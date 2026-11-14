@@ -15,7 +15,7 @@ import type { Making, MakingChannel, MakingChannelPost } from '../_making.js'
 // week, or nothing is written. Any day of the week has boxes: an off-day post is first-class (2026-10-30).
 //
 // GET /api/board/<Monday>/pieces, the same key, read-only: which piece sits on which day of the week and which boxes
-// it has, {days: [{day, date, piece_id, channels, slot?}]}. slot (New York HH:MM) is given for an off day only; on
+// it has, {days: [{day, date, piece_id, channels, slot?}]}, and (2026-11-12) `live`: every post he marked live. slot (New York HH:MM) is given for an off day only; on
 // Monday, Wednesday and Friday Growth uses the series slot it already holds (12:30). Growth's board_tick.py reads it,
 // so it keeps no map of its own.
 
@@ -30,7 +30,7 @@ export const DAYS = Object.keys(DAY_OFFSET) as PostedDay[]
 export const SERIES_DAYS: readonly PostedDay[] = ['mon', 'wed', 'fri']
 /** The day's series, by the publication's rhythm (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap). */
 const DAY_SERIES: Partial<Record<PostedDay, string>> = { mon: 'follow_the_money', wed: 'under_the_hood', fri: 'mind_the_gap' }
-// The day's posting boxes on the board (week_board.py STEPS, the ones with a channel), with the label each box carries.
+// The day's posting boxes on the board, with the label each box carries (the old board page drew the same boxes).
 export const BOARD_CHANNELS = {
   substack: 'Substack: video post with the article',
   youtube: 'YouTube: the 3-minute video',
@@ -161,15 +161,21 @@ export function piecesByDay(week: string, raw: Body[]): Array<{ day: PostedDay; 
   return out
 }
 
-/** Which piece sits on which day of the week, and its boxes. A piece is on a day when it is scheduled for that date
- *  and not buried or dropped. When two share a date, a series day keeps the piece of its own series, an off day the
- *  piece whose meta.offday names that date, then the one changed last; one piece a day, as Growth reads it. */
+/** Which piece sits on which day of the week, and its boxes. A piece is on a day when it is scheduled for that date,
+ *  not buried or dropped, and his approval holds it there (the ideas gate, _gate.ts: Growth makes and posts only what
+ *  he approved). When two share a date, a series day keeps the piece of its own series, an off day the piece whose
+ *  meta.offday names that date, then the one changed last; one piece a day, as Growth reads it. When his approvals
+ *  cannot be read, nothing is handed over (503 approvals_unavailable), never everything. */
 export async function readPieces(db: SupabaseClient, week: string): Promise<{ status: number; body: Body }> {
   const end = dayDate(week, 'sun')
   const read = await db.from('content_ideas').select('id, scheduled_for, lane_slot, state, buried_at, meta, updated_at')
     .gte('scheduled_for', week).lte('scheduled_for', end)
   if (read.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
-  const days: PieceDay[] = piecesByDay(week, (read.data || []) as Body[]).map(({ day, date, piece, series }) => {
+  const { readApprovals, approvalFor } = await import('./_gate.js')
+  const approvals = await readApprovals(db, week)
+  if (!approvals) return { status: 503, body: { ok: false, error: 'approvals_unavailable' } }
+  const approved = ((read.data || []) as Body[]).filter(r => typeof r.scheduled_for === 'string' && approvalFor(approvals, r, String(r.scheduled_for).slice(0, 10)))
+  const days: PieceDay[] = piecesByDay(week, approved).map(({ day, date, piece, series }) => {
     const entry: PieceDay = { day, date, piece_id: String(piece.id).toLowerCase(), channels: [...(series ? SERIES_DAY_CHANNELS : OFF_DAY_CHANNELS)] }
     if (!series) {
       const own = isObj(piece.meta) && isObj(piece.meta.offday) ? String(piece.meta.offday.slot || '') : ''
@@ -187,9 +193,20 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
   // Growth makes the mock from the direction he approved, exactly as it was shown (shown), and puts it back on the card.
   // An option counts once its idea is approved and its direction, if it had one, is too; a returned mock he has not
   // yet approved is said in mock.
-  const off = await db.from('board_documents').select('doc_id,body').eq('week', week).eq('collection', 'queue').like('doc_id', 'off-%')
+  const off = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'queue').like('doc_id', 'off-%')
   if (off.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
+  // Only an option his Approve stands on (the ideas gate): his own press, and its latest answer an approval. And only
+  // on the day the one place says it is on (offday_items, _offdayItems.ts; Ruling, Krish, 2026-11-12: any off-day post
+  // moves to any day at his press): an option he moved is handed over on its new day, in its new week, and never on
+  // the day it left. When the items cannot be read, nothing is handed over (503), never a day that may be stale.
+  const standing = new Set(approvals.map(a => a.doc))
+  const { readItems, placedHere } = await import('./_offdayItems.js')
+  const items = await readItems(db, week)
+  if (!items) return { status: 503, body: { ok: false, error: 'items_unavailable' } }
   const offdays = (off.data || []).flatMap(row => {
+    if (row.updated_by !== 'Krish' || !standing.has(`queue/${String(row.doc_id)}`)) return []
+    const placed = placedHere(items, week, String(row.doc_id))
+    if (!placed.keep) return []
     const b = isObj(row.body) ? row.body : null
     const idea = b && isObj(b.idea) ? b.idea : null
     if (!b || !idea || idea.verdict !== 'approve') return []
@@ -202,12 +219,88 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
       // His open words on the option, exactly as typed (Krish, 2026-11-02: "it would contain the exact meme text to
       // put above the meme video"): Growth makes the post with them.
       note: isObj(b.note) && typeof b.note.words === 'string' ? b.note.words : null,
-      approved_at: dir?.at ?? idea.at ?? null }]
+      approved_at: dir?.at ?? idea.at ?? null,
+      // Where its day lives (2026-11-12): the item, the version a move names and its date, so Growth makes and posts it
+      // on that day and nowhere else; moved_from when he moved it here from another day.
+      item: placed.item?.item ?? null, version: placed.item?.version ?? null, date: dayDate(week, String(row.doc_id).slice(4, 7) as PostedDay),
+      moved_from: isObj(b.moved) && typeof b.moved.from_week === 'string' ? { week: b.moved.from_week, day: b.moved.from_day ?? null } : null }]
   }).sort((a, b) => String(a.id).localeCompare(String(b.id)))
   // His yes for each day, from wherever he gave it (_yes.ts, one yes anywhere): Growth schedules a day's go-lives on it.
   const said = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'picks')
-    .or('doc_id.like.yes-%,doc_id.like.%-publish')
+    .or('doc_id.like.yes-%,doc_id.like.%-publish,doc_id.like.live-%')
   if (said.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   const yes = yesByDay((said.data || []) as YesRow[])
-  return { status: 200, body: { days, mix, offdays, yes } }
+  // Every post he marked live on the board ("It's live", _itsLive.ts), for Growth's learning: a post he made by hand
+  // is one Buffer never saw. Each with its day, its piece or off-day option, its channels, its link and when.
+  const { liveByDay } = await import('./_itsLive.js')
+  const marked = liveByDay((said.data || []) as Array<{ doc_id: string; body: Body; updated_by: string }>)
+  const live = DAYS.flatMap(d => (marked[d] || []).map(p => ({ day: d, date: dayDate(week, d), piece_id: p.piece_id ?? null, option: p.option ?? null,
+    channels: p.channels, url: p.url, at: p.at, by: p.by })))
+  return { status: 200, body: { days, mix, offdays, yes, live } }
+}
+
+// ── A piece's scheduled posts, from Growth's own record (2026-11-12) ────────────────────────────────────────────────
+//
+// Ruling (Krish, 2026-11-12): the board shows exactly where everything is. Fri 13 Nov was scheduled while the board said
+// "Ready to post: Growth posts it on the day", because the write-back above takes only a post that went out, and an
+// off-day item's (POST /offday-posts) has no piece. So POST /api/board/<Monday>/offday-posts also takes a piece's own
+// entries, {piece_id, day, state: scheduled | cancelled, channel, due_at, buffer_post_id}: each is kept on the day's box
+// for that channel (board_ticks <day>-<channel>, done stays false, actor growth) as `scheduled`, and the view says
+// "Scheduled on Substack Notes for Fri 13 Nov, 12:40". A box already ticked done (the post went out) is never touched,
+// and the piece must be on that day, as for a post that went out.
+
+export interface PieceScheduled { piece_id: string; day: PostedDay; state: 'scheduled' | 'cancelled'; channel: PostedChannel; due_at: string | null; buffer_post_id: string | null }
+
+/** One piece entry of Growth's posting record, or null when it is not one. */
+export function pieceScheduled(v: unknown): PieceScheduled | null {
+  if (!isObj(v) || typeof v.piece_id !== 'string' || !UUID.test(v.piece_id)) return null
+  if (!Object.hasOwn(DAY_OFFSET, String(v.day)) || !Object.hasOwn(POSTED_CHANNELS, String(v.channel))) return null
+  if (v.state !== 'scheduled' && v.state !== 'cancelled') return null
+  const due = typeof v.due_at === 'string' && Number.isFinite(Date.parse(v.due_at)) ? new Date(v.due_at).toISOString() : null
+  if (v.state === 'scheduled' && !due) return null
+  const buffer = typeof v.buffer_post_id === 'string' && BUFFER_ID.test(v.buffer_post_id) ? v.buffer_post_id : null
+  return { piece_id: v.piece_id.toLowerCase(), day: v.day as PostedDay, state: v.state, channel: v.channel as PostedChannel, due_at: due, buffer_post_id: buffer }
+}
+
+/** Keep each scheduled post on its piece's box; a cancelled one comes off. Counts what it kept and what it left. */
+export async function recordScheduled(db: SupabaseClient, week: string, entries: PieceScheduled[], now: string): Promise<{ kept: number; left: number; failed: boolean }> {
+  let kept = 0, left = 0
+  const days = new Map<string, string | null>()
+  for (const e of entries) {
+    if (!days.has(e.piece_id)) {
+      const p = await db.from('content_ideas').select('id, scheduled_for').eq('id', e.piece_id).maybeSingle()
+      if (p.error) return { kept, left, failed: true }
+      days.set(e.piece_id, p.data ? String((p.data as Body).scheduled_for || '').slice(0, 10) : null)
+    }
+    if (days.get(e.piece_id) !== dayDate(week, e.day)) { left++; continue }
+    const tickId = `${e.day}-${e.channel}`
+    const read = await db.from('board_ticks').select('body, revision').eq('week', week).eq('tick_id', tickId).maybeSingle()
+    if (read.error) return { kept, left, failed: true }
+    const held: Body = isObj(read.data?.body) ? read.data!.body : {}
+    if (held.done === true || (held.piece_id && held.piece_id !== e.piece_id)) { left++; continue }
+    const was = Array.isArray(held.scheduled) ? (held.scheduled as Body[]).filter(isObj) : []
+    const rest = was.filter(s => !(e.buffer_post_id ? s.buffer_post_id === e.buffer_post_id : s.due_at === e.due_at))
+    const scheduled = e.state === 'scheduled' ? [...rest, { due_at: e.due_at, buffer_post_id: e.buffer_post_id, at: now }].slice(-MAX_POSTS) : rest
+    const body: Body = { ...held, done: false, day: e.day, piece_id: e.piece_id, step: e.channel, channel: e.channel, label: POSTED_CHANNELS[e.channel], by: POSTED_ACTOR, scheduled }
+    if (!validBody('ticks', tickId, body)) { left++; continue }
+    const saved = await db.rpc('board_save', { p_week: week, p_collection: 'ticks', p_id: tickId, p_body: body, p_revision: Number(read.data?.revision || 0), p_actor: POSTED_ACTOR })
+    if (saved.error) return { kept, left, failed: true }
+    if (saved.data?.ok) kept++
+    else left++
+  }
+  return { kept, left, failed: false }
+}
+
+/** A day's scheduled posts for its piece, from the boxes Growth keeps (`scheduled`), soonest first; a box already done
+ *  is out, not scheduled. Pure. */
+export function scheduledOf(ticks: Array<{ tick_id: string; body: Body; updated_by: string }> | undefined, day: string, pieceId: string | null): Array<{ channel: string; label: string; due_at: string }> {
+  const out: Array<{ channel: string; label: string; due_at: string }> = []
+  for (const t of ticks || []) {
+    if (t.updated_by !== POSTED_ACTOR || !isObj(t.body) || t.body.done === true || t.body.day !== day) continue
+    if (pieceId && t.body.piece_id && String(t.body.piece_id).toLowerCase() !== pieceId) continue
+    for (const s of Array.isArray(t.body.scheduled) ? (t.body.scheduled as Body[]).filter(isObj) : []) {
+      if (typeof s.due_at === 'string') out.push({ channel: String(t.body.channel || t.body.step), label: String(t.body.label || t.body.step), due_at: s.due_at })
+    }
+  }
+  return out.sort((a, b) => a.due_at.localeCompare(b.due_at))
 }

@@ -168,13 +168,14 @@
     "choices": [
       {
         "id": "opening",
-        "title": "The sting on the wide cut, the hook on the tall",
+        "title": "The hook is the intro, on every cut",
         "ruling": 13,
-        "default": "sting_wide_hook_tall",
+        "default": "hook_is_intro",
         "off_day": "hook_is_intro",
-        "options": ["sting_wide_hook_tall", "hook_is_intro", "story_card", "logo_intro"],
-        "what": "The wide long cut of a weekly series piece opens on the house sting (config/intro-sting.json), then the hook; the tall short cut and an off-day piece open on the hook in the brand's dress. One calm close.",
-        "changed": {"on": "2026-11-05", "by": "Krish", "from": "hook_is_intro", "words": "I think it should go at the start of the longer wide videos 100%,", "where": "the Intro Sting page; config/intro-sting.json placement"}
+        "options": ["hook_is_intro"],
+        "what": "Every cut, wide or tall, series or off day, opens straight on its hook in the brand's dress: nothing goes before the hook, ever, so the opening is no longer a choice under test. One calm close.",
+        "changed": {"on": "2026-11-12", "by": "Krish", "from": "sting_wide_hook_tall", "words": "Nothing before the hook, ever. Remove the sting exception for good.", "where": "a working session, answering the openings question; config/intro-sting.json, retired"},
+        "before": {"on": "2026-11-05", "by": "Krish", "default": "sting_wide_hook_tall", "words": "I think it should go at the start of the longer wide videos 100%,", "where": "the Intro Sting page"}
       },
       {
         "id": "lead_picture",
@@ -480,8 +481,8 @@
         "answer": "I think it should go at the start of the longer wide videos 100%,",
         "question": "Of the Intro Sting page (the makeyourmindup intro sting, the second direction he saw on 12 October, one clip per series), he asked: \"where is this additive?\" The engine answered that no cut used it, since every video had opened on the hook from 29 October (ruling 8), and proposed the full wordmark on screen from the hook's first frame instead of a separate intro before his face. Where does the sting go?",
         "quote": "I think it should go at the start of the longer wide videos 100%,",
-        "production": "the wide long cut of a weekly series piece opens on that series' house sting, the clip he saw, with no sound of its own and the bed under it, and his face and the hook come in on the very next frame; the tall short cut opens on the hook in the brand's dress (ruling 8); an off-day piece wears no sting; nothing else goes in front of the hook; one calm close, held long enough to read",
-        "changed": "Under test, the opening: the default is now sting_wide_hook_tall, with hook_is_intro for an off-day piece, recorded per piece as production_choices.opening, and the opening choice cites this ruling. House rule HOOK_IS_THE_INTRO and config/intro-sting.json carry it; his approval of the clips is recorded there in his words, and until it is the wide cut opens on its hook and its report says why. Asked the same day whether each series' sting may keep flashing the other series' colours, he picked \"Keep it as I saw it\": the one written exception to the series-colour rule. The sting followed straight by his face is one opening (never 7); a story card or a title card between them would be two."
+        "production": "superseded on 12 Nov 2026 (Ruling, Krish: \"Nothing before the hook, ever. Remove the sting exception for good.\"): every cut, wide or tall, opens straight on its hook, nothing in front of it. From 5 to 12 Nov it read: the wide long cut of a weekly series piece opens on that series' house sting, then the hook; the tall short cut opens on the hook (ruling 8); one calm close, held long enough to read.",
+        "changed": "Under test, the opening: the default is now sting_wide_hook_tall, with hook_is_intro for an off-day piece, recorded per piece as production_choices.opening, and the opening choice cites this ruling. House rule HOOK_IS_THE_INTRO and config/intro-sting.json carry it; his approval of the clips is recorded there in his words, and until it is the wide cut opens on its hook and its report says why. Asked the same day whether each series' sting may keep flashing the other series' colours, he picked \"Keep it as I saw it\": the one written exception to the series-colour rule. The sting followed straight by his face is one opening (never 7); a story card or a title card between them would be two. Changed again on 12 Nov 2026: \"Nothing before the hook, ever. Remove the sting exception for good.\" The sting is retired for good (config/intro-sting.json), and the opening is hook_is_intro, the only option."
       }
     ]
   },

@@ -29,7 +29,17 @@ repository's `docs/CAROUSEL-STANDARD.md`, the rejection floor and the copy
 lint. Content-engine keeps the standard and makes the hero assets: the
 article, both cuts, thumbnails and covers.
 
-**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, every week's board lives at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are kept as compatibility and history; never use them to synchronize artifacts.
+How they are made (Ruling, Krish, 2026-11-13: "all the carousels should now be
+done in Claude, but using the Codex plug in as per the other usual
+workflows"; "memes and Notes images should go the same way"; "Off-day
+voiceover shorts should go the same way too"): every carousel, meme and Notes
+image is made in a Claude session, with the Codex plugin building it (a
+`ve card` of kind carousel, meme or notes_image), and every off-day voiceover
+short on the ve route from a Claude session. Never a scheduled job, a
+headless model run or a template engine. The route is
+`docs/CAROUSEL-STANDARD.md`, "How a carousel is made".
+
+**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); the old board pages at content.krishraja.com/board are retired for good and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good, and everything old in content-engine is retired). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this repository are history.
 
 
 <!-- north-star:start -->
@@ -45,7 +55,7 @@ Codex reads no hooks and no `CLAUDE.md`, so the route is here (`docs/plans/2026-
 3. Claude owns the words and the visuals: the story, the scripts, the article copy, every article figure and the
    creative direction (`docs/CREATIVE_DIRECTION.md`). Production renders only from a direction Krish signed;
    `kit.py` and `make.py` refuse anything else from 26 Oct 2026.
-4. Feed the board through `week_board.py`'s inputs only; never a per-day feeder script (`npm run check:board-layout`).
+4. Feed the live board by writing what its view reads, and report and file on the piece as you work (`docs/PUBLISH_BOARDS.md`, "One live board" and "Sessions and materials"); never build or publish a board page (`tests/one-live-board.test.ts`).
 5. Never publish, sign in to a publishing platform, or ask Krish for a login code. He publishes.
 6. Never call anything ready from receipts: a separate reviewer watches and listens to the finished asset, and fact,
    transport and editorial status are reported separately.
@@ -115,6 +125,8 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 
 **His feedback on ideas is kept as cues, permanently** ([detail](docs/AGENTS-REFERENCE.md#rule-19))
 
+**Every opening, close, icon, wordmark and sting comes from `config/brand-palette.json` and nowhere else; `scripts/brand_palette.py` refuses a cut that differs (Ruling, Krish, 2026-11-12).** ([detail](docs/production/BRAND_PALETTE.md))
+
 **Never ship beneath the rejection floor: read `python3 scripts/floor.py --format <maker>` before the brief and check the finished file against it.** ([detail](docs/AGENTS-REFERENCE.md#rule-20))
 
 ## Rules for every agent
@@ -128,7 +140,7 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 - **The mandate is the test.** Read live; never copy it, the voice block or corpus.
 - **Voice.** Plain English; no public em dashes or "Not X, Y" in either order.
 - **Spend.** Stay within approval; check `meter_daily`.
-- **Drive folders are load-bearing.** Read `docs/DRIVE.md`; use IDs.
+- **Drive folders are load-bearing.** Read `docs/DRIVE.md`; use IDs. Brand assets come only from `1 Brand kit (permanent)`, music included, never `_Archive` (Krish, 2026-11-11; `docs/DRIVE.md`, "The brand kit").
 - **Leave the knowledge in the repository.**
 - Never commit media, credentials, OAuth state, job data, archives or derived indexes. Never expose secrets.
 
@@ -136,7 +148,7 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 
 ## Video production
 
-Video is made with `python scripts/ve.py`: read `docs/ve/ENGINE.md`, follow `docs/ve/RUNBOOK.md`. One signed spec (`creative-direction.json`, `schema_version: 2`); no per-piece compositions or render scripts. Codex is a visual asset maker (Ruling, Krish, 2026-10-28: "Visual asset maker"): it builds library devices from cards (`card`, `dispatch`, `verify-card`) and makes visual plates for named slots, and it never edits a cut. Every cut is held to the signed motion standard (`docs/ve/MOTION_STANDARD.md`). Motion styles live in one bank, the `motion` layer of `config/style-references.json`; Claude picks one per piece (`style.motion`, which `ve lint` requires from 9 Nov 2026), and every card for that piece carries it as its own `## Motion style` section. Codex builds to that section's rules and never-list, under the brand tokens and the design lock, and never picks or mixes a style itself. ve has no publish verb. Quick-edit stays the fallback until ve passes Phase 3. Local runs use `. scripts/ve-env.sh` (Bash). Licensed music lives only at `MINDMAKE_MUSIC_ROOT` with `config/music-library.json`; never browse Drive for audio.
+Video is made with `python scripts/ve.py`: read `docs/ve/ENGINE.md`, follow `docs/ve/RUNBOOK.md`. One signed spec (`creative-direction.json`, `schema_version: 2`); no per-piece compositions or render scripts. Codex is a visual asset maker (Ruling, Krish, 2026-10-28: "Visual asset maker"): it builds library devices from cards (`card`, `dispatch`, `verify-card`) and makes visual plates for named slots, and it never edits a cut. Every cut is held to the signed motion standard (`docs/ve/MOTION_STANDARD.md`). Motion styles live in one bank, the `motion` layer of `config/style-references.json`; Claude picks one per piece (`style.motion`, which `ve lint` requires from 9 Nov 2026), and every card for that piece carries it as its own `## Motion style` section. Codex builds to that section's rules and never-list, under the brand tokens and the design lock, and never picks or mixes a style itself. Captions, transitions, camera and energy are chosen apart from the motion style (`style.captions`, `style.transitions`, `style.camera`, `style.energy`; 27 caption styles, three motion styles from Krish's own cuts; `ve pace` measures a cut against his references): `docs/ve/INGREDIENTS.md` (Krish, 2026-11-13: "the captions should be decoupled from the animation styles"). ve has no publish verb. Quick-edit stays the fallback until ve passes Phase 3. Local runs use `. scripts/ve-env.sh` (Bash). Licensed music lives only at `MINDMAKE_MUSIC_ROOT` with `config/music-library.json`; never browse Drive for audio.
 
 Code check (28 Oct 2026): compile/render lint first and use shared FormatMaster. The schema makes `signed` optional; sign-off remains an operator gate. `docs/ve/RUNBOOK.md` is the procedure and `docs/ve/STATUS.md` says what ve can and cannot do today. Phase 3 fallback is policy, not a CLI switch. [Legacy route](docs/AGENTS-REFERENCE.md#rule-17).
 
@@ -155,28 +167,33 @@ Original domain paragraphs under the North Star heading are linked individually 
 
 ## Verification
 
-Run `npm run verify` before pushing; validate skills with `npm run skills:validate` (`python scripts/validate-skills.py`). After skill edits run `python scripts/validate-skills.py --sync-claude`: Claude's copies must be real identical files. Content engine: `npm run typecheck:control-plane` and `npm run check:control-plane`. Known main failures: `docs/STATE.md`; fix anything else. [Detail](docs/AGENTS-REFERENCE.md#verification).
+Run `npm run verify:quick` before pushing (every guard of `npm run verify`, the tests related to the change and the publishing-safety tests, in minutes); CI runs the same on the pull request, and the full `npm run verify` on Linux and Windows with the browser jobs runs after merge in `.github/workflows/full-verify.yml`, which never blocks a merge and opens one issue when main goes red (Ruling (Krish, 2026-11-11): quick checks on pull requests, the full verify after merge; merge fast and he tests live.). Validate skills with `npm run skills:validate` (`python scripts/validate-skills.py`). After skill edits run `python scripts/validate-skills.py --sync-claude`: Claude's copies must be real identical files. Content engine: `npm run typecheck:control-plane` and `npm run check:control-plane`. Known main failures: `docs/STATE.md`; fix anything else. [Detail](docs/AGENTS-REFERENCE.md#verification).
 
 ## Commit and closeout
 
-Commit code/config/specs/small data before stopping; file media through the authorised library route. Verify before pushing. Pushing straight to main is allowed (Krish, 2026-11-09: "change content engine settings to allow pushes to main and force pushes"); the usual route is still a session branch and a pull request. Engine work never waits on a hand merge: run `npm run verify`, push the session branch, open a pull request, and `.github/workflows/auto-merge.yml` merges it to main once CI is green. Every pull request merges itself, ve included; nobody merges by hand (Ruling, Krish, 2026-11-03: "Change everything to auto-merge all the time. No manual merging"). Fix red CI on the branch. Zero Claude routines (Ruling, Krish, 2026-10-29: "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture"): no claude.ai scheduled or fired trigger, and no headless Claude on a home-computer timer. GitHub Actions is the scheduler ("Could you not get Github to trigger Claude subscription to do something and then update the content.krishraja.com board?"): judgment work runs as Claude Code inside a GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`, never an API key) and writes to the board only through the engine API; `tests/no-claude-routines.test.ts` refuses anything else. Exactly three scheduled jobs may touch a publish board: the Sunday ideas board, the Monday final board and the Thursday Saturday-options run (Ruling, Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas"; "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning"; Ruling, Krish, 2026-11-07: "Happy to break the "no Claude schedules" rule for Saturday's good news. We might as well just keep that on an automatic schedule."). The first is `.github/workflows/sunday-ideas.yml`; the second is built by code (`week_board.py`) from the overnight runner (Wave 2; until then the first session on Monday), never by Claude on a timer; the third is `.github/workflows/saturday-goodnews.yml`, which finds that week's Saturday good news on Thursday and writes only that option's stories. No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board, other than those three. The timed API calls (the engine's Vercel crons, inspirationhouse's daily runs, the fact gate) stay, held under $15 a week for this chain (Krish, 2026-10-29: "happy with $15 a week"). So, until Krish says otherwise, any other scheduled job (the Monday repair round, the titles default when he has not pressed) writes records only, and the board shows them at its next build.
+Commit code/config/specs/small data before stopping; file media through the authorised library route. Verify before pushing. Pushing straight to main is allowed (Krish, 2026-11-09: "change content engine settings to allow pushes to main and force pushes"); the usual route is still a session branch and a pull request. Engine work never waits on a hand merge: run `npm run verify:quick`, push the session branch, open a pull request, and `.github/workflows/auto-merge.yml` merges it to main once CI is green (CI is the quick checks; the full verify runs after the merge and a red main is fixed fast from its issue). Every pull request merges itself, ve included; nobody merges by hand (Ruling, Krish, 2026-11-03: "Change everything to auto-merge all the time. No manual merging"). Fix red CI on the branch. Zero Claude routines (Ruling, Krish, 2026-10-29: "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture"): no claude.ai scheduled or fired trigger, and no headless Claude on a home-computer timer. GitHub Actions is the scheduler ("Could you not get Github to trigger Claude subscription to do something and then update the content.krishraja.com board?"): judgment work runs as Claude Code inside a GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`, never an API key) and writes to the board only through the engine API; `tests/no-claude-routines.test.ts` refuses anything else. Exactly two scheduled jobs may touch a publish board: the Sunday ideas board and the Monday final board (Ruling, Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas"; "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning"). Ruling (Krish, 2026-11-11): the ideas board fills once a week in full, Saturday's good news included; the Thursday good-news schedule is retired. The first is `.github/workflows/sunday-ideas.yml`, which finds Saturday's good-news stories with the rest of the week's ideas; the second is no built page since 11 November: the live board reads the week's records, and the overnight runner reports each cut made or held on its piece (Wave 2; until then the first session on Monday), never Claude on a timer (`docs/CADENCE.md`). `.github/workflows/saturday-goodnews.yml` stays, by hand only, to find the stories again. No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board, other than those two. Every scheduled job proposes; only Krish's Approve puts an idea on a publish board (the ideas gate, `docs/PUBLISH_BOARDS.md`). The timed API calls (the engine's Vercel crons, inspirationhouse's daily runs, the fact gate) stay, held under $15 a week for this chain (Krish, 2026-10-29: "happy with $15 a week"). So, until Krish says otherwise, any other scheduled job (the Monday repair round, the titles default when he has not pressed) writes records only, and the live board shows them at its next read.
 
 Guarded rules. When Krish asks for files, hand him the files themselves. When he asks for something in Drive, put it in its post's `3 Posts` folder (Ruling, Krish, 2026-11-03: "everything ready for post goes in the posts folder, not the growth folder"), read it back, and reply "Done" with the link; nothing else ("WHEN I ASK YOU TO PUTTHINGS IN DRIVE IT SHOULD JUST BE REPLIED TO WITH 'DONE'", 2026-11-03; `config/failures.json` F29). Before designing a cut, open the inspiration board's cards for it and name them in `brand.references` (F26). His words are exact typed quotes; a paraphrase stays an observation; a question his feedback already answers is not asked ("If you read what I am feeding back, it's pretty obvious what it is"). Inspiration links go to `Production Inspo` or `Content Inspo` ([detail](docs/AGENTS-REFERENCE.md)).
 
-Closeout: update NOW.md's as_of, status and single next action in the same work; leave head to the steward. For untouched NOW.md only, an exempt change's commit body says `Closeout: not needed, <reason>`. Keep exactly one dated line under "What is next and what is waiting on Krish", choosing holds or recalibration proposed with a reason:
-- North Star check (YYYY-MM-DD): holds.
+Closeout: never edit NOW.md on a branch (`scripts/check_now_untouched.py` fails the pull request; steward branches excepted). Two pull requests editing it at once conflicted, auto-merge could merge neither, and they sat open while main moved on (2026-11-10). Write `now-notes/YYYY-MM-DD-<slug>.md` instead, with `Status:`, `Next:` (the single next action), optionally `Changed:`, and one dated line, starting with the words themselves, no dash or bullet in front:
+
+```
+North Star check (YYYY-MM-DD): holds.
+```
+
+(or `recalibration proposed. <why>`). The dash belongs to NOW.md's copy of the line, which the fold writes; a note's line with a dash never folds (three sat on main unfolded, 11 and 12 Nov). `npm run check:now-notes`, part of verify and so of CI, runs the fold's own code over every note before the merge, so a note that passes it always folds. Auto-merge folds the note into NOW.md on main and `scripts/now_trim.py` keeps the page under 14,000 bytes there; never trim it by hand. A change that needs no closeout says `Closeout: not needed, <reason>` in its commit body.
 
 Only Krish changes the North Star. Task-specific restrictions override routine commit, board and closeout actions.
 
-<!-- krish-repo-admin:start brain=2ad79d5cf4f3 sha=75a4f360a412 -->
+<!-- krish-repo-admin:start brain=aabfeac6c45f sha=33ec6eef2668 -->
 ## Administer this repository
 
 Use `docs/HARNESS_CONTEXT.md` for the owning workflow, source of truth and checks. Preserve the goal and accepted decisions when a revision changes one part; explain material trade-offs. Verify the downstream result. Record corrections and observed outcomes through the existing capture path. Experimental results retain their conditions; inferred requirements remain proposals.
 
-Before any work run `python3 scripts/check_failures.py`. At session start read comments on EVERY board link in `config/boards.json`; each board publish updates every link from the same engine-built file. Studio work requires `docs/ENGINE_SESSION.md`, `studio.session.open` and its tracked capability set; cloud Studio sessions stay read-only. Preserve observer attribution and Krish's actual decisions, keep exact feedback excerpts and never whole transcripts. `Video engine` remains the exact external launcher.
+Before any work run `python3 scripts/check_failures.py`. At session start read this week's comments on the one live board in Control Centre, as `docs/PUBLISH_BOARDS.md` says. Studio work requires `docs/ENGINE_SESSION.md`, `studio.session.open` and its tracked capability set; cloud Studio sessions stay read-only. Preserve observer attribution and Krish's actual decisions, keep exact feedback excerpts and never whole transcripts. `Video engine` remains the exact external launcher.
 <!-- krish-repo-admin:end -->
 
-<!-- krish-canon:start release=v2026.10.31.4 sha=49ccfe98b287 rendered=2026-10-31 -->
+<!-- krish-canon:start release=v2026.11.13.2 sha=bffef655d142 rendered=2026-11-14 -->
 ## Krish canon
 
 Rendered from `krishanraja/ai-harness`; the start marker names the release. Nothing inside these
@@ -233,5 +250,5 @@ https://controlcenter.krishraja.com/api/canon/KRISH.md (and `PORTFOLIO.md` besid
 30 curated skills are in `krishanraja/ai-harness`. On a machine with the harness installed the same skills are under the user skills root, and the local copy is
 authoritative for reading; the repository is authoritative for what is correct. Where none is installed (claude.ai, a cloud session), read each skill live with Control Center `get_skill`.
 
-**This repository's own rules:** `AGENTS.md`, `CLAUDE.md`, `docs/CAROUSEL_ENGINE_STATE.md`
+**This repository's own rules:** `AGENTS.md`, `CLAUDE.md`, `docs/CAROUSEL-STANDARD.md`
 <!-- krish-canon:end -->

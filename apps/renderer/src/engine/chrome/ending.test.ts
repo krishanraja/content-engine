@@ -7,10 +7,10 @@ vi.mock('remotion', async (importOriginal) => {
   const actual = await importOriginal<typeof import('remotion')>()
   return { ...actual, Img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => React.createElement('img', props) }
 })
-import { HOUSE, houseDueLine, houseTickerCycleWidth, houseTickerOffset } from '../../house/geometry'
+import { houseDueLine } from '../../house/geometry'
 import { EngineRenderPropsSchema, type EngineRenderProps } from '../props'
 import { CallCard, callCardLayout, callCardModel, ENDING_SAFE } from './CallCard'
-import { BAND_ARRIVAL_FRAMES, EndingBand, endingBandModel } from './EndingBand'
+import { ENDING_DAYS, ENDING_SETTLED_S, ENDING_SETTLED_TALL_S, ENDING_TAGLINE, EndingBand, endingBandModel, statementLines } from './EndingBand'
 
 function fixture(aspect: EngineRenderProps['aspect']): EngineRenderProps {
   const image = { src: 'stacked.svg', pixelWidth: 1040, pixelHeight: 320 }
@@ -27,32 +27,43 @@ function fixture(aspect: EngineRenderProps['aspect']): EngineRenderProps {
   })
 }
 
-describe('ending ticker', () => {
-  it('holds until arrival, then moves monotonically over 600 frames', () => {
-    const props = fixture('9:16')
-    const start = props.ending!.fromFrame
-    expect(endingBandModel(props, start - 1)).toBeNull()
-    expect(endingBandModel(props, start + BAND_ARRIVAL_FRAMES)!.offset).toBe(0)
-    let previous = 0
-    for (let elapsed = 1; elapsed <= 600; elapsed++) {
-      const model = endingBandModel(props, start + BAND_ARRIVAL_FRAMES + elapsed)!
-      expect(model.offset).toBeGreaterThan(previous)
-      expect(model.offset).toBe(houseTickerOffset(props.series.promise, props.series.day, elapsed / 30 * 1000))
-      previous = model.offset
-    }
+describe('the statement close', () => {
+  it('says exactly the tagline, broken only between words, the last word alone', () => {
+    expect(ENDING_TAGLINE).toBe('Built to help you decide.')
+    expect(statementLines('9:16')).toEqual(['Built to', 'help you', 'decide.'])
+    expect(statementLines('16:9')).toEqual(['Built to help you', 'decide.'])
   })
 
-  it('does not reset after a whole cycle and supplies enough strip for the cut', () => {
+  it('starts on his last word, moves in reading order, settles by 2.75 s and then holds still', () => {
     const props = fixture('16:9')
-    const start = props.ending!.fromFrame + BAND_ARRIVAL_FRAMES
-    const before = endingBandModel(props, start + 1139)!
-    const after = endingBandModel(props, start + 1141)!
-    const cycle = houseTickerCycleWidth(props.series.promise, props.series.day)
-    expect(after.offset).toBeGreaterThan(before.offset)
-    expect(after.offset).toBeGreaterThan(cycle)
-    const last = endingBandModel(props, props.durationFrames - 1)!
-    expect(last.cycles * cycle - last.offset).toBeGreaterThan(last.width)
+    const start = props.ending!.fromFrame
+    expect(endingBandModel(props, start - 1)).toBeNull()
+    const first = endingBandModel(props, start)!
+    expect(first.lines.every((line) => line.rise === 0)).toBe(true)
+    expect(first.logo).toBe(0)
+    const mid = endingBandModel(props, start + 30)!
+    expect(mid.lines[0]!.rise).toBe(1)
+    expect(mid.logo).toBe(0)
+    expect(ENDING_SETTLED_S).toBeCloseTo(2.75)
+    const settled = endingBandModel(props, start + Math.ceil(ENDING_SETTLED_S * 30))!
+    const later = endingBandModel(props, start + 170)!
+    expect(settled.settled).toBe(true)
+    for (const model of [settled, later]) {
+      expect(model.lines.every((line) => line.rise === 1)).toBe(true)
+      expect([model.logo, model.days, model.cta, model.url, model.underline]).toEqual([1, 1, 1, 1, 1])
+    }
     expect(endingBandModel(props, props.durationFrames)).toBeNull()
+  })
+
+  it('on the tall cut is a 2 s beat: the logo first, everything settled by 1.3 s (config/brand-palette.json statement_beat)', () => {
+    const props = fixture('9:16')
+    const start = props.ending!.fromFrame
+    expect(ENDING_SETTLED_TALL_S).toBeCloseTo(1.3)
+    expect(endingBandModel(props, start + 15)!.logo).toBe(1)
+    const settled = endingBandModel(props, start + Math.ceil(ENDING_SETTLED_TALL_S * 30))!
+    expect(settled.settled).toBe(true)
+    expect(settled.lines.every((line) => line.rise === 1)).toBe(true)
+    expect([settled.logo, settled.days, settled.cta, settled.url, settled.underline]).toEqual([1, 1, 1, 1, 1])
   })
 })
 
@@ -81,21 +92,17 @@ describe.each(['9:16', '16:9'] as const)('%s chrome', (aspect) => {
     expect(callCardModel(withoutCall, 105)).toBeNull()
   })
 
-  it('keeps band identity inside safe insets with full-width ink and ticker', () => {
+  it('covers the whole frame in ink and keeps every word inside the safe box', () => {
     const props = fixture(aspect)
-    const safe = ENDING_SAFE[aspect]
-    const model = endingBandModel(props, 200)!
+    const model = endingBandModel(props, 300)!
     const width = aspect === '9:16' ? 1080 : 1920
     const height = aspect === '9:16' ? 1920 : 1080
-    expect(model.left).toBe(0)
-    expect(model.width).toBe(width)
-    expect(model.contentBox.left).toBeGreaterThanOrEqual(safe.leftPx)
-    expect(model.contentBox.left + model.contentBox.width).toBeLessThanOrEqual(width - safe.rightPx)
-    expect(model.top).toBeGreaterThanOrEqual(safe.topPx)
-    expect(model.top + model.height).toBeLessThanOrEqual(height - safe.bottomPx)
-    expect(model.logoWidth).toBeGreaterThan(0)
-    if (aspect === '16:9') expect(model.height).toBe(320)
-    else expect(model.tickerHeight).toBe(HOUSE.band.tickerHeight + HOUSE.band.tickerRule)
+    expect([model.left, model.top, model.width, model.height]).toEqual([0, 0, width, height])
+    const box = model.contentBox
+    if (aspect === '9:16') expect([box.left, box.top, box.left + box.width, box.top + box.height]).toEqual([120, 330, 820, 1180])
+    else expect([box.left, box.top, box.left + box.width, box.top + box.height]).toEqual([160, 120, 1760, 960])
+    expect(model.statementPx).toBeGreaterThanOrEqual(aspect === '9:16' ? 170 : 180)
+    expect(model.logoWidth).toBe(aspect === '9:16' ? 420 : 520)
   })
 
   it('renders the call data, stacked logo, day, promise, pill and URL', () => {
@@ -109,22 +116,22 @@ describe.each(['9:16', '16:9'] as const)('%s chrome', (aspect) => {
     expect(call).toContain(due.due)
     expect(call).toContain(due.sure)
     const band = renderToStaticMarkup(React.createElement(EndingBand, { props, frame: 200 }))
-    for (const text of [props.brand.stacked.src, props.series.day, props.series.promise, props.series.label, props.ending!.url, 'MYMU Plex Mono']) expect(band).toContain(text)
+    for (const text of [props.brand.stacked.src, 'Built to', 'help you', 'decide.', 'Subscribe free', props.ending!.url, 'MYMU Plex Mono', 'MYMU Anton',
+      ...ENDING_DAYS.map((d) => d.day)]) expect(band).toContain(text)
+    expect(band).not.toContain(props.series.promise)
     expect(renderToStaticMarkup(React.createElement(EndingBand, { props, frame: 179 }))).toBe('')
   })
 })
 
-describe('ending band without the ticker', () => {
-  it('draws ink, logo, day, pill and URL with no scrolling strip, and a shorter band', () => {
-    const base = fixture('9:16')
-    const quiet = EngineRenderPropsSchema.parse({ ...base, ending: { ...base.ending, ticker: false } })
-    expect(base.ending!.ticker).toBe(true)
-    expect(endingBandModel(quiet, 200)!.tickerHeight).toBe(0)
-    expect(endingBandModel(quiet, 200)!.height).toBe(endingBandModel(base, 200)!.height - (HOUSE.band.tickerHeight + HOUSE.band.tickerRule))
-    const withTicker = renderToStaticMarkup(React.createElement(EndingBand, { props: base, frame: 200 }))
-    const without = renderToStaticMarkup(React.createElement(EndingBand, { props: quiet, frame: 200 }))
-    expect(withTicker.toUpperCase()).toContain(base.series.promise.toUpperCase())
-    expect(without.toUpperCase()).not.toContain(base.series.promise.toUpperCase())
-    expect(without).toContain('makeyourmindup.ai')
+describe('the close uses what compile passes', () => {
+  it('draws the days and copy compile gives it, and the old ticker flag changes nothing', () => {
+    const base = fixture('16:9')
+    const given = EngineRenderPropsSchema.parse({ ...base, ending: { ...base.ending, ticker: false, cta: 'Read the full piece',
+      days: [{ day: 'Mondays', colour: '#FFD84D' }] } })
+    const markup = renderToStaticMarkup(React.createElement(EndingBand, { props: given, frame: 300 }))
+    expect(markup).toContain('Read the full piece')
+    expect(markup).toContain('Mondays')
+    expect(markup).not.toContain('Fridays')
+    expect(markup).not.toContain(base.series.promise)
   })
 })

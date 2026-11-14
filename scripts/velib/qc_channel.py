@@ -13,10 +13,10 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 import channel_safe  # noqa: E402
 
 WHOLE_STAGE = {'STAGE', 'SPLIT'}
-# Measured and listed, never blocking, until card ve-motion-4-channel-safe-tall moves the tall layouts out of the
-# zones: today the house caption region and the word caption sit in Instagram's handle zone, so blocking would hold
-# every tall cut. Then this becomes a measured row that counts toward measured_pass.
-ADVISORY = True
+# Counted since 11 Nov 2026: the tall layouts, the house caption, the word caption and the held title all sit inside
+# every channel's safe area (card ve-motion-4-channel-safe-tall; Krish: "Ensure that we stay within the boundaries of
+# all the social platforms so that elements and captions don't end up underneath the social app UI features").
+ADVISORY = False
 
 
 def drawn_boxes(pages, beats, aspect, region, style, layouts=None) -> list:

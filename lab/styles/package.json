@@ -1,0 +1,9 @@
+{
+  "name": "style-lab",
+  "private": true,
+  "description": "The style lab: each library style drawn frame by frame in code, outside the frozen ve renderer.",
+  "type": "module",
+  "dependencies": {
+    "three": "0.170.0"
+  }
+}

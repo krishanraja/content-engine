@@ -10,7 +10,7 @@
 // The repository is public, so the runs' status is read from GitHub's public API (readRuns), with the same token when
 // one is set (a higher rate limit). The board shows each job's latest run: queued, running, done or failed.
 
-export type JobName = 'make-piece' | 'offday-revise' | 'saturday-goodnews' | 'sunday-ideas' | 'produce-day' | 'repair-round'
+export type JobName = 'make-piece' | 'offday-revise' | 'saturday-goodnews' | 'sunday-ideas' | 'produce-day' | 'repair-round' | 'signoff-apply'
 
 interface Job {
   workflow: string
@@ -34,8 +34,12 @@ export const JOBS: Record<JobName, Job> = {
     payload: i => (isMonday(i.week) && (i.option === undefined || OPTION.test(String(i.option)))
       ? { week: i.week, ...(i.option ? { option: i.option } : {}) } : null),
   },
-  // A press means now: the run finds the stories even before Thursday (saturday_goodnews.py check --force).
-  'saturday-goodnews': { workflow: 'saturday-goodnews.yml', payload: i => (isMonday(i.week) ? { week: i.week, force: true } : null) },
+  // A press means now: the run finds the week's stories again, by hand (saturday_goodnews.py check --force); the Sunday
+  // ideas run finds them each week (Ruling, Krish, 2026-11-11).
+  // `fill` (Ruling, Krish, 2026-11-13: the Saturday carousel is five good-news stories on one topic): the good-news post
+  // he approved holds fewer than five, so the run finds the rest on its topic and writes them onto that option.
+  'saturday-goodnews': { workflow: 'saturday-goodnews.yml', payload: i => (isMonday(i.week) && (i.fill === undefined || OPTION.test(String(i.fill)))
+    ? { week: i.week, force: true, ...(i.fill ? { fill: i.fill } : {}) } : null) },
   'sunday-ideas': { workflow: 'sunday-ideas.yml', payload: i => (isMonday(i.week) ? { week: i.week } : null) },
   'produce-day': {
     workflow: 'produce-day.yml',
@@ -48,6 +52,9 @@ export const JOBS: Record<JobName, Job> = {
     payload: i => (isMonday(i.week) && Array.isArray(i.cuts) && i.cuts.length > 0 && i.cuts.length <= 6 && i.cuts.every(c => CUT.test(String(c)))
       ? { week: i.week, cuts: i.cuts.map(String).join(',') } : null),
   },
+  // His press on a sign-off card (_signOffs.ts) starts the job that writes the configs from his presses, read back from
+  // the board, never from this payload (Ruling, Krish, 2026-11-12: only his presses write the configs). No Claude runs.
+  'signoff-apply': { workflow: 'signoff-apply.yml', payload: () => ({}) },
 }
 
 export const isJob = (v: unknown): v is JobName => typeof v === 'string' && Object.hasOwn(JOBS, v)

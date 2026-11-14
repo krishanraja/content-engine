@@ -104,23 +104,41 @@ function formatOf(row: Row): string {
   return String(f.format ?? f.media ?? '').toLowerCase()
 }
 
-/** The cards to offer for a role, best first: a card that teaches the role (his word before the engine's guess), then
- *  his kept or liked signal, then a card in the asked format, then one never used, then the newest. Cards that cannot
- *  hold a cut are left out. Deterministic: the same rows give the same order. */
-export function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: { role: Role; format?: string; limit: number }) {
+/** One of his open ticks asking for a card's style to be used within a week (control-center inspiration_actions, kind
+ *  copy_style; Ruling, Krish, 2026-11-12). */
+export interface StyleTick { action_id: string; due_at: string; words: string | null }
+
+/** The roles a ticked card is offered for: the ones it teaches, else the three every cut names (look, motion, captions;
+ *  failure F26). */
+export function tickRoles(row: Row): Role[] {
+  const t = teaches(row).filter((x): x is Role => (ROLES as readonly string[]).includes(x))
+  return t.length ? t : ['look', 'motion', 'captions']
+}
+
+/** The cards to offer for a role, best first: a card he ticked as a style to use within a week (the soonest due first;
+ *  an instruction, not a suggestion), then a card that teaches the role (his word before the engine's guess), then his
+ *  kept or liked signal, then a card in the asked format, then one never used, then the newest. Cards that cannot hold
+ *  a cut are left out. Deterministic: the same rows give the same order. */
+export function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: { role: Role; format?: string; limit: number },
+  ticks: ReadonlyMap<string, StyleTick> = new Map()) {
   const format = (opts.format || '').toLowerCase()
   const scored = rows.filter(r => !refusal(r)).map(r => {
     const t = teaches(r)
     const teach = t.includes(opts.role) ? (r.teaches_source === 'krish' ? 2 : 1) : 0
     const used = (uses.get(String(r.id).toLowerCase()) || []).length
-    return { r, teach, kept: kept(r), fits: format && formatOf(r) === format ? 1 : 0, used, at: String(r.drive_created_at || '') }
+    const tick = ticks.get(String(r.id).toLowerCase())
+    const told = tick && tickRoles(r).includes(opts.role) ? tick : null
+    return { r, told, teach, kept: kept(r), fits: format && formatOf(r) === format ? 1 : 0, used, at: String(r.drive_created_at || '') }
   })
-  scored.sort((a, b) => b.teach - a.teach || b.kept - a.kept || b.fits - a.fits || (a.used === 0 ? 0 : 1) - (b.used === 0 ? 0 : 1)
+  scored.sort((a, b) => Number(!!b.told) - Number(!!a.told) || (a.told && b.told ? a.told.due_at.localeCompare(b.told.due_at) : 0)
+    || b.teach - a.teach || b.kept - a.kept || b.fits - a.fits || (a.used === 0 ? 0 : 1) - (b.used === 0 ? 0 : 1)
     || b.at.localeCompare(a.at) || String(a.r.id).localeCompare(String(b.r.id)))
   return scored.slice(0, opts.limit).map(s => ({
     ...cardView(s.r, uses.get(String(s.r.id).toLowerCase()) || []),
     offered_for: opts.role,
+    ...(s.told ? { instruction: { action_id: s.told.action_id, due_at: s.told.due_at, words: s.told.words } } : {}),
     why: [
+      ...(s.told ? [`Krish ticked it: use this style in a made asset by ${s.told.due_at.slice(0, 10)}, an instruction, not a suggestion`] : []),
       s.teach === 2 ? `Krish says it teaches ${opts.role}` : s.teach === 1 ? `the engine guesses it teaches ${opts.role}` : `nothing says it teaches ${opts.role} yet`,
       s.kept === 2 ? 'he sent it to study its style' : s.kept === 1 ? 'he said why he likes it' : 'he has not said he likes it',
       s.used ? `used ${s.used} time(s)` : 'never used',

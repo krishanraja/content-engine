@@ -7,19 +7,33 @@ description: Plan the publishing week and run the Sunday room. Research at least
 
 ## Publish-board routing
 
-Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
-current web addresses, all six collection reads, build/download/publication,
-making-record attribution and rollback. Check `config/boards.json.web_cutover`:
-while pending, source migration is unfinished; once active, use only the web
-board for new interactions. Claude artifacts are retired for good (Krish,
-2026-10-19: "we are now retiring the Claude artefact permanently and we are
-working in content.krishraja.com for all published board updates"): no step
-makes or publishes one. The week's board, a day's tab in draft, the workroom and
-the publish page all go to content.krishraja.com (`week_board.py --target web`,
-then `board_web.py publish-web`), and `scripts/hooks/artifact_gate.py` refuses
-every Artifact publish and every ArtifactData write. Any Artifact, ArtifactData,
-ArtifactComments or dual-account step below is history: read an old artifact
-only to recover what it holds.
+Ruling (Krish, 2026-11-11): one live board, in Control Centre. Ruling (Krish, 2026-11-13): the old publish boards are retired for good. The week's
+publish board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its
+link), and it draws the week from the engine's `GET /api/board/<Monday>/view` (`docs/PUBLISH_BOARDS.md`, "One live
+board"). Update it by writing what the view reads, never a page: the piece's making record (`making.py`), his presses
+and his yes (`board_web.py read`, `yes.py`), and the week's plan files (`docs/plans/<Monday>-week/ideas.json`, the
+narrative locks, the research) on main or on the week's branch `offday-revise/<Monday>`; when only a file changed,
+`python3 scripts/post-pack/board_web.py touch <Monday>` makes the live board read the week again at once. Never build
+or publish a board page: the old content.krishraja.com pages, their builder and publisher are gone, and every old
+address redirects to the live board. A question for Krish is a press the view carries or an item on his one
+list; his approval of scripts is his own words in the session, recorded with `making.py <uuid> read-back CUT
+--krish-words` before `teleprompter_send.py`. Claude artifacts stay retired (Krish, 2026-10-19), and
+`scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Do all board work
+through the records above.
+
+## Report to the board as you work
+
+A session started from this skill, not from a prompt copied off the board, reports the same way a board prompt says
+("Keep the board current as you work", `writeBack` in `apps/control-plane/api/board/_writeBack.ts`): first
+`get_piece_board` on the Control Center connector, or `python3 scripts/post-pack/board_session.py <piece_id> show`;
+then `report_board_session` (start, progress at each milestone, done, or blocked with what it needs), or
+`board_session.py <piece_id> start|progress|done|blocked "one line" --session <id> --step <step>`; and everything it
+makes or draws on goes on the piece with `add_piece_material`, or `board_session.py <piece_id> add <file or text>`. A
+day with no piece yet is `day:<Monday>/<day>`. Add, never replace.
+
+**Research (Ruling, Krish, 2026-11-11).** Research is never left in scratch or a chat: file each research document on
+the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his
+Research library in Drive.
 
 ## The Sunday loop (rulings, Krish, 2026-10-28)
 
@@ -52,16 +66,20 @@ through the engine API:
 
 - **The Sunday ideas run**, `.github/workflows/sunday-ideas.yml`: GitHub's
   cron fires it early on Saturday (UTC), twice, because GitHub fires late; a
-  guard (`scripts/sunday_ideas.py built`) makes it do nothing once the week's
-  Ideas tab is live. It runs steps 1 to 7 only (of step 0, only the
-  Inspiration cards routed to a piece), and keeps `ideas.json` and
-  `combine.json` on the branch `sunday-ideas/<Monday>-<run>`.
-- **The Thursday good-news run**, `.github/workflows/saturday-goodnews.yml`:
-  the one other scheduled Claude run (Ruling, Krish, 2026-11-07). It fires
-  twice on Thursday, finds that week's Saturday good news ("The Saturday good
-  news" in `references/offdays.md`), publishes it on the live board, and keeps
-  the week folder on `saturday-goodnews/<Monday>-<run>`; the next session
-  merges that branch.
+  guard (`scripts/sunday_ideas.py built`) makes it do nothing once the live
+  board's view carries the whole ideas board: each publishing day's options and
+  Saturday's good-news stories. It runs steps 1 to 7 only (of step
+  0, only the Inspiration cards routed to a piece), and keeps `ideas.json` and
+  `combine.json` on the branch `sunday-ideas/<Monday>-<run>` and on the week's
+  branch `offday-revise/<Monday>`, which the live board reads before main
+  (`scripts/week_branch_keep.sh`, with a pull request that merges itself).
+- **Saturday's good news comes with it** (Ruling, Krish, 2026-11-11: the ideas
+  board fills once a week in full, Saturday's good news included; the Thursday
+  good-news schedule is retired). The Sunday ideas run finds the week's five
+  real, sourced stories in step 3c ("The Saturday good news" in
+  `references/offdays.md`). `.github/workflows/saturday-goodnews.yml` stays, by
+  hand only (the board's "Find the stories now" press, or Run workflow), to find
+  them again for a week; it has no schedule.
 - **The Sunday room** is a session Krish opens himself. It merges that branch
   into its own, writes the `WORKBENCH.md` lines the run could not keep (step
   7 and "Without the connectors"), does step 0's close-out, then steps 8 to
@@ -128,6 +146,13 @@ sentence>", "examples": ["<2 to 3 pub-test examples>"], "chain": ["<5 to 8
 cause-and-effect links>"], "take": "<our take, the ending>"}`. Each carousel
 option carries `cards`: `[{"words": "<what the card says>", "picture":
 "<what it shows>"}]` (the board renders both).
+
+## The ideas gate (Ruling, Krish, 2026-11-11)
+
+Every idea ends in one of five outcomes, each his press: Approve for <day>, File for later, Reject, Save as a trend,
+Improve for a future piece. Only his Approve puts an idea on a publish board: you propose and never place. Read
+`references/ideas-gate.md` and `.agents/skills/plan-week/references/refused.md` (his refusals) before step 1; a card
+he ticks: `references/inspiration-piece.md`.
 
 ## Steps
 
@@ -312,10 +337,10 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    from or that it recommends for specific content ... pushing and pushing
    and pushing, becoming more and more creative and experimental"). Pick
    the recommendation for the content (the format's `fits`), and make the
-   experiment a format that has not been made yet. The board refuses a day
-   with one script format, a day with no untried experiment, a week where
-   one production format is over half the cards, and a format he marked
-   not for us (`week_board.style_problems`).
+   experiment a format that has not been made yet. `board_feed.py cover`
+   refuses a day with one script format, a day with no untried experiment, a
+   week where one production format is over half the cards, and a format he
+   marked not for us (`week_plan.style_problems`).
    **The quality bar, before an idea reaches him** (Krish, 2026-10-24:
    "most importantly focus on improving your own work quality"). Each day's
    ideas are four different stories, never four angles on one headline.
@@ -381,12 +406,13 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    gates: someone else's image or clip is never reposted; every news claim
    names its primary source, is checked against it the same day and passes
    the fact gate; each option's copy passes the copy lint and the kill list
-   before it reaches the tab; they go into ideas.json `offdays` and reach
-   the tab only through `week_board.py --ideas`, never by patching the page,
-   and until the board has its Off days part the room says so in step 8.
-   Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week,
-   its stories due on the Thursday of its week and none yet (the card says they come Thursday); the Thursday run
-   (`.github/workflows/saturday-goodnews.yml`) finds its five fresh stories. Never research them on Sunday.
+   before it reaches the tab; they go into ideas.json `offdays`, which the
+   live board reads, never a page.
+   Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week
+   and its five real stories, found now, in this run (Ruling, Krish, 2026-11-11: the ideas board fills once a week in
+   full, Saturday's good news included), each checked against its primary source the same day, with `stories_due`
+   today. The trade-off is said on the card and in the reply: a story found now is about two weeks old by the
+   Saturday it posts on, and the fact gate checks each one against its source again before Growth makes the post.
    Growth makes what he approved. **His own
    ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
    idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day
@@ -414,8 +440,9 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    (`control-center api/content/slate.ts`), and the week page reads the options
    live, so nothing else is needed. Check that the board item
    `week-<Monday>` exists; if the cron has not run yet, it will.
-6. Do not pick, schedule, draft or spend. Picking is Krish's press on the
-   board's Ideas tab; a pick starts nothing by itself. Each piece's make
+6. Do not pick, schedule, draft or spend. Approving is Krish's press on the
+   live board, and his Approve puts the idea on its day itself; nothing else
+   can (the ideas gate, above). It starts no make by itself. Each piece's make
    starts once he signs its narrative lock (steps 10 and 11).
    **Sunday is his recording day** (Krish, 2026-10-24: "Yes, Sunday is my
    recording day"). The room locks the three stories with him; each make
@@ -437,58 +464,21 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    `pieces.<piece id>` with his words and the date; the board then shows the
    feature as a third cut on that day. `config/deep-cuts.json` is retired
    and gets no new week.
-7. **Make the week's publish board**, last, once the options are written.
-   Krish, 2026-10-12: "just give me one ... Publish Manager for the ...
-   whole week with 3 tabs on it for Mon / Weds / Fri, which we need to get
-   to 100%. Give me a tick box next to each one so I can tick as I go and
-   you can durably record that completion where it needs to be recorded.
-   That Publish Manager is what you create every Sunday and let me iterate
-   inside until we're done, and then I check off the list what I have done
-   as I do it."
-   - **Feed the fixed layout, never shape it** (from the week of 26
-     October: Ideas, Queue, then each day's Brief, Drafts, Record and
-     Publish; `docs/PUBLISH_BOARDS.md`, "The fixed layout"). Give
-     `--ideas`, `--queue` and `--combine` every Sunday; each pick's record-ready brief
-     goes on its day with `--brief DAY=brief.json` once it is drafted, due
-     the night before its day. Never patch the built page.
-   - **Build it** with all three tabs, from the week's picks as they stand:
-     `python3 scripts/post-pack/week_board.py --week <Monday> --live --ideas
-     docs/plans/<Monday>-week/ideas.json --queue .cache/week-board/<Monday>/queue.json
-     --combine docs/plans/<Monday>-week/combine.json --out
-     .cache/week-board/<Monday>/week-board.html`. Its title names the week,
-     "This Week's Publish Board (wC 19 Oct)". A day whose piece already
-     has a publish page (a piece moved from another week) is a made tab:
-     carry it as `docs/PUBLISH_BOARDS.md` says ("Update a board": the
-     `carry` POST, then `board_web.py download <its Monday> --output <file>`
-     and `--carry DAY=<file>:FROMDAY`). A picked day not made
-     yet gets its "not made yet" tab with a working checklist; a day not
-     picked yet says so. It writes `week-board.json` beside the page: the
-     week, each day's state and piece, every tick id, and the publish call.
-     Exit 2 is a refusal it names: fix it and build again.
-   - **Active web route:** build with `--target web`, publish the verified
-     manifest through `board_web.py publish-web`, register the dated URL in
-     `config/boards.json.web`, and read it back as `docs/PUBLISH_BOARDS.md`
-     requires. Continue at "Record its link" below. No new Claude board or
-     cross-account copy is created after active cutover.
-   - **Legacy artifact mode only (retired):** publish as a new private artifact, a new one every Sunday, never
-     last week's link: `Artifact({action: "publish", file_path: "<absolute
-     path>/week-board.html", title: <the manifest's publish.title>, icon:
-     "calendar", capabilities: <the manifest's publish.capabilities>, description:
-     "<the manifest's publish.description>", pin: true})`, from a session
-     signed in as Krish's own account, so it lands pinned in his sidebar
-     (Krish, 2026-10-14: "lets pin this weeks artifact (I cant seem to do
-     that myself)"; a board made under another organisation cannot be
-     pinned, and its ticks cannot be read from Claude Code). The publish
-     hook (`scripts/hooks/artifact_gate.py`) refuses a board the engine did
-     not build. Add its link under the week in `config/boards.json` (Krish
-     works from two Claude accounts; every board publish goes to every link
-     listed there), and ask Krish to add his other account as an editor so
-     both accounts can open it. Each link keeps its own store (ticks, saved
-     edits), readable only from the account that owns it; comments are
-     readable from both, which is why a Save is also posted as a comment
-     (`make-piece`, "Krish's edits on the board"). Then one `ArtifactData`
-     `list` of `ticks` and one of `links` on its link: both are empty on a
-     new board, and the page's own store is then known to answer.
+7. **Put the week on the live board**, last, once the options are written
+   (Ruling, Krish, 2026-11-11: one live board, in Control Centre). The live board draws the week from
+   `GET /api/board/<Monday>/view`, which reads `ideas.json` (each publishing
+   day's options and the off-day options) from the week's branch
+   `offday-revise/<Monday>` before main, his presses from the board's store
+   and the pieces from their records; every option on it carries his presses
+   (Pick and the four presses on an idea; Approve, Improve, Reject and Next
+   week on an off-day option). So nothing is built: in the Sunday ideas run
+   the workflow keeps the week's folder on that branch and bumps the week's
+   change signal; in a session, commit the folder to that branch or to main
+   (a pull request), then `python3 scripts/post-pack/board_web.py touch
+   <Monday>`. Read the view back (`python3 scripts/engine.py GET
+   /api/board/<Monday>/view`): each publishing day lists its options. Never
+   build or publish a board page (the old pages are retired for good and
+   redirect to the live board).
    - **Record its link where every later session finds it.** On the board,
      an item of its own for this week, `week-publish-board-<Monday>`, so
      last week's item and link stay as they are: `POST /api/workbench` with
@@ -498,8 +488,8 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
      "detail": "One page for Monday, Wednesday and Friday. Tick each step as
      you do it; every tick is saved at once, and the next session copies it
      onto the piece.", "only_you": "post", "closes_on": "week_published",
-     "link": "<its link>", "link_label": "Open this week's publish
-     board"}]}` (the id and the dates are the week's). Only he posts, and it
+     "link": "<python3 scripts/post-pack/live_board.py <Monday>>",
+     "link_label": "Open this week's publish board"}]}` (the id and the dates are the week's). Only he posts, and it
      says how it ends: Control Center's done-check sweep closes it once
      every picked day is at 100% on the record, so no session moves it to
      done. While last week's board is still open, Control Center holds the
@@ -510,40 +500,38 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
      publish board" (replacing the one there), where it stays until that
      week's item is done.
    - **When the picks come in.** This run is on Saturday, before Krish
-     picks, so most tabs start as not picked. The room rebuilds the board
-     with the picks after the triage readback (step 8) and republishes it to
-     this same link, with `--previous` so no day it holds is lost, and no
-     tick is lost; from then on each make session keeps its own day's tab
-     current (`make-piece`, "The week's publish board"), and so does any
-     session that finds a day picked or made that the board does not show
-     yet. When this skill runs again in the same week (Krish asks to
-     re-plan), it republishes to this week's link rather than making
-     another.
+     picks, so most days start as not picked. He picks on the live board (a
+     day's options, on its More tab); his pick is `picks/<day>`, read back in
+     step 8, and the day moves on by itself because the view is built on
+     every read. Nothing is rebuilt or republished, and each make session
+     keeps its day current by writing the piece's record. When this skill
+     runs again in the same week (Krish asks to re-plan), it writes the
+     week's `ideas.json` again and the same link shows it.
 
 The Sunday room now waits for him in this same session: he comes back
 after his presses, by 10:00.
 
 8. **The triage readback.** His five presses on the Ideas tab are his
-   decisions, and the board writes each into the store that holds it: Pick
-   for day (`picks/<day>`, with his optional `note`; the pick reaches its
-   piece by itself), Wider piece (`queue/<idea_id>` with `use:
-   wider_piece_context`), Future trend (`use: track_over_time`), Next week
-   (`use: next_week` with `target_week`) and Reject (`use: not_for_us`, with
-   his `reason`), and on each off-day option his verdict on the idea, the
+   decisions, the five outcomes of the ideas gate, and the board writes each
+   into the store that holds it: Approve for the day (`picks/<day>`, with his
+   optional `note`; it puts its idea on its day itself), Save as a trend
+   (`queue/<idea_id>` with `use: wider_piece_context` and the trend he names;
+   an older `use: track_over_time` reads as a trend), File for later
+   (`use: next_week` with `target_week`), Reject (`use: not_for_us`, with
+   his `reason`) and Improve for a future piece (`use: improve`, with his
+   note), and on each off-day option his verdict on the idea, the
    direction and any returned mock (`queue/off-<day>-<option>`, each side
-   `{verdict, words}`: approve, improve, reject or next week; a piece he
-   records keeps `approved`). Read them: `python3
+   `{verdict, words}`: approve, improve, reject, trend or next week; a piece he
+   records keeps `approved`). The database keeps each answer in
+   `idea_outcomes`, append only. Read them: `python3
    scripts/post-pack/board_web.py read <Monday> picks`, then the same with
    `queue` and `comments`. Only documents whose `updated_by` is Krish are
    his; nothing else is read back as his. Then say it back to him in one
    message, by day: what he picked, with his note in his exact words; each
    idea he kept for a wider piece, a future trend or next week, and each he
    rejected with his reason in his exact words; and the off-day options he
-   approved, improved (his words) or rejected (his reason). Check that each pick reached its piece (`scheduled` in
-   `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>"
-   --full`), and name any that did not; for one that did not, write the
-   picked idea onto its piece as the day's rank 1 option through
-   `/api/week/options` (creating its row first if it has none), as before.
+   approved, improved (his words) or rejected (his reason). Check each approved idea reached its day
+   (`python3 scripts/post-pack/board_gate.py <Monday>`) and name any that did not, with why; never place one yourself.
    Never relay a pick he makes in chat
    as a board tap: what he types in the room is relayed as his words with
    where he typed them ("Sunday room chat" and the time), only through a
@@ -613,7 +601,11 @@ after his presses, by 10:00.
    lock to him in the room, the words themselves and never a pointer to
    them, and ask him to sign it. Once he does, the last line is his exact
    typed words, the date and that hash: `Signed by Krish: "<his words>",
-   <YYYY-MM-DD>, lock sha256 <hash>`. Run `narrative` again until it says
+   <YYYY-MM-DD>, lock sha256 <hash>`. His typed words are his approval of the
+   lock (Ruling, Krish, 2026-11-12): carry them to the board verbatim in the
+   same step with `board_session.py approve lock`, and the board shows "Approved
+   in your words" (`.agents/skills/plan-week/references/typed-approval.md`). Never for an idea: his
+   Approve on an idea stays his press. Run `narrative` again until it says
    signed, commit the lock and `interview.md`, push the room's session
    branch and open its pull request with auto-merge on (`AGENTS.md`,
    "Commit and closeout"; nothing lives only in this container). The signed
@@ -648,7 +640,11 @@ after his presses, by 10:00.
    checked and read back). Read each press and its answer on the board: `python3
    scripts/post-pack/board_web.py read <Monday> approvals` (the collection
    `config/teleprompter.json` `approval.collection` names; only documents
-   whose `updated_by` is Krish are his press).
+   whose `updated_by` is Krish are his press, and `<day>-scripts-words` is his
+   typed approval). When he approves the scripts in his own typed words in the
+   room instead, carry them with `board_session.py approve scripts`
+   (`references/typed-approval.md`): the server sends them to Teleprompter as
+   it does for his press, held the same way until their checks pass.
    - `sent`: nothing to do; `making.py <uuid> show` says, per cut,
      "Teleprompter, 5-minute cut: holds the current words".
    - `no_key` (the Teleprompter key is not set yet): the room sends exactly
@@ -668,34 +664,13 @@ after his presses, by 10:00.
 
 ## Without the connectors
 
-The Sunday ideas run in GitHub Actions has no Drive and no Firecrawl
-connector. Then research with the built-in web search and web fetch instead,
-and skip the Cold Ideas & Inspo folder rather than guessing what is in it.
-Say which sources were unavailable on the week's board item, in one plain line
-at the end of its detail, for example "Researched with web search only: Drive
-and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not
-read." Write it with `POST /api/workbench {"action": "upsert_items",
-"client": "claude_code", "items": [{"id": "week-<Monday>", "detail": "..."}]}`,
-keeping the detail already there (read it first with `GET /api/workbench`); if
-the item does not exist yet, give it `"lane": "on_you"`, a `"title"`,
-`"only_you": "judgment"`, `"link": "https://controlcenter.krishraja.com/#/week"`,
-`"link_label": "Open the week"` and `"closes_on": "week_planned"` too, or
-the engine refuses it, naming the field it lacks (`WORKBENCH.md`, the
-board).
-Put the same line in `WORKBENCH.md`, because the slate cron rewrites the week
-item's text each morning.
-
-The server sends approved scripts to Teleprompter itself; only a `no_key`
-answer needs the Teleprompter connector (step 12). Without it, name each
-waiting cut in one line on its day's tab. Descript was retired on 12
-October (Krish: "Descript is permanently gone, teleprompter.com is
-permanently in, connected via MCP here"): nothing is sent there. The active web board needs the existing engine
-operator credential, not an Artifact connector. If authenticated board reads
-fail, record that specific blocker; never treat inaccessible feedback as empty.
+Read `.agents/skills/plan-week/references/without-connectors.md` when the run has no Drive,
+Firecrawl or Teleprompter connector, or the board will not read: it says what to research with, what to
+say on the week's board item, and what never to treat as empty.
 
 ## Before you stop
 
 Copy the week's ticks once more (a board made this run has none yet).
 Commit what the room made (`ideas.json`, `interview.md`, each lock) and push
 the room's branch. Update `WORKBENCH.md` and end every reply with the week's
-publish board, https://content.krishraja.com/board/<Monday>.
+publish board in Control Centre, `python3 scripts/post-pack/live_board.py <Monday>`.

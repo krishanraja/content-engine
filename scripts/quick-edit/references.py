@@ -44,6 +44,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 LEDGER = REPO / 'config' / 'style-references.json'
+# A mirror of Production Inspo for machines without H:, never a home: clips are filed only in
+# Production Inspo (docs/DRIVE.md, "The brand kit", Krish 2026-11-11).
 LIBRARY_REFERENCES = '1 Brand kit (permanent)/Style references'
 FETCH_DEFAULT = REPO / '.cache' / 'references'
 VIDEO_EXTENSIONS = {'.mp4', '.mov', '.webm', '.m4v'}
@@ -278,15 +280,34 @@ def zoom_moves_pillow(path, duration, step=0.5, cuts=None):
     return moves
 
 
+def _pcm16k(path):
+    """Mono float32 samples at 16 kHz, decoded by ffmpeg, so PyAV never opens the container (an older PyAV rejects the
+    metadata_errors= keyword faster-whisper passes to av.open, which crashed `ve study` twice on 13 Nov 2026)."""
+    import numpy as np
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(path), '-map', '0:a:0', '-ac', '1', '-ar', '16000',
+                          '-f', 'f32le', '-'], capture_output=True, check=True).stdout
+    return np.frombuffer(raw, dtype=np.float32)
+
+
 def transcript(path):
-    """Words with timings, when faster-whisper runs here; else None."""
+    """Words with timings, when faster-whisper runs here; else None, with the reason on `transcript.skipped`."""
+    transcript.skipped = None
     try:
         from faster_whisper import WhisperModel
-    except Exception:  # noqa: BLE001 the study runs without words
+    except Exception as exc:  # noqa: BLE001 the study runs without words
+        transcript.skipped = f'faster-whisper is not installed ({type(exc).__name__})'
         return None
-    model = WhisperModel(os.environ.get('MINDMAKE_REFERENCE_MODEL', 'small'), device='cpu', compute_type='int8')
-    segments, _ = model.transcribe(str(path), word_timestamps=False, vad_filter=True)
-    return [{'start': round(s.start, 2), 'end': round(s.end, 2), 'text': s.text.strip()} for s in segments]
+    try:
+        audio = _pcm16k(path)
+        model = WhisperModel(os.environ.get('MINDMAKE_REFERENCE_MODEL', 'small'), device='cpu', compute_type='int8')
+        segments, _ = model.transcribe(audio, word_timestamps=False, vad_filter=True)
+        return [{'start': round(s.start, 2), 'end': round(s.end, 2), 'text': s.text.strip()} for s in segments]
+    except Exception as exc:  # noqa: BLE001 a failed transcript never costs the rest of the card
+        transcript.skipped = f'transcription failed ({type(exc).__name__}: {exc})'
+        return None
+
+
+transcript.skipped = None
 
 
 def speech_summary(segments, duration):

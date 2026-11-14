@@ -222,9 +222,7 @@ export function MindmakeShort(props: ShortProps) {
     <AbsoluteFill style={{ backgroundColor: props.brandTheme?.colors.ink || '#050505' }}>
       <OffthreadVideo src={staticFile(props.sourceFile)} style={videoStyle} />
       <AbsoluteFill style={{ background: props.brandTheme ? 'linear-gradient(180deg, rgba(10,16,13,.24) 0%, rgba(10,16,13,0) 24%, rgba(10,16,13,.18) 55%, rgba(10,16,13,.72) 100%)' : 'linear-gradient(180deg, rgba(0,0,0,.2) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.15) 55%, rgba(0,0,0,.62) 100%)' }} />
-      {props.seriesName && props.brandTheme && props.brandWordmarks ? (
-        <BrandLockup wordmarks={props.brandWordmarks} plateColor="rgba(10,16,13,.94)" lineColor={props.brandTheme.colors.line} durationMs={props.durationMs} />
-      ) : null}
+      {/* 9:16 only: no wordmark lockup on vertical video (Ruling, Krish, 2026-11-11). */}
       {props.evidenceOverlays.map((overlay) => {
         const from = Math.max(0, Math.floor(overlay.start_ms / 1000 * fps))
         const duration = Math.max(1, Math.ceil((overlay.end_ms - overlay.start_ms) / 1000 * fps))

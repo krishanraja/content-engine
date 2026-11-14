@@ -24,7 +24,7 @@ before he recorded (`docs/plans/2026-10-23-friday/creative-direction.md`). This 
 | His sign-off | Krish | He signs the storyboard in his own words. The words go into `signed` with the hash of each script (`creative_direction.py hash`). His signature accepts Claude's lead-picture pick unless he ticks the other (`production_choices.lead_picture.ticked`); no storyboard waits on a tick. Then `making.py <piece> choices creative-direction.json` records the choices under test on the piece; if he has a cut open another way, `--opening` records what it used, so the making record stays the one home for these choices. |
 | Production | Claude, with Codex for named plates | On ve, Claude runs `python scripts/ve.py` from the signed spec (`docs/ve/RUNBOOK.md`), and Codex only builds the plates and library devices its cards name; it never edits a cut. On the quick-edit fallback, `produce-video` renders exactly the signed direction. Neither invents a visual, a caption, a figure or a style. A gap goes back to Claude. |
 | Review | A reviewer who did not make the cut | Watches every cut at full size and listens across every join, against `acceptance`. Reports fact, transport and editorial status separately. |
-| The board | Claude | The day's Publish step through `week_board.py`'s own inputs. |
+| The board | Claude | The day's Publish step through the piece's record, which the live board reads (`docs/PUBLISH_BOARDS.md`). |
 
 ## The file
 
@@ -42,13 +42,15 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
   `creative_direction.py motion --points number,comparison --format long_video` gives a ranked shortlist: only styles
   made for that format, never one he marked not for us, his liked ones first. Each style enters `untested` and becomes
   a default only once he rates a trial on his own footage.
-- `brand`: the series, a `reference` (an approved earlier frame or board, a path or a link), the captions module and
-  the intro sting (`intro_sting`): the piece's own series id (`follow_the_money`, `under_the_hood` or `mind_the_gap`)
-  on a weekly series piece published on its series' day, whose 16:9 long cut opens on that series' house sting
-  (`config/intro-sting.json`; Krish, 2026-11-05: "I think it should go at the start of the longer wide videos
-  100%,"), or the no-sting sentence `none: this piece opens on its hook (an off day, or no wide long cut)` for any
-  other piece. The template fills it from the series and the publish day; the 9:16 short cut never carries a sting,
-  and `ve lint` refuses a sting where no cut opens on one.
+- `brand`: the series, a `reference` (an approved earlier frame or board, a path or a link), the captions module
+  (`captions`, house or word, or a caption style in `caption_theme`: one of the 15 in
+  `apps/renderer/src/engine/captions/names.ts`, with `art-directed` the style Krish picked on 11 Nov 2026) and
+  `intro_sting`, always the no-sting sentence `none: this piece opens on its hook, and nothing goes before it`
+  (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."). The template
+  fills it; `ve lint` and the contract refuse a series sting there and any `opening_exception` (the 9 Nov episode card
+  in place of the sting), and compile lays nothing in front of any hook. The house sting is retired
+  (`config/intro-sting.json`). A spec written before 12 Nov may carry the older sentence, `none: this piece opens on
+  its hook (an off day, or no wide long cut)`, read the same.
 - `cuts.<long|short|feature>`: the `take` (on_camera or voiceover) and its `beats`. Each beat has:
   - `words`: the exact words it sits under. All the beats together are the script, word for word, in order.
   - `point`: what the beat makes the viewer understand. A picture with no point is a gimmick (house rule
@@ -62,8 +64,7 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
 - `article.visuals`: each article figure's point, the reader's question it answers, and its source.
 - `production_choices`: the choices Krish put under test, to be judged on real engagement (`docs/production/THE_BAR.md`,
   "Under test"; the defaults and options live in `config/reference-cuts.json` `under_test`, and the template starts from
-  them). `opening` (`sting_wide_hook_tall`: the house sting then the hook on the wide cut, the hook on the tall;
-  `hook_is_intro`, the hook in both cuts, for an off-day piece); `lead_picture`, with a `series_picture` and a
+  them). `opening` (`hook_is_intro`, the hook on every cut, the only option since 12 Nov 2026); `lead_picture`, with a `series_picture` and a
   `story_object`, each `what` and a `still` path, Claude's `proposed` pick and his `ticked` one when he ticks the other;
   `big_moment_sound` (`none` until he approves a small set by ear, then `big_moment_only`). Never a refusal: `check`
   passes a direction whatever these hold, a missing tick included.
@@ -90,4 +91,4 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
 3. Never publish, sign in to a publishing platform, or ask Krish for a login code. The board is fed; Krish publishes.
 4. Never call a cut ready from receipts. Ready is the reviewer's pass against `acceptance`, with fact, transport and
    editorial status each reported.
-5. Never write a script that patches or feeds the board by hand (`npm run check:board-layout` refuses one).
+5. Never write a script that patches or feeds the board by hand: the board is fed only through the records `docs/PUBLISH_BOARDS.md` names.

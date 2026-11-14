@@ -1,61 +1,80 @@
 import React from 'react'
 import { HOUSE_FONTS } from '../../../house/geometry'
+import { HERO, MOTION, onTwos, progress } from '../../clock'
 import type { DeviceProps } from '../types'
 import { quotaState } from './state'
 
-/** Geometry is authored in slot pixels, independently for each aspect. */
+/** Wide proof stays above the face window; portrait gets its own vertical stage. */
 export function chartLayout(w: number, h: number, tall: boolean) {
-  return { x: w * .07, y: h * .16, width: w * .86, height: h * (tall ? .34 : .32),
-    salesY: h * (tall ? .64 : .68), salesH: h * (tall ? .22 : .18) }
+  return { x: w * .07, y: h * (tall ? .23 : .24), width: w * .86,
+    height: h * (tall ? .31 : .33), salesY: h * (tall ? .64 : .6), salesH: h * .22 }
 }
 export function Device({ object, events, box, tokens, aspect, frame }: DeviceProps) {
   const s = quotaState(object, events, frame)
   if (!s.visible) return null
   const tall = aspect === '9:16', w = box.width, h = box.height
-  const {x, y, width: cw, height: ch, salesY, salesH} = chartLayout(w, h, tall)
-  const base = y + ch, bw = cw / s.bins.length * .76
-  const coral = tokens.channel
-  const hatchId = `quota-hatch-${object.obj}`
-  const tx = x + cw * s.target
-  const peak = s.bars[Math.min(s.bins.length - 1, Math.floor((object.params.target as number) * s.bins.length))]!
-  const px = x + peak.x * cw
-  const py = base - (peak.solid + peak.junk / 2) * ch
-  return <svg data-device="quota_chart" width={w} height={h} style={{position:'absolute',left:box.left,top:box.top,overflow:'hidden',background:tokens.ink,opacity:s.opacity}}>
-    <defs><pattern id={hatchId} width={16} height={16} patternUnits="userSpaceOnUse"><rect width={16} height={16} fill={tokens.ink}/><path d="M -4 4 L 4 -4 M 0 16 L 16 0 M 12 20 L 20 12" stroke={coral} strokeWidth={5}/></pattern></defs>
-    <g fontFamily={HOUSE_FONTS.data} fontSize={tall ? 34 : 30} fill={tokens.cream}>
-      <text x={x} y={y - 90}>{s.labels.questions}</text>
-      <g data-chart-bounds={`${x},${y},${cw},${ch}`}>
-        <path d={`M ${x} ${y} V ${base} H ${x+cw}`} stroke={tokens.cream} strokeWidth={3} fill="none" pathLength={1} strokeDasharray={1} strokeDashoffset={1-s.enter}/>
-        <text x={x} y={base+44}>0</text>
-        {s.bars.map((b,i) => {
-          const bx=x+b.x*cw-bw/2, solidH=b.solid*ch, junkH=b.junk*ch
-          return <g key={i} data-bin={i}>
-            <rect x={bx} y={base-solidH} width={bw} height={solidH} fill={tokens.cream}/>
-            {junkH>0 && <rect data-junk={b.junk} x={bx} y={base-solidH-junkH} width={bw} height={junkH} fill={`url(#${hatchId})`}/>}
-          </g>
-        })}
+  const { x, y, width: cw, height: ch } = chartLayout(w, h, tall)
+  const base = y + ch
+  const countCue = s.fired.findLast(e => e.verb === 'count_to' && e.atFrame >= (s.entrance?.atFrame ?? 0))
+  const compare = countCue ? progress(frame - countCue.atFrame, MOTION.countFrames) : 0
+  const life = progress(frame - (s.entrance?.atFrame ?? object.fromFrame),
+    object.toFrame - (s.entrance?.atFrame ?? object.fromFrame), HERO)
+  const camera = 1 + .06 * life
+  const backgroundCamera = 1 + .03 * life
+  const id = `quota-${object.obj}`
+  const bw = cw / s.bins.length * .5
+  const targetY = base - ch * s.target
+  const junkVisible = s.mark > 0 && s.bars.some(b => b.junk > 0)
+  const headline = junkVisible && s.move === 0 ? `${Math.round(s.junkShare * 100)}% JUNK`
+    : `${Math.round(s.targetValue + (s.halfTargetValue - s.targetValue) * s.move)} A MONTH`
+  return <svg data-device="quota_chart" width={w} height={h} style={{position:'absolute',left:box.left,top:box.top,overflow:'hidden',opacity:s.opacity}}>
+    <defs>
+      <radialGradient id={`${id}-light`} cx="18%" cy="12%" r="95%"><stop stopColor={tokens.ink}/><stop offset="1" stopColor={tokens.inkDeep}/></radialGradient>
+      <filter id={`${id}-grain`}><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves={3} seed={Math.floor(onTwos(frame, s.entrance?.atFrame ?? 0) / 2) + 1}/><feColorMatrix type="saturate" values="0"/></filter>
+      <filter id={`${id}-shadow`} x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation={12}/></filter>
+      <clipPath id={`${id}-safe`}><path d={tall ? `M0 0H${w}V${h}H0Z` : `M0 0H${w}V676H1452V1016H${w}V${h}H0Z`}/></clipPath>
+    </defs>
+    <g clipPath={`url(#${id}-safe)`}>
+      <g transform={`translate(${w/2} ${h/2}) scale(${backgroundCamera}) translate(${-w/2} ${-h/2})`}>
+        <rect width={w} height={h} fill={`url(#${id}-light)`}/>
+        <rect width={w} height={h} filter={`url(#${id}-grain)`} opacity={.03}/>
       </g>
-      {s.draw>0 && <g opacity={s.draw}>
-        <path data-target={s.target} d={`M ${tx} ${base} V ${base-ch*s.draw}`} stroke={coral} strokeWidth={6} strokeDasharray="16 12"/>
-        <g transform={`translate(${tx-145},${y-65})`}><rect width={290} height={50} fill={coral}/><text x={14} y={36} fill={tokens.ink}>{s.labels.target}: {Math.round(s.targetValue+(s.halfTargetValue-s.targetValue)*s.move)}</text></g>
-      </g>}
-      {s.mark>0 && peak.junk>0 && <g opacity={s.mark}>
-        <text x={px-bw/2-85} y={py-55} textAnchor="end" fontFamily={HOUSE_FONTS.structure} fontSize={40} fontWeight={600}>{s.labels.junk}</text>
-        <path data-leader="short" d={`M ${px-bw/2-75} ${py-45} l 75 45`} fill="none" stroke={coral} strokeWidth={4}/>
-      </g>}
-      {s.sales[0]!>0 && <g>
-        <text x={x} y={salesY-35}>{s.labels.sales}</text>
-        <path d={`M ${x} ${salesY+salesH} h ${cw}`} stroke={tokens.cream} strokeWidth={3}/>
-        {s.sales.map((v,i)=>{
-          const bx=x+cw*(i ? .55 : .06), bh=v/(1+s.salesLift)*salesH
-          return <g key={i}>
-            <rect data-sales={i} x={bx} y={salesY+salesH-bh} width={cw*.35} height={bh} fill={i ? tokens.mint : tokens.cream}/>
-            <text x={bx} y={salesY+salesH+48}>{i ? 'Half target' : 'Old target'}</text>
-            {i===1 && s.lift>0 && <text x={bx+cw*.175} y={salesY+salesH-bh-22} textAnchor="middle" fontFamily={HOUSE_FONTS.display} fontSize={140} fill={tokens.mint}>+{Number((s.salesLift*s.lift*100).toFixed(2))}%</text>}
-          </g>
-        })}
-      </g>}
-      <text x={x} y={h-36}>{s.source}</text>
+      <g transform={`translate(${w/2} ${h*.35}) scale(${camera}) translate(${-w/2} ${-h*.35})`} fill={tokens.cream}>
+        <g data-chart-bounds={`${x},${y},${cw},${ch}`} transform={`translate(${-compare*cw*.03} ${compare*ch*.6}) scale(${1-compare*.12} ${1-compare*.88})`}>
+          <ellipse cx={w/2} cy={base+15} rx={cw*.5} ry={18} fill={tokens.inkDeep} opacity={.7} filter={`url(#${id}-shadow)`}/>
+          {s.bars.map((b,i) => {
+            // Enter builds the object; fill retains its existing state semantics.
+            const rise = progress(s.age - i*2, Math.min(7, MOTION.enterFrames))
+            const surge = s.draw * (1-s.mark) * (1-s.move)
+            const nearest = Math.abs(i / (s.bins.length-1) - .7) < .19
+            const value = b.solid || s.bins[i]! * rise
+            const solidH = (value + (nearest ? Math.max(0,s.target-value)*surge : 0))*ch
+            const junkH = b.junk*ch
+            const bx = x + b.x*cw - bw/2
+            const fall = s.move * (36 + i*3)
+            return <g key={i} data-bin={i}>
+              <rect x={bx} y={base-solidH} width={bw} height={solidH} rx={2}/>
+              {junkH>0 && <g data-junk={b.junk} fill={tokens.inkSoft} transform={`translate(0 ${fall})`} opacity={1-s.move}>
+                {[0,1,2].map(part => <path key={part} d={`M${bx+part*bw/3+2} ${base-solidH-junkH-6*s.mark} h${bw/3-3} v${junkH*.72} l${-bw/6} ${junkH*.28} h${-bw/6+3}Z`}/>)}
+              </g>}
+            </g>
+          })}
+          {s.draw>0 && <path data-target={s.target} d={`M${x} ${targetY}H${x+cw*s.draw}`} fill="none" stroke={tokens.channel} strokeWidth={6} opacity={1-compare}/>} 
+        </g>
+        {s.draw>0 && compare<1 && <text x={x} y={y-48} fontFamily={HOUSE_FONTS.display} fontSize={120} opacity={s.draw*(1-compare)}>{headline}</text>}
+        {compare>0 && <g opacity={compare}>
+          <text x={x + cw*.43} y={(tall ? h*.87 : h*.85) - s.sales[1]! / (1+s.salesLift) * h*(tall ? .12 : .13) - 40} fontFamily={HOUSE_FONTS.display} fontSize={220} fill={tokens.mint}>+{Number((s.salesLift*s.lift*100).toFixed(2))}%</text>
+          {[0,1].map(i => {
+            const bx = x + cw*(i ? .43 : 0), bottom = tall ? h*.87 : h*.85
+            const bh = s.sales[i]! / (1+s.salesLift) * h*(tall ? .12 : .13)
+            return <g key={i}>
+              <rect data-sales={i} x={bx} y={bottom-bh} width={cw*.32} height={bh} fill={i ? tokens.mint : tokens.cream}/>
+              <text x={bx} y={bottom+64} fontFamily={HOUSE_FONTS.dek} fontWeight={600} fontSize={56}>{i ? 'Half target' : 'Old target'}</text>
+            </g>
+          })}
+        </g>}
+      </g>
+      {s.showSource && <text x={x} y={tall ? h-64 : h-30} fill={tokens.cream} fontFamily={HOUSE_FONTS.data} fontSize={30}>{s.source}</text>}
     </g>
   </svg>
 }

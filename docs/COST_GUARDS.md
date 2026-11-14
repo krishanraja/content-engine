@@ -47,7 +47,7 @@ meter showed $0.40 of spend in 60 days and no retries, so it would only have add
 | G4 | Carry settled sentences past every paid step | `settledLeftovers()` in `api/_factGate.ts`; the warm cache in `fact-check.ts` | The second look reads only open sentences (a test proves verdicts identical). The first on-file check runs alone so the rest read its cached sources: on 18 October about 8 cache writes a run were $2.90 of the day's $3.95. | Built; the claim lister still reads the whole body (to keep its context) |
 | G5 | No full board in the chat | `scripts/hooks/cost_gate.py` | An `Artifact read` of any link in `config/boards.json`. | Built |
 | G6 | Agent and workflow gate | `scripts/hooks/cost_gate.py` | An Agent call that does not name its separate reader; a Workflow without `said:`. | Built |
-| G7 | Quiet scripts | `scripts/quiet_errors.py` in `engine.py`, `send.py`, `working.py`, `making.py`, `week_board.py` | A traceback in the chat: one line, the rest in `.cache/logs/`. `send.py` retries by itself. | Built |
+| G7 | Quiet scripts | `scripts/quiet_errors.py` in `engine.py`, `send.py`, `working.py`, `making.py` | A traceback in the chat: one line, the rest in `.cache/logs/`. `send.py` retries by itself. | Built |
 | G8 | Model per job | `produce-video` frontmatter `model: sonnet`; `.codex/config.toml` `[profiles.production]`; in Claude Code the session default `opus` (`.claude/settings.json`) and the `executor` subagent on Sonnet, `repo-scout` on Haiku, `reviewer` on Opus (`.claude/agents/`) | Writing, judgment and fact reading on the strongest model; mechanical production work (renders, packs, filing, board rebuilds) on Sonnet in Claude Code and at low reasoning effort in Codex; `produce-video` stays on Sonnet by Krish's ruling of 29 October (`docs/proposals/2026-10-29-g8-produce-video-model.md`). | Built |
 | G9 | Sign-off of named lines | the fact-check route (`signOff`, `stillBlocking`, `carrySignOffs` in `api/_factGate.ts`); Control Center's button still to come | Krish passes a line the checker cannot match (an analogy, "last month") in his own words, so no paid rerun chases it. `POST .../fact-check` with `{ action: 'sign_off', decided_by: 'Krish', lines: [{ sentence, said }] }` stores `meta.fact_check.signed_off`; it refuses a line that is not blocking, a line the sources contradict (only an `unverified` line may be signed off; Krish, 2026-10-18), a line without his words and a check of an older body, and calls no model. A rerun keeps a sign-off only while its exact sentence still blocks. Three sign-offs made before that ruling are on contradicted lines (piece `904658db`, 18 October); they are left as they are until he says. | Built (main, 996544a; contradicted lines refused from 18 October) |
 | G10 | Image gate | none | Dropped: an image costs about width × height / 750 tokens, capped by the API's resizing, so a few thousand at most. The 400k-character figures in the transcript were base64 in the log, not tokens. | Dropped (measured) |
@@ -58,14 +58,20 @@ meter showed $0.40 of spend in 60 days and no retries, so it would only have add
 
 ## Scheduled Claude runs and the $15 a week
 
-Two scheduled Claude runs exist, both Claude Code in GitHub Actions on Krish's subscription (`CLAUDE_CODE_OAUTH_TOKEN`),
-never an API key, so neither adds API spend: the Sunday ideas run (`sunday-ideas.yml`, Saturday) and, from 19 November,
-the Thursday good-news run (`saturday-goodnews.yml`; Ruling, Krish, 2026-11-07: "Happy to break the "no Claude
-schedules" rule for Saturday's good news"). The Thursday run is capped at 150 turns and 120 minutes, does one week's
-five stories, and its guard skips the retry firing once the stories are live, so it costs one subscription run a week
-and GitHub's free minutes on this public repository. It makes no paid API call (no fact-check POST, no Perplexity, no
-generation), so the chain stays inside his $15 a week (Krish, 2026-10-29: "happy with $15 a week"); a run that would
-need one stops and says so.
+One scheduled Claude run exists, Claude Code in GitHub Actions on Krish's subscription (`CLAUDE_CODE_OAUTH_TOKEN`),
+never an API key, so it adds no API spend: the Sunday ideas run (`sunday-ideas.yml`, Saturday), which since 11 November
+also finds Saturday's five good-news stories (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full,
+Saturday's good news included; the Thursday good-news schedule is retired). The good-news job (`saturday-goodnews.yml`)
+stays, by hand only: capped at 150 turns and 120 minutes, one week's five stories, and its guard does nothing once the
+stories are live. Neither makes a paid API call (no fact-check POST, no Perplexity, no generation), so the chain stays
+inside his $15 a week (Krish, 2026-10-29: "happy with $15 a week"); a run that would need one stops and says so.
+
+## The judges on Growth's carousels and Shorts
+
+Every carousel and Short Growth makes is judged by the draft judges' panel before it is made (Ruling, Krish,
+2026-11-12: "Judge them; count passes."; `apps/control-plane/api/board/_judge.ts`). Free checks run first and fail a post
+without a model call; a post judged before answers from `asset_judgements` and pays nothing; at most `DAILY_CAP` (40)
+panels a day are paid for, then the route answers 429 and Growth holds the slot. Each row records its `cost_usd`.
 
 ## The environment is the floor: a setting only Krish can change
 

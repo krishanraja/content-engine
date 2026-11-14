@@ -5,10 +5,11 @@ and basic narrative is Sunday's job." Then: "Create a prompt to upgrade the publ
 which pulls from all the inspo folders and all the other places that we agree to pull from (such as certain
 influencers I follow or just, in general, what's happening out there)."
 
-**Status (4 November 2026): done, kept as history.** Every board in the fixed layout (from the week of 26 October)
-has the Ideas tab (`week_board.py --ideas`). The Sunday ideas run (`.github/workflows/sunday-ideas.yml`, running the
-`plan-week` skill) fills it each week through the engine API, and boards live at content.krishraja.com, never in
-Claude artifacts (`docs/PUBLISH_BOARDS.md`). Do not paste this prompt into a new session.
+**Status (13 November 2026): done, kept for its list of sources.** The ideas board is the live board in Control
+Centre's Content tab (the old board pages that first drew it are retired for good, Ruling, Krish, 2026-11-13). The
+Sunday ideas run (`.github/workflows/sunday-ideas.yml`, running the `plan-week` skill) fills it each week through the
+engine API and the week's plan files (`docs/PUBLISH_BOARDS.md`); `plan-week` reads the sources below. Do not paste this
+prompt into a new session.
 
 Paste everything below the line into a fresh Claude Code session on `krishanraja/content-engine`.
 

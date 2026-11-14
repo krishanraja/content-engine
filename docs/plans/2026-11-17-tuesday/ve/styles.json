@@ -1,0 +1,147 @@
+{
+  "schema": "ve-styles/1",
+  "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+  "cut": "short",
+  "beat": "proof",
+  "rule": "most distinct devices (2)",
+  "window": {
+    "start": 10.5,
+    "end": 18.5
+  },
+  "take": "his last face-with-proof take (2026-11-05-thursday-no-spending), until this piece is recorded",
+  "options": [
+    {
+      "module": "data-story",
+      "name": "Data story",
+      "how": "Real numbers drawn mark by mark, with the source on screen and one annotation that says what changed.",
+      "why": "untested; matches comparison, number, sequence; suits the channel often; drawn by kinetic_stat, stat_strip, evidence_card",
+      "file": "styles/data-story.mp4",
+      "sha256": "624cd86758c862c974e2c80aa2f24b42ae1f16065f3d4d87aff21d2427b8490d",
+      "differs": {
+        "house": 2.044
+      }
+    },
+    {
+      "module": "swiss-kinetic-type",
+      "name": "Swiss grid and kinetic type",
+      "how": "Type is the picture: one headline set huge on a strict modular grid, words entering on the grid lines.",
+      "why": "untested; matches number, sequence; suits the channel often; drawn by headline, kinetic_stat, stat_strip",
+      "file": "styles/swiss-kinetic-type.mp4",
+      "sha256": "0cbcbd739c3d2e27e75840a4c56d4056de816d8cc3a8fc7830a341ce03a3ee30",
+      "differs": {
+        "house": 7.323,
+        "data-story": 7.959
+      }
+    },
+    {
+      "module": "dark-keynote",
+      "name": "Dark tech keynote",
+      "how": "A near-black stage, one giant number or line, a slow light sweep: the launch-event look.",
+      "why": "untested; matches number; suits the channel often; drawn by kinetic_stat, headline, logo_card",
+      "file": "styles/dark-keynote.mp4",
+      "sha256": "8fa267c6ccfe8e42137205f5b96cfeab2c6d09c8ac898c69f9adad60ce840c37",
+      "differs": {
+        "house": 2.472,
+        "data-story": 1.768,
+        "swiss-kinetic-type": 8.468
+      }
+    }
+  ],
+  "skipped": [
+    {
+      "module": "shape-morph",
+      "why": "needs a ve device that is not built yet (needs_device)",
+      "reason": "needs_device"
+    },
+    {
+      "module": "flat-vector-explainer",
+      "why": "needs a ve device that is not built yet (needs_device)",
+      "reason": "needs_device"
+    },
+    {
+      "module": "isometric-world",
+      "why": "needs a ve device that is not built yet (needs_device)",
+      "reason": "needs_device"
+    },
+    {
+      "module": "pixel-retro",
+      "why": "needs a ve device that is not built yet (needs_device)",
+      "reason": "needs_device"
+    },
+    {
+      "module": "film-crt",
+      "why": "needs a ve device that is not built yet (needs_device)",
+      "reason": "needs_device"
+    },
+    {
+      "module": "toy-3d",
+      "why": "needs a ve device that is not built yet (needs_device)",
+      "reason": "needs_device"
+    },
+    {
+      "module": "full-visual",
+      "why": "looks like data-story on this window (difference 1.264, under the 1.5 distinct threshold); the next ranked style takes its place",
+      "reason": "look_alike",
+      "score": 1.264,
+      "like": "data-story"
+    }
+  ],
+  "house": {
+    "file": "styles/house.mp4",
+    "sha256": "766d509a10717de494e83c5bf88362296aa26967b8a3798b9b734d1b9f4956d3"
+  },
+  "distinctness": {
+    "threshold": 1.5,
+    "frames": 6,
+    "width": 270,
+    "measure": "mean absolute greyscale difference, 0 to 255",
+    "pairs": [
+      {
+        "a": "house",
+        "b": "data-story",
+        "score": 2.044
+      },
+      {
+        "a": "house",
+        "b": "swiss-kinetic-type",
+        "score": 7.323
+      },
+      {
+        "a": "data-story",
+        "b": "swiss-kinetic-type",
+        "score": 7.959
+      },
+      {
+        "a": "house",
+        "b": "full-visual",
+        "score": 2.441
+      },
+      {
+        "a": "data-story",
+        "b": "full-visual",
+        "score": 1.264
+      },
+      {
+        "a": "swiss-kinetic-type",
+        "b": "full-visual",
+        "score": 8.059
+      },
+      {
+        "a": "house",
+        "b": "dark-keynote",
+        "score": 2.472
+      },
+      {
+        "a": "data-story",
+        "b": "dark-keynote",
+        "score": 1.768
+      },
+      {
+        "a": "swiss-kinetic-type",
+        "b": "dark-keynote",
+        "score": 8.468
+      }
+    ]
+  },
+  "distinct": true
+}

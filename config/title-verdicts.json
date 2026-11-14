@@ -92,6 +92,51 @@
  ],
  "verdicts": [
   {
+   "title": "Is this UK number two AI or human music?",
+   "surface": "shorts",
+   "verdict": "picked",
+   "why": "His pick for the short after the floor refused the bare question",
+   "krish": "\"Is this UK number two AI or human music?\" (picked in answer to the short title question, 2026-11-11)",
+   "on": "2026-11-11",
+   "piece": "36886e0b-4b32-473b-be72-b0aef31fccef"
+  },
+  {
+   "title": "Is it AI or human music?",
+   "surface": "shorts",
+   "verdict": "picked",
+   "why": "His own words for the short's title",
+   "krish": "1. yes. 2. B for youtube, A for substack, short should be \"Is it AI or human music?\" 3. a",
+   "on": "2026-11-11",
+   "piece": "36886e0b-4b32-473b-be72-b0aef31fccef"
+  },
+  {
+   "title": "A Reiki master wrote a UK number two, and it's both AI and human",
+   "surface": "article",
+   "verdict": "picked",
+   "why": "His pick for Substack: keep the article title",
+   "krish": "1. yes. 2. B for youtube, A for substack, short should be \"Is it AI or human music?\" 3. a",
+   "on": "2026-11-11",
+   "piece": "36886e0b-4b32-473b-be72-b0aef31fccef"
+  },
+  {
+   "title": "AI music or human music? This UK number two is both",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "His pick for YouTube from three options",
+   "krish": "1. yes. 2. B for youtube, A for substack, short should be \"Is it AI or human music?\" 3. a",
+   "on": "2026-11-11",
+   "piece": "36886e0b-4b32-473b-be72-b0aef31fccef"
+  },
+  {
+   "title": "AI music or human music?",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "His own title for the piece: the one question the video and the epic title card ask",
+   "krish": "There are two title cards, I just want the one \"AI Music or Human Music\" title, but it to be more epic.",
+   "on": "2026-11-11",
+   "piece": "36886e0b-4b32-473b-be72-b0aef31fccef"
+  },
+  {
    "title": "CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS",
    "surface": "cover",
    "verdict": "picked",
@@ -1772,6 +1817,105 @@
    "why": "states the obvious, as a denial",
    "krish": "Of course, Muse isn't ChatGPT. That's a stupid thing to say. It's dumb.",
    "on": "2026-10-14"
+  },
+  {
+   "title": "RANKED BY AI USE",
+   "surface": "thumbnail",
+   "verdict": "rejected",
+   "why": "flat statement with no hook; he called the titles awful",
+   "krish": "Krish, 2026-11-11: \"These covers are shit, and the titles are awful. They're not on brand with this week's neon theming that we've agreed on.\"",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta ranked staff by AI use. It backfired.",
+   "surface": "tall_cover",
+   "verdict": "rejected",
+   "why": "flat statement with no hook; he called the titles awful",
+   "krish": "Krish, 2026-11-11: \"These covers are shit, and the titles are awful. They're not on brand with this week's neon theming that we've agreed on.\"",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta ranked staff by AI use. It backfired.",
+   "surface": "cover",
+   "verdict": "rejected",
+   "why": "flat statement with no hook; he called the titles awful",
+   "krish": "Krish, 2026-11-11: \"These covers are shit, and the titles are awful. They're not on brand with this week's neon theming that we've agreed on.\"",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta ranked staff by AI use. Then it backfired.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "flat statement with no hook; he called the titles awful",
+   "krish": "Krish, 2026-11-11: \"These covers are shit, and the titles are awful. They're not on brand with this week's neon theming that we've agreed on.\"",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta ranked 85,000 staff by AI use. They gamed it.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "not true as written: Fortune says the board tracked 85,000+ staff and ranked the top 250; changed for the fact gate",
+   "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" and \"THEY FAKED / AI USE\" from four options each",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta ranked 85,000 staff by AI use. They gamed it.",
+   "surface": "cover",
+   "verdict": "rejected",
+   "why": "not true as written: Fortune says the board tracked 85,000+ staff and ranked the top 250; changed for the fact gate",
+   "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" and \"THEY FAKED / AI USE\" from four options each",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta ranked 85,000 staff by AI use. They gamed it.",
+   "surface": "tall_cover",
+   "verdict": "rejected",
+   "why": "not true as written: Fortune says the board tracked 85,000+ staff and ranked the top 250; changed for the fact gate",
+   "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" and \"THEY FAKED / AI USE\" from four options each",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "THEY FAKED AI USE",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "blunt and sensational; the logos and the Fortune proof carry who",
+   "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" and \"THEY FAKED / AI USE\" from four options each",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta staff were ranked by AI use. They gamed it.",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "his pick, corrected only so it matches Fortune (the board ranked the top 250 of 85,000+)",
+   "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" from four options; wording corrected for truth by the session",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta staff were ranked by AI use. They gamed it.",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "his pick, corrected only so it matches Fortune (the board ranked the top 250 of 85,000+)",
+   "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" from four options; wording corrected for truth by the session",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta staff were ranked by AI use. They gamed it.",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "his pick, corrected only so it matches Fortune (the board ranked the top 250 of 85,000+)",
+   "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" from four options; wording corrected for truth by the session",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
   }
  ]
 }

@@ -1,87 +1,88 @@
 import { describe, expect, it } from 'vitest'
 import { slotsFor } from './index'
 
+// The tall boxes moved into every channel's safe column on 11 Nov 2026 (Krish: "make maximum use of the full screen").
 const previous = {
   "9:16": {
     "P1": [
       {
-        "left": 120,
-        "top": 288,
-        "width": 768,
+        "left": 60,
+        "top": 280,
+        "width": 800,
         "height": 552
       },
       {
-        "left": 144,
-        "top": 312,
-        "width": 720,
+        "left": 84,
+        "top": 304,
+        "width": 752,
         "height": 160
       }
     ],
     "P3": [
       {
-        "left": 120,
-        "top": 288,
-        "width": 768,
+        "left": 60,
+        "top": 280,
+        "width": 800,
         "height": 324
       },
       {
-        "left": 120,
-        "top": 624,
-        "width": 768,
+        "left": 60,
+        "top": 616,
+        "width": 800,
         "height": 216
       },
       {
-        "left": 120,
-        "top": 852,
-        "width": 660,
-        "height": 290
+        "left": 60,
+        "top": 844,
+        "width": 700,
+        "height": 206
       }
     ],
     "P6": [
       {
-        "left": 120,
-        "top": 288,
-        "width": 768,
+        "left": 60,
+        "top": 280,
+        "width": 800,
         "height": 552
       },
       {
-        "left": 424,
-        "top": 576,
+        "left": 396,
+        "top": 568,
         "width": 464,
         "height": 264
       }
     ],
     "F1": [
       {
-        "left": 120,
-        "top": 852,
-        "width": 660,
-        "height": 290
+        "left": 60,
+        "top": 844,
+        "width": 700,
+        "height": 206
       },
       {
-        "left": 120,
-        "top": 288,
-        "width": 768,
+        "left": 60,
+        "top": 280,
+        "width": 800,
         "height": 400
       },
       {
-        "left": 120,
-        "top": 700,
-        "width": 768,
-        "height": 140
+        "left": 60,
+        "top": 692,
+        "width": 800,
+        "height": 124
       }
     ],
     "F3": [
       {
-        "left": 120,
-        "top": 376,
-        "width": 768,
+        "left": 60,
+        "top": 368,
+        "width": 800,
         "height": 464
       },
       {
-        "left": 120,
-        "top": 288,
-        "width": 768,
+        "left": 60,
+        "top": 280,
+        "width": 800,
         "height": 72
       }
     ]

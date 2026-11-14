@@ -1,0 +1,70 @@
+{
+ "subchannel": "under.the.hood",
+ "date": "2026-11-11",
+ "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+ "headline": "A Reiki master wrote a UK number two, and it's both AI and human",
+ "video_title": "AI music or human music?",
+ "video_length": "5:01",
+ "cover": {
+  "headline": [
+   "AI MUSIC OR",
+   "HUMAN MUSIC?"
+  ],
+  "rows": [
+   {
+    "name": "Suno",
+    "logo": "logos/suno-cream.svg",
+    "tag": "THE DEMO",
+    "colour": "butter"
+   },
+   {
+    "name": "Udio",
+    "logo": "logos/udio-cream.png",
+    "tag": "OR THIS",
+    "colour": "butter"
+   },
+   {
+    "name": "Grammys",
+    "logo": "logos/grammys-cream.svg",
+    "tag": "SPLIT",
+    "colour": "mint"
+   },
+   {
+    "name": "Deezer",
+    "logo": "logos/deezer-symbol.svg",
+    "tag": "50% AI",
+    "colour": "coral"
+   }
+  ],
+  "proof": {
+   "page": {
+    "url": "https://www.officialcharts.com/songs/hugelimael-angelultra-nate-movin-to-the-sun/",
+    "height": 1300,
+    "crop": [
+     0.02,
+     0.34,
+     0.688,
+     0.8
+    ]
+   },
+   "source": "s1",
+   "tag": "THE OFFICIAL CHARTS",
+   "alt": "The Official Charts page for Movin' To The Sun by HUGEL, Imael Angel and Ultra Nate: peak position 2",
+   "show_tag": false,
+   "ring": [
+    0.0,
+    0.765,
+    1.0,
+    0.925
+   ]
+  },
+  "quiet_pill": true,
+  "headline_first": true
+ },
+ "thumbs": {
+  "headline": [
+   "AI MUSIC OR",
+   "HUMAN MUSIC?"
+  ]
+ }
+}

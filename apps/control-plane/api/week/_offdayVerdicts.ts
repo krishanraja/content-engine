@@ -16,7 +16,7 @@ export interface OffdayVerdict {
   /** The hook he saw when he approved the idea, when the press kept it. */
   hook: string | null
   side: 'idea' | 'direction' | 'mock' | 'note'
-  verdict: 'approve' | 'improve' | 'reject' | 'next_week' | 'note'
+  verdict: 'approve' | 'improve' | 'reject' | 'next_week' | 'trend' | 'note'
   /** His words, verbatim, or null for a bare press. */
   words: string | null
   at: string | null
@@ -24,7 +24,8 @@ export interface OffdayVerdict {
 
 type Row = { week?: unknown; doc_id?: unknown; body?: unknown }
 const isObj = (v: unknown): v is Record<string, any> => !!v && typeof v === 'object' && !Array.isArray(v)
-const VERDICTS = new Set(['approve', 'improve', 'reject', 'next_week'])
+// trend: Save as a trend, one of the five outcomes since 11 November (the ideas gate, docs/PUBLISH_BOARDS.md).
+const VERDICTS = new Set(['approve', 'improve', 'reject', 'next_week', 'trend'])
 
 export function buildOffdayVerdicts(rows: Row[]): { verdicts: OffdayVerdict[]; counts: Record<string, number> } {
   const out: OffdayVerdict[] = []
@@ -47,7 +48,7 @@ export function buildOffdayVerdicts(rows: Row[]): { verdicts: OffdayVerdict[]; c
     }
   }
   out.sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')) || a.option.localeCompare(b.option))
-  const counts: Record<string, number> = { approve: 0, improve: 0, reject: 0, next_week: 0, note: 0 }
+  const counts: Record<string, number> = { approve: 0, improve: 0, reject: 0, next_week: 0, trend: 0, note: 0 }
   for (const v of out) counts[v.verdict]++
   return { verdicts: out, counts }
 }

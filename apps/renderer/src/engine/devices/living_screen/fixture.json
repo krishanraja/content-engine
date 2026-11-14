@@ -1,0 +1,163 @@
+{
+  "object": {
+    "obj": "screen",
+    "device": "living_screen",
+    "meaning": "Sourced working interface",
+    "params": {
+      "cards": [
+        {
+          "id": "staff",
+          "label": "PER BRANCH"
+        },
+        {
+          "id": "branches",
+          "label": "BRANCHES"
+        }
+      ],
+      "tabs": [
+        "Staff",
+        "Customers"
+      ],
+      "rows": [
+        "Review task"
+      ],
+      "chart": {
+        "expected": "expected",
+        "lines": [
+          {
+            "id": "actual",
+            "label": "ACTUAL"
+          }
+        ]
+      }
+    },
+    "dataset": {
+      "unit": "people",
+      "denominator": null,
+      "producerLabel": "BESSEN 2015",
+      "rows": [
+        {
+          "label": "staff",
+          "value": 20
+        },
+        {
+          "label": "staff:new",
+          "value": 13
+        },
+        {
+          "label": "branches",
+          "value": 43
+        },
+        {
+          "label": "expected:0",
+          "value": 20
+        },
+        {
+          "label": "expected:1",
+          "value": 0
+        },
+        {
+          "label": "actual:0",
+          "value": 20
+        },
+        {
+          "label": "actual:1",
+          "value": 22
+        }
+      ]
+    },
+    "variants": {},
+    "fromFrame": 0,
+    "toFrame": 500
+  },
+  "events": [
+    {
+      "id": "0",
+      "obj": "screen",
+      "verb": "enter",
+      "toState": "on",
+      "atFrame": 10
+    },
+    {
+      "id": "1",
+      "obj": "screen",
+      "verb": "move",
+      "toState": "staff",
+      "atFrame": 35
+    },
+    {
+      "id": "2",
+      "obj": "screen",
+      "verb": "count_to",
+      "toState": "{\"card\": \"staff\", \"value\": 13}",
+      "atFrame": 70
+    },
+    {
+      "id": "3",
+      "obj": "screen",
+      "verb": "mark",
+      "toState": "staff",
+      "atFrame": 90
+    },
+    {
+      "id": "4",
+      "obj": "screen",
+      "verb": "move",
+      "toState": "chart",
+      "atFrame": 100
+    },
+    {
+      "id": "5",
+      "obj": "screen",
+      "verb": "draw",
+      "toState": "on",
+      "atFrame": 135
+    },
+    {
+      "id": "6",
+      "obj": "screen",
+      "verb": "pick",
+      "toState": "Customers",
+      "atFrame": 220
+    },
+    {
+      "id": "7",
+      "obj": "screen",
+      "verb": "highlight",
+      "toState": "actual",
+      "atFrame": 250
+    },
+    {
+      "id": "8",
+      "obj": "screen",
+      "verb": "add",
+      "toState": "4",
+      "atFrame": 280
+    },
+    {
+      "id": "9",
+      "obj": "screen",
+      "verb": "move",
+      "toState": "wide",
+      "atFrame": 350
+    },
+    {
+      "id": "10",
+      "obj": "screen",
+      "verb": "exit",
+      "toState": "off",
+      "atFrame": 450
+    }
+  ],
+  "stills": [
+    0,
+    65,
+    88,
+    100,
+    180,
+    240,
+    320,
+    390,
+    460
+  ]
+}

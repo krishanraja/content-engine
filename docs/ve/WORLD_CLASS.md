@@ -23,7 +23,7 @@ jackroberts on the graphics beats, georgia on the face-alone beats.
 
 The cut Krish called "the branding is wrong" wore two: an ink stage with the horizontal logo on graphics beats and a
 cream stage with the mark tile on splits. Since #380 face-with-proof draws its STAGE graphics on the same light wash
-as its SPLIT stage, with the mark tile and pill everywhere. Never put a face-with-proof graphic on ink.
+as its SPLIT stage; the wide cut carries the mark tile and pill, the vertical cut neither (Krish, 2026-11-11). Never put a face-with-proof graphic on ink.
 
 ## 3. Design the spec to the signed storyboard, then to the pace
 

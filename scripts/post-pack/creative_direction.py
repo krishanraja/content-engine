@@ -65,11 +65,10 @@ SERIES_PICTURE = {
     'mind.the.gap': 'Threads on a time axis that bend and meet, ending in a dated call.',
 }
 LEAD_PICTURES = ('series_picture', 'story_object')
-# brand.intro_sting: the piece's own series sting, which opens its 16:9 long cut (Krish, 2026-11-05: "I think it should
-# go at the start of the longer wide videos 100%,"; config/intro-sting.json), or this sentence for a piece that wears
-# none, so a session never fills it with a sting no cut opens on. The same sentence as the ve contract's VE_NO_STING
-# (packages/contracts/src/production-spec.ts), which tests/ve_thursday_guards_test.py pins.
-NO_STING = 'none: this piece opens on its hook (an off day, or no wide long cut)'
+# brand.intro_sting: always this sentence. Nothing goes before the hook on any cut (Ruling, Krish, 2026-11-12: "Nothing
+# before the hook, ever. Remove the sting exception for good."; config/intro-sting.json, retired). The same sentence as
+# the ve contract's VE_NO_STING (packages/contracts/src/production-spec.ts), which tests/ve_thursday_guards_test.py pins.
+NO_STING = 'none: this piece opens on its hook, and nothing goes before it'
 STUDIO = ROOT / 'config' / 'studio.json'  # the house channels: the day each weekly series runs on
 
 
@@ -341,17 +340,10 @@ def series_day(series):
 
 
 def intro_sting_for(series, publish_day):
-    """brand.intro_sting for a piece: its series' sting ('mind_the_gap') when it is published on its series' own day,
-    NO_STING on an off day (the day ve compile puts no sting on its wide cut), '' while the series or the day is not
-    known yet, for Claude to fill."""
-    day = series_day(series)
-    try:
-        weekday = date.fromisoformat(str(publish_day or '')[:10]).strftime('%A')
-    except ValueError:
-        return ''
-    if not day:
-        return ''
-    return str(series).replace('.', '_') if weekday == day else NO_STING
+    """brand.intro_sting for a piece: NO_STING, for every series and day (Ruling, Krish, 2026-11-12: "Nothing before
+    the hook, ever. Remove the sting exception for good."). Until 12 Nov a series piece on its own day named its series'
+    sting here."""
+    return NO_STING
 
 
 def choices_block(series='', path=BAR, publish_day=''):
@@ -528,12 +520,12 @@ def _self_test():
         fresh = Path(tmp) / 'fresh'
         fresh.mkdir()
         _, new = template(fresh, 'long', script)
-        if new['brand'].get('intro_sting') != '':
-            probs.append('a new direction with no series or day leaves brand.intro_sting for Claude to fill')
-        # The opening (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"): a series
-        # piece on its series' day names its own sting and opens its wide cut on it; an off day names none.
+        if new['brand'].get('intro_sting') != NO_STING:
+            probs.append('a new direction names no sting, even with no series or day')
+        # The opening (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."):
+        # a series piece on its series' day and an off-day piece both name no sting and open on the hook.
         tested = under_test()
-        for day, sting, opening in (('2026-11-13', 'mind_the_gap', 'sting_wide_hook_tall'),
+        for day, sting, opening in (('2026-11-13', NO_STING, 'hook_is_intro'),
                                     ('2026-11-12', NO_STING, 'hook_is_intro')):
             dated = Path(tmp) / f'dated-{day}'
             dated.mkdir()
@@ -543,8 +535,8 @@ def _self_test():
                     or any('brand.intro_sting' in p for p in check(piece)):
                 probs.append(f'a mind.the.gap piece on {day} names {sting!r} and opens {opening}: '
                              f'{piece["brand"].get("intro_sting")!r}, {piece["production_choices"].get("opening")}')
-        if tested['opening']['default'] != 'sting_wide_hook_tall' or tested['opening']['off_day'] != 'hook_is_intro':
-            probs.append('the bar\'s opening: the sting on the wide cut by default, the hook on an off day')
+        if (tested['opening']['default'], tested['opening']['off_day'], tested['opening']['options']) != ('hook_is_intro', 'hook_is_intro', ['hook_is_intro']):
+            probs.append('the bar\'s opening: the hook, on every cut, with nothing else to choose')
         # The choices under test: each default from the bar, both lead pictures to draw, the pick left to Claude.
         # The good direction is a mind.the.gap piece on a Monday: an off day, so it opens on its hook.
         seeded = doc.get('production_choices') or {}
@@ -573,7 +565,7 @@ def _self_test():
     picked = json.loads(json.dumps(good))
     picked['production_choices'] = choices_block('mind.the.gap')
     picked['production_choices']['lead_picture']['proposed'] = 'story_object'
-    if production_choices(picked) != {'opening': 'sting_wide_hook_tall', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}:
+    if production_choices(picked) != {'opening': 'hook_is_intro', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}:
         probs.append(f'his signature accepts Claude\'s pick: {production_choices(picked)}')
     if not any(line.endswith('<- Claude proposes') and 'story object' in line for line in choice_lines(picked)):
         probs.append('the storyboard marks the proposal')

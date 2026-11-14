@@ -18,16 +18,23 @@ from .common import ROOT, load_json
 from .lint import pending_devices_error
 
 FPS = 30
-ENDING_FRAMES = 105
+ENDING_FRAMES = 180  # the house close: 6 s, settled by 2.75 s then held (docs/production/CLOSING.md)
+# The tall close is a compact end beat of 2 s inside the tall core box (config/brand-palette.json statement_beat;
+# Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the attached").
+ENDING_FRAMES_BY_ASPECT = {'16:9': ENDING_FRAMES, '9:16': 60}
+# Krish, 10 Nov 2026: "The copy should read: "Built to help you decide."" (the same words as quick-edit's kit TAGLINE).
+ENDING_TAGLINE = 'Built to help you decide.'
+ENDING_CTA = 'Subscribe free'
 # The opening, under test (Krish, 29 Oct 2026: "I'd pick number one here but I think that we need to test and learn.
 # We need to figure out what the right tone is over time based on real engagement. Let's go with number one for
 # now."): the hook is the intro. The first beat owns frame 0 with the logo and the series tag in its corners, and no
-# story card comes before it. One thing goes in front of it, on one cut only (Krish, 2026-11-05: "I think it should go
-# at the start of the longer wide videos 100%,"): the house intro sting on the 16:9 whole cut of a weekly series
-# piece (sting_props). It moves no frame: the cut keeps its own clock, which starts sting.frames into the render
-# (apps/renderer/src/engine/VeCut.tsx), so frame 0 is still the hook, his face on the frame after the sting's last.
-# Each compile report records the opening it used ("sting" or "hook"), so real engagement can settle it.
+# story card comes before it. Nothing goes in front of it on any cut (Ruling, Krish, 2026-11-12: "Nothing before the
+# hook, ever. Remove the sting exception for good."): the house sting that opened the 16:9 whole cut of a weekly
+# series piece from 5 Nov is retired, sting_props gives no cut one, and sting_problems refuses props that carry one.
+# Each compile report records the opening it used ("hook"), so real engagement can still be read against it.
+NOTHING_BEFORE_HOOK = 'Nothing before the hook, ever. Remove the sting exception for good.'
 STING_ASPECT, STING_SHAPE = '16:9', '16x9'  # the long cut, and the name config/intro-sting.json gives its shape
+STING_POSITION = 'after_hook'  # where compile lays the series sting (hook_end; config/brand-palette.json); ve lint reads it
 
 
 
@@ -53,56 +60,43 @@ def _intro():
 
 
 def sting_props(cut: dict, channel: str, off: bool, report: dict | None = None) -> dict | None:
-    """props.sting for this cut, or None when it opens on its hook.
+    """props.sting for this cut: None, for every cut (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove
+    the sting exception for good."). From 5 Nov to 12 Nov the 16:9 whole cut of a weekly series piece opened on the
+    house sting; config/intro-sting.json keeps that record, retired, and is no longer read to open a cut."""
+    return None
 
-    Only the 16:9 whole cut of a weekly series piece wears the sting (Krish, 2026-11-05: "I think it should go at the
-    start of the longer wide videos 100%,"). The 9:16 cut, a proof excerpt and an off-day cut open on the hook (house
-    rule HOOK_IS_THE_INTRO) and never read the sting's config. A candidate sting leaves the cut on its hook and says so
-    in the report. An approved sting is never skipped: the clip is the one Krish saw, checked by its size and sha256
-    and fetched from the library when this machine does not have it, or the cut is refused with what to do. A
-    voiceover master or a split first beat gets it too: his words cover every wide long cut."""
-    if cut['aspect'] != STING_ASPECT or cut.get('excerpt', False) or off:
-        return None
-    intro = _intro()
-    try:
-        cfg = intro.load()
-    except intro.IntroError as error:
-        raise ValueError(f'the wide cut of a {channel} piece opens on the intro sting, and its config cannot be read: {error}') from None
-    if STING_SHAPE not in cfg['shapes'] or channel not in cfg['series'] or cfg['status'] == 'retired':
-        return None
-    if cfg['status'] != 'approved':
-        if report is not None:
-            report['opening_why'] = ('the intro sting is still a candidate waiting for Krish\'s approval '
-                                     '(config/intro-sting.json), so this wide cut opens on its hook')
-        return None
-    if cfg.get('source_sha256') != intro.source_hash(cfg):
-        raise ValueError('the clips config/intro-sting.json names are not the ones Krish approved (source_sha256), so this wide cut '
-                         'cannot open as it should: show him the clips and record his words again')
-    entry = cfg['clips'][STING_SHAPE][channel]
-    refused = f'the wide cut of a {channel} piece opens on the approved intro sting, and its clip could not be had'
-    try:
-        path = intro.clip(STING_SHAPE, channel, cfg)
-    except intro.IntroError:
-        try:
-            _, _, missing = intro.fetch(cfg, out=lambda line: None, only=[(STING_SHAPE, channel)])
-            if missing:
-                raise intro.IntroError(f'{entry["library"]} is not in the library yet: a machine that has the clips sends them '
-                                       'with python scripts/quick-edit/intro.py publish')
-            path = intro.clip(STING_SHAPE, channel, cfg)
-        except (OSError, ValueError) as error:  # IntroError is a ValueError; a failed download an OSError
-            raise ValueError(f'{refused}: {error}. On a machine with the engine key, python scripts/quick-edit/intro.py fetch '
-                             'gets it') from None
-    if report is not None:
-        report['sting'] = {'series': channel, 'frames': cfg['frames'], 'clip_sha256': entry['sha256'],
-                           'source_sha256': cfg['source_sha256'], 'library': entry['library']}
-    return {'src': str(Path(path).resolve()), 'series': channel, 'frames': cfg['frames'], 'sha256': entry['sha256']}
+
+def hook_end(props: dict) -> int:
+    """The cut's own frame the series sting plays at: the frame after the hook's last, the end of beat 0 (config/
+    brand-palette.json long_cut sting after_hook; SOCIAL-BEST-PRACTICES-2026 section 4.3, a brand sting follows the hook
+    and never precedes it). The hook must run at least the opening gate's windows (config/opening-gate.json), so the gate
+    measures his hook and never the sting, and no caption page may run across it; a page that ends on a later word is
+    refused, and one that only holds into the sting is closed on the hook's last frame (props changed in place)."""
+    beats = props['beats']
+    if len(beats) < 2:
+        raise ValueError('the series sting follows the hook, so the cut needs a beat after its hook (beat 0)')
+    at = int(beats[0]['toFrame'])
+    gate = load_json(ROOT / 'config' / 'opening-gate.json')
+    need = math.ceil(max(float(gate['dead_window_s']), float(gate['headline_window_s'])) * FPS)
+    if at < need:
+        raise ValueError(f'the hook (beat {beats[0].get("id")}) runs {at} frames, and the sting follows it: a hook shorter than '
+                         f'{need} frames would put the sting inside the opening the gate measures (config/opening-gate.json)')
+    for page in props['captions']:
+        if page['fromFrame'] < at < page['toFrame']:
+            late = [w['text'] for w in page['words'] if w['atFrame'] >= at]
+            if late:
+                raise ValueError(f'the caption page at frame {page["fromFrame"]} runs across the end of the hook into '
+                                 f'"{" ".join(late)}": end the hook beat on a caption page\'s end')
+            page['toFrame'] = at
+    return at
 
 
 def sting_problems(props: dict) -> list[str]:
-    """Why compiled props must not render for their opening ([] when it is right): a sting that is not the approved
-    clip of its series, a wide whole cut of a series piece that the approved sting should open and does not (props
-    compiled before the approval), or a stem whose lead is not the sting's frames (ve premix lays his voice after the
-    sting; a stem made for another opening would play his voice over the sting, or the sting's length late)."""
+    """Why compiled props must not render for their opening ([] when it is right): anything in front of the hook, a
+    sting or an episode card (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for
+    good."); a sting after the hook that config/intro-sting.json does not approve (retired: none is) or that is not its
+    clip; or a stem premixed for another sting or another place (ve premix lays his voice from frame 0, with the sting's
+    frames of silence only where a sting after the hook plays)."""
     sting = props.get('sting')
     series = (props.get('series') or {}).get('label') or ''
     wide_whole = props.get('aspect') == STING_ASPECT and bool(props.get('ending')) and series not in ('', 'off.day')
@@ -114,30 +108,39 @@ def sting_problems(props: dict) -> list[str]:
             cfg = intro.load()
         except intro.IntroError as error:
             return [f'the intro sting\'s config cannot be read, so this cut\'s opening cannot be checked: {error}']
-        wanted = (cfg['status'] == 'approved' and STING_SHAPE in cfg['shapes'] and channel in cfg['series'])
-        excepted = (props.get('opening') or {}).get('kind') == 'episode_card' and len(str((props.get('opening') or {}).get('said') or '')) >= 12
-        if not sting and wanted and not excepted:
+        wanted = (cfg['status'] == 'approved' and not cfg.get('paused') and STING_SHAPE in cfg['shapes']
+                  and channel in cfg['series'])
+        if not sting and wanted:
             problems.append(f'this wide cut of a {series} piece opens on the approved intro sting, and its props have none '
                             '(compiled before the approval): run ve compile again, then ve premix')
         if sting:
             entry = (cfg['clips'].get(STING_SHAPE) or {}).get(sting.get('series')) or {}
             if not wanted:
-                problems.append(f'the props carry a sting, and config/intro-sting.json does not open this cut on one (status '
-                                f'{cfg["status"]}): only a sting Krish approved opens a cut; run ve compile again')
+                problems.append(f'the props carry a sting, and config/intro-sting.json lays none (status {cfg["status"]}): nothing '
+                                f'goes before the hook (Ruling, Krish, 2026-11-12: "{NOTHING_BEFORE_HOOK}"), and a sting after '
+                                'it plays only once he approves one; run ve compile again')
             elif cfg.get('source_sha256') != intro.source_hash(cfg):
                 problems.append('the clips config/intro-sting.json names are not the ones Krish approved (source_sha256)')
+            elif not int(sting.get('atFrame') or 0):
+                problems.append(f'the props carry a sting in front of the hook: nothing goes before the hook (Ruling, Krish, '
+                                f'2026-11-12: "{NOTHING_BEFORE_HOOK}"); run ve compile again')
             elif sting.get('series') != channel or sting.get('sha256') != entry.get('sha256') or sting.get('frames') != cfg['frames']:
                 problems.append(f'the props\' sting ({sting.get("series")}, {sting.get("frames")} frames, sha256 {sting.get("sha256")}) '
                                 f'is not the approved {channel} clip ({cfg["frames"]} frames, sha256 {entry.get("sha256")}): '
                                 'run ve compile again')
+    if (props.get('opening') or {}).get('kind') == 'episode_card':
+        problems.append(f'the props open on an episode card where the sting was: nothing goes before the hook (Ruling, Krish, '
+                        f'2026-11-12: "{NOTHING_BEFORE_HOOK}"); run ve compile again')
     lead = int((sting or {}).get('frames') or 0)
     stem = (props.get('audio') or {}).get('stem') or {}
     sidecar = Path(stem['src']).with_suffix('.bed.json') if stem.get('src') else None
     if sidecar is not None and sidecar.is_file():
-        made = int(load_json(sidecar).get('lead_frames') or 0)
-        if made != lead:
-            problems.append(f'the stem {Path(stem["src"]).name} was premixed with {made} frames in front of his voice, and the '
-                            f'cut opens on {lead}: run ve premix again')
+        side = load_json(sidecar)
+        made, made_at = int(side.get('lead_frames') or 0), int(side.get('sting_at_frame') or 0)
+        at = int((sting or {}).get('atFrame') or 0)
+        if made != lead or made_at != at:
+            problems.append(f'the stem {Path(stem["src"]).name} was premixed with {made} frames of sting at frame {made_at}, and '
+                            f'the cut plays {lead} at frame {at}: run ve premix again')
     elif lead:
         problems.append(f'the stem {stem.get("src")} has no ve premix sidecar to say his voice comes in after the sting: '
                         'run ve premix')
@@ -174,7 +177,7 @@ def _text_width(text: str, size: int) -> float:
 
 
 def caption_line_count(rows: list[dict], aspect: str = '9:16', emphasis=()) -> int:
-    size, available = (54, 1400 - 42 * 2) if aspect == '16:9' else (68, 1080 - 72 - 108 - 42 * 2)
+    size, available = (54, 1400 - 42 * 2) if aspect == '16:9' else (68, 1080 - 60 - 220 - 42 * 2)  # house/geometry.ts HOUSE.caption
     space = _text_width(' ', size)
     width, lines = 0, 1
     for row in rows:
@@ -471,15 +474,12 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # colour or its promise (Krish, 2026-11-04: "Yes, give off days their own music and look - Rotate.").
     off = _series_day(identity['day'], spec.get('publish_day')) != identity['day']
     opening = {}
-    # Krish's word for this piece can put its own episode card where the sting would be (brand.opening_exception;
-    # Krish, 2026-11-09: "I don't want the overall brand intro to come in. I want the episode card to come in."). The
-    # card is drawn by the spec's own beats; compile only leaves the sting out and says why, in his words.
-    exception = (spec.get('brand') or {}).get('opening_exception')
-    if exception and cut['aspect'] == STING_ASPECT and not cut.get('excerpt', False) and not off:
-        sting = None
-        opening['opening_why'] = f"Krish, {exception['on']}: {exception['said']}"
-    else:
-        sting = sting_props(cut, channel, off, opening)
+    # Nothing goes before the hook (Ruling, Krish, 2026-11-12): no sting, and no episode card in its place (the
+    # brand.opening_exception of 9 Nov, which ve lint now refuses).
+    if (spec.get('brand') or {}).get('opening_exception'):
+        raise ValueError(f'brand.opening_exception puts an episode card before the hook: nothing goes before the hook (Ruling, '
+                         f'Krish, 2026-11-12: "{NOTHING_BEFORE_HOOK}"); remove it from the spec')
+    sting = sting_props(cut, channel, off, opening)
     props = {
         'pieceId': spec['piece_id'], 'cutId': cut_id, 'format': spec['format'], 'aspect': cut['aspect'],
         'fps': FPS, 'durationFrames': duration,
@@ -497,9 +497,17 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
         'captions': captions, 'captionStyle': 'word' if word_mode else 'house',
+        **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
+        **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
+    if sting:
+        # After the hook, never in front of it (config/brand-palette.json long_cut sting after_hook): every frame in the
+        # props stays on the cut's own clock, and the render plays the sting from this one (VeCut.tsx).
+        sting = dict(sting, atFrame=hook_end(props))
+        if 'sting' in opening:
+            opening['sting']['at_frame'] = sting['atFrame']
     sfx, missing = [], []
     kit_path = ROOT / 'config' / 've' / 'sfx-kits' / f"{spec['audio']['sfx_kit']}.json"
     kit = load_json(kit_path) if kit_path.is_file() else {}
@@ -513,11 +521,14 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         gain = sound['gain_db']
         if isinstance(gain, bool) or not isinstance(gain, (int, float)) or not math.isfinite(gain) or gain > 0:
             raise ValueError(f'invalid sfx gain for {event["id"]}')
-        sfx.append({'src': resolve_source(sound['path']), 'atFrame': event['atFrame'], 'gainDb': gain})
+        # The approved sound itself, staged into the cut's assets from MINDMAKE_MUSIC_ROOT (the brand kit's Music
+        # folder) and checked by its sha256; a sound missing on this machine stops the compile, never drops out.
+        from .sfx import ensure_staged  # noqa: PLC0415
+        sfx.append({'src': resolve_source(ensure_staged(event['sfx'], sound['path'], assets_dir)), 'atFrame': event['atFrame'],
+                    'gainDb': gain})
     props['audio']['sfx'] = sfx
     if report is not None:
-        report.update(lint='clean', sfx_missing=missing, opening='sting' if sting else ('episode_card' if exception else 'hook'),
-                      **opening)
+        report.update(lint='clean', sfx_missing=missing, opening='sting' if sting else 'hook', **opening)
         if edl is not None:
             report['edl'] = {'cut': cut_id, 'joins_s': [join['at_s'] for join in edl.get('joins', [])],
                              'duration_frames': edl.get('duration_frames'),
@@ -526,10 +537,12 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro"), not only a
     # cut that carries a dated call; the call card still needs a call.
     if not cut.get('excerpt', False):
-        props['ending'] = {'fromFrame': duration, 'url': props['series']['site']}
+        props['ending'] = {'fromFrame': duration, 'url': props['series']['site'], 'tagline': ENDING_TAGLINE, 'cta': ENDING_CTA,
+                           'days': [{'day': house['channels'][c]['day'], 'colour': publication['channel_colors'][c]}
+                                    for c in house['channels'] if c in publication['channel_colors']] if not off else []}
         if spec.get('style', {}).get('ending_ticker') is False:
             props['ending']['ticker'] = False  # no scrolling promise strip (Krish: no marquee)
-        props['durationFrames'] += ENDING_FRAMES
+        props['durationFrames'] += ENDING_FRAMES_BY_ASPECT.get(cut['aspect'], ENDING_FRAMES)
         # The ending band is drawn by BrandFrame, which FormatMaster mounts only for an active beat, so the last
         # beat (and what persists to it) runs through the ending. Captions stop at its start.
         end_frame = props['durationFrames']
@@ -538,17 +551,115 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             if compiled['toFrame'] == duration:
                 compiled['toFrame'] = end_frame
     if sting:
-        # In front of the cut, never in it: durationFrames stays the cut's own length and no frame moves.
+        # Never: sting_props gives no cut one (Ruling, Krish, 2026-11-12), and sting_problems refuses props that carry one.
         props['sting'] = sting
-    elif exception and 'opening_why' in opening:
-        props['opening'] = {'kind': 'episode_card', 'said': exception['said'], 'on': exception['on']}
     if spec.get('call'):
         call = spec['call']
         props['call'] = {'statement': call['statement'], 'due': call['due'], 'confidencePercent': call['confidence_percent']}
     motion = motion_props(spec)
     if motion is not None:
         props['motion'] = motion
+    ingredients = ingredient_props(spec)
+    if ingredients is not None:
+        props['ingredients'] = ingredients
+    if 'sound' in (spec.get('style') or {}):
+        props['audio']['sfx'] = sound_props(spec, props, assets_dir)
+    layout = ((spec.get('style') or {}).get('layout') or {}).get('mode')
+    if layout and layout != 'house':
+        if layout not in LAYOUTS:
+            raise ValueError(f"style.layout.mode {layout} is not one of {', '.join(LAYOUTS)}")
+        if layout == 'tray' and props.get('captionPlacement') != 'upper':
+            raise ValueError('style.layout.mode tray leaves his face clear, so the captions go in the upper strip: '
+                             'set style.captions.placement upper')
+        props['layout'] = {'mode': layout}
     return props
+
+
+# The ingredients chosen per piece apart from the motion style (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the
+# captions should be decoupled from the animation styles"). Names as the renderer's captions/names.ts and
+# kit/ingredients.ts; engine.test.ts holds the two lists in step.
+CAPTION_PLACEMENTS = ('lower', 'centre', 'upper')
+ENERGIES = ('calm', 'medium', 'high')
+TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade')
+CAMERAS = ('none', 'drift', 'phased', 'punch')
+LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray')
+
+
+def caption_props(spec: dict) -> dict:
+    """props.captionTheme and props.captionPlacement from style.captions, which wins over brand.caption_theme. A caption
+    style is chosen on its own and draws over any motion style (it also wins over a style's own lead captions)."""
+    chosen = (spec.get('style') or {}).get('captions')
+    if not chosen:
+        return {}
+    out = {'captionTheme': chosen['theme']}
+    if chosen.get('placement'):
+        if chosen['placement'] not in CAPTION_PLACEMENTS:
+            raise ValueError(f"style.captions.placement {chosen['placement']} is not one of {', '.join(CAPTION_PLACEMENTS)}")
+        out['captionPlacement'] = chosen['placement']
+    return out
+
+
+def sound_props(spec: dict, props: dict, assets_dir: Path) -> list[dict]:
+    """Approved cues on the picture's clock, one frame ahead, at least six frames apart.
+
+    Beat starts match lastHandover and device frames match hitFrames in kit/ingredients.ts.
+    Existing explicit cues participate in spacing only when style.sound is chosen.
+    """
+    from . import sfx  # noqa: PLC0415
+    problems = sfx.style_problems(spec)
+    if problems:
+        raise ValueError('; '.join(problems))
+    sound = (spec.get('style') or {}).get('sound')
+    existing = (props.get('audio') or {}).get('sfx') or []
+    if sound is None:
+        return existing
+    ok = sfx.approved(sfx.APPROVED)
+    handovers = {beat['fromFrame'] for beat in props.get('beats', [])[1:]}
+    cues = []
+    if sound.get('handover'):
+        cues.extend((frame, 'handover') for frame in handovers)
+    ingredients = ingredient_props(spec)
+    if sound.get('hit') and ingredients and ingredients['hits']:
+        hits = []
+        for frame in sorted({event['atFrame'] for event in props.get('events', [])}):
+            if not hits or frame - hits[-1] >= 3:
+                hits.append(frame)
+        cues.extend((frame, 'hit') for frame in hits if not (sound.get('handover') and frame in handovers))
+    # Handovers win ties, including frame 0 when the lead is clamped.
+    candidates = [(cue['atFrame'], 1, cue) for cue in existing]
+    paths = {}
+    for frame, role in cues:
+        sid = sound[role]
+        if sid not in paths:
+            row = ok[sid]
+            rel = f"sfx/{sid}{Path(row['file']).suffix.lower()}"
+            paths[sid] = source(sfx.ensure_staged(sid, rel, assets_dir, sfx.APPROVED), assets_dir)
+        at = max(0, frame - 1)
+        candidates.append((at, 0 if role == 'handover' else 2,
+                           {'src': paths[sid], 'atFrame': at,
+                            'gainDb': sound.get('gainDb', -14 if role == 'handover' else -12)}))
+    out = []
+    for at, _priority, cue in sorted(candidates, key=lambda item: item[:2]):
+        if not out or at - out[-1]['atFrame'] >= 6:
+            out.append(cue)
+    return out
+
+
+def ingredient_props(spec: dict) -> dict | None:
+    """props.ingredients from style.transitions, style.camera and style.energy. None of them means none, and the cut
+    draws exactly as before (every beat cuts under a still camera)."""
+    style = spec.get('style') or {}
+    if not any(style.get(k) for k in ('transitions', 'camera', 'energy')):
+        return None
+    energy = style.get('energy') or 'medium'
+    transition = (style.get('transitions') or {}).get('kind', 'cut')
+    camera = style.get('camera') or {}
+    move = camera.get('move', 'none')
+    for value, allowed, name in ((energy, ENERGIES, 'style.energy'), (transition, TRANSITIONS, 'style.transitions.kind'),
+                                 (move, CAMERAS, 'style.camera.move')):
+        if value not in allowed:
+            raise ValueError(f"{name} {value} is not one of {', '.join(allowed)}")
+    return {'energy': energy, 'transition': transition, 'camera': move, 'hits': bool(camera.get('hits', move in ('punch', 'phased')))}
 
 
 MOTION_PROFILES = ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'kit' / 'motion-profiles.json'

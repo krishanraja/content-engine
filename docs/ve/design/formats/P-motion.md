@@ -113,5 +113,5 @@ Scribble: a hand-drawn loop around 0/1 (the one number that moved). Rounded-rect
 
 - Every slap is the same 5-frame curve. Only the tilt and the shake distance change, so the system reads as one hand with one stamp.
 - All hand-offs are camera or page moves, never a cross-dissolve. The only dissolves are grain and ground at the very start and end.
-- The caption zone (x 72 to 972, y 1180 to 1500) never carries a stamp, scribble or sticker; only page, thread and ground continue behind it.
+- The caption zone (x 60 to 860, y 1090 to 1320) never carries a stamp, scribble or sticker; only page, thread and ground continue behind it.
 - With reduced motion on, every beat holds its key frame as drawn here (the PNGs).

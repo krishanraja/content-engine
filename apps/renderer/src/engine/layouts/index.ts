@@ -15,27 +15,31 @@ const TALL: Record<Layout, readonly Box[]> = {
   STAGE: [
     { left: 0, top: 0, width: 1080, height: 1920 },
   ],
+  // Key content uses the whole safe column: x 60 to 860 (the action rail starts at 880) from y 280, just under every
+  // channel's top bar, down to the caption's top at 1060 (config/channel-safe-zones.json; Krish, 2026-11-11: "make
+  // maximum use of the full screen ... stay within the boundaries of all the social platforms"). Graphics end by y 1050,
+  // above the caption block (top 1090).
   P1: [
-    { left: 120, top: 288, width: 768, height: 552 },
-    { left: 144, top: 312, width: 720, height: 160 },
+    { left: 60, top: 280, width: 800, height: 552 },
+    { left: 84, top: 304, width: 752, height: 160 },
   ],
   P3: [
-    { left: 120, top: 288, width: 768, height: 324 },
-    { left: 120, top: 624, width: 768, height: 216 },
-    { left: 120, top: 852, width: 660, height: 290 },
+    { left: 60, top: 280, width: 800, height: 324 },
+    { left: 60, top: 616, width: 800, height: 216 },
+    { left: 60, top: 844, width: 700, height: 206 },
   ],
   P6: [
-    { left: 120, top: 288, width: 768, height: 552 },
-    { left: 424, top: 576, width: 464, height: 264 },
+    { left: 60, top: 280, width: 800, height: 552 },
+    { left: 396, top: 568, width: 464, height: 264 },
   ],
   F1: [
-    { left: 120, top: 852, width: 660, height: 290 },
-    { left: 120, top: 288, width: 768, height: 400 },
-    { left: 120, top: 700, width: 768, height: 140 },
+    { left: 60, top: 844, width: 700, height: 206 },
+    { left: 60, top: 280, width: 800, height: 400 },
+    { left: 60, top: 692, width: 800, height: 124 },
   ],
   F3: [
-    { left: 120, top: 376, width: 768, height: 464 },
-    { left: 120, top: 288, width: 768, height: 72 },
+    { left: 60, top: 368, width: 800, height: 464 },
+    { left: 60, top: 280, width: 800, height: 72 },
   ],
 }
 

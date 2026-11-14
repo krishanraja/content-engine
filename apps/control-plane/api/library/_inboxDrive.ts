@@ -177,8 +177,10 @@ export async function listInbox(folderId: string): Promise<InboxListing> {
 /** Streams one Drive file to a signed Storage upload URL, hashing it on the
  *  way. Returns the PUT's status and the sha256 of the bytes that passed.
  *  Nothing is held in memory but the chunk in flight. */
-export async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number): Promise<{ status: number; sha256: string }> {
-  const token = await googleAccessToken([DRIVE_READONLY_SCOPE], { impersonate: false })
+export async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number,
+  /** A token to read with instead of the service account's own: the board reads a post's file as the folder's owner. */
+  asToken?: string): Promise<{ status: number; sha256: string }> {
+  const token = asToken || await googleAccessToken([DRIVE_READONLY_SCOPE], { impersonate: false })
   if (!token) throw new Error('the engine could not sign in to Google')
   // A copy that would outlast the function is stopped and counted as a
   // failure, so the run still records itself; killed by the platform it

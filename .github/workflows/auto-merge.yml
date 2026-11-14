@@ -3,7 +3,8 @@ name: Auto-merge
 # Every pull request merges itself once CI is green, ve included (Ruling, Krish, 2026-11-03: "Change everything to
 # auto-merge all the time. No manual merging"). main has no required checks (Krish, 2026-10-25: "No merge checks."), so
 # GitHub's own auto-merge would not wait for CI; this job merges on green CI instead. Red CI never merges: the branch
-# is fixed and the next green run merges it. A branch with no open pull request is never touched.
+# is fixed and the next green run merges it. A branch with no open pull request is never touched. "CI" is the quick
+# checks only (ci.yml); the full verify (full-verify.yml) runs after the merge and never holds one back.
 on:
   workflow_run:
     workflows: [CI]
@@ -41,8 +42,15 @@ jobs:
           gh pr merge "$pr" -R "$REPO" --merge
           echo "Merged #$pr ($SHA) on green CI."
           echo "merged=true" >> "$GITHUB_OUTPUT"
-          # A merge made with GitHub's own token starts no push workflow on main; start the docs steward by hand.
-          gh workflow run docs-steward.yml -R "$REPO" --ref main || echo "::warning::docs-steward was not started; its nightly run picks the merge up."
+          # A merge made with GitHub's own token starts no push workflow on main; start the docs steward by hand, as
+          # its dry run: the digest and the validator, with no model, the half a push would run. Its writing half is
+          # the nightly run. Dispatched without the dry run, every merge started Claude as github-actions[bot], which
+          # claude-code-action refuses ("Workflow initiated by non-human actor"), so the steward check was red on
+          # every merge from 3 Nov to 12 Nov.
+          gh workflow run docs-steward.yml -R "$REPO" --ref main -f dry_run=true || echo "::warning::docs-steward was not started; its nightly run picks the merge up."
+          # The full verify runs after the merge, never before it (Ruling, Krish, 2026-11-11: quick checks on pull requests,
+          # the full verify after merge; merge fast and he tests live). It opens an issue if main goes red.
+          gh workflow run full-verify.yml -R "$REPO" --ref main || echo "::warning::full-verify was not started; its nightly run picks the merge up."
       # The same token starts no push workflow, so harness-repository-context.yml's fold job never sees this merge and
       # closeout notes pile up unfolded (twelve by 4 Nov). Fold them here with the harness's own script, pinned by the
       # sha256 that workflow checks, so NOW.md is current the moment the work lands (Ruling, Krish, 2026-11-04: docs are
@@ -65,12 +73,17 @@ jobs:
           pin=$(grep -o -m1 '[0-9a-f]\{64\}  \.claude/hooks/harness-closeout\.mjs' .github/workflows/harness-repository-context.yml)
           for attempt in 1 2 3; do
             git fetch --quiet origin main && git reset --quiet --hard origin/main || exit 1
-            if ! ls now-notes/*.md >/dev/null 2>&1; then echo "No closeout notes to fold."; exit 0; fi
-            echo "$pin" | sha256sum --check --status || { echo "::error::.claude/hooks/harness-closeout.mjs is not the harness copy"; exit 1; }
-            status=0; node .claude/hooks/harness-closeout.mjs --fold || status=$?
-            if [ -z "$(git status --porcelain -- NOW.md now-notes)" ]; then exit "$status"; fi
-            git add -A -- NOW.md now-notes
-            git commit --quiet -m "docs(closeout): fold closeout notes into NOW.md" -m "Folded by auto-merge after the merge, with .claude/hooks/harness-closeout.mjs --fold from krishanraja/ai-harness."
+            status=0
+            if ls now-notes/*.md >/dev/null 2>&1; then
+              echo "$pin" | sha256sum --check --status || { echo "::error::.claude/hooks/harness-closeout.mjs is not the harness copy"; exit 1; }
+              node .claude/hooks/harness-closeout.mjs --fold || status=$?
+            fi
+            # Main keeps NOW.md under its limit itself, so no branch ever trims it by hand: two branches trimming
+            # NOW.md at once is what left pull requests conflicted and unmerged (2026-11-10).
+            python3 scripts/now_trim.py || status=$?
+            if [ -z "$(git status --porcelain -- NOW.md now-notes docs/history)" ]; then echo "Nothing to fold or trim."; exit "$status"; fi
+            git add -A -- NOW.md now-notes docs/history
+            git commit --quiet -m "docs(closeout): fold closeout notes into NOW.md" -m "Folded by auto-merge after the merge, with .claude/hooks/harness-closeout.mjs --fold from krishanraja/ai-harness, then trimmed under the size limit by scripts/now_trim.py."
             if git push --quiet origin HEAD:main; then exit "$status"; fi
             sleep $((attempt * 5))
           done

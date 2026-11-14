@@ -1,5 +1,7 @@
 import { sanitizeVoice } from './_content.js'
 import { AEO_ENGINES, AEO_THEMES_STATUSES, PRODUCT_SLUGS, SUBJECT_KINDS, mondayOf } from './_growth.js'
+// AEO-Engine's own docs/packet.schema.json, copied byte for byte: the shapes of the optional packet fields are checked against it.
+import packetSchema from '../../../docs/AEO-PACKET.schema.json' with { type: 'json' }
 
 // _aeo: the pure half of the AEO engine's landing (api/aeo/*).
 //
@@ -34,7 +36,7 @@ export const OPEN_GOVERNOR = 12
 export const SIGNAL_TTL_DAYS = 21
 
 export type SubjectKind = 'venture' | 'prospect' | 'aspiration'
-export type AeoEngine = 'perplexity' | 'chatgpt' | 'claude' | 'grok'
+export type AeoEngine = 'perplexity' | 'chatgpt' | 'claude' | 'grok' | 'gemini'
 export type ThemesStatus = 'ok' | 'no_calls' | 'no_attributed_calls' | 'fireflies_unavailable' | 'not_applicable'
 
 export interface AeoEvidence { call_ref: string; date: string; paraphrase: string }
@@ -47,6 +49,18 @@ export interface AeoProbe {
   we_cited: boolean
   citations: string[]
   cost_usd: number
+  /** Packet feature probe_detail: what the engine's search returned, cited or not. */
+  retrieved?: string[]
+  /** Packet feature probe_detail: whether the engine searched the web for this answer. */
+  searched?: boolean
+  /** Packet feature probe_detail: the engine's own search queries. */
+  fan_out?: string[]
+  /** Packet feature probe_detail: 1-based position of our first inline citation. */
+  our_position?: number | null
+  /** Packet feature name_mentions: the answer names the subject outside any URL. */
+  name_mentioned?: boolean | null
+  /** Packet feature samples: a contested question's repeat samples on this engine. */
+  samples?: { n: number; first: number; cited: number } | null
 }
 
 export interface AeoQuery {
@@ -61,6 +75,28 @@ export interface AeoQuery {
   status: 'watch' | 'recommend' | 'drop'
   touchpoint_id: string | null
   probes: AeoProbe[]
+  /** Packet feature panel: where the question stands, run after run. */
+  panel?: Record<string, unknown>
+  /** Packet feature diagnosis: why the question is not won. */
+  diagnosis?: Record<string, unknown>
+  /** Packet feature outcome: search signals for the page a kit targets or a venture shipped. */
+  outcome?: Record<string, unknown>
+}
+
+/** Packet feature cited_pages: one page the assistants cite for the venture's questions (brief, section J). */
+export interface AeoCitedPage {
+  url: string
+  host: string
+  page_type: string
+  questions: number
+  engines: AeoEngine[]
+  times_cited: number
+  times_first: number
+  mention: 'link' | 'name' | 'none' | 'unchecked'
+  mention_ok: boolean | null
+  checked_at: string | null
+  platform: boolean
+  own: boolean
 }
 
 export interface AeoRecommendation {
@@ -119,6 +155,14 @@ export interface AeoPacket {
     queries: number; probes: number; probes_failed: number; probes_skipped_cap: number
     cost_usd: number; engines: number; transcripts: number; digest_writer: 'claude' | 'fallback'
   }
+  /** Packet feature kits: the venture's win kits, highest priority first. */
+  kits?: Array<Record<string, unknown>>
+  /** Packet feature site: each of our hosts' gates from the fetch-only site audit. */
+  site?: { hosts: Array<{ host: string; gates: Array<{ gate: string; pass: boolean }> }> }
+  /** Packet feature run_kind: a verify run re-asks shipped questions only and is never counted. */
+  run_kind?: 'research' | 'verify'
+  /** Packet feature cited_pages: the venture's cited-pages sheet. */
+  cited_pages?: AeoCitedPage[]
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -182,6 +226,81 @@ function evidenceOk(v: unknown, path: string, errs: Errs): void {
  * packet on success (strings cleaned), or every problem found, so the engine
  * sees one 400 with the full list rather than one per push.
  */
+// ── The optional packet fields, checked against AEO-Engine's own schema ────
+// docs/AEO-PACKET.schema.json is AEO-Engine's docs/packet.schema.json byte for
+// byte. The v1 fields keep the hand checks above; the fields a packet carries
+// only once the context lists them in packet_features are checked here, by the
+// handful of JSON Schema keywords that file uses, so the engine and this ingest
+// hold one contract.
+
+type SchemaNode = Record<string, unknown>
+const SCHEMA = packetSchema as unknown as { $defs: Record<string, SchemaNode>; properties: Record<string, SchemaNode> }
+const PROBE_PROPS = (SCHEMA.$defs.probe as { properties: Record<string, SchemaNode> }).properties
+const TOP_PROPS = SCHEMA.properties
+/** The probe fields of packet features probe_detail, name_mentions and samples. */
+export const PROBE_FEATURE_FIELDS = ['retrieved', 'searched', 'fan_out', 'our_position', 'name_mentioned', 'samples'] as const
+
+function resolveRef(node: SchemaNode): SchemaNode {
+  let n = node
+  for (let i = 0; i < 8 && typeof n.$ref === 'string'; i++) {
+    const m = /^#\/\$defs\/(.+)$/.exec(n.$ref)
+    const def = m ? SCHEMA.$defs[m[1]] : undefined
+    if (!def) throw new Error(`packet schema: unknown $ref ${n.$ref}`)
+    n = def
+  }
+  return n
+}
+
+function typeOk(type: string, v: unknown): boolean {
+  switch (type) {
+    case 'string': return typeof v === 'string'
+    case 'integer': return typeof v === 'number' && Number.isInteger(v)
+    case 'number': return typeof v === 'number' && Number.isFinite(v)
+    case 'boolean': return typeof v === 'boolean'
+    case 'null': return v === null
+    case 'array': return Array.isArray(v)
+    case 'object': return isObj(v)
+    default: return false
+  }
+}
+
+/** Check a value against one node of the packet schema; push a plain error per fault, at most a few per field. */
+export function schemaCheck(node: SchemaNode, v: unknown, path: string, errs: string[]): void {
+  const n = resolveRef(node)
+  if (Array.isArray(n.oneOf)) {
+    const passing = (n.oneOf as SchemaNode[]).filter(alt => { const e: string[] = []; schemaCheck(alt, v, path, e); return e.length === 0 })
+    if (passing.length !== 1) errs.push(`${path}: does not match its shape`)
+    return
+  }
+  if (typeof n.type === 'string' && !typeOk(n.type, v)) { errs.push(`${path}: must be ${n.type === 'integer' ? 'a whole number' : `a ${n.type}`}`); return }
+  if ('const' in n && v !== n.const) { errs.push(`${path}: must be ${JSON.stringify(n.const)}`); return }
+  if (Array.isArray(n.enum) && !(n.enum as unknown[]).includes(v)) { errs.push(`${path}: unknown value`); return }
+  if (typeof v === 'string') {
+    if (typeof n.minLength === 'number' && v.length < n.minLength) errs.push(`${path}: too short`)
+    if (typeof n.maxLength === 'number' && v.length > n.maxLength) errs.push(`${path}: over ${n.maxLength} characters`)
+    if (typeof n.pattern === 'string' && !new RegExp(n.pattern).test(v)) errs.push(`${path}: not in the expected form`)
+  }
+  if (typeof v === 'number') {
+    if (typeof n.minimum === 'number' && v < n.minimum) errs.push(`${path}: under ${n.minimum}`)
+    if (typeof n.maximum === 'number' && v > n.maximum) errs.push(`${path}: over ${n.maximum}`)
+  }
+  if (Array.isArray(v)) {
+    if (typeof n.minItems === 'number' && v.length < n.minItems) errs.push(`${path}: fewer than ${n.minItems}`)
+    if (typeof n.maxItems === 'number' && v.length > n.maxItems) { errs.push(`${path}: over ${n.maxItems} items`); return }
+    if (n.uniqueItems === true && new Set(v.map(x => JSON.stringify(x))).size !== v.length) errs.push(`${path}: repeats an item`)
+    if (isObj(n.items)) for (const [i, x] of v.entries()) { schemaCheck(n.items as SchemaNode, x, `${path}[${i}]`, errs); if (errs.length > 40) return }
+  }
+  if (isObj(v) && (isObj(n.properties) || Array.isArray(n.required))) {
+    const props = (isObj(n.properties) ? n.properties : {}) as Record<string, SchemaNode>
+    for (const r of (Array.isArray(n.required) ? n.required : []) as string[]) if (!(r in v)) errs.push(`${path}.${r}: required`)
+    for (const [k, x] of Object.entries(v)) {
+      if (props[k]) schemaCheck(props[k], x, `${path}.${k}`, errs)
+      else if (n.additionalProperties === false) errs.push(`${path}.${k}: not a field of this shape`)
+      if (errs.length > 40) return
+    }
+  }
+}
+
 export function validatePacket(input: unknown): { ok: true; packet: AeoPacket } | { ok: false; errors: string[] } {
   const errs: Errs = []
   if (!isObj(input)) return { ok: false, errors: ['packet must be a JSON object'] }
@@ -206,7 +325,7 @@ export function validatePacket(input: unknown): { ok: true; packet: AeoPacket } 
   else if (mondayOf(new Date(`${p.week_start}T00:00:00Z`)) !== p.week_start) errs.push('packet.week_start: must be a Monday (UTC)')
   if (typeof p.generated_at !== 'string' || Number.isNaN(Date.parse(p.generated_at))) errs.push('packet.generated_at: must be an ISO timestamp')
 
-  if (arr(p.engines, 'packet.engines', 4, errs)) {
+  if (arr(p.engines, 'packet.engines', AEO_ENGINES.size, errs)) {
     if (!p.engines.length) errs.push('packet.engines: at least one engine')
     for (const [i, e] of p.engines.entries()) if (typeof e !== 'string' || !AEO_ENGINES.has(e)) errs.push(`packet.engines[${i}]: unknown engine`)
     if (new Set(p.engines).size !== p.engines.length) errs.push('packet.engines: duplicates')
@@ -251,7 +370,7 @@ export function validatePacket(input: unknown): { ok: true; packet: AeoPacket } 
       if (arr(q.call_evidence, `${path}.call_evidence`, 10, errs)) q.call_evidence.forEach((e, j) => evidenceOk(e, `${path}.call_evidence[${j}]`, errs))
       if (!isObj(q.gap)) errs.push(`${path}.gap: required`)
       else {
-        if (arr(q.gap.we_cited_engines, `${path}.gap.we_cited_engines`, 4, errs)) for (const e of q.gap.we_cited_engines) if (typeof e !== 'string' || !AEO_ENGINES.has(e)) errs.push(`${path}.gap.we_cited_engines: unknown engine`)
+        if (arr(q.gap.we_cited_engines, `${path}.gap.we_cited_engines`, AEO_ENGINES.size, errs)) for (const e of q.gap.we_cited_engines) if (typeof e !== 'string' || !AEO_ENGINES.has(e)) errs.push(`${path}.gap.we_cited_engines: unknown engine`)
         arr(q.gap.competitor_domains, `${path}.gap.competitor_domains`, 12, errs)
       }
       if (typeof q.trend !== 'string' || !TRENDS.has(q.trend)) errs.push(`${path}.trend: unknown value`)
@@ -269,8 +388,10 @@ export function validatePacket(input: unknown): { ok: true; packet: AeoPacket } 
           if (typeof pr.we_cited !== 'boolean') errs.push(`${pp}.we_cited: must be a boolean`)
           arr(pr.citations, `${pp}.citations`, 8, errs)
           if (typeof pr.cost_usd !== 'number' || pr.cost_usd < 0) errs.push(`${pp}.cost_usd: must be a number, zero or more`)
+          for (const k of PROBE_FEATURE_FIELDS) if (pr[k] !== undefined) schemaCheck(PROBE_PROPS[k], pr[k], `${pp}.${k}`, errs)
         }
       }
+      for (const k of ['panel', 'diagnosis', 'outcome'] as const) if (q[k] !== undefined) schemaCheck({ $ref: `#/$defs/${k}` }, q[k], `${path}.${k}`, errs)
     }
   }
   if (probeCount > MAX_PROBES) errs.push(`packet.queries: ${probeCount} probes is over the ${MAX_PROBES} cap`)
@@ -287,7 +408,7 @@ export function validatePacket(input: unknown): { ok: true; packet: AeoPacket } 
       else if (queryIds.size && !queryIds.has(r.query_id)) errs.push(`${path}.query_id: not one of the packet's queries`)
       str(r.angle, `${path}.angle`, 600, errs)
       arr(r.evidence, `${path}.evidence`, 6, errs)
-      if (arr(r.engines, `${path}.engines`, 4, errs)) for (const e of r.engines) if (typeof e !== 'string' || !AEO_ENGINES.has(e)) errs.push(`${path}.engines: unknown engine`)
+      if (arr(r.engines, `${path}.engines`, AEO_ENGINES.size, errs)) for (const e of r.engines) if (typeof e !== 'string' || !AEO_ENGINES.has(e)) errs.push(`${path}.engines: unknown engine`)
       int(r.demand, `${path}.demand`, 0, 100, errs)
       // Nullable on purpose: a packet written before the winnability gate
       // still lands. A present reason has to be a real sentence.
@@ -330,6 +451,19 @@ export function validatePacket(input: unknown): { ok: true; packet: AeoPacket } 
     for (const k of ['queries', 'probes', 'probes_failed', 'probes_skipped_cap', 'engines', 'transcripts']) int(p.stats[k], `packet.stats.${k}`, 0, 1_000_000, errs)
     if (typeof p.stats.cost_usd !== 'number' || p.stats.cost_usd < 0) errs.push('packet.stats.cost_usd: must be a number, zero or more')
     if (p.stats.digest_writer !== 'claude' && p.stats.digest_writer !== 'fallback') errs.push('packet.stats.digest_writer: claude or fallback')
+  }
+
+  // The optional top-level fields (packet features kits, site, run_kind and cited_pages), each in AEO-Engine's own shape.
+  for (const k of ['kits', 'site', 'run_kind', 'cited_pages'] as const) if (p[k] !== undefined) schemaCheck(TOP_PROPS[k], p[k], `packet.${k}`, errs)
+  const venture = !!subject && subject.kind === 'venture'
+  if (p.kits !== undefined && !venture) errs.push('packet.kits: only a venture carries win kits')
+  if (p.cited_pages !== undefined && !venture) errs.push('packet.cited_pages: only a venture carries a cited-pages sheet')
+  if (Array.isArray(p.kits)) {
+    for (const [i, k] of p.kits.entries()) {
+      if (!isObj(k)) continue
+      if (typeof k.query_id === 'string' && queryIds.size && !queryIds.has(k.query_id)) errs.push(`packet.kits[${i}].query_id: not one of the packet's queries`)
+      if (subject && typeof k.product_slug === 'string' && k.product_slug !== subject.product_slug) errs.push(`packet.kits[${i}].product_slug: not this subject's product`)
+    }
   }
 
   if (errs.length) return { ok: false, errors: errs.slice(0, 40) }
@@ -491,6 +625,14 @@ export function probeRows(packet: AeoPacket): Array<Record<string, unknown>> {
         competitors_cited: pr.citations.slice(0, 8),
         touchpoint_id: q.touchpoint_id,
         run_at: packet.generated_at,
+        // A verify run's probes never stand in for a research week (brief, section I).
+        run_kind: packet.run_kind === 'verify' ? 'verify' : 'research',
+        retrieved: pr.retrieved ?? null,
+        searched: pr.searched ?? null,
+        fan_out: pr.fan_out ?? null,
+        our_position: pr.our_position ?? null,
+        name_mentioned: pr.name_mentioned ?? null,
+        samples: pr.samples ?? null,
       })
     }
   }
@@ -513,5 +655,281 @@ export function queryRows(packet: AeoPacket): Array<Record<string, unknown>> {
     trend: q.trend,
     status: q.status,
     touchpoint_id: q.touchpoint_id,
+    panel: q.panel ?? null,
+    diagnosis: q.diagnosis ?? null,
+    outcome: q.outcome ?? null,
   }))
+}
+
+/** A row of the cited-pages sheet as stored (growth_aeo_cited_pages), AEO's columns and the outreach status. */
+export interface CitedPageRow {
+  product_slug: string
+  url: string
+  host: string
+  page_type: string
+  questions: number
+  engines: string[]
+  times_cited: number
+  times_first: number
+  mention: 'link' | 'name' | 'none' | 'unchecked'
+  mention_ok: boolean | null
+  checked_at: string | null
+  platform: boolean
+  own: boolean
+  status?: string
+}
+
+const MENTIONED = new Set(['link', 'name'])
+
+/**
+ * The sheet rows one packet writes (brief, section J), merged with what is
+ * stored. AEO owns the measured columns. A page sent as "unchecked" (not read
+ * this run) keeps the mention stored for it. A page whose mention appears where
+ * it was "none" gets status "mention acquired": set from AEO's reading, never
+ * by hand. The outreach columns are never touched here otherwise. Pure.
+ */
+export function citedPageRows(packet: AeoPacket, stored: ReadonlyArray<Pick<CitedPageRow, 'url' | 'mention' | 'mention_ok' | 'checked_at'>>, runAt = packet.generated_at): Array<CitedPageRow & { last_run_id: string; last_seen_at: string }> {
+  const product = packet.subject.product_slug
+  if (packet.subject.kind !== 'venture' || !product || !Array.isArray(packet.cited_pages)) return []
+  const before = new Map(stored.map(r => [r.url, r]))
+  return packet.cited_pages.map(c => {
+    const was = before.get(c.url)
+    const keep = c.mention === 'unchecked' && was
+    const row: CitedPageRow & { last_run_id: string; last_seen_at: string } = {
+      product_slug: product, url: c.url, host: c.host, page_type: c.page_type, questions: c.questions,
+      engines: [...c.engines], times_cited: c.times_cited, times_first: c.times_first,
+      mention: keep ? was.mention : c.mention,
+      mention_ok: keep ? was.mention_ok : c.mention_ok,
+      checked_at: keep ? was.checked_at : c.checked_at,
+      platform: c.platform, own: c.own, last_run_id: packet.run_id, last_seen_at: runAt,
+    }
+    if (was && was.mention === 'none' && MENTIONED.has(c.mention)) row.status = 'mention acquired'
+    return row
+  })
+}
+
+// ── What the context tells the engine about Krish and each subject ─────────
+// AEO-Engine docs/briefs/2026-11-13-aeo-specialist.md, sections B and C.
+
+/**
+ * Where Krish himself is cited: a hit on any of these counts as being in the
+ * answer for a venture or a prospect read. krishraja.ai, krishraja.com and
+ * themindmaker.ai are his (Ruling, Krish, 2026-11-13).
+ */
+export const KRISH_DOMAINS: readonly string[] = [
+  'mindmake.co', 'krishraja.com', 'krishraja.ai', 'themindmaker.ai', 'mindmakerlive.substack.com',
+  'home.makeyourmindup.ai', 'makeyourmindup.ai', 'linkedin.com/in/krishraja',
+]
+
+/**
+ * Never ours, whatever a list says (Ruling, Krish, 2026-11-13: fractionl.us is
+ * not his). The same list as Control Center's NOT_OURS (src/lib/aiAnswers.ts)
+ * and AEO-Engine's config/own-domains.json, so every count agrees.
+ */
+export const NOT_OURS: readonly string[] = ['fractionl.us']
+
+/**
+ * The optional packet fields this ingest accepts (AEO-Engine
+ * src/schema/packet.ts, PACKET_FEATURES). The engine sends a field only when it
+ * is listed; an empty list would keep every packet exactly the v1 shape. Each is
+ * checked by validatePacket against AEO-Engine's schema and stored by the ingest
+ * (Control Center migration 20261201092000_aeo_packet_fields.sql).
+ */
+export const PACKET_FEATURES: readonly string[] = [
+  'probe_detail', 'name_mentions', 'samples', 'panel', 'diagnosis', 'kits', 'site', 'run_kind', 'engine_gemini', 'outcome', 'cited_pages',
+]
+
+/**
+ * Context features that are not packet fields, served in the same
+ * `packet_features` list because AEO-Engine reads that one list:
+ *
+ *   meter_billing  POST /api/aeo/meter reads provider, billing, input_tokens,
+ *                  output_tokens and search_calls (AEO brief, section F), so the
+ *                  engine posts its subscription and non-Anthropic rows.
+ */
+export const CONTEXT_FEATURES: readonly string[] = ['meter_billing']
+
+/** A subject's brand-accuracy check (brief, B6): an answer must not say any of must_not and must say every must. */
+export interface BrandCheck { question: string; must_not: string[]; must: string[] }
+
+const strings = (v: unknown, max: number, len: number): string[] =>
+  Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string' && s.trim().length > 0).map(s => s.trim().slice(0, len)).slice(0, max) : []
+
+/** A subject's distinctive names, as stored (growth_aeo_subjects.brand_names): at most 5, never empty strings. */
+export function brandNamesOf(v: unknown): string[] {
+  return strings(v, 5, 60)
+}
+
+/** A subject's brand checks, as stored (growth_aeo_subjects.brand_checks): at most 3, each with a question and a phrase to test. */
+export function brandChecksOf(v: unknown): BrandCheck[] {
+  if (!Array.isArray(v)) return []
+  const out: BrandCheck[] = []
+  for (const c of v) {
+    if (!c || typeof c !== 'object' || Array.isArray(c)) continue
+    const r = c as Record<string, unknown>
+    if (typeof r.question !== 'string' || !r.question.trim()) continue
+    const check = { question: r.question.trim().slice(0, 300), must_not: strings(r.must_not, 10, 80), must: strings(r.must, 10, 80) }
+    if (check.must_not.length || check.must.length) out.push(check)
+    if (out.length === 3) break
+  }
+  return out
+}
+
+/** The products whose venture growth engine Krish holds (growth_engines: role venture, activation_state held). */
+export function heldProducts(engines: ReadonlyArray<{ product_slug?: unknown; role?: unknown; activation_state?: unknown }>): Set<string> {
+  const held = new Set<string>()
+  for (const e of engines) {
+    if (e.role === 'venture' && e.activation_state === 'held' && typeof e.product_slug === 'string') held.add(e.product_slug)
+  }
+  return held
+}
+
+/** A page a venture's engine says has shipped for one of its questions, as AEO-Engine reads it (subject.shipped). */
+export interface ShippedDeclaration { question?: string; query_id?: string; url: string; shipped_at: string | null; by?: string }
+
+/**
+ * One product's shipped pages for the context, newest declaration first, at
+ * most 25, one a page; a row with no https URL, or naming neither its question
+ * nor its query id, is left out. Pure.
+ */
+export function shippedFor(rows: ReadonlyArray<Record<string, unknown>>, product: string): ShippedDeclaration[] {
+  const out: ShippedDeclaration[] = []
+  const seen = new Set<string>()
+  for (const r of rows) {
+    if (r.product_slug !== product || typeof r.url !== 'string' || !r.url.startsWith('https://') || seen.has(r.url)) continue
+    const question = typeof r.question === 'string' && r.question.trim() ? r.question.trim() : undefined
+    const query_id = typeof r.query_id === 'string' && r.query_id ? r.query_id : undefined
+    if (!question && !query_id) continue
+    seen.add(r.url)
+    out.push({
+      ...(question ? { question } : {}), ...(query_id ? { query_id } : {}), url: r.url,
+      shipped_at: typeof r.shipped_at === 'string' ? r.shipped_at : null,
+      ...(typeof r.engine_id === 'string' ? { by: r.engine_id } : {}),
+    })
+    if (out.length === 25) break
+  }
+  return out
+}
+
+/**
+ * A venture subject's own hosts: each domain's host, lower case, with no
+ * scheme, www or path, and never a not-ours one. The same rule as Control
+ * Center's subjectHosts (api/_searchSignals.ts), which keys the search signals
+ * by these hosts.
+ */
+export function subjectHostsOf(domains: unknown): string[] {
+  if (!Array.isArray(domains)) return []
+  const out = new Set<string>()
+  for (const d of domains) {
+    if (typeof d !== 'string') continue
+    const host = d.trim().toLowerCase().replace(/^[a-z][a-z0-9+.-]*:\/\//, '').replace(/^www\./, '').split(/[/?#]/)[0]
+    if (host && !NOT_OURS.some(n => host === n || host.endsWith(`.${n}`))) out.add(host)
+  }
+  return [...out]
+}
+
+/** One read's state as Control Center recorded it (growth_search_reads): when it last worked, and why the last try failed. */
+export interface SearchRead { source: string; part: string; host: string; ok: boolean; last_ok_at: string | null; reason: string | null; note: string | null }
+
+/**
+ * What AEO-Engine reads as `subject.search_signals` (its brief, section C;
+ * src/schema/context.ts SearchSignals there). A list is null when no read of
+ * it has ever worked on one of the subject's hosts: unknown, never zero.
+ * `reads` says, per source, part and host, when it last worked and why the
+ * last try failed.
+ */
+export interface SearchSignals {
+  gsc_queries: Array<{ query: string; page: string; impressions: number; clicks: number; position: number | null; date_from: string; date_to: string }> | null
+  bing: {
+    queries: Array<{ query: string; impressions: number | null; clicks: number | null; position: number | null; date_from: string; date_to: string | null }> | null
+    pages: Array<{ page: string; impressions: number | null; clicks: number | null; position: number | null; date_from: string; date_to: string | null }> | null
+    url_info: Array<{ url: string; indexed: boolean | null; last_crawled: string | null; checked: string }> | null
+    crawl_issues: Array<{ url: string; http_code: number | null; issues: unknown; in_links: number | null; checked: string }> | null
+    keyword_volume: Array<{ query: string; volume: number; weeks: number; date_from: string; date_to: string }> | null
+  } | null
+  ai_referrals: Array<{ landing_page: string; source: string | null; sessions: number; date: string; via: 'ga4' | 'clarity' }> | null
+  reads: SearchRead[]
+}
+
+type SigRow = Record<string, unknown>
+const n = (v: unknown): number | null => {
+  const x = typeof v === 'string' ? Number(v) : v
+  return typeof x === 'number' && Number.isFinite(x) ? x : null
+}
+const s = (v: unknown): string | null => (typeof v === 'string' && v ? v : null)
+
+/**
+ * One subject's search signals from Control Center's rows: the read states,
+ * its Search Console rows already summed into weeks (growth_search_gsc_weekly),
+ * Bing's weekly query and page rows, Bing's recent index, crawl and keyword
+ * rows, and the AI-referral rows. Pure.
+ */
+export function searchSignalsFor(hosts: readonly string[], input: { reads: readonly SigRow[]; gsc: readonly SigRow[]; bing: readonly SigRow[]; recent: readonly SigRow[]; referrals: readonly SigRow[] }): SearchSignals {
+  const mine = new Set(hosts)
+  const reads: SearchRead[] = input.reads.filter(r => typeof r.host === 'string' && mine.has(r.host)).map(r => ({
+    source: String(r.source), part: String(r.part), host: String(r.host),
+    ok: r.reason == null && !!r.last_ok_at, last_ok_at: s(r.last_ok_at), reason: s(r.reason), note: s(r.note),
+  }))
+  const known = (source: string, part: string) => reads.some(r => r.source === source && r.part === part && !!r.last_ok_at)
+  const onMine = (r: SigRow) => typeof r.host === 'string' && mine.has(r.host)
+
+  const gsc_queries = known('gsc', 'search_analytics')
+    ? input.gsc.filter(onMine).flatMap(r => {
+      const query = s(r.query), page = s(r.page), from = s(r.date_from), to = s(r.date_to)
+      const impressions = n(r.impressions), clicks = n(r.clicks)
+      return query && page && from && to && impressions != null && clicks != null
+        ? [{ query, page, impressions, clicks, position: n(r.avg_position), date_from: from, date_to: to }] : []
+    })
+    : null
+
+  const bingParts = ['queries', 'pages', 'url_info', 'crawl_issues', 'keywords'] as const
+  let bing: SearchSignals['bing'] = null
+  if (bingParts.some(p => known('bing', p))) {
+    const weekly = input.bing.filter(onMine)
+    const recent = input.recent.filter(onMine)
+    const urlInfo = new Map<string, { url: string; indexed: boolean | null; last_crawled: string | null; checked: string }>()
+    for (const r of recent) {
+      const url = s(r.page), day = s(r.day)
+      if (r.kind !== 'url_info' || !url || !day) continue
+      const had = urlInfo.get(url)
+      if (!had || had.checked < day) urlInfo.set(url, { url, indexed: typeof r.indexed === 'boolean' ? r.indexed : null, last_crawled: s(r.last_crawled), checked: day })
+    }
+    const newestCrawl = new Map<string, string>()
+    for (const r of recent) if (r.kind === 'crawl_issue' && typeof r.day === 'string' && (newestCrawl.get(String(r.host)) ?? '') < r.day) newestCrawl.set(String(r.host), r.day)
+    const keywords = new Map<string, Array<{ day: string; to: string; volume: number }>>()
+    for (const r of recent) {
+      const q = s(r.query), day = s(r.day), volume = n(r.volume)
+      if (r.kind !== 'keyword' || !q || !day || volume == null) continue
+      const list = keywords.get(q) ?? []
+      if (!list.some(w => w.day === day)) list.push({ day, to: s(r.day_to) ?? day, volume })
+      keywords.set(q, list)
+    }
+    bing = {
+      queries: known('bing', 'queries') ? weekly.filter(r => r.kind === 'query' && s(r.query) && s(r.day)).map(r => ({
+        query: String(r.query), impressions: n(r.impressions), clicks: n(r.clicks), position: n(r.position), date_from: String(r.day), date_to: s(r.day_to),
+      })) : null,
+      pages: known('bing', 'pages') ? weekly.filter(r => r.kind === 'page' && s(r.page) && s(r.day)).map(r => ({
+        page: String(r.page), impressions: n(r.impressions), clicks: n(r.clicks), position: n(r.position), date_from: String(r.day), date_to: s(r.day_to),
+      })) : null,
+      url_info: known('bing', 'url_info') ? [...urlInfo.values()] : null,
+      crawl_issues: known('bing', 'crawl_issues') ? recent.filter(r => r.kind === 'crawl_issue' && s(r.page) && r.day === newestCrawl.get(String(r.host))).map(r => {
+        const d = r.detail && typeof r.detail === 'object' ? r.detail as SigRow : {}
+        return { url: String(r.page), http_code: n(d.http_code), issues: d.issues ?? null, in_links: n(d.in_links), checked: String(r.day) }
+      }) : null,
+      keyword_volume: known('bing', 'keywords') ? [...keywords.entries()].map(([query, weeks]) => {
+        const newest = weeks.sort((a, b) => (a.day < b.day ? 1 : -1)).slice(0, 4)
+        return { query, volume: newest.reduce((t, w) => t + w.volume, 0), weeks: newest.length, date_from: newest[newest.length - 1].day, date_to: newest[0].to }
+      }) : null,
+    }
+  }
+
+  const ai_referrals = known('ga4', 'ai_referrals') || known('clarity', 'ai_referrals')
+    ? input.referrals.filter(onMine).flatMap(r => {
+      const page = s(r.page), day = s(r.day), sessions = n(r.sessions)
+      const via: 'ga4' | 'clarity' | null = r.source === 'ga4' ? 'ga4' : r.source === 'clarity' ? 'clarity' : null
+      return page && day && sessions != null && via ? [{ landing_page: page, source: s(r.ai_source), sessions, date: day, via }] : []
+    })
+    : null
+
+  return { gsc_queries, bing, ai_referrals, reads }
 }

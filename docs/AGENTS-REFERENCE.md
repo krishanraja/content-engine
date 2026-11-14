@@ -16,15 +16,23 @@ everything is.
 
 <a id="rule-02"></a>
 
-**The publish board is fed, never shaped.** Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex." From the week of 26 October every board has one layout (`config/board-layout.json`): five tabs (Ideas, Queue, Monday, Wednesday, Friday) and four steps in every day (Brief, Drafts, Record, Publish). Feed it through `week_board.py`'s inputs only (`docs/PUBLISH_BOARDS.md`, "The fixed layout"); never add a section, banner or style, never patch a built board. `week_board.verify()` and `npm run check:board-layout` (CI) refuse anything else, and a change to the layout itself is Krish's: there are no approval prompts for board edits; the layout is held by CI and changes only with his recorded words (Ruling, Krish, 2026-10-21). `scripts/check_board_layout.py` holds the hash of `config/board-layout.json` and `scripts/post-pack/tokens.css` and the board's structure in its snapshot, and fails until `--update --approved "Krish, YYYY-MM-DD: <his exact words>"` records the change with them.
+**The publish board is fed, never shaped.** Since 11 November it is fed by writing what the live board's view reads, never by a built page (Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. `docs/PUBLISH_BOARDS.md`, "One live board"); the fixed layout below was the old board's, retired on 13 November (the amendment below). Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex." From the week of 26 October every board has one layout (`config/board-layout.json`): five tabs (Ideas, Queue, Monday, Wednesday, Friday) and four steps in every day (Brief, Drafts, Record, Publish). Feed it through `week_board.py`'s inputs only (`docs/PUBLISH_BOARDS.md`, "The fixed layout"); never add a section, banner or style, never patch a built board. `week_board.verify()` and `npm run check:board-layout` (CI) refuse anything else, and a change to the layout itself is Krish's: there are no approval prompts for board edits; the layout is held by CI and changes only with his recorded words (Ruling, Krish, 2026-10-21). `scripts/check_board_layout.py` holds the hash of `config/board-layout.json` and `scripts/post-pack/tokens.css` and the board's structure in its snapshot, and fails until `--update --approved "Krish, YYYY-MM-DD: <his exact words>"` records the change with them.
+
+Amended (Ruling, Krish, 2026-11-13): the old publish boards are retired for good, and everything old in content-engine is retired. `week_board.py`, its fixed layout, the desk and `board_web.py publish-web` are gone (`docs/history/2026-11-13-old-boards-retired.md`); every old board address redirects to the live board, and what this rule says about building or publishing a page is history.
 
 <a id="rule-03"></a>
 
-**No Claude artifact, ever; engine work merges to main by itself.** Krish, 2026-10-19: "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically." Every board update (the week's board, a day's tab in draft, the workroom, a publish page) is built with `week_board.py --target web` (the default) and published with `board_web.py publish-web --apply` (`docs/PUBLISH_BOARDS.md`); `scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Engine work never waits on a hand merge: run `npm run verify`, push the session branch, open a pull request, and `.github/workflows/auto-merge.yml` merges it to main once CI is green; every pull request, ve included, merges itself and nobody merges by hand (Ruling, Krish, 2026-11-03: "Change everything to auto-merge all the time. No manual merging"). Never push to main directly; a red CI is fixed on the branch. No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board: Krish deleted those from both accounts on 2026-10-19 ("We are not ready for this yet"). The board keeps itself current: its live overlay redraws every day's steps, cuts and posts from the records every few seconds, so no session is needed to refresh it (Ruling, Krish, 2026-11-03: the publish board is the makeyourmindup weekly content calendar, always up to date; `docs/PUBLISH_BOARDS.md`, "Always current: the live overlay").
+**No Claude artifact, ever; engine work merges to main by itself.** Krish, 2026-10-19: "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically." Every board update (the week's board, a day's tab in draft, the workroom, a publish page) is built with `week_board.py --target web` (the default) and published with `board_web.py publish-web --apply` (`docs/PUBLISH_BOARDS.md`); `scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Engine work never waits on a hand merge: run `npm run verify:quick`, push the session branch, open a pull request, and `.github/workflows/auto-merge.yml` merges it to main once CI is green; every pull request, ve included, merges itself and nobody merges by hand (Ruling, Krish, 2026-11-03: "Change everything to auto-merge all the time. No manual merging"). Never push to main directly; a red CI is fixed on the branch. No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board: Krish deleted those from both accounts on 2026-10-19 ("We are not ready for this yet"). The board keeps itself current: its live overlay redraws every day's steps, cuts and posts from the records every few seconds, so no session is needed to refresh it (Ruling, Krish, 2026-11-03: the publish board is the makeyourmindup weekly content calendar, always up to date; `docs/PUBLISH_BOARDS.md`, "Always current: the live overlay").
 
 Amended (Ruling, Krish, 2026-10-28): he said otherwise for two boards. "on a Sunday, Claude Code proactively brings me ideas", and "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning". Zero Claude routines (Ruling, Krish, 2026-10-29); exactly two scheduled GitHub Actions jobs may build a board: the Sunday ideas board (Saturday night, ready by Sunday morning) and the Monday final board (built from the records by 06:30 Monday). Each feeds `week_board.py`'s inputs and publishes to content.krishraja.com like any session. Every other rebuild (new words, assets or a new day; the overlay shows the rest by itself) happens in a session (`docs/CADENCE.md`, "The rhythm from 1 November 2026"); until he says otherwise, any other scheduled job (the Monday repair round, the titles fallback) writes records only.
 
 Amended (Ruling, Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture". Then: "Minimal API usage under $5 a week. Could you not get Github to trigger Claude subscription to do something and then update the content.krishraja.com board?", and "happy with $15 a week". So no Claude routine of any kind: no claude.ai scheduled or fired trigger, and no headless Claude on a home-computer timer (the Saturday overnight preflight no longer starts one). GitHub Actions is the scheduler. The Sunday ideas board is `.github/workflows/sunday-ideas.yml`: Claude Code inside the job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`, made with `claude setup-token`; never an API key), fired early on Saturday with a guard that it already ran for the week, and `workflow_dispatch` by hand. Each signed piece's make is one run of `.github/workflows/make-piece.yml`. The Monday final board is built by code (`week_board.py`) from the overnight runner (Wave 2; until then the first session on Monday), never by Claude on a timer. Both write to the board only through the engine API (`ENGINE_OPERATOR_TOKEN`). The timed API calls (the engine's Vercel crons, inspirationhouse's daily runs, the fact gate) stay, and this chain's metered API spend stays under $15 a week (about $13.80 measured, 15 to 28 October). `tests/no-claude-routines.test.ts` fails on any workflow or skill that creates or fires a Claude routine, or runs Claude Code on an API key.
+
+Amended (Krish, 2026-11-09): "change content engine settings to allow pushes to main and force pushes". Pushing straight to main is allowed; the usual route is still a session branch and a pull request that merges itself (AGENTS.md, "Commit and closeout"), so "never push to main directly" above is history.
+
+Amended (Ruling, Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. From that day no board update is built with `week_board.py` or published with `board_web.py publish-web`: a session writes what the live view reads (the week's files on its branch, the making record, the engine API; `docs/PUBLISH_BOARDS.md`, "One live board"), the live view is built on every read, and the overlay above describes the archive. The same day (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's good news included) the Thursday good-news schedule was retired, so the Sunday ideas run is the one scheduled job that writes a board, and the Monday final board is the live board reading the week's records as the overnight runner fills them (`docs/CADENCE.md`).
+
+Amended (Ruling, Krish, 2026-11-13): the old publish boards are retired for good, and everything old in content-engine is retired. `week_board.py`, its fixed layout, the desk and `board_web.py publish-web` are gone (`docs/history/2026-11-13-old-boards-retired.md`); every old board address redirects to the live board, and what this rule says about building or publishing a page is history.
 
 <a id="rule-04"></a>
 
@@ -192,7 +200,8 @@ field that nothing reads.
 Amended (Ruling, Krish, 2026-10-28): "Once I approve, the two scripts will go
 to teleprompter" and "Server sends directly". This replaces the 12 October
 "Yes, automatic": a cut's script is sent only when he presses Approve scripts
-for its day on the board, and the engine's server sends it
+for its day on the board, or approves them in his own typed words carried to
+the board as `picks/<day>-scripts-words` (Ruling (Krish, 2026-11-12): "Scripts and locks only. Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs your press, so that gate is unchanged."; `board_session.py approve`), and the engine's server sends it
 (`apps/control-plane/api/_teleprompter.ts`, `sendApprovedScripts`, with the
 `TELEPROMPTER_API_KEY` secret), refusing any text whose hash is not the one he
 approved and reading each script back. The never list above is unchanged:
@@ -203,15 +212,11 @@ connector under the same scope (`plan-week`, step 12); no routine is fired
 
 <a id="rule-13"></a>
 
-**Web publish board migration (19 October 2026).** Full parity is implemented
-behind the existing access code at `content.krishraja.com/board/<Monday>`.
-Released: `config/boards.json` carries the web URLs and its `web_cutover` marker
-is `active`, so the web board is the only board. Then every
-making session reads ticks, links, edits, picks, queue and comments through
-`board_web.py read`; only the web board takes new interactions. Preserve the
-Claude artifacts and artifact generator; no ongoing two-way sync. See
-`docs/handovers/board-web-release.md` for approval gates and exact commands.
-The artifact workflow below applies before cutover and to explicit legacy builds.
+**Web publish board migration (19 October 2026).** Superseded twice: on 11 November the live board became Control
+Centre's Content tab, and on 13 November the old pages at `content.krishraja.com/board/<Monday>` were retired for good
+and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good;
+`docs/PUBLISH_BOARDS.md`, `docs/history/2026-11-13-old-boards-retired.md`). Every making session still reads ticks,
+links, edits, picks, queue and comments through `board_web.py read`; only the live board takes new interactions.
 
 <a id="rule-14"></a>
 
@@ -219,11 +224,10 @@ The artifact workflow below applies before cutover and to explicit legacy builds
 is where it counts.** Krish, 2026-10-12: "Give me a tick box next to each
 one so I can tick as I go and you can durably record that completion where
 it needs to be recorded. That Publish Manager is what you create every
-Sunday and let me iterate inside until we're done". The Sunday session makes
-one board a week (`scripts/post-pack/week_board.py`, the web board at
-content.krishraja.com/board/<its Monday>, with a tab for every publishing
-day), which keeps itself current through its live overlay; a rebuild for
-new words or assets carries every tick and day with `--previous`. Completion is recorded
+Sunday and let me iterate inside until we're done". Since 11 November the week's board is the live board in Control Centre's
+Content tab, drawn from the records on every read, and nothing builds a
+page; the old pages at content.krishraja.com/board/<its Monday> are retired
+and redirect to it (Ruling, Krish, 2026-11-13). Completion is recorded
 in this order: his tick is saved at once in the board's own store; every
 making session in Claude Code (`make-piece`, `plan-week`, `produce-video`)
 copies each channel tick onto the piece the board names for that day,
@@ -593,7 +597,15 @@ authoritative for reading; the repository is authoritative for what is correct.
 
 ## Verification
 
-Run `npm run verify` before pushing. Validate all repo-scoped skills with
+Run `npm run verify:quick` before pushing: every guard of `npm run verify`, the
+vitest tests related to the change since the merge base, the Python tests that
+changed or name a changed file, and the publishing-safety tests every time
+(`scripts/verify-quick.mjs`; shared config falls back to the whole suite). CI
+(`.github/workflows/ci.yml`, the workflow auto-merge waits on) runs exactly
+that on Linux. The full `npm run verify` on Linux and Windows, with the browser
+jobs, runs after merge in `.github/workflows/full-verify.yml` (on main, nightly
+and by hand), never blocks a merge, and opens or updates one issue when main
+goes red, closing it when main is green again. Ruling (Krish, 2026-11-11): quick checks on pull requests, the full verify after merge; merge fast and he tests live. Validate all repo-scoped skills with
 `npm run skills:validate`. Codex reads `.agents/skills`; Claude Code reads
 `.claude/skills`, which holds a real copy of the `SKILL.md` of each skill it
 loads (make-piece, plan-week, produce-video, ve), never a link, because git on

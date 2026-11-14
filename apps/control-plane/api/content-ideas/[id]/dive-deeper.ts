@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
 import { supabase } from '../../_supabase.js'
+import { patchMeta, type StoreDb } from '../../_pieceStore.js'
 import { callClaude, readMaterials, robustJson, withMaterial, type Material } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
 import { perplexityCall } from '../../_meter.js'
@@ -76,11 +77,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!items.length) return res.status(502).json({ ok: false, error: 'no_suggestions' })
 
       const research_suggestions = { items, at: new Date().toISOString() }
-      const { error: uErr } = await supabase
-        .from('content_ideas')
-        .update({ meta: { ...meta, research_suggestions }, updated_at: new Date().toISOString() })
-        .eq('id', ideaId)
-      if (uErr) return res.status(500).json({ ok: false, error: uErr.message })
+      // Onto the piece as it is now (patchMeta), never over a write that landed while the model ran.
+      const saved = await patchMeta(supabase as unknown as StoreDb, ideaId, now => ({ ...now, research_suggestions }))
+      if (saved.ok === false) return res.status(saved.reason === 'busy' ? 409 : 500).json({ ok: false, error: saved.reason === 'busy' ? 'piece_busy: send it again' : 'the suggestions could not be saved' })
 
       return res.status(200).json({ ok: true, suggestions: items })
     } catch (e: any) {
@@ -117,12 +116,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const citations: string[] = Array.isArray(j?.citations) ? j.citations : []
 
     const entry = { query: q, findings, citations, at: new Date().toISOString() }
-    const deep_dives = [...(Array.isArray(meta.deep_dives) ? meta.deep_dives : []), entry]
-    const research = uniq([...(Array.isArray(meta.research) ? meta.research : []), ...citations])
 
     // Auto-attach the findings as a material so they ground Cleo's writing
     // and show up in the Materials log without re-pasting.
-    let materials = readMaterials(meta)
     let material: Material | null = null
     if (findings.trim()) {
       material = {
@@ -134,14 +130,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         bytes: findings.length,
         at: entry.at,
       }
-      materials = withMaterial(materials, material)
     }
 
-    const { error: uErr } = await supabase
-      .from('content_ideas')
-      .update({ meta: { ...meta, deep_dives, research, materials }, updated_at: new Date().toISOString() })
-      .eq('id', ideaId)
-    if (uErr) return res.status(500).json({ ok: false, error: uErr.message })
+    // Onto the piece as it is now, not as it was read before the dive ran (patchMeta: a write that landed meanwhile is
+    // kept, never overwritten).
+    const saved = await patchMeta(supabase as unknown as StoreDb, ideaId, (now: any) => ({
+      ...now,
+      deep_dives: [...(Array.isArray(now.deep_dives) ? now.deep_dives : []), entry],
+      research: uniq([...(Array.isArray(now.research) ? now.research : []), ...citations]),
+      materials: material ? withMaterial(readMaterials(now), material) : readMaterials(now),
+    }))
+    if (saved.ok === false) return res.status(saved.reason === 'busy' ? 409 : 500).json({ ok: false, error: saved.reason === 'busy' ? 'piece_busy: send it again' : 'the dive could not be saved' })
 
     return res.status(200).json({ ok: true, entry, material })
   } catch (e: any) {

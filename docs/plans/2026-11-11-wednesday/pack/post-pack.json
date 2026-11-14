@@ -1,0 +1,238 @@
+{
+ "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+ "date": "2026-11-11",
+ "subchannel": "under.the.hood",
+ "subject": "AI is already in the music you love",
+ "headline": "A Reiki master wrote a UK number two, and it's both AI and human",
+ "files": [
+  {
+   "kind": "fact-checked-text",
+   "file": "../article.md"
+  },
+  {
+   "kind": "substack-copy",
+   "file": "../../../../.cache/pack/wed11/pages/substack.html",
+   "logos": [
+    "Suno",
+    "Udio",
+    "Grammys",
+    "Deezer"
+   ]
+  },
+  {
+   "kind": "web-page",
+   "file": "../../../../.cache/pack/wed11/pages/page.html",
+   "logos": [
+    "Suno",
+    "Udio",
+    "Grammys",
+    "Deezer"
+   ]
+  },
+  {
+   "kind": "email-pictures-off",
+   "file": "../../../../.cache/pack/wed11/pages/email-pictures-off.html",
+   "logos": [
+    "Suno",
+    "Udio",
+    "Grammys",
+    "Deezer"
+   ]
+  },
+  {
+   "kind": "cover",
+   "file": "../../../../.cache/pack/wed11/pages/cover.png",
+   "logos": [
+    "Suno",
+    "Udio",
+    "Grammys",
+    "Deezer"
+   ]
+  },
+  {
+   "kind": "substack-cover",
+   "file": "../../../../.cache/pack/wed11/pages/cover-1200x630.png",
+   "logos": [
+    "Suno",
+    "Udio",
+    "Grammys",
+    "Deezer"
+   ]
+  },
+  {
+   "kind": "share-card-cover",
+   "file": "../../../../.cache/pack/wed11/pages/cover-1200x675.png",
+   "logos": [
+    "Suno",
+    "Udio",
+    "Grammys",
+    "Deezer"
+   ]
+  },
+  {
+   "kind": "square-cover",
+   "file": "../../../../.cache/pack/wed11/pages/cover-1080x1080.png",
+   "logos": [
+    "Suno",
+    "Udio",
+    "Grammys",
+    "Deezer"
+   ]
+  },
+  {
+   "kind": "vertical-cover",
+   "file": "../../../../.cache/pack/wed11/pages/cover-1080x1920.png",
+   "logos": [
+    "Suno",
+    "Udio",
+    "Grammys",
+    "Deezer"
+   ]
+  },
+  {
+   "kind": "phone-check",
+   "file": "../../../../.cache/pack/wed11/pages/phone-images.png"
+  },
+  {
+   "kind": "thumbnail",
+   "shape": "wide",
+   "file": "../../../../.cache/pack/wed11/pages/thumb-wide-1280x720.jpg",
+   "logos": [
+    "Suno",
+    "Udio",
+    "Grammys",
+    "Deezer"
+   ]
+  },
+  {
+   "kind": "thumbnail",
+   "shape": "tall",
+   "file": "../../../../.cache/pack/wed11/pages/thumb-tall-1080x1920.jpg",
+   "logos": [
+    "Suno",
+    "Udio",
+    "Grammys",
+    "Deezer"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/wed11/figure-charts.png",
+   "purpose": "The Official Charts page: peak position 2, first charted 25 June 2026, weeks on the chart.",
+   "shows": "screenshot",
+   "data_source": "Official Charts, Movin' To The Sun page (11 Nov 2026)",
+   "facts": [
+    "Movin' To The Sun",
+    "HUGEL",
+    "Imael Angel",
+    "Ultra Nate",
+    "2"
+   ],
+   "logos": []
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/wed11/figure-suno.png",
+   "purpose": "Suno's custom mode: a lyrics box and a style box.",
+   "shows": "screenshot",
+   "data_source": "Tom's Guide, How to make music with AI using Suno",
+   "facts": [
+    "Suno",
+    "lyrics",
+    "style"
+   ],
+   "logos": [
+    "Suno"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/wed11/figure-flood.png",
+   "purpose": "Deezer's two numbers: over 50% of daily uploads, 1% to 3% of listening.",
+   "shows": "chart",
+   "data_source": "Deezer newsroom, April and July 2026",
+   "facts": [
+    "50%",
+    "1% to 3%",
+    "July 2026",
+    "April 2026"
+   ],
+   "logos": [
+    "Deezer"
+   ],
+   "measures": "AI-made tracks' share of Deezer's daily new uploads (July 2026) and of its listening (April 2026), in percent; the bars are drawn to scale and labelled"
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/wed11/figure-grammys.png",
+   "purpose": "The Grammys ruling: out of songwriting, could still qualify in performance.",
+   "shows": "comparison",
+   "data_source": "The Australian, 16 October 2026, as cited in the article",
+   "facts": [
+    "songwriting",
+    "performance",
+    "16 October 2026"
+   ],
+   "logos": [
+    "Grammys"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/wed11/figure-layers.png",
+   "purpose": "Who did which bit, layer by layer.",
+   "shows": "comparison",
+   "data_source": "HUGEL's account via We Rave You and the music press cited in the article",
+   "facts": [
+    "Imael Angel",
+    "HUGEL",
+    "Ultra Naté"
+   ],
+   "logos": [
+    "Suno",
+    "Udio"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/wed11/figure-work.png",
+   "purpose": "The three questions to ask of any work on your desk.",
+   "shows": "comparison",
+   "data_source": "the article",
+   "facts": [
+    "Whose idea was it?",
+    "What did a tool draft?",
+    "Who checked it and put their name to it?"
+   ],
+   "logos": []
+  },
+  {
+   "kind": "video-script",
+   "file": "../script-long-v2.md",
+   "name": "video-script-5-minute.md",
+   "purpose": "The 5-minute script he recorded from (Teleprompter)."
+  },
+  {
+   "kind": "video-script",
+   "file": "../script-short-v2.md",
+   "name": "video-script-90-second.md",
+   "purpose": "The 90-second script he recorded from (Teleprompter)."
+  },
+  {
+   "kind": "video-words",
+   "file": "publish-words.json"
+  },
+  {
+   "kind": "linkedin-post",
+   "text": "A Reiki master with no studio wrote a UK number two. An AI app made her first version, a producer rebuilt it and a house legend sang it. The Grammys couldn't file it under one word.\n\nThe work on your desk is increasingly made the same way. \"Did AI make this?\" tells you very little. Ask whose idea it was, what a tool drafted and who checked it and put their name to it.\n\nThe full deep dive is at makeyourmindup.ai."
+  },
+  {
+   "kind": "publish-manager",
+   "file": "../../../../.cache/pack/wed11/manager/publish-manager.html"
+  },
+  {
+   "kind": "publish-kit",
+   "file": "../../../../.cache/pack/wed11/kit/publish.html"
+  }
+ ]
+}

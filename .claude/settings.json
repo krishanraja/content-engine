@@ -15,8 +15,6 @@
       "Bash(python3 scripts/post-pack/ai_scan.py *)",
       "Bash(python3 scripts/post-pack/spine_check.py outline *)",
       "Bash(python3 scripts/post-pack/spine_check.py draft *)",
-      "Bash(python3 scripts/post-pack/week_board.py --verify *)",
-      "Bash(CLAUDE_CODE_REMOTE=1 python3 scripts/post-pack/week_board.py --verify *)",
       "Bash(git status *)",
       "Bash(git diff *)",
       "Bash(git log *)",
@@ -114,28 +112,6 @@
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/taste-guard.mjs\"",
             "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "Bash|Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/board-ui-guard.mjs\"",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Artifact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/board_sync.py\"",
-            "timeout": 30
           }
         ]
       }

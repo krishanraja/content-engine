@@ -36,7 +36,7 @@ as it stood, the brief's score, floor groups and failure ids. Writers:
 
 | Kind | Written by |
 |---|---|
-| krish_reject | his Reject asset, Reject proof and "None of these" styles presses (`apps/control-plane/api/board/_presses.ts`, `pressIncidents`) |
+| krish_reject | his Reject asset, Reject proof and "None of these" styles presses (`apps/control-plane/api/board/_presses.ts`, `pressIncidents`), and his Not this on a rendered cut (`apps/control-plane/api/board/_cuts.ts`, `cutIncident`, stage `cut`) |
 | second_round | a new proof press after a rejected one (`_presses.ts`), and `rounds` rising to 2 or more on the making record (`api/content-ideas/[id]/making.ts`) |
 | critic_block | a Critic verdict with a block finding (`scripts/velib/verdict.py`) |
 | override | each beat a spec silences a lint on with `override_reason` (`scripts/ve.py lint`) |

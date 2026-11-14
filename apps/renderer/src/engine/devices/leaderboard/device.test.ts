@@ -47,7 +47,32 @@ describe('leaderboard', () => {
     for (const aspect of ['9:16', '16:9'] as const) for (const frame of fixture.stills) {
       const markup = html(frame, aspect)
       assertOverlayMarkup(markup, 'leaderboard', aspect)
-      if (markup) expect(markup).toContain(aspect === '9:16' ? 'width:1080px;height:960px' : 'width:1280px;height:1080px')
+      if (markup) expect(markup).toContain(aspect === '9:16' ? 'width:1080px;height:960px' : 'width:1920px;height:660px')
+    }
+  })
+  it('keeps premium type and a full-width stage above the wide face window', () => {
+    const markup = html(90, '16:9')
+    expect(markup).toContain('width:1920px;height:660px')
+    for (const match of markup.matchAll(/font-size:(\d+)px/g)) expect(Number(match[1])).toBeGreaterThanOrEqual(28)
+    expect(markup).toContain('font-size:120px')
+  })
+  it('draws no note or source when unset', () => {
+    const blank = { ...object, dataset: undefined, params: { ...object.params, note: '' } }
+    const markup = renderToStaticMarkup(React.createElement(Device, { ...overlayTestProps, object: blank, events, frame: 90 }))
+    expect(markup).not.toContain('data-note')
+    expect(markup).not.toContain('data-producer')
+    expect(markup).not.toContain('<footer')
+  })
+  it('never holds identical frames while visible and renders deterministically', () => {
+    for (const aspect of ['16:9', '9:16'] as const) {
+      let previous = '', held = 0
+      for (let frame = 10; frame < 250; frame++) {
+        const markup = html(frame, aspect)
+        held = markup === previous ? held + 1 : 0
+        expect(held).toBeLessThan(15)
+        previous = markup
+      }
+      expect(html(146, aspect)).toBe(html(146, aspect))
     }
   })
   it('validates counts, values and unique row identities', () => {

@@ -1,0 +1,20 @@
+{
+  "id": "count-in-card",
+  "what": "A number counts to the spoken value in a card, then to the new value with the old one struck; a row of people lights and the leavers drop away.",
+  "says": [
+    "number",
+    "before-after",
+    "person"
+  ],
+  "needs": [
+    "number"
+  ],
+  "energy": "medium",
+  "engine": "canvas",
+  "code": "packages/moves/count-in-card/move.mjs",
+  "entry": "draw",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+  "from": "lab/styles/living-screen/scene.mjs",
+  "proven_by": "Krish, 2026-11-10, on the teller opening: \"Now let's keep that pace of animation up.\""
+}

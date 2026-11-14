@@ -1,0 +1,212 @@
+{
+ "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+ "date": "2026-11-13",
+ "subchannel": "mind.the.gap",
+ "subject": "Counting rat tails",
+ "headline": "Meta staff were ranked by AI use. They gamed it.",
+ "files": [
+  {
+   "kind": "fact-checked-text",
+   "file": "../article.md"
+  },
+  {
+   "kind": "substack-copy",
+   "file": "../../../../.cache/pack/fri/pages/substack.html",
+   "logos": [
+    "Meta",
+    "Amazon",
+    "Shopify",
+    "Duolingo"
+   ]
+  },
+  {
+   "kind": "web-page",
+   "file": "../../../../.cache/pack/fri/pages/page.html",
+   "logos": [
+    "Meta",
+    "Amazon",
+    "Shopify",
+    "Duolingo"
+   ]
+  },
+  {
+   "kind": "email-pictures-off",
+   "file": "../../../../.cache/pack/fri/pages/email-pictures-off.html",
+   "logos": [
+    "Meta",
+    "Amazon",
+    "Shopify",
+    "Duolingo"
+   ]
+  },
+  {
+   "kind": "cover",
+   "file": "../../../../.cache/pack/fri/pages/cover.png",
+   "logos": [
+    "Meta",
+    "Amazon",
+    "Shopify",
+    "Duolingo"
+   ]
+  },
+  {
+   "kind": "substack-cover",
+   "file": "../../../../.cache/pack/fri/pages/cover-1200x630.png",
+   "logos": [
+    "Meta",
+    "Amazon",
+    "Shopify",
+    "Duolingo"
+   ]
+  },
+  {
+   "kind": "share-card-cover",
+   "file": "../../../../.cache/pack/fri/pages/cover-1200x675.png",
+   "logos": [
+    "Meta",
+    "Amazon",
+    "Shopify",
+    "Duolingo"
+   ]
+  },
+  {
+   "kind": "square-cover",
+   "file": "../../../../.cache/pack/fri/pages/cover-1080x1080.png",
+   "logos": [
+    "Meta",
+    "Amazon",
+    "Shopify",
+    "Duolingo"
+   ]
+  },
+  {
+   "kind": "vertical-cover",
+   "file": "../../../../.cache/pack/fri/pages/cover-1080x1920.png",
+   "logos": [
+    "Meta",
+    "Amazon",
+    "Shopify",
+    "Duolingo"
+   ]
+  },
+  {
+   "kind": "phone-check",
+   "file": "../../../../.cache/pack/fri/pages/phone-images.png"
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/fri/figure-tails.png",
+   "purpose": "How Hanoi's rat bounty bred rats: the rule, the trick, the rat farms.",
+   "logos": [],
+   "shows": "comparison",
+   "data_source": "Atlas Obscura, The Great Hanoi Rat Massacre of 1902",
+   "facts": [
+    "one cent per rat",
+    "tail as proof",
+    "rat farms outside Hanoi"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/fri/figure-leaderboard.png",
+   "purpose": "Meta's token leaderboard in numbers, and Amazon's KiroRank.",
+   "logos": [
+    "Meta",
+    "Amazon"
+   ],
+   "shows": "comparison",
+   "data_source": "Fortune (9 Apr 2026); CIO",
+   "facts": [
+    "85,000+",
+    "top 250",
+    "Token Legend",
+    "Cache Wizard",
+    "60 trillion+",
+    "$1.4m+"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/fri/figure-uturns.png",
+   "purpose": "The U-turns: Duolingo, Meta and Amazon back away from counting AI use.",
+   "logos": [
+    "Duolingo",
+    "Meta",
+    "Amazon"
+   ],
+   "shows": "comparison",
+   "data_source": "WPXI; daily.dev; CNBC",
+   "facts": [
+    "April 2026",
+    "September 2026",
+    "October 2026",
+    "a finding, not a failing"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/fri/figure-study.png",
+   "purpose": "Half the target, more sales: the arXiv study's numbers.",
+   "logos": [],
+   "shows": "comparison",
+   "data_source": "arXiv 2609.32859 (Sep 2026)",
+   "facts": [
+    "31%",
+    "200 to 100",
+    "30%",
+    "about 90%",
+    "+7%"
+   ]
+  },
+  {
+   "kind": "thumbnail",
+   "shape": "wide",
+   "file": "/tmp/claude-0/-home-user/a2b398ec-48c8-57a1-bbe0-b1078b2b5a2c/scratchpad/fri-neon3/thumb-wide-1280x720.jpg",
+   "logos": [
+    "Meta",
+    "Amazon",
+    "Shopify",
+    "Duolingo"
+   ]
+  },
+  {
+   "kind": "thumbnail",
+   "shape": "tall",
+   "file": "/tmp/claude-0/-home-user/a2b398ec-48c8-57a1-bbe0-b1078b2b5a2c/scratchpad/fri-neon3/thumb-tall-1080x1920.jpg",
+   "logos": [
+    "Meta",
+    "Amazon",
+    "Shopify",
+    "Duolingo"
+   ]
+  },
+  {
+   "kind": "video-script",
+   "file": "../../2026-11-13-draft-script.md",
+   "name": "video-script-5-minute.md",
+   "purpose": "The 5-minute script he recorded from (Teleprompter)."
+  },
+  {
+   "kind": "video-script",
+   "file": "../../2026-11-13-draft-script-90s.md",
+   "name": "video-script-90-second.md",
+   "purpose": "The 90-second script he recorded from (Teleprompter)."
+  },
+  {
+   "kind": "video-words",
+   "file": "publish-words.json"
+  },
+  {
+   "kind": "linkedin-post",
+   "text": "Some of the biggest companies in tech ranked their staff by how much AI they used. Meta had a leaderboard with titles like \"Token Legend\". Amazon had KiroRank. Staff set AI agents running on unnecessary tasks to climb them, and both boards came down.\n\nWhen one company halved its AI usage target instead, most of the junk vanished and its sales staff sold 7% more.\n\nWhatever you count, people learn to produce. If you're counting how much AI your people use, you're counting rat tails.\n\nThe full deep dive is at makeyourmindup.ai."
+  },
+  {
+   "kind": "publish-manager",
+   "file": "../../../../.cache/pack/fri/manager/publish-manager.html"
+  },
+  {
+   "kind": "publish-kit",
+   "file": "../../../../.cache/pack/fri/kit/publish.html"
+  }
+ ]
+}

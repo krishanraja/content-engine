@@ -463,7 +463,8 @@ class RunTests(unittest.TestCase):
         block = overnight.lane_block(record)
         self.assertNotIn('file', block['cuts'][0])
 
-    def test_the_monday_board_names_every_held_cut_through_week_boards_inputs(self):
+    def test_the_run_names_every_held_cut_on_the_live_board_and_builds_no_page(self):
+        # Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it.
         records = [{'critic_calibrated': True, 'cuts': [
             {'day': 'mon', 'cut': 'long', 'piece_id': PIECE, 'status': 'made', 'url': 'https://drive.google.com/file/d/' + 'y' * 25 + '/view'}]},
             overnight.unfinished({'state': 'running', 'cuts': []}, 'standby', '2026-11-16', {'mon': PIECE}, self.config)]
@@ -471,22 +472,24 @@ class RunTests(unittest.TestCase):
 
         def run(argv):
             seen.append(argv)
-            if 'download' in argv:
-                Path(argv[argv.index('--output') + 1]).write_text('<html></html>', encoding='utf-8')
             return Proc(out='{}')
         with mock.patch.object(overnight.shutil, 'which', return_value=None):
             result = overnight.board('2026-11-16', records, self.config, runner=run)
-        build = next(a for a in seen if 'scripts/post-pack/week_board.py' in a)
-        self.assertIn('--materials', build)
-        self.assertIn('--previous', build)
-        path = Path(build[build.index('--materials') + 1].split('=', 1)[1])
-        data = json.loads(path.read_text())
+        flat = [' '.join(a) for a in seen]
+        self.assertFalse([a for a in flat if 'week_board.py' in a or 'publish-web' in a or ' download ' in a], flat)
+        filed = next(a for a in seen if 'board_session.py' in ' '.join(a) and 'add' in a)
+        self.assertEqual(filed[filed.index('add') - 1], PIECE)
+        data = json.loads(Path(filed[filed.index('add') + 1]).read_text())
         board_materials.validate(data, PIECE)
         self.assertEqual(data['status'], 'review')
         self.assertIn('Held: the short cut', data['note'])
         self.assertIn(overnight.REASONS['not_finished'], json.dumps(data))
+        report = next(a for a in seen if 'board_session.py' in ' '.join(a) and 'blocked' in a)
+        self.assertIn('Held: the short cut', report[report.index('blocked') + 1])
+        self.assertEqual(seen[-1][-4:], ['touch', '2026-11-16', '--source', 'overnight'])
         self.assertEqual(result['held'], [{'day': 'mon', 'cut': 'short', 'reason_code': 'not_finished'}])
-        self.assertTrue(result['published'])
+        self.assertEqual(result['filed'], ['mon'])
+        self.assertTrue(result['touched'])
         self.assertIsNone(result['repair_round'])
 
     def test_a_held_cut_a_repair_could_mend_asks_for_one_repair_round(self):

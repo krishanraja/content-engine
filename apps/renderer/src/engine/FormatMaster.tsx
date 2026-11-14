@@ -13,10 +13,14 @@ import type { Box } from './devices/types'
 import { slotsFor, splitCameraBox, splitPlatePosition, windowCameraState } from './layouts'
 import { setActiveCanvas } from './kit/lock'
 import { resolveMotion, type MotionProfile } from './kit/motionProfiles'
-import { beatMotion, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
+import { beatMotion, groundTexture, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
 import { focusRoom, placed } from './kit/focus'
 import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
+import { TRANSITION_FRAMES, cameraAt, cameraStyle, flashAt, hitFrames } from './kit/ingredients'
+import { regionSlots } from './kit/layout'
+import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
+import { layoutSlots } from './kit/layout'
 import { EngineAudio } from './audio'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
 
@@ -88,12 +92,24 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const faceState = hasWindow ? windowCameraState(props.beats, props.aspect, frame) : undefined
   setActiveCanvas(width, height)
   // The motion style he picked (props.motion), or the house motion when there is none: every device reads it.
-  const profile = resolveMotion(props.motion)
+  const ingredients = props.ingredients
+  // A crossfade handover (style.transitions crossfade) dissolves beat into beat on the style's own clock, its length
+  // set by the energy and kept within the 6 to 10 frames a crossfade may take.
+  const chosen = resolveMotion(props.motion)
+  const profile = chosen && ingredients?.transition === 'crossfade'
+    ? { ...chosen, transition: 'crossfade' as const, transitionFrames: Math.min(10, Math.max(6, TRANSITION_FRAMES[ingredients.energy])) } : chosen
   setMotionProfile(profile)
+  // A staging (kit/staging.ts) places his take and a graphics panel on every beat that shows him; a piece with a
+  // WINDOW beat keeps the window's own moves.
+  const staging = !hasWindow && isStaging(props.layout?.mode)
+    ? stagingGeometry(props.layout!.mode as 'band', props.aspect, props.captionPlacement, !!props.captionTheme) : undefined
+  const stagedNow = staging && activeBeat && staged(activeBeat) ? staging : undefined
+  const stagedTake = stagedNow ? { ...boxStyle(stagedNow.take), borderRadius: stagedNow.take.radius,
+    ...(stagedNow.take.border ? { border: `6px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `14px 14px 0 ${props.tokens.inkDeep}` } : {}) } : undefined
 
   const take = props.segments.map((segment, index) => (
         <Sequence key={`segment-${index}`} from={segment.fromFrame} durationInFrames={segment.durationFrames}>
-          <AbsoluteFill style={{ overflow: 'hidden', ...(faceState?.box ?? camera ?? {}), ...(faceState ? { borderRadius: 210 * faceState.windowed, border: `${6 * faceState.windowed}px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `${10 * faceState.windowed}px ${10 * faceState.windowed}px 0 ${props.tokens.inkDeep}`, transform: `scale(${faceState.scale})`, transformOrigin: 'center center' } : {}) }}>
+          <AbsoluteFill style={{ overflow: 'hidden', ...(faceState?.box ?? camera ?? stagedTake ?? {}), ...(faceState ? { borderRadius: 210 * faceState.windowed, border: `${6 * faceState.windowed}px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `${10 * faceState.windowed}px ${10 * faceState.windowed}px 0 ${props.tokens.inkDeep}`, transform: `scale(${faceState.scale})`, transformOrigin: 'center center' } : {}) }}>
             <OffthreadVideo
               src={segment.src}
               trimBefore={segment.trimBeforeFrames}
@@ -111,10 +127,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         </Sequence>
       ))
 
-  return (
-    <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
-      {!hasWindow && take}
-      {props.beats.map((beat, beatIndex) => {
+  const beatLayers = props.beats.map((beat, beatIndex) => {
         // Beats mount by frame range with no time offset, so media nested inside a device (a recording's own
         // Sequence) runs on the same global clock as everything else (INV-ONE-CLOCK).
         const next = props.beats[beatIndex + 1]
@@ -124,14 +137,19 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const outgoing = frame >= beat.toFrame && frame < beat.toFrame + overlap
         if ((frame < beat.fromFrame || frame >= beat.toFrame) && !outgoing) return null
         const now = outgoing ? beat.toFrame - 1 : frame
-        const slots = slotsFor(beat.layout, props.aspect, beat.uses.length)
+        // The layout ingredient (kit/layout.ts): a graphics-only beat's devices fill the region the captions leave.
+        const graphicsOnly = beat.layout === 'STAGE' && beat.plate?.source === 'none'
+        const stagedBeat = staging && staged(beat) ? staging : undefined
+        const slots = (stagedBeat ? regionSlots(stagedBeat.region, beat.uses.length) : undefined)
+          ?? (graphicsOnly ? layoutSlots(props.layout, props.aspect, props.captionPlacement, !!props.captionTheme, beat.uses.length) : undefined)
+          ?? slotsFor(beat.layout, props.aspect, beat.uses.length)
         if (beat.layout === 'WINDOW' && slots.length)
           slots[0] = { left: 0, top: 0, width, height }
         // A style on twos steps its graphics; the take and captions stay on every frame.
         const at = profile?.onTwos ? onTwos(now, beat.fromFrame) : now
         const layerHeight = beat.layout === 'SPLIT' ? splitCameraBox(props.aspect).top : height
         const view = profile ? cameraView(profile, beat, slots, objects, props, at) : undefined
-        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight) : undefined
+        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region) : undefined
         const fade = (motion?.fade ?? 1) * (outgoing ? 1 - progress(frame - beat.toFrame, overlap, (t) => t) : 1)
         const sweep = profile && (beat.layout === 'STAGE' || beat.layout === 'SPLIT') ? sweepStyle(profile, props.tokens, beat, now) : null
         const ground = beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: profile ? splitGroundColour(profile, props.tokens) : props.tokens.cream, overflow: 'hidden' as const }
@@ -154,6 +172,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
             {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts). */}
             {profile ? <>
               {sweep && <AbsoluteFill style={sweep} />}
+              {grounded && groundTexture(profile.ground.texture, props.tokens, frame) && <AbsoluteFill data-ground-texture style={groundTexture(profile.ground.texture, props.tokens, frame)!} />}
               {grounded && profile.ground.texture === 'paper' && <PaperTexture id={beat.id} width={width} height={layerHeight} tokens={props.tokens} />}
               {grounded && overlays.includes('scanLines') && <AbsoluteFill data-scan-lines style={scanLines(props.tokens)} />}
               {grounded && overlays.includes('sketchFrame') && profile.boil && <SketchFrame id={beat.id} width={width} height={layerHeight}
@@ -226,17 +245,57 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
             </AbsoluteFill>
           </AbsoluteFill>
         )
+        // tray: the graphics sit in a cream tray that rises from bottom left over his chest, with a hard ink drop.
+        if (stagedBeat?.rises) {
+          const rise = trayRise(frame, beat.fromFrame)
+          return <Fragment key={`devices-${beat.id}`}>
+            <div data-staging-tray style={{ ...boxStyle(stagedBeat.panel), borderRadius: stagedBeat.panel.radius, backgroundColor: props.tokens.cream,
+              boxShadow: `16px 16px 0 ${props.tokens.inkDeep}`, opacity: rise.opacity * fade,
+              transform: `translateY(${rise.ty}px) scale(${rise.scale})`, transformOrigin: 'bottom left' }} />
+            <AbsoluteFill style={{ opacity: rise.opacity, transform: `translateY(${rise.ty}px) scale(${rise.scale})`,
+              transformOrigin: `${stagedBeat.panel.left}px ${stagedBeat.panel.top + stagedBeat.panel.height}px` }}>{layer}</AbsoluteFill>
+          </Fragment>
+        }
         // paper-cutout: the stock is torn where it meets his take, under the captions and the mark tile.
         return torn && beat.layout === 'SPLIT' ? <Fragment key={`devices-${beat.id}`}>{layer}
           <AbsoluteFill style={fade < 1 ? { opacity: fade } : undefined}>
             <TornSeam id={beat.id} width={width} seam={layerHeight} tokens={props.tokens} />
           </AbsoluteFill></Fragment> : layer
-      }).concat(hasWindow ? take : [])}
-      {props.beats.map((beat) => (frame < beat.fromFrame || frame >= beat.toFrame ? null : (
+      }).concat(hasWindow ? take : [])
+  const brandLayers = props.beats.map((beat) => (frame < beat.fromFrame || frame >= beat.toFrame ? null : (
         <AbsoluteFill key={`brand-${beat.id}`}>
           <BrandFrame props={props} beat={beat} frame={frame} />
         </AbsoluteFill>
-      )))}
+      )))
+  // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.
+  const stagingGround = stagedNow && !stagedNow.rises ? (
+    <AbsoluteFill key="staging-ground" data-staging={props.layout!.mode} style={{ backgroundColor: stagedNow.under === 'cream' ? props.tokens.cream : props.tokens.ink }}>
+      <div style={{ ...boxStyle(stagedNow.panel), borderRadius: stagedNow.panel.radius, background: `radial-gradient(ellipse at 30% 30%, ${props.tokens.inkSoft} 0%, ${props.tokens.ink} 70%)` }} />
+      {groundTexture(profile?.ground.texture, props.tokens, frame) ? <div data-ground-texture style={{ ...boxStyle(stagedNow.panel), borderRadius: stagedNow.panel.radius, ...groundTexture(profile?.ground.texture, props.tokens, frame)! }} /> : null}
+      {stagedNow.hairline ? <div style={{ ...boxStyle(stagedNow.hairline), backgroundColor: props.tokens.channel }} /> : null}
+    </AbsoluteFill>) : undefined
+  const picture = stagingGround ? [stagingGround, ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)
+  // With no ingredients the tree is exactly what it was before them (houseGolden.test.ts flattens it).
+  if (!ingredients) return (
+    <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
+      {stagingGround ? picture : !hasWindow && take}
+      {beatLayers}
+      {brandLayers}
+      <EngineAudio audio={props.audio} stem={stem} />
+    </AbsoluteFill>
+  )
+  // The camera and the handover (kit/ingredients.ts) move the whole picture, his take and the graphics together; the
+  // captions and the frame stay still over it, and a flash of cream lands over the picture under the captions.
+  const hits = ingredients.hits ? hitFrames(props.events) : []
+  const flash = flashAt(ingredients, props.beats, hits, frame)
+  return (
+    <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
+      <AbsoluteFill data-ingredient-camera style={cameraStyle(cameraAt(ingredients, props.beats, hits, frame, width), width, height)}>
+        {stagingGround ? picture : !hasWindow && take}
+        {beatLayers}
+      </AbsoluteFill>
+      {flash > 0 ? <AbsoluteFill data-flash style={{ backgroundColor: props.tokens.cream, opacity: flash }} /> : null}
+      {brandLayers}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )

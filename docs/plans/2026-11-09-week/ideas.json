@@ -492,6 +492,41 @@
     "closed": "Rejected (Krish, 3 Nov): boring, no clear takeaway."
    }
   ],
+  "wed": [
+   {
+    "id": "tablefortwo",
+    "format": "Meme, 1 image, 4:5",
+    "source": {
+     "label": "The photo Growth filed with the post on 11 Nov (Jensen Huang toasting a felt robot)",
+     "url": "https://drive.google.com/file/d/1jwnCb8VE3PdK9rDhvaz3r1y7DX5Y0j77/view"
+    },
+    "copy": "Table for two. One of them runs on a GPU. 🍷🤖\n\nTag the tech leader most likely to get caught.",
+    "hook": "POV: tech leaders getting busted in 5 years from now",
+    "pitch": {
+     "see": "Jensen Huang toasting a felt robot at a restaurant table, under one line of caption.",
+     "lands": "Anyone watching tech leaders fall for their own AI gets the joke at a glance.",
+     "share": "Tag the tech leader most likely to get caught."
+    },
+    "direction": {
+     "look": "The photo in a mint frame with a soft green glow on brand ink; the caption in cream Archivo, POV in mint; the house wordmark small, bottom right",
+     "format": "Meme, 1 image, 4:5",
+     "frames": [
+      {
+       "words": "POV: tech leaders getting busted in 5 years from now",
+       "picture": "Jensen Huang and the felt robot raising glasses"
+      }
+     ],
+     "tone": "Silly",
+     "kit": "On-ink wordmark from 1 Brand kit (permanent), bottom right"
+    },
+    "drive": "https://drive.google.com/drive/folders/1ery_5vVMg-HFwhCj4MwpcB8ClIMI7H_d",
+    "posts_folder": "2026-11-11 Wed off.day - Table for two",
+    "decided": "Growth filed it for Wed 11 Nov on white; remade on black 12 Nov (Krish, 12 Nov: \"Today's Jensen Huang post needs to have a black background not a white background so we need to reskin that.\"). Black version: 4 Social/table-for-two-meme-black-v2.png.",
+    "needs": [
+     "Finished: table-for-two-meme-black-v2.png and the post description in 3 Posts › 2026-11-11 Wed off.day - Table for two › 4 Social."
+    ]
+   }
+  ],
   "thu": [
    {
     "id": "gitbroke",
@@ -721,6 +756,99 @@
      "against": 13
     },
     "closed": "Not chosen: Thursday runs the Git carousel."
+   },
+   {
+    "id": "agentnotsetup",
+    "format": "Meme video, 19 s, 9:16",
+    "source": {
+     "label": "Geek Creative Agency short Krish saved on 3 Nov",
+     "url": "https://youtube.com/shorts/tJwqPQvgQkk"
+    },
+    "copy": "Gave my AI agent the keys to my laptop and zero instructions. Forty minutes later it's still hunting for the start button. 🖱️\n\nSet yours up properly before you let it drive.\n\nVideo: Geek Creative Agency (@geekanimals)",
+    "hook": "POV: your AI agent using your computer without being set up properly by you",
+    "pitch": {
+     "see": "The Geek short unchanged except the caption, his words; our wordmark and Geek's credit under the clip.",
+     "lands": "Anyone who has let an AI agent loose on their computer knows the feeling.",
+     "share": "Set up your AI agent before it touches your computer."
+    },
+    "direction": {
+     "look": "The saved short as it is",
+     "format": "Meme video, 19 s, 9:16",
+     "frames": [
+      {
+       "words": "POV: your AI agent using your computer without being set up properly by you",
+       "picture": "The Geek short"
+      }
+     ],
+     "tone": "Silly",
+     "kit": "Wordmark and Geek credit under the clip"
+    },
+    "drive": "https://drive.google.com/drive/folders/1UU2FiU2HAvUuuEbJ2GM7nqzm76rZg9GJ",
+    "posts_folder": "2026-11-12 Thu off.day - AI agent not set up",
+    "decided": "Posts Thu 12 Nov (Krish, 11 Nov: \"POV: your AI agent using your computer... is for tomorrow\"). Codex schedules it.",
+    "needs": [
+     "Finished: AI agent not set up - tall 9x16 - black v2.mp4 (remade on black 12 Nov, Krish: \"Same goes for Thursdays meme\") and its post description in 3 Posts › 2026-11-12 Thu off.day - AI agent not set up."
+    ]
+   },
+   {
+    "format": "Explainer carousel, 6 cards, 4:5",
+    "source": {
+     "label": "VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); GeekWire, 30 Mar 2026 (Microsoft Critique); NeurIPS 2024 study on AI judges; SEC auditor independence rules, Jan 2003",
+     "url": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+    },
+    "hook": "Your AI thinks it's the best. Guess who told it.",
+    "pitch": {
+     "see": "Six cards. Cover: a robot proudly pressing an I'M THE BEST sticker onto its own chest, a sheet of the same stickers on the desk, while the office behind it is broken and on fire. Then the post-Enron auditor rule, Home Depot (Google answers, OpenAI judges), Microsoft (GPT writes, Claude checks), the study in one line, and the rule on the last card above Follow for more.",
+     "lands": "Everyone knows why an auditor can't sign off its own work; the sticker makes the AI version a joke before it is a rule.",
+     "why_now": "As AI writes more of the first draft, checking becomes the job: Microsoft built its checker in March and Home Depot's CIO described hers in October.",
+     "share": "Your AI gave itself the sticker."
+    },
+    "direction": {
+     "look": "A funny photographic scene cover, then house ink cards with real logos on cream tiles",
+     "format": "Explainer carousel, 6 cards, 4:5",
+     "frames": [
+      {
+       "words": "YOUR AI THINKS IT'S THE BEST. GUESS WHO TOLD IT.",
+       "picture": "A robot proudly pressing an I'M THE BEST sticker onto its own chest, a sticker sheet of the same on the desk beside it, the office around it broken and on fire"
+      },
+      {
+       "words": "AFTER ENRON, AN ACCOUNTING FIRM MAY NOT CHECK ITS OWN WORK",
+       "picture": "A real crop of the SEC's January 2003 auditor rule"
+      },
+      {
+       "words": "HOME DEPOT: GOOGLE'S AI ANSWERS, OPENAI'S AI JUDGES",
+       "picture": "The Home Depot, Google and OpenAI logos, with the CIO's line: \"We like the tension\""
+      },
+      {
+       "words": "MICROSOFT: GPT WRITES THE REPORT, CLAUDE CHECKS IT",
+       "picture": "The Microsoft, OpenAI and Anthropic logos over a real crop of Copilot's Critique"
+      },
+      {
+       "words": "AN AI RATES ITS OWN WRITING HIGHER THAN PEOPLE DO",
+       "picture": "A real crop of the study's own chart"
+      },
+      {
+       "words": "NEVER LET AN AI MARK ITS OWN HOMEWORK.",
+       "picture": "If you're relying on the answer for an important decision, ask a different AI to check. Follow for more over the centred mark"
+      }
+     ],
+     "tone": "Plain and dry",
+     "kit": "Brand kit, no series pill (off day), house mark small bottom-right, Follow for more on the last card"
+    },
+    "learned_from": [
+     "\"If you're relying on the answer for an important decision, ask a different AI to check\" can be the final statement. Then it's perfect and needs to be filed for today in the board and drive (12 Nov)",
+     "Okay, I agree with number one, but we need a more catchy, sensational heading. We need a hilarious front cover picture of a robot that looks like a person, proudly putting a sticker on his own chest saying, \"I'm the best,\" with a similar sticker sheet on the table next to him (showing that he literally just does this whilst everything around him is broken and on fire). (12 Nov)",
+     "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)"
+    ],
+    "id": "beststicker",
+    "item": "engine:2026-11-16:auditrule",
+    "copy": "Six cards. Your AI thinks it's the best: at school you don't mark your own test, AIs give themselves better marks, so Home Depot and Microsoft have a rival AI check their AI. If you're relying on the answer for an important decision, ask a different AI to check.",
+    "decided": "Posts Thu 12 Nov (Krish, 12 Nov: \"\"If you're relying on the answer for an important decision, ask a different AI to check\" can be the final statement. Then it's perfect and needs to be filed for today in the board and drive\"). Growth posts it.",
+    "needs": [
+     "Finished: six cards (best-card-1 to 6) and the post description with its sources in 3 Posts › 2026-11-12 Thu off.day - Your AI thinks it's the best › 4 Social."
+    ],
+    "drive": "https://drive.google.com/drive/folders/1gA2PveiPW4YAQNS2s3zOch6c5rAaXQtN",
+    "posts_folder": "2026-11-12 Thu off.day - Your AI thinks it's the best"
    }
   ],
   "sat": [
@@ -777,47 +905,82 @@
     },
     "adds": "Real, dated news from this week with each story's own picture or clip, where the saved post is a one-off with no sources.",
     "weekly": "good_news",
-    "stories_due": "2026-11-08",
+    "stories_due": "2026-11-12",
     "stories": [
      {
-      "headline": "Nurses with AI help gave 4,597 heart scans in rural towns",
-      "what": "A health van visited 10 rural counties in four US states. Nurses and other staff with two hours of AI-guided training took the heart scans, and experts far away checked them. 98% of scans had every view doctors need.",
-      "why": "People who live far from a heart specialist can get a proper heart check close to home. These are early results that other experts have not yet reviewed.",
-      "date": "2026-11-02",
-      "source": {"label": "American Heart Association newsroom", "url": "https://newsroom.heart.org/news/non-experts-with-ai-guidance-and-off-site-review-perform-quality-mobile-rural-heart-scans"},
-      "media": {"kind": "photo", "url": "https://iprsoftwaremedia.com/67/files/20269/eec50b9c834cefd555f05b13149e03ca/6ad983fe3d633211624a8985_Ravi%20-%20Mobile%20Health%20Unit/Ravi%20-%20Mobile%20Health%20Unit_452cc052-eaae-4f6d-93f1-4363f72b0584-prv.jpg"}
+      "headline": "AI tips helped electricity customers cut peak demand by 1 gigawatt this year",
+      "what": "Power companies in North America used Oracle's AI tools to send customers tips and rewards for using less power at the busiest times. Programs that reached 4.3 million customers cut peak demand by 1 gigawatt so far in 2026, over 73 events.",
+      "why": "Using less power at the busiest times eases the strain on the grid, and some customers earn bill credits for it. The figures come from Oracle itself.",
+      "kind": "climate",
+      "date": "2026-11-11",
+      "source": {
+       "label": "Oracle press release, via PR Newswire",
+       "url": "https://www.prnewswire.com/news-releases/utilities-achieve-record-peak-energy-ai-powered-demand-reduction-with-oracle-302936449.html"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://mmx.prnewswire.com/media/MS605173/Oracle-Logo-Logo.jpg?id=OA3069858"
+      }
      },
      {
-      "headline": "Wearables and AI warned of blood pressure crises up to 3 days early",
-      "what": "Researchers followed 4,190 adults with high blood pressure who wore activity trackers. When doctors changed their medicine within a day of an AI alert, crises fell by about 61%.",
-      "why": "A warning days ahead gives a doctor time to act before a trip to the emergency room. These are early results that other experts have not yet reviewed.",
-      "date": "2026-11-02",
-      "source": {"label": "American Heart Association newsroom", "url": "https://newsroom.heart.org/news/wearable-devices-+-ai-analysis-may-predict-high-blood-pressure-crisis-up-to-3-days-early"},
-      "media": {"kind": "clip", "url": "https://iprsoftwaremedia.com/67/files/20269/1a624d0e623e57367d5667614dca3667/Dr.%20Delgado-Lelievre%20HBP%20tracking%20and%20AI%20tracking.mp4"}
+      "headline": "AI drafts of heart scan reports cut doctors' reading time by nearly half",
+      "what": "Kaiser Permanente tried AI on 1,200 heart ultrasound scans at 21 medical centres in California. The AI's first drafts were as accurate as drafts by trained staff, and heart doctors took 4.6 minutes per scan instead of 8.5.",
+      "why": "Heart doctors spend less time on each report. These are early results that other experts have not yet reviewed.",
+      "kind": "work",
+      "date": "2026-11-09",
+      "source": {
+       "label": "American Heart Association newsroom",
+       "url": "https://newsroom.heart.org/news/ai-interpreted-echocardiograms-comparable-to-human-reports-cardiologists-time-cut-by-about-50"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://iprsoftwaremedia.com/67/files/20143/53599f8bc8046712f4065d3a_heart%20with%20artery%20view/heart%20with%20artery%20view_01ffdf01-5bde-4cd9-b76c-748d50ca8d91-prv.jpg?v=01ffdf01-5bde-4cd9-b76c-748d50ca8d91"
+      }
      },
      {
-      "headline": "Doctors preferred AI-written hospital discharge notes 95% of the time",
-      "what": "Stony Brook University compared discharge notes written by AI and by doctors for 60 long hospital stays. The doctors who reviewed them preferred the AI version in 95% of cases.",
-      "why": "A clearer note helps your own doctor look after you once you go home. Both kinds still had mistakes, so a doctor still checks every note.",
-      "date": "2026-11-02",
-      "source": {"label": "Stony Brook University, via Newswise", "url": "https://www.newswise.com/articles/study-shows-ai-may-improve-patient-discharge-summaries"},
-      "media": {"kind": "photo", "url": "https://media.newswise.com/pio/articles/857814/6ae8bfff436b0_DischargeSummaryTable1_857814.jpg"}
+      "headline": "More heart patients got cholesterol treatment when AI read their scans",
+      "what": "In Cleerly's PARAMOUNT trial of 530 people with chest pain at 21 sites, its AI measured the build-up in their heart arteries from a CT scan. Three in four of them ended up on cholesterol medicine, against under half of those given the usual stress test.",
+      "why": "Doctors could see more clearly what was behind the chest pain and treat it early. The results come from the company and other experts have not yet reviewed them.",
+      "kind": "health",
+      "date": "2026-11-07",
+      "source": {
+       "label": "Cleerly press release",
+       "url": "https://cleerly.com/press/paramount-first-randomized-trial"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://cleerly.com/hubfs/press-release/aha-2026_pr_paramount-aha-results.jpg"
+      }
      },
      {
-      "headline": "Google's free AI training for teachers reaches five more places",
-      "what": "The free, on-demand course for teachers now covers Spain, Brazil, Mexico, Australia and sub-Saharan Africa. In India, 80,000 teachers took it in September.",
-      "why": "Teachers learn to use AI well in class. Teachers in Malaysia say it saves them three to five hours of lesson prep per topic.",
-      "date": "2026-11-03",
-      "source": {"label": "Google blog", "url": "https://blog.google/products-and-platforms/products/education/google-ai-educator-series-global-expansion-november-2026/"},
-      "media": {"kind": "photo", "url": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Regional_Blog_Header_Option_1.width-200.format-webp.webp"}
+      "headline": "AlphaGenome 2 finds nearly twice as many DNA changes that matter",
+      "what": "Google DeepMind's new AI reads a long stretch of DNA and predicts how small changes in it turn genes up or down in each kind of cell. It learned from more than 100 million single cells, and researchers can use it now.",
+      "why": "It helps scientists find which DNA changes cause disease, and in which cells, so they know where to look for treatments. It is for research only, and doctors cannot use it to diagnose anyone.",
+      "kind": "science",
+      "date": "2026-11-11",
+      "source": {
+       "label": "Google DeepMind blog",
+       "url": "https://deepmind.google/blog/alphagenome-2-deciphering-how-cells-read-dna-to-better-understand-disease/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://storage.googleapis.com/gdm-deepmind-com-prod-public/media/original_images/EUdRzfXXT2oOcMoR/ag1_vs_ag2_expr_cond_gdm_light_no_outline.gif"
+      }
      },
      {
-      "headline": "AI picked 92 possible new sweeteners from 50 million chemicals",
-      "what": "Scientists at the Hebrew University of Jerusalem used AI to sift about 50 million compounds for ones that could taste sweet. It narrowed them down to 92 to test next.",
-      "why": "It could lead to new sugar swaps for people who need to eat less sugar. Each one still has to be tested for taste and safety.",
+      "headline": "UNICEF is building an AI that shows which children a hurricane could hit",
+      "what": "UNICEF's Ahead of the Storm mixes weather, maps and population data to estimate how many children could be affected before a hurricane reaches land. It names the towns, schools and health centres likely to be in the storm's path.",
+      "why": "Help can go to the right places before the storm arrives. The tool is still being tested, next in the Caribbean.",
+      "kind": "safety",
       "date": "2026-11-05",
-      "source": {"label": "Hebrew University of Jerusalem, via Phys.org", "url": "https://phys.org/news/2026-11-sweeter-future-ai-scientists-sugar.html"},
-      "media": {"kind": "photo", "url": "https://scx1.b-cdn.net/csz/news/800a/2026/a-sweeter-future-ai-he.jpg"}
+      "source": {
+       "label": "UNICEF",
+       "url": "https://www.unicef.org/digitalimpact/stories/using-ai-protect-children-disaster-strikes"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://www.unicef.org/digitalimpact/sites/unicef.org.digitalimpact/files/styles/hero_desktop/public/DSC03039.JPG.webp?itok=68FNu_ik"
+      }
      }
     ],
     "read_back": {
@@ -1012,7 +1175,66 @@
     "needs": [
      "A candidate for the weekend decision beside the fresh good news (Krish, 4 Nov). If chosen: real stories only, with a funny generated cover (Krish, 3 Nov)."
     ],
-    "decided": "Chosen at the weekend from fresh news (Krish, 4 Nov): the run on Sat 7 Nov brings the week's good news, and you pick on Sun 8 Nov."
+    "decided": "Chosen at the weekend from fresh news (Krish, 4 Nov): the run on Sat 7 Nov brings the week's good news, and you pick on Sun 8 Nov.",
+    "stories": [
+     {
+      "headline": "Four years misdiagnosed. ChatGPT found it.",
+      "what": "A young woman in Cardiff was misdiagnosed for four years. She asked ChatGPT; it suggested hereditary spastic paraplegia, her GP agreed, and genetic testing confirmed it.",
+      "why": "AI flagged it; a doctor and a test confirmed it.",
+      "kind": "health",
+      "date": "2026-04-10",
+      "source": {
+       "label": "BBC, 10 Apr 2026",
+       "url": "https://www.bbc.com/news/articles/cx24njzzkgjo"
+      }
+     },
+     {
+      "headline": "AI found forgotten oil wells.",
+      "what": "Berkeley Lab's AI read oil maps from 1947 to 1992 and flagged 1,301 possible undocumented wells. Researchers then confirmed 29 by satellite and 15 more in the field.",
+      "why": "AI reread decades of maps; people confirmed what it found.",
+      "kind": "environment",
+      "date": "2024-12-04",
+      "source": {
+       "label": "Berkeley Lab, 4 Dec 2024",
+       "url": "https://newscenter.lbl.gov/2024/12/04/ai-helps-researchers-dig-through-old-maps-to-find-lost-oil-and-gas-wells/"
+      }
+     },
+     {
+      "headline": "AI broke an 80-year-old maths belief.",
+      "what": "Paul Erdős's 1946 guess about dots and equal distances was disproved by an OpenAI model, and nine mathematicians checked the proof.",
+      "why": "AI found it; nine mathematicians checked it.",
+      "kind": "science",
+      "date": "2026-05-20",
+      "source": {
+       "label": "arXiv, 20 May 2026",
+       "url": "https://arxiv.org/abs/2605.20695"
+      }
+     },
+     {
+      "headline": "AI alone raises false alarms.",
+      "what": "An AI company says a painting sold as a copy is a real Caravaggio. Experts aren't convinced. AI on its own isn't proof.",
+      "why": "The twist: AI works best with a person beside it.",
+      "kind": "culture",
+      "date": "2025-09-29",
+      "source": {
+       "label": "Hyperallergic, 29 Sep 2025",
+       "url": "https://hyperallergic.com/ai-company-says-it-has-outsmarted-caravaggio-experts/"
+      }
+     },
+     {
+      "headline": "AI plus doctors found 29% more cancers.",
+      "what": "In Sweden's MASAI trial of 106,000 women, AI plus radiologists found 29% more cancers than standard screening, with 44% less reading work.",
+      "why": "AI plus a person beats either alone.",
+      "kind": "health",
+      "date": "2026-01-30",
+      "source": {
+       "label": "Lund University, The Lancet, 30 Jan 2026",
+       "url": "https://www.lunduniversity.lu.se/article/ai-support-breast-cancer-screening-fewer-missed-cancer-cases"
+      }
+     }
+    ],
+    "stories_due": "2026-11-13",
+    "stories_from": "Buffer: the scheduled Sat 14 Nov deck (Instagram post 6af772edbb36d00909c78294)"
    }
   ]
  },

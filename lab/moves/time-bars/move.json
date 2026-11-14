@@ -1,0 +1,19 @@
+{
+  "id": "time-bars",
+  "what": "Where time goes: one task bar shrinks, another grows; pairs of people appear, each with a bubble.",
+  "says": [
+    "before-after",
+    "person"
+  ],
+  "needs": [
+    "text"
+  ],
+  "energy": "medium",
+  "engine": "canvas",
+  "code": "packages/moves/time-bars/move.mjs",
+  "entry": "draw",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+  "from": "lab/styles/living-screen/scene.mjs",
+  "proven_by": "Krish, 2026-11-10, on the teller opening: \"Now let's keep that pace of animation up.\""
+}

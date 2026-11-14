@@ -109,19 +109,19 @@
           "how": "the engine stamps every board and publish page it builds"
         },
         {
-          "file": "scripts/hooks/artifact_gate.py",
-          "contains": "week_board.verify",
-          "how": "the publish hook refuses an unstamped or edited board"
-        },
-        {
           "file": ".claude/settings.json",
           "contains": "artifact_gate.py",
           "how": "the hook is wired for every Claude Code session in this repository"
         },
         {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "a made day with no Copy buttons",
-          "how": "the board's own publish check"
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/hooks/artifact_gate.py: week_board.verify",
+            "scripts/post-pack/week_board.py: a made day with no Copy buttons"
+          ]
         }
       ]
     },
@@ -133,14 +133,18 @@
       "status": "guarded",
       "guards": [
         {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "a finished video with no Drive link",
-          "how": "the publish hook refuses a board with an unlinked video"
-        },
-        {
           "file": "scripts/post-pack/making.py",
           "contains": "def drive_link_patch",
           "how": "drive-link records it; a session runs it (the scheduled board-videos task was retired, Krish 2026-10-19)"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/post-pack/week_board.py: a finished video with no Drive link"
+          ]
         }
       ]
     },
@@ -152,14 +156,18 @@
       "status": "guarded",
       "guards": [
         {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "a finished video with no thumbnail link",
-          "how": "the publish hook refuses a board with an unlinked thumbnail"
-        },
-        {
           "file": "scripts/post-pack/making.py",
           "contains": "Drive link joins its path",
           "how": "drive-link --thumb-url records it, tested"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/post-pack/week_board.py: a finished video with no thumbnail link"
+          ]
         }
       ]
     },
@@ -171,19 +179,23 @@
       "status": "guarded",
       "guards": [
         {
-          "file": "scripts/post-pack/week_board/week.js",
-          "contains": "function dataBlob(src)",
-          "how": "pictures decode in the page"
-        },
-        {
           "file": "scripts/post-pack/buttons_in_browser.py",
           "contains": "connect-src 'none'",
           "how": "every button clicked in Chromium with fetch blocked"
         },
         {
-          "file": ".github/workflows/ci.yml",
+          "file": ".github/workflows/full-verify.yml",
           "contains": "buttons_in_browser.py",
-          "how": "CI runs it on every push"
+          "how": "the full verify runs it after every merge and nightly, and a red main opens an issue (Ruling, Krish, 2026-11-11: quick checks on pull requests, the full verify after merge)"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/post-pack/week_board/week.js: function dataBlob(src)"
+          ]
         }
       ]
     },
@@ -200,14 +212,14 @@
           "how": "every link of the week's board"
         },
         {
-          "file": "scripts/hooks/board_sync.py",
-          "contains": "Publish this same file",
-          "how": "after each board publish, names any link still behind"
-        },
-        {
-          "file": ".claude/settings.json",
-          "contains": "board_sync.py",
-          "how": "wired for every session in this repository"
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/hooks/board_sync.py: Publish this same file",
+            ".claude/settings.json: board_sync.py"
+          ]
         }
       ]
     },
@@ -220,8 +232,8 @@
       "guards": [
         {
           "file": ".agents/skills/plan-week/SKILL.md",
-          "contains": "pin: true",
-          "how": "each Sunday's board is published pinned, from Krish's own account"
+          "contains": "one live board, in Control Centre",
+          "how": "since 11 Nov 2026 the week's board is Control Centre's Content tab, on Krish's own account, so there is nothing to pin (plan-week, Publish-board routing; the pinned Claude artifact it replaced is retired)"
         }
       ]
     },
@@ -443,54 +455,22 @@
       "status": "guarded",
       "guards": [
         {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "a day in review shows its review card, never an older publish page",
-          "how": "--draft DAY builds the tab from the review card, the calls waiting on Krish (--waiting) and the checklist; --draft with --day or --keep for the same day is refused"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "is older than its words",
-          "how": "with --live, a piece not yet posted whose publish page was made before its words last changed is refused unless it is built with --draft"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "holds its words in review",
-          "how": "a rebuild of a board holding a day in draft without --draft is refused, so a scheduled run leaves the board standing"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "so its words would not show",
-          "how": "--review on a day that is neither made nor in draft is refused, never dropped without a word"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "def posted_kick",
-          "how": "a made day whose piece is posted says so in its status line, from the record"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "def _draft_checks",
-          "how": "the self-test builds a day in draft from Friday's real record times and checks every refusal above"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "nothing shows this publish page was made from them",
-          "how": "a day in draft is replaced by a publish page only when --live shows the page was made after the words last changed"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "so nothing shows whether ",
-          "how": "--live fails closed when the making record of a kept, given or draft day cannot be read"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "--drop-review {key}=<id> once Krish is done with it",
-          "how": "a rebuild never drops a review box the board holds without --drop-review, and carries the calls waiting on Krish"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "DEEP_LABEL = {",
-          "how": "the week's deep-cut day says deep cut in its checklist, never 3-minute"
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/post-pack/week_board.py: a day in review shows its review card, never an older publish page",
+            "scripts/post-pack/week_board.py: is older than its words",
+            "scripts/post-pack/week_board.py: holds its words in review",
+            "scripts/post-pack/week_board.py: so its words would not show",
+            "scripts/post-pack/week_board.py: def posted_kick",
+            "scripts/post-pack/week_board.py: def _draft_checks",
+            "scripts/post-pack/week_board.py: nothing shows this publish page was made from them",
+            "scripts/post-pack/week_board.py: so nothing shows whether ",
+            "scripts/post-pack/week_board.py: --drop-review {key}=<id> once Krish is done with it",
+            "scripts/post-pack/week_board.py: DEEP_LABEL = {"
+          ]
         }
       ]
     },
@@ -502,14 +482,14 @@
       "status": "guarded",
       "guards": [
         {
-          "file": "scripts/post-pack/week_board/week.js",
-          "contains": "v.at < built",
-          "how": "the page shows a saved edit only when it is newer than the build time on its block (data-built-at)"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "def previous_review_times",
-          "how": "a rebuild keeps a review block's build time while its words are unchanged, so a newer save still shows"
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/post-pack/week_board/week.js: v.at < built",
+            "scripts/post-pack/week_board.py: def previous_review_times"
+          ]
         }
       ]
     },
@@ -660,11 +640,6 @@
       "status": "guarded",
       "guards": [
         {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "picture(s) with nothing to show",
-          "how": "the board's pre-publish check (run by the publish hook) refuses a made day with any picture that has no image data or https link; its self-test empties one and expects the refusal"
-        },
-        {
           "file": "scripts/post-pack/publish_manager.py",
           "contains": "def compact_png",
           "how": "charts are made smaller in place (256 colours, only when no pixel visibly changes), never borrowed by a script; each named file links to its Drive copy"
@@ -673,6 +648,15 @@
           "file": "scripts/post-pack/publish_kit.py",
           "contains": "long_waiting",
           "how": "the long cut is named by the piece (the deep cut, or the 3-minute video), and a step whose video is not made says so first"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/post-pack/week_board.py: picture(s) with nothing to show"
+          ]
         }
       ]
     },
@@ -815,10 +799,10 @@
           "test": "python3 scripts/post-pack/board_feed.py self-test"
         },
         {
-          "file": "scripts/post-pack/week_board.py",
+          "file": "scripts/post-pack/week_plan.py",
           "contains": "def coverage_problems",
           "how": "the build refuses ideas that leave a routed card or his relayed words off the board without a reason",
-          "test": "python3 scripts/post-pack/week_board.py --self-test"
+          "test": "python3 scripts/post-pack/board_feed.py self-test"
         }
       ]
     },
@@ -830,15 +814,14 @@
       "status": "guarded",
       "guards": [
         {
-          "file": "scripts/check_board_layout.py",
-          "contains": "a one-off board feeder",
-          "how": "CI refuses any new script under docs/ that drives week_board or board_web; the old ones are frozen as history",
-          "test": "python3 scripts/check_board_layout.py"
-        },
-        {
-          "file": "config/board-layout.json",
-          "contains": "sunday_before",
-          "how": "the layout, held by its hash, changes only with his recorded words"
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/check_board_layout.py: a one-off board feeder",
+            "config/board-layout.json: sunday_before"
+          ]
         }
       ]
     },
@@ -1542,7 +1525,7 @@
         {
           "file": "scripts/quick-edit/opening_gate.py",
           "contains": "def check(",
-          "how": "voice from the first half second, a finished first frame, a headline that holds 2 s in the first 3 s, no flat frame, measured on the finished bytes from the cut's first frame (the frame after the house sting on a wide cut that opens on it, --lead-frames)",
+          "how": "voice from the first half second, a finished first frame, a headline that holds 2 s in the first 3 s, no flat frame, measured on the finished bytes from the cut's first frame (nothing goes before the hook since 12 Nov 2026, so --lead-frames is 0)",
           "test": "python3 scripts/quick-edit/opening_gate.py --self-test"
         },
         {
@@ -1552,10 +1535,13 @@
           "test": "python3 tests/quick_edit_produce_day_test.py"
         },
         {
-          "file": "scripts/post-pack/board_web.py",
-          "contains": "def ready_video_problems",
-          "how": "publish-web refuses a video a day's materials mark ready unless its exact bytes carry a passing delivery receipt, or the asset carries Krish's own words",
-          "test": "python3 tests/board_web_test.py"
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/post-pack/board_web.py: def ready_video_problems"
+          ]
         }
       ]
     },
@@ -1622,22 +1608,25 @@
           "test": "python3 scripts/post-pack/board_feed.py self-test"
         },
         {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "def stale_sources(",
-          "how": "a board for a week not yet started is built only from a gather of the last two days, and the build runs board_feed.check whole",
-          "test": "python3 scripts/post-pack/week_board.py --self-test"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
+          "file": "scripts/post-pack/week_plan.py",
           "contains": "he judges an option by these",
           "how": "from the 9 Nov week an off-day option with no hook, pitch.see, pitch.lands or direction is refused",
-          "test": "python3 scripts/post-pack/week_board.py --self-test"
+          "test": "python3 scripts/post-pack/board_feed.py self-test"
         },
         {
           "file": "scripts/post-pack/board_feed.py",
           "contains": "def goodnews_problems(",
           "how": "the weekly Saturday good news holds five stories from the seven days before its Sunday, each with its source and its own photo or clip, none a recent off day ran; the Sunday run fills them (sunday_ideas.py goodnews)",
           "test": "python3 scripts/post-pack/board_feed.py self-test"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "test": "npx vitest run tests/control-plane/old-boards-retired.test.ts",
+          "was": [
+            "scripts/post-pack/week_board.py: def stale_sources("
+          ]
         }
       ]
     },
@@ -1665,13 +1654,13 @@
         {
           "file": "scripts/velib/compile.py",
           "contains": "if index == 0 and event['verb'] in ('enter', 'type') and event['at_w'] == beat['span']['from_w']:",
-          "how": "an entrance on the first word lands on the cut's frame 0, so the hook is the cut's first frame (in the file, frame 0 of the tall cut and the frame after the house sting on the wide cut of a series piece)",
+          "how": "an entrance on the first word lands on the cut's frame 0, so the hook is the cut's first frame (in the file, frame 0 of every cut: nothing goes before the hook since 12 Nov 2026)",
           "test": "python3 -m unittest tests/ve_compile_test.py"
         },
         {
           "file": "apps/renderer/src/engine/BrandFrame.tsx",
-          "contains": "{beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>",
-          "how": "SPLIT beats, and face-with-proof's light STAGE beats, keep the legible mark tile and series pill",
+          "contains": "{props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>",
+          "how": "on the wide cut, SPLIT beats and face-with-proof's light STAGE beats keep the legible mark tile and series pill; the vertical cut carries none (Ruling, Krish, 2026-11-11)",
           "test": "npx vitest run apps/renderer/src/engine/layouts/split.test.ts"
         }
       ]
@@ -1762,7 +1751,7 @@
           "test": "python3 tests/ve_packet_test.py"
         },
         {
-          "file": "scripts/post-pack/week_board.py",
+          "file": "scripts/post-pack/week_plan.py",
           "contains": "def posts_needs(",
           "how": "a finished off-day card says 'Not in its 3 Posts folder yet' until it links that folder",
           "test": "python3 tests/board_posts_test.py"
@@ -1822,13 +1811,13 @@
         {
           "file": "scripts/velib/qc_channel.py",
           "contains": "def safe_zones(",
-          "how": "ve qc row channel.safe_zones lists every caption, title or slot box under a channel's buttons; advisory (listed, not counted) until card ve-motion-4-channel-safe-tall moves the tall layouts, then it counts",
+          "how": "ve qc row channel.safe_zones fails any caption, title or slot box under a channel's buttons; counted since 11 Nov 2026, when the tall layouts, captions and title moved inside every channel's safe area",
           "test": "python3 tests/channel_safe_test.py"
         },
         {
           "file": "scripts/quick-edit/make.py",
           "contains": "receipt['channel_safe']",
-          "how": "every quick-edit tall cut measures and lists what sits under a channel's buttons; it holds once card ve-motion-4-channel-safe-tall moves the layout"
+          "how": "every quick-edit tall cut measures what sits under a channel's buttons; a caption band there holds the cut (since 11 Nov 2026), and words read there by OCR are a warning"
         }
       ],
       "recurrences": [
@@ -2396,6 +2385,140 @@
       ],
       "related": [
         "F44-evidence-too-small-to-read"
+      ]
+    },
+    {
+      "id": "av-sync-drift-converted-take",
+      "on": "2026-11-12",
+      "krish": "the 5-minute video had audio and video out of sync with one another. We need to ensure that never happens in the future.",
+      "what": "Wednesday 11 Nov's 5-minute (under.the.hood, AI music) was a one-off composite (docs/plans/2026-11-11-wednesday/short-composite/comp_long.py) drawn from a 30 fps copy of his 48 fps take that the Maxine prep step made with the output option -r 30 -fps_mode cfr (.github/workflows/maxine-trial.yml), then ve eyeline. Measured from the original take with scripts/av_sync.py (frames counted in decode order, never seeked): that conversion puts his picture 52 to 55 ms behind his voice for the whole take, while fps=30:round=near on the same frames reads 2 to 4 ms and a 48 fps re-encode 0.1 ms. Replaying comp_long.py's own reads showed its seven OpenCV seeks land on the right frame (0 frames off on all 10,124 frames), so the composite's picture path was exact; rebuilding the cut's timing from that 30 fps copy measures 43 to 67 ms sound-ahead on six of seven spans (fails), and from a correct conversion 18 ms at worst (passes). The delivered cut's own bytes were not measured (Drive only, over the connector's 10 MB cap) and its sound mix is unrecorded, so any further offset in it is unmeasured.",
+      "symptom": "His voice runs about two frames ahead of his lips across the 5-minute.",
+      "cause": "A frame-rate conversion with the output -r option shifted the picture against the sound; the take record's own check (laid even, 0 ms) read the file's timestamps, which share the fault; and the cut was recorded hand-built, which skipped every delivery check, sync included.",
+      "status": "guarded",
+      "mode": "picture-late-against-sound",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check compared a cut's picture against its sound from the source take; ve's sync.av_xcorr compares sound with sound, and quick-edit's SyncNet ran only inside quick-edit."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "making.py video skipped quality.delivery_problems for a hand-built cut, and a filing exception skipped every receipt."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "maxine-trial.yml converted the take's rate with -r on the output."
+        }
+      ],
+      "related": [
+        "lip-sync-drift",
+        "F10-sync-route-fragile",
+        "cut-called-done-unheard"
+      ],
+      "surface": "Every hand-built or excepted cut carries a picture-against-sound receipt for its exact bytes, measured from the source take on every span (scripts/av_sync.py, |drift| <= 45 ms), and a converted take is measured against the original before anything is built on it.",
+      "guards": [
+        {
+          "file": "scripts/av_sync.py",
+          "contains": "def measure(",
+          "how": "per span: the sound's lag and the picture's lag, each matched against the source take decoded in order; refuses |sound lag - picture lag| > 45 ms, an unreliable match, or under 80% coverage",
+          "test": "python3 tests/av_sync_test.py"
+        },
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "problems = av_sync.receipt_problems(a.video_file)",
+          "how": "a hand-built cut is recorded on the piece only with its sync receipt for those bytes",
+          "test": "python3 tests/av_sync_test.py"
+        },
+        {
+          "file": "scripts/bed_shape.py",
+          "contains": "import av_sync",
+          "how": "a filing exception on a series cut waives the bed receipt, never the sync receipt",
+          "test": "python3 tests/av_sync_test.py"
+        },
+        {
+          "file": ".github/workflows/maxine-trial.yml",
+          "contains": "fps=$RATE:round=near",
+          "how": "the rate is changed with the fps filter, and the converted take is measured against the original before Maxine runs"
+        }
+      ]
+    },
+    {
+      "id": "carousel-fails-the-ten-second-swipe",
+      "on": "2026-11-13",
+      "krish": "Git carousel cards look terrible apart from the cover card and they also are not very easy to follow. Remember that a complete layperson is swiping through these cards at light speed and needs to be able to follow the story within 10 seconds. This cannot ever happen again in any future carousel.",
+      "what": "The Thursday 12 Nov Git carousel (Growth, to this repository's standard) led cards 2 to 5 with a mono label ('CODE CHANGES ANTHROPIC MERGED PER DAY'), a bare '7 ENGINEERS 5 MONTHS', a list of three companies in boxes and an abstract close; the story sat in small print under them, with no picture of the point and the word 'merged' unexplained. Its read-back was done on the pitch, not on the cards' headlines. The first redraw (13 Nov) fixed the layout but still never said what Git is, why Anthropic did it, what trend it points to or what a business should do; the check passed it because it measured length, not story.",
+      "symptom": "Swiped fast, cards 2 to 5 do not say what happened or why it matters; they look like slides.",
+      "cause": "Nothing checked the cards' own headlines as a story a layperson reads in ten seconds; the read-back read the pitch.",
+      "status": "guarded",
+      "mode": "carousel-headlines-not-a-story",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check read a carousel's card headlines as the story; read_back on the option read its pitch."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "docs/CAROUSEL-STANDARD.md asked for reader comprehension but set no measure a deck could be refused on."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "The 13 Nov check had no story test: no five whys, no card for why, the wider trend or what to do, no evidence for the trend."
+        }
+      ],
+      "related": [
+        "F16-krish-carried-qa"
+      ],
+      "surface": "Every carousel follows the route in docs/CAROUSEL-STANDARD.md (The ten-second swipe): five whys, the wider trend proven from outside the story, then what it is, what happened, why, the trend, what to do; at most 50 headline words and 10 cards; the last card centred; two fresh readers answer the five questions from the headlines alone; python3 scripts/carousel_check.py DECK.json passes before drawing.",
+      "guards": [
+        {
+          "file": "scripts/carousel_check.py",
+          "contains": "def problems(",
+          "how": "refuses label headlines, over 12 words a card or 45 a deck, a card with no picture, a long line, unexplained jargon, and fewer than two headline read-backs",
+          "test": "python3 tests/carousel_check_test.py"
+        },
+        {
+          "file": "docs/CAROUSEL-STANDARD.md",
+          "contains": "## The ten-second swipe",
+          "how": "the standard Growth makes every carousel to"
+        }
+      ]
+    },
+    {
+      "id": "ve-3d-styles-slow-static-captions",
+      "on": "2026-11-13",
+      "krish": "no, these are both terrible. the captions should be decoupled from the animation styles, these captions are boring and not active enough. The motion design is terrible, the use of the screen space is terrible, the motion is 10X too slow, not immersive and engaging at all.",
+      "what": "The Gate 2 test cuts of The Ladder (ladder_stage) and The Living Screen (living_screen), 54 s each on his house test take: one small 3D set held in a 590 px band above a plain three-word caption box, the bottom 40% of the 9:16 frame empty, about one device event per spoken beat (roughly every 5 s), a near-still camera.",
+      "symptom": "Both cuts read as slow, static and sparse; captions are passive boxes; the frame is mostly empty.",
+      "cause": "Captions were built into each style's cut instead of as an independent layer; motion was paced to the script's beats, not to a measured cut density; the set was fitted into a small safe box; both cuts were judged from stills and frame sheets, never at speed beside a professional reference.",
+      "status": "open",
+      "mode": "style-judged-from-stills-not-at-speed",
+      "guard_level": "prose",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "No measure of events per second, frame coverage or caption motion existed for a style test; the check was framing and truth only."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "Before sending, the cuts were reviewed as contact sheets every 2 s and single frames; nobody watched them at speed beside a reference."
+        },
+        {
+          "cause": "tool_limit",
+          "evidence": "Captions are one house box (kit/lock.ts) shared by every style; captions cannot be chosen or animated apart from the style."
+        }
+      ],
+      "related": [
+        "cut-called-done-unheard"
+      ],
+      "surface": "Both 3D styles stay work in progress (needs_device kept). The next attempt makes captions their own swappable layer, measures pace and frame coverage against a professional reference, and watches every test cut at speed beside it before Krish sees it.",
+      "guards": [
+        {
+          "file": "docs/ve/FAILURE_2026-11-13_3d-styles.md",
+          "contains": "## The bar for the next attempt",
+          "how": "the failure note and the bar the next session builds to"
+        }
       ]
     }
   ]

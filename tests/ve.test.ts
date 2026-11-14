@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { ProductionSpecV2Schema, VE_NO_STING } from '../packages/contracts/src/production-spec'
+import { ProductionSpecV2Schema, VE_NO_STING, VE_NO_STING_BEFORE } from '../packages/contracts/src/production-spec'
 
 // ve, the spec-driven video engine (docs/ve/ENGINE.md). Friday 23 Oct's failures are fixtures here:
 // a spec that carries one is refused, and media that shows one fails QC.
@@ -33,17 +33,21 @@ describe('ve', () => {
     expect(ProductionSpecV2Schema.safeParse(spec).success).toBe(false)
   })
 
-  it('a piece names only its own series sting, or the no-sting sentence (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,")', () => {
+  it('nothing goes before the hook: a spec names no sting and no episode card in its place (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.")', () => {
     const named = (value: unknown) => { const spec = fixture(); spec.brand.intro_sting = value; return ProductionSpecV2Schema.safeParse(spec) }
-    expect(named('mind_the_gap').success).toBe(true)
     expect(named(VE_NO_STING).success).toBe(true)
-    // Another series' sting, a free string or the retired sentence is refused.
-    const wrong = named('follow_the_money')
-    expect(wrong.success).toBe(false)
-    expect(JSON.stringify(wrong.error?.issues)).toContain("a piece wears its own series' sting: mind_the_gap")
-    for (const value of ['mind-the-gap-sting', 'none: the hook is the intro (under test, ruling 8)', '']) expect(named(value).success, value).toBe(false)
+    expect(named(VE_NO_STING_BEFORE).success).toBe(true)
+    for (const value of ['mind_the_gap', 'follow_the_money', 'mind-the-gap-sting', 'none: the hook is the intro (under test, ruling 8)', '']) {
+      const got = named(value)
+      expect(got.success, value).toBe(false)
+      expect(JSON.stringify(got.error?.issues)).toContain('Nothing before the hook, ever.')
+    }
     const unset = fixture(); delete unset.brand.intro_sting
     expect(ProductionSpecV2Schema.safeParse(unset).success).toBe(true)
+    const card = fixture(); card.brand.opening_exception = { opening: 'episode_card', said: 'I want the episode card to come in.', on: '2026-11-09' }
+    const refused = ProductionSpecV2Schema.safeParse(card)
+    expect(refused.success).toBe(false)
+    expect(JSON.stringify(refused.error?.issues)).toContain('remove brand.opening_exception')
   })
 
   it('a generated picture needs no on-screen ILLUSTRATION label (Krish, 28 Oct 2026: "Yes remove those.")', () => {
@@ -82,6 +86,7 @@ describe('ve', () => {
     ['the listen pass: hesitations the transcript left out are cut, no join lands on sound, the reading that sounded right wins, his lexicon learns facts and never taste (Krish, 5 Nov)', 'tests/ve_listen_test.py'],
     ['the voice pass: sniffs turned down, never cut; the repair chain only with his words (Krish, 17 Oct)', 'tests/ve_voice_test.py'],
     ['one sound on the big moment: auditioned on his cut, approved only from his words, the kit from approved rows (ruling 11)', 'tests/ve_sfx_test.py'],
+    ['the three video sign-offs: samples on his board, and only his presses write the sound, golden-frame and Gate 2 configs (Ruling, Krish, 2026-11-12)', 'tests/ve_signoffs_test.py'],
     ['the Critic sees the cut in motion: strips per beat, per move and per cut, and QC numbers marked not heard (F16, F38)', 'tests/ve_critic_inputs_test.py'],
     ['each filed piece records what it used; the next one is told when it repeats them, never refused (F14)', 'tests/ve_history_test.py'],
     ['the lab: every look on one window of his pinned take, outside any piece; a lab pick is liked, never tested', 'tests/ve_lab_test.py'],

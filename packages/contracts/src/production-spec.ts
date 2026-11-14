@@ -10,21 +10,22 @@ import { IdentifierV1Schema, NarrativeBeatV1Schema, Sha256V1Schema } from './v2.
 export const VE_FORMATS = ['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports'] as const
 export const VeFormatSchema = z.enum(VE_FORMATS)
 export const VeSeriesSchema = z.enum(['mind.the.gap', 'follow.the.money', 'under.the.hood'])
-/** The makeyourmindup intro sting a piece names (brand.intro_sting): its own series' clip in config/intro-sting.json,
- *  which opens the 16:9 whole cut of a weekly series piece (Krish, 2026-11-05: "I think it should go at the start of
- *  the longer wide videos 100%,"), or VE_NO_STING for a piece that wears none. ve compile decides the opening from the
- *  cut itself; this field only has to agree with it. Whether the publish day is the series' own day lives in
- *  config/studio.json, so ve lint checks that half (scripts/velib/guards.py, opening_problems). */
+/** brand.intro_sting: nothing goes before the hook, ever (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever.
+ *  Remove the sting exception for good."), so the one value a piece may name is VE_NO_STING, or leave it unset. The
+ *  series stings (config/intro-sting.json, retired) are listed only so the refusal can name what it refuses; ve lint
+ *  refuses the same (scripts/velib/guards.py, opening_problems). */
 export const VeStingSchema = z.enum(['follow_the_money', 'mind_the_gap', 'under_the_hood'])
 /** The sentence scripts/post-pack/creative_direction.py writes as NO_STING (tests/ve_thursday_guards_test.py pins them equal). */
-export const VE_NO_STING = 'none: this piece opens on its hook (an off day, or no wide long cut)'
+export const VE_NO_STING = 'none: this piece opens on its hook, and nothing goes before it'
+/** The same answer as written before 2026-11-12, still read as no sting so a spec from before the ruling parses. */
+export const VE_NO_STING_BEFORE = 'none: this piece opens on its hook (an off day, or no wide long cut)'
+export const VE_NOTHING_BEFORE_HOOK = 'Nothing before the hook, ever. Remove the sting exception for good.'
 export const VeAspectSchema = z.enum(['9:16', '16:9'])
 export const VeLayoutSchema = z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW'])
 export const VeRoleSchema = z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call'])
 // The same verbs as the renderer's EngineEventSchema (apps/renderer/src/engine/props.ts), so a spec can name every
 // verb a library device accepts (config/ve/devices.json); compile still refuses a verb its device does not list.
-export const VeVerbSchema = z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw',
-  'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick'])
+export const VeVerbSchema = z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick', 'drop', 'grey', 'multiply', 'dim', 'thin', 'grow', 'light', 'connect', 'rest_on'])
 export const VeTransitionSchema = z.enum(['cut', 'cut_on_curve', 'carry', 'zoom_out'])
 export const VeFinishSchema = z.enum(['house_grain', 'halftone_news', 'analog_paper'])
 
@@ -221,16 +222,19 @@ export const ProductionSpecV2Schema = z.object({
     // 'word': one word at a time, off the face, under a held title (Krish, 2026-11-03: "its the georgia subtitles
     // build, and the motion and graphics of the other one"; inspiration card instagram_DePHDr_jRed).
     captions: z.enum(['house', 'word']),
+    // A caption theme instead of the house caption (Krish, 2026-11-11: "install all of these different caption styles
+    // in to the engine, so future productions can select from them"). Names as apps/renderer/src/engine/captions/names.ts.
+    caption_theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
+      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']).optional(),
     title: z.string().min(3).max(48).optional(),
     reference: z.string().min(1).optional(),
     // Required by ve lint for every piece publishing after 5 Nov 2026: at least one card for look, one for motion
     // and one for the caption build (scripts/velib/lint.py, reference_lints).
     references: z.array(VeReferenceSchema).optional(),
-    intro_sting: z.union([VeStingSchema, z.literal(VE_NO_STING)]).optional(),
-    // A piece whose wide cut opens on its own episode card in place of the series sting, by Krish's word for that piece
-    // (Krish, 2026-11-09, of Wednesday 11 Nov: "I don't want the overall brand intro to come in. I want the episode
-    // card to come in."). Without it ve compile still puts the approved sting in front of every series wide cut.
-    opening_exception: z.object({ opening: z.literal('episode_card'), said: z.string().min(12), on: DateSchema }).strict().optional(),
+    intro_sting: z.string().optional(),
+    // Retired (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever."): from 9 Nov it put a piece's own episode
+    // card where the sting was. Kept in the shape only so the refusal below can name it; any value is refused.
+    opening_exception: z.unknown().optional(),
   }).strict(),
   call: VeCallSchema.optional(),
   signature: VeSignatureSchema,
@@ -249,14 +253,29 @@ export const ProductionSpecV2Schema = z.object({
   // (motion.required) checks the module against the bank and requires it from creative_direction.MOTION_FROM.
   style: z.object({
     motion: z.object({ module: z.string().min(1), reason: z.string().min(1) }).strict().optional(),
+    // The ingredients chosen apart from the motion style (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the captions
+    // should be decoupled from the animation styles"). captions wins over brand.caption_theme.
+    captions: z.object({ theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
+      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']),
+      placement: z.enum(['lower', 'centre', 'upper']).optional(), reason: z.string().min(1) }).strict().optional(),
+    transitions: z.object({ kind: z.enum(['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade']), reason: z.string().min(1) }).strict().optional(),
+    camera: z.object({ move: z.enum(['none', 'drift', 'phased', 'punch']), hits: z.boolean().optional(), reason: z.string().min(1) }).strict().optional(),
+    energy: z.enum(['calm', 'medium', 'high']).optional(),
+    // IDs are checked against Krish's approved sounds by ve lint and compile.
+    sound: z.object({ handover: z.string().min(1).optional(), hit: z.string().min(1).optional(),
+      gainDb: z.number().finite().max(0).optional(), reason: z.string().min(1) }).strict().optional(),
+    // How a graphics-only beat uses the frame (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the use of the screen space is terrible").
+    layout: z.object({ mode: z.enum(['house', 'fill', 'stack', 'band', 'stage', 'tray']), reason: z.string().min(1) }).strict().optional(),
   }).catchall(z.unknown()).optional(),
   max_face_share: z.number().min(0).max(1).optional(),
   character: VeCharacterSchema.optional(),
 }).strict().superRefine((spec, c) => {
   if (spec.brand.series === 'mind.the.gap' && !spec.call) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })
-  const ownSting = spec.brand.series.replace(/\./g, '_')
-  if (spec.brand.intro_sting && spec.brand.intro_sting !== VE_NO_STING && spec.brand.intro_sting !== ownSting) {
-    c.addIssue({ code: 'custom', path: ['brand', 'intro_sting'], message: `a piece wears its own series' sting: ${ownSting}, or "${VE_NO_STING}"` })
+  if (spec.brand.intro_sting !== undefined && spec.brand.intro_sting !== VE_NO_STING && spec.brand.intro_sting !== VE_NO_STING_BEFORE) {
+    c.addIssue({ code: 'custom', path: ['brand', 'intro_sting'], message: `nothing goes before the hook (Ruling, Krish, 2026-11-12: "${VE_NOTHING_BEFORE_HOOK}"): brand.intro_sting is "${VE_NO_STING}", or unset` })
+  }
+  if (spec.brand.opening_exception !== undefined) {
+    c.addIssue({ code: 'custom', path: ['brand', 'opening_exception'], message: `nothing goes before the hook (Ruling, Krish, 2026-11-12: "${VE_NOTHING_BEFORE_HOOK}"): remove brand.opening_exception` })
   }
   const datasets = new Set(spec.datasets.map((d) => d.id))
   const objects = new Set(spec.objects.map((o) => o.obj))

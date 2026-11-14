@@ -1,0 +1,15 @@
+{
+  "card_id": "ve-fri-9-leaderboard-premium",
+  "kind": "device",
+  "format": "face-with-proof",
+  "motion_style": "data-story",
+  "title": "Leaderboard, premium rebuild: a lit board in perspective, capsules that race, the top row glowing",
+  "goal": "Krish, 10 Nov: \"these animations do not look very premium\" and \"the visual quality looks incredibly low effort and sub par\". Seen: small devices in a flat black void, no light or depth, tiny generic type, emoji-like glyphs, frames that stand still. Bar: his Fri 23 Oct and Mon 26 Oct cuts (config/reference-cuts.json). 16:9 first: box 1920x1080, face window bottom right (1452,676,400,340) kept clear; tall second.\n\nEvery state:\na. Fill at least 80% of the box width.\nb. A lit stage: inkDeep to ink radial light from upper left, soft floor shadows, SVG film grain at 3% re-seeded every 2 frames.\nc. A camera: push 1.00 to 1.06 over the device's life, background parallax 0.5x, house easing from clock.ts, overshoot at most 4%.\nd. Always alive: no frame repeats for more than 15 frames while on screen.\ne. Type: numbers and the headline in Anton 120 px+, human words Fraunces semibold 56 px+, Plex Mono only for a source line 28 px+; at most two labels; no axis zeros or titles.\n\nThe story, in states (verbs unchanged): enter, a dark glass board rises into a gentle perspective (rotateX 8 degrees, easing flat as the camera pushes), header in Anton 120 px; add, rows slide in with a 3-frame stagger, each with a rank numeral in Anton, an initial in a cream circle and the label in Fraunces 56 px; fill, thick capsule bars race to their values with a coral gradient and a moving light sweep, the leader's row lifting 8 px with a soft coral glow; stamp keeps its meaning (a hard coral stamp with its text, slammed with a 6-frame squash). Rows re-order with a physical swap when values change. The note and the producer label draw only when set.",
+  "contract": "Change only the leaderboard device and its fixture and tests; verbs and params keep their meaning. Colours only from tokens. Keep existing tests passing and add: no text under 28 px; the board spans at least 70% of a 16:9 box; an empty note draws nothing; no two consecutive identical frames for more than 15 frames between enter and exit.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/leaderboard\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts",
+  "write_allow": "[apps/renderer/src/engine/devices/leaderboard/*, apps/renderer/src/engine/houseGolden.json]",
+  "read": "apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/leaderboard/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/house/geometry.ts, config/ve/brand-tokens.json, docs/ve/MOTION_STANDARD.md, docs/production/THE_BAR.md",
+  "max_minutes": 60,
+  "max_calls": 60,
+  "path": "docs/ve/cards/fri-13-nov/ve-fri-9-leaderboard-premium.md"
+}

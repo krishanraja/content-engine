@@ -1,23 +1,56 @@
 {
   "schema": "ve-golden-frames/1",
-  "about": "Interim golden frames: 5 to 10 moments Krish names from Production Inspo (config/style-references.json, Drive folder Ventures > Inspiration > Production Inspo). The Critic ranks plate candidates and judges cuts against them, with Monday 26's frames, until his scores exist. Each slot records a reference and a time only: the clip and any extracted frame stay off the repository (Production Inspo is studied, never published). A slot is filled only with his own words naming it; an agent never fills one for him.",
+  "about": "Interim golden frames: 5 to 10 moments Krish names from Production Inspo (config/style-references.json, Drive folder Ventures > Inspiration > Production Inspo). The Critic ranks plate candidates and judges cuts against them, with Monday 26's frames, until his scores exist. Each slot records a reference and a time only: the clip and any extracted frame stay off the repository (Production Inspo is studied, never published). A slot is filled only with his own words naming it; an agent never fills one for him. Since 12 Nov 2026 a slot can also hold a frame of his own approved, published cut, named by his Approve on the Golden frames card of his Publish Board (Ruling, Krish, 2026-11-12: the three video sign-offs are one review card each on his board, with samples, and only his presses write the configs): such a slot records the piece, the cut file's sha256, the time and his press (`source: cut`, velib/signoffs.py), and the still stays in his Drive by its id. His Not this on a candidate is kept under `declined`.",
   "min": 5,
   "max": 10,
   "fill": "python scripts/ve.py golden fill <slot> --reference <file in config/style-references.json> --at <mm:ss.s> --said \"<his exact words>\" [--clip <local path to the clip>]",
   "interim": {
     "about": "Monday 26's accepted cuts serve beside his named frames until his scores exist. Their moments are read live from config/reference-cuts.json (reference_moments), never copied here.",
-    "references": ["mon26-tall", "mon26-wide"]
+    "references": [
+      "mon26-tall",
+      "mon26-wide"
+    ]
   },
   "slots": [
-    {"slot": "g1", "status": "empty"},
-    {"slot": "g2", "status": "empty"},
-    {"slot": "g3", "status": "empty"},
-    {"slot": "g4", "status": "empty"},
-    {"slot": "g5", "status": "empty"},
-    {"slot": "g6", "status": "empty"},
-    {"slot": "g7", "status": "empty"},
-    {"slot": "g8", "status": "empty"},
-    {"slot": "g9", "status": "empty"},
-    {"slot": "g10", "status": "empty"}
+    {
+      "slot": "g1",
+      "status": "empty"
+    },
+    {
+      "slot": "g2",
+      "status": "empty"
+    },
+    {
+      "slot": "g3",
+      "status": "empty"
+    },
+    {
+      "slot": "g4",
+      "status": "empty"
+    },
+    {
+      "slot": "g5",
+      "status": "empty"
+    },
+    {
+      "slot": "g6",
+      "status": "empty"
+    },
+    {
+      "slot": "g7",
+      "status": "empty"
+    },
+    {
+      "slot": "g8",
+      "status": "empty"
+    },
+    {
+      "slot": "g9",
+      "status": "empty"
+    },
+    {
+      "slot": "g10",
+      "status": "empty"
+    }
   ]
 }

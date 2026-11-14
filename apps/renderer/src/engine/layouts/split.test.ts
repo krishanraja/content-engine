@@ -62,10 +62,10 @@ describe('frozen SPLIT geometry', () => {
     expect(device.props.box).toEqual({ left: 60, top: 300, width: 960, height: FWP_SPLIT_SEAM_Y - 360 })
     const stage = nodes.find((n) => (n.props.style as Record<string, unknown>)?.backgroundColor === props.tokens.cream)!
     expect(stage.props.style).toMatchObject({ height: FWP_SPLIT_SEAM_Y, overflow: 'hidden' })
-    // The mark tile and pill, legible on cream, not the ink-only horizontal logo (Krish, 2026-11-03).
+    // No mark tile, pill or header on the vertical cut (Ruling, Krish, 2026-11-11).
     const chrome = elements(BrandFrame({ props, beat: props.beats[1]!, frame: 75 }))
     expect(chrome.some((n) => n.type === StageHeader)).toBe(false)
-    expect(chrome.some((n) => n.type === MarkTile)).toBe(true)
+    expect(chrome.some((n) => n.type === MarkTile)).toBe(false)
   })
   it('preserves explicit placement and strips it from device params', () => {
     const props = propsForSplit()
@@ -82,7 +82,7 @@ describe('frozen SPLIT geometry', () => {
   })
   it('places one and two caption lines inside the frozen zone and preserves normal captions', () => {
     const props = propsForSplit()
-    for (const text of ['Proof', 'One two three four five six seven eight']) {
+    for (const text of ['Proof', 'One two three four five six seven']) {
       props.captions[0]!.words = text.split(' ').map((text) => ({ text, atFrame: 0 }))
       const caption = SplitCaptionTrack({ props, frame: 75 })!
       const style = caption.props.style
@@ -90,7 +90,10 @@ describe('frozen SPLIT geometry', () => {
       expect(style.top).toBe(FWP_SPLIT_CAPTION_ZONE.top)
       expect(style.width).toBe(FWP_SPLIT_CAPTION_ZONE.width)
       expect(Number(style.height)).toBeLessThanOrEqual(FWP_SPLIT_CAPTION_ZONE.height)
-      expect(Number(style.top)).toBeGreaterThanOrEqual(1260)
+      // On the seam, and inside every channel's safe column (Krish, 2026-11-11).
+      expect(Number(style.top)).toBeLessThanOrEqual(FWP_SPLIT_SEAM_Y)
+      expect(Number(style.top) + Number(style.height)).toBeGreaterThanOrEqual(FWP_SPLIT_SEAM_Y)
+      expect(Number(style.left) + FWP_SPLIT_CAPTION_ZONE.width).toBeLessThanOrEqual(860)
     }
     props.beats[1]!.layout = 'P1'
     expect(CaptionTrack({ props, frame: 75 })!.props.style.top).toBe(boxFor('caption', '9:16').top)

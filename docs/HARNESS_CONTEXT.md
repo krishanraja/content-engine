@@ -1,4 +1,4 @@
-<!-- krish-repo-context:start brain=2ad79d5cf4f3 sha=5060dd066b03 -->
+<!-- krish-repo-context:start brain=aabfeac6c45f sha=b88d7e84da4b -->
 # content-engine: operating context
 
 Generated from the central ai-harness brain. This is a route inventory, not a certification of current architecture. Read the section for the work at hand; repository-owned sources establish current facts. The nightly publisher rechecks source paths and named commands. This file grants no product action or spending authority.
@@ -7,7 +7,7 @@ Generated from the central ai-harness brain. This is a route inventory, not a ce
 
 - Purpose and system boundaries (orientation): `README.md`.
 - Current repository state (state): `NOW.md`.
-- CAROUSEL ENGINE STATE (state): `docs/CAROUSEL_ENGINE_STATE.md`.
+- CAROUSEL STANDARD (orientation): `docs/CAROUSEL-STANDARD.md`.
 - WORKBENCH (state): `WORKBENCH.md`.
 - NORTH STAR (orientation): `docs/NORTH_STAR.md`.
 - 2026 10 14 handoff (orientation): `docs/plans/2026-10-14-handoff.md`.
@@ -20,7 +20,8 @@ Generated from the central ai-harness brain. This is a route inventory, not a ce
 - SKILL (workflow): `.agents/skills/plan-week/SKILL.md`.
 - title verdicts (learning): `config/title-verdicts.json`.
 - failures (learning): `config/failures.json`.
-- boards (orientation): `config/boards.json`.
+- The one live publish board and how every actor uses it (workflow): `docs/PUBLISH_BOARDS.md`.
+- Board link config, read with docs/PUBLISH_BOARDS.md (orientation): `config/boards.json`.
 - check failures (learning): `scripts/check_failures.py`.
 - Repository commands (verification): `package.json`.
 - Required bootstrap source (workflow): `docs/REPO_MAP.md`.
@@ -39,9 +40,9 @@ Read: `docs/STUDIO.md`, `docs/ENGINE_SESSION.md`, `.agents/skills/produce-video/
 Checks: `npm run verify`.
 Run only within existing authority. Check inputs, the owning stage, and the downstream artifact actually consumed.
 
-### board: Weekly decisions, all account links and feedback continuity
+### board: The one live publish board: its view, presses, sessions, materials and archive
 
-Read: `.agents/skills/plan-week/SKILL.md`, `config/boards.json`, `WORKBENCH.md`.
+Read: `docs/PUBLISH_BOARDS.md`, `.agents/skills/plan-week/SKILL.md`, `config/boards.json`, `WORKBENCH.md`.
 Checks: `python3 scripts/check_failures.py`.
 Run only within existing authority. Check inputs, the owning stage, and the downstream artifact actually consumed.
 

@@ -1,0 +1,614 @@
+{
+  "pieceId": "2026-11-05-thursday-no-spending",
+  "cutId": "short",
+  "format": "face-with-proof",
+  "aspect": "9:16",
+  "fps": 30,
+  "durationFrames": 240,
+  "tokens": {
+    "ink": "#0C1512",
+    "inkDeep": "#070D0B",
+    "inkSoft": "#16221D",
+    "cream": "#F4EFE4",
+    "mint": "#7EF0C0",
+    "channel": "#B7A6FF"
+  },
+  "series": {
+    "label": "off.day",
+    "day": "Thursday",
+    "promise": "Free from jargon",
+    "site": "makeyourmindup.ai"
+  },
+  "brand": {
+    "mark": {
+      "src": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets/src/assets/brand/makeyourmindup/makeyourmindup-mark.png",
+      "pixelWidth": 831,
+      "pixelHeight": 740
+    },
+    "logo": {
+      "src": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets/src/assets/brand/makeyourmindup/makeyourmindup-horizontal.png",
+      "pixelWidth": 1200,
+      "pixelHeight": 141
+    },
+    "stacked": {
+      "src": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets/src/assets/brand/makeyourmindup/makeyourmindup-stacked.png",
+      "pixelWidth": 2415,
+      "pixelHeight": 740
+    }
+  },
+  "segments": [
+    {
+      "src": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets/conformed.short.mp4",
+      "trimBeforeFrames": 315,
+      "fromFrame": 0,
+      "durationFrames": 240
+    }
+  ],
+  "audio": {
+    "stem": {
+      "src": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets/audio.short.wav",
+      "trimBeforeFrames": 315
+    },
+    "sfx": []
+  },
+  "captions": [
+    {
+      "fromFrame": 0,
+      "toFrame": 4,
+      "words": [
+        {
+          "text": "dangerous",
+          "atFrame": 0
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 4,
+      "toFrame": 10,
+      "words": [
+        {
+          "text": "because",
+          "atFrame": 4
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 10,
+      "toFrame": 16,
+      "words": [
+        {
+          "text": "once",
+          "atFrame": 10
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 16,
+      "toFrame": 21,
+      "words": [
+        {
+          "text": "they're",
+          "atFrame": 16
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 21,
+      "toFrame": 51,
+      "words": [
+        {
+          "text": "connected",
+          "atFrame": 21
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 51,
+      "toFrame": 60,
+      "words": [
+        {
+          "text": "Muse",
+          "atFrame": 51
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 60,
+      "toFrame": 67,
+      "words": [
+        {
+          "text": "into",
+          "atFrame": 60
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 67,
+      "toFrame": 71,
+      "words": [
+        {
+          "text": "your",
+          "atFrame": 67
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 71,
+      "toFrame": 87,
+      "words": [
+        {
+          "text": "WhatsApp,",
+          "atFrame": 71
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 87,
+      "toFrame": 97,
+      "words": [
+        {
+          "text": "Amazon",
+          "atFrame": 87
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 97,
+      "toFrame": 100,
+      "words": [
+        {
+          "text": "for",
+          "atFrame": 97
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 100,
+      "toFrame": 105,
+      "words": [
+        {
+          "text": "your",
+          "atFrame": 100
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 105,
+      "toFrame": 143,
+      "words": [
+        {
+          "text": "groceries,",
+          "atFrame": 105
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 143,
+      "toFrame": 152,
+      "words": [
+        {
+          "text": "Google",
+          "atFrame": 143
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 152,
+      "toFrame": 154,
+      "words": [
+        {
+          "text": "for",
+          "atFrame": 152
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 154,
+      "toFrame": 159,
+      "words": [
+        {
+          "text": "your",
+          "atFrame": 154
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 159,
+      "toFrame": 189,
+      "words": [
+        {
+          "text": "emails,",
+          "atFrame": 159
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 189,
+      "toFrame": 194,
+      "words": [
+        {
+          "text": "it",
+          "atFrame": 189
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 194,
+      "toFrame": 213,
+      "words": [
+        {
+          "text": "can",
+          "atFrame": 194
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 213,
+      "toFrame": 217,
+      "words": [
+        {
+          "text": "get",
+          "atFrame": 213
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 217,
+      "toFrame": 219,
+      "words": [
+        {
+          "text": "a",
+          "atFrame": 217
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 219,
+      "toFrame": 224,
+      "words": [
+        {
+          "text": "bit",
+          "atFrame": 219
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 224,
+      "toFrame": 238,
+      "words": [
+        {
+          "text": "dangerous.",
+          "atFrame": 224
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 238,
+      "toFrame": 240,
+      "words": [
+        {
+          "text": "So",
+          "atFrame": 238
+        }
+      ],
+      "swipeIndex": null
+    }
+  ],
+  "captionStyle": "word",
+  "title": "Give your AI two rules",
+  "beats": [
+    {
+      "id": "face",
+      "role": "bridge",
+      "layout": "SPLIT",
+      "fromFrame": 0,
+      "toFrame": 51,
+      "uses": [
+        "verdict"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": true,
+      "plate": {
+        "source": "take",
+        "crop": "50% 88%"
+      },
+      "keyFrame": 13
+    },
+    {
+      "id": "proof",
+      "role": "anchor",
+      "layout": "SPLIT",
+      "fromFrame": 51,
+      "toFrame": 189,
+      "uses": [
+        "logos",
+        "amazon_loop"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take",
+        "crop": "50% 88%"
+      },
+      "keyFrame": 161
+    },
+    {
+      "id": "b4-8am",
+      "role": "anchor",
+      "layout": "SPLIT",
+      "fromFrame": 189,
+      "toFrame": 238,
+      "uses": [
+        "chat"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take",
+        "crop": "50% 88%"
+      },
+      "keyFrame": 228
+    },
+    {
+      "id": "b5-rule",
+      "role": "pivot",
+      "layout": "SPLIT",
+      "fromFrame": 238,
+      "toFrame": 240,
+      "uses": [
+        "chat",
+        "rules"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take",
+        "crop": "50% 88%"
+      },
+      "keyFrame": 239
+    }
+  ],
+  "objects": [
+    {
+      "obj": "logos",
+      "device": "logo_card",
+      "meaning": "the apps he names the assistants live inside, on equal tiles",
+      "fromFrame": 51,
+      "toFrame": 189,
+      "variants": {},
+      "params": {
+        "tiles": true,
+        "logos": [
+          {
+            "id": "Meta"
+          },
+          {
+            "id": "Amazon"
+          },
+          {
+            "id": "Google"
+          }
+        ],
+        "place": {
+          "left": -120,
+          "top": 260,
+          "width": 960,
+          "height": 520,
+          "scale": 1.45
+        }
+      }
+    },
+    {
+      "obj": "amazon_loop",
+      "device": "scribble",
+      "meaning": "circles Amazon as he says it",
+      "fromFrame": 51,
+      "toFrame": 189,
+      "variants": {},
+      "params": {
+        "colour": "mint",
+        "seed": "fwp",
+        "shape": "loop",
+        "target": {
+          "x": 400,
+          "y": 460,
+          "w": 350,
+          "h": 350
+        }
+      }
+    },
+    {
+      "obj": "chat",
+      "device": "typing_bubble",
+      "meaning": "the 8am reply the assistant sends for him",
+      "fromFrame": 189,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "kind": "chat",
+        "rows": [
+          {
+            "who": "Boss",
+            "text": "Can you join the 8am?",
+            "side": "left"
+          },
+          {
+            "who": "You",
+            "text": "Absolutely not, it's my lie-in day",
+            "side": "right"
+          }
+        ],
+        "place": {
+          "left": -135,
+          "top": 210,
+          "width": 1080,
+          "height": 640,
+          "scale": 1.25
+        }
+      }
+    },
+    {
+      "obj": "rules",
+      "device": "typing_bubble",
+      "meaning": "the two rules, as his AI would read them",
+      "fromFrame": 238,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "kind": "notification",
+        "rows": [
+          {
+            "who": "Your AI",
+            "text": "No spending."
+          },
+          {
+            "text": "No sending."
+          }
+        ],
+        "place": {
+          "left": -135,
+          "top": 210,
+          "width": 1080,
+          "height": 640,
+          "scale": 1.25
+        }
+      }
+    },
+    {
+      "obj": "verdict",
+      "device": "typing_bubble",
+      "meaning": "AI that acts first: really helpful, a bit dangerous",
+      "fromFrame": 0,
+      "toFrame": 51,
+      "variants": {},
+      "params": {
+        "kind": "notification",
+        "rows": [
+          {
+            "who": "AI that acts first",
+            "text": "Really helpful."
+          },
+          {
+            "text": "A bit dangerous."
+          }
+        ],
+        "place": {
+          "left": -135,
+          "top": 210,
+          "width": 1080,
+          "height": 640,
+          "scale": 1.25
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "face-0",
+      "obj": "verdict",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 0
+    },
+    {
+      "id": "face-1",
+      "obj": "verdict",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 0
+    },
+    {
+      "id": "face-2",
+      "obj": "verdict",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 0
+    },
+    {
+      "id": "proof-0",
+      "obj": "logos",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 51
+    },
+    {
+      "id": "proof-1",
+      "obj": "logos",
+      "verb": "highlight",
+      "toState": "1",
+      "atFrame": 87
+    },
+    {
+      "id": "proof-2",
+      "obj": "amazon_loop",
+      "verb": "draw",
+      "toState": "Amazon",
+      "atFrame": 97
+    },
+    {
+      "id": "proof-3",
+      "obj": "logos",
+      "verb": "highlight",
+      "toState": "2",
+      "atFrame": 143
+    },
+    {
+      "id": "proof-4",
+      "obj": "amazon_loop",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 143
+    },
+    {
+      "id": "b4-8am-0",
+      "obj": "chat",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 189
+    },
+    {
+      "id": "b4-8am-1",
+      "obj": "chat",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 189
+    },
+    {
+      "id": "b4-8am-2",
+      "obj": "chat",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 213
+    },
+    {
+      "id": "b4-8am-3",
+      "obj": "chat",
+      "verb": "send",
+      "toState": "1",
+      "atFrame": 219
+    }
+  ]
+}

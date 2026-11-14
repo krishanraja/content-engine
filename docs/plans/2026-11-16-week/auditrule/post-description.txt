@@ -1,0 +1,17 @@
+Your AI thinks it's the best. Guess who told it.
+
+At school you don't mark your own test. Big companies now hold their AI to the same rule.
+
+The Home Depot has Google's AI answer its customers, and OpenAI's AI check the answers. Microsoft has OpenAI's GPT write research reports, and Claude, from rival Anthropic, check them before anyone reads them.
+
+Why bother? Scientists found that an AI gives its own writing better marks than people do. A different AI catches what the first one misses.
+
+If you're relying on the answer for an important decision, ask a different AI to check.
+
+Sources:
+VentureBeat, Beyond the Pilot, interview with Home Depot CIO Angie Brown, Oct 2026: https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot
+GeekWire, 30 Mar 2026, Microsoft Copilot Researcher Critique: https://www.geekwire.com/2026/gpt-drafts-claude-critiques-microsoft-blends-rival-ai-models-in-new-copilot-upgrade/
+Panickssery, Bowman and Feng, LLM Evaluators Recognize and Favor Their Own Generations, NeurIPS 2024: https://arxiv.org/abs/2404.13076
+SEC auditor independence rules after Enron, Jan 2003: https://www.sec.gov/files/rules/final/33-8183.htm
+
+Follow for more.

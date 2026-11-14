@@ -5,7 +5,7 @@ Ruling (Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claude schedul
 So nothing here is on a timer of its own. His Titles press starts it: the recordings pass on each computer
 (scripts/recordings-upload.ps1, the windowless task that already polls the engine every five minutes) asks `due`, and
 when every picked day of the week has its Titles press it starts `run` once, with no window (Krish, 2026-10-28:
-"HIDE ALL CONSOLE POP UPS FOREVER"). The primary computer makes the long cuts and builds the Monday 06:30 board; the
+"HIDE ALL CONSOLE POP UPS FOREVER"). The primary computer makes the long cuts and reports the run on the live board by 06:30; the
 standby makes the shorts (config/overnight.json, the setting MINDMAKE_OVERNIGHT_ROLE on each).
 
 For each cut:
@@ -16,9 +16,10 @@ For each cut:
      repair.max_rounds;
   4. once a Critic passes it, the full-scale render runs once, then the measured gates.
 A cut that does not get through is held, with the reason. The run never publishes, sends or posts anything: Codex
-steps run only under config/codex-profile.json, audited first, and the board is built by week_board.py from its own
-inputs (--materials, one section per day naming each cut made and each cut held and why). When the board holds a cut
-a repair could mend, one bounded repair round is started in GitHub Actions (.github/workflows/repair-round.yml).
+steps run only under config/codex-profile.json, audited first, and the run puts itself on the live board by the
+piece's record and its reports (one note per day naming each cut made and each cut held and why; no page is built,
+docs/PUBLISH_BOARDS.md). When a held cut is one a repair could mend, one bounded repair round is started in GitHub
+Actions (.github/workflows/repair-round.yml).
 
     python3 scripts/overnight/overnight.py due [--week MONDAY] [--json]       exit 0 due, 3 not yet, 1 cannot tell
     python3 scripts/overnight/overnight.py run --role primary|standby --week MONDAY
@@ -389,21 +390,17 @@ def materials_for(day, piece_id, cuts, previous=None, calibrated_critic=True) ->
 
 
 def board(week, records, config, runner=default_runner, dry_run=False) -> dict:
-    """Builds the week's board from week_board.py's inputs: the current board as --previous, and one --materials
-    file a day. Returns what it did, including the held cuts and whether a repair round was started."""
+    """Puts the run on the live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
+    read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it). The cuts it made are on each piece's record already, which the live board reads; for each day
+    it files the run's note on the piece (each cut made and each cut held and why, board_materials' shape) and reports
+    the day done or blocked there, then bumps the week's change signal. It builds and publishes no page
+    (docs/PUBLISH_BOARDS.md). Returns what it did, including the held cuts and whether a repair round was started."""
     sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
-    import board_materials
+    import board_materials  # noqa: F401  (materials_for writes its shape)
     work = state_root() / week / 'board'
     work.mkdir(parents=True, exist_ok=True)
-    values = {'week': week, 'python': sys.executable, 'previous': str(work / 'previous.html'), 'page': str(work / 'week-board.html')}
+    values = {'week': week, 'python': sys.executable, 'session': f'overnight-{week}'}
     steps = config['board_steps']
-    code, _, tail = run_step({'argv': steps['download']}, values, runner)
-    if code != 0:
-        raise RunError(f'the current board could not be read: {tail}')
-    try:
-        previous = board_materials.previous(Path(values['previous']).read_text(encoding='utf-8-sig'))
-    except OSError:
-        previous = {}
     cuts = [c for r in records if r for c in r.get('cuts') or []]
     judged = all(r.get('critic_calibrated') for r in records if r)
     materials = {}
@@ -411,24 +408,28 @@ def board(week, records, config, runner=default_runner, dry_run=False) -> dict:
         mine = [c for c in cuts if c.get('day') == day]
         if not mine:
             continue
-        piece = next((c.get('piece_id') for c in mine if c.get('piece_id')), None) or (previous.get(day) or {}).get('piece_id')
+        piece = next((c.get('piece_id') for c in mine if c.get('piece_id')), None)
         path = work / f'materials-{day}.json'
-        write_json(path, materials_for(day, piece, mine, previous.get(day), judged))
+        write_json(path, materials_for(day, piece, mine, None, judged))
         materials[day] = str(path)
     held = [c for c in cuts if c.get('status') != 'made']
     result = {'week': week, 'held': [{'day': c['day'], 'cut': c['cut'], 'reason_code': c.get('reason_code')} for c in held],
-              'built': False, 'published': False, 'repair_round': None}
+              'filed': [], 'touched': False, 'repair_round': None}
     if dry_run:
         result['materials'] = materials
         return result
-    code, _, tail = run_step({'argv': steps['build']}, dict(values, materials=materials), runner)
-    if code != 0:
-        raise RunError(f'week_board.py refused the build: {tail}')
-    result['built'] = True
-    code, _, tail = run_step({'argv': steps['publish']}, values, runner)
-    if code != 0:
-        raise RunError(f'the board was built but not published: {tail}')
-    result['published'] = True
+    for day, path in materials.items():
+        data = read_json(Path(path)) or {}
+        where = data.get('piece_id') or f'day:{week}/{day}'
+        at = dict(values, piece=where, file=path, kind='done' if data.get('status') == 'ready' else 'blocked',
+                  line=str(data.get('note') or 'Overnight run.')[:600], title=f'Overnight run, {day}')
+        for name in ('file', 'report'):
+            code, _, tail = run_step({'argv': steps[name]}, at, runner)
+            if code != 0:
+                raise RunError(f'the {day} piece could not take the run\'s {name}: {tail}')
+        result['filed'].append(day)
+    code, _, _ = run_step({'argv': steps['touch']}, values, runner)
+    result['touched'] = code == 0  # without it the live board shows the run at its next poll
     result['repair_round'] = repair_round(week, held, config, runner)
     return result
 

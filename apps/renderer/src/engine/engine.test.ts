@@ -38,8 +38,9 @@ describe('ve layouts', () => {
   for (const aspect of aspects) {
     for (const layout of layouts) {
       it(`${layout} stays inside ${aspect} content safe bounds`, () => {
-        // Tall: key content in X 120-888 above Y 840; below Y 840 only X 120-780 (the platform action rail), and
-        // graphics end by Y 1150 so the caption block (top 1180) is never covered. Wide: title-safe.
+        // Tall: key content in every channel's safe column (config/channel-safe-zones.json): X 60-860, clear of the
+        // action rail from X 880, from Y 270 under the top bar, ending by Y 1050 so the caption block (top 1060) is
+        // never covered. Wide: title-safe.
         const slots = slotsFor(layout, aspect)
         expect(slots).toHaveLength({ P1: 2, P3: 3, P6: 2, F1: 3, F3: 2 }[layout])
         for (const box of slots) {
@@ -51,10 +52,10 @@ describe('ve layouts', () => {
           const right = box.left + box.width
           const bottom = box.top + box.height
           if (aspect === '9:16') {
-            expect(box.left).toBeGreaterThanOrEqual(120)
-            expect(box.top).toBeGreaterThanOrEqual(288)
-            if (bottom <= 840) expect(right).toBeLessThanOrEqual(888)
-            else { expect(right).toBeLessThanOrEqual(780); expect(bottom).toBeLessThanOrEqual(1150) }
+            expect(box.left).toBeGreaterThanOrEqual(60)
+            expect(box.top).toBeGreaterThanOrEqual(270)
+            expect(right).toBeLessThanOrEqual(860)
+            expect(bottom).toBeLessThanOrEqual(1050)
           } else {
             expect(box.left).toBeGreaterThanOrEqual(96)
             expect(box.top).toBeGreaterThanOrEqual(54)
@@ -82,7 +83,18 @@ describe('ve layouts', () => {
 
   it('returns independent slot boxes', () => {
     slotsFor('P1', '9:16')[0]!.left = 0
-    expect(slotsFor('P1', '9:16')[0]!.left).toBe(120)
+    expect(slotsFor('P1', '9:16')[0]!.left).toBe(60)
+  })
+
+  // Krish, 2026-11-11: "all vertical video templates should be adjusted to make maximum use of the full screen, as
+  // opposed to the current situation where a third of the screen at the top is now cut off". Every tall layout's key
+  // content starts just under the channels' top bar, never lower than y 340.
+  it('uses the top of the tall screen: every layout starts its content between y 270 and 340', () => {
+    for (const layout of layouts) {
+      const top = Math.min(...slotsFor(layout, '9:16').map((box) => box.top))
+      expect(top, layout).toBeGreaterThanOrEqual(270)
+      expect(top, layout).toBeLessThanOrEqual(340)
+    }
   })
 })
 
@@ -184,7 +196,7 @@ describe('BrandFrame call and ending routing', () => {
 describe('the hook is the intro', () => {
   // Under test (Krish, 29 Oct 2026: "Let's go with number one for now."): the first frame is the hook in the brand's
   // dress, the logo and the series tag in its corners from the start, with no story card or logo sting before it.
-  it.each(aspects)('draws the logo and the series tag on the first beat from frame 0 in %s', (aspect) => {
+  it.each(aspects)('opens on the hook at frame 0 in %s: the wide cut with its logo and series tag, the tall one with neither', (aspect) => {
     const props = EngineRenderPropsSchema.parse(fixture)
     props.aspect = aspect
     expect(props.beats[0]).toMatchObject({ fromFrame: 0, sectionBeat: true })
@@ -194,7 +206,10 @@ describe('the hook is the intro', () => {
     for (const layout of ['STAGE', 'P1', 'P3', 'P6', 'F3'] as const) {
       const beat = { ...props.beats[0]!, layout }
       const nodes = elements(BrandFrame({ props, beat, frame: 0 }))
-      if (layout === 'STAGE') {
+      if (aspect === '9:16') {
+        // Vertical video carries no wordmark, mark tile or series pill (Ruling, Krish, 2026-11-11).
+        expect(nodes.filter((node) => node.type === StageHeader || node.type === MarkTile || node.type === ChannelPill)).toHaveLength(0)
+      } else if (layout === 'STAGE') {
         expect(nodes.filter((node) => node.type === StageHeader)).toHaveLength(1)
       } else {
         expect(nodes.filter((node) => node.type === MarkTile)).toHaveLength(1)
@@ -204,11 +219,33 @@ describe('the hook is the intro', () => {
   })
 })
 
+describe('vertical video carries no wordmark (Ruling, Krish, 2026-11-11)', () => {
+  it('draws no mark tile, series pill or header on any 9:16 beat, of any format or layout', () => {
+    const base = { ...EngineRenderPropsSchema.parse(fixture), aspect: '9:16' as const }
+    for (const format of ['face-with-proof', 'two-passports'] as const) {
+      const props = { ...base, format }
+      for (const layout of ['STAGE', 'P1', 'P3', 'P6', 'F1', 'F3', 'SPLIT', 'WINDOW'] as const) {
+        const beat = { ...props.beats[0]!, layout, plate: { source: 'none' as const } }
+        const nodes = elements(BrandFrame({ props, beat, frame: 0 }))
+        expect(nodes.filter((node) => node.type === StageHeader || node.type === MarkTile || node.type === ChannelPill)).toHaveLength(0)
+      }
+    }
+  })
+
+  it('keeps the brand on the closing outro card (Krish, 2026-11-11: "not the closing outro card")', () => {
+    const props = EngineRenderPropsSchema.parse({ ...fixture, aspect: '9:16', ending: { fromFrame: 90, url: 'makeyourmindup.ai' } })
+    const nodes = elements(BrandFrame({ props, beat: props.beats[0]!, frame: 100 }))
+    const band = nodes.find((node) => node.type === EndingBand)
+    expect(band).toBeTruthy()
+    expect(JSON.stringify(elements(EndingBand({ props, frame: 100 }) as ReactElement).map((n) => (n.props as { image?: { src?: string } }).image?.src ?? null))).toContain(props.brand.stacked.src)
+  })
+})
+
 describe('face-with-proof wears one brand treatment', () => {
   // Krish, 2026-11-03: "The branding is wrong". Its STAGE graphics sit on the light wash of its SPLIT stage, with the
   // same mark tile and pill; the held title shows over a STAGE beat on the take, never over one with no plate.
-  it('draws the mark tile, never the ink header, on a face-with-proof STAGE beat', () => {
-    const props = { ...EngineRenderPropsSchema.parse(fixture), format: 'face-with-proof' as const }
+  it('draws the mark tile, never the ink header, on a face-with-proof STAGE beat on the wide cut', () => {
+    const props = { ...EngineRenderPropsSchema.parse(fixture), format: 'face-with-proof' as const, aspect: '16:9' as const }
     const graphics = { ...props.beats[0]!, layout: 'STAGE' as const, plate: { source: 'none' as const } }
     const nodes = elements(BrandFrame({ props, beat: graphics, frame: 0 }))
     expect(nodes.filter((node) => node.type === MarkTile)).toHaveLength(1)
@@ -334,16 +371,20 @@ describe('motion styles in the composition', () => {
   })
 })
 
-describe('the sting opens the wide long cut', () => {
-  // Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,". The 16:9 whole cut of a
-  // weekly series piece opens on its series' sting clip, and his face comes in on the very next frame after its last.
+describe('nothing goes before the hook on the wide long cut; a sting only after it', () => {
+  // Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for good." A sting in front
+  // of any cut is refused. The sting after the hook (sting.atFrame) is a new design: built here, laid by compile only
+  // once he approves it (config/intro-sting.json is retired; none is).
   const STING = { src: 'makeyourmindup-sting-16x9-mind_the_gap.mp4', series: 'mind_the_gap' as const, frames: 56, sha256: 'a'.repeat(64) }
-  function wide(sting: Record<string, unknown> | null = STING) {
-    return EngineRenderPropsSchema.parse({ ...structuredClone(fixture), aspect: '16:9',
-      segments: [{ src: 'take.mp4', trimBeforeFrames: 0, fromFrame: 0, durationFrames: 120 }],
-      audio: { stem: { src: 'stem.wav', trimBeforeFrames: 0 }, sfx: [{ src: 'hit.wav', atFrame: 10, gainDb: -6 }] },
-      ending: { fromFrame: 90, url: 'makeyourmindup.ai' }, ...(sting ? { sting } : {}) })
+  const raw = () => ({ ...structuredClone(fixture), aspect: '16:9',
+    segments: [{ src: 'take.mp4', trimBeforeFrames: 0, fromFrame: 0, durationFrames: 120 }],
+    audio: { stem: { src: 'stem.wav', trimBeforeFrames: 0 }, sfx: [{ src: 'hit.wav', atFrame: 10, gainDb: -6 }] },
+    ending: { fromFrame: 90, url: 'makeyourmindup.ai' } })
+  const refused = (change: Record<string, unknown>) => {
+    const result = EngineRenderPropsSchema.safeParse({ ...raw(), ...change })
+    return result.success ? '' : result.error.issues.map((issue) => issue.message).join('; ')
   }
+  const wide = (sting: Record<string, unknown> | null) => EngineRenderPropsSchema.parse({ ...raw(), ...(sting ? { sting } : {}) })
   /** What one render frame draws, read with Remotion's Sequence rule: a child mounts on [from, from + durationInFrames)
    *  and counts its own frames from `from`. VeCut, FormatMaster and EngineAudio are called, FormatMaster with the clock
    *  at its own frame (it reads it once); everything else is kept with its children. */
@@ -367,80 +408,57 @@ describe('the sting opens the wide long cut', () => {
   const brands = (nodes: ReactElement<Record<string, unknown>>[]) => nodes.filter((node) => node.type === BrandFrame)
     .map((node) => [(node.props.beat as EngineBeat).id, node.props.frame])
 
-  it('draws the sting clip, muted and full frame, on frames 0 to 55 and nothing of the cut', () => {
-    const props = wide()
-    for (let frame = 0; frame < 56; frame++) {
-      const nodes = at(createElement(VeCut, props), frame)
-      expect(pictures(nodes)).toEqual([[STING.src, null, true]])
-      expect(nodes.find((node) => node.type === OffthreadVideo)!.props.style).toMatchObject({ width: '100%', height: '100%' })
-      expect(nodes.some((node) => node.type === FormatMaster || node.type === BrandFrame)).toBe(false)
-    }
+  it('refuses a sting in front of any cut, even the series wide whole cut it used to open', () => {
+    expect(refused({ sting: STING })).toContain('Nothing before the hook, ever.')
+    expect(refused({ sting: { ...STING, atFrame: 0 } })).toContain('Nothing before the hook, ever.')
+    expect(refused({ sting: STING, aspect: '9:16' })).toContain('Nothing before the hook, ever.')
   })
 
-  it("draws beat 0's BrandFrame and his take's first frame on frame 56, on the cut's own clock", () => {
-    const props = wide()
-    const nodes = at(createElement(VeCut, props), 56)
-    expect(pictures(nodes)).toEqual([['take.mp4', 0, true]])
-    expect(brands(nodes)).toEqual([[props.beats[0]!.id, 0]])
-    expect(nodes.find((node) => node.type === BrandFrame)!.props.beat).toMatchObject({ fromFrame: 0, sectionBeat: true })
-    // FormatMaster never sees the sting and leaves the stem to the wrapper.
-    const master = nodes.find((node) => node.type === FormatMaster)!
-    expect(master.props).not.toHaveProperty('sting')
-    expect(master.props.stem).toBe(false)
-    // Every later render frame is the cut's frame 56 earlier, to its last; after it nothing of the cut is drawn.
-    for (const [render, beat, frame] of [[115, 'hook', 59], [116, 'call', 60], [175, 'call', 119]] as const) {
+  it('refuses an episode card in place of the sting', () => {
+    expect(refused({ opening: { kind: 'episode_card', said: 'I want the episode card to come in.', on: '2026-11-09' } }))
+      .toContain('an episode card in front of the cut')
+  })
+
+  it('plays the sting straight after the hook: the hook first, then the sting, then the cut goes on (atFrame)', () => {
+    const props = wide({ ...STING, atFrame: 60 })
+    for (const [render, beat, frame] of [[0, 'hook', 0], [59, 'hook', 59]] as const) {
+      const nodes = at(createElement(VeCut, props), render)
+      expect(brands(nodes)).toEqual([[beat, frame]])
+      expect(pictures(nodes)).toEqual([['take.mp4', 0, true]])
+    }
+    for (const render of [60, 115]) {
+      const nodes = at(createElement(VeCut, props), render)
+      expect(pictures(nodes)).toEqual([[STING.src, null, true]])
+      expect(nodes.some((node) => node.type === FormatMaster || node.type === BrandFrame)).toBe(false)
+    }
+    for (const [render, beat, frame] of [[116, 'call', 60], [175, 'call', 119]] as const) {
       expect(brands(at(createElement(VeCut, props), render))).toEqual([[beat, frame]])
     }
     expect(at(createElement(VeCut, props), 176).some((node) => node.type === FormatMaster)).toBe(false)
-  })
-
-  it("plays the one stem from the render's frame 0 and keeps each sfx on the cut's clock", () => {
-    const props = wide()
-    for (const frame of [0, 55, 56, 175]) {
+    // One stem from frame 0; the hook's sfx in the hook only, never again after the sting.
+    for (const frame of [0, 60, 116, 175]) {
       const stems = at(createElement(VeCut, props), frame).filter((node) => node.type === Audio && node.props.src === 'stem.wav')
-      expect(stems.map((node) => node.props.trimBefore)).toEqual([0])
+      expect(stems).toHaveLength(1)
     }
     const sfx = (frame: number) => at(createElement(VeCut, props), frame).some((node) => node.type === Audio && node.props.src === 'hit.wav')
-    expect([sfx(10), sfx(65), sfx(66)]).toEqual([false, false, true])
+    expect([sfx(10), sfx(59), sfx(60), sfx(116), sfx(175)]).toEqual([true, true, false, false, false])
   })
 
-  it('changes nothing with no sting', () => {
+  it('takes the sting only on a beat boundary inside the cut, before its close', () => {
+    expect(refused({ sting: { ...STING, atFrame: 60 } })).toBe('')
+    expect(refused({ sting: { ...STING, atFrame: 30 } })).toMatch(/beat boundary/)
+    expect(refused({ sting: { ...STING, atFrame: 95 } })).toMatch(/before its close/)
+  })
+
+  it('opens the wide cut on its hook: with no sting VeCut is the cut itself, frame 0 his take', () => {
     const props = wide(null)
     const tree = VeCut(props)
     expect(tree.type).toBe(FormatMaster)
     expect(tree.props).toEqual(props)
-    expect(tree.props).not.toHaveProperty('stem')
-    expect(pictures(at(tree, 0))).toEqual([['take.mp4', 0, true]])
-    expect(brands(at(tree, 0))).toEqual([[props.beats[0]!.id, 0]])
-    expect(at(tree, 0).filter((node) => node.type === Audio).map((node) => node.props.src)).toEqual(['stem.wav'])
-  })
-
-  it('takes a sting only on a whole 16:9 cut of its own series', () => {
-    expect(EngineRenderPropsSchema.safeParse(wide()).success).toBe(true)
-    const refused = (change: Record<string, unknown>) => {
-      const result = EngineRenderPropsSchema.safeParse({ ...wide(), ...change })
-      return result.success ? '' : result.error.issues.map((issue) => issue.message).join('; ')
-    }
-    expect(refused({ aspect: '9:16' })).toContain('the 9:16 short opens on its hook')
-    expect(refused({ ending: undefined })).toContain('never an excerpt')
-    expect(refused({ sting: { ...STING, series: 'follow_the_money' } })).toContain('cannot open the mind.the.gap cut')
-    expect(refused({ series: { ...wide().series, label: 'off.day' } })).toContain('cannot open the off.day cut')
-    for (const sting of [{ ...STING, extra: 1 }, { ...STING, sha256: 'A'.repeat(64) }, { ...STING, frames: 0 }, { ...STING, series: 'off_day' }]) {
-      expect(refused({ sting })).not.toBe('')
-    }
-  })
-
-  it('runs the wide composition through VeCut, the sting then the cut, and leaves the tall one alone', () => {
     const compositions = elements(RemotionRoot()).filter((node) => node.type === Composition)
-    const composition = (id: string) => compositions.find((node) => node.props.id === id)!
-    const length = (id: string, props: unknown) =>
-      (composition(id).props.calculateMetadata as (input: { props: unknown }) => { durationInFrames: number })({ props }).durationInFrames
-    const render = (id: string, props: unknown) => (composition(id).props.component as (p: unknown) => ReactElement)(props)
-    expect(length('VeFormatMasterWide', wide())).toBe(56 + 120)
-    expect(length('VeFormatMasterWide', wide(null))).toBe(120)
-    expect(length('VeFormatMasterTall', fixture)).toBe(120)
-    expect(render('VeFormatMasterWide', wide()).type).toBe(VeCut)
-    expect(render('VeFormatMasterTall', fixture).type).toBe(FormatMaster)
+    const composition = compositions.find((node) => node.props.id === 'VeFormatMasterWide')!
+    const length = (composition.props.calculateMetadata as (input: { props: unknown }) => { durationInFrames: number })({ props }).durationInFrames
+    expect(length).toBe(120)
   })
 })
 

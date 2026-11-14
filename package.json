@@ -24,7 +24,8 @@
     "check:renderer": "tsx scripts/check-renderer.ts",
     "check:video-engine-trigger": "tsx scripts/check-video-engine-trigger.ts",
     "check:stations": "tsx scripts/check-station-harnesses.ts",
-    "verify": "npm run typecheck && npm run typecheck:control-plane && npm run test && npm run skills:validate && npm run check:stations && npm run check:video-engine-trigger && npm run check:renderer && npm run check:public-copy && npm run check:no-secrets && npm run check:control-plane && npm run check:one-close && npm run check:workbench && npm run check:skill-core && npm run check:desk-page && npm run check:board-layout && npm run check:local-paths && npm run check:ve-route && npm run check:floor-groups && npm run check:music-bed && npm run check:repo-map",
+    "verify:quick": "node scripts/verify-quick.mjs",
+    "verify": "npm run typecheck && npm run typecheck:control-plane && npm run test && npm run skills:validate && npm run check:stations && npm run check:video-engine-trigger && npm run check:renderer && npm run check:public-copy && npm run check:no-secrets && npm run check:control-plane && npm run check:one-close && npm run check:workbench && npm run check:skill-core && npm run check:view-contract && npm run check:local-paths && npm run check:ve-route && npm run check:floor-groups && npm run check:music-bed && npm run check:capabilities && npm run check:now-notes && npm run check:repo-map",
     "typecheck:control-plane": "tsc --noEmit -p apps/control-plane/tsconfig.json && tsc --noEmit -p apps/control-plane/tsconfig.scripts.json",
     "check:control-plane": "tsx scripts/check-control-plane.ts",
     "check:one-close": "tsx scripts/check-one-close.ts",
@@ -32,12 +33,13 @@
     "check:workbench": "python3 scripts/check_workbench.py",
     "repo-map": "node scripts/gen-repo-map.mjs",
     "check:repo-map": "node scripts/gen-repo-map.mjs --check",
-    "check:board-layout": "python3 scripts/check_board_layout.py",
     "check:local-paths": "python3 scripts/check_local_paths.py",
     "check:ve-route": "python3 scripts/ve/check_route.py",
     "check:floor-groups": "python3 scripts/floor_group.py --check",
     "check:music-bed": "python3 scripts/check_music_bed.py",
-    "check:desk-page": "node scripts/build-desk-page.mjs --check"
+    "check:capabilities": "python3 scripts/capabilities.py --check",
+    "check:view-contract": "tsx scripts/check-view-contract.ts",
+    "check:now-notes": "tsx scripts/check-now-notes.ts"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "5.3.0",
@@ -57,20 +59,12 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "4.3.5",
     "@types/node": "24.3.0",
     "@types/react": "19.1.12",
     "@types/react-dom": "19.1.9",
-    "@vitejs/plugin-react": "6.3.0",
-    "axe-core": "4.10.3",
-    "cmdk": "1.1.1",
-    "sonner": "2.0.8",
-    "tailwindcss": "4.3.5",
     "tsx": "4.20.5",
     "typescript": "5.9.2",
-    "vaul": "1.1.2",
     "vite": "8.3.4",
-    "vite-plugin-singlefile": "2.3.4",
     "vitest": "5.0.3"
   },
   "overrides": {

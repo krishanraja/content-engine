@@ -234,6 +234,105 @@
         "mark",
         "exit"
       ]
+    },
+    "ladder_stage": {
+      "verbs": [
+        "enter",
+        "count_to",
+        "add",
+        "draw",
+        "move",
+        "fill",
+        "highlight",
+        "carry",
+        "exit"
+      ]
+    },
+    "living_screen": {
+      "verbs": [
+        "enter",
+        "move",
+        "count_to",
+        "mark",
+        "draw",
+        "pick",
+        "highlight",
+        "add",
+        "exit"
+      ]
+    },
+    "checklist": {
+      "verbs": [
+        "enter",
+        "fill",
+        "exit"
+      ]
+    },
+    "mint_ring": {
+      "verbs": [
+        "draw",
+        "exit"
+      ]
+    },
+    "pull_quote": {
+      "verbs": [
+        "enter",
+        "highlight"
+      ]
+    },
+    "receipt_print": {
+      "verbs": [
+        "enter",
+        "add",
+        "fill",
+        "highlight",
+        "count_to",
+        "stamp",
+        "exit"
+      ]
+    },
+    "slam_word": {
+      "verbs": [
+        "enter",
+        "exit"
+      ]
+    },
+    "takeover": {
+      "verbs": [
+        "enter",
+        "exit"
+      ]
+    },
+    "unit_field": {
+      "verbs": [
+        "enter",
+        "drop",
+        "grey",
+        "multiply",
+        "exit"
+      ]
+    },
+    "video_wall": {
+      "verbs": [
+        "enter",
+        "add",
+        "dim"
+      ]
+    },
+    "through_line": {
+      "verbs": [
+        "enter",
+        "count_to",
+        "thin",
+        "grow",
+        "multiply",
+        "drop",
+        "light",
+        "connect",
+        "rest_on",
+        "carry",
+        "exit"
+      ]
     }
   }
 }

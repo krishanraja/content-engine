@@ -283,8 +283,10 @@ def send(planned, engine_api, out=print, lib=library.MAKEYOURMINDUP):
     refused = [line for target, path, why in planned for line in library.video_refusal(path, target)]
     if refused:
         raise SendError('Video delivery blocked: ' + '; '.join(refused))
+    import bed_shape
     for target, path, why in planned:
-        if quality.is_delivery_video(target):
+        # A file Krish approved by name and destination (config/filing-exceptions.json) skips the receipt gates only.
+        if quality.is_delivery_video(target) and not bed_shape.filing_exception(path, target):
             problems = quality.delivery_problems(path, str(path)+'.validation.json', target)
             if problems:
                 raise SendError('Video delivery blocked: ' + '; '.join(problems))

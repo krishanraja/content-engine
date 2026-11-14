@@ -92,7 +92,7 @@ def chapter_lifts(bed, windows, meter=None):
 
 
 def chapters_line(shape, bed, windows, meter=None):
-    """The 16:9 cut's chapter lifts, measured; the levels' sign-off stays his by ear."""
+    """The 16:9 cut's chapter lifts, measured; the levels are the ones Krish approved on 2026-11-12 (config/music-library.json levels)."""
     if shape != '16x9':
         return None
     if not bed:

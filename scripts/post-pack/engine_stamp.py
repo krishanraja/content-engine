@@ -5,8 +5,8 @@ Krish, 2026-10-14: "why are Wednesday and Friday built differently to
 Monday? ... I thought I didn't need to keep telling you this sort of stuff?",
 then "how are you going to ensure all this stuff ... can never be had again".
 The stamp is the sha256 of the page without its stamp line; any change after
-the build breaks it. scripts/hooks/artifact_gate.py refuses to publish a
-board or publish page whose stamp does not match.
+the build breaks it. publish_manager.py stamps the publish page it builds
+(the board pages that also wore it were retired on 13 Nov 2026).
 """
 import hashlib
 import re
@@ -34,13 +34,13 @@ def stamp_problem(page, kind):
 
 
 def self_test():
-    page = stamp('<title>T</title>\n<p>x</p>\n', 'week_board')
+    page = stamp('<title>T</title>\n<p>x</p>\n', 'publish_page')
     fails = [name for name, ok in [
-        ('a fresh stamp passes', stamp_problem(page, 'week_board') is None),
-        ('a hand edit is caught', 'hand edit' in (stamp_problem(page.replace('<p>x', '<p>y'), 'week_board') or '')),
-        ('an unstamped page is caught', 'no engine stamp' in (stamp_problem('<title>T</title>', 'week_board') or '')),
-        ('the wrong kind is caught', 'not a publish_page' in (stamp_problem(page, 'publish_page') or '')),
-        ('stamping twice keeps one stamp', stamp(page, 'week_board').count('mymu-engine') == 1),
+        ('a fresh stamp passes', stamp_problem(page, 'publish_page') is None),
+        ('a hand edit is caught', 'hand edit' in (stamp_problem(page.replace('<p>x', '<p>y'), 'publish_page') or '')),
+        ('an unstamped page is caught', 'no engine stamp' in (stamp_problem('<title>T</title>', 'publish_page') or '')),
+        ('the wrong kind is caught', 'not a carousel page' in (stamp_problem(page, 'carousel') or '')),
+        ('stamping twice keeps one stamp', stamp(page, 'publish_page').count('mymu-engine') == 1),
     ] if not ok]
     print('engine stamp self-test ' + ('FAILED: ' + ', '.join(fails) if fails else 'passed'))
     return 1 if fails else 0

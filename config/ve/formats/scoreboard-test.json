@@ -46,5 +46,5 @@
     "9:16",
     "16:9"
   ],
-  "intro_outro": "Under test (Krish, 29 Oct and 5 Nov 2026, to be judged on real engagement): the 9:16 cut opens on the hook, its first frame the hook in the brand's dress with the logo and the series tag in its corners from the start; the 16:9 whole cut of a weekly series piece opens on its series' house sting (config/intro-sting.json), and the hook comes in on the frame after it; an off-day piece opens on the hook in both. No story card or other intro ahead of the hook; compile records the opening as hook or sting. One calm close, the ending band, held long enough to read."
+  "intro_outro": "Nothing before the hook, ever (Ruling, Krish, 2026-11-12: \"Nothing before the hook, ever. Remove the sting exception for good.\"): every cut, the 9:16 and the 16:9 whole cut, of a series piece or an off-day piece, opens on the hook, its first frame the hook. No sting, story card, episode card or other intro ahead of the hook; compile records the opening as hook. One calm close, the ending band, held long enough to read."
 }

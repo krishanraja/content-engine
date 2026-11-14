@@ -1,0 +1,166 @@
+{
+ "subchannel": "under.the.hood",
+ "date": "2026-11-11",
+ "headline": "A Reiki master wrote a UK number two, and it's both AI and human",
+ "deck": "Movin' To The Sun started as an AI demo by a Reiki master, then a DJ and a house legend finished it. The Grammys split it in two. Here is who did which bit, and why that's the question to ask at work.",
+ "video_title": "AI music or human music? This UK number two is both",
+ "video_title_emphasis": "both",
+ "comment_question": "WHAT LANDED ON YOUR DESK THIS WEEK THAT WAS PART AI, PART HUMAN?",
+ "cover": {
+  "headline": [
+   "AI MUSIC OR",
+   "HUMAN MUSIC?"
+  ],
+  "rows": [
+   {
+    "name": "Suno",
+    "logo": "../logos/suno-cream.svg",
+    "tag": "THE DEMO",
+    "colour": "butter"
+   },
+   {
+    "name": "Udio",
+    "logo": "../logos/udio-cream.png",
+    "tag": "OR THIS",
+    "colour": "butter"
+   },
+   {
+    "name": "Grammys",
+    "logo": "../logos/grammys-cream.svg",
+    "tag": "SPLIT",
+    "colour": "mint"
+   },
+   {
+    "name": "Deezer",
+    "logo": "../logos/deezer-symbol.svg",
+    "tag": "50% AI",
+    "colour": "coral"
+   }
+  ],
+  "proof": {
+   "page": {
+    "url": "https://www.officialcharts.com/songs/hugelimael-angelultra-nate-movin-to-the-sun/",
+    "height": 1300,
+    "crop": [
+     0.02,
+     0.34,
+     0.688,
+     0.8
+    ]
+   },
+   "source": "s1",
+   "tag": "THE OFFICIAL CHARTS",
+   "alt": "The Official Charts page for Movin' To The Sun by HUGEL, Imael Angel and Ultra Nate: peak position 2",
+   "show_tag": false,
+   "ring": [
+    0.0,
+    0.765,
+    1.0,
+    0.925
+   ]
+  },
+  "quiet_pill": true,
+  "headline_first": true
+ },
+ "thumbs": {
+  "headline": [
+   "AI MUSIC OR",
+   "HUMAN MUSIC?"
+  ]
+ },
+ "body": "../article.md",
+ "endnote": "Checked on 11 November 2026 against the sources below.",
+ "figures": [
+  {
+   "after": "stayed on the singles chart for months.",
+   "image": "../../../../.cache/pack/wed11/figure-charts.png",
+   "alt": "The Official Charts page for Movin' To The Sun by HUGEL, Imael Angel and Ultra Nate: peak position 2, first charted 25 June 2026, 21 weeks in the Top 100, 8 in the Top 10."
+  },
+  {
+   "after": "We couldn't confirm which of the two made this song's first version.",
+   "image": "../../../../.cache/pack/wed11/figure-suno.png",
+   "html": "figure-suno.html",
+   "alt": "Suno's custom mode: a box for your lyrics, a box for the style of music, and it turns them into a song with vocals. Screenshot from Tom's Guide."
+  },
+  {
+   "after": "This one got found.",
+   "image": "../../../../.cache/pack/wed11/figure-flood.png",
+   "html": "figure-flood.html",
+   "alt": "Deezer, two reports three months apart: AI-made tracks are over 50% of the new music uploaded every day (July 2026) but get 1% to 3% of the listening (April 2026)."
+  },
+  {
+   "after": "could still be eligible in the performance categories.",
+   "image": "../../../../.cache/pack/wed11/figure-grammys.png",
+   "html": "figure-grammys.html",
+   "alt": "One recording, two answers: out of the Grammys' songwriting categories, could still qualify in performance."
+  },
+  {
+   "after": "with a trace of the AI voice still underneath.",
+   "image": "../../../../.cache/pack/wed11/figure-layers.png",
+   "html": "figure-layers.html",
+   "alt": "Who did which bit, bottom up: Imael Angel wrote the words; an AI app made the first version with an AI singer; HUGEL rebuilt the track from ready-made parts; Ultra Nate sang it, with a thin AI layer kept under her voice."
+  },
+  {
+   "after": "so the name on a piece of work belongs to the person who stands behind it.",
+   "image": "../../../../.cache/pack/wed11/figure-work.png",
+   "html": "figure-work.html",
+   "alt": "Ask who did which bit: whose idea was it, what did a tool draft, who checked it and put their name to it."
+  }
+ ],
+ "sources": {
+  "s1": [
+   "Official Charts: Movin' To The Sun",
+   "https://www.officialcharts.com/songs/hugelimael-angelultra-nate-movin-to-the-sun/"
+  ],
+  "s2": [
+   "Tom's Guide: How to make music with AI using Suno",
+   "https://www.tomsguide.com/ai/how-to-make-music-with-ai-using-suno"
+  ],
+  "s3": [
+   "Deezer: AI music exceeds 50% of daily uploads (July 2026)",
+   "https://newsroom-deezer.com/2026/07/ai-music-exceeds-50-percent-daily-uploads-deezer/"
+  ],
+  "s4": [
+   "Deezer: AI-generated tracks represent 44% of new uploaded music (April 2026)",
+   "https://newsroom-deezer.com/2026/04/ai-generated-tracks-represent-44-of-new-uploaded-music/"
+  ],
+  "s5": [
+   "We Rave You: HUGEL's response and breakdown",
+   "https://weraveyou.com/2026/09/hugel-movin-to-the-sun-ai-accusations-response-breakdown/"
+  ],
+  "s6": [
+   "EDMTunes: HUGEL addresses AI controversy",
+   "https://www.edmtunes.com/2026/09/27/hugel-addresses-ai-controversy/"
+  ],
+  "s7": [
+   "27 The Journal: Movin' To The Sun, how human is human enough?",
+   "https://twentyseventhejournal.substack.com/p/hugels-movin-to-the-sun-how-human"
+  ],
+  "s8": [
+   "Wikipedia: Movin' to the Sun",
+   "https://en.wikipedia.org/wiki/Movin%27_to_the_Sun"
+  ]
+ },
+ "links": [
+  [
+   "On the Official Charts",
+   "s1"
+  ],
+  [
+   "Suno's custom mode",
+   "s2"
+  ],
+  [
+   "said in July 2026",
+   "s3"
+  ],
+  [
+   "In an earlier report, in April",
+   "s4"
+  ],
+  [
+   "as the dance music site We Rave You reported it",
+   "s5"
+  ]
+ ]
+}

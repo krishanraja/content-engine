@@ -162,7 +162,8 @@ def continuity(render: str, stem: str, sidecar: str | None = None) -> dict:
                 'pass': False, 'status': 'measured', 'reason': reason or 'the render has no audio or the wrong length'}
     # A cut that opens on the intro sting (the premix's lead_frames) has the bed alone under the sting (HOOK_IS_THE_INTRO:
     # "with no sound of its own and the music bed under it"), so the floor holds from the file's first window, the sting included, not from his first word.
-    lead = int(data.get('lead_frames') or 0)
+    # A sting after the hook (sting_at_frame) has the bed lifted under it, inside the body, so the floor starts at the body.
+    lead = int(data.get('lead_frames') or 0) if not int(data.get('sting_at_frame') or 0) else 0
     start = 0.0 if lead else (report.get('body_s') or [1.5])[0]
     end = max(start, (duration or length) - 1.5)
     holes = _outside(gaps(mono, start_s=start, end_s=end, floor_dbfs=floor), _handover_skip(report, 0.5))

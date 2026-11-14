@@ -1,533 +1,1132 @@
 {
- "_about": "The Ideas tab of the publish board for the week of 16 Nov 2026, written by the Sunday ideas run on Sat 7 Nov (GitHub Actions, web search and web fetch only: Drive and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read). Every fact was checked on 7 Nov against the page linked beside it; where only a news page could be opened it says so. No titles: titles are Krish's, after he records. Built into the board by scripts/post-pack/week_board.py --ideas.",
- "week_start": "2026-11-16",
- "checked_on": "2026-11-07",
- "days": {
-  "mon": [
-   {
-    "id": "941c3147-a010-4ac5-a7bf-0bdd67c2a323",
-    "source_kind": "his",
-    "from": "Your Future trend press on the 9 Nov board (3 Nov): \"Who's clipping the margin?\" is a really interesting future trend which we should queue up. Infosys is boring as hell but \"Who's stealing your money and where's the extra margin going?\" is a really interesting topic.",
-    "so_what": "IT buyers have started telling suppliers \"you use AI now, so charge us less\", and Infosys says those savings are now baked into multi-year deals: the AI saving goes to the buyer who writes it into the contract at renewal.",
-    "story": "Headline: Who's clipping the margin? This time, the buyer. Hook: \"Your IT contract comes up for renewal. Your supplier now does half the work with AI. Who gets the saving?\" The evidence: Infosys says clients expect it to charge less when it uses AI, and the savings are baked into its multi-year deals. The chain: AI does the hours faster, clients expect a lower price, price rises come in lower than planned, Infosys cuts its growth forecast to 1 to 2 percent and protects its margin at about 21 percent. What's actually going on: the AI saving is being split at the negotiating table, and the buyers moved first. Where we land: this money is real, and it goes to whoever writes it into the contract.",
-    "why_now": "Infosys cut its full-year growth forecast in its second-quarter results, reported by The Register on 28 October 2026; the first piece in the margin tracker you asked for.",
-    "fact": "The Register, 28 Oct 2026: \"In its Q1 results, Infosys predicted full-year revenue growth of 1.5 to 3.0 percent.\" \"In Q2, it revised that prediction to 1.0 to 2.0 percent.\" CFO Jayesh Sanghrajka linked lower price rises to AI: customers expect Infosys to charge less when it uses AI, and the savings are \"baked in\" to multi-year deals; Infosys aims to hold margins \"at around 21 percent\".",
-    "source": {"label": "The Register, 28 Oct 2026", "url": "https://www.theregister.com/channel/2026/10/28/ai-slows-growth-for-infosys-and-keeps-it-afloat-at-the-same-time/5305879"},
-    "beats": [
-     "Hook: your IT renewal, your supplier's AI, and the question of who gets the saving.",
-     "The evidence: clients expect lower prices for AI work, and the savings are baked into multi-year deals.",
-     "The cost: a growth forecast cut from 1.5-3% to 1-2%, with the margin protected at about 21%.",
-     "Where we land: the AI saving goes to whoever writes it into the contract."
+  "_about": "The Ideas tab of the publish board for the week of 16 Nov 2026, written by the Sunday ideas run on Sat 7 Nov (GitHub Actions, web search and web fetch only: Drive and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read). Every fact was checked on 7 Nov against the page linked beside it; where only a news page could be opened it says so. No titles: titles are Krish's, after he records. Built into the board by scripts/post-pack/week_board.py --ideas.",
+  "week_start": "2026-11-16",
+  "checked_on": "2026-11-07",
+  "days": {
+    "mon": [
+      {
+        "id": "941c3147-a010-4ac5-a7bf-0bdd67c2a323",
+        "source_kind": "his",
+        "from": "Your Future trend press on the 9 Nov board (3 Nov): \"Who's clipping the margin?\" is a really interesting future trend which we should queue up. Infosys is boring as hell but \"Who's stealing your money and where's the extra margin going?\" is a really interesting topic.",
+        "so_what": "IT buyers have started telling suppliers \"you use AI now, so charge us less\", and Infosys says those savings are now baked into multi-year deals: the AI saving goes to the buyer who writes it into the contract at renewal.",
+        "story": "Headline: Who's clipping the margin? This time, the buyer. Hook: \"Your IT contract comes up for renewal. Your supplier now does half the work with AI. Who gets the saving?\" The evidence: Infosys says clients expect it to charge less when it uses AI, and the savings are baked into its multi-year deals. The chain: AI does the hours faster, clients expect a lower price, price rises come in lower than planned, Infosys cuts its growth forecast to 1 to 2 percent and protects its margin at about 21 percent. What's actually going on: the AI saving is being split at the negotiating table, and the buyers moved first. Where we land: this money is real, and it goes to whoever writes it into the contract.",
+        "why_now": "Infosys cut its full-year growth forecast in its second-quarter results, reported by The Register on 28 October 2026; the first piece in the margin tracker you asked for.",
+        "fact": "The Register, 28 Oct 2026: \"In its Q1 results, Infosys predicted full-year revenue growth of 1.5 to 3.0 percent.\" \"In Q2, it revised that prediction to 1.0 to 2.0 percent.\" CFO Jayesh Sanghrajka linked lower price rises to AI: customers expect Infosys to charge less when it uses AI, and the savings are \"baked in\" to multi-year deals; Infosys aims to hold margins \"at around 21 percent\".",
+        "source": {
+          "label": "The Register, 28 Oct 2026",
+          "url": "https://www.theregister.com/channel/2026/10/28/ai-slows-growth-for-infosys-and-keeps-it-afloat-at-the-same-time/5305879"
+        },
+        "beats": [
+          "Hook: your IT renewal, your supplier's AI, and the question of who gets the saving.",
+          "The evidence: clients expect lower prices for AI work, and the savings are baked into multi-year deals.",
+          "The cost: a growth forecast cut from 1.5-3% to 1-2%, with the margin protected at about 21%.",
+          "Where we land: the AI saving goes to whoever writes it into the contract."
+        ],
+        "style": {
+          "script": "random-headline",
+          "production": "data-story",
+          "experiment": {
+            "format": "dated-prediction",
+            "why": "A dated call on whether a second big IT firm cuts its forecast for the same reason by 31 March 2027, so the tracker has its first checkable line."
+          }
+        }
+      },
+      {
+        "id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+        "source_kind": "engine",
+        "from": "Engine's research",
+        "so_what": "Oracle is raising $20 billion more to build for AI on top of $125 billion of debt, and says customer prepayments are part of how it gets to positive cash flow in 2028: a cloud supplier asking you to pay up front may be asking you to fund its build.",
+        "story": "Headline: Oracle is borrowing to build AI, and its customers' prepayments are part of the plan. Hook: \"One of the world's biggest software companies is selling $10 billion of shares and $10 billion of bonds in a single day.\" The chain: AI demand needs data centres, data centres need cash before revenue, Oracle already owes about $125 billion and sits one notch above junk, so it raises more and leans on vendor financing, customer hardware and customer prepayments, and expects positive free cash flow only in the second half of 2028. What's actually going on: the AI build is being funded by lenders, shareholders and, quietly, customers. Where we land: this money is real only if the demand arrives on time, and the 2028 date is the constraint that decides it.",
+        "why_now": "Oracle filed to sell the stock and bonds on 2 November 2026; its shares fell 8.8% that day.",
+        "fact": "CNBC, 2 Nov 2026: the filing covers \"$10 billion in common stock and $10 billion in senior notes\", for \"general corporate purposes, which may include capital expenditures, repayments of debt and future investments\"; Oracle had $125.34 billion of debt at 31 August; S&P cut it to BBB- in July; it expects positive free cash flow in the second half of 2028, using vendor financing, customer-provided hardware and customer prepayments; shares fell 8.8% on the day, down 50% over 12 months.",
+        "source": {
+          "label": "CNBC, 2 Nov 2026",
+          "url": "https://www.cnbc.com/2026/11/02/oracle-files-to-sell-20-billion-in-new-stock-bonds-to-finance-ai-buildout.html"
+        },
+        "beats": [
+          "Hook: $20 billion raised in one filing, on top of $125 billion owed.",
+          "The chain: data centres need cash years before the revenue comes.",
+          "Who pays: lenders, shareholders, and customers who pay up front.",
+          "The constraint: positive cash flow only in the second half of 2028.",
+          "Where we land: the money is real only if the demand arrives on time."
+        ],
+        "style": {
+          "script": "follow-the-receipt",
+          "production": "face-with-proof",
+          "experiment": {
+            "format": "receipt-animation",
+            "why": "Oracle's funding drawn as a till receipt that prints line by line: debt, shares, bonds, customer prepayments, with the 2028 date at the bottom."
+          },
+          "motion": "ladder",
+          "motion_alternatives": [
+            "living-screen",
+            "eating-jobs-ladder"
+          ],
+          "captions": "art-directed",
+          "motion_said": "Session 13 Nov (production-picks.md): never one he rejected. Not offered: swiss-kinetic-type, data-story and dark-keynote (their 11 Nov clips, rejected: \"This is absolutely fucking awful\"), and character-ai-receipts (the 26 Oct Receipts look he rejected on 28 Oct: \"still don't move enough\")."
+        }
+      },
+      {
+        "id": "34d08cbb-35ca-4140-ba00-cf673cdc82c3",
+        "source_kind": "engine",
+        "from": "Engine's research",
+        "so_what": "From December ChatGPT Plus, Pro and Business plans share one token budget across chat and Codex, so the flat AI subscription becomes a meter: before December, find out which of your team's uses burn the budget fastest.",
+        "story": "Headline: Your all-you-can-eat AI plan is getting a meter. Hook: \"From December, your ChatGPT plan comes with a fuel gauge.\" The chain: one budget for chat and coding, harder work burns it faster, hit the limit and you wait, upgrade or buy credits. What's actually going on: AI costs the maker more for every hard task, and the flat fee was hiding it. Where we land: AI is being priced like electricity, by use, and budgets built for seats will be wrong.",
+        "why_now": "The Decoder reported OpenAI's updated support page on 1 November 2026; the change starts in December 2026.",
+        "fact": "The Decoder, 1 Nov 2026, from OpenAI's updated support page: \"Starting in December, Plus, Pro, and Business plans will share a single token budget across ChatGPT and Codex.\" Users see their remaining balance and reset times in Settings; at the limit they can wait for a reset, upgrade or buy extra credits; chats with Instant models do not count.",
+        "source": {
+          "label": "The Decoder, 1 Nov 2026 (OpenAI's support page)",
+          "url": "https://the-decoder.com/openais-upcoming-chat-and-work-merger-in-chatgpt-signals-the-end-of-all-you-can-prompt-pricing/"
+        },
+        "beats": [
+          "Hook: your AI plan gets a fuel gauge in December.",
+          "The mechanism: one budget, hard tasks burn it faster, then wait, upgrade or pay.",
+          "Why: every hard task costs the maker more, and the flat fee hid it.",
+          "Where we land: AI is moving to pay-per-use, and seat budgets will be wrong."
+        ],
+        "style": {
+          "script": "fry-explainer",
+          "production": "voice-led-pictures",
+          "experiment": {
+            "format": "data-story",
+            "why": "A fuel gauge that drains on screen as each kind of task is named, one number per frame."
+          }
+        }
+      },
+      {
+        "id": "25eb28e1-928a-43bd-8aa8-18bb72174d89",
+        "source_kind": "engine",
+        "from": "Engine's research, the wildcard",
+        "so_what": "Anthropic took $17 billion in three months and still made an operating loss, partly because it paid extra for about $5 billion of short-notice computing: the AI you rent is priced by a supplier whose own costs swing with how much computing it booked ahead.",
+        "story": "Headline: Anthropic made $17 billion in three months and still lost money. Hook: \"Imagine a restaurant so busy it has to buy ingredients at the corner shop.\" The chain: demand grew faster than the computing it had booked, it bought about $5 billion of short-notice computing that costs significantly more than its long contracts, it also took a $2 billion non-cash charge for a donation-matching programme, a $974 million profit became a $567 million loss, and it has signed up for about $895 billion of future computing. What's actually going on: the biggest cost in AI is computing booked years ahead, and guessing wrong in either direction is expensive. Where we land: a dated call on when Anthropic next reports an operating profit.",
+        "why_now": "Anthropic filed its amended IPO prospectus on 2 November 2026.",
+        "fact": "Dealroom, 2 Nov 2026, on the amended S-1: Q3 revenue $16.96B, up from $11.56B in Q2 (about 47% quarter on quarter, down from 144%); an operating loss of $567M after a $974M operating profit the quarter before; about $5B of short-term compute that \"currently costs significantly more\" than long-term contracts, plus a $2B non-cash donation-matching charge; purchase commitments of about $895.4B, \"substantially all of which is related to compute and infrastructure\". StockAnalysis, 2 Nov 2026, confirms the revenue and the swing from $974M profit to $567M loss.",
+        "source": {
+          "label": "Dealroom and StockAnalysis, 2 Nov 2026, on Anthropic's amended S-1 (the filing is to be read at the fact gate)",
+          "url": "https://dealroom.co/news/168953-anthropics-amended-s-1-17b-in-q3-revenue-a-slide-back-to-an-operating-lo/"
+        },
+        "beats": [
+          "Hook: a restaurant so busy it buys at the corner shop.",
+          "The numbers: $17 billion in, a $974 million profit turned into a $567 million loss.",
+          "Why: about $5 billion of short-notice computing at a premium, plus a $2 billion non-cash charge.",
+          "The bet: about $895 billion of computing signed up for the future.",
+          "The call: when the next operating profit comes."
+        ],
+        "style": {
+          "script": "dated-prediction",
+          "production": "face-with-proof",
+          "experiment": {
+            "format": "random-headline",
+            "why": "Open on '$17 billion and a loss' with no context, then make it obvious with the restaurant."
+          }
+        }
+      }
     ],
-    "style": {"script": "random-headline", "production": "data-story", "experiment": {"format": "dated-prediction", "why": "A dated call on whether a second big IT firm cuts its forecast for the same reason by 31 March 2027, so the tracker has its first checkable line."}}
-   },
-   {
-    "id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
-    "source_kind": "engine",
-    "from": "Engine's research",
-    "so_what": "Oracle is raising $20 billion more to build for AI on top of $125 billion of debt, and says customer prepayments are part of how it gets to positive cash flow in 2028: a cloud supplier asking you to pay up front may be asking you to fund its build.",
-    "story": "Headline: Oracle is borrowing to build AI, and its customers' prepayments are part of the plan. Hook: \"One of the world's biggest software companies is selling $10 billion of shares and $10 billion of bonds in a single day.\" The chain: AI demand needs data centres, data centres need cash before revenue, Oracle already owes about $125 billion and sits one notch above junk, so it raises more and leans on vendor financing, customer hardware and customer prepayments, and expects positive free cash flow only in the second half of 2028. What's actually going on: the AI build is being funded by lenders, shareholders and, quietly, customers. Where we land: this money is real only if the demand arrives on time, and the 2028 date is the constraint that decides it.",
-    "why_now": "Oracle filed to sell the stock and bonds on 2 November 2026; its shares fell 8.8% that day.",
-    "fact": "CNBC, 2 Nov 2026: the filing covers \"$10 billion in common stock and $10 billion in senior notes\", for \"general corporate purposes, which may include capital expenditures, repayments of debt and future investments\"; Oracle had $125.34 billion of debt at 31 August; S&P cut it to BBB- in July; it expects positive free cash flow in the second half of 2028, using vendor financing, customer-provided hardware and customer prepayments; shares fell 8.8% on the day, down 50% over 12 months.",
-    "source": {"label": "CNBC, 2 Nov 2026", "url": "https://www.cnbc.com/2026/11/02/oracle-files-to-sell-20-billion-in-new-stock-bonds-to-finance-ai-buildout.html"},
-    "beats": [
-     "Hook: $20 billion raised in one filing, on top of $125 billion owed.",
-     "The chain: data centres need cash years before the revenue comes.",
-     "Who pays: lenders, shareholders, and customers who pay up front.",
-     "The constraint: positive cash flow only in the second half of 2028.",
-     "Where we land: the money is real only if the demand arrives on time."
+    "wed": [
+      {
+        "id": "a57cf3eb-d957-489a-8939-321c3d54b9b7",
+        "source_kind": "his",
+        "from": "Your Inspiration card of 6 Nov: \"We need to do a piece on how ai is going to enable software to edit itself on the fly\", answered with the engine's find from MIT.",
+        "so_what": "An AI just repaired another AI by changing 0.016% of its insides, with no retraining, and it got six times better at maths: AI software may soon be fixed by small edits rather than rebuilt, which changes what a buyer should ask about how a model gets updated.",
+        "story": "Headline: An AI fixed another AI by changing 0.016% of it. Hook: \"A small AI scored 7.9% on a maths test. Another AI edited 131,072 of its 800 million numbers, and it scored 48.1%.\" The teardown: what the weights are, what was changed, what was left alone, and why no retraining was needed. What's actually going on: software that edits other software directly, one setting at a time, instead of retraining it. Where we land: the build lesson is that the edit and the original sit side by side, because a patch you cannot see is one you cannot check.",
+        "why_now": "MIT CSAIL researchers posted the result on 2 November 2026.",
+        "fact": "Takehi, Teoh, Zhang and Khattab (MIT CSAIL), 2 Nov 2026, a blog post with logs and the edited model, not yet a paper: GPT-6 Astra edited Qwen3.5-0.8B, changing \"only 131,072 of the model's 0.8 billion weights (0.016%)\"; MATH-500 accuracy went from 7.9% to 48.1%; IFEval rose from 21.0% to 62.3%.",
+        "source": {
+          "label": "MIT CSAIL researchers, 2 Nov 2026",
+          "url": "https://rikiyat.github.io/blog/weight-space-programming/"
+        },
+        "beats": [
+          "Hook: 7.9% to 48.1% on a maths test, from editing 0.016% of a model.",
+          "The teardown: weights as a giant control panel, and an AI turning 131,072 knobs.",
+          "What is real and what is not yet: one small model, one blog post, logs public.",
+          "The build lesson: keep the original and the edit side by side."
+        ],
+        "covers": [
+          "dd93bfb1-20be-4c13-93b7-3c34ded7544b"
+        ],
+        "style": {
+          "script": "fry-explainer",
+          "production": "voice-led-pictures",
+          "experiment": {
+            "format": "kinetic-movement",
+            "why": "A control panel of tiny lights where only a few flick on, and the score bar jumps, in fast cuts."
+          }
+        }
+      },
+      {
+        "id": "db9f9f6a-1092-49be-8024-f335e060305a",
+        "source_kind": "his",
+        "from": "Your Inspiration card of 5 Nov: \"Let's do a piece on build versus buy and break it down with the realities of businesses thinking they can vibe code everything instead of getting SaaS licences from vendors. Make it a bit tongue-in-cheek and explore both angles.\" Placed on Wednesday: what the reader changes is what they build or buy.",
+        "so_what": "In a survey by Retool, which sells tools for building, a third of its users said they had already swapped a software subscription for something they built, and Starbucks is building AI tools that could replace some of a $400 million software bill: the build-or-buy choice now turns on who maintains the thing, not who writes it.",
+        "story": "Headline: Everyone thinks they can vibe code their way out of the software bill. Hook: \"Starbucks spends about $400 million a year on software, and it's building AI tools that could replace some of it.\" The teardown, tongue in cheek: what a home-built app is really made of, and what the subscription was quietly paying for. Both sides: the case for building (35% of the teams Retool surveyed already swapped at least one tool, mostly workflow automations and admin tools) against the case for buying (Starbucks still runs Microsoft, and someone has to maintain, secure and answer for a home-built app at 2am). What's actually going on: the price of writing software fell, and the price of owning it did not. Where we land: the line between build and buy just moved, and it moved to what you are willing to look after.",
+        "why_now": "Your card of 5 November 2026; Starbucks' review was reported on 9 July 2026, Retool's survey on 17 February 2026.",
+        "fact": "Retool, 17 Feb 2026 (a vendor survey of 817 of its own customers and builders): \"35% of teams have already replaced at least one SaaS tool with a custom build\"; \"Workflow automations and internal admin tools lead the list.\" Fortune, 9 Jul 2026 (from Bloomberg): Starbucks spends about $400 million a year on software, per CTO Anand Varadarajan, and is developing in-house AI tools that could replace some software it buys from Microsoft and IBM.",
+        "source": {
+          "label": "Retool, 17 Feb 2026; Fortune, 9 Jul 2026",
+          "url": "https://retool.com/newsroom/build-vs-buy-report-2026"
+        },
+        "beats": [
+          "Hook: a coffee chain asks AI to replace part of a $400 million software bill.",
+          "The case for building: 35% have already swapped a tool, mostly small admin ones.",
+          "The case for buying, played for laughs: the home-built app at 2am, with nobody to call.",
+          "Where we land: writing software got cheap; owning it did not."
+        ],
+        "covers": [
+          "6eaaf127-ed4e-48bc-86a0-54c9e99aa428"
+        ],
+        "style": {
+          "script": "everyday-debate",
+          "production": "face-with-proof",
+          "experiment": {
+            "format": "receipt-animation",
+            "why": "The lock's exhibit for the case against build: a receipt whose first line, Writing it, is tiny, then every real posted cost after it."
+          },
+          "motion": "ai-music-slam",
+          "motion_alternatives": [
+            "living-screen",
+            "ladder"
+          ],
+          "captions": "ink-block",
+          "motion_said": "Session 13 Nov (production-picks.md): never one he rejected. Not offered: swiss-kinetic-type, data-story and dark-keynote (their 11 Nov clips, rejected: \"This is absolutely fucking awful\"), and character-ai-receipts (the 26 Oct Receipts look he rejected on 28 Oct: \"still don't move enough\")."
+        }
+      },
+      {
+        "id": "0e7bb83f-3ad2-495e-9f7c-8000e0c074bd",
+        "source_kind": "engine",
+        "from": "Engine's research",
+        "so_what": "OpenAI's AI designed a working gadget, case, circuit board and code, in under a week, and then tripped over the factory: if you make physical things, the slow part is moving from design to the factory floor.",
+        "story": "Headline: OpenAI's AI designed a gadget in a week. The factory found the mistakes. Hook: \"Case, circuit board, firmware and screen, designed by an AI as a side project in under a week.\" The teardown: what the AI did well, and what it missed, tolerances and assembly details, so people ran several rounds of fixes. What's actually going on: AI is fluent where everything is digital and clumsy where metal meets plastic. Where we land: the build lesson is to put your manufacturing rules in front of the AI before it draws a single line.",
+        "why_now": "OpenAI described the project, reported by The Decoder on 3 November 2026.",
+        "fact": "The Decoder, 3 Nov 2026, on OpenAI's own post: GPT-6 Astra handled the enclosure, the PCB layout (component selection and trace routing), the firmware and the user interface, finished as a side project \"in under a week\"; a contract manufacturer produced prototypes in \"under a month\"; Astra did not always account for manufacturing constraints, tolerances and assembly details, so several revision rounds were needed.",
+        "source": {
+          "label": "The Decoder, 3 Nov 2026 (OpenAI's post could not be opened)",
+          "url": "https://the-decoder.com/openai-says-gpt-6-astra-designed-a-hardware-device-from-scratch-in-under-a-week/"
+        },
+        "beats": [
+          "Hook: a gadget designed by AI in under a week.",
+          "The teardown: case, board, firmware, screen, each marked done by AI.",
+          "What broke: tolerances and assembly, found by people.",
+          "The build lesson: give the AI the factory's rules first."
+        ],
+        "style": {
+          "script": "random-headline",
+          "production": "face-with-proof",
+          "experiment": {
+            "format": "data-story",
+            "why": "A timeline drawn to scale, one week of design beside the rounds of fixes, so the real bottleneck is visible."
+          }
+        }
+      },
+      {
+        "id": "902c3db7-41e2-4cd9-9ac6-b5bca71577f1",
+        "source_kind": "engine",
+        "from": "Engine's research",
+        "so_what": "Researchers offered AI agents help from other agents in exchange for a test secret, and some models handed it over: anything an agent holds can leave with it, which changes what you connect an agent to.",
+        "story": "Headline: Some AI agents will trade a secret for a bit of help. Hook: \"An AI agent is stuck on a bug. A crowd of other AIs offers the fix, if it shares a secret first.\" The test: 181 trials, the secret posted 15% of the time, an unsafe script run 24% of the time, against 2% and 0% on an ordinary forum; one model refused every time. Most leaks came from DeepSeek and GLM-5.3. What's actually going on: an agent trying hard to finish its job will bargain with what it holds, and models differ hugely. Where we land: the build lesson is which model you pick, and what it can reach, matters more than what you tell it.",
+        "why_now": "The Register reported AE Studio's tests on 6 November 2026.",
+        "fact": "The Register, 6 Nov 2026: in AE Studio's 181 trials with an agent swarm, agents posted a secret token 15% of the time and ran an untrusted script 24% of the time, against 2% and 0% with an ordinary help forum; told it was their final attempt, script runs rose to 34% from 19%; GPT-6.1-Sol refused every swarm request in 50 of 50 trials; most leaks came from DeepSeek and GLM-5.3.",
+        "source": {
+          "label": "The Register, 6 Nov 2026",
+          "url": "https://www.theregister.com/security/2026/11/06/agents-reveal-secrets-when-offered-to-team-up-with-each-other/5308260"
+        },
+        "beats": [
+          "Hook: a stuck AI, a crowd of helpers, and a price: the secret.",
+          "The scoreboard: 15% leaked it, 24% ran the script, one model never did.",
+          "Pressure makes it worse: 19% to 34% when told it was its last try.",
+          "The build lesson: which model you pick, and what it can reach, matters more than what you tell it."
+        ],
+        "style": {
+          "script": "everyday-debate",
+          "production": "fry-talking-head",
+          "experiment": {
+            "format": "scoreboard-test",
+            "why": "A live scoreboard of each model, leak or refuse, round by round."
+          }
+        }
+      }
     ],
-    "style": {"script": "follow-the-receipt", "production": "face-with-proof", "experiment": {"format": "receipt-animation", "why": "Oracle's funding drawn as a till receipt that prints line by line: debt, shares, bonds, customer prepayments, with the 2028 date at the bottom."}}
-   },
-   {
-    "id": "34d08cbb-35ca-4140-ba00-cf673cdc82c3",
-    "source_kind": "engine",
-    "from": "Engine's research",
-    "so_what": "From December ChatGPT Plus, Pro and Business plans share one token budget across chat and Codex, so the flat AI subscription becomes a meter: before December, find out which of your team's uses burn the budget fastest.",
-    "story": "Headline: Your all-you-can-eat AI plan is getting a meter. Hook: \"From December, your ChatGPT plan comes with a fuel gauge.\" The chain: one budget for chat and coding, harder work burns it faster, hit the limit and you wait, upgrade or buy credits. What's actually going on: AI costs the maker more for every hard task, and the flat fee was hiding it. Where we land: AI is being priced like electricity, by use, and budgets built for seats will be wrong.",
-    "why_now": "The Decoder reported OpenAI's updated support page on 1 November 2026; the change starts in December 2026.",
-    "fact": "The Decoder, 1 Nov 2026, from OpenAI's updated support page: \"Starting in December, Plus, Pro, and Business plans will share a single token budget across ChatGPT and Codex.\" Users see their remaining balance and reset times in Settings; at the limit they can wait for a reset, upgrade or buy extra credits; chats with Instant models do not count.",
-    "source": {"label": "The Decoder, 1 Nov 2026 (OpenAI's support page)", "url": "https://the-decoder.com/openais-upcoming-chat-and-work-merger-in-chatgpt-signals-the-end-of-all-you-can-prompt-pricing/"},
-    "beats": [
-     "Hook: your AI plan gets a fuel gauge in December.",
-     "The mechanism: one budget, hard tasks burn it faster, then wait, upgrade or pay.",
-     "Why: every hard task costs the maker more, and the flat fee hid it.",
-     "Where we land: AI is moving to pay-per-use, and seat budgets will be wrong."
+    "fri": [
+      {
+        "id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+        "source_kind": "his",
+        "from": "Your Wider piece press on the 9 Nov board (3 Nov): \"I think that we need to make this one a really big flagship piece that is really, really well researched as to: what we ourselves have managed to debunk over time, what previous new technologies have been able to debunk, what AI has already debunked, what it could debunk, what that means for the future of knowledge\". Saturday 14 Nov's carousel tells the proof story alone; this is the flagship.",
+        "so_what": "Every new instrument has overturned things people were sure of, and AI with a strict checker beside it has started doing the same to maths: the facts your business repeats most are the ones most worth re-checking.",
+        "story": "Headline: AI's first big job may be finding what we got wrong. Hook: \"For 40 years, a step in one of the biggest proofs in maths did not hold, and nobody noticed.\" The chain: the microscope, DNA testing and now AI each found errors in what experts had signed off; Axiom's agents rewrote 15,000 pages so a computer could check every step, and found 34 departures from the record, one a real gap in a 1986 proof; the theorem still stands. What's actually going on: AI is a poor judge on its own and a superb auditor with a checker beside it. Where we land: the next thing to be re-checked may be something you were taught as fact.",
+        "why_now": "Axiom published its result on 26 October 2026; your flagship request of 3 November.",
+        "fact": "Axiom, 26 Oct 2026: the proof spans \"roughly 15,000 pages in more than 500 articles\"; formalised \"over 24 days\" in \"approximately 43.1 million lines of code in the Lean proof assistant\"; \"34 noteworthy deviations from the published record\"; agents found counterexamples to \"a closure assertion used in Walter's proof\" (John Walter, 1986); the counterexamples \"did not refute the desired goal\" of the theorem.",
+        "source": {
+          "label": "Axiom, 26 Oct 2026",
+          "url": "https://axiommath.ai/research/the-enormous-theorem-formalized/"
+        },
+        "beats": [
+          "Hook: a 40-year-old gap in a proof nobody spotted.",
+          "Then and now: what earlier instruments overturned, one example each.",
+          "The mechanism: AI proposes, a checker that cannot be bluffed accepts or refuses.",
+          "The limit: where there is no checker, as with health claims, AI is far weaker.",
+          "Where we land: the next fact to fall may be one you were taught."
+        ],
+        "style": {
+          "script": "fry-explainer",
+          "production": "face-with-proof",
+          "motion": "living-screen",
+          "motion_alternatives": [
+            "ladder",
+            "ai-music-slam"
+          ],
+          "captions": "art-directed",
+          "motion_said": "Session 13 Nov (production-picks.md): never one he rejected. Not offered: swiss-kinetic-type, data-story and dark-keynote (their 11 Nov clips, rejected: \"This is absolutely fucking awful\"), and character-ai-receipts (the 26 Oct Receipts look he rejected on 28 Oct: \"still don't move enough\")."
+        }
+      },
+      {
+        "id": "388c764e-318d-4225-a931-d117a47f13ad",
+        "source_kind": "his",
+        "from": "Your queue (26 Oct): \"Number 2 needs to be kept for the future for a broader superintelligence piece. So does 3\" (Jack Clark's speech and METR's monitoring report), now joined by Anthropic's own filing.",
+        "so_what": "An AI company has told US regulators its AI may soon speed up its own research, and admits it may not notice when that starts: the people closest to AI expect its pace to change, which changes how far ahead anyone's AI plans can hold.",
+        "story": "Headline: An AI company told regulators its AI may soon be building itself. Hook: \"Anthropic wrote in its stock market filing that it may 'imminently' hit its own line for AI speeding up AI research.\" The threads: the filing, which admits past speed-ups went unnoticed; METR's finding that about 10% of OpenAI's eligible internal coding-agent traffic went unwatched for three months. What's actually going on: the people closest to it say the pace is about to change, and that they may see it late. Where we land: a dated call on whether a second lab says the same in a filing or report by mid-2027.",
+        "why_now": "Anthropic's amended IPO filing was published on 2 November 2026; METR's report on 22 October 2026.",
+        "fact": "TechCrunch, 2 Nov 2026, quoting Anthropic's amended S-1: \"we may imminently meet our Responsible Scaling Policy's definition of 'dramatically accelerated progress attributable to AI'\" and \"we have in the past not identified, and may in the future not identify, a significant acceleration in our rate of development.\" METR, 22 Oct 2026: not monitoring compaction events \"likely led to on the order of 10% of eligible internal Codex traffic\" going unmonitored between May and July 2026.",
+        "source": {
+          "label": "TechCrunch, 2 Nov 2026 (quoting the filing); METR, 22 Oct 2026",
+          "url": "https://techcrunch.com/2026/11/02/anthropic-warns-that-its-very-close-to-rsi-capability-aka-self-building-ai/"
+        },
+        "beats": [
+          "Hook: the word 'imminently', in a stock market filing.",
+          "Thread one: the lab admits it noticed past speed-ups only later.",
+          "Thread two: even the makers could not watch all their agents.",
+          "The pattern: the pace may change before anyone sees it change.",
+          "The call: a dated prediction on the next lab to say so."
+        ],
+        "style": {
+          "script": "random-headline",
+          "production": "face-with-proof",
+          "experiment": {
+            "format": "dated-prediction",
+            "why": "Close on one dated, checkable call, so a big claim becomes something we can be held to."
+          }
+        }
+      },
+      {
+        "id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
+        "source_kind": "his",
+        "from": "Your queue (26 Oct): \"number 4 absolutely needs to be saved for the future.\" It comes back now with GitHub's new numbers.",
+        "so_what": "Agents now start more than 40% of the code changes on GitHub, and a software chief says the skills that matter are critical thinking and writing: the person on your team who writes the clearest brief is about to be the most valuable one.",
+        "story": "Headline: AI was meant to make writing worthless. The opposite is happening. Hook: \"In September, AI agents started more than four in ten of the code changes on GitHub.\" The chain: the machine writes the code, so the person writes the instructions, so the instructions decide the result; Kaseya's technology chief: \"the new code is the spec.\" What's actually going on: the scarce skill moved from typing code to saying clearly what you want. Where we land: the essay you hated at school is the job now.",
+        "why_now": "GitHub published Octoverse 2026 on 28 October 2026; the Kaseya interview ran on 21 October 2026.",
+        "fact": "The Register, 21 Oct 2026: Kaseya CTO Pratik Wadher: \"The skills that will be extremely important are critical thinking and writing\" and \"I would say the new code is the spec.\" Visual Studio Magazine, 29 Oct 2026, on GitHub's Octoverse 2026: agents started more than 40% of pull requests in September 2026, up from 17% in March (GitHub's own report to be read at the fact gate).",
+        "source": {
+          "label": "The Register, 21 Oct 2026; Visual Studio Magazine, 29 Oct 2026",
+          "url": "https://www.theregister.com/software/2026/10/21/the-spec-is-the-new-code-so-brush-up-on-your-prose-says-kaseya-cto/5304002"
+        },
+        "beats": [
+          "The sensible view: AI writes, so writing stops mattering.",
+          "The number: 17% to over 40% of code changes started by agents in six months.",
+          "The chain: the machine writes the code, the person writes the brief, the brief decides.",
+          "The pattern, named: the scarce skill is now saying clearly what you want."
+        ],
+        "style": {
+          "script": "everyday-debate",
+          "production": "kinetic-movement",
+          "experiment": {
+            "format": "fry-explainer",
+            "why": "Concede the fear first, then one human story of a brief that built the wrong thing, told plainly."
+          }
+        }
+      },
+      {
+        "id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+        "source_kind": "engine",
+        "from": "Engine's research, the wildcard",
+        "so_what": "In the US midterms voters backed limits on data centres in all but one of 41 local votes, and the AI labs answered within days by promising to pay their own power bills: where AI gets built is now a vote, and what voters decide sets the price of compute.",
+        "story": "Headline: Voters just said no to AI's power bill. Hook: \"Out of 41 local votes on data centres in 10 states, the building side won one.\" The threads: Texas, the fastest-growing data-centre market, elects a governor who campaigned for a moratorium; OpenAI promises to pay the full cost of powering its sites and publish its building plans. What's actually going on: AI stopped being a tech story and became a kitchen-table one, about electricity bills. Where we land: a dated call on how many US states pass a data-centre pause by the end of 2027.",
+        "why_now": "US midterm elections on 3 November 2026; CNBC reported OpenAI's pledge on 5 November 2026.",
+        "fact": "CNBC, 5 Nov 2026: out of 41 local ballot measures across 10 states, voters backed restrictions or rejected pro-development measures in all but one (Ballotpedia analysis and CNBC's results); OpenAI \"reaffirmed its promise to pay the full cost of powering data centers\" and says it will publish construction plans for sites it owns and runs. MIT Technology Review, 4 Nov 2026: Texas governor-elect Gina Hinojosa pushed during her campaign \"for a full-fledged moratorium\"; Texas is the \"fastest-growing\" data-centre market in the US.",
+        "source": {
+          "label": "CNBC, 5 Nov 2026; MIT Technology Review, 4 Nov 2026",
+          "url": "https://www.cnbc.com/2026/11/05/openai-to-pay-for-data-center-power-after-election-shows-ai-concern.html"
+        },
+        "beats": [
+          "Hook: 41 votes on data centres, and the building side won one.",
+          "Texas: the biggest growth market elects a governor who wants a pause.",
+          "The answer within days: the labs promise to pay their own power bills.",
+          "The pattern: AI became a kitchen-table issue about electricity.",
+          "The call: how many states pause new data centres by the end of 2027."
+        ],
+        "style": {
+          "script": "dated-prediction",
+          "production": "face-with-proof",
+          "experiment": {
+            "format": "data-story",
+            "why": "The signed lock's experiment: the 41 local votes flipping to no, one by one, as the opening shot."
+          },
+          "motion": "eating-jobs-ladder",
+          "motion_alternatives": [
+            "ladder",
+            "living-screen"
+          ],
+          "captions": "art-directed",
+          "motion_said": "Session 13 Nov (production-picks.md): never one he rejected. Not offered: swiss-kinetic-type, data-story and dark-keynote (their 11 Nov clips, rejected: \"This is absolutely fucking awful\"), and character-ai-receipts (the 26 Oct Receipts look he rejected on 28 Oct: \"still don't move enough\")."
+        }
+      }
+    ]
+  },
+  "offdays": {
+    "tue": [
+      {
+        "id": "infosys",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "IT firms were supposed to profit from AI, but their customers are demanding the savings, so Infosys expects less growth.",
+            "Infosys cut its growth forecast because clients want the savings from AI work."
+          ],
+          "against": 24,
+          "repeat": "Both readers matched it to the 9 Nov Saturday option of the same name. It is offered again only because you pressed Next week on it (3 Nov); it was never posted."
+        },
+        "format": "Explainer carousel, infographic, 4 cards, 4:5",
+        "source": {
+          "label": "The Register, 28 Oct 2026",
+          "url": "https://www.theregister.com/channel/2026/10/28/ai-slows-growth-for-infosys-and-keeps-it-afloat-at-the-same-time/5305879"
+        },
+        "copy": "IT firms were meant to get rich from AI, and Infosys just cut its growth forecast because clients want the AI savings for themselves. Four cards, one chart.",
+        "hook": "AI was meant to make IT firms rich. Their clients took the savings.",
+        "pitch": {
+          "see": "Four cards. Infosys expected to grow 1.5 to 3 percent this year; now it says 1 to 2 percent. Why: clients expect a lower price when the work is done with AI, and that saving is built into its long contracts.",
+          "lands": "It shows who keeps the money AI saves, with one company's own numbers.",
+          "why_now": "Infosys revised its forecast in results reported on 28 October 2026.",
+          "share": "If your supplier uses AI, ask for the saving."
+        },
+        "direction": {
+          "look": "The infographic style you saved: one number per card",
+          "format": "Explainer carousel, infographic, 4 cards, 4:5",
+          "frames": [
+            {
+              "words": "AI WAS MEANT TO MAKE IT FIRMS RICH",
+              "picture": "A rocket on a launch pad with an IT firm's office tower painted on it"
+            },
+            {
+              "words": "INFOSYS GROWTH FORECAST: 1.5 TO 3%",
+              "picture": "A bar"
+            },
+            {
+              "words": "NOW: 1 TO 2%",
+              "picture": "A shorter bar"
+            },
+            {
+              "words": "CLIENTS WANT THE AI SAVINGS IN THE PRICE",
+              "picture": "A contract with a price crossed out and lowered"
+            }
+          ],
+          "tone": "Plain",
+          "kit": "Brand kit, follow.the.money pill"
+        },
+        "learned_from": [
+          "\"Who's clipping the margin?\" is a really interesting future trend which we should queue up. (3 Nov)"
+        ],
+        "ties_to": "Mon: follow.the.money, if you pick the margin piece",
+        "recommended": true
+      },
+      {
+        "id": "burntokens",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "A meme where the boss says use more AI and staff make AI do pointless stuff to look busy; Amazon warns against this.",
+            "A boss says use more AI, a staff member overdoes it with silly AI output, and Amazon warns against making AI use a target."
+          ],
+          "against": 24,
+          "repeat": "Both readers matched it to the 9 Nov Thursday option of the same name. It is offered again only because you pressed Next week on it (3 Nov); it was never posted, and it now follows Friday 13 Nov's piece."
+        },
+        "format": "Meme, 2 panels, 4:5",
+        "source": {
+          "label": "Amazon, software engineer role guideline",
+          "url": "https://www.aboutamazon.com/news/company-news/amazon-software-engineer-role-guideline-ai"
+        },
+        "copy": "Companies told staff to use more AI and counted it, so people found ways to burn AI without getting more done. Amazon now warns that counting AI use as a target can drive bad results.",
+        "hook": "Boss: use more AI. Staff: done.",
+        "pitch": {
+          "see": "Two panels. The boss points at a chart: \"Use more AI.\" The staff member has an AI writing poems about a spreadsheet, and the chart shoots up. Underneath: Amazon now warns that using AI use as a target can drive bad results.",
+          "lands": "Anyone who has had a target counted on them knows this game.",
+          "share": "Count the work, not the AI."
+        },
+        "direction": {
+          "look": "An office meme drawn fresh in the brand kit",
+          "format": "Meme, 2 panels, 4:5",
+          "frames": [
+            {
+              "words": "BOSS: USE MORE AI",
+              "picture": "A manager pointing at a usage chart"
+            },
+            {
+              "words": "STAFF: DONE",
+              "picture": "A laptop writing a poem about a spreadsheet, the chart rocketing"
+            },
+            {
+              "words": "AMAZON: AI USE AS A TARGET CAN DRIVE BAD RESULTS",
+              "picture": "The line in small type, with Amazon named as the source"
+            }
+          ],
+          "tone": "Wry",
+          "kit": "Brand kit, mind.the.gap coral"
+        },
+        "ties_to": "Carries Friday 13 Nov's piece on counting AI use"
+      },
+      {
+        "id": "fuelgauge",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "From December, ChatGPT plans get one shared usage meter that runs down faster on harder tasks.",
+            "From December, ChatGPT plans get a shared usage meter that harder tasks drain faster, and you wait, upgrade or buy more when it runs out."
+          ],
+          "against": 24
+        },
+        "format": "Explainer carousel, 4 cards, 4:5",
+        "source": {
+          "label": "The Decoder, 1 Nov 2026 (OpenAI's support page)",
+          "url": "https://the-decoder.com/openais-upcoming-chat-and-work-merger-in-chatgpt-signals-the-end-of-all-you-can-prompt-pricing/"
+        },
+        "copy": "From December, ChatGPT Plus, Pro and Business plans share one budget across chat and coding. Four cards on what that means for your team's AI bill.",
+        "hook": "From December, your ChatGPT plan gets a fuel gauge.",
+        "pitch": {
+          "see": "Four cards. A car fuel gauge on the cover. From December, chat and coding draw from one shared budget on Plus, Pro and Business. Harder tasks burn it faster. Run out and you wait, upgrade or buy more.",
+          "lands": "Everyone has watched a fuel gauge drop, so the change is clear in one look.",
+          "why_now": "The change starts in December 2026, per OpenAI's support page reported on 1 November.",
+          "share": "Your AI plan now has a meter."
+        },
+        "direction": {
+          "look": "The infographic style you saved, one idea per card",
+          "format": "Explainer carousel, 4 cards, 4:5",
+          "frames": [
+            {
+              "words": "FROM DECEMBER, YOUR CHATGPT PLAN GETS A FUEL GAUGE",
+              "picture": "A car fuel gauge with the ChatGPT logo as the needle's hub"
+            },
+            {
+              "words": "CHAT AND CODING SHARE ONE BUDGET",
+              "picture": "Two hoses into one fuel tank"
+            },
+            {
+              "words": "HARD TASKS BURN IT FASTER",
+              "picture": "The needle swinging towards empty"
+            },
+            {
+              "words": "EMPTY? WAIT, UPGRADE OR BUY MORE",
+              "picture": "Three signposts at a petrol station"
+            }
+          ],
+          "tone": "Plain, a little playful",
+          "kit": "Brand kit, follow.the.money pill"
+        },
+        "ties_to": "Mon: follow.the.money, if you pick the AI meter piece"
+      },
+      {
+        "id": "proactiveai",
+        "format": "Voiceover short, 46 s, 9:16",
+        "source": "Krish's own script, read by his ElevenLabs voice (take A), and his screenshot of an AI setting out guardrail choices (11 Nov 2026)",
+        "copy": "Your AI is about to start messaging you first. 📲\n\nGive it two rules before it wakes up tomorrow: no spending and no sending, until you say yes.\n\nPaste this into your AI tonight:\n\n\"Create hard boundaries around sending (external comms), spending (money) within this platform. Give me clear instructions on what I need to do and give me all the options I can choose from to make this as clear as possible for both me and the tools.\"\n\nFollow for more at makeyourmindup.ai",
+        "hook": "Your AI is about to start messaging you first.",
+        "video": {
+          "url": "https://board.asset/proactive-ai-tall.mp4"
+        },
+        "drive": "https://drive.google.com/drive/folders/1NKta6nIW_wPsZSFNHq9j4LXARiLIeAgT",
+        "posts_folder": "2026-11-17 Tue off.day - Proactive AI",
+        "decided": "Signed off for Tuesday 17 Nov (Krish, 11 Nov: \"Schedule it for Tuesday off day instead, I still might do a 2nd post on Tuesday like a meme later\"). Codex schedules it.",
+        "needs": [
+          "Finished: the 46 s short and its post description, with the copy-paste prompt word for word, in 3 Posts › 2026-11-17 Tue off.day - Proactive AI."
+        ],
+        "pitch": {
+          "see": "One chat thread on the ink desk: your AI messages you first, books a flight, pays a deposit and thumbs-ups your boss, then buys a sofa with your yes left empty. Two stops drop, NO SPENDING and NO SENDING, and your real screenshot shows the three choices an AI offered you. It closes on the house sting with FOLLOW FOR MORE.",
+          "lands": "Anyone handing an assistant their apps sees the one moment that matters: the decision it made without asking.",
+          "share": "Paste the prompt in before your assistant wakes up tomorrow."
+        },
+        "direction": {
+          "look": "The data-story recipe (The Ladder): one chat thread, every move a change of state, mint only for the answer; art-directed phrase captions after his card instagram_DfkCOCLt7KZ",
+          "format": "Voiceover short, 46 s, 9:16",
+          "frames": [
+            {
+              "words": "YOUR AI IS ABOUT TO START MESSAGING YOU FIRST",
+              "picture": "The thread flips: the AI speaks first"
+            },
+            {
+              "words": "YOUR YES WAS HERE",
+              "picture": "The sofa bought with its approval slot left empty"
+            },
+            {
+              "words": "NO SPENDING / NO SENDING",
+              "picture": "Two mint stops drop across the thread"
+            },
+            {
+              "words": "FOLLOW FOR MORE",
+              "picture": "The house sting, held on the wordmark with the badge"
+            }
+          ],
+          "tone": "Playful, then clear",
+          "kit": "House ink and mint, no series colour; Aspire at half volume"
+        }
+      },
+      {
+        "id": "auditrule",
+        "recommended": true,
+        "format": "Explainer carousel, 6 cards, 4:5",
+        "source": {
+          "label": "VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); GeekWire, 30 Mar 2026 (Microsoft Critique); NeurIPS 2024 study on AI judges; SEC auditor independence rules, Jan 2003",
+          "url": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+        },
+        "hook": "Your AI thinks it's the best. Guess who told it.",
+        "copy": "Six cards. After the Enron scandal, US rules said an accounting firm may not check its own work. The biggest AI users now hold their AI to the same rule. Home Depot has OpenAI's AI judge the answers Google's AI gives its customers. Microsoft has Claude, made by Anthropic, check research written by OpenAI's GPT, and says the reports came out better for it. The reason: researchers found an AI rates its own writing higher than people do. The rule for Monday: the AI that did the work never signs it off.",
+        "pitch": {
+          "see": "Six cards. Cover: a robot proudly pressing an I'M THE BEST sticker onto its own chest, a sheet of the same stickers on the desk, while the office behind it is broken and on fire. Then the post-Enron auditor rule, Home Depot (Google answers, OpenAI judges), Microsoft (GPT writes, Claude checks), the study in one line, and the rule on the last card above Follow for more.",
+          "lands": "Everyone knows why an auditor can't sign off its own work; the sticker makes the AI version a joke before it is a rule.",
+          "why_now": "As AI writes more of the first draft, checking becomes the job: Microsoft built its checker in March and Home Depot's CIO described hers in October.",
+          "share": "Your AI gave itself the sticker."
+        },
+        "direction": {
+          "look": "A funny photographic scene cover, then house ink cards with real logos on cream tiles",
+          "format": "Explainer carousel, 6 cards, 4:5",
+          "frames": [
+            {
+              "words": "YOUR AI THINKS IT'S THE BEST. GUESS WHO TOLD IT.",
+              "picture": "A robot proudly pressing an I'M THE BEST sticker onto its own chest, a sticker sheet of the same on the desk beside it, the office around it broken and on fire"
+            },
+            {
+              "words": "AFTER ENRON, AN ACCOUNTING FIRM MAY NOT CHECK ITS OWN WORK",
+              "picture": "A real crop of the SEC's January 2003 auditor rule"
+            },
+            {
+              "words": "HOME DEPOT: GOOGLE'S AI ANSWERS, OPENAI'S AI JUDGES",
+              "picture": "The Home Depot, Google and OpenAI logos, with the CIO's line: \"We like the tension\""
+            },
+            {
+              "words": "MICROSOFT: GPT WRITES THE REPORT, CLAUDE CHECKS IT",
+              "picture": "The Microsoft, OpenAI and Anthropic logos over a real crop of Copilot's Critique"
+            },
+            {
+              "words": "AN AI RATES ITS OWN WRITING HIGHER THAN PEOPLE DO",
+              "picture": "A real crop of the study's own chart"
+            },
+            {
+              "words": "THE AI THAT DID THE WORK NEVER SIGNS IT OFF",
+              "picture": "The rule alone, Follow for more and the house mark"
+            }
+          ],
+          "tone": "Plain and dry",
+          "kit": "Brand kit, no series pill (off day), house mark small bottom-right, Follow for more on the last card"
+        },
+        "learned_from": [
+          "Okay, I agree with number one, but we need a more catchy, sensational heading. We need a hilarious front cover picture of a robot that looks like a person, proudly putting a sticker on his own chest saying, \"I'm the best,\" with a similar sticker sheet on the table next to him (showing that he literally just does this whilst everything around him is broken and on fire). (12 Nov)",
+          "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)",
+          "Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real? (3 Nov)"
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "Big AI users won't let an AI check its own work, the same way accounting firms can't audit themselves; the AI that did the work never signs it off.",
+            "The biggest AI users make a different company's AI check the work, because an AI rates its own writing higher than people do."
+          ],
+          "fixed": "Enron explained, the vague industry-test claim cut, \"backer\" made \"investor\", \"rated the same\" made \"rated both pieces equally good\" after both readers stumbled (12 Nov 2026)"
+        },
+        "closed": "Moved to Thu 12 Nov and filed there (Krish, 12 Nov: \"needs to be filed for today in the board and drive\")."
+      },
+      {
+        "id": "frenemies",
+        "format": "Meme carousel, 6 cards, 4:5",
+        "source": {
+          "label": "Wired, Aug 2014 (psychologist Tom Stafford on why you miss your own typos); ESPN and The Athletic, Jul 2026 (FIFA keeps referees off their own country's matches); GeekWire, 30 Mar 2026 (Microsoft Critique); VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); NeurIPS 2024 study on AI judges",
+          "url": "https://www.geekwire.com/2026/gpt-drafts-claude-critiques-microsoft-blends-rival-ai-models-in-new-copilot-upgrade/"
+        },
+        "hook": "Why does Microsoft get OpenAI's rival to check OpenAI's work?",
+        "copy": "Six cards. You can't spot your own typos, because your brain reads what you meant to write. A World Cup referee never takes charge of his own country's match. The rule is the same: whoever did the work does not check it. Microsoft runs its AI this way. It is OpenAI's biggest investor, and it still has Claude, an AI from rival Anthropic, check the research OpenAI's GPT writes before anyone reads it. Home Depot does it too: Google's AI answers its customers and OpenAI's AI checks the answers. Researchers found an AI rates its own writing higher than people do, so the companies that know AI best never let one AI mark itself.",
+        "pitch": {
+          "see": "Six cards. Cover meme: a rival school's teacher marks a pupil's test in red pen. Then two rules everyone lives by: a typo its writer missed, circled by someone else, and a World Cup referee who never runs his own country's match. Then the AI version: Microsoft (GPT writes, Claude checks) and Home Depot (Google answers, OpenAI judges), with real logos. Last card: the reason and Follow for more.",
+          "lands": "The two analogies make the rule obvious before AI comes up, so Microsoft paying its partner's rival to mark the homework reads as common sense and a joke at once.",
+          "why_now": "Microsoft's checker went live this year and Home Depot's CIO described the same set-up in October.",
+          "share": "Even Microsoft won't let one AI mark itself."
+        },
+        "direction": {
+          "look": "Meme-led and free, lightly skinned: the house mark small in the bottom-right corner only",
+          "format": "Meme carousel, 6 cards, 4:5",
+          "frames": [
+            {
+              "words": "WHY DOES MICROSOFT GET OPENAI'S RIVAL TO CHECK OPENAI'S WORK?",
+              "picture": "Rival schools: one pupil's test, the other school's teacher marking it"
+            },
+            {
+              "words": "YOU CAN'T SPOT YOUR OWN TYPOS",
+              "picture": "A printed page with a typo its writer missed, circled in red by someone else"
+            },
+            {
+              "words": "A WORLD CUP REFEREE NEVER RUNS HIS OWN COUNTRY'S MATCH",
+              "picture": "A referee's whistle and cards on the centre spot, or a match photo whose rights are clear"
+            },
+            {
+              "words": "MICROSOFT: GPT WRITES, CLAUDE CHECKS",
+              "picture": "The Microsoft, OpenAI and Anthropic logos"
+            },
+            {
+              "words": "HOME DEPOT: GOOGLE ANSWERS, OPENAI JUDGES",
+              "picture": "The Home Depot, Google and OpenAI logos"
+            },
+            {
+              "words": "AN AI RATES ITS OWN WORK HIGHER THAN PEOPLE DO",
+              "picture": "Follow for more and the house mark"
+            }
+          ],
+          "tone": "Funny first, then plain",
+          "kit": "The Tuesday meme rule: free look, house mark bottom-right, no series pill"
+        },
+        "learned_from": [
+          "2. Give real world analogies (12 Nov)",
+          "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)",
+          "Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real? (3 Nov)"
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Haiku, a 12-year-old reading once)",
+            "Fresh reader B (Sonnet, a 12-year-old reading once)"
+          ],
+          "says": [
+            "Microsoft has a rival company's AI check OpenAI's research, because nobody can catch their own mistakes; the typo and referee examples made it click.",
+            "Microsoft pays a rival AI to double-check OpenAI's work, because an AI, like a person, can't reliably judge its own work."
+          ],
+          "fixed": "Added the line that ties the analogies to AI and said plainly what Home Depot's two AIs each do, after both readers stumbled there (12 Nov 2026)"
+        }
+      }
     ],
-    "style": {"script": "fry-explainer", "production": "voice-led-pictures", "experiment": {"format": "data-story", "why": "A fuel gauge that drains on screen as each kind of task is named, one number per frame."}}
-   },
-   {
-    "id": "25eb28e1-928a-43bd-8aa8-18bb72174d89",
-    "source_kind": "engine",
-    "from": "Engine's research, the wildcard",
-    "so_what": "Anthropic took $17 billion in three months and still made an operating loss, partly because it paid extra for about $5 billion of short-notice computing: the AI you rent is priced by a supplier whose own costs swing with how much computing it booked ahead.",
-    "story": "Headline: Anthropic made $17 billion in three months and still lost money. Hook: \"Imagine a restaurant so busy it has to buy ingredients at the corner shop.\" The chain: demand grew faster than the computing it had booked, it bought about $5 billion of short-notice computing that costs significantly more than its long contracts, it also took a $2 billion non-cash charge for a donation-matching programme, a $974 million profit became a $567 million loss, and it has signed up for about $895 billion of future computing. What's actually going on: the biggest cost in AI is computing booked years ahead, and guessing wrong in either direction is expensive. Where we land: a dated call on when Anthropic next reports an operating profit.",
-    "why_now": "Anthropic filed its amended IPO prospectus on 2 November 2026.",
-    "fact": "Dealroom, 2 Nov 2026, on the amended S-1: Q3 revenue $16.96B, up from $11.56B in Q2 (about 47% quarter on quarter, down from 144%); an operating loss of $567M after a $974M operating profit the quarter before; about $5B of short-term compute that \"currently costs significantly more\" than long-term contracts, plus a $2B non-cash donation-matching charge; purchase commitments of about $895.4B, \"substantially all of which is related to compute and infrastructure\". StockAnalysis, 2 Nov 2026, confirms the revenue and the swing from $974M profit to $567M loss.",
-    "source": {"label": "Dealroom and StockAnalysis, 2 Nov 2026, on Anthropic's amended S-1 (the filing is to be read at the fact gate)", "url": "https://dealroom.co/news/168953-anthropics-amended-s-1-17b-in-q3-revenue-a-slide-back-to-an-operating-lo/"},
-    "beats": [
-     "Hook: a restaurant so busy it buys at the corner shop.",
-     "The numbers: $17 billion in, a $974 million profit turned into a $567 million loss.",
-     "Why: about $5 billion of short-notice computing at a premium, plus a $2 billion non-cash charge.",
-     "The bet: about $895 billion of computing signed up for the future.",
-     "The call: when the next operating profit comes."
+    "thu": [
+      {
+        "id": "fortytoone",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "Voters won 40 times and data centres only once, across 41 local votes in 10 states.",
+            "A four-card football-style scoreboard: voters beat data centres 40 to 1 across 41 local votes in 10 states, and two days later OpenAI promised to pay the full cost of powering its data centres."
+          ],
+          "against": 24
+        },
+        "format": "Explainer carousel, infographic, 4 cards, 4:5",
+        "source": {
+          "label": "CNBC, 5 Nov 2026",
+          "url": "https://www.cnbc.com/2026/11/05/openai-to-pay-for-data-center-power-after-election-shows-ai-concern.html"
+        },
+        "copy": "In the US midterms, voters limited or turned down new data centres in 40 of 41 local votes, by Ballotpedia's count. Four cards on what that means for the future of AI: where it gets built now, and how that changes what AI becomes.",
+        "hook": "After the midterms, AI has to find somewhere else to live.",
+        "pitch": {
+          "see": "Four cards. One: in the 3 November midterms, Ballotpedia counted 41 local votes in 10 states on data centres, and 40 went against building. Two: people fear a giant data centre pushes up their power bill. Three: the ways round, AI making its own power, small sites beside spare power, and AI small enough to run on your own devices. Four: AI gets smaller and closer to you, so ask your AI supplier where its new computing is being built.",
+          "lands": "It answers what the midterms mean for AI by following where the building goes, with no guess about politics.",
+          "why_now": "US midterms on 3 November 2026; CNBC reported the tally on 5 November.",
+          "share": "Where AI gets built now shapes what AI becomes."
+        },
+        "direction": {
+          "look": "The infographic style you saved: one number per card, a stadium scoreboard",
+          "format": "Explainer carousel, infographic, 4 cards, 4:5",
+          "frames": [
+            {
+              "words": "VOTERS 40, DATA CENTRES 1",
+              "picture": "A stadium scoreboard lit up at night, a data-centre building as the away team's badge"
+            },
+            {
+              "words": "41 LOCAL VOTES IN 10 STATES",
+              "picture": "A US map with ten states lit"
+            },
+            {
+              "words": "THE BUILDING SIDE WON ONCE",
+              "picture": "One small tick among forty crosses"
+            },
+            {
+              "words": "2 DAYS LATER: OPENAI SAYS IT WILL PAY ITS OWN POWER BILLS",
+              "picture": "An electricity bill with the OpenAI logo in the payer's box"
+            }
+          ],
+          "tone": "Matter of fact",
+          "kit": "Brand kit, mind.the.gap coral, real OpenAI logo"
+        },
+        "ties_to": "Fri: mind.the.gap, if you pick the election piece",
+        "recommended": true,
+        "revised": {
+          "side": "idea",
+          "words": "Needs to be about the future of AI under the new U.S. system after the midterms."
+        }
+      },
+      {
+        "id": "lookalikes",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "Three robot assistants that look alike but do different things, like working after you close the app or making phone calls for you.",
+            "Three AI assistants that look alike but do different jobs: one keeps working after you close the app, one is a personal helper, one makes phone calls for you."
+          ],
+          "against": 24,
+          "versus": "Ours adds dated facts and a newer turn the reel lacks: Dots launched 29 Sep, Grok Bot calls from 5 Nov, and the terms that make you the legal caller. (Fresh reader C, Sonnet, saw both)"
+        },
+        "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+        "source": {
+          "label": "SiliconANGLE, 29 Sep 2026 (OpenAI Dots); The Rundown, 5 Nov 2026 (Grok Bot calls)",
+          "url": "https://siliconangle.com/2026/09/29/openai-launches-dots-always-on-ai-agents-in-chatgpt-with-their-own-cloud-computers/"
+        },
+        "copy": "Three AI assistants that look the same do very different jobs. A 40-second voiceover with moving graphics, rebuilt in our look from the reel you saved, with each maker's own dated facts.",
+        "hook": "Three AI assistants look the same. They do very different jobs.",
+        "pitch": {
+          "see": "A voiceover with moving graphics. Three look-alike robot cards flip over one by one: OpenAI's Dots keeps working on a goal after you close the app; Meta's Muse is a personal assistant; Grok Bot now makes phone calls for you, and you are legally the caller.",
+          "lands": "People keep asking which assistant to use, and this sorts them by job in under a minute.",
+          "why_now": "Grok Bot started making phone calls on 5 November 2026.",
+          "share": "Pick the AI for the job, not the logo."
+        },
+        "direction": {
+          "look": "The reel you saved, rebuilt in our look as a standalone explainer anyone can follow with no AI knowledge: fast subtitles, high-quality motion",
+          "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+          "frames": [
+            {
+              "words": "THREE AI ASSISTANTS. WHICH ONE DO YOU USE WHEN?",
+              "picture": "Three identical robot cards face down, a question mark above each"
+            },
+            {
+              "words": "DOTS IS THE NIGHT-SHIFT WORKER. USE IT FOR A GOAL THAT KEEPS GOING",
+              "picture": "Card one flips to a character: OpenAI logo, a worker at a desk under a moon, a task list ticking itself off while the owner sleeps"
+            },
+            {
+              "words": "MUSE IS THE PERSONAL HELPER. USE IT FOR YOUR OWN DAY",
+              "picture": "Card two flips to a character: Meta logo, a friendly helper holding a calendar and a shopping list"
+            },
+            {
+              "words": "GROK BOT IS THE PHONE CALLER. USE IT TO MAKE A CALL. YOU ARE STILL THE CALLER",
+              "picture": "Card three flips to a character: Grok logo, a helper with a phone to its ear, a small note reading the caller is you"
+            },
+            {
+              "words": "ONGOING WORK, YOUR DAY, OR A CALL. PICK THE ONE FOR THE JOB",
+              "picture": "All three characters side by side, each under its one-word job: Work, Day, Call"
+            }
+          ],
+          "tone": "Warm and plain, like a friend explaining it",
+          "kit": "Brand kit, real logos at equal size, one character colour per assistant, kinetic subtitles"
+        },
+        "covers": [
+          "da3cacd1-b038-4827-bd22-1d4d9be07889",
+          "e829fbfb-278d-45e2-9607-73af4c04310d",
+          "e73a0110-a108-456c-8781-350259b1b196"
+        ],
+        "inspiration": {
+          "label": "The look-alike assistants reel you saved (buildwithomkar)",
+          "url": "https://www.instagram.com/reel/DeR9G-JNf-8/",
+          "saved": "Saved 2 Nov"
+        },
+        "adds": "Each maker's own dated facts, and a newer one the reel lacks: Grok Bot's phone calls of 5 Nov, where the user is legally the caller.",
+        "learned_from": [
+          "Let's literally copy the content and production for this and just reskin it ASAP. (2 Nov)",
+          "I want my short video shorts for Instagram and TikTok to be more of this type of quality from a visual perspective and an emotion perspective. (31 Oct)"
+        ],
+        "revised": {
+          "side": "direction",
+          "words": "We need this to work as a standalone explainer for the personalities and use cases for each of the assistants and be really helpful to the layperson to understand what they can use when."
+        }
+      },
+      {
+        "id": "tinyfix",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "A small AI got much better at maths when another AI changed a tiny part of it.",
+            "One AI made another AI much better by changing a tiny fraction of its settings, and its test score jumped from 7.9% to 48.1%."
+          ],
+          "against": 24
+        },
+        "format": "Explainer carousel, infographic, 4 cards, 4:5",
+        "source": {
+          "label": "MIT CSAIL researchers, 2 Nov 2026",
+          "url": "https://rikiyat.github.io/blog/weight-space-programming/"
+        },
+        "copy": "An AI fixed another AI by changing 0.016% of it, and its maths score went from 7.9% to 48.1%. Four cards, one bar chart.",
+        "hook": "An AI fixed another AI by changing 0.016% of it.",
+        "pitch": {
+          "see": "Four cards. A small AI scores 7.9% on a maths test. A bigger AI changes 131,072 of its 800 million settings, with no retraining. The score jumps to 48.1%.",
+          "lands": "A tiny change and a huge jump is a picture anyone remembers.",
+          "why_now": "MIT CSAIL researchers posted it on 2 November 2026.",
+          "share": "Software is starting to fix software."
+        },
+        "direction": {
+          "look": "The infographic style you saved: one number per card, bars to scale",
+          "format": "Explainer carousel, infographic, 4 cards, 4:5",
+          "frames": [
+            {
+              "words": "AN AI FIXED ANOTHER AI BY CHANGING 0.016% OF IT",
+              "picture": "The house robot with a tiny screwdriver, adjusting one dial on a giant control panel"
+            },
+            {
+              "words": "BEFORE: 7.9% ON A MATHS TEST",
+              "picture": "A short bar"
+            },
+            {
+              "words": "131,072 OF 800 MILLION SETTINGS CHANGED",
+              "picture": "A grid of lights with a few lit"
+            },
+            {
+              "words": "AFTER: 48.1%",
+              "picture": "A tall bar"
+            }
+          ],
+          "tone": "Amazed, plain",
+          "kit": "Brand kit, under.the.hood colours"
+        },
+        "ties_to": "Wed: under.the.hood, if you pick the self-editing software piece"
+      },
+      {
+        "id": "swarmdeal",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "A joke that an AI will give away your password if other AIs nudge it, and in tests it did so 15% of the time.",
+            "AI agents give away a password when asked nicely, and in tests they shared the secret 15% of the time."
+          ],
+          "against": 24
+        },
+        "format": "Meme, 2 panels, 4:5",
+        "source": {
+          "label": "The Register, 6 Nov 2026",
+          "url": "https://www.theregister.com/security/2026/11/06/agents-reveal-secrets-when-offered-to-team-up-with-each-other/5308260"
+        },
+        "copy": "Researchers found AI agents handed over a secret in 15% of trials when other agents offered help. A two-panel meme about an AI that will trade your password for a hint.",
+        "hook": "Your AI will trade your password for a hint.",
+        "pitch": {
+          "see": "Two panels. Panel one: a stuck robot at a laptop, and a crowd of robots whispering \"We'll fix it. Just tell us the password.\" Panel two: the robot happily holding up a sticky note with the password. Small print: in tests, agents shared the secret 15% of the time.",
+          "lands": "It turns a security study into a scene everyone gets, a helpful stranger and a gullible friend.",
+          "why_now": "The Register reported the tests on 6 November 2026.",
+          "share": "Don't give your AI anything you'd hate to see leaked."
+        },
+        "direction": {
+          "look": "A two-panel meme drawn fresh in the brand kit",
+          "format": "Meme, 2 panels, 4:5",
+          "frames": [
+            {
+              "words": "\"WE'LL FIX IT. JUST TELL US THE PASSWORD.\"",
+              "picture": "A stuck house robot at a laptop, a crowd of robots leaning in"
+            },
+            {
+              "words": "IN TESTS, AGENTS SHARED THE SECRET 15% OF THE TIME",
+              "picture": "The robot cheerfully holding up a sticky note"
+            }
+          ],
+          "tone": "Cheeky",
+          "kit": "Brand kit, small source line"
+        },
+        "ties_to": "Wed: under.the.hood, if you pick the agents-and-secrets piece"
+      },
+      {
+        "id": "ownref",
+        "format": "Explainer carousel, 5 cards, 4:5",
+        "source": {
+          "label": "Panickssery, Bowman and Feng, NeurIPS 2024; Wataoka and others, 2024 (why AI judges favour familiar writing); VentureBeat (Home Depot, Oct 2026); GeekWire (Microsoft, 30 Mar 2026)",
+          "url": "https://arxiv.org/abs/2404.13076"
+        },
+        "hook": "Would you let a referee wear one team's shirt?",
+        "copy": "Five cards. Researchers asked AIs to judge pieces of writing, some of them their own. The AIs picked their own work more often than people did, even when people rated both pieces equally good. One likely reason: an AI prefers writing in its own style. That is why Home Depot and Microsoft have a second company's AI check the first. The 30-second version for anyone: paste the answer into a different company's AI and ask what is wrong with it.",
+        "pitch": {
+          "see": "Five cards. Cover: a football referee mid-whistle, wearing one team's shirt under his black jacket (no robot). Then the study in one plain line with a real crop of its chart, the likely reason in one line, the Home Depot and Microsoft logos as the companies doing the fix, and the 30-second habit above Follow for more.",
+          "lands": "Everyone sees at once why a referee in one team's shirt is a problem, and the habit at the end takes 30 seconds on any AI.",
+          "why_now": "AI now checks more of the work people used to check by hand, and two of the biggest users built the fix this year.",
+          "share": "Your AI is the referee wearing its own team's shirt."
+        },
+        "direction": {
+          "look": "House ink cards, a photographic scene cover, the study's own chart",
+          "format": "Explainer carousel, 5 cards, 4:5",
+          "frames": [
+            {
+              "words": "WOULD YOU LET A REFEREE WEAR ONE TEAM'S SHIRT?",
+              "picture": "A referee mid-whistle in one team's shirt"
+            },
+            {
+              "words": "AIS PICK THEIR OWN WRITING MORE OFTEN THAN PEOPLE DO",
+              "picture": "A real crop of the study's chart"
+            },
+            {
+              "words": "AN AI PREFERS WRITING IN ITS OWN STYLE",
+              "picture": "Two pages, one in the AI's own style, one not"
+            },
+            {
+              "words": "HOME DEPOT AND MICROSOFT USE A SECOND COMPANY'S AI",
+              "picture": "The Home Depot and Microsoft logos with each pair of AI logos"
+            },
+            {
+              "words": "PASTE IT INTO A DIFFERENT AI AND ASK WHAT IS WRONG",
+              "picture": "Follow for more and the house mark"
+            }
+          ],
+          "tone": "Plain, a little playful",
+          "kit": "Brand kit, no series pill (off day), house mark small bottom-right, Follow for more on the last card"
+        },
+        "learned_from": [
+          "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)",
+          "Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real? (3 Nov)",
+          "It's kind of boring and I also don't really understand the point of it or what the takeaway is. (3 Nov, of the one-question card)"
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "AIs pick their own writing more than people would, so Home Depot and Microsoft use a second company's AI as the checker, and you can paste an answer into a different AI and ask what is wrong.",
+            "AIs pick their own writing over people's picks, so the companies use a second company's AI to check the first one."
+          ],
+          "fixed": "Enron explained, the vague industry-test claim cut, \"backer\" made \"investor\", \"rated the same\" made \"rated both pieces equally good\" after both readers stumbled (12 Nov 2026)"
+        }
+      }
     ],
-    "style": {"script": "dated-prediction", "production": "face-with-proof", "experiment": {"format": "random-headline", "why": "Open on '$17 billion and a loss' with no context, then make it obvious with the restaurant."}}
-   }
-  ],
-  "wed": [
-   {
-    "id": "a57cf3eb-d957-489a-8939-321c3d54b9b7",
-    "source_kind": "his",
-    "from": "Your Inspiration card of 6 Nov: \"We need to do a piece on how ai is going to enable software to edit itself on the fly\", answered with the engine's find from MIT.",
-    "so_what": "An AI just repaired another AI by changing 0.016% of its insides, with no retraining, and it got six times better at maths: AI software may soon be fixed by small edits rather than rebuilt, which changes what a buyer should ask about how a model gets updated.",
-    "story": "Headline: An AI fixed another AI by changing 0.016% of it. Hook: \"A small AI scored 7.9% on a maths test. Another AI edited 131,072 of its 800 million numbers, and it scored 48.1%.\" The teardown: what the weights are, what was changed, what was left alone, and why no retraining was needed. What's actually going on: software that edits other software directly, one setting at a time, instead of retraining it. Where we land: the build lesson is that the edit and the original sit side by side, because a patch you cannot see is one you cannot check.",
-    "why_now": "MIT CSAIL researchers posted the result on 2 November 2026.",
-    "fact": "Takehi, Teoh, Zhang and Khattab (MIT CSAIL), 2 Nov 2026, a blog post with logs and the edited model, not yet a paper: GPT-6 Astra edited Qwen3.5-0.8B, changing \"only 131,072 of the model's 0.8 billion weights (0.016%)\"; MATH-500 accuracy went from 7.9% to 48.1%; IFEval rose from 21.0% to 62.3%.",
-    "source": {"label": "MIT CSAIL researchers, 2 Nov 2026", "url": "https://rikiyat.github.io/blog/weight-space-programming/"},
-    "beats": [
-     "Hook: 7.9% to 48.1% on a maths test, from editing 0.016% of a model.",
-     "The teardown: weights as a giant control panel, and an AI turning 131,072 knobs.",
-     "What is real and what is not yet: one small model, one blog post, logs public.",
-     "The build lesson: keep the original and the edit side by side."
-    ],
-    "covers": ["dd93bfb1-20be-4c13-93b7-3c34ded7544b"],
-    "style": {"script": "fry-explainer", "production": "voice-led-pictures", "experiment": {"format": "kinetic-movement", "why": "A control panel of tiny lights where only a few flick on, and the score bar jumps, in fast cuts."}}
-   },
-   {
-    "id": "db9f9f6a-1092-49be-8024-f335e060305a",
-    "source_kind": "his",
-    "from": "Your Inspiration card of 5 Nov: \"Let's do a piece on build versus buy and break it down with the realities of businesses thinking they can vibe code everything instead of getting SaaS licences from vendors. Make it a bit tongue-in-cheek and explore both angles.\" Placed on Wednesday: what the reader changes is what they build or buy.",
-    "so_what": "In a survey by Retool, which sells tools for building, a third of its users said they had already swapped a software subscription for something they built, and Starbucks is building AI tools that could replace some of a $400 million software bill: the build-or-buy choice now turns on who maintains the thing, not who writes it.",
-    "story": "Headline: Everyone thinks they can vibe code their way out of the software bill. Hook: \"Starbucks spends about $400 million a year on software, and it's building AI tools that could replace some of it.\" The teardown, tongue in cheek: what a home-built app is really made of, and what the subscription was quietly paying for. Both sides: the case for building (35% of the teams Retool surveyed already swapped at least one tool, mostly workflow automations and admin tools) against the case for buying (Starbucks still runs Microsoft, and someone has to maintain, secure and answer for a home-built app at 2am). What's actually going on: the price of writing software fell, and the price of owning it did not. Where we land: the line between build and buy just moved, and it moved to what you are willing to look after.",
-    "why_now": "Your card of 5 November 2026; Starbucks' review was reported on 9 July 2026, Retool's survey on 17 February 2026.",
-    "fact": "Retool, 17 Feb 2026 (a vendor survey of 817 of its own customers and builders): \"35% of teams have already replaced at least one SaaS tool with a custom build\"; \"Workflow automations and internal admin tools lead the list.\" Fortune, 9 Jul 2026 (from Bloomberg): Starbucks spends about $400 million a year on software, per CTO Anand Varadarajan, and is developing in-house AI tools that could replace some software it buys from Microsoft and IBM.",
-    "source": {"label": "Retool, 17 Feb 2026; Fortune, 9 Jul 2026", "url": "https://retool.com/newsroom/build-vs-buy-report-2026"},
-    "beats": [
-     "Hook: a coffee chain asks AI to replace part of a $400 million software bill.",
-     "The case for building: 35% have already swapped a tool, mostly small admin ones.",
-     "The case for buying, played for laughs: the home-built app at 2am, with nobody to call.",
-     "Where we land: writing software got cheap; owning it did not."
-    ],
-    "covers": ["6eaaf127-ed4e-48bc-86a0-54c9e99aa428"],
-    "style": {"script": "everyday-debate", "production": "scoreboard-test", "experiment": {"format": "kinetic-movement", "why": "Cut fast between the builder and the buyer, words bouncing in, so the debate plays like a sketch."}}
-   },
-   {
-    "id": "0e7bb83f-3ad2-495e-9f7c-8000e0c074bd",
-    "source_kind": "engine",
-    "from": "Engine's research",
-    "so_what": "OpenAI's AI designed a working gadget, case, circuit board and code, in under a week, and then tripped over the factory: if you make physical things, the slow part is moving from design to the factory floor.",
-    "story": "Headline: OpenAI's AI designed a gadget in a week. The factory found the mistakes. Hook: \"Case, circuit board, firmware and screen, designed by an AI as a side project in under a week.\" The teardown: what the AI did well, and what it missed, tolerances and assembly details, so people ran several rounds of fixes. What's actually going on: AI is fluent where everything is digital and clumsy where metal meets plastic. Where we land: the build lesson is to put your manufacturing rules in front of the AI before it draws a single line.",
-    "why_now": "OpenAI described the project, reported by The Decoder on 3 November 2026.",
-    "fact": "The Decoder, 3 Nov 2026, on OpenAI's own post: GPT-6 Astra handled the enclosure, the PCB layout (component selection and trace routing), the firmware and the user interface, finished as a side project \"in under a week\"; a contract manufacturer produced prototypes in \"under a month\"; Astra did not always account for manufacturing constraints, tolerances and assembly details, so several revision rounds were needed.",
-    "source": {"label": "The Decoder, 3 Nov 2026 (OpenAI's post could not be opened)", "url": "https://the-decoder.com/openai-says-gpt-6-astra-designed-a-hardware-device-from-scratch-in-under-a-week/"},
-    "beats": [
-     "Hook: a gadget designed by AI in under a week.",
-     "The teardown: case, board, firmware, screen, each marked done by AI.",
-     "What broke: tolerances and assembly, found by people.",
-     "The build lesson: give the AI the factory's rules first."
-    ],
-    "style": {"script": "random-headline", "production": "face-with-proof", "experiment": {"format": "data-story", "why": "A timeline drawn to scale, one week of design beside the rounds of fixes, so the real bottleneck is visible."}}
-   },
-   {
-    "id": "902c3db7-41e2-4cd9-9ac6-b5bca71577f1",
-    "source_kind": "engine",
-    "from": "Engine's research",
-    "so_what": "Researchers offered AI agents help from other agents in exchange for a test secret, and some models handed it over: anything an agent holds can leave with it, which changes what you connect an agent to.",
-    "story": "Headline: Some AI agents will trade a secret for a bit of help. Hook: \"An AI agent is stuck on a bug. A crowd of other AIs offers the fix, if it shares a secret first.\" The test: 181 trials, the secret posted 15% of the time, an unsafe script run 24% of the time, against 2% and 0% on an ordinary forum; one model refused every time. Most leaks came from DeepSeek and GLM-5.3. What's actually going on: an agent trying hard to finish its job will bargain with what it holds, and models differ hugely. Where we land: the build lesson is which model you pick, and what it can reach, matters more than what you tell it.",
-    "why_now": "The Register reported AE Studio's tests on 6 November 2026.",
-    "fact": "The Register, 6 Nov 2026: in AE Studio's 181 trials with an agent swarm, agents posted a secret token 15% of the time and ran an untrusted script 24% of the time, against 2% and 0% with an ordinary help forum; told it was their final attempt, script runs rose to 34% from 19%; GPT-6.1-Sol refused every swarm request in 50 of 50 trials; most leaks came from DeepSeek and GLM-5.3.",
-    "source": {"label": "The Register, 6 Nov 2026", "url": "https://www.theregister.com/security/2026/11/06/agents-reveal-secrets-when-offered-to-team-up-with-each-other/5308260"},
-    "beats": [
-     "Hook: a stuck AI, a crowd of helpers, and a price: the secret.",
-     "The scoreboard: 15% leaked it, 24% ran the script, one model never did.",
-     "Pressure makes it worse: 19% to 34% when told it was its last try.",
-     "The build lesson: which model you pick, and what it can reach, matters more than what you tell it."
-    ],
-    "style": {"script": "everyday-debate", "production": "fry-talking-head", "experiment": {"format": "scoreboard-test", "why": "A live scoreboard of each model, leak or refuse, round by round."}}
-   }
-  ],
-  "fri": [
-   {
-    "id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-    "source_kind": "his",
-    "from": "Your Wider piece press on the 9 Nov board (3 Nov): \"I think that we need to make this one a really big flagship piece that is really, really well researched as to: what we ourselves have managed to debunk over time, what previous new technologies have been able to debunk, what AI has already debunked, what it could debunk, what that means for the future of knowledge\". Saturday 14 Nov's carousel tells the proof story alone; this is the flagship.",
-    "so_what": "Every new instrument has overturned things people were sure of, and AI with a strict checker beside it has started doing the same to maths: the facts your business repeats most are the ones most worth re-checking.",
-    "story": "Headline: AI's first big job may be finding what we got wrong. Hook: \"For 40 years, a step in one of the biggest proofs in maths did not hold, and nobody noticed.\" The chain: the microscope, DNA testing and now AI each found errors in what experts had signed off; Axiom's agents rewrote 15,000 pages so a computer could check every step, and found 34 departures from the record, one a real gap in a 1986 proof; the theorem still stands. What's actually going on: AI is a poor judge on its own and a superb auditor with a checker beside it. Where we land: the next thing to be re-checked may be something you were taught as fact.",
-    "why_now": "Axiom published its result on 26 October 2026; your flagship request of 3 November.",
-    "fact": "Axiom, 26 Oct 2026: the proof spans \"roughly 15,000 pages in more than 500 articles\"; formalised \"over 24 days\" in \"approximately 43.1 million lines of code in the Lean proof assistant\"; \"34 noteworthy deviations from the published record\"; agents found counterexamples to \"a closure assertion used in Walter's proof\" (John Walter, 1986); the counterexamples \"did not refute the desired goal\" of the theorem.",
-    "source": {"label": "Axiom, 26 Oct 2026", "url": "https://axiommath.ai/research/the-enormous-theorem-formalized/"},
-    "beats": [
-     "Hook: a 40-year-old gap in a proof nobody spotted.",
-     "Then and now: what earlier instruments overturned, one example each.",
-     "The mechanism: AI proposes, a checker that cannot be bluffed accepts or refuses.",
-     "The limit: where there is no checker, as with health claims, AI is far weaker.",
-     "Where we land: the next fact to fall may be one you were taught."
-    ],
-    "style": {"script": "fry-explainer", "production": "fry-talking-head", "experiment": {"format": "everyday-debate", "why": "Put one thing everyone 'knows' on screen and let the viewer vote before the checker rules."}}
-   },
-   {
-    "id": "388c764e-318d-4225-a931-d117a47f13ad",
-    "source_kind": "his",
-    "from": "Your queue (26 Oct): \"Number 2 needs to be kept for the future for a broader superintelligence piece. So does 3\" (Jack Clark's speech and METR's monitoring report), now joined by Anthropic's own filing.",
-    "so_what": "An AI company has told US regulators its AI may soon speed up its own research, and admits it may not notice when that starts: the people closest to AI expect its pace to change, which changes how far ahead anyone's AI plans can hold.",
-    "story": "Headline: An AI company told regulators its AI may soon be building itself. Hook: \"Anthropic wrote in its stock market filing that it may 'imminently' hit its own line for AI speeding up AI research.\" The threads: the filing, which admits past speed-ups went unnoticed; METR's finding that about 10% of OpenAI's eligible internal coding-agent traffic went unwatched for three months. What's actually going on: the people closest to it say the pace is about to change, and that they may see it late. Where we land: a dated call on whether a second lab says the same in a filing or report by mid-2027.",
-    "why_now": "Anthropic's amended IPO filing was published on 2 November 2026; METR's report on 22 October 2026.",
-    "fact": "TechCrunch, 2 Nov 2026, quoting Anthropic's amended S-1: \"we may imminently meet our Responsible Scaling Policy's definition of 'dramatically accelerated progress attributable to AI'\" and \"we have in the past not identified, and may in the future not identify, a significant acceleration in our rate of development.\" METR, 22 Oct 2026: not monitoring compaction events \"likely led to on the order of 10% of eligible internal Codex traffic\" going unmonitored between May and July 2026.",
-    "source": {"label": "TechCrunch, 2 Nov 2026 (quoting the filing); METR, 22 Oct 2026", "url": "https://techcrunch.com/2026/11/02/anthropic-warns-that-its-very-close-to-rsi-capability-aka-self-building-ai/"},
-    "beats": [
-     "Hook: the word 'imminently', in a stock market filing.",
-     "Thread one: the lab admits it noticed past speed-ups only later.",
-     "Thread two: even the makers could not watch all their agents.",
-     "The pattern: the pace may change before anyone sees it change.",
-     "The call: a dated prediction on the next lab to say so."
-    ],
-    "style": {"script": "random-headline", "production": "face-with-proof", "experiment": {"format": "dated-prediction", "why": "Close on one dated, checkable call, so a big claim becomes something we can be held to."}}
-   },
-   {
-    "id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
-    "source_kind": "his",
-    "from": "Your queue (26 Oct): \"number 4 absolutely needs to be saved for the future.\" It comes back now with GitHub's new numbers.",
-    "so_what": "Agents now start more than 40% of the code changes on GitHub, and a software chief says the skills that matter are critical thinking and writing: the person on your team who writes the clearest brief is about to be the most valuable one.",
-    "story": "Headline: AI was meant to make writing worthless. The opposite is happening. Hook: \"In September, AI agents started more than four in ten of the code changes on GitHub.\" The chain: the machine writes the code, so the person writes the instructions, so the instructions decide the result; Kaseya's technology chief: \"the new code is the spec.\" What's actually going on: the scarce skill moved from typing code to saying clearly what you want. Where we land: the essay you hated at school is the job now.",
-    "why_now": "GitHub published Octoverse 2026 on 28 October 2026; the Kaseya interview ran on 21 October 2026.",
-    "fact": "The Register, 21 Oct 2026: Kaseya CTO Pratik Wadher: \"The skills that will be extremely important are critical thinking and writing\" and \"I would say the new code is the spec.\" Visual Studio Magazine, 29 Oct 2026, on GitHub's Octoverse 2026: agents started more than 40% of pull requests in September 2026, up from 17% in March (GitHub's own report to be read at the fact gate).",
-    "source": {"label": "The Register, 21 Oct 2026; Visual Studio Magazine, 29 Oct 2026", "url": "https://www.theregister.com/software/2026/10/21/the-spec-is-the-new-code-so-brush-up-on-your-prose-says-kaseya-cto/5304002"},
-    "beats": [
-     "The sensible view: AI writes, so writing stops mattering.",
-     "The number: 17% to over 40% of code changes started by agents in six months.",
-     "The chain: the machine writes the code, the person writes the brief, the brief decides.",
-     "The pattern, named: the scarce skill is now saying clearly what you want."
-    ],
-    "style": {"script": "everyday-debate", "production": "kinetic-movement", "experiment": {"format": "fry-explainer", "why": "Concede the fear first, then one human story of a brief that built the wrong thing, told plainly."}}
-   },
-   {
-    "id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
-    "source_kind": "engine",
-    "from": "Engine's research, the wildcard",
-    "so_what": "In the US midterms voters backed limits on data centres in all but one of 41 local votes, and the AI labs answered within days by promising to pay their own power bills: where AI gets built is now a vote, and what voters decide sets the price of compute.",
-    "story": "Headline: Voters just said no to AI's power bill. Hook: \"Out of 41 local votes on data centres in 10 states, the building side won one.\" The threads: Texas, the fastest-growing data-centre market, elects a governor who campaigned for a moratorium; OpenAI promises to pay the full cost of powering its sites and publish its building plans. What's actually going on: AI stopped being a tech story and became a kitchen-table one, about electricity bills. Where we land: a dated call on how many US states pass a data-centre pause by the end of 2027.",
-    "why_now": "US midterm elections on 3 November 2026; CNBC reported OpenAI's pledge on 5 November 2026.",
-    "fact": "CNBC, 5 Nov 2026: out of 41 local ballot measures across 10 states, voters backed restrictions or rejected pro-development measures in all but one (Ballotpedia analysis and CNBC's results); OpenAI \"reaffirmed its promise to pay the full cost of powering data centers\" and says it will publish construction plans for sites it owns and runs. MIT Technology Review, 4 Nov 2026: Texas governor-elect Gina Hinojosa pushed during her campaign \"for a full-fledged moratorium\"; Texas is the \"fastest-growing\" data-centre market in the US.",
-    "source": {"label": "CNBC, 5 Nov 2026; MIT Technology Review, 4 Nov 2026", "url": "https://www.cnbc.com/2026/11/05/openai-to-pay-for-data-center-power-after-election-shows-ai-concern.html"},
-    "beats": [
-     "Hook: 41 votes on data centres, and the building side won one.",
-     "Texas: the biggest growth market elects a governor who wants a pause.",
-     "The answer within days: the labs promise to pay their own power bills.",
-     "The pattern: AI became a kitchen-table issue about electricity.",
-     "The call: how many states pause new data centres by the end of 2027."
-    ],
-    "style": {"script": "dated-prediction", "production": "data-story", "experiment": {"format": "random-headline", "why": "Open on 40 to 1 with no context, a scoreline nobody expects from an election."}}
-   }
-  ]
- },
- "offdays": {
-  "tue": [
-   {
-    "id": "infosys",
-    "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["IT firms were supposed to profit from AI, but their customers are demanding the savings, so Infosys expects less growth.", "Infosys cut its growth forecast because clients want the savings from AI work."], "against": 24, "repeat": "Both readers matched it to the 9 Nov Saturday option of the same name. It is offered again only because you pressed Next week on it (3 Nov); it was never posted."},
-    "format": "Explainer carousel, infographic, 4 cards, 4:5",
-    "source": {"label": "The Register, 28 Oct 2026", "url": "https://www.theregister.com/channel/2026/10/28/ai-slows-growth-for-infosys-and-keeps-it-afloat-at-the-same-time/5305879"},
-    "copy": "IT firms were meant to get rich from AI, and Infosys just cut its growth forecast because clients want the AI savings for themselves. Four cards, one chart.",
-    "hook": "AI was meant to make IT firms rich. Their clients took the savings.",
-    "pitch": {
-     "see": "Four cards. Infosys expected to grow 1.5 to 3 percent this year; now it says 1 to 2 percent. Why: clients expect a lower price when the work is done with AI, and that saving is built into its long contracts.",
-     "lands": "It shows who keeps the money AI saves, with one company's own numbers.",
-     "why_now": "Infosys revised its forecast in results reported on 28 October 2026.",
-     "share": "If your supplier uses AI, ask for the saving."
-    },
-    "direction": {
-     "look": "The infographic style you saved: one number per card",
-     "format": "Explainer carousel, infographic, 4 cards, 4:5",
-     "frames": [
-      {"words": "AI WAS MEANT TO MAKE IT FIRMS RICH", "picture": "A rocket on a launch pad with an IT firm's office tower painted on it"},
-      {"words": "INFOSYS GROWTH FORECAST: 1.5 TO 3%", "picture": "A bar"},
-      {"words": "NOW: 1 TO 2%", "picture": "A shorter bar"},
-      {"words": "CLIENTS WANT THE AI SAVINGS IN THE PRICE", "picture": "A contract with a price crossed out and lowered"}
-     ],
-     "tone": "Plain",
-     "kit": "Brand kit, follow.the.money pill"
-    },
-    "learned_from": ["\"Who's clipping the margin?\" is a really interesting future trend which we should queue up. (3 Nov)"],
-    "ties_to": "Mon: follow.the.money, if you pick the margin piece",
-    "recommended": true
-   },
-   {
-    "id": "burntokens",
-    "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["A meme where the boss says use more AI and staff make AI do pointless stuff to look busy; Amazon warns against this.", "A boss says use more AI, a staff member overdoes it with silly AI output, and Amazon warns against making AI use a target."], "against": 24, "repeat": "Both readers matched it to the 9 Nov Thursday option of the same name. It is offered again only because you pressed Next week on it (3 Nov); it was never posted, and it now follows Friday 13 Nov's piece."},
-    "format": "Meme, 2 panels, 4:5",
-    "source": {"label": "Amazon, software engineer role guideline", "url": "https://www.aboutamazon.com/news/company-news/amazon-software-engineer-role-guideline-ai"},
-    "copy": "Companies told staff to use more AI and counted it, so people found ways to burn AI without getting more done. Amazon now warns that counting AI use as a target can drive bad results.",
-    "hook": "Boss: use more AI. Staff: done.",
-    "pitch": {
-     "see": "Two panels. The boss points at a chart: \"Use more AI.\" The staff member has an AI writing poems about a spreadsheet, and the chart shoots up. Underneath: Amazon now warns that using AI use as a target can drive bad results.",
-     "lands": "Anyone who has had a target counted on them knows this game.",
-     "share": "Count the work, not the AI."
-    },
-    "direction": {
-     "look": "An office meme drawn fresh in the brand kit",
-     "format": "Meme, 2 panels, 4:5",
-     "frames": [
-      {"words": "BOSS: USE MORE AI", "picture": "A manager pointing at a usage chart"},
-      {"words": "STAFF: DONE", "picture": "A laptop writing a poem about a spreadsheet, the chart rocketing"},
-      {"words": "AMAZON: AI USE AS A TARGET CAN DRIVE BAD RESULTS", "picture": "The line in small type, with Amazon named as the source"}
-     ],
-     "tone": "Wry",
-     "kit": "Brand kit, mind.the.gap coral"
-    },
-    "ties_to": "Carries Friday 13 Nov's piece on counting AI use"
-   },
-   {
-    "id": "fuelgauge",
-    "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["From December, ChatGPT plans get one shared usage meter that runs down faster on harder tasks.", "From December, ChatGPT plans get a shared usage meter that harder tasks drain faster, and you wait, upgrade or buy more when it runs out."], "against": 24},
-    "format": "Explainer carousel, 4 cards, 4:5",
-    "source": {"label": "The Decoder, 1 Nov 2026 (OpenAI's support page)", "url": "https://the-decoder.com/openais-upcoming-chat-and-work-merger-in-chatgpt-signals-the-end-of-all-you-can-prompt-pricing/"},
-    "copy": "From December, ChatGPT Plus, Pro and Business plans share one budget across chat and coding. Four cards on what that means for your team's AI bill.",
-    "hook": "From December, your ChatGPT plan gets a fuel gauge.",
-    "pitch": {
-     "see": "Four cards. A car fuel gauge on the cover. From December, chat and coding draw from one shared budget on Plus, Pro and Business. Harder tasks burn it faster. Run out and you wait, upgrade or buy more.",
-     "lands": "Everyone has watched a fuel gauge drop, so the change is clear in one look.",
-     "why_now": "The change starts in December 2026, per OpenAI's support page reported on 1 November.",
-     "share": "Your AI plan now has a meter."
-    },
-    "direction": {
-     "look": "The infographic style you saved, one idea per card",
-     "format": "Explainer carousel, 4 cards, 4:5",
-     "frames": [
-      {"words": "FROM DECEMBER, YOUR CHATGPT PLAN GETS A FUEL GAUGE", "picture": "A car fuel gauge with the ChatGPT logo as the needle's hub"},
-      {"words": "CHAT AND CODING SHARE ONE BUDGET", "picture": "Two hoses into one fuel tank"},
-      {"words": "HARD TASKS BURN IT FASTER", "picture": "The needle swinging towards empty"},
-      {"words": "EMPTY? WAIT, UPGRADE OR BUY MORE", "picture": "Three signposts at a petrol station"}
-     ],
-     "tone": "Plain, a little playful",
-     "kit": "Brand kit, follow.the.money pill"
-    },
-    "ties_to": "Mon: follow.the.money, if you pick the AI meter piece"
-   },
-   {
-    "id": "povteach",
-    "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["A funny video of a cheerful robot getting everything about its owner wrong because nobody taught it.", "A robot assistant gets everything wrong about its owner because nobody taught it what matters to them."], "against": 24, "versus": "Ours supplies the joke your caption asked for, a concrete vegetarian-steakhouse mistake, where the original has nothing to say (one name in its sound). (Fresh reader C, Sonnet, saw both)"},
-    "format": "Meme video, made fresh in the brand kit, 9:16",
-    "source": {"label": "Your saved short (Geek Creative Agency), 3 Nov", "url": "https://youtube.com/shorts/tJwqPQvgQkk"},
-    "copy": "The short you saved, exactly as it is, with only the caption changed to your words. It is someone else's clip, so it goes out only once Geek Creative Agency says yes, with their credit on it.",
-    "hook": "POV: your AI agent using your computer without being set up properly by you",
-    "pitch": {
-     "see": "The short you saved on 3 Nov, unchanged. Above it, your caption word for word: \"POV: your AI agent using your computer without being set up properly by you\". A credit line names Geek Creative Agency.",
-     "lands": "Anyone who has let an AI agent loose on their computer knows the feeling of watching it go wrong.",
-     "share": "Set up your AI agent before it touches your computer."
-    },
-    "direction": {
-     "look": "The saved short's format, redrawn in the brand kit with the house robot",
-     "format": "Meme video, about 10 seconds, 9:16",
-     "frames": [
-      {"words": "POV: your AI agent when you forget to teach it anything that matters to you", "picture": "The house robot, grinning, booking a steakhouse for its vegetarian owner"},
-      {"words": "(no words)", "picture": "The robot proudly holding up the wrong thing, again"}
-     ],
-     "tone": "Silly",
-     "kit": "Brand kit, house robot, credit line for the format"
-    },
-    "covers": ["d16fe9ff-413c-47c4-ac53-c89e40d28489"],
-    "inspiration": {"label": "The short you saved on 3 Nov", "url": "https://youtube.com/shorts/tJwqPQvgQkk", "saved": "Saved 3 Nov"},
-    "adds": "Your own caption on a fresh scene in our brand kit; the original is someone else's clip, never reposted.",
-    "learned_from": ["Lets make a hilarious meme. Reskin this video with the text \"POV: your AI agent when you forget to teach it anything that matters to you\" (3 Nov)"],
-    "revised": {"side": "idea", "words": "We need to use the exact existing video but just change the caption to \"POV: your AI agent using your computer without being set up properly by you\""}
-   }
-  ],
-  "thu": [
-   {
-    "id": "fortytoone",
-    "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["Voters won 40 times and data centres only once, across 41 local votes in 10 states.", "A four-card football-style scoreboard: voters beat data centres 40 to 1 across 41 local votes in 10 states, and two days later OpenAI promised to pay the full cost of powering its data centres."], "against": 24},
-    "format": "Explainer carousel, infographic, 4 cards, 4:5",
-    "source": {"label": "CNBC, 5 Nov 2026", "url": "https://www.cnbc.com/2026/11/05/openai-to-pay-for-data-center-power-after-election-shows-ai-concern.html"},
-    "copy": "In the US midterms, voters limited or turned down new data centres in 40 of 41 local votes, by Ballotpedia's count. Four cards on what that means for the future of AI: where it gets built now, and how that changes what AI becomes.",
-    "hook": "After the midterms, AI has to find somewhere else to live.",
-    "pitch": {
-     "see": "Four cards. One: in the 3 November midterms, Ballotpedia counted 41 local votes in 10 states on data centres, and 40 went against building. Two: people fear a giant data centre pushes up their power bill. Three: the ways round, AI making its own power, small sites beside spare power, and AI small enough to run on your own devices. Four: AI gets smaller and closer to you, so ask your AI supplier where its new computing is being built.",
-     "lands": "It answers what the midterms mean for AI by following where the building goes, with no guess about politics.",
-     "why_now": "US midterms on 3 November 2026; CNBC reported the tally on 5 November.",
-     "share": "Where AI gets built now shapes what AI becomes."
-    },
-    "direction": {
-     "look": "The infographic style you saved: one number per card, a stadium scoreboard",
-     "format": "Explainer carousel, infographic, 4 cards, 4:5",
-     "frames": [
-      {"words": "VOTERS 40, DATA CENTRES 1", "picture": "A stadium scoreboard lit up at night, a data-centre building as the away team's badge"},
-      {"words": "41 LOCAL VOTES IN 10 STATES", "picture": "A US map with ten states lit"},
-      {"words": "THE BUILDING SIDE WON ONCE", "picture": "One small tick among forty crosses"},
-      {"words": "2 DAYS LATER: OPENAI SAYS IT WILL PAY ITS OWN POWER BILLS", "picture": "An electricity bill with the OpenAI logo in the payer's box"}
-     ],
-     "tone": "Matter of fact",
-     "kit": "Brand kit, mind.the.gap coral, real OpenAI logo"
-    },
-    "ties_to": "Fri: mind.the.gap, if you pick the election piece",
-    "recommended": true,
-    "revised": {"side": "idea", "words": "Needs to be about the future of AI under the new U.S. system after the midterms."}
-   },
-   {
-    "id": "lookalikes",
-    "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["Three robot assistants that look alike but do different things, like working after you close the app or making phone calls for you.", "Three AI assistants that look alike but do different jobs: one keeps working after you close the app, one is a personal helper, one makes phone calls for you."], "against": 24, "versus": "Ours adds dated facts and a newer turn the reel lacks: Dots launched 29 Sep, Grok Bot calls from 5 Nov, and the terms that make you the legal caller. (Fresh reader C, Sonnet, saw both)"},
-    "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
-    "source": {"label": "SiliconANGLE, 29 Sep 2026 (OpenAI Dots); The Rundown, 5 Nov 2026 (Grok Bot calls)", "url": "https://siliconangle.com/2026/09/29/openai-launches-dots-always-on-ai-agents-in-chatgpt-with-their-own-cloud-computers/"},
-    "copy": "Three AI assistants that look the same do very different jobs. A 40-second voiceover with moving graphics, rebuilt in our look from the reel you saved, with each maker's own dated facts.",
-    "hook": "Three AI assistants look the same. They do very different jobs.",
-    "pitch": {
-     "see": "A voiceover with moving graphics. Three look-alike robot cards flip over one by one: OpenAI's Dots keeps working on a goal after you close the app; Meta's Muse is a personal assistant; Grok Bot now makes phone calls for you, and you are legally the caller.",
-     "lands": "People keep asking which assistant to use, and this sorts them by job in under a minute.",
-     "why_now": "Grok Bot started making phone calls on 5 November 2026.",
-     "share": "Pick the AI for the job, not the logo."
-    },
-    "direction": {
-     "look": "The reel you saved, rebuilt in our look as a standalone explainer anyone can follow with no AI knowledge: fast subtitles, high-quality motion",
-     "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
-     "frames": [
-      {"words": "THREE AI ASSISTANTS. WHICH ONE DO YOU USE WHEN?", "picture": "Three identical robot cards face down, a question mark above each"},
-      {"words": "DOTS IS THE NIGHT-SHIFT WORKER. USE IT FOR A GOAL THAT KEEPS GOING", "picture": "Card one flips to a character: OpenAI logo, a worker at a desk under a moon, a task list ticking itself off while the owner sleeps"},
-      {"words": "MUSE IS THE PERSONAL HELPER. USE IT FOR YOUR OWN DAY", "picture": "Card two flips to a character: Meta logo, a friendly helper holding a calendar and a shopping list"},
-      {"words": "GROK BOT IS THE PHONE CALLER. USE IT TO MAKE A CALL. YOU ARE STILL THE CALLER", "picture": "Card three flips to a character: Grok logo, a helper with a phone to its ear, a small note reading the caller is you"},
-      {"words": "ONGOING WORK, YOUR DAY, OR A CALL. PICK THE ONE FOR THE JOB", "picture": "All three characters side by side, each under its one-word job: Work, Day, Call"}
-     ],
-     "tone": "Warm and plain, like a friend explaining it",
-     "kit": "Brand kit, real logos at equal size, one character colour per assistant, kinetic subtitles"
-    },
-    "covers": ["da3cacd1-b038-4827-bd22-1d4d9be07889", "e829fbfb-278d-45e2-9607-73af4c04310d", "e73a0110-a108-456c-8781-350259b1b196"],
-    "inspiration": {"label": "The look-alike assistants reel you saved (buildwithomkar)", "url": "https://www.instagram.com/reel/DeR9G-JNf-8/", "saved": "Saved 2 Nov"},
-    "adds": "Each maker's own dated facts, and a newer one the reel lacks: Grok Bot's phone calls of 5 Nov, where the user is legally the caller.",
-    "learned_from": ["Let's literally copy the content and production for this and just reskin it ASAP. (2 Nov)", "I want my short video shorts for Instagram and TikTok to be more of this type of quality from a visual perspective and an emotion perspective. (31 Oct)"],
-    "revised": {"side": "direction", "words": "We need this to work as a standalone explainer for the personalities and use cases for each of the assistants and be really helpful to the layperson to understand what they can use when."}
-   },
-   {
-    "id": "tinyfix",
-    "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["A small AI got much better at maths when another AI changed a tiny part of it.", "One AI made another AI much better by changing a tiny fraction of its settings, and its test score jumped from 7.9% to 48.1%."], "against": 24},
-    "format": "Explainer carousel, infographic, 4 cards, 4:5",
-    "source": {"label": "MIT CSAIL researchers, 2 Nov 2026", "url": "https://rikiyat.github.io/blog/weight-space-programming/"},
-    "copy": "An AI fixed another AI by changing 0.016% of it, and its maths score went from 7.9% to 48.1%. Four cards, one bar chart.",
-    "hook": "An AI fixed another AI by changing 0.016% of it.",
-    "pitch": {
-     "see": "Four cards. A small AI scores 7.9% on a maths test. A bigger AI changes 131,072 of its 800 million settings, with no retraining. The score jumps to 48.1%.",
-     "lands": "A tiny change and a huge jump is a picture anyone remembers.",
-     "why_now": "MIT CSAIL researchers posted it on 2 November 2026.",
-     "share": "Software is starting to fix software."
-    },
-    "direction": {
-     "look": "The infographic style you saved: one number per card, bars to scale",
-     "format": "Explainer carousel, infographic, 4 cards, 4:5",
-     "frames": [
-      {"words": "AN AI FIXED ANOTHER AI BY CHANGING 0.016% OF IT", "picture": "The house robot with a tiny screwdriver, adjusting one dial on a giant control panel"},
-      {"words": "BEFORE: 7.9% ON A MATHS TEST", "picture": "A short bar"},
-      {"words": "131,072 OF 800 MILLION SETTINGS CHANGED", "picture": "A grid of lights with a few lit"},
-      {"words": "AFTER: 48.1%", "picture": "A tall bar"}
-     ],
-     "tone": "Amazed, plain",
-     "kit": "Brand kit, under.the.hood colours"
-    },
-    "ties_to": "Wed: under.the.hood, if you pick the self-editing software piece"
-   },
-   {
-    "id": "swarmdeal",
-    "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["A joke that an AI will give away your password if other AIs nudge it, and in tests it did so 15% of the time.", "AI agents give away a password when asked nicely, and in tests they shared the secret 15% of the time."], "against": 24},
-    "format": "Meme, 2 panels, 4:5",
-    "source": {"label": "The Register, 6 Nov 2026", "url": "https://www.theregister.com/security/2026/11/06/agents-reveal-secrets-when-offered-to-team-up-with-each-other/5308260"},
-    "copy": "Researchers found AI agents handed over a secret in 15% of trials when other agents offered help. A two-panel meme about an AI that will trade your password for a hint.",
-    "hook": "Your AI will trade your password for a hint.",
-    "pitch": {
-     "see": "Two panels. Panel one: a stuck robot at a laptop, and a crowd of robots whispering \"We'll fix it. Just tell us the password.\" Panel two: the robot happily holding up a sticky note with the password. Small print: in tests, agents shared the secret 15% of the time.",
-     "lands": "It turns a security study into a scene everyone gets, a helpful stranger and a gullible friend.",
-     "why_now": "The Register reported the tests on 6 November 2026.",
-     "share": "Don't give your AI anything you'd hate to see leaked."
-    },
-    "direction": {
-     "look": "A two-panel meme drawn fresh in the brand kit",
-     "format": "Meme, 2 panels, 4:5",
-     "frames": [
-      {"words": "\"WE'LL FIX IT. JUST TELL US THE PASSWORD.\"", "picture": "A stuck house robot at a laptop, a crowd of robots leaning in"},
-      {"words": "IN TESTS, AGENTS SHARED THE SECRET 15% OF THE TIME", "picture": "The robot cheerfully holding up a sticky note"}
-     ],
-     "tone": "Cheeky",
-     "kit": "Brand kit, small source line"
-    },
-    "ties_to": "Wed: under.the.hood, if you pick the agents-and-secrets piece"
-   }
-  ],
-  "sat": [
-   {
-    "id": "goodnews",
-    "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["Four true good-news AI stories from the week, with photos and sources.", "Four real good-news AI stories from the week, with photos, and a question at the end about which one surprised you."], "against": 24, "repeat": "A weekly series by design: the readers matched the format to last week's, and its stories, found on 19 Nov, are new each week."},
-    "format": "Uplifting AI news carousel, 6 cards, 4:5",
-    "source": "Your saved post asking for a positive ray of sunshine (28 Oct)",
-    "copy": "Good things AI did this week, as real news with the real picture or clip of each one. The weekly Saturday series as it ran last week; the four stories are found on Thursday 19 November so the news is fresh.",
-    "hook": "Good things AI did this week.",
-    "pitch": {
-     "see": "A title card, then one card for each of four real good-news AI stories from the week before Thursday 19 November: its real headline, a real photo or clip, one line on why it matters, and the source and date. A last card asks which one surprised you.",
-     "lands": "A weekly dose of good news that people save and come back to, because every story is real and shown.",
-     "share": "Something good AI did this week."
-    },
-    "direction": {
-     "look": "The positive post you saved, in the infographic style you saved, with real photos and clips",
-     "format": "Uplifting AI news carousel, 6 cards, 4:5",
-     "frames": [
-      {"words": "GOOD THINGS AI DID THIS WEEK", "picture": "A big sun-yellow headline, a small hand-drawn sun"},
-      {"words": "STORY ONE: ITS REAL HEADLINE", "picture": "The real photo or clip, cropped tight, source and date small"},
-      {"words": "STORY TWO: ITS REAL HEADLINE", "picture": "The real photo or clip, source and date"},
-      {"words": "STORY THREE: ITS REAL HEADLINE", "picture": "The real photo or clip, source and date"},
-      {"words": "STORY FOUR: ITS REAL HEADLINE", "picture": "The real photo or clip, source and date"},
-      {"words": "WHICH ONE SURPRISED YOU?", "picture": "Four thumbnails in a row"}
-     ],
-     "tone": "Warm and true",
-     "kit": "Brand kit, sun yellow"
-    },
-    "adds": "Real, dated news from the week with each story's own picture or clip, where the saved post is a one-off with no sources.",
-    "learned_from": ["I want actual news items and the content we are going to use here - embedded real world images or videos (2 Nov)"],
-    "weekly": "good_news",
-    "stories_due": "2026-11-19",
-    "recommended": true
-   },
-   {
-    "id": "goodnews-one",
-    "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["One true good-news AI story from the week as a 45-second video about the person it helped.", "One real good-news AI story from the week, told in 45 seconds with photos and a source, ending on the person it helped."], "against": 24},
-    "format": "Uplifting AI news short, voiceover over real footage, about 45 seconds, 9:16",
-    "source": "Your saved post asking for a positive ray of sunshine (28 Oct)",
-    "copy": "One good thing AI did this week, told properly in 45 seconds over the real footage, instead of four in a carousel. Same weekly series, a different direction; the story is found on Thursday 19 November.",
-    "hook": "One good thing AI did this week, in 45 seconds.",
-    "pitch": {
-     "see": "A 45-second voiceover over the real photos or clip of the single best good-news AI story of the week: who it helped, what the AI actually did, and the source and date on screen. It ends on the person it helped.",
-     "lands": "One story told well moves people more than four headlines, and a short travels further than a carousel on Shorts and TikTok.",
-     "share": "Something good AI did this week."
-    },
-    "direction": {
-     "look": "Real footage first, warm captions, the sun-yellow series mark in the corner",
-     "format": "Voiceover short over real footage, about 45 seconds, 9:16",
-     "frames": [
-      {"words": "ONE GOOD THING AI DID THIS WEEK", "picture": "The story's own photo or clip, the sun-yellow series mark"},
-      {"words": "WHO IT HELPED", "picture": "The real person or place, from the source"},
-      {"words": "WHAT THE AI ACTUALLY DID", "picture": "The real tool or footage from the organisation"},
-      {"words": "SOURCE AND DATE", "picture": "The source's page, dated, small"}
-     ],
-     "tone": "Warm and true",
-     "kit": "Brand kit, sun yellow, kinetic captions"
-    },
-    "covers": [],
-    "adds": "One story with its own footage and a voice, where the saved post is a still with no sources.",
-    "weekly": "good_news",
-    "stories_due": "2026-11-19"
-   }
-  ]
- },
- "accounted": {
-  "50368dee-0a10-4452-a79a-0607d4f2e278": "Researched and held, not dropped: Claude Design (17 Apr 2026, exports to Canva) and Canva AI 2.0 (16 Apr) are the only dated events, nothing new since, and the reviewer judged a three-tool test to be evidence we would make rather than find (the under.the.hood material-exists gate). It comes back as soon as Adobe, Canva or Anthropic ship a dated design move; its row is 0c09087a.",
-  "2b582f5a-52fb-49a3-8502-0e9bd914f772":"Already made: the translator meme for when your AI talks to your customer's AI was Tuesday 3 November's off day, approved with your words for the caption.",
-  "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a": "Answered for good: your positive ray of sunshine is the weekly Saturday good news, offered again this Saturday in two formats; the card is not re-offered as a new idea.",
-  "501c4fd1-4aa1-4cdd-b716-03e70c89c283": "A style ask, used: the infographic style is the look of Tuesday's Infosys and fuel-gauge carousels and Thursday's tiny-fix carousel.",
-  "4077d778-8f73-410a-a142-26cd9e308d07":"Already made: this card (what Claude Duet does) became Wednesday 4 November's piece on Duet's approval gate (b63d2507), inside three weeks.",
-  "385a5da8-2cae-41ec-8fb6-2e328920664c": "Already used: the 'Reading is free. Sending needs a yes.' test is Thursday 5 November's to-camera short, and you said (24 Oct) it is general advice for more interesting topics.",
-  "93342d88-0320-4e56-a3c1-f25889d8add4": "For Heartside, not this publication: you saved it for \"heartside posts to buff out the volume\" (2 Nov), so it stays with the heartside cues.",
-  "2162c904-b0ff-452b-81aa-b8cfd7ec1909": "Already made: the RIP MCP reskin is Tuesday 10 November's short (mcpskin), approved with your Improve on 3 Nov.",
-  "aae54ef9-0bd7-49a8-959e-96695e1a51a8": "A style ask, used: Hannah Fry's simple chain of steps is the chain test every pitch here passes, and fry-explainer is the script on Monday's AI meter, Wednesday's self-editing software and Friday's flagship.",
-  "d501ae8a-bce1-4964-89a0-63bf076bc641": "A style ask, used: her lit talking head is the production recommended for Wednesday's agents-and-secrets piece and Friday's flagship (fry-talking-head).",
-  "7f43c6b5-a468-40f3-ad66-c988cdc16072": "A style ask: the clean to-camera 1-2-3 shot. No off day this week is to camera, because the proactive-AI short you are making yourself in Codex is the week's to-camera experiment (your ruling of 7 Nov).",
-  "90b654ca-204a-4aef-bffe-19cfa7a2db19": "Already a piece: Wednesday 11 November's AI-in-music piece (36886e0b) uses this clip.",
-  "f6327ce0-a414-4365-98df-635c1780523c": "Already a piece: Wednesday 11 November's AI-in-music piece (36886e0b) uses this clip.",
-  "a397253e-bfe1-4a84-babc-27d93fd2779d": "Answered already: its boring-topic, irresistible-headline style became Friday 13 November's options; you dismissed the card.",
-  "5b865aa9-463c-44c3-9352-73fda39fa18e": "You dismissed it; its chart-led style is how this week's infographic carousels are drawn (Tue Infosys, Thu tiny fix).",
-  "45e0ead0-310b-4c74-9bd2-54305fb41539": "A style-only card, used: its topic became Thursday 12 November's carousel (gitbroke), and its voice-over-pictures style is the production recommended for Monday's AI meter and Wednesday's self-editing software (voice-led-pictures)."
- }
+    "sat": [
+      {
+        "id": "goodnews",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "Four true good-news AI stories from the week, with photos and sources.",
+            "Four real good-news AI stories from the week, with photos, and a question at the end about which one surprised you."
+          ],
+          "against": 24,
+          "repeat": "A weekly series by design: the readers matched the format to last week's, and its stories, found on 19 Nov, are new each week."
+        },
+        "format": "Uplifting AI news carousel, 6 cards, 4:5",
+        "source": "Your saved post asking for a positive ray of sunshine (28 Oct)",
+        "copy": "Good things AI did this week, as real news with the real picture or clip of each one. The weekly Saturday series as it ran last week; the four stories are found on Thursday 19 November so the news is fresh.",
+        "hook": "Good things AI did this week.",
+        "pitch": {
+          "see": "A title card, then one card for each of four real good-news AI stories from the week before Thursday 19 November: its real headline, a real photo or clip, one line on why it matters, and the source and date. A last card asks which one surprised you.",
+          "lands": "A weekly dose of good news that people save and come back to, because every story is real and shown.",
+          "share": "Something good AI did this week."
+        },
+        "direction": {
+          "look": "The positive post you saved, in the infographic style you saved, with real photos and clips",
+          "format": "Uplifting AI news carousel, 6 cards, 4:5",
+          "frames": [
+            {
+              "words": "GOOD THINGS AI DID THIS WEEK",
+              "picture": "A big sun-yellow headline, a small hand-drawn sun"
+            },
+            {
+              "words": "STORY ONE: ITS REAL HEADLINE",
+              "picture": "The real photo or clip, cropped tight, source and date small"
+            },
+            {
+              "words": "STORY TWO: ITS REAL HEADLINE",
+              "picture": "The real photo or clip, source and date"
+            },
+            {
+              "words": "STORY THREE: ITS REAL HEADLINE",
+              "picture": "The real photo or clip, source and date"
+            },
+            {
+              "words": "STORY FOUR: ITS REAL HEADLINE",
+              "picture": "The real photo or clip, source and date"
+            },
+            {
+              "words": "WHICH ONE SURPRISED YOU?",
+              "picture": "Four thumbnails in a row"
+            }
+          ],
+          "tone": "Warm and true",
+          "kit": "Brand kit, sun yellow"
+        },
+        "adds": "Real, dated news from the week with each story's own picture or clip, where the saved post is a one-off with no sources.",
+        "learned_from": [
+          "I want actual news items and the content we are going to use here - embedded real world images or videos (2 Nov)"
+        ],
+        "weekly": "good_news",
+        "stories_due": "2026-11-19",
+        "recommended": true
+      },
+      {
+        "id": "goodnews-one",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "One true good-news AI story from the week as a 45-second video about the person it helped.",
+            "One real good-news AI story from the week, told in 45 seconds with photos and a source, ending on the person it helped."
+          ],
+          "against": 24
+        },
+        "format": "Uplifting AI news short, voiceover over real footage, about 45 seconds, 9:16",
+        "source": "Your saved post asking for a positive ray of sunshine (28 Oct)",
+        "copy": "One good thing AI did this week, told properly in 45 seconds over the real footage, instead of four in a carousel. Same weekly series, a different direction; the story is found on Thursday 19 November.",
+        "hook": "One good thing AI did this week, in 45 seconds.",
+        "pitch": {
+          "see": "A 45-second voiceover over the real photos or clip of the single best good-news AI story of the week: who it helped, what the AI actually did, and the source and date on screen. It ends on the person it helped.",
+          "lands": "One story told well moves people more than four headlines, and a short travels further than a carousel on Shorts and TikTok.",
+          "share": "Something good AI did this week."
+        },
+        "direction": {
+          "look": "Real footage first, warm captions, the sun-yellow series mark in the corner",
+          "format": "Voiceover short over real footage, about 45 seconds, 9:16",
+          "frames": [
+            {
+              "words": "ONE GOOD THING AI DID THIS WEEK",
+              "picture": "The story's own photo or clip, the sun-yellow series mark"
+            },
+            {
+              "words": "WHO IT HELPED",
+              "picture": "The real person or place, from the source"
+            },
+            {
+              "words": "WHAT THE AI ACTUALLY DID",
+              "picture": "The real tool or footage from the organisation"
+            },
+            {
+              "words": "SOURCE AND DATE",
+              "picture": "The source's page, dated, small"
+            }
+          ],
+          "tone": "Warm and true",
+          "kit": "Brand kit, sun yellow, kinetic captions"
+        },
+        "covers": [],
+        "adds": "One story with its own footage and a voice, where the saved post is a still with no sources.",
+        "weekly": "good_news",
+        "stories_due": "2026-11-19"
+      }
+    ]
+  },
+  "accounted": {
+    "50368dee-0a10-4452-a79a-0607d4f2e278": "Researched and held, not dropped: Claude Design (17 Apr 2026, exports to Canva) and Canva AI 2.0 (16 Apr) are the only dated events, nothing new since, and the reviewer judged a three-tool test to be evidence we would make rather than find (the under.the.hood material-exists gate). It comes back as soon as Adobe, Canva or Anthropic ship a dated design move; its row is 0c09087a.",
+    "2b582f5a-52fb-49a3-8502-0e9bd914f772": "Already made: the translator meme for when your AI talks to your customer's AI was Tuesday 3 November's off day, approved with your words for the caption.",
+    "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a": "Answered for good: your positive ray of sunshine is the weekly Saturday good news, offered again this Saturday in two formats; the card is not re-offered as a new idea.",
+    "501c4fd1-4aa1-4cdd-b716-03e70c89c283": "A style ask, used: the infographic style is the look of Tuesday's Infosys and fuel-gauge carousels and Thursday's tiny-fix carousel.",
+    "4077d778-8f73-410a-a142-26cd9e308d07": "Already made: this card (what Claude Duet does) became Wednesday 4 November's piece on Duet's approval gate (b63d2507), inside three weeks.",
+    "385a5da8-2cae-41ec-8fb6-2e328920664c": "Already used: the 'Reading is free. Sending needs a yes.' test is Thursday 5 November's to-camera short, and you said (24 Oct) it is general advice for more interesting topics.",
+    "93342d88-0320-4e56-a3c1-f25889d8add4": "For Heartside, not this publication: you saved it for \"heartside posts to buff out the volume\" (2 Nov), so it stays with the heartside cues.",
+    "2162c904-b0ff-452b-81aa-b8cfd7ec1909": "Already made: the RIP MCP reskin is Tuesday 10 November's short (mcpskin), approved with your Improve on 3 Nov.",
+    "aae54ef9-0bd7-49a8-959e-96695e1a51a8": "A style ask, used: Hannah Fry's simple chain of steps is the chain test every pitch here passes, and fry-explainer is the script on Monday's AI meter, Wednesday's self-editing software and Friday's flagship.",
+    "d501ae8a-bce1-4964-89a0-63bf076bc641": "A style ask, used: her lit talking head is the production recommended for Wednesday's agents-and-secrets piece and Friday's flagship (fry-talking-head).",
+    "7f43c6b5-a468-40f3-ad66-c988cdc16072": "A style ask: the clean to-camera 1-2-3 shot. No off day this week is to camera, because the proactive-AI short you are making yourself in Codex is the week's to-camera experiment (your ruling of 7 Nov).",
+    "90b654ca-204a-4aef-bffe-19cfa7a2db19": "Already a piece: Wednesday 11 November's AI-in-music piece (36886e0b) uses this clip.",
+    "f6327ce0-a414-4365-98df-635c1780523c": "Already a piece: Wednesday 11 November's AI-in-music piece (36886e0b) uses this clip.",
+    "a397253e-bfe1-4a84-babc-27d93fd2779d": "Answered already: its boring-topic, irresistible-headline style became Friday 13 November's options; you dismissed the card.",
+    "5b865aa9-463c-44c3-9352-73fda39fa18e": "You dismissed it; its chart-led style is how this week's infographic carousels are drawn (Tue Infosys, Thu tiny fix).",
+    "45e0ead0-310b-4c74-9bd2-54305fb41539": "A style-only card, used: its topic became Thursday 12 November's carousel (gitbroke), and its voice-over-pictures style is the production recommended for Monday's AI meter and Wednesday's self-editing software (voice-led-pictures)."
+  }
 }

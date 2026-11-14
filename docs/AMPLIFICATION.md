@@ -58,13 +58,28 @@ optional and never hold a piece back.
 | 1 | Substack | Video post: the 5-minute cut on top with the wide thumbnail, the article under it, the 1200 x 630 cover as the post's cover image. Settings: YouTube upload on with the watermark off; Shorts and LinkedIn clips off | It is the link |
 | 2 | YouTube | Substack uploads the 5-minute cut as private. Swap in the engine's title and description, upload the wide thumbnail, make it public, pin a comment | The description's read line and the pinned comment |
 | 3 | YouTube Shorts | The 90-second cut, with Related video set to the long one | Related video (links in Shorts are not clickable) |
-| 4 | TikTok | The 90-second cut, with the caption and the tall thumbnail as its cover | Said out loud in the video; makeyourmindup.ai in the profile |
-| 5 | Instagram Reels | The 90-second cut, with the caption and the tall thumbnail as its cover | Link in bio (makeyourmindup.ai) |
+| 4 | TikTok | The 90-second cut, with the caption and the tall thumbnail as its cover | Said out loud in the video; the caption points to the link in bio, the tagged subscribe page |
+| 5 | Instagram Reels | The 90-second cut, with the caption and the tall thumbnail as its cover | Link in bio: the tagged subscribe page |
 | 6 | LinkedIn (optional) | The 90-second cut as a native video, with the LinkedIn post | First comment |
 | 7 | Spotify (optional) | In Spotify for Creators, never the Substack feed: the 5-minute cut as a video episode with the wide thumbnail and its chapters, and the 90-second cut as its clip | The episode's description |
 
 Steps 1 and 2 come first because every later step needs their links. The
 page has a box for each link; paste it once and every Copy button carries it.
+
+**Every post asks for the subscription.** Ruling (Krish, 2026-11-12): "Just
+make sure this is fixed moving forward." Posts from 2 to 11 November named
+makeyourmindup.ai but none linked the subscribe page, and the week brought 1 new
+subscriber against a target of 86. So every Copy button that can hold a link
+ends with "Get the next one in your inbox:" and the subscribe page,
+`https://home.makeyourmindup.ai/subscribe`, tagged with the channel
+(`utm_source`) and the piece (`utm_content`), the two tags Growth credits a
+subscriber by: the YouTube description and pinned comment, the LinkedIn first
+comment and the Spotify description. A caption that cannot hold a clickable
+link (TikTok, Reels) ends with "Get the next one in your inbox: link in bio.",
+and the profile link is the same page tagged `utm_content=bio`. The spoken close
+of a script is unchanged (house rule SCRIPT_CLOSE): a link is written, never
+said. `publish_kit.py` adds it, so every new publish page and board card
+carries it; its self-test fails without it.
 
 **A thumbnail for every video size.** Krish, 2026-10-12: "I always want a
 video thumbnail for all video sizes produced as an asset every time".

@@ -200,9 +200,43 @@ def motion_lints(spec: dict) -> list[str]:
     return out
 
 
+def palette_lints(spec: dict) -> list[str]:
+    """brand.palette: each whole cut's opening, sting and close against config/brand-palette.json for its day
+    (Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the
+    attached"). What ve will draw is read from compile, the one place it is decided: its close is ENDING_FRAMES
+    long on both shapes, and no cut carries a sting (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove
+    the sting exception for good."). A spec dated before the palette's applies_from is not checked."""
+    import sys  # noqa: PLC0415
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import brand_palette  # noqa: PLC0415
+    from . import compile as ve_compile  # noqa: PLC0415
+    when = spec.get('publish_day')
+    if not when:
+        return []
+    palette = brand_palette.load()
+    series = str((spec.get('brand') or {}).get('series') or '').replace('.', '_')
+    day = brand_palette.day(when, palette)
+    kind = 'series' if day['kind'] == 'series' and day.get('series') == series else 'off'
+    out = []
+    for cut_id, cut in spec['cuts'].items():
+        if cut.get('excerpt'):
+            continue
+        shape = {'16:9': '16x9', '9:16': '9x16'}.get(cut.get('aspect'))
+        if not shape:
+            continue
+        sting = 'none'
+        record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
+                  'opening': 'hook', 'sting': sting,
+                  'close': {'id': 'statement_card' if shape == '16x9' else 'statement_beat',
+                            'seconds': getattr(ve_compile, 'ENDING_FRAMES_BY_ASPECT', {}).get(cut.get('aspect'), ve_compile.ENDING_FRAMES)
+                            / ve_compile.FPS, 'days_row': kind == 'series'}}
+        out += [f'brand.palette cuts.{cut_id}: {p}' for p in brand_palette.check(record, palette)]
+    return out
+
+
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     from . import guards
-    out: list[str] = reference_lints(spec) + motion_lints(spec) + guards.spec_lints(spec)
+    out: list[str] = reference_lints(spec) + motion_lints(spec) + guards.spec_lints(spec) + palette_lints(spec)
     from . import character
     out.extend(character.spec_lints(spec))  # nothing unless the spec names a character
     from . import designlock
@@ -268,7 +302,7 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         first = beats[0]
         if not any(e['at_w'] <= first['span']['from_w'] + 4 for e in first['events']):
             out.append(f'story.hook_event {where}.beats.0: the first visual event must land within the first 4 words of the hook '
-                       '(about 1.5 s after his first word, which follows the intro sting on a wide series cut)')
+                       '(about 1.5 s after his first word, the cut\'s first frame: nothing goes before the hook)')
         roles = [b['role'] for b in beats]
         whole = not cut.get('excerpt')
         if whole and roles.count('payoff') != 1:
@@ -323,12 +357,12 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             need = math.ceil(fmt['qc'].get('layout_types_per_min_tall', 1) * min(minutes, 1.0))
             # Krish may waive variety for a piece in his own words (an exception approval), as for Thursday 5 Nov:
             # "This Thursday video should be the simplest to produce and feature my face minimally".
-            if len(layouts) < need and not any(a['gate'] == 'exception' for a in spec['approvals']):
+            if len(layouts) < need and not any(a['gate'] == 'exception' and a.get('scope') != 'engine' for a in spec['approvals']):
                 out.append(f'motion.layout_variety {where}: {len(layouts)} layout types, the format needs at least {need} a minute')
 
     bed_mode = spec['audio']['bed']['mode']
     if spec['audio']['master'] == 'vo' and bed_mode not in ('continuous', 'ducked', 'episode_bed'):
-        if not any(a['gate'] == 'exception' for a in spec['approvals']):
+        if not any(a['gate'] == 'exception' and a.get('scope') != 'engine' for a in spec['approvals']):
             out.append('sound.bed_continuous audio.bed.mode: a voiceover cut carries a continuous, ducked or episode_bed bed (episode mode needs an exception approval)')
     # A long cut carries the approved episode bed: one low level under the voice, lifts only at chapter cards
     # (config/learnings.json deep-cut-music-always-under). Krish, Gate 2, 2026-10-30, of a ducked long cut:

@@ -1,6 +1,6 @@
 # post-pack
 
-**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, every week's board lives at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); the old board pages at content.krishraja.com/board are retired for good and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good, and everything old in content-engine is retired). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this document are history.
 
 
 Puts every asset of the publication into Krish's makeyourmindup asset library
@@ -188,64 +188,19 @@ writes `publish.html` for one post; pack it as `publish-kit`.
 
 ## The week's publish board
 
-Krish, 2026-10-12: "just give me one ... Publish Manager for the ... whole
-week with 3 tabs on it for Mon / Weds / Fri, which we need to get to 100%.
-Give me a tick box next to each one so I can tick as I go and you can
-durably record that completion where it needs to be recorded. That Publish
-Manager is what you create every Sunday and let me iterate inside until
-we're done, and then I check off the list what I have done as I do it."
+The live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its
+link), drawn on every read from this engine's view; `docs/PUBLISH_BOARDS.md` says how to feed it. Nothing here builds
+or publishes a page: the old board builder (`week_board.py`) and its publisher were retired for good on 13 November
+2026 and every old board address redirects to the live board (Ruling, Krish, 2026-11-13); their section of this
+README is kept in `docs/history/2026-11-13-old-boards-retired.md`. From here:
 
-`docs/PUBLISH_BOARDS.md` is the current workflow (the fixed layout, Today,
-his presses); this section covers the builder's own inputs.
-
-`week_board.py` builds that one page (its template is `week_board/`). Each
-tab is a made piece's whole publish page (`publish_manager.py`'s, given with
-`--day`), or a designed "not made yet" or "not picked" state. A made tab
-opens with Record (each cut's script in Teleprompter by its title, and its
-folder, from the making record's teleprompter field or a small JSON of ids,
-and how the take comes back: dropped at the top of the Video Engine Inbox),
-the two scripts to copy and the checklist; a tick also sits by each
-channel's heading. Seven ticks make a day 100% (both cuts recorded, then
-Substack, YouTube, Shorts, TikTok, Instagram); LinkedIn, WhatsApp and Notes
-are optional. A day's piece comes from `--piece`, or from the week's picks
-(`--options`, a saved `GET /api/week/options` answer, or `--live`, which
-only reads): the piece of the day's series scheduled for its date in any
-picked state, published included (the options' `scheduled` list), since
-the publish watcher marks a piece published once its Substack post is live
-and Krish still posts the rest from its tab.
-
-    python scripts/post-pack/week_board.py --week 2026-10-12 --day mon=monday-publish.html --day fri=friday-publish.html \
-        --piece mon=<uuid> --piece fri=<uuid> [--teleprompter mon=record.json] --live --previous <the board it replaces> --out week-board.html
-    python scripts/post-pack/week_board.py --show <a board page or week-board.json> [--json]
-    python scripts/post-pack/week_board.py --self-test
-    npx vitest run tests/control-plane/week-board.test.ts
-
-A rebuild never loses a day. `--previous` is the board being replaced (its
-`week-board.json`, or its web page as `board_web.py download <Monday> --output
-FILE` saves it): a day it holds
-as made or picked that the rebuild would show as not picked is refused, and
-so is a made day with no publish page in the rebuild; `--unpick DAY` says a
-day really has no piece now. With `--live`, a picked piece whose making
-record has a publish page must come with it (`--day`). `--show` prints the
-days a board holds, each day's state and piece: the piece a tick on that
-day belongs to.
-
-Every tick saves at once through the board's authenticated web API at
-content.krishraja.com: `ticks/<day>-<step>` (`done, at, day, piece_id, step,
-channel, label`) and `links/<day>` (`article, youtube, at`), read back with
-`board_web.py read <Monday> ticks` (or `links`). `week-board.json`, written
-beside the page, holds the week, each day's state and piece, and every tick
-id. Build with `--target web` (the default; `artifact` builds a legacy copy
-for comparison only, since Claude artifacts were retired on 19 Oct 2026), run
-`--verify`, then `board_web.py publish-web PAGE.html` for the dry-run
-manifest and `--apply` once publishing is authorised (`docs/PUBLISH_BOARDS.md`,
-"Update a board"). A rebuilt board keeps every tick, because the ids depend
-only on the day and the step (`fixtures/week-board/published-2026-10-12.json`
-holds a published board's tick ids and steps, and the test runs the page's
-own script against a stand-in store); register each new Monday under
-`config/boards.json` `web`. A session copies each channel tick onto the
-piece with `making.py <piece> posted <channel> [url]`; Record is done from
-the takes on the record, never from a tick.
+- `board_web.py read <Monday> <collection>` reads his ticks, links, edits, picks, queue and comments, and
+  `board_web.py touch <Monday>` makes the live board read the week again after a file changes.
+- `board_feed.py gather <Monday>`, `cover <Monday>` and `gate <Monday>` gather the week's sources and check its
+  `ideas.json` (`week_plan.py`: the file's shape, the off-day options, the style rules) before the board reads it.
+- `board_session.py <piece>` reports a session's progress and files what it makes on the piece.
+- A session copies each channel tick onto the piece with `making.py <piece> posted <channel> [url]`; Record is done
+  from the takes on the record, never from a tick.
 
 ## The visual gate
 
@@ -857,9 +812,9 @@ python scripts/post-pack/making.py --self-test
 python scripts/post-pack/plan_files.py --self-test
 python scripts/post-pack/story_check.py --self-test
 python scripts/post-pack/teleprompter_send.py --self-test
-python scripts/post-pack/week_board.py --self-test
+python scripts/post-pack/board_feed.py self-test
 npx vitest run tests/control-plane/library-path.test.ts tests/control-plane/library-routes.test.ts tests/control-plane/library-recordings.test.ts tests/control-plane/post-pack.test.ts tests/control-plane/making.test.ts tests/control-plane/recording-match.test.ts tests/library-sync.test.ts tests/recordings-upload.test.ts
-npx vitest run tests/control-plane/teleprompter-send.test.ts tests/control-plane/week-board.test.ts tests/control-plane/week-options.test.ts tests/control-plane/house-rules.test.ts
+npx vitest run tests/control-plane/teleprompter-send.test.ts tests/control-plane/week-options.test.ts tests/control-plane/house-rules.test.ts tests/control-plane/old-boards-retired.test.ts
 ```
 
 ## What stays out of the repository

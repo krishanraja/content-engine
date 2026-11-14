@@ -162,7 +162,8 @@ def _read(cut, plate, beats, fps, plate_offset_frames, pages):
         worst = {'L': 0.0, 'a': 0.0, 'b': 0.0}
         for k in range(PER_BEAT):
             frame = int(beat['fromFrame']) + int(span * (k + 1) / (PER_BEAT + 1))
-            seen, shot = _frame(cut, frame / fps), _frame(plate, (frame + plate_offset_frames) / fps)
+            # A beat after the sting sits its frames later in the file than on the plate (beat shift, velib.qc.to_file).
+            seen, shot = _frame(cut, frame / fps), _frame(plate, (frame + plate_offset_frames - int(beat.get('shift') or 0)) / fps)
             if seen is None or shot is None:
                 continue
             ours, theirs = lower_quarter(seen), take_part(shot, beat)

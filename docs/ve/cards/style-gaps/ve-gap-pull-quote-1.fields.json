@@ -1,0 +1,14 @@
+{
+  "card_id": "ve-gap-pull-quote-1",
+  "title": "pull_quote: a quote reveals grey to cream word by word, then a highlight sweeps it",
+  "goal": "From Krish's eating-its-own-jobs cut (docs/ve/styles/eating-jobs-ladder.card.json, gaps). Build device `pull_quote`: the quote sits in grey (inkSoft on the dark ground), each word turning cream as it is spoken (word timings from events), then a mint highlight sweeps behind the key words word by word. The attribution draws in the mono role with its date. Verbs: enter, highlight. Fixture and test: per-word colour at the frames that matter.\n\nPer devices/CONTRACT.md: index.tsx, state.ts, schema.ts, fixture.json, device.test.ts; register in registry.ts and config/ve/devices.json.",
+  "write_allow": "[apps/renderer/src/engine/devices/pull_quote/**, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/props.ts, config/ve/devices.json]",
+  "read": "apps/renderer/src/engine/**, docs/ve/MOTION_STANDARD.md, docs/ve/INGREDIENTS.md, config/ve/design-lock.json, docs/ve/styles/eating-jobs-ladder.card.json",
+  "kind": "device",
+  "motion_style": "eating-jobs-ladder",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. Every number carries its producer. In a layout region (kit/layout.ts isRegion, kit/staging.ts) the device lays out at its natural size and grows to fill the region (kit/regionFit.tsx).",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/pull_quote\nnpx vitest run apps/renderer/src/engine\nnode node_modules/typescript/bin/tsc --noEmit --pretty false",
+  "max_minutes": 60,
+  "max_calls": 60,
+  "path": "docs/ve/cards/style-gaps/ve-gap-pull-quote-1.md"
+}

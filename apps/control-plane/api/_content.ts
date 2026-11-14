@@ -796,7 +796,7 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
  * answer from a 200 response. Indexing by position was always an assumption
  * about the content array; this reads what it is actually looking for.
  */
-function firstText(j: any): string {
+export function firstText(j: any): string {
   const blocks = Array.isArray(j?.content) ? j.content : []
   for (const b of blocks) if (b?.type === 'text' && typeof b.text === 'string') return b.text
   return ''

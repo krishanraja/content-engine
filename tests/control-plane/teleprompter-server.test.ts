@@ -155,7 +155,7 @@ describe('his approval is checked here, not trusted to the caller', () => {
     const OTHER = 'Words Krish never saw.'
     const unapproved = input({ scripts: [{ ...input().scripts[0], text: OTHER, sha256: scriptHash(OTHER) }] })
     await refusedWith({ ...unapproved, approval: undefined as any }, /there is no approval/)
-    await refusedWith({ ...unapproved, approval: approval({ long: scriptHash(OTHER) }, { updated_by: 'engine_operator' }) }, /written by engine_operator, and only Krish's press counts/)
+    await refusedWith({ ...unapproved, approval: approval({ long: scriptHash(OTHER) }, { updated_by: 'engine_operator' }) }, /written by engine_operator, and only Krish's press or his own typed words count/)
     await refusedWith(unapproved, /he approved other words for the 5-minute script/)
   })
 

@@ -109,6 +109,11 @@ def window(props: dict, beat_id: str) -> tuple[int, int]:
             end, start = min(limit, end - start), 0
         if end > limit:
             start, end = max(0, start - (end - limit)), limit
+    # A window never spans the sting after the hook: the stem holds its frames of silence there, so a window that
+    # crossed it would play his voice out of step. It stays on its own beat's side of the hook's end.
+    at = int((props.get('sting') or {}).get('atFrame') or 0)
+    if at and start < at < end:
+        start, end = (at, end) if int(beat['fromFrame']) >= at else (start, at)
     if end <= start:
         raise ValueError(f'beat {beat_id} has no frames to prove')
     return start, end
@@ -160,12 +165,12 @@ def window_props(props: dict, start: int, end: int) -> dict:
                             fromFrame=shift(s['fromFrame']),
                             durationFrames=min(int(s['fromFrame']) + int(s['durationFrames']), end) - max(int(s['fromFrame']), start))
                        for s in props.get('segments') or [] if overlaps(s['fromFrame'], int(s['fromFrame']) + int(s['durationFrames']))]
-    # A window is never a whole cut, so it opens on no sting; but the stem was premixed with the sting's frames in
-    # front of his voice (ve premix), so cut frame f is stem frame f + the sting's frames.
-    lead = int((props.get('sting') or {}).get('frames') or 0)
+    # A window is never a whole cut, so it carries no sting; but the stem was premixed with the sting's frames where
+    # it plays (ve premix), so cut frame f is stem frame velib.qc.to_file(f) (window keeps it off the sting).
+    from .qc import to_file  # noqa: PLC0415
     out.pop('sting', None)
     out['audio'] = dict(props['audio'], stem=dict(props['audio']['stem'],
-                        trimBeforeFrames=int(props['audio']['stem'].get('trimBeforeFrames', 0)) + start + lead),
+                        trimBeforeFrames=int(props['audio']['stem'].get('trimBeforeFrames', 0)) + to_file(start, props)),
                         sfx=[dict(s, atFrame=shift(s['atFrame'])) for s in props['audio'].get('sfx') or []
                              if start <= int(s['atFrame']) < end])
     ending = props.get('ending')

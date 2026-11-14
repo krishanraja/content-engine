@@ -1,0 +1,1902 @@
+{
+  "schema": "ve-said/1",
+  "take": "long-1110",
+  "media_sha256": "8e409d053c37f0e191971d1e07f7ae4ea8d87d5431704e5898749d156f1a0d10",
+  "aligner": "faster-whisper:small.en",
+  "script": "script-long.txt",
+  "script_sha256": "450c743cdad17244f86aeb44ee24c96439d582ea17b5bd35dba2e8462a92e323",
+  "rates": {
+    "script_words": 818,
+    "said_words": 1011,
+    "word_for_word": 752,
+    "said_more_pct": 23.6,
+    "own_words_pct": 25.6,
+    "script_kept_pct": 91.9,
+    "minutes": 5.92,
+    "words_a_minute": 170.7,
+    "words_a_minute_talking": 174.9,
+    "differences": 63,
+    "differences_a_minute": 10.6,
+    "tags": {
+      "rephrase": 25,
+      "addition": 15,
+      "filler": 13,
+      "aside": 8,
+      "intensifier": 7,
+      "signpost": 5,
+      "to the viewer": 4,
+      "hedge": 3,
+      "restart": 2,
+      "number": 2,
+      "dropped": 1
+    },
+    "tags_a_minute": {
+      "rephrase": 4.22,
+      "addition": 2.53,
+      "filler": 2.19,
+      "aside": 1.35,
+      "intensifier": 1.18,
+      "signpost": 0.84,
+      "to the viewer": 0.68,
+      "hedge": 0.51,
+      "restart": 0.34,
+      "number": 0.34,
+      "dropped": 0.17
+    },
+    "sentence_words_said": 12.6,
+    "sentence_words_script": 10.4,
+    "sentences_starting_with_a_joiner_pct": {
+      "said": 37.5,
+      "script": 34.2
+    },
+    "top_starts_said": [
+      [
+        "and",
+        13
+      ],
+      [
+        "so",
+        13
+      ],
+      [
+        "it's",
+        4
+      ],
+      [
+        "that's",
+        4
+      ],
+      [
+        "if",
+        3
+      ],
+      [
+        "but",
+        3
+      ],
+      [
+        "the",
+        3
+      ],
+      [
+        "then",
+        3
+      ]
+    ],
+    "top_words_added": [
+      [
+        "and",
+        8
+      ],
+      [
+        "you",
+        7
+      ],
+      [
+        "human",
+        6
+      ],
+      [
+        "actually",
+        6
+      ],
+      [
+        "music",
+        5
+      ],
+      [
+        "so",
+        4
+      ],
+      [
+        "that's",
+        3
+      ],
+      [
+        "this",
+        3
+      ],
+      [
+        "track",
+        3
+      ],
+      [
+        "i'm",
+        3
+      ],
+      [
+        "healer",
+        3
+      ],
+      [
+        "if",
+        3
+      ],
+      [
+        "an",
+        3
+      ],
+      [
+        "now",
+        3
+      ],
+      [
+        "like",
+        3
+      ],
+      [
+        "want",
+        3
+      ],
+      [
+        "ai",
+        3
+      ],
+      [
+        "sure",
+        2
+      ],
+      [
+        "you've",
+        2
+      ],
+      [
+        "heard",
+        2
+      ]
+    ],
+    "top_words_dropped": [
+      [
+        "and",
+        5
+      ],
+      [
+        "you",
+        3
+      ],
+      [
+        "had",
+        2
+      ],
+      [
+        "two",
+        2
+      ],
+      [
+        "human",
+        1
+      ],
+      [
+        "music",
+        1
+      ],
+      [
+        "this",
+        1
+      ],
+      [
+        "song",
+        1
+      ],
+      [
+        "explains",
+        1
+      ],
+      [
+        "how",
+        1
+      ],
+      [
+        "almost",
+        1
+      ],
+      [
+        "now",
+        1
+      ],
+      [
+        "her",
+        1
+      ],
+      [
+        "by",
+        1
+      ],
+      [
+        "day",
+        1
+      ]
+    ]
+  },
+  "differences": [
+    {
+      "at": 5.73,
+      "kind": "added",
+      "tags": [
+        "filler"
+      ],
+      "script": "",
+      "said": "it's",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 12.59,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "human music?",
+      "said": "is it human music? That's the important question.",
+      "script_words": 2,
+      "said_words": 8
+    },
+    {
+      "at": 15.57,
+      "kind": "said differently",
+      "tags": [
+        "hedge",
+        "rephrase"
+      ],
+      "script": "This song",
+      "said": "about that. So this track",
+      "script_words": 2,
+      "said_words": 5
+    },
+    {
+      "at": 20.54,
+      "kind": "added",
+      "tags": [
+        "to the viewer",
+        "aside"
+      ],
+      "script": "",
+      "said": "I'm sure you've heard it, I'm sure you've heard of it.",
+      "script_words": 0,
+      "said_words": 11
+    },
+    {
+      "at": 25.12,
+      "kind": "added",
+      "tags": [
+        "restart",
+        "aside"
+      ],
+      "script": "",
+      "said": "a Reiki healer, nothing to do with music.",
+      "script_words": 0,
+      "said_words": 8
+    },
+    {
+      "at": 33.24,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "it",
+      "said": "that",
+      "script_words": 1,
+      "said_words": 1
+    },
+    {
+      "at": 35.46,
+      "kind": "said differently",
+      "tags": [
+        "hedge",
+        "rephrase"
+      ],
+      "script": "explains how almost",
+      "said": "kind of explains how",
+      "script_words": 3,
+      "said_words": 4
+    },
+    {
+      "at": 38.74,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "now,",
+      "said": "nowadays,",
+      "script_words": 1,
+      "said_words": 1
+    },
+    {
+      "at": 41.32,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "human music. So",
+      "script_words": 0,
+      "said_words": 3
+    },
+    {
+      "at": 44.02,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "her.",
+      "said": "the Reiki healer.",
+      "script_words": 1,
+      "said_words": 3
+    },
+    {
+      "at": 46.56,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "by day she's",
+      "said": "her day job is as",
+      "script_words": 3,
+      "said_words": 5
+    },
+    {
+      "at": 55.76,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "had",
+      "said": "has",
+      "script_words": 1,
+      "said_words": 1
+    },
+    {
+      "at": 58.24,
+      "kind": "skipped",
+      "tags": [
+        "dropped"
+      ],
+      "script": "and",
+      "said": "",
+      "script_words": 1,
+      "said_words": 0
+    },
+    {
+      "at": 59.28,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "producer",
+      "said": "complex music production",
+      "script_words": 1,
+      "said_words": 3
+    },
+    {
+      "at": 70.02,
+      "kind": "added",
+      "tags": [
+        "filler"
+      ],
+      "script": "",
+      "said": "and",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 75.94,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "Vibes and then",
+      "script_words": 0,
+      "said_words": 3
+    },
+    {
+      "at": 80.7,
+      "kind": "said differently",
+      "tags": [
+        "signpost",
+        "number",
+        "rephrase"
+      ],
+      "script": "two whole songs",
+      "said": "basically a whole song",
+      "script_words": 3,
+      "said_words": 4
+    },
+    {
+      "at": 83.06,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "drums, bass and a",
+      "said": "the drums, the bass and the",
+      "script_words": 4,
+      "said_words": 6
+    },
+    {
+      "at": 85.98,
+      "kind": "added",
+      "tags": [
+        "to the viewer"
+      ],
+      "script": "",
+      "said": "If you",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 92.4,
+      "kind": "added",
+      "tags": [
+        "filler",
+        "signpost"
+      ],
+      "script": "",
+      "said": "right?",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 106.62,
+      "kind": "added",
+      "tags": [
+        "filler"
+      ],
+      "script": "",
+      "said": "that",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 110.1,
+      "kind": "added",
+      "tags": [
+        "filler",
+        "intensifier"
+      ],
+      "script": "",
+      "said": "actually",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 113.7,
+      "kind": "said differently",
+      "tags": [
+        "aside",
+        "rephrase"
+      ],
+      "script": "make sounds electronically, and samples, which are recorded snippets",
+      "said": "is an electronic sound and an electronic sample which are basically recorded snippets that",
+      "script_words": 9,
+      "said_words": 14
+    },
+    {
+      "at": 122.3,
+      "kind": "added",
+      "tags": [
+        "filler",
+        "signpost"
+      ],
+      "script": "",
+      "said": "So",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 125.06,
+      "kind": "added",
+      "tags": [
+        "filler",
+        "intensifier"
+      ],
+      "script": "",
+      "said": "actually",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 127.58,
+      "kind": "added",
+      "tags": [
+        "aside"
+      ],
+      "script": "",
+      "said": "and electronically produced. So we've been producing non-human music for years, just within the confines of human releases.",
+      "script_words": 0,
+      "said_words": 18
+    },
+    {
+      "at": 139.74,
+      "kind": "said differently",
+      "tags": [
+        "intensifier",
+        "rephrase"
+      ],
+      "script": "Two things. First, you can",
+      "said": "here? It actually changes two things. Firstly, you can now",
+      "script_words": 5,
+      "said_words": 10
+    },
+    {
+      "at": 143.46,
+      "kind": "added",
+      "tags": [
+        "to the viewer",
+        "aside"
+      ],
+      "script": "",
+      "said": "of your track into existence or like I just said the whole thing",
+      "script_words": 0,
+      "said_words": 13
+    },
+    {
+      "at": 149.64,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "Second,",
+      "said": "And secondly,",
+      "script_words": 1,
+      "said_words": 2
+    },
+    {
+      "at": 152.42,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "Want a choir, a sitar and a robot? You",
+      "said": "If you want to choir, you want to sitar, you want a robot,",
+      "script_words": 9,
+      "said_words": 13
+    },
+    {
+      "at": 162.88,
+      "kind": "added",
+      "tags": [
+        "filler"
+      ],
+      "script": "",
+      "said": "the bit",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 168.7,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "cats,",
+      "said": "AI Generated Cats and",
+      "script_words": 1,
+      "said_words": 4
+    },
+    {
+      "at": 175.14,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "they",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 176.1,
+      "kind": "added",
+      "tags": [
+        "intensifier",
+        "aside"
+      ],
+      "script": "",
+      "said": "like, whoa, what's that? That's a really good catchy track.",
+      "script_words": 0,
+      "said_words": 10
+    },
+    {
+      "at": 181.5,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "again.",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 189.1,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "after TikTok.",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 192.02,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "as",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 196.44,
+      "kind": "added",
+      "tags": [
+        "filler",
+        "intensifier"
+      ],
+      "script": "",
+      "said": "actually",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 201.44,
+      "kind": "said differently",
+      "tags": [
+        "intensifier",
+        "rephrase"
+      ],
+      "script": "stopped being",
+      "said": "is not actually",
+      "script_words": 2,
+      "said_words": 3
+    },
+    {
+      "at": 202.66,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "anymore.",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 206.06,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "distribution.",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 228.12,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "ever",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 231.4,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "Ultra Naté. If you went",
+      "said": "UltraNate. If you weren't",
+      "script_words": 5,
+      "said_words": 4
+    },
+    {
+      "at": 233.86,
+      "kind": "said differently",
+      "tags": [
+        "number",
+        "rephrase"
+      ],
+      "script": "nineties,",
+      "said": "90s like me,",
+      "script_words": 1,
+      "said_words": 3
+    },
+    {
+      "at": 239.48,
+      "kind": "added",
+      "tags": [
+        "filler"
+      ],
+      "script": "",
+      "said": "that",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 241.54,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "an",
+      "said": "her AI",
+      "script_words": 1,
+      "said_words": 2
+    },
+    {
+      "at": 254.52,
+      "kind": "added",
+      "tags": [
+        "filler",
+        "intensifier"
+      ],
+      "script": "",
+      "said": "actually",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 259.34,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "dance legend.",
+      "said": "human dance legend. They're singing together.",
+      "script_words": 2,
+      "said_words": 6
+    },
+    {
+      "at": 265.44,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "had",
+      "said": "came along. The Grammys have",
+      "script_words": 1,
+      "said_words": 5
+    },
+    {
+      "at": 271.48,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "they give",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 274.18,
+      "kind": "added",
+      "tags": [
+        "filler"
+      ],
+      "script": "",
+      "said": "And",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 276.3,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "writing",
+      "said": "songwriting",
+      "script_words": 1,
+      "said_words": 1
+    },
+    {
+      "at": 280.48,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "Remember the robot's humming.",
+      "script_words": 0,
+      "said_words": 4
+    },
+    {
+      "at": 293.8,
+      "kind": "added",
+      "tags": [
+        "aside"
+      ],
+      "script": "",
+      "said": "He wants it to win a Grammy on that count.",
+      "script_words": 0,
+      "said_words": 10
+    },
+    {
+      "at": 298.44,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "is it",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 300.56,
+      "kind": "added",
+      "tags": [
+        "hedge",
+        "signpost",
+        "to the viewer"
+      ],
+      "script": "",
+      "said": "now. I think you can see here",
+      "script_words": 0,
+      "said_words": 7
+    },
+    {
+      "at": 304.7,
+      "kind": "said differently",
+      "tags": [
+        "restart",
+        "aside"
+      ],
+      "script": "and",
+      "said": "An app made the first version. Strangers on their phones made it famous. A healer had the idea.",
+      "script_words": 1,
+      "said_words": 18
+    },
+    {
+      "at": 326.6,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "of the production.",
+      "script_words": 0,
+      "said_words": 3
+    },
+    {
+      "at": 333.5,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "that's lying",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 334.44,
+      "kind": "added",
+      "tags": [
+        "filler",
+        "signpost"
+      ],
+      "script": "",
+      "said": "right now.",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 342.46,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "next time",
+      "said": "anytime",
+      "script_words": 2,
+      "said_words": 1
+    },
+    {
+      "at": 345.26,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "I won't",
+      "said": "I'm not going to",
+      "script_words": 2,
+      "said_words": 4
+    },
+    {
+      "at": 347.8,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "Is this AI or is this human?",
+      "script_words": 0,
+      "said_words": 7
+    }
+  ],
+  "pace": [
+    {
+      "line": 1,
+      "text": "Does this track sound familiar?",
+      "from_s": 2.19,
+      "words": 5,
+      "words_per_s": 3.68,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 2,
+      "text": "It's all over TikTok and it's all over the charts.",
+      "from_s": 4.57,
+      "words": 10,
+      "words_per_s": 4.67,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 3,
+      "text": "But which came first, TikTok or the charts?",
+      "from_s": 6.99,
+      "words": 8,
+      "words_per_s": 2.42,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 4,
+      "text": "And is it AI music, or is it human music?",
+      "from_s": 11.07,
+      "words": 10,
+      "words_per_s": 3.97,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 5,
+      "text": "That's the important question.",
+      "from_s": 13.75,
+      "words": 4,
+      "words_per_s": 4.17,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 6,
+      "text": "Let's find out.",
+      "from_s": 14.91,
+      "words": 3,
+      "words_per_s": 4.55,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 7,
+      "text": "about that.",
+      "from_s": 15.57,
+      "words": 2,
+      "words_per_s": 4.17,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 8,
+      "text": "So This track is called Movin' To The Sun.",
+      "from_s": 18.38,
+      "words": 9,
+      "words_per_s": 4.64,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 9,
+      "text": "I'm sure you've heard it, I'm sure you've heard of it.",
+      "from_s": 20.54,
+      "words": 11,
+      "words_per_s": 6.18,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 10,
+      "text": "It got to number two in the UK.",
+      "from_s": 22.56,
+      "words": 8,
+      "words_per_s": 5.19,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 11,
+      "text": "And it started with a Reiki healer, nothing to do with music.",
+      "from_s": 24.1,
+      "words": 12,
+      "words_per_s": 4.14,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 12,
+      "text": "a Reiki healer typing a few lines into an AI app.",
+      "from_s": 27.52,
+      "words": 11,
+      "words_per_s": 4.14,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 13,
+      "text": "So I've been digging into how it was made, and I want to break that down for you.",
+      "from_s": 30.18,
+      "words": 18,
+      "words_per_s": 4.62,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 14,
+      "text": "Because this one song kind of explains how all music gets made nowadays, even the songs you think are real.",
+      "from_s": 34.08,
+      "words": 20,
+      "words_per_s": 2.76,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 15,
+      "text": "human music.",
+      "from_s": 41.32,
+      "words": 2,
+      "words_per_s": 2.17,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 16,
+      "text": "So Let's start with the Reiki healer.",
+      "from_s": 43.12,
+      "words": 7,
+      "words_per_s": 4.79,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 17,
+      "text": "She calls herself Imael Angel, and her day job is as a Reiki master.",
+      "from_s": 44.86,
+      "words": 14,
+      "words_per_s": 3.18,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 18,
+      "text": "That's a healer who works on your energy, mostly without touching you.",
+      "from_s": 49.98,
+      "words": 12,
+      "words_per_s": 3.43,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 19,
+      "text": "She did go to music school.",
+      "from_s": 53.48,
+      "words": 6,
+      "words_per_s": 3.12,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 20,
+      "text": "But she has no studio, no band, no idea how to use complex music production software.",
+      "from_s": 55.5,
+      "words": 16,
+      "words_per_s": 2.68,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 21,
+      "text": "So she opened an AI music app called Suno.",
+      "from_s": 62.34,
+      "words": 9,
+      "words_per_s": 3.6,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 22,
+      "text": "And here's what that actually looks like.",
+      "from_s": 64.84,
+      "words": 7,
+      "words_per_s": 2.82,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 23,
+      "text": "There's one box for your lyrics.",
+      "from_s": 68.4,
+      "words": 6,
+      "words_per_s": 3.7,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 24,
+      "text": "and In another, you describe the sound, like deep house, female singer, summer.",
+      "from_s": 70.02,
+      "words": 13,
+      "words_per_s": 2.2,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 25,
+      "text": "Vibes and then You press a button, and a few moments later you get basically a whole song back.",
+      "from_s": 75.94,
+      "words": 19,
+      "words_per_s": 3.09,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 26,
+      "text": "That's the tune, the drums, the bass and the singer, all at once.",
+      "from_s": 82.08,
+      "words": 13,
+      "words_per_s": 3.8,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 27,
+      "text": "If you Don't like the second verse?",
+      "from_s": 85.98,
+      "words": 7,
+      "words_per_s": 7.45,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 28,
+      "text": "You don't rewrite it, you just press the button again.",
+      "from_s": 87.5,
+      "words": 10,
+      "words_per_s": 6.25,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 29,
+      "text": "It's basically a slot machine that pays out in songs.",
+      "from_s": 89.76,
+      "words": 10,
+      "words_per_s": 3.79,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 30,
+      "text": "right?",
+      "from_s": 92.4,
+      "words": 1,
+      "words_per_s": 3.13,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 31,
+      "text": "But to see why that matters, we need to zoom in on how a song is built.",
+      "from_s": 94.14,
+      "words": 17,
+      "words_per_s": 3.9,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 32,
+      "text": "Every song is a stack of layers, like the drums, the bass, the chords and the voice.",
+      "from_s": 99.16,
+      "words": 17,
+      "words_per_s": 2.98,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 33,
+      "text": "And this is the bit that most people miss.",
+      "from_s": 105.46,
+      "words": 9,
+      "words_per_s": 4.55,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 34,
+      "text": "For about twenty years, loads of those layers haven't actually been real instruments anyway.",
+      "from_s": 107.7,
+      "words": 14,
+      "words_per_s": 3.37,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 35,
+      "text": "They're synths, which is an electronic sound, and an electronic sample, which are basically recorded snippets that anyone can reuse.",
+      "from_s": 112.38,
+      "words": 20,
+      "words_per_s": 2.16,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 36,
+      "text": "So That real guitar on your favourite song?",
+      "from_s": 122.3,
+      "words": 8,
+      "words_per_s": 3.42,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 37,
+      "text": "It might actually come from a pack of samples you can buy.",
+      "from_s": 124.64,
+      "words": 12,
+      "words_per_s": 4.08,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 38,
+      "text": "and electronically produced.",
+      "from_s": 127.58,
+      "words": 3,
+      "words_per_s": 1.5,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 39,
+      "text": "So we've been producing non-human music for years, just within the confines of human releases.",
+      "from_s": 130.08,
+      "words": 15,
+      "words_per_s": 1.91,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 40,
+      "text": "So what does AI actually change?",
+      "from_s": 138.24,
+      "words": 6,
+      "words_per_s": 4.0,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 41,
+      "text": "here?",
+      "from_s": 139.74,
+      "words": 1,
+      "words_per_s": 3.85,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 42,
+      "text": "It actually changes Two things.",
+      "from_s": 140.6,
+      "words": 5,
+      "words_per_s": 5.1,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 43,
+      "text": "Firstly, you can now talk a layer of your track into existence or like I just said the whole thing into existence without learning the software.",
+      "from_s": 141.72,
+      "words": 26,
+      "words_per_s": 3.57,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 44,
+      "text": "And secondly, there are way more layers to pick from.",
+      "from_s": 149.64,
+      "words": 10,
+      "words_per_s": 3.91,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 45,
+      "text": "If you want to choir, you want to sitar, you Want a robot?",
+      "from_s": 152.42,
+      "words": 13,
+      "words_per_s": 3.74,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 46,
+      "text": "just ask.",
+      "from_s": 156.38,
+      "words": 2,
+      "words_per_s": 4.35,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 47,
+      "text": "Okay, so she's got her songs, and she puts them online.",
+      "from_s": 157.94,
+      "words": 11,
+      "words_per_s": 3.09,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 48,
+      "text": "And this is the bit where it gets interesting.",
+      "from_s": 162.62,
+      "words": 9,
+      "words_per_s": 6.0,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 49,
+      "text": "People start using her track under their own videos, like AI Generated cats, and weddings and dads dancing badly.",
+      "from_s": 164.4,
+      "words": 19,
+      "words_per_s": 2.39,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 50,
+      "text": "Viewers hear it behind someone else's clip and they go hunting for it.",
+      "from_s": 172.66,
+      "words": 13,
+      "words_per_s": 3.78,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 51,
+      "text": "like, whoa, what's that?",
+      "from_s": 176.1,
+      "words": 4,
+      "words_per_s": 4.55,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 52,
+      "text": "That's a really good catchy track.",
+      "from_s": 177.08,
+      "words": 6,
+      "words_per_s": 4.05,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 53,
+      "text": "Scroll the comments and it's the same question, over and over.",
+      "from_s": 179.4,
+      "words": 11,
+      "words_per_s": 5.24,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 54,
+      "text": "again.",
+      "from_s": 181.5,
+      "words": 1,
+      "words_per_s": 4.55,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 55,
+      "text": "What is this song?",
+      "from_s": 181.86,
+      "words": 4,
+      "words_per_s": 4.88,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 56,
+      "text": "So, which came first?",
+      "from_s": 183.64,
+      "words": 4,
+      "words_per_s": 2.53,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 57,
+      "text": "TikTok, and the charts came later.",
+      "from_s": 185.46,
+      "words": 6,
+      "words_per_s": 1.65,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 58,
+      "text": "after TikTok.",
+      "from_s": 189.1,
+      "words": 2,
+      "words_per_s": 1.89,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 59,
+      "text": "And that tells us something big.",
+      "from_s": 190.6,
+      "words": 6,
+      "words_per_s": 5.88,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 60,
+      "text": "as On one of the big streaming apps, over half of the new songs uploaded every day are actually made with AI.",
+      "from_s": 192.02,
+      "words": 22,
+      "words_per_s": 3.86,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 61,
+      "text": "And almost no one listens to them.",
+      "from_s": 198.64,
+      "words": 7,
+      "words_per_s": 5.3,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 62,
+      "text": "So making a song is not actually the hard part.",
+      "from_s": 200.7,
+      "words": 10,
+      "words_per_s": 5.1,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 63,
+      "text": "anymore.",
+      "from_s": 202.66,
+      "words": 1,
+      "words_per_s": 4.17,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 64,
+      "text": "The hard part is getting a stranger to go looking for it.",
+      "from_s": 203.08,
+      "words": 12,
+      "words_per_s": 4.72,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 65,
+      "text": "distribution.",
+      "from_s": 206.06,
+      "words": 1,
+      "words_per_s": 3.57,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 66,
+      "text": "And one stranger who went looking was a dance producer called HUGEL.",
+      "from_s": 207.56,
+      "words": 12,
+      "words_per_s": 3.53,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 67,
+      "text": "Now, he didn't just release her AI song.",
+      "from_s": 210.96,
+      "words": 8,
+      "words_per_s": 2.84,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 68,
+      "text": "He pulled it apart, kept a few pieces and threw the rest out.",
+      "from_s": 213.92,
+      "words": 13,
+      "words_per_s": 3.42,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 69,
+      "text": "Then he rebuilt it by hand, with drums from a sample library, a big synth bass, piano and strings.",
+      "from_s": 218.14,
+      "words": 19,
+      "words_per_s": 3.08,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 70,
+      "text": "Which means even the human version has drums no one actually ever played.",
+      "from_s": 224.52,
+      "words": 13,
+      "words_per_s": 3.1,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 71,
+      "text": "Then he brought in the singer UltraNate.",
+      "from_s": 230.04,
+      "words": 7,
+      "words_per_s": 3.3,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 72,
+      "text": "If you weren't clubbing in the 90s like me, you know that voice.",
+      "from_s": 232.72,
+      "words": 13,
+      "words_per_s": 4.89,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 73,
+      "text": "And now she's back near the top of the charts, singing a song that a healer started on her AI app.",
+      "from_s": 235.38,
+      "words": 21,
+      "words_per_s": 2.99,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 74,
+      "text": "But here's my favourite detail.",
+      "from_s": 243.24,
+      "words": 5,
+      "words_per_s": 3.47,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 75,
+      "text": "Listen closely, because under her voice, in a few places, HUGEL kept a thin layer of the original AI singer.",
+      "from_s": 245.66,
+      "words": 20,
+      "words_per_s": 2.77,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 76,
+      "text": "So this hit actually has a robot quietly humming along under a human dance legend.",
+      "from_s": 253.7,
+      "words": 15,
+      "words_per_s": 2.25,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 77,
+      "text": "They're singing together.",
+      "from_s": 261.3,
+      "words": 3,
+      "words_per_s": 1.9,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 78,
+      "text": "And then the Grammys came along.",
+      "from_s": 264.46,
+      "words": 6,
+      "words_per_s": 4.0,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 79,
+      "text": "The Grammys have to decide what this thing even is.",
+      "from_s": 266.12,
+      "words": 10,
+      "words_per_s": 3.88,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 80,
+      "text": "They give one prize for writing a song, and they give another for performing it.",
+      "from_s": 269.24,
+      "words": 15,
+      "words_per_s": 3.64,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 81,
+      "text": "And They've reportedly ruled it out of the songwriting prize, because bits of the AI version are still in there.",
+      "from_s": 274.18,
+      "words": 20,
+      "words_per_s": 3.22,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 82,
+      "text": "Remember the robot's humming.",
+      "from_s": 280.48,
+      "words": 4,
+      "words_per_s": 2.86,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 83,
+      "text": "But a human sang it, so it can still compete for performing.",
+      "from_s": 282.92,
+      "words": 12,
+      "words_per_s": 1.67,
+      "rushed": false,
+      "pauses": [
+        {
+          "after": "human",
+          "at_s": 283.44,
+          "pause_s": 1.8
+        }
+      ]
+    },
+    {
+      "line": 84,
+      "text": "And HUGEL is challenging that decision.",
+      "from_s": 291.32,
+      "words": 6,
+      "words_per_s": 2.59,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 85,
+      "text": "He wants it to win a Grammy on that count.",
+      "from_s": 293.8,
+      "words": 10,
+      "words_per_s": 4.67,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 86,
+      "text": "So, is it AI music or is it human music?",
+      "from_s": 296.28,
+      "words": 10,
+      "words_per_s": 3.5,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 87,
+      "text": "Honestly, I think that's the wrong question.",
+      "from_s": 299.3,
+      "words": 7,
+      "words_per_s": 5.56,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 88,
+      "text": "now.",
+      "from_s": 300.56,
+      "words": 1,
+      "words_per_s": 3.57,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 89,
+      "text": "I think you can see here A healer had the idea, An app made the first version.",
+      "from_s": 300.98,
+      "words": 17,
+      "words_per_s": 3.37,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 90,
+      "text": "Strangers on their phones made it famous.",
+      "from_s": 306.34,
+      "words": 7,
+      "words_per_s": 4.22,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 91,
+      "text": "A healer had the idea.",
+      "from_s": 311.42,
+      "words": 5,
+      "words_per_s": 3.79,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 92,
+      "text": "an app made the first version.",
+      "from_s": 313.34,
+      "words": 6,
+      "words_per_s": 3.41,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 93,
+      "text": "Strangers on their phones made it famous, and a producer rebuilt it by hand.",
+      "from_s": 315.68,
+      "words": 14,
+      "words_per_s": 3.55,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 94,
+      "text": "Then a legend sang it, with a robot humming underneath.",
+      "from_s": 319.62,
+      "words": 10,
+      "words_per_s": 2.66,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 95,
+      "text": "So it's both, at every single layer.",
+      "from_s": 324.58,
+      "words": 7,
+      "words_per_s": 3.47,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 96,
+      "text": "of the production.",
+      "from_s": 326.6,
+      "words": 3,
+      "words_per_s": 4.55,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 97,
+      "text": "And this goes way beyond music.",
+      "from_s": 328.08,
+      "words": 6,
+      "words_per_s": 3.26,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 98,
+      "text": "It's the advert you scrolled past this morning and the report that's lying on your desk.",
+      "from_s": 330.36,
+      "words": 16,
+      "words_per_s": 3.92,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 99,
+      "text": "right now.",
+      "from_s": 334.44,
+      "words": 2,
+      "words_per_s": 2.63,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 100,
+      "text": "It's even the deck your team sent you last night.",
+      "from_s": 335.52,
+      "words": 10,
+      "words_per_s": 1.77,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 101,
+      "text": "So anytime someone hands me something brilliant, I'm not going to ask if AI made it.",
+      "from_s": 342.16,
+      "words": 16,
+      "words_per_s": 2.84,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 102,
+      "text": "Is this AI or is this human?",
+      "from_s": 347.8,
+      "words": 7,
+      "words_per_s": 4.67,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 103,
+      "text": "I'll ask who did which bit.",
+      "from_s": 349.8,
+      "words": 6,
+      "words_per_s": 5.26,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 104,
+      "text": "Because the song you can't stop dancing to is already both.",
+      "from_s": 351.06,
+      "words": 11,
+      "words_per_s": 3.46,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 105,
+      "text": "The full deep dive is at makeyourmindup ai.",
+      "from_s": 355.08,
+      "words": 8,
+      "words_per_s": 3.23,
+      "rushed": true,
+      "pauses": []
+    }
+  ],
+  "heard_only": 232
+}

@@ -29,7 +29,7 @@ import type { ClipPlacement, ClipUseRecord } from './_routedClips.js'
  *  YouTube and then Shorts, TikTok, and Instagram." The first five are the
  *  standing set; LinkedIn, WhatsApp and Substack Notes stay available when
  *  he wants them and never hold a piece back. */
-// feature_youtube and feature_spotify: the 15-minute feature's own two posts, on a feature piece only (config/board-layout.json).
+// feature_youtube and feature_spotify: the 15-minute feature's own two posts, on a feature piece only.
 // instagram, x, threads and facebook: posts Growth makes and reports through POST /api/board/<Monday>/posted (2026-10-30).
 export const MAKING_CHANNELS = ['substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify', 'feature_youtube', 'feature_spotify', 'instagram', 'x', 'threads', 'facebook'] as const
 export type MakingChannel = (typeof MAKING_CHANNELS)[number]

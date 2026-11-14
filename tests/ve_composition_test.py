@@ -96,7 +96,7 @@ class Composition(unittest.TestCase):
                  'ending': {'fromFrame': 200},
                  'beats': [{'id': 'proof', 'layout': 'SPLIT', 'fromFrame': 0, 'toFrame': 300}]}
         four = self.word(text='4', x=834, y=1873, w=16, h=36)
-        stray = self.word(text='STRAY', x=300, y=1480, w=200, h=40)  # inside the split caption zone
+        stray = self.word(text='STRAY', x=300, y=740, w=200, h=40)  # inside the split caption zone, on the seam
         for at, ending_exempt in ((100, True), (250, False)):
             with self.subTest(frame=at), patch.object(comp, '_frame', return_value=(self.image(), at)), \
                     patch.object(comp, '_words', return_value=[four, stray]):

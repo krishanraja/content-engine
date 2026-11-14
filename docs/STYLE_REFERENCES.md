@@ -84,6 +84,10 @@ When asked to study the style references, or when one is listed as
      - `krish_verdict`: `untested` to start.
 
      Reuse a module the bank already holds rather than adding a twin.
+   - A whole new motion look (not one technique) is designed and proved
+     in the style lab first, then enters the motion layer by the steps in
+     `lab/styles/README.md`, "From the lab to ve" (The Ladder and The
+     Living Screen came in that way on 11 Nov 2026).
    - On the reference itself: list the modules it gave, and copy Krish's
      row from the sheet into `krish_likes`, word for word.
 6. `python scripts/quick-edit/references.py --self-test` must still pass.

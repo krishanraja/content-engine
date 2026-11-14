@@ -132,15 +132,18 @@ describe('board access and contracts', () => {
     await handler(req('GET'), res)
     expect(status).toBe(401); expect(body).toEqual({ ok: false, error: 'unauthorized' })
   })
-  it('refuses a direct board activation with empty assets and no independent HTML review', async () => {
+  it('publishes no build: a direct board activation is refused before the store (Ruling, Krish, 2026-11-13)', async () => {
     process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'
     let writes = 0
-    const handler = createBoardHandler(async () => ({ rpc() { writes++; throw new Error('activation must not run') } }) as never)
+    const handler = createBoardHandler(async () => ({ rpc() { writes++; throw new Error('activation must not run') }, from() { writes++; throw new Error('no store') } }) as never)
     const sha = 'a'.repeat(64), week = '2026-10-26'
     const manifest = { version: 1, week, html: { sha256: sha, bytes: 40, type: 'text/html', name: 'board.html', key: `boards/${week}/${sha}` }, assets: {} }
-    let status = 0; let body: any
-    const res = { setHeader() {}, status(code: number) { status = code; return this }, json(value: unknown) { body = value } } as unknown as VercelResponse
-    await handler({ method: 'PUT', headers: { authorization: 'Bearer synthetic-operator' }, query: { week }, body: { manifest, revision: 0 } } as unknown as VercelRequest, res)
-    expect(status).toBe(409); expect(body.error).toContain('signed board delivery review required'); expect(writes).toBe(0)
+    for (const op of [undefined, 'uploads', 'imports', 'sources']) {
+      let status = 0
+      const res = { setHeader() {}, status(code: number) { status = code; return this }, json() {} } as unknown as VercelResponse
+      await handler({ method: op ? 'POST' : 'PUT', headers: { authorization: 'Bearer synthetic-operator' }, query: { week, ...(op ? { collection: op } : {}) }, body: { manifest, revision: 0 } } as unknown as VercelRequest, res)
+      expect(status, String(op)).toBeGreaterThanOrEqual(400)
+    }
+    expect(writes).toBe(0)
   })
 })

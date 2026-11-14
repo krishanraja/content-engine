@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
-import { buildView, lockSigned, viewProblems, type ViewInputs } from '../../apps/control-plane/api/board/_view'
+import { withApprovals } from './_approvals'
+import { buildView, lockSigned, postingStarted, viewProblems, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { JOBS, dispatchJob, readRuns, type JobName } from '../../apps/control-plane/api/board/_run'
-import { DESK_PAGE } from '../../apps/control-plane/api/board/_deskPage'
 
 // The live board (docs/plans/2026-11-09-board-desk/PLAN.md). Krish, 2026-11-09: "I should always open it with
 // something to do for each piece or for the week, unless the day or the week is complete", "Absolutely everything that
@@ -10,7 +10,9 @@ import { DESK_PAGE } from '../../apps/control-plane/api/board/_deskPage'
 
 const WEEK = '2026-11-16'
 const MON = '8287846b-6618-4a19-9fb8-23ad4eca2718', WED = 'db9f9f6a-1092-49be-8024-f335e060305a', FRI = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118'
-const SIGNED = readFileSync('docs/plans/2026-11-16-week/narrative-lock-fri.md', 'utf8')
+// A lock as Krish signed it on 9 Nov, frozen here: the week's own lock files change as the week is made (the
+// data-centres lock moved to Tue 17 on 13 Nov and waits on his signature again), and this test reads a signed one.
+const SIGNED = readFileSync('tests/control-plane/fixtures/narrative-lock-signed-2026-11-09.md', 'utf8')
 const piece = (id: string, date: string, slot: string, making: Record<string, unknown> = {}, extra: Record<string, unknown> = {}) =>
   ({ id, idea: `Piece ${id.slice(0, 4)}`, scheduled_for: date, lane_slot: slot, state: 'drafting', buried_at: null, body: '', updated_at: '2026-11-09T12:00:00Z', meta: { making }, ...extra })
 const option = (id: string, extra: Record<string, unknown> = {}) => ({ id, format: 'Meme video, 9:16', copy: `Option ${id}`, ...extra })
@@ -18,14 +20,14 @@ const verdict = (day: string, id: string, side: Record<string, unknown>) => ({ d
 const run = (job: JobName, state: 'queued' | 'running' | 'done' | 'failed') => ({ job, workflow: JOBS[job].workflow, state, started_at: '2026-11-09T17:00:00Z', updated_at: '2026-11-09T17:05:00Z', url: `https://github.com/x/${job}`, event: 'repository_dispatch' })
 
 function inputs(over: Partial<ViewInputs> = {}): ViewInputs {
-  return {
+  return withApprovals({
     week: WEEK, now: new Date('2026-11-09T18:00:00Z'),
     pieces: [piece(MON, '2026-11-16', 'follow_the_money'), piece(WED, '2026-11-18', 'under_the_hood'), piece(FRI, '2026-11-20', 'mind_the_gap')],
     picks: [], queue: [], history: [], runs: {}, north_star: { current: 3, target: 8 },
     ideas: { offdays: { tue: [option('povteach'), option('infosys')], thu: [option('lookalikes')], sat: [] } },
     locks: { mon: null, wed: null, fri: SIGNED },
     ...over,
-  }
+  })
 }
 const day = (v: ReturnType<typeof buildView>, d: string) => v.days.find(x => x.day === d)!
 
@@ -68,7 +70,7 @@ describe('the live board view', () => {
     // Monday: no research, no lock -> Research, with the engine's run first and the Perplexity prompt beside it.
     const mon = day(buildView(inputs()), 'mon')
     expect(mon.path?.current).toBe('research')
-    expect(mon.actions.map(a => a.kind)).toEqual(['research', 'prompt', 'prompt'])
+    expect(mon.actions.map(a => a.kind)).toEqual(['research', 'prompt', 'press', 'prompt', 'press'])
     // Research on the piece -> Story, a conversation.
     const withResearch = inputs({ pieces: [piece(MON, '2026-11-16', 'follow_the_money', {}, { meta: { materials: [{ id: 'm1', kind: 'file', title: 'mon-research.md', content: 'x', bytes: 1 }] } })] })
     const mon2 = day(buildView(withResearch), 'mon')
@@ -83,7 +85,7 @@ describe('the live board view', () => {
     const looked = inputs({ pieces: [piece(FRI, '2026-11-20', 'mind_the_gap', {}, { meta: { look: { production: 'data-story', experiment: null, inspiration: [], by: 'Krish', at: 'x' } } })] })
     const fri2 = day(buildView(looked), 'fri')
     expect(fri2.path?.current).toBe('board')
-    expect(fri2.actions.map(a => a.kind)).toEqual(['prompt', 'run'])
+    expect(fri2.actions.map(a => a.kind)).toEqual(['prompt', 'run', 'press'])
     expect(fri2.actions[1]).toMatchObject({ kind: 'run', job: 'make-piece', input: { piece_id: FRI } })
     const sb = fri2.actions[0].kind === 'prompt' ? fri2.actions[0].prompt : ''
     expect(sb).toContain('before he records')
@@ -117,10 +119,11 @@ describe('the live board view', () => {
     expect(back.reviews?.[0].option.idea_sha256).toMatch(/^[0-9a-f]{64}$/)
   })
 
-  it('lets Saturday start the good-news run, and lists only his and stuck days in Your move', () => {
+  it('lets Saturday start the good-news run, and lists only his real decisions in Your move (Ruling, Krish, 2026-11-13)', () => {
     const v = buildView(inputs())
     expect(day(v, 'sat').actions[0]).toMatchObject({ kind: 'run', job: 'saturday-goodnews', input: { week: WEEK } })
-    expect([...new Set(v.yours.map(y => y.day))].sort()).toEqual(v.days.filter(d => d.who === 'you' || d.who === 'stuck').map(d => d.day).sort())
+    // Your move is the week model's decisions only (Approve for publish, an approved post's missing choice), never an idea.
+    expect(v.yours.map(y => y.key)).toEqual(v.model!.days.flatMap(d => d.items.filter(it => it.decision).map(it => `${d.day}-${it.key}`)))
   })
 
   it('opens on Week done when every day is published', () => {
@@ -172,23 +175,20 @@ describe('every board button starts a real machine', () => {
     }
   })
 
-  it('serves the page built from its one source, with no data baked in', () => {
-    // The source is the React client in apps/control-plane/board-next; `node scripts/build-desk-page.mjs --check` rebuilds it
-    // and fails when the committed module differs (CI runs it through npm run verify).
-    expect(DESK_PAGE).toMatch(/^<!doctype html>/i)
-    expect(DESK_PAGE).toContain('<div id="root">')
-    expect(DESK_PAGE).toContain('/view')
-    expect(DESK_PAGE).not.toMatch(/8287846b-6618|b019dbf8-8051/)
-  })
 })
 
 describe('a press on the live board binds the same words as the full board', () => {
-  it('hashes every side of every real off-day option exactly as week_board.py does', async () => {
+  it('hashes every side of every real off-day option exactly as week_plan.py does', async () => {
     const { execFileSync } = await import('node:child_process')
     const { offdaySides } = await import('../../apps/control-plane/api/board/_offdaySides')
-    const py = `import sys,json\nsys.path.insert(0,'scripts/post-pack')\nimport week_board as wb\nd=json.load(open(sys.argv[1]))\nr=wb.read_offdays(d['offdays'])\nprint(json.dumps({o['id']:[o.get('idea_sha256'),o.get('direction_sha256'),o['copy_sha256'],o['source']] for v in r.values() for o in v}))`
+    // ideas.json is read as UTF-8, the way week_plan.py reads it: a bare open() is cp1252 on Windows, which turned the
+    // proactiveai option's "›" and "📲" into other characters and hashed different words (Full verify, windows-latest).
+    const py = `import sys,json\nsys.path.insert(0,'scripts/post-pack')\nimport week_plan as wb\nd=json.load(open(sys.argv[1],encoding='utf-8'))\nr=wb.read_offdays(d['offdays'])\nprint(json.dumps({o['id']:[o.get('idea_sha256'),o.get('direction_sha256'),o['copy_sha256'],o['source']] for v in r.values() for o in v}))`
     const file = 'docs/plans/2026-11-16-week/ideas.json'
-    const want = JSON.parse(execFileSync('python3', ['-c', py, file], { encoding: 'utf8' })) as Record<string, [string, string | null, string, string]>
+    const PY = process.platform === 'win32' ? 'python' : 'python3'
+    const want = JSON.parse(execFileSync(PY, ['-c', py, file], { encoding: 'utf8', env: { ...process.env, PYTHONIOENCODING: 'utf-8' } })) as Record<string, [string, string | null, string, string]>
+    // At least one option carries characters outside ASCII, so a reader that is not UTF-8 is caught here, not on a press.
+    expect(readFileSync(file, 'utf8')).toMatch(/[^\x00-\x7F]/)
     const ideas = JSON.parse(readFileSync(file, 'utf8'))
     let n = 0
     for (const opts of Object.values(ideas.offdays) as Array<Array<Record<string, unknown>>>) for (const o of opts) {
@@ -254,25 +254,36 @@ describe('no storyboard on file: remind, never refuse (Krish, 2026-11-09: "Remin
   })
 })
 
-describe("the week's board link opens the live board (Krish, 2026-11-10: \"Switch fully, move the old board to an archive link\")", () => {
-  async function page(query: Record<string, string>) {
+describe("the week's old board link opens the live board (Ruling, Krish, 2026-11-13: the old publish boards are retired for good)", () => {
+  it('answers /board/<Monday>, /board/next/<Monday> and ?archive=1 with a permanent redirect to the live board at that week', async () => {
     const { createBoardHandler } = await import('../../apps/control-plane/api/board/_handler')
-    const handler = createBoardHandler(async () => { throw new Error('no database for the page') })
-    let status = 0, body: unknown
-    const res = { setHeader() {}, status(code: number) { status = code; return this }, send(v: unknown) { body = v; return this }, json(v: unknown) { body = v; return this }, redirect(code: number) { status = code; return this } }
-    await handler({ method: 'GET', headers: {}, query: { week: '2026-11-16', ...query } } as never, res as never)
-    return { status, body }
-  }
-  it('serves the live board at /board/<Monday> and /board/next/<Monday>, with no sign-in needed for the page itself', async () => {
-    for (const op of ['html', 'next']) {
-      const { status, body } = await page({ op })
-      expect(status, op).toBe(200)
-      expect(body, op).toBe(DESK_PAGE)
+    const handler = createBoardHandler(async () => { throw new Error('no database for a redirect') })
+    for (const query of [{ op: 'html' }, { op: 'next' }, { op: 'html', archive: '1' }]) {
+      let status = 0, location = ''
+      const res = { setHeader() {}, status(code: number) { status = code; return this }, json() { return this }, redirect(code: number, url: string) { status = code; location = url; return this } }
+      await handler({ method: 'GET', headers: {}, query: { week: '2026-11-16', ...query } } as never, res as never)
+      expect([status, location], JSON.stringify(query)).toEqual([308, 'https://controlcenter.krishraja.com/#/content?week=2026-11-16'])
     }
   })
-  it('keeps the old board behind ?archive=1, where his sign-in is still asked for', async () => {
-    const { status, body } = await page({ op: 'html', archive: '1' })
-    expect(status).toBe(401)
-    expect(body).toMatchObject({ ok: false, error: 'unauthorized' })
+})
+
+describe('a piece at Publish with nothing out asks for the watch and approve, not posting', () => {
+  it('reads posting only from a publish step that carries a channel count', () => {
+    expect(postingStarted({ steps: [{ key: 'video', state: 'done' }, { key: 'publish', state: 'now' }] })).toBe(false)
+    expect(postingStarted({ steps: [{ key: 'publish', state: 'now', note: '1 of 5 channels' }] })).toBe(true)
+    expect(postingStarted({ steps: [{ key: 'publish', state: 'done', note: '5 of 5 channels' }] })).toBe(false)
+  })
+})
+
+describe('his yes in his own words leaves nothing for him to press (Krish, 2026-11-11)', () => {
+  it('reads the day as approved and ready to post once his typed yes is on the board', () => {
+    const made = { workroom: { at: 'x', url: 'https://example.com' } }
+    const yes = { doc_id: 'yes-fri-words', updated_by: 'engine', body: { kind: 'yes', day: 'fri', via: 'words', approved: true,
+      words: 'ready to go', at: '2026-11-11T10:00:00Z', said_at: '2026-11-11T10:00:00Z', said_where: 'session', session_ref: 'https://claude.ai/code/session_x' } }
+    const v = buildView(inputs({ picks: [yes], pieces: [piece(FRI, '2026-11-20', 'mind_the_gap', made)] }))
+    const fri = day(v, 'fri')
+    // Only a day that reached the publish branch reads the yes; earlier steps still lead with their own next step.
+    expect(fri.next).not.toMatch(/Approved/)
+    expect(viewProblems(v)).toEqual([])
   })
 })

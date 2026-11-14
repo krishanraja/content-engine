@@ -1,0 +1,260 @@
+{
+  "_about": "The caption styles ve can draw, in plain words, for the publish board's Captions choice (view contract 1.4.0, day.path.style.captions; docs/PUBLISH_BOARDS.md). One entry per name in apps/renderer/src/engine/captions/names.ts CAPTION_THEMES, in that order (apps/renderer/src/engine/captions.test.ts checks). The drawing lives in apps/renderer/src/engine/captions/themes.tsx and chrome/ArtDirectedCaption.tsx; this file only names and describes it. Every style keeps the house rules: only the house faces (Anton, Archivo, Fraunces, Plex Mono), only the brand colours, each word on screen at the frame it is said, at most one marked word per page, and every word inside the platform safe area. recommended_why marks the style the board recommends, with Krish's reason in his own words.",
+  "pop": {
+    "name": "Pop",
+    "line": "Bold capitals land word by word, and the word being said wears the series colour.",
+    "rules": [
+      "Archivo Black capitals, centred in the caption band",
+      "At most two lines, sized to fill the width",
+      "The colour moves on to each word as it lands"
+    ]
+  },
+  "karaoke": {
+    "name": "Karaoke",
+    "line": "The whole line is set at once, and each word fills to full cream as he says it.",
+    "rules": [
+      "Archivo ExtraBold, mixed case",
+      "Each word fills left to right across the time it is spoken",
+      "A short series-colour rule draws under the word being said"
+    ]
+  },
+  "kinetic-01": {
+    "name": "Justified stack",
+    "line": "One word per row in Anton capitals, every row the same width, so the phrase becomes a block of type.",
+    "rules": [
+      "Each new row wipes up from its baseline",
+      "The block grows upward from the floor of the caption band",
+      "The key word is set in the series colour"
+    ]
+  },
+  "kinetic-02": {
+    "name": "Edge snap",
+    "line": "Condensed capitals snap in from alternating sides of the frame into one left-aligned lockup.",
+    "rules": [
+      "Archivo condensed capitals",
+      "The page's hero word lands last and largest, one full step up",
+      "The hero word is in the series colour"
+    ]
+  },
+  "hustle": {
+    "name": "Marker",
+    "line": "Anton capitals, with a series-colour bar drawn under the key word just after he says it.",
+    "rules": [
+      "Two lines at most",
+      "The key word turns ink on the bar, like a pen through the line"
+    ]
+  },
+  "grape": {
+    "name": "Ink card",
+    "line": "The line sits on a deep-ink card that opens as the phrase starts, and the word being said is mint.",
+    "rules": [
+      "Archivo Bold, mixed case",
+      "Words arrive in cream as they are said",
+      "The easiest style to read over busy footage, such as a window or a screen behind him"
+    ]
+  },
+  "beast": {
+    "name": "Punch",
+    "line": "Huge outlined Anton capitals punch in, one or two words on screen at a time.",
+    "rules": [
+      "Cream type with a thick ink outline and a hard ink drop",
+      "Each word punches in from 1.3 times its size with a small turn that rights itself",
+      "The key word fills with the series colour",
+      "Loud on purpose, for the fast cuts"
+    ]
+  },
+  "poppin": {
+    "name": "Spring",
+    "line": "Mixed-case words spring up from their baseline with one small overshoot.",
+    "rules": [
+      "Archivo ExtraBold",
+      "The key word springs a size bigger, in mint",
+      "Friendly and quick, for the lighter pieces"
+    ]
+  },
+  "aarit": {
+    "name": "Editorial",
+    "line": "The setup in a quiet Fraunces italic, then the hero word alone in Anton capitals at three times the size.",
+    "rules": [
+      "A short cream rule draws first",
+      "A page without a hero word stays a single italic line",
+      "Left-aligned, for the reflective pieces"
+    ]
+  },
+  "soft-ai": {
+    "name": "Bloom",
+    "line": "Each word comes into focus from a soft blur, and the key word blooms with a brief mint glow.",
+    "rules": [
+      "Archivo Medium, mixed case",
+      "The glow settles to a clean edge within a third of a second",
+      "Sharp and easy to read at rest, for the technology pieces"
+    ]
+  },
+  "gaming-stream": {
+    "name": "Terminal",
+    "line": "Plex Mono on a deep-ink tag, each word typing itself out as he says it.",
+    "rules": [
+      "A mint prompt at the start and a mint block cursor blinking at the end",
+      "About thirty characters a second, from the frame the word is said"
+    ]
+  },
+  "simple-one-word": {
+    "name": "One word",
+    "line": "Only the word being said, in Archivo Black capitals fitted to the width of the caption band.",
+    "rules": [
+      "Never larger than 240 px",
+      "The word before it lingers above at a tenth of its weight",
+      "The key word is in the series colour"
+    ]
+  },
+  "podcast": {
+    "name": "Two-line scroll",
+    "line": "The line being said brightens word by word, and the line before it slides up and away.",
+    "rules": [
+      "Archivo Bold, mixed case",
+      "The line before sits above, smaller and dimmed",
+      "Left-aligned and calm, for long conversational takes"
+    ]
+  },
+  "art-directed": {
+    "name": "Art-directed phrases",
+    "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+    "rules": [
+      "Cream with a soft shadow, and no box, pill, underline or colour",
+      "Words pop in over 0.12 s as he says them",
+      "The key word at 168 px, the rest at 92 px",
+      "Phrases alternate left and right inside the safe area"
+    ],
+    "recommended_why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\"."
+  },
+  "cinematic": {
+    "name": "Cinematic",
+    "line": "Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass.",
+    "rules": [
+      "Support words in Archivo Medium, mixed case",
+      "The hero word is Anton at hero scale, a glass fill the footage shows through",
+      "One light sweep across the hero word, and the layout moves between groups",
+      "A page with no hero word sets its key word one step up instead"
+    ]
+  },
+  "slam": {
+    "name": "Slam",
+    "line": "Every word slams in as it is said, and the words already said stack above it, smaller.",
+    "rules": [
+      "Anton capitals, the newest word largest, the two before it stepping down and dimming",
+      "Each word lands from twice its size with a motion blur and a small turn, in about a sixth of a second",
+      "The stack slides up as the next word lands, filling the band from the bottom",
+      "The key word in the series colour with an ink outline; the fastest caption, one event per word"
+    ]
+  },
+  "georgia-build": {
+    "name": "Georgia build",
+    "line": "Small mixed-case words at chest height, one to three at a time, where the typeface shows the stress: Fraunces for small words, Archivo ExtraBold for content, a size up for numbers and names, and Fraunces italic for the key word. Each chunk builds and then cuts hard to the next.",
+    "rules": [
+      "Chunks hold at most 3 words and 16 characters, and a new chunk starts at the key word",
+      "Each chunk stays on screen until the next chunk's first word, with a hard cut and no crossfade",
+      "A word fades in over 2 frames and settles from 1.06 to 1 in 4 frames, with no movement",
+      "All type is cream with the soft lift shadow, and one key word per page is set in Fraunces italic"
+    ]
+  },
+  "stair-flash": {
+    "name": "Staircase flash",
+    "line": "Anton capitals build a stepped lockup word by word on hard cuts, with small connector words at about half size on the same baseline. The key word lands with a short series-colour streak and then cools to cream under a left-to-right wipe.",
+    "rules": [
+      "Content words are Anton capitals up to 112 px, short stop words are 0.58 of that, and the hero is 1.34 of it, all on one baseline",
+      "Up to 3 rows, each stepping in by 0.9 of the size, and the anchor swaps left, right, left by page",
+      "Words cut on at full opacity and settle from 1.08 to 1 over 3 frames, and only the key word slides 40 px with a channel streak, then is wiped back to cream by 0.3 s",
+      "The page leaves over its last 3 frames on a blur to 12 px and a fade, with no movement"
+    ]
+  },
+  "tuck-stack": {
+    "name": "Tuck stack",
+    "line": "Tiny lead words tuck tight above big lowercase-as-said Archivo words, so each phrase sets as a mixed-scale lockup. The key word is a size up in the series colour, and the stack lifts away as the page ends.",
+    "rules": [
+      "Every content word is a head in Archivo ExtraBold up to 118 px, and the stop words before it are its tuck at 0.3 of that size, set tight above its left edge",
+      "A tucked head starts a new row, an untucked head joins the row before if it fits, and closing stop words always join the last row",
+      "Heads fade in over 2 frames, scale from 0.92 and draw their letter-spacing tight from +0.02em to -0.035em over 0.2 s, while tucks fade up from 0.25 and rise 6 px",
+      "Only the key head carries the series colour, and the whole stack rises 24 px and fades over the last 4 frames"
+    ]
+  },
+  "anchor-quote": {
+    "name": "Quote anchor",
+    "line": "A small running caption of up to three words changes every few words, while the page's hero holds beneath it in big Fraunces capitals between mint curly quotes, staying still across the next pages until a new anchor lands or 3 s pass.",
+    "rules": [
+      "The anchor is the page's hero, or else its key word when that has 5 or more letters. It is the page's one marked word, and the running tier never repeats it.",
+      "The anchor lands at its word with a settle from 1.18x. Its mint quotes close in 2 frames later, and it leaves just before the next anchor is due (quotes slide out, word fades), never later than 3 s.",
+      "The running tier is Archivo Bold as said, in chunks of 3 words at most, each word rising 8 px into place as it is said. The next chunk replaces it with a hard cut.",
+      "The anchor's slot is always kept, so the running tier never moves. lower sits the slot on the band's bottom, upper hangs the running tier from the band's top, and centre centres the pair."
+    ]
+  },
+  "rack-focus": {
+    "name": "Rack focus",
+    "line": "Focus travels along the line: the word being said is sharp, the words already said slip out of focus, and the hero arrives on its own row in big Anton capitals from a deep blur.",
+    "rules": [
+      "Archivo Bold as said, at most 90 px and at most two support rows. Each word focuses in from a 10 px blur at the frame it is said.",
+      "When the next word starts, the words already said defocus to a 3.5 px blur, 0.55 opacity and 0.97 scale, and stay there.",
+      "The hero (else the key word when it scores 3 or more) gets its own row in Anton capitals at 1.6x, arriving from a 22 px blur at 1.3x. It never defocuses.",
+      "The page racks out to a 16 px blur over its last 4 frames. It is left-aligned in lower and upper and centred in centre, and the whole block is shrunk to fit the band's height."
+    ]
+  },
+  "flip-hinge": {
+    "name": "Hinge",
+    "line": "Each word swings up into place on a hinge at its baseline, like a card flipped upright, lighting as it faces the camera, and the phrase falls away backward word after word as the page ends.",
+    "rules": [
+      "Archivo Black capitals, centred, at most two rows, with 700 px perspective. Each word turns rotateX from -95 deg to 0 about its baseline over 0.2 s, overshooting about 8 deg, with brightness going 0.55 to 1.",
+      "The key word is in the series colour at 1.1x, on a slightly slower 0.26 s swing. No other word is marked.",
+      "Over the page's last 4 frames the words fall back about their top edge to +90 deg and fade, staggered up to 1 frame apart from the first word.",
+      "lower puts the bottom row on the band's bottom, upper starts at band.top + 10, and centre is centred. Sizes shrink until the page fits two rows and the band's height."
+    ]
+  },
+  "slice": {
+    "name": "Slice",
+    "line": "Each Anton capital word arrives cut in two: the top half slides in from the left and the bottom half from the right, and they close on a mint hairline that flashes and fades.",
+    "rules": [
+      "Every word is drawn twice and clipped at its middle; the halves slide in from opposite sides (70 px, 0.16 s, outExpo) and meet on a 3 px mint hairline that draws out from the centre and fades by 0.30 s.",
+      "The key word is in the series colour and comes in wider and slower (120 px, 0.22 s).",
+      "Anton capitals up to 120 px, at most two rows, left-aligned in the lower and upper bands and centred in the centre band; a half never starts past the band's right edge.",
+      "Over the page's last 3 frames the halves part again (40 px each way) and fade."
+    ]
+  },
+  "slot-roll": {
+    "name": "Slot Roll",
+    "line": "Letters roll up one after another into their own little windows like a slot reel, and every digit spins through four other digits before it lands on the true one.",
+    "rules": [
+      "Each Anton letter sits in its own 1 em window and rolls up into place (outBack 1.3, 0.16 s), one frame after the last, with the whole word's stagger capped at 0.2 s.",
+      "A digit spins down through four lead digits, fixed by the true digit as (d + 3 + 7j) mod 10, and lands with a blur that clears in 0.2 s, so a still and a render always match.",
+      "The key word is in the series colour with a 1.5-frame stagger; Anton capitals up to 112 px, at most two rows, left-aligned in the lower and upper bands and centred in the centre band.",
+      "Over the page's last 4 frames every letter rolls up out of its window, half a frame apart; a digit that has landed leaves like a letter, so its lead digits never show again."
+    ]
+  },
+  "receipt-chip": {
+    "name": "Receipt chip",
+    "line": "Words type onto a till receipt as he says them, in lower-case mono on deep ink, the paper jolting down on every word and the figure printed on a mint fill.",
+    "rules": [
+      "From Krish's Character.ai cut (26 Oct)",
+      "Each word types on in hard steps behind a mint print head, finishing within 4 frames",
+      "Every landing kicks the paper down 10 px and eases back; each new line feeds up out of a cream slot",
+      "At most two lines; the page tears off upward when it ends"
+    ]
+  },
+  "ink-block": {
+    "name": "Ink block",
+    "line": "The phrase builds word by word on stepped full-width ink slabs, each slab wiping in from the left with a thick series-colour bar drawing under the newest word.",
+    "rules": [
+      "From Krish's eating-its-own-jobs cut (2 Nov)",
+      "Each line is its own slab, the second stepped in like a rung",
+      "Each word rises into its slab with a slight overshoot while the bar draws out to it",
+      "The marked word stays in the series colour; the slabs wipe out to the left when the page ends"
+    ]
+  },
+  "mint-word": {
+    "name": "Mint word",
+    "line": "One big word at a time slams into its own box, which wipes open just ahead of it; small words sit small, and the key word lands in a mint box.",
+    "rules": [
+      "From Krish's AI music cut (11 Nov)",
+      "Each content word is a 7-frame event: the box wipes open, then box and word slam in from 1.25 times their size and settle",
+      "Small linking words are set at six-tenths of the size",
+      "Only a real hero word turns the box mint"
+    ]
+  }
+}

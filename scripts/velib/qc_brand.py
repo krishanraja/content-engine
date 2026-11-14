@@ -83,3 +83,12 @@ def mark_tile(render, mark_png, beats, aspect) -> dict:
         score = _ncc(gray_frames(render, frame, frame, box)[0], template)
         rows.append({'beat': beat.get('id', index), 'frame': frame, 'score': score, 'pass': score >= 0.8})
     return measurement(rows, 'mark NCC >= 0.8 at every beat midpoint')
+
+
+def no_mark(render, mark_png, beats, aspect) -> dict:
+    """No mark over a vertical cut's animated content (Ruling, Krish, 2026-11-11; the closing outro card keeps it, and
+    is not a beat): the mark must be absent at every beat midpoint,
+    measured where the tall mark used to sit, so a template that brings it back fails."""
+    found = mark_tile(render, mark_png, beats, aspect)
+    rows = [{**row, 'pass': not row['pass']} for row in found['value']]
+    return measurement(rows, 'no mark on the vertical cut: mark NCC < 0.8 at every beat midpoint')

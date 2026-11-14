@@ -3,9 +3,10 @@ import { supabase } from '../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
 import { isMonday, keepThroughWeek, mergeCovers, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
 import { buildSources, windows } from '../_weekSources.js'
-import { buildInspiration, RECENT_DAYS } from '../_inspirationSources.js'
+import { buildCorrections, buildFeed, buildHindsight, buildInspiration, CORRECTION_DAYS, FEED_DAYS, RECENT_DAYS } from '../_inspirationSources.js'
 import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
 import { TASTE_VENTURE } from '../_taste.js'
+import { HOUSE_RULES } from '../_houseRules.js'
 import { buildOffdayVerdicts, offdayWeeksBefore } from './_offdayVerdicts.js'
 
 // GET  /api/week/options?week_start=YYYY-MM-DD
@@ -29,10 +30,18 @@ import { buildOffdayVerdicts, offdayWeeksBefore } from './_offdayVerdicts.js'
 //        Ideas tab must cover (_inspirationSources.ts), and `sources.cues`: his
 //        feedback cues (future pieces owed, wider pieces by theme, topics
 //        tracked, briefs waiting, not for us) that the Inspiration House files
-//        from his words (_feedbackCues.ts); a missing table is said in `empty`,
-//        never a failure. Evidence only: no model, no write, and the judges
-//        never read it.
-// POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended, covers? }] }
+//        from his words (_feedbackCues.ts), and `sources.outcomes`: his answers on
+//        the ideas boards of the eight weeks before (the ideas gate, idea_outcomes):
+//        the ideas he filed for later, rejected with his reason, saved as a
+//        trend and improved with his note, each the cue the next ideas run reads;
+//        a missing table is said in `empty`, never a failure. An idea whose latest answer is Reject leaves the pool
+//        the moment he presses (`skipped.rejected`) and joins his Drops for the near-drop check; `unvetoed` is every
+//        refused subject he gave back with his press (queue/veto-<subject>), and `house_rules` the live rules the
+//        ideas are held to as the judges and writers read them (BIG_PICTURE, STORY_ARC; the ideas quality plan,
+//        Wave 1). Evidence only: no model, no write, and the judges never read it.
+// POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended, covers?, inspiration_action? }] }
+//        (inspiration_action: an idea made from an Inspiration card Krish ticked names his tick, and comes on top of the
+//        day's four, one a day; Ruling, Krish, 2026-11-12)
 //        writes meta.week_option on each option's row (and its series, when
 //        the row has none), keeps each option alive through its week (a seed's
 //        own expiry can fall before the purge that would delete it), and
@@ -128,7 +137,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   for (const o of options) {
     const row = found.get(o.id)!
     const meta = row.meta && typeof row.meta === 'object' ? row.meta : {}
-    const option: WeekOptionMeta = { week_start, series, rank: o.rank, pitch: o.pitch, why_now: o.why_now, recommended: Boolean(o.recommended), by, at }
+    const option: WeekOptionMeta = { week_start, series, rank: o.rank, pitch: o.pitch, why_now: o.why_now, recommended: Boolean(o.recommended), by, at,
+      ...(o.inspiration_action ? { inspiration_action: o.inspiration_action } : {}) }
     const covers = mergeCovers(meta.covers, week_start, o.covers)
     const patch: Record<string, unknown> = { meta: { ...meta, week_option: option, ...(covers ? { covers } : {}) }, updated_at: at }
     // A row with no series takes the day's (the judges' ladder fills an empty slot the same way); a stored series is never overwritten.
@@ -168,14 +178,131 @@ async function readSources(week: string, slugs: string[]) {
   ])
   const failed = rows.error || marked.error || picked.error || chosen.error || relayed.error
   if (failed) throw new Error(failed.message)
+  // His answers first: an idea he rejected leaves the pool when he presses, not at the next clean-up sweep, and its row
+  // joins his Drops so a near copy is flagged (near_drop).
+  const outcomes = await readOutcomes(week)
+  const rejectedIds = outcomes.block.rejected.map(r => String(r.idea_id || '')).filter(id => UUID.test(id))
+  const refusedRows = rejectedIds.length
+    ? await supabase.from('content_ideas').select(TASTE_COLS).in('id', rejectedIds).limit(200)
+    : { data: [], error: null }
+  const refusedData = (refusedRows.error ? [] : refusedRows.data || []) as Array<Record<string, any>>
   const tasteRows = [...(marked.data || []), ...(picked.data || []), ...(chosen.data || [])] as Array<Record<string, any>>
-  const sources = buildSources({ weekStart: week, series: slugs, rows: (rows.data || []) as Array<Record<string, any>>, tasteRows, relayed: (relayed.data || []) as Array<Record<string, any>> })
+  const sources = buildSources({ weekStart: week, series: slugs, rows: (rows.data || []) as Array<Record<string, any>>, tasteRows, relayed: (relayed.data || []) as Array<Record<string, any>>,
+    rejected: outcomes.block.rejected.map(r => ({ id: String(r.idea_id || ''), said: (r.said as string | null) ?? null, at: (r.at as string | null) ?? null })), rejectedRows: refusedData })
   // A said idea is a manual content idea and an inspiration card at once (20261118093200_inspiration_said_cards.sql);
   // the idea already read here is the one Sunday counts, so its card is not counted again.
   const listed = ((rows.data || []) as Array<Record<string, any>>).map(r => String(r.id))
-  const [inspiration, cues, offday] = await Promise.all([readInspiration(week, listed), readCues(), readOffdayVerdicts(week)])
-  const empty = [...sources.empty, ...(cues.empty ? [cues.empty] : []), ...(offday.empty ? [offday.empty] : [])]
-  return { ...sources, empty, inspiration, cues: cues.cues, offday_verdicts: offday.block }
+  const [inspiration, cues, offday, unvetoed, ticks, rules] = await Promise.all([readInspiration(week, listed), readCues(), readOffdayVerdicts(week), readUnvetoed(week),
+    readInstructions(), readTasteRules()])
+  // His ticked cards (Ruling, Krish, 2026-11-12: a ticked inspiration card is an instruction that jumps the queue): a
+  // Content tick its own run has not turned into an idea yet is owed a place on the board like a routed card.
+  const owed = new Set((inspiration.must_cover || []).map((m: { id: string }) => m.id))
+  for (const t of ticks.list) {
+    if (t.kind !== 'make_piece' || t.state !== 'open' || !t.card || owed.has(t.card)) continue
+    owed.add(t.card)
+    inspiration.must_cover.push({ id: t.card, what: 'Inspiration card you ticked "Act on this": make it into a piece now', his_words: t.words, endorsed: null, instruction: t.id } as never)
+  }
+  // The words of the idea each answer was on, so a refusal keys on the subject he saw (idea_checks.py subjects_of).
+  const answered = [...new Set(Object.values(outcomes.block).flat().map(r => String(r.idea_id || '')).filter(id => UUID.test(id)))]
+  const texts = answered.length ? await supabase.from('content_ideas').select('id,idea').in('id', answered).limit(500) : { data: [], error: null }
+  const textOf = new Map(((texts.error ? [] : texts.data) || []).map((r: Record<string, any>) => [String(r.id), String(r.idea || '')]))
+  for (const list of Object.values(outcomes.block)) for (const r of list) r.idea = textOf.get(String(r.idea_id || '')) ?? null
+  const empty = [...sources.empty, ...(cues.empty ? [cues.empty] : []), ...(offday.empty ? [offday.empty] : []), ...(outcomes.empty ? [outcomes.empty] : []),
+    ...(unvetoed.empty ? [unvetoed.empty] : []), ...(ticks.empty ? [ticks.empty] : []), ...(rules.empty ? [rules.empty] : [])]
+  return { ...sources, empty, inspiration, cues: cues.cues, offday_verdicts: offday.block, outcomes: outcomes.block, unvetoed: unvetoed.list,
+    instructions: ticks.list, taste_rules: rules.list,
+    house_rules: IDEA_RULES.map(id => HOUSE_RULES.find(r => r.id === id)).filter(r => r && r.status === 'live').map(r => ({ id: r!.id, name: r!.name, text: r!.text, on: r!.on })) }
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+/** His ticked Inspiration cards that still stand (control-center inspiration_actions; Ruling, Krish, 2026-11-12: a ticked
+ *  card is an instruction that jumps the queue: Content means make it into a piece now, Production means use the style
+ *  within a week): each with its kind, his words, when it is due, the card and what its own run did. The Sunday run reads
+ *  them beside everything else, so an instruction whose run failed or never ran still reaches the board. Never fails the
+ *  gather: a table it cannot read is said in `empty`. */
+export async function readInstructions(db: { from: typeof supabase.from } = supabase) {
+  try {
+    const r = await db.from('inspiration_actions').select('id,item_id,kind,words,due_at,state,piece_id,job_state,job_error,created_at')
+      .in('state', ['open', 'drafted', 'in_use']).order('created_at', { ascending: false }).limit(50)
+    if (r.error) return { list: [] as Instruction[], empty: `instructions: his ticked cards could not be read (${r.error.message})` }
+    return { list: ((r.data || []) as Array<Record<string, any>>).map(instructionOf).filter((x): x is Instruction => Boolean(x)), empty: null }
+  } catch (e) { return { list: [] as Instruction[], empty: `instructions: his ticked cards could not be read (${(e as Error).message})` } }
+}
+export interface Instruction { id: string; kind: string; card: string | null; words: string | null; due_at: string | null; state: string; idea: string | null; job: string | null; job_error: string | null; at: string | null }
+export function instructionOf(a: Record<string, any>): Instruction | null {
+  if (!a || typeof a.id !== 'string' || !UUID.test(a.id)) return null
+  const words = typeof a.words === 'string' && a.words.trim() ? a.words.trim().replace(/\s+/g, ' ').slice(0, 600) : null
+  return { id: a.id.toLowerCase(), kind: String(a.kind || ''), card: typeof a.item_id === 'string' && UUID.test(a.item_id) ? a.item_id.toLowerCase() : null, words,
+    due_at: typeof a.due_at === 'string' ? a.due_at : null, state: String(a.state || ''), idea: typeof a.piece_id === 'string' ? a.piece_id.toLowerCase() : null,
+    job: typeof a.job_state === 'string' ? a.job_state : null, job_error: typeof a.job_error === 'string' ? a.job_error.slice(0, 300) : null, at: typeof a.created_at === 'string' ? a.created_at : null }
+}
+
+/** The taste rules he approved, Make Your Mind Up's only (taste_profile_form, as _taste.ts reads them for the writers):
+ *  form only, how an idea is told and made, never what it is about (the anti-echo rule). The Sunday run writes its ideas
+ *  to them; nothing ranks or judges by them. Never fails the gather. */
+export async function readTasteRules(db: { from: typeof supabase.from } = supabase) {
+  try {
+    const r = await db.from('taste_profile_form').select('statement,means,layer,lane,confidence').eq('venture', TASTE_VENTURE).order('confidence', { ascending: false }).limit(40)
+    if (r.error) return { list: [] as Array<Record<string, unknown>>, empty: `taste_rules: his approved rules could not be read (${r.error.message})` }
+    return { list: ((r.data || []) as Array<Record<string, any>>).filter(x => typeof x.statement === 'string' && x.statement.trim())
+      .map(x => ({ statement: String(x.statement).trim(), means: typeof x.means === 'string' ? x.means : null, layer: x.layer ?? null, lane: x.lane ?? null })), empty: null }
+  } catch (e) { return { list: [] as Array<Record<string, unknown>>, empty: `taste_rules: his approved rules could not be read (${(e as Error).message})` } }
+}
+
+/** The live house rules the ideas are held to, read by the Sunday run as the judges and writers read them: BIG_PICTURE
+ *  (a week's headline is evidence inside the bigger story, never the story) and STORY_ARC (open on one clear question,
+ *  in plain words). Both are his rules already (the ideas quality plan, item 7). */
+export const IDEA_RULES = ['BIG_PICTURE', 'STORY_ARC'] as const
+
+/** The refused subjects he gave back (a veto line's "Offer it again" press, queue/veto-<subject>, his alone): the
+ *  latest press on each, from this week's board and the eight before. Never fails the gather. */
+export async function readUnvetoed(week: string, db: { from: typeof supabase.from } = supabase) {
+  try {
+    const weeks = [week, ...offdayWeeksBefore(week)]
+    const res = await db.from('board_documents').select('week,doc_id,body,updated_by,updated_at').eq('collection', 'queue').like('doc_id', 'veto-%')
+      .in('week', weeks).limit(500)
+    if (res.error) throw new Error(res.error.message)
+    const list = ((res.data || []) as Array<Record<string, any>>)
+      .filter(r => r.updated_by === 'Krish' && r.body && typeof r.body.unveto === 'string' && r.body.unveto.trim())
+      .map(r => ({ subject: String(r.body.unveto).trim(), at: String(r.body.at || r.updated_at || ''), week: String(r.week).slice(0, 10) }))
+      .sort((a, b) => b.at.localeCompare(a.at))
+    return { list, empty: null }
+  } catch (e) {
+    return { list: [] as Array<{ subject: string; at: string; week: string }>, empty: `the subjects he gave back could not be read (${String((e as Error).message || 'unknown error').slice(0, 160)}); every refusal stands this week` }
+  }
+}
+
+/** His answers on the ideas boards of the eight weeks before this one (the ideas gate, idea_outcomes; Krish,
+ *  2026-11-11: "filed away for later, rejected and learnt from, saved as a trend for a wider piece, improved for a future
+ *  piece cue"): the latest answer on each idea, grouped by outcome, his words verbatim. The next ideas run offers a
+ *  filed idea again where it fits, never offers a rejected one again and learns from his reason, gathers trends by the
+ *  name he gave them, and carries an improve note into that idea's pitch. Approvals are the publish board's, not here.
+ *  Never fails the gather: a table not applied yet, or a failed read, is said in `empty`. */
+export async function readOutcomes(week: string, db: { from: typeof supabase.from } = supabase) {
+  const since = new Date(Date.parse(`${week}T00:00:00Z`) - 56 * 86_400_000).toISOString().slice(0, 10)
+  const block: Record<'filed' | 'rejected' | 'trend' | 'improved', Array<Record<string, unknown>>> = { filed: [], rejected: [], trend: [], improved: [] }
+  try {
+    const res = await db.from('idea_outcomes').select('week,day,date,idea_id,option_ref,doc,outcome,words,shown,decided_at,id')
+      .gte('week', since).lt('week', week).order('decided_at', { ascending: false }).order('id', { ascending: false }).limit(2000)
+    if (res.error) throw new Error(res.error.message)
+    const seen = new Set<string>()
+    for (const r of (res.data || []) as Array<Record<string, unknown>>) {
+      const key = `${String(r.week).slice(0, 10)}/${r.doc}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      const o = String(r.outcome)
+      if (o === 'filed' || o === 'rejected' || o === 'trend' || o === 'improved') {
+        // doc and shown: which press on which board, and the off-day words he answered, so the next run can tell a
+        // return and the subject he refused (idea_checks.py).
+        block[o].push({ week: String(r.week).slice(0, 10), day: r.day, idea_id: r.idea_id, option: r.option_ref ?? null, said: r.words ?? null, at: r.decided_at,
+          doc: r.doc ?? null, shown: r.shown ?? null })
+      }
+    }
+    return { block, empty: null }
+  } catch (e) {
+    return { block, empty: `his answers on the ideas board could not be read (${String((e as Error).message || 'unknown error').slice(0, 160)}); this slate is made without them` }
+  }
 }
 
 /** His verdicts on the last weeks' off-day options (_offdayVerdicts.ts): what Sunday learns from. Never fails the
@@ -209,7 +336,9 @@ const INSPO_COLS = 'id,name,folder,lane,kind,facets,why_here,route,routes,why_li
  *  loudly: Sunday must never look complete while his routed cards are missing (Krish, 2026-10-24). */
 async function readInspiration(week: string, listed: string[] = []) {
   const recentSince = new Date(Date.parse(`${week}T00:00:00Z`) - RECENT_DAYS * 86_400_000).toISOString().slice(0, 10)
-  const [items, routed, asked, recent, reads, moves, claims] = await Promise.all([
+  const feedSince = new Date(Date.parse(`${week}T00:00:00Z`) - (FEED_DAYS + 9) * 86_400_000).toISOString()
+  const correctionsSince = new Date(Date.parse(`${week}T00:00:00Z`) - (CORRECTION_DAYS + 9) * 86_400_000).toISOString()
+  const [items, routed, asked, recent, reads, moves, claims, feed, corrections, hindsight] = await Promise.all([
     supabase.from('inspiration_items').select(INSPO_COLS).order('created_at', { ascending: false }).limit(500),
     // Every card he routed to Make a piece, however old: the newest 500 above could leave one out of must_cover.
     supabase.from('inspiration_items').select(INSPO_COLS).or('route.eq.make_piece,routes.cs.{make_piece}').is('piece_id', null).limit(1000),
@@ -224,9 +353,23 @@ async function readInspiration(week: string, listed: string[] = []) {
     // The ledger's claims and the answers they quote are Make Your Mind Up's only (TASTE_VENTURE).
     supabase.from('taste_claims').select('id,layer,kind,status,statement,krish,krish_source_id,support_n').eq('venture', TASTE_VENTURE)
       .in('status', ['candidate', 'proposed']).order('updated_at', { ascending: false }).limit(100),
+    // The ideas quality plan, item 9: the feed's posts (the run is a week before its Monday, so FEED_DAYS back from the
+    // run), his corrections from sessions, and his hindsight scores. Each is help, never a gate: a failed read is said.
+    supabase.from('taste_evidence').select('title,excerpt,meta,occurred_at').eq('venture', TASTE_VENTURE).eq('source', 'drive_cold')
+      .like('source_ref', 'instagram:%').gte('occurred_at', feedSince).order('occurred_at', { ascending: false }).limit(300),
+    supabase.from('taste_evidence').select('title,excerpt,meta,occurred_at,withdrawn_at').eq('venture', TASTE_VENTURE).eq('source', 'session_report')
+      .gte('occurred_at', correctionsSince).order('occurred_at', { ascending: false }).limit(200),
+    supabase.from('piece_scores_current').select('piece_id,basis,narrative,production,note,scored_at').eq('basis', 'hindsight')
+      .order('scored_at', { ascending: false }).limit(60),
   ])
   const failed = items.error || routed.error || asked.error || recent.error || reads.error || moves.error || claims.error
   if (failed) throw new Error(`inspiration: ${failed.message}`)
+  const extra = {
+    feed: feed.error ? [] : buildFeed((feed.data || []) as Array<Record<string, any>>),
+    corrections: corrections.error ? [] : buildCorrections((corrections.data || []) as Array<Record<string, any>>),
+    hindsight: hindsight.error ? [] : buildHindsight((hindsight.data || []) as Array<Record<string, any>>),
+    unread: [feed.error && 'feed', corrections.error && 'corrections', hindsight.error && 'hindsight'].filter(Boolean),
+  }
   // A claim keeps its quote while the answer it quotes is withdrawn; it is his words only while that answer stands.
   const quoted = [...new Set((claims.data || []).map((c: Record<string, any>) => c.krish_source_id).filter(Boolean))] as string[]
   const standing = quoted.length
@@ -236,8 +379,9 @@ async function readInspiration(week: string, listed: string[] = []) {
   const seen = new Set((items.data || []).map((r: Record<string, any>) => r.id))
   const all = [...(items.data || [])] as Array<Record<string, any>>
   for (const r of [...(routed.data || []), ...(asked.data || [])] as Array<Record<string, any>>) if (!seen.has(r.id)) { seen.add(r.id); all.push(r) }
-  return buildInspiration({ weekStart: week, items: all as Array<Record<string, any>>,
+  const block = buildInspiration({ weekStart: week, items: all as Array<Record<string, any>>,
     reads: (reads.data || []) as Array<Record<string, any>>, moves: (moves.data || []) as Array<Record<string, any>>,
     claims: (claims.data || []) as Array<Record<string, any>>, listedIdeas: listed, recentPieces: (recent.data || []) as Array<Record<string, any>>,
     quotesStanding: (standing.data || []).map((r: Record<string, any>) => String(r.id)) })
+  return { ...block, ...extra, counts: { ...block.counts, feed: extra.feed.length, corrections: extra.corrections.length, hindsight: extra.hindsight.length } }
 }
