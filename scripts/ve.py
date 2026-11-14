@@ -631,6 +631,11 @@ def cmd_packet(args) -> int:
                 print(f'{cut}: LEGACY: no design lock')
         out = packet.assemble(spec, directory, args.out or directory / 'packet', args.legacy_ok)
         print(f've packet: {out} (round {packet.rounds(directory)} of full cuts sent for this piece)')
+        sheet = Path(out) / 'PACKET.md'
+        if sheet.is_file():
+            for line in sheet.read_text(encoding='utf-8').splitlines():
+                if line.startswith('pace: '):
+                    print(f've packet: {line}')
         from velib import gates
         print(f've packet: {gates.write_rounds(directory, packet.rounds(directory))}')
         return 0
@@ -1048,6 +1053,10 @@ def cmd_lab(args) -> int:
             from velib.render import render
             manifest = lab.render(cfg, assets, lambda p, o: render(p, o, args.scale or cfg['scale']), out, args.only)
             print(f"ve lab: {len(manifest['looks'])} look(s) on engine {manifest['engine']} in {out}")
+            from velib import pace
+            for look in manifest['looks']:
+                if not look.get('same_as'):
+                    print(f"ve lab: {look.get('id', look['file'])}: {pace.beside_references(out / look['file'])}")
             reel = lab.reel(out)
             print(f've lab: {reel}\nve lab: {lab.sheet(out)}')
             return 0
@@ -1619,6 +1628,7 @@ def cmd_proof(args, render_fn=None) -> int:
 
 def cmd_styles(args, render_fn=None) -> int:
     """The shortlisted motion styles, each rendered on the same window of his take, for his Pick a style press."""
+    from velib import pace
     from velib import styles, verdict
     from velib.lint import lint
     from velib.render import render
@@ -1655,6 +1665,7 @@ def cmd_styles(args, render_fn=None) -> int:
             nearest = min(option['differs'].values())
             print(f"{option['module']}: {option['name']}  {option['file']}  ({option['why']}; differs by {nearest:g}, "
                   f"threshold {threshold:g})")
+            print(f"  {pace.beside_references(directory / option['file'])}")
         for row in doc['skipped']:
             print(f"left out: {row['module']} ({row['why']})")
         if doc.get('note'):

@@ -119,6 +119,8 @@ def assemble(spec, directory, out, legacy_ok=()):
                  *(f'- {line}' for line in in_short(spec, directory, prepared, round_number)), '']
         for cut, qc, video, digest in prepared:
             lines += [f'## {cut}', f'SHA-256: {digest}', '']
+            from . import pace  # noqa: PLC0415
+            lines += [pace.beside_references(video), '']
             if cut in legacy_ok and spec['format'] not in designlock.load()['formats']:
                 lines += ['LEGACY: no design lock', '']
             shutil.copyfile(video, stage / f'{cut}.mp4')

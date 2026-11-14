@@ -28,7 +28,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .common import ffmpeg
+from .common import ROOT, ffmpeg
 
 SAMPLE_FPS = 15
 GRID_W, GRID_H = 90, 160          # 9:16 sampling grid; a wide cut is letterboxed into it by scale+pad, never stretched
@@ -110,6 +110,10 @@ def measure(path: str | Path, seconds: float | None = None) -> dict:
     }
 
 
+TABLE = ROOT / 'config' / 've' / 'pace-references.json'
+SHORT = {'events_per_s': 'events/s', 'longest_gap_s': 'longest gap s', 'energy_median': 'energy',
+         'used_frame': 'frame used', 'active_frame': 'frame active'}
+
 SUMMARY = ('events_per_s', 'longest_gap_s', 'energy_median', 'used_frame', 'active_frame')
 HIGHER_IS_FASTER = {'events_per_s': True, 'longest_gap_s': False, 'energy_median': True, 'used_frame': True,
                     'active_frame': True}
@@ -139,3 +143,21 @@ def write(card: dict, out: str | Path) -> Path:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(card, indent=2) + '\n', encoding='utf-8')
     return out
+
+
+def beside_references(video: str | Path, table: str | Path = TABLE, measure_fn=None) -> str:
+    """One line for what ve styles, ve lab and ve packet print (audit ve-10, 14 Nov 2026): the cut's pace beside the
+    references he keeps, each measure as cut (references min .. median .. max), the ones below every reference named.
+    A measurement only: it never holds a cut back, and a cut it cannot measure says why instead of failing the command."""
+    try:
+        card = (measure_fn or measure)(video)
+        card['file'] = Path(video).name
+        loaded = json.loads(Path(table).read_text(encoding='utf-8'))
+        verdict = compare(card, loaded['references'] + loaded.get('house', []))
+    except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
+        return f'pace: not measured ({error})'
+    parts = [f"{SHORT.get(key, key)} {row['cut']} ({row['ref_min']} .. {row['ref_median']} .. {row['ref_max']})"
+             for key, row in verdict['rows'].items()]
+    low = [SHORT.get(k, k) for k in verdict['below_all']]
+    tail = f"; below every reference on {', '.join(low)}" if low else ''
+    return f"pace: {'; '.join(parts)}{tail} (against {verdict['references']} reference cuts; a measurement, never a gate)"
