@@ -1,3 +1,0 @@
-Status: Every subscribe link the publish kit writes is built from Growth's subscribe route, vendored with its sha256 (vendor/makeyourmindup/subscribe-route.json): four tags on a post (utm_campaign=growth), utm_content = content_of(<board item id>-<channel>), and a piece's own board item id for one cut is <piece_id>-<cut> (long, short or feature), so Control Center binds a sent post to its item exactly (I-09).
-Next: Growth adds linkedin and spotify to the route's sources, or says the kit should stop tagging them; today they pass their channel name as utm_source.
-North Star check (2026-11-14): holds.
