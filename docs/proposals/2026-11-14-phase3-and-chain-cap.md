@@ -1,6 +1,8 @@
 # Proposals for Krish's ruling, 14 Nov 2026: ve's Phase 3 test, and what the $15 chain counts
 
-**Status: PROPOSAL. Neither is a rule until Krish rules on it in his own words.** Nothing here changes code, a cap or a
+**Status: RULED, 14 Nov 2026.** Krish approved both as written (`KRISH-ANSWERS.md` in control-center, items 3.6 and 5.5;
+his words: "I agree with everything else until Batch 6"). Phase 3 now lives in `docs/ve/ENGINE.md`; the chain's keys in
+`config/chain-cap.json`. The text below is kept as proposed. Originally: nothing here changed code, a cap or a
 route. Written by the fleet audit's content-engine fix session (findings ve-3 and content-engine-4).
 
 ## 1. Phase 3: when ve replaces quick-edit
