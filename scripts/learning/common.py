@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import math
 import re
+import sys
 from collections import Counter
 from pathlib import Path
 
@@ -36,6 +37,13 @@ WORD = re.compile(r"[a-z][a-z0-9]+")
 
 def load_json(path: Path):
     return json.loads(Path(path).read_text(encoding='utf-8'))
+
+
+def load_floor(path: Path | None = None):
+    """The rejection floor with Krish's rulings on wording applied (scripts/floor_rulings.py)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import floor_rulings
+    return floor_rulings.apply(load_json(path or FLOOR))[0]
 
 
 def stem(word: str) -> str:
@@ -102,7 +110,7 @@ def registers(groups_path: Path | None = None) -> dict:
     return {
         'failures': load_json(FAILURES),
         'learnings': load_json(LEARNINGS),
-        'floor': load_json(FLOOR),
+        'floor': load_floor(FLOOR),
         'groups': load_json(groups_path) if groups_path.is_file() else None,
     }
 
