@@ -27,9 +27,10 @@ When this page and the code disagree, the code wins: fix this page.
   `saturday-goodnews.yml` and `maxine-trial.yml`. `board-rebuild.yml` was removed with the old boards on 13 Nov.
 - **The publish board.** The one live board is Control Centre's Content tab (`config/boards.json`,
   `live_board.url`; `python3 scripts/post-pack/live_board.py <Monday> [day]`), drawn from this engine's view
-  (`GET /api/board/<Monday>/view`, `apps/control-plane/api/board/_view.ts`). The view's contract is 1.10.0
-  (`VIEW_CONTRACT_VERSION`, `_viewContract.ts`; the live view answered 1.10.0), and Control Centre pins 1.10.0 (its
-  `tests/fixtures/board-view/PIN.json` on `main`, the schema and fixture byte for byte this engine's at #597). The engine's own old pages at content.krishraja.com/board/<Monday>
+  (`GET /api/board/<Monday>/view`, `apps/control-plane/api/board/_view.ts`). The view's contract is 1.15.0
+  (`VIEW_CONTRACT_VERSION`, `_viewContract.ts`; the live view answered 1.15.0 on 14 Nov 2026), and Control Centre pins
+  1.15.0 (its `tests/fixtures/board-view/PIN.json` on `main`, the schema and fixture byte for byte this engine's at
+  9669f14). The engine's own old pages at content.krishraja.com/board/<Monday>
   are retired for good (Ruling, Krish, 2026-11-13): every old address answers a permanent redirect (308) to the live
   board at the same week (`apps/control-plane/api/board/_handler.ts`, `OLD_PAGES`). How to use the board:
   `docs/PUBLISH_BOARDS.md`.
