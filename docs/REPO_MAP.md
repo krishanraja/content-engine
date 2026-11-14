@@ -266,6 +266,7 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `const KRISH_DOMAINS: readonly string[]`
 - `const NOT_OURS: readonly string[]`
 - `const PACKET_FEATURES: readonly string[]`
+- `const CONTEXT_FEATURES: readonly string[]`
 - `interface BrandCheck`
 - `function brandNamesOf(v: unknown): string[]`
 - `function brandChecksOf(v: unknown): BrandCheck[]`
@@ -1272,7 +1273,7 @@ The making record: where one piece is on its way from the workroom to
 
 ### `apps/control-plane/api/_meter.ts`
 
-- `type MeterProvider = 'apify' | 'n8n' | 'anthropic' | 'perplexity' | 'openai'`
+- `type MeterProvider`
 - `type MeterUnitKind = 'actor' | 'workflow' | 'agent'`
 - `interface MeterScope`
 - `function meterScope<T>(s: MeterScope, fn: () => Promise<T>): Promise<T>`
@@ -1290,6 +1291,7 @@ The making record: where one piece is on its way from the workroom to
 - `async function anthropicFailure(e: { agent?: string | null model: string error: unknown /** The usage the provider repo…`
 - `async function perplexityCall(e: { agent: string; model: string; usage?: unknown; failed?: boolean }): Promise<void>`
 - `async function openaiEmbeddingCall(e: { agent: string; model: string; usage?: unknown; failed?: boolean }): Promise<voi…`
+- `async function reportedUsage(e: { provider: 'anthropic' | 'openai' | 'perplexity' | 'google' | 'xai' agent?: string | n…`
 - `interface FactRunCost`
 - `function newestRunCost(rows: Array<{ at: string; run_id: string | null; piece_id: string | null; usd: number | string }…`
 - `async function lastFactRunCost(): Promise<FactRunCost | null>`
@@ -1475,6 +1477,7 @@ The one Anthropic price table.
 - `function readUsage(usage: unknown): TokenUsage`
 - `const PERPLEXITY_PRICES: Record<string, { in: number; out: number; request: number }>`
 - `function perplexityUsd(model: string, usage: unknown): number`
+- `const ANTHROPIC_WEB_SEARCH_USD`
 - `const OPENAI_EMBEDDING_PRICES: Record<string, number>`
 
 ### `apps/control-plane/api/_productionBrief.ts`
@@ -2079,6 +2082,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 ### `apps/control-plane/api/aeo/meter.ts`
 
+- `const METER_PROVIDERS`
+- `function rowErrors(rows: readonly UsageRow[]): string[]`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/aeo/queries.ts`
