@@ -5,7 +5,9 @@
 // Idempotent: a slot that already holds a URL is never touched, so a second run changes nothing. Uses the Supabase
 // management API (the proxy adds the credential; no key in this file).
 import { readFileSync } from 'node:fs'
-const REF = 'gojpffsrxybbpbdzzrvs'
+// The project address is never kept in this public repository (fleet audit I-01, 2026-11-14).
+const REF = process.env.SUPABASE_PROJECT_REF
+if (!REF) throw new Error('backfill: set SUPABASE_PROJECT_REF (the main database project)')
 const plan = JSON.parse(readFileSync(new URL('./backfill.json', import.meta.url), 'utf8'))
 const q = async (query, read_only = true) => {
   const r = await fetch(`https://api.supabase.com/v1/projects/${REF}/database/query`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ query, read_only }) })

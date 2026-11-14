@@ -38,7 +38,7 @@ and then apply"
 
 ## Krish's answers, 18 October 2026 (after the merge)
 - "apply the meter_events migration": approved, for `supabase/migrations/20261024090000_meter_events.sql` on
-  Supabase project `gojpffsrxybbpbdzzrvs` (Mindmaker OS) only. NOT applied yet: the cost gate (300k context
+  Supabase project `<project-ref>` (Mindmaker OS) only. NOT applied yet: the cost gate (300k context
   ceiling) blocked the call. Next session: apply that file, read back `information_schema.columns` for
   `meter_events`, record it in `docs/COST_GUARDS.md` (G12 status) and the commit body.
 - "keep the judge sweep, and yes":

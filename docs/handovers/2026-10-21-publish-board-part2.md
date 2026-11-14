@@ -23,7 +23,7 @@ sed -n '/^## The fixed layout/,/^## Finished files/p' docs/PUBLISH_BOARDS.md
 
 Then raise the blocker below with Krish before building "his ideas first".
 
-## Live findings (read-only Supabase, Mindmaker OS project `gojpffsrxybbpbdzzrvs`, 21 Oct)
+## Live findings (read-only Supabase, Mindmaker OS project `<project-ref>`, 21 Oct)
 - **His ideas are not reaching the engine.** `content_ideas` holds one `source_type='manual'` row ever, from 23 Sep. `said_parts` and `tasks_inbox` are empty, and there are no `said-` board items. Ideas he drops in Control Center's content tab are not landing as `manual` rows. Part 2 must find where the content tab writes (control-center repo) before "his ideas first" can work. This is a blocker to raise with Krish, not to guess at.
 - **Inspo folder ideas** are `source_type='inspiration_sweep'`: 211 rows in total, 49 in the last 14 days, the latest today, and 45 of the 49 embedded. So the Drive scan works.
 - **Engine sources over the last 14 days:**
