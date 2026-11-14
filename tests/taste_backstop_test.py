@@ -12,6 +12,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 import taste_backstop as tb  # noqa: E402
 
 
+# The cases that keep lines locally run with no environment and no network. With the session's own environment, a
+# cloud container (CLAUDE_CODE_REMOTE=true) sent these invented lines to Krish's real taste ledger as his words
+# (4 rows on 14 Nov 2026, reported_at 19:44 UTC). A test never reads os.environ here and never posts.
+OFFLINE = {}
+
+
+def no_network(*_args, **_kwargs):
+    raise AssertionError('a test tried to send to the taste ledger')
+
+
 def record(kind, content, **extra):
     return json.dumps({'type': kind, 'message': {'content': content}, **extra})
 
@@ -41,7 +51,7 @@ def main():
 
         hook = json.dumps({'transcript_path': str(transcript), 'session_id': 'session_test'})
         said = []
-        assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append) == 0
+        assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append, env=OFFLINE, post=no_network) == 0
         outbox = root / tb.OUTBOX
         first = [json.loads(x) for x in outbox.read_text(encoding='utf-8').splitlines()]
         assert len(first) == 4, first
@@ -50,12 +60,12 @@ def main():
         assert 'nothing sent' in said[0]
 
         # Once each: a second end of the same session keeps nothing new.
-        assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append) == 0
+        assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append, env=OFFLINE, post=no_network) == 0
         assert len(outbox.read_text(encoding='utf-8').splitlines()) == 4
 
         # A hook never breaks the end of a session.
-        assert tb.main([], stdin=io.StringIO('not json'), root=root, out=said.append) == 0
-        assert tb.main([], stdin=io.StringIO(''), root=root, out=said.append) == 0
+        assert tb.main([], stdin=io.StringIO('not json'), root=root, out=said.append, env=OFFLINE, post=no_network) == 0
+        assert tb.main([], stdin=io.StringIO(''), root=root, out=said.append, env=OFFLINE, post=no_network) == 0
 
     # I-33: with the backstop key the lines post to Control Center's route; the file is only the fallback.
     secret = 'fixture-backstop-key'
