@@ -58,7 +58,8 @@ sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402
 
 KINDS = ('start', 'progress', 'heartbeat', 'blocked', 'done', 'end')
-DAYS = ('mon', 'wed', 'fri')
+# The days a piece may be placed on (a piece moved to an off day by his place_piece is still a piece).
+DAYS = ('mon', 'tue', 'wed', 'thu', 'fri', 'sat')
 CUTS = ('long', 'short', 'feature')
 TEXT_FILES = {'.md', '.txt', '.csv', '.json', '.html', '.htm', '.srt', '.vtt'}
 TEXT_MAX = 2_000_000
@@ -164,8 +165,8 @@ def lock_words_body(piece, day, lock_path, text, words, said_at, where, session_
     (making.py lock_body_hash). A signature already on the lock must carry these same words."""
     import making  # noqa: PLC0415
     if day not in DAYS:
-        raise Refused(f'{day}: a lock is for mon, wed or fri')
-    if not re.fullmatch(r'docs/plans/\d{4}-\d{2}-\d{2}-week/narrative-lock-(mon|wed|fri)\.md', lock_path) or not lock_path.endswith(f'-{day}.md'):
+        raise Refused(f'{day}: a lock is for the day its piece is on, mon to sat')
+    if not re.fullmatch(r'docs/plans/\d{4}-\d{2}-\d{2}-week/narrative-lock-(mon|tue|wed|thu|fri|sat)\.md', lock_path) or not lock_path.endswith(f'-{day}.md'):
         raise Refused(f'--lock is docs/plans/<Monday>-week/narrative-lock-{day}.md')
     signed = making.lock_signature(text)
     if signed and signed[0] != words.strip():
