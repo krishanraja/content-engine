@@ -2470,7 +2470,7 @@
       "related": [
         "F16-krish-carried-qa"
       ],
-      "surface": "Every carousel follows the route in docs/CAROUSEL-STANDARD.md (The ten-second swipe): five whys, the wider trend proven from outside the story, then what it is, what happened, why, the trend, what to do; at most 50 headline words and 10 cards; the last card centred; two fresh readers answer the five questions from the headlines alone; python3 scripts/carousel_check.py DECK.json passes before drawing.",
+      "surface": "Every carousel follows the route in docs/CAROUSEL-STANDARD.md (The ten-second swipe): five whys, the wider trend proven from outside the story, then what it is, what happened, why, the trend, what to do; at most 50 headline words and 10 cards; the last card the palette's close, the takeaway then \"Subscribe free (makeyourmindup.ai)\" (Ruling, Krish, 2026-11-14); two fresh readers answer the five questions from the headlines alone; python3 scripts/carousel_check.py DECK.json passes before drawing.",
       "guards": [
         {
           "file": "scripts/carousel_check.py",
