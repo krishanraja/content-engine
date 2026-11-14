@@ -14,6 +14,7 @@ import { Device as TypingBubble } from './typing_bubble'
 import { Device as CursorBuddy } from './cursor_buddy'
 import { Device as LogoCard } from './logo_card'
 import { Device as HandPhoneStage } from './hand_phone_stage'
+import { Device as SlamWord } from './slam_word'
 import type { DeviceRegistry } from './types'
 import { TestGrid } from './test_grid'
 import { Device as RecordCard } from './record_card'
@@ -38,6 +39,7 @@ import { Device as ReceiptPrint } from './receipt_print'
 export const DEVICES: DeviceRegistry = {
   checklist: Checklist,
   receipt_print: ReceiptPrint,
+  slam_word: SlamWord,
   living_screen: LivingScreen,
   ladder_stage: LadderStage,
   quota_chart: QuotaChart,

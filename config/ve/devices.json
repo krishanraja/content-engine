@@ -6,6 +6,9 @@
     "receipt_print": {
       "verbs": ["enter", "add", "highlight"]
     },
+    "slam_word": {
+      "verbs": ["enter", "exit"]
+    },
     "office_floor": {
       "verbs": [
         "enter",
