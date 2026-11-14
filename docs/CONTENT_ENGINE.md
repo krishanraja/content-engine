@@ -71,9 +71,10 @@ thirteen callers moved to `guardEngine`: shifts, content decisions, weekly
 briefs, creator settings and AEO settings. The auth test scans every handler so
 a new `preamble(req, ...)` call fails the suite, and it invokes each of the
 thirteen former openings with no credentials to prove it returns 401 before a
-database read, model call or factory push. That fix is on `main`. `discover-lens-radar` remains open when
-`LENS_RADAR_SECRET` is unset, and the fail-open guards remain recorded in
-`docs/STATE.md`.
+database read, model call or factory push. That fix is on `main`. `discover-lens-radar` is closed too since 2026-11-14:
+the dashboard's cookie or the `CRON_SECRET` bearer (`guardOperatorOrCron`),
+never a secret in the query string; the remaining fail-open guards are recorded
+in `docs/STATE.md`.
 
 ## The pipeline, stage by stage
 
@@ -745,7 +746,7 @@ The tables this engine lives on:
 Set on the Vercel project `content-engine`; `apps/control-plane/.env.example`
 lists them. Groups: auth shared with Control Center (`ACCESS_CODE`,
 `APP_ORIGIN`, `VIDEO_STUDIO_CSRF_SECRET`, `ENGINE_OPERATOR_TOKEN`,
-`CRON_SECRET`, `LENS_RADAR_SECRET`); database (`SUPABASE_URL`,
+`CRON_SECRET`); database (`SUPABASE_URL`,
 `SUPABASE_SERVICE_ROLE_KEY`, `CTRL_SUPABASE_URL`, `CTRL_SUPABASE_SERVICE_KEY`);
 models and research (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`,
 `PERPLEXITY_API_KEY`, `EXA_API_KEY`, `BRAVE_API_KEY`, `NEWSAPI_KEY`); sources
