@@ -6,9 +6,10 @@ import { channelOfUrl, type LivePost } from './_itsLive.js'
 import { driveFolderIdOf } from './_drivePosts.js'
 import { carriedItems, dayLabel as dateLabel, dayOptions, elsewhereLines, moveSpec, twinLines, viewPosts, type MoveSpec, type OffdayItem, type ViewGrowthPost } from './_offdayItems.js'
 import type { ViewStage } from './_stage.js'
+import { replacePress, seriesMoveSpec } from './_seriesMoves.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
-// Control Centre; the old board is a read-only archive). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
+// Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
 // day: every piece on it (`pieces`, so a second piece or an off-day piece is never hidden behind the first), the day's
 // options in full with the presses that answer them (`options`), his comments on it (`comments`), what Growth has
 // posted (`posted`) and his yes (`yes`); and on the week, the board's change signal (`revision`).
@@ -41,8 +42,9 @@ export type PressAction = {
   id?: string
   revision?: number
   /** Or POST /api/board/<Monday>/<op> with the body (material: his research pasted onto the piece; live: a post he
-   *  marked live, contract 1.8.0, _itsLive.ts). */
-  op?: 'material' | 'live'
+   *  marked live, contract 1.8.0, _itsLive.ts; replace: his Approve on a day that already holds a piece, contract 1.13.0,
+   *  _seriesMoves.ts, with the chosen `current_to`). */
+  op?: 'material' | 'live' | 'replace' | 'look' | 'style'
   /** Contract 1.8.0: the week the press saves into, when it is not the week the board shows (an idea for later,
    *  answered on its own week's board or approved onto a later one; GET /api/board/later). */
   week?: string
@@ -103,6 +105,9 @@ export interface ViewOption {
 }
 export interface ViewPiece {
   id: string; title: string; series: string; state: string; published: boolean; on_day: boolean
+  /** Contract 1.13.0: Move to… on the piece, the same shape as an off-day item's `move` (_seriesMoves.ts), its item
+   *  piece:<id>; null when it does not move here (out, buried, an off-day post, or the view has no clock). */
+  move?: MoveSpec | null
   /** Contract 1.3.0: the approval that holds it on its day ("Approved by you, Sun 9 Nov, 08:07"). */
   approval?: { at: string; label: string; via: string } | null
   /** Contract 1.10.0 (_stage.ts): the one state the board shows it in, from the records. */
@@ -163,14 +168,15 @@ export function storiesFresh(week: string, o: Body): boolean {
 
 /** Every piece on the day his approval holds there, the one the day shows first marked, each with that approval. The
  *  pieces it does not hold are the day's `held` lines (_gate.ts gatePieces), never here. */
-export function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map()): ViewPiece[] {
+export function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map(), now?: Date): ViewPiece[] {
   return pieces.filter(p => p.scheduled_for === date && !p.buried_at && p.state !== 'dropped' && typeof p.id === 'string')
     .map(p => {
       const id = String(p.id).toLowerCase()
       const a = approvalOf.get(id)
       return { id, title: cut(p.idea || p.thesis || 'Untitled', 140), series: String(p.lane_slot || ''), state: String(p.state || ''),
         published: p.state === 'published' || Boolean(p.published_at), on_day: id === shown,
-        approval: a ? { at: a.decided_at, label: approvedLabel(a), via: a.via } : null }
+        approval: a ? { at: a.decided_at, label: approvedLabel(a), via: a.via } : null,
+        ...(now && a ? { move: seriesMoveSpec(p, now) } : {}) }
     })
     .sort((a, b) => Number(b.on_day) - Number(a.on_day) || a.id.localeCompare(b.id))
 }
@@ -209,7 +215,7 @@ export function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | nul
  *  his pick for the day (picks/<day>): it puts the idea on the publish board on that day (placePick, _presses.ts). The
  *  other four are queue/<pick> with the use each outcome is stored as (_gate.ts OUTCOME_OF_USE). An idea he approved
  *  carries no other press: one idea, one outcome. */
-export function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[] {
+export function seriesOptions(i: ExtrasInputs, day: string, placed: boolean, onDay: Body | null = null): ViewOption[] {
   const list = isObj(i.ideas) && isObj(i.ideas.days) && Array.isArray(i.ideas.days[day]) ? (i.ideas.days[day] as unknown[]).filter(isObj) : []
   const current = (i.approvals || []).find(a => a.via === 'pick' && a.day === day) || null
   return list.map((o, n) => {
@@ -230,6 +236,12 @@ export function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): Vi
     const actions: PressAction[] = []
     let held: string | undefined
     if (!approved) {
+      // A day that already holds his piece: the Approve says what it replaces and asks where that piece goes
+      // (contract 1.13.0, _seriesMoves.ts). Every option keeps an Approve.
+      if (placed && onDay && i.now && ideaId && UUID.test(ideaId) && ideaId.toLowerCase() !== String(onDay.id).toLowerCase()) {
+        actions.push(replacePress({ week: i.week, day, revision: rev(i.picks, day), now: i.now, current: onDay,
+          card: { pick, idea_id: ideaId.toLowerCase(), series: SERIES_SLOT[day], story, so_what, option_sha256: card.option_sha256 } }))
+      }
       if (!placed) {
         if (ideaId && UUID.test(ideaId)) {
           actions.push({ kind: 'press', label: `Approve for ${dayShort(i.week, day)}`, collection: 'picks', id: day, revision: rev(i.picks, day),

@@ -12,6 +12,24 @@ and build it"; he had asked for "Ideas and a suggested creative direction to
 approve or improve or flat out reject for a reason, and the machine can learn
 over time").
 
+**Every off-day option names its kind** (Ruling, Krish, 2026-11-13: the publish board shows only what he approved,
+in one week model, three pieces and off-day posts of fixed kinds; his words: "In general, we have carousels that
+support Monday, Wednesday, or Friday. We have voiceovers, explainers, uplifting carousels, and memes."). Write
+`"kind"` on each option, one of the five, and the board says its plain name everywhere he reads it
+(`apps/control-plane/api/board/_weekModel.ts`, `OFFDAY_KINDS`):
+
+| `kind` | Its name on the board | What it is |
+|---|---|---|
+| `supporting` (with `"supports": "mon"`, `"wed"` or `"fri"`) | Carousel for Monday's piece | A carousel that carries that day's piece further |
+| `voiceover` | Voiceover short | A short with his voice over motion graphics or footage. A piece he records keeps `"kind": "recorded"` (below) and reads as a Voiceover short |
+| `explainer` | Explainer | An explainer carousel or infographic that stands on its own |
+| `good_news` | Good news | Saturday's uplifting good news: one topic and five stories on it (below) |
+| `meme` | Meme | A meme, a meme carousel or a meme video |
+
+An older plan with no `kind` is read from its format by one rule (`offdayKind`); a quiz or level-up carousel is a
+supporting carousel when it ties to a publishing day and an explainer when it does not. A suggestion that is none of
+the five is not offered.
+
 On the Ideas tab, 4 to 6 options each for Tuesday, Thursday and Saturday
 (the board takes 2 to 6; Sunday is a rest day and nothing is published on it:
 Ruling, Krish, 2026-11-02, "Let's eliminate Sunday from Publishing anythign
@@ -26,6 +44,18 @@ gate before it is made; one level-up move, a single practical way to get more
 from AI; or a snackable cut from a past week's approved master, named by its
 piece and word range. Mix them across the week: no day all one format, and at
 least two days feeding that week's Monday, Wednesday or Friday piece.
+
+How each is made once he approves it is not this skill's job, and it is one
+route (Rulings, Krish, 2026-11-13: "all the carousels should now be done in
+Claude, but using the Codex plug in as per the other usual workflows";
+"memes and Notes images should go the same way"; "Off-day voiceover shorts
+should go the same way too"): a carousel, a meme or a Notes image is made in
+a Claude session, with the Codex plugin building it
+(`docs/CAROUSEL-STANDARD.md`, "How a carousel is made"), and a voiceover
+short or a meme video on the ve route from a Claude session. The board's
+"Copy prompt for Claude" says so on every approved off-day post. The plan
+only proposes; never a scheduled job, a headless model run or a template
+engine makes one.
 
 **Where the ideas come from.** Add no source: there are many already (Krish,
 2026-11-01: "there are so many sources of inspiration by now throughout the
@@ -89,9 +119,8 @@ pitch, "I have zero idea what this even means"). Before an option reaches the ta
 A **weekly series** (an option with `"weekly"`, today only the Saturday good news) recurs every week by design: its
 format coming back is never a repeat, and its readers judge only whether its stories could repeat.
 
-`board_feed.py cover` refuses an option without these, and the build (`week_board.py --ideas`) refuses an option with
-no `hook`, `pitch.see`, `pitch.lands` and `direction`, a gather older than two days before the week, a recorded
-option for an idea that has left the pool, and an option covering an off day of the last three weeks.
+`board_feed.py cover` refuses an option without these, and reads the file's off-day options with
+`week_plan.read_offdays`, which refuses a shape it cannot read and names it.
 
 `hook`, `pitch` and `direction` are what he judges, so every option has them;
 `learned_from` quotes only his own words from `offday_verdicts` or `cues`,
@@ -103,8 +132,8 @@ scripts/post-pack/copy_lint.py --applies-to channel_copy` (and `--applies-to
 carousel_text` for a carousel) and `node
 vendor/makeyourmindup/kill-list/kill-list.mjs` before they reach the tab.
 They reach the live board only through `ideas.json` itself, which its view
-reads (`docs/PUBLISH_BOARDS.md`); `week_board.py --ideas`, run locally, still
-refuses a wrong shape and names it, and no page is published.
+reads (`docs/PUBLISH_BOARDS.md`); `board_feed.py cover` refuses a wrong shape
+and names it, and no page is published.
 
 **His presses.** On each option he presses the idea, the direction and, once
 Growth returns it, the mock: Approve, Improve (his words) or Reject (his
@@ -128,8 +157,9 @@ Sunday in `offday_verdicts`. An Improve on the idea or the direction also
 starts a revision run (`.github/workflows/offday-revise.yml`, below), whose
 revised card goes live at the board's next build. Growth reads each option whose
 idea and direction he approved (`GET /api/board/<Monday>/pieces`, `offdays`),
-makes the mock in the brand kit from the direction exactly as shown, and
-returns it on the option as `mock` for his final yes; this repository cuts any
+makes the mock from the direction exactly as shown, in a Claude session with
+the Codex plugin building it (`docs/CAROUSEL-STANDARD.md`, "How a carousel is
+made"), and returns it on the option as `mock` for his final yes; this repository cuts any
 snackable clip.
 
 **Revising one option** (the revision run, or a session asked to). What waits
@@ -141,11 +171,11 @@ side's current hash. Revise only those. For each, change only that side of
 that option in `docs/plans/<Monday>-week/ideas.json` `offdays` to answer his
 words, keep its `id`, and set `"revised": {"side": "<idea or direction>",
 "words": "<his words, verbatim>"}`. Run the same checks as above and check
-the file builds (`week_board.py --ideas`, a local build). The side's hash
+the file reads (`board_feed.py cover <Monday>`). The side's hash
 changes with its words, so his old press reads as answered and he judges the
 new card when the live board next reads these ideas; a side already
 revised is never revised again from the same words. The revision run does not
-publish the board. A mock is Growth's to remake from his words.
+publish the board. A mock is Growth's to remake from his words, by the same route.
 
 **An off-day piece he records** (Ruling, Krish, 2026-10-29: an idea he drops in
 "should appear on my Sunday board for either Tuesday, Thursday, Saturday, or
@@ -175,7 +205,7 @@ it fits best, ranked first that day. It is one short cut, nothing else:
    Pick the style from the idea: to camera when it is his take or story, a
    voiceover when the point is a mechanism or numbers a picture shows better.
 
-`week_board.py` refuses a recorded option that fails any of this. On the card
+`board_feed.py cover` (`week_plan.read_offdays`) refuses a recorded option that fails any of this. On the card
 he sees the whole script. His Approve puts the piece on that day in its
 series and the server sends those exact words to Teleprompter in the piece's
 folder (`apps/control-plane/api/board/_presses.ts`, `offdayRecorded`); the
@@ -212,9 +242,13 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
 0. Read his positive saves first (`sources.json` `inspiration.positive`: cards he saved as good news, his words beside
    each, the ideas quality plan, item 12): a story they point to, or one of the kind they show he likes, comes before
    anything the search finds.
-1. Find five real AI stories that are good news for ordinary people (health, science, safety, access, work made
-   better), each published in the seven days up to `stories_due` (today), none already run (`sources.json`
-   `recent_offdays` urls). Tag each story with its `kind`, one of `health`, `lab`, `science`, `work`, `money`,
+1. **One topic, five stories on it** (Ruling, Krish, 2026-11-13: the publish board shows only what he approved, in one
+   week model; his words: "The Saturday carousel is supposed to be five good news stories on that same topic"). Choose
+   one topic first (for example "AI fixing old mistakes", "AI in the clinic this week"), write it on the option as
+   `"topic": "<a few plain words>"`, and make the option's hook say it. Then find five real AI stories on that topic
+   that are good news for ordinary people (health, science, safety, access, work made better), each published in the
+   seven days up to `stories_due` (today), none already run (`sources.json` `recent_offdays` urls). Five is the post:
+   four or fewer is not a good-news post yet, and the board says so plainly on Saturday ("1 of 5 stories found"). Tag each story with its `kind`, one of `health`, `lab`, `science`, `work`, `money`,
    `learning`, `climate`, `creative`, `people`, `safety` or `other`; the board shows the week's mix on the option
    ("The mix: 2 health, 1 work, ..."), so he sees it before he presses. A cap on health and lab stories waits for his
    yes; until then the mix is shown, never capped. Prefer a primary source: the organisation's own page, the paper, the official
@@ -229,18 +263,34 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
 5. `python3 scripts/post-pack/copy_lint.py --applies-to carousel_text` on the words, then
    `python3 scripts/post-pack/board_feed.py gather <Monday>` and `cover <Monday>`: it refuses a story dated outside
    the seven days, one with no source or picture, and one a recent off day ran.
-6. Put them on the live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
-   read-only archive) with the rest of the week's ideas: the workflow's keep step puts the week's folder on the week's
+6. Put them on the live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre) with the rest of the week's ideas: the workflow's keep step puts the week's folder on the week's
    branch `offday-revise/<Monday>`, which the live board's view reads before main (`scripts/week_branch_keep.sh`, with a
    pull request that merges itself), and bumps the week's change signal (`board_web.py touch <Monday>`). The view
    counts the stories as this week's when they were found on or after the day the week's ideas run fills its board
-   (`ideasRunOf`, the Saturday nine days before the Monday). Never rebuild or publish a board page: the archive
-   refuses it.
+   (`ideasRunOf`, the Saturday nine days before the Monday). Never build or publish a board page: the old pages are
+   retired for good.
 
 **The trade-off, said plainly.** The run fills the board for the week that starts eight days after its Sunday, so a
 story it finds is about two weeks old by the Saturday it posts on. So before Growth makes the post, each story is
 checked against its source again through the fact gate (as every off-day news claim is, above), and one the source no
 longer carries is cut and named.
 
-Growth makes the carousel from the stories as shown, and its mock comes back for his final yes as with any off day.
+**Filling an approved post to five.** When he approves a good-news post that holds fewer than five stories (an
+uplifting option with one story of its own, as Sat 14 Nov's "AI found a mistake in a maths proof from 1986" was), its
+topic stands and his Approve stands: the board's "Find the other N stories" press starts
+`.github/workflows/saturday-goodnews.yml` with `fill: off-<day>-<id>`. The run then:
+
+1. reads the option's own story (its hook, copy and source) as the topic and the first story, and writes it as the
+   first entry of `stories` when the option has none;
+2. finds the rest, to five, on that same topic, by steps 0 to 3 above (the seven days up to today, checked against
+   each primary source, each with its own picture);
+3. writes them onto that option only, sets `stories_due` to today, and never changes its copy, hook, pitch or
+   direction: his Approve is bound to those words (`_offdaySides.ts`), and a story list is not part of them;
+4. runs `board_feed.py gather` and `cover`, and the keep step puts the week on its branch as above.
+
+It never writes a second good-news option, never approves anything and never moves a day. Fewer than five found on
+the topic in the window is said on the option (`"stories_short": "<why>"`) and on the board, never padded with a story
+off the topic.
+
+Growth makes the carousel from the stories as shown, in a Claude session with the Codex plugin building it (`docs/CAROUSEL-STANDARD.md`, "How a carousel is made"), and its mock comes back for his final yes as with any off day.
 

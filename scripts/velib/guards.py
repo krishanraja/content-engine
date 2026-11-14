@@ -10,8 +10,9 @@ gate they bind a whole cut of a piece published from creative_direction.MOTION_F
   - `retype_problems(spec)`: a named real artifact is shown as itself; a device whose words copy it is refused.
   - `offday_problems(spec)`: an off-day piece beds on an off-day track and wears no series sting (Krish, 4 Nov:
     "Yes, give off days their own music and look - Rotate."); compile draws it in the house mint.
-  - `opening_problems(spec)`: a piece names the intro sting only where ve compile puts it, on the 16:9 whole cut of a
-    weekly series piece (Krish, 5 Nov: "I think it should go at the start of the longer wide videos 100%,").
+  - `opening_problems(spec)`: nothing before the hook on any cut, ever: a spec naming a sting (brand.intro_sting) or
+    an episode card where the sting was (brand.opening_exception) is refused (Ruling, Krish, 12 Nov: "Nothing before the
+    hook, ever. Remove the sting exception for good.").
   - `freeze(directory)` / `engine_problems(...)`: the engine the storyboard was signed on draws its proof and cut.
   - `record_render(...)` / `loop_problems(...)`: two full renders of a cut per press from Krish, then he sees it.
   - `type_treatments(props)` / `type_note(...)`: the type treatments a cut shows, listed on its proof for Krish to
@@ -215,23 +216,21 @@ def sting_named(spec: dict) -> str | None:
 
 
 def opening_problems(spec: dict) -> list[str]:
-    """A sting named where no cut opens on one. ve compile puts the sting only in front of the 16:9 whole cut of a weekly
-    series piece published on its series' day (Krish, 2026-11-05: "I think it should go at the start of the longer wide
-    videos 100%,"); the 9:16 cut opens on its hook (house rule HOOK_IS_THE_INTRO). So a spec naming a sting with no 16:9
-    whole cut, or on an off day, says what its cuts will not do. Binds every date: an opening that disagrees with its
-    own cuts is never a matter of when."""
-    sting = sting_named(spec)
-    if not sting:
-        return []
+    """Anything a spec puts before the hook, refused on every cut and every date (Ruling, Krish, 2026-11-12: "Nothing
+    before the hook, ever. Remove the sting exception for good."): a series sting named in brand.intro_sting (only
+    creative_direction.NO_STING may stand there), or an episode card in brand.opening_exception (the 9 Nov exception
+    that put one where the sting was). ve compile lays neither; this says so before anything is drawn."""
+    brand = spec.get('brand') or {}
     out = []
-    wide = [cut for cut, c in (spec.get('cuts') or {}).items() if c.get('aspect') == '16:9' and not c.get('excerpt', False)]
-    if not wide:
-        out.append(f'opening.sting_no_wide brand.intro_sting: {sting} opens only the 16:9 whole cut, and this piece has none; '
-                   'its 9:16 cut opens straight on its hook: say none')
-    # On a piece offday_problems binds, it refuses this already (offday.chrome); on any other, it is refused here.
-    if off_day(spec) and not (config()['off_day'].get('status') == 'approved' and bound(spec)):
-        out.append(f'opening.sting_off_day brand.intro_sting: {sting} on {spec.get("publish_day")}, which is not the series\' '
-                   f'own day ({series_day(spec)}): an off-day piece opens on its hook, with no sting')
+    sting = sting_named(spec)
+    if sting:
+        out.append(f'opening.nothing_before_hook brand.intro_sting: {sting} would open a cut before its hook, and nothing goes '
+                   'before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for '
+                   'good."): say none')
+    if brand.get('opening_exception'):
+        out.append('opening.nothing_before_hook brand.opening_exception: an episode card before the hook, and nothing goes '
+                   'before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for '
+                   'good."): remove it')
     return out
 
 
@@ -256,8 +255,9 @@ def annotation_lints(spec: dict) -> list[str]:
 
 def spec_lints(spec: dict) -> list[str]:
     """The spec-level guards, for ve lint."""
+    from .sfx import style_problems  # noqa: PLC0415
     return (idea_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
-            + annotation_lints(spec))
+            + annotation_lints(spec) + style_problems(spec))
 
 
 # ---------------------------------------------------------------- 3. freeze the engine during a piece

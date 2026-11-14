@@ -1,3 +1,4 @@
+import { isStaging } from './kit/staging'
 import React from 'react'
 import { HOUSE } from '../house/geometry'
 import { FWP_SPLIT_CAPTION_ZONE } from './mocks/face-with-proof'
@@ -40,7 +41,7 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     </>}
     {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);
         graphics own the top of SPLIT and of a STAGE beat with no plate. */}
-    {props.captionStyle === 'word' && !call && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
+    {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={props} frame={frame} />
       : call ? <CallCard props={props} frame={frame} />
         : props.captionTheme ? <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />

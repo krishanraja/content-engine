@@ -23,7 +23,7 @@ format is refused before it renders. Only Krish changes the palette, and only in
 | The marks | The icon (`mark.png`), the masthead and the wordmark, by sha256 | `config/brand-palette.json` `marks`; the files are in krishanraja/makeyourmindup `apps/cover/public/brand` |
 | The wide close | `statement_card`: "Built to help you decide.", masthead, days, Subscribe free, address; 6 s, held for YouTube's end screen | `scripts/quick-edit/kit/endcard.html` (wide); ve `apps/renderer/src/engine/chrome/EndingBand.tsx` |
 | The tall close | `statement_beat`: the same words, at most 2 s, every word inside the tall core box x 120 to 820, y 330 to 1180 | `scripts/quick-edit/kit/endcard.html` (tall); ve `EndingBand.tsx` (`ENDING_TIMING_TALL`), its length `ENDING_FRAMES_BY_ASPECT` in `scripts/velib/compile.py` |
-| The sting | Paused (Krish, 12 Nov 2026): no cut wears it. When it returns it plays after the hook, on a series day's long cut only | `config/intro-sting.json` (`paused`; clips in the Drive brand kit) |
+| The sting | Retired for good (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."): no cut carries anything before its hook | `config/intro-sting.json` (`retired`; the clips stay in the Drive brand kit for the record) |
 | The carousel close | `house_close_slide`: the piece's takeaway, Subscribe free, the wordmark small in the bottom right | krishanraja/growth-makeyourmindup `render/templates/carousel-close.html` |
 
 ## The days
@@ -39,7 +39,7 @@ An asset on a series day that is not the week's series piece, and does not carry
 
 ## The formats, in one line each
 
-- **Long cut (16:9).** Opens on the hook, with no sting while it is paused (when it returns, it follows the hook on a series day). The body carries the icon tile only, with the series pill on section beats. Closes on `statement_card`.
+- **Long cut (16:9).** Opens on the hook, with nothing before it (the sting is retired). The body carries the icon tile only, with the series pill on section beats. Closes on `statement_card`.
 - **Short cut (9:16).** Opens on the hook, with no intro card and no sting. The body carries captions only: no icon, no wordmark, no pill. Closes on `statement_beat`, the only place a wordmark appears.
 - **Carousel (4:5).** Card 1 is the cover scene, with no logo at the top. Every card carries the wordmark small in the bottom right. The last card is `house_close_slide`.
 - **Meme and Notes image.** No logo at the top, and the wordmark small in the bottom right. No close.
@@ -54,7 +54,7 @@ An asset on a series day that is not the week's series piece, and does not carry
 | quick-edit (`scripts/quick-edit/make.py`) | `palette_problems`, before any render, for every dated cut | Stops with `Brand palette (config/brand-palette.json): ...` |
 | The day runner (`scripts/produce_day.py`) | Through make.py; it no longer swaps in any outro of its own | The same stop |
 | ve (`scripts/velib/lint.py`) | `palette_lints`, the `brand.palette` lint, read from compile's own close length and sting position | `ve lint` fails |
-| Growth's carousels | `engine/run/artdirect.py` `OWN_CLOSE`: a new piece kit may not ship its own close | The art-direction gate refuses the kit |
+| Growth's carousels | `engine/run/kits.py` `OWN_CLOSE`: a piece kit may not ship its own close | `python growth.py run kit check`, the acceptance of the Codex card that builds the kit, refuses it |
 | Tests | `tests/brand_palette_test.py` here; `tests/test_render_templates.py` `FollowsThePalette` in Growth | CI fails |
 
 The palette binds every piece dated from **16 Nov 2026** (`applies_from`). Fri 13 Nov is made on a frozen engine (F33).
@@ -75,14 +75,23 @@ One-off piece scripts (`docs/plans/*/rebuild`, `short-composite`, `build_cut.py`
 3. A one-off exception for one piece is `"palette_exception": "Krish, YYYY-MM-DD: <his words>"` in that cut's config. make.py prints it and lets the cut through. Nothing else lets a cut through.
 4. Never add a close, intro, mark position or colour anywhere except the palette.
 
-## The sting, paused
+## The sting, retired
 
-Krish, 12 Nov 2026: "Happy with your recommendations". Long cuts open on the hook with no sting until the sting
-after the hook is built and he approves its proof render. `config/intro-sting.json` carries the pause (`paused`),
-and `intro.wanted`, ve compile's `sting_props` and `sting_problems`, and ve lint all read it. His 5 Nov approval and the
-clips are kept. To bring the sting back after the hook: lay it after the hook in both engines (every check that maps a
-frame of the file back to the cut, `velib.qc.lead_frames` and its callers, the premix lead in `velib.audio.premix`,
-`sting_problems`, the opening gate, and make.py's audio graph), prove it on his own take (F04, F13), then remove the
-pause and set the palette's long cut `sting` to `after_hook`, both on his words.
+Krish, 12 Nov 2026, first: "Happy with your recommendations" (the sting paused until it could follow the hook); then,
+the same day, answering the openings question: "Nothing before the hook, ever. Remove the sting exception for good."
+`config/intro-sting.json` says `retired`; `intro.py` gives no cut a sting and refuses every approval, ve compile's
+`sting_props` lays none and `sting_problems` refuses props that carry one, ve lint and the contract refuse a spec that
+names one or an episode card in its place, and make.py leaves out any intro clip and stops a cut handed one. The
+palette's long cut keeps `sting_when_built: after_hook` as the record of the sheet he approved: a sting after the hook
+would be a new design, built, proved on his own take (F04, F13) and approved in his words first.
+
+**Built in ve, not switched on (13 Nov 2026, after Krish: "Can you sort out the sting now?").** ve can now play a
+sting straight after the hook and never in front of it: `compile.hook_end` (the end of beat 0, at least 3 s so the
+opening gate measures the hook), `props.sting.atFrame`, `VeCut.tsx` (hook, clip, then the cut on), premix's
+`sting_at_frame` (his voice to the hook's end, the sting's frames of silence, the bed lifted under them), and every check
+through `velib.qc.to_file`. A sting with no `atFrame` is refused everywhere. Nothing lays one: `sting_props` still
+gives no cut a sting and the config stays retired, so `sting_problems` refuses any sting. To use it, Krish approves a
+proof on his own take, in his words; then the config, `intro.py` and `sting_props` change to lay it after the hook.
+quick-edit cannot lay it.
 
 Both tall closes, kit's and ve's, are the palette's 2 s beat, and an off-day close shows no series days.

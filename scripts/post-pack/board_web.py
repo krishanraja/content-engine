@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
-"""Web board build adapter and explicit operator commands. No write runs by default."""
+"""The board's store, read and signalled from a session or a run: the engine's routes under /api/board/<Monday>, on the
+engine operator's key. Nothing here builds, publishes, downloads or rolls back a board page: those were retired for good
+on 13 November 2026 (Ruling, Krish, 2026-11-13: "We need to retire the old publish boards now permanently";
+docs/history/2026-11-13-old-boards-retired.md). The one live board is Control Centre's Content tab
+(scripts/post-pack/live_board.py); how to feed it is docs/PUBLISH_BOARDS.md.
+
+    python3 scripts/post-pack/board_web.py read <Monday> <collection>   his saved picks, presses, edits and comments
+    python3 scripts/post-pack/board_web.py touch <Monday> [--source S]  bump the week's change signal
+
+call() is the client the other scripts use (board_feed.py, yes.py, the overnight run).
+"""
 import argparse
-import base64
-import hashlib
 import json
-import mimetypes
 import os
 from pathlib import Path
 import re
@@ -15,50 +22,16 @@ import urllib.parse
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
-import engine
-sys.path.insert(0, str(HERE.parent/'quick-edit'))
-import media_standard
+import engine  # noqa: E402
+
 
 def canonical(value):
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
 
-def sha(data):
-    return hashlib.sha256(data).hexdigest()
-
-def web_page(page, manifest):
-    """Keep artifact markup intact; substitute only its runtime dependency."""
-    week = manifest['week_start']
-    adapter = (HERE / 'week_board' / 'web.js').read_text(encoding='utf-8').replace('__WEB_WEEK__', json.dumps(week))
-    # Substitute runtime calls only, never a matching phrase in saved wording.
-    page = re.sub(r'<script\b[^>]*>.*?</script>',
-                  lambda match: match.group(0).replace('window.claude', 'window.boardRuntime'), page, flags=re.S)
-    # Update generated help only; editorial wording and saved drafts stay verbatim.
-    page = page.replace(
-        '<p class="rv-how">Change any word below and press Save, or press Comment to say what to change. Claude reads your saved words and your comments and comes back with the next version.</p>',
-        '<p class="rv-how">Change any word below and press Save, or press Comment to say what to change. Your saved words and comments guide the next version through the content workflows.</p>')
-    page = page.replace(
-        '<p class="qd-how">Ideas you queued earlier that fit this day. Ask Claude to start one, or pick from the new ideas below.</p>',
-        '<p class="qd-how">Ideas you queued earlier that fit this day. Ask your content workflow to start one, or pick from the new ideas below.</p>')
-    first = page.find('<script')
-    if first < 0:
-        raise ValueError('board has no runtime')
-    page = page[:first] + '<script>\n' + adapter + '\n</script>\n' + page[first:]
-    import engine_stamp
-    page = engine_stamp.stamp(page, 'week_board')
-    manifest['target'] = 'web'
-    # The archive's address: read-only since 11 Nov 2026 (docs/PUBLISH_BOARDS.md); the live board is Control Centre's.
-    manifest['web_url'] = f'https://content.krishraja.com/board/{week}'
-    manifest['publish'] = {'command': 'board_web.py publish-web', 'approval_required': True}
-    manifest['bytes'] = len(page.encode('utf-8'))
-    manifest['sha256'] = sha(page.encode('utf-8'))
-    return page, manifest
-
-# The library lives on the engine's own host, not the board's (content.krishraja.com answers 404 for /api/library/,
-# the 9 Nov restore's first dry run): the same engine key, the address scripts/engine.py uses.
-ENGINE_BASE_URL = 'https://content-engine-flame-nu.vercel.app'
-
 
 def call(method, path, body=None, base=None):
+    """One request to the board's routes (BOARD_BASE_URL, by default the board's API host), every page of a listing
+    gathered. Never prints a key, a signed URL or a provider's body."""
     key = os.environ.get('ENGINE_OPERATOR_TOKEN')
     if not key:
         key, _ = engine.windows_key()
@@ -94,306 +67,22 @@ def call(method, path, body=None, base=None):
         # Never print signed URLs, headers or provider bodies.
         raise ValueError(f'Board request failed: HTTP {error.code} ({method} {path.split("?")[0]})') from None
 
-def spec(week, path, mime=None):
-    data = Path(path).read_bytes()
-    digest = sha(data)
-    return {'sha256': digest, 'bytes': len(data), 'type': mime or mimetypes.guess_type(path)[0] or 'application/octet-stream',
-            'name': Path(path).name, 'key': f'boards/{week}/{digest}'}, data
-
-def upload(week, file, data):
-    response = call('POST', f'/api/board/{week}/uploads', {'file': file})
-    if response.get('exists'):
-        return
-    url = response.get('upload_url', '')
-    # Only the storage host used by the engine is eligible; no bearer is forwarded.
-    parsed = urllib.parse.urlparse(url)
-    if parsed.scheme != 'https' or not parsed.hostname or not parsed.hostname.endswith('.supabase.co'):
-        raise ValueError('Invalid signed upload destination')
-    request = urllib.request.Request(url, data=data, method='PUT', headers={'Content-Type': file['type']})
-    try:
-        with urllib.request.urlopen(request, timeout=300) as response:
-            if response.status not in (200, 201):
-                raise ValueError('Storage upload failed')
-    except urllib.error.URLError:
-        raise ValueError('Storage upload failed; signed URL withheld') from None
-
-VIDEO_FILLS = ('video-long', 'video-short', 'video-feature')
-KRISH_WORDS = re.compile(r'^Krish, \d{4}-\d{2}-\d{2}: \S')
-
-
-def ready_video_problems(page, mappings, check=None):
-    """Each video a day's materials mark ready must be the exact bytes of a cut whose delivery receipt passes
-    (quality.delivery_problems, the opening check included), or carry Krish's own words on its asset. Krish, 2026-11-01,
-    after four cuts reached the board as ready with no receipt: "figure out how this can never happen again durably"."""
-    import board_materials
-    if check is None:
-        import quality
-        check = lambda path: quality.delivery_problems(path, str(path) + '.validation.json')
-    by_source = {m.get('source_url'): m for m in mappings}
-    problems = []
-    for day, data in board_materials.previous(page).items():
-        if data.get('status') != 'ready':
-            continue
-        for row, item in board_materials.fills(data).items():
-            if row not in VIDEO_FILLS:
-                continue
-            asset = by_source.get(item.get('url'))
-            if asset is None:
-                problems.append(f'{day} {row}: no asset mapping names its link, so its bytes cannot be checked')
-                continue
-            if KRISH_WORDS.match(str(asset.get('krish') or '')):
-                continue
-            path = asset.get('path') or asset.get('checked_file')
-            if not path:
-                problems.append(f'{day} {row}: no local file to check (give path, or checked_file for an existing asset)')
-                continue
-            if asset.get('existing_sha256') and sha(Path(path).read_bytes()) != asset['existing_sha256']:
-                problems.append(f'{day} {row}: checked_file is not the bytes of the existing asset')
-                continue
-            found = check(path)
-            if found:
-                problems.append(f'{day} {row}: ' + '; '.join(found))
-    return problems
-
-
-ARTICLE_BLOCK = re.compile(r'(<div class="article" id="[A-Za-z0-9_-]*art">)(.*?)(</div>\s*<pre id="[A-Za-z0-9_-]*art-text")', re.S)
-ARTICLE_IMG = re.compile(r'<img\b[^>]*?\ssrc="data:(image/(?:png|jpeg|webp|gif));base64,([A-Za-z0-9+/=]+)"[^>]*>')
-
-
-def lift_article_pictures(week, page, assets, payloads, current):
-    """Stores every picture in a made day's article as a board file and names it on its <img> as data-asset, so Copy
-    article can hand Substack a link it can fetch. The picture itself stays in the page as its own bytes, so the board
-    shows, downloads and copies it exactly as before. Krish, 2026-11-06, of Friday's article: "Every Substack article
-    embeds the images inline"; its six figures did not come through the paste, and the browser blocked the downloads.
-    The same bytes are stored once, and a file the current build already holds is reused, never sent again."""
-    import base64
-    by_sha = {f.get('sha256'): f for f in list(current.values()) + list(assets.values()) if isinstance(f, dict)}
-
-    def tag(m):
-        img, mime, b64 = m.group(0), m.group(1), m.group(2)
-        if 'data-asset=' in img:
-            return img
-        data = base64.b64decode(b64)
-        digest = sha(data)
-        asset_id = f'article-{digest[:16]}'
-        file = by_sha.get(digest)
-        if not file:
-            ext = {'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif'}[mime]
-            file = {'sha256': digest, 'bytes': len(data), 'type': mime, 'name': f'{asset_id}.{ext}', 'key': f'boards/{week}/{digest}'}
-            payloads.append((file, data))
-            by_sha[digest] = file
-        assets.setdefault(asset_id, file)
-        return img[:4] + f' data-asset="/api/board/{week}/assets/{asset_id}?sha={digest}"' + img[4:]
-
-    return ARTICLE_BLOCK.sub(lambda b: b.group(1) + ARTICLE_IMG.sub(tag, b.group(2)) + b.group(3), page)
-
-
-def library_file(week, ref, kind=None):
-    """(file, bytes) for {"path": <library path>, "sha256": <hex>} read through GET /api/library/file."""
-    import urllib.parse
-    if not (isinstance(ref, dict) and isinstance(ref.get('path'), str) and re.fullmatch(r'[a-f0-9]{64}', str(ref.get('sha256')))):
-        raise ValueError('A library asset is {"path": "<library path>", "sha256": "<64 hex>"}')
-    got = call('GET', '/api/library/file?path=' + urllib.parse.quote(ref['path']) + '&sha256=' + ref['sha256'],
-               base=os.environ.get('ENGINE_BASE_URL', ENGINE_BASE_URL))
-    url = ((got or {}).get('download') or {}).get('url')
-    if not url:
-        raise ValueError(f'The library has no ready file {ref["path"]} with sha256 {ref["sha256"][:12]}')
-    with urllib.request.urlopen(url, timeout=300) as response:
-        data = response.read()
-    if sha(data) != ref['sha256']:
-        raise ValueError(f'The library file {ref["path"]} is not the bytes the mapping names')
-    name = Path(ref['path']).name
-    mime = kind or mimetypes.guess_type(name)[0] or 'application/octet-stream'
-    return {'sha256': ref['sha256'], 'bytes': len(data), 'type': mime, 'name': name, 'key': f'boards/{week}/{ref["sha256"]}'}, data
-
-
-def publish(args):
-    import week_board
-    path = Path(args.page)
-    page = path.read_text(encoding='utf-8')
-    meta = json.loads(path.with_suffix('.json').read_text(encoding='utf-8'))
-    if meta.get('target') != 'web' or 'window.claude' in page:
-        raise ValueError('Build with week_board.py --target web first')
-    issues = week_board.verify(page)
-    if issues:
-        raise ValueError('; '.join(issues))
-    week = meta['week_start']
-    assets, payloads = {}, []
-    state = call('GET', f'/api/board/{week}')
-    if getattr(args, 'expected_build', None) and state.get('build_id') != args.expected_build:
-        raise ValueError('Active board changed since preparation; download it and rebuild before publishing')
-    mappings = json.loads(Path(args.assets).read_text(encoding='utf-8')) if args.assets else []
-    held = ready_video_problems(page, mappings)
-    if held:
-        raise ValueError('A video shown ready has no passing delivery receipt for its bytes: ' + ' | '.join(held)
-                         + '. Set that day\'s materials to review with this reason in its note, or carry Krish\'s own '
-                         'words on the asset ("krish": "Krish, YYYY-MM-DD: ...")')
-    for item in mappings:
-        asset_id = item['id']
-        if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}', asset_id) or asset_id in assets:
-            raise ValueError('Invalid or duplicate asset id')
-        if item.get('existing_sha256'):
-            current = ((state.get('manifest') or {}).get('assets') or {})
-            file = current.get(asset_id)
-            if not file:
-                # The same stored bytes under another name in this build: reuse that file, never re-upload it.
-                file = next((f for f in current.values() if f.get('sha256') == item['existing_sha256']), None)
-            if not file and item.get('from_build'):
-                # A publish that carried no stored files (the 9 Nov board's 4 Nov 07:13 build held none) leaves the
-                # bytes in the week's earlier build. Read that build's record of the file; the server serves it by
-                # its sha from any build of the week and checks the stored object again on publish.
-                if not re.fullmatch(r'[a-f0-9]{64}', item['from_build']):
-                    raise ValueError(f'Asset {asset_id}: from_build is a 64-hex build id')
-                older = call('GET', f"/api/board/{week}?build={item['from_build']}")
-                file = (((older.get('manifest') or {}).get('assets') or {}).get(asset_id))
-            if not file or file.get('sha256') != item['existing_sha256']:
-                raise ValueError(f'Existing asset {asset_id} changed or is missing; refresh the mapping')
-        elif item.get('library'):
-            # A picture filed to the library (send.py) after the week's last stored build: fetched by its library path
-            # and checked against the sha256 the mapping names, then stored with the build (the 9 Nov off-day carousels
-            # Krish approved again on 5 Nov live only there and in Drive).
-            file, data = library_file(week, item['library'], item.get('type'))
-            payloads.append((file, data))
-        else:
-            file, data = spec(week, item['path'], item.get('type'))
-            payloads.append((file, data))
-        assets[asset_id] = file
-        if item.get('img_id'):
-            # A picture the page holds inside itself (the made day's covers and share card, drawn into the page as it
-            # was made): the named picture shows the mapped file instead (Krish, 2026-11-09: "The Monday thumbnails and
-            # covers are all the old ones").
-            img = str(item['img_id'])
-            found = re.search(r'<img\b[^>]*\bid="' + re.escape(img) + r'"[^>]*>', page)
-            if not re.fullmatch(r'[A-Za-z0-9_-]{1,80}', img) or not found:
-                raise ValueError(f'Asset {asset_id}: the board has no picture with id {img}')
-            # The page holds its pictures' own bytes (week_board.verify: a made day's pictures are data: or https:), so
-            # the mapped file's bytes go in, with the stored asset named beside them for Download and Copy.
-            if not item.get('library'):
-                raise ValueError(f'Asset {asset_id}: img_id needs a library file')
-            uri = 'data:' + (item.get('type') or file.get('type') or 'image/png') + ';base64,' + base64.b64encode(data).decode('ascii')
-            tag = re.sub(r'\ssrc="[^"]*"', f' src="{uri}"', found.group(0), count=1)
-            tag = tag[:4] + f' data-asset="/api/board/{week}/assets/{asset_id}?sha={file["sha256"]}"' + tag[4:]
-            page = page.replace(found.group(0), tag, 1)
-            continue
-        source = item['source_url']
-        if source not in page:
-            raise ValueError(f'Asset {asset_id} has no matching link in the board')
-        page = page.replace(source, f'/api/board/{week}/assets/{asset_id}?sha={file["sha256"]}')
-        if item.get('drive_id'):
-            # The file that replaced the source's Drive file (Krish binned the 9 Nov Monday thumbnails the record still
-            # names and filed the v2 set): its Open in Drive link and drive id follow the new file, never the binned one.
-            old = re.search(r'[?&]id=([A-Za-z0-9_-]{20,})', source)
-            new = str(item['drive_id'])
-            if not old or not re.fullmatch(r'[A-Za-z0-9_-]{20,}', new):
-                raise ValueError(f'Asset {asset_id}: drive_id needs a Drive download source_url and a Drive file id')
-            page = (page.replace(f'https://drive.google.com/file/d/{old.group(1)}/', f'https://drive.google.com/file/d/{new}/')
-                    .replace(f'data-drive-id="{old.group(1)}"', f'data-drive-id="{new}"'))
-    page = lift_article_pictures(week, page, assets, payloads, (state.get('manifest') or {}).get('assets') or {})
-    if re.search(r'https://(?:drive\.google\.com/(?:uc\?|download\?)|drive\.usercontent\.google\.com/download\?)', page):
-        raise ValueError('Map every Drive download to an immutable library asset with --assets')
-    page = week_board.engine_stamp.stamp(page, 'week_board')
-    issues = week_board.verify(page)
-    if issues: raise ValueError('; '.join(issues))
-    data = page.encode('utf-8')
-    if len(data) >= 16 * 1024 * 1024:
-        raise ValueError('Board exceeds 16 MB')
-    html = {'sha256': sha(data), 'bytes': len(data), 'type': 'text/html', 'name': path.name, 'key': f'boards/{week}/{sha(data)}'}
-    manifest = {'version': 1, 'week': week, 'html': html, 'assets': assets}
-    if getattr(args, 'save', None):
-        # The exact page this publish would put live, and the files it would store, for the phone screenshots.
-        out = Path(args.save); (out / 'assets').mkdir(parents=True, exist_ok=True)
-        (out / 'page.html').write_bytes(data)
-        for f, b in payloads:
-            if f is not html:
-                (out / 'assets' / f['sha256']).write_bytes(b)
-    if not args.apply:
-        print(canonical({'dry_run': True, 'week': week, 'build_id': sha(canonical(manifest).encode()), 'html_bytes': len(data), 'assets': len(assets)}))
-        return
-    if media_standard.enforced():
-        review_path = path.with_suffix('.delivery-review.json')
-        if not review_path.is_file():
-            raise ValueError('Independent board delivery review missing for this exact build')
-        delivery_review = json.loads(review_path.read_text(encoding='utf-8'))
-        manifest['delivery_review'] = delivery_review
-    for file, content in payloads + [(html, data)]:
-        upload(week, file, content)
-    result = call('PUT', f'/api/board/{week}', {'manifest': manifest, 'revision': state['revision']})
-    actual = call('GET', f'/api/board/{week}')
-    if actual['build_id'] != result['build_id'] or actual['manifest'] != manifest:
-        raise ValueError('Published build readback mismatch')
-    print(canonical({'verified': True, 'week': week, 'build_id': result['build_id']}))
-
-def convert_export(args):
-    """Upgrade an explicitly identified native HTML export without rebuilding its content."""
-    import week_board
-    data = Path(args.page).read_bytes()
-    if sha(data) != args.expected_sha256:
-        raise ValueError('Source export digest does not match the reviewed bytes')
-    expected = json.loads((HERE.parents[1] / 'config/boards.json').read_text(encoding='utf-8'))['weeks']
-    if args.source not in expected.get(args.week, []):
-        raise ValueError('Source is not a registered artifact for this week')
-    page = data.decode('utf-8')
-    scripts = list(re.finditer(r'<script\b[^>]*>(.*?)</script>', page, re.S))
-    if len(scripts) != 1 or "week_board.py fills CONF" not in scripts[0].group(1):
-        raise ValueError('Source must have exactly one recognized week-board runtime')
-    match = re.search(r'const CONF = (.*?);\s*\n', scripts[0].group(1))
-    if not match: raise ValueError('Source configuration is unavailable')
-    conf = json.loads(match.group(1))
-    if conf.get('week') != args.week: raise ValueError('Source week mismatch')
-    # Leave every panel, image, current wording and built-at edit guard intact.
-    runtime = scripts[0]
-    page = page[:runtime.start()] + '<script>\n' + week_board.script(conf) + '\n</script>' + page[runtime.end():]
-    meta = {'kind':'week_board','version':1,'week_start':args.week,
-            'source_export':{'artifact':args.source,'sha256':sha(data),'bytes':len(data)},
-            'migration_note':'Original content retained; shared runtime upgraded for web persistence.'}
-    page, meta = web_page(page, meta)
-    issues = week_board.verify(page)
-    if issues: raise ValueError('; '.join(issues))
-    week_board.write(page, meta, args.output)
-    print(canonical({'converted':True,'week':args.week,'source_sha256':sha(data),'web_sha256':meta['sha256']}))
 
 def main():
-    p = argparse.ArgumentParser(description=__doc__)
+    p = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
     sub = p.add_subparsers(dest='command', required=True)
-    pub = sub.add_parser('publish-web'); pub.add_argument('page'); pub.add_argument('--assets'); pub.add_argument('--apply', action='store_true'); pub.add_argument('--save')
-    pub.add_argument('--expected-build', help='refuse to replace a build other than the one used for preparation')
-    convert = sub.add_parser('convert-export'); convert.add_argument('page'); convert.add_argument('--week',required=True); convert.add_argument('--source',required=True); convert.add_argument('--expected-sha256',required=True); convert.add_argument('--output',required=True)
     # approvals and titles are read-only views of his day decisions in picks (api/board/_contracts.ts views).
     read = sub.add_parser('read'); read.add_argument('week'); read.add_argument('collection', choices=['ticks','links','edits','picks','queue','comments','approvals','titles'])
-    download = sub.add_parser('download'); download.add_argument('week'); download.add_argument('--output', required=True); download.add_argument('--build')
-    rollback = sub.add_parser('rollback'); rollback.add_argument('week'); rollback.add_argument('build'); rollback.add_argument('--apply', action='store_true')
     # The week's change signal (POST /api/board/<Monday>/touch): after a run pushes the week's plan files, the live board
     # in Control Centre reads the week again at once (Ruling, Krish, 2026-11-11: one live board, in Control Centre).
     touch = sub.add_parser('touch'); touch.add_argument('week'); touch.add_argument('--source', default='plan')
     args = p.parse_args()
-    if args.command == 'publish-web': publish(args)
-    elif args.command == 'convert-export': convert_export(args)
-    elif args.command == 'read': print(json.dumps(call('GET', f'/api/board/{args.week}/{args.collection}'), ensure_ascii=False, indent=2))
-    elif args.command == 'touch':
+    if args.command == 'read':
+        print(json.dumps(call('GET', f'/api/board/{args.week}/{args.collection}'), ensure_ascii=False, indent=2))
+    else:
         if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', args.week) or not re.fullmatch(r'[a-z][a-z_-]{0,39}', args.source): raise ValueError('touch takes a Monday and a one-word source')
         print(canonical(call('POST', f'/api/board/{args.week}/touch', {'source': args.source})))
-    elif args.command == 'download':
-        build = f'?build={args.build}' if args.build else ''
-        if args.build and not re.fullmatch(r'[a-f0-9]{64}', args.build): raise ValueError('--build is a 64-hex build id')
-        state = call('GET', f'/api/board/{args.week}{build}')
-        if not state.get('manifest'): raise ValueError('Board is not published')
-        key = os.environ.get('ENGINE_OPERATOR_TOKEN') or engine.windows_key()[0]
-        base = os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
-        request = urllib.request.Request(base + f'/board/{args.week}{build}', headers={'Authorization':'Bearer ' + key})
-        with urllib.request.urlopen(request, timeout=300) as response: data = response.read()
-        expected = state['manifest']['html']
-        if len(data) != expected['bytes'] or sha(data) != expected['sha256']: raise ValueError('Board changed during download; retry')
-        output = Path(args.output); output.parent.mkdir(parents=True, exist_ok=True); output.write_bytes(data)
-        print(canonical({'saved':str(output),'build_id':state['build_id'],'sha256':sha(data)}))
-    else:
-        previous = call('GET', f'/api/board/{args.week}?build={args.build}')
-        current = call('GET', f'/api/board/{args.week}')
-        if args.apply:
-            result = call('PUT', f'/api/board/{args.week}', {'manifest': previous['manifest'], 'revision': current['revision']})
-            actual = call('GET', f'/api/board/{args.week}')
-            if actual['build_id'] != args.build: raise ValueError('Rollback readback mismatch')
-            print(canonical(result))
-        else: print(canonical({'dry_run': True, 'restore': previous['build_id'], 'current': current['build_id']}))
+
 
 if __name__ == '__main__':
     try: main()

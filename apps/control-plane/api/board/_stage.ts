@@ -49,14 +49,18 @@ export function postedStage(input: {
     return { state: 'live', label: `Live on ${list(live.map(p => p.label))}`, at,
       links: live.filter(p => p.href).map(p => ({ label: p.label, href: p.href! })) }
   }
-  if (input.date < input.today) {
-    return { state: 'missed', label: `Missed: ${dayLabel(input.date)} passed and it is not marked live`, at: null, links: [] }
-  }
   const scheduled = [...input.growth.filter(p => p.state === 'scheduled' && p.due_at).map(p => ({ label: channelWord(p.channel), due_at: p.due_at! })), ...input.scheduled]
     .sort((a, b) => a.due_at.localeCompare(b.due_at))
+  // A post scheduled to go out after its day is not missed: it says when it goes (Fri 13 Nov's "Your AI thinks it's the
+  // best" was scheduled in Buffer for Tue 17; only his Move to… changes its day on the board).
+  const ahead = scheduled.filter(s => s.due_at.slice(0, 10) >= input.today)
+  if (input.date < input.today && !ahead.length) {
+    return { state: 'missed', label: `Missed: ${dayLabel(input.date)} passed and it is not marked live`, at: null, links: [] }
+  }
   if (scheduled.length) {
-    const first = scheduled[0].due_at
-    return { state: 'scheduled', label: `Scheduled on ${list(scheduled.map(s => s.label))} for ${approvedWhen(first)}`, at: first, links: [] }
+    const now = input.date < input.today ? ahead : scheduled
+    const first = now[0].due_at
+    return { state: 'scheduled', label: `Scheduled on ${list(now.map(s => s.label))} for ${approvedWhen(first)}${input.date < input.today ? `, after its day (${dayLabel(input.date)})` : ''}`, at: first, links: [] }
   }
   if (input.made || input.growth.some(p => p.state === 'made')) return { state: 'made', label: 'Made: its files are made and filed', at: null, links: [] }
   return { state: 'approved', label: input.approvedLabel, at: input.approvedAt, links: [] }

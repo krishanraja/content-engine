@@ -29,7 +29,17 @@ repository's `docs/CAROUSEL-STANDARD.md`, the rejection floor and the copy
 lint. Content-engine keeps the standard and makes the hero assets: the
 article, both cuts, thumbnails and covers.
 
-**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); content.krishraja.com/board/<Monday> is the read-only archive (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this repository are history.
+How they are made (Ruling, Krish, 2026-11-13: "all the carousels should now be
+done in Claude, but using the Codex plug in as per the other usual
+workflows"; "memes and Notes images should go the same way"; "Off-day
+voiceover shorts should go the same way too"): every carousel, meme and Notes
+image is made in a Claude session, with the Codex plugin building it (a
+`ve card` of kind carousel, meme or notes_image), and every off-day voiceover
+short on the ve route from a Claude session. Never a scheduled job, a
+headless model run or a template engine. The route is
+`docs/CAROUSEL-STANDARD.md`, "How a carousel is made".
+
+**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); the old board pages at content.krishraja.com/board are retired for good and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good, and everything old in content-engine is retired). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this repository are history.
 
 
 <!-- north-star:start -->
@@ -138,7 +148,7 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 
 ## Video production
 
-Video is made with `python scripts/ve.py`: read `docs/ve/ENGINE.md`, follow `docs/ve/RUNBOOK.md`. One signed spec (`creative-direction.json`, `schema_version: 2`); no per-piece compositions or render scripts. Codex is a visual asset maker (Ruling, Krish, 2026-10-28: "Visual asset maker"): it builds library devices from cards (`card`, `dispatch`, `verify-card`) and makes visual plates for named slots, and it never edits a cut. Every cut is held to the signed motion standard (`docs/ve/MOTION_STANDARD.md`). Motion styles live in one bank, the `motion` layer of `config/style-references.json`; Claude picks one per piece (`style.motion`, which `ve lint` requires from 9 Nov 2026), and every card for that piece carries it as its own `## Motion style` section. Codex builds to that section's rules and never-list, under the brand tokens and the design lock, and never picks or mixes a style itself. ve has no publish verb. Quick-edit stays the fallback until ve passes Phase 3. Local runs use `. scripts/ve-env.sh` (Bash). Licensed music lives only at `MINDMAKE_MUSIC_ROOT` with `config/music-library.json`; never browse Drive for audio.
+Video is made with `python scripts/ve.py`: read `docs/ve/ENGINE.md`, follow `docs/ve/RUNBOOK.md`. One signed spec (`creative-direction.json`, `schema_version: 2`); no per-piece compositions or render scripts. Codex is a visual asset maker (Ruling, Krish, 2026-10-28: "Visual asset maker"): it builds library devices from cards (`card`, `dispatch`, `verify-card`) and makes visual plates for named slots, and it never edits a cut. Every cut is held to the signed motion standard (`docs/ve/MOTION_STANDARD.md`). Motion styles live in one bank, the `motion` layer of `config/style-references.json`; Claude picks one per piece (`style.motion`, which `ve lint` requires from 9 Nov 2026), and every card for that piece carries it as its own `## Motion style` section. Codex builds to that section's rules and never-list, under the brand tokens and the design lock, and never picks or mixes a style itself. Captions, transitions, camera and energy are chosen apart from the motion style (`style.captions`, `style.transitions`, `style.camera`, `style.energy`; 27 caption styles, three motion styles from Krish's own cuts; `ve pace` measures a cut against his references): `docs/ve/INGREDIENTS.md` (Krish, 2026-11-13: "the captions should be decoupled from the animation styles"). ve has no publish verb. Quick-edit stays the fallback until ve passes Phase 3. Local runs use `. scripts/ve-env.sh` (Bash). Licensed music lives only at `MINDMAKE_MUSIC_ROOT` with `config/music-library.json`; never browse Drive for audio.
 
 Code check (28 Oct 2026): compile/render lint first and use shared FormatMaster. The schema makes `signed` optional; sign-off remains an operator gate. `docs/ve/RUNBOOK.md` is the procedure and `docs/ve/STATUS.md` says what ve can and cannot do today. Phase 3 fallback is policy, not a CLI switch. [Legacy route](docs/AGENTS-REFERENCE.md#rule-17).
 
@@ -175,7 +185,7 @@ North Star check (YYYY-MM-DD): holds.
 
 Only Krish changes the North Star. Task-specific restrictions override routine commit, board and closeout actions.
 
-<!-- krish-repo-admin:start brain=379ce05f4241 sha=33ec6eef2668 -->
+<!-- krish-repo-admin:start brain=aabfeac6c45f sha=33ec6eef2668 -->
 ## Administer this repository
 
 Use `docs/HARNESS_CONTEXT.md` for the owning workflow, source of truth and checks. Preserve the goal and accepted decisions when a revision changes one part; explain material trade-offs. Verify the downstream result. Record corrections and observed outcomes through the existing capture path. Experimental results retain their conditions; inferred requirements remain proposals.
@@ -183,7 +193,7 @@ Use `docs/HARNESS_CONTEXT.md` for the owning workflow, source of truth and check
 Before any work run `python3 scripts/check_failures.py`. At session start read this week's comments on the one live board in Control Centre, as `docs/PUBLISH_BOARDS.md` says. Studio work requires `docs/ENGINE_SESSION.md`, `studio.session.open` and its tracked capability set; cloud Studio sessions stay read-only. Preserve observer attribution and Krish's actual decisions, keep exact feedback excerpts and never whole transcripts. `Video engine` remains the exact external launcher.
 <!-- krish-repo-admin:end -->
 
-<!-- krish-canon:start release=v2026.10.31.4 sha=49ccfe98b287 rendered=2026-10-31 -->
+<!-- krish-canon:start release=v2026.11.13.2 sha=bffef655d142 rendered=2026-11-14 -->
 ## Krish canon
 
 Rendered from `krishanraja/ai-harness`; the start marker names the release. Nothing inside these
@@ -240,5 +250,5 @@ https://controlcenter.krishraja.com/api/canon/KRISH.md (and `PORTFOLIO.md` besid
 30 curated skills are in `krishanraja/ai-harness`. On a machine with the harness installed the same skills are under the user skills root, and the local copy is
 authoritative for reading; the repository is authoritative for what is correct. Where none is installed (claude.ai, a cloud session), read each skill live with Control Center `get_skill`.
 
-**This repository's own rules:** `AGENTS.md`, `CLAUDE.md`, `docs/CAROUSEL_ENGINE_STATE.md`
+**This repository's own rules:** `AGENTS.md`, `CLAUDE.md`, `docs/CAROUSEL-STANDARD.md`
 <!-- krish-canon:end -->

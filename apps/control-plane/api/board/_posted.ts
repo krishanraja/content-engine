@@ -30,7 +30,7 @@ export const DAYS = Object.keys(DAY_OFFSET) as PostedDay[]
 export const SERIES_DAYS: readonly PostedDay[] = ['mon', 'wed', 'fri']
 /** The day's series, by the publication's rhythm (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap). */
 const DAY_SERIES: Partial<Record<PostedDay, string>> = { mon: 'follow_the_money', wed: 'under_the_hood', fri: 'mind_the_gap' }
-// The day's posting boxes on the board (week_board.py STEPS, the ones with a channel), with the label each box carries.
+// The day's posting boxes on the board, with the label each box carries (the old board page drew the same boxes).
 export const BOARD_CHANNELS = {
   substack: 'Substack: video post with the article',
   youtube: 'YouTube: the 3-minute video',

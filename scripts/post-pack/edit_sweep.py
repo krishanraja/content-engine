@@ -16,7 +16,7 @@ edits-propagate-and-teach (config/learnings.json).
     python3 scripts/post-pack/edit_sweep.py --self-test
 
 DAY_OR_PIECE is the day whose edits to sweep (mon, wed, fri) or its piece id (with --piece). --edits is the saved
-answer of `board_web.py read WEEK edits`. --review takes the same DAY=LABEL|PATH as week_board.py: every draft of the
+answer of `board_web.py read WEEK edits`. --review takes DAY=LABEL|PATH: every draft of the
 day (article, scripts, captions) and the drafts of later days still in review.
 
 Only his saves count: a document whose updated_by is not Krish (the board's access-cookie writer) is left out and named.
@@ -35,8 +35,8 @@ For each saved edit (edits/<day>-<item>: text, base_sha256, at) it:
      content words that are not claim or filler words; anything weaker is a suggestion, and no number his edit does not
      hold is ever put into a draft;
   4. runs the gates again on every draft that changed: story_check.py on a script, voice_check.py on the article;
-  5. writes the sweep (default docs/plans/<Monday>-week/<day>-sweep.json) for week_board.py --sweep DAY=..., which
-     shows it under the drafts as "Also changed", each with Undo, and one ledger row per edit (surface publish_board,
+  5. writes the sweep (default docs/plans/<Monday>-week/<day>-sweep.json), in the shape week_plan.read_sweep reads, to
+     file on the piece (board_session.py <uuid> add) so the live board's day shows it as "Also changed", each with Undo, and one ledger row per edit (surface publish_board,
      action manual_edit, reason_code the class, decided_by Krish: his own saved words) for POST /api/content-edits.
 
 Without --apply nothing is written but the sweep file. The figure matching reuses narration_diff.py's number words and
@@ -77,11 +77,11 @@ def sha(text):
 
 
 def slug_of(label):
-    """The board's item id for a label, as week_board.py makes it."""
+    """The board's item id for a label: its words, lower case, joined by hyphens."""
     return re.sub(r'[^a-z0-9]+', '-', label.lower()).strip('-') or 'text'
 
 
-PARA_SPLIT = re.compile(r'(\n(?:[ \t]*\n)+)')  # the board's paragraphs (week_board.paragraphs, week.js)
+PARA_SPLIT = re.compile(r'(\n(?:[ \t]*\n)+)')  # a draft's paragraphs (week_plan.paragraphs)
 
 
 def paragraphs(text):
@@ -403,7 +403,7 @@ def matches_in(change, text, skip=None):
 # ------------------------------------------------------------------ the drafts, the edits and the run
 
 def read_reviews(values):
-    """{day: [{slug, label, path, text}]} from --review DAY=LABEL|PATH, as week_board.py reads them."""
+    """{day: [{slug, label, path, text}]} from --review DAY=LABEL|PATH."""
     out = {}
     for v in values or []:
         k, sep, rest = v.partition('=')
@@ -722,11 +722,11 @@ def self_test():
         check('run twice, the ledger row is the same row', again['ledger'][0]['idempotency_key'] == result['ledger'][0]['idempotency_key'])
         check('the gates ran on what changed', {g['where'] for g in result['gates']} >= {'Monday, Five-minute script', 'Monday, Article'})
         sys.path.insert(0, str(HERE))
-        import week_board
+        import week_plan
         try:
-            week_board.read_sweep(json.loads(json.dumps(result)))
+            week_plan.read_sweep(json.loads(json.dumps(result)))
             check('the board takes the sweep as written', True)
-        except week_board.BoardError as error:
+        except week_plan.BoardError as error:
             check(f'the board takes the sweep as written ({error})', False)
         stale = {'mon-article': dict(edits['mon-article'], base_sha256='0' * 64)}
         r2, c2 = sweep('mon', reviews, stale, {'mon': piece}, {}, '2026-10-26')
@@ -804,7 +804,7 @@ def main(argv=None):
     ap.add_argument('target', nargs='?', help='the day whose edits to sweep (mon, wed, fri), or its piece id with --piece')
     ap.add_argument('--week', help='the Monday, YYYY-MM-DD')
     ap.add_argument('--edits', help='the saved answer of board_web.py read WEEK edits')
-    ap.add_argument('--review', action='append', metavar='DAY=LABEL|PATH', help='each draft, as week_board.py takes it')
+    ap.add_argument('--review', action='append', metavar='DAY=LABEL|PATH', help='each draft, DAY=LABEL|PATH')
     ap.add_argument('--piece', action='append', metavar='DAY=UUID', help='the piece a day holds (for the ledger rows)')
     ap.add_argument('--recorded', action='append', metavar='DAY=CUT', help='a cut he has recorded: never changed, only listed')
     ap.add_argument('--making', action='append', metavar='DAY=PATH', help='a saved making record: its recordings are recorded cuts')
@@ -855,7 +855,7 @@ def main(argv=None):
         if a.post_ledger:
             for line in post_ledger(result['ledger']):
                 print(f'  ledger {line}')
-        print(f'then: week_board.py ... --sweep {day}={out}')
+        print(f'then: board_session.py <piece id> add {out}')
         return 0 if all(g['ok'] for g in result['gates']) else 1
     except SweepError as error:
         print(f'edit sweep: {error}', file=sys.stderr)

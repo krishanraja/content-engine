@@ -161,7 +161,7 @@ def spend_from_budget(record, *, lock_path=None) -> dict:
     return lock
 
 
-def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None) -> dict:
+def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None, approved=None) -> dict:
     path = _path(lock_path).resolve()
     root = path.parents[2] if path.parent.name == 've' and path.parent.parent.name == 'config' else path.parent
     lock = load(path)
@@ -207,6 +207,12 @@ def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None) ->
             if module in lock['formats']:
                 lock['formats'][module]['role'] = 'module'
     settings['frozen_on'] = (today or date.today()).isoformat() if not isinstance(today, str) else date.fromisoformat(today).isoformat()
+    if approved:
+        # Who froze it and how: Krish's Gate 2 (his words, or his Approve press on these exact stills from his board).
+        if approved.get('by') != 'Krish':
+            raise ValueError('only Krish freezes a lock at Gate 2')
+        settings['approved'] = {k: v for k, v in approved.items() if v is not None}
+        settings.pop('gate2', None)
     lock['status'] = 'frozen' if all(frozen(lock, name, root)[0] for name in lock['formats']) else 'direction_approved'
     path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
     return lock
@@ -274,5 +280,19 @@ def draft(fmt: str, aspect: str, beats: list[str], *, anatomy: str, motion: str,
     if wide:
         entry.update(canvas=dict(WIDE_CANVAS), compare_size=[960, 540])
     lock.setdefault('drafts', {})[key] = entry
+    path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
+    return entry
+
+
+def gate2_declined(fmt, *, words, on, at=None, sha256, lock_path=None) -> dict:
+    """His Not this at Gate 2 on a draft's stills (his Publish Board, To review): recorded on the draft as his no, with the
+    date and the sha256 of the stills he saw. The draft stays a draft; a new set of stills asks him again."""
+    path = _path(lock_path).resolve()
+    lock = load(path)
+    entry = lock.get('drafts', {}).get(fmt)
+    if entry is None:
+        raise ValueError(f'{fmt} is not a draft awaiting Gate 2')
+    entry['gate2'] = {'verdict': 'not_this', 'by': 'Krish', 'on': on, **({'at': at} if at else {}), 'sha256': sha256,
+                      **({'words': words.strip()} if str(words or '').strip() else {})}
     path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
     return entry

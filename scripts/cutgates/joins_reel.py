@@ -4,14 +4,14 @@
 F09 (27 Oct): Krish heard the ten-join reel and rejected it ("clipping after answered all the"). Every cut now
 comes with its own reel: the sound one and a half seconds either side of every join, in order, with a short
 silence between, so he can hear each join in under a minute. It is listed on the day's tab through the board's
-existing --materials input (scripts/post-pack/board_materials.py); week_board.py is not changed.
+materials shape (scripts/post-pack/board_materials.py), filed on the piece so the live board's day shows it.
 
     python3 scripts/cutgates/joins_reel.py build --video CUT.mp4 [--receipt CUT.mp4.validation.json] [--out DIR]
         writes CUT.joins-reel.m4a and CUT.joins-reel.json (reel time to cut time, the words either side, each
         join's gap check) beside the cut, or in DIR
     python3 scripts/cutgates/joins_reel.py board --piece UUID --reel long=URL[,INDEX.json] --reel short=URL[,INDEX.json]
         [--materials EXISTING.json] --out materials.json
-        then: week_board.py ... --materials mon=materials.json
+        then: board_session.py <piece id> add materials.json
 
 The URL is where filing put the reel (an https link, or a board asset under /api/board/). The reel is built from
 the finished file's own decoded sound, never from the take.

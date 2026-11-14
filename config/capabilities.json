@@ -681,7 +681,7 @@
    "purpose": "Subtitle, motion, idea, storyboard and thumbnail options on his take",
    "stage": "direction",
    "decided": "post-record",
-   "location": "scripts/post-pack/board_v4.py",
+   "location": "apps/control-plane/api/board/_presses.ts",
    "status": "partial",
    "proposal": "merge",
    "overlaps": [

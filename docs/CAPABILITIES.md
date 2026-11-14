@@ -60,7 +60,7 @@ and a keep, merge or retire proposal that is Krish's to decide.
 | ve spec v2 (`ve-spec`) | The one signed production spec for a ve cut | pre-record | working | keep | `packages/contracts/src/production-spec.ts` | creative-direction-legacy |
 | ve init, lint and expect (`ve-init-lint-expect`) | Starts a spec, refuses bad specs, writes the expectations sheet | pre-record | working | keep | `scripts/velib/lint.py` |  |
 | Storyboard (`storyboard`) | A mock frame per script line, signed before recording | pre-record | partial | keep | `.agents/skills/make-piece/SKILL.md` | creative-sheet |
-| Creative sheet v4 (`creative-sheet`) | Subtitle, motion, idea, storyboard and thumbnail options on his take | post-record | partial | merge | `scripts/post-pack/board_v4.py` | storyboard |
+| Creative sheet v4 (`creative-sheet`) | Subtitle, motion, idea, storyboard and thumbnail options on his take | post-record | partial | merge | `apps/control-plane/api/board/_presses.ts` | storyboard |
 
 ## pre-record
 

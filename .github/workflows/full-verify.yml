@@ -80,8 +80,8 @@ jobs:
       - run: npm run verify
 
   browser-buttons:
-    # Every Download, Copy picture and Copy button on a built publish board
-    # and publish page, clicked in Chromium with fetch() blocked the way
+    # Every Download, Copy picture and Copy button on a built publish page,
+    # clicked in Chromium with fetch() blocked the way
     # claude.ai's page rules block it (Krish, 2026-10-14: "the download
     # buttons for the images STILL do not work!!!!").
     # Playwright 1.55 below supports this host; latest now resolves to 26.04.
@@ -97,7 +97,7 @@ jobs:
         run: |
           python -m pip install playwright==1.55.0
           python -m playwright install --with-deps chromium
-      - name: Click every button on the board and a publish page
+      - name: Click every button on a publish page
         run: python scripts/post-pack/buttons_in_browser.py
       # The covers load the house fonts from node_modules (@fontsource), so the cover tests need the packages.
       - uses: actions/setup-node@v4
@@ -109,12 +109,10 @@ jobs:
         run: python tests/receipt_overlap_test.py
       - name: All nine series skins drawn, Mon, Wed and Fri, tall and wide, with and without logo rows, nothing on the words or logos (Krish, 2026-11-05)
         run: python tests/series_skins_test.py
-      - name: The board keeps its fixed layout and fits a phone (390px, 44px targets)
-        run: python scripts/check_board_layout.py --browser
 
   board-web:
-    # The isolated browser runtime below is pinned to Playwright 1.55.
-    # ubuntu-latest moved to 26.04, which that runtime does not support.
+    # The board's store on real SQL runtimes (pglite and Postgres). Its old pages and their browser runtime were retired
+    # on 13 Nov 2026 (Ruling, Krish, 2026-11-13). Pinned to 24.04 with the other jobs.
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -127,17 +125,12 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install --require-hashes --no-deps -r requirements-ci.txt
       - run: npm ci
-      - name: Install isolated SQL and browser test runtimes
+      - name: Install isolated SQL test runtimes
+        run: npm install --no-save --package-lock=false @electric-sql/pglite@0.3.14 pg@8.13.1
+      - name: The board's store, sessions and gates on a real SQL runtime
         run: |
-          npm install --no-save --package-lock=false @electric-sql/pglite@0.3.14 playwright@1.55.0 pg@8.13.1
-          npx playwright install --with-deps chromium
-      - name: Verify artifact conversion, migration and interactive web parity
-        run: |
-          python tests/board_web_test.py
-          python tests/board_today_test.py
           python tests/floor_group_test.py
           python tests/now_trim_test.py
-          python scripts/post-pack/board_today.py fixtures/week-board/today-2026-10-26.json fixtures/week-board/today-2026-11-02.json --out "$RUNNER_TEMP/board-today" --shoot --open mon
           node tests/board-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
           node tests/board-sessions-db.mjs pglite "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
           node tests/ideas-gate-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
@@ -146,8 +139,6 @@ jobs:
           python tests/board_session_test.py
           python tests/recover_research_test.py
           node tests/inspiration-said-cards.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
-          python tests/board_fixture.py "$RUNNER_TEMP/board-fixture.html"
-          node --import tsx tests/integration/board-runtime.ts "$PWD/node_modules/@electric-sql/pglite/dist/index.js" "$PWD/node_modules/playwright/index.mjs" "$RUNNER_TEMP/board-fixture.html" "$RUNNER_TEMP/board-screenshots"
       - name: Board sessions on a real Postgres (four at once, and a copied prompt followed end to end)
         run: |
           PGBIN=$(ls -d /usr/lib/postgresql/*/bin | sort -V | tail -1)

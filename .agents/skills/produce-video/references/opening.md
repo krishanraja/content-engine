@@ -1,85 +1,48 @@
 # The opening
 
-Reference for the `produce-video` skill, read at the step that names it (`.agents/skills/produce-video/SKILL.md`). Moved out of the core on 18 October 2026 so a session starts lean (docs/COST_GUARDS.md); rewritten on 29 October 2026, when the hook became the intro; changed on 5 November 2026, when the intro sting came back in front of the wide cut.
+Reference for the `produce-video` skill, read at the step that names it (`.agents/skills/produce-video/SKILL.md`). Moved out of the core on 18 October 2026 so a session starts lean (docs/COST_GUARDS.md); rewritten on 29 October 2026, when the hook became the intro, and again on 12 November 2026, when nothing before the hook became the rule for good.
 
-Krish, 2026-11-05, of the makeyourmindup intro sting (the Intro Sting page, the
-second direction he saw on 12 October): "I think it should go at the start of
-the longer wide videos 100%,". Asked whether each series' clip may keep
-flashing the other series' colours on its way to its own, he picked "Keep it as
-I saw it". Before that, 2026-10-29, picking option one, "The hook is the
-intro", for the one opening every video has: "I'd pick number one here but I
-think that we need to test and learn. We need to figure out what the right tone
-is over time based on real engagement. Let's go with number one for now."
-(house rule HOOK_IS_THE_INTRO).
+Ruling (Krish, 2026-11-12), answering the openings question: "Nothing before
+the hook, ever. Remove the sting exception for good." (house rule
+HOOK_IS_THE_INTRO).
 
-- **Paused since 2026-11-12.** `config/intro-sting.json` carries a `paused`
-  block with Krish's words ("Happy with your recommendations and yes go for
-  the profile links as well."): long cuts open on the hook with no sting until
-  the sting after the hook is built and he approves its proof render
-  (`docs/production/SOCIAL-BEST-PRACTICES-2026.md` section 4.3: a brief
-  animated logo may follow, not precede, value). make.py, the day runner and
-  ve read the block and open every cut on its hook, and the palette
-  (`config/brand-palette.json`) expects no sting. His 5 November approval and
-  the clips are kept; the block is removed, with his words, once the after-hook
-  sting is approved (`docs/production/BRAND_PALETTE.md`). The bullets below
-  are how the sting stands when it returns.
-- **What the wide cut opens on.** The 16:9 long cut of a weekly series piece
-  opens on that series' house sting: the clip he saw, byte for byte
-  (`config/intro-sting.json` names each clip by its library path and sha256,
-  under "1 Brand kit (permanent)/Intro sting"), 56 frames at 30 fps, about
-  1.9 seconds (45 frames at 24 fps, when the cut runs at the take's rate),
-  with the full MAKE YOUR MIND/UP wordmark plate near its end. It has no sound of its own:
-  make.py lays silence under it and the music bed over it, at its loud open.
-  His face and the hook come in on the very next frame, in the wide cut's
-  existing branded frame for now (not yet put to Krish: the wide cut either
-  keeps that frame, with the series pill on each panel, or gets a corner
-  dress like the tall one; he chooses from a still of each). Each series'
-  clip flashes the other series' colours on its way to its own: the one
-  written exception to the series-colour rule. make.py fetches a clip that is
-  not on the machine from the library, checked by size and sha256
-  (`python scripts/quick-edit/intro.py fetch` does it by hand).
-- **What the tall cut opens on.** His hook, straight away, in the brand's
-  dress from the first frame: the brand's wordmark in the top left corner and
-  the series tag in the top right, as the Friday 23 October tall cut has them
-  (kit.py draws `dress-9x16.png`; make.py lays it over the whole main, over
-  the pictures and under the captions). No sting.
-- **An off-day piece** (one with no weekly series, or dated on a day that
-  is not its series' own day) wears no sting, and never another series' colour, so
-  both its cuts open on the hook.
-- **Nothing else goes in front of the hook:** no story card, no title card
-  and no second intro, in either cut.
+- **Every cut opens on its hook.** The 16:9 long cut and the 9:16 short cut,
+  of a weekly series piece or an off-day piece: the first frame is the hook.
+  The long cut opens on his face and the hook in the wide cut's branded frame;
+  the tall cut opens on his hook with no wordmark, mark tile or series tag over
+  its animated content (the closing outro card keeps the wordmark; Krish,
+  2026-11-11).
+- **Nothing goes in front of it.** No sting, no logo animation, no story card,
+  no episode card, no title card and no second intro, on any cut, and no
+  words for one piece let one in. make.py leaves out a clip a config names in
+  `"intro"`, honours `"intro_override"` no more, and its report says so;
+  `sting_stop` refuses a cut handed an intro anyway. ve lint refuses a spec
+  naming a sting (`brand.intro_sting` other than its no-sting sentence) or an
+  episode card (`brand.opening_exception`), ve compile lays neither, and ve
+  render and ve qc refuse props or a file that carry one.
+- **The house intro sting is retired for good.** `config/intro-sting.json` says
+  `retired`, with his words; `scripts/quick-edit/intro.py` gives no cut a
+  sting, refuses any other status on that file and refuses every approval. Its
+  clips stay in the brand kit for the record only. Its history: it first ran
+  from 2026-10-12 (house rule INTRO_STING) with no design approved; on
+  2026-10-12 he turned the first direction down ("it's ok, it's a bit boring
+  and colourless and vanilla - and just what Powerpoint would do in 2008");
+  his pick of "The hook is the intro" retired it on 2026-10-29; on 2026-11-05
+  it came back in front of the wide cut of a series piece ("I think it should
+  go at the start of the longer wide videos 100%,"); it was paused on
+  2026-11-12 and retired the same day.
 - **One opening and one close.** The close is one calm outro card, held long
   enough to read (house rule STORY_INTRO_OUTRO; the story outro). Krish,
   2026-10-21: "why are there two separate intro sequences? that should NEVER
   happen."; 2026-10-28: "we also don't need three separate outro transitions
-  and screens. Ever."
-  The sting followed straight by his face is one opening; a story card or a
-  title card between them would be two.
+  and screens. Ever." The animated story card in front of each cut (the intro
+  half of STORY_INTRO_OUTRO) stays retired, in `config/story-intro-outro.json`.
 - **Recorded on every cut.** Each report says what the cut opened on
-  (`opening`): `{"kind": "sting", "rule": "HOOK_IS_THE_INTRO", "series": ...,
-  "clip_sha256": ...}` on a wide cut with its sting, `{"kind": "hook", "rule":
-  "HOOK_IS_THE_INTRO"}` on the tall cut, and the same with a `why` on a wide
-  cut that opened on its hook. So real engagement can settle the choice, and
-  the openings stay his choice to test. Another opening is tried only on
-  Krish's own words for that piece: a clip named in the config's `"intro"`
-  with his words in `"intro_override"`, which the report records as
-  `{"kind": "clip", ...}` and quotes. Never write those words for him, and
-  never copy an old approval into a new piece's config.
-- **Waiting on his approval.** While `config/intro-sting.json` says
-  `candidate`, make.py renders the wide cut on its hook and its report says
-  why. `python scripts/quick-edit/intro.py approve --words "..."` records his
-  approval in his own words, bound to the clips' sha256 (`source_sha256`);
-  never write those words for him. Once it is recorded, a wide cut of a
-  series piece that cannot have its sting (a clip missing from the library,
-  or not the one he approved) stops before it renders, and only his own words
-  for that piece in `"intro_override"` let it through.
-- **What came before.** The sting first ran from 2026-10-12 (house rule
-  INTRO_STING) with no design approved: on 2026-10-12 he turned the first
-  direction down ("it's ok, it's a bit boring and colourless and vanilla - and
-  just what Powerpoint would do in 2008"), and on 2026-10-29 his pick of "The
-  hook is the intro" retired it, so no cut opened on a sting from 29 October
-  to 5 November. The animated story card in front of each cut (the intro half
-  of STORY_INTRO_OUTRO) stays retired, in `config/story-intro-outro.json`.
+  (`opening`): `{"kind": "hook", "rule": "HOOK_IS_THE_INTRO"}`, always.
+- **The music under the opening.** The bed opens loud for the first moments
+  and eases under his voice (the one bed shape, `config/music-bed.json`); with
+  nothing in front of the hook, that loud open sits under his first words at
+  the level house rule MUSIC_BED sets.
 - **No name.** No cut carries his name, on screen or in a caption (Krish,
   2026-10-28: "Remember, no content refers to Krish, ever. I still see that
   popping up from time to time. Even articles written are not authored by

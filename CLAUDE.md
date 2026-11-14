@@ -23,7 +23,7 @@ reading it whole. It is about 270 KB (some 65k tokens).
 | Pick up where the last session stopped | `WORKBENCH.md` |
 | Find a file, a function, a route or a station | `docs/REPO_MAP.md` (search it) |
 | Ideas, judging, drafting, rewriting, channel copy, the ledger | `docs/CONTENT_ENGINE.md` |
-| Video | `docs/ve/ENGINE.md`, then `docs/ve/RUNBOOK.md` (`docs/ve/STATUS.md` says what ve can do today) |
+| Video | `docs/ve/ENGINE.md`, then `docs/ve/RUNBOOK.md` (`docs/ve/STATUS.md` says what ve can do today; `docs/ve/INGREDIENTS.md` for caption styles, motion styles, transitions, camera, energy and `ve pace`) |
 | The week's publish board | `docs/PUBLISH_BOARDS.md` |
 | Any intro, outro, icon, wordmark, sting or end card, on any day or format | `docs/production/BRAND_PALETTE.md` (the rules are `config/brand-palette.json` only) |
 | The carousel standard (Growth makes the carousels) | `docs/CAROUSEL-STANDARD.md` |

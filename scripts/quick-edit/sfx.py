@@ -31,7 +31,9 @@ def approved(path=APPROVED):
     data = json.loads(Path(path).read_text(encoding='utf-8'))
     out = {}
     for row in data.get('approved') or []:
-        if row.get('id') and row.get('sha256') and row.get('approved_by') == 'Krish' and row.get('approval_words'):
+        # His words, or his Approve press on these exact bytes (the Sound effects card, Ruling, Krish, 2026-11-12).
+        pressed = (row.get('approved_press') or {}).get('sha256') == row.get('sha256')
+        if row.get('id') and row.get('sha256') and row.get('approved_by') == 'Krish' and (row.get('approval_words') or pressed):
             out[row['id']] = row
     return out
 

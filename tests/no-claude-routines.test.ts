@@ -203,12 +203,12 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     // good-news schedule is retired. The other, the Monday final board, is built by code from the overnight runner,
     // never by a workflow on a timer.
     const scheduled = WORKFLOWS.filter((path) => /^\s*schedule:/m.test(read(path)))
-    const boards = scheduled.filter((path) => /week_board\.py|board_web\.py/.test(read(path)))
+    const boards = scheduled.filter((path) => /board_web\.py|board_feed\.py/.test(read(path)))
     expect(boards).toEqual(['.github/workflows/sunday-ideas.yml'])
     expect(read('.github/workflows/saturday-goodnews.yml')).not.toMatch(/^\s*schedule:|cron:/m)
     // Every other scheduled job that runs Claude Code builds no board.
     for (const path of scheduled.filter((p) => runsClaude(read(p)) && !boards.includes(p))) {
-      expect(read(path), path).not.toMatch(/week_board\.py|board_web\.py/)
+      expect(read(path), path).not.toMatch(/board_web\.py|board_feed\.py/)
     }
     const agents = read('AGENTS.md')
     expect(agents).toContain('Exactly two scheduled jobs may touch a publish board')
@@ -266,17 +266,14 @@ with tempfile.TemporaryDirectory() as t:
     expect(text).not.toMatch(/publish-web|week_board\.py/)
   })
 
-  it('the guard plans the week eight days after the recording Sunday and reads only a live Ideas tab as built', () => {
+  it('the guard plans the week eight days after the recording Sunday and takes only a typed Monday', () => {
     const py = (code: string) => spawnSync('python3', ['-c', code], { cwd: ROOT, encoding: 'utf8' })
     const run = py(`
 import sys, datetime as dt
 sys.path.insert(0, 'scripts'); sys.path.insert(0, 'scripts/post-pack')
-import sunday_ideas as s, week_board as w
+import sunday_ideas as s
 for d in ('2026-10-31', '2026-11-01', '2026-10-27'):
     print(s.target_monday(dt.date.fromisoformat(d)).isoformat())
-print(s.has_ideas(w.ideas_waiting_panel(w.monday_of('2026-11-09'), False)))
-import inspect
-print(s.IDEAS_LIVE in inspect.getsource(w.ideas_panel))
 print(s.monday_arg('2026-11-09').isoformat())
 for typed in ('20261109', '2026-W46-1', '2026-11-10', ''):
     try:
@@ -285,7 +282,7 @@ for typed in ('20261109', '2026-W46-1', '2026-11-10', ''):
         print('refused')
 `)
     expect(run.stderr).toBe('')
-    expect(run.stdout.trim().split(/\r?\n/)).toEqual(['2026-11-09', '2026-11-09', '2026-11-09', 'False', 'True', '2026-11-09',
+    expect(run.stdout.trim().split(/\r?\n/)).toEqual(['2026-11-09', '2026-11-09', '2026-11-09', '2026-11-09',
       'refused', 'refused', 'refused', 'refused'])
     // The workflow puts the normalised Monday, never the typed text, into its output.
     expect(read('.github/workflows/sunday-ideas.yml')).toContain('monday=$(python3 scripts/sunday_ideas.py week --date "$WEEK")')

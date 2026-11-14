@@ -14,7 +14,7 @@ name: Make a piece
 #   - Krish, from Actions > Make a piece > Run workflow.
 # Its questions for Krish go onto the live board (Control Centre's Content tab), never into chat: nobody reads this
 # run's output. It writes to the board only through the engine API, on ENGINE_OPERATOR_TOKEN, and builds no board page
-# (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive).
+# (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it).
 #
 # One-time setup (Krish): run `claude setup-token` on his own computer and add the result to this repository as the
 # Actions secret CLAUDE_CODE_OAUTH_TOKEN. Until it exists every run fails at its first step, naming that step.
@@ -122,7 +122,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 600
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_web.py touch:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/title_check.py:*),Bash(python3 scripts/post-pack/narration_diff.py:*),Bash(python3 scripts/post-pack/voice_check.py:*),Bash(python3 scripts/post-pack/story_check.py:*),Bash(python3 scripts/post-pack/ai_scan.py:*),Bash(python3 scripts/post-pack/creative_direction.py:*),Bash(python3 scripts/post-pack/edit_sweep.py:*),Bash(python3 scripts/post-pack/teleprompter_send.py:*),Bash(python3 scripts/pages/build.py:*),Bash(python3 scripts/voice/spoken_rules.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),Edit(WORKBENCH.md),Write(WORKBENCH.md),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_web.py touch:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/title_check.py:*),Bash(python3 scripts/post-pack/narration_diff.py:*),Bash(python3 scripts/post-pack/voice_check.py:*),Bash(python3 scripts/post-pack/story_check.py:*),Bash(python3 scripts/post-pack/ai_scan.py:*),Bash(python3 scripts/post-pack/creative_direction.py:*),Bash(python3 scripts/post-pack/edit_sweep.py:*),Bash(python3 scripts/post-pack/teleprompter_send.py:*),Bash(python3 scripts/pages/build.py:*),Bash(python3 scripts/voice/spoken_rules.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),Edit(WORKBENCH.md),Write(WORKBENCH.md),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             piece_id: ${{ steps.piece.outputs.id }}

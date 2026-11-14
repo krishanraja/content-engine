@@ -205,13 +205,19 @@ describe('every ruling carries his words and reaches a stage', () => {
   test('a production rule is enforced by the tools its source names, and those tools exist', () => {
     // No prompt reads the production stage, so a rule there is enforced
     // somewhere only when a tool holds it: its source must name that tool.
+    // A source is the rule's provenance, his to change (taste-guard), so a tool it names that was retired since stays
+    // named there; it is listed here with the ruling that retired it, and the rule must still name a tool that exists.
+    const RETIRED_TOOLS: Record<string, string> = {
+      'config/board-layout.json': 'Ruling (Krish, 2026-11-13): the old publish boards are retired for good',
+    }
     const production = rulesFor('production')
     assert.ok(production.length > 0)
     for (const r of production) {
-      const tools = r.source.match(/\b(?:scripts|config|apps)\/[\w./\-\[\]]+\.(?:py|ts|json)\b/g) || []
+      const tools = (r.source.match(/\b(?:scripts|config|apps)\/[\w./\-\[\]]+\.(?:py|ts|json)\b/g) || []).filter(t => !(t in RETIRED_TOOLS))
       assert.ok(tools.length > 0, `${r.id} names no tool that enforces it`)
       for (const tool of tools) assert.ok(existsSync(tool), `${r.id}: ${tool} does not exist`)
     }
+    for (const tool of Object.keys(RETIRED_TOOLS)) assert.ok(!existsSync(tool), `${tool} is back: take it off RETIRED_TOOLS`)
   })
 })
 
@@ -511,7 +517,7 @@ describe('the opening, the music bed and a thumbnail for every size (Krish, 2026
     return r
   }
   const VIDEO_RULES = ['HOOK_IS_THE_INTRO', 'MUSIC_BED', 'THUMBNAIL_EVERY_SIZE']
-  const ON: Record<string, string> = { HOOK_IS_THE_INTRO: '2026-10-29', MUSIC_BED: '2026-10-12', THUMBNAIL_EVERY_SIZE: '2026-10-12' }
+  const ON: Record<string, string> = { HOOK_IS_THE_INTRO: '2026-11-12', MUSIC_BED: '2026-10-12', THUMBNAIL_EVERY_SIZE: '2026-10-12' }
   test('all three are live, dated, in his words, and on the production stage only', () => {
     for (const id of VIDEO_RULES) {
       const r = rule(id)
@@ -520,7 +526,8 @@ describe('the opening, the music bed and a thumbnail for every size (Krish, 2026
       assert.deepEqual(r.stages, ['production'], id)
       assert.ok(rulesFor('production').includes(r), id)
     }
-    assert.ok(rule('HOOK_IS_THE_INTRO').said.startsWith('I think it should go at the start of the longer wide videos 100%,'))
+    assert.ok(rule('HOOK_IS_THE_INTRO').said.startsWith('Nothing before the hook, ever. Remove the sting exception for good.'))
+    assert.ok(rule('HOOK_IS_THE_INTRO').said.includes('"I think it should go at the start of the longer wide videos 100%,"'))
     assert.ok(rule('HOOK_IS_THE_INTRO').said.includes('"I\'d pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let\'s go with number one for now."'))
     assert.ok(rule('MUSIC_BED').said.includes('(high volume during the intro, low whilst I am talking, higher during the outro)'))
     assert.ok(rule('MUSIC_BED').said.includes('"Yes I think music should be audible throughout but just lower."'))
@@ -544,43 +551,33 @@ describe('the opening, the music bed and a thumbnail for every size (Krish, 2026
     assert.doesNotMatch(houseRulesBlock('visual'), /LUFS|intro-sting|thumbnail_override/)
     assert.doesNotMatch(houseRulesBlock('write'), /LUFS|intro-sting|thumbnail_override/)
   })
-  test('the opening rule says what is true today: the sting on the wide cut of a series piece, the hook on the tall cut, the story card retired, a choice under test', () => {
+  test('the opening rule says what is true today: nothing before the hook on any cut, ever, the sting retired for good, the story card retired', () => {
     const r = rule('HOOK_IS_THE_INTRO')
-    // Krish, 2026-10-29: option one, "The hook is the intro", which replaced both 12 October opening rules; then
-    // 2026-11-05: "I think it should go at the start of the longer wide videos 100%," (the sting, back on the wide cut only).
+    // Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for good."
     assert.equal(HOUSE_RULES.find(x => x.id === 'INTRO_STING'), undefined, 'INTRO_STING stays folded into HOOK_IS_THE_INTRO')
-    assert.match(r.text, /The 9:16 short cut opens straight on its hook/)
+    assert.match(r.text, /nothing goes before the hook, ever \(Ruling, Krish, 2026-11-12\)/)
+    assert.match(r.text, /Every cut, the 9:16 short cut and the 16:9 long cut, of a weekly series piece or an off-day piece, opens straight on its hook/)
+    assert.match(r.text, /No sting, logo animation, story card, episode card, title card or second intro sits in front of it, and no words for one piece let one in/)
     // Krish, 2026-11-11: no wordmark, mark tile or series tag over the vertical cut's animated content; the outro keeps it.
-    assert.match(r.text, /No wordmark, mark tile or series tag sits over its animated content/)
+    assert.match(r.text, /no wordmark, mark tile or series tag sits over its animated content/)
     assert.match(r.text, /the closing outro card keeps the wordmark/)
-    assert.doesNotMatch(r.text, /series tag small in the top corners/)
-    assert.match(r.text, /The 16:9 long cut of a weekly series piece opens on the house intro sting \(config\/intro-sting\.json: 56 frames at 30 fps/)
-    assert.match(r.text, /with no sound of its own and the music bed under it, and his face and the hook come in on the very next frame/)
-    assert.match(r.text, /no story card, no second intro, and no sting on the tall cut or on an off-day piece/)
-    assert.match(r.text, /The sting first ran from 2026-10-12 to 2026-10-29 with no design approved \(INTRO_STING\)/)
+    assert.match(r.text, /The house intro sting is retired for good \(config\/intro-sting\.json\)/)
     assert.match(r.text, /The intro half of STORY_INTRO_OUTRO \(the animated story card\) stays retired/)
-    // His "test and learn": a choice under test, recorded per cut.
-    assert.match(r.text, /stays Krish's choice to test/)
-    assert.match(r.text, /records the opening it used \("opening"\)/)
-    assert.match(r.text, /intro_override/)
+    assert.match(r.text, /records the opening it used \("opening"\), which is always the hook/)
+    // No exception survives: nothing in the text lets a sting, a clip or his words for one piece open a cut.
+    assert.doesNotMatch(r.text, /except|intro_override|opening_exception|stays Krish's choice to test|opens on the house intro sting/)
     const said = 'I\'d pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let\'s go with number one for now.'
     const sting = JSON.parse(readFileSync('config/intro-sting.json', 'utf8'))
     assert.equal(sting.schema_version, 2)
-    assert.ok(['candidate', 'approved'].includes(sting.status), sting.status)
-    assert.deepEqual(sting.shapes, ['16x9'])
-    assert.equal(sting.frames, 56)
-    assert.deepEqual([sting.placement.on, sting.placement.by, sting.placement.words], ['2026-11-05', 'Krish', 'I think it should go at the start of the longer wide videos 100%,'])
-    assert.equal(sting.colours.picked, 'Keep it as I saw it')
-    // The 29 October retirement and the 12 October rejection are kept, in his words.
+    assert.equal(sting.status, 'retired')
+    assert.deepEqual(sting.last_decision, { on: '2026-11-12', by: 'Krish', decision: 'retired', words: 'Nothing before the hook, ever. Remove the sting exception for good.' })
+    assert.equal(sting.source_sha256, null, 'nothing is approved, so no hash')
+    assert.equal(sting.paused, undefined)
+    // His earlier words are kept, in his words: the 12 October rejection, the 29 October retirement, the 5 November placement.
     const retired = sting.history.find((h: any) => h.decision === 'retired')
     assert.deepEqual([retired.on, retired.by, retired.rule, retired.words], ['2026-10-29', 'Krish', 'HOOK_IS_THE_INTRO', said])
     assert.ok(sting.history.some((h: any) => h.decision === 'rejected' && h.on === '2026-10-12'))
-    if (sting.status === 'approved') {
-      assert.match(sting.source_sha256, /^[0-9a-f]{64}$/, 'an approval is bound to the clips')
-      assert.equal(sting.last_decision.decision, 'approved')
-    } else {
-      assert.equal(sting.source_sha256, null, 'no approval yet, so no hash')
-    }
+    assert.deepEqual([sting.placement.on, sting.placement.by, sting.placement.words], ['2026-11-05', 'Krish', 'I think it should go at the start of the longer wide videos 100%,'])
     const story = JSON.parse(readFileSync('config/story-intro-outro.json', 'utf8'))
     assert.deepEqual([story.retired.story_intro.on, story.retired.story_intro.rule, story.retired.story_intro.words], ['2026-10-29', 'HOOK_IS_THE_INTRO', said])
     assert.deepEqual(Object.keys(story.required).sort(), ['audio_treatment', 'outro_card'])
@@ -594,7 +591,11 @@ describe('the opening, the music bed and a thumbnail for every size (Krish, 2026
     assert.ok(r.text.includes(`about ${lv.intro_lufs} LUFS over the intro, about ${lv.bed_lufs} under his voice (about ${lv.final_integrated_lufs - lv.bed_lufs} LU below it) and about ${lv.outro_lufs} over the end card`))
     assert.ok(r.text.includes(`up over ${lv.ramp_up_s} seconds after his last word`) && lv.ramp_down_s === 0.5 && r.text.includes('over half a second'))
     assert.ok(r.text.includes(`finishes at ${lv.final_integrated_lufs} LUFS integrated with true peak at most ${lv.max_true_peak_dbtp} dBTP`))
-    assert.match(r.text, /stay proposed until he approves them by ear/)
+    // Ruling (Krish, 2026-11-12): "Approve them as they are." The rule and the ledger say the same: approved by him that day.
+    assert.doesNotMatch(r.text, /stay proposed/)
+    assert.deepEqual([lv.status, lv.approved_by, lv.approved_on, lv.approval_words], ['approved', 'Krish', '2026-11-12', 'Approve them as they are.'])
+    assert.ok(r.text.includes(`Krish approved these levels on ${lv.approved_on} ("${lv.approval_words}")`))
+    assert.ok(r.said.includes(`"${lv.approval_words}"`))
     // Krish, 2026-10-28: "Yes I think music should be audible throughout but just lower."
     assert.match(r.text, /audible under the whole of every cut, wide or tall, low under his voice, and never drops out/)
   })
@@ -631,6 +632,30 @@ describe('every script opens straight on the hook: the series line is retired (S
       mind_the_gap: "I've been keeping a beady eye on what's coming with AI, before everyone notices. I'm Krish.",
     })
   })
+  test('nothing before the hook: no house rule, skill, ve document or format allows a sting or anything else in front of it (Ruling, Krish, 2026-11-12)', () => {
+    // "Nothing before the hook, ever. Remove the sting exception for good." Each pattern is a way the exception was
+    // written before; any of them coming back, in a rule or a document a session reads, fails here.
+    const allows = [
+      /except(?:ing)? the (?:house )?(?:intro )?sting/i,
+      /\bopens? on (?:its|the|that) (?:series'? )?(?:house )?(?:intro )?sting\b/i,
+      /(?:house |intro |series )sting (?:goes |plays |sits )?in front of (?:the|its|every|a) (?:hook|16:9|long|wide)/i,
+      /(?:wide|long) cut[^.]{0,60}\bopens? on [^.]{0,30}\bsting\b/i,
+      /sting_wide_hook_tall` by default|default `sting_wide_hook_tall`/,
+    ]
+    for (const r of HOUSE_RULES) for (const re of allows) assert.doesNotMatch(r.text, re, `${r.id}: ${re}`)
+    const read = (f: string) => readFileSync(f, 'utf8')
+    const files = [
+      '.agents/skills/make-piece/SKILL.md', '.claude/skills/make-piece/SKILL.md', '.agents/skills/produce-video/SKILL.md',
+      '.claude/skills/produce-video/SKILL.md', '.agents/skills/produce-video/references/opening.md', '.agents/skills/ve/SKILL.md',
+      '.claude/skills/ve/SKILL.md', '.agents/skills/plan-week/SKILL.md', '.claude/skills/plan-week/SKILL.md',
+      'docs/ve/ENGINE.md', 'docs/ve/RUNBOOK.md', 'docs/ve/STATUS.md', 'docs/CREATIVE_DIRECTION.md', 'docs/production/BRAND_PALETTE.md',
+      'docs/ve/design/formats/F-anatomy.md', 'config/ve/formats/voice-led-pictures.json', 'scripts/quick-edit/README.md', 'WORKBENCH.md',
+    ]
+    for (const f of files) {
+      if (!existsSync(f)) continue
+      for (const re of allows) assert.doesNotMatch(read(f), re, `${f}: ${re}`)
+    }
+  })
   test('HOOK_AND_CTA opens straight on the hook and closes as SCRIPT_CLOSE says', () => {
     const r = HOUSE_RULES.find(x => x.id === 'HOOK_AND_CTA')!
     assert.match(r.text, /opens straight on the hook \(SERIES_OPENER\)/)
@@ -638,8 +663,9 @@ describe('every script opens straight on the hook: the series line is retired (S
     assert.match(r.text, /closes as SCRIPT_CLOSE says/)
     assert.match(r.text, /The full deep dive is at makeyourmindup\.ai\./)
     assert.match(r.text, /No question for the comments and no sign-off/)
-    // The script opens on the hook; the only logo animation in front of it is the house sting on the 16:9 long cut.
-    assert.match(r.text, /no logo animation goes in front of the hook, except the house sting on the 16:9 long cut \(HOOK_IS_THE_INTRO\)/)
+    // The script opens on the hook, and nothing goes in front of it on any cut (Ruling, Krish, 2026-11-12).
+    assert.match(r.text, /nothing goes in front of the hook on any cut, ever: no logo animation and no sting \(HOOK_IS_THE_INTRO\)/)
+    assert.doesNotMatch(r.text, /except the house sting/)
     assert.match(r.said, /launch straight in to "I put GrokBot and Muse head to head"/)
   })
   test('the script writer opens on the hook with no series line, whatever the series', async () => {

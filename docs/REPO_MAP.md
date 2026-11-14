@@ -35,7 +35,6 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `docs/ve/`
 - `docs/walks/`
 - `editions/`
-- `examples/`
 - `fixtures/`
 - `inspo/`
 - `lab/`
@@ -242,14 +241,17 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `const OPEN_GOVERNOR`
 - `const SIGNAL_TTL_DAYS`
 - `type SubjectKind = 'venture' | 'prospect' | 'aspiration'`
-- `type AeoEngine = 'perplexity' | 'chatgpt' | 'claude' | 'grok'`
+- `type AeoEngine = 'perplexity' | 'chatgpt' | 'claude' | 'grok' | 'gemini'`
 - `type ThemesStatus`
 - `interface AeoEvidence`
 - `interface AeoProbe`
 - `interface AeoQuery`
+- `interface AeoCitedPage`
 - `interface AeoRecommendation`
 - `interface AeoNotWorthChasing`
 - `interface AeoPacket`
+- `const PROBE_FEATURE_FIELDS`
+- `function schemaCheck(node: SchemaNode, v: unknown, path: string, errs: string[]): void`
 - `function validatePacket(input: unknown): { ok: true; packet: AeoPacket } | { ok: false; errors: string[] }`
 - `function aeoSourceRef(kind: SubjectKind, slug: string, weekStart: string, n: number): string`
 - `interface AeoSignalRow`
@@ -259,6 +261,22 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `function aeoSignalSummary(meta: AeoSignalRow['meta']['aeo'], thesis: string): string`
 - `function probeRows(packet: AeoPacket): Array<Record<string, unknown>>`
 - `function queryRows(packet: AeoPacket): Array<Record<string, unknown>>`
+- `interface CitedPageRow`
+- `function citedPageRows(packet: AeoPacket, stored: ReadonlyArray<Pick<CitedPageRow, 'url' | 'mention' | 'mention_ok' | '…`
+- `const KRISH_DOMAINS: readonly string[]`
+- `const NOT_OURS: readonly string[]`
+- `const PACKET_FEATURES: readonly string[]`
+- `const CONTEXT_FEATURES: readonly string[]`
+- `interface BrandCheck`
+- `function brandNamesOf(v: unknown): string[]`
+- `function brandChecksOf(v: unknown): BrandCheck[]`
+- `function heldProducts(engines: ReadonlyArray<{ product_slug?: unknown; role?: unknown; activation_state?: unknown }>): …`
+- `interface ShippedDeclaration`
+- `function shippedFor(rows: ReadonlyArray<Record<string, unknown>>, product: string): ShippedDeclaration[]`
+- `function subjectHostsOf(domains: unknown): string[]`
+- `interface SearchRead`
+- `interface SearchSignals`
+- `function searchSignalsFor(hosts: readonly string[], input: { reads: readonly SigRow[]; gsc: readonly SigRow[]; bing: re…`
 
 ### `apps/control-plane/api/_alert.ts`
 
@@ -1255,7 +1273,7 @@ The making record: where one piece is on its way from the workroom to
 
 ### `apps/control-plane/api/_meter.ts`
 
-- `type MeterProvider = 'apify' | 'n8n' | 'anthropic' | 'perplexity' | 'openai'`
+- `type MeterProvider`
 - `type MeterUnitKind = 'actor' | 'workflow' | 'agent'`
 - `interface MeterScope`
 - `function meterScope<T>(s: MeterScope, fn: () => Promise<T>): Promise<T>`
@@ -1273,6 +1291,7 @@ The making record: where one piece is on its way from the workroom to
 - `async function anthropicFailure(e: { agent?: string | null model: string error: unknown /** The usage the provider repo…`
 - `async function perplexityCall(e: { agent: string; model: string; usage?: unknown; failed?: boolean }): Promise<void>`
 - `async function openaiEmbeddingCall(e: { agent: string; model: string; usage?: unknown; failed?: boolean }): Promise<voi…`
+- `async function reportedUsage(e: { provider: 'anthropic' | 'openai' | 'perplexity' | 'google' | 'xai' agent?: string | n…`
 - `interface FactRunCost`
 - `function newestRunCost(rows: Array<{ at: string; run_id: string | null; piece_id: string | null; usd: number | string }…`
 - `async function lastFactRunCost(): Promise<FactRunCost | null>`
@@ -1458,6 +1477,7 @@ The one Anthropic price table.
 - `function readUsage(usage: unknown): TokenUsage`
 - `const PERPLEXITY_PRICES: Record<string, { in: number; out: number; request: number }>`
 - `function perplexityUsd(model: string, usage: unknown): number`
+- `const ANTHROPIC_WEB_SEARCH_USD`
 - `const OPENAI_EMBEDDING_PRICES: Record<string, number>`
 
 ### `apps/control-plane/api/_productionBrief.ts`
@@ -1861,6 +1881,8 @@ What Krish has confirmed he likes, for the writers.
 - `const DEFAULT_TELEPROMPTER_MCP_URL`
 - `const WORDS_PER_MINUTE`
 - `const APPROVAL_WRITER`
+- `const TYPED_SCRIPTS_ID`
+- `function typedApproval(a: { id?: unknown; body?: unknown }): boolean`
 - `const ALLOWED_TOOLS: Readonly<Record<string, readonly string[]>>`
 - `class TeleprompterRefusal`
 - `class TeleprompterError`
@@ -2060,6 +2082,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 ### `apps/control-plane/api/aeo/meter.ts`
 
+- `const METER_PROVIDERS`
+- `function rowErrors(rows: readonly UsageRow[]): string[]`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/aeo/queries.ts`
@@ -2145,8 +2169,16 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function creativeBody(id: string, body: Record<string, unknown>): boolean`
 - `const YES_ID`
 - `function yesBody(id: string, body: Record<string, unknown>): boolean`
+- `const WORDS_ID`
+- `const WORDS_KIND`
+- `function saidInWords(body: Record<string, unknown>): boolean`
+- `function wordsBody(id: string, body: Record<string, unknown>): boolean`
 - `const LIVE_ID`
 - `function liveBody(id: string, body: Record<string, unknown>): boolean`
+- `const SIGN_OFF_ID`
+- `const MAX_SIGN_OFF_PRESSES`
+- `const SIGN_OFF_WORDS_MAX`
+- `function signOffBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
@@ -2188,12 +2220,6 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function cutInboxRow(place: CutPlace, v: CutVerdict)`
 - `function cutIncident(place: CutPlace, v: CutVerdict): Incident | null`
 - `async function fileCutLearning(db: SupabaseClient, place: CutPlace, v: CutVerdict, now = new Date()): Promise<CutLearni…`
-
-### `apps/control-plane/api/board/_deskPage.ts`
-
-Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not edit by hand.
-
-- `const DESK_PAGE: string`
 
 ### `apps/control-plane/api/board/_drivePosts.ts`
 
@@ -2278,6 +2304,15 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `const PUBLICATION_SERIES`
 - `async function publishedNow(db: SupabaseClient, now: Date): Promise<number | null>`
 
+### `apps/control-plane/api/board/_judge.ts`
+
+- `const JUDGED_FORMATS`
+- `const DAILY_CAP`
+- `interface JudgeDeps`
+- `function artifactSha256(format: string, channel: string, words: string, assets: Array<{ sha256: string }>): string`
+- `function postArtifact(b: Body): string`
+- `async function judgeAsset(db: SupabaseClient, week: string, body: unknown, deps: JudgeDeps = {}): Promise<Answer>`
+
 ### `apps/control-plane/api/board/_later.ts`
 
 - `const FIRST_IDEAS_WEEK`
@@ -2291,6 +2326,7 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `function answersFor(s: Shown, i: LaterInputs): Answer[]`
 - `function buildLater(i: LaterInputs): LaterView`
 - `function freeDay(i: LaterInputs, day: string, kind: 'series' | 'offday', today: string): string | null`
+- `function replaceTargets(i: LaterInputs, day: string, ideaId: string, today: string): Array<{ week: string; date: string…`
 - `function laterPresses(i: LaterInputs, s: Shown, today: string): { actions: PressAction[]; held: string | null }`
 - `async function readLater(db: SupabaseClient, fetcher: Fetcher = fetch as unknown as Fetcher, now = new Date()): Promise…`
 
@@ -2314,7 +2350,16 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 
 - `const LIVE_BOARD_URL`
 - `function liveBoardUrl(week?: string | null, day?: string | null): string`
-- `const ARCHIVE_LINE`
+
+### `apps/control-plane/api/board/_makeRoute.ts`
+
+How an off-day post is made, said once for every prompt the board copies out (the week model's "Copy prompt for
+
+- `type MakeRoute = 'still' | 'motion'`
+- `function makeRoute(kind: string | null | undefined, format: string | null | undefined): MakeRoute | null`
+- `const ROUTE_RULING`
+- `const NEVER_HEADLESS`
+- `function routeLine(route: MakeRoute): string`
 
 ### `apps/control-plane/api/board/_manifest.ts`
 
@@ -2355,7 +2400,8 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `type PostState = 'made' | 'scheduled' | 'live' | 'cancelled'`
 - `interface GrowthPost`
 - `interface OffdayItem`
-- `function growthPost(v: unknown): GrowthPost | null`
+- `const POST_CHECKS`
+- `function growthPost(v: unknown, check: string | null = null): GrowthPost | null`
 - `const itemKey = (source: 'engine' | 'growth', week: string, id: string) =>`
 - `const mondayOf = (d: string) =>`
 - `const dayKeyOf = (d: string) =>`
@@ -2503,12 +2549,6 @@ Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md
 - `function mockPrompt(p: PieceBrief): string`
 - `function stepPrompt(p: PieceBrief, step: string): string`
 
-### `apps/control-plane/api/board/_readOnly.ts`
-
-- `const ARCHIVE_REFERRER_POLICY`
-- `function fromArchivePage(referer: string | string[] | undefined): boolean`
-- `function readOnlyArchive(html: string, week: string): string`
-
 ### `apps/control-plane/api/board/_research.ts`
 
 - `const MAX_MATERIAL`
@@ -2533,6 +2573,60 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `type RunState = 'queued' | 'running' | 'done' | 'failed' | 'cancelled'`
 - `interface RunInfo`
 - `async function readRuns(env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as F…`
+
+### `apps/control-plane/api/board/_seriesMoves.ts`
+
+- `const PIECE_ITEM`
+- `const SERIES_OF: Record<string, string>`
+- `const titleOf = (p: Body) =>`
+- `function pieceVersion(p: Body): number`
+- `function movable(p: Body): boolean`
+- `const SERIES_MOVE_NOTE`
+- `function seriesMoveSpec(p: Body, now: Date): MoveSpec | null`
+- `function replaceChoices(now: Date, date: string, title: string): NonNullable<PressAction['choose']>`
+- `interface PickCard`
+- `function replacePress(o: { week: string; day: string; revision: number; card: PickCard; current: Body; now: Date; label…`
+- `interface SeriesDeps`
+- `async function moveSeriesPiece(db: SupabaseClient, req: MoveRequest, deps: SeriesDeps): Promise<MoveResult>`
+- `type CurrentTo = { date: string } | 'later' | 'alongside'`
+- `interface ReplaceRequest`
+- `function replaceInput(body: unknown): { input?: ReplaceRequest; problem?: string }`
+- `async function replacePick(db: SupabaseClient, week: string, req: ReplaceRequest, deps: SeriesDeps): Promise<MoveResult>`
+- `export type { MoveDay }`
+
+### `apps/control-plane/api/board/_signOffs.ts`
+
+- `const SIGN_OFF_OP`
+- `const SIGN_OFF_CARDS`
+- `type SignOffCardId = typeof SIGN_OFF_CARDS[number]`
+- `export { SIGN_OFF_ID }`
+- `const CARD_ITEM`
+- `const GATE2_LOCK`
+- `export { MAX_SIGN_OFF_PRESSES, SIGN_OFF_WORDS_MAX }`
+- `type SignOffSaid = 'approve' | 'not_this'`
+- `interface SignOffSample`
+- `interface SignOffManifestCard`
+- `interface SignOffManifest`
+- `interface SignOffPress`
+- `interface SignOffConfigs`
+- `interface SignOffAction`
+- `interface SignOffAnswer`
+- `interface SignOffItemView`
+- `interface SignOffCardView`
+- `interface SignOffsView`
+- `function cardSha256(card: Pick<SignOffManifestCard, 'items'>): string`
+- `function parseManifest(text: string | null): SignOffManifest | null`
+- `function pressesOf(rows: Array<{ week?: string; doc_id: string; body: unknown; updated_by: string }>): SignOffPress[]`
+- `function signOffPresses(card: SignOffManifestCard, item: SignOffSample | null): { approve: SignOffAction; not_this: Sig…`
+- `function signOffsView(manifest: SignOffManifest | null, presses: SignOffPress[], configs: SignOffConfigs): SignOffsView…`
+- `async function readSignOffSources(fetcher: Fetcher, mainSha?: string | null): Promise<{ manifest: SignOffManifest | nul…`
+- `async function readSignOffPresses(db: SupabaseClient): Promise<SignOffPress[] | null>`
+- `function signOffFiles(manifest: SignOffManifest | null): Set<string>`
+- `class SignOffError`
+- `interface SignOffPick`
+- `function signOffPick(body: unknown): SignOffPick`
+- `function checkAgainst(manifest: SignOffManifest | null, pick: SignOffPick): void`
+- `async function recordSignOff(db: SupabaseClient, week: string, pick: SignOffPick, now: string): Promise<{ press: SignOf…`
 
 ### `apps/control-plane/api/board/_stage.ts`
 
@@ -2603,6 +2697,14 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface WeekView`
 - `interface ViewInputs`
 - `function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost…`
+- `function lockBodyHash(text: string): string`
+- `const LOCK_DAYS: PostedDay[]`
+- `function lockPieceId(text: string | null | undefined): string | null`
+- `function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: string): { text: string; day: PostedDay } | null`
+- `type Typed = { words: string; said_where: string; said_at: string }`
+- `interface LockToSign`
+- `function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: st…`
+- `function inYourWords(words: string, on: string | null, where?: string | null): string`
 - `function lockSigned(text: string | null | undefined): boolean`
 - `function postingStarted(live: Pick<LiveDay, 'steps'>): boolean`
 - `function backupPrompt(week: string, d: DayView): string`
@@ -2632,11 +2734,11 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function thursdayOf(week: string): string`
 - `function ideasRunOf(week: string): string`
 - `function storiesFresh(week: string, o: Body): boolean`
-- `function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map()): …`
+- `function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map(), n…`
 - `function dayComments(rows: ExtrasInputs['comments'], day: string): ViewComment[]`
 - `function dayPosted(rows: ExtrasInputs['ticks'], day: string, live: LivePost[] = []): ViewPosted[]`
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
-- `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[]`
+- `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean, onDay: Body | null = null): ViewOption[]`
 - `function warned(o: Body): string`
 - `function tickNote(o: Body): string`
 - `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
@@ -2649,6 +2751,36 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function yesPress(i: ExtrasInputs, day: string): PressAction`
 - `function fillPress(a: PressAction, words: string, at: string): { id: string; body: Body }`
 
+### `apps/control-plane/api/board/_weekModel.ts`
+
+- `const OFFDAY_KINDS`
+- `type OffdayKind = typeof OFFDAY_KINDS[number]['key']`
+- `const PIECE_KIND`
+- `const PIECE_PATH`
+- `const POST_PATH`
+- `const GOOD_NEWS_STORIES`
+- `const CLAUDE_LABEL`
+- `interface ModelStep`
+- `interface ModelSource`
+- `interface ModelStory`
+- `interface ModelRead`
+- `type ModelAction = Action`
+- `interface ModelItem`
+- `interface ModelIdea`
+- `interface ModelDay`
+- `interface WeekModel`
+- `interface ModelInputs`
+- `function signPress(week: string, pieceId: string, lock: LockToSign): PressAction`
+- `function lookPresses(pieceId: string, style: DayStyle | null | undefined): PressAction[]`
+- `function offdayKind(o: Body): { kind: OffdayKind; supports: 'mon' | 'wed' | 'fri' | null }`
+- `function kindLabel(kind: OffdayKind, supports: string | null): string`
+- `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
+- `function offdayHead(route: MakeRoute | null): string`
+- `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
+- `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
+- `function modelProblems(model: WeekModel, days: DayView[]): string[]`
+
 ### `apps/control-plane/api/board/_writeBack.ts`
 
 What every prompt the board copies out says about reporting back, and what the board shows of the sessions and the
@@ -2656,6 +2788,7 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const WRITE_BACK_HEAD`
 - `const RESEARCH_RULE`
 - `const WALLS`
+- `const APPROVAL_RULE`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
@@ -3893,84 +4026,6 @@ His verdicts on past off-day options, for Sunday's gather (GET /api/week/options
 - `function groupSaid(rows: SaidRow[], ids: string[]): Map<string, SaidNote[]>`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
-### `apps/control-plane/board-next/src/App.tsx`
-
-- `function App()`
-
-### `apps/control-plane/board-next/src/api.ts`
-
-The live board's one door to the server. Every call carries his login cookie; a 401 is said plainly, never swallowed.
-
-- `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
-- `type Action`
-- `interface Run`
-- `interface LookOption`
-- `interface OffdaySides`
-- `interface Review`
-- `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
-- `interface DayPath`
-- `interface Day`
-- `interface View`
-- `class BoardError`
-- `const week`
-- `const api`
-- `function sayError(e: unknown): string`
-
-### `apps/control-plane/board-next/src/components/live.tsx`
-
-The archive is read-only (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only
-
-- `const LIVE_PRESS`
-- `function LiveLink({ day, primary = false, label = LIVE_PRESS }: { day?: string | null; primary?: boolean; label?: strin…`
-
-### `apps/control-plane/board-next/src/components/path.tsx`
-
-One day's guided path (PLAN.md, "Each day as a guided path"): six steps, only the current one open.
-
-- `function Stepper({ path, open, onOpen }: { path: DayPath; open: PathKey | null; onOpen: (k: PathKey) => void })`
-- `function Dropzone({ day, role }: { day: Day; onFiled?: () => void; role?: 'storyboard' })`
-- `function StepPanel({ day, step, reload }: { day: Day; step: PathKey; reload: () => void })`
-- `function RunButton({ day }: { day: Day; reload?: () => void })`
-- `function DayActions({ day, reload, only, onReview }: { day: Day; reload: () => void; only?: 'first' | 'prompt'; onRevie…`
-
-### `apps/control-plane/board-next/src/components/review.tsx`
-
-A revised off-day option, judged where it shows (21st.dev Approval Card, syeddhasnainn, restyled). The press writes
-
-- `function ReviewCard({ review, day, label, reload }: { review: Review; day: string; label: string; reload: () => void })`
-
-### `apps/control-plane/board-next/src/components/sheets.tsx`
-
-Sheets for what he does not need to see until he asks: the full prompt before copying, and his long-form thoughts.
-
-- `function PromptButton({ label, prompt, target = 'claude' }: { label: string; prompt: string; target?: 'claude' | 'perpl…`
-- `function ThoughtsLink({ day, step, label = 'Add your thoughts' }: { day: string; step: string; label?: string })`
-
-### `apps/control-plane/board-next/src/components/ui.tsx`
-
-The board's small parts. Every control keeps its text inside it (nowrap, ellipsis, the full text as its title) and is
-
-- `const cx = (...xs: Array<string | false | null | undefined>) =>`
-- `const Button`
-- `function Spinner()`
-- `function StatusDot({ tone, pulse, label }: { tone: 'ok' | 'amber' | 'bad' | 'muted'; pulse?: boolean; label: string })`
-- `function Chip({ tone = 'muted', children }: { tone?: 'ok' | 'amber' | 'bad' | 'muted' | 'ink'; children: React.ReactNod…`
-- `function CountUp({ to }: { to: number })`
-- `function Panel({ title, chip, why, children, actions, after }: { title: React.ReactNode; chip?: React.ReactNode; why?: …`
-- `function ActionBar({ primary, secondary, prompt }: { primary?: React.ReactNode; secondary?: React.ReactNode; prompt?: R…`
-
-### `apps/control-plane/board-next/src/undo.tsx`
-
-Every press is sent after a five-second Undo (sonner, the toast under 21st.dev's Sonner Toast), so a wrong tap costs no…
-
-- `function useUndo()`
-
-### `apps/control-plane/board-next/vite.config.ts`
-
-The live board's client (docs/plans/2026-11-09-board-desk/PLAN.md, build round 3). One self-contained HTML file:
-
-- `export default defineConfig({ root: import.meta.dirname, plugins: [react(),`
-
 ### `apps/control-plane/lib/contentEngine.ts`
 
 contentEngine: shared config for the Content Engine layer on the Content tab.
@@ -4057,10 +4112,6 @@ The Content Engine's schedule, as the dashboard knows it.
 - `function hasExactProductionApproval(meta: unknown): boolean`
 - `function storedProductionBriefs(outputs: unknown): StoredProductionBrief[]`
 
-### `apps/control-plane/scripts/backfill-shifts.ts`
-
-One-shot reconstruction of the Jul 2025 - Jun 2026 shifts baseline (spec §6, R6).
-
 ### `apps/control-plane/scripts/check-aeo-packet-schema.ts`
 
 The packet contract, in three repositories.
@@ -4144,16 +4195,6 @@ The editorial route: one neutral source, two independent series lenses, and
 ### `apps/control-plane/scripts/clustering/build-narrative-clusters.ts`
 
 Nightly narrative clustering for the Content tab.
-
-### `apps/control-plane/scripts/consolidate-shifts.ts`
-
-Register consolidation (backfill follow-up): merge near-duplicate shifts so
-
-### `apps/control-plane/scripts/dry-run-content-v2.ts`
-
-One-shot dry run of the Content Engine v2 core against live data (PR-A gate).
-
-- `export {}`
 
 ### `apps/control-plane/scripts/eval/_env.ts`
 
@@ -4273,21 +4314,6 @@ Run a Vercel serverless handler locally against the real environment.
 - `type ShortProps`
 - `function BorderControlShort(p:ShortProps)`
 
-### `apps/renderer/src/carousel/HouseCarouselCard.tsx`
-
-- `const FOLLOW_SIGN`
-- `function houseCardModel(props: CarouselRenderProps)`
-- `function HouseCarouselCard(props: CarouselRenderProps)`
-
-### `apps/renderer/src/carousel/MindmakeCarouselSlide.tsx`
-
-- `function MindmakeCarouselSlide(props: CarouselRenderProps)`
-
-### `apps/renderer/src/carousel/props.ts`
-
-- `const CarouselRenderPropsSchema`
-- `type CarouselRenderProps = z.infer<typeof CarouselRenderPropsSchema>`
-
 ### `apps/renderer/src/engine/BrandFrame.tsx`
 
 - `interface BrandFrameProps`
@@ -4306,12 +4332,25 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function EngineAudio({ audio, stem = true }: { audio: EngineRenderProps['audio']; stem?: boolean })`
 
+### `apps/renderer/src/engine/captions/draw.tsx`
+
+- `type Draw`
+- `const root = (name: string, box: Box, children: React.ReactNode, extra: React.CSSProperties = {}) =>`
+- `const upper = (t: string) =>`
+- `function wrap(words: string[], size: number, width: number, face: Parameters<typeof textWidth>[2], caps: boolean, gap: …`
+- `const STOP`
+- `const isStop = (text: string) =>`
+- `function exitStart(page: { toFrame: number; words: readonly { atFrame: number }[] }, frames: number, fps: number, holdS…`
+- `function exitProgress(page: { toFrame: number }, es: number | undefined, frame: number): number`
+- `function marked(hero: number): number`
+
 ### `apps/renderer/src/engine/captions/kit.ts`
 
 - `type Page = EngineRenderProps['captions'][number]`
 - `type Aspect = EngineRenderProps['aspect']`
 - `type Box = { left: number; top: number; width: number; height: number }`
-- `const REGIONS: Record<Aspect, { lower: Box; upper: Box }>`
+- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box }>`
+- `function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'>): Box`
 - `const scale = (aspect: Aspect) =>`
 - `const F`
 - `function livePage(props: Pick<EngineRenderProps, 'captions'>, frame: number): { page: Page; index: number } | null`
@@ -4340,6 +4379,55 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 
 - `const CAPTION_THEMES`
 - `type CaptionThemeName = typeof CAPTION_THEMES[number]`
+
+### `apps/renderer/src/engine/captions/styles/anchor-quote.tsx`
+
+- `const anchorQuote: Draw`
+
+### `apps/renderer/src/engine/captions/styles/flip-hinge.tsx`
+
+- `const flipHinge: Draw`
+
+### `apps/renderer/src/engine/captions/styles/georgia-build.tsx`
+
+- `const georgiaBuild: Draw`
+
+### `apps/renderer/src/engine/captions/styles/index.ts`
+
+- `const STYLES`
+- `type StyleName = keyof typeof STYLES`
+
+### `apps/renderer/src/engine/captions/styles/ink-block.tsx`
+
+- `const inkBlock: Draw`
+
+### `apps/renderer/src/engine/captions/styles/mint-word.tsx`
+
+- `const mintWord: Draw`
+
+### `apps/renderer/src/engine/captions/styles/rack-focus.tsx`
+
+- `const rackFocus: Draw`
+
+### `apps/renderer/src/engine/captions/styles/receipt-chip.tsx`
+
+- `const receiptChip: Draw`
+
+### `apps/renderer/src/engine/captions/styles/slice.tsx`
+
+- `const slice: Draw`
+
+### `apps/renderer/src/engine/captions/styles/slot-roll.tsx`
+
+- `const slotRoll: Draw`
+
+### `apps/renderer/src/engine/captions/styles/stair-flash.tsx`
+
+- `const stairFlash: Draw`
+
+### `apps/renderer/src/engine/captions/styles/tuck-stack.tsx`
+
+- `const tuckStack: Draw`
 
 ### `apps/renderer/src/engine/captions/themes.tsx`
 
@@ -4476,6 +4564,21 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function arrangementState({ object, events, frame }: Pick<DeviceProps, 'object'|'events'|'frame'>)`
 
+### `apps/renderer/src/engine/devices/checklist/index.tsx`
+
+- `function checklistLayout(box: Box, object: DeviceProps['object'], aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/checklist/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/checklist/state.ts`
+
+- `const SLOT_STAGGER`
+- `const FILL_FRAMES`
+- `function checklistState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
 
 - `function buddyState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
@@ -4537,7 +4640,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/kinetic_stat/index.tsx`
 
-- `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'])`
+- `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'], ghos…`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/kinetic_stat/schema.ts`
@@ -4580,6 +4683,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function viewport(p:DeviceProps)`
 - `function safeBox(p:DeviceProps)`
 - `function cameraFor(p:DeviceProps)`
+- `function countText(value:number,sourced:number[])`
 - `function paint(g:CanvasRenderingContext2D,p:DeviceProps)`
 - `function Device(p:DeviceProps)`
 
@@ -4630,6 +4734,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function marqueeState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/mint_ring/index.tsx`
+
+- `function Device({ object, events, box, tokens, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/mint_ring/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/mint_ring/state.ts`
+
+- `const DRAW_FRAMES`
+- `function ringGeometry(object: EngineObject)`
+- `function mintRingState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/office_floor/index.tsx`
 
 - `function Device({ object, events, box, tokens: t, aspect, frame }: DeviceProps)`
@@ -4661,6 +4779,18 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function passportState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 - `function mrzLine(text: string)`
 
+### `apps/renderer/src/engine/devices/pull_quote/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/pull_quote/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/pull_quote/state.ts`
+
+- `function pullQuoteState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/query_chip/index.tsx`
 
 - `function queryLayout(box: Box, text: string, aspect: DeviceProps['aspect'])`
@@ -4690,7 +4820,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/quote_card/index.tsx`
 
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device({ object, events, box, tokens, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/quote_card/schema.ts`
 
@@ -4699,6 +4829,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/quote_card/state.ts`
 
 - `function quoteCardState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/receipt_print/index.tsx`
+
+- `function receiptLayout(state: ReceiptState, aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/receipt_print/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/receipt_print/state.ts`
+
+- `const PRINT`
+- `function receiptState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/record_card/index.tsx`
 
@@ -4728,6 +4872,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function scribbleState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 - `function scribblePen(object: EngineObject, events: readonly EngineEvent[]): (frame: number) => Point | undefined`
+
+### `apps/renderer/src/engine/devices/slam_word/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/slam_word/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/slam_word/state.ts`
+
+- `const SLAM`
+- `function burstFor(id: string)`
+- `function slamWordState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/slot_machine/hatch.ts`
 
@@ -4764,7 +4922,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/stat_strip/index.tsx`
 
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device({ object, events, box, tokens, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/stat_strip/schema.ts`
 
@@ -4785,6 +4943,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/sticker/state.ts`
 
 - `function stickerState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/takeover/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/takeover/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/takeover/state.ts`
+
+- `const FLICKER_OFFSETS`
+- `function takeoverState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/test_grid/index.tsx`
 
@@ -4812,6 +4983,21 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `const ParamsSchema`
 
+### `apps/renderer/src/engine/devices/through_line/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/through_line/schema.ts`
+
+- `const NumberSchema`
+- `const CommandSchema`
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/through_line/state.ts`
+
+- `const entranceFrames = () =>`
+- `function throughLineState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/types.ts`
 
 - `interface Box`
@@ -4824,11 +5010,31 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
 - `function bubbleFocus({ object, events, box, aspect, frame }: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' |…`
 - `function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight = 1920)`
-- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/typing_bubble/schema.ts`
 
 - `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/unit_field/grid.tsx`
+
+- `function dotGridPosition(index: number, columns: number, pitch = 64)`
+- `function UnitMark({ kind, weight, colour, soft }: { kind: 'dot' | 'block'; weight: number; colour: string; soft: string…`
+
+### `apps/renderer/src/engine/devices/unit_field/index.tsx`
+
+- `export { dotGridPosition, UnitMark } from './grid'`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/unit_field/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/unit_field/state.ts`
+
+- `const CHANGE_FRAMES`
+- `const COPY_STEP_FRAMES`
+- `function unitFieldState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/upload_flood/hatch.ts`
 
@@ -4844,6 +5050,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/upload_flood/schema.ts`
 
 - `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/video_wall/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/video_wall/schema.ts`
+
+- `const ParamsSchema`
+- `type Params = z.infer<typeof ParamsSchema>`
+
+### `apps/renderer/src/engine/devices/video_wall/state.ts`
+
+- `function videoWallState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/wall_screen/index.tsx`
 
@@ -4894,6 +5113,8 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function stageGround(profile: MotionProfile | undefined, tokens: EngineTokens): CSSProperties`
 - `function sweepStyle(profile: MotionProfile, tokens: EngineTokens, beat: EngineBeat, frame: number): CSSProperties | null`
 - `function halftoneTexture(tokens: EngineTokens): CSSProperties`
+- `function groundTexture(texture: string | undefined, tokens: EngineTokens, frame: number): CSSProperties | null`
+- `function hatched(tokens: EngineTokens, frame: number): CSSProperties`
 
 ### `apps/renderer/src/engine/kit/camera.ts`
 
@@ -4985,6 +5206,33 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `function homography(src: readonly Point[], dst: readonly Point[]): Homography`
 - `function matrix3d(h: Homography): string`
 
+### `apps/renderer/src/engine/kit/ingredients.ts`
+
+- `const ENERGIES`
+- `const TRANSITIONS`
+- `const CAMERAS`
+- `const EngineIngredientsSchema`
+- `type EngineIngredients = z.infer<typeof EngineIngredientsSchema>`
+- `const TRANSITION_FRAMES: Record<Energy, number>`
+- `interface Span`
+- `interface CameraState`
+- `function hitFrames(events: readonly { atFrame: number }[]): number[]`
+- `function cameraAt(ing: EngineIngredients, beats: readonly Span[], hits: readonly number[], frame: number, width: number…`
+- `function cameraStyle(state: CameraState, width: number, height: number): CSSProperties`
+- `function flashAt(ing: EngineIngredients, beats: readonly Span[], hits: readonly number[], frame: number): number`
+
+### `apps/renderer/src/engine/kit/layout.ts`
+
+- `const LAYOUTS`
+- `const EngineLayoutSchema`
+- `type EngineLayout = z.infer<typeof EngineLayoutSchema>`
+- `const MAX_GROW`
+- `const isRegion = (box: Box): boolean =>`
+- `const markRegion`
+- `function freeRegion(aspect: Aspect, placement: Placement, themed: boolean): Box`
+- `function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, placement: Placement, themed: boolean, count: nu…`
+- `function regionSlots(region: Box, count: number): Box[]`
+
 ### `apps/renderer/src/engine/kit/lock.ts`
 
 Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
@@ -5064,6 +5312,11 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `class Screen`
 - `function uiClipPath(expand=9,rad=36): string`
 
+### `apps/renderer/src/engine/kit/regionFit.tsx`
+
+- `function bestNatural(box: Box, candidates: readonly number[], heightAt: (width: number) => number): { width: number; he…`
+- `function RegionFit({ natural, box, children }: { natural: { width: number; height: number }; box: Box; children: React.…`
+
 ### `apps/renderer/src/engine/kit/reveal.ts`
 
 - `function entranceStyle(p: number): CSSProperties`
@@ -5080,6 +5333,17 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `type Target = { x: number; y: number; w: number; h: number }`
 - `type ScribbleSpec`
 - `function scribblePath(spec: ScribbleSpec, seed: string): string`
+
+### `apps/renderer/src/engine/kit/staging.ts`
+
+- `const STAGINGS`
+- `type Staging = typeof STAGINGS[number]`
+- `const isStaging = (mode: string | undefined): mode is Staging =>`
+- `interface StagingGeometry`
+- `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry`
+- `function staged(beat: { layout: string; plate?: { source: string } | undefined }): boolean`
+- `function trayRise(frame: number, from: number): { scale: number; ty: number; opacity: number }`
+- `function boxStyle(box: Box): CSSProperties`
 
 ### `apps/renderer/src/engine/kit/threadPath.ts`
 
@@ -5403,27 +5667,6 @@ The piece's call: the dated prediction every makeyourmindup piece ends on
 - `function hasPercentage(text: string): boolean`
 - `function readPieceCall(approvedText: string): PieceCallReadingV1`
 
-### `packages/contracts/src/carousel.ts`
-
-- `const CAROUSEL_SCHEMA_VERSION`
-- `const CarouselVisualDirectionMethodV1Schema`
-- `type CarouselVisualDirectionMethodV1 = z.infer<typeof CarouselVisualDirectionMethodV1Schema>`
-- `const CarouselPlatformSchema`
-- `const CarouselSourceFormatSchema`
-- `const CarouselSlideRoleSchema`
-- `const CarouselLayoutSchema`
-- `const CarouselSceneSchema`
-- `const CarouselAssetV1Schema`
-- `const CarouselSlideV1Schema`
-- `const CarouselEditorialAssessmentV1Schema`
-- `const CarouselApprovalV1Schema`
-- `type CarouselApprovalV1 = z.infer<typeof CarouselApprovalV1Schema>`
-- `const CarouselStoryV1Schema`
-- `type CarouselStoryV1 = z.infer<typeof CarouselStoryV1Schema>`
-- `type CarouselSlideV1 = z.infer<typeof CarouselSlideV1Schema>`
-- `const CarouselDraftPackageV1Schema`
-- `type CarouselDraftPackageV1 = z.infer<typeof CarouselDraftPackageV1Schema>`
-
 ### `packages/contracts/src/confirmation-v1.ts`
 
 Artifact-bound user confirmation references.
@@ -5589,7 +5832,6 @@ Artifact-bound user confirmation references.
 - `export * from './v2.js'`
 - `export * from './control-plane-v1.js'`
 - `export * from './drive-discovery-v1.js'`
-- `export * from './carousel.js'`
 - `export * from './session-v1.js'`
 - `export * from './confirmation-v1.js'`
 - `export * from './editorial-v1.js'`
@@ -5692,6 +5934,8 @@ Artifact-bound user confirmation references.
 - `const VeSeriesSchema`
 - `const VeStingSchema`
 - `const VE_NO_STING`
+- `const VE_NO_STING_BEFORE`
+- `const VE_NOTHING_BEFORE_HOOK`
 - `const VeAspectSchema`
 - `const VeLayoutSchema`
 - `const VeRoleSchema`
@@ -5959,7 +6203,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `function brandWordmarkLegibilityIssues(theme: BrandThemeV1): string[]`
 - `async function stageOfficialWordmarks(manifest: RenderManifestV1, targetDirectory: string, fetchImpl: typeof fetch = fe…`
 - `function officialSeriesMark(theme: BrandThemeV1, series: Series): BrandWordmarkAssetV1`
-- `async function stageOfficialSeriesWordmarks(theme: BrandThemeV1, series: Series, targetDirectory: string, fetchImpl: ty…`
 - `function runtimeTypography(theme: BrandThemeV1): { structure: string; claim: string; body: string; data: string }`
 - `interface StagedPublicationMarks`
 - `interface PublicationLegibilityReport`
@@ -5997,22 +6240,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `function sliceTranscript(transcript: TranscriptDocument, startMs: number, endMs: number): TranscriptDocument`
 - `function captionTranscriptSimilarity(captions: RenderManifestV1['captions'], expectedText: string): number`
 - `function verifiedTextCaptionCues(text: string, timedTranscript: TranscriptDocument, durationMs: number): RenderManifest…`
-
-### `packages/core/src/carousel.ts`
-
-- `interface CarouselRenderResult`
-- `function carouselEditorialPreferenceIssues(input: CarouselStoryV1, preferences: PreferenceRuleV1[] = []): string[]`
-- `function carouselStoryContentHash(input: CarouselStoryV1): string`
-- `function carouselApprovalBinds(approval: CarouselApprovalV1, gate: CarouselApprovalV1['gate'], contentHash: string): bo…`
-- `function theForkIssues(input: CarouselStoryV1): string[]`
-- `function carouselProductionIssues(input: CarouselStoryV1): string[]`
-- `async function runtimeWordmark(asset: StagedWordmarkAsset, stagingDirectory: string)`
-- `async function renderCarousel(repoRoot: string, configPath: string, storyInput: unknown, outputDirectory: string, revie…`
-- `type CarouselBrandMarks`
-- `interface CarouselHouseV1`
-- `function carouselHouse(story: CarouselStoryV1, marks: Pick<StagedPublicationMarks, 'lockup' | 'channelColor' | 'channel…`
-- `function carouselSlideInputProps(story: CarouselStoryV1, slide: CarouselStoryV1['slides'][number], theme: BrandThemeV1,…`
-- `async function packageCarousel(repoRoot: string, configPath: string, storyInput: unknown, outputDirectory: string): Pro…`
 
 ### `packages/core/src/control-plane-client.ts`
 
@@ -6185,7 +6412,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `export * from './candidates.js'`
 - `export * from './caption-analysis.js'`
 - `export * from './captions.js'`
-- `export * from './carousel.js'`
 - `export * from './credentials.js'`
 - `export * from './control-plane-client.js'`
 - `export { APPROVAL_SIGNING_CREDENTIAL, RUNNER_RECEIPT_SIGNING_CREDENTIAL, approvalSigningCredentialReady, loadRunnerRece…`
@@ -6639,29 +6865,6 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 
 - `interface YoutubeUploadInput`
 - `async function uploadPrivateYoutubeVideo(input: YoutubeUploadInput): Promise<unknown>`
-
-### `scripts/backfill_closes.ts`
-
-Backfill step 1 of step 4 (one done-check sweep): give each open board
-
-- `const ENGINE`
-- `const PUBLICATION`
-- `const ARCHIVE`
-- `const LAUNCH_DATE`
-- `interface BoardRow`
-- `interface ArchivePost`
-- `type Write = { id: string } & Record<string, unknown>`
-- `interface Plan`
-- `function stripHeld(detail: string | null | undefined): string`
-- `function shareFileId(html: string): string | null`
-- `function dayOf(iso: string): string`
-- `function oneNewsletterOn(posts: readonly ArchivePost[], day: string): ArchivePost | string`
-- `interface Facts`
-- `function planWrites(board: readonly BoardRow[], facts: Facts): Plan`
-- `function assertNeverCloses(w: Write): void`
-- `function accessCookie(code: string): string`
-- `function readArchive(raw: unknown): ArchivePost[]`
-- `async function gatherFacts(now: string): Promise<Facts>`
 
 ### `scripts/check-control-plane.ts`
 

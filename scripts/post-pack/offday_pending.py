@@ -13,14 +13,14 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import week_board as wb  # noqa: E402
+import week_plan as wb  # noqa: E402
 
 SIDES = ('idea', 'direction')
 
 
 def offdays_of(ideas):
     """The week's off-day options from ideas.json `offdays`, or from Growth's growth-offdays/1 file when the week's
-    off days came from Growth (week_board.py --offdays-plan), as the board read them."""
+    off days came from Growth (its growth-offdays/1 plan), as the board reads them."""
     if isinstance(ideas, dict) and ideas.get('schema') == 'growth-offdays/1':
         from datetime import date
         rows, _ = wb.read_growth_offdays(ideas, date.fromisoformat(str(ideas.get('week_of'))))

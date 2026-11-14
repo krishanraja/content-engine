@@ -1,0 +1,6 @@
+# Carousels, memes, Notes images and off-day voiceover shorts
+
+Rulings (Krish, 2026-11-13): "all the carousels should now be done in Claude, but using the Codex plug in as per the other usual workflows"; "memes and Notes images should go the same way"; "Off-day voiceover shorts should go the same way too".
+
+- A carousel, a meme or a Notes image is made in a Claude session with the Codex plugin building it, from a card of kind `carousel`, `meme` or `notes_image`: `ve card` holds each to the brand palette for its `date`, the inspiration cards he ticked (`references`) and, for a carousel, a `deck` that passes `scripts/carousel_check.py`. A card for Growth's renderer carries its `spend_id` and goes in growth-makeyourmindup's `codex/queue/<id>.md` for the Codex lane. The route is `docs/CAROUSEL-STANDARD.md`, "How a carousel is made".
+- An off-day voiceover short or a meme video is a piece on this ve route like any other, run from a Claude session: the session writes the script and the signed spec, Codex builds the devices and plates from cards, `ve` renders, a separate reviewer watches and listens. The voice comes from wherever it comes from today. `scripts/produce_day.py` refuses an off-day piece.

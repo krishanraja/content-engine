@@ -20,7 +20,22 @@ import * as meter from '../_meter.js'
 // exists to have ended.
 //
 //   POST, Bearer AEO_ENGINE_SECRET
-//   { agent: 'aeo-<stage>', model, usage: {...}, calls?, failed? }[]
+//   { rows: [{ agent: 'aeo-<stage>', model, usage: {...}, calls?, failed?, day? }], run? }
+//
+// Since the AEO brief, section F (2026-11-14), a row may also say who billed it
+// and how, and the context lists `meter_billing` once this route reads them:
+//
+//   provider      anthropic (the default), openai, perplexity, google or xai
+//   billing       api (the default) or subscription. Subscription rows carry
+//                 tokens and no dollar amount (Ruling, Krish, 2026-11-13: Claude
+//                 probes run on the Claude Code subscription token, with the
+//                 paid API as a fallback)
+//   input_tokens, output_tokens
+//                 for a provider whose usage object is not Anthropic's; an
+//                 Anthropic row may still send `usage`, cache fields and all
+//   search_calls  hosted web searches, billed per request on the API
+//
+// Every row is priced in _meter.ts against the one price table (reportedUsage).
 //
 // add() and not replaceDays(): these are self-metered events, and a second run
 // on the same day really did spend the money a second time. A replayed POST
@@ -29,9 +44,14 @@ import * as meter from '../_meter.js'
 
 /** A model's worth of usage from one run, as the engine measured it. */
 interface UsageRow {
+  provider?: unknown
+  billing?: unknown
   agent?: unknown
   model?: unknown
   usage?: unknown
+  input_tokens?: unknown
+  output_tokens?: unknown
+  search_calls?: unknown
   calls?: unknown
   failed?: unknown
   day?: unknown
@@ -39,6 +59,26 @@ interface UsageRow {
 
 const MAX_ROWS = 200
 const DAY = /^\d{4}-\d{2}-\d{2}$/
+export const METER_PROVIDERS = ['anthropic', 'openai', 'perplexity', 'google', 'xai'] as const
+type Provider = typeof METER_PROVIDERS[number]
+const count = (v: unknown) => v === undefined || (typeof v === 'number' && Number.isInteger(v) && v >= 0)
+
+/** Every reason a row cannot be metered, by its index. A row is never written as a zero it does not mean. */
+export function rowErrors(rows: readonly UsageRow[]): string[] {
+  const bad: string[] = []
+  for (const [i, r] of rows.entries()) {
+    if (typeof r.model !== 'string' || !r.model) bad.push(`rows[${i}]: model required`)
+    if (r.provider !== undefined && !(METER_PROVIDERS as readonly unknown[]).includes(r.provider)) bad.push(`rows[${i}]: provider must be one of ${METER_PROVIDERS.join(', ')}`)
+    if (r.billing !== undefined && r.billing !== 'api' && r.billing !== 'subscription') bad.push(`rows[${i}]: billing must be api or subscription`)
+    const hasUsage = !!r.usage && typeof r.usage === 'object'
+    const hasTokens = r.input_tokens !== undefined || r.output_tokens !== undefined
+    if (!hasUsage && !hasTokens) bad.push(`rows[${i}]: usage object or input_tokens and output_tokens required`)
+    if (!count(r.input_tokens) || !count(r.output_tokens)) bad.push(`rows[${i}]: input_tokens and output_tokens must be whole numbers`)
+    if (!count(r.search_calls)) bad.push(`rows[${i}]: search_calls must be a whole number`)
+    if (r.day !== undefined && (typeof r.day !== 'string' || !DAY.test(r.day))) bad.push(`rows[${i}]: day must be YYYY-MM-DD`)
+  }
+  return bad
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardBearerExport(req, res, 'AEO_ENGINE_SECRET', ['POST'])) return
@@ -51,26 +91,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // A row naming no model cannot be priced and a row with no usage cannot be
   // measured. Both are rejected by name rather than written as a zero, because
   // a zero row is indistinguishable from a cheap one on the dashboard.
-  const bad: string[] = []
-  for (const [i, r] of rows.entries()) {
-    if (typeof r.model !== 'string' || !r.model) bad.push(`rows[${i}]: model required`)
-    if (!r.usage || typeof r.usage !== 'object') bad.push(`rows[${i}]: usage object required`)
-    if (r.day !== undefined && (typeof r.day !== 'string' || !DAY.test(r.day))) bad.push(`rows[${i}]: day must be YYYY-MM-DD`)
-  }
+  const bad = rowErrors(rows)
   if (bad.length) return res.status(400).json({ ok: false, error: 'invalid rows', errors: bad.slice(0, 20) })
 
-  // anthropicCall is the one place cache fields are read and the one place the
-  // price table is applied, so the engine is metered by exactly the same code
-  // as an in-process call — and gets cache accounting for free the day a probe
-  // prompt starts being cached, without this route learning anything about it.
+  // reportedUsage sends an Anthropic API row through anthropicCall, the one
+  // place cache fields are read and the one place the price table is applied,
+  // so the engine is metered by exactly the same code as an in-process call.
   let written = 0
   for (const r of rows) {
-    await meter.anthropicCall({
+    await meter.reportedUsage({
+      provider: (r.provider as Provider | undefined) ?? 'anthropic',
+      billing: r.billing === 'subscription' ? 'subscription' : 'api',
       agent: typeof r.agent === 'string' && r.agent ? r.agent : 'aeo-engine',
       model: String(r.model),
-      usage: r.usage,
+      usage: r.usage && typeof r.usage === 'object' ? r.usage : undefined,
+      inputTokens: Number(r.input_tokens) || 0,
+      outputTokens: Number(r.output_tokens) || 0,
       calls: Number(r.calls) || 1,
       failedCalls: Number(r.failed) || 0,
+      searchCalls: Number(r.search_calls) || 0,
       day: typeof r.day === 'string' ? r.day : undefined,
     })
     written++

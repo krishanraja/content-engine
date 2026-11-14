@@ -52,7 +52,12 @@ export type ItemState = 'offered' | 'approved' | 'later' | 'withdrawn'
 /** One entry of Growth's posting record for an item, as Growth reports it: made (its files are in its post folder),
  *  scheduled on a channel for a time, live on a channel with its link, or a scheduled post taken back (cancelled). */
 export type PostState = 'made' | 'scheduled' | 'live' | 'cancelled'
-export interface GrowthPost { state: PostState; channel: string | null; due_at: string | null; url: string | null; at: string; buffer_post_id: string | null }
+export interface GrowthPost {
+  state: PostState; channel: string | null; due_at: string | null; url: string | null; at: string; buffer_post_id: string | null
+  /** A post a check saw rather than Growth's own record (client done_check; ADR-036): `buffer_sent` is Buffer's record of
+   *  the send, with its Buffer post id as the proof. Absent on Growth's own posts. */
+  check?: string
+}
 /** One row of offday_items: the one place an off-day item's day lives. */
 export interface OffdayItem {
   item: string
@@ -79,14 +84,20 @@ const POST_STATES: readonly PostState[] = ['made', 'scheduled', 'live', 'cancell
 const httpsUrl = (v: unknown) => (typeof v === 'string' && /^https:\/\/[^\s]{1,2000}$/.test(v) ? v : null)
 const isoOf = (v: unknown) => (typeof v === 'string' && Number.isFinite(Date.parse(v)) ? new Date(v).toISOString() : null)
 /** One entry of Growth's posting record, or null when it is not one. */
-export function growthPost(v: unknown): GrowthPost | null {
+/** The checks that may report a post (client done_check): Buffer's record of a send. */
+export const POST_CHECKS = ['buffer_sent'] as const
+export function growthPost(v: unknown, check: string | null = null): GrowthPost | null {
   if (!isObj(v) || !(POST_STATES as readonly unknown[]).includes(v.state)) return null
   const channel = typeof v.channel === 'string' && /^[a-z][a-z0-9-]{0,30}$/.test(v.channel) ? v.channel : null
   const post: GrowthPost = { state: v.state as PostState, channel, due_at: isoOf(v.due_at), url: httpsUrl(v.url), at: isoOf(v.at) || '',
-    buffer_post_id: typeof v.buffer_post_id === 'string' && /^[A-Za-z0-9_-]{1,80}$/.test(v.buffer_post_id) ? v.buffer_post_id : null }
+    buffer_post_id: typeof v.buffer_post_id === 'string' && /^[A-Za-z0-9_-]{1,80}$/.test(v.buffer_post_id) ? v.buffer_post_id : null,
+    ...(check ? { check } : {}) }
   if (post.state === 'scheduled' && (!channel || !post.due_at)) return null
-  // Live only with the channel and the post's own link: Growth's record of a post it made go out.
-  if (post.state === 'live' && (!channel || !post.url)) return null
+  // Live only with the channel and the post's own link: Growth's record of a post it made go out. A check that saw the
+  // send in Buffer may have no public link (Buffer gives none for some channels): its Buffer post id is the proof.
+  if (post.state === 'live' && (!channel || !(post.url || (check && post.buffer_post_id)))) return null
+  // A check only ever reports what it saw: a send (live) or a post waiting in Buffer's queue (scheduled), each by its id.
+  if (check && (!post.buffer_post_id || (post.state !== 'live' && post.state !== 'scheduled'))) return null
   if (post.state === 'cancelled' && !channel) return null
   return post
 }
@@ -107,7 +118,8 @@ export function itemOf(r: unknown): OffdayItem | null {
     option: isObj(r.option) ? r.option : {}, state: state as ItemState, week: ymd(r.week), day: typeof r.day === 'string' ? r.day : null, date: ymd(r.date),
     doc: typeof r.doc === 'string' ? r.doc : null, piece_id: typeof r.piece_id === 'string' ? r.piece_id.toLowerCase() : null,
     drive_folder: typeof r.drive_folder === 'string' ? r.drive_folder : null,
-    posts: Array.isArray(r.posts) ? (r.posts as unknown[]).map(growthPost).filter((x): x is GrowthPost => Boolean(x)) : [],
+    posts: Array.isArray(r.posts) ? (r.posts as unknown[]).map(p => growthPost(p, isObj(p) && (POST_CHECKS as readonly unknown[]).includes(p.check) ? String(p.check) : null))
+      .filter((x): x is GrowthPost => Boolean(x)) : [],
     followed: isObj(r.followed) ? r.followed : {}, version: Number(r.version) || 1, placed_by: String(r.placed_by || ''), placed_at: String(r.placed_at || ''),
   }
 }
@@ -376,7 +388,8 @@ const isMonday = (v: unknown): v is string => typeof v === 'string' && DATE.test
 /** The move press as the board sends it, or why not. */
 export function moveInput(body: unknown): { input?: MoveRequest; problem?: string } {
   if (!isObj(body)) return { problem: 'invalid_move' }
-  if (typeof body.item !== 'string' || !ITEM_KEY.test(body.item)) return { problem: 'invalid_item' }
+  // A series piece moves through the same press (contract 1.13.0, _seriesMoves.ts): its item is piece:<id>.
+  if (typeof body.item !== 'string' || !(ITEM_KEY.test(body.item) || /^piece:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(body.item))) return { problem: 'invalid_item' }
   if (!Number.isSafeInteger(body.version) || Number(body.version) < 0) return { problem: 'invalid_version' }
   let from: MoveRequest['from'] = null
   if (body.from !== null && body.from !== undefined) {
@@ -683,16 +696,26 @@ export async function reportPosts(db: SupabaseClient, week: string, body: unknow
   }
   body = { ...body, posts: (body.posts as unknown[]).filter(p => !pieceEntries.includes(p)) }
   if (!isObj(body) || !Array.isArray(body.posts)) return { status: 400, body: { ok: false, error: 'invalid_posts' } }
+  // A check's report (client done_check, ADR-036: Control Centre's done-check sweep, which reads Buffer's sends) is kept
+  // as the check's, never as Growth's own record: each post carries `check`, and Growth's own entry on a channel wins.
+  const check = body.client === 'done_check' ? ((POST_CHECKS as readonly unknown[]).includes(body.check) ? String(body.check) : '') : null
+  if (check === '') return { status: 400, body: { ok: false, error: 'unknown_check' } }
   const items = await readItems(db, week)
   if (!items) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   const next = new Map<string, { row: OffdayItem; posts: GrowthPost[]; drive: string | null }>()
-  let unknown = 0
+  let unknown = 0, kept = 0
   for (const raw of body.posts.filter(isObj)) {
     const ref = String(raw.item || raw.option || '')
     const row = items.find(r => r.item === ref || (r.week === week && r.doc === `queue/${ref}`))
-    const post = growthPost({ ...raw, at: raw.at ?? now.toISOString() })
+    const post = growthPost({ ...raw, at: raw.at ?? now.toISOString() }, check)
     if (!row || !post) { unknown++; continue }
     const cur = next.get(row.item) ?? { row, posts: [...row.posts], drive: null }
+    if (check) {
+      // The same Buffer post again, or a channel Growth's own record already has out: nothing to add.
+      const seen = cur.posts.some(p => (p.buffer_post_id && p.buffer_post_id === post.buffer_post_id && p.state === post.state)
+        || (p.state === 'live' && p.channel === post.channel && (!p.check || post.state !== 'live')))
+      if (seen) { kept++; next.set(row.item, cur); continue }
+    }
     if (post.state === 'made') cur.posts = cur.posts.filter(p => p.state !== 'made')
     else if (post.state === 'cancelled') cur.posts = cur.posts.filter(p => !(p.state === 'scheduled' && p.channel === post.channel))
     else if (post.state === 'scheduled' && cur.posts.some(p => p.state === 'live' && p.channel === post.channel)) { next.set(row.item, cur); continue }
@@ -706,7 +729,7 @@ export async function reportPosts(db: SupabaseClient, week: string, body: unknow
     const w = await db.from('offday_items').update({ posts: posts.slice(-40), ...(drive ? { drive_folder: drive } : {}) }).eq('item', item)
     if (w.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   }
-  return { status: 200, body: { ok: true, items: next.size, unknown, ...(pieces ? { pieces } : {}) } }
+  return { status: 200, body: { ok: true, items: next.size, unknown, ...(check ? { check, already: kept } : {}), ...(pieces ? { pieces } : {}) } }
 }
 
 /** The week's items for Growth (GET /api/board/<Monday>/offdays): where each is now, by the one place. */

@@ -1,0 +1,635 @@
+{
+  "schema": "ve-sign-offs/1",
+  "about": [
+    "Krish's three video sign-offs, one review card each on his Publish Board (Ruling, Krish, 2026-11-12: \"One review card each: each goes on your Publish Board as a card with samples to look at and listen to, plus Approve or Not this. About 10 minutes in total.\").",
+    "Each sample is a file in his Drive, named by its id and link, with the sha256 of its bytes, which his press binds. Media is never committed. scripts/velib/signoffs.py makes and records them (ve signoff stills, gate2, add); the live board draws them (apps/control-plane/api/board/_signOffs.ts, view contract 1.11.0, sign_offs) and takes his Approve or Not this; .github/workflows/signoff-apply.yml writes his presses into config/sfx-approved.json, config/ve/golden-frames.json and config/ve/design-lock.json. Nothing is approved on his behalf.",
+    "The samples were filed on 13 Nov 2026 in his Drive's Inbox from My AI (docs/DRIVE.md: where a session files what the map gives no other home), each named \"Video sign-off - ...\"."
+  ],
+  "drive": {
+    "folder": "Inbox from My AI",
+    "folder_id": "1rQ7IXSFPYmYAmiv8FvMQzmPAnyytAx5S"
+  },
+  "made_on": "2026-11-13",
+  "cards": [
+    {
+      "id": "sfx",
+      "title": "Sound effects",
+      "presses": "each",
+      "writes": "config/sfx-approved.json",
+      "ask": "Twelve short sounds for the one big moment in a cut. Approve each one you would want to hear in a video, and press Not this on any you would not.",
+      "why": "config/sfx-approved.json approves none, so no cut can use a sound yet (THE_BAR ruling 11: one sound, on the big moment only).",
+      "from": "Epidemic Sound, on your plan, which covers sound effects in published video (29 Oct 2026)",
+      "items": [
+        {
+          "id": "low-thud-deep",
+          "title": "Designed, Boom, Impact, Thud, Deep, Heavy, Realistic, Distant",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "low-thud-deep.wav",
+          "seconds": 2.13,
+          "slot": "slam",
+          "use": "A word or card slams in on the big moment (a low thud as BANKRUPT slams in)",
+          "provider": "Epidemic Sound",
+          "provider_id": "4969f8ba-0853-49d3-8d5f-9787371deb54",
+          "gain_db": -8,
+          "drive": {
+            "file_id": "1Hwl2aPFtwRQw0-IpZuXZ2wM79FOCW9pN",
+            "url": "https://drive.google.com/file/d/1Hwl2aPFtwRQw0-IpZuXZ2wM79FOCW9pN/view"
+          },
+          "order": 1,
+          "sha256": "54902ec8131b506c95bba26d3f9152455fa7ac8e73083eded366ecd9c592b03d",
+          "bytes": 1224484
+        },
+        {
+          "id": "low-thud-wood",
+          "title": "Wood, Impact, Thud, Deep, Dark, Reverb",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "low-thud-wood.wav",
+          "seconds": 2.07,
+          "slot": "slam",
+          "use": "A drier, woodier thud for a rung or a card landing",
+          "provider": "Epidemic Sound",
+          "provider_id": "c282f83a-3a3f-4cd1-acf8-59de56b6b59e",
+          "gain_db": -8,
+          "drive": {
+            "file_id": "1pmdLOFo34BDyXkUD1tAVM8HepKhp9NSH",
+            "url": "https://drive.google.com/file/d/1pmdLOFo34BDyXkUD1tAVM8HepKhp9NSH/view"
+          },
+          "order": 2,
+          "sha256": "f8dd5eba8f372ff01391ae6ca4ae4e6601df6aa9a2f93814e5878ecf13cecce4",
+          "bytes": 1190478
+        },
+        {
+          "id": "stamp-rubber",
+          "title": "Office Supplies, Rubber Stamp, Document 01",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "stamp-rubber.wav",
+          "seconds": 0.21,
+          "slot": "stamp",
+          "use": "A real rubber stamp for the stamp device",
+          "provider": "Epidemic Sound",
+          "provider_id": "d530c5b9-3047-42fe-a06a-7c479d637b60",
+          "gain_db": -10,
+          "drive": {
+            "file_id": "1eIAX99XqApVIN27pMi9pGGuc3nJ_pcQX",
+            "url": "https://drive.google.com/file/d/1eIAX99XqApVIN27pMi9pGGuc3nJ_pcQX/view"
+          },
+          "order": 3,
+          "sha256": "d0dc077f3a61453725ecf851a8b413f9b5d6f61eb9ddf12db07e0b4e9d8e5085",
+          "bytes": 123842
+        },
+        {
+          "id": "ding-desk-bell",
+          "title": "User Interface, Misc, Pings, Tings, Bell, Desk, Tings",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "ding-desk-bell.wav",
+          "seconds": 2.12,
+          "slot": "count",
+          "use": "A scoreboard ticking up, with a ding (your ask: \"for enjoyment\")",
+          "provider": "Epidemic Sound",
+          "provider_id": "235cdcbd-b5f2-42b2-bd99-1c3a9827fc3b",
+          "gain_db": -12,
+          "drive": {
+            "file_id": "1O0jLLlceXlpQhwStp0KDDqCNPHdv9C9C",
+            "url": "https://drive.google.com/file/d/1O0jLLlceXlpQhwStp0KDDqCNPHdv9C9C/view"
+          },
+          "order": 4,
+          "sha256": "6bde7ce4f65de9098d471381d35c059a2c751fe96534bf33abf8b9bbb2e91fbc",
+          "bytes": 1219154
+        },
+        {
+          "id": "ding-notification",
+          "title": "User Interface, Misc, Pings, Tings, Generic, Notification, Tings",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "ding-notification.wav",
+          "seconds": 1.17,
+          "slot": "count",
+          "use": "A shorter, softer ding",
+          "provider": "Epidemic Sound",
+          "provider_id": "75a73c70-d0bd-43e3-bdf4-2eb525b511f6",
+          "gain_db": -12,
+          "drive": {
+            "file_id": "1F-XQENvEPCMncoABllDaC0-QKdvz6FGg",
+            "url": "https://drive.google.com/file/d/1F-XQENvEPCMncoABllDaC0-QKdvz6FGg/view"
+          },
+          "order": 5,
+          "sha256": "c315801196242896fe546eb77994f69e7f3af518b96c547b1a209c906e592be0",
+          "bytes": 673814
+        },
+        {
+          "id": "paper-rip-stub",
+          "title": "Paper, Rip, Cheque, Rip From Book Stub 03",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "paper-rip-stub.wav",
+          "seconds": 0.87,
+          "slot": "receipt",
+          "use": "A receipt or cheque torn off",
+          "provider": "Epidemic Sound",
+          "provider_id": "1b808b71-b0fb-4350-8728-fb7a9bd8e59e",
+          "gain_db": -12,
+          "drive": {
+            "file_id": "1xkjZIzlRuCDorFam83LoC8O8NKBhpcCO",
+            "url": "https://drive.google.com/file/d/1xkjZIzlRuCDorFam83LoC8O8NKBhpcCO/view"
+          },
+          "order": 6,
+          "sha256": "e8fd2be1af6b57311ece72dbe7efa862dbaa4e8bf1b2e178c25bdb52c6baf126",
+          "bytes": 499034
+        },
+        {
+          "id": "whoosh-heavy",
+          "title": "Swooshes, Swish, Cable, Swipe, Air, Thick, Slow, Heavy",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "whoosh-heavy.wav",
+          "seconds": 0.39,
+          "slot": "enter",
+          "use": "A heavy card swiping in",
+          "provider": "Epidemic Sound",
+          "provider_id": "2033c33f-38f6-4260-8087-94e3a5408f4e",
+          "gain_db": -12,
+          "drive": {
+            "file_id": "1QtlAyGAF3MPvwPeVHAn2oFmaCBQG_Sge",
+            "url": "https://drive.google.com/file/d/1QtlAyGAF3MPvwPeVHAn2oFmaCBQG_Sge/view"
+          },
+          "order": 7,
+          "sha256": "22ecb9cb549917dd495b9322c8c31f80095e499acfa2da77453b07695dfbc8b8",
+          "bytes": 225394
+        },
+        {
+          "id": "swish-fast",
+          "title": "Swooshes, Swish, Stick, Fast Swipe Through Air 02",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "swish-fast.wav",
+          "seconds": 0.24,
+          "slot": "enter",
+          "use": "A light, fast swipe in",
+          "provider": "Epidemic Sound",
+          "provider_id": "66d23571-4b85-49e4-a0e0-4966a6d60034",
+          "gain_db": -12,
+          "drive": {
+            "file_id": "1xq5HBR8MyArPJpSW0AOZhKzdqU5RaqAT",
+            "url": "https://drive.google.com/file/d/1xq5HBR8MyArPJpSW0AOZhKzdqU5RaqAT/view"
+          },
+          "order": 8,
+          "sha256": "c40b9fdf8232d546d829e2cf423962c9bdd8899a713c17a9ef8a44d40030bf0f",
+          "bytes": 137086
+        },
+        {
+          "id": "marker-scribble",
+          "title": "Objects, Writing, Marker Pen, Scribble On Cardboard Sheet, Short",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "marker-scribble.wav",
+          "seconds": 0.54,
+          "slot": "mark",
+          "use": "A marker ringing or underlining the words that matter",
+          "provider": "Epidemic Sound",
+          "provider_id": "e55a339f-f8dd-4143-b7c5-110aeb7a4cf7",
+          "gain_db": -12,
+          "drive": {
+            "file_id": "1fWAof8SuYaeZyLVYXqZD-yXG54jFDLDB",
+            "url": "https://drive.google.com/file/d/1fWAof8SuYaeZyLVYXqZD-yXG54jFDLDB/view"
+          },
+          "order": 9,
+          "sha256": "7bdc874a78d110090e1460e54f80f8325c7576c3e75d7911e4da3b03ab39b20a",
+          "bytes": 314054
+        },
+        {
+          "id": "receipt-print",
+          "title": "Machines, Antique, Cash Register, Printing, Receipt, Light",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "receipt-print.wav",
+          "seconds": 3.44,
+          "slot": "receipt",
+          "use": "A receipt printing as its count rises",
+          "provider": "Epidemic Sound",
+          "provider_id": "54644c85-f1a0-4cbc-adb0-4376fe506ade",
+          "gain_db": -12,
+          "drive": {
+            "file_id": "1MrDQ2pPmIRTaZYuddc_Lk5cKj7bi83mX",
+            "url": "https://drive.google.com/file/d/1MrDQ2pPmIRTaZYuddc_Lk5cKj7bi83mX/view"
+          },
+          "order": 10,
+          "sha256": "7e55ce59d533738ae2acd9ceb77cccb9023e709ecf358522f7038c93be3c3971",
+          "bytes": 1981340
+        },
+        {
+          "id": "register-open",
+          "title": "Bells, Misc, Cash Register, Open",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "register-open.wav",
+          "seconds": 0.86,
+          "slot": "count",
+          "use": "A cash register opening on a money figure (follow.the.money)",
+          "provider": "Epidemic Sound",
+          "provider_id": "78cd1e0c-f70d-41d6-9836-1b1da0bd1a9a",
+          "gain_db": -12,
+          "drive": {
+            "file_id": "1CIgG4if88qK64HgVLwfhqp0tC-XgPcP3",
+            "url": "https://drive.google.com/file/d/1CIgG4if88qK64HgVLwfhqp0tC-XgPcP3/view"
+          },
+          "order": 11,
+          "sha256": "937a13bfac962cee8b0af62344405850cdce72d3d11be1c4c5d84c290a22983d",
+          "bytes": 498246
+        },
+        {
+          "id": "message-sent",
+          "title": "User Interface, Alert, Notifications, Notification, Vintage, Sent",
+          "kind": "audio",
+          "mime": "audio/wav",
+          "name": "message-sent.wav",
+          "seconds": 0.69,
+          "slot": "send",
+          "use": "A message going out (an AI that sends for you)",
+          "provider": "Epidemic Sound",
+          "provider_id": "bbe9a6bc-c062-45ed-9451-aaa95dd7bd8d",
+          "gain_db": -12,
+          "drive": {
+            "file_id": "1644ANFrSdIrbAiJ5WU1YQ5SSJexzjZfO",
+            "url": "https://drive.google.com/file/d/1644ANFrSdIrbAiJ5WU1YQ5SSJexzjZfO/view"
+          },
+          "order": 12,
+          "sha256": "e1bf2690af3eea5c739910d1d60e1de85c6a764f20be15112c8dd080d6dfaeb6",
+          "bytes": 395306
+        }
+      ]
+    },
+    {
+      "id": "golden",
+      "title": "Golden frames",
+      "presses": "each",
+      "writes": "config/ve/golden-frames.json",
+      "want": {
+        "min": 5,
+        "max": 10
+      },
+      "ask": "Twelve frames from your own published cuts. Approve the ones that show the standard every new cut is judged against. At least five are wanted, and at most ten are kept.",
+      "why": "All ten golden frame slots are empty, so the Critic judges new cuts against Monday 26 alone.",
+      "items": [
+        {
+          "id": "mon26-tall-00047",
+          "title": "MILLIONS MADE FRIENDS arrives word by word as you say it",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+          "piece": "Why is Disney eating the scraps of bankrupt Character.AI?",
+          "date": "2026-10-26",
+          "cut": "short",
+          "shape": "tall 9:16",
+          "at": "0:04.7",
+          "at_s": 4.7,
+          "cut_sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+          "cut_path": "3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/3 Video/Disney, Google and Character.AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+          "drive": {
+            "file_id": "11gBUXJEHsu46SFioerPAAkN5kWKK-4LN",
+            "url": "https://drive.google.com/file/d/11gBUXJEHsu46SFioerPAAkN5kWKK-4LN/view"
+          },
+          "order": 1,
+          "sha256": "007c4e171aa72a9da332825afe9f22147a40515f5a33ea4bfaaeecf0a2ffc8f9",
+          "bytes": 253304
+        },
+        {
+          "id": "mon26-tall-00200",
+          "title": "A torn receipt whose mint figure matches the caption's mint chip",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+          "piece": "Why is Disney eating the scraps of bankrupt Character.AI?",
+          "date": "2026-10-26",
+          "cut": "short",
+          "shape": "tall 9:16",
+          "at": "0:20.0",
+          "at_s": 20.0,
+          "cut_sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+          "cut_path": "3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/3 Video/Disney, Google and Character.AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+          "drive": {
+            "file_id": "1-QEstUiHhSFjxWdN_C9Dm4ClbjfPMxtg",
+            "url": "https://drive.google.com/file/d/1-QEstUiHhSFjxWdN_C9Dm4ClbjfPMxtg/view"
+          },
+          "order": 2,
+          "sha256": "e2b5ea213dc76e7ca5def63c91e8e670515e09e8c9ae577848cc722283fae17c",
+          "bytes": 217072
+        },
+        {
+          "id": "mon26-tall-00275",
+          "title": "An article blurred except the phrase you quote",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+          "piece": "Why is Disney eating the scraps of bankrupt Character.AI?",
+          "date": "2026-10-26",
+          "cut": "short",
+          "shape": "tall 9:16",
+          "at": "0:27.5",
+          "at_s": 27.5,
+          "cut_sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+          "cut_path": "3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/3 Video/Disney, Google and Character.AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+          "drive": {
+            "file_id": "1bFMnGPNRGjbUf2IEdO9TKjdK8PcjgpV_",
+            "url": "https://drive.google.com/file/d/1bFMnGPNRGjbUf2IEdO9TKjdK8PcjgpV_/view"
+          },
+          "order": 3,
+          "sha256": "11c62637b8f78e249f4fdde4027e886ddbcb671f2474d60f386d887a880b6b43",
+          "bytes": 222041
+        },
+        {
+          "id": "mon26-tall-00610",
+          "title": "Your prediction, with the companies it names",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+          "piece": "Why is Disney eating the scraps of bankrupt Character.AI?",
+          "date": "2026-10-26",
+          "cut": "short",
+          "shape": "tall 9:16",
+          "at": "1:01.0",
+          "at_s": 61.0,
+          "cut_sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+          "cut_path": "3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/3 Video/Disney, Google and Character.AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+          "drive": {
+            "file_id": "1iS3kNwkxYoEkkIyNNOZ3fr44U8LDlJXs",
+            "url": "https://drive.google.com/file/d/1iS3kNwkxYoEkkIyNNOZ3fr44U8LDlJXs/view"
+          },
+          "order": 4,
+          "sha256": "415d13a85b98eb7c2804e662aeefa5c36b01697192caba59ee32e727027dc163",
+          "bytes": 245080
+        },
+        {
+          "id": "mon26-wide-01651",
+          "title": "Comparison receipts beside you: proof that sums up",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+          "piece": "Why is Disney eating the scraps of bankrupt Character.AI?",
+          "date": "2026-10-26",
+          "cut": "long",
+          "shape": "wide 16:9",
+          "at": "2:45.1",
+          "at_s": 165.11,
+          "cut_sha256": "14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294",
+          "cut_path": "3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/3 Video/Disney, Google and Character.AI - wide 16x9 - YouTube, Substack.mp4",
+          "drive": {
+            "file_id": "1LiOTbz4S9RYsrQuy7KAkqXoQW3n10Clz",
+            "url": "https://drive.google.com/file/d/1LiOTbz4S9RYsrQuy7KAkqXoQW3n10Clz/view"
+          },
+          "order": 5,
+          "sha256": "0d258d81c25f307f76c90f3678dbeace9034a458303807205c8fb2741b40716e",
+          "bytes": 236525
+        },
+        {
+          "id": "mon2-tall-00178",
+          "title": "The quote with its key phrase lit, the page behind it",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+          "piece": "Who trains your 2030 seniors",
+          "date": "2026-11-02",
+          "cut": "short",
+          "shape": "tall 9:16",
+          "at": "0:17.9",
+          "at_s": 17.87,
+          "cut_sha256": "2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a",
+          "cut_path": "3 Posts/2026-11-02 Mon follow.the.money - Who trains your 2030 seniors/3 Video/Who trains your 2030 seniors - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+          "drive": {
+            "file_id": "1JVS_4GC-r6l3uKn-0z8BgoUemLdn16CY",
+            "url": "https://drive.google.com/file/d/1JVS_4GC-r6l3uKn-0z8BgoUemLdn16CY/view"
+          },
+          "order": 6,
+          "sha256": "dfb5544aabb3c06986be05a199210f6172cbb4ecdbbd81c7aa8342527af90724",
+          "bytes": 180444
+        },
+        {
+          "id": "mon2-tall-00287",
+          "title": "The ladder: one object carries the idea",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+          "piece": "Who trains your 2030 seniors",
+          "date": "2026-11-02",
+          "cut": "short",
+          "shape": "tall 9:16",
+          "at": "0:28.8",
+          "at_s": 28.78,
+          "cut_sha256": "2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a",
+          "cut_path": "3 Posts/2026-11-02 Mon follow.the.money - Who trains your 2030 seniors/3 Video/Who trains your 2030 seniors - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+          "drive": {
+            "file_id": "1gP1n6JViUC9oGlkl9NqKIm0NUNKE2OMX",
+            "url": "https://drive.google.com/file/d/1gP1n6JViUC9oGlkl9NqKIm0NUNKE2OMX/view"
+          },
+          "order": 7,
+          "sha256": "87f105d8e9eefddcf433c13669b46cad9d69c7388281dba6c15a5fc76bfce709",
+          "bytes": 86100
+        },
+        {
+          "id": "mon2-wide-02650",
+          "title": "The one thing to do, as a card beside you",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+          "piece": "Who trains your 2030 seniors",
+          "date": "2026-11-02",
+          "cut": "long",
+          "shape": "wide 16:9",
+          "at": "4:25.0",
+          "at_s": 265.0,
+          "cut_sha256": "a7eb0a498d6f5ec0dc9d2c6342c72f01151bb10710760731d2325b6a0c4ec48b",
+          "cut_path": "3 Posts/2026-11-02 Mon follow.the.money - Who trains your 2030 seniors/3 Video/Who trains your 2030 seniors - wide 16x9 - YouTube, Substack.mp4",
+          "drive": {
+            "file_id": "1S0-l6XldpGR2hbqXDILergTUmaPZTl2O",
+            "url": "https://drive.google.com/file/d/1S0-l6XldpGR2hbqXDILergTUmaPZTl2O/view"
+          },
+          "order": 8,
+          "sha256": "dd8c2c7321ecb5b8bc12e356bc8dce0e47be06f7b67d74557de32e312cbcc903",
+          "bytes": 152611
+        },
+        {
+          "id": "fri6-wide-01188",
+          "title": "TWO PASSPORTS: the passport as the one object",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+          "piece": "Two passports",
+          "date": "2026-11-06",
+          "cut": "long",
+          "shape": "wide 16:9",
+          "at": "1:58.8",
+          "at_s": 118.83,
+          "cut_sha256": "ece2e8ee2b1561d6c74834250246a75dc9ad16aad4d78c6d7325a4a264193e05",
+          "cut_path": "3 Posts/2026-11-06 Fri mind.the.gap - Two passports/3 Video/wide 16x9 - YouTube, Substack - music restart fixed.mp4",
+          "drive": {
+            "file_id": "1JwAqbfqw2N2eBf0IAQq7M1CAVwa7HnCo",
+            "url": "https://drive.google.com/file/d/1JwAqbfqw2N2eBf0IAQq7M1CAVwa7HnCo/view"
+          },
+          "order": 9,
+          "sha256": "6e07cecd385301d5c64d3feed5f09ff27c6e724c4e2bbeaf1f58b293ce25261b",
+          "bytes": 142914
+        },
+        {
+          "id": "fri6-wide-01683",
+          "title": "The real privacy policy, on a real phone",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+          "piece": "Two passports",
+          "date": "2026-11-06",
+          "cut": "long",
+          "shape": "wide 16:9",
+          "at": "2:48.4",
+          "at_s": 168.37,
+          "cut_sha256": "ece2e8ee2b1561d6c74834250246a75dc9ad16aad4d78c6d7325a4a264193e05",
+          "cut_path": "3 Posts/2026-11-06 Fri mind.the.gap - Two passports/3 Video/wide 16x9 - YouTube, Substack - music restart fixed.mp4",
+          "drive": {
+            "file_id": "1JznL80B89hNipoNB-8WFepc7cBdchncI",
+            "url": "https://drive.google.com/file/d/1JznL80B89hNipoNB-8WFepc7cBdchncI/view"
+          },
+          "order": 10,
+          "sha256": "8c725ff4d0dd02589427bfe4f7011f75c94fa92d0989177e12ade7f4a5a2cc1c",
+          "bytes": 251577
+        },
+        {
+          "id": "wed4-wide-00215",
+          "title": "The real app on a phone beside you",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+          "piece": "Claude Duet",
+          "date": "2026-11-04",
+          "cut": "long",
+          "shape": "wide 16:9",
+          "at": "0:21.5",
+          "at_s": 21.53,
+          "cut_sha256": "9ac6f10b757757615d8a373740ee38eef74c193335adf90bf2bbcfdbc9591a44",
+          "cut_path": "3 Posts/2026-11-04 Wed under.the.hood - Claude Duet/3 Video/Claude Duet - wide 16x9 - YouTube, Substack.mp4",
+          "drive": {
+            "file_id": "1RuDB8sk5Icdrr6cPhcGA5_KrMvw3xT1R",
+            "url": "https://drive.google.com/file/d/1RuDB8sk5Icdrr6cPhcGA5_KrMvw3xT1R/view"
+          },
+          "order": 11,
+          "sha256": "84d988e0dc9293c91c59335e0e781c50e4da5052788a816a683f91900595cdd1",
+          "bytes": 299081
+        },
+        {
+          "id": "wed4-wide-01757",
+          "title": "A quote card beside you",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+          "piece": "Claude Duet",
+          "date": "2026-11-04",
+          "cut": "long",
+          "shape": "wide 16:9",
+          "at": "2:55.7",
+          "at_s": 175.73,
+          "cut_sha256": "9ac6f10b757757615d8a373740ee38eef74c193335adf90bf2bbcfdbc9591a44",
+          "cut_path": "3 Posts/2026-11-04 Wed under.the.hood - Claude Duet/3 Video/Claude Duet - wide 16x9 - YouTube, Substack.mp4",
+          "drive": {
+            "file_id": "12bC4H7OHudz8ZyJH9eJ6IWBL50zr_HV1",
+            "url": "https://drive.google.com/file/d/12bC4H7OHudz8ZyJH9eJ6IWBL50zr_HV1/view"
+          },
+          "order": 12,
+          "sha256": "1dbd454bb9820bb648a585304333a698c7edac6b70cd4344f5c400b66c41f286",
+          "bytes": 200214
+        }
+      ]
+    },
+    {
+      "id": "gate2",
+      "title": "Gate 2: face-with-proof at 16:9",
+      "presses": "card",
+      "lock": "face-with-proof@16:9",
+      "writes": "config/ve/design-lock.json",
+      "ask": "Four frames, one for each beat of the wide layout (hook, face, proof, close), from your published Mon 2 Nov wide cut. Approve them and they become the 16:9 lock every wide cut is checked against.",
+      "why": "The 9:16 lock is frozen; the 16:9 one is still a draft, so no wide cut has key frames to match.",
+      "note": "These frames are from the published cut, made before ve drew wide cuts. ve does not yet draw this layout on your portrait takes, so approving makes it the target the wide renderer is built to, as the 9:16 lock was on 3 Nov.",
+      "from": {
+        "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+        "piece": "Who trains your 2030 seniors",
+        "date": "2026-11-02",
+        "cut": "long",
+        "cut_sha256": "a7eb0a498d6f5ec0dc9d2c6342c72f01151bb10710760731d2325b6a0c4ec48b"
+      },
+      "items": [
+        {
+          "id": "hook",
+          "beat": "hook",
+          "title": "Hook: the cut opens on its claim, in the brand's dress, with you in the middle",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "width": 1920,
+          "height": 1080,
+          "at": "0:01.5",
+          "at_s": 1.5,
+          "drive": {
+            "file_id": "1BNtVAIm9JU-ehoYzo--11suRYDrNHxpE",
+            "url": "https://drive.google.com/file/d/1BNtVAIm9JU-ehoYzo--11suRYDrNHxpE/view"
+          },
+          "order": 1,
+          "sha256": "9aeeaedbd4ba1581306a5a4e6047cf3b0c27959a144f04cb8b2029afa7c0bf78",
+          "bytes": 160127
+        },
+        {
+          "id": "face",
+          "beat": "face",
+          "title": "Face: you carry the line; the label adds the series and the claim",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "width": 1920,
+          "height": 1080,
+          "at": "0:08.0",
+          "at_s": 8.0,
+          "drive": {
+            "file_id": "1IeCMfM6wb-3hDC-2Adrmp_f6HdHUw_s8",
+            "url": "https://drive.google.com/file/d/1IeCMfM6wb-3hDC-2Adrmp_f6HdHUw_s8/view"
+          },
+          "order": 2,
+          "sha256": "32b8cee7dc486f3e43be18801224dee9b8f93c670762f2fc573177f6cf20086a",
+          "bytes": 194307
+        },
+        {
+          "id": "proof",
+          "beat": "proof",
+          "title": "Proof: the document beside you as you name it",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "width": 1920,
+          "height": 1080,
+          "at": "1:34.5",
+          "at_s": 94.5,
+          "drive": {
+            "file_id": "1W5NZhP_I5VK9Q9OnTcz6kgYNOYKOkc8M",
+            "url": "https://drive.google.com/file/d/1W5NZhP_I5VK9Q9OnTcz6kgYNOYKOkc8M/view"
+          },
+          "order": 3,
+          "sha256": "6e233176a03c9acf82f403cd23e6af7e742a7a5463cb64af6fcff86770f6776e",
+          "bytes": 172756
+        },
+        {
+          "id": "close",
+          "beat": "close",
+          "title": "Close: one calm end band, held long enough to read",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "width": 1920,
+          "height": 1080,
+          "at": "4:49.0",
+          "at_s": 289.0,
+          "drive": {
+            "file_id": "1FYmMz9wn4cpqaw3WcC51LvStTStAagZl",
+            "url": "https://drive.google.com/file/d/1FYmMz9wn4cpqaw3WcC51LvStTStAagZl/view"
+          },
+          "order": 4,
+          "sha256": "8d3699d6f6228e63f9256944ed17c990eaee83d696a4612aa9f662de03dab693",
+          "bytes": 95772
+        }
+      ]
+    }
+  ]
+}

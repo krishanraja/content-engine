@@ -13,6 +13,12 @@ export const MotionProfileSchema = z.object({
     easing: z.enum(['enter', 'hero', 'utility']),
     distancePx: z.number().nonnegative(),
     overshootPct: z.number().nonnegative(),
+    /** Blur-in: px of blur at the start of the entrance, sharp by its end (Character.ai: 8 px in 2 to 3 frames). */
+    blurPx: z.number().min(0).max(12).optional(),
+    /** Turn during the entrance, degrees, reaching 0 as it lands (a drop in with rotation; eating its own jobs). */
+    spinDeg: z.number().min(-20).max(20).optional(),
+    /** The resting tilt it settles on, degrees (AI music settles slams on 2 to 4 degrees). */
+    tiltDeg: z.number().min(-6).max(6).optional(),
   }).strict(),
   stagger: z.object({ frames: z.number().int().nonnegative(), unit: z.enum(['line', 'word', 'char']) }).strict(),
   exitFrames: z.number().int().positive(),
@@ -29,8 +35,10 @@ export const MotionProfileSchema = z.object({
   typeReveal: z.object({ kind: z.enum(['line', 'word', 'typewriter', 'roll']), cps: z.number().positive().optional() }).strict(),
   /** house: the cream stage; inkDeep: ink_deep under a graphics-only beat (dark-keynote); dark: ink_deep under every
    *  graphic ground, SPLIT included, with text cards inverted for contrast (hud-terminal, line-boil). paper: a seeded,
-   *  generated grain and fibre over the ground (paper-cutout), no image asset. */
-  ground: z.object({ kind: z.enum(['house', 'inkDeep', 'dark']), sweepFrames: z.number().int().nonnegative(), texture: z.enum(['none', 'halftone', 'paper']),
+   *  generated grain and fibre over the ground (paper-cutout), no image asset. lit: a series-colour glow top left and a
+   *  mint glow bottom right, drifting slowly, over a faint 54 px grid (Character.ai). vignette: a radial ink to inkSoft
+   *  (eating its own jobs). hatched: scrolling inkSoft diagonals, the AI material (AI music). */
+  ground: z.object({ kind: z.enum(['house', 'inkDeep', 'dark']), sweepFrames: z.number().int().nonnegative(), texture: z.enum(['none', 'halftone', 'paper', 'lit', 'vignette', 'hatched']),
     /** On a dark ground, text cards invert (the default) or keep their house cream; type drawn straight on the ground
      *  always inverts so it reads. */
     cards: z.enum(['invert', 'keep']).optional() }).strict(),
@@ -63,9 +71,11 @@ export const MOTION_PROFILES: Readonly<Record<string, MotionProfile>> = Object.f
 /** Styles that need their own device or drawing pipeline: they render with the house motion until it is built. */
 export const NEEDS_DEVICE: readonly string[] = table.needs_device
 
-/** The signed floor (docs/ve/MOTION_STANDARD.md, signed by Krish 3 Nov 2026). */
+/** The signed floor (docs/ve/MOTION_STANDARD.md, signed by Krish 3 Nov 2026), widened on 13 Nov 2026 to admit his own
+ *  cuts (Ruling, Krish, 2026-11-13: "yes it should"): the AI music cut slams about 500 px with about 12% overshoot over
+ *  10 frames, and the Character.ai cut's type travels 0 px (it fades or blurs in only). */
 export const FLOOR = {
-  entranceFrames: [4, 7], risePx: [40, 60], overshootPctMax: 6, driftPctMin: 0,
+  entranceFrames: [4, 10], risePx: [0, 500], overshootPctMax: 12, driftPctMin: 0,
   /** No graphic held more than 3.5 s without a change: nothing a profile times may run longer. */
   maxHoldFrames: 105,
   zoom: [1, 3], cps: [25, 40],
@@ -79,9 +89,9 @@ const clamp = (value: number, low: number, high: number) => Math.min(high, Math.
 export function floorProblems(profile: MotionProfile): string[] {
   const problems: string[] = []
   const { entrance } = profile
-  if (entrance.frames < FLOOR.entranceFrames[0] || entrance.frames > FLOOR.entranceFrames[1]) problems.push(`entrance settles in ${entrance.frames} frames, not 4 to 7`)
-  if (entrance.distancePx < FLOOR.risePx[0] || entrance.distancePx > FLOOR.risePx[1]) problems.push(`entrance travels ${entrance.distancePx} px, not 40 to 60`)
-  if (entrance.overshootPct > FLOOR.overshootPctMax) problems.push(`overshoot ${entrance.overshootPct}% is over 6%`)
+  if (entrance.frames < FLOOR.entranceFrames[0] || entrance.frames > FLOOR.entranceFrames[1]) problems.push(`entrance settles in ${entrance.frames} frames, not 4 to 10`)
+  if (entrance.distancePx < FLOOR.risePx[0] || entrance.distancePx > FLOOR.risePx[1]) problems.push(`entrance travels ${entrance.distancePx} px, not 0 to 500`)
+  if (entrance.overshootPct > FLOOR.overshootPctMax) problems.push(`overshoot ${entrance.overshootPct}% is over 12%`)
   if (!(profile.driftPct > FLOOR.driftPctMin)) problems.push('drift must be above 0 so nothing fully stops')
   if (profile.ground.sweepFrames > FLOOR.maxHoldFrames || profile.countFrames > FLOOR.maxHoldFrames || profile.exitFrames > FLOOR.maxHoldFrames)
     problems.push('a timed move runs past 3.5 s')

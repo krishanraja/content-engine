@@ -6,7 +6,7 @@ import { validBody } from '../../apps/control-plane/api/board/_contracts'
 import { offdaySides } from '../../apps/control-plane/api/board/_offdaySides'
 import { liveInput } from '../../apps/control-plane/api/board/_itsLive'
 
-// One live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive).
+// One live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it).
 // Everything the old board showed is in the view (contract 1.1.0), and every press the old board made is a press the
 // view carries, built so the board accepts it once his words and the time are filled in.
 
@@ -58,7 +58,8 @@ describe('one live board: the view carries everything the old board showed', () 
     expect(opts.gitbroke.held).toMatch(/not pressed Approve/)
     expect(opts.gitbroke.actions.map(a => a.label)).toEqual(['Approve for Thursday 12 Nov', 'Improve for a future piece', 'Reject', 'Save as a trend', 'File for later'])
     expect(held.held.map(h => [h.option, h.title])).toEqual([['off-thu-gitbroke', 'Held: not approved by you'], ['off-thu-agentnotsetup', 'Held: not approved by you']])
-    expect(held.next).not.toMatch(/Approved/)
+    // A held idea is the ideas board's: the day never leads with it (Ruling, Krish, 2026-11-13).
+    expect(held.actions.some(a => a.kind === 'press' && /^Approve/.test(a.label))).toBe(false)
     // His Approve on it stands: it is chosen, says so with when, and carries no press; his words settled its Improve.
     const gitbroke = opt('gitbroke', { decided: 'Signed off for publishing next week (Krish, 4 Nov). Growth posts it.', direction: { look: 'Infographic' } })
     const approved = buildView(week({ approvals: [approval(WEEK, 'thu', 'gitbroke', { doc: 'queue/off-thu-gitbroke', option_sha256: offdaySides(gitbroke).idea_sha256, decided_at: '2026-11-03T11:56:26Z' })] }))
@@ -113,12 +114,18 @@ describe('one live board: the view carries everything the old board showed', () 
     expect(acts.map(a => a.outcome)).toEqual(['approved', 'filed', 'rejected', 'trend', 'improved'])
     expect(acts[0].goes).toBe("Goes onto the publish board for Friday 13 November as the day's piece.")
     for (const a of acts) expect(a.goes, a.label).toBeTruthy()
-    // A day with its piece approved and placed keeps its options to read and press, with no Approve.
+    // A day with its piece approved and placed keeps its options to read and press; since 1.13.0 each other option's
+    // Approve says what it replaces and asks where that piece goes (Krish, 13 Nov 2026: "There is no approve button").
     const F = 'f3fcd5e1-573e-4692-a413-db7c5823a10e'
     const placed = day(buildView(week({ pieces: [...week().pieces, piece(F, '2026-11-13', 'mind_the_gap')] })), 'fri')
     expect(placed.options[0].actions.map(a => a.label)).toEqual([])
     expect(placed.options[0].status).toBe('approved')
-    expect(placed.options[1].actions.map(a => a.label)).toEqual(['File for later', 'Reject', 'Save as a trend', 'Improve for a future piece'])
+    expect(placed.options[1].actions.map(a => a.label).slice(1)).toEqual(['File for later', 'Reject', 'Save as a trend', 'Improve for a future piece'])
+    const swap = placed.options[1].actions[0]
+    expect(swap.op).toBe('replace')
+    expect(swap.label).toMatch(/^Approve for Fri 13 Nov, replacing /)
+    expect(swap.choose?.path).toBe('current_to')
+    expect(swap.choose?.options.map(o => o.value).slice(-2)).toEqual(['later', 'alongside'])
   })
 
   it('builds every press as a document the board accepts once his words and the time are in', () => {

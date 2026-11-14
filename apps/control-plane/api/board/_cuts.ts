@@ -140,7 +140,7 @@ export async function saveCut(db: SupabaseClient, pieceId: string, pick: CutPick
 
 const REPOSITORY = 'krishanraja/content-engine'
 const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const
-/** The rejection engine's formats for a cut (inspirationhouse src/rejection/vocab.ts; week_board.py asset_formats). */
+/** The rejection engine's formats for a cut (inspirationhouse src/rejection/vocab.ts). */
 const CUT_FORMATS: Record<string, string> = { long: 'long_video', feature: 'long_video', short: 'short_video' }
 const CUT_WORDS: Record<string, string> = { long: 'long cut', short: 'short cut', feature: 'feature cut' }
 // The tables made by the migrations: Postgres's and PostgREST's codes for one not made yet.

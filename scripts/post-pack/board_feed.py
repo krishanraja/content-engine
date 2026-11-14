@@ -152,8 +152,8 @@ def gather(week, call=None, out_dir=None, read=None):
     must_cover += his_dropped(sources)
     out = {
         'week_start': wk,
-        # When it was read: a board is built from a gather of the last two days only (week_board.py --ideas), so what
-        # happened between the Sunday run and the build (a pick, an off day used) is in it.
+        # When it was read: the ideas are checked against a gather of the last two days only, so what happened between
+        # the Sunday run and the check (a pick, an off day used) is in it.
         'gathered_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
         'how': 'Read-only gather (board_feed.py). Write ideas.json from series[].pool and inspiration (routed, liked, fresh, corpora, '
                'creators) and his feedback cues (cues), his ideas first, each with source_kind, why_here, beats and style (config/styles.json); every must_cover id '
@@ -295,7 +295,7 @@ def goodnews_problems(ideas, sources, today=None):
     its week until 7 November, the Thursday of its week since: Krish, 2026-11-07, "Saturday's good news run should be done
     later in the week so the good news is fresh"). Once that day has come it holds its five stories, each dated in the
     seven days up to it, none a story a recent off day already ran."""
-    import week_board
+    import week_plan
     today = today or date.today()
     used = {u for o in (sources or {}).get('recent_offdays') or [] if isinstance(o, dict) for u in o.get('urls') or []}
     out = []
@@ -313,7 +313,7 @@ def goodnews_problems(ideas, sources, today=None):
             stories = o.get('stories') or []
             if today < due and not stories:
                 continue
-            bad = week_board.story_problems(stories)
+            bad = week_plan.story_problems(stories)
             if bad:
                 out += [f'{label}: stories {p} (due {due.isoformat()})' for p in bad]
                 continue
@@ -405,22 +405,24 @@ def repeat_problems(ideas, sources):
 
 def cover(week, ideas_path=None, plans=None):
     """Problems with the week's ideas.json against its sources.json: every must_cover id (his asks included) carried
-    by an idea's `covers` (a style-only ask by `style_from`) or accounted for with a reason, the style rules
-    (week_board.style_problems), half and half each publishing day, no repeat of the last 21 days, and the Wave 1
-    checks (wave1: what he refused, returns, the plain question). [] when ready."""
-    import week_board
+    by an idea's `covers` (a style-only ask by `style_from`) or accounted for with a reason, the file's own shape (at
+    least four ideas a publishing day, each with what a business person finds out, its story, why now, its fact and
+    its linked source: week_plan.ideas_problems), the style rules (week_plan.style_problems), half and half each
+    publishing day, no repeat of the last 21 days, and the Wave 1 checks (wave1: what he refused, returns, the plain
+    question). [] when ready."""
+    import week_plan
     wk = monday(week).isoformat()
     folder = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week'
     sources = json.loads((folder / 'sources.json').read_text(encoding='utf-8'))
     ideas = json.loads(Path(ideas_path or folder / 'ideas.json').read_text(encoding='utf-8'))
-    return check(ideas, sources, week_board, plans)
+    return week_plan.ideas_problems(ideas, monday(week)) + check(ideas, sources, week_plan, plans)
 
 
-def check(ideas, sources, week_board, plans=None):
+def check(ideas, sources, week_plan, plans=None):
     week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')
     halves = ([f['line'] for f in wave1(ideas, sources, plans) if f['code'] in HALVES_CODES]
               if week >= idea_checks.SHAPE_FROM else halves_problems(ideas))
-    return (week_board.coverage_problems(ideas, style_answered(ideas, sources)) + week_board.style_problems(ideas)
+    return (week_plan.coverage_problems(ideas, style_answered(ideas, sources)) + week_plan.style_problems(ideas)
             + halves + locked_problems(ideas, sources) + repeat_problems(ideas, sources)
             + readback_problems(ideas, sources) + goodnews_problems(ideas, sources)
             + [f['line'] for f in wave1(ideas, sources, plans) if f['code'] not in HALVES_CODES and f['code'] not in idea_checks.NOTE_CODES])
@@ -657,26 +659,6 @@ def taps(week, read=None):
     return his_taps((answer or {}).get('documents') if isinstance(answer, dict) else [])
 
 
-def archive(week, call=None, out_dir=None):
-    """(path written, summary line): the Archive for a board from layout v3 on (W2.1), every published piece since the
-    Launch with his scores, from GET /api/board/<Monday>/archive, written to docs/plans/<Monday>-week/archive.json for
-    week_board.py --archive. Read-only."""
-    call = call or making._engine_call
-    wk = monday(week).isoformat()
-    data = get(call, f'/api/board/{wk}/archive')
-    rows = data.get('rows')
-    if not isinstance(rows, list):
-        raise FeedError(f'GET /api/board/{wk}/archive: no rows')
-    out = Path(out_dir) if out_dir else ROOT / 'docs' / 'plans' / f'{wk}-week'
-    out.mkdir(parents=True, exist_ok=True)
-    path = out / 'archive.json'
-    path.write_text(json.dumps({'week_start': wk, 'scores': data.get('scores'), 'rows': rows}, indent=1) + '\n', encoding='utf-8')
-    scored = sum(1 for r in rows if isinstance(r, dict) and r.get('scores'))
-    line = f'archive: {len(rows)} published pieces, {scored} scored' + (
-        '; the score table waits on the Wave 2 migration batch' if data.get('scores') == 'waits_on_migration' else '')
-    return str(path), line
-
-
 def self_test():
     """No engine: a fake answer for each route, then what gather writes and says."""
     import tempfile
@@ -740,19 +722,6 @@ def self_test():
         problems.append('an engine error must be said, never written as an empty pool')
     except FeedError:
         pass
-    row = {'piece_id': '11111111-2222-4333-8444-555555555555', 'date': '2026-10-12', 'series': 'follow_the_money', 'title': 'T',
-           'links': [], 'scores': {'hindsight': {'narrative': 8, 'production': 6}}}
-    seen = []
-
-    def arch(method, path, body):
-        seen.append((method, path))
-        return 200, json.dumps({'ok': True, 'scores': 'waits_on_migration', 'rows': [row, dict(row, scores={})]})
-    with tempfile.TemporaryDirectory() as tmp:
-        path, line = archive('2026-11-09', arch, tmp)
-        if seen != [('GET', '/api/board/2026-11-09/archive')] or json.loads(Path(path).read_text(encoding='utf-8'))['rows'][0] != row:
-            problems.append('archive reads the board\'s Archive view once and writes its rows as given')
-        if line != 'archive: 2 published pieces, 1 scored; the score table waits on the Wave 2 migration batch':
-            problems.append(f'archive says how many pieces and scores, and when the score table is not there yet ({line})')
     m = ['11111111-2222-4333-8444-555555555555', '22222222-3333-4444-8555-666666666666']
     docs = [{'id': 'combine-1', 'updated_by': 'Krish', 'body': {'combine': True, 'members': m, 'pick': 'combine-1'}},
             {'id': 'combine-2', 'updated_by': 'engine_operator', 'body': {'combine': True, 'members': m, 'pick': 'combine-2'}},
@@ -770,7 +739,7 @@ def self_test():
 
 def cover_self_test():
     """Krish, 2026-10-31: his asks used or accounted, half and half each publishing day, no repeat of 21 days."""
-    import week_board
+    import week_plan
     problems = []
     his = lambda **kw: dict({'source_kind': 'inspo', 'covers': []}, **kw)
     eng = lambda **kw: dict({'source_kind': 'engine', 'covers': []}, **kw)
@@ -779,15 +748,15 @@ def cover_self_test():
         {'id': 'a397253e', 'what': 'Inspiration card "granny" you wrote on, then dismissed', 'ask': True, 'state': 'dismissed', 'style_only': False},
         {'id': '45e0ead0', 'what': 'Inspiration card "Git" you wrote on and routed to Study style', 'ask': True, 'state': 'style_only', 'style_only': True}]}
     # (a) every ask covered or accounted: a dismissed ask left out is said; a style-only ask is answered by style_from.
-    left = week_board.coverage_problems({'days': days}, style_answered({'days': days}, sources))
+    left = week_plan.coverage_problems({'days': days}, style_answered({'days': days}, sources))
     if not any('a397253e' in x for x in left) or not any('45e0ead0' in x for x in left):
         problems.append('an ask he typed words on, dismissed or style-only, left off the board must be said')
     used = {'days': dict(days, mon=[his(covers=['a397253e']), eng(style_from=['45e0ead0'])])}
-    if week_board.coverage_problems(used, style_answered(used, sources)):
+    if week_plan.coverage_problems(used, style_answered(used, sources)):
         problems.append('an ask in covers, and a style-only ask in style_from, are answered')
     topic_only = dict(sources, must_cover=[dict(sources['must_cover'][0], style_only=False, id='x1')])
     named = {'days': dict(days, mon=[his(), eng(style_from=['x1'])])}
-    if not week_board.coverage_problems(named, style_answered(named, topic_only)):
+    if not week_plan.coverage_problems(named, style_answered(named, topic_only)):
         problems.append('style_from answers only a style-only ask, never a topic ask')
     # (a2) Krish, 2026-11-02: "Monday's piece is already done". A scheduled day is locked to its piece, with no options.
     sched = {'week_start': '2026-11-09', 'scheduled': {'follow_the_money': [
@@ -877,18 +846,8 @@ def main(argv=None):
     gt.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
     gt.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
     gt.add_argument('--base', help='the week\'s ideas.json before a run that adds one idea: what the board already had is reported, never this run\'s to answer')
-    a = sub.add_parser('archive', help='the Archive (layout v3): every published piece and his scores, into docs/plans/<Monday>-week/archive.json')
-    a.add_argument('week', help='the Monday of the board, YYYY-MM-DD')
     sub.add_parser('self-test')
     args = ap.parse_args(argv)
-    if args.cmd == 'archive':
-        try:
-            path, line = archive(args.week)
-        except (FeedError, ValueError, OSError) as error:
-            print(f'board_feed archive: {error}', file=sys.stderr)
-            return 1
-        print(f'{line}\nwrote {path}; build with --archive {path}')
-        return 0
     if args.cmd == 'taps':
         try:
             bodies, skipped = taps(args.week)

@@ -20,11 +20,18 @@ export const WRITE_BACK_HEAD = 'Keep the board current as you work'
 export const RESEARCH_RULE = 'Research is never left in scratch or a chat: file each research document on the piece as you write it, '
   + 'and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive.'
 
-/** What no session does on the board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
- *  read-only archive), said once in every copied prompt; how to use the board is docs/PUBLISH_BOARDS.md. */
-export const WALLS = 'This Publish Board in Control Centre is the only place to put the work; content.krishraja.com/board is a '
-  + 'read-only archive. Never post or publish anything, and never put an idea on the publish board: propose it, and only '
-  + 'Krish\'s Approve places it.'
+/** What no session does on the board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; Ruling, Krish,
+ *  2026-11-13: the old publish boards are retired for good), said once in every copied prompt; how to use the board is
+ *  docs/PUBLISH_BOARDS.md. */
+export const WALLS = 'This Publish Board in Control Centre is the only place to put the work; the old pages at '
+  + 'content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on '
+  + 'the publish board: propose it, and only Krish\'s Approve places it.'
+
+/** Where his typed approval of a lock or scripts goes (Ruling, Krish, 2026-11-12: "Scripts and locks only."). On 13 Nov
+ *  he had approved Mon 16's and Wed 18's stories and scripts in sessions, and the board said "No approved scripts are
+ *  filed yet": the approvals stayed in the chats and in draft files the board never reads. */
+export const APPROVAL_RULE = 'When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, '
+  + 'with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file.'
 
 export interface WriteBackTarget { pieceId: string | null; week: string; day: string; step: string }
 
@@ -49,7 +56,8 @@ export function writeBack(t: WriteBackTarget): string {
     + `3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, `
     + `or board_session.py ${cli} add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py ${cli} read <id>.\n`
     + `4. ${RESEARCH_RULE} The script: board_session.py ${cli} add <file> --kind research\n`
-    + `5. ${WALLS}\n`
+    + (t.pieceId ? `5. ${APPROVAL_RULE} The script: board_session.py ${cli} approve lock|scripts (docs/PUBLISH_BOARDS.md, "His typed approval")\n` : '')
+    + `${t.pieceId ? 6 : 5}. ${WALLS}\n`
     + 'Nothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, '
     + 'and the script uses the engine key this machine already holds.'
 }

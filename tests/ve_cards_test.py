@@ -63,3 +63,59 @@ class WriteAllowListsMatch(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class VisualCardsTakeTheOneRoute(unittest.TestCase):
+    """Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, with the Codex plugin building it, as in
+    the other usual workflows; memes and Notes images go the same way. A card of one of these kinds is held to the brand
+    palette for its day and the inspiration cards Krish ticked, and a carousel's to a deck that passes
+    scripts/carousel_check.py, and it never carries the deck's words (a venture's card sits in a public repository)."""
+
+    DECK = 'docs/plans/2026-11-09-week/git-carousel/deck.json'
+
+    def card(self, tmp, **extra):
+        from velib import cards
+        fields = dict(card_id='carousel-x', kind='carousel', title='t', goal='g', contract='c',
+                      acceptance='python3 -c "pass"', write_allow=['render/pieces/x/**'], read=['render/KIT.md'],
+                      cwd=str(Path(tmp) / 'wt'), date='2026-11-17', references=['8ca0bd3d'], deck=self.DECK)
+        fields.update(extra)
+        return cards.write_card(Path(tmp) / 'c.md', **fields)
+
+    def test_a_carousel_card_carries_the_palette_the_references_and_the_deck_shape_but_none_of_its_words(self):
+        import json as _json
+        with tempfile.TemporaryDirectory() as tmp:
+            text = self.card(tmp).read_text(encoding='utf-8')
+        self.assertIn('## Brand (carousel, off, 2026-11-17', text)
+        self.assertIn('"close": "house_close_slide"', text)
+        self.assertIn('- 8ca0bd3d', text)
+        self.assertIn('## Deck (9 cards', text)
+        self.assertLessEqual(len(text.encode('utf-8')), 6144)
+        deck = _json.loads((ROOT / self.DECK).read_text(encoding='utf-8'))
+        for card in deck['cards']:
+            self.assertNotIn(card['headline'], text)
+
+    def test_no_references_no_card(self):
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
+            self.card(tmp, references=[])
+        self.assertIn('F26', str(stop.exception.code))
+
+    def test_a_deck_that_fails_the_story_check_is_never_carded(self):
+        import json as _json
+        with tempfile.TemporaryDirectory() as tmp:
+            deck = _json.loads((ROOT / self.DECK).read_text(encoding='utf-8'))
+            deck['five_whys'] = deck['five_whys'][:2]
+            bad = Path(tmp) / 'deck.json'
+            bad.write_text(_json.dumps(deck), encoding='utf-8')
+            with self.assertRaises(SystemExit) as stop:
+                self.card(tmp, deck=str(bad))
+        self.assertIn('carousel_check', str(stop.exception.code))
+        self.assertIn('five times', str(stop.exception.code))
+
+    def test_a_meme_and_a_notes_image_wear_their_own_palette_and_need_no_deck(self):
+        for kind in ('meme', 'notes_image'):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as tmp:
+                text = self.card(tmp, kind=kind, deck=None, spend_id='f2bfdae8').read_text(encoding='utf-8')
+                self.assertIn(f'## Brand ({kind}, off, 2026-11-17', text)
+                self.assertIn('"close": "none"', text)
+                self.assertIn('\nspend_id: f2bfdae8\nkind: ' + kind, text)
+                self.assertNotIn('## Deck', text)

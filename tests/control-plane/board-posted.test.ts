@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
 import { readFileSync } from 'node:fs'
-import { BOARD_CHANNELS, OFF_DAY_CHANNELS, POSTED_CHANNELS, SERIES_DAY_CHANNELS, dayDate, postedInput, readPieces } from '../../apps/control-plane/api/board/_posted.js'
+import { OFF_DAY_CHANNELS, POSTED_CHANNELS, SERIES_DAY_CHANNELS, dayDate, postedInput, readPieces } from '../../apps/control-plane/api/board/_posted.js'
 vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => false, mediaQualityRollout: () => ({ status: 'candidate_pending_calibration' }) }))
 
 // Growth's write-back (Krish, 2026-10-29: "we need the growth repo to keep the publish board check boxes update with
@@ -90,12 +90,6 @@ describe('what a post must carry', () => {
 })
 
 describe('the boxes it ticks', () => {
-  it('are week_board.py\'s posting steps, with the same labels', () => {
-    const py = readFileSync(new URL('../../scripts/post-pack/week_board.py', import.meta.url), 'utf8')
-    const steps = [...py.matchAll(/^    \('([a-z-]+)', '([^']+)', '([a-z]+)', (?:True|False)\),$/gm)].map(m => [m[1], m[2]])
-    expect(steps.length).toBeGreaterThan(0)
-    expect(Object.fromEntries(steps)).toEqual(BOARD_CHANNELS)
-  })
   it('are every box Growth may fill, and a day lists only boxes the route takes', () => {
     const growth = ['shorts', 'youtube', 'tiktok', 'reels', 'instagram', 'linkedin', 'x', 'threads', 'facebook', 'substack-notes']
     for (const box of growth) expect(Object.keys(POSTED_CHANNELS)).toContain(box)

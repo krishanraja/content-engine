@@ -2,9 +2,11 @@ import React from 'react'
 import type { EngineRenderProps } from '../props'
 import type { CaptionThemeName } from './names'
 import {
-  F, LIFT, REGIONS, type Box, clamp, clean, fit, hero, key, livePage, mix, outBack, outCubic, outExpo, previousPage,
+  F, LIFT, REGIONS, band, type Box, clamp, clean, fit, hero, key, livePage, mix, outBack, outCubic, outExpo, previousPage,
   scale, settle, since, spoken, spring, textWidth,
 } from './kit'
+import { type Draw, root, upper, wrap } from './draw'
+import { STYLES } from './styles'
 
 /** Every caption style but `art-directed` (chrome/ArtDirectedCaption.tsx), each the house's own build of an idea
  *  (Krish, 2026-11-11: "None of other styles are amazing you need to improve them all 10X"). The house rules they all
@@ -13,32 +15,12 @@ import {
  *  are spoken, never a finished line early; one marked word per page at most; type inside the safe area, never under
  *  the platform UI; no rainbow, no permanent glow, no pill per word. */
 
-type Draw = (props: EngineRenderProps, frame: number) => React.ReactElement | null
-
-const root = (name: string, box: Box, children: React.ReactNode, extra: React.CSSProperties = {}) => (
-  <div data-caption-theme={name} style={{ position: 'absolute', ...box, pointerEvents: 'none', zIndex: 40, ...extra }}>{children}</div>
-)
-
-const upper = (t: string) => clean(t).toUpperCase()
-
-/** Rows of words, greedily wrapped to a width by the width estimate (no word is split; a page keeps its order). */
-function wrap(words: string[], size: number, width: number, face: Parameters<typeof textWidth>[2], caps: boolean, gap: number): number[][] {
-  const rows: number[][] = []
-  let row: number[] = [], used = 0
-  words.forEach((w, i) => {
-    const wd = textWidth(w, size, face, caps)
-    if (row.length && used + gap + wd > width) { rows.push(row); row = []; used = 0 }
-    used += (row.length ? gap : 0) + wd; row.push(i)
-  })
-  if (row.length) rows.push(row)
-  return rows
-}
 
 /** pop: Archivo Black capitals that land word by word with a firm settle; the word being said wears the series colour
  *  and hands it on as the next lands. Centred in the caption band, at most two lines, sized to fill the width. */
 const pop: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, now = spoken(page, frame)
+  const { page } = live, k = scale(props.aspect), box = band(props), now = spoken(page, frame)
   const words = page.words.map((w) => upper(w.text))
   const size = Math.min(132 * k, fit(words.join(' '), box.width * 2.3, 'archivo900', true, 132 * k))
   const rows = wrap(words, size, box.width, 'archivo900', true, size * 0.28)
@@ -60,7 +42,7 @@ const pop: Draw = (props, frame) => {
  *  it is spoken, and a short series-colour rule draws under the word being said. Archivo ExtraBold, mixed case. */
 const karaoke: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, now = spoken(page, frame)
+  const { page } = live, k = scale(props.aspect), box = band(props), now = spoken(page, frame)
   const words = page.words.map((w) => clean(w.text))
   const size = Math.min(100 * k, fit(words.join(' '), box.width * 2.1, 'archivo700', false, 100 * k))
   const enter = outCubic(since(frame, page.fromFrame, props.fps) / 0.2)
@@ -87,7 +69,7 @@ const karaoke: Draw = (props, frame) => {
  *  floor. The key word is set in the series colour. */
 const kinetic01: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, kw = key(page)
+  const { page } = live, k = scale(props.aspect), box = band(props), kw = key(page)
   const width = 560 * k, words = page.words.map((w) => upper(w.text))
   let sizes = words.map((w) => fit(w, width, 'anton', true, 230 * k, 60))
   const total = sizes.reduce((a, b) => a + b * 0.92, 0), room = box.height + 140 * k
@@ -109,7 +91,7 @@ const kinetic01: Draw = (props, frame) => {
  *  left-aligned lockup; the page's hero lands last and largest, a full step up, in the series colour. */
 const kinetic02: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, kw = key(page)
+  const { page } = live, k = scale(props.aspect), box = band(props), kw = key(page)
   const words = page.words.map((w) => upper(w.text))
   const base = Math.min(104 * k, fit(words.filter((_, i) => i !== kw).join(' '), box.width * 1.6, 'archivoCondensed', true, 104 * k))
   const big = fit(words[kw]!, box.width, 'archivoCondensed', true, 200 * k)
@@ -133,7 +115,7 @@ const kinetic02: Draw = (props, frame) => {
  *  just after it is said and the word turns ink on it, like a pen through the line. */
 const hustle: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, kw = key(page)
+  const { page } = live, k = scale(props.aspect), box = band(props), kw = key(page)
   const words = page.words.map((w) => upper(w.text))
   const size = Math.min(128 * k, fit(words.join(' '), box.width * 2.1, 'anton', true, 128 * k))
   const rows = wrap(words, size, box.width - 40, 'anton', true, size * 0.22)
@@ -160,14 +142,14 @@ const hustle: Draw = (props, frame) => {
  *  footage, for pieces shot against a window or a screen. */
 const grape: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, now = spoken(page, frame)
+  const { page } = live, k = scale(props.aspect), box = band(props), now = spoken(page, frame)
   const words = page.words.map((w) => clean(w.text))
   const size = Math.min(84 * k, fit(words.join(' '), (box.width - 80) * 2.2, 'archivo700', false, 84 * k))
   const open = outExpo(since(frame, page.fromFrame, props.fps) / 0.26)
   return root('grape', box, (
     <div style={{ position: 'absolute', left: 0, bottom: 0, maxWidth: box.width, padding: `${size * 0.36}px ${size * 0.5}px`,
-      background: props.tokens.inkDeep, borderRadius: 18, opacity: 0.94, boxShadow: '0 18px 50px rgba(0,0,0,.35)',
-      clipPath: `inset(0 ${100 - open * 100}% 0 0 round 18px)`, display: 'flex', flexWrap: 'wrap', columnGap: size * 0.28, rowGap: size * 0.1 }}>
+      background: props.tokens.inkDeep, borderRadius: 18, opacity: 0.94, boxShadow: `0 0 0 3px ${props.tokens.cream}, 0 18px 50px rgba(0,0,0,.35)`,
+      clipPath: `inset(-3px ${open >= 1 ? -3 : 100 - open * 100}${open >= 1 ? 'px' : '%'} -3px -3px round 18px)`, display: 'flex', flexWrap: 'wrap', columnGap: size * 0.28, rowGap: size * 0.1 }}>
       <span style={{ position: 'absolute', left: 0, top: 18, bottom: 18, width: 6, background: props.tokens.mint, borderRadius: 3 }} />
       {page.words.map((w, i) => {
         const t = since(frame, w.atFrame, props.fps) / 0.16
@@ -183,7 +165,7 @@ const grape: Draw = (props, frame) => {
  *  itself. The key word fills with the series colour. Loud on purpose, for the fast cuts. */
 const beast: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, now = spoken(page, frame), kw = key(page)
+  const { page } = live, k = scale(props.aspect), box = band(props), now = spoken(page, frame), kw = key(page)
   if (now < 0) return null
   const show = [now - 1, now].filter((i) => i >= 0)
   return root('beast', box, (
@@ -205,7 +187,7 @@ const beast: Draw = (props, frame) => {
  *  springs a size bigger, in mint. Friendly and quick, for the lighter pieces. */
 const poppin: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, kw = key(page)
+  const { page } = live, k = scale(props.aspect), box = band(props), kw = key(page)
   const words = page.words.map((w) => clean(w.text))
   const size = Math.min(104 * k, fit(words.join(' '), box.width * 2.1, 'archivo900', false, 104 * k))
   return root('poppin', box, (
@@ -227,7 +209,7 @@ const poppin: Draw = (props, frame) => {
  *  single italic line. Left-aligned, for the reflective pieces. */
 const aarit: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, h = hero(page)
+  const { page } = live, k = scale(props.aspect), box = band(props), h = hero(page)
   const rest = page.words.map((w, i) => ({ w, i })).filter(({ i }) => i !== h)
   const small = Math.min(78 * k, fit(rest.map(({ w }) => clean(w.text)).join(' '), box.width * 1.6, 'frauncesItalic', false, 78 * k))
   const rule = outExpo(since(frame, page.fromFrame, props.fps) / 0.3)
@@ -252,7 +234,7 @@ const aarit: Draw = (props, frame) => {
  *  Sharp and readable at rest; for the technology pieces. */
 const softAi: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, kw = key(page)
+  const { page } = live, k = scale(props.aspect), box = band(props), kw = key(page)
   const words = page.words.map((w) => clean(w.text))
   const size = Math.min(100 * k, fit(words.join(' '), box.width * 2.1, 'archivo500', false, 100 * k))
   return root('soft-ai', box, (
@@ -272,7 +254,7 @@ const softAi: Draw = (props, frame) => {
  *  thirty characters a second from the frame it is said, and a mint block cursor blinks at the end of the line. */
 const gaming: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower
+  const { page } = live, k = scale(props.aspect), box = band(props)
   const size = Math.round(62 * k), per = props.fps / 30
   let text = ''
   page.words.forEach((w, i) => {
@@ -285,7 +267,7 @@ const gaming: Draw = (props, frame) => {
   return root('gaming-stream', box, (
     <div style={{ position: 'absolute', left: 0, bottom: 0, maxWidth: box.width, background: props.tokens.inkDeep, opacity: 0.94,
       borderRadius: 10, padding: `${size * 0.3}px ${size * 0.42}px`, fontFamily: F.data, fontWeight: 500, fontSize: size, lineHeight: 1.2,
-      color: props.tokens.cream, boxShadow: `0 0 0 2px ${props.tokens.inkSoft}, 0 18px 50px rgba(0,0,0,.35)` }}>
+      color: props.tokens.cream, boxShadow: `0 0 0 2px ${props.tokens.inkSoft}, 0 0 0 4px ${props.tokens.cream}, 0 18px 50px rgba(0,0,0,.35)` }}>
       <span style={{ color: props.tokens.mint }}>{'> '}</span>{text}
       <span style={{ display: 'inline-block', width: size * 0.55, height: size * 0.95, marginLeft: size * 0.1, verticalAlign: '-0.12em',
         background: props.tokens.mint, opacity: blink ? 1 : 0 }} />
@@ -297,7 +279,7 @@ const gaming: Draw = (props, frame) => {
  *  lands. The key word is in the series colour. */
 const oneWord: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, now = spoken(page, frame), kw = key(page)
+  const { page } = live, k = scale(props.aspect), box = band(props), now = spoken(page, frame), kw = key(page)
   if (now < 0) return null
   const w = page.words[now]!, text = upper(w.text), t = since(frame, w.atFrame, props.fps) / 0.2
   const size = fit(text, box.width, 'archivo900', true, 240 * k, 70)
@@ -316,7 +298,7 @@ const oneWord: Draw = (props, frame) => {
  *  begins. Left-aligned, calm, for long conversational takes. */
 const podcast: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
-  const { page, index } = live, k = scale(props.aspect), box = REGIONS[props.aspect].lower, prev = previousPage(props, index, frame, 90)
+  const { page, index } = live, k = scale(props.aspect), box = band(props), prev = previousPage(props, index, frame, 90)
   const size = Math.min(88 * k, fit(page.words.map((w) => clean(w.text)).join(' '), box.width * 2.1, 'archivo700', false, 88 * k))
   const enter = outCubic(since(frame, page.fromFrame, props.fps) / 0.28)
   return root('podcast', box, (
@@ -383,7 +365,34 @@ const cinematic: Draw = (props, frame) => {
     </div>))
 }
 
+/** slam, the beat-slam stack: every word slams in at the frame it is said, from 2.2x with a motion blur and a small
+ *  alternating turn, landing in 0.16 s on a quart-out (the kinetic beat-slam timings, held 0.35 s and more; source:
+ *  "openmontage@fecb9a1", behaviour only). The words already said on the page stack above it, each step smaller and
+ *  dimmer, the stack sliding up as the next lands, so the band fills from the bottom. Anton capitals; the key word in
+ *  the series colour with an ink outline. Every word is an event on screen: this is the fast caption. */
+const slam: Draw = (props, frame) => {
+  const live = livePage(props, frame); if (!live) return null
+  const { page } = live, k = scale(props.aspect), box = band(props), now = spoken(page, frame), kw = key(page)
+  if (now < 0) return null
+  const w = page.words[now]!, t = since(frame, w.atFrame, props.fps)
+  const land = 1 - Math.pow(1 - clamp(t / 0.16), 4)
+  const show = [now - 2, now - 1, now].filter((i) => i >= 0)
+  const sizes = show.map((i, j) => fit(upper(page.words[i]!.text), box.width, 'anton', true, (j === show.length - 1 ? 210 : 210 * Math.pow(0.58, show.length - 1 - j)) * k, 44))
+  return root('slam', box, (
+    <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center',
+      transform: `translateY(${((1 - outExpo(t / 0.12)) * sizes[sizes.length - 1]! * 0.5).toFixed(1)}px)` }}>
+      {show.map((i, j) => {
+        const cur = i === now, size = sizes[j]!, word = upper(page.words[i]!.text), turn = (now % 2 ? 1 : -1) * 5
+        return <span key={i} style={{ fontFamily: F.display, fontSize: size, lineHeight: 0.96, display: 'inline-block', letterSpacing: '0.005em',
+          color: i === kw ? props.tokens.channel : props.tokens.cream, opacity: cur ? clamp(t / 0.03) : 0.55 + 0.2 * j,
+          WebkitTextStroke: i === kw ? `${Math.round(size * 0.06)}px ${props.tokens.ink}` : undefined, paintOrder: 'stroke fill',
+          textShadow: LIFT, filter: cur && land < 0.98 ? `blur(${((1 - land) * 16).toFixed(1)}px)` : undefined,
+          transform: cur ? `scale(${mix(2.2, 1, land).toFixed(3)}) rotate(${mix(turn, 0, land).toFixed(2)}deg)` : 'none' }}>{word}</span>
+      })}
+    </div>))
+}
+
 export const THEMES: Record<Exclude<CaptionThemeName, 'art-directed'>, Draw> = {
   pop, karaoke, 'kinetic-01': kinetic01, 'kinetic-02': kinetic02, hustle, grape, beast, poppin, aarit, 'soft-ai': softAi,
-  'gaming-stream': gaming, 'simple-one-word': oneWord, podcast, cinematic,
+  'gaming-stream': gaming, 'simple-one-word': oneWord, podcast, cinematic, slam, ...STYLES,
 }

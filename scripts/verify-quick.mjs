@@ -38,9 +38,10 @@ const FULL_SUITE = [
 // package.json moves every test only through what it installs or how modules resolve; a new script does not.
 const PKG_KEYS = ['dependencies', 'devDependencies', 'optionalDependencies', 'overrides', 'workspaces', 'type', 'imports', 'exports', 'engines']
 
-// Publishing safety: run on every pull request, touched or not.
+// Publishing safety: run on every pull request, touched or not (the old boards' retirement guard among them).
 const ALWAYS_TS = [
   'tests/claude-hooks.test.ts', 'tests/secret-patterns.test.ts', 'tests/no-claude-routines.test.ts', 'tests/one-live-board.test.ts',
+  'tests/control-plane/old-boards-retired.test.ts',
   'tests/control-plane/teleprompter-send.test.ts', 'tests/control-plane/teleprompter-server.test.ts',
   'tests/control-plane/copy-lint.test.ts', 'tests/floor-tools.test.ts', 'tests/control-plane/board-view-contract.test.ts',
 ]

@@ -8,6 +8,7 @@ the stories now" press, or Run workflow) that finds them again for a week. Its e
 "Saturday's good news run should be done later in the week so the good news is fresh") are history.
 
     python3 scripts/saturday_goodnews.py check [--today YYYY-MM-DD] [--week YYYY-MM-DD] [--event schedule] [--force]
+                                               [--fill off-<day>-<id>]
 
 prints, for $GITHUB_OUTPUT, `monday=<the week>`, `go=true|false` and `due=<today>`, the day the stories are found up
 to, and says why on stderr. The week is the one whose Saturday comes next, unless a week is typed. It goes while that
@@ -17,10 +18,15 @@ same) and the live board does not show them yet. A scheduled firing does nothing
 one added by mistake still finds nothing to do. `--force` goes whenever the option exists, stories or not. It exits 1
 when it cannot read the board, so a run never goes or skips on a guess, and 2 on a typed week that is not a Monday.
 
+`--fill off-<day>-<id>` (the board's "Find the other N stories" press) goes whenever it names an off-day option of the
+week: the good-news post he approved holds fewer than five stories, so the run finds the rest on its own topic and
+writes them onto that option (Ruling, Krish, 2026-11-13: the Saturday carousel is five good-news stories on one topic).
+It prints `fill=<the option>` for the run's prompt.
+
 The live board is Control Centre's (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
-read-only archive): it reads the week's view, GET /api/board/<Monday>/view, which reads ideas.json from the week's
+read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it): it reads the week's view, GET /api/board/<Monday>/view, which reads ideas.json from the week's
 branch (offday-revise/<Monday>) before main. So the run keeps its stories on that branch, bumps the week's change
-signal, and this guard asks the view, never the archive page, whether they are there.
+signal, and this guard asks the view, never an old page, whether they are there.
 """
 from __future__ import annotations
 
@@ -28,6 +34,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 import sys
 import urllib.request
 from pathlib import Path
@@ -41,8 +48,11 @@ sys.path.insert(0, str(HERE / 'post-pack'))
 from sunday_ideas import monday_arg  # noqa: E402  the one check of a typed Monday
 
 NEW_YORK = ZoneInfo('America/New_York')
-# The weekly good news holds five stories (week_board.STORY_COUNT, plan-week references/offdays.md).
+# The weekly good news holds five stories (week_plan.STORY_COUNT, plan-week references/offdays.md).
 STORY_COUNT = 5
+
+
+FILL = re.compile(r'^off-(mon|tue|wed|thu|fri|sat)-[A-Za-z0-9][A-Za-z0-9_.:-]{0,59}$')
 
 
 def goodnews_monday(today: dt.date) -> dt.date:
@@ -145,7 +155,11 @@ def main() -> int:
     check.add_argument('--week', help='a typed Monday, YYYY-MM-DD; default: the week whose Saturday comes next')
     check.add_argument('--event', default='workflow_dispatch', help="GitHub's event name; a 'schedule' firing does nothing")
     check.add_argument('--force', action='store_true')
+    check.add_argument('--fill', help='off-<day>-<id>: the approved good-news post to fill to five stories on its topic')
     args = parser.parse_args()
+    if args.fill and not FILL.match(args.fill):
+        print(f'saturday good news: {args.fill!r} is not an off-day option (off-<day>-<id>)', file=sys.stderr)
+        return 2
     today = dt.date.fromisoformat(args.today) if args.today else dt.datetime.now(NEW_YORK).date()
     try:
         monday = monday_arg(args.week) if args.week else goodnews_monday(today)
@@ -153,7 +167,7 @@ def main() -> int:
         print(f'saturday good news: {error}', file=sys.stderr)
         return 2
     try:
-        go, why = decide(monday, today, args.event, args.force)
+        go, why = (True, f'filling {args.fill} to five stories on its topic') if args.fill and args.event != 'schedule' else decide(monday, today, args.event, args.force)
     except Exception as error:  # an unreadable board is never read as filled or as empty
         print(f'saturday good news: could not read the week board for {monday}: {error}', file=sys.stderr)
         return 1
@@ -161,6 +175,7 @@ def main() -> int:
     print(f'monday={monday.isoformat()}')
     print(f'go={"true" if go else "false"}')
     print(f'due={today.isoformat()}')
+    print(f'fill={args.fill or ""}')
     return 0
 
 

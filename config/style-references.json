@@ -920,6 +920,48 @@
       "krish_verdict": "untested"
     },
     {
+      "id": "character-ai-receipts",
+      "layer": "motion",
+      "name": "Receipts on the ink desk (from the Character.ai cut)",
+      "how": "Evidence prints onto a lit ink desk above a still face band: receipts, money maps, logo rows and checklists rise into place under a fade, each line printing on the word that names it, the figure landing on a mint fill; a device changes state by dissolving, never by a camera move.",
+      "from": "Krish's own Mon 26 Oct cut, Why is Disney eating the scraps of bankrupt Character.AI? (config/reference-cuts.json mon26-tall, sha256 39f1039c), studied at speed and measured 13 Nov 2026 (3.85 events a second, 81% of the frame in use). Krish, 2026-11-13: \"Ensure the Character.ai video, the Anthropic eating its own jobs video, the AI music video are used as the basis for their own artistic styles too\"",
+      "fits": "often",
+      "point_types": ["claim", "number", "system", "sequence"],
+      "formats": ["short_video", "long_video"],
+      "ve_route": ["evidence_card", "logo_card", "kinetic_stat", "headline", "record_card"],
+      "rules": ["the panel is an ink desk with a series-colour glow top left and a mint glow bottom right, slowly drifting", "proof objects rise into place under a fade with no overshoot; type only fades or blurs in, one word or line at a time", "every line, chip and figure lands on the word that names it; the figure lands on a mint fill", "a device changes state by an 8-frame dissolve: the old layout ghosts under the new", "no camera move on the panel or the face; at most one slam (caution tape and confetti) in a piece"],
+      "avoid": ["camera pushes or punch-ins", "overshoot or bounce on any entrance", "an on-screen label repeating the spoken line", "more than one slam in a piece"],
+      "krish_verdict": "untested"
+    },
+    {
+      "id": "eating-jobs-ladder",
+      "layer": "motion",
+      "name": "One object carries the story (from the eating-its-own-jobs cut)",
+      "how": "One object, a career ladder, carries the whole piece: every number is counted onto, beside or in place of a part of it, on a vignetted ink desk or in a butter tray over his chest, and every scene that steps away ends by turning back into the ladder, changed.",
+      "from": "Krish's own Mon 2 Nov cut, Who trains your 2030 seniors (thumbnail \"CLAUDE IS EATING ITS OWN JOBS\"; config/reference-cuts.json mon02-tall, sha256 2cdff09a), studied at speed and measured 13 Nov 2026 (3.91 events a second, 20 cuts a minute). Krish, 2026-11-13: \"Ensure the Character.ai video, the Anthropic eating its own jobs video, the AI music video are used as the basis for their own artistic styles too\"",
+      "fits": "often",
+      "point_types": ["number", "transformation", "system"],
+      "formats": ["short_video", "long_video"],
+      "ve_route": ["kinetic_stat", "headline", "quote_card", "evidence_card"],
+      "rules": ["one through-line object for the whole piece, changed on screen, never replaced", "numbers roll onto the object on the enter curve and land on their word", "a slow push holds every panel; nothing holds still", "every change is a 10-frame crossfade on its word; no slide or whip exits", "mint marks only the answer; the series colour is never a warning"],
+      "avoid": ["figures or icons acting out a sentence", "on-screen words repeating what he says", "eyebrow labels, kickers or asterisks", "a hard cut between panels except into the end card"],
+      "krish_verdict": "untested"
+    },
+    {
+      "id": "ai-music-slam",
+      "layer": "motion",
+      "name": "Proof slams onto the stage (from the AI music cut)",
+      "how": "Real proof (screens, charts, headlines, clips) slams onto an ink stage over the top of the frame on a back curve and settles tilted, while he talks below; mint is what a human made and hatched ink is what the machine made; the camera never stops pushing and scenes hand over with a horizontal blur whip.",
+      "from": "Krish's own Wed 11 Nov cut, AI is already in the music you love (tall 9x16, sha256 3c360c73), studied at speed and measured 13 Nov 2026 (4.12 events a second, longest gap 0.93 s, 81% of the frame in use). Krish, 2026-11-13: \"Ensure the Character.ai video, the Anthropic eating its own jobs video, the AI music video are used as the basis for their own artistic styles too\"",
+      "fits": "often",
+      "point_types": ["product", "claim", "number", "transformation"],
+      "formats": ["short_video", "long_video"],
+      "ve_route": ["evidence_card", "hand_phone_stage", "kinetic_stat", "headline", "logo_card"],
+      "rules": ["two materials only: mint for what a human made, hatched ink for what the machine made", "every real thing slams in on a back curve, settles on a small tilt with a soft shadow, and the picture behind it dims", "the camera pushes through every scene and breathes on long holds; nothing is ever still", "scenes hand over with a horizontal blur whip; one crossfade inside a scene at most", "each rebuilt interface carries its rebuilt-from line"],
+      "avoid": ["a third colour for provenance", "a crossfade between scenes", "the series colour anywhere but the pill and the end ticker", "a rebuilt interface passed off as the real one"],
+      "krish_verdict": "untested"
+    },
+    {
       "id": "named-metaphor-spine",
       "layer": "breakdown",
       "name": "Named metaphor spine",

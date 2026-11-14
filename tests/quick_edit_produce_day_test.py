@@ -144,9 +144,8 @@ class FilingTests(unittest.TestCase):
 
 
 class StingTests(unittest.TestCase):
-    """The long cut opens on the intro sting once Krish approves it (Krish, 2026-11-05: "I think it should go at the
-    start of the longer wide videos 100%,"): its clips are fetched first, the music runs under it, and a long cut that
-    cannot have it stops the run. The short cut opens on the hook."""
+    """Nothing before the hook, ever (Ruling, Krish, 2026-11-12): no sting is fetched, even an approved one, and a cut
+    handed anything in front of its hook stops the run. The music is sized to whatever make.py measures."""
 
     def setUp(self):
         tmp = tempfile.TemporaryDirectory()
@@ -194,8 +193,8 @@ class StingTests(unittest.TestCase):
         self.make(sting_s=0.0)
         self.assertEqual(json.loads((self.work / 'kit' / 'long.json').read_text())['music_seconds'], 306.0)
 
-    def test_a_long_cut_that_cannot_have_the_approved_sting_stops_the_run(self):
-        why = 'the 16x9 cut of this follow_the_money piece opens on the approved intro sting ... and it could not be had: not fetched'
+    def test_a_long_cut_handed_anything_before_its_hook_stops_the_run(self):
+        why = 'the 16x9 cut would open on clip.mp4 before its hook: nothing goes before the hook'
         with self.assertRaises(produce_day.Stop) as stop:
             self.make(long_shape={'opening_stop': why})
         self.assertIn('the long cut: ' + why, str(stop.exception))
@@ -210,24 +209,46 @@ class StingTests(unittest.TestCase):
             self.assertFalse(produce_day.fetch_sting())
         ran.assert_not_called()
 
-    def test_an_approved_sting_is_fetched_and_one_not_in_the_library_stops_the_run(self):
+    def test_even_an_approved_sting_fetches_nothing(self):
+        # Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for good."
         intro = produce_day_intro()
+        with patch.object(intro, 'load', return_value=self.config('approved')), patch.object(produce_day, 'run') as ran:
+            self.assertFalse(produce_day.fetch_sting())
+        ran.assert_not_called()
 
-        class Done:
-            def __init__(self, code):
-                self.returncode, self.stdout = code, ''
-        with patch.object(intro, 'load', return_value=self.config('approved')), patch.object(produce_day, 'run', return_value=Done(0)) as ran:
-            self.assertTrue(produce_day.fetch_sting())
-        self.assertEqual([str(a) for a in ran.call_args.args[0][1:]], ['scripts/quick-edit/intro.py', 'fetch'])
-        with patch.object(intro, 'load', return_value=self.config('approved')), patch.object(produce_day, 'run', return_value=Done(2)):
-            with self.assertRaises(produce_day.Stop) as stop:
-                produce_day.fetch_sting()
-        self.assertIn('intro.py publish', str(stop.exception))
+    def test_the_committed_sting_is_retired_and_fetches_nothing(self):
+        with patch.object(produce_day, 'run') as ran:
+            self.assertFalse(produce_day.fetch_sting())
+        ran.assert_not_called()
 
 
 def produce_day_intro():
     import intro  # noqa: PLC0415  scripts/quick-edit/intro.py, as produce_day imports it
     return intro
+
+
+class OffDayTests(unittest.TestCase):
+    """Ruling (Krish, 2026-11-13): off-day voiceover shorts are made the same way, in a Claude session with the Codex
+    plugin (the ve route). This headless run makes series days only, even when it is handed an off-day piece."""
+
+    def reason(self, post):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'post.json'
+            path.write_text(json.dumps(post), encoding='utf-8')
+            return produce_day.offday_reason(path)
+
+    def test_an_off_day_piece_is_refused_and_pointed_at_the_ve_route(self):
+        for day in ('2026-11-17', '2026-11-19', '2026-11-21'):
+            with self.subTest(day=day):
+                why = self.reason({'date': day, 'piece_id': 'x'})
+                self.assertIsNotNone(why)
+                self.assertIn('ve route', why)
+                self.assertIn('Claude session', why)
+
+    def test_a_series_day_piece_and_an_undated_one_go_on(self):
+        for post in ({'date': '2026-11-16'}, {'date': '2026-11-18'}, {'date': '2026-11-20'}, {}, {'date': 'soon'}):
+            with self.subTest(post=post):
+                self.assertIsNone(self.reason(post))
 
 
 class ScheduleTests(unittest.TestCase):

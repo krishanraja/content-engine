@@ -91,7 +91,7 @@ export function Device(p:DeviceProps) {
   }
   const number=p.object.dataset?.rows.find(r=>r.value===s.count)
   // A 9:16 frame sees less width through the same lens: pull the camera back and aim above the set so it sits under the number.
-  const back=tall?2.1:1, aim=new T.Vector3(0,tall?5.5:2,0)
+  const back=tall?2.9:1, aim=new T.Vector3(0,tall?1:2,0)
   const eye=new T.Vector3((camera[0]!+d)*back,(camera[1]!+d*0.4)*back,camera[2]!*back)
   const orientation=new T.Euler().setFromRotationMatrix(new T.Matrix4().lookAt(eye,aim,new T.Vector3(0,1,0)))
   return <div data-device="ladder_stage" style={{position:'absolute',...p.box,left:p.box.left,top:p.box.top,background:p.tokens.ink,opacity:s.opacity,overflow:'hidden'}}>

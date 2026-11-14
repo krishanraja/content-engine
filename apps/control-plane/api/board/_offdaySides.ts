@@ -1,17 +1,16 @@
 import { createHash } from 'node:crypto'
 
 // What an off-day option showed Krish, side by side, and the hash his press on each side is bound to: the same values
-// scripts/post-pack/week_board.py writes on the full board (read_offdays, off_rich, side_sha), so a press made on the
-// live board (/board/next) is the same record, binds the same words, and reads the same to offday_pending.py, Growth
-// and the revise job. tests/control-plane/board-desk.test.ts holds every hash here equal to the Python one on the
-// week's real options.
+// scripts/post-pack/week_plan.py reads from the week's plan files (read_offdays, off_rich, side_sha), so a press made on
+// the live board is the same record, binds the same words, and reads the same to offday_pending.py, Growth and the
+// revise job.
 
 type Body = Record<string, unknown>
 const isObj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
 const PITCH = ['see', 'lands', 'why_now', 'share'] as const
 const DIRECTION = ['look', 'format', 'tone', 'kit', 'inspo_url'] as const
 
-/** week_board._line: the words on one line, cut at cap characters, or null. */
+/** week_plan._line: the words on one line, cut at cap characters, or null. */
 export function line(v: unknown, cap: number): string | null {
   if (typeof v !== 'string' || !v.trim()) return null
   return Array.from(v.trim().split(/\s+/).join(' ')).slice(0, cap).join('')
