@@ -34,6 +34,10 @@ export const LANE_PROBLEMS: Readonly<Record<string, string>> = Object.freeze({
   library_root_missing: 'cannot find the asset library (makeyourmindup) folder on its H: drive',
   library_env_stale: 'has a MINDMAKE_LIBRARY_ROOT setting that points at a folder that is not there; it used config/studio.json instead. Delete the setting',
   library_sync_failed: 'could not file the asset library into Drive on its last pass (library-sync.log on that machine says why)',
+  // Audit ve-11 (14 Nov 2026): a failed pull of main was said only in the machine's own log, so it kept running old
+  // code with nobody told.
+  engine_pull_failed: 'could not bring its copy of the engine up to date from main (git pull did not finish), so it runs an older copy; its log says why',
+  library_source_pull_failed: 'could not bring its library-sync copy up to date from main (git pull did not finish), so the library sync runs an older copy',
   heartside_library_root_missing: 'cannot find the Heartside social library (Heartside/03b_Social-Schedule) folder on its H: drive',
   heartside_library_gone: 'stopped filing Heartside posts: the Heartside social library folder (found by its Drive ID) was deleted. Nothing was filed and no folder was made; give the engine the new folder\'s ID',
   heartside_library_trashed: 'stopped filing Heartside posts: the Heartside social library folder (found by its Drive ID) is in the Drive bin. Nothing was filed and no folder was made; restore it from the bin',

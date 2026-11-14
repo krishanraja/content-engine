@@ -919,13 +919,31 @@ def cmd_publish(data, out=print):
         raise MusicError(str(error))
 
 
-def cmd_fetch(data, out_dir=None, out=print):
+def behind_main(repo=REPO, run=subprocess.run):
+    """How many commits on main change the music ledger that this checkout lacks, or None when it cannot tell (no git,
+    no network). Only the ledger's own history counts: main moving on elsewhere never stops a fetch."""
+    try:
+        run(['git', '-C', str(repo), 'fetch', '-q', 'origin', 'main'], check=True, capture_output=True, timeout=60)
+        done = run(['git', '-C', str(repo), 'rev-list', '--count', 'HEAD..origin/main', '--', 'config/music-library.json'],
+                   check=True, capture_output=True, text=True, timeout=30)
+        return int(done.stdout.strip())
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return None
+
+
+def cmd_fetch(data, out_dir=None, out=print, behind=behind_main):
     """Downloads every ledger file from the library into out_dir, checked by
     size and (once measured) sha256. Returns the folder."""
     import urllib.parse
     import urllib.request
     _post_pack()
     import engine  # scripts/engine.py
+    # The ledger is in this checkout and the files are in the library: a checkout behind main asks for files the
+    # library has replaced, and the sha256 mismatch that follows reads as a broken library (audit ve-11, 14 Nov 2026).
+    late = behind() if behind else None
+    if late:
+        raise MusicError(f'this checkout is {late} commit{"s" if late != 1 else ""} behind main on the music ledger, so it '
+                         'asks for files the library has replaced: pull main (git pull --ff-only), then fetch again')
     folder = Path(out_dir or FETCH_DEFAULT)
     folder.mkdir(parents=True, exist_ok=True)
     token = engine.operator_key()
