@@ -191,7 +191,10 @@ only. The database function `research_find` (migration `20261202090000_research_
 this library mirrors (the newest version of each research, corpus, note or paste text, never an archived one) by English
 full text over the title and the first 200,000 characters, and answers each hit's piece, week, day, kind, version,
 sha256, rank and a short snippet; the full text is read by its material id. A file kept in the bucket (a PDF, a
-screenshot) is not searched.
+screenshot) is not searched. Filters (OPEN-ITEMS D3, 14 Nov): `since=<YYYY-MM-DD>`, `kinds=research,corpus,note,paste`,
+`fresh=1` (added in the last 90 days) or `fresh=0`, and `venture=<slug>` for another venture's own shelf (I-30; absent
+or `publication` is Make Your Mind Up's). Each hit says `fresh`; the answer says what it searched and `shelf_size`, so an
+empty shelf reads differently from no match (migration `20261203100000_research_find_filters.sql`).
 
 **How.** The engine writes as the owner of his Drive (`GOOGLE_DRIVE_OWNER`, the delegated `drive` scope, as the feedback
 lane does). In Drive it only adds: week, piece, day and `Sources` folders inside the library and files inside them. It
