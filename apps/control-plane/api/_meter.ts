@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from 'node:async_hooks'
-import { priceUsd, priceUsdDetailed, priceUsdUncached, readUsage, isPriced, perplexityUsd, PERPLEXITY_PRICES, OPENAI_EMBEDDING_PRICES, ANTHROPIC_WEB_SEARCH_USD, type TokenUsage } from './_prices.js'
+import { priceUsd, priceUsdDetailed, priceUsdUncached, readUsage, isPriced, perplexityUsd, PERPLEXITY_PRICES, OPENAI_EMBEDDING_PRICES, ANTHROPIC_WEB_SEARCH_USD, providerPrice, type TokenUsage } from './_prices.js'
 import { classifyAnthropicFailure, noteAnthropicSuccess, recordAnthropicFailure, type ProviderFailure } from './_modelProvider.js'
 
 /**
@@ -545,9 +545,11 @@ export async function openaiEmbeddingCall(e: { agent: string; model: string; usa
  *   api           Anthropic through anthropicCall, the one place its usage is
  *                 read; its search requests at ANTHROPIC_WEB_SEARCH_USD in a
  *                 bucket of their own. Perplexity at PERPLEXITY_PRICES, tokens
- *                 plus one request fee a call. OpenAI, Google and xAI have no
- *                 rate in the table yet: tokens with no dollars beside them,
- *                 `unpriced-model`, visibly a gap (_prices.ts).
+ *                 plus one request fee a call. OpenAI, Google and xAI at
+ *                 PROVIDER_PRICES (each provider's published page), their
+ *                 search calls in a bucket of their own; a model not there
+ *                 lands as tokens with no dollars, `unpriced-model`, visibly a
+ *                 gap (_prices.ts).
  */
 export async function reportedUsage(e: {
   provider: 'anthropic' | 'openai' | 'perplexity' | 'google' | 'xai'
@@ -591,7 +593,21 @@ export async function reportedUsage(e: {
       }
       return
     }
+    const rate = e.provider === 'perplexity' ? null : providerPrice(e.provider, e.model, e.day)
+    if (rate && searches) {
+      await add({
+        provider: e.provider, unitKind: 'agent', unitKey: agent, bucket: `${e.model} web search`, label: agent,
+        category: 'priced', usd: searches * rate.search, runs: 0, units: searches, unitName: 'searches', day: e.day,
+      })
+    }
     if (!tokens && !failed) return
+    if (rate) {
+      await add({
+        provider: e.provider, unitKind: 'agent', unitKey: agent, bucket: e.model, label: agent,
+        category: 'priced', usd: (u.input / 1e6) * rate.in + (u.output / 1e6) * rate.out, runs, failed, units: tokens, unitName: 'tokens', day: e.day,
+      })
+      return
+    }
     const p = e.provider === 'perplexity' ? PERPLEXITY_PRICES[e.model] : undefined
     const usd = p ? (u.input / 1e6) * p.in + (u.output / 1e6) * p.out + p.request * (runs - failed) : 0
     await add({

@@ -4,8 +4,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // Subscription rows carry tokens and no dollar amount (Ruling, Krish,
 // 2026-11-13), in a bucket of their own; Anthropic API rows are priced by
 // anthropicCall with their searches beside them; Perplexity is priced from the
-// table; OpenAI, Google and xAI have no rate yet and land as tokens with no
-// dollars, `unpriced-model`, a visible gap rather than a cheap-looking zero.
+// table; OpenAI, Google and xAI from each provider's published price
+// (PROVIDER_PRICES), searches beside; a model with no rate lands as tokens with
+// no dollars, `unpriced-model`, a visible gap rather than a cheap-looking zero.
 
 const db = vi.hoisted(() => ({ rpc: [] as Array<Record<string, unknown>> }))
 
@@ -51,22 +52,34 @@ describe('the AEO meter rows', () => {
     expect(r.p_usd).toBeCloseTo(2.04, 6)
   })
 
-  it('OpenAI, Google and xAI land as tokens with no dollars, unpriced, never a cheap-looking zero', async () => {
+  it('OpenAI, Google and xAI are priced from each provider\'s published page, searches in a bucket of their own', async () => {
+    const day = '2026-11-22'
     for (const [provider, model] of [['openai', 'gpt-5'], ['google', 'gemini-3.6-flash'], ['xai', 'grok-4']] as const) {
-      await meter.reportedUsage({ provider, billing: 'api', agent: 'aeo-probe', model, inputTokens: 100, outputTokens: 50, calls: 3 })
+      await meter.reportedUsage({ provider, billing: 'api', agent: 'aeo-probe', model, inputTokens: 1_000_000, outputTokens: 1_000_000, calls: 3, searchCalls: 1000, day })
     }
-    expect(db.rpc.map(cell)).toEqual([
-      ['openai', 'aeo-probe', 'gpt-5', 'unpriced-model', 0, 3, 0, 150],
-      ['google', 'aeo-probe', 'gemini-3.6-flash', 'unpriced-model', 0, 3, 0, 150],
-      ['xai', 'aeo-probe', 'grok-4', 'unpriced-model', 0, 3, 0, 150],
+    const rows = db.rpc.map(cell)
+    expect(rows.map(r => r.slice(0, 4))).toEqual([
+      ['openai', 'aeo-probe', 'gpt-5 web search', 'priced'], ['openai', 'aeo-probe', 'gpt-5', 'priced'],
+      ['google', 'aeo-probe', 'gemini-3.6-flash web search', 'priced'], ['google', 'aeo-probe', 'gemini-3.6-flash', 'priced'],
+      ['xai', 'aeo-probe', 'grok-4 web search', 'priced'], ['xai', 'aeo-probe', 'grok-4', 'priced'],
     ])
+    expect(rows.map(r => Number(r[4]))).toEqual([10, 11.25, 14, 4.5, 5, 3.75].map(x => expect.closeTo(x, 6)) as unknown as number[])
+    // Gemini 3.6 Flash doubles from 1 Jan 2027, its published date.
+    db.rpc.length = 0
+    await meter.reportedUsage({ provider: 'google', billing: 'api', agent: 'aeo-probe', model: 'gemini-3.6-flash', inputTokens: 1_000_000, outputTokens: 1_000_000, day: '2027-01-01' })
+    expect(Number(db.rpc[0].p_usd)).toBeCloseTo(9, 6)
+  })
+
+  it('an exact id only: a newer model with no published rate here stays unpriced, never a cheap-looking zero', async () => {
+    await meter.reportedUsage({ provider: 'xai', billing: 'api', agent: 'aeo-probe', model: 'grok-4.7', inputTokens: 100, outputTokens: 50, calls: 3, searchCalls: 4 })
+    expect(db.rpc.map(cell)).toEqual([['xai', 'aeo-probe', 'grok-4.7', 'unpriced-model', 0, 3, 0, 150]])
   })
 
   it('a row with nothing measured writes nothing; a failure with no tokens is still a failure', async () => {
     await meter.reportedUsage({ provider: 'openai', billing: 'api', agent: 'aeo-probe', model: 'gpt-5', inputTokens: 0, outputTokens: 0, calls: 1 })
     expect(db.rpc).toEqual([])
     await meter.reportedUsage({ provider: 'openai', billing: 'api', agent: 'aeo-probe', model: 'gpt-5', calls: 2, failedCalls: 2 })
-    expect(db.rpc.map(cell)).toEqual([['openai', 'aeo-probe', 'gpt-5', 'unpriced-model', 0, 2, 2, 0]])
+    expect(db.rpc.map(cell)).toEqual([['openai', 'aeo-probe', 'gpt-5', 'priced', 0, 2, 2, 0]])
   })
 
   it('the route names every bad row and takes the old Anthropic shape unchanged', () => {
