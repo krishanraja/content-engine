@@ -1,3 +1,0 @@
-Status: `POST /api/aeo/meter` reads each row's `provider` (anthropic, openai, perplexity, google, xai), `billing` (api or subscription), its tokens and `search_calls` (AEO brief F), and the context lists `meter_billing`. Subscription rows carry tokens with no dollar amount in a bucket of their own. Anthropic web searches are priced at $10 a thousand. gpt-5, gemini-3.6-flash and grok-4 land as tokens with no rate yet (`unpriced-model`). The old Anthropic-only rows are taken unchanged.
-Next: AEO-Engine posts its subscription and non-Anthropic rows once the context lists `meter_billing`, and the first run's rows show in `meter_daily`.
-North Star check (2026-11-14): holds.
