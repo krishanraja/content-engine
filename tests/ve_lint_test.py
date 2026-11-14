@@ -95,6 +95,23 @@ class FridayFailuresAreRefused(unittest.TestCase):
                          'a spec with no publish day from 9 Nov is not bound')
         self.assertRefused(mutate(lambda s: s.update(publish_day='2026-11-11')), 'sound.one_moment')
 
+    def test_style_sound_counts_under_one_moment(self):
+        # Audit ve-4: style.sound places a sound on every handover and every device hit, so a spec with no event sfx
+        # carried many sounds and passed. It counts under ruling 11 until Krish says in his words that ruling changed.
+        def silent_but_styled(s, **sound):
+            s['publish_day'] = '2026-11-11'
+            for beat in s['cuts']['proof-tall']['beats']:
+                for event in beat['events']:
+                    event.pop('sfx', None)
+            for cut in s['cuts'].values():
+                for beat in cut['beats']:
+                    for event in beat['events']:
+                        event.pop('sfx', None)
+            s.setdefault('style', {})['sound'] = {'reason': 'test', **sound}
+        self.assertRefused(mutate(lambda s: silent_but_styled(s, handover='whoosh-1')), 'sound.one_moment')
+        self.assertRefused(mutate(lambda s: silent_but_styled(s, hit='hit-1')), 'sound.one_moment')
+        self.assertNotIn('sound.one_moment', codes_for(mutate(lambda s: silent_but_styled(s))))
+
     def test_IR102_episode_bed_under_a_voiceover(self):
         self.assertRefused(mutate(lambda s: s['audio']['bed'].update(mode='episode')), 'sound.bed_continuous')
 
