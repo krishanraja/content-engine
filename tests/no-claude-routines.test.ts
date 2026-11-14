@@ -162,7 +162,7 @@ print(view_has_ideas(v)); print('|'.join(missing(v)))
 v['days'][1]['options'].append(opt('wed-1')); gn['stories_fresh'] = True
 print(view_has_ideas(v)); print('|'.join(missing(v)) or 'none')
 `], { cwd: ROOT, encoding: 'utf8' })
-    expect(why.stdout.trim().split('\n')).toEqual(['False', "wed: no options|good news: this week's five stories are not in (stories_due 2026-11-13); saturday-goodnews.yml finds them", 'True', 'none'])
+    expect(why.stdout.trim().split(/\r?\n/)).toEqual(['False', "wed: no options|good news: this week's five stories are not in (stories_due 2026-11-13); saturday-goodnews.yml finds them", 'True', 'none'])
     expect(text).toMatch(/if: steps\.guard\.outputs\.go == 'true'\n\s+uses: anthropics\/claude-code-action/)
     expect(text).toContain('Stop\n            after step 7.')
   })
