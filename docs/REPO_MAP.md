@@ -2679,6 +2679,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function lockPieceId(text: string | null | undefined): string | null`
 - `function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: string): { text: string; day: PostedDay } | null`
 - `type Typed = { words: string; said_where: string; said_at: string }`
+- `interface LockToSign`
 - `function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: st…`
 - `function inYourWords(words: string, on: string | null, where?: string | null): string`
 - `function lockSigned(text: string | null | undefined): boolean`
@@ -2746,6 +2747,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface ModelDay`
 - `interface WeekModel`
 - `interface ModelInputs`
+- `function signPress(week: string, pieceId: string, lock: LockToSign): PressAction`
 - `function lookPresses(pieceId: string, style: DayStyle | null | undefined): PressAction[]`
 - `function offdayKind(o: Body): { kind: OffdayKind; supports: 'mon' | 'wed' | 'fri' | null }`
 - `function kindLabel(kind: OffdayKind, supports: string | null): string`
