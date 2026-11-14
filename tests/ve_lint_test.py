@@ -225,6 +225,14 @@ class ReferencesAreRequired(unittest.TestCase):
         self.assertNotIn('motion.required', codes_for(good))
         bad = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(style={'motion': {'module': 'not-a-style', 'reason': 'x y z w'}})))
         self.assertIn('motion.required', codes_for(bad))
+    def test_a_motion_style_the_renderer_cannot_draw_is_refused(self):
+        # Fleet audit 14 Nov (ve-1): a style waiting on its device rendered in the house motion without a word.
+        styled = lambda module: mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(style={'motion': {
+            'module': module, 'reason': 'the money moves on screen as he names it'}})))
+        self.assertIn('motion.not_drawable', codes_for(styled('ladder')))
+        self.assertIn('motion.not_drawable', codes_for(styled('living-screen')))
+        self.assertNotIn('motion.not_drawable', codes_for(styled('eating-jobs-ladder')))
+
     def test_a_reference_without_its_board_id_is_refused(self):
         bare = {k: v for k, v in JACK.items() if k != 'id'}
         found = [p for p in lint_lines(mutate(lambda s: dated(s, [GEORGIA, bare]))) if p.startswith('reference.id')]
