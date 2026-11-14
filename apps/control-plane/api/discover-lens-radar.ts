@@ -8,6 +8,7 @@ import {
 } from './_judgmentLens.js'
 import { loadCuratedVoices } from './_creators.js'
 import { withContentRun } from './_runs.js'
+import { guardOperatorOrCron } from './_auth.js'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // discover-lens-radar — the cadenced "judgment economy" content radar.
@@ -110,24 +111,10 @@ function toCandidate(
   }
 }
 
-function checkSecret(req: VercelRequest): boolean {
-  // Vercel Cron injects `Authorization: Bearer ${CRON_SECRET}` on scheduled runs.
-  const cronSecret = process.env.CRON_SECRET
-  if (cronSecret && req.headers['authorization'] === `Bearer ${cronSecret}`) return true
-  const expected = process.env.LENS_RADAR_SECRET
-  // If no secret is configured, allow (so a fresh env can dry-run); when set, enforce.
-  if (!expected) return true
-  const got =
-    (req.headers['x-lens-secret'] as string | undefined) ||
-    (typeof req.query.secret === 'string' ? req.query.secret : undefined)
-  return got === expected
-}
-
 async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST' && req.method !== 'GET') {
-    return res.status(405).json({ ok: false, error: 'Method not allowed' })
-  }
-  if (!checkSecret(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+  // Fail closed: the dashboard's cookie or Vercel Cron's CRON_SECRET bearer (constant-time), never a secret in the
+  // query string and never open when a variable is unset (security sweep, 2026-11-14).
+  if (guardOperatorOrCron(req, res)) return
   if (!process.env.EXA_API_KEY) {
     return res.json({ ok: true, skipped: 'no EXA_API_KEY', written: 0 })
   }
