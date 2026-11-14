@@ -1,3 +1,0 @@
-Status: The taste engine's jobs are on the content engine's schedule (apps/control-plane/lib/contentEngineSchedule.ts), graded by the rows inspirationhouse writes into content_engine_runs: taste_daily and taste_harness daily, taste_weekly weekly, taste_cards and taste_retro only when their last run failed (onDemand). A new trigger kind, ledger, marks a job another repository records with no route here. taste_rejections also writes rows (4 runs, 3 not ok, last 4 Nov) and is left off until someone says how it runs.
-Next: Control Center copies the five rows into src/lib/contentEngineSchedule.ts under its existing field-for-field guard.
-North Star check (2026-11-14): holds.
