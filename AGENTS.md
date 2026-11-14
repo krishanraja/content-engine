@@ -77,13 +77,7 @@ Read and follow `C:/Users/krish/dev/mindmaker-os/ai-harness/contract/krish-opera
 
 ## File routing
 
-Never write loose files or produce files from `C:/Users/krish/`; read-only inspection is fine. SSOT: `G:/My Drive/Ventures/Active/Mindmaker-OS/architecture/RULES.md`. First match wins:
-1. Code/build -> `C:/Users/krish/dev/<venture>/` by git remote; corpus -> its `_corpus/`.
-2. Personal -> `G:/My Drive/Personal/{Investments|Legal|Family|Media}/` even if business-like.
-3. Scratch/QA/temp/screenshots -> `C:/Users/krish/.scratch/`.
-4. Timeless cross-venture IP -> `G:/My Drive/Ventures/_Knowledge/<sub>/`.
-5. Venture deliverables -> `G:/My Drive/Ventures/Active/<Venture>/0X_*/`; dormant -> `Ventures/_Archive/`.
-6. Unsure: ask. Brands: Mindmake, Mindmake-OS, Fractionl; labs: onalert, gutted, merciless. AdFixus/Meliora are retired; never create Active folders for them. VPS/n8n: `/workspace/deliverables/<venture>/` then rclone to Drive. Task-specific write limits apply.
+Where anything goes in Krish's Drive is [`docs/DRIVE.md`](docs/DRIVE.md), the Drive map by folder ID (the 22 Oct layout; the home computers find each folder by its ID). Anything it does not place goes in `Inbox from My AI`, never loose. Never write loose files under his home folder; read-only inspection is fine. Task-specific write limits apply.
 
 ## Every-session rules
 
