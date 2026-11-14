@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- AEO's context now names Krish's own sites (krishraja.ai, krishraja.com, themindmaker.ai) and the not-ours list (fractionl.us), and gives each venture subject its brand names, its brand-accuracy checks and whether its growth engine is held; probes from an off-week verify run are left out of its four weeks of history, and an empty packet_features list keeps every packet the v1 shape. (2026-11-14)
 - His "Signed." is one press on the board for any piece whose lock is written and unsigned, on any day it is placed (Tue 17 included); the typed-approval route takes Monday to Saturday. (2026-11-14)
 - Sat 14 Nov's good news carries the five stories of the deck scheduled in Buffer (BBC, Berkeley Lab, arXiv, Hyperallergic, Lund), so the board reads 5 of 5 and offers no run to find more. (2026-11-14)
 - A piece already approved on a day of the week no longer also waits on the ideas board (Fri 20's data-centres option after the piece moved to Tue 17). (2026-11-14)
@@ -41,19 +42,17 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - The view reads every day's narrative lock, so a piece moved to an off day keeps its own (Tue 17's data-centres piece). (2026-11-13)
 - The publish board says the current state: a day is Done only when every item is live, past and already-out ideas leave the ideas board, a narrative lock follows its piece, and the offday-posts route takes the done-check's Buffer sends (check buffer_sent) with the Buffer id as proof. (2026-11-13)
 - ve gained three stagings from Krish's own cuts (band, stage, tray), the lit, vignette and hatched grounds, blur-in, turn and tilt entrances, a crossfade handover, region fitting for five more devices, the open caption fixes and a ve study that no longer crashes; rendered on his pinned take and watched: up to 3.88 events a second and 82% of the frame, against 2.58 and 26% before (docs/ve/INGREDIENTS.md, "The stagings"). (2026-11-13)
-- Week of 16 Nov made ready for Krish's production picks. No agreed scripts for Mon 16, Wed 18 or Fri 20 are on any record (Teleprompter, git, the pieces, the board, Drive). Drafted and checked from the signed locks: Mon 16 scripts (on the making record, waiting on his Approve) and Tue 17 scripts (the data-centres piece, moved from Fri 20; its lock re-dated to Tue 17 and waiting on his "Signed." again). Wed 18's rewritten lock and a Fri 20 Great Recount lock wait on his signature. Production picks, recording notes and two Codex device cards (receipt, vote tally) are in docs/plans/2026-11-16-week/production-picks.md and docs/ve/cards/w1116/. (2026-11-13)
-- ve has a layout ingredient: style.layout.mode fill or stack hands each device on a graphics-only beat the channel-safe region the captions leave, and a device that fits itself (headline, kinetic_stat, evidence_card, query_chip, test_grid) grows up to 3x and centres in it instead of shrinking to the top of the frame; with no layout every cut draws as before. The frame below y 1320 can only be filled with pictures (his take, footage, real screens), never words, so a text-only cut still leaves it empty. (2026-11-13)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
 - 2026-11-13 kit/staging.ts, kit/layout.ts, kit/beatMotion.ts, kit/reveal.ts, kit/motion-profiles.json, FormatMaster.tsx, BrandFrame.tsx, captions/, devices (typing_bubble, logo_card, quote_card, stat_strip, record_card), scripts/velib/compile.py and study.py, docs/ve/INGREDIENTS.md, STATUS.md, RUNBOOK.md, docs/ve/cards/style-gaps/.
-Older lines: `docs/history/2026-11-13-NOW-moved-14.md` (it names every earlier move) and `LOG.md`.
+Older lines: `docs/history/2026-11-14-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-14): Krish signs the Tue 17, Wed 18 and Fri 20 locks on the board; the producing session then writes each signature line into its lock file.
+- Next (2026-11-14): accept and store AEO's new packet fields (probe detail, panel, kits, cited pages, Gemini, verify runs) and list them in packet_features before the 22 November research run.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
