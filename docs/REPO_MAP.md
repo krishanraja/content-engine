@@ -159,6 +159,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/publish/watch`
 - `/api/purge/restore`
 - `/api/purge/run`
+- `/api/research-library/find`
 - `/api/research-library/sweep`
 - `/api/shifts/[id]`
 - `/api/shifts/[id]/write`
@@ -3531,6 +3532,15 @@ A copy of every row the Monday purge is about to hard-delete.
 ### `apps/control-plane/api/purge/run.ts`
 
 - `export default withContentRun('purge', handler)`
+
+### `apps/control-plane/api/research-library/find.ts`
+
+- `const FIND_LIMIT_DEFAULT`
+- `const FIND_LIMIT_MAX`
+- `interface FindHit`
+- `function parseFindQuery(query: unknown): { q: string; limit: number } | null`
+- `function createFindHandler(getDb: () => Promise<Db>)`
+- `export default createFindHandler(async () => (await import('../_supabase.js`
 
 ### `apps/control-plane/api/research-library/sweep.ts`
 
