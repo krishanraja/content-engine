@@ -3562,10 +3562,13 @@ A copy of every row the Monday purge is about to hard-delete.
 
 ### `apps/control-plane/api/research-library/find.ts`
 
+- `const FIND_KINDS`
+- `const FRESH_DAYS`
+- `interface FindQuery`
 - `const FIND_LIMIT_DEFAULT`
 - `const FIND_LIMIT_MAX`
 - `interface FindHit`
-- `function parseFindQuery(query: unknown): { q: string; limit: number } | null`
+- `function parseFindQuery(query: unknown): FindQuery | null`
 - `function createFindHandler(getDb: () => Promise<Db>)`
 - `export default createFindHandler(async () => (await import('../_supabase.js`
 
