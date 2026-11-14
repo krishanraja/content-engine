@@ -4548,6 +4548,21 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function arrangementState({ object, events, frame }: Pick<DeviceProps, 'object'|'events'|'frame'>)`
 
+### `apps/renderer/src/engine/devices/checklist/index.tsx`
+
+- `function checklistLayout(box: Box, object: DeviceProps['object'], aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/checklist/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/checklist/state.ts`
+
+- `const SLOT_STAGGER`
+- `const FILL_FRAMES`
+- `function checklistState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
 
 - `function buddyState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
@@ -4609,7 +4624,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/kinetic_stat/index.tsx`
 
-- `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'])`
+- `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'], ghos…`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/kinetic_stat/schema.ts`
@@ -4703,6 +4718,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function marqueeState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/mint_ring/index.tsx`
+
+- `function Device({ object, events, box, tokens, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/mint_ring/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/mint_ring/state.ts`
+
+- `const DRAW_FRAMES`
+- `function ringGeometry(object: EngineObject)`
+- `function mintRingState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/office_floor/index.tsx`
 
 - `function Device({ object, events, box, tokens: t, aspect, frame }: DeviceProps)`
@@ -4733,6 +4762,18 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function passportState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 - `function mrzLine(text: string)`
+
+### `apps/renderer/src/engine/devices/pull_quote/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/pull_quote/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/pull_quote/state.ts`
+
+- `function pullQuoteState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/query_chip/index.tsx`
 
@@ -4773,6 +4814,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function quoteCardState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/receipt_print/index.tsx`
+
+- `function receiptLayout(state: ReceiptState, aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/receipt_print/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/receipt_print/state.ts`
+
+- `const PRINT`
+- `function receiptState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/record_card/index.tsx`
 
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
@@ -4801,6 +4856,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function scribbleState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 - `function scribblePen(object: EngineObject, events: readonly EngineEvent[]): (frame: number) => Point | undefined`
+
+### `apps/renderer/src/engine/devices/slam_word/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/slam_word/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/slam_word/state.ts`
+
+- `const SLAM`
+- `function burstFor(id: string)`
+- `function slamWordState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/slot_machine/hatch.ts`
 
@@ -4859,6 +4928,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function stickerState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/takeover/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/takeover/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/takeover/state.ts`
+
+- `const FLICKER_OFFSETS`
+- `function takeoverState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/test_grid/index.tsx`
 
 - `export { testGridStateAt } from './state'`
@@ -4885,6 +4967,21 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `const ParamsSchema`
 
+### `apps/renderer/src/engine/devices/through_line/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/through_line/schema.ts`
+
+- `const NumberSchema`
+- `const CommandSchema`
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/through_line/state.ts`
+
+- `const entranceFrames = () =>`
+- `function throughLineState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/types.ts`
 
 - `interface Box`
@@ -4903,6 +5000,26 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `const ParamsSchema`
 
+### `apps/renderer/src/engine/devices/unit_field/grid.tsx`
+
+- `function dotGridPosition(index: number, columns: number, pitch = 64)`
+- `function UnitMark({ kind, weight, colour, soft }: { kind: 'dot' | 'block'; weight: number; colour: string; soft: string…`
+
+### `apps/renderer/src/engine/devices/unit_field/index.tsx`
+
+- `export { dotGridPosition, UnitMark } from './grid'`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/unit_field/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/unit_field/state.ts`
+
+- `const CHANGE_FRAMES`
+- `const COPY_STEP_FRAMES`
+- `function unitFieldState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/upload_flood/hatch.ts`
 
 - `function hatch(id: string, tokens: EngineTokens)`
@@ -4917,6 +5034,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/upload_flood/schema.ts`
 
 - `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/video_wall/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/video_wall/schema.ts`
+
+- `const ParamsSchema`
+- `type Params = z.infer<typeof ParamsSchema>`
+
+### `apps/renderer/src/engine/devices/video_wall/state.ts`
+
+- `function videoWallState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/wall_screen/index.tsx`
 
