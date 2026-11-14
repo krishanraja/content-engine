@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- GET /api/library/find (engine key or Krish's cookie) answers lane B's contract: by library and sha256, or under a path prefix of one type, each ready file's library, path, storage key, sha256, bytes, type, role and approved, at most 50, never a URL, so Control Center's make_send_link links a library file in place (I-07). (2026-11-14)
 - The dead Apollo enrichment is gone from the engine (apps/control-plane/api/_enrich.ts apolloPerson and researchBrief's Apollo path, its .env.example line and a comment in _quota.ts): Apollo is a retired route. A person's research brief now takes its structured facts from People Data Labs alone, then the web research, as before. (2026-11-14)
 - docs/ve/INGREDIENTS.md says how many words a caption page holds: 2 to 5, no 3-word cap of his, and the floor's endorsed "two to four" is his to rule on. The carousel close is left alone: docs/CAROUSEL-STANDARD.md line 10 and config/brand-palette.json say takeaway then Subscribe free, while line 41, scripts/carousel_check.py and the every-session failure entry say "Follow for more" (Krish, 5 Nov), so which close stands is his. (2026-11-14)
 - ve lint counts every sound style.sound places (one per handover, one per device hit) under sound.one_moment, so the sound ingredient can no longer get round THE_BAR ruling 11 ("Only the big moment"); docs/ve/INGREDIENTS.md says so. (2026-11-14)
@@ -51,7 +52,7 @@ Older lines: `docs/history/2026-11-14-NOW-moved-10.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-14): Nothing for this; the content-engine half of ai-retired-11 is done.
+- Next (2026-11-14): record approval and file share copies beside masters, so approved and share carry real values.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
