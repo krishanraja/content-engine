@@ -5,14 +5,16 @@ import { fitBox, fitScale } from '../../fit'
 import type { Box, DeviceProps } from '../types'
 import { kineticState } from './state'
 
-export function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect']) {
+export function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'], ghostTexts: readonly string[] = []) {
   const sizes = aspect === '9:16' ? [120, 30, 24] : [144, 28, 22]
   const [numberSize, unitSize, producerSize] = sizes as [number, number, number]
-  const width = Math.max(1, textWidth('anton', text, numberSize), textWidth('anton', text.replace(/\d/g, '0'), numberSize), textWidth('mono', unit, unitSize), textWidth('mono', producerLabel, producerSize))
-  const natural = { width, height: numberSize * 1.2 + unitSize * 1.3 + producerSize * 1.3 + 24 }
+  const width = Math.max(1, textWidth('anton', text, numberSize), textWidth('anton', text.replace(/\d/g, '0'), numberSize), textWidth('mono', unit, unitSize), textWidth('mono', producerLabel, producerSize),
+    ...ghostTexts.map(value => Math.max(textWidth('mono', value, numberSize), textWidth('anton', value, numberSize))))
+  const ghostInset = ghostTexts.length ? 8 : 0
+  const natural = { width, height: numberSize * 1.2 + unitSize * 1.3 + producerSize * 1.3 + 24 + ghostInset }
   const scale = fitScale(natural, box)
   const fitted = fitBox(natural, box)
-  const rect = (top: number, height: number): Box => ({ left: fitted.left, top: fitted.top + top * scale, width: fitted.width, height: height * scale })
+  const rect = (top: number, height: number): Box => ({ left: fitted.left, top: fitted.top + (top + ghostInset) * scale, width: fitted.width, height: height * scale })
   return { scale, sizes, number: rect(0, numberSize * 1.2), unit: rect(numberSize * 1.2 + 12, unitSize * 1.3),
     producer: rect(numberSize * 1.2 + 24 + unitSize * 1.3, producerSize * 1.3) }
 }
@@ -22,8 +24,14 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   if (!state.visible) return null
   // Size against the final value, so counting never changes the geometry.
   const target = state.denominator === null ? String(state.target) : `${state.target}/${state.denominator}`
-  const l = kineticLayout(box, target, state.unit, state.producerLabel, aspect)
+  const ghostTexts = object.params.ghost === true ? object.dataset!.rows.map(row =>
+    state.denominator === null ? String(row.value) : `${row.value}/${state.denominator}`) : []
+  const l = kineticLayout(box, target, state.unit, state.producerLabel, aspect, ghostTexts)
   return <div style={{ color: tokens.cream, textAlign: 'center' }}>
+    {state.ghostText !== null && <div data-kinetic-ghost="" style={{ position: 'absolute', ...l.number,
+      top: l.number.top - 8 * l.scale, opacity: 0.25, textDecoration: 'line-through',
+      fontFamily: HOUSE_FONTS.data, fontSize: l.sizes[0]! * l.scale,
+      lineHeight: 1.2, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>{state.ghostText}</div>}
     {[{ rect: l.number, text: state.text, font: HOUSE_FONTS.display },
       { rect: l.unit, text: state.unit, font: HOUSE_FONTS.data },
       { rect: l.producer, text: state.producerLabel, font: HOUSE_FONTS.data }].map((row, i) =>

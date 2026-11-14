@@ -1,0 +1,346 @@
+{
+  "objects": [
+    {
+      "obj": "career-ladder",
+      "device": "through_line",
+      "meaning": "One career ladder persists through six beats",
+      "fromFrame": 0,
+      "toFrame": 540,
+      "params": {
+        "parts": [
+          {
+            "id": "junior",
+            "label": "Junior",
+            "kind": "rung",
+            "number": {
+              "value": 27,
+              "unit": "%",
+              "producer": "ANTHROPIC",
+              "date": "OCT 2026"
+            }
+          },
+          {
+            "id": "staff",
+            "label": "Staff hours",
+            "kind": "bar"
+          },
+          {
+            "id": "agents",
+            "label": "Agent hours",
+            "kind": "bar"
+          },
+          {
+            "id": "tellers",
+            "label": "Tellers",
+            "kind": "units",
+            "count": 20,
+            "number": {
+              "value": 20,
+              "unit": "",
+              "producer": "IMF",
+              "date": "BESSEN 2015"
+            }
+          },
+          {
+            "id": "branches",
+            "label": "Branches",
+            "kind": "rung",
+            "number": {
+              "value": 0,
+              "unit": "%",
+              "producer": "NPR PLANET MONEY",
+              "date": "2015"
+            }
+          },
+          {
+            "id": "senior",
+            "label": "Senior",
+            "kind": "rung"
+          }
+        ],
+        "states": {
+          "nine": {
+            "verb": "count_to",
+            "part": "junior",
+            "number": {
+              "value": 9,
+              "unit": "%",
+              "producer": "ANTHROPIC",
+              "date": "OCT 2026"
+            },
+            "annotation": "Junior rung shrinks"
+          },
+          "hairline": {
+            "verb": "thin",
+            "part": "junior",
+            "thickness": 0.12
+          },
+          "six": {
+            "verb": "grow",
+            "part": "agents",
+            "size": 6,
+            "annotation": "Agent hours grow",
+            "number": {
+              "value": 6,
+              "unit": "\u00d7",
+              "producer": "ANTHROPIC",
+              "date": "AUG 2026"
+            }
+          },
+          "lose-seven": {
+            "verb": "drop",
+            "part": "tellers",
+            "count": 7,
+            "annotation": "20 to 13",
+            "number": {
+              "value": 13,
+              "unit": "",
+              "producer": "IMF",
+              "date": "BESSEN 2015"
+            }
+          },
+          "copy": {
+            "verb": "multiply",
+            "part": "tellers",
+            "factor": 1.43,
+            "annotation": "43% more branches"
+          },
+          "gap": {
+            "verb": "drop",
+            "part": "junior"
+          },
+          "rest": {
+            "verb": "rest_on",
+            "part": "junior",
+            "annotation": "No bottom rung"
+          },
+          "future": {
+            "verb": "light",
+            "part": "senior",
+            "number": {
+              "value": 2030,
+              "unit": "",
+              "producer": "HOSSEINI & LICHTINGER",
+              "date": "2025"
+            },
+            "annotation": "Who trains them?"
+          },
+          "line": {
+            "verb": "connect",
+            "part": "senior",
+            "to": "junior"
+          },
+          "branch-count": {
+            "verb": "count_to",
+            "part": "branches",
+            "number": {
+              "value": 43,
+              "unit": "%",
+              "producer": "NPR PLANET MONEY",
+              "date": "2015"
+            },
+            "annotation": "43% more branches"
+          }
+        }
+      },
+      "dataset": {
+        "unit": "source values",
+        "denominator": null,
+        "producerLabel": "ANTHROPIC; NPR PLANET MONEY; HOSSEINI & LICHTINGER; IMF",
+        "rows": [
+          {
+            "label": "27",
+            "value": 27
+          },
+          {
+            "label": "9",
+            "value": 9
+          },
+          {
+            "label": "43",
+            "value": 43
+          },
+          {
+            "label": "2030",
+            "value": 2030
+          },
+          {
+            "label": "0",
+            "value": 0
+          },
+          {
+            "label": "6",
+            "value": 6
+          },
+          {
+            "label": "20",
+            "value": 20
+          },
+          {
+            "label": "13",
+            "value": 13
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "enter",
+      "obj": "career-ladder",
+      "verb": "enter",
+      "toState": "enter",
+      "atFrame": 0
+    },
+    {
+      "id": "count",
+      "obj": "career-ladder",
+      "verb": "count_to",
+      "toState": "nine",
+      "atFrame": 10
+    },
+    {
+      "id": "thin",
+      "obj": "career-ladder",
+      "verb": "thin",
+      "toState": "hairline",
+      "atFrame": 10
+    },
+    {
+      "id": "agents",
+      "obj": "career-ladder",
+      "verb": "grow",
+      "toState": "six",
+      "atFrame": 100
+    },
+    {
+      "id": "loss",
+      "obj": "career-ladder",
+      "verb": "drop",
+      "toState": "lose-seven",
+      "atFrame": 190
+    },
+    {
+      "id": "copies",
+      "obj": "career-ladder",
+      "verb": "multiply",
+      "toState": "copy",
+      "atFrame": 230
+    },
+    {
+      "id": "branch-growth",
+      "obj": "career-ladder",
+      "verb": "count_to",
+      "toState": "branch-count",
+      "atFrame": 230
+    },
+    {
+      "id": "missing",
+      "obj": "career-ladder",
+      "verb": "drop",
+      "toState": "gap",
+      "atFrame": 280
+    },
+    {
+      "id": "camera",
+      "obj": "career-ladder",
+      "verb": "rest_on",
+      "toState": "rest",
+      "atFrame": 290
+    },
+    {
+      "id": "light",
+      "obj": "career-ladder",
+      "verb": "light",
+      "toState": "future",
+      "atFrame": 460
+    },
+    {
+      "id": "connect",
+      "obj": "career-ladder",
+      "verb": "connect",
+      "toState": "line",
+      "atFrame": 470
+    }
+  ],
+  "beats": [
+    {
+      "id": "move-1",
+      "role": "hook",
+      "layout": "STAGE",
+      "fromFrame": 0,
+      "toFrame": 90,
+      "uses": [
+        "career-ladder"
+      ],
+      "transitionOut": "carry"
+    },
+    {
+      "id": "move-2",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 90,
+      "toFrame": 180,
+      "uses": [
+        "career-ladder"
+      ],
+      "transitionOut": "carry"
+    },
+    {
+      "id": "move-3",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 180,
+      "toFrame": 270,
+      "uses": [
+        "career-ladder"
+      ],
+      "transitionOut": "carry"
+    },
+    {
+      "id": "move-4",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 270,
+      "toFrame": 360,
+      "uses": [
+        "career-ladder"
+      ],
+      "transitionOut": "carry"
+    },
+    {
+      "id": "move-5",
+      "role": "payoff",
+      "layout": "STAGE",
+      "fromFrame": 360,
+      "toFrame": 450,
+      "uses": [
+        "career-ladder"
+      ],
+      "transitionOut": "carry"
+    },
+    {
+      "id": "move-6",
+      "role": "call",
+      "layout": "STAGE",
+      "fromFrame": 450,
+      "toFrame": 540,
+      "uses": [
+        "career-ladder"
+      ],
+      "transitionOut": "carry"
+    }
+  ],
+  "stills": [
+    0,
+    10,
+    25,
+    40,
+    130,
+    220,
+    260,
+    300,
+    400,
+    500
+  ]
+}

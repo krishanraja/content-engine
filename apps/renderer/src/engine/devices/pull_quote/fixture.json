@@ -1,0 +1,81 @@
+{
+  "objects": [
+    {
+      "obj": "proof",
+      "device": "pull_quote",
+      "meaning": "The proving phrase stays attached to its source",
+      "params": {
+        "quote": "Training makes the next expert",
+        "attribution": "Research team",
+        "date": "November 2026"
+      },
+      "fromFrame": 0,
+      "toFrame": 180
+    }
+  ],
+  "events": [
+    {
+      "id": "show",
+      "obj": "proof",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 10
+    },
+    {
+      "id": "speak-0",
+      "obj": "proof",
+      "verb": "enter",
+      "toState": "word:0",
+      "atFrame": 20
+    },
+    {
+      "id": "speak-1",
+      "obj": "proof",
+      "verb": "enter",
+      "toState": "word:1",
+      "atFrame": 29
+    },
+    {
+      "id": "speak-2",
+      "obj": "proof",
+      "verb": "enter",
+      "toState": "word:2",
+      "atFrame": 47
+    },
+    {
+      "id": "speak-3",
+      "obj": "proof",
+      "verb": "enter",
+      "toState": "word:3",
+      "atFrame": 59
+    },
+    {
+      "id": "speak-4",
+      "obj": "proof",
+      "verb": "enter",
+      "toState": "word:4",
+      "atFrame": 75
+    },
+    {
+      "id": "source",
+      "obj": "proof",
+      "verb": "enter",
+      "toState": "attribution",
+      "atFrame": 85
+    },
+    {
+      "id": "answer-3",
+      "obj": "proof",
+      "verb": "highlight",
+      "toState": "word:3",
+      "atFrame": 100
+    },
+    {
+      "id": "answer-4",
+      "obj": "proof",
+      "verb": "highlight",
+      "toState": "word:4",
+      "atFrame": 103
+    }
+  ]
+}

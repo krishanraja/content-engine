@@ -1,0 +1,86 @@
+{
+  "objects": [
+    {
+      "obj": "proof",
+      "device": "video_wall",
+      "meaning": "Real clips build a wall of evidence",
+      "fromFrame": 0,
+      "toFrame": 180,
+      "params": {
+        "mode": "wall",
+        "intervalFrames": 7,
+        "clips": [
+          {
+            "id": "clip1",
+            "kind": "image",
+            "src": "assets/proof-1.jpg",
+            "source": "SOURCE A",
+            "tilt": -3
+          },
+          {
+            "id": "clip2",
+            "kind": "image",
+            "src": "assets/proof-2.jpg",
+            "source": "SOURCE B",
+            "tilt": 2
+          },
+          {
+            "id": "clip3",
+            "kind": "image",
+            "src": "assets/proof-3.jpg",
+            "source": "SOURCE C",
+            "tilt": 4
+          },
+          {
+            "id": "clip4",
+            "kind": "image",
+            "src": "assets/proof-4.jpg",
+            "source": "SOURCE D",
+            "tilt": -2
+          },
+          {
+            "id": "clip5",
+            "kind": "image",
+            "src": "assets/proof-5.jpg",
+            "source": "SOURCE E",
+            "tilt": 3
+          },
+          {
+            "id": "clip6",
+            "kind": "image",
+            "src": "assets/proof-6.jpg",
+            "source": "SOURCE F",
+            "tilt": -4
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "enter",
+      "obj": "proof",
+      "verb": "enter",
+      "toState": "wall",
+      "atFrame": 10
+    },
+    {
+      "id": "dim",
+      "obj": "proof",
+      "verb": "dim",
+      "toState": "background",
+      "atFrame": 70
+    }
+  ],
+  "stills": [
+    9,
+    10,
+    17,
+    24,
+    31,
+    38,
+    45,
+    55,
+    76
+  ]
+}

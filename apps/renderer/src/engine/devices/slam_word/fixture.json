@@ -1,0 +1,11 @@
+{
+  "objects": [{
+    "obj": "slam-verdict", "device": "slam_word", "meaning": "The changed word lands once",
+    "params": { "word": "EXPOSED", "tapeText": "CAUTION" },
+    "fromFrame": 0, "toFrame": 100
+  }],
+  "events": [
+    { "id": "land", "obj": "slam-verdict", "verb": "enter", "toState": "visible", "atFrame": 10 },
+    { "id": "fade", "obj": "slam-verdict", "verb": "exit", "toState": "dim", "atFrame": 80 }
+  ]
+}
