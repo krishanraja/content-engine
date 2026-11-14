@@ -96,7 +96,11 @@ describe('one live board: the view carries everything the old board showed', () 
     expect(gn.stories).toHaveLength(5)
     expect(gn.stories![0]).toMatchObject({ headline: 'Story 1', href: 'https://example.org/1', media_kind: 'photo' })
     expect(ideasRunOf(WEEK)).toBe('2026-10-31')
-    expect(storiesFresh(WEEK, { stories: [1, 2, 3, 4, 5].map(story), stories_due: '2026-10-30' })).toBe(false)
+    // A run started by hand up to two days before its Saturday finds this week's stories (the week of 23 Nov's ran on
+    // Friday 13 Nov, and its board read the good news as missing); three days before is another week's.
+    expect(storiesFresh(WEEK, { stories: [1, 2, 3, 4, 5].map(story), stories_due: '2026-10-28' })).toBe(false)
+    expect(storiesFresh(WEEK, { stories: [1, 2, 3, 4, 5].map(story), stories_due: '2026-10-29' })).toBe(true)
+    expect(storiesFresh('2026-11-23', { stories: [1, 2, 3, 4, 5].map(story), stories_due: '2026-11-13' })).toBe(true)
     expect(storiesFresh(WEEK, { stories: [1, 2, 3, 4].map(story), stories_due: '2026-11-12' })).toBe(false)
     // Without his Approve the good news is an option to judge, held while a session's words call it decided.
     const unpressed = day(buildView(week()), 'sat')
