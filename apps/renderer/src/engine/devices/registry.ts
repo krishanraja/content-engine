@@ -16,6 +16,7 @@ import { Device as CursorBuddy } from './cursor_buddy'
 import { Device as LogoCard } from './logo_card'
 import { Device as HandPhoneStage } from './hand_phone_stage'
 import { Device as SlamWord } from './slam_word'
+import { Device as UnitField } from './unit_field'
 import type { DeviceRegistry } from './types'
 import { TestGrid } from './test_grid'
 import { Device as RecordCard } from './record_card'
@@ -65,6 +66,7 @@ export const DEVICES: DeviceRegistry = {
   pull_quote: PullQuote,
   hand_phone_stage: HandPhoneStage,
   test_grid: TestGrid,
+  unit_field: UnitField,
   record_card: RecordCard,
   query_chip: QueryChip,
   evidence_card: EvidenceCard,

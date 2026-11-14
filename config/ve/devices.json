@@ -284,6 +284,15 @@
         "fill",
         "exit"
       ]
+    },
+    "unit_field": {
+      "verbs": [
+        "enter",
+        "drop",
+        "grey",
+        "multiply",
+        "exit"
+      ]
     }
   }
 }
