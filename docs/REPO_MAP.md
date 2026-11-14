@@ -270,6 +270,8 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `function brandNamesOf(v: unknown): string[]`
 - `function brandChecksOf(v: unknown): BrandCheck[]`
 - `function heldProducts(engines: ReadonlyArray<{ product_slug?: unknown; role?: unknown; activation_state?: unknown }>): …`
+- `interface ShippedDeclaration`
+- `function shippedFor(rows: ReadonlyArray<Record<string, unknown>>, product: string): ShippedDeclaration[]`
 
 ### `apps/control-plane/api/_alert.ts`
 
