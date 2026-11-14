@@ -1,0 +1,25 @@
+{
+  "about": "Krish's rulings on the wording of a rejection floor record, kept over every rebuild of config/rejection-floor.json. The Rejections engine (krishanraja/inspirationhouse) rebuilds that file from records that cannot be edited once written; scripts/floor_rulings.py applies each ruling below when any reader here loads the floor. A ruling replaces a field only while it still holds one of the wordings in replaces (or already the ruled one); any other wording is reported, never overwritten. Each entry carries the ruling line and his words. Changed only by a pull request that carries his ruling.",
+  "records": {
+    "r0e552d8de3": {
+      "field": "wanted_instead",
+      "ruled": "Two to five words per caption in sentence case (Archivo), at most one punch word per beat in Anton capitals with the mint swipe. Ruling (Krish, 2026-11-14): caption pages are 2 to 5 words, as docs/ve/ENGINE.md and docs/ve/INGREDIENTS.md say (his words: \"I agree with everything else until Batch 6\").",
+      "replaces": [
+        "Two to four words per caption in sentence case (Archivo), at most one punch word per beat in Anton capitals with the mint swipe."
+      ],
+      "ruling": "Ruling (Krish, 2026-11-14): a caption page holds two to five words, and the rejections engine keeps the ruled wording (his words: \"I agree with everything else until Batch 6\")",
+      "his_words": [
+        {
+          "said": "I agree with everything else until Batch 6",
+          "on": "2026-11-14",
+          "where": "his answers to the 14 Nov fleet decision list, item 5.4 (control-center docs/audits/2026-11-14-fleet-integration/KRISH-ANSWERS.md)"
+        },
+        {
+          "said": "i have either completed these or you can make the decision",
+          "on": "2026-11-14",
+          "where": "relayed by the fleet integration session: how the ruling survives the engine's rebuild"
+        }
+      ]
+    }
+  }
+}
