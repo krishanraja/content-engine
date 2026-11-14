@@ -39,51 +39,9 @@ async function perplexity(key: string, system: string, user: string): Promise<{ 
   }
 }
 
-// Apollo.io people/match — structured B2B data (title, org, seniority, career
-// history) when APOLLO_API_KEY is set. Returns a context block for the synthesis
-// prompt plus the LinkedIn URL it resolved. Best-effort: any failure returns ''.
-async function apolloPerson(input: BriefInput): Promise<{ context: string; linkedin?: string }> {
-  const key = process.env.APOLLO_API_KEY
-  if (!key) return { context: '' }
-  const parts = (input.name || '').trim().split(/\s+/)
-  const first = parts[0] || undefined
-  const last = parts.length > 1 ? parts.slice(1).join(' ') : undefined
-  const body: Record<string, any> = {}
-  if (input.email) body.email = input.email
-  if (first) body.first_name = first
-  if (last) body.last_name = last
-  if (input.company) body.organization_name = input.company
-  if (input.url && /linkedin\.com/i.test(input.url)) body.linkedin_url = input.url
-  if (!body.email && !body.linkedin_url && !(body.first_name && body.organization_name)) return { context: '' }
-  try {
-    const r = await fetch('https://api.apollo.io/api/v1/people/match', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache', 'X-Api-Key': key },
-      body: JSON.stringify(body),
-    })
-    const j: any = await r.json().catch(() => ({}))
-    const p = j?.person
-    if (!r.ok || !p) return { context: '' }
-    const org = p.organization || {}
-    const lines = [
-      p.title ? `Title: ${p.title}` : '',
-      p.headline ? `Headline: ${p.headline}` : '',
-      org.name ? `Company: ${org.name}${org.industry ? ` (${org.industry})` : ''}` : '',
-      org.website_url ? `Company site: ${org.website_url}` : '',
-      org.estimated_num_employees ? `Company size: ~${org.estimated_num_employees} employees` : '',
-      [p.city, p.state, p.country].filter(Boolean).length ? `Location: ${[p.city, p.state, p.country].filter(Boolean).join(', ')}` : '',
-      Array.isArray(p.employment_history) && p.employment_history.length
-        ? `Career: ${p.employment_history.slice(0, 4).map((e: any) => `${e.title || ''}${e.organization_name ? ` @ ${e.organization_name}` : ''}`).filter((s: string) => s.trim()).join('; ')}`
-        : '',
-    ].filter(Boolean)
-    return { context: lines.length ? `APOLLO DATA:\n${lines.join('\n')}` : '', linkedin: p.linkedin_url || undefined }
-  } catch {
-    return { context: '' }
-  }
-}
-
-// People Data Labs person enrichment — a second structured source alongside
-// Apollo (catches people Apollo misses). Gated on PEOPLE_DATA_LABS_API_KEY.
+// People Data Labs person enrichment: the structured source for a person
+// (Apollo, the first one, is a retired route and was removed on 14 Nov 2026).
+// Gated on PEOPLE_DATA_LABS_API_KEY.
 async function peopleDataLabs(input: BriefInput): Promise<string> {
   const key = process.env.PEOPLE_DATA_LABS_API_KEY
   if (!key) return ''
@@ -154,7 +112,7 @@ async function braveSearch(query: string): Promise<{ text: string; sources: stri
 
 // Web research, cost-aware: prefer Perplexity (synthesized + cited); fall back to
 // Exa, then Brave, only when the prior source is unavailable/empty. Exported so
-// the ICP scorer can augment lanes Apollo can't judge (e.g. builder_economy,
+// the ICP scorer can augment lanes structured data can't judge (e.g. builder_economy,
 // where audience + "impossible before AI" novelty live on the open web).
 export async function webResearch(query: string): Promise<{ text: string; sources: string[] }> {
   const pplxKey = process.env.PERPLEXITY_API_KEY
@@ -167,8 +125,8 @@ export async function webResearch(query: string): Promise<{ text: string; source
   return braveSearch(query)
 }
 
-/** Build a grounded research brief. Combines structured B2B data (Apollo +
- *  People Data Labs) with web research (Perplexity → Exa → Brave), then Claude
+/** Build a grounded research brief. Combines structured B2B data (People Data
+ *  Labs) with web research (Perplexity → Exa → Brave), then Claude
  *  to synthesize. Every source is independently gated on its key; with none set
  *  it degrades to a Claude-only summary from known context. */
 export async function researchBrief(input: BriefInput): Promise<BriefResult> {
@@ -178,11 +136,11 @@ export async function researchBrief(input: BriefInput): Promise<BriefResult> {
 
   // Structured (people only) + web research in parallel.
   const structuredP = input.kind === 'person'
-    ? Promise.all([apolloPerson(input), peopleDataLabs(input)]).then(([a, pdl]) => [a.context, pdl].filter(Boolean).join('\n\n'))
+    ? peopleDataLabs(input)
     : Promise.resolve('')
   const [structured, web] = await Promise.all([structuredP, webResearch(query)])
 
-  const system = 'You write a tight research brief an operator can act on immediately. 4–7 sentences, concrete and specific. Prefer the structured data (Apollo / People Data Labs) for hard facts; use the web findings for recent/contextual colour. If the facts are thin, say so plainly rather than inventing anything.'
+  const system = 'You write a tight research brief an operator can act on immediately. 4–7 sentences, concrete and specific. Prefer the structured data (People Data Labs) for hard facts; use the web findings for recent/contextual colour. If the facts are thin, say so plainly rather than inventing anything.'
   const user = [
     input.kind === 'event' ? `EVENT: ${input.name}` : `PERSON: ${input.name}`,
     input.company ? `Company: ${input.company}` : '',
