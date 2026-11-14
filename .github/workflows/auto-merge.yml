@@ -21,19 +21,29 @@ concurrency:
 
 jobs:
   merge:
-    if: github.event.workflow_run.conclusion == 'success'
+    # A fork's run never reaches the merge step: this repository is public (security lane APP-2, 14 Nov 2026).
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
+      # The pick rule from main, never from the branch being merged.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          sparse-checkout: .github/scripts
+          path: .auto-merge-pick
+          persist-credentials: false
       - name: Merge the pull request whose CI is green
         id: merge
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+          OWNER: ${{ github.repository_owner }}
           SHA: ${{ github.event.workflow_run.head_sha }}
           BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
-          pr=$(gh pr list -R "$REPO" --head "$BRANCH" --state open --json number,headRefOid,isDraft \
-            --jq "[.[] | select(.isDraft | not) | select(.headRefOid == \"$SHA\")][0].number // empty")
+          prs=$(gh pr list -R "$REPO" --head "$BRANCH" --state open \
+            --json number,headRefOid,isDraft,isCrossRepository,author,headRepositoryOwner)
+          pr=$(printf '%s' "$prs" | jq -r --arg sha "$SHA" --arg owner "$OWNER" -f .auto-merge-pick/.github/scripts/auto-merge-pick.jq)
           if [ -z "$pr" ]; then echo "No open, ready pull request at $SHA on $BRANCH; nothing to merge."; exit 0; fi
           # Push and pull_request both run CI on the same commit: merge only when every CI run on it is green.
           waiting=$(gh api "repos/$REPO/actions/runs?head_sha=$SHA&per_page=100" \
