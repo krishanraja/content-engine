@@ -104,6 +104,26 @@ describe('bound to its post, then live: what the North Star counts', () => {
     expect((await run(db, { op: 'live', posts })).body).toEqual({ ok: true, marked: 0 })
     expect(db.rows.filter(r => r.event === 'live')).toEqual([expect.objectContaining({ artifact_sha256: sha, buffer_post_id: 'bufpost0001', live_at: '2026-11-10T13:30:00.000Z' })])
   })
+  // I-09: the board tick and Control Center read the binding by the post's id, never a match on its title.
+  it('each live row carries the item it was bound to, and the binding reads back by Buffer post id', async () => {
+    const db = fakeDb()
+    const sha = String((await run(db, post())).body.artifact_sha256)
+    await run(db, { op: 'bind', artifact_sha256: sha, buffer_post_id: 'bufpost0001', item: 'instagram-2026-11-10-0830' })
+    await run(db, { op: 'live', posts: [{ buffer_post_id: 'bufpost0001', url: 'https://www.instagram.com/p/SYNTHETIC/', at: '2026-11-10T13:30:00Z' }] })
+    expect(db.rows.find(r => r.event === 'live')).toMatchObject({ item: 'instagram-2026-11-10-0830' })
+    const read = await run(db, { op: 'bindings', buffer_post_ids: ['bufpost0001', 'bufpost0009'] })
+    expect(read.status).toBe(200)
+    expect(read.body.bindings).toEqual([
+      { buffer_post_id: 'bufpost0001', item: 'instagram-2026-11-10-0830', artifact_sha256: sha, bound_at: NOW.toISOString(),
+        live: { url: 'https://www.instagram.com/p/SYNTHETIC/', at: '2026-11-10T13:30:00.000Z' } },
+      { buffer_post_id: 'bufpost0009', item: null, artifact_sha256: null, bound_at: null, live: null },
+    ])
+    const before = db.rows.length
+    for (const bad of [{}, { buffer_post_ids: [] }, { buffer_post_ids: ['x'] }, { buffer_post_ids: Array.from({ length: 201 }, (_, i) => `bufpost${1000 + i}`) }]) {
+      expect((await run(db, { op: 'bindings', ...bad })).body).toEqual({ ok: false, error: 'invalid_bindings' })
+    }
+    expect(db.rows.length).toBe(before)
+  })
   it('a failed post can never bind, so it never counts', async () => {
     const db = fakeDb()
     const failed = await run(db, post(), panelOf([4, 4, 4]))

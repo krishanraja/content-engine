@@ -19,7 +19,11 @@ Krish: "Judge them; count passes. Every Growth carousel goes through the same 10
   rewrites it. The same post judged again answers from the record and pays nothing.
 - **Recorded on the item.** Every verdict, with each judge's score and fix, is a row in `asset_judgements` (migration
   `20261201090000_asset_judgements.sql`, append only) under Growth's slot id; a pass is bound to its Buffer post
-  (`op: bind`), and Growth's board tick reports every sent post (`op: live`), which marks only bound posts live.
+  (`op: bind`, with its board `item`, at the moment the post is saved in Buffer), and Growth's board tick reports every
+  sent post (`op: live`), which marks only bound posts live, each live row carrying the item it was bound to. A post is
+  tied to its board item by its Buffer post id, never matched by title (I-09, 14 Nov): `op: bindings` with
+  `buffer_post_ids` reads back each post's item, artifact and whether it went live, read only, and lists a post never
+  bound with `item: null`.
 - **Counted.** The North Star's number counts each Growth carousel and Short whose latest verdict is a pass and that went
   live in the last 7 days, once however many channels carried it, beside the essays published (Control Center's reader,
   `judgedLiveCount`; NOW.md's `current_source` names both). A judgement store that cannot be read makes the reading
