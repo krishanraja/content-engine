@@ -57,6 +57,69 @@ def main():
         assert tb.main([], stdin=io.StringIO('not json'), root=root, out=said.append) == 0
         assert tb.main([], stdin=io.StringIO(''), root=root, out=said.append) == 0
 
+    # I-33: with the backstop key the lines post to Control Center's route; the file is only the fallback.
+    secret = 'fixture-backstop-key'
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        transcript = root / 't.jsonl'
+        transcript.write_text('\n'.join(rows) + '\n', encoding='utf-8')
+        hook = json.dumps({'transcript_path': str(transcript), 'session_id': 'session_test'})
+        calls, said = [], []
+
+        def accept(url, headers, body):
+            calls.append((url, headers, json.loads(body)))
+            return 200, {'ok': True}
+
+        env = {'TASTE_BACKSTOP_TOKEN': secret, 'CONTROL_CENTER_ORIGIN': 'https://cc.example/'}
+        assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append, env=env, post=accept) == 0
+        assert len(calls) == 1, calls
+        url, headers, body = calls[0]
+        assert url == 'https://cc.example/api/taste/backstop', url
+        assert headers['authorization'] == 'Bearer ' + secret and headers['content-type'] == 'application/json'
+        assert body['schema'] == 'growth-taste-backstop/1' and len(body['rows']) == 4, body
+        assert {r['kind'] for r in body['rows']} <= {'correction', 'rejection'}, body
+        assert all(r['repository'] == 'krishanraja/content-engine' and r['session'] == 'session_test'
+                   and len(r['line_sha256']) == 64 for r in body['rows'])
+        assert not (root / tb.OUTBOX).exists(), 'a posted line is not also kept locally'
+        assert '4 sent' in said[0] and secret not in ''.join(said), said
+
+        # A refused or unreachable post never blocks the session: the lines fall back to the file.
+        def refuse(url, headers, body):
+            raise OSError('unreachable')
+
+        assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append, env=env, post=refuse) == 0
+        kept_rows = [json.loads(x) for x in (root / tb.OUTBOX).read_text(encoding='utf-8').splitlines()]
+        assert len(kept_rows) == 4 and all(r['posted'] is False for r in kept_rows), kept_rows
+        assert secret not in (root / tb.OUTBOX).read_text(encoding='utf-8')
+
+        def server_error(url, headers, body):
+            return 500, None
+
+        root2 = root / 'again'
+        root2.mkdir()
+        assert tb.main([], stdin=io.StringIO(hook), root=root2, out=said.append, env=env, post=server_error) == 0
+        assert len((root2 / tb.OUTBOX).read_text(encoding='utf-8').splitlines()) == 4
+
+    # A cloud session holds no key: the network proxy injects the backstop secret, so it posts with a placeholder.
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        transcript = root / 't.jsonl'
+        transcript.write_text('\n'.join(rows) + '\n', encoding='utf-8')
+        hook = json.dumps({'transcript_path': str(transcript), 'session_id': 'session_cloud'})
+        calls = []
+        assert tb.main([], stdin=io.StringIO(hook), root=root, out=lambda _: None, env={'CLAUDE_CODE_REMOTE': 'true'},
+                       post=lambda url, headers, body: (calls.append(headers), (200, {'ok': True}))[1]) == 0
+        assert len(calls) == 1 and calls[0]['authorization'] == 'Bearer ' + tb.PROXY_PLACEHOLDER, calls
+        assert not (root / tb.OUTBOX).exists()
+        # Anywhere else with no key, nothing is sent.
+        calls.clear()
+        assert tb.main([], stdin=io.StringIO(hook), root=root, out=lambda _: None, env={},
+                       post=lambda url, headers, body: (calls.append(headers), (200, {'ok': True}))[1]) == 0
+        assert calls == [] and len((root / tb.OUTBOX).read_text(encoding='utf-8').splitlines()) == 4
+
+    assert tb.kind_of('I hate that font') == 'rejection'
+    assert tb.kind_of('That is wrong, use the other one instead') == 'correction'
+
     ignore = (Path(__file__).resolve().parents[1] / '.gitignore').read_text(encoding='utf-8')
     assert '.scratch/' in ignore.splitlines(), 'the backstop outbox must stay out of git'
     print('taste backstop: ok')
