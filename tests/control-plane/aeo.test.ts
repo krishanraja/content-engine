@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'vitest'
 import {
   EDITORIAL_AEO_SUBJECTS, KRISH_DOMAINS, MAX_IDEAS_PER_SUBJECT, NOT_OURS, PACKET_FEATURES, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef,
-  brandChecksOf, brandNamesOf, citedPageRows, heldProducts, isEditorialAeoSubject, probeRows, queryRows, validatePacket,
+  brandChecksOf, brandNamesOf, citedPageRows, heldProducts, shippedFor, isEditorialAeoSubject, probeRows, queryRows, validatePacket,
   type AeoPacket,
 } from '../../apps/control-plane/api/_aeo.ts'
 import { CONTENT_ENGINE_JOBS, contentEngineAttention } from '../../apps/control-plane/lib/contentEngineSchedule.ts'
@@ -317,4 +317,17 @@ test('a venture is held only when its own venture engine is held; the specialist
     { product_slug: 'mindmake', role: 'specialist', activation_state: 'held' },
   ])
   assert.deepEqual([...held].sort(), ['full-time', 'legibility'])
+})
+
+test("a venture's shipped pages reach AEO newest first, one a page, never one with no question or no https page", () => {
+  const rows = [
+    { product_slug: 'heartside', question: 'What is a good gift from my dog?', query_id: null, url: 'https://heartside.io/answers/gift', shipped_at: '2026-11-12T00:00:00.000Z', engine_id: 'growth-heartside' },
+    { product_slug: 'heartside', question: 'What is a good gift from my dog?', query_id: null, url: 'https://heartside.io/answers/gift', shipped_at: '2026-11-10T00:00:00.000Z', engine_id: 'growth-heartside' },
+    { product_slug: 'heartside', question: null, query_id: null, url: 'https://heartside.io/answers/none', shipped_at: null, engine_id: 'growth-heartside' },
+    { product_slug: 'heartside', question: 'Which mug?', query_id: null, url: 'http://heartside.io/mug', shipped_at: null, engine_id: 'growth-heartside' },
+    { product_slug: 'mindmake', question: 'Who helps a board with AI?', query_id: null, url: 'https://mindmake.co/answers/board', shipped_at: null, engine_id: 'growth-mindmake' },
+  ]
+  assert.deepEqual(shippedFor(rows, 'heartside'), [{ question: 'What is a good gift from my dog?', url: 'https://heartside.io/answers/gift', shipped_at: '2026-11-12T00:00:00.000Z', by: 'growth-heartside' }])
+  assert.equal(shippedFor(rows, 'mindmake').length, 1)
+  assert.deepEqual(shippedFor(rows, 'legibility'), [])
 })

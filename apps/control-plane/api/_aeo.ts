@@ -773,3 +773,30 @@ export function heldProducts(engines: ReadonlyArray<{ product_slug?: unknown; ro
   }
   return held
 }
+
+/** A page a venture's engine says has shipped for one of its questions, as AEO-Engine reads it (subject.shipped). */
+export interface ShippedDeclaration { question?: string; query_id?: string; url: string; shipped_at: string | null; by?: string }
+
+/**
+ * One product's shipped pages for the context, newest declaration first, at
+ * most 25, one a page; a row with no https URL, or naming neither its question
+ * nor its query id, is left out. Pure.
+ */
+export function shippedFor(rows: ReadonlyArray<Record<string, unknown>>, product: string): ShippedDeclaration[] {
+  const out: ShippedDeclaration[] = []
+  const seen = new Set<string>()
+  for (const r of rows) {
+    if (r.product_slug !== product || typeof r.url !== 'string' || !r.url.startsWith('https://') || seen.has(r.url)) continue
+    const question = typeof r.question === 'string' && r.question.trim() ? r.question.trim() : undefined
+    const query_id = typeof r.query_id === 'string' && r.query_id ? r.query_id : undefined
+    if (!question && !query_id) continue
+    seen.add(r.url)
+    out.push({
+      ...(question ? { question } : {}), ...(query_id ? { query_id } : {}), url: r.url,
+      shipped_at: typeof r.shipped_at === 'string' ? r.shipped_at : null,
+      ...(typeof r.engine_id === 'string' ? { by: r.engine_id } : {}),
+    })
+    if (out.length === 25) break
+  }
+  return out
+}
