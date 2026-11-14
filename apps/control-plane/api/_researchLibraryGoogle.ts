@@ -202,7 +202,7 @@ export function storeSource(db: SourceDb, bucket: string): LibrarySource {
       }
       const research = `kind.in.(${LIBRARY_KINDS.join(',')}),role.in.(${LIBRARY_ROLES.join(',')})`
       for (let from = 0; ; from += 1000) {
-        const r = await db.from('piece_materials').select(COLUMNS).is('archived_at', null).in('storage', ['text', 'bucket']).or(research)
+        const r = await db.from('piece_materials').select(COLUMNS).is('archived_at', null).in('storage', ['text', 'bucket']).not('scope', 'like', 'venture:%').or(research)
           .order('added_at', { ascending: true }).order('id', { ascending: true }).range(from, from + 999)
         if (r.error) throw new Error('store_unreadable')
         out.push(...(r.data || []))
