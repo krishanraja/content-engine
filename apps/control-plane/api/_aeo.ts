@@ -718,8 +718,25 @@ export function citedPageRows(packet: AeoPacket, stored: ReadonlyArray<Pick<Cite
  */
 export const KRISH_DOMAINS: readonly string[] = [
   'mindmake.co', 'krishraja.com', 'krishraja.ai', 'themindmaker.ai', 'mindmakerlive.substack.com',
-  'home.makeyourmindup.ai', 'makeyourmindup.ai', 'linkedin.com/in/krishraja',
+  // His LinkedIn profile is in/krish-raja (krish-raja src/content/site.ts). Until 14 Nov 2026 this said in/krishraja,
+  // a path that is not his, so a citation of his profile never counted (audit, AEO lane).
+  'home.makeyourmindup.ai', 'makeyourmindup.ai', 'linkedin.com/in/krish-raja',
 ]
+
+/** Whether a cited URL is one of his: its host is a listed domain (or under one), and when the entry names a path,
+ *  the URL's path is that path or below it, on a whole segment (in/krish-raja, never in/krish-rajapaksa). */
+export function isKrishsOwn(url: string, domains: readonly string[] = KRISH_DOMAINS): boolean {
+  const bare = String(url || '').trim().toLowerCase().replace(/^[a-z][a-z0-9+.-]*:\/\//, '').replace(/^www\./, '')
+  const [host = '', ...rest] = bare.split(/[?#]/)[0]!.split('/')
+  const path = rest.filter(Boolean).join('/')
+  if (!host || NOT_OURS.some(n => host === n || host.endsWith(`.${n}`))) return false
+  return domains.some((entry) => {
+    const [h = '', ...p] = entry.toLowerCase().split('/')
+    const want = p.filter(Boolean).join('/')
+    if (host !== h && !host.endsWith(`.${h}`)) return false
+    return !want || path === want || path.startsWith(`${want}/`)
+  })
+}
 
 /**
  * Never ours, whatever a list says (Ruling, Krish, 2026-11-13: fractionl.us is
@@ -773,6 +790,25 @@ export function brandChecksOf(v: unknown): BrandCheck[] {
     if (out.length === 3) break
   }
   return out
+}
+
+/**
+ * Where a research week's recommendations go (AEO lane, 14 Nov 2026).
+ * - kits: the packet carries at least one win kit, so its moves reach Krish through the venture's engine (Ruling, Krish,
+ *   2026-11-13) and nothing is seeded as an idea. An empty list is not kits: until then it routed every
+ *   recommendation nowhere.
+ * - held: Krish holds this venture's growth engine, so it puts nothing on his list (Ruling, Krish, 2026-10-29). The
+ *   recommendations stay on the week's digest, where its engine reads them when he releases it.
+ * - unknown: the hold could not be read, so nothing is seeded; the digest keeps them.
+ * - ideas: an active venture (or a subject with no venture) with no kits yet: the existing ideas path, with its
+ *   governor, cap and dedupe.
+ */
+export type RecommendationRoute = 'kits' | 'held' | 'unknown' | 'ideas'
+export function recommendationRoute(kits: unknown, hold: 'held' | 'active' | 'unknown'): RecommendationRoute {
+  if (Array.isArray(kits) && kits.length > 0) return 'kits'
+  if (hold === 'held') return 'held'
+  if (hold === 'unknown') return 'unknown'
+  return 'ideas'
 }
 
 /** The products whose venture growth engine Krish holds (growth_engines: role venture, activation_state held). */

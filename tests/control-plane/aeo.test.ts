@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'vitest'
 import {
-  EDITORIAL_AEO_SUBJECTS, KRISH_DOMAINS, MAX_IDEAS_PER_SUBJECT, NOT_OURS, PACKET_FEATURES, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef,
+  EDITORIAL_AEO_SUBJECTS, KRISH_DOMAINS, isKrishsOwn, MAX_IDEAS_PER_SUBJECT, NOT_OURS, PACKET_FEATURES, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef,
   brandChecksOf, brandNamesOf, citedPageRows, heldProducts, searchSignalsFor, shippedFor, subjectHostsOf, isEditorialAeoSubject, probeRows, queryRows, validatePacket,
   type AeoPacket,
 } from '../../apps/control-plane/api/_aeo.ts'
@@ -333,7 +333,7 @@ test("a venture's shipped pages reach AEO newest first, one a page, never one wi
 })
 
 test("subject hosts: each domain's bare host, never a path, www or a not-ours one", () => {
-  assert.deepEqual(subjectHostsOf(['mindmake.co', 'https://www.krishraja.ai/', 'linkedin.com/in/krishraja', 'fractionl.us', 'x.fractionl.us', 7]), ['mindmake.co', 'krishraja.ai', 'linkedin.com'])
+  assert.deepEqual(subjectHostsOf(['mindmake.co', 'https://www.krishraja.ai/', 'linkedin.com/in/krish-raja', 'fractionl.us', 'x.fractionl.us', 7]), ['mindmake.co', 'krishraja.ai', 'linkedin.com'])
   assert.deepEqual(subjectHostsOf(null), [])
 })
 
@@ -382,4 +382,13 @@ test('search signals: Bing lists by part, newest index detail a page, newest cra
   assert.deepEqual(out.bing?.crawl_issues, [{ url: 'https://mindmake.co/old', http_code: 404, issues: 2, in_links: 1, checked: '2026-11-14' }])
   assert.deepEqual(out.bing?.keyword_volume, [{ query: 'what is an ai pilot', volume: 140, weeks: 4, date_from: '2026-10-19', date_to: '2026-11-09' }])
   assert.deepEqual(out.ai_referrals?.map(r => [r.via, r.sessions]), [['clarity', 2], ['ga4', 1]], 'each via apart, never summed')
+})
+
+test("his LinkedIn profile counts as his; the in/krishraja path and look-alikes never do (AEO lane, 14 Nov 2026)", () => {
+  assert.ok(KRISH_DOMAINS.includes('linkedin.com/in/krish-raja'))
+  assert.ok(!KRISH_DOMAINS.includes('linkedin.com/in/krishraja'))
+  for (const url of ['https://www.linkedin.com/in/krish-raja/', 'linkedin.com/in/krish-raja', 'https://linkedin.com/in/krish-raja/recent-activity/all/', 'https://uk.linkedin.com/in/krish-raja?trk=x']) assert.ok(isKrishsOwn(url), url)
+  for (const url of ['https://www.linkedin.com/in/krishraja/', 'https://www.linkedin.com/in/krish-rajapaksa/', 'https://www.linkedin.com/', 'https://www.linkedin.com/company/mindmake']) assert.ok(!isKrishsOwn(url), url)
+  assert.ok(isKrishsOwn('https://www.krishraja.ai/essays/x'))
+  assert.ok(!isKrishsOwn('https://fractionl.us/'))
 })
