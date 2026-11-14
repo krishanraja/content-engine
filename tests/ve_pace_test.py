@@ -74,5 +74,38 @@ class PaceTest(unittest.TestCase):
                 self.assertIsInstance(row[key], (int, float))
 
 
+
+class BesideReferences(unittest.TestCase):
+    """The one pace line ve styles, ve lab and ve packet print (audit ve-10): a measurement, never a refusal."""
+
+    def table(self, folder):
+        refs = [{'file': f'r{i}.mp4', 'events_per_s': e, 'longest_gap_s': g, 'energy_median': 4.0, 'used_frame': 0.6,
+                 'active_frame': 0.5} for i, (e, g) in enumerate([(1.0, 2.0), (2.0, 1.5), (3.0, 1.0)])]
+        path = Path(folder) / 'refs.json'
+        path.write_text(json.dumps({'references': refs, 'house': []}), encoding='utf-8')
+        return path
+
+    def test_names_the_measures_below_every_reference(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            slow = lambda _v: {'events_per_s': 0.2, 'longest_gap_s': 5.0, 'energy_median': 4.0, 'used_frame': 0.6,
+                               'active_frame': 0.5}
+            line = pace.beside_references(Path(tmp) / 'cut.mp4', self.table(tmp), measure_fn=slow)
+            self.assertTrue(line.startswith('pace: events/s 0.2 (1.0 .. 2.0 .. 3.0)'), line)
+            self.assertIn('below every reference on events/s, longest gap s', line)
+            self.assertIn('never a gate', line)
+
+    def test_a_cut_it_cannot_measure_says_why_and_never_raises(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            line = pace.beside_references(Path(tmp) / 'missing.mp4', self.table(tmp))
+            self.assertTrue(line.startswith('pace: not measured ('), line)
+
+    def test_the_kept_references_table_reads(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            same = lambda _v: {'events_per_s': 2.0, 'longest_gap_s': 1.0, 'energy_median': 5.0, 'used_frame': 0.7,
+                               'active_frame': 0.6}
+            line = pace.beside_references(Path(tmp) / 'cut.mp4', measure_fn=same)
+            self.assertNotIn('not measured', line)
+
+
 if __name__ == '__main__':
     unittest.main()
