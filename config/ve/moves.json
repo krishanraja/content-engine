@@ -65,10 +65,10 @@
       "card": "docs/ve/cards/w3-1-ports/ve-p-3-receipt-print.md",
       "source": "docs/plans/2026-10-26-monday/video/draw_panels.py (receipt, void) and motion.py (GENERIC: .receipt, count)",
       "signatures": [
-        "def receipt\\w*\\(",
+        "def (?:draw_)?receipt(?:_(?:lines?|panel|card|paper))?\\(",
         "class=\"receipt",
         "\\.receipt\\b.*(line|count)",
-        "receipt[ _-]?print"
+        "receipt[_-]print\\w*\\s*[(=:]"
       ],
       "example": "def receipt(header, lines, footer, shown):"
     },

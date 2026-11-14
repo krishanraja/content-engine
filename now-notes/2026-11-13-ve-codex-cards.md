@@ -1,0 +1,4 @@
+Status: Codex built the eleven cards for Krish's three styles in a cloud session: nine devices (receipt_print, slam_word, checklist, pull_quote, unit_field, video_wall, mint_ring, takeover, through_line), the kinetic_stat count-down ghost and style.sound for handover and hit sounds; each passed ve verify-card and was rendered and looked at, and config/ve/sfx-candidates.json holds seven Epidemic Sound candidates for his ear, none approved.
+Next: Krish hears the seven sound candidates and approves one handover and one hit on his Sound effects card; then prove a staging with the new devices on a piece for his press.
+Changed: docs/ve/cards/style-gaps/, apps/renderer/src/engine/devices/ (nine new devices, kinetic_stat ghost), scripts/velib/compile.py (style.sound), config/ve/sfx-candidates.json, docs/ve/INGREDIENTS.md.
+North Star check (2026-11-14): holds.

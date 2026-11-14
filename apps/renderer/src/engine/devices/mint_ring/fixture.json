@@ -1,0 +1,8 @@
+{
+  "objects": [{ "obj": "chart-value-ring", "device": "mint_ring", "meaning": "The value to notice on the screenshot",
+    "params": { "at": { "x": 120, "y": 160, "w": 280, "h": 100 } }, "fromFrame": 0, "toFrame": 120 }],
+  "events": [
+    { "id": "ring-draw", "obj": "chart-value-ring", "verb": "draw", "toState": "drawn", "atFrame": 10 },
+    { "id": "ring-exit", "obj": "chart-value-ring", "verb": "exit", "toState": "gone", "atFrame": 60 }
+  ]
+}

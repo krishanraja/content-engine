@@ -4,13 +4,15 @@ captions should be decoupled from the animation styles")."""
 from __future__ import annotations
 
 import sys
+import json
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
-from velib.compile import LAYOUTS, caption_props, ingredient_props  # noqa: E402
+from velib.compile import LAYOUTS, caption_props, ingredient_props, compile_cut, sound_props  # noqa: E402
 
 
 class IngredientsTest(unittest.TestCase):
@@ -37,6 +39,18 @@ class IngredientsTest(unittest.TestCase):
 
     def test_the_layout_modes_are_the_renderers(self):
         self.assertEqual(LAYOUTS, ('house', 'fill', 'stack', 'band', 'stage', 'tray'))
+
+    def test_no_sound_preserves_serialized_props_with_other_style_ingredients(self):
+        fixture = ROOT / 'fixtures/ve/my-test-19s'
+        spec = json.loads((fixture / 'spec.json').read_text())
+        spec.setdefault('style', {}).update({'camera': {'move': 'phased', 'reason': 'x'}, 'energy': 'high'})
+        words = [dict(w, end_s=w['onset_s'] + .2) for w in json.loads((fixture / 'words.frames.json').read_text())]
+        props = compile_cut(spec, 'proof-tall', words, fixture)
+        before = json.dumps(props).encode()
+        props['audio']['sfx'] = sound_props(spec, props, fixture)
+        self.assertEqual(json.dumps(props).encode(), before)
+        with patch('velib.compile.sound_props', side_effect=AssertionError('sound was not chosen')):
+            self.assertEqual(json.dumps(compile_cut(spec, 'proof-tall', words, fixture)).encode(), before)
 
 
 class TrayTest(unittest.TestCase):
