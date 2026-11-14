@@ -159,11 +159,16 @@ export function ideasRunOf(week: string): string {
 }
 
 /** Whether a weekly good-news option holds this week's stories: five or more, found for a due date on or after the day
- *  the week's ideas run fills its board (ideasRunOf). Stories found before it were found for another week. */
+ *  the week's ideas run fills its board (ideasRunOf), or up to EARLY_RUN_DAYS before it, when the run was started by
+ *  hand ahead of its Saturday (the week of 23 Nov's went on Friday 13 Nov, and its board read the good news as missing
+ *  and offered to find it again). Stories found earlier than that were found for another week. */
+export const EARLY_RUN_DAYS = 2
 export function storiesFresh(week: string, o: Body): boolean {
   const stories = Array.isArray(o.stories) ? o.stories.filter(isObj) : []
   const due = typeof o.stories_due === 'string' ? o.stories_due : ''
-  return stories.length >= 5 && /^\d{4}-\d{2}-\d{2}$/.test(due) && due >= ideasRunOf(week)
+  const from = new Date(`${ideasRunOf(week)}T00:00:00Z`)
+  from.setUTCDate(from.getUTCDate() - EARLY_RUN_DAYS)
+  return stories.length >= 5 && /^\d{4}-\d{2}-\d{2}$/.test(due) && due >= from.toISOString().slice(0, 10)
 }
 
 /** Every piece on the day his approval holds there, the one the day shows first marked, each with that approval. The

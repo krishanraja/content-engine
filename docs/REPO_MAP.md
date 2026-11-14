@@ -2743,6 +2743,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface ExtrasInputs`
 - `function thursdayOf(week: string): string`
 - `function ideasRunOf(week: string): string`
+- `const EARLY_RUN_DAYS`
 - `function storiesFresh(week: string, o: Body): boolean`
 - `function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map(), n…`
 - `function dayComments(rows: ExtrasInputs['comments'], day: string): ViewComment[]`
