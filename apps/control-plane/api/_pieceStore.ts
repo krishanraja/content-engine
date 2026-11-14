@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { withMaterial, readMaterials, MaterialsFull, type Material } from './_content.js'
+import { containsCommittedSecret } from '../../../scripts/secret-patterns.js'
 
 // Board sessions and the piece materials store (docs/PUBLISH_BOARDS.md, "Sessions and materials";
 // supabase/migrations/20261125093000_board_sessions_and_piece_store.sql).
@@ -178,6 +179,44 @@ function materialBase(body: Body, fallbackKind: MaterialKind): Omit<MaterialInpu
 const sourceOf = (bearer: boolean, body: Body): MaterialInput['source'] =>
   bearer ? (body.source === 'repo' || body.source === 'backfill' ? body.source : 'session') : body.via === 'control_center' ? 'control_center' : 'board'
 
+// ── venture shelves (I-30) ───────────────────────────────────────────────────────────────────────────────────────────
+//
+// Research another venture paid for (a Mindmake market, offer or partner) goes on that venture's own shelf, scope
+// venture:<slug>, never on a Make Your Mind Up piece and never into his Drive research library (the mirror skips it).
+// The database checks the slug against venture_registry (active only) and refuses 'publication', whose research sits on
+// its pieces and days (migration 20261203090000_research_venture_shelves.sql). This door also refuses a text that holds
+// a key (scripts/secret-patterns.ts, the list check:no-secrets uses), an email address or a phone number: a shelf holds
+// research, never a person's contact details or a credential.
+
+export const VENTURE_SLUG = /^[a-z][a-z0-9_]{1,40}$/
+const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/
+const PHONE = [
+  /(?:^|[^\w+])\+\d{1,3}[\s.-]?\(?\d{1,4}\)?(?:[\s.-]?\d{2,4}){2,4}(?!\d)/,
+  /\(\d{3}\)\s?\d{3}[\s.-]\d{4}(?!\d)/,
+  /(?<![\d.-])\d{3}[.-]\d{3}[.-]\d{4}(?![\d.-])/,
+]
+
+/** Why a text may not go on a venture shelf, or null when it may. */
+export function shelfRefusal(...texts: Array<string | null | undefined>): 'holds_a_secret' | 'holds_an_email_address' | 'holds_a_phone_number' | null {
+  for (const t of texts) {
+    if (!t) continue
+    if (containsCommittedSecret(t)) return 'holds_a_secret'
+    if (EMAIL.test(t)) return 'holds_an_email_address'
+    if (PHONE.some(r => r.test(t))) return 'holds_a_phone_number'
+  }
+  return null
+}
+
+/** The venture a write names, or null when it names none; refuses a malformed slug or one mixed with a piece or day. */
+export function ventureOf(body: Body): string | null {
+  if (body.venture === undefined || body.venture === null || body.venture === '') return null
+  const v = typeof body.venture === 'string' ? body.venture.trim().toLowerCase() : ''
+  if (!VENTURE_SLUG.test(v)) throw new StoreError(400, 'invalid_venture')
+  if (body.piece_id || body.piece || body.week || body.day) throw new StoreError(400, 'venture_and_piece')
+  if (v === 'publication') throw new StoreError(400, 'publication_files_on_its_pieces')
+  return v
+}
+
 async function put(db: StoreDb, p: Body): Promise<Body> {
   const r = await call<Body>(db, 'board_material_put', { p })
   if (!r || r.ok !== true) refused(r || {})
@@ -247,6 +286,8 @@ export async function patchMeta(db: StoreDb, pieceId: string, patch: (meta: Body
 /** A text or a link on a piece or a day. A piece's text up to WORKING_SET_MAX (and any link) also joins the working set
  *  every writer grounds on; the capture trigger files it in the store in the same write. Everything else is the store's alone. */
 export async function addText(db: StoreDb, body: Body, bearer: boolean, by: string): Promise<Body> {
+  const venture = ventureOf(body)
+  if (venture) return addToShelf(db, venture, body, bearer, by)
   const isLink = body.op === 'link' || (typeof body.url === 'string' && !body.content)
   const base = materialBase(body, isLink ? 'link' : 'corpus')
   const source = sourceOf(bearer, body)
@@ -284,6 +325,33 @@ export async function addText(db: StoreDb, body: Body, bearer: boolean, by: stri
     source, source_ref: str(body.source_ref, 500), added_by: by, session_id: base.session_id,
   })
   return { ...stored, working_set: 'store_only' }
+}
+
+/** A text or a link on a venture's shelf: the store alone (no piece, no working set, no Drive copy). */
+async function addToShelf(db: StoreDb, venture: string, body: Body, bearer: boolean, by: string): Promise<Body> {
+  const isLink = body.op === 'link' || (typeof body.url === 'string' && !body.content)
+  const kind = (MATERIAL_KINDS as readonly string[]).includes(String(body.kind)) ? body.kind as MaterialKind : isLink ? 'link' : 'research'
+  const role = str(body.role, 41)
+  if (role && !ROLE.test(role)) throw new StoreError(400, 'invalid_role')
+  const session = str(body.session_id, 80)
+  if (session && !SESSION_ID.test(session)) throw new StoreError(400, 'invalid_session')
+  const base = body.base_version === undefined || body.base_version === null ? null : Number(body.base_version)
+  if (base !== null && !(Number.isSafeInteger(base) && base >= 0)) throw new StoreError(400, 'invalid_base_version')
+  const content = typeof body.content === 'string' ? body.content : ''
+  const url = typeof body.url === 'string' ? body.url.trim() : ''
+  if (isLink) { if (!/^https?:\/\//.test(url) || url.length > 2000) throw new StoreError(400, 'invalid_url') }
+  else if (!content.trim()) throw new StoreError(400, 'empty_material')
+  else if (Buffer.byteLength(content) > STORE_TEXT_MAX) throw new StoreError(413, 'material_too_large')
+  const title = str(body.title, 300) || (isLink ? hostOf(url) : firstLine(content))
+  const note = str(body.note, 2000)
+  const why = shelfRefusal(isLink ? url : content, title, note)
+  if (why) throw new StoreError(422, why)
+  const stored = await put(db, {
+    venture, material_key: str(body.material_key, 200), ...(base !== null ? { base_version: base } : {}),
+    storage: isLink ? 'link' : 'text', content: isLink ? null : content, url: isLink ? url : null, kind, role, title, note,
+    source: sourceOf(bearer, body), source_ref: str(body.source_ref, 500), added_by: by, session_id: session,
+  })
+  return { ...stored, working_set: 'store_only', shelf: `venture:${venture}` }
 }
 
 /** A file's extension and the type the library allows for it, or a refusal. */
