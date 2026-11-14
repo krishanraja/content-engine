@@ -136,8 +136,10 @@ describe('the requests the routes take', () => {
   })
 
   it('pending names one machine and a limit up to 100', () => {
-    expect(parseLibraryPendingQuery({ machine: 'library-0f3c' })).toEqual({ machine: 'library-0f3c', limit: 25, library: 'makeyourmindup' })
-    expect(parseLibraryPendingQuery({ machine: 'library-0f3c', limit: '100' })).toEqual({ machine: 'library-0f3c', limit: 100, library: 'makeyourmindup' })
+    expect(parseLibraryPendingQuery({ machine: 'library-0f3c' })).toEqual({ machine: 'library-0f3c', limit: 25, library: 'makeyourmindup', folders: false })
+    expect(parseLibraryPendingQuery({ machine: 'library-0f3c', limit: '100' })).toEqual({ machine: 'library-0f3c', limit: 100, library: 'makeyourmindup', folders: false })
+    expect(parseLibraryPendingQuery({ machine: 'library-0f3c', folders: '1' })).toMatchObject({ folders: true })
+    expect(parseLibraryPendingQuery({ machine: 'library-0f3c', folders: 'yes' })).toBeNull()
     expect(parseLibraryPendingQuery({ machine: 'library-0f3c', limit: '101' })).toBeNull()
     expect(parseLibraryPendingQuery({ machine: 'library-0f3c', limit: '0' })).toBeNull()
     expect(parseLibraryPendingQuery({ machine: ['a', 'b'] })).toBeNull()
@@ -242,8 +244,8 @@ describe('the Heartside library', () => {
     expect(parseLibraryUploadRequest({ ...upload, library: 'elsewhere' })).toEqual({ ok: false, code: 'invalid_library' })
     const confirmed = parseLibraryConfirmRequest({ path: upload.path, sha256: sha, library: 'heartside' })
     expect(confirmed.ok && confirmed.value.path.library).toBe('heartside')
-    expect(parseLibraryPendingQuery({ machine: 'library-1' })).toEqual({ machine: 'library-1', limit: 25, library: 'makeyourmindup' })
-    expect(parseLibraryPendingQuery({ machine: 'library-1', library: 'heartside' })).toEqual({ machine: 'library-1', limit: 25, library: 'heartside' })
+    expect(parseLibraryPendingQuery({ machine: 'library-1' })).toEqual({ machine: 'library-1', limit: 25, library: 'makeyourmindup', folders: false })
+    expect(parseLibraryPendingQuery({ machine: 'library-1', library: 'heartside' })).toEqual({ machine: 'library-1', limit: 25, library: 'heartside', folders: false })
     expect(parseLibraryPendingQuery({ machine: 'library-1', library: 'elsewhere' })).toBeNull()
     const written = { schema_version: 1, machine: 'library-1', items: [{ path: upload.path, sha256: sha }] }
     expect(parseLibraryWrittenRequest(written)).toBeNull()

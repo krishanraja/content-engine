@@ -294,18 +294,23 @@ export function parseLibraryConfirmRequest(value: unknown): Parsed<{ path: Libra
 export const LIBRARY_PENDING_DEFAULT = 25
 export const LIBRARY_PENDING_MAX = 100
 
-export function parseLibraryPendingQuery(query: unknown): { machine: string; limit: number; library: LibraryName } | null {
+export function parseLibraryPendingQuery(query: unknown): { machine: string; limit: number; library: LibraryName; folders: boolean } | null {
   const q = record(query) ?? {}
   const machine = q.machine
   if (typeof machine !== 'string' || !MACHINE_RE.test(machine)) return null
   const library = parseLibraryName(q.library)
   if (!library) return null
+  // folders=1: also say where the runtime folders are now, by their Drive IDs
+  // (_runtimeFolders.ts). The sync asks once a pass, not every round.
+  const rawFolders = q.folders
+  if (rawFolders !== undefined && rawFolders !== '1' && rawFolders !== '0') return null
+  const folders = rawFolders === '1'
   const rawLimit = q.limit
-  if (rawLimit === undefined) return { machine, limit: LIBRARY_PENDING_DEFAULT, library }
+  if (rawLimit === undefined) return { machine, limit: LIBRARY_PENDING_DEFAULT, library, folders }
   if (typeof rawLimit !== 'string' || !/^[0-9]{1,3}$/.test(rawLimit)) return null
   const limit = Number(rawLimit)
   if (limit < 1 || limit > LIBRARY_PENDING_MAX) return null
-  return { machine, limit, library }
+  return { machine, limit, library, folders }
 }
 
 export interface LibraryWrittenItem { path: string; sha256: string; written_as: string | null }
