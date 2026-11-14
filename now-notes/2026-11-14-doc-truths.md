@@ -1,3 +1,0 @@
-Status: docs/ve/INGREDIENTS.md says how many words a caption page holds: 2 to 5, no 3-word cap of his, and the floor's endorsed "two to four" is his to rule on. The carousel close is left alone: docs/CAROUSEL-STANDARD.md line 10 and config/brand-palette.json say takeaway then Subscribe free, while line 41, scripts/carousel_check.py and the every-session failure entry say "Follow for more" (Krish, 5 Nov), so which close stands is his.
-Next: Krish says which carousel close stands, the house close (Subscribe free) or "Follow for more", and one session makes the standard, the palette and carousel_check.py agree.
-North Star check (2026-11-14): holds.
