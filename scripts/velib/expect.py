@@ -84,9 +84,16 @@ def lines(spec: dict, directory: Path | None = None) -> list[str]:
         sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
         import creative_direction  # noqa: PLC0415
         module = creative_direction.motion_modules().get(motion.get('module')) or {}
-        if module and 'needs_device' in (module.get('ve_route') or []):
-            out.append(f"The {module.get('name', motion['module'])} style has no ve device yet: the nearest house devices "
-                       'draw it until Codex builds one.')
+        route = module.get('ve_route') or []
+        if module and 'needs_device' in route:
+            built = [d for d in route if d != 'needs_device']
+            name = module.get('name', motion['module'])
+            if built:
+                out.append(f"The {name} style's ve device ({', '.join(built)}) is still work in progress, not yet passed "
+                           'for a finished cut: the nearest house devices may draw it instead.')
+            else:
+                out.append(f'The {name} style has no ve device yet: the nearest house devices draw it until Codex '
+                           'builds one.')
     from .lint import novelty_note
     repeat = novelty_note(spec)
     if repeat and len(out) < MAX_LINES:

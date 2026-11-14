@@ -581,6 +581,21 @@ class Expect(unittest.TestCase):
             self.assertLessEqual(len([l for l in path.read_text().splitlines() if l.startswith('- ')]), 6)
 
 
+    def test_a_style_whose_device_is_built_but_unpassed_is_not_called_deviceless(self):
+        spec = copy.deepcopy(FIXTURE)
+        keep = expect.MAX_LINES
+        expect.MAX_LINES = 50
+        try:
+            spec.setdefault('style', {})['motion'] = {'module': 'ladder'}
+            found = [line for line in expect.lines(spec) if 'Ladder' in line]
+            self.assertTrue(found and 'ladder_stage' in found[0] and 'work in progress' in found[0], found)
+            self.assertFalse(any('no ve device' in line for line in found), 'ladder_stage exists in config/ve/devices.json')
+            spec['style']['motion'] = {'module': 'isometric-world'}
+            self.assertTrue(any('no ve device yet' in line for line in expect.lines(spec)), 'a style with no device says so')
+        finally:
+            expect.MAX_LINES = keep
+
+
 class PacketSummary(unittest.TestCase):
     def test_in_short_is_ten_plain_lines_at_most_with_the_proof_first(self):
         with tempfile.TemporaryDirectory() as tmp:

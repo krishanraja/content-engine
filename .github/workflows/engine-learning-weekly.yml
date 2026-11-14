@@ -116,6 +116,10 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ github.token }}
+          # The schedule's actor is whoever last pushed main, and auto-merge pushes as github-actions[bot]: the only run
+          # (8 Nov) stopped in 22 s on "Workflow initiated by non-human actor: github-actions". This job has no event a
+          # stranger can start (schedule and his own hand run only), so that one bot is allowed here, no other.
+          allowed_bots: 'github-actions'
           claude_args: >-
             --max-turns 120
             --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/validate-skills.py:*),Bash(python3 scripts/check_skill_core.py:*),Bash(python3 -m unittest:*),Bash(python3 tests/:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Write(.cache/learning/**),Edit(scripts/**),Write(scripts/**),Edit(tests/**),Write(tests/**),Edit(config/failures.json),Edit(.agents/skills/**),Edit(docs/**),TodoWrite"
