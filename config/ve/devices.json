@@ -1,5 +1,8 @@
 {
   "devices": {
+    "receipt_print": {
+      "verbs": ["enter", "add", "highlight"]
+    },
     "office_floor": {
       "verbs": [
         "enter",
