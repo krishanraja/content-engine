@@ -78,9 +78,23 @@ else until Batch 6"). The families live in `config/chain-cap.json` (inspirationh
 crons, the fact gate; `unit_kind` agent only), and `chainWeekSpend()` in `apps/control-plane/api/_meter.ts` sums them
 for the week from Monday 00:00 UTC (`tests/control-plane/chain-cap.test.ts`). Left out, each with its reason in that
 file: `aeo-*`, Apify actors, Control Center's own agents and Claude Code on his subscription. Measured on 14 Nov 2026:
-$15.45 (week of 26 Oct), $14.53 (2 Nov), $19.64 (9 Nov, to 14 Nov). Not built yet: the sweep that skips optional runs,
-inspirationhouse tagging first, once the week passes $15, and writes one board item saying so; it never stops the fact
-gate on a piece he picked.
+$15.45 (week of 26 Oct), $14.53 (2 Nov), $19.64 (9 Nov, to 14 Nov).
+
+The cap is enforced, as the proposal said, with no new table and no new cron (`apps/control-plane/api/_chainCap.ts`):
+
+- The existing daily sweep, the triage sweep (`api/triage/sweep.ts`, 03:00 UTC), reads the week's chain spend and
+  records its verdict in the run ledger as job `chain_cap`: `skipped` once the week passes $15 (the reason names the
+  spend and what is skipped, the counts carry each family's dollars and `skip_<unit key>` = 1 for each skipped run),
+  `ok` under it, `failed` when the meter cannot be read. A dry run is `POST /api/triage/sweep {"action": "chain_cap",
+  "dry_run": true}`.
+- Over the cap it skips the optional runs `config/chain-cap.json` lists in `skip_when_over`, in order, inspirationhouse
+  tagging (`inspirationhouse-tag`) first: inspirationhouse's daily run (05:17 UTC) already writes this ledger, reads
+  this week's newest `chain_cap` row before it tags, and skips its tagging while that row is `skipped` and carries
+  `skip_inspirationhouse_tag`. No row this week, or a failed one, skips nothing: unknown never stops a run.
+- It writes one board item a week saying so (`chain-cap-<Monday>`, in progress, never on Krish), which closes itself by
+  the existing `job_ok` check on the first `chain_cap` run that is `ok`: the next week's first sweep.
+- It never stops the fact gate on a piece he picked: `chainAllows` answers that first, whatever the list says, and the
+  fact gate is not on the list.
 
 ## The judges on Growth's carousels and Shorts
 

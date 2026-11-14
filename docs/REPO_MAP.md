@@ -426,6 +426,22 @@ The card contract, enforced. Final brief section 2 (27 Aug), superseding the
 - `const cardPasses = (card: Card, ctx: LintContext = {}) =>`
 - `const LINT_VOCAB`
 
+### `apps/control-plane/api/_chainCap.ts`
+
+- `const CHAIN_JOB`
+- `const CHAIN_SKIPS: readonly string[]`
+- `const CHAIN_ITEM_LINK`
+- `function skipKey(unitKey: string): string`
+- `interface ChainVerdict`
+- `function chainAllows(unitKey: string, week: ChainWeek | null, o: { picked?: boolean; skips?: readonly string[] } = {}):…`
+- `function chainSkipped(week: ChainWeek | null): string[]`
+- `function chainCapRecord(week: ChainWeek | null): Pick<ContentRunRecord, 'status' | 'reason' | 'counts'>`
+- `function chainCapItem(week: ChainWeek, now: Date)`
+- `interface ChainCapDeps`
+- `const chainCapDeps: ChainCapDeps`
+- `interface ChainCapResult`
+- `async function enforceChainCap(now: Date, deps: ChainCapDeps = chainCapDeps, o: { scheduled: boolean; write?: boolean }…`
+
 ### `apps/control-plane/api/_classify.ts`
 
 The step that was missing: an arc gets a lens and, where one honestly fits,

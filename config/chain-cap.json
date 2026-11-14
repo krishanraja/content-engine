@@ -21,6 +21,8 @@
       "keys": []
     }
   },
+  "skip_when_over": ["inspirationhouse-tag"],
+  "skip_note": "Optional runs the daily sweep (the triage sweep, 03:00 UTC) skips once the week passes weekly_usd, in this order, inspirationhouse tagging first. Recorded as job chain_cap in content_engine_runs, where the run reads it, with one board item a week (apps/control-plane/api/_chainCap.ts). The fact gate on a piece Krish picked is never skipped, whatever this list says.",
   "left_out": {
     "aeo-*": "AEO-Engine is a specialist with a spend cap of its own (fleet audit aeo-2).",
     "apify actors": "a pay-as-you-go ceiling pool, never a target (Control Center protocol, credit_mode); and unit_kind actor never counts.",
