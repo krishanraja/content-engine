@@ -153,22 +153,50 @@ function Get-Setting([string]$Name) {
   return [Environment]::GetEnvironmentVariable($Name, 'Process')
 }
 
-function Resolve-LibraryRoot($Config) {
-  # -LibraryRoot, else runtime.library_root in config\studio.json, unless
-  # MINDMAKE_LIBRARY_ROOT names a folder that is there. A setting naming a
-  # missing folder while studio.json's is there is stale: it is reported to
-  # the engine (Krish, 2026-10-24) and studio.json's is used.
+function Resolve-LibraryRoot($Config, $Folders = $null) {
+  # In order: -LibraryRoot; MINDMAKE_LIBRARY_ROOT when it names a folder that
+  # is there; the folder the engine found by its Drive ID ($Folders, from
+  # Get-RuntimeFolders: config\studio.json drive_ids.library_root), mapped onto
+  # the drive runtime.library_root is on, so a rename or a move above it needs
+  # nothing (11 Nov: "Active" became "Active Ventures" and the path broke);
+  # else runtime.library_root itself. A setting naming a missing folder while
+  # studio.json's is there is stale: it is reported to the engine (Krish,
+  # 2026-10-24). A library the engine says is deleted or in the Drive bin
+  # stops the pass, with no fallback to an old path. Nothing here makes a folder.
   $runtime = Get-Field $Config 'runtime'
   $configured = [string](Get-Field $runtime 'library_root')
   $root = $LibraryRoot
   if (-not $root) {
     $setting = Get-Setting 'MINDMAKE_LIBRARY_ROOT'
-    $root = $configured
-    if ($setting) {
-      if ((Test-Path -LiteralPath $setting -PathType Container) -or -not $configured -or -not (Test-Path -LiteralPath $configured -PathType Container)) { $root = $setting }
-      else {
-        Write-Log "MINDMAKE_LIBRARY_ROOT on this machine names $setting, which is not there; using config\studio.json's $configured. Delete the setting."
-        $script:Problems.Add('library_env_stale')
+    $folder = Find-RuntimeFolder $Folders 'library_root'
+    $state = [string](Get-Field $folder 'state')
+    if ($setting -and (Test-Path -LiteralPath $setting -PathType Container)) { $root = $setting }
+    elseif ($state -eq 'gone') {
+      $problem = [string](Get-Field $folder 'problem')
+      if ($problem -notin @('library_root_gone', 'library_root_trashed')) { $problem = 'library_root_gone' }
+      $script:Problems.Add($problem)
+      throw "The library folder is gone from Drive: $(Get-Field $folder 'reason'). Nothing is written and no folder is made; restore it from the bin, or put the new folder's ID in config\studio.json drive_ids.library_root."
+    } else {
+      if ($state -eq 'found') {
+        $mapped = ConvertTo-LocalDrivePath $folder @($configured, $setting)
+        if ($mapped -and (Test-Path -LiteralPath $mapped -PathType Container)) {
+          $root = $mapped
+          if ($configured -and -not (Test-SamePath $mapped $configured)) { Write-Log "the library was found by its Drive ID at $mapped; config\studio.json still names $configured" }
+        } elseif ($mapped) {
+          Write-Log "the engine found the library by its Drive ID at $mapped, which this machine cannot reach; using the configured folder"
+        }
+      } elseif ($null -ne $folder) {
+        Write-Log "the engine could not find the library by its ID ($(Get-Field $folder 'reason')); using config\studio.json"
+      }
+      if (-not $root) {
+        $root = $configured
+        if ($setting) {
+          if (-not $configured -or -not (Test-Path -LiteralPath $configured -PathType Container)) { $root = $setting }
+          else {
+            Write-Log "MINDMAKE_LIBRARY_ROOT on this machine names $setting, which is not there; using config\studio.json's $configured. Delete the setting."
+            $script:Problems.Add('library_env_stale')
+          }
+        }
       }
     }
   }
@@ -212,6 +240,91 @@ function Get-HeartsideFolder($Client, [string]$Base, [string]$Token, [string]$Ma
     Write-Log "the engine could not say where the Heartside library is ($($_.Exception.Message)); using config\heartside-library.json"
     return $null
   }
+}
+
+function Get-RuntimeFolders($Client, [string]$Base, [string]$Token, [string]$Machine) {
+  # Where the engine says each runtime folder is now, found in Drive by the IDs
+  # in config\studio.json drive_ids (api/library/_runtimeFolders.ts). Asked
+  # once a pass. $null when the engine cannot be asked; each configured path
+  # is used then.
+  try {
+    $query = '/api/library/pending?machine={0}&limit=1&folders=1' -f [uri]::EscapeDataString($Machine)
+    $folders = Get-Field (Invoke-Engine $Client $Base $Token 'GET' $query $null) 'folders'
+    if ($null -eq $folders) { return $null }
+    return ,@($folders)
+  } catch {
+    Write-Log "the engine could not say where the runtime folders are ($($_.Exception.Message)); using config\studio.json"
+    return $null
+  }
+}
+
+function Find-RuntimeFolder($Folders, [string]$Name) {
+  foreach ($folder in @($Folders)) {
+    if ($null -ne $folder -and [string](Get-Field $folder 'name') -ceq $Name) { return $folder }
+  }
+  return $null
+}
+
+function ConvertTo-LocalDrivePath($Folder, [string[]]$Known) {
+  # A found folder's path on this machine: its names under the Google Drive for
+  # desktop drive that the first known full path is on. $null when none is.
+  $driveRoot = $null
+  foreach ($path in @($Known)) {
+    if ($path -and [System.IO.Path]::IsPathRooted($path)) { $driveRoot = Get-DriveForDesktopRoot $path; break }
+  }
+  return ConvertTo-HeartsidePath $driveRoot (Get-Field $Folder 'segments')
+}
+
+function Get-DrivePathsFile($Config) {
+  # %LOCALAPPDATA%\makeyourmindup\drive-paths.json: local_roots.runtime in
+  # config\studio.json, the engine's runtime folder on this computer.
+  $runtime = [string](Get-Field (Get-Field $Config 'local_roots') 'runtime')
+  $folder = if ($runtime) { [Environment]::ExpandEnvironmentVariables($runtime) } else { '' }
+  if (-not $folder -or $folder.Contains('%')) { $folder = Join-Path $env:LOCALAPPDATA 'makeyourmindup' }
+  return Join-Path $folder 'drive-paths.json'
+}
+
+function Write-DrivePaths($Config, $Folders, $Heartside, [string]$Known) {
+  # Where every folder the engine found by its Drive ID is on this computer,
+  # for each other reader here: music and the archive (scripts/velib/
+  # drive_paths.py), krish-clone, content-watcher and filearchives. Shape:
+  #   { "schema_version": 1, "written_at", "written_by": "library-sync",
+  #     "folders": [ { "name", "id", "state", "path", "drive_path", "reason" } ] }
+  # Readers take only state "found": path is then a folder that is there on
+  # this computer. "not_on_this_machine" is found in Drive with no folder here;
+  # "gone" and "unknown" carry the engine's reason. Written only from an engine
+  # answer, so a run that could not ask never replaces a good file.
+  if ($null -eq $Folders) { return }
+  $entries = New-Object System.Collections.Generic.List[object]
+  $all = @(@($Folders) | Where-Object { $null -ne $_ })
+  if ($null -ne $Heartside) { $all += [pscustomobject]@{ name = 'heartside_library'; state = (Get-Field $Heartside 'state'); drive_id = (Get-Field $Heartside 'drive_id'); path = (Get-Field $Heartside 'path'); segments = (Get-Field $Heartside 'segments'); reason = (Get-Field $Heartside 'reason') } }
+  foreach ($folder in $all) {
+    $name = [string](Get-Field $folder 'name')
+    $id = [string](Get-Field $folder 'drive_id')
+    if (-not $name -or -not $id) { continue }
+    $state = [string](Get-Field $folder 'state')
+    if ($state -notin @('found', 'gone', 'unknown')) { $state = 'unknown' }
+    $local = $null
+    if ($state -eq 'found') {
+      $local = ConvertTo-LocalDrivePath $folder @($Known)
+      if (-not $local -or -not (Test-Path -LiteralPath $local -PathType Container)) { $state = 'not_on_this_machine' }
+    }
+    $entries.Add([ordered]@{
+      name = $name
+      id = $id
+      state = $state
+      path = $local
+      drive_path = (Get-Field $folder 'path')
+      reason = (Get-Field $folder 'reason')
+    })
+  }
+  $file = Get-DrivePathsFile $Config
+  if ($Check) { Write-Log "Checking only: $file is not written ($($entries.Count) folder(s))"; return }
+  [void][System.IO.Directory]::CreateDirectory([System.IO.Path]::GetDirectoryName($file))
+  $temporary = "$file.tmp"
+  $body = [ordered]@{ schema_version = 1; written_at = (Get-Date).ToUniversalTime().ToString('o'); written_by = 'library-sync'; folders = $entries.ToArray() }
+  [System.IO.File]::WriteAllText($temporary, ($body | ConvertTo-Json -Depth 6), (New-Object System.Text.UTF8Encoding($false)))
+  Move-Item -LiteralPath $temporary -Destination $file -Force
 }
 
 function Get-DriveForDesktopRoot([string]$Known) {
@@ -602,22 +715,30 @@ function Invoke-Pass {
   $client = New-HttpClient
   try {
     $config = Get-StudioConfig
-    $root = Resolve-LibraryRoot $config
     $base = Resolve-EngineUrl
+    $token = Get-RunnerToken
+    $machine = Get-MachineId
+    # Where the runtime folders are now, by their Drive IDs, asked once a pass;
+    # the library root comes from it, with studio.json's path as the fallback.
+    $folders = Get-RuntimeFolders $client $base $token $machine
+    $heartsideFolder = Get-HeartsideFolder $client $base $token $machine
+    # Written before anything can stop the pass, so music, the archive and the
+    # other repositories on this computer always have the newest answer.
+    try { Write-DrivePaths $config $folders $heartsideFolder ([string](Get-Field (Get-Field $config 'runtime') 'library_root')) }
+    catch { Write-Log "drive-paths.json could not be written: $($_.Exception.Message)" }
+    $root = Resolve-LibraryRoot $config $folders
     if ($Check) { Write-Log "Checking only: nothing is written. Library: $root" }
     if (-not $SkipBrandKit) {
       try { $null = Sync-BrandKit $client $root $workDir }
       catch { Write-Log "the brand kit check failed: $($_.Exception.Message)" }
     }
-    $token = Get-RunnerToken
-    $machine = Get-MachineId
     $result = Sync-Pending $client $base $token $root $machine $workDir
     if ($result.written -gt 0 -or $result.failed -gt 0) { Write-Log "wrote $($result.written) file(s); $($result.failed) could not be written and will be tried again" }
     # Heartside's library, after makeyourmindup's and apart from it: a problem
     # here is logged and reported, and never stops the makeyourmindup pass.
     $heartsideOk = $true
     try {
-      $heartside = Resolve-HeartsideRoot $config (Get-HeartsideFolder $client $base $token $machine)
+      $heartside = Resolve-HeartsideRoot $config $heartsideFolder
       if ($heartside) {
         if ($Check) { Write-Log "Checking only: nothing is written. Heartside library: $heartside" }
         $hs = Sync-Pending $client $base $token $heartside $machine $workDir 'heartside'
