@@ -72,7 +72,21 @@ def view_has_ideas(view: dict) -> bool:
     return not weekly or any(o.get('stories_fresh') is True for o in weekly)
 
 
-def built(monday: str) -> bool:
+def missing(view: dict) -> list[str]:
+    """What keeps the week's view from carrying the whole ideas board, in words that name no idea and no source (the
+    repository is public, so a run's log may show only this): each publishing day with no option, and a weekly good-news
+    option whose stories are not this week's."""
+    days = {d.get('day'): d for d in view.get('days') or [] if isinstance(d, dict)}
+    ideas = lambda d: [o for o in d.get('options') or [] if isinstance(o, dict) and not str(o.get('doc_id') or '').startswith(('veto-', 'held-'))]
+    out = [f'{k}: no options' for k in ('mon', 'wed', 'fri') if not (isinstance(days.get(k), dict) and ideas(days[k]))]
+    weekly = [o for d in days.values() for o in d.get('options') or [] if isinstance(o, dict) and 'stories_fresh' in o]
+    if weekly and not any(o.get('stories_fresh') is True for o in weekly):
+        due = sorted({str(o.get('stories_due') or 'none') for o in weekly})
+        out.append(f"good news: this week's five stories are not in (stories_due {', '.join(due)}); saturday-goodnews.yml finds them")
+    return out
+
+
+def read_view(monday: str) -> dict:
     import json
     import os
     key = os.environ.get('ENGINE_OPERATOR_TOKEN') or ''
@@ -81,7 +95,11 @@ def built(monday: str) -> bool:
     base = os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
     request = urllib.request.Request(base + f'/api/board/{monday}/view', headers={'Authorization': 'Bearer ' + key, 'Cache-Control': 'no-cache'})
     with urllib.request.urlopen(request, timeout=120) as response:
-        return view_has_ideas(json.loads(response.read().decode('utf-8')))
+        return json.loads(response.read().decode('utf-8'))
+
+
+def built(monday: str) -> bool:
+    return view_has_ideas(read_view(monday))
 
 
 def main() -> int:
@@ -92,6 +110,8 @@ def main() -> int:
     week.add_argument('--date', help='a typed Monday, YYYY-MM-DD: checked and printed in that form')
     done = sub.add_parser('built')
     done.add_argument('monday')
+    why = sub.add_parser('why', help="what keeps the week's view from carrying the whole ideas board; nothing when built")
+    why.add_argument('monday')
     args = parser.parse_args()
     try:
         if args.command == 'week' and args.date:
@@ -106,6 +126,10 @@ def main() -> int:
         print(f'sunday ideas: {error}', file=sys.stderr)
         return 2
     try:
+        if args.command == 'why':
+            for line in missing(read_view(monday.isoformat())):
+                print(line)
+            return 0
         print(f'built={"true" if built(monday.isoformat()) else "false"}')
     except Exception as error:  # an unreadable board is never read as built or as not built
         print(f'sunday ideas: could not read the week board for {monday}: {error}', file=sys.stderr)
