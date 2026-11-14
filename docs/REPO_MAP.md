@@ -272,6 +272,10 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `function heldProducts(engines: ReadonlyArray<{ product_slug?: unknown; role?: unknown; activation_state?: unknown }>): …`
 - `interface ShippedDeclaration`
 - `function shippedFor(rows: ReadonlyArray<Record<string, unknown>>, product: string): ShippedDeclaration[]`
+- `function subjectHostsOf(domains: unknown): string[]`
+- `interface SearchRead`
+- `interface SearchSignals`
+- `function searchSignalsFor(hosts: readonly string[], input: { reads: readonly SigRow[]; gsc: readonly SigRow[]; bing: re…`
 
 ### `apps/control-plane/api/_alert.ts`
 
