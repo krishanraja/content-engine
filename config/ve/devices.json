@@ -1,5 +1,8 @@
 {
   "devices": {
+    "takeover": {
+      "verbs": ["enter", "exit"]
+    },
     "office_floor": {
       "verbs": [
         "enter",
