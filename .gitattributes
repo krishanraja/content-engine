@@ -46,6 +46,9 @@ docs/ve/design/formats/ref/** -text
 # makeyourmindup's kill list is pinned by hash (vendor/makeyourmindup/kill-list/SOURCE.md,
 # tests/vendor-kill-list.test.ts): never convert its line endings.
 vendor/makeyourmindup/kill-list/** -text
+# Growth's subscribe route is pinned by sha256 the same way (scripts/post-pack/publish_kit.py,
+# tests/subscribe_route_test.py): a CRLF checkout on Windows refused it and turned full verify red (14 Nov 2026).
+vendor/makeyourmindup/subscribe-route.json -text
 
 # tests/no-claude-routines.test.ts reads the workflows' exact text. Keep them LF on Windows too.
 .github/workflows/*.yml text eol=lf
