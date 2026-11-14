@@ -1,4 +1,0 @@
-Status: The runtime folders in config/studio.json drive_ids are found by their Drive IDs: the library pending list answers folders=1 with where each is now (api/library/_runtimeFolders.ts, the walk built for Heartside, now _driveFolder.ts); the library sync uses the found library root ahead of the configured path and writes %LOCALAPPDATA%\makeyourmindup\drive-paths.json, which music (music.py, velib/sfx.py, scripts/drive_paths.py) reads before its configured path. A rename above the library or music root (11 Nov) no longer breaks either home computer.
-Next: The recordings upload and the archive read drive-paths.json the same way (media_inbox, archive_root).
-Changed: library-sync.ps1 asks once a pass with folders=1 and stops on library_root_gone or library_root_trashed; docs/DRIVE.md gives the file's shape for krish-clone, content-watcher and filearchives.
-North Star check (2026-11-14): holds.
