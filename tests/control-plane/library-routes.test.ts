@@ -38,12 +38,14 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
   function table(name: string) {
     if (name !== 'content_library_files') throw new Error(`unexpected table ${name}`)
     const filters: Array<[string, unknown]> = []
+    const likes: Array<[string, string]> = []
     let update: Row | null = null
     let order: { key: string; ascending: boolean } | null = null
     let limit: number | null = null
     const matching = () => {
       // A row seeded without a library is makeyourmindup, as the migration's column default makes it.
-      let rows = db.files.filter((row) => filters.every(([key, value]) => (key === 'library' ? row[key] ?? 'makeyourmindup' : row[key]) === value))
+      let rows = db.files.filter((row) => filters.every(([key, value]) => (key === 'library' ? row[key] ?? 'makeyourmindup' : row[key]) === value)
+        && likes.every(([key, pattern]) => String(row[key]).startsWith(pattern.replace(/%$/, ''))))
       if (order) {
         const { key, ascending } = order
         rows = [...rows].sort((a, b) => (a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0) * (ascending ? 1 : -1))
@@ -54,6 +56,7 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
     const chain: Record<string, any> = {
       select: () => chain,
       eq: (key: string, value: unknown) => { filters.push([key, value]); return chain },
+      like: (key: string, pattern: string) => { likes.push([key, pattern]); return chain },
       order: (key: string, options?: { ascending?: boolean }) => { order = { key, ascending: options?.ascending !== false }; return chain },
       limit: (n: number) => { limit = n; return chain },
       update: (values: Row) => { update = values; return chain },
@@ -139,6 +142,7 @@ import uploadUrl from '../../apps/control-plane/api/library/upload-url.js'
 import confirm from '../../apps/control-plane/api/library/confirm.js'
 import pending from '../../apps/control-plane/api/library/pending.js'
 import fileRoute from '../../apps/control-plane/api/library/file.js'
+import findRoute from '../../apps/control-plane/api/library/find.js'
 import written from '../../apps/control-plane/api/library/written.js'
 import { LIBRARY_MAX_BYTES, libraryMimeTypes } from '../../apps/control-plane/api/library/_library.js'
 import { videoStudioRunnerIdentity } from '../../apps/control-plane/api/_videoStudioAuth.js'
@@ -619,6 +623,31 @@ describe('the Heartside library on the same routes', () => {
     expect(asked.statusCode).toBe(200)
     expect(asked.body.folders).toEqual(runtime.answer)
     expect(runtime.asked).toBe(1)
+  })
+
+  // I-07, lane B's contract: Control Center links a library file in place, by its hash or under a folder.
+  it('finds files by library and sha256, or under a path prefix of one type, naming each storage key and never a URL', async () => {
+    const other = 'b'.repeat(64)
+    db.files.push(readyRow({ ready_at: '2026-10-06T08:01:00.000Z' }))
+    db.files.push(readyRow({ library: 'heartside', path: 'Posts/F01/heartside_F01_same.html', ready_at: '2026-11-03T08:01:00.000Z' }))
+    db.files.push(readyRow({ sha256: other, path: '3 Posts/2026-10-06 Article/cut.mp4', content_type: 'video/mp4', object_key: `files/${other}.mp4`, ready_at: '2026-10-07T08:01:00.000Z' }))
+    db.files.push(readyRow({ sha256: 'c'.repeat(64), path: '3 Posts/2026-10-06 Article/held.mp4', content_type: 'video/mp4', state: 'reserved', ready_at: null }))
+    const get = (query: Record<string, unknown>, headers: Record<string, string> = { authorization: `Bearer ${ENGINE}` }) => call(findRoute, { method: 'GET', headers, query })
+
+    const bySha = await get({ library: 'makeyourmindup', sha256: SHA })
+    expect(bySha.statusCode).toBe(200)
+    expect(bySha.body).toEqual({ ok: true, files: [{ library: 'makeyourmindup', path: PATH, object_key: KEY, sha256: SHA, bytes: 1234, type: 'text',
+      content_type: 'text/html', ready_at: '2026-10-06T08:01:00.000Z', role: 'master', approved: false }] })
+
+    const videos = await get({ library: 'makeyourmindup', prefix: '3 Posts/2026-10-06 Article/', type: 'video' })
+    expect(videos.body.files.map((f: { path: string }) => f.path)).toEqual(['3 Posts/2026-10-06 Article/cut.mp4'])
+    expect(JSON.stringify(videos.body)).not.toMatch(/https?:/)
+
+    for (const bad of [{ sha256: SHA }, { library: 'makeyourmindup' }, { library: 'makeyourmindup', sha256: 'NOT' }, { library: 'elsewhere', sha256: SHA },
+      { library: 'makeyourmindup', prefix: '3 Posts/%' }, { library: 'makeyourmindup', prefix: '3 Posts/', type: 'gif' }, { library: 'makeyourmindup', sha256: SHA, prefix: 'x' }]) {
+      expect((await get(bad)).body).toEqual({ ok: false, error: 'invalid_find_query' })
+    }
+    expect((await get({ library: 'makeyourmindup', sha256: SHA }, {})).statusCode).toBe(401)
   })
 
   it('asks the database for one library at a time', async () => {
