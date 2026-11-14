@@ -358,7 +358,7 @@ def approved_hashes(body):
     return {cut: sha for cut, sha in pairs if cut in ALL_CUTS and isinstance(sha, str) and making.SHA256.match(sha)}
 
 
-TYPED_SCRIPTS_ID = re.compile(r'^(mon|wed|fri)-scripts-words$')
+TYPED_SCRIPTS_ID = re.compile(r'^(mon|tue|wed|thu|fri|sat)-scripts-words$')
 
 
 def typed_approval(doc):
