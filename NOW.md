@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The AEO ingest accepts and stores every optional packet field AEO-Engine knows (probe detail, name mentions, repeat samples, each question's panel, diagnosis and outcome, win kits, site gates, the cited-pages sheet and Gemini as a fifth engine), checks each against AEO-Engine's own schema, writes a verify run's probes as verify and nothing else, and stops seeding content ideas once kits arrive; the context lists all eleven in packet_features and serves each question's last panel and the stored sheet. (2026-11-14)
 - Codex built the eleven cards for Krish's three styles in a cloud session: nine devices (receipt_print, slam_word, checklist, pull_quote, unit_field, video_wall, mint_ring, takeover, through_line), the kinetic_stat count-down ghost and style.sound for handover and hit sounds; each passed ve verify-card and was rendered and looked at, and config/ve/sfx-candidates.json holds seven Epidemic Sound candidates for his ear, none approved. (2026-11-13)
 - AEO's context now names Krish's own sites (krishraja.ai, krishraja.com, themindmaker.ai) and the not-ours list (fractionl.us), and gives each venture subject its brand names, its brand-accuracy checks and whether its growth engine is held; probes from an off-week verify run are left out of its four weeks of history, and an empty packet_features list keeps every packet the v1 shape. (2026-11-14)
 - His "Signed." is one press on the board for any piece whose lock is written and unsigned, on any day it is placed (Tue 17 included); the typed-approval route takes Monday to Saturday. (2026-11-14)
@@ -41,20 +42,17 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - A piece already approved on a day of the week no longer also waits on the ideas board (Fri 20's data-centres option after the piece moved to Tue 17). (2026-11-14)
 - Every piece before recording offers his production pick as three presses (look, motion style, captions) through the engine's look and style routes, the recommended one first and marked; a session's recommendation is the piece's row style in the week's plan (contract 1.15.0). (2026-11-13)
 - The view reads every day's narrative lock, so a piece moved to an off day keeps its own (Tue 17's data-centres piece). (2026-11-13)
-- The publish board says the current state: a day is Done only when every item is live, past and already-out ideas leave the ideas board, a narrative lock follows its piece, and the offday-posts route takes the done-check's Buffer sends (check buffer_sent) with the Buffer id as proof. (2026-11-13)
-- ve gained three stagings from Krish's own cuts (band, stage, tray), the lit, vignette and hatched grounds, blur-in, turn and tilt entrances, a crossfade handover, region fitting for five more devices, the open caption fixes and a ve study that no longer crashes; rendered on his pinned take and watched: up to 3.88 events a second and 82% of the frame, against 2.58 and 26% before (docs/ve/INGREDIENTS.md, "The stagings"). (2026-11-13)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
 - 2026-11-13 docs/ve/cards/style-gaps/, apps/renderer/src/engine/devices/ (nine new devices, kinetic_stat ghost), scripts/velib/compile.py (style.sound), config/ve/sfx-candidates.json, docs/ve/INGREDIENTS.md.
-- 2026-11-13 kit/staging.ts, kit/layout.ts, kit/beatMotion.ts, kit/reveal.ts, kit/motion-profiles.json, FormatMaster.tsx, BrandFrame.tsx, captions/, devices (typing_bubble, logo_card, quote_card, stat_strip, record_card), scripts/velib/compile.py and study.py, docs/ve/INGREDIENTS.md, STATUS.md, RUNBOOK.md, docs/ve/cards/style-gaps/.
-Older lines: `docs/history/2026-11-14-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
+Older lines: `docs/history/2026-11-14-NOW-moved-2.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-13): Krish hears the seven sound candidates and approves one handover and one hit on his Sound effects card; then prove a staging with the new devices on a piece for his press.
+- Next (2026-11-14): Control Center serves each venture's per-question standing and win kits to its growth engine (protocol 1.25.0, features.ai_answers_detail).
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.

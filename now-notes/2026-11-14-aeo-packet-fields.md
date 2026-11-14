@@ -1,3 +1,0 @@
-Status: The AEO ingest accepts and stores every optional packet field AEO-Engine knows (probe detail, name mentions, repeat samples, each question's panel, diagnosis and outcome, win kits, site gates, the cited-pages sheet and Gemini as a fifth engine), checks each against AEO-Engine's own schema, writes a verify run's probes as verify and nothing else, and stops seeding content ideas once kits arrive; the context lists all eleven in packet_features and serves each question's last panel and the stored sheet.
-Next: Control Center serves each venture's per-question standing and win kits to its growth engine (protocol 1.25.0, features.ai_answers_detail).
-North Star check (2026-11-14): holds.
