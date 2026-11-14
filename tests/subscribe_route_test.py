@@ -23,6 +23,14 @@ class SubscribeRouteTest(unittest.TestCase):
         self.assertEqual(publish_kit.SUBSCRIBE_SPEC_SHA256, SHA256)
         self.assertEqual(json.loads(SPEC.read_bytes())['schema'], 'mymu-subscribe-route/1')
 
+    def test_git_never_converts_its_line_endings(self):
+        # The hash is of the exact bytes, so a Windows checkout must not turn LF into CRLF (full verify red on
+        # windows-latest, 14 Nov 2026): .gitattributes marks the file -text, as it does the vendored kill list.
+        import subprocess
+        out = subprocess.run(['git', 'check-attr', 'text', '--', 'vendor/makeyourmindup/subscribe-route.json'],
+                             cwd=ROOT, capture_output=True, text=True, check=True).stdout
+        self.assertTrue(out.strip().endswith(': text: unset'), out)
+
     def test_every_link_the_kit_writes_matches_the_route(self):
         p = {'piece_id': '8287846b-1111-4111-8111-111111111111', 'youtube_description': 'D', 'linkedin_post': 'L', 'comment_question': 'Q?'}
         route = publish_kit.ROUTE
