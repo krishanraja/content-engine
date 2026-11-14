@@ -1314,6 +1314,12 @@ The making record: where one piece is on its way from the workroom to
 - `interface FactRunCost`
 - `function newestRunCost(rows: Array<{ at: string; run_id: string | null; piece_id: string | null; usd: number | string }…`
 - `async function lastFactRunCost(): Promise<FactRunCost | null>`
+- `const CHAIN_WEEKLY_USD: number`
+- `function chainFamily(r: { unit_kind: string; unit_key: string }): string | null`
+- `function weekStartKey(d: Date): string`
+- `interface ChainWeek`
+- `function chainWeekSum(rows: Array<{ unit_kind: string; unit_key: string; day: string; usd: number | string }>, week: st…`
+- `async function chainWeekSpend(now: Date = new Date()): Promise<ChainWeek | null>`
 
 ### `apps/control-plane/api/_mission.ts`
 

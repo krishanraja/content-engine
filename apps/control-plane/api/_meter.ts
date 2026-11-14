@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from 'node:async_hooks'
 import { priceUsd, priceUsdDetailed, priceUsdUncached, readUsage, isPriced, perplexityUsd, PERPLEXITY_PRICES, OPENAI_EMBEDDING_PRICES, ANTHROPIC_WEB_SEARCH_USD, providerPrice, type TokenUsage } from './_prices.js'
+import chainCap from '../../../config/chain-cap.json' with { type: 'json' }
 import { classifyAnthropicFailure, noteAnthropicSuccess, recordAnthropicFailure, type ProviderFailure } from './_modelProvider.js'
 
 /**
@@ -675,4 +676,60 @@ export async function lastFactRunCost(): Promise<FactRunCost | null> {
     if (d.runs > 0) return { day, runs: d.runs, usd_per_run: Math.round((d.usd / d.runs) * 100) / 100, basis: 'day_average' }
   }
   return null
+}
+
+// ── The $15 a week chain ────────────────────────────────────────────────────
+//
+// Ruling (Krish, 2026-11-14): the chain cap is measured by its own unit keys
+// (config/chain-cap.json), never by everything metered. Weeks start Monday UTC.
+
+type ChainFamilies = Record<string, { what: string; prefixes: string[]; keys: string[] }>
+export const CHAIN_WEEKLY_USD: number = chainCap.weekly_usd
+
+/** The chain family a meter row belongs to, or null when it does not count against the $15. */
+export function chainFamily(r: { unit_kind: string; unit_key: string }): string | null {
+  if (r.unit_kind !== chainCap.unit_kind) return null
+  for (const [family, f] of Object.entries(chainCap.families as ChainFamilies)) {
+    if (f.keys.includes(r.unit_key) || f.prefixes.some(p => r.unit_key.startsWith(p))) return family
+  }
+  return null
+}
+
+/** The Monday (UTC) that starts the week holding `d`, as YYYY-MM-DD. */
+export function weekStartKey(d: Date): string {
+  const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()))
+  t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7))
+  return t.toISOString().slice(0, 10)
+}
+
+export interface ChainWeek { week: string; usd: number; by_family: Record<string, number>; cap_usd: number; over: boolean }
+
+/** Sum the chain's rows for the week starting `week` (a Monday key); rows outside that week or the chain are ignored. */
+export function chainWeekSum(rows: Array<{ unit_kind: string; unit_key: string; day: string; usd: number | string }>, week: string): ChainWeek {
+  const end = new Date(`${week}T00:00:00Z`)
+  end.setUTCDate(end.getUTCDate() + 7)
+  const endKey = end.toISOString().slice(0, 10)
+  const by: Record<string, number> = {}
+  let usd = 0
+  for (const r of rows) {
+    if (r.day < week || r.day >= endKey) continue
+    const family = chainFamily(r)
+    if (!family) continue
+    const v = Number(r.usd) || 0
+    by[family] = round6((by[family] || 0) + v)
+    usd += v
+  }
+  usd = round6(usd)
+  return { week, usd, by_family: by, cap_usd: CHAIN_WEEKLY_USD, over: usd > CHAIN_WEEKLY_USD }
+}
+
+/** This week's chain spend, read from meter_daily; null when the meter cannot be read. */
+export async function chainWeekSpend(now: Date = new Date()): Promise<ChainWeek | null> {
+  const supabase = await db()
+  if (!supabase) return null
+  const week = weekStartKey(now)
+  const { data, error } = await supabase.from('meter_daily').select('unit_kind,unit_key,day,usd')
+    .eq('unit_kind', chainCap.unit_kind).gte('day', week).limit(5000)
+  if (error || !data) return null
+  return chainWeekSum(data as Array<{ unit_kind: string; unit_key: string; day: string; usd: number | string }>, week)
 }
