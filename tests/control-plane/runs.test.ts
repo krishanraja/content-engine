@@ -146,3 +146,22 @@ test('a person with the cron secret is still recorded as manual', () => {
   assert.equal(isScheduled({}), false)
   assert.equal(isScheduled({ 'user-agent': 'Mozilla/5.0' }), false)
 })
+
+test('the taste engine: daily jobs go stale on silence, on-demand jobs are said only when their last run failed', () => {
+  const now = new Date('2026-11-14T12:00:00Z')
+  const ago = (h: number) => new Date(now.getTime() - h * 3_600_000).toISOString()
+  for (const job of ['taste_daily', 'taste_harness', 'taste_weekly', 'taste_cards', 'taste_retro']) {
+    const row = CONTENT_ENGINE_JOBS.find(j => j.job === job)
+    assert.ok(row, job)
+    assert.equal(row!.trigger, 'ledger')
+  }
+  assert.ok(CONTENT_ENGINE_JOBS.find(j => j.job === 'taste_cards')!.onDemand)
+  assert.ok(CONTENT_ENGINE_JOBS.find(j => j.job === 'taste_retro')!.onDemand)
+  const quiet = contentEngineAttention([
+    { job: 'taste_daily', status: 'ok', reason: null, finished_at: ago(48) },
+    { job: 'taste_cards', status: 'ok', reason: null, finished_at: ago(24 * 60) },
+  ], now)
+  assert.deepEqual(quiet.attention.map(a => [a.job, a.kind]), [['taste_daily', 'stale']])
+  const failed = contentEngineAttention([{ job: 'taste_retro', status: 'failed', reason: 'model refused', finished_at: ago(24 * 30) }], now)
+  assert.deepEqual(failed.attention.map(a => [a.job, a.kind]), [['taste_retro', 'failed']])
+})
