@@ -169,3 +169,15 @@ own script against a stand-in store); register each new Monday under
 piece with `making.py <piece> posted <channel> [url]`; Record is done from
 the takes on the record, never from a tick.
 
+## Moved from AGENTS-REFERENCE.md (14 Nov 2026)
+
+Word for word, from rule 2 ("The publish board is fed, never shaped") and rule 3's amendment of 11 November, which
+described the retired boards (fleet audit, content-engine-11).
+
+From rule 2:
+
+> From the week of 26 October every board has one layout (`config/board-layout.json`): five tabs (Ideas, Queue, Monday, Wednesday, Friday) and four steps in every day (Brief, Drafts, Record, Publish). Feed it through `week_board.py`'s inputs only (`docs/PUBLISH_BOARDS.md`, "The fixed layout"); never add a section, banner or style, never patch a built board. `week_board.verify()` and `npm run check:board-layout` (CI) refuse anything else, and a change to the layout itself is Krish's: there are no approval prompts for board edits; the layout is held by CI and changes only with his recorded words (Ruling, Krish, 2026-10-21). `scripts/check_board_layout.py` holds the hash of `config/board-layout.json` and `scripts/post-pack/tokens.css` and the board's structure in its snapshot, and fails until `--update --approved "Krish, YYYY-MM-DD: <his exact words>"` records the change with them.
+
+From rule 3, amended (Ruling, Krish, 2026-11-11):
+
+> Amended (Ruling, Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. From that day no board update is built with `week_board.py` or published with `board_web.py publish-web`: a session writes what the live view reads (the week's files on its branch, the making record, the engine API; `docs/PUBLISH_BOARDS.md`, "One live board"), the live view is built on every read, and the overlay above describes the archive. The same day (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's good news included) the Thursday good-news schedule was retired, so the Sunday ideas run is the one scheduled job that writes a board, and the Monday final board is the live board reading the week's records as the overnight runner fills them (`docs/CADENCE.md`).

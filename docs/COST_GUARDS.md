@@ -58,13 +58,22 @@ meter showed $0.40 of spend in 60 days and no retries, so it would only have add
 
 ## Scheduled Claude runs and the $15 a week
 
-One scheduled Claude run exists, Claude Code in GitHub Actions on Krish's subscription (`CLAUDE_CODE_OAUTH_TOKEN`),
-never an API key, so it adds no API spend: the Sunday ideas run (`sunday-ideas.yml`, Saturday), which since 11 November
-also finds Saturday's five good-news stories (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full,
-Saturday's good news included; the Thursday good-news schedule is retired). The good-news job (`saturday-goodnews.yml`)
-stays, by hand only: capped at 150 turns and 120 minutes, one week's five stories, and its guard does nothing once the
-stories are live. Neither makes a paid API call (no fact-check POST, no Perplexity, no generation), so the chain stays
-inside his $15 a week (Krish, 2026-10-29: "happy with $15 a week"); a run that would need one stops and says so.
+Three scheduled jobs run Claude, each as Claude Code in GitHub Actions on Krish's subscription
+(`CLAUDE_CODE_OAUTH_TOKEN`), never an API key, so none adds API spend (checked against `.github/workflows` on
+14 Nov 2026):
+
+- **Sunday ideas** (`sunday-ideas.yml`, Saturday 12:17 and 20:47 UTC; its guard makes the later firing do nothing once
+  the week is built). Since 11 November it also finds Saturday's five good-news stories (Ruling, Krish, 2026-11-11: the
+  ideas board fills once a week in full, Saturday's good news included; the Thursday good-news schedule is retired).
+- **Engine learning weekly** (`engine-learning-weekly.yml`, Sunday 19:37 UTC): Claude only for the causes the
+  incident fields cannot explain and the ladder's work orders; a hand run is a dry run.
+- **Docs steward** (`docs-steward.yml`, nightly 20:30 UTC): the fleet's steward from krishanraja/ai-harness, keeping
+  the documents true to the code.
+
+The good-news job (`saturday-goodnews.yml`) stays, by hand only: capped at 150 turns and 120 minutes, one week's five
+stories, and its guard does nothing once the stories are live. None of these makes a paid API call (no fact-check
+POST, no Perplexity, no generation), so the chain stays inside his $15 a week (Krish, 2026-10-29: "happy with $15 a
+week"); a run that would need one stops and says so.
 
 ## The judges on Growth's carousels and Shorts
 
