@@ -255,6 +255,18 @@ SERIES_LABELS = {slug: label for *_, slug, label in DAYS}
 OFF_OPTIONS = (2, 6)
 
 
+def his_tick(o):
+    """True when an off-day option came from an Inspiration card Krish ticked: inspiration_act.py place writes it after
+    the day's other options, marked from_inspiration with his tick (idea_checks.his_tick reads the same mark). Such an
+    option is his and never counts toward the day's 2 to 6 (Ruling, Krish, 2026-11-12: an inspiration card he ticks is
+    an instruction that jumps the queue), as an idea from his tick comes on top of a publishing day's four
+    (apps/control-plane/api/_weekOptions.ts, MAX_INSPIRED). It keeps its own id, the piece's uuid. Closed and decided
+    options still count: the board's view (apps/control-plane/api/board/_viewExtras.ts, offdayOptions) draws them on
+    the day like any other option, and it draws his tick's option too, so reading it here keeps the two in step."""
+    import idea_checks  # the one reader of his tick's mark
+    return bool(idea_checks.his_tick(o))
+
+
 OFF_FRAMES = (1, 12)
 
 
@@ -452,7 +464,7 @@ def side_sha(o, side):
 
 def read_offdays(data, where='ideas.json offdays', whole=False):
     """{day: [{'id', 'format', 'source', 'url', 'copy', 'copy_sha256'}]}, or None when there are none. Each day given
-    holds 2 to 6 options; a day left out is said on the tab."""
+    holds 2 to 6 options, plus any his ticked inspiration brought (his_tick); a day left out is said on the tab."""
     if data is None:
         return None
     if not isinstance(data, dict):
@@ -468,8 +480,11 @@ def read_offdays(data, where='ideas.json offdays', whole=False):
         # A publishing day's off-day post sits beside the week's piece, one or more finished posts rather than a choice
         # (Krish, 2026-11-12, of Wednesday's Jensen Huang post: "Put them there so I can approve").
         least = 1 if key in ('mon', 'wed', 'fri') else OFF_OPTIONS[0]
-        if not isinstance(opts, list) or not least <= len(opts) <= OFF_OPTIONS[1]:
-            problems.append(f'{weekday}: give {least} to {OFF_OPTIONS[1]} options')
+        # An option from his tick rides on top of the day's own (his_tick), so a day holds 2 to 6 options a session
+        # wrote plus whatever his ticks brought, or only what his ticks brought.
+        own = len([o for o in opts if not his_tick(o)]) if isinstance(opts, list) else -1
+        if not isinstance(opts, list) or not (least <= own <= OFF_OPTIONS[1] or own == 0 < len(opts)):
+            problems.append(f'{weekday}: give {least} to {OFF_OPTIONS[1]} options, plus any from his ticked inspiration')
             continue
         rows, seen = [], set()
         for n, o in enumerate(opts, 1):
