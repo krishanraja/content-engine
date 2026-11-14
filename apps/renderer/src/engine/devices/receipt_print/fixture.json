@@ -1,0 +1,23 @@
+{
+  "objects": [{
+    "obj": "receipt", "device": "receipt_print", "meaning": "Five sourced figures print on their cues",
+    "params": { "title": "COST RECEIPT", "lines": [
+      { "key": "licence", "row": "Licence" }, { "key": "hosting", "row": "Hosting" },
+      { "key": "support", "row": "Support" }, { "key": "training", "row": "Training" }, { "key": "review", "row": "Review" }
+    ] },
+    "dataset": { "unit": "USD", "denominator": null, "producerLabel": "FIXTURE AUDIT · 13 NOV 2026", "rows": [
+      { "label": "Licence", "value": 120 }, { "label": "Hosting", "value": 80 },
+      { "label": "Support", "value": 40 }, { "label": "Training", "value": 60 }, { "label": "Review", "value": 20 }
+    ] }, "fromFrame": 0, "toFrame": 150
+  }],
+  "beats": [{ "id": "costs", "role": "anchor", "layout": "STAGE", "fromFrame": 0, "toFrame": 150, "uses": ["receipt"], "transitionOut": "cut" }],
+  "events": [
+    { "id": "enter", "obj": "receipt", "verb": "enter", "toState": "visible", "atFrame": 10 },
+    { "id": "line1", "obj": "receipt", "verb": "add", "toState": "licence", "atFrame": 30 },
+    { "id": "line2", "obj": "receipt", "verb": "add", "toState": "hosting", "atFrame": 42 },
+    { "id": "line3", "obj": "receipt", "verb": "add", "toState": "support", "atFrame": 54 },
+    { "id": "line4", "obj": "receipt", "verb": "add", "toState": "training", "atFrame": 66 },
+    { "id": "line5", "obj": "receipt", "verb": "add", "toState": "review", "atFrame": 78 },
+    { "id": "highlight", "obj": "receipt", "verb": "highlight", "toState": "review", "atFrame": 90 }
+  ]
+}

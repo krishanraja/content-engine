@@ -3,6 +3,9 @@
     "mint_ring": {
       "verbs": ["draw", "exit"]
     },
+    "receipt_print": {
+      "verbs": ["enter", "add", "highlight"]
+    },
     "office_floor": {
       "verbs": [
         "enter",
