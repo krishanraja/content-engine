@@ -58,13 +58,19 @@ meter showed $0.40 of spend in 60 days and no retries, so it would only have add
 
 ## Scheduled Claude runs and the $15 a week
 
-One scheduled Claude run exists, Claude Code in GitHub Actions on Krish's subscription (`CLAUDE_CODE_OAUTH_TOKEN`),
-never an API key, so it adds no API spend: the Sunday ideas run (`sunday-ideas.yml`, Saturday), which since 11 November
-also finds Saturday's five good-news stories (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full,
-Saturday's good news included; the Thursday good-news schedule is retired). The good-news job (`saturday-goodnews.yml`)
-stays, by hand only: capped at 150 turns and 120 minutes, one week's five stories, and its guard does nothing once the
-stories are live. Neither makes a paid API call (no fact-check POST, no Perplexity, no generation), so the chain stays
-inside his $15 a week (Krish, 2026-10-29: "happy with $15 a week"); a run that would need one stops and says so.
+Three scheduled jobs run Claude Code, each inside GitHub Actions on Krish's subscription (`CLAUDE_CODE_OAUTH_TOKEN`),
+never an API key, so none adds API spend (`tests/no-claude-routines.test.ts` refuses any other):
+
+| Workflow | When (UTC) | What it does |
+|---|---|---|
+| Sunday ideas (`sunday-ideas.yml`) | Saturday 12:17, and 20:47 as the second try | the week's ideas, Saturday's five good-news stories included (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's good news included; the Thursday good-news schedule is retired); its guard does nothing once the week is built |
+| Engine learning weekly (`engine-learning-weekly.yml`) | Sunday 19:37 | the self-improving failure loop: the week's incidents clustered into failure modes by code first, then Claude Code only for what the fields could not explain and the ladder's work orders (`docs/learning/README.md`) |
+| Docs steward (`docs-steward.yml`) | every day 20:30 | the fleet's docs steward, ai-harness's reusable workflow pinned by commit |
+
+The good-news job (`saturday-goodnews.yml`) stays, by hand only: capped at 150 turns and 120 minutes, one week's five
+stories, and its guard does nothing once the stories are live. None of these makes a paid API call (no fact-check POST,
+no Perplexity, no generation), so the chain stays inside his $15 a week (Krish, 2026-10-29: "happy with $15 a week"); a
+run that would need one stops and says so.
 
 ## The judges on Growth's carousels and Shorts
 
