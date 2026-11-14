@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- AGENTS.md File routing is one pointer to docs/DRIVE.md, the Drive map by folder ID, with Inbox from My AI for anything it does not place; the pre-22-Oct paths and the old RULES.md pointer are gone. (2026-11-14)
 - The taste engine's jobs are on the content engine's schedule (apps/control-plane/lib/contentEngineSchedule.ts), graded by the rows inspirationhouse writes into content_engine_runs: taste_daily and taste_harness daily, taste_weekly weekly, taste_cards and taste_retro only when their last run failed (onDemand). A new trigger kind, ledger, marks a job another repository records with no route here. taste_rejections also writes rows (4 runs, 3 not ok, last 4 Nov) and is left off until someone says how it runs. (2026-11-14)
 - The lens radar is gated like the other recovery routes: the dashboard's cookie or the CRON_SECRET bearer in constant time, closed when neither is set, and no secret is read from the query string; LENS_RADAR_SECRET is retired from the required list and the example env. (2026-11-14)
 - The runtime folders in config/studio.json drive_ids are found by their Drive IDs: the library pending list answers folders=1 with where each is now (api/library/_runtimeFolders.ts, the walk built for Heartside, now _driveFolder.ts); the library sync uses the found library root ahead of the configured path and writes %LOCALAPPDATA%\makeyourmindup\drive-paths.json, which music (music.py, velib/sfx.py, scripts/drive_paths.py) reads before its configured path. A rename above the library or music root (11 Nov) no longer breaks either home computer. (2026-11-14)
@@ -50,7 +51,7 @@ Older lines: `docs/history/2026-11-14-NOW-moved-9.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-14): Control Center copies the five rows into src/lib/contentEngineSchedule.ts under its existing field-for-field guard.
+- Next (2026-11-14): Krish merges ai-harness #244 so the canon says the same.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
