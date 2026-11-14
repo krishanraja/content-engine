@@ -1,4 +1,5 @@
 import React from 'react'
+import { textWidth } from '../../../house/metrics'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import { drift } from '../../clock'
 import { isRegion } from '../../kit/layout'
@@ -16,10 +17,12 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   // A fixed number row, a camera band sized for the part labels, then annotation and source rows.
   // Reserve every row for the object's lifetime, including while the number or a rung is absent.
   const natural = region ? bestNatural(box, tall ? [640, 800] : [960, 1200],
-    () => numberSize + 200 + Math.max(1, s.parts.length - 1) * 70) : undefined
+    () => numberSize + 300 + Math.max(1, s.parts.length - 1) * 70) : undefined
   const w = natural?.width ?? box.width, h = natural?.height ?? box.height
-  const left = w * .12, right = w * (tall ? .74 : .83)
-  const top = region ? numberSize + 60 : h * (tall ? .28 : .25)
+  const labelLeft = w * .08
+  const labelWidth = Math.max(...p.parts.map(part => textWidth('fraunces', part.label, 30)))
+  const left = labelLeft + labelWidth + 28, right = w * .86
+  const top = region ? numberSize + 130 : h * (tall ? .28 : .25)
   const bottom = region ? top + Math.max(0, s.parts.length - 1) * 56 : h * (tall ? .72 : .69)
   const y = (i: number) => bottom - i * (bottom - top) / Math.max(1, s.parts.length - 1)
   const focused = s.parts.find(part => part.id === s.focus)
@@ -29,11 +32,10 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const cameraShift = .12 * (cameraWeight * h * .45 - cameraY)
   // Clamp the camera band between the number and annotation rows. Labels follow the camera,
   // while the number stays in its own row rather than travelling onto a neighbouring label.
-  const shift = region ? Math.max(numberSize + 60 - (h * .45 + (top + 8 - h * .45) * scale),
-    Math.min(cameraShift, h - 110 - (h * .45 + (bottom + 46 - h * .45) * scale))) : cameraShift
+  const shift = Math.max(numberSize + 90 - (h * .45 + (top - 44 - h * .45) * scale),
+    Math.min(cameraShift, h - 130 - (h * .45 + (bottom + 18 - h * .45) * scale)))
   const maxSize = Math.max(1, ...p.parts.map(part => part.size), ...Object.values(p.states).filter(c => c.verb === 'grow').map(c => c.size))
   const number = focused && focused.opacity > 0 ? focused.number : undefined
-  const focusY = y(s.parts.findIndex(part => part.id === s.focus))
   const annotationY = y(s.parts.findIndex(part => part.id === s.annotationPart))
   const screenY = (py: number) => h * .45 + shift + (py - h * .45) * scale
   const drawing = <svg data-device="through_line" data-object={s.obj} width={w} height={h}
@@ -56,7 +58,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
           }) : <rect x={left} y={part.kind === 'bar' ? py - 22 : py - 4 * part.thickness}
             width={(right - left) * (part.kind === 'bar' ? part.size / maxSize : 1)}
             height={part.kind === 'bar' ? 22 : 8 * part.thickness} fill={colour}/>}
-          <text data-part-label={region ? part.id : undefined} x={left} y={py + 38} fill={tokens.cream} fontFamily={HOUSE_FONTS.dek} fontSize={30}>{part.label}</text>
+          <text data-part-label={part.id} x={labelLeft} y={py + 10} fill={tokens.cream} fontFamily={HOUSE_FONTS.dek} fontSize={30}>{part.label}</text>
         </g>
       })}
       {s.connections.map((line, i) => {
@@ -64,26 +66,20 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
         return <line key={i} data-connection={`${line.from}:${line.to}`} x1={right} x2={right}
           y1={y(a)} y2={y(a) + (y(b) - y(a)) * line.amount} stroke={tokens.mint} strokeWidth={5}/>
       })}
-      {!region && number && <g data-number-on={focused!.id}>
-        <text x={left + 16} y={focusY - 16} fill={tokens.cream} fontFamily={HOUSE_FONTS.display} fontSize={tall ? 96 : 112}>
-          {Number(number.value.toFixed(2))}{number.unit}
-        </text>
-        <path d={`M${left} ${focusY - 6}H${left + w * .24}`} stroke={tokens.channel} strokeWidth={5}/>
-      </g>}
     </g>
-    {region && number && <g data-number-on={focused!.id}>
-      <text data-number-row="" x={left} y={numberSize + 20} fill={tokens.cream}
+    {number && <g data-number-on={focused!.id}>
+      <text data-number-row="" x={labelLeft} y={numberSize + 20} fill={tokens.cream}
         fontFamily={HOUSE_FONTS.display} fontSize={numberSize}>
         {Number(number.value.toFixed(2))}{number.unit}
       </text>
-      <path d={`M${left} ${numberSize + 28}H${left + w * .24}`} stroke={tokens.channel} strokeWidth={5}/>
+      <path d={`M${labelLeft} ${numberSize + 60}H${labelLeft + w * .24}`} stroke={tokens.channel} strokeWidth={5}/>
     </g>}
     {number && <g>
-      <text x={left} y={region ? h - 20 : h * .94} fill={tokens.cream} fontFamily={HOUSE_FONTS.data} fontSize={30}>{number.producer} · {number.date}</text>
+      <text data-producer="" x={labelLeft} y={h - 20} fill={tokens.cream} fontFamily={HOUSE_FONTS.data} fontSize={30}>{number.producer} · {number.date}</text>
     </g>}
     {s.annotation && <g>
-      <path d={`M${right} ${h * .82}L${w / 2 + (right - w / 2) * scale} ${screenY(annotationY)}`} stroke={tokens.cream} strokeWidth={2}/>
-      <text x={left} y={region ? h - 70 : h * .86} fill={tokens.cream} fontFamily={HOUSE_FONTS.dek} fontSize={32}>{s.annotation}</text>
+      <path d={`M${w / 2 + (right - w / 2) * scale} ${h - 88}L${w / 2 + (right - w / 2) * scale} ${screenY(annotationY)}`} stroke={tokens.cream} strokeWidth={2}/>
+      <text x={labelLeft} y={h - 76} fill={tokens.cream} fontFamily={HOUSE_FONTS.dek} fontSize={32}>{s.annotation}</text>
     </g>}
   </svg>
   return natural ? <RegionFit natural={natural} box={box}>{drawing}</RegionFit> : drawing
