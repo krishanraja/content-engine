@@ -4,7 +4,7 @@ import { supabase } from '../_supabase.js'
 import { loadConfig, loadVoiceBlock } from '../_content.js'
 import { loadCuratedVoices } from '../_creators.js'
 import { LANE_SLUG, mondayOf } from '../_growth.js'
-import { KRISH_DOMAINS, NOT_OURS, PACKET_FEATURES, brandChecksOf, brandNamesOf, heldProducts } from '../_aeo.js'
+import { KRISH_DOMAINS, NOT_OURS, PACKET_FEATURES, brandChecksOf, brandNamesOf, heldProducts, shippedFor } from '../_aeo.js'
 // The room lane stays in Control Center, so its 293-line helper does not come
 // with this route for one column list. Copied deliberately, named so a drift is
 // findable: api/_room.ts CONTACT_COLUMNS in krishanraja/control-center.
@@ -149,6 +149,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (cp.error) throw new Error(cp.error.message)
       citedPages = (cp.data || []) as Row[]
     }
+    // What each venture's engine says has shipped for its questions (Control
+    // Center's growth_answer_shipped, protocol 1.26.0): AEO asks those
+    // questions first, and re-checks them in an off week on Krish's approved
+    // go-live. Newest first, at most 25 a product.
+    let shipped: Row[] = []
+    if (productSlugs.length) {
+      const sh = await supabase.from('growth_answer_shipped')
+        .select('product_slug, question, query_id, url, shipped_at, engine_id, declared_at')
+        .in('product_slug', productSlugs)
+        .order('declared_at', { ascending: false })
+        .limit(25 * productSlugs.length)
+      if (sh.error) throw new Error(sh.error.message)
+      shipped = (sh.data || []) as Row[]
+    }
 
     const out = subjects.map(s => {
       const id = String(s.id)
@@ -172,6 +186,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // A venture's distinctive names and its brand-accuracy checks (brief, B3 and B6), and whether its engine is held (B4).
         brand_names: brandNamesOf(s.brand_names),
         brand_checks: brandChecksOf(s.brand_checks),
+        ...(s.kind === 'venture' && product ? { shipped: shippedFor(shipped, product) } : {}),
         ...(s.kind === 'venture' ? { engine_held: !!product && held.has(product) } : {}),
         room_target: room ? {
           id: room.id,
