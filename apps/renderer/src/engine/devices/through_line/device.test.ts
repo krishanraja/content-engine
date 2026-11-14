@@ -188,3 +188,84 @@ it.each(['9:16', '16:9'] as const)('keeps the number box and every label box dis
     }
   }
 })
+
+it.each(['9:16', '16:9'] as const)('separates every text box from rungs, bars, dot grids and strokes at every %s fixture frame', aspect => {
+  type Bounds = { name: string; left: number; top: number; right: number; bottom: number }
+  const intersects = (a: Bounds, b: Bounds) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top
+  // Include the fixture's key frames and every intervening camera/count frame. Inspect the
+  // emitted geometry, not layout constants, in both ordinary slots and RegionFit regions.
+  for (const box of [
+    { left: 0, top: 0, width: aspect === '9:16' ? 1080 : 1920, height: aspect === '9:16' ? 1920 : 1080 },
+    { left: 0, top: 0, width: aspect === '9:16' ? 800 : 1600, height: aspect === '9:16' ? 850 : 800 },
+    markRegion({ left: 60, top: 280, width: 800, height: 780 }),
+    markRegion({ left: 96, top: 140, width: 1728, height: 600 }),
+  ]) for (let frame = object.fromFrame; frame < object.toFrame; frame++) {
+    const markup = renderToStaticMarkup(Device({ ...overlayTestProps, object, events, frame, aspect, box }))
+    const stack = [{ scale: 1, x: 0, y: 0, part: '' }]
+    const labels: Bounds[] = [], shapes: Bounds[] = []
+    const grids = new Map<string, Bounds>()
+    for (const match of markup.matchAll(/<g\b([^>]*)>|<\/g>|<(text|rect|circle|line|path)\b([^>]*?)(?:\/>|>)([^<]*)/g)) {
+      if (match[0] === '</g>') { stack.pop(); continue }
+      const parent = stack.at(-1)!
+      if (match[1] !== undefined) {
+        const attrs = match[1]
+        const transform = attrs.match(/transform="translate\(([^ ]+) ([^)]+)\) scale\(([^)]+)\) translate\(([^ ]+) ([^)]+)\)"/)
+        const scale = transform ? Number(transform[3]) : 1
+        stack.push({ scale: parent.scale * scale,
+          x: parent.x + (transform ? parent.scale * (Number(transform[1]) + scale * Number(transform[4])) : 0),
+          y: parent.y + (transform ? parent.scale * (Number(transform[2]) + scale * Number(transform[5])) : 0),
+          part: attrs.match(/data-part="([^"]+)"/)?.[1] ?? parent.part })
+        continue
+      }
+      const tag = match[2]!, attrs = match[3]!
+      const value = (key: string) => attrs.match(new RegExp(`(?:^| )${key}="([^"]*)"`))?.[1]
+      const n = (key: string) => Number(value(key) ?? 0)
+      const bounds = (name: string, left: number, top: number, right: number, bottom: number): Bounds => ({ name,
+        left: parent.x + parent.scale * left, right: parent.x + parent.scale * right,
+        top: parent.y + parent.scale * top, bottom: parent.y + parent.scale * bottom })
+      if (tag === 'text') {
+        const text = match[4]!.replace(/&amp;/g, '&'), size = n('font-size')
+        const face = value('font-family')!.includes('Anton') ? 'anton' : value('font-family')!.includes('Plex Mono') ? 'mono' : 'fraunces'
+        labels.push(bounds(text, n('x'), n('y') - size * 1.1,
+          n('x') + textWidth(face, text, size), n('y') + size * .25))
+      } else if (tag === 'rect') {
+        shapes.push(bounds(`${parent.part} rung/bar`, n('x'), n('y'), n('x') + n('width'), n('y') + n('height')))
+      } else if (tag === 'circle') {
+        // Bound the entire grid, including the reserved zero-area marks, so a label
+        // cannot slip into an empty position and collide when those marks grow.
+        const dot = bounds(`${parent.part} dot grid`, n('cx') - n('r'), n('cy') - n('r'), n('cx') + n('r'), n('cy') + n('r'))
+        const grid = grids.get(parent.part)
+        grids.set(parent.part, grid ? { name: dot.name, left: Math.min(grid.left, dot.left), top: Math.min(grid.top, dot.top),
+          right: Math.max(grid.right, dot.right), bottom: Math.max(grid.bottom, dot.bottom) } : dot)
+      } else {
+        const halfStroke = n('stroke-width') / 2
+        const segment = (x1: number, y1: number, x2: number, y2: number) => shapes.push(bounds(tag,
+          Math.min(x1, x2) - halfStroke, Math.min(y1, y2) - halfStroke,
+          Math.max(x1, x2) + halfStroke, Math.max(y1, y2) + halfStroke))
+        if (tag === 'line') segment(n('x1'), n('y1'), n('x2'), n('y2'))
+        else {
+          let x = 0, y = 0
+          for (const command of value('d')!.matchAll(/([MLHV])([^MLHV]+)/g)) {
+            const args = command[2]!.trim().split(/[ ,]+/).map(Number)
+            const nx = command[1] === 'V' ? x : args[0]!
+            const ny = command[1] === 'H' ? y : command[1] === 'V' ? args[0]! : args[1]!
+            if (command[1] !== 'M') segment(x, y, nx, ny)
+            x = nx; y = ny
+          }
+        }
+      }
+    }
+    shapes.push(...grids.values())
+    expect(labels.length).toBeGreaterThanOrEqual(6)
+    expect(shapes.length).toBeGreaterThanOrEqual(8)
+    for (const label of labels) {
+      for (const shape of shapes) expect(intersects(label, shape),
+        `${aspect} ${box.width}x${box.height} frame ${frame}: ${label.name} / ${shape.name}`).toBe(false)
+      for (const other of labels) if (other !== label) expect(intersects(label, other),
+        `frame ${frame}: ${label.name} / ${other.name}`).toBe(false)
+    }
+    const svgHeight = Number(markup.match(/<svg[^>]* height="([^"]+)"/)![1])
+    const credit = labels.find(label => label.name.includes(' · '))
+    if (credit) expect(credit.bottom).toBeLessThan(svgHeight)
+  }
+})
