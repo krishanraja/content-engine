@@ -17,6 +17,8 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from velib import designlock, qc, qc_captions, qc_composition as comp
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ocr_guard import real_ocr  # noqa: E402
 import ve
 
 PIN = ROOT.parents[1] / 'toolchain/ffmpeg-n8.1.2-53-g1005b294ff-win64-gpl-8.1/bin/ffmpeg.exe'
@@ -37,6 +39,7 @@ class Composition(unittest.TestCase):
     def measure(self, words=(), **kwargs):
         return comp.measure(self.image(), self.lock, ocr_words=words, **kwargs)
 
+    @real_ocr
     def test_fixtures(self):
         base = ROOT / 'fixtures/ve/design-lock'
         files = [(base / 'approved' / f'{prefix}-f{i}.jpg', True)
@@ -161,7 +164,7 @@ class Composition(unittest.TestCase):
         self.assertFalse(report['checks']['platform_zone']['pass'])
         self.assertFalse(report['checks']['fill_pct']['pass'])
 
-    @unittest.skipUnless(shutil.which('tesseract'), 'tesseract is missing')
+    @real_ocr
     def test_real_font_ocr(self):
         for size, small in [(20, True), (30, False)]:
             image = self.image()
