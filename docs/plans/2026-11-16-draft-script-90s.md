@@ -1,11 +1,11 @@
-Amazon, Microsoft, Google and Meta now spend more on AI data centres than all the spare cash their businesses make. And the AI tools your team pays for run inside those data centres. So how do these four pay for it?
+Amazon, Microsoft, Google and Meta will spend nearly three quarters of a trillion dollars this year. It goes on the buildings your AI tools run in. So who pays for it?
 
-They're called hyperscalers, and a hyperscaler is a landlord for computers. It builds giant data centres today, then earns it back in rent for years.
+These four are called hyperscalers. A hyperscaler is like a landlord that rents out computing power. It builds the data centre first, then earns rent for years from the AI firms you buy from.
 
-They used to pay out of profits. Now they borrow and sell new shares.
+They used to pay for it out of spare cash. Now about one in three dollars they spend on building is borrowed.
 
-But people blame data centres for higher power bills. In this month's US elections there were 41 local votes on new ones. Nearly every vote said no. So now a landlord has to win over the town and pay for its own power. And every month of delay costs interest before the rent comes in. Those costs get passed on.
+Borrowing to build only works if the rent starts on time. But data centres use huge amounts of power. And many people blame them for rising power bills. In this month's US elections, town after town voted to limit new ones. Every month of delay is more interest, with no new rent coming in. And those costs get passed on, all the way to your AI bill.
 
-So my call is that AI won't get cheaper as fast as the sellers say. If I ran a business, I'd ask my AI suppliers which landlord they run on. If it borrows to build, I wouldn't count on my bill coming down.
+So my call is that AI won't get cheaper as fast as people hope. If I were buying AI for a team, I'd budget for that bill to stay flat next year, not fall.
 
 The full story is free at makeyourmindup.ai.
