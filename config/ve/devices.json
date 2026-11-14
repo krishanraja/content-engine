@@ -1,5 +1,8 @@
 {
   "devices": {
+    "mint_ring": {
+      "verbs": ["draw", "exit"]
+    },
     "office_floor": {
       "verbs": [
         "enter",
