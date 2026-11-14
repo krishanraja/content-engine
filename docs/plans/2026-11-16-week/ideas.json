@@ -702,6 +702,105 @@
           ],
           "fixed": "Added the line that ties the analogies to AI and said plainly what Home Depot's two AIs each do, after both readers stumbled there (12 Nov 2026)"
         }
+      },
+      {
+        "kind": "recorded",
+        "format": "Said to camera",
+        "style": "to_camera",
+        "series": "mind_the_gap",
+        "piece_id": "701a2c55-7400-4dc8-99cb-d6001147ae16",
+        "covers": [
+          "701a2c55-7400-4dc8-99cb-d6001147ae16",
+          "ccbe548e-9c51-4e7d-819b-f629c7e2ddc9"
+        ],
+        "title": "Which of your habits will cost you your job once AI is at work?",
+        "hook": "Which of your habits will cost you your job once AI is at work?",
+        "so_what": "AI can't be blamed or sacked, so the people who keep their jobs are the ones who check its work and put their own name on it, and the habits that cost jobs are waiting to be told, passing work on unchecked and blaming the computer.",
+        "story": {
+          "headline": "Which of your habits will cost you your job once AI is at work?",
+          "hook": "If an AI loses your company a million pounds, who gets sacked? You can't sack the AI.",
+          "evidence": "IBM's 2026 study of 1,500 HR chiefs and 8,800 staff in 28 countries (April to June 2026): 71% of HR chiefs name supervising, checking and overriding AI output as the workforce's most essential skill, while only 29% of employees rank judgment as important; 43% of employees say that when AI goes wrong the blame already falls on them. On LBC on 12 Nov 2026 Kai-Fu Lee, former president of Google China, said AI agents cannot be accountable, so the opportunity goes to people courageous enough to own the accountability (his own claim).",
+          "chain": "AI takes the doing; someone still answers for the result; bosses now hire and keep for the answering; most staff still think the doing is the job.",
+          "whats_going_on": "The skill bosses rank first and the one staff rank first have split, and the split is where jobs go.",
+          "where_we_land": "Three habits cost the job: waiting to be told, passing AI work on unchecked, and 'the computer said so'. The one that keeps it is owning the work, mistakes and all."
+        },
+        "why_now": "Kai-Fu Lee said it on LBC on 12 Nov 2026, and IBM's study of 8,800 staff (21 Sep 2026) shows bosses and workers now rank the skill that matters most very differently.",
+        "fact": "71% of HR chiefs say the most essential workforce skill is the ability to supervise, validate and override AI outputs; only 29% of employees rank judgment as important (IBM CHRO study, 21 Sep 2026).",
+        "source": {
+          "label": "IBM newsroom, 21 Sep 2026: New IBM CHRO Study, AI Puts Critical Thinking at the Center of Workforce Priorities",
+          "url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities"
+        },
+        "copy": "A confronting minute to camera on the habits that cost a job once AI is at work, and the one that keeps it. You can't sack an AI, so bosses keep the people who check its work and own the result, and IBM's numbers show most workers haven't noticed.",
+        "pitch": {
+          "see": "Him to camera asking which of your habits will cost you your job, then naming three habits that do and the one that saves it.",
+          "lands": "It is uncomfortable on purpose: most viewers will recognise one of the three habits in themselves, and it ends on one thing he does from today.",
+          "why_now": "Kai-Fu Lee on LBC, 12 Nov 2026; IBM's study of 8,800 staff, 21 Sep 2026.",
+          "share": "You can't sack an AI. So who takes the blame?"
+        },
+        "direction": {
+          "look": "To camera, tight and close, house mint off-day look",
+          "format": "One short, 9:16, about 75 seconds",
+          "frames": [
+            {
+              "words": "You can't sack an AI",
+              "picture": "him to camera, close"
+            },
+            {
+              "words": "Bosses: 71% pick checking AI. Staff: 29% pick judgment. (IBM, 2026)",
+              "picture": "two plain bars side by side, source and date beneath"
+            },
+            {
+              "words": "Waits to be told / Passes it on unchecked / \"The computer said so\"",
+              "picture": "three plain cards that drop in as he names each habit"
+            }
+          ],
+          "tone": "Blunt and dry, a little uncomfortable, never preachy",
+          "kit": "Off-day bed and house mint from the brand kit; no series sting",
+          "inspo_url": "https://youtu.be/GBjWcUL77UQ"
+        },
+        "inspiration": {
+          "label": "LBC: Kai-Fu Lee on AI and white-collar jobs",
+          "url": "https://youtu.be/GBjWcUL77UQ",
+          "saved": "Saved 12 Nov"
+        },
+        "adds": "The interview spends ten minutes on Nvidia, chips and his book and touches accountability near the end; ours makes the confronting question the whole piece, adds IBM's dated numbers on what bosses and staff each rank first, names three habits that cost a job, and ends on one thing to do.",
+        "learned_from": [
+          "His Reject on the 9 Nov board, 3 Nov: \"I also don't really understand the point of it or what the takeaway is\" (so the takeaway is said plainly and last)",
+          "His words on this card, 12 Nov: \"It should be incredibly confronting.\""
+        ],
+        "asks": [
+          {
+            "id": "ccbe548e-9c51-4e7d-819b-f629c7e2ddc9",
+            "said": "We need to do a piece on what kind of human qualities are going to result in job loss versus succeeding in the future era. It should be incredibly confronting.",
+            "scope": "as_typed"
+          }
+        ],
+        "source_tag": "his_card",
+        "ties_to": "Fri: mind.the.gap",
+        "recommended": false,
+        "research_prompt": "Find the strongest primary-source evidence, dated 1 Jan 2025 to 16 Nov 2026, on which human qualities employers now reward or cut as AI takes on work: surveys of bosses and of staff (IBM IBV CHRO 2026, WEF Future of Jobs, LinkedIn, Microsoft Work Trend Index), layoffs that name roles cut for AI, and what accountability or judgment means in hiring. Give every claim its source link and date, and say which are a company's own claims.",
+        "script": "Which of your habits will cost you your job once AI is at work?\n\nIf an AI loses your company a million pounds, who gets sacked? You can't sack the AI. So a person has to take the blame.\n\nNow, the tech giant IBM asked bosses which skill matters most. Most of them gave the same answer: check the AI's work, and fix it when it's wrong. Then IBM asked the workers. Most of them didn't even pick it. So bosses want checkers, and most workers haven't noticed.\n\nSo here's the uncomfortable bit. If you wait to be told what to do, AI is already better at that. If you pass the AI's work to your boss without checking it, the AI can do that part without you. And if your only excuse is \"the computer said so\", I reckon you're easy to replace.\n\nThe people who keep their jobs will be brave enough to own the work, mistakes and all.\n\nSo from today, I check everything AI writes for me before I put my name on it.",
+        "read_back": {
+          "readers": [
+            "read-back K (fresh reader, a 12-year-old hearing it once)",
+            "read-back L (fresh reader, a 12-year-old hearing it once)"
+          ],
+          "found": "nothing lost",
+          "says": [
+            "If you just do what you're told, or pass on the AI's work without checking it, AI can replace you, so check everything AI makes before you put your name on it and own your mistakes.",
+            "Bosses want workers who check AI's work and own mistakes, but most workers haven't noticed; wait for orders, pass AI work unchecked or blame the computer and you're easy to replace."
+          ],
+          "against": 24,
+          "repeat": "Four earlier fresh readers (C, D, E, F) checked it against all 24 recent pieces and off days: no repeat; nearest were the 'check the AI' tips and 'Claude is eating the jobs of its own humans', on a different angle.",
+          "versus": "A separate reader who saw both: ADDS, the original only gestures at accountability near its end, while ours makes it the whole piece with a dated IBM number, three habits and one action."
+        },
+        "id": "701a2c55-7400-4dc8-99cb-d6001147ae16",
+        "from_inspiration": {
+          "action_id": "7b4d3a28-2b85-47fc-893f-b41c9bfdbeb7",
+          "card_id": "ccbe548e-9c51-4e7d-819b-f629c7e2ddc9",
+          "card_name": "youtube_GBjWcUL77UQ.mp4"
+        },
+        "source_kind": "his"
       }
     ],
     "thu": [
