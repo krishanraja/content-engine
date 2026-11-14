@@ -3,7 +3,8 @@
     "The shortlist for the one sound on the big moment (THE_BAR ruling 11, \"Only the big moment\"; scripts/velib/sfx.py).",
     "A row is a candidate, never an approval: config/sfx-approved.json holds only what Krish approved by ear, in his words.",
     "provider_id comes from Epidemic Sound's search. file (a path under MINDMAKE_MUSIC_ROOT) and sha256 are filled only after Krish says yes to downloading it; his plan covers sound effects (29 Oct 2026).",
-    "gain_db is the level the sound is auditioned at, relative to full scale; ve sfx audition measures each hit against his voice."
+    "gain_db is the level the sound is auditioned at, relative to full scale; ve sfx audition measures each hit against his voice.",
+    "One shortlist for every sound (fleet audit 14 Nov, ve-4): role says what a candidate is for, big_moment (THE_BAR ruling 11, the one sound on the big moment), handover or hit (ve's ingredients, docs/ve/INGREDIENTS.md \"Sound\"). The seven handover and hit candidates found on 14 Nov came from config/ve/sfx-candidates.json, which this file replaces; nothing here is approved."
   ],
   "candidates": [
     {
@@ -17,7 +18,8 @@
       "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KHY21QFRTF80TN73V99ENPZW.mp3",
       "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
       "file": null,
-      "sha256": null
+      "sha256": null,
+      "role": "big_moment"
     },
     {
       "id": "low-thud-wood",
@@ -30,7 +32,8 @@
       "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KHY152J1C4ZM6JV977V4E6YW.mp3",
       "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
       "file": null,
-      "sha256": null
+      "sha256": null,
+      "role": "big_moment"
     },
     {
       "id": "stamp-rubber",
@@ -43,7 +46,8 @@
       "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01HY1C21MBT83VFRQ7RCYV50YK.mp3",
       "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
       "file": null,
-      "sha256": null
+      "sha256": null,
+      "role": "big_moment"
     },
     {
       "id": "ding-desk-bell",
@@ -56,7 +60,8 @@
       "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KK1V6T0YFMYNFRK81JRSBEEM.mp3",
       "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
       "file": null,
-      "sha256": null
+      "sha256": null,
+      "role": "big_moment"
     },
     {
       "id": "ding-notification",
@@ -69,7 +74,8 @@
       "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KK1V6T1W2H8B6MRXHVBWHPZH.mp3",
       "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
       "file": null,
-      "sha256": null
+      "sha256": null,
+      "role": "big_moment"
     },
     {
       "id": "paper-rip-stub",
@@ -81,6 +87,105 @@
       "why": "a receipt or cheque torn off, for the paper-cutout style or the receipt cover",
       "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KHQY8562Q3RRWWJQCCGY1G9P.mp3",
       "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null,
+      "role": "big_moment"
+    },
+    {
+      "id": "whoosh-air",
+      "role": "handover",
+      "title": "Swooshes, Whoosh, Designed, Generic, Air",
+      "provider": "Epidemic Sound",
+      "provider_id": "c406a00b-d4b3-42e9-ba76-707ba5174543",
+      "duration_ms": 546,
+      "gain_db": -8,
+      "why": "a short, dry handover sound between beats (docs/ve/INGREDIENTS.md, \"Sound\")",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KK1V6VAB5QFWRV0ZPZ5KB4X2.mp3",
+      "found_by": "Epidemic Sound search, 14 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "whoosh-fast-01",
+      "role": "handover",
+      "title": "Swooshes, Swish, Stick, Bendy, Whoosh, Air, Fast 01",
+      "provider": "Epidemic Sound",
+      "provider_id": "b7c25d77-694e-4b55-b99b-539c940a9b33",
+      "duration_ms": 268,
+      "gain_db": -8,
+      "why": "a short, dry handover sound between beats (docs/ve/INGREDIENTS.md, \"Sound\")",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KHTV0CZ0JMNEAD006F69WXSD.mp3",
+      "found_by": "Epidemic Sound search, 14 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "whoosh-fast-04",
+      "role": "handover",
+      "title": "Swooshes, Swish, Stick, Bendy, Whoosh, Air, Fast 04",
+      "provider": "Epidemic Sound",
+      "provider_id": "f50b2cde-d934-4069-ab4d-d607ad8f1198",
+      "duration_ms": 396,
+      "gain_db": -8,
+      "why": "a short, dry handover sound between beats (docs/ve/INGREDIENTS.md, \"Sound\")",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KHTV0CTZAQTK630HV4G13BAH.mp3",
+      "found_by": "Epidemic Sound search, 14 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "whoosh-deep-reversed",
+      "role": "handover",
+      "title": "Swooshes, Whoosh, Short, Deep Reversed, Dry",
+      "provider": "Epidemic Sound",
+      "provider_id": "14f0f3a4-cc2b-4d8b-b453-49fd070c591d",
+      "duration_ms": 878,
+      "gain_db": -8,
+      "why": "a short, dry handover sound between beats (docs/ve/INGREDIENTS.md, \"Sound\")",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KJAHY45R74XQ1FAVBZVKSSFT.mp3",
+      "found_by": "Epidemic Sound search, 14 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "hit-wood-thud",
+      "role": "hit",
+      "title": "Wood, Impact, Deep Thud",
+      "provider": "Epidemic Sound",
+      "provider_id": "2563d97c-a43a-495d-9f32-4818ed0a88ef",
+      "duration_ms": 408,
+      "gain_db": -8,
+      "why": "a short, dry hit on a card or a word landing (docs/ve/INGREDIENTS.md, \"Sound\")",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KHY1K38MSZ7QPDVTZ9C0RW92.mp3",
+      "found_by": "Epidemic Sound search, 14 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "hit-ui-confirm",
+      "role": "hit",
+      "title": "User Interface, Click, UI Buttons, Confirm, Dull",
+      "provider": "Epidemic Sound",
+      "provider_id": "46216b97-17a4-48ec-a7ec-999132ef096a",
+      "duration_ms": 321,
+      "gain_db": -8,
+      "why": "a short, dry hit on a card or a word landing (docs/ve/INGREDIENTS.md, \"Sound\")",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KK1V6TCH3F2VDNFF9JEPW165.mp3",
+      "found_by": "Epidemic Sound search, 14 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "hit-ui-select",
+      "role": "hit",
+      "title": "User Interface, Click, Button Press Click, Tap, Main Menu, Select 01",
+      "provider": "Epidemic Sound",
+      "provider_id": "3190076b-c1d8-4b6e-9a02-e903fe7a78cc",
+      "duration_ms": 360,
+      "gain_db": -8,
+      "why": "a short, dry hit on a card or a word landing (docs/ve/INGREDIENTS.md, \"Sound\")",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KJQ04GQ0NEGV28KTGHC30FWD.mp3",
+      "found_by": "Epidemic Sound search, 14 Nov 2026 (no download)",
       "file": null,
       "sha256": null
     }
