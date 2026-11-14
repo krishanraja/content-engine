@@ -1,5 +1,6 @@
 import { Device as Checklist } from './checklist'
 import { Device as LivingScreen } from './living_screen'
+import { Device as Takeover } from './takeover'
 import { Device as LadderStage } from './ladder_stage'
 import { Device as QuotaChart } from './quota_chart'
 import { Device as AgentSwarm } from './agent_swarm'
@@ -40,6 +41,7 @@ export const DEVICES: DeviceRegistry = {
   checklist: Checklist,
   receipt_print: ReceiptPrint,
   slam_word: SlamWord,
+  takeover: Takeover,
   living_screen: LivingScreen,
   ladder_stage: LadderStage,
   quota_chart: QuotaChart,
