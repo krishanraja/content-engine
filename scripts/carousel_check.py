@@ -11,7 +11,7 @@ DECK.json (schema carousel-deck/1) is the deck's words as the cards carry them, 
   {"schema": "carousel-deck/1", "title": "...",
    "five_whys": [{"q": "Why ...?", "a": "..."}, x5],
    "arc": {"what": 1, "happened": [1, 2], "why": 3, "so_what": [5, 6, 7], "do": [8, 9]},
-   "cards": [{"headline": "...", "line": "...", "picture": "...", "source": "on the trend card"}, ..., {"cta": "Follow for more"}],
+   "cards": [{"headline": "...", "line": "...", "picture": "...", "source": "on the trend card"}, ..., {"headline": "the takeaway.", "picture": "...", "cta": "Subscribe free (makeyourmindup.ai)"}],
    "read_back": [{"reader": "...", "answers": {"what": "...", "happened": "...", "why": "...", "so_what": "...", "do": "..."}}],
    "explains": {"git": "the tool programmers use to save code"}}
 
@@ -19,7 +19,9 @@ What it refuses (each is what a Git deck of 12 or 13 Nov got wrong; docs/CAROUSE
   - no five whys asked before writing, or no card for what it is, what happened, why, the wider trend or what to do,
     or those steps out of order;
   - a wider-trend card with no evidence from outside the story ("source");
-  - more than 10 cards, the cover and the call-to-action card included, or a last card without "Follow for more";
+  - more than 10 cards, the cover and the last card included, or a last card that is not the brand palette's close
+    (house_close_slide: the piece's takeaway as its headline, then "Subscribe free (makeyourmindup.ai)", never "Follow for
+    more"; Ruling, Krish, 2026-11-14); a deck marked "good_news": true keeps his fixed good-news close instead;
   - a card whose headline is not a whole sentence a stranger reads in about two seconds (3 to 12 words, ending . ! ?;
     the cover may drop the full stop), so no card leads with a label such as "CODE CHANGES ANTHROPIC MERGED PER DAY";
   - headlines that together take longer than ten seconds to read (over 50 words across the deck);
@@ -49,6 +51,33 @@ READERS = 2
 
 def words(text: str) -> list[str]:
     return re.findall(r"[A-Za-z0-9][A-Za-z0-9'’,.%+×-]*", text or '')
+
+
+# The last card is the brand palette's close (config/brand-palette.json, house_close_slide): the piece's takeaway, then
+# one small action (Ruling, Krish, 2026-11-14: the carousel ends on the palette's close, the takeaway then "Subscribe free
+# (makeyourmindup.ai)"; his words: "I agree with everything else until Batch 6"). Saturday's good news keeps his fixed
+# close (good_news_close).
+HOUSE_CLOSE = 'Subscribe free (makeyourmindup.ai)'
+GOOD_NEWS_CLOSE = 'If this inspires you to MAKE THE WORLD BETTER by combining your ideas + AI, follow for more'
+
+
+def close_problems(deck: dict, cards: list) -> list:
+    last = cards[-1] if cards and isinstance(cards[-1], dict) else {}
+    foot = ' '.join(str(last.get(k) or '') for k in ('line', 'cta')).lower()
+    if deck.get('good_news') is True:
+        if GOOD_NEWS_CLOSE.lower() not in foot:
+            return [f'the last card is the good-news close: "{GOOD_NEWS_CLOSE}" over the centred mark']
+        return []
+    out = []
+    if not str(last.get('headline') or '').strip():
+        out.append('the last card leads with the piece\'s takeaway as its headline (house_close_slide)')
+    if 'subscribe free' not in foot or 'makeyourmindup.ai' not in foot:
+        out.append(f'the last card ends on the palette\'s close: the takeaway, then "{HOUSE_CLOSE}" and the wordmark small '
+                   'bottom right (house_close_slide)')
+    if 'follow for more' in foot:
+        out.append('the last card says "Subscribe free (makeyourmindup.ai)", not "Follow for more" (retired by the palette, '
+                   '12 Nov 2026)')
+    return out
 
 
 def problems(deck: dict) -> list[str]:
@@ -83,9 +112,7 @@ def problems(deck: dict) -> list[str]:
     so = so if isinstance(so, list) else [so]
     if not any(isinstance(i, int) and 1 <= i <= len(cards) and str((cards[i - 1] or {}).get('source') or '').strip() for i in so):
         out.append('the wider-trend card names its evidence ("source" on that card): a trend is shown, never asserted')
-    last = cards[-1] if isinstance(cards[-1], dict) else {}
-    if 'follow for more' not in f"{last.get('line') or ''} {last.get('cta') or ''}".lower():
-        out.append('the last card ends on "Follow for more" over the centred wordmark (Krish, 5 Nov 2026)')
+    out.extend(close_problems(deck, cards))
     jargon = json.loads(WORDS.read_text(encoding='utf-8'))['jargon'] if WORDS.is_file() else []
     explained = {k.lower() for k in (deck.get('explains') or {}) if str((deck.get('explains') or {})[k]).strip()}
     total = 0
