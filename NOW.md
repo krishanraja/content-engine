@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The lens radar is gated like the other recovery routes: the dashboard's cookie or the CRON_SECRET bearer in constant time, closed when neither is set, and no secret is read from the query string; LENS_RADAR_SECRET is retired from the required list and the example env. (2026-11-14)
 - The runtime folders in config/studio.json drive_ids are found by their Drive IDs: the library pending list answers folders=1 with where each is now (api/library/_runtimeFolders.ts, the walk built for Heartside, now _driveFolder.ts); the library sync uses the found library root ahead of the configured path and writes %LOCALAPPDATA%\makeyourmindup\drive-paths.json, which music (music.py, velib/sfx.py, scripts/drive_paths.py) reads before its configured path. A rename above the library or music root (11 Nov) no longer breaks either home computer. (2026-11-14)
 - A Growth post is tied to its board item by its Buffer post id: op live now carries the item it was bound to onto the live row, and op bindings (read only) answers each Buffer post id's item, artifact and whether it went live, so the board tick and Control Center read the binding instead of matching a title (I-09, content-engine side). (2026-11-14)
 - GET /api/research-library/find?q= (engine key, read only) searches the research the piece materials store already holds, the same materials 6 Research library mirrors, through research_find (migration 20261202090000, applied live; about 0.4 s on the live store), so a session finds earlier research before paying for more (I-16). (2026-11-14)
@@ -48,7 +49,7 @@ Older lines: `docs/history/2026-11-14-NOW-moved-9.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-14): The recordings upload and the archive read drive-paths.json the same way (media_inbox, archive_root).
+- Next (2026-11-14): Remove LENS_RADAR_SECRET from the Vercel project content-engine when convenient; nothing reads it now.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
