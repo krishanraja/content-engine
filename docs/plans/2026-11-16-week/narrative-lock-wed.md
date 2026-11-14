@@ -74,3 +74,5 @@ Answer: Building is working for small tools someone owns, and the costs that cat
 
 ## Music bed
 NO CURVES (Instrumental Version), Superintendent McCupcakes (Epidemic Sound), `no-curves-instrumental` in `config/music-library.json`, the one series bed in the ledger, in the one bed shape (`config/music-bed.json`).
+
+Signed by Krish: "approve the lock for weds", 2026-11-14, lock sha256 80524be95101ec8f6017cb1fb026512c062b13ec91ed9b227c93c0460c60e152
