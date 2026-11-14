@@ -23,6 +23,7 @@ import { Device as KineticStat } from './kinetic_stat'
 import { Device as ThreadCard } from './thread_card'
 import { Device as PassportPage } from './passport_page'
 import { Device as Scribble } from './scribble'
+import { Device as MintRing } from './mint_ring'
 import { Device as Headline } from './headline'
 import { Device as Sticker } from './sticker'
 import { Device as Stamp } from './stamp'
@@ -63,4 +64,5 @@ export const DEVICES: DeviceRegistry = {
   thread_card: ThreadCard,
   passport_page: PassportPage,
   scribble: Scribble,
+  mint_ring: MintRing,
 }
