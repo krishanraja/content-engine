@@ -30,7 +30,6 @@ FLOOR = ROOT / 'config' / 'rejection-floor.json'
 GROUPS = ROOT / 'config' / 'floor-groups.json'
 BATCH = 'floor-groups-2026-11-04'
 VENTURE = 'publication'
-DEFAULT_PROJECT = 'gojpffsrxybbpbdzzrvs'
 KEY = re.compile(r'^[a-z][a-z0-9_]{1,63}$')
 DASHES = ('—', '–')
 MAX_QUOTES = 5
@@ -118,7 +117,10 @@ def sql_api(query):
     token = os.environ.get('SUPABASE_ACCESS_TOKEN')
     if not token:
         raise SystemExit('floor_group: --seed needs SUPABASE_ACCESS_TOKEN (the Supabase management key) in the environment')
-    project = os.environ.get('SUPABASE_PROJECT_REF') or DEFAULT_PROJECT
+    # The project address is never kept in this public repository (fleet audit I-01, 2026-11-14).
+    project = os.environ.get('SUPABASE_PROJECT_REF')
+    if not project:
+        raise SystemExit('floor_group: --seed needs SUPABASE_PROJECT_REF (the main database project) in the environment')
     req = urllib.request.Request(f'https://api.supabase.com/v1/projects/{project}/database/query',
                                  data=json.dumps({'query': query}).encode('utf-8'), method='POST',
                                  headers={'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'})
