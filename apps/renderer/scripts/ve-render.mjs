@@ -11,6 +11,7 @@ import { promisify } from 'node:util'
 import { bundle } from '@remotion/bundler'
 import { selectComposition, renderMedia, renderStill } from '@remotion/renderer'
 import { tsImport } from 'tsx/esm/api'
+import { chunkFrames, joinChunks, renderChunks, renderKey } from './ve-chunks.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 const run = promisify(execFile)
@@ -224,10 +225,28 @@ async function main() {
     }
     await mkdir(path.dirname(path.resolve(output)), { recursive: true })
     const raw = path.join(temporary, 'raw.mp4')
-    await renderMedia({ serveUrl, composition: { ...composition, durationInFrames: clock.frames },
-      inputProps: transportProps, outputLocation: raw, codec: 'h264', crf: 18, scale, sampleRate, browserExecutable: browser, chromiumOptions: { gl: 'swangle' } })
+    const common = { serveUrl, composition: { ...composition, durationInFrames: clock.frames }, inputProps: transportProps,
+      sampleRate, browserExecutable: browser, chromiumOptions: { gl: 'swangle' } }
+    // A cut longer than one chunk renders in frame-range chunks kept in the render cache, so a failure part way loses
+    // only the chunk it was on and a rerun picks up from there (ve-chunks.mjs). A short cut is one render, as before.
+    const size = chunkFrames()
+    let chunkDir
+    if (clock.frames > size) {
+      const key = await renderKey({ props: transportProps, id, scale, size, sourceDir: path.join(root, 'apps/renderer/src'), publicDir })
+      chunkDir = path.join(root, '.cache/ve-render-chunks', key)
+      const files = await renderChunks({ frames: clock.frames, size, dir: chunkDir,
+        renderChunk: (start, end, file) => renderMedia({ ...common, outputLocation: file, codec: 'h264', crf: 18, scale,
+          frameRange: [start, end], muted: true }) })
+      const sound = path.join(temporary, 'sound.wav')
+      await renderMedia({ ...common, outputLocation: sound, codec: 'wav' })
+      await joinChunks(files, raw, { audio: sound, temporary })
+    } else {
+      await renderMedia({ ...common, outputLocation: raw, codec: 'h264', crf: 18, scale })
+    }
     await correctAudio(raw, path.resolve(output), stemSrc, inputProps.audio.stem.trimBeforeFrames / inputProps.fps,
       temporary, lagSamples, clock.lead / inputProps.fps)
+    // The chunks are kept only until the render they belong to is handed over.
+    if (chunkDir) await rm(chunkDir, { recursive: true, force: true })
     if ((await stat(output)).size === 0) throw new Error('render produced an empty MP4')
     console.log(`ve render: ${path.resolve(output)}`)
   } finally {
