@@ -71,8 +71,11 @@ concurrency:
   group: sunday-ideas
   cancel-in-progress: false
 
+# pull-requests: write so the keep step can open the week's pull request (offday-revise.yml has had it all along). The
+# 13 Nov run for the week of 23 Nov failed there with "Resource not accessible by integration", and a `|| true` hid it.
 permissions:
   contents: write
+  pull-requests: write
   id-token: write
 
 jobs:
@@ -248,11 +251,15 @@ jobs:
           fi
           # The live board reads the week's branch before main: main, then what is on the branch, then these ideas.
           bash scripts/week_branch_keep.sh "$MONDAY" "$(git rev-parse HEAD)" "$auth"
-          if [ -z "$(gh pr list --head "offday-revise/$MONDAY" --state open --json number --jq '.[].number')" ]; then
-            gh pr create --head "offday-revise/$MONDAY" --base main --title "Sunday ideas for the week of $MONDAY" \
-              --body "The week's options for $MONDAY, written by .github/workflows/sunday-ideas.yml. The live board already shows them from this branch; it merges itself once CI is green (auto-merge.yml)." || true
-          fi
           python3 scripts/post-pack/board_web.py touch "$MONDAY" --source ideas || echo "::warning::The week's change signal was not bumped; the board shows the options at its next read."
+          # The pull request is how the week reaches main. A failure here fails the step, named, and never hides.
+          if [ -z "$(gh pr list --head "offday-revise/$MONDAY" --state open --json number --jq '.[].number')" ]; then
+            if ! gh pr create --head "offday-revise/$MONDAY" --base main --title "Sunday ideas for the week of $MONDAY" \
+              --body "The week's options for $MONDAY, written by .github/workflows/sunday-ideas.yml. The live board already shows them from this branch; it merges itself once CI is green (auto-merge.yml)."; then
+              echo "::error::Could not open the pull request for offday-revise/$MONDAY. If the log says 'Resource not accessible by integration', the repository setting Settings > Actions > General > 'Allow GitHub Actions to create and approve pull requests' is off: Krish turns it on, or a session opens the pull request by hand."
+              exit 1
+            fi
+          fi
 
       - name: The options are on the live board
         if: steps.guard.outputs.go == 'true' && steps.gate.outputs.passed == 'true'
@@ -260,10 +267,17 @@ jobs:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           MONDAY: ${{ steps.guard.outputs.monday }}
         run: |
-          # The view the live board draws, asked until each publishing day carries its options.
+          # The last step: the view the live board draws is asked until it is "built" (each publishing day carries its
+          # options and the good news holds this week's stories). Halfway, the run repairs what it can by itself: it bumps
+          # the week's change signal again so the board reads the branch afresh. If it still is not built it names what is
+          # missing (counts and dates only: this repository is public) and fails, so the red run says why.
           for i in 1 2 3 4 5 6 7 8 9 10; do
             [ "$(python3 scripts/sunday_ideas.py built "$MONDAY")" = "built=true" ] && { echo "The week's options are on the live board."; exit 0; }
+            if [ "$i" = 5 ]; then
+              python3 scripts/post-pack/board_web.py touch "$MONDAY" --source ideas || echo "::warning::The repair could not bump the week's change signal."
+            fi
             sleep 45
           done
-          echo "::error::The run ended but the live board's view for the week of $MONDAY does not carry the options."
+          python3 scripts/sunday_ideas.py why "$MONDAY" | while read -r line; do echo "::error::Not built for the week of $MONDAY: $line"; done
+          echo "::error::The run ended but the live board's view for the week of $MONDAY is not built."
           exit 1
