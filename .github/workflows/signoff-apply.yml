@@ -65,7 +65,13 @@ jobs:
           RUN_ID: ${{ github.run_id }}
           REPO: ${{ github.repository }}
         run: |
-          git add -A -- config/sfx-approved.json config/ve/sfx-kits config/ve/golden-frames.json config/ve/design-lock.json fixtures/ve/design-lock
+          # Only the paths that exist: config/ve/sfx-kits appears with the first approved sound, and git add refuses a
+          # pathspec that matches nothing (the first run, 14 Nov 2026, read no presses and then stopped here, exit 128).
+          paths=()
+          for p in config/sfx-approved.json config/ve/sfx-kits config/ve/golden-frames.json config/ve/design-lock.json fixtures/ve/design-lock; do
+            if [ -e "$p" ]; then paths+=("$p"); fi
+          done
+          if [ ${#paths[@]} -gt 0 ]; then git add -A -- "${paths[@]}"; fi
           if git diff --cached --quiet; then echo "Nothing new to write."; exit 0; fi
           today=$(date -u +%Y-%m-%d)
           branch="signoff/$today-$RUN_ID"
