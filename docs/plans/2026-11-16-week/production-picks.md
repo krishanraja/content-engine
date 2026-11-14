@@ -33,9 +33,11 @@ Nothing goes to Teleprompter until his Approve (his press, or his words in a ses
 - **Length:** the lock asked for about 8 minutes; the engine's 5-minute gate caps the long cut at 825 words, so it is
   written at about 5:30. One word from him: **keep 5:30**, or **longer** (needs a gate change first).
 - **Look (one word):** recommended **receipt**: face-with-proof for the 5-minute cut and the receipt prints for the
-  90-second cut (the lock's own style recipe, which his signature approved), motion style **ladder** (The
-  Ladder, liked: one real object carries the piece), captions **art-directed** (his pick, 11 Nov). Alternatives:
-  **living-screen** (liked) or **eating-jobs-ladder**. Not offered: character-ai-receipts, which comes from the
+  90-second cut (the lock's own style recipe, which his signature approved), motion style **eating-jobs-ladder**
+  (re-pointed 14 Nov from ladder, which Krish rejected with living-screen on 13 Nov: it is measured from his own
+  2 Nov cut and makes one object carry the whole piece, here the receipt every number is counted onto), captions
+  **art-directed** (his pick, 11 Nov). Alternatives: **ai-music-slam** (each receipt line slams on as proof) or
+  **character-ai-receipts**. Not offered: character-ai-receipts, which comes from the
   26 Oct Receipts look he rejected on 28 Oct ("still don't move enough"). Inspiration cards for `brand.references`: 45e0ead0 (the Anthropic and
   GitHub explainer, "how the visuals support most of the absorption"), d501ae8a (Hannah Fry, lighting and subtitles).
 - **Record:** 5-minute to camera (face-with-proof, eye line to lens, the receipt cut-ins land on his words "Line one"
