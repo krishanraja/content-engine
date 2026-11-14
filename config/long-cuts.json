@@ -1,0 +1,20 @@
+{
+  "_about": [
+    "A long cut longer than about five minutes, for one piece at a time (house rule TWO_CUTS). Ruling (Krish, 2026-11-14): the long cut's word cap lifts for a piece when the story is worth it; the narrative lock says so and why. His answer: \"lift if worth it\".",
+    "An entry lifts the piece's long cut from 825 spoken words to `words`, never past LONG_CUT's lifted_most_words in apps/control-plane/api/_houseRules.ts (1,200, about 8 minutes at 150 a minute, the most he asked for). It holds only while `lock` is the piece's narrative lock, naming the piece and signed by Krish, unchanged since, and `lock_says` is the lock's own words asking for the longer cut. `reason` is one line saying why the story is worth the minutes; the piece's Scripts step on the board shows it with the length (making.py scripts records script_check.long_cut), so a cut is never lifted silently.",
+    "A session adds an entry only after judging, from the signed lock and the research, that the story is worth it, and says so in `judged`. The extra minutes go on explaining, never on more figures or names than LISTENING allows. scripts/post-pack/long_cut.py checks every entry (--check); story_check.py --piece and making.py scripts read it. Nothing else lifts the cap."
+  ],
+  "pieces": {
+    "8287846b-6618-4a19-9fb8-23ad4eca2718": {
+      "words": 1200,
+      "reason": "Who pays for the AI build, then the town votes that delay it, meeting in Oracle; you asked for about 8 minutes.",
+      "lock": "docs/plans/2026-11-16-week/narrative-lock-mon.md",
+      "lock_says": "face-with-proof for the long cut, about 8 minutes this week instead of 5",
+      "judged": {
+        "by": "Claude Code",
+        "on": "2026-11-14",
+        "why": "Worth it. The signed lock carries two stories that each need setting up for a slow listener (what a hyperscaler is and the six lines of who pays, then the midterm backlash that adds cost and delay to borrowed money) and lands them together on Oracle, then four impacts in his close. The 5-minute draft (docs/plans/2026-11-16-draft-script.md) is 818 words, 7 under the cap, runs about 5:32 as he says it by his ledger, and gives Oracle four sentences and the power-bill mechanism one. The research behind it is deep and labelled (docs/plans/2026-11-16-week/mon-research.md). He asked for the extra minutes himself on 10 Nov: \"The article might need to be a bit longer, and the long cut video might need to be a few minutes longer as well.\" The minutes go on explaining; the three figures for the board meeting stay three."
+      }
+    }
+  }
+}

@@ -246,8 +246,9 @@ that holds anything but the words Krish says (stage directions, labels,
 timings, headings, joke options: house rule SCRIPT_ONLY), one that does not
 open on a question, one of a minute or more that does not close the way Krish
 ruled on 2026-10-31 (house rule SCRIPT_CLOSE: one short beat saying the one
-thing he would do, then, last and alone, "The full deep dive is at
-makeyourmindup.ai."), one that says his name (NO_NAME), one a 12-year-old
+thing he would do, then, last and alone, "The full story is free at
+makeyourmindup.ai.", SCRIPT_CLOSE_LINE in the house rules; Ruling, Krish,
+2026-11-14: the voice check wins over the line of 2026-10-21), one that says his name (NO_NAME), one a 12-year-old
 could not follow heard once (R7, the numbers in SCRIPT_READING), one with
 more figures or names than a listener can hold (LISTENING), one that speaks
 an article heading or a REAL or THEATRE stamp aloud, and one with lines still
@@ -261,7 +262,15 @@ Every piece has two scripts, one per cut, each with its own hook and outro
 (house rule TWO_CUTS, Krish, 2026-10-11): the 5-minute long cut (3 minutes until Krish, 2026-10-19: "let's make the
 3-minute scripts into 5-minute scripts and videos"), 675 to 825
 spoken words, and the 90-second short cut, 160 to 195, so the finished cut
-stays under 89 seconds. Give each
+stays under 89 seconds. One piece's long cut may run longer, to at most 1,200
+words (about 8 minutes), when `config/long-cuts.json` lifts it: its signed
+narrative lock asks for it, in the words quoted there, and the entry says why
+in one line (Ruling, Krish, 2026-11-14: "lift if worth it").
+`python3 long_cut.py <piece id>` says what the long cut may run to, or why the
+lift does not hold; `story_check.py --cut long --piece <piece id>`,
+`build.py` (by the post's `piece_id`) and `making.py scripts` hold the long
+cut to that length, and `making.py` records it on the piece, so the board's
+Scripts step names the length and the reason. Give each
 `video-script` entry its `"cut": "long"` or `"cut": "short"` so the length is
 checked; a file name that says `long`, `3min`, `5min`, `wide`, `short`,
 `90` or `vertical` does the same.
@@ -690,8 +699,9 @@ still sounds a bit bossy and preachy", then "Yes, replace it". So the beat
 before the last line says the one thing he would do, in his first person, in
 at most three sentences with at most one order, and never the retired
 "Here's what I'd do with this info if I were you" (his 2026-10-21 lead-in);
-the last sentence is still exactly "The full deep dive is at
-makeyourmindup.ai." with nothing after it. It also refuses a script holding
+the last sentence is exactly "The full story is free at makeyourmindup.ai."
+with nothing after it (since 2026-11-14; the line before it failed the voice
+check). It also refuses a script holding
 more figures or names than a listener keeps heard once (house rule
 LISTENING, "Yes, a hard rule", 2026-10-31; the numbers are LISTENING in
 `apps/control-plane/api/_houseRules.ts`). The series
