@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- His "Signed." is one press on the board for any piece whose lock is written and unsigned, on any day it is placed (Tue 17 included); the typed-approval route takes Monday to Saturday. (2026-11-14)
 - Sat 14 Nov's good news carries the five stories of the deck scheduled in Buffer (BBC, Berkeley Lab, arXiv, Hyperallergic, Lund), so the board reads 5 of 5 and offers no run to find more. (2026-11-14)
 - A piece already approved on a day of the week no longer also waits on the ideas board (Fri 20's data-centres option after the piece moved to Tue 17). (2026-11-14)
 - Every piece before recording offers his production pick as three presses (look, motion style, captions) through the engine's look and style routes, the recommended one first and marked; a session's recommendation is the piece's row style in the week's plan (contract 1.15.0). (2026-11-13)
@@ -52,7 +53,7 @@ Older lines: `docs/history/2026-11-13-NOW-moved-14.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-14): Krish reviews the Sat 14 deck as it goes out at 10:00 UTC.
+- Next (2026-11-14): Krish signs the Tue 17, Wed 18 and Fri 20 locks on the board; the producing session then writes each signature line into its lock file.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
