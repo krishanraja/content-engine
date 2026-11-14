@@ -1,3 +1,0 @@
-Status: The off-day reader no longer refuses the week of 16 Nov. Tuesday held six options a session wrote and a seventh from the Inspiration card Krish ticked, and week_plan.read_offdays counted all seven against the day's 2 to 6, so the gate and the hash test failed while the board's view drew all seven. An option from his tick (from_inspiration) now rides on top of the day's 2 to 6 and keeps its id; closed and decided options still count, as the view draws them on the day. What the live board shows is unchanged.
-Next: Krish reads the idea from his tick on Tuesday 17 Nov's ideas and presses Approve, Reject or File for later.
-North Star check (2026-11-14): holds.
