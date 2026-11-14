@@ -194,7 +194,10 @@ def send(rows, token, origin=ORIGIN, post=http_post):
     return accepted
 
 
-def main(argv=None, stdin=None, root=ROOT, out=print, env=None, post=http_post):
+def main(argv=None, stdin=None, root=ROOT, out=print, env=None, post=None):
+    # post is None unless the hook itself runs (the __main__ line below): any other caller, a test above all,
+    # keeps the lines locally whatever the environment says. Invented test lines reached the real ledger from a
+    # cloud container on 14 Nov 2026 when a test called main() with the session's own environment.
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--dry-run', metavar='TRANSCRIPT')
     try:
@@ -211,7 +214,7 @@ def main(argv=None, stdin=None, root=ROOT, out=print, env=None, post=http_post):
         rows = entries(flagged(transcript), hook.get('session_id'))
         env = os.environ if env is None else env
         token = env.get('TASTE_BACKSTOP_TOKEN') or (PROXY_PLACEHOLDER if env.get('CLAUDE_CODE_REMOTE') == 'true' else '')
-        sent = send(rows, token, env.get('CONTROL_CENTER_ORIGIN') or ORIGIN, post) if token and rows else set()
+        sent = send(rows, token, env.get('CONTROL_CENTER_ORIGIN') or ORIGIN, post) if post and token and rows else set()
         kept = append([r for r in rows if r['line_sha256'] not in sent], root)
         if sent:
             out('taste backstop: ' + str(len(sent)) + ' sent to Control Center, ' + str(kept) + ' kept locally')
@@ -223,4 +226,4 @@ def main(argv=None, stdin=None, root=ROOT, out=print, env=None, post=http_post):
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(main(post=http_post))
