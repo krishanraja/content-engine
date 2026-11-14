@@ -549,7 +549,7 @@ accept is recorded by whoever accepted it.
 | `GET /api/content-engine/ping` | commit and a ready flag, no auth |
 | `/api/content-engine/runs/replay` | re-runs a registered job by calling its GET with `CRON_SECRET`; refuses `manual_only` jobs |
 | `/api/purge/run` (cron, Mondays), `/api/purge/restore` | exports doomed rows to the `content-engine-archive` bucket and `trend_observations`, then hard-deletes expired news rows; deletes nothing if either copy fails, and keeps any row an open board item names (`kept_for_board`). The engine's only hard delete |
-| `POST /api/aeo/meter` | prices the AEO engine's token use into `meter_daily` |
+| `POST /api/aeo/meter` | prices the AEO engine's token use into `meter_daily` (`reportedUsage` in `_meter.ts`): Anthropic through `anthropicCall` with its web searches at $10 a thousand, Perplexity from its table, OpenAI, Google and xAI as tokens with no rate yet (`unpriced-model`), and subscription rows as tokens with no dollar amount in a bucket of their own (AEO brief F; the context lists `meter_billing`) |
 
 Every scheduled route is wrapped in `withContentRun` (`api/_runs.ts`), which
 writes one `content_engine_runs` row per run, and a redacted failure artifact
