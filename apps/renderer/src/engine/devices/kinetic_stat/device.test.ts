@@ -71,9 +71,10 @@ describe('optional count-down ghost', () => {
     expect(ghost).toBeDefined()
     expect(ghost).toContain('opacity:0.25')
     expect(ghost).toContain('text-decoration:line-through')
-    expect(ghost).toContain(`font-family:${HOUSE_FONTS.data}`)
+    expect(ghost).toContain(`font-family:${HOUSE_FONTS.data.replaceAll('"', '&quot;')}`)   // markup escapes the quotes
     const l = kineticLayout(box, '24/100', 'checks', 'Fixture audit', aspect, ['72/100', '24/100', '12/100'])
-    expect(ghost).toContain(`top:${l.number.top - 8 * l.scale}px`)
+    const top = l.number.top - 8 * l.scale
+    expect(ghost).toContain(top === 0 ? 'top:0;' : `top:${top}px`)   // React writes a zero without its unit
     for (const frame of [79, 80, 180]) expect(renderToStaticMarkup(createElement(Device, { ...props, frame }))).not.toContain('data-kinetic-ghost')
     for (const params of [{}, { ghost: false }]) expect(renderToStaticMarkup(createElement(Device, {
       ...props, object: { ...ghostObject, params },
