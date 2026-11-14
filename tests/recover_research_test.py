@@ -182,5 +182,85 @@ class Transcripts(unittest.TestCase):
             self.assertIn('Recovered by scripts/recover_research.py', body['note'])
 
 
+class History(unittest.TestCase):
+    """I-31: a claude.ai export and a transcripts zip, read straight from their zips, listed first, export lines held."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.home = Path(self.tmp.name)
+        self.out = self.home / 'out'
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def export_zip(self):
+        import zipfile
+        convs = [
+            {'uuid': 'c-ours', 'name': 'Make Your Mind Up: AI music money', 'created_at': '2026-10-01T09:00:00Z',
+             'chat_messages': [{'sender': 'human', 'text': 'research it'},
+                               {'sender': 'assistant', 'created_at': '2026-10-01T09:05:00Z', 'text': DOSSIER}]},
+            {'uuid': 'c-personal', 'name': 'Dinner plans', 'created_at': '2026-10-02T09:00:00Z',
+             'chat_messages': [{'sender': 'assistant', 'created_at': '2026-10-02T09:05:00Z', 'text': 'Book a table. ' + 'q' * 900}]},
+            {'uuid': 'c-mm', 'name': 'Mindmake buyers', 'created_at': '2026-10-03T09:00:00Z',
+             'chat_messages': [{'sender': 'assistant', 'created_at': '2026-10-03T09:05:00Z',
+                                'content': [{'type': 'text', 'text': 'Mindmake buyers. ' + ''.join(f'https://example.org/m{i} ' for i in range(6)) + 'm' * 900}]}]},
+        ]
+        z = self.home / 'claude-export.zip'
+        with zipfile.ZipFile(z, 'w') as zf:
+            zf.writestr('data-2026-11-14/conversations.json', json.dumps(convs))
+            zf.writestr('data-2026-11-14/projects.json', json.dumps([{'name': 'Mindmake research', 'docs': [
+                {'filename': 'market-research.md', 'content': 'Mindmake market. ' + 'r' * 900, 'created_at': '2026-10-04T09:00:00Z'}]}]))
+        return z
+
+    def rows(self):
+        with open(self.out / 'found.tsv', encoding='utf-8') as fh:
+            return list(csv.DictReader(fh, delimiter='\t'))
+
+    def test_export_is_listed_and_held_never_filed(self):
+        z = self.export_zip()
+        with redirect_stdout(io.StringIO()) as said:
+            self.assertEqual(rr.main(['find', '--export', str(z), '--out', str(self.out), '--since', '2026-01-01']), 0)
+        rows = self.rows()
+        held = {r['title']: r for r in rows if r['file'] == rr.HOLD}
+        self.assertEqual(set(held), {'Make Your Mind Up AI music money.md', 'Mindmake buyers.md', 'market-research.md'})
+        self.assertEqual(held['Mindmake buyers.md']['scope'], 'venture:mindmake')
+        self.assertEqual(held['market-research.md']['scope'], 'venture:mindmake')
+        self.assertTrue(all('held until Krish has read the list' in r['why'] for r in held.values()))
+        self.assertNotIn('yes', {r['file'] for r in rows})
+        self.assertEqual(next(r for r in rows if r['title'] == 'Dinner plans.md')['file'], 'no')
+        self.assertIn('held until Krish has read the list', said.getvalue())
+        # Nothing was unpacked: an export is read inside its zip.
+        self.assertFalse((self.out / 'unpacked').exists())
+
+        calls = []
+        real, board_session.call = board_session.call, lambda *a, **k: calls.append(a) or (201, {})
+        try:
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(rr.main(['file', '--out', str(self.out)]), 0)
+        finally:
+            board_session.call = real
+        self.assertEqual(calls, [])  # a hold is never filed
+
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(rr.main(['all', '--export', str(z), '--out', str(self.out)]), 1)
+
+    def test_transcripts_zip_reads_each_transcript_into_scratch_only(self):
+        import zipfile
+        z = self.home / 'transcripts.zip'
+        line = claude_line(type='assistant', timestamp='2026-10-20T08:05:00Z', cwd='/x/content-engine', message={'role': 'assistant', 'content': [
+            {'type': 'tool_use', 'id': 't1', 'name': 'Write', 'input': {'file_path': '/s/.scratch/mon-research.md', 'content': DOSSIER}}]})
+        with zipfile.ZipFile(z, 'w') as zf:
+            zf.writestr('../../evil/.claude/projects/p/s1.jsonl', line)
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(rr.main(['find', '--transcripts-zip', str(z), '--out', str(self.out), '--since', '2026-01-01']), 0)
+        yes = [r for r in self.rows() if r['file'] == 'yes']
+        self.assertEqual([r['sha256'] for r in yes], [hashlib.sha256(DOSSIER.encode()).hexdigest()])
+        self.assertEqual(yes[0]['origin'], 'transcripts zip')
+        # The member's own path is never used: one numbered file under the scratch folder, nothing outside it.
+        unpacked = list((self.out / 'unpacked').rglob('*.jsonl'))
+        self.assertEqual(len(unpacked), 1)
+        self.assertFalse((self.home / 'evil').exists())
+
+
 if __name__ == '__main__':
     unittest.main()
