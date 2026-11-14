@@ -325,10 +325,11 @@ the captions.**
 
 ## What is still open
 
-- **The devices his styles still need** are carded, not built: `receipt_print`, `slam_word`, `checklist`
-  (Character.ai); `pull_quote`, `unit_field`, the count-down ghost and the ladder `through_line` (eating its own jobs);
-  `video_wall`, `mint_ring`, `takeover` (AI music). Codex builds them from `docs/ve/cards/style-gaps/` and
-  `docs/ve/cards/through-line/`, dispatched from a home computer (`ve card` reads its local roots).
+- **The devices his styles needed are built** (14 Nov 2026, by Codex from `docs/ve/cards/style-gaps/` and
+  `docs/ve/cards/through-line/`, each checked with `ve verify-card` and rendered and looked at before merging):
+  `receipt_print`, `slam_word`, `checklist` (Character.ai); `pull_quote`, `unit_field`, the `kinetic_stat` count-down
+  ghost and the ladder `through_line` (eating its own jobs); `video_wall`, `mint_ring`, `takeover` (AI music). Each fills
+  a layout region and draws as its fixture everywhere else. None is proved on a piece or seen by Krish yet.
 - **No staging or new style is proved on his take with the real brand chrome.** Each needs `ve proof` on a home computer
   (where the brand marks are) and his press before a cut ships with it.
 - **Sound effects on handovers and hits.** The timing rule is noted: start 10 to 20 ms before the visual change and
