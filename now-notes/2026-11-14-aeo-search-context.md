@@ -1,0 +1,3 @@
+Status: `/api/aeo/context` now serves each venture subject's `search_signals` (AEO brief C) from Control Center's `growth_search_signals` and `growth_search_reads`: Search Console pages and queries in 7-day blocks; Bing's queries, pages, index detail, crawl issues and keyword volume; and AI-assistant referrals, each with `via` `ga4` or `clarity`. A list stays null until one of the subject's hosts has had a read that worked. If the read here fails, every venture's signals are null and the context still answers. AEO-Engine's own `readSignals` parses the output.
+Next: after Control Center's 13:20 UTC run, check that a venture subject in the live context has `search_signals` that are not null.
+North Star check (2026-11-14): holds.
