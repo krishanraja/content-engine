@@ -231,6 +231,13 @@ From `.agents/skills/mindmake-video/stations/registry.json`; each station's inst
 
 Every tracked TypeScript module outside tests, with its leading comment and its exports.
 
+### `apps/control-plane/api/_accessCookie.ts`
+
+- `function v2Signature(code: string, signed: string): string`
+- `function legacyAccessValue(code: string): string`
+- `function accessCookieValid(supplied: string, code: string, nowMs: number = Date.now()): boolean`
+- `function mintAccessValue(code: string, env: Record<string, string | undefined> = process.env, nowMs: number = Date.now(…`
+
 ### `apps/control-plane/api/_aeo.ts`
 
 - `const PACKET_SCHEMA_VERSION`

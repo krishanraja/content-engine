@@ -1,21 +1,19 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
+import { guardSensitiveRead } from '../../_auth.js'
 
 // GET /api/investigations/:run_id/trace
 //
 // The audit read. Every gate decision for a run, with the value each check
 // OBSERVED, so "why did this pass" is answerable months later.
 //
-// Deliberately unauthenticated for GET. Every table it reads already carries
-// `anon SELECT` under the house RLS policy, so a token here would be theatre,
-// not a control. It spends nothing and writes nothing.
+// Behind the same read gate as the engine's other sensitive reads (his browser cookie, the export bearer or the
+// operator bearer; security lane APP-8, 14 Nov 2026): it returns a run's claims, evidence and gate log, and some run
+// ids are in public plan receipts. It spends nothing and writes nothing.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
+  if (guardSensitiveRead(req, res, ['GET'], { operatorBearer: true })) return
   res.setHeader('Cache-Control', 'no-store')
-  if (req.method === 'OPTIONS') return res.status(204).end()
-  if (req.method !== 'GET') return res.status(405).json({ ok: false, error: 'GET only' })
 
   const runId = ((req.query.run_id || '') as string).trim()
   if (!runId) return res.status(400).json({ ok: false, error: 'run_id required' })
