@@ -38,7 +38,9 @@ export function findings(file: string, text: string, rules = [...RETIRED, ...HEA
   return rules.filter(([re]) => re.test(own)).map(([, why]) => `${file}: names ${why}`)
 }
 
-const read = (f: string) => readFileSync(f, 'utf8')
+// CRLF on a Windows checkout reads as LF here, so a source-text match means the same on every runner (full verify was
+// red on Windows from 13 Nov over this file's produce_day.py match).
+const read = (f: string) => readFileSync(f, 'utf8').replace(/\r\n/g, '\n')
 
 /** The documents and prompts that tell a session how one of these is made. Each says the route. */
 const TELLS_HOW = [
