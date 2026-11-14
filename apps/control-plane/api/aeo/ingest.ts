@@ -4,7 +4,8 @@ import { supabase } from '../_supabase.js'
 import { checkDuplicate } from '../_dedup.js'
 import { withContentRun } from '../_runs.js'
 import {
-  MAX_IDEAS_PER_SUBJECT, OPEN_GOVERNOR, aeoSignalRow, aeoSourceRef, citedPageRows, probeRows, queryRows, validatePacket,
+  MAX_IDEAS_PER_SUBJECT, OPEN_GOVERNOR, aeoSignalRow, aeoSourceRef, citedPageRows, heldProducts, probeRows, queryRows,
+  recommendationRoute, validatePacket,
   type AeoPacket,
 } from '../_aeo.js'
 
@@ -128,7 +129,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // 4. Recommendations into the content spine.
-    const counts: Record<string, number> = { ideas_inserted: 0, ideas_refreshed: 0, ideas_duplicate: 0, ideas_capped: 0, ideas_governed: 0, ideas_kits: 0, cited_pages: 0, mentions_acquired: 0 }
+    const counts: Record<string, number> = { ideas_inserted: 0, ideas_refreshed: 0, ideas_duplicate: 0, ideas_capped: 0, ideas_governed: 0, ideas_kits: 0, ideas_held: 0, cited_pages: 0, mentions_acquired: 0 }
     const openRead = await supabase.from('content_ideas')
       .select('id,state,meta')
       .eq('source_type', 'aeo_signal')
@@ -142,14 +143,23 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     // Once AEO sends win kits, its moves reach Krish through each venture's
     // engine (Ruling, Krish, 2026-11-13), so its recommendations no longer
     // seed content ideas (brief, A3). The ideas seeded before stay as history.
-    const kitsFlow = Array.isArray(packet.kits)
+    // A held venture seeds nothing (Ruling, Krish, 2026-10-29); its digest
+    // keeps the recommendations for its engine on release (_aeo.ts,
+    // recommendationRoute).
+    let hold: 'held' | 'active' | 'unknown' = 'active'
+    if (packet.subject.product_slug) {
+      const engines = await supabase.from('growth_engines').select('product_slug, role, activation_state').eq('product_slug', packet.subject.product_slug)
+      hold = engines.error ? 'unknown' : heldProducts((engines.data || []) as Row[]).has(packet.subject.product_slug) ? 'held' : 'active'
+    }
+    const route = recommendationRoute(packet.kits, hold)
 
     const recs = [...packet.recommendations].sort((a, b) => a.n - b.n)
     const enriched: Row[] = []
     let admitted = 0
     for (const rec of recs) {
       const out: Row = { ...rec, content_idea_id: null, dismissed_at: priorDismissed.get(rec.query_id) ?? null }
-      if (kitsFlow) { counts.ideas_kits += 1; enriched.push(out); continue }
+      if (route === 'kits') { counts.ideas_kits += 1; enriched.push(out); continue }
+      if (route !== 'ideas') { counts.ideas_held += 1; enriched.push(out); continue }
       if (governed) { counts.ideas_governed += 1; enriched.push(out); continue }
       if (admitted >= MAX_IDEAS_PER_SUBJECT) { counts.ideas_capped += 1; enriched.push(out); continue }
       const row = aeoSignalRow(packet, rec, String(subject.name))
