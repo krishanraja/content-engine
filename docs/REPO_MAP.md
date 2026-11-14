@@ -2840,6 +2840,14 @@ One yes anywhere (Ruling, Krish, 2026-11-02): his answer for each day, read from
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 - `const config`
 
+### `apps/control-plane/api/briefs/_ask.ts`
+
+- `function shapeFault(p: any): string`
+- `const FIRST_ATTEMPT`
+- `const ROOMY_RETRY`
+- `interface AskRecord`
+- `async function askForBrief(call: Call, base: Omit<ClaudeOpts, 'maxTokens' | 'think' | 'onUsage'>, log: (line: string) =…`
+
 ### `apps/control-plane/api/briefs/assemble.ts`
 
 - `async function runAssemble(force = false)`

@@ -608,7 +608,7 @@ export function claudeRequestBody(opts: ClaudeOpts): Record<string, unknown> {
   }
 }
 
-export interface TokenUsage { input: number; output: number; model: string }
+export interface TokenUsage { input: number; output: number; model: string; stopReason?: string | null }
 
 /** Cost of a usage record in USD. Unknown models price at 0 rather than guess;
  *  the rates live in api/_prices.ts, the only copy of them. */
@@ -768,7 +768,8 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
     }
     const inputTokens = Number(j?.usage?.input_tokens) || 0
     const outputTokens = Number(j?.usage?.output_tokens) || 0
-    if (opts.onUsage) opts.onUsage({ input: inputTokens, output: outputTokens, model })
+    if (opts.onUsage) opts.onUsage({ input: inputTokens, output: outputTokens, model,
+      stopReason: typeof j?.stop_reason === 'string' ? j.stop_reason : null })
     // Unconditional, unlike onUsage: a route that does not care what it cost is
     // exactly the route whose spend nobody was watching.
     //
