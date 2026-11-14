@@ -11,6 +11,15 @@ which cannot read the engine key):
     python scripts/recover_research.py file     # files every line of the list marked yes
     python scripts/recover_research.py all      # both, one after the other
 
+From the history (I-31, 14 Nov 2026), listing first:
+
+    python scripts/recover_research.py find --export ~/Downloads/claude-export.zip     # a claude.ai export
+    python scripts/recover_research.py find --transcripts-zip transcripts-2026-11.zip   # a machine's transcripts zip
+
+reads only those, straight out of the zip, and lists them. A document from a claude.ai export is marked `hold`, never
+`yes`: the export holds every client and personal conversation, so nothing from it is filed until Krish has read the
+list and changed a `hold` to `yes` himself. `all` refuses with either flag.
+
 Where it looks (read only; it never moves, edits or deletes anything it finds):
   - scratch folders: ~/.scratch, the temp folder's claude* scratchpads, and every .scratch folder in the checkouts
     beside this one (and under ~/dev), up to four folders deep;
@@ -55,6 +64,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -388,6 +398,114 @@ def from_transcripts(home: Path, since: float):
                        'written': ts[:19] or iso(mtime), 'ours': ours, 'piece': piece}
 
 
+# ---- the history: a claude.ai export and a zip of transcripts (I-31) -------------------------------------------------
+#
+# Krish's yes on 14 Nov 2026 (claude-archive's North Star wording, D22): research already paid for comes back from the
+# history. Both are read straight out of their zips: nothing is unpacked into a repository (claude-archive README: zips
+# in, nothing extracted), and a transcripts zip's .jsonl files go only to this checkout's ignored .scratch folder.
+# An export holds every client and personal conversation, so nothing from it is filed until Krish has read the list:
+# its lines are marked `hold`, which `file` never files; he changes a `hold` to `yes` himself.
+
+EXPORT_ORIGIN = 'claude.ai export'
+HOLD = 'hold'
+ZIP_MEMBER_MAX = 512 * 1024 * 1024
+
+
+def _export_files(path: Path) -> dict[str, bytes]:
+    """conversations.json and projects.json from an export folder or its zip (anywhere inside it)."""
+    want = ('conversations.json', 'projects.json')
+    got: dict[str, bytes] = {}
+    if path.is_dir():
+        for name in want:
+            hits = sorted(path.rglob(name))
+            if hits:
+                got[name] = hits[0].read_bytes()
+        return got
+    with zipfile.ZipFile(path) as z:
+        for info in z.infolist():
+            base = info.filename.replace('\\', '/').rsplit('/', 1)[-1]
+            if base in want and base not in got and info.file_size <= ZIP_MEMBER_MAX:
+                got[base] = z.read(info)
+    return got
+
+
+def _message_text(m: dict) -> str:
+    parts = [m.get('text')] if isinstance(m.get('text'), str) else []
+    for b in m.get('content') or []:
+        if isinstance(b, dict) and b.get('type') == 'text' and isinstance(b.get('text'), str):
+            parts.append(b['text'])
+    seen, out = set(), []
+    for t in parts:
+        if t and t not in seen:
+            seen.add(t)
+            out.append(t)
+    return '\n\n'.join(out)
+
+
+def _safe_name(s: str, fallback: str) -> str:
+    name = re.sub(r'\s+', ' ', re.sub(r'[^A-Za-z0-9 ._-]+', ' ', s or '')).strip()[:120]
+    return (name or fallback) + '.md'
+
+
+def from_export(path: Path, since: float):
+    """Each assistant write-up in a claude.ai export, and each document attached to a project, as a candidate."""
+    files = _export_files(path)
+    label = path.name
+    conversations = json.loads(files['conversations.json'].decode('utf-8')) if 'conversations.json' in files else []
+    for c in conversations if isinstance(conversations, list) else []:
+        if not isinstance(c, dict):
+            continue
+        cid = str(c.get('uuid') or c.get('id') or '')
+        title = str(c.get('name') or c.get('title') or '')
+        ours = bool(OURS.search(title))
+        for i, m in enumerate(c.get('chat_messages') or c.get('messages') or []):
+            if not isinstance(m, dict) or (m.get('sender') or m.get('role')) not in ('assistant',):
+                continue
+            ts = str(m.get('created_at') or c.get('created_at') or '')
+            try:
+                if ts and dt.datetime.fromisoformat(ts.replace('Z', '+00:00')).timestamp() < since:
+                    continue
+            except ValueError:
+                pass
+            text = _message_text(m)
+            if text.strip():
+                yield {'origin': EXPORT_ORIGIN, 'where': f'{label} -> conversation {cid} message {i}',
+                       'name': _safe_name(title, f'conversation-{cid[:8]}'), 'text': text, 'written': ts[:19],
+                       'ours': ours, 'piece': None}
+    projects = json.loads(files['projects.json'].decode('utf-8')) if 'projects.json' in files else []
+    for pr in projects if isinstance(projects, list) else []:
+        if not isinstance(pr, dict):
+            continue
+        pname = str(pr.get('name') or '')
+        for d in pr.get('docs') or []:
+            if isinstance(d, dict) and isinstance(d.get('content'), str) and d['content'].strip():
+                ts = str(d.get('created_at') or pr.get('created_at') or '')
+                yield {'origin': EXPORT_ORIGIN, 'where': f"{label} -> project {pr.get('uuid') or pname} doc {d.get('uuid') or d.get('filename')}",
+                       'name': str(d.get('filename') or _safe_name(pname, 'project-doc')), 'text': d['content'],
+                       'written': ts[:19], 'ours': bool(OURS.search(pname)), 'piece': None}
+
+
+def from_transcripts_zip(path: Path, since: float, out: Path):
+    """Each Claude Code or Codex transcript in a zip (claude-archive's machine captures), read as on this computer."""
+    tag = hashlib.sha256(str(path.resolve()).encode('utf-8')).hexdigest()[:12]
+    work = out / 'unpacked' / tag
+    work.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(path) as z:
+        for n, info in enumerate(z.infolist()):
+            inner = info.filename.replace('\\', '/')
+            if not inner.endswith('.jsonl') or info.is_dir() or info.file_size > ZIP_MEMBER_MAX:
+                continue
+            # Never the member's own path (a zip can name ../ or an absolute path): a numbered file in scratch.
+            f = work / f'{n:06d}.jsonl'
+            if not f.exists():
+                f.write_bytes(z.read(info))
+            reader = codex_transcript if ('/.codex/' in f'/{inner}' or '/sessions/' in f'/{inner}' and 'rollout-' in inner) else claude_transcript
+            for ts, name, text, piece, ours in reader(f, since):
+                yield {'origin': 'transcripts zip', 'where': f'{path.name} -> {inner} -> {name}', 'name': name, 'text': text,
+                       'written': ts[:19] or iso(info.date_time and dt.datetime(*info.date_time).timestamp() or 0),
+                       'ours': ours, 'piece': piece}
+
+
 # ---- the two commands ------------------------------------------------------------------------------------------------
 
 def find(args) -> int:
@@ -397,7 +515,13 @@ def find(args) -> int:
     tmp = Path(args.tmp).expanduser() if args.tmp else Path(tempfile.gettempdir())
     roots = scratch_roots(home, checkouts, tmp) + [Path(r).expanduser() for r in args.root]
     found = []
-    streams = [from_files(roots, since, 'scratch folder'), from_git(checkouts, home, since), from_transcripts(home, since)]
+    if args.export or args.transcripts_zip:
+        # The history only: an export and/or a transcripts zip, listed and never filed in the same run.
+        streams = [from_export(Path(e).expanduser(), since) for e in args.export] + \
+                  [from_transcripts_zip(Path(z).expanduser(), since, Path(args.out)) for z in args.transcripts_zip]
+        roots = []
+    else:
+        streams = [from_files(roots, since, 'scratch folder'), from_git(checkouts, home, since), from_transcripts(home, since)]
     for stream in streams:
         for d in stream:
             ok, why = judge(d['name'], d['text'], d['ours'])
@@ -408,12 +532,15 @@ def find(args) -> int:
                 scope = (f'venture:{venture}' if venture else place(d['name'], d['text'], d['written'] or iso(0), d['piece'])) if ok else ''
             except ValueError:
                 ok, why, scope = False, 'no date to file it under; file it by hand', ''
-            found.append({'file': 'yes' if ok else 'no', 'why': why, 'scope': scope,
+            mark = 'yes' if ok else 'no'
+            if ok and d['origin'] == EXPORT_ORIGIN:
+                mark, why = HOLD, f"held until Krish has read the list: {why}"
+            found.append({'file': mark, 'why': why, 'scope': scope,
                           'title': Path(d['name'].replace('\\', '/')).name[:150], 'chars': len(d['text']), 'sha256': sha,
                           'written': d['written'], 'origin': d['origin'], 'where': d['where'], 'text': d['text']})
     # One line per exact text. Of the places it was found, the line keeps the one to file (yes over no), then the one
     # that names its piece, then the earliest; the rest are counted in its why.
-    best = lambda f: (f['file'] != 'yes', f['scope'].startswith(('day:', 'venture:')) or not f['scope'], f['written'])
+    best = lambda f: (f['file'] not in ('yes', HOLD), f['scope'].startswith(('day:', 'venture:')) or not f['scope'], f['written'])
     by_sha: dict[str, dict] = {}
     for f in sorted(found, key=best):
         first = by_sha.get(f['sha256'])
@@ -421,7 +548,7 @@ def find(args) -> int:
             by_sha[f['sha256']] = f
         else:
             first['also'] = first.get('also', 0) + 1
-    rows = sorted(by_sha.values(), key=lambda r: (r['file'] != 'yes', r['written']))
+    rows = sorted(by_sha.values(), key=lambda r: (r['file'] not in ('yes', HOLD), r['written']))
     out = Path(args.out)
     (out / 'texts').mkdir(parents=True, exist_ok=True)
     with open(out / 'found.tsv', 'w', encoding='utf-8', newline='') as fh:
@@ -429,13 +556,22 @@ def find(args) -> int:
         w.writerow(COLUMNS)
         for r in rows:
             saved = ''
-            if r['file'] == 'yes':
+            if r['file'] in ('yes', HOLD):
                 saved = str(out / 'texts' / f"{r['sha256']}.txt")
                 Path(saved).write_text(r['text'], encoding='utf-8')
             why = r['why'] + (f" (also found {r['also']} more time(s))" if r.get('also') else '')
             w.writerow([r['file'], why, r['scope'], r['title'], r['chars'], r['sha256'], r['written'], r['origin'],
                         r['where'], saved])
     yes = sum(1 for r in rows if r['file'] == 'yes')
+    held = sum(1 for r in rows if r['file'] == HOLD)
+    if held:
+        by_venture: dict[str, int] = {}
+        for r in rows:
+            if r['file'] == HOLD:
+                v = r['scope'][len('venture:'):] if r['scope'].startswith('venture:') else 'publication'
+                by_venture[v] = by_venture.get(v, 0) + 1
+        print(f"{held} research document(s) from a claude.ai export are held until Krish has read the list "
+              f"({', '.join(f'{k} {v}' for k, v in sorted(by_venture.items()))}); `file` files none of them.")
     print(f"Looked in {len(roots)} scratch folder(s), the git checkouts beside this one and the Claude Code and Codex "
           f"transcripts in {home}.")
     shelf = sum(1 for r in rows if r['file'] == 'yes' and r['scope'].startswith('venture:'))
@@ -538,7 +674,14 @@ def main(argv=None) -> int:
     p.add_argument('--out', default=str(OUT))
     p.add_argument('--by', default='Claude Code (local recovery)')
     p.add_argument('--dry-run', action='store_true', help='with file: say what would be filed, file nothing')
+    p.add_argument('--export', action='append', default=[],
+                   help='with find: a claude.ai export (its folder or zip) to list; its lines are held until Krish has read them')
+    p.add_argument('--transcripts-zip', action='append', default=[],
+                   help='with find: a zip of Claude Code or Codex transcripts (claude-archive\'s machine captures) to list')
     args = p.parse_args(argv)
+    if (args.export or args.transcripts_zip) and args.command == 'all':
+        print('From the history the list comes first: run `find` with --export or --transcripts-zip, read the list, then `file`.')
+        return 1
     if args.command in ('find', 'all'):
         find(args)
     if args.command in ('file', 'all'):
