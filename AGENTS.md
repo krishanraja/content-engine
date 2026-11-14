@@ -193,7 +193,7 @@ Use `docs/HARNESS_CONTEXT.md` for the owning workflow, source of truth and check
 Before any work run `python3 scripts/check_failures.py`. At session start read this week's comments on the one live board in Control Centre, as `docs/PUBLISH_BOARDS.md` says. Studio work requires `docs/ENGINE_SESSION.md`, `studio.session.open` and its tracked capability set; cloud Studio sessions stay read-only. Preserve observer attribution and Krish's actual decisions, keep exact feedback excerpts and never whole transcripts. `Video engine` remains the exact external launcher.
 <!-- krish-repo-admin:end -->
 
-<!-- krish-canon:start release=v2026.10.31.4 sha=49ccfe98b287 rendered=2026-10-31 -->
+<!-- krish-canon:start release=v2026.11.13.2 sha=bffef655d142 rendered=2026-11-14 -->
 ## Krish canon
 
 Rendered from `krishanraja/ai-harness`; the start marker names the release. Nothing inside these
@@ -250,5 +250,5 @@ https://controlcenter.krishraja.com/api/canon/KRISH.md (and `PORTFOLIO.md` besid
 30 curated skills are in `krishanraja/ai-harness`. On a machine with the harness installed the same skills are under the user skills root, and the local copy is
 authoritative for reading; the repository is authoritative for what is correct. Where none is installed (claude.ai, a cloud session), read each skill live with Control Center `get_skill`.
 
-**This repository's own rules:** `AGENTS.md`, `CLAUDE.md`, `docs/CAROUSEL_ENGINE_STATE.md`
+**This repository's own rules:** `AGENTS.md`, `CLAUDE.md`, `docs/CAROUSEL-STANDARD.md`
 <!-- krish-canon:end -->
