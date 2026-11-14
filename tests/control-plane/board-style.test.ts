@@ -63,6 +63,18 @@ describe('the motion styles on a piece', () => {
     expect(ids(dayStyle(inputs({ meta: { style: { rejected: { motion: ['ladder'] } } } })).motion.options)).toEqual(['swiss', 'morph', 'ink'])
   })
 
+  it('passes the week plan\'s pick through the same filter: never one ve cannot draw or one he called not for us', () => {
+    // Fleet audit 14 Nov (ve-1): the plan named two 3D styles that wait on a device and he had rejected; a pick on one
+    // would have rendered the house motion without a word.
+    const planned = dayStyle(inputs({ recommendedMotion: 'swiss' }))
+    expect(ids(planned.motion.options)).toEqual(['swiss'])
+    for (const id of ['undrawn', 'retro']) {
+      const s = dayStyle(inputs({ recommendedMotion: id }))
+      expect(ids(s.motion.options)).toEqual(['ladder', 'swiss', 'morph'])
+      expect(s.motion.options.find(o => o.id === id)!.recommended).toBe(false)
+    }
+  })
+
   it('shows his pick first, then his Pick a style gate, then a creative direction he signed', () => {
     const signed = { piece_id: PIECE, signed: { by: 'Krish', on: '2026-11-15' }, style: { motion: { module: 'morph' } }, brand: { caption_theme: 'cinematic' } }
     const gate = { state: 'picked' as const, at: '2026-11-14T10:00:00Z', sha256: 'a'.repeat(64), module: 'swiss' }

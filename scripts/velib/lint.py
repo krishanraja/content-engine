@@ -179,6 +179,21 @@ def motion_style_problems(spec: dict) -> list[str]:
     return creative_direction.motion_problems(spec)
 
 
+def motion_not_drawable(spec: dict) -> list[str]:
+    """style.motion names a style the renderer cannot draw yet (kit/motion-profiles.json needs_device): compile would
+    carry only its id and the cut would render in the house motion without a word (fleet audit 14 Nov, ve-1). Refused
+    here until its device is built and Krish says yes to its test render."""
+    from .compile import MOTION_PROFILES  # noqa: PLC0415
+    module = ((spec.get('style') or {}).get('motion') or {}).get('module')
+    if not module:
+        return []
+    table = json.loads(MOTION_PROFILES.read_text(encoding='utf-8'))
+    if module in table.get('needs_device', []):
+        return [f'motion.not_drawable style.motion.module: {module} waits on its own device (kit/motion-profiles.json '
+                'needs_device), so the cut would render in the house motion; pick a style the renderer draws']
+    return []
+
+
 def motion_lints(spec: dict) -> list[str]:
     """The premium motion standard (docs/ve/MOTION_STANDARD.md) where a spec alone can show it."""
     out = []
@@ -191,6 +206,7 @@ def motion_lints(spec: dict) -> list[str]:
         out.append('captions.word_default brand.captions: face-with-proof uses the word caption build, one word at a time '
                    'off the face (signed by Krish, 3 Nov 2026, docs/ve/MOTION_STANDARD.md)')
     out.extend(f'motion.required {problem}' for problem in motion_style_problems(spec))
+    out.extend(motion_not_drawable(spec))
     for cut_id, cut in spec['cuts'].items():
         for index, beat in enumerate(cut['beats']):
             used = [objects[name]['device'] for name in beat['uses'] if name in objects]
