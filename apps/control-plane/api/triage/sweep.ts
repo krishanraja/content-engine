@@ -6,7 +6,8 @@ import {
   features, score, guarded, idleDays, titleOf, reasonOf,
   loadWeights, saveConfig, fetchEligible,
 } from '../_grader.js'
-import { withContentRun } from '../_runs.js'
+import { isScheduled, withContentRun } from '../_runs.js'
+import { enforceChainCap, type ChainCapResult } from '../_chainCap.js'
 
 /**
  * Backburner sweep + grader weight learning.
@@ -15,6 +16,7 @@ import { withContentRun } from '../_runs.js'
  *        sweep, then the capped learning pass.
  * POST — UI calls:
  *        { action: 'sweep', dry_run?: true }
+ *        { action: 'chain_cap', dry_run?: true }
  *        { action: 'restore', source_table, source_id }
  *        { action: 'learn', dry_run?: true }
  *
@@ -29,6 +31,13 @@ import { withContentRun } from '../_runs.js'
  * (feedback_queue) by at most LEARN_STEP_CAP per cycle and never applies an
  * update that would newly bury an item Krish kept; larger shifts are staged
  * in grader_weights_proposed_<domain> for explicit approval.
+ *
+ * Then the $15 a week chain (api/_chainCap.ts; Ruling, Krish, 2026-11-14):
+ * this daily sweep reads the week's chain spend, records its verdict as job
+ * chain_cap in the run ledger, where inspirationhouse's 05:17 run reads it
+ * and skips its tagging over the cap, and writes one board item a week when
+ * the chain is over. It never stops the fact gate on a piece he picked. A cap
+ * step that fails is said in the response and never fails the sweep.
  */
 
 const LEARN_STEP_CAP = 0.1 // max ±10% per coefficient per cycle
@@ -252,6 +261,11 @@ async function runLearn(dryRun: boolean) {
   return out
 }
 
+/** The chain cap's step on the cron; its failure is a count in the sweep's answer, never the sweep's failure. */
+async function chainStep(scheduled: boolean): Promise<ChainCapResult | { chain_failed: 1 }> {
+  try { return await enforceChainCap(new Date(), undefined, { scheduled }) } catch { return { chain_failed: 1 } }
+}
+
 async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardCronRoute(req, res)) return
 
@@ -261,7 +275,8 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       const purge = await runPurge(false)
       const learn = await runLearn(false)
       const buried = Object.fromEntries(Object.entries(sweep).map(([t, r]) => [t, r.buried.length]))
-      return res.json({ ok: true, buried, purged: purge.purged.length, learn })
+      const chain = await chainStep(isScheduled(req))
+      return res.json({ ok: true, buried, purged: purge.purged.length, learn, ...chain })
     } catch (e: any) {
       return res.status(500).json({ ok: false, error: String(e?.message || e) })
     }
@@ -288,6 +303,10 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     if (body.action === 'purge') {
       const result = await runPurge(!!body.dry_run)
       return res.json({ ok: true, dry_run: !!body.dry_run, result })
+    }
+    if (body.action === 'chain_cap') {
+      const result = await enforceChainCap(new Date(), undefined, { scheduled: false, write: !body.dry_run })
+      return res.json({ ok: true, dry_run: !!body.dry_run, ...result })
     }
     if (body.action === 'learn') {
       const result = await runLearn(!!body.dry_run)
