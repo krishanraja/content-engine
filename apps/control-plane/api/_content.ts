@@ -233,9 +233,9 @@ export async function loadLiveVoice(kind: 'article' | 'social' | 'script' | 'ema
   if (hit && Date.now() - hit.at < 5 * 60_000) return hit.text
   const code = (env.ACCESS_CODE || '').trim()
   if (!code) return ''
-  const { createHash } = await import('node:crypto')
+  const { mintAccessValue } = await import('./_accessCookie.js')
   const base = (env.CONTROL_CENTER_URL || 'https://controlcenter.krishraja.com').replace(/\/+$/, '')
-  const r = await fetch(`${base}/api/voice/rules?for=${kind}`, { headers: { cookie: `cc_access=${createHash('sha256').update(code).digest('hex')}` }, signal: AbortSignal.timeout(8_000) })
+  const r = await fetch(`${base}/api/voice/rules?for=${kind}`, { headers: { cookie: `cc_access=${mintAccessValue(code, env)}` }, signal: AbortSignal.timeout(8_000) })
   if (r.status !== 200) return ''
   const j = await r.json() as { ok?: boolean; text?: string }
   const text = j?.ok === true && typeof j.text === 'string' ? j.text : ''

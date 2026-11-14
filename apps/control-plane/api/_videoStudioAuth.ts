@@ -1,5 +1,6 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { accessCookieValid } from './_accessCookie.js'
 
 const ACCESS_COOKIE = 'cc_access'
 const CSRF_VERSION = 'v1'
@@ -70,17 +71,13 @@ function operatorConfig(): { accessCode: string; appOrigin: string; csrfSecret: 
   return { accessCode, appOrigin, csrfSecret }
 }
 
-function expectedAccessCookie(accessCode: string): string {
-  return createHash('sha256').update(accessCode).digest('hex')
-}
-
 function suppliedAccessCookie(req: VercelRequest): string {
   return parseCookies(headerValue(req.headers.cookie))[ACCESS_COOKIE] || ''
 }
 
 function hasConfiguredOperatorSession(req: VercelRequest, accessCode: string): boolean {
   const supplied = suppliedAccessCookie(req)
-  return Boolean(supplied) && safeEqual(supplied, expectedAccessCookie(accessCode))
+  return accessCookieValid(supplied, accessCode)
 }
 
 function sendError(res: VercelResponse, status: number, code: ErrorCode): true {

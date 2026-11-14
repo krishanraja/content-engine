@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto'
+import { mintAccessValue } from './_accessCookie.js'
 import { supabase } from './_supabase.js'
 
 // The engine asks Control Center's done-check sweep to look at a piece's
@@ -31,10 +32,10 @@ export function controlCenterUrl(env: Record<string, string | undefined> = proce
   return (env.CONTROL_CENTER_URL || DEFAULT_CONTROL_CENTER_URL).replace(/\/+$/, '')
 }
 
-/** The cookie Control Center's edge gate issues for the access code, or null when there is none. */
+/** The cookie Control Center's edge gate issues for the access code (v2 when ACCESS_COOKIE_V2=1), or null when there is none. */
 export function accessCookie(env: Record<string, string | undefined> = process.env): string | null {
   const code = (env.ACCESS_CODE || '').trim()
-  return code ? `cc_access=${createHash('sha256').update(code).digest('hex')}` : null
+  return code ? `cc_access=${mintAccessValue(code, env)}` : null
 }
 
 export type FetchLike = (url: string, init: { method: string; headers: Record<string, string>; body: string; signal: AbortSignal }) => Promise<{ status: number }>
