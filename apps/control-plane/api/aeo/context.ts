@@ -4,6 +4,7 @@ import { supabase } from '../_supabase.js'
 import { loadConfig, loadVoiceBlock } from '../_content.js'
 import { loadCuratedVoices } from '../_creators.js'
 import { LANE_SLUG, mondayOf } from '../_growth.js'
+import { KRISH_DOMAINS, NOT_OURS, PACKET_FEATURES, brandChecksOf, brandNamesOf, heldProducts } from '../_aeo.js'
 // The room lane stays in Control Center, so its 293-line helper does not come
 // with this route for one column list. Copied deliberately, named so a drift is
 // findable: api/_room.ts CONTACT_COLUMNS in krishanraja/control-center.
@@ -52,7 +53,9 @@ const ROOM_FACE = {
  *  the answer for a venture or a prospect read. */
 const KRISH = {
   name: 'Krish Raja',
-  domains: ['mindmake.co', 'krishraja.com', 'mindmakerlive.substack.com', 'home.makeyourmindup.ai', 'makeyourmindup.ai', 'linkedin.com/in/krishraja'],
+  domains: [...KRISH_DOMAINS],
+  // Never ours, whatever a list says (Ruling, Krish, 2026-11-13).
+  not_ours: [...NOT_OURS],
 }
 
 type Row = Record<string, any>
@@ -78,7 +81,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const since = new Date(Date.now() - PROBE_WINDOW_DAYS * 86_400_000).toISOString()
     const weekStart = mondayOf(new Date())
 
-    const [voiceBlock, canonConfig, ratedVoices, touchpoints, striking, probes, digests, rooms] = await Promise.all([
+    const [voiceBlock, canonConfig, ratedVoices, touchpoints, striking, probes, digests, rooms, engines] = await Promise.all([
       // Told to the OS once, on the Content side, and read here ever since.
       loadVoiceBlock().catch(() => ''),
       loadConfig(['mindmake_canon']).catch(() => ({} as Record<string, unknown>)),
@@ -98,6 +101,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       supabase.from('growth_geo_probes')
         .select('id, product_slug, subject_id, subject_kind, question, engine, we_cited, competitors_cited, run_at, run_id, query_id')
         .gte('run_at', since)
+        // A verify run's probes (an off-week re-check) never stand in for a research week (brief, section I).
+        .eq('run_kind', 'research')
         .or(`subject_id.in.(${ids.join(',')})${productSlugs.length ? `,and(subject_id.is.null,subject_kind.eq.venture,product_slug.in.(${productSlugs.join(',')}))` : ''}`)
         .order('run_at', { ascending: false })
         .limit(500 * ids.length),
@@ -112,8 +117,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .select(`id, why_face, trigger_signal, trigger_source_url, state, contact:contacts(${CONTACT_COLUMNS})`)
           .in('id', roomIds)
         : Promise.resolve({ data: [], error: null }),
+      // Which ventures' growth engines Krish holds: AEO measures them and builds no kit for them (brief, B4).
+      supabase.from('growth_engines').select('product_slug, role, activation_state'),
     ])
-    for (const r of [touchpoints, striking, probes, digests, rooms]) if (r.error) throw new Error(r.error.message)
+    for (const r of [touchpoints, striking, probes, digests, rooms, engines]) if (r.error) throw new Error(r.error.message)
+    const held = heldProducts((engines.data || []) as Row[])
 
     // The prior week's queries, one read for every subject's latest digest week.
     const priorBySubject = new Map<string, Row>()
@@ -149,6 +157,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         never_say: s.never_say || [],
         product_slug: product,
         lane_slug: lane,
+        // A venture's distinctive names and its brand-accuracy checks (brief, B3 and B6), and whether its engine is held (B4).
+        brand_names: brandNamesOf(s.brand_names),
+        brand_checks: brandChecksOf(s.brand_checks),
+        ...(s.kind === 'venture' ? { engine_held: !!product && held.has(product) } : {}),
         room_target: room ? {
           id: room.id,
           // The company and the title, never the person's name or email:
@@ -210,6 +222,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         canon: typeof canonConfig.mindmake_canon === 'string' ? canonConfig.mindmake_canon : '',
       },
       icp: { room_face: ROOM_FACE },
+      // The optional packet fields the ingest accepts; the engine sends a field only when it is listed.
+      packet_features: [...PACKET_FEATURES],
       subjects: out,
     })
   } catch (e: unknown) {
