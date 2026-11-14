@@ -52,8 +52,8 @@ export function isBlocking(o: ProviderOutcome): boolean {
 
 // Substrings that mean "out of credits" rather than "bad request", across the
 // providers this repo calls. Each vendor picks a different status code for the
-// same condition — PDL and Apify use 402, OpenAI 429 with `insufficient_quota`,
-// Apollo 403 with a message — so the body is read as well as the status.
+// same condition — PDL and Apify use 402, OpenAI 429 with `insufficient_quota` —
+// so the body is read as well as the status.
 //
 // Split into two lists because the status code changes how much the body can be
 // trusted.
