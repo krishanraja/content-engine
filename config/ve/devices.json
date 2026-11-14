@@ -1,18 +1,31 @@
 {
   "devices": {
     "mint_ring": {
-      "verbs": ["draw", "exit"]
+      "verbs": [
+        "draw",
+        "exit"
+      ]
     },
     "receipt_print": {
-      "verbs": ["enter", "add", "highlight"]
+      "verbs": [
+        "enter",
+        "add",
+        "highlight"
+      ]
     },
-    "slam_word": {
-    },
+    "slam_word": {},
     "takeover": {
-      "verbs": ["enter", "exit"]
+      "verbs": [
+        "enter",
+        "exit"
+      ]
     },
     "video_wall": {
-      "verbs": ["enter", "add", "dim"]
+      "verbs": [
+        "enter",
+        "add",
+        "dim"
+      ]
     },
     "office_floor": {
       "verbs": [
@@ -294,6 +307,21 @@
         "drop",
         "grey",
         "multiply",
+        "exit"
+      ]
+    },
+    "through_line": {
+      "verbs": [
+        "enter",
+        "count_to",
+        "thin",
+        "grow",
+        "multiply",
+        "drop",
+        "light",
+        "connect",
+        "rest_on",
+        "carry",
         "exit"
       ]
     }

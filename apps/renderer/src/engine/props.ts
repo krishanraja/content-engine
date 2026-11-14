@@ -22,6 +22,7 @@ export const EngineEventSchema = z.object({
   obj: z.string().min(1),
   verb: z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick', 'drop', 'grey', 'multiply']),
   verb: z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'dim', 'chip', 'type', 'send', 'pick']),
+  verb: z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick', 'thin', 'grow', 'multiply', 'drop', 'light', 'connect', 'rest_on']),
   toState: z.string().min(1),
   atFrame: Frame,
   sfx: z.string().optional(),
