@@ -4199,6 +4199,20 @@ Checks the MYMU: Teardown beat gate (api/_beat.ts) in BOTH directions.
 
 The editorial route: one neutral source, two independent series lenses, and
 
+### `apps/control-plane/scripts/check-voice-close.ts`
+
+The voice check wins over the script close.
+
+- `const PHRASE`
+- `const ALLOWED: ReadonlyArray<{ file: string; holds: string; why: string }>`
+- `interface Hit`
+- `function phraseHits(file: string, text: string): Hit[]`
+- `function textProblems(files: Array<[string, string]>, allowed = ALLOWED): string[]`
+- `function promptProblems(input: { closeLine: string rules: ReadonlyArray<{ id: string; name: string; text: string }> blo…`
+- `function jsonProblems(file: string, data: unknown, hisKeys: ReadonlySet<string>): string[]`
+- `function scopeFiles(): string[]`
+- `async function check(): Promise<string[]>`
+
 ### `apps/control-plane/scripts/clustering/build-narrative-clusters.ts`
 
 Nightly narrative clustering for the Content tab.
