@@ -191,12 +191,18 @@ describe('a press on the live board binds the same words as the full board', () 
     expect(readFileSync(file, 'utf8')).toMatch(/[^\x00-\x7F]/)
     const ideas = JSON.parse(readFileSync(file, 'utf8'))
     let n = 0
+    const seen: string[] = []
     for (const opts of Object.values(ideas.offdays) as Array<Array<Record<string, unknown>>>) for (const o of opts) {
       const got = offdaySides(o)
       expect([got.idea_sha256, got.direction_sha256, got.copy_sha256, got.source], String(o.id)).toEqual(want[String(o.id)])
+      seen.push(String(o.id))
       n++
     }
     expect(n).toBeGreaterThanOrEqual(8)
+    // Every option the view draws is one the reader reads, his tick's included (Tuesday's seventh, from the card he
+    // ticked on 12 Nov, rides on top of the day's six): like is compared with like.
+    expect(Object.keys(want).sort()).toEqual(seen.sort())
+    expect(ideas.offdays.tue.filter((o: { from_inspiration?: unknown }) => o.from_inspiration).map((o: { id: string }) => o.id)).toEqual(['701a2c55-7400-4dc8-99cb-d6001147ae16'])
   })
 })
 
