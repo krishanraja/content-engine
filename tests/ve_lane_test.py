@@ -25,7 +25,7 @@ def item(state, lane_name='in_progress', id='codex-x', **extra):
 
 
 class Route(unittest.TestCase):
-    def test_no_codex_means_queue_and_codex_here_means_local(self):
+    def test_no_companion_means_queue_and_codex_on_this_machine_means_local(self):
         with tempfile.TemporaryDirectory() as temp:
             home = Path(temp)
             self.assertEqual(lane.route(home), 'queue')
