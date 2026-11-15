@@ -20,9 +20,11 @@ You stay advisory until calibrated: you must fail Friday v7 to v11 and pass Mond
 
 ## Calibration
 
-Questions 9 to 12 read the cut at speed and stay advisory, never blocking, until they have failed the rejected
-design-lock fixtures and passed the approved ones. On 15 Nov 2026 they could not be put to them: those fixtures are
-single key frames, and each of these questions needs the frames around a move or a cut. There is no 1 to 5 scale here;
+Questions 9 to 12 read the cut at speed and stay advisory, never blocking, until they have failed a cut Krish
+rejected and passed one he approved, on their motion sheets (`ve refs` on a home computer). After that, one of them
+may block a cut, but only on a finding cited by frame (Ruling, Krish, 2026-11-15). On 15 Nov 2026 they could not be
+put to the design-lock fixtures: those are single key frames, and each of these questions needs the frames around a
+move or a cut. There is no 1 to 5 scale here;
 the only number is the 0 to 10 score against each reference card, with 8 the bar (`scripts/velib/refgate.py`).
 
 The Critic must fail `fixtures/ve/design-lock/rejected/*.jpg` and pass
