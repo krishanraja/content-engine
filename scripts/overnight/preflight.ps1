@@ -27,10 +27,10 @@ The checks, each { ok, detail, ... }:
   codex_profile    Codex's tool profile (config\codex-profile.json) passes its audit, and the MCP servers the Codex
                    that runs cards has ("codex mcp list --json", which only lists) are read for a forbidden kind:
                    publish, share, deploy, TikTok, Buffer, workflow and the rest the profile names (failure
-                   production-asked-to-publish). That Codex is Krish's everyday home, the one Codex Desktop reads
-                   (Ruling, Krish, 2026-11-15), where such servers are counted and named but kept; with
-                   VE_CODEX_STUDIO_HOME=1 it is the Studio's own home (scripts\overnight\codex_home.py), which must
-                   pass its check and have none.
+                   production-asked-to-publish). That Codex is the Studio's own home (scripts\overnight\codex_home.py)
+                   once built, which must pass its check and have none, since video cards run there and are
+                   never shown in Codex Desktop (Ruling, Krish, 2026-11-15); with VE_CODEX_VISIBLE=1 it is
+                   Krish's everyday home, the one Codex Desktop reads, where such servers are counted and named but kept.
   codex_allowance  the weekly Codex allowance used, from python scripts\session_token_audit.py --codex --json. Above
                    the ceiling in scripts\velib\cards.py (ALLOWANCE_CEILING) dispatch refuses a card the weekly credit
                    budget Krish signed does not cover (config\ve\credit-budget.json), so an overnight run spends nothing alone. Unknown (no Codex thread on this machine in
@@ -66,14 +66,14 @@ $RepoRoot = [System.IO.Path]::GetFullPath($RepoRoot)
 $StudioRuntime = Join-Path $env:USERPROFILE 'Documents\MindmakeVideoStudio\runtime'
 $StudioPython = Join-Path $StudioRuntime 'python\Scripts\python.exe'
 $CodexThread = Join-Path $RepoRoot 'scripts\codex_thread.mjs'
-# The Codex home ve dispatch runs cards under: Krish's everyday home, the one his Codex Desktop app reads (its
-# CODEX_HOME, else ~\.codex), so every session shows there (Ruling, Krish, 2026-11-15: every Codex session Claude
-# starts runs where Krish can see it in his Codex Desktop app). The Studio's own home (scripts\overnight\codex_home.py:
-# no MCP server, no plugin) is used only when VE_CODEX_STUDIO_HOME is 1. The login and profile checks read the one
-# dispatch uses.
+# The Codex home ve dispatch runs video cards under: the Studio's own home once it is built
+# (scripts\overnight\codex_home.py: no MCP server, no plugin), else Codex's own ~\.codex, never shown in Codex Desktop
+# (Ruling, Krish, 2026-11-15: video production stays rooted in the cloud; only social-media management started from
+# his own computer runs where he can see it). With VE_CODEX_VISIBLE=1 the checks read his everyday home instead, the
+# one `ve dispatch --visible` uses. The login and profile checks read the one dispatch uses.
 $CodexHome = Join-Path $StudioRuntime 'codex-home'
 $CodexEnv = @{}
-$CodexStudio = @('1', 'true', 'yes') -contains ([string]$env:VE_CODEX_STUDIO_HOME).Trim().ToLowerInvariant()
+$CodexStudio = -not (@('1', 'true', 'yes') -contains ([string]$env:VE_CODEX_VISIBLE).Trim().ToLowerInvariant())
 if ($CodexStudio -and (Test-Path -LiteralPath (Join-Path $CodexHome 'config.toml') -PathType Leaf)) { $CodexEnv = @{ CODEX_HOME = $CodexHome } }
 $Checks = [ordered]@{}
 
@@ -382,9 +382,9 @@ Invoke-Check 'codex_profile' {
     if (@(Get-ForbiddenHits $text $forbidden).Count) { $flagged += 1 }
   }
   $servers = $entries
-  # A visible run (the default since 15 Nov) uses Krish's everyday home, whose servers he keeps ("no, we need those",
+  # A visible run (ve dispatch --visible) uses Krish's everyday home, whose servers he keeps ("no, we need those",
   # 30 Oct): they are counted and named in the detail, and the card's tool profile still holds a card that names one.
-  # Only the opt-in Studio home must have none.
+  # The Studio home, where video cards run, must have none.
   if ($flagged -and $CodexEnv.Count) { return [ordered]@{ ok = $false; flagged = $flagged; detail = "$whose has $flagged MCP server(s) of a kind the profile forbids (codex mcp list names them); rebuild it (python scripts\overnight\codex_home.py build)." } }
   if ($flagged) { return [ordered]@{ ok = $true; flagged = $flagged; detail = "the profile passes its audit; visible runs use $whose, where $flagged MCP server(s) of a kind the profile forbids stay reachable (cards naming them are held). Set VE_CODEX_STUDIO_HOME=1 for runs with none, never shown in Codex Desktop." } }
   return [ordered]@{ ok = $true; flagged = 0; detail = "the profile passes its audit and none of the $($servers.Count) MCP server(s) $whose has is a forbidden kind." }

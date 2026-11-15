@@ -526,13 +526,17 @@ def cmd_sprint(args) -> int:
 
 
 def cmd_dispatch(args) -> int:
+    if getattr(args, 'visible', False):
+        # One switch for the whole visible route: the home his Desktop app reads and card worktrees beside it
+        # (velib.codex_route.card_root reads the same flag through codex_home.studio_opted_in).
+        os.environ['VE_CODEX_VISIBLE'] = '1'
     if getattr(args, 'piece', None):
         from velib.ledger import require_within
         require_within(args.piece)
     if getattr(args, 'dry_run', False):
         # The command dispatch would launch, as one line: nothing reserved, no worktree made, Codex not started.
         from velib.cards import dry_run
-        print(dry_run(Path(args.card), studio=getattr(args, 'studio_home', False), piece=getattr(args, 'piece', None)))
+        print(dry_run(Path(args.card), visible=getattr(args, 'visible', False), piece=getattr(args, 'piece', None)))
         return 0
     from velib import codex_lane
     if getattr(args, 'queue', False) or codex_lane.route() == 'queue':
@@ -543,7 +547,7 @@ def cmd_dispatch(args) -> int:
               '(its recordings pass picks it up within five minutes). Read the result with ve lane status.')
         return 0
     from velib.cards import dispatch
-    result = dispatch(Path(args.card), background=not args.wait, studio=getattr(args, 'studio_home', False),
+    result = dispatch(Path(args.card), background=not args.wait, visible=getattr(args, 'visible', False),
                       piece=getattr(args, 'piece', None))
     print((result.stdout or result.stderr).strip()[-2000:])
     return result.returncode
@@ -553,9 +557,12 @@ def cmd_codex(args) -> int:
     """The Codex minimum (Ruling, Krish, 2026-11-15): Claude records Codex's checked share of a piece; status reads it."""
     from velib import codex_minimum, verdict
     if args.action == 'where':
+        from velib.cards import codex_env
+        video = codex_env().get('CODEX_HOME') or str(Path.home() / '.codex')
         home, how = codex_minimum.desktop_home_found()
-        print(f've codex: dispatch runs Codex under {home} (found by {how}), the home Codex Desktop reads; '
-              'a session started in a cloud container never shows there')
+        print(f've codex: video cards and the lane run Codex under {video}, never shown in Codex Desktop; '
+              f've dispatch --visible (social-media legwork from his own computer) runs under {home} (found by {how}), '
+              'the home Codex Desktop reads (Ruling, Krish, 2026-11-15)')
         return 0
     if args.action == 'route':
         # How a card would start on this machine, for a stand-in card: the route and the exact command (in WSL with his
@@ -563,7 +570,7 @@ def cmd_codex(args) -> int:
         from velib import codex_route
         from velib.cards import codex_env, plan
         from velib.common import card_worktree, native_path
-        env = codex_env(getattr(args, 'studio_home', False))
+        env = codex_env(getattr(args, 'visible', False))
         try:
             cwd = str(native_path(card_worktree('route-check')))
         except ValueError:
@@ -1975,8 +1982,11 @@ def main() -> int:
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
     p.add_argument('--queue', action='store_true', help='send it to the Codex lane even when Codex is on this machine')
     p.add_argument('--spend-id', help='with the lane: the Control Center reservation booked for this card')
+    p.add_argument('--visible', action='store_true',
+                   help="run under the Codex home his Desktop app reads, for social-media legwork started from his own "
+                        "computer; video cards never use it (Ruling, Krish, 2026-11-15)")
     p.add_argument('--studio-home', action='store_true',
-                   help="run under the Studio's own Codex home (no MCP server or plugin; NOT visible in Codex Desktop)")
+                   help="the default since 15 Nov: the Studio's own Codex home when built, NOT visible in Codex Desktop")
     p.add_argument('--dry-run', action='store_true', help='print the command it would launch and start nothing')
     p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('codex', help="the Codex minimum: record Codex's checked share of a piece, or read it")
@@ -1988,8 +1998,9 @@ def main() -> int:
     a.add_argument('--verified-by', required=True, help='who checked it (never Codex)')
     a.add_argument('--cwd', help="the card's worktree, to find its Codex session log"); a.add_argument('--session')
     a = actions.add_parser('status'); a.add_argument('piece')
-    actions.add_parser('where', help='the Codex home dispatch runs under: the one Codex Desktop reads')
-    actions.add_parser('route', help='the route and exact command a card would start Codex with here; starts nothing')
+    actions.add_parser('where', help='the Codex homes dispatch runs under: the video route and the --visible route')
+    a = actions.add_parser('route', help='the route and exact command a card would start Codex with here; starts nothing')
+    a.add_argument('--visible', action='store_true', help='the --visible route (his Desktop home) instead of the video route')
     p.set_defaults(fn=cmd_codex)
     p = sub.add_parser('lane', help='the Codex lane: queue a card from any session; the home computer builds it')
     actions = p.add_subparsers(dest='action', required=True)
