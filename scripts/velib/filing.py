@@ -46,7 +46,8 @@ def readiness(spec: dict, cut: str, directory: Path) -> tuple[list[str], str | N
     """(reasons it is not ready, the QC-bound video, its sha256): the same reasons `ve status` prints."""
     from . import packet  # noqa: PLC0415
     state = packet.readiness(spec, cut, directory)
-    return state['mechanical'] + state['design'] + state['final'], state['video'], state['digest']
+    return (state['mechanical'] + state['design'] + state['final'] + state.get('codex', []), state['video'],
+            state['digest'])
 
 
 def library_root(given=None) -> Path:
