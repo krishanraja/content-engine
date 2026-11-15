@@ -5569,6 +5569,16 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `type FontRole = keyof typeof HOUSE_FONTS`
 - `function font(role: FontRole): string`
 
+### `apps/renderer/src/engine/kit/verbs.ts`
+
+- `function countTo(frame: number, at: number, from: number, to: number, { frames = 18, jitter = 0.02, decimals = 0 }: { f…`
+- `function typeOn(frame: number, at: number, text: string, { cps = 30 }: { cps?: number } = {}): string`
+- `function drawPath(frame: number, at: number, lengthPx: number, { frames = 12 }: { frames?: number } = {}): number`
+- `function mix(frame: number, at: number, fromColour: string, toColour: string, { frames = 6 }: { frames?: number } = {})…`
+- `interface CursorPoint`
+- `interface CursorState`
+- `function cursorPath(frame: number, at: number, points: readonly CursorPoint[], { framesPerLeg = 10, restFrames = 4 }: {…`
+
 ### `apps/renderer/src/engine/layouts/index.ts`
 
 - `function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[]`
