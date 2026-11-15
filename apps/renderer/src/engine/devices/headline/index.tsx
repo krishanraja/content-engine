@@ -1,3 +1,4 @@
+import { ENTER, progress } from '../../clock'
 import { isRegion } from '../../kit/layout'
 import React from 'react'
 import { Swipe } from '../../../house/components'
@@ -39,12 +40,18 @@ export function Device({ object, events, box, aspect, tokens, frame }: DevicePro
     s.dek.split(/\s+/).some(word => textWidth('fraunces', word, 44) > dekWidth)))
     throw new Error('Dek copy does not fit at 44px')
   const reveal = revealLines(s.lines.map(line => line.toUpperCase()), s.age)
+  const assemble = s.reveal === 'assemble'
+  const wordCount = s.lines.reduce((n, line) => n + line.split(/\s+/).length, 0)
+  let wordIndex = 0
   return <>
     <div data-overlay="headline" style={{ ...canvasRect(at.x, at.y, at.w, l.height), color: s.ground === 'light' ? tokens.ink : tokens.cream,
       fontFamily: HOUSE_FONTS.display, fontSize: l.size, lineHeight: 0.88, opacity: 1 - s.exit }}>
       {s.lines.map((line, i) => {
         // The shared reveal (kit/reveal.ts): by line with no style, as before; by word, typed or rolled in a style.
         const r = reveal[i]!
+        const row = line.toUpperCase().split(/\s+/)
+        const lineWidth = textWidth('anton', row.join(' '), l.size)
+        let cursor = 0
         const words = line.toUpperCase().split(/\s+/).map((word, j) => {
           const w = r.words[j]!
           const shown = w.chars >= word.length ? word : <>{word.slice(0, w.chars)}<span style={{ opacity: 0 }}>{word.slice(w.chars)}</span></>
@@ -57,19 +64,30 @@ export function Device({ object, events, box, aspect, tokens, frame }: DevicePro
             body = React.cloneElement(swipe, {}, React.cloneElement(block, { style: { ...block.props.style, ...halftone(tokens) } }), word)
           }
           // A word typing in shows its typed part; the swiped word waits until it is whole.
-          const unit = w.chars < word.length ? (swiped ? <span style={{ opacity: 0 }}>{body}</span> : shown)
+          let unit = w.chars < word.length ? (swiped ? <span style={{ opacity: 0 }}>{body}</span> : shown)
             : w.p === 1 ? body : <span style={{ display: 'inline-block', ...entranceStyle(w.p) }}>{body}</span>
+          if (assemble) {
+            const delay = wordCount > 1 ? 3 * wordIndex / (wordCount - 1) : 0
+            const p = Math.min(1, Math.max(0, progress(s.age - delay, 7, ENTER)))
+            const width = textWidth('anton', word, l.size)
+            const towardCentre = Math.max(-24, Math.min(24, lineWidth / 2 - (cursor + width / 2)))
+            // The swipe treatment follows the landed word; no second entrance on the word itself.
+            unit = <span data-assemble-word={wordIndex} style={{ display: 'inline-block', opacity: p,
+              transform: `translateX(${towardCentre * (1 - p)}px) scale(${1 + 0.3 * (1 - p)})` }}>{swiped && s.age >= 10 ? body : word}</span>
+            cursor += width + textWidth('anton', ' ', l.size)
+            wordIndex++
+          }
           return <React.Fragment key={j}>{j > 0 ? ' ' : ''}{unit}</React.Fragment>
         })
-        if (r.roll) return <div key={i} style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
+        if (!assemble && r.roll) return <div key={i} style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
           <div style={{ transform: `translateY(${(100 * (1 - r.p)).toFixed(3)}%)`, opacity: Math.min(1, r.p * 2) }}>{words}</div></div>
-        return <div key={i} style={{ ...entranceStyle(r.p), whiteSpace: 'nowrap' }}>{words}</div>
+        return <div key={i} style={{ ...(assemble ? {} : entranceStyle(r.p)), whiteSpace: 'nowrap' }}>{words}</div>
       })}
     </div>
     {s.dek && <div style={{ ...canvasRect(s.dekAt?.x ?? (beside ? at.x + wordWidth + 32 : at.x),
       s.dekAt?.y ?? (beside ? at.y : at.y + l.height + 24), dekWidth, 110),
       color: tokens.cream, fontFamily: HOUSE_FONTS.dek, fontSize: 44, fontStyle: 'italic', lineHeight: 1.16,
-      opacity: s.opacity, ...(s.dekBack ? { background: tokens.ink, boxShadow: `0 0 0 14px ${tokens.ink}`, width: 'fit-content', maxWidth: dekWidth, height: 'auto', minHeight: 0 } : {}) }}
+      opacity: assemble && s.age < 10 ? 0 : s.opacity, ...(s.dekBack ? { background: tokens.ink, boxShadow: `0 0 0 14px ${tokens.ink}`, width: 'fit-content', maxWidth: dekWidth, height: 'auto', minHeight: 0 } : {}) }}
       data-dek-back={s.dekBack ? '' : undefined}>{s.dek}</div>}
   </>
 }
