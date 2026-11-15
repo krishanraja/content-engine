@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
-"""Where ve dispatch runs Codex: Krish's everyday Codex home, the one his Codex Desktop app reads, so every session
-Claude starts shows in his Desktop app and he can attach his browser to it.
+"""Where ve dispatch runs Codex. Two routes (Ruling, Krish, 2026-11-15, later the same day: video production stays
+rooted in the cloud and is never shown in Codex Desktop; only social-media management, started from a Claude session on
+his own computer, runs where he can see it). Every video card and the lane's builds run under the Studio's own home below
+when it is built, else Codex's own default home (velib.cards.codex_env); `ve dispatch --visible` runs under Krish's
+everyday Codex home, the one his Codex Desktop app reads, found here, so he can attach his browser.
+
+The earlier ruling the --visible route came from:
 
 Ruling (Krish, 2026-11-15): every Codex session Claude starts runs where Krish can see it in his Codex Desktop app, so
 he can attach his browser; this replaces the separate Studio Codex home of 30 Oct as the default. His words: "I want
@@ -20,7 +25,7 @@ Claude to spin up codex sessions I can actually see."
                    them: the tool profile (config/codex-profile.json) still holds any card that names a forbidden tool,
                    and verify-card still refuses work outside write_allow.
 
-The Studio's own home below stays as an explicit opt-in (ve dispatch --studio-home, or VE_CODEX_STUDIO_HOME=1): a run
+The Studio's own home below is the video default again (it was an opt-in from 15 Nov until the ruling above): a run
 with no MCP server and no plugin at all, which his Desktop app never shows.
 
 The Studio home, as built since 30 Oct:
@@ -71,6 +76,7 @@ PROFILE = 've-card'
 BEGIN = f'# >>> content-engine {PROFILE} profile: written by scripts/overnight/codex_home.py install-profile; never edit >>>'
 END = f'# <<< content-engine {PROFILE} profile <<<'
 STUDIO_FLAG = 'VE_CODEX_STUDIO_HOME'
+VISIBLE_FLAG = 'VE_CODEX_VISIBLE'
 DESKTOP_FLAG = 'VE_CODEX_DESKTOP_HOME'
 
 
@@ -125,9 +131,21 @@ def desktop_home(env=None, wsl: bool | None = None, windows=windows_value,
     return Path.home() / '.codex', '~/.codex'
 
 
-def studio_opted_in(env=None) -> bool:
+def visible_opted_in(env=None) -> bool:
+    """Whether a card takes the visible route: VE_CODEX_VISIBLE set (ve dispatch --visible sets it), for social-media
+    legwork a session on his own computer starts. Ruling (Krish, 2026-11-15): video production stays rooted in the cloud
+    and is never shown in Codex Desktop; only social-media management runs where he can see it."""
     env = os.environ if env is None else env
-    return str(env.get(STUDIO_FLAG, '')).strip().lower() in ('1', 'true', 'yes')
+    return str(env.get(VISIBLE_FLAG, '')).strip().lower() in ('1', 'true', 'yes')
+
+
+def studio_opted_in(env=None) -> bool:
+    """Whether a card takes the video route (the Studio home when built, the layout's own worktrees): always, unless
+    the visible route is asked for (visible_opted_in). VE_CODEX_STUDIO_HOME=1 still says so explicitly."""
+    env = os.environ if env is None else env
+    if str(env.get(STUDIO_FLAG, '')).strip().lower() in ('1', 'true', 'yes'):
+        return True
+    return not visible_opted_in(env)
 
 
 # Krish's everyday Codex home, the one his Desktop app reads (resolved when a command runs, never at import).
@@ -221,7 +239,7 @@ def check(home: Path = HOME, main: Path | None = MAIN, profile: dict | None = No
 
 
 def active(home: Path = HOME) -> Path | None:
-    """The Studio home when it is built, else None. Dispatch runs under it only when asked to (studio_opted_in)."""
+    """The Studio home when it is built, else None. Every video card runs under it when it is built (velib.cards.codex_env)."""
     return home if (home / 'config.toml').is_file() else None
 
 

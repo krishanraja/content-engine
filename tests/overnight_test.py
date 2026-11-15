@@ -138,38 +138,56 @@ class CodexHomeTests(unittest.TestCase):
     def test_build_never_uses_the_everyday_home_as_its_own(self):
         self.assertTrue(codex_home.build(self.main, self.main))
 
-    def test_dispatch_runs_codex_under_the_desktop_home_by_default_and_never_a_shared_runtime(self):
-        """Ruling (Krish, 2026-11-15): every Codex session Claude starts runs where he can see it in Codex Desktop."""
+    def test_video_cards_run_under_the_studio_home_by_default_and_never_a_shared_runtime(self):
+        """Ruling (Krish, 2026-11-15): video production stays rooted in the cloud, never shown in Codex Desktop."""
         sys.path.insert(0, str(ROOT / 'scripts'))
         from velib import cards
-        env = {'CODEX_COMPANION_APP_SERVER_ENDPOINT': 'pipe', 'KEEP': '1', codex_home.DESKTOP_FLAG: str(self.main),
-               codex_home.STUDIO_FLAG: ''}
+        env = {'CODEX_COMPANION_APP_SERVER_ENDPOINT': 'pipe', 'KEEP': '1', codex_home.DESKTOP_FLAG: str(self.main)}
         codex_home.build(self.home, self.main)
-        with mock.patch.dict(os.environ, env, clear=False), mock.patch.object(codex_home, 'active', return_value=self.home):
+        with mock.patch.dict(os.environ, env, clear=False), mock.patch.object(codex_home, 'active', return_value=self.home), \
+                mock.patch.object(codex_home, 'check', return_value=[]):
             run_env = cards.codex_env()
         self.assertNotIn('CODEX_COMPANION_APP_SERVER_ENDPOINT', run_env)
         self.assertEqual(run_env['KEEP'], '1')
-        self.assertEqual(run_env['CODEX_HOME'], str(self.main), 'the built Studio home is no longer the default')
-        self.assertEqual(codex_home.profile_problems(self.main), [], 'dispatch wrote the ve-card profile')
-        self.assertIn('[mcp_servers.buffer]', (self.main / 'config.toml').read_text(encoding='utf-8'),
-                      'his own settings stay as they were')
-
-    def test_the_studio_home_is_an_explicit_opt_in(self):
-        sys.path.insert(0, str(ROOT / 'scripts'))
-        from velib import cards
-        codex_home.build(self.home, self.main)
-        with mock.patch.dict(os.environ, {codex_home.STUDIO_FLAG: ''}), \
-                mock.patch.object(codex_home, 'active', return_value=self.home), \
-                mock.patch.object(codex_home, 'check', return_value=[]):
-            self.assertEqual(cards.codex_env(studio=True)['CODEX_HOME'], str(self.home))
-        with mock.patch.dict(os.environ, {codex_home.STUDIO_FLAG: '1'}), \
-                mock.patch.object(codex_home, 'active', return_value=self.home), \
+        self.assertEqual(run_env['CODEX_HOME'], str(self.home), 'a video card runs under the built Studio home')
+        self.assertEqual(codex_home.profile_problems(self.main) != [], True, 'his everyday home is not written to')
+        with mock.patch.dict(os.environ, env, clear=False), mock.patch.object(codex_home, 'active', return_value=self.home), \
                 mock.patch.object(codex_home, 'check', return_value=['config.toml is not ...']):
             with self.assertRaises(SystemExit):
                 cards.codex_env()
-        with mock.patch.object(codex_home, 'active', return_value=None):
-            with self.assertRaises(SystemExit):
-                cards.codex_env(studio=True)
+
+    def test_with_no_studio_home_a_video_card_never_takes_a_windows_drive_home_in_wsl(self):
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        from velib import cards
+        with mock.patch.dict(os.environ, {'CODEX_HOME': '/mnt/c/Users/someone/.codex'}, clear=False), \
+                mock.patch.object(codex_home, 'active', return_value=None), mock.patch.object(codex_home, 'in_wsl', return_value=True):
+            self.assertNotIn('CODEX_HOME', cards.codex_env(), 'WSL takes its own ~/.codex: the native route, as before 15 Nov')
+        with mock.patch.dict(os.environ, {'CODEX_HOME': '/home/someone/.codex'}, clear=False), \
+                mock.patch.object(codex_home, 'active', return_value=None), mock.patch.object(codex_home, 'in_wsl', return_value=True):
+            self.assertEqual(cards.codex_env()['CODEX_HOME'], '/home/someone/.codex')
+
+    def test_the_desktop_home_is_the_visible_opt_in(self):
+        """Ruling (Krish, 2026-11-15): social-media legwork from his own computer runs where he can see it."""
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        from velib import cards
+        codex_home.build(self.home, self.main)
+        with mock.patch.dict(os.environ, {codex_home.DESKTOP_FLAG: str(self.main)}), \
+                mock.patch.object(codex_home, 'active', return_value=self.home):
+            run_env = cards.codex_env(visible=True)
+        self.assertEqual(run_env['CODEX_HOME'], str(self.main))
+        self.assertEqual(codex_home.profile_problems(self.main), [], 'the visible route writes the ve-card profile')
+        self.assertIn('[mcp_servers.buffer]', (self.main / 'config.toml').read_text(encoding='utf-8'),
+                      'his own settings stay as they were')
+
+    def test_one_switch_takes_the_visible_route(self):
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        from velib import cards
+        codex_home.build(self.home, self.main)
+        with mock.patch.dict(os.environ, {codex_home.DESKTOP_FLAG: str(self.main), codex_home.VISIBLE_FLAG: '1'}), \
+                mock.patch.object(codex_home, 'active', return_value=self.home):
+            self.assertEqual(cards.codex_env()['CODEX_HOME'], str(self.main), 'VE_CODEX_VISIBLE asks for his Desktop home')
+        self.assertFalse(codex_home.studio_opted_in({codex_home.VISIBLE_FLAG: '1'}))
+        self.assertTrue(codex_home.studio_opted_in({}), 'with no switch every card takes the video route')
 
     def test_desktop_home_in_wsl_is_the_windows_home_never_wsls_own(self):
         windows = {'CODEX_HOME': None, 'USERPROFILE': '/mnt/c/Users/krish'}
