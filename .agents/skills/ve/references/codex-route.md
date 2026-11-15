@@ -9,3 +9,5 @@ Moved here whole from the ve skill's core on 13 November 2026, when the core rea
 If Codex can't start, report the exact error in one line and stop; never edit MCP or Claude settings to work around it.
 
 **Claude starts Codex only through scripts/codex_thread.mjs** (Ruling, Krish, 2026-11-15). `node scripts/codex_thread.mjs open "<message>"` makes a permanent thread in his Codex Desktop recents, titled by its first line; `send <thread> "<message>"` adds one turn and releases the thread so he can type in it too; `read <thread>` prints every turn, his from Desktop included. Each command starts its own short-lived `codex app-server`; never the Codex plugin's long-running server. `ve dispatch` opens every card this way; a background card's log, thread id first, is `.ve-work/dispatch/<card>.log`.
+
+**No Control Center connector** (moved here from the skill's step 7 to keep the skill under its cap): With no Control Center connector (a local Claude Code install) dispatch reserves provisionally, warns in one line and still starts Codex; reconcile later with `ve budget provisional` and `ve budget reconcile`.
