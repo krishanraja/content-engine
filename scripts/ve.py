@@ -527,7 +527,14 @@ def cmd_codex(args) -> int:
         options = ['--cwd', cwd, '--sandbox', 'workspace-write', '--prompt-file',
                    str(ROOT / '.cache' / 've-dispatch' / 'route-check.prompt.md')]
         print(f"ve codex: Codex home {env.get('CODEX_HOME')}")
-        print(codex_route.describe(*plan(options, env)))
+        argv, chosen, extra = plan(options, env)
+        print(codex_route.describe(argv, chosen, extra))
+        if chosen == 'wsl-windows':
+            # Copy the script and start Windows node on it with no command (it prints its usage; no Codex starts),
+            # exactly as a dispatch will, so a route that cannot run fails here with node's own error.
+            from velib.cards import launch
+            launch(options, env)
+            print('ve codex: Windows node runs codex_thread.mjs from its Windows copy (usage printed; no Codex started)')
         return 0
     try:
         spec_file = spec_path_for(args.piece)

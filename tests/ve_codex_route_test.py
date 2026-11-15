@@ -182,9 +182,12 @@ class DispatchUsesTheRouteTest(unittest.TestCase):
             return real(script, sub, options, home, platform='linux', wsl=True, run=fake, which=lambda _n: '/usr/bin/codex')
 
         with unittest.mock.patch.object(codex_route, 'thread_command', simulated), \
-                unittest.mock.patch.object(codex_route, 'stage') as stage:
+                unittest.mock.patch.object(codex_route, 'stage') as stage, \
+                unittest.mock.patch.object(codex_route, 'smoke') as smoke:
             cmd, env, chosen = cards.launch(list(OPTIONS), {'CODEX_HOME': WIN_HOME, 'PATH': '/usr/bin'})
         stage.assert_called_once()
+        smoke.assert_called_once()
+        self.assertEqual(smoke.call_args.args[0][:2], cmd[:2])
         self.assertEqual(chosen, 'wsl-windows')
         self.assertEqual(cmd[0], '/mnt/c/Program Files/nodejs/node.exe')
         self.assertEqual(cmd[cmd.index('--home') + 1], 'C:\\Users\\krish\\.codex')
@@ -199,6 +202,36 @@ class DispatchUsesTheRouteTest(unittest.TestCase):
             with self.assertRaises(SystemExit) as stop:
                 cards.launch(list(OPTIONS), {'CODEX_HOME': WIN_HOME})
         self.assertEqual(stop.exception.code, 've dispatch: no Windows node (fix)')
+
+
+class SmokeTest(unittest.TestCase):
+    """On 15 Nov the first card on the Windows route came back with only node's MODULE_NOT_FOUND tail. The launch now
+    starts node on the staged script once, with no command, and stops in one line with node's own error."""
+
+    ARGV = ['/mnt/c/Program Files/nodejs/node.exe', 'C:\\Users\\krish\\.ve-codex\\codex_thread.mjs', 'open']
+
+    def test_usage_printed_passes(self):
+        ok = lambda args, **kw: subprocess.CompletedProcess(args, 2, '', 'Usage: node codex_thread.mjs open ...\n')
+        codex_route.smoke(self.ARGV, {}, None, run=ok)
+
+    def test_module_not_found_stops_with_nodes_line(self):
+        err = ("node:internal/modules/cjs/loader:1228\n  throw err;\n\nError: Cannot find module "
+               "'C:\\\\Users\\\\krish\\\\.ve-codex\\\\codex_thread.mjs'\n    at node:internal/main/run_main_module:33:47 {\n"
+               "  code: 'MODULE_NOT_FOUND',\n}\n\nNode.js v24.19.0\n")
+        bad = lambda args, **kw: subprocess.CompletedProcess(args, 1, '', err)
+        with self.assertRaises(codex_route.RouteError) as stop:
+            codex_route.smoke(self.ARGV, {}, '/home/krish/wt', run=bad)
+        self.assertIn('Cannot find module', str(stop.exception))
+        self.assertIn(self.ARGV[1], str(stop.exception))
+
+    def test_a_drive_path_is_translated_without_wslpath(self):
+        self.assertEqual(codex_route.drvfs_windows('/mnt/c/Users/krish/.ve-codex/codex_thread.mjs'),
+                         'C:\\Users\\krish\\.ve-codex\\codex_thread.mjs')
+        self.assertIsNone(codex_route.drvfs_windows('/home/krish/wt'))
+
+        def refuse(args, **kw):
+            raise AssertionError('wslpath must not be asked about a /mnt path')
+        self.assertEqual(codex_route.wslpath('/mnt/d/x', '-w', refuse), 'D:\\x')
 
 
 class SessionLogTest(unittest.TestCase):
