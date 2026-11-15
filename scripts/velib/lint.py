@@ -291,16 +291,17 @@ def title_moment_lints(spec: dict) -> list[str]:
     return out
 
 
-# INV-SYNTHETIC-OFF (config/ve/invariants.json; Krish, 2026-10-27: "on backup until trained and convincing"): no synthetic
-# Krish voice or likeness until he approves its realism test. That approval lives once, in krish-clone's registry
-# (docs/REGISTRY.md there): one entry per approved clone, his exact words, the date and the sha256 of the scored blind
-# A/B record he approved. It is read live from krish-clone main, the way voice_score.mjs reads ai-harness, and only when
-# a spec uses a synthetic capability or claims a synthetic approval, so every other lint stays offline. An unreadable
-# or malformed registry refuses; it never passes.
+# INV-SYNTHETIC-OFF (config/ve/invariants.json; Krish, 2026-10-27: "on backup until trained and convincing"): no
+# synthetic Krish voice or likeness until he approves it. That approval lives once, in krish-clone's registry
+# (docs/REGISTRY.md there): one entry per approved clone, his exact words, the date and approved_sha256, the sha256 of
+# exactly what he approved. His own say-so is enough (Ruling, Krish, 2026-11-15); a scored listening panel is optional.
+# It is read live from krish-clone main, the way voice_score.mjs reads ai-harness, and only when a spec uses a synthetic
+# capability or claims a synthetic approval, so every other lint stays offline. An unreadable or malformed registry
+# refuses; it never passes.
 SYNTHETIC_REGISTRY = 'https://raw.githubusercontent.com/krishanraja/krish-clone/main/config/synthetic-approvals.json'
 SYNTHETIC_FORMAT = 'krish-clone.synthetic-approvals/1'
 SYNTHETIC_KIND = {'voice_clone': 'voice', 'avatar': 'likeness', 'lipsync': 'likeness'}  # tools.json realism_test keys
-SYNTHETIC_FIELDS = ('name', 'kind', 'platform', 'scored_pack_sha256', 'approved_words', 'approved_on')
+SYNTHETIC_FIELDS = ('name', 'kind', 'platform', 'approved_sha256', 'approved_words', 'approved_on')
 CLONE_NAME = re.compile(r':\s*([a-z][a-z0-9]*(?:-[a-z0-9]+)+)\s*$')
 
 
@@ -367,14 +368,14 @@ def read_synthetic_registry(fetch=None) -> list[dict]:
     for index, entry in enumerate(entries):
         if not isinstance(entry, dict) or any(not isinstance(entry.get(k), str) or not entry[k].strip() for k in SYNTHETIC_FIELDS):
             raise ValueError(f'approvals[{index}] is incomplete')
-        if not re.fullmatch(r'[0-9a-f]{64}', entry['scored_pack_sha256']):
-            raise ValueError(f'approvals[{index}] has no scored record sha256')
+        if not re.fullmatch(r'[0-9a-f]{64}', entry['approved_sha256']):
+            raise ValueError(f'approvals[{index}] has no approved_sha256')
     return [entry for entry in entries if not entry.get('withdrawn')]
 
 
 def _synthetic_match(entry: dict, approval: dict) -> bool:
     return (approval.get('gate') == 'synthetic' and approval.get('by') == 'Krish'
-            and approval.get('artifact_hash') == entry['scored_pack_sha256']
+            and approval.get('artifact_hash') == entry['approved_sha256']
             and approval.get('said') == entry['approved_words'] and approval.get('on') == entry['approved_on'])
 
 
@@ -410,18 +411,18 @@ def synthetic_lints(spec: dict, fetch=None) -> list[str]:
                       and e['platform'] == use['platform']), None)
         if entry is None:
             out.append(f"{where}: {use['name']} is not an approved {use['kind']} from {use['platform']} in krish-clone's "
-                       'registry; no spec uses a synthetic Krish until he approves its scored blind test (INV-SYNTHETIC-OFF)')
+                       'registry; no spec uses a synthetic Krish until he approves it (INV-SYNTHETIC-OFF)')
         elif not any(_synthetic_match(entry, approval) for _, approval in claimed):
             out.append(f"{where}: {use['name']} is approved, but the spec carries no matching approval: add "
                        'approvals[gate=synthetic] with by Krish, and said, on and artifact_hash copied exactly from its '
-                       f"registry entry (artifact_hash {entry['scored_pack_sha256']})")
+                       f"registry entry (artifact_hash {entry['approved_sha256']})")
     for index, approval in claimed:
         if unreadable:
             out.append(f'voice.synthetic approvals.{index}: a synthetic approval cannot be checked; the approvals registry '
                        f'could not be read ({unreadable})')
         elif not any(_synthetic_match(entry, approval) for entry in registry):
             out.append(f"voice.synthetic approvals.{index}: this synthetic approval matches no active entry in krish-clone's "
-                       'registry (his words, the date and the scored record sha256, exactly)')
+                       'registry (his words, the date and its approved_sha256, exactly)')
     return out
 
 
