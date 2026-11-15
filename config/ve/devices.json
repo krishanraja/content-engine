@@ -264,6 +264,7 @@
     "checklist": {
       "verbs": [
         "enter",
+        "dim",
         "fill",
         "exit"
       ]
