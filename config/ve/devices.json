@@ -334,6 +334,14 @@
         "carry",
         "exit"
       ]
+    },
+    "code_card": {
+      "verbs": [
+        "enter",
+        "type",
+        "highlight",
+        "exit"
+      ]
     }
   }
 }

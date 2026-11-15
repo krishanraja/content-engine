@@ -4,6 +4,7 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('code_card declares four cues', () => { expect(manifest.devices.code_card.verbs).toEqual(['enter', 'type', 'highlight', 'exit']) })
   it('checklist declares its work and fill cues', () => {
     expect(manifest.devices.checklist.verbs).toEqual(['enter', 'dim', 'fill', 'exit'])
   })
