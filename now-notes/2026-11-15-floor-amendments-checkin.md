@@ -1,3 +1,0 @@
-Status: His 15 Nov words now reach the floor: house_brand, words_add and honest_titles carry his amendments (taste_floor_group_amendments, live and read back; the 4 Nov decisions kept), floor.py prints each group's decided words above its members, and the weekly standards check-in has its tables, its code-only builder (scripts/standards_checkin.py) and a Sunday workflow; the one check-in artifact is the only artifact the gate lets through (Ruling, Krish, 2026-11-15).
-Next: Add SUPABASE_ACCESS_TOKEN and SUPABASE_PROJECT_REF as repository secrets so standards-checkin.yml can run on Sunday.
-North Star check (2026-11-15): holds.
