@@ -232,7 +232,9 @@ Every cut is held to the signed [motion standard](MOTION_STANDARD.md); each piec
 Card fields name `write_allow` and `read` as `[a, b]` text or a JSON list; `ve card` writes either as `[a, b]`, the form
 `ve verify-card` matches against (11 Nov 2026: a list once reached the card as Python's list text and a correct build
 was refused). When the lane marks a build failed, read why: if the fault is the lane's, check the pushed
-`ve-card/<card>` branch yourself (its acceptance, `ve verify-card`, the stills) before spending a second run.
+`ve-card/<card>` branch yourself (its acceptance, `ve verify-card`, the stills) before spending a second run. A re-queued card whose
+first attempt cannot take in the current main (the same files changed on main since) starts fresh from main by itself, and
+its build replaces that first attempt on its branch only if the branch has not moved since (`cards.restart_fresh`, 15 Nov 2026).
 
 Codex never edits a cut: it never renders, assembles, trims, retimes, captions, mixes or files a production piece, and never touches its words or audio. Its report is never proof.
 
