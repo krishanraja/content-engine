@@ -1,3 +1,4 @@
+import { codeFocus } from './code_card'
 import type { EngineEvent, EngineObject } from '../props'
 import type { Focus, Point } from '../kit/focus'
 import type { DeviceProps } from './types'
@@ -9,6 +10,7 @@ import { scribblePen } from './scribble/state'
  *  single-line-drawing no pen to follow; config/ve/style-distinct.json names the same devices, so `ve styles` leaves
  *  out a style whose effects touch no device in the window (engine.test.ts holds the two lists equal). */
 export const FOCUS: Readonly<Record<string, (p: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | 'frame'>) => Focus | undefined>> = {
+  code_card: codeFocus,
   typing_bubble: bubbleFocus,
   query_chip: chipFocus,
 }

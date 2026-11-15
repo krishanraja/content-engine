@@ -251,8 +251,15 @@ def publish_branch(worktree: Path, branch: str, message: str) -> tuple[str | Non
     if subprocess.run(git + ['diff', '--cached', '--quiet'], capture_output=True).returncode != 0:
         subprocess.run(git + ['-c', 'user.name=Codex lane', '-c', 'user.email=codex-lane@users.noreply.github.com',
                               'commit', '-q', '-m', message], check=True, capture_output=True)
-    pushed = subprocess.run(git + ['push', '-q', '-u', 'origin', '--end-of-options', f'HEAD:refs/heads/{branch}'],
+    # A worktree restarted from main (cards.restart_fresh) replaces its earlier attempt, and only that attempt.
+    from .cards import fresh_lease_path
+    lease_file = fresh_lease_path(worktree)
+    lease = lease_file.read_text(encoding='utf-8').strip() if lease_file.exists() else None
+    force = [f'--force-with-lease=refs/heads/{branch}:{lease}'] if lease is not None else []
+    pushed = subprocess.run(git + ['push', '-q', '-u', *force, 'origin', '--end-of-options', f'HEAD:refs/heads/{branch}'],
                             capture_output=True, text=True)
+    if pushed.returncode == 0 and lease is not None:
+        lease_file.unlink(missing_ok=True)
     if pushed.returncode != 0:
         tail = ' '.join((pushed.stderr or '').strip().splitlines()[-2:])
         return None, (f'built, but the branch {branch} could not be pushed from this computer ({tail}); give WSL git '
