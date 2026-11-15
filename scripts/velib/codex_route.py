@@ -85,7 +85,22 @@ def _run(args, run=subprocess.run, **kw):
         raise RouteError(NO_INTEROP.format(home='{home}', why=f'{args[0]} failed: {error}')) from error
 
 
+def drvfs_windows(path) -> str | None:
+    """A /mnt/<drive>/... path in its Windows form (C:\\...), worked out without wslpath, which may answer a path that does
+    not exist yet with its \\\\wsl.localhost form; None for any other path."""
+    text = str(path).replace('\\', '/')
+    match = WINDOWS_MOUNT.match(text)
+    if not match:
+        return None
+    rest = text[match.end():].strip('/')
+    return f'{match.group(1).upper()}:\\' + rest.replace('/', '\\')
+
+
 def wslpath(path, flag: str = '-w', run=subprocess.run) -> str:
+    if flag == '-w':
+        known = drvfs_windows(path)
+        if known:
+            return known
     done = _run(['wslpath', flag, str(path)], run)
     out = (done.stdout or '').strip()
     if done.returncode != 0 or not out:
@@ -156,6 +171,22 @@ def thread_command(script, sub: str, options: list, home, *, platform: str | Non
     except RouteError as error:
         raise RouteError(str(error).replace('{home}', str(home))) from None
     return argv, chosen, {'stage': (str(script), str(target)), 'path': codex_dir, 'codex': codex}
+
+
+def smoke(argv: list[str], env: dict, cwd, run=subprocess.run) -> None:
+    """Start Windows node on the staged codex_thread.mjs with no command, as the launch will (same node, script, cwd and
+    environment): it prints its usage and starts no Codex. On 15 Nov the first card on this route came back with only
+    node's MODULE_NOT_FOUND, its own line cut off, so a failure here stops in one line with node's error and the paths."""
+    try:
+        done = run(argv[:2], capture_output=True, text=True, timeout=60, cwd=cwd, env=env)
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise RouteError(f've dispatch: Windows node could not be started ({argv[0]}): {error}') from error
+    text = (done.stdout or '') + (done.stderr or '')
+    if 'MODULE_NOT_FOUND' in text or 'Cannot find module' in text or 'usage' not in text.lower():
+        said = next((line.strip() for line in text.splitlines() if 'Error' in line or 'Cannot find' in line), '')
+        raise RouteError(f've dispatch: Windows node {argv[0]} could not run {argv[1]} from {cwd} (exit {done.returncode}'
+                         f'{": " + said if said else ""}). Check that file exists in Windows Explorer; '
+                         f'its copy is made from scripts/codex_thread.mjs on every dispatch.')
 
 
 def linux_form(path: str) -> str:

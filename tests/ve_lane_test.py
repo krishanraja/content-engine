@@ -215,6 +215,12 @@ class WhatCodexDid(unittest.TestCase):
         self.assertIn('Codex exited 2', lane.dispatch_problems(broke, ['a.ts'])[0])
         self.assertIn('not logged in', lane.dispatch_problems(broke, ['a.ts'])[0])
         self.assertEqual(lane.dispatch_problems(quiet, ['a.ts']), [])
+        # 15 Nov: node's "Cannot find module" line sat above the last six lines and was lost; it now goes first.
+        node = '\n'.join(["node:internal/modules/cjs/loader:1228", "  throw err;", "", "Error: Cannot find module 'C:\\x.mjs'",
+                          "    at a", "    at b", "    at node:internal/main/run_main_module:33:47 {", "  code: 'MODULE_NOT_FOUND',",
+                          "  requireStack: []", "}", "", "Node.js v24.19.0"])
+        said = lane.dispatch_problems(subprocess.CompletedProcess([], 1, '', node), [])[0]
+        self.assertIn("Cannot find module 'C:\\x.mjs'", said)
 
     def test_changed_files_sees_commits_and_uncommitted_work(self):
         import subprocess
