@@ -189,12 +189,36 @@ def smoke(argv: list[str], env: dict, cwd, run=subprocess.run) -> None:
                          f'its copy is made from scripts/codex_thread.mjs on every dispatch.')
 
 
-def linux_form(path: str) -> str:
-    """A cwd Windows Codex logged for a worktree on the WSL filesystem (\\\\wsl.localhost\\Ubuntu\\home\\...) in the
-    form WSL gives it (/home/...), so verify-card finds the card's session by its worktree; any other path unchanged."""
+def linux_form(path: str, platform: str | None = None) -> str:
+    """A cwd Windows Codex logged, in the form WSL gives it, so verify-card finds the card's session by its worktree:
+    \\\\wsl.localhost\\Ubuntu\\home\\... is /home/..., and off Windows a drive path C:\\... is /mnt/c/... (card
+    worktrees on the wsl-windows route live on the Windows drive, card_root); any other path unchanged."""
     text = str(path).replace('\\', '/')
     match = re.match(r'^//(?:wsl\.localhost|wsl\$)/[^/]+(/.*)?$', text, re.I)
-    return (match.group(1) or '/') if match else text
+    if match:
+        return match.group(1) or '/'
+    drive = re.match(r'^([A-Za-z]):/*(.*)$', text)
+    if drive and (sys.platform if platform is None else platform) != 'win32':
+        return f'/mnt/{drive.group(1).lower()}/' + drive.group(2)
+    return text
+
+
+def card_root(env=None) -> str | None:
+    """Where card worktrees go on the wsl-windows route: beside the Windows Codex home, on the Windows drive
+    (/mnt/c/Users/<you>/.ve-codex/worktrees). Windows Codex's sandbox cannot open the WSL filesystem: on 15 Nov the
+    first card on this route stopped with "Set-Location returned Access denied ... Wsl/Service/E_ACCESSDENIED" for its
+    \\\\wsl.localhost worktree. None off this route, or when MINDMAKE_LOCAL_WORKTREES names a root by hand."""
+    env = os.environ if env is None else env
+    if env.get('MINDMAKE_LOCAL_WORKTREES', '').strip() or sys.platform == 'win32' or not in_wsl(env):
+        return None
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'overnight'))
+    import codex_home
+    if codex_home.studio_opted_in(env):
+        return None
+    home, _how = codex_home.desktop_home(env)
+    if not is_windows_home(home):
+        return None
+    return str(Path(str(home).replace('\\', '/')).parent / '.ve-codex' / 'worktrees')
 
 
 def describe(argv: list[str], chosen: str, extra: dict | None = None) -> str:
