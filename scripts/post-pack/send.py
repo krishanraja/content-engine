@@ -160,6 +160,29 @@ def brand_kit_purpose(relative):
     return BRAND_KIT_PURPOSES.get(first, BRAND_KIT_DEFAULT)
 
 
+def tall_meme_problems(relative, path):
+    """A 1080x1920 meme (its name says meme) is held to scripts/layout_centre.py before it is filed; [] otherwise."""
+    if 'meme' not in str(relative).lower() or Path(path).suffix.lower() not in ('.png', '.jpg', '.jpeg', '.mp4', '.mov'):
+        return []
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import layout_centre
+    try:
+        if Path(path).suffix.lower() in ('.mp4', '.mov'):
+            import subprocess
+            size = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height',
+                                   '-of', 'csv=p=0', str(path)], capture_output=True, text=True).stdout.strip()
+            w, h = (int(x) for x in size.split(',')[:2])
+        else:
+            from PIL import Image
+            with Image.open(path) as im:
+                w, h = im.size
+    except (OSError, ValueError, ImportError):
+        return []
+    if w * 16 != h * 9:
+        return []
+    return layout_centre.check([str(path)])
+
+
 def plan(folder, prefix=None, purpose=None, brand_kit=False, lib=library.MAKEYOURMINDUP):
     """[(library path, Path, purpose)] for everything in folder, checked
     against the library's rule. Raises SendError listing every problem."""
@@ -199,6 +222,10 @@ def plan(folder, prefix=None, purpose=None, brand_kit=False, lib=library.MAKEYOU
         elif path.stat().st_size == 0:
             problems.append(f'  {target}\n    is empty')
         planned.append((target, path, why))
+        centre = tall_meme_problems(relative, path)
+        if centre:
+            problems.append(f'  {target}\n    is a tall meme that is not centred on the screen (Ruling, Krish, 2026-11-15):\n      '
+                            + '\n      '.join(centre))
     if problems:
         raise SendError('nothing was sent, because:\n' + '\n'.join(problems))
     return planned

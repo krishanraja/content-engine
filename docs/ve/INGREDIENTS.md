@@ -276,6 +276,20 @@ The last two rows are the honest finding of this work. Active captions and a mov
 graphics sit in the top half of the frame still runs slower than all of his. **The graphics layer is now the gap, not
 the captions.**
 
+## The episode title moment (15 Nov 2026)
+
+Krish, 2026-11-15: the episode title should be "integrated into a sentence seamlessly near the start of the video and
+the production suite knows that this is the moment to make it feel like the title, instead of regular captions."
+
+- The script says the episode title inside a natural sentence near the start, marked as the title line (make-piece,
+  the Scripts step).
+- The spec carries it: `title_moment: {title, line, spans?}`, `spans` naming that sentence's words in each cut once it
+  is recorded (`packages/contracts/src/production-spec.ts`). `ve lint` (`title.moment`) refuses a series piece
+  publishing from 16 Nov 2026 without it, a line that does not carry the title, and a span past the first three beats.
+- The renderer shows the title as its own animated title over that span and the captions step aside for those words,
+  so the words appear once (the words_add amendment, 15 Nov). Not built yet: the renderer does not read
+  `title_moment` today, so until it does the session lays the title over that span by hand and keeps captions off it.
+
 ## Rules the renderer keeps
 
 - **Captions win over a motion style's own captions.**

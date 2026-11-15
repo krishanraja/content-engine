@@ -470,6 +470,19 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         from . import qc_onscreen
         checks.update(qc_onscreen.rows(path, composition_props, publish_day, read=onscreen_reader,
                                        lead=opening_lead(composition_props)))
+    # A tall meme is centred on the screen (Ruling, Krish, 2026-11-15: tall memes are centred; scripts/layout_centre.py,
+    # the bars in config/brand-palette.json formats.meme_tall).
+    if 'meme' in str(format_id) and aspect == '9:16':
+        import sys as _sys
+        _sys.path.insert(0, str(ROOT / 'scripts'))
+        import layout_centre
+        try:
+            found = layout_centre.check([path])
+            checks['layout.centred'] = {'value': found, 'target': 'picture centred, margins even, words clear of every channel',
+                                        'pass': not found}
+        except (ValueError, KeyError, OSError, subprocess.CalledProcessError) as exc:
+            checks['layout.centred'] = {'value': None, 'target': 'centred on the screen', 'pass': False, 'status': 'error',
+                                        'reason': str(exc)}
     # An advisory row is measured and shown, never counted (scripts/velib/qc_channel.py until its layout card lands).
     applicable = [c for c in checks.values() if c.get('status') not in ('not applicable', 'advisory')]
     built = [c['pass'] for c in applicable if c['pass'] is not None]

@@ -90,7 +90,7 @@ describe('the one route for carousels, memes, Notes images and off-day voiceover
       expect(findings('prompt', a.prompt)).toEqual([])
     }
     if (still.kind !== 'prompt' || motion.kind !== 'prompt') throw new Error('not a prompt')
-    for (const words of ['scripts/carousel_check.py', 'scripts/ve.py card', 'config/brand-palette.json', '10/10 judges', '3 Posts', 'inspiration cards Krish ticked']) {
+    for (const words of ['scripts/carousel_check.py', 'carousel_check.py --cards', '8 to 20 words a stranger can follow', 'scripts/ve.py card', 'config/brand-palette.json', '10/10 judges', '3 Posts', 'inspiration cards Krish ticked']) {
       expect(still.prompt).toContain(words)
     }
     for (const words of ['ve route', 'docs/ve/ENGINE.md', 'signed spec', 've verify-card', 'separate reviewer watches and listens', 'The voice comes from where it comes from today']) {
