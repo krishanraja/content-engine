@@ -494,7 +494,8 @@ def cmd_dispatch(args) -> int:
               '(its recordings pass picks it up within five minutes). Read the result with ve lane status.')
         return 0
     from velib.cards import dispatch
-    result = dispatch(Path(args.card), background=not args.wait)
+    result = dispatch(Path(args.card), background=not args.wait, studio=getattr(args, 'studio_home', False),
+                      piece=getattr(args, 'piece', None))
     print((result.stdout or result.stderr).strip()[-2000:])
     return result.returncode
 
@@ -502,6 +503,11 @@ def cmd_dispatch(args) -> int:
 def cmd_codex(args) -> int:
     """The Codex minimum (Ruling, Krish, 2026-11-15): Claude records Codex's checked share of a piece; status reads it."""
     from velib import codex_minimum, verdict
+    if args.action == 'where':
+        home, how = codex_minimum.desktop_home_found()
+        print(f've codex: dispatch runs Codex under {home} (found by {how}), the home Codex Desktop reads; '
+              'a session started in a cloud container never shows there')
+        return 0
     try:
         spec_file = spec_path_for(args.piece)
         spec = load_json(spec_file)
@@ -518,7 +524,8 @@ def cmd_codex(args) -> int:
                                         session=session, desktop_visible=visible)
             print(f"ve codex: receipt for {note['card']} ({note['job']}, {note['evidence_sha256'][:12]}) on {args.piece}")
             if visible is False:
-                print('ve codex: that Codex session ran outside the home Codex Desktop reads; Krish cannot watch it there')
+                print('ve codex: that Codex session ran outside the home Codex Desktop reads; Krish cannot watch it there '
+                      '(ve codex where names that home)')
             return 0
         state = codex_minimum.status(spec, directory)
         need = state['minimum']['receipts']
@@ -1805,6 +1812,8 @@ def main() -> int:
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
     p.add_argument('--queue', action='store_true', help='send it to the Codex lane even when Codex is on this machine')
     p.add_argument('--spend-id', help='with the lane: the Control Center reservation booked for this card')
+    p.add_argument('--studio-home', action='store_true',
+                   help="run under the Studio's own Codex home (no MCP server or plugin; NOT visible in Codex Desktop)")
     p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('codex', help="the Codex minimum: record Codex's checked share of a piece, or read it")
     actions = p.add_subparsers(dest='action', required=True)
@@ -1815,6 +1824,7 @@ def main() -> int:
     a.add_argument('--verified-by', required=True, help='who checked it (never Codex)')
     a.add_argument('--cwd', help="the card's worktree, to find its Codex session log"); a.add_argument('--session')
     a = actions.add_parser('status'); a.add_argument('piece')
+    actions.add_parser('where', help='the Codex home dispatch runs under: the one Codex Desktop reads')
     p.set_defaults(fn=cmd_codex)
     p = sub.add_parser('lane', help='the Codex lane: queue a card from any session; the home computer builds it')
     actions = p.add_subparsers(dest='action', required=True)

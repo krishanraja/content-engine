@@ -162,6 +162,7 @@ class BudgetTests(unittest.TestCase):
         with mock.patch.object(credits, 'RECORD', self.path), mock.patch.object(cards, 'weekly_used_percent', return_value=10.0), \
                 mock.patch.object(credits, 'week_of', return_value=MONDAY.isoformat()), \
                 mock.patch.object(cards, 'companion', return_value='companion.mjs'), \
+                mock.patch.object(cards, 'codex_env', return_value={}), \
                 mock.patch.object(cards.subprocess, 'run') as run:
             cards.dispatch(card)
             self.assertEqual(run.call_count, 1)
