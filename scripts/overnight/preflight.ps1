@@ -20,11 +20,13 @@ The checks, each { ok, detail, ... }:
                    "task --help": the companion reads help only as its first word, so "task --help" would start a
                    real Codex task with the prompt "--help" and spend the allowance.
   codex_login      "codex login status" says ChatGPT (the test ve doctor uses), in the Codex home dispatch uses.
-  codex_profile    Codex's tool profile (config\codex-profile.json) passes its audit, and none of the MCP servers the
-                   Codex that runs cards has ("codex mcp list --json", which only lists) is a forbidden kind: publish,
-                   share, deploy, TikTok, Buffer, workflow and the rest the profile names (failure
-                   production-asked-to-publish). That Codex is the Studio's own home once scripts\overnight\codex_home.py
-                   has built it (which must then pass its check), else this machine's ~/.codex.
+  codex_profile    Codex's tool profile (config\codex-profile.json) passes its audit, and the MCP servers the Codex
+                   that runs cards has ("codex mcp list --json", which only lists) are read for a forbidden kind:
+                   publish, share, deploy, TikTok, Buffer, workflow and the rest the profile names (failure
+                   production-asked-to-publish). That Codex is Krish's everyday home, the one Codex Desktop reads
+                   (Ruling, Krish, 2026-11-15), where such servers are counted and named but kept; with
+                   VE_CODEX_STUDIO_HOME=1 it is the Studio's own home (scripts\overnight\codex_home.py), which must
+                   pass its check and have none.
   codex_allowance  the weekly Codex allowance used, from python scripts\session_token_audit.py --codex --json. Above
                    the ceiling in scripts\velib\cards.py (ALLOWANCE_CEILING) dispatch refuses a card the weekly credit
                    budget Krish signed does not cover (config\ve\credit-budget.json), so an overnight run spends nothing alone. Unknown (no Codex thread on this machine in
@@ -60,11 +62,15 @@ $RepoRoot = [System.IO.Path]::GetFullPath($RepoRoot)
 $StudioRuntime = Join-Path $env:USERPROFILE 'Documents\MindmakeVideoStudio\runtime'
 $StudioPython = Join-Path $StudioRuntime 'python\Scripts\python.exe'
 $CompanionRoot = Join-Path $env:USERPROFILE '.claude\plugins\cache\openai-codex\codex'
-# The Codex home ve dispatch runs cards under once it is built (scripts\overnight\codex_home.py: no MCP server, no
-# plugin), else Codex's own ~/.codex. The login and profile checks read the one dispatch uses.
+# The Codex home ve dispatch runs cards under: Krish's everyday home, the one his Codex Desktop app reads (its
+# CODEX_HOME, else ~\.codex), so every session shows there (Ruling, Krish, 2026-11-15: every Codex session Claude
+# starts runs where Krish can see it in his Codex Desktop app). The Studio's own home (scripts\overnight\codex_home.py:
+# no MCP server, no plugin) is used only when VE_CODEX_STUDIO_HOME is 1. The login and profile checks read the one
+# dispatch uses.
 $CodexHome = Join-Path $StudioRuntime 'codex-home'
 $CodexEnv = @{}
-if (Test-Path -LiteralPath (Join-Path $CodexHome 'config.toml') -PathType Leaf) { $CodexEnv = @{ CODEX_HOME = $CodexHome } }
+$CodexStudio = @('1', 'true', 'yes') -contains ([string]$env:VE_CODEX_STUDIO_HOME).Trim().ToLowerInvariant()
+if ($CodexStudio -and (Test-Path -LiteralPath (Join-Path $CodexHome 'config.toml') -PathType Leaf)) { $CodexEnv = @{ CODEX_HOME = $CodexHome } }
 $Checks = [ordered]@{}
 
 # ---- reading, never writing ---------------------------------------------------------------------------------------
@@ -341,7 +347,7 @@ Invoke-Check 'codex_profile' {
   if ($wrong.Count) { return [ordered]@{ ok = $false; flagged = $null; detail = "config\codex-profile.json fails its audit: $($wrong -join '; ')." } }
   $codex = Find-Program @('codex.exe', 'codex.cmd') @((Join-Path $env:APPDATA 'npm\codex.cmd'))
   if (-not $codex) { return [ordered]@{ ok = $false; flagged = $null; detail = 'The Codex CLI is not on this machine, so its MCP servers cannot be checked.' } }
-  $whose = "this machine's Codex"
+  $whose = "Krish's everyday Codex home (the one Codex Desktop reads)"
   if ($CodexEnv.Count) {
     # The Studio's Codex home must still be what codex_home.py builds: its own config, the shared sign-in and sessions.
     $python = Find-Python
@@ -377,7 +383,11 @@ Invoke-Check 'codex_profile' {
     if (@(Get-ForbiddenHits $text $forbidden).Count) { $flagged += 1 }
   }
   $servers = $entries
-  if ($flagged) { return [ordered]@{ ok = $false; flagged = $flagged; detail = "$whose has $flagged MCP server(s) of a kind the profile forbids (codex mcp list names them); remove them before an unattended run, or build the Studio's own home (python scripts\overnight\codex_home.py build)." } }
+  # A visible run (the default since 15 Nov) uses Krish's everyday home, whose servers he keeps ("no, we need those",
+  # 30 Oct): they are counted and named in the detail, and the card's tool profile still holds a card that names one.
+  # Only the opt-in Studio home must have none.
+  if ($flagged -and $CodexEnv.Count) { return [ordered]@{ ok = $false; flagged = $flagged; detail = "$whose has $flagged MCP server(s) of a kind the profile forbids (codex mcp list names them); rebuild it (python scripts\overnight\codex_home.py build)." } }
+  if ($flagged) { return [ordered]@{ ok = $true; flagged = $flagged; detail = "the profile passes its audit; visible runs use $whose, where $flagged MCP server(s) of a kind the profile forbids stay reachable (cards naming them are held). Set VE_CODEX_STUDIO_HOME=1 for runs with none, never shown in Codex Desktop." } }
   return [ordered]@{ ok = $true; flagged = 0; detail = "the profile passes its audit and none of the $($servers.Count) MCP server(s) $whose has is a forbidden kind." }
 }
 
