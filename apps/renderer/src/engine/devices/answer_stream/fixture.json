@@ -1,0 +1,99 @@
+{
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "objects": [
+    {
+      "obj": "answer",
+      "device": "answer_stream",
+      "meaning": "Captured citation connects to its source",
+      "params": {
+        "answer": {
+          "src": "answer-capture.png",
+          "pixelWidth": 800,
+          "pixelHeight": 400
+        },
+        "source": {
+          "src": "source-capture.png",
+          "pixelWidth": 800,
+          "pixelHeight": 500
+        },
+        "blank": {
+          "x": 0,
+          "y": 0,
+          "w": 20,
+          "h": 20
+        },
+        "lines": [
+          {
+            "x": 40,
+            "y": 60,
+            "w": 700,
+            "h": 48,
+            "chars": 40
+          },
+          {
+            "x": 40,
+            "y": 120,
+            "w": 600,
+            "h": 48,
+            "chars": 32
+          }
+        ],
+        "citation": {
+          "x": 660,
+          "y": 120,
+          "w": 60,
+          "h": 48
+        },
+        "passage": {
+          "x": 40,
+          "y": 100,
+          "w": 700,
+          "h": 150
+        },
+        "label": "Test fixture captures only \u00b7 2026-11-15"
+      },
+      "fromFrame": 0,
+      "toFrame": 200
+    }
+  ],
+  "events": [
+    {
+      "id": "enter",
+      "obj": "answer",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1
+    },
+    {
+      "id": "type",
+      "obj": "answer",
+      "verb": "type",
+      "toState": "answer",
+      "atFrame": 15
+    },
+    {
+      "id": "mark",
+      "obj": "answer",
+      "verb": "mark",
+      "toState": "citation",
+      "atFrame": 100
+    },
+    {
+      "id": "light",
+      "obj": "answer",
+      "verb": "light",
+      "toState": "source",
+      "atFrame": 120
+    },
+    {
+      "id": "exit",
+      "obj": "answer",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 180
+    }
+  ]
+}

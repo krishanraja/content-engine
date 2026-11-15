@@ -15,7 +15,7 @@
   "effects": {
     "typewriter": {"devices": ["typing_bubble", "query_chip", "headline"], "what": "types text a character at a time"},
     "roll": {"devices": ["typing_bubble", "query_chip", "headline", "kinetic_stat", "stat_strip"], "what": "rolls figures up"},
-    "zoomToFocus": {"devices": ["typing_bubble", "query_chip"], "what": "zooms to the line a device reports"},
+    "zoomToFocus": {"devices": ["typing_bubble", "query_chip", "code_card"], "what": "zooms to the line a device reports"},
     "followPen": {"devices": ["scribble"], "what": "follows a scribble's pen tip"},
     "halftone": {"take": true, "what": "lays a halftone on his take"},
     "inkDeep": {"stage": true, "what": "lays ink_deep under a graphics-only beat"},
@@ -23,7 +23,7 @@
     "paper": {"ground": true, "what": "lays a seeded paper stock under the graphics"},
     "hero": {"ground": true, "what": "sets the beat's key phrase as hero type on its graphic ground"},
     "lead": {"captions": true, "what": "makes his captions the main graphic"},
-    "brackets": {"devices": ["typing_bubble", "query_chip"], "what": "locks bracket corners onto the line a device reports"},
+    "brackets": {"devices": ["typing_bubble", "query_chip", "code_card"], "what": "locks bracket corners onto the line a device reports"},
     "torn": {"devices": ["typing_bubble", "query_chip", "evidence_card", "quote_card", "record_card", "thread_card", "logo_card", "sticker", "stamp", "passport_page"], "what": "cuts cards and logo tiles out with a torn edge and a soft shadow"},
     "boil": {"devices": ["scribble"], "what": "boils a drawn line"}
   }
