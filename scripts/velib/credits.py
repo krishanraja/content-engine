@@ -105,6 +105,13 @@ def verify(record) -> list[str]:
     return out
 
 
+class NoRead(SystemExit):
+    """No credit read stands on this machine: none was pulled, it cannot be read, or it is stale. That is a missing
+    Control Center connector (a local Claude Code install has none), not a limit, so a Codex card may go ahead on a
+    provisional local reservation (ledger.reserve(provisional_ok=True)). A read that stands and says no (held, unknown,
+    no pool, over the cap) is never a NoRead."""
+
+
 def load(path=None) -> dict:
     return json.loads(Path(path or RECORD).read_text(encoding='utf-8'))
 
@@ -121,16 +128,16 @@ def standing(path=None, today: dt.date | None = None) -> dict:
     try:
         record = load(path)
     except FileNotFoundError:
-        raise SystemExit('ve: no credit read from Control Center: run ve budget pull with its get_engine_credits '
-                         f'answer for {ENGINE}; nothing spends until then') from None
+        raise NoRead('ve: no credit read from Control Center: run ve budget pull with its get_engine_credits '
+                     f'answer for {ENGINE}; nothing spends until then') from None
     except (OSError, ValueError) as error:
-        raise SystemExit(f've: the saved credit read cannot be read: {error}') from None
+        raise NoRead(f've: the saved credit read cannot be read: {error}') from None
     problems = verify(record)
     if problems:
         raise SystemExit('ve: the credit budget does not stand: ' + '; '.join(problems))
     pulled = dt.date.fromisoformat(record['pulled_on'])
     if ((today or _today()) - pulled).days > MAX_AGE_DAYS:
-        raise SystemExit(f've: the credit read was pulled on {pulled}, more than {MAX_AGE_DAYS} days ago: pull it again')
+        raise NoRead(f've: the credit read was pulled on {pulled}, more than {MAX_AGE_DAYS} days ago: pull it again')
     return record
 
 

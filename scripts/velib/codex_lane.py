@@ -140,13 +140,19 @@ def fields_path_for(card: Path) -> Path:
 SPEND_ID = re.compile(r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')
 
 
-def require_booking(spend_id: str | None) -> str:
+def require_booking(spend_id: str | None) -> str | None:
     """The Control Center reservation the queuing session made (reserve_credit_spend), so no credit file has to live
-    on the computer that builds. A card is never queued without one: Control Center is the guard that refuses
-    over_share, held or no_pool, and the session settles it (settle_credit_spend) once the result is back."""
-    if not spend_id or not SPEND_ID.match(spend_id):
-        raise SystemExit('ve lane: book the card first: reserve_credit_spend (Control Center connector, the venture\'s '
-                         'engine, pool codex) and pass its spend_id with --spend-id')
+    on the computer that builds; Control Center is then the guard that refuses over_share, held or no_pool, and the
+    session settles it (settle_credit_spend) once the result is back. A session with no connector (Claude Code on his
+    PC has none) has no booking: that never blocks a card. It returns None with one warning line, and the computer that
+    builds reserves the card provisionally in its local ledger, reconciled later (ve budget provisional). A value that
+    is given but is not a spend_id is a mistake, and is refused."""
+    if not spend_id:
+        print('ve lane: no Control Center booking (no connector here); the card goes ahead on a provisional local '
+              'reservation, reconciled later', file=sys.stderr)
+        return None
+    if not SPEND_ID.match(spend_id):
+        raise SystemExit(f've lane: --spend-id {spend_id!r} is not a reserve_credit_spend spend_id')
     return spend_id
 
 
@@ -157,6 +163,8 @@ def queue_item(fields_rel: str, fields: dict, ref: str, piece: str | None, clien
     close_ref = {'lane': 'codex', 'fields': fields_rel, 'ref': ref, 'state': 'queued', 'queued_at': stamp, 'by': client}
     if spend_id:
         close_ref['spend_id'] = spend_id
+    else:
+        close_ref['booking'] = 'provisional'
     if piece:
         close_ref['piece'] = piece
     return {
@@ -197,7 +205,7 @@ def unknown_verbs(fields: dict, props_text: str | None = None) -> list[str]:
 
 
 def queue(card: Path, piece: str | None, ref: str = 'main', client: str = 'claude_code', spend_id: str | None = None) -> dict:
-    require_booking(spend_id)
+    spend_id = require_booking(spend_id)
     fields_file = fields_path_for(card.resolve())
     rel = fields_file.relative_to(ROOT).as_posix()
     # The home computer cuts the card's worktree from main, so the verbs must be on origin/main, not only here: on

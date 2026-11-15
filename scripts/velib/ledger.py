@@ -172,27 +172,77 @@ def weekly(week, record=None):
     return out
 
 
-def reserve(provider, amount, piece='', note='', today=None, budget_path=None):
-    """Reserve credits against Control Center's credit read, or SystemExit naming the cap it would pass. Returns its id."""
-    import uuid
-    from .credits import PROVIDERS, cap, standing, week_of
+_WARNED = False
+
+
+def reserve(provider, amount, piece='', note='', today=None, budget_path=None, provisional_ok=False):
+    """Reserve credits against Control Center's credit read, or SystemExit naming the cap it would pass. Returns its id.
+
+    provisional_ok (a Codex card's dispatch): when no credit read stands on this machine (credits.NoRead: none pulled,
+    unreadable or stale, which is what a local install with no Control Center connector looks like), the reservation is
+    written as provisional, uncapped, with why, and a one-line warning is printed once; it is reconciled later by a
+    session with the connector (`ve budget provisional`, then `ve budget reconcile ID --spend-id UUID`). A read that
+    stands still refuses over its cap, held, unknown or no pool."""
+    import sys
+    from .credits import PROVIDERS, NoRead, cap, standing, week_of
+    global _WARNED
     if provider not in PROVIDERS:
         raise ValueError(f'unknown provider {provider!r}; expected one of {", ".join(PROVIDERS)}')
     _validate('credits', amount)
-    record = standing(budget_path, today)
     week = week_of(today)
+    try:
+        record = standing(budget_path, today)
+    except NoRead as missing:
+        if not provisional_ok:
+            raise
+        rid = _write_reserve(week, provider, amount, piece, note, provisional=str(missing).removeprefix('ve: '))
+        if not _WARNED:
+            _WARNED = True
+            print(f've: no Control Center credit read here, so {amount:g} {provider} is reserved provisionally '
+                  f'({rid}) and reconciled later; carrying on', file=sys.stderr)
+        return rid
     limit = cap(record, provider)
     entry = weekly(week, record)[provider]
     if entry['used'] + amount > limit:
         raise SystemExit(f've: over the credit cap from Control Center: {provider} {entry["used"]:g} used or reserved + {amount:g} '
                          f'> {limit:g} for the week of {week}; nothing was dispatched')
+    return _write_reserve(week, provider, amount, piece, note)
+
+
+def _write_reserve(week, provider, amount, piece, note, provisional=None):
+    import uuid
     rid = uuid.uuid4().hex[:12]
+    row = {'id': rid, 'ts': _now().isoformat(), 'kind': 'reserve', 'provider': provider, 'amount': amount,
+           'piece': str(piece), 'note': str(note)}
+    if provisional:
+        row['provisional'] = True
+        row['why'] = provisional
     path = credit_ledger_path(week)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open('a', encoding='utf-8', newline='\n') as handle:
-        handle.write(json.dumps({'id': rid, 'ts': _now().isoformat(), 'kind': 'reserve', 'provider': provider,
-                                 'amount': amount, 'piece': str(piece), 'note': str(note)}) + '\n')
+        handle.write(json.dumps(row) + '\n')
     return rid
+
+
+def provisional(week=None):
+    """Provisional reservations not yet booked with Control Center, oldest first, across every week on this machine
+    (or one week): what a session with the connector books with reserve_credit_spend and settles."""
+    weeks = [week] if week else sorted(p.stem for p in credit_ledger_path('x').parent.glob('*.jsonl'))
+    out = []
+    for w in weeks:
+        rows = _credit_rows(w)
+        booked = {r['id'] for r in rows if r['kind'] == 'reconcile'}
+        out += [dict(r, week=w) for r in rows if r['kind'] == 'reserve' and r.get('provisional') and r['id'] not in booked]
+    return out
+
+
+def reconcile(rid, spend_id, week=None):
+    """Record that a provisional reservation was booked with Control Center (its reserve_credit_spend spend_id)."""
+    match = [r for r in provisional(week) if r['id'] == rid]
+    if not match:
+        raise ValueError(f'no open provisional reservation {rid}')
+    with credit_ledger_path(match[0]['week']).open('a', encoding='utf-8', newline='\n') as handle:
+        handle.write(json.dumps({'id': rid, 'ts': _now().isoformat(), 'kind': 'reconcile', 'spend_id': str(spend_id)}) + '\n')
 
 
 def settle(rid, actual, today=None):

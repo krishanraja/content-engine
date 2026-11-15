@@ -448,16 +448,36 @@ def _admit(card_path: Path, meta: dict) -> None:
         _hold(card_path, reasons)
 
 
+def exhausted(info: dict | None) -> str | None:
+    """Why Codex's own readable allowance says no card can run, or None: the weekly window is used up and the paid
+    credit balance it reports is nothing. Unread is never exhausted."""
+    if not info or info.get('used_percent') is None or info['used_percent'] < 100:
+        return None
+    if info.get('credits') is None or info['credits'] > 0:
+        return None
+    return (f'Codex reports its weekly allowance used ({info["used_percent"]:.0f}%) and no paid credits left'
+            + (f'; it resets {info["resets_at"]}' if info.get('resets_at') else ''))
+
+
 def _reserve(card_path: Path, meta: dict) -> str:
     """Reserve the card's credits against Control Center's credit read, before anything is sent; refuse over it.
-    Past the weekly allowance ceiling Codex draws paid credits, which reserve against their own cap."""
+    Past the weekly allowance ceiling Codex draws paid credits, which reserve against their own cap.
+
+    A machine with no Control Center connector (a local Claude Code install) has no credit read: the card is then
+    reserved provisionally in the local ledger, with one warning line, and goes ahead (reconciled later by a session
+    with the connector). The real limits still hold: a read that stands refuses over its cap, and Codex's own
+    allowance read as exhausted refuses the card."""
     from . import ledger
+    why = exhausted(allowance())
+    if why:
+        sys.exit(f've dispatch: not sent: {why}')
     used = weekly_used_percent()
+    card = meta.get('card', card_path.stem)
     if used is not None and used > ALLOWANCE_CEILING:
         return ledger.reserve('codex_paid_credits', float(meta.get('paid_credits') or DEFAULT_PAID_RESERVE),
-                              note=f'card {meta.get("card", card_path.stem)}: allowance at {used:.0f}%')
+                              note=f'card {card}: allowance at {used:.0f}%', provisional_ok=True)
     return ledger.reserve('codex_allowance_points', float(meta.get('allowance_points') or DEFAULT_ALLOWANCE_RESERVE),
-                          note=f'card {meta.get("card", card_path.stem)}')
+                          note=f'card {card}', provisional_ok=True)
 
 
 def codex_env(studio: bool = False) -> dict:
