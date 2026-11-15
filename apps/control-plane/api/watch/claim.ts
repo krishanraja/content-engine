@@ -11,7 +11,8 @@ import { watchStore } from './_watchStore.js'
 // attempts }] }. Logs nothing about the links.
 //
 // GET /api/watch/claim?machine=NAME, on the engine key: { ok, waiting }, how many this machine could claim now,
-// claiming none. The cloud backup looks first and sets itself up only when a link has waited out the home computers.
+// claiming none. Since 15 Nov 2026 the worker (cloud-vps) claims every link first and the home computers wait 15
+// minutes as its backup; a YouTube link, which refuses the worker, goes to the home computers at once (_watch.ts).
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['GET', 'POST'])) return
