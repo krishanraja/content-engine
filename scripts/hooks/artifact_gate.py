@@ -4,9 +4,18 @@ again. Reads and listings pass.
 
 Krish, 2026-10-19: "we are now retiring the Claude artefact permanently". A rule in a document can be skipped; this hook
 cannot. Exit 2 blocks the call and tells the session why. Wired in .claude/settings.json.
+
+One exception (Ruling, Krish, 2026-11-15: the weekly standards check-in is one pinned claude.ai artifact refreshed
+weekly, an exception to "No Claude artifact, ever"): a publish or pin of that one artifact, by its own address, passes.
+A new artifact, any other address, and every ArtifactData write are still refused (docs/AGENTS-REFERENCE.md, rule 3).
 """
 import json
+import re
 import sys
+
+# The one standards check-in artifact (docs/STANDARDS-CHECKIN.md). Its id, never any other.
+STANDARDS_CHECKIN_ID = 'AmaXBSHYfZMF9RUEmgcSqH'
+CHECKIN_URL = re.compile(r'^https://claude\.ai/(?:code/)?artifact/' + STANDARDS_CHECKIN_ID + r'/?$')
 
 
 RETIRED = ('Claude artifacts are retired (Krish, 2026-10-19: "we are now retiring the Claude artefact permanently"). '
@@ -20,6 +29,8 @@ RETIRED = ('Claude artifacts are retired (Krish, 2026-10-19: "we are now retirin
 def retired_write(name, ti):
     """Every Artifact publish, and every write to an artifact's store, is refused; reads and listings pass."""
     if name == 'Artifact' and ti.get('action') in (None, 'publish', 'pin'):
+        if CHECKIN_URL.match(str(ti.get('url') or '')) and not ti.get('from_url'):
+            return None
         return RETIRED
     if name == 'ArtifactData' and ti.get('action') not in ('get', 'list', 'query'):
         return RETIRED
