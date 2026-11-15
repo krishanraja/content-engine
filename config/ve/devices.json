@@ -1,5 +1,6 @@
 {
   "devices": {
+    "answer_stream": { "verbs": ["enter", "type", "mark", "light", "exit"] },
     "office_floor": {
       "verbs": [
         "enter",
