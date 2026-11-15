@@ -1,0 +1,12 @@
+{
+  "name": "mymu-hyperframes-pin",
+  "private": true,
+  "description": "The pinned HyperFrames CLI, kit's opt-in film backend (scripts/quick-edit/hyperframes_film.py; docs/production/HYPERFRAMES.md). Outside the root workspaces on purpose: install with `npm ci --prefix vendor/hyperframes` only where it is used.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "hyperframes": "0.9.54"
+  }
+}
