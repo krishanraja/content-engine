@@ -1,7 +1,29 @@
 import { describe, expect, it } from 'vitest'
 import { countTo, cursorPath, drawPath, mix, typeOn } from './verbs'
+import { setMotionProfile } from '../clock'
+import { MOTION_PROFILES } from './motionProfiles'
 
 describe('pure motion verbs', () => {
+  it('depends only on its arguments, independent of the active motion profile', () => {
+    const sample = () => [countTo(15, 10, 0, 100), drawPath(15, 10, 120),
+      mix(13, 10, 'red', 'blue'), cursorPath(15, 10, [{ x: 0, y: 0 }, { x: 100, y: 0 }])]
+    setMotionProfile(undefined)
+    const expected = sample()
+    try {
+      for (const profile of Object.values(MOTION_PROFILES)) {
+        setMotionProfile(profile)
+        expect(sample()).toEqual(expected)
+      }
+    } finally {
+      setMotionProfile(undefined)
+    }
+  })
+
+  it('lands an instantaneous count exactly on its cue', () => {
+    expect(countTo(9, 10, 1, 2, { frames: 0 })).toBe(1)
+    expect(countTo(10, 10, 1, 2, { frames: 0 })).toBe(2)
+  })
+
   it('counts deterministically and holds exact endpoints, including descending counts', () => {
     for (const [from, to] of ([[0.123, 99.456], [100, -50]] as const)) {
       expect(countTo(9, 10, from, to)).toBe(from)

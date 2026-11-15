@@ -1,8 +1,8 @@
-import { Easing } from 'remotion'
-import { FPS, progress } from '../clock'
+import { EXIT, FPS, progress } from '../clock'
 
-// Explicit house curve keeps these pure even when FormatMaster changes the active profile.
-const ease = Easing.bezier(0.05, 0.7, 0.1, 1)
+// Reverse the clock's fixed exit curve for a soft landing. Unlike its active entrance
+// curve, this stays pure when FormatMaster changes the current motion profile.
+const ease = (t: number): number => 1 - EXIT(1 - t)
 function share(frame: number, at: number, frames: number): number {
   if (frame < at) return 0
   if (frames <= 0 || frame >= at + frames) return 1
@@ -18,9 +18,10 @@ function hash(at: number): number {
 /** Count with a cue-seeded, decaying perturbation; endpoints retain their exact values. */
 export function countTo(frame: number, at: number, from: number, to: number,
   { frames = 18, jitter = 0.02, decimals = 0 }: { frames?: number; jitter?: number; decimals?: number } = {}): number {
-  if (frame <= at) return from
+  if (frame < at) return from
   const p = share(frame, at, frames)
   if (p === 1) return to
+  if (p === 0) return from
   const value = from + (to - from) * p + Math.abs(to - from) * jitter * hash(at) * p * (1 - p)
   const scale = 10 ** Math.min(15, Math.max(0, Math.floor(decimals)))
   return Math.round(value * scale) / scale
