@@ -72,4 +72,16 @@ describe('the engine gates', () => {
     expect(hook({ action: 'read', url: 'https://claude.ai/artifact/x' }).status).toBe(0)
     expect(hook({ action: 'query', url: 'https://claude.ai/artifact/x' }, 'ArtifactData').status).toBe(0)
   })
+
+  it('the one standards check-in artifact may be refreshed and pinned; nothing else may (Ruling, Krish, 2026-11-15)', () => {
+    const hook = (input: Record<string, unknown>, tool = 'Artifact') => py(['scripts/hooks/artifact_gate.py'], JSON.stringify({ tool_name: tool, tool_input: input }))
+    const checkin = 'https://claude.ai/artifact/AmaXBSHYfZMF9RUEmgcSqH'
+    expect(hook({ file_path: '/tmp/checkin.html', url: checkin }).status).toBe(0)
+    expect(hook({ action: 'pin', url: checkin }).status).toBe(0)
+    // A new artifact, a look-alike address, a copy from elsewhere and every store write stay refused.
+    expect(hook({ file_path: '/tmp/checkin.html' }).status).toBe(2)
+    expect(hook({ file_path: '/tmp/x.html', url: `${checkin}x` }).status).toBe(2)
+    expect(hook({ file_path: '/tmp/x.html', url: 'https://claude.ai/artifact/other' }).status).toBe(2)
+    expect(hook({ action: 'set', url: checkin }, 'ArtifactData').status).toBe(2)
+  })
 })
