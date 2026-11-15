@@ -228,7 +228,8 @@ def companion() -> str:
 def allowance() -> dict | None:
     """The latest Codex rate_limits record: weekly used_percent (0 once its window has reset), resets_at, credits."""
     import time
-    logs = sorted(glob.glob(str(Path.home() / '.codex' / 'sessions' / '*' / '*' / '*' / '*.jsonl')), key=os.path.getmtime)
+    logs = sorted({log for home in codex_homes() for log in glob.glob(str(home / 'sessions' / '*' / '*' / '*' / '*.jsonl'))},
+                  key=os.path.getmtime)
     for log in reversed(logs[-5:]):
         lines = Path(log).read_text(encoding='utf-8', errors='replace').splitlines()
         for line in reversed(lines):
@@ -266,14 +267,21 @@ def card_limits(meta: dict) -> tuple[int, int]:
     return minutes, calls
 
 
+def _codex_home_module():
+    sys.path.insert(0, str(ROOT / 'scripts' / 'overnight'))
+    import codex_home
+    return codex_home
+
+
 def codex_homes() -> list[Path]:
-    """Every folder a card's Codex session can log to: the Studio's own Codex home when it is built (codex_env sets
-    CODEX_HOME to it for every dispatch), CODEX_HOME when set, and ~/.codex. Reading only ~/.codex marked every card
-    run under the Studio home as having no session log (found 2026-11-01 proving the Codex lane)."""
+    """Every folder a card's Codex session can log to: the home Krish's Codex Desktop app reads (where dispatch runs
+    cards by default since 15 Nov), the Studio's own Codex home when it is built (the --studio-home opt-in),
+    CODEX_HOME when set, and ~/.codex. Reading only ~/.codex marked every card run under the Studio home as having no
+    session log (found 2026-11-01 proving the Codex lane)."""
     homes = []
     try:
-        sys.path.insert(0, str(ROOT / 'scripts' / 'overnight'))
-        import codex_home
+        codex_home = _codex_home_module()
+        homes.append(Path(codex_home.desktop_home()[0]))
         built = codex_home.active()
         if built:
             homes.append(Path(built))
@@ -452,27 +460,75 @@ def _reserve(card_path: Path, meta: dict) -> str:
                           note=f'card {meta.get("card", card_path.stem)}')
 
 
-def codex_env() -> dict:
-    """The environment Codex runs cards in: CODEX_HOME set to the Studio's own Codex home once it is built
-    (scripts/overnight/codex_home.py: no MCP server, no plugin, Krish's everyday ~/.codex untouched; Krish, 30 Oct,
-    "do the separate settings folder fix"), and never a shared Codex runtime another session started under ~/.codex.
-    A built home that fails its check stops the dispatch rather than falling back to ~/.codex."""
-    sys.path.insert(0, str(ROOT / 'scripts' / 'overnight'))
-    import codex_home
+def codex_env(studio: bool = False) -> dict:
+    """The environment Codex runs cards in. By default CODEX_HOME is Krish's everyday home, the one his Codex Desktop
+    app reads, so the session shows there and he can attach his browser to it (Ruling, Krish, 2026-11-15: every Codex
+    session Claude starts runs where Krish can see it in his Codex Desktop app). The run's own settings come from the
+    ve-card profile in that home (codex_home.py install-profile, written here when it is missing). With studio=True
+    (ve dispatch --studio-home, or VE_CODEX_STUDIO_HOME=1) it is the Studio's own home of 30 Oct instead: no MCP
+    server, no plugin, and never shown in his Desktop app. A shared Codex runtime another session started is never
+    reused."""
+    codex_home = _codex_home_module()
     env = {k: v for k, v in os.environ.items() if k != 'CODEX_COMPANION_APP_SERVER_ENDPOINT'}
-    home = codex_home.active()
-    if home:
+    if studio or codex_home.studio_opted_in():
+        home = codex_home.active()
+        if not home:
+            sys.exit("ve dispatch: --studio-home asks for the Studio's Codex home, which is not built "
+                     '(python scripts/overnight/codex_home.py build)')
         problems = codex_home.check(home)
         if problems:
             sys.exit("ve dispatch: the Studio's Codex home fails its check: " + '; '.join(problems))
         env['CODEX_HOME'] = str(home)
+        return env
+    home, how = codex_home.desktop_home()
+    if not (home / 'auth.json').is_file():
+        sys.exit(f've dispatch: {home} (the Codex home his Desktop app reads, found by {how}) has no sign-in: open Codex '
+                 f'Desktop and sign in, or set {codex_home.DESKTOP_FLAG} to the home it uses')
+    if codex_home.profile_problems(home):
+        problems = codex_home.install_profile(home)
+        if problems:
+            sys.exit('ve dispatch: the ve-card profile could not be written: ' + '; '.join(problems))
+        print(f've dispatch: wrote the {codex_home.PROFILE} profile into {home / "config.toml"}', file=sys.stderr)
+    env['CODEX_HOME'] = str(home)
     return env
 
 
-def dispatch(card_path: Path, background: bool = True, booked: str | None = None) -> subprocess.CompletedProcess:
+def companion_takes_profile(path: str) -> bool:
+    """Whether the installed companion takes --profile, read from its own source (never by running it)."""
+    try:
+        return '--profile' in Path(path).read_text(encoding='utf-8', errors='replace')
+    except OSError:
+        return False
+
+
+def session_title(meta: dict, card_path: Path, piece: str | None = None) -> str:
+    """The first line of the prompt, which is how Krish finds the session in his Codex Desktop app: the card, the piece
+    it is for, its kind and its own title, e.g. "ve card fri-hero-plates for 2026-11-20-fri (plates): The ledger"."""
+    card = meta.get('card') or card_path.stem
+    heading = next((line[2:].strip() for line in card_path.read_text(encoding='utf-8').splitlines()
+                    if line.startswith('# ')), '')
+    parts = ['ve card', card]
+    if piece:
+        parts.append(f'for {piece}')
+    if meta.get('kind'):
+        parts.append(f'({meta["kind"]})')
+    return ' '.join(parts) + (f': {heading}' if heading else '')
+
+
+def titled_prompt(card_path: Path, meta: dict, piece: str | None = None) -> Path:
+    """The card with its title line first, written beside the card's worktree cache; the card file is not changed."""
+    out = ROOT / '.cache' / 've-dispatch' / f'{meta.get("card") or card_path.stem}.prompt.md'
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(session_title(meta, card_path, piece) + '\n\n' + card_path.read_text(encoding='utf-8'), encoding='utf-8')
+    return out
+
+
+def dispatch(card_path: Path, background: bool = True, booked: str | None = None,
+             studio: bool = False, piece: str | None = None) -> subprocess.CompletedProcess:
     """booked: the id of a Control Center reservation (reserve_credit_spend) the queuing session already made for this
     card. Control Center is then the guard that refused anything over the share, so the local cap file is not read;
-    the session settles the booking with settle_credit_spend once it has the result."""
+    the session settles the booking with settle_credit_spend once it has the result. studio: run under the Studio's
+    own Codex home (not visible in Codex Desktop) instead of Krish's everyday one."""
     meta = parse_card(card_path)
     _require_design_lock(meta)
     _admit(card_path, meta)
@@ -481,9 +537,17 @@ def dispatch(card_path: Path, background: bool = True, booked: str | None = None
     cwd = meta.get('cwd') or str(ROOT)
     minutes, _ = card_limits(meta)
     ensure_worktree(Path(cwd), meta.get('card', 'card'))
-    env = codex_env()
-    cmd = ['node', companion(), 'task', '--fresh', '--write', '--model', meta.get('model', MODEL), '--effort', meta.get('effort', EFFORT),
-           '--cwd', cwd, '--prompt-file', str(card_path.resolve())]
+    env = codex_env(studio)
+    runner = companion()
+    cmd = ['node', runner, 'task', '--fresh', '--write', '--model', meta.get('model', MODEL), '--effort', meta.get('effort', EFFORT),
+           '--cwd', cwd, '--prompt-file', str(titled_prompt(card_path, meta, piece).resolve())]
+    if env.get('CODEX_HOME') and not (studio or _codex_home_module().studio_opted_in()):
+        if companion_takes_profile(runner):
+            cmd[3:3] = ['--profile', _codex_home_module().PROFILE]
+        else:
+            print('ve dispatch: this Codex plugin companion takes no --profile, so the run uses the everyday settings '
+                  'of the home it shows in (its MCP servers and plugins too); the tool profile still held the card. '
+                  'Pass --studio-home for a run with none.', file=sys.stderr)
     if background:
         # The companion runs on in the background; verify-card holds it to max_minutes and max_calls from its log.
         cmd.insert(3, '--background')

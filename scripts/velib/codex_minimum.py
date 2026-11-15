@@ -15,6 +15,7 @@ the minimum of verified receipts of an art direction job. A proof excerpt is nev
 from __future__ import annotations
 
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -98,9 +99,17 @@ def record(directory: Path, card: str, job: str, evidence: Path, verified_by: st
     return note
 
 
+def desktop_home_found() -> tuple[Path, str]:
+    """(the Codex home Krish's Codex Desktop app reads, how it was found): scripts/overnight/codex_home.py decides it,
+    the same home ve dispatch runs cards under (in WSL, the Windows side's home, never WSL's own ~/.codex)."""
+    sys.path.insert(0, str(ROOT / 'scripts' / 'overnight'))
+    import codex_home
+    return codex_home.desktop_home()
+
+
 def desktop_home() -> Path:
-    """The Codex home Krish's Codex Desktop app reads: his everyday ~/.codex."""
-    return Path.home() / '.codex'
+    """The Codex home Krish's Codex Desktop app reads."""
+    return desktop_home_found()[0]
 
 
 def visible_in_desktop(log: str | None, home: Path | None = None) -> bool | None:
