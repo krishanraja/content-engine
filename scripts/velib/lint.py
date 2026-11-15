@@ -291,10 +291,144 @@ def title_moment_lints(spec: dict) -> list[str]:
     return out
 
 
+# INV-SYNTHETIC-OFF (config/ve/invariants.json; Krish, 2026-10-27: "on backup until trained and convincing"): no synthetic
+# Krish voice or likeness until he approves its realism test. That approval lives once, in krish-clone's registry
+# (docs/REGISTRY.md there): one entry per approved clone, his exact words, the date and the sha256 of the scored blind
+# A/B record he approved. It is read live from krish-clone main, the way voice_score.mjs reads ai-harness, and only when
+# a spec uses a synthetic capability or claims a synthetic approval, so every other lint stays offline. An unreadable
+# or malformed registry refuses; it never passes.
+SYNTHETIC_REGISTRY = 'https://raw.githubusercontent.com/krishanraja/krish-clone/main/config/synthetic-approvals.json'
+SYNTHETIC_FORMAT = 'krish-clone.synthetic-approvals/1'
+SYNTHETIC_KIND = {'voice_clone': 'voice', 'avatar': 'likeness', 'lipsync': 'likeness'}  # tools.json realism_test keys
+SYNTHETIC_FIELDS = ('name', 'kind', 'platform', 'scored_pack_sha256', 'approved_words', 'approved_on')
+CLONE_NAME = re.compile(r':\s*([a-z][a-z0-9]*(?:-[a-z0-9]+)+)\s*$')
+
+
+def synthetic_capabilities() -> dict[str, dict[str, str]]:
+    """{tool: {capability: kind}} for each capability config/ve/tools.json holds behind the realism test. A capability
+    this file has no kind for is 'unknown', which no registry entry matches, so it is refused until it is named here."""
+    found: dict[str, dict[str, str]] = {}
+    for tool, entry in load_json(CONFIG / 'tools.json')['tools'].items():
+        for capability, ruling in (entry.get('requires_ruling') or {}).items():
+            if ruling == 'realism_test':
+                found.setdefault(tool, {})[capability] = SYNTHETIC_KIND.get(capability, 'unknown')
+    return found
+
+
+def synthetic_uses(spec: dict) -> list[dict]:
+    """Each asset that is a synthetic Krish voice or likeness: its tool names a realism-test capability
+    (elevenlabs.voice_clone:krish-voice-1, the clone's registry name after the colon), or it is generated footage from a
+    tool whose ruled capabilities make a likeness (HeyGen's other slots only propose cuts of real footage), or it is a
+    generated recording, which can only be a voice."""
+    ruled = synthetic_capabilities()
+    uses = []
+    for index, asset in enumerate(spec.get('assets') or []):
+        tool = str(asset.get('tool') or '').strip().lower()
+        head = CLONE_NAME.sub('', tool)  # the capability is read before the clone's name, never inside it
+        base = re.split(r'[.:/\s]', head, maxsplit=1)[0]
+        matched = [(owner, capability_kind) for owner, capabilities in ruled.items()
+                   for capability, capability_kind in capabilities.items()
+                   if re.search(r'(?<![a-z])' + capability.replace('_', '[ _-]?') + r'(?![a-z])', head)]
+        kind = None
+        if matched:
+            kinds = {k for _, k in matched}
+            kind = kinds.pop() if len(kinds) == 1 else 'unknown'  # two kinds in one tool fails closed
+            owners = {o for o, _ in matched}
+            if base not in ruled and len(owners) == 1:
+                base = owners.pop()
+        if kind is None and asset.get('origin') == 'generated':
+            if asset.get('kind') == 'recording':
+                kind = 'voice'
+            elif asset.get('kind') in ('broll', 'illustration') and 'likeness' in ruled.get(base, {}).values():
+                kind = 'likeness'
+        if kind:
+            name = CLONE_NAME.search(tool)
+            uses.append({'path': f'assets.{index}', 'tool': tool or '(no tool)', 'platform': base, 'kind': kind,
+                         'name': name.group(1) if name else None, 'origin': asset.get('origin')})
+    return uses
+
+
+def fetch_synthetic_registry() -> str:
+    """krish-clone's registry as main holds it now. curl honours the proxy on every machine ve runs on."""
+    result = run(['curl', '-fsSL', '--max-time', '20', SYNTHETIC_REGISTRY])
+    if result.returncode != 0:
+        raise RuntimeError(f'curl exited {result.returncode}: {(result.stderr or "").strip()[:160]}')
+    return result.stdout
+
+
+def read_synthetic_registry(fetch=None) -> list[dict]:
+    """The active entries. Raises on anything unreadable or malformed; the caller refuses."""
+    data = json.loads((fetch or fetch_synthetic_registry)())
+    if not isinstance(data, dict) or data.get('format') != SYNTHETIC_FORMAT:
+        raise ValueError(f'format is not {SYNTHETIC_FORMAT}')
+    entries = data.get('approvals')
+    if not isinstance(entries, list):
+        raise ValueError('approvals is not a list')
+    for index, entry in enumerate(entries):
+        if not isinstance(entry, dict) or any(not isinstance(entry.get(k), str) or not entry[k].strip() for k in SYNTHETIC_FIELDS):
+            raise ValueError(f'approvals[{index}] is incomplete')
+        if not re.fullmatch(r'[0-9a-f]{64}', entry['scored_pack_sha256']):
+            raise ValueError(f'approvals[{index}] has no scored record sha256')
+    return [entry for entry in entries if not entry.get('withdrawn')]
+
+
+def _synthetic_match(entry: dict, approval: dict) -> bool:
+    return (approval.get('gate') == 'synthetic' and approval.get('by') == 'Krish'
+            and approval.get('artifact_hash') == entry['scored_pack_sha256']
+            and approval.get('said') == entry['approved_words'] and approval.get('on') == entry['approved_on'])
+
+
+def synthetic_lints(spec: dict, fetch=None) -> list[str]:
+    """voice.synthetic: every synthetic Krish voice or likeness names an approved clone in krish-clone's registry, and
+    the spec carries that clone's approval (approvals[gate=synthetic]: by Krish, said, on and artifact_hash, copied
+    exactly from the registry entry). A synthetic approval the registry does not hold is refused too."""
+    uses = synthetic_uses(spec)
+    claimed = [(i, a) for i, a in enumerate(spec.get('approvals') or []) if a.get('gate') == 'synthetic']
+    if not uses and not claimed:
+        return []
+    try:
+        registry, unreadable = read_synthetic_registry(fetch), None
+    except Exception as failed:  # noqa: BLE001 - any failure to read is a refusal, never a pass
+        registry, unreadable = [], f'{type(failed).__name__}: {failed}'
+    out = []
+    for use in uses:
+        where = f"voice.synthetic {use['path']}"
+        what = f"{use['tool']} is a synthetic Krish {use['kind']}"
+        if unreadable:
+            out.append(f'{where}: {what}, and the approvals registry could not be read ({unreadable}), so it is refused '
+                       f'(INV-SYNTHETIC-OFF; {SYNTHETIC_REGISTRY})')
+            continue
+        if use['origin'] in ('capture', 'source', 'licensed'):
+            out.append(f"{where}: {what} but is marked origin {use['origin']}; a synthetic voice or likeness is generated, "
+                       'never evidence (INV-EVIDENCE-REAL)')
+            continue
+        if not use['name']:
+            out.append(f'{where}: {what} that names no approved clone; write its tool as <tool>.<capability>:<clone name> '
+                       "with the name from krish-clone's registry (INV-SYNTHETIC-OFF)")
+            continue
+        entry = next((e for e in registry if e['name'] == use['name'] and e['kind'] == use['kind']
+                      and e['platform'] == use['platform']), None)
+        if entry is None:
+            out.append(f"{where}: {use['name']} is not an approved {use['kind']} from {use['platform']} in krish-clone's "
+                       'registry; no spec uses a synthetic Krish until he approves its scored blind test (INV-SYNTHETIC-OFF)')
+        elif not any(_synthetic_match(entry, approval) for _, approval in claimed):
+            out.append(f"{where}: {use['name']} is approved, but the spec carries no matching approval: add "
+                       'approvals[gate=synthetic] with by Krish, and said, on and artifact_hash copied exactly from its '
+                       f"registry entry (artifact_hash {entry['scored_pack_sha256']})")
+    for index, approval in claimed:
+        if unreadable:
+            out.append(f'voice.synthetic approvals.{index}: a synthetic approval cannot be checked; the approvals registry '
+                       f'could not be read ({unreadable})')
+        elif not any(_synthetic_match(entry, approval) for entry in registry):
+            out.append(f"voice.synthetic approvals.{index}: this synthetic approval matches no active entry in krish-clone's "
+                       'registry (his words, the date and the scored record sha256, exactly)')
+    return out
+
+
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     from . import guards
     out: list[str] = (reference_lints(spec) + motion_lints(spec) + guards.spec_lints(spec) + palette_lints(spec)
-                      + title_moment_lints(spec))
+                      + title_moment_lints(spec) + synthetic_lints(spec))
     from . import character
     out.extend(character.spec_lints(spec))  # nothing unless the spec names a character
     from . import designlock
