@@ -1432,16 +1432,20 @@ def thumbnail_options_patch(out):
         record = to.load_set(out)
         problems = to.set_problems(out, record)
         verdict = to.read_verdict(out, record)
+        drive = to.read_drive(out, record)
     except (to.OptionsError, OSError, ValueError) as error:
         raise MakingError(str(error))
     if problems:
         raise MakingError('the options on this machine are not the set its record names: ' + '; '.join(problems))
+    # The review copies' Drive ids (thumb_options.py drive), so the board shows the set with Pick and Not this (1.16.0).
+    copy = (lambda f: {'drive_id': drive['files'][f['file']]} if drive else {})
     entry = {
         'set_sha256': record['set_sha256'], 'drawn_at': record['drawn_at'], 'skin': record.get('skin'),
         'headline': ' '.join(record.get('headline') or []),
-        'options': [{'id': o['id'], 'note': o['note'], 'files': [{'shape': f['shape'], 'file': f['file'], 'sha256': f['sha256']} for f in o['files']]}
+        'options': [{'id': o['id'], 'note': o['note'], 'files': [{'shape': f['shape'], 'file': f['file'], 'sha256': f['sha256'], **copy(f)} for f in o['files']]}
                     for o in record['options']],
-        'grid_mock': {'sha256': record['grid_mock']['sha256'], 'past_read': record['grid_mock']['past_read'], 'note': record['grid_mock']['note']},
+        'grid_mock': {'sha256': record['grid_mock']['sha256'], 'past_read': record['grid_mock']['past_read'], 'note': record['grid_mock']['note'],
+                      **({'drive_id': drive['grid_mock']} if drive else {})},
     }
     if verdict:
         entry['verdict'] = {
@@ -1501,7 +1505,9 @@ def option_pick_problem(record, thumb_file):
 
 def thumbnail_ask_item(piece_id, record, link):
     """The one board item that asks Krish to pick (WORKBENCH.md, "The board"): on him, his judgment, an https link to
-    where the options and the grid mock are shown, closed by the Video assets step once a cut carries his pick."""
+    where the options and the grid mock are shown. It closes on the Video assets step, and Control Centre's done check
+    closes it as soon as his answer to this set is on the record (a thumbs-<set> item: his Pick or Not this on the
+    board, view contract 1.16.0, or his pick in a session)."""
     held = (record or {}).get('thumbnail_options') or {}
     if not held.get('set_sha256') or not held.get('options'):
         raise MakingError('the engine\'s record holds no thumbnail options, so nothing was asked: the set is not on the record yet')
@@ -1509,9 +1515,13 @@ def thumbnail_ask_item(piece_id, record, link):
         raise MakingError('--ask is the https link where he sees the options and the grid mock (the live board day: live_board.py)')
     ids = [o['id'].upper() for o in held.get('options') or []]
     best = ((held.get('verdict') or {}).get('best') or '').upper()
+    # The board shows the set (Pick on each option, Not this on the set) once every file's review copy is in Drive.
+    on_board = all(f.get('drive_id') for o in held.get('options') or [] for f in o.get('files') or []) and bool((held.get('grid_mock') or {}).get('drive_id'))
     detail = (f'{len(ids)} thumbnail options for "{held.get("headline", "")}" are on the piece, each in a mock of your grid. '
               + (f'The critic\'s pick is {best}. ' if best else '')
-              + 'Say which one in a session; it is recorded with your words, and nothing is filed as the thumbnail before you answer.')
+              + ('Press Pick on the one you want on the board, or Not this to have them drawn again; '
+                 if on_board else 'Say which one in a session, where it is recorded with your words; ')
+              + 'nothing is filed as the thumbnail before you answer.')
     return {'id': f'{THUMB_ASK_PREFIX}{held["set_sha256"][:12]}', 'idea_id': piece_id, 'lane': 'on_you', 'only_you': 'judgment',
             'link': link, 'closes_on': 'video', 'area': 'Thumbnails', 'rank': 3,
             'title': f'Pick the thumbnail: {", ".join(ids[:-1])} or {ids[-1]}'[:200], 'detail': detail[:2000]}

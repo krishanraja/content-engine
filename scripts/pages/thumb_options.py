@@ -16,6 +16,11 @@ The thumbnail-designer skill (.agents/skills/thumbnail-designer/SKILL.md) runs t
         writes OUT/thumb-verdict.json from the critic's answer: refused unless it judges every option on the set once,
         names each option's files with the sha256 the files have now and the set records, answers all seven checks, and
         was written by a reader that did not draw the options.
+    python3 scripts/pages/thumb_options.py drive OUT a:wide=ID a:tall=ID b:wide=ID b:tall=ID [c:wide=ID c:tall=ID] mock=ID
+        writes OUT/drive.json: the Drive id of each file's review copy (filed in his Drive's Inbox from My AI, docs/DRIVE.md),
+        every option's two files and the grid mock, so the Publish Board can show the set with its Pick and Not this
+        (view contract 1.16.0). making.py thumbnails reads it. Refused unless it names every file of the set on this
+        machine and nothing else.
     python3 scripts/pages/thumb_options.py show OUT
     python3 scripts/pages/thumb_options.py --self-test
 
@@ -30,7 +35,8 @@ The grid mock is a 3-wide Instagram profile grid: each option's tall thumbnail i
 cover is only ever a file read on this machine (--past), recorded by its sha256: never drawn, never guessed. With none,
 the mock shows the options alone and its record and its caption say so.
 
-Nothing here posts, sends or files anything, and nothing outside the drawer's own output folder is written.
+Nothing here posts, sends or files anything, and nothing outside the drawer's own output folder is written. The review
+copies in Drive are filed by the session (docs/DRIVE.md); `drive` only records their ids beside the set.
 """
 from __future__ import annotations
 
@@ -49,6 +55,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 OPTIONS_FILE = 'thumb-options.json'
 VERDICT_FILE = 'thumb-verdict.json'
+DRIVE_FILE = 'drive.json'
 MOCK_FILE = 'grid-mock.png'
 OPTIONS_DIR = 'options'
 OPTION_IDS = ('a', 'b', 'c')
@@ -82,6 +89,7 @@ GAP = 4
 PAST_MAX = 5
 SHA = re.compile(r'^[0-9a-f]{64}$')
 DRIVE_ID = re.compile(r'^[A-Za-z0-9_-]{10,}$')
+DRIVE_FILE_ID = re.compile(r'^[A-Za-z0-9_-]{20,80}$')   # a Drive file id, the board's own rule (board/_drivePosts.ts)
 
 
 class OptionsError(Exception):
@@ -595,6 +603,58 @@ def read_verdict(out: Path, record: dict) -> dict | None:
     return verdict
 
 
+def drive_keys(record: dict) -> dict:
+    """Each file of the set by the key `drive` names it: <option>:<wide|tall> for an option's file, mock for the grid mock."""
+    keys = {f'{o["id"]}:{f["shape"]}': f['file'] for o in record.get('options') or [] for f in o.get('files') or []}
+    keys['mock'] = (record.get('grid_mock') or {}).get('file') or MOCK_FILE
+    return keys
+
+
+def write_drive(out: Path, pairs: list[str]) -> dict:
+    """OUT/drive.json from KEY=ID pairs: the Drive id of every file's review copy. Refused unless the set on this machine
+    is whole and the pairs name each of its files once, with a Drive file id, and nothing else."""
+    out = Path(out)
+    record = load_set(out)
+    problems = set_problems(out, record)
+    if problems:
+        raise OptionsError('the set on this machine is not the one recorded, so no Drive ids are written:\n  - ' + '\n  - '.join(problems))
+    keys = drive_keys(record)
+    ids: dict[str, str] = {}
+    for pair in pairs:
+        key, _, value = str(pair).partition('=')
+        key, value = key.strip().lower(), value.strip()
+        if key not in keys:
+            raise OptionsError(f'"{key}" names no file of this set: use {", ".join(sorted(keys))}')
+        if key in ids:
+            raise OptionsError(f'"{key}" is named twice')
+        if not DRIVE_FILE_ID.match(value):
+            raise OptionsError(f'"{key}": "{value}" is not a Drive file id (the id in drive.google.com/file/d/<id>/view)')
+        ids[key] = value
+    missing = sorted(set(keys) - set(ids))
+    if missing:
+        raise OptionsError(f'every file needs its Drive id, so the board can show the whole set; missing: {", ".join(missing)}')
+    entry = {'schema': 'thumb-drive/1', 'set_sha256': record['set_sha256'],
+             'files': {keys[k]: v for k, v in sorted(ids.items()) if k != 'mock'}, 'grid_mock': ids['mock'], 'at': now_iso()}
+    (out / DRIVE_FILE).write_text(json.dumps(entry, indent=1) + '\n', encoding='utf-8')
+    return entry
+
+
+def read_drive(out: Path, record: dict) -> dict | None:
+    """The review copies' Drive ids beside the set ({'files': {path: id}, 'grid_mock': id}), or None when none are
+    recorded. Raises when they are for another set."""
+    path = Path(out) / DRIVE_FILE
+    if not path.is_file():
+        return None
+    entry = json.loads(path.read_text(encoding='utf-8'))
+    if entry.get('set_sha256') != record.get('set_sha256'):
+        raise OptionsError(f'{DRIVE_FILE} is for another set of options: file this set\'s copies and record their ids again')
+    files = entry.get('files') if isinstance(entry.get('files'), dict) else {}
+    wanted = {f['file'] for o in record['options'] for f in o['files']}
+    if set(files) != wanted or not all(DRIVE_FILE_ID.match(str(v)) for v in files.values()) or not DRIVE_FILE_ID.match(str(entry.get('grid_mock') or '')):
+        raise OptionsError(f'{DRIVE_FILE} does not name every file of this set with a Drive id: run thumb_options.py drive again')
+    return {'files': dict(files), 'grid_mock': entry['grid_mock']}
+
+
 def show(out: Path) -> str:
     record = load_set(out)
     lines = [f'{len(record["options"])} option(s) for "{" ".join(record["headline"])}", set {record["set_sha256"][:12]}, '
@@ -619,6 +679,12 @@ def show(out: Path) -> str:
             lines.append(f'    {o["id"].upper()}: ' + ('blocks' if o['blocking'] else 'passes') + (f' (fails {", ".join(fails)})' if fails else ''))
     else:
         lines.append('  no verdict yet: the critic reads the options and the mock next')
+    try:
+        drive = read_drive(out, record)
+        lines.append('  review copies in Drive: every file, so the board can show the set' if drive
+                     else '  no review copies in Drive yet: file them, then thumb_options.py drive OUT KEY=ID ...')
+    except (OptionsError, ValueError) as e:
+        lines.append(f'  PROBLEM: {e}')
     return '\n'.join(lines)
 
 
@@ -713,6 +779,24 @@ def self_test() -> int:
         written = write_verdict(out, critic, 'thumbnail-critic')
         check('the verdict is bound to the set', (written['set_sha256'], written['blocking']), (record['set_sha256'], False))
         check('the verdict reads back for this set', read_verdict(out, record)['best'], 'a')
+        check('no review copies recorded reads as none', read_drive(out, record), None)
+        fid = lambda n: f'1{n}' + 'x' * 25
+        pairs = ['a:wide=' + fid('aw'), 'a:tall=' + fid('at'), 'b:wide=' + fid('bw'), 'b:tall=' + fid('bt'), 'mock=' + fid('mk')]
+        for label, bad in (('a file left out is refused', pairs[:-1]), ('a key that names no file is refused', pairs + ['c:wide=' + fid('cw')]),
+                           ('an id that is not a Drive id is refused', pairs[:-1] + ['mock=short'])):
+            try:
+                write_drive(out, bad)
+                check(label, False, True)
+            except OptionsError:
+                check(label, True, True)
+        write_drive(out, pairs)
+        got = read_drive(out, record)
+        check('every file and the mock have their Drive id', (got['files'][f'{OPTIONS_DIR}/a/{THUMB_FILES["wide"]}'], got['grid_mock']), (fid('aw'), fid('mk')))
+        try:
+            read_drive(out, dict(record, set_sha256='0' * 64))
+            check('Drive ids for another set are refused', False, True)
+        except OptionsError:
+            check('Drive ids for another set are refused', True, True)
         Image.new('RGB', (1080, 1920), 'green').save(tall['a'], 'JPEG')
         check('a file changed after drawing is named', any('changed after it was drawn' in p for p in set_problems(out, record)), True)
     if fails:
@@ -724,9 +808,10 @@ def self_test() -> int:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description='Thumbnail options: the grid mock again, the critic\'s verdict, or what is on file.')
-    ap.add_argument('what', nargs='?', choices=['mock', 'verdict', 'show'])
+    ap.add_argument('what', nargs='?', choices=['mock', 'verdict', 'drive', 'show'])
     ap.add_argument('out', nargs='?', help='the folder build.py --thumbs --options wrote')
-    ap.add_argument('critic', nargs='?', help='with verdict: the critic\'s answer, a JSON file')
+    ap.add_argument('critic', nargs='*', help='with verdict: the critic\'s answer, a JSON file; with drive: KEY=ID for each file '
+                    '(a:wide, a:tall, ..., mock)')
     ap.add_argument('--past', action='append', default=[], metavar='COVER', help='with mock: a past posted cover on this machine, newest first (up to five)')
     ap.add_argument('--reviewer', help='with verdict: who judged them (the thumbnail-critic subagent), never the session that drew them')
     ap.add_argument('--self-test', action='store_true')
@@ -740,6 +825,11 @@ def main(argv=None) -> int:
         if a.what == 'show':
             print(show(out))
             return 0
+        if a.what == 'drive':
+            entry = write_drive(out, a.critic)
+            print(f'{out / DRIVE_FILE}  {len(entry["files"])} files and the grid mock, each with its review copy\'s Drive id. '
+                  'Next: making.py PIECE thumbnails OUT records them, and the board shows the set with Pick and Not this.')
+            return 0
         record = load_set(out)
         if a.what == 'mock':
             tall = {}
@@ -751,12 +841,13 @@ def main(argv=None) -> int:
                 tall[o['id']] = path
             record['grid_mock'] = draw_mock(out, tall, a.past)
             (out / VERDICT_FILE).unlink(missing_ok=True)   # the critic judged the old mock
+            (out / DRIVE_FILE).unlink(missing_ok=True)     # and the copy in Drive is the old mock
             (out / OPTIONS_FILE).write_text(json.dumps(record, indent=1) + '\n', encoding='utf-8')
             print(f'{out / MOCK_FILE}  {record["grid_mock"]["note"]} Any verdict on the old mock is removed: run the critic again.')
             return 0
-        if not a.critic or not a.reviewer:
+        if len(a.critic) != 1 or not a.reviewer:
             ap.error('verdict needs the critic\'s answer (a JSON file) and --reviewer')
-        critic = json.loads(Path(a.critic).read_text(encoding='utf-8'))
+        critic = json.loads(Path(a.critic[0]).read_text(encoding='utf-8'))
         verdict = write_verdict(out, critic, a.reviewer)
         print(f'{out / VERDICT_FILE}  by {verdict["reviewer"]}: best {verdict["best"] or "none"}'
               + ('; every option blocks: hold the thumbnail with the reason, never ship it below the bar' if verdict['blocking'] else ''))

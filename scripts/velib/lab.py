@@ -11,7 +11,10 @@ footage and saved before a reel uses it).
   stage    rebuild the window's media from the pinned take (fetched by scripts/post-pack/recording.py): conform its
            committed EDL, his voice as the stem (no bed), and the brand marks, each checked against config/studio.json
   render   the house look, each caption look and each drawable style on config/ve/lab.json's window, through the one
-           render path, into .cache/ve/lab/<engine>/
+           render path, into .cache/ve/lab/<engine>/; a caption style from config/caption-themes.json (theme-<name>) only
+           when --only names it, so the regression reel never grows by itself
+  sample   records one rendered look, filed in his Drive, as the sample Pick a style shows on the board
+           (config/ve/style-samples.json; view contract 1.16.0)
   reel     one mp4: a title card then each look; and one sheet of sampled frames
   diff     every look against the last lab render on another engine (velib.styles.difference): the house must not move
   verdict  his words on a look, through creative_direction.style_verdict with context lab: a lab pick makes a style
@@ -22,6 +25,7 @@ It approves nothing and changes no piece.
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -31,6 +35,11 @@ from pathlib import Path
 from .common import CONFIG, ROOT, ffmpeg, load_json, sha256_file, write_json
 
 LAB = CONFIG / 'lab.json'
+STYLE_SAMPLES = CONFIG / 'style-samples.json'
+CAPTION_THEMES = ROOT / 'config' / 'caption-themes.json'
+THEME_PREFIX = 'theme-'
+SAMPLE_PATH = '/api/board/sign-offs?file='   # the engine's Drive file route the board shows a sample from
+SAMPLE_DRIVE_ID = re.compile(r'^[A-Za-z0-9_-]{20,80}$')
 CACHE = ROOT / '.cache' / 've' / 'lab'
 RESULTS = ROOT / 'docs' / 've' / 'lab'
 STUDIO = ROOT / 'config' / 'studio.json'
@@ -110,11 +119,20 @@ def window_props(cfg: dict, assets: Path) -> dict:
     return proof.window_props(json.loads(text), start, end)
 
 
-def looks(cfg: dict) -> list[dict]:
-    """The house look, each caption look the renderer draws (props captionStyle), and each drawable motion style."""
+def caption_themes() -> list[str]:
+    """The caption styles a piece picks (config/caption-themes.json, props captionTheme), in its order."""
+    return [k for k in load_json(CAPTION_THEMES) if not k.startswith('_')]
+
+
+def looks(cfg: dict, only: list[str] | None = None) -> list[dict]:
+    """The house look, each caption look the renderer draws (props captionStyle), and each drawable motion style; and
+    each caption style --only names as theme-<name> (props captionTheme), drawn only when asked for."""
     from .compile import MOTION_PROFILES  # noqa: PLC0415
     out = [{'id': 'house', 'kind': 'house', 'title': 'House look'}]
     out += [{'id': f'captions-{c}', 'kind': 'captions', 'caption': c, 'title': f'Captions: {c}'} for c in cfg['caption_looks']]
+    themes = caption_themes()
+    out += [{'id': f'{THEME_PREFIX}{t}', 'kind': 'caption_theme', 'theme': t, 'title': f'Caption style: {t}'}
+            for t in themes if only and f'{THEME_PREFIX}{t}' in only]
     sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
     import creative_direction  # noqa: PLC0415
     bank = creative_direction.motion_modules()
@@ -130,6 +148,8 @@ def props_for(look: dict, window: dict, spec: dict) -> dict:
     props = {k: v for k, v in window.items() if k != 'motion'}
     if look['kind'] == 'captions':
         props['captionStyle'] = look['caption']
+    if look['kind'] == 'caption_theme':
+        props['captionTheme'] = look['theme']
     if look['kind'] == 'style':
         trial = json.loads(json.dumps(spec))
         trial.setdefault('style', {})['motion'] = {'module': look['module'], 'reason': 'the lab'}
@@ -145,7 +165,7 @@ def render(cfg: dict, assets: Path, render_fn, out: Path | None = None, only: li
     spec = load_json(ROOT / cfg['piece_dir'] / 'spec.json')
     window = window_props(cfg, assets)
     rows = []
-    for look in looks(cfg):
+    for look in looks(cfg, only):
         if only and look['id'] not in only:
             continue
         props = props_for(look, window, spec)
@@ -296,6 +316,35 @@ def record(manifest: dict, report: dict | None = None, today: str | None = None,
     RESULTS.mkdir(parents=True, exist_ok=True)
     return write_json(RESULTS / f'{today or date.today().isoformat()}.json',
                       {'manifest': manifest, 'diff': report, 'as_shot': shot})
+
+
+def record_sample(layer: str, style_id: str, drive_id: str, clip: Path | None = None, path: Path = STYLE_SAMPLES) -> dict:
+    """One rendered look, filed in his Drive, recorded as the sample Pick a style shows on the board: its value the
+    engine's same-site Drive file route (/api/board/sign-offs?file=<drive id>), its Drive id in the drive map, its waiting
+    note gone. A motion sample is a drawable style's look (its id); a caption sample is a caption style (theme-<name>
+    rendered, recorded by its name). With clip, the file must be the lab's render of that look (its manifest beside it).
+    It writes only config/ve/style-samples.json; filing in Drive is the session's (docs/DRIVE.md)."""
+    if layer not in ('motion', 'captions'):
+        raise ValueError('the layer is motion or captions')
+    if not SAMPLE_DRIVE_ID.match(str(drive_id or '')):
+        raise ValueError(f'"{drive_id}" is not a Drive file id (the id in drive.google.com/file/d/<id>/view)')
+    if layer == 'motion' and style_id not in {look['id'] for look in looks(config()) if look['kind'] == 'style'}:
+        raise ValueError(f'{style_id} is not a motion style the lab draws')
+    if layer == 'captions' and style_id not in caption_themes():
+        raise ValueError(f'{style_id} is not a caption style (config/caption-themes.json)')
+    if clip is not None:
+        clip = Path(clip)
+        manifest = load_json(clip.parent / 'manifest.json')
+        want = style_id if layer == 'motion' else f'{THEME_PREFIX}{style_id}'
+        row = next((look for look in manifest.get('looks') or [] if look.get('id') == want), None)
+        if not row or row.get('file') != clip.name or sha256_file(clip) != row.get('sha256'):
+            raise ValueError(f'{clip} is not the lab\'s render of {want} (its manifest beside it names another file)')
+    doc = load_json(path)
+    doc.setdefault(layer, {})[style_id] = f'{SAMPLE_PATH}{drive_id}'
+    doc.setdefault('drive', {}).setdefault(layer, {})[style_id] = drive_id
+    (doc.get('waiting') or {}).get(layer, {}).pop(style_id, None)
+    write_json(path, doc)
+    return doc
 
 
 def verdict(module: str, said: str, on: str, choice: str, path: Path | None = None) -> dict:

@@ -1991,8 +1991,12 @@ A piece's thumbnail options on its making record (meta.making.thumbnail_options)
 - `interface MakingThumbVerdictOption`
 - `interface MakingThumbVerdict`
 - `interface MakingThumbPick`
+- `interface MakingThumbRedraw`
+- `const BOARD_PICK`
+- `const BOARD_REDRAW`
 - `interface MakingThumbnailOptions`
 - `type ThumbnailOptionsPatch`
+- `const THUMB_DRIVE_ID`
 - `function setDigest(options: Array<Pick<MakingThumbOption, 'id' | 'files'>>): string`
 - `function parseThumbnailOptions(v: unknown, problems: string[]): ThumbnailOptionsPatch | null`
 - `function thumbnailOptionsProblems(prev: MakingThumbnailOptions | null | undefined, patch: ThumbnailOptionsPatch | undef…`
@@ -2751,6 +2755,8 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `const CAPTIONS: Array<{ id: string } & CaptionTheme>`
 - `function motionBank(styles: unknown): MotionModule[]`
 - `function sampleUrl(layer: StyleLayerKey, id: string, samples: unknown = styleSamples): string | null`
+- `function sampleDrive(layer: StyleLayerKey, id: string, samples: unknown = styleSamples): { file_id: string; url: string…`
+- `function sampleFiles(samples: unknown = styleSamples): Set<string>`
 - `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, str…`
 - `interface StyleInputs`
 - `function dayStyle(i: StyleInputs): DayStyle`

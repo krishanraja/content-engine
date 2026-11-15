@@ -3,6 +3,7 @@ import { writeBack } from './_writeBack.js'
 import type { MoveSpec } from './_offdayItems.js'
 import type { PressAction, ViewOption } from './_viewExtras.js'
 import type { Action, DayView, LockToSign } from './_view.js'
+import { thumbsPress } from './_thumbs.js'
 import { makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
 import type { DayStyle, StyleLayer } from './_style.js'
 
@@ -393,6 +394,11 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const decision = publish ?? yes ?? null
   const line = missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.` : `${label}. ${d.next.replace(/[.\s]+$/, '')}.`
   if (decision && !missed) return { ...base, line, next: decision, decision: true }
+  // His pick of the thumbnail (contract 1.16.0, _thumbs.ts): while a judged set waits on him, it is his decision for the
+  // day; the board opens the options at their own shapes, and the choice is the fallback a board that cannot draw them
+  // still makes.
+  const thumbs = missed ? null : thumbsPress(d.thumbs ?? null)
+  if (thumbs) return { ...base, line: `${label}. ${d.thumbs!.line}`, next: thumbs as unknown as Action, decision: true }
   const live = d.actions.find(a => isLive(a, { piece_id: d.piece_id! }))
   if (live && (missed || d.who === 'growth')) return { ...base, line, next: { ...live, label: "It's live" } as Action, decision: false }
   // His production pick, before a take is recorded: the look, the motion style and the captions, each one press (the

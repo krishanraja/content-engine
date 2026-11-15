@@ -12,8 +12,9 @@ import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
-import { StyleError, needsMotion, saveStyle, stylePick } from './_style.js'
+import { StyleError, needsMotion, sampleFiles, saveStyle, stylePick } from './_style.js'
 import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
+import { THUMB_OP, ThumbError, fileThumbLearning, saveThumbs, thumbDriveIds, thumbPick } from './_thumbs.js'
 import { LIVE_OP, recordLive } from './_itsLive.js'
 import { SIGN_OFF_OP, SignOffError, checkAgainst, readSignOffPresses, readSignOffSources, recordSignOff, signOffFiles, signOffPick } from './_signOffs.js'
 import { readLater } from './_later.js'
@@ -24,7 +25,7 @@ import { qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
 
 /** The presses posted to /api/board/<Monday>/<op> that reach the handler as a collection (no rewrite of their own). */
-const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP, LIVE_OP, SIGN_OFF_OP, 'replace'])
+const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP, THUMB_OP, LIVE_OP, SIGN_OFF_OP, 'replace'])
 /** The ops vercel.json gives the old board pages' addresses (/board/<Monday>, /board, /board/next[/<Monday>]): each is
  *  a permanent redirect to the live board now (Ruling, Krish, 2026-11-13). */
 const OLD_PAGES: ReadonlySet<string> = new Set(['html', 'next', 'latest'])
@@ -77,6 +78,18 @@ async function moveLibrary(db: SupabaseClient) {
   return libraryFollower(db)
 }
 
+/** Whether a Drive id is a thumbnail option's review copy, or its grid mock, on a piece of this week (_thumbs.ts, contract
+ *  1.16.0). A read that fails says no, and the week's posts decide. */
+async function thumbOfWeek(db: SupabaseClient, week: string, id: string): Promise<boolean> {
+  try {
+    const end = new Date(`${week}T00:00:00Z`); end.setUTCDate(end.getUTCDate() + 6)
+    const read = await db.from('content_ideas').select('id, scheduled_for, meta').gte('scheduled_for', week).lte('scheduled_for', end.toISOString().slice(0, 10))
+    return !read.error && thumbDriveIds((read.data || []) as Record<string, unknown>[]).has(id)
+  } catch {
+    return false
+  }
+}
+
 /** A view read that does not need the week's posts in Drive (the gate, a research prompt). */
 const NO_DRIVE = async () => null
 
@@ -105,7 +118,8 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
     const id = scalar(req.query.id)
     // A press posted to /api/board/<Monday>/<op> whose op has no rewrite of its own arrives as a collection
     // (vercel.json: /api/board/:week/:collection). `style` cannot have one, since GET /api/board/<Monday>/style is the
-    // read-only view of his Pick a style documents, so a POST there is the style press; `cut-verdict` the same.
+    // read-only view of his Pick a style documents, so a POST there is the style press; `cut-verdict` and `thumb-pick`
+    // the same.
     if (!op && !id && method === 'POST' && POST_OPS.has(collection)) { op = collection; collection = '' }
     if (op === 'carry') {
       // The cross-week carry (_carry.ts): the engine operator's key only.
@@ -252,15 +266,18 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       if (op === 'sign-offs') {
         // The video sign-off cards (_signOffs.ts, contract 1.11.0), on no week: his presses for the job that writes the
         // configs (signoff-apply.yml, the engine key), and one sample's bytes by its Drive id (?file=), only a sample a
-        // card shows, as a short signed link (302, or {url} with link=1) to the board's copy of it. Read-only.
+        // card shows, or a style sample Pick a style shows (config/ve/style-samples.json's drive map, contract 1.16.0),
+        // as a short signed link (302, or {url} with link=1) to the board's copy of it. Read-only.
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
         const file = scalar(req.query.file)
         if (file) {
           let url: string | null
           try {
-            const { manifest } = await signOffSources()
-            if (!manifest) throw new BoardError(503, 'sign_offs_unavailable')
-            if (!signOffFiles(manifest).has(file)) throw new BoardError(404, 'sample_not_found')
+            if (!sampleFiles().has(file)) {
+              const { manifest } = await signOffSources()
+              if (!manifest) throw new BoardError(503, 'sign_offs_unavailable')
+              if (!signOffFiles(manifest).has(file)) throw new BoardError(404, 'sample_not_found')
+            }
             url = await driveOf(db).serve(file)
           } catch (e) { if (e instanceof BoardError) throw e; throw new BoardError(503, 'drive_unavailable') }
           if (!url) throw new BoardError(404, 'sample_not_found')
@@ -342,20 +359,24 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         const drive = driveOf(db)
         let url: string | null
         try {
-          const posts = await drive.posts(week)
-          if (!posts) throw new BoardError(503, 'drive_unavailable')
-          if (!filesOfPosts(posts).has(id)) throw new BoardError(404, 'drive_file_not_found')
+          // A thumbnail option's review copy or its grid mock on a piece of this week (_thumbs.ts, contract 1.16.0), or a
+          // file of the week's posts.
+          if (!(await thumbOfWeek(db, week, id))) {
+            const posts = await drive.posts(week)
+            if (!posts) throw new BoardError(503, 'drive_unavailable')
+            if (!filesOfPosts(posts).has(id)) throw new BoardError(404, 'drive_file_not_found')
+          }
           url = await drive.serve(id)
         } catch (e) { if (e instanceof BoardError) throw e; throw new BoardError(503, 'drive_unavailable') }
         if (!url) throw new BoardError(404, 'drive_file_not_found')
         res.setHeader('Cache-Control', 'private, max-age=300')
         return res.redirect(302, url)
       }
-      if (op === 'research' || op === 'material' || op === 'look' || op === 'style' || op === CUT_OP) {
+      if (op === 'research' || op === 'material' || op === 'look' || op === 'style' || op === CUT_OP || op === THUMB_OP) {
         // The day path's presses on a piece of this week (_research.ts): research it now (sonar-pro), file research he
         // dropped, his pick of the look, his pick or "Not this" of a motion or caption style (_style.ts, contract
-        // 1.4.0), and his Yes or Not this on one of its cuts (_cuts.ts, contract 1.6.0). His press only; the piece must
-        // be scheduled inside this week.
+        // 1.4.0), his Yes or Not this on one of its cuts (_cuts.ts, contract 1.6.0), and his Pick or Not this on its
+        // thumbnail options (_thumbs.ts, contract 1.16.0). His press only; the piece must be scheduled inside this week.
         if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
         if (who !== 'Krish') throw new BoardError(403, 'his_press')
         const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
@@ -392,6 +413,18 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             const learned = saved.already ? null : await fileCutLearning(db, { week, date: String(row.data.scheduled_for), pieceId }, saved.verdict)
             return res.status(200).json({ ok: true, cut_verdict: saved.verdict, already: saved.already, ...(learned ? { learned } : {}) })
           }
+          if (op === THUMB_OP) {
+            // His pick of a thumbnail option, or Not this on the set, on the making record bound to the set's hash (a set
+            // no longer on the record is the making route's own 409). Then the done check looks at the piece's open items,
+            // so the session's ask closes once his answer is there. A Not this with his words is learned from, once,
+            // never blocking.
+            const pick = thumbPick(body)
+            const saved = await saveThumbs(db, pieceId, pick)
+            const learned = saved.already || pick.verdict !== 'not_this' ? null
+              : await fileThumbLearning(db, { week, date: String(row.data.scheduled_for), pieceId, set: pick.set_sha256, headline: saved.headline }, pick.words, saved.answer!.at)
+            const look = saved.already ? null : await (deps.look ?? (async (piece: string) => (await import('../_controlCenter.js')).askChecksForPiece(piece)))(pieceId).catch(() => null)
+            return res.status(200).json({ ok: true, thumbs: saved.answer, already: saved.already, ...(learned ? { learned } : {}), ...(look ? { looked: look.keys } : {}) })
+          }
           if (op === 'style') {
             // The motion styles are the bank's motion layer, read from main only when the press names one; the caption
             // styles are config/caption-themes.json. It writes meta.style beside meta.look and never edits a spec.
@@ -414,6 +447,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             inspiration: Array.isArray(body.inspiration) ? body.inspiration.map(String) : [] }, new Set([...production, ...(experiment ? [experiment] : [])]))
           return res.status(200).json({ ok: true, look })
         } catch (e) {
+          if (e instanceof ThumbError) return res.status(e.status).json({ ok: false, error: e.message, ...(e.problems.length ? { problems: e.problems } : {}) })
           if (e instanceof MaterialError || e instanceof StyleError || e instanceof CutError) throw new BoardError(e.status, e.message)
           throw e
         }

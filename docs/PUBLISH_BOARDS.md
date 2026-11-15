@@ -641,6 +641,13 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   every idea on a day that already holds a piece and on every idea for later on such a date, and `move` on every piece
   his approval holds (`days[].pieces[].move`, the model's piece `move`), the same shape as an off-day item's; a day's
   model may list more than one piece ("Replacing a day's piece, and Move to… on a series piece", above).
+- **1.16.0 (15 Nov 2026)** added `thumbs` to each series day: the piece's thumbnail options while a set the critic
+  judged is on its making record, each option's wide and tall files as same-site Drive file paths with their sha256, the
+  critic's line, the grid mock, Pick on each option and Not this on the set, and the press op `thumb-pick`, which the
+  week model makes the piece's decision while the set waits on him ("Thumbnail options and his pick", below; Ruling,
+  Krish, 2026-11-15, approved with the specialists plan: thumbnail options carry a pick press on the Content board). It
+  also added `sample_drive` to each style option, and a style sample's `sample_url` is the Drive file route
+  `/api/board/sign-offs?file=<drive id>` ("The style choices", below).
 
 ## To review: the video sign-offs (contract 1.11.0)
 
@@ -776,8 +783,31 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   record (`gates.style`), then a creative direction he signed (`signed.by` Krish in the day's
   `docs/plans/<date>-<dayname>/ve/spec.json` or `creative-direction.json`, `picked_by: spec`). A spec he has not signed
   is never shown as a pick, and one whose `piece_id` names another piece is never read.
-- **`sample_url`** is a rendered sample listed in `config/ve/style-samples.json`, as a same-site path, or null. None is
-  listed yet, and nothing renders one to fill it.
+- **`sample_url`** is a rendered sample listed in `config/ve/style-samples.json`, as a same-site path, or null; and
+  `sample_drive` (1.16.0) its file in his Drive, `{ file_id, url }`, or null. Each value in that file is a path string
+  (`_style.ts` reads only strings): the engine's Drive file route `/api/board/sign-offs?file=<drive id>`, with the Drive
+  id in its separate `drive` map, by layer and style. The route serves a sample only when its id is in that map
+  (`sampleFiles`), beside the sign-off cards' samples. An empty value is a render still waiting: it reads as null, the
+  board draws no sample for it (never a placeholder), and the file's `waiting` map says which render. Every value is
+  empty today: each sample is the style lab's render of that style on his pinned take (`config/ve/lab.json`), made on a
+  home computer, filed in Drive's Inbox from My AI and recorded with `ve lab sample`. The commands, on a home computer
+  in this repository:
+
+  ```
+  . scripts/ve-env.sh
+  python3 scripts/post-pack/recording.py get --sha256 203d10c946954c5343ccec5b0e3a3626e9b2dfd7ef376485ff1bbbf4f35dddd5 --out .cache/lab-take
+  python3 scripts/ve.py lab render --take .cache/lab-take/thurs5Novrecording-nospendingnosending.mp4 \
+    --brand-dir <the folder holding the three pinned makeyourmindup marks, config/studio.json> --out .cache/ve/lab/samples \
+    --only <each motion id in style-samples.json> <theme-<id> for each caption style in it>
+  # watch each clip at full size; file each in Inbox from My AI as "Style sample - motion - <id>.mp4"
+  # (or "- captions -"), read it back, then record it:
+  python3 scripts/ve.py lab sample --layer motion --module <id> --drive-id <its Drive id> --clip .cache/ve/lab/samples/<id>.mp4
+  python3 scripts/ve.py lab sample --layer captions --module <id> --drive-id <its Drive id> --clip .cache/ve/lab/samples/theme-<id>.mp4
+  ```
+
+  `ve lab sample` checks the clip is the lab's own render of that style (its manifest beside it), writes the value, the
+  drive map and clears the waiting note; commit `config/ve/style-samples.json` only, never the media. A caption style is
+  drawn by the lab only when `--only` names it (`theme-<id>`), so the regression reel never grows by itself.
 - **His press**: `presses.yes` and `presses.not_this` (labels "Yes" and "Not this") each say `POST
   /api/board/<Monday>/<op>` with a body. `POST /api/board/<Monday>/style` takes `{ piece_id, motion?, captions?,
   reject?: { layer: 'motion' | 'captions' | 'treatment', id } }`, his press only, on a piece scheduled in that week, the same guards
@@ -793,7 +823,7 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
 - **Held by:** `tests/control-plane/board-style.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
 - **Routing:** `vercel.json` has no rewrite of its own for `/api/board/<Monday>/style`, and cannot have one, since
   `GET` there is the read-only view of his Pick a style documents. So the press arrives as the collection `style`, and
-  the handler reads a `POST` with no id to `style` (or `cut-verdict`) as the press (`POST_OPS` in `_handler.ts`).
+  the handler reads a `POST` with no id to `style` (or `cut-verdict`, or `thumb-pick`) as the press (`POST_OPS` in `_handler.ts`).
   Until 11 Nov 2026 it did not, and every style press from Control Centre was answered 400 `read_only_view`
   (`tests/control-plane/board-cuts.test.ts` sends it as production does).
 
@@ -898,6 +928,57 @@ built by `apps/control-plane/api/board/_cuts.ts` on every read.
   make-piece and produce-video read before the next cut ("A Not this is the brief for the next cut of that kind").
 - **Held by:** `tests/control-plane/board-cuts.test.ts`, `tests/control-plane/making.test.ts`, the making self-test and
   `tests/control-plane/board-view-contract.test.ts`.
+
+## Thumbnail options and his pick (contract 1.16.0)
+
+Ruling (Krish, 2026-11-15, approved with the specialists plan): thumbnail options carry a pick press on the Content
+board. The thumbnail-designer skill draws two or three options, a separate critic judges each file by its sha256, and
+the set is on the piece's making record (`meta.making.thumbnail_options`, `apps/control-plane/api/_thumbOptions.ts`).
+Until 15 Nov he answered only in a session; now the board shows the set and takes his answer
+(`apps/control-plane/api/board/_thumbs.ts`).
+
+- **In the view:** a series day whose piece holds a set the critic judged, and not every option blocks, carries
+  `thumbs`: `{ set_sha256, headline, state, line, options, grid_mock, critic, answer, not_this }`. Each option is
+  `{ id, note, files, critic: { line, blocking, best }, press }`, its files the tall then the wide, each
+  `{ shape, src, drive, sha256 }`, where `src` is the same-site Drive file route `/api/board/<Monday>/drive/<drive id>`
+  of its review copy and `drive` its Drive link. The critic's `line` is one sentence: held, with its reason; all seven
+  checks pass; or how many pass, with its first note. A set the critic has not judged, or holds back whole, is never
+  carried: the skill never puts options below the bar to him.
+- **States:** `awaits_pick` (every file and the grid mock are in Drive, and nothing is answered); `not_in_drive` (the
+  review copies are not all in Drive: no press, since he cannot pick what he cannot see); `picked` and `redraw` (his
+  answer, in `answer`, `{ said, option, how, words, at }`, and no press).
+- **His presses, while it waits:** Pick on each option the critic does not hold (`press`), and Not this on the set
+  (`not_this`, its words optional: "What should the new ones do differently?"). Both are `POST
+  /api/board/<Monday>/thumb-pick` with `{ piece_id, set_sha256, verdict: 'pick' | 'not_this', option?, words? }`, his
+  login only (403 `his_press`), on a piece scheduled in that week (404 `piece_not_in_week`). 400 `invalid_set`,
+  `invalid_verdict`, `invalid_option`.
+- **The decision on the day:** the week model leads the piece with **Pick the thumbnail** (`op: thumb-pick`, its
+  `choose` at `option`, the critic's pick first and marked) while the set waits on him, after an Approve for publish
+  and before anything else. Control Centre opens the options at their own shapes from it; the choice is what a board
+  that cannot draw them still sends.
+- **The write:** his pick lands on the making record as `thumbnail_options.pick` `{ option, files, decision: "picked on
+  the board", at: his press time, by: Krish }`, bound to the set's hash and that option's files by the making route's own
+  rule (`thumbnailOptionsProblems`). It is his decision, never words he did not type: `krish_words` stays for a pick he
+  gave in a session. Not this lands as `thumbnail_options.redraw` `{ decision: "not this: draw them again", words, at,
+  by: Krish }`. A press on a set that is no longer the one on the record is refused with the making route's 409
+  `thumbnail_options_unbound` (and its `problems`), an option the critic held with 409 `option_held_by_critic`, and a
+  different answer after one with 409 `thumbnails_answered` (a change of mind is recorded by a session, in his words).
+  The same answer again changes nothing (`already: true`). Guarded on the row's `updated_at` (`patchMeta`).
+- **What closes the ask:** the session's one item on his list (`thumbs-<set>`, `making.py thumbnails --ask`, closes on
+  `video`) closes by the done check, never a cron: after the write the engine asks Control Centre's sweep to look at the
+  piece's open items (`askChecksForPiece`), and its `piece_step` check closes a `thumbs-<set>` item as soon as his
+  answer to that set is on the record, and at the latest when the Video assets step lands.
+- **What a Not this teaches:** with his words, one `taste_reports` row (his words, `dislikes`, subject the piece) and
+  one `taste_rejection_inbox` row (format `thumbnail`, for the rejection floor), once each, never blocking (`learned`).
+- **Then:** `making.py video` accepts the picked option's files as before (`option_pick_problem` reads `pick.option`
+  and its sha256s), and produce-video files his pick. A Not this sends the session back to step 5 of the skill.
+- **The review copies:** before asking, the session files each option's two files and the grid mock in Drive's Inbox
+  from My AI (`docs/DRIVE.md`), records their ids beside the set with `thumb_options.py drive OUT a:wide=ID ... mock=ID`
+  (`OUT/drive.json`), and records the set again with `making.py PIECE thumbnails OUT`, which carries each `drive_id`;
+  the same set recorded again keeps its verdict and his answer. `GET /api/board/<Monday>/drive/<id>` serves only those
+  ids of a piece of that week, beside the week's posts.
+- **Held by:** `tests/control-plane/board-thumbs.test.ts`, `tests/control-plane/thumb-options.test.ts`,
+  `tests/control-plane/board-view-contract.test.ts`, the thumb_options and making self-tests.
 
 ## Sessions and materials
 
