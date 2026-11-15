@@ -1,3 +1,5 @@
+import { Device as CursorPath } from './cursor_path'
+import { Device as CharacterLayer } from '../character'
 import { Device as AnswerStream } from './answer_stream'
 import { Device as CodeCard } from './code_card'
 import { Device as Checklist } from './checklist'
@@ -43,6 +45,8 @@ import { Device as ReceiptPrint } from './receipt_print'
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
+  cursor_path: CursorPath,
+  character_layer: CharacterLayer,
   answer_stream: AnswerStream,
   code_card: CodeCard,
   checklist: Checklist,

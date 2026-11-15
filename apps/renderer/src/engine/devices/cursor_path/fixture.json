@@ -1,0 +1,95 @@
+{
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "objects": [
+    {
+      "obj": "cursor",
+      "device": "cursor_path",
+      "meaning": "Test-only capture interaction",
+      "params": {
+        "screen": {
+          "src": "cursor-capture.png",
+          "pixelWidth": 800,
+          "pixelHeight": 600
+        },
+        "targets": [
+          {
+            "id": "input",
+            "x": 100,
+            "y": 100,
+            "w": 400,
+            "h": 70,
+            "text": "Hello there"
+          },
+          {
+            "id": "send",
+            "x": 600,
+            "y": 400,
+            "w": 100,
+            "h": 60
+          }
+        ],
+        "start": {
+          "x": 40,
+          "y": 40
+        },
+        "label": "Test fixture capture only \u00b7 2026-11-15"
+      },
+      "fromFrame": 0,
+      "toFrame": 200
+    }
+  ],
+  "events": [
+    {
+      "id": "enter1",
+      "obj": "cursor",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1
+    },
+    {
+      "id": "move20",
+      "obj": "cursor",
+      "verb": "move",
+      "toState": "input",
+      "atFrame": 20
+    },
+    {
+      "id": "pick34",
+      "obj": "cursor",
+      "verb": "pick",
+      "toState": "input",
+      "atFrame": 34
+    },
+    {
+      "id": "type45",
+      "obj": "cursor",
+      "verb": "type",
+      "toState": "input",
+      "atFrame": 45
+    },
+    {
+      "id": "move70",
+      "obj": "cursor",
+      "verb": "move",
+      "toState": "send",
+      "atFrame": 70
+    },
+    {
+      "id": "send84",
+      "obj": "cursor",
+      "verb": "send",
+      "toState": "send",
+      "atFrame": 84
+    },
+    {
+      "id": "exit160",
+      "obj": "cursor",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 160
+    }
+  ]
+}

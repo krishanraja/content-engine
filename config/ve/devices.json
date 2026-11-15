@@ -1,5 +1,7 @@
 {
   "devices": {
+    "cursor_path": {"verbs": ["enter", "move", "pick", "type", "send", "exit"]},
+    "character_layer": { "verbs": ["enter", "exit"] },
     "answer_stream": { "verbs": ["enter", "type", "mark", "light", "exit"] },
     "office_floor": {
       "verbs": [
