@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.15.0",
+ "contract_version": "1.16.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -150,6 +150,7 @@
         "recommended": true,
         "why": "You liked it before. It suits the channel often.",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -195,6 +196,7 @@
         "recommended": true,
         "why": "It suits the channel often.",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -239,6 +241,7 @@
         "recommended": true,
         "why": "It suits the channel sometimes.",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -282,6 +285,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -326,6 +330,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": true,
         "presses": {
          "yes": {
@@ -370,6 +375,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -414,6 +420,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -451,6 +458,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -488,6 +496,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -525,6 +534,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -561,6 +571,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -598,6 +609,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -636,6 +648,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": true,
         "presses": {
          "yes": {
@@ -673,6 +686,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -710,6 +724,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -747,6 +762,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -783,6 +799,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -820,6 +837,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -857,6 +875,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -895,6 +914,7 @@
         "recommended": true,
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -933,6 +953,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -971,6 +992,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1009,6 +1031,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1047,6 +1070,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1085,6 +1109,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1123,6 +1148,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1161,6 +1187,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1199,6 +1226,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1237,6 +1265,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1275,6 +1304,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1313,6 +1343,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1351,6 +1382,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1389,6 +1421,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1429,6 +1462,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1452,6 +1486,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1795,6 +1830,7 @@
      }
     }
    ],
+   "thumbs": null,
    "pieces": [
     {
      "id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
@@ -2392,6 +2428,7 @@
    ],
    "manifest": null,
    "media": [],
+   "thumbs": null,
    "pieces": [],
    "options": [
     {
@@ -3017,6 +3054,7 @@
         "recommended": true,
         "why": "You liked it before. It suits the channel often.",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3062,6 +3100,7 @@
         "recommended": true,
         "why": "It suits the channel often.",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3106,6 +3145,7 @@
         "recommended": true,
         "why": "It suits the channel sometimes.",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3149,6 +3189,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3193,6 +3234,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": true,
         "presses": {
          "yes": {
@@ -3237,6 +3279,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3281,6 +3324,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3318,6 +3362,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3355,6 +3400,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3392,6 +3438,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3428,6 +3475,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3465,6 +3513,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3503,6 +3552,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3540,6 +3590,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3577,6 +3628,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3614,6 +3666,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3650,6 +3703,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3687,6 +3741,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3724,6 +3779,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3762,6 +3818,7 @@
         "recommended": true,
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3800,6 +3857,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3838,6 +3896,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3876,6 +3935,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3914,6 +3974,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3952,6 +4013,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3990,6 +4052,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4028,6 +4091,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4066,6 +4130,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4104,6 +4169,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4142,6 +4208,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4180,6 +4247,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4218,6 +4286,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4256,6 +4325,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4296,6 +4366,7 @@
         "recommended": true,
         "why": "The Sunday room recommends it for this idea.",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4331,6 +4402,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4446,6 +4518,7 @@
    ],
    "manifest": null,
    "media": [],
+   "thumbs": null,
    "pieces": [
     {
      "id": "db9f9f6a-1092-49be-8024-f335e060305a",
@@ -4749,6 +4822,7 @@
    ],
    "manifest": null,
    "media": [],
+   "thumbs": null,
    "pieces": [],
    "options": [
     {
@@ -5645,6 +5719,7 @@
         "recommended": true,
         "why": "You liked it before. It draws the number points this piece makes. It suits the channel often.",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5690,6 +5765,7 @@
         "recommended": true,
         "why": "It draws the number points this piece makes. It suits the channel often.",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5734,6 +5810,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5777,6 +5854,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5821,6 +5899,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": true,
         "presses": {
          "yes": {
@@ -5865,6 +5944,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5909,6 +5989,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5946,6 +6027,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5983,6 +6065,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6020,6 +6103,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6056,6 +6140,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6093,6 +6178,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6131,6 +6217,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6168,6 +6255,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6205,6 +6293,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6242,6 +6331,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6278,6 +6368,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6315,6 +6406,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6352,6 +6444,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6390,6 +6483,7 @@
         "recommended": true,
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6428,6 +6522,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6466,6 +6561,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6504,6 +6600,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6542,6 +6639,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6580,6 +6678,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6618,6 +6717,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6656,6 +6756,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6694,6 +6795,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6732,6 +6834,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6770,6 +6873,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6808,6 +6912,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6846,6 +6951,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6884,6 +6990,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6924,6 +7031,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6959,6 +7067,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -7090,6 +7199,159 @@
    ],
    "manifest": null,
    "media": [],
+   "thumbs": {
+    "set_sha256": "b46b01af2ca8e96a0e9fb16c01685bebd75768dbd28cf58150d1bef1f4ed1d8e",
+    "headline": "Voters said no to the power bill",
+    "state": "awaits_pick",
+    "line": "3 options, each in a mock of your grid. The critic's pick is B. Pick one, or say Not this to have them drawn again.",
+    "options": [
+     {
+      "id": "a",
+      "note": "Option a: the proof wide",
+      "files": [
+       {
+        "shape": "tall",
+        "src": "/api/board/2026-11-16/drive/1Thumbatallxxxxxxxxxxxxxxxxxxx",
+        "drive": {
+         "file_id": "1Thumbatallxxxxxxxxxxxxxxxxxxx",
+         "url": "https://drive.google.com/file/d/1Thumbatallxxxxxxxxxxxxxxxxxxx/view"
+        },
+        "sha256": "6975cf74e6fde6e9e185e82db571991f0395ba3077e9bc75eb28e3235d1da111"
+       },
+       {
+        "shape": "wide",
+        "src": "/api/board/2026-11-16/drive/1Thumbawidexxxxxxxxxxxxxxxxxxx",
+        "drive": {
+         "file_id": "1Thumbawidexxxxxxxxxxxxxxxxxxx",
+         "url": "https://drive.google.com/file/d/1Thumbawidexxxxxxxxxxxxxxxxxxx/view"
+        },
+        "sha256": "79a21f64f8ab8d617b94efc6a633f676d4b1fd8a030c79677e1ccd5d2d714576"
+       }
+      ],
+      "critic": {
+       "line": "Passes 6 of 7 checks. The second line is small at grid size.",
+       "blocking": false,
+       "best": false
+      },
+      "press": {
+       "kind": "press",
+       "label": "Pick",
+       "op": "thumb-pick",
+       "body": {
+        "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+        "set_sha256": "b46b01af2ca8e96a0e9fb16c01685bebd75768dbd28cf58150d1bef1f4ed1d8e",
+        "verdict": "pick",
+        "option": "a"
+       },
+       "stamp": [],
+       "done": "Picked. Option A is the thumbnail; a session files it with the cuts."
+      }
+     },
+     {
+      "id": "b",
+      "note": "Option b: the proof ringed",
+      "files": [
+       {
+        "shape": "tall",
+        "src": "/api/board/2026-11-16/drive/1Thumbbtallxxxxxxxxxxxxxxxxxxx",
+        "drive": {
+         "file_id": "1Thumbbtallxxxxxxxxxxxxxxxxxxx",
+         "url": "https://drive.google.com/file/d/1Thumbbtallxxxxxxxxxxxxxxxxxxx/view"
+        },
+        "sha256": "3ebd1f020c0c235b67bf358976388bbf76a2a872e0e1c5319889257bab8b4afb"
+       },
+       {
+        "shape": "wide",
+        "src": "/api/board/2026-11-16/drive/1Thumbbwidexxxxxxxxxxxxxxxxxxx",
+        "drive": {
+         "file_id": "1Thumbbwidexxxxxxxxxxxxxxxxxxx",
+         "url": "https://drive.google.com/file/d/1Thumbbwidexxxxxxxxxxxxxxxxxxx/view"
+        },
+        "sha256": "ffd10946f0581c69bb5e4a1fba03c31b7988fd7c10bc136d4ccb1dfab605f7f7"
+       }
+      ],
+      "critic": {
+       "line": "Passes all 7 checks.",
+       "blocking": false,
+       "best": true
+      },
+      "press": {
+       "kind": "press",
+       "label": "Pick",
+       "op": "thumb-pick",
+       "body": {
+        "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+        "set_sha256": "b46b01af2ca8e96a0e9fb16c01685bebd75768dbd28cf58150d1bef1f4ed1d8e",
+        "verdict": "pick",
+        "option": "b"
+       },
+       "stamp": [],
+       "done": "Picked. Option B is the thumbnail; a session files it with the cuts."
+      }
+     },
+     {
+      "id": "c",
+      "note": "Option c: the proof narrow",
+      "files": [
+       {
+        "shape": "tall",
+        "src": "/api/board/2026-11-16/drive/1Thumbctallxxxxxxxxxxxxxxxxxxx",
+        "drive": {
+         "file_id": "1Thumbctallxxxxxxxxxxxxxxxxxxx",
+         "url": "https://drive.google.com/file/d/1Thumbctallxxxxxxxxxxxxxxxxxxx/view"
+        },
+        "sha256": "4ad05708f806e02695ced0e59ff2f7b9c05fa8eca7670305149114ab4851da45"
+       },
+       {
+        "shape": "wide",
+        "src": "/api/board/2026-11-16/drive/1Thumbcwidexxxxxxxxxxxxxxxxxxx",
+        "drive": {
+         "file_id": "1Thumbcwidexxxxxxxxxxxxxxxxxxx",
+         "url": "https://drive.google.com/file/d/1Thumbcwidexxxxxxxxxxxxxxxxxxx/view"
+        },
+        "sha256": "64c8acd1f2162cba0d4c9056e5debd0b7ab8f9ea99109ac7d84d4b35aebd14fc"
+       }
+      ],
+      "critic": {
+       "line": "Held by the critic. A logo the headline does not name.",
+       "blocking": true,
+       "best": false
+      },
+      "press": null
+     }
+    ],
+    "grid_mock": {
+     "src": "/api/board/2026-11-16/drive/1Thumbmockxxxxxxxxxxxxxxxxxxxx",
+     "drive": {
+      "file_id": "1Thumbmockxxxxxxxxxxxxxxxxxxxx",
+      "url": "https://drive.google.com/file/d/1Thumbmockxxxxxxxxxxxxxxxxxxxx/view"
+     },
+     "note": "Each option in your grid beside the last five posted covers.",
+     "past_read": 5
+    },
+    "critic": {
+     "reviewer": "thumbnail-critic",
+     "best": "b"
+    },
+    "answer": null,
+    "not_this": {
+     "kind": "press",
+     "label": "Not this",
+     "op": "thumb-pick",
+     "body": {
+      "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+      "set_sha256": "b46b01af2ca8e96a0e9fb16c01685bebd75768dbd28cf58150d1bef1f4ed1d8e",
+      "verdict": "not_this"
+     },
+     "words": {
+      "path": "words",
+      "ask": "What should the new ones do differently? (optional)",
+      "required": false
+     },
+     "stamp": [],
+     "done": "Noted. A session draws a new set of options."
+    }
+   },
    "pieces": [
     {
      "id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
@@ -7451,6 +7713,7 @@
    ],
    "manifest": null,
    "media": [],
+   "thumbs": null,
    "pieces": [],
    "options": [
     {
@@ -7826,6 +8089,42 @@
       ]
      },
      "done": "Picked. It is the look for this piece."
+    }
+   ]
+  },
+  {
+   "key": "fri-piece:b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+   "day": "fri",
+   "label": "Fri 20",
+   "next": "Approved. 3 options, each in a mock of your grid. The critic's pick is B. Pick one, or say Not this to have them drawn again.",
+   "actions": [
+    {
+     "kind": "press",
+     "label": "Pick the thumbnail",
+     "op": "thumb-pick",
+     "body": {
+      "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+      "set_sha256": "b46b01af2ca8e96a0e9fb16c01685bebd75768dbd28cf58150d1bef1f4ed1d8e",
+      "verdict": "pick"
+     },
+     "choose": {
+      "path": "option",
+      "ask": "Which thumbnail?",
+      "multi": false,
+      "required": true,
+      "options": [
+       {
+        "value": "b",
+        "label": "Option B (the critic's pick)"
+       },
+       {
+        "value": "a",
+        "label": "Option A"
+       }
+      ]
+     },
+     "stamp": [],
+     "done": "Picked. A session files it with the cuts."
     }
    ]
   }
@@ -9960,212 +10259,42 @@
       "links": [],
       "stories": null,
       "stories_planned": null,
-      "others": [
-       {
-        "kind": "press",
-        "label": "Pick the look",
-        "op": "look",
-        "body": {
-         "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
-         "experiment": null,
-         "inspiration": []
-        },
-        "stamp": [],
-        "choose": {
-         "path": "production",
-         "ask": "Which look?",
-         "multi": false,
-         "required": true,
-         "options": [
-          {
-           "value": "face-with-proof",
-           "label": "Face-led"
-          },
-          {
-           "value": "kinetic-movement",
-           "label": "Everything moves"
-          }
-         ]
-        },
-        "done": "Picked. It is the look for this piece."
-       },
-       {
-        "kind": "press",
-        "label": "Change the motion style",
-        "op": "style",
-        "body": {
-         "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118"
-        },
-        "stamp": [],
-        "choose": {
-         "path": "motion",
-         "ask": "Which motion style?",
-         "multi": false,
-         "required": true,
-         "options": [
-          {
-           "value": "data-story",
-           "label": "The data-story style (picked)"
-          },
-          {
-           "value": "ladder",
-           "label": "The ladder style (recommended)"
-          },
-          {
-           "value": "shape-morph",
-           "label": "The shape-morph style"
-          },
-          {
-           "value": "full-visual",
-           "label": "The full-visual style"
-          },
-          {
-           "value": "toy-3d",
-           "label": "The toy-3d style (not ready yet)"
-          }
-         ]
-        },
-        "done": "Picked. It is the motion style for this piece."
-       },
-       {
-        "kind": "press",
-        "label": "Change the captions",
-        "op": "style",
-        "body": {
-         "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118"
-        },
-        "stamp": [],
-        "choose": {
-         "path": "captions",
-         "ask": "Which captions?",
-         "multi": false,
-         "required": true,
-         "options": [
-          {
-           "value": "art-directed",
-           "label": "Art-directed phrases (picked)"
-          },
-          {
-           "value": "pop",
-           "label": "Pop"
-          },
-          {
-           "value": "karaoke",
-           "label": "Karaoke"
-          },
-          {
-           "value": "kinetic-01",
-           "label": "Justified stack"
-          },
-          {
-           "value": "kinetic-02",
-           "label": "Edge snap"
-          },
-          {
-           "value": "hustle",
-           "label": "Marker"
-          },
-          {
-           "value": "grape",
-           "label": "Ink card"
-          },
-          {
-           "value": "beast",
-           "label": "Punch"
-          },
-          {
-           "value": "poppin",
-           "label": "Spring"
-          },
-          {
-           "value": "aarit",
-           "label": "Editorial"
-          },
-          {
-           "value": "soft-ai",
-           "label": "Bloom"
-          },
-          {
-           "value": "gaming-stream",
-           "label": "Terminal"
-          },
-          {
-           "value": "simple-one-word",
-           "label": "One word"
-          },
-          {
-           "value": "podcast",
-           "label": "Two-line scroll"
-          },
-          {
-           "value": "cinematic",
-           "label": "Cinematic"
-          },
-          {
-           "value": "slam",
-           "label": "Slam"
-          },
-          {
-           "value": "georgia-build",
-           "label": "Georgia build"
-          },
-          {
-           "value": "stair-flash",
-           "label": "Staircase flash"
-          },
-          {
-           "value": "tuck-stack",
-           "label": "Tuck stack"
-          },
-          {
-           "value": "anchor-quote",
-           "label": "Quote anchor"
-          },
-          {
-           "value": "rack-focus",
-           "label": "Rack focus"
-          },
-          {
-           "value": "flip-hinge",
-           "label": "Hinge"
-          },
-          {
-           "value": "slice",
-           "label": "Slice"
-          },
-          {
-           "value": "slot-roll",
-           "label": "Slot Roll"
-          },
-          {
-           "value": "receipt-chip",
-           "label": "Receipt chip"
-          },
-          {
-           "value": "ink-block",
-           "label": "Ink block"
-          },
-          {
-           "value": "mint-word",
-           "label": "Mint word"
-          }
-         ]
-        },
-        "done": "Picked. It is the captions for this piece."
-       }
-      ],
-      "line": "Approved. Bring the evidence: research it now, or drop your Perplexity file on this day.",
+      "others": [],
+      "line": "Approved. 3 options, each in a mock of your grid. The critic's pick is B. Pick one, or say Not this to have them drawn again.",
       "next": {
-       "kind": "research",
-       "label": "Research it now",
-       "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118"
+       "kind": "press",
+       "label": "Pick the thumbnail",
+       "op": "thumb-pick",
+       "body": {
+        "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+        "set_sha256": "b46b01af2ca8e96a0e9fb16c01685bebd75768dbd28cf58150d1bef1f4ed1d8e",
+        "verdict": "pick"
+       },
+       "choose": {
+        "path": "option",
+        "ask": "Which thumbnail?",
+        "multi": false,
+        "required": true,
+        "options": [
+         {
+          "value": "b",
+          "label": "Option B (the critic's pick)"
+         },
+         {
+          "value": "a",
+          "label": "Option A"
+         }
+        ]
+       },
+       "stamp": [],
+       "done": "Picked. A session files it with the cuts."
       },
-      "decision": false
+      "decision": true
      }
     ],
-    "decisions": 0,
+    "decisions": 1,
     "ideas": 0,
-    "line": "One item in progress."
+    "line": "One decision for you."
    },
    {
     "day": "sat",

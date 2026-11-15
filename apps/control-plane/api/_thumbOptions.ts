@@ -9,6 +9,12 @@
 // refuses a verdict or a pick whose hashes are not the set's (thumbnailOptionsProblems), the way the board's judge binds
 // a picture to its asset's sha256. It never touches asset_judgements: the critic is not the board's judge panel, and
 // the content North Star count is untouched. Nothing here sends, posts or files anything.
+//
+// Contract 1.16.0 (Ruling, Krish, 2026-11-15, approved with the specialists plan: thumbnail options carry a pick press on
+// the Content board): each file and the grid mock may carry the Drive id of its review copy (drive_id), so the board can
+// show it; a set recorded again with the same bytes keeps its verdict and his answer. His answer comes from a session in
+// his own words (pick.krish_words), or from his press on the board (pick.decision "picked on the board", or redraw, his
+// Not this on the whole set: draw them again), each with his press time (board/_thumbs.ts).
 
 import { createHash } from 'node:crypto'
 
@@ -18,28 +24,39 @@ export const THUMB_SHAPES = ['wide', 'tall'] as const
 export const THUMB_CHECKS = ['readable_at_grid', 'words_max', 'three_parts', 'logos_named', 'no_badges', 'title_hidden', 'promise_matches'] as const
 export type ThumbCheck = (typeof THUMB_CHECKS)[number]
 
-export interface MakingThumbFile { shape: (typeof THUMB_SHAPES)[number]; file: string; sha256: string }
+/** A file of an option. drive_id (1.16.0): its review copy in his Drive, which the board shows it from. */
+export interface MakingThumbFile { shape: (typeof THUMB_SHAPES)[number]; file: string; sha256: string; drive_id?: string }
 export interface MakingThumbOption { id: string; note: string; files: MakingThumbFile[] }
 export interface MakingThumbVerdictOption { id: string; files: Array<{ file: string; sha256: string }>; checks: Record<ThumbCheck, 'pass' | 'fail'>; blocking: boolean; findings: string[] }
 export interface MakingThumbVerdict { reviewer: string; reviewed_at: string; best: string | null; blocking: boolean; qa_sha256?: string; options: MakingThumbVerdictOption[] }
-export interface MakingThumbPick { option: string; files: MakingThumbFile[]; krish_words: string; at: string; by: string }
+/** His pick: from a session, with his own words (krish_words); or from his press on the board, as his own decision
+ *  (decision: "picked on the board", at his press time). */
+export interface MakingThumbPick { option: string; files: MakingThumbFile[]; krish_words?: string; decision?: typeof BOARD_PICK; at: string; by: string }
+/** His Not this on the whole set, pressed on the board: none of these, draw them again, with his words if he gave any. */
+export interface MakingThumbRedraw { decision: typeof BOARD_REDRAW; words: string | null; at: string; by: 'Krish' }
+/** What his press on the board is recorded as (never his words: a press is not words). */
+export const BOARD_PICK = 'picked on the board'
+export const BOARD_REDRAW = 'not this: draw them again'
 export interface MakingThumbnailOptions {
   set_sha256: string
   drawn_at: string
   skin: string | null
   headline: string
   options: MakingThumbOption[]
-  grid_mock: { sha256: string; past_read: number; note: string }
+  grid_mock: { sha256: string; past_read: number; note: string; drive_id?: string }
   verdict?: MakingThumbVerdict
   pick?: MakingThumbPick
+  redraw?: MakingThumbRedraw
   at: string
   by: string
 }
 /** A patch: a whole new set (options, with the verdict when the critic has judged it), or, for the set on the record
  *  (set_sha256), a verdict or his pick. */
-export type ThumbnailOptionsPatch = Partial<Omit<MakingThumbnailOptions, 'at' | 'by' | 'pick'>> & { set_sha256: string; pick?: Omit<MakingThumbPick, 'at' | 'by'> }
+export type ThumbnailOptionsPatch = Partial<Omit<MakingThumbnailOptions, 'at' | 'by' | 'pick' | 'redraw'>> & { set_sha256: string; pick?: Omit<MakingThumbPick, 'at' | 'by'> }
 
 const SHA = /^[a-f0-9]{64}$/
+/** A Drive file id, the board's own rule (board/_drivePosts.ts DRIVE_ID). */
+export const THUMB_DRIVE_ID = /^[A-Za-z0-9_-]{20,80}$/
 const FILE = /^options\/[abc]\/[a-z0-9-]{1,60}\.(jpg|png)$/
 const MAX_FINDINGS = 12
 const isObj = (v: unknown): v is Record<string, unknown> => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
@@ -55,11 +72,12 @@ function parseFiles(v: unknown, at: string, problems: string[]): MakingThumbFile
   if (!Array.isArray(v) || v.length !== THUMB_SHAPES.length) { problems.push(`${at}.files is the option's wide and tall thumbnails, each {shape, file, sha256}`); return null }
   const files: MakingThumbFile[] = []
   for (const f of v) {
-    if (!isObj(f) || !(THUMB_SHAPES as readonly string[]).includes(String(f.shape)) || typeof f.file !== 'string' || !FILE.test(f.file) || typeof f.sha256 !== 'string' || !SHA.test(f.sha256)) {
-      problems.push(`${at}.files: each is {shape: wide or tall, file: options/<id>/<name>.jpg, sha256: 64 hex}`)
+    if (!isObj(f) || !(THUMB_SHAPES as readonly string[]).includes(String(f.shape)) || typeof f.file !== 'string' || !FILE.test(f.file) || typeof f.sha256 !== 'string' || !SHA.test(f.sha256)
+      || (f.drive_id !== undefined && (typeof f.drive_id !== 'string' || !THUMB_DRIVE_ID.test(f.drive_id)))) {
+      problems.push(`${at}.files: each is {shape: wide or tall, file: options/<id>/<name>.jpg, sha256: 64 hex, drive_id?: its review copy's Drive id}`)
       return null
     }
-    files.push({ shape: f.shape as MakingThumbFile['shape'], file: f.file, sha256: f.sha256 })
+    files.push({ shape: f.shape as MakingThumbFile['shape'], file: f.file, sha256: f.sha256, ...(typeof f.drive_id === 'string' ? { drive_id: f.drive_id } : {}) })
   }
   if (new Set(files.map(f => f.shape)).size !== THUMB_SHAPES.length) { problems.push(`${at}.files holds one wide and one tall`); return null }
   return files
@@ -118,8 +136,9 @@ export function parseThumbnailOptions(v: unknown, problems: string[]): Thumbnail
     }
     if (new Set(options.map(o => o.id)).size !== options.length) problems.push('thumbnail_options.options: each option has its own id')
     const mock = v.grid_mock
-    if (!isObj(mock) || typeof mock.sha256 !== 'string' || !SHA.test(mock.sha256) || !Number.isInteger(mock.past_read) || Number(mock.past_read) < 0 || Number(mock.past_read) > 5 || !text(mock.note, 300)) {
-      problems.push('thumbnail_options.grid_mock is {sha256, past_read: 0 to 5, note}: the mock of his grid every option is shown in')
+    if (!isObj(mock) || typeof mock.sha256 !== 'string' || !SHA.test(mock.sha256) || !Number.isInteger(mock.past_read) || Number(mock.past_read) < 0 || Number(mock.past_read) > 5 || !text(mock.note, 300)
+      || (mock.drive_id !== undefined && (typeof mock.drive_id !== 'string' || !THUMB_DRIVE_ID.test(mock.drive_id)))) {
+      problems.push('thumbnail_options.grid_mock is {sha256, past_read: 0 to 5, note, drive_id?}: the mock of his grid every option is shown in')
     }
     const drawn = time(v.drawn_at)
     if (!drawn) problems.push('thumbnail_options.drawn_at is when the set was drawn')
@@ -128,7 +147,8 @@ export function parseThumbnailOptions(v: unknown, problems: string[]): Thumbnail
     if (problems.length > before) return null
     if (setDigest(options) !== v.set_sha256) { problems.push('thumbnail_options.set_sha256 is not the hash of its options\' files: the set changed after it was drawn'); return null }
     Object.assign(out, { options, drawn_at: drawn!, headline: headline!, skin: text(v.skin, 40),
-      grid_mock: { sha256: (mock as Record<string, string>).sha256, past_read: Number((mock as Record<string, unknown>).past_read), note: text((mock as Record<string, unknown>).note, 300)! } })
+      grid_mock: { sha256: (mock as Record<string, string>).sha256, past_read: Number((mock as Record<string, unknown>).past_read), note: text((mock as Record<string, unknown>).note, 300)!,
+        ...(typeof (mock as Record<string, unknown>).drive_id === 'string' ? { drive_id: (mock as Record<string, string>).drive_id } : {}) } })
   }
   if (v.verdict !== undefined) {
     const verdict = parseVerdict(v.verdict, problems)
@@ -181,16 +201,27 @@ export function thumbnailOptionsProblems(prev: MakingThumbnailOptions | null | u
   return out
 }
 
-/** The next record: a new set replaces the old one whole (its verdict and pick with it); a verdict or a pick lands on
- *  the set on the record. Call only after thumbnailOptionsProblems found nothing. */
+/** The next record: a new set replaces the old one whole (its verdict and his answer with it); the same set recorded
+ *  again (the same bytes, its review copies' Drive ids added, 1.16.0) keeps its verdict, unless a new one comes with it,
+ *  and keeps his pick or his Not this. A verdict or a pick lands on the set on the record. Call only after
+ *  thumbnailOptionsProblems found nothing. */
 export function mergeThumbnailOptions(prev: MakingThumbnailOptions | null | undefined, patch: ThumbnailOptionsPatch, by: string, now: string): MakingThumbnailOptions {
   if (patch.options) {
     const { pick: _ignored, ...set } = patch
-    return { ...(set as Omit<MakingThumbnailOptions, 'at' | 'by'>), at: now, by }
+    const same = prev && prev.set_sha256 === patch.set_sha256 ? prev : null
+    return {
+      ...(same?.verdict ? { verdict: same.verdict } : {}),
+      ...(set as Omit<MakingThumbnailOptions, 'at' | 'by'>),
+      ...(same?.pick ? { pick: same.pick } : {}),
+      ...(same?.redraw ? { redraw: same.redraw } : {}),
+      at: now, by,
+    }
   }
   const base = prev as MakingThumbnailOptions
+  // His pick answers the set: a Not this pressed before it no longer stands.
+  const { redraw: _answered, ...kept } = base
   return {
-    ...base,
+    ...(patch.pick ? kept : base),
     ...(patch.verdict ? { verdict: patch.verdict } : {}),
     ...(patch.pick ? { pick: { ...patch.pick, at: now, by } } : {}),
     at: now, by,

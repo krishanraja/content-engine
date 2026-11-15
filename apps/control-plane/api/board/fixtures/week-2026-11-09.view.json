@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.15.0",
+ "contract_version": "1.16.0",
  "week": "2026-11-09",
  "as_of": "2026-11-13T15:00:00.000Z",
  "days": [
@@ -117,6 +117,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -154,6 +155,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -191,6 +193,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -228,6 +231,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -264,6 +268,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -301,6 +306,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -339,6 +345,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -376,6 +383,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -413,6 +421,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -450,6 +459,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -486,6 +496,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -523,6 +534,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -560,6 +572,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -598,6 +611,7 @@
         "recommended": true,
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -636,6 +650,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -674,6 +689,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -712,6 +728,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -750,6 +767,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -788,6 +806,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -826,6 +845,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -864,6 +884,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -902,6 +923,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -940,6 +962,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -978,6 +1001,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1016,6 +1040,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1054,6 +1079,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1092,6 +1118,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1288,6 +1315,7 @@
      }
     }
    ],
+   "thumbs": null,
    "pieces": [
     {
      "id": "b358e788-209f-427b-a84d-1f79a8ebb430",
@@ -1742,6 +1770,7 @@
    ],
    "manifest": null,
    "media": [],
+   "thumbs": null,
    "pieces": [],
    "options": [
     {
@@ -2632,6 +2661,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -2669,6 +2699,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -2706,6 +2737,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -2743,6 +2775,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -2779,6 +2812,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -2816,6 +2850,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -2854,6 +2889,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -2891,6 +2927,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -2928,6 +2965,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -2965,6 +3003,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3001,6 +3040,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3038,6 +3078,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3075,6 +3116,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3113,6 +3155,7 @@
         "recommended": true,
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3151,6 +3194,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3189,6 +3233,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3227,6 +3272,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3265,6 +3311,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3303,6 +3350,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3341,6 +3389,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3379,6 +3428,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3417,6 +3467,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3455,6 +3506,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3493,6 +3545,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3531,6 +3584,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3569,6 +3623,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3607,6 +3662,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3803,6 +3859,7 @@
      }
     }
    ],
+   "thumbs": null,
    "pieces": [
     {
      "id": "36886e0b-4b32-473b-be72-b0aef31fccef",
@@ -4477,6 +4534,7 @@
    ],
    "manifest": null,
    "media": [],
+   "thumbs": null,
    "pieces": [],
    "options": [
     {
@@ -5250,6 +5308,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5287,6 +5346,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5324,6 +5384,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5361,6 +5422,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5397,6 +5459,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5434,6 +5497,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5472,6 +5536,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5509,6 +5574,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5546,6 +5612,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5583,6 +5650,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5619,6 +5687,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5656,6 +5725,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5693,6 +5763,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5731,6 +5802,7 @@
         "recommended": true,
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5769,6 +5841,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5807,6 +5880,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5845,6 +5919,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5883,6 +5958,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5921,6 +5997,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5959,6 +6036,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5997,6 +6075,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6035,6 +6114,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6073,6 +6153,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6111,6 +6192,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6149,6 +6231,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6187,6 +6270,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6225,6 +6309,7 @@
         "recommended": false,
         "why": null,
         "sample_url": null,
+        "sample_drive": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6563,6 +6648,7 @@
      }
     }
    ],
+   "thumbs": null,
    "pieces": [
     {
      "id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
@@ -7242,6 +7328,7 @@
    ],
    "manifest": null,
    "media": [],
+   "thumbs": null,
    "pieces": [],
    "options": [
     {
