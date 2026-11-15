@@ -14,7 +14,7 @@ afterEach(() => { for (const key of ['ACCESS_CODE', 'ENGINE_OPERATOR_TOKEN']) { 
 
 const grouping = JSON.parse(readFileSync('config/floor-groups.json', 'utf8')) as { groups: { key: string; title: string; never_beneath: string; check: string; members: string[] }[] }
 const id = (i: number) => `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`
-// The fixture: the twenty real groups, each with a synthetic card; group 3 has the most productions and group 0 is decided.
+// The fixture: every real group in the file, each with a synthetic card; group 3 has the most productions and group 0 is decided.
 const groups = grouping.groups.map((g, i) => ({
   key: g.key, title: g.title, never_beneath: g.never_beneath, check_text: g.check, proposal_id: id(i),
   member_fingerprints: g.members.map(m => m.slice(1) + '0'.repeat(6)),
@@ -73,13 +73,13 @@ async function call(who: 'krish' | 'operator' | null, method = 'GET', body?: unk
 }
 
 describe('the standards page', () => {
-  it('shows the twenty groups as cards, most productions first, with his words verbatim and escaped', async () => {
+  it('shows every group as a card, most productions first, with his words verbatim and escaped', async () => {
     const { status, out, set } = await call('krish')
     expect(status).toBe(200)
     expect(set['content-type']).toContain('text/html')
     expect(set['content-security-policy']).toContain("frame-ancestors 'none'")
     const page = String(out)
-    expect(page.match(/<article class="std/g)).toHaveLength(20)
+    expect(page.match(/<article class="std/g)).toHaveLength(groups.length)
     const order = [...page.matchAll(/<article [^>]*data-key="([a-z_]+)"/g)].map(m => m[1])
     expect(order[0]).toBe(grouping.groups[3].key)
     expect(page).toContain('These look like &lt;PowerPoint&gt; cliparts.')
@@ -91,7 +91,7 @@ describe('the standards page', () => {
     expect(decided).not.toContain('data-act="approved"')
     const waiting = page.slice(page.indexOf(`data-key="${grouping.groups[1].key}"`)).split('</article>')[0]
     for (const act of ['approved', 'reword', 'rejected']) expect(waiting).toContain(`data-act="${act}"`)
-    expect(page).toContain('1 of 20 decided')
+    expect(page).toContain(`1 of ${groups.length} decided`)
     expect(page).not.toMatch(/[–—]/)
   })
 
