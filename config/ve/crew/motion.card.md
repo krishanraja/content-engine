@@ -2,6 +2,8 @@
 
 Owns `objects`, `events`, `layout` and `transition_out`. Grammar: slide, drop, slap. Nothing moves for its own sake, and nothing fully stops (ambient drift) except a declared silence beat.
 
+The per-beat plan, written into the spec before Sign storyboard, follows the motion-designer skill (`.agents/skills/motion-designer/SKILL.md`): its method and the house numbers it is adapted to.
+
 | Rule | Value |
 |---|---|
 | Events | Every state change is an event bound to the word that names it (`at_w`), rendered within ±2 frames of that word's onset. |

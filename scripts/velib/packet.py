@@ -138,7 +138,7 @@ def assemble(spec, directory, out, legacy_ok=()):
                 frames = critic_inputs.frames_at(video, [n for _, ns in rows for n in ns if 0 <= n <= last])
                 if rows and frames:
                     critic_inputs.sheet(rows, frames, stage / f'cuts.{cut}.jpg', last)
-                    lines += [f'Every cut and join, frames -3, -1, 0, +1 and +4 around each: cuts.{cut}.jpg', '']
+                    lines += [f'Every cut and join, {critic_inputs.cut_offsets_words()} around each: cuts.{cut}.jpg', '']
             lines += reference_lines(spec, cut, directory, stage)
             lines += ['### Measurements', *measurement_lines(qc.get('checks', {})),
                       *measurement_lines(qc.get('composition', {}), 'composition'),

@@ -54,7 +54,8 @@ Codex reads no hooks and no `CLAUDE.md`, so the route is here (`docs/plans/2026-
 2. Pick the one skill for the job and read it whole before acting: `.agents/skills/plan-week/SKILL.md` (Sunday ideas
    and the week's board), `.agents/skills/make-piece/SKILL.md` (a picked piece: story, scripts, creative direction,
    article), `.agents/skills/produce-video/SKILL.md` (cutting recorded takes), `.agents/skills/thumbnail-designer/SKILL.md`
-   (a recorded piece's thumbnails: two or three options, a separate critic, his pick in his words).
+   (a recorded piece's thumbnails: two or three options, a separate critic, his pick in his words),
+   `.agents/skills/motion-designer/SKILL.md` (a ve piece's per-beat motion plan in its spec, before Sign storyboard).
 3. Claude owns the words and the visuals: the story, the scripts, the article copy, every article figure and the
    creative direction (`docs/CREATIVE_DIRECTION.md`). Production renders only from a direction Krish signed;
    `kit.py` and `make.py` refuse anything else from 26 Oct 2026.
