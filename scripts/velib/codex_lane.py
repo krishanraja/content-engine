@@ -7,7 +7,7 @@ Codex runs only where its plugin companion and his ChatGPT login are: his home c
 session, Claude Desktop chat or a Windows-side Claude Code cannot start it. So a session never asks him how to reach
 Codex. It picks the route by itself (`route()`):
 
-  local   the companion is on this machine: `ve dispatch` here, as before;
+  local   the codex command is on this machine: `ve dispatch` here, as before;
   queue   it is not: `ve lane queue` writes one board item (lane in_progress, id codex-<card>), and the home
           computer's windowless recordings pass runs `ve lane serve`, which claims it, builds it in WSL
           (`ve lane build`, the same dispatch and verify-card) and writes the result back onto the item.
@@ -21,7 +21,6 @@ and closes the item (closes_on session).
 from __future__ import annotations
 
 import datetime as dt
-import glob
 import json
 import os
 import platform
@@ -63,8 +62,12 @@ def now() -> str:
 
 
 def has_companion(home: Path | None = None) -> bool:
-    base = home or Path.home()
-    return bool(glob.glob(str(base / '.claude' / 'plugins' / 'cache' / 'openai-codex' / 'codex' / '*' / 'scripts' / 'codex-companion.mjs')))
+    """Whether Codex can be started from this machine: the codex command is on PATH (scripts/codex_thread.mjs drives it;
+    the Codex plugin is no longer needed). home: a fake PATH root for tests, holding bin/codex."""
+    import shutil
+    if home is not None:
+        return any((home / 'bin' / name).exists() for name in ('codex', 'codex.exe'))
+    return shutil.which('codex') is not None
 
 
 def route(home: Path | None = None) -> str:

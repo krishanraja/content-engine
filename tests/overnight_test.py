@@ -225,14 +225,6 @@ class CodexHomeTests(unittest.TestCase):
         self.assertTrue(lines[0].startswith('ve card fri-plates'))
         self.assertIn('card: fri-plates', lines, 'card_usage still finds the run by its card line')
 
-    def test_companion_profile_flag_is_read_from_its_source(self):
-        sys.path.insert(0, str(ROOT / 'scripts'))
-        from velib import cards
-        companion = Path(self.tmp.name) / 'codex-companion.mjs'
-        companion.write_text('task [--write] [--profile <codex-profile>]', encoding='utf-8')
-        self.assertTrue(cards.companion_takes_profile(str(companion)))
-        companion.write_text('task [--write]', encoding='utf-8')
-        self.assertFalse(cards.companion_takes_profile(str(companion)))
 
 
 def verdict(findings=(), critic_id='c1', round_no=1, sha=SHA, day='mon', cut='long'):
