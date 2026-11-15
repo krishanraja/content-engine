@@ -234,11 +234,33 @@ class SmokeTest(unittest.TestCase):
         self.assertEqual(codex_route.wslpath('/mnt/d/x', '-w', refuse), 'D:\\x')
 
 
+class CardRootTest(unittest.TestCase):
+    """15 Nov: Windows Codex's sandbox refused the \\\\wsl.localhost worktree (E_ACCESSDENIED); on this route card
+    worktrees go on the Windows drive beside the Codex home."""
+
+    WSL = {'WSL_DISTRO_NAME': 'Ubuntu', 'VE_CODEX_DESKTOP_HOME': '/mnt/c/Users/krish/.codex'}
+
+    def test_wsl_with_his_windows_home_puts_cards_on_the_windows_drive(self):
+        with unittest.mock.patch.object(sys, 'platform', 'linux'):
+            self.assertEqual(codex_route.card_root(dict(self.WSL)), '/mnt/c/Users/krish/.ve-codex/worktrees')
+
+    def test_a_hand_set_root_a_linux_home_or_the_studio_home_keep_the_layout(self):
+        with unittest.mock.patch.object(sys, 'platform', 'linux'):
+            self.assertIsNone(codex_route.card_root({**self.WSL, 'MINDMAKE_LOCAL_WORKTREES': '/home/krish/wt'}))
+            self.assertIsNone(codex_route.card_root({**self.WSL, 'VE_CODEX_DESKTOP_HOME': '/home/krish/.codex'}))
+            self.assertIsNone(codex_route.card_root({**self.WSL, 'VE_CODEX_STUDIO_HOME': '1'}))
+
+    def test_a_windows_drive_session_cwd_maps_back_in_wsl_only(self):
+        self.assertEqual(codex_route.linux_form('C:\\Users\\krish\\.ve-codex\\worktrees\\x', platform='linux'),
+                         '/mnt/c/Users/krish/.ve-codex/worktrees/x')
+        self.assertEqual(codex_route.linux_form('C:\\Users\\x', platform='win32'), 'C:/Users/x')
+
+
 class SessionLogTest(unittest.TestCase):
     def test_a_windows_codex_session_is_found_by_its_wsl_worktree(self):
         self.assertEqual(codex_route.linux_form('\\\\wsl.localhost\\Ubuntu\\home\\krish\\wt'), '/home/krish/wt')
         self.assertEqual(codex_route.linux_form('//wsl$/Ubuntu/home/krish/wt'), '/home/krish/wt')
-        self.assertEqual(codex_route.linux_form('C:\\Users\\krish'), 'C:/Users/krish')
+        self.assertEqual(codex_route.linux_form('C:\\Users\\krish', platform='win32'), 'C:/Users/krish')
 
     def test_card_usage_matches_the_worktree_through_its_unc_form(self):
         import json
