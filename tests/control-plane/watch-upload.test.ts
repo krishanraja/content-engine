@@ -113,14 +113,15 @@ describe('what the upload accepts', () => {
 })
 
 describe('the peek', () => {
-  it('counts what a machine could claim, after the 15-minute wait for a cloud machine, and claims nothing', async () => {
+  it('counts what a machine could claim: the worker at once, a home computer or another cloud machine after 15 minutes', async () => {
     const rows = [
       request(1, { status: 'queued', claimed_by: null, claimed_at: null, requested_at: minutesAgo(20) }),
       request(2, { status: 'queued', claimed_by: null, claimed_at: null, requested_at: minutesAgo(5) }),
     ]
     const s = store(rows)
     expect(await waiting(s, 'cloud-gh', NOW)).toBe(1)
-    expect(await waiting(s, 'SURFACE', NOW)).toBe(2)
+    expect(await waiting(s, 'SURFACE', NOW)).toBe(1)
+    expect(await waiting(s, 'cloud-vps', NOW)).toBe(2)
   })
 })
 
