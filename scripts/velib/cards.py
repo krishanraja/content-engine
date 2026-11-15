@@ -410,9 +410,14 @@ def ensure_worktree(cwd: Path, card_id: str) -> None:
             os.symlink(modules.resolve(), cwd / 'node_modules')
 
 
+FRESH_LEASE = 've-fresh-lease'
+
+
 def refresh_worktree(cwd: Path) -> None:
     """Bring an existing card worktree up to origin/main by a merge, so its branch still pushes as a fast-forward and
-    any earlier attempt's work is kept. A merge that conflicts is aborted and the dispatch stops, naming the worktree.
+    any earlier attempt's work is kept. A merge that conflicts is aborted and the card starts fresh from origin/main
+    (restart_fresh): on 15 Nov 2026 two re-queued cards stopped on his PC, unattended, because main had changed the
+    same files since their first attempt. Only a clean ve-card/ worktree restarts; anything else stops, naming it.
     A folder that is not a git checkout is left alone."""
     if not (cwd / '.git').exists():
         return
@@ -422,8 +427,43 @@ def refresh_worktree(cwd: Path) -> None:
                             capture_output=True, text=True)
     if merged.returncode != 0:
         subprocess.run(['git', '-C', str(cwd), 'merge', '--abort'], capture_output=True)
-        sys.exit(f've dispatch: the worktree {cwd} cannot take in origin/main cleanly; remove it so the card starts '
-                 f'fresh ({(merged.stderr or merged.stdout).strip()[-300:]})')
+        why = (merged.stderr or merged.stdout).strip()[-300:]
+        if not restart_fresh(cwd):
+            sys.exit(f've dispatch: the worktree {cwd} cannot take in origin/main cleanly; remove it so the card starts '
+                     f'fresh ({why})')
+        print(f've dispatch: {cwd} could not take in origin/main, so the card starts fresh from main; its build replaces '
+              f'the earlier attempt on its branch ({why})', file=sys.stderr)
+
+
+def fresh_lease_path(cwd: Path) -> Path:
+    """Where a restarted worktree keeps the branch's remote commit it may replace: inside its own git directory."""
+    out = subprocess.run(['git', '-C', str(cwd), 'rev-parse', '--git-path', FRESH_LEASE],
+                         capture_output=True, text=True, check=True).stdout.strip()
+    path = Path(out)
+    return path if path.is_absolute() else cwd / path
+
+
+def restart_fresh(cwd: Path) -> bool:
+    """Start a card's worktree again from origin/main when its earlier attempt cannot take main in. Only a ve-card/
+    branch with nothing uncommitted (the lane commits and pushes every attempt) is restarted. The branch's commit on
+    origin, or nothing when it was never pushed, is kept as the lease the next push must find there
+    (codex_lane.publish_branch), so a build replaces only the attempt it started from. Returns False when it may not."""
+    git = ['git', '-C', str(cwd)]
+    branch = subprocess.run(git + ['rev-parse', '--abbrev-ref', 'HEAD'], capture_output=True, text=True).stdout.strip()
+    if not branch.startswith('ve-card/'):
+        return False
+    status = subprocess.run(git + ['status', '--porcelain', '--untracked-files=all'], capture_output=True, text=True)
+    if status.returncode != 0 or any(line[3:].strip().rstrip('/') != 'node_modules'
+                                     for line in status.stdout.splitlines() if line.strip()):
+        return False
+    remote = subprocess.run(git + ['ls-remote', 'origin', f'refs/heads/{branch}'], capture_output=True, text=True)
+    if remote.returncode != 0:
+        return False
+    lease = remote.stdout.split()[0] if remote.stdout.split() else ''
+    if subprocess.run(git + ['checkout', '-q', '-B', branch, 'origin/main'], capture_output=True).returncode != 0:
+        return False
+    fresh_lease_path(cwd).write_text(lease + '\n', encoding='utf-8')
+    return True
 
 
 def _is_link(path: Path) -> bool:
