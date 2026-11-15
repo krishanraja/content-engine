@@ -186,12 +186,26 @@ def structure(spec: dict, cut: str) -> dict:
     beats = spec['cuts'][cut]['beats']
     used = {name for b in beats for name in b.get('uses') or []}
     motion = (spec.get('style') or {}).get('motion')
-    return {
+    out = {
         'format': spec.get('format'), 'aspect': spec['cuts'][cut].get('aspect'),
         'motion': motion.get('module') if isinstance(motion, dict) else None,
         'objects': sorted([o['obj'], o.get('device')] for o in spec.get('objects') or [] if o['obj'] in used),
         'beats': [[b['id'], b.get('layout'), sorted(b.get('uses') or [])] for b in beats],
     }
+    # An off-day short voiced by his approved clone (Ruling, Krish, 2026-11-15): his Approve proof stands for the clone
+    # reading he heard, so a voice generated again shows him the proof again. A cut read from his own voice carries no
+    # such key, so every proof recorded before this keeps its hash.
+    voice = clone_voice(spec, cut)
+    if voice:
+        out['voice'] = voice
+    return out
+
+
+def clone_voice(spec: dict, cut: str) -> list | None:
+    """[asset id, tool, sha256] of the clone voice the cut takes, or None for his own voice."""
+    take = spec['cuts'][cut].get('take')
+    asset = next((a for a in spec.get('assets') or [] if a.get('kind') == 'voice' and a.get('id') == take), None)
+    return [asset['id'], asset.get('tool'), asset.get('sha256')] if asset else None
 
 
 def structural_hash(spec: dict, cut: str) -> str:
@@ -206,6 +220,10 @@ def changes(old: dict, new: dict) -> list[str]:
     for key in ('format', 'aspect'):
         if old.get(key) != new.get(key):
             out.append(f'{key} {old.get(key)} -> {new.get(key)}')
+    if old.get('voice') != new.get('voice'):
+        def heard(voice):
+            return f'clone {voice[0]} ({str(voice[2])[:12]})' if voice else 'his own voice'
+        out.append(f"voice {heard(old.get('voice'))} -> {heard(new.get('voice'))}")
     a, b = {tuple(x) for x in old.get('objects') or []}, {tuple(x) for x in new.get('objects') or []}
     out += [f'device added: {o} ({d})' for o, d in sorted(b - a)] + [f'device removed: {o} ({d})' for o, d in sorted(a - b)]
     olds = {row[0]: row for row in old.get('beats') or []}

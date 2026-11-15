@@ -3,8 +3,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { attachQualifiedClientFixture } from './helpers/media-delivery.js'
-import { CandidateV1Schema, DraftPackageV2Schema, RenderManifestV2Schema } from '@mindmake/contracts'
-import { VIDEO_PACKAGE_PLATFORMS, createDraftPackageV2, draftPackageFileIssuesV2, hashFile, platformCopyV2 } from '@mindmake/core'
+import { CandidateV1Schema, DraftPackageV2Schema, RenderManifestV2Schema, type RenderManifestV2 } from '@mindmake/contracts'
+import { VIDEO_PACKAGE_PLATFORMS, createDraftPackageV2, draftPackageFileIssuesV2, hashFile, platformCopyV2, receiptCoverV2 } from '@mindmake/core'
 
 const candidate = CandidateV1Schema.parse({
   schema_version: 1,
@@ -129,7 +129,7 @@ describe('four-platform V2 packages', () => {
     expect(await draftPackageFileIssuesV2({ ...draft, captions_path: outsidePath }, expected)).toContain('captions path is outside the current job package')
   })
 
-  it('makes a rendered thumbnail the package cover, bound to its exact bytes', async () => {
+  it('makes the Receipt the package cover, bound to its exact bytes', async () => {
     const temporaryRoot = await mkdtemp(join(tmpdir(), 'mindmake-package-cover-'))
     temporaryRoots.push(temporaryRoot)
     previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
@@ -168,3 +168,43 @@ describe('four-platform V2 packages', () => {
   })
 })
 
+describe('a house-style Short takes the Receipt as its cover (the sticker thumbnail retired, 15 Nov 2026)', () => {
+  const roots: string[] = []
+  afterEach(async () => { await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true }))) })
+  const tall = { series: 'mind_the_gap', output: { width: 1080, height: 1920 } } as unknown as RenderManifestV2
+  const wide = { series: 'mind_the_gap', output: { width: 1920, height: 1080 } } as unknown as RenderManifestV2
+  async function drawn(over: Record<string, unknown> = {}) {
+    const folder = await mkdtemp(join(tmpdir(), 'mindmake-receipt-cover-'))
+    roots.push(folder)
+    await writeFile(join(folder, 'thumb-tall-1080x1920.jpg'), 'tall receipt jpeg\n', 'utf8')
+    await writeFile(join(folder, 'thumb-wide-1280x720.jpg'), 'wide receipt jpeg\n', 'utf8')
+    const files = [
+      { file: 'thumb-wide-1280x720.jpg', shape: 'wide', sha256: await hashFile(join(folder, 'thumb-wide-1280x720.jpg')) },
+      { file: 'thumb-tall-1080x1920.jpg', shape: 'tall', sha256: await hashFile(join(folder, 'thumb-tall-1080x1920.jpg')) },
+    ]
+    await writeFile(join(folder, 'thumbs.json'), JSON.stringify({ schema_version: 1, drawer: 'scripts/pages/build.py --thumbs (receipt)', template: 'receipt',
+      subchannel: 'mind.the.gap', files, ...over }), 'utf8')
+    return folder
+  }
+
+  it('takes the thumbnail drawn for the master\'s shape, at the bytes its receipt recorded', async () => {
+    const folder = await drawn()
+    expect(await receiptCoverV2(folder, tall)).toEqual({ path: join(folder, 'thumb-tall-1080x1920.jpg'), sha256: await hashFile(join(folder, 'thumb-tall-1080x1920.jpg')) })
+    expect((await receiptCoverV2(folder, wide)).path).toBe(join(folder, 'thumb-wide-1280x720.jpg'))
+  })
+
+  it('refuses, in plain words, when there is no Receipt to take', async () => {
+    await expect(receiptCoverV2(undefined, tall)).rejects.toThrow(/takes the Receipt as its cover, and none was given: draw it with python3 scripts\/pages\/build.py COVER_FACTS --thumbs/)
+    const empty = await mkdtemp(join(tmpdir(), 'mindmake-receipt-cover-'))
+    roots.push(empty)
+    await expect(receiptCoverV2(empty, tall)).rejects.toThrow(/no readable thumbs.json/)
+    await expect(receiptCoverV2(await drawn({ drawer: 'scripts/pages/build.py --thumbs', template: undefined }), tall)).rejects.toThrow(/not drawn as the Receipt/)
+    await expect(receiptCoverV2(await drawn({ subchannel: 'follow.the.money' }), tall)).rejects.toThrow(/drawn for follow.the.money, not mind.the.gap/)
+    const changed = await drawn()
+    await writeFile(join(changed, 'thumb-tall-1080x1920.jpg'), 'drawn over by hand\n', 'utf8')
+    await expect(receiptCoverV2(changed, tall)).rejects.toThrow(/changed after it was drawn/)
+    const gone = await drawn()
+    await rm(join(gone, 'thumb-tall-1080x1920.jpg'))
+    await expect(receiptCoverV2(gone, tall)).rejects.toThrow(/is missing from/)
+  })
+})

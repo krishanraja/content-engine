@@ -162,8 +162,9 @@ class SyntheticThroughVeLint(unittest.TestCase):
             self.assertEqual(self.lint_codes([{**VOICE_ASSET, 'origin': 'capture'}]), ['voice.synthetic'])
 
     def test_the_schema_still_refuses_a_generated_recording(self):
-        """A cloned voice clip honestly marked generated stops at the schema (generated media is never evidence), even
-        when registered: letting a registered one in is a change to production-spec.ts, which waits on Krish."""
+        """A cloned voice clip marked as a generated recording stops at the schema (generated media is never evidence),
+        even when registered. His clone enters a spec only as an asset of kind voice, on an off-day voiceover short
+        (Ruling, Krish, 2026-11-15; tests/ve_clone_voice_test.py)."""
         with served(registry(VOICE)):
             codes = self.lint_codes([VOICE_ASSET], [approval(VOICE)])
         self.assertIn('SCHEMA', codes)

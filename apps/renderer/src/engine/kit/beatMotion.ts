@@ -15,8 +15,10 @@ export interface Box { left: number; top: number; width: number; height: number 
 export interface BeatMotion { layer: CSSProperties; dim: number; fade: number }
 
 /** What the camera can see on this beat (kit/focus.ts): a focus a device reports and the room it must stay in, the
- *  first device's box for a device that reports none, and a pen to follow. */
-export interface CameraView { focus?: Focus | undefined; room?: Room | undefined; fallback?: Box | undefined; pen?: ((frame: number) => Point | undefined) | undefined }
+ *  first device's box for a device that reports none, and a pen to follow. `focusable`: a device on the beat can
+ *  report a focus (devices/focus.ts FOCUS), whether or not it has one yet. */
+export interface CameraView { focus?: Focus | undefined; room?: Room | undefined; fallback?: Box | undefined; pen?: ((frame: number) => Point | undefined) | undefined
+  focusable?: boolean | undefined }
 
 const linear = (t: number) => t
 const lerp = (a: number, b: number, q: number) => a + (b - a) * q
@@ -27,13 +29,46 @@ export function transitionFrames(profile: MotionProfile): number {
   return profile.transitionFrames ?? Math.min(10, Math.max(6, profile.exitFrames))
 }
 
-/** Whether the beat stays mounted, fading out under the next one, for that many frames after its end. */
-export function keepsOutgoing(profile: MotionProfile | undefined, beat: EngineBeat, next: EngineBeat | undefined): boolean {
-  return !!profile && !!next && next.fromFrame === beat.toFrame && (profile.transition === 'crossfade' || beat.transitionOut === 'carry')
+/** Whether the beat stays mounted under the next one after its end: fading out under a crossfade or a carry, or, in a
+ *  leading handover (`lead`, kit/ingredients.ts), still on its way out for the handover's last frames. A carry hands
+ *  its objects on, so it never leads: it fades as it always did. */
+export function keepsOutgoing(profile: MotionProfile | undefined, beat: EngineBeat, next: EngineBeat | undefined, lead = false): boolean {
+  if (!next || next.fromFrame !== beat.toFrame) return false
+  if (lead && beat.transitionOut !== 'carry') return true
+  return !!profile && (profile.transition === 'crossfade' || beat.transitionOut === 'carry')
 }
 
+/** The zoom to a focus line, about the layer's centre: living-ui's zoomToFocus, and focus on the event
+ *  (style.camera.focus) over a style that does not zoom to it. It zooms to the line that proves the words (up to
+ *  `scaleTo`; the card's own edges may leave the frame), keeps the line inside the channel safe area and off his face,
+ *  and travels from line to line. `amount` is how far in it is, 0 to 1. */
+export function focusZoom(focus: Focus, room: Room, t: number, scaleTo: number, width: number, height: number): { transform: string; amount: number } {
+  const ox = width / 2, oy = height / 2
+  const zoomIn = progress(Math.min(focus.since, t - MOTION.enterFrames), 12, HERO)
+  const move = focus.from ? progress(focus.since, 12, HERO) : 1
+  const rect = focus.from ? { left: lerp(focus.from.left, focus.rect.left, move), top: lerp(focus.from.top, focus.rect.top, move),
+    width: lerp(focus.from.width, focus.rect.width, move), height: lerp(focus.from.height, focus.rect.height, move) } : focus.rect
+  const target = zoomTarget(rect, room, scaleTo)
+  const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2
+  const s = 1 + (target.scale - 1) * zoomIn
+  const mx = lerp(cx, target.centre[0], zoomIn), my = lerp(cy, target.centre[1], zoomIn)
+  // About the layer's centre: the focus centre lands on (mx, my) at scale s.
+  return { transform: `translate(${fixed(mx - ox - s * (cx - ox))}px, ${fixed(my - oy - s * (cy - oy))}px) scale(${fixed(s)})`, amount: zoomIn }
+}
+
+/** Focus on the event with no motion style: only the focus zoom on the beat's graphics layer, at `scaleTo`. */
+export function focusMotion(view: CameraView, frame: number, beat: EngineBeat, scaleTo: number, width: number, height: number): BeatMotion {
+  if (!view.focus || !view.room) return { layer: {}, dim: 1, fade: 1 }
+  const { transform } = focusZoom(view.focus, view.room, frame - beat.fromFrame, scaleTo, width, height)
+  return { layer: { transform, transformOrigin: `${width / 2}px ${height / 2}px` }, dim: 1, fade: 1 }
+}
+
+/** `focusScale`: focus on the event (style.camera.focus) is on. On a beat with a device that can report a focus, the
+ *  focus zoom stands in for the style's own camera for the whole beat (so nothing pops when the first line types), and
+ *  no other device on the layer dims. A style that already zooms to the focus keeps its own zoom. */
 export function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number,
-  view: CameraView, width: number, height: number, region?: { left: number; top: number; width: number; height: number }): BeatMotion {
+  view: CameraView, width: number, height: number, region?: { left: number; top: number; width: number; height: number },
+  focusScale?: number): BeatMotion {
   const beat = beats[index]!
   const prev = index > 0 ? beats[index - 1] : undefined
   const t = frame - beat.fromFrame
@@ -65,7 +100,9 @@ export function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[],
   let origin = `${width / 2}px ${height / 2}px`
   const ox = width / 2, oy = height / 2
   const camera = profile.camera
-  if (camera.kind === 'push' && region) {
+  if (focusScale !== undefined && camera.kind !== 'zoomToFocus' && view.focusable) {
+    if (view.focus && view.room) transforms.push(focusZoom(view.focus, view.room, t, focusScale, width, height).transform)
+  } else if (camera.kind === 'push' && region) {
     // A staged beat (kit/staging.ts) pushes on its own region, and never so far that the region leaves the frame.
     const cx = region.left + region.width / 2, cy = region.top + region.height / 2
     const m = 40   // the region keeps at least this far inside the frame at the push's height
@@ -78,18 +115,9 @@ export function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[],
   } else if (camera.kind === 'zoomToFocus' && view.focus && view.room) {
     // Zoom to the line that proves the words (up to the profile's scale; the card's own edges may leave the frame),
     // the line kept inside the channel safe area and off his face. From line to line the camera travels.
-    const { focus, room } = view
-    const zoomIn = progress(Math.min(focus.since, t - MOTION.enterFrames), 12, HERO)
-    const move = focus.from ? progress(focus.since, 12, HERO) : 1
-    const rect = focus.from ? { left: lerp(focus.from.left, focus.rect.left, move), top: lerp(focus.from.top, focus.rect.top, move),
-      width: lerp(focus.from.width, focus.rect.width, move), height: lerp(focus.from.height, focus.rect.height, move) } : focus.rect
-    const target = zoomTarget(rect, room, camera.scaleTo)
-    const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2
-    const s = 1 + (target.scale - 1) * zoomIn
-    const mx = lerp(cx, target.centre[0], zoomIn), my = lerp(cy, target.centre[1], zoomIn)
-    // About the layer's centre: the focus centre lands on (mx, my) at scale s.
-    transforms.push(`translate(${fixed(mx - ox - s * (cx - ox))}px, ${fixed(my - oy - s * (cy - oy))}px) scale(${fixed(s)})`)
-    if (camera.dimOthers) dim = 1 - 0.6 * zoomIn
+    const zoom = focusZoom(view.focus, view.room, t, camera.scaleTo, width, height)
+    transforms.push(zoom.transform)
+    if (camera.dimOthers) dim = 1 - 0.6 * zoom.amount
   } else if (camera.kind === 'zoomToFocus' && view.fallback) {
     // A device that reports no line: zoom to its box, never so far that it leaves the frame.
     const focus = view.fallback

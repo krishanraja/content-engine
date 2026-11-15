@@ -62,7 +62,7 @@ import {
   captureFeedbackV2,
   createDraftPackageV2,
   houseThemeForManifestV2,
-  renderThumbnailV2,
+  receiptCoverV2,
   createDriveSourceBundleDraft,
   createExperimentV2,
   createJobV2,
@@ -655,13 +655,6 @@ async function approvedBriefTitle(jobId: string): Promise<OpeningContextV1> {
     const brief = await loadBoundProductionBriefV2(await loadJobV2(jobId))
     return brief ? { approved_title: brief.content.title } : {}
   } catch { return {} }
-}
-
-/** The thumbnail's words: the approved title over the Short's hook, or,
- *  with no production brief bound to the job, the hook over the payoff. */
-async function thumbnailCopy(jobId: string, candidate: CandidateV1): Promise<{ headline: string; dek: string }> {
-  const { approved_title: title } = await approvedBriefTitle(jobId)
-  return title ? { headline: title, dek: candidate.hook } : { headline: candidate.hook, dek: candidate.payoff }
 }
 
 async function verifyEvidencePacketFiles(packet: EvidenceReviewPacketV2): Promise<void> {
@@ -2226,6 +2219,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
   packages.command('create')
     .requiredOption('--job <jobId>')
     .requiredOption('--candidate <path>')
+    .option('--thumbs <folder>', 'the folder python3 scripts/pages/build.py COVER_FACTS --thumbs wrote (thumbs.json beside the Receipt thumbnails): a Short in the makeyourmindup house style takes its Receipt as the cover')
     .action(async (options) => {
       const manifest = await loadJobV2(options.job)
       if (manifest.purpose === 'calibration') throw new Error('calibration jobs are analysis-only and cannot create platform packages')
@@ -2266,10 +2260,11 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         if (hashValue(renderManifest.assets) !== approvedAssetsHash || hashValue(renderManifest.generated_shots) !== approvedGeneratedHash) throw new Error(`render manifest for ${platform} is not bound to the exact approved asset ledger`)
         for (const sourceItem of renderManifest.sources) if (await hashFile(resolve(sourceItem.path)) !== sourceItem.sha256) throw new Error(`render source ${sourceItem.source_id} changed for ${platform}`)
         if (!renderManifest.disclosures.some((item) => item.platform === platform)) throw new Error(`render manifest for ${platform} lacks a platform disclosure decision`)
-        // In the makeyourmindup house style the package's cover is the
-        // Short's thumbnail: the piece's title over its hook, no photograph.
+        // In the makeyourmindup house style the package's cover is the Receipt
+        // build.py --thumbs drew for the master's shape (the sticker thumbnail
+        // is retired, 15 Nov 2026); with none, the package is refused.
         const cover = await houseThemeForManifestV2(renderManifest)
-          ? await renderThumbnailV2(context.repoRoot, renderManifest, await thumbnailCopy(options.job, candidate))
+          ? await receiptCoverV2(options.thumbs, renderManifest)
           : undefined
         created.push(await createDraftPackageV2(options.job, platform, renderItem.master_path, candidate, renderManifest, qa.payload, { render_manifest_hash: renderItem.manifest_hash, master_path: renderItem.master_path, master_hash: renderItem.master_hash }, cover))
       }
