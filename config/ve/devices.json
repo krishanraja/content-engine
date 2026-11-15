@@ -1,5 +1,6 @@
 {
   "devices": {
+    "answer_stream": { "verbs": ["enter", "type", "mark", "light", "exit"] },
     "office_floor": {
       "verbs": [
         "enter",
@@ -332,6 +333,14 @@
         "connect",
         "rest_on",
         "carry",
+        "exit"
+      ]
+    },
+    "code_card": {
+      "verbs": [
+        "enter",
+        "type",
+        "highlight",
         "exit"
       ]
     }
