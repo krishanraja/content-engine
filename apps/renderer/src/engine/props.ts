@@ -91,6 +91,12 @@ export const EngineStingSchema = z.object({
 }).strict()
 
 export const EngineRenderPropsSchema = z.object({
+  character: z.object({
+    poses: z.array(z.object({ fromFrame: Frame, pose: z.string(), spot: z.string(), sinkPx: z.number(), x: z.number(), width: z.number() }).strict()),
+    mouth: z.array(z.boolean()), blinks: z.array(Frame),
+    images: z.record(z.string(), z.object({ closed: z.string(), open: z.string(), blink: z.string() }).strict()),
+    seed: z.string(),
+  }).strict().optional(),
   pieceId: z.string().min(1),
   cutId: z.string().min(1),
   format: z.enum(['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports']),

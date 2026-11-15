@@ -1,3 +1,4 @@
+import { CharacterLayer } from './character'
 import { Fragment, type ReactElement } from 'react'
 import { z } from 'zod'
 import { AbsoluteFill, OffthreadVideo, Sequence } from 'remotion'
@@ -301,7 +302,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       {stagingGround ? picture : !hasWindow && take}
       {beatLayers}
-      {brandLayers}
+      {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers]}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )
@@ -317,7 +318,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         {beatLayers}
       </AbsoluteFill>
       {flash > 0 ? <AbsoluteFill data-flash style={{ backgroundColor: props.tokens.cream, opacity: flash }} /> : null}
-      {brandLayers}
+      {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers]}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )

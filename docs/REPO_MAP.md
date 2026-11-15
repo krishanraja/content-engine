@@ -4630,6 +4630,12 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 
 - `const THEMES: Record<Exclude<CaptionThemeName, 'art-directed'>, Draw>`
 
+### `apps/renderer/src/engine/character/index.tsx`
+
+- `function Device(): never`
+- `function characterState(track: Track, frame: number)`
+- `function CharacterLayer({ track, frame }: { track: Track; frame: number })`
+
 ### `apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx`
 
 - `const ART_REGION`
@@ -4814,6 +4820,18 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `const MoodSchema`
 - `const ParamsSchema`
 - `const PositionSchema`
+
+### `apps/renderer/src/engine/devices/cursor_path/index.tsx`
+
+- `function Device(props: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/cursor_path/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/cursor_path/state.ts`
+
+- `function cursorState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
 
 ### `apps/renderer/src/engine/devices/evidence_card/index.tsx`
 
