@@ -1,0 +1,83 @@
+{
+  "objects": [
+    {
+      "obj": "code",
+      "device": "code_card",
+      "meaning": "Real helper source",
+      "params": {
+        "file": {
+          "path": "apps/renderer/src/engine/kit/verbs.ts",
+          "revision": "working tree",
+          "date": "2026-11-15",
+          "label": "typeOn helpers"
+        },
+        "lines": [
+          {
+            "id": "seed",
+            "text": "  let h = 2166136261",
+            "typed": true
+          },
+          {
+            "id": "end",
+            "text": "}",
+            "typed": true
+          }
+        ]
+      },
+      "fromFrame": 0,
+      "toFrame": 180
+    }
+  ],
+  "events": [
+    {
+      "id": "enter0",
+      "obj": "code",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 10
+    },
+    {
+      "id": "type1",
+      "obj": "code",
+      "verb": "type",
+      "toState": "seed",
+      "atFrame": 30
+    },
+    {
+      "id": "type2",
+      "obj": "code",
+      "verb": "type",
+      "toState": "end",
+      "atFrame": 49
+    },
+    {
+      "id": "highlight3",
+      "obj": "code",
+      "verb": "highlight",
+      "toState": "end",
+      "atFrame": 70
+    },
+    {
+      "id": "exit4",
+      "obj": "code",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 150
+    }
+  ],
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "stills": [
+    0,
+    20,
+    30,
+    40,
+    49,
+    50,
+    70,
+    153,
+    156
+  ]
+}
