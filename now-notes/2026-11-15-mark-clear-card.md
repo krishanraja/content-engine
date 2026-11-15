@@ -1,3 +1,0 @@
-Status: Krish ruled "keep captions clear of the mark" (2026-11-15). The Codex card `docs/ve/cards/motion-standard/ve-motion-2-mark-clearance.fields.json` is rewritten as `ve-motion-2b-mark-clear-every-layout`: captions, held titles and words move below the mark's clear zone on every layout, STAGE included, the mark never moved, shrunk or hidden, with a `mark_clearance` QC row and tests that pass only when no caption box meets the zone. The ruling is in `docs/ve/INGREDIENTS.md`. The old branch `ve-card/ve-motion-2-mark-clearance` is not merged.
-Next: his PC's recordings pass builds the queued card in WSL; a Claude session checks the pushed `ve-card/ve-motion-2b-mark-clear-every-layout` branch by re-running its acceptance.
-North Star check (2026-11-15): holds.
