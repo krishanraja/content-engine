@@ -1,6 +1,29 @@
 #!/usr/bin/env python3
-"""The Codex home ve dispatch runs Codex under: a settings folder of its own, so Krish's everyday Codex keeps every
-MCP server and plugin he uses while the Codex that runs cards has none.
+"""Where ve dispatch runs Codex: Krish's everyday Codex home, the one his Codex Desktop app reads, so every session
+Claude starts shows in his Desktop app and he can attach his browser to it.
+
+Ruling (Krish, 2026-11-15): every Codex session Claude starts runs where Krish can see it in his Codex Desktop app, so
+he can attach his browser; this replaces the separate Studio Codex home of 30 Oct as the default. His words: "I want
+Claude to spin up codex sessions I can actually see."
+
+  desktop_home()   the home his Desktop app reads: VE_CODEX_DESKTOP_HOME when set (the override for a machine the rules
+                   below get wrong), else CODEX_HOME when it names a folder other than the Studio home, else, inside
+                   WSL, the Windows side's home (its %CODEX_HOME%, else %USERPROFILE%\\.codex, read through WSL's
+                   Windows interop, else the one C:\\Users\\<name>\\.codex holding a sign-in), else ~/.codex. Cards build
+                   in WSL, and a WSL ~/.codex is a folder the Windows Desktop app never reads.
+  the ve-card profile   the per-run settings the Studio home used to carry (approval never, workspace-write sandbox,
+                   no network, the connector and plugin features off; the browser stays
+                   on so he can attach his), written as one marked [profiles.ve-card] block at the end of
+                   his config.toml (install-profile; nothing else in the file is touched, and a profile does nothing
+                   until a run names it). Dispatch passes --profile ve-card when the installed Codex plugin companion
+                   takes it. A profile cannot drop the MCP servers his own config names, so a card's Codex can reach
+                   them: the tool profile (config/codex-profile.json) still holds any card that names a forbidden tool,
+                   and verify-card still refuses work outside write_allow.
+
+The Studio's own home below stays as an explicit opt-in (ve dispatch --studio-home, or VE_CODEX_STUDIO_HOME=1): a run
+with no MCP server and no plugin at all, which his Desktop app never shows.
+
+The Studio home, as built since 30 Oct:
 
 Krish, 30 Oct, on the Buffer and Teleprompter servers the preflight flagged on LORIMER: "no, we need those", then "do
 the separate settings folder fix". Codex reads its settings from CODEX_HOME (default ~/.codex), so this folder is a
@@ -23,9 +46,14 @@ second home beside the Studio runtime (Documents\\MindmakeVideoStudio\\runtime\\
   where   prints the folder's path.
 
     python scripts/overnight/codex_home.py build|check|where [--home DIR] [--main DIR]
+    python scripts/overnight/codex_home.py desktop|install-profile [--main DIR]
 
-ve dispatch uses this home when its config.toml is there and ~/.codex when it is not, so a computer that has not
-built it runs as before and its preflight reads ~/.codex's servers as before.
+  desktop          prints {home, how, profile_installed}: the home visible runs use and how it was found.
+  install-profile  writes or rewrites the marked ve-card block in that home's config.toml (a copy of the file as it
+                   was is kept beside it as config.toml.before-ve-card the first time).
+
+A Codex session started inside a cloud container (claude.ai/code, Codex cloud) can never appear in his Desktop app:
+its home is on a machine that is not his. Visible sessions are started from a Claude session on his own computer.
 """
 from __future__ import annotations
 
@@ -39,12 +67,79 @@ from pathlib import Path
 import codex_profile
 
 HOME = Path.home() / 'Documents' / 'MindmakeVideoStudio' / 'runtime' / 'codex-home'
-# Krish's everyday Codex home: CODEX_HOME when it names another folder (a Codex running under this home sets it here).
-MAIN = Path(os.environ['CODEX_HOME']) if os.environ.get('CODEX_HOME') and Path(os.environ['CODEX_HOME']) != HOME     else Path.home() / '.codex'
+PROFILE = 've-card'
+BEGIN = f'# >>> content-engine {PROFILE} profile: written by scripts/overnight/codex_home.py install-profile; never edit >>>'
+END = f'# <<< content-engine {PROFILE} profile <<<'
+STUDIO_FLAG = 'VE_CODEX_STUDIO_HOME'
+DESKTOP_FLAG = 'VE_CODEX_DESKTOP_HOME'
+
+
+def in_wsl(env=None, proc: Path = Path('/proc/version')) -> bool:
+    env = os.environ if env is None else env
+    if env.get('WSL_DISTRO_NAME') or env.get('WSL_INTEROP'):
+        return True
+    try:
+        return 'microsoft' in proc.read_text(encoding='utf-8', errors='replace').lower()
+    except OSError:
+        return False
+
+
+def windows_value(name: str) -> str | None:
+    """A Windows environment variable read from inside WSL through cmd.exe interop; None when unset or unreachable."""
+    try:
+        out = subprocess.run(['cmd.exe', '/d', '/c', f'echo %{name}%'], capture_output=True, text=True, timeout=15,
+                             cwd='/mnt/c' if Path('/mnt/c').is_dir() else None).stdout.strip()
+        if not out or out == f'%{name}%':
+            return None
+        unix = subprocess.run(['wslpath', '-u', out], capture_output=True, text=True, timeout=15).stdout.strip()
+        return unix or None
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+def _windows_homes(users: Path = Path('/mnt/c/Users')) -> list[Path]:
+    try:
+        return sorted(p / '.codex' for p in users.iterdir() if (p / '.codex' / 'auth.json').is_file())
+    except OSError:
+        return []
+
+
+def desktop_home(env=None, wsl: bool | None = None, windows=windows_value,
+                 users: Path = Path('/mnt/c/Users')) -> tuple[Path, str]:
+    """(the Codex home Krish's Desktop app reads, how it was found). See the module's head for the order."""
+    env = os.environ if env is None else env
+    if env.get(DESKTOP_FLAG):
+        return Path(env[DESKTOP_FLAG]).expanduser(), DESKTOP_FLAG
+    if env.get('CODEX_HOME') and Path(env['CODEX_HOME']).expanduser() != HOME:
+        return Path(env['CODEX_HOME']).expanduser(), 'CODEX_HOME'
+    if in_wsl(env) if wsl is None else wsl:
+        named = windows('CODEX_HOME')
+        if named:
+            return Path(named), 'Windows %CODEX_HOME%'
+        profile = windows('USERPROFILE')
+        if profile:
+            return Path(profile) / '.codex', 'Windows %USERPROFILE%'
+        found = _windows_homes(users)
+        if len(found) == 1:
+            return found[0], 'the one signed-in Windows home under /mnt/c/Users'
+    return Path.home() / '.codex', '~/.codex'
+
+
+def studio_opted_in(env=None) -> bool:
+    env = os.environ if env is None else env
+    return str(env.get(STUDIO_FLAG, '')).strip().lower() in ('1', 'true', 'yes')
+
+
+# Krish's everyday Codex home, the one his Desktop app reads (resolved when a command runs, never at import).
+MAIN = None
 # What the config may carry: the profile's own settings. A table or key outside these is a problem.
 TABLES = ('mcp_servers', 'plugins', 'marketplaces')
 # Codex features that bring tools outside the profile's allowed_tools (codex features list names them).
 FEATURES_OFF = ('apps', 'plugins', 'remote_plugin', 'browser_use', 'browser_use_external', 'computer_use')
+# The visible ve-card profile leaves the browser and computer use features on: Krish attaches his signed-in browser to
+# a visible session for the browser legwork (Ruling, Krish, 2026-11-15), and a profile that switched them off would
+# stop him. The connectors and plugins stay off.
+VISIBLE_FEATURES_OFF = ('apps', 'plugins', 'remote_plugin')
 
 
 def config_text(profile: dict) -> str:
@@ -75,7 +170,8 @@ def _link_dir(link: Path, target: Path) -> None:
         link.symlink_to(target, target_is_directory=True)
 
 
-def build(home: Path = HOME, main: Path = MAIN, profile: dict | None = None) -> list[str]:
+def build(home: Path = HOME, main: Path | None = MAIN, profile: dict | None = None) -> list[str]:
+    main = main or desktop_home()[0]
     profile = profile or codex_profile.load()
     if codex_profile.audit(profile):
         return ['config/codex-profile.json fails its audit, so no home is built from it']
@@ -102,7 +198,8 @@ def build(home: Path = HOME, main: Path = MAIN, profile: dict | None = None) -> 
     return check(home, main, profile)
 
 
-def check(home: Path = HOME, main: Path = MAIN, profile: dict | None = None) -> list[str]:
+def check(home: Path = HOME, main: Path | None = MAIN, profile: dict | None = None) -> list[str]:
+    main = main or desktop_home()[0]
     profile = profile or codex_profile.load()
     config = home / 'config.toml'
     if not config.is_file():
@@ -124,19 +221,82 @@ def check(home: Path = HOME, main: Path = MAIN, profile: dict | None = None) -> 
 
 
 def active(home: Path = HOME) -> Path | None:
-    """The home ve dispatch runs Codex under: this one once built, else None (Codex's own default)."""
+    """The Studio home when it is built, else None. Dispatch runs under it only when asked to (studio_opted_in)."""
     return home if (home / 'config.toml').is_file() else None
+
+
+def profile_block(profile: dict | None = None) -> str:
+    """The marked [profiles.ve-card] block: the profile's codex_config and the tool features off, under the profile."""
+    profile = profile or codex_profile.load()
+    top, tables = [], {}
+    for key, value in profile.get('codex_config', {}).items():
+        table, _, name = key.rpartition('.')
+        line = f'{name} = {json.dumps(value)}'
+        (tables.setdefault(table, []) if table else top).append(line)
+    tables['features'] = [f'{name} = false' for name in VISIBLE_FEATURES_OFF]
+    body = [f'[profiles.{PROFILE}]'] + top
+    for table, lines in tables.items():
+        body += ['', f'[profiles.{PROFILE}.{table}]'] + lines
+    return '\n'.join([BEGIN] + body + [END]) + '\n'
+
+
+def _split(text: str) -> tuple[str, str | None]:
+    """(the config without our block, the block as it stands or None)."""
+    if BEGIN not in text:
+        return text, None
+    before, _, rest = text.partition(BEGIN)
+    block, _, after = rest.partition(END)
+    return before.rstrip('\n') + ('\n' if before.strip() else '') + after.lstrip('\n'), BEGIN + block + END + '\n'
+
+
+def profile_problems(main: Path | None = None, profile: dict | None = None) -> list[str]:
+    main = main or desktop_home()[0]
+    config = main / 'config.toml'
+    text = config.read_text(encoding='utf-8') if config.is_file() else ''
+    rest, block = _split(text)
+    problems = []
+    if f'[profiles.{PROFILE}]' in rest:
+        problems.append(f'{config} has a [profiles.{PROFILE}] table of its own outside the marked block; remove it')
+    if block is None:
+        problems.append(f'{config} has no {PROFILE} profile: run python scripts/overnight/codex_home.py install-profile')
+    elif block != profile_block(profile):
+        problems.append(f'the {PROFILE} profile in {config} is not what config/codex-profile.json writes: run install-profile')
+    return problems
+
+
+def install_profile(main: Path | None = None, profile: dict | None = None) -> list[str]:
+    """Write the marked block at the end of the home's config.toml; everything else in the file stays as it was."""
+    profile = profile or codex_profile.load()
+    if codex_profile.audit(profile):
+        return ['config/codex-profile.json fails its audit, so no profile is written from it']
+    main = main or desktop_home()[0]
+    config = main / 'config.toml'
+    text = config.read_text(encoding='utf-8') if config.is_file() else ''
+    rest, _ = _split(text)
+    if f'[profiles.{PROFILE}]' in rest:
+        return [f'{config} has a [profiles.{PROFILE}] table of its own outside the marked block; remove it first']
+    main.mkdir(parents=True, exist_ok=True)
+    backup = main / 'config.toml.before-ve-card'
+    if text and not backup.exists():
+        backup.write_text(text, encoding='utf-8')
+    config.write_text((rest.rstrip('\n') + '\n\n' if rest.strip() else '') + profile_block(profile), encoding='utf-8')
+    return profile_problems(main, profile)
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
-    ap.add_argument('command', choices=['build', 'check', 'where'])
+    ap.add_argument('command', choices=['build', 'check', 'where', 'desktop', 'install-profile'])
     ap.add_argument('--home', type=Path, default=HOME)
-    ap.add_argument('--main', type=Path, default=MAIN)
+    ap.add_argument('--main', type=Path, default=None, help='default: the home his Codex Desktop app reads')
     a = ap.parse_args(argv)
     if a.command == 'where':
         print(a.home)
         return 0
+    if a.command in ('desktop', 'install-profile'):
+        main, how = (a.main, '--main') if a.main else desktop_home()
+        problems = install_profile(main) if a.command == 'install-profile' else profile_problems(main)
+        print(json.dumps({'ok': not problems, 'home': str(main), 'how': how, 'profile': PROFILE, 'problems': problems}))
+        return 1 if problems else 0
     problems = build(a.home, a.main) if a.command == 'build' else check(a.home, a.main)
     print(json.dumps({'ok': not problems, 'home': str(a.home), 'problems': problems}))
     return 1 if problems else 0

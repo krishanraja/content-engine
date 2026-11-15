@@ -138,20 +138,102 @@ class CodexHomeTests(unittest.TestCase):
     def test_build_never_uses_the_everyday_home_as_its_own(self):
         self.assertTrue(codex_home.build(self.main, self.main))
 
-    def test_dispatch_runs_codex_under_the_built_home_and_never_a_shared_runtime(self):
+    def test_dispatch_runs_codex_under_the_desktop_home_by_default_and_never_a_shared_runtime(self):
+        """Ruling (Krish, 2026-11-15): every Codex session Claude starts runs where he can see it in Codex Desktop."""
         sys.path.insert(0, str(ROOT / 'scripts'))
         from velib import cards
-        env = {'CODEX_COMPANION_APP_SERVER_ENDPOINT': 'pipe', 'KEEP': '1'}
-        with mock.patch.dict(os.environ, env, clear=False), mock.patch.object(codex_home, 'active', return_value=None):
+        env = {'CODEX_COMPANION_APP_SERVER_ENDPOINT': 'pipe', 'KEEP': '1', codex_home.DESKTOP_FLAG: str(self.main),
+               codex_home.STUDIO_FLAG: ''}
+        codex_home.build(self.home, self.main)
+        with mock.patch.dict(os.environ, env, clear=False), mock.patch.object(codex_home, 'active', return_value=self.home):
             run_env = cards.codex_env()
         self.assertNotIn('CODEX_COMPANION_APP_SERVER_ENDPOINT', run_env)
         self.assertEqual(run_env['KEEP'], '1')
+        self.assertEqual(run_env['CODEX_HOME'], str(self.main), 'the built Studio home is no longer the default')
+        self.assertEqual(codex_home.profile_problems(self.main), [], 'dispatch wrote the ve-card profile')
+        self.assertIn('[mcp_servers.buffer]', (self.main / 'config.toml').read_text(encoding='utf-8'),
+                      'his own settings stay as they were')
+
+    def test_the_studio_home_is_an_explicit_opt_in(self):
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        from velib import cards
         codex_home.build(self.home, self.main)
-        with mock.patch.object(codex_home, 'active', return_value=self.home),                 mock.patch.object(codex_home, 'check', return_value=[]):
-            self.assertEqual(cards.codex_env()['CODEX_HOME'], str(self.home))
-        with mock.patch.object(codex_home, 'active', return_value=self.home),                 mock.patch.object(codex_home, 'check', return_value=['config.toml is not ...']):
+        with mock.patch.dict(os.environ, {codex_home.STUDIO_FLAG: ''}), \
+                mock.patch.object(codex_home, 'active', return_value=self.home), \
+                mock.patch.object(codex_home, 'check', return_value=[]):
+            self.assertEqual(cards.codex_env(studio=True)['CODEX_HOME'], str(self.home))
+        with mock.patch.dict(os.environ, {codex_home.STUDIO_FLAG: '1'}), \
+                mock.patch.object(codex_home, 'active', return_value=self.home), \
+                mock.patch.object(codex_home, 'check', return_value=['config.toml is not ...']):
             with self.assertRaises(SystemExit):
                 cards.codex_env()
+        with mock.patch.object(codex_home, 'active', return_value=None):
+            with self.assertRaises(SystemExit):
+                cards.codex_env(studio=True)
+
+    def test_desktop_home_in_wsl_is_the_windows_home_never_wsls_own(self):
+        windows = {'CODEX_HOME': None, 'USERPROFILE': '/mnt/c/Users/krish'}
+        home, how = codex_home.desktop_home(env={}, wsl=True, windows=windows.get)
+        self.assertEqual(home, Path('/mnt/c/Users/krish/.codex'))
+        windows['CODEX_HOME'] = '/mnt/d/codex'
+        self.assertEqual(codex_home.desktop_home(env={}, wsl=True, windows=windows.get)[0], Path('/mnt/d/codex'))
+        users = Path(self.tmp.name) / 'Users'
+        (users / 'krish' / '.codex').mkdir(parents=True)
+        (users / 'krish' / '.codex' / 'auth.json').write_text('{}', encoding='utf-8')
+        (users / 'Public').mkdir()
+        found = codex_home.desktop_home(env={}, wsl=True, windows=lambda name: None, users=users)
+        self.assertEqual(found[0], users / 'krish' / '.codex')
+        self.assertEqual(codex_home.desktop_home(env={}, wsl=False)[0], Path.home() / '.codex')
+        self.assertEqual(codex_home.desktop_home(env={codex_home.DESKTOP_FLAG: '/x'}, wsl=True)[0], Path('/x'))
+        self.assertEqual(codex_home.desktop_home(env={'CODEX_HOME': '/y'}, wsl=True)[0], Path('/y'))
+        studio = codex_home.desktop_home(env={'CODEX_HOME': str(codex_home.HOME)}, wsl=False)[0]
+        self.assertEqual(studio, Path.home() / '.codex', 'the Studio home is never taken for his everyday one')
+
+    def test_install_profile_touches_only_its_marked_block(self):
+        before = (self.main / 'config.toml').read_text(encoding='utf-8')
+        self.assertTrue(codex_home.profile_problems(self.main))
+        self.assertEqual(codex_home.install_profile(self.main), [])
+        text = (self.main / 'config.toml').read_text(encoding='utf-8')
+        self.assertTrue(text.startswith(before.rstrip('\n')))
+        self.assertIn('[profiles.ve-card]\napproval_policy = "never"\nsandbox_mode = "workspace-write"', text)
+        self.assertIn('[profiles.ve-card.sandbox_workspace_write]\nnetwork_access = false', text)
+        self.assertNotIn('browser_use = false', text, 'he attaches his browser to a visible session')
+        self.assertEqual((self.main / 'config.toml.before-ve-card').read_text(encoding='utf-8'), before)
+        self.assertEqual(codex_home.install_profile(self.main), [])
+        self.assertEqual((self.main / 'config.toml').read_text(encoding='utf-8'), text, 'a rewrite changes nothing')
+        (self.main / 'config.toml').write_text(text.replace('"never"', '"on-request"'), encoding='utf-8')
+        self.assertTrue(codex_home.profile_problems(self.main))
+        self.assertEqual(codex_home.install_profile(self.main), [])
+        self.assertEqual((self.main / 'config.toml').read_text(encoding='utf-8'), text)
+
+    def test_install_profile_refuses_a_ve_card_table_of_his_own(self):
+        (self.main / 'config.toml').write_text('[profiles.ve-card]\nmodel = "x"\n', encoding='utf-8')
+        self.assertTrue(codex_home.install_profile(self.main))
+        self.assertEqual((self.main / 'config.toml').read_text(encoding='utf-8'), '[profiles.ve-card]\nmodel = "x"\n')
+
+    def test_the_session_title_names_the_card_the_piece_and_its_kind(self):
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        from velib import cards
+        card = Path(self.tmp.name) / 'c.md'
+        card.write_text('---\ncard: fri-plates\nkind: plates\n---\n\n# The ledger wall\n\nbody\n', encoding='utf-8')
+        meta = {'card': 'fri-plates', 'kind': 'plates'}
+        self.assertEqual(cards.session_title(meta, card, '2026-11-20-fri'),
+                         've card fri-plates for 2026-11-20-fri (plates): The ledger wall')
+        with mock.patch.object(cards, 'ROOT', Path(self.tmp.name)):
+            prompt = cards.titled_prompt(card, meta, '2026-11-20-fri')
+        lines = prompt.read_text(encoding='utf-8').splitlines()
+        self.assertTrue(lines[0].startswith('ve card fri-plates'))
+        self.assertIn('card: fri-plates', lines, 'card_usage still finds the run by its card line')
+
+    def test_companion_profile_flag_is_read_from_its_source(self):
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        from velib import cards
+        companion = Path(self.tmp.name) / 'codex-companion.mjs'
+        companion.write_text('task [--write] [--profile <codex-profile>]', encoding='utf-8')
+        self.assertTrue(cards.companion_takes_profile(str(companion)))
+        companion.write_text('task [--write]', encoding='utf-8')
+        self.assertFalse(cards.companion_takes_profile(str(companion)))
+
 
 def verdict(findings=(), critic_id='c1', round_no=1, sha=SHA, day='mon', cut='long'):
     return {'schema': 'overnight-critic/1', 'critic_id': critic_id, 'round': round_no, 'day': day, 'cut': cut,
