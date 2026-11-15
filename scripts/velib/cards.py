@@ -277,8 +277,8 @@ def _codex_home_module():
 
 
 def codex_homes() -> list[Path]:
-    """Every folder a card's Codex session can log to: the home Krish's Codex Desktop app reads (where dispatch runs
-    cards by default since 15 Nov), the Studio's own Codex home when it is built (the --studio-home opt-in),
+    """Every folder a card's Codex session can log to: the home Krish's Codex Desktop app reads (the --visible route),
+    the Studio's own Codex home when it is built (where video cards run by default),
     CODEX_HOME when set, and ~/.codex. Reading only ~/.codex marked every card run under the Studio home as having no
     session log (found 2026-11-01 proving the Codex lane)."""
     homes = []
@@ -486,25 +486,31 @@ def _reserve(card_path: Path, meta: dict) -> str:
                           note=f'card {card}', provisional_ok=True)
 
 
-def codex_env(studio: bool = False) -> dict:
-    """The environment Codex runs cards in. By default CODEX_HOME is Krish's everyday home, the one his Codex Desktop
-    app reads, so the session shows there and he can attach his browser to it (Ruling, Krish, 2026-11-15: every Codex
-    session Claude starts runs where Krish can see it in his Codex Desktop app). The run's own settings come from the
-    ve-card profile in that home (codex_home.py install-profile, written here when it is missing). With studio=True
-    (ve dispatch --studio-home, or VE_CODEX_STUDIO_HOME=1) it is the Studio's own home of 30 Oct instead: no MCP
-    server, no plugin, and never shown in his Desktop app. A shared Codex runtime another session started is never
-    reused."""
+def codex_env(visible: bool = False) -> dict:
+    """The environment Codex runs cards in. Two routes (Ruling, Krish, 2026-11-15: video production stays rooted in the
+    cloud and is never shown in Codex Desktop; only social-media management, started from a Claude session on his own
+    computer, runs where he can see it and attach his browser):
+
+    - By default (every video card, the lane's builds and the venture lane): the Studio's own Codex home of 30 Oct when
+      it is built (no MCP server, no plugin), else Codex's own default home on this machine, as before 15 Nov. Inside
+      WSL a CODEX_HOME on a Windows drive is dropped, so a card never runs under the home his Desktop app reads and
+      always takes the native route. A built Studio home that fails its check stops the dispatch.
+    - visible=True (ve dispatch --visible, from a session on his computer, for browser legwork he watches): Krish's
+      everyday home, the one his Codex Desktop app reads, with the ve-card profile written into it when missing.
+
+    A shared Codex runtime another session started is never reused."""
     codex_home = _codex_home_module()
     env = {k: v for k, v in os.environ.items() if k != 'CODEX_COMPANION_APP_SERVER_ENDPOINT'}
-    if studio or codex_home.studio_opted_in():
+    visible = visible or codex_home.visible_opted_in(env)
+    if not visible:
         home = codex_home.active()
-        if not home:
-            sys.exit("ve dispatch: --studio-home asks for the Studio's Codex home, which is not built "
-                     '(python scripts/overnight/codex_home.py build)')
-        problems = codex_home.check(home)
-        if problems:
-            sys.exit("ve dispatch: the Studio's Codex home fails its check: " + '; '.join(problems))
-        env['CODEX_HOME'] = str(home)
+        if home:
+            problems = codex_home.check(home)
+            if problems:
+                sys.exit("ve dispatch: the Studio's Codex home fails its check: " + '; '.join(problems))
+            env['CODEX_HOME'] = str(home)
+        elif codex_home.in_wsl() and str(env.get('CODEX_HOME', '')).replace('\\', '/').lower().startswith('/mnt/'):
+            env.pop('CODEX_HOME')
         return env
     home, how = codex_home.desktop_home()
     if not (home / 'auth.json').is_file():
@@ -542,11 +548,11 @@ def titled_prompt(card_path: Path, meta: dict, piece: str | None = None) -> Path
 
 
 def dispatch(card_path: Path, background: bool = True, booked: str | None = None,
-             studio: bool = False, piece: str | None = None) -> subprocess.CompletedProcess:
+             visible: bool = False, piece: str | None = None) -> subprocess.CompletedProcess:
     """booked: the id of a Control Center reservation (reserve_credit_spend) the queuing session already made for this
     card. Control Center is then the guard that refused anything over the share, so the local cap file is not read;
-    the session settles the booking with settle_credit_spend once it has the result. studio: run under the Studio's
-    own Codex home (not visible in Codex Desktop) instead of Krish's everyday one."""
+    the session settles the booking with settle_credit_spend once it has the result. visible: run under the home his
+    Codex Desktop app reads, for social-media legwork started from his own computer; a video card never sets it."""
     meta = parse_card(card_path)
     _require_design_lock(meta)
     _admit(card_path, meta)
@@ -555,7 +561,7 @@ def dispatch(card_path: Path, background: bool = True, booked: str | None = None
     cwd = meta.get('cwd') or str(ROOT)
     minutes, _ = card_limits(meta)
     ensure_worktree(Path(cwd), meta.get('card', 'card'))
-    env = codex_env(studio)
+    env = codex_env(visible)
     name = meta.get('card') or card_path.stem
     options = ['--cwd', cwd, '--sandbox', 'workspace-write', '--model', meta.get('model', MODEL),
                '--effort', meta.get('effort', EFFORT), '--prompt-file', str(titled_prompt(card_path, meta, piece).resolve())]
@@ -606,13 +612,13 @@ def launch(options: list, env: dict, sub: str = 'open') -> tuple[list[str], dict
     return cmd, run_env, chosen
 
 
-def dry_run(card_path: Path, studio: bool = False, piece: str | None = None) -> str:
+def dry_run(card_path: Path, visible: bool = False, piece: str | None = None) -> str:
     """What dispatch would launch for this card, as one line, without reserving, making a worktree or starting Codex."""
     from . import codex_route
     meta = parse_card(card_path)
     options = ['--cwd', meta.get('cwd') or str(ROOT), '--sandbox', 'workspace-write', '--model', meta.get('model', MODEL),
                '--effort', meta.get('effort', EFFORT), '--prompt-file', str(titled_prompt(card_path, meta, piece).resolve())]
-    return codex_route.describe(*plan(options, codex_env(studio)))
+    return codex_route.describe(*plan(options, codex_env(visible)))
 
 
 def verify(card_path: Path, cwd: Path) -> list[str]:
