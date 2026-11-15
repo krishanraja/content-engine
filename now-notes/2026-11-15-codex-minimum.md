@@ -1,0 +1,3 @@
+Status: The Codex minimum is built: every whole ve cut published from 16 Nov 2026 needs one Claude-checked Codex receipt of art direction, plates or a device (`config/codex-minimum.json`, `ve codex receipt`, `scripts/velib/codex_minimum.py`), and `ve status` and `ve file` hold it otherwise. The Claude and Codex division of labour is written in AGENTS.md, `docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md` and the ve and produce-video skills (Ruling, Krish, 2026-11-15).
+Next: Krish settles Codex Desktop visibility: today `ve dispatch` runs cards under the Studio's own Codex home in WSL, which his Desktop app does not show; point the app at that home, or run cards in the app under the same profile.
+North Star check (2026-11-15): holds.

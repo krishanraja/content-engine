@@ -12,7 +12,7 @@ KINDS = ('claude_tokens', 'codex_tokens', 'allowance_points', 'credits',
          'engine_seconds', 'krish_wait_seconds')
 # Not usage: the preflight receipt (scripts/preflight.py) shares the piece's ledger so a sandbox with no engine still
 # keeps it; totals passes over it.
-RECEIPT_KINDS = ('preflight',)
+RECEIPT_KINDS = ('preflight', 'codex')  # codex: the Codex minimum's receipts (velib/codex_minimum.py)
 MEASURES = (
     ('claude_tokens', 'claude tokens', 'claude_tokens_cap'),
     ('codex_tokens', 'codex tokens', 'codex_tokens_cap'),
