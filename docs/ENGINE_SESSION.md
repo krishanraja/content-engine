@@ -81,6 +81,30 @@ On Krish's Windows machines, Codex and Claude Code use the committed stdio proxy
 
 Claude.ai and ChatGPT require the separately released OAuth connector. Until that release exists, those clients may read and reason from the repository but must report `read_only_untracked`; they must not reuse the local bearer token.
 
+## The checkout stays on main
+
+Ruling (Krish, 2026-11-15): every session on his computers leaves the content-engine checkout on an up-to-date main,
+never stranded on an old branch. On 15 Nov his Windows checkout sat on an old session's branch, local main 1,784
+commits behind origin/main, with an uncommitted edit blocking `git pull`.
+
+`scripts/checkout_tidy.mjs` (`npm run checkout:tidy`) puts it back, and touches nothing it could lose:
+
+- It fetches origin main; offline, it does nothing.
+- On main with no tracked changes, it fast-forwards (`merge --ff-only`; never a merge commit or a rebase).
+- On a branch whose work is already on origin/main (an ancestor, squash-merged with the same patch, or its upstream
+  deleted with every file it touched the same on main), it switches to main and fast-forwards. It never deletes a branch.
+- Tracked changes, unmerged commits, a local main ahead of origin, or a merge or rebase in progress: it changes nothing,
+  prints one line with the branch, the files and the commands to keep them (`git stash push -m ...` or a commit), and
+  records the case in the ignored `.scratch/checkout-tidy.jsonl`.
+- It skips a linked worktree (`.claude/worktrees`, `.worktrees`), a cloud container (`CLAUDE_CODE_REMOTE`), CI, and a
+  checkout another live session holds.
+
+Claude Code runs it by itself: the SessionStart hook (`--hook start`) tidies and then writes `.git/session.lock`
+(session id, pid, host, time), and the SessionEnd hook (`--hook end`) removes that session's lock and tidies again. A lock
+is stale after 12 hours or once its pid is gone, and is then taken over. Codex reads no hooks, so AGENTS.md's start route
+runs it as step 0, before work and again before finishing. It is silent when there is nothing to do and always exits 0.
+`CHECKOUT_TIDY_OFF=1` turns it off for one run. Held by `tests/checkout-tidy.test.ts`.
+
 ## Running from Claude Code
 
 The session above, step for step, as Codex and Claude Code each run it. Nothing here changes the contract; it says

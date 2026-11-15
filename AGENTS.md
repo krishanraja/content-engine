@@ -47,6 +47,8 @@ headless model run or a template engine. The route is
 
 Codex reads no hooks and no `CLAUDE.md`, so the route is here (`docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md`):
 
+0. `node scripts/checkout_tidy.mjs` (`npm run checkout:tidy`), before work and again before finishing: it puts a home
+   checkout back on an up-to-date main and touches nothing it could lose (`docs/ENGINE_SESSION.md`, "The checkout stays on main").
 1. `python3 scripts/check_failures.py`, then `python3 scripts/floor.py` (the rejection floor: what Krish rejected and the
    standards nothing may fall beneath; `--format <maker>` for the one you are making), then `WORKBENCH.md` and `NOW.md`.
 2. Pick the one skill for the job and read it whole before acting: `.agents/skills/plan-week/SKILL.md` (Sunday ideas
