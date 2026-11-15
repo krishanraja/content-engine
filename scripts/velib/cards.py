@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import fnmatch
 import glob
+import hashlib
 import json
 import os
 import re
@@ -349,12 +350,45 @@ def limit_problems(meta: dict, usage: dict | None) -> list[str]:
     return out
 
 
+MODULES_STAMP = '.ve-lock-sha256'
+
+
+def fresh_modules(root: Path = ROOT, run=None) -> bool:
+    """The main checkout's node_modules matches its package-lock.json before a card links it, so a card never builds
+    against packages the repository no longer names. On 15 Nov 2026 the first card on the restored cloud lane reached
+    its acceptance and failed on `import * as T from 'three'` and the @remotion/three JSX types: the lane clone had not
+    installed since the 3D styles added them on 11 Nov, and the ve-style cards of that day failed the same way. The
+    lockfile's sha256 is kept in node_modules/.ve-lock-sha256; when it differs, `npm ci` runs once here and the stamp is
+    written. Returns whether it installed. A checkout with no lockfile is left alone."""
+    lock = root / 'package-lock.json'
+    if not lock.is_file():
+        return False
+    want = hashlib.sha256(lock.read_bytes()).hexdigest()
+    stamp = root / 'node_modules' / MODULES_STAMP
+    try:
+        if stamp.read_text(encoding='utf-8').strip() == want:
+            return False
+    except OSError:
+        pass
+    run = run or subprocess.run
+    npm = 'npm.cmd' if sys.platform == 'win32' else 'npm'
+    done = run([npm, 'ci', '--no-audit', '--no-fund'], cwd=root, capture_output=True, text=True, timeout=1800)
+    if done.returncode != 0:
+        tail = ' '.join(((done.stdout or '') + (done.stderr or '')).strip().splitlines()[-3:])
+        sys.exit(f've dispatch: npm ci in {root} failed, so no card builds against stale packages: {tail}')
+    stamp.parent.mkdir(parents=True, exist_ok=True)
+    stamp.write_text(want + '\n', encoding='utf-8')
+    return True
+
+
 def ensure_worktree(cwd: Path, card_id: str) -> None:
     """A card runs in its own worktree cut from origin/main, with node_modules junctioned from the main checkout.
     A new worktree is made only where the local layout puts it (velib.common.card_worktree: config/studio.json
     local_roots.worktrees, W2.11): a card still naming a typed path is refused and rewritten with ve card. One that
     already exists (a re-queued card) first takes in the current origin/main: on 2026-11-02 three re-queued cards were
-    built on their first attempt's stale main and failed on a fix main already had (F22)."""
+    built on their first attempt's stale main and failed on a fix main already had (F22). Either way the main
+    checkout's packages are brought up to its lockfile first (fresh_modules)."""
+    fresh_modules()
     if cwd.exists():
         refresh_worktree(cwd)
         return

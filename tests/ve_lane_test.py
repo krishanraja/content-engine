@@ -143,7 +143,7 @@ class Booking(unittest.TestCase):
             self.assertEqual(cards.parse_card(card)['acceptance'], ['pnpm test'])
             with patch.object(cards, '_admit'), patch.object(cards, '_reserve') as reserve, \
                     patch.object(cards, 'launch', return_value=(['node', 'c.mjs'], {}, 'linux')), patch.object(cards, 'codex_env', return_value={}), \
-                    patch.object(cards.subprocess, 'run') as run:
+                    patch.object(cards.subprocess, 'run') as run, patch.object(cards, 'fresh_modules', return_value=False):
                 cards.dispatch(card, booked='12345678-1234-4234-9234-123456789abc')
                 reserve.assert_not_called()
                 run.assert_called_once()
@@ -384,6 +384,42 @@ class StaleWorktree(unittest.TestCase):
             git('commit', '-qam', 'fix', cwd=seed); git('push', '-q', 'origin', 'HEAD:main', cwd=seed)
             cards.refresh_worktree(tmp / 'card')
             self.assertEqual((tmp / 'card' / 'props.ts').read_text(), 'new')
+
+
+
+class FreshModules(unittest.TestCase):
+    """15 Nov 2026: a card built against a lane clone that had not installed since the lockfile changed."""
+
+    def test_npm_ci_runs_once_per_lockfile(self):
+        import tempfile, types
+        from velib import cards
+        calls = []
+        def run(cmd, **kw):
+            calls.append(cmd)
+            return types.SimpleNamespace(returncode=0, stdout='', stderr='')
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.assertFalse(cards.fresh_modules(root, run=run), 'no lockfile, nothing to do')
+            (root / 'package-lock.json').write_text('{"lockfileVersion": 3}')
+            self.assertTrue(cards.fresh_modules(root, run=run))
+            self.assertEqual(calls[-1][1:], ['ci', '--no-audit', '--no-fund'])
+            self.assertFalse(cards.fresh_modules(root, run=run), 'the stamp matches, so no second install')
+            self.assertEqual(len(calls), 1)
+            (root / 'package-lock.json').write_text('{"lockfileVersion": 3, "packages": {"three": {}}}')
+            self.assertTrue(cards.fresh_modules(root, run=run), 'a changed lockfile installs again')
+            self.assertEqual(len(calls), 2)
+
+    def test_a_failed_install_stops_the_dispatch(self):
+        import tempfile, types
+        from velib import cards
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'package-lock.json').write_text('{}')
+            failed = lambda cmd, **kw: types.SimpleNamespace(returncode=1, stdout='', stderr='npm ERR! network')
+            with self.assertRaises(SystemExit) as stop:
+                cards.fresh_modules(root, run=failed)
+            self.assertIn('npm ERR! network', str(stop.exception))
+            self.assertFalse((root / 'node_modules' / cards.MODULES_STAMP).exists(), 'no stamp after a failed install')
 
 
 if __name__ == '__main__':
