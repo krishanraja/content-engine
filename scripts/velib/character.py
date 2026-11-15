@@ -79,6 +79,8 @@ def spec_lints(spec: dict, manifest: dict | None = None, registered: bool | None
     built = set(library.get('poses') or [])
     cuts = spec.get('cuts') or {}
     for name in ch.get('cuts') or []:
+        if name in cuts and cuts[name].get('aspect') not in m.get('acting', {}).get('aspects', ['9:16']):
+            out.append(f'character.aspect cut {name}: aspect is not supported by acting.aspects')
         if name not in cuts:
             out.append(f'character.cut character.cuts: {name} is not a cut in this spec')
     for index, cue in enumerate(ch.get('cues') or []):
