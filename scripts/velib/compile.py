@@ -582,6 +582,8 @@ CAPTION_PLACEMENTS = ('lower', 'centre', 'upper')
 ENERGIES = ('calm', 'medium', 'high')
 TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade')
 CAMERAS = ('none', 'drift', 'phased', 'punch')
+# The handovers whose exit can lead their entrance (style.transitions.lead, 15 Nov 2026): the ones that travel.
+LEAD_TRANSITIONS = ('whip', 'push', 'zoom-through', 'punch')
 LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray')
 
 
@@ -647,19 +649,30 @@ def sound_props(spec: dict, props: dict, assets_dir: Path) -> list[dict]:
 
 def ingredient_props(spec: dict) -> dict | None:
     """props.ingredients from style.transitions, style.camera and style.energy. None of them means none, and the cut
-    draws exactly as before (every beat cuts under a still camera)."""
+    draws exactly as before (every beat cuts under a still camera). style.transitions.lead (the exit leads the
+    entrance) and style.camera.focus (the graphics layer pushes onto the line a device reports) are carried only when
+    true, so a spec that leaves them out compiles to the props it always did."""
     style = spec.get('style') or {}
     if not any(style.get(k) for k in ('transitions', 'camera', 'energy')):
         return None
     energy = style.get('energy') or 'medium'
-    transition = (style.get('transitions') or {}).get('kind', 'cut')
+    transitions = style.get('transitions') or {}
+    transition = transitions.get('kind', 'cut')
     camera = style.get('camera') or {}
     move = camera.get('move', 'none')
     for value, allowed, name in ((energy, ENERGIES, 'style.energy'), (transition, TRANSITIONS, 'style.transitions.kind'),
                                  (move, CAMERAS, 'style.camera.move')):
         if value not in allowed:
             raise ValueError(f"{name} {value} is not one of {', '.join(allowed)}")
-    return {'energy': energy, 'transition': transition, 'camera': move, 'hits': bool(camera.get('hits', move in ('punch', 'phased')))}
+    if transitions.get('lead') and transition not in LEAD_TRANSITIONS:
+        raise ValueError(f"style.transitions.lead leads a handover that travels ({', '.join(LEAD_TRANSITIONS)}), "
+                         f'not {transition}')
+    props = {'energy': energy, 'transition': transition, 'camera': move, 'hits': bool(camera.get('hits', move in ('punch', 'phased')))}
+    if transitions.get('lead'):
+        props['lead'] = True
+    if camera.get('focus'):
+        props['focus'] = True
+    return props
 
 
 MOTION_PROFILES = ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'kit' / 'motion-profiles.json'

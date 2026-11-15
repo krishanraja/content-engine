@@ -258,8 +258,11 @@ export const ProductionSpecV2Schema = z.object({
     captions: z.object({ theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
       'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']),
       placement: z.enum(['lower', 'centre', 'upper']).optional(), reason: z.string().min(1) }).strict().optional(),
-    transitions: z.object({ kind: z.enum(['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade']), reason: z.string().min(1) }).strict().optional(),
-    camera: z.object({ move: z.enum(['none', 'drift', 'phased', 'punch']), hits: z.boolean().optional(), reason: z.string().min(1) }).strict().optional(),
+    // lead: the exit leads the entrance, on a handover that travels (docs/ve/INGREDIENTS.md, 15 Nov 2026).
+    transitions: z.object({ kind: z.enum(['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade']), lead: z.boolean().optional(), reason: z.string().min(1) }).strict()
+      .refine((t) => !t.lead || (['whip', 'push', 'zoom-through', 'punch'] as string[]).includes(t.kind), { message: 'style.transitions.lead leads a handover that travels: whip, push, zoom-through or punch', path: ['lead'] }).optional(),
+    // focus: the graphics layer pushes onto the line a device reports, for a motion style that does not already.
+    camera: z.object({ move: z.enum(['none', 'drift', 'phased', 'punch']), hits: z.boolean().optional(), focus: z.boolean().optional(), reason: z.string().min(1) }).strict().optional(),
     energy: z.enum(['calm', 'medium', 'high']).optional(),
     // IDs are checked against Krish's approved sounds by ve lint and compile.
     sound: z.object({ handover: z.string().min(1).optional(), hit: z.string().min(1).optional(),

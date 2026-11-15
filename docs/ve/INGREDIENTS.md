@@ -51,8 +51,10 @@
    `style.captions.placement: upper`, because it keeps his face clear; compile refuses anything else.
 4. **Pick the handover and camera:**
    - `style.transitions.kind` is one of `cut`, `whip`, `push`, `zoom-through`, `flash`, `punch` or `crossfade`
-     (a dissolve of 6 to 10 frames, set by the energy; it needs a motion style).
+     (a dissolve of 6 to 10 frames, set by the energy; it needs a motion style). On `whip`, `push`, `zoom-through`
+     or `punch`, `lead: true` makes the exit lead the entrance (below).
    - `style.camera.move` is one of `none`, `drift`, `phased` or `punch`, and `hits: true` lets device events kick it.
+     `focus: true` pushes the graphics onto the line a device reports (below).
    - `style.energy` is `calm`, `medium` or `high`.
    - Each motion style's bank entry names the ingredients it was measured with. For example, `ai-music-slam` was
      measured with `whip`, `phased` and `high`.
@@ -81,8 +83,8 @@
 |---|---|---|---|---|
 | Motion style | `style.motion.module` | `motion` | `kit/motionProfiles.ts`, `kit/motion-profiles.json`, devices | 14 drawable: `swiss-kinetic-type`, `data-story`, `dark-keynote`, `living-ui`, `hud-terminal`, `riso-halftone`, `paper-cutout`, `vertical-captions`, `single-line-drawing`, `line-boil`, `full-visual`, `character-ai-receipts`, `eating-jobs-ladder`, `ai-music-slam`. 9 more need a device of their own: `flat-vector-explainer`, `isometric-world`, `toy-3d`, `shape-morph`, `watercolour-ink`, `pixel-retro`, `film-crt`, `ladder`, `living-screen` |
 | Captions | `style.captions.theme`, `.placement` | `captionTheme`, `captionPlacement` | `captions/themes.tsx` and one file each in `captions/styles/`, on `captions/kit.ts` and `captions/draw.tsx` | 27 styles (below) |
-| Transitions | `style.transitions.kind` | `ingredients.transition` | `kit/ingredients.ts` | `cut`, `whip`, `push`, `zoom-through`, `flash`, `punch`, `crossfade` |
-| Camera | `style.camera.move`, `.hits` | `ingredients.camera`, `.hits` | `kit/ingredients.ts` | `none`, `drift`, `phased`, `punch`. Device events kick it: a punch-in, a shake above calm, a cream flash at high |
+| Transitions | `style.transitions.kind`, `.lead` | `ingredients.transition`, `.lead` | `kit/ingredients.ts`, `FormatMaster.tsx` | `cut`, `whip`, `push`, `zoom-through`, `flash`, `punch`, `crossfade`. `lead` on the four that travel: the exit leads the entrance |
+| Camera | `style.camera.move`, `.hits`, `.focus` | `ingredients.camera`, `.hits`, `.focus` | `kit/ingredients.ts`, `kit/beatMotion.ts` | `none`, `drift` (the living drift), `phased`, `punch`. Device events kick it: a punch-in, a shake above calm, a cream flash at high. `focus` pushes the graphics layer onto the line a device reports. Every move blurs by its speed, at most 18 px |
 | Energy | `style.energy` | `ingredients.energy` | `kit/ingredients.ts` | `calm`, `medium`, `high`: the handover lasts 16, 10 or 6 frames, and blur, punch, shake and flash scale with it |
 | Sound | `audio`, `ve sfx` | `audio` | `audio.tsx` | unchanged. The bed is one shape (F40), and effects come only from the brand kit |
 | Layout | `style.layout.mode` | `layout` | `kit/layout.ts`, `kit/staging.ts`, `fit.ts`, devices | `house` (as before), `fill` (each device on a graphics-only beat gets the safe region the captions leave, and grows up to 3x, centred), `stack` (the beat's devices share that region top to bottom), and the stagings `band`, `stage`, `tray` (below) |
@@ -299,6 +301,58 @@ the production suite knows that this is the moment to make it feel like the titl
   so the words appear once (the words_add amendment, 15 Nov). Not built yet: the renderer does not read
   `title_moment` today, so until it does the session lays the title over that span by hand and keeps captions off it.
 
+## The exit leads the entrance, the living drift, focus and blur from speed (15 Nov 2026)
+
+Four changes to the handover and the camera, built and tested on 15 Nov 2026 and held for an engine window, because
+they change the engine a piece in production is frozen to (`config/failures.json` F33; `scripts/velib/guards.py`).
+
+**The exit leads the entrance (`style.transitions.lead: true`).** Only on `whip`, `push`, `zoom-through` and `punch`;
+the spec schema and compile refuse it on any other.
+- The outgoing beat starts leaving 6 frames before the handover and keeps leaving until 2 frames after it, speeding
+  up as it goes: a whip leaves to the left, a push leaves upward, a zoom-through or a punch pushes in through it.
+- The incoming beat is mounted from the handover and arrives over it on the same move as before, energy-timed.
+- The outgoing beat stays mounted for those 2 frames, its clock still running, so its exit never freezes. Its objects
+  hold their last frame (one that lives on into the next beat keeps running), so nothing on it blinks out while it
+  is still on screen.
+- It dims to dark as it leaves (its brightness falls to 0.15), never a fade, so a blurred beat never reads as a flat
+  mid-grey frame.
+- Both moves are on the beats' own layers, so the camera makes no handover move of its own, and there is never a frame
+  with neither beat on screen (`kit/ingredients.test.ts`, every handover of a recorded cut at every energy).
+- Under a lead the motion style's own crossfade or curve entrance is off: the lead is the handover.
+- A `carry` hands its objects on, so it never leads; it fades as it always did.
+
+**The living drift (`style.camera.move: drift`).** The drift was 4 px across and 2 px down. It is now about 8 px
+across, 4 px down, a 0.1 degree roll and a slow breath that pushes in to 1.02 and back. The headroom (1.02) covers the
+drift and the roll at either aspect, and headroom times push stays at or under 1.05 (asserted in
+`kit/ingredients.test.ts`). The `phased` and `punch` cameras keep the gentle drift they had.
+
+**Focus on the event (`style.camera.focus: true`).** On a beat with a device that reports the line that proves the
+words (the typed line of `typing_bubble`, the chip of `query_chip`), the beat's graphics layer pushes onto that line, up
+to 1.3x, with the same zoom living-ui uses: the line stays inside the channel safe area and off his face, and the
+camera travels from line to line. It stands in for the motion style's own camera on that beat. It is never a zoom of
+the camera, so his take is never cropped by it, and a style that already zooms to the line (living-ui) gets no second
+zoom. No other device dims.
+
+**Blur from speed.** The camera and every handover blur by how far the picture travels in a frame, as a half-frame
+shutter would, never more than 18 px. A move slower than about 10 px a frame stays sharp, so the drift and the phased
+steps never soften his face, and a cut stays sharp. This replaces the fixed blur the whip and the zoom-through had.
+No iris, pan or rise.
+
+**Nothing chosen means nothing changes.** A spec that sets none of these draws exactly as before
+(`houseGolden.test.ts`, byte-identical).
+
+**Not watched yet.** No lab render of these was watched at speed: this session had no take and no brand kit to render
+with. Before a cut ships with any of them, render it on his take on a home computer, watch it at speed beside a
+reference, and measure it with `ve pace`.
+
+```json
+"style": {
+  "transitions": { "kind": "whip", "lead": true, "reason": "the old scene is already leaving as the new one lands" },
+  "camera": { "move": "drift", "focus": true, "hits": true, "reason": "a living frame that leans into the typed line" },
+  "energy": "high"
+}
+```
+
 ## Rules the renderer keeps
 
 - **Captions win over a motion style's own captions.**
@@ -306,7 +360,8 @@ the production suite knows that this is the moment to make it feel like the titl
   - A chosen theme also wins over a style's lead captions (`vertical-captions`).
   - Every placement sits inside every channel's safe area (`captions/kit.ts` `REGIONS`).
 - **The camera moves the picture, never the words.** It moves his take and the graphics together; the captions and
-  the frame stay still over them.
+  the frame stay still over them. A leading handover and focus on the event move a beat's graphics only, never the
+  captions (`kit/ingredients.test.ts`, "captions never move").
 - **Steady zoom stays at about 1.05 or below**, because graphics run to the safe edges. The hits carry the energy,
   briefly. The handover flash is short and low, because a strong one read as a flat grey frame at speed.
 - **Every ingredient and caption style is a pure function of (props, frame)**, so a still and a render agree.

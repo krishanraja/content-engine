@@ -32,3 +32,18 @@ describe('spec verbs', () => {
     expect([...VeVerbSchema.options].sort()).toEqual([...EngineEventSchema.shape.verb.options].sort())
   })
 })
+
+describe('the leading handover and focus in the spec (15 Nov 2026)', () => {
+  const styled = (style: Record<string, unknown>) => ({ ...structuredClone(fixture), style })
+  it('accepts lead on a handover that travels and focus on any camera, and refuses lead on one that does not travel', () => {
+    for (const kind of ['whip', 'push', 'zoom-through', 'punch']) {
+      expect(ProductionSpecV2Schema.safeParse(styled({ transitions: { kind, lead: true, reason: 'the exit leads' } })).success).toBe(true)
+    }
+    for (const kind of ['cut', 'flash', 'crossfade']) {
+      expect(ProductionSpecV2Schema.safeParse(styled({ transitions: { kind, lead: true, reason: 'the exit leads' } })).success).toBe(false)
+      expect(ProductionSpecV2Schema.safeParse(styled({ transitions: { kind, lead: false, reason: 'x' } })).success).toBe(true)
+    }
+    expect(ProductionSpecV2Schema.safeParse(styled({ camera: { move: 'drift', focus: true, reason: 'push onto the line' } })).success).toBe(true)
+    expect(ProductionSpecV2Schema.safeParse(styled({ camera: { move: 'drift', zoom: 2, reason: 'x' } })).success).toBe(false)
+  })
+})
