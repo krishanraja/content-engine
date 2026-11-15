@@ -499,6 +499,42 @@ def cmd_dispatch(args) -> int:
     return result.returncode
 
 
+def cmd_codex(args) -> int:
+    """The Codex minimum (Ruling, Krish, 2026-11-15): Claude records Codex's checked share of a piece; status reads it."""
+    from velib import codex_minimum, verdict
+    try:
+        spec_file = spec_path_for(args.piece)
+        spec = load_json(spec_file)
+        directory = verdict.ve_dir(spec_file)
+        if args.action == 'receipt':
+            session, visible = args.session or '', None
+            if args.cwd:
+                from velib.cards import card_usage
+                usage = card_usage(args.card, args.cwd)
+                if usage and usage.get('log'):
+                    session = session or Path(usage['log']).stem
+                    visible = codex_minimum.visible_in_desktop(usage['log'])
+            note = codex_minimum.record(directory, args.card, args.job, Path(args.evidence), args.verified_by,
+                                        session=session, desktop_visible=visible)
+            print(f"ve codex: receipt for {note['card']} ({note['job']}, {note['evidence_sha256'][:12]}) on {args.piece}")
+            if visible is False:
+                print('ve codex: that Codex session ran outside the home Codex Desktop reads; Krish cannot watch it there')
+            return 0
+        state = codex_minimum.status(spec, directory)
+        need = state['minimum']['receipts']
+        print(f"ve codex: {state['counted']} of {need} counted receipt(s); required for pieces published from {state['required_from']}")
+        for row in state['receipts']:
+            seen = {True: 'visible in Codex Desktop', False: 'NOT visible in Codex Desktop', None: 'Desktop visibility unknown'}
+            print(f"  {row.get('ts', '')[:16]}  {row.get('job'):<13} {row.get('card')}  checked by {row.get('verified_by')}; "
+                  f"{seen[row.get('desktop_visible')]}")
+        if any(codex_minimum.problems(spec, cut, directory) for cut in spec['cuts']):
+            return 1
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've codex: {error}', file=sys.stderr)
+        return 1
+
+
 def cmd_lane(args) -> int:
     from velib import codex_lane
     if args.action == 'route':
@@ -667,7 +703,10 @@ def cmd_status(args) -> int:
         print(f'{cut}:')
         print('  mechanical: ' + ('INVALID (' + '; '.join(mechanical) + ')' if mechanical else 'VALID'))
         print('  design: ' + ('NOT APPROVED (' + '; '.join(design) + ')' if design else 'APPROVED'))
-        reasons = mechanical + design + final
+        codex = state.get('codex', [])
+        if codex:
+            print('  codex: ' + '; '.join(codex))
+        reasons = mechanical + design + final + codex
         print(f"{cut}: {'READY' if not reasons else 'NOT READY (' + '; '.join(reasons) + ')'}")
         # Done means in the post's 3 Posts folder, read back from the library, never from the receipt alone
         # (Ruling, Krish, 2026-11-03: "everything ready for post goes in the posts folder, not the growth folder").
@@ -1767,6 +1806,16 @@ def main() -> int:
     p.add_argument('--queue', action='store_true', help='send it to the Codex lane even when Codex is on this machine')
     p.add_argument('--spend-id', help='with the lane: the Control Center reservation booked for this card')
     p.set_defaults(fn=cmd_dispatch)
+    p = sub.add_parser('codex', help="the Codex minimum: record Codex's checked share of a piece, or read it")
+    actions = p.add_subparsers(dest='action', required=True)
+    a = actions.add_parser('receipt', help='after Claude has checked the work: one receipt on the piece ledger')
+    a.add_argument('piece'); a.add_argument('--card', required=True)
+    a.add_argument('--job', required=True, choices=('art_direction', 'plates', 'device', 'browser'))
+    a.add_argument('--evidence', required=True, help='the file Claude checked: a contact sheet, the chosen plate, verify output')
+    a.add_argument('--verified-by', required=True, help='who checked it (never Codex)')
+    a.add_argument('--cwd', help="the card's worktree, to find its Codex session log"); a.add_argument('--session')
+    a = actions.add_parser('status'); a.add_argument('piece')
+    p.set_defaults(fn=cmd_codex)
     p = sub.add_parser('lane', help='the Codex lane: queue a card from any session; the home computer builds it')
     actions = p.add_subparsers(dest='action', required=True)
     actions.add_parser('route', help='local when Codex is on this machine, else queue')
