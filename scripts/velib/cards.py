@@ -1,5 +1,6 @@
-"""ve card, dispatch and verify-card: exact Codex task cards, sent straight to the Codex plugin companion
-(never the codex-rescue subagent), checked by Claude outside the sandbox. Codex's own report is never evidence."""
+"""ve card, dispatch and verify-card: exact Codex task cards, sent through scripts/codex_thread.mjs (never the Codex
+plugin's long-running broker, never the codex-rescue subagent), checked by Claude outside the sandbox. Codex's own report
+is never evidence. Ruling (Krish, 2026-11-15): Claude starts Codex only through scripts/codex_thread.mjs."""
 from __future__ import annotations
 
 import fnmatch
@@ -7,6 +8,7 @@ import glob
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -217,12 +219,15 @@ def parse_card(path: Path) -> dict:
     return meta
 
 
-def companion() -> str:
-    pattern = str(Path.home() / '.claude' / 'plugins' / 'cache' / 'openai-codex' / 'codex' / '*' / 'scripts' / 'codex-companion.mjs')
-    found = sorted(glob.glob(pattern))
-    if not found:
-        sys.exit('ve dispatch: the Codex plugin companion is not installed (ve doctor explains)')
-    return found[-1]
+CODEX_THREAD = ROOT / 'scripts' / 'codex_thread.mjs'
+
+
+def codex_thread() -> str:
+    """The one way Claude starts Codex: scripts/codex_thread.mjs drives `codex app-server` directly, one short-lived
+    server per command, so each card is a permanent thread in Krish's Desktop home that he can open and type in."""
+    if not shutil.which('codex'):
+        sys.exit('ve dispatch: the codex command is not on PATH (install Codex, or open Codex Desktop once)')
+    return str(CODEX_THREAD)
 
 
 def allowance() -> dict | None:
@@ -513,14 +518,6 @@ def codex_env(studio: bool = False) -> dict:
     return env
 
 
-def companion_takes_profile(path: str) -> bool:
-    """Whether the installed companion takes --profile, read from its own source (never by running it)."""
-    try:
-        return '--profile' in Path(path).read_text(encoding='utf-8', errors='replace')
-    except OSError:
-        return False
-
-
 def session_title(meta: dict, card_path: Path, piece: str | None = None) -> str:
     """The first line of the prompt, which is how Krish finds the session in his Codex Desktop app: the card, the piece
     it is for, its kind and its own title, e.g. "ve card fri-hero-plates for 2026-11-20-fri (plates): The ledger"."""
@@ -558,19 +555,17 @@ def dispatch(card_path: Path, background: bool = True, booked: str | None = None
     minutes, _ = card_limits(meta)
     ensure_worktree(Path(cwd), meta.get('card', 'card'))
     env = codex_env(studio)
-    runner = companion()
-    cmd = ['node', runner, 'task', '--fresh', '--write', '--model', meta.get('model', MODEL), '--effort', meta.get('effort', EFFORT),
-           '--cwd', cwd, '--prompt-file', str(titled_prompt(card_path, meta, piece).resolve())]
-    if env.get('CODEX_HOME') and not (studio or _codex_home_module().studio_opted_in()):
-        if companion_takes_profile(runner):
-            cmd[3:3] = ['--profile', _codex_home_module().PROFILE]
-        else:
-            print('ve dispatch: this Codex plugin companion takes no --profile, so the run uses the everyday settings '
-                  'of the home it shows in (its MCP servers and plugins too); the tool profile still held the card. '
-                  'Pass --studio-home for a run with none.', file=sys.stderr)
+    script = codex_thread()
+    name = meta.get('card') or card_path.stem
+    cmd = ['node', script, 'open', '--cwd', cwd, '--sandbox', 'workspace-write', '--model', meta.get('model', MODEL),
+           '--effort', meta.get('effort', EFFORT), '--prompt-file', str(titled_prompt(card_path, meta, piece).resolve())]
+    if env.get('CODEX_HOME'):
+        cmd += ['--home', env['CODEX_HOME']]
     if background:
-        # The companion runs on in the background; verify-card holds it to max_minutes and max_calls from its log.
-        cmd.insert(3, '--background')
+        # The thread runs on in a detached child and releases itself when the turn ends; its log, in .ve-work (Claude may
+        # not read .cache), names the thread id first: read it with codex_thread.mjs read.
+        # verify-card holds it to max_minutes and max_calls from its session log.
+        cmd += ['--detach', '--log', str(ROOT / '.ve-work' / 'dispatch' / f'{name}.log')]
         return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, env=env)
     try:
         return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, env=env, timeout=minutes * 60)
