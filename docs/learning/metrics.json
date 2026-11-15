@@ -1,0 +1,26 @@
+{
+  "_about": "The failure loop's weekly numbers (scripts/learning/report.py).",
+  "weeks": [
+    {
+      "date": "2026-11-15",
+      "metrics": {
+        "items": 0,
+        "repeats": 0,
+        "repeat_rate": null,
+        "by_stage": {},
+        "modes": 0,
+        "repeating_modes": 0
+      },
+      "rounds": {
+        "pieces": 0,
+        "mean": null,
+        "one_round": 0
+      },
+      "register": {
+        "guarded": 71,
+        "tested": 41,
+        "open": 19
+      }
+    }
+  ]
+}
