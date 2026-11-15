@@ -55,8 +55,8 @@ def bin_path():
 
 def browser_path(environ=None):
     """The Chrome HyperFrames drives: HYPERFRAMES_BROWSER_PATH, else the newest headless shell in the cloud
-    container (the CLI's own kind of browser), else MYMU_BROWSER when it names a file (kit's browser). None lets the
-    CLI find its own, which on a machine with none means it downloads Chrome Headless Shell once."""
+    container (the CLI's own kind of browser), else MYMU_BROWSER when it names a file (kit's browser). None when
+    there is none: render() then stops, so the CLI never downloads a browser behind kit's back."""
     env = os.environ if environ is None else environ
     want = (env.get('HYPERFRAMES_BROWSER_PATH') or '').strip()
     if want and Path(want).is_file():
@@ -68,14 +68,35 @@ def browser_path(environ=None):
     return want if want and Path(want).is_file() else None
 
 
+# What the CLI is given of the session's environment, and nothing else: no engine secret reaches a third-party tool.
+PASS_ENV = ('PATH', 'PATHEXT', 'HOME', 'USERPROFILE', 'HOMEDRIVE', 'HOMEPATH', 'TEMP', 'TMP', 'TMPDIR', 'SYSTEMROOT',
+            'WINDIR', 'COMSPEC', 'APPDATA', 'LOCALAPPDATA', 'LANG', 'LC_ALL', 'TZ', 'XDG_CACHE_HOME', 'XDG_CONFIG_HOME',
+            'FONTCONFIG_PATH', 'FONTCONFIG_FILE', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH',
+            'HYPERFRAMES_CACHE_DIR', 'HYPERFRAMES_CONFIG_DIR', 'HYPERFRAMES_FONT_CACHE_DIR')
+
+
 def hf_env(environ=None):
-    """The CLI's environment: telemetry forced off whatever the caller set, and the browser pinned when one is known."""
-    env = dict(os.environ if environ is None else environ)
+    """The CLI's environment: only PASS_ENV from the caller's, telemetry forced off whatever the caller set, and the
+    browser pinned when one is known."""
+    src = os.environ if environ is None else environ
+    env = {k: src[k] for k in PASS_ENV if k in src}
     env.update(NO_TELEMETRY)
-    found = browser_path(env)
+    found = browser_path(src)
     if found:
         env['HYPERFRAMES_BROWSER_PATH'] = found
     return env
+
+
+def _kill_tree(proc):
+    """Stop the CLI and every Chrome it started, not just the direct child (cmd.exe on Windows, node elsewhere)."""
+    if os.name == 'nt':
+        subprocess.run(['taskkill', '/T', '/F', '/PID', str(proc.pid)], capture_output=True)
+    else:
+        try:
+            os.killpg(proc.pid, 9)
+        except (ProcessLookupError, PermissionError):
+            proc.kill()
+    proc.communicate()
 
 
 def wrap(doc, size, seconds, background='transparent'):
@@ -114,11 +135,22 @@ def render(project, out_dir, fps=30, timeout=600, binary=None, environ=None):
     binary = binary or bin_path()
     if not binary:
         raise RuntimeError(f'the pinned HyperFrames CLI is not installed: run `{INSTALL}` first')
+    env = hf_env(environ)
+    if 'HYPERFRAMES_BROWSER_PATH' not in env:
+        raise RuntimeError('no Chrome for HyperFrames: set HYPERFRAMES_BROWSER_PATH to a Chrome or Chrome Headless Shell '
+                           'binary (the adapter never lets the CLI download one)')
+    # `render` only: the CLI's publish, share and cloud verbs upload to HeyGen and are never called from here.
     cmd = [str(binary), 'render', str(project), '--format', 'png-sequence', '-o', str(out_dir), '--fps', str(fps), '--quiet']
-    p = subprocess.run(cmd, env=hf_env(environ), capture_output=True, text=True, timeout=timeout)
-    if p.returncode:
-        tail = '\n'.join((p.stderr or p.stdout or '').strip().splitlines()[-8:])
-        raise RuntimeError(f'HyperFrames render failed (exit {p.returncode}): {tail}')
+    group = {'creationflags': subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == 'nt' else {'start_new_session': True}
+    proc = subprocess.Popen(cmd, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, **group)
+    try:
+        out, err = proc.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        _kill_tree(proc)
+        raise RuntimeError(f'HyperFrames render took longer than {timeout} s and was stopped') from None
+    if proc.returncode:
+        tail = '\n'.join((err or out or '').strip().splitlines()[-8:])
+        raise RuntimeError(f'HyperFrames render failed (exit {proc.returncode}): {tail}')
     return frame_pattern(out_dir)
 
 
@@ -157,7 +189,7 @@ class HyperFramesDrawer:
             (project / 'index.html').write_text(wrap(settled, size, seconds, background), encoding='utf-8')
             try:
                 pattern, first, count = render(project, frames, fps)
-            except (RuntimeError, ValueError, subprocess.TimeoutExpired) as e:
+            except (RuntimeError, ValueError, OSError) as e:  # OSError: a shim that cannot start (WinError 193, a lost +x)
                 raise kit.KitError(f'{Path(mp4).name}: {e}') from e
             want = round(seconds * fps)
             if count != want:
