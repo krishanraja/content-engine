@@ -1,3 +1,0 @@
-Status: The Windows Codex route from WSL (#727) reached his PC; its first card failed with node's MODULE_NOT_FOUND, its naming line cut off. Dispatch now checks the route before each launch (Windows node on the staged codex_thread.mjs, no command, usage expected) and stops with node's own line; the lane puts the error line first; /mnt drive paths go to Windows form without wslpath; a failed git add says why.
-Next: On his PC, in the lane's WSL clone, run `python3 scripts/ve.py codex route` and re-queue one card once it prints that Windows node runs codex_thread.mjs.
-North Star check (2026-11-15): holds.
