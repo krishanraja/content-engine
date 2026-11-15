@@ -1,5 +1,6 @@
 import { z } from 'zod'
 export const ParamsSchema = z.object({
+  reveal: z.literal('assemble').optional(),
   lines: z.array(z.string().trim().min(1)).min(1).max(2),
   swipe: z.object({ line: z.number().int().min(0).max(1), word: z.number().int().nonnegative() }).strict().optional(),
   dek: z.string().min(1).optional(),
