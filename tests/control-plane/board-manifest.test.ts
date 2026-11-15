@@ -20,7 +20,8 @@ const PIECE = '8287846b-6618-4a19-9fb8-23ad4eca2718'
 const FOLDER = '2026-11-16 Mon follow.the.money - The fixture'
 const spec = (words = 'Synthetic caption.') => ({ piece_id: PIECE, qa: { state: 'passed', checked_at: '2026-11-15T07:00:00Z' },
   assets: [{ name: 'short_video', drive_id: 'a'.repeat(25), sha256: '1'.repeat(64) }, { name: 'vertical_cover', drive_id: 'b'.repeat(25), sha256: '2'.repeat(64) }],
-  channels: { tiktok: { words, alt_text: null, assets: ['short_video'] }, linkedin: { words, alt_text: ['A synthetic cover.'], assets: ['vertical_cover'] } } })
+  // A posted video carries its designed cover (Ruling, Krish, 2026-11-15).
+  channels: { tiktok: { words, alt_text: null, assets: ['short_video'], cover: { asset: 'vertical_cover', sha256: '2'.repeat(64), cover_offset_ms: null } }, linkedin: { words, alt_text: ['A synthetic cover.'], assets: ['vertical_cover'] } } })
 
 /** A draft's exact bytes, as scripts/post-pack/piece_manifest.py draft writes them (its own draft() and encode()). */
 function draftBytes(words?: string): Buffer {

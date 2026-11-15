@@ -6,6 +6,15 @@ they also are not very easy to follow. Remember that a complete layperson is swi
 and needs to be able to follow the story within 10 seconds. This cannot ever happen again in any future carousel."
 
     python3 scripts/carousel_check.py DECK.json      exit 0 when the deck may be made and filed, 1 with every reason
+    python3 scripts/carousel_check.py --cards card-1.png ... card-n.png
+                                                     the drawn cards, cover first: a cover that looks like a front cover,
+                                                     body cards that use the page centrally with real visual effort
+                                                     (scripts/carousel_layout.py, config/carousel-layout.json)
+
+Ruling (Krish, 2026-11-15): a carousel body card carries one full plain sentence of 8 to 20 words ("Use 8 to 20
+words"); his 2 Nov "WAY too much text" means no paragraphs. His words that day: "They assume that people have a working knowledge
+of what we're talking about and use too few words. For example, "12x more code in 4 months" should be something like:
+"12 times more code is being produced per month because of AI doing more coding"."
 
 DECK.json (schema carousel-deck/1) is the deck's words as the cards carry them, written before the cards are drawn:
   {"schema": "carousel-deck/1", "title": "...",
@@ -22,9 +31,13 @@ What it refuses (each is what a Git deck of 12 or 13 Nov got wrong; docs/CAROUSE
   - more than 10 cards, the cover and the last card included, or a last card that is not the brand palette's close
     (house_close_slide: the piece's takeaway as its headline, then "Subscribe free (makeyourmindup.ai)", never "Follow for
     more"; Ruling, Krish, 2026-11-14); a deck marked "good_news": true keeps his fixed good-news close instead;
-  - a card whose headline is not a whole sentence a stranger reads in about two seconds (3 to 12 words, ending . ! ?;
-    the cover may drop the full stop), so no card leads with a label such as "CODE CHANGES ANTHROPIC MERGED PER DAY";
-  - headlines that together take longer than ten seconds to read (over 50 words across the deck);
+  - a cover headline over 12 words, or a body card whose headline is not one full plain sentence a stranger can follow
+    cold (8 to 20 words, ending . ! ?, with a verb; 15 Nov 2026), so no card leads with a label such as "CODE CHANGES
+    ANTHROPIC MERGED PER DAY" or shorthand such as "12x more code in four months.": no bare multiplier ("12x", write
+    "12 times"), a number always with its unit or comparator and its cause, no opening on So, But, And, Then, Or or
+    Because, no "it", "they" or "this" standing in for a name at the start, and no stacked fragments ("Doing got faster.
+    Checking didn't.");
+  - headlines that together run past what one plain sentence a card allows (over 160 words across the deck);
   - a card after the cover with no picture of its point (a number alone, a list of names, words alone);
   - a line under a headline over 20 words: the line adds, it never carries the story;
   - jargon a layperson does not know (config/carousel-plain-words.json) unless the deck explains it in plain words;
@@ -37,10 +50,13 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 ROOT = Path(__file__).resolve().parents[1]
 WORDS = ROOT / 'config' / 'carousel-plain-words.json'
-HEADLINE_WORDS = (3, 12)
-DECK_HEADLINE_WORDS = 50
+HEADLINE_WORDS = (3, 12)          # the cover
+BODY_HEADLINE_WORDS = (8, 20)     # one full plain sentence a stranger can follow (Ruling, Krish, 2026-11-15); the same
+                                  # range as Growth's carousel lint (growth-makeyourmindup #119)
+DECK_HEADLINE_WORDS = 160         # one sentence of up to 20 words on each of at most 8 cards after the cover
 MAX_CARDS = 10            # the cover and the call-to-action card included (Krish, 2026-11-13)
 ARC = ('what', 'happened', 'why', 'so_what', 'do')
 ARC_SAYS = {'what': 'what the thing is, in plain words', 'happened': 'what happened', 'why': 'why it happened',
@@ -51,6 +67,64 @@ READERS = 2
 
 def words(text: str) -> list[str]:
     return re.findall(r"[A-Za-z0-9][A-Za-z0-9'’,.%+×-]*", text or '')
+
+
+# Followable cold (Ruling, Krish, 2026-11-15). Plain heuristics a writer can satisfy by writing a whole sentence.
+MULTIPLIER = re.compile(r'\b\d+(?:\.\d+)?\s?[x×]\b', re.I)
+NUMBER = re.compile(r'\b\d[\d,.]*\b|%|\b(?:times|twice|double|half|percent)\b', re.I)
+UNIT_OR_COMPARATOR = re.compile(
+    r'\b(?:per|a|an|each|every)\s+(?:second|minute|hour|day|week|month|quarter|year)s?\b|\bthan\b|\bcompared\b|'
+    r'\bfrom\b.+\bto\b|\bin\s+(?:19|20)\d\d\b|\bsince\b|\bof\s+(?:all|every|the)\b|%|\bpercent\b|\bout of\b|'
+    r'\b(?:dollars?|pounds?|euros?|people|engineers|workers|users|customers|jobs|companies|firms|hours|days|weeks|months|years)\b', re.I)
+CAUSE = re.compile(r'\b(?:because|as|since|after|thanks to|due to|by|so|from|driven by|with|when|while|for)\b', re.I)
+OPENS_ON = re.compile(r'^(?:so|but|and|then|or|because)\b', re.I)
+VAGUE_START = re.compile(r'^(?:it|they|them|this|these|those|that|one)\b(?!\s+(?:of|in)\b)', re.I)
+AUX = set('am is are was were be been being has have had do does did can could will would shall should may might must '
+          "isn't aren't wasn't weren't hasn't haven't didn't doesn't don't can't won't couldn't wouldn't it's they're "
+          "we're you're that's there's".split())
+VERBS = set('ask build builds built buy buys bought break breaks broke broken bring brings brought catch caught change changes '
+            'check checks come comes came cut cuts do find finds found fix fixes get gets got give gives gave go goes went '
+            'grow grows grew keep keeps kept know knows knew lead leads led lose loses lost make makes made move moves need '
+            'needs pay pays paid put puts read reads run runs ran save saves say says said see sees saw sell sells sold send '
+            'sends sent set sets ship ships spend spends spent start starts stop stops take takes took tell tells told think '
+            'thinks thought try tries use uses wait waits want wants watch watches win wins won work works write writes '
+            'wrote written cost costs rise rises rose fall falls fell earn earns hire hires fire fires replace replaces '
+            'learn learns plan plans let lets look looks mean means show shows hold holds held leave leaves left'.split())
+
+
+def has_verb(sentence: str) -> bool:
+    for w in words(sentence.lower()):
+        w = w.strip(".,'’%")
+        if w in AUX or w in VERBS or (len(w) > 4 and w.endswith('ed')) or w.endswith("n't"):
+            return True
+    return False
+
+
+def followable_problems(n: int, head: str, line: str) -> list[str]:
+    """Why a body card is not one full plain sentence a stranger follows cold."""
+    out = []
+    if MULTIPLIER.search(head):
+        out.append(f'card {n}: "{MULTIPLIER.search(head).group(0)}" is shorthand; write it out ("12 times"), a stranger '
+                   'does not read a bare multiplier')
+    if not has_verb(head):
+        out.append(f'card {n}: the headline has no verb ("{head[:60]}"): a label, not a sentence a stranger can follow')
+    if OPENS_ON.match(head):
+        out.append(f'card {n}: the headline opens on "{OPENS_ON.match(head).group(0)}", so it leans on the card before '
+                   'it; each card is followed alone')
+    if VAGUE_START.match(head):
+        out.append(f'card {n}: the headline opens on "{VAGUE_START.match(head).group(0)}" with no name for it on the '
+                   'card; say who or what')
+    sentences = [x for x in re.split(r'(?<=[.!?])\s+', head) if x.strip()]
+    if sum(1 for x in sentences if len(words(x)) <= 3) >= 2:
+        out.append(f'card {n}: stacked fragments ("{head[:60]}"): one full sentence, never two clipped ones')
+    both = f'{head} {line}'
+    if NUMBER.search(head):
+        if not UNIT_OR_COMPARATOR.search(both):
+            out.append(f'card {n}: a number with no unit or comparator ("per month", "than", "of all ..."): a stranger '
+                       'cannot tell what it counts')
+        if not CAUSE.search(head):
+            out.append(f'card {n}: a number with no cause in its sentence ("because ..."): say why it moved')
+    return out
 
 
 # The last card is the brand palette's close (config/brand-palette.json, house_close_slide): the piece's takeaway, then
@@ -121,12 +195,18 @@ def problems(deck: dict) -> list[str]:
         head = str(card.get('headline') or '').strip()
         count = len(words(head))
         total += count
-        if not HEADLINE_WORDS[0] <= count <= HEADLINE_WORDS[1]:
-            out.append(f'card {n}: the headline has {count} words; a stranger swiping reads {HEADLINE_WORDS[0]} to '
-                       f'{HEADLINE_WORDS[1]} in about two seconds')
+        line = str(card.get('line') or '').strip()
+        if n == 1 and not HEADLINE_WORDS[0] <= count <= HEADLINE_WORDS[1]:
+            out.append(f'card {n}: the cover headline has {count} words; a cover reads in a glance, '
+                       f'{HEADLINE_WORDS[0]} to {HEADLINE_WORDS[1]}')
+        if n > 1 and not BODY_HEADLINE_WORDS[0] <= count <= BODY_HEADLINE_WORDS[1]:
+            out.append(f'card {n}: the headline has {count} words; a card carries one full plain sentence of '
+                       f'{BODY_HEADLINE_WORDS[0]} to {BODY_HEADLINE_WORDS[1]} words a stranger can follow, never a '
+                       'paragraph (Ruling, Krish, 2026-11-15)')
         if n > 1 and not re.search(r'[.!?]["’\')]*$', head):
             out.append(f'card {n}: the headline is not a whole sentence ("{head[:60]}"): a label is not a story')
-        line = str(card.get('line') or '').strip()
+        if n > 1:
+            out.extend(followable_problems(n, head, line))
         if len(words(line)) > LINE_WORDS:
             out.append(f'card {n}: the line under the headline has {len(words(line))} words (at most {LINE_WORDS}): '
                        'the headline carries the story, the line only adds')
@@ -138,8 +218,7 @@ def problems(deck: dict) -> list[str]:
                 out.append(f'card {n}: "{term}" is jargon to a layperson; say it plainly, or explain it in "explains" '
                            'and on the card where it first appears')
     if total > DECK_HEADLINE_WORDS:
-        out.append(f'the headlines total {total} words; read in order they must take ten seconds or less '
-                   f'(at most {DECK_HEADLINE_WORDS})')
+        out.append(f'the headlines total {total} words; at most {DECK_HEADLINE_WORDS}, one plain sentence a card')
     told = [r for r in (deck.get('read_back') or []) if isinstance(r, dict) and str(r.get('reader') or '').strip()
             and all(len(words(str((r.get('answers') or {}).get(step) or ''))) >= 3 for step in ARC)]
     if len(told) < READERS:
@@ -150,6 +229,15 @@ def problems(deck: dict) -> list[str]:
 
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ['--cards']:
+        import carousel_layout
+        found, cards = carousel_layout.problems(argv[1:])
+        for p in found:
+            print(f'carousel_check: {p}')
+        if not found:
+            print(f'carousel_check: the {len(cards)} cards pass the cover, space, centring and richness bars '
+                  '(proxies: look at them at full size and at phone size before calling them done)')
+        return 1 if found else 0
     if len(argv) != 1:
         print(__doc__)
         return 2

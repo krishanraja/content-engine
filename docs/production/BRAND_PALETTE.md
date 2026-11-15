@@ -47,6 +47,11 @@ An asset on a series day that is not the week's series piece, and does not carry
 - **Wide thumbnail.** No logo.
 - **Tall cover.** A separate cover, never the opening frame, with the masthead inside the cover grid.
 
+A tall meme is its own format, `meme_tall` (9x16; Ruling, Krish, 2026-11-15: tall memes are centred, his words "The
+POV computer meme, it's not centralized on the screen"): the same skin as the square meme, the wordmark small in the
+bottom-right corner, and its picture centred on the screen by the bars in `formats.meme_tall.centre`, which
+`python3 scripts/layout_centre.py FILE` checks in `ve qc` and before filing.
+
 ## Who checks what
 
 | Maker | Where the guard runs | What happens on a miss |

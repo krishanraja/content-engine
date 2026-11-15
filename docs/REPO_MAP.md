@@ -2369,9 +2369,15 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 - `const JUDGED_FORMATS`
 - `const DAILY_CAP`
+- `const BAR`
+- `const LAYOUT_CHECK`
+- `type CardReader`
 - `interface JudgeDeps`
+- `const driveCardReader: CardReader`
 - `function artifactSha256(format: string, channel: string, words: string, assets: Array<{ sha256: string }>): string`
 - `function postArtifact(b: Body): string`
+- `function everyJudgePasses(verdicts: JudgeVerdict[]): boolean`
+- `function pictureProblem(b: Body): { status: number; error: string; reasons?: unknown[] } | null`
 - `async function judgeAsset(db: SupabaseClient, week: string, body: unknown, deps: JudgeDeps = {}): Promise<Answer>`
 
 ### `apps/control-plane/api/board/_later.ts`

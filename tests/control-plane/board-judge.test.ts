@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { artifactSha256, DAILY_CAP, judgeAsset } from '../../apps/control-plane/api/board/_judge'
+import { createHash } from 'node:crypto'
+import { artifactSha256, DAILY_CAP, judgeAsset, LAYOUT_CHECK } from '../../apps/control-plane/api/board/_judge'
 import type { PanelInput, PanelResult } from '../../apps/control-plane/api/_judges/panel'
 import { ROSTER_VERSION } from '../../apps/control-plane/api/_judges/roster'
 
@@ -10,7 +11,10 @@ import { ROSTER_VERSION } from '../../apps/control-plane/api/_judges/roster'
 type Row = Record<string, any>
 const WEEK = '2026-11-09'
 const NOW = new Date('2026-11-13T10:00:00Z')
-const A = 'a'.repeat(64), B = 'b'.repeat(64)
+// Two synthetic cards: their bytes, as the judges are shown them, and their sha256s.
+const IMG_A = Buffer.from('synthetic card one').toString('base64'), IMG_B = Buffer.from('synthetic card two').toString('base64')
+const sha = (b64: string) => createHash('sha256').update(Buffer.from(b64, 'base64')).digest('hex')
+const A = sha(IMG_A), B = sha(IMG_B)
 
 /** asset_judgements in memory: the reads and the one insert the route makes. */
 function fakeDb(rows: Row[] = []) {
@@ -40,7 +44,9 @@ function fakeDb(rows: Row[] = []) {
 
 const post = (over: Row = {}): Row => ({ op: 'judge', item: 'instagram-2026-11-10-0830', format: 'carousel', channel: 'instagram',
   concept_id: 'synthetic-concept', claim: 'Synthetic claim.', words: 'Slide one says the claim. Read the piece at makeyourmindup.ai',
-  assets: [{ name: 'mock-1.png', sha256: A }, { name: 'mock-2.png', sha256: B }], ...over })
+  assets: [{ name: 'mock-1.png', sha256: A }, { name: 'mock-2.png', sha256: B }],
+  images: [{ mime: 'image/png', data: IMG_A }, { mime: 'image/png', data: IMG_B }],
+  layout: { check: LAYOUT_CHECK, passed: true, assets: [A, B] }, ...over })
 function panelOf(scores: number[], calls: PanelInput[] = []) {
   return async (input: PanelInput): Promise<PanelResult> => {
     calls.push(input)
@@ -51,10 +57,47 @@ function panelOf(scores: number[], calls: PanelInput[] = []) {
       spread: { low: null, high: null, kills: [], prosecution: null }, dissent: false, cost_usd: 0.01, started_at: '', finished_at: '' }
   }
 }
-const run = (db: ReturnType<typeof fakeDb>, body: unknown, panel = panelOf([8, 8, 9, 8, 7, 8, 9, 8, 8])) =>
-  judgeAsset(db as any, WEEK, body, { panel, now: () => NOW })
+const run = (db: ReturnType<typeof fakeDb>, body: unknown, panel = panelOf([8, 8, 9, 8, 7, 8, 9, 8, 8]), readCard?: (id: string) => Promise<{ mime: string; data: string } | null>) =>
+  judgeAsset(db as any, WEEK, body, { panel, now: () => NOW, ...(readCard ? { readCard } : {}) })
 
 describe('the judges on a Growth carousel or Short', () => {
+  it('the judges are shown every card, and a pass needs every judge to pass it (Ruling, Krish, 2026-11-15)', async () => {
+    const calls: PanelInput[] = []
+    const out = await run(fakeDb(), post(), panelOf([8, 8, 9, 8, 7, 8, 9, 8, 8], calls))
+    expect(out.body.verdict).toBe('pass')
+    expect(calls[0].images?.map(i => i.data)).toEqual([IMG_A, IMG_B])
+    expect(calls[0].artifact).toContain('shown to you above')
+    // The lower median is 8, but one judge at 6 means it is not 10 of 10.
+    const one = await run(fakeDb(), post(), panelOf([8, 8, 9, 8, 6, 8, 9, 8, 8]))
+    expect(one.body.verdict).toBe('fail')
+  })
+  it('reads each card from its Drive view_url, as Growth sends it, and shows the judges the cards it read', async () => {
+    const calls: PanelInput[] = []
+    const drive: Record<string, string> = { ['A'.repeat(33)]: IMG_A, ['B'.repeat(33)]: IMG_B }
+    const read = async (id: string) => (drive[id] ? { mime: 'image/png', data: drive[id] } : null)
+    const viewed = post({ images: undefined, assets: [{ name: 'mock-1.png', sha256: A, view_url: `https://drive.google.com/file/d/${'A'.repeat(33)}/view` },
+      { name: 'mock-2.png', sha256: B, view_url: `https://drive.google.com/file/d/${'B'.repeat(33)}/view` }] })
+    const out = await run(fakeDb(), viewed, panelOf([8, 8, 8], calls), read)
+    expect(out.body.verdict).toBe('pass')
+    expect(calls[0].images?.map(i => i.data)).toEqual([IMG_A, IMG_B])
+    // A card Drive will not give back is refused, never judged unseen.
+    const gone = await run(fakeDb(), viewed, panelOf([8, 8, 8]), async () => null)
+    expect(gone).toMatchObject({ status: 503, body: { error: 'cards_unreadable' } })
+  })
+  it('a carousel without its cards, with cards that are not its assets, or without a passing layout receipt is refused unpaid', async () => {
+    const calls: PanelInput[] = []
+    const panel = panelOf([9, 9, 9], calls)
+    expect((await run(fakeDb(), post({ images: undefined }), panel)).body.error).toBe('images_required')
+    expect((await run(fakeDb(), post({ images: [{ mime: 'image/png', data: IMG_B }, { mime: 'image/png', data: IMG_A }] }), panel)).body.error).toBe('image_not_the_asset')
+    expect((await run(fakeDb(), post({ layout: undefined }), panel)).body.error).toBe('layout_receipt_required')
+    const failed = await run(fakeDb(), post({ layout: { check: LAYOUT_CHECK, passed: false, assets: [A, B], problems: ['card 1: it looks like the rest of the cards'] } }), panel)
+    expect(failed).toMatchObject({ status: 422, body: { ok: false, error: 'layout_failed', reasons: ['card 1: it looks like the rest of the cards'] } })
+    // A phone-size rendition of the card counts, named by the asset it was made from.
+    const smaller = Buffer.from('rendition').toString('base64')
+    expect((await run(fakeDb(), post({ images: [{ mime: 'image/jpeg', data: smaller, of: A }, { mime: 'image/png', data: IMG_B }] }), panel)).body.verdict).toBe('pass')
+    expect(calls.length).toBe(1)
+  })
+
   it('a post the panel stands ready on passes, bound to its exact words and pictures, and is recorded', async () => {
     const db = fakeDb()
     const calls: PanelInput[] = []

@@ -281,6 +281,43 @@
         "close": "none"
       }
     },
+    "meme_tall": {
+      "shape": "9x16",
+      "off": {
+        "opening": "own_idea",
+        "logo_top": false,
+        "body": {
+          "icon": false,
+          "wordmark": "bottom_right_small"
+        },
+        "close": "none"
+      },
+      "ruled": "Ruling (Krish, 2026-11-15): tall memes are centred. His words: \"The POV computer meme, it's not centralized on the screen.\"",
+      "centre": {
+        "picture_dx_px": 4,
+        "margin_diff_px": 16,
+        "picture_centre": [
+          540,
+          920
+        ],
+        "picture_dy_px": 48,
+        "picture_x": [
+          120,
+          960
+        ],
+        "top_gap_max_pct": 25,
+        "check": "python3 scripts/layout_centre.py FILE (ve qc on a tall meme, and before filing)",
+        "words_clear_of": "config/channel-safe-zones.json, every channel",
+        "set_from": "the 13 Nov meme as posted: picture 40.5 px left and 107 px high, margins 83 and 163 px, 34.5% empty below",
+        "words_box": [
+          200,
+          270,
+          880,
+          1320
+        ],
+        "why_920": "Growth's tall templates centre the clip window at (540, 920), inside the clear box y 270 to 1320, x 200 to 880 that config/channel-safe-zones.json leaves clear of every channel (growth-makeyourmindup #119)."
+      }
+    },
     "notes_image": {
       "shape": "any",
       "off": {

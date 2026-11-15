@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
-import { runPanel, standing, type DeterministicFinding, type PanelInput, type PanelResult } from '../_judges/panel.js'
+import { READY_AT, runPanel, standing, type DeterministicFinding, type JudgeVerdict, type PanelInput, type PanelResult } from '../_judges/panel.js'
 import { voiceMechanics } from '../_judges/deterministic.js'
 import { ROSTER_VERSION } from '../_judges/roster.js'
 import { copyLint, copyLintReason } from '../_copyLint.js'
@@ -25,17 +25,67 @@ import { houseRulesBlock } from '../_houseRules.js'
 //                                                                          id at the moment it is saved, never matched by title)
 // Every row goes to asset_judgements (append only); Control Center's reader counts each artifact whose latest verdict
 // is a pass and that went live in the last 7 days. At most DAILY_CAP panels a day are paid for (docs/COST_GUARDS.md).
+//
+// The judges see the pictures, and a pass is the North Star's bar (Ruling, Krish, 2026-11-15: a carousel cover must
+// look like a front cover, body cards use the page centrally with real visual effort). A carousel's request names each
+// card's Drive view_url, and the route reads the cards itself (or the request carries them as `images`, each the bytes
+// of the asset at the same place or a phone-size rendition of it); each card's sha256 is checked here, and the
+// drawn cards' receipt from `python3 scripts/carousel_check.py --cards` (`layout`, bound to the same sha256s); a
+// missing or failed receipt is refused before any judge is paid. Until 15 Nov a pass was the panel's lower median at
+// READY_AT (7), with the pictures "seen by the reader, not shown to you": the 14 Nov "decades-old mistakes" carousel
+// passed at 9 that way. A pass now means every judge that scores passes it (10 of 10 judges, the bar
+// docs/NORTH_STAR.md names): each scores at least READY_AT, none kills or abstains. Verdicts from the old bar are never
+// served again (BAR, in the recorded roster_version).
 
 export const JUDGED_FORMATS = ['carousel', 'short-video'] as const
 /** Panels a day: Growth makes three or four posts a day, about half of them carousels or Shorts. */
 export const DAILY_CAP = 40
+/** The bar a recorded verdict was judged to; a verdict to an older bar is judged again, never served. */
+export const BAR = 'every-judge-passes-2026-11-15'
+export const LAYOUT_CHECK = 'carousel_check --cards'
+const IMAGE_MIME = new Set(['image/png', 'image/jpeg', 'image/webp'])
+/** A card is sent as its own bytes or as a phone-size rendition of them (`of`: the asset's sha256), within the
+ *  route's body limit: at most 600 KB a card and 3.5 MB in all. */
+const MAX_IMAGE_BYTES = 600_000
+const MAX_IMAGES_BYTES = 3_500_000
+/** A card the route reads from Drive itself is not in the request body, so it may be the full-size card. */
+const MAX_FETCHED_BYTES = 4_500_000
 const SHA256 = /^[a-f0-9]{64}$/
 const POST_ID = /^[A-Za-z0-9_-]{6,64}$/
 const CHANNEL = /^[a-z][a-z0-9-]{0,30}$/
 type Body = Record<string, unknown>
 type Answer = { status: number; body: Body }
 type Panel = (input: PanelInput) => Promise<PanelResult>
-export interface JudgeDeps { panel?: Panel; now?: () => Date; writtenBy?: string }
+/** A card's bytes by its Drive file id, as the owner of his Drive; null when it cannot be read. */
+export type CardReader = (driveId: string) => Promise<{ mime: string; data: string } | null>
+export interface JudgeDeps { panel?: Panel; now?: () => Date; writtenBy?: string; readCard?: CardReader }
+
+/** The default reader: the Drive file's own bytes (files/<id>?alt=media) on the owner's Drive token (_drivePosts.ts). */
+export const driveCardReader: CardReader = async (driveId) => {
+  const { ownerDriveToken } = await import('./_drivePosts.js')
+  const token = await ownerDriveToken().catch(() => null)
+  if (!token) return null
+  const r = await fetch(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(driveId)}?alt=media&supportsAllDrives=true`,
+    { headers: { Authorization: `Bearer ${token}` } }).catch(() => null)
+  if (!r || !r.ok) return null
+  const mime = String(r.headers.get('content-type') || '').split(';')[0].trim()
+  const bytes = Buffer.from(await r.arrayBuffer())
+  if (!IMAGE_MIME.has(mime) || !bytes.length || bytes.length > MAX_FETCHED_BYTES) return null
+  return { mime, data: bytes.toString('base64') }
+}
+
+/** Growth sends each card's Drive view_url (growth-makeyourmindup #119); the route reads the cards itself, so the judges
+ *  are shown exactly what is in Drive. A card that cannot be read leaves images unset, and the request is refused. */
+async function readCards(b: Body, read: CardReader): Promise<Body> {
+  if (b.format !== 'carousel' || b.images !== undefined) return b
+  const assets = b.assets as Body[]
+  const { driveIdOf } = await import('./_drivePosts.js')
+  const ids = assets.map(a => driveIdOf(a.view_url))
+  if (!ids.length || ids.some(id => !id)) return b
+  const images = await Promise.all(ids.map(id => read(id!).catch(() => null)))
+  if (images.some(i => !i)) return { ...b, cards_unreadable: true }
+  return { ...b, images, images_fetched: true }
+}
 
 const isObj = (v: unknown): v is Body => !!v && typeof v === 'object' && !Array.isArray(v)
 const text = (v: unknown, max: number) => typeof v === 'string' && v.length <= max
@@ -53,19 +103,63 @@ export function postArtifact(b: Body): string {
   return [`Format: ${b.format} on ${b.channel}${b.format === 'carousel' ? `, ${assets.length} slides` : ''}`,
     b.claim ? `The claim it carries, from the published piece: ${b.claim}` : '',
     'The words, exactly as posted:', String(b.words),
-    `Pictures: ${assets.map(a => a.name).join(', ') || 'none'} (seen by the reader, not shown to you)`].filter(Boolean).join('\n')
+    Array.isArray(b.images) && b.images.length
+      ? `Pictures: ${assets.map(a => a.name).join(', ')} (shown to you above, in this order, at the size the reader sees)`
+      : `Pictures: ${assets.map(a => a.name).join(', ') || 'none'}`].filter(Boolean).join('\n')
 }
 
 const CONTEXT = ['This is a derived post Growth made from a piece the publication already published: a carousel or a Short on',
   'a social channel. Judge it as the publication\'s own post on that channel, to the same bar as any draft: would the',
-  'reader stop, understand the one point, and want the full piece. The pictures are the approved mocks; judge the words',
-  'and what they promise.'].join(' ')
+  'reader stop, understand the one point, and want the full piece. You are shown its pictures: judge them as hard as the',
+  'words. A carousel\'s first card must look like a front cover and nothing like the cards after it; every card after it',
+  'uses the page centrally with real visual effort, never plain, bland or off centre; every card carries one full plain',
+  'sentence a stranger can follow cold (Ruling, Krish, 2026-11-15).'].join(' ')
+
+/** Every judge that scores passes it: the North Star's "10/10 judges" (Ruling, Krish, 2026-11-15). */
+export function everyJudgePasses(verdicts: JudgeVerdict[]): boolean {
+  const panel = verdicts.filter(v => !v.adversarial && !v.deterministic)
+  return panel.length > 0 && panel.every(v => v.verdict !== 'kill' && v.verdict !== 'abstain' && v.score !== null && v.score >= READY_AT)
+}
+
+/** A carousel arrives with its cards as images (each the asset's own bytes) and a passing drawn-cards receipt for those
+ *  same bytes, or the reason it is refused. Nothing is paid before both hold. */
+export function pictureProblem(b: Body): { status: number; error: string; reasons?: unknown[] } | null {
+  const assets = b.assets as Array<{ sha256: string }>
+  const images = b.images
+  if (b.cards_unreadable === true) return { status: 503, error: 'cards_unreadable' }
+  if (b.format === 'carousel' || images !== undefined) {
+    if (!Array.isArray(images) || images.length !== assets.length) return { status: 400, error: 'images_required' }
+    let total = 0
+    for (const [i, img] of images.entries()) {
+      if (!isObj(img) || !IMAGE_MIME.has(String(img.mime)) || typeof img.data !== 'string') return { status: 400, error: 'invalid_image' }
+      const bytes = Buffer.from(img.data, 'base64')
+      total += bytes.length
+      const fetched = b.images_fetched === true
+      if (!bytes.length || (!fetched && (bytes.length > MAX_IMAGE_BYTES || total > MAX_IMAGES_BYTES))) return { status: 400, error: 'invalid_image' }
+      const own = createHash('sha256').update(bytes).digest('hex') === assets[i].sha256
+      if (!own && img.of !== assets[i].sha256) return { status: 400, error: 'image_not_the_asset' }
+    }
+  }
+  if (b.format !== 'carousel') return null
+  const layout = b.layout
+  if (!isObj(layout) || layout.check !== LAYOUT_CHECK || !Array.isArray(layout.assets)
+    || layout.assets.length !== assets.length || layout.assets.some((s, i) => s !== assets[i].sha256)) {
+    return { status: 400, error: 'layout_receipt_required' }
+  }
+  if (layout.passed !== true) {
+    const reasons = Array.isArray(layout.problems) ? layout.problems.filter(x => typeof x === 'string').slice(0, 12) : []
+    return { status: 422, error: 'layout_failed', reasons }
+  }
+  return null
+}
 
 function judgeBody(b: unknown): b is Body {
   if (!isObj(b) || !text(b.item, 200) || !String(b.item).trim()) return false
   if (!(JUDGED_FORMATS as readonly string[]).includes(String(b.format)) || typeof b.channel !== 'string' || !CHANNEL.test(b.channel)) return false
   if (typeof b.words !== 'string' || !b.words.trim() || b.words.length > 20_000) return false
-  if (!Array.isArray(b.assets) || b.assets.length > 20 || !b.assets.every(a => isObj(a) && text(a.name, 200) && SHA256.test(String(a.sha256)))) return false
+  if (!Array.isArray(b.assets) || b.assets.length > 20 || !b.assets.every(a => isObj(a) && text(a.name, 200) && SHA256.test(String(a.sha256))
+    && (a.view_url === undefined || text(a.view_url, 400)))) return false
+  if (b.images !== undefined && (!Array.isArray(b.images) || b.images.length > 20)) return false
   return (b.concept_id === undefined || b.concept_id === null || text(b.concept_id, 200)) && (b.claim === undefined || text(b.claim, 2000))
 }
 
@@ -92,7 +186,7 @@ export async function judgeAsset(db: SupabaseClient, week: string, body: unknown
   const by = deps.writtenBy ?? 'growth'
   if (!isObj(body)) return { status: 400, body: { ok: false, error: 'invalid_judge_request' } }
   try {
-    if (body.op === 'judge') return await judge(db, week, body, now, by, deps.panel ?? runPanel)
+    if (body.op === 'judge') return await judge(db, week, body, now, by, deps.panel ?? runPanel, deps.readCard ?? driveCardReader)
     if (body.op === 'bind') return await bind(db, body, by)
     if (body.op === 'live') return await live(db, body, by)
     if (body.op === 'bindings') return await bindings(db, body)
@@ -102,12 +196,16 @@ export async function judgeAsset(db: SupabaseClient, week: string, body: unknown
   return { status: 400, body: { ok: false, error: 'invalid_judge_op' } }
 }
 
-async function judge(db: SupabaseClient, week: string, b: Body, now: Date, by: string, panel: Panel): Promise<Answer> {
-  if (!judgeBody(b)) return { status: 400, body: { ok: false, error: 'invalid_judge_request' } }
+async function judge(db: SupabaseClient, week: string, sent: Body, now: Date, by: string, panel: Panel, readCard: CardReader): Promise<Answer> {
+  if (!judgeBody(sent)) return { status: 400, body: { ok: false, error: 'invalid_judge_request' } }
+  const b = await readCards(sent, readCard)
   const assets = b.assets as Array<{ name: string; sha256: string }>
   const artifact = artifactSha256(String(b.format), String(b.channel), String(b.words), assets)
+  const refused = pictureProblem(b)
+  if (refused) return { status: refused.status, body: { ok: false, error: refused.error, ...(refused.reasons ? { reasons: refused.reasons } : {}) } }
+  const recorded = `${ROSTER_VERSION}+${BAR}`
   const held = await latestJudged(db, artifact)
-  if (held && held.roster_version === ROSTER_VERSION) {
+  if (held && held.roster_version === recorded) {
     return { status: 200, body: { ok: true, verdict: held.verdict, score: held.score, band: held.band, reasons: held.reasons, artifact_sha256: artifact, again: true } }
   }
   const today = await db.from('asset_judgements').select('id', { count: 'exact', head: true }).eq('event', 'judged')
@@ -116,14 +214,15 @@ async function judge(db: SupabaseClient, week: string, b: Body, now: Date, by: s
   if ((today.count ?? 0) >= DAILY_CAP) return { status: 429, body: { ok: false, error: 'judge_cap_reached' } }
   const lint = lintFinding(String(b.words), String(b.format))
   const result = await panel({ gate: 'draft', subjectTable: 'content_ideas', subjectId: String(b.item), artifact: postArtifact(b),
-    context: [houseRulesBlock('judge_draft'), CONTEXT].join('\n\n'), deterministic: lint ? [lint] : [], shortCircuitOnKill: true })
+    context: [houseRulesBlock('judge_draft'), CONTEXT].join('\n\n'), deterministic: lint ? [lint] : [], shortCircuitOnKill: true,
+    ...(Array.isArray(b.images) && b.images.length ? { images: (b.images as Body[]).map(i => ({ mime: String(i.mime), data: String(i.data) })) } : {}) })
   const s = standing(result.verdicts)
-  const pass = !lint && s.band === 'ready'
+  const pass = !lint && s.band === 'ready' && everyJudgePasses(result.verdicts)
   const reasons = (lint ? [{ judge: 'copy_lint', score: 0, fix: lint.the_one_fix }] : s.brief).slice(0, 12)
   const row = { event: 'judged', artifact_sha256: artifact, item: String(b.item), week, format: String(b.format), channel: String(b.channel),
     concept_id: typeof b.concept_id === 'string' ? b.concept_id : null, verdict: pass ? 'pass' : 'fail', score: s.score, band: lint ? 'weak' : s.band,
     reasons, judges: result.verdicts.map(v => ({ judge: v.judge, score: v.score, verdict: v.verdict, adversarial: v.adversarial })),
-    roster_version: result.roster_version, cost_usd: Math.max(0, Number(result.cost_usd) || 0), judged_at: now.toISOString(), written_by: by }
+    roster_version: `${result.roster_version}+${BAR}`, cost_usd: Math.max(0, Number(result.cost_usd) || 0), judged_at: now.toISOString(), written_by: by }
   const wrote = await db.from('asset_judgements').insert(row)
   if (wrote.error) throw new Error('judgements_unwritable')
   return { status: 200, body: { ok: true, verdict: row.verdict, score: row.score, band: row.band, reasons, artifact_sha256: artifact } }

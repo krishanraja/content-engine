@@ -46,6 +46,9 @@ export interface PanelInput {
    *  sweep passes its own, which answers from a reply already paid for or
    *  defers. Nothing else about the panel changes between the two. */
   call?: ClaudeCall
+  /** The pictures the reader sees, in order, shown to every judge before the words (Ruling, Krish, 2026-11-15: the
+   *  judges see the pictures; a carousel is judged on its cards, never on its words alone). */
+  images?: Array<{ mime: string; data: string }>
   /** Which independent draw of this panel this is. Only the bury confirmation
    *  sets it, and only so a batched re-read of an identical artifact is a real
    *  second reading rather than the first one served from cache. */
@@ -291,6 +294,7 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
         maxTokens: 900,
         temperature: 0.2,
         agent: `judge-${judge.key}`,
+        ...(input.images?.length ? { images: input.images } : {}),
         ...(input.sample ? { sample: input.sample } : {}),
         ...(input.timeoutMs ? { timeoutMs: input.timeoutMs } : {}),
       })

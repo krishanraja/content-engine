@@ -38,8 +38,9 @@ headless model run or a template engine. The Studio's old carousel commands are 
 `docs/history/`, dated 13 November 2026), and so is Growth's Saturday art-direction run. In the session:
 
 1. **Claude writes the deck: the story, the words and the creative direction.** The story route is "The ten-second
-   swipe" below: ask why five times, find the wider trend and prove it with an outside source, tell it in order, at
-   most 50 headline words and at most 10 cards, ending on the palette's close: the takeaway, then "Subscribe free
+   swipe" below: ask why five times, find the wider trend and prove it with an outside source, tell it in order, every
+   card after the cover one full plain sentence of 8 to 20 words a stranger can follow, and at most 10 cards, ending on
+   the palette's close: the takeaway, then "Subscribe free
    (makeyourmindup.ai)". The words live in a `carousel-deck/1` file
    and `python3 scripts/carousel_check.py DECK.json` passes before anything is drawn. Everything follows this
    standard, the brand palette (`config/brand-palette.json`, `docs/production/BRAND_PALETTE.md`) and the rejection
@@ -57,7 +58,8 @@ headless model run or a template engine. The Studio's old carousel commands are 
 4. **Codex builds the card images in code** from the card: each card's look as code, rendered to pictures, held to the
    brand tokens. The words are placeholders in the code; the session puts the deck's words in when it renders.
 5. **Claude verifies them**: `ve verify-card` (or the lane's own run of it) for the card's acceptance, the deck check
-   again on the words as drawn, the 10/10 judges below (`POST /api/board/<Monday>/judge`, the panel Growth's maker
+   again on the words as drawn, the drawn cards with `python3 scripts/carousel_check.py --cards card-1.png ...`
+   ("The cover and the page", below), the 10/10 judges below, shown every card, (`POST /api/board/<Monday>/judge`, the panel Growth's maker
    asks), and a look at every card at full size and at phone size.
    Codex's own report is never proof.
 6. **Claude files them** in the post's `3 Posts` folder with `scripts/post-pack/send.py` and reports on the piece or
@@ -79,7 +81,10 @@ one of these to this route, and refuses the retired routes by name.
 
 Krish: "Judge them; count passes. Every Growth carousel goes through the same 10/10 judges, and each one that passes and goes live counts." Whoever makes it, a carousel is judged
 before it is made for posting: Growth's maker asks `POST /api/board/<Monday>/judge`, the draft judges' panel reads its
-exact words with its claim, and only a pass is made, bound to its post and counted on the North Star once it goes live.
+exact words with its claim and is shown every card (from 15 Nov: the request carries the cards and a passing
+`carousel_check.py --cards` receipt for them, or it is refused unpaid), and a pass means every judge passes it, each
+scoring at least 7, none killing or abstaining: 10 of 10 judges, the bar docs/NORTH_STAR.md names. Until 15 Nov a pass
+was the panel's lower median at 7 with the pictures unseen, which is how the 14 Nov deck passed at 9. Only a pass is made, bound to its post and counted on the North Star once it goes live.
 A fail comes back with each judge's fix and is never posted. `docs/GROWTH-HANDOFF.md`, "Every carousel and Short
 through the 10/10 judges", has the route.
 
@@ -184,9 +189,16 @@ The route, for every carousel, whatever the topic. Nothing is drawn until the wo
 3. **Tell it in this order, a card or more for each**: what the thing is, in plain words (a layperson never knows the
    tool, the company or the term); what happened; why; the wider trend and why it matters to them; what to do about it.
    The doing is concrete enough to act on this week.
-4. **The headlines alone, read in order, tell that whole story in about ten seconds**: at most 50 words across the
-   deck and 3 to 12 on any one card. Each headline after the cover is one whole sentence. A label ("Code changes
-   Anthropic merged per day"), a bare number ("7 engineers, 5 months") or a list of names is not a headline.
+4. **Every card after the cover carries one full plain sentence a stranger can follow cold** (Ruling, Krish,
+   2026-11-15: a carousel body card carries one full plain sentence of 8 to 20 words; his words, "Use 8 to 20 words";
+   his 2 Nov "WAY too much text" means no paragraphs). His words: "They assume that people have a working knowledge of what we're talking
+   about and use too few words. For example, "12x more code in 4 months" should be something like: "12 times more code
+   is being produced per month because of AI doing more coding"." So 8 to 20 words a card (the range he ruled, and the one Growth's carousel lint holds) and still one point a card;
+   the cover 3 to 12; at most 160 across the deck. The sentence names its subject, has a verb, gives a number its unit
+   or comparator and its cause, and leans on no card before it: no "12x" (write "12 times"), no opening on So, But,
+   And, Then, Or or Because, no "it", "they" or "this" for a name, no stacked fragments ("Doing got faster. Checking
+   didn't."). A label ("Code changes Anthropic merged per day"), a bare number ("7 engineers, 5 months") or a list of
+   names is not a headline. This replaces the 50-word cap of 13 Nov for the cards after the cover.
 5. **Every card after the cover shows its point as a picture**: bars to scale, the thing jammed, the people, the
    hand-off. The line under a headline is at most 20 words and only adds: it defines a word, names a source or gives the
    number. No jargon a layperson does not know (`config/carousel-plain-words.json`) unless the deck explains it.
@@ -200,10 +212,38 @@ The route, for every carousel, whatever the topic. Nothing is drawn until the wo
 
 The deck's words live in a `carousel-deck/1` file (`five_whys`, `arc` naming the card for each step, a `source` on the
 trend card, `cta`, `read_back` with each reader's five answers), and `python3 scripts/carousel_check.py DECK.json` passes
-before any card is drawn or filed. `tests/carousel_check_test.py` holds both failures: the deck as sent on 12 Nov, and
-the five-card redraw of 13 Nov with no "so what". The Git deck of 13 Nov
-(`docs/plans/2026-11-09-week/git-carousel/deck.json`) is the worked example. Growth runs the check on every carousel it
+before any card is drawn or filed. `tests/carousel_check_test.py` holds the failures: the deck as sent on 12 Nov, the
+five-card redraw of 13 Nov with no "so what", and the Git deck of 13 Nov
+(`docs/plans/2026-11-09-week/git-carousel/deck.json`), which he named hard to follow on 15 Nov ("12x more code in four
+months.", "So Anthropic built one for AI.", "Doing got faster. Checking didn't."). The worked example is now the
+synthetic FOLLOWABLE deck in that test, written in the shape he asked for. Growth runs the check on every carousel it
 makes to this standard.
+
+## The cover and the page (Ruling, Krish, 15 November 2026)
+
+His words, on the "AI is catching decades-old mistakes" carousel of 14 Nov: "the front cover card does not look like a
+front cover. It looks like all the rest of the cards. ... That and the other cards in this carousel don't look very good
+and aren't using the page space centrally or correctly. They look too bland and too plain, and not enough effort has
+been put into the visual treatment." The ruling: a carousel cover must look like a front cover, and body cards use the
+page centrally with real visual effort.
+
+`python3 scripts/carousel_check.py --cards card-1.png ... card-n.png` measures the finished cards, cover first
+(`scripts/carousel_layout.py`; the bars in `config/carousel-layout.json`, the safe box from the brand palette), and
+exits 1 with every reason:
+
+- **The cover is a front cover.** Its headline is at least 1.3 times the body cards' (14 Nov: 1.03), and it differs
+  from them in at least two of three: headline scale, where the headline block sits, and how much of the card is
+  picture. Never a deck where every card has the same scene-and-headline layout.
+- **Every card after it uses the page.** No type outside the safe box (80 px in from every edge); no empty band over
+  12% of the height and at most 35% of the safe rows empty (the 12 Nov Git cards: up to 26% and 60%); every line of
+  type centred within 24 px (the Git cards: up to 408 px left).
+- **Real visual effort.** A visual anchor of real size on every card: picture on at least 12% of it (the Git cards: 1
+  to 9%), never plain ground with type on it.
+- **Readable on a phone.** Body type no smaller than the house mobile floor: 14 CSS px on a 390 px phone, 35 px of ink
+  on the 1080 px card (14 Nov: about 26 to 32).
+
+These are proxies: a deck that passes still gets the look at full size and at phone size, and the judges, who are
+shown every card. `tests/carousel_layout_test.py` holds the bars on synthetic cards.
 
 ## Narrative production and review
 
@@ -400,6 +440,15 @@ thumbnail and cover asset templates for Monday, Wednesday, and Friday"), which h
   `tests/series_skins_test.py` (all nine skins drawn on Monday, Wednesday and Friday on all seven shapes, alone, with
   logo rows and a strip, and under a long title, and a skin forced to fail moving the piece on). Growth holds its kit
   to the same rule (its R125).
+
+## The tall meme is centred (Ruling, Krish, 15 November 2026)
+
+His words: "The POV computer meme, it's not centralized on the screen." The 13 Nov meme sat 40 px left and 107 px high
+with a third of the screen empty below it. A tall meme is the brand palette's `meme_tall` (9x16), and
+`python3 scripts/layout_centre.py FILE` holds it (in `ve qc` on a tall meme, and in `send.py` before it is filed): the
+picture centred within 4 px across and within 48 px of y 920 (where Growth's tall templates centre the clip), the
+column's margins within 16 px of each other, every word and mark inside the clear box x 200 to 880, y 270 to 1320 and
+clear of every channel's buttons and caption area (`config/channel-safe-zones.json`), no empty band over 25% above it.
 
 ## The Tuesday meme (Ruling, Krish, 4 November 2026)
 

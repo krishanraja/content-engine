@@ -41,14 +41,15 @@ export const NEVER_HEADLESS = 'Never a scheduled job, a headless model run or a 
 const STILL = `Make it in this Claude session, with the Codex plugin building it. ${ROUTE_RULING} `
   + 'The route is content-engine docs/CAROUSEL-STANDARD.md, "How a carousel is made". '
   + '1. Write the words, the story and the creative direction yourself. A carousel\'s deck comes first, as carousel-deck/1, '
-  + 'and passes python3 scripts/carousel_check.py DECK.json: five whys, the wider trend with an outside source, at most 50 '
-  + 'headline words, at most 10 cards, ending on the palette\'s close: the takeaway, then "Subscribe free (makeyourmindup.ai)". '
+  + 'and passes python3 scripts/carousel_check.py DECK.json: five whys, the wider trend with an outside source, every card '
+  + 'after the cover one full plain sentence of 8 to 20 words a stranger can follow, at most 10 cards, ending on the palette\'s close: the takeaway, then "Subscribe free (makeyourmindup.ai)". '
   + '2. Write one Codex card for the pictures with python3 scripts/ve.py card (kind carousel, meme or notes_image, with the '
   + 'day and the inspiration cards Krish ticked), held to config/brand-palette.json, and send it to Codex through the '
   + 'plugin: ve dispatch, or, for a card in growth-makeyourmindup, its codex/queue/ on your claude/ branch, which the Codex '
   + 'lane builds. '
-  + '3. Codex builds the pictures in code. You verify them: the deck check again, the 10/10 judges for a carousel, and a '
-  + 'look at every card at phone size. '
+  + '3. Codex builds the pictures in code. You verify them: the deck check again, the drawn cards with '
+  + 'python3 scripts/carousel_check.py --cards (a cover that looks like a front cover, body cards that use the page centrally '
+  + 'with real visual effort), the 10/10 judges for a carousel, shown every card, and a look at every card at phone size. '
   + `4. File them in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. ${NEVER_HEADLESS}`
 
 const MOTION = `Make it in a Claude session in krishanraja/content-engine on the ve route, with the Codex plugin building its pictures. ${ROUTE_RULING} `
