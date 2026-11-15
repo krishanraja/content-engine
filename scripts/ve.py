@@ -1002,7 +1002,10 @@ def cmd_lexicon(args) -> int:
 
 
 def cmd_voice(args) -> int:
-    """His voice profile in numbers, over every take a listen pass measured (velib/delivery.py)."""
+    """His voice profile in numbers, over every take a listen pass measured (velib/delivery.py); or, with `clone`, his
+    approved clone reading an off-day voiceover short's signed script (velib/clone_voice.py)."""
+    if args.action == 'clone':
+        return cmd_voice_clone(args)
     from velib import delivery, hear, takes
     try:
         records = []
@@ -1021,6 +1024,67 @@ def cmd_voice(args) -> int:
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(f've voice profile: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_voice_clone(args) -> int:
+    """Off-day voiceover shorts may be voiced with his approved ElevenLabs clone; hero cuts stay on his real takes (Ruling,
+    Krish, 2026-11-15). Plan by default (nothing spent); --generate runs exactly the plan printed, through the credit route."""
+    from velib import clone_voice, verdict
+    from velib.lint import schema
+    try:
+        if len(args.pieces) != 1:
+            raise ValueError('ve voice clone takes one piece, or the path of its spec')
+        if args.plan and args.generate:
+            raise ValueError('--plan prints the generation; --generate runs it: give one')
+        given = Path(args.pieces[0])
+        spec_file = given if given.is_file() else spec_path_for(args.pieces[0])
+        spec, problems = schema(spec_file)
+        if spec is None:
+            raise ValueError('the spec does not pass its schema: ' + '; '.join(problems[:5]))
+        directory = verdict.ve_dir(spec_file)
+        script = Path(args.script) if args.script else directory / 'script.words.json'
+        if not script.is_file():
+            raise ValueError(f'no signed script words at {script}: give --script')
+        doc = clone_voice.plan(spec, script)
+        plan_path = write_json(directory / clone_voice.PLAN_FILE, doc)
+        clone, credits = doc['clone'], doc['credits']
+        print(f"ve voice clone: {doc['piece']}, take {doc['take']} (cuts {', '.join(doc['cuts'])}; published {doc['publish_day']}, "
+              'an off day)')
+        print(f"  clone: {clone['name']} ({clone['platform']}, voice id {clone['voice_id']}), approved by Krish on "
+              f"{clone['approved_on']} (registry sha256 {clone['approved_sha256'][:12]})")
+        print(f"  model: {doc['model']}; output: {doc['output_format']}, made into {doc['take']}.wav for ve ingest")
+        print(f"  script: {doc['script']['file']} (sha256 {doc['script']['sha256'][:12]}, {doc['script']['words']} words)")
+        print(f"  cost: {doc['characters']} characters, about {credits['estimate']} ElevenLabs credits ({credits['provider']}, "
+              f"{credits['per_character']} a character; settled at what ElevenLabs reports)")
+        print('  text, exactly as the clone will read it:')
+        print(f"    {doc['text']}")
+        print(f"  plan_sha256: {doc['plan_sha256']}  ({plan_path})")
+        if not args.generate:
+            print('ve voice clone: nothing generated or spent. To generate, on the machine that holds ELEVENLABS_API_KEY: book it '
+                  f"with Control Center (reserve_credit_spend, pool elevenlabs, {credits['estimate']} credits), then\n"
+                  f"  python scripts/ve.py voice clone {args.pieces[0]} --generate --plan-sha256 {doc['plan_sha256']} "
+                  '--spend-id <its spend_id> --assets-dir <assets>')
+            return 0
+        receipt = clone_voice.generate(doc, plan_sha256=args.plan_sha256, spend_id=args.spend_id, assets_dir=args.assets_dir)
+        receipt_path = write_json(directory / clone_voice.RECEIPT_FILE, receipt)
+        spent = receipt['credits']
+        print(f"ve voice clone: generated {receipt['voice']['name']} (sha256 {receipt['voice']['sha256'][:12]}) in {args.assets_dir}; "
+              f"{spent['charged']:g} credits from {spent['charged_from']}, ledger reservation {spent['reservation']} settled "
+              f"-> {receipt_path}")
+        print(f"next: settle_credit_spend (spend_id {spent['spend_id']}, actual {spent['charged']:g}, job "
+              f"{receipt.get('request_id') or 'none reported'}), then record_credit_balance")
+        print('next: add this asset to the spec (every cut already takes it):')
+        print('  ' + json.dumps(receipt['asset']))
+        print(f"next: as for his recording: ve ingest {doc['piece']} --take {doc['take']} --media <assets>/{receipt['voice']['name']} "
+              '(two local aligners), ve hear, ve said against the signed script, ve conform, ve premix, ve compile, ve proof; '
+              'his Approve proof press hears the clone before any whole cut renders')
+        return 0
+    except SystemExit as stopped:  # the credit ledger refuses with a SystemExit naming the cap or the missing read
+        print(f've voice clone: {stopped}', file=sys.stderr)
+        return 1
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've voice clone: {error}', file=sys.stderr)
         return 1
 
 
@@ -1754,6 +1818,10 @@ def cmd_proof(args, render_fn=None) -> int:
             print(f"ve proof: qc {'measured pass' if record['qc'].get('measured_pass') else 'FAILS or not run'}; "
                   f"{'complete' if record['qc'].get('complete') else 'incomplete'}")
         print(f've proof: {guards.type_note(props)}')
+        if record['structure'].get('voice'):
+            asset, tool, sha = record['structure']['voice']
+            print(f've proof: voiced by his approved clone ({tool}, {asset}, sha256 {str(sha)[:12]}), not his recording; '
+                  'his Approve proof is his yes to this voice too, and a voice generated again needs it again')
         print(f"{record['sha256']}  {proof.clip_path(directory, args.cut)}")
         print('next: Krish presses Approve proof (or Reject, with his words) on the board; ve render waits for it')
         return 0
@@ -2047,9 +2115,17 @@ def main() -> int:
     p.add_argument('action', choices=('show', 'learn')); p.add_argument('piece', nargs='?')
     p.add_argument('--take'); p.add_argument('--teleprompter', help='the script text he read (as for ve said)')
     p.set_defaults(fn=cmd_lexicon)
-    p = sub.add_parser('voice', help='his voice profile in numbers, from the listen pass over his takes')
-    p.add_argument('action', choices=('profile',)); p.add_argument('pieces', nargs='+')
-    p.add_argument('--out', help='default config/voice/profile.json')
+    p = sub.add_parser('voice', help='his voice profile in numbers (profile); his approved clone reading an off-day '
+                                     "voiceover short's signed script (clone: plan, or --generate)")
+    p.add_argument('action', choices=('profile', 'clone')); p.add_argument('pieces', nargs='+')
+    p.add_argument('--out', help='profile: default config/voice/profile.json')
+    p.add_argument('--script', help="clone: the signed script words (default <ve dir>/script.words.json)")
+    p.add_argument('--plan', action='store_true', help='clone: print and write the exact generation, spending nothing (the default)')
+    p.add_argument('--generate', action='store_true',
+                   help='clone: run the plan once, on the machine holding ELEVENLABS_API_KEY, through the credit ledger')
+    p.add_argument('--plan-sha256', help='clone --generate: the plan_sha256 the plan printed')
+    p.add_argument('--spend-id', help="clone --generate: the spend_id Control Center's reserve_credit_spend returned")
+    p.add_argument('--assets-dir', help='clone --generate: where the voice is written (never committed)')
     p.set_defaults(fn=cmd_voice)
     p = sub.add_parser('faces', help='where on a take he looks off the lens, closes his eyes or turns his head (advisory)')
     p.add_argument('piece'); p.add_argument('--take', required=True)

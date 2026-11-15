@@ -1,0 +1,15 @@
+{
+  "_about": "How ve voice clone voices an off-day voiceover short with his approved ElevenLabs clone (scripts/velib/clone_voice.py). The clone itself, its voice id included, is read live from krish-clone's registry (scripts/velib/lint.py SYNTHETIC_REGISTRY, platform_ref); nothing here keeps a voice id or a key. The key is ELEVENLABS_API_KEY on the machine that generates (docs/INTEGRATIONS.md). The estimate is characters times credits_per_character; the reservation is settled with what ElevenLabs reports (its character-cost header).",
+  "ruling": "Ruling, Krish, 2026-11-15: off-day voiceover shorts may be voiced with his approved ElevenLabs clone; hero cuts stay on his real takes",
+  "clone": "krish-voice-elevenlabs",
+  "platform": "elevenlabs",
+  "capability": "voice_clone",
+  "provider": "elevenlabs_credits",
+  "key_env": "ELEVENLABS_API_KEY",
+  "endpoint": "https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+  "model": "eleven_multilingual_v2",
+  "output_format": "mp3_44100_128",
+  "credits_per_character": 1,
+  "sample_rate": 48000,
+  "timeout_s": 180
+}
