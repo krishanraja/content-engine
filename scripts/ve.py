@@ -485,6 +485,11 @@ def cmd_dispatch(args) -> int:
     if getattr(args, 'piece', None):
         from velib.ledger import require_within
         require_within(args.piece)
+    if getattr(args, 'dry_run', False):
+        # The command dispatch would launch, as one line: nothing reserved, no worktree made, Codex not started.
+        from velib.cards import dry_run
+        print(dry_run(Path(args.card), studio=getattr(args, 'studio_home', False), piece=getattr(args, 'piece', None)))
+        return 0
     from velib import codex_lane
     if getattr(args, 'queue', False) or codex_lane.route() == 'queue':
         # Codex is not on this machine (a cloud session, Claude Desktop, a Windows-side Claude Code): the card goes to
@@ -507,6 +512,22 @@ def cmd_codex(args) -> int:
         home, how = codex_minimum.desktop_home_found()
         print(f've codex: dispatch runs Codex under {home} (found by {how}), the home Codex Desktop reads; '
               'a session started in a cloud container never shows there')
+        return 0
+    if args.action == 'route':
+        # How a card would start on this machine, for a stand-in card: the route and the exact command (in WSL with his
+        # Windows home: Windows node and Windows Codex, never the Linux codex on /mnt/c). Starts nothing.
+        from velib import codex_route
+        from velib.cards import codex_env, plan
+        from velib.common import card_worktree, native_path
+        env = codex_env(getattr(args, 'studio_home', False))
+        try:
+            cwd = str(native_path(card_worktree('route-check')))
+        except ValueError:
+            cwd = str(ROOT)
+        options = ['--cwd', cwd, '--sandbox', 'workspace-write', '--prompt-file',
+                   str(ROOT / '.cache' / 've-dispatch' / 'route-check.prompt.md')]
+        print(f"ve codex: Codex home {env.get('CODEX_HOME')}")
+        print(codex_route.describe(*plan(options, env)))
         return 0
     try:
         spec_file = spec_path_for(args.piece)
@@ -1832,6 +1853,7 @@ def main() -> int:
     p.add_argument('--spend-id', help='with the lane: the Control Center reservation booked for this card')
     p.add_argument('--studio-home', action='store_true',
                    help="run under the Studio's own Codex home (no MCP server or plugin; NOT visible in Codex Desktop)")
+    p.add_argument('--dry-run', action='store_true', help='print the command it would launch and start nothing')
     p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('codex', help="the Codex minimum: record Codex's checked share of a piece, or read it")
     actions = p.add_subparsers(dest='action', required=True)
@@ -1843,6 +1865,7 @@ def main() -> int:
     a.add_argument('--cwd', help="the card's worktree, to find its Codex session log"); a.add_argument('--session')
     a = actions.add_parser('status'); a.add_argument('piece')
     actions.add_parser('where', help='the Codex home dispatch runs under: the one Codex Desktop reads')
+    actions.add_parser('route', help='the route and exact command a card would start Codex with here; starts nothing')
     p.set_defaults(fn=cmd_codex)
     p = sub.add_parser('lane', help='the Codex lane: queue a card from any session; the home computer builds it')
     actions = p.add_subparsers(dest='action', required=True)

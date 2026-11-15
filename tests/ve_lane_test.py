@@ -142,7 +142,7 @@ class Booking(unittest.TestCase):
             card.write_text('---\ncard: c\ncwd: ' + temp + '\n---\n## Acceptance\npnpm test\n## Return\n', encoding='utf-8')
             self.assertEqual(cards.parse_card(card)['acceptance'], ['pnpm test'])
             with patch.object(cards, '_admit'), patch.object(cards, '_reserve') as reserve, \
-                    patch.object(cards, 'codex_thread', return_value='c.mjs'), patch.object(cards, 'codex_env', return_value={}), \
+                    patch.object(cards, 'launch', return_value=(['node', 'c.mjs'], {}, 'linux')), patch.object(cards, 'codex_env', return_value={}), \
                     patch.object(cards.subprocess, 'run') as run:
                 cards.dispatch(card, booked='12345678-1234-4234-9234-123456789abc')
                 reserve.assert_not_called()
