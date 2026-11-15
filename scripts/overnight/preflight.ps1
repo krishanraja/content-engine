@@ -15,10 +15,14 @@ The checks, each { ok, detail, ... }:
 
   claude_cli       Claude Code is installed, and its version (claude --version only; no turn, no model call). The
                    sessions Krish opens on this machine use it.
-  codex_companion  the Codex plugin companion that ve dispatch uses (scripts\velib\cards.py) is installed, and
-                   "node <companion> help" runs and offers the task route with the flags dispatch passes. Never
-                   "task --help": the companion reads help only as its first word, so "task --help" would start a
-                   real Codex task with the prompt "--help" and spend the allowance.
+  codex_companion  the route ve dispatch starts Codex by (Claude starts Codex only through scripts\codex_thread.mjs,
+                   Ruling, Krish, 2026-11-15; the Codex plugin's companion is no longer used): on this Windows side,
+                   node.exe and the Windows codex.exe (never the npm codex.cmd shim, which codex_thread.mjs cannot
+                   start without a shell) are found and scripts\codex_thread.mjs
+                   is in the repository, and "node codex_thread.mjs" with no arguments prints its usage and nothing
+                   else. The lane builds in WSL and runs exactly these Windows programs (scripts\velib\codex_route.py),
+                   never the Linux codex on the Windows Codex home. Never "open" or "send" here: either starts a real
+                   Codex turn and spends the allowance. The key keeps its old name, which the lane report carries.
   codex_login      "codex login status" says ChatGPT (the test ve doctor uses), in the Codex home dispatch uses.
   codex_profile    Codex's tool profile (config\codex-profile.json) passes its audit, and the MCP servers the Codex
                    that runs cards has ("codex mcp list --json", which only lists) are read for a forbidden kind:
@@ -61,7 +65,7 @@ if (-not $RepoRoot) { $RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScri
 $RepoRoot = [System.IO.Path]::GetFullPath($RepoRoot)
 $StudioRuntime = Join-Path $env:USERPROFILE 'Documents\MindmakeVideoStudio\runtime'
 $StudioPython = Join-Path $StudioRuntime 'python\Scripts\python.exe'
-$CompanionRoot = Join-Path $env:USERPROFILE '.claude\plugins\cache\openai-codex\codex'
+$CodexThread = Join-Path $RepoRoot 'scripts\codex_thread.mjs'
 # The Codex home ve dispatch runs cards under: Krish's everyday home, the one his Codex Desktop app reads (its
 # CODEX_HOME, else ~\.codex), so every session shows there (Ruling, Krish, 2026-11-15: every Codex session Claude
 # starts runs where Krish can see it in his Codex Desktop app). The Studio's own home (scripts\overnight\codex_home.py:
@@ -288,22 +292,17 @@ Invoke-Check 'claude_cli' {
 }
 
 Invoke-Check 'codex_companion' {
-  # The file ve dispatch picks (scripts\velib\cards.py, companion()): the last by name of every installed version.
-  $found = [string[]]@(Get-ChildItem -LiteralPath $CompanionRoot -Directory -ErrorAction SilentlyContinue |
-    ForEach-Object { Join-Path $_.FullName 'scripts\codex-companion.mjs' } | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf })
-  if (-not $found.Count) { return [ordered]@{ ok = $false; version = $null; detail = 'The Codex plugin companion is not installed (ve doctor explains), so ve dispatch cannot send a Codex card.' } }
-  [Array]::Sort($found, [StringComparer]::Ordinal)
-  $companion = $found[-1]
-  $version = Split-Path -Leaf (Split-Path -Parent (Split-Path -Parent $companion))
+  # The Windows-native route ve dispatch uses (scripts\velib\codex_route.py): Windows node runs codex_thread.mjs, which
+  # starts the Windows codex. With no arguments the script prints its usage and exits 2: no Codex is started.
+  if (-not (Test-Path -LiteralPath $CodexThread -PathType Leaf)) { return [ordered]@{ ok = $false; version = $null; detail = 'scripts\codex_thread.mjs is not in this checkout, so ve dispatch cannot start Codex: pull main.' } }
   $node = Find-Program @('node.exe')
-  if (-not $node) { return [ordered]@{ ok = $false; version = $version; detail = 'Node is not on this machine, so the companion cannot run.' } }
-  # "help" as the first word, which the companion answers with its usage and nothing else. Never "task --help".
-  $run = Invoke-Quiet $node @($companion, 'help') 30
-  $task = @(($run.out -split "`r?`n") | Where-Object { $_ -match 'codex-companion\.mjs task ' } | Select-Object -First 1)
-  if ($run.code -ne 0 -or -not $task.Count) { return [ordered]@{ ok = $false; version = $version; detail = "node <companion> help did not offer the task route ($(Get-Short $run))." } }
-  $missing = @(@('--write', '--fresh', '--model', '--effort', '--background') | Where-Object { $task[0].IndexOf($_) -lt 0 })
-  if ($missing.Count) { return [ordered]@{ ok = $false; version = $version; detail = "the companion's task route no longer takes $($missing -join ', '), which ve dispatch passes." } }
-  return [ordered]@{ ok = $true; version = $version; detail = "companion $version runs and offers the task route ve dispatch uses." }
+  if (-not $node) { return [ordered]@{ ok = $false; version = $null; detail = 'Node is not on this Windows side, so codex_thread.mjs cannot run: winget install OpenJS.NodeJS.LTS.' } }
+  $codex = Find-Program @('codex.exe')
+  if (-not $codex) { return [ordered]@{ ok = $false; version = $null; detail = 'No codex.exe is on the Windows PATH, so the lane cannot start Codex: put the folder holding codex.exe on PATH.' } }
+  $run = Invoke-Quiet $node @($CodexThread) 30
+  $usage = @((($run.out + "`n" + $run.err) -split "`r?`n") | Where-Object { $_ -match 'codex_thread\.mjs open' } | Select-Object -First 1)
+  if (-not $usage.Count) { return [ordered]@{ ok = $false; version = $null; detail = "node codex_thread.mjs did not print its usage ($(Get-Short $run))." } }
+  return [ordered]@{ ok = $true; version = 'codex_thread'; detail = 'Windows node runs codex_thread.mjs and the Windows codex is found: the route ve dispatch uses.' }
 }
 
 Invoke-Check 'codex_login' {

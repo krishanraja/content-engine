@@ -161,7 +161,7 @@ class BudgetTests(unittest.TestCase):
         card.write_text(card.read_text().replace('shell, buffer_create_post', 'shell, image_generation') , encoding='utf-8')
         with mock.patch.object(credits, 'RECORD', self.path), mock.patch.object(cards, 'weekly_used_percent', return_value=10.0), \
                 mock.patch.object(credits, 'week_of', return_value=MONDAY.isoformat()), \
-                mock.patch.object(cards, 'codex_thread', return_value='codex_thread.mjs'), \
+                mock.patch.object(cards, 'launch', return_value=(['node', 'codex_thread.mjs'], {}, 'linux')), \
                 mock.patch.object(cards, 'codex_env', return_value={}), \
                 mock.patch.object(cards.subprocess, 'run') as run:
             cards.dispatch(card)
@@ -189,7 +189,7 @@ class BudgetTests(unittest.TestCase):
                 mock.patch.object(cards, '_require_design_lock', return_value=None),
                 mock.patch.object(cards, '_admit', return_value=None),
                 mock.patch.object(cards, 'ensure_worktree', return_value=None),
-                mock.patch.object(cards, 'codex_thread', return_value='codex_thread.mjs'),
+                mock.patch.object(cards, 'launch', return_value=(['node', 'codex_thread.mjs'], {}, 'linux')),
                 mock.patch.object(cards, 'codex_env', return_value={}),
                 mock.patch.object(cards, 'titled_prompt', return_value=self.dir / 'prompt.md')]
 
