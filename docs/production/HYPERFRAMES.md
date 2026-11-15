@@ -45,8 +45,8 @@ with kit's own `page_endcard`, fonts and masthead, through both backends:
 Compared on contact sheets of both shapes and a full-resolution crop of the settled wide frame: the same layout, type
 and motion, frame for frame. The difference left is a
 sub-pixel shift on the "Subscribe free" and address lines and antialiasing noise on the days row (mean under 2 of 255).
-It is not byte-identical to Playwright's film. The default Playwright clip is byte-identical before and after this
-change (frame hashes compared).
+It is not byte-identical to Playwright's film. The default Playwright clip is unchanged by this work: its decoded frames
+hash the same before and after, and the old and new encoder commands write files with the same sha256.
 
 Also proved in the spike: a page with a transparent background renders to ProRes 4444 (`yuva444p12le`) with alpha 0
 outside the drawn box and 255 inside it. A page with no GSAP or other library needs no network at render time; when a
@@ -75,9 +75,14 @@ MYMU_FILM=hyperframes python scripts/quick-edit/kit.py POST_JSON --cut short --r
 - `MYMU_FILM` unset or `playwright` is today's route. Any other value stops the run.
 - A clip filmed by HyperFrames carries `:hyperframes` in its kit signature, so neither backend's clip stands in for the other.
 - The CLI drives `HYPERFRAMES_BROWSER_PATH`, else the newest Chrome headless shell under `/opt/pw-browsers`, else `MYMU_BROWSER`
-  when it names a file. With none of those, the CLI downloads Chrome Headless Shell once.
+  when it names a file. With none of those the adapter stops and asks for `HYPERFRAMES_BROWSER_PATH`; it never lets the
+  CLI download a browser.
 - Telemetry is always off: the adapter sets `HYPERFRAMES_NO_TELEMETRY=1` and `DO_NOT_TRACK=1` on every call, because the CLI
   sends usage events by default.
+- The CLI sees only the variables in `PASS_ENV` (paths, home, temp, locale, fonts, its own ffmpeg and cache settings), so no
+  engine secret in the session reaches it.
+- A render past its time limit is stopped with every Chrome it started (the whole process group; `taskkill /T` on Windows),
+  and every failure reaches kit's caller as a `KitError` naming the clip.
 - Tests: `python tests/hyperframes_film_test.py` (the render test runs only where the pinned CLI is installed).
 
 ### Rules

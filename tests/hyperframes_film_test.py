@@ -45,6 +45,14 @@ class Environment(unittest.TestCase):
         env = hf.hf_env({'HYPERFRAMES_NO_TELEMETRY': '0', 'DO_NOT_TRACK': '0', 'PATH': '/bin'})
         self.assertEqual((env['HYPERFRAMES_NO_TELEMETRY'], env['DO_NOT_TRACK'], env['PATH']), ('1', '1', '/bin'))
 
+    def test_no_secret_of_the_session_reaches_the_cli(self):
+        env = hf.hf_env({'PATH': '/bin', 'HOME': '/root', 'ENGINE_OPERATOR_TOKEN': 'x', 'SUPABASE_SERVICE_ROLE_KEY': 'x',
+                         'HYPERFRAMES_AUDIO_API_KEY': 'x', 'HYPERFRAMES_FFMPEG_PATH': '/usr/bin/ffmpeg'})
+        self.assertLessEqual(set(env) - set(hf.NO_TELEMETRY) - {'HYPERFRAMES_BROWSER_PATH'}, set(hf.PASS_ENV))
+        self.assertEqual((env['HOME'], env['HYPERFRAMES_FFMPEG_PATH']), ('/root', '/usr/bin/ffmpeg'))
+        for secret in ('ENGINE_OPERATOR_TOKEN', 'SUPABASE_SERVICE_ROLE_KEY', 'HYPERFRAMES_AUDIO_API_KEY'):
+            self.assertNotIn(secret, env)
+
     def test_browser_order_is_explicit_then_headless_shell_then_kits_browser(self):
         with tempfile.TemporaryDirectory() as tmp:
             explicit, shell, mine = (Path(tmp) / n for n in ('explicit', 'shell-dir', 'mine'))
@@ -83,6 +91,101 @@ class Frames(unittest.TestCase):
             with self.assertRaises(RuntimeError) as e:
                 hf.render('page', 'frames')
         self.assertIn('npm ci --prefix vendor/hyperframes', str(e.exception))
+
+
+class Command(unittest.TestCase):
+    """The command the adapter runs, with Popen stood in: `render` and nothing else, and every way out of it."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+        self.chrome = self.dir / 'chrome'
+        self.chrome.write_text('x')
+        self.frames = self.dir / 'frames'
+        self.frames.mkdir()
+        for i in range(1, 3):
+            (self.frames / f'frame_{i:06d}.png').write_bytes(b'')
+        self.environ = {'PATH': '/bin', 'HYPERFRAMES_BROWSER_PATH': str(self.chrome), 'ENGINE_OPERATOR_TOKEN': 'x'}
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def popen(self, returncode=0, communicate=('', '')):
+        proc = mock.Mock(pid=12345, returncode=returncode)
+        proc.communicate = mock.Mock(side_effect=communicate if isinstance(communicate, list) else [communicate])
+        return mock.patch.object(hf.subprocess, 'Popen', return_value=proc), proc
+
+    def test_only_the_render_verb_runs_with_telemetry_off_and_no_secrets(self):
+        patch, _ = self.popen()
+        with patch as popen:
+            pattern, first, count = hf.render('page', self.frames, binary='hf', environ=self.environ)
+        cmd, kw = popen.call_args.args[0], popen.call_args.kwargs
+        self.assertEqual(cmd[:2], ['hf', 'render'])
+        self.assertEqual(cmd[cmd.index('--format') + 1], 'png-sequence')
+        self.assertFalse({'publish', 'share', 'cloud', '--docker'} & set(cmd))
+        self.assertEqual((kw['env']['HYPERFRAMES_NO_TELEMETRY'], kw['env']['DO_NOT_TRACK']), ('1', '1'))
+        self.assertNotIn('ENGINE_OPERATOR_TOKEN', kw['env'])
+        self.assertEqual((pattern.name, first, count), ('frame_%06d.png', 1, 2))
+
+    def test_no_browser_stops_before_the_cli_can_download_one(self):
+        with mock.patch.object(hf, 'HEADLESS_SHELLS', str(self.dir / 'none' / '*')), mock.patch.object(hf.subprocess, 'Popen') as popen:
+            with self.assertRaises(RuntimeError) as e:
+                hf.render('page', self.frames, binary='hf', environ={'PATH': '/bin'})
+        self.assertIn('HYPERFRAMES_BROWSER_PATH', str(e.exception))
+        popen.assert_not_called()
+
+    def test_a_failed_render_says_why(self):
+        patch, _ = self.popen(returncode=1, communicate=('', 'line one\nChrome crashed'))
+        with patch, self.assertRaises(RuntimeError) as e:
+            hf.render('page', self.frames, binary='hf', environ=self.environ)
+        self.assertIn('exit 1', str(e.exception))
+        self.assertIn('Chrome crashed', str(e.exception))
+
+    def test_a_render_past_its_time_is_stopped_with_everything_it_started(self):
+        patch, proc = self.popen(communicate=[subprocess.TimeoutExpired('hf', 1)])
+        with patch, mock.patch.object(hf, '_kill_tree') as kill, self.assertRaises(RuntimeError) as e:
+            hf.render('page', self.frames, binary='hf', environ=self.environ, timeout=1)
+        kill.assert_called_once_with(proc)
+        self.assertIn('longer than 1 s', str(e.exception))
+
+
+class _Page:
+    """Just enough of a Playwright page for HyperFramesDrawer.film to reach the render."""
+
+    def set_viewport_size(self, _):
+        pass
+
+    def set_content(self, *_, **__):
+        pass
+
+    def evaluate(self, js, *_):
+        if js == kit.CHECK_JS:
+            return []
+        if 'outerHTML' in js:
+            return '<!doctype html><html><body><p>x</p></body></html>'
+        if 'backgroundColor' in js:
+            return 'rgb(12, 21, 18)'
+        return True
+
+
+class FilmFailures(unittest.TestCase):
+    def test_every_way_the_render_can_fail_reaches_kits_caller_as_a_kit_error(self):
+        d = hf.HyperFramesDrawer(kit)
+        d._base = mock.Mock(page=mock.Mock(return_value=_Page()))
+        for err in (RuntimeError('render failed'), ValueError('gaps'), OSError(8, 'Exec format error')):
+            with self.subTest(err=type(err).__name__), mock.patch.object(hf, 'render', side_effect=err):
+                with self.assertRaises(kit.KitError) as e:
+                    d.film('<html><body></body></html>', (1080, 1920), 'end.mp4', 2)
+                self.assertTrue(str(e.exception).startswith('end.mp4: '))
+
+    def test_a_short_sequence_is_refused(self):
+        d = hf.HyperFramesDrawer(kit)
+        d._base = mock.Mock(page=mock.Mock(return_value=_Page()))
+        with mock.patch.object(hf, 'render', return_value=(Path('f%06d.png'), 1, 59)), mock.patch.object(kit, 'encode_frames') as enc:
+            with self.assertRaises(kit.KitError) as e:
+                d.film('<html><body></body></html>', (1080, 1920), 'end.mp4', 2)
+        self.assertIn('59 frames, 60 wanted', str(e.exception))
+        enc.assert_not_called()
 
 
 class Pin(unittest.TestCase):
@@ -136,7 +239,7 @@ def _can_render():
 
 
 @unittest.skipIf(_can_render(), _can_render() or '')
-class Render(unittest.TestCase):
+class RealRender(unittest.TestCase):
     def test_the_tall_end_card_films_to_kits_own_streams(self):
         st = kit.style_for('follow_the_money', '2026-11-16')
         dot = kit.png_uri(__import__('PIL.Image', fromlist=['Image']).new('RGB', (322, 99), (126, 240, 192)))
