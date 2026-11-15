@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, type ReactElement } from 'react'
 import { z } from 'zod'
 import { AbsoluteFill, OffthreadVideo, Sequence } from 'remotion'
 import { BrandFrame } from './BrandFrame'
@@ -13,11 +13,11 @@ import type { Box } from './devices/types'
 import { slotsFor, splitCameraBox, splitPlatePosition, windowCameraState } from './layouts'
 import { setActiveCanvas } from './kit/lock'
 import { resolveMotion, type MotionProfile } from './kit/motionProfiles'
-import { beatMotion, groundTexture, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
+import { beatMotion, focusMotion, groundTexture, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
 import { focusRoom, placed } from './kit/focus'
 import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
-import { TRANSITION_FRAMES, cameraAt, cameraStyle, flashAt, hitFrames } from './kit/ingredients'
+import { FOCUS_SCALE, LEAD_AFTER, TRANSITION_FRAMES, cameraAt, cameraStyle, flashAt, hitFrames, leadMoveAt, leadStyle, leads } from './kit/ingredients'
 import { regionSlots } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
@@ -31,11 +31,11 @@ const PlaceSchema = z.object({
   scale: z.number().finite().positive(),
 }).strict()
 
-/** What the camera sees on a beat (kit/focus.ts): for zoomToFocus the first device that reports a focus line, mapped
- *  through its SPLIT placement, and the room it must stay in; for followPen the first scribble's pen tip. Only read
- *  under a motion style. */
-function cameraView(profile: MotionProfile, beat: EngineBeat, slots: readonly Box[], objects: ReadonlyMap<string, EngineObject>,
-  props: EngineRenderProps, at: number): CameraView & { focusIndex: number } {
+/** What the camera sees on a beat (kit/focus.ts): for zoomToFocus (or focus on the event, `wantFocus`) the first device
+ *  that reports a focus line, mapped through its SPLIT placement, and the room it must stay in; for followPen the first
+ *  scribble's pen tip. Read under a motion style, or for focus on the event alone. */
+function cameraView(profile: MotionProfile | undefined, beat: EngineBeat, slots: readonly Box[], objects: ReadonlyMap<string, EngineObject>,
+  props: EngineRenderProps, at: number, wantFocus = false): CameraView & { focusIndex: number } {
   const placeOf = (object: EngineObject) => {
     const place = Object.hasOwn(object.params, 'place') ? PlaceSchema.safeParse(object.params.place) : undefined
     return place?.success ? place.data : undefined
@@ -44,7 +44,8 @@ function cameraView(profile: MotionProfile, beat: EngineBeat, slots: readonly Bo
   const firstPlace = first ? placeOf(first) : undefined
   const fallback = firstPlace ? { left: firstPlace.left, top: firstPlace.top,
     width: firstPlace.width * firstPlace.scale, height: firstPlace.height * firstPlace.scale } : slots[0]
-  if (profile.camera.kind === 'zoomToFocus' || profile.overlays?.includes('brackets')) {
+  const focusable = wantFocus && beat.uses.some((id) => { const object = objects.get(id); return !!object && Object.hasOwn(FOCUS, object.device) })
+  if (profile?.camera.kind === 'zoomToFocus' || profile?.overlays?.includes('brackets') || focusable) {
     for (const [index, id] of beat.uses.entries()) {
       const object = objects.get(id)
       const report = object && Object.hasOwn(FOCUS, object.device) ? FOCUS[object.device] : undefined
@@ -56,11 +57,11 @@ function cameraView(profile: MotionProfile, beat: EngineBeat, slots: readonly Bo
       const focus = report({ object: place ? { ...object, params } : object, events: props.events, box, aspect: props.aspect, frame: at })
       if (!focus) continue
       const room = focusRoom(props.aspect, beat.layout, beat.plate?.source !== 'none', slots)
-      return { focusIndex: index, room, fallback, focus: { ...focus, rect: placed(focus.rect, place),
+      return { focusIndex: index, room, fallback, focusable, focus: { ...focus, rect: placed(focus.rect, place),
         ...(focus.from ? { from: placed(focus.from, place) } : {}) } }
     }
   }
-  if (profile.camera.kind === 'followPen') {
+  if (profile?.camera.kind === 'followPen') {
     for (const id of beat.uses) {
       const object = objects.get(id)
       const track = object && Object.hasOwn(PEN, object.device) ? PEN[object.device] : undefined
@@ -74,7 +75,7 @@ function cameraView(profile: MotionProfile, beat: EngineBeat, slots: readonly Bo
       } }
     }
   }
-  return { focusIndex: 0, fallback }
+  return { focusIndex: 0, fallback, ...(focusable ? { focusable } : {}) }
 }
 
 /** The composition owns the clock; every device and chrome layer receives global frames. `stem={false}` leaves the
@@ -96,9 +97,16 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   // A crossfade handover (style.transitions crossfade) dissolves beat into beat on the style's own clock, its length
   // set by the energy and kept within the 6 to 10 frames a crossfade may take.
   const chosen = resolveMotion(props.motion)
+  // A leading handover (style.transitions.lead, kit/ingredients.ts) is the handover: the style's own crossfade or
+  // curve entrance would fade or move the incoming beat a second time, so under a lead the style's beats cut.
+  const leading = leads(ingredients)
   const profile = chosen && ingredients?.transition === 'crossfade'
-    ? { ...chosen, transition: 'crossfade' as const, transitionFrames: Math.min(10, Math.max(6, TRANSITION_FRAMES[ingredients.energy])) } : chosen
+    ? { ...chosen, transition: 'crossfade' as const, transitionFrames: Math.min(10, Math.max(6, TRANSITION_FRAMES[ingredients.energy])) }
+    : chosen && leading ? { ...chosen, transition: 'cut' as const } : chosen
   setMotionProfile(profile)
+  // Focus on the event (style.camera.focus): the graphics layer pushes onto the line a device reports, for a style that
+  // does not already zoom to it. Never a zoom of the camera, so his take is never cropped by it.
+  const focusOn = !!ingredients?.focus && profile?.camera.kind !== 'zoomToFocus'
   // A staging (kit/staging.ts) places his take and a graphics panel on every beat that shows him; a piece with a
   // WINDOW beat keeps the window's own moves.
   const staging = !hasWindow && isStaging(props.layout?.mode)
@@ -131,12 +139,15 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         // Beats mount by frame range with no time offset, so media nested inside a device (a recording's own
         // Sequence) runs on the same global clock as everything else (INV-ONE-CLOCK).
         const next = props.beats[beatIndex + 1]
+        const prev = beatIndex > 0 ? props.beats[beatIndex - 1] : undefined
         // A crossfade (or a carry) keeps the outgoing beat mounted, held on its last frame, fading out under the
-        // incoming one for the transition's frames. With no style every beat still cuts.
-        const overlap = profile && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
+        // incoming one for the transition's frames. With no style every beat still cuts. A leading handover keeps it
+        // LEAD_AFTER frames more, its clock still running so its exit carries on while the next beat arrives over it.
+        const leadOut = leading && beat.transitionOut !== 'carry' && keepsOutgoing(profile, beat, next, true)
+        const overlap = leadOut ? LEAD_AFTER : profile && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
         const outgoing = frame >= beat.toFrame && frame < beat.toFrame + overlap
         if ((frame < beat.fromFrame || frame >= beat.toFrame) && !outgoing) return null
-        const now = outgoing ? beat.toFrame - 1 : frame
+        const now = outgoing && !leadOut ? beat.toFrame - 1 : frame
         // The layout ingredient (kit/layout.ts): a graphics-only beat's devices fill the region the captions leave.
         const graphicsOnly = beat.layout === 'STAGE' && beat.plate?.source === 'none'
         const stagedBeat = staging && staged(beat) ? staging : undefined
@@ -147,10 +158,16 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
           slots[0] = { left: 0, top: 0, width, height }
         // A style on twos steps its graphics; the take and captions stay on every frame.
         const at = profile?.onTwos ? onTwos(now, beat.fromFrame) : now
+        // What a leaving beat shows never runs past its own end: its objects hold their last frame (one that lives on
+        // into the next beat keeps running), so nothing on it blinks out while it is still on screen.
+        const shown = outgoing ? Math.min(at, beat.toFrame - 1) : at
         const layerHeight = beat.layout === 'SPLIT' ? splitCameraBox(props.aspect).top : height
-        const view = profile ? cameraView(profile, beat, slots, objects, props, at) : undefined
-        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region) : undefined
-        const fade = (motion?.fade ?? 1) * (outgoing ? 1 - progress(frame - beat.toFrame, overlap, (t) => t) : 1)
+        const view = profile || focusOn ? cameraView(profile, beat, slots, objects, props, shown, focusOn) : undefined
+        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region, focusOn ? FOCUS_SCALE : undefined)
+          : view?.focusable ? focusMotion(view, now, beat, FOCUS_SCALE, width, layerHeight) : undefined
+        const fade = (motion?.fade ?? 1) * (outgoing && !leadOut ? 1 - progress(frame - beat.toFrame, overlap, (t) => t) : 1)
+        // The beat's own move in a leading handover: arriving over the one before, and leaving, dimming to dark.
+        const lead = leading ? leadMoveAt(ingredients!, beat, !!prev && prev.transitionOut !== 'carry', leadOut, frame, width, height) : undefined
         const sweep = profile && (beat.layout === 'STAGE' || beat.layout === 'SPLIT') ? sweepStyle(profile, props.tokens, beat, now) : null
         const ground = beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: profile ? splitGroundColour(profile, props.tokens) : props.tokens.cream, overflow: 'hidden' as const }
           // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
@@ -164,7 +181,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const grounded = beat.layout === 'SPLIT' || (beat.layout === 'STAGE' && beat.plate?.source === 'none')
         const overlays = profile?.overlays ?? []
         const sinceBeat = at - beat.fromFrame
-        const hero = profile?.type?.hero && grounded ? heroPhrase(beat, objects, props.events, props.captions, at) : undefined
+        const hero = profile?.type?.hero && grounded ? heroPhrase(beat, objects, props.events, props.captions, shown) : undefined
         const heroDraw = hero ? heroLayout(hero, heroArea(props.aspect, layerHeight, beat.uses.some(id => !hero.replaces.includes(id)))) : undefined
         const torn = overlays.includes('torn')
         const layer = (
@@ -223,7 +240,8 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
               // STAGE shares the whole canvas; other layouts retain their slot clips.
               const clipPath = `inset(${box.top}px ${width - box.left - box.width}px ${height - box.top - box.height}px ${box.left}px${beat.layout === 'P6' && index === 1 ? ' round 40px' : ''})`
               const cutout = torn && TORN_DEVICES.includes(object.device)
-              const device = <Device object={deviceObject} events={props.events} box={box} tokens={tokensFor(object.device, props.tokens, profile)} aspect={props.aspect} frame={at} />
+              const device = <Device object={deviceObject} events={props.events} box={box} tokens={tokensFor(object.device, props.tokens, profile)} aspect={props.aspect}
+                frame={leadOut && outgoing ? Math.min(at, Math.max(object.toFrame, beat.toFrame) - 1) : at} />
               // paper-cutout: the piece leans a little on its own centre and is nudged by hand each step (on twos);
               // the torn edge and shadow are drawn round it afterwards, so the shadow falls straight down.
               // Logo tiles lean one by one inside the device (tileLean), so the device itself does not.
@@ -245,22 +263,25 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
             </AbsoluteFill>
           </AbsoluteFill>
         )
+        // A leading handover moves the whole beat, its tray and torn seam included, and dims it as it leaves.
+        const moved = (drawn: ReactElement) => lead
+          ? <AbsoluteFill key={`lead-${beat.id}`} data-lead={beat.id} style={leadStyle(lead)}>{drawn}</AbsoluteFill> : drawn
         // tray: the graphics sit in a cream tray that rises from bottom left over his chest, with a hard ink drop.
         if (stagedBeat?.rises) {
           const rise = trayRise(frame, beat.fromFrame)
-          return <Fragment key={`devices-${beat.id}`}>
+          return moved(<Fragment key={`devices-${beat.id}`}>
             <div data-staging-tray style={{ ...boxStyle(stagedBeat.panel), borderRadius: stagedBeat.panel.radius, backgroundColor: props.tokens.cream,
               boxShadow: `16px 16px 0 ${props.tokens.inkDeep}`, opacity: rise.opacity * fade,
               transform: `translateY(${rise.ty}px) scale(${rise.scale})`, transformOrigin: 'bottom left' }} />
             <AbsoluteFill style={{ opacity: rise.opacity, transform: `translateY(${rise.ty}px) scale(${rise.scale})`,
               transformOrigin: `${stagedBeat.panel.left}px ${stagedBeat.panel.top + stagedBeat.panel.height}px` }}>{layer}</AbsoluteFill>
-          </Fragment>
+          </Fragment>)
         }
         // paper-cutout: the stock is torn where it meets his take, under the captions and the mark tile.
-        return torn && beat.layout === 'SPLIT' ? <Fragment key={`devices-${beat.id}`}>{layer}
+        return moved(torn && beat.layout === 'SPLIT' ? <Fragment key={`devices-${beat.id}`}>{layer}
           <AbsoluteFill style={fade < 1 ? { opacity: fade } : undefined}>
             <TornSeam id={beat.id} width={width} seam={layerHeight} tokens={props.tokens} />
-          </AbsoluteFill></Fragment> : layer
+          </AbsoluteFill></Fragment> : layer)
       }).concat(hasWindow ? take : [])
   const brandLayers = props.beats.map((beat) => (frame < beat.fromFrame || frame >= beat.toFrame ? null : (
         <AbsoluteFill key={`brand-${beat.id}`}>
@@ -285,12 +306,13 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
     </AbsoluteFill>
   )
   // The camera and the handover (kit/ingredients.ts) move the whole picture, his take and the graphics together; the
-  // captions and the frame stay still over it, and a flash of cream lands over the picture under the captions.
+  // captions and the frame stay still over it, and a flash of cream lands over the picture under the captions. A
+  // leading handover moves the two beats instead (above), so the camera makes no handover move of its own.
   const hits = ingredients.hits ? hitFrames(props.events) : []
   const flash = flashAt(ingredients, props.beats, hits, frame)
   return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
-      <AbsoluteFill data-ingredient-camera style={cameraStyle(cameraAt(ingredients, props.beats, hits, frame, width), width, height)}>
+      <AbsoluteFill data-ingredient-camera style={cameraStyle(cameraAt(ingredients, props.beats, hits, frame, width, height), width, height)}>
         {stagingGround ? picture : !hasWindow && take}
         {beatLayers}
       </AbsoluteFill>

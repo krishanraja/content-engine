@@ -1104,6 +1104,16 @@ export async function loadPinnedRenderRegistryV2(manifest: RenderManifestV2): Pr
   return TreatmentRegistryV1Schema.parse(JSON.parse(await readFile(pinnedConfigPathV2(job), 'utf8')))
 }
 
+/** The house style theme a branded manifest pins, from the job's own pinned configuration, or undefined for a
+ *  manifest the house style does not draw. A Short in the house style takes the Receipt as its package cover
+ *  (receiptCoverV2 in package.ts). */
+export async function houseThemeForManifestV2(manifest: RenderManifestV2): Promise<BrandThemeV1 | undefined> {
+  if (manifest.branding.mode !== 'series') return undefined
+  const registry = await loadPinnedRenderRegistryV2(manifest)
+  const theme = registry.brand_themes.find((candidate) => candidate.theme_id === manifest.branding.theme_id && candidate.version === manifest.branding.theme_version && hashValue(candidate) === manifest.branding.theme_hash)
+  return theme?.publication?.house_style ? theme : undefined
+}
+
 export async function loadExactBrandGeometryContextV2(manifest: RenderManifestV2): Promise<BrandGeometryContextV2 | undefined> {
   if (manifest.branding.mode === 'none') return undefined
   const job = await loadJobV2(manifest.job_id)

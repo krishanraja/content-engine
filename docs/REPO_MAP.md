@@ -5273,7 +5273,9 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `interface BeatMotion`
 - `interface CameraView`
 - `function transitionFrames(profile: MotionProfile): number`
-- `function keepsOutgoing(profile: MotionProfile | undefined, beat: EngineBeat, next: EngineBeat | undefined): boolean`
+- `function keepsOutgoing(profile: MotionProfile | undefined, beat: EngineBeat, next: EngineBeat | undefined, lead = false…`
+- `function focusZoom(focus: Focus, room: Room, t: number, scaleTo: number, width: number, height: number): { transform: s…`
+- `function focusMotion(view: CameraView, frame: number, beat: EngineBeat, scaleTo: number, width: number, height: number)…`
 - `function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number, view: CameraVie…`
 - `function stageGround(profile: MotionProfile | undefined, tokens: EngineTokens): CSSProperties`
 - `function sweepStyle(profile: MotionProfile, tokens: EngineTokens, beat: EngineBeat, frame: number): CSSProperties | null`
@@ -5376,14 +5378,26 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `const ENERGIES`
 - `const TRANSITIONS`
 - `const CAMERAS`
+- `const LEAD_TRANSITIONS`
 - `const EngineIngredientsSchema`
 - `type EngineIngredients = z.infer<typeof EngineIngredientsSchema>`
 - `const TRANSITION_FRAMES: Record<Energy, number>`
+- `const LIVING_DRIFT`
+- `const LEAD_BEFORE`
+- `const LEAD_AFTER`
+- `const FOCUS_SCALE`
+- `const MAX_BLUR_PX`
 - `interface Span`
 - `interface CameraState`
+- `interface Pose`
+- `function leads(ing: EngineIngredients | undefined): boolean`
 - `function hitFrames(events: readonly { atFrame: number }[]): number[]`
+- `function speedBlur(before: Pose, after: Pose, width: number, height: number): number`
 - `function cameraAt(ing: EngineIngredients, beats: readonly Span[], hits: readonly number[], frame: number, width: number…`
 - `function cameraStyle(state: CameraState, width: number, height: number): CSSProperties`
+- `interface LeadMove`
+- `function leadMoveAt(ing: EngineIngredients, beat: Span, enters: boolean, exits: boolean, frame: number, width: number, …`
+- `function leadStyle(move: LeadMove | undefined): CSSProperties`
 - `function flashAt(ing: EngineIngredients, beats: readonly Span[], hits: readonly number[], frame: number): number`
 
 ### `apps/renderer/src/engine/kit/layout.ts`
@@ -5581,7 +5595,6 @@ JSON-value transport: escape values only; keys retain their original spelling.
 - `interface HouseImage`
 - `function HouseFontsGate()`
 - `function Grain()`
-- `function ColourBlock({ tokens }: { tokens: HouseTokens })`
 - `function Swipe({ children, tokens, display = false }: { children: React.ReactNode; tokens: HouseTokens; display?: boole…`
 - `function SwipedText({ text, swipeIndex, tokens, display = false }: { text: string; swipeIndex: number; tokens: HouseTok…`
 - `function Sticker({ text, background, tokens, style, sizePx = HOUSE.sticker.size, paddingX = HOUSE.sticker.paddingX, pad…`
@@ -5712,16 +5725,6 @@ Fitting type into a box, as a pure function of a width measurer, so the
 - `function Badge({ id, p, m, L, x, y, t, shadow, z = 2, opacity = 1, tag, tagTone, tagPop }: { id: string; p: StoryPlayer…`
 - `function Field({ left, top, width, height, bg, z }: { left: number; top: number; width: number; height: number; bg: str…`
 - `function SafeProbe({ on, shape, clip }: { on: boolean; shape: Shape; clip: string })`
-
-### `apps/renderer/src/thumbnail/MakeyourmindupThumbnail.tsx`
-
-- `function houseThumbnailModel(props: ThumbnailProps)`
-- `function MakeyourmindupThumbnail(props: ThumbnailProps)`
-
-### `apps/renderer/src/thumbnail/props.ts`
-
-- `const ThumbnailPropsSchema`
-- `type ThumbnailProps = z.infer<typeof ThumbnailPropsSchema>`
 
 ### `apps/renderer/src/v2/HouseShort.tsx`
 
@@ -6115,6 +6118,7 @@ Artifact-bound user confirmation references.
 - `const VeDatasetSchema`
 - `const VeObjectSchema`
 - `const VeSignatureSchema`
+- `const VE_CLONE_VOICE_RULING`
 - `const VeAssetSchema`
 - `const VeAudioSchema`
 - `const VeApprovalSchema`
@@ -6612,7 +6616,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `export * from './source-analysis.js'`
 - `export * from './stage-graphs.js'`
 - `export * from './station-harnesses.js'`
-- `export * from './thumbnail.js'`
 - `export * from './treatment.js'`
 - `export * from './virtual-camera.js'`
 - `export * from './visual-plan.js'`
@@ -6755,6 +6758,7 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 - `interface PlatformPackageMetadataV2`
 - `interface PlatformCopyV2`
 - `function platformCopyV2(candidate: CandidateV1, platform: VideoPlatformV1): PlatformCopyV2`
+- `async function receiptCoverV2(folder: string | undefined, manifest: RenderManifestV2): Promise<{ path: string; sha256: …`
 - `async function createDraftPackageV2( jobId: string, platform: VideoPlatformV1, masterPath: string, candidate: Candidate…`
 - `async function createDraftPackageSetV2( jobId: string, masterPath: string, candidate: CandidateV1, manifests: RenderMan…`
 - `async function createDraftPackage( jobId: string, platform: 'youtube' | 'linkedin', masterPath: string, candidate: Cand…`
@@ -6857,6 +6861,7 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 - `function validateV2RenderReadiness(manifestInput: RenderManifestV2, reviewOverlay: V2ReviewOverlay = 'none'): string[]`
 - `function manifestToV2RenderProps( manifest: RenderManifestV2, staged: V2StagedMedia, options: { durationMs?: number; re…`
 - `async function loadPinnedRenderRegistryV2(manifest: RenderManifestV2): Promise<TreatmentRegistryV1>`
+- `async function houseThemeForManifestV2(manifest: RenderManifestV2): Promise<BrandThemeV1 | undefined>`
 - `async function loadExactBrandGeometryContextV2(manifest: RenderManifestV2): Promise<BrandGeometryContextV2 | undefined>`
 - `async function rendererImplementationHashV2(repoRoot: string): Promise<string>`
 - `function renderV2CacheKey(manifest: unknown, profile: string, rendererHash: string, durationMs?: number, startMs?: numb…`
@@ -6987,14 +6992,6 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 - `function stationArtifactTopologyIssues( registry: StationRegistryV1, definitions: Iterable<StationDefinitionV1>, ): str…`
 - `function stationInstructionMetadataMatches(instructionSource: string, definition: StationDefinitionV1): boolean`
 - `function loadStationHarnessRegistry(repoRoot: string): LoadedStationRegistryV1`
-
-### `packages/core/src/thumbnail.ts`
-
-- `interface ThumbnailCopyV1`
-- `interface RenderedThumbnailV1`
-- `function thumbnailInputProps(theme: BrandThemeV1, marks: Pick<StagedPublicationMarks, 'mark' | 'channelLabel' | 'channe…`
-- `async function houseThemeForManifestV2(manifest: RenderManifestV2): Promise<BrandThemeV1 | undefined>`
-- `async function renderThumbnailV2(repoRoot: string, manifestInput: RenderManifestV2, copy: ThumbnailCopyV1): Promise<Ren…`
 
 ### `packages/core/src/treatment.ts`
 

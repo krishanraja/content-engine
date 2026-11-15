@@ -4,8 +4,6 @@ import { MindmakeShort } from './Short'
 import { ShortPropsSchema, type ShortProps } from './props'
 import { MindmakeStoryV2 } from './v2/MindmakeStory'
 import { V2RenderPropsSchema, type V2RenderProps } from './v2/props'
-import { MakeyourmindupThumbnail } from './thumbnail/MakeyourmindupThumbnail'
-import { ThumbnailPropsSchema, type ThumbnailProps } from './thumbnail/props'
 import { StoryIntroStandoff, STORY_INTRO_FRAMES } from './story/StoryIntroStandoff'
 import { StoryOutroStandoff, STORY_OUTRO_FRAMES } from './story/StoryOutroStandoff'
 import { StoryStandoffPropsSchema } from './story/props'
@@ -64,18 +62,6 @@ const v2DefaultProps: V2RenderProps = {
     typography: { structure: 'Archivo Variable', claim: 'Newsreader Variable', body: 'Source Serif 4 Variable', data: 'IBM Plex Mono' },
   },
   reviewOverlay: 'none',
-}
-
-const thumbnailDefaultProps: ThumbnailProps = {
-  reviewMode: true,
-  series: 'mind_the_gap',
-  channelLabel: 'mind.the.gap',
-  day: 'Fridays',
-  headline: 'A headline in Anton.',
-  dek: 'The human line, in Fraunces italic.',
-  sticker: 'The headliner',
-  mark: { assetFile: 'placeholder.png', pixelWidth: 831, pixelHeight: 740 },
-  tokens: { ink: '#0C1512', inkDeep: '#070D0B', inkSoft: '#16221D', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' },
 }
 
 function TransportFormatMaster(props: EngineRenderProps) {
@@ -141,16 +127,6 @@ export function RemotionRoot() {
         schema={V2RenderPropsSchema}
         defaultProps={v2DefaultProps}
         calculateMetadata={({ props }) => ({ durationInFrames: Math.max(1, Math.ceil(props.durationMs / 1000 * 30)) })}
-      />
-      <Composition
-        id="MakeyourmindupThumbnail"
-        component={MakeyourmindupThumbnail}
-        width={1080}
-        height={1920}
-        fps={30}
-        durationInFrames={1}
-        schema={ThumbnailPropsSchema}
-        defaultProps={thumbnailDefaultProps}
       />
       {/* The story intro and outro (the stand-off), silent: the music is mixed elsewhere. */}
       <Composition id="StoryIntroStandoffWide" component={StoryIntroStandoff} width={1920} height={1080} fps={30}

@@ -264,6 +264,46 @@ function hasGeneratedMedia(manifest: RenderManifestV1 | RenderManifestV2): boole
   return manifest.assets.some((asset) => asset.generated)
 }
 
+/** The Receipt thumbnail's receipt, as scripts/pages/receipt.py writes it beside the files (thumbs.json). */
+interface ReceiptThumbsV1 { drawer?: unknown; template?: unknown; subchannel?: unknown; files?: unknown }
+
+/** The cover of a Short in the makeyourmindup house style: the Receipt (house rule THE_RECEIPT, Ruling, Krish,
+ *  2026-11-02: "make this the floor level standard moving forward, inviolable"), the thumbnail
+ *  `python3 scripts/pages/build.py COVER_FACTS --thumbs` drew for the master's shape, checked against the thumbs.json
+ *  receipt beside it: drawn as the Receipt, for this manifest's subchannel, and the exact bytes it recorded. The old
+ *  sticker thumbnail is retired (15 Nov 2026), so a house-style Short with no Receipt is refused, never given one. */
+export async function receiptCoverV2(folder: string | undefined, manifest: RenderManifestV2): Promise<{ path: string; sha256: string }> {
+  const draw = 'draw it with python3 scripts/pages/build.py COVER_FACTS --thumbs and pass that folder with --thumbs'
+  if (!folder) throw new Error(`a Short in the makeyourmindup house style takes the Receipt as its cover, and none was given: ${draw}`)
+  let receipt: ReceiptThumbsV1
+  try {
+    receipt = JSON.parse(await readFile(join(folder, 'thumbs.json'), 'utf8')) as ReceiptThumbsV1
+  } catch {
+    throw new Error(`there is no readable thumbs.json in ${folder}, so its thumbnails cannot be shown to be the Receipt: ${draw}`)
+  }
+  if (receipt.template !== 'receipt' || typeof receipt.drawer !== 'string' || !receipt.drawer.includes('(receipt)')) {
+    throw new Error(`the thumbnails in ${folder} were not drawn as the Receipt: ${draw}`)
+  }
+  const subchannel = typeof receipt.subchannel === 'string' ? receipt.subchannel.trim().toLowerCase().replace(/\./g, '_') : ''
+  if (subchannel !== manifest.series) {
+    throw new Error(`the Receipt in ${folder} was drawn for ${String(receipt.subchannel)}, not ${PUBLIC_SERIES_NAMES[manifest.series]}: ${draw}`)
+  }
+  const shape = manifest.output.height > manifest.output.width ? 'tall' : 'wide'
+  const files = Array.isArray(receipt.files) ? receipt.files as Array<{ file?: unknown; shape?: unknown; sha256?: unknown }> : []
+  const entry = files.find((item) => item.shape === shape)
+  if (!entry || typeof entry.file !== 'string' || typeof entry.sha256 !== 'string') {
+    throw new Error(`the Receipt in ${folder} has no ${shape} thumbnail for this ${manifest.output.width} x ${manifest.output.height} master: ${draw}`)
+  }
+  const path = join(folder, basename(entry.file))
+  if (!/\.jpe?g$/i.test(path)) throw new Error(`the Receipt's ${shape} thumbnail ${basename(path)} is not a JPEG: ${draw}`)
+  let sha256: string
+  try { sha256 = await hashFile(path) } catch {
+    throw new Error(`the Receipt's ${shape} thumbnail ${basename(path)} is missing from ${folder}: ${draw}`)
+  }
+  if (sha256 !== entry.sha256) throw new Error(`the Receipt's ${shape} thumbnail ${basename(path)} changed after it was drawn: ${draw}`)
+  return { path, sha256 }
+}
+
 export async function createDraftPackageV2(
   jobId: string,
   platform: VideoPlatformV1,
@@ -272,9 +312,10 @@ export async function createDraftPackageV2(
   manifest: RenderManifestV1 | RenderManifestV2,
   qa: unknown,
   approvedHashes?: { render_manifest_hash?: string; master_path?: string; master_hash?: string },
-  // A rendered cover, for a Short in the makeyourmindup house style: its
-  // thumbnail (renderThumbnailV2). Without one, the cover is the master's
-  // frame at half a second, as it always was.
+  // The cover, for a Short in the makeyourmindup house style: the Receipt
+  // that scripts/pages/build.py --thumbs drew for its shape (receiptCoverV2).
+  // Without one, the cover is the master's frame at half a second, as it
+  // always was.
   cover?: { path: string; sha256: string },
 ): Promise<DraftPackageV2> {
   if (mediaQualityEnforced()) await assertQualifiedFile(masterPath, undefined, jobId, 'video')

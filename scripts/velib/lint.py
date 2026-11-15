@@ -337,6 +337,8 @@ def synthetic_uses(spec: dict) -> list[dict]:
             owners = {o for o, _ in matched}
             if base not in ruled and len(owners) == 1:
                 base = owners.pop()
+        if asset.get('kind') == 'voice':  # a clone voice is a synthetic voice whatever its tool says; a likeness tool fails closed
+            kind = 'voice' if kind in (None, 'voice') else 'unknown'
         if kind is None and asset.get('origin') == 'generated':
             if asset.get('kind') == 'recording':
                 kind = 'voice'
@@ -426,10 +428,75 @@ def synthetic_lints(spec: dict, fetch=None) -> list[str]:
     return out
 
 
+# Off-day voiceover shorts may be voiced with his approved ElevenLabs clone; hero cuts stay on his real takes (Ruling,
+# Krish, 2026-11-15). A spec carries the clone as one asset of kind voice (the schema holds its shape: a voiceover
+# master, every cut a 9:16 short taking it). This row holds what the schema cannot read: the piece is published on an
+# off day (guards.off_day, from config/studio.json's series days), and the voice is ElevenLabs' voice clone, the one the
+# ruling names. voice.synthetic holds his approval of the clone itself in krish-clone's registry.
+CLONE_VOICE_RULING = ('Ruling, Krish, 2026-11-15: off-day voiceover shorts may be voiced with his approved ElevenLabs '
+                      'clone; hero cuts stay on his real takes')
+CLONE_VOICE_PLATFORM, CLONE_VOICE_CAPABILITY = 'elevenlabs', 'voice_clone'
+
+
+def clone_voices(spec: dict) -> list[tuple[int, dict]]:
+    return [(index, asset) for index, asset in enumerate(spec.get('assets') or []) if asset.get('kind') == 'voice']
+
+
+def clone_route_problems(spec: dict) -> list[str]:
+    """Why this spec is not an off-day voiceover short his clone may voice, [] when it is. Read with or without the voice
+    asset, so `ve voice clone` checks the route before anything is generated."""
+    from . import guards
+    route = f'his clone voices an off-day voiceover short only ({CLONE_VOICE_RULING})'
+    out = []
+    if not guards.off_day(spec):
+        day, series = spec.get('publish_day'), (spec.get('brand') or {}).get('series')
+        why = (f'{day} is the {series} day, so this is a hero piece and stays on his real takes' if day and guards.series_day(spec)
+               else 'no off day can be read for this spec (publish_day and its series day)')
+        out.append(f'voice.clone_route publish_day: {why}: {route}')
+    if (spec.get('audio') or {}).get('master') != 'vo':
+        out.append(f'voice.clone_route audio.master: a clone-voiced spec has the voiceover master (vo): {route}')
+    for cut_id, cut in (spec.get('cuts') or {}).items():
+        if cut.get('aspect') != '9:16':
+            out.append(f'voice.clone_route cuts.{cut_id}.aspect: {cut.get("aspect")} is no short; every cut is 9:16: {route}')
+    return out
+
+
+def clone_tool_problem(asset: dict) -> str | None:
+    """None when the asset's tool is ElevenLabs' voice clone with a registry name after the colon."""
+    tool = str(asset.get('tool') or '').strip().lower()
+    head = CLONE_NAME.sub('', tool)
+    platform = re.split(r'[.:/\s]', head, maxsplit=1)[0]
+    if platform == CLONE_VOICE_PLATFORM and re.search(r'(?<![a-z])voice[ _-]?clone(?![a-z])', head) and CLONE_NAME.search(tool):
+        return None
+    return (f'{tool or "(no tool)"} is not his ElevenLabs voice clone; write it as '
+            f'{CLONE_VOICE_PLATFORM}.{CLONE_VOICE_CAPABILITY}:<name in krish-clone\'s registry> ({CLONE_VOICE_RULING})')
+
+
+def clone_voice_lints(spec: dict) -> list[str]:
+    """voice.clone_route: a spec carrying a clone voice is an off-day voiceover short of 9:16 cuts, each taking that
+    voice, and the voice is ElevenLabs' voice clone. A hero cut can never carry it."""
+    voices = clone_voices(spec)
+    if not voices:
+        return []
+    out = clone_route_problems(spec)
+    ids = {asset.get('id') for _, asset in voices}
+    if len(voices) > 1:
+        out.append(f'voice.clone_route assets: {len(voices)} clone voices; one per spec, the one every cut takes ({CLONE_VOICE_RULING})')
+    for cut_id, cut in (spec.get('cuts') or {}).items():
+        if cut.get('take') not in ids:
+            out.append(f'voice.clone_route cuts.{cut_id}.take: {cut.get("take")} is not the clone voice; his take and his clone '
+                       f'never share a clone-voiced spec ({CLONE_VOICE_RULING})')
+    for index, asset in voices:
+        problem = clone_tool_problem(asset)
+        if problem:
+            out.append(f'voice.clone_route assets.{index}.tool: {problem}')
+    return out
+
+
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     from . import guards
     out: list[str] = (reference_lints(spec) + motion_lints(spec) + guards.spec_lints(spec) + palette_lints(spec)
-                      + title_moment_lints(spec) + synthetic_lints(spec))
+                      + title_moment_lints(spec) + clone_voice_lints(spec) + synthetic_lints(spec))
     from . import character
     out.extend(character.spec_lints(spec))  # nothing unless the spec names a character
     from . import designlock
