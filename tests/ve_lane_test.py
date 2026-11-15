@@ -290,6 +290,24 @@ class NodeModulesLink(unittest.TestCase):
             self.assertNotIn('node_modules', files)
             self.assertIn('out/x.ts', files)
 
+    def test_an_ignored_node_modules_does_not_stop_the_commit(self):
+        # 15 Nov, on his PC: .gitignore ignores node_modules and the exclude pathspec made git add exit 1.
+        import os, subprocess
+        with tempfile.TemporaryDirectory() as temp, tempfile.TemporaryDirectory() as mods:
+            wt = Path(temp)
+            git = ['git', '-C', temp, '-c', 'user.name=t', '-c', 'user.email=t@t']
+            subprocess.run(['git', 'init', '-q', temp], check=True)
+            (wt / '.gitignore').write_text('node_modules\n', encoding='utf-8')
+            subprocess.run(git + ['add', '-A'], check=True); subprocess.run(git + ['commit', '-q', '-m', 'base'], check=True)
+            os.symlink(mods, wt / 'node_modules')
+            (wt / 'out').mkdir(); (wt / 'out' / 'x.ts').write_text('x', encoding='utf-8')
+            subprocess.run(['git', '-C', temp, 'remote', 'add', 'origin', temp + '/.git'], check=True)
+            sha, why = lane.publish_branch(wt, 'codex/c', 'codex: c')
+            self.assertIsNone(why)
+            files = subprocess.run(['git', '-C', temp, 'ls-tree', '-r', '--name-only', 'HEAD'], capture_output=True, text=True).stdout.split()
+            self.assertNotIn('node_modules', files)
+            self.assertIn('out/x.ts', files)
+
 
 class Routes(unittest.TestCase):
     def test_an_explicit_wsl_route_wins_over_a_companion_here(self):

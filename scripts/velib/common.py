@@ -152,7 +152,13 @@ def local_root(kind: str, repo: str = 'content-engine', branch: str | None = Non
 
 
 def card_worktree(card_id: str) -> str:
-    """Where a Codex card's worktree lives: the worktrees root, repo content-engine, branch ve-card/<card>."""
+    """Where a Codex card's worktree lives: the worktrees root, repo content-engine, branch ve-card/<card>. Inside WSL
+    with his Windows Codex home it is on the Windows drive beside that home (velib.codex_route.card_root), because
+    Windows Codex cannot open a worktree on the WSL filesystem."""
+    from . import codex_route
+    windows = codex_route.card_root()
+    if windows:
+        return f'{windows}/content-engine/ve-card/{card_id}'
     return local_root('worktrees', repo='content-engine', branch=f've-card/{card_id}')
 
 
