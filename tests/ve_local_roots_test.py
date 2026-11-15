@@ -143,7 +143,7 @@ class EveryReaderResolvesFromConfig(unittest.TestCase):
 
     def test_ensure_worktree_refuses_a_typed_path_and_makes_nothing(self):
         with tempfile.TemporaryDirectory() as temp, mock.patch.dict(os.environ, {'MINDMAKE_LOCAL_WORKTREES': temp}), \
-                mock.patch.object(cards.subprocess, 'run') as run:
+                mock.patch.object(cards.subprocess, 'run') as run, mock.patch.object(cards, 'fresh_modules', return_value=False):
             with self.assertRaises(SystemExit) as stop:
                 cards.ensure_worktree(Path(temp) / 'somewhere-else' / 'w-2', 'w-2')
             self.assertIn('local_roots.worktrees', str(stop.exception))
@@ -155,13 +155,15 @@ class EveryReaderResolvesFromConfig(unittest.TestCase):
 
     def test_ensure_worktree_makes_the_configured_one(self):
         with tempfile.TemporaryDirectory() as temp, mock.patch.dict(os.environ, {'MINDMAKE_LOCAL_WORKTREES': temp}), \
-                mock.patch.object(cards.subprocess, 'run') as run, mock.patch.object(cards.os, 'symlink'):
+                mock.patch.object(cards.subprocess, 'run') as run, mock.patch.object(cards.os, 'symlink'), \
+                mock.patch.object(cards, 'fresh_modules', return_value=False) as fresh:
             target = common.native_path(cards.card_worktree('w-4'))
             cards.ensure_worktree(target, 'w-4')
             added = [call.args[0] for call in run.call_args_list if call.args[0][:3] == ['git', 'worktree', 'add']]
             self.assertEqual(len(added), 1)
             self.assertEqual(added[0][-2], str(target))
             self.assertEqual(added[0][5], 've-card/w-4')
+            fresh.assert_called_once()  # the main checkout's packages are brought up to its lockfile first
 
     @unittest.skipIf(sys.platform == 'win32' and not os.environ.get('BASH'), 'needs bash')
     def test_ve_env_sh_reads_the_toolchain_from_the_config(self):

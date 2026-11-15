@@ -44,10 +44,15 @@ class BudgetTests(unittest.TestCase):
         self.dir = Path(self.tmp.name)
         self.env = mock.patch.dict(os.environ, {'VE_CREDIT_LEDGER': str(self.dir / 'ledger')})
         self.env.start()
+        # Dispatch brings the main checkout's packages up to its lockfile first; never a real npm ci in a unit test.
+        from velib import cards
+        self.fresh = mock.patch.object(cards, 'fresh_modules', return_value=False)
+        self.fresh.start()
         self.path = self.dir / 'credit-budget.json'
         self.path.write_text(json.dumps(signed()), encoding='utf-8')
 
     def tearDown(self):
+        self.fresh.stop()
         self.env.stop()
         self.tmp.cleanup()
 
