@@ -2768,6 +2768,32 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle`
 - `async function saveStyle(db: SupabaseClient, pieceId: string, pick: StylePick, now = new Date()): Promise<SavedStyle>`
 
+### `apps/control-plane/api/board/_thumbs.ts`
+
+- `const THUMB_OP`
+- `const THUMB_WORDS_MAX`
+- `interface ThumbDrive`
+- `interface ThumbPress`
+- `interface ThumbFileView`
+- `interface ThumbOptionView`
+- `type ThumbState = 'awaits_pick' | 'not_in_drive' | 'picked' | 'redraw'`
+- `interface DayThumbs`
+- `function criticLine(v: MakingThumbVerdictOption | undefined): string`
+- `function thumbsOf(piece: Body | undefined): MakingThumbnailOptions | null`
+- `function dayThumbs(week: string, piece: Body | undefined): DayThumbs | null`
+- `function thumbsPress(t: DayThumbs | null): ThumbPress | null`
+- `class ThumbError`
+- `interface ThumbPick`
+- `function thumbPick(body: Body): ThumbPick`
+- `function nextThumbs(making: Body, pick: ThumbPick, at: string): { making: Body; already: boolean; answer: DayThumbs['an…`
+- `async function saveThumbs(db: SupabaseClient, pieceId: string, pick: ThumbPick, now = new Date()): Promise<{ answer: Da…`
+- `interface ThumbPlace`
+- `type Filed = 'filed' | 'failed' | 'waits_on_migration'`
+- `function thumbReport(place: ThumbPlace, words: string | null, at: string)`
+- `function thumbInboxRow(place: ThumbPlace, words: string | null, at: string)`
+- `async function fileThumbLearning(db: SupabaseClient, place: ThumbPlace, words: string | null, at: string): Promise<{ ta…`
+- `function thumbDriveIds(pieces: Body[]): Set<string>`
+
 ### `apps/control-plane/api/board/_view.ts`
 
 - `const VIEW_DAYS: readonly PostedDay[]`
