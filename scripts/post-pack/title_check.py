@@ -21,7 +21,13 @@ A title passes only when it is none of these (house rule TITLE_EARNS_THE_CLICK):
     why", "the truth about", "you won't believe", "what you need to know",
     "game changer", "a closer look", "deep dive", "the future of";
   - made from nothing: a name or a number in it that the piece never says
-    (checked when the piece's words are given).
+    (checked when the piece's words are given);
+  - a vague word standing in for a name: "they" or "them" anywhere, or "it",
+    "this", "these" or "those" before the title has named anyone (Krish,
+    2026-11-15: '"They Faked AI Use" is a terrible title. It's not clear, and
+    it's way too vague. Words like "they" are not welcome in these types of
+    titles.' The honest_titles amendment: "It names who did it, never 'they',
+    'it' or 'this' standing in for a name.").
 
     python title_check.py "Title" [more titles] [--source body.md [--source script.md]]
     python title_check.py lessons            what Krish's verdicts teach, and his picked and rejected titles
@@ -129,6 +135,25 @@ def names_nothing(title, source):
     return None
 
 
+VAGUE_ALWAYS = re.compile(r"\b(they|them|they['’](?:re|ve|ll|d))\b", re.I)
+VAGUE_BEFORE_A_NAME = re.compile(r"\b(it|this|these|those)\b", re.I)
+
+
+def vague_subject(title):
+    """The vague word standing in for a name, or None (Ruling, Krish, 2026-11-15: titles never use vague words like
+    "they")."""
+    t = FORMAT_LABEL.sub('', title)
+    m = VAGUE_ALWAYS.search(t)
+    if m:
+        return m.group(1)
+    m = VAGUE_BEFORE_A_NAME.search(t)
+    if m:
+        before = t[:m.start()]
+        if not names_in(before) if before.strip() else True:
+            return m.group(1)
+    return None
+
+
 def problems(title, source=None):
     """The reasons a title fails, [] when it passes. source: the piece's own
     words (body and scripts), to check its names and numbers are the piece's."""
@@ -142,6 +167,10 @@ def problems(title, source=None):
     m = STOCK.search(t)
     if m:
         out.append(f'"{m.group(0)}" is a stock headline phrase')
+    vague = vague_subject(t)
+    if vague:
+        out.append(f'"{vague}" stands in for a name: say who did it (Krish, 2026-11-15: "Words like \'they\' are not welcome in '
+                   'these types of titles")')
     names = names_in(t)
     earned = (NUMBER.search(t) or (names and (VERB_HINT.search(t) or NUMBER_WORD.search(t))) or len(names) >= 2
               or (STAKE.search(t) and VERB_HINT.search(t)))
@@ -438,6 +467,10 @@ def self_test():
     check('made from nothing: a number the piece never says', any('"12"' in p for p in problems('Muse wins 12 to 3', body)), True)
     for good in ('A million new ChatGPT users in one hour', 'Three Opus models in four months'):
         check(f'a number in words earns it: {good}', problems(good, 'ChatGPT users Opus models million hour three four months'), [])
+    for vague in ('They faked AI use', 'THEY FAKED AI USE', 'Meta staff were ranked by AI use. They gamed it.',
+                  'This is why Meta ranks staff', 'It broke Git'):
+        check(f'refused, a vague word for a name: {vague}', any('stands in for a name' in p for p in problems(vague)), True)
+    check('it after a name is a name', any('stands in for a name' in p for p in problems('Amazon locked Muse out. Walmart let it in.')), False)
     check('the VIDEO: format label is not a name', problems("VIDEO: We unpack why Amazon blocked Muse, and Walmart let it in", body), [])
     check('a name after the label is still checked', any('Tesco' in p for p in problems('VIDEO: Tesco blocked Muse', body)), True)
     # The gate: only a title Krish picked; a rejected one says why.

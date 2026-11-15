@@ -58,3 +58,24 @@ kept for some formats, say which.
 ## His answer
 
 Approved as written, so the ceilings stand: 7 words (point 1) and three logos at most (point 3).
+
+## Every posted video carries its designed cover (Ruling, Krish, 15 November 2026)
+
+His words, on the Rat tails reel: "the thumbnail is ridiculously poor, and that must never be the case." The 14 Nov
+Instagram repost went out through Buffer with no cover set, so Instagram showed the cut's opening frame, an AI scene
+with no headline and no wordmark, while his own native posts the day before showed the designed cover.
+
+- Every video posted on any platform, on every post and repost, shows its own designed cover in the grid and the player:
+  the approved vertical cover for a tall cut, the wide thumbnail for a wide cut. Never an auto-picked frame, the opening
+  frame, an AI scene or a blank.
+- The piece manifest names it: each channel that posts a video (instagram, facebook, tiktok, youtube, threads, x)
+  carries `cover: {asset, sha256, cover_offset_ms}` (`config/schema/piece-manifest.schema.json`,
+  `scripts/post-pack/piece_manifest.py`, which refuses a video channel without it), so the posting route knows which
+  image is the cover.
+- A route that can set a cover image posts with that image. Buffer cannot: it takes only a frame time
+  (`thumbnailOffset`). A route like that may post the video only when the designed cover is built into the cut as its
+  final frames, `cover_offset_ms` says where, and its `thumbnailOffset` equals it; otherwise the post is held. Growth
+  owns the posting side and implements that hold.
+- One canonical tall cover per cut: a tall cover's headline passes `title_check.py` on the piece's own words, which
+  refuses "they", "it" or "this" standing in for a name (Krish, 2026-11-15: '"They Faked AI Use" is a terrible title.
+  It's not clear, and it's way too vague. Words like "they" are not welcome in these types of titles.').

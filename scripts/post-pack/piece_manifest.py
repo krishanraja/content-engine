@@ -9,7 +9,16 @@ copied from its main at 38fada1 into config/schema/piece-manifest.schema.json:
     {"schema": "content-engine-piece-manifest/1", "piece_id", "approval_sha256",
      "qa": {"state": "passed" | "held" | "failed", "checked_at"},
      "assets": [{"name", "drive_id", "sha256", "order"}],
-     "channels": {channel: {"words", "alt_text": [text, ...] | null, "assets": [name, ...]}}}
+     "channels": {channel: {"words", "alt_text": [text, ...] | null, "assets": [name, ...],
+                            "cover": {"asset", "sha256", "cover_offset_ms": int | null}}}}
+
+Every posted video carries its designed cover (Ruling, Krish, 2026-11-15; docs/production/COVER-STANDARD.md, "Every
+posted video carries its designed cover"). A channel that posts a video (instagram, facebook, tiktok, youtube, threads,
+x) names its cover: an image asset in this manifest (vertical_cover, thumb_tall, thumb_wide, square_cover) and its
+sha256, so the posting route knows which image is the cover. cover_offset_ms is the time in the cut where that same cover
+is built in as the closing frames, or null when it is not: a route that cannot set a cover image (Buffer takes only a
+frame time, thumbnailOffset) may post the video only when cover_offset_ms is set and its thumbnailOffset equals it;
+otherwise the slot is held. Growth implements the posting side.
 
 Three steps, and nothing here sends anything unless Krish's yes is given for that exact send:
 
@@ -66,6 +75,10 @@ YES = re.compile(r'^Krish, (\d{4}-\d{2}-\d{2}): (\S.{3,})$', re.S)
 # A viewer page is not the file's bytes: Growth downloads the manifest itself and hashes what it gets.
 VIEWER = re.compile(r'^https://(?:drive|docs)\.google\.com/(?:file/d/[^/]+/(?:view|edit|preview)|open\b|document/)')
 MAX_BYTES = 262144
+# Every posted video carries its designed cover (Ruling, Krish, 2026-11-15).
+VIDEO_ASSETS = ('short_video', 'long_video', 'feature_video', 'snackable_video')
+COVER_ASSETS = ('vertical_cover', 'thumb_tall', 'thumb_wide', 'square_cover')
+COVER_CHANNELS = ('instagram', 'facebook', 'tiktok', 'youtube', 'threads', 'x')
 MAX_ASSETS = 40
 
 
@@ -132,13 +145,38 @@ def problems(value, draft=False):
         if ch not in CHANNELS:
             out.append(f'{ch}: not one of Growth\'s channels ({", ".join(CHANNELS)})')
             continue
-        if not isinstance(e, dict) or set(e) != {'words', 'alt_text', 'assets'} or not (isinstance(e['words'], str) and e['words'].strip()) \
+        if not isinstance(e, dict) or not {'words', 'alt_text', 'assets'} <= set(e) <= {'words', 'alt_text', 'assets', 'cover'} \
+                or not (isinstance(e['words'], str) and e['words'].strip()) \
                 or not isinstance(e['assets'], list) or any(n not in names for n in e['assets']) or len(set(e['assets'])) != len(e['assets']):
             out.append(f'{ch}: words, alt_text and assets (names from assets, each once)')
             continue
         alt = e['alt_text']
         if alt is not None and not (isinstance(alt, list) and len(alt) == len(e['assets']) and all(isinstance(t, str) for t in alt)):
             out.append(f'{ch}: alt_text is null or one text per asset, in order')
+        out.extend(cover_problems(ch, e, {a['name']: a for a in assets if isinstance(a, dict) and 'name' in a}))
+    return out
+
+
+def cover_problems(ch, entry, by_name):
+    """Every posted video carries its designed cover (Ruling, Krish, 2026-11-15): [] when it does or posts no video."""
+    posts_video = any(asset_spec.asset_kind(n) in VIDEO_ASSETS for n in entry.get('assets') or [])
+    cover = entry.get('cover')
+    if cover is None:
+        if posts_video and ch in COVER_CHANNELS:
+            return [f'{ch}: a posted video carries its designed cover ("cover": {{"asset", "sha256", "cover_offset_ms"}}); '
+                    'never an auto-picked frame (Ruling, Krish, 2026-11-15)']
+        return []
+    if not isinstance(cover, dict) or set(cover) != {'asset', 'sha256', 'cover_offset_ms'}:
+        return [f'{ch}: cover is {{asset, sha256, cover_offset_ms}}']
+    out = []
+    held = by_name.get(cover['asset'])
+    if held is None or asset_spec.asset_kind(cover['asset']) not in COVER_ASSETS:
+        out.append(f'{ch}: the cover is one of this manifest\'s cover images ({", ".join(COVER_ASSETS)})')
+    elif cover['sha256'] != held.get('sha256'):
+        out.append(f'{ch}: the cover\'s sha256 is not its asset\'s')
+    offset = cover['cover_offset_ms']
+    if offset is not None and (isinstance(offset, bool) or not isinstance(offset, int) or offset < 0):
+        out.append(f'{ch}: cover_offset_ms is the time of the built-in cover frame in ms, or null')
     return out
 
 
@@ -149,7 +187,8 @@ def draft(spec):
     assets = [{'name': a.get('name'), 'drive_id': a.get('drive_id'), 'sha256': a.get('sha256'), 'order': n}
               for n, a in enumerate(spec.get('assets') or [], 1) if isinstance(a, dict)]
     out = {'schema': SCHEMA, 'piece_id': spec.get('piece_id'), 'qa': spec.get('qa'), 'assets': assets,
-           'channels': {ch: {'words': e.get('words'), 'alt_text': e.get('alt_text'), 'assets': e.get('assets') or []}
+           'channels': {ch: {'words': e.get('words'), 'alt_text': e.get('alt_text'), 'assets': e.get('assets') or [],
+                             **({'cover': e['cover']} if 'cover' in e else {})}
                         if isinstance(e, dict) else e for ch, e in (spec.get('channels') or {}).items()}}
     bad = problems(out, draft=True)
     if bad:
@@ -261,8 +300,10 @@ def self_test():
     spec = {'piece_id': piece, 'qa': {'state': 'passed', 'checked_at': '2026-11-09T07:00:00Z'},
             'assets': [{'name': 'short_video', 'drive_id': 'a' * 25, 'sha256': '1' * 64},
                        {'name': 'vertical_cover', 'drive_id': 'b' * 25, 'sha256': '2' * 64}],
-            'channels': {'tiktok': {'words': 'Synthetic caption.', 'alt_text': None, 'assets': ['short_video']},
-                         'instagram': {'words': 'Synthetic caption.', 'alt_text': None, 'assets': ['short_video']},
+            'channels': {'tiktok': {'words': 'Synthetic caption.', 'alt_text': None, 'assets': ['short_video'],
+                                    'cover': {'asset': 'vertical_cover', 'sha256': '2' * 64, 'cover_offset_ms': None}},
+                         'instagram': {'words': 'Synthetic caption.', 'alt_text': None, 'assets': ['short_video'],
+                                       'cover': {'asset': 'vertical_cover', 'sha256': '2' * 64, 'cover_offset_ms': 89500}},
                          'linkedin': {'words': 'Synthetic post.', 'alt_text': ['A synthetic cover.'], 'assets': ['vertical_cover']}}}
     d = draft(spec)
     db = encode(d)
@@ -272,6 +313,9 @@ def self_test():
     for bad, why in ((dict(spec, channels={'myspace': {'words': 'x', 'alt_text': None, 'assets': []}}), 'an unknown channel'),
                      (dict(spec, channels={'tiktok': {'words': 'x', 'alt_text': None, 'assets': ['nope']}}), 'an asset it does not hold'),
                      (dict(spec, channels={'tiktok': {'words': 'x', 'alt_text': ['a', 'b'], 'assets': ['short_video']}}), 'alt text not one per asset'),
+                     (dict(spec, channels={'tiktok': {'words': 'x', 'alt_text': None, 'assets': ['short_video']}}), 'a posted video with no cover'),
+                     (dict(spec, channels={'tiktok': {'words': 'x', 'alt_text': None, 'assets': ['short_video'],
+                                                      'cover': {'asset': 'vertical_cover', 'sha256': '9' * 64, 'cover_offset_ms': None}}}), 'a cover that is not its asset'),
                      (dict(spec, assets=[{'name': '3 Video/x.mp4', 'drive_id': 'a' * 25, 'sha256': '1' * 64}]), 'a name with spaces'),
                      (dict(spec, assets=spec['assets'] + [{'name': 'teaser_gif', 'drive_id': 'c' * 25, 'sha256': '3' * 64}]), 'an asset the spec does not hold')):
         try:
