@@ -4039,6 +4039,10 @@ The content-watcher queue: what the home computers may claim, report and read, d
 - `const STALE_CLAIM_MS`
 - `const CLOUD_GRACE_MS`
 - `const isCloudMachine = (machine: string) =>`
+- `const WORKER_MACHINE`
+- `const HOME_GRACE_MS`
+- `const isWorker = (machine: string) =>`
+- `const workerCannotFetch = (row: Pick<WatchRequestRow, 'platform'>) =>`
 - `const MAX_ATTEMPTS`
 - `const RETRY_AFTER_MS`
 - `function claimableNow(row: WatchRequestRow, machine: string, now: Date): boolean`
@@ -4056,7 +4060,7 @@ The content-watcher queue: what the home computers may claim, report and read, d
 - `function parseReport(body: unknown): Parsed<ReportBody>`
 - `function parseReadOnly(body: unknown): Parsed<{ machine: string; reads: ReadRow[] }>`
 - `function parseCheck(body: unknown): Parsed<{ machine: string; shas: string[]; engine_rev: string }>`
-- `async function heldReads(store: WatchStore, shas: string[], engineRev: string): Promise<Record<string, string>>`
+- `async function heldReads(store: WatchStore, shas: string[], engineRev: string, machine?: string): Promise<Record<string…`
 - `function compareRev(a: string, b: string): number`
 - `function claimView(row: WatchRequestRow)`
 - `async function waiting(store: WatchStore, machine: string, now = new Date()): Promise<number>`
