@@ -66,3 +66,72 @@ it('puts an ink panel behind the dek only when asked', () => {
   expect(html(withDek({}))).not.toContain('data-dek-back')
   expect(html(withDek({ dekBack: true }))).toContain('data-dek-back')
 })
+
+import { createHash } from 'node:crypto'
+import { setMotionProfile } from '../../clock'
+import { resolveMotion } from '../../kit/motionProfiles'
+
+it('preserves the original default markup at every frame in both shapes and motion styles', () => {
+  const hash = createHash('sha256')
+  try {
+    for (const module of [undefined, 'living-ui']) {
+      setMotionProfile(module ? resolveMotion({ style: module }) : undefined)
+      for (const aspect of ['9:16', '16:9'] as const) {
+        for (let frame = 0; frame <= 180; frame++) {
+          hash.update(renderToStaticMarkup(React.createElement(Device, {
+            ...overlayTestProps, aspect, object, events, frame,
+          })))
+        }
+      }
+    }
+  } finally { setMotionProfile(undefined) }
+  expect(hash.digest('hex')).toMatchInlineSnapshot(`"748db0650566c2fc32018ad05ca28be79c74e0fa3b5313d9830d08c25f103af5"`)
+})
+
+import { setActiveCanvas } from '../../kit/lock'
+import { ParamsSchema } from './schema'
+it('accepts only the explicit assemble reveal', () => {
+  expect(ParamsSchema.safeParse({ lines: ['WORDS'], reveal: 'assemble' }).success).toBe(true)
+  for (const reveal of ['word', 'typewriter', '', null, 1]) {
+    expect(ParamsSchema.safeParse({ lines: ['WORDS'], reveal }).success).toBe(false)
+  }
+})
+it('assembles every word once in reading order within ten frames, overriding typing in both shapes', () => {
+  const params = { lines: ['WORDS LAND', 'IN PLACE'], reveal: 'assemble', swipe: { line: 0, word: 0 }, dek: 'A human line.' }
+  try {
+    setMotionProfile(resolveMotion({ style: 'living-ui' }))
+    for (const aspect of ['9:16', '16:9'] as const) {
+      setActiveCanvas(aspect === '9:16' ? 1080 : 1920, aspect === '9:16' ? 1920 : 1080)
+      const render = (frame: number) => renderToStaticMarkup(React.createElement(Device, {
+        ...overlayTestProps, aspect, object: { ...object, params }, events, frame,
+        box: { left: 0, top: 0, width: aspect === '9:16' ? 1080 : 1920, height: aspect === '9:16' ? 1920 : 1080 },
+      }))
+      for (let age = 0; age <= 30; age++) {
+        const html = render(10 + age)
+        const words = [...html.matchAll(/data-assemble-word="(\d+)" style="([^"]+)"/g)]
+        expect(words).toHaveLength(4)
+        words.forEach(([, index, style]) => {
+          const scale = Number(style!.match(/scale\(([^)]+)\)/)![1])
+          const offset = Number(style!.match(/translateX\(([^p]+)px\)/)![1])
+          expect(scale).toBeGreaterThanOrEqual(1)
+          expect(scale).toBeLessThanOrEqual(1.3)
+          expect(Math.abs(offset)).toBeLessThanOrEqual(24)
+          if (age <= Number(index)) expect(style).toContain('opacity:0;')
+          if (age >= Number(index) + 7) {
+            expect(scale).toBe(1)
+            expect(offset).toBe(0)
+            expect(style).toContain('opacity:1;')
+          }
+        })
+        if (age < 10) expect(html).not.toContain('skewX')
+        else expect(html).toContain('skewX')
+      }
+      expect(render(20)).toBe(render(40))
+      expect(render(106)).toBe('')
+      const again = { ...events[0]!, id: 'again', atFrame: 120 }
+      expect(renderToStaticMarkup(React.createElement(Device, {
+        ...overlayTestProps, aspect, object: { ...object, params }, events: [...events, again], frame: 120,
+      }))).toContain('scale(1.3)')
+    }
+  } finally { setMotionProfile(undefined); setActiveCanvas(1080, 1920) }
+})
