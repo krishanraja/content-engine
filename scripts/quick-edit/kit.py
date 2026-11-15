@@ -89,6 +89,12 @@ cue's words to the ones he said where the plan says one was not found.
 Needs Python 3.10+, Pillow, ffmpeg, the repository's fonts (`npm ci`) and
 Playwright for Python with a Chromium (`MYMU_BROWSER` may name one; in the
 cloud container it is set to the Chromium that is there).
+
+The end card's motion is filmed by Playwright stepping each animation to each
+frame (Drawer.film), the default. MYMU_FILM=hyperframes films it with the
+pinned HyperFrames CLI instead (hyperframes_film.py; docs/production/HYPERFRAMES.md):
+the same page, laid out and checked by the same CHECK_JS, encoded by the same
+encode_frames. It is opt-in and changes no cut until Krish says otherwise.
 """
 import argparse
 import base64
@@ -969,11 +975,7 @@ class Drawer:
             for i in range(round(seconds * fps)):
                 pg.evaluate('t => document.getAnimations().forEach(a => { a.currentTime = t; })', i * 1000 / fps)
                 pg.screenshot(path=str(Path(frames) / f'f{i:04d}.png'), clip={'x': 0, 'y': 0, 'width': size[0], 'height': size[1]})
-            subprocess.run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-framerate', str(fps), '-i', str(Path(frames) / 'f%04d.png'),
-                            '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-t', str(seconds), '-vf', 'format=yuv420p', '-r', str(fps),
-                            '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-profile:v', 'high', '-pix_fmt', 'yuv420p',
-                            '-c:a', 'aac', '-b:a', '128k', '-ar', '48000', '-ac', '2', '-shortest', '-movflags', '+faststart', str(mp4)],
-                           check=True)
+            encode_frames(Path(frames) / 'f%04d.png', seconds, mp4, fps)
         return bad
 
     def close(self):
@@ -982,6 +984,33 @@ class Drawer:
         if self._pw:
             self._pw.stop()
         self._pw = self._browser = self._page = None
+
+
+def encode_frames(pattern, seconds, mp4, fps=30, start_number=0):
+    """Numbered PNG frames (an ffmpeg pattern such as f%04d.png) as a clip make.py can join: 30 fps H.264 high,
+    yuv420p, a silent 48 kHz stereo track. The one encoder setting for a filmed page, whichever backend filmed it."""
+    subprocess.run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-framerate', str(fps),
+                    '-start_number', str(start_number), '-i', str(pattern),
+                    '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-t', str(seconds), '-vf', 'format=yuv420p', '-r', str(fps),
+                    '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-profile:v', 'high', '-pix_fmt', 'yuv420p',
+                    '-c:a', 'aac', '-b:a', '128k', '-ar', '48000', '-ac', '2', '-shortest', '-movflags', '+faststart', str(mp4)],
+                   check=True)
+
+
+FILM_ENV = 'MYMU_FILM'
+FILM_BACKENDS = ('playwright', 'hyperframes')
+
+
+def default_drawer():
+    """The drawer make_kit uses when none is given. Playwright films the end card unless MYMU_FILM names another
+    backend; an unknown name stops the run rather than quietly falling back."""
+    want = (os.environ.get(FILM_ENV) or 'playwright').strip().lower()
+    if want == 'playwright':
+        return Drawer()
+    if want == 'hyperframes':
+        import hyperframes_film  # noqa: PLC0415  only when asked for: it needs the pinned install in vendor/hyperframes
+        return hyperframes_film.HyperFramesDrawer(sys.modules[__name__])
+    raise KitError(f'{FILM_ENV}={want!r} is not a film backend; use one of {", ".join(FILM_BACKENDS)}.')
 
 
 def endcard_video(png, mp4, seconds=ENDCARD_SECONDS):
@@ -1153,7 +1182,7 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
     fonts = brand.font_css()
     logos = logos or {'masthead': brand.brand_uri('masthead', full=True), 'wordmark': brand.brand_uri('wordmark', full=True)}
     own = drawer is None
-    drawer = drawer or Drawer()
+    drawer = drawer or default_drawer()
 
     def draw(rel, doc, size, clear=False):
         sig = sha256_text(f'{KIT_VERSION}\n{doc}')
@@ -1175,7 +1204,8 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
             png, _ = draw(f'endcard-{sh}.png', doc, FRAME[sh])
             mp4 = out / f'endcard-{sh}.mp4'
             seconds = ENDCARD_SECONDS_BY_SHAPE[sh]
-            sig = f'{sha256_text(doc)}:{sha256_file(png)}:{seconds}:{KIT_VERSION}:motion'
+            # A clip filmed by another backend is a different clip: its tag keeps one from standing in for the other.
+            sig = f'{sha256_text(doc)}:{sha256_file(png)}:{seconds}:{KIT_VERSION}:motion{getattr(drawer, "film_tag", "")}'
             if mp4.exists() and made.get(mp4.name) == sig:
                 log(f'kept  {mp4.name}')
             else:
