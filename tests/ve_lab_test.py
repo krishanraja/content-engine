@@ -91,6 +91,47 @@ class LabTest(unittest.TestCase):
         with self.assertRaises(creative_direction.DirectionError):
             creative_direction.style_verdict(data, module, 'picked', '', '2026-11-05', context='lab')
 
+    def test_a_caption_style_is_drawn_only_when_named_so_the_regression_reel_never_grows(self):
+        plain = [look['id'] for look in lab.looks(self.cfg)]
+        self.assertFalse(any(i.startswith('theme-') for i in plain))
+        seen = []
+        manifest = lab.render(self.cfg, self.dir / 'a', self.fake_render(seen), self.dir / 'themes', only=['theme-art-directed'])
+        self.assertEqual([look['id'] for look in manifest['looks']], ['theme-art-directed'])
+        self.assertEqual(seen[0]['captionTheme'], 'art-directed')
+
+    def test_a_sample_is_recorded_as_the_drive_route_with_its_id_and_its_note_cleared(self):
+        samples = self.dir / 'style-samples.json'
+        samples.write_text(json.dumps({'motion': {'paper-cutout': ''}, 'captions': {'art-directed': ''}, 'drive': {'motion': {}, 'captions': {}},
+                                       'waiting': {'motion': {'paper-cutout': 'the lab render'}, 'captions': {'art-directed': 'the lab render'}}}))
+        drive_id = '1' + 'S' * 30
+        manifest = lab.render(self.cfg, self.dir / 'a', self.fake_render([]), self.dir / 'clips', only=['paper-cutout', 'theme-art-directed'])
+        doc = lab.record_sample('motion', 'paper-cutout', drive_id, self.dir / 'clips' / 'paper-cutout.mp4', path=samples)
+        self.assertEqual(doc['motion']['paper-cutout'], f'/api/board/sign-offs?file={drive_id}')
+        self.assertEqual(doc['drive']['motion']['paper-cutout'], drive_id)
+        self.assertNotIn('paper-cutout', doc['waiting']['motion'])
+        lab.record_sample('captions', 'art-directed', drive_id, self.dir / 'clips' / 'theme-art-directed.mp4', path=samples)
+        self.assertEqual(json.loads(samples.read_text())['captions']['art-directed'], f'/api/board/sign-offs?file={drive_id}')
+        for bad in (lambda: lab.record_sample('motion', 'paper-cutout', 'short', path=samples),
+                    lambda: lab.record_sample('motion', 'ladder', drive_id, path=samples),
+                    lambda: lab.record_sample('captions', 'no-such-caption', drive_id, path=samples),
+                    lambda: lab.record_sample('motion', 'data-story', drive_id, self.dir / 'clips' / 'paper-cutout.mp4', path=samples)):
+            with self.assertRaises(ValueError):
+                bad()
+        self.assertEqual(len(manifest['looks']), 2)
+
+    def test_every_waiting_sample_is_a_look_the_lab_draws_and_every_value_is_its_drive_route(self):
+        doc = json.loads(lab.STYLE_SAMPLES.read_text(encoding='utf-8'))
+        drawable = {look['id'] for look in lab.looks(self.cfg) if look['kind'] == 'style'}
+        self.assertEqual(set(doc['motion']) - drawable, set())
+        self.assertEqual(set(doc['captions']) - set(lab.caption_themes()), set())
+        for layer in ('motion', 'captions'):
+            for style_id, value in doc[layer].items():
+                self.assertIsInstance(value, str)
+                if value:
+                    self.assertEqual(value, f"/api/board/sign-offs?file={doc['drive'][layer][style_id]}")
+                else:
+                    self.assertIn(style_id, doc['waiting'][layer], f'{layer} {style_id}: an empty value says which render waits')
+
     def test_the_marks_staged_are_the_ones_studio_pins(self):
         marks = lab.brand_marks()
         self.assertTrue(any(m['source_path'].endswith('makeyourmindup-mark.png') for m in marks))

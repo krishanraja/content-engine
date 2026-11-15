@@ -28,6 +28,7 @@
   python scripts/ve.py voice-ab <piece> --cut <cut> --assets-dir <dir> --at <s>  raw and repaired voice for his ear
   python scripts/ve.py sfx audition <piece> --cut <cut> --assets-dir <dir> --candidates <ids>   big-moment sounds for his ear
   python scripts/ve.py lab render --take <pinned take> --brand-dir <dir> | diff --against <dir> | verdict --module <id> --verdict <v> --said "<his words>" --on <date>
+  python scripts/ve.py lab sample --layer motion|captions --module <id> --drive-id <ID> [--clip <the render>]   a sample for Pick a style
   python scripts/ve.py sfx approve --id <id> --words "<his words>" --on <date> --audition <ve>/sfx-audition.json | sfx stage --assets-dir <dir>
   python scripts/ve.py brief <piece> [--cut <cut>]   one brief per plate, with card fields; never dispatches
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
@@ -1263,6 +1264,12 @@ def cmd_lab(args) -> int:
                   else 'none moved his room off the take'))
             print(f've lab: {lab.record(load_json(out / "manifest.json"), shot=shot)}')
             return 0
+        if args.action == 'sample':
+            if not (args.layer and args.module and args.drive_id):
+                raise ValueError('sample needs --layer motion|captions, --module <the style> and --drive-id <its file in Drive> [--clip <the render>]')
+            lab.record_sample(args.layer, args.module, args.drive_id, Path(args.clip) if args.clip else None)
+            print(f've lab: {args.layer} {args.module} is the sample Pick a style shows (config/ve/style-samples.json)')
+            return 0
         if not (args.module and args.verdict and args.on):
             raise ValueError('verdict needs --module, --verdict picked|seen|not-for-us, --said "<his words>" and --on <date>')
         m = lab.verdict(args.module, args.said, args.on, args.verdict)
@@ -2172,8 +2179,9 @@ def main() -> int:
     p.add_argument('--audition', help="the piece's sfx-audition.json he heard the sound in")
     p.set_defaults(fn=cmd_sfx)
     p = sub.add_parser('lab', help='every drawable style and caption look on one window of his pinned take, outside any piece')
-    p.add_argument('action', choices=('render', 'diff', 'record', 'verdict'))
+    p.add_argument('action', choices=('render', 'diff', 'record', 'verdict', 'sample'))
     p.add_argument('--take'); p.add_argument('--brand-dir'); p.add_argument('--out'); p.add_argument('--against')
+    p.add_argument('--layer', choices=('motion', 'captions')); p.add_argument('--drive-id'); p.add_argument('--clip')
     p.add_argument('--scale', type=float); p.add_argument('--only', nargs='+')
     p.add_argument('--module'); p.add_argument('--verdict', choices=('picked', 'seen', 'not-for-us'))
     p.add_argument('--said', default=''); p.add_argument('--on')

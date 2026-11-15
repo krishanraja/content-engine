@@ -90,15 +90,18 @@ new set; a new set needs a new verdict. At most two rounds of repair. Then hold:
 
 ## 6. Before Krish
 
-1. Record the set and its verdict, by sha256: `python3 scripts/post-pack/making.py <piece> thumbnails WORK/thumbs`.
-2. File each option's two files and the grid mock on the piece, so his board day shows them:
-   `python3 scripts/post-pack/board_session.py <piece> add WORK/thumbs/grid-mock.png --kind output --role thumbnail-options --title "Thumbnail options in your grid"`,
-   and the same for `WORK/thumbs/options/<id>/...` ("Thumbnail option A, tall").
-3. Ask once: `python3 scripts/post-pack/making.py <piece> thumbnails WORK/thumbs --ask "$(python3 scripts/post-pack/live_board.py <Monday> <day>)"`.
-   One item on his list, his judgment, closed by the Video assets step. The live board has no pick press for options
-   yet; he answers in a session.
-4. His answer, in his exact words: `python3 scripts/post-pack/making.py <piece> thumbnails WORK/thumbs --picked b --krish-words "Krish, YYYY-MM-DD: his words"`.
-   A correction to the design goes to his taste ledger too (`report_to_taste_engine`), word for word.
+Follow `.agents/skills/thumbnail-designer/references/board-pick.md` whole: it files the review copies in Drive, records
+the set with their Drive ids so his board shows every option with Pick and Not this (view contract 1.16.0; Ruling,
+Krish, 2026-11-15, approved with the specialists plan: thumbnail options carry a pick press on the Content board),
+files them on the piece, asks him once, and reads his answer back. In short:
+
+1. `python3 scripts/pages/thumb_options.py drive WORK/thumbs a:wide=ID a:tall=ID ... mock=ID`, after filing each in
+   Inbox from My AI.
+2. `python3 scripts/post-pack/making.py <piece> thumbnails WORK/thumbs` (the set, its verdict and those ids, by sha256).
+3. `python3 scripts/post-pack/board_session.py <piece> add ...` for each file and the grid mock.
+4. Ask once: `python3 scripts/post-pack/making.py <piece> thumbnails WORK/thumbs --ask "$(python3 scripts/post-pack/live_board.py <Monday> <day>)"`.
+5. His Pick on the board is on the record by itself; his Not this sends you back to step 5 with his words. An answer in
+   a session: `making.py <piece> thumbnails WORK/thumbs --picked b --krish-words "Krish, YYYY-MM-DD: his words"`.
 
 Until his pick is on the record nothing is the thumbnail: `making.py video` refuses an option's file he has not
 picked, and no option is filed, posted or put in the manifest. A run no one is in (the Sunday-night run) leaves the
@@ -119,5 +122,6 @@ None open. `visual_gate.py` follows the cover standard: at most three logos, onl
 
 ## Walls
 
-Nothing here sends, posts, publishes or spends. No outside image enters the repository. Files reach Drive only
-through `send.py` after his pick (produce-video steps 7 and 8).
+Nothing here sends, posts, publishes or spends. No outside image enters the repository. The thumbnail reaches the
+post's folder in Drive only through `send.py` after his pick (produce-video steps 7 and 8); before it, the options go
+to Drive only as review copies in Inbox from My AI, so his board can show them (step 6).

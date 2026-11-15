@@ -167,7 +167,9 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
   prerequisite, 3D and the moves package, landed 11 Nov; `ladder_stage` landed 11 Nov and `living_screen` 12 Nov; each style routes to its device only after Krish's yes on its test render). A 3D device brings `@types/three` (a dev dependency of `apps/renderer`) and fills its whole device box with one `ThreeCanvas` given whole-pixel sizes, framing any words inside the 9:16 words-safe zone with its camera (`living_screen`'s `safeBox`); any plate it loads is staged by `ve-render.mjs`. How a lab style reaches ve: `lab/styles/README.md`, "From the lab to ve".
 - **Two things called "lab".** `ve lab render` (`velib/lab.py`) renders the house and word caption builds and the
   bank's drawable styles on one window of his pinned take (`config/ve/lab.json`), to check the house look has not
-  moved; it does not render the 15 caption styles. The style lab (`lab/styles/`, `render.mjs`) is where a new
+  moved; it renders a caption style from `config/caption-themes.json` only when `--only` names it (`theme-<id>`, 15 Nov
+  2026), so the regression reel never grows by itself, and `ve lab sample` records a render filed in Drive as the
+  sample Pick a style shows on the board (`config/ve/style-samples.json`). The style lab (`lab/styles/`, `render.mjs`) is where a new
   style is designed and proved as a whole cut, outside the renderer. They are different tools.
 - **What makeyourmindup.ai shows.** The engine's publication watcher (`apps/control-plane/api/publish/watch.ts`,
   hourly) records each piece's Substack post, YouTube video and Short as they go live, and
