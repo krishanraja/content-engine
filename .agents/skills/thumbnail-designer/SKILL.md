@@ -113,9 +113,9 @@ every shape matches what he picked. Each video channel's cover in the piece mani
 
 ## Where the standard and the gates differ
 
-Say these to Krish once when they bite; never settle them yourself (`references/drawing.md`, "Two open conflicts"):
-`visual_gate.py` still asks for every company the piece names on each thumbnail, which point 3 narrows; and
-`config/hook-playbook.json` still describes thumbnails with his face and under 4 words.
+`visual_gate.py` follows the cover standard: at most three logos, only of companies the piece names (Ruling, Krish,
+2026-11-15). Say this one to Krish once when it bites; never settle it yourself (`references/drawing.md`, "One open
+conflict"): `config/hook-playbook.json` still describes thumbnails with his face and under 4 words.
 
 ## Walls
 
