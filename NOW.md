@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":4,"current_as_of":"2026-11-15","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (3 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 8 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
+- Every Claude Code session on Krish's computers now puts the content-engine checkout back on an up-to-date main at start and end (`scripts/checkout_tidy.mjs`, SessionStart and SessionEnd hooks, a session lock), and Codex runs it as step 0 of the start route; it never touches uncommitted changes, unmerged commits or another live session's checkout. (2026-11-15)
 - ve dispatch (and the Codex lane builds that call it) now runs every Codex session under the home Krish's Codex Desktop app reads, so he can see it and attach his browser (Ruling, Krish, 2026-11-15). In WSL that is the Windows side's home, never WSL's own ~/.codex. The run's settings come from a marked ve-card profile in his config.toml; the prompt's first line names the card and piece; the Studio home of 30 Oct is the --studio-home opt-in only. `ve codex where` prints the home. (2026-11-15)
 - His 15 Nov standards are concrete and checked: carousel_check refuses shorthand cards and takes one full plain sentence of up to 20 words a card, `carousel_check.py --cards` measures a cover that looks like a cover and body cards that use the page centrally with real visual effort, the judges are shown every card and pass only at 10 of 10, a tall meme is centred (layout_centre.py in ve qc and before filing), title_check refuses "they", every posted video names its designed cover in the piece manifest, and a series piece carries its episode title moment in the ve spec (Ruling, Krish, 2026-11-15). (2026-11-15)
 - His 15 Nov words now reach the floor: house_brand, words_add and honest_titles carry his amendments (taste_floor_group_amendments, live and read back; the 4 Nov decisions kept), floor.py prints each group's decided words above its members, and the weekly standards check-in has its tables, its code-only builder (scripts/standards_checkin.py) and a Sunday workflow; the one check-in artifact is the only artifact the gate lets through (Ruling, Krish, 2026-11-15). (2026-11-15)
@@ -42,13 +43,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-15 His checkout sat on an old branch 1,784 commits behind with an edit blocking `git pull` (Ruling, Krish, 2026-11-15); the Substack empty-byline rule, stranded in that edit, is now in docs/PUBLISH_BOARDS.md.
 - 2026-11-14 config/chain-cap.json, apps/control-plane/api/_meter.ts, docs/ve/ENGINE.md, docs/ve/STATUS.md, docs/CAROUSEL-STANDARD.md, scripts/carousel_check.py, config/rejection-floor.json.
 Older lines: `docs/history/2026-11-15-NOW-moved-4.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-15): on his PC, the first card dispatched from a Claude session there shows in Codex Desktop under its "ve card <id> for <piece>" line; check `ve codex where` names his Windows home, and if the companion prints that it takes no --profile, decide whether visible runs may load his everyday MCP servers.
+- Next (2026-11-15): On his Windows PC, keep or drop the stashed edit, then open one Claude Code session there and confirm the checkout lands on main.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
