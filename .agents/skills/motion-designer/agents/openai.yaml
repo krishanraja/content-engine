@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan the motion"
+  short_description: "A ve piece's per-beat motion plan, written into its spec before Krish signs the storyboard"
+  default_prompt: "Use $motion-designer to write this ve piece's per-beat motion plan into its spec before Sign storyboard: piece_id: <uuid>."

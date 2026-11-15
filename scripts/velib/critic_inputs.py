@@ -2,17 +2,24 @@
 
 Until 5 Nov 2026 the Critic read four frames a row against each board card (velib.refgate) and nothing else: no frame
 around a cut, no entrance as it settles, no number from QC. Krish caught what that missed himself (F16) and rejected
-a verdict made on stills (F38). ghost-editor's approval sheet (a frame at each cut plus 0.12 s, each beat as it lands
-and fully built) and its cut sheet (three frames either side of every cut) are the model.
+a verdict made on stills (F38). So the Critic reads the cut at speed: every frame around each cut, each move until it
+has landed, the hardest beat as it plays, and each beat once it is fully built, at a size its words can be read.
 
 `write` makes, beside the cut's QC record:
 
   beats.<cut>.jpg    one row per beat: a frame every 0.5 s from the beat's first frame, at most 8, each labelled with its
                      frame number;
-  events.<cut>.jpg   one row per moment a device moves (events sharing a frame share a row): frames at -2, +2, +5, +8 and
-                     +12 from it, so a 4-to-7-frame settle (docs/ve/MOTION_STANDARD.md) is seen, not assumed;
-  cuts.<cut>.jpg     one row per cut (a beat boundary, and a join between takes): frames -3, -1, 0, +1 and +4 (0.12 s
-                     after), so a jump, a flash or a frozen frame at the cut is in view;
+  events.<cut>.jpg   one row per moment a device moves (events sharing a frame share a row), labelled with the word he
+                     says there: frames at -2, +2, +5, +8, +10 and +12 from it, so an entrance that has not landed by
+                     +10 (the signed 4-to-10-frame floor, docs/ve/MOTION_STANDARD.md) is seen, not assumed;
+  cuts.<cut>.jpg     one row per cut (a beat boundary, and a join between takes): every frame from -8 to +8, so a hand-off
+                     that brings the next beat in before the last one leaves, a grey or empty frame, a jump, a flash or
+                     a frozen frame is in view (widened 15 Nov 2026 from -3 to +4, which showed only part of a calm
+                     handover: it runs 16 frames, apps/renderer/src/engine/kit/ingredients.ts);
+  hardest.<cut>.jpg  every third frame of the hardest beat (velib.proof's rule), ten a row, so the beat that is hardest to
+                     make move is read as it plays: the camera, the cursor, a box that re-wraps;
+  read.<cut>.jpg     each beat once fully built (every move in it landed, before it hands over), 960 px wide, so its words
+                     are read at the size a viewer reads them;
   numbers.<cut>.json the measures QC already took, copied, never measured again, per beat where QC gives times, and
                      labelled "measured; not heard": the Critic cites them and never claims to have heard the cut.
 
@@ -32,16 +39,22 @@ from .qc import lead_frames, sting_at, to_file
 
 STRIP_EVERY_S = 0.5
 PER_BEAT = 8
-EVENT_OFFSETS = (-2, 2, 5, 8, 12)
-CUT_OFFSETS = (-3, -1, 0, 1, 4)
+EVENT_OFFSETS = (-2, 2, 5, 8, 10, 12)
+CUT_OFFSETS = tuple(range(-8, 9))
 MAX_ROWS = 30
 TILE_W = 160
+HARDEST_EVERY = 3        # every third frame of the hardest beat
+HARDEST_PER_ROW = 10
+READ_W = 960             # a fully built beat, wide enough to read its words
+READ_PER_ROW = 2
+LANDED = 10              # frames an entrance has to land (the signed floor's longest settle)
+BEFORE_HANDOVER = 2      # a built frame stays this far before the beat hands over
 LABEL_H = 18
 HEARD = 'measured; not heard'
 QC_ROWS = ('motion.change_density', 'motion.longest_still', 'motion.periodicity', 'loudness.integrated', 'loudness.true_peak',
            'loudness.long_silence', 'audio.bed', 'audio.bed_continuity', 'sync.av_xcorr', 'joins.in_gaps', 'joins.decoder',
            'captions.clock', 'captions.render', 'captions.ocr', 'words.lost', 'channel.safe_zones', 'audio.voice', 'opening',
-           'beats.handover_in_gaps', 'ground.not_bare')
+           'beats.handover_in_gaps', 'ground.not_bare', 'music.beats')
 
 
 def frames_at(video: Path, numbers: list[int], width: int = TILE_W):
@@ -111,11 +124,23 @@ def beat_rows(props: dict) -> list[tuple[str, list[int]]]:
     return out
 
 
+def word_at(props: dict, frame: int) -> str | None:
+    """The caption word he says at this frame of the cut's own clock: the last word that starts at or before it."""
+    said = [(int(w['atFrame']), str(w.get('text') or '')) for page in props.get('captions') or []
+            for w in page.get('words') or [] if 'atFrame' in w]
+    before = [text for at, text in sorted(said) if at <= frame]
+    return before[-1] if before else None
+
+
 def event_rows(props: dict) -> list[tuple[str, list[int]]]:
     by_frame: dict[int, list[str]] = {}
+    words: dict[int, str | None] = {}
     for event in props.get('events') or []:
-        by_frame.setdefault(to_file(event['atFrame'], props), []).append(f"{event.get('obj', '?')} {event.get('verb', '?')}")
-    return [(f'f{at}: ' + ', '.join(names), [at + k for k in EVENT_OFFSETS]) for at, names in sorted(by_frame.items())]
+        at = to_file(event['atFrame'], props)
+        by_frame.setdefault(at, []).append(f"{event.get('obj', '?')} {event.get('verb', '?')}")
+        words.setdefault(at, word_at(props, int(event['atFrame'])))
+    return [(f'f{at}' + (f' "{words[at]}"' if words.get(at) else '') + ': ' + ', '.join(names),
+             [at + k for k in EVENT_OFFSETS]) for at, names in sorted(by_frame.items())]
 
 
 def cut_frames(props: dict, edl: dict | None) -> list[tuple[int, str]]:
@@ -135,6 +160,71 @@ def cut_frames(props: dict, edl: dict | None) -> list[tuple[int, str]]:
 
 def cut_rows(props: dict, edl: dict | None) -> list[tuple[str, list[int]]]:
     return [(f'cut at f{at}: {what}', [at + k for k in CUT_OFFSETS]) for at, what in cut_frames(props, edl)]
+
+
+def cut_offsets_words() -> str:
+    """How the cut sheet samples each cut, in words for the packet: "every frame from -8 to +8"."""
+    lo, hi = min(CUT_OFFSETS), max(CUT_OFFSETS)
+    if list(CUT_OFFSETS) == list(range(lo, hi + 1)):
+        return f'every frame from {lo:+d} to {hi:+d}'
+    return 'frames ' + ', '.join(f'{k:+d}' if k else '0' for k in CUT_OFFSETS)
+
+
+def _beat_frames(props: dict, beat: dict) -> tuple[int, int]:
+    """A beat's first and last frame on the file's clock."""
+    return to_file(beat['fromFrame'], props), to_file(beat['toFrame'], props, end=True) - 1
+
+
+def hardest_beat(props: dict, spec: dict | None = None, cut: str | None = None) -> tuple[str, str] | None:
+    """(beat id, why): the proof's own rule on the spec (velib.proof.hardest_beat) when the spec is given; without it,
+    the beat whose events move the most different objects, then the longest, then the first."""
+    beats = props.get('beats') or []
+    if not beats:
+        return None
+    if spec and cut in (spec.get('cuts') or {}):
+        from . import proof  # noqa: PLC0415
+        try:
+            beat_id, rule = proof.hardest_beat(spec, cut, props)
+            if any(b['id'] == beat_id for b in beats):
+                return beat_id, rule
+        except (ValueError, KeyError, TypeError):
+            pass
+    scored = []
+    for index, beat in enumerate(beats):
+        moving = {e.get('obj') for e in props.get('events') or [] if beat['fromFrame'] <= e['atFrame'] < beat['toFrame']}
+        scored.append((len(moving), beat['toFrame'] - beat['fromFrame'], -index, beat['id']))
+    best = max(scored)
+    return best[3], f'most objects moving ({best[0]}), then the longest'
+
+
+def hardest_rows(props: dict, spec: dict | None = None, cut: str | None = None) -> list[tuple[str, list[int]]]:
+    """Every third frame of the hardest beat, ten a row."""
+    found = hardest_beat(props, spec, cut)
+    if found is None:
+        return []
+    beat_id, rule = found
+    beat = next(b for b in props['beats'] if b['id'] == beat_id)
+    first, last = _beat_frames(props, beat)
+    picks = list(range(first, last + 1, HARDEST_EVERY)) or [first]
+    rows = [picks[i:i + HARDEST_PER_ROW] for i in range(0, len(picks), HARDEST_PER_ROW)]
+    return [(f'hardest beat {beat_id} f{row[0]}-f{row[-1]}, one frame in {HARDEST_EVERY} ({rule})', row) for row in rows]
+
+
+def built_frame(props: dict, beat: dict) -> int:
+    """The frame a beat is fully built: every move in it has had LANDED frames to land, and it has not started to hand
+    over (BEFORE_HANDOVER frames before its end). A beat too short for both shows its last such frame."""
+    first, last = _beat_frames(props, beat)
+    moves = [to_file(e['atFrame'], props) for e in props.get('events') or []
+             if beat['fromFrame'] <= e['atFrame'] < beat['toFrame']]
+    want = max([first + LANDED] + [at + LANDED for at in moves])
+    return max(first, min(want, last - BEFORE_HANDOVER))
+
+
+def read_rows(props: dict) -> list[tuple[str, list[int]]]:
+    """Each beat once fully built, READ_PER_ROW to a row, each named with its frame in the row's title."""
+    built = [(beat['id'], built_frame(props, beat)) for beat in props.get('beats') or []]
+    rows = [built[i:i + READ_PER_ROW] for i in range(0, len(built), READ_PER_ROW)]
+    return [('built: ' + ' | '.join(f'{beat_id} f{at}' for beat_id, at in row), [at for _, at in row]) for row in rows]
 
 
 def reference_numbers(spec: dict) -> dict:
@@ -174,18 +264,24 @@ def numbers(props: dict, qc: dict) -> dict:
 
 def write(cut: str, directory: Path, video: Path, props: dict, qc: dict, edl: dict | None = None,
           spec: dict | None = None) -> list[Path]:
-    """Write the three strips and numbers.<cut>.json beside the cut's QC record; return their paths."""
+    """Write the five sheets and numbers.<cut>.json beside the cut's QC record; return their paths."""
     directory, video = Path(directory), Path(video)
     if qc.get('sha256') and qc['sha256'] != sha256_file(video):
         raise ValueError(f'the QC record for {cut} is for another file: run ve qc on this cut first')
     last = last_frame(props)
-    kinds = (('beats', beat_rows(props)), ('events', event_rows(props)), ('cuts', cut_rows(props, edl)))
+    kinds = (('beats', beat_rows(props)), ('events', event_rows(props)), ('cuts', cut_rows(props, edl)),
+             ('hardest', hardest_rows(props, spec, cut)))
     wanted = [n for _, rows in kinds for _, numbers_ in rows[:MAX_ROWS] for n in numbers_ if 0 <= n <= last]
     frames = frames_at(video, wanted)
     out = []
     for kind, rows in kinds:
         if rows and frames:
             out.append(sheet(rows, frames, directory / f'{kind}.{cut}.jpg', last))
+    # Each beat fully built, at a width its words can be read: a second, larger read of the file.
+    reading = read_rows(props)
+    large = frames_at(video, [n for _, numbers_ in reading[:MAX_ROWS] for n in numbers_ if 0 <= n <= last], width=READ_W)
+    if reading and large:
+        out.append(sheet(reading, large, directory / f'read.{cut}.jpg', last))
     figures = numbers(props, qc)
     if spec:
         figures['references'] = reference_numbers(spec)
