@@ -242,9 +242,12 @@ def publish_branch(worktree: Path, branch: str, message: str) -> tuple[str | Non
     can read and check it. Returns (commit sha, None) or (None, why it could not be pushed)."""
     git = ['git', '-C', str(worktree)]
     # Never the node_modules link ensure_worktree made: on 2026-11-01 it was committed with Codex's work.
-    added = subprocess.run(git + ['add', '-A', '--', '.', ':(exclude)node_modules'], capture_output=True, text=True)
+    # An exclude pathspec on node_modules, which .gitignore already ignores, made git add exit 1 ("Use -f if you really
+    # want to add them") on his PC on 15 Nov; so add everything, then take the link back out of the index.
+    added = subprocess.run(git + ['add', '-A'], capture_output=True, text=True)
     if added.returncode != 0:
         return None, f'git add in {worktree} failed: ' + ' '.join((added.stderr or '').strip().splitlines()[-2:])
+    subprocess.run(git + ['rm', '-q', '--cached', '--ignore-unmatch', '-r', '--', 'node_modules'], capture_output=True)
     if subprocess.run(git + ['diff', '--cached', '--quiet'], capture_output=True).returncode != 0:
         subprocess.run(git + ['-c', 'user.name=Codex lane', '-c', 'user.email=codex-lane@users.noreply.github.com',
                               'commit', '-q', '-m', message], check=True, capture_output=True)
