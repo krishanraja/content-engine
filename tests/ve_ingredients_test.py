@@ -37,6 +37,18 @@ class IngredientsTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             ingredient_props({'style': {'transitions': {'kind': 'spin', 'reason': 'x'}}})
 
+    def test_lead_and_focus_come_through_only_when_chosen(self):
+        spec = {'style': {'transitions': {'kind': 'push', 'lead': True, 'reason': 'x'},
+                          'camera': {'move': 'drift', 'focus': True, 'reason': 'x'}, 'energy': 'medium'}}
+        self.assertEqual(ingredient_props(spec), {'energy': 'medium', 'transition': 'push', 'camera': 'drift', 'hits': False,
+                                                  'lead': True, 'focus': True})
+        plain = {'style': {'transitions': {'kind': 'push', 'lead': False, 'reason': 'x'}, 'camera': {'move': 'drift', 'reason': 'x'}}}
+        self.assertNotIn('lead', ingredient_props(plain))
+        self.assertNotIn('focus', ingredient_props(plain))
+        for kind in ('cut', 'flash', 'crossfade'):
+            with self.assertRaises(ValueError):
+                ingredient_props({'style': {'transitions': {'kind': kind, 'lead': True, 'reason': 'x'}}})
+
     def test_the_layout_modes_are_the_renderers(self):
         self.assertEqual(LAYOUTS, ('house', 'fill', 'stack', 'band', 'stage', 'tray'))
 
