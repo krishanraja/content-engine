@@ -4,6 +4,9 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('checklist declares its work and fill cues', () => {
+    expect(manifest.devices.checklist.verbs).toEqual(['enter', 'dim', 'fill', 'exit'])
+  })
   it('living_screen declares its nine cues', () => {
     expect(manifest.devices.living_screen.verbs).toEqual(['enter','move','count_to','mark','draw','pick','highlight','add','exit'])
   })

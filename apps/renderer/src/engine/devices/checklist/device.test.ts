@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
 import { fitBox, fitScale } from '../../fit'
@@ -9,6 +9,9 @@ import { Device, checklistLayout } from './index'
 import { ParamsSchema } from './schema'
 import { checklistState } from './state'
 import fixture from './fixture.json'
+import { setMotionProfile } from '../../clock'
+import { MOTION_PROFILES } from '../../kit/motionProfiles'
+afterEach(() => setMotionProfile(undefined))
 
 const object = EngineObjectSchema.parse(fixture.objects[0])
 const events = fixture.events.map(event => EngineEventSchema.parse(event))
@@ -81,7 +84,7 @@ describe('checklist blank arrival and event-driven fill', () => {
     expect(checklistState(six, events, 21).slots[5]!.arrival).toBeGreaterThan(0)
     expect(checklistState(six, events, 20).slots[5]!.arrival).toBe(0)
     expect(DEVICES.checklist).toBe(Device)
-    expect(manifest.devices.checklist.verbs).toEqual(['enter', 'fill', 'exit'])
+    expect(manifest.devices.checklist.verbs).toEqual(['enter', 'dim', 'fill', 'exit'])
   })
 
   it.each(['9:16', '16:9'] as const)('fits stable final geometry and grows in a %s region', aspect => {
@@ -129,5 +132,47 @@ describe('region fit bounds', () => {
       drawn++
     }
     expect(drawn).toBeGreaterThan(0)
+  })
+})
+
+
+describe('checklist work and tick pop', () => {
+  const dim = EngineEventSchema.parse({ id: 'work', obj: object.obj, verb: 'dim', toState: 'slot-3', atFrame: 22 })
+  const cues = [...events, dim]
+  const slot = (frame: number, list = cues) => checklistState(object, list, frame).slots[2]!
+  it('dims only the cued blank paper and number over six frames, then lifts with fill', () => {
+    expect(slot(21).workOpacity).toBe(1)
+    expect(slot(22).workOpacity).toBe(1)
+    expect(slot(25).workOpacity).toBeCloseTo(0.71)
+    expect(slot(28).workOpacity).toBeCloseTo(0.42)
+    expect(slot(29).numberOpacity).toBeCloseTo(0.42)
+    expect(slot(34).numberOpacity).toBeCloseTo(0.71)
+    expect(slot(38).numberOpacity).toBe(1)
+    expect(checklistState(object, cues, 29).slots[0]!.workOpacity).toBe(1)
+    const markup = (frame: number) => renderToStaticMarkup(Device({ object, events: cues, box, tokens, frame, aspect: '9:16' }))
+    expect(markup(21)).toBe(still(21))
+    expect(markup(28)).toContain('opacity:0.42000000000000004')
+    expect(markup(38)).toContain('data-filled-paper="" style="position:absolute;inset:0;background:ivory;opacity:1"')
+    expect(markup(38)).toContain('height:2px;width:100%;background:aquamarine;opacity:0')
+  })
+  it('draws once monotonically to fill, or holds full after thirty frames without a fill', () => {
+    for (const list of [cues, [events[0]!, dim], [...cues, { ...dim, id: 'duplicate', atFrame: 26 }]]) {
+      let previous = 0
+      for (let frame = 22; frame < 100; frame++) {
+        const length = slot(frame, list).hairline
+        expect(length).toBeGreaterThanOrEqual(previous)
+        previous = length
+      }
+      expect(slot(list.length === 2 ? 52 : 30, list).hairline).toBe(1)
+    }
+  })
+  it('pops once only with a style, settles in six frames and ignores repeated fills', () => {
+    for (let frame = 30; frame < 60; frame++) expect(slot(frame).tickScale).toBe(1)
+    setMotionProfile(Object.values(MOTION_PROFILES)[0]!)
+    const scales = Array.from({ length: 7 }, (_, i) => slot(30 + i).tickScale)
+    expect(Math.max(...scales)).toBeGreaterThan(1)
+    expect(Math.max(...scales)).toBeLessThanOrEqual(1.2)
+    for (let frame = 36; frame < 100; frame++) expect(slot(frame).tickScale).toBe(1)
+    expect(slot(42, [...cues, { ...events[1]!, id: 'duplicate-fill', atFrame: 40 }]).tickScale).toBe(1)
   })
 })

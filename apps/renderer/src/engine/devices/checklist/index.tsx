@@ -1,7 +1,7 @@
 import React from 'react'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import { textWidth } from '../../../house/metrics'
-import { MOTION } from '../../clock'
+import { MOTION, motionProfile } from '../../clock'
 import { fitBox, fitScale } from '../../fit'
 import { isRegion } from '../../kit/layout'
 import { bestNatural, RegionFit } from '../../kit/regionFit'
@@ -45,13 +45,15 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
         style={{ position: 'relative', height: l.heights[index], opacity: slot.arrival,
           // Only the proof container rises. Its type stays fixed and fades with the paper.
           transform: `translateY(${(1 - slot.arrival) * Math.min(60, MOTION.risePx)}px)` }}>
-        <div data-blank-paper="" style={{ position: 'absolute', inset: 0, background: tokens.cream, opacity: 1 - slot.dissolve }} />
+        <div data-blank-paper="" style={{ position: 'absolute', inset: 0, background: tokens.cream, opacity: (1 - slot.dissolve) * slot.workOpacity }} />
+        {slot.hairline > 0 ? <div data-work-hairline="" style={{ position: 'absolute', left: 0, bottom: 0,
+          height: 2, width: `${slot.hairline * 100}%`, background: tokens.mint, opacity: 1 - slot.dissolve }} /> : null}
         <div data-filled-paper="" style={{ position: 'absolute', inset: 0, background: tokens.cream, opacity: slot.dissolve }} />
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', height: '100%', color: tokens.ink }}>
-          <span style={{ width: 76, flexShrink: 0, textAlign: 'center', fontFamily: HOUSE_FONTS.data, fontSize: 28 }}>{slot.number}</span>
+          <span style={{ width: 76, flexShrink: 0, textAlign: 'center', fontFamily: HOUSE_FONTS.data, fontSize: 28, ...(slot.numberOpacity !== 1 ? { opacity: slot.numberOpacity } : {}) }}>{slot.number}</span>
           <span data-line="" style={{ width: l.textArea, opacity: slot.dissolve, fontFamily: HOUSE_FONTS.display,
             fontSize: l.fontSize, lineHeight: 1.2, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', wordBreak: 'break-all' }}>{slot.line}</span>
-          {slot.filled ? <svg data-tick="" width="52" height="52" viewBox="0 0 52 52" style={{ marginLeft: 16, flexShrink: 0 }}>
+          {slot.filled ? <svg data-tick="" width="52" height="52" viewBox="0 0 52 52" style={{ marginLeft: 16, flexShrink: 0, ...(motionProfile() ? { transform: `scale(${slot.tickScale})`, transformOrigin: 'center' } : {}) }}>
             <path d="M10 27 L22 39 L44 12" fill="none" stroke={tokens.mint} strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"
               pathLength="1" strokeDasharray="1" strokeDashoffset={1 - slot.dissolve} />
           </svg> : null}
