@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":4,"current_as_of":"2026-11-15","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (3 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 8 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
+- the branch sweep takes an approved list (branch@sha) on a hand run and deletes each named branch only at that exact commit, skipping and logging anything else; the weekly run is unchanged. Copied from ai-harness's canonical script and workflow. (2026-11-15)
 - Claude starts Codex only through scripts/codex_thread.mjs (open, send, read): a permanent thread in Krish's Codex Desktop recents, released after every turn so he can type in it; ve dispatch uses it, and the Codex plugin's long-running server is no longer used. Tested live on 15 Nov: thread opened, shown in his recents, Claude's second turn sent, his Desktop "hello" answered and read back. (2026-11-15)
 - the taste files describe the Receipt (Ruling, Krish, 2026-11-15): `config/hook-playbook.json` gives the thumbnail and the cover at most 7 words over a real proof from the piece's sources, up to three logos of the companies the headline names, and no face, and `config/brand-palette.json`'s tall cover reads proof, headline and brand. The thumbnail designer has no open conflict left. (2026-11-15)
 - the visual gate follows the cover standard (Ruling, Krish, 2026-11-15): a cover or a thumbnail carries at most three logos, each of a company the piece names, and none is required; every company the piece names still has to be on one of the piece's pictures (`scripts/post-pack/visual_gate.py`, `few_logos`, self-test 73 checks). The thumbnail designer's open logo conflict is closed; the face lines in `config/hook-playbook.json` stay with Krish. (2026-11-15)
@@ -50,7 +51,7 @@ Older lines: `docs/history/2026-11-15-NOW-moved-6.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-15): Run the first real ve card through ve dispatch on the new route and check it in his Desktop recents.
+- Next (2026-11-15): run the sweep by hand with dry_run false and this repository's approved list, and read its log.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
