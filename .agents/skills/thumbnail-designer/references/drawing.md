@@ -23,8 +23,10 @@ Playwright for Python with a browser. Never pass `--assets`: the logo paths are 
   holds the cover's logos to commit them as SVG under `docs/plans/PLAN/logos/` and draw the thumbnails. Video assets
   stays "thumbnail still to make" until then.
 - A missing logo goes into the cover facts as `"thumbs": {"strip": [{"logo": ..., "name": ...}]}` with its real logo,
-  never a drawn stand-in. Which logos belong on a thumbnail is the brief's `named` list (the cover standard, point 3);
-  see "Two open conflicts" below for the gate that still asks for more.
+  never a drawn stand-in. Which logos belong on a thumbnail is the brief's `named` list (the cover standard, point 3),
+  and `scripts/post-pack/visual_gate.py` holds a cover or thumbnail to the same rule: at most three logos, each of a
+  company the piece names, none required (Ruling, Krish, 2026-11-15). Every company the piece names still has to be on
+  one of the piece's pictures, so a company left off the thumbnail goes on an article figure or the cover.
 - The options themselves: `"thumb_options": [{"id": "a", "note": "...", "proof": {...}, "proof_width": "58%" | "50%" |
   "44%", "proof_first": true, "logos_under": true}, ...]` in the cover facts. `"proof"` is merged over the thumbnail's
   own proof: a new `"crop"` inside its `"pdf"`, `"page"` or `"html"` keeps the picture and its source; a different
@@ -51,16 +53,14 @@ read on this machine counts, recorded by its sha256; a past post is never drawn 
 - When they cannot be read in this session, draw the mock with the options alone. Its record and its caption say so,
   and so does your reply.
 
-## Two open conflicts
+## One open conflict
 
-These are for Krish, once each, when they bite. Do not pick a side.
+This is for Krish, once, when it bites. Do not pick a side.
 
-1. **How many logos.** The cover standard (approved 9 Nov), point 3: logos only for the companies the headline or the
-   picture names. `scripts/post-pack/visual_gate.py` still fails a thumbnail that lacks any company the piece names,
-   and the approved floor standard of 4 Nov says "Always place the real logo of every company discussed on the cover
-   and thumbnail". Point 3 says it narrows that rule. Until the gate follows the standard, a thumbnail drawn to point
-   3 fails the visual gate.
-2. **His face and 4 words.** `config/hook-playbook.json` still describes the thumbnail as "Under 4 words over his face
+The logo count is settled: the gate follows the cover standard (Ruling, Krish, 2026-11-15: "yes, make the gate follow
+the cover standard").
+
+**His face and 4 words.** `config/hook-playbook.json` still describes the thumbnail as "Under 4 words over his face
    and the logos" and the Substack cover "with his face and 3 to 5 big words". THE_RECEIPT (2 Nov) took the face off
    every cover and thumbnail, and the cover standard (9 Nov) allows 7 words. The playbook is a taste config, changed
    only by Krish in person.
