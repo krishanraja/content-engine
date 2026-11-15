@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-14
-head: 3ab533c
+as_of: 2026-11-15
+head: c85e359
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
