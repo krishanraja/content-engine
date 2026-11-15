@@ -591,12 +591,18 @@ def launch(options: list, env: dict, sub: str = 'open') -> tuple[list[str], dict
     Windows drive. Returns the command, its environment and the route."""
     from . import codex_route
     cmd, chosen, extra = plan(options, env, sub)
+    run_env = codex_route.environ_for(chosen, env, extra)
     if extra.get('stage'):
         try:
             codex_route.stage(*extra['stage'])
         except OSError as error:
             sys.exit(f've dispatch: codex_thread.mjs could not be copied beside the Windows Codex home ({error})')
-    return cmd, codex_route.environ_for(chosen, env, extra), chosen
+        cwd = options[options.index('--cwd') + 1] if '--cwd' in options else None
+        try:
+            codex_route.smoke(cmd, run_env, cwd if cwd and Path(cwd).is_dir() else None)
+        except codex_route.RouteError as error:
+            sys.exit(str(error))
+    return cmd, run_env, chosen
 
 
 def dry_run(card_path: Path, studio: bool = False, piece: str | None = None) -> str:
