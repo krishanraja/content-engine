@@ -1,3 +1,0 @@
-Status: three cards built by Codex on the home computer's lane from the cloud and checked here: ve-mg-2 (the checklist's work state, a row dimmed to 42% with a mint hairline drawn once, and the mint tick pop), ve-mg-4 (the headline's opt-in assemble reveal, at most 1.3x, 10 frames) and ve-kf-6 (the character pose library reader and stager, read-only on the approved drawings). Every acceptance command passed again in the cloud session; stills are not looked at yet, because this container has no house fonts.
-Next: render each device's Gate 2 stills on a home computer and put them to Krish (ve signoff gate2), then queue ve-kf-7 on the lane now that ve-kf-6 is on main.
-North Star check (2026-11-15): holds.
