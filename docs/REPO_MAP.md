@@ -6118,6 +6118,7 @@ Artifact-bound user confirmation references.
 - `const VeDatasetSchema`
 - `const VeObjectSchema`
 - `const VeSignatureSchema`
+- `const VE_CLONE_VOICE_RULING`
 - `const VeAssetSchema`
 - `const VeAudioSchema`
 - `const VeApprovalSchema`

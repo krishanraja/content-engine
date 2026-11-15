@@ -14,7 +14,7 @@ import re
 import sys
 from pathlib import Path, PureWindowsPath
 
-from .common import ROOT, load_json
+from .common import ROOT, load_json, sha256_file
 from .lint import pending_devices_error
 
 FPS = 30
@@ -156,6 +156,61 @@ def source(path: str, assets_dir: str | Path) -> str:
     if not resolved.is_relative_to(root):
         raise ValueError(f'asset source escapes assets folder: {path}')
     return str(resolved)
+
+
+# Off-day voiceover shorts may be voiced with his approved ElevenLabs clone; hero cuts stay on his real takes (Ruling,
+# Krish, 2026-11-15). The clone is an asset of kind voice that the cut names as its take; ve ingest, hear, said and
+# conform treat its file as they treat his recorded voiceover, so the props are the same either way. compile only says
+# which voice it is, and refuses it anywhere else, so no hero cut, wide cut or cut showing his take is ever voiced by it.
+CLONE_VOICE_RULING = ('Ruling, Krish, 2026-11-15: off-day voiceover shorts may be voiced with his approved ElevenLabs '
+                      'clone; hero cuts stay on his real takes')
+
+
+def clone_voice_master(spec: dict, cut_id: str, *, off: bool, edl: dict | None = None,
+                       assets_dir: str | Path | None = None) -> dict | None:
+    """The clone voice the cut is read from, or None for a cut read from his own voice. Raises when the clone would voice
+    anything but an off-day 9:16 voiceover, when the EDL draws on other bytes than the clone's (or a cut naming his take
+    draws on the clone's), when the clone kept a word the signed script does not hold, or, with no EDL, when the clone's
+    file in the assets folder is not the bytes the spec names."""
+    cut = spec['cuts'][cut_id]
+    voices = {asset['id']: asset for asset in spec.get('assets', []) if asset.get('kind') == 'voice'}
+    voice = voices.get(cut['take'])
+    drawn = {}
+    if edl is not None:
+        used = {segment['take'] for segment in edl.get('segments', [])}
+        drawn = {name: ((edl.get('takes') or {}).get(name, {}).get('media') or {}).get('sha256') for name in used}
+    if voice is None:
+        clone = {asset['sha256'] for asset in voices.values()} & set(drawn.values())
+        if clone:
+            raise ValueError(f'cut {cut_id} names {cut["take"]}, his own voice, but its EDL draws on the clone voice: a cut '
+                             f'is voiced by the take it names ({CLONE_VOICE_RULING})')
+        return None
+    where = []
+    if spec['audio']['master'] != 'vo':
+        where.append('the spec has no voiceover master')
+    if cut['aspect'] != '9:16':
+        where.append(f'it is {cut["aspect"]}, not a 9:16 short')
+    if not off:
+        where.append('the piece is published on its series day, a hero piece')
+    if where:
+        raise ValueError(f'cut {cut_id} takes the clone voice {voice["id"]}, but {"; ".join(where)}: hero cuts stay on his '
+                         f'real takes ({CLONE_VOICE_RULING})')
+    if edl is not None:
+        other = sorted(name for name, sha in drawn.items() if sha != voice['sha256'])
+        if not drawn or other:
+            raise ValueError(f'cut {cut_id} takes the clone voice {voice["id"]}, but its EDL draws on '
+                             f'{", ".join(other) or "no take"}: ingest the clone file the spec names (sha256 '
+                             f'{voice["sha256"][:12]}) as take {voice["id"]} and conform again')
+        if edl.get('unscripted_kept'):
+            said = ', '.join(f'"{row["word"]}"' for row in edl['unscripted_kept'][:5])
+            raise ValueError(f'cut {cut_id}: the clone voice says {said}, which the signed script does not hold; it reads the '
+                             'signed words and nothing else, so generate it again (ve voice clone) rather than keep them')
+    else:
+        staged = Path(source(voice['path'], assets_dir or '.'))
+        if not staged.is_file() or sha256_file(staged) != voice['sha256']:
+            raise ValueError(f'cut {cut_id} takes the clone voice {voice["id"]}: {voice["path"]} in the assets folder is '
+                             f'missing or not the bytes the spec names (sha256 {voice["sha256"][:12]})')
+    return {'master': 'clone', 'asset': voice['id'], 'tool': voice.get('tool'), 'sha256': voice['sha256']}
 
 
 def _frame(seconds: float) -> int:
@@ -473,6 +528,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # An off day (published on a day that is not its series' day) has its own look: the house mint, never the series
     # colour or its promise (Krish, 2026-11-04: "Yes, give off days their own music and look - Rotate.").
     off = _series_day(identity['day'], spec.get('publish_day')) != identity['day']
+    # Which voice the cut is read from: his own, or his approved clone on an off-day voiceover short. The props below
+    # are the same either way, since a voiceover master lays no picture of the take.
+    clone = clone_voice_master(spec, cut_id, off=off, edl=edl, assets_dir=assets_dir)
     opening = {}
     # Nothing goes before the hook (Ruling, Krish, 2026-11-12): no sting, and no episode card in its place (the
     # brand.opening_exception of 9 Nov, which ve lint now refuses).
@@ -529,6 +587,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     props['audio']['sfx'] = sfx
     if report is not None:
         report.update(lint='clean', sfx_missing=missing, opening='sting' if sting else 'hook', **opening)
+        if clone:
+            report['voice'] = clone
         if edl is not None:
             report['edl'] = {'cut': cut_id, 'joins_s': [join['at_s'] for join in edl.get('joins', [])],
                              'duration_frames': edl.get('duration_frames'),

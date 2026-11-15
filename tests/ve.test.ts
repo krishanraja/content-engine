@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { ProductionSpecV2Schema, VE_NO_STING, VE_NO_STING_BEFORE } from '../packages/contracts/src/production-spec'
+import { ProductionSpecV2Schema, VE_CLONE_VOICE_RULING, VE_NO_STING, VE_NO_STING_BEFORE } from '../packages/contracts/src/production-spec'
 
 // ve, the spec-driven video engine (docs/ve/ENGINE.md). Friday 23 Oct's failures are fixtures here:
 // a spec that carries one is refused, and media that shows one fails QC.
@@ -50,6 +50,30 @@ describe('ve', () => {
     expect(JSON.stringify(refused.error?.issues)).toContain('remove brand.opening_exception')
   })
 
+  it('his clone voices an off-day voiceover short only: one generated voice, the voiceover master, every cut a 9:16 short taking it (Ruling, Krish, 2026-11-15)', () => {
+    const short = () => {
+      const spec = fixture()
+      spec.publish_day = '2026-10-22'
+      delete spec.cuts['proof-wide']
+      spec.cuts['proof-tall'].take = 'clone-vo'
+      spec.assets.push({ id: 'clone-vo', kind: 'voice', origin: 'generated', path: 'clone-vo.wav', sha256: 'e'.repeat(64),
+        licence: 'generated with his approved clone (test)', tool: 'elevenlabs.voice_clone:krish-voice-elevenlabs' })
+      return spec
+    }
+    const parsed = ProductionSpecV2Schema.safeParse(short())
+    expect(parsed.success, JSON.stringify(parsed.error?.issues)).toBe(true)
+    const wide = short(); wide.cuts['proof-wide'] = { ...fixture().cuts['proof-wide'], take: 'clone-vo' }
+    const takeMaster = short(); takeMaster.audio.master = 'take'
+    const hisTake = short(); hisTake.cuts['proof-tall'].take = 'long-vo-master'
+    const captured = short(); captured.assets[captured.assets.length - 1].origin = 'capture'
+    const undated = short(); delete undated.publish_day
+    for (const [why, spec] of Object.entries({ wide, takeMaster, hisTake, captured, undated })) {
+      const got = ProductionSpecV2Schema.safeParse(spec)
+      expect(got.success, why).toBe(false)
+      expect(JSON.stringify(got.error?.issues), why).toContain(VE_CLONE_VOICE_RULING)
+    }
+  })
+
   it('a generated picture needs no on-screen ILLUSTRATION label (Krish, 28 Oct 2026: "Yes remove those.")', () => {
     const spec = fixture()
     spec.assets.push({ id: 'plate', kind: 'illustration', origin: 'generated', path: 'plate.png', sha256: '0'.repeat(64), licence: 'generated', tool: 'imagegen' })
@@ -85,6 +109,7 @@ describe('ve', () => {
     ['eye gaze: eyes turned toward the lens only where they are off it, never on a blink or a turned head, sound and frame times kept exactly, a model that changes nothing or may not be published refused (Krish, 5 Nov)', 'tests/ve_eyeline_test.py'],
     ['the listen pass: hesitations the transcript left out are cut, no join lands on sound, the reading that sounded right wins, his lexicon learns facts and never taste (Krish, 5 Nov)', 'tests/ve_listen_test.py'],
     ['the voice pass: sniffs turned down, never cut; the repair chain only with his words (Krish, 17 Oct)', 'tests/ve_voice_test.py'],
+    ['his approved clone voices off-day voiceover shorts only, read as his recording, behind his Approve proof, generated only from the printed plan through the credit ledger (Ruling, Krish, 2026-11-15)', 'tests/ve_clone_voice_test.py'],
     ['one sound on the big moment: auditioned on his cut, approved only from his words, the kit from approved rows (ruling 11)', 'tests/ve_sfx_test.py'],
     ['the three video sign-offs: samples on his board, and only his presses write the sound, golden-frame and Gate 2 configs (Ruling, Krish, 2026-11-12)', 'tests/ve_signoffs_test.py'],
     ['the Critic sees the cut in motion: every frame around each cut, each move at +10, the hardest beat and each beat built, and QC numbers marked not heard (F16, F38)', 'tests/ve_critic_inputs_test.py'],

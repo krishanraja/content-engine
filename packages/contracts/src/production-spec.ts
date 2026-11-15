@@ -129,9 +129,16 @@ export const VeSignatureSchema = z.object({
   variants: z.record(SlugSchema, z.record(z.string(), z.string())).default({}),
 }).strict()
 
+/** Off-day voiceover shorts may be voiced with his approved ElevenLabs clone; hero cuts stay on his real takes (Ruling,
+ *  Krish, 2026-11-15). An asset of kind `voice` is that clone's reading of the signed script: generated, its tool
+ *  `<tool>.voice_clone:<registry name>` (`ve voice clone` writes it). The schema holds its shape here; ve lint holds
+ *  the rest (scripts/velib/lint.py: voice.clone_route for the off day and the tool, voice.synthetic for his approval
+ *  in krish-clone's registry). */
+export const VE_CLONE_VOICE_RULING = 'Ruling, Krish, 2026-11-15: off-day voiceover shorts may be voiced with his approved ElevenLabs clone; hero cuts stay on his real takes'
+
 export const VeAssetSchema = z.object({
   id: SlugSchema,
-  kind: z.enum(['logo', 'screenshot', 'document', 'photo', 'illustration', 'broll', 'recording', 'sfx', 'music']),
+  kind: z.enum(['logo', 'screenshot', 'document', 'photo', 'illustration', 'broll', 'recording', 'sfx', 'music', 'voice']),
   origin: z.enum(['capture', 'source', 'licensed', 'generated']),
   path: z.string().min(1),
   sha256: Sha256V1Schema,
@@ -146,9 +153,10 @@ export const VeAssetSchema = z.object({
   label: z.string().min(2).optional(),
 }).strict().superRefine((v, c) => {
   if (v.origin === 'generated') {
-    if (!['illustration', 'broll', 'sfx', 'music'].includes(v.kind)) c.addIssue({ code: 'custom', path: ['kind'], message: 'generated media is illustration, broll, sfx or music, never evidence' })
+    if (!['illustration', 'broll', 'sfx', 'music', 'voice'].includes(v.kind)) c.addIssue({ code: 'custom', path: ['kind'], message: 'generated media is illustration, broll, sfx, music or his approved clone voice, never evidence' })
     if (!v.tool) c.addIssue({ code: 'custom', path: ['tool'], message: 'generated media names the tool that made it' })
   }
+  if (v.kind === 'voice' && v.origin !== 'generated') c.addIssue({ code: 'custom', path: ['origin'], message: `a voice asset is his clone's reading, so it is generated; his own voice is a recording or a take (${VE_CLONE_VOICE_RULING})` })
   if (/\bCC[ -]BY/i.test(v.licence) && !v.credit) c.addIssue({ code: 'custom', path: ['credit'], message: 'a CC BY licence needs its credit line' })
 })
 
@@ -290,6 +298,21 @@ export const ProductionSpecV2Schema = z.object({
   }
   if (spec.brand.opening_exception !== undefined) {
     c.addIssue({ code: 'custom', path: ['brand', 'opening_exception'], message: `nothing goes before the hook (Ruling, Krish, 2026-11-12: "${VE_NOTHING_BEFORE_HOOK}"): remove brand.opening_exception` })
+  }
+  // His clone voices only an off-day voiceover short (VE_CLONE_VOICE_RULING): a spec that carries it is a voiceover
+  // with one voice, every cut a 9:16 short read from it, so no hero cut and no take of his can sit beside it. Whether the
+  // day is an off day is ve lint's (voice.clone_route, from config/studio.json's series days).
+  const voices = spec.assets.filter((a) => a.kind === 'voice')
+  if (voices.length > 0) {
+    const route = `his clone voices an off-day voiceover short only (${VE_CLONE_VOICE_RULING})`
+    if (voices.length > 1) c.addIssue({ code: 'custom', path: ['assets'], message: `one clone voice per spec, the one every cut takes: ${route}` })
+    if (spec.audio.master !== 'vo') c.addIssue({ code: 'custom', path: ['audio', 'master'], message: `a spec with a clone voice has the voiceover master (vo): ${route}` })
+    if (!spec.publish_day) c.addIssue({ code: 'custom', path: ['publish_day'], message: `a spec with a clone voice names its publish_day, so its off day can be checked: ${route}` })
+    const voiceIds = new Set(voices.map((a) => a.id))
+    for (const [cutId, cut] of Object.entries(spec.cuts)) {
+      if (cut.aspect !== '9:16') c.addIssue({ code: 'custom', path: ['cuts', cutId, 'aspect'], message: `every cut of a clone-voiced spec is a 9:16 short: ${route}` })
+      if (!voiceIds.has(cut.take)) c.addIssue({ code: 'custom', path: ['cuts', cutId, 'take'], message: `every cut of a clone-voiced spec takes the clone voice asset, never a take of his: ${route}` })
+    }
   }
   const datasets = new Set(spec.datasets.map((d) => d.id))
   const objects = new Set(spec.objects.map((o) => o.obj))
