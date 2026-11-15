@@ -491,7 +491,10 @@ export const BrandHouseStyleV1Schema = z.object({
     call_footnote: z.string().min(12).max(200),
     question_kicker: z.string().min(3).max(40),
     cover_call_sticker: z.string().min(3).max(40),
-    thumbnail_call_sticker: z.string().min(3).max(40),
+    // Retired on 15 Nov 2026 with the sticker thumbnail (a Short's cover is the Receipt, receiptCoverV2): the live
+    // theme no longer carries it and nothing reads it. Kept optional only so a theme a job pinned before then still
+    // parses and hashes as it did.
+    thumbnail_call_sticker: z.string().min(3).max(40).optional(),
   }).strict(),
 }).strict()
 export type BrandHouseStyleV1 = z.infer<typeof BrandHouseStyleV1Schema>
