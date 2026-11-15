@@ -99,6 +99,8 @@ MCP connector in a session, no engine secret).
 | Apify (scrapers) | the `mcp__Apify__*` connector, or `APIFY_TOKEN` at runtime | `APIFY_TOKEN` | **connector, live**; runtime key already in use. The cloud backup for pasted links (`.github/workflows/watch-cloud.yml`) holds no Apify key: its paid runs go through `POST /api/watch/apify`, which runs content-watcher's own actors with this key, only for a cloud machine holding that link's claim, each under a hard charge cap, and under the runner's own $2 monthly ledger |
 | Supabase (runtime) | platform-injected service role | `SUPABASE_SERVICE_ROLE_KEY` | **injected, live** (do not store the master) |
 | Vercel | deploy only, no content-route use | `VERCEL_TOKEN` (not needed by the engine) | **not an engine secret** |
+| HyperFrames (local HTML-to-video renderer) | `scripts/quick-edit/hyperframes_film.py`, kit's opt-in film backend (`MYMU_FILM=hyperframes`), the CLI pinned in `vendor/hyperframes`; telemetry forced off | none | **keyless, opt-in, off by default** (15 Nov 2026; `docs/production/HYPERFRAMES.md`) |
+| Open Generative AI (muapi.ai front end) | not reached | none | **evaluated 15 Nov 2026, not adopted**: every cloud call is a paid muapi.ai credit (`docs/production/HYPERFRAMES.md`) |
 
 ## What is built, and what is next
 
