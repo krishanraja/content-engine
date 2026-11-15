@@ -4,6 +4,7 @@ passed the fact gate.
 
     python build.py page.json --out OUTDIR [--check] [--shots] [--cover] [--thumbs]
     python build.py cover-facts.json --out OUTDIR --cover --thumbs   (the artwork alone)
+    python build.py cover-facts.json --out OUTDIR --thumbs --options 3 --brief BRIEF.json [--past COVER ...]
     python build.py --self-test
 
 Reads the piece's body markdown and a small JSON file of page facts (README.md
@@ -47,10 +48,16 @@ Artwork made from HTML is checked before it becomes a PNG by card.py.
 --thumbs  draws a thumbnail for every video size from the same facts:
           thumb-wide-1280x720.jpg for the 16:9 long cut (YouTube and the
           Substack video post) and thumb-tall-1080x1920.jpg for the 9:16
-          short cut (the cover on Reels and TikTok), with Krish's face and
-          the real logos, a receipt thumbs.json and thumbs-check.png. Both or
-          neither: it refuses if a word, the face or a logo would sit where a
-          platform covers or crops it, or a word would be too small to read.
+          short cut (the cover on Reels and TikTok), as the Receipt (house
+          rule THE_RECEIPT: a real proof, the wordmark and the real logos,
+          never his face), with a receipt thumbs.json. Both or neither: it
+          refuses if a word or a logo would sit where a platform covers or
+          crops it, or a word would be too small to read.
+--options N  with --thumbs: two or three options in place of the one set
+          (docs/production/COVER-STANDARD.md, point 8; the thumbnail-designer
+          skill), from the facts' "thumb_options" and --brief BRIEF.json,
+          with a grid mock beside the last five posted covers (--past, newest
+          first). scripts/pages/thumb_options.py has the rest.
 
 Facts with no deck or body (docs/plans/<plan>/cover-facts.json) draw only
 the artwork that --cover and --thumbs ask for. Paths in the facts are
@@ -1757,6 +1764,15 @@ def thumbs_check_html(shots, length='3:04'):
             f'padding:20px;background:#fff">{"".join(panels)}</div></body>')
 
 
+def draw_options(facts, base, out, a):
+    """--thumbs --options N: two or three thumbnail options, the grid mock and their record (thumb_options.py), in
+    place of the one set. True when the set was written."""
+    import os
+    import thumb_options
+    by = os.environ.get('MAKING_BY', '').strip() or ('Codex' if any(k.startswith('CODEX') for k in os.environ) else 'Claude Code')
+    return thumb_options.draw(facts, base, out, thumb_facts, companies_of, a.options, a.brief, a.past, by=by)
+
+
 def draw_thumbs(facts, base, out, refresh=False):
     """thumb-wide-1280x720.jpg and thumb-tall-1080x1920.jpg, their receipt
     thumbs.json and thumbs-check.png. Writes all of them or none: an older set
@@ -2171,6 +2187,10 @@ def main():
     ap.add_argument('--cover', action='store_true', help="draw a cover for every place it is shown: cover-1200x630.png (upload to Substack), cover-1200x675.png, cover-1080x1080.png, cover-1080x1920.png and cover.png at 3:2, each with its check")
     ap.add_argument('--thumbs', action='store_true', help='draw thumb-wide-1280x720.jpg and thumb-tall-1080x1920.jpg, a thumbnail for each video '
                     'size, with their receipt thumbs.json and thumbs-check.png')
+    ap.add_argument('--options', type=int, metavar='N', help='with --thumbs: draw 2 or 3 thumbnail options from the facts\' "thumb_options", '
+                    'each in its own folder, with a grid mock (scripts/pages/thumb_options.py)')
+    ap.add_argument('--brief', metavar='BRIEF.json', help='with --options: the thumbnail brief, written before any option is drawn')
+    ap.add_argument('--past', action='append', default=[], metavar='COVER', help='with --options: a past posted cover on this machine, newest first (up to five)')
     ap.add_argument('--refresh-brand', action='store_true', help='fetch the logo images again now')
     ap.add_argument('--self-test', action='store_true', help='check the thumbnail shapes, the facts and the page check, with no browser')
     a = ap.parse_args()
@@ -2183,6 +2203,8 @@ def main():
     raw = json.loads(Path(a.facts).read_text(encoding='utf-8'))
     refuse_author(raw, a.facts)
     base = Path(a.assets) if a.assets else Path(a.facts).resolve().parent
+    if a.options is not None and not a.thumbs:
+        ap.error('--options draws thumbnail options: give --thumbs too')
     if (a.cover or a.thumbs) and not (a.check or a.shots) and not page_ready(raw, base, a.body):
         # Cover facts: only the artwork.
         for key in ('subchannel',) + (('date',) if a.cover else ()):
@@ -2196,7 +2218,7 @@ def main():
         if a.cover:
             ok &= draw_covers(raw, base, out, a.refresh_brand)
         if a.thumbs:
-            ok &= draw_thumbs(raw, base, out, a.refresh_brand)
+            ok &= draw_thumbs(raw, base, out, a.refresh_brand) if a.options is None else draw_options(raw, base, out, a)
         sys.exit(0 if ok else 1)
 
     facts, base, body, sources = load_facts(a.facts, a.body, a.assets)
@@ -2227,7 +2249,7 @@ def main():
     if a.cover:
         ok &= draw_covers(facts, base, out, a.refresh_brand)
     if a.thumbs:
-        ok &= draw_thumbs(facts, base, out, a.refresh_brand)
+        ok &= draw_thumbs(facts, base, out, a.refresh_brand) if a.options is None else draw_options(facts, base, out, a)
     if a.check:
         ok &= clipboard_check(out / 'substack.html', body)
     if not ok:

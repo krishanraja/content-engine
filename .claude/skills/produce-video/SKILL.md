@@ -723,35 +723,17 @@ make a feature for any other piece). What changes for it:
 Krish, 2026-10-12: "I always want a video thumbnail for all video sizes
 produced as an asset every time" (house rule THUMBNAIL_EVERY_SIZE): wide
 1280 x 720 for the long cut, tall 1080 x 1920 for the short cut, as the
-Receipt (house rule THE_RECEIPT, Krish, 2026-11-02: "inviolable"): a real proof
-from one of the piece's checked sources ("proof" in the cover facts), the
-wordmark and the real logos, and never his face or a frame from a take.
-
-```
-$env:MYMU_BROWSER = "msedge"     # Windows; in the cloud container: MYMU_BROWSER=/opt/pw-browsers/chromium
-python scripts/pages/build.py docs/plans/PLAN/cover-facts.json --thumbs --out WORK/thumbs
-```
-
-It writes `thumb-wide-1280x720.jpg`, `thumb-tall-1080x1920.jpg`,
-`thumbs.json` (each file's sha256, the proof, the logos), both or neither.
-It needs the internet for the proof (it fetches the source PDF or page named in
-the facts) and the wordmark. Never pass `--assets`: the logo paths are
-relative to the facts file.
-
-- A plan keeps its real logos as SVG in `docs/plans/PLAN/logos/`, so any
-  checkout draws its thumbnails, a home computer included. The pile-up
-  background is a picture git does not keep: without it the thumbnails are
-  drawn on plain ink and the drawer says so. That is fine.
-- A plan with no `logos/` folder (made before 12 October) cannot be drawn
-  here: never draw a thumbnail without the real logos. Render and archive
-  the cuts, but do not send them to the library (step 8) and record them
-  without a thumbnail (step 9). Put a board item (`idea_id`,
-  `"closes_on": "video"`) asking the session that holds the cover's logos
-  to commit them as SVG under `docs/plans/PLAN/logos/` and draw the
-  thumbnails. Video assets stays "thumbnail still to make" until then.
-- Every company the piece names must be on each thumbnail. One missing goes
-  into the cover facts as `"thumbs": {"strip": [{"logo": ..., "name": ...}]}`
-  with its real logo, never a drawn stand-in.
+Receipt (house rule THE_RECEIPT, Krish, 2026-11-02: "inviolable"), never his
+face or a frame from a take. Read `.agents/skills/thumbnail-designer/SKILL.md`
+and follow it whole: two or three options from a brief (the cover standard,
+point 8), each checked, judged by a separate critic, shown to Krish in a mock
+of his grid and filed only once he picks, his pick recorded in his words. Its
+`references/drawing.md` holds the drawing rules this step held (the browser,
+the real logos as SVG, a plan with no `logos/` folder). Until his pick is on
+the record no thumbnail is filed, posted or recorded: leave `--tall-thumb`,
+`--wide-thumb` and `--thumb` out of steps 7 to 9 and the step reads
+"thumbnail still to make". With it, `WORK/thumbs/` in steps 6 to 9 means
+`WORK/thumbs/options/<his pick>/`.
 
 ## 6. Check it from the report
 
@@ -792,8 +774,8 @@ one the hook in the brand's dress, the wordmark and the series tag in the
 tall cut's top corners; each graphic on its line, its words
 readable on a phone, captions readable, his eyes in frame in the tall
 shape), `NAME.cut.txt` (misheard names, US spellings, and every number
-whole: "$150,000", "70%") and `thumbs-check.png`. A fault goes back to step 4
-or 5.
+whole: "$150,000", "70%") and the grid mock, `WORK/thumbs/grid-mock.png`. A
+fault goes back to step 4 or 5.
 
 ## 7. File both cuts in the archive, once
 

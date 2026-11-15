@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../../_auth.js'
 import { type Making, makingSteps, mergeMaking, parseMakingPatch } from '../../_making.js'
+import { thumbnailOptionsProblems } from '../../_thumbOptions.js'
 import { askChecksForPiece } from '../../_controlCenter.js'
 import { MediaQualityError, qualifyMedia, readMediaRef } from '../../_mediaQuality.js'
 
@@ -18,7 +19,11 @@ import { mediaQualityEnforced, mediaQualityRollout } from '../../../../../packag
 //          recordings: [{cut, path, seconds, script_sha256}], video_assets: [{cut, name, path, url}],
 //          channels: {substack: {url}, youtube: null, ...}, session: {url, by},
 //          teleprompter: {folder_id, folder_name, cuts: {long|short: {script_id, title, script_sha256,
-//            sent_at, error, failed_at}}} }
+//            sent_at, error, failed_at}}},
+//          thumbnail_options: {set_sha256, options, grid_mock, verdict?} or {set_sha256, verdict | pick} }
+//
+// thumbnail_options is the thumbnail-designer's set (scripts/post-pack/making.py thumbnails): a verdict or a pick
+// whose files' sha256s are not the set's on the record is refused (409 thumbnail_options_unbound).
 //
 // teleprompter is where each cut's script is in Krish's teleprompter.com
 // account (scripts/post-pack/teleprompter_send.py record, making.py
@@ -90,6 +95,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { patch, problems } = parseMakingPatch(body, now)
   if (problems.length) return res.status(400).json({ ok: false, error: 'bad_patch', problems })
   if (!Object.keys(patch).length) return res.status(400).json({ ok: false, error: 'empty_patch', problems: ['nothing to record'] })
+  // A thumbnail verdict or pick is kept only on the set it names, with that set's exact files (_thumbOptions.ts).
+  const unbound = thumbnailOptionsProblems(prev?.thumbnail_options, patch.thumbnail_options)
+  if (unbound.length) return res.status(409).json({ ok: false, error: 'thumbnail_options_unbound', problems: unbound })
 
   try {
     const cache = new Map()
