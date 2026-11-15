@@ -1,0 +1,58 @@
+{
+  "devices": [
+    {
+      "device": "answer_stream",
+      "week": "2026-11-16",
+      "card": "docs/ve/cards/living-ui/ve-mg-1-answer-stream.md",
+      "aim": "good visuals",
+      "meaning": "the real answer arrives and its real source lights up, so the claim is seen to come from somewhere real",
+      "reference": "no Production Inspo reference: a library device from plan item B3d, carded with ve card (never ve sprint cards)",
+      "gate2": null
+    },
+    {
+      "device": "character_layer",
+      "week": "2026-11-16",
+      "card": "docs/ve/cards/keyframes/ve-kf-7-character-layer.md",
+      "aim": "good animation",
+      "meaning": "his own cartoon acts each idea with a pose, so the point reads with the sound off",
+      "reference": "no Production Inspo reference: the character layer from plan item C1, carded with ve card (never ve sprint cards)",
+      "gate2": null
+    },
+    {
+      "device": "checklist",
+      "week": "2026-11-16",
+      "card": "docs/ve/cards/living-ui/ve-mg-2-checklist-work.md",
+      "aim": "good motion",
+      "meaning": "a step is seen being worked on and then lands with its tick, so progress is shown rather than said (the work state and the check pop of card ve-mg-2)",
+      "reference": "no Production Inspo reference: a library device from plan item B3d, carded with ve card (never ve sprint cards)",
+      "gate2": null
+    },
+    {
+      "device": "code_card",
+      "week": "2026-11-16",
+      "card": "docs/ve/cards/living-ui/ve-mg-3-code-card.md",
+      "aim": "good visuals",
+      "meaning": "the real code is written line by line and the camera stays on the line that does the work",
+      "reference": "no Production Inspo reference: a library device from plan item B3d, carded with ve card (never ve sprint cards)",
+      "gate2": null
+    },
+    {
+      "device": "cursor_path",
+      "week": "2026-11-16",
+      "card": "docs/ve/cards/keyframes/ve-kf-5-cursor-path.md",
+      "aim": "good animation",
+      "meaning": "a real interface is used on his words, so the viewer sees the act happen instead of hearing it described",
+      "reference": "no Production Inspo reference: a library device from plan item B3d, carded with ve card (never ve sprint cards)",
+      "gate2": null
+    },
+    {
+      "device": "headline",
+      "week": "2026-11-16",
+      "card": "docs/ve/cards/living-ui/ve-mg-4-headline-assemble.md",
+      "aim": "good motion",
+      "meaning": "the words come together into one line, so the headline lands as one idea (the assemble reveal of card ve-mg-4)",
+      "reference": "no Production Inspo reference: a library device from plan item B3d, carded with ve card (never ve sprint cards)",
+      "gate2": null
+    }
+  ]
+}

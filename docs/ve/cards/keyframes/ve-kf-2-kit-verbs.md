@@ -8,30 +8,30 @@ max_minutes: 30
 max_calls: 30
 cwd: C:\Users\krish\dev\makeyourmindup\.worktrees\content-engine\ve-card\ve-kf-2-kit-verbs
 write_allow: [apps/renderer/src/engine/kit/verbs.ts, apps/renderer/src/engine/kit/verbs.test.ts]
-read: _corpus/keyframes-full-visual.md, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/kit/motionProfiles.ts, apps/renderer/src/engine/chrome/tokens.ts, docs/ve/MOTION_STANDARD.md
+read: [apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/kit/motionProfiles.ts, apps/renderer/src/engine/kit/reveal.ts, apps/renderer/src/engine/props.ts, config/ve/brand-tokens.json, docs/ve/MOTION_STANDARD.md]
 never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, raw hex colours, useCurrentFrame outside apps/renderer/src/engine/clock.ts, edits outside write_allow
 ---
 
-# Five motion verbs from the full-visual kit, as pure functions
+# Five motion verbs any device may call, as pure functions
 
 ## Goal
-Add apps/renderer/src/engine/kit/verbs.ts with five pure helpers any device may call (_corpus/keyframes-full-visual.md section 3.7). Times are frames at ve's 30 fps; each takes the frame passed in and a start frame, never reads the clock itself.
+Add apps/renderer/src/engine/kit/verbs.ts with five pure helpers any device may call. cursor_path (card ve-kf-5) uses cursorPath and typeOn, code_card (ve-mg-3) typeOn, answer_stream (ve-mg-1) drawPath. Times are frames at ve's 30 fps; each takes the frame passed in and a start frame, and never reads the clock itself.
 
 1. countTo(frame, at, from, to, {frames=18, jitter=0.02, decimals=0}): the shown number, eased with progress(); a small deterministic jitter (from a hash of `at`, never Math.random) that dies out by the last frame; lands exactly on `to` at at+frames and holds.
 2. typeOn(frame, at, text, {cps=30}): the visible prefix; cps clamped to 25..40 (the motion floor).
 3. drawPath(frame, at, lengthPx, {frames=12}): strokeDashoffset from lengthPx to 0.
-4. mix(frame, at, fromToken, toToken, {frames=6}): an interpolated colour between two token colours (tokens only, no raw hex).
+4. mix(frame, at, fromColour, toColour, {frames=6}): fromColour before `at`, toColour from at+frames, and between them a CSS color-mix() of the two at the eased share, so any token value works (the tests pass named colours); callers pass token values only, never raw hex.
 5. cursorPath(frame, at, points, {framesPerLeg=10, restFrames=4}): {x, y, pressed} along eased arcs between points, resting before each press.
 
 ## Tests (kit/verbs.test.ts)
 - countTo is `from` before `at`, exactly `to` from at+frames, and the same value for the same inputs twice
 - typeOn shows no characters before `at` and the whole text by at + ceil(len/cps*30)
 - drawPath is lengthPx before `at` and 0 at at+frames
-- mix returns fromToken before and toToken after
+- mix returns fromColour before and toColour after, and a color-mix() string between
 - cursorPath is at points[0] before `at`, pressed only during rests, at the last point at the end
 
 ## Contract
-Pure functions of their arguments: no useCurrentFrame, no Math.random, no wall clock, no React. Animation easing only from progress() and drift() in ../clock. Export from kit/index if one exists. Do not change any existing kit file's behaviour or any device.
+Pure functions of their arguments: no useCurrentFrame, no Math.random, no wall clock, no React. Easing only from progress() and drift() in ../clock. There is no kit/index; export from verbs.ts itself. Do not change any existing kit file's behaviour or any device.
 
 ## Motion style: Full visual: the real thing, opened up (full-visual, untested)
 For how-it-works and who-pays-whom pieces. No presenter on screen: his voice explains and the screen is the explanation. Under a word-by-word caption, the real thing each sentence is about is redrawn from real photos and screens, and changes on the word that changes it.
@@ -52,7 +52,7 @@ Never:
 
 ## Acceptance (every command must exit 0 inside your sandbox)
 npx vitest run apps/renderer/src/engine/kit
-npx tsc --noEmit -p apps/renderer
+npx tsc --noEmit
 
 ## Return
 Your final message is only JSON matching config/ve/task-result.schema.json:
