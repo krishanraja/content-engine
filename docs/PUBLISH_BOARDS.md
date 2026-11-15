@@ -716,6 +716,8 @@ any other channel it went out on.
 
 Held by `tests/control-plane/board-its-live.test.ts`.
 
+For every makeyourmind/up Substack article or video post, leave the public byline empty (Krish, 2 November 2026). The native editor may attach the signed-in writer automatically. Remove every name until "Add byline" appears, check the reader preview before scheduling, and reopen the public post after release to verify its header. Hold release if any author remains visible.
+
 ## Ideas for later (GET /api/board/later)
 
 Krish, 2026-11-12: "Does my 'Ideas for Later' tab contain everything I've not approved but not rejected in all the
