@@ -1,3 +1,0 @@
-Status: a re-queued Codex card whose first attempt cannot take in the current main now starts fresh from main by itself, and its build replaces that first attempt on its branch only if the branch has not moved (force-with-lease). Tonight kf-5's second run stopped on his PC for exactly this. Card kf-7 also now says its character layer may add no child to FormatMaster when a cut has no character: its first build moved the frozen golden digest of a recorded cut that has none.
-Next: once this is on main, queue ve-kf-5 and ve-kf-7 on the lane again under new bookings.
-North Star check (2026-11-15): holds.
