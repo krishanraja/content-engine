@@ -1,7 +1,26 @@
 # HyperFrames and Open Generative AI: what was tested, what was kept
 
-Status: evaluated 15 Nov 2026. HyperFrames is installed as an opt-in film backend for quick-edit's kit, off by
-default. Open Generative AI was not adopted. Nothing here changes a cut, a palette element or the ve renderer.
+Status: evaluated and decided 15 Nov 2026. HyperFrames is installed as an opt-in film backend for quick-edit's kit,
+off by default, with no further job (see "The decision"). Open Generative AI was not adopted, and `ve assets plan` is
+not built now. Nothing here changes a cut, a palette element or the ve renderer.
+
+## The decision
+
+Asked which job HyperFrames gets and whether to build `ve assets plan`, Krish left the call to the engine on one
+test (15 Nov 2026): "Whatever gets the job done to the highest quality". On that test:
+
+1. **HyperFrames stays opt-in and off by default, with no ve card.** The parity check shows it films the end card as
+   well as today's route and no better, so making it the default changes the engine for no visible gain (F33). Moving
+   plates drawn in HTML would sit outside ve's one composition, its design lock and Gate 2: the kind of per-piece route
+   behind the four rejected cuts of 23 Oct (`docs/ve/ENGINE.md`, "Why ve exists"). The pin costs nothing while unused;
+   CI never installs it.
+2. **`ve assets plan` is not built now.** His floor puts real material above made pictures. It reads "Never use generic
+   clipart, stock icons, or gimmick illustrations in place of real, dated screenshots and sourced charts that make the
+   point land" (approved 4 Nov), and the one generated thing he has accepted is still images ("The only thing
+   acceptable is the still images generated", 27 Oct). The odd generated still already has its route: a named request
+   in `assets.requests.json`, his credits at Gate 1, then the ve-assets agent.
+3. **What reopens each.** A ve proof that needs a moving page no ve device can draw reopens HyperFrames, through a ve card
+   and Gate 2. Generated stills needed in more than the odd piece reopen `ve assets plan`.
 
 ## The short answer
 
