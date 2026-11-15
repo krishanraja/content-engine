@@ -113,9 +113,9 @@ every shape matches what he picked. Each video channel's cover in the piece mani
 
 ## Where the standard and the gates differ
 
-`visual_gate.py` follows the cover standard: at most three logos, only of companies the piece names (Ruling, Krish,
-2026-11-15). Say this one to Krish once when it bites; never settle it yourself (`references/drawing.md`, "One open
-conflict"): `config/hook-playbook.json` still describes thumbnails with his face and under 4 words.
+None open. `visual_gate.py` follows the cover standard: at most three logos, only of companies the piece names, and
+`config/hook-playbook.json` describes the Receipt: at most 7 words over a real proof, no face (Rulings, Krish,
+2026-11-15). A new difference between the standard and a gate goes to Krish once; never settle it yourself.
 
 ## Walls
 

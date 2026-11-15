@@ -53,14 +53,12 @@ read on this machine counts, recorded by its sha256; a past post is never drawn 
 - When they cannot be read in this session, draw the mock with the options alone. Its record and its caption say so,
   and so does your reply.
 
-## One open conflict
+## Settled conflicts
 
-This is for Krish, once, when it bites. Do not pick a side.
+None is open. Both were settled by Krish on 15 November 2026:
 
-The logo count is settled: the gate follows the cover standard (Ruling, Krish, 2026-11-15: "yes, make the gate follow
-the cover standard").
-
-**His face and 4 words.** `config/hook-playbook.json` still describes the thumbnail as "Under 4 words over his face
-   and the logos" and the Substack cover "with his face and 3 to 5 big words". THE_RECEIPT (2 Nov) took the face off
-   every cover and thumbnail, and the cover standard (9 Nov) allows 7 words. The playbook is a taste config, changed
-   only by Krish in person.
+- **How many logos.** The gate follows the cover standard: at most three logos, each of a company the piece names
+  ("yes, make the gate follow the cover standard").
+- **His face and 4 words.** `config/hook-playbook.json` and `config/brand-palette.json` now describe the Receipt: at
+  most 7 words over a real proof from the piece's sources, up to three logos of the companies the headline names, and
+  no face (his answer: apply the rewrite).
