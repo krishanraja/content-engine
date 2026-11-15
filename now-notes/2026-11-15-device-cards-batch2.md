@@ -1,3 +1,0 @@
-Status: two more devices built by Codex on the lane from the cloud and checked here with both applied to main: ve-mg-1 answer_stream (a real captured answer types in, its citation is marked and its real source lights) and ve-mg-3 code_card (real code typed on a card that reports its line, so the camera can follow it). Every acceptance command passed again. Stills are not looked at yet, because this container has no house fonts. The house golden test cannot see any device that draws with remotion's Img (answer_stream, hand_phone_stage, video_wall, wall_screen all record a throw there); answer_stream's own device test does draw it.
-Next: render Gate 2 stills of answer_stream and code_card on a home computer and put them to Krish.
-North Star check (2026-11-15): holds.
