@@ -8,7 +8,6 @@ import glob
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -224,9 +223,8 @@ CODEX_THREAD = ROOT / 'scripts' / 'codex_thread.mjs'
 
 def codex_thread() -> str:
     """The one way Claude starts Codex: scripts/codex_thread.mjs drives `codex app-server` directly, one short-lived
-    server per command, so each card is a permanent thread in Krish's Desktop home that he can open and type in."""
-    if not shutil.which('codex'):
-        sys.exit('ve dispatch: the codex command is not on PATH (install Codex, or open Codex Desktop once)')
+    server per command, so each card is a permanent thread in Krish's Desktop home that he can open and type in. Which
+    node and codex run it is velib.codex_route's (thread_command): in WSL with his Windows home, the Windows ones."""
     return str(CODEX_THREAD)
 
 
@@ -306,6 +304,7 @@ def card_usage(card_id: str, cwd: str, logs: list[str] | None = None) -> dict | 
     """{minutes, calls, log} for the newest Codex session that ran this card (its cwd is the card's worktree, or its
     prompt names the card), from the session's own timestamps and tool calls; None when no log is found."""
     from datetime import datetime
+    from . import codex_route
     if logs is None:
         logs = sorted((log for home in codex_homes() for log in glob.glob(str(home / 'sessions' / '*' / '*' / '*' / '*.jsonl'))),
                       key=os.path.getmtime)
@@ -319,6 +318,7 @@ def card_usage(card_id: str, cwd: str, logs: list[str] | None = None) -> dict | 
             except ValueError:
                 continue
         meta_cwd = next((str((e.get('payload') or {}).get('cwd') or '') for e in events if e.get('type') == 'session_meta'), '')
+        meta_cwd = codex_route.linux_form(meta_cwd)  # Windows Codex logs a WSL worktree by its wsl.localhost path
         mine = (want_cwd and meta_cwd.replace('\\', '/').rstrip('/').lower() == want_cwd) or f'card: {card_id}' in '\n'.join(lines)
         if not mine:
             continue
@@ -555,22 +555,57 @@ def dispatch(card_path: Path, background: bool = True, booked: str | None = None
     minutes, _ = card_limits(meta)
     ensure_worktree(Path(cwd), meta.get('card', 'card'))
     env = codex_env(studio)
-    script = codex_thread()
     name = meta.get('card') or card_path.stem
-    cmd = ['node', script, 'open', '--cwd', cwd, '--sandbox', 'workspace-write', '--model', meta.get('model', MODEL),
-           '--effort', meta.get('effort', EFFORT), '--prompt-file', str(titled_prompt(card_path, meta, piece).resolve())]
-    if env.get('CODEX_HOME'):
-        cmd += ['--home', env['CODEX_HOME']]
+    options = ['--cwd', cwd, '--sandbox', 'workspace-write', '--model', meta.get('model', MODEL),
+               '--effort', meta.get('effort', EFFORT), '--prompt-file', str(titled_prompt(card_path, meta, piece).resolve())]
     if background:
         # The thread runs on in a detached child and releases itself when the turn ends; its log, in .ve-work (Claude may
         # not read .cache), names the thread id first: read it with codex_thread.mjs read.
         # verify-card holds it to max_minutes and max_calls from its session log.
-        cmd += ['--detach', '--log', str(ROOT / '.ve-work' / 'dispatch' / f'{name}.log')]
+        log = ROOT / '.ve-work' / 'dispatch' / f'{name}.log'
+        log.parent.mkdir(parents=True, exist_ok=True)
+        options += ['--detach', '--log', str(log)]
+    cmd, env, _ = launch(options, env)
+    if background:
         return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, env=env)
     try:
         return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, env=env, timeout=minutes * 60)
     except subprocess.TimeoutExpired:
         sys.exit(f've dispatch: card {meta.get("card")} ran past its max_minutes ({minutes}) and was stopped')
+
+
+def plan(options: list, env: dict, sub: str = 'open') -> tuple[list[str], str, dict]:
+    """(argv, route, extra) that start codex_thread.mjs under env's CODEX_HOME; nothing is written or started. Inside
+    WSL with a Windows home (/mnt/c/...) it is Windows node and Windows codex.exe with Windows paths, never the Linux
+    codex on /mnt/c (scripts/velib/codex_route.py says why); a route that cannot be taken stops in one line with its fix."""
+    from . import codex_route
+    home = env.get('CODEX_HOME') or str(Path.home() / '.codex')
+    try:
+        return codex_route.thread_command(codex_thread(), sub, [*options, '--home', home], home)
+    except codex_route.RouteError as error:
+        sys.exit(str(error))
+
+
+def launch(options: list, env: dict, sub: str = 'open') -> tuple[list[str], dict, str]:
+    """plan, then what the route needs before it starts: on wsl-windows the unchanged copy of codex_thread.mjs on the
+    Windows drive. Returns the command, its environment and the route."""
+    from . import codex_route
+    cmd, chosen, extra = plan(options, env, sub)
+    if extra.get('stage'):
+        try:
+            codex_route.stage(*extra['stage'])
+        except OSError as error:
+            sys.exit(f've dispatch: codex_thread.mjs could not be copied beside the Windows Codex home ({error})')
+    return cmd, codex_route.environ_for(chosen, env, extra), chosen
+
+
+def dry_run(card_path: Path, studio: bool = False, piece: str | None = None) -> str:
+    """What dispatch would launch for this card, as one line, without reserving, making a worktree or starting Codex."""
+    from . import codex_route
+    meta = parse_card(card_path)
+    options = ['--cwd', meta.get('cwd') or str(ROOT), '--sandbox', 'workspace-write', '--model', meta.get('model', MODEL),
+               '--effort', meta.get('effort', EFFORT), '--prompt-file', str(titled_prompt(card_path, meta, piece).resolve())]
+    return codex_route.describe(*plan(options, codex_env(studio)))
 
 
 def verify(card_path: Path, cwd: Path) -> list[str]:

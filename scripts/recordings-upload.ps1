@@ -68,7 +68,7 @@ Once each Saturday after 18:00 local, a pass also runs the overnight preflight
 (scripts\overnight\preflight.ps1, plan Wave 1: the clock's "Sat 18:00
 Preflight" row), with no window. It only reads: whether this machine could run
 the overnight production unattended (Claude Code installed, never started,
-the Codex companion, login and allowance, the pinned ffmpeg and Tesseract, free
+the Codex route (Windows node and codex, codex_thread.mjs), login and allowance, the pinned ffmpeg and Tesseract, free
 disk, Google Drive). Its result is kept as preflight.json beside this log, a
 failed one is tried once more 20 minutes later, and every report after carries
 its summary, so GET /api/library/recordings/lane reads it with no new key.
