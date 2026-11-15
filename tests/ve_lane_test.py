@@ -2,10 +2,12 @@
 a session with no Codex queues the card on the board, the home computer claims and builds it, the result lands on the
 same item. Pure pieces only: no engine call, no Codex."""
 import datetime as dt
+import io
 import json
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 from pathlib import Path
 
@@ -117,10 +119,16 @@ class Guards(unittest.TestCase):
 
 
 class Booking(unittest.TestCase):
-    def test_a_card_is_never_queued_or_built_without_a_control_center_booking(self):
-        for bad in (None, '', 'not-a-uuid'):
-            with self.assertRaises(SystemExit):
-                lane.require_booking(bad)
+    def test_a_booking_is_checked_and_a_missing_one_never_blocks_the_card(self):
+        with self.assertRaises(SystemExit):
+            lane.require_booking('not-a-uuid')
+        # No connector, no booking (Krish, 2026-11-15): the card goes ahead on a provisional local reservation.
+        with unittest.mock.patch('sys.stderr', new_callable=io.StringIO) as err:
+            for missing in (None, ''):
+                self.assertIsNone(lane.require_booking(missing))
+        self.assertIn('provisional', err.getvalue())
+        bare = lane.queue_item('docs/ve/cards/x.fields.json', FIELDS, 'main', None, 'claude_code')
+        self.assertEqual(bare['close_ref']['booking'], 'provisional')
         good = '12345678-1234-4234-9234-123456789abc'
         self.assertEqual(lane.require_booking(good), good)
         item = lane.queue_item('docs/ve/cards/x.fields.json', FIELDS, 'main', None, 'claude_code', spend_id=good)

@@ -17,7 +17,7 @@
 
   python scripts/ve.py ledger <piece>               usage against the piece's caps
   python scripts/ve.py ledger <piece> reserve <provider> <amount>   reserve against Control Center's credit caps
-  python scripts/ve.py budget pull|verify|hash|status  the credit caps Control Center places on the publication
+  python scripts/ve.py budget pull|verify|hash|status|provisional|reconcile  the credit caps Control Center places on the publication
   python scripts/ve.py lock spend                    the design lock's spend consent becomes Control Center's caps
   python scripts/ve.py time <piece> start <phase>    time an engine phase (stop/status available)
 
@@ -1331,6 +1331,24 @@ def cmd_ledger(args) -> int:
 def cmd_budget(args) -> int:
     from velib import credits, ledger
     path = Path(args.record) if args.record else credits.RECORD
+    if args.action == 'provisional':
+        rows = ledger.provisional()
+        for r in rows:
+            print(f'{r["id"]}  {r["week"]}  {r["provider"]} {r["amount"]:g}  {r["note"]}  ({r.get("why", "")})')
+        print(f've budget: {len(rows)} provisional reservation(s) to book with Control Center (reserve_credit_spend, '
+              'engine growth-makeyourmindup, pool codex or codex-credits), then ve budget reconcile ID --spend-id UUID')
+        return 0
+    if args.action == 'reconcile':
+        if not (args.id and args.spend_id):
+            print('ve budget reconcile: give the provisional id and --spend-id (the reserve_credit_spend answer)', file=sys.stderr)
+            return 1
+        try:
+            ledger.reconcile(args.id, args.spend_id)
+        except ValueError as error:
+            print(f've budget reconcile: {error}', file=sys.stderr)
+            return 1
+        print(f've budget: {args.id} booked with Control Center as {args.spend_id}')
+        return 0
     if args.action == 'pull':
         if not args.read:
             print('ve budget pull: give the get_engine_credits answer as a file (--read FILE)', file=sys.stderr)
@@ -1908,7 +1926,9 @@ def main() -> int:
     a.add_argument('id'); a.add_argument('amount', type=float)
     p.set_defaults(fn=cmd_ledger)
     p = sub.add_parser('budget', help='pull, verify, hash or show the credit caps Control Center places on the publication')
-    p.add_argument('action', choices=('pull', 'verify', 'hash', 'status'))
+    p.add_argument('action', choices=('pull', 'verify', 'hash', 'status', 'provisional', 'reconcile'))
+    p.add_argument('id', nargs='?', help='reconcile: the provisional reservation id')
+    p.add_argument('--spend-id', help='reconcile: the spend_id reserve_credit_spend returned')
     p.add_argument('--read', help='pull: a get_engine_credits answer (JSON) for growth-makeyourmindup')
     p.add_argument('--record', help='default .ve-work/credits/credit-budget.json (never committed), or VE_CREDIT_BUDGET')
     p.set_defaults(fn=cmd_budget)

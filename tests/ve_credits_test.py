@@ -179,6 +179,99 @@ class BudgetTests(unittest.TestCase):
             self.assertIn('codex_paid_credits', str(paid.exception))
             run.assert_not_called()
 
+    # A local Claude Code install has no Control Center connector, so no credit read (Krish, 2026-11-15: a session on his
+    # PC refused ve dispatch for that and went off editing his MCP config). A missing read never blocks a Codex card.
+    def _dispatch_patches(self, record_path, info=None, used=10.0):
+        return [mock.patch.object(credits, 'RECORD', record_path),
+                mock.patch.object(cards, 'allowance', return_value=info),
+                mock.patch.object(cards, 'weekly_used_percent', return_value=used),
+                mock.patch.object(credits, 'week_of', return_value=MONDAY.isoformat()),
+                mock.patch.object(cards, '_require_design_lock', return_value=None),
+                mock.patch.object(cards, '_admit', return_value=None),
+                mock.patch.object(cards, 'ensure_worktree', return_value=None),
+                mock.patch.object(cards, 'companion', return_value='companion.mjs'),
+                mock.patch.object(cards, 'codex_env', return_value={}),
+                mock.patch.object(cards, 'titled_prompt', return_value=self.dir / 'prompt.md')]
+
+    def _card(self):
+        card = self.dir / 'card.md'
+        card.write_text('---\ncard: t\nkind: plate\ncwd: ' + str(self.dir) + '\n---\n## Acceptance\n## Return\n', encoding='utf-8')
+        return card
+
+    def _run(self, card, record_path, info=None, used=10.0):
+        import contextlib
+        import io
+        with contextlib.ExitStack() as stack:
+            for patch in self._dispatch_patches(record_path, info, used):
+                stack.enter_context(patch)
+            run = stack.enter_context(mock.patch.object(cards.subprocess, 'run'))
+            err = io.StringIO()
+            stack.enter_context(contextlib.redirect_stderr(err))
+            try:
+                cards.dispatch(card)
+                return run, err.getvalue(), None
+            except SystemExit as stop:
+                return run, err.getvalue(), stop
+
+    def test_no_connector_dispatch_proceeds_on_a_provisional_reservation_with_one_warning(self):
+        ledger._WARNED = False
+        card = self._card()
+        run, err, stop = self._run(card, self.dir / 'missing.json')
+        self.assertIsNone(stop)
+        self.assertEqual(run.call_count, 1)
+        self.assertEqual(len(err.strip().splitlines()), 1)
+        self.assertIn('provisionally', err)
+        open_rows = ledger.provisional()
+        self.assertEqual(len(open_rows), 1)
+        self.assertEqual(open_rows[0]['provider'], 'codex_allowance_points')
+        self.assertIn('no credit read', open_rows[0]['why'])
+        run, err, stop = self._run(card, self.dir / 'missing.json')
+        self.assertIsNone(stop)
+        self.assertEqual(err, '')                                   # warned once, not every card
+        self.assertEqual(len(ledger.provisional()), 2)
+        ledger.reconcile(open_rows[0]['id'], '00000000-0000-0000-0000-000000000000')
+        self.assertEqual(len(ledger.provisional()), 1)
+        # A stale read is a missing connector too, never a block.
+        stale = self.dir / 'stale.json'
+        old = credits.from_read(read(), today=MONDAY - dt.timedelta(days=credits.MAX_AGE_DAYS + 3))
+        credits.save(old, stale)
+        run, _, stop = self._run(card, stale)
+        self.assertIsNone(stop)
+        self.assertEqual(run.call_count, 1)
+
+    def test_a_readable_exhausted_allowance_refuses_the_card(self):
+        card = self._card()
+        used_up = {'used_percent': 100.0, 'resets_at': '2026-11-20', 'credits': 0.0}
+        run, _, stop = self._run(card, self.dir / 'missing.json', info=used_up, used=100.0)
+        self.assertIsNotNone(stop)
+        self.assertIn('allowance used', str(stop))
+        run.assert_not_called()
+        # A read from Control Center that stands and says the cap is spent refuses too.
+        spent = self.dir / 'spent.json'
+        credits.save(credits.from_read(read({'codex': 0, 'codex-credits': 0, 'runway': 0, 'higgsfield': 0, 'elevenlabs': 0}),
+                                       today=MONDAY), spent)
+        with mock.patch.object(credits, '_today', return_value=MONDAY):
+            run, _, stop = self._run(card, spent)
+        self.assertIn('over the credit cap', str(stop))
+        run.assert_not_called()
+        self.assertEqual(ledger.provisional(), [])
+        # Unread credits with a full window is not proof it is exhausted.
+        self.assertIsNone(cards.exhausted({'used_percent': 100.0, 'resets_at': None, 'credits': None}))
+
+    def test_an_available_allowance_is_reserved_and_settled(self):
+        card = self._card()
+        with mock.patch.object(credits, '_today', return_value=MONDAY):
+            run, err, stop = self._run(card, self.path)
+        self.assertIsNone(stop)
+        self.assertEqual(run.call_count, 1)
+        self.assertEqual(ledger.provisional(), [])
+        week = ledger.weekly(MONDAY.isoformat(), signed())['codex_allowance_points']
+        self.assertEqual((week['open'], week['settled']), (1.0, 0))
+        rows = [json.loads(line) for line in ledger.credit_ledger_path(MONDAY.isoformat()).read_text().splitlines()]
+        ledger.settle(rows[0]['id'], 0.6, today=MONDAY)
+        week = ledger.weekly(MONDAY.isoformat(), signed())['codex_allowance_points']
+        self.assertEqual((week['open'], week['settled'], week['used']), (0, 0.6, 0.6))
+
     def test_the_spend_flag_is_gone(self):
         self.assertNotIn('spend_approved', (ROOT / 'scripts' / 'velib' / 'cards.py').read_text())
         self.assertNotIn('--spend-approved', (ROOT / 'scripts' / 've.py').read_text())
