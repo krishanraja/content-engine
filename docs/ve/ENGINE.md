@@ -27,6 +27,8 @@ Friday 23 Oct took a 62-hour thread, about 253M tokens, and four rejected cuts. 
 | Caption styles (27) | `apps/renderer/src/engine/captions/` (`names.ts`, `kit.ts`, `draw.tsx`, `themes.tsx`, one file each in `styles/`) and `chrome/ArtDirectedCaption.tsx`; picked with `style.captions` (theme and placement), apart from the motion style ([INGREDIENTS.md](INGREDIENTS.md)) |
 | Transitions, camera, energy | `apps/renderer/src/engine/kit/ingredients.ts`; picked with `style.transitions`, `style.camera`, `style.energy` ([INGREDIENTS.md](INGREDIENTS.md)) |
 | Pace | `scripts/velib/pace.py` (`ve pace`), compared with `config/ve/pace-references.json` |
+| A bed's beat | `scripts/velib/beats.py` (`ve beats`; ve qc's advisory `music.beats` row): tempo, bars, drops and a confidence, no grid under 1.5; measured, never snapped to (his words are the clock) |
+| The per-beat motion plan | the motion-designer skill (`.agents/skills/motion-designer/SKILL.md`), written into the spec before Sign storyboard |
 | The style lab | `lab/styles/` (one folder per built style, `STYLE.md` and `scene.mjs`); `lab/styles/README.md` |
 | The moves (one copy, for the lab and ve) | `packages/moves/` (`@mymu/moves`, plain ES modules, `draw` or `update` from t); `lab/moves/` keeps the gallery, the check and re-exports |
 | 3D | `three` and `@remotion/three` in `apps/renderer`; renders use software WebGL (`gl: 'swangle'` in `scripts/ve-render.mjs`), so a 3D device renders the same on every machine |

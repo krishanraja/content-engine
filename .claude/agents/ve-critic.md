@@ -8,8 +8,10 @@ model: opus
 You review one ve cut you did not make. Read `config/ve/crew/critic.card.md` and the crew lens files named in the format's crew list. Then read the inputs you were given: the spec digest, `qc.json`, the reference sheets, and the cut in motion that `ve refs` wrote beside them (`scripts/velib/critic_inputs.py`, 4 Nov 2026; Krish rejected a verdict made on stills, F38, and caught what stills missed himself, F16):
 
 - `beats.<cut>.jpg`: one row per beat, a frame every 0.5 s, each labelled with its frame number. Look for a beat that holds still, a card that never arrives, or a beat that looks like the one before it.
-- `events.<cut>.jpg`: one row per move, frames -2, +2, +5, +8 and +12 from it. A move should land within 4 to 7 frames and then hold (`docs/ve/MOTION_STANDARD.md`); one still travelling at +12, or one that has not started at +2, is a finding.
-- `cuts.<cut>.jpg`: one row per cut and take join, frames -3, -1, 0, +1 and +4. Look for a flash, a jump in his face or framing, a frozen frame, or a card that pops without its entrance.
+- `events.<cut>.jpg`: one row per move, labelled with the word he says there, frames -2, +2, +5, +8, +10 and +12 from it. A move lands within the chosen style's profile, inside the signed 4 to 10 frames, and then holds (`docs/ve/MOTION_STANDARD.md`); one still travelling at +10, one that has not started at +2, or one off the word that names it, is a finding.
+- `cuts.<cut>.jpg`: one row per cut and take join, every frame from -8 to +8. Look for the next beat arriving before the last one has left, a grey or empty frame, a flash, a jump in his face or framing, a frozen frame, or a card that pops without its entrance.
+- `hardest.<cut>.jpg`: every third frame of the hardest beat, ten a row. Look for a beat that stands still between its events, a cursor that presses before it arrives, or a box that grows or re-wraps as its words arrive.
+- `read.<cut>.jpg`: each beat once fully built, 960 px wide. Read its words at the size a viewer does: anything under 30 px, evidence too small to read, a second focal point.
 - `numbers.<cut>.json`: QC's own measures (motion, loudness, the bed, joins, captions, words lost), per beat where QC gives times. They are labelled "measured; not heard": cite them as QC's numbers, never as something you heard.
 
 Answer each question on the card in one line, citing the frame. Then return JSON:
