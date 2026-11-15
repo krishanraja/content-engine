@@ -1,0 +1,28 @@
+{
+  "path": "docs/ve/cards/living-ui/ve-mg-1-answer-stream.md",
+  "card_id": "ve-mg-1-answer-stream",
+  "kind": "device",
+  "motion_style": "living-ui",
+  "title": "A real captured answer streams in, a citation pops, its real source lights up",
+  "goal": "Build device `answer_stream`. It shows the captures themselves and never re-types their words (ve lint real.retyped); the only text it draws is `label`. Needs kit/verbs.ts (card ve-kf-2) on main.\n\nparams: `answer` and `source` ({src, pixelWidth, pixelHeight}: the real answer and the real page it cites); `blank` ({x, y, w, h} in answer pixels: a patch of the answer's own background); `lines` ([{x, y, w, h, chars}], its text lines in reading order); `citation` and `passage` (boxes in answer and source pixels); `label` (where and when each was captured, HOUSE_FONTS.data, at least 24 px). A line drawn under 40 px tall on 9:16 is refused by its index: crop tighter, never shrink.\n\n1. `enter`: the answer rises in, every line covered by `blank` stretched over it (the capture's own ground, never a token or a drawn box).\n2. `type` (toState `answer`): the lines uncover in order, left to right, in steps every 2 frames of 2 to 6 characters (from a hash of line and step), averaging 30 a second (25 to 40), faster only to finish by the object's next event.\n3. `mark` (toState `citation`): the citation's own pixels pop once, up to 1.25x and back in 8 frames (overshootEase), and a mint ring draws round it once.\n4. `light` (toState `source`): the source comes in (below the answer on 9:16, beside it on 16:9; the answer steps aside), a mint frame draws once round `passage` over a 20% mint wash, the rest of the source dims to 40%, and a mint hairline draws once from the citation to the passage (drawPath).\n5. `exit`.\n\n## Tests (device.test.ts)\n- every line is covered before `type`, whole by its end, and never covered again\n- the steps are the same across two renders\n- the citation pops once and settles at 1x; the ring and hairline only grow\n- after `light` the passage is mint and the rest of the source is at 40%\n- the 9:16 and 16:9 fixtures render (no image committed)",
+  "contract": "Device rules (apps/renderer/src/engine/devices/CONTRACT.md): a pure function of its props; state only from stateAt(events, object.obj, frame); motion only from progress(), drift() and MOTION in clock.ts and the helpers in kit/verbs.ts; colours only from tokens (raw hex refused); type only from HOUSE_FONTS; no Math.random, no frame modulo, no wall clock, no fetch; useCurrentFrame only in clock.ts. Every move runs once and holds: no spinner, pulse or loop (ve qc motion.periodicity). No per-piece code. Files: index.tsx, schema.ts (zod, strict), state.ts, fixture.json (\"aspects\": [\"9:16\", \"16:9\"]; the 1080x1920 and 1920x1080 slots authored apart, never one scaled into the other), device.test.ts. Register it in devices/registry.ts (one line) and config/ve/devices.json with exactly the verbs above, and add its line to verbs.test.ts. Add only your own keys to apps/renderer/src/engine/houseGolden.json (VE_WRITE_HOUSE_GOLDEN=1 npx vitest run apps/renderer/src/engine/houseGolden.test.ts); every other key stays byte-identical.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/answer_stream\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\nnpx vitest run apps/renderer/src/engine/houseGolden.test.ts\nnpx tsc --noEmit\npython scripts/ve/check_route.py",
+  "write_allow": [
+    "apps/renderer/src/engine/devices/answer_stream/*",
+    "apps/renderer/src/engine/devices/registry.ts",
+    "apps/renderer/src/engine/devices/verbs.test.ts",
+    "apps/renderer/src/engine/houseGolden.json",
+    "config/ve/devices.json"
+  ],
+  "read": [
+    "apps/renderer/src/engine/devices/CONTRACT.md",
+    "apps/renderer/src/engine/kit/verbs.ts",
+    "apps/renderer/src/engine/devices/evidence_card/**",
+    "apps/renderer/src/engine/clock.ts",
+    "apps/renderer/src/engine/props.ts",
+    "config/ve/brand-tokens.json",
+    "docs/ve/MOTION_STANDARD.md"
+  ],
+  "max_minutes": 60,
+  "max_calls": 60
+}
