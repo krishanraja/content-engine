@@ -110,12 +110,12 @@ def cmd_doctor(_args) -> int:
     login = subprocess.run([codex, 'login', 'status'], capture_output=True, text=True) if codex else None
     status = (login.stdout + login.stderr).strip() if login else ''
     check('codex login', 'ChatGPT' in status, status or 'codex CLI missing: Codex cards cannot run', hard=False)
-    from velib.cards import allowance, companion
+    from velib.cards import allowance, codex_thread
     import time
     try:
-        check('codex plugin companion', True, companion())
+        check('codex_thread.mjs (the one way Claude starts Codex)', True, codex_thread())
     except SystemExit as error:
-        check('codex plugin companion', False, str(error), hard=False)
+        check('codex_thread.mjs (the one way Claude starts Codex)', False, str(error), hard=False)
     info = allowance()
     if info:
         days = (info['resets_at'] - time.time()) / 86400 if info['resets_at'] else None
