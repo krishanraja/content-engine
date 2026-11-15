@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design the thumbnails"
+  short_description: "Two or three Receipt thumbnail options, a grid mock, a separate critic and his pick in his words"
+  default_prompt: "Use $thumbnail-designer to design this piece's thumbnails now that its thumbnail words are picked: piece_id: <uuid>."

@@ -12,7 +12,7 @@ So this refuses:
 - with --against REV: a house rule ID named in that revision's SKILL.md and no longer named in the core;
 - a skill core over its byte cap (W2.12, CORE_CAPS): a core that grows past it moves a section to references/.
 
-    python3 scripts/check_skill_core.py                  # make-piece and produce-video
+    python3 scripts/check_skill_core.py                  # make-piece, produce-video and thumbnail-designer
     python3 scripts/check_skill_core.py --against REV    # and nothing named at REV has left the core
 """
 from __future__ import annotations
@@ -26,13 +26,15 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / '.agents' / 'skills'
 # The skills split into a core plus references (their .claude/skills copies hold SKILL.md only, so each
 # reference is named by its repository path).
-SPLIT = ('make-piece', 'produce-video')
+SPLIT = ('make-piece', 'produce-video', 'thumbnail-designer')
 RULES = ROOT / 'apps' / 'control-plane' / 'api' / '_houseRules.ts'
 # Byte caps on every skill core (W2.12): each core's size on 29 October 2026 with about a tenth of headroom. A session
 # reads the whole core at its start, so a core that grows costs every session; past its cap a section moves to
 # references/ and the core names it.
 CORE_CAPS = {'make-piece': 63_000, 'plan-week': 49_000, 'produce-video': 60_000, 'mindmake-video': 9_000,
-             've': 6_000, 'video-engine': 4_500}
+             've': 6_000, 'video-engine': 4_500,
+             # thumbnail-designer (15 Nov 2026): its size that day with about a tenth of headroom; its detail is in references/.
+             'thumbnail-designer': 9_500}
 
 
 def cap_problems(skills=SKILLS, caps=CORE_CAPS) -> list[str]:

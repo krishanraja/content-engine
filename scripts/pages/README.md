@@ -369,6 +369,25 @@ be copied beside the facts on the machine that draws, and git ignores the
 copy. It needs the internet for the wordmark and for a proof cut from a live
 page or PDF, and a browser (`MYMU_BROWSER`, as in Setup).
 
+**Two or three options** (`docs/production/COVER-STANDARD.md`, point 8, approved
+by Krish on 2026-11-09: "Two or three options, never one, each shown in a mock
+of his grid beside the last five posts"; the thumbnail-designer skill):
+
+```
+python scripts/pages/build.py docs/plans/PLAN/cover-facts.json --thumbs --options 3 --brief WORK/thumbs/brief.json [--past COVER ...] --out WORK/thumbs
+```
+
+draws each option declared in the facts' `"thumb_options"` (`{"id": "a",
+"note": "what it tries", "proof": {...}, "proof_width": "58%" | "50%" | "44%",
+"proof_first": true, "logos_under": true}`: the proof's crop or picture and the
+layout, nothing else) in the week's one skin, into
+`WORK/thumbs/options/<id>/` with its own `thumbs.json`, and writes the set's
+record `thumb-options.json` (each file's sha256) and `grid-mock.png` (each
+option's tall thumbnail in the first tile of a 3-wide Instagram grid, beside
+the `--past` covers). Two or three, or none written. `thumb_options.py` holds
+the rest: the brief's rules, the mock drawn again, and the separate critic's
+verdict bound to the files' sha256 (`thumb_options.py --self-test`).
+
 ## Making it a web edition
 
 To keep a page in `editions/`, copy `page.html` there as `index.html`, beside

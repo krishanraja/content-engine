@@ -1978,6 +1978,26 @@ What Krish has confirmed he likes, for the writers.
 - `function linkedinNorm(input: string | null | undefined): string | null`
 - `function contentHash(input: string | null | undefined): string | null`
 
+### `apps/control-plane/api/_thumbOptions.ts`
+
+A piece's thumbnail options on its making record (meta.making.thumbnail_options): the thumbnail-designer skill's
+
+- `const THUMB_OPTION_IDS`
+- `const THUMB_SHAPES`
+- `const THUMB_CHECKS`
+- `type ThumbCheck = (typeof THUMB_CHECKS)[number]`
+- `interface MakingThumbFile`
+- `interface MakingThumbOption`
+- `interface MakingThumbVerdictOption`
+- `interface MakingThumbVerdict`
+- `interface MakingThumbPick`
+- `interface MakingThumbnailOptions`
+- `type ThumbnailOptionsPatch`
+- `function setDigest(options: Array<Pick<MakingThumbOption, 'id' | 'files'>>): string`
+- `function parseThumbnailOptions(v: unknown, problems: string[]): ThumbnailOptionsPatch | null`
+- `function thumbnailOptionsProblems(prev: MakingThumbnailOptions | null | undefined, patch: ThumbnailOptionsPatch | undef…`
+- `function mergeThumbnailOptions(prev: MakingThumbnailOptions | null | undefined, patch: ThumbnailOptionsPatch, by: strin…`
+
 ### `apps/control-plane/api/_timezone.ts`
 
 - `const DEFAULT_TZ`
