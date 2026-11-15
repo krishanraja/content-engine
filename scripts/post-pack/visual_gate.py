@@ -24,9 +24,11 @@ The five checks:
 
   1. LOGOS. Every company in config/logo-registry.json that the fact-checked
      body names (and is not a mentions-only source) appears in the "logos"
-     of at least one packed picture and of the cover, and of every packed
-     video (declared: what the edit put on screen) and every packed
-     thumbnail, as a video's.
+     of at least one packed picture, and of every packed video (declared:
+     what the edit put on screen). A cover and a thumbnail follow the cover
+     standard (docs/production/COVER-STANDARD.md, approved 9 Nov 2026;
+     Ruling, Krish, 2026-11-15: the gate follows it): at most three logos,
+     each of a company the piece names, and none required.
   2. EVIDENCE. When the body is about volume (it says "so many", "every few
      months", "keeps growing", "more than a dozen", "flood", "pile", "one
      after another" or the like), the pack holds a picture of kind
@@ -36,8 +38,7 @@ The five checks:
      cover.json receipt matches the PNG byte for byte (and each cover for
      another place, cover-1200x630.png, cover-1200x675.png,
      cover-1080x1080.png and cover-1080x1920.png, its own receipt), it carries Krish's
-     the Receipt (a real proof, no face), and when the piece names companies it carries at least one
-     logo row.
+     the Receipt (a real proof, no face), and its logos follow the cover standard (check 1).
   4. THUMBNAILS. Each video thumbnail (Krish, 2026-10-12: "I always want a
      video thumbnail for all video sizes produced as an asset every time")
      was drawn by scripts/pages/build.py --thumbs: its thumbs.json receipt
@@ -124,6 +125,31 @@ def declared_drawn(declared, receipt_logos, reg):
     if found:
         return all(drawn(c['name'], receipt_logos, reg) for c in found)
     return drawn(declared, receipt_logos, reg)
+
+
+# The cover standard (docs/production/COVER-STANDARD.md, approved 9 Nov 2026), point 2 and 3: a cover or a
+# thumbnail carries at most three logos, only for companies the headline or the picture names, never one for a
+# company the piece only mentions in passing. Ruling (Krish, 2026-11-15): the gate follows the cover standard, so a
+# cover or thumbnail is no longer held to every company the piece names; each of them still appears on a picture.
+MAX_COVER_LOGOS = 3
+
+
+def few_logos(label, logos, names, reg):
+    """Plain-words reasons a cover's or a thumbnail's logos break the cover standard: more than three companies, or
+    the logo of a company the registry knows that the piece does not name (a source such as Reuters included). A row
+    of two companies counts as two. An entry the registry does not know counts toward the three."""
+    found, count, off = [], 0, []
+    for entry in logos or []:
+        known = companies_in(entry, reg)
+        count += len(known) or 1
+        off += [c['name'] for c in known if c['name'] not in names and c['name'] not in off]
+    if count > MAX_COVER_LOGOS:
+        found.append(f'{label} carries {count} logos; the cover standard allows at most {MAX_COVER_LOGOS}, only for the companies its '
+                     'headline or picture names (docs/production/COVER-STANDARD.md, point 2 and 3)')
+    if off:
+        found.append(f'{label} carries the logo of {", ".join(off)}, which the piece does not name as a subject: a cover or thumbnail '
+                     'shows only the companies its headline or picture names (docs/production/COVER-STANDARD.md, point 3)')
+    return found
 
 
 # Each cover kind a pack carries, and the receipt scripts/pages/build.py
@@ -270,13 +296,11 @@ def problems(post, planned, body, base, reg=None):
             if vm:
                 found.append(f'the video {Path(str(v.get("source", ""))).name} declares no logo for {", ".join(vm)}: put the real logos on '
                              'screen in the edit and list them in its "logos"')
-        for t in thumbs:
-            tm = [n for n in names if not drawn(n, t.get('logos'), reg)]
-            if tm:
-                found.append(f'the {t.get("shape", "")} thumbnail {Path(str(t.get("source", ""))).name} declares no logo for {", ".join(tm)}: '
-                             'draw it with their logos (rows, or "strip", in the "thumbs" cover facts) and list them in its "logos"')
-        if cover is not None and not set(cover.get('logos') or []) & set(names):
-            found.append('the cover shows none of the companies the piece names: give it logo rows (the "cover" page facts) and list them in its "logos"')
+    # A cover and a thumbnail follow the cover standard instead: at most three logos, only for named companies.
+    for t in thumbs:
+        found += few_logos(f'the {t.get("shape", "")} thumbnail {Path(str(t.get("source", ""))).name}', t.get('logos'), names, reg)
+    for c in [p for p in planned if p.get('kind') in COVER_RECEIPTS]:
+        found += few_logos(f'the {c.get("kind")} {Path(str(c.get("source", ""))).name}', c.get('logos'), names, reg)
     # 2. EVIDENCE
     if about_volume(body or ''):
         ev = [p for p in planned if (p.get('evidence') or {}).get('pages')]
@@ -474,7 +498,10 @@ def self_test():
         no_logo = [dict(full[0]), {'kind': 'image', 'source': t / 'a.png', 'logos': ['OpenAI'], 'path': '2/a.png'}, full[2], full[3]]
         check('a named company with no logo anywhere fails', any('no picture carries the real logo of Anthropic' in x for x in problems({}, [full[0] | {'logos': ['OpenAI']}, full[1] | {'logos': ['OpenAI']}, full[2] | {'logos': []}, full[3]], body, t, reg)), True)
         check('a video with no declared logo fails', any('declares no logo' in x for x in problems({}, full[:3] + [full[3] | {'logos': []}], body, t, reg)), True)
-        check('a cover with no logo fails', any('cover shows none' in x for x in problems({}, [full[0] | {'logos': []}] + full[1:], body, t, reg)), True)
+        # The cover standard (Ruling, Krish, 2026-11-15): a cover needs no logo, carries at most three, only of named companies.
+        check('a cover with no logo passes', problems({}, [full[0] | {'logos': []}] + full[1:], body, t, reg), [])
+        check('a cover with four logos fails', any('cover cover.png carries 4 logos' in x for x in problems({}, [full[0] | {'logos': ['OpenAI', 'Anthropic', 'Mistral', 'Cohere']}] + full[1:], body, t, reg)), True)
+        check('a cover with the logo of a source the piece does not name fails', any('carries the logo of Reuters' in x for x in problems({}, [full[0] | {'logos': ['OpenAI', 'Reuters']}] + full[1:], body, t, reg)), True)
         check('a volume piece with no evidence picture fails', any('built from real pages' in x for x in problems({}, [full[0], full[1], full[3]], body, t, reg)), True)
         check('five pages are not enough', any('at least 6' in x for x in problems({}, [full[0], full[1], full[2] | {'evidence': {'pages': pages[:5]}}, full[3]], body, t, reg)), True)
         check('a quiet piece needs no evidence', problems({}, [full[0], full[1], full[3]], 'Open Claude today. ChatGPT too.', t, reg), [])
@@ -526,8 +553,15 @@ def self_test():
         check('a thumbnail or video whose declared logos are the drawer\'s rows of two companies passes',
               problems({}, full[:3] + [full[3] | {'logos': rows}, thumbs[0] | {'logos': rows}, thumbs[1] | {'logos': rows}], body, t, reg), [])
         check('a name inside another word is not a logo drawn', drawn('Meta', ['Metadata Inc'], []), False)
-        check('a thumbnail that declares no logo for a named company fails',
-              any('thumbnail thumb-tall-1080x1920.jpg declares no logo for Anthropic' in x for x in problems({}, full + [thumbs[0], thumbs[1] | {'logos': ['OpenAI']}], body, t, reg)), True)
+        # The cover standard (Ruling, Krish, 2026-11-15): a thumbnail carries only the companies its headline names.
+        check('a thumbnail with the logo of only the company its headline names passes',
+              problems({}, full + [thumbs[0], thumbs[1] | {'logos': ['OpenAI']}], body, t, reg), [])
+        check('a thumbnail with a row of two counts both, and four companies fail',
+              any('thumbnail thumb-wide-1280x720.jpg carries 4 logos' in x for x in problems({}, full + [thumbs[0] | {'logos': ['OpenAI and Anthropic', 'Mistral', 'Cohere']}, thumbs[1]], body, t, reg)), True)
+        check('a thumbnail with the logo of a source the piece does not name fails',
+              any('thumbnail thumb-tall-1080x1920.jpg carries the logo of Reuters' in x for x in problems({}, full + [thumbs[0], thumbs[1] | {'logos': ['OpenAI', 'Reuters']}], body, t, reg)), True)
+        check('a named company with no logo on any picture still fails when the thumbnails carry it',
+              any('no picture carries the real logo of Anthropic' in x for x in problems({}, [full[0] | {'logos': ['OpenAI']}, full[1] | {'logos': ['OpenAI']}, full[2] | {'logos': []}, full[3], thumbs[0], thumbs[1]], body, t, reg)), True)
         (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | {'logos': ['OpenAI']}))
         check('a thumbnail that declares a logo it does not show fails',
               any('declares the logo of Anthropic, but the drawer drew no row or strip' in x for x in problems({}, full + thumbs, body, t, reg)), True)

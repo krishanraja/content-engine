@@ -1,0 +1,3 @@
+Status: the visual gate follows the cover standard (Ruling, Krish, 2026-11-15): a cover or a thumbnail carries at most three logos, each of a company the piece names, and none is required; every company the piece names still has to be on one of the piece's pictures (`scripts/post-pack/visual_gate.py`, `few_logos`, self-test 73 checks). The thumbnail designer's open logo conflict is closed; the face lines in `config/hook-playbook.json` stay with Krish.
+Next: the first piece drawn with thumbnail-designer passes the gate with its thumbnails carrying only the headline's companies.
+North Star check (2026-11-15): holds.
