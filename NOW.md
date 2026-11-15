@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-14
+as_of: 2026-11-15
 head: 3ab533c
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,27 +30,26 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-14)
+## Where it is right now (as of 2026-11-15)
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":4,"current_as_of":"2026-11-15","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (3 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 8 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
+- the worker server (content-watcher machine cloud-vps) takes every content-watcher task first: it claims each pasted link at once and reads every dropped file, while the home computers take a link only after it has waited 15 minutes (the worker's backup) and read no dropped file; a YouTube link, which refuses the worker's address, goes to the home computers at once. (2026-11-15)
 - the $15 a week chain cap is enforced (Ruling, Krish, 2026-11-14, the proposal approved as written): the daily triage sweep (03:00 UTC) records the week's chain spend as job `chain_cap` in the run ledger, `skipped` over $15 with `skip_inspirationhouse_tag`, writes one board item a week (`chain-cap-<Monday>`, closing itself on the next `ok` run), and never stops the fact gate on a piece he picked (`apps/control-plane/api/_chainCap.ts`, `docs/COST_GUARDS.md`). This week's chain read $20.43 at 22:50 UTC, so the first sweep records `skipped`. (2026-11-14)
 - scripts/taste_backstop.py sends only when run as the SessionEnd hook (main(post=http_post) at __main__); any other caller of main(), a test above all, keeps lines locally whatever the environment says, so a cloud session's proxy-held key can never carry invented test lines to the taste ledger again. (2026-11-14)
 - scripts/taste_backstop.py posts each flagged, scrubbed line to Control Center's backstop route when TASTE_BACKSTOP_TOKEN is set or in a cloud session (whose proxy injects the key), and keeps the local file only as fallback; tests/taste_backstop_test.py covers posting, refusal, failure and no key. (2026-11-14)
 - Wave 3 S4 in content-engine. Other ventures have their own research shelf in the store (venture:<slug>, #693, merged); the research search takes since, kinds, fresh and venture (#698); the vault's export route accepts only claude-archive's own GitHub identity token from main of a private repository, and recover_research.py lists a claude.ai export or a transcripts zip, holding every export line until Krish has read the list. Migrations 20261203090000 and 20261203100000 are written but not yet applied to the database: the Supabase connector's confirmation question went unanswered and the session stopped database calls. The routes work either way (an unfiltered search falls back; a venture write is refused, never misfiled, until applied). (2026-11-14)
-- Krish's 14 Nov rulings on four content-engine standards are in, one pull request each. The $15 a week chain is measured by its own unit keys (config/chain-cap.json, chainWeekSpend in apps/control-plane/api/_meter.ts): $19.64 for the week of 9 Nov by 14 Nov, already over. ve's Phase 3 test is in docs/ve/ENGINE.md, with the count (0 of 3) in docs/ve/STATUS.md. A carousel ends on the palette's close, the takeaway then "Subscribe free (makeyourmindup.ai)", and scripts/carousel_check.py refuses "Follow for more". The floor's caption entry says two to five words a page. (2026-11-14)
-- docs/AGENTS-REFERENCE.md no longer describes the retired publish boards as rules (rule 02's fixed-layout paragraph and rule 03's 11 Nov amendment moved verbatim to docs/history/2026-11-14-agents-reference-retired-boards.md), and docs/COST_GUARDS.md lists the three scheduled Claude jobs as the workflows define them (Sunday ideas, Engine learning weekly, the docs steward) instead of one. (2026-11-14)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
 - 2026-11-14 config/chain-cap.json, apps/control-plane/api/_meter.ts, docs/ve/ENGINE.md, docs/ve/STATUS.md, docs/CAROUSEL-STANDARD.md, scripts/carousel_check.py, config/rejection-floor.json.
-Older lines: `docs/history/2026-11-14-NOW-moved-13.md` (it names every earlier move) and `LOG.md`.
+Older lines: `docs/history/2026-11-15-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-14): read Sunday 15 Nov's 03:00 UTC `chain_cap` row (status skipped, `skip_inspirationhouse_tag` 1) and the `chain-cap-2026-11-09` board item, then inspirationhouse's 05:17 run skipping its tagging once its matching pull request is merged.
+- Next (2026-11-15): the first link Krish pastes after the deploy shows claimed_by cloud-vps in content_watch_requests within a minute.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
@@ -58,7 +57,7 @@ Older lines: `docs/history/2026-11-14-NOW-moved-13.md` (it names every earlier m
 - 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms). Monday's lock signed 10 Nov: its long cut runs a few minutes over 5 and the article longer, to carry the midterm data-centre backlash. Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
 - Waiting on Krish (checked 2026-11-12, 14:00 UTC): his Approve on Thu 12's `beststicker` on the live board (the Home Depot rethink he signed off in a session, filed in 3 Posts and carrying Tue 17's `auditrule`; the live view reads "Idea: waiting on your Approve"), and an answer on `frenemies` (Tue 17) and `ownref` (Thu 19), which have no outcome in `idea_outcomes`; a sound-effect set (`config/sfx-approved.json` approves none); golden frames (all 10 slots of `config/ve/golden-frames.json` empty, at least 5 wanted); Gate 2 on face-with-proof at 16:9 (`config/ve/design-lock.json`) (each still needs its review card on his Publish Board, with samples he can see and hear; not built yet). The music levels are no longer waiting: he approved them as they are on 12 Nov. `docs/STATE.md`, "Waiting on Krish".
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-14): holds.
+- North Star check (2026-11-15): holds.
 
 ## Read next
 
