@@ -16,9 +16,9 @@ sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
 from velib import lint as ve_lint  # noqa: E402
 
 FIXTURE = ROOT / 'fixtures/ve/my-test-19s/spec.json'
-VOICE = {'name': 'krish-voice-1', 'kind': 'voice', 'platform': 'elevenlabs', 'scored_pack_sha256': 'c' * 64,
+VOICE = {'name': 'krish-voice-1', 'kind': 'voice', 'platform': 'elevenlabs', 'approved_sha256': 'c' * 64,
          'approved_words': "test words, not Krish's", 'approved_on': '2026-11-20'}
-LIKENESS = {**VOICE, 'name': 'krish-twin-1', 'kind': 'likeness', 'platform': 'heygen', 'scored_pack_sha256': 'd' * 64}
+LIKENESS = {**VOICE, 'name': 'krish-twin-1', 'kind': 'likeness', 'platform': 'heygen', 'approved_sha256': 'd' * 64}
 VOICE_ASSET = {'id': 'cloned-vo', 'kind': 'recording', 'origin': 'generated', 'path': 'cloned-vo.wav', 'sha256': 'e' * 64,
                'licence': 'generated', 'tool': 'elevenlabs.voice_clone:krish-voice-1'}
 LIKENESS_ASSET = {'id': 'twin-open', 'kind': 'broll', 'origin': 'generated', 'path': 'twin-open.mp4', 'sha256': 'f' * 64,
@@ -31,7 +31,7 @@ def registry(*entries) -> str:
 
 def approval(entry: dict) -> dict:
     return {'gate': 'synthetic', 'by': 'Krish', 'said': entry['approved_words'], 'on': entry['approved_on'],
-            'artifact_hash': entry['scored_pack_sha256']}
+            'artifact_hash': entry['approved_sha256']}
 
 
 def served(text: str):
@@ -81,7 +81,7 @@ class SyntheticVoiceOnTheFixture(unittest.TestCase):
         cases = {'unreachable': unreachable(), 'not JSON': served('<html>'),
                  'another format': served(json.dumps({'format': 'x/1', 'approvals': [VOICE]})),
                  'an incomplete entry': served(registry({**VOICE, 'approved_words': ''})),
-                 'a short hash': served(registry({**VOICE, 'scored_pack_sha256': 'c' * 63}))}
+                 'a short hash': served(registry({**VOICE, 'approved_sha256': 'c' * 63}))}
         for why, patcher in cases.items():
             with self.subTest(why), patcher:
                 lines = ve_lint.crew_lints(spec)
