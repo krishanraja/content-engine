@@ -128,6 +128,19 @@ def check(doc):
         for r in s.get('records', []):
             if r not in doc['records']:
                 problems.append(f'standard {ref} cites a record that is not in records')
+    groups = doc.get('groups')
+    if groups is not None and not isinstance(groups, list):
+        problems.append('groups must be a list')
+    for g in groups if isinstance(groups, list) else []:
+        key = g.get('key') if isinstance(g, dict) else None
+        if not key or not g.get('statement'):
+            problems.append(f'group {key!r} needs a key and its decided statement')
+            continue
+        if g.get('standing') not in ('approved', 'reworded'):
+            problems.append(f'group {key}: standing must be approved or reworded')
+        for m in g.get('members') or []:
+            if m not in doc['standards']:
+                problems.append(f'group {key}: member {m} is not in standards')
     return problems
 
 
@@ -678,6 +691,33 @@ def show_bar(bar, fmt):
         print(bar_pointer(bar, fmt) + '\n')
 
 
+GROUP_STANDINGS = {'approved': 'approved', 'reworded': 'reworded by him'}
+
+
+def group_lines(doc, refs):
+    """The decided groups that touch these standards: each group's decided words above its members (Ruling, Krish,
+    2026-11-15: the words he decided for a group reach the maker). The file's top-level `groups` array is written by
+    the Rejections engine from taste_floor (the group's statement is his latest amendment, else his correction, else
+    the group's own words); an older file without it prints nothing."""
+    groups = doc.get('groups')
+    if not isinstance(groups, list):
+        return []
+    wanted = set(refs)
+    lines = []
+    for g in groups:
+        if not isinstance(g, dict) or not g.get('statement'):
+            continue
+        members = [m for m in g.get('members') or [] if m in wanted]
+        if not members:
+            continue
+        standing = GROUP_STANDINGS.get(g.get('standing'), g.get('standing') or 'decided')
+        decided = f', {g["decided_on"]}' if g.get('decided_on') else ''
+        lines.append(f'- {g.get("title") or g.get("key")} [{g.get("key")}; {standing}{decided}]')
+        lines.append(para(quote(g['statement']), indent='    '))
+        lines.append(f'    Members here: {", ".join(members)}')
+    return lines
+
+
 def show_format(doc, fmt, approved_only, limit, bar=None):
     entry = doc['formats'].get(fmt)
     if entry is None:
@@ -690,6 +730,11 @@ def show_format(doc, fmt, approved_only, limit, bar=None):
     drafts = [] if approved_only else by_weight(entry.get('draft', []), doc)
     print('Blocking: only his eight nevers, above. Every standard below is the kind of thing that does not fly: it guides '
           'the work and a reviewer, and no check refuses on it (Krish, 2026-10-29).\n')
+    touching = group_lines(doc, list(entry.get('approved', [])) + list(entry.get('draft', [])))
+    if touching:
+        print(f'His decided groups for this maker ({len(touching) // 3}): the words he decided, above the standards they '
+              'hold. Where a group\'s words and a member\'s differ, his group words win.')
+        print('\n'.join(touching) + '\n')
     print(f'Approved standards ({len(approved)}): he approved their wording; follow them.')
     for ref in approved:
         print('\n'.join(standard_lines(ref, doc['standards'][ref])))

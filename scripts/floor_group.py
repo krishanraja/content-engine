@@ -175,8 +175,9 @@ def plan(floor, groups, rows):
     return out
 
 
-def seed_sql(item):
-    """One group and its proposal, written together, and only while the key is unseeded."""
+def seed_sql(item, batch=None):
+    """One group and its proposal, written together, and only while the key is unseeded. `batch` names the week it was
+    put to him (the weekly standards check-in passes its own); the 4 Nov batch otherwise."""
     return f"""
 with g as (select {literal(item)} as j),
 fresh as (select j from g where not exists (select 1 from public.taste_floor_groups t where t.key = j->>'key')),
@@ -184,7 +185,7 @@ p as (
   insert into public.mindmake_studio_learning_proposals
     (weekly_batch_id, proposal_class, assertion, scope, evidence_event_ids, independent_session_count,
      independent_job_count, counterexamples, regression_cases, proposed_change)
-  select '{BATCH}', 'taste', j->>'assertion', j->'scope',
+  select '{batch or BATCH}', 'taste', j->>'assertion', j->'scope',
          array(select jsonb_array_elements_text(j->'evidence'))::uuid[], (j->>'sessions')::int, 0, '[]'::jsonb,
          j->'regression_cases', j->'proposed_change'
   from fresh
