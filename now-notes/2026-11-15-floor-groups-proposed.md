@@ -1,0 +1,3 @@
+Status: the rebuilt rejection floor (356 standards, from #708) is grouped for Krish (his yes on 15 Nov to sorting the new draft standards into proposed groups): its 157 new standards sit in 23 new groups (126 standards) and operating (31, the session-process ones; 16 of them reword operating standards the floor superseded, which leave operating). The 20 approved groups are unchanged, a new group that adds to one names it in its title, and `python3 scripts/floor_group.py --check` passes. Once merged, `--seed` puts each new group to him as a proposal at /standards; nothing is decided for him.
+Next: Krish decides the 23 new groups at /standards (approve, reword or reject each).
+North Star check (2026-11-15): holds.
