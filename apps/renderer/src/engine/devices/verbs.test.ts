@@ -4,6 +4,10 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('character_layer exposes only layer entrance and exit', () => {
+    expect(manifest.devices.character_layer.verbs).toEqual(['enter', 'exit'])
+    expect(() => DEVICES.character_layer!({} as never)).toThrow('never a beat object')
+  })
   it('answer_stream declares its five cues', () => { expect(manifest.devices.answer_stream.verbs).toEqual(['enter', 'type', 'mark', 'light', 'exit']) })
   it('code_card declares four cues', () => { expect(manifest.devices.code_card.verbs).toEqual(['enter', 'type', 'highlight', 'exit']) })
   it('checklist declares its work and fill cues', () => {

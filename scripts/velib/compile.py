@@ -172,6 +172,8 @@ def clone_voice_master(spec: dict, cut_id: str, *, off: bool, edl: dict | None =
     anything but an off-day 9:16 voiceover, when the EDL draws on other bytes than the clone's (or a cut naming his take
     draws on the clone's), when the clone kept a word the signed script does not hold, or, with no EDL, when the clone's
     file in the assets folder is not the bytes the spec names."""
+    if any(o.get('device') == 'character_layer' for o in spec.get('objects', [])):
+        raise ValueError('character_layer is a cut layer, never a beat object')
     cut = spec['cuts'][cut_id]
     voices = {asset['id']: asset for asset in spec.get('assets', []) if asset.get('kind') == 'voice'}
     voice = voices.get(cut['take'])
@@ -632,6 +634,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             raise ValueError('style.layout.mode tray leaves his face clear, so the captions go in the upper strip: '
                              'set style.captions.placement upper')
         props['layout'] = {'mode': layout}
+    if spec.get('character') and cut_id in spec['character'].get('cuts', []):
+        from .character_track import compile_track
+        props['character'] = compile_track(spec, cut_id, rows, props, assets_dir)
     return props
 
 
