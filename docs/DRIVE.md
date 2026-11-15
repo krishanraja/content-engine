@@ -259,6 +259,12 @@ The first three are in `04_Content` (`1ELCdOmMGXWmLpuheEoAKA-_4jvYbmbn3`).
 - Anything an AI session cannot place: `Inbox from My AI` at the top of his Drive, never loose at the top.
 - Samples for a sign-off card on his Publish Board (`config/ve/sign-offs.json`): `Inbox from My AI`, each file named
   `Video sign-off - ...`, filed by id and never moved by the engine; the card links each one.
+- Review copies of a piece's thumbnail options and their grid mock, so his board can show them with Pick and Not this
+  (`thumb_options.py drive`; `docs/PUBLISH_BOARDS.md`, "Thumbnail options and his pick"): `Inbox from My AI`, each named
+  `Thumbnail option - <piece date> - <A, B or C> <wide or tall>` or `Thumbnail options grid - <piece date>`. They are for
+  his pick only: the thumbnail itself reaches the post's `3 Posts` folder through `send.py` after his pick.
+- A style sample for Pick a style (`config/ve/style-samples.json`, recorded with `ve lab sample`): `Inbox from My AI`,
+  named `Style sample - motion - <id>.mp4` or `Style sample - captions - <id>.mp4`.
 - Sales material: `Sales Materials`.
 - A brand film: `Films`, next number.
 - Nothing loose at the top of `04_Content` except the READ ME.

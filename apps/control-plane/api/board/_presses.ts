@@ -77,7 +77,10 @@ export interface PressDeps { send?: Sender; now?: () => string; revise?: typeof 
   judgePanel?: (input: import('../_judges/panel.js').PanelInput) => Promise<import('../_judges/panel.js').PanelResult>
   /** The sign-off cards' sources (_signOffs.ts readSignOffSources) and the apply job's dispatch; a test passes its own. */
   signOffs?: () => ReturnType<typeof import('./_signOffs.js').readSignOffSources>
-  dispatch?: typeof import('./_run.js').dispatchJob }
+  dispatch?: typeof import('./_run.js').dispatchJob
+  /** The done check's look at a piece's open items after his answer on its thumbnail options (_controlCenter.ts
+   *  askChecksForPiece); a test passes its own. */
+  look?: (pieceId: string) => Promise<{ keys: string[] }> }
 type Body = Record<string, unknown>
 type Saved = { ok: boolean; revision?: number; body?: Body; [key: string]: unknown }
 export class PressError extends Error { constructor(public status: number, message: string) { super(message) } }

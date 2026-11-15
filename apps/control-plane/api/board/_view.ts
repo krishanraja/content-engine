@@ -10,6 +10,7 @@ import { readSignOffPresses, readSignOffSources, signOffsView, type SignOffsView
 import { offdaySides, type OffdaySides } from './_offdaySides.js'
 import type { MediaItem } from './_media.js'
 import { mediaWithAnswers } from './_cuts.js'
+import { dayThumbs, type DayThumbs } from './_thumbs.js'
 import { VIEW_CONTRACT_VERSION } from './_viewContract.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
@@ -84,6 +85,10 @@ export interface DayView {
   /** What the day's piece has rendered (cuts, thumbnails), newest first; ids only, signed at /api/board/<week>/media/<id> (_media.ts).
    *  Contract 1.6.0: each cut carries his Yes and Not this and his latest answer on it (_cuts.ts). */
   media: MediaItem[]
+  /** Contract 1.16.0 (_thumbs.ts): the piece's thumbnail options while a set the critic judged is on its making record,
+   *  each option's wide and tall files as same-site Drive file paths with their sha256 and the critic's line, the grid
+   *  mock, his Pick on each option and Not this on the set while it waits on him, and his answer once given; else null. */
+  thumbs: DayThumbs | null
   /** Contract 1.2.0 (_viewExtras.ts): every piece on the day, the day's options with their presses, his comments, what
    *  Growth posted and his yes. */
   pieces: ViewPiece[]
@@ -111,7 +116,7 @@ export interface DayView {
 /** A post folder of a day, as the view carries it (contract 1.7.0). */
 export interface ViewPost { id: string; name: string; url: string; option: string | null; piece_id: string | null; assets: PostAsset[] }
 /** What a day's next step is built from, before the parts every day carries (media, and 1.2.0's extras). */
-export type DayCore = Omit<DayView, 'media' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials' | 'held' | 'posts' | 'manifest'>
+export type DayCore = Omit<DayView, 'media' | 'thumbs' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials' | 'held' | 'posts' | 'manifest'>
 export type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'
 export const PATH: Array<{ key: PathKey; label: string }> = [
   { key: 'research', label: 'Research' }, { key: 'story', label: 'Story' }, { key: 'look', label: 'Look' },
@@ -730,7 +735,7 @@ export function buildView(i: ViewInputs): WeekView {
     // His Approve for publish, bound to the piece's manifest, leads while it waits on him (1.8.0).
     const manifest = SERIES_DAYS.includes(d) && shown ? dayManifest(i.drafts?.[shown], i.picks, d) : null
     if (manifest?.press && core.who !== 'done') core.actions = [manifest.press, ...core.actions.filter(a => !(a.kind === 'press' && a.id === manifest.press!.id))]
-    return { ...core, manifest, media: mediaWithAnswers(piece),
+    return { ...core, manifest, media: mediaWithAnswers(piece), thumbs: SERIES_DAYS.includes(d) ? dayThumbs(i.week, piece) : null,
       pieces: dayPieces(gate.approved, date, shown, gate.approvalOf, i.now),
       options, held,
       comments: dayComments(i.comments, d), posted: [...dayPosted(i.ticks, d, liveByDay(i.picks)[d] || []), ...growthPosted(i.items, i.week, d)], yes: dayYes(i.picks, d),

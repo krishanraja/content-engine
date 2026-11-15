@@ -10,6 +10,7 @@ import { LIVE_BOARD_URL, liveBoardUrl } from '../../apps/control-plane/api/board
 import { SCHEMA_PATH, compare, judge, validate } from '../../scripts/check-view-contract'
 import { assetsOf, type DriveFile } from '../../apps/control-plane/api/board/_drivePosts'
 import { parseDraft } from '../../apps/control-plane/api/board/_manifest'
+import { setDigest, THUMB_CHECKS } from '../../apps/control-plane/api/_thumbOptions'
 
 // The Publish Board view's contract (Ruling, Krish, 2026-11-11: "make sure this is built such that when I make other
 // updates to the publish board and content engine, they do not regress this work, they just elegantly upgrade the
@@ -37,6 +38,23 @@ const look = (id: string, name: string) => ({ id, name, pitch: `${name}, pitched
 const motion = (id: string, fits: string, krish_verdict: string, point_types: string[], formats = ['long_video', 'short_video'], ve_route = ['headline']) =>
   ({ id, name: `The ${id} style`, how: `How ${id} moves.`, rules: [`${id} rule one`, `${id} rule two`], point_types, formats, fits, krish_verdict, ve_route })
 
+/** Friday's thumbnail options (1.16.0): three options, each file's review copy in Drive, the critic's pick B and C held. */
+function thumbSet() {
+  const sha = (s: string) => createHash('sha256').update(s).digest('hex')
+  const drive = (s: string) => `1Thumb${s}${'x'.repeat(24 - s.length)}`
+  const options = (['a', 'b', 'c'] as const).map(id => ({ id, note: `Option ${id}: the proof ${id === 'a' ? 'wide' : id === 'b' ? 'ringed' : 'narrow'}`,
+    files: (['wide', 'tall'] as const).map(shape => ({ shape, file: `options/${id}/thumb-${shape}-${shape === 'wide' ? '1280x720' : '1080x1920'}.jpg`, sha256: sha(`${id}${shape}`), drive_id: drive(`${id}${shape}`) })) }))
+  const checks = (fail?: string) => Object.fromEntries(THUMB_CHECKS.map(k => [k, k === fail ? 'fail' : 'pass']))
+  return {
+    set_sha256: setDigest(options), drawn_at: '2026-11-19T18:00:00Z', skin: 'receipt', headline: 'Voters said no to the power bill', options,
+    grid_mock: { sha256: sha('mock'), past_read: 5, note: 'Each option in your grid beside the last five posted covers.', drive_id: drive('mock') },
+    verdict: { reviewer: 'thumbnail-critic', reviewed_at: '2026-11-19T18:10:00Z', best: 'b', blocking: false, options: options.map(o => ({ id: o.id, files: o.files.map(f => ({ file: f.file, sha256: f.sha256 })),
+      checks: checks(o.id === 'a' ? 'readable_at_grid' : o.id === 'c' ? 'logos_named' : undefined), blocking: o.id === 'c',
+      findings: o.id === 'a' ? ['fix: readable_at_grid: the second line is small at grid size'] : o.id === 'c' ? ['block: logos_named: a logo the headline does not name'] : [] })) },
+    at: '2026-11-19T18:10:00Z', by: 'Claude Code',
+  }
+}
+
 /** One week with every part of the view in it: media, a run, a path at each step, a revised off-day option, reviews. */
 function full(): ViewInputs {
   // 1.7.0: the cut and its thumbnail carry their Drive links (the making record's url), and the piece files into its post.
@@ -53,7 +71,8 @@ function full(): ViewInputs {
           // 1.6.0: his Not this on the long cut, with his words.
           cut_verdicts: [{ media_id: 'a'.repeat(64), cut: 'long', verdict: 'not_this', words: 'The open drags. Start on the number.', sha256: 'a'.repeat(64), path: '3 Posts/mon/long.mp4', by: 'Krish', at: '2026-11-16T08:40:00Z' }] }),
       piece(WED, '2026-11-18', 'under_the_hood', {}, { materials: [{ id: 'm2', title: 'WIRED: a source', kind: 'paste', content: 'x', at: '2026-11-14T10:00:00Z' }] }),
-      piece(FRI, '2026-11-20', 'mind_the_gap'),
+      // 1.16.0: Friday's thumbnail options wait on his pick.
+      piece(FRI, '2026-11-20', 'mind_the_gap', { thumbnail_options: thumbSet() }),
     ],
     picks: [{ doc_id: 'mon-scripts', updated_by: 'Krish', body: { approved: true, piece_id: MON } }],
     queue: [verdict('tue', 'povteach', { idea: { verdict: 'improve', words: 'Change the caption', sha256: 'a'.repeat(64) } }),
@@ -195,6 +214,17 @@ describe('the Publish Board view contract', () => {
     }
     expect(media.find(m => m.kind === 'cut')?.verdict).toEqual({ said: 'not_this', words: 'The open drags. Start on the number.', at: '2026-11-16T08:40:00Z' })
     expect(v.days.some(d => d.run)).toBe(true)
+    // 1.16.0: Friday's thumbnail options, each file a same-site Drive path with its sha256, the critic's line, Pick on
+    // the two it does not hold, Not this on the set, and Pick the thumbnail as the piece's decision.
+    const fri = v.days.find(d => d.day === 'fri') as any
+    expect(fri.thumbs.state).toBe('awaits_pick')
+    expect(fri.thumbs.options.map((o: any) => [o.id, o.critic.best, o.critic.blocking, o.press?.body?.option ?? null])).toEqual([['a', false, false, 'a'], ['b', true, false, 'b'], ['c', false, true, null]])
+    expect(fri.thumbs.options[0].files.map((f: any) => [f.shape, f.src])).toEqual([['tall', `/api/board/${WEEK}/drive/1Thumbatallxxxxxxxxxxxxxxxxxxx`], ['wide', `/api/board/${WEEK}/drive/1Thumbawidexxxxxxxxxxxxxxxxxxx`]])
+    expect(fri.thumbs.options[0].critic.line).toBe('Passes 6 of 7 checks. The second line is small at grid size.')
+    expect(fri.thumbs.not_this.words).toEqual({ path: 'words', ask: 'What should the new ones do differently? (optional)', required: false })
+    const friItem = (served(full()) as any).model.days.find((d: any) => d.day === 'fri').items[0]
+    expect([friItem.next.label, friItem.next.op, friItem.decision, friItem.next.choose.options.map((o: any) => o.value)]).toEqual(['Pick the thumbnail', 'thumb-pick', true, ['b', 'a']])
+    expect(v.days.filter(d => d.day !== 'fri').every(d => d.thumbs === null)).toBe(true)
     // 1.11.0: the sign-off cards ride on every week, each sample with its preview, its Drive link and his answer.
     const so = (served(full()) as Body).sign_offs as any
     expect(so.cards.map((c: any) => [c.id, c.state])).toEqual([['sfx', 'waiting'], ['golden', 'answered'], ['gate2', 'waiting']])

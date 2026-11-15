@@ -727,7 +727,8 @@ Receipt (house rule THE_RECEIPT, Krish, 2026-11-02: "inviolable"), never his
 face or a frame from a take. Read `.agents/skills/thumbnail-designer/SKILL.md`
 and follow it whole: two or three options from a brief (the cover standard,
 point 8), each checked, judged by a separate critic, shown to Krish in a mock
-of his grid and filed only once he picks, his pick recorded in his words. Its
+of his grid and filed only once he picks: his Pick on the board (view contract
+1.16.0) or his words in a session, either recorded on the piece. Its
 `references/drawing.md` holds the drawing rules this step held (the browser,
 the real logos as SVG, a plan with no `logos/` folder). Until his pick is on
 the record no thumbnail is filed, posted or recorded: leave `--tall-thumb`,

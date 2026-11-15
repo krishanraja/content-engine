@@ -105,4 +105,28 @@ describe('thumbnail options on the making record', () => {
     expect(making?.thumbnail_options?.pick).toBeUndefined()
     expect(making?.thumbnail_options?.verdict).toBeUndefined()
   })
+
+  it('1.16.0: the same set recorded again with its review copies\' Drive ids keeps its verdict and his pick', () => {
+    const judged = record(set({ verdict: verdictOn() })).making
+    const picked = record({ set_sha256: setDigest(OPTIONS), pick: { option: 'a', files: OPTIONS[0].files, krish_words: 'Krish, 2026-11-15: A' } }, judged).making
+    const inDrive = OPTIONS.map((o, k) => ({ ...o, files: o.files.map((f, n) => ({ ...f, drive_id: `1Drive${k}${n}${'x'.repeat(20)}` })) }))
+    const { problems, making } = record({ ...set({ grid_mock: { ...set().grid_mock, drive_id: '1DriveMock' + 'x'.repeat(20) } }), options: inDrive }, picked)
+    expect(problems).toEqual([])
+    expect(making?.thumbnail_options?.set_sha256).toBe(setDigest(OPTIONS))
+    expect(making?.thumbnail_options?.options[0].files[0].drive_id).toBe('1Drive00' + 'x'.repeat(20))
+    expect(making?.thumbnail_options?.grid_mock.drive_id).toBe('1DriveMock' + 'x'.repeat(20))
+    expect(making?.thumbnail_options?.verdict?.best).toBe('a')
+    expect(making?.thumbnail_options?.pick?.option).toBe('a')
+    // A Drive id that is not one is refused.
+    const bad = OPTIONS.map(o => ({ ...o, files: o.files.map(f => ({ ...f, drive_id: 'x' })) }))
+    expect(record({ ...set(), options: bad }).problems.join()).toMatch(/drive_id/)
+  })
+
+  it('1.16.0: his pick in a session takes the place of a Not this he pressed on the board', () => {
+    const judged = record(set({ verdict: verdictOn() })).making!
+    const redraw = { ...judged, thumbnail_options: { ...judged.thumbnail_options!, redraw: { decision: 'not this: draw them again' as const, words: null, at: NOW, by: 'Krish' as const } } }
+    const { making } = record({ set_sha256: setDigest(OPTIONS), pick: { option: 'b', files: OPTIONS[1].files, krish_words: 'Krish, 2026-11-15: B after all' } }, redraw)
+    expect(making?.thumbnail_options?.pick?.option).toBe('b')
+    expect(making?.thumbnail_options?.redraw).toBeUndefined()
+  })
 })

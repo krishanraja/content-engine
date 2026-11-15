@@ -49,8 +49,12 @@ export interface StyleOption {
   recommended: boolean
   /** Why the engine recommends it, in plain words; null when it does not. */
   why: string | null
-  /** A rendered sample on this site (config/ve/style-samples.json), or null. */
+  /** A rendered sample on this site (config/ve/style-samples.json), or null: a same-site path, since 1.16.0 the Drive
+   *  file route GET /api/board/sign-offs?file=<drive id>. */
   sample_url: string | null
+  /** Contract 1.16.0: the sample's file in his Drive (config/ve/style-samples.json's drive map), where he opens it; null
+   *  when there is no sample. */
+  sample_drive: { file_id: string; url: string } | null
   /** He said "Not this" to it on this piece, or called it not for us. */
   rejected: boolean
   presses: { yes: StylePress; not_this?: StylePress }
@@ -83,11 +87,38 @@ export function motionBank(styles: unknown): MotionModule[] {
       formats: strings(m.formats), fits: String(m.fits || ''), krish_verdict: String(m.krish_verdict || 'untested'), ve_route: strings(m.ve_route) }))
 }
 
-/** A rendered sample's same-site path, or null: never an outside link (the view carries none, by the media rule). */
+/** A rendered sample's same-site path, or null: never an outside link (the view carries none, by the media rule). Its
+ *  value in config/ve/style-samples.json is a path string, since 1.16.0 the Drive file route
+ *  /api/board/sign-offs?file=<drive id>; an empty value is a render still waiting, and reads as null. */
 export function sampleUrl(layer: StyleLayerKey, id: string, samples: unknown = styleSamples): string | null {
   const map = isObj(samples) && isObj(samples[layer]) ? samples[layer] as Body : {}
   const url = map[id]
   return typeof url === 'string' && /^\/(?!\/)[^\s]*$/.test(url) ? url : null
+}
+
+const SAMPLE_DRIVE_ID = /^[A-Za-z0-9_-]{20,80}$/
+/** The Drive id behind a sample (config/ve/style-samples.json's drive map, one per layer), or null. */
+function sampleDriveId(layer: StyleLayerKey, id: string, samples: unknown): string | null {
+  const drive = isObj(samples) && isObj(samples.drive) && isObj(samples.drive[layer]) ? samples.drive[layer] as Body : {}
+  const file = drive[id]
+  return typeof file === 'string' && SAMPLE_DRIVE_ID.test(file) ? file : null
+}
+
+/** A sample's file in his Drive, where he opens it (1.16.0), or null: only for a sample the view shows. */
+export function sampleDrive(layer: StyleLayerKey, id: string, samples: unknown = styleSamples): { file_id: string; url: string } | null {
+  const file = sampleUrl(layer, id, samples) ? sampleDriveId(layer, id, samples) : null
+  return file ? { file_id: file, url: `https://drive.google.com/file/d/${file}/view` } : null
+}
+
+/** Every Drive id a style sample is served from: the ids GET /api/board/sign-offs?file= serves for Pick a style, beside
+ *  the sign-off cards' samples. */
+export function sampleFiles(samples: unknown = styleSamples): Set<string> {
+  const out = new Set<string>()
+  for (const layer of STYLE_LAYERS) {
+    const drive = isObj(samples) && isObj(samples.drive) && isObj(samples.drive[layer]) ? samples.drive[layer] as Body : {}
+    for (const id of Object.keys(drive)) { const f = sampleDriveId(layer, id, samples); if (f && sampleUrl(layer, id, samples)) out.add(f) }
+  }
+  return out
 }
 
 const NOT_FOR_US = new Set(['not for us', 'not_for_us', 'not-for-us', 'rejected'])
@@ -170,7 +201,7 @@ export function dayStyle(i: StyleInputs): DayStyle {
     : [...ranked.map(x => x.m), ...i.motion.filter(m => !recommended.has(m.id))]
   const motion: StyleLayer = {
     options: order.map(m => ({ id: m.id, name: m.name, line: m.how, rules: m.rules, point_types: m.point_types, formats: m.formats, ready: ready(m),
-      recommended: recommended.has(m.id), why: recommended.get(m.id) ?? null, sample_url: sampleUrl('motion', m.id),
+      recommended: recommended.has(m.id), why: recommended.get(m.id) ?? null, sample_url: sampleUrl('motion', m.id), sample_drive: sampleDrive('motion', m.id),
       rejected: mine.rejected.motion.includes(m.id) || NOT_FOR_US.has(m.krish_verdict),
       presses: { yes: press('Yes', 'style', { motion: m.id }, `Picked. ${m.name} is the motion style for this piece.`),
         not_this: press('Not this', 'style', { reject: { layer: 'motion', id: m.id } }, 'Noted. It is not recommended for this piece any more.') } })),
@@ -188,7 +219,7 @@ export function dayStyle(i: StyleInputs): DayStyle {
       const plannedCaption = i.recommendedCaptions && CAPTION_IDS.has(i.recommendedCaptions) && !mine.rejected.captions.includes(i.recommendedCaptions) ? i.recommendedCaptions : null
       const rec = plannedCaption ? c.id === plannedCaption : Boolean(c.recommended_why) && !rejected
       const why = plannedCaption ? (rec ? 'The production pick recommended for this piece.' : null) : rec ? c.recommended_why! : null
-      return { id: c.id, name: c.name, line: c.line, rules: c.rules, recommended: rec, why, sample_url: sampleUrl('captions', c.id), rejected,
+      return { id: c.id, name: c.name, line: c.line, rules: c.rules, recommended: rec, why, sample_url: sampleUrl('captions', c.id), sample_drive: sampleDrive('captions', c.id), rejected,
         presses: { yes: press('Yes', 'style', { captions: c.id }, `Picked. ${c.name} is the caption style for this piece.`),
           not_this: press('Not this', 'style', { reject: { layer: 'captions', id: c.id } }, 'Noted. It is not recommended for this piece any more.') } }
     }),
@@ -206,7 +237,7 @@ export function dayStyle(i: StyleInputs): DayStyle {
       const rejected = mine.rejected.treatment.includes(l.id) && !(look && look.production === l.id)
       const rec = l.id === i.recommendedLook && !rejected
       return { id: l.id, name: l.name, line: l.pitch, rules: [], recommended: rec,
-        why: rec ? 'The Sunday room recommends it for this idea.' : null, sample_url: null, rejected,
+        why: rec ? 'The Sunday room recommends it for this idea.' : null, sample_url: null, sample_drive: null, rejected,
         // The picked look takes no "Not this": a no would leave it picked (the look op holds the pick); he picks another.
         presses: { yes: press('Yes', 'look', { production: l.id, ...keep }, `Picked. ${l.name} is the look for this piece.`),
           ...(look && look.production === l.id ? {} : { not_this: press('Not this', 'style', { reject: { layer: 'treatment', id: l.id } }, 'Noted. It is not recommended for this piece any more.') }) } }
