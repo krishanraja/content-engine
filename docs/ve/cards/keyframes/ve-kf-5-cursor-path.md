@@ -8,7 +8,7 @@ max_minutes: 60
 max_calls: 60
 cwd: C:\Users\krish\dev\makeyourmindup\.worktrees\content-engine\ve-card\ve-kf-5-cursor-path
 write_allow: [apps/renderer/src/engine/devices/cursor_path/*, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/devices/verbs.test.ts, apps/renderer/src/engine/houseGolden.json, config/ve/devices.json]
-read: [apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/kit/verbs.ts, apps/renderer/src/engine/devices/typing_bubble/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, config/ve/devices.json, config/ve/brand-tokens.json, docs/ve/MOTION_STANDARD.md]
+read: [apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/kit/verbs.ts, apps/renderer/src/engine/devices/typing_bubble/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, config/ve/devices.json, config/ve/brand-tokens.json, docs/ve/MOTION_STANDARD.md, apps/renderer/src/engine/devices/hand_phone_stage/device.test.ts]
 never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, raw hex colours, useCurrentFrame outside apps/renderer/src/engine/clock.ts, edits outside write_allow
 ---
 
@@ -32,6 +32,8 @@ params: `screen` ({src, pixelWidth, pixelHeight}: a real capture, drawn whole at
 - typed text is empty before its event and whole by its end
 - the busy ring only grows after a send and never repeats
 - the 9:16 and 16:9 fixtures render
+- the capture is drawn with remotion's Img, which needs a composition, so device.test.ts mocks Img as a plain img exactly as hand_phone_stage/device.test.ts does (vi.mock('remotion', ...)) and renders outside one
+- houseGolden.json gains cursor_path's own entries, written with VE_WRITE_HOUSE_GOLDEN=1 npx vitest run apps/renderer/src/engine/houseGolden.test.ts; every existing digest stays exactly as it was (a first build on 15 Nov failed both of these)
 
 ## Contract
 Device rules (apps/renderer/src/engine/devices/CONTRACT.md): a pure function of its props; state only from stateAt(events, object.obj, frame); motion only from progress(), drift() and MOTION in clock.ts and the helpers in kit/verbs.ts; colours only from tokens (raw hex refused); type only from HOUSE_FONTS; no Math.random, no frame modulo, no wall clock, no fetch; useCurrentFrame only in clock.ts. Every move runs once and holds: no spinner, pulse or loop (ve qc motion.periodicity). No per-piece code. Files: index.tsx, schema.ts (zod, strict), state.ts, fixture.json ("aspects": ["9:16", "16:9"]; the 1080x1920 and 1920x1080 slots authored apart, never one scaled into the other), device.test.ts. Register it in devices/registry.ts (one line) and config/ve/devices.json with exactly the verbs above, and add its line to verbs.test.ts. Add only your own keys to apps/renderer/src/engine/houseGolden.json (VE_WRITE_HOUSE_GOLDEN=1 npx vitest run apps/renderer/src/engine/houseGolden.test.ts); every other key stays byte-identical.
