@@ -41,7 +41,7 @@ function powershell(dir: string, script: string): Record<string, any> {
 // Every program the preflight starts, exactly. A new one is added here on purpose, after reading what it does.
 const RUNS = [
   "Invoke-Quiet $Claude @('--version') 30",
-  "Invoke-Quiet $node @($companion, 'help') 30",
+  "Invoke-Quiet $node @($CodexThread) 30",
   "Invoke-Quiet $codex @('login', 'status') 30 $CodexEnv",
   "Invoke-Quiet $python.path ($python.prefix + @($check, 'check')) 60 @{ PYTHONUTF8 = '1'; PYTHONIOENCODING = 'utf-8' }",
   "Invoke-Quiet $codex @('mcp', 'list', '--json') 30 $CodexEnv",
@@ -72,14 +72,15 @@ describe('the overnight preflight on a home computer', () => {
     expect(quiet).toContain('"/PID $($process.Id) /T /F"')
   })
 
-  it('starts exactly these programs, with these arguments, and never the Codex companion\'s task route', () => {
+  it('starts exactly these programs, with these arguments, and never a Codex turn through codex_thread.mjs', () => {
     const runs = [...code.matchAll(/\$run = (Invoke-Quiet .+)$/gm)].map((m) => m[1])
     expect(runs).toEqual(RUNS)
     expect(code.match(/Invoke-Quiet /g)).toHaveLength(RUNS.length)
     for (const run of runs) expect(run).not.toMatch(FORBIDDEN_ARGUMENTS)
-    // The companion reads help only as its first word: "task --help" would start a real Codex task and spend.
-    expect(code).not.toMatch(/\$companion,\s*'task'/)
-    expect(preflight).toContain('Never "task --help"')
+    // codex_thread.mjs with no arguments prints its usage; "open" or "send" would start a real Codex turn and spend.
+    expect(code).not.toMatch(/\$CodexThread,\s*'(open|send)'/)
+    expect(code).not.toMatch(/codex-companion|CompanionRoot/)
+    expect(preflight).toContain('Never "open" or "send" here')
   })
 
   it('runs every program with no window, its input closed and its output read here', () => {
@@ -123,10 +124,11 @@ describe('the overnight preflight on a home computer', () => {
     expect(ceiling).toBe(true)
     expect(/^ALLOWANCE_CEILING = (\d+)/m.exec(read('scripts/velib/cards.py'))?.[1]).toBe('80')
     // What ve dispatch runs, and the flags it passes: scripts/codex_thread.mjs since 15 Nov (Ruling, Krish, 2026-11-15:
-    // Claude starts Codex only through scripts/codex_thread.mjs). The preflight still reports the plugin it finds.
+    // Claude starts Codex only through scripts/codex_thread.mjs), and the preflight checks that same script and the
+    // Windows node and codex that run it (scripts/velib/codex_route.py), not the plugin's companion.
     expect(read('scripts/velib/cards.py')).toContain("CODEX_THREAD = ROOT / 'scripts' / 'codex_thread.mjs'")
-    expect(preflight).toContain("$CompanionRoot = Join-Path $env:USERPROFILE '.claude\\plugins\\cache\\openai-codex\\codex'")
-    expect(read('scripts/velib/cards.py')).toMatch(/'open', '--cwd', cwd, '--sandbox', 'workspace-write', '--model', .+\n\s+'--effort'/)
+    expect(preflight).toContain("$CodexThread = Join-Path $RepoRoot 'scripts\\codex_thread.mjs'")
+    expect(read('scripts/velib/cards.py')).toMatch(/options = \['--cwd', cwd, '--sandbox', 'workspace-write', '--model', .+\n\s+'--effort'/)
   })
 
   it('runs these checks, and its report carries the fields the engine keeps and nothing else', () => {
@@ -321,7 +323,7 @@ $seen = Watch-Run $process 200
 `)
     expect(result.control, 'the probe saw no window from the control, so it proves nothing').toBeGreaterThan(0)
     expect(result.seen).toBe(0)
-    expect(result.exit).toBe(1)  // the empty home has no Codex companion on any machine, so a check always fails
+    expect(result.exit).toBe(1)  // the empty home has no Codex sign-in on any machine, so a check always fails
     const run = JSON.parse(String(result.out).trim().split(/\r?\n/).pop()!)
     expect(run).toMatchObject({ schema_version: 1, kind: 'overnight_preflight', ok: false })
     expect(Object.keys(run.checks)).toEqual(CHECKS)
@@ -332,7 +334,7 @@ $seen = Watch-Run $process 200
     const reachable = ['drive_root', 'media_inbox', 'archive_root', 'library_root'].filter((key) => runtime[key] && existsSync(runtime[key])).length
     expect(run.checks.drive).toMatchObject({ ok: reachable === 4, reachable, folders: 4 })
     expect(run.checks.disk.free_gb).toBeGreaterThan(0)
-    expect(run.checks.codex_companion.ok).toBe(false)
+    expect(run.checks.codex_login.ok).toBe(false)
     // The audit ran and its totals were read: nothing in the empty home, so the allowance is unknown and passes.
     expect(run.checks.codex_allowance).toMatchObject({ ok: true, used_pct: null, limit_pct: 80 })
     if (toolchain) expect(run.checks.ffmpeg).toMatchObject({ ok: true, version: expect.stringMatching(/^n8\.1\.2-53-g1005b294ff/) })
