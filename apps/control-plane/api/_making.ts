@@ -24,6 +24,7 @@ import { MediaRefSchema, mediaReviewProblems, type MediaRef } from '../../../pac
 import { mediaQualityEnforced } from '../../../packages/core/src/media-rollout.js'
 import type { ClipPlacement, ClipUseRecord } from './_routedClips.js'
 import { LONG_CUT } from './_houseRules.js'
+import { mergeThumbnailOptions, parseThumbnailOptions, type MakingThumbnailOptions, type ThumbnailOptionsPatch } from './_thumbOptions.js'
 
 /** Every channel a piece can go to, in the order Krish posts them
  *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
@@ -174,6 +175,9 @@ export interface Making {
   gates?: MakingGates
   /** How many full renders went to him before he approved the cut (the "one round" measure), written by the engine. */
   rounds?: number
+  /** The thumbnail options (thumbnail-designer; COVER-STANDARD point 8), the critic's verdict and his pick, each bound to
+   *  the files' sha256 (_thumbOptions.ts). Never asset_judgements: the content North Star count is untouched. */
+  thumbnail_options?: MakingThumbnailOptions
   /** What the session read before it made anything (the failure loop's receipt; Krish, 2026-11-04): the rejection
    *  floor for each maker, the failure register, the skill it loaded and his approved taste, each with the version it
    *  read. Written by scripts/floor.py, check_failures.py and preflight.py; merged by check, format and name. ve brief
@@ -207,7 +211,7 @@ export interface MakingGates {
   creative?: MakingGate & { approved: boolean; picks: Partial<Record<'opener' | 'captions' | 'motion' | 'thumbnail', string>>; words?: string }
 }
 
-export type MakingPatch = Partial<Omit<Making, 'updated_at' | 'by' | 'started_at' | 'descript'>>
+export type MakingPatch = Partial<Omit<Making, 'updated_at' | 'by' | 'started_at' | 'descript' | 'thumbnail_options'>> & { thumbnail_options?: ThumbnailOptionsPatch }
 
 const MAX_PROBLEMS = 40
 const MAX_LIST = 40
@@ -580,6 +584,11 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     }
     if (out.length === list.length && out.length) patch.preflight = out
   }
+  if (body.thumbnail_options !== undefined) {
+    // Bound to the set on the record by the making route (thumbnailOptionsProblems), which can see it.
+    const t = parseThumbnailOptions(body.thumbnail_options, problems)
+    if (t) patch.thumbnail_options = t
+  }
   if (body.rounds !== undefined) {
     const n = count(body.rounds)
     if (n === null || n > 99) problems.push('rounds is how many full renders went to Krish before he approved the cut: a whole number, 0 to 99')
@@ -648,6 +657,10 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
     next.spoken_delta = { ...held, ...patch.spoken_delta }
   }
   if (patch.rounds !== undefined) next.rounds = patch.rounds
+  if (patch.thumbnail_options && (patch.thumbnail_options.options || isObj(base.thumbnail_options))) {
+    // A new set replaces the old one whole; a verdict or his pick lands on the set on the record.
+    next.thumbnail_options = mergeThumbnailOptions(base.thumbnail_options, patch.thumbnail_options, by, stamp)
+  }
   if (patch.preflight) {
     // Receipt by receipt: a newer read of the same check replaces the older, the others stay.
     const held = new Map<string, MakingPreflight>((Array.isArray(base.preflight) ? base.preflight : []).filter(isObj).map(p => [preflightKey(p), p]))

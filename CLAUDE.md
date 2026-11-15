@@ -45,11 +45,12 @@ reading it whole. It is about 270 KB (some 65k tokens).
 | A session that starts `piece_id:`, or a piece Krish picked | `/make-piece` |
 | The Sunday plan, or a re-plan of the week | `/plan-week` |
 | Krish has recorded; cut and file the videos | `/produce-video` |
+| A recorded piece's thumbnails, once his thumbnail words are picked (produce-video step 5 calls it) | `/thumbnail-designer` |
 | A piece on ve (its spec is `schema_version: 2`), or a ve Codex task card | `/ve` |
 | A Studio station (brief, script, render, qa...) | the `mindmake-studio` MCP tools, inside a tracked session (`docs/ENGINE_SESSION.md`) |
 | Krish's voice or a channel decision | his account-wide `krish-voice` and `content-corpus` |
 
-The skills live once in `.agents/skills/`; `.claude/skills/` holds exact copies of the four
+The skills live once in `.agents/skills/`; `.claude/skills/` holds exact copies of the five
 above (AGENTS.md, Verification). `mindmake-video` and `video-engine` are not loaded here on
 purpose; `scripts/validate-skills.py` (`NOT_FOR_CLAUDE`) says why and fails on any new skill that
 is neither copied nor listed.
@@ -67,6 +68,7 @@ separate reader (cost rule 6, guard G6), and pick by the job:
 | `executor` | Sonnet | a scoped edit already decided, test runs, renders, packs, filing, feeding the live board (never a board page) |
 | `reviewer` | Opus | architecture, the final check before a push, anything touching judging, drafting, the fact gate, mandates or the ledger |
 | `ve-critic` | Opus | the non-producer review of a ve cut, after `ve qc` and `ve refs`; it writes the verdict and never edits the spec |
+| `thumbnail-critic` | Opus | the review of a piece's thumbnail options by a reader that did not draw them (thumbnail-designer step 4); its verdict names each file's sha256 and it never edits or draws |
 
 `produce-video` runs on Sonnet by its own frontmatter (guard G8).
 

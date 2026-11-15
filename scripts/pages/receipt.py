@@ -348,7 +348,9 @@ def page(facts, c, base, shape, skin=...):
         # "headline_first": true (opt-in until the extruded, bauhaus and brandbook skins keep their light off logos under the words) puts the logos under the headline, smaller, so the headline leads (Krish, 2026-11-09:
         # "The headline should take precedence").
         '--logo': f'{round(max(fine_px + 2, (r - l) / 24 * (.7 if c.get("headline_first") else 1)) * (1 if n_logos <= 3 else .78))}px', '--gap': f'{round(W / 40)}px', '--edge': f'{edge}px',
-        '--proofw': spec.get('proofw', '58%') if side else '100%',
+        # A thumbnail option (thumb_options.py) may set the proof's share of a side layout ("proofw"); the plain drawer
+        # never does, so its default is the shape's own.
+        '--proofw': (c.get('proofw') or spec.get('proofw', '58%')) if side else '100%',
     }
     root = ';'.join(f'{k}:{v}' for k, v in vars_.items())
     head = (f'{esc(lead)} ' if lead else '') + f'<mark>{esc(last)}</mark>'
@@ -358,6 +360,10 @@ def page(facts, c, base, shape, skin=...):
     # a small label, not a second headline. Krish, 2026-11-09: "The \"Follow the Money\" badge doesn't need to be that big."
     quiet = ('<style>.pill{background:transparent!important;box-shadow:none!important;padding:0!important;'
              'color:var(--accent)!important;opacity:.9}</style>') if c.get('quiet_pill', True) else ''
+    # "proof_first" (a thumbnail option's layout, thumb_options.py; never the plain drawer's) puts the picture above the
+    # words on a stacked shape. The headline stays the largest thing on the cover.
+    if c.get('proof_first') and not side:
+        quiet += '<style>.stack .proof{order:0}</style>'
     # With its tag off, a pinned proof keeps the room the tag gave it, so a skin's light round the frame clears the
     # headline above and the logos below.
     # (The tag stays in the page when it is not shown, hidden but keeping its room, so every skin's placement still
@@ -430,8 +436,11 @@ def render(b, facts, c, base, shape, jpeg=None, skin=...):
     pg = b.new_page(viewport={'width': W, 'height': H})
     pg.set_content(page(facts, c, base, shape, skin_id))
     card.settle(pg)
+    # A thumbnail option that names its proof's width is drawn at that width or not at all, so two options never
+    # quietly settle on the same layout.
+    widths = ([c['proofw']] if c.get('proofw') else [spec.get('proofw', '58%'), '50%', '44%']) if spec['layout'] == 'side' else ['100%']
     fit = pg.evaluate(FIT_JS, [list(spec['heads']), spec['lines'], LONE_WORD_MAX, list(spec['safe']), spec.get('clear', []), PROOF_MIN.get(shape, PROOF_MIN[spec['layout']]),
-                                  [spec.get('proofw', '58%'), '50%', '44%'] if spec['layout'] == 'side' else ['100%']])
+                               widths])
     if skin_id:
         fit = place_skin(pg, skin_id, shape, fit)
     small = card.too_small(card.texts(pg, (0, 0, W, H)), W)
@@ -691,15 +700,26 @@ def draw_thumbs(facts, base, out, thumb_facts, companies_of):
     for s, f in THUMB_FILES.items():
         shot, fit, q = shots[s]
         (out / f).write_bytes(shot)
-        files.append({'file': f, 'shape': s, 'width': SHAPES[s]['w'], 'height': SHAPES[s]['h'], 'bytes': len(shot),
-                      'sha256': hashlib.sha256(shot).hexdigest(), 'headline_px': fit['head'], 'face_px': 0, 'jpeg_quality': q})
+        files.append(thumb_entry(s, f, shot, fit, q))
         print(f'{out / f}  {SHAPES[s]["w"]} x {SHAPES[s]["h"]}, {len(shot) / 1e3:.0f} KB: headline {fit["head"]} px in {fit["lines"]} line(s)')
+    (out / 'thumbs.json').write_text(json.dumps(thumbs_record(facts, c, settled, files, companies_of), indent=1) + '\n', encoding='utf-8')
+    return True
+
+
+def thumb_entry(shape, name, shot, fit, quality):
+    """One drawn thumbnail as its receipt lists it: what making.py and visual_gate.py match it by (its sha256 and shape)."""
+    return {'file': name, 'shape': shape, 'width': SHAPES[shape]['w'], 'height': SHAPES[shape]['h'], 'bytes': len(shot),
+            'sha256': hashlib.sha256(shot).hexdigest(), 'headline_px': fit['head'], 'face_px': 0, 'jpeg_quality': quality}
+
+
+def thumbs_record(facts, c, settled, files, companies_of, drawer='scripts/pages/build.py --thumbs (receipt)'):
+    """The thumbnails' receipt (thumbs.json): what visual_gate.py and making.py hold a thumbnail to. One shape for the
+    single set and for each of a piece's options (thumb_options.py), so every reader reads both the same way."""
     logos = [r.get('name', '') for r in [*c.get('rows', []), *c.get('strip', [])]]
-    (out / 'thumbs.json').write_text(json.dumps({
-        'schema_version': 1, 'drawer': 'scripts/pages/build.py --thumbs (receipt)', 'template': TEMPLATE, 'subchannel': facts['subchannel'],
+    return {
+        'schema_version': 1, 'drawer': drawer, 'template': TEMPLATE, 'subchannel': facts['subchannel'],
         'series_look': brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries')), **skin_record(settled),
         'headline': list(words_of(c, facts)), 'portrait': False, 'proof': {k: (c.get('proof') or {}).get(k) for k in ('image', 'pdf', 'page', 'html', 'source', 'tag', 'ring')},
         'logos': [n for n in logos if n], 'companies': companies_of([n for n in logos if n]), 'background': False,
         'files': files, 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
-    }, indent=1) + '\n', encoding='utf-8')
-    return True
+    }

@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { MediaFixture } from '../helpers/media-quality.js'
 import { makingStamp, makingSteps, mergeMaking, parseMakingPatch, takeCounts, teleprompterNote, teleprompterStates } from '../../apps/control-plane/api/_making.js'
+import { THUMB_CHECKS, setDigest } from '../../apps/control-plane/api/_thumbOptions.js'
 const rollout = vi.hoisted(() => ({ active: true }))
 vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => rollout.active, mediaQualityRollout: () => ({ status: rollout.active ? 'active' : 'candidate_pending_calibration' }) }))
 
@@ -349,6 +350,25 @@ describe('the making record', () => {
     expect(again.status).toBe(200)
     expect(again.body.making.publish_manager.url).toBe('https://claude.ai/artifact/other')
     expect(again.body.making.recordings).toHaveLength(1)
+  })
+
+  it('keeps thumbnail options by sha256, and refuses with 409 a pick or verdict whose bytes are not the set\'s, writing nothing', async () => {
+    const f = (id: string, shape: string, hex: string) => ({ shape, file: `options/${id}/thumb-${shape === 'wide' ? 'wide-1280x720' : 'tall-1080x1920'}.jpg`, sha256: hex.repeat(64) })
+    const options = [{ id: 'a', note: 'proof wide', files: [f('a', 'wide', '1'), f('a', 'tall', '2')] }, { id: 'b', note: 'proof narrow', files: [f('b', 'wide', '3'), f('b', 'tall', '4')] }]
+    const verdict = { reviewer: 'thumbnail-critic', reviewed_at: '2026-11-15T12:00:00Z', best: 'b', blocking: false,
+      options: options.map(o => ({ id: o.id, files: o.files.map(x => ({ file: x.file, sha256: x.sha256 })), checks: Object.fromEntries(THUMB_CHECKS.map(k => [k, 'pass'])), blocking: false, findings: [] })) }
+    const kept = await call('POST', { thumbnail_options: { set_sha256: setDigest(options), drawn_at: '2026-11-15T11:00:00Z', skin: null, headline: 'GOOGLE PAID $2.7B FIRST',
+      options, grid_mock: { sha256: '5'.repeat(64), past_read: 0, note: 'The options are shown alone.' }, verdict } })
+    expect(kept.status).toBe(200)
+    expect(kept.body.making.thumbnail_options.verdict.best).toBe('b')
+    db.writes = []
+    const other = await call('POST', { thumbnail_options: { set_sha256: setDigest(options), pick: { option: 'b', files: options[0].files, krish_words: 'Krish, 2026-11-15: B' } } })
+    expect(other.status).toBe(409)
+    expect(other.body.error).toBe('thumbnail_options_unbound')
+    expect(db.writes).toHaveLength(0)
+    const his = await call('POST', { thumbnail_options: { set_sha256: setDigest(options), pick: { option: 'b', files: options[1].files, krish_words: 'Krish, 2026-11-15: B' } } })
+    expect(his.status).toBe(200)
+    expect(his.body.making.thumbnail_options.pick).toMatchObject({ option: 'b', krish_words: 'Krish, 2026-11-15: B' })
   })
 
   it('Krish ticks channels off from his cookie; a null clears one; an unknown channel is refused', async () => {

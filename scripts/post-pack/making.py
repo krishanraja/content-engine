@@ -20,6 +20,9 @@ that everything is fresh and synchronised in real time".
     python making.py PIECE_ID recorded long "recordings/<sha256>.mp4" [--seconds N] [--krish-words "Krish, DATE: ..."]
     python making.py PIECE_ID video long NAME PATH [--url https://...] [--seconds N]
                      [--thumb PATH --thumb-file LOCAL_PATH [--thumb-url https://...]] [--music TRACK_ID]
+    python making.py PIECE_ID thumbnails WORK/thumbs [--ask https://...]   # the thumbnail options, their grid mock and the
+                                                             # critic's verdict, by sha256; --ask puts one pick on his list
+    python making.py PIECE_ID thumbnails WORK/thumbs --picked b --krish-words "Krish, DATE: ..."   # his pick, in his words
     python making.py PIECE_ID posted substack https://...    # after Krish posted it
     python making.py PIECE_ID session https://claude.ai/code/session_...
     python making.py PIECE_ID narrative [LOCK]                # whether its signed narrative lock stands; writes nothing
@@ -1403,6 +1406,117 @@ def video_patch(cut, name, path, url=None, seconds=None, thumb=None, thumb_url=N
     return {'video_assets': [asset]}
 
 
+# Thumbnail options (the thumbnail-designer skill; docs/production/COVER-STANDARD.md, point 8, approved by Krish on
+# 2026-11-09: "Two or three options, never one, each shown in a mock of his grid beside the last five posts"). The set
+# scripts/pages/build.py --thumbs --options drew goes on the record by each file's sha256 with the critic's verdict on
+# those exact bytes (the engine refuses a verdict or a pick whose hashes are not the set's: _making.ts,
+# thumbnailOptionsProblems); his pick goes on only with his own words; and a cut carries an option's thumbnail only once
+# his pick names that option and those bytes. Nothing is recorded as chosen before he answers.
+THUMB_ASK_PREFIX = 'thumbs-'
+
+
+def _thumb_options():
+    pages = str(HERE.parent / 'pages')
+    if pages not in sys.path:
+        sys.path.insert(0, pages)
+    import thumb_options
+    return thumb_options
+
+
+def thumbnail_options_patch(out):
+    """The set in the folder `out` (thumb-options.json, and thumb-verdict.json when the critic has judged it) as a
+    record: each option's files by sha256, the grid mock's, and the verdict bound to the same bytes. Refused when a file
+    on this machine is not the one the set names."""
+    to = _thumb_options()
+    try:
+        record = to.load_set(out)
+        problems = to.set_problems(out, record)
+        verdict = to.read_verdict(out, record)
+    except (to.OptionsError, OSError, ValueError) as error:
+        raise MakingError(str(error))
+    if problems:
+        raise MakingError('the options on this machine are not the set its record names: ' + '; '.join(problems))
+    entry = {
+        'set_sha256': record['set_sha256'], 'drawn_at': record['drawn_at'], 'skin': record.get('skin'),
+        'headline': ' '.join(record.get('headline') or []),
+        'options': [{'id': o['id'], 'note': o['note'], 'files': [{'shape': f['shape'], 'file': f['file'], 'sha256': f['sha256']} for f in o['files']]}
+                    for o in record['options']],
+        'grid_mock': {'sha256': record['grid_mock']['sha256'], 'past_read': record['grid_mock']['past_read'], 'note': record['grid_mock']['note']},
+    }
+    if verdict:
+        entry['verdict'] = {
+            'reviewer': verdict['reviewer'], 'reviewed_at': verdict['reviewed_at'], 'best': verdict['best'], 'blocking': verdict['blocking'],
+            **({'qa_sha256': verdict['qa_sha256']} if verdict.get('qa_sha256') else {}),
+            'options': [{'id': o['id'], 'files': o['files'], 'checks': o['checks'], 'blocking': o['blocking'],
+                         'findings': [f'{x["severity"]}: {x["check"]}: {x["text"]}'[:300] for x in o['findings']][:12]} for o in verdict['options']],
+        }
+    return {'thumbnail_options': entry}
+
+
+def thumbnail_pick_patch(record, option, krish):
+    """His pick of one option, with his own words, bound to that option's files on the record. Refused before the
+    critic's verdict is on the record, and for an option or words that are not there."""
+    held = (record or {}).get('thumbnail_options')
+    if not isinstance(held, dict) or not held.get('options'):
+        raise MakingError('no thumbnail options are on the record: record the set first (making.py PIECE thumbnails OUT)')
+    if not isinstance(held.get('verdict'), dict):
+        raise MakingError('the critic has not judged these options yet: the options go to Krish only after the verdict')
+    words = (krish or '').strip()
+    if not re.match(r'^Krish\b', words) or len(words) > 600:
+        raise MakingError('his pick is recorded only with his own words: --krish-words "Krish, YYYY-MM-DD: his exact words"')
+    chosen = next((o for o in held['options'] if o.get('id') == str(option).strip().lower()), None)
+    if not chosen:
+        raise MakingError(f'option {option} is not on the record (the set holds {", ".join(o["id"] for o in held["options"])})')
+    return {'thumbnail_options': {'set_sha256': held['set_sha256'],
+                                  'pick': {'option': chosen['id'], 'files': chosen['files'], 'krish_words': words}}}
+
+
+def thumb_option_of(thumb_file):
+    """The option a drawn thumbnail belongs to (its thumbs.json's "option"), or None for the one set."""
+    try:
+        receipt = json.loads((Path(thumb_file).parent / THUMB_RECEIPT).read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return None
+    return receipt.get('option') if isinstance(receipt, dict) else None
+
+
+def option_pick_problem(record, thumb_file):
+    """Why a cut may not carry this thumbnail yet, or None. A thumbnail from an options set (its thumbs.json names its
+    option) goes on a cut only once Krish's pick on the record names that option and these exact bytes."""
+    path = Path(thumb_file)
+    option = thumb_option_of(path)
+    if not option:
+        return None
+    pick = ((record or {}).get('thumbnail_options') or {}).get('pick')
+    if not isinstance(pick, dict):
+        return (f'{path.name} is option {str(option).upper()} of a set Krish has not picked from yet: nothing is recorded as '
+                'the chosen thumbnail until he answers (making.py PIECE thumbnails OUT --picked ID --krish-words "...")')
+    if pick.get('option') != option:
+        return f'{path.name} is option {str(option).upper()}; Krish picked option {str(pick.get("option")).upper()}'
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if digest not in {f.get('sha256') for f in pick.get('files') or []}:
+        return f'{path.name} is not the file Krish picked (its sha256 is not on his pick): draw nothing new after his answer'
+    return None
+
+
+def thumbnail_ask_item(piece_id, record, link):
+    """The one board item that asks Krish to pick (WORKBENCH.md, "The board"): on him, his judgment, an https link to
+    where the options and the grid mock are shown, closed by the Video assets step once a cut carries his pick."""
+    held = (record or {}).get('thumbnail_options') or {}
+    if not held.get('set_sha256') or not held.get('options'):
+        raise MakingError('the engine\'s record holds no thumbnail options, so nothing was asked: the set is not on the record yet')
+    if not str(link or '').startswith('https://'):
+        raise MakingError('--ask is the https link where he sees the options and the grid mock (the live board day: live_board.py)')
+    ids = [o['id'].upper() for o in held.get('options') or []]
+    best = ((held.get('verdict') or {}).get('best') or '').upper()
+    detail = (f'{len(ids)} thumbnail options for "{held.get("headline", "")}" are on the piece, each in a mock of your grid. '
+              + (f'The critic\'s pick is {best}. ' if best else '')
+              + 'Say which one in a session; it is recorded with your words, and nothing is filed as the thumbnail before you answer.')
+    return {'id': f'{THUMB_ASK_PREFIX}{held["set_sha256"][:12]}', 'idea_id': piece_id, 'lane': 'on_you', 'only_you': 'judgment',
+            'link': link, 'closes_on': 'video', 'area': 'Thumbnails', 'rank': 3,
+            'title': f'Pick the thumbnail: {", ".join(ids[:-1])} or {ids[-1]}'[:200], 'detail': detail[:2000]}
+
+
 # Clips routed to the piece (apps/control-plane/api/_routedClips.ts). Krish, 2026-10-31: "route the two videos to it
 # once they're read, so a new session knows they will need to be referenced with audio on during my video post
 # production". The engine lists every Inspiration card linked to the piece; a card is `show_with_sound` only once his
@@ -2648,7 +2762,7 @@ def main(argv=None, call=None):
     ap = argparse.ArgumentParser(description="Record where a piece is, for Control Center's board.")
     ap.add_argument('piece_id', nargs='?')
     ap.add_argument('what', nargs='?', choices=['show', 'workroom', 'publish-manager', 'visual-gate', 'scripts', 'pack', 'recorded', 'video', 'posted', 'session',
-                                                     'read-back', 'teleprompter', 'drive-link', 'narrative', 'choices', 'clips'])
+                                                     'read-back', 'teleprompter', 'drive-link', 'narrative', 'choices', 'clips', 'thumbnails'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--by', help=f'who is writing: Codex, Claude Code (default: {BY_ENV}, else {CODEX_BY} inside Codex, else {DEFAULT_BY})')
     ap.add_argument('--sent', action='store_true', help='with pack: the pack was sent to the library')
@@ -2683,6 +2797,9 @@ def main(argv=None, call=None):
     ap.add_argument('--end-s', type=float, metavar='SECONDS', help='with clips: where it ends')
     ap.add_argument('--audio', choices=['on', 'off'], help="with clips: whether the clip's own sound plays (off takes --krish-words)")
     ap.add_argument('--omit', action='store_true', help='with clips: the cut leaves the clip out (takes --krish-words)')
+    ap.add_argument('--picked', metavar='OPTION', help='with thumbnails: the option Krish picked (a, b or c), with his words in --krish-words')
+    ap.add_argument('--ask', metavar='LINK', help='with thumbnails: put one item on his list asking him to pick, linking where he sees '
+                    'the options and the grid mock (the live board day)')
     ap.add_argument('--self-test', action='store_true')
     a = ap.parse_args(argv)
     if a.self_test:
@@ -2773,9 +2890,32 @@ def main(argv=None, call=None):
             if len(a.args) != 2:
                 ap.error('give the cut and its Drive link: drive-link long https://drive.google.com/file/d/<id>/view')
             patch = drive_link_patch(record_of(a.piece_id, call), a.args[0], a.args[1], thumb_url=a.thumb_url)
+        elif a.what == 'thumbnails':
+            if len(a.args) != 1:
+                ap.error('give the options folder: thumbnails WORK/thumbs [--ask LINK], or his pick: thumbnails WORK/thumbs '
+                         '--picked b --krish-words "Krish, YYYY-MM-DD: his words"')
+            if a.ask and not a.ask.startswith('https://'):
+                ap.error('--ask is the https link where he sees the options and the grid mock (the live board day: live_board.py)')
+            if a.picked:
+                if a.ask:
+                    ap.error('--ask puts the question to him; --picked records his answer: one at a time')
+                patch = thumbnail_pick_patch(record_of(a.piece_id, call), a.picked, a.krish_words)
+            else:
+                patch = thumbnail_options_patch(a.args[0])
+                verdict = patch['thumbnail_options'].get('verdict')
+                if a.ask and not verdict:
+                    raise MakingError('the options go to Krish only after the critic\'s verdict (thumb_options.py verdict); nothing was recorded')
+                if a.ask and verdict['blocking']:
+                    raise MakingError('every option blocks on the critic\'s verdict: hold the thumbnail with the reason and repair it '
+                                      '(at most two rounds), never put options below the bar to him; nothing was recorded')
         elif a.what == 'video':
             patch = video_patch(a.args[0], a.args[1], a.args[2], url=a.url, seconds=a.seconds,
                                 thumb=a.thumb, thumb_url=a.thumb_url, music=a.music, thumb_file=a.thumb_file)
+            if a.thumb_file and thumb_option_of(a.thumb_file):
+                # One of a set of options: only the one he picked, these exact bytes (thumbnail-designer).
+                why = option_pick_problem(record_of(a.piece_id, call), a.thumb_file)
+                if why:
+                    raise MakingError('--thumb-file: ' + why)
             sys.path.insert(0, str(HERE.parent / 'quick-edit'))
             import quality
             guarded = quality.guarded_pieces().get(a.piece_id)
@@ -2829,6 +2969,11 @@ def main(argv=None, call=None):
         else:
             patch = {'session': {'url': a.args[0], 'by': by}}
         data = post(a.piece_id, patch, call, by=by)
+        if a.what == 'thumbnails' and a.ask:
+            # One question on his list, after the set and its verdict are on the record.
+            item = thumbnail_ask_item(a.piece_id, data.get('making') or {}, a.ask)
+            written, left = board_upsert([item], call, by)
+            print(f'making: asked Krish to pick ({item["id"]})' if written else f'making: the question {item["id"]} was already answered or closed', file=sys.stderr)
         if a.what == 'scripts' and changed:
             # A take on the record of the words that just changed: one question for Krish.
             try:
