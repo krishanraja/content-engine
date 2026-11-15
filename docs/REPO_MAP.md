@@ -4740,6 +4740,20 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 
 - `function swarmState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
 
+### `apps/renderer/src/engine/devices/answer_stream/index.tsx`
+
+- `function answerLayout(box: Box, aspect: DeviceProps['aspect'], answer: { pixelWidth: number; pixelHeight: number }, sou…`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/answer_stream/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/answer_stream/state.ts`
+
+- `function revealSteps(lines: readonly { chars: number }[])`
+- `function answerState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/arrangement/hatch.ts`
 
 Eight-pixel, 45-degree cream machine hatch over ink.
@@ -4775,6 +4789,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `const SLOT_STAGGER`
 - `const FILL_FRAMES`
 - `function checklistState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/code_card/index.tsx`
+
+- `function codeGeometry(box: DeviceProps['box'], aspect: DeviceProps['aspect'])`
+- `function codeFocus(p: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | 'frame'>): Focus | undefined`
+- `function Device(p: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/code_card/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/code_card/state.ts`
+
+- `function codeState({ object, events, frame, aspect }: Pick<DeviceProps, 'object' | 'events' | 'frame' | 'aspect'>)`
 
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
 

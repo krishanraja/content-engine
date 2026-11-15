@@ -7,7 +7,7 @@ max_minutes: 90
 max_calls: 90
 cwd: C:\Users\krish\dev\makeyourmindup\.worktrees\content-engine\ve-card\ve-kf-7-character-layer
 write_allow: [apps/renderer/src/engine/character/*, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/FormatMaster.tsx, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/devices/verbs.test.ts, config/ve/devices.json, scripts/velib/character_track.py, scripts/velib/compile.py, scripts/velib/character.py, tests/ve_character_track_test.py, tests/ve_character_test.py]
-read: [config/ve/character.json, config/channel-safe-zones.json, scripts/velib/character.py, scripts/velib/character_library.py, apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/FormatMaster.tsx, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/clock.ts, scripts/velib/compile.py, scripts/velib/qc_channel.py]
+read: [config/ve/character.json, config/channel-safe-zones.json, scripts/velib/character.py, scripts/velib/character_library.py, apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/FormatMaster.tsx, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/clock.ts, scripts/velib/compile.py, scripts/velib/qc_channel.py, apps/renderer/src/engine/houseGolden.test.ts]
 never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, raw hex colours, useCurrentFrame outside apps/renderer/src/engine/clock.ts, edits outside write_allow
 ---
 
@@ -36,6 +36,7 @@ Lint: add character.aspect to scripts/velib/character.py, refusing a named cut w
 - the bust clears every action rail and the caption region at every frame
 - a 16:9 cut is refused at compile and at lint
 - a spec without character compiles byte-identical props to before
+- a cut without character draws exactly the element tree it drew before: FormatMaster gains no child at all when props.character is unset, not even a null one (spread the layer into the children only when it is set), so houseGolden.test.ts passes with houseGolden.json unchanged. A first build on 15 Nov added `{props.character ? <CharacterLayer/> : null}`, which moved the frozen digest of docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json
 
 ## Contract
 Rules for every device (apps/renderer/src/engine/devices/CONTRACT.md): a pure function of frame and props; motion from progress() and drift() with MOTION timing; colours only from tokens; no Math.random, no frame modulo, no wall clock; useCurrentFrame only in clock.ts. Add an optional `character` field to props.ts, absent by default; FormatMaster draws the layer only when it is present, so houseGolden.json passes unchanged. Register character_layer in config/ve/devices.json with verbs ["enter", "exit"] (its moves come from props.character, not events) and in devices/registry.ts with a component that throws if used as a beat object; compile refuses such an object. No per-piece code. Never generate an image; never touch the brand kit or Google Drive: tests build a library in a temp folder.

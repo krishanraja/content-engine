@@ -385,6 +385,72 @@ class StaleWorktree(unittest.TestCase):
             cards.refresh_worktree(tmp / 'card')
             self.assertEqual((tmp / 'card' / 'props.ts').read_text(), 'new')
 
+    def test_a_conflicting_attempt_starts_fresh_and_replaces_only_itself(self):
+        """15 Nov 2026: kf-5 and kf-7 were re-queued after main changed the files their first attempts touched; the
+        merge conflicted and the lane stopped on his PC with nobody there to remove the worktree."""
+        import subprocess, tempfile
+        from velib import cards, codex_lane
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            def git(*a, cwd):
+                return subprocess.run(['git', *a], cwd=cwd, check=True, capture_output=True, text=True).stdout.strip()
+            git('init', '-q', '--bare', '-b', 'main', str(tmp / 'origin.git'), cwd=tmp)
+            git('clone', '-q', str(tmp / 'origin.git'), str(tmp / 'seed'), cwd=tmp)
+            seed, card = tmp / 'seed', tmp / 'card'
+            for k, v in (('user.name', 't'), ('user.email', 't@t')):
+                git('config', k, v, cwd=seed)
+            (seed / 'registry.ts').write_text('a\n')
+            git('add', '.', cwd=seed); git('commit', '-qm', 'one', cwd=seed); git('push', '-q', 'origin', 'HEAD:main', cwd=seed)
+            git('clone', '-q', str(tmp / 'origin.git'), str(card), cwd=tmp)
+            for k, v in (('user.name', 't'), ('user.email', 't@t')):
+                git('config', k, v, cwd=card)
+            git('checkout', '-q', '-b', 've-card/x', cwd=card)
+            (card / 'registry.ts').write_text('a\nfirst attempt\n')
+            git('commit', '-qam', 'attempt 1', cwd=card); git('push', '-q', 'origin', 've-card/x', cwd=card)
+            first = git('rev-parse', 'HEAD', cwd=card)
+            (seed / 'registry.ts').write_text('a\nanother device\n')
+            git('commit', '-qam', 'main moved', cwd=seed); git('push', '-q', 'origin', 'HEAD:main', cwd=seed)
+            cards.refresh_worktree(card)
+            self.assertEqual((card / 'registry.ts').read_text(), 'a\nanother device\n')
+            self.assertEqual(git('rev-parse', '--abbrev-ref', 'HEAD', cwd=card), 've-card/x')
+            self.assertEqual(cards.fresh_lease_path(card).read_text().strip(), first)
+            (card / 'registry.ts').write_text('a\nanother device\nsecond attempt\n')
+            sha, why = codex_lane.publish_branch(card, 've-card/x', 'codex: x')
+            self.assertIsNone(why)
+            self.assertEqual(git('rev-parse', 've-card/x', cwd=tmp / 'origin.git'), sha)
+            self.assertFalse(cards.fresh_lease_path(card).exists())
+
+    def test_a_moved_branch_is_never_replaced(self):
+        """The lease holds: if the branch moved on origin after the restart, the push is refused, not forced."""
+        import subprocess, tempfile
+        from velib import cards, codex_lane
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            def git(*a, cwd):
+                return subprocess.run(['git', *a], cwd=cwd, check=True, capture_output=True, text=True).stdout.strip()
+            git('init', '-q', '--bare', '-b', 'main', str(tmp / 'origin.git'), cwd=tmp)
+            git('clone', '-q', str(tmp / 'origin.git'), str(tmp / 'card'), cwd=tmp)
+            card = tmp / 'card'
+            for k, v in (('user.name', 't'), ('user.email', 't@t')):
+                git('config', k, v, cwd=card)
+            (card / 'f').write_text('1')
+            git('add', '.', cwd=card); git('commit', '-qm', 'one', cwd=card); git('push', '-q', 'origin', 'HEAD:main', cwd=card)
+            git('push', '-q', 'origin', 'HEAD:refs/heads/ve-card/y', cwd=card)
+            git('checkout', '-q', '-b', 've-card/y', cwd=card)
+            cards.fresh_lease_path(card).write_text('0' * 40 + '\n')
+            (card / 'f').write_text('2')
+            sha, why = codex_lane.publish_branch(card, 've-card/y', 'codex: y')
+            self.assertIsNone(sha)
+            self.assertIn('could not be pushed', why)
+
+    def test_a_dirty_or_foreign_worktree_still_stops(self):
+        import subprocess, tempfile
+        from velib import cards
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            subprocess.run(['git', 'init', '-q', '-b', 'main', str(tmp)], check=True, capture_output=True)
+            self.assertFalse(cards.restart_fresh(tmp))
+
 
 
 class FreshModules(unittest.TestCase):
