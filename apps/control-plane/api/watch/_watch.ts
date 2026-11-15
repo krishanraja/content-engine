@@ -13,15 +13,34 @@ export const STALE_CLAIM_MS = 30 * 60 * 1000
 // which cost nothing, get it first. Krish, 2026-10-28: "yes build the cloud backup".
 export const CLOUD_GRACE_MS = 15 * 60 * 1000
 export const isCloudMachine = (machine: string) => /^cloud/i.test(machine)
+
+// The worker server (machine cloud-vps) does every content-watcher task first (Krish, 2026-11-15: "I just need that
+// every content watcher and music watcher task automatically goes to the worker in the VPS"). It claims a link at
+// once, and it reads every dropped file. The home computers become its backup: they take a link only once it has
+// waited HOME_GRACE_MS with nobody on it, so a link is still read when the worker is down, and they read no dropped
+// file. YouTube refuses the worker's address, so a YouTube link is the one the worker never takes and the home
+// computers take at once.
+export const WORKER_MACHINE = 'cloud-vps'
+export const HOME_GRACE_MS = 15 * 60 * 1000
+export const isWorker = (machine: string) => machine.toLowerCase() === WORKER_MACHINE
+export const workerCannotFetch = (row: Pick<WatchRequestRow, 'platform'>) => row.platform === 'youtube'
 export const MAX_ATTEMPTS = 3
 // A try that failed waits this long, times the tries so far, before anyone may claim it again. On 28 October an
 // Instagram post spent all three tries in five minutes across both home computers: a block that clears in an hour
 // took the link for good.
 export const RETRY_AFTER_MS = 20 * 60 * 1000
 
-/** Whether a request may be claimed now: never before a cloud machine's wait, nor before a failed try's wait. */
+/** Whether a request may be claimed now: the worker first (never a YouTube link), a home computer after the worker's
+ *  head start (a YouTube link at once), any other cloud machine after its wait, and nobody before a failed try's wait. */
 export function claimableNow(row: WatchRequestRow, machine: string, now: Date): boolean {
-  if (isCloudMachine(machine) && Date.parse(row.requested_at) > now.getTime() - CLOUD_GRACE_MS) return false
+  const waited = (ms: number) => Date.parse(row.requested_at) <= now.getTime() - ms
+  if (isWorker(machine)) {
+    if (workerCannotFetch(row)) return false
+  } else if (isCloudMachine(machine)) {
+    if (!waited(CLOUD_GRACE_MS)) return false
+  } else if (!workerCannotFetch(row) && !waited(HOME_GRACE_MS)) {
+    return false
+  }
   if (row.status === 'queued' && row.attempts > 0 && row.updated_at) {
     if (Date.parse(row.updated_at) > now.getTime() - RETRY_AFTER_MS * row.attempts) return false
   }
@@ -200,9 +219,15 @@ export function parseCheck(body: unknown): Parsed<{ machine: string; shas: strin
   return { ok: true, value: { machine: b.machine, shas: [...new Set(shas as string[])], engine_rev: b.engine_rev } }
 }
 
-export async function heldReads(store: WatchStore, shas: string[], engineRev: string): Promise<Record<string, string>> {
-  const existing = await store.readRevs(shas)
+/** The dropped files a machine need not read. The worker reads every dropped file, so a home computer is told each one
+ *  is held and reads none; the worker, and any caller that names no machine, is told only what is really here. */
+export async function heldReads(store: WatchStore, shas: string[], engineRev: string, machine?: string): Promise<Record<string, string>> {
   const held: Record<string, string> = {}
+  if (machine && !isCloudMachine(machine)) {
+    for (const sha of shas) held[sha] = engineRev
+    return held
+  }
+  const existing = await store.readRevs(shas)
   for (const sha of shas) {
     const found = existing.get(sha)
     if (found && (found.linked || compareRev(found.engine_rev, engineRev) >= 0)) held[sha] = found.engine_rev
@@ -226,7 +251,7 @@ export function claimView(row: WatchRequestRow) {
   }
 }
 
-/** How many requests this machine could claim now, without claiming any: the cloud backup's cheap first look. */
+/** How many requests this machine could claim now, without claiming any: a machine's cheap first look. */
 export async function waiting(store: WatchStore, machine: string, now = new Date()): Promise<number> {
   const staleBefore = new Date(now.getTime() - STALE_CLAIM_MS).toISOString()
   return (await store.claimable(staleBefore, MAX_CLAIM * 3)).filter(row => claimableNow(row, machine, now)).length

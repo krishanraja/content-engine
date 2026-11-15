@@ -100,12 +100,32 @@ describe('claim', () => {
 
   // Krish, 2026-10-27: "Why can't I add links into my inspiration board pre-tagged for production or content?" Control
   // Center writes his tag as lane; content-watcher files by it (production: Production Inspo, strategy: Content Inspo).
-  it('leaves a link to the home computers for 15 minutes before the cloud backup may take it', async () => {
+  // Krish, 2026-11-15: "I just need that every content watcher and music watcher task automatically goes to the worker
+  // in the VPS." The worker (cloud-vps) takes a link at once; the home computers are its backup after 15 minutes.
+  it('gives every link to the worker first, and a home computer only after it has waited 15 minutes', async () => {
+    const store = new MemoryStore([request(1, { requested_at: minutesAgo(1) }), request(2, { requested_at: minutesAgo(5) })])
+    expect((await claim(store, 'LORIMER', 5, NOW)).requests).toHaveLength(0)
+    const worker = await claim(store, 'cloud-vps', 5, NOW)
+    expect(worker.requests.map(r => r.id)).toEqual([uuid(2), uuid(1)])
+  })
+
+  it('lets a home computer take a link the worker left for 15 minutes, so a link is read when the worker is down', async () => {
+    const store = new MemoryStore([request(1, { requested_at: minutesAgo(16) }), request(2, { requested_at: minutesAgo(5) })])
+    const home = await claim(store, 'SURFACE', 5, NOW)
+    expect(home.requests.map(r => r.id)).toEqual([uuid(1)])
+  })
+
+  it('never gives the worker a YouTube link, which refuses its address, and gives it to a home computer at once', async () => {
+    const yt = { platform: 'youtube', url: 'https://www.youtube.com/shorts/Y1', url_key: 'https://www.youtube.com/shorts/Y1', requested_at: minutesAgo(1) }
+    const store = new MemoryStore([request(1, yt), request(2, { requested_at: minutesAgo(1) })])
+    expect((await claim(store, 'cloud-vps', 5, NOW)).requests.map(r => r.id)).toEqual([uuid(2)])
+    expect((await claim(store, 'LORIMER', 5, NOW)).requests.map(r => r.id)).toEqual([uuid(1)])
+  })
+
+  it('keeps any other cloud machine waiting 15 minutes, as before', async () => {
     const store = new MemoryStore([request(1, { requested_at: minutesAgo(16) }), request(2, { requested_at: minutesAgo(5) })])
     const cloud = await claim(store, 'cloud-github', 5, NOW)
     expect(cloud.requests.map(r => r.id)).toEqual([uuid(1)])
-    const home = await claim(store, 'LORIMER', 5, NOW)
-    expect(home.requests.map(r => r.id)).toEqual([uuid(2)])
   })
 
   it('hands a machine what an earlier try already filed, so a second fetch reuses it', async () => {
@@ -204,6 +224,13 @@ describe('readings', () => {
     await writeReads(store, [{ ...readRow('c'), source_url: null, platform: 'own' }])
     expect((await writeReads(store, [readRow('c')])).written).toBe(1)
     expect(store.reads.get(sha('c'))!.platform).toBe('instagram')
+  })
+
+  it('tells a home computer every dropped file is held, so the worker reads them all, and tells the worker the truth', async () => {
+    const store = new MemoryStore([])
+    expect(await heldReads(store, [sha('a'), sha('b')], 'cw-2026.11.15', 'SURFACE')).toEqual({ [sha('a')]: 'cw-2026.11.15', [sha('b')]: 'cw-2026.11.15' })
+    expect(await heldReads(store, [sha('a'), sha('b')], 'cw-2026.11.15', 'cloud-vps')).toEqual({})
+    expect(await heldReads(store, [sha('a')], 'cw-2026.11.15')).toEqual({})
   })
 
   it('tells a machine which dropped files it need not read: a link reading, or the same or a newer revision', async () => {

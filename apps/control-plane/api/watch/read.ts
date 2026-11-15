@@ -11,7 +11,8 @@ import { watchStore } from './_watchStore.js'
 //
 // POST /api/watch/read { machine, check: [sha256, ...], engine_rev } writes nothing and answers { held: { sha: rev } }:
 // the media a machine need not read, because a reading of the same or a newer revision, or one made from a link, is
-// already here (heldReads). content-watcher asks it before reading a dropped file.
+// already here (heldReads). content-watcher asks it before reading a dropped file. The worker reads every dropped file,
+// so a home computer is told each one is held (Krish, 2026-11-15).
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['POST'])) return
@@ -19,7 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const check = parseCheck(req.body)
     if ('error' in check) return res.status(400).json({ ok: false, error: check.error })
     try {
-      return res.status(200).json({ ok: true, held: await heldReads(watchStore, check.value.shas, check.value.engine_rev) })
+      return res.status(200).json({ ok: true, held: await heldReads(watchStore, check.value.shas, check.value.engine_rev, check.value.machine) })
     } catch {
       return res.status(503).json({ ok: false, error: 'watch_store_unavailable' })
     }
