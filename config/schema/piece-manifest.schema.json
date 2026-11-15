@@ -124,6 +124,35 @@
             },
             "uniqueItems": true,
             "description": "Asset names, in the order the post carries them."
+          },
+          "cover": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "asset",
+              "sha256",
+              "cover_offset_ms"
+            ],
+            "description": "The designed cover a posted video carries (Ruling, Krish, 2026-11-15): required on instagram, facebook, tiktok, youtube, threads and x whenever the channel posts a video. A route that cannot set a cover image (Buffer: thumbnailOffset only) may post only when cover_offset_ms is set and its thumbnailOffset equals it; otherwise the slot is held.",
+            "properties": {
+              "asset": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+                "description": "A cover image in assets[] (vertical_cover, thumb_tall, thumb_wide, square_cover)."
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "cover_offset_ms": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "Where in the cut the same cover is built in as its closing frames, or null."
+              }
+            }
           }
         }
       }

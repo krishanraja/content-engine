@@ -250,9 +250,51 @@ def palette_lints(spec: dict) -> list[str]:
     return out
 
 
+TITLE_MOMENT_FROM = '2026-11-16'
+
+
+def _title_words(text: str) -> list[str]:
+    return [w for w in re.findall(r"[a-z0-9']+", str(text).lower()) if w not in {'the', 'a', 'an', 'of', 'to', 'and', 'is'}]
+
+
+def title_moment_lints(spec: dict) -> list[str]:
+    """title.moment: a series piece says its episode title as a natural sentence near the start, and the spec marks
+    it so the renderer shows it as the title and the captions step aside (Krish, 2026-11-15: the episode title should be
+    "integrated into a sentence seamlessly near the start of the video and the production suite knows that this is the
+    moment to make it feel like the title, instead of regular captions"). From TITLE_MOMENT_FROM, on a series day."""
+    when = spec.get('publish_day')
+    if not when or when < TITLE_MOMENT_FROM:
+        return []
+    import sys  # noqa: PLC0415
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import brand_palette  # noqa: PLC0415
+    series = str((spec.get('brand') or {}).get('series') or '').replace('.', '_')
+    day = brand_palette.day(when, brand_palette.load())
+    if not (day['kind'] == 'series' and day.get('series') == series):
+        return []
+    moment = spec.get('title_moment')
+    if not moment:
+        return ['title.moment: a series piece names its episode title moment (title_moment: {title, line}): the sentence '
+                'near the start where he says the title, shown as the title with the captions stepped aside (Krish, 2026-11-15)']
+    title, line = _title_words(moment.get('title')), set(_title_words(moment.get('line')))
+    if title and sum(w in line for w in title) / len(title) < 0.7:
+        return ['title.moment: the line does not carry the title; the title is said inside a natural sentence']
+    out = []
+    for cut_id, span in (moment.get('spans') or {}).items():
+        cut = spec['cuts'].get(cut_id)
+        if cut is None:
+            out.append(f'title.moment spans.{cut_id}: no such cut')
+        elif span['to_w'] < span['from_w']:
+            out.append(f'title.moment spans.{cut_id}: the span ends before it starts')
+        elif cut.get('beats') and span['from_w'] > cut['beats'][min(2, len(cut['beats']) - 1)]['span']['to_w']:
+            out.append(f'title.moment spans.{cut_id}: the title is said near the start, within the first three beats')
+    return out
+
+
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     from . import guards
-    out: list[str] = reference_lints(spec) + motion_lints(spec) + guards.spec_lints(spec) + palette_lints(spec)
+    out: list[str] = (reference_lints(spec) + motion_lints(spec) + guards.spec_lints(spec) + palette_lints(spec)
+                      + title_moment_lints(spec))
     from . import character
     out.extend(character.spec_lints(spec))  # nothing unless the spec names a character
     from . import designlock

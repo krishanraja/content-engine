@@ -269,6 +269,17 @@ export const ProductionSpecV2Schema = z.object({
   }).catchall(z.unknown()).optional(),
   max_face_share: z.number().min(0).max(1).optional(),
   character: VeCharacterSchema.optional(),
+  // The episode title moment (Krish, 2026-11-15: the episode title should be "integrated into a sentence seamlessly
+  // near the start of the video and the production suite knows that this is the moment to make it feel like the
+  // title, instead of regular captions"). `title` is the episode title, `line` the sentence he says that carries it,
+  // as written in the teleprompter script; `spans` marks that sentence's words in each cut's take once it is recorded.
+  // The renderer shows the title there as its own animated title and the captions step aside for those words. ve lint
+  // requires it for a series piece from 16 Nov 2026 (scripts/velib/lint.py, title_moment_lints).
+  title_moment: z.object({
+    title: z.string().min(3).max(80),
+    line: z.string().min(8).max(240),
+    spans: z.record(SlugSchema, VeSpanSchema).optional(),
+  }).strict().optional(),
 }).strict().superRefine((spec, c) => {
   if (spec.brand.series === 'mind.the.gap' && !spec.call) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })
   if (spec.brand.intro_sting !== undefined && spec.brand.intro_sting !== VE_NO_STING && spec.brand.intro_sting !== VE_NO_STING_BEFORE) {

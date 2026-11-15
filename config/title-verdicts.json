@@ -92,6 +92,14 @@
  ],
  "verdicts": [
   {
+   "title": "They Faked AI Use",
+   "surface": "cover",
+   "verdict": "rejected",
+   "why": "A vague word stands in for a name: a title says who did it, never they, it or this; and it must be clear, never vague.",
+   "krish": "\"They Faked AI Use\" is a terrible title. It's not clear, and it's way too vague. Words like \"they\" are not welcome in these types of titles.",
+   "on": "2026-11-15"
+  },
+  {
    "title": "Is this UK number two AI or human music?",
    "surface": "shorts",
    "verdict": "picked",
