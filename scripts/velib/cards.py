@@ -308,7 +308,8 @@ def card_usage(card_id: str, cwd: str, logs: list[str] | None = None) -> dict | 
     if logs is None:
         logs = sorted((log for home in codex_homes() for log in glob.glob(str(home / 'sessions' / '*' / '*' / '*' / '*.jsonl'))),
                       key=os.path.getmtime)
-    want_cwd = str(Path(cwd)).replace('\\', '/').rstrip('/').lower() if cwd else None
+    # Both sides in the form linux_form gives, so a drive path matches however either side wrote it.
+    want_cwd = codex_route.linux_form(str(Path(cwd))).replace('\\', '/').rstrip('/').lower() if cwd else None
     for log in reversed(logs[-40:]):
         lines = Path(log).read_text(encoding='utf-8', errors='replace').splitlines()
         events = []
