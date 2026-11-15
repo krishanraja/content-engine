@@ -122,10 +122,11 @@ describe('the overnight preflight on a home computer', () => {
     const ceiling = /'\(\?m\)\^ALLOWANCE_CEILING = \(\\d\+\)'/.test(code)
     expect(ceiling).toBe(true)
     expect(/^ALLOWANCE_CEILING = (\d+)/m.exec(read('scripts/velib/cards.py'))?.[1]).toBe('80')
-    // The companion ve dispatch picks, and the flags it passes.
-    expect(read('scripts/velib/cards.py')).toContain("'openai-codex' / 'codex' / '*' / 'scripts' / 'codex-companion.mjs'")
+    // What ve dispatch runs, and the flags it passes: scripts/codex_thread.mjs since 15 Nov (Ruling, Krish, 2026-11-15:
+    // Claude starts Codex only through scripts/codex_thread.mjs). The preflight still reports the plugin it finds.
+    expect(read('scripts/velib/cards.py')).toContain("CODEX_THREAD = ROOT / 'scripts' / 'codex_thread.mjs'")
     expect(preflight).toContain("$CompanionRoot = Join-Path $env:USERPROFILE '.claude\\plugins\\cache\\openai-codex\\codex'")
-    expect(read('scripts/velib/cards.py')).toMatch(/'task', '--fresh', '--write', '--model', .+, '--effort'/)
+    expect(read('scripts/velib/cards.py')).toMatch(/'open', '--cwd', cwd, '--sandbox', 'workspace-write', '--model', .+\n\s+'--effort'/)
   })
 
   it('runs these checks, and its report carries the fields the engine keeps and nothing else', () => {

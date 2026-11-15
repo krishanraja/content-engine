@@ -143,6 +143,10 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 
 [Detail](docs/AGENTS-REFERENCE.md#rules-for-every-agent).
 
+## Codex at any point
+
+To use Codex in any session on his computer, Claude runs `node scripts/codex_thread.mjs open "<message>"` (the thread shows in his Codex Desktop recents, titled by the first line), then `send <thread> "<message>"` and `read <thread>`; he can type in the same thread between turns. Claude starts Codex only through scripts/codex_thread.mjs (Ruling, Krish, 2026-11-15).
+
 ## Video production
 
 Video is made with `python scripts/ve.py`: read `docs/ve/ENGINE.md`, follow `docs/ve/RUNBOOK.md`. One signed spec (`creative-direction.json`, `schema_version: 2`); no per-piece compositions or render scripts. Codex is a visual asset maker (Ruling, Krish, 2026-10-28: "Visual asset maker"): it builds library devices from cards (`card`, `dispatch`, `verify-card`) and makes visual plates for named slots, and it never edits a cut. Every cut is held to the signed motion standard (`docs/ve/MOTION_STANDARD.md`). Motion styles live in one bank, the `motion` layer of `config/style-references.json`; Claude picks one per piece (`style.motion`, which `ve lint` requires from 9 Nov 2026), and every card for that piece carries it as its own `## Motion style` section. Codex builds to that section's rules and never-list, under the brand tokens and the design lock, and never picks or mixes a style itself. Captions, transitions, camera and energy are chosen apart from the motion style (`style.captions`, `style.transitions`, `style.camera`, `style.energy`; 27 caption styles, three motion styles from Krish's own cuts; `ve pace` measures a cut against his references): `docs/ve/INGREDIENTS.md` (Krish, 2026-11-13: "the captions should be decoupled from the animation styles"). ve has no publish verb. Quick-edit stays the fallback until ve passes Phase 3. Local runs use `. scripts/ve-env.sh` (Bash). Licensed music lives only at `MINDMAKE_MUSIC_ROOT` with `config/music-library.json`; never browse Drive for audio.

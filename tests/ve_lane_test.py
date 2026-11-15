@@ -25,13 +25,12 @@ def item(state, lane_name='in_progress', id='codex-x', **extra):
 
 
 class Route(unittest.TestCase):
-    def test_no_companion_means_queue_and_a_companion_means_local(self):
+    def test_no_companion_means_queue_and_codex_on_this_machine_means_local(self):
         with tempfile.TemporaryDirectory() as temp:
             home = Path(temp)
             self.assertEqual(lane.route(home), 'queue')
-            path = home / '.claude/plugins/cache/openai-codex/codex/1.0.0/scripts'
-            path.mkdir(parents=True)
-            (path / 'codex-companion.mjs').write_text('', encoding='utf-8')
+            (home / 'bin').mkdir()
+            (home / 'bin' / 'codex').write_text('', encoding='utf-8')
             self.assertEqual(lane.route(home), 'local')
 
 
@@ -143,7 +142,7 @@ class Booking(unittest.TestCase):
             card.write_text('---\ncard: c\ncwd: ' + temp + '\n---\n## Acceptance\npnpm test\n## Return\n', encoding='utf-8')
             self.assertEqual(cards.parse_card(card)['acceptance'], ['pnpm test'])
             with patch.object(cards, '_admit'), patch.object(cards, '_reserve') as reserve, \
-                    patch.object(cards, 'companion', return_value='c.mjs'), patch.object(cards, 'codex_env', return_value={}), \
+                    patch.object(cards, 'codex_thread', return_value='c.mjs'), patch.object(cards, 'codex_env', return_value={}), \
                     patch.object(cards.subprocess, 'run') as run:
                 cards.dispatch(card, booked='12345678-1234-4234-9234-123456789abc')
                 reserve.assert_not_called()
