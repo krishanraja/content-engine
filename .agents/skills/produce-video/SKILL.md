@@ -154,7 +154,7 @@ recordings pass to build in WSL (`scripts/velib/codex_lane.py`). Start
 first built or failed line (`lane status` lists every item); check a built
 card yourself (acceptance, golden stills), then close its work board item
 (lane `done`).
-Visible in Codex Desktop: `ve codex where` (Krish, 2026-11-15).
+Video cards are never shown in Codex Desktop: `ve codex where` (Krish, 2026-11-15).
 
 **Codex minimum** (Krish, 2026-11-15): `docs/ve/ENGINE.md`, "Who does
 what, and the Codex minimum".

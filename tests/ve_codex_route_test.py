@@ -240,15 +240,20 @@ class CardRootTest(unittest.TestCase):
 
     WSL = {'WSL_DISTRO_NAME': 'Ubuntu', 'VE_CODEX_DESKTOP_HOME': '/mnt/c/Users/krish/.codex'}
 
-    def test_wsl_with_his_windows_home_puts_cards_on_the_windows_drive(self):
+    def test_the_visible_route_in_wsl_puts_cards_on_the_windows_drive(self):
         with unittest.mock.patch.object(sys, 'platform', 'linux'):
-            self.assertEqual(codex_route.card_root(dict(self.WSL)), '/mnt/c/Users/krish/.ve-codex/worktrees')
+            self.assertEqual(codex_route.card_root({**self.WSL, 'VE_CODEX_VISIBLE': '1'}), '/mnt/c/Users/krish/.ve-codex/worktrees')
+
+    def test_a_video_card_keeps_the_wsl_layout_even_with_his_windows_home(self):
+        """Ruling (Krish, 2026-11-15): video production stays rooted in the cloud, never shown in Codex Desktop."""
+        with unittest.mock.patch.object(sys, 'platform', 'linux'):
+            self.assertIsNone(codex_route.card_root(dict(self.WSL)))
 
     def test_a_hand_set_root_a_linux_home_or_the_studio_home_keep_the_layout(self):
         with unittest.mock.patch.object(sys, 'platform', 'linux'):
             self.assertIsNone(codex_route.card_root({**self.WSL, 'MINDMAKE_LOCAL_WORKTREES': '/home/krish/wt'}))
-            self.assertIsNone(codex_route.card_root({**self.WSL, 'VE_CODEX_DESKTOP_HOME': '/home/krish/.codex'}))
-            self.assertIsNone(codex_route.card_root({**self.WSL, 'VE_CODEX_STUDIO_HOME': '1'}))
+            self.assertIsNone(codex_route.card_root({**self.WSL, 'VE_CODEX_VISIBLE': '1', 'VE_CODEX_DESKTOP_HOME': '/home/krish/.codex'}))
+            self.assertIsNone(codex_route.card_root({**self.WSL, 'VE_CODEX_VISIBLE': '1', 'VE_CODEX_STUDIO_HOME': '1'}))
 
     def test_a_windows_drive_session_cwd_maps_back_in_wsl_only(self):
         self.assertEqual(codex_route.linux_form('C:\\Users\\krish\\.ve-codex\\worktrees\\x', platform='linux'),
