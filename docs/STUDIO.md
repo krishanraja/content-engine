@@ -155,16 +155,15 @@ What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
   arrive with a short slide, drop or slap, every motion a pure function of
   the frame. The band may sit over the torso, as in the mock, and must
   clear the face.
-- The thumbnail (composition `MakeyourmindupThumbnail`, 1080 x 1920, still):
-  the section's colour block with halftone, the day, the pill on ink, the
-  mark tile, the piece's headline in Anton, the dek in Fraunces italic and a
-  cream sticker ("Our call, dated" for a piece with a call, the channel's
-  own sticker otherwise), all inside the middle 1080 x 1440 that Instagram's
-  grid shows. It has no field for a photograph, so no photo of Krish can
-  reach it. `studio v2 package create` renders it (`renderThumbnailV2`) and
-  makes it the package's `cover.jpg` for a Short in the house style: the
-  approved title from the production brief over the Short's hook, or the
-  hook over the payoff when no brief is bound to the job. Every other
+- The cover. A Short in the house style takes the Receipt as its package
+  `cover.jpg` (house rule THE_RECEIPT): the thumbnail
+  `python3 scripts/pages/build.py COVER_FACTS --thumbs` drew for the
+  master's shape, given to `studio v2 package create` with `--thumbs
+  <folder>` and checked against the `thumbs.json` beside it (drawn as the
+  Receipt, for the job's subchannel, the exact bytes it recorded;
+  `receiptCoverV2`). With none, or one that fails a check, the package is
+  refused and says why. The old sticker thumbnail (composition
+  `MakeyourmindupThumbnail`) is retired since 15 Nov 2026. Every other
   package keeps the master's frame at half a second, as before.
 - A carousel. The cover on the section's colour (day, pill, mark tile, the
   headline, the dek, a sticker pointing at the call for The Fork or the

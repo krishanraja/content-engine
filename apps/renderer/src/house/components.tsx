@@ -1,7 +1,7 @@
 import React from 'react'
 import { cancelRender, continueRender, delayRender, Img } from 'remotion'
 import './fonts.css'
-import { HOUSE, HOUSE_FONT_FAMILIES, HOUSE_FONTS, HOUSE_GRAIN_IMAGE, HOUSE_GRAIN_OPACITY, HOUSE_HALFTONE } from './geometry'
+import { HOUSE, HOUSE_FONT_FAMILIES, HOUSE_FONTS, HOUSE_GRAIN_IMAGE, HOUSE_GRAIN_OPACITY } from './geometry'
 
 /** The house colours a frame is drawn in: ink, cream and mint, and the one
  *  section colour the piece belongs to. */
@@ -45,15 +45,6 @@ export function HouseFontsGate() {
 /** Fractal noise at 7%, the last layer of a dark block. */
 export function Grain() {
   return <div aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: HOUSE_GRAIN_IMAGE, opacity: HOUSE_GRAIN_OPACITY, pointerEvents: 'none', mixBlendMode: 'screen' }} />
-}
-
-/** A section's colour block with its halftone ink dots. */
-export function ColourBlock({ tokens }: { tokens: HouseTokens }) {
-  return (
-    <div style={{ position: 'absolute', inset: 0, background: tokens.section }}>
-      <div aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: HOUSE_HALFTONE.image, backgroundSize: `${HOUSE_HALFTONE.size}px ${HOUSE_HALFTONE.size}px`, pointerEvents: 'none' }} />
-    </div>
-  )
 }
 
 /** The mint highlighter swipe behind the one loud word, skewed 8 degrees.

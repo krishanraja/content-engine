@@ -170,17 +170,21 @@ describe('every ruling carries his words and reaches a stage', () => {
     assert.ok(r.text.includes(`${read} pixels or more there, and fine print such as sources at ${fine} or more`))
     assert.ok(r.text.includes(`on the 1200-wide cover, draw words at ${at(1200, read)} pixels or more and fine print at ${at(1200, fine)} or more; on a 1360-wide image, ${at(1360, read)} and ${at(1360, fine)}`))
     // The cover is held to card.py's floors and draws at card.py's sizes,
-    // never at a copy of them.
-    assert.match(build, /words, fine = card\.needed\(COVER_W\)/)
-    assert.match(build, /small = card\.too_small\(words, COVER_W\)/)
-    assert.doesNotMatch(build, /^(PHONE_COLUMN|MIN_READ_PX|MIN_FINE_PX) =/m)
-    assert.match(build, /^COVER_W, COVER_H = 1200, 800$/m)
+    // never at a copy of them. Every cover is the Receipt (house rule
+    // THE_RECEIPT), so the numbers are read from receipt.py, the one drawer
+    // build.py --cover calls since the face look was removed (15 Nov 2026).
+    const receipt = readFileSync('scripts/pages/receipt.py', 'utf8')
+    assert.match(build, /return receipt\.draw_covers\(/)
+    assert.match(receipt, /words_px, fine_px = card\.needed\(W\)/)
+    assert.match(receipt, /small = card\.too_small\(card\.texts\(pg, \(0, 0, W, H\)\), W\)/)
+    for (const src of [build, receipt]) assert.doesNotMatch(src, /^(PHONE_COLUMN|MIN_READ_PX|MIN_FINE_PX) =/m)
     assert.match(build, /^ALT_MIN_WORDS = \d+$/m)
     assert.match(build, /pictures_off\(sub_html, out\)/)
+    const cover = /'cover':\s*\{'w': (\d+), 'h': (\d+),.*'safe': \((\d+), (\d+), (\d+), (\d+)\)/.exec(receipt)
+    assert.ok(cover)
+    assert.deepEqual([cover[1], cover[2]], ['1200', '800'])
     assert.ok(r.text.includes('The cover is 1200 x 800 (3:2)'))
-    const safe = /^COVER_SAFE = \((\d+), (\d+), (\d+), (\d+)\)/m.exec(build)
-    assert.ok(safe)
-    assert.ok(r.text.includes(`inside x ${safe[1]} to ${safe[3]} and y ${safe[2]} to ${safe[4]}`))
+    assert.ok(r.text.includes(`inside x ${cover[3]} to ${cover[5]} and y ${cover[4]} to ${cover[6]}`))
   })
   test('the three questions every piece answers, and the Receipt with real logos and no face, reach the stages that make them', () => {
     const lenses = HOUSE_RULES.find(x => x.id === 'THREE_LENSES')

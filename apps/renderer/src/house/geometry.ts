@@ -74,18 +74,6 @@ export const HOUSE = {
     // (Ruling, Krish, 2026-11-05, docs/CAROUSEL-STANDARD.md "The last card says \"Follow for more\"").
     foot: { bottom: 72, rule: 2, paddingTop: 40, logoWidth: 470, signSize: 46, signGap: 22, lastLogoWidth: 540 },
   },
-  // Thumbnail, 1080 x 1920; Instagram's grid shows the middle 1080 x 1440.
-  thumbnail: {
-    safeTop: 240,
-    safeBottom: 1680,
-    topRow: 300,
-    daySize: 32,
-    pillSize: 46,
-    tile: { size: 128, image: 92 },
-    head: { top: 600, gap: 36, size: 250 },
-    dekSize: 60,
-    sticker: { left: 72, top: 1545, rotateDegrees: -5, size: 36, paddingY: 16, paddingX: 34 },
-  },
 } as const
 
 export interface HouseSafeZones { topPx: number; rightPx: number; bottomPx: number; leftPx: number }

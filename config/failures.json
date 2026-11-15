@@ -19,9 +19,9 @@
           "how": "cards"
         },
         {
-          "file": "scripts/pages/build.py",
-          "contains": "title_check",
-          "how": "covers and thumbnails"
+          "file": "scripts/pages/receipt.py",
+          "contains": "title_check.gate(",
+          "how": "covers and thumbnails, all drawn as the Receipt (the gate moved there from build.py on 15 Nov 2026, with the face look)"
         },
         {
           "file": "scripts/quick-edit/story_io.py",
@@ -370,8 +370,8 @@
         },
         {
           "file": "scripts/pages/build.py",
-          "contains": "brand.portrait_for(facts.get('date'))",
-          "how": "every cover and thumbnail with Krish's face uses it"
+          "contains": "return receipt.draw_covers(",
+          "how": "every cover and thumbnail is drawn as the Receipt, which draws no face, so no photo of him can repeat; the face look that used brand.portrait_for was removed on 15 Nov 2026"
         }
       ]
     },
@@ -1676,8 +1676,8 @@
       "guards": [
         {
           "file": "scripts/pages/build.py",
-          "contains": "def portrait_name(",
-          "how": "\"portrait\" is true or a named approved headshot from brand.PORTRAITS; any path or frame is refused before drawing",
+          "contains": "return receipt.draw_thumbs(",
+          "how": "--thumbs draws only the Receipt, which takes no \"portrait\": the face look, and with it any path to a frame from a take, was removed on 15 Nov 2026",
           "test": "python3 scripts/pages/build.py --self-test"
         },
         {
@@ -1688,8 +1688,8 @@
         },
         {
           "file": "scripts/pages/build.py",
-          "contains": "def receipt_required(",
-          "how": "--cover and --thumbs always draw the Receipt; there is no switch back to the face look",
+          "contains": "the Receipt draws every cover shape and both thumbnails",
+          "how": "--cover and --thumbs always draw the Receipt; the switch back to the face look, and the look itself, are gone (15 Nov 2026), and the self-test says so",
           "test": "python3 scripts/pages/build.py --self-test"
         },
         {
