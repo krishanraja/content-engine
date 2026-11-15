@@ -46,7 +46,7 @@
    "limit_chars": 40,
    "formula": "3 to 5 big words that complete the title, not repeat it; a contradiction or a reveal ('You've been lied to').",
    "strong": [
-    "one face with clear emotion (+18 to 32%)",
+    "one real proof, big and readable",
     "4 to 5 words"
    ],
    "weak": [
@@ -103,7 +103,7 @@
   },
   "thumbnail": {
    "limit_chars": 28,
-   "formula": "Under 4 words over his face and the logos, completing the YouTube title, never repeating it.",
+   "formula": "At most 7 words over a real proof from the piece's sources, with up to three logos of the companies the headline names, completing the YouTube title, never repeating it.",
    "strong": [
     "a visual curiosity gap",
     "under 4 words"
@@ -126,9 +126,9 @@
  "surface_map": {
   "article": "The Substack headline: the post's title, also the email subject line and the homepage headline. Words only.",
   "subtitle": "The Substack subtitle under the headline (also the email preview line). Words only.",
-  "cover": "The Substack cover image: the picture at the top of the post and on social cards, with his face and 3 to 5 big words. It completes the headline, never repeats it. The YouTube thumbnail shares its words and look when both fit.",
+  "cover": "The Substack cover image: the picture at the top of the post and on social cards, with a real proof from the piece's sources and at most 7 words. It completes the headline, never repeats it. The YouTube thumbnail shares its words and look when both fit.",
   "youtube": "The YouTube title of the long cut, and the Substack video post's title (it starts \"VIDEO:\" there, and that post is also the email subject).",
-  "thumbnail": "The YouTube thumbnail of the long cut (wide, 16:9): his face, the companies' logos, under 4 words that complete the YouTube title, never repeat it.",
+  "thumbnail": "The YouTube thumbnail of the long cut (wide, 16:9): at most 7 words over a real proof from the piece's sources, with up to three logos of the companies the headline names, completing the YouTube title, never repeating it.",
   "shorts": "The title of the 90-second cut on YouTube Shorts, and the caption's first line on TikTok and Instagram Reels.",
   "tall_cover": "The 90-second cut's cover frame (tall, 9:16): the frame the Shorts, TikTok and Reels grids show, with under 4 words.",
   "title_card": "The title card inside both videos, in the story intro: the video's own name, short (60 characters at most).",
