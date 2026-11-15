@@ -155,6 +155,9 @@ first built or failed line (`lane status` lists every item); check a built
 card yourself (acceptance, golden stills), then close its work board item
 (lane `done`).
 
+**Codex minimum** (Krish, 2026-11-15): `docs/ve/ENGINE.md`, "Who does
+what, and the Codex minimum".
+
 Both cuts render through `scripts/quick-edit/make.py`, the only path that
 makes 16:9 as well as 9:16 and the only one that carries music (the
 Studio renders 9:16 only and refuses it). Each cut is

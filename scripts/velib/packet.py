@@ -256,7 +256,12 @@ def readiness(spec, cut, directory) -> dict:
         from . import gates
         final = [] if gates.for_hash(gates.load(directory, spec)['gates'], 'final', digest, cut) else [
             'no final approval from Krish for this file']
+        # The Codex minimum (Ruling, Krish, 2026-11-15): a whole cut published from its date needs Codex's verified
+        # share of the art direction on the piece's own ledger (velib/codex_minimum.py, config/codex-minimum.json).
+        from . import codex_minimum
+        codex = codex_minimum.problems(spec, cut, Path(directory))
     except (OSError, ValueError, KeyError, TypeError) as error:
-        return {'mechanical': [str(error)], 'design': ['design could not be checked'], 'final': [],
+        return {'mechanical': [str(error)], 'design': ['design could not be checked'], 'final': [], 'codex': [],
                 'video': None, 'digest': None}
-    return {'mechanical': reasons, 'design': design_reasons, 'final': final, 'video': video, 'digest': digest}
+    return {'mechanical': reasons, 'design': design_reasons, 'final': final, 'codex': codex, 'video': video,
+            'digest': digest}

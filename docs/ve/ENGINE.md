@@ -232,6 +232,27 @@ was refused). When the lane marks a build failed, read why: if the fault is the 
 
 Codex never edits a cut: it never renders, assembles, trims, retimes, captions, mixes or files a production piece, and never touches its words or audio. Its report is never proof.
 
+### Who does what, and the Codex minimum
+
+Ruling (Krish, 2026-11-15): Codex does a minimum of every video session and the social legwork, visible in Codex Desktop; Claude owns strategy, orchestration, verification and learnings; Codex never updates ai-harness or Google Drive. His words: "Claude is in charge of strategy, planning, orchestration and verification and reingestion of learnings in to the system. Codex has a lot of token avails, better art direction capability and better browser access. Codex is not to be in charge of updating AI harness or Google Drive ever, even though these things always need to be done. Codex needs to be used so I can actually see the session in my Codex Desktop app".
+
+| Claude | Codex |
+|---|---|
+| Strategy, the story, the scripts, the spec, the plan for the session | Art direction: candidate looks for the named slots against `style.motion` and the inspiration cards |
+| Orchestration: writes every card, dispatches it, books and settles its spend | Plates for named slots and library devices from cards |
+| Verification: verify-card, golden stills, the full-size watch, the receipt | Browser legwork in Krish's signed-in browser (reference pulls, platform previews) |
+| Learnings back into the system: `config/failures.json`, the floor, the cues, ai-harness | Never ai-harness, never Google Drive, never a cut, never words or audio, never a publish |
+| Filing to Drive (`ve file`, the library lane) and every ai-harness proposal | |
+
+**The minimum** is in `config/codex-minimum.json`: every whole cut of a piece published from 16 Nov 2026 needs at least one verified Codex receipt of an `art_direction`, `plates` or `device` job on the piece's own ledger. `ve status` prints it under `codex:` and `ve file` refuses the cut until it is met (`scripts/velib/codex_minimum.py`). Browser legwork is recorded too but never counts towards the minimum. After Claude has checked Codex's work, Claude writes the receipt:
+
+    python scripts/ve.py codex receipt <piece> --card <card id> --job art_direction --evidence <contact sheet> --verified-by Claude --cwd <card worktree>
+    python scripts/ve.py codex status <piece>
+
+Codex never writes a receipt, and one naming Codex as its checker is refused: its report is never proof.
+
+**Visible in Codex Desktop.** Each receipt keeps the Codex session id and whether its log sits in `~/.codex`, the home Codex Desktop reads. Today `ve dispatch` runs cards in WSL under the Studio's own Codex home (`scripts/overnight/codex_home.py`, Krish, 30 Oct: "do the separate settings folder fix"), so those sessions do not show in his Desktop app; `ve codex status` says "NOT visible in Codex Desktop" for each. The two rulings pull against each other and only Krish settles it: either the Desktop app is pointed at the Studio's Codex home, or cards run in the Desktop app (attended) under the same tool profile. Until he does, nothing here widens Codex's tools or moves its home.
+
 ## Budget
 
 Caps come from `config/ve/budget.json`:

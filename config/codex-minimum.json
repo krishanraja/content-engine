@@ -1,0 +1,18 @@
+{
+  "schema": "codex-minimum/1",
+  "about": "The least Codex does in every video production session, and what it never does. Ruling (Krish, 2026-11-15): Codex does a minimum of every video session and the social legwork, visible in Codex Desktop; Claude owns strategy, orchestration, verification and learnings; Codex never updates ai-harness or Google Drive. His words: \"I want you to ensure that video production has a minimum amount of work being done by Codex per session - Claude is in charge of strategy, planning, orchestration and verification and reingestion of learnings in to the system. Codex has a lot of token avails, better art direction capability and better browser access. Codex is not to be in charge of updating AI harness or Google Drive ever, even though these things always need to be done.\" Read by scripts/velib/codex_minimum.py; ve status and ve file refuse a whole cut of a piece published from `from` that has fewer than `receipts` verified Codex receipts of a job in `jobs_any_of`. Changing a number here needs Krish's words in the commit body.",
+  "from": "2026-11-16",
+  "minimum": {
+    "receipts": 1,
+    "jobs_any_of": ["art_direction", "plates", "device"]
+  },
+  "jobs": {
+    "art_direction": "Codex proposes the look of the piece's named slots against the motion style and the inspiration cards: candidate stills, one contact sheet, before any plate is made",
+    "plates": "Codex makes candidate pictures for a named slot (stills first, then motion of an approved still); the engine places the chosen one",
+    "device": "Codex builds a library device from a card in its worktree; verify-card passes outside the sandbox",
+    "browser": "Codex does browser legwork in Krish's signed-in browser (reference pulls, a platform's own preview); never counted towards the video minimum, which is art direction"
+  },
+  "claude_owns": ["strategy", "planning", "orchestration", "verification", "learnings back into the system", "ai-harness", "Google Drive"],
+  "codex_never": ["ai-harness", "Google Drive", "editing a cut (render, assemble, trim, retime, caption, mix, file)", "a piece's words or audio", "publishing"],
+  "desktop_visible": "Krish watches every Codex session in his Codex Desktop app. A receipt records the Codex session id and whether its log sits in the Codex home the Desktop app reads; ve codex status says so for every receipt."
+}
