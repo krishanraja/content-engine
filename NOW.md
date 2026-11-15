@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":4,"current_as_of":"2026-11-15","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (3 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 8 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
+- HyperFrames (CLI 0.9.54, pinned in vendor/hyperframes) is kit's opt-in film backend for the house end card (MYMU_FILM=hyperframes, scripts/quick-edit/hyperframes_film.py), off by default; its check filmed both shapes at SSIM 0.998 and 0.999 against Playwright's film, byte-identical run to run, with no key and no spend. Open Generative AI was evaluated and not adopted: every cloud call is a paid muapi.ai credit, and ve already has the generation contract (docs/production/HYPERFRAMES.md). (2026-11-15)
 - a re-queued Codex card whose first attempt cannot take in the current main now starts fresh from main by itself, and its build replaces that first attempt on its branch only if the branch has not moved (force-with-lease). Tonight kf-5's second run stopped on his PC for exactly this. Card kf-7 also now says its character layer may add no child to FormatMaster when a cut has no character: its first build moved the frozen golden digest of a recorded cut that has none. (2026-11-15)
 - two more devices built by Codex on the lane from the cloud and checked here with both applied to main: ve-mg-1 answer_stream (a real captured answer types in, its citation is marked and its real source lights) and ve-mg-3 code_card (real code typed on a card that reports its line, so the camera can follow it). Every acceptance command passed again. Stills are not looked at yet, because this container has no house fonts. The house golden test cannot see any device that draws with remotion's Img (answer_stream, hand_phone_stage, video_wall, wall_screen all record a throw there); answer_stream's own device test does draw it. (2026-11-15)
 - card ve-kf-5 (cursor_path) failed its first build on the lane: its device test rendered remotion's Img outside a composition, and houseGolden.json did not carry the new device's entries. Both reproduced in the cloud session on the pushed branch; the card now names both, with hand_phone_stage's test as the pattern. (2026-11-15)
@@ -43,13 +44,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-15 scripts/quick-edit/kit.py (encode_frames, default_drawer), scripts/quick-edit/hyperframes_film.py, vendor/hyperframes, tests/hyperframes_film_test.py, docs/production/HYPERFRAMES.md, docs/INTEGRATIONS.md.
 - 2026-11-15 scripts/codex_thread.mjs, scripts/velib/cards.py, scripts/velib/codex_lane.py, ve doctor, the ve skill, docs/ve/RUNBOOK.md, docs/ve/ENGINE.md, AGENTS.md.
 Older lines: `docs/history/2026-11-15-NOW-moved-13.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-15): once this is on main, queue ve-kf-5 and ve-kf-7 on the lane again under new bookings.
+- Next (2026-11-15): Krish decides whether HyperFrames earns a real job (a ve card for transparent Codex plates, or kit's default film); until then nothing calls it.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.

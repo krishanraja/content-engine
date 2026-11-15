@@ -1,4 +1,0 @@
-Status: HyperFrames (CLI 0.9.54, pinned in vendor/hyperframes) is kit's opt-in film backend for the house end card (MYMU_FILM=hyperframes, scripts/quick-edit/hyperframes_film.py), off by default; its check filmed both shapes at SSIM 0.998 and 0.999 against Playwright's film, byte-identical run to run, with no key and no spend. Open Generative AI was evaluated and not adopted: every cloud call is a paid muapi.ai credit, and ve already has the generation contract (docs/production/HYPERFRAMES.md).
-Next: Krish decides whether HyperFrames earns a real job (a ve card for transparent Codex plates, or kit's default film); until then nothing calls it.
-Changed: scripts/quick-edit/kit.py (encode_frames, default_drawer), scripts/quick-edit/hyperframes_film.py, vendor/hyperframes, tests/hyperframes_film_test.py, docs/production/HYPERFRAMES.md, docs/INTEGRATIONS.md.
-North Star check (2026-11-15): holds.
