@@ -562,9 +562,10 @@ def dispatch(card_path: Path, background: bool = True, booked: str | None = None
     if env.get('CODEX_HOME'):
         cmd += ['--home', env['CODEX_HOME']]
     if background:
-        # The thread runs on in a detached child and releases itself when the turn ends; its log names the thread id.
+        # The thread runs on in a detached child and releases itself when the turn ends; its log, in .ve-work (Claude may
+        # not read .cache), names the thread id first: read it with codex_thread.mjs read.
         # verify-card holds it to max_minutes and max_calls from its session log.
-        cmd += ['--detach', '--log', str(ROOT / '.cache' / 've-dispatch' / f'{name}.log')]
+        cmd += ['--detach', '--log', str(ROOT / '.ve-work' / 'dispatch' / f'{name}.log')]
         return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, env=env)
     try:
         return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, env=env, timeout=minutes * 60)
