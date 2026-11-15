@@ -242,7 +242,9 @@ def publish_branch(worktree: Path, branch: str, message: str) -> tuple[str | Non
     can read and check it. Returns (commit sha, None) or (None, why it could not be pushed)."""
     git = ['git', '-C', str(worktree)]
     # Never the node_modules link ensure_worktree made: on 2026-11-01 it was committed with Codex's work.
-    subprocess.run(git + ['add', '-A', '--', '.', ':(exclude)node_modules'], check=True, capture_output=True)
+    added = subprocess.run(git + ['add', '-A', '--', '.', ':(exclude)node_modules'], capture_output=True, text=True)
+    if added.returncode != 0:
+        return None, f'git add in {worktree} failed: ' + ' '.join((added.stderr or '').strip().splitlines()[-2:])
     if subprocess.run(git + ['diff', '--cached', '--quiet'], capture_output=True).returncode != 0:
         subprocess.run(git + ['-c', 'user.name=Codex lane', '-c', 'user.email=codex-lane@users.noreply.github.com',
                               'commit', '-q', '-m', message], check=True, capture_output=True)
@@ -269,7 +271,10 @@ def changed_files(worktree: Path, base: str) -> list[str]:
 def dispatch_problems(done, changed: list[str]) -> list[str]:
     """Why Codex produced nothing, said first and in Codex's own words: on 2026-11-01 a card came back with only
     acceptance failures while Codex had changed nothing, so the real cause never reached the session."""
-    tail = ' | '.join((done.stdout + done.stderr).strip().splitlines()[-6:])[:600]
+    lines = (done.stdout + done.stderr).strip().splitlines()
+    # The line that names the error goes first: on 15 Nov node's "Cannot find module" sat above the last six lines.
+    said = [line.strip() for line in lines if 'Error' in line or 'Cannot find' in line or 've dispatch:' in line][:2]
+    tail = ' | '.join(said + [line for line in lines[-6:] if line.strip() not in said])[:900]
     if done.returncode != 0:
         return [f'Codex exited {done.returncode} and its work was not checked: {tail or "no output"}']
     if not changed:
