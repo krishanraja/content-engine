@@ -8,6 +8,7 @@
   python scripts/ve.py study <reference.mp4>         grammar card: cuts, change density, stills, loops
   python scripts/ve.py pace <cut.mp4> [--out pace.json]   events a second, energy and frame use, beside his references
   python scripts/ve.py pace --refs [--dir .cache/references]   re-measure the references into config/ve/pace-references.json
+  python scripts/ve.py beats <audio> [--out beats.json] | --grid <track>|--all [--write]   tempo, bars, drops: measured, never snapped to
   python scripts/ve.py card <card.json>              write a Codex task card from its fields
   python scripts/ve.py dispatch <card.md> [--wait]   send it to Codex (pinned model and effort)
   python scripts/ve.py verify-card <card.md> --cwd <worktree>
@@ -433,6 +434,49 @@ def cmd_pace(args) -> int:
         return 0
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
         print(f've pace: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_beats(args) -> int:
+    """Where the beat is in a bed: tempo, bars, drops and how sure (velib.beats). It only measures; nothing snaps to it.
+    --grid reads ledger tracks from MINDMAKE_MUSIC_ROOT on the machine that holds the music; --write keeps each grid in
+    its track's row of config/music-library.json."""
+    from velib import beats
+    try:
+        if args.grid is None and not args.all:
+            if not args.audio:
+                print('ve beats: give an audio file, or --grid <track id> | --grid --all', file=sys.stderr)
+                return 2
+            reading = beats.read(args.audio)
+            out = Path(args.out) if args.out else Path(args.audio).with_suffix('.beats.json')
+            write_json(out, reading)
+            grid = reading.get('grid')
+            print(f"ve beats: {reading['tempo_bpm']} a minute, confidence {reading['confidence']} "
+                  f"({'grid of ' + str(len(grid['bars_s'])) + ' bars' if grid else reading.get('no_grid')}), "
+                  f"drops at {[d['at_s'] for d in reading['drops']]}")
+            print(f've beats: {beats.NOTE}')
+            print(f've beats: -> {out}')
+            return 0
+        ledger = load_json(MUSIC_LEDGER)
+        root = os.environ.get(ledger.get('root_env') or 'MINDMAKE_MUSIC_ROOT') or os.environ.get('MINDMAKE_MUSIC_ROOT')
+        if not root:
+            raise ValueError('MINDMAKE_MUSIC_ROOT is not set: run this on a home computer (python scripts/quick-edit/music.py fetch prints it)')
+        wanted = [t for t in ledger['tracks'] if args.all or t['id'] == args.grid]
+        if not wanted:
+            raise ValueError(f'{args.grid} is not a track in config/music-library.json')
+        for track in wanted:
+            entry = beats.ledger_entry(beats.track_reading(track, root))
+            track['beats'] = entry
+            print(f"ve beats: {track['id']}: {entry['tempo_bpm']} a minute, confidence {entry['confidence']}, "
+                  f"{'grid' if entry['grid'] else 'no grid'}, drops at {entry['drops_s']}")
+        if args.write:
+            MUSIC_LEDGER.write_text(json.dumps(ledger, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+            print(f've beats: {len(wanted)} grid(s) -> {MUSIC_LEDGER}')
+        else:
+            print('ve beats: nothing written; add --write to keep these in config/music-library.json')
+        return 0
+    except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
+        print(f've beats: {error}', file=sys.stderr)
         return 1
 
 
@@ -1817,6 +1861,11 @@ def main() -> int:
     p.add_argument('video', nargs='?'); p.add_argument('--out'); p.add_argument('--seconds', type=float)
     p.add_argument('--refs', action='store_true'); p.add_argument('--dir', default=str(ROOT / '.cache' / 'references'))
     p.set_defaults(fn=cmd_pace)
+    p = sub.add_parser('beats', help='tempo, bars, drops and a confidence for a music bed; measured, never snapped to')
+    p.add_argument('audio', nargs='?'); p.add_argument('--out')
+    p.add_argument('--grid', nargs='?', const='', help='a ledger track id (or --all) read from MINDMAKE_MUSIC_ROOT')
+    p.add_argument('--all', action='store_true'); p.add_argument('--write', action='store_true')
+    p.set_defaults(fn=cmd_beats)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
     p = sub.add_parser('sprint', help='the weekly device sprint: brief, card, Gate 2 record (docs/ve/SPRINT.md)')
     actions = p.add_subparsers(dest='action', required=True)

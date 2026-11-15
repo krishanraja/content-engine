@@ -84,7 +84,9 @@ TRACK_FIELDS = (
     'licence_file', 'acquired_on', 'expires_on', 'platforms', 'monetisation_ok', 'content_id_cleared', 'attribution',
     'restrictions', 'file', 'sha256', 'bytes', 'duration_s', 'sample_rate', 'measured_lufs', 'measured_true_peak',
     'intro_cue_s', 'outro_cue_s', 'mood', 'status', 'approved_by', 'approved_on', 'approval_words')
-OPTIONAL_FIELDS = ('loopable', 'drive_file_id', 'for')
+# beats: the track's measured grid (tempo, bars, drops), written only by `python scripts/ve.py beats --grid ... --write`
+# on a machine that holds the music (scripts/velib/beats.py); measured, never a clock.
+OPTIONAL_FIELDS = ('loopable', 'drive_file_id', 'for', 'beats')
 LEVEL_KEYS = ('intro_lufs', 'bed_lufs', 'outro_lufs', 'ramp_down_s', 'ramp_up_s', 'final_integrated_lufs', 'tolerance_lu', 'max_true_peak_dbtp')
 RATE = 48000
 FADE_IN_S = bed_shape.shape()['fade_in_s']    # no click where the track is cut in (config/music-bed.json)

@@ -416,6 +416,17 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
             row = {'value': None, 'target': 'no bare ground at a beat edge', 'pass': False, 'status': 'error',
                    'reason': str(exc)}
         checks['ground.not_bare'] = row if fmt.get('bare_ground') else {**row, 'status': 'advisory', 'shadow': True}
+    # The bed's beat (velib.beats): the music stem the premix wrote beside the voice stem, read for its tempo, bars and
+    # drops, and where the cut's handovers fall against its beats. Advisory and shadow: measured for the Critic, never
+    # counted, never a target; nothing snaps to a beat, because his words and pauses are the clock.
+    music_wav = Path(str(dialogue_master)).with_suffix('.music.wav') if dialogue_master else None
+    if music_wav is not None and music_wav.is_file():
+        from . import beats as beat_reader
+        try:
+            checks['music.beats'] = beat_reader.qc_row(music_wav, beats, fps)
+        except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
+            checks['music.beats'] = {'value': None, 'target': 'measured only: nothing snaps to the beat', 'pass': None,
+                                     'status': 'advisory', 'shadow': True, 'reason': str(exc)}
     # STAGE beats compose the whole screen under a moving camera. The square mark tile is replaced by the logo in
     # the stage header, and an object's slot is the full canvas, so "change near the event inside its slot" cannot
     # separate an event from the camera. Both checks apply to the other layouts only; events on STAGE devices are

@@ -1,5 +1,6 @@
-"""The Critic's view of a cut in motion (velib.critic_inputs): strips per beat, per move and per cut, and QC's numbers
-labelled as measured, not heard. Synthetic media only."""
+"""The Critic's view of a cut in motion (velib.critic_inputs): strips per beat, per move and per cut, the hardest beat as
+it plays, each beat fully built at a readable size, and QC's numbers labelled as measured, not heard. Synthetic media
+only."""
 from __future__ import annotations
 
 import json
@@ -64,10 +65,12 @@ class CriticInputsTest(unittest.TestCase):
         self.assertEqual([r[1][:3] for r in beats], [[0, 15, 30], [60, 75, 90]])
         events = critic_inputs.event_rows(PROPS)
         self.assertEqual(len(events), 2, 'two moves on one frame share a row')
-        self.assertEqual(events[0][1], [8, 12, 15, 18, 22])
+        self.assertEqual(events[0][1], [8, 12, 15, 18, 20, 22], 'an entrance is seen at +10, where it must have landed')
         edl = {'joins': [{'at_frame': 90, 'from': {'take': 'a'}, 'to': {'take': 'b'}}]}
         cuts = critic_inputs.cut_rows(PROPS, edl)
-        self.assertEqual([r[1] for r in cuts], [[57, 59, 60, 61, 64], [87, 89, 90, 91, 94]])
+        self.assertEqual([r[1] for r in cuts], [list(range(52, 69)), list(range(82, 99))],
+                         'every frame from -8 to +8 around each cut and join')
+        self.assertEqual(critic_inputs.cut_offsets_words(), 'every frame from -8 to +8')
 
     def test_write_makes_the_strips_and_copies_qc_numbers_labelled_not_heard(self):
         qc = {'sha256': sha256_file(self.video), 'measured_pass': True, 'complete': False,
@@ -75,7 +78,8 @@ class CriticInputsTest(unittest.TestCase):
                          'loudness.integrated': {'value': -14.0, 'pass': True}, 'something.else': {'value': 1}}}
         paths = critic_inputs.write('short', self.dir, self.video, PROPS, qc)
         names = sorted(p.name for p in paths)
-        self.assertEqual(names, ['beats.short.jpg', 'cuts.short.jpg', 'events.short.jpg', 'numbers.short.json'])
+        self.assertEqual(names, ['beats.short.jpg', 'cuts.short.jpg', 'events.short.jpg', 'hardest.short.jpg',
+                                 'numbers.short.json', 'read.short.jpg'])
         numbers = json.loads((self.dir / 'numbers.short.json').read_text())
         self.assertEqual(numbers['label'], 'measured; not heard')
         self.assertIn('loudness.integrated', numbers['checks'])
@@ -89,11 +93,13 @@ class CriticInputsTest(unittest.TestCase):
         beats = critic_inputs.beat_rows(stung)
         self.assertEqual(beats[0], ('intro sting (mind_the_gap) f0-f55', [0, 15, 30, 45, 55]))
         self.assertEqual([r[1][:3] for r in beats[1:]], [[56, 71, 86], [116, 131, 146]])
-        self.assertEqual(critic_inputs.event_rows(stung)[0][1], [64, 68, 71, 74, 78])
+        self.assertEqual(critic_inputs.event_rows(stung)[0][1], [64, 68, 71, 74, 76, 78])
         edl = {'joins': [{'at_frame': 90, 'from': {'take': 'a'}, 'to': {'take': 'b'}}]}
         cuts = critic_inputs.cut_rows(stung, edl)
-        self.assertEqual(cuts[0], ('cut at f56: intro sting > his face', [53, 55, 56, 57, 60]))
-        self.assertEqual([r[1] for r in cuts[1:]], [[113, 115, 116, 117, 120], [143, 145, 146, 147, 150]])
+        self.assertEqual(cuts[0], ('cut at f56: intro sting > his face', list(range(48, 65))))
+        self.assertEqual([r[1] for r in cuts[1:]], [list(range(108, 125)), list(range(138, 155))])
+        self.assertEqual(critic_inputs.read_rows(stung), [('built: hook f76 | proof f136', [76, 136])],
+                         'a built frame is on the file clock too')
         self.assertEqual(critic_inputs.last_frame(stung), 175)
         video = self.dir / 'stung.mp4'
         make_cut(video, 176)
@@ -105,6 +111,57 @@ class CriticInputsTest(unittest.TestCase):
         self.assertEqual(numbers['beats'][0]['longest_still_s'], 2, 'a still run QC found at 2.2 s in the file is in the first beat')
         self.assertIn('opening', numbers['checks'])
         self.assertEqual(critic_inputs.frames_at(video, [56])[56].shape[0], HEIGHT)
+
+    def test_an_event_row_names_the_word_he_says_there(self):
+        said = dict(PROPS, captions=[{'fromFrame': 0, 'toFrame': 60, 'words': [{'text': 'both', 'atFrame': 8},
+                                                                               {'text': 'flag', 'atFrame': 12}]},
+                                     {'fromFrame': 60, 'toFrame': 120, 'words': [{'text': 'types', 'atFrame': 66}]}])
+        titles = [title for title, _ in critic_inputs.event_rows(said)]
+        self.assertEqual(titles, ['f10 "both": card enter, stamp stamp', 'f70 "types": chip type'])
+        self.assertEqual([t for t, _ in critic_inputs.event_rows(PROPS)][0], 'f10: card enter, stamp stamp',
+                         'no captions, no word')
+
+    def test_the_hardest_beat_is_read_every_third_frame(self):
+        # No spec: the beat moving the most objects (hook: card and stamp) wins over proof (chip alone).
+        rows = critic_inputs.hardest_rows(PROPS)
+        self.assertEqual([r[1] for r in rows], [list(range(0, 30, 3)), list(range(30, 60, 3))])
+        self.assertTrue(rows[0][0].startswith('hardest beat hook f0-f27, one frame in 3'))
+        # With the spec, the proof's own rule decides: here the beat it names.
+        spec = {'style': {'proof': {'beat': 'proof'}}, 'cuts': {'short': {'beats': [{'id': 'hook'}, {'id': 'proof'}]}}}
+        self.assertEqual(critic_inputs.hardest_beat(PROPS, spec, 'short'), ('proof', 'named in the spec (proof.beat)'))
+        self.assertEqual(critic_inputs.hardest_rows(PROPS, spec, 'short')[0][1], list(range(60, 90, 3)))
+        self.assertEqual(critic_inputs.hardest_rows({'beats': []}), [])
+
+    def test_a_beat_is_read_once_every_move_in_it_has_landed(self):
+        self.assertEqual(critic_inputs.read_rows(PROPS), [('built: hook f20 | proof f80', [20, 80])])
+        # A beat too short to land its last move and stay clear of its handover shows its last clear frame.
+        short = {'fps': 30, 'beats': [{'id': 'a', 'fromFrame': 0, 'toFrame': 6}],
+                 'events': [{'obj': 'x', 'verb': 'enter', 'atFrame': 3}]}
+        self.assertEqual(critic_inputs.built_frame(short, short['beats'][0]), 3)
+        # A beat with no move is read after the floor's longest settle.
+        still = {'fps': 30, 'beats': [{'id': 'a', 'fromFrame': 30, 'toFrame': 90}], 'events': []}
+        self.assertEqual(critic_inputs.built_frame(still, still['beats'][0]), 40)
+
+    def test_the_sheets_hold_the_frames_they_name(self):
+        import numpy as np
+        from PIL import Image
+        qc = {'sha256': sha256_file(self.video), 'checks': {}}
+        critic_inputs.write('short', self.dir, self.video, PROPS, qc)
+        label = critic_inputs.LABEL_H
+        with Image.open(self.dir / 'cuts.short.jpg') as cuts:
+            tile_w, tile_h = critic_inputs.TILE_W, HEIGHT
+            self.assertEqual(cuts.size[0], tile_w * 17)
+            seen = [index_of(np.asarray(cuts.crop((k * tile_w, label, (k + 1) * tile_w, label + tile_h)).convert('RGB')))
+                    for k in range(17)]
+        self.assertEqual(seen, list(range(52, 69)), 'the cut at f60, every frame from -8 to +8')
+        with Image.open(self.dir / 'read.short.jpg') as read:
+            width, height = critic_inputs.READ_W, critic_inputs.READ_W * HEIGHT // (BITS * STRIPE)
+            self.assertEqual(read.size[0], width * 2)
+            seen = [index_of(np.asarray(read.crop((k * width, label, (k + 1) * width, label + height)).convert('RGB')))
+                    for k in range(2)]
+        self.assertEqual(seen, [20, 80], 'each beat fully built, 960 px wide')
+        with Image.open(self.dir / 'hardest.short.jpg') as hardest:
+            self.assertEqual(hardest.size, (critic_inputs.TILE_W * 10, 2 * (HEIGHT + 2 * label)))
 
     def test_a_qc_record_for_another_file_is_refused(self):
         with self.assertRaises(ValueError):

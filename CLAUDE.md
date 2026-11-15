@@ -47,10 +47,11 @@ reading it whole. It is about 270 KB (some 65k tokens).
 | Krish has recorded; cut and file the videos | `/produce-video` |
 | A recorded piece's thumbnails, once his thumbnail words are picked (produce-video step 5 calls it) | `/thumbnail-designer` |
 | A piece on ve (its spec is `schema_version: 2`), or a ve Codex task card | `/ve` |
+| A ve piece's per-beat motion plan, written into its spec before Sign storyboard (the ve skill, step 6, points to it) | `/motion-designer` |
 | A Studio station (brief, script, render, qa...) | the `mindmake-studio` MCP tools, inside a tracked session (`docs/ENGINE_SESSION.md`) |
 | Krish's voice or a channel decision | his account-wide `krish-voice` and `content-corpus` |
 
-The skills live once in `.agents/skills/`; `.claude/skills/` holds exact copies of the five
+The skills live once in `.agents/skills/`; `.claude/skills/` holds exact copies of the six
 above (AGENTS.md, Verification). `mindmake-video` and `video-engine` are not loaded here on
 purpose; `scripts/validate-skills.py` (`NOT_FOR_CLAUDE`) says why and fails on any new skill that
 is neither copied nor listed.

@@ -1,6 +1,6 @@
 # Critic
 
-You never made this cut. You read `qc.json`, the reference sheets, the cut's motion strips (`beats`, `events` and `cuts` `.<cut>.jpg`) with `numbers.<cut>.json`, and the spec digest. Then you write `verdict.<cut>.json` with `ve verdict write` (below): findings with frame numbers. You do not edit the spec.
+You never made this cut. You read `qc.json`, the reference sheets, the cut's motion strips (`beats`, `events`, `cuts`, `hardest` and `read` `.<cut>.jpg`) with `numbers.<cut>.json`, and the spec digest. Then you write `verdict.<cut>.json` with `ve verdict write` (below): findings with frame numbers. You do not edit the spec.
 
 Ask each question with a one-line answer and a frame reference:
 1. Does each beat land muted?
@@ -11,10 +11,19 @@ Ask each question with a one-line answer and a frame reference:
 6. Is this ours, and unlike the last three pieces?
 7. Any slop tells (corpus section 10b): centred text on a gradient, robotic pacing, bloom shimmer, flat photos with no parallax?
 8. Does every frame use the whole screen with one focal point and one scribble, nothing under 30 px, nothing in a grid of cells or a corner widget, and the caption zone clear?
+9. Entrances: does every entrance move as the chosen style's profile says (`style.motion`), and has it landed by +10 (`events.<cut>.jpg`, the +10 column; `hardest.<cut>.jpg`)?
+10. Hand-offs: does the outgoing beat leave before the incoming arrives, with no grey or empty frame between them (`cuts.<cut>.jpg`, every frame from -8 to +8)?
+11. Camera: does every beat carry a camera move or a living drift, so no beat stands still between its events (`beats.<cut>.jpg`, `hardest.<cut>.jpg`)?
+12. Does the screen act on his words: a cursor that waits before it presses, each change on the word that names it, and nothing that re-wraps (`events.<cut>.jpg` row words, `hardest.<cut>.jpg`, `read.<cut>.jpg`)?
 
 You stay advisory until calibrated: you must fail Friday v7 to v11 and pass Monday 19. Until then you block only on items you can cite by frame.
 
 ## Calibration
+
+Questions 9 to 12 read the cut at speed and stay advisory, never blocking, until they have failed the rejected
+design-lock fixtures and passed the approved ones. On 15 Nov 2026 they could not be put to them: those fixtures are
+single key frames, and each of these questions needs the frames around a move or a cut. There is no 1 to 5 scale here;
+the only number is the 0 to 10 score against each reference card, with 8 the bar (`scripts/velib/refgate.py`).
 
 The Critic must fail `fixtures/ve/design-lock/rejected/*.jpg` and pass
 `fixtures/ve/design-lock/approved/*.jpg`. Until it has done so it blocks only
