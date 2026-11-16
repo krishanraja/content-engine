@@ -64,8 +64,9 @@ matches exactly what it matched before. follow.the.money and under.the.hood
 take their predecessors' formats; mind.the.gap has The Fork (Krish,
 2026-09-26: "The Fork is good"): then, now, the fork, our call, the order its
 timeline draws the story in. A Fork carousel must end on the call, with the
-prediction's date and how sure we are (`theForkIssues` in
-`packages/core/src/carousel.ts`). A piece on a
+prediction's date and how sure we are (the Studio's check, `theForkIssues`,
+went with the Studio's carousel code on 13 Nov 2026; `docs/CAROUSEL-STANDARD.md`,
+"How a carousel is made", is the route now). A piece on a
 live subchannel gets a brief in its own name; a piece on a retired slot keeps
 its retired id.
 
@@ -165,7 +166,9 @@ What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
   refused and says why. The old sticker thumbnail (composition
   `MakeyourmindupThumbnail`) is retired since 15 Nov 2026. Every other
   package keeps the master's frame at half a second, as before.
-- A carousel. The cover on the section's colour (day, pill, mark tile, the
+- A carousel, until 13 Nov 2026, when the Studio's carousel code was
+  retired (a carousel is now made in a Claude session:
+  `docs/CAROUSEL-STANDARD.md`, "How a carousel is made"). It drew the cover on the section's colour (day, pill, mark tile, the
   headline, the dek, a sticker pointing at the call for The Fork or the
   channel's sticker otherwise, and the channel's standing question); middle
   cards on ink with grain (day, pill, mark tile, the headline with one swiped
@@ -173,11 +176,11 @@ What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
   mint mono, a page counter "n / N"); the last card as the mock (day, pill,
   counter, headline, body, the mono line, for The Fork the line about how
   calls are marked, and the horizontal logo and address in the footer). No
-  Mindmake scene artwork in this theme. Headlines are sized to fit before a
-  card renders, from the kit fonts' own metrics.
+  Mindmake scene artwork in this theme. Headlines were sized to fit before a
+  card rendered, from the kit fonts' own metrics.
 - The retired series keep the Mindmake theme exactly as approved: their
-  render props hash as they did at `518b5fe` (tests/render-v2.test.ts and
-  tests/carousel.test.ts check it).
+  render props hash as they did at `518b5fe` (tests/render-v2.test.ts checks
+  it).
 - Control Center's video plate (`VideoBrandLockup`) still shows the version 1
   look; it needs its own change there.
 
@@ -225,8 +228,8 @@ pinned by sha256 in control-center, `src/assets/brand/makeyourmindup/`,
 because content-engine never tracks image files. The house faces load under
 names of their own (`apps/renderer/src/house/fonts.css`), so the retired
 theme's faces resolve exactly as before. The renderer's house code is in
-`apps/renderer/src/house/`, `apps/renderer/src/v2/HouseShort.tsx` and
-`apps/renderer/src/thumbnail/`.
+`apps/renderer/src/house/` and `apps/renderer/src/v2/HouseShort.tsx`
+(`apps/renderer/src/thumbnail/` went with the sticker thumbnail on 15 Nov 2026).
 
 `brandThemeRefusal` refuses the theme for a retired series, while it is a
 candidate or has no approval, and whenever its `source.commit` is the
@@ -257,8 +260,9 @@ Studio, `docs/ENGINE_SESSION.md`):
 2. Done 2026-10-02: both runners are on `cc0657e`
    (`docs/history/2026-11-12-STATE-before-recheck.md`, "The Studio's runners,
    2026-10-02").
-3. Render the proof in the Studio (a Short with its call, the thumbnail and a
-   carousel) and show it to Krish. The call comes from the job's production
+3. Render the proof in the Studio (a Short with its call, and its cover, the
+   Receipt; the Studio has drawn no carousel since 13 Nov 2026 and no
+   thumbnail of its own since 15 Nov 2026) and show it to Krish. The call comes from the job's production
    brief, and a brief is built only from an approved piece
    (`api/content-ideas/[id]/production-brief.ts` refuses
    `exact_revision_not_approved`), so the proof follows Krish's approval of a
@@ -324,9 +328,9 @@ The V1 graph still exists only so V1 jobs can resume. New work is V2.
 | Learning | local feedback lifecycle (`observed` to `active`); a rule is active only when it is in reviewed Git config; cloud session and learning tables | `packages/core/src/feedback.ts`, `config/studio.json`, `supabase/migrations/20260907091923_studio_session_learning_spine.sql` |
 
 The CLI groups: `doctor`, `status`, `resume`, `index rebuild`, `radar pull`,
-`benchmark transcription`, `calibration contact-sheet`; `carousel
-method|validate|render|package`; the V1 job commands, kept so V1 jobs can
-resume; and under `v2`: `production-brief
+`benchmark transcription`, `calibration contact-sheet`; the V1 job commands,
+kept so V1 jobs can resume (the `carousel` group went with the carousel
+engine on 13 Nov 2026); and under `v2`: `production-brief
 import|materialize`, `identity`, `job create|status|resume`, the stage commands
 (`ingest`, `transcribe`, `candidates`, `recording-brief create`, `stage
 import`, `source analyze`), `repertoire`, `visual-plan`, `assets`, `call`,
@@ -405,7 +409,7 @@ chat, the complete first message `Video engine` launches the operator workflow
 
 Each is current for the Studio except where the note says otherwise
 (audited 2026-09-25; the first five rows rechecked against the code on
-2026-11-04).
+2026-11-04 and again on 2026-11-16).
 
 | Document | What it settles | Known stale |
 |---|---|---|

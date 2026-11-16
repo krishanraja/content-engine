@@ -3,7 +3,9 @@
     "Rendered samples of a motion style or a caption style, shown beside Pick a style on the publish board (view contract 1.4.0, sample_url on day.path.style options; 1.16.0 adds sample_drive; docs/PUBLISH_BOARDS.md, \"Style samples on Pick a style\").",
     "Each value is a same-site path string (apps/control-plane/api/board/_style.ts reads only strings): the engine's Drive file route /api/board/sign-offs?file=<drive id>, which serves only the ids in the drive map below. Its Drive id is in the drive map, by layer and style, and the board links it as Open in Drive. An empty value is a render still waiting: it reads as no sample, and the board draws none (never a placeholder). The note in waiting says which render.",
     "Each sample is the style lab's render on his pinned take (config/ve/lab.json: thurs5Novrecording-nospendingnosending.mp4, sha256 203d10c94695..., the short cut, frames 315 to 555), made on a home computer and filed in his Drive's Inbox from My AI (docs/DRIVE.md), never committed. The commands, on a home computer in this repository: (1) . scripts/ve-env.sh; (2) python3 scripts/post-pack/recording.py get --sha256 203d10c946954c5343ccec5b0e3a3626e9b2dfd7ef376485ff1bbbf4f35dddd5 --out .cache/lab-take; (3) python3 scripts/ve.py lab render --take .cache/lab-take/thurs5Novrecording-nospendingnosending.mp4 --brand-dir <the folder holding the three pinned makeyourmindup marks, config/studio.json> --out .cache/ve/lab/samples --only <the motion ids below> <theme-<caption id> for each caption style below>; (4) watch each clip at full size; (5) file each clip in Inbox from My AI as \"Style sample - motion - <id>.mp4\" or \"Style sample - captions - <id>.mp4\" and read it back; (6) python3 scripts/ve.py lab sample --layer motion|captions --module <id> --drive-id <its Drive id> --clip .cache/ve/lab/samples/<id or theme-<id>>.mp4, which writes the value, the drive map and clears the note; (7) commit this file only.",
-    "Nothing renders a sample by itself, and no media is committed."
+    "Stills (Krish, 16 Nov 2026: \"I should be able to hover over the captions, look, and motion style and see a templated screenshot of what it might look like. No need for a video, just a still.\"): the stills map holds one 540x960 JPEG per look (treatment, config/style-references.json formats.production), drawable motion style and caption style, the picture the board shows on hover, in the same shape as a sample: a path string to the same Drive file route, /api/board/sign-offs?file=<drive id>, with its Drive id in stills_drive, by layer and id. An empty value is a still not recorded yet: no picture, never a placeholder. A motion or caption still is the lab's frame of its render (python3 scripts/ve.py lab stills, every one cut at the same frame of the pinned window, into .cache); a look's still comes from a design-lock key frame or a Codex plate. Each is filed in Inbox from My AI as \"Style still - <layer> - <id>.jpg\", read back, then recorded with python3 scripts/ve.py lab still <layer> <id> --drive <its Drive id> --file <the jpg>; commit this file only.",
+    "Nothing renders a sample by itself, and no media is committed.",
+    "Never a frame of his recordings (Ruling, Krish, 2026-11-16: \"Please don't tell me this is going on the board as an example or a gold standard template that we could use in future projects\", of a still cut from the Thu 5 Nov No Spending take). A still is the StyleStill cover art (Codex card docs/ve/cards/style-stills/ve-style-still-template-1.md): a shop window of each style at its best, drawn from the work he praised, never a take; ve lab still refuses a frame of a take. The style lab's pinned take stays the engine's own regression check and is never shown to him as an example."
   ],
   "motion": {
     "ai-music-slam": "",
@@ -100,5 +102,81 @@
       "ink-block": "The style lab's render of the ink-block caption style on the pinned take (ve lab render --only theme-ink-block), on a home computer, then filed in Drive.",
       "mint-word": "The style lab's render of the mint-word caption style on the pinned take (ve lab render --only theme-mint-word), on a home computer, then filed in Drive."
     }
+  },
+  "stills": {
+    "treatment": {
+      "face-with-proof": "",
+      "voice-led-pictures": "",
+      "data-story": "",
+      "fry-talking-head": "",
+      "scoreboard-test": "",
+      "kinetic-movement": "",
+      "receipt-animation": ""
+    },
+    "motion": {
+      "ai-music-slam": "",
+      "character-ai-receipts": "",
+      "dark-keynote": "",
+      "data-story": "",
+      "eating-jobs-ladder": "",
+      "full-visual": "",
+      "hud-terminal": "",
+      "line-boil": "",
+      "living-ui": "",
+      "paper-cutout": "",
+      "riso-halftone": "",
+      "single-line-drawing": "",
+      "swiss-kinetic-type": "",
+      "vertical-captions": ""
+    },
+    "captions": {
+      "pop": "",
+      "karaoke": "",
+      "kinetic-01": "",
+      "kinetic-02": "",
+      "hustle": "",
+      "grape": "",
+      "beast": "",
+      "poppin": "",
+      "aarit": "",
+      "soft-ai": "",
+      "gaming-stream": "",
+      "simple-one-word": "",
+      "podcast": "",
+      "art-directed": "",
+      "cinematic": "",
+      "slam": "",
+      "georgia-build": "",
+      "stair-flash": "",
+      "tuck-stack": "",
+      "anchor-quote": "",
+      "rack-focus": "",
+      "flip-hinge": "",
+      "slice": "",
+      "slot-roll": "",
+      "receipt-chip": "",
+      "ink-block": "",
+      "mint-word": ""
+    }
+  },
+  "stills_drive": {
+    "treatment": {},
+    "motion": {
+      "ai-music-slam": "",
+      "character-ai-receipts": "",
+      "dark-keynote": "",
+      "data-story": "",
+      "eating-jobs-ladder": "",
+      "full-visual": "",
+      "hud-terminal": "",
+      "line-boil": "",
+      "living-ui": "",
+      "paper-cutout": "",
+      "riso-halftone": "",
+      "single-line-drawing": "",
+      "swiss-kinetic-type": "",
+      "vertical-captions": ""
+    },
+    "captions": {}
   }
 }

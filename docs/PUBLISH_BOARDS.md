@@ -561,6 +561,12 @@ live board while `gate` fails). Each check enforces a rule already live or his o
   asked, a source newer than his press, changed copy and a research prompt; otherwise it is held with its reason.
 - From the 23 Nov board every publishing-day option opens on one plain question (`pitch.question`, drawn as its title),
   with a research prompt and a source tag.
+- Since 16 Nov an option that retells a piece or post that went out or is on its way fails the gate (code `repeat`:
+  the same primary source, the same hook, an earlier board's option he did not send back, a twin on the same board,
+  or two of the same works; an idea of his own or from his tick carries the match and never fails, `his_repeat`;
+  Krish, 2026-11-16: "this week's Ideas Board needs to not contain mostly things we published last week"). From the
+  23 Nov board every option also says its shape, its aim (utility, interest or humour) and its funny line, and names
+  the lookalike pattern it draws on from his Instagram inspo sheet (code `aim`, plan-week `references/lookalike.md`).
 
 **On the board** (`_viewExtras.ts ideaLines`, after a day's options, no new contract field): each subject not offered
 again is a line "Not offered again: <subject>" with his words and one press, "Offer it again" (`queue/veto-<subject>`,
@@ -641,6 +647,10 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   every idea on a day that already holds a piece and on every idea for later on such a date, and `move` on every piece
   his approval holds (`days[].pieces[].move`, the model's piece `move`), the same shape as an off-day item's; a day's
   model may list more than one piece ("Replacing a day's piece, and Move to… on a series piece", above).
+- **1.14.0 (13 Nov 2026)** added the press op `look`, Pick the look, for a piece whose path is at its look ("The current
+  state, and nothing stale", above).
+- **1.15.0 (13 Nov 2026)** added the press op `style`, Pick the motion style and Pick the captions, beside Pick the look
+  on every piece before recording (`lookPresses`, the same section).
 - **1.16.0 (15 Nov 2026)** added `thumbs` to each series day: the piece's thumbnail options while a set the critic
   judged is on its making record, each option's wide and tall files as same-site Drive file paths with their sha256, the
   critic's line, the grid mock, Pick on each option and Not this on the set, and the press op `thumb-pick`, which the
@@ -648,6 +658,57 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   Krish, 2026-11-15, approved with the specialists plan: thumbnail options carry a pick press on the Content board). It
   also added `sample_drive` to each style option, and a style sample's `sample_url` is the Drive file route
   `/api/board/sign-offs?file=<drive id>` ("The style choices", below).
+- **1.17.0 (16 Nov 2026)** made four additions.
+  - **`notes` on the Claude prompt.** Krish types his own notes before he copies the prompt. The board adds them under
+    the heading, at the end of the prompt, and saves them with `save`: his comment on the day, `use: claude_notes`.
+    `afterPress` files that comment to his taste ledger as his words.
+    - Ruling (Krish, 2026-11-16): "I should be able to provide feedback or what I think the next steps are first, and
+      then click the "Copy to Claude" button, and the prompt incorporates that."
+  - **`open` on the Claude prompt**, `{ app: 'claude_code', repository }`. The board opens a new Claude Code session on
+    claude.ai/code with that repository chosen and the prompt filled in. The board builds the address; the view still
+    carries no link.
+    - From approval of the story until a take is recorded, the prompt stays beside the picks. A session that changes an
+      approved story takes his approval line off its end, so the board asks him to approve the new story. A story
+      changed under its old line reads as unsigned too: `lockSigned` checks the line's `lock sha256` against the words
+      above it, as making.py's drift rule does.
+    - Ruling (Krish, 2026-11-16): "Even though this piece is locked, I should be able to tweak the narrative slightly in
+      it by opening a session with Claude."
+  - **Stills for the pickers.** The press `after` field is reserved for the production press of the next release:
+    the prompt the board opens once that press is saved. No press carries it yet.
+    `choose.options[].line` and `.still` are added, and `still_url` is added to each style option, from
+    config/ve/style-samples.json's `stills` map, recorded by `ve lab still`. The board shows the still when he hovers
+    over or picks an option.
+    - Ruling (Krish, 2026-11-16): "hover over the captions, look, and motion style and see a templated screenshot of
+      what it might look like".
+  - **Repeats are flagged.** `item.repeat` and `model.repeats` (with each idea's `piece_id`, so the one list leaves it
+    out too) are added. An idea that retells a piece or post an earlier board put out or on its way, approved,
+    scheduled or live, from 14 days before it to the end of its own week, leaves the ideas board. It is listed in
+    `repeats`, and its line says what matched and when. An approved item says the same in `repeat`. A retelling is any
+    one of:
+    - the same primary source;
+    - the same hook (never for the weekly good news, whose hook is the same every week);
+    - two or more of the same named sources.
+
+    This week's own board is never its own repeat: a twin on it is the Sunday run's to refuse (`board_feed.py gate`).
+
+    Ruling (Krish, 2026-11-16): "this week's Ideas Board needs to not contain mostly things we published last week".
+- **1.18.0 (16 Nov 2026)** made two additions.
+  - **`link` on an option**, `{ label, href }`, https only: what it came from, to open. A held ask of his keeps the card
+    he saved: its link, his words in `said`, and a title naming what it is about. On 16 Nov the board showed "Held back:
+    Lets make a hilarious meme." with no sign of the YouTube short he had saved to make it from.
+    - Ruling (Krish, 2026-11-16): "feedback and suggestions like "Let's make a hilarious meme" end up in the ideas board
+      without any context of what I actually wanted to make a hilarious meme about. We've now ended up with a vague
+      instruction where I actually put on the inspiration board something very specific."
+  - **`why` on a recommended choice.** Each recommended option of the look, the motion style and the captions says why
+    in plain words, so the board can offer the three as one recommended set. With no look from the Sunday room, the
+    proven look he has not turned down is the recommended one.
+    - Ruling (Krish, 2026-11-16): "on my mobile, that I can pick the look, pick the caption style, and pick the motion
+      style myself or the system itself can considerately recommend the best combination for me."
+
+  The ideas gate also gained a same-story review the same day: a fresh reader judges every option against the words of
+  what went out on the last three weeks' boards, because a retold story shares no link and no sentence with its post
+  (Thu 5 Nov's No spending, no sending short came back for Tue 17 as "Your AI is about to start messaging you first").
+  `plan-week`, `references/lookalike.md`, "The same story under new words".
 
 ## To review: the video sign-offs (contract 1.11.0)
 
@@ -808,6 +869,16 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   `ve lab sample` checks the clip is the lab's own render of that style (its manifest beside it), writes the value, the
   drive map and clears the waiting note; commit `config/ve/style-samples.json` only, never the media. A caption style is
   drawn by the lab only when `--only` names it (`theme-<id>`), so the regression reel never grows by itself.
+
+  **Stills** are the picture he sees when he hovers a look, a motion style or a caption style (Krish, 16 Nov 2026: "No
+  need for a video, just a still."). They sit in the same file, in a `stills` map by layer (`treatment` for the seven
+  looks of `formats.production`, `motion` for the 14 drawable styles, `captions` for the 27 caption styles), each value
+  the same Drive file route as a sample, `/api/board/sign-offs?file=<drive id>`, with its Drive id in a `stills_drive`
+  map by layer. An empty value is a still not recorded yet: no picture, never a placeholder. `python3 scripts/ve.py lab
+  stills` cuts one 540x960 JPEG per motion and caption style from the lab's renders, all at the same frame, into
+  `.cache`; each is watched, filed in Inbox from My AI as "Style still - <layer> - <id>.jpg", read back and recorded
+  with `python3 scripts/ve.py lab still <layer> <id> --drive <its Drive id> --file <the jpg>`. A look's still comes
+  from a design-lock key frame or a Codex plate, recorded the same way. Commit the file only, never the stills.
 - **His press**: `presses.yes` and `presses.not_this` (labels "Yes" and "Not this") each say `POST
   /api/board/<Monday>/<op>` with a body. `POST /api/board/<Monday>/style` takes `{ piece_id, motion?, captions?,
   reject?: { layer: 'motion' | 'captions' | 'treatment', id } }`, his press only, on a piece scheduled in that week, the same guards
@@ -1159,8 +1230,9 @@ approvals`) are read-only views of the `picks` documents of that kind; nothing
 writes to a view.
 
 Sunday's sources: `python3 scripts/post-pack/board_feed.py gather <Monday>`
-reads `GET /api/week/options?include=sources` and `GET /api/idea-queue?combine=1`
-(read-only, no spend) into `docs/plans/<Monday>-week/sources.json`: each
+reads `GET /api/week/options?include=sources`, `GET /api/idea-queue?combine=1`
+and the view of each of the three weeks before (what went out, `recent_posts`, for the repeat
+check), all read-only and with no spend, into `docs/plans/<Monday>-week/sources.json`: each
 series' pool, his ideas first, then near something he liked, then the ladder
 score, each with `source_kind` and `why_here`, the queue and its combine groups,
 and which source is empty and why. His ideas are `manual` rows (his words
@@ -1222,7 +1294,8 @@ then "Could you not get Github to trigger Claude subscription to do something an
 board?" (the board was the engine's own page then; it is retired, and its addresses redirect to the live board). No
 Claude routine writes to a board. The Sunday ideas board is `.github/workflows/sunday-ideas.yml`: Claude Code inside a
 GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`, never an API key), fired twice on Saturday (12:17
-and 20:47 UTC, the second only a retry), idempotent for the week, and startable by hand. It fills the whole ideas board
+and 20:47 UTC, the second only a retry), idempotent for the week, and startable by hand or by a board press (by hand,
+its `days` input makes again only the options nobody answered on those days). It fills the whole ideas board
 once a week, Saturday's good news included (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full,
 Saturday's good news included; the Thursday good-news schedule is retired): the publishing days' options, every off
 day's options and Saturday's five real, sourced stories, each checked against its primary source, with `stories_due`

@@ -359,6 +359,36 @@ export function feelReport(week: string, id: string, body: Body, now: string) {
   }
 }
 
+/** His notes for Claude on an item (contract 1.17.0): the words he typed above Copy prompt for Claude, saved as his comment
+ *  on the day (use claude_notes) and filed to his taste ledger as krish_words, where and when he typed them (Ruling,
+ *  Krish, 2026-11-16: "I should be able to provide feedback or what I think the next steps are first"). Null for any
+ *  other comment. */
+export function notesReport(week: string, id: string, body: Body, now: string) {
+  if (body.use !== 'claude_notes') return null
+  const words = typeof body.text === 'string' && body.text.trim() ? body.text.trim().slice(0, 2000) : null
+  if (!words) return null
+  const piece = typeof body.piece_id === 'string' && PIECE_UUID.test(body.piece_id) ? body.piece_id : null
+  const title = typeof body.title === 'string' && body.title.trim() ? body.title.trim().slice(0, 300) : null
+  return {
+    kind: 'krish_words',
+    body: words,
+    said_where: `publish board in Control Centre, his notes for Claude, ${week} comments/${id}`,
+    said_at: typeof body.at === 'string' && Number.isFinite(Date.parse(body.at)) ? new Date(body.at).toISOString() : now,
+    lane: 'strategy',
+    polarity: 'neutral',
+    subject_ref: piece ? `piece:${piece}` : null,
+    subject: piece ? (title || `the piece ${piece}`) : null,
+    session_ref: 'controlcenter.krishraja.com publish board',
+    repository: 'krishanraja/content-engine',
+    surface: 'publish_board',
+    emitter_id: 'content-engine-board',
+    // The same notes saved again file nothing twice.
+    client_report_id: `notes-${digest(canonical({ week, id, words, piece }))}`.slice(0, 96),
+    reported_at: now,
+    meta: { press: 'claude_notes', week, anchor: body.anchor, ...(typeof body.item === 'string' ? { item: body.item.slice(0, 160) } : {}) },
+  }
+}
+
 /** His words on an off-day option, one taste_reports row per side he improved or rejected (Ruling, Krish,
  *  2026-11-01: "...approve or improve or flat out reject for a reason, and the machine can learn over time"). */
 export function offdayReports(week: string, id: string, body: Body, now: string) {
@@ -640,6 +670,17 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
     if (who !== 'Krish') return null
     const placed = await placePick(db, { week, day: id, body, now }).catch(() => ({ status: 'refused' as const, date: dayDate(week, id as PostedDay), error: 'the idea could not be written' }))
     return { ...saved, placed }
+  }
+  if (collection === 'comments' && who === 'Krish' && body.use === 'claude_notes') {
+    const report = notesReport(week, id, body, now)
+    if (!report) return null
+    try {
+      const filed = await db.from('taste_reports').upsert(report, { onConflict: 'emitter_id,client_report_id', ignoreDuplicates: true })
+      const code = String((filed.error as { code?: string } | null)?.code || '')
+      return { ...saved, taste: !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed' }
+    } catch {
+      return { ...saved, taste: 'failed' }
+    }
   }
   if (collection === 'queue' && who === 'Krish' && (body.use === 'not_for_us' || body.use === 'improve')) {
     const report = ideaReport(week, id, body, now)

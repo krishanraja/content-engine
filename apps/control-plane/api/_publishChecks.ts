@@ -281,6 +281,36 @@ export function threeThingsTomorrow(body: string): { ok: boolean; detail: string
   return { ok: true, detail: 'Ends with "3 things you can do tomorrow" and its three actions.' }
 }
 
+/** House rule ARTICLE_SUBSCRIBE_ASK (Ruling, Krish, 2026-11-16, of Growth's audience brief, change 6: "apply 1 to 6
+ *  from the next piece you make this week"). The newest article asked only in the navigation, the sidebar and after
+ *  the sources and comments at the very end, so the body asks twice: a paragraph before the first heading, for a reader
+ *  who is not yet a subscriber, and a paragraph after the three actions of "3 things you can do tomorrow", right after
+ *  the key takeaway. Each says what the reader gets; the words are the writer's, the place is this check's. */
+export function articleSubscribeAsks(body: string): { ok: boolean; detail: string } {
+  const lines = String(body || '').replace(/\r\n/g, '\n').split('\n')
+  const heading = (l: string) => /^\s{0,3}#{1,6}\s+\S/.test(l)
+  const item = (l: string) => /^\s*(?:[-*\u2022]|\d+[.)])\s+\S/.test(l)
+  const asks = (l: string) => /\bsubscribe\b/i.test(l) && !heading(l) && !item(l)
+  const firstHeading = lines.findIndex(heading)
+  const top = (firstHeading < 0 ? lines : lines.slice(0, firstHeading)).some(asks)
+  const at = lines.map((l, i) => (heading(l) && /3\s+things\s+you\s+can\s+do\s+tomorrow/i.test(l) ? i : -1)).filter(i => i >= 0).pop()
+  let after = false
+  if (at !== undefined) {
+    const rest = lines.slice(at + 1)
+    const next = rest.findIndex(heading)
+    const section = next < 0 ? rest : rest.slice(0, next)
+    const lastItem = section.map((l, i) => (item(l) ? i : -1)).filter(i => i >= 0).pop()
+    after = lastItem !== undefined && section.slice(lastItem + 1).some(asks)
+  }
+  const missing = [
+    top ? '' : 'one near the top, before the first heading, for a reader who is not yet a subscriber',
+    after ? '' : 'one right after the three actions of "3 things you can do tomorrow"',
+  ].filter(Boolean)
+  return missing.length
+    ? { ok: false, detail: `Ask the reader to subscribe inside the article, saying what they get: ${missing.join('; and ')}.` }
+    : { ok: true, detail: 'Asks for the subscription near the top and right after the key takeaway.' }
+}
+
 /** ARTICLE_FORMAT (Krish, 2026-11-01, on the 2 Nov board's flattened list: "can we make sure the article
  *  formatting is 11/10? Growth engine will start auto posting this"): nothing in the body a reader would see as
  *  unfinished. A working note (a line in underscores, "fact gate", "source of truth", a repository path), a title
@@ -367,6 +397,10 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   // making it blocking is a one-word change once Krish has seen the pieces carry it.
   const three = threeThingsTomorrow(text)
   checks.push({ id: 'THREE_THINGS_TOMORROW', name: 'Ends with "3 things you can do tomorrow"', blocking: false, ok: three.ok, detail: three.detail })
+  // Not blocking yet, for the reason above (ARTICLE_SUBSCRIBE_ASK; Ruling, Krish, 2026-11-16): the writers and make-piece
+  // hold it from the next piece; blocking is a one-word change once he has seen pieces carry it.
+  const subscribe = articleSubscribeAsks(text)
+  checks.push({ id: 'ARTICLE_SUBSCRIBE_ASK', name: 'Asks for the subscription twice, inside the article', blocking: false, ok: subscribe.ok, detail: subscribe.detail })
   checks.push({ id: 'R6', name: 'Plain words', blocking: false, ok: jargon.length === 0, detail: jargon.length ? `Make sure each is explained where it first appears: ${jargon.join(', ')}.` : 'No listed jargon found.' })
   if (pieceId === WEDNESDAY_RETROSPECTIVE_EXCEPTION.pieceId
       && createHash('sha256').update(text).digest('hex') === WEDNESDAY_RETROSPECTIVE_EXCEPTION.bodySha256) {

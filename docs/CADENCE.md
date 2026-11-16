@@ -35,9 +35,9 @@ Ruling, Krish, 2026-11-13).
 
 | When | What happens | Who |
 |---|---|---|
-| Saturday, ready by Sunday 06:00 | The Sunday ideas board: 3 or 4 options for each of Monday, Wednesday and Friday, with last week's "next week" items first, and 4 to 6 off-day options for each of Tuesday, Thursday and Saturday, each read back by two fresh readers (Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas") | the Sunday ideas run: Claude Code in GitHub Actions on his subscription (`.github/workflows/sunday-ideas.yml`); Growth for the off days |
-| Saturday, the same run | The Saturday good news for the week that starts the next day: four real stories from the seven days before, each checked against its primary source, with its own photo or clip, put on that week's board (Krish, 2026-11-02: "find the actual good news on Sunday ... so that the news items are fresh") | the Sunday ideas run, its good-news step |
-| Sunday, by 10:00 | One press on every idea: pick it for a day (with a note if he likes), keep it for a wider piece, track it as a future trend, queue it for next week, or reject it. Approve or skip each off-day option | Krish, about 15 minutes |
+| Saturday, ready by Sunday 06:00 | The Sunday ideas board: at least four options for each of Monday, Wednesday and Friday, with last week's "next week" items first, and 4 to 6 off-day options for each of Tuesday, Thursday and Saturday, each read back by two fresh readers (Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas") | the Sunday ideas run: Claude Code in GitHub Actions on his subscription (`.github/workflows/sunday-ideas.yml`); Growth for the off days |
+| Saturday, the same run | The Saturday good news for the week the run plans, which starts eight days after its Sunday: five real stories on one topic from the seven days before the run, each checked against its primary source, with its own photo or clip, put on that week's board (Krish, 2026-11-02: "find the actual good news on Sunday ... so that the news items are fresh") | the Sunday ideas run, its good-news step |
+| Sunday, by 10:00 | One press on every idea, one of the five outcomes of the ideas gate (`docs/PUBLISH_BOARDS.md`, from 11 November): approve it for a day (with a note if he likes), file it for later, reject it, save it as a trend, or improve it for a future piece. The off-day options take the same five | Krish, about 15 minutes |
 | Sunday, 10:00 to 11:45 | The interview, one question at a time, ending in one signed narrative lock per piece (Krish, 2026-10-28: "Claude interviews me on all three ideas to nail down the narrative arc") | the Sunday room session, with Krish |
 | As each lock is signed | One fresh make run per piece (`.github/workflows/make-piece.yml`, Claude Code in GitHub Actions on his subscription). The two scripts come first (reading age, kill list, copy lint, two fresh readers, a fact check of what they claim); the article follows | Claude Code |
 | About 12:30 | **Approve scripts**, one press per day. The engine's server sends both scripts to Teleprompter and reads them back (Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"; "Server sends directly"). Until the Teleprompter key is stored, the Sunday room sends them through the connector | Krish, then the engine |
@@ -184,7 +184,7 @@ board, the strip and both skills read the same table.
 | The Sunday question and the pick | Control Center (cron), Krish | `api/content/slate.ts`, the week page | the work board's week item; the pick and its day |
 | Workroom, fact-checked draft, visual gate, scripts, publish page, pack | Claude Code | `.agents/skills/make-piece` | `meta.making.workroom`, `.publish_manager`, `.visual_gate`, `.script_check`, `.pack`; the body through the engine |
 | The read-back | Claude Code, at the Scripts step: two fresh readers, each an ordinary 12-year-old hearing the script once | `make-piece` ("The Scripts step", step 4), `making.py <piece> read-back` | `meta.making.script_check.read_back`: who read each cut, when, "nothing lost", and the hash of the words they heard |
-| Scripts into Teleprompter | Claude Code, at the Scripts step, or any session that `teleprompter_send.py pending` shows a cut still to send; from 1 November, only on his Approve scripts press | `make-piece` ("The Scripts step", step 6), `scripts/post-pack/teleprompter_send.py` | one folder per piece and one script per cut in his teleprompter.com account, then `meta.making.teleprompter` (the folder, each cut's script and title, and the hash of the words sent) |
+| Scripts into Teleprompter | Claude Code, at the Scripts step, or any session that `teleprompter_send.py pending` shows a cut still to send; from 1 November, only on his Approve scripts press (from 12 November, or his typed approval of the scripts filed on the board: `docs/PUBLISH_BOARDS.md`, "His typed approval") | `make-piece` ("The Scripts step", step 6), `scripts/post-pack/teleprompter_send.py` | one folder per piece and one script per cut in his teleprompter.com account, then `meta.making.teleprompter` (the folder, each cut's script and title, and the hash of the words sent) |
 | Record | Krish records, then drops each take in the Inbox; the home computers' recordings lane writes it, and the production session one the lane has not placed | `scripts/post-pack/recording_match.py --record`, run by `scripts/recordings-upload.ps1` at the end of every pass on either machine (`--board --by "Recordings lane"`) and in `.agents/skills/produce-video` | `meta.making.recordings`, each take with the hash of the script it was read from (`script_sha256`) |
 | Video assets | ve (`python scripts/ve.py`, `docs/ve/RUNBOOK.md`) on a home computer; quick-edit (`.agents/skills/produce-video`) only as the fallback until ve passes Phase 3. Codex makes plates and devices, never a cut | `scripts/ve.py`, `.agents/skills/ve` | `meta.making.video_assets`, each cut with its thumbnail and music track; the cuts and thumbnails in the archive and in the post's library folder (`3 Video`). Never the visual gate or the pack |
 | Publish board with the cuts | Claude Code | `make-piece` (last step) | the piece's record, which the live board shows (`docs/PUBLISH_BOARDS.md`); and the pack again with the cuts (`build.py --replace`, which records Visual gate and Pack, then `send.py`) when the session holds the post's working folder and the cut files |
@@ -201,7 +201,7 @@ Where each thing lives, and nowhere else:
 | The runner's bearer | Credential Manager on each runner machine | the recordings and library lanes |
 | Control Center's secrets (access code, cron secret) | Control Center's Vercel project | its own routes; the slate cron speaks to the board on the access-code cookie |
 | Recordings | the engine's recordings lane (object store plus manifest), fed only from the top of the Video Engine Inbox | the home computers place each Inbox take on its piece and cut by themselves (`scripts/recordings-upload.ps1`, then `scripts/post-pack/recording_match.py`); `scripts/post-pack/recording.py get` fetches a take by its Inbox name or by the path its piece's record holds (`recordings/<sha256>.<ext>`); never the Drive connector (10 MB cap) |
-| Scripts for Krish to read while he records | his teleprompter.com account: one folder per piece ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"), one script per cut ("Mon 12 Oct - 5-minute - Who gets paid for AI songs"); and the publish page's Copy | each cut's script title on the piece's making record (`meta.making.teleprompter`), shown on Control Center's Record step ("Read from Teleprompter: <title>") and on the week's publish board. Sent at the Scripts step by `teleprompter_send.py` (from 1 November, only on his Approve scripts press); words that change update the same script in place, and nothing there is ever deleted |
+| Scripts for Krish to read while he records | his teleprompter.com account: one folder per piece ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"), one script per cut ("Mon 12 Oct - 5-minute - Who gets paid for AI songs"); and the publish page's Copy | each cut's script title on the piece's making record (`meta.making.teleprompter`), shown on Control Center's Record step ("Read from Teleprompter: <title>") and on the week's publish board. Sent at the Scripts step by `teleprompter_send.py` (from 1 November, only on his Approve scripts press; from 12 November, or his typed approval of the scripts filed on the board); words that change update the same script in place, and nothing there is ever deleted |
 | The week's publish board and all decisions | the engine's board tables, drawn live in Control Centre's Content tab (the old content.krishraja.com/board pages are retired and redirect there) | each week's `week-publish-board-<Monday>` item and `WORKBENCH.md`; every tool reads all six collections with `board_web.py`, following `docs/PUBLISH_BOARDS.md` |
 | Licensed music | Drive, `makeyourmindup > 1 Brand kit (permanent) > Music` (`MINDMAKE_MUSIC_ROOT`), each licence certificate beside its track; the ledger `config/music-library.json` in GitHub | `scripts/quick-edit/music.py` on a home computer; only approved ledger tracks, never browsed |
 | The pack, the publish page, the finished cuts | Krish's Drive library, written by his own machine from the engine's library store | `build.py`, `send.py`; the Drive folder is the canonical copy for every tool and for Krish |
@@ -220,9 +220,10 @@ What could be misread, and what stops it:
    approval.** The produce-video skill names what it never writes. A
    decision Krish made in words is relayed with `decided_by: 'Krish'` by
    either tool, never invented.
-3. **A link only one tool can open.** Artifact links open only in
-   claude.ai. The pack in Drive is canonical, so Codex and the runner work
-   from the folder; the strip shows both.
+3. **A link only one tool can open.** Artifact links opened only in
+   claude.ai, and no board or pack is a Claude artifact any more (AGENTS.md,
+   rule 3). The pack in Drive is canonical, so Codex and the runner
+   work from the folder.
 4. **A key in the wrong place.** The engine key is never in a repository,
    a file or a chat. Inside Codex's Windows sandbox it cannot be read: the
    skill says to run outside the sandbox with Krish's approval. In Claude
@@ -337,7 +338,10 @@ What could be misread, and what stops it:
     `build.py`, and no longer checked.
 18. **A tick that never reaches the record.** A tick lives only on the
     week's board until a Claude Code session copies it, at the start and
-    end of every making session; Codex cannot read the board. Each tick is
+    end of every making session; Codex cannot read the board. Growth's
+    write-back (`POST /api/board/<Monday>/posted`, `docs/GROWTH-HANDOFF.md`)
+    and his It's live press (`docs/PUBLISH_BOARDS.md`) write the channel
+    onto the record at once. Each tick is
     copied onto the piece the board itself names for its day: the publish
     watcher marks a piece published once its Substack post is live, and
     that piece is still its day's piece (the week options' `scheduled`
@@ -347,7 +351,11 @@ What could be misread, and what stops it:
     100% (its own item, `week-publish-board-<Monday>`, stays open till
     then), so a repost Krish ticks at the weekend still reaches the record.
 19. **Two boards for one week, or a rebuild that loses the ticks or a
-    day.** One board a week, its link on that week's item and in
+    day.** Nothing builds a board page since 11 November (retired for good
+    on 13 November): the live board draws each week from the records on
+    every read, so no rebuild can lose a tick or a day
+    (`docs/PUBLISH_BOARDS.md`). What follows is how the built board was
+    guarded until then. One board a week, its link on that week's item and in
     `WORKBENCH.md`. Every rebuild republishes to that link, which keeps
     every tick, because the store stays with the page and each tick's id
     depends only on its day and step. A rebuild given the board it replaces

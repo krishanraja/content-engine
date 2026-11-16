@@ -240,7 +240,13 @@ MIX_DAYS = (('mon', 'Monday', 0), ('tue', 'Tuesday', 1), ('wed', 'Wednesday', 2)
 RECORDED_STYLES = {'to_camera': 'Said to camera', 'voiceover': 'Voiceover with motion graphics'}
 
 
-RECORDED_WORDS = (160, 195)  # a 90-second cut that finishes under 89 seconds (story_check's short cut)
+RECORDED_WORDS = (160, 195)  # a 90-second cut that finishes under 89 seconds: off-day options of weeks before SHORT_FROM_WEEK
+# Ruling (Krish, 2026-11-16), of Growth's audience brief: "apply 1 to 6 from the next piece you make this week". The
+# short cut is 20 to 35 seconds (SHORT_CUT in the house rules) and its first sentence names one concrete thing
+# (ONE_CONCRETE_THING). This week's off-day options were made before that ruling and stay as they were; the ideas run
+# makes the week of 23 Nov's under it. A caller that does not say the week keeps the old check.
+SHORT_FROM_WEEK = '2026-11-23'
+NEW_SHORT_RULES = ('ONE_CONCRETE_THING', 'TWO_CUTS')
 
 
 SERIES_LABELS = {slug: label for *_, slug, label in DAYS}
@@ -462,7 +468,7 @@ def side_sha(o, side):
     return hashlib.sha256(json.dumps(shown, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
 
-def read_offdays(data, where='ideas.json offdays', whole=False):
+def read_offdays(data, where='ideas.json offdays', whole=False, week=None):
     """{day: [{'id', 'format', 'source', 'url', 'copy', 'copy_sha256'}]}, or None when there are none. Each day given
     holds 2 to 6 options, plus any his ticked inspiration brought (his_tick); a day left out is said on the tab."""
     if data is None:
@@ -553,7 +559,7 @@ def read_offdays(data, where='ideas.json offdays', whole=False):
             if o.get('kind') == 'recorded' and key not in {k for k, *_ in OFF_DAYS}:
                 problems.append(f'{weekday} option {n}: a piece he records is a Tuesday, Thursday, Saturday or Sunday piece')
             elif o.get('kind') == 'recorded':
-                found = recorded_problems(o)
+                found = recorded_problems(o, week)
                 problems.extend(f'{weekday} option {n}: {p}' for p in found)
                 if not found:
                     row.update(recorded_fields(o))
@@ -646,7 +652,7 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
     return out, warnings
 
 
-def recorded_problems(o):
+def recorded_problems(o, week=None):
     """Why a recorded off-day option is not ready to show, or []. It names his idea (piece_id), its series, its style,
     a title, and the exact words, which pass the story check as a short cut (all but the article close, since an off-day
     piece has no article: house rule SCRIPT_CLOSE sends the viewer to it) and were read back by two fresh readers with
@@ -666,10 +672,14 @@ def recorded_problems(o):
         out.append('title is the piece\'s subject in one line of up to 120 characters (it names the Teleprompter script)')
     script = tps.spoken_text(str(o.get('script') or ''))
     words = len(script.split())
-    if not RECORDED_WORDS[0] <= words <= RECORDED_WORDS[1]:
-        out.append(f'script is the exact words he reads, {RECORDED_WORDS[0]} to {RECORDED_WORDS[1]} words (it has {words})')
+    now = bool(week) and str(week) >= SHORT_FROM_WEEK
+    low, high = (story_check.CUTS['short'][0], story_check.CUTS['short'][1]) if now else RECORDED_WORDS
+    if not low <= words <= high:
+        out.append(f'script is the exact words he reads, {low} to {high} words (it has {words})'
+                   + (' (house rule TWO_CUTS: a short of 20 to 35 seconds, Ruling, Krish, 2026-11-16)' if now else ''))
     else:
-        found = [p for p in story_check.problems(script, 'short') if 'SCRIPT_CLOSE' not in p]
+        found = [p for p in story_check.problems(script, 'short') if 'SCRIPT_CLOSE' not in p
+                 and (now or not any(rule in p for rule in NEW_SHORT_RULES))]
         out.extend(f'script: {p}' for p in found[:5])
     rb = o.get('read_back') if isinstance(o.get('read_back'), dict) else {}
     readers = rb.get('readers') if isinstance(rb.get('readers'), list) else []
@@ -852,7 +862,7 @@ def ideas_problems(data, monday, where='ideas.json'):
         out += [line.strip() for line in str(error).split('\n')[1:]] or [str(error)]
     if isinstance(data, dict) and data.get('offdays') is not None:
         try:
-            read_offdays(data.get('offdays'), f'{where} offdays')
+            read_offdays(data.get('offdays'), f'{where} offdays', week=monday.isoformat())
         except BoardError as error:
             out.append(str(error))
     return out

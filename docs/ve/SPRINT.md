@@ -1,6 +1,6 @@
 # The weekly device sprint (W3.8)
 
-Each week, one or two new library devices come from Production Inspo. Each one is briefed through `ve brief`, built by Codex from a card, and proven at Krish's Gate 2 before any spec uses it. Each device serves one aim (good motion, good animation or good visuals) and makes something land beyond the words. The device count and each Gate 2 yes appear on the board's Archive.
+Each week, one or two new library devices come from Production Inspo. Each one is briefed through `ve brief`, built by Codex from a card, and proven at Krish's Gate 2 before any spec uses it. Each device serves one aim (good motion, good animation or good visuals) and makes something land beyond the words. The device count and each Gate 2 yes appear in `ve sprint status` (the old board's Archive tab, which showed them, is retired since 13 Nov 2026).
 
 `ve` means `python scripts/ve.py`. The mechanics are in `scripts/velib/sprint.py`, tested by `tests/ve_sprint_test.py`.
 

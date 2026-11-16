@@ -53,7 +53,7 @@ export type PressAction = {
   words?: { path: string; ask: string; required: boolean }
   /** Contract 1.8.0: a choice he makes before the press, written at this dot path as the values he chose (several when
    *  multi). from_link: the option whose hosts the link names is chosen for him first, and he can change it. */
-  choose?: { path: string; ask: string; multi: boolean; required: boolean; from_link?: boolean; options: Array<{ value: string; label: string; hosts?: string[] }> }
+  choose?: { path: string; ask: string; multi: boolean; required: boolean; from_link?: boolean; options: Array<{ value: string; label: string; hosts?: string[]; still?: string; line?: string; why?: string }> }
   /** Dot paths set to the press time (ISO). */
   stamp: string[]
   /** What the board says once it is saved. */
@@ -61,6 +61,9 @@ export type PressAction = {
   /** Contract 1.3.0: which of the five outcomes the press gives an idea, and where that sends it, said before he presses. */
   outcome?: Outcome
   goes?: string
+  /** Contract 1.17.0: what the board does once the press is saved: the prompt it opens (Open a production session
+   *  saves his approval of the story, then opens the production session). */
+  after?: import('./_view.js').PromptAction
 }
 
 export interface ViewOption {
@@ -74,6 +77,8 @@ export interface ViewOption {
   status: string
   /** His words on it, or the decision the week's plan records in his words. */
   said: string | null
+  /** Contract 1.18.0: what it came from, to open (the card he saved, on a held ask of his). https only. */
+  link?: { label: string; href: string }
   stories?: Array<{ headline: string; what: string; date: string | null; source: string | null; href?: string; media_kind: string | null; media?: string }>
   stories_due?: string | null
   /** Whether the good news holds this week's stories (found on or after the week's Thursday). */
@@ -331,8 +336,13 @@ export function ideaLines(i: ExtrasInputs, day: string): ViewOption[] {
   for (const h of (Array.isArray(plan.held) ? plan.held : []).filter(isObj)) {
     const ref = cut(h.ref, 160)
     if (!ref || !on(h.day)) continue
+    // A held ask of his keeps the card he saved, its link and his words (Krish, 2026-11-16: "I actually put on the
+    // inspiration board something very specific"); 1.18.0.
+    const src = isObj(h.source) ? h.source : {}
+    const href = typeof src.url === 'string' && /^https:\/\/[^\s"<>]+$/.test(src.url) ? src.url : null
     out.push({ id: `held-${slugOf(ref)}`, doc_id: `held-${slugOf(ref)}`, title: `Held back: ${cut(h.title, 200) || ref}`, text: cut(h.reason, 600),
-      format: null, source: null, status: 'held back', said: null, actions: [], outcome: null })
+      format: null, source: null, status: 'held back', said: cut(h.said, 600) || null, actions: [], outcome: null,
+      ...(href ? { link: { label: cut(src.label, 120) || 'What you saved', href } } : {}) })
   }
   return out
 }

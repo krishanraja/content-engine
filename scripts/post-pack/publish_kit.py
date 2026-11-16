@@ -68,7 +68,15 @@ from pathlib import Path
 
 ARTICLE = '{ARTICLE_URL}'
 YOUTUBE = '{YOUTUBE_URL}'
-VERTICAL_MAX_SECONDS = 90  # the short cut, house rule TWO_CUTS; inside WhatsApp Status's limit too
+# The short cut's ceiling, house rule TWO_CUTS: SHORT_CUT in the house rules (Ruling, Krish, 2026-11-16: "apply 1 to 6
+# from the next piece you make this week", so verticals of 20 to 35 seconds). It was 90 until 15 Nov.
+def _short_cut_most_s():
+    text = (Path(__file__).resolve().parents[2] / 'apps' / 'control-plane' / 'api' / '_houseRules.ts').read_text(encoding='utf-8')
+    block = text.split('// SHORT_CUT:BEGIN', 1)[1].split('// SHORT_CUT:END', 1)[0]
+    return int(json.loads(block[block.index('{'):block.rindex('}') + 1])['most_s'])
+
+
+VERTICAL_MAX_SECONDS = _short_cut_most_s()  # inside WhatsApp Status's limit too
 FEATURE_NAME = '15-minute feature'  # making.CUT_NAME['feature']
 # Named so the board's YouTube tick ("YouTube (the ...)") stays the 5-minute video's alone.
 FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'
@@ -283,7 +291,7 @@ def steps(p):
                      ('Pinned comment', pinned_comment('youtube', p, q))],
         },
         {
-            'where': 'YouTube Shorts', 'tag': f'The {VERTICAL_MAX_SECONDS}-second cut, linked to the full video',
+            'where': 'YouTube Shorts', 'tag': f'The short cut (at most {VERTICAL_MAX_SECONDS} seconds), linked to the full video',
             'why': 'Links in Shorts are not clickable, so the Short points to the full video instead.',
             'files': [short_video, vertical],
             'do': [f'Upload the tall video as a Short with the title {words_at}.',
@@ -293,7 +301,7 @@ def steps(p):
             'copy': [('Title', p.get('short_title') or p.get('youtube_title'))],
         },
         {
-            'where': 'TikTok', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
+            'where': 'TikTok', 'tag': f'The same short cut (at most {VERTICAL_MAX_SECONDS} seconds)',
             'why': 'Links in TikTok captions are not clickable, and a clickable link in your profile needs 1,000 followers '
                    'or a business account. The video says makeyourmindup.ai out loud, so the caption only has to name it.',
             'files': [short_video, vertical],
@@ -304,7 +312,7 @@ def steps(p):
             'copy': [('Caption', with_bio_pointer(p.get('tiktok_caption') or short_caption))],
         },
         {
-            'where': 'Instagram Reels', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
+            'where': 'Instagram Reels', 'tag': f'The same short cut (at most {VERTICAL_MAX_SECONDS} seconds)',
             'why': 'Reel captions cannot hold a clickable link, so the caption sends people to the link in your bio.',
             'files': [short_video, vertical, square],
             'do': [f'New Reel, add the tall video and paste the caption {words_at}.',

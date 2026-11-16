@@ -50,7 +50,7 @@ Commands, outputs and 55-minute envelope: RUNBOOK.md. Batch questions; end sessi
 | S7 | QC --props, <=2 fix loops, fresh Critic, final packet; Gate 3: watch cuts/hear joins reel | scripts, Claude, Krish |
 | S8 | file READY cuts to the archive and the post's `3 Video` folder, bound to piece_id; stop clock | script/Claude |
 
-In `config/ve/formats/*.json` face-with-proof is `proven`; hand-held-screen, two-passports, scoreboard-test and voice-led-pictures are `trial`. `config/ve/devices.json` registers 19 devices, the same 19 the renderer's `devices/registry.ts` draws; format lists also name future devices. Compile refuses device verbs absent from devices.json. test_grid draws carry with a dashed box and ANSWER DELETED outline text.
+In `config/ve/formats/*.json` face-with-proof is `proven`; hand-held-screen, two-passports, scoreboard-test and voice-led-pictures are `trial`. `config/ve/devices.json` registers 42 devices (16 Nov 2026), the same 42 the renderer's `devices/registry.ts` draws; format lists also name future devices. Compile refuses device verbs absent from devices.json. test_grid draws carry with a dashed box and ANSWER DELETED outline text.
 
 ## CLI
 
@@ -97,7 +97,7 @@ time <piece> status
 file <piece> --subject <text> [--date <YYYY-MM-DD>] [--cut <cut> ...] [--dry-run]
 ```
 
-Also: `comp`, `keyframes`, `lock check|show|freeze`, `fonts`, `lane`, `verdict write`, `packet`, `premix`, `receipt`, `faces` and `lab` (RUNBOOK.md, STATUS.md; `ve <command> -h`). `stills` is a placeholder (exit 2); quick-edit is fallback. Never claim complete ve production from unavailable stages.
+Also: `comp`, `keyframes`, `lock check|show|freeze`, `fonts`, `lane`, `verdict write`, `packet`, `premix`, `receipt`, `faces` and `lab` (RUNBOOK.md, STATUS.md; `ve <command> -h`). `stills` is a placeholder (exit 2), apart from `ve lab stills` (below); quick-edit is fallback. Never claim complete ve production from unavailable stages.
 
 **One production round (plan 4 Nov 2026; F04, F13).** **expect** writes `<ve dir>/expect.md`, at most six plain lines of what the cut will and won't do, each only when it applies (`velib/expect.py`). **styles** renders the same 8 to 15 s window of his take once per shortlisted motion style (`creative_direction.pick_motion`, top 3; a style whose device is not built is left out and named) to `styles/<module>.mp4` and `styles.json`, each option's props carrying its own `motion` (the style id and its profile from the renderer's `kit/motion-profiles.json`, which the renderer draws; see STATUS.md for the ten styles drawn and the seven that need a device); with no take it uses his last take of the same format, labelled, never stock. Only distinct options are offered (`config/ve/style-distinct.json`): it renders the house look on the same window to `styles/house.mp4`, leaves out first a style whose own effect touches no device in the window (named, reason `no_device_in_window`), samples 6 frames of every clip at 270 px wide in greyscale with ffmpeg, scores every pair by mean absolute difference and offers a style only when it differs from the house and every option already offered by at least the threshold; a look-alike (`look_alike`, with its score and the clip it resembles) gives way to the next ranked drawable style, two distinct options are offered with a `note` saying so, and fewer than two refuse. `styles.json` carries `house`, `distinctness` {threshold, frames, width, pairs} and each option's `differs`. **proof** renders only the hardest beat (`velib/proof.py`: `style.proof.beat`, else most distinct devices, then a SPLIT beat with a card, then the longest) from the compiled props, cut to that window on the same clock and rendered by the same `render`, then runs qc on it; it writes `proof/<cut>.mp4` and `proof/<cut>.json` {beat, start, end, sha256, spec_sha256, style_module}. From `creative_direction.MOTION_FROM` (9 Nov 2026) `render` of a whole cut, `packet` and `status` refuse unless Krish approved that proof by its sha256 and `proof.structural_hash` (style.motion, the device set, each beat's id, uses and layout; never caption text) still matches, and the beat has not moved 0.5 s or more. His presses are read from the piece's making record, `gates.{storyboard,style,proof,final}` (`velib/gates.py`, GET `/api/content-ideas/<id>/making`, the uuid from the plan folder's `post.json`), and from the spec's own `approvals`; the record wins, and offline it says NOT CHECKED. A proof press that names its `cut` counts only for that cut; the final press binds each cut in `gates.final.cuts` ({long, short}: file sha256s), and `gates.storyboard.sha256` is `gates.storyboard_sha` (canonical JSON of expect.md and storyboard.md, LF). `packet` opens with "In short" (at most ten lines), counts `rounds` in `packet.record.json` and writes it to the making record (the route refuses session writes to `gates`, never `rounds`).
 
@@ -155,15 +155,15 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
   content and no animation ever passes over a wordmark; the closing outro card keeps the wordmark (Ruling, Krish,
   2026-11-11; `MOTION_STANDARD.md` rule 3). The 16:9 cut keeps its mark tile and pill, and nothing may overlap them.
 - **Caption styles.** A spec sets `brand.caption_theme` to one of 15 names (`captions/names.ts`); with none, the house
-  caption draws. `art-directed` is the one Krish picked; `cinematic` is Audrey's system (one scored hero word per page
+  caption draws. Since 13 Nov there are 27, picked with `style.captions`, which wins over `brand.caption_theme` (above). `art-directed` is the one Krish picked; `cinematic` is Audrey's system (one scored hero word per page
   in silver tinted glass, support words in a cascade, layout states rotating); the other 13 are house rebuilds. Every
   style takes ve's caption pages and timing, the house faces and tokens, and stays in the safe area. Not yet proved on
   his take: prove a style on one before a cut ships with it, by setting `brand.caption_theme` in the spec and running
   `ve proof` (the hardest beat on his real take, through the one render path) for his Approve proof press.
 - **Motion styles from the lab.** A piece's `style.motion` names one style in the bank (`config/style-references.json`,
   motion layer). `ladder` (The Ladder: one lit 3D object carries every number) and `living-screen` (The Living Screen:
-  a working interface the camera reads for the viewer) joined on 11 Nov, liked by Krish, and are `needs_device`: a spec
-  naming them lints and renders in house motion until their devices land (cards `docs/ve/cards/styles-3d/`: the
+  a working interface the camera reads for the viewer) joined on 11 Nov, liked by Krish, and are `needs_device`: since 14 Nov 2026 `ve lint` refuses a spec
+  naming them (`motion.not_drawable`), where before it rendered in house motion (cards `docs/ve/cards/styles-3d/`: the
   prerequisite, 3D and the moves package, landed 11 Nov; `ladder_stage` landed 11 Nov and `living_screen` 12 Nov; each style routes to its device only after Krish's yes on its test render). A 3D device brings `@types/three` (a dev dependency of `apps/renderer`) and fills its whole device box with one `ThreeCanvas` given whole-pixel sizes, framing any words inside the 9:16 words-safe zone with its camera (`living_screen`'s `safeBox`); any plate it loads is staged by `ve-render.mjs`. How a lab style reaches ve: `lab/styles/README.md`, "From the lab to ve".
 - **Two things called "lab".** `ve lab render` (`velib/lab.py`) renders the house and word caption builds and the
   bank's drawable styles on one window of his pinned take (`config/ve/lab.json`), to check the house look has not
@@ -171,6 +171,18 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
   2026), so the regression reel never grows by itself, and `ve lab sample` records a render filed in Drive as the
   sample Pick a style shows on the board (`config/ve/style-samples.json`). The style lab (`lab/styles/`, `render.mjs`) is where a new
   style is designed and proved as a whole cut, outside the renderer. They are different tools.
+- **Stills for the board's pickers** (Krish, 16 Nov 2026: "I should be able to hover over the captions, look, and motion
+  style and see a templated screenshot of what it might look like. No need for a video, just a still."). `ve lab stills`
+  cuts one 540x960 JPEG from each drawable motion style and each caption style the lab rendered (`--only` narrows it;
+  with `--take` and `--brand-dir` it renders them first), every one at the same frame of the pinned window
+  (`velib/lab.py` `STILL_FRAME`, frame 445, where a caption page and a device have both settled), into `<out>/stills/`
+  under `.cache`, never the repository, and prints its manifest (`stills.json`: id, layer, path, sha256, width,
+  height). Once he has looked at them and each is filed in Drive, `ve lab still <layer> <id> --drive <its Drive id>
+  --file <the jpg>` records it in `style-samples.json`'s `stills` map (with its Drive id in `stills_drive`), served by
+  the same Drive file route as a sample. A look's still (layer `treatment`) comes from a design-lock key frame or a
+  Codex plate and is recorded the same way. It refuses a style the lab cannot draw (`needs_device`), an unknown id or
+  layer, a malformed Drive id, and a file that is not a JPEG of about 540x960 or, for motion and captions, not the
+  lab's own still.
 - **What makeyourmindup.ai shows.** The engine's publication watcher (`apps/control-plane/api/publish/watch.ts`,
   hourly) records each piece's Substack post, YouTube video and Short as they go live, and
   `GET /api/publish/catalogue` serves them to the site (which takes each article's cover from Substack itself). Nothing in ve publishes; a session never edits the site's
