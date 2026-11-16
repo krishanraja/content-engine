@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-15
-head: 3ab533c
+as_of: 2026-11-16
+head: 3379360
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,7 +30,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-15)
+## Where it is right now (as of 2026-11-16)
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":4,"current_as_of":"2026-11-15","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (3 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 8 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
@@ -44,7 +44,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-15 scripts/quick-edit/kit.py (encode_frames, default_drawer), scripts/quick-edit/hyperframes_film.py, vendor/hyperframes, tests/hyperframes_film_test.py, docs/production/HYPERFRAMES.md, docs/INTEGRATIONS.md.
+- 2026-11-15 HyperFrames became kit's opt-in film backend for the moving end card, with Playwright still the default and byte-identical before and after (frame hashes compared). Its check filmed 16:9 at SSIM 0.9978 and 9:16 at 0.9990 against Playwright, two runs byte-identical, with no key and no spend. Open Generative AI was not adopted because "every cloud call is a paid muapi.ai credit" and ve already has the generation contract (commit 7e3f19ee, `docs/production/HYPERFRAMES.md`).
 Older lines: `docs/history/2026-11-15-NOW-moved-14.md` (it names every earlier move) and `LOG.md`.
 
 
