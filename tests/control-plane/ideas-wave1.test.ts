@@ -102,6 +102,19 @@ describe('the board shows what the run will not offer, and why', () => {
     expect([held.title, held.status, held.actions.length]).toEqual(['Held back: Acme clients took the savings', 'held back', 0])
     expect(ideaLines(inputs(ideas), 'wed')).toEqual([])
   })
+
+  it('a held ask of his keeps the card he saved: its link, his words and a title naming it (1.18.0)', () => {
+    const said = 'Lets make a hilarious meme. Reskin this video with the text "POV: your AI agent when you forget to teach it anything"'
+    const ideas = { held: [
+      { ref: 'ask/d16fe9ff-413c-47c4-ac53-c89e40d28489', day: 'tue', said, title: 'A meme on the YouTube short you saved: an AI agent nobody taught',
+        source: { label: 'The YouTube short you saved, 3 Nov', url: 'https://youtube.com/shorts/tJwqPQvgQkk' }, reason: 'Too close to the meme approved for Fri 13 Nov.' },
+      { ref: 'ask/0000aaaa-0000-0000-0000-000000000000', day: 'tue', title: 'An ask with an unsafe link', source: { url: 'javascript:alert(1)' }, reason: 'A reason of twenty letters.' }] }
+    const [held, unsafe] = ideaLines(inputs(ideas), 'tue')
+    expect(held.title).toBe('Held back: A meme on the YouTube short you saved: an AI agent nobody taught')
+    expect(held.said).toBe(said)
+    expect(held.link).toEqual({ label: 'The YouTube short you saved, 3 Nov', href: 'https://youtube.com/shorts/tJwqPQvgQkk' })
+    expect(unsafe.link).toBeUndefined()
+  })
 })
 
 describe('the run reads fuller sources, and the good news shows its mix (items 9 and 12)', () => {

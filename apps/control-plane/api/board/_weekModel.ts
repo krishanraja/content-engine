@@ -233,7 +233,9 @@ function layerPress(pieceId: string, style: DayStyle, layer: 'treatment' | 'moti
   // Each option carries its one line and, once recorded, its still (contract 1.17.0), which the board shows when he
   // hovers or picks it.
   const options = ordered.map(o => ({ value: o.id, label: `${o.name}${o.id === L.picked ? ' (picked)' : o.recommended ? ' (recommended)' : o.ready === false ? ' (not ready yet)' : ''}`,
-    ...(o.line ? { line: cut(o.line, 240) } : {}), ...(o.still_url ? { still: o.still_url } : {}) }))
+    ...(o.line ? { line: cut(o.line, 240) } : {}), ...(o.still_url ? { still: o.still_url } : {}),
+    // Why it is recommended (1.18.0), so the board shows the recommended look, motion and captions as one set with reasons.
+    ...(o.recommended && o.why ? { why: cut(o.why, 240) } : {}) }))
   const word = { treatment: 'the look', motion: 'the motion style', captions: 'the captions' }[layer]
   const op = layer === 'treatment' ? 'look' : 'style'
   const path = layer === 'treatment' ? 'production' : layer
