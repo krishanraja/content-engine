@@ -1029,7 +1029,7 @@
           "beats": "https://www.instagram.com/evolving.ai/p/DfPW8fmgCnt/",
           "our_take": "One topic and every story checked at its source with its own photo, where the roundup is a grab bag."
         },
-        "stories_short": "3 of 5 found on the topic in the seven days to 16 Nov. Two more were cut: the UCSB bionic-eye study ScienceDaily ran on 12 Nov was released by UCSB on 7 Aug, and DeepL's Aure voice translator (11 Nov) has no real photo of its own. The Find the other 2 stories press fills it to five.",
+        "stories_short": "4 of 5 found on the topic in the seven days to 16 Nov, each checked on its source on 16 Nov. No fifth story on speaking, signing or getting around has a source and a real photo of its own this week: DeepL's Aure voice translator (11 Nov) has only a logo; Apple TV's new sign-language option (10 Nov) is filmed by people, not AI; the Wandercraft walking clinic piece (10 Nov) names no AI; the UCSB bionic-eye study ScienceDaily ran on 12 Nov was released on 7 Aug. Thatsign is still a prototype in testing, and Google's glasses describe the world but, Google says, are no mobility aid. The Find the other story press fills it to five.",
         "learned_from": [
           "I want actual news items and the content we are going to use here - embedded real world images or videos (2 Nov)",
           "Real-world stories only, but with a hilarious generated cover page (3 Nov)"
@@ -1076,7 +1076,69 @@
           ],
           "versus": "Ours adds one clear topic and three real stories dated 10 to 12 Nov 2026, each with its own photo and named source, where his saved post had no sources or dates. (Fresh reader C, Sonnet, saw both)",
           "repeat": "A weekly series by design: reader A matched the format to the earlier Saturday good news and said the stories look new; reader B called it new, the same format with different news."
-        }
+        },
+        "stories": [
+          {
+            "headline": "An app gives a woman with ALS her own voice back",
+            "what": "Anne-Marie Poirier in Montreal lost her speech to ALS in October 2025. The Vocality app turns a few words she picks into full sentences and reads them out in a copy of her own voice, made from recordings of her speaking.",
+            "why": "More than 100 people across North America now talk with it every day, in six languages.",
+            "kind": "health",
+            "date": "2026-11-11",
+            "source": {
+              "label": "The Canadian Press, via MTL Blog, 11 Nov 2026",
+              "url": "https://www.mtlblog.com/woman-with-als-hears-her-own-voice-again"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://www.mtlblog.com/media-library/woman-with-als-hears-her-own-voice-again.jpg?id=68662245&width=1245&height=700&quality=85&coordinates=0%2C61%2C0%2C61"
+            }
+          },
+          {
+            "headline": "A sign-language app that works both ways is being tested",
+            "what": "Thatsign, from Techies Africa in Lagos and London, turns speech into British Sign Language on screen and turns signing back into words. It is still a prototype that knows 13 everyday signs, and a deaf teacher who tried it gave it 9 out of 10.",
+            "why": "9 in 10 deaf children are born to hearing parents, and it is built for those families. Its makers aim to launch it around the middle of 2027.",
+            "kind": "people",
+            "date": "2026-11-12",
+            "source": {
+              "label": "Techpoint Africa, 12 Nov 2026",
+              "url": "https://techpoint.africa/feature/thatsign-to-bridge-communication-gap/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://techpoint.africa/wp-content/uploads/2026/11/FotoJet-57.png.webp"
+            }
+          },
+          {
+            "headline": "An AI guide for blind walkers reaches its first customers",
+            "what": "Glide is an AI guide for people who are blind or have low vision. It works out a path through the places people walk, and you can ask it out loud what is around you.",
+            "why": "It has started reaching its first customers and won two CES 2027 Innovation Awards, one for accessibility and one for mobility.",
+            "kind": "people",
+            "date": "2026-11-10",
+            "source": {
+              "label": "Glidance, 10 Nov 2026",
+              "url": "https://www.glidance.io/news/glide-wins-2027-ces-innovation-awards-in-two-categories"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://cdn.prod.website-files.com/6a39148a246d50f4de336212/6a57ddb24596a3b178bc058a_We%E2%80%99re%C2%A0with%20you%2C%20every%20step%20of%20the%20way_.webp"
+            }
+          },
+          {
+            "headline": "Google's new glasses describe the world to blind wearers",
+            "what": "Google's new AI glasses come with Guided Vision, which talks people who are blind or have low vision through what is in front of them, reads small print and helps find everyday things.",
+            "why": "Pre-orders opened on 12 November and the glasses go on sale on 10 December. Google says it is no mobility aid and no stand-in for a white cane.",
+            "kind": "people",
+            "date": "2026-11-12",
+            "source": {
+              "label": "Google, 12 Nov 2026",
+              "url": "https://blog.google/innovation-and-ai/technology/xr-ar/google-intelligent-eyewear-collections-pre-order/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/WP_Carousel_Lifestyle.width-1200.format-webp.webp"
+            }
+          }
+        ]
       },
       {
         "id": "eggs",
