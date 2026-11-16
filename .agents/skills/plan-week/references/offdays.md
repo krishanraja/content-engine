@@ -282,23 +282,34 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
    anything the search finds. Then his Instagram inspo sheet (Krish, 2026-11-16: "Good news stories can come from the
    Instagram inspo as well. There's absolutely tonnes in there. We would just need to pick the right ones if the good
    news was on a specific theme"): `python3 scripts/post-pack/lookalike.py goodnews <Monday>` writes the sheet's newest
-   posts to `goodnews-input.json` (never committed). Once the topic is chosen (step 1), pick the posts on it that are
-   good news; a run of good-news posts on one theme there may be the topic. A post is where a story was found, never
+   posts to `goodnews-input.json` (never committed). Its good-news posts are candidates for step 1 (place
+   `sheet`); a run of them on one theme may be the topic. A post is where a story was found, never
    its source: the story still has its primary source and its own picture (steps 1 to 3), is told in our words, never
    the post's, and says where it was found (`"found": {"label": "Your Instagram inspo sheet", "url": "<the post>"}`).
    A story found there may be up to thirty days old (his Yes, 16 Nov); one the web search finds stays within the seven
    days (step 1). The web search finds the rest.
-1. **One topic, five stories on it** (Ruling, Krish, 2026-11-13: the publish board shows only what he approved, in one
-   week model; his words: "The Saturday carousel is supposed to be five good news stories on that same topic"). Choose
-   one topic first (for example "AI fixing old mistakes", "AI in the clinic this week"), write it on the option as
-   `"topic": "<a few plain words>"`, and make the option's hook say it. Then find five real AI stories on that topic
-   that are good news for ordinary people (health, science, safety, access, work made better), each published in the
-   seven days up to `stories_due` (today), none already run (`sources.json` `recent_offdays` urls). Five is the post:
-   four or fewer is not a good-news post yet, and the board says so plainly on Saturday ("1 of 5 stories found"). Tag each story with its `kind`, one of `health`, `lab`, `science`, `work`, `money`,
-   `learning`, `climate`, `creative`, `people`, `safety` or `other`; the board shows the week's mix on the option
+1. **Look wide, then choose the topic** (Krish, 2026-11-16: "Something's gone wrong in where you're looking and how
+   you're looking because there should be millions of good news stories. What about Reddit, YouTube, or LinkedIn?
+   Given that it's business leaders, we might want some successful business stories as well. In fact successful
+   business stories might be really good."). First gather at least fifteen candidates from at least three kinds of
+   place: the news, Reddit, YouTube, LinkedIn, his sheet and his saved cards. Write them on the option as
+   `"candidates": [{"title": "<our words>", "url", "place": "news" | "reddit" | "youtube" | "linkedin" | "sheet" |
+   "card", "date": "YYYY-MM-DD"}]`. Good news is a real AI story that helped ordinary people (health, science, safety,
+   access, work made better), or a business that succeeded with AI, with the number that shows it (revenue,
+   customers, hours saved, people hired): he speaks to business leaders, and a success story may be the best of all.
+   Then choose the topic where five strong candidates meet (Ruling, Krish, 2026-11-13: "The Saturday carousel is
+   supposed to be five good news stories on that same topic"; for example "Small firms AI made money for this month",
+   "AI in the clinic this week"), write it on the option as `"topic": "<a few plain words>"`, and make the option's
+   hook say it. Never choose the topic first and hunt for five: that is how 16 Nov found four. Each story is
+   published in the seven days up to `stories_due` (today), or the thirty for one found in his sheet (step 0), none
+   already run (`sources.json` `recent_offdays` urls). A Reddit thread, a video or a post is where a story was found
+   (`found`), never its source. Five is the post: four or fewer is not a good-news post yet, and the board says so
+   plainly on Saturday ("1 of 5 stories found"). Tag each story with its `kind`, one of `business`, `health`, `lab`, `science`, `work`,
+   `money`, `learning`, `climate`, `creative`, `people`, `safety` or `other`; the board shows the week's mix on the option
    ("The mix: 2 health, 1 work, ..."), so he sees it before he presses. A cap on health and lab stories waits for his
    yes; until then the mix is shown, never capped. Prefer a primary source: the organisation's own page, the paper, the official
-   announcement; a press story only names where it read it.
+   announcement, a company's own results or case study; a press story only names where it read it, and a founder's own
+   post about their own company is that company's own words, said as theirs.
 2. Check each against its primary source the same day: the headline, the number and the date must be on that page.
    A claim the source does not carry is cut, never softened.
 3. Each story has its own picture: a photo or clip of the thing itself from the source or the organisation (`media`,
