@@ -162,7 +162,7 @@
   {
    "id": "style-bank",
    "name": "Style bank",
-   "purpose": "53 reusable modules in 11 layers (opening to motion); 52 untested",
+   "purpose": "58 reusable modules in 11 layers (opening to motion); 55 untested",
    "stage": "direction",
    "decided": "pre-script",
    "location": "config/style-references.json",
@@ -386,7 +386,7 @@
   {
    "id": "music-library",
    "name": "Music library ledger",
-   "purpose": "Approved tracks for beds (2 approved, 4 proposed)",
+   "purpose": "Approved tracks for beds (4 approved, 4 proposed)",
    "stage": "sound",
    "decided": "pre-script",
    "location": "config/music-library.json",
@@ -580,7 +580,7 @@
   {
    "id": "devices",
    "name": "Device library",
-   "purpose": "The verbs FormatMaster draws (27)",
+   "purpose": "The verbs FormatMaster draws (42)",
    "stage": "artwork",
    "decided": "pre-record",
    "location": "config/ve/devices.json",
@@ -843,7 +843,7 @@
   {
    "id": "caption-styles",
    "name": "Caption styles",
-   "purpose": "Fifteen caption styles a spec picks with brand.caption_theme (art-directed, his pick; cinematic, Audrey's system; thirteen house rebuilds), drawn from ve's caption pages in the house faces and tokens inside every channel's safe area; proved on stills, not yet on his take",
+   "purpose": "27 caption styles a spec picks with style.captions.theme, chosen apart from the motion style since 13 Nov (art-directed, his pick; cinematic, Audrey's system; the rest house rebuilds; docs/ve/INGREDIENTS.md), drawn from ve's caption pages in the house faces and tokens inside every channel's safe area; proved on stills, not yet on his take",
    "stage": "captions",
    "decided": "pre-record",
    "location": "apps/renderer/src/engine/captions/themes.tsx",
