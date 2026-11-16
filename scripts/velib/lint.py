@@ -7,7 +7,7 @@ import math
 import re
 from pathlib import Path
 
-from .common import CONFIG, load_json, run
+from .common import CONFIG, ROOT, load_json, run
 
 HEX = re.compile(r'#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b')
 DIGIT = re.compile(r'\d')
@@ -16,6 +16,15 @@ SOUNDED_VERBS = {'enter', 'stamp', 'mark'}   # the moves a sound can sit on; non
 SOUND_FROM = '2026-11-09'                      # the date the 9 Nov guards bind from (creative_direction.MOTION_FROM)
 WORDS_PER_SECOND = 2.6  # Krish's measured read rate, used only before ingest gives real times
 LONG_CUT_S = 90  # a cut allowed past this is a long cut: its bed is episode_bed
+
+
+def short_cut() -> dict:
+    """The short (tall) cut's limits, house rule TWO_CUTS: the JSON between // SHORT_CUT:BEGIN and :END in the house
+    rules. Ruling (Krish, 2026-11-16), of Growth's audience brief, changes 1 and 2: "apply 1 to 6 from the next piece
+    you make this week" (verticals of 20 to 35 seconds that win their first two seconds)."""
+    text = (ROOT / 'apps' / 'control-plane' / 'api' / '_houseRules.ts').read_text(encoding='utf-8')
+    block = text.split('// SHORT_CUT:BEGIN', 1)[1].split('// SHORT_CUT:END', 1)[0]
+    return json.loads(block[block.index('{'):block.rindex('}') + 1])
 # His name, a spelling or handle of it, or a possessive of it ("KRISH'S TEST", "@TheRealKrisho", "krishraja.com").
 # Krish, 28 Oct 2026: "Remember, no content refers to Krish, ever." One pattern: copy-lint's no_name once
 # config/copy-lint.json carries it, this same regex until then. "Raja" alone and "Krishna" pass.
@@ -563,13 +572,23 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             out.append(f'sound.one_moment {where}: {len(sounded) + placed} moves carry a sound{via}; one sound, on the big '
                        'moment only (THE_BAR ruling 11)')
         # dialogue
-        if cut['aspect'] == '9:16' and cut['max_s'] > 89:
+        short = short_cut()
+        vertical_now = cut['aspect'] == '9:16' and (spec.get('publish_day') or '') >= short['from']
+        if vertical_now and cut['max_s'] > short['most_s']:
+            out.append(f'dialogue.short_max {where}.max_s: a 9:16 short published from {short["from"]} is {short["most_s"]} s or '
+                       'less, one idea (house rule TWO_CUTS; Ruling, Krish, 2026-11-16)')
+        elif cut['aspect'] == '9:16' and cut['max_s'] > 89:
             out.append(f'dialogue.short_max {where}.max_s: a 9:16 short is 89 s or less')
         # story
         first = beats[0]
-        if not any(e['at_w'] <= first['span']['from_w'] + 4 for e in first['events']):
-            out.append(f'story.hook_event {where}.beats.0: the first visual event must land within the first 4 words of the hook '
-                       '(about 1.5 s after his first word, the cut\'s first frame: nothing goes before the hook)')
+        # A vertical wins its first two seconds (house rule FIRST_TWO_SECONDS): its first visual event lands by the
+        # hook's second word, about 0.8 s at his pace, so the concrete thing and its words are on screen inside a second.
+        reach = 1 if vertical_now else 4
+        if not any(e['at_w'] <= first['span']['from_w'] + reach for e in first['events']):
+            out.append(f'story.hook_event {where}.beats.0: the first visual event must land within the first {reach + 1} words of '
+                       'the hook (' + ('by his second word, inside the first second, on a vertical: house rule FIRST_TWO_SECONDS'
+                                       if vertical_now else 'about 1.5 s after his first word') +
+                       '; the cut\'s first frame: nothing goes before the hook)')
         roles = [b['role'] for b in beats]
         whole = not cut.get('excerpt')
         if whole and roles.count('payoff') != 1:

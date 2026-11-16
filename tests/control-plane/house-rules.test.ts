@@ -471,12 +471,16 @@ describe('two cuts, each from its own script, inside the lengths story_check hol
     const video = await import('../../apps/control-plane/api/_video.js')
     const client = await import('../../apps/control-plane/lib/contentEngine.js')
     const check = readFileSync('scripts/post-pack/story_check.py', 'utf8')
+    // The short cut's band lives in the house rules (SHORT_CUT; Ruling, Krish, 2026-11-16), which story_check.py reads.
+    const { SHORT_CUT } = await import('../../apps/control-plane/api/_houseRules.js')
     const bounds = (cut: string) => {
+      if (cut === 'short') return [SHORT_CUT.fewest_words, SHORT_CUT.most_words]
       const m = new RegExp(`'${cut}':\\s*\\((\\d+),\\s*(\\d+)`).exec(check)
       assert.ok(m, cut)
       return [Number(m[1]), Number(m[2])]
     }
-    for (const [id, cut, ceiling] of [['5min', 'long', 825], ['90s', 'short', 195]] as const) {
+    assert.match(check, /CUTS\['short'\], _SHORT_CAP_S = short_band\(\)/)
+    for (const [id, cut, ceiling] of [['5min', 'long', 825], ['90s', 'short', 68]] as const) {
       const f = video.VIDEO_FORMATS.find(x => x.id === id)!
       const [lo, hi] = bounds(cut)
       assert.ok(f.words >= lo && f.words <= hi, `${id} target ${f.words} inside ${lo}-${hi}`)
@@ -491,7 +495,7 @@ describe('two cuts, each from its own script, inside the lengths story_check hol
     const { LONG_CUT } = await import('../../apps/control-plane/api/_houseRules.js')
     assert.deepEqual({ ...LONG_CUT }, { fewest_words: 675, most_words: 825, lifted_most_words: 1200, words_per_minute: 150 })
     const r = HOUSE_RULES.find(x => x.id === 'TWO_CUTS')!
-    assert.equal(r.on, '2026-11-14')
+    assert.equal(r.on, '2026-11-16') // the short cut's ruling of 16 Nov came after the lift of 14 Nov
     assert.match(r.said, /"lift if worth it"/)
     assert.match(r.text, /up to 1200 words \(about 8 minutes\), only when the story is worth it: its signed narrative lock asks for the longer cut, and config\/long-cuts\.json/)
     assert.match(r.text, /never on more figures or names than LISTENING allows/)
@@ -934,7 +938,7 @@ describe('its audio treatment and one calm outro card, in every format (STORY_IN
 // v5 keeps every old gate (length, reading age, the story) and fails on
 // nothing but that close and that name.
 describe('this week\'s unrecorded scripts keep every gate but the new close and the name (R7, SCRIPT_CLOSE, NO_NAME)', () => {
-  test('Friday\'s v5 deep cut and 90-second cut fit their lengths and a 12-year-old can follow them; only the close of 2026-10-21 and the name of 2026-10-28 fail', async () => {
+  test('Friday\'s v5 deep cut and 90-second cut fit their lengths and a 12-year-old can follow them; only the close of 2026-10-21, the name of 2026-10-28 and the rules of 2026-11-16 (the named opening, and the short cut\'s new length) fail', async () => {
     const { spawnSync } = await import('node:child_process')
     for (const [file, cut, series] of [
       ['docs/plans/2026-10-09-script-deep-v5.md', 'deep', 'mind_the_gap'],
@@ -944,7 +948,10 @@ describe('this week\'s unrecorded scripts keep every gate but the new close and 
       const found = out.stdout.split('\n').filter(l => l.startsWith('  - '))
       assert.ok(found.some(l => /SCRIPT_CLOSE/.test(l)), `${file}: v5 predates the new close and should be told so`)
       assert.ok(found.some(l => /NO_NAME/.test(l)), `${file}: v5 opens on a series line that says his name`)
-      for (const line of found) assert.match(line, /SCRIPT_CLOSE|NO_NAME/, `${file}: ${line}`)
+      // Ruling (Krish, 2026-11-16), Growth's audience brief: the first sentence names one concrete thing
+      // (ONE_CONCRETE_THING) and the short cut runs 20 to 35 seconds (TWO_CUTS, SHORT_CUT); v5 predates both.
+      const later = cut === 'short' ? /SCRIPT_CLOSE|NO_NAME|ONE_CONCRETE_THING|TWO_CUTS/ : /SCRIPT_CLOSE|NO_NAME|ONE_CONCRETE_THING/
+      for (const line of found) assert.match(line, later, `${file}: ${line}`)
     }
   })
 })
