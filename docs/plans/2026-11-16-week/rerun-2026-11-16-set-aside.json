@@ -1,0 +1,303 @@
+{
+  "_about": "Set aside from the Sunday ideas re-run of 16 Nov (run 43875684590) when its ideas.json was repaired to read on main, 16 Nov. Thursday 19 was already decided (Krish, 9 Nov: \"Yes, assistants explainer Thursday\"; 16 Nov: \"Make Thursday the 19th a carousel.\"), so its three new options were not offered; none had a press. Saturday's good-news option takes 5 stories and the re-run found 3, so they wait here for the good-news run (saturday-goodnews.yml, by hand). Nothing here is on the board.",
+  "thu_options_not_offered": [
+    {
+      "id": "nod",
+      "format": "Explainer carousel, 6 cards, 4:5",
+      "source": {
+        "label": "n8n Labs blog, 10 Nov 2026, Meet Nod",
+        "url": "https://blog.n8n.io/meet-nod"
+      },
+      "copy": "n8n Labs released Nod on 10 November, a free, open-source agent for Mac and Windows that works in your apps and on websites until a job is done. Six cards on three chores to hand it this week, and the one setting to switch on first: a monthly spending limit.",
+      "hook": "A free AI that sits through the cancel screens for you.",
+      "pitch": {
+        "see": "Six cards. Cover: the house robot calmly saying no to a tower of pop-ups that beg it to stay. Then three chores Nod's makers list: cancel a subscription and turn down every offer to stay, watch a price and tell you when it drops, find a hotel and book it once you say go. Then the catch: the app is free, and you pay your AI provider for each task, so set the monthly cap first.",
+        "lands": "Everyone hates the cancel maze, and this hands it to a robot with endless patience.",
+        "why_now": "n8n Labs released Nod on 10 November 2026.",
+        "share": "Let the robot sit through the offers to stay."
+      },
+      "shape": "story",
+      "dive": "Nod works in your own apps and browser, each task shows its cost, and the only bill is the AI model you connect, which you can cap each month.",
+      "aim": "utility",
+      "funny": "A robot with endless patience finally wins against the are-you-sure-you-want-to-leave screen.",
+      "lookalike": {
+        "pattern": "free-stuff-worth-saving",
+        "beats": "https://www.instagram.com/getintoai/p/DfPuPhZkwMW/",
+        "our_take": "One free tool shown doing three real chores, with the cost catch said plainly, where the post sells a course."
+      },
+      "cards": [
+        {
+          "words": "A FREE AI THAT SITS THROUGH THE CANCEL SCREENS FOR YOU",
+          "picture": "The house robot calmly declining a tower of pop-ups"
+        },
+        {
+          "words": "CHORE 1: CANCEL A SUBSCRIPTION AND SAY NO TO EVERY OFFER TO STAY",
+          "picture": "A gym membership page, the robot pressing No thanks again and again"
+        },
+        {
+          "words": "CHORE 2: WATCH A PRICE AND TELL YOU WHEN IT DROPS",
+          "picture": "A price tag with a line sliding down"
+        },
+        {
+          "words": "CHORE 3: FIND A HOTEL AND BOOK IT ONCE YOU SAY GO",
+          "picture": "A hotel card with a big GO button under its owner's thumb"
+        },
+        {
+          "words": "THE APP IS FREE. YOU PAY YOUR AI PER TASK. SET A MONTHLY CAP FIRST.",
+          "picture": "A dial marked monthly limit, turned down low"
+        },
+        {
+          "words": "SAVE THIS. SUBSCRIBE FREE (MAKEYOURMINDUP.AI)",
+          "picture": "The house close"
+        }
+      ],
+      "learned_from": [
+        "\"I don't get it and it feels boring with not much point to it.\" (3 Nov, your Reject on the phone-home meme): this one is a chore you can hand over today."
+      ],
+      "direction": {
+        "look": "The infographic style you saved: one chore per card, the house robot doing it",
+        "format": "Explainer carousel, 6 cards, 4:5",
+        "frames": [
+          {
+            "words": "A FREE AI THAT SITS THROUGH THE CANCEL SCREENS FOR YOU",
+            "picture": "The house robot calmly declining a tower of pop-ups"
+          },
+          {
+            "words": "CHORE 1: CANCEL A SUBSCRIPTION AND SAY NO TO EVERY OFFER TO STAY",
+            "picture": "A gym membership page, the robot pressing No thanks again and again"
+          },
+          {
+            "words": "CHORE 2: WATCH A PRICE AND TELL YOU WHEN IT DROPS",
+            "picture": "A price tag with a line sliding down"
+          },
+          {
+            "words": "CHORE 3: FIND A HOTEL AND BOOK IT ONCE YOU SAY GO",
+            "picture": "A hotel card with a big GO button under its owner's thumb"
+          },
+          {
+            "words": "THE APP IS FREE. YOU PAY YOUR AI PER TASK. SET A MONTHLY CAP FIRST.",
+            "picture": "A dial marked monthly limit, turned down low"
+          },
+          {
+            "words": "SAVE THIS. SUBSCRIBE FREE (MAKEYOURMINDUP.AI)",
+            "picture": "The house close"
+          }
+        ],
+        "tone": "Cheeky and useful",
+        "kit": "Brand kit, the house robot, house close"
+      },
+      "fact_note": "Windows support is a preview that needs WSL 2 (Ryan Doser's review, 11 Nov); the card says Mac and Windows as the n8n post does.",
+      "read_back": {
+        "readers": [
+          "Fresh reader A (Sonnet, a 12-year-old reading once)",
+          "Fresh reader B (Haiku, a 12-year-old reading once)"
+        ],
+        "says": [
+          "A free AI app called Nod that cancels subscriptions, watches prices and books hotels for you, but you pay your AI provider per task so set a monthly cap.",
+          "A free AI app that sits through cancel screens for you, watches prices and books hotels, but you pay your AI provider for each task, so you set a monthly cap first."
+        ],
+        "against": 31
+      }
+    },
+    {
+      "id": "bizhub",
+      "format": "Explainer carousel, 6 cards, 4:5",
+      "source": {
+        "label": "IT Brief UK, 11 Nov 2026, on OpenAI's Businesses in ChatGPT (opened 10 Nov)",
+        "url": "https://itbrief.co.uk/story/openai-launches-chatgpt-business-hub-for-companies"
+      },
+      "copy": "OpenAI opened Business Hub on 10 November: a business can claim its listing in ChatGPT, verify it, fix its details and see how often it is mentioned. Six cards on how to claim yours and what it will not change.",
+      "hook": "ChatGPT already talks about your business. Now you can correct it.",
+      "pitch": {
+        "see": "Six cards. Cover: a cafe owner glaring at a giant chat bubble that has their opening hours wrong. Then: what Business Hub is; claim and verify your listing from the ChatGPT sidebar; add your own products and prices; what you see (mentions, website clicks and the topics people ask about, never anyone's chats); the catch (ChatGPT still decides what to recommend). Last card: claim yours this week.",
+        "lands": "Every owner has a wrong-listing story, and this one has a quick fix.",
+        "why_now": "OpenAI opened Business Hub on 10 November 2026.",
+        "share": "Check what ChatGPT says about your business."
+      },
+      "shape": "story",
+      "dive": "Claiming a listing lets a business correct the facts ChatGPT reads about it and see counts of mentions and clicks, while ChatGPT still chooses what to recommend.",
+      "aim": "utility",
+      "funny": "ChatGPT has been telling people your cafe opens at 6am on Sundays, and now you can make it stop.",
+      "lookalike": {
+        "pattern": "new-thing-you-can-do",
+        "beats": "https://www.instagram.com/therundownai/p/DfXx4uMktKI/",
+        "our_take": "Made for the owner, where the post is for the user: how to fix what ChatGPT says about you, and the one thing it will not fix."
+      },
+      "cards": [
+        {
+          "words": "CHATGPT ALREADY TALKS ABOUT YOUR BUSINESS. NOW YOU CAN CORRECT IT.",
+          "picture": "A cafe owner glaring at a chat bubble with the wrong opening hours"
+        },
+        {
+          "words": "BUSINESS HUB: CLAIM YOUR LISTING INSIDE CHATGPT",
+          "picture": "The ChatGPT sidebar with Business Hub picked out"
+        },
+        {
+          "words": "VERIFY IT, FIX YOUR DETAILS, ADD YOUR PRODUCTS AND PRICES",
+          "picture": "A listing card being corrected with a red pen"
+        },
+        {
+          "words": "YOU SEE MENTIONS, CLICKS AND TOPICS. NEVER ANYONE'S CHATS.",
+          "picture": "A small dashboard with three counters"
+        },
+        {
+          "words": "THE CATCH: CHATGPT STILL DECIDES WHAT TO RECOMMEND",
+          "picture": "The house robot holding the menu just out of the owner's reach"
+        },
+        {
+          "words": "CLAIM YOURS THIS WEEK. SUBSCRIBE FREE (MAKEYOURMINDUP.AI)",
+          "picture": "The house close"
+        }
+      ],
+      "learned_from": [
+        "\"I don't get it and it feels boring with not much point to it.\" (3 Nov, your Reject on the phone-home meme): the point here is one job an owner can do this week."
+      ],
+      "direction": {
+        "look": "The infographic style you saved: one step per card, real screens redrawn in the house look",
+        "format": "Explainer carousel, 6 cards, 4:5",
+        "frames": [
+          {
+            "words": "CHATGPT ALREADY TALKS ABOUT YOUR BUSINESS. NOW YOU CAN CORRECT IT.",
+            "picture": "A cafe owner glaring at a chat bubble with the wrong opening hours"
+          },
+          {
+            "words": "BUSINESS HUB: CLAIM YOUR LISTING INSIDE CHATGPT",
+            "picture": "The ChatGPT sidebar with Business Hub picked out"
+          },
+          {
+            "words": "VERIFY IT, FIX YOUR DETAILS, ADD YOUR PRODUCTS AND PRICES",
+            "picture": "A listing card being corrected with a red pen"
+          },
+          {
+            "words": "YOU SEE MENTIONS, CLICKS AND TOPICS. NEVER ANYONE'S CHATS.",
+            "picture": "A small dashboard with three counters"
+          },
+          {
+            "words": "THE CATCH: CHATGPT STILL DECIDES WHAT TO RECOMMEND",
+            "picture": "The house robot holding the menu just out of the owner's reach"
+          },
+          {
+            "words": "CLAIM YOURS THIS WEEK. SUBSCRIBE FREE (MAKEYOURMINDUP.AI)",
+            "picture": "The house close"
+          }
+        ],
+        "tone": "Practical, a little smug on the owner's behalf",
+        "kit": "Brand kit, the house robot, house close"
+      },
+      "fact_note": "OpenAI's own page (openai.com/index/introducing-businesses-chatgpt) refused the fetch here (403); IT Brief's report of it was read on 16 Nov. Eligibility varies by country and kind of business, and Business Agents are US only. The fact gate reads OpenAI's page before Growth makes the post.",
+      "read_back": {
+        "readers": [
+          "Fresh reader A (Sonnet, a 12-year-old reading once)",
+          "Fresh reader B (Haiku, a 12-year-old reading once)"
+        ],
+        "says": [
+          "ChatGPT has a Business Hub where shop owners can claim their listing and fix wrong info like opening hours; you should claim yours this week.",
+          "ChatGPT's Business Hub lets a business claim its listing and correct what ChatGPT says about its products, prices and hours."
+        ],
+        "against": 31
+      }
+    },
+    {
+      "id": "united",
+      "format": "Meme, 2 panels, 4:5",
+      "source": {
+        "label": "United Airlines newsroom, 11 Nov 2026, United Restricts Access for Third-Party AI Agents",
+        "url": "https://united.mediaroom.com/news-releases?item=125496"
+      },
+      "copy": "On 11 November United said it will block personal AI agents from booking and managing its flights, because handing them your login can expose your details and lead to purchases you never meant. A two-panel meme about the first airline to turn the robots away at the desk.",
+      "hook": "My AI agent tried to book my flight. United said no.",
+      "pitch": {
+        "see": "Panel one: the house robot at an airline check-in desk, proudly holding up its owner's passport. Panel two: the desk agent pointing at a sign, NO ROBOTS PAST THIS POINT, while the owner sighs behind the robot. Small print: United, 11 Nov 2026.",
+        "lands": "Everyone has pictured their AI doing the boring booking, and the first big airline just said not here.",
+        "why_now": "United announced the restriction on 11 November 2026.",
+        "share": "Plan it with AI. Book it yourself."
+      },
+      "shape": "story",
+      "dive": "An agent that books for you needs your password, and United says that can expose your details, cause purchases or miles spent that you never meant, and break the rule that a human checks in.",
+      "aim": "humour",
+      "funny": "The first airline to stop a passenger's robot at the desk.",
+      "lookalike": {
+        "pattern": "ai-says-no",
+        "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+        "our_take": "This time a company says no to the AI, and the reason is your password."
+      },
+      "learned_from": [
+        "\"Let's run this one as well and play on the hilarity of this topic.\" (3 Nov, your Improve on the homework meme)"
+      ],
+      "direction": {
+        "look": "The house two-panel meme, drawn fresh",
+        "format": "2 panels, 4:5",
+        "frames": [
+          {
+            "words": "ME: BOOK MY FLIGHT HOME",
+            "picture": "The house robot at a check-in desk, holding up its owner's passport"
+          },
+          {
+            "words": "UNITED: NO ROBOTS PAST THIS POINT",
+            "picture": "The desk agent pointing at the sign, the owner sighing behind the robot"
+          }
+        ],
+        "tone": "Deadpan",
+        "kit": "Brand kit, the house robot, small source line"
+      },
+      "read_back": {
+        "readers": [
+          "Fresh reader A (Sonnet, a 12-year-old reading once)",
+          "Fresh reader B (Haiku, a 12-year-old reading once)"
+        ],
+        "says": [
+          "A joke comic: a robot tries to book a flight for its owner and United says no robots allowed (United refused an AI agent booking, 11 Nov 2026).",
+          "An AI agent tried to check in for a flight with its owner's passport, and the airline desk said no robots allowed."
+        ],
+        "against": 31
+      }
+    }
+  ],
+  "sat_goodnews_stories_found": [
+    {
+      "headline": "An app gives a woman with ALS her own voice back",
+      "what": "Anne-Marie Poirier types a few words and the Vocality app speaks a full sentence in a voice built from her own recordings; more than 100 people across North America use it every day.",
+      "why": "People losing their speech keep sounding like themselves.",
+      "kind": "health",
+      "date": "2026-11-11",
+      "source": {
+        "label": "Global News (The Canadian Press), Quebec woman with ALS hears her own voice again thanks to AI app",
+        "url": "https://globalnews.ca/news/12147285/quebec-woman-als-ai-voice-app"
+      },
+      "media": {
+        "kind": "photo",
+        "url": "https://globalnews.ca/wp-content/uploads/2026/11/c75cdc637fd60095cac21aba396acbb56fe7325dd73fc5cc25f58f485e8ef89a.jpg"
+      }
+    },
+    {
+      "headline": "A sign-language app that works both ways",
+      "what": "Thatsign, built by a team in Lagos and London, turns speech or typing into British Sign Language and turns signing back into words; it is a prototype due around mid-2027.",
+      "why": "More than nine in 10 deaf children are born to hearing parents, so families need a way to talk.",
+      "kind": "people",
+      "date": "2026-11-12",
+      "source": {
+        "label": "Techpoint Africa, 9 in 10 deaf children are born to hearing parents. Thatsign wants to bridge the communication gap",
+        "url": "https://techpoint.africa/feature/thatsign-to-bridge-communication-gap/"
+      },
+      "media": {
+        "kind": "photo",
+        "url": "https://techpoint.africa/wp-content/uploads/2026/11/FotoJet-57.png.webp"
+      }
+    },
+    {
+      "headline": "An AI guide for blind walkers reaches its first customers",
+      "what": "Glidance says Glide, a wheeled guide that steers round obstacles indoors and out, is rolling out to its first customers and won two CES 2027 Innovation Awards.",
+      "why": "Blind and low-vision people get a third way to get around beside a cane or a guide dog.",
+      "kind": "people",
+      "date": "2026-11-10",
+      "source": {
+        "label": "Glidance, Glide wins 2027 CES Innovation Awards in two categories",
+        "url": "https://www.glidance.io/"
+      },
+      "media": {
+        "kind": "photo",
+        "url": "https://cdn.prod.website-files.com/6a39148a246d50f4de336212/6a463e344281bc58b993cc77_manwalking2_1.webp"
+      }
+    }
+  ]
+}
