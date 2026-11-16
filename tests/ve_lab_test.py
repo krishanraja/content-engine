@@ -210,6 +210,14 @@ class LabTest(unittest.TestCase):
         lab.render(self.cfg, self.dir / 'a', self.fake_render([]), self.dir / 'out', only=['paper-cutout', 'data-story', 'theme-art-directed'])
         lab.stills(self.dir / 'out', cfg=self.cfg, grab_fn=self.fake_grab([]))
         stills = self.dir / 'out' / 'stills'
+        # A frame of his take is never a board still (Krish, 2026-11-16): the take's stills are refused.
+        with self.assertRaises(ValueError) as caught:
+            lab.record_still('motion', 'paper-cutout', drive_id, stills / 'motion-paper-cutout.jpg', path=samples)
+        self.assertIn('never a frame of his recordings', str(caught.exception))
+        # The neutral StyleStill template's stills are recorded.
+        made = json.loads((stills / lab.STILLS_MANIFEST).read_text())
+        made.pop('take_sha256'); made['source'] = 'template'
+        (stills / lab.STILLS_MANIFEST).write_text(json.dumps(made))
         plate = self.dir / 'plate.jpg'
         plate.write_bytes(archive.jpeg_header(540, 960))
         lab.record_still('treatment', 'face-with-proof', drive_id, plate, path=samples)
