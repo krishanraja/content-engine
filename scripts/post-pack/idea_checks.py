@@ -1262,6 +1262,15 @@ def needs_lookalike(o):
     return not (o.get('weekly') or o.get('source_kind') == 'his' or o.get('kind') == 'recorded' or o.get('from_inspiration'))
 
 
+def offday_carousel(ref, o):
+    """An off-day carousel that is neither the weekly good news nor a meme nor an idea of his or one he records: the
+    kind whose aim is utility (Krish, 2026-11-16)."""
+    if not str(ref).startswith('off-') or o.get('weekly') or o.get('source_kind') == 'his' or o.get('kind') in ('recorded', 'good_news', 'meme'):
+        return False
+    fmt = f'{o.get("kind") or ""} {o.get("format") or ""}'.lower()
+    return 'carousel' in fmt and 'meme' not in fmt and 'good news' not in fmt and 'uplifting' not in fmt
+
+
 def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=()):
     """From AIM_FROM, every option says its shape (one clear theme with at least three sourced stories, or one clear
     story with the mechanism to dive into), its aim (utility, interest or humour), its funny angle in one plain line,
@@ -1295,6 +1304,12 @@ def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=()):
                         'mechanism to dive into, in a sentence'})
         if o.get('aim') not in AIMS:
             out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} says what it is for: aim is "utility", "interest" or "humour"'})
+        elif offday_carousel(ref, o) and o.get('aim') != 'utility':
+            # Krish, 2026-11-16: "Off day Carousels should have that level of utility: attention-grabbing headline and
+            # visual, and actual real utility."
+            out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} is an off-day carousel: its aim is "utility", a headline and a '
+                        'picture that stop the scroll and something the reader can use the same day, at the level of the best posts '
+                        'in his Instagram inspo sheet'})
         funny = str(o.get('funny') or '').strip()
         if len(funny) < 10 or '\n' in funny or len(funny) > 240 or '—' in funny:
             out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} carries its humorous angle in funny: one plain line, no em dash'})

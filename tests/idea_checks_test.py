@@ -515,6 +515,20 @@ class RepeatTest(unittest.TestCase):
         self.assertNotIn(('wed-1', 'repeat'), found)
         self.assertIn('his_repeat', ic.NOTE_CODES)
 
+    def test_an_off_day_carousel_is_utility(self):
+        """Krish, 2026-11-16: "Off day Carousels should have that level of utility"."""
+        self.assertTrue(ic.offday_carousel('off-tue-x', {'format': 'Explainer carousel, 4 cards, 4:5'}))
+        self.assertFalse(ic.offday_carousel('off-sat-goodnews', {'format': 'Uplifting AI news carousel, 6 cards', 'weekly': 'good_news'}))
+        self.assertFalse(ic.offday_carousel('off-tue-m', {'format': 'Meme carousel, 6 cards, 4:5'}))
+        self.assertFalse(ic.offday_carousel('mon-1', {'format': 'carousel'}))
+        opt = {'id': 'x', 'format': 'Explainer carousel, 4 cards, 4:5', 'shape': 'story', 'aim': 'interest',
+               'source': {'url': 'https://example.com/a'}, 'dive': 'How the meter counts the work it does.', 'funny': 'Your AI plan now has a fuel light.'}
+        lines = [f['line'] for f in ic.aim_findings({'offdays': {'tue': [opt]}}, '2026-11-23', None, [], ['No lookalike this week: none'])]
+        self.assertTrue(any('off-day carousel: its aim is "utility"' in line for line in lines), lines)
+        opt['aim'] = 'utility'
+        lines = [f['line'] for f in ic.aim_findings({'offdays': {'tue': [opt]}}, '2026-11-23', None, [], ['No lookalike this week: none'])]
+        self.assertFalse(any('off-day carousel' in line for line in lines), lines)
+
     def test_one_name_and_a_year_is_not_one_work(self):
         a = ic.work_marks('The Register, Oct 2026 (Anthropic Scion)')
         b = ic.work_marks('The Register, Oct 2026 (Microsoft layoffs)')
