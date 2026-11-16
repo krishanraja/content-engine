@@ -1215,6 +1215,92 @@ def repeat_findings(ideas, sources, earlier=None):
     return out
 
 
+REVIEW_FROM = '2026-11-16'  # the first board a fresh reader's same-story review is required on (Krish, 2026-11-16)
+STORY_VERDICTS = ('new', 'same_story')
+
+
+def review_findings(ideas, sources, week):
+    """A retold story shares no link and no sentence with the post it retells, so no rule above can see it (Krish,
+    2026-11-16: '"AI is about to start messaging you first" was posted last week. Why is it on my ideas board for this
+    week?': Thu 5 Nov's No spending, no sending short, offered again for Tue 17 under new words). A fresh reader (a
+    separate subagent with none of the run's reasoning) reads every option beside the words of what went out on the last
+    three weeks' boards (sources.json recent_posts, each with its words) and writes ideas.json repeat_review:
+    {"reader": "<who read>", "checked": [{"ref": "<board ref or option id>", "verdict": "new" | "same_story",
+    "of": "<the recent post's key>", "why": "<one line>"}]}. From REVIEW_FROM every option needs its verdict, and one the
+    reader calls the same story fails the gate (his own idea is shown with it, never failed)."""
+    if str(week) < REVIEW_FROM:
+        return []
+    board = board_raw(ideas)
+    rv = (ideas or {}).get('repeat_review') if isinstance((ideas or {}).get('repeat_review'), dict) else {}
+    reader = str(rv.get('reader') or '').strip()
+    checked = {}
+    for c in rv.get('checked') or []:
+        if isinstance(c, dict) and str(c.get('ref') or '').strip():
+            checked[str(c['ref']).strip().lower()] = c
+    mine = his_open(sources)
+    out = []
+    for ref, day, main, o in board:
+        label = f'{ref} ({str(o.get("id") or "")[:8]})' if main else ref
+        oid = str(o.get('id') or '').lower()
+        c = checked.get(ref.lower()) or (checked.get(oid) if oid else None)
+        if not reader or c is None or c.get('verdict') not in STORY_VERDICTS:
+            out.append({'code': 'repeat', 'ref': ref, 'rule': 'f',
+                        'line': f'repeat: {label} has no same-story verdict from a fresh reader (ideas.json repeat_review, '
+                                'references/lookalike.md, "The same story under new words")'})
+            continue
+        if c['verdict'] == 'same_story':
+            his = o.get('source_kind') == 'his' or bool(o.get('from_inspiration')) or oid in mine
+            of = str(c.get('of') or 'a recent post')[:120]
+            why = ' '.join(str(c.get('why') or '').split())[:200]
+            line = f'{label} tells the same story as {of}{f" ({why})" if why else ""}: what went out is never offered again under new words'
+            out.append({'code': 'his_repeat' if his else 'repeat', 'ref': ref, 'rule': 'f', 'post': of,
+                        'line': ('shown with the repeat (his own idea): ' if his else 'repeat: ') + line})
+    return out
+
+
+ASK_REF = re.compile(r'^ask[/-](?P<id>[0-9a-f-]{8,})', re.I)
+
+
+def held_ask_findings(ideas, sources, week):
+    """An ask of his held back keeps what he saved (Krish, 2026-11-16: "feedback and suggestions like 'Let's make a
+    hilarious meme' end up in the ideas board without any context of what I actually wanted to make a hilarious meme
+    about. We've now ended up with a vague instruction where I actually put on the inspiration board something very
+    specific."). From REVIEW_FROM a held ask from a card carries a title that names what it is about (never his words
+    alone), his words exactly in said, and the card's own link in source, so the board shows the thing he saved."""
+    if str(week) < REVIEW_FROM:
+        return []
+    cards = {}
+    insp = (sources or {}).get('inspiration') if isinstance((sources or {}).get('inspiration'), dict) else {}
+    for group in ('fresh', 'feed', 'cards', 'ticked'):
+        for c in insp.get(group) or []:
+            if isinstance(c, dict) and c.get('id'):
+                cards.setdefault(str(c['id']).lower(), c)
+    out = []
+    for h in (ideas or {}).get('held') or []:
+        if not isinstance(h, dict):
+            continue
+        m = ASK_REF.match(str(h.get('ref') or ''))
+        if not m:
+            continue
+        ref = str(h.get('ref'))
+        card = cards.get(m.group('id').lower())
+        said = ' '.join(str(h.get('said') or '').split())
+        title = ' '.join(str(h.get('title') or '').split())
+        src = h.get('source') if isinstance(h.get('source'), dict) else {}
+        if len(said) < 3:
+            out.append({'code': 'held', 'ref': ref, 'line': f'held: {ref} carries his words exactly in said'})
+        his_words = ' '.join(str(said or (card or {}).get('saved_why') or (card or {}).get('note_for_claude') or '').split()).lower()
+        t = title.lower().rstrip('.')
+        if len(title) < 12 or (his_words and (t in his_words or his_words.rstrip('.') in t)):
+            out.append({'code': 'held', 'ref': ref, 'line': f'held: {ref} has a title that names what it is about (the post he saved and what to make of it), '
+                        'never his words alone; his words go in said'})
+        link = card.get('link') if card else None
+        if link and canon_url(src.get('url')) != canon_url(link):
+            out.append({'code': 'held', 'ref': ref, 'line': f'held: {ref} came from a card he saved: its source is the card\'s own link ({link}), '
+                        'so the board shows what he saved'})
+    return out
+
+
 def repeat_read_findings(sources, week):
     """The repeat check could not read what went out: a failed read is said, and from REPEAT_FROM a gather without the
     posts fails the gate."""
@@ -1333,6 +1419,34 @@ def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=(), feed_t
         if run:
             out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} copies the words of the post it draws on ("{run}"): '
                         'the idea, the news and the format may be theirs, the copy is ours'})
+    return out
+
+
+OFFDAY_BREADTH = 5  # options each off day offers from the 23 Nov board (it was four to six)
+AIM_SPREAD = 2      # aims a day of three or more options spans
+
+
+def breadth_findings(ideas, week):
+    """Krish, 2026-11-16: "There's not enough quality and breadth of ideas flowing through to this week's or next week's
+    boards." From AIM_FROM each off day offers at least OFFDAY_BREADTH options, and a day of three or more spans at least
+    AIM_SPREAD of utility, interest and humour, so a day is never four of one kind."""
+    if str(week) < AIM_FROM:
+        return []
+    out = []
+    by_day = {}
+    for ref, day, main, o in board_raw(ideas):
+        by_day.setdefault((day, main), []).append(o)
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    for day in ('tue', 'thu', 'sat'):
+        n = len([o for o in offdays.get(day) or [] if isinstance(o, dict)])
+        if day in offdays and n < OFFDAY_BREADTH:
+            out.append({'code': 'aim', 'ref': f'off-{day}', 'line': f'aim: {day} offers {n} options; an off day offers at least {OFFDAY_BREADTH}, '
+                        'from different sources (the sheet, the web, his cards), so he has a real choice'})
+    for (day, main), opts in by_day.items():
+        aims = {o.get('aim') for o in opts if o.get('aim') in AIMS}
+        if len(opts) >= 3 and len(aims) < AIM_SPREAD:
+            out.append({'code': 'aim', 'ref': f'{"" if main else "off-"}{day}', 'line': f'aim: {day}\'s {len(opts)} options are all '
+                        f'{", ".join(sorted(aims)) or "without an aim"}; a day spans at least {AIM_SPREAD} of utility, interest and humour'})
     return out
 
 

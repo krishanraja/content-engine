@@ -260,13 +260,19 @@ export function dayStyle(i: StyleInputs): DayStyle {
   // recommended; a later Yes on it takes it back.
   const look = isObj(i.meta.look) && typeof i.meta.look.production === 'string' ? i.meta.look : null
   const keep = { experiment: look && typeof look.experiment === 'string' ? look.experiment : null, inspiration: look ? strings(look.inspiration) : [] }
+  // With no look from the Sunday room, the proven one he has not turned down is recommended, so the board can always
+  // offer a whole recommended set (Krish, 2026-11-16: "or the system itself can considerately recommend the best
+  // combination for me").
+  const roomLook = i.recommendedLook && i.looks.some(l => l.id === i.recommendedLook && !mine.rejected.treatment.includes(l.id)) ? i.recommendedLook : null
+  const provenLook = roomLook ? null : i.looks.find(l => l.status === 'proven' && !mine.rejected.treatment.includes(l.id))?.id ?? null
   const treatment: StyleLayer = {
     options: i.looks.map(l => {
       // A look he picked after saying "Not this" to it (the look op) is his pick, never also a no.
       const rejected = mine.rejected.treatment.includes(l.id) && !(look && look.production === l.id)
-      const rec = l.id === i.recommendedLook && !rejected
+      const rec = (l.id === roomLook || l.id === provenLook) && !rejected
       return { id: l.id, name: l.name, line: l.pitch, rules: [], recommended: rec,
-        why: rec ? 'The Sunday room recommends it for this idea.' : null, sample_url: null, sample_drive: null, still_url: stillUrl('treatment', l.id), rejected,
+        why: rec ? (l.id === roomLook ? 'The Sunday room recommends it for this idea.' : 'It is proven: every piece so far was made in it.') : null,
+        sample_url: null, sample_drive: null, still_url: stillUrl('treatment', l.id), rejected,
         // The picked look takes no "Not this": a no would leave it picked (the look op holds the pick); he picks another.
         presses: { yes: press('Yes', 'look', { production: l.id, ...keep }, `Picked. ${l.name} is the look for this piece.`),
           ...(look && look.production === l.id ? {} : { not_this: press('Not this', 'style', { reject: { layer: 'treatment', id: l.id } }, 'Noted. It is not recommended for this piece any more.') }) } }

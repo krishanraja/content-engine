@@ -30,8 +30,10 @@ An older plan with no `kind` is read from its format by one rule (`offdayKind`);
 supporting carousel when it ties to a publishing day and an explainer when it does not. A suggestion that is none of
 the five is not offered.
 
-On the Ideas tab, 4 to 6 options each for Tuesday, Thursday and Saturday
-(the board takes 2 to 6; Sunday is a rest day and nothing is published on it:
+On the Ideas tab, at least 5 options each for Tuesday, Thursday and Saturday from the 23 Nov board, from different
+sources (the Instagram sheet, the web, his cards) and spanning at least two aims (Krish, 2026-11-16: "There's not
+enough quality and breadth of ideas flowing through to this week's or next week's boards"; `board_feed.py gate`,
+code `aim`); 4 to 6 before it (the board takes 2 to 6; Sunday is a rest day and nothing is published on it:
 Ruling, Krish, 2026-11-02, "Let's eliminate Sunday from Publishing anythign
 permanently. Sunday is rest and planning and ideation day."), for the Make Your Mind Up Instagram, TikTok
 and YouTube Shorts channels (Shorts takes video only, so a carousel goes
