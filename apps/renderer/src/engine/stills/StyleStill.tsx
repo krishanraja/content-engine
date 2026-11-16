@@ -53,14 +53,15 @@ function Art({id,layer,p}:{id:string;layer:Layer;p:Palette}) {
  return <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position:'absolute',inset:0}}><defs><linearGradient id="sweep"><stop stopColor={p.paper} stopOpacity={0}/><stop offset=".5" stopColor={p.paper} stopOpacity={.13}/><stop offset="1" stopColor={p.paper} stopOpacity={0}/></linearGradient><pattern id="grain" width={13} height={17} patternUnits="userSpaceOnUse"><circle cx={3} cy={7} r={1} fill={p.paper} opacity={.15}/></pattern><pattern id="dots" width={8} height={8} patternUnits="userSpaceOnUse"><circle cx={3} cy={3} r={2.3} fill={p.ink}/></pattern></defs>{art}</svg>
 }
 
+export const CAPTION_ZOOM = 2.4   // the most a caption is enlarged
+const CAPTION_W = 940              // the width a fitted caption may take
+const CAPTION_H = 700              // and its height
+const CAPTION_Y = 1180             // the centre it sits on: over the presenter's chest, as captions play
+/** The video frame a caption plays over: his drawn character to camera, quiet behind the caption. */
 function CaptionBackdrop({index,p}:{index:number;p:Palette}) {
- return <svg data-caption-backdrop="room" width={1080} height={1920} viewBox="0 0 1080 1920" style={{position:'absolute',inset:0}}>
+ return <svg data-caption-backdrop="talking-head" width={1080} height={1920} viewBox="0 0 1080 1920" style={{position:'absolute',inset:0}}>
  <rect width={1080} height={1920} fill={p.ground}/>
- <rect x={100} y={100} width={360} height={430} rx={8} fill={p.paper} opacity={.08}/>
- <path d="M280 100V530M100 315H460" stroke={p.paper} opacity={.12} strokeWidth={6}/>
- <path d="M0 1570H1080V1920H0Z" fill={p.paper} opacity={.04}/>
- <rect x={700+index%3*15} y={1490} width={260} height={24} fill={p.paper} opacity={.15}/>
- <path d="M725 1514V1780M935 1514V1780" stroke={p.paper} opacity={.12} strokeWidth={16}/>
+ <g opacity={.3}><DrawnPresenter p={p} y={200 + (index % 3) * 20} scale={1.5}/></g>
  </svg>
 }
 /** Schematic drawn presenter; no external character media is loaded. */
@@ -81,7 +82,29 @@ function jitterRat(seed:number) {
 }
 function CaptionSample({id,props}:{id:string;props:React.ComponentProps<typeof ArtDirectedCaption>['props']}) {
  const node=id==='art-directed'?ArtDirectedCaption({props,frame:90}):THEMES[id as Exclude<CaptionThemeName,'art-directed'>](props,90)
- return <div data-caption-zone style={{position:'absolute',left:0,top:0,width:1080,height:1920,overflow:'hidden'}}>{node}</div>
+ // A shop window, not the cut at its true size (Krish, 2026-11-16: "shop window examples of how that element looks"):
+ // the caption as it plays, measured and fitted to the frame (at most CAPTION_ZOOM times larger), centred, so it reads
+ // on a thumbnail and never runs off an edge.
+ const ref=React.useRef<HTMLDivElement>(null)
+ const [fit,setFit]=React.useState<{s:number;x:number;y:number}|null>(null)
+ React.useLayoutEffect(()=>{
+  const el=ref.current; if(!el) return
+  const rects:DOMRect[]=[]
+  el.querySelectorAll('*').forEach(n=>{
+   const hasText=Array.from(n.childNodes).some(c=>c.nodeType===3&&(c.textContent||'').trim())
+   if(hasText) { const r=(n as Element).getBoundingClientRect(); if(r.width>0&&r.height>0) rects.push(r) }
+  })
+  if(!rects.length) return
+  const box=el.getBoundingClientRect()
+  const x0=Math.min(...rects.map(r=>r.left))-box.left, x1=Math.max(...rects.map(r=>r.right))-box.left
+  const y0=Math.min(...rects.map(r=>r.top))-box.top, y1=Math.max(...rects.map(r=>r.bottom))-box.top
+  const s=Math.min(CAPTION_ZOOM,CAPTION_W/Math.max(1,x1-x0),CAPTION_H/Math.max(1,y1-y0))
+  setFit({s,x:540-(x0+x1)/2*s,y:CAPTION_Y-(y0+y1)/2*s})
+ },[])
+ return <div data-caption-zone style={{position:'absolute',left:0,top:0,width:1080,height:1920,overflow:'hidden'}}>
+  <div ref={ref} style={{position:'absolute',left:0,top:0,width:1080,height:1920,transformOrigin:'0 0',
+   transform:fit?`translate(${fit.x}px, ${fit.y}px) scale(${fit.s})`:undefined}}>{node}</div>
+ </div>
 }
 export function StyleStill({layer,id}:Props) {
  const plan=coverPlan(layer,id), p=PALETTES[plan.palette]!, captionIndex=CAPTION_THEMES.indexOf(id as CaptionThemeName)
