@@ -287,7 +287,11 @@ jobs:
           # this log; the findings are kept beside the week's ideas for the Sunday room.
           folder="docs/plans/$MONDAY-week"
           if [ ! -f "$folder/ideas.json" ]; then echo "passed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
-          if python3 scripts/post-pack/board_feed.py gate "$MONDAY" > "$folder/gate.txt" 2>&1; then
+          # A re-run of some days answers for those days only: a problem the board had on another day is reported, never
+          # this run's to fail on (the week of 16 Nov carried answered repeats on Mon and Tue).
+          base=()
+          if [ -n "$DAYS" ]; then base=(--base "$RUNNER_TEMP/ideas-before.json" --days "$DAYS" --status "$RUNNER_TEMP/status.json"); fi
+          if python3 scripts/post-pack/board_feed.py gate "$MONDAY" "${base[@]}" > "$folder/gate.txt" 2>&1; then
             echo "passed=true" >> "$GITHUB_OUTPUT"
             echo "The gate passed: nothing he refused is offered again."
           else
