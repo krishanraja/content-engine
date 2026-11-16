@@ -11,8 +11,11 @@ import { stillFiles, stillUrl } from '../../apps/control-plane/api/board/_style'
 // sources.
 
 type Body = Record<string, unknown>
-const plan = (week: string) => JSON.parse(readFileSync(`docs/plans/${week}-week/ideas.json`, 'utf8')) as { days: Record<string, Body[]>; offdays: Record<string, Body[]> }
-const w9 = plan('2026-11-09'), w16 = plan('2026-11-16')
+const read = (file: string) => JSON.parse(readFileSync(file, 'utf8')) as { days: Record<string, Body[]>; offdays: Record<string, Body[]> }
+const plan = (week: string) => read(`docs/plans/${week}-week/ideas.json`)
+// The week of 16 Nov as it stood when this went wrong (frozen 16 Nov): the live plan moves on as its ideas are made
+// again, and a later run took frenemies and fuelgauge off it, so the test reads the plan it was written against.
+const w9 = plan('2026-11-09'), w16 = read('tests/fixtures/plans/2026-11-16-ideas.json')
 const option = (p: ReturnType<typeof plan>, group: 'days' | 'offdays', day: string, id: string) => p[group][day].find(o => String(o.id).startsWith(id))!
 
 // What earlier boards put out, through the real shapes: off-day item rows (offday_items) and piece rows (content_ideas).

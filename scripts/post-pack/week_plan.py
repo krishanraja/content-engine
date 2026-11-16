@@ -533,7 +533,7 @@ def read_offdays(data, where='ideas.json offdays', whole=False, week=None):
                     row['cards'] = [{'words': ' '.join(c['words'].split()), 'picture': ' '.join(c['picture'].split())} for c in cards]
             row.update(off_rich(o, problems, f'{weekday} option {n}'))
             if o.get('stories'):
-                found = story_problems(o['stories'])
+                found = story_problems(o['stories'], o.get('stories_short'))
                 problems.extend(f'{weekday} option {n}: stories {p}' for p in found)
                 if not found:
                     row['stories'] = [{k: s[k] for k in ('headline', 'what', 'why', 'date', 'source', 'media')} for s in o['stories']]
@@ -575,13 +575,16 @@ def read_offdays(data, where='ideas.json offdays', whole=False, week=None):
 STORY_COUNT = 5  # the weekly good news (Krish, 2026-11-02: "find the actual good news on Sunday ... so that the news items are fresh";
 
 
-def story_problems(stories):
+def story_problems(stories, short=None):
     """Why a weekly good-news option's stories are not ready to show, or []: five real stories, each with its headline,
     what happened, why it matters, its date, its source and its own photo or clip (Krish, 2026-11-02, Improve on the
     7 Nov good news: "I want actual news items and the content we are going to use here - embedded real world images or
-    videos")."""
-    if not isinstance(stories, list) or len(stories) != STORY_COUNT:
-        return [f'is a list of {STORY_COUNT} stories']
+    videos"). Fewer than five, never none, when `short` (the option's stories_short) says why: the run found no more on
+    the topic in the window and never pads with a story off it (plan-week references/offdays.md); the board's "Find the
+    other story" press fills it to five (saturday_goodnews.stories_fresh still counts it short)."""
+    have = len(stories) if isinstance(stories, list) else -1
+    if not (have == STORY_COUNT or (_line(short, 2000) and 1 <= have < STORY_COUNT)):
+        return [f'is a list of {STORY_COUNT} stories, or fewer with stories_short saying why']
     out = []
     for i, st in enumerate(stories, 1):
         st = st if isinstance(st, dict) else {}
