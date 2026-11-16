@@ -9,7 +9,7 @@ const beats = [
  '31% JUNK','A CENT A RAT TAIL','I’m movin’ to the sun','SONGWRITING RULED OUT','AI MUSIC / HUMAN MUSIC',
  'TikTok came first','AI IS ALREADY IN THE MUSIC YOU LOVE','a robot humming underneath',
  'AI didn’t help here','Hanoi paid for tails','The thin AI layer','The rat-tail problem','TikTok or the charts?',
- 'HALF THE TARGET','THE BILL IS NOT THE WORK',
+ 'THE PRODUCER STARTED AGAIN','THE BILL IS NOT THE WORK',
  'all over TikTok','a Reiki healer','her own lyrics','pressed a button','a whole song','cats and weddings','dads dancing badly',
  'strangers went hunting','a top producer','rebuilt by hand','Ultra Naté','under her voice','still compete for singing',
  'already both','in 1902','afraid of plague','hand in the tail','very much alive','rat farms','Token Legend','Cache Wizard',
