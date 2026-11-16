@@ -222,11 +222,15 @@ def prepare(week, call_bytes=None, plans=None, today=None, sheet_file=None):
         except (OSError, ValueError):
             raise LookalikeError(f'the sheet could not be read ({reason}) and there is no sources.json to fall back on; gather first')
         (posts, which), themes, source = feed_posts(sources), [], 'feed_fallback'
-        if not posts:
-            raise LookalikeError(f'the sheet could not be read ({reason}) and the gathered feed holds no post with a URL')
         total = len(posts)
-        warnings.append(f'Feed fallback: the Instagram inspo sheet could not be read ({reason[:200]}); the patterns come from the feed the '
-                        f'gather read ({which}).')
+        if posts:
+            warnings.append(f'Feed fallback: the Instagram inspo sheet could not be read ({reason[:200]}); the patterns come from the feed the '
+                            f'gather read ({which}).')
+        else:
+            # Nothing to draw patterns from is said, never a stop: the run makes the week without the lookalike step and
+            # carries this line in ideas.json _about (idea_checks.aim_findings asks for it word for word).
+            warnings.append(f'No lookalike this week: the Instagram inspo sheet could not be read ({reason[:200]}) and the gathered feed '
+                            'holds no post with a link, so no option names a pattern.')
     fresh = freshness(posts, today)
     stale = stale_warning(fresh, today, 'the Instagram inspo sheet' if source == 'sheet' else 'the gathered feed')
     if stale:

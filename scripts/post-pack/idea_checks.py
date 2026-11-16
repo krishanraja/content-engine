@@ -963,9 +963,9 @@ def same_work(a, b):
         return False
     if a['years'] and b['years'] and not a['years'] & b['years']:
         return False
-    if a['days'] or b['days']:
-        return len(shared) >= 2
-    return len(shared) >= 2 or bool(a['years'] & b['years'])
+    # Two names in common, never one name and a year: "The Register, Oct 2026 (Anthropic Scion)" and "The Register, Oct
+    # 2026 (Microsoft layoffs)" are two works.
+    return len(shared) >= 2
 
 
 def shared_works(ours, theirs):
@@ -1124,7 +1124,13 @@ def repeat_findings(ideas, sources, earlier=None):
         sp = supported(o, approved)
         return bool(sp and p.get('piece_id') and sp == str(p['piece_id']).lower())
 
+    def his(o):
+        """His own idea or the idea from a card he ticked: a repeat on it is shown to him beside it, never failing the run,
+        as his tick on a subject he refused is (Ruling, Krish, 2026-11-12: his own tick outranks an older refusal)."""
+        return o.get('source_kind') == 'his' or bool(o.get('from_inspiration')) or str(o.get('id') or '').lower() in mine
+
     board = board_raw(ideas)
+    found_from = len(out)
     for ref, day, main, o in board:
         label = f'{ref} ({str(o.get("id") or "")[:8]})' if main else ref
         weekly = bool(o.get('weekly'))
@@ -1172,7 +1178,14 @@ def repeat_findings(ideas, sources, earlier=None):
                     out.append({'code': 'repeat', 'ref': ref, 'rule': 'e', 'post': p.get('key'),
                                 'line': f'repeat: {label} cites {len(both)} of the works {post_name(p)} cited, week of {p.get("week")} ('
                                         + '; '.join(b for _, b in both) + '): the same evidence is the same post'})
-    # (d) two options on this board with one primary source.
+    # (d) two options on this board with one primary source. An off-day option tied to a publishing day's piece (its
+    # `supports`, or `ties_to` naming Mon, Wed or Fri) carries that day's story by design (Ruling, Krish, 2026-11-13: "we
+    # have carousels that support Monday, Wednesday, or Friday"), approved or not yet.
+    def tied(x_ref, x, y_ref):
+        if not x_ref.startswith('off-') or y_ref.startswith('off-'):
+            return False
+        said = str(x.get('supports') or '').strip().lower()[:3] or (re.match(r'\s*(mon|wed|fri)', str(x.get('ties_to') or ''), re.I) or [None, ''])[1].lower()
+        return bool(said) and y_ref.startswith(f'{said}-')
     groups = {}
     for ref, day, main, o in board:
         if o.get('weekly'):
@@ -1184,12 +1197,21 @@ def repeat_findings(ideas, sources, earlier=None):
         if len(members) < 2:
             continue
         for ref, o in members:
-            twins = [r for r, x in members if r != ref and not (supported(o, approved) or supported(x, approved))]
+            twins = [r for r, x in members if r != ref and not (supported(o, approved) or supported(x, approved))
+                     and not tied(ref, o, r) and not tied(r, x, ref)
+                     # His own idea keeps the story: the twin is the engine option's to answer, never his.
+                     and not (his(o) and not his(x))]
             if twins:
                 label = ref if ref.startswith('off-') else f'{ref} ({str(o.get("id") or "")[:8]})'
                 out.append({'code': 'repeat', 'ref': ref, 'rule': 'd', 'post': ', '.join(twins),
                             'line': f'repeat: {label} has the same primary source as {", ".join(twins)} on this '
-                                    f'board: {url}; one story is one option (a carousel that supports the day\'s approved piece says so in supports)'})
+                                    f'board: {url}; one story is one option (a carousel for a day\'s piece says so in supports or ties_to)'})
+    # A repeat on his own idea or his tick is shown to him with it, never failing the run (NOTE_CODES).
+    refs_his = {ref for ref, _, _, o in board if his(o)}
+    for f in out[found_from:]:
+        if f['ref'] in refs_his and f['code'] == 'repeat':
+            f['code'] = 'his_repeat'
+            f['line'] = 'shown with the repeat (his own idea): ' + f['line'][len('repeat: '):]
     return out
 
 
@@ -1253,7 +1275,10 @@ def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=()):
     out += [{'code': 'aim', 'ref': 'lookalike', 'line': f'aim: ideas.json _about does not say, word for word: {w}'} for w in warnings or [] if w not in about]
     pats = set(patterns or [])
     feed = {canon_url(u) for u in feed_urls or [] if canon_url(u)}
-    if patterns is None:
+    # No post to draw patterns from (lookalike.py said so in a warning, which _about must carry): the shape, aim and
+    # funny line still hold; the pattern and the post an option beats cannot be asked for.
+    no_feed = not feed and any(str(w).startswith('No lookalike this week') for w in warnings or [])
+    if patterns is None and not no_feed:
         out.append({'code': 'aim', 'ref': 'lookalike', 'line': 'aim: no lookalike.json for the week; run lookalike.py prepare and check, '
                     'then name each option\'s pattern'})
     for ref, day, main, o in board_raw(ideas):
@@ -1273,7 +1298,7 @@ def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=()):
         funny = str(o.get('funny') or '').strip()
         if len(funny) < 10 or '\n' in funny or len(funny) > 240 or '—' in funny:
             out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} carries its humorous angle in funny: one plain line, no em dash'})
-        if not needs_lookalike(o):
+        if not needs_lookalike(o) or no_feed:
             continue
         look = o.get('lookalike') if isinstance(o.get('lookalike'), dict) else {}
         if patterns is not None and look.get('pattern') not in pats:
@@ -1292,7 +1317,7 @@ def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=()):
 GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim')
 # What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
 # subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
-NOTE_CODES = ('warned', 'his_tick')
+NOTE_CODES = ('warned', 'his_tick', 'his_repeat')
 
 # P6 ("A subject you call boring, lame or pointless in any press is vetoed until you raise it"): a proposed rule that
 # waits for Krish's yes on his taste ledger. Until he approves it, refusing words outside a Reject warn and never block.

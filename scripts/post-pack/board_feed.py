@@ -19,6 +19,7 @@ and builds with --ideas --queue --combine.
 """
 import argparse
 import json
+import os
 import re
 import sys
 from datetime import date, datetime, timedelta, timezone
@@ -241,6 +242,16 @@ def option_status(view, outcomes):
             status[f'off:{m.group(1)}:{m.group(2).lower()}'] = why
         elif i.get('piece_id'):
             status[f'idea:{str(i["piece_id"]).lower()}'] = why
+    # An idea the board took off as a repeat (contract 1.17.0, model.repeats) is still unanswered: open, so a `days`
+    # re-run may make it again (it is exactly what the run is there to replace).
+    for r in model.get('repeats') or []:
+        if not isinstance(r, dict):
+            continue
+        m = OFF_KEY.match(str(r.get('doc_id') or ''))
+        if m:
+            status.setdefault(f'off:{m.group(1)}:{m.group(2).lower()}', 'open')
+        elif r.get('piece_id'):
+            status.setdefault(f'idea:{str(r["piece_id"]).lower()}', 'open')
     for d in model.get('days') or []:
         for it in (d.get('items') or []) if isinstance(d, dict) else []:
             if not isinstance(it, dict):
@@ -698,7 +709,9 @@ GATE_SUBJECT = re.compile(r'^[^:]+:\s+(?:off-(?P<oday>mon|tue|wed|thu|fri|sat)-(
 def remakeable(line, days, status=None):
     """Whether a gate line's subject (the option it is about, the first one it names) is one a `days` re-run was there
     to make again: an option on one of those days that was open (never answered). Without the status, every option on
-    those days counts, so a re-run never passes on an option it may have left as it was."""
+    those days counts, so a re-run never passes on an option it may have left as it was. An option the status does not
+    name is not the run's (keep_problems holds it to come back byte for byte), so its line is reported, never failed:
+    the two checks never ask the run for opposite things."""
     m = GATE_SUBJECT.match(line)
     if not m:
         return False
@@ -708,10 +721,10 @@ def remakeable(line, days, status=None):
     if status is None:
         return True
     if m.group('oday'):
-        return status.get(f'off:{day}:{m.group("oid").lower()}', 'open') == 'open'
+        return status.get(f'off:{day}:{m.group("oid").lower()}') == 'open'
     pid = m.group('pid')
     hits = [v for k, v in status.items() if pid and k.startswith(f'idea:{pid}')]
-    return (hits[0] if hits else 'open') == 'open'
+    return bool(hits) and hits[0] == 'open'
 
 
 def gate_report(week, ideas_path=None, plans=None, base_path=None, days=None, status=None):
@@ -735,7 +748,7 @@ def gate_report(week, ideas_path=None, plans=None, base_path=None, days=None, st
         before = [p for p in problems if p in had and p not in keep]
         problems = [p for p in problems if p not in had] + keep
     return {'problems': problems, 'warned': [f['line'] for f in found if f['code'] == 'warned'],
-            'ticks': [f['line'] for f in found if f['code'] == 'his_tick'], 'before': before}
+            'ticks': [f['line'] for f in found if f['code'] in ('his_tick', 'his_repeat')], 'before': before}
 
 
 def tick_notes(week, plan, piece_id, plans=None):
@@ -920,15 +933,32 @@ def keep_problems(before, after, status, days):
     return out
 
 
+def merged_status(paths):
+    """One status from several reads of it (before and after the run): an option answered in any read stays answered
+    (that read's answer); an option open in every read it appears in is open. Raises ValueError when a read failed:
+    nothing is made again without knowing what he answered."""
+    out = {}
+    for p in [paths] if isinstance(paths, (str, Path)) else paths:
+        data = json.loads(Path(p).read_text(encoding='utf-8'))
+        if data.get('error') or not isinstance(data.get('status'), dict):
+            raise ValueError(f'the status of the week\'s options could not be read ({data.get("error") or "no status"}); nothing is made again without it')
+        for k, v in data['status'].items():
+            if v != 'open' or k not in out:
+                out[k] = v
+    return out
+
+
 def keep(week, days, before_path, status_path, ideas_path=None, plans=None):
-    """keep_problems on the week's ideas.json against the copy taken before the re-run and the status read before it."""
+    """keep_problems on the week's ideas.json against the copy taken before the re-run and the status read before it
+    (and after it: status_path may be a list of reads, merged by merged_status)."""
     wk = monday(week).isoformat()
     after = json.loads(Path(ideas_path or Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week' / 'ideas.json').read_text(encoding='utf-8'))
     before = json.loads(Path(before_path).read_text(encoding='utf-8'))
-    data = json.loads(Path(status_path).read_text(encoding='utf-8'))
-    if data.get('error') or not isinstance(data.get('status'), dict):
-        return [f'the status of the week\'s options could not be read ({data.get("error") or "no status"}); nothing is made again without it']
-    return keep_problems(before, after, data['status'], days)
+    try:
+        status = merged_status(status_path)
+    except ValueError as error:
+        return [str(error)]
+    return keep_problems(before, after, status, days)
 
 
 def load_recent(path):
@@ -1176,7 +1206,7 @@ def main(argv=None):
     gt.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
     gt.add_argument('--base', help='the week\'s ideas.json before a run that adds one idea: what the board already had is reported, never this run\'s to answer')
     gt.add_argument('--days', help='with --base, a re-run of these days (e.g. thu,sat): a problem already on an open option of those days still fails')
-    gt.add_argument('--status', help='with --days, the options\' status before the run (board_feed.py status): only an open option was the run\'s to make again')
+    gt.add_argument('--status', action='append', help='with --days, the options\' status before (and after) the run (board_feed.py status): only an option open in every read was the run\'s to make again')
     rp = sub.add_parser('repeats', help='what on the week\'s ideas repeats a recent post, piece, earlier option or another option (the gate\'s repeat check)')
     rp.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
     rp.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
@@ -1189,7 +1219,7 @@ def main(argv=None):
     kp.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
     kp.add_argument('--days', required=True, help='the days it may make again, e.g. thu,sat')
     kp.add_argument('--before', required=True, help='the week\'s ideas.json as it stood before the re-run')
-    kp.add_argument('--status', required=True, help='the status file board_feed.py status wrote before the re-run')
+    kp.add_argument('--status', required=True, action='append', help='a status file board_feed.py status wrote, before the re-run (and again after it); an option answered in any is kept')
     kp.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
     sub.add_parser('self-test')
     args = ap.parse_args(argv)
@@ -1207,7 +1237,14 @@ def main(argv=None):
         wk = monday(args.week).isoformat()
         status, error = read_status(wk, making._engine_call)
         if args.out:
-            Path(args.out).write_text(json.dumps({'week': wk, 'status': status, 'error': error}, indent=1) + '\n', encoding='utf-8')
+            # Only into the job's own temporary folder or the plans: the Sunday run may call this command, and is fenced
+            # to write under docs/plans.
+            out = Path(args.out).resolve()
+            homes = [(ROOT / 'docs' / 'plans').resolve()] + ([Path(os.environ['RUNNER_TEMP']).resolve()] if os.environ.get('RUNNER_TEMP') else [])
+            if not any(out == h or h in out.parents for h in homes):
+                print(f'board_feed status: --out must be under docs/plans or $RUNNER_TEMP, not {args.out}', file=sys.stderr)
+                return 2
+            out.write_text(json.dumps({'week': wk, 'status': status, 'error': error}, indent=1) + '\n', encoding='utf-8')
         counts = {}
         for v in status.values():
             counts[v] = counts.get(v, 0) + 1
@@ -1245,9 +1282,7 @@ def main(argv=None):
         return 0
     if args.cmd == 'gate':
         try:
-            status = json.loads(Path(args.status).read_text(encoding='utf-8')) if args.status else None
-            if isinstance(status, dict) and isinstance(status.get('status'), dict):
-                status = status['status']
+            status = merged_status(args.status) if args.status else None
             report = gate_report(args.week, args.ideas, base_path=args.base, days=[d for d in (args.days or '').split(',') if d] or None, status=status)
         except (FeedError, OSError, ValueError) as error:
             # Not a refusal: the gate could not read the week. Exit 2, so no run says he refused something he did not.

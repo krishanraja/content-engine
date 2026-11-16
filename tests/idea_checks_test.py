@@ -485,15 +485,41 @@ class RepeatTest(unittest.TestCase):
         # frenemies and ownref cite the Home Depot interview, Microsoft's Critique and the NeurIPS study, as beststicker did.
         self.assertEqual(by['off-tue-frenemies'], {'e'})
         self.assertEqual(by['off-thu-ownref'], {'e'})
-        # Five stories on the board twice, once as a piece and once as an off day.
+        # Five stories on the board twice, once as a piece option and once as an off-day carousel tied to that day
+        # (ties_to "Mon: ...", "Wed: ...", "Fri: ..."): a carousel that supports a day's piece carries its story by design
+        # (Ruling, Krish, 2026-11-13: "we have carousels that support Monday, Wednesday, or Friday"), so rule d leaves them.
         for pair in (('mon-3', 'off-tue-fuelgauge'), ('wed-1', 'off-thu-tinyfix'), ('wed-4', 'off-thu-swarmdeal'),
                      ('fri-4', 'off-thu-fortytoone'), ('mon-1', 'off-tue-infosys')):
             for ref in pair:
-                self.assertIn('d', by[ref], ref)
+                self.assertNotIn('d', by.get(ref, set()), ref)
         self.assertNotIn('wed-2', by, 'an option on its own story is no repeat')
-        self.assertTrue(all(f['code'] in ic.GATE_CODES for f in found))
+        # A repeat on his own idea or tick is shown with it (NOTE_CODES), every other one fails the run.
+        self.assertTrue(all(f['code'] in ic.GATE_CODES + ic.NOTE_CODES for f in found))
         line = next(f['line'] for f in found if f['ref'] == 'off-tue-burntokens')
         self.assertIn('Fri 13 Nov\'s piece "Meta staff were ranked by AI use. They gamed it." (live)', line)
+
+    def test_twins_that_say_no_tie_are_refused_and_his_own_idea_keeps_its_story(self):
+        page = {'label': 'The Register, 6 Nov 2026', 'url': 'https://www.theregister.com/a/'}
+        tied = {'week_start': '2026-11-23', 'days': {'wed': [{'id': 'aaaaaaaa-0000-0000-0000-000000000001', 'source': page}]},
+                'offdays': {'tue': [{'id': 'tied', 'source': page, 'ties_to': 'Wed: under.the.hood, if you pick it'}]}}
+        self.assertEqual(ic.repeat_findings(tied, {}, []), [])
+        plan = {'week_start': '2026-11-23', 'days': {'wed': [{'id': 'aaaaaaaa-0000-0000-0000-000000000001', 'source': page}]},
+                'offdays': {'thu': [{'id': 'untied', 'source': page}]}}
+        found = {(f['ref'], f['code']) for f in ic.repeat_findings(plan, {}, [])}
+        self.assertIn(('off-thu-untied', 'repeat'), found)
+        self.assertIn(('wed-1', 'repeat'), found)
+        # His own idea keeps the story: the engine's twin is refused, his is shown with the repeat, never failing.
+        plan['days']['wed'][0]['source_kind'] = 'his'
+        found = {(f['ref'], f['code']) for f in ic.repeat_findings(plan, {}, [])}
+        self.assertIn(('off-thu-untied', 'repeat'), found)
+        self.assertNotIn(('wed-1', 'repeat'), found)
+        self.assertIn('his_repeat', ic.NOTE_CODES)
+
+    def test_one_name_and_a_year_is_not_one_work(self):
+        a = ic.work_marks('The Register, Oct 2026 (Anthropic Scion)')
+        b = ic.work_marks('The Register, Oct 2026 (Microsoft layoffs)')
+        self.assertFalse(ic.same_work(ic.work_marks('Gartner, 2026 (agent spend)'), ic.work_marks('Gartner press release, 2026 (hype cycle)')))
+        self.assertFalse(ic.same_work(a, b))
 
     def test_a_page_is_compared_without_tracking_www_fragment_or_trailing_slash(self):
         self.assertEqual(ic.canon_url('https://WWW.Example.com/a/b/?utm_source=x&id=7#top'), 'example.com/a/b?id=7')
