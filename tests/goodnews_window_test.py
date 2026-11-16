@@ -54,5 +54,32 @@ class WindowTest(unittest.TestCase):
             self.assertEqual(board_feed.goodnews_problems(week(story(1, date='2026-10-20', found=SHEET)), {}, DUE, plans=tmp), [])
 
 
+
+def cand(n, place):
+    return {'title': f'Candidate {n}', 'url': f'https://example.org/c{n}', 'place': place, 'date': '2026-11-15'}
+
+
+class WideTest(unittest.TestCase):
+    """Krish, 2026-11-16: "Something's gone wrong in where you're looking and how you're looking because there should
+    be millions of good news stories. What about Reddit, YouTube, or LinkedIn?" The run looks wide, then chooses."""
+
+    def wk(self, candidates, due='2026-11-19'):
+        return {'week_start': '2026-11-16', 'offdays': {'sat': [{'id': 'goodnews', 'weekly': 'good_news', 'stories_due': due,
+                                                                 'stories': [story(n) for n in range(1, 6)], 'candidates': candidates}]}}
+
+    def test_fifteen_candidates_from_three_kinds_of_place(self):
+        places = ['news', 'reddit', 'youtube', 'linkedin', 'sheet']
+        wide = [cand(n, places[n % 5]) for n in range(15)]
+        self.assertEqual(board_feed.goodnews_problems(self.wk(wide), {}, date(2026, 11, 19)), [])
+
+    def test_a_narrow_look_is_refused(self):
+        lines = board_feed.goodnews_problems(self.wk([cand(n, 'news') for n in range(4)]), {}, date(2026, 11, 19))
+        self.assertTrue(any('4 candidates gathered' in x for x in lines), lines)
+        self.assertTrue(any('candidates from news' in x and 'Reddit, YouTube, or LinkedIn' in x for x in lines), lines)
+
+    def test_a_week_found_before_it_keeps_its_checks(self):
+        self.assertEqual(board_feed.goodnews_problems(self.wk([], due='2026-11-16'), {}, date(2026, 11, 16)), [])
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -172,9 +172,15 @@ jobs:
             inspo as well. There's absolutely tonnes in there"): run python3 scripts/post-pack/lookalike.py goodnews
             <Monday> and pick from goodnews-input.json the posts on the topic, each story still checked on its own
             primary source and told in our words; a story found there may be up to thirty days old (his Yes,
-            16 Nov), one from the web stays within the seven. Find one topic and the five stories on it
-            (real AI news from the seven days up to ${{ steps.guard.outputs.due }}, today, that helped
-            real people, each with a real photo or clip of the thing itself the post can embed), check each against its
+            16 Nov), one from the web stays within the seven. Look wide first, then choose the topic (Krish, 2026-11-16:
+            "Something's gone wrong in where you're looking and how you're looking because there should be millions of
+            good news stories. What about Reddit, YouTube, or LinkedIn? Given that it's business leaders, we might want
+            some successful business stories as well. In fact successful business stories might be really good."):
+            gather at least fifteen candidates from at least three of the news, Reddit, YouTube, LinkedIn, his sheet and
+            his saved cards, written on the option as candidates, and count a business that succeeded with AI, with the
+            number that shows it, as good news. Then choose the topic where five strong candidates meet and find those five
+            (from the seven days up to ${{ steps.guard.outputs.due }}, today, or the thirty for his sheet, each
+            with a real photo or clip of the thing itself the post can embed), check each against its
             primary source, write them into that week's docs/plans/<Monday>-week/ideas.json on the weekly good-news
             option, replacing any older stories there, and set that option's stories_due to
             ${{ steps.guard.outputs.due }}. Then run board_feed.py gather and cover. Research with the built-in web
