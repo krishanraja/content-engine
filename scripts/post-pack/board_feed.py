@@ -474,13 +474,44 @@ def locked_problems(ideas, sources):
 READ_FROM = '2026-11-09'  # Krish, 2026-11-02, of the 9 Nov off days; older weeks keep the shape they were made in
 
 
-def goodnews_problems(ideas, sources, today=None):
+GOODNEWS_DAYS = 7   # a good-news story is from the seven days up to stories_due (Krish, 2026-11-07: "fresh")
+SHEET_DAYS = 30     # or the thirty, when it was found in his Instagram inspo sheet (Ruling, Krish, 2026-11-16)
+
+
+def sheet_posts(ideas, sources, plans=None):
+    """The canonical urls of the posts in the week's goodnews-input.json (lookalike.py goodnews), or None when the file
+    is not on disk (it is never committed, so only the job that read the sheet holds it)."""
+    week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')
+    if not week:
+        return None
+    path = Path(plans or ROOT / 'docs' / 'plans') / f'{week}-week' / 'goodnews-input.json'
+    try:
+        posts = json.loads(path.read_text(encoding='utf-8')).get('posts') or []
+    except (OSError, ValueError):
+        return None
+    return {idea_checks.canon_url(p.get('url')) for p in posts if isinstance(p, dict)} - {None}
+
+
+def found_in_sheet(story, sheet=None):
+    """Whether a good-news story says it was found in his Instagram inspo sheet: `found.url` an Instagram post and, when
+    the week's goodnews-input.json is on disk, one of its posts."""
+    found = story.get('found') if isinstance(story.get('found'), dict) else {}
+    url = idea_checks.canon_url(found.get('url'))
+    if not url or not re.match(r'^instagram\.com/(?:[^/]+/)?(?:p|reel|reels|tv)/', url):
+        return False
+    return sheet is None or url in sheet
+
+
+def goodnews_problems(ideas, sources, today=None, plans=None):
     """A weekly series option (the Saturday good news) names when its stories are found (stories_due, the Sunday before
     its week until 7 November, the Thursday of its week since: Krish, 2026-11-07, "Saturday's good news run should be done
     later in the week so the good news is fresh"). Once that day has come it holds its five stories, each dated in the
-    seven days up to it, none a story a recent off day already ran."""
+    GOODNEWS_DAYS up to it, or the SHEET_DAYS when it was found in his Instagram inspo sheet (Krish, 2026-11-16: "Good
+    news stories can come from the Instagram inspo as well. There's absolutely tonnes in there"; his Yes to thirty days
+    the same day), none a story a recent off day already ran."""
     import week_plan
     today = today or date.today()
+    sheet = sheet_posts(ideas, sources, plans)
     used = {u for o in (sources or {}).get('recent_offdays') or [] if isinstance(o, dict) for u in o.get('urls') or []}
     out = []
     offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
@@ -503,8 +534,10 @@ def goodnews_problems(ideas, sources, today=None):
                 continue
             for i, st in enumerate(stories, 1):
                 when = date.fromisoformat(str(st['date']))
-                if not due - timedelta(days=7) <= when <= due:
-                    out.append(f'{label}: story {i} is dated {when.isoformat()}; the stories are from the seven days up to {due.isoformat()}')
+                days = SHEET_DAYS if found_in_sheet(st, sheet) else GOODNEWS_DAYS
+                if not due - timedelta(days=days) <= when <= due:
+                    out.append(f'{label}: story {i} is dated {when.isoformat()}; the stories are from the seven days up to {due.isoformat()}'
+                               f', or the {SHEET_DAYS} when found in his Instagram inspo sheet ("found": {{"label", "url"}} of its post)')
                 if str(st['source']['url']) in used:
                     out.append(f'{label}: story {i} ran on a recent off day already ({st["source"]["url"]})')
     return out
@@ -608,7 +641,7 @@ def check(ideas, sources, week_plan, plans=None):
               if week >= idea_checks.SHAPE_FROM else halves_problems(ideas))
     return (week_plan.coverage_problems(ideas, style_answered(ideas, sources)) + week_plan.style_problems(ideas)
             + halves + locked_problems(ideas, sources) + repeat_problems(ideas, sources)
-            + readback_problems(ideas, sources) + goodnews_problems(ideas, sources)
+            + readback_problems(ideas, sources) + goodnews_problems(ideas, sources, plans=plans)
             + [f['line'] for f in wave1(ideas, sources, plans) if f['code'] not in HALVES_CODES and f['code'] not in idea_checks.NOTE_CODES])
 
 
@@ -1223,6 +1256,10 @@ def cover_self_test():
     rerun = goodnews_problems(wk([stry(1, source={'label': 'L', 'url': 'https://e.com/used'})] + [stry(n) for n in range(2, 6)]), gsrc, date(2026, 11, 8))
     if not any('dated 2026-10-20' in x for x in old_one) or not any('ran on a recent off day' in x for x in rerun):
         problems.append('a stale story and a story a recent off day ran are refused')
+    sheet_one = goodnews_problems(wk([stry(1, date='2026-10-20', found={'label': 'Your Instagram inspo sheet', 'url': 'https://www.instagram.com/p/abc123/'})]
+                                     + [stry(n) for n in range(2, 6)]), gsrc, date(2026, 11, 8))
+    if sheet_one:
+        problems.append('a story found in his Instagram inspo sheet may be up to thirty days old (Krish, 2026-11-16)')
     # (b) half and half on each publishing day.
     if halves_problems({'days': days}):
         problems.append('a day with one ask-led and one engine option passes half and half')
