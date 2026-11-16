@@ -302,6 +302,10 @@ he ticks: `references/inspiration-piece.md`.
    judges' best, and the ideas Krish dropped in during the last fortnight).
    Also list the Drive "Cold Ideas & Inspo" folder for anything new, when the
    Drive connector is attached (see "Without the connectors" below).
+1b. **The lookalike step, and no repeats** (Krish, 2026-11-16): after the gather follow
+   `.agents/skills/plan-week/references/lookalike.md`. Each option is one clear theme or one
+   clear story, for utility, interest or humour, with a humorous angle; nothing that went
+   out comes back (`board_feed.py gate`).
 2. Flesh out what Krish dropped in first: an idea of his is never ranked below
    an equal one of the engine's.
 3. For each publishing day, find at least four real options. Prefer existing

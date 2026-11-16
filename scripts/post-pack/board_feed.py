@@ -9,8 +9,10 @@ queue-consolidation-and-fresh-sunday-ideas.
 
     python3 scripts/post-pack/board_feed.py gather 2026-10-26
 
-Read-only with the engine key, no model and no spend: GET /api/week/options?week_start=<Monday>&include=sources and
-GET /api/idea-queue?combine=1, written to docs/plans/<Monday>-week/sources.json. It prints the count from each
+Read-only with the engine key, no model and no spend: GET /api/week/options?week_start=<Monday>&include=sources,
+GET /api/idea-queue?combine=1, the last three weeks' live boards (GET /api/board/<Monday>/view, for the repeat check)
+and the week's own board and presses (view and outcomes, where each option stands), written to
+docs/plans/<Monday>-week/sources.json. It prints the count from each
 source and says which is empty and why. Then the session (plan-week, steps 1 to 3b) writes ideas.json from the
 pool, his ideas first, each with source_kind, why_here and beats, and combine.json from the groups worth combining,
 and builds with --ideas --queue --combine.
@@ -128,6 +130,151 @@ def recent_offdays(wk, read=None, plans=None):
     return out
 
 
+RECENT_POST_WEEKS = 3  # the weeks before the planned one whose posts it may not repeat (Krish, 2026-11-16)
+POST_STAGES = ('approved', 'made', 'scheduled', 'live')
+LOCK_SOURCE = 'The narrative lock ('
+
+
+def posts_of(week, model):
+    """Every piece and every off-day post on a week's live board (its week model, contract 1.12.0: only what he
+    approved is on a day), each {week, day, date, key, type, kind, kind_label, title, stage, piece_id, item, primary,
+    urls, labels}: primary is the href of its first source, urls and labels every source the read sheet shows (the
+    narrative lock, a source the board adds, left out)."""
+    out = []
+    for d in (model or {}).get('days') or []:
+        for it in (d.get('items') or []) if isinstance(d, dict) else []:
+            if not isinstance(it, dict):
+                continue
+            stage = it.get('stage') if isinstance(it.get('stage'), dict) else {}
+            if it.get('type') != 'piece' and stage.get('key') not in POST_STAGES:
+                continue
+            read = it.get('read') if isinstance(it.get('read'), dict) else {}
+            srcs = [s for s in read.get('sources') or [] if isinstance(s, dict) and not str(s.get('label') or '').startswith(LOCK_SOURCE)]
+            out.append({'week': week, 'day': it.get('day') or d.get('day'), 'date': it.get('date') or d.get('date'), 'key': it.get('key'),
+                        'type': it.get('type'), 'kind': it.get('kind'), 'kind_label': it.get('kind_label'), 'title': it.get('title'),
+                        'stage': stage.get('key'), 'piece_id': it.get('piece_id'), 'item': it.get('item'),
+                        'primary': srcs[0].get('href') if srcs else None,
+                        'urls': [s['href'] for s in srcs if s.get('href')], 'labels': [s['label'] for s in srcs if s.get('label')]})
+    return out
+
+
+def recent_posts(wk, call):
+    """(posts, errors): what went out or is on its way on the RECENT_POST_WEEKS boards before the week, read from each
+    week's live board model (GET /api/board/<Monday>/view). A week that cannot be read is an error, said and kept,
+    never an empty week."""
+    start = date.fromisoformat(wk)
+    posts, errors = [], []
+    for back in range(1, RECENT_POST_WEEKS + 1):
+        w = (start - timedelta(days=7 * back)).isoformat()
+        try:
+            view = get(call, f'/api/board/{w}/view')
+        except (FeedError, making.MakingError) as error:
+            errors.append(f'{w}: {error}')
+            continue
+        model = view.get('model')
+        if not isinstance(model, dict) or not isinstance(model.get('days'), list):
+            errors.append(f'{w}: the view has no week model (contract 1.12.0 or later)')
+            continue
+        posts += posts_of(w, model)
+    return posts, errors
+
+
+def earlier_options(wk, plans=None, recent_off=()):
+    """[{week, day, id, main}]: every option the boards of the RECENT_POST_WEEKS weeks before offered, from their plan
+    files (ideas.json, Growth's offdays-growth.json) and the off days the gather read from their queues."""
+    plans = Path(plans) if plans else ROOT / 'docs' / 'plans'
+    start = date.fromisoformat(wk)
+    out, seen = [], set()
+
+    def add(w, day, oid, main):
+        k = (w, 'main' if main else 'off', str(oid).lower())
+        if oid and k not in seen:
+            seen.add(k)
+            out.append({'week': w, 'day': day, 'id': str(oid), 'main': main})
+    for back in range(1, RECENT_POST_WEEKS + 1):
+        w = (start - timedelta(days=7 * back)).isoformat()
+        path = plans / f'{w}-week' / 'ideas.json'
+        data = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+        for day, opts in (data.get('days') if isinstance(data.get('days'), dict) else {}).items():
+            for o in opts if isinstance(opts, list) else []:
+                if isinstance(o, dict):
+                    add(w, day, o.get('id'), True)
+        for day, opts in (data.get('offdays') if isinstance(data.get('offdays'), dict) else {}).items():
+            for o in opts if isinstance(opts, list) else []:
+                if isinstance(o, dict) and not o.get('weekly'):
+                    add(w, day, o.get('id'), False)
+    for o in recent_off or []:
+        if isinstance(o, dict) and str(o.get('week') or '') < wk:
+            add(o.get('week'), o.get('day'), o.get('id'), False)
+    return out
+
+
+def earlier_of(sources, week, plans=None):
+    """The earlier boards' options the repeat check reads: sources.json earlier_options, written by the gather; for a
+    gather from before them, the plan files on disk."""
+    got = (sources or {}).get('earlier_options')
+    if isinstance(got, list):
+        return got
+    try:
+        return earlier_options(monday(week).isoformat(), plans, (sources or {}).get('recent_offdays') or [])
+    except (FeedError, ValueError, OSError):
+        return []
+
+
+OFF_KEY = re.compile(r'^(?:queue/)?off-(mon|tue|wed|thu|fri|sat|sun)-(.+)$')
+
+
+def option_status(view, outcomes):
+    """{key: status} for every option on a week's ideas board, from its live board (GET /api/board/<Monday>/view, the
+    model's ideas and days) and his presses (GET /api/board/<Monday>/outcomes): key "idea:<id>" for a publishing-day
+    option, "off:<day>:<id>" for an off-day one. A press of his that stands (approved, filed, trend, improved,
+    rejected) wins; else the model says open, held or revised; an option on a day is approved. Only "open" may be made
+    again (the `days` re-run)."""
+    status = {}
+    model = (view or {}).get('model') if isinstance((view or {}).get('model'), dict) else {}
+    for i in model.get('ideas') or []:
+        if not isinstance(i, dict):
+            continue
+        why = {'open': 'open', 'revised': 'revised', 'held': 'held', 'held_piece': 'held'}.get(str(i.get('why')), 'held')
+        m = OFF_KEY.match(str(i.get('doc_id') or ''))
+        if m:
+            status[f'off:{m.group(1)}:{m.group(2).lower()}'] = why
+        elif i.get('piece_id'):
+            status[f'idea:{str(i["piece_id"]).lower()}'] = why
+    for d in model.get('days') or []:
+        for it in (d.get('items') or []) if isinstance(d, dict) else []:
+            if not isinstance(it, dict):
+                continue
+            m = OFF_KEY.match(str(it.get('key') or ''))
+            if m:
+                status[f'off:{m.group(1)}:{m.group(2).lower()}'] = 'approved'
+            elif it.get('piece_id'):
+                status[f'idea:{str(it["piece_id"]).lower()}'] = 'approved'
+    final = {}
+    rows = [r for r in (outcomes or {}).get('outcomes') or [] if isinstance(r, dict)]
+    for r in sorted(rows, key=lambda r: str(r.get('decided_at') or r.get('at') or '')):
+        m = OFF_KEY.match(str(r.get('doc') or ''))
+        key = f'off:{m.group(1)}:{m.group(2).lower()}' if m else (f'idea:{str(r["idea_id"]).lower()}' if r.get('idea_id') else None)
+        if key:
+            final[(str(r.get('doc')), key)] = str(r.get('outcome') or '')
+    answered = {}
+    for (doc, key), outcome in final.items():
+        if outcome and outcome != 'withdrawn':
+            answered[key] = outcome
+    status.update(answered)
+    return status
+
+
+def read_status(wk, call):
+    """(status, error) for the week's own options, read live; error is None when both reads answered."""
+    try:
+        view = get(call, f'/api/board/{wk}/view')
+        outcomes = get(call, f'/api/board/{wk}/outcomes')
+    except (FeedError, making.MakingError) as error:
+        return {}, str(error)
+    return option_status(view, outcomes), None
+
+
 def gather(week, call=None, out_dir=None, read=None):
     """(path written, summary lines). call: (method, path, body) -> (status, text), the engine key by default."""
     call = call or making._engine_call
@@ -137,6 +284,8 @@ def gather(week, call=None, out_dir=None, read=None):
         read = lambda path: board_web.call('GET', path)
     options = get(call, f'/api/week/options?week_start={wk}&include=sources')
     queue = get(call, '/api/idea-queue?combine=1')
+    posts, post_errors = recent_posts(wk, call)
+    status, status_error = read_status(wk, call)
     sources = options.get('sources')
     if not isinstance(sources, dict):
         raise FeedError('the engine answered without a sources block; is the include=sources route deployed?')
@@ -150,6 +299,7 @@ def gather(week, call=None, out_dir=None, read=None):
     must_cover = list(inspo.get('must_cover') or []) + [
         {'id': r.get('id'), 'what': f'Your words on board item "{r.get("title")}"', 'his_words': r.get('detail')} for r in relayed if r.get('id')]
     must_cover += his_dropped(sources)
+    offs = recent_offdays(wk, read)
     out = {
         'week_start': wk,
         # When it was read: the ideas are checked against a gather of the last two days only, so what happened between
@@ -182,7 +332,19 @@ def gather(week, call=None, out_dir=None, read=None):
         'asks': inspo.get('asks') or [],
         'recent': inspo.get('recent') if isinstance(inspo.get('recent'), list) else None,
         # Krish, 2026-11-02: the off days of this week and the two before it, for the no-repeat check and the readers.
-        'recent_offdays': recent_offdays(wk, read),
+        'recent_offdays': offs,
+        # Krish, 2026-11-16: "this week's Ideas Board needs to not contain mostly things we published last week". What
+        # went out or is on its way on the last three weeks' live boards (every piece and post he approved, made,
+        # scheduled or live, with its sources), and every option those boards offered: the repeat check in the gate
+        # (idea_checks.repeat_findings) reads both from here, with no engine key. A week that could not be read is
+        # said in recent_posts_error, and the gate fails until a gather reads it.
+        'recent_posts': posts,
+        **({'recent_posts_error': '; '.join(post_errors)} if post_errors else {}),
+        'earlier_options': earlier_options(wk, None, offs),
+        # Where each option of this week's own board stands (open, held, revised, or his press), for a re-run that
+        # makes again only the open ones on some days (sunday-ideas.yml `days`; board_feed.py keep).
+        'option_status': status,
+        **({'option_status_error': status_error} if status_error else {}),
         # The ideas gate (Ruling, Krish, 2026-11-11): his answers on the eight boards before this one, the cues the run
         # learns from, and what cover and gate check (idea_checks.py): a subject he refused, a return no deeper.
         'outcomes': sources.get('outcomes') if isinstance(sources.get('outcomes'), dict) else {},
@@ -208,6 +370,10 @@ def gather(week, call=None, out_dir=None, read=None):
     lines.append('  his answers on earlier boards: ' + (', '.join(f'{k} {len(oc.get(k) or [])}' for k in ('filed', 'rejected', 'trend', 'improved'))
                                                        if oc else 'none in the engine\'s answer') + f'; given back {len(out["unvetoed"])}')
     lines.append('  house rules: ' + (', '.join(str(r.get('id')) for r in out['house_rules']) or 'none in the engine\'s answer (the route predates them)'))
+    lines.append(f'  recent posts: {len(posts)} on the {RECENT_POST_WEEKS} boards before the week, {len(out["earlier_options"])} options those boards offered'
+                 + (f'; NOT READ: {out["recent_posts_error"]} (the gate fails until a gather reads them)' if post_errors else ''))
+    lines.append(f'  this week\'s options: {sum(1 for v in status.values() if v == "open")} open, {sum(1 for v in status.values() if v != "open")} answered or held'
+                 + (f'; NOT READ: {status_error}' if status_error else ''))
     cc = out['cues'].get('counts') if out['cues'] else None
     lines.append('  feedback cues: ' + (', '.join(f'{k.replace("_", " ")} {cc.get(k, 0)}' for k in ('future_pieces', 'wider_pieces', 'wider_themes', 'tracked', 'briefs', 'not_for_us'))
                                          if isinstance(cc, dict) else 'not in the engine\'s answer (the route on production predates them)'))
@@ -469,8 +635,9 @@ def wave1(ideas, sources, plans=None, p6=None):
     """The ideas quality plan's Wave 1 checks on a week's ideas.json against its sources.json (idea_checks.py): a
     subject he refused, a warned option placed first or shown without his words, a return no deeper, an option that
     calls itself his and points to nothing he typed, the vetoes the board lists, and from the 23 Nov board the shape
-    (the plain question first, a research prompt, a source tag) and the house rules read. Each finding is
-    {code, ref, line}."""
+    (the plain question first, a research prompt, a source tag) and the house rules read; on every board, no repeat of
+    what went out on the last three weeks' boards or of another option (Krish, 2026-11-16), and from the 23 Nov board
+    each option's shape, aim, humour and lookalike. Each finding is {code, ref, line}."""
     week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')
     shown_text, earlier_text16 = plans_reader(plans)
     opts = idea_checks.board_options(ideas)
@@ -491,7 +658,32 @@ def wave1(ideas, sources, plans=None, p6=None):
         have = {str(r.get('id')) for r in (sources or {}).get('house_rules') or [] if isinstance(r, dict) and str(r.get('text') or '').strip()}
         found += [{'code': 'house_rules', 'ref': rid, 'line': f'sources.json has no house rule {rid}; gather again, and read it before writing an idea'}
                   for rid in IDEA_RULES if rid not in have]
+    # Krish, 2026-11-16: no repeat of what went out, on any board the gather can read for (sources.json and the plan
+    # files only: the gate in sunday-ideas.yml holds no engine key).
+    found += idea_checks.repeat_read_findings(sources, week) + idea_checks.repeat_findings(ideas, sources, earlier_of(sources, week, plans))
+    if week >= idea_checks.AIM_FROM:
+        patterns, feed_urls, warnings = lookalike_of(week, plans)
+        found += idea_checks.aim_findings(ideas, week, patterns, feed_urls, warnings)
     return found
+
+
+def lookalike_of(week, plans=None):
+    """(pattern ids, feed post URLs, warnings) from the week's lookalike.json and lookalike-input.json (lookalike.py);
+    pattern ids None when the week has no lookalike.json."""
+    folder = Path(plans or ROOT / 'docs' / 'plans') / f'{week}-week'
+    patterns, urls, warnings = None, [], []
+    try:
+        data = json.loads((folder / 'lookalike.json').read_text(encoding='utf-8'))
+        patterns = [str(p.get('id')) for p in data.get('patterns') or [] if isinstance(p, dict) and p.get('id')]
+    except (OSError, ValueError):
+        pass
+    try:
+        data = json.loads((folder / 'lookalike-input.json').read_text(encoding='utf-8'))
+        urls = [p.get('url') for p in data.get('posts') or [] if isinstance(p, dict) and p.get('url')]
+        warnings = [str(w) for w in data.get('warnings') or [] if w]
+    except (OSError, ValueError):
+        pass
+    return patterns, urls, warnings
 
 
 def gate(week, ideas_path=None, plans=None):
@@ -659,6 +851,90 @@ def taps(week, read=None):
     return his_taps((answer or {}).get('documents') if isinstance(answer, dict) else [])
 
 
+def canonical(o):
+    return json.dumps(o, sort_keys=True, ensure_ascii=False)
+
+
+def keep_problems(before, after, status, days):
+    """What a re-run that makes again only the open options on some days (sunday-ideas.yml `days`) changed that it may
+    not: any day it was not given, and on its days any option that existed before and is not open (approved, revised,
+    held, filed, saved as a trend, improved, rejected, or not known), which must come back byte for byte as it was
+    (its JSON with sorted keys). A publishing-day option also keeps its place: the board's presses name it by place
+    (queue/<day>-<n>). status: option_status's {key: status}. [] when the re-run kept to that."""
+    days = {str(d).strip().lower()[:3] for d in days if str(d).strip()}
+    out = []
+    for group in ('days', 'offdays'):
+        b = (before or {}).get(group) if isinstance((before or {}).get(group), dict) else {}
+        a = (after or {}).get(group) if isinstance((after or {}).get(group), dict) else {}
+        for day in sorted(set(b) | set(a)):
+            bo = b.get(day) if isinstance(b.get(day), list) else []
+            ao = a.get(day) if isinstance(a.get(day), list) else []
+            if day not in days:
+                if canonical(bo) != canonical(ao):
+                    out.append(f'{day}: not one of the days to make again ({", ".join(sorted(days))}), and its options changed; leave them as they were')
+                continue
+            for n, o in enumerate(bo, 1):
+                if not isinstance(o, dict):
+                    continue
+                oid = str(o.get('id') or '').lower()
+                key = f'idea:{oid}' if group == 'days' else f'off:{day}:{oid}'
+                st = status.get(key, 'unknown')
+                if st == 'open':
+                    continue
+                if group == 'days':
+                    same = n <= len(ao) and canonical(ao[n - 1]) == canonical(o)
+                    where = f'{day}-{n}'
+                else:
+                    match = [x for x in ao if isinstance(x, dict) and str(x.get('id') or '').lower() == oid]
+                    same = bool(match) and canonical(match[0]) == canonical(o)
+                    where = f'off-{day}-{o.get("id")}'
+                if not same:
+                    out.append(f'{where} is {st}, not open: it comes back exactly as it was'
+                               + (' and in its place' if group == 'days' else '') + '; only the options nobody answered are made again')
+    return out
+
+
+def keep(week, days, before_path, status_path, ideas_path=None, plans=None):
+    """keep_problems on the week's ideas.json against the copy taken before the re-run and the status read before it."""
+    wk = monday(week).isoformat()
+    after = json.loads(Path(ideas_path or Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week' / 'ideas.json').read_text(encoding='utf-8'))
+    before = json.loads(Path(before_path).read_text(encoding='utf-8'))
+    data = json.loads(Path(status_path).read_text(encoding='utf-8'))
+    if data.get('error') or not isinstance(data.get('status'), dict):
+        return [f'the status of the week\'s options could not be read ({data.get("error") or "no status"}); nothing is made again without it']
+    return keep_problems(before, after, data['status'], days)
+
+
+def load_recent(path):
+    """Recent posts from a file or a folder, for the repeat check run offline: a folder of view answers saved as
+    <Monday>.json (GET /api/board/<Monday>/view), or a file holding a list of posts or {"recent_posts": [...]}."""
+    p = Path(path)
+    if p.is_dir():
+        posts = []
+        for f in sorted(p.glob('*.json')):
+            m = re.match(r'^(\d{4}-\d{2}-\d{2})(?:-view)?\.json$', f.name)
+            if not m:
+                continue
+            view = json.loads(f.read_text(encoding='utf-8'))
+            posts += posts_of(m.group(1), view.get('model') if isinstance(view.get('model'), dict) else {})
+        return posts
+    data = json.loads(p.read_text(encoding='utf-8'))
+    return data if isinstance(data, list) else list(data.get('recent_posts') or [])
+
+
+def repeats(week, ideas_path=None, plans=None, recent_from=None):
+    """The repeat findings on a week's ideas.json, with recent posts from sources.json or, offline, from recent_from."""
+    wk = monday(week).isoformat()
+    folder = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week'
+    sources = json.loads((folder / 'sources.json').read_text(encoding='utf-8'))
+    if recent_from:
+        sources = dict(sources, recent_posts=load_recent(recent_from))
+        sources.pop('recent_posts_error', None)
+    ideas = json.loads(Path(ideas_path or folder / 'ideas.json').read_text(encoding='utf-8'))
+    return (idea_checks.repeat_read_findings(sources, wk)
+            + idea_checks.repeat_findings(ideas, sources, earlier_of(sources, wk, plans)))
+
+
 def self_test():
     """No engine: a fake answer for each route, then what gather writes and says."""
     import tempfile
@@ -674,6 +950,18 @@ def self_test():
                                  'counts': {'future_pieces': 1, 'wider_pieces': 0, 'wider_themes': 0, 'tracked': 0, 'briefs': 0, 'not_for_us': 0}}}},
         '/api/idea-queue?combine=1': {'ok': True, 'queue': [{'id': 'q1'}, {'id': 'q2'}], 'combine': [{'ids': ['q1', 'q2']}]},
     }
+    # The last three weeks' live boards (Krish, 2026-11-16: no repeat of what went out) and this week's own.
+    item = lambda key, typ, stage, title, href: {'key': key, 'type': typ, 'day': 'tue', 'date': '2026-10-20', 'kind': 'meme', 'kind_label': 'Meme',
+                                                  'title': title, 'stage': {'key': stage}, 'piece_id': None, 'item': None,
+                                                  'read': {'sources': [{'label': 'The narrative lock (x.md)', 'href': 'https://github.com/x'},
+                                                                       {'label': 'Paper, 2 Oct 2026', 'href': href}]}}
+    for back, w in enumerate(('2026-10-19', '2026-10-12', '2026-10-05'), 1):
+        answers[f'/api/board/{w}/view'] = {'ok': True, 'model': {'days': [{'day': 'tue', 'items': [
+            item(f'off-tue-a{back}', 'post', 'live', f'Post {back} went out', f'https://www.e.com/{back}/?utm_source=x'),
+            item(f'off-tue-b{back}', 'post', 'nonsense', 'Not a post', 'https://e.com/skip')]}], 'ideas': []}}
+    answers['/api/board/2026-10-26/view'] = {'ok': True, 'model': {'days': [], 'ideas': [{'doc_id': 'off-thu-open1', 'why': 'open'},
+                                                                                          {'doc_id': 'mon-1', 'piece_id': 'P1', 'why': 'open'}]}}
+    answers['/api/board/2026-10-26/outcomes'] = {'ok': True, 'outcomes': [{'doc': 'queue/mon-1', 'idea_id': 'P1', 'outcome': 'filed', 'decided_at': '2026-10-25T10:00:00Z'}]}
     calls = []
 
     def call(method, path, body):
@@ -683,8 +971,13 @@ def self_test():
     with tempfile.TemporaryDirectory() as tmp:
         path, lines = gather('2026-10-26', call, tmp, read=lambda p: {})
         data = json.loads(Path(path).read_text(encoding='utf-8'))
-        if [m for m, _ in calls] != ['GET', 'GET']:
-            problems.append('gather must only read')
+        if {m for m, _ in calls} != {'GET'} or len(calls) != 7:
+            problems.append(f'gather must only read, its two sources, three past boards and this week\'s board ({len(calls)} reads)')
+        if [p['key'] for p in data['recent_posts']] != ['off-tue-a1', 'off-tue-a2', 'off-tue-a3'] or data['recent_posts'][0]['primary'] != 'https://www.e.com/1/?utm_source=x' \
+                or 'recent_posts_error' in data or not any('recent posts: 3 on the 3 boards' in x for x in lines):
+            problems.append('every post he approved on the last three boards is read, its narrative lock left out, and counted')
+        if data['option_status'] != {'off:thu:open1': 'open', 'idea:p1': 'filed'}:
+            problems.append(f'this week\'s options are open until his press answers them ({data["option_status"]})')
         if data['series'][0]['pool'][0]['source_kind'] != 'his' or data['series'][0]['mandate'] != 'M':
             problems.append('the pool keeps its order, his first, with the mandate beside it')
         if [m['id'] for m in data['must_cover']] != ['card-1', 'said-1', 'a'] or not any('routed 1' in x for x in lines):
@@ -697,6 +990,15 @@ def self_test():
             problems.append('the counts and the empty source are said')
         if data['cues'].get('future_pieces', [{}])[0].get('id') != 'c1' or not any('feedback cues: future pieces 1' in x for x in lines):
             problems.append('his feedback cues are written and counted')
+    down = dict(answers)
+    down.pop('/api/board/2026-10-12/view')
+    with tempfile.TemporaryDirectory() as tmp:
+        path, lines = gather('2026-10-26', lambda m, p, b: (200, json.dumps(down[p])) if p in down else (503, 'down'), tmp, read=lambda p: {})
+        data = json.loads(Path(path).read_text(encoding='utf-8'))
+        if '2026-10-12' not in str(data.get('recent_posts_error')) or len(data['recent_posts']) != 2 or not any('NOT READ' in x for x in lines):
+            problems.append('a past board that cannot be read is said in recent_posts_error, never an empty week')
+        if not idea_checks.repeat_read_findings(data, '2026-10-26'):
+            problems.append('the gate fails while a past board could not be read')
     no_cues = json.loads(json.dumps(answers))
     no_cues['/api/week/options?week_start=2026-10-26&include=sources']['sources'].pop('cues')
     with tempfile.TemporaryDirectory() as tmp:
@@ -842,12 +1144,55 @@ def main(argv=None):
     sc = sub.add_parser('scorecard', help='the board\'s scorecard from his real presses, each count by its rule; writes docs/plans/<Monday>-week/scorecard.json')
     sc.add_argument('week', help='the Monday of the board, YYYY-MM-DD')
     sc.add_argument('--no-write', action='store_true', help='print only')
-    gt = sub.add_parser('gate', help='the checks that fail the Sunday run: a subject he refused, a warned option placed first, a return no deeper')
+    gt = sub.add_parser('gate', help='the checks that fail the Sunday run: a subject he refused, a warned option placed first, a return no deeper, '
+                                     'a repeat of what went out, an option without its shape')
     gt.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
     gt.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
     gt.add_argument('--base', help='the week\'s ideas.json before a run that adds one idea: what the board already had is reported, never this run\'s to answer')
+    rp = sub.add_parser('repeats', help='what on the week\'s ideas repeats a recent post, piece, earlier option or another option (the gate\'s repeat check)')
+    rp.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
+    rp.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
+    rp.add_argument('--recent-from', help='recent posts from here instead of sources.json: a folder of saved view answers '
+                                          '(<Monday>.json) or a file with a list of posts (offline)')
+    st = sub.add_parser('status', help='where each option of the week\'s own board stands (open, held, revised or his press), read live')
+    st.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
+    st.add_argument('--out', help='write {week, status, error} here (a re-run\'s keep check reads it)')
+    kp = sub.add_parser('keep', help='a re-run that makes again only the open options on some days changed nothing else')
+    kp.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
+    kp.add_argument('--days', required=True, help='the days it may make again, e.g. thu,sat')
+    kp.add_argument('--before', required=True, help='the week\'s ideas.json as it stood before the re-run')
+    kp.add_argument('--status', required=True, help='the status file board_feed.py status wrote before the re-run')
+    kp.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
     sub.add_parser('self-test')
     args = ap.parse_args(argv)
+    if args.cmd == 'repeats':
+        try:
+            found = repeats(args.week, args.ideas, recent_from=args.recent_from)
+        except (FeedError, OSError, ValueError) as error:
+            print(f'board_feed repeats: could not read the week: {error}', file=sys.stderr)
+            return 2
+        for f in found:
+            print(f['line'])
+        print(f'repeats: {len(found)} finding(s) on {len({f["ref"] for f in found})} option(s)' if found else 'repeats: none')
+        return 1 if found else 0
+    if args.cmd == 'status':
+        wk = monday(args.week).isoformat()
+        status, error = read_status(wk, making._engine_call)
+        if args.out:
+            Path(args.out).write_text(json.dumps({'week': wk, 'status': status, 'error': error}, indent=1) + '\n', encoding='utf-8')
+        counts = {}
+        for v in status.values():
+            counts[v] = counts.get(v, 0) + 1
+        print(f'status of the week of {wk}: ' + (', '.join(f'{k} {n}' for k, n in sorted(counts.items())) or 'no options') + (f'; NOT READ: {error}' if error else ''))
+        return 1 if error else 0
+    if args.cmd == 'keep':
+        try:
+            problems = keep(args.week, args.days.split(','), args.before, args.status, args.ideas)
+        except (FeedError, OSError, ValueError) as error:
+            print(f'board_feed keep: could not read the week: {error}', file=sys.stderr)
+            return 2
+        print('keep: ' + ('REFUSED:\n  ' + '\n  '.join(problems) if problems else f'only the open options on {args.days} were made again'))
+        return 1 if problems else 0
     if args.cmd == 'taps':
         try:
             bodies, skipped = taps(args.week)
@@ -885,7 +1230,7 @@ def main(argv=None):
         for line in report['before']:
             print(f'on the board before this run, the week\'s own and not this run\'s to answer: {line}')
         print('gate: ' + ('REFUSED:\n  ' + '\n  '.join(problems) if problems else 'nothing he refused is offered again, no warned option leads its day, '
-                                                                                'and every return comes back deeper'
+                                                                                'every return comes back deeper, and nothing repeats what went out'
                                                                                 + (' (in what this run added)' if args.base else '')))
         return 1 if problems else 0
     if args.cmd == 'cover':
