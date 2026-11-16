@@ -48,7 +48,7 @@ and a keep, merge or retire proposal that is Krish's to decide.
 
 | Capability | For | Decided | Status | Proposal | Where | Overlaps |
 |---|---|---|---|---|---|---|
-| Style bank (`style-bank`) | 53 reusable modules in 11 layers (opening to motion); 52 untested | pre-script | partial | keep | `config/style-references.json` | techniques, devices |
+| Style bank (`style-bank`) | 58 reusable modules in 11 layers (opening to motion); 55 untested | pre-script | partial | keep | `config/style-references.json` | techniques, devices |
 | Technique registry (`techniques`) | The Studio runner's technique registry and the renderer's device adapter map | pre-script | working | decide | `config/techniques.json` | style-bank, devices, studio-v2 |
 | Production formats (`production-formats`) | 7 production treatments (face-with-proof is the only one liked) | pre-script | partial | keep | `config/style-references.json` | ve-formats |
 | ve format files (`ve-formats`) | Five buildable formats with layers, devices, beats and QC | pre-record | partial | keep | `config/ve/formats` | production-formats |
@@ -97,20 +97,20 @@ and a keep, merge or retire proposal that is Krish's to decide.
 | Capability | For | Decided | Status | Proposal | Where | Overlaps |
 |---|---|---|---|---|---|---|
 | Design lock and brand tokens (`design-lock`) | Grid, zones, type, colour and frozen key frames | pre-record | partial | keep | `config/ve/design-lock.json` |  |
-| Device library (`devices`) | The verbs FormatMaster draws (27) | pre-record | partial | keep | `config/ve/devices.json` | techniques |
+| Device library (`devices`) | The verbs FormatMaster draws (42) | pre-record | partial | keep | `config/ve/devices.json` | techniques |
 | Codex cards (`codex-cards`) | Device and plate briefs Codex builds from | pre-record | partial | keep | `scripts/velib/cards.py` |  |
 
 ## captions
 
 | Capability | For | Decided | Status | Proposal | Where | Overlaps |
 |---|---|---|---|---|---|---|
-| Caption styles (`caption-styles`) | Fifteen caption styles a spec picks with brand.caption_theme (art-directed, his pick; cinematic, Audrey's system; thirteen house rebuilds), drawn from ve's caption pages in the house faces and tokens inside every channel's safe area; proved on stills, not yet on his take | pre-record | partial | keep | `apps/renderer/src/engine/captions/themes.tsx` |  |
+| Caption styles (`caption-styles`) | 27 caption styles a spec picks with style.captions.theme, chosen apart from the motion style since 13 Nov (art-directed, his pick; cinematic, Audrey's system; the rest house rebuilds; docs/ve/INGREDIENTS.md), drawn from ve's caption pages in the house faces and tokens inside every channel's safe area; proved on stills, not yet on his take | pre-record | partial | keep | `apps/renderer/src/engine/captions/themes.tsx` |  |
 
 ## sound
 
 | Capability | For | Decided | Status | Proposal | Where | Overlaps |
 |---|---|---|---|---|---|---|
-| Music library ledger (`music-library`) | Approved tracks for beds (2 approved, 4 proposed) | pre-script | partial | keep | `config/music-library.json` |  |
+| Music library ledger (`music-library`) | Approved tracks for beds (4 approved, 4 proposed) | pre-script | partial | keep | `config/music-library.json` |  |
 | Music bed shape (`music-bed`) | One bed shape: loud open, steady under voice, louder end | any | working | keep | `config/music-bed.json` |  |
 | Approved sound effects (`sfx-approved`) | The gate that refuses any sound not listed by id and sha256; the set is empty until Krish approves sounds by ear | post-record | partial | keep | `config/sfx-approved.json` |  |
 
