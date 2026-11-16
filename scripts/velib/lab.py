@@ -352,9 +352,9 @@ def record_sample(layer: str, style_id: str, drive_id: str, clip: Path | None = 
         raise ValueError(f'{style_id} is not a caption style (config/caption-themes.json)')
     # Every lab render is a cut of his pinned take, and a cut of his recordings is never an example on the board
     # (Krish, 2026-11-16: "Please don't tell me this is going on the board as an example or a gold standard template").
-    # The board shows the StyleStill template's stills; a sample waits for a template of its own.
+    # The board shows the StyleStill cover art (a shop window of each style at its best); a sample waits for its own.
     raise ValueError('a style sample is a render of his pinned take, and a cut of his recordings is never an example on the '
-                     'board; the board shows the StyleStill template\'s stills (ve lab still) instead')
+                     'board; the board shows the StyleStill cover art\'s stills (ve lab still) instead')
     if clip is not None:
         clip = Path(clip)
         manifest = load_json(clip.parent / 'manifest.json')
@@ -478,8 +478,8 @@ def record_still(layer: str, still_id: str, drive_id: str, file: Path | None = N
     """One still, filed in his Drive, recorded as the picture the board shows when he hovers a look, a motion style or
     a caption style: its value the same Drive file route as a sample (/api/board/sign-offs?file=<drive id>), its Drive id
     in stills_drive, by layer. A motion still is a drawable style's (never one whose device is not built); a caption
-    still is a caption style's; a look's (treatment) comes from a Codex plate. Every one is drawn on the neutral StyleStill
-    template, never a frame of a take (Krish, 2026-11-16): a still beside a take's stills.json is refused.
+    still is a caption style's; a look's (treatment) too. Every one is the StyleStill cover art, a shop window of the style at
+    its best, never a frame of a take (Krish, 2026-11-16): a still beside a take's stills.json is refused.
     With file, it must be a JPEG of about 540x960 and, for motion and captions, the lab's still of that style (stills.json
     beside it). It writes only config/ve/style-samples.json; filing in Drive is the session's (docs/DRIVE.md)."""
     if layer not in STILL_LAYERS:
@@ -509,17 +509,17 @@ def record_still(layer: str, still_id: str, drive_id: str, file: Path | None = N
             raise ValueError(f'{file} is {size[0]}x{size[1]}, not a {STILL_W}x{STILL_H} still')
         beside = file.parent / STILLS_MANIFEST
         made = load_json(beside) if beside.is_file() else {}
-        # A board still is drawn on the neutral StyleStill template, never a frame of a take: the first stills were frames
+        # A board still is the StyleStill cover art, never a frame of a take: the first stills were frames
         # of his Thu 5 Nov take, which he hates (Krish, 2026-11-16: "Please don't tell me this is going on the board as
         # an example or a gold standard template that we could use in future projects").
         if made.get('take_sha256') or made.get('source') == 'take':
-            raise ValueError(f'{file} is a frame of a take; a board still is drawn on the neutral StyleStill template '
+            raise ValueError(f'{file} is a frame of a take; a board still is the StyleStill cover art '
                              '(card ve-style-still-template-1), never a frame of his recordings')
         if layer in ('motion', 'captions'):
             rows = (made.get('stills') or []) if made.get('source') == 'template' else []
             row = next((r for r in rows if r.get('layer') == layer and r.get('id') == still_id), None)
             if not row or Path(str(row.get('path'))).name != file.name or sha256_file(file) != row.get('sha256'):
-                raise ValueError(f'{file} is not the StyleStill template\'s still of {layer} {still_id} ({STILLS_MANIFEST} beside it, '
+                raise ValueError(f'{file} is not the StyleStill cover art\'s still of {layer} {still_id} ({STILLS_MANIFEST} beside it, '
                                  'source template, names another file or none)')
     doc = load_json(path)
     doc.setdefault('stills', {}).setdefault(layer, {})[still_id] = f'{SAMPLE_PATH}{drive_id}'
