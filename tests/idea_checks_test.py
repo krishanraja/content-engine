@@ -753,6 +753,22 @@ class KeepTest(unittest.TestCase):
         unknown = board_feed.keep_problems(self.before, json.loads(json.dumps(self.before)) | {'offdays': {'tue': self.before['offdays']['tue'], 'thu': []}}, {}, ['thu'])
         self.assertTrue(all('is unknown' in g for g in unknown) and len(unknown) == 2, 'an option whose status is not known is kept')
 
+    def test_a_day_made_again_leaves_him_a_real_choice(self):
+        # The 16 Nov re-run of Tue and Thu left Tue 17 with one open option (Krish, 2026-11-16: "There's not enough
+        # quality and breadth of ideas").
+        after = json.loads(json.dumps(self.before))
+        after['offdays']['tue'] = [off('new1', 'https://e.com/n1')]
+        got = board_feed.refill_breadth(self.before, after, self.status, ['tue'])
+        self.assertEqual(len(got), 1, got)
+        self.assertTrue(got[0].startswith('tue: 1 option(s)'), got)
+        after['offdays']['tue'] += [off(f'new{n}', f'https://e.com/n{n}') for n in (2, 3)] + [off('kept', 'https://e.com/k')]
+        self.assertEqual(board_feed.refill_breadth(self.before, after, self.status, ['tue']), [], 'a kept open option counts')
+        answered = dict(self.status, **{'off:tue:kept': 'rejected'})
+        self.assertEqual(len(board_feed.refill_breadth(self.before, after, answered, ['tue'])), 1, 'an answered option is not a choice')
+        # Thu keeps one open and one revised: two choices, and the re-run must add two more.
+        self.assertEqual(len(board_feed.refill_breadth(self.before, self.before, self.status, ['thu'])), 1)
+        self.assertEqual(board_feed.refill_breadth(self.before, self.before, self.status, ['fri']), [], 'a day with no options anywhere is not asked')
+
     def test_the_status_reads_his_presses_over_the_board(self):
         view = {'model': {'ideas': [{'doc_id': 'off-thu-open1', 'why': 'open'}, {'doc_id': 'off-thu-liked', 'why': 'revised'},
                                     {'doc_id': 'mon-2', 'piece_id': OTHER, 'why': 'open'}, {'doc_id': 'mon-1', 'piece_id': IDEA, 'why': 'open'}],

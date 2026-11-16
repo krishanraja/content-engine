@@ -298,8 +298,8 @@
       "guards": [
         {
           "file": "scripts/post-pack/story_check.py",
-          "contains": "finishes under 89 seconds",
-          "how": "a short script over 195 words is refused before Krish records it"
+          "contains": "def short_band",
+          "how": "a short script past SHORT_CUT.most_words is refused before Krish records it; since 2026-11-16 the short cut is 20 to 35 seconds (Ruling, Krish, 2026-11-16), well inside every platform's line"
         },
         {
           "file": "scripts/produce_day.py",

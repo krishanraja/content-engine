@@ -27,3 +27,21 @@ didn't approve to move to the publish board."
   refused"): `python3 scripts/post-pack/board_feed.py gate <Monday>` fails on a subject he refused offered again, a
   warned option placed first or shown without his words, and a return that came back no deeper; the Sunday workflow
   keeps the week off the live board while it fails. "Offer it again" on a "Not offered again" line is his press alone.
+
+## The idea's pitch, and test 6
+
+**Every idea is a full story pitch.** Beside its existing fields an idea may
+carry `pitch`: `{"headline": "<the wait, what line>", "hook": "<the opening
+sentence>", "examples": ["<2 to 3 pub-test examples>"], "chain": ["<5 to 8
+cause-and-effect links>"], "take": "<our take, the ending>"}`. Each carousel
+option carries `cards`: `[{"words": "<what the card says>", "picture":
+"<what it shows>"}]` (the board renders both).
+
+**6. One named thing, for a leader** (house rules ONE_CONCRETE_THING and FOR_THE_LEADER; Ruling, Krish, 2026-11-16, of
+Growth's audience brief, Control Center material cbb90470: "apply 1 to 6 from the next piece you make this week"). The
+idea is built on one named, concrete thing (a product, a deal, a number or a person); its `pitch.headline` and
+`pitch.hook` name it, and the hook's next line says what it changes for a business in a leader's terms (budget, team,
+customers, suppliers, contracts, prices or margin). Instagram held people longest on named things (Higgsfield 44.6 s,
+Disney and Character.AI 39.7 s) and least on an abstract framing ("Every AI has two passports", 17.5 s, no share); the
+pop-culture hook drew the most reach of the run and no reader. An abstract framing may be the angle, never the opening;
+a pitch that stays pop culture past its first line is not ready.
