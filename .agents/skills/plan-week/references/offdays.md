@@ -107,7 +107,15 @@ and `lookalike` (the pattern and the feed post it beats; none for an idea of his
 `references/lookalike.md` says. The humour lives in the angle, the headline and the narration, never in stickers,
 badges or slogans on a cover (`docs/CAROUSEL-STANDARD.md`). `board_feed.py gate` refuses an option without them, and an
 option that repeats a post of the last three weeks or another option on the board (one story is one option; a carousel
-that `supports` the day's approved piece says so).
+for a day's piece says so in `supports` or `ties_to`).
+
+**An off-day carousel is utility, at the level of the best posts in his Instagram inspo sheet** (Krish, 2026-11-16:
+"Ultimately what performs really well is what's on those Instagram info sheets. Off day Carousels should have that level
+of utility: attention-grabbing headline and visual, and actual real utility."). Its `aim` is `"utility"`. Its hook is a
+headline that stops the scroll, and its `pitch.see` the picture that does the same. Its cards give the reader something
+they can use the same day, at the level of the sheet's best posts (the lookalike pattern it beats). The humour still rides
+on top, in the angle. The weekly good news and the memes keep their own aims. `board_feed.py gate` refuses an off-day
+carousel whose aim is not utility (from the 23 Nov board).
 
 A carousel's first `picture` (its cover) names a scene that is the story's object, place or moment, or the house robot
 doing something (`config/brand-robot.json`), never a made-up robot (Ruling, Krish, 2026-11-05: "either use the branded

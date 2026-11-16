@@ -167,6 +167,22 @@ earned full-pilot acceptance after explicit tasks, cumulative scores and a
 distinct practical ending corrected those failures. Acceptance proves this
 reference met Krish's bar; it does not prove audience or growth performance.
 
+## Off-day carousels are utility, at the level of the Instagram inspo sheet (Ruling, Krish, 16 November 2026)
+
+Krish, 2026-11-16: "Ultimately what performs really well is what's on those Instagram info sheets. Off day Carousels
+should have that level of utility: attention-grabbing headline and visual, and actual real utility."
+
+An off-day carousel is made to the bar of the best posts in his Instagram inspo sheet (Drive "Instagram inspo.xlsx"; the
+plan-week lookalike step names the post each idea beats):
+
+- a headline that stops the scroll;
+- a cover picture that does the same;
+- cards that give the reader something they can use the same day.
+
+Humour rides on top, in the angle. The weekly good news and the memes keep their own aims. The ideas gate holds the idea
+to it (`aim: utility`, `board_feed.py gate`, from the 23 Nov board), and the 10/10 judges read the finished carousel
+against it.
+
 ## The ten-second swipe (Ruling, Krish, 13 November 2026)
 
 His words, of the Thursday 12 Nov Git carousel: "Git carousel cards look terrible apart from the cover card and they
