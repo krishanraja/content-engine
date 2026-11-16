@@ -482,8 +482,10 @@ class RepeatTest(unittest.TestCase):
     """Krish, 2026-11-16: "this week's Ideas Board needs to not contain mostly things we published last week"."""
 
     def test_the_16_nov_board_repeats_what_went_out_and_itself(self):
-        plan = json.loads((ROOT / 'docs' / 'plans' / '2026-11-16-week' / 'ideas.json').read_text(encoding='utf-8'))
-        src = json.loads((ROOT / 'docs' / 'plans' / '2026-11-16-week' / 'sources.json').read_text(encoding='utf-8'))
+        # The week of 16 Nov as it stood when this went wrong (frozen 16 Nov): the live plan moves on as its ideas are
+        # made again, and a later run took frenemies and ownref off it.
+        plan = json.loads((ROOT / 'tests' / 'fixtures' / 'plans' / '2026-11-16-ideas.json').read_text(encoding='utf-8'))
+        src = json.loads((ROOT / 'tests' / 'fixtures' / 'plans' / '2026-11-16-sources.json').read_text(encoding='utf-8'))
         found = ic.repeat_findings(plan, dict(src, recent_posts=RECENT), board_feed.earlier_of(src, '2026-11-16'))
         by = {}
         for f in found:
