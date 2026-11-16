@@ -102,6 +102,19 @@ describe('the board shows what the run will not offer, and why', () => {
     expect([held.title, held.status, held.actions.length]).toEqual(['Held back: Acme clients took the savings', 'held back', 0])
     expect(ideaLines(inputs(ideas), 'wed')).toEqual([])
   })
+
+  it('a held ask of his keeps the card he saved: its link, his words and a title naming it (1.18.0)', () => {
+    const said = 'Lets make a hilarious meme. Reskin this video with the text "POV: your AI agent when you forget to teach it anything"'
+    const ideas = { held: [
+      { ref: 'ask/d16fe9ff-413c-47c4-ac53-c89e40d28489', day: 'tue', said, title: 'A meme on the YouTube short you saved: an AI agent nobody taught',
+        source: { label: 'The YouTube short you saved, 3 Nov', url: 'https://youtube.com/shorts/tJwqPQvgQkk' }, reason: 'Too close to the meme approved for Fri 13 Nov.' },
+      { ref: 'ask/0000aaaa-0000-0000-0000-000000000000', day: 'tue', title: 'An ask with an unsafe link', source: { url: 'javascript:alert(1)' }, reason: 'A reason of twenty letters.' }] }
+    const [held, unsafe] = ideaLines(inputs(ideas), 'tue')
+    expect(held.title).toBe('Held back: A meme on the YouTube short you saved: an AI agent nobody taught')
+    expect(held.said).toBe(said)
+    expect(held.link).toEqual({ label: 'The YouTube short you saved, 3 Nov', href: 'https://youtube.com/shorts/tJwqPQvgQkk' })
+    expect(unsafe.link).toBeUndefined()
+  })
 })
 
 describe('the run reads fuller sources, and the good news shows its mix (items 9 and 12)', () => {
@@ -127,6 +140,16 @@ describe('the run reads fuller sources, and the good news shows its mix (items 9
       .toEqual([{ said: 'Make it simpler.', about: 'The cover', where: 'a session', repository: null, at: '2026-11-15T00:00:00Z' }])
     expect(buildHindsight([{ piece_id: 'p1', narrative: 8, production: 7, note: 'Clear.', scored_at: '2026-11-07T00:00:00Z' }]))
       .toEqual([{ piece_id: 'p1', narrative: 8, production: 7, note: 'Clear.', at: '2026-11-07T00:00:00Z' }])
+  })
+
+  it('one read of the feed keeps the topic signal to its days and hands the lookalike step the wider window', async () => {
+    const { splitFeed, FEED_DAYS, LOOKALIKE_FEED_DAYS } = await import('../../apps/control-plane/api/_inspirationSources')
+    expect([FEED_DAYS, LOOKALIKE_FEED_DAYS]).toEqual([8, 45])
+    const row = (at: string) => ({ title: at, excerpt: 'x', meta: { url: `https://example.com/${at}` }, occurred_at: at })
+    const out = splitFeed([row('2026-11-15T00:00:00+00:00'), row('2026-11-06T00:00:00+00:00'), row('2026-10-12T00:00:00+00:00')], '2026-11-06T00:00:00.000Z')
+    expect(out.feed.map(p => p.title)).toEqual(['2026-11-15T00:00:00+00:00', '2026-11-06T00:00:00+00:00'])
+    expect(out.lookalike.map(p => p.url)).toEqual(['https://example.com/2026-11-15T00:00:00+00:00', 'https://example.com/2026-11-06T00:00:00+00:00',
+      'https://example.com/2026-10-12T00:00:00+00:00'])
   })
 
   it('the good-news option says its mix before he presses', async () => {

@@ -30,8 +30,10 @@ An older plan with no `kind` is read from its format by one rule (`offdayKind`);
 supporting carousel when it ties to a publishing day and an explainer when it does not. A suggestion that is none of
 the five is not offered.
 
-On the Ideas tab, 4 to 6 options each for Tuesday, Thursday and Saturday
-(the board takes 2 to 6; Sunday is a rest day and nothing is published on it:
+On the Ideas tab, at least 5 options each for Tuesday, Thursday and Saturday from the 23 Nov board, from different
+sources (the Instagram sheet, the web, his cards) and spanning at least two aims (Krish, 2026-11-16: "There's not
+enough quality and breadth of ideas flowing through to this week's or next week's boards"; `board_feed.py gate`,
+code `aim`); 4 to 6 before it (the board takes 2 to 6; Sunday is a rest day and nothing is published on it:
 Ruling, Krish, 2026-11-02, "Let's eliminate Sunday from Publishing anythign
 permanently. Sunday is rest and planning and ideation day."), for the Make Your Mind Up Instagram, TikTok
 and YouTube Shorts channels (Shorts takes video only, so a carousel goes
@@ -85,6 +87,9 @@ through `POST /api/board/<Monday>/offdays`, never through this file.
  "copy": "<two plain sentences: what it is and why it lands>",
  "hook": "<the headline he reads first, one line>",
  "pitch": {"see": "<what you see or hear>", "lands": "<why it is funny or useful>", "why_now": "<the dated reason, if any>", "share": "<the one line people send on>"},
+ "shape": "story", "dive": "<the mechanism to dive into, one sentence>", "aim": "humour",
+ "funny": "<its humorous angle, one plain line>",
+ "lookalike": {"pattern": "<a pattern id in lookalike.json>", "beats": "<the feed post URL it is similar to, better than or adapted from>", "our_take": "<one line: what we say that the post did not>"},
  "cards": [{"words": "...", "picture": "..."}],
  "inspiration": {"label": "<the saved post it borrows from, as he would name it>", "url": "https://...", "saved": "Saved 29 Oct"},
  "learned_from": ["<his words that shaped it, quoted, with their date>"],
@@ -95,6 +100,37 @@ through `POST /api/board/<Monday>/offdays`, never through this file.
                "tone": "<one line>", "kit": "<the brand-kit pieces it uses>", "inspo_url": "https://..."},
  "covers": ["<must_cover id>"]}
 ```
+
+**Its shape, aim and humour, from the 23 Nov board** (Krish, 2026-11-16: "Everything should be tinged with a humorous
+angle, all scripts for pieces and all suggestions for off days."). Every option carries `shape` (`"theme"`, one topic and
+at least three sourced `stories`, or `"story"`, one primary `source` and `dive`), `aim` (`"utility"`, `"interest"` or
+`"humour"`; its own field, so `pitch.lands` stays the line on why it lands), `funny` (its humorous angle, one plain line)
+and `lookalike` (the pattern and the feed post it beats; none for an idea of his or one he records), as
+`references/lookalike.md` says. The humour lives in the angle, the headline and the narration, never in stickers,
+badges or slogans on a cover (`docs/CAROUSEL-STANDARD.md`). `board_feed.py gate` refuses an option without them, and an
+option that repeats a post of the last three weeks or another option on the board (one story is one option; a carousel
+for a day's piece says so in `supports` or `ties_to`).
+
+**An off-day carousel is utility, at the level of the best posts in his Instagram inspo sheet** (Krish, 2026-11-16:
+"Ultimately what performs really well is what's on those Instagram info sheets. Off day Carousels should have that level
+of utility: attention-grabbing headline and visual, and actual real utility."). Its `aim` is `"utility"`. Its hook is a
+headline that stops the scroll, and its `pitch.see` the picture that does the same. Its cards give the reader something
+they can use the same day, at the level of the sheet's best posts (the lookalike pattern it beats). The humour still rides
+on top, in the angle. The weekly good news and the memes keep their own aims. `board_feed.py gate` refuses an off-day
+carousel whose aim is not utility (from the 23 Nov board).
+
+**The sheet is a source, and its card flow is the model** (Krish, 2026-11-16: "Just look at that Instagram inspo sheet
+for content ideas. Look at it for the way the narrative goes from card to card. You are more than welcome to copy any
+ideas but we just change the copy, we change the branding, we change the imagery, and ideally we have our own take on
+the card (even if we're allowed to use the specific bit of news or idea or format)."). An option may take a sheet post's
+news, idea or format outright, naming it in `lookalike.beats`. Its `cards` follow the job of each card in that
+pattern's `card_flow` (lookalike.json), in our own words, on our brand and with our own pictures, and `lookalike.our_take`
+says in one line what we add. Never their sentence: the gate refuses seven of their words in a row. Ours must beat the
+post it draws on; a copy that is "way worse" (2 Nov) is cut.
+
+**Fun to make, fun to consume** (Krish, 2026-11-16: "one of the main things about ALL makeyourmindup content is that it
+must be fun for me to produce, and must be fun for an audience to consume."). An option he would not enjoy making, or a
+reader would not enjoy reading, is cut before the tab, however useful.
 
 A carousel's first `picture` (its cover) names a scene that is the story's object, place or moment, or the house robot
 doing something (`config/brand-robot.json`), never a made-up robot (Ruling, Krish, 2026-11-05: "either use the branded

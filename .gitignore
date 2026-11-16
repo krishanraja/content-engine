@@ -67,3 +67,8 @@ supabase/.temp/
 
 # The live board client build output (built into api/board/_deskPage.ts)
 apps/control-plane/board-next/dist/
+
+# The lookalike step's input: other people's Instagram posts read from his inspo sheet (captions, slide text). It is
+# made again in the job that reads it (scripts/post-pack/lookalike.py prepare) and never committed: this repository is
+# public, and their words are theirs. lookalike.json, the patterns drawn from it in the engine's own words, is kept.
+docs/plans/*-week/lookalike-input.json

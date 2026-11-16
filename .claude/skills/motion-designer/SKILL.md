@@ -18,6 +18,12 @@ The plan answers to the house, never the other way round:
   never a style in `meta.style.rejected`. Its profile in `apps/renderer/src/engine/kit/motion-profiles.json` (read it,
   never edit it) sets how things enter. This skill plans inside it.
 - **House rules.** HOOK_IS_THE_INTRO: every cut opens on its hook, nothing before it, one close.
+- **The first two seconds of a vertical** (house rule FIRST_TWO_SECONDS; Ruling, Krish, 2026-11-16, of Growth's audience
+  brief: "apply 1 to 6 from the next piece you make this week"). On a 9:16 cut the hook beat's first frame shows the
+  piece's one named thing, and its first event lands by the hook's second word, so words are on screen inside the
+  first second: `ve lint` (`story.hook_event`) refuses it later, and `dialogue.short_max` refuses a short past
+  SHORT_CUT's 35 seconds. The promoted TikTok of "The UK number two" kept 35.7 in 100 viewers past 2 seconds and 0.6
+  to the end: plan the opening for a stranger scrolling with the sound off.
   STORY_ARC: one story, each beat setting up or answering its question. VISUAL_EXPLAINS: a moving picture exists only to
   make one point land faster than the words. MUSIC_BED: only licensed music from the ledger, never a clock.
 - **His words are the clock.** Every event sits on the word that names it; every handover sits in a pause.

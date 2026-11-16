@@ -113,7 +113,7 @@ article or a visual: each piece's make session does, from its signed lock
 The channel is smart entertainment: "Make Your Mind Up takes the strangest,
 funniest and quietly biggest things AI did this week and makes them make
 sense to a busy leader in one listen, so they walk into Monday with an
-opinion of their own." Every idea passes five tests before it reaches him:
+opinion of their own." Every idea passes six tests before it reaches him:
 
 1. **Wait, what headline.** The first line makes a busy person stop.
 2. **Pub test.** One real-world example he could tell a friend at the pub.
@@ -124,6 +124,7 @@ opinion of their own." Every idea passes five tests before it reaches him:
    nuclear bombs": an impossible-sounding claim, "let me explain", single
    steps with everyday objects, one number at a time, then a close that
    calls back to the hook. An idea that cannot be chained is not ready.
+6. **One named thing, for a leader.** One concrete thing, its business stake next (ONE_CONCRETE_THING, FOR_THE_LEADER).
 
 **His asks.** Every card he typed words on in the 45 days before the week
 (`why_here`, a typed `why_like`, `would_do`), dismissed, style-only or
@@ -140,12 +141,7 @@ one from engine research (`source_kind` `engine`). No idea repeats a piece
 made or scheduled in the 21 days before the week (`sources.json` `recent`).
 `board_feed.py cover <Monday>` checks all three.
 
-**Every idea is a full story pitch.** Beside its existing fields an idea may
-carry `pitch`: `{"headline": "<the wait, what line>", "hook": "<the opening
-sentence>", "examples": ["<2 to 3 pub-test examples>"], "chain": ["<5 to 8
-cause-and-effect links>"], "take": "<our take, the ending>"}`. Each carousel
-option carries `cards`: `[{"words": "<what the card says>", "picture":
-"<what it shows>"}]` (the board renders both).
+**Every idea is a full story pitch**, and test 6 in full: `.agents/skills/plan-week/references/ideas-gate.md`.
 
 ## The ideas gate (Ruling, Krish, 2026-11-11)
 
@@ -302,6 +298,10 @@ he ticks: `references/inspiration-piece.md`.
    judges' best, and the ideas Krish dropped in during the last fortnight).
    Also list the Drive "Cold Ideas & Inspo" folder for anything new, when the
    Drive connector is attached (see "Without the connectors" below).
+1b. **The lookalike step, and no repeats** (Krish, 2026-11-16): after the gather follow
+   `.agents/skills/plan-week/references/lookalike.md`. Each option is one clear theme or one
+   clear story, for utility, interest or humour, with a humorous angle; nothing that went
+   out comes back under any words (a fresh reader checks; `board_feed.py gate`). The sheet is a source too.
 2. Flesh out what Krish dropped in first: an idea of his is never ranked below
    an equal one of the engine's.
 3. For each publishing day, find at least four real options. Prefer existing

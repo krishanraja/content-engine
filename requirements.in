@@ -4,3 +4,5 @@ requests==2.34.2
 scenedetect[opencv]==0.6.7.1
 mediapipe==0.10.21
 PyYAML==6.0.2
+# The lookalike step reads his Instagram inspo sheet, an .xlsx (scripts/post-pack/lookalike.py).
+openpyxl==3.1.5

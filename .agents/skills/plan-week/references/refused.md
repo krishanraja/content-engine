@@ -52,6 +52,12 @@ what kind of thing doesn't fly with me, rather than implement incredibly specifi
   question. Each carries `research_prompt` (step 2a) and `source_tag` (`his_ask`, `his_card`, `his_idea`, `his_press`,
   `his_queue`, `inspo_card`, `newsletter`, `instagram`, `creator`, `engine_research`, `radar` or `trade_press`), and
   every off-day option a `source_tag`.
+- **Nothing that went out is offered again, every option has its shape, and a re-run of some days keeps every
+  answered option** (Krish, 2026-11-16: "this week's Ideas Board needs to not contain mostly things we published last
+  week"). `gate` fails on a repeat (code `repeat`: a recent post's primary source or words, an earlier board's option he
+  did not send back, the same evidence as a post, two options on one story) and, from the 23 Nov board, on an option
+  without `shape`, `aim`, `funny` and `lookalike` (code `aim`); `board_feed.py keep` holds a `days` re-run to the open
+  options. The rules and the fields: `references/lookalike.md`.
 - **The scorecard.** After his presses, `python3 scripts/post-pack/board_feed.py scorecard <Monday>` counts his real
   presses on that board, each count beside its written rule and each label beside his exact words, and writes
   `docs/plans/<Monday>-week/scorecard.json` (ids, labels and counts only). Read it into the triage readback (step 8),
@@ -72,7 +78,13 @@ what kind of thing doesn't fly with me, rather than implement incredibly specifi
   (`[{"id", "said": his words exactly, "scope": "as_typed" or "narrowed", "why": when narrowed}]`), and says why when it
   narrows it ("software to edit itself on the fly" is a bigger question than one lab's find). An open ask left off the
   board is in `accounted` with a reason that cites only rows that exist in `sources.json`, never swaps his question for a
-  narrower one, and is a held line on the board: `held` with ref `ask/<id>`, his words as its title, the reason he reads.
+  narrower one, and is a held line on the board: `held` with ref `ask/<id>`, the reason he reads, his words exactly in
+  `said`, a `title` that names what it is about (the post he saved and what to make of it, never his words alone), and,
+  for an ask from a card, the card's own link in `source` (`{"label": "<what it is, as he would name it>", "url": "<the
+  card's link>"}`). Krish, 2026-11-16: "feedback and suggestions like "Let's make a hilarious meme" end up in the ideas
+  board without any context of what I actually wanted to make a hilarious meme about. We've now ended up with a vague
+  instruction where I actually put on the inspiration board something very specific." The gate holds it (code `held`).
+  Hold an ask only when making it now would break a rule he set; otherwise make the idea he asked for.
 - **Off days say what they learned** (item 8): every off-day option quotes the earlier verdict of his it learned from
   (`references/offdays.md`).
 - **Look at more, show the best** (item 10). Research up to eight candidates for each publishing day and show the best

@@ -41,4 +41,4 @@ The renderer is inside ve's engine freeze (F33, `config/ve/production-guards.jso
 
 ## Not yet
 
-- Off-day pieces through kit still use the series list. An off-day cut there should take the house mint for the last word, with no series promise (F36). ve already does this, because compile sets the channel colour to mint on an off day.
+- Done (checked 16 Nov 2026): off-day pieces through kit now close in the house mint for the last word, with no series days (`style_for` and `page_endcard` in `scripts/quick-edit/kit.py`; F36). ve already did this, because compile sets the channel colour to mint on an off day.

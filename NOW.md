@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-15
-head: 3ab533c
+as_of: 2026-11-16
+head: 3379360
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,27 +30,24 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-15)
+## Where it is right now (as of 2026-11-16)
 
-<!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":4,"current_as_of":"2026-11-15","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (3 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 8 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
+<!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-16","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (3 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
-- the last two device cards are built and checked: ve-kf-5 cursor_path (the cursor glides, waits 4 frames, presses with a mint ripple, types and shows it is busy once) and ve-kf-7 character_layer (the cartoon character placed in a 9:16 cut on cue from the approved poses, only for a cut the spec names). Both were rebuilt fresh from main by the lane's restart; every acceptance command passed again in the cloud session, and houseGolden.json gains only cursor_path's own two entries. All eight device and character cards of the specialists plan are now on main. Stills are not looked at here (no house fonts in the cloud container). (2026-11-15)
-- Krish left the HyperFrames and generated-assets calls to "Whatever gets the job done to the highest quality"; decided on the floor's evidence: HyperFrames stays opt-in with no ve card and is not kit's default, and `ve assets plan` is not built now, because his floor puts real screenshots and sourced charts above made pictures (docs/production/HYPERFRAMES.md, "The decision"). (2026-11-15)
-- HyperFrames (CLI 0.9.54, pinned in vendor/hyperframes) is kit's opt-in film backend for the house end card (MYMU_FILM=hyperframes, scripts/quick-edit/hyperframes_film.py), off by default; its check filmed both shapes at SSIM 0.998 and 0.999 against Playwright's film, byte-identical run to run, with no key and no spend. Open Generative AI was evaluated and not adopted: every cloud call is a paid muapi.ai credit, and ve already has the generation contract (docs/production/HYPERFRAMES.md). (2026-11-15)
-- a re-queued Codex card whose first attempt cannot take in the current main now starts fresh from main by itself, and its build replaces that first attempt on its branch only if the branch has not moved (force-with-lease). Tonight kf-5's second run stopped on his PC for exactly this. Card kf-7 also now says its character layer may add no child to FormatMaster when a cut has no character: its first build moved the frozen golden digest of a recorded cut that has none. (2026-11-15)
-- two more devices built by Codex on the lane from the cloud and checked here with both applied to main: ve-mg-1 answer_stream (a real captured answer types in, its citation is marked and its real source lights) and ve-mg-3 code_card (real code typed on a card that reports its line, so the camera can follow it). Every acceptance command passed again. Stills are not looked at yet, because this container has no house fonts. The house golden test cannot see any device that draws with remotion's Img (answer_stream, hand_phone_stage, video_wall, wall_screen all record a throw there); answer_stream's own device test does draw it. (2026-11-15)
-- card ve-kf-5 (cursor_path) failed its first build on the lane: its device test rendered remotion's Img outside a composition, and houseGolden.json did not carry the new device's entries. Both reproduced in the cloud session on the pushed branch; the card now names both, with hand_phone_stage's test as the pattern. (2026-11-15)
+- Growth's audience brief of 16 Nov (Control Center material cbb90470) is taken in. Changes 1 to 6 bind from the next piece made: the short cut is 20 to 35 seconds, one idea (SHORT_CUT in the house rules; it replaced the 90-second cut), a vertical shows its one named thing with words on screen inside the first second (ve lint), every script opens on one named, concrete thing (story_check refuses one that does not) and says its business stake by the second sentence (a warning), every piece ships a written edition for X, Threads and Notes (written_edition_check.py), and every article asks for the subscription near the top and right after its three actions (publish check, not blocking yet). Changes 7 to 9 are recorded open in config/learnings.json: the public scorecard is the site's to build, grid covers wait for cover data, the forwardable line waits for Krish's word. Mon 16 and Tue 17's short drafts (194 and 195 words) are now refused and need rewriting before his Approve; Wed 18 is the first piece written from scratch under all six. (2026-11-16)
+- a re-run of some days of the ideas board (sunday-ideas.yml `days`) must now leave each of them with at least four options Krish has not answered (board_feed.py keep, refill_breadth), and its last check answers for its own days only, so a Tue and Thu refill is no longer failed for Saturday's good-news stories still to be found (sunday_ideas.py built --days). (2026-11-16)
+- the hover stills are off the board and burned. The first 14 were frames of the Thu 5 Nov No Spending take he rejected; they are in his Drive bin, with every local copy deleted. A board still is now cover art, a shop window of each look, motion style and caption style at its best, drawn from the work he praised: the AI music piece, the Rat Tails piece and his drawn character. Nothing from the Thu 5 piece is used. ve lab still and ve lab sample refuse any cut of a take. The Codex card that builds the covers (docs/ve/cards/style-stills/ve-style-still-template-1.md) is booked on the Codex pool (spend c4572367). (2026-11-16)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
-- 2026-11-15 scripts/quick-edit/kit.py (encode_frames, default_drawer), scripts/quick-edit/hyperframes_film.py, vendor/hyperframes, tests/hyperframes_film_test.py, docs/production/HYPERFRAMES.md, docs/INTEGRATIONS.md.
-Older lines: `docs/history/2026-11-15-NOW-moved-14.md` (it names every earlier move) and `LOG.md`.
+- 2026-11-15 HyperFrames became kit's opt-in film backend for the moving end card, with Playwright still the default and byte-identical before and after (frame hashes compared). Its check filmed 16:9 at SSIM 0.9978 and 9:16 at 0.9990 against Playwright, two runs byte-identical, with no key and no spend. Open Generative AI was not adopted because "every cloud call is a paid muapi.ai credit" and ve already has the generation contract (commit 7e3f19ee, `docs/production/HYPERFRAMES.md`).
+Older lines: `docs/history/2026-11-16-NOW-moved-5.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-15): on a home computer, render Gate 2 stills of checklist work, headline assemble, answer_stream, code_card, cursor_path and the character in a cut, and put them to Krish.
+- Next (2026-11-16): the Wed 18 make-piece session writes its scripts, article and written edition under the six rules.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
@@ -59,7 +56,7 @@ Older lines: `docs/history/2026-11-15-NOW-moved-14.md` (it names every earlier m
 - Waiting on Krish (checked 2026-11-12, 14:00 UTC): his Approve on Thu 12's `beststicker` on the live board (the Home Depot rethink he signed off in a session, filed in 3 Posts and carrying Tue 17's `auditrule`; the live view reads "Idea: waiting on your Approve"), and an answer on `frenemies` (Tue 17) and `ownref` (Thu 19), which have no outcome in `idea_outcomes`; a sound-effect set (`config/sfx-approved.json` approves none); golden frames (all 10 slots of `config/ve/golden-frames.json` empty, at least 5 wanted); Gate 2 on face-with-proof at 16:9 (`config/ve/design-lock.json`) (each still needs its review card on his Publish Board, with samples he can see and hear; not built yet). The music levels are no longer waiting: he approved them as they are on 12 Nov. `docs/STATE.md`, "Waiting on Krish".
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - Failure loop (2026-11-15): 0 incident(s), 0 on modes already guarded (repeat rate n/a); 0 proposal(s) on his list; docs/learning/2026-11-15.md.
-- North Star check (2026-11-15): holds.
+- North Star check (2026-11-16): holds.
 
 ## Read next
 

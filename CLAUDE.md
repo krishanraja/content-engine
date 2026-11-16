@@ -16,7 +16,7 @@ this file.
 Read the one document for the task, then the files it names. Never scan the repository, never
 open a whole directory, and never read a file to find out what is in it: find it in
 `docs/REPO_MAP.md` first, by searching it (`grep -n -A12 "### \`path"` or a name), never by
-reading it whole. It is about 270 KB (some 65k tokens).
+reading it whole. It is about 335 KB (some 80k tokens).
 
 | Task | Read |
 |---|---|
@@ -33,6 +33,7 @@ reading it whole. It is about 270 KB (some 65k tokens).
 | Any name (a subchannel, a series, a state) | `docs/GLOSSARY.md` |
 | Anything in Google Drive | `docs/DRIVE.md` |
 | Anything that costs tokens or money | `docs/COST_GUARDS.md` |
+| The weekly standards check-in (the one Claude artifact still allowed) | `docs/STANDARDS-CHECKIN.md` |
 | A service, its secret's name | `docs/INTEGRATIONS.md` |
 | Anything else | the table in `README.md` |
 
@@ -68,6 +69,7 @@ separate reader (cost rule 6, guard G6), and pick by the job:
 | `repo-scout` | Haiku | lookups and log reading; returns `file:line` and a few lines |
 | `executor` | Sonnet | a scoped edit already decided, test runs, renders, packs, filing, feeding the live board (never a board page) |
 | `reviewer` | Opus | architecture, the final check before a push, anything touching judging, drafting, the fact gate, mandates or the ledger |
+| `ve-assets` | Sonnet | runs the recipes in a ve piece's `assets.requests.json` exactly as written, once Krish approved their credits; nothing writes that file yet (`ve assets plan` is not built) |
 | `ve-critic` | Opus | the non-producer review of a ve cut, after `ve qc` and `ve refs`; it writes the verdict and never edits the spec |
 | `thumbnail-critic` | Opus | the review of a piece's thumbnail options by a reader that did not draw them (thumbnail-designer step 4); its verdict names each file's sha256 and it never edits or draws |
 
@@ -79,7 +81,10 @@ separate reader (cost rule 6, guard G6), and pick by the job:
 
 - `scripts/hooks/cost_gate.py`: the cost guards G5 and G6 (G1, the context nudge, removed by Krish on 2026-11-03).
 - `scripts/hooks/artifact_gate.py`: refuses every Artifact publish and every ArtifactData write (Claude
-  artifacts are retired; AGENTS.md rule 3).
+  artifacts are retired; AGENTS.md rule 3), except a publish or pin of the one weekly standards check-in artifact at
+  its own address (Krish's ruling of 15 Nov; `docs/STANDARDS-CHECKIN.md`).
+- `scripts/checkout_tidy.mjs` (SessionStart and SessionEnd): puts a home checkout back on an up-to-date main without
+  losing any work, and holds a lock while a session works in it (`docs/ENGINE_SESSION.md`, "The checkout stays on main").
 - `.claude/hooks/secret-guard.mjs`: refuses a secret-shaped string in a command or a file, and any
   `.env` write. Its patterns are read from `scripts/secret-patterns.ts`, the list `check:no-secrets` uses.
 - `.claude/hooks/publish-guard.mjs`: puts every send, post, publish, schedule, deploy or push to
@@ -91,8 +96,8 @@ separate reader (cost rule 6, guard G6), and pick by the job:
   related tests and sends the session back once if they fail.
 - `.claude/hooks/codex-login.sh` (SessionStart): silent when Codex is signed in; otherwise starts the ChatGPT
   device sign-in and shows Krish the link and code (installing Codex first in a cloud container).
-- `.claude/hooks/harness-closeout.mjs`: at the end of a turn that committed work and left `NOW.md`
-  untouched, sends the session back once with the closeout steps.
+- `.claude/hooks/harness-closeout.mjs`: at the end of a turn that committed product work with no closeout note
+  (`now-notes/YYYY-MM-DD-<slug>.md`; AGENTS.md, "Commit and closeout"), sends the session back once with the closeout steps.
 - `scripts/taste_backstop.py`: at session end, keeps Krish's own typed corrections in the ignored
   `.scratch/taste/backstop.jsonl` for the runner to send to his taste ledger.
 - `permissions.deny`: no hard reset, clean, branch delete, `git checkout --`,

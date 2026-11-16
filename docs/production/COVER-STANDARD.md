@@ -3,7 +3,8 @@
 Status: approved. Krish, 2026-11-09: "approve the cover standard as written". It binds every cover and thumbnail made
 from now on. It reaches the rejection floor (`floor.py --format cover`) through the Rejections engine
 (krishanraja/inspirationhouse), which alone writes `config/rejection-floor.json`; the cover drawer's defaults
-(`scripts/pages/receipt.py`, the skins) follow it from branch `claude/mon-9nov-covers` once the freeze lifts (16 Nov).
+(`scripts/pages/receipt.py`, the skins) follow it in part on main, and what is still open is listed under "What
+changes in the drawer" (checked 16 Nov 2026).
 
 Applies to: series covers and thumbnails (16:9 long, 9:16 tall, Substack cover, share card, square) and the first frame
 of every tall cut. Carousel card 1 keeps its own rule ("the cover card is a scene, not a slide",
@@ -42,12 +43,14 @@ of every tall cut. Carousel card 1 keeps its own rule ("the cover card is a scen
 ## What changes in the drawer if approved
 
 - `receipt.py` defaults flip: no proof tag, quiet series label, headline first, logos only from a `named` list in the
-  cover facts (empty by default). The Monday covers session already wrote this on branch `claude/mon-9nov-covers`
-  (commit 798e155, unmerged under the freeze): `show_tag`, `quiet_pill`, `headline_first`.
+  cover facts (empty by default). On main (checked 16 Nov 2026): `show_tag` is off and `quiet_pill` on by default;
+  `headline_first` is opt-in until the extruded, bauhaus and brandbook skins keep their light off logos under the
+  words; the `named` logo list is not built, so logos still come from the cover facts' `rows` and `strip`.
 - The tall safe box moves the logo row out of Instagram's caption zone (found on every tall thumbnail, 9 Nov).
-- `channel_safe.py` gains the grid crop check (the on-screen checks merged 7 Nov list it from 14 Nov).
+- `channel_safe.py --shape cover_tall` checks a tall cover against Instagram's 3:4 profile grid crop and its account
+  row (7 Nov).
 
-All of this lands after the freeze (from 16 Nov) unless he says otherwise.
+What is still open lands after the freeze (from 16 Nov) unless he says otherwise.
 
 ## One older approval this narrows
 

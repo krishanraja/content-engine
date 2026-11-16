@@ -1,7 +1,7 @@
 # Carousel quality standard
 
 Owner: content-engine. Taste authority: Krish Raja. Updated 5 November 2026; the brand elements rechecked on 12
-November 2026; how a carousel is made rewritten on 13 November 2026.
+November 2026; how a carousel is made rewritten on 13 November 2026; his rulings of 14, 15 and 16 November 2026 added.
 
 **The brand palette wins on every brand element** (Krish, 12 Nov 2026: "I approve the brand palette sheet, but only if
 it falls in line with the attached."): the cover's logo, the wordmark, the colour of each day and the last card come
@@ -33,7 +33,9 @@ using the Codex plug in as per the other usual workflows". Then, the same day: "
 same way", and "Off-day voiceover shorts should go the same way too".
 
 So there is one route. A carousel is made in a Claude session that someone opens, usually from the board item's "Copy
-prompt for Claude" (`apps/control-plane/api/board/_makeRoute.ts` writes it). It is never made by a scheduled job, a
+prompt for Claude" (`itemPrompt` in `apps/control-plane/api/board/_weekModel.ts` writes it, with the route from
+`_makeRoute.ts`; since view contract 1.17.0 of 16 November it takes Krish's notes first and opens Claude Code with the
+prompt filled in). It is never made by a scheduled job, a
 headless model run or a template engine. The Studio's old carousel commands are retired (their record is in
 `docs/history/`, dated 13 November 2026), and so is Growth's Saturday art-direction run. In the session:
 
@@ -166,6 +168,37 @@ visual direction. Keep that distinction in the review history. Revision 03
 earned full-pilot acceptance after explicit tasks, cumulative scores and a
 distinct practical ending corrected those failures. Acceptance proves this
 reference met Krish's bar; it does not prove audience or growth performance.
+
+## Off-day carousels are utility, at the level of the Instagram inspo sheet (Ruling, Krish, 16 November 2026)
+
+Krish, 2026-11-16: "Ultimately what performs really well is what's on those Instagram info sheets. Off day Carousels
+should have that level of utility: attention-grabbing headline and visual, and actual real utility."
+
+An off-day carousel is made to the bar of the best posts in his Instagram inspo sheet (Drive "Instagram inspo.xlsx"; the
+plan-week lookalike step names the post each idea beats):
+
+- a headline that stops the scroll;
+- a cover picture that does the same;
+- cards that give the reader something they can use the same day.
+
+Humour rides on top, in the angle. The weekly good news and the memes keep their own aims. The ideas gate holds the idea
+to it (`aim: utility`, `board_feed.py gate`, from the 23 Nov board), and the 10/10 judges read the finished carousel
+against it.
+
+The sheet is a source of ideas too, and its card flow is the model (Krish, 2026-11-16: "Just look at that Instagram
+inspo sheet for content ideas. Look at it for the way the narrative goes from card to card. You are more than welcome to
+copy any ideas but we just change the copy, we change the branding, we change the imagery, and ideally we have our own
+take on the card (even if we're allowed to use the specific bit of news or idea or format)."):
+
+- a carousel may take a sheet post's news, idea or format outright, and names it (the idea's `lookalike.beats`);
+- its cards do, in order, the job each card does in that post's pattern (`card_flow` in the week's `lookalike.json`);
+- the copy, the branding (this standard and `config/brand-palette.json`) and the imagery are always ours: never their
+  sentence (the ideas gate refuses seven of their words in a row), their layout, their logo or their pictures;
+- it says its own take in one line (`lookalike.our_take`) and lands it on the cards;
+- the facts come from the primary source, checked the same day: the post is where the idea came from, never the evidence.
+
+All of it is fun to make and fun to read (Krish, 2026-11-16: "one of the main things about ALL makeyourmindup content is
+that it must be fun for me to produce, and must be fun for an audience to consume.").
 
 ## The ten-second swipe (Ruling, Krish, 13 November 2026)
 

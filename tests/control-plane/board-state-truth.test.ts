@@ -295,18 +295,32 @@ describe('his production pick on every piece before recording: the look, the mot
     const it = model(buildView(inputs()), 'mon').items[0]
     expect(it.next).toMatchObject({ kind: 'press', op: 'look', label: 'Pick the look', body: { piece_id: MON, experiment: null, inspiration: [] }, choose: { path: 'production' } })
     expect(labels(it.next)[0]).toBe('Face with proof (recommended)')
-    expect(it.others.map(a => [a.label, (a as any).op, (a as any).choose.path])).toEqual([['Pick the motion style', 'style', 'motion'], ['Pick the captions', 'style', 'captions']])
-    expect(labels(it.others[0])).toEqual(['Receipts on the ink desk (recommended)', 'Swiss grid', 'The Ladder (not ready yet)'])
-    expect((it.others[0] as any).body).toEqual({ piece_id: MON })
-    expect(labels(it.others[1])[0]).toMatch(/\(recommended\)$/)
-    expect((it.others[1] as any).choose.options[0].value).toBe('receipt-chip')
+    // After his approval of the story, Copy prompt for Claude stays beside the picks so he can still change the story
+    // (Ruling, Krish, 2026-11-16), with his notes asked first and the session opened on content-engine (1.17.0).
+    expect(it.others[0]).toMatchObject({ kind: 'prompt', label: 'Copy prompt for Claude', notes: { heading: expect.stringContaining("Krish's notes") },
+      open: { app: 'claude_code', repository: 'krishanraja/content-engine' } })
+    expect((it.others[0] as any).prompt).toContain('Krish has approved it')
+    expect((it.others[0] as any).notes.save).toMatchObject({ kind: 'press', collection: 'comments', body: { use: 'claude_notes', piece_id: MON } })
+    const picks = it.others.slice(1)
+    expect(picks.map(a => [a.label, (a as any).op, (a as any).choose.path])).toEqual([['Pick the motion style', 'style', 'motion'], ['Pick the captions', 'style', 'captions']])
+    expect(labels(picks[0])).toEqual(['Receipts on the ink desk (recommended)', 'Swiss grid', 'The Ladder (not ready yet)'])
+    expect((picks[0] as any).body).toEqual({ piece_id: MON })
+    expect(labels(picks[1])[0]).toMatch(/\(recommended\)$/)
+    expect((picks[1] as any).choose.options[0].value).toBe('receipt-chip')
+    // Each option carries its one line for the picker (1.17.0); a still only once one is recorded.
+    expect((picks[0] as any).choose.options[0].line).toEqual(expect.any(String))
+    // A recommended option says why (1.18.0), so the board offers the three as one recommended set; the others do not.
+    expect((it.next as any).choose.options[0].why).toEqual(expect.any(String))
+    expect((picks[0] as any).choose.options[0].why).toEqual(expect.any(String))
+    expect((picks[1] as any).choose.options[0].why).toEqual(expect.any(String))
+    expect((picks[0] as any).choose.options[1].why).toBeUndefined()
   })
   it('Wed 18 before its lock is signed: the step stays the lock, and the three picks wait in the read sheet', () => {
     const it = model(buildView(inputs()), 'wed').items[0]
     expect(it.next).not.toMatchObject({ op: 'look' })
     expect(it.decision).toBe(false)
-    expect(it.others.map(a => a.label)).toEqual(['Pick the look', 'Pick the motion style', 'Pick the captions'])
-    expect(labels(it.others[0])[0]).toBe('The lit talking head (recommended)')
+    expect(it.others.map(a => a.label)).toEqual(['Copy prompt for Claude', 'Pick the look', 'Pick the motion style', 'Pick the captions'])
+    expect(labels(it.others[1])[0]).toBe('The lit talking head (recommended)')
   })
   it('Tue 17\'s moved piece has the same three picks, from its own row in the plan', () => {
     const it = model(buildView(inputs()), 'tue').items.find(x => x.piece_id === TUE)!

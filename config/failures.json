@@ -298,8 +298,8 @@
       "guards": [
         {
           "file": "scripts/post-pack/story_check.py",
-          "contains": "finishes under 89 seconds",
-          "how": "a short script over 195 words is refused before Krish records it"
+          "contains": "def short_band",
+          "how": "a short script past SHORT_CUT.most_words is refused before Krish records it; since 2026-11-16 the short cut is 20 to 35 seconds (Ruling, Krish, 2026-11-16), well inside every platform's line"
         },
         {
           "file": "scripts/produce_day.py",
@@ -2518,6 +2518,43 @@
           "file": "docs/ve/FAILURE_2026-11-13_3d-styles.md",
           "contains": "## The bar for the next attempt",
           "how": "the failure note and the bar the next session builds to"
+        }
+      ]
+    },
+    {
+      "id": "stills-from-rejected-thu5-take",
+      "on": "2026-11-16",
+      "status": "open",
+      "mode": "rejected-work-reused-as-example",
+      "guard_level": "lint_refuse",
+      "krish": "This is more or less the only screenshot I've ever shared. I told you how much I hate it in every way possible. Please don't tell me this is going on the board as an example or a gold standard template that we could use in future projects. Then: I should be showing shop window examples of how that element looks, not an old crappy screen i rejected many times. I even asked you to purge thay specific screenshot from existence and burn it so I never ever have to see it again- we've done so much good work and that is the worst thing we've ever produced",
+      "what": "The board's hover stills for the 14 motion styles (contract 1.17.0) were frames cut from the style lab's pinned take, the Thu 5 Nov No Spending recording, whose \"AMAZON FOR YOUR GROCERIES\" layout he had rejected many times. They went live at 12:39 on 16 Nov and came off at 12:51.",
+      "symptom": "The worst thing the engine has produced stood on the board as the example of every motion style.",
+      "cause": "The stills were planned as \"one frame per style on his own house test take\" without checking which take the lab pins, and nobody looked at a still beside his rejections before it was recorded.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check asked whether the lab's pinned take is work he rejected; the plan called it \"his own house test take\"."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "A still had no bar: it should be shop-window cover art that makes him want to pick the style, from the work he praised (the AI music piece, the Rat Tails piece, his drawn character)."
+        }
+      ],
+      "related": [
+        "cut-called-done-unheard"
+      ],
+      "surface": "Every copy was burned (Drive bin, local caches). A board still is now the StyleStill cover art from Codex card docs/ve/cards/style-stills/ve-style-still-template-1.md, never a cut of a take; ve lab still and ve lab sample refuse any cut of a take. The lab's own pinned take is still that recording and is to be replaced with one he praised.",
+      "guards": [
+        {
+          "file": "scripts/velib/lab.py",
+          "contains": "never a frame of his recordings",
+          "how": "ve lab still refuses a still cut from a take"
+        },
+        {
+          "file": "tests/ve_lab_test.py",
+          "contains": "test_a_sample_of_his_take_is_never_recorded_for_the_board",
+          "how": "a sample of his take is refused"
         }
       ]
     }
