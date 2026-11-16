@@ -50,3 +50,24 @@ describe('StyleStill full bank',()=>{
  })
  it('fails explicitly for an unknown selection',()=>expect(()=>coverPlan('motion','unknown')).toThrow('Unknown StyleStill'))
 })
+
+describe('fourth-pass reviewer gates',()=>{
+ it('uses a different portrait layout for the close-up',()=>{
+  expect(coverPlan('treatment','fry-talking-head').layout).not.toBe(coverPlan('treatment','face-with-proof').layout)
+  const close=renderToStaticMarkup(React.createElement(StyleStill,{layer:'treatment',id:'fry-talking-head'}))
+  const mid=renderToStaticMarkup(React.createElement(StyleStill,{layer:'treatment',id:'face-with-proof'}))
+  expect(close).toContain('scale(1.4)');expect(mid).toContain('scale(.35)')
+ })
+ it('bounds every caption zone by a forty pixel margin',()=>{
+  for(const id of CAPTION_THEMES) for(const z of coverPlan('captions',id).zones.filter(z=>z.name==='caption')) {
+   expect(z.x0).toBeGreaterThanOrEqual(40);expect(z.y0).toBeGreaterThanOrEqual(40)
+   expect(z.x1).toBeLessThanOrEqual(1040);expect(z.y1).toBeLessThanOrEqual(1880)
+  }
+ })
+ it('never shares a beat across covers',()=>expect(new Set(ids.map(x=>coverPlan(x.layer,x.id).beat)).size).toBe(ids.length))
+ it('prints the data story labels once each',()=>{
+  const markup=renderToStaticMarkup(React.createElement(StyleStill,{layer:'treatment',id:'data-story'}))
+  const words=[...markup.matchAll(/<text\b[^>]*>([^<]+)<\/text>/g)].flatMap(m=>m[1]!.toLowerCase().split(/\s+/))
+  expect(new Set(words).size).toBe(words.length)
+ })
+})

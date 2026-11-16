@@ -27,5 +27,5 @@ export function coverPlan(layer:Layer,id:string) {
  const caption=index>=21, n=index-21
  return {scene:beats[index]!, beat:beats[index]!, layout:caption?`caption-${id}-backdrop-${n}`:layouts[index]!,
  type:caption?`${id} native caption`:types[index]!, palette:`ink-${index}`,
- zones:caption ? [{name:'device',x0:0,y0:0,x1:1080,y1:540},{name:'caption',x0:0,y0:550,x1:1080,y1:1360},{name:'device',x0:0,y0:1400,x1:1080,y1:1920}] : [{name:'device',x0:0,y0:0,x1:1080,y1:1920}] }
+ zones:caption ? [{name:'device',x0:0,y0:0,x1:1080,y1:540},{name:'caption',x0:40,y0:550,x1:1040,y1:1360},{name:'device',x0:0,y0:1400,x1:1080,y1:1920}] : [{name:'device',x0:0,y0:0,x1:1080,y1:1920}] }
 }
