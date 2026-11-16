@@ -692,6 +692,23 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
     This week's own board is never its own repeat: a twin on it is the Sunday run's to refuse (`board_feed.py gate`).
 
     Ruling (Krish, 2026-11-16): "this week's Ideas Board needs to not contain mostly things we published last week".
+- **1.18.0 (16 Nov 2026)** made two additions.
+  - **`link` on an option**, `{ label, href }`, https only: what it came from, to open. A held ask of his keeps the card
+    he saved: its link, his words in `said`, and a title naming what it is about. On 16 Nov the board showed "Held back:
+    Lets make a hilarious meme." with no sign of the YouTube short he had saved to make it from.
+    - Ruling (Krish, 2026-11-16): "feedback and suggestions like "Let's make a hilarious meme" end up in the ideas board
+      without any context of what I actually wanted to make a hilarious meme about. We've now ended up with a vague
+      instruction where I actually put on the inspiration board something very specific."
+  - **`why` on a recommended choice.** Each recommended option of the look, the motion style and the captions says why
+    in plain words, so the board can offer the three as one recommended set. With no look from the Sunday room, the
+    proven look he has not turned down is the recommended one.
+    - Ruling (Krish, 2026-11-16): "on my mobile, that I can pick the look, pick the caption style, and pick the motion
+      style myself or the system itself can considerately recommend the best combination for me."
+
+  The ideas gate also gained a same-story review the same day: a fresh reader judges every option against the words of
+  what went out on the last three weeks' boards, because a retold story shares no link and no sentence with its post
+  (Thu 5 Nov's No spending, no sending short came back for Tue 17 as "Your AI is about to start messaging you first").
+  `plan-week`, `references/lookalike.md`, "The same story under new words".
 
 ## To review: the video sign-offs (contract 1.11.0)
 
