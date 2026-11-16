@@ -648,6 +648,33 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   Krish, 2026-11-15, approved with the specialists plan: thumbnail options carry a pick press on the Content board). It
   also added `sample_drive` to each style option, and a style sample's `sample_url` is the Drive file route
   `/api/board/sign-offs?file=<drive id>` ("The style choices", below).
+- **1.17.0 (16 Nov 2026)** made four additions.
+  - **`notes` on the Claude prompt.** Krish types his own notes before he copies the prompt. The board adds them under
+    the heading, at the end of the prompt, and saves them with `save`: his comment on the day, `use: claude_notes`.
+    `afterPress` files that comment to his taste ledger as his words.
+    - Ruling (Krish, 2026-11-16): "I should be able to provide feedback or what I think the next steps are first, and
+      then click the "Copy to Claude" button, and the prompt incorporates that."
+  - **`open` on the Claude prompt**, `{ app: 'claude_code', repository }`. The board opens a new Claude Code session on
+    claude.ai/code with that repository chosen and the prompt filled in. The board builds the address; the view still
+    carries no link.
+    - From approval of the story until a take is recorded, the prompt stays beside the picks. A changed story is written
+      above his approval line, the line then no longer matches, and the board asks him to approve the new story.
+    - Ruling (Krish, 2026-11-16): "Even though this piece is locked, I should be able to tweak the narrative slightly in
+      it by opening a session with Claude."
+  - **Stills for the pickers.** The press `after` field is the prompt the board opens once a press is saved.
+    `choose.options[].line` and `.still` are added, and `still_url` is added to each style option, from
+    config/ve/style-samples.json's `stills` map, recorded by `ve lab still`. The board shows the still when he hovers
+    over or picks an option.
+    - Ruling (Krish, 2026-11-16): "hover over the captions, look, and motion style and see a templated screenshot of
+      what it might look like".
+  - **Repeats are flagged.** `item.repeat` and `model.repeats` are added. An idea that retells something approved,
+    scheduled or live in the 14 days before it leaves the ideas board, and is listed in `repeats` with the line naming
+    what went out. An approved item says the same in `repeat`. A retelling is any one of:
+    - the same primary source;
+    - the same hook;
+    - two or more of the same named sources.
+
+    Ruling (Krish, 2026-11-16): "this week's Ideas Board needs to not contain mostly things we published last week".
 
 ## To review: the video sign-offs (contract 1.11.0)
 

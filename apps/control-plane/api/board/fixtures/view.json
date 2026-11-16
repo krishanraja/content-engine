@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.16.0",
+ "contract_version": "1.17.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -151,6 +151,7 @@
         "why": "You liked it before. It suits the channel often.",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -197,6 +198,7 @@
         "why": "It suits the channel often.",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -242,6 +244,7 @@
         "why": "It suits the channel sometimes.",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -286,6 +289,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -331,6 +335,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": true,
         "presses": {
          "yes": {
@@ -376,6 +381,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -421,6 +427,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -459,6 +466,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -497,6 +505,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -535,6 +544,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -572,6 +582,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -610,6 +621,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -649,6 +661,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": true,
         "presses": {
          "yes": {
@@ -687,6 +700,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -725,6 +739,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -763,6 +778,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -800,6 +816,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -838,6 +855,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -876,6 +894,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -915,6 +934,7 @@
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -954,6 +974,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -993,6 +1014,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1032,6 +1054,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1071,6 +1094,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1110,6 +1134,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1149,6 +1174,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1188,6 +1214,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1227,6 +1254,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1266,6 +1294,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1305,6 +1334,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1344,6 +1374,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1383,6 +1414,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1422,6 +1454,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1463,6 +1496,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -1487,6 +1521,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3055,6 +3090,7 @@
         "why": "You liked it before. It suits the channel often.",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3101,6 +3137,7 @@
         "why": "It suits the channel often.",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3146,6 +3183,7 @@
         "why": "It suits the channel sometimes.",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3190,6 +3228,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3235,6 +3274,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": true,
         "presses": {
          "yes": {
@@ -3280,6 +3320,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3325,6 +3366,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3363,6 +3405,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3401,6 +3444,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3439,6 +3483,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3476,6 +3521,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3514,6 +3560,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3553,6 +3600,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3591,6 +3639,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3629,6 +3678,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3667,6 +3717,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3704,6 +3755,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3742,6 +3794,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3780,6 +3833,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3819,6 +3873,7 @@
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3858,6 +3913,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3897,6 +3953,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3936,6 +3993,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -3975,6 +4033,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4014,6 +4073,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4053,6 +4113,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4092,6 +4153,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4131,6 +4193,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4170,6 +4233,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4209,6 +4273,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4248,6 +4313,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4287,6 +4353,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4326,6 +4393,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4367,6 +4435,7 @@
         "why": "The Sunday room recommends it for this idea.",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -4403,6 +4472,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5720,6 +5790,7 @@
         "why": "You liked it before. It draws the number points this piece makes. It suits the channel often.",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5766,6 +5837,7 @@
         "why": "It draws the number points this piece makes. It suits the channel often.",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5811,6 +5883,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5855,6 +5928,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5900,6 +5974,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": true,
         "presses": {
          "yes": {
@@ -5945,6 +6020,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -5990,6 +6066,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6028,6 +6105,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6066,6 +6144,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6104,6 +6183,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6141,6 +6221,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6179,6 +6260,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6218,6 +6300,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6256,6 +6339,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6294,6 +6378,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6332,6 +6417,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6369,6 +6455,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6407,6 +6494,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6445,6 +6533,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6484,6 +6573,7 @@
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6523,6 +6613,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6562,6 +6653,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6601,6 +6693,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6640,6 +6733,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6679,6 +6773,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6718,6 +6813,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6757,6 +6853,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6796,6 +6893,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6835,6 +6933,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6874,6 +6973,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6913,6 +7013,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6952,6 +7053,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -6991,6 +7093,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -7032,6 +7135,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -7068,6 +7172,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
+        "still_url": null,
         "rejected": false,
         "presses": {
          "yes": {
@@ -8080,11 +8185,13 @@
       "options": [
        {
         "value": "face-with-proof",
-        "label": "Face-led (recommended)"
+        "label": "Face-led (recommended)",
+        "line": "Face-led, pitched."
        },
        {
         "value": "kinetic-movement",
-        "label": "Everything moves"
+        "label": "Everything moves",
+        "line": "Everything moves, pitched."
        }
       ]
      },
@@ -9119,11 +9226,13 @@
          "options": [
           {
            "value": "face-with-proof",
-           "label": "Face-led"
+           "label": "Face-led",
+           "line": "Face-led, pitched."
           },
           {
            "value": "kinetic-movement",
-           "label": "Everything moves"
+           "label": "Everything moves",
+           "line": "Everything moves, pitched."
           }
          ]
         },
@@ -9145,23 +9254,28 @@
          "options": [
           {
            "value": "ladder",
-           "label": "The ladder style (recommended)"
+           "label": "The ladder style (recommended)",
+           "line": "How ladder moves."
           },
           {
            "value": "data-story",
-           "label": "The data-story style (recommended)"
+           "label": "The data-story style (recommended)",
+           "line": "How data-story moves."
           },
           {
            "value": "shape-morph",
-           "label": "The shape-morph style (recommended)"
+           "label": "The shape-morph style (recommended)",
+           "line": "How shape-morph moves."
           },
           {
            "value": "full-visual",
-           "label": "The full-visual style"
+           "label": "The full-visual style",
+           "line": "How full-visual moves."
           },
           {
            "value": "toy-3d",
-           "label": "The toy-3d style (not ready yet)"
+           "label": "The toy-3d style (not ready yet)",
+           "line": "How toy-3d moves."
           }
          ]
         },
@@ -9183,111 +9297,138 @@
          "options": [
           {
            "value": "art-directed",
-           "label": "Art-directed phrases (recommended)"
+           "label": "Art-directed phrases (recommended)",
+           "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind."
           },
           {
            "value": "pop",
-           "label": "Pop"
+           "label": "Pop",
+           "line": "Bold capitals land word by word, and the word being said wears the series colour."
           },
           {
            "value": "karaoke",
-           "label": "Karaoke"
+           "label": "Karaoke",
+           "line": "The whole line is set at once, and each word fills to full cream as he says it."
           },
           {
            "value": "kinetic-01",
-           "label": "Justified stack"
+           "label": "Justified stack",
+           "line": "One word per row in Anton capitals, every row the same width, so the phrase becomes a block of type."
           },
           {
            "value": "kinetic-02",
-           "label": "Edge snap"
+           "label": "Edge snap",
+           "line": "Condensed capitals snap in from alternating sides of the frame into one left-aligned lockup."
           },
           {
            "value": "hustle",
-           "label": "Marker"
+           "label": "Marker",
+           "line": "Anton capitals, with a series-colour bar drawn under the key word just after he says it."
           },
           {
            "value": "grape",
-           "label": "Ink card"
+           "label": "Ink card",
+           "line": "The line sits on a deep-ink card that opens as the phrase starts, and the word being said is mint."
           },
           {
            "value": "beast",
-           "label": "Punch"
+           "label": "Punch",
+           "line": "Huge outlined Anton capitals punch in, one or two words on screen at a time."
           },
           {
            "value": "poppin",
-           "label": "Spring"
+           "label": "Spring",
+           "line": "Mixed-case words spring up from their baseline with one small overshoot."
           },
           {
            "value": "aarit",
-           "label": "Editorial"
+           "label": "Editorial",
+           "line": "The setup in a quiet Fraunces italic, then the hero word alone in Anton capitals at three times the size."
           },
           {
            "value": "soft-ai",
-           "label": "Bloom"
+           "label": "Bloom",
+           "line": "Each word comes into focus from a soft blur, and the key word blooms with a brief mint glow."
           },
           {
            "value": "gaming-stream",
-           "label": "Terminal"
+           "label": "Terminal",
+           "line": "Plex Mono on a deep-ink tag, each word typing itself out as he says it."
           },
           {
            "value": "simple-one-word",
-           "label": "One word"
+           "label": "One word",
+           "line": "Only the word being said, in Archivo Black capitals fitted to the width of the caption band."
           },
           {
            "value": "podcast",
-           "label": "Two-line scroll"
+           "label": "Two-line scroll",
+           "line": "The line being said brightens word by word, and the line before it slides up and away."
           },
           {
            "value": "cinematic",
-           "label": "Cinematic"
+           "label": "Cinematic",
+           "line": "Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass."
           },
           {
            "value": "slam",
-           "label": "Slam"
+           "label": "Slam",
+           "line": "Every word slams in as it is said, and the words already said stack above it, smaller."
           },
           {
            "value": "georgia-build",
-           "label": "Georgia build"
+           "label": "Georgia build",
+           "line": "Small mixed-case words at chest height, one to three at a time, where the typeface shows the stress: Fraunces for small words, Archivo ExtraBold for content, a size up for numbers and names, and Fraunces italic for the key word. Each chunk…"
           },
           {
            "value": "stair-flash",
-           "label": "Staircase flash"
+           "label": "Staircase flash",
+           "line": "Anton capitals build a stepped lockup word by word on hard cuts, with small connector words at about half size on the same baseline. The key word lands with a short series-colour streak and then cools to cream under a left-to-right wipe."
           },
           {
            "value": "tuck-stack",
-           "label": "Tuck stack"
+           "label": "Tuck stack",
+           "line": "Tiny lead words tuck tight above big lowercase-as-said Archivo words, so each phrase sets as a mixed-scale lockup. The key word is a size up in the series colour, and the stack lifts away as the page ends."
           },
           {
            "value": "anchor-quote",
-           "label": "Quote anchor"
+           "label": "Quote anchor",
+           "line": "A small running caption of up to three words changes every few words, while the page's hero holds beneath it in big Fraunces capitals between mint curly quotes, staying still across the next pages until a new anchor lands or 3 s pass."
           },
           {
            "value": "rack-focus",
-           "label": "Rack focus"
+           "label": "Rack focus",
+           "line": "Focus travels along the line: the word being said is sharp, the words already said slip out of focus, and the hero arrives on its own row in big Anton capitals from a deep blur."
           },
           {
            "value": "flip-hinge",
-           "label": "Hinge"
+           "label": "Hinge",
+           "line": "Each word swings up into place on a hinge at its baseline, like a card flipped upright, lighting as it faces the camera, and the phrase falls away backward word after word as the page ends."
           },
           {
            "value": "slice",
-           "label": "Slice"
+           "label": "Slice",
+           "line": "Each Anton capital word arrives cut in two: the top half slides in from the left and the bottom half from the right, and they close on a mint hairline that flashes and fades."
           },
           {
            "value": "slot-roll",
-           "label": "Slot Roll"
+           "label": "Slot Roll",
+           "line": "Letters roll up one after another into their own little windows like a slot reel, and every digit spins through four other digits before it lands on the true one."
           },
           {
            "value": "receipt-chip",
-           "label": "Receipt chip"
+           "label": "Receipt chip",
+           "line": "Words type onto a till receipt as he says them, in lower-case mono on deep ink, the paper jolting down on every word and the figure printed on a mint fill."
           },
           {
            "value": "ink-block",
-           "label": "Ink block"
+           "label": "Ink block",
+           "line": "The phrase builds word by word on stepped full-width ink slabs, each slab wiping in from the left with a thick series-colour bar drawing under the newest word."
           },
           {
            "value": "mint-word",
-           "label": "Mint word"
+           "label": "Mint word",
+           "line": "One big word at a time slams into its own box, which wipes open just ahead of it; small words sit small, and the key word lands in a mint box."
           }
          ]
         },
@@ -9298,7 +9439,38 @@
       "next": {
        "kind": "prompt",
        "label": "Copy prompt for Claude",
-       "prompt": "You are picking up the Monday 2026-11-16 piece 5b726fc3-ac63-4607-9293-3257b4ecc75c of the Make Your Mind Up content engine with no prior context: \"Piece 5b72. It says one thing.\". Where it stands: Approved for Mon 16. Its make picks up fro…"
+       "prompt": "You are picking up the Monday 2026-11-16 piece 5b726fc3-ac63-4607-9293-3257b4ecc75c of the Make Your Mind Up content engine with no prior context: \"Piece 5b72. It says one thing.\". Where it stands: Approved for Mon 16. Its make picks up fro…",
+       "notes": {
+        "ask": "Your notes for Claude: what to change, or what you think the next step is",
+        "heading": "Krish's notes, in his own words (typed on the board just now). They come first: do what they ask before anything else.",
+        "save": {
+         "kind": "press",
+         "label": "Your notes for Claude",
+         "collection": "comments",
+         "id": "desk-mon-next-{t}",
+         "revision": 0,
+         "body": {
+          "thread_id": "{id}",
+          "anchor": "desk:mon:next",
+          "use": "claude_notes",
+          "title": "Piece 5b72. It says one thing.",
+          "piece_id": "5b726fc3-ac63-4607-9293-3257b4ecc75c"
+         },
+         "words": {
+          "path": "text",
+          "ask": "Your notes for Claude",
+          "required": true
+         },
+         "stamp": [
+          "at"
+         ],
+         "done": "Saved on the board, and in the prompt."
+        }
+       },
+       "open": {
+        "app": "claude_code",
+        "repository": "krishanraja/content-engine"
+       }
       },
       "decision": false
      }
@@ -9564,6 +9736,42 @@
       "stories_planned": null,
       "others": [
        {
+        "kind": "prompt",
+        "label": "Copy prompt for Claude",
+        "prompt": "You are picking up the Wednesday 2026-11-18 piece db9f9f6a-1092-49be-8024-f335e060305a of the Make Your Mind Up content engine with no prior context: \"Piece db9f. It says one thing.\". Where it stands: Branded. Pick the look: the recommended…",
+        "notes": {
+         "ask": "Your notes for Claude: what to change, or what you think the next step is",
+         "heading": "Krish's notes, in his own words (typed on the board just now). They come first: do what they ask before anything else.",
+         "save": {
+          "kind": "press",
+          "label": "Your notes for Claude",
+          "collection": "comments",
+          "id": "desk-wed-look-{t}",
+          "revision": 0,
+          "body": {
+           "thread_id": "{id}",
+           "anchor": "desk:wed:look",
+           "use": "claude_notes",
+           "title": "Piece db9f. It says one thing.",
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a"
+          },
+          "words": {
+           "path": "text",
+           "ask": "Your notes for Claude",
+           "required": true
+          },
+          "stamp": [
+           "at"
+          ],
+          "done": "Saved on the board, and in the prompt."
+         }
+        },
+        "open": {
+         "app": "claude_code",
+         "repository": "krishanraja/content-engine"
+        }
+       },
+       {
         "kind": "press",
         "label": "Pick the motion style",
         "op": "style",
@@ -9579,23 +9787,28 @@
          "options": [
           {
            "value": "ladder",
-           "label": "The ladder style (recommended)"
+           "label": "The ladder style (recommended)",
+           "line": "How ladder moves."
           },
           {
            "value": "data-story",
-           "label": "The data-story style (recommended)"
+           "label": "The data-story style (recommended)",
+           "line": "How data-story moves."
           },
           {
            "value": "shape-morph",
-           "label": "The shape-morph style (recommended)"
+           "label": "The shape-morph style (recommended)",
+           "line": "How shape-morph moves."
           },
           {
            "value": "full-visual",
-           "label": "The full-visual style"
+           "label": "The full-visual style",
+           "line": "How full-visual moves."
           },
           {
            "value": "toy-3d",
-           "label": "The toy-3d style (not ready yet)"
+           "label": "The toy-3d style (not ready yet)",
+           "line": "How toy-3d moves."
           }
          ]
         },
@@ -9617,111 +9830,138 @@
          "options": [
           {
            "value": "art-directed",
-           "label": "Art-directed phrases (recommended)"
+           "label": "Art-directed phrases (recommended)",
+           "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind."
           },
           {
            "value": "pop",
-           "label": "Pop"
+           "label": "Pop",
+           "line": "Bold capitals land word by word, and the word being said wears the series colour."
           },
           {
            "value": "karaoke",
-           "label": "Karaoke"
+           "label": "Karaoke",
+           "line": "The whole line is set at once, and each word fills to full cream as he says it."
           },
           {
            "value": "kinetic-01",
-           "label": "Justified stack"
+           "label": "Justified stack",
+           "line": "One word per row in Anton capitals, every row the same width, so the phrase becomes a block of type."
           },
           {
            "value": "kinetic-02",
-           "label": "Edge snap"
+           "label": "Edge snap",
+           "line": "Condensed capitals snap in from alternating sides of the frame into one left-aligned lockup."
           },
           {
            "value": "hustle",
-           "label": "Marker"
+           "label": "Marker",
+           "line": "Anton capitals, with a series-colour bar drawn under the key word just after he says it."
           },
           {
            "value": "grape",
-           "label": "Ink card"
+           "label": "Ink card",
+           "line": "The line sits on a deep-ink card that opens as the phrase starts, and the word being said is mint."
           },
           {
            "value": "beast",
-           "label": "Punch"
+           "label": "Punch",
+           "line": "Huge outlined Anton capitals punch in, one or two words on screen at a time."
           },
           {
            "value": "poppin",
-           "label": "Spring"
+           "label": "Spring",
+           "line": "Mixed-case words spring up from their baseline with one small overshoot."
           },
           {
            "value": "aarit",
-           "label": "Editorial"
+           "label": "Editorial",
+           "line": "The setup in a quiet Fraunces italic, then the hero word alone in Anton capitals at three times the size."
           },
           {
            "value": "soft-ai",
-           "label": "Bloom"
+           "label": "Bloom",
+           "line": "Each word comes into focus from a soft blur, and the key word blooms with a brief mint glow."
           },
           {
            "value": "gaming-stream",
-           "label": "Terminal"
+           "label": "Terminal",
+           "line": "Plex Mono on a deep-ink tag, each word typing itself out as he says it."
           },
           {
            "value": "simple-one-word",
-           "label": "One word"
+           "label": "One word",
+           "line": "Only the word being said, in Archivo Black capitals fitted to the width of the caption band."
           },
           {
            "value": "podcast",
-           "label": "Two-line scroll"
+           "label": "Two-line scroll",
+           "line": "The line being said brightens word by word, and the line before it slides up and away."
           },
           {
            "value": "cinematic",
-           "label": "Cinematic"
+           "label": "Cinematic",
+           "line": "Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass."
           },
           {
            "value": "slam",
-           "label": "Slam"
+           "label": "Slam",
+           "line": "Every word slams in as it is said, and the words already said stack above it, smaller."
           },
           {
            "value": "georgia-build",
-           "label": "Georgia build"
+           "label": "Georgia build",
+           "line": "Small mixed-case words at chest height, one to three at a time, where the typeface shows the stress: Fraunces for small words, Archivo ExtraBold for content, a size up for numbers and names, and Fraunces italic for the key word. Each chunk…"
           },
           {
            "value": "stair-flash",
-           "label": "Staircase flash"
+           "label": "Staircase flash",
+           "line": "Anton capitals build a stepped lockup word by word on hard cuts, with small connector words at about half size on the same baseline. The key word lands with a short series-colour streak and then cools to cream under a left-to-right wipe."
           },
           {
            "value": "tuck-stack",
-           "label": "Tuck stack"
+           "label": "Tuck stack",
+           "line": "Tiny lead words tuck tight above big lowercase-as-said Archivo words, so each phrase sets as a mixed-scale lockup. The key word is a size up in the series colour, and the stack lifts away as the page ends."
           },
           {
            "value": "anchor-quote",
-           "label": "Quote anchor"
+           "label": "Quote anchor",
+           "line": "A small running caption of up to three words changes every few words, while the page's hero holds beneath it in big Fraunces capitals between mint curly quotes, staying still across the next pages until a new anchor lands or 3 s pass."
           },
           {
            "value": "rack-focus",
-           "label": "Rack focus"
+           "label": "Rack focus",
+           "line": "Focus travels along the line: the word being said is sharp, the words already said slip out of focus, and the hero arrives on its own row in big Anton capitals from a deep blur."
           },
           {
            "value": "flip-hinge",
-           "label": "Hinge"
+           "label": "Hinge",
+           "line": "Each word swings up into place on a hinge at its baseline, like a card flipped upright, lighting as it faces the camera, and the phrase falls away backward word after word as the page ends."
           },
           {
            "value": "slice",
-           "label": "Slice"
+           "label": "Slice",
+           "line": "Each Anton capital word arrives cut in two: the top half slides in from the left and the bottom half from the right, and they close on a mint hairline that flashes and fades."
           },
           {
            "value": "slot-roll",
-           "label": "Slot Roll"
+           "label": "Slot Roll",
+           "line": "Letters roll up one after another into their own little windows like a slot reel, and every digit spins through four other digits before it lands on the true one."
           },
           {
            "value": "receipt-chip",
-           "label": "Receipt chip"
+           "label": "Receipt chip",
+           "line": "Words type onto a till receipt as he says them, in lower-case mono on deep ink, the paper jolting down on every word and the figure printed on a mint fill."
           },
           {
            "value": "ink-block",
-           "label": "Ink block"
+           "label": "Ink block",
+           "line": "The phrase builds word by word on stepped full-width ink slabs, each slab wiping in from the left with a thick series-colour bar drawing under the newest word."
           },
           {
            "value": "mint-word",
-           "label": "Mint word"
+           "label": "Mint word",
+           "line": "One big word at a time slams into its own box, which wipes open just ahead of it; small words sit small, and the key word lands in a mint box."
           }
          ]
         },
@@ -9747,11 +9987,13 @@
         "options": [
          {
           "value": "face-with-proof",
-          "label": "Face-led (recommended)"
+          "label": "Face-led (recommended)",
+          "line": "Face-led, pitched."
          },
          {
           "value": "kinetic-movement",
-          "label": "Everything moves"
+          "label": "Everything moves",
+          "line": "Everything moves, pitched."
          }
         ]
        },
@@ -10465,7 +10707,37 @@
       "next": {
        "kind": "prompt",
        "label": "Copy prompt for Claude",
-       "prompt": "You are picking up the Saturday 2026-11-21 off-day post off-sat-goodnews (Good news) of the Make Your Mind Up content engine with no prior context: \"Option goodnews\". Where it stands: Approved by you, Sun 8 Nov, 09:07.\n\nMake it in a Claude …"
+       "prompt": "You are picking up the Saturday 2026-11-21 off-day post off-sat-goodnews (Good news) of the Make Your Mind Up content engine with no prior context: \"Option goodnews\". Where it stands: Approved by you, Sun 8 Nov, 09:07.\n\nMake it in a Claude …",
+       "notes": {
+        "ask": "Your notes for Claude: what to change, or what you think the next step is",
+        "heading": "Krish's notes, in his own words (typed on the board just now). They come first: do what they ask before anything else.",
+        "save": {
+         "kind": "press",
+         "label": "Your notes for Claude",
+         "collection": "comments",
+         "id": "desk-sat-post-{t}",
+         "revision": 0,
+         "body": {
+          "thread_id": "{id}",
+          "anchor": "desk:sat:post",
+          "use": "claude_notes",
+          "title": "Option goodnews"
+         },
+         "words": {
+          "path": "text",
+          "ask": "Your notes for Claude",
+          "required": true
+         },
+         "stamp": [
+          "at"
+         ],
+         "done": "Saved on the board, and in the prompt."
+        }
+       },
+       "open": {
+        "app": "claude_code",
+        "repository": "krishanraja/content-engine"
+       }
       },
       "decision": false
      }
@@ -11196,6 +11468,7 @@
      }
     }
    }
-  ]
+  ],
+  "repeats": []
  }
 }
