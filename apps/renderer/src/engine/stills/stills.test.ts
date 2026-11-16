@@ -64,7 +64,7 @@ describe('third-pass cover constraints',()=>{
    expect(z.y1-z.y0).toBeGreaterThanOrEqual(300)
    expect(z.y0).toBeGreaterThanOrEqual(0);expect(z.y1).toBeLessThanOrEqual(1920)
    const markup=renderToStaticMarkup(React.createElement(StyleStill,{layer:"captions",id}) )
-   expect(markup).toContain('data-caption-backdrop="room"')
+   expect(markup).toContain('data-caption-backdrop="talking-head"')
    expect(markup).not.toContain('caption-grain')
    expect(markup).not.toContain('overflow="hidden"')
   }
