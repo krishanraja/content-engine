@@ -97,6 +97,9 @@ def text(value, cap=None):
     return t[:cap] if cap else t
 
 
+HEAD_SCAN = 25  # how far down a tab its heading row is looked for
+
+
 def header_map(row):
     """{field: column index} from the Posts tab's header row."""
     out = {}
@@ -122,12 +125,17 @@ def parse_sheet(data):
     rows = list(book[names['posts']].iter_rows(values_only=True))
     if not rows:
         raise LookalikeError('the Posts tab is empty')
-    cols = header_map(rows[0])
-    missing = [f for f in ('published', 'retrieved', 'headline', 'url') if f not in cols]
-    if missing:
-        raise LookalikeError(f'the Posts tab has no {", ".join(COLUMNS[f] for f in missing)} column')
+    # The headings are not always the first row: the live sheet opens with its title and a note, its headings on row 5
+    # (16 Nov), and read as row 1 it was never read at all, every run falling back to the feed.
+    need = ('published', 'retrieved', 'headline', 'url')
+    at = next((i for i, r in enumerate(rows[:HEAD_SCAN]) if all(f in header_map(r) for f in need)), None)
+    if at is None:
+        cols = header_map(rows[0])
+        missing = [f for f in need if f not in cols]
+        raise LookalikeError(f'the Posts tab has no {", ".join(COLUMNS[f] for f in missing)} column in its first {HEAD_SCAN} rows')
+    cols = header_map(rows[at])
     posts = []
-    for row in rows[1:]:
+    for row in rows[at + 1:]:
         if not any(v not in (None, '') for v in row):
             continue
         get = lambda f: row[cols[f]] if f in cols and cols[f] < len(row) else None
@@ -139,8 +147,10 @@ def parse_sheet(data):
     themes = []
     if 'themes' in names:
         trows = list(book[names['themes']].iter_rows(values_only=True))
-        heads = [text(h) for h in (trows[0] if trows else [])]
-        for row in trows[1:]:
+        # Its headings start with "Theme", under a title and a summary block on the live sheet (row 9, 16 Nov).
+        tat = next((i for i, r in enumerate(trows[:HEAD_SCAN]) if r and ' '.join(str(r[0] or '').lower().split()) == 'theme'), 0)
+        heads = [text(h) for h in (trows[tat] if trows else [])]
+        for row in trows[tat + 1:]:
             item = {heads[i] or f'col{i + 1}': text(v, 600) for i, v in enumerate(row) if i < len(heads) and v not in (None, '')}
             if item:
                 themes.append(item)
@@ -251,6 +261,59 @@ def prepare(week, call_bytes=None, plans=None, today=None, sheet_file=None):
     return path, lines
 
 
+GOODNEWS_ROWS = 600  # the sheet's newest posts the good-news run picks from (it has thousands: Krish, 2026-11-16)
+GOODNEWS_FIELDS = ('post_id', 'published', 'retrieved', 'type', 'headline', 'summary', 'entities', 'evidence', 'caption', 'url', 'account')
+
+
+def dated_first(posts):
+    """Posts with a Published date first, newest first, then the rest by Retrieved: a good-news story is from the last
+    seven days, and the profile-grid backfill (16 Nov) has no Published date and may be old."""
+    return sorted(posts, key=lambda p: (bool(p.get('published')), p.get('published') or p.get('retrieved') or ''), reverse=True)
+
+
+def slim(post):
+    """A post with what the good-news run reads to pick it (not its slide text), so more of the sheet fits."""
+    return {k: post[k] for k in GOODNEWS_FIELDS if k in post}
+
+
+def goodnews_input(week, call_bytes=None, plans=None, today=None, sheet_file=None):
+    """(path written, summary lines): docs/plans/<Monday>-week/goodnews-input.json, the sheet's newest GOODNEWS_ROWS posts
+    for the Saturday good news to pick from (Krish, 2026-11-16: "Good news stories can come from the Instagram inspo as
+    well. There's absolutely tonnes in there. We would just need to pick the right ones if the good news was on a
+    specific theme"). Never committed (.gitignore): the posts are other people's words. A sheet it cannot read is said in
+    the file and the lines, never a stop: the run then finds its stories on the web alone. The lines are counts only, so
+    a public run's log carries none of their words."""
+    wk = monday(week)
+    today = today or datetime.now(timezone.utc).date()
+    folder = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week'
+    folder.mkdir(parents=True, exist_ok=True)
+    try:
+        data = Path(sheet_file).read_bytes() if sheet_file else download(call_bytes)
+        posts, themes, total = parse_sheet(data)
+        if not posts:
+            raise LookalikeError('the Posts tab has no row with a post URL')
+        reason, warnings = None, []
+    except (LookalikeError, OSError) as error:
+        posts, themes, total = [], [], 0
+        reason = ' '.join(str(error).split())[:300]
+        warnings = [f'The Instagram inspo sheet could not be read ({reason[:200]}): this week\'s good news is found on the web alone.']
+    fresh = freshness(posts, today)
+    stale = stale_warning(fresh, today) if posts else None
+    if stale:
+        warnings.append(stale)
+    out = {'_about': ('His Instagram inspo sheet for the Saturday good news (scripts/post-pack/lookalike.py goodnews): newest first, '
+                      'by Published, else Retrieved. Pick the posts on the week\'s good-news topic; each is where a story was found, '
+                      'never its source: the story is checked on its own primary source, and told in our words, never theirs.'),
+           'week_start': wk, 'read_on': today.isoformat(), 'source': 'sheet' if posts else 'unread', **({'reason': reason} if reason else {}),
+           'freshness': fresh, 'warnings': warnings, 'posts': [slim(p) for p in dated_first(posts)[:GOODNEWS_ROWS]], 'themes': themes}
+    path = folder / 'goodnews-input.json'
+    path.write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
+    lines = [f'good-news input for the week of {wk}: {out["source"]}, {len(out["posts"])} of {total} posts, {len(themes)} themes; '
+             f'{fresh["rows_last_7_days"]} in the last 7 days']
+    lines += [f'  WARNING: {w}' for w in warnings]
+    return path, lines
+
+
 def check_lookalike(look, given):
     """Problems with a lookalike.json against its lookalike-input.json; [] when it is ready."""
     out = []
@@ -334,8 +397,18 @@ def main(argv=None):
     p.add_argument('--today', help='YYYY-MM-DD, for how fresh the sheet is (default: today, UTC)')
     c = sub.add_parser('check', help='check docs/plans/<Monday>-week/lookalike.json against its input')
     c.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
+    g = sub.add_parser('goodnews', help="read the sheet's newest posts into docs/plans/<Monday>-week/goodnews-input.json for the Saturday good news")
+    g.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
+    g.add_argument('--file', help='read this workbook instead of downloading it (offline)')
+    g.add_argument('--today', help='YYYY-MM-DD, for how fresh the sheet is (default: today, UTC)')
     args = ap.parse_args(argv)
     try:
+        if args.cmd == 'goodnews':
+            today = date.fromisoformat(args.today) if args.today else None
+            path, lines = goodnews_input(args.week, today=today, sheet_file=args.file)
+            print('\n'.join(lines))
+            print(f'wrote {path.relative_to(ROOT) if path.is_relative_to(ROOT) else path}')
+            return 0
         if args.cmd == 'prepare':
             today = date.fromisoformat(args.today) if args.today else None
             path, lines = prepare(args.week, today=today, sheet_file=args.file)

@@ -72,3 +72,5 @@ apps/control-plane/board-next/dist/
 # made again in the job that reads it (scripts/post-pack/lookalike.py prepare) and never committed: this repository is
 # public, and their words are theirs. lookalike.json, the patterns drawn from it in the engine's own words, is kept.
 docs/plans/*-week/lookalike-input.json
+# The Saturday good news's pick of the same sheet (lookalike.py goodnews): their words too, never committed.
+docs/plans/*-week/goodnews-input.json
