@@ -94,10 +94,11 @@ WORDS_PER_MINUTE = 150
 CUTS = {
     # cut: (fewest words, most words, what Krish asked for)
     'long': (675, 825, 'a 5-minute video'),
-    # 195: Wednesday's 222 words ran 99 seconds with the intro and outro, and Reels over 90 s were cut off
-    # (Krish, 2026-10-14: "I'm noticing on Instagram that sometimes my reels are getting cut off"). At his pace
-    # 195 words keep the finished cut under 89 s, inside every platform's line (docs/research/2026-10-14-platform-length-limits.md).
-    'short': (160, 195, 'a 90-second version that finishes under 89 seconds'),
+    # The short cut's band is SHORT_CUT in the house rules (short_band() below sets it after house_block is defined).
+    # Ruling (Krish, 2026-11-16), of Growth's audience brief, change 2: "apply 1 to 6 from the next piece you make
+    # this week", so the vertical is 20 to 35 seconds, one idea. It was 160 to 195 words (a 90-second cut) from
+    # 2026-10-14 to 2026-11-15, after Reels over 90 s were cut off.
+    'short': None,
     # The Spotify audio edition (docs/SPOTIFY.md; Krish, 2026-10-14: "create scripts for everything"): the article
     # read for the ear, about 8 to 12 minutes. Its chapters live beside it in <script>.chapters.md: the script is
     # only the spoken words (house rule SCRIPT_ONLY), because it goes straight onto the teleprompter.
@@ -165,6 +166,20 @@ def house_block(name, path=HOUSE_RULES):
         return json.loads(block[block.index('{'):block.rindex('}') + 1])
     except ValueError as error:
         raise ValueError(f'the {name} block in {Path(path).name} is not JSON: {error}')
+
+
+def short_band():
+    """The short cut's (fewest words, most words, what Krish asked for) and its spoken cap in seconds, from the
+    house rules (SHORT_CUT; Ruling, Krish, 2026-11-16)."""
+    cut = house_block('SHORT_CUT')
+    for key in ('fewest_s', 'most_s', 'fewest_words', 'most_words', 'from'):
+        if key not in cut:
+            raise ValueError(f'SHORT_CUT has no {key}')
+    asked = f'a vertical of {cut["fewest_s"]} to {cut["most_s"]} seconds, one idea'
+    return (cut['fewest_words'], cut['most_words'], asked), cut['most_s']
+
+
+CUTS['short'], _SHORT_CAP_S = short_band()
 
 
 @functools.lru_cache(maxsize=None)
@@ -497,9 +512,9 @@ def length_problem(words, cut, lift=None):
     return None
 
 
-# How long each cut may run as he says it (seconds): the 90-second cut under 89 s (TWO_CUTS, the platforms' line),
-# the 5-minute cut by about 5:30, the deep cut 8 to 12 minutes (DEEP_CUT).
-SPOKEN_CAP_S = {'short': 89, 'long': 330, 'deep': 720, 'feature': 990}
+# How long each cut may run as he says it (seconds): the short cut by SHORT_CUT.most_s (TWO_CUTS), the 5-minute cut
+# by about 5:30, the deep cut 8 to 12 minutes (DEEP_CUT).
+SPOKEN_CAP_S = {'short': _SHORT_CAP_S, 'long': 330, 'deep': 720, 'feature': 990}
 
 
 def spoken_length_warning(words, cut, ledger=None, lift=None):
@@ -611,6 +626,69 @@ def takes(text):
             for i, m in enumerate(marks)]
 
 
+# House rule ONE_CONCRETE_THING (Ruling, Krish, 2026-11-16, of Growth's audience brief, change 3: "apply 1 to 6 from
+# the next piece you make this week"). Instagram held people longest on named things (Higgsfield 44.6 s, Disney and
+# Character.AI 39.7 s) and least on an abstract framing ("Every AI has two passports", 17.5 s, no share), so the first
+# sentence of every cut names the thing. A name is a capitalised word other than an ordinary first word, I or AI; a
+# number is a digit or a number word from three up (two passports is no number a leader pictures).
+NUMBER_WORD = re.compile(r'\b(?:three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|'
+                         r'seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|'
+                         r'thousand|million|billion|trillion|dozen)\b', re.I)
+NOT_A_NAME = {'i', "i'm", "i've", "i'd", "i'll", 'ai', 'ok', 'okay'}
+COMMON_FIRST = set('''a an the so and but now see this that these those what why how who whom whose when where which if
+here there it its your you we they he she my our their every each most some many few imagine picture think meet last
+next one two no not all just still yesterday today tonight right look listen remember there's here's it's that's
+what's who's you're we're they're let's nobody everyone someone anyone everybody somebody before after in on at for
+from by with as while because once then first finally suddenly maybe perhaps ever never always sometimes would could
+should can do does did is are was were have has had will may might must let say said ask asked tell told'''.split())
+
+
+def names_a_thing(sentence):
+    """True when the sentence names something concrete: a digit, a number word from three up, or a capitalised
+    name (house rule ONE_CONCRETE_THING)."""
+    plain = _plain(sentence or '')
+    if re.search(r'\d', plain) or NUMBER_WORD.search(plain):
+        return True
+    for i, token in enumerate(re.findall(r"[A-Za-z][A-Za-z0-9'\u2019&.-]*", plain)):
+        bare = token.strip(".'\u2019-").replace('\u2019', "'")
+        if not bare or not bare[0].isupper() or bare.lower() in NOT_A_NAME:
+            continue
+        if i == 0 and bare.lower() in COMMON_FIRST:
+            continue
+        return True
+    return False
+
+
+# House rule FOR_THE_LEADER (Ruling, Krish, 2026-11-16, of Growth's audience brief, change 4): within the first two
+# sentences, what this changes for a business, in a leader's terms. Words cannot judge a stake, so this is a warning
+# that names the miss; the read-back's readers judge it.
+LEADER_STAKE = re.compile(r"\b(?:business(?:es)?|compan(?:y|ies)|firms?|teams?|staff|employees?|workforce|hir(?:e|es|ed|ing)|"
+                          r"budgets?|boss(?:es)?|boards?|customers?|clients?|suppliers?|vendors?|contracts?|deals?|prices?|"
+                          r"pricing|margins?|costs?|bills?|invoices?|sales|revenue|profits?|payroll|salar(?:y|ies)|"
+                          r"shareholders?|investors?|leaders?|managers?|ceos?|cfos?|ctos?|coos?|office|competitors?|"
+                          r"rivals?|jobs?|careers?|spend(?:s|ing)?|brands?|products?|markets?)\b", re.I)
+
+
+def leader_stake_warning(beats):
+    """A warning when the first two spoken sentences say nothing a business leader would recognise as their stake."""
+    opening = ' '.join((sentences(beats) or [])[:2])
+    if not opening or LEADER_STAKE.search(_plain(opening)):
+        return None
+    return (f'its first two sentences say nothing about what this changes for a business ("{_plain(opening)[:80]}"): '
+            'say who it is for in a leader\'s terms, their budget, team, customers, suppliers or margin, by the second '
+            'sentence (house rule FOR_THE_LEADER; a warning, not a refusal)')
+
+
+def short_close_problems(beats):
+    """The short cut under a minute (SHORT_CUT) keeps SCRIPT_CLOSE's last sentence, with his beat of what he would do
+    at most one sentence or left out (house rule TWO_CUTS, Ruling, Krish, 2026-11-16)."""
+    last = (sentences(beats) or [''])[-1]
+    if _is_close(last):
+        return []
+    return [f'the short cut\'s last sentence must be exactly "{close_line()}" with nothing after it (house rules TWO_CUTS '
+            f'and SCRIPT_CLOSE). It ends: "{_plain(last)[-90:]}"']
+
+
 def problems(text, cut=None, series=None, lift=None):
     """Plain-words reasons this script is not ready, or [] when it passes.
     `cut` ('long' or 'short') adds the length rule; `series` (the piece's
@@ -648,6 +726,12 @@ def problems(text, cut=None, series=None, lift=None):
                      'words as plain paragraphs; shots go in the shot list and joke options beside it (house rule SCRIPT_ONLY)')
     if len(words) >= SHORT_WORDS:
         found += close_problems(beats)
+    elif cut == 'short':
+        found += short_close_problems(beats)
+    if cut in CUTS and not names_a_thing(first):
+        found.append(f'its first sentence names no concrete thing ("{_plain(first)[:70]}"): open on the piece\'s one named thing, '
+                     'a product, company, person or number, then follow the money or the surprise (house rule ONE_CONCRETE_THING; '
+                     'Ruling, Krish, 2026-11-16: "apply 1 to 6 from the next piece you make this week")')
     too = length_problem(words, cut, lift)
     if too:
         found.append(too)
@@ -707,6 +791,9 @@ def warnings(text):
     beats = spoken_paragraphs(text)
     words = ' '.join(beats).split()
     found = []
+    stake = leader_stake_warning(beats)
+    if stake:
+        found.append(stake)
     if len(words) >= SHORT_WORDS and not OPINION.search(' '.join(beats)):
         found.append('it states no opinion as an opinion: somewhere say "I reckon", "I think" or "my call", kept apart '
                      'from the checked facts (house rule VOICE_ON_CAMERA; a warning, not a refusal)')
@@ -1090,16 +1177,43 @@ def self_test():
     with tempfile.TemporaryDirectory() as tmp:
         led = Path(tmp) / 'ledger.json'
         led.write_text(json.dumps({'takes': [{'take': 'x', 'cut': 'short', 'date': '2026-10-14', 'said_more_pct': 38.3, 'words_a_minute': 174.2}]}))
-        warned = spoken_length_warning(['w'] * 190, 'short', led)
-        check('a 90-second script that will run long as he says it is a warning naming the time and the cut to make',
-              (bool(warned), '1:30' in (warned or '') or '1:3' in (warned or ''), 'SCRIPT_AS_HE_TALKS' in (warned or '')), (True, True, True))
-        check('one that fits is not', spoken_length_warning(['w'] * 150, 'short', led), None)
+        warned = spoken_length_warning(['w'] * 100, 'short', led)
+        check('a short script that will run past SHORT_CUT.most_s as he says it is a warning naming the time and the cut to make',
+              (bool(warned), '0:4' in (warned or ''), '0:35' in (warned or ''), 'SCRIPT_AS_HE_TALKS' in (warned or '')), (True, True, True, True))
+        check('one that fits is not', spoken_length_warning(['w'] * 60, 'short', led), None)
         check('no take of the cut, no warning', spoken_length_warning(['w'] * 900, 'deep', led), None)
     filler = lambda n: 'Why does the price matter? ' + ' '.join(['word'] * (n - 5))
     check('a 5-minute long cut passes the length rule', length_problem(filler(750).split(), 'long'), None)
     check('a 7-minute long cut is refused', 'cut it to 675 to 825' in (length_problem(filler(1000).split(), 'long') or ''), True)
-    check('a 90-second short cut passes', length_problem(filler(185).split(), 'short'), None)
+    check('a short cut inside SHORT_CUT passes', length_problem(filler(60).split(), 'short'), None)
+    check('the old 90-second short cut is refused since 16 Nov, naming TWO_CUTS',
+          'TWO_CUTS' in (length_problem(filler(185).split(), 'short') or ''), True)
+    check('the short cut\'s band is the house rules\' SHORT_CUT', CUTS['short'][:2],
+          (house_block('SHORT_CUT')['fewest_words'], house_block('SHORT_CUT')['most_words']))
     check('a two-minute short cut is refused', 'TWO_CUTS' in (length_problem(filler(300).split(), 'short') or ''), True)
+    # Growth's audience brief of 16 Nov, changes 3 and 4 (Ruling, Krish, 2026-11-16): the first lines it measured.
+    check('the openings that held people name a concrete thing; the abstract one and a bare question do not',
+          [names_a_thing(t) for t in ('In the belly of the $1B beast: Higgsfield', 'Google paid $2.7 billion for the founders.',
+                                      "The UK number two you've been dancing to started as an AI demo.",
+                                      'Imagine waiting forty minutes for a refund you never asked for.',
+                                      'Claude Duet messages you first.', 'Every AI has two passports.', 'Why does it matter?',
+                                      'So this changes everything for you.')],
+          [True, True, True, True, True, False, False, False])
+    short_good = ('Disney is paying Character.AI to put its films inside a chatbot. So what does your brand lose when fans '
+                  'can talk to it?\n\nHere is the deal. Fans chat with the heroes. Disney gets paid each time. The chatbot '
+                  'learns what fans want.\n\nSo I reckon every big brand signs a deal like this by next summer. If I ran a '
+                  'brand, I\'d ask who owns those chats.\n\nThe full story is free at makeyourmindup.ai.')
+    check('a short cut on one named thing, with its stake and the last line, passes', problems(short_good, 'short'), [])
+    check('and carries no leader-stake warning', leader_stake_warning(spoken_paragraphs(short_good)), None)
+    abstract = short_good.replace('Disney is paying Character.AI to put its films inside a chatbot.', 'Every AI has two passports.')
+    check('a cut that opens on an abstract framing is refused naming ONE_CONCRETE_THING',
+          any('ONE_CONCRETE_THING' in p for p in problems(abstract, 'short')), True)
+    check('with no cut named, the opening rule waits for the cut (a bare hook passes as before)',
+          any('ONE_CONCRETE_THING' in p for p in problems(abstract)), False)
+    check('a short cut that ends past the last line is refused naming TWO_CUTS',
+          any('TWO_CUTS' in p for p in problems(short_good + ' What do you think?', 'short')), True)
+    check('an opening with no business stake in two sentences is a FOR_THE_LEADER warning',
+          'FOR_THE_LEADER' in (leader_stake_warning(['Every AI has two passports. It travels light and fast.']) or ''), True)
     check('a long cut far too short is refused', 'short of a 5-minute video' in (length_problem(filler(250).split(), 'long') or ''), True)
     # A piece whose long cut config/long-cuts.json lifts (long_cut.py; Ruling, Krish, 2026-11-14: "lift if worth it").
     lifted = {'words': 1200, 'minutes': '8:00', 'reason': 'Two stories in one piece.'}

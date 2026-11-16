@@ -65,17 +65,16 @@ export const VIDEO_FORMATS: VideoFormat[] = [
     ].join(' '),
   },
   {
-    // The short cut of every piece (house rule TWO_CUTS, Krish 2026-10-11):
-    // YouTube Shorts, TikTok and Instagram Reels, at most 90 seconds. The
-    // target sits under story_check.py's 160 to 195 so its ceiling (195)
-    // does too; aiming at the top made the writer overshoot what the check takes.
-    // 195 keeps the finished cut under 89 s with its intro and outro (Krish,
-    // 2026-10-14: "sometimes my reels are getting cut off").
-    id: '90s', label: '90 seconds', seconds: 90, words: 177,
+    // The short cut of every piece (house rule TWO_CUTS): YouTube Shorts, TikTok and Instagram Reels. Ruling (Krish,
+    // 2026-11-16), of Growth's audience brief, changes 1 to 4: "apply 1 to 6 from the next piece you make this week",
+    // so 20 to 35 seconds, one idea, from 45 to 75 script words (SHORT_CUT in _houseRules.ts, which story_check.py
+    // reads). The target sits under the top so its ceiling (wordCeiling) does too. The id stays '90s' because records
+    // and the video-script route name it; it was the 90-second cut (160 to 195 words) until 15 Nov.
+    id: '90s', label: 'Short cut (20 to 35 seconds)', seconds: 35, words: 62,
     shape: [
-      'Hook (the most provocative true thing, then the one question), then two beats, then the call, then the close.',
-      'Each beat is one point with its one number. No third beat: there is no room.',
-      'The call answers the question in one sentence. The close is the one thing Krish would do and then the last line, where the full story is free at makeyourmindup.ai, nothing else (STORY_OUTRO).',
+      'Hook: the first sentence names the piece\'s one concrete thing (a product, a deal, a number or a person) and makes it surprising; the second says what it changes for a business, in a leader\'s terms (ONE_CONCRETE_THING, FOR_THE_LEADER), then the one question.',
+      'One idea, one beat, its one number. No second beat: it goes to the long cut or the article.',
+      'The call answers the question in one sentence, then the last line, where the full story is free at makeyourmindup.ai, nothing else (STORY_OUTRO). The beat of what Krish would do is one sentence at most, or left out.',
     ].join(' '),
   },
   {

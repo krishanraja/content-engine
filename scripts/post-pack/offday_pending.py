@@ -25,7 +25,7 @@ def offdays_of(ideas):
         from datetime import date
         rows, _ = wb.read_growth_offdays(ideas, date.fromisoformat(str(ideas.get('week_of'))))
         return wb.read_offdays(rows, 'offdays-growth.json') or {}
-    return wb.read_offdays(ideas.get('offdays')) or {}
+    return wb.read_offdays(ideas.get('offdays'), week=ideas.get('week_start')) or {}
 
 
 def pending(ideas, queue):

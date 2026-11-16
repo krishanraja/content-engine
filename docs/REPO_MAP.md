@@ -994,6 +994,8 @@ Krish's house rules, in one place.
 - `const SCRIPT_CLOSE_LINE: string`
 - `interface LongCut`
 - `const LONG_CUT: Readonly<LongCut>`
+- `interface ShortCut`
+- `const SHORT_CUT: Readonly<ShortCut>`
 - `const HOUSE_RULES: readonly HouseRule[]`
 - `function rulesFor(stage: Stage, subchannel?: string | null): HouseRule[]`
 - `function subchannelRulesBlock(stage: Stage, subchannel?: string | null): string`
@@ -1601,6 +1603,7 @@ The mechanical checks a piece must pass before it can be approved or
 - `function predictionCheck(body: string): { ok: boolean; detail: string }`
 - `function bareScores(body: string): Array<{ number: string; sentence: string }>`
 - `function threeThingsTomorrow(body: string): { ok: boolean; detail: string }`
+- `function articleSubscribeAsks(body: string): { ok: boolean; detail: string }`
 - `function articleFormat(body: string): string[]`
 - `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?…`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
