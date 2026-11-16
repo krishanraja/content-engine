@@ -214,8 +214,10 @@ jobs:
             Saturday's good news included): also find Saturday's good news now, following "The Saturday good news" in
             .agents/skills/plan-week/references/offdays.md exactly: five real AI stories from the seven days up to
             today, each checked against its primary source, each with its own real photo or clip, written onto that
-            week's weekly good-news option with its stories_due set to today's date. Then run board_feed.py gather and
-            cover again.
+            week's weekly good-news option with its stories_due set to today's date. His Instagram inspo sheet is a
+            source for it as well as the web (Krish, 2026-11-16: "Good news stories can come from the Instagram inspo as
+            well"): python3 scripts/post-pack/lookalike.py goodnews <Monday>, then pick the posts on the topic. Then run
+            board_feed.py gather and cover again.
 
             The lookalike step, after the gather (Krish, 2026-11-16: "build a lookalike model of stories that pull from
             the latest in [the Instagram inspo sheet] and then go and find similar if not better stories on the web";

@@ -19,16 +19,22 @@ HEAD = ['Post ID', 'Published (UTC)', 'Retrieved (UTC)', 'Type', 'Pages', 'Captu
         'Carousel slide text (ordered)', 'Post URL', 'Account']
 
 
-def workbook(rows, themes=True):
+def workbook(rows, themes=True, titled=False):
     import openpyxl
     book = openpyxl.Workbook()
     posts = book.active
     posts.title = 'Posts'
+    if titled:  # the live sheet's shape (16 Nov): a blank row, its title, a note and a blank row over the headings
+        for r in ([], ['Instagram inspo'], ['Captured from the profiles he follows.'], []):
+            posts.append(r)
     posts.append(HEAD)
     for r in rows:
         posts.append(r)
     if themes:
         t = book.create_sheet('Themes')
+        if titled:
+            for r in ([], ['Instagram inspo: themes'], ['A note.'], [], ['Posts captured', 4000], ['Profiles', 12], []):
+                t.append(r)
         t.append(['Theme', 'Why it travels'])
         t.append(['Robots at work', 'People like seeing the robot fail first'])
     out = BytesIO()
@@ -151,6 +157,55 @@ class CheckTest(unittest.TestCase):
             self.assertEqual(lookalike.check('2026-11-23', plans=tmp), [])
         with self.assertRaises(lookalike.LookalikeError):
             lookalike.check('2026-11-24')
+
+
+class TitledSheetTest(unittest.TestCase):
+    def test_headings_under_a_title_and_a_note_are_found(self):
+        # The live sheet on 16 Nov: Posts headings on row 5, Themes headings on row 9. Read as row 1 it was never read.
+        rows = [row(1, published=datetime(2026, 11, 14, 9)), row(2)]
+        with tempfile.TemporaryDirectory() as tmp:
+            path, _ = lookalike.prepare('2026-11-23', call_bytes=lambda p: (200, workbook(rows, titled=True), XLSX), plans=tmp, today=TODAY)
+            data = json.loads(path.read_text())
+        self.assertEqual(data['source'], 'sheet')
+        self.assertEqual([p['post_id'] for p in data['posts']], ['p2', 'p1'])
+        self.assertEqual(data['themes'], [{'Theme': 'Robots at work', 'Why it travels': 'People like seeing the robot fail first'}])
+
+
+class GoodNewsInputTest(unittest.TestCase):
+    """Krish, 2026-11-16: "Good news stories can come from the Instagram inspo as well. There's absolutely tonnes in
+    there." The good-news run picks from far more of the sheet than the lookalike step's newest hundred."""
+
+    def test_the_sheet_newest_first_for_the_good_news_to_pick_from(self):
+        rows = [row(n, published=datetime(2026, 9, 1)) for n in range(1, 200)] + [row(500, published=datetime(2026, 11, 15, 8))]
+        with tempfile.TemporaryDirectory() as tmp:
+            path, lines = lookalike.goodnews_input('2026-11-16', call_bytes=lambda p: (200, workbook(rows), XLSX), plans=tmp, today=TODAY)
+            data = json.loads(path.read_text())
+        self.assertEqual(path.name, 'goodnews-input.json')
+        self.assertEqual(data['source'], 'sheet')
+        self.assertEqual(len(data['posts']), 200, 'more than the lookalike step\'s newest hundred')
+        self.assertEqual(data['posts'][0]['post_id'], 'p500')
+        self.assertNotIn('slides', data['posts'][0], 'slim: what it needs to pick a post')
+        self.assertIn('never its source', data['_about'])
+        self.assertTrue(all('caption' not in line and 'Headline' not in line for line in lines), 'the log carries counts only')
+
+    def test_a_dated_post_comes_before_the_undated_backfill(self):
+        rows = [row(1), row(2, published=datetime(2026, 11, 12, 9)), row(3, published=datetime(2026, 11, 15, 9))]
+        with tempfile.TemporaryDirectory() as tmp:
+            path, _ = lookalike.goodnews_input('2026-11-16', call_bytes=lambda p: (200, workbook(rows), XLSX), plans=tmp, today=TODAY)
+            data = json.loads(path.read_text())
+        self.assertEqual([p['post_id'] for p in data['posts']], ['p3', 'p2', 'p1'])
+
+    def test_a_sheet_it_cannot_read_is_said_and_the_run_goes_on(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path, lines = lookalike.goodnews_input('2026-11-16', call_bytes=lambda p: (500, b'down', 'text/plain'), plans=tmp, today=TODAY)
+            data = json.loads(path.read_text())
+        self.assertEqual((data['source'], data['posts']), ('unread', []))
+        self.assertTrue(data['warnings'][0].startswith('The Instagram inspo sheet could not be read'))
+        self.assertTrue(any('WARNING' in line for line in lines))
+
+    def test_the_input_is_never_committed(self):
+        ignored = (ROOT / '.gitignore').read_text()
+        self.assertIn('docs/plans/*-week/goodnews-input.json', ignored)
 
 
 if __name__ == '__main__':
