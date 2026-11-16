@@ -224,8 +224,10 @@ take. Every idea he dropped in through Control Center is in `sources.json`
 name Monday, Wednesday or Friday, offer it as a recorded option on the off day
 it fits best, ranked first that day. It is one short cut, nothing else:
 
-1. Write the script from his words: 160 to 195 spoken words (it finishes under
-   89 seconds), opening on a question, for the ear, a 12-year-old can follow
+1. Write the script from his words: 45 to 75 spoken words, one idea (it runs 20
+   to 35 seconds as he says it: house rules TWO_CUTS and SHORT_CUT, Ruling, Krish, 2026-11-16; the ideas gate
+   holds it from the week of 23 Nov, and a week before keeps 160 to 195 words), its first sentence naming one
+   concrete thing (ONE_CONCRETE_THING), opening on a question, for the ear, a 12-year-old can follow
    it, never his name, and closing on the one thing he would do, in his first
    person and one short beat, never a list of orders (house rule SCRIPT_CLOSE,
    2026-10-31). There is no article, so
@@ -277,7 +279,14 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
 
 0. Read his positive saves first (`sources.json` `inspiration.positive`: cards he saved as good news, his words beside
    each, the ideas quality plan, item 12): a story they point to, or one of the kind they show he likes, comes before
-   anything the search finds.
+   anything the search finds. Then his Instagram inspo sheet (Krish, 2026-11-16: "Good news stories can come from the
+   Instagram inspo as well. There's absolutely tonnes in there. We would just need to pick the right ones if the good
+   news was on a specific theme"): `python3 scripts/post-pack/lookalike.py goodnews <Monday>` writes the sheet's newest
+   posts to `goodnews-input.json` (never committed). Once the topic is chosen (step 1), pick the posts on it that are
+   good news; a run of good-news posts on one theme there may be the topic. A post is where a story was found, never
+   its source: the story still has its primary source, its date in the seven days and its own picture (steps 1 to 3),
+   is told in our words, never the post's, and says where it was found (`"found": {"label": "Your Instagram inspo
+   sheet", "url": "<the post>"}`). The web search finds the rest.
 1. **One topic, five stories on it** (Ruling, Krish, 2026-11-13: the publish board shows only what he approved, in one
    week model; his words: "The Saturday carousel is supposed to be five good news stories on that same topic"). Choose
    one topic first (for example "AI fixing old mistakes", "AI in the clinic this week"), write it on the option as
