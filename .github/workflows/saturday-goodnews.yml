@@ -117,6 +117,27 @@ jobs:
           # The Claude Code installer needs its launcher directory to exist (the docs steward's fix, 2026-09-08).
           mkdir -p "$HOME/.local/bin"
 
+      - name: Start from the week as the live board has it
+        if: steps.guard.outputs.go == 'true'
+        env:
+          MONDAY: ${{ steps.guard.outputs.monday }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # The live board reads the week's branch, offday-revise/<Monday>, before main. Starting from main's copy, the
+          # run's stories could not apply onto a branch a refill had changed (16 Nov, run 43879655980: four stories
+          # found, none on the board). So the week's folder comes from that branch first, committed here, and the
+          # run's own commit holds only the stories.
+          folder="docs/plans/$MONDAY-week"
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          if git -c http.extraheader="AUTHORIZATION: basic $auth" ls-remote --exit-code --heads origin "offday-revise/$MONDAY" >/dev/null 2>&1; then
+            git -c http.extraheader="AUTHORIZATION: basic $auth" fetch -q origin "+refs/heads/offday-revise/$MONDAY:refs/weekbranch/week"
+            git checkout refs/weekbranch/week -- "$folder" 2>/dev/null || echo "::notice::offday-revise/$MONDAY has no $folder; starting from main's."
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$folder"
+          git diff --cached --quiet || git commit -q -m "The week of $MONDAY as the live board has it, before the good-news run"
+
       - name: This Saturday's good news, in Claude Code on his subscription
         if: steps.guard.outputs.go == 'true'
         uses: anthropics/claude-code-action@v1
