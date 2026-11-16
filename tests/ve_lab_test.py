@@ -249,6 +249,30 @@ class LabTest(unittest.TestCase):
             self.assertIn(says, str(caught.exception))
         self.assertEqual(json.loads(samples.read_text()), doc, 'a refusal writes nothing')
 
+    def test_covers_are_the_style_still_art_and_reach_the_board_through_ve_lab_still(self):
+        # Krish, 2026-11-16: "I should be showing shop window examples of how that element looks". The covers are drawn
+        # by the StyleStill composition (card ve-style-still-template-2), never cut from a take.
+        drawn = []
+
+        def fake(folder, ids):
+            for i in ids:
+                if i['id'] == 'kinetic-01':
+                    continue  # a cover the composition cannot draw is left out, never faked
+                (folder / f"{i['layer']}-{i['id']}.jpeg").write_bytes(archive.jpeg_header(540, 960))
+                drawn.append(i)
+        doc = lab.covers(self.dir / 'covers', render_fn=fake)
+        self.assertEqual((doc['source'], doc['card']), ('template', lab.COVER_CARD))
+        self.assertEqual(doc['missing'], ['captions kinetic-01'])
+        layers = {r['layer'] for r in doc['stills']}
+        self.assertEqual(layers, {'treatment', 'motion', 'captions'})
+        samples = self.dir / 'style-samples.json'
+        samples.write_text(json.dumps({'stills': {}, 'stills_drive': {}}))
+        folder = self.dir / 'covers' / 'stills'
+        drive_id = '1' + 'C' * 30
+        made = lab.record_still('motion', 'paper-cutout', drive_id, folder / 'motion-paper-cutout.jpeg', path=samples)
+        self.assertEqual(made['stills_drive']['motion']['paper-cutout'], drive_id)
+        lab.record_still('captions', 'pop', drive_id, folder / 'captions-pop.jpeg', path=samples)
+
     def test_the_stills_maps_hold_every_look_drawable_style_and_caption_style(self):
         doc = json.loads(lab.STYLE_SAMPLES.read_text(encoding='utf-8'))
         drawable = {look['id'] for look in lab.looks(self.cfg) if look['kind'] == 'style'}
