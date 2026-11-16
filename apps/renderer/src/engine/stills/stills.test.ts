@@ -50,3 +50,26 @@ describe('StyleStill full bank',()=>{
  })
  it('fails explicitly for an unknown selection',()=>expect(()=>coverPlan('motion','unknown')).toThrow('Unknown StyleStill'))
 })
+
+describe('third-pass cover constraints',()=>{
+ const live=[['ai-music-slam',0,'SINGING STILL IN','stage-1236-cream-band','Anton tilted verdict'],['eating-jobs-ladder',2,'COUNT WHAT GOT DONE','hero-216-object-580','Anton counter above object'],['data-story',4,'200 → 100','zero-axis-diptych','Plex axis + Anton delta'],['full-visual',5,'WHO DID WHICH BIT?','exploded-audio-lanes','Archivo lane hierarchy'],['hud-terminal',6,'31% JUNK','locked-terminal','Plex locked value'],['riso-halftone',10,'AI MUSIC / HUMAN MUSIC','offset-print-disc','bold grotesk spot-print'],['single-line-drawing',11,'TikTok came first','continuous-causal-route','Plex causal labels'],['swiss-kinetic-type',12,'AI IS ALREADY IN THE MUSIC YOU LOVE','twelve-column-editorial','Anton grid headline']] as const
+ for(const [id,n,beat,layout,type] of live) it(`preserves live plan ${id}`,()=>expect(coverPlan('motion',id)).toEqual({scene:beat,beat,layout,type,palette:`ink-${n}`,zones:[{name:'device',x0:0,y0:0,x1:1080,y1:1920}]}))
+ it('has no repeated beat across the entire lineup',()=>{
+  const beats=ids.map(x=>coverPlan(x.layer,x.id).beat.toLowerCase().replace(/[^a-z0-9]/g,''))
+  expect(new Set(beats).size).toBe(ids.length)
+ })
+ it('keeps each caption zone at least 300px tall inside the frame',()=>{
+  for(const id of CAPTION_THEMES) {
+   const z=coverPlan('captions',id).zones.find(z=>z.name==='caption')!
+   expect(z.y1-z.y0).toBeGreaterThanOrEqual(300)
+   expect(z.y0).toBeGreaterThanOrEqual(0);expect(z.y1).toBeLessThanOrEqual(1920)
+   const markup=renderToStaticMarkup(React.createElement(StyleStill,{layer:"captions",id}) )
+   expect(markup).toContain('data-caption-backdrop="room"')
+   expect(markup).not.toContain('caption-grain')
+   expect(markup).not.toContain('overflow="hidden"')
+  }
+ })
+ for(const id of ['face-with-proof','fry-talking-head']) it(`${id} draws its presenter`,()=>{
+  expect(renderToStaticMarkup(React.createElement(StyleStill,{layer:"treatment",id}))).toContain('data-drawn-presenter="krish-schematic"')
+ })
+})
