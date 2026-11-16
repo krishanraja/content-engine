@@ -132,6 +132,10 @@ def recent_offdays(wk, read=None, plans=None):
 
 
 RECENT_POST_WEEKS = 3  # the weeks before the planned one whose posts it may not repeat (Krish, 2026-11-16)
+POST_WORDS = 1200  # how much of each recent post's words the fresh reader gets
+# What a `days` re-run may make again: an option he never answered. Open, and held (words from a session said it was
+# decided, but only his Approve counts: Krish, 2026-11-11), which is how Tue 17's retold No spending short stood.
+REMAKE = ('open', 'held')
 POST_STAGES = ('approved', 'made', 'scheduled', 'live')
 LOCK_SOURCE = 'The narrative lock ('
 
@@ -151,8 +155,11 @@ def posts_of(week, model):
                 continue
             read = it.get('read') if isinstance(it.get('read'), dict) else {}
             srcs = [s for s in read.get('sources') or [] if isinstance(s, dict) and not str(s.get('label') or '').startswith(LOCK_SOURCE)]
+            # Its words, for the fresh reader who judges whether a new option tells the same story (Krish, 2026-11-16).
+            words = ' '.join(' '.join(str(x).split()) for x in (it.get('title'), read.get('so_what'), read.get('text'), read.get('story'), read.get('said')) if x)
             out.append({'week': week, 'day': it.get('day') or d.get('day'), 'date': it.get('date') or d.get('date'), 'key': it.get('key'),
                         'type': it.get('type'), 'kind': it.get('kind'), 'kind_label': it.get('kind_label'), 'title': it.get('title'),
+                        'words': words[:POST_WORDS],
                         'stage': stage.get('key'), 'piece_id': it.get('piece_id'), 'item': it.get('item'),
                         'primary': srcs[0].get('href') if srcs else None,
                         'urls': [s['href'] for s in srcs if s.get('href')], 'labels': [s['label'] for s in srcs if s.get('label')]})
@@ -229,14 +236,14 @@ def option_status(view, outcomes):
     """{key: status} for every option on a week's ideas board, from its live board (GET /api/board/<Monday>/view, the
     model's ideas and days) and his presses (GET /api/board/<Monday>/outcomes): key "idea:<id>" for a publishing-day
     option, "off:<day>:<id>" for an off-day one. A press of his that stands (approved, filed, trend, improved,
-    rejected) wins; else the model says open, held or revised; an option on a day is approved. Only "open" may be made
+    rejected) wins; else the model says open, held or revised; an option on a day is approved. Only "open" and "held" (REMAKE) may be made
     again (the `days` re-run)."""
     status = {}
     model = (view or {}).get('model') if isinstance((view or {}).get('model'), dict) else {}
     for i in model.get('ideas') or []:
         if not isinstance(i, dict):
             continue
-        why = {'open': 'open', 'revised': 'revised', 'held': 'held', 'held_piece': 'held'}.get(str(i.get('why')), 'held')
+        why = {'open': 'open', 'revised': 'revised', 'held': 'held', 'held_piece': 'held_piece'}.get(str(i.get('why')), 'held_piece')
         m = OFF_KEY.match(str(i.get('doc_id') or ''))
         if m:
             status[f'off:{m.group(1)}:{m.group(2).lower()}'] = why
@@ -672,9 +679,13 @@ def wave1(ideas, sources, plans=None, p6=None):
     # Krish, 2026-11-16: no repeat of what went out, on any board the gather can read for (sources.json and the plan
     # files only: the gate in sunday-ideas.yml holds no engine key).
     found += idea_checks.repeat_read_findings(sources, week) + idea_checks.repeat_findings(ideas, sources, earlier_of(sources, week, plans))
+    # The same story under new words, judged by a fresh reader against what went out, and a held ask that keeps the card
+    # he saved (Krish, 2026-11-16).
+    found += idea_checks.review_findings(ideas, sources, week) + idea_checks.held_ask_findings(ideas, sources, week)
     if week >= idea_checks.AIM_FROM:
         patterns, feed_urls, warnings = lookalike_of(week, plans)
         found += idea_checks.aim_findings(ideas, week, patterns, feed_urls, warnings, lookalike_text(week, plans))
+        found += idea_checks.breadth_findings(ideas, week)
     return found
 
 
@@ -736,10 +747,10 @@ def remakeable(line, days, status=None):
     if status is None:
         return True
     if m.group('oday'):
-        return status.get(f'off:{day}:{m.group("oid").lower()}') == 'open'
+        return status.get(f'off:{day}:{m.group("oid").lower()}') in REMAKE
     pid = m.group('pid')
     hits = [v for k, v in status.items() if pid and k.startswith(f'idea:{pid}')]
-    return bool(hits) and hits[0] == 'open'
+    return bool(hits) and hits[0] in REMAKE
 
 
 def gate_report(week, ideas_path=None, plans=None, base_path=None, days=None, status=None):
@@ -933,7 +944,7 @@ def keep_problems(before, after, status, days):
                 oid = str(o.get('id') or '').lower()
                 key = f'idea:{oid}' if group == 'days' else f'off:{day}:{oid}'
                 st = status.get(key, 'unknown')
-                if st == 'open':
+                if st in REMAKE:
                     continue
                 if group == 'days':
                     same = n <= len(ao) and canonical(ao[n - 1]) == canonical(o)
@@ -958,7 +969,7 @@ def merged_status(paths):
         if data.get('error') or not isinstance(data.get('status'), dict):
             raise ValueError(f'the status of the week\'s options could not be read ({data.get("error") or "no status"}); nothing is made again without it')
         for k, v in data['status'].items():
-            if v != 'open' or k not in out:
+            if v not in REMAKE or k not in out:
                 out[k] = v
     return out
 

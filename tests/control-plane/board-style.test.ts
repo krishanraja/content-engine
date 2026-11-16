@@ -134,6 +134,15 @@ describe('the treatment in the same shape', () => {
     const picked = dayStyle(inputs({ meta: { look: { production: 'face-with-proof' }, style: { rejected: { treatment: ['face-with-proof'] } } } }))
     expect(picked.treatment.options.find(o => o.id === 'face-with-proof')!.rejected).toBe(false)
   })
+
+  it('with no look from the Sunday room, the proven one is recommended with its reason, so a whole set is offered (1.18.0)', () => {
+    const two = [{ id: 'data-story', name: 'One number per frame', pitch: 'A number a frame.', status: 'trial' }, { id: 'face-with-proof', name: 'Face-led', pitch: 'His face with the proof.', status: 'proven' }]
+    const none = dayStyle(inputs({ looks: two, recommendedLook: null })).treatment.options
+    expect(ids(none)).toEqual(['face-with-proof'])
+    expect(none.find(o => o.id === 'face-with-proof')!.why).toBe('It is proven: every piece so far was made in it.')
+    expect(ids(dayStyle(inputs({ looks: two, recommendedLook: 'data-story' })).treatment.options)).toEqual(['data-story'])
+    expect(ids(dayStyle(inputs({ looks: two, recommendedLook: null, meta: { style: { rejected: { treatment: ['face-with-proof'] } } } })).treatment.options)).toEqual([])
+  })
 })
 
 describe('a rendered sample', () => {

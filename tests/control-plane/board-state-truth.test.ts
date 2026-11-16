@@ -309,6 +309,11 @@ describe('his production pick on every piece before recording: the look, the mot
     expect((picks[1] as any).choose.options[0].value).toBe('receipt-chip')
     // Each option carries its one line for the picker (1.17.0); a still only once one is recorded.
     expect((picks[0] as any).choose.options[0].line).toEqual(expect.any(String))
+    // A recommended option says why (1.18.0), so the board offers the three as one recommended set; the others do not.
+    expect((it.next as any).choose.options[0].why).toEqual(expect.any(String))
+    expect((picks[0] as any).choose.options[0].why).toEqual(expect.any(String))
+    expect((picks[1] as any).choose.options[0].why).toEqual(expect.any(String))
+    expect((picks[0] as any).choose.options[1].why).toBeUndefined()
   })
   it('Wed 18 before its lock is signed: the step stays the lock, and the three picks wait in the read sheet', () => {
     const it = model(buildView(inputs()), 'wed').items[0]

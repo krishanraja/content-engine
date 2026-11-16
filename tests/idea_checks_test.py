@@ -38,6 +38,14 @@ AIMED = {'shape': 'story', 'dive': 'How the saving moves from the supplier to th
          'lookalike': {'pattern': 'p1', 'beats': FEED_POST, 'our_take': 'We show who keeps the saving, which the post never did.'}}
 
 
+def reviewed(ideas, verdicts=None):
+    """The plan with a fresh reader's same-story verdict on every option (ideas.json repeat_review, from REVIEW_FROM)."""
+    out = json.loads(json.dumps(ideas))
+    out['repeat_review'] = {'reader': 'a fresh reader', 'checked': [{'ref': ref, 'verdict': (verdicts or {}).get(ref, 'new'), 'of': None, 'why': ''}
+                                                                    for ref, *_ in ic.board_raw(out)]}
+    return out
+
+
 def main_option(**kw):
     o = dict({'id': OTHER, 'source_kind': 'engine', 'so_what': 'A thing happened.', 'story': 'Headline: x.', 'covers': []}, **AIMED)
     o.update(kw)
@@ -213,13 +221,13 @@ class GateTest(unittest.TestCase):
             folder = Path(tmp) / '2026-11-23-week'
             folder.mkdir()
             (folder / 'sources.json').write_text(json.dumps(src))
-            (folder / 'ideas.json').write_text(json.dumps(ideas))
+            (folder / 'ideas.json').write_text(json.dumps(reviewed(ideas)))
             write_look(folder)
             problems, warned = board_feed.gate('2026-11-23', plans=tmp)
             self.assertEqual(len(problems), 1)
             self.assertTrue(problems[0].startswith('refused: mon-1 is on Acme'))
             ideas['days']['mon'][0]['so_what'] = 'Who keeps the AI saving.'
-            (folder / 'ideas.json').write_text(json.dumps(ideas))
+            (folder / 'ideas.json').write_text(json.dumps(reviewed(ideas)))
             self.assertEqual(board_feed.gate('2026-11-23', plans=tmp)[0], [])
 
     def test_the_self_test_still_passes(self):
@@ -247,7 +255,7 @@ class TickTest(unittest.TestCase):
         folder = Path(tmp) / '2026-11-23-week'
         folder.mkdir(exist_ok=True)
         (folder / 'sources.json').write_text(json.dumps(self.src))
-        (folder / 'ideas.json').write_text(json.dumps(ideas))
+        (folder / 'ideas.json').write_text(json.dumps(reviewed(ideas)))
         write_look(folder)
         return folder
 
@@ -280,7 +288,7 @@ class TickTest(unittest.TestCase):
             notes = board_feed.tick_notes('2026-11-23', ideas, PIECE, plans=tmp)
             self.assertEqual([n['subject'] for n in notes], ['Acme'])
             ideas['days']['mon'][0]['refused_before'] = notes
-            (Path(tmp) / '2026-11-23-week' / 'ideas.json').write_text(json.dumps(ideas))
+            (Path(tmp) / '2026-11-23-week' / 'ideas.json').write_text(json.dumps(reviewed(ideas)))
             self.assertIn('refusal shown beside it (refused_before)', board_feed.gate_report('2026-11-23', plans=tmp)['ticks'][0])
             self.assertEqual(board_feed.tick_notes('2026-11-23', {'days': {'mon': [ticked(so_what='Who keeps the saving?')]}}, PIECE, plans=tmp), [])
 
@@ -292,15 +300,15 @@ class TickTest(unittest.TestCase):
             base.write_text(json.dumps(before))
             after = json.loads(json.dumps(before))
             after['days']['mon'].append(ticked(so_what='Acme staff who ask questions keep their jobs.'))
-            (folder / 'ideas.json').write_text(json.dumps(after))
+            (folder / 'ideas.json').write_text(json.dumps(reviewed(after)))
             self.assertEqual(len(board_feed.gate_report('2026-11-23', plans=tmp)['problems']), 1, 'the Sunday gate still sees the week\'s own refusal')
             report = board_feed.gate_report('2026-11-23', plans=tmp, base_path=base)
             self.assertEqual(report['problems'], [])
             self.assertTrue(report['before'][0].startswith('refused: mon-1 is on Acme'))
             self.assertTrue(report['ticks'][0].startswith('his tick: mon-2 is on Acme'))
             # An engine idea the run adds or changes is held as it always was.
-            after['days']['mon'].append(main_option(id=IDEA.replace('1', '7'), so_what='Acme again, from the engine.'))
-            (folder / 'ideas.json').write_text(json.dumps(after))
+            after['days']['mon'].append(main_option(id=IDEA.replace('1', '7'), so_what='Acme again, from the engine.', aim='humour'))
+            (folder / 'ideas.json').write_text(json.dumps(reviewed(after)))
             held = board_feed.gate_report('2026-11-23', plans=tmp, base_path=base)['problems']
             self.assertEqual(len(held), 1)
             self.assertTrue(held[0].startswith('refused: mon-3 is on Acme'))
@@ -314,7 +322,7 @@ class TickTest(unittest.TestCase):
             folder = plans / '2026-11-23-week'
             folder.mkdir()
             (folder / 'sources.json').write_text(json.dumps(self.src))
-            (folder / 'ideas.json').write_text(json.dumps({'week_start': '2026-11-23', 'days': {'mon': [main_option()]}}))
+            (folder / 'ideas.json').write_text(json.dumps(reviewed({'week_start': '2026-11-23', 'days': {'mon': [main_option()]}})))
             write_look(folder)
             idea = {'action_id': TICK, 'week': '2026-11-23', 'day': 'mon', 'piece_id': PIECE, 'pitch': 'Acme staff who ask questions keep their jobs.',
                     'why_now': 'A report, 20 Nov 2026.', 'option': {'so_what': 'Acme staff who ask questions keep their jobs.', 'story': 'Headline: x.',
@@ -595,7 +603,7 @@ class RepeatTest(unittest.TestCase):
             folder = Path(tmp) / '2026-11-23-week'
             folder.mkdir()
             (folder / 'sources.json').write_text(json.dumps(src))
-            (folder / 'ideas.json').write_text(json.dumps(ideas))
+            (folder / 'ideas.json').write_text(json.dumps(reviewed(ideas)))
             write_look(folder)
             problems, _ = board_feed.gate('2026-11-23', plans=tmp)
             self.assertEqual(len(problems), 1)
@@ -661,6 +669,55 @@ class AimTest(unittest.TestCase):
         self.assertEqual(ic.aim_findings(dict(plan, _about=f'The board. {warn}'), '2026-11-23', ['p1'], [FEED_POST], [warn]), [])
 
 
+class SameStoryTest(unittest.TestCase):
+    """Krish, 2026-11-16: '"AI is about to start messaging you first" was posted last week. Why is it on my ideas board
+    for this week?' A retold story shares no link and no sentence with the post it retells; a fresh reader judges it."""
+
+    def test_every_option_needs_a_fresh_readers_verdict_and_the_same_story_fails(self):
+        plan = {'week_start': '2026-11-16', 'days': {'mon': [main_option()]}, 'offdays': {'tue': [off('proactiveai', 'https://e.com/p')]}}
+        lines = [f['line'] for f in ic.review_findings(plan, sources(), '2026-11-16')]
+        self.assertEqual(len(lines), 2, lines)
+        self.assertTrue(all('no same-story verdict' in x for x in lines))
+        self.assertEqual(ic.review_findings(reviewed(plan), sources(), '2026-11-16'), [])
+        same = reviewed(plan, {'off-tue-proactiveai': 'same_story'})
+        same['repeat_review']['checked'][1].update({'of': 'off-thu-puppy', 'why': 'the No spending, no sending short of Thu 5 Nov'})
+        found = ic.review_findings(same, sources(), '2026-11-16')
+        self.assertEqual([f['code'] for f in found], ['repeat'])
+        self.assertIn('off-tue-proactiveai tells the same story as off-thu-puppy', found[0]['line'])
+        self.assertIn('repeat', ic.GATE_CODES)
+        self.assertEqual(ic.review_findings(plan, sources(), '2026-11-09'), [], 'an older board keeps its checks')
+
+    def test_a_review_without_a_reader_counts_for_nothing_and_his_own_idea_is_only_shown(self):
+        plan = reviewed({'week_start': '2026-11-16', 'days': {'mon': [main_option(source_kind='his')]}}, {'mon-1': 'same_story'})
+        found = ic.review_findings(plan, sources(), '2026-11-16')
+        self.assertEqual([f['code'] for f in found], ['his_repeat'])
+        plan['repeat_review']['reader'] = ''
+        self.assertIn('no same-story verdict', ic.review_findings(plan, sources(), '2026-11-16')[0]['line'])
+
+    def test_an_off_day_offers_five_and_a_day_spans_two_aims(self):
+        offs = {'tue': [off(f'o{n}', f'https://e.com/{n}', aim='utility') for n in range(4)]}
+        plan = {'week_start': '2026-11-23', 'offdays': offs}
+        lines = [f['line'] for f in ic.breadth_findings(plan, '2026-11-23')]
+        self.assertEqual(len(lines), 2, lines)
+        self.assertTrue(any('offers 4 options' in x for x in lines))
+        offs['tue'].append(dict(off('o4', 'https://e.com/4'), aim='humour'))
+        self.assertEqual(ic.breadth_findings(plan, '2026-11-23'), [])
+        self.assertEqual(ic.breadth_findings({'offdays': {'tue': offs['tue'][:2]}}, '2026-11-16'), [], 'an older board keeps its checks')
+
+    def test_a_held_ask_keeps_the_card_he_saved(self):
+        link = 'https://youtube.com/shorts/tJwqPQvgQkk'
+        card = {'id': 'd16fe9ff-413c-47c4-ac53-c89e40d28489', 'link': link, 'saved_why': 'Lets make a hilarious meme.'}
+        src = dict(sources(), inspiration={'fresh': [card]})
+        said = 'Lets make a hilarious meme. Reskin this video with the text "POV: your AI agent when you forget to teach it anything"'
+        vague = {'held': [{'ref': f'ask/{card["id"]}', 'day': 'tue', 'title': said, 'reason': 'Too close to the meme approved for Fri 13 Nov.'}]}
+        lines = [f['line'] for f in ic.held_ask_findings(vague, src, '2026-11-23')]
+        self.assertEqual(len(lines), 3, lines)
+        good = {'held': [{'ref': f'ask/{card["id"]}', 'day': 'tue', 'said': said, 'source': {'label': 'The YouTube short you saved, 3 Nov', 'url': link},
+                          'title': 'A meme on the YouTube short you saved: an AI agent nobody taught', 'reason': 'Too close to the meme approved for Fri 13 Nov.'}]}
+        self.assertEqual(ic.held_ask_findings(good, src, '2026-11-23'), [])
+        self.assertEqual(ic.held_ask_findings(vague, src, '2026-11-09'), [])
+
+
 class KeepTest(unittest.TestCase):
     """A re-run that makes again only the open options on some days (sunday-ideas.yml days) leaves every answered one
     exactly as it was."""
@@ -669,6 +726,13 @@ class KeepTest(unittest.TestCase):
         self.before = {'days': {'mon': [main_option(id=IDEA), main_option(id=OTHER)]},
                        'offdays': {'tue': [off('kept', 'https://e.com/k')], 'thu': [off('open1', 'https://e.com/o'), off('liked', 'https://e.com/l')]}}
         self.status = {f'idea:{IDEA}': 'approved', f'idea:{OTHER}': 'open', 'off:thu:open1': 'open', 'off:thu:liked': 'revised', 'off:tue:kept': 'open'}
+
+    def test_a_held_option_he_never_pressed_may_be_made_again_too(self):
+        # Tue 17's retold No spending short stood as held: words from a session, never his press (Krish, 2026-11-11).
+        after = json.loads(json.dumps(self.before))
+        after['offdays']['tue'] = []
+        self.assertEqual(board_feed.keep_problems(self.before, after, dict(self.status, **{'off:tue:kept': 'held'}), ['tue']), [])
+        self.assertEqual(len(board_feed.keep_problems(self.before, after, dict(self.status, **{'off:tue:kept': 'held_piece'}), ['tue'])), 1)
 
     def test_open_options_on_its_days_may_be_made_again(self):
         after = json.loads(json.dumps(self.before))

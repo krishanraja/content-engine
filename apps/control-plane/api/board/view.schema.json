@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://content.krishraja.com/api/board/view.schema.json",
   "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
-  "x-contract-version": "1.17.0",
+  "x-contract-version": "1.18.0",
   "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
   "type": "object",
   "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources", "revision"],
@@ -311,7 +311,7 @@
           "required": ["path", "ask", "multi", "required", "options"],
           "properties": {
             "path": { "type": "string" }, "ask": { "type": "string" }, "multi": { "type": "boolean" }, "required": { "type": "boolean" }, "from_link": { "type": "boolean" },
-            "options": { "type": "array", "items": { "type": "object", "required": ["value", "label"], "properties": { "value": { "type": "string" }, "label": { "type": "string" }, "hosts": { "type": "array", "items": { "type": "string" } }, "line": { "type": "string", "x-since": "1.17.0", "description": "One line on what the option is." }, "still": { "type": "string", "x-since": "1.17.0", "description": "A still of what the option looks like, a same-site path (the style's still_url); shown when he hovers or picks it." } } } }
+            "options": { "type": "array", "items": { "type": "object", "required": ["value", "label"], "properties": { "value": { "type": "string" }, "label": { "type": "string" }, "hosts": { "type": "array", "items": { "type": "string" } }, "line": { "type": "string", "x-since": "1.17.0", "description": "One line on what the option is." }, "still": { "type": "string", "x-since": "1.17.0", "description": "A still of what the option looks like, a same-site path (the style's still_url); shown when he hovers or picks it." }, "why": { "type": "string", "x-since": "1.18.0", "description": "Why the engine recommends it for this piece, in plain words; on a recommended option only, so the board can show the recommended look, motion and captions together with their reasons (Krish, 2026-11-16)." } } } }
           },
           "description": "press: a choice he makes before the press, written at path as the values he chose (a list when multi); from_link: the option whose hosts his link names is chosen for him first."
         },
@@ -738,6 +738,12 @@
           "items": { "type": "object", "required": ["state", "channel", "label", "at", "due_at"], "properties": { "state": { "type": "string", "enum": ["made", "scheduled", "live"], "x-open": true }, "channel": { "type": ["string", "null"] }, "label": { "type": "string" }, "at": { "type": ["string", "null"] }, "due_at": { "type": ["string", "null"] }, "href": { "type": "string" } } }
         },
         "elsewhere": { "type": "array", "x-since": "1.9.0", "items": { "type": "string" }, "description": "A post Growth scheduled on a platform for a day the item is no longer on, said plainly: \"Still scheduled for Tue 17 on Instagram: move it there too\". Since 1.10.0 also where else the same post is up as an idea, and that this option is one post with an item on another day." },
+        "link": {
+          "type": "object", "x-since": "1.18.0",
+          "description": "What it came from, to open: the card he saved (a held ask of his keeps it: Krish, 2026-11-16, \"I actually put on the inspiration board something very specific\"). An https page only.",
+          "required": ["label", "href"],
+          "properties": { "label": { "type": "string" }, "href": { "type": "string", "pattern": "^https://" } }
+        },
         "same_post": {
           "type": "object", "x-since": "1.10.0",
           "description": "One post, one item (_onePost.ts): this option is a post already an item on another day (or in his Ideas for Later) under another id. It is that item: its Approve here moves it here, never a second copy.",

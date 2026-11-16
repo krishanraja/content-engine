@@ -88,6 +88,24 @@ Two posts may still cite one article (docs/PUBLISH_BOARDS.md, "One post, one ite
 read (`recent_posts_error`) fails the gate too: gather again. `python3 scripts/post-pack/board_feed.py repeats <Monday>`
 prints only these lines.
 
+## The same story under new words
+
+Thu 5 Nov's No spending, no sending short came back as Tue 17's "Your AI is about to start messaging you first",
+with no link and no sentence in common (Krish, 2026-11-16: '"AI is about to start messaging you first" was posted
+last week. Why is it on my ideas board for this week?'). No rule above can see a retold story, so a reader judges it:
+
+1. When every option is written, give a fresh reader (a separate subagent, the Task tool, with none of your reasoning)
+   two lists: every option on the board (its ref, hook, `pitch.see` or story, and copy) and every post in
+   `sources.json` `recent_posts` (its key, title, date and `words`). Ask, for each option, one question: does it tell
+   the same story as one of those posts, the same news or the same advice to the same reader, under any words? The
+   reader answers `new` or `same_story`, names the post, and gives one line of why.
+2. Write its answers, unchanged, into ideas.json `repeat_review`: `{"reader": "<the subagent you asked>", "checked":
+   [{"ref": "<board ref, e.g. off-tue-proactiveai or mon-2>", "verdict": "new" | "same_story", "of": "<the post's key>",
+   "why": "<its line>"}]}`. Every option on the board has one, and only the reader's answer counts.
+3. Cut or replace every option it calls `same_story`, then ask it again about the replacements. `board_feed.py gate`
+   fails an option with no verdict, or one called the same story (code `repeat`); his own idea is shown with it, never
+   failed.
+
 ## Making some days again
 
 A run started with `days` (sunday-ideas.yml, e.g. `thu,sat`) makes again only the options nobody answered on those days

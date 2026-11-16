@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.17.0",
+ "contract_version": "1.18.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -8186,7 +8186,8 @@
        {
         "value": "face-with-proof",
         "label": "Face-led (recommended)",
-        "line": "Face-led, pitched."
+        "line": "Face-led, pitched.",
+        "why": "The Sunday room recommends it for this idea."
        },
        {
         "value": "kinetic-movement",
@@ -9255,17 +9256,20 @@
           {
            "value": "ladder",
            "label": "The ladder style (recommended)",
-           "line": "How ladder moves."
+           "line": "How ladder moves.",
+           "why": "You liked it before. It suits the channel often."
           },
           {
            "value": "data-story",
            "label": "The data-story style (recommended)",
-           "line": "How data-story moves."
+           "line": "How data-story moves.",
+           "why": "It suits the channel often."
           },
           {
            "value": "shape-morph",
            "label": "The shape-morph style (recommended)",
-           "line": "How shape-morph moves."
+           "line": "How shape-morph moves.",
+           "why": "It suits the channel sometimes."
           },
           {
            "value": "full-visual",
@@ -9298,7 +9302,8 @@
           {
            "value": "art-directed",
            "label": "Art-directed phrases (recommended)",
-           "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind."
+           "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+           "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\"."
           },
           {
            "value": "pop",
@@ -9788,17 +9793,20 @@
           {
            "value": "ladder",
            "label": "The ladder style (recommended)",
-           "line": "How ladder moves."
+           "line": "How ladder moves.",
+           "why": "You liked it before. It suits the channel often."
           },
           {
            "value": "data-story",
            "label": "The data-story style (recommended)",
-           "line": "How data-story moves."
+           "line": "How data-story moves.",
+           "why": "It suits the channel often."
           },
           {
            "value": "shape-morph",
            "label": "The shape-morph style (recommended)",
-           "line": "How shape-morph moves."
+           "line": "How shape-morph moves.",
+           "why": "It suits the channel sometimes."
           },
           {
            "value": "full-visual",
@@ -9831,7 +9839,8 @@
           {
            "value": "art-directed",
            "label": "Art-directed phrases (recommended)",
-           "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind."
+           "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+           "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\"."
           },
           {
            "value": "pop",
@@ -9988,7 +9997,8 @@
          {
           "value": "face-with-proof",
           "label": "Face-led (recommended)",
-          "line": "Face-led, pitched."
+          "line": "Face-led, pitched.",
+          "why": "The Sunday room recommends it for this idea."
          },
          {
           "value": "kinetic-movement",
