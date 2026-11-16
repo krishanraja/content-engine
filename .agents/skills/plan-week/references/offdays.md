@@ -284,9 +284,10 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
    news was on a specific theme"): `python3 scripts/post-pack/lookalike.py goodnews <Monday>` writes the sheet's newest
    posts to `goodnews-input.json` (never committed). Once the topic is chosen (step 1), pick the posts on it that are
    good news; a run of good-news posts on one theme there may be the topic. A post is where a story was found, never
-   its source: the story still has its primary source, its date in the seven days and its own picture (steps 1 to 3),
-   is told in our words, never the post's, and says where it was found (`"found": {"label": "Your Instagram inspo
-   sheet", "url": "<the post>"}`). The web search finds the rest.
+   its source: the story still has its primary source and its own picture (steps 1 to 3), is told in our words, never
+   the post's, and says where it was found (`"found": {"label": "Your Instagram inspo sheet", "url": "<the post>"}`).
+   A story found there may be up to thirty days old (his Yes, 16 Nov); one the web search finds stays within the seven
+   days (step 1). The web search finds the rest.
 1. **One topic, five stories on it** (Ruling, Krish, 2026-11-13: the publish board shows only what he approved, in one
    week model; his words: "The Saturday carousel is supposed to be five good news stories on that same topic"). Choose
    one topic first (for example "AI fixing old mistakes", "AI in the clinic this week"), write it on the option as
@@ -307,7 +308,7 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
    "photo" or "clip", "url"}}]`, five of them, in plain English a 12-year-old follows, and set `stories_due` to today.
 5. `python3 scripts/post-pack/copy_lint.py --applies-to carousel_text` on the words, then
    `python3 scripts/post-pack/board_feed.py gather <Monday>` and `cover <Monday>`: it refuses a story dated outside
-   the seven days, one with no source or picture, and one a recent off day ran.
+   the seven days (the thirty for one found in his sheet), one with no source or picture, and one a recent off day ran.
 6. Put them on the live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre) with the rest of the week's ideas: the workflow's keep step puts the week's folder on the week's
    branch `offday-revise/<Monday>`, which the live board's view reads before main (`scripts/week_branch_keep.sh`, with a
    pull request that merges itself), and bumps the week's change signal (`board_web.py touch <Monday>`). The view
