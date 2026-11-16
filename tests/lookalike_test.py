@@ -117,6 +117,23 @@ class CheckTest(unittest.TestCase):
         bad = {'patterns': [pattern(0, aim='lands', search_briefs=[])] + [pattern(n) for n in range(1, 5)]}
         self.assertEqual(len(lookalike.check_lookalike(bad, self.given)), 2)
 
+    def test_a_pattern_drawn_from_carousels_says_how_the_story_moves_card_to_card(self):
+        # Krish, 2026-11-16: "Look at it for the way the narrative goes from card to card."
+        given = {'posts': [{'url': 'https://www.instagram.com/p/post1/', 'type': 'carousel', 'pages': 5},
+                           {'url': 'https://www.instagram.com/p/reel1/', 'type': 'reel', 'pages': 1}], 'warnings': []}
+        flat = {'patterns': [pattern(n) for n in range(5)]}
+        lines = lookalike.check_lookalike(flat, given)
+        self.assertEqual(len(lines), 5, lines)
+        self.assertTrue(all('card_flow' in line for line in lines))
+        flow = ['A claim that stops the scroll', 'The proof', 'What it means for you', 'Three things to try']
+        self.assertEqual(lookalike.check_lookalike({'patterns': [pattern(n, card_flow=flow) for n in range(5)]}, given), [])
+        self.assertEqual(len(lookalike.check_lookalike({'patterns': [pattern(n, card_flow=flow[:2]) for n in range(5)]}, given)), 5)
+        reels = {'patterns': [pattern(n, examples=['https://www.instagram.com/p/reel1/']) for n in range(5)]}
+        self.assertEqual(lookalike.check_lookalike(reels, given), [], 'a pattern of reels has no cards to follow')
+        self.assertTrue(lookalike.is_carousel({'type': 'Sidecar'}))
+        self.assertTrue(lookalike.is_carousel({'type': None, 'pages': '6'}))
+        self.assertFalse(lookalike.is_carousel({'type': 'reel', 'pages': 'n/a'}))
+
     def test_every_warning_is_carried_word_for_word(self):
         given = dict(self.given, warnings=['Stale sheet: the newest row is 2026-11-01.'])
         look = {'patterns': [pattern(n) for n in range(5)]}

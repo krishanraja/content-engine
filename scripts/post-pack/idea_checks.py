@@ -1271,7 +1271,7 @@ def offday_carousel(ref, o):
     return 'carousel' in fmt and 'meme' not in fmt and 'good news' not in fmt and 'uplifting' not in fmt
 
 
-def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=()):
+def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=(), feed_text=None):
     """From AIM_FROM, every option says its shape (one clear theme with at least three sourced stories, or one clear
     story with the mechanism to dive into), its aim (utility, interest or humour), its funny angle in one plain line,
     and the lookalike pattern and the feed post it beats (lookalike.json, lookalike-input.json). patterns: the pattern
@@ -1322,7 +1322,43 @@ def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=()):
         if canon_url(look.get('beats')) not in feed:
             out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} names the feed post it beats (lookalike.beats, a post URL in '
                         'lookalike-input.json)'})
+        # Krish, 2026-11-16: "You are more than welcome to copy any ideas but we just change the copy, we change the
+        # branding, we change the imagery, and ideally we have our own take on the card". Its take is its own, said in one
+        # line; its words are never theirs.
+        if len(str(look.get('our_take') or '').strip()) < 10:
+            out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} says its own take on the post it draws on (lookalike.our_take, '
+                        'one line: what we say that they did not)'})
+        theirs = (feed_text or {}).get(canon_url(look.get('beats')) or '')
+        run = copied_run(option_words(o), theirs) if theirs else None
+        if run:
+            out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} copies the words of the post it draws on ("{run}"): '
+                        'the idea, the news and the format may be theirs, the copy is ours'})
     return out
+
+
+COPY_RUN = 7
+
+
+def option_words(o):
+    """Every word an option would put in front of a reader: its hook, headline, copy, story and each card's words."""
+    pitch = o.get('pitch') if isinstance(o.get('pitch'), dict) else {}
+    parts = [o.get('hook'), o.get('title'), o.get('copy'), o.get('story'), pitch.get('headline'), pitch.get('hook')]
+    parts += [c.get('words') for c in o.get('cards') or [] if isinstance(c, dict)]
+    return ' '.join(str(p) for p in parts if p)
+
+
+def copied_run(ours, theirs, n=COPY_RUN):
+    """The first run of n words in a row that our words share with theirs, or None: borrowing a fact or a name is
+    fine, carrying their sentence is not."""
+    tok = lambda s: re.findall(r"[a-z0-9']+", str(s or '').lower())
+    a, b = tok(ours), tok(theirs)
+    if len(a) < n or len(b) < n:
+        return None
+    grams = {tuple(b[i:i + n]) for i in range(len(b) - n + 1)}
+    for i in range(len(a) - n + 1):
+        if tuple(a[i:i + n]) in grams:
+            return ' '.join(a[i:i + n])
+    return None
 
 
 # The findings that fail the Sunday run (board_feed.py gate): a subject he refused offered again, a warned option placed

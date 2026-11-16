@@ -1,0 +1,3 @@
+Status: the Sunday ideas run reads his Instagram inspo sheet as a source of ideas, not only a model. A lookalike pattern drawn from carousels now says how their story moves card to card (card_flow, from the slides), and every option that draws on a sheet post says its own take (lookalike.our_take); the gate refuses one that carries seven of the post's words in a row. The plan-week skill and the carousel standard say the copy, branding and imagery are always ours, and that everything is fun to make and fun to consume.
+Next: run sunday-ideas.yml for the week of 23 Nov (force) and for Thu 19 and Sat 21 (days=thu,sat), once the production press ships.
+North Star check (2026-11-16): holds.
