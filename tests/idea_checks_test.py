@@ -34,7 +34,8 @@ def sources(*answers, asks=(), cues=None, unvetoed=()):
 FEED_POST = 'https://www.instagram.com/p/feedpost1/'
 # What every option carries from the 23 Nov board (Krish, 2026-11-16): its shape, aim, humorous angle and lookalike.
 AIMED = {'shape': 'story', 'dive': 'How the saving moves from the supplier to the buyer, step by step.', 'aim': 'interest',
-         'funny': 'The robot did the work and the client kept the tip.', 'lookalike': {'pattern': 'p1', 'beats': FEED_POST}}
+         'funny': 'The robot did the work and the client kept the tip.',
+         'lookalike': {'pattern': 'p1', 'beats': FEED_POST, 'our_take': 'We show who keeps the saving, which the post never did.'}}
 
 
 def main_option(**kw):
@@ -608,7 +609,7 @@ class AimTest(unittest.TestCase):
     def test_every_option_from_23_nov_says_its_shape_aim_humour_and_lookalike(self):
         bare = {'week_start': '2026-11-23', 'days': {'mon': [{'id': OTHER, 'source_kind': 'engine', 'source': {'label': 'l', 'url': 'https://e.com/s'}}]}}
         lines = [f['line'] for f in ic.aim_findings(bare, '2026-11-23', ['p1'], [FEED_POST])]
-        self.assertEqual(len(lines), 5, lines)
+        self.assertEqual(len(lines), 6, lines)
         self.assertTrue(all(f['code'] in ic.GATE_CODES for f in ic.aim_findings(bare, '2026-11-23', ['p1'], [FEED_POST])))
         self.assertEqual(ic.aim_findings({'days': {'mon': [main_option()]}}, '2026-11-23', ['p1'], [FEED_POST]), [])
         self.assertEqual(ic.aim_findings(bare, '2026-11-16', ['p1'], [FEED_POST]), [], 'an older board keeps its shape')
@@ -621,11 +622,37 @@ class AimTest(unittest.TestCase):
         self.assertIn('is a story', ic.aim_findings({'days': {'mon': [main_option(dive='')]}}, '2026-11-23', ['p1'], [FEED_POST])[0]['line'])
 
     def test_the_lookalike_names_a_pattern_and_a_post_in_the_input_and_his_own_need_none(self):
-        wrong = main_option(lookalike={'pattern': 'nope', 'beats': 'https://www.instagram.com/p/elsewhere/'})
+        wrong = main_option(lookalike={'pattern': 'nope', 'beats': 'https://www.instagram.com/p/elsewhere/', 'our_take': AIMED['lookalike']['our_take']})
         self.assertEqual(len(ic.aim_findings({'days': {'mon': [wrong]}}, '2026-11-23', ['p1'], [FEED_POST])), 2)
         his = main_option(source_kind='his', lookalike=None)
         self.assertEqual(ic.aim_findings({'days': {'mon': [his]}}, '2026-11-23', ['p1'], [FEED_POST]), [])
         self.assertEqual([f['ref'] for f in ic.aim_findings({'days': {}}, '2026-11-23', None, [])], ['lookalike'])
+
+    def test_an_option_may_take_a_posts_idea_but_says_its_own_take_in_its_own_words(self):
+        # Krish, 2026-11-16: "You are more than welcome to copy any ideas but we just change the copy, we change the
+        # branding, we change the imagery, and ideally we have our own take on the card".
+        no_take = main_option(lookalike={'pattern': 'p1', 'beats': FEED_POST})
+        lines = [f['line'] for f in ic.aim_findings({'days': {'mon': [no_take]}}, '2026-11-23', ['p1'], [FEED_POST])]
+        self.assertEqual(len(lines), 1, lines)
+        self.assertIn('lookalike.our_take', lines[0])
+        theirs = {ic.canon_url(FEED_POST): 'Your boss is quietly replacing your team with three agents and a spreadsheet. Swipe.'}
+        copied = main_option(hook='Your boss is quietly replacing your team with three agents, says a new survey.')
+        got = ic.aim_findings({'days': {'mon': [copied]}}, '2026-11-23', ['p1'], [FEED_POST], (), theirs)
+        self.assertEqual(len(got), 1, got)
+        self.assertIn('"your boss is quietly replacing your team"', got[0]['line'])
+        self.assertEqual(got[0]['code'], 'aim')
+        ours = main_option(hook='Three agents and a spreadsheet walk into your team meeting.')
+        self.assertEqual(ic.aim_findings({'days': {'mon': [ours]}}, '2026-11-23', ['p1'], [FEED_POST], (), theirs), [],
+                         'a shared fact or a few shared words are fine')
+        card = main_option(cards=[{'words': 'Your boss is quietly replacing your team with three agents', 'picture': 'x'}])
+        self.assertEqual(len(ic.aim_findings({'days': {'mon': [card]}}, '2026-11-23', ['p1'], [FEED_POST], (), theirs)), 1)
+
+    def test_copied_run_finds_seven_words_in_a_row_and_nothing_shorter(self):
+        self.assertIsNone(ic.copied_run('one two three four five six', 'one two three four five six seven'))
+        self.assertEqual(ic.copied_run('A one two three four five six seven b', 'x one two three four five six seven y'),
+                         'one two three four five six seven')
+        self.assertIsNone(ic.copied_run('one two three four five six eight', 'one two three four five six seven'))
+        self.assertIsNone(ic.copied_run('', 'anything at all here in seven words'))
 
     def test_a_stale_sheet_is_said_in_ideas_about(self):
         warn = 'Stale sheet: the newest row is 2026-11-10.'

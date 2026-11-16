@@ -183,6 +183,21 @@ Humour rides on top, in the angle. The weekly good news and the memes keep their
 to it (`aim: utility`, `board_feed.py gate`, from the 23 Nov board), and the 10/10 judges read the finished carousel
 against it.
 
+The sheet is a source of ideas too, and its card flow is the model (Krish, 2026-11-16: "Just look at that Instagram
+inspo sheet for content ideas. Look at it for the way the narrative goes from card to card. You are more than welcome to
+copy any ideas but we just change the copy, we change the branding, we change the imagery, and ideally we have our own
+take on the card (even if we're allowed to use the specific bit of news or idea or format)."):
+
+- a carousel may take a sheet post's news, idea or format outright, and names it (the idea's `lookalike.beats`);
+- its cards do, in order, the job each card does in that post's pattern (`card_flow` in the week's `lookalike.json`);
+- the copy, the branding (this standard and `config/brand-palette.json`) and the imagery are always ours: never their
+  sentence (the ideas gate refuses seven of their words in a row), their layout, their logo or their pictures;
+- it says its own take in one line (`lookalike.our_take`) and lands it on the cards;
+- the facts come from the primary source, checked the same day: the post is where the idea came from, never the evidence.
+
+All of it is fun to make and fun to read (Krish, 2026-11-16: "one of the main things about ALL makeyourmindup content is
+that it must be fun for me to produce, and must be fun for an audience to consume.").
+
 ## The ten-second swipe (Ruling, Krish, 13 November 2026)
 
 His words, of the Thursday 12 Nov Git carousel: "Git carousel cards look terrible apart from the cover card and they

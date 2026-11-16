@@ -24,8 +24,19 @@ scripts for pieces and all suggestions for off days."
 2. Write `docs/plans/<Monday>-week/lookalike.json`: 5 to 8 patterns, what travels in those posts, each
    `{"id": "<short id>", "pattern": "<what the posts have in common, a plain sentence>", "why_it_travels": "<why people
    share it>", "aim": "utility" | "interest" | "humour", "examples": [<post URLs from lookalike-input.json>],
-   "search_briefs": ["<what to search the web for this week>"]}`. Read the posts themselves (headline, summary, slides),
-   never only their headlines.
+   "card_flow": ["<the job card 1 does>", "<card 2>", ...], "search_briefs": ["<what to search the web for this
+   week>"]}`. Read the posts themselves (headline, summary, caption, every slide in order), never only their headlines.
+   A pattern whose examples are carousels says, in `card_flow`, how their story moves from card to card: the job each
+   card does, 3 to 10 steps (for example "a claim that stops the scroll", "the screenshot that proves it", "what it means
+   for you", "the three things to try"). `lookalike.py check` refuses a carousel pattern without it.
+
+   The sheet is a source of ideas in its own right, not only a model (Krish, 2026-11-16: "Just look at that Instagram
+   inspo sheet for content ideas. Look at it for the way the narrative goes from card to card. You are more than welcome
+   to copy any ideas but we just change the copy, we change the branding, we change the imagery, and ideally we have our
+   own take on the card (even if we're allowed to use the specific bit of news or idea or format)."). An option may take
+   a post's news, idea or format outright. Its copy, its branding (the house look, config/brand-palette.json) and its
+   imagery are always ours, and it says its own take in one line. The facts still come from the primary source, checked
+   the same day: the post is where the idea came from, never the evidence.
 3. A stale sheet (its newest row older than three days) or a fallback is a warning in `lookalike-input.json`
    `warnings`. Copy each one, word for word, into `lookalike.json` `_about` and into ideas.json `_about`: never a quiet
    skip.
@@ -47,9 +58,14 @@ scripts for pieces and all suggestions for off days."
 - `funny`: its humorous angle in one plain line, no em dash. Educational but humorous: the humour carries the point,
   never replaces it. On a carousel or a cover the humour lives in the angle, the headline and the narration, never in
   stickers, badges or slogans (`docs/CAROUSEL-STANDARD.md`: "The fun is colour and light, never jokey copy").
-- `lookalike`: `{"pattern": "<an id in lookalike.json>", "beats": "<the feed post URL it is similar to or better
-  than>"}`. His own ideas, ideas he records (`kind: recorded`), ideas from his tick and the weekly series need none;
-  they still carry `shape`, `aim` and `funny`.
+- `lookalike`: `{"pattern": "<an id in lookalike.json>", "beats": "<the feed post URL it is similar to, better than or
+  adapted from>", "our_take": "<one line: what we say that the post did not>"}`. His own ideas, ideas he records
+  (`kind: recorded`), ideas from his tick and the weekly series need none; they still carry `shape`, `aim` and `funny`.
+- Its words are ours. The gate (code `aim`) refuses an option whose hook, title, copy, story, pitch or card words carry
+  seven words in a row from the post it names in `beats` (its headline, caption and slides). A fact, a name or a number
+  may match; their sentence may not.
+- A carousel drawn from a pattern follows that pattern's `card_flow`, card by card, in our copy, on our brand and with
+  our own pictures (`docs/CAROUSEL-STANDARD.md`, "Off-day carousels are utility").
 
 ## Nothing that went out is offered again
 

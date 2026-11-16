@@ -50,7 +50,10 @@ COLUMNS = {
     'entities': 'named entities', 'horizon': 'time horizon', 'evidence': 'evidence or source named', 'caption': 'full caption',
     'slides': 'carousel slide text', 'url': 'post url', 'account': 'account',
 }
-CLIP = {'caption': 300, 'slides': 600, 'summary': 600, 'claims': 400, 'entities': 300, 'evidence': 300, 'headline': 300}
+# The slides whole enough to read how a carousel's story moves from card to card (Krish, 2026-11-16). The input is
+# never committed (.gitignore), so their words stay in the job that reads them.
+CLIP = {'caption': 1200, 'slides': 4000, 'summary': 600, 'claims': 400, 'entities': 300, 'evidence': 300, 'headline': 300}
+CARD_FLOW_MIN, CARD_FLOW_MAX = 3, 10
 
 
 class LookalikeError(Exception):
@@ -253,6 +256,7 @@ def check_lookalike(look, given):
     out = []
     urls = {idea_checks.canon_url(p.get('url')) for p in (given or {}).get('posts') or [] if isinstance(p, dict)}
     urls.discard(None)
+    by_url = {idea_checks.canon_url(p.get('url')): p for p in (given or {}).get('posts') or [] if isinstance(p, dict)}
     pats = (look or {}).get('patterns')
     if not isinstance(pats, list) or not PATTERNS_MIN <= len(pats) <= PATTERNS_MAX:
         out.append(f'patterns: {PATTERNS_MIN} to {PATTERNS_MAX} of them ({len(pats) if isinstance(pats, list) else "none"} given)')
@@ -281,11 +285,30 @@ def check_lookalike(look, given):
         briefs = p.get('search_briefs') if isinstance(p.get('search_briefs'), list) else []
         if not [b for b in briefs if isinstance(b, str) and len(b.strip()) >= 10]:
             out.append(f'{label}: search_briefs, what to search the web for this week')
+        # A pattern drawn from carousels says how their story moves from card to card (Krish, 2026-11-16: "Look at it
+        # for the way the narrative goes from card to card"): the job each card does, in order, read from their slides.
+        carousel = any(is_carousel(by_url.get(idea_checks.canon_url(u)) or {}) for u in ex)
+        flow = p.get('card_flow') if isinstance(p.get('card_flow'), list) else []
+        steps = [s for s in flow if isinstance(s, str) and len(s.strip()) >= 4]
+        if carousel and not CARD_FLOW_MIN <= len(steps) <= CARD_FLOW_MAX:
+            out.append(f'{label}: card_flow, the job each card does in order ({CARD_FLOW_MIN} to {CARD_FLOW_MAX} short steps, '
+                       'read from the example carousels\' slides), since its examples are carousels')
     about = str((look or {}).get('_about') or '')
     for w in (given or {}).get('warnings') or []:
         if w not in about:
             out.append(f'_about does not carry the warning, word for word: {w}')
     return out
+
+
+def is_carousel(post):
+    """A post of several cards: its type says carousel (Instagram's own word for one is a sidecar), or it has more
+    than one page."""
+    kind = str(post.get('type') or '').lower()
+    try:
+        pages = int(float(str(post.get('pages') or 0)))
+    except ValueError:
+        pages = 0
+    return 'carousel' in kind or 'sidecar' in kind or pages > 1
 
 
 def check(week, plans=None):
