@@ -1,0 +1,11 @@
+{
+  "_about": "A style may bring its own colours (Ruling, Krish, 2026-11-16: \"A style may bring in its own colours and theming as long as it doesn't end up looking like a clown's apron. I want to experiment with variety, colour, and visual styles. We're in the experimental stage of content creation here, as opposed to being obsessive about brand guidelines.\"). A piece names one in its spec (style.palette); compile draws the cut in it and keeps his brand marks (the mark tile, the series pill, the call card, the ending) in the house colours of config/studio.json. Each palette fills the five colour roles the devices read (config/ve/brand-tokens.json), so a spec still names roles, never colours: ink the ground, ink_deep and ink_soft its shades, cream the type and paper, mint the one accent. Five colours, no more, and scripts/velib/palettes.py holds the contrast (no clown's apron). 'suits' names the styles each was made for; any piece may try any palette.",
+  "palettes": {
+    "riso-pop": {"name": "Riso pop", "suits": ["riso-halftone", "paper-cutout"], "colours": {"ink": "#1E2A5A", "ink_deep": "#141C40", "ink_soft": "#2B3A75", "cream": "#F7F1E3", "mint": "#FF5C95"}},
+    "arcade": {"name": "Arcade", "suits": ["swiss-kinetic-type", "vertical-captions"], "colours": {"ink": "#140C33", "ink_deep": "#0B0622", "ink_soft": "#251856", "cream": "#F4F4F4", "mint": "#FFD23F"}},
+    "kraft-paper": {"name": "Kraft paper", "suits": ["paper-cutout", "single-line-drawing", "line-boil"], "colours": {"ink": "#2B211A", "ink_deep": "#1C150F", "ink_soft": "#3D3026", "cream": "#EEDFC6", "mint": "#FF6B4A"}},
+    "phosphor": {"name": "Phosphor", "suits": ["hud-terminal", "living-ui"], "colours": {"ink": "#050A06", "ink_deep": "#020403", "ink_soft": "#0F1C12", "cream": "#D3EAD6", "mint": "#3DFF72"}},
+    "keynote-gold": {"name": "Keynote gold", "suits": ["dark-keynote", "data-story"], "colours": {"ink": "#0B0B0E", "ink_deep": "#050507", "ink_soft": "#19191F", "cream": "#F5F2EA", "mint": "#F2B544"}},
+    "blueprint": {"name": "Blueprint", "suits": ["data-story", "eating-jobs-ladder", "full-visual"], "colours": {"ink": "#0D3866", "ink_deep": "#082646", "ink_soft": "#174C86", "cream": "#EEF4FF", "mint": "#FF9A4D"}}
+  }
+}

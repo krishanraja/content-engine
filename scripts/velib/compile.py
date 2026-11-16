@@ -16,6 +16,7 @@ from pathlib import Path, PureWindowsPath
 
 from .common import ROOT, load_json, sha256_file
 from .lint import pending_devices_error
+from . import palettes
 
 FPS = 30
 ENDING_FRAMES = 180  # the house close: 6 s, settled by 2.75 s then held (docs/production/CLOSING.md)
@@ -36,6 +37,10 @@ NOTHING_BEFORE_HOOK = 'Nothing before the hook, ever. Remove the sting exception
 STING_ASPECT, STING_SHAPE = '16:9', '16x9'  # the long cut, and the name config/intro-sting.json gives its shape
 STING_POSITION = 'after_hook'  # where compile lays the series sting (hook_end; config/brand-palette.json); ve lint reads it
 
+
+def _render_tokens(t: dict, channel: str) -> dict:
+    """The colour roles as the renderer reads them (EngineTokensSchema)."""
+    return {'ink': t['ink'], 'inkDeep': t['ink_deep'], 'inkSoft': t['ink_soft'], 'cream': t['cream'], 'mint': t['mint'], 'channel': channel}
 
 
 def _series_day(series_day: str, publish_day: str | None) -> str:
@@ -543,9 +548,11 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     props = {
         'pieceId': spec['piece_id'], 'cutId': cut_id, 'format': spec['format'], 'aspect': cut['aspect'],
         'fps': FPS, 'durationFrames': duration,
-        'tokens': {'ink': tokens['ink'], 'inkDeep': tokens['ink_deep'], 'inkSoft': tokens['ink_soft'],
-                   'cream': tokens['cream'], 'mint': tokens['mint'],
-                   'channel': tokens['mint'] if off else publication['channel_colors'][channel]},
+        # A style may bring its own colours (style.palette, config/ve/style-palettes.json; Ruling, Krish,
+        # 2026-11-16): the cut is drawn in them, and his brand marks keep the house's (brandTokens).
+        'tokens': _render_tokens(palettes.tokens_for(spec, tokens), tokens['mint'] if off else publication['channel_colors'][channel]),
+        **({'brandTokens': _render_tokens(tokens, tokens['mint'] if off else publication['channel_colors'][channel])}
+           if (spec.get('style') or {}).get('palette') else {}),
         # An off-day piece wears the house dress of a series but never another day's name (Krish, 2026-11-03, of
         # Thursday's under.the.hood tag: "The branding is wrong").
         'series': {'label': spec['brand']['series'] if _series_day(identity['day'], spec.get('publish_day')) == identity['day']
