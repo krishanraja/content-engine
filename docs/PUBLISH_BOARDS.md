@@ -648,6 +648,40 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   Krish, 2026-11-15, approved with the specialists plan: thumbnail options carry a pick press on the Content board). It
   also added `sample_drive` to each style option, and a style sample's `sample_url` is the Drive file route
   `/api/board/sign-offs?file=<drive id>` ("The style choices", below).
+- **1.17.0 (16 Nov 2026)** made four additions.
+  - **`notes` on the Claude prompt.** Krish types his own notes before he copies the prompt. The board adds them under
+    the heading, at the end of the prompt, and saves them with `save`: his comment on the day, `use: claude_notes`.
+    `afterPress` files that comment to his taste ledger as his words.
+    - Ruling (Krish, 2026-11-16): "I should be able to provide feedback or what I think the next steps are first, and
+      then click the "Copy to Claude" button, and the prompt incorporates that."
+  - **`open` on the Claude prompt**, `{ app: 'claude_code', repository }`. The board opens a new Claude Code session on
+    claude.ai/code with that repository chosen and the prompt filled in. The board builds the address; the view still
+    carries no link.
+    - From approval of the story until a take is recorded, the prompt stays beside the picks. A session that changes an
+      approved story takes his approval line off its end, so the board asks him to approve the new story. A story
+      changed under its old line reads as unsigned too: `lockSigned` checks the line's `lock sha256` against the words
+      above it, as making.py's drift rule does.
+    - Ruling (Krish, 2026-11-16): "Even though this piece is locked, I should be able to tweak the narrative slightly in
+      it by opening a session with Claude."
+  - **Stills for the pickers.** The press `after` field is reserved for the production press of the next release:
+    the prompt the board opens once that press is saved. No press carries it yet.
+    `choose.options[].line` and `.still` are added, and `still_url` is added to each style option, from
+    config/ve/style-samples.json's `stills` map, recorded by `ve lab still`. The board shows the still when he hovers
+    over or picks an option.
+    - Ruling (Krish, 2026-11-16): "hover over the captions, look, and motion style and see a templated screenshot of
+      what it might look like".
+  - **Repeats are flagged.** `item.repeat` and `model.repeats` (with each idea's `piece_id`, so the one list leaves it
+    out too) are added. An idea that retells a piece or post an earlier board put out or on its way, approved,
+    scheduled or live, from 14 days before it to the end of its own week, leaves the ideas board. It is listed in
+    `repeats`, and its line says what matched and when. An approved item says the same in `repeat`. A retelling is any
+    one of:
+    - the same primary source;
+    - the same hook (never for the weekly good news, whose hook is the same every week);
+    - two or more of the same named sources.
+
+    This week's own board is never its own repeat: a twin on it is the Sunday run's to refuse (`board_feed.py gate`).
+
+    Ruling (Krish, 2026-11-16): "this week's Ideas Board needs to not contain mostly things we published last week".
 
 ## To review: the video sign-offs (contract 1.11.0)
 
@@ -808,6 +842,16 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   `ve lab sample` checks the clip is the lab's own render of that style (its manifest beside it), writes the value, the
   drive map and clears the waiting note; commit `config/ve/style-samples.json` only, never the media. A caption style is
   drawn by the lab only when `--only` names it (`theme-<id>`), so the regression reel never grows by itself.
+
+  **Stills** are the picture he sees when he hovers a look, a motion style or a caption style (Krish, 16 Nov 2026: "No
+  need for a video, just a still."). They sit in the same file, in a `stills` map by layer (`treatment` for the seven
+  looks of `formats.production`, `motion` for the 14 drawable styles, `captions` for the 27 caption styles), each value
+  the same Drive file route as a sample, `/api/board/sign-offs?file=<drive id>`, with its Drive id in a `stills_drive`
+  map by layer. An empty value is a still not recorded yet: no picture, never a placeholder. `python3 scripts/ve.py lab
+  stills` cuts one 540x960 JPEG per motion and caption style from the lab's renders, all at the same frame, into
+  `.cache`; each is watched, filed in Inbox from My AI as "Style still - <layer> - <id>.jpg", read back and recorded
+  with `python3 scripts/ve.py lab still <layer> <id> --drive <its Drive id> --file <the jpg>`. A look's still comes
+  from a design-lock key frame or a Codex plate, recorded the same way. Commit the file only, never the stills.
 - **His press**: `presses.yes` and `presses.not_this` (labels "Yes" and "Not this") each say `POST
   /api/board/<Monday>/<op>` with a body. `POST /api/board/<Monday>/style` takes `{ piece_id, motion?, captions?,
   reject?: { layer: 'motion' | 'captions' | 'treatment', id } }`, his press only, on a piece scheduled in that week, the same guards

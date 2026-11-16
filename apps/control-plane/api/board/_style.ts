@@ -55,6 +55,11 @@ export interface StyleOption {
   /** Contract 1.16.0: the sample's file in his Drive (config/ve/style-samples.json's drive map), where he opens it; null
    *  when there is no sample. */
   sample_drive: { file_id: string; url: string } | null
+  /** Contract 1.17.0: a still of what it looks like (config/ve/style-samples.json's stills map: one frame of the style
+   *  lab's render on his house take, or a look's plate), a same-site path like a sample; null while none is recorded.
+   *  The pickers show it when he hovers or picks an option (Ruling, Krish, 2026-11-16: "hover over the captions, look,
+   *  and motion style and see a templated screenshot of what it might look like"). */
+  still_url?: string | null
   /** He said "Not this" to it on this piece, or called it not for us. */
   rejected: boolean
   presses: { yes: StylePress; not_this?: StylePress }
@@ -117,6 +122,30 @@ export function sampleFiles(samples: unknown = styleSamples): Set<string> {
   for (const layer of STYLE_LAYERS) {
     const drive = isObj(samples) && isObj(samples.drive) && isObj(samples.drive[layer]) ? samples.drive[layer] as Body : {}
     for (const id of Object.keys(drive)) { const f = sampleDriveId(layer, id, samples); if (f && sampleUrl(layer, id, samples)) out.add(f) }
+  }
+  return out
+}
+
+/** The layers a still is kept for: the two style layers and the looks. */
+export type StillLayerKey = StyleLayerKey | 'treatment'
+const STILL_LAYERS: readonly StillLayerKey[] = ['motion', 'captions', 'treatment']
+
+/** A still's same-site path (config/ve/style-samples.json `stills`, written by `ve lab still`), or null: the same rule
+ *  as a sample, a path on this site and never an outside link; an empty value is a still not made yet. */
+export function stillUrl(layer: StillLayerKey, id: string, samples: unknown = styleSamples): string | null {
+  const map = isObj(samples) && isObj(samples.stills) && isObj(samples.stills[layer]) ? samples.stills[layer] as Body : {}
+  const url = map[id]
+  // Only the board's own file route with a Drive id: a still is never anything else (a path such as /\\host would leave
+  // the site).
+  return typeof url === 'string' && /^\/api\/board\/sign-offs\?file=[A-Za-z0-9_-]{20,80}$/.test(url) ? url : null
+}
+
+/** Every Drive id a still is served from (the stills_drive map), only for a still the view shows. */
+export function stillFiles(samples: unknown = styleSamples): Set<string> {
+  const out = new Set<string>()
+  for (const layer of STILL_LAYERS) {
+    const drive = isObj(samples) && isObj(samples.stills_drive) && isObj(samples.stills_drive[layer]) ? samples.stills_drive[layer] as Body : {}
+    for (const [id, file] of Object.entries(drive)) if (typeof file === 'string' && SAMPLE_DRIVE_ID.test(file) && stillUrl(layer, id, samples)) out.add(file)
   }
   return out
 }
@@ -201,7 +230,7 @@ export function dayStyle(i: StyleInputs): DayStyle {
     : [...ranked.map(x => x.m), ...i.motion.filter(m => !recommended.has(m.id))]
   const motion: StyleLayer = {
     options: order.map(m => ({ id: m.id, name: m.name, line: m.how, rules: m.rules, point_types: m.point_types, formats: m.formats, ready: ready(m),
-      recommended: recommended.has(m.id), why: recommended.get(m.id) ?? null, sample_url: sampleUrl('motion', m.id), sample_drive: sampleDrive('motion', m.id),
+      recommended: recommended.has(m.id), why: recommended.get(m.id) ?? null, sample_url: sampleUrl('motion', m.id), sample_drive: sampleDrive('motion', m.id), still_url: stillUrl('motion', m.id),
       rejected: mine.rejected.motion.includes(m.id) || NOT_FOR_US.has(m.krish_verdict),
       presses: { yes: press('Yes', 'style', { motion: m.id }, `Picked. ${m.name} is the motion style for this piece.`),
         not_this: press('Not this', 'style', { reject: { layer: 'motion', id: m.id } }, 'Noted. It is not recommended for this piece any more.') } })),
@@ -219,7 +248,7 @@ export function dayStyle(i: StyleInputs): DayStyle {
       const plannedCaption = i.recommendedCaptions && CAPTION_IDS.has(i.recommendedCaptions) && !mine.rejected.captions.includes(i.recommendedCaptions) ? i.recommendedCaptions : null
       const rec = plannedCaption ? c.id === plannedCaption : Boolean(c.recommended_why) && !rejected
       const why = plannedCaption ? (rec ? 'The production pick recommended for this piece.' : null) : rec ? c.recommended_why! : null
-      return { id: c.id, name: c.name, line: c.line, rules: c.rules, recommended: rec, why, sample_url: sampleUrl('captions', c.id), sample_drive: sampleDrive('captions', c.id), rejected,
+      return { id: c.id, name: c.name, line: c.line, rules: c.rules, recommended: rec, why, sample_url: sampleUrl('captions', c.id), sample_drive: sampleDrive('captions', c.id), still_url: stillUrl('captions', c.id), rejected,
         presses: { yes: press('Yes', 'style', { captions: c.id }, `Picked. ${c.name} is the caption style for this piece.`),
           not_this: press('Not this', 'style', { reject: { layer: 'captions', id: c.id } }, 'Noted. It is not recommended for this piece any more.') } }
     }),
@@ -237,7 +266,7 @@ export function dayStyle(i: StyleInputs): DayStyle {
       const rejected = mine.rejected.treatment.includes(l.id) && !(look && look.production === l.id)
       const rec = l.id === i.recommendedLook && !rejected
       return { id: l.id, name: l.name, line: l.pitch, rules: [], recommended: rec,
-        why: rec ? 'The Sunday room recommends it for this idea.' : null, sample_url: null, sample_drive: null, rejected,
+        why: rec ? 'The Sunday room recommends it for this idea.' : null, sample_url: null, sample_drive: null, still_url: stillUrl('treatment', l.id), rejected,
         // The picked look takes no "Not this": a no would leave it picked (the look op holds the pick); he picks another.
         presses: { yes: press('Yes', 'look', { production: l.id, ...keep }, `Picked. ${l.name} is the look for this piece.`),
           ...(look && look.production === l.id ? {} : { not_this: press('Not this', 'style', { reject: { layer: 'treatment', id: l.id } }, 'Noted. It is not recommended for this piece any more.') }) } }

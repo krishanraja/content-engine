@@ -310,9 +310,25 @@ export function wordless(c: InspoCard): boolean {
  *  his note. Read-only rows in, plain lists out. */
 export const FEED_DAYS = 8
 export const CORRECTION_DAYS = 14
+/** The wider window of the same feed the lookalike step reads when his Instagram inspo sheet cannot be downloaded
+ *  (scripts/post-pack/lookalike.py; Krish, 2026-11-16: "build a lookalike model of stories that pull from the latest in
+ *  [the Instagram inspo sheet]"). The topic signal above keeps FEED_DAYS. */
+export const LOOKALIKE_FEED_DAYS = 45
 export function buildFeed(rows: Row[]) {
   return rows.map(r => ({ title: clip(r.title, 200), excerpt: clip(r.excerpt, 600), account: r.meta?.account || null,
     url: typeof r.meta?.url === 'string' && /^https:\/\//.test(r.meta.url) ? r.meta.url : null, at: r.occurred_at || null }))
+}
+/** How many posts the lookalike fallback keeps: the newest, as many as lookalike.py reads from the sheet. */
+export const LOOKALIKE_FEED_MAX = 100
+/** One read of the feed, newest first, cut two ways: `feed`, the posts since `feedSince` (the topic signal, FEED_DAYS),
+ *  and `lookalike`, the newest LOOKALIKE_FEED_MAX posts read (LOOKALIKE_FEED_DAYS), for the lookalike step's fallback.
+ *  The fallback carries each post's headline, account, link and day only, never its excerpt: sources.json is committed
+ *  to a public repository, and other people's captions are theirs. */
+export function splitFeed(rows: Row[], feedSince: string) {
+  const all = buildFeed(rows)
+  const since = Date.parse(feedSince)
+  return { feed: all.filter(p => typeof p.at === 'string' && Date.parse(p.at) >= since),
+    lookalike: all.slice(0, LOOKALIKE_FEED_MAX).map(p => ({ title: p.title, account: p.account, url: p.url, at: p.at })) }
 }
 export function buildCorrections(rows: Row[]) {
   return rows.filter(r => typeof r.excerpt === 'string' && r.excerpt.trim().length > 1 && !r.withdrawn_at)

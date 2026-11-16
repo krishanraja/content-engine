@@ -66,6 +66,9 @@ on:
         description: 'Run even if the Ideas tab for that week is already live'
         type: boolean
         default: false
+      days:
+        description: 'Make again only the options nobody answered on these days of that week, e.g. thu,sat (empty: the whole board)'
+        required: false
 
 concurrency:
   group: sunday-ideas
@@ -112,12 +115,25 @@ jobs:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           WEEK: ${{ inputs.week || github.event.client_payload.week }}
           FORCE: ${{ inputs.force }}
+          DAYS: ${{ inputs.days }}
         run: |
           # A typed week is normalised to its YYYY-MM-DD Monday (or refused) before it names a folder or a branch.
           if [ -n "$WEEK" ]; then monday=$(python3 scripts/sunday_ideas.py week --date "$WEEK"); else monday=$(python3 scripts/sunday_ideas.py week); fi
           state=$(python3 scripts/sunday_ideas.py built "$monday")
           echo "monday=$monday" >> "$GITHUB_OUTPUT"
-          if [ "$state" = "built=true" ] && [ "$FORCE" != "true" ]; then
+          # Typed days are checked before they reach a command or the prompt: three-letter days, comma separated.
+          # Every space and line break goes first: grep matches line by line, so a value with a newline in it could pass
+          # with a second line, and the whole value is held to the pattern in one piece.
+          days=$(printf '%s' "$DAYS" | tr 'A-Z' 'a-z' | tr -d '[:space:]')
+          if [ -n "$days" ] && ! [[ "$days" =~ ^(mon|tue|wed|thu|fri|sat)(,(mon|tue|wed|thu|fri|sat))*$ ]]; then
+            echo "::error::days is three-letter days, comma separated (e.g. thu,sat); the typed value is not."
+            exit 1
+          fi
+          echo "days=$days" >> "$GITHUB_OUTPUT"
+          if [ -n "$days" ]; then
+            echo "::notice::Making again only the options nobody answered on $days of the week of $monday."
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          elif [ "$state" = "built=true" ] && [ "$FORCE" != "true" ]; then
             echo "::notice::The Ideas tab for the week of $monday is already live. Nothing to do."
             echo "go=false" >> "$GITHUB_OUTPUT"
           else
@@ -133,10 +149,38 @@ jobs:
       - name: Install the tools the skill runs
         if: steps.guard.outputs.go == 'true'
         run: |
+          # requirements-ci.txt carries openpyxl, which reads his Instagram inspo sheet for the lookalike step.
           python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+          python -c "import openpyxl"  # the lookalike step needs it; say so here, not halfway through the run
           npm ci
           # The Claude Code installer needs its launcher directory to exist (the docs steward's fix, 2026-09-08).
           mkdir -p "$HOME/.local/bin"
+
+      - name: The week as the live board has it, and where each of its options stands
+        id: before
+        if: steps.guard.outputs.go == 'true' && steps.guard.outputs.days != ''
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          MONDAY: ${{ steps.guard.outputs.monday }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # A re-run of some days (Krish, 2026-11-16) starts from the week as the live board reads it: the week's branch,
+          # offday-revise/<Monday>, before main. Its folder is committed here first, so the run's own commit holds only
+          # what it made again and lands on that branch cleanly.
+          folder="docs/plans/$MONDAY-week"
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          if git -c http.extraheader="AUTHORIZATION: basic $auth" ls-remote --exit-code --heads origin "offday-revise/$MONDAY" >/dev/null 2>&1; then
+            git -c http.extraheader="AUTHORIZATION: basic $auth" fetch -q origin "+refs/heads/offday-revise/$MONDAY:refs/weekbranch/week"
+            git checkout refs/weekbranch/week -- "$folder" 2>/dev/null || echo "::notice::offday-revise/$MONDAY has no $folder; starting from main's."
+          fi
+          [ -f "$folder/ideas.json" ] || { echo "::error::The week of $MONDAY has no ideas.json on its branch or on main, so there is nothing to make again."; exit 1; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$folder"
+          git diff --cached --quiet || git commit -q -m "The week of $MONDAY as the live board has it, before the run makes some days again"
+          # Outside docs/plans, where the run cannot write: what the keep check holds the run to.
+          cp "$folder/ideas.json" "$RUNNER_TEMP/ideas-before.json"
+          python3 scripts/post-pack/board_feed.py status "$MONDAY" --out "$RUNNER_TEMP/status.json"
 
       - name: The ideas stage of plan-week, in Claude Code on his subscription
         if: steps.guard.outputs.go == 'true'
@@ -149,7 +193,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 400
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/lookalike.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             The Sunday ideas run for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub Actions
@@ -172,6 +216,24 @@ jobs:
             today, each checked against its primary source, each with its own real photo or clip, written onto that
             week's weekly good-news option with its stories_due set to today's date. Then run board_feed.py gather and
             cover again.
+
+            The lookalike step, after the gather (Krish, 2026-11-16: "build a lookalike model of stories that pull from
+            the latest in [the Instagram inspo sheet] and then go and find similar if not better stories on the web";
+            .agents/skills/plan-week/references/lookalike.md): run python3 scripts/post-pack/lookalike.py prepare <Monday>,
+            write docs/plans/<Monday>-week/lookalike.json from lookalike-input.json, and run lookalike.py check <Monday>
+            until it passes. Then search the web for each pattern's briefs: this week's similar or better stories, dated
+            within 7 days, each checked against its primary source. Every option is one clear theme with many stories
+            or one clear story to dive into, for utility, interest or humour, with a humorous angle (shape, aim, funny,
+            lookalike). Copy every warning lookalike-input.json carries into ideas.json _about word for word. Nothing
+            that went out or is on its way on the last three weeks' boards is offered again, and no story sits on the
+            board twice: board_feed.py gate refuses a repeat.
+
+            Days to make again: ${{ steps.guard.outputs.days || 'none, this run fills the whole board' }}. When days are
+            named, make again only the options nobody answered (open in sources.json option_status) on those days of
+            that week, and leave every other option exactly as it is, byte for byte and in its place: approved,
+            revised, held, filed, saved as a trend, improved and rejected options, and every option on any other day.
+            The workflow checks this in code (board_feed.py keep) and keeps the week off the live board if anything
+            else changed.
 
             The ideas gate: you propose ideas on the ideas board and never put one on the publish board. Only Krish's
             Approve does. Never set a piece's day (no /api/content-ideas/<id>/schedule), never write a pick or a press,
@@ -199,22 +261,49 @@ jobs:
             the workflow puts that folder on the live board and keeps it on a branch for the Sunday room. If
             board_feed.py cover refuses the options, fix them and check again; if it still refuses, stop and say why.
             board_feed.py gate must pass before you stop: the workflow runs it again and keeps the week off the live
-            board while a subject he refused is offered, a warned option leads its day, or a return comes back no
-            deeper (the plan-week skill, "What he refused stays refused").
+            board while a subject he refused is offered, a warned option leads its day, a return comes back no
+            deeper, an option repeats what went out or another option, or an option lacks its shape, aim, humour or
+            lookalike (the plan-week skill, "What he refused stays refused").
+
+      - name: His presses read again, now the run has stopped
+        if: always() && steps.guard.outputs.go == 'true' && steps.guard.outputs.days != ''
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          MONDAY: ${{ steps.guard.outputs.monday }}
+        run: |
+          # An option he answered while the run was making the day again (a re-run can take hours) is his, not the run's:
+          # the keep check holds every option answered in either read to come back byte for byte.
+          python3 scripts/post-pack/board_feed.py status "$MONDAY" --out "$RUNNER_TEMP/status-after.json"
 
       - name: What he refused stays refused, checked in code
         id: gate
         if: always() && steps.guard.outputs.go == 'true'
         env:
           MONDAY: ${{ steps.guard.outputs.monday }}
+          DAYS: ${{ steps.guard.outputs.days }}
         run: |
+          # A re-run of some days changed only the open options on them (board_feed.py keep), against the copy and the
+          # status taken before Claude ran, which it could not write. From sources.json and ideas.json only: no engine key.
+          if [ -n "$DAYS" ]; then
+            if ! python3 scripts/post-pack/board_feed.py keep "$MONDAY" --days "$DAYS" --before "$RUNNER_TEMP/ideas-before.json" \
+                --status "$RUNNER_TEMP/status.json" --status "$RUNNER_TEMP/status-after.json" > "$RUNNER_TEMP/keep.txt" 2>&1; then
+              echo "passed=false" >> "$GITHUB_OUTPUT"
+              echo "::error::The re-run of $DAYS changed options it may not: $(grep -c '^  ' "$RUNNER_TEMP/keep.txt" || true) line(s)."
+              cp "$RUNNER_TEMP/keep.txt" "docs/plans/$MONDAY-week/keep.txt" 2>/dev/null || true
+              exit 0
+            fi
+          fi
           # The ideas quality plan, item 1 (Krish, 2026-11-09: "I just said that Infosys is boring so why did you make the
           # piece about Infosys?"): a subject he refused offered again, a warned option placed first or shown without
           # his words, or a return no deeper fails the run, and the week does not go on the live board. Only counts go to
           # this log; the findings are kept beside the week's ideas for the Sunday room.
           folder="docs/plans/$MONDAY-week"
           if [ ! -f "$folder/ideas.json" ]; then echo "passed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
-          if python3 scripts/post-pack/board_feed.py gate "$MONDAY" > "$folder/gate.txt" 2>&1; then
+          # A re-run of some days answers for those days only: a problem the board had on another day is reported, never
+          # this run's to fail on (the week of 16 Nov carried answered repeats on Mon and Tue).
+          base=()
+          if [ -n "$DAYS" ]; then base=(--base "$RUNNER_TEMP/ideas-before.json" --days "$DAYS" --status "$RUNNER_TEMP/status.json" --status "$RUNNER_TEMP/status-after.json"); fi
+          if python3 scripts/post-pack/board_feed.py gate "$MONDAY" "${base[@]}" > "$folder/gate.txt" 2>&1; then
             echo "passed=true" >> "$GITHUB_OUTPUT"
             echo "The gate passed: nothing he refused is offered again."
           else

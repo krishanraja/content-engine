@@ -3,7 +3,7 @@ import { supabase } from '../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
 import { isMonday, keepThroughWeek, mergeCovers, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
 import { buildSources, windows } from '../_weekSources.js'
-import { buildCorrections, buildFeed, buildHindsight, buildInspiration, CORRECTION_DAYS, FEED_DAYS, RECENT_DAYS } from '../_inspirationSources.js'
+import { buildCorrections, buildHindsight, buildInspiration, CORRECTION_DAYS, FEED_DAYS, LOOKALIKE_FEED_DAYS, RECENT_DAYS, splitFeed } from '../_inspirationSources.js'
 import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
 import { TASTE_VENTURE } from '../_taste.js'
 import { HOUSE_RULES } from '../_houseRules.js'
@@ -337,6 +337,7 @@ const INSPO_COLS = 'id,name,folder,lane,kind,facets,why_here,route,routes,why_li
 async function readInspiration(week: string, listed: string[] = []) {
   const recentSince = new Date(Date.parse(`${week}T00:00:00Z`) - RECENT_DAYS * 86_400_000).toISOString().slice(0, 10)
   const feedSince = new Date(Date.parse(`${week}T00:00:00Z`) - (FEED_DAYS + 9) * 86_400_000).toISOString()
+  const lookalikeSince = new Date(Date.parse(`${week}T00:00:00Z`) - (LOOKALIKE_FEED_DAYS + 9) * 86_400_000).toISOString()
   const correctionsSince = new Date(Date.parse(`${week}T00:00:00Z`) - (CORRECTION_DAYS + 9) * 86_400_000).toISOString()
   const [items, routed, asked, recent, reads, moves, claims, feed, corrections, hindsight] = await Promise.all([
     supabase.from('inspiration_items').select(INSPO_COLS).order('created_at', { ascending: false }).limit(500),
@@ -355,8 +356,10 @@ async function readInspiration(week: string, listed: string[] = []) {
       .in('status', ['candidate', 'proposed']).order('updated_at', { ascending: false }).limit(100),
     // The ideas quality plan, item 9: the feed's posts (the run is a week before its Monday, so FEED_DAYS back from the
     // run), his corrections from sessions, and his hindsight scores. Each is help, never a gate: a failed read is said.
+    // One read of the feed covers LOOKALIKE_FEED_DAYS, the lookalike step's fallback (Krish, 2026-11-16); splitFeed
+    // keeps `feed` to FEED_DAYS as before.
     supabase.from('taste_evidence').select('title,excerpt,meta,occurred_at').eq('venture', TASTE_VENTURE).eq('source', 'drive_cold')
-      .like('source_ref', 'instagram:%').gte('occurred_at', feedSince).order('occurred_at', { ascending: false }).limit(300),
+      .like('source_ref', 'instagram:%').gte('occurred_at', lookalikeSince).order('occurred_at', { ascending: false }).limit(600),
     supabase.from('taste_evidence').select('title,excerpt,meta,occurred_at,withdrawn_at').eq('venture', TASTE_VENTURE).eq('source', 'session_report')
       .gte('occurred_at', correctionsSince).order('occurred_at', { ascending: false }).limit(200),
     supabase.from('piece_scores_current').select('piece_id,basis,narrative,production,note,scored_at').eq('basis', 'hindsight')
@@ -364,8 +367,10 @@ async function readInspiration(week: string, listed: string[] = []) {
   ])
   const failed = items.error || routed.error || asked.error || recent.error || reads.error || moves.error || claims.error
   if (failed) throw new Error(`inspiration: ${failed.message}`)
+  const split = feed.error ? { feed: [], lookalike: [] } : splitFeed((feed.data || []) as Array<Record<string, any>>, feedSince)
   const extra = {
-    feed: feed.error ? [] : buildFeed((feed.data || []) as Array<Record<string, any>>),
+    feed: split.feed,
+    lookalike_feed: split.lookalike,
     corrections: corrections.error ? [] : buildCorrections((corrections.data || []) as Array<Record<string, any>>),
     hindsight: hindsight.error ? [] : buildHindsight((hindsight.data || []) as Array<Record<string, any>>),
     unread: [feed.error && 'feed', corrections.error && 'corrections', hindsight.error && 'hindsight'].filter(Boolean),
@@ -383,5 +388,5 @@ async function readInspiration(week: string, listed: string[] = []) {
     reads: (reads.data || []) as Array<Record<string, any>>, moves: (moves.data || []) as Array<Record<string, any>>,
     claims: (claims.data || []) as Array<Record<string, any>>, listedIdeas: listed, recentPieces: (recent.data || []) as Array<Record<string, any>>,
     quotesStanding: (standing.data || []).map((r: Record<string, any>) => String(r.id)) })
-  return { ...block, ...extra, counts: { ...block.counts, feed: extra.feed.length, corrections: extra.corrections.length, hindsight: extra.hindsight.length } }
+  return { ...block, ...extra, counts: { ...block.counts, feed: extra.feed.length, lookalike_feed: extra.lookalike_feed.length, corrections: extra.corrections.length, hindsight: extra.hindsight.length } }
 }

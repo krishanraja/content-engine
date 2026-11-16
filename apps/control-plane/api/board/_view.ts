@@ -24,7 +24,7 @@ import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_d
 import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
 import { carriedItems, channelWord, dayLabel, dayOptions, liveOn, readItems, readItemsIn, type GrowthPost, type OffdayItem } from './_offdayItems.js'
 import { ideaStage, postedStage, truthProblems } from './_stage.js'
-import { modelProblems, offdayHead, offdayKind, weekModel, type ModelInputs, type WeekModel } from './_weekModel.js'
+import { modelProblems, offdayHead, offdayKind, recentOutOf, weekModel, type ModelInputs, type WeekModel } from './_weekModel.js'
 import { makeRoute } from './_makeRoute.js'
 import { scheduledOf } from './_posted.js'
 
@@ -58,11 +58,23 @@ export type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done' | 'missed'
 export type Action =
   | { kind: 'run'; label: string; job: JobName; input: Record<string, unknown>; runs_on: string }
   | { kind: 'open'; label: string; href: string }
-  | { kind: 'prompt'; label: string; prompt: string }
+  | PromptAction
   | { kind: 'review'; label: string }
   | { kind: 'research'; label: string; piece_id: string }
   | { kind: 'look'; label: string; piece_id: string }
   | PressAction
+/** The one Claude prompt (contract 1.17.0 adds `notes` and `open`): `notes` asks for his own words before it is copied
+ *  and the board puts them under `heading` at the end of the prompt, saving them with `save` (his comment on the day,
+ *  which the engine files to his taste ledger); `open` names where the board opens it, a new Claude Code session with
+ *  the repository chosen and the prompt filled in. The board builds the claude.ai/code address: the view carries no
+ *  link. */
+export type PromptAction = {
+  kind: 'prompt'
+  label: string
+  prompt: string
+  notes?: { ask: string; heading: string; save?: PressAction }
+  open?: { app: 'claude_code'; repository: string }
+}
 export interface DayView {
   day: PostedDay
   date: string
@@ -271,6 +283,8 @@ export interface ViewInputs {
   /** Contract 1.10.0, one post, one item (_onePost.ts): every item of every week on a day or in his Ideas for Later, and
    *  the week plans beside this one (by Monday), so the same post is drawn on one day only. Left out, the week's own. */
   all_items?: OffdayItem[] | null
+  /** Contract 1.17.0: the series pieces scheduled in the 14 days before the week (content_ideas), for the repeat check. */
+  recent_pieces?: Body[]
   plans?: Record<string, Body | null>
 }
 
@@ -338,12 +352,18 @@ export function inYourWords(words: string, on: string | null, where?: string | n
   const when = day ? `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.getUTCDay()]} ${day.getUTCDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][day.getUTCMonth()]}` : ''
   return `Approved in your words: "${said}"${when ? `, ${when}` : ''}${where ? ` (${where})` : ''}`
 }
-/** Whether a narrative lock is signed: its last line that is not blank is his signature (making.py lock_signature). */
+/** Whether a narrative lock is signed: its last line that is not blank is his signature (making.py lock_signature), and
+ *  when that line names the sha256 it binds, the words above it still hash to it (making.py signature_problems, the
+ *  drift rule). A story changed under his old approval line is unsigned, so the board asks him to approve it again
+ *  (Ruling, Krish, 2026-11-16: an approved story can still be changed by a Claude session). */
 export function lockSigned(text: string | null | undefined): boolean {
   if (!text) return false
   const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean)
-  const m = lines.length ? LOCK_SIGNED.exec(lines[lines.length - 1]) : null
-  return Boolean(m && !/^<[^>]*>$/.test(m[1].trim()))
+  const last = lines.length ? lines[lines.length - 1] : ''
+  const m = LOCK_SIGNED.exec(last)
+  if (!m || /^<[^>]*>$/.test(m[1].trim())) return false
+  const bound = /lock sha256 ([0-9a-f]{64})\b/.exec(last)?.[1]
+  return !bound || bound === lockBodyHash(String(text))
 }
 
 const short = (week: string, day: PostedDay) => {
@@ -852,7 +872,9 @@ export function buildView(i: ViewInputs): WeekView {
         revision: i.picks.find(x => x.doc_id === doc)?.revision ?? 0 }
     }
   }
-  const model = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign })
+  // What went out or is on its way around the week, so an idea that retells it leaves the ideas board (contract 1.17.0).
+  const recentOut = recentOutOf({ week: i.week, ideas: i.ideas, plans: i.plans, pieces: i.pieces }, days, i.all_items ?? null, i.recent_pieces ?? [])
+  const model = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut })
   // What waits on his press: only his real decisions (Approve for publish on a made piece, an approved post's missing
   // choice), never an idea (Ruling, Krish, 2026-11-13).
   const yours: WeekView['yours'] = model.days.flatMap(md => md.items.filter(it => it.decision && it.next)
@@ -970,7 +992,11 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // The three video sign-off cards (contract 1.11.0): the manifest and the configs it writes, from main, and his presses.
   const signOffs = Promise.all([readSignOffSources(fetcher, mainSha), readSignOffPresses(db).catch(() => null)])
     .then(([s, p]) => signOffsView(s.manifest, p ?? [], s.configs)).catch(() => null)
-  const [approvals, items, allItems, ...beside] = await Promise.all([readApprovals(db, week), readItems(db, week), readItemsIn(db, ['offered', 'approved', 'later']),
+  const [approvals, items, allItems, recentPieces, ...beside] = await Promise.all([readApprovals(db, week), readItems(db, week), readItemsIn(db, ['offered', 'approved', 'later']),
+    // The series pieces of the 14 days before the week, with their source, so an idea that retells one leaves the board.
+    db.from('content_ideas').select('id, idea, thesis, scheduled_for, state, buried_at, source_url, canonical_url')
+      .gte('scheduled_for', shiftYmd(week, -14)).lt('scheduled_for', week).in('state', ['drafting', 'review', 'approved', 'published'])
+      .then(r => (r.error ? [] : r.data || []), () => []),
     ...[-7, 7].map(n => readWeekIdeas(shiftYmd(week, n), env, fetcher).catch(() => null))])
   let formats: ViewInputs['formats'] = { script: [], production: [] }
   let motion: MotionModule[] = []
@@ -1002,7 +1028,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
     specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
-    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items, all_items: allItems,
+    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items, all_items: allItems, recent_pieces: recentPieces as Body[],
     plans: { [shiftYmd(week, -7)]: beside[0] ?? null, [shiftYmd(week, 7)]: beside[1] ?? null }, sign_offs: await signOffs })
 }
 

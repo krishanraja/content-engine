@@ -1,0 +1,310 @@
+{
+ "_about": "The posts on the live boards of the three weeks before 16 Nov 2026 (each week's board model, GET /api/board/<Monday>/view, read 16 Nov 2026 with board_feed.py posts_of): what the repeat check holds the 16 Nov board against (tests/idea_checks_test.py, RepeatTest).",
+ "week": "2026-11-16",
+ "recent_posts": [
+  {
+   "week": "2026-11-02",
+   "day": "mon",
+   "date": "2026-11-02",
+   "key": "piece:9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "follow.the.money",
+   "title": "Anthropic's Own Hiring Data Is the Most Honest Labour Market Report Published This Year",
+   "stage": "live",
+   "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+   "item": null,
+   "primary": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+   "urls": [
+    "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf"
+   ],
+   "labels": [
+    "Anthropic, Employment at Anthropic (its own report)"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "tue",
+   "date": "2026-11-03",
+   "key": "off-tue-claudejobs",
+   "type": "post",
+   "kind": "meme",
+   "kind_label": "Meme",
+   "title": "Tue 3 Nov, the day after Monday's piece. Four cards, 4:5. Card 1: CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS (huge yellow type, a cartoon robot holding a tiny office ladder). Card 2: The rungs junior",
+   "stage": "approved",
+   "piece_id": null,
+   "item": "engine:2026-11-02:claudejobs",
+   "primary": null,
+   "urls": [],
+   "labels": [
+    "Meme"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "tue",
+   "date": "2026-11-03",
+   "key": "off-tue-translator",
+   "type": "post",
+   "kind": "meme",
+   "kind_label": "Meme",
+   "title": "Tue 3 Nov. Your idea (28 Oct): the translator scene you saved, reskinned for when your AI talks to your customer's AI. Two identical robots across a table, each insisting the other is the translator,",
+   "stage": "approved",
+   "piece_id": null,
+   "item": "engine:2026-11-02:translator",
+   "primary": null,
+   "urls": [],
+   "labels": [
+    "Meme"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "wed",
+   "date": "2026-11-04",
+   "key": "piece:b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "under.the.hood",
+   "title": "Claude Duet's Approval Gate Is the Governance Pattern Every Enterprise Agent Should Copy",
+   "stage": "live",
+   "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+   "item": null,
+   "primary": "https://claude.com/resources/articles/claude-duet",
+   "urls": [
+    "https://claude.com/resources/articles/claude-duet"
+   ],
+   "labels": [
+    "Anthropic, Introducing Claude Duet, 21 Oct 2026 (the company's own description)"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "thu",
+   "date": "2026-11-05",
+   "key": "off-thu-puppy",
+   "type": "post",
+   "kind": "explainer",
+   "kind_label": "Explainer",
+   "title": "Thu 5 Nov, the day after Wednesday's 'AI now acts first' piece. Your idea (28 Oct): a clean, well-lit to-camera 1-2-3 with fast subtitle builds and a strong thumbnail. About 40 seconds. Your AI is a p",
+   "stage": "approved",
+   "piece_id": null,
+   "item": "engine:2026-11-02:puppy",
+   "primary": null,
+   "urls": [],
+   "labels": [
+    "Short"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "fri",
+   "date": "2026-11-06",
+   "key": "piece:7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "mind.the.gap",
+   "title": "Where an AI was built is starting to decide what it says no to: ask Claude, then a Chinese model, the same thing, and the answers split by w",
+   "stage": "live",
+   "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+   "item": null,
+   "primary": null,
+   "urls": [],
+   "labels": []
+  },
+  {
+   "week": "2026-11-09",
+   "day": "mon",
+   "date": "2026-11-09",
+   "key": "piece:b358e788-209f-427b-a84d-1f79a8ebb430",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "follow.the.money",
+   "title": "When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; Disney is bidding mil",
+   "stage": "live",
+   "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+   "item": null,
+   "primary": null,
+   "urls": [],
+   "labels": []
+  },
+  {
+   "week": "2026-11-09",
+   "day": "tue",
+   "date": "2026-11-10",
+   "key": "off-tue-shell",
+   "type": "post",
+   "kind": "meme",
+   "kind_label": "Meme",
+   "title": "Character.AI went bust. Here is who got what.",
+   "stage": "live",
+   "piece_id": null,
+   "item": "engine:2026-11-09:shell",
+   "primary": "https://techcrunch.com/2026/10/13/just-5-years-in-interactive-chatbot-platform-character-ai-files-for-bankruptcy/",
+   "urls": [
+    "https://techcrunch.com/2026/10/13/just-5-years-in-interactive-chatbot-platform-character-ai-files-for-bankruptcy/"
+   ],
+   "labels": [
+    "TechCrunch, 13 Oct 2026"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "tue",
+   "date": "2026-11-10",
+   "key": "off-tue-mcpskin",
+   "type": "post",
+   "kind": "voiceover",
+   "kind_label": "Voiceover short",
+   "title": "Your AI was reading the whole phone book to make one call.",
+   "stage": "approved",
+   "piece_id": null,
+   "item": "engine:2026-11-09:mcpskin",
+   "primary": "https://www.anthropic.com/engineering/code-execution-with-mcp",
+   "urls": [
+    "https://www.anthropic.com/engineering/code-execution-with-mcp"
+   ],
+   "labels": [
+    "Anthropic engineering, 4 Nov 2025"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "tue",
+   "date": "2026-11-10",
+   "key": "off-tue-homework",
+   "type": "post",
+   "kind": "meme",
+   "kind_label": "Meme",
+   "title": "Home Depot makes its AIs mark each other's homework.",
+   "stage": "live",
+   "piece_id": null,
+   "item": "engine:2026-11-09:homework",
+   "primary": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot",
+   "urls": [
+    "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+   ],
+   "labels": [
+    "VentureBeat, interview with Home Depot CIO Angie Brown"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "wed",
+   "date": "2026-11-11",
+   "key": "piece:36886e0b-4b32-473b-be72-b0aef31fccef",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "under.the.hood",
+   "title": "AI is already inside the songs people have on repeat, hidden in the credits. Movin' To The Sun started as a Suno demo, was rebuilt by HUGEL",
+   "stage": "live",
+   "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+   "item": null,
+   "primary": "https://edm.com/?p=271236",
+   "urls": [
+    "https://edm.com/?p=271236"
+   ],
+   "labels": [
+    "EDM.com, 26 Sep 2026; Official Charts; your research folder"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "thu",
+   "date": "2026-11-12",
+   "key": "off-thu-gitbroke",
+   "type": "post",
+   "kind": "explainer",
+   "kind_label": "Explainer",
+   "title": "Anthropic's AI wrote so much code Git could not keep up.",
+   "stage": "live",
+   "piece_id": null,
+   "item": "engine:2026-11-09:gitbroke",
+   "primary": "https://www.theregister.com/a/5302943",
+   "urls": [
+    "https://www.theregister.com/a/5302943"
+   ],
+   "labels": [
+    "The Register, Oct 2026 (Anthropic Scion)"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "date": "2026-11-13",
+   "key": "piece:f3fcd5e1-573e-4692-a413-db7c5823a10e",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "mind.the.gap",
+   "title": "Meta staff were ranked by AI use. They gamed it.",
+   "stage": "live",
+   "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+   "item": null,
+   "primary": "https://www.aboutamazon.com/news/company-news/amazon-software-engineer-role-guideline-ai",
+   "urls": [
+    "https://www.aboutamazon.com/news/company-news/amazon-software-engineer-role-guideline-ai"
+   ],
+   "labels": [
+    "Amazon's own post (undated; quoted 28 Oct 2026); The Register, 21 Oct 2026"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "date": "2026-11-13",
+   "key": "off-fri-beststicker",
+   "type": "post",
+   "kind": "explainer",
+   "kind_label": "Explainer",
+   "title": "Your AI thinks it's the best. Guess who told it.",
+   "stage": "scheduled",
+   "piece_id": null,
+   "item": "engine:2026-11-09:beststicker",
+   "primary": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot",
+   "urls": [
+    "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+   ],
+   "labels": [
+    "VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); GeekWire, 30 Mar 2026 (Microsoft Critique); NeurIPS 2024 study on AI judges; SEC auditor independence rules, Jan 2003"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "date": "2026-11-13",
+   "key": "off-fri-povteach",
+   "type": "post",
+   "kind": "meme",
+   "kind_label": "Meme",
+   "title": "POV: your AI agent using your computer without being set up properly by you",
+   "stage": "live",
+   "piece_id": null,
+   "item": "engine:2026-11-16:povteach",
+   "primary": null,
+   "urls": [],
+   "labels": [
+    "Your saved short (Geek Creative Agency), 3 Nov"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "sat",
+   "date": "2026-11-14",
+   "key": "off-sat-oldproof",
+   "type": "post",
+   "kind": "good_news",
+   "kind_label": "Good news",
+   "title": "AI found a mistake in a maths proof from 1986, its makers say.",
+   "stage": "live",
+   "piece_id": null,
+   "item": "engine:2026-11-09:oldproof",
+   "primary": "https://axiommath.ai/research/the-enormous-theorem-formalized/",
+   "urls": [
+    "https://axiommath.ai/research/the-enormous-theorem-formalized/"
+   ],
+   "labels": [
+    "Axiom, The enormous theorem formalized"
+   ]
+  }
+ ]
+}
