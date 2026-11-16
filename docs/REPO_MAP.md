@@ -133,6 +133,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/inspiration/candidates`
 - `/api/inspiration/cards`
 - `/api/inspiration/drive-scan`
+- `/api/inspiration/instagram-sheet`
 - `/api/inspiration/uses`
 - `/api/investigations/[run_id]/draft-check`
 - `/api/investigations/[run_id]/trace`
@@ -1073,7 +1074,10 @@ What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?
 - `function wordless(c: InspoCard): boolean`
 - `const FEED_DAYS`
 - `const CORRECTION_DAYS`
+- `const LOOKALIKE_FEED_DAYS`
 - `function buildFeed(rows: Row[])`
+- `const LOOKALIKE_FEED_MAX`
+- `function splitFeed(rows: Row[], feedSince: string)`
 - `function buildCorrections(rows: Row[])`
 - `function buildHindsight(rows: Row[])`
 
@@ -2618,6 +2622,7 @@ One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Rul
 - `function pressIncidents(week: string, id: string, body: Body, prior: MakingGates | null | undefined): Incident[]`
 - `function gateReport(week: string, id: string, body: Body, now: string)`
 - `function feelReport(week: string, id: string, body: Body, now: string)`
+- `function notesReport(week: string, id: string, body: Body, now: string)`
 - `function offdayReports(week: string, id: string, body: Body, now: string)`
 - `function scoreRow(week: string, id: string, body: Body, now: string)`
 - `async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null>`
@@ -2757,6 +2762,9 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function sampleUrl(layer: StyleLayerKey, id: string, samples: unknown = styleSamples): string | null`
 - `function sampleDrive(layer: StyleLayerKey, id: string, samples: unknown = styleSamples): { file_id: string; url: string…`
 - `function sampleFiles(samples: unknown = styleSamples): Set<string>`
+- `type StillLayerKey = StyleLayerKey | 'treatment'`
+- `function stillUrl(layer: StillLayerKey, id: string, samples: unknown = styleSamples): string | null`
+- `function stillFiles(samples: unknown = styleSamples): Set<string>`
 - `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, str…`
 - `interface StyleInputs`
 - `function dayStyle(i: StyleInputs): DayStyle`
@@ -2800,6 +2808,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `const STOPS`
 - `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done' | 'missed'`
 - `type Action`
+- `type PromptAction`
 - `interface DayView`
 - `interface ViewPost`
 - `type DayCore`
@@ -2880,12 +2889,18 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `const POST_PATH`
 - `const GOOD_NEWS_STORIES`
 - `const CLAUDE_LABEL`
+- `const CLAUDE_CODE_OPEN`
+- `const GROWTH_CODE_OPEN`
+- `const NOTES_HEADING`
 - `interface ModelStep`
 - `interface ModelSource`
 - `interface ModelStory`
 - `interface ModelRead`
 - `type ModelAction = Action`
 - `interface ModelItem`
+- `interface ModelRepeatOf`
+- `interface ModelRepeat`
+- `interface RecentOut`
 - `interface ModelIdea`
 - `interface ModelDay`
 - `interface WeekModel`
@@ -2896,8 +2911,14 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function kindLabel(kind: OffdayKind, supports: string | null): string`
 - `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
 - `function offdayHead(route: MakeRoute | null): string`
+- `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
 - `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
+- `function primaryUrl(raw: Body | null, fallback: unknown = null): string | null`
+- `function citesOf(raw: Body | null): { urls: string[]; parts: string[] }`
+- `function hookNorm(v: unknown): string | null`
+- `function repeatOf(own: { keys: string[]; week: string; date: string; url: string | null; hook: string | null; recurring…`
+- `function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'pieces'>, _days: DayView[], items: OffdayItem[]…`
 - `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
 - `function modelProblems(model: WeekModel, days: DayView[]): string[]`
 
@@ -3324,6 +3345,13 @@ What the Drive scan decides, with no Drive, no model and no database.
 ### `apps/control-plane/api/inspiration/drive-scan.ts`
 
 - `export default withContentRun('inspiration_scan', handler)`
+
+### `apps/control-plane/api/inspiration/instagram-sheet.ts`
+
+- `const INSTAGRAM_SHEET_ID`
+- `const XLSX_TYPE`
+- `const SHEET_MAX_BYTES`
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/inspiration/uses.ts`
 

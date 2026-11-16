@@ -29,6 +29,8 @@
   python scripts/ve.py sfx audition <piece> --cut <cut> --assets-dir <dir> --candidates <ids>   big-moment sounds for his ear
   python scripts/ve.py lab render --take <pinned take> --brand-dir <dir> | diff --against <dir> | verdict --module <id> --verdict <v> --said "<his words>" --on <date>
   python scripts/ve.py lab sample --layer motion|captions --module <id> --drive-id <ID> [--clip <the render>]   a sample for Pick a style
+  python scripts/ve.py lab stills [--only <looks>] [--take <pinned take> --brand-dir <dir>]   one 540x960 still per style
+  python scripts/ve.py lab still treatment|motion|captions <id> --drive <ID> [--file <the jpg>]   the still the board shows on hover
   python scripts/ve.py sfx approve --id <id> --words "<his words>" --on <date> --audition <ve>/sfx-audition.json | sfx stage --assets-dir <dir>
   python scripts/ve.py brief <piece> [--cut <cut>]   one brief per plate, with card fields; never dispatches
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
@@ -1236,13 +1238,37 @@ def cmd_lab(args) -> int:
     try:
         cfg = lab.config()
         out = Path(args.out) if args.out else lab.CACHE / lab.engine_id()
-        if args.action == 'render':
+
+        def render_looks():
             if not (args.take and args.brand_dir):
-                raise ValueError('render needs --take <the pinned recording> and --brand-dir <the brand marks>')
+                raise ValueError(f'{args.action} needs --take <the pinned recording> and --brand-dir <the brand marks>')
             assets = lab.stage(cfg, Path(args.take), Path(args.brand_dir), out)
             from velib.render import render
             manifest = lab.render(cfg, assets, lambda p, o: render(p, o, args.scale or cfg['scale']), out, args.only)
             print(f"ve lab: {len(manifest['looks'])} look(s) on engine {manifest['engine']} in {out}")
+            return manifest
+
+        if args.action == 'stills':
+            folder = lab.stills_dir(out)   # refuses a folder in the repository before anything renders
+            if args.take or args.brand_dir:
+                render_looks()
+            doc = lab.stills(out, args.only, cfg)
+            print(json.dumps(doc, indent=1))
+            print(f"ve lab: {len(doc['stills'])} still(s) at frame {doc['frame']} of the take in {folder}; look at each, "
+                  'file it in Drive, then ve lab still <layer> <id> --drive <its Drive id> --file <the jpg>')
+            return 0
+        if args.action == 'still':
+            if len(args.target) != 2 or not args.drive_id:
+                raise ValueError('still needs <layer> <id> (layer treatment, motion or captions), --drive <its file in Drive> '
+                                 'and, from the lab, --file <the jpg>')
+            layer, still_id = args.target
+            lab.record_still(layer, still_id, args.drive_id, Path(args.file) if args.file else None)
+            print(f've lab: the {layer} still of {still_id} is recorded (config/ve/style-samples.json stills; commit that file only)')
+            return 0
+        if args.target:
+            raise ValueError(f'{args.action} takes no names: {" ".join(args.target)}')
+        if args.action == 'render':
+            manifest = render_looks()
             from velib import pace
             for look in manifest['looks']:
                 if not look.get('same_as'):
@@ -2179,9 +2205,12 @@ def main() -> int:
     p.add_argument('--audition', help="the piece's sfx-audition.json he heard the sound in")
     p.set_defaults(fn=cmd_sfx)
     p = sub.add_parser('lab', help='every drawable style and caption look on one window of his pinned take, outside any piece')
-    p.add_argument('action', choices=('render', 'diff', 'record', 'verdict', 'sample'))
+    p.add_argument('action', choices=('render', 'diff', 'record', 'verdict', 'sample', 'stills', 'still'))
+    p.add_argument('target', nargs='*', metavar='NAME', help='still: the layer (treatment, motion or captions) and the id')
     p.add_argument('--take'); p.add_argument('--brand-dir'); p.add_argument('--out'); p.add_argument('--against')
-    p.add_argument('--layer', choices=('motion', 'captions')); p.add_argument('--drive-id'); p.add_argument('--clip')
+    p.add_argument('--layer', choices=('motion', 'captions'))
+    p.add_argument('--drive-id', '--drive', dest='drive_id', help='its file id in Drive'); p.add_argument('--clip')
+    p.add_argument('--file', help='still: the jpg filed in Drive (the lab\'s, for motion and captions)')
     p.add_argument('--scale', type=float); p.add_argument('--only', nargs='+')
     p.add_argument('--module'); p.add_argument('--verdict', choices=('picked', 'seen', 'not-for-us'))
     p.add_argument('--said', default=''); p.add_argument('--on')

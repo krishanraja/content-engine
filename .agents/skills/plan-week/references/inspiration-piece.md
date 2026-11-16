@@ -46,7 +46,10 @@ is held to, and it still waits for his Approve.
    and `source` `{label, url}`. The business-leader test, simple first then unpacked, follow.the.money shows the money.
    Then the gates in code: `python3 scripts/post-pack/copy_lint.py` and
    `node vendor/makeyourmindup/kill-list/kill-list.mjs` on the words (no em dashes, none of the killed phrases, no
-   "Not X, Y" in either order). Fix and check again until both pass.
+   "Not X, Y" in either order). Fix and check again until both pass. From the 23 Nov board the option also carries
+   `shape` (`"story"` with `dive`, or `"theme"` with three sourced `stories`), `aim` (`"utility"`, `"interest"` or
+   `"humour"`) and `funny`, its humorous angle in one plain line (Krish, 2026-11-16: "Everything should be tinged with a
+   humorous angle"); an idea from his tick needs no `lookalike` (the skill, step 1b).
 7. **Its day: the earliest open day it fits.** Walk `open_days` in order and take the first whose series' mandate the
    idea fits (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap); his words naming a day win.
    When no open publishing day fits, it is an off-day option on the earliest of Tuesday, Thursday or Saturday, written

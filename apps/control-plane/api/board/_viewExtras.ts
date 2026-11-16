@@ -53,7 +53,7 @@ export type PressAction = {
   words?: { path: string; ask: string; required: boolean }
   /** Contract 1.8.0: a choice he makes before the press, written at this dot path as the values he chose (several when
    *  multi). from_link: the option whose hosts the link names is chosen for him first, and he can change it. */
-  choose?: { path: string; ask: string; multi: boolean; required: boolean; from_link?: boolean; options: Array<{ value: string; label: string; hosts?: string[] }> }
+  choose?: { path: string; ask: string; multi: boolean; required: boolean; from_link?: boolean; options: Array<{ value: string; label: string; hosts?: string[]; still?: string; line?: string }> }
   /** Dot paths set to the press time (ISO). */
   stamp: string[]
   /** What the board says once it is saved. */
@@ -61,6 +61,9 @@ export type PressAction = {
   /** Contract 1.3.0: which of the five outcomes the press gives an idea, and where that sends it, said before he presses. */
   outcome?: Outcome
   goes?: string
+  /** Contract 1.17.0: what the board does once the press is saved: the prompt it opens (Open a production session
+   *  saves his approval of the story, then opens the production session). */
+  after?: import('./_view.js').PromptAction
 }
 
 export interface ViewOption {

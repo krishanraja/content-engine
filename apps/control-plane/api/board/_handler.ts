@@ -12,7 +12,7 @@ import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
-import { StyleError, needsMotion, sampleFiles, saveStyle, stylePick } from './_style.js'
+import { StyleError, needsMotion, sampleFiles, saveStyle, stillFiles, stylePick } from './_style.js'
 import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
 import { THUMB_OP, ThumbError, fileThumbLearning, saveThumbs, thumbDriveIds, thumbPick } from './_thumbs.js'
 import { LIVE_OP, recordLive } from './_itsLive.js'
@@ -273,7 +273,8 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (file) {
           let url: string | null
           try {
-            if (!sampleFiles().has(file)) {
+            // A style's still (contract 1.17.0, the stills_drive map) is served the same way as its sample.
+            if (!sampleFiles().has(file) && !stillFiles().has(file)) {
               const { manifest } = await signOffSources()
               if (!manifest) throw new BoardError(503, 'sign_offs_unavailable')
               if (!signOffFiles(manifest).has(file)) throw new BoardError(404, 'sample_not_found')

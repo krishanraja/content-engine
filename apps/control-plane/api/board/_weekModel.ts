@@ -1,11 +1,12 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
-import type { MoveSpec } from './_offdayItems.js'
-import type { PressAction, ViewOption } from './_viewExtras.js'
-import type { Action, DayView, LockToSign } from './_view.js'
+import type { MoveSpec, OffdayItem } from './_offdayItems.js'
+import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
+import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
 import { thumbsPress } from './_thumbs.js'
 import { makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
 import type { DayStyle, StyleLayer } from './_style.js'
+import { canonicalUrl, titleNorm } from '../_text.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
 //
@@ -72,6 +73,15 @@ export const POST_PATH = [
 export const GOOD_NEWS_STORIES = 5
 /** The one label every hand-off to a session wears. */
 export const CLAUDE_LABEL = 'Copy prompt for Claude'
+/** Where a prompt opens (contract 1.17.0): a new Claude Code session with the repository chosen and the prompt filled
+ *  in (claude.ai/code's own prefill, code.claude.com/docs/en/web-quickstart: it fills the box and he presses send). The
+ *  board builds the address from this; the view carries no link. */
+export const CLAUDE_CODE_OPEN = { app: 'claude_code', repository: 'krishanraja/content-engine' } as const
+export const GROWTH_CODE_OPEN = { app: 'claude_code', repository: 'krishanraja/growth-makeyourmindup' } as const
+/** The heading his own words go under at the end of a prompt (Ruling, Krish, 2026-11-16: "I should be able to provide
+ *  feedback or what I think the next steps are first, and then click the \"Copy to Claude\" button, and the prompt
+ *  incorporates that"). */
+export const NOTES_HEADING = "Krish's notes, in his own words (typed on the board just now). They come first: do what they ask before anything else."
 
 export interface ModelStep { key: string; label: string; state: 'done' | 'current' | 'todo'; when: string | null }
 export interface ModelSource { label: string; href: string | null }
@@ -122,7 +132,23 @@ export interface ModelItem {
   /** Good news: the stories in full, and how many it should hold. Null for any other kind. */
   stories: ModelStory[] | null
   stories_planned: number | null
+  /** Contract 1.17.0: the same story already went out or is already on its way (the same primary source, or the same
+   *  hook), said in one line; absent when it did not. */
+  repeat?: ModelRepeatOf | null
 }
+/** What an item or idea repeats: a piece or a post approved, scheduled or live in the 14 days before it. */
+export interface ModelRepeatOf { title: string; date: string; day: string; stage: 'live' | 'scheduled' | 'approved'; kind: 'piece' | 'post'; line: string }
+/** An idea that left the ideas board because it repeats something that went out (contract 1.17.0). */
+export interface ModelRepeat { doc_id: string; piece_id: string | null; day: PostedDay; date: string; title: string; of: ModelRepeatOf }
+/** One thing approved, scheduled or live, with its primary source and hook, that a later idea must not retell (Ruling,
+ *  Krish, 2026-11-16: "this week's Ideas Board needs to not contain mostly things we published last week"). */
+export interface RecentOut { keys: string[]; kind: 'piece' | 'post'; title: string; url: string | null; hook: string | null; date: string; day: string; stage: 'live' | 'scheduled' | 'approved'
+  /** The board (Monday) that offered it: only an earlier board's piece or post is ever a repeat. */
+  week: string
+  /** The weekly good news, whose hook is the same every week by design: never matched by its hook. */
+  recurring?: boolean
+  /** Every source it cites: canonical URLs, and the named sources of its label, one per ';' part, as words. */
+  cites?: { urls: string[]; parts: string[] } }
 /** An idea he has not answered, held or revised: on the ideas board only, with the presses that answer it. */
 export interface ModelIdea {
   doc_id: string
@@ -159,6 +185,8 @@ export interface WeekModel {
   post_path: Array<{ key: string; label: string }>
   days: ModelDay[]
   ideas: ModelIdea[]
+  /** Contract 1.17.0: the ideas that left the board because they retell something that went out. */
+  repeats?: ModelRepeat[]
 }
 
 /** What the model reads besides the view's days: the week, today, the week's plan and the pieces' rows. */
@@ -177,6 +205,8 @@ export interface ModelInputs {
   placedStyles?: Record<string, DayStyle>
   /** Each piece's lock on file and unsigned, by piece id (_view.ts locksToSign). */
   locksToSign?: Record<string, LockToSign>
+  /** Pieces and posts approved, scheduled or live from 14 days before the week to its end (_view.ts recentOut). */
+  recentOut?: RecentOut[]
 }
 
 /** The address of the live board on a week and day: where his typed approval was given. */
@@ -200,7 +230,10 @@ function layerPress(pieceId: string, style: DayStyle, layer: 'treatment' | 'moti
   const opts = L.options.filter(o => !o.rejected)
   if (!opts.length) return null
   const ordered = [...opts].sort((a, b) => Number(b.id === L.picked) - Number(a.id === L.picked) || Number(b.recommended) - Number(a.recommended))
-  const options = ordered.map(o => ({ value: o.id, label: `${o.name}${o.id === L.picked ? ' (picked)' : o.recommended ? ' (recommended)' : o.ready === false ? ' (not ready yet)' : ''}` }))
+  // Each option carries its one line and, once recorded, its still (contract 1.17.0), which the board shows when he
+  // hovers or picks it.
+  const options = ordered.map(o => ({ value: o.id, label: `${o.name}${o.id === L.picked ? ' (picked)' : o.recommended ? ' (recommended)' : o.ready === false ? ' (not ready yet)' : ''}`,
+    ...(o.line ? { line: cut(o.line, 240) } : {}), ...(o.still_url ? { still: o.still_url } : {}) }))
   const word = { treatment: 'the look', motion: 'the motion style', captions: 'the captions' }[layer]
   const op = layer === 'treatment' ? 'look' : 'style'
   const path = layer === 'treatment' ? 'production' : layer
@@ -328,18 +361,41 @@ export function offdayHead(route: MakeRoute | null): string {
     + `${route === 'still' ? ' and content-engine docs/CAROUSEL-STANDARD.md' : ''}; Growth (krishanraja/growth-makeyourmindup) posts it.\n\n`
 }
 
-/** The one Claude prompt for an item: what it is, where it stands, how it is made and how to report back to the board. */
-export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null): ModelAction {
+/** What the prompt says to do with the story, by where the piece is (Ruling, Krish, 2026-11-16: "Even though this piece is
+ *  locked, I should be able to tweak the narrative slightly in it by opening a session with Claude"). */
+export interface StoryState { approved: boolean; path?: string | null }
+function storyLines(story: StoryState | null | undefined): string {
+  if (!story) return ''
+  const file = story.path ? `The story is ${story.path}.` : 'The story is its narrative file in this week\'s docs/plans folder (narrative-lock-<day>.md, found by its piece_id line).'
+  return story.approved
+    ? `${file} Krish has approved it. If his notes below change the story (a new angle is a rewrite, not a patch), write the changed story into the same file and take his approval line off its end (a story changed under his approval is not the story he approved: making.py refuses it), so the board asks him to approve the new story. Otherwise take the next step.\n\n`
+    : `${file} Krish has not approved it yet. If his notes below ask for a change or a different angle, rewrite it to them, then tell him it is ready to approve on the board. If something in it is still open, settle it with him first.\n\n`
+}
+
+/** The one Claude prompt for an item: what it is, where it stands, how it is made and how to report back to the board.
+ *  Contract 1.17.0: it asks for his notes first (`notes`, saved as his comment on the day) and opens claude.ai/code with
+ *  the prompt filled in (`open`). */
+export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null): ModelAction {
   const what = it.piece_id ? `the ${DAY_WORD[it.day]} ${it.date} piece ${it.piece_id}` : `the ${DAY_WORD[it.day]} ${it.date} off-day post ${it.key} (${it.kind_label})`
   const growth = !it.piece_id
   const prompt = `You are picking up ${what} of the Make Your Mind Up content engine with no prior context: "${it.title}". `
     + `Where it stands: ${it.line}\n\n`
     + (growth
       ? offdayHead(route)
-      : 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then take the next step with Krish, one question at a time.\n\n')
+      : 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules. Work freely; when you need Krish, ask him the one question that changes the work most.\n\n')
+    + storyLines(story)
     + writeBack({ pieceId: it.piece_id, week, day: it.day, step })
-  return { kind: 'prompt', label: CLAUDE_LABEL, prompt }
+  const base = thoughtPress(it.day, stepAnchor(step))
+  const save: PressAction = { ...base, label: 'Your notes for Claude', done: 'Saved on the board, and in the prompt.',
+    body: { ...base.body, use: 'claude_notes', title: cut(it.title, 300), ...(it.piece_id ? { piece_id: it.piece_id } : { item: it.key }) },
+    words: { path: 'text', ask: 'Your notes for Claude', required: true } }
+  const action: PromptAction = { kind: 'prompt', label: CLAUDE_LABEL, prompt,
+    notes: { ask: 'Your notes for Claude: what to change, or what you think the next step is', heading: NOTES_HEADING, save },
+    open: { ...(growth && !route ? GROWTH_CODE_OPEN : CLAUDE_CODE_OPEN) } }
+  return action
 }
+/** A step as the comment anchor's last part: lower case letters, digits and dashes. */
+const stepAnchor = (step: string): string => (step.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'next')
 
 /** A press that does the thing: the engine's own route or a run on GitHub, never a page of the archive. */
 function doable(a: Action | undefined): boolean {
@@ -406,17 +462,27 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   // three wait in the read sheet, so he can pick before or after he signs the lock.
   const recorded = isDone('record') || isDone('cut') || out
   const picks = recorded || missed ? [] : lookPresses(d.piece_id, d.path?.style)
-  if (d.path?.current === 'look' && picks.length) return { ...base, line, next: picks[0] as Action, decision: true, others: picks.slice(1) }
+  // After his approval of the story the prompt stays beside the picks, so he can still change the story (Ruling, Krish,
+  // 2026-11-16).
+  const story = (approved: boolean, path: string | null = null): StoryState => ({ approved, path })
+  if (d.path?.current === 'look' && picks.length) {
+    return { ...base, line, next: picks[0] as Action, decision: true,
+      others: [itemPrompt(m.week, { ...base, line }, 'look', null, story(true)) as unknown as PressAction, ...picks.slice(1)] }
+  }
   // His "Signed." on the lock on file, one press, when the story is the step.
   const toSign = m.locksToSign?.[d.piece_id]
   if (d.path?.current === 'story' && toSign && !missed) {
-    const prompt = itemPrompt(m.week, { ...base, line }, 'story') as unknown as PressAction
+    const prompt = itemPrompt(m.week, { ...base, line }, 'story', null, story(false, toSign.path)) as unknown as PressAction
     return { ...base, read: { ...read, sources: [lockSource(toSign.path), ...read.sources] }, line, next: signPress(m.week, d.piece_id, toSign) as Action,
       decision: true, others: [prompt, ...picks] }
   }
   const lead = d.actions[0]
-  if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) return { ...base, line, next: lead, decision: false, others: picks }
-  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next'), decision: false, others: picks }
+  if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) {
+    const tweak = recorded || missed ? [] : [itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, isDone('story') ? story(true) : null) as unknown as PressAction]
+    return { ...base, line, next: lead, decision: false, others: [...tweak, ...picks] }
+  }
+  const signedStory = isDone('story') && !recorded ? story(true) : null
+  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, signedStory), decision: false, others: picks }
 }
 
 /** A piece his approval holds on a day that is not the day's own piece (moved there, or kept alongside). */
@@ -440,16 +506,17 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
     const signLine = `Approved for ${d.label}. Read the narrative lock and sign it, or say what to change.`
     return { ...base, read: { ...base.read, sources: [lockSource(toSign.path), ...base.read.sources] }, line: signLine,
       next: signPress(m.week, p.id, toSign) as Action, decision: true,
-      others: [itemPrompt(m.week, { ...base, line: signLine }, 'story') as unknown as PressAction, ...picks] }
+      others: [itemPrompt(m.week, { ...base, line: signLine }, 'story', null, { approved: false, path: toSign.path }) as unknown as PressAction, ...picks] }
   }
   // Signed and its look not picked: his production pick leads, as on a series day (Tue 17's piece is still a piece).
   const lookPicked = Boolean(m.placedStyles?.[p.id]?.treatment.picked)
   const lookPress = picks.find(a => a.op === 'look')
   if (branded && !lookPicked && lookPress) {
-    return { ...base, line: `Branded for ${d.label}. Pick the look: the recommended one, another, or fold in your inspiration.`, next: lookPress as Action, decision: true,
-      others: picks.filter(a => a !== lookPress) }
+    const brandedLine = `Branded for ${d.label}. Pick the look: the recommended one, another, or fold in your inspiration.`
+    return { ...base, line: brandedLine, next: lookPress as Action, decision: true,
+      others: [itemPrompt(m.week, { ...base, line: brandedLine }, 'look', null, { approved: true }) as unknown as PressAction, ...picks.filter(a => a !== lookPress)] }
   }
-  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, branded ? 'look' : 'next'), decision: false, others: picks }
+  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, branded ? 'look' : 'next', null, branded && !out && !missed ? { approved: true } : null), decision: false, others: picks }
 }
 
 /** An approved off-day post on the board: its kind, its path, where it is and its one next action. */
@@ -511,9 +578,95 @@ export function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ide
   return live ? `${live} of ${d.items.length} live. ${going}` : going
 }
 
+const DAY_MS = 86_400_000
+const daysBetween = (a: string, b: string): number => Math.round((Date.parse(`${a}T00:00:00Z`) - Date.parse(`${b}T00:00:00Z`)) / DAY_MS)
+const STAGE_WORD: Record<RecentOut['stage'], string> = { live: 'went out', scheduled: 'is scheduled', approved: 'was approved' }
+/** The canonical primary source of a plan option, or null: its own `source`, else the first of its `sources`. */
+export function primaryUrl(raw: Body | null, fallback: unknown = null): string | null {
+  const first = (v: unknown): string | null => (isObj(v) ? str(v.url) ?? str(v.href) : str(v))
+  const list = raw && Array.isArray(raw.sources) ? raw.sources : []
+  const url = first(raw?.source) ?? first(raw?.source_url) ?? (list.length ? first(list[0]) : null) ?? first(fallback)
+  return url && /^https?:\/\//i.test(url) ? canonicalUrl(url) : null
+}
+/** Every source an option cites: the canonical URLs anywhere in its source fields, and its label's named sources, one per
+ *  ';' part, as words (dates and all). Two options citing two or more of the same named sources tell the same story
+ *  (Tue 17's "Why does Microsoft get OpenAI's rival to check OpenAI's work?" cited three of the five sources of Fri 13's
+ *  "Your AI thinks it's the best"). */
+export function citesOf(raw: Body | null): { urls: string[]; parts: string[] } {
+  const urls = new Set<string>(), parts = new Set<string>()
+  const take = (v: unknown) => {
+    if (isObj(v)) { take(v.url); take(v.href); take(v.label); return }
+    const t = str(v)
+    if (!t) return
+    for (const m of t.match(/https?:\/\/[^\s"')<>]+/gi) || []) { const c = canonicalUrl(m); if (c) urls.add(c) }
+    for (const part of t.replace(/https?:\/\/\S+/gi, ' ').split(';')) { const w = titleNorm(part); if (w.split(' ').length >= 3) parts.add(w) }
+  }
+  take(raw?.source); take(raw?.source_url)
+  if (raw && Array.isArray(raw.sources)) raw.sources.forEach(take)
+  return { urls: [...urls], parts: [...parts] }
+}
+/** A hook as words only, for an exact match; null when it is too short to mean anything. */
+export function hookNorm(v: unknown): string | null {
+  const s = titleNorm(str(v) ?? '')
+  return s.split(' ').length >= 4 ? s : null
+}
+/** The earlier thing an item or idea retells, or null. Only a piece or post an earlier board offered counts (a story he
+ *  already chose), dated from 14 days before it to the end of its own week; never itself (an item carried into this week
+ *  is matched by its key). Retelling is the same primary source, the same hook (never for the weekly good news, whose
+ *  hook is the same every week by design), or two or more named sources in common. The line says which. */
+export function repeatOf(own: { keys: string[]; week: string; date: string; url: string | null; hook: string | null; recurring?: boolean; cites?: { urls: string[]; parts: string[] } }, recent: RecentOut[]): ModelRepeatOf | null {
+  const why = (r: RecentOut): string | null => {
+    if (own.url && (r.url === own.url || (r.cites?.urls || []).includes(own.url))) return 'Same source as'
+    if (r.url && (own.cites?.urls || []).includes(r.url)) return 'Same source as'
+    if (own.hook && r.hook === own.hook && !own.recurring && !r.recurring) return 'Same hook as'
+    const mine = new Set(own.cites?.parts || [])
+    const shared = (r.cites?.parts || []).filter(x => mine.has(x)).length
+    return shared >= 2 ? `Shares ${shared} sources with` : null
+  }
+  const end = shiftDays(own.week, 6)
+  const hits = recent.filter(r => !r.keys.some(k => own.keys.includes(k)) && r.week < own.week && daysBetween(own.date, r.date) <= 14 && r.date <= end)
+    .map(r => ({ r, how: why(r) })).filter((x): x is { r: RecentOut; how: string } => Boolean(x.how))
+    .sort((a, b) => ['live', 'scheduled', 'approved'].indexOf(a.r.stage) - ['live', 'scheduled', 'approved'].indexOf(b.r.stage) || b.r.date.localeCompare(a.r.date))
+  const hit = hits[0]
+  if (!hit) return null
+  const { r } = hit
+  const when = new Date(`${r.date}T00:00:00Z`).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
+  return { title: cut(r.title, 200), date: r.date, day: r.day, stage: r.stage, kind: r.kind,
+    line: `${hit.how} "${cut(r.title, 120).replace(/[.\s]+$/, '')}", which ${STAGE_WORD[r.stage]} on ${when}.` }
+}
+
+/** What earlier boards put out or on its way, from 14 days before the week to its end, for the repeat check: every
+ *  approved off-day item an earlier board offered (its stage from Growth's posting record) and the series pieces of the
+ *  14 days before the week (content_ideas rows the view reads). This week's own board is never its own repeat: a twin
+ *  on it is the Sunday run's to refuse (board_feed.py gate). Pure. */
+export function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'pieces'>, _days: DayView[], items: OffdayItem[] | null, pastPieces: Body[]): RecentOut[] {
+  const from = shiftDays(m.week, -14), to = shiftDays(m.week, 6)
+  const out: RecentOut[] = []
+  for (const it of items || []) {
+    const board = it.origin_week || it.week || ''
+    if (it.state !== 'approved' || !it.date || it.date < from || it.date > to || !board || board >= m.week) continue
+    const stage: RecentOut['stage'] = it.posts.some(p => p.state === 'live') ? 'live' : it.posts.some(p => p.state === 'scheduled') ? 'scheduled' : 'approved'
+    const raw = isObj(it.option) && Object.keys(it.option).length ? it.option : rawOption(m as ModelInputs, it.day || '', it.option_id)
+    out.push({ keys: [it.item, ...(it.doc ? [`${board}:${it.doc}`] : [])], kind: 'post', title: cut(raw?.hook ?? raw?.title ?? raw?.copy ?? it.option_id, 200),
+      url: primaryUrl(raw) ?? primaryUrl(rawOption(m as ModelInputs, it.day || '', it.option_id)), hook: hookNorm(raw?.hook ?? raw?.title), date: it.date, day: it.day || '', stage,
+      week: board, recurring: offdayKind(raw || {}).kind === 'good_news', cites: citesOf(raw) })
+  }
+  for (const r of pastPieces) {
+    const date = str(r.scheduled_for)?.slice(0, 10)
+    if (!date || date < from || date >= m.week || r.buried_at) continue
+    const at = new Date(`${date}T00:00:00Z`)
+    const day = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][at.getUTCDay()]
+    out.push({ keys: [`piece:${String(r.id).toLowerCase()}`], kind: 'piece', title: cut(r.idea ?? r.thesis, 200),
+      url: str(r.canonical_url) ?? primaryUrl(null, r.source_url), hook: hookNorm(r.idea), date, day,
+      stage: r.state === 'published' ? 'live' : 'approved', week: shiftDays(date, -((at.getUTCDay() + 6) % 7)) })
+  }
+  return out
+}
+
 /** The week model from the view's days (already gated and staged from the records). Pure. */
 export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
   const ideas: ModelIdea[] = []
+  const ideaRepeats = new Map<string, ModelRepeatOf>()
   const out: ModelDay[] = days.map(d => {
     const items: ModelItem[] = []
     const piece = pieceItem(m, d)
@@ -528,7 +681,14 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
       const offday = o.doc_id.startsWith('off-')
       if (offday && o.status === 'approved' && o.outcome?.id === 'approved') { items.push(postItem(m, d, o)); continue }
       const why = ideaLine(o)
-      if (why && (offday || /^(mon|wed|fri)-\d+$/.test(o.doc_id))) ideas.push(ideaOf(m, d, o, why))
+      if (why && (offday || /^(mon|wed|fri)-\d+$/.test(o.doc_id))) {
+        const idea = ideaOf(m, d, o, why)
+        const raw = rawOption(m, d.day, o.id)
+        const rep = repeatOf({ keys: [`${m.week}:${o.doc_id}`, ...(o.item?.key ? [o.item.key] : []), ...(idea.piece_id ? [`piece:${idea.piece_id}`] : [])], week: m.week, date: d.date,
+          url: primaryUrl(raw, o.source), hook: hookNorm(raw?.hook ?? o.title), recurring: idea.kind === 'good_news', cites: citesOf(raw) }, m.recentOut || [])
+        if (rep) ideaRepeats.set(o.doc_id, rep)
+        ideas.push(idea)
+      }
     }
     for (const h of (m.heldPieces || []).filter(x => x.day === d.day)) {
       const id = String(h.piece.id).toLowerCase()
@@ -549,7 +709,24 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
   // A piece his approval already holds on a day of the week is never also an idea elsewhere in it (Fri 20's "Voters just
   // said no to AI's power bill" still waited on his answer after he moved that piece to Tue 17 on 13 Nov).
   const onDay = new Set(out.flatMap(md => md.items.map(it => it.piece_id).filter((x): x is string => Boolean(x))))
-  const waiting = ideas.filter(i => i.date >= m.today && !goneOut.has(twinOf.get(i.doc_id) ?? '') && !(i.piece_id && onDay.has(i.piece_id)))
+  // An idea that retells something already approved, scheduled or live leaves the board too, said once in `repeats`
+  // (contract 1.17.0; Ruling, Krish, 2026-11-16): on 16 Nov four of the week's options retold last week's posts.
+  const recent = m.recentOut || []
+  const repeats: ModelRepeat[] = []
+  for (const md of out) for (const it of md.items) {
+    if (it.stage.key === 'live') continue
+    const raw = it.piece_id ? rawOption(m, md.day, it.piece_id) : rawOption(m, md.day, it.key.replace(/^off-[a-z]{3}-/, ''))
+    const row = it.piece_id ? m.pieces.find(x => String(x.id).toLowerCase() === it.piece_id) ?? null : null
+    const rep = repeatOf({ keys: [`${m.week}:${it.key}`, ...(it.item ? [it.item] : []), ...(it.piece_id ? [`piece:${it.piece_id}`] : [])], week: m.week, date: it.date,
+      url: primaryUrl(raw, row?.source_url), hook: hookNorm(raw?.hook ?? it.title), recurring: it.kind === 'good_news', cites: citesOf(raw) }, recent)
+    if (rep) it.repeat = rep
+  }
+  const fresh = ideas.filter(i => {
+    const rep = ideaRepeats.get(i.doc_id) ?? null
+    if (rep && i.date >= m.today) repeats.push({ doc_id: i.doc_id, piece_id: i.piece_id, day: i.day, date: i.date, title: i.title, of: rep })
+    return !rep
+  })
+  const waiting = fresh.filter(i => i.date >= m.today && !goneOut.has(twinOf.get(i.doc_id) ?? '') && !(i.piece_id && onDay.has(i.piece_id)))
   if (waiting.length !== ideas.length) {
     for (const md of out) {
       md.ideas = waiting.filter(x => x.day === md.day).length
@@ -563,8 +740,10 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
     post_path: POST_PATH.map(s => ({ key: s.key, label: s.label })),
     days: out,
     ideas: waiting,
+    repeats,
   }
 }
+const shiftDays = (ymd: string, n: number): string => new Date(Date.parse(`${ymd}T00:00:00Z`) + n * DAY_MS).toISOString().slice(0, 10)
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 function ideaOf(m: ModelInputs, d: DayView, o: ViewOption, w: { why: ModelIdea['why']; line: string }): ModelIdea {

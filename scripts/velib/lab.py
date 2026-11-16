@@ -15,6 +15,11 @@ footage and saved before a reel uses it).
            when --only names it, so the regression reel never grows by itself
   sample   records one rendered look, filed in his Drive, as the sample Pick a style shows on the board
            (config/ve/style-samples.json; view contract 1.16.0)
+  stills   one 540x960 JPEG per drawable style and caption style the lab rendered, all cut at one frame of the window
+           (STILL_FRAME), into .cache, with a manifest (Krish, 16 Nov 2026: "hover over the captions, look, and motion
+           style and see a templated screenshot of what it might look like. No need for a video, just a still.")
+  still    records one still, filed in his Drive, as the picture the board shows on hover (style-samples.json stills;
+           a look's still comes from a design-lock key frame or a Codex plate, not the lab)
   reel     one mp4: a title card then each look; and one sheet of sampled frames
   diff     every look against the last lab render on another engine (velib.styles.difference): the house must not move
   verdict  his words on a look, through creative_direction.style_verdict with context lab: a lab pick makes a style
@@ -46,6 +51,19 @@ STUDIO = ROOT / 'config' / 'studio.json'
 TITLE_S = 1.0
 REEL_W, REEL_H = 540, 960
 TITLE_PX = 40
+STILL_LAYERS = ('treatment', 'motion', 'captions')   # the board's three pickers: look, motion style, captions
+STILL_W, STILL_H = 540, 960   # the 9:16 frame at the lab's scale (0.5 of 1080x1920)
+STILL_SLACK = 8               # px a recorded still may differ from 540x960 either way (a plate cropped to 9:16)
+STILL_QUALITY = 3             # ffmpeg -q:v for the JPEG: 2 is the best, 31 the worst
+# The one frame every still is cut at, on the pinned short cut's own clock (config/ve/lab.json: window 315 to 555), so
+# every still shows the same moment and differs only by its style. Frame 445, 54% into the window, not its 60% point
+# (459, where the "Google" page is one frame old and the Amazon scribble has just begun to leave): the "groceries,"
+# caption page (420 to 458) has stood for 25 frames, so every caption style has finished its entrance; the proof beat
+# (366 to 504) is mid-way, the logo card lit since 402 and the Amazon scribble drawn since 412 (10 frames to draw), so
+# every motion style's device is on screen and settled; nothing changes until 458 and no cut is near (366, 504).
+# A new take or window needs a new frame: still_frame refuses one outside the window.
+STILL_FRAME = 445
+STILLS_MANIFEST = 'stills.json'
 
 
 def config(path: Path = LAB) -> dict:
@@ -343,6 +361,155 @@ def record_sample(layer: str, style_id: str, drive_id: str, clip: Path | None = 
     doc.setdefault(layer, {})[style_id] = f'{SAMPLE_PATH}{drive_id}'
     doc.setdefault('drive', {}).setdefault(layer, {})[style_id] = drive_id
     (doc.get('waiting') or {}).get(layer, {}).pop(style_id, None)
+    write_json(path, doc)
+    return doc
+
+
+def still_frame(cfg: dict) -> int:
+    """The frame of the window's clip every still is cut at: STILL_FRAME on the take's own clock, less the window's
+    start (the lab's clip begins at the window's first frame)."""
+    start, end = cfg['window']
+    if not start <= STILL_FRAME < end:
+        raise ValueError(f'the still frame {STILL_FRAME} is outside the lab window {start} to {end}: choose another '
+                         '(velib/lab.py STILL_FRAME)')
+    return STILL_FRAME - start
+
+
+def still_target(look: dict) -> tuple[str, str] | None:
+    """(layer, id) a lab look's still is recorded under: a drawable style by its motion id, a caption style
+    (theme-<id>) by its caption id. The house look and the caption builds have none."""
+    if look.get('kind') == 'style':
+        return 'motion', look['module']
+    if look.get('kind') == 'caption_theme':
+        return 'captions', look['theme']
+    return None
+
+
+def stills_dir(out: Path) -> Path:
+    """Where the stills of a lab folder go: <out>/stills, under .cache when it is inside the repository, never in it."""
+    folder = (Path(out) / 'stills').resolve()
+    root = ROOT.resolve()
+    if folder.is_relative_to(root) and not folder.is_relative_to(root / '.cache'):
+        raise ValueError(f'{folder}: stills go under .cache, never in the repository (no media is committed)')
+    return folder
+
+
+def jpeg_size(path: Path) -> tuple[int, int] | None:
+    """(width, height) of a JPEG from its header (quick-edit/archive.image_size, no image library), or None when the
+    file is not a JPEG."""
+    sys.path.insert(0, str(ROOT / 'scripts' / 'quick-edit'))
+    import archive  # noqa: PLC0415
+    try:
+        with open(path, 'rb') as f:
+            if f.read(2) != b'\xff\xd8':
+                return None
+    except OSError:
+        return None
+    return archive.image_size(path)
+
+
+def grab(clip: Path, frame: int, target: Path) -> Path:
+    """One frame of a clip, chosen by its number (never by a timestamp), as a 540x960 JPEG."""
+    target = Path(target)
+    target.unlink(missing_ok=True)
+    pad = f'scale={STILL_W}:{STILL_H}:force_original_aspect_ratio=decrease,pad={STILL_W}:{STILL_H}:(ow-iw)/2:(oh-ih)/2,setsar=1'
+    done = subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-y', '-i', str(clip), '-vf', f'select=eq(n\\,{frame}),{pad}',
+                           '-frames:v', '1', '-q:v', str(STILL_QUALITY), str(target)], capture_output=True, text=True, errors='replace')
+    if done.returncode or not target.is_file() or target.stat().st_size == 0:
+        target.unlink(missing_ok=True)
+        raise ValueError(f'{clip} gave no frame {frame}' + (f': {done.stderr.strip()[-300:]}' if done.stderr.strip() else ''))
+    return target
+
+
+def stills(out: Path, only: list[str] | None = None, cfg: dict | None = None, grab_fn=grab) -> dict:
+    """One still per drawable style and caption style the lab rendered in out, every one cut at the same frame
+    (STILL_FRAME), as <out>/stills/<layer>-<id>.jpg, with stills.json beside them; returns that manifest. --only
+    narrows it to the looks it names. Nothing is filed or recorded: that is ve lab still, after he has seen them."""
+    cfg = cfg or config()
+    out = Path(out)
+    if not (out / 'manifest.json').is_file():
+        raise ValueError(f'no lab render in {out}: run ve lab render first, or pass --take and --brand-dir')
+    manifest = load_json(out / 'manifest.json')
+    if (manifest.get('take_sha256'), manifest.get('cut'), manifest.get('window')) != (cfg['take']['sha256'], cfg['cut'], cfg['window']):
+        raise ValueError(f'{out} is not a render of the pinned take\'s window (config/ve/lab.json): the still frame is chosen for it')
+    frame = still_frame(cfg)
+    rendered = {look['id'] for look in manifest['looks']}
+    missing = [look_id for look_id in only or [] if look_id not in rendered]
+    if missing:
+        raise ValueError(f'{out} has no render of {", ".join(missing)}: render it first (ve lab render --only)')
+    folder = stills_dir(out)
+    folder.mkdir(parents=True, exist_ok=True)
+    rows = []
+    for look in manifest['looks']:
+        target = still_target(look)
+        if not target or (only and look['id'] not in only):
+            continue
+        layer, still_id = target
+        clip = out / look['file']
+        if sha256_file(clip) != look.get('sha256'):
+            raise ValueError(f'{clip} is not the render its manifest names')
+        jpg = grab_fn(clip, frame, folder / f'{layer}-{still_id}.jpg')
+        size = jpeg_size(jpg)
+        if size != (STILL_W, STILL_H):
+            raise ValueError(f'{jpg} is {size or "not a JPEG"}, not {STILL_W}x{STILL_H}')
+        rows.append({'id': still_id, 'layer': layer, 'path': Path(jpg).as_posix(), 'sha256': sha256_file(jpg),
+                     'width': size[0], 'height': size[1], 'look': look['id'], 'clip_sha256': look['sha256']})
+    if not rows:
+        raise ValueError(f'no drawable style or caption style rendered in {out} to cut a still from')
+    doc = {'schema': 've-lab-stills/1', 'engine': manifest['engine'], 'take_sha256': manifest['take_sha256'],
+           'cut': manifest['cut'], 'window': manifest['window'], 'frame': STILL_FRAME, 'clip_frame': frame, 'stills': rows}
+    write_json(folder / STILLS_MANIFEST, doc)
+    return doc
+
+
+def treatments() -> list[str]:
+    """The looks the board's Look picker offers (config/style-references.json formats.production), in its order."""
+    sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+    import creative_direction  # noqa: PLC0415
+    return list(creative_direction.bank()[2])
+
+
+def record_still(layer: str, still_id: str, drive_id: str, file: Path | None = None, path: Path = STYLE_SAMPLES) -> dict:
+    """One still, filed in his Drive, recorded as the picture the board shows when he hovers a look, a motion style or
+    a caption style: its value the same Drive file route as a sample (/api/board/sign-offs?file=<drive id>), its Drive id
+    in stills_drive, by layer. A motion still is a drawable style's (never one whose device is not built); a caption
+    still is a caption style's; a look's (treatment) comes from a design-lock key frame or a Codex plate, not the lab.
+    With file, it must be a JPEG of about 540x960 and, for motion and captions, the lab's still of that style (stills.json
+    beside it). It writes only config/ve/style-samples.json; filing in Drive is the session's (docs/DRIVE.md)."""
+    if layer not in STILL_LAYERS:
+        raise ValueError(f'the layer is {", ".join(STILL_LAYERS[:-1])} or {STILL_LAYERS[-1]}')
+    if not SAMPLE_DRIVE_ID.match(str(drive_id or '')):
+        raise ValueError(f'"{drive_id}" is not a Drive file id (the id in drive.google.com/file/d/<id>/view)')
+    if layer == 'treatment' and still_id not in treatments():
+        raise ValueError(f'{still_id} is not a look (config/style-references.json formats.production)')
+    if layer == 'motion' and still_id not in {look['id'] for look in looks(config()) if look['kind'] == 'style'}:
+        sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+        import creative_direction  # noqa: PLC0415
+        module = creative_direction.motion_modules().get(still_id) or {}
+        if 'needs_device' in (module.get('ve_route') or []):
+            raise ValueError(f'{still_id} needs a device the lab cannot draw yet (ve_route needs_device): it has no still')
+        raise ValueError(f'{still_id} is not a motion style the lab draws')
+    if layer == 'captions' and still_id not in caption_themes():
+        raise ValueError(f'{still_id} is not a caption style (config/caption-themes.json)')
+    # A motion or caption still is always the lab's own frame, checked against stills.json: never recorded blind.
+    if file is None and layer in ('motion', 'captions'):
+        raise ValueError(f'a {layer} still is recorded with --file, the lab\'s still of it (ve lab stills), so it is checked')
+    if file is not None:
+        file = Path(file)
+        size = jpeg_size(file)
+        if size is None:
+            raise ValueError(f'{file} is not a JPEG')
+        if abs(size[0] - STILL_W) > STILL_SLACK or abs(size[1] - STILL_H) > STILL_SLACK:
+            raise ValueError(f'{file} is {size[0]}x{size[1]}, not a {STILL_W}x{STILL_H} still')
+        if layer in ('motion', 'captions'):
+            beside = file.parent / STILLS_MANIFEST
+            rows = (load_json(beside).get('stills') or []) if beside.is_file() else []
+            row = next((r for r in rows if r.get('layer') == layer and r.get('id') == still_id), None)
+            if not row or Path(str(row.get('path'))).name != file.name or sha256_file(file) != row.get('sha256'):
+                raise ValueError(f'{file} is not the lab\'s still of {layer} {still_id} ({STILLS_MANIFEST} beside it names another file)')
+    doc = load_json(path)
+    doc.setdefault('stills', {}).setdefault(layer, {})[still_id] = f'{SAMPLE_PATH}{drive_id}'
+    doc.setdefault('stills_drive', {}).setdefault(layer, {})[still_id] = drive_id
     write_json(path, doc)
     return doc
 
