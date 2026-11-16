@@ -52,6 +52,12 @@ what kind of thing doesn't fly with me, rather than implement incredibly specifi
   question. Each carries `research_prompt` (step 2a) and `source_tag` (`his_ask`, `his_card`, `his_idea`, `his_press`,
   `his_queue`, `inspo_card`, `newsletter`, `instagram`, `creator`, `engine_research`, `radar` or `trade_press`), and
   every off-day option a `source_tag`.
+- **Nothing that went out is offered again, every option has its shape, and a re-run of some days keeps every
+  answered option** (Krish, 2026-11-16: "this week's Ideas Board needs to not contain mostly things we published last
+  week"). `gate` fails on a repeat (code `repeat`: a recent post's primary source or words, an earlier board's option he
+  did not send back, the same evidence as a post, two options on one story) and, from the 23 Nov board, on an option
+  without `shape`, `aim`, `funny` and `lookalike` (code `aim`); `board_feed.py keep` holds a `days` re-run to the open
+  options. The rules and the fields: `references/lookalike.md`.
 - **The scorecard.** After his presses, `python3 scripts/post-pack/board_feed.py scorecard <Monday>` counts his real
   presses on that board, each count beside its written rule and each label beside his exact words, and writes
   `docs/plans/<Monday>-week/scorecard.json` (ids, labels and counts only). Read it into the triage readback (step 8),
