@@ -497,7 +497,7 @@ def goodnews_problems(ideas, sources, today=None):
             stories = o.get('stories') or []
             if today < due and not stories:
                 continue
-            bad = week_plan.story_problems(stories)
+            bad = week_plan.story_problems(stories, o.get('stories_short'))
             if bad:
                 out += [f'{label}: stories {p} (due {due.isoformat()})' for p in bad]
                 continue
