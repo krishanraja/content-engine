@@ -841,10 +841,455 @@ def mix_of(stories):
     return ', '.join(f'{n} {k}' for k, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0])))
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+# Repeats: what went out, or is on its way, is never offered again (Krish, 2026-11-16, of the 16 Nov board: "this
+# week's Ideas Board needs to not contain mostly things we published last week").
+#
+# Measured on that board: its Friday option on the Axiom proof was Saturday 14's live carousel (one Axiom page), its
+# Tuesday burntokens was Friday 13's live piece (one Amazon page), frenemies and ownref were Friday 13's beststicker
+# again (the same Home Depot interview, Microsoft's Critique and the NeurIPS study), and five stories sat on the board
+# twice, once as a piece and once as an off day. The run plans eight days ahead, and the old check compared ids only.
+# So an option is a repeat when, against the posts on the last three weeks' boards (sources.json recent_posts, read
+# from each week's live board model: every piece and every post he approved, made, scheduled or live):
+#   (a) its primary source is a post's primary source (the same page, canonical: host without www, no tracking
+#       parameters, no fragment, no trailing slash);
+#   (b) its hook or headline is a post's title, or a recent piece's idea, word for word (lower case, punctuation off);
+#   (c) it re-offers an option id from an earlier board that he did not send back (File for later, Save as a trend,
+#       Improve) and that is not one of his own open ideas;
+#   (d) its primary source is another option's on the same board, unless one of them supports that day's approved
+#       piece (`supports`: a carousel that carries the piece further);
+#   (e) it cites two or more of the same works as one post (its whole evidence is that post's).
+# Two posts may still cite one article (docs/PUBLISH_BOARDS.md, "One post, one item"): only the primary source counts
+# in (a) and (d), and (e) needs two works in common.
+
+REPEAT_FROM = '2026-11-23'  # the first board gathered with recent_posts: from it, a gather without them fails the gate
+EVIDENCE_MIN = 2
+TRACKING = re.compile(r'^(?:utm_.*|fbclid|gclid|dclid|msclkid|mc_cid|mc_eid|igshid|igsh|si|ref|ref_src|ref_url|cmpid|ocid|'
+                      r'mkt_tok|_hsenc|_hsmi|guccounter|guce_referrer|guce_referrer_sig|smid|sh)$', re.I)
+
+
+def canon_url(url):
+    """A page as compared: host in lower case without www, the path without its trailing slash, the query without
+    tracking parameters, no fragment and no scheme. None when it is not a web address."""
+    from urllib.parse import urlsplit, parse_qsl, urlencode
+    s = str(url or '').strip()
+    if not re.match(r'^https?://', s, re.I):
+        return None
+    try:
+        p = urlsplit(s)
+        host = (p.hostname or '').lower()
+    except ValueError:
+        return None
+    if host.startswith('www.'):
+        host = host[4:]
+    if not host:
+        return None
+    query = [(k, v) for k, v in parse_qsl(p.query, keep_blank_values=True) if not TRACKING.match(k)]
+    return host + p.path.rstrip('/') + ('?' + urlencode(query) if query else '')
+
+
+def text_key(text):
+    """Words as a hook is compared: lower case, every run of anything but a to z and 0 to 9 one space (the same rule
+    as one post's hook key, _onePost.ts hookWords). None under 12 characters: too plain to name one post."""
+    w = re.sub(r'[^a-z0-9]+', ' ', str(text or '').replace('’', "'").lower()).strip()
+    return w if len(w) >= 12 else None
+
+
+def source_of(o):
+    """{label, url} of an option's primary source: its `source`, else the first of its `sources`, else its first
+    story's."""
+    src = o.get('source') if isinstance(o, dict) else None
+    if isinstance(src, dict) and (src.get('url') or src.get('href')):
+        return {'label': str(src.get('label') or ''), 'url': src.get('url') or src.get('href')}
+    for s in (o.get('sources') or []) if isinstance(o, dict) else []:
+        if isinstance(s, dict) and (s.get('url') or s.get('href')):
+            return {'label': str(s.get('label') or ''), 'url': s.get('url') or s.get('href')}
+    for st in (o.get('stories') or []) if isinstance(o, dict) else []:
+        s = st.get('source') if isinstance(st, dict) else None
+        if isinstance(s, dict) and s.get('url'):
+            return {'label': str(s.get('label') or ''), 'url': s['url']}
+    if isinstance(src, dict):
+        return {'label': str(src.get('label') or ''), 'url': None}
+    if isinstance(src, str):
+        m = re.search(r'https?://\S+', src)
+        return {'label': src, 'url': m.group(0) if m else None}
+    return {'label': '', 'url': None}
+
+
+def primary_url(o):
+    return canon_url(source_of(o).get('url'))
+
+
+def citations(labels):
+    """The works some source labels cite: each label cut at its semicolons."""
+    return [c.strip() for lab in labels or [] for c in str(lab or '').split(';') if c and c.strip()]
+
+
+def option_citations(o):
+    labels = [source_of(o).get('label')] + [s.get('label') for s in (o.get('sources') or []) if isinstance(s, dict)]
+    return citations(labels)
+
+
+CITE_PLAIN = {'own', 'post', 'study', 'report', 'blog', 'news', 'newsroom', 'research', 'interview', 'video', 'page', 'paper',
+              'press', 'release', 'article', 'official', 'podcast', 'survey', 'filing', 'quoting', 'quoted', 'undated', 'others',
+              'also', 'your', 'saved', 'folder'}
+MONTH_YEAR = re.compile(r'\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(19\d\d|20\d\d)\b')
+
+
+def work_marks(citation):
+    """What names one cited work: its proper names (outlet, company, venue, author, in lower case) and its dates (days,
+    months and years)."""
+    text = str(citation or '')
+    days = set(dates_in(text))
+    months = {f'{y}-{MONTHS[m.lower()]:02d}' for m, y in MONTH_YEAR.findall(text)} | {d[:7] for d in days}
+    years = set(re.findall(r'\b(?:19|20)\d\d\b', text))
+    tokens = set()
+    for w in re.findall(r"[A-Z][A-Za-z0-9&]*(?:['’][A-Za-z]+)?", text):
+        w = re.sub(r"['’]s$", '', w).lower()
+        if len(w) >= 3 and w not in STOP and w not in CITE_PLAIN and not w.isdigit():
+            tokens.add(w)
+    return {'tokens': tokens, 'days': days, 'months': months, 'years': years}
+
+
+def same_work(a, b):
+    """Whether two citations name one work: a name in common, and their dates agree. Two exact days decide alone; a day
+    beside a month only, or no dates beside a shared year, needs two names in common or the same year."""
+    shared = a['tokens'] & b['tokens']
+    if not shared:
+        return False
+    if a['days'] and b['days']:
+        return bool(a['days'] & b['days'])
+    if a['months'] and b['months'] and not a['months'] & b['months']:
+        return False
+    if a['years'] and b['years'] and not a['years'] & b['years']:
+        return False
+    if a['days'] or b['days']:
+        return len(shared) >= 2
+    return len(shared) >= 2 or bool(a['years'] & b['years'])
+
+
+def shared_works(ours, theirs):
+    """The works two lists of citations have in common, one to one: [(ours, theirs)]."""
+    a = [(c, work_marks(c)) for c in ours]
+    b = [(c, work_marks(c)) for c in theirs]
+    used, out = set(), []
+    for ca, ma in a:
+        for n, (cb, mb) in enumerate(b):
+            if n not in used and same_work(ma, mb):
+                used.add(n)
+                out.append((ca, cb))
+                break
+    return out
+
+
+def headline_of(o):
+    """A publishing-day option's headline: pitch.headline, else the 'Headline:' line of its story."""
+    pitch = o.get('pitch') if isinstance(o.get('pitch'), dict) else {}
+    if pitch.get('headline'):
+        return str(pitch['headline'])
+    m = re.search(r'Headline:\s*(.+?)(?:\s+Hook:|$)', str(o.get('story') or ''))
+    return m.group(1).strip(' "“”') if m else None
+
+
+def option_keys(o, main):
+    """The words an option is known by for (b): its hook, title and headline (and a publishing-day option's story)."""
+    vals = [o.get('hook'), o.get('title'), headline_of(o) if main else None]
+    return {k for k in (text_key(v) for v in vals) if k}
+
+
+def approved_pieces(ideas, sources):
+    """{day: piece id} of the week's publishing days that already hold their approved piece: ideas.json locked, and the
+    pieces the gather says are scheduled on the week's days."""
+    out = {}
+    for day, lock in ((ideas or {}).get('locked') or {}).items():
+        if isinstance(lock, dict) and lock.get('piece_id'):
+            out[str(day)[:3]] = str(lock['piece_id']).lower()
+    week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')[:10]
+    try:
+        start = date.fromisoformat(week)
+    except ValueError:
+        return out
+    offset = {(start.toordinal() + n): d for d, n in (('mon', 0), ('wed', 2), ('fri', 4))}
+    for rows in ((sources or {}).get('scheduled') or {}).values():
+        for r in rows or []:
+            if isinstance(r, dict) and r.get('id') and r.get('scheduled_for'):
+                try:
+                    d = offset.get(date.fromisoformat(str(r['scheduled_for'])[:10]).toordinal())
+                except ValueError:
+                    continue
+                if d:
+                    out.setdefault(d, str(r['id']).lower())
+    return out
+
+
+def supported(o, approved):
+    """The approved piece an option says it supports (`supports`: "mon", "wed", "fri" or the piece's id), or None."""
+    s = str(o.get('supports') or '').strip().lower()
+    if not s:
+        return None
+    if s[:3] in approved:
+        return approved[s[:3]]
+    return s if s in approved.values() else None
+
+
+def stage_key(p):
+    st = p.get('stage')
+    return str(st.get('key') if isinstance(st, dict) else st or '')
+
+
+def post_name(p):
+    """A recent post as he reads it: "Fri 13 Nov's piece "Title" (live)"."""
+    try:
+        when = date.fromisoformat(str(p.get('date'))[:10]).strftime('%a %d %b').replace(' 0', ' ')
+    except ValueError:
+        when = f"{p.get('day')} of the week of {p.get('week')}"
+    what = 'piece' if p.get('type') == 'piece' else (p.get('kind_label') or p.get('kind') or 'post').lower()
+    return f'{when}\'s {what} "{str(p.get("title") or "")[:90]}" ({stage_key(p)})'
+
+
+def board_raw(ideas):
+    """[(ref, day, main, option)] for every option on the board, the weekly series included."""
+    out = []
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    for day in ('mon', 'wed', 'fri'):
+        out += [(f'{day}-{n}', day, True, o) for n, o in enumerate(days.get(day) or [], 1) if isinstance(o, dict)]
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    for day, opts in offdays.items():
+        out += [(f'off-{day}-{o.get("id")}', day, False, o) for o in (opts if isinstance(opts, list) else []) if isinstance(o, dict)]
+    return out
+
+
+def sent_back(sources):
+    """{(kind, id)} he sent back to come again (File for later, Save as a trend, Improve; Next week on an off day; an
+    idea in his idea queue): a return may re-use its id, and the return check holds it to depth."""
+    out = set()
+    for a in answers_of(sources):
+        if a['kind'] in ('filed', 'trend', 'improved'):
+            if a.get('idea_id'):
+                out.add(('main', a['idea_id']))
+            if a.get('option'):
+                out.add(('off', str(a['option']).lower()))
+    for o in (sources or {}).get('recent_offdays') or []:
+        if isinstance(o, dict) and o.get('verdict') in ('next_week', 'trend', 'improve', 'improved', 'filed') and o.get('id'):
+            out.add(('off', str(o['id']).lower()))
+    # His idea queue: the ideas he filed for later before the ideas gate kept his presses (the 26 Oct board's), each
+    # offered first in the weeks after (plan-week, step 1).
+    for q in (sources or {}).get('queue') or []:
+        if isinstance(q, dict) and q.get('id'):
+            out.add(('main', str(q['id']).lower()))
+    return out
+
+
+def his_open(sources):
+    """The ids of his own ideas still owed a place: every must_cover id, every ask, and his own ideas in the pool."""
+    ids = {str(i).lower() for i in his_ids(sources)}
+    pool = [c for s in (sources or {}).get('series') or [] for c in s.get('pool') or []] + list((sources or {}).get('unassigned') or [])
+    return ids | {str(c.get('id')).lower() for c in pool if isinstance(c, dict) and c.get('source_kind') == 'his' and c.get('id')}
+
+
+def repeat_findings(ideas, sources, earlier=None):
+    """Each option that repeats a recent post, a recent piece, an earlier board's option or another option on this
+    board (the five rules above). earlier: [{week, day, id, main}], the options of the earlier boards (sources.json
+    earlier_options, or board_feed.py reads the plan files). Every line names what it repeats and why."""
+    out = []
+    posts = [p for p in (sources or {}).get('recent_posts') or [] if isinstance(p, dict)]
+    pieces = [p for p in (sources or {}).get('recent') or [] if isinstance(p, dict)]
+    approved = approved_pieces(ideas, sources)
+    back = sent_back(sources)
+    mine = his_open(sources)
+    by_url = {}
+    for p in posts:
+        u = canon_url(p['primary'] if 'primary' in p else (p.get('urls') or [None])[0])
+        if u:
+            by_url.setdefault(u, []).append(p)
+    post_keys = {}
+    for p in posts:
+        k = text_key(p.get('title'))
+        if k:
+            post_keys.setdefault(k, p)
+    piece_keys = {}
+    for p in pieces:
+        k = text_key(p.get('idea'))
+        if k:
+            piece_keys.setdefault(k, p)
+    seen_earlier = {}
+    for e in earlier or []:
+        if isinstance(e, dict) and e.get('id'):
+            seen_earlier.setdefault(('main' if e.get('main') else 'off', str(e['id']).lower()), e)
+
+    def carried(o, p):
+        """The option is that post's own item, carried before it went live, or supports that very piece."""
+        if o.get('item') and p.get('item') and str(o['item']) == str(p['item']) and stage_key(p) != 'live':
+            return True
+        sp = supported(o, approved)
+        return bool(sp and p.get('piece_id') and sp == str(p['piece_id']).lower())
+
+    board = board_raw(ideas)
+    for ref, day, main, o in board:
+        label = f'{ref} ({str(o.get("id") or "")[:8]})' if main else ref
+        weekly = bool(o.get('weekly'))
+        url = primary_url(o)
+        if weekly:
+            # A weekly series recurs by design; its stories may not repeat a post.
+            for n, st in enumerate(o.get('stories') or [], 1):
+                su = canon_url((st.get('source') or {}).get('url')) if isinstance(st, dict) and isinstance(st.get('source'), dict) else None
+                for p in by_url.get(su, []) if su else []:
+                    out.append({'code': 'repeat', 'ref': ref, 'rule': 'a', 'post': p.get('key'),
+                                'line': f'repeat: {label} story {n} is the primary source of {post_name(p)}: {su}; find another story'})
+            continue
+        # (a) the same primary source as a recent post.
+        for p in by_url.get(url, []) if url else []:
+            if not carried(o, p):
+                out.append({'code': 'repeat', 'ref': ref, 'rule': 'a', 'post': p.get('key'),
+                            'line': f'repeat: {label} has the same primary source as {post_name(p)}, week of {p.get("week")}: {url}; '
+                                    'what went out, or is on its way, is never offered again'})
+        # (b) the same hook or headline as a recent post or piece.
+        for k in sorted(option_keys(o, main)):
+            p = post_keys.get(k)
+            if p and not carried(o, p) and not (url and any(x is p for x in by_url.get(url, []))):
+                out.append({'code': 'repeat', 'ref': ref, 'rule': 'b', 'post': p.get('key'),
+                            'line': f'repeat: {label} carries the words of {post_name(p)}, week of {p.get("week")}: "{k}"'})
+            q = piece_keys.get(k)
+            if q:
+                out.append({'code': 'repeat', 'ref': ref, 'rule': 'b', 'post': q.get('id'),
+                            'line': f'repeat: {label} carries the words of the piece "{str(q.get("idea") or "")[:90]}" ({q.get("scheduled_for")})'})
+        # (c) an option id an earlier board offered, not a return he asked for.
+        kind = 'main' if main else 'off'
+        oid = str(o.get('id') or '').lower()
+        e = seen_earlier.get((kind, oid)) if oid else None
+        if e and (kind, oid) not in back and oid not in mine and not o.get('item'):
+            out.append({'code': 'repeat', 'ref': ref, 'rule': 'c', 'post': f'{e.get("week")}/{e.get("day")}',
+                        'line': f'repeat: {label} is the option "{oid}" the board of {e.get("week")} offered on {e.get("day")}, and he did not '
+                                'send it back (File for later, Save as a trend, Improve): a new idea needs a new story'})
+        # (e) the same evidence as a recent post: two or more cited works in common.
+        cites = option_citations(o)
+        if len(cites) >= EVIDENCE_MIN:
+            for p in posts:
+                if carried(o, p) or (url and any(x is p for x in by_url.get(url, []))):
+                    continue
+                both = shared_works(cites, citations(p.get('labels') or []))
+                if len(both) >= EVIDENCE_MIN:
+                    out.append({'code': 'repeat', 'ref': ref, 'rule': 'e', 'post': p.get('key'),
+                                'line': f'repeat: {label} cites {len(both)} of the works {post_name(p)} cited, week of {p.get("week")} ('
+                                        + '; '.join(b for _, b in both) + '): the same evidence is the same post'})
+    # (d) two options on this board with one primary source.
+    groups = {}
+    for ref, day, main, o in board:
+        if o.get('weekly'):
+            continue
+        url = primary_url(o)
+        if url:
+            groups.setdefault(url, []).append((ref, o))
+    for url, members in groups.items():
+        if len(members) < 2:
+            continue
+        for ref, o in members:
+            twins = [r for r, x in members if r != ref and not (supported(o, approved) or supported(x, approved))]
+            if twins:
+                label = ref if ref.startswith('off-') else f'{ref} ({str(o.get("id") or "")[:8]})'
+                out.append({'code': 'repeat', 'ref': ref, 'rule': 'd', 'post': ', '.join(twins),
+                            'line': f'repeat: {label} has the same primary source as {", ".join(twins)} on this '
+                                    f'board: {url}; one story is one option (a carousel that supports the day\'s approved piece says so in supports)'})
+    return out
+
+
+def repeat_read_findings(sources, week):
+    """The repeat check could not read what went out: a failed read is said, and from REPEAT_FROM a gather without the
+    posts fails the gate."""
+    err = (sources or {}).get('recent_posts_error')
+    if err:
+        return [{'code': 'repeat', 'ref': 'sources', 'rule': 'read',
+                 'line': f'repeat: the last weeks\' posts could not be read ({str(err)[:300]}); gather again, so what went out is never offered again'}]
+    if str(week) >= REPEAT_FROM and not isinstance((sources or {}).get('recent_posts'), list):
+        return [{'code': 'repeat', 'ref': 'sources', 'rule': 'read',
+                 'line': 'repeat: sources.json has no recent_posts (the gather predates them); gather again, so what went out is never offered again'}]
+    return []
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# The shape of every option from the 23 Nov board (Krish, 2026-11-16: "The suggestions ... should be either one clear
+# theme containing lots of different news stories or one clear story that we can dive into. The goal should always be
+# immediate utility for the user, or interest, or humor." And: "Everything should be tinged with a humorous angle, all
+# scripts for pieces and all suggestions for off days.")
+
+AIM_FROM = '2026-11-23'
+SHAPES = ('theme', 'story')
+AIMS = ('utility', 'interest', 'humour')
+THEME_STORIES = 3
+DIVE_MIN = 20
+
+
+def theme_urls(o):
+    """The distinct sourced stories a theme carries: its stories' sources and its sources, by page."""
+    urls = []
+    for st in o.get('stories') or []:
+        s = st.get('source') if isinstance(st, dict) else None
+        u = canon_url(s.get('url') if isinstance(s, dict) else (st.get('url') if isinstance(st, dict) else None))
+        if u and u not in urls:
+            urls.append(u)
+    for s in o.get('sources') or []:
+        u = canon_url(s.get('url') or s.get('href')) if isinstance(s, dict) else None
+        if u and u not in urls:
+            urls.append(u)
+    return urls
+
+
+def needs_lookalike(o):
+    """Whether an option names the lookalike pattern it comes from: every option but his own (his idea, an idea he
+    recorded, his tick) and the weekly series."""
+    return not (o.get('weekly') or o.get('source_kind') == 'his' or o.get('kind') == 'recorded' or o.get('from_inspiration'))
+
+
+def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=()):
+    """From AIM_FROM, every option says its shape (one clear theme with at least three sourced stories, or one clear
+    story with the mechanism to dive into), its aim (utility, interest or humour), its funny angle in one plain line,
+    and the lookalike pattern and the feed post it beats (lookalike.json, lookalike-input.json). patterns: the pattern
+    ids in lookalike.json, or None when the week has none; feed_urls: the post URLs in lookalike-input.json; warnings:
+    lookalike-input.json's (a stale sheet, a feed fallback), each said word for word in ideas.json _about."""
+    if str(week) < AIM_FROM:
+        return []
+    out = []
+    about = str((ideas or {}).get('_about') or '')
+    out += [{'code': 'aim', 'ref': 'lookalike', 'line': f'aim: ideas.json _about does not say, word for word: {w}'} for w in warnings or [] if w not in about]
+    pats = set(patterns or [])
+    feed = {canon_url(u) for u in feed_urls or [] if canon_url(u)}
+    if patterns is None:
+        out.append({'code': 'aim', 'ref': 'lookalike', 'line': 'aim: no lookalike.json for the week; run lookalike.py prepare and check, '
+                    'then name each option\'s pattern'})
+    for ref, day, main, o in board_raw(ideas):
+        label = f'{ref} ({str(o.get("id") or "")[:8]})' if main else ref
+        shape = o.get('shape')
+        if shape not in SHAPES:
+            out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} says its shape: "theme" (one topic, three or more sourced stories) '
+                        'or "story" (one primary source and the mechanism to dive into)'})
+        elif shape == 'theme' and len(theme_urls(o)) < THEME_STORIES:
+            out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} is a theme with {len(theme_urls(o))} sourced stories; a theme '
+                        f'carries at least {THEME_STORIES} different ones (stories or sources, each with its url)'})
+        elif shape == 'story' and not (primary_url(o) and len(str(o.get('dive') or '').strip()) >= DIVE_MIN):
+            out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} is a story: one primary source (source.url) and dive, the '
+                        'mechanism to dive into, in a sentence'})
+        if o.get('aim') not in AIMS:
+            out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} says what it is for: aim is "utility", "interest" or "humour"'})
+        funny = str(o.get('funny') or '').strip()
+        if len(funny) < 10 or '\n' in funny or len(funny) > 240 or '—' in funny:
+            out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} carries its humorous angle in funny: one plain line, no em dash'})
+        if not needs_lookalike(o):
+            continue
+        look = o.get('lookalike') if isinstance(o.get('lookalike'), dict) else {}
+        if patterns is not None and look.get('pattern') not in pats:
+            out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} names its lookalike pattern (lookalike.pattern, one of '
+                        f'{", ".join(sorted(pats)) or "the patterns in lookalike.json"})'})
+        if canon_url(look.get('beats')) not in feed:
+            out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} names the feed post it beats (lookalike.beats, a post URL in '
+                        'lookalike-input.json)'})
+    return out
+
+
 # The findings that fail the Sunday run (board_feed.py gate): a subject he refused offered again, a warned option placed
-# first or shown without his words, and a return that came back no deeper. The rest of cover stays the run's to fix
-# before it stops, as before.
-GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return')
+# first or shown without his words, a return that came back no deeper, a repeat of what went out (Krish, 2026-11-16),
+# and from the 23 Nov board an option without its shape, aim, humour and lookalike. The rest of cover stays the run's to
+# fix before it stops, as before.
+GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim')
 # What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
 # subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
 NOTE_CODES = ('warned', 'his_tick')
