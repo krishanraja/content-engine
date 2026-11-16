@@ -73,3 +73,29 @@ describe('third-pass cover constraints',()=>{
   expect(renderToStaticMarkup(React.createElement(StyleStill,{layer:"treatment",id}))).toContain('data-drawn-presenter="krish-schematic"')
  })
 })
+
+describe('fourth-pass reviewer gates',()=>{
+ it('draws the close-up larger than the mid shot, in a different layout',()=>{
+  expect(coverPlan('treatment','fry-talking-head').layout).not.toBe(coverPlan('treatment','face-with-proof').layout)
+  const close=renderToStaticMarkup(React.createElement(StyleStill,{layer:'treatment',id:'fry-talking-head'}))
+  const mid=renderToStaticMarkup(React.createElement(StyleStill,{layer:'treatment',id:'face-with-proof'}))
+  expect(close).toContain('scale(2.2)');expect(mid).toContain('scale(1)')
+ })
+ it('gives the mid-shot proof card its source line',()=>expect(renderToStaticMarkup(React.createElement(StyleStill,{layer:'treatment',id:'face-with-proof'}))).toContain('Fortune · October 2026'))
+ it('bounds every caption zone by a forty pixel margin',()=>{
+  for(const id of CAPTION_THEMES) for(const z of coverPlan('captions',id).zones.filter(z=>z.name==='caption')) {
+   expect(z.x0).toBeGreaterThanOrEqual(40);expect(z.y0).toBeGreaterThanOrEqual(40)
+   expect(z.x1).toBeLessThanOrEqual(1040);expect(z.y1).toBeLessThanOrEqual(1880)
+  }
+ })
+ it('never shares a beat across covers',()=>expect(new Set(ids.map(x=>coverPlan(x.layer,x.id).beat)).size).toBe(ids.length))
+ it('prints the data story labels once each',()=>{
+  const markup=renderToStaticMarkup(React.createElement(StyleStill,{layer:'treatment',id:'data-story'}))
+  const words=[...markup.matchAll(/<text\b[^>]*>([^<]+)<\/text>/g)].flatMap(m=>m[1]!.toLowerCase().split(/\s+/))
+  expect(new Set(words).size).toBe(words.length)
+ })
+ it('tears the receipt across its whole foot',()=>{
+  const markup=renderToStaticMarkup(React.createElement(StyleStill,{layer:'motion',id:'character-ai-receipts'}))
+  expect(markup).toMatch(/V1660L940 1640L910 1660/);expect(markup).toMatch(/L110 1640L110 1660Z/)
+ })
+})

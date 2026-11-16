@@ -18,7 +18,7 @@ Krish, 16 Nov 2026: "Just do it all now." Thirty-two covers are live on his boar
 
 Motion:
 - paper-cutout: irregular torn edges, soft offset shadows (blurred, 4-8px), a paper grain; no strip cut off by the frame edge.
-- line-boil: a rat anyone recognises, drawn in curved strokes (no straight segments), three passes offset 1-2px so the line visibly boils, its tail attached.
+- line-boil: a rat anyone recognises, drawn in curved strokes (no straight segments), three passes offset 1-2px so the line visibly boils, its tail attached. (Built at 3px offsets on 3px strokes, 16 Nov: 1-2px merges into one line in the half-scale still.)
 - vertical-captions: heavy bold words stacked down most of the frame, the active word in a tight box around that word only.
 - character-ai-receipts: a torn receipt with the tear across the whole bottom edge; the hero figure at 4.5:1 or more against the paper.
 
