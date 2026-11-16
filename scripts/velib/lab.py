@@ -350,6 +350,11 @@ def record_sample(layer: str, style_id: str, drive_id: str, clip: Path | None = 
         raise ValueError(f'{style_id} is not a motion style the lab draws')
     if layer == 'captions' and style_id not in caption_themes():
         raise ValueError(f'{style_id} is not a caption style (config/caption-themes.json)')
+    # Every lab render is a cut of his pinned take, and a cut of his recordings is never an example on the board
+    # (Krish, 2026-11-16: "Please don't tell me this is going on the board as an example or a gold standard template").
+    # The board shows the StyleStill template's stills; a sample waits for a template of its own.
+    raise ValueError('a style sample is a render of his pinned take, and a cut of his recordings is never an example on the '
+                     'board; the board shows the StyleStill template\'s stills (ve lab still) instead')
     if clip is not None:
         clip = Path(clip)
         manifest = load_json(clip.parent / 'manifest.json')

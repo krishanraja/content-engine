@@ -103,25 +103,21 @@ class LabTest(unittest.TestCase):
         self.assertEqual([look['id'] for look in manifest['looks']], ['theme-art-directed'])
         self.assertEqual(seen[0]['captionTheme'], 'art-directed')
 
-    def test_a_sample_is_recorded_as_the_drive_route_with_its_id_and_its_note_cleared(self):
+    def test_a_sample_of_his_take_is_never_recorded_for_the_board(self):
+        # Every lab render is a cut of his pinned take, and a cut of his recordings is never an example on the board
+        # (Krish, 2026-11-16: "Please don't tell me this is going on the board as an example or a gold standard template").
         samples = self.dir / 'style-samples.json'
         samples.write_text(json.dumps({'motion': {'paper-cutout': ''}, 'captions': {'art-directed': ''}, 'drive': {'motion': {}, 'captions': {}},
                                        'waiting': {'motion': {'paper-cutout': 'the lab render'}, 'captions': {'art-directed': 'the lab render'}}}))
+        before = samples.read_text()
         drive_id = '1' + 'S' * 30
-        manifest = lab.render(self.cfg, self.dir / 'a', self.fake_render([]), self.dir / 'clips', only=['paper-cutout', 'theme-art-directed'])
-        doc = lab.record_sample('motion', 'paper-cutout', drive_id, self.dir / 'clips' / 'paper-cutout.mp4', path=samples)
-        self.assertEqual(doc['motion']['paper-cutout'], f'/api/board/sign-offs?file={drive_id}')
-        self.assertEqual(doc['drive']['motion']['paper-cutout'], drive_id)
-        self.assertNotIn('paper-cutout', doc['waiting']['motion'])
-        lab.record_sample('captions', 'art-directed', drive_id, self.dir / 'clips' / 'theme-art-directed.mp4', path=samples)
-        self.assertEqual(json.loads(samples.read_text())['captions']['art-directed'], f'/api/board/sign-offs?file={drive_id}')
-        for bad in (lambda: lab.record_sample('motion', 'paper-cutout', 'short', path=samples),
-                    lambda: lab.record_sample('motion', 'ladder', drive_id, path=samples),
-                    lambda: lab.record_sample('captions', 'no-such-caption', drive_id, path=samples),
-                    lambda: lab.record_sample('motion', 'data-story', drive_id, self.dir / 'clips' / 'paper-cutout.mp4', path=samples)):
+        lab.render(self.cfg, self.dir / 'a', self.fake_render([]), self.dir / 'clips', only=['paper-cutout', 'theme-art-directed'])
+        for bad in (lambda: lab.record_sample('motion', 'paper-cutout', drive_id, self.dir / 'clips' / 'paper-cutout.mp4', path=samples),
+                    lambda: lab.record_sample('captions', 'art-directed', drive_id, self.dir / 'clips' / 'theme-art-directed.mp4', path=samples),
+                    lambda: lab.record_sample('motion', 'paper-cutout', 'short', path=samples)):
             with self.assertRaises(ValueError):
                 bad()
-        self.assertEqual(len(manifest['looks']), 2)
+        self.assertEqual(samples.read_text(), before, 'a refusal writes nothing')
 
     def test_every_waiting_sample_is_a_look_the_lab_draws_and_every_value_is_its_drive_route(self):
         doc = json.loads(lab.STYLE_SAMPLES.read_text(encoding='utf-8'))
