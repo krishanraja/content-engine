@@ -808,6 +808,16 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   `ve lab sample` checks the clip is the lab's own render of that style (its manifest beside it), writes the value, the
   drive map and clears the waiting note; commit `config/ve/style-samples.json` only, never the media. A caption style is
   drawn by the lab only when `--only` names it (`theme-<id>`), so the regression reel never grows by itself.
+
+  **Stills** are the picture he sees when he hovers a look, a motion style or a caption style (Krish, 16 Nov 2026: "No
+  need for a video, just a still."). They sit in the same file, in a `stills` map by layer (`treatment` for the seven
+  looks of `formats.production`, `motion` for the 14 drawable styles, `captions` for the 27 caption styles), each value
+  the same Drive file route as a sample, `/api/board/sign-offs?file=<drive id>`, with its Drive id in a `stills_drive`
+  map by layer. An empty value is a still not recorded yet: no picture, never a placeholder. `python3 scripts/ve.py lab
+  stills` cuts one 540x960 JPEG per motion and caption style from the lab's renders, all at the same frame, into
+  `.cache`; each is watched, filed in Inbox from My AI as "Style still - <layer> - <id>.jpg", read back and recorded
+  with `python3 scripts/ve.py lab still <layer> <id> --drive <its Drive id> --file <the jpg>`. A look's still comes
+  from a design-lock key frame or a Codex plate, recorded the same way. Commit the file only, never the stills.
 - **His press**: `presses.yes` and `presses.not_this` (labels "Yes" and "Not this") each say `POST
   /api/board/<Monday>/<op>` with a body. `POST /api/board/<Monday>/style` takes `{ piece_id, motion?, captions?,
   reject?: { layer: 'motion' | 'captions' | 'treatment', id } }`, his press only, on a piece scheduled in that week, the same guards

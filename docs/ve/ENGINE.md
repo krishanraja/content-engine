@@ -171,6 +171,18 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
   2026), so the regression reel never grows by itself, and `ve lab sample` records a render filed in Drive as the
   sample Pick a style shows on the board (`config/ve/style-samples.json`). The style lab (`lab/styles/`, `render.mjs`) is where a new
   style is designed and proved as a whole cut, outside the renderer. They are different tools.
+- **Stills for the board's pickers** (Krish, 16 Nov 2026: "I should be able to hover over the captions, look, and motion
+  style and see a templated screenshot of what it might look like. No need for a video, just a still."). `ve lab stills`
+  cuts one 540x960 JPEG from each drawable motion style and each caption style the lab rendered (`--only` narrows it;
+  with `--take` and `--brand-dir` it renders them first), every one at the same frame of the pinned window
+  (`velib/lab.py` `STILL_FRAME`, frame 445, where a caption page and a device have both settled), into `<out>/stills/`
+  under `.cache`, never the repository, and prints its manifest (`stills.json`: id, layer, path, sha256, width,
+  height). Once he has looked at them and each is filed in Drive, `ve lab still <layer> <id> --drive <its Drive id>
+  --file <the jpg>` records it in `style-samples.json`'s `stills` map (with its Drive id in `stills_drive`), served by
+  the same Drive file route as a sample. A look's still (layer `treatment`) comes from a design-lock key frame or a
+  Codex plate and is recorded the same way. It refuses a style the lab cannot draw (`needs_device`), an unknown id or
+  layer, a malformed Drive id, and a file that is not a JPEG of about 540x960 or, for motion and captions, not the
+  lab's own still.
 - **What makeyourmindup.ai shows.** The engine's publication watcher (`apps/control-plane/api/publish/watch.ts`,
   hourly) records each piece's Substack post, YouTube video and Short as they go live, and
   `GET /api/publish/catalogue` serves them to the site (which takes each article's cover from Substack itself). Nothing in ve publishes; a session never edits the site's
