@@ -2,7 +2,7 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-11-12 against `main` at `02184d34` for every term (each checked against the code or config it names), with `venture_formats`, `format_aliases`, the `content_ideas` state check and the tables named here read back from the database the same day
+Last verified: 2026-11-12 against `main` at `02184d34` for every term (each checked against the code or config it names), with `venture_formats`, `format_aliases`, the `content_ideas` state check and the tables named here read back from the database the same day; caption styles, the ideas gate and the lookalike step rechecked on 16 Nov against `main` at `4fcf48fb`
 
 Terms as this repository uses them. Where a word means different things in the
 two halves, both meanings are given. Read "Names" first: most misreadings of
@@ -127,6 +127,17 @@ this repository start with a retired name.
   raised and the guard that now stops it, `python3 scripts/check_failures.py`)
   and `engine_incidents`, which the weekly learning run reads
   (`docs/learning/README.md`).
+- **Ideas gate.** Two things share the name. On the board: only Krish's Approve puts an idea on a day of the
+  publish board (`apps/control-plane/api/board/_gate.ts`; `docs/PUBLISH_BOARDS.md`, "The ideas gate"). In the Sunday
+  ideas run: the checks that keep a week off the live board while they fail (`python3 scripts/post-pack/board_feed.py
+  gate <Monday>`, the codes in `idea_checks.GATE_CODES`), among them `repeat` (no option repeats what went out in the
+  last three weeks, or an earlier board's option he did not send back) and `aim` (from the 23 Nov board, every option says its
+  shape, its aim, its funny line and its lookalike pattern).
+- **Lookalike step, the Instagram inspo sheet.** In the Sunday ideas run, the patterns read from the newest posts of
+  Krish's Instagram inspo sheet (`python3 scripts/post-pack/lookalike.py`, through `GET
+  /api/inspiration/instagram-sheet`), used to find similar or better stories on the web. A pattern from carousels
+  says how the story moves from card to card (`card_flow`), and an option drawn from a sheet post says its own take
+  (`our_take`) (`.agents/skills/plan-week/references/lookalike.md`).
 - **Narrative lock.** The one story for a piece, settled with Krish in the
   Sunday room and signed by him once
   (`docs/plans/<Monday>-week/narrative-lock-<day>.md`); the scripts are
@@ -173,8 +184,9 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
   carries every number; a working interface the camera reads for the viewer. Bank ids `ladder`, `living-screen`.
 - **Move.** One motion that says one thing (a count, a drop, a before-and-after), timed by the words that cue it:
   `packages/moves/` (`@mymu/moves`), re-exported unchanged in `lab/moves/`, called by every style and by ve.
-- **Caption style.** How the spoken words are drawn on screen: the house caption, the word build, or one of 15
-  caption styles named in `brand.caption_theme` (`apps/renderer/src/engine/captions/`). `art-directed` is the one
+- **Caption style.** How the spoken words are drawn on screen: the house caption, the word build, or one of 27
+  caption styles, picked with `style.captions.theme` (the older `brand.caption_theme` still works), apart from the
+  motion style (`config/caption-themes.json`, `apps/renderer/src/engine/captions/`; all 27 in `docs/ve/INGREDIENTS.md`). `art-directed` is the one
   Krish picked; `cinematic` is Audrey's cinematic caption system rebuilt for ve.
 - **Hero word.** In the cinematic style, the one word on a page that carries the claim (a reversal, a number, the
   spoken stress), scored and set large; a setup line has none.

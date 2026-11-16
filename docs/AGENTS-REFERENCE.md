@@ -393,8 +393,8 @@ The records behind it, and what is kept of each asset (a still, a six-frame
 strip or a 4-second clip, never a master), live in `taste_rejections` and
 `taste_rejection_media`.
 He decides the standards at `/board/standards` (also `/standards`; Krish,
-2026-11-04: "group the 215 floor standards for my approval"): about 20 groups
-from `config/floor-groups.json`, each one proposal he approves, rewords in his
+2026-11-04: "group the 215 floor standards for my approval"): the groups in
+`config/floor-groups.json` (20 at first, 43 since 15 Nov), each one proposal he approves, rewords in his
 own words or rejects, and every member standard takes that decision in
 `public.taste_floor` (`group_key`, `group_title`, `group_statement`). The
 session-process standards sit in its `operating` list and are never put to him
@@ -613,7 +613,7 @@ and by hand), never blocks a merge, and opens or updates one issue when main
 goes red, closing it when main is green again. Ruling (Krish, 2026-11-11): quick checks on pull requests, the full verify after merge; merge fast and he tests live. Validate all repo-scoped skills with
 `npm run skills:validate`. Codex reads `.agents/skills`; Claude Code reads
 `.claude/skills`, which holds a real copy of the `SKILL.md` of each skill it
-loads (make-piece, plan-week, produce-video, ve), never a link, because git on
+loads (make-piece, plan-week, produce-video, thumbnail-designer, motion-designer, ve), never a link, because git on
 Windows checks a link out as a text file. After editing one of those skills,
 run `python scripts/validate-skills.py --sync-claude`; the validator fails
 while a copy differs from its source. For the content engine, `npm run
