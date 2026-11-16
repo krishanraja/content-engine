@@ -1257,6 +1257,12 @@ def cmd_lab(args) -> int:
             print(f"ve lab: {len(doc['stills'])} still(s) at frame {doc['frame']} of the take in {folder}; look at each, "
                   'file it in Drive, then ve lab still <layer> <id> --drive <its Drive id> --file <the jpg>')
             return 0
+        if args.action == 'covers':
+            doc = lab.covers(out, args.only)
+            print(f"ve lab: {len(doc['stills'])} cover(s) in {lab.stills_dir(out)}"
+                  + (f"; not drawn: {', '.join(doc['missing'])}" if doc['missing'] else '')
+                  + '; look at each, file it in Drive, then ve lab still <layer> <id> --drive <its Drive id> --file <the jpeg>')
+            return 0
         if args.action == 'still':
             if len(args.target) != 2 or not args.drive_id:
                 raise ValueError('still needs <layer> <id> (layer treatment, motion or captions), --drive <its file in Drive> '
@@ -2205,7 +2211,7 @@ def main() -> int:
     p.add_argument('--audition', help="the piece's sfx-audition.json he heard the sound in")
     p.set_defaults(fn=cmd_sfx)
     p = sub.add_parser('lab', help='every drawable style and caption look on one window of his pinned take, outside any piece')
-    p.add_argument('action', choices=('render', 'diff', 'record', 'verdict', 'sample', 'stills', 'still'))
+    p.add_argument('action', choices=('render', 'diff', 'record', 'verdict', 'sample', 'stills', 'still', 'covers'))
     p.add_argument('target', nargs='*', metavar='NAME', help='still: the layer (treatment, motion or captions) and the id')
     p.add_argument('--take'); p.add_argument('--brand-dir'); p.add_argument('--out'); p.add_argument('--against')
     p.add_argument('--layer', choices=('motion', 'captions'))

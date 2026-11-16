@@ -467,6 +467,52 @@ def stills(out: Path, only: list[str] | None = None, cfg: dict | None = None, gr
     return doc
 
 
+COVER_CARD = 've-style-still-template-2'
+
+
+def cover_ids(cfg: dict | None = None) -> list[dict]:
+    """Every cover the board's pickers can show: each look, each motion style the lab draws, each caption style."""
+    cfg = cfg or config()
+    motion = [look['id'] for look in looks(cfg) if look['kind'] == 'style']
+    return ([{'layer': 'treatment', 'id': t} for t in treatments()] + [{'layer': 'motion', 'id': m} for m in motion]
+            + [{'layer': 'captions', 'id': c} for c in caption_themes()])
+
+
+def render_covers(folder: Path, ids: list[dict]) -> None:
+    """The StyleStill cover art through apps/renderer/scripts/ve-covers.mjs, one JPEG per id in folder."""
+    folder.mkdir(parents=True, exist_ok=True)
+    listing = folder / 'ids.json'
+    write_json(listing, ids)
+    subprocess.run(['node', str(ROOT / 'apps/renderer/scripts/ve-covers.mjs'), str(folder), str(listing)], cwd=ROOT, check=True)
+
+
+def covers(out: Path, only: list[str] | None = None, render_fn=render_covers) -> dict:
+    """The cover art of every look, motion style and caption style (Krish, 2026-11-16: "I should be showing shop window
+    examples of how that element looks"), drawn by the StyleStill composition (card ve-style-still-template-2), never a
+    frame of a take: <out>/stills/<layer>-<id>.jpeg with stills.json beside them, source template, which ve lab still
+    checks before a cover is recorded for the board. A cover the composition cannot draw is left out and said. Nothing
+    is filed or recorded here: he sees them first."""
+    folder = stills_dir(out)
+    folder.mkdir(parents=True, exist_ok=True)
+    ids = [i for i in cover_ids() if not only or i['id'] in only]
+    render_fn(folder, ids)
+    rows, missing = [], []
+    for i in ids:
+        jpg = folder / f"{i['layer']}-{i['id']}.jpeg"
+        size = jpeg_size(jpg) if jpg.is_file() else None
+        if size is None:
+            missing.append(f"{i['layer']} {i['id']}")
+            continue
+        if abs(size[0] - STILL_W) > STILL_SLACK or abs(size[1] - STILL_H) > STILL_SLACK:
+            raise ValueError(f'{jpg} is {size[0]}x{size[1]}, not {STILL_W}x{STILL_H}')
+        rows.append({'id': i['id'], 'layer': i['layer'], 'path': jpg.as_posix(), 'sha256': sha256_file(jpg), 'width': size[0], 'height': size[1]})
+    if not rows:
+        raise ValueError('the StyleStill composition drew no cover: is its card built and merged?')
+    doc = {'schema': 've-lab-stills/1', 'source': 'template', 'card': COVER_CARD, 'stills': rows, 'missing': missing}
+    write_json(folder / STILLS_MANIFEST, doc)
+    return doc
+
+
 def treatments() -> list[str]:
     """The looks the board's Look picker offers (config/style-references.json formats.production), in its order."""
     sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
