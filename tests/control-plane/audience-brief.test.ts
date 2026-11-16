@@ -98,7 +98,7 @@ describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from t
 
   test('this week\'s off-day options, made before the ruling, still read; the week of 23 Nov\'s are held to the short cut', () => {
     const py3 = ['import sys, json', "sys.path.insert(0, 'scripts/post-pack')", 'import week_plan as wb',
-      "d = json.load(open('docs/plans/2026-11-16-week/ideas.json', encoding='utf-8'))",
+      "d = json.load(open('tests/fixtures/plans/2026-11-16-ideas.json', encoding='utf-8'))",
       "print(sorted(wb.read_offdays(d['offdays'], week='2026-11-16')))",
       'try:', "    wb.read_offdays(d['offdays'], week='2026-11-23'); print('passed')",
       'except wb.BoardError as e:', "    print('held' if '45 to 75 words' in str(e) else str(e))"].join('\n')
@@ -111,6 +111,20 @@ describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from t
     const lint = readFileSync('scripts/velib/lint.py', 'utf8')
     assert.match(lint, /def short_cut\(\)/)
     assert.match(lint, /house rule FIRST_TWO_SECONDS/)
+  })
+})
+
+describe('a good-news option short of five stories reads when it says why (plan-week references/offdays.md)', () => {
+  test('four stories with stories_short read; four without it, or none, do not; five always do', () => {
+    const py5 = ['import sys, json', "sys.path.insert(0, 'scripts/post-pack')", 'import week_plan as wb',
+      "s = {'headline': 'h', 'what': 'w', 'why': 'y', 'date': '2026-11-12', 'source': {'label': 'l', 'url': 'https://a'}, 'media': {'kind': 'photo', 'url': 'https://b'}}",
+      "print(json.dumps([wb.story_problems([s] * 4, 'only four on the topic this week'), wb.story_problems([s] * 4), wb.story_problems([], 'none'), wb.story_problems([s] * 5)]))"].join('\n')
+    const run = spawnSync(py, ['-c', py5], { encoding: 'utf8' })
+    assert.equal(run.status, 0, run.stderr)
+    const [shortWithWhy, shortBare, none, five] = JSON.parse(run.stdout)
+    assert.deepEqual([shortWithWhy, five], [[], []])
+    assert.equal(shortBare.length, 1)
+    assert.equal(none.length, 1)
   })
 })
 
