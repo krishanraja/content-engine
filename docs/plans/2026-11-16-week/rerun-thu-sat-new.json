@@ -1,0 +1,253 @@
+{
+  "_about": "The six new off-day options the Sunday ideas re-run of Mon 16 Nov 2026 (days thu,sat) wrote, before they were merged into ideas.json. Every fact was checked on 16 Nov against the page linked beside it.",
+  "thu": [
+    {
+      "id": "nod",
+      "format": "Explainer carousel, 6 cards, 4:5",
+      "source": {"label": "n8n Labs blog, 10 Nov 2026, Meet Nod", "url": "https://blog.n8n.io/meet-nod"},
+      "copy": "n8n Labs released Nod on 10 November, a free, open-source agent for Mac and Windows that works in your apps and on websites until a job is done. Six cards on three chores to hand it this week, and the one setting to switch on first: a monthly spending limit.",
+      "hook": "A free AI that sits through the cancel screens for you.",
+      "pitch": {
+        "see": "Six cards. Cover: the house robot calmly saying no to a tower of pop-ups that beg it to stay. Then three chores Nod's makers list: cancel a subscription and turn down every offer to stay, watch a price and tell you when it drops, find a hotel and book it once you say go. Then the catch: the app is free, and you pay your AI provider for each task, so set the monthly cap first.",
+        "lands": "Everyone hates the cancel maze, and this hands it to a robot with endless patience.",
+        "why_now": "n8n Labs released Nod on 10 November 2026.",
+        "share": "Let the robot sit through the offers to stay."
+      },
+      "shape": "story",
+      "dive": "Nod works in your own apps and browser, each task shows its cost, and the only bill is the AI model you connect, which you can cap each month.",
+      "aim": "utility",
+      "funny": "A robot with endless patience finally wins against the are-you-sure-you-want-to-leave screen.",
+      "lookalike": {
+        "pattern": "free-stuff-worth-saving",
+        "beats": "https://www.instagram.com/getintoai/p/DfPuPhZkwMW/",
+        "our_take": "One free tool shown doing three real chores, with the cost catch said plainly, where the post sells a course."
+      },
+      "cards": [
+        {"words": "A FREE AI THAT SITS THROUGH THE CANCEL SCREENS FOR YOU", "picture": "The house robot calmly declining a tower of pop-ups"},
+        {"words": "CHORE 1: CANCEL A SUBSCRIPTION AND SAY NO TO EVERY OFFER TO STAY", "picture": "A gym membership page, the robot pressing No thanks again and again"},
+        {"words": "CHORE 2: WATCH A PRICE AND TELL YOU WHEN IT DROPS", "picture": "A price tag with a line sliding down"},
+        {"words": "CHORE 3: FIND A HOTEL AND BOOK IT ONCE YOU SAY GO", "picture": "A hotel card with a big GO button under its owner's thumb"},
+        {"words": "THE APP IS FREE. YOU PAY YOUR AI PER TASK. SET A MONTHLY CAP FIRST.", "picture": "A dial marked monthly limit, turned down low"},
+        {"words": "SAVE THIS. SUBSCRIBE FREE (MAKEYOURMINDUP.AI)", "picture": "The house close"}
+      ],
+      "learned_from": [
+        "\"I don't get it and it feels boring with not much point to it.\" (3 Nov, your Reject on the phone-home meme): this one is a chore you can hand over today."
+      ],
+      "direction": {
+        "look": "The infographic style you saved: one chore per card, the house robot doing it",
+        "format": "Explainer carousel, 6 cards, 4:5",
+        "frames": [
+          {"words": "A FREE AI THAT SITS THROUGH THE CANCEL SCREENS FOR YOU", "picture": "The house robot calmly declining a tower of pop-ups"},
+          {"words": "CHORE 1: CANCEL A SUBSCRIPTION AND SAY NO TO EVERY OFFER TO STAY", "picture": "A gym membership page, the robot pressing No thanks again and again"},
+          {"words": "CHORE 2: WATCH A PRICE AND TELL YOU WHEN IT DROPS", "picture": "A price tag with a line sliding down"},
+          {"words": "CHORE 3: FIND A HOTEL AND BOOK IT ONCE YOU SAY GO", "picture": "A hotel card with a big GO button under its owner's thumb"},
+          {"words": "THE APP IS FREE. YOU PAY YOUR AI PER TASK. SET A MONTHLY CAP FIRST.", "picture": "A dial marked monthly limit, turned down low"},
+          {"words": "SAVE THIS. SUBSCRIBE FREE (MAKEYOURMINDUP.AI)", "picture": "The house close"}
+        ],
+        "tone": "Cheeky and useful",
+        "kit": "Brand kit, the house robot, house close"
+      },
+      "fact_note": "Windows support is a preview that needs WSL 2 (Ryan Doser's review, 11 Nov); the card says Mac and Windows as the n8n post does.",
+      "recommended": true
+    },
+    {
+      "id": "bizhub",
+      "format": "Explainer carousel, 6 cards, 4:5",
+      "source": {"label": "IT Brief UK, 11 Nov 2026, on OpenAI's Businesses in ChatGPT (opened 10 Nov)", "url": "https://itbrief.co.uk/story/openai-launches-chatgpt-business-hub-for-companies"},
+      "copy": "OpenAI opened Business Hub on 10 November: a business can claim its listing in ChatGPT, verify it, fix its details and see how often it is mentioned. Six cards on how to claim yours and what it will not change.",
+      "hook": "ChatGPT already talks about your business. Now you can correct it.",
+      "pitch": {
+        "see": "Six cards. Cover: a cafe owner glaring at a giant chat bubble that has their opening hours wrong. Then: what Business Hub is; claim and verify your listing from the ChatGPT sidebar; add your own products and prices; what you see (mentions, website clicks and the topics people ask about, never anyone's chats); the catch (ChatGPT still decides what to recommend). Last card: claim yours this week.",
+        "lands": "Every owner has a wrong-listing story, and this one has a quick fix.",
+        "why_now": "OpenAI opened Business Hub on 10 November 2026.",
+        "share": "Check what ChatGPT says about your business."
+      },
+      "shape": "story",
+      "dive": "Claiming a listing lets a business correct the facts ChatGPT reads about it and see counts of mentions and clicks, while ChatGPT still chooses what to recommend.",
+      "aim": "utility",
+      "funny": "ChatGPT has been telling people your cafe opens at 6am on Sundays, and now you can make it stop.",
+      "lookalike": {
+        "pattern": "new-thing-you-can-do",
+        "beats": "https://www.instagram.com/therundownai/p/DfXx4uMktKI/",
+        "our_take": "Made for the owner, where the post is for the user: how to fix what ChatGPT says about you, and the one thing it will not fix."
+      },
+      "cards": [
+        {"words": "CHATGPT ALREADY TALKS ABOUT YOUR BUSINESS. NOW YOU CAN CORRECT IT.", "picture": "A cafe owner glaring at a chat bubble with the wrong opening hours"},
+        {"words": "BUSINESS HUB: CLAIM YOUR LISTING INSIDE CHATGPT", "picture": "The ChatGPT sidebar with Business Hub picked out"},
+        {"words": "VERIFY IT, FIX YOUR DETAILS, ADD YOUR PRODUCTS AND PRICES", "picture": "A listing card being corrected with a red pen"},
+        {"words": "YOU SEE MENTIONS, CLICKS AND TOPICS. NEVER ANYONE'S CHATS.", "picture": "A small dashboard with three counters"},
+        {"words": "THE CATCH: CHATGPT STILL DECIDES WHAT TO RECOMMEND", "picture": "The house robot holding the menu just out of the owner's reach"},
+        {"words": "CLAIM YOURS THIS WEEK. SUBSCRIBE FREE (MAKEYOURMINDUP.AI)", "picture": "The house close"}
+      ],
+      "learned_from": [
+        "\"I don't get it and it feels boring with not much point to it.\" (3 Nov, your Reject on the phone-home meme): the point here is one job an owner can do this week."
+      ],
+      "direction": {
+        "look": "The infographic style you saved: one step per card, real screens redrawn in the house look",
+        "format": "Explainer carousel, 6 cards, 4:5",
+        "frames": [
+          {"words": "CHATGPT ALREADY TALKS ABOUT YOUR BUSINESS. NOW YOU CAN CORRECT IT.", "picture": "A cafe owner glaring at a chat bubble with the wrong opening hours"},
+          {"words": "BUSINESS HUB: CLAIM YOUR LISTING INSIDE CHATGPT", "picture": "The ChatGPT sidebar with Business Hub picked out"},
+          {"words": "VERIFY IT, FIX YOUR DETAILS, ADD YOUR PRODUCTS AND PRICES", "picture": "A listing card being corrected with a red pen"},
+          {"words": "YOU SEE MENTIONS, CLICKS AND TOPICS. NEVER ANYONE'S CHATS.", "picture": "A small dashboard with three counters"},
+          {"words": "THE CATCH: CHATGPT STILL DECIDES WHAT TO RECOMMEND", "picture": "The house robot holding the menu just out of the owner's reach"},
+          {"words": "CLAIM YOURS THIS WEEK. SUBSCRIBE FREE (MAKEYOURMINDUP.AI)", "picture": "The house close"}
+        ],
+        "tone": "Practical, a little smug on the owner's behalf",
+        "kit": "Brand kit, the house robot, house close"
+      },
+      "fact_note": "OpenAI's own page (openai.com/index/introducing-businesses-chatgpt) refused the fetch here (403); IT Brief's report of it was read on 16 Nov. Eligibility varies by country and kind of business, and Business Agents are US only. The fact gate reads OpenAI's page before Growth makes the post."
+    },
+    {
+      "id": "united",
+      "format": "Meme, 2 panels, 4:5",
+      "source": {"label": "United Airlines newsroom, 11 Nov 2026, United Restricts Access for Third-Party AI Agents", "url": "https://united.mediaroom.com/news-releases?item=125496"},
+      "copy": "On 11 November United said it will block personal AI agents from booking and managing its flights, because handing them your login can expose your details and lead to purchases you never meant. A two-panel meme about the first airline to turn the robots away at the desk.",
+      "hook": "My AI agent tried to book my flight. United said no.",
+      "pitch": {
+        "see": "Panel one: the house robot at an airline check-in desk, proudly holding up its owner's passport. Panel two: the desk agent pointing at a sign, NO ROBOTS PAST THIS POINT, while the owner sighs behind the robot. Small print: United, 11 Nov 2026.",
+        "lands": "Everyone has pictured their AI doing the boring booking, and the first big airline just said not here.",
+        "why_now": "United announced the restriction on 11 November 2026.",
+        "share": "Plan it with AI. Book it yourself."
+      },
+      "shape": "story",
+      "dive": "An agent that books for you needs your password, and United says that can expose your details, cause purchases or miles spent that you never meant, and break the rule that a human checks in.",
+      "aim": "humour",
+      "funny": "The first airline to stop a passenger's robot at the desk.",
+      "lookalike": {
+        "pattern": "ai-says-no",
+        "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+        "our_take": "This time a company says no to the AI, and the reason is your password."
+      },
+      "learned_from": [
+        "\"Let's run this one as well and play on the hilarity of this topic.\" (3 Nov, your Improve on the homework meme)"
+      ],
+      "direction": {
+        "look": "The house two-panel meme, drawn fresh",
+        "format": "2 panels, 4:5",
+        "frames": [
+          {"words": "ME: BOOK MY FLIGHT HOME", "picture": "The house robot at a check-in desk, holding up its owner's passport"},
+          {"words": "UNITED: NO ROBOTS PAST THIS POINT", "picture": "The desk agent pointing at the sign, the owner sighing behind the robot"}
+        ],
+        "tone": "Deadpan",
+        "kit": "Brand kit, the house robot, small source line"
+      }
+    }
+  ],
+  "sat": [
+    {
+      "id": "mayo",
+      "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+      "source": {"label": "Inside Precision Medicine, 13 Nov 2026, on Mayo Clinic's talk at AMP 2026 in Seattle", "url": "https://www.insideprecisionmedicine.com/topics/molecular-dx/amp-2026-is-human-expertise-limiting-ai-diagnostics/"},
+      "copy": "At a pathology meeting in Seattle, a Mayo Clinic doctor showed an AI that named 100 brain tumours with 97% accuracy, ahead of all eight specialists it was tested against, and every specialist improved after seeing its answers. A 40-second voiceover on the AI as the colleague who makes the whole room sharper.",
+      "hook": "An AI beat eight brain-tumour experts at a quiz. Then it made all eight better.",
+      "pitch": {
+        "see": "A voiceover with moving graphics. A quiz-show set: eight doctors at buzzers, one robot. 100 tumour slides, 52 possible answers. The robot's score reads 97%, the highest in the room. Then the twist: the doctors see its answers, may change their own, and every one of their scores goes up.",
+        "lands": "It turns the robots-replace-doctors fear into a better story: the robot made the experts better.",
+        "why_now": "Presented at the AMP 2026 meeting in Seattle (10 to 14 November), reported 13 November 2026.",
+        "share": "The best colleague makes everyone sharper."
+      },
+      "shape": "story",
+      "dive": "Doctors who saw the AI's answer could change their own, and every one of them scored higher, though the test left out the lab tests they normally use.",
+      "aim": "interest",
+      "funny": "A game show where the robot wins and then shares the prize with every other player.",
+      "lookalike": {
+        "pattern": "ai-did-a-human-thing",
+        "beats": "https://www.instagram.com/power.ai/p/Dfjbe68ldg-/",
+        "our_take": "The human thing here is teaching: the AI's answers made eight experts better, where the post shows one person's lucky fix."
+      },
+      "learned_from": [
+        "\"Real-world stories only, but with a hilarious generated cover page\" (3 Nov, your Improve on the maths-proof good news)"
+      ],
+      "direction": {
+        "look": "A quiz-show set drawn in the house look, a scoreboard for the numbers",
+        "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+        "frames": [
+          {"words": "EIGHT BRAIN-TUMOUR EXPERTS. ONE AI. 100 SLIDES.", "picture": "Eight doctors at buzzers, the house robot at the end of the row"},
+          {"words": "52 POSSIBLE ANSWERS FOR EACH", "picture": "A wall of 52 answer cards"},
+          {"words": "THE AI: 97%. AHEAD OF ALL EIGHT.", "picture": "The scoreboard, the robot's light on top"},
+          {"words": "THEN THE DOCTORS SAW ITS ANSWERS", "picture": "Each doctor glancing at the robot's card"},
+          {"words": "EVERY ONE OF THEM IMPROVED", "picture": "Eight scores rising together"}
+        ],
+        "tone": "Warm, a little game-show",
+        "kit": "Brand kit, the house robot, scoreboard"
+      },
+      "fact_note": "A conference talk, not yet a peer-reviewed paper; the article does not give each doctor's score, and Dr Aldape said the test left out the lab tests doctors normally use, so the voiceover says so."
+    },
+    {
+      "id": "aure",
+      "format": "Meme, 2 panels, 4:5",
+      "source": {"label": "DeepL press release, 11 Nov 2026, DeepL unveils Aure", "url": "https://www.deepl.com/en/press-release/aure-voice-ai-model"},
+      "copy": "DeepL's voice model Aure, launched on 11 November, carries your rhythm, tone and emphasis into the translated voice in real time, in eight languages, in Teams, Zoom and Google Meet. A two-panel meme about a translator that now copies your mood along with your words.",
+      "hook": "My translator now sounds exactly as fed up as I do.",
+      "pitch": {
+        "see": "Panel one: a man on a video call, face in his hands, saying the meeting could have been an email. Panel two: his translated voice in Japanese, drawn as a speech bubble with the very same slumped face and sigh. Small print: DeepL Aure, 11 Nov 2026.",
+        "lands": "Everyone has sat through that meeting, and now the sigh survives translation.",
+        "why_now": "DeepL launched Aure on 11 November 2026.",
+        "share": "Your sigh now speaks eight languages."
+      },
+      "shape": "story",
+      "dive": "Aure listens for how you say something, your pace, stress and tone, and puts that into the translated voice as you speak, deleting the voice data when the call ends.",
+      "aim": "humour",
+      "funny": "The sigh that used to get lost in translation now arrives in eight languages.",
+      "lookalike": {
+        "pattern": "new-thing-you-can-do",
+        "beats": "https://www.instagram.com/artificialintelligenceee/p/DfYEiQgmpCJ/",
+        "our_take": "Shows the new thing by its funniest use, your mood crossing languages, where the post lists a feature."
+      },
+      "learned_from": [
+        "\"Let's run this one as well and play on the hilarity of this topic.\" (3 Nov, your Improve on the homework meme)"
+      ],
+      "direction": {
+        "look": "The house two-panel meme, drawn fresh",
+        "format": "2 panels, 4:5",
+        "frames": [
+          {"words": "ME, IN ENGLISH: THIS COULD HAVE BEEN AN EMAIL", "picture": "A man on a video call, face in his hands"},
+          {"words": "ME, IN JAPANESE, NOW: SAME SIGH", "picture": "His translated speech bubble wearing the very same slumped face"}
+        ],
+        "tone": "Dry",
+        "kit": "Brand kit, small source line"
+      },
+      "fact_note": "DeepL's 76% fewer critical errors claim is its own marketing and is left out."
+    },
+    {
+      "id": "genome",
+      "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+      "source": {"label": "Google DeepMind blog, 11 Nov 2026, AlphaGenome 2", "url": "https://deepmind.google/blog/alphagenome-2-deciphering-how-cells-read-dna-to-better-understand-disease/"},
+      "copy": "Google DeepMind's AlphaGenome 2, out on 11 November, predicts how a change in DNA plays out in one particular kind of cell, trained on more than 100 million single cells across 68 tissues. A 40-second voiceover on why one small change in your DNA can matter in one kind of cell and not another.",
+      "hook": "Every cell in you has the same recipe book. Google's new AI guesses which page each one reads.",
+      "pitch": {
+        "see": "A voiceover with moving graphics. One recipe book copied into a blood cell, a skin cell and a brain cell, each open at a different page. A typo lands on one page. Only the cell reading that page changes. Then the number: in one test the new model caught 30% of the known culprit typos, where the old one caught 16%.",
+        "lands": "It makes genetics as simple as a recipe book and a typo.",
+        "why_now": "Google DeepMind released AlphaGenome 2 on 11 November 2026.",
+        "share": "Same recipe book, different page."
+      },
+      "shape": "story",
+      "dive": "Every cell carries the same DNA but reads different parts of it, so AlphaGenome 2 predicts a change's effect one kind of cell at a time.",
+      "aim": "interest",
+      "funny": "Your cells are flatmates sharing one cookbook, and each only ever cooks its own dish.",
+      "lookalike": {
+        "pattern": "weekly-roundup",
+        "beats": "https://www.instagram.com/getintoai/p/DfPhI6EGM_6/",
+        "our_take": "One science story told all the way through with a recipe book, where the roundup gives it a line."
+      },
+      "learned_from": [
+        "\"It's kind of boring and I also don't really understand the point of it or what the takeaway is.\" (3 Nov, your Reject on the quote-line carousel): this one leads with the recipe book so the point lands first."
+      ],
+      "direction": {
+        "look": "A cookbook and three kitchens drawn in the house look",
+        "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+        "frames": [
+          {"words": "EVERY CELL IN YOU HAS THE SAME RECIPE BOOK", "picture": "One cookbook copied into three little kitchens: blood, skin, brain"},
+          {"words": "EACH ONE READS A DIFFERENT PAGE", "picture": "Three open books, three different pages"},
+          {"words": "A TYPO ONLY MATTERS WHERE IT IS READ", "picture": "A typo on one page, only one kitchen's dish going wrong"},
+          {"words": "GOOGLE'S NEW AI CHECKS EACH KITCHEN", "picture": "The house robot with a clipboard, kitchen to kitchen"},
+          {"words": "30% OF KNOWN CULPRITS FOUND. THE OLD MODEL: 16%.", "picture": "Two bars, one nearly twice the other"}
+        ],
+        "tone": "Curious and light",
+        "kit": "Brand kit, the house robot"
+      },
+      "fact_note": "Research use only: DeepMind says it is not validated for clinical or diagnostic use. The 30% against 16% is the TenK10K test on its page."
+    }
+  ]
+}
