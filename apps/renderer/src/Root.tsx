@@ -1,4 +1,5 @@
 import React from 'react'
+import { StyleStill, StyleStillSchema } from './engine/stills/StyleStill'
 import { Composition } from 'remotion'
 import { MindmakeShort } from './Short'
 import { ShortPropsSchema, type ShortProps } from './props'
@@ -76,6 +77,7 @@ function TransportVeCut(props: EngineRenderProps) {
 export function RemotionRoot() {
   return (
     <>
+      <Composition id="StyleStill" component={StyleStill} width={1080} height={1920} fps={30} durationInFrames={1} schema={StyleStillSchema} defaultProps={{layer: 'motion', id: 'ai-music-slam'}} />
       <Composition
         id="VeFormatMasterTall"
         component={TransportFormatMaster}
