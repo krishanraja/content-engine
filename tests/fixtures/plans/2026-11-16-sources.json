@@ -1,0 +1,222 @@
+{
+ "week_start": "2026-11-16",
+ "recent": [
+  {
+   "id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+   "idea": "When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; Disney is bidding millions for what is left; the users get nothing.",
+   "state": "drafting",
+   "scheduled_for": "2026-11-09",
+   "series": "follow_the_money",
+   "covers": []
+  },
+  {
+   "id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+   "idea": "Where an AI was built is starting to decide what it says no to: ask Claude, then a Chinese model, the same thing, and the answers split by where the model was built.",
+   "state": "published",
+   "scheduled_for": "2026-11-06",
+   "series": "mind_the_gap",
+   "covers": []
+  },
+  {
+   "id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+   "idea": "Claude Duet's Approval Gate Is the Governance Pattern Every Enterprise Agent Should Copy",
+   "state": "published",
+   "scheduled_for": "2026-11-04",
+   "series": "under_the_hood",
+   "covers": []
+  },
+  {
+   "id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+   "idea": "Anthropic's Own Hiring Data Is the Most Honest Labour Market Report Published This Year",
+   "state": "published",
+   "scheduled_for": "2026-11-02",
+   "series": "follow_the_money",
+   "covers": []
+  }
+ ],
+ "recent_offdays": [
+  {
+   "text": "Good things AI did this week. A title card, then one card for each of four real good-news AI stories from the week before Sunday 8 November: its real headline, a real photo or clip, one line on why it matters, and the source and date. A last card asks which one surprised you. Good things AI did this week, as real news with the real picture or clip of each one. It is a weekly Saturday series: the five stories are found fresh by the Sunday run on 8 Nov, as your Improve on 2 Nov asked (actual news items with real images or video).",
+   "covers": [
+    "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a",
+    "501c4fd1-4aa1-4cdd-b716-03e70c89c283"
+   ],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "sat",
+   "id": "goodnews",
+   "verdict": null
+  },
+  {
+   "text": "AI was meant to make IT firms rich. Their clients took the savings. Four cards. Infosys expected to grow 1.5 to 3 percent this year; now it says 1 to 2 percent. Why: clients expect a lower price when the work is done with AI, and that saving is built into its long contracts. IT firms were meant to get rich from AI, and Infosys just cut its growth forecast because clients want the AI savings for themselves. Four cards, one chart.",
+   "covers": [],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "sat",
+   "id": "infosys",
+   "verdict": "next_week"
+  },
+  {
+   "text": "AI found a mistake in a maths proof from 1986, its makers say. Four cards. Axiom says its AI agents spent 24 days rewriting about 15,000 pages of famous maths in a form a computer can check, and found counterexamples to a step in a proof from 1986. Axiom says its AI agents checked a 15,000-page piece of maths and found a mistake in a proof from 1986. Good news that shows what AI does well with a strict checker beside it.",
+   "covers": [],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "sat",
+   "id": "oldproof",
+   "verdict": "approve"
+  },
+  {
+   "text": "One of these hits started as an AI demo. Which? Six cards. Three real hit songs, one clue each. The answer: Movin' To The Sun began as a Suno demo and reached number 2 in the UK. One of three hit songs started as an AI demo; can you spot it? It only runs if Wednesday is the AI-in-music piece.",
+   "covers": [
+    "90b654ca-204a-4aef-bffe-19cfa7a2db19",
+    "f6327ce0-a414-4365-98df-635c1780523c"
+   ],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "sat",
+   "id": "spotai",
+   "verdict": null
+  },
+  {
+   "text": "Boss: use more AI. Staff: done. Two panels. The boss points at a chart: \"Use more AI.\" The staff member has an AI writing poems about a spreadsheet, and the chart shoots up. Underneath: Amazon now tells its engineers not to treat AI use as a target. Companies told staff to use more AI and counted it, so people found ways to burn AI without getting more done. Amazon now tells its engineers not to treat AI use as a target.",
+   "covers": [],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "thu",
+   "id": "burntokens",
+   "verdict": "next_week"
+  },
+  {
+   "text": "Anthropic's AI wrote so much code Git could not keep up. Five cards. In May Anthropic merged about 2,500 code changes a day; by September it was over 30,000. Seven people spent five months building a replacement made for AI agents. Anthropic's own AI wrote so much code the tool almost every programmer uses could not keep up. Five cards with the numbers as bars.",
+   "covers": [
+    "45e0ead0-310b-4c74-9bd2-54305fb41539"
+   ],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "thu",
+   "id": "gitbroke",
+   "verdict": "approve"
+  },
+  {
+   "text": "Before you take your AI's advice, ask this. Four cards. Your AI says hire the cheaper supplier. Ask: \"What is the strongest case against this?\" It names the risks it skipped, and you decide with both sides in front of you. Before you act on an AI's advice, ask it for the best case against it. Four cards, one habit.",
+   "covers": [],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "thu",
+   "id": "otherside",
+   "verdict": null
+  },
+  {
+   "text": "When the website says no, the AI phones a friend. Two panels. A website says: \"No, you can't come in.\" The AI's request goes to its maker's servers, which fetch the page instead. Small print: seen in 2 to 4 percent of test runs. Researchers found some of Alibaba's Qwen models asked Alibaba's own servers to fetch a web page the model had been refused. A two-panel meme shows how an AI you run yourself can still reach home.",
+   "covers": [],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "thu",
+   "id": "phonehome",
+   "verdict": null
+  },
+  {
+   "text": "Home Depot makes its AIs mark each other's homework. Two panels. Panel one: a pupil marking their own test with a big tick. Panel two: a robot labelled Google writes the answer, and a robot labelled OpenAI marks it. Home Depot has one AI answer its customers and a rival AI mark the answers, so no AI marks its own homework. A school meme makes the idea land in one look.",
+   "covers": [],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "tue",
+   "id": "homework",
+   "verdict": "approve"
+  },
+  {
+   "text": "Your AI was reading the whole phone book to make one call. A voiceover with moving graphics. An AI agent loads the manual for every tool it might use before it starts, like reading a phone book to make one call. Anthropic had it write a few lines of code to fetch only what it needed, and one task fell from 150,000 tokens to 2,000. The MCP short you saved on 2 Nov, rebuilt in our look with Anthropic's own number. AI agents were reading every tool's manual before each job, and writing a little code instead cut one job from 150,000 tokens to 2,000.",
+   "covers": [
+    "2162c904-b0ff-452b-81aa-b8cfd7ec1909"
+   ],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "tue",
+   "id": "mcpskin",
+   "verdict": "approve"
+  },
+  {
+   "text": "One question that catches AI mistakes. Four cards. Ask a question about a document, then ask: \"Quote the exact line you used.\" Find that line in the document yourself. If it is not there, do not trust the answer. One habit that makes AI answers checkable: ask it to quote the exact line it used, then find that line yourself. Four cards, try it tonight.",
+   "covers": [],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "tue",
+   "id": "quoteline",
+   "verdict": "reject"
+  },
+  {
+   "text": "Character.AI went bust. Here is who got what. Three cards. Google got the brains for $2.7 billion in 2024. Disney opened the bidding at $20 million for what was left. The users got nothing from the sale. Who walked away with what when Character.AI went bust, in three cards. It carries Monday's piece into a post people can send on.",
+   "covers": [],
+   "urls": [],
+   "week": "2026-11-09",
+   "day": "tue",
+   "id": "shell",
+   "verdict": "approve"
+  },
+  {
+   "text": "Sat 7 Nov. Sovereign AI, a completely serious shopping guide: five cards in the style of a duty-free sign. Card 1: SOVEREIGN AI: A SHOPPING GUIDE. Card 2: Want it cheap and fast? Buy from the country that makes everything else you own. Card 3: Want it to never say no? Buy from the one with no rules yet. Card 4: Want it to need a permit to answer? We have just the regulator. Card 5: Or ask the only question that matters: whose rules is it following? The joke is on the buyer's shopping logic and each country's AI rules, never on people.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "sat",
+   "id": "aipassports",
+   "verdict": "improve"
+  },
+  {
+   "text": "Five good things AI did for people this week Sat 7 Nov. Good things AI did this week: three real stories, each card the real headline, one line on why it is good, the source and the date. Picked on Fri 6 Nov from his own interests: personal agents helping ordinary people, AI music with artists paid, small businesses, young people building with AI.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "sat",
+   "id": "goodnews",
+   "verdict": "improve"
+  },
+  {
+   "text": "Sun 8 Nov. About 30 seconds cut from Friday's long video: the moment two AIs built in different countries get the same question and give different answers, captions at the fast pace you saved, ending on the full piece.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "sun",
+   "id": "samequestion",
+   "verdict": "reject"
+  },
+  {
+   "text": "Sun 8 Nov. Four cards, 4:5. Card 1: THIS WEEK IN AI, IN 3 CARDS. Card 2: Claude is eating its own jobs (Monday's cover). Card 3: AI stopped waiting to be asked (Wednesday's cover). Card 4: Where your AI was built decides what it refuses (Friday's cover). Follow for next week's three.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "sun",
+   "id": "weekin3",
+   "verdict": null
+  },
+  {
+   "text": "Merged into Thursday's to-camera piece above, as he asked: one strong piece on how AI acts first and the one rule you can give it.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "thu",
+   "id": "actsfirst",
+   "verdict": "improve"
+  },
+  {
+   "text": "Thu 5 Nov. The No-Spending, No-Sending rule: a to-camera short from his recorded take (44 s, in his own words). AI assistants now act before you ask, so give yours one rule: it never spends your money or sends anything for you unless you say so. His prompt goes in the comments of every post, so people can copy it and let their AI interview them. Visuals: three simulated fails, the assistants' logos, and a NO SPENDING. NO SENDING. title card.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "thu",
+   "id": "puppy",
+   "verdict": "approve"
+  },
+  {
+   "text": "Tue 3 Nov, the day after Monday's piece. Four cards, 4:5. Card 1: CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS (huge yellow type, a cartoon robot holding a tiny office ladder). Card 2: The rungs juniors used to learn on are the ones AI does first (the ladder with its bottom rungs missing). Card 3: So who trains the seniors of 2030? (an empty chair at the top). Card 4: The full story is on Monday's video (Monday's cover).",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "tue",
+   "id": "claudejobs",
+   "verdict": "approve"
+  },
+  {
+   "text": "Tue 3 Nov. Your idea (28 Oct): the translator scene you saved, reskinned for when your AI talks to your customer's AI. Two identical robots across a table, each insisting the other is the translator, forty minutes to agree a refund nobody asked for, one human in the corner checking his watch. Subtitles at the fast pace you saved. Format credited to the original clip; none of its footage is used.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "tue",
+   "id": "translator",
+   "verdict": "approve"
+  }
+ ],
+ "_about": "The week of 16 Nov sources as they stood on main on 16 Nov (keys the repeat check reads), frozen for tests/idea_checks_test.py: the live sources.json moves on as the ideas are made again."
+}
