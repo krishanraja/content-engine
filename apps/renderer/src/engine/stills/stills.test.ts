@@ -96,6 +96,6 @@ describe('fourth-pass reviewer gates',()=>{
  })
  it('tears the receipt across its whole foot',()=>{
   const markup=renderToStaticMarkup(React.createElement(StyleStill,{layer:'motion',id:'character-ai-receipts'}))
-  expect(markup).toMatch(/L130 1640L110 1660Z/)
+  expect(markup).toMatch(/V1660L940 1640L910 1660/);expect(markup).toMatch(/L110 1640L110 1660Z/)
  })
 })
