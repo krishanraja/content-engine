@@ -145,6 +145,26 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_R18_short_over_89_seconds(self):
         self.assertRefused(mutate(lambda s: s['cuts']['proof-tall'].update(max_s=95)), 'dialogue.short_max')
 
+    def test_short_from_16_nov_is_35_seconds_or_less(self):
+        # Ruling (Krish, 2026-11-16), Growth's audience brief, change 2: verticals of 20 to 35 seconds (SHORT_CUT).
+        def dated(max_s):
+            return lambda s: (s.update(publish_day='2026-11-18'), s['cuts']['proof-tall'].update(max_s=max_s))
+        self.assertRefused(mutate(dated(60)), 'dialogue.short_max')
+        self.assertNotIn('dialogue.short_max', codes_for(mutate(dated(35))))
+        self.assertNotIn('dialogue.short_max', codes_for(mutate(lambda s: s['cuts']['proof-tall'].update(max_s=60))))
+
+    def test_vertical_from_16_nov_shows_its_thing_by_the_second_word(self):
+        # House rule FIRST_TWO_SECONDS (Ruling, Krish, 2026-11-16), Growth's audience brief, change 1.
+        def on_word(at, day):
+            def fn(s):
+                s['publish_day'] = day
+                first = s['cuts']['proof-tall']['beats'][0]
+                first['events'] = [dict(e, at_w=max(e['at_w'], at)) for e in first['events']]
+            return fn
+        self.assertRefused(mutate(on_word(3, '2026-11-18')), 'story.hook_event')
+        self.assertNotIn('story.hook_event', codes_for(mutate(on_word(1, '2026-11-18'))))
+        self.assertNotIn('story.hook_event', codes_for(mutate(on_word(3, '2026-10-23'))))
+
     def test_IR43_hook_lands_late(self):
         def late(s):
             first = s['cuts']['proof-tall']['beats'][0]
