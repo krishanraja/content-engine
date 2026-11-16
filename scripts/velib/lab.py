@@ -491,6 +491,9 @@ def record_still(layer: str, still_id: str, drive_id: str, file: Path | None = N
         raise ValueError(f'{still_id} is not a motion style the lab draws')
     if layer == 'captions' and still_id not in caption_themes():
         raise ValueError(f'{still_id} is not a caption style (config/caption-themes.json)')
+    # A motion or caption still is always the lab's own frame, checked against stills.json: never recorded blind.
+    if file is None and layer in ('motion', 'captions'):
+        raise ValueError(f'a {layer} still is recorded with --file, the lab\'s still of it (ve lab stills), so it is checked')
     if file is not None:
         file = Path(file)
         size = jpeg_size(file)

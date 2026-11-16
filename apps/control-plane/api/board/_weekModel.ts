@@ -139,10 +139,14 @@ export interface ModelItem {
 /** What an item or idea repeats: a piece or a post approved, scheduled or live in the 14 days before it. */
 export interface ModelRepeatOf { title: string; date: string; day: string; stage: 'live' | 'scheduled' | 'approved'; kind: 'piece' | 'post'; line: string }
 /** An idea that left the ideas board because it repeats something that went out (contract 1.17.0). */
-export interface ModelRepeat { doc_id: string; day: PostedDay; date: string; title: string; of: ModelRepeatOf }
+export interface ModelRepeat { doc_id: string; piece_id: string | null; day: PostedDay; date: string; title: string; of: ModelRepeatOf }
 /** One thing approved, scheduled or live, with its primary source and hook, that a later idea must not retell (Ruling,
  *  Krish, 2026-11-16: "this week's Ideas Board needs to not contain mostly things we published last week"). */
-export interface RecentOut { keys: string[]; kind: 'piece' | 'post'; title: string; url: string | null; hook: string | null; date: string; day: string; stage: 'live' | 'scheduled' | 'approved'; supports?: string | null
+export interface RecentOut { keys: string[]; kind: 'piece' | 'post'; title: string; url: string | null; hook: string | null; date: string; day: string; stage: 'live' | 'scheduled' | 'approved'
+  /** The board (Monday) that offered it: only an earlier board's piece or post is ever a repeat. */
+  week: string
+  /** The weekly good news, whose hook is the same every week by design: never matched by its hook. */
+  recurring?: boolean
   /** Every source it cites: canonical URLs, and the named sources of its label, one per ';' part, as words. */
   cites?: { urls: string[]; parts: string[] } }
 /** An idea he has not answered, held or revised: on the ideas board only, with the presses that answer it. */
@@ -364,7 +368,7 @@ function storyLines(story: StoryState | null | undefined): string {
   if (!story) return ''
   const file = story.path ? `The story is ${story.path}.` : 'The story is its narrative file in this week\'s docs/plans folder (narrative-lock-<day>.md, found by its piece_id line).'
   return story.approved
-    ? `${file} Krish has approved it. If his notes below change the story (a new angle is a rewrite, not a patch), write the changed story into the same file above his approval line and leave that line as it is: it no longer matches, so the board asks him to approve the new story. Otherwise take the next step.\n\n`
+    ? `${file} Krish has approved it. If his notes below change the story (a new angle is a rewrite, not a patch), write the changed story into the same file and take his approval line off its end (a story changed under his approval is not the story he approved: making.py refuses it), so the board asks him to approve the new story. Otherwise take the next step.\n\n`
     : `${file} Krish has not approved it yet. If his notes below ask for a change or a different angle, rewrite it to them, then tell him it is ready to approve on the board. If something in it is still open, settle it with him first.\n\n`
 }
 
@@ -383,7 +387,7 @@ export function itemPrompt(week: string, it: { day: PostedDay; date: string; tit
     + writeBack({ pieceId: it.piece_id, week, day: it.day, step })
   const base = thoughtPress(it.day, stepAnchor(step))
   const save: PressAction = { ...base, label: 'Your notes for Claude', done: 'Saved on the board, and in the prompt.',
-    body: { ...base.body, use: 'claude_notes', title: cut(it.title, 300), ...(it.piece_id ? { piece_id: it.piece_id } : {}) },
+    body: { ...base.body, use: 'claude_notes', title: cut(it.title, 300), ...(it.piece_id ? { piece_id: it.piece_id } : { item: it.key }) },
     words: { path: 'text', ask: 'Your notes for Claude', required: true } }
   const action: PromptAction = { kind: 'prompt', label: CLAUDE_LABEL, prompt,
     notes: { ask: 'Your notes for Claude: what to change, or what you think the next step is', heading: NOTES_HEADING, save },
@@ -606,56 +610,55 @@ export function hookNorm(v: unknown): string | null {
   const s = titleNorm(str(v) ?? '')
   return s.split(' ').length >= 4 ? s : null
 }
-/** The earlier thing an item or idea retells, or null: the same primary source, or the same hook, approved, scheduled or
- *  live from 14 days before it up to (for an idea) the end of its week. A supporting carousel may share its own piece's
- *  source; an item never matches itself. */
-export function repeatOf(own: { keys: string[]; date: string; url: string | null; hook: string | null; supports: string | null; cites?: { urls: string[]; parts: string[] } }, recent: RecentOut[], ideaWeekEnd: string | null): ModelRepeatOf | null {
-  const same = (r: RecentOut): boolean => {
-    if (own.url && (r.url === own.url || (r.cites?.urls || []).includes(own.url))) return true
-    if (r.url && (own.cites?.urls || []).includes(r.url)) return true
-    if (own.hook && r.hook === own.hook) return true
+/** The earlier thing an item or idea retells, or null. Only a piece or post an earlier board offered counts (a story he
+ *  already chose), dated from 14 days before it to the end of its own week; never itself (an item carried into this week
+ *  is matched by its key). Retelling is the same primary source, the same hook (never for the weekly good news, whose
+ *  hook is the same every week by design), or two or more named sources in common. The line says which. */
+export function repeatOf(own: { keys: string[]; week: string; date: string; url: string | null; hook: string | null; recurring?: boolean; cites?: { urls: string[]; parts: string[] } }, recent: RecentOut[]): ModelRepeatOf | null {
+  const why = (r: RecentOut): string | null => {
+    if (own.url && (r.url === own.url || (r.cites?.urls || []).includes(own.url))) return 'Same source as'
+    if (r.url && (own.cites?.urls || []).includes(r.url)) return 'Same source as'
+    if (own.hook && r.hook === own.hook && !own.recurring && !r.recurring) return 'Same hook as'
     const mine = new Set(own.cites?.parts || [])
-    return (r.cites?.parts || []).filter(x => mine.has(x)).length >= 2
+    const shared = (r.cites?.parts || []).filter(x => mine.has(x)).length
+    return shared >= 2 ? `Shares ${shared} sources with` : null
   }
-  const hit = recent.filter(r => !r.keys.some(k => own.keys.includes(k)))
-    .filter(r => daysBetween(own.date, r.date) <= 14 && (ideaWeekEnd ? r.date <= ideaWeekEnd : r.date < own.date))
-    .filter(r => !(r.kind === 'piece' && own.supports && r.day === own.supports && daysBetween(own.date, r.date) <= 6 && daysBetween(r.date, own.date) <= 6))
-    .filter(same)
-    .sort((a, b) => ['live', 'scheduled', 'approved'].indexOf(a.stage) - ['live', 'scheduled', 'approved'].indexOf(b.stage) || b.date.localeCompare(a.date))[0]
+  const end = shiftDays(own.week, 6)
+  const hits = recent.filter(r => !r.keys.some(k => own.keys.includes(k)) && r.week < own.week && daysBetween(own.date, r.date) <= 14 && r.date <= end)
+    .map(r => ({ r, how: why(r) })).filter((x): x is { r: RecentOut; how: string } => Boolean(x.how))
+    .sort((a, b) => ['live', 'scheduled', 'approved'].indexOf(a.r.stage) - ['live', 'scheduled', 'approved'].indexOf(b.r.stage) || b.r.date.localeCompare(a.r.date))
+  const hit = hits[0]
   if (!hit) return null
-  const when = new Date(`${hit.date}T00:00:00Z`).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
-  return { title: cut(hit.title, 200), date: hit.date, day: hit.day, stage: hit.stage, kind: hit.kind,
-    line: `The same story ${STAGE_WORD[hit.stage]} on ${when}: "${cut(hit.title, 120).replace(/[.\s]+$/, '')}".` }
+  const { r } = hit
+  const when = new Date(`${r.date}T00:00:00Z`).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
+  return { title: cut(r.title, 200), date: r.date, day: r.day, stage: r.stage, kind: r.kind,
+    line: `${hit.how} "${cut(r.title, 120).replace(/[.\s]+$/, '')}", which ${STAGE_WORD[r.stage]} on ${when}.` }
 }
 
-/** What went out or is on its way from 14 days before the week to its end, for the repeat check: every approved off-day
- *  item (its stage from Growth's posting record), the week's approved pieces and the series pieces of the 14 days before
- *  (content_ideas rows the view reads). Pure. */
-export function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'pieces'>, days: DayView[], items: OffdayItem[] | null, pastPieces: Body[]): RecentOut[] {
+/** What earlier boards put out or on its way, from 14 days before the week to its end, for the repeat check: every
+ *  approved off-day item an earlier board offered (its stage from Growth's posting record) and the series pieces of the
+ *  14 days before the week (content_ideas rows the view reads). This week's own board is never its own repeat: a twin
+ *  on it is the Sunday run's to refuse (board_feed.py gate). Pure. */
+export function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'pieces'>, _days: DayView[], items: OffdayItem[] | null, pastPieces: Body[]): RecentOut[] {
   const from = shiftDays(m.week, -14), to = shiftDays(m.week, 6)
   const out: RecentOut[] = []
   for (const it of items || []) {
-    if (it.state !== 'approved' || !it.date || it.date < from || it.date > to) continue
+    const board = it.origin_week || it.week || ''
+    if (it.state !== 'approved' || !it.date || it.date < from || it.date > to || !board || board >= m.week) continue
     const stage: RecentOut['stage'] = it.posts.some(p => p.state === 'live') ? 'live' : it.posts.some(p => p.state === 'scheduled') ? 'scheduled' : 'approved'
     const raw = isObj(it.option) && Object.keys(it.option).length ? it.option : rawOption(m as ModelInputs, it.day || '', it.option_id)
-    out.push({ keys: [it.item, ...(it.doc ? [it.doc] : [])], kind: 'post', title: cut(raw?.hook ?? raw?.title ?? raw?.copy ?? it.option_id, 200),
+    out.push({ keys: [it.item, ...(it.doc ? [`${board}:${it.doc}`] : [])], kind: 'post', title: cut(raw?.hook ?? raw?.title ?? raw?.copy ?? it.option_id, 200),
       url: primaryUrl(raw) ?? primaryUrl(rawOption(m as ModelInputs, it.day || '', it.option_id)), hook: hookNorm(raw?.hook ?? raw?.title), date: it.date, day: it.day || '', stage,
-      supports: offdayKind(raw || {}).supports, cites: citesOf(raw) })
-  }
-  for (const d of days) for (const p of d.pieces) {
-    if (!p.approval) continue
-    const raw = rawOption(m as ModelInputs, d.day, p.id)
-    const row = m.pieces.find(x => String(x.id).toLowerCase() === p.id) ?? null
-    out.push({ keys: [`piece:${p.id}`], kind: 'piece', title: cut(p.title, 200), url: primaryUrl(raw, row?.source_url), hook: hookNorm(raw?.hook ?? p.title),
-      date: d.date, day: d.day, stage: p.published || p.stage?.state === 'live' ? 'live' : 'approved', cites: citesOf(raw) })
+      week: board, recurring: offdayKind(raw || {}).kind === 'good_news', cites: citesOf(raw) })
   }
   for (const r of pastPieces) {
     const date = str(r.scheduled_for)?.slice(0, 10)
     if (!date || date < from || date >= m.week || r.buried_at) continue
-    const day = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][new Date(`${date}T00:00:00Z`).getUTCDay()]
+    const at = new Date(`${date}T00:00:00Z`)
+    const day = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][at.getUTCDay()]
     out.push({ keys: [`piece:${String(r.id).toLowerCase()}`], kind: 'piece', title: cut(r.idea ?? r.thesis, 200),
       url: str(r.canonical_url) ?? primaryUrl(null, r.source_url), hook: hookNorm(r.idea), date, day,
-      stage: r.state === 'published' ? 'live' : 'approved' })
+      stage: r.state === 'published' ? 'live' : 'approved', week: shiftDays(date, -((at.getUTCDay() + 6) % 7)) })
   }
   return out
 }
@@ -681,9 +684,8 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
       if (why && (offday || /^(mon|wed|fri)-\d+$/.test(o.doc_id))) {
         const idea = ideaOf(m, d, o, why)
         const raw = rawOption(m, d.day, o.id)
-        const supports = offday ? offdayKind({ ...(raw || {}), format: raw?.format ?? o.format }).supports : null
-        const rep = repeatOf({ keys: [o.doc_id, ...(o.item?.key ? [o.item.key] : []), ...(idea.piece_id ? [`piece:${idea.piece_id}`] : [])], date: d.date, url: primaryUrl(raw, o.source),
-          hook: hookNorm(raw?.hook ?? o.title), supports, cites: citesOf(raw) }, m.recentOut || [], shiftDays(m.week, 6))
+        const rep = repeatOf({ keys: [`${m.week}:${o.doc_id}`, ...(o.item?.key ? [o.item.key] : []), ...(idea.piece_id ? [`piece:${idea.piece_id}`] : [])], week: m.week, date: d.date,
+          url: primaryUrl(raw, o.source), hook: hookNorm(raw?.hook ?? o.title), recurring: idea.kind === 'good_news', cites: citesOf(raw) }, m.recentOut || [])
         if (rep) ideaRepeats.set(o.doc_id, rep)
         ideas.push(idea)
       }
@@ -715,12 +717,13 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
     if (it.stage.key === 'live') continue
     const raw = it.piece_id ? rawOption(m, md.day, it.piece_id) : rawOption(m, md.day, it.key.replace(/^off-[a-z]{3}-/, ''))
     const row = it.piece_id ? m.pieces.find(x => String(x.id).toLowerCase() === it.piece_id) ?? null : null
-    const rep = repeatOf({ keys: [it.key, ...(it.item ? [it.item] : [])], date: it.date, url: primaryUrl(raw, row?.source_url), hook: hookNorm(raw?.hook ?? it.title), supports: it.supports, cites: citesOf(raw) }, recent, null)
+    const rep = repeatOf({ keys: [`${m.week}:${it.key}`, ...(it.item ? [it.item] : []), ...(it.piece_id ? [`piece:${it.piece_id}`] : [])], week: m.week, date: it.date,
+      url: primaryUrl(raw, row?.source_url), hook: hookNorm(raw?.hook ?? it.title), recurring: it.kind === 'good_news', cites: citesOf(raw) }, recent)
     if (rep) it.repeat = rep
   }
   const fresh = ideas.filter(i => {
     const rep = ideaRepeats.get(i.doc_id) ?? null
-    if (rep && i.date >= m.today) repeats.push({ doc_id: i.doc_id, day: i.day, date: i.date, title: i.title, of: rep })
+    if (rep && i.date >= m.today) repeats.push({ doc_id: i.doc_id, piece_id: i.piece_id, day: i.day, date: i.date, title: i.title, of: rep })
     return !rep
   })
   const waiting = fresh.filter(i => i.date >= m.today && !goneOut.has(twinOf.get(i.doc_id) ?? '') && !(i.piece_id && onDay.has(i.piece_id)))

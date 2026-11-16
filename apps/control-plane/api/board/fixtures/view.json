@@ -10721,7 +10721,8 @@
           "thread_id": "{id}",
           "anchor": "desk:sat:post",
           "use": "claude_notes",
-          "title": "Option goodnews"
+          "title": "Option goodnews",
+          "item": "off-sat-goodnews"
          },
          "words": {
           "path": "text",

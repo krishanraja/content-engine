@@ -133,6 +133,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/inspiration/candidates`
 - `/api/inspiration/cards`
 - `/api/inspiration/drive-scan`
+- `/api/inspiration/instagram-sheet`
 - `/api/inspiration/uses`
 - `/api/investigations/[run_id]/draft-check`
 - `/api/investigations/[run_id]/trace`
@@ -1073,7 +1074,9 @@ What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?
 - `function wordless(c: InspoCard): boolean`
 - `const FEED_DAYS`
 - `const CORRECTION_DAYS`
+- `const LOOKALIKE_FEED_DAYS`
 - `function buildFeed(rows: Row[])`
+- `function splitFeed(rows: Row[], feedSince: string)`
 - `function buildCorrections(rows: Row[])`
 - `function buildHindsight(rows: Row[])`
 
@@ -2913,8 +2916,8 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function primaryUrl(raw: Body | null, fallback: unknown = null): string | null`
 - `function citesOf(raw: Body | null): { urls: string[]; parts: string[] }`
 - `function hookNorm(v: unknown): string | null`
-- `function repeatOf(own: { keys: string[]; date: string; url: string | null; hook: string | null; supports: string | null…`
-- `function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'pieces'>, days: DayView[], items: OffdayItem[] …`
+- `function repeatOf(own: { keys: string[]; week: string; date: string; url: string | null; hook: string | null; recurring…`
+- `function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'pieces'>, _days: DayView[], items: OffdayItem[]…`
 - `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
 - `function modelProblems(model: WeekModel, days: DayView[]): string[]`
 
@@ -3341,6 +3344,13 @@ What the Drive scan decides, with no Drive, no model and no database.
 ### `apps/control-plane/api/inspiration/drive-scan.ts`
 
 - `export default withContentRun('inspiration_scan', handler)`
+
+### `apps/control-plane/api/inspiration/instagram-sheet.ts`
+
+- `const INSTAGRAM_SHEET_ID`
+- `const XLSX_TYPE`
+- `const SHEET_MAX_BYTES`
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/inspiration/uses.ts`
 

@@ -385,7 +385,7 @@ export function notesReport(week: string, id: string, body: Body, now: string) {
     // The same notes saved again file nothing twice.
     client_report_id: `notes-${digest(canonical({ week, id, words, piece }))}`.slice(0, 96),
     reported_at: now,
-    meta: { press: 'claude_notes', week, anchor: body.anchor },
+    meta: { press: 'claude_notes', week, anchor: body.anchor, ...(typeof body.item === 'string' ? { item: body.item.slice(0, 160) } : {}) },
   }
 }
 

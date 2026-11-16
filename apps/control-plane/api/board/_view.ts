@@ -352,12 +352,18 @@ export function inYourWords(words: string, on: string | null, where?: string | n
   const when = day ? `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.getUTCDay()]} ${day.getUTCDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][day.getUTCMonth()]}` : ''
   return `Approved in your words: "${said}"${when ? `, ${when}` : ''}${where ? ` (${where})` : ''}`
 }
-/** Whether a narrative lock is signed: its last line that is not blank is his signature (making.py lock_signature). */
+/** Whether a narrative lock is signed: its last line that is not blank is his signature (making.py lock_signature), and
+ *  when that line names the sha256 it binds, the words above it still hash to it (making.py signature_problems, the
+ *  drift rule). A story changed under his old approval line is unsigned, so the board asks him to approve it again
+ *  (Ruling, Krish, 2026-11-16: an approved story can still be changed by a Claude session). */
 export function lockSigned(text: string | null | undefined): boolean {
   if (!text) return false
   const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean)
-  const m = lines.length ? LOCK_SIGNED.exec(lines[lines.length - 1]) : null
-  return Boolean(m && !/^<[^>]*>$/.test(m[1].trim()))
+  const last = lines.length ? lines[lines.length - 1] : ''
+  const m = LOCK_SIGNED.exec(last)
+  if (!m || /^<[^>]*>$/.test(m[1].trim())) return false
+  const bound = /lock sha256 ([0-9a-f]{64})\b/.exec(last)?.[1]
+  return !bound || bound === lockBodyHash(String(text))
 }
 
 const short = (week: string, day: PostedDay) => {

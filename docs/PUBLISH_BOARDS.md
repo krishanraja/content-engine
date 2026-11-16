@@ -657,22 +657,29 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   - **`open` on the Claude prompt**, `{ app: 'claude_code', repository }`. The board opens a new Claude Code session on
     claude.ai/code with that repository chosen and the prompt filled in. The board builds the address; the view still
     carries no link.
-    - From approval of the story until a take is recorded, the prompt stays beside the picks. A changed story is written
-      above his approval line, the line then no longer matches, and the board asks him to approve the new story.
+    - From approval of the story until a take is recorded, the prompt stays beside the picks. A session that changes an
+      approved story takes his approval line off its end, so the board asks him to approve the new story. A story
+      changed under its old line reads as unsigned too: `lockSigned` checks the line's `lock sha256` against the words
+      above it, as making.py's drift rule does.
     - Ruling (Krish, 2026-11-16): "Even though this piece is locked, I should be able to tweak the narrative slightly in
       it by opening a session with Claude."
-  - **Stills for the pickers.** The press `after` field is the prompt the board opens once a press is saved.
+  - **Stills for the pickers.** The press `after` field is reserved for the production press of the next release:
+    the prompt the board opens once that press is saved. No press carries it yet.
     `choose.options[].line` and `.still` are added, and `still_url` is added to each style option, from
     config/ve/style-samples.json's `stills` map, recorded by `ve lab still`. The board shows the still when he hovers
     over or picks an option.
     - Ruling (Krish, 2026-11-16): "hover over the captions, look, and motion style and see a templated screenshot of
       what it might look like".
-  - **Repeats are flagged.** `item.repeat` and `model.repeats` are added. An idea that retells something approved,
-    scheduled or live in the 14 days before it leaves the ideas board, and is listed in `repeats` with the line naming
-    what went out. An approved item says the same in `repeat`. A retelling is any one of:
+  - **Repeats are flagged.** `item.repeat` and `model.repeats` (with each idea's `piece_id`, so the one list leaves it
+    out too) are added. An idea that retells a piece or post an earlier board put out or on its way, approved,
+    scheduled or live, from 14 days before it to the end of its own week, leaves the ideas board. It is listed in
+    `repeats`, and its line says what matched and when. An approved item says the same in `repeat`. A retelling is any
+    one of:
     - the same primary source;
-    - the same hook;
+    - the same hook (never for the weekly good news, whose hook is the same every week);
     - two or more of the same named sources.
+
+    This week's own board is never its own repeat: a twin on it is the Sunday run's to refuse (`board_feed.py gate`).
 
     Ruling (Krish, 2026-11-16): "this week's Ideas Board needs to not contain mostly things we published last week".
 
