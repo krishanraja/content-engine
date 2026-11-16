@@ -674,8 +674,23 @@ def wave1(ideas, sources, plans=None, p6=None):
     found += idea_checks.repeat_read_findings(sources, week) + idea_checks.repeat_findings(ideas, sources, earlier_of(sources, week, plans))
     if week >= idea_checks.AIM_FROM:
         patterns, feed_urls, warnings = lookalike_of(week, plans)
-        found += idea_checks.aim_findings(ideas, week, patterns, feed_urls, warnings)
+        found += idea_checks.aim_findings(ideas, week, patterns, feed_urls, warnings, lookalike_text(week, plans))
     return found
+
+
+def lookalike_text(week, plans=None):
+    """{canonical post URL: its headline, caption and slide text} from the week's lookalike-input.json, for the check
+    that our copy never carries their words; {} when the input is not here (a later job: it is never committed)."""
+    folder = Path(plans or ROOT / 'docs' / 'plans') / f'{week}-week'
+    try:
+        data = json.loads((folder / 'lookalike-input.json').read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for p in data.get('posts') or []:
+        if isinstance(p, dict) and idea_checks.canon_url(p.get('url')):
+            out[idea_checks.canon_url(p['url'])] = ' '.join(str(p.get(f) or '') for f in ('headline', 'caption', 'slides'))
+    return out
 
 
 def lookalike_of(week, plans=None):
