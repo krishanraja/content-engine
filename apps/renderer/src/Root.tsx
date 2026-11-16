@@ -1,3 +1,4 @@
+import { StyleStill } from './engine/stills/StyleStill'
 import React from 'react'
 import { Composition } from 'remotion'
 import { MindmakeShort } from './Short'
@@ -76,6 +77,8 @@ function TransportVeCut(props: EngineRenderProps) {
 export function RemotionRoot() {
   return (
     <>
+      <Composition id="StyleStill" component={StyleStill} width={1080} height={1920} fps={30} durationInFrames={1}
+        defaultProps={{ layer: 'captions' as const, id: 'art-directed' }} />
       <Composition
         id="VeFormatMasterTall"
         component={TransportFormatMaster}
