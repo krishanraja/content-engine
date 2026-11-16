@@ -129,6 +129,16 @@ describe('the run reads fuller sources, and the good news shows its mix (items 9
       .toEqual([{ piece_id: 'p1', narrative: 8, production: 7, note: 'Clear.', at: '2026-11-07T00:00:00Z' }])
   })
 
+  it('one read of the feed keeps the topic signal to its days and hands the lookalike step the wider window', async () => {
+    const { splitFeed, FEED_DAYS, LOOKALIKE_FEED_DAYS } = await import('../../apps/control-plane/api/_inspirationSources')
+    expect([FEED_DAYS, LOOKALIKE_FEED_DAYS]).toEqual([8, 45])
+    const row = (at: string) => ({ title: at, excerpt: 'x', meta: { url: `https://example.com/${at}` }, occurred_at: at })
+    const out = splitFeed([row('2026-11-15T00:00:00+00:00'), row('2026-11-06T00:00:00+00:00'), row('2026-10-12T00:00:00+00:00')], '2026-11-06T00:00:00.000Z')
+    expect(out.feed.map(p => p.title)).toEqual(['2026-11-15T00:00:00+00:00', '2026-11-06T00:00:00+00:00'])
+    expect(out.lookalike.map(p => p.url)).toEqual(['https://example.com/2026-11-15T00:00:00+00:00', 'https://example.com/2026-11-06T00:00:00+00:00',
+      'https://example.com/2026-10-12T00:00:00+00:00'])
+  })
+
   it('the good-news option says its mix before he presses', async () => {
     const { mixOf, offdayOptions } = await import('../../apps/control-plane/api/board/_viewExtras')
     const st = (kind: string) => ({ headline: 'h', what: 'w', why: 'y', kind, date: '2026-11-20', source: { label: 'L', url: 'https://e.com' }, media: { kind: 'photo', url: 'https://e.com/i' } })

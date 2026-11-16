@@ -178,6 +178,22 @@ def call(method: str, path: str, body=None, token: str = '', sse: bool = False, 
                           'sandbox with no internet, run it again outside the sandbox.')
 
 
+def call_bytes(path: str, token: str = '', timeout: int = 120) -> tuple:
+    """(status, bytes, content type) for one GET to the engine at BASE, on the engine key: for a route that answers a
+    file (GET /api/inspiration/instagram-sheet), which call() would try to read as text. Raises Unreachable when the
+    engine cannot be reached."""
+    req = urllib.request.Request(BASE + path, method='GET')
+    req.add_header('Authorization', 'Bearer ' + token)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status, r.read(), r.headers.get('Content-Type') or ''
+    except urllib.error.HTTPError as e:
+        return e.code, e.read(), e.headers.get('Content-Type') or ''
+    except urllib.error.URLError as e:
+        raise Unreachable(f'Could not reach the engine at {BASE} ({e.reason}). If this ran inside a '
+                          'sandbox with no internet, run it again outside the sandbox.')
+
+
 def precheck_refusal(answer: dict, flags: set) -> str:
     """Why a paid fact check should wait, from the free GET's answer: numbers
     the piece states that no filed source carries (Krish, 2026-10-15, on the
