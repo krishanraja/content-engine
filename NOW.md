@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-16","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (3 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- the fourth pass on the held style covers is carried onto main (Codex built it on an older copy of the stills); 15 of the 16 passed a separate review and are filed in Drive and recorded, and the live living-ui cover's label (ink on ink) is fixed and refiled. The other 31 live covers render byte for byte as before. (2026-11-16)
 - Codex's third StyleStill pass is merged and 24 more covers passed a separate reviewer, filed and recorded for the board: motion dark-keynote and living-ui; looks scoreboard-test, kinetic-movement and receipt-animation; 19 caption styles, now fitted large over a talking-head frame. With the first eight, 32 of 48 covers are live. A fourth card for the 16 still held back is queued. (2026-11-16)
 - eight motion-style covers from Codex's second StyleStill pass are filed in Inbox from My AI and recorded in config/ve/style-samples.json, so the board's motion picker shows them (ai-music-slam, data-story, eating-jobs-ladder, full-visual, hud-terminal, riso-halftone, single-line-drawing, swiss-kinetic-type); the card's composition is merged. A separate reviewer and Claude both held back the looks, the captions and six motion covers (paper-cutout, line-boil, dark-keynote, living-ui, vertical-captions, character-ai-receipts). (2026-11-16)
 - the second StyleStill cover card (ve-style-still-template-2) is queued on the Codex lane with today's last 4% of the allowance (spend e2669ebf); `ve lab covers` now renders every cover from the composition into a template manifest that `ve lab still` accepts, so the covers can be filed and recorded for the board's pickers once built and reviewed. (2026-11-16)
@@ -43,13 +44,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-16 apps/renderer/src/engine/stills (StyleStill, plan, tests), config/ve/style-samples.json, the fourth-pass card's line-boil note.
 - 2026-11-15 HyperFrames became kit's opt-in film backend for the moving end card, with Playwright still the default and byte-identical before and after (frame hashes compared). Its check filmed 16:9 at SSIM 0.9978 and 9:16 at 0.9990 against Playwright, two runs byte-identical, with no key and no spend. Open Generative AI was not adopted because "every cloud call is a paid muapi.ai credit" and ve already has the generation contract (commit 7e3f19ee, `docs/production/HYPERFRAMES.md`).
 Older lines: `docs/history/2026-11-16-NOW-moved-8.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-16): check, review and record the fourth card's covers (paper-cutout, line-boil, vertical-captions, character-ai-receipts; face-with-proof, voice-led-pictures, data-story, fry-talking-head; art-directed, cinematic, slam, stair-flash, slot-roll, flip-hinge, slice, ink-block).
+- Next (2026-11-16): fix slot-roll's uneven word gap in the caption theme itself (its width estimate against the last window's slack), then file its cover.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
