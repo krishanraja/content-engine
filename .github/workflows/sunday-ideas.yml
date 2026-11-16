@@ -232,6 +232,8 @@ jobs:
             named, make again only the options nobody answered (open in sources.json option_status) on those days of
             that week, and leave every other option exactly as it is, byte for byte and in its place: approved,
             revised, held, filed, saved as a trend, improved and rejected options, and every option on any other day.
+            Each day you make again ends with at least four options he has not answered (the new ones and the open ones
+            you keep), so he has a real choice there.
             The workflow checks this in code (board_feed.py keep) and keeps the week off the live board if anything
             else changed.
 
@@ -355,18 +357,27 @@ jobs:
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           MONDAY: ${{ steps.guard.outputs.monday }}
+          DAYS: ${{ steps.guard.outputs.days }}
         run: |
           # The last step: the view the live board draws is asked until it is "built" (each publishing day carries its
           # options and the good news holds this week's stories). Halfway, the run repairs what it can by itself: it bumps
           # the week's change signal again so the board reads the branch afresh. If it still is not built it names what is
-          # missing (counts and dates only: this repository is public) and fails, so the red run says why.
+          # missing (counts and dates only: this repository is public) and fails, so the red run says why. A re-run of
+          # some days answers for those days only: Tuesday and Thursday made again are never failed for Saturday's
+          # good-news stories (16 Nov, run 43866949707), which the whole week's check still names as a warning.
           for i in 1 2 3 4 5 6 7 8 9 10; do
-            [ "$(python3 scripts/sunday_ideas.py built "$MONDAY")" = "built=true" ] && { echo "The week's options are on the live board."; exit 0; }
+            if [ "$(python3 scripts/sunday_ideas.py built "$MONDAY" --days "$DAYS")" = "built=true" ]; then
+              echo "The week's options are on the live board."
+              if [ -n "$DAYS" ]; then
+                python3 scripts/sunday_ideas.py why "$MONDAY" | while read -r line; do echo "::warning::Not this run's days, still open for the week of $MONDAY: $line"; done
+              fi
+              exit 0
+            fi
             if [ "$i" = 5 ]; then
               python3 scripts/post-pack/board_web.py touch "$MONDAY" --source ideas || echo "::warning::The repair could not bump the week's change signal."
             fi
             sleep 45
           done
-          python3 scripts/sunday_ideas.py why "$MONDAY" | while read -r line; do echo "::error::Not built for the week of $MONDAY: $line"; done
+          python3 scripts/sunday_ideas.py why "$MONDAY" --days "$DAYS" | while read -r line; do echo "::error::Not built for the week of $MONDAY: $line"; done
           echo "::error::The run ended but the live board's view for the week of $MONDAY is not built."
           exit 1
