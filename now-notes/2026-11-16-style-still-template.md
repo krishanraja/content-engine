@@ -1,0 +1,3 @@
+Status: the hover stills are off the board. The first 14 were frames of the style lab's pinned take, the Thu 5 Nov No Spending recording he hates. A board still is now drawn on a neutral StyleStill template with no take, no face and no real logo, and ve lab still refuses a frame of a take. The Codex card that builds the template (docs/ve/cards/style-stills/ve-style-still-template-1.md) is queued to the lane, booked on the Codex pool (spend c4572367).
+Next: once his home computer builds the card, check its result, render one still per look, motion style and caption style from it, look at each, file them, record them, and settle the spend.
+North Star check (2026-11-16): holds.
