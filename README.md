@@ -51,7 +51,14 @@ them by hand. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | treat Spotify as a channel: the show, the audio editions, the sizes | `docs/SPOTIFY.md` |
 | learn from the videos Krish likes, or apply a style recipe to a piece | `docs/STYLE_REFERENCES.md` |
 | design or prove a new video look, use a lab style (The Ladder, The Living Screen and three more) or a move | `lab/styles/README.md`, `lab/moves/README.md`; how a look reaches ve: `lab/styles/README.md`, "From the lab to ve" |
-| pick a piece's caption style, or check what the tall frame may hold (safe zones, no wordmark over content) | `docs/ve/ENGINE.md`, "New capabilities"; `docs/ve/MOTION_STANDARD.md`, Channels |
+| pick a piece's caption style, transitions, camera or energy, or check what the tall frame may hold (safe zones, no wordmark over content) | `docs/ve/INGREDIENTS.md` (all 27 caption styles); `docs/ve/MOTION_STANDARD.md`, Channels |
+| feed, report to or file on the week's publish board (the one live board, in Control Centre's Content tab) | `docs/PUBLISH_BOARDS.md` |
+| make or check any intro, outro, icon, wordmark, sting or end card | `docs/production/BRAND_PALETTE.md` (the rules are `config/brand-palette.json` only) |
+| make or check a cover or thumbnail | `docs/production/COVER-STANDARD.md`; a recorded piece's thumbnails: `.agents/skills/thumbnail-designer/SKILL.md` |
+| read the carousel standard, or make a carousel, meme or Notes image (Growth makes them; each is made in a Claude session with the Codex plugin building it) | `docs/CAROUSEL-STANDARD.md`, "How a carousel is made" |
+| run anything that costs tokens or money | `docs/COST_GUARDS.md` |
+| refresh the weekly standards check-in | `docs/STANDARDS-CHECKIN.md` |
+| see how failures are recorded and how the weekly loop strengthens the guard on a repeat | `docs/learning/README.md` |
 | see what every capability is for and whether it works | `docs/CAPABILITIES.md` (rendered from `config/capabilities.json`) |
 | see every failure Krish has raised and the guard that now stops it | `python3 scripts/check_failures.py` (`config/failures.json`) |
 | know what works, what is broken and what waits on Krish | `docs/STATE.md` |
@@ -128,8 +135,8 @@ npm run check:control-plane     # 28 structural guards for the content engine (s
 
 All 28 content-engine guards pass on `main`. One media test,
 `tests/quick-edit-mix.test.ts`, fails in the cloud container (FFmpeg 6.1.1)
-and passes in CI, which installs the pinned FFmpeg 8.1.2 (`docs/STATE.md`,
-"Broken or risky"). Anything else failing is yours.
+and passes in CI, which installs the pinned FFmpeg 8.1.2. What fails on `main`
+today is in `docs/STATE.md`, "Broken or risky". Anything else failing is yours.
 
 Studio setup on Windows starts in `docs/STUDIO.md`, "Quick start".
 

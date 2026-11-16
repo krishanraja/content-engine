@@ -125,8 +125,12 @@ Where the one value lives, and nowhere else:
 - each Windows home machine that runs Codex or Claude Code, in Windows
   Credential Manager as `Mindmake/engine-operator-token` (LocalMachine), written
   by `scripts/engine-key.ps1`; `scripts/engine.py` reads it from there;
-- Claude Code's cloud environment, as the environment variable
-  `ENGINE_OPERATOR_TOKEN`;
+- Claude Code's cloud environment, as a network secret since 2026-10-09: a
+  Bearer on `content-engine-flame-nu.vercel.app`, path `/api/`, which the
+  session's proxy adds to each request, so the container never holds it
+  (`scripts/engine.py`; `docs/INTEGRATIONS.md`, "The secret store");
+- this repository's GitHub Actions secrets, as `ENGINE_OPERATOR_TOKEN`, for
+  the jobs in `.github/workflows/` that write to the engine;
 - KeePass, beside the runner's other keys, as "Mindmake engine key
   (ENGINE_OPERATOR_TOKEN)".
 
@@ -145,7 +149,8 @@ redeploy, then check.
 To make a new one (rotation): on one home machine run
 `scripts/engine-key.ps1 -New` from outside the runner checkout. It stores a
 fresh `mm_engine_` key, puts it on the clipboard once for KeePass, Vercel and
-the Claude environment, then clears the clipboard. Redeploy the engine so it
+the Claude environment, then clears the clipboard. The script names those
+three; the GitHub Actions secret above takes the new value too. Redeploy the engine so it
 takes the new value; the old one stops working at that deployment. On the other
 machine run the script without `-New` and paste the key from KeePass at its
 hidden prompt. `-Check` prints the fingerprint and whether the engine accepts

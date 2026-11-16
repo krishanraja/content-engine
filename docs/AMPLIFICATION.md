@@ -73,10 +73,13 @@ make sure this is fixed moving forward." Posts from 2 to 11 November named
 makeyourmindup.ai but none linked the subscribe page, and the week brought 1 new
 subscriber against a target of 86. So every Copy button that can hold a link
 ends with "Get the next one in your inbox:" and the subscribe page,
-`https://home.makeyourmindup.ai/subscribe`, tagged with the channel
-(`utm_source`) and the piece (`utm_content`), the two tags Growth credits a
-subscriber by: the YouTube description and pinned comment, the LinkedIn first
-comment and the Spotify description. A caption that cannot hold a clickable
+`https://home.makeyourmindup.ai/subscribe`: the YouTube description and
+pinned comment, the LinkedIn first comment and the Spotify description. Each
+link carries the tags Growth credits a subscriber by, from Growth's one
+subscribe route (`vendor/makeyourmindup/subscribe-route.json`, since 14
+November; `docs/GROWTH-HANDOFF.md`, "One subscribe route"): the channel
+(`utm_source`), `utm_medium`, `utm_campaign` and the post (`utm_content`, its
+board item and channel). A caption that cannot hold a clickable
 link (TikTok, Reels) ends with "Get the next one in your inbox: link in bio.",
 and the profile link is the same page tagged `utm_content=bio`. The spoken close
 of a script is unchanged (house rule SCRIPT_CLOSE): a link is written, never
@@ -86,7 +89,11 @@ carries it; its self-test fails without it.
 **A thumbnail for every video size.** Krish, 2026-10-12: "I always want a
 video thumbnail for all video sizes produced as an asset every time".
 `python scripts/pages/build.py COVER_FACTS --thumbs` draws both from the
-cover facts, with his face and the real logos: the wide one (1280 x 720,
+cover facts, as the Receipt (house rule THE_RECEIPT: a real proof, the
+wordmark and the real logos, never his face); for a recorded piece the
+thumbnail-designer skill draws two or three options with `--options` and he
+picks one (`docs/PUBLISH_BOARDS.md`, "Thumbnail options and his pick").
+The wide one (1280 x 720,
 `<Subject> - wide 16x9 - thumbnail.jpg` in `3 Video`) goes on YouTube and
 the Substack video post, and the tall one (1080 x 1920, `<Subject> - tall
 9x16 - thumbnail.jpg`) is the cover on Reels and TikTok. The 1200 x 630

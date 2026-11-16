@@ -181,8 +181,8 @@ Growth's closed shape (`content-engine-piece-manifest/1`, copied from Growth int
 
 1. `draft SPEC --out "0 Publish/manifest.draft.json"`: assets in order with their
    Drive ids and sha256, the exact words and alt text per channel, and QA. The
-   board's Approve for publish binds the draft's sha256
-   that. The live board carries the press from view contract 1.8.0: the draft is
+   board's Approve for publish binds the draft's sha256. The live board
+   carries the press from view contract 1.8.0: the draft is
    read from `0 Publish/manifest.draft.json` in the post's library folder, every
    file is shown with its Drive link beside the press, and a draft that changes
    after his press needs his press again (`docs/PUBLISH_BOARDS.md`, "Approve for
@@ -233,8 +233,8 @@ Content-Type: application/json
   "Where everything is"), kept on the day's box for its channel with `done` false, so the day says "Scheduled:
   Substack Notes, from Fri 13 Nov, 12:40" in place of "Ready to post"; a box already out is never touched, and the
   piece must be on that day. growth-makeyourmindup's `board posts` step sends both since its #79 (12 Nov).
-- The key opens this route, `offdays` and `offday-posts` (above), and two read-only ones: `pieces`, above, and `build`
-  (the week's published build and its manifest). `ENGINE_OPERATOR_TOKEN` also works. It records what Growth posted or
+- The key opens this route, `offdays`, `offday-posts` and `judge` (above), and two read-only ones: `pieces`, above,
+  and `build` (the week's published build and its manifest). `ENGINE_OPERATOR_TOKEN` also works. It records what Growth posted or
   scheduled; it posts nothing.
 
 ## Improve each engine at its own job

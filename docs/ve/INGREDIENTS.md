@@ -18,9 +18,10 @@
   The words move or reflow, never the mark: it is never shrunk, moved or hidden to make room. Which formats carry a
   mark comes from `config/brand-palette.json` (`formats.<format>.<series|off>.body.icon`): today the 16:9 long cut's
   tile, and none in the 9:16 short's animated content (MOTION_STANDARD.md rule 3). Every placement here (lower,
-  centre, upper) obeys it; the 16:9 `upper` strip and the 16:9 held title start below the zone. `ve qc` proves it per
-  beat (`mark_clearance`). Codex card `docs/ve/cards/motion-standard/ve-motion-2-mark-clearance.fields.json`
-  (card id `ve-motion-2b-mark-clear-every-layout`) builds it.
+  centre, upper) obeys it; the 16:9 `upper` strip and the 16:9 held title start below the zone. `ve qc` is to prove it
+  per beat (`mark_clearance`) once Codex card `docs/ve/cards/motion-standard/ve-motion-2-mark-clearance.fields.json`
+  (card id `ve-motion-2b-mark-clear-every-layout`) builds it. It is not built yet (16 Nov 2026): no `mark_clearance`
+  row exists in `ve qc`, so nothing checks this today.
 - **14 drawable motion styles.** Three of them are taken from Krish's own cuts:
 
 | Motion style | Taken from |

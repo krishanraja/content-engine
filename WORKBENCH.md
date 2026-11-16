@@ -111,7 +111,7 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   2026-10-14: "We need an anti-dumb filter ... this sort of crap cannot be
   allowed to pass in the future, ever". He liked "Muse's real rival: Siri."
   **Titles go to him as options first, and nothing is made from a title he
-  has not picked** (make-piece "Titles (Krish picks)"; config/title-verdicts.json
+  has not picked** (make-piece, "Titles, headlines and headings"; config/title-verdicts.json
   holds every verdict and what it teaches; `title_check.py lessons`). Krish,
   2026-10-14: "Stop ... generating assets ... when I haven't actually
   approved your new approach ... iterate, and understand what I actually
@@ -206,8 +206,8 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
     images/<name>` (or the board's own copies);
   - the tools: `pip install faster-whisper==1.2.0 ctranslate2==4.8.1 av==18.1.0
     playwright`, `npm ci`, `MYMU_BROWSER=/opt/pw-browsers/chromium` (a link to the container's Chromium);
-  - the story intro and outro: `scripts/quick-edit/story_io.py props --plan
-    <plan>` then `render`.
+  - the piece's own outro (the story intro is retired): `scripts/quick-edit/story_io.py props --plan
+    <plan>` then `render --only outro-16x9,outro-9x16`.
   Then kit.py, make.py, the thumbnails, send.py and making.py as
   `produce-video` says. The production run (`.github/workflows/produce-day.yml`,
   `scripts/produce_day.py`) does all of it on GitHub's machine (his choice:
@@ -463,7 +463,7 @@ the top item that is not waiting on Krish. Before you stop, update this file.
 
 Claude Code works from the same rules and skills as Codex. `CLAUDE.md` imports `AGENTS.md`
 and adds only what is particular to Claude Code: which doc to read for which task, the
-models (Opus, with `repo-scout`, `executor`, `reviewer` and `ve-critic` subagents in `.claude/agents/`), the
+models (Opus, with `repo-scout`, `executor`, `reviewer`, `ve-assets`, `ve-critic` and `thumbnail-critic` subagents in `.claude/agents/`), the
 hooks that refuse secrets and North Star edits and put every publish, send or taste-rule edit to
 Krish in person (`.claude/hooks/`), and the checks. To find code, search `docs/REPO_MAP.md`
 (`npm run repo-map` keeps it current) rather than opening files. `docs/ENGINE_SESSION.md`,

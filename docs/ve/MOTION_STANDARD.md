@@ -118,7 +118,9 @@ brand kit in Drive; Krish, 2026-11-03: "add the upright Fraunces to the kit"), n
 
 - The standard, and word captions as the default for face-with-proof: "I signed the motion standards".
 - Spend for the four Codex cards above: "I approved the spend". They were queued to the home computer's Codex lane;
-  card 1 (`ve-motion-1-split-full-width`) was built and merged on 3 Nov (#367), and cards 2 to 4 are not merged yet.
+  card 1 (`ve-motion-1-split-full-width`) was built and merged on 3 Nov (#367), card 3 (`ve-motion-3-word-on-the-seam`)
+  on 3 Nov and card 4 (`ve-motion-4-channel-safe-tall`) on 11 Nov. Card 2 (`ve-motion-2-mark-clearance`) failed twice
+  and was rewritten on 15 Nov as `ve-motion-2b-mark-clear-every-layout`; it is not built yet (16 Nov 2026).
 - The Instagram zones in `config/studio.json` brought up to the measured ones: "I approve updating the Instagram
   button zones".
 
@@ -142,7 +144,8 @@ frames 600 and 990 of each reel.
 ## Engine notes (not part of the signed text; audit, 3 Nov 2026)
 
 - **Where the per-piece style comes from.** This standard is the floor every cut holds. Each piece also names one
-  motion style from the bank, the `motion` layer of `config/style-references.json` (17 styles), as `style.motion`
+  motion style from the bank, the `motion` layer of `config/style-references.json` (23 styles on 16 Nov 2026, 14 of
+  them drawable), as `style.motion`
   `{module, reason}` in its spec. ve lint refuses a spec without it from `creative_direction.MOTION_FROM` (9 Nov 2026,
   `motion.required`), and a Codex card written for that piece carries the style as its own `## Motion style` section
   (`scripts/velib/cards.py`). The format's own motion notes (`docs/ve/design/formats/*-motion.md`) hold its frame;
