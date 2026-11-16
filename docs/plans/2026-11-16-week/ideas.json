@@ -1006,7 +1006,7 @@
         "id": "goodnews",
         "weekly": "good_news",
         "source_tag": "radar",
-        "topic": "AI helping people speak, sign and get around",
+        "topic": "AI helping people speak, sign, read and get around",
         "stories_due": "2026-11-16",
         "format": "Uplifting AI news carousel, 5 cards, 4:5",
         "source": {
@@ -1029,7 +1029,6 @@
           "beats": "https://www.instagram.com/evolving.ai/p/DfPW8fmgCnt/",
           "our_take": "One topic and every story checked at its source with its own photo, where the roundup is a grab bag."
         },
-        "stories_short": "4 of 5 found on the topic in the seven days to 16 Nov, each checked on its source on 16 Nov. No fifth story on speaking, signing or getting around has a source and a real photo of its own this week: DeepL's Aure voice translator (11 Nov) has only a logo; Apple TV's new sign-language option (10 Nov) is filmed by people, not AI; the Wandercraft walking clinic piece (10 Nov) names no AI; the UCSB bionic-eye study ScienceDaily ran on 12 Nov was released on 7 Aug. Thatsign is still a prototype in testing, and Google's glasses describe the world but, Google says, are no mobility aid. The Find the other story press fills it to five.",
         "learned_from": [
           "I want actual news items and the content we are going to use here - embedded real world images or videos (2 Nov)",
           "Real-world stories only, but with a hilarious generated cover page (3 Nov)"
@@ -1077,6 +1076,140 @@
           "versus": "Ours adds one clear topic and three real stories dated 10 to 12 Nov 2026, each with its own photo and named source, where his saved post had no sources or dates. (Fresh reader C, Sonnet, saw both)",
           "repeat": "A weekly series by design: reader A matched the format to the earlier Saturday good news and said the stories look new; reader B called it new, the same format with different news."
         },
+        "candidates": [
+          {
+            "title": "A woman with ALS hears her own voice again through the Vocality app",
+            "url": "https://www.mtlblog.com/woman-with-als-hears-her-own-voice-again",
+            "place": "news",
+            "date": "2026-11-11"
+          },
+          {
+            "title": "A two-way sign-language app, Thatsign, is tested with deaf families",
+            "url": "https://techpoint.africa/feature/thatsign-to-bridge-communication-gap/",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "Glide, an AI guide for blind walkers, reaches its first customers",
+            "url": "https://www.glidance.io/news/glide-wins-2027-ces-innovation-awards-in-two-categories",
+            "place": "news",
+            "date": "2026-11-10"
+          },
+          {
+            "title": "Google's new glasses describe the world to blind wearers",
+            "url": "https://blog.google/innovation-and-ai/technology/xr-ar/google-intelligent-eyewear-collections-pre-order/",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A 17-year-old's AI tool makes PDFs readable for blind people",
+            "url": "https://thebetterindia.com/innovation/ai-tool-makes-pdfs-accessible-for-the-blind-gurugram-visionably-yash-bhatnagar-12814698",
+            "place": "news",
+            "date": "2026-11-16"
+          },
+          {
+            "title": "Apple TV adds sign-language interpretation to films",
+            "url": "https://www.apple.com/newsroom/2026/11/apple-tv-introduces-new-sign-language-interpretation-feature/",
+            "place": "news",
+            "date": "2026-11-10"
+          },
+          {
+            "title": "DeepL's Aure translates speech keeping tone and pace",
+            "url": "https://manilatimes.net/2026/11/11/tmt-newswire/pr-newswire/deepl-unveils-aure-its-most-lifelike-voice-ai-translation-model-yet/2467304",
+            "place": "news",
+            "date": "2026-11-11"
+          },
+          {
+            "title": "The NHS trials AI-read cancer blood tests with 20,000 patients",
+            "url": "https://cyprus-mail.com/2026/11/05/new-blood-tests-could-detect-14-cancers-earlier",
+            "place": "news",
+            "date": "2026-11-05"
+          },
+          {
+            "title": "An AI heart-scan trial (PARAMOUNT) beats stress tests on diagnostic certainty",
+            "url": "https://www.hcplive.com/view/ai-driven-quantification-of-coronary-plaque-outperforms-standard-care-in-suspected-cad",
+            "place": "news",
+            "date": "2026-11-07"
+          },
+          {
+            "title": "Apple opens a health AI study to 200,000 people",
+            "url": "https://techcrunch.com/2026/11/15/apple-launches-new-app-to-study-how-people-use-ai-for-health",
+            "place": "news",
+            "date": "2026-11-15"
+          },
+          {
+            "title": "Workday cuts the time to deploy an AI agent from five months to under a day (LangChain)",
+            "url": "https://www.langchain.com/blog/series-c",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "Pashion Footwear's AI campaign converts 28% of shoppers",
+            "url": "https://www.businesswire.com/news/home/20261111644348/en/LoyaltyLion-Expands-AI-Capabilities-and-Helps-Brands-Influence-Shopper-Behavior-Across-Every-Channel",
+            "place": "news",
+            "date": "2026-11-11"
+          },
+          {
+            "title": "Cisco posts a record quarter on AI network demand",
+            "url": "https://moneymorning.com/2026/11/13/cisco-ai-infrastructure-9-billion-record-quarter-november-2026",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "TaskUs's AI services line grows 28%",
+            "url": "https://news.outsourceaccelerator.com/taskus-q3-2026-results/",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "Microsoft's MAI-DxO beats doctors on hard cases while ordering cheaper tests",
+            "url": "https://www.instagram.com/therundownai/p/De1uIZeycMr/",
+            "place": "sheet",
+            "date": "2026-10-23"
+          },
+          {
+            "title": "Neuralink already lets people with paralysis work a computer by thought",
+            "url": "https://www.instagram.com/evolving.ai/p/DfclzlfAC67/",
+            "place": "sheet",
+            "date": "2026-11-07"
+          },
+          {
+            "title": "A one-person biotech whose founder used Claude for a treatment is bought by Anthropic",
+            "url": "https://www.instagram.com/evolving.ai/p/DfPW8fmgCnt/",
+            "place": "sheet",
+            "date": "2026-11-02"
+          },
+          {
+            "title": "Higgsfield, an AI video start-up, passes $1 billion a year in revenue",
+            "url": "https://www.instagram.com/evolving.ai/p/De4UJUJgAPU/",
+            "place": "sheet",
+            "date": "2026-10-24"
+          },
+          {
+            "title": "Uber gives ChatGPT Work to all 30,000 staff; 80% of early users are not engineers",
+            "url": "https://www.instagram.com/therundownai/p/De2T9HfSLef/",
+            "place": "sheet",
+            "date": "2026-10-23"
+          },
+          {
+            "title": "People build a wildfire tracker and more with Claude",
+            "url": "https://www.instagram.com/evolving.ai/p/Deo-ebkAExL/",
+            "place": "sheet",
+            "date": "2026-10-18"
+          },
+          {
+            "title": "MIT's AI reads atoms and words to find new materials",
+            "url": "https://www.instagram.com/therundownai/p/DesA95ISsD3/",
+            "place": "sheet",
+            "date": "2026-10-19"
+          },
+          {
+            "title": "MIT puts 2,500 courses online free",
+            "url": "https://www.instagram.com/evolving.ai/p/Dfjz9o8gA0F/",
+            "place": "sheet",
+            "date": "2026-11-10"
+          }
+        ],
         "stories": [
           {
             "headline": "An app gives a woman with ALS her own voice back",
@@ -1136,6 +1269,21 @@
             "media": {
               "kind": "photo",
               "url": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/WP_Carousel_Lifestyle.width-1200.format-webp.webp"
+            }
+          },
+          {
+            "headline": "A 17-year-old's AI tool makes bank statements readable for blind people",
+            "what": "Yash Bhatnagar, a 17-year-old school student, built Visionably. Banks and other organisations send it their PDF files, and it adds the labels, reading order and picture descriptions a screen reader needs to read them out loud.",
+            "why": "It works on about 95% of the PDFs it has been tested on, and he is making ten children's books readable for free, with six done so far.",
+            "kind": "people",
+            "date": "2026-11-16",
+            "source": {
+              "label": "The Better India, 16 Nov 2026",
+              "url": "https://thebetterindia.com/innovation/ai-tool-makes-pdfs-accessible-for-the-blind-gurugram-visionably-yash-bhatnagar-12814698"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://img-cdn.publive.online/fit-in/1280x960/filters:format(webp)/english-betterindia/media/media_files/2026/11/16/visionably-2026-11-16-18-26-21.png"
             }
           }
         ]

@@ -1,6 +1,6 @@
 {
  "week_start": "2026-11-16",
- "gathered_at": "2026-11-16T14:13:58Z",
+ "gathered_at": "2026-11-16T15:43:16Z",
  "how": "Read-only gather (board_feed.py). Write ideas.json from series[].pool and inspiration (routed, liked, fresh, corpora, creators) and his feedback cues (cues), his ideas first, each with source_kind, why_here, beats and style (config/styles.json); every must_cover id is in some idea's covers or in ideas.json accounted with a reason (board_feed.py cover); write combine.json; build with --ideas --queue --combine.",
  "counts": {
   "his": 0,
