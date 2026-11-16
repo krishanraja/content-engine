@@ -130,7 +130,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 150
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/lookalike.py goodnews:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             The Saturday good news for the week starting Monday ${{ steps.guard.outputs.monday }}, started by hand
@@ -146,7 +146,11 @@ jobs:
             direction (his Approve is bound to those words), then run board_feed.py gather and cover.
 
             Otherwise follow the section
-            "The Saturday good news" in .agents/skills/plan-week/references/offdays.md exactly: find one topic and the five stories on it
+            "The Saturday good news" in .agents/skills/plan-week/references/offdays.md exactly. His Instagram inspo
+            sheet is a source as well as the web (Krish, 2026-11-16: "Good news stories can come from the Instagram
+            inspo as well. There's absolutely tonnes in there"): run python3 scripts/post-pack/lookalike.py goodnews
+            <Monday> and pick from goodnews-input.json the posts on the topic, each story still checked on its own
+            primary source and told in our words. Find one topic and the five stories on it
             (real AI news from the seven days up to ${{ steps.guard.outputs.due }}, today, that helped
             real people, each with a real photo or clip of the thing itself the post can embed), check each against its
             primary source, write them into that week's docs/plans/<Monday>-week/ideas.json on the weekly good-news

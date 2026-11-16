@@ -277,7 +277,14 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
 
 0. Read his positive saves first (`sources.json` `inspiration.positive`: cards he saved as good news, his words beside
    each, the ideas quality plan, item 12): a story they point to, or one of the kind they show he likes, comes before
-   anything the search finds.
+   anything the search finds. Then his Instagram inspo sheet (Krish, 2026-11-16: "Good news stories can come from the
+   Instagram inspo as well. There's absolutely tonnes in there. We would just need to pick the right ones if the good
+   news was on a specific theme"): `python3 scripts/post-pack/lookalike.py goodnews <Monday>` writes the sheet's newest
+   posts to `goodnews-input.json` (never committed). Once the topic is chosen (step 1), pick the posts on it that are
+   good news; a run of good-news posts on one theme there may be the topic. A post is where a story was found, never
+   its source: the story still has its primary source, its date in the seven days and its own picture (steps 1 to 3),
+   is told in our words, never the post's, and says where it was found (`"found": {"label": "Your Instagram inspo
+   sheet", "url": "<the post>"}`). The web search finds the rest.
 1. **One topic, five stories on it** (Ruling, Krish, 2026-11-13: the publish board shows only what he approved, in one
    week model; his words: "The Saturday carousel is supposed to be five good news stories on that same topic"). Choose
    one topic first (for example "AI fixing old mistakes", "AI in the clinic this week"), write it on the option as
