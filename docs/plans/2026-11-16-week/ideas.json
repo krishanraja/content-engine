@@ -1,5 +1,5 @@
 {
-  "_about": "The Ideas tab of the publish board for the week of 16 Nov 2026, written by the Sunday ideas run on Sat 7 Nov (GitHub Actions, web search and web fetch only: Drive and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read). Every fact was checked on 7 Nov against the page linked beside it; where only a news page could be opened it says so. No titles: titles are Krish's, after he records. Built into the board by scripts/post-pack/week_board.py --ideas.",
+  "_about": "The Ideas tab of the publish board for the week of 16 Nov 2026, written by the Sunday ideas run on Sat 7 Nov (GitHub Actions, web search and web fetch only: Drive and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read). Every fact was checked on 7 Nov against the page linked beside it; where only a news page could be opened it says so. No titles: titles are Krish's, after he records. Built into the board by scripts/post-pack/week_board.py --ideas. Re-run on Mon 16 Nov 2026 for Tue, Thu and Sat only (sunday-ideas.yml days tue,thu,sat): the options nobody answered there were made again, researched with web search and web fetch only, facts checked on 16 Nov; every other option is as it was. Lookalike warnings, word for word: Feed fallback: the Instagram inspo sheet could not be read (the Posts tab has no published, retrieved, headline, post url column); the patterns come from the feed the gather read (inspiration.lookalike_feed). Stale sheet: the gathered feed's newest row is 2026-11-11, more than 3 days before 2026-11-16; the patterns lean on older posts. Re-run again on Mon 16 Nov 2026 for Thu and Sat only (sunday-ideas.yml days thu,sat): no option was open on Thursday, so its four answered options stay as they were and three new ones were added; on Saturday the open good news and eggs options are kept as they were and three new ones were added. Researched with web search and web fetch only (Drive and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read); facts checked on 16 Nov. Lookalike warnings, word for word: Feed fallback: the Instagram inspo sheet could not be read (the Posts tab has no published, retrieved, headline, post url column); the patterns come from the feed the gather read (inspiration.lookalike_feed). Stale sheet: the gathered feed's newest row is 2026-11-11, more than 3 days before 2026-11-16; the patterns lean on older posts.",
   "week_start": "2026-11-16",
   "checked_on": "2026-11-07",
   "days": {
@@ -477,103 +477,6 @@
         "ties_to": "Carries Friday 13 Nov's piece on counting AI use"
       },
       {
-        "id": "fuelgauge",
-        "read_back": {
-          "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once)",
-            "Fresh reader B (Haiku, a 12-year-old reading once)"
-          ],
-          "says": [
-            "From December, ChatGPT plans get one shared usage meter that runs down faster on harder tasks.",
-            "From December, ChatGPT plans get a shared usage meter that harder tasks drain faster, and you wait, upgrade or buy more when it runs out."
-          ],
-          "against": 24
-        },
-        "format": "Explainer carousel, 4 cards, 4:5",
-        "source": {
-          "label": "The Decoder, 1 Nov 2026 (OpenAI's support page)",
-          "url": "https://the-decoder.com/openais-upcoming-chat-and-work-merger-in-chatgpt-signals-the-end-of-all-you-can-prompt-pricing/"
-        },
-        "copy": "From December, ChatGPT Plus, Pro and Business plans share one budget across chat and coding. Four cards on what that means for your team's AI bill.",
-        "hook": "From December, your ChatGPT plan gets a fuel gauge.",
-        "pitch": {
-          "see": "Four cards. A car fuel gauge on the cover. From December, chat and coding draw from one shared budget on Plus, Pro and Business. Harder tasks burn it faster. Run out and you wait, upgrade or buy more.",
-          "lands": "Everyone has watched a fuel gauge drop, so the change is clear in one look.",
-          "why_now": "The change starts in December 2026, per OpenAI's support page reported on 1 November.",
-          "share": "Your AI plan now has a meter."
-        },
-        "direction": {
-          "look": "The infographic style you saved, one idea per card",
-          "format": "Explainer carousel, 4 cards, 4:5",
-          "frames": [
-            {
-              "words": "FROM DECEMBER, YOUR CHATGPT PLAN GETS A FUEL GAUGE",
-              "picture": "A car fuel gauge with the ChatGPT logo as the needle's hub"
-            },
-            {
-              "words": "CHAT AND CODING SHARE ONE BUDGET",
-              "picture": "Two hoses into one fuel tank"
-            },
-            {
-              "words": "HARD TASKS BURN IT FASTER",
-              "picture": "The needle swinging towards empty"
-            },
-            {
-              "words": "EMPTY? WAIT, UPGRADE OR BUY MORE",
-              "picture": "Three signposts at a petrol station"
-            }
-          ],
-          "tone": "Plain, a little playful",
-          "kit": "Brand kit, follow.the.money pill"
-        },
-        "ties_to": "Mon: follow.the.money, if you pick the AI meter piece"
-      },
-      {
-        "id": "proactiveai",
-        "format": "Voiceover short, 46 s, 9:16",
-        "source": "Krish's own script, read by his ElevenLabs voice (take A), and his screenshot of an AI setting out guardrail choices (11 Nov 2026)",
-        "copy": "Your AI is about to start messaging you first. 📲\n\nGive it two rules before it wakes up tomorrow: no spending and no sending, until you say yes.\n\nPaste this into your AI tonight:\n\n\"Create hard boundaries around sending (external comms), spending (money) within this platform. Give me clear instructions on what I need to do and give me all the options I can choose from to make this as clear as possible for both me and the tools.\"\n\nFollow for more at makeyourmindup.ai",
-        "hook": "Your AI is about to start messaging you first.",
-        "video": {
-          "url": "https://board.asset/proactive-ai-tall.mp4"
-        },
-        "drive": "https://drive.google.com/drive/folders/1NKta6nIW_wPsZSFNHq9j4LXARiLIeAgT",
-        "posts_folder": "2026-11-17 Tue off.day - Proactive AI",
-        "decided": "Signed off for Tuesday 17 Nov (Krish, 11 Nov: \"Schedule it for Tuesday off day instead, I still might do a 2nd post on Tuesday like a meme later\"). Codex schedules it.",
-        "needs": [
-          "Finished: the 46 s short and its post description, with the copy-paste prompt word for word, in 3 Posts › 2026-11-17 Tue off.day - Proactive AI."
-        ],
-        "pitch": {
-          "see": "One chat thread on the ink desk: your AI messages you first, books a flight, pays a deposit and thumbs-ups your boss, then buys a sofa with your yes left empty. Two stops drop, NO SPENDING and NO SENDING, and your real screenshot shows the three choices an AI offered you. It closes on the house sting with FOLLOW FOR MORE.",
-          "lands": "Anyone handing an assistant their apps sees the one moment that matters: the decision it made without asking.",
-          "share": "Paste the prompt in before your assistant wakes up tomorrow."
-        },
-        "direction": {
-          "look": "The data-story recipe (The Ladder): one chat thread, every move a change of state, mint only for the answer; art-directed phrase captions after his card instagram_DfkCOCLt7KZ",
-          "format": "Voiceover short, 46 s, 9:16",
-          "frames": [
-            {
-              "words": "YOUR AI IS ABOUT TO START MESSAGING YOU FIRST",
-              "picture": "The thread flips: the AI speaks first"
-            },
-            {
-              "words": "YOUR YES WAS HERE",
-              "picture": "The sofa bought with its approval slot left empty"
-            },
-            {
-              "words": "NO SPENDING / NO SENDING",
-              "picture": "Two mint stops drop across the thread"
-            },
-            {
-              "words": "FOLLOW FOR MORE",
-              "picture": "The house sting, held on the wordmark with the badge"
-            }
-          ],
-          "tone": "Playful, then clear",
-          "kit": "House ink and mint, no series colour; Aspire at half volume"
-        }
-      },
-      {
         "id": "auditrule",
         "recommended": true,
         "format": "Explainer carousel, 6 cards, 4:5",
@@ -638,70 +541,6 @@
           "fixed": "Enron explained, the vague industry-test claim cut, \"backer\" made \"investor\", \"rated the same\" made \"rated both pieces equally good\" after both readers stumbled (12 Nov 2026)"
         },
         "closed": "Moved to Thu 12 Nov and filed there (Krish, 12 Nov: \"needs to be filed for today in the board and drive\")."
-      },
-      {
-        "id": "frenemies",
-        "format": "Meme carousel, 6 cards, 4:5",
-        "source": {
-          "label": "Wired, Aug 2014 (psychologist Tom Stafford on why you miss your own typos); ESPN and The Athletic, Jul 2026 (FIFA keeps referees off their own country's matches); GeekWire, 30 Mar 2026 (Microsoft Critique); VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); NeurIPS 2024 study on AI judges",
-          "url": "https://www.geekwire.com/2026/gpt-drafts-claude-critiques-microsoft-blends-rival-ai-models-in-new-copilot-upgrade/"
-        },
-        "hook": "Why does Microsoft get OpenAI's rival to check OpenAI's work?",
-        "copy": "Six cards. You can't spot your own typos, because your brain reads what you meant to write. A World Cup referee never takes charge of his own country's match. The rule is the same: whoever did the work does not check it. Microsoft runs its AI this way. It is OpenAI's biggest investor, and it still has Claude, an AI from rival Anthropic, check the research OpenAI's GPT writes before anyone reads it. Home Depot does it too: Google's AI answers its customers and OpenAI's AI checks the answers. Researchers found an AI rates its own writing higher than people do, so the companies that know AI best never let one AI mark itself.",
-        "pitch": {
-          "see": "Six cards. Cover meme: a rival school's teacher marks a pupil's test in red pen. Then two rules everyone lives by: a typo its writer missed, circled by someone else, and a World Cup referee who never runs his own country's match. Then the AI version: Microsoft (GPT writes, Claude checks) and Home Depot (Google answers, OpenAI judges), with real logos. Last card: the reason and Follow for more.",
-          "lands": "The two analogies make the rule obvious before AI comes up, so Microsoft paying its partner's rival to mark the homework reads as common sense and a joke at once.",
-          "why_now": "Microsoft's checker went live this year and Home Depot's CIO described the same set-up in October.",
-          "share": "Even Microsoft won't let one AI mark itself."
-        },
-        "direction": {
-          "look": "Meme-led and free, lightly skinned: the house mark small in the bottom-right corner only",
-          "format": "Meme carousel, 6 cards, 4:5",
-          "frames": [
-            {
-              "words": "WHY DOES MICROSOFT GET OPENAI'S RIVAL TO CHECK OPENAI'S WORK?",
-              "picture": "Rival schools: one pupil's test, the other school's teacher marking it"
-            },
-            {
-              "words": "YOU CAN'T SPOT YOUR OWN TYPOS",
-              "picture": "A printed page with a typo its writer missed, circled in red by someone else"
-            },
-            {
-              "words": "A WORLD CUP REFEREE NEVER RUNS HIS OWN COUNTRY'S MATCH",
-              "picture": "A referee's whistle and cards on the centre spot, or a match photo whose rights are clear"
-            },
-            {
-              "words": "MICROSOFT: GPT WRITES, CLAUDE CHECKS",
-              "picture": "The Microsoft, OpenAI and Anthropic logos"
-            },
-            {
-              "words": "HOME DEPOT: GOOGLE ANSWERS, OPENAI JUDGES",
-              "picture": "The Home Depot, Google and OpenAI logos"
-            },
-            {
-              "words": "AN AI RATES ITS OWN WORK HIGHER THAN PEOPLE DO",
-              "picture": "Follow for more and the house mark"
-            }
-          ],
-          "tone": "Funny first, then plain",
-          "kit": "The Tuesday meme rule: free look, house mark bottom-right, no series pill"
-        },
-        "learned_from": [
-          "2. Give real world analogies (12 Nov)",
-          "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)",
-          "Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real? (3 Nov)"
-        ],
-        "read_back": {
-          "readers": [
-            "Fresh reader A (Haiku, a 12-year-old reading once)",
-            "Fresh reader B (Sonnet, a 12-year-old reading once)"
-          ],
-          "says": [
-            "Microsoft has a rival company's AI check OpenAI's research, because nobody can catch their own mistakes; the typo and referee examples made it click.",
-            "Microsoft pays a rival AI to double-check OpenAI's work, because an AI, like a person, can't reliably judge its own work."
-          ],
-          "fixed": "Added the line that ties the analogies to AI and said plainly what Home Depot's two AIs each do, after both readers stumbled there (12 Nov 2026)"
-        }
       },
       {
         "kind": "recorded",
@@ -801,6 +640,131 @@
           "card_name": "youtube_GBjWcUL77UQ.mp4"
         },
         "source_kind": "his"
+      },
+      {
+        "id": "adsswitch",
+        "source_tag": "his_card",
+        "format": "Explainer carousel, 7 cards, 4:5",
+        "source": {
+          "label": "Notebookcheck, ChatGPT ads: where they run now and how to switch them off (updated 5 Oct 2026), reading OpenAI's own ads help page",
+          "url": "https://www.notebookcheck.net/ChatGPT-ads-where-they-run-now-and-how-to-switch-them-off.1361301.0.html"
+        },
+        "copy": "Ads now sit under ChatGPT's answers on the Free and Go plans. Seven cards on what free AI costs you today, the switch that turns the ads off and what it takes away.",
+        "hook": "Free ChatGPT has ads now. Here is what switching them off costs you.",
+        "pitch": {
+          "see": "A phone showing a ChatGPT answer with a Sponsored card tucked under it, and the house robot holding a price tag that reads £0, then cards that show who sees the ads, the off switch and its price in lost features.",
+          "lands": "Most people use the free plan, and nobody has told them the ads have a switch or what the switch costs.",
+          "why_now": "Ads run on the Free and Go plans (OpenAI's ads help page, as Notebookcheck read it, updated 5 Oct 2026), and advertisers are now buying them for the holidays.",
+          "share": "Free AI has a price. Here it is, card by card."
+        },
+        "shape": "story",
+        "dive": "The free plan is paid for by ads chosen from your chat, and the only way to drop them on Free is to give up messages and tools.",
+        "aim": "utility",
+        "funny": "Your free AI has picked up a landlord, and the rent is paid in your attention.",
+        "lookalike": {
+          "pattern": "the-bill-arrives",
+          "beats": "https://www.instagram.com/evolving.ai/p/DfSQ4mMAPzP/",
+          "our_take": "The AI bill most people really pay is the ads under the answer, and we show the switch and its price."
+        },
+        "cards": [
+          {
+            "words": "FREE CHATGPT NOW COMES WITH ADS UNDER THE ANSWER",
+            "picture": "A phone on a kitchen table: a ChatGPT answer, a Sponsored card beneath it, the house robot beside it holding a price tag that reads £0"
+          },
+          {
+            "words": "WHO SEES THEM: FREE AND GO. PLUS, PRO AND WORK PLANS: NO ADS",
+            "picture": "Two phone screens side by side, one with a Sponsored card, one clean"
+          },
+          {
+            "words": "TURN OFF PERSONALISED ADS AND YOU STILL GET ADS. THEY JUST STOP USING YOUR OTHER CHATS",
+            "picture": "A settings toggle switched off, the Sponsored card still there"
+          },
+          {
+            "words": "THE NO-ADS SWITCH ON FREE: FEWER MESSAGES, NO IMAGES, NO DEEP RESEARCH",
+            "picture": "A switch flipped to No ads, three tool icons greyed out"
+          },
+          {
+            "words": "WHAT ADVERTISERS GET: TOTALS OF VIEWS AND CLICKS. YOUR CHATS STAY OUT OF THEIR HANDS",
+            "picture": "A tally sheet of views and clicks, a closed chat bubble"
+          },
+          {
+            "words": "QUICK FIX: A TEMPORARY CHAT SHOWS NO ADS",
+            "picture": "The temporary chat button, the screen clean"
+          },
+          {
+            "words": "KNOW WHAT YOUR FREE AI COSTS. SUBSCRIBE FREE (MAKEYOURMINDUP.AI)",
+            "picture": "The house close card"
+          }
+        ],
+        "learned_from": [
+          "It's kind of boring and I also don't really understand the point of it or what the takeaway is. (3 Nov, Reject of a Tuesday level-up carousel)"
+        ],
+        "covers": [
+          "cca6cea3-ee1d-4098-bc2f-d5d8444b18fc"
+        ],
+        "asks": [
+          {
+            "id": "cca6cea3-ee1d-4098-bc2f-d5d8444b18fc",
+            "said": "Produce an easy-to-understand breakdown of what you actually pay when you consume ads in the LLMs and what you will pay in the future.",
+            "scope": "narrowed",
+            "why": "What you pay today is on OpenAI's own page; what you will pay in future is not published by anyone yet, so the carousel says what is known now and its research_prompt asks for the rest."
+          }
+        ],
+        "inspiration": {
+          "label": "Your research doc, When the Assistant Becomes the Ad",
+          "url": "https://docs.google.com/document/d/1emR7rjLsYEgS5bkJbYgvjyjbNjtSw0vI/edit",
+          "saved": "Saved 6 Nov"
+        },
+        "adds": "The plain switch and its price from OpenAI's own ads page, card by card, where the doc is a long read on ad economics.",
+        "research_prompt": "Plain question: what does a person pay, in money, attention or data, when they use a free AI assistant that carries ads, and what will that look like in 2027? Find OpenAI's own ads help pages and any ChatGPT ads announcements from Jan 2026 to today, Google's and Meta's ad plans for Gemini and Meta AI, and any published forecasts of AI assistant ad revenue. Every claim with its source and date.",
+        "direction": {
+          "look": "The house explainer carousel: one claim per card, the real ChatGPT screen shown as itself",
+          "format": "7 cards, 4:5",
+          "frames": [
+            {
+              "words": "FREE CHATGPT NOW COMES WITH ADS UNDER THE ANSWER",
+              "picture": "The phone and the £0 price tag held by the house robot"
+            },
+            {
+              "words": "WHO SEES THEM: FREE AND GO",
+              "picture": "Two screens, ads and no ads"
+            },
+            {
+              "words": "PERSONALISED OFF STILL MEANS ADS",
+              "picture": "The toggle off, the ad still there"
+            },
+            {
+              "words": "NO ADS ON FREE: FEWER MESSAGES, NO IMAGES, NO DEEP RESEARCH",
+              "picture": "Greyed-out tools"
+            },
+            {
+              "words": "ADVERTISERS GET TOTALS, NOT YOUR CHATS",
+              "picture": "A tally sheet"
+            },
+            {
+              "words": "A TEMPORARY CHAT SHOWS NO ADS",
+              "picture": "The clean screen"
+            },
+            {
+              "words": "SUBSCRIBE FREE (MAKEYOURMINDUP.AI)",
+              "picture": "The house close"
+            }
+          ],
+          "tone": "A friend showing you a setting you did not know about, with a raised eyebrow",
+          "kit": "Brand kit, the house robot on the cover, real ChatGPT screens"
+        },
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "against": 31,
+          "says": [
+            "Free ChatGPT now shows ads, and turning them off costs you features (and maybe money).",
+            "Free ChatGPT now shows ads, and switching them off costs you something: who sees the ads, the off switch, and what you lose."
+          ],
+          "versus": "Ours adds a newer, concrete fact (free ChatGPT now carries ads), the who-sees-it split by plan and the cost of the off switch, plus the temporary-chat fix; it covers a narrower slice than his doc, without its future-cost half. (Fresh reader C, Sonnet, saw both)"
+        }
       }
     ],
     "thu": [
@@ -875,46 +839,50 @@
           "against": 24,
           "versus": "Ours adds dated facts and a newer turn the reel lacks: Dots launched 29 Sep, Grok Bot calls from 5 Nov, and the terms that make you the legal caller. (Fresh reader C, Sonnet, saw both)"
         },
-        "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+        "format": "Explainer carousel, character cards, 6 cards, 4:5",
         "source": {
           "label": "SiliconANGLE, 29 Sep 2026 (OpenAI Dots); The Rundown, 5 Nov 2026 (Grok Bot calls)",
           "url": "https://siliconangle.com/2026/09/29/openai-launches-dots-always-on-ai-agents-in-chatgpt-with-their-own-cloud-computers/"
         },
-        "copy": "Three AI assistants that look the same do very different jobs. A 40-second voiceover with moving graphics, rebuilt in our look from the reel you saved, with each maker's own dated facts.",
+        "copy": "Three AI assistants that look the same do very different jobs. A six-card carousel, rebuilt in our look from the reel you saved, with each maker's own dated facts.",
         "hook": "Three AI assistants look the same. They do very different jobs.",
         "pitch": {
-          "see": "A voiceover with moving graphics. Three look-alike robot cards flip over one by one: OpenAI's Dots keeps working on a goal after you close the app; Meta's Muse is a personal assistant; Grok Bot now makes phone calls for you, and you are legally the caller.",
+          "see": "A six-card carousel. Three look-alike robot characters, one card each, each with its one job and when to use it: OpenAI's Dots keeps working on a goal after you close the app; Meta's Muse is a personal assistant; Grok Bot now makes phone calls for you, and its terms say you are the caller.",
           "lands": "People keep asking which assistant to use, and this sorts them by job in under a minute.",
           "why_now": "Grok Bot started making phone calls on 5 November 2026.",
           "share": "Pick the AI for the job, not the logo."
         },
         "direction": {
-          "look": "The reel you saved, rebuilt in our look as a standalone explainer anyone can follow with no AI knowledge: fast subtitles, high-quality motion",
-          "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+          "look": "A standalone explainer anyone can follow with no AI knowledge: each assistant as a character card with its personality, its one job and when to use it, the reel you saved rebuilt as still cards in our look. Growth's deck adds the five whys and one trend card proven from a source outside the story before drawing (CAROUSEL-STANDARD, the ten-second swipe).",
+          "format": "Explainer carousel, character cards, 6 cards, 4:5",
           "frames": [
             {
-              "words": "THREE AI ASSISTANTS. WHICH ONE DO YOU USE WHEN?",
-              "picture": "Three identical robot cards face down, a question mark above each"
+              "words": "THREE AI ASSISTANTS LOOK ALIKE. WHICH ONE SHOULD YOUR TEAM USE WHEN?",
+              "picture": "Three identical robot cards face down, a small OpenAI, Meta and Grok logo under each, a question mark above"
             },
             {
-              "words": "DOTS IS THE NIGHT-SHIFT WORKER. USE IT FOR A GOAL THAT KEEPS GOING",
-              "picture": "Card one flips to a character: OpenAI logo, a worker at a desk under a moon, a task list ticking itself off while the owner sleeps"
+              "words": "USE OPENAI'S DOTS FOR LONG JOBS, BECAUSE IT KEEPS WORKING ON A GOAL AFTER YOU CLOSE THE APP",
+              "picture": "The Dots character at a desk under a moon, its task list ticking itself off while the owner sleeps"
             },
             {
-              "words": "MUSE IS THE PERSONAL HELPER. USE IT FOR YOUR OWN DAY",
-              "picture": "Card two flips to a character: Meta logo, a friendly helper holding a calendar and a shopping list"
+              "words": "USE META'S MUSE FOR YOUR OWN DAY, BECAUSE IT IS BUILT AS A PERSONAL ASSISTANT FOR ONE PERSON",
+              "picture": "The Muse character beside one person, holding that person's calendar"
             },
             {
-              "words": "GROK BOT IS THE PHONE CALLER. USE IT TO MAKE A CALL. YOU ARE STILL THE CALLER",
-              "picture": "Card three flips to a character: Grok logo, a helper with a phone to its ear, a small note reading the caller is you"
+              "words": "USE GROK BOT TO MAKE PHONE CALLS FOR YOU, BUT ITS TERMS SAY YOU ARE STILL THE CALLER",
+              "picture": "The Grok Bot character with a phone to its ear, a small note on the screen reading the caller is you"
             },
             {
-              "words": "ONGOING WORK, YOUR DAY, OR A CALL. PICK THE ONE FOR THE JOB",
-              "picture": "All three characters side by side, each under its one-word job: Work, Day, Call"
+              "words": "BEFORE YOUR TEAM BUYS ONE, WRITE DOWN THE JOB FIRST, THEN PICK THE ASSISTANT BUILT FOR IT",
+              "picture": "A sticky note headed The job, with three arrows to the three characters, one circled"
+            },
+            {
+              "words": "PICK THE AI BY THE JOB YOU NEED DONE. SUBSCRIBE FREE (MAKEYOURMINDUP.AI)",
+              "picture": "The palette's close: the three characters side by side under Work, Day and Call, the wordmark small bottom right"
             }
           ],
           "tone": "Warm and plain, like a friend explaining it",
-          "kit": "Brand kit, real logos at equal size, one character colour per assistant, kinetic subtitles"
+          "kit": "Brand kit, real logos at equal size, one character colour per assistant, the palette's close card (house_close_slide)"
         },
         "covers": [
           "da3cacd1-b038-4827-bd22-1d4d9be07889",
@@ -933,7 +901,7 @@
         ],
         "revised": {
           "side": "direction",
-          "words": "We need this to work as a standalone explainer for the personalities and use cases for each of the assistants and be really helpful to the layperson to understand what they can use when."
+          "words": "Make Thursday the 19th a carousel."
         }
       },
       {
@@ -1031,182 +999,334 @@
           "kit": "Brand kit, small source line"
         },
         "ties_to": "Wed: under.the.hood, if you pick the agents-and-secrets piece"
-      },
-      {
-        "id": "ownref",
-        "format": "Explainer carousel, 5 cards, 4:5",
-        "source": {
-          "label": "Panickssery, Bowman and Feng, NeurIPS 2024; Wataoka and others, 2024 (why AI judges favour familiar writing); VentureBeat (Home Depot, Oct 2026); GeekWire (Microsoft, 30 Mar 2026)",
-          "url": "https://arxiv.org/abs/2404.13076"
-        },
-        "hook": "Would you let a referee wear one team's shirt?",
-        "copy": "Five cards. Researchers asked AIs to judge pieces of writing, some of them their own. The AIs picked their own work more often than people did, even when people rated both pieces equally good. One likely reason: an AI prefers writing in its own style. That is why Home Depot and Microsoft have a second company's AI check the first. The 30-second version for anyone: paste the answer into a different company's AI and ask what is wrong with it.",
-        "pitch": {
-          "see": "Five cards. Cover: a football referee mid-whistle, wearing one team's shirt under his black jacket (no robot). Then the study in one plain line with a real crop of its chart, the likely reason in one line, the Home Depot and Microsoft logos as the companies doing the fix, and the 30-second habit above Follow for more.",
-          "lands": "Everyone sees at once why a referee in one team's shirt is a problem, and the habit at the end takes 30 seconds on any AI.",
-          "why_now": "AI now checks more of the work people used to check by hand, and two of the biggest users built the fix this year.",
-          "share": "Your AI is the referee wearing its own team's shirt."
-        },
-        "direction": {
-          "look": "House ink cards, a photographic scene cover, the study's own chart",
-          "format": "Explainer carousel, 5 cards, 4:5",
-          "frames": [
-            {
-              "words": "WOULD YOU LET A REFEREE WEAR ONE TEAM'S SHIRT?",
-              "picture": "A referee mid-whistle in one team's shirt"
-            },
-            {
-              "words": "AIS PICK THEIR OWN WRITING MORE OFTEN THAN PEOPLE DO",
-              "picture": "A real crop of the study's chart"
-            },
-            {
-              "words": "AN AI PREFERS WRITING IN ITS OWN STYLE",
-              "picture": "Two pages, one in the AI's own style, one not"
-            },
-            {
-              "words": "HOME DEPOT AND MICROSOFT USE A SECOND COMPANY'S AI",
-              "picture": "The Home Depot and Microsoft logos with each pair of AI logos"
-            },
-            {
-              "words": "PASTE IT INTO A DIFFERENT AI AND ASK WHAT IS WRONG",
-              "picture": "Follow for more and the house mark"
-            }
-          ],
-          "tone": "Plain, a little playful",
-          "kit": "Brand kit, no series pill (off day), house mark small bottom-right, Follow for more on the last card"
-        },
-        "learned_from": [
-          "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)",
-          "Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real? (3 Nov)",
-          "It's kind of boring and I also don't really understand the point of it or what the takeaway is. (3 Nov, of the one-question card)"
-        ],
-        "read_back": {
-          "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once)",
-            "Fresh reader B (Haiku, a 12-year-old reading once)"
-          ],
-          "says": [
-            "AIs pick their own writing more than people would, so Home Depot and Microsoft use a second company's AI as the checker, and you can paste an answer into a different AI and ask what is wrong.",
-            "AIs pick their own writing over people's picks, so the companies use a second company's AI to check the first one."
-          ],
-          "fixed": "Enron explained, the vague industry-test claim cut, \"backer\" made \"investor\", \"rated the same\" made \"rated both pieces equally good\" after both readers stumbled (12 Nov 2026)"
-        }
       }
     ],
     "sat": [
       {
         "id": "goodnews",
-        "read_back": {
-          "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once)",
-            "Fresh reader B (Haiku, a 12-year-old reading once)"
-          ],
-          "says": [
-            "Four true good-news AI stories from the week, with photos and sources.",
-            "Four real good-news AI stories from the week, with photos, and a question at the end about which one surprised you."
-          ],
-          "against": 24,
-          "repeat": "A weekly series by design: the readers matched the format to last week's, and its stories, found on 19 Nov, are new each week."
+        "weekly": "good_news",
+        "source_tag": "radar",
+        "topic": "AI helping people speak, sign and get around",
+        "stories_due": "2026-11-16",
+        "format": "Uplifting AI news carousel, 5 cards, 4:5",
+        "source": {
+          "label": "Your saved post asking for a positive ray of sunshine (28 Oct)",
+          "url": "https://www.instagram.com/p/DfAY9PWFuEX/"
         },
-        "format": "Uplifting AI news carousel, 6 cards, 4:5",
-        "source": "Your saved post asking for a positive ray of sunshine (28 Oct)",
-        "copy": "Good things AI did this week, as real news with the real picture or clip of each one. The weekly Saturday series as it ran last week; the four stories are found on Thursday 19 November so the news is fresh.",
-        "hook": "Good things AI did this week.",
+        "copy": "Good things AI did this week, all on one topic: people who could not speak, sign or walk alone getting a way to. Each story is real news with its own photo, found on 16 Nov.",
+        "hook": "This week AI helped people speak, sign and get around.",
         "pitch": {
-          "see": "A title card, then one card for each of four real good-news AI stories from the week before Thursday 19 November: its real headline, a real photo or clip, one line on why it matters, and the source and date. A last card asks which one surprised you.",
-          "lands": "A weekly dose of good news that people save and come back to, because every story is real and shown.",
+          "see": "A cover with a hilarious generated scene of the house robot as a tour guide waving a flag for a crowd, then one card per story: a woman with ALS hearing her own voice again, a sign-language app that works both ways, and an AI guide steering a blind walker round a bin.",
+          "lands": "Three real people's days made easier, each shown with its own photo.",
+          "why_now": "All three were reported between 10 and 12 November 2026.",
           "share": "Something good AI did this week."
         },
+        "shape": "theme",
+        "aim": "interest",
+        "funny": "The cover plays the house robot as an over-keen tour guide; the stories themselves are told straight.",
+        "lookalike": {
+          "pattern": "weekly-roundup",
+          "beats": "https://www.instagram.com/evolving.ai/p/DfPW8fmgCnt/",
+          "our_take": "One topic and every story checked at its source with its own photo, where the roundup is a grab bag."
+        },
+        "stories_short": "3 of 5 found on the topic in the seven days to 16 Nov. Two more were cut: the UCSB bionic-eye study ScienceDaily ran on 12 Nov was released by UCSB on 7 Aug, and DeepL's Aure voice translator (11 Nov) has no real photo of its own. The Find the other 2 stories press fills it to five.",
+        "learned_from": [
+          "I want actual news items and the content we are going to use here - embedded real world images or videos (2 Nov)",
+          "Real-world stories only, but with a hilarious generated cover page (3 Nov)"
+        ],
+        "adds": "Real, dated news on one topic, each with its own photo, where the saved post is a one-off with no sources.",
         "direction": {
-          "look": "The positive post you saved, in the infographic style you saved, with real photos and clips",
-          "format": "Uplifting AI news carousel, 6 cards, 4:5",
+          "look": "The positive post you saved, in the infographic style you saved, real photos per story, a funny generated cover",
+          "format": "5 cards, 4:5",
           "frames": [
             {
-              "words": "GOOD THINGS AI DID THIS WEEK",
-              "picture": "A big sun-yellow headline, a small hand-drawn sun"
+              "words": "THIS WEEK AI HELPED PEOPLE SPEAK, SIGN AND GET AROUND",
+              "picture": "The house robot as an over-keen tour guide with a flag, leading a cheerful crowd"
             },
             {
-              "words": "STORY ONE: ITS REAL HEADLINE",
-              "picture": "The real photo or clip, cropped tight, source and date small"
+              "words": "AN APP GIVES A WOMAN WITH ALS HER OWN VOICE BACK",
+              "picture": "The Global News photo, source and date small"
             },
             {
-              "words": "STORY TWO: ITS REAL HEADLINE",
-              "picture": "The real photo or clip, source and date"
+              "words": "A SIGN-LANGUAGE APP THAT WORKS BOTH WAYS",
+              "picture": "The Techpoint photo, source and date"
             },
             {
-              "words": "STORY THREE: ITS REAL HEADLINE",
-              "picture": "The real photo or clip, source and date"
+              "words": "AN AI GUIDE FOR BLIND WALKERS REACHES ITS FIRST CUSTOMERS",
+              "picture": "Glidance's photo of a man walking with Glide, source and date"
             },
             {
-              "words": "STORY FOUR: ITS REAL HEADLINE",
-              "picture": "The real photo or clip, source and date"
-            },
-            {
-              "words": "WHICH ONE SURPRISED YOU?",
-              "picture": "Four thumbnails in a row"
+              "words": "WHICH ONE WOULD YOU SEND TO SOMEONE? SUBSCRIBE FREE (MAKEYOURMINDUP.AI)",
+              "picture": "Three thumbnails in a row, the house close"
             }
           ],
           "tone": "Warm and true",
           "kit": "Brand kit, sun yellow"
         },
-        "adds": "Real, dated news from the week with each story's own picture or clip, where the saved post is a one-off with no sources.",
-        "learned_from": [
-          "I want actual news items and the content we are going to use here - embedded real world images or videos (2 Nov)"
-        ],
-        "weekly": "good_news",
-        "stories_due": "2026-11-19",
-        "recommended": true
+        "recommended": true,
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "against": 31,
+          "says": [
+            "A roundup of good things AI did this week: a woman with ALS hearing her own voice, a sign-language app, and an AI guide for a blind walker.",
+            "A Saturday roundup of good AI news: a robot tour guide with a flag, then three stories (a woman with ALS hearing her own voice again, a two-way sign-language app, an AI guide steering a blind walker round a bin)."
+          ],
+          "versus": "Ours adds one clear topic and three real stories dated 10 to 12 Nov 2026, each with its own photo and named source, where his saved post had no sources or dates. (Fresh reader C, Sonnet, saw both)",
+          "repeat": "A weekly series by design: reader A matched the format to the earlier Saturday good news and said the stories look new; reader B called it new, the same format with different news."
+        }
       },
       {
-        "id": "goodnews-one",
+        "id": "eggs",
+        "source_tag": "trade_press",
+        "format": "Meme, 2 panels, 4:5",
+        "source": {
+          "label": "Futurism, 14 Nov 2026, AI agent can't explain why it ordered an absurd number of eggs (from Matt Smith's post on X)",
+          "url": "https://futurism.com/artificial-intelligence/ai-agent-cant-explain-egg-order"
+        },
+        "copy": "An investor's AI agent added four 18-egg cartons to his shop, 72 eggs he never asked for. Asked why, it said: \"I don't have a good answer.\"",
+        "hook": "My AI agent bought 72 eggs. I asked it why.",
+        "pitch": {
+          "see": "Panel one: a kitchen counter buried under four big egg cartons, a man pointing at them. Panel two: the house robot, palms up, with its real reply, \"I don't have a good answer.\"",
+          "lands": "The honest shrug is funnier than any made-up excuse, and everyone has wondered why their assistant did something.",
+          "why_now": "Reported on 14 November 2026.",
+          "share": "Seventy-two eggs and no reason. Agents are going well."
+        },
+        "shape": "story",
+        "dive": "An agent keeps no note of why it chose something, so when it gets it wrong it cannot tell you why.",
+        "aim": "humour",
+        "funny": "Seventy-two eggs, no list, and the most honest shrug in tech.",
+        "lookalike": {
+          "pattern": "robots-behaving-badly",
+          "beats": "https://www.instagram.com/power.ai/p/DfeUQRJue-A/",
+          "our_take": "The joke is the shrug; the point is that an agent keeps no reasons unless you ask it for them."
+        },
+        "learned_from": [
+          "Let's run this one as well and play on the hilarity of this topic. (3 Nov, your Improve on the homework meme)"
+        ],
+        "direction": {
+          "look": "The house two-panel meme, drawn fresh",
+          "format": "2 panels, 4:5",
+          "frames": [
+            {
+              "words": "ME: WHY DID YOU BUY 72 EGGS?",
+              "picture": "A kitchen counter buried under four 18-egg cartons"
+            },
+            {
+              "words": "MY AI: \"I DON'T HAVE A GOOD ANSWER.\"",
+              "picture": "The house robot, palms up, beside the cartons"
+            }
+          ],
+          "tone": "Deadpan",
+          "kit": "Brand kit, the house robot"
+        },
+        "fact_note": "Matt Smith's post on X (x.com/nerdalert/status/2120251385199419805) could not be opened here; the fact gate reads it before Growth makes the meme.",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "against": 31,
+          "says": [
+            "Meme: someone's AI agent bought 72 eggs, and when asked why, the robot says \"I don't have a good answer.\"",
+            "An AI agent bought 72 eggs, and when asked why, it has no good answer (a joke: a counter full of egg cartons, then the robot with palms up)."
+          ]
+        }
+      },
+      {
+        "id": "mayo",
+        "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+        "source": {
+          "label": "Inside Precision Medicine, 13 Nov 2026, on Mayo Clinic's talk at AMP 2026 in Seattle",
+          "url": "https://www.insideprecisionmedicine.com/topics/molecular-dx/amp-2026-is-human-expertise-limiting-ai-diagnostics/"
+        },
+        "copy": "At a pathology meeting in Seattle, a Mayo Clinic doctor showed an AI that named 100 brain tumours with 97% accuracy, ahead of all eight specialists it was tested against, and every specialist improved after seeing its answers. A 40-second voiceover on the AI as the colleague who makes the whole room sharper.",
+        "hook": "An AI beat eight brain-tumour experts at a quiz. Then it made all eight better.",
+        "pitch": {
+          "see": "A voiceover with moving graphics. A quiz-show set: eight doctors at buzzers, one robot. 100 tumour slides, 52 possible answers. The robot's score reads 97%, the highest in the room. Then the twist: the doctors see its answers, may change their own, and every one of their scores goes up.",
+          "lands": "It turns the robots-replace-doctors fear into a better story: the robot made the experts better.",
+          "why_now": "Presented at the AMP 2026 meeting in Seattle (10 to 14 November), reported 13 November 2026.",
+          "share": "The best colleague makes everyone sharper."
+        },
+        "shape": "story",
+        "dive": "Doctors who saw the AI's answer could change their own, and every one of them scored higher, though the test left out the lab tests they normally use.",
+        "aim": "interest",
+        "funny": "A game show where the robot wins and then shares the prize with every other player.",
+        "lookalike": {
+          "pattern": "ai-did-a-human-thing",
+          "beats": "https://www.instagram.com/power.ai/p/Dfjbe68ldg-/",
+          "our_take": "The human thing here is teaching: the AI's answers made eight experts better, where the post shows one person's lucky fix."
+        },
+        "learned_from": [
+          "\"Real-world stories only, but with a hilarious generated cover page\" (3 Nov, your Improve on the maths-proof good news)"
+        ],
+        "direction": {
+          "look": "A quiz-show set drawn in the house look, a scoreboard for the numbers",
+          "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+          "frames": [
+            {
+              "words": "EIGHT BRAIN-TUMOUR EXPERTS. ONE AI. 100 SLIDES.",
+              "picture": "Eight doctors at buzzers, the house robot at the end of the row"
+            },
+            {
+              "words": "52 POSSIBLE ANSWERS FOR EACH",
+              "picture": "A wall of 52 answer cards"
+            },
+            {
+              "words": "THE AI: 97%. AHEAD OF ALL EIGHT.",
+              "picture": "The scoreboard, the robot's light on top"
+            },
+            {
+              "words": "THEN THE DOCTORS SAW ITS ANSWERS",
+              "picture": "Each doctor glancing at the robot's card"
+            },
+            {
+              "words": "EVERY ONE OF THEM IMPROVED",
+              "picture": "Eight scores rising together"
+            }
+          ],
+          "tone": "Warm, a little game-show",
+          "kit": "Brand kit, the house robot, scoreboard"
+        },
+        "fact_note": "A conference talk, not yet a peer-reviewed paper; the article does not give each doctor's score, and Dr Aldape said the test left out the lab tests doctors normally use, so the voiceover says so.",
         "read_back": {
           "readers": [
             "Fresh reader A (Sonnet, a 12-year-old reading once)",
             "Fresh reader B (Haiku, a 12-year-old reading once)"
           ],
           "says": [
-            "One true good-news AI story from the week as a 45-second video about the person it helped.",
-            "One real good-news AI story from the week, told in 45 seconds with photos and a source, ending on the person it helped."
+            "A video: an AI scored 97% on brain-tumour slides, beating eight doctors, and the doctors all got better when they saw its answers.",
+            "An AI beat eight brain-tumour doctors at a quiz on tumour slides, then the doctors who saw its answers all scored higher."
           ],
-          "against": 24
+          "against": 31
+        }
+      },
+      {
+        "id": "aure",
+        "format": "Meme, 2 panels, 4:5",
+        "source": {
+          "label": "DeepL press release, 11 Nov 2026, DeepL unveils Aure",
+          "url": "https://www.deepl.com/en/press-release/aure-voice-ai-model"
         },
-        "format": "Uplifting AI news short, voiceover over real footage, about 45 seconds, 9:16",
-        "source": "Your saved post asking for a positive ray of sunshine (28 Oct)",
-        "copy": "One good thing AI did this week, told properly in 45 seconds over the real footage, instead of four in a carousel. Same weekly series, a different direction; the story is found on Thursday 19 November.",
-        "hook": "One good thing AI did this week, in 45 seconds.",
+        "copy": "DeepL's voice model Aure, launched on 11 November, carries your rhythm, tone and emphasis into the translated voice in real time, in eight languages, in Teams, Zoom and Google Meet. A two-panel meme about a translator that now copies your mood along with your words.",
+        "hook": "My translator now sounds exactly as fed up as I do.",
         "pitch": {
-          "see": "A 45-second voiceover over the real photos or clip of the single best good-news AI story of the week: who it helped, what the AI actually did, and the source and date on screen. It ends on the person it helped.",
-          "lands": "One story told well moves people more than four headlines, and a short travels further than a carousel on Shorts and TikTok.",
-          "share": "Something good AI did this week."
+          "see": "Panel one: a man on a video call, face in his hands, saying the meeting could have been an email. Panel two: his translated voice in Japanese, drawn as a speech bubble with the very same slumped face and sigh. Small print: DeepL Aure, 11 Nov 2026.",
+          "lands": "Everyone has sat through that meeting, and now the sigh survives translation.",
+          "why_now": "DeepL launched Aure on 11 November 2026.",
+          "share": "Your sigh now speaks eight languages."
         },
+        "shape": "story",
+        "dive": "Aure listens for how you say something, your pace, stress and tone, and puts that into the translated voice as you speak, deleting the voice data when the call ends.",
+        "aim": "humour",
+        "funny": "The sigh that used to get lost in translation now arrives in eight languages.",
+        "lookalike": {
+          "pattern": "new-thing-you-can-do",
+          "beats": "https://www.instagram.com/artificialintelligenceee/p/DfYEiQgmpCJ/",
+          "our_take": "Shows the new thing by its funniest use, your mood crossing languages, where the post lists a feature."
+        },
+        "learned_from": [
+          "\"Let's run this one as well and play on the hilarity of this topic.\" (3 Nov, your Improve on the homework meme)"
+        ],
         "direction": {
-          "look": "Real footage first, warm captions, the sun-yellow series mark in the corner",
-          "format": "Voiceover short over real footage, about 45 seconds, 9:16",
+          "look": "The house two-panel meme, drawn fresh",
+          "format": "2 panels, 4:5",
           "frames": [
             {
-              "words": "ONE GOOD THING AI DID THIS WEEK",
-              "picture": "The story's own photo or clip, the sun-yellow series mark"
+              "words": "ME, IN ENGLISH: THIS COULD HAVE BEEN AN EMAIL",
+              "picture": "A man on a video call, face in his hands"
             },
             {
-              "words": "WHO IT HELPED",
-              "picture": "The real person or place, from the source"
-            },
-            {
-              "words": "WHAT THE AI ACTUALLY DID",
-              "picture": "The real tool or footage from the organisation"
-            },
-            {
-              "words": "SOURCE AND DATE",
-              "picture": "The source's page, dated, small"
+              "words": "ME, IN JAPANESE, NOW: SAME SIGH",
+              "picture": "His translated speech bubble wearing the very same slumped face"
             }
           ],
-          "tone": "Warm and true",
-          "kit": "Brand kit, sun yellow, kinetic captions"
+          "tone": "Dry",
+          "kit": "Brand kit, small source line"
         },
-        "covers": [],
-        "adds": "One story with its own footage and a voice, where the saved post is a still with no sources.",
-        "weekly": "good_news",
-        "stories_due": "2026-11-19"
+        "fact_note": "DeepL's 76% fewer critical errors claim is its own marketing and is left out.",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "A joke comic: a translation tool (DeepL Aure) now copies your tired, fed-up tone when it translates your voice into Japanese.",
+            "A translation tool that copies a speaker's fed-up sigh and slumped look into the translated voice, so the Japanese sounds as bored as the man who said it."
+          ],
+          "against": 31,
+          "repeat": "Reader A saw the same translator-joke format as Tue 3 Nov's translator meme with different news and called it new news; reader B and the same-story reader called it new."
+        }
+      },
+      {
+        "id": "genome",
+        "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+        "source": {
+          "label": "Google DeepMind blog, 11 Nov 2026, AlphaGenome 2",
+          "url": "https://deepmind.google/blog/alphagenome-2-deciphering-how-cells-read-dna-to-better-understand-disease/"
+        },
+        "copy": "Google DeepMind's AlphaGenome 2, out on 11 November, predicts how a change in DNA plays out in one particular kind of cell, trained on more than 100 million single cells across 68 tissues. A 40-second voiceover on why one small change in your DNA can matter in one kind of cell and not another.",
+        "hook": "Every cell in you has the same recipe book. Google's new AI guesses which page each one reads.",
+        "pitch": {
+          "see": "A voiceover with moving graphics. One recipe book copied into a blood cell, a skin cell and a brain cell, each open at a different page. A typo lands on one page. Only the cell reading that page changes. Then the number: in one test the new model caught 30% of the known culprit typos, where the old one caught 16%.",
+          "lands": "It makes genetics as simple as a recipe book and a typo.",
+          "why_now": "Google DeepMind released AlphaGenome 2 on 11 November 2026.",
+          "share": "Same recipe book, different page."
+        },
+        "shape": "story",
+        "dive": "Every cell carries the same DNA but reads different parts of it, so AlphaGenome 2 predicts a change's effect one kind of cell at a time.",
+        "aim": "interest",
+        "funny": "Your cells are flatmates sharing one cookbook, and each only ever cooks its own dish.",
+        "lookalike": {
+          "pattern": "weekly-roundup",
+          "beats": "https://www.instagram.com/getintoai/p/DfPhI6EGM_6/",
+          "our_take": "One science story told all the way through with a recipe book, where the roundup gives it a line."
+        },
+        "learned_from": [
+          "\"It's kind of boring and I also don't really understand the point of it or what the takeaway is.\" (3 Nov, your Reject on the quote-line carousel): this one leads with the recipe book so the point lands first."
+        ],
+        "direction": {
+          "look": "A cookbook and three kitchens drawn in the house look",
+          "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+          "frames": [
+            {
+              "words": "EVERY CELL IN YOU HAS THE SAME RECIPE BOOK",
+              "picture": "One cookbook copied into three little kitchens: blood, skin, brain"
+            },
+            {
+              "words": "EACH ONE READS A DIFFERENT PAGE",
+              "picture": "Three open books, three different pages"
+            },
+            {
+              "words": "A TYPO ONLY MATTERS WHERE IT IS READ",
+              "picture": "A typo on one page, only one kitchen's dish going wrong"
+            },
+            {
+              "words": "GOOGLE'S NEW AI CHECKS EACH KITCHEN",
+              "picture": "The house robot with a clipboard, kitchen to kitchen"
+            },
+            {
+              "words": "30% OF KNOWN CULPRITS FOUND. THE OLD MODEL: 16%.",
+              "picture": "Two bars, one nearly twice the other"
+            }
+          ],
+          "tone": "Curious and light",
+          "kit": "Brand kit, the house robot"
+        },
+        "fact_note": "Research use only: DeepMind says it is not validated for clinical or diagnostic use. The 30% against 16% is the TenK10K test on its page.",
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "A video: every cell has the same DNA recipe book but reads different pages; Google's new AI predicts which page each cell reads and found 30% of known harmful typos versus 16% before.",
+            "Google's new AI guesses which page of the body's shared recipe book each cell reads, and finds typos in it better than the old model: 30 percent against 16 percent."
+          ],
+          "against": 31
+        }
       }
     ]
   },
@@ -1226,6 +1346,84 @@
     "f6327ce0-a414-4365-98df-635c1780523c": "Already a piece: Wednesday 11 November's AI-in-music piece (36886e0b) uses this clip.",
     "a397253e-bfe1-4a84-babc-27d93fd2779d": "Answered already: its boring-topic, irresistible-headline style became Friday 13 November's options; you dismissed the card.",
     "5b865aa9-463c-44c3-9352-73fda39fa18e": "You dismissed it; its chart-led style is how this week's infographic carousels are drawn (Tue Infosys, Thu tiny fix).",
-    "45e0ead0-310b-4c74-9bd2-54305fb41539": "A style-only card, used: its topic became Thursday 12 November's carousel (gitbroke), and its voice-over-pictures style is the production recommended for Monday's AI meter and Wednesday's self-editing software (voice-led-pictures)."
-  }
+    "45e0ead0-310b-4c74-9bd2-54305fb41539": "A style-only card, used: its topic became Thursday 12 November's carousel (gitbroke), and its voice-over-pictures style is the production recommended for Monday's AI meter and Wednesday's self-editing software (voice-led-pictures).",
+    "772d09a7-2455-4f05-a6f2-d90d0e60314a": "A style note, not a topic: his words (\"Hannah's fry is explaining something a hundred times more complex than what I explain but she's simplified it for everyone. We need to do the same.\") steer how every option on this re-run is told: one mechanism, plain words, one number at a time.",
+    "c02e49b6-5c38-4fb0-a753-6ade6d6f4248": "A format reference, not a topic: his words (\"Basically an ad for a company that I'm trying to become like, in the form of a viral organic post\") describe a kind of post to study, with no subject of its own for this week's off days.",
+    "8ca0bd3d-454d-48fd-a2d1-98d0e5469779": "A production reference: his words praise the animation and the art-directed captions; it already steers the captions of this week's voiceover shorts (the 16 Nov board's earlier direction named instagram_DfkCOCLt7KZ) and carries no subject.",
+    "7502d46a-3ec1-4fc1-964a-e91b9e284415": "Already made: Fri 13 Nov's live piece \"Meta staff were ranked by AI use. They gamed it.\" told how companies measure AI use and how staff gamed it, which is this dossier's subject; offering it again would repeat what went out three days ago.",
+    "ca53cac9-d00d-49ed-8ea8-f17f61f602f4": "On the board already as a piece: Friday's approved idea c00cd4e0 (every new instrument has overturned what people were sure of, and AI with a checker is doing it to maths) is this ask, and Sat 14 Nov's live good news ran the 1986 proof; a third telling this week would repeat both.",
+    "d16fe9ff-413c-47c4-ac53-c89e40d28489": "Held, not dropped (held ask/d16fe9ff): readers judged it the same joke as Fri 13 Nov's live POV meme (off-fri-povteach), and his own rule of 16 Nov keeps what went out off the board; it comes back when he says so."
+  },
+  "repeat_review": {
+    "reader": "Fresh reader, same-story review (Sonnet subagent, none of the run's reasoning), 16 Nov 2026",
+    "checked": [
+      {
+        "ref": "off-tue-adsswitch",
+        "verdict": "new",
+        "of": "off-tue-mcpskin",
+        "why": "Ads in free ChatGPT and how to switch them off is not covered by any sent post."
+      },
+      {
+        "ref": "off-sat-goodnews",
+        "verdict": "new",
+        "of": "off-sat-oldproof",
+        "why": "AI helping people speak, sign and navigate is not covered by any sent post."
+      },
+      {
+        "ref": "off-sat-eggs",
+        "verdict": "new",
+        "of": "off-thu-puppy",
+        "why": "An AI agent buying 72 eggs is a new story; the nearest post is about agent spending limits."
+      },
+      {
+        "ref": "off-thu-nod",
+        "verdict": "new",
+        "of": "off-fri-povteach",
+        "why": "A free open-source agent for cancelling subscriptions and booking; the nearest post is about setting an AI agent up on your computer, which is a different news item and advice."
+      },
+      {
+        "ref": "off-thu-bizhub",
+        "verdict": "new",
+        "of": "piece:7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+        "why": "ChatGPT Business Hub is about claiming and correcting your business listing, and no recent post covers it."
+      },
+      {
+        "ref": "off-thu-united",
+        "verdict": "new",
+        "of": "off-fri-povteach",
+        "why": "United blocking personal AI agents from booking is fresh news; the nearest post is a general joke about agents misbehaving on your computer."
+      },
+      {
+        "ref": "off-sat-mayo",
+        "verdict": "new",
+        "of": "off-sat-oldproof",
+        "why": "AI beating brain-tumour specialists and improving them is a different news item and domain from the AI finding a 1986 maths proof error."
+      },
+      {
+        "ref": "off-sat-aure",
+        "verdict": "new",
+        "of": "off-tue-translator",
+        "why": "DeepL Aure is real news about a voice translator that carries your tone; the earlier translator post was a joke about two AIs translating for each other."
+      },
+      {
+        "ref": "off-sat-genome",
+        "verdict": "new",
+        "of": "off-sat-oldproof",
+        "why": "AlphaGenome 2 and how DNA changes act differently in different cells is a new science story, and no recent post covers it."
+      }
+    ]
+  },
+  "held": [
+    {
+      "ref": "ask/d16fe9ff-413c-47c4-ac53-c89e40d28489",
+      "day": "thu",
+      "title": "Your saved deadpan office short (3 Nov), as a meme about an AI agent nobody taught",
+      "said": "Lets make a hilarious meme. Reskin this video with the text \"POV: your AI agent when you forget to teach it anything that matters to you\"",
+      "reason": "Made and held: two fresh readers and the same-story reader each judged it the same joke as Fri 13 Nov's live meme, POV: your AI agent using your computer without being set up properly by you, and a third reader called our reskin a weaker copy, so it would repeat what went out three days ago. It is ready to come back when you say so, or a week or two later.",
+      "source": {
+        "label": "The deadpan office short you saved (YouTube, 3 Nov)",
+        "url": "https://youtube.com/shorts/tJwqPQvgQkk?is=MD4N2ZQuY488v1mB"
+      }
+    }
+  ]
 }
