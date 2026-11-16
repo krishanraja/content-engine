@@ -216,6 +216,8 @@ def motion_lints(spec: dict) -> list[str]:
                    'off the face (signed by Krish, 3 Nov 2026, docs/ve/MOTION_STANDARD.md)')
     out.extend(f'motion.required {problem}' for problem in motion_style_problems(spec))
     out.extend(motion_not_drawable(spec))
+    from . import palettes  # noqa: PLC0415
+    out.extend(palettes.spec_problems(spec))
     for cut_id, cut in spec['cuts'].items():
         for index, beat in enumerate(cut['beats']):
             used = [objects[name]['device'] for name in beat['uses'] if name in objects]

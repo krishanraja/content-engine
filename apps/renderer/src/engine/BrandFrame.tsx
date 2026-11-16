@@ -28,6 +28,8 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
   const ending = !!props.ending && frame >= props.ending.fromFrame
   // vertical-captions: lead captions replace the house captions for that style only.
   const lead = resolveMotion(props.motion)?.captions
+  // His brand marks keep the house colours when the cut is drawn in a style's own palette (props.brandTokens).
+  const house = props.brandTokens ? { ...props, tokens: props.brandTokens } : props
   return <>
     <Grain />
     {/* SPLIT keeps the mark tile and series pill of every face-with-proof beat: the horizontal logo is drawn for ink
@@ -35,15 +37,15 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
         audio and outro"; the house mark sits at the start of every beat, Krish 2026-09-26). */}
     {/* Vertical video carries no wordmark, mark tile or series pill (Ruling, Krish, 2026-11-11: "I don't think they're
         necessary and should be permanently removed from all templates"). The wide cut keeps them. */}
-    {props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>
-      <MarkTile props={props} />
-      <ChannelPill props={props} beat={beat} />
+    {props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={house} /> : <>
+      <MarkTile props={house} />
+      <ChannelPill props={house} beat={beat} />
     </>}
     {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);
         graphics own the top of SPLIT and of a STAGE beat with no plate. */}
     {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
-    {ending ? <EndingBand props={props} frame={frame} />
-      : call ? <CallCard props={props} frame={frame} />
+    {ending ? <EndingBand props={house} frame={frame} />
+      : call ? <CallCard props={house} frame={frame} />
         : props.captionTheme ? <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />
         : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />
         : props.captionStyle === 'word' ? <WordCaption props={props} frame={frame} />

@@ -104,6 +104,9 @@ export const EngineRenderPropsSchema = z.object({
   fps: z.literal(30),
   durationFrames: z.number().int().positive(),
   tokens: EngineTokensSchema,
+  /** The house colours, when the cut is drawn in a style's own palette (style.palette): his brand marks keep them
+   *  (Ruling, Krish, 2026-11-16: a style may bring its own colours). Absent, the marks use tokens. */
+  brandTokens: EngineTokensSchema.optional(),
   series: z.object({ label: z.string().min(1), day: z.string().min(1), promise: z.string().min(1), site: z.string().min(1) }).strict(),
   brand: z.object({ mark: EngineImageSchema, logo: EngineImageSchema, stacked: EngineImageSchema }).strict(),
   segments: z.array(EngineSegmentSchema).default([]),
