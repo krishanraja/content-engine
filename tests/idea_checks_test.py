@@ -633,5 +633,27 @@ class KeepTest(unittest.TestCase):
                                                                     f'idea:{IDEA}': 'filed', 'off:tue:kept': 'approved', f'idea:{ASK}': 'approved'})
 
 
+class DaysGateTest(unittest.TestCase):
+    """A `days` re-run (sunday-ideas.yml) answers for the open options of its own days only: a problem the board already
+    had elsewhere, or on an option he answered, is reported and never fails the run (the week of 16 Nov carried answered
+    repeats on Mon and Tue when Thu and Sat were made again)."""
+
+    STATUS = {'off:thu:ownref': 'open', 'off:thu:tinyfix': 'filed', 'idea:a57cf3eb-0000': 'open'}
+
+    def test_only_an_open_option_on_a_re_run_day_is_the_runs(self):
+        self.assertTrue(board_feed.remakeable('repeat: off-thu-ownref cites three of the same works', ['thu', 'sat'], self.STATUS))
+        self.assertFalse(board_feed.remakeable('repeat: off-thu-tinyfix has the same primary source as wed-1', ['thu', 'sat'], self.STATUS))
+        self.assertFalse(board_feed.remakeable('repeat: wed-1 (a57cf3eb) has the same primary source as off-thu-tinyfix', ['thu', 'sat'], self.STATUS))
+        self.assertTrue(board_feed.remakeable('repeat: wed-1 (a57cf3eb) x', ['wed'], self.STATUS))
+
+    def test_the_subject_is_the_first_option_named_never_a_press_it_cites(self):
+        line = 'return without depth: off-tue-burntokens comes back after his filed press (2026-11-09/queue/off-thu-burntokens, 2026-11-03)'
+        self.assertFalse(board_feed.remakeable(line, ['thu'], self.STATUS))
+
+    def test_without_the_status_every_option_on_those_days_counts(self):
+        self.assertTrue(board_feed.remakeable('repeat: off-sat-goodnews x', ['sat'], None))
+        self.assertFalse(board_feed.remakeable('no subject here', ['sat'], None))
+
+
 if __name__ == '__main__':
     unittest.main()

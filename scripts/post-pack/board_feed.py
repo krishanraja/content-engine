@@ -692,7 +692,29 @@ def gate(week, ideas_path=None, plans=None):
     return report['problems'], report['warned']
 
 
-def gate_report(week, ideas_path=None, plans=None, base_path=None):
+GATE_SUBJECT = re.compile(r'^[^:]+:\s+(?:off-(?P<oday>mon|tue|wed|thu|fri|sat)-(?P<oid>[A-Za-z0-9_-]+)|(?P<day>mon|tue|wed|thu|fri|sat)-\d+(?:\s+\((?P<pid>[0-9a-f]{8})\))?)')
+
+
+def remakeable(line, days, status=None):
+    """Whether a gate line's subject (the option it is about, the first one it names) is one a `days` re-run was there
+    to make again: an option on one of those days that was open (never answered). Without the status, every option on
+    those days counts, so a re-run never passes on an option it may have left as it was."""
+    m = GATE_SUBJECT.match(line)
+    if not m:
+        return False
+    day = m.group('oday') or m.group('day')
+    if day not in days:
+        return False
+    if status is None:
+        return True
+    if m.group('oday'):
+        return status.get(f'off:{day}:{m.group("oid").lower()}', 'open') == 'open'
+    pid = m.group('pid')
+    hits = [v for k, v in status.items() if pid and k.startswith(f'idea:{pid}')]
+    return (hits[0] if hits else 'open') == 'open'
+
+
+def gate_report(week, ideas_path=None, plans=None, base_path=None, days=None, status=None):
     """The gate, every line it read: {problems (they fail the run), warned, ticks (an idea from his tick on a subject he
     refused: shown to him, never failing; Ruling, Krish, 2026-11-12), before}. With base_path (the week's ideas.json as it
     stood before a run that adds one idea, the Inspiration piece run), a problem the board already had is moved to
@@ -706,8 +728,12 @@ def gate_report(week, ideas_path=None, plans=None, base_path=None):
     before = []
     if base_path:
         had = {f['line'] for f in wave1(json.loads(Path(base_path).read_text(encoding='utf-8')), sources, plans) if f['code'] in idea_checks.GATE_CODES}
-        before = [p for p in problems if p in had]
-        problems = [p for p in problems if p not in had]
+        # A re-run of some days (sunday-ideas.yml `days`) answers for those days in full: a problem the board already had
+        # on one of them still fails, since the run was there to make its open options again. Every other day's
+        # problems are the week's own and only reported.
+        keep = [p for p in problems if p in had and days and remakeable(p, days, status)]
+        before = [p for p in problems if p in had and p not in keep]
+        problems = [p for p in problems if p not in had] + keep
     return {'problems': problems, 'warned': [f['line'] for f in found if f['code'] == 'warned'],
             'ticks': [f['line'] for f in found if f['code'] == 'his_tick'], 'before': before}
 
@@ -1149,6 +1175,8 @@ def main(argv=None):
     gt.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
     gt.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
     gt.add_argument('--base', help='the week\'s ideas.json before a run that adds one idea: what the board already had is reported, never this run\'s to answer')
+    gt.add_argument('--days', help='with --base, a re-run of these days (e.g. thu,sat): a problem already on an open option of those days still fails')
+    gt.add_argument('--status', help='with --days, the options\' status before the run (board_feed.py status): only an open option was the run\'s to make again')
     rp = sub.add_parser('repeats', help='what on the week\'s ideas repeats a recent post, piece, earlier option or another option (the gate\'s repeat check)')
     rp.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
     rp.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
@@ -1217,7 +1245,10 @@ def main(argv=None):
         return 0
     if args.cmd == 'gate':
         try:
-            report = gate_report(args.week, args.ideas, base_path=args.base)
+            status = json.loads(Path(args.status).read_text(encoding='utf-8')) if args.status else None
+            if isinstance(status, dict) and isinstance(status.get('status'), dict):
+                status = status['status']
+            report = gate_report(args.week, args.ideas, base_path=args.base, days=[d for d in (args.days or '').split(',') if d] or None, status=status)
         except (FeedError, OSError, ValueError) as error:
             # Not a refusal: the gate could not read the week. Exit 2, so no run says he refused something he did not.
             print(f'board_feed gate: could not read the week: {error}', file=sys.stderr)
