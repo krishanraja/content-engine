@@ -5699,6 +5699,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 
 - `export { coverPlan, stillIds } from './plan'`
 - `const StyleStillSchema`
+- `const CAPTION_ZOOM`
 - `function StyleStill({layer,id}:Props)`
 
 ### `apps/renderer/src/engine/stills/palettes.ts`
