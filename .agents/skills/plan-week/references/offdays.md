@@ -85,6 +85,9 @@ through `POST /api/board/<Monday>/offdays`, never through this file.
  "copy": "<two plain sentences: what it is and why it lands>",
  "hook": "<the headline he reads first, one line>",
  "pitch": {"see": "<what you see or hear>", "lands": "<why it is funny or useful>", "why_now": "<the dated reason, if any>", "share": "<the one line people send on>"},
+ "shape": "story", "dive": "<the mechanism to dive into, one sentence>", "aim": "humour",
+ "funny": "<its humorous angle, one plain line>",
+ "lookalike": {"pattern": "<a pattern id in lookalike.json>", "beats": "<the feed post URL it is similar to or better than>"},
  "cards": [{"words": "...", "picture": "..."}],
  "inspiration": {"label": "<the saved post it borrows from, as he would name it>", "url": "https://...", "saved": "Saved 29 Oct"},
  "learned_from": ["<his words that shaped it, quoted, with their date>"],
@@ -95,6 +98,16 @@ through `POST /api/board/<Monday>/offdays`, never through this file.
                "tone": "<one line>", "kit": "<the brand-kit pieces it uses>", "inspo_url": "https://..."},
  "covers": ["<must_cover id>"]}
 ```
+
+**Its shape, aim and humour, from the 23 Nov board** (Krish, 2026-11-16: "Everything should be tinged with a humorous
+angle, all scripts for pieces and all suggestions for off days."). Every option carries `shape` (`"theme"`, one topic and
+at least three sourced `stories`, or `"story"`, one primary `source` and `dive`), `aim` (`"utility"`, `"interest"` or
+`"humour"`; its own field, so `pitch.lands` stays the line on why it lands), `funny` (its humorous angle, one plain line)
+and `lookalike` (the pattern and the feed post it beats; none for an idea of his or one he records), as
+`references/lookalike.md` says. The humour lives in the angle, the headline and the narration, never in stickers,
+badges or slogans on a cover (`docs/CAROUSEL-STANDARD.md`). `board_feed.py gate` refuses an option without them, and an
+option that repeats a post of the last three weeks or another option on the board (one story is one option; a carousel
+that `supports` the day's approved piece says so).
 
 A carousel's first `picture` (its cover) names a scene that is the story's object, place or moment, or the house robot
 doing something (`config/brand-robot.json`), never a made-up robot (Ruling, Krish, 2026-11-05: "either use the branded
