@@ -1,0 +1,95 @@
+{
+ "_about": "What travels in the posts of his Instagram inspo feed, read on 16 Nov 2026 for the re-run of Tue, Thu and Sat of the week of 16 Nov. Feed fallback: the Instagram inspo sheet could not be read (the Posts tab has no published, retrieved, headline, post url column); the patterns come from the feed the gather read (inspiration.lookalike_feed). Stale sheet: the gathered feed's newest row is 2026-11-11, more than 3 days before 2026-11-16; the patterns lean on older posts. The feed rows carry headlines and short summaries only, no slide text, so each card_flow is read from what the headline and summary say the post does.",
+ "week_start": "2026-11-16",
+ "patterns": [
+  {
+   "id": "ai-did-a-human-thing",
+   "pattern": "An ordinary person used AI for a small, very human job (finding a lost earbud, planning a road trip, sorting a dull chore) and it worked in a way nobody expected.",
+   "why_it_travels": "It is a story you can retell in one breath, it is a little absurd, and the reader thinks they could do it tonight.",
+   "aim": "humour",
+   "examples": [
+    "https://www.instagram.com/power.ai/p/Dfjbe68ldg-/",
+    "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
+    "https://www.instagram.com/therundownai/p/DfQCWHZEreu/"
+   ],
+   "card_flow": ["the odd everyday problem, in one line", "what the person typed or showed the AI", "what came back", "the moment it worked", "how you could try the same thing"],
+   "search_briefs": ["people using ChatGPT, Claude or Gemini for an everyday problem, reported this week with names", "odd but real AI help stories, November 2026"]
+  },
+  {
+   "id": "free-stuff-worth-saving",
+   "pattern": "A list of free things you can use now: free courses, free tools, a free feature that was paid last month.",
+   "why_it_travels": "People save and send what saves them money or time; the word free does the work.",
+   "aim": "utility",
+   "examples": [
+    "https://www.instagram.com/evolving.ai/p/Dfjz9o8gA0F/",
+    "https://www.instagram.com/power.ai/reel/C5Ch05aSOzK/",
+    "https://www.instagram.com/getintoai/p/DfPuPhZkwMW/"
+   ],
+   "card_flow": ["the promise: something useful, free, today", "item one with what it does for you", "item two", "item three", "where to find them", "save this"],
+   "search_briefs": ["AI features made free this week, November 2026", "free AI courses or tools announced in the last 7 days from the maker's own page"]
+  },
+  {
+   "id": "ai-says-no",
+   "pattern": "An AI refused, pushed back or caught someone out (spotting an exam and refusing the answer, giving life advice nobody expected).",
+   "why_it_travels": "A machine with a backbone is funny and a bit reassuring at the same time.",
+   "aim": "humour",
+   "examples": [
+    "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+    "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/",
+    "https://www.instagram.com/evolving.ai/p/DfPo57fAL9g/"
+   ],
+   "card_flow": ["the setup: someone asks the AI for something", "what it said instead", "why it said it", "what that tells you about using it"],
+   "search_briefs": ["AI assistant refusing or pushing back on a user, reported in the last 7 days", "AI gave advice people did not expect, November 2026"]
+  },
+  {
+   "id": "the-bill-arrives",
+   "pattern": "What AI really costs someone: a company's monthly AI bill, a cut of 90 per cent after switching tools, a limit put on spending.",
+   "why_it_travels": "Money numbers are concrete, and readers compare them with their own bill.",
+   "aim": "utility",
+   "examples": [
+    "https://www.instagram.com/evolving.ai/p/DfSQ4mMAPzP/",
+    "https://www.instagram.com/therundownai/p/DfSLrV8Sox9/",
+    "https://www.instagram.com/therundownai/p/DfX6gffylbl/"
+   ],
+   "card_flow": ["the number that stops you", "who spent it and on what", "what they changed", "what it saved", "the one thing you can check on your own bill"],
+   "search_briefs": ["company cuts AI spending or caps AI tool budgets, November 2026", "AI tool pricing changes for ordinary users this week"]
+  },
+  {
+   "id": "new-thing-you-can-do",
+   "pattern": "A new feature lands that changes an everyday job: AI as a job-search helper, connected personal finance, voice and video chat.",
+   "why_it_travels": "It answers 'what can I do with this now', with one clear use.",
+   "aim": "utility",
+   "examples": [
+    "https://www.instagram.com/therundownai/p/DfXx4uMktKI/",
+    "https://www.instagram.com/therundownai/p/DfXrUQUktBy/",
+    "https://www.instagram.com/artificialintelligenceee/p/DfYEiQgmpCJ/"
+   ],
+   "card_flow": ["what you can now do, in one line", "the screen that shows it", "how to switch it on", "one way to use it this week", "the catch to watch"],
+   "search_briefs": ["new consumer AI features launched in the last 7 days, from the maker's own page", "AI features that help with a daily task, released November 2026"]
+  },
+  {
+   "id": "weekly-roundup",
+   "pattern": "A swipe-through of the week's AI stories, one per card, each in a line.",
+   "why_it_travels": "One save catches you up on a whole week.",
+   "aim": "interest",
+   "examples": [
+    "https://www.instagram.com/evolving.ai/p/DfPW8fmgCnt/",
+    "https://www.instagram.com/getintoai/p/DfPhI6EGM_6/"
+   ],
+   "card_flow": ["the week in one promise", "story one", "story two", "story three", "story four", "story five", "follow for next week"],
+   "search_briefs": ["good news AI stories from the last 7 days: health, science, access", "AI helping people this week, from the organisation's own page"]
+  },
+  {
+   "id": "robots-behaving-badly",
+   "pattern": "AI or robots tricked, fooled or doing something daft in a test: easy to picture, a little alarming, mostly funny.",
+   "why_it_travels": "It is slapstick with a point; people send it with 'are we cooked'.",
+   "aim": "humour",
+   "examples": [
+    "https://www.instagram.com/evolving.ai/p/DfcKCktgEA2/",
+    "https://www.instagram.com/power.ai/p/DfeUQRJue-A/"
+   ],
+   "card_flow": ["the daft thing it did", "how they got it to do it", "why it fell for it", "what that means for anyone using one"],
+   "search_briefs": ["AI agent tricked or fooled in a test, research published this week", "AI agents failing at a simple real task, November 2026"]
+  }
+ ]
+}
