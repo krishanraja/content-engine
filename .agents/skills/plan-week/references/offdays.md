@@ -87,7 +87,7 @@ through `POST /api/board/<Monday>/offdays`, never through this file.
  "pitch": {"see": "<what you see or hear>", "lands": "<why it is funny or useful>", "why_now": "<the dated reason, if any>", "share": "<the one line people send on>"},
  "shape": "story", "dive": "<the mechanism to dive into, one sentence>", "aim": "humour",
  "funny": "<its humorous angle, one plain line>",
- "lookalike": {"pattern": "<a pattern id in lookalike.json>", "beats": "<the feed post URL it is similar to or better than>"},
+ "lookalike": {"pattern": "<a pattern id in lookalike.json>", "beats": "<the feed post URL it is similar to, better than or adapted from>", "our_take": "<one line: what we say that the post did not>"},
  "cards": [{"words": "...", "picture": "..."}],
  "inspiration": {"label": "<the saved post it borrows from, as he would name it>", "url": "https://...", "saved": "Saved 29 Oct"},
  "learned_from": ["<his words that shaped it, quoted, with their date>"],
@@ -116,6 +116,19 @@ headline that stops the scroll, and its `pitch.see` the picture that does the sa
 they can use the same day, at the level of the sheet's best posts (the lookalike pattern it beats). The humour still rides
 on top, in the angle. The weekly good news and the memes keep their own aims. `board_feed.py gate` refuses an off-day
 carousel whose aim is not utility (from the 23 Nov board).
+
+**The sheet is a source, and its card flow is the model** (Krish, 2026-11-16: "Just look at that Instagram inspo sheet
+for content ideas. Look at it for the way the narrative goes from card to card. You are more than welcome to copy any
+ideas but we just change the copy, we change the branding, we change the imagery, and ideally we have our own take on
+the card (even if we're allowed to use the specific bit of news or idea or format)."). An option may take a sheet post's
+news, idea or format outright, naming it in `lookalike.beats`. Its `cards` follow the job of each card in that
+pattern's `card_flow` (lookalike.json), in our own words, on our brand and with our own pictures, and `lookalike.our_take`
+says in one line what we add. Never their sentence: the gate refuses seven of their words in a row. Ours must beat the
+post it draws on; a copy that is "way worse" (2 Nov) is cut.
+
+**Fun to make, fun to consume** (Krish, 2026-11-16: "one of the main things about ALL makeyourmindup content is that it
+must be fun for me to produce, and must be fun for an audience to consume."). An option he would not enjoy making, or a
+reader would not enjoy reading, is cut before the tab, however useful.
 
 A carousel's first `picture` (its cover) names a scene that is the story's object, place or moment, or the house robot
 doing something (`config/brand-robot.json`), never a made-up robot (Ruling, Krish, 2026-11-05: "either use the branded
