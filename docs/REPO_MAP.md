@@ -5695,6 +5695,29 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `type EngineTokens = z.infer<typeof EngineTokensSchema>`
 - `type EngineSting = z.infer<typeof EngineStingSchema>`
 
+### `apps/renderer/src/engine/stills/StyleStill.tsx`
+
+- `export { coverPlan, stillIds } from './plan'`
+- `const StyleStillSchema`
+- `function StyleStill({layer,id}:Props)`
+
+### `apps/renderer/src/engine/stills/palettes.ts`
+
+Spot inks, paper and shadow. All still colour values live here, including device tokens.
+
+- `type Palette`
+- `const PALETTES: Record<string, Palette>`
+- `const tokensFor = (p: Palette) =>`
+
+### `apps/renderer/src/engine/stills/plan.ts`
+
+- `type Layer = 'motion' | 'treatment' | 'captions'`
+- `type Zone = {name:string; x0:number; y0:number; x1:number; y1:number}`
+- `const MOTION_IDS`
+- `const TREATMENT_IDS`
+- `function stillIds(): {layer:Layer; id:string}[]`
+- `function coverPlan(layer:Layer,id:string)`
+
 ### `apps/renderer/src/engine/transport.ts`
 
 JSON-value transport: escape values only; keys retain their original spelling.
