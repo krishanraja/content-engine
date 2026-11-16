@@ -475,6 +475,13 @@ READ_FROM = '2026-11-09'  # Krish, 2026-11-02, of the 9 Nov off days; older week
 
 
 GOODNEWS_DAYS = 7   # a good-news story is from the seven days up to stories_due (Krish, 2026-11-07: "fresh")
+# Look wide, then choose the topic (Krish, 2026-11-16: "Something's gone wrong in where you're looking and how you're
+# looking because there should be millions of good news stories. What about Reddit, YouTube, or LinkedIn?"): from
+# WIDE_FROM, the stories come with the candidates the run gathered before it chose the topic.
+WIDE_FROM = '2026-11-17'
+WIDE_CANDIDATES = 15
+WIDE_PLACES = 3
+PLACES = ('news', 'reddit', 'youtube', 'linkedin', 'sheet', 'card')
 SHEET_DAYS = 30     # or the thirty, when it was found in his Instagram inspo sheet (Ruling, Krish, 2026-11-16)
 
 
@@ -500,6 +507,23 @@ def found_in_sheet(story, sheet=None):
     if not url or not re.match(r'^instagram\.com/(?:[^/]+/)?(?:p|reel|reels|tv)/', url):
         return False
     return sheet is None or url in sheet
+
+
+def wide_problems(label, candidates):
+    """The good news looked wide before it chose its topic: at least WIDE_CANDIDATES candidates, each {title, url (https),
+    place, date}, from at least WIDE_PLACES of PLACES (offdays.md, "The Saturday good news", step 1)."""
+    cands = [c for c in candidates or [] if isinstance(c, dict)]
+    good = [c for c in cands if str(c.get('title') or '').strip() and str(c.get('url') or '').startswith('https://')
+            and c.get('place') in PLACES and re.fullmatch(r'\d{4}-\d{2}-\d{2}', str(c.get('date') or ''))]
+    places = sorted({c['place'] for c in good})
+    out = []
+    if len(good) < WIDE_CANDIDATES:
+        out.append(f'{label}: {len(good)} candidates gathered; look wide first, at least {WIDE_CANDIDATES} '
+                   '({"title", "url", "place", "date"}), then choose the topic where five meet')
+    if len(places) < WIDE_PLACES:
+        out.append(f'{label}: candidates from {", ".join(places) or "nowhere"}; look in at least {WIDE_PLACES} of '
+                   f'{", ".join(PLACES)} (Krish, 2026-11-16: "What about Reddit, YouTube, or LinkedIn?")')
+    return out
 
 
 def goodnews_problems(ideas, sources, today=None, plans=None):
@@ -532,6 +556,8 @@ def goodnews_problems(ideas, sources, today=None, plans=None):
             if bad:
                 out += [f'{label}: stories {p} (due {due.isoformat()})' for p in bad]
                 continue
+            if due.isoformat() >= WIDE_FROM:
+                out += wide_problems(label, o.get('candidates'))
             for i, st in enumerate(stories, 1):
                 when = date.fromisoformat(str(st['date']))
                 days = SHEET_DAYS if found_in_sheet(st, sheet) else GOODNEWS_DAYS
