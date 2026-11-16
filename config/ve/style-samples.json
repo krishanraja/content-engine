@@ -105,10 +105,10 @@
   },
   "stills": {
     "treatment": {
-      "face-with-proof": "",
-      "voice-led-pictures": "",
+      "face-with-proof": "/api/board/sign-offs?file=1fmbpyjl7qYMe0-Fd3kXnv77ECJ059xj2",
+      "voice-led-pictures": "/api/board/sign-offs?file=1KjsE7xJS0H3tok1R1teYUs3MgoH6BaQu",
       "data-story": "",
-      "fry-talking-head": "",
+      "fry-talking-head": "/api/board/sign-offs?file=1CwpWOM-aeXcchMi-Gs-rwBNcKNgZgsFh",
       "scoreboard-test": "/api/board/sign-offs?file=1SyjyzeJhGO-S933AQk8YNSE6Df99ATUz",
       "kinetic-movement": "/api/board/sign-offs?file=12MPDJHZPWonuBXzNJ-Ugvq_07IlAmv7M",
       "receipt-animation": "/api/board/sign-offs?file=1eWcc2rt4oDP4I8GH7IQwOk-lRTgdhjfG"
@@ -123,11 +123,11 @@
       "hud-terminal": "/api/board/sign-offs?file=1vRFWHzYPKHTk-KcSbEtVJ3iEmS9UArd3",
       "line-boil": "",
       "living-ui": "/api/board/sign-offs?file=1nld7-IPPeHZ91f3JqB_V_f9txKduX2sb",
-      "paper-cutout": "",
+      "paper-cutout": "/api/board/sign-offs?file=1EY4BdP1VvzRXveXKuMODJ0PspJ-NiACD",
       "riso-halftone": "/api/board/sign-offs?file=1X0LGy4QkGhUnIyTvG04yIWVbtehSq9d4",
       "single-line-drawing": "/api/board/sign-offs?file=1qytOc-IW_PwVzX3ET875o2iRhXojtD-y",
       "swiss-kinetic-type": "/api/board/sign-offs?file=10_qOgHqoFT92zHvdmrhJrC64pStURPXB",
-      "vertical-captions": ""
+      "vertical-captions": "/api/board/sign-offs?file=1X3nFnjd0TjsZwy4PWrSaxVB5gM-5zk4Z"
     },
     "captions": {
       "pop": "/api/board/sign-offs?file=1NE-0O6EOYwnqfIj06f5RrvPAZELURZRF",
@@ -143,19 +143,19 @@
       "gaming-stream": "/api/board/sign-offs?file=16l1brGocCpQPIaoJsKtr0JKh03uENnVO",
       "simple-one-word": "/api/board/sign-offs?file=197qf2CcFQNykVehcrWi6b_grs2a7bV4b",
       "podcast": "/api/board/sign-offs?file=1odFEa3jzR9_iOasuLi97IvuKN4rD1TYu",
-      "art-directed": "",
-      "cinematic": "",
-      "slam": "",
+      "art-directed": "/api/board/sign-offs?file=1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
+      "cinematic": "/api/board/sign-offs?file=1aVC8fDi_Kkk9SsYTWsL07sqnpdZuQ7la",
+      "slam": "/api/board/sign-offs?file=1GDBVFc30kJywUtwQbpwySBQJ1Skexg-z",
       "georgia-build": "/api/board/sign-offs?file=1Ffa3saJ6D93IYsR75rjQ4QyVY3vGd4wX",
-      "stair-flash": "",
+      "stair-flash": "/api/board/sign-offs?file=158BqsUMeplN_sRdRvzsagXjrbRmYRpzk",
       "tuck-stack": "/api/board/sign-offs?file=1h5HkovL7sUeV_tugeoYdvrS_iDTpj53x",
       "anchor-quote": "/api/board/sign-offs?file=1Ix2KAjWDaJYMWuNc09ma9hyfn-HI6RXb",
       "rack-focus": "/api/board/sign-offs?file=1xtrXjdbR0rm4ImVnfNyDVVEuMIEELB6r",
       "flip-hinge": "",
-      "slice": "",
+      "slice": "/api/board/sign-offs?file=1rz4QXIqtIrDkb3eaqzrlo6BxcUm3An-p",
       "slot-roll": "",
       "receipt-chip": "/api/board/sign-offs?file=1wimTz66mETNNnv6YGhc9QsMrRwGB3b1c",
-      "ink-block": "",
+      "ink-block": "/api/board/sign-offs?file=1cbx6mqGYMRvSinx8CuPkzcY-IWzCK4DW",
       "mint-word": "/api/board/sign-offs?file=1QqqcuNpas17EsG1P2pGW_r-NX4V3rlh0"
     }
   },
@@ -163,7 +163,10 @@
     "treatment": {
       "scoreboard-test": "1SyjyzeJhGO-S933AQk8YNSE6Df99ATUz",
       "kinetic-movement": "12MPDJHZPWonuBXzNJ-Ugvq_07IlAmv7M",
-      "receipt-animation": "1eWcc2rt4oDP4I8GH7IQwOk-lRTgdhjfG"
+      "receipt-animation": "1eWcc2rt4oDP4I8GH7IQwOk-lRTgdhjfG",
+      "face-with-proof": "1fmbpyjl7qYMe0-Fd3kXnv77ECJ059xj2",
+      "voice-led-pictures": "1KjsE7xJS0H3tok1R1teYUs3MgoH6BaQu",
+      "fry-talking-head": "1CwpWOM-aeXcchMi-Gs-rwBNcKNgZgsFh"
     },
     "motion": {
       "ai-music-slam": "1quOEk6tN-P9LM76H1JLxaKAxMFKfHjid",
@@ -175,11 +178,11 @@
       "hud-terminal": "1vRFWHzYPKHTk-KcSbEtVJ3iEmS9UArd3",
       "line-boil": "",
       "living-ui": "1nld7-IPPeHZ91f3JqB_V_f9txKduX2sb",
-      "paper-cutout": "",
+      "paper-cutout": "1EY4BdP1VvzRXveXKuMODJ0PspJ-NiACD",
       "riso-halftone": "1X0LGy4QkGhUnIyTvG04yIWVbtehSq9d4",
       "single-line-drawing": "1qytOc-IW_PwVzX3ET875o2iRhXojtD-y",
       "swiss-kinetic-type": "10_qOgHqoFT92zHvdmrhJrC64pStURPXB",
-      "vertical-captions": ""
+      "vertical-captions": "1X3nFnjd0TjsZwy4PWrSaxVB5gM-5zk4Z"
     },
     "captions": {
       "pop": "1NE-0O6EOYwnqfIj06f5RrvPAZELURZRF",
@@ -200,7 +203,13 @@
       "anchor-quote": "1Ix2KAjWDaJYMWuNc09ma9hyfn-HI6RXb",
       "rack-focus": "1xtrXjdbR0rm4ImVnfNyDVVEuMIEELB6r",
       "receipt-chip": "1wimTz66mETNNnv6YGhc9QsMrRwGB3b1c",
-      "mint-word": "1QqqcuNpas17EsG1P2pGW_r-NX4V3rlh0"
+      "mint-word": "1QqqcuNpas17EsG1P2pGW_r-NX4V3rlh0",
+      "art-directed": "1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
+      "cinematic": "1aVC8fDi_Kkk9SsYTWsL07sqnpdZuQ7la",
+      "slam": "1GDBVFc30kJywUtwQbpwySBQJ1Skexg-z",
+      "stair-flash": "158BqsUMeplN_sRdRvzsagXjrbRmYRpzk",
+      "slice": "1rz4QXIqtIrDkb3eaqzrlo6BxcUm3An-p",
+      "ink-block": "1cbx6mqGYMRvSinx8CuPkzcY-IWzCK4DW"
     }
   }
 }
