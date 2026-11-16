@@ -1076,6 +1076,7 @@ What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?
 - `const CORRECTION_DAYS`
 - `const LOOKALIKE_FEED_DAYS`
 - `function buildFeed(rows: Row[])`
+- `const LOOKALIKE_FEED_MAX`
 - `function splitFeed(rows: Row[], feedSince: string)`
 - `function buildCorrections(rows: Row[])`
 - `function buildHindsight(rows: Row[])`
