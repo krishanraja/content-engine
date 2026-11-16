@@ -5,7 +5,9 @@ Owner: Krish Raja
 Last verified: 2026-11-12 against `main` at `02184d34` (the code, `apps/control-plane/vercel.json` and
 `.github/workflows/`), GitHub Actions' own run records, and a read-only readback of the shared Mindmaker OS database
 between 11:00 and 12:00 UTC the same day; the board's contract, the full verify, the engine's runs and what waits on
-Krish rechecked against `main` at `3064e769`, the live view and the database between 13:30 and 14:30 UTC
+Krish rechecked against `main` at `3064e769`, the live view and the database between 13:30 and 14:30 UTC; the
+workflows, the board's contract, the full verify and the week of 9 Nov's ideas rechecked on 16 Nov against `main` at
+`4fcf48fb` (the code), GitHub's run and issue records and the live view between 08:30 and 09:30 UTC
 
 `NOW.md` is the short version and says what is next. This page holds only what was checked on the day above, and
 each line names where. The page it replaced (its 4 November list, the 19 October board cutover and a body last
@@ -17,21 +19,24 @@ When this page and the code disagree, the code wins: fix this page.
 - **The content engine** (`apps/control-plane`) runs on the Vercel project `content-engine` with 25 crons
   (`apps/control-plane/vercel.json`), each recording its runs in `content_engine_runs`. In the eight days to
   12 Nov every cron job wrote run rows. Their last results are under "Broken or risky".
-- **GitHub Actions** (`.github/workflows/`, 18 workflows) holds this repository's scheduled jobs outside Vercel; no
+- **GitHub Actions** (`.github/workflows/`, 20 workflows) holds this repository's scheduled jobs outside Vercel; no
   Claude routine or claude.ai schedule runs any of them (Ruling, Krish, 2026-10-29). On a schedule: `docs-steward.yml` (20:30 UTC nightly), `full-verify.yml`
   (03:23 UTC nightly, on a push to `main`, and started by `auto-merge.yml` after every merge), `engine-learning-weekly.yml` (Sundays 19:37 UTC), `sunday-ideas.yml`
-  (Saturdays 12:17 and 20:47 UTC) and `watch-cloud.yml` (every 15 minutes). On events: `ci.yml`,
+  (Saturdays 12:17 and 20:47 UTC), `watch-cloud.yml` (every 15 minutes), `branch-sweep.yml` (Sundays 03:17 UTC: deletes
+  branches whose work is on main and lists the rest) and `standards-checkin.yml` (Sundays 07:00 UTC, code only: the
+  weekly standards check-in's data, `docs/STANDARDS-CHECKIN.md`). On events: `ci.yml`,
   `auto-merge.yml` (merges a pull request on green CI, then folds the closeout notes into `NOW.md`),
   `harness-repository-context.yml` and `now-trim.yml`. By hand or by dispatch only: `make-piece.yml`,
   `inspiration-piece.yml`, `produce-day.yml`, `place-takes.yml`, `repair-round.yml`, `offday-revise.yml`,
-  `saturday-goodnews.yml` and `maxine-trial.yml`. `board-rebuild.yml` was removed with the old boards on 13 Nov.
+  `saturday-goodnews.yml`, `maxine-trial.yml` and `signoff-apply.yml` (started by his Approve or Not this on a video
+  sign-off card; it writes the configs his presses name). `board-rebuild.yml` was removed with the old boards on 13 Nov.
 - **The publish board.** The one live board is Control Centre's Content tab (`config/boards.json`,
   `live_board.url`; `python3 scripts/post-pack/live_board.py <Monday> [day]`), drawn from this engine's view
-  (`GET /api/board/<Monday>/view`, `apps/control-plane/api/board/_view.ts`). The view's contract is 1.16.0
-  (`VIEW_CONTRACT_VERSION`, `_viewContract.ts`; 15 Nov 2026: thumbnail options with Pick and Not this, and style samples'
-  Drive links; the live view answered 1.15.0 on 14 Nov 2026), and Control Centre pins 1.16.0 from its board's own change
-  of 15 Nov (its `tests/fixtures/board-view/PIN.json`, the schema and fixture byte for byte this engine's; 1.15.0 at
-  9669f14 before it). The engine's own old pages at content.krishraja.com/board/<Monday>
+  (`GET /api/board/<Monday>/view`, `apps/control-plane/api/board/_view.ts`). The view's contract is 1.17.0
+  (`VIEW_CONTRACT_VERSION`, `_viewContract.ts`; pull request #745, 16 Nov 2026: a prompt's notes and an open in Claude
+  Code, a press's `after`, stills on style options and `model.repeats`; the live view answered 1.17.0 on 16 Nov 2026).
+  Control Centre pins 1.17.0 from its pull request #926 (merged 16 Nov; its `tests/fixtures/board-view/PIN.json`, the
+  schema and fixture byte for byte this engine's; 1.16.0 from its board's change of 15 Nov before it). The engine's own old pages at content.krishraja.com/board/<Monday>
   are retired for good (Ruling, Krish, 2026-11-13): every old address answers a permanent redirect (308) to the live
   board at the same week (`apps/control-plane/api/board/_handler.ts`, `OLD_PAGES`). How to use the board:
   `docs/PUBLISH_BOARDS.md`.
@@ -55,10 +60,15 @@ When this page and the code disagree, the code wins: fix this page.
 
 ## Broken or risky
 
-- **Full verify on `main`** was red from 12 Nov 09:53 UTC (issue #589, closed 12:24 UTC): the Windows suite failed
-  `tests/control-plane/inspiration-actions.test.ts` on CRLF output, and the board's phone check failed because a
-  long subscribe link widened the run-sheet past 390px. Both were fixed in pull request #592, and the full verify on
-  `3064e769` (13:26 UTC) is green.
+- **Full verify on `main`** is red from 16 Nov 08:08 UTC (issue #746, open): its `board-web` job ("Board sessions on a
+  real Postgres") fails on `708dddd` and again on `4fcf48fb` with "db.from(...).select(...).gte(...).lt is not a
+  function". The view's new read of the pieces of the 14 days before the week (`apps/control-plane/api/board/_view.ts`)
+  calls `.lt`, which the query builder in `tests/integration/board-sessions-e2e.ts` did not have. The pull request that
+  carries this page adds `lt`, `gt` and `in` to that builder; the next full verify on `main` says whether it is green.
+  (The red of 12 Nov, issue #589, was fixed in pull request #592.)
+- **The weekly failure loop's first pull request** (#743, the week to 15 Nov) is red and open: its NOW.md line takes
+  `NOW.md` to 14,100 bytes, over the 14,000 that `check:workbench` allows, so `verify:quick` fails and it cannot merge
+  itself.
 - **`claims_resolve` failed every day** (5 to 12 Nov, every run): "there is no unique or exclusion constraint
   matching the ON CONFLICT specification". Its upsert named `onConflict: 'claim_id'`, and the only unique index on
   `claim_resolutions.claim_id` is partial (`claim_resolutions_one_due`, `WHERE event = 'came_due'`), which an
@@ -82,11 +92,9 @@ Each is checked in the record that holds it; only his own words or presses close
 - **Golden frames.** All 10 slots in `config/ve/golden-frames.json` are empty; at least 5 are wanted, and only his
   words naming a moment fill one.
 - **Gate 2 on face-with-proof at 16:9** (`config/ve/design-lock.json`, `drafts`).
-- **His answers on the week of 9 Nov's ideas board** (the live view, 13:30 UTC on 12 Nov): Thu 12's
-  `beststicker` ("Your AI thinks it's the best. Guess who told it.", signed off in a session and filed in 3 Posts, so
-  it waits on his Approve on the live board, the one press that puts it on the day) and `otherside`; Wed 11's
-  `tablefortwo`; one option on Fri 13; Sat 14's `goodnews` and `spotai`. Thu 12's `agentnotsetup` is one post with Tue
-  17's `povteach`, approved on Tue 17; his Approve on Thu 12 would move it there.
+- **His answers on the week of 9 Nov's ideas board** (the live view, 16 Nov): Thu 12's `otherside` and one option on
+  Fri 13 are still open; Wed 11's `tablefortwo`, Thu 12's `agentnotsetup` and Sat 14's `goodnews` and `spotai` are held,
+  not approved by him. `beststicker` is approved, and the view shows it on Fri 13.
 - **Friday 13 Nov's creative sheet.** `docs/plans/2026-11-09-week/fri-preproduction/creative.json` has `signed: null`;
   nothing in its "after sign" list starts before he signs it.
 

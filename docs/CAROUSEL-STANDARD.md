@@ -1,7 +1,7 @@
 # Carousel quality standard
 
 Owner: content-engine. Taste authority: Krish Raja. Updated 5 November 2026; the brand elements rechecked on 12
-November 2026; how a carousel is made rewritten on 13 November 2026.
+November 2026; how a carousel is made rewritten on 13 November 2026; his rulings of 14, 15 and 16 November 2026 added.
 
 **The brand palette wins on every brand element** (Krish, 12 Nov 2026: "I approve the brand palette sheet, but only if
 it falls in line with the attached."): the cover's logo, the wordmark, the colour of each day and the last card come
@@ -33,7 +33,9 @@ using the Codex plug in as per the other usual workflows". Then, the same day: "
 same way", and "Off-day voiceover shorts should go the same way too".
 
 So there is one route. A carousel is made in a Claude session that someone opens, usually from the board item's "Copy
-prompt for Claude" (`apps/control-plane/api/board/_makeRoute.ts` writes it). It is never made by a scheduled job, a
+prompt for Claude" (`itemPrompt` in `apps/control-plane/api/board/_weekModel.ts` writes it, with the route from
+`_makeRoute.ts`; since view contract 1.17.0 of 16 November it takes Krish's notes first and opens Claude Code with the
+prompt filled in). It is never made by a scheduled job, a
 headless model run or a template engine. The Studio's old carousel commands are retired (their record is in
 `docs/history/`, dated 13 November 2026), and so is Growth's Saturday art-direction run. In the session:
 

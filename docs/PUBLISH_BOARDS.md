@@ -561,6 +561,12 @@ live board while `gate` fails). Each check enforces a rule already live or his o
   asked, a source newer than his press, changed copy and a research prompt; otherwise it is held with its reason.
 - From the 23 Nov board every publishing-day option opens on one plain question (`pitch.question`, drawn as its title),
   with a research prompt and a source tag.
+- Since 16 Nov an option that retells a piece or post that went out or is on its way fails the gate (code `repeat`:
+  the same primary source, the same hook, an earlier board's option he did not send back, a twin on the same board,
+  or two of the same works; an idea of his own or from his tick carries the match and never fails, `his_repeat`;
+  Krish, 2026-11-16: "this week's Ideas Board needs to not contain mostly things we published last week"). From the
+  23 Nov board every option also says its shape, its aim (utility, interest or humour) and its funny line, and names
+  the lookalike pattern it draws on from his Instagram inspo sheet (code `aim`, plan-week `references/lookalike.md`).
 
 **On the board** (`_viewExtras.ts ideaLines`, after a day's options, no new contract field): each subject not offered
 again is a line "Not offered again: <subject>" with his words and one press, "Offer it again" (`queue/veto-<subject>`,
@@ -641,6 +647,10 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   every idea on a day that already holds a piece and on every idea for later on such a date, and `move` on every piece
   his approval holds (`days[].pieces[].move`, the model's piece `move`), the same shape as an off-day item's; a day's
   model may list more than one piece ("Replacing a day's piece, and Move to… on a series piece", above).
+- **1.14.0 (13 Nov 2026)** added the press op `look`, Pick the look, for a piece whose path is at its look ("The current
+  state, and nothing stale", above).
+- **1.15.0 (13 Nov 2026)** added the press op `style`, Pick the motion style and Pick the captions, beside Pick the look
+  on every piece before recording (`lookPresses`, the same section).
 - **1.16.0 (15 Nov 2026)** added `thumbs` to each series day: the piece's thumbnail options while a set the critic
   judged is on its making record, each option's wide and tall files as same-site Drive file paths with their sha256, the
   critic's line, the grid mock, Pick on each option and Not this on the set, and the press op `thumb-pick`, which the
@@ -1203,8 +1213,9 @@ approvals`) are read-only views of the `picks` documents of that kind; nothing
 writes to a view.
 
 Sunday's sources: `python3 scripts/post-pack/board_feed.py gather <Monday>`
-reads `GET /api/week/options?include=sources` and `GET /api/idea-queue?combine=1`
-(read-only, no spend) into `docs/plans/<Monday>-week/sources.json`: each
+reads `GET /api/week/options?include=sources`, `GET /api/idea-queue?combine=1`
+and the view of each of the three weeks before (what went out, `recent_posts`, for the repeat
+check), all read-only and with no spend, into `docs/plans/<Monday>-week/sources.json`: each
 series' pool, his ideas first, then near something he liked, then the ladder
 score, each with `source_kind` and `why_here`, the queue and its combine groups,
 and which source is empty and why. His ideas are `manual` rows (his words
@@ -1266,7 +1277,8 @@ then "Could you not get Github to trigger Claude subscription to do something an
 board?" (the board was the engine's own page then; it is retired, and its addresses redirect to the live board). No
 Claude routine writes to a board. The Sunday ideas board is `.github/workflows/sunday-ideas.yml`: Claude Code inside a
 GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`, never an API key), fired twice on Saturday (12:17
-and 20:47 UTC, the second only a retry), idempotent for the week, and startable by hand. It fills the whole ideas board
+and 20:47 UTC, the second only a retry), idempotent for the week, and startable by hand or by a board press (by hand,
+its `days` input makes again only the options nobody answered on those days). It fills the whole ideas board
 once a week, Saturday's good news included (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full,
 Saturday's good news included; the Thursday good-news schedule is retired): the publishing days' options, every off
 day's options and Saturday's five real, sourced stories, each checked against its primary source, with `stories_due`
