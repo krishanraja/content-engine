@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildView, viewProblems, type ViewInputs } from '../../apps/control-plane/api/board/_view'
+import { buildView, viewProblems, type ViewInputs, lockBodyHash } from '../../apps/control-plane/api/board/_view'
 import { pieceScheduled, recordScheduled, scheduledOf } from '../../apps/control-plane/api/board/_posted'
 import { reportPosts } from '../../apps/control-plane/api/board/_offdayItems'
 import { approvedAll } from './_approvals'
@@ -23,7 +23,7 @@ const scripts = { doc_id: 'fri-scripts', updated_by: 'Krish', body: { approved: 
 const notes = { tick_id: 'fri-substack-notes', updated_by: 'growth', body: { done: false, day: 'fri', piece_id: FRI, step: 'substack-notes', channel: 'substack-notes', label: 'Substack Notes', by: 'growth',
   scheduled: [{ due_at: '2026-11-13T17:40:00.000Z', buffer_post_id: '6af4e3a977f44b6536fa99f8', at: '2026-11-12T12:00:00Z' }] } }
 const inputs = (over: Partial<ViewInputs> = {}): ViewInputs => ({ week: WEEK, now: new Date('2026-11-12T15:00:00Z'), pieces: [piece], picks: [yes, scripts], queue: [], history: [], runs: {}, north_star: null,
-  ideas: null, locks: { fri: 'Signed by Krish: "yes", 2026-11-07, lock sha256 ' + 'a'.repeat(64) }, approvals: approvedAll(WEEK, [piece]), research_files: { fri: true }, ...over } as ViewInputs)
+  ideas: null, locks: { fri: 'Signed by Krish: "yes", 2026-11-07, lock sha256 ' + lockBodyHash('') }, approvals: approvedAll(WEEK, [piece]), research_files: { fri: true }, ...over } as ViewInputs)
 
 describe('a piece Growth has scheduled', () => {
   it('says when it goes out, from Growth\'s record, and the piece is Scheduled', () => {

@@ -232,6 +232,8 @@ class LabTest(unittest.TestCase):
                           (lambda: lab.record_still('motion', 'ladder', drive_id, path=samples), 'needs_device'),
                           (lambda: lab.record_still('motion', 'no-such-style', drive_id, path=samples), 'draws'),
                           (lambda: lab.record_still('captions', 'no-such-caption', drive_id, path=samples), 'caption'),
+                          (lambda: lab.record_still('captions', 'art-directed', drive_id, path=samples), '--file'),
+                          (lambda: lab.record_still('motion', 'paper-cutout', drive_id, path=samples), '--file'),
                           (lambda: lab.record_still('treatment', 'no-such-look', drive_id, path=samples), 'formats.production'),
                           (lambda: lab.record_still('treatment', 'face-with-proof', 'short', path=samples), 'Drive file id'),
                           (lambda: lab.record_still('treatment', 'face-with-proof', drive_id, png, path=samples), 'not a JPEG'),

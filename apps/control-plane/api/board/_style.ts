@@ -135,7 +135,9 @@ const STILL_LAYERS: readonly StillLayerKey[] = ['motion', 'captions', 'treatment
 export function stillUrl(layer: StillLayerKey, id: string, samples: unknown = styleSamples): string | null {
   const map = isObj(samples) && isObj(samples.stills) && isObj(samples.stills[layer]) ? samples.stills[layer] as Body : {}
   const url = map[id]
-  return typeof url === 'string' && /^\/(?!\/)[^\s]*$/.test(url) ? url : null
+  // Only the board's own file route with a Drive id: a still is never anything else (a path such as /\\host would leave
+  // the site).
+  return typeof url === 'string' && /^\/api\/board\/sign-offs\?file=[A-Za-z0-9_-]{20,80}$/.test(url) ? url : null
 }
 
 /** Every Drive id a still is served from (the stills_drive map), only for a still the view shows. */
