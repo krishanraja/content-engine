@@ -663,8 +663,8 @@
         },
         {
           "file": "apps/control-plane/api/_houseRules.ts",
-          "contains": "A five-minute video and a ninety-second one",
-          "how": "house rule TWO_CUTS"
+          "contains": "A five-minute video and a short vertical one",
+          "how": "house rule TWO_CUTS; renamed 2026-11-16 when the short cut became 20 to 35 seconds (Ruling, Krish, 2026-11-16)"
         }
       ]
     },
@@ -2407,6 +2407,324 @@
           "how": "the Scripts step names the lifted length and the reason on the board"
         }
       ]
+    },
+    {
+      "id": "audience-first-two-seconds",
+      "on": "2026-11-16",
+      "krish": "apply 1 to 6 from the next piece you make this week",
+      "why": "Growth measured the promoted TikTok of \"The UK number two\": 35.7 in 100 viewers past 2 seconds, 9.2 past 6, 0.6 to the end, every attention measure below average; organic TikTok held 2.5 to 7 seconds. Most viewers decide in the first two seconds.",
+      "means": "Every vertical shows its one named thing in its first frame and has words on screen inside the first second: its first visual event lands by the hook's second word. Nothing goes before it (HOOK_IS_THE_INTRO already said so). A house rule, a ve lint refusal from 16 Nov, a motion-designer line and a test.",
+      "status": "encoded",
+      "brief": {
+        "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
+        "material_sha256": "f0aed19ad9875e58b5935f8214f40eb14a5ebc4db70c8a7a752692a93e2f482f",
+        "path": "growth-makeyourmindup docs/briefs/2026-11-16-content-engine-what-the-audience-tells-us.md",
+        "read_from": "branch claude/2026-11-16-growth-push at a35f633 (5,136 bytes, sha256 28dc8784); the board material is 5,023 bytes with another sha256 and returned no text on 16 Nov, so the two may differ",
+        "change": 1,
+        "becomes": [
+          "house_rule",
+          "skill",
+          "test"
+        ],
+        "evidence": "TikTok Promote, \"The UK number two\", 11 Nov",
+        "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
+      },
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'FIRST_TWO_SECONDS'",
+          "how": "the house rule, read by the visual planners"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "house rule FIRST_TWO_SECONDS",
+          "how": "story.hook_event refuses a 9:16 cut from 16 Nov whose first event lands after the hook's second word"
+        },
+        {
+          "file": "tests/ve_lint_test.py",
+          "contains": "test_vertical_from_16_nov_shows_its_thing_by_the_second_word",
+          "how": "the lint, held by a test"
+        },
+        {
+          "file": ".agents/skills/motion-designer/SKILL.md",
+          "contains": "The first two seconds of a vertical",
+          "how": "the motion plan opens on the thing"
+        }
+      ]
+    },
+    {
+      "id": "audience-short-verticals",
+      "on": "2026-11-16",
+      "krish": "apply 1 to 6 from the next piece you make this week",
+      "why": "The longest Instagram holds were 14 to 45 seconds; the 1:20 TikTok and the 5:02 YouTube cut lost nearly everyone. The session disagreed with the ceiling, once: the brief's own best Instagram videos averaged 44.6 s and 39.7 s of watch, longer than 35, so a 35-second cut sits below what the best pieces held. Applied as he said; the ceiling is one number (SHORT_CUT.most_s) for him to move.",
+      "means": "The short cut runs 20 to 35 seconds as he says it, 45 to 75 script words, one idea: hook, the idea, the call, the last line. A second idea goes to the long cut or the article. Long cuts belong to YouTube search and the Substack post, never the feeds. It replaced the 90-second cut (160 to 195 words) from the pieces published 16 Nov.",
+      "status": "encoded",
+      "brief": {
+        "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
+        "material_sha256": "f0aed19ad9875e58b5935f8214f40eb14a5ebc4db70c8a7a752692a93e2f482f",
+        "path": "growth-makeyourmindup docs/briefs/2026-11-16-content-engine-what-the-audience-tells-us.md",
+        "read_from": "branch claude/2026-11-16-growth-push at a35f633 (5,136 bytes, sha256 28dc8784); the board material is 5,023 bytes with another sha256 and returned no text on 16 Nov, so the two may differ",
+        "change": 2,
+        "becomes": [
+          "house_rule",
+          "skill",
+          "test"
+        ],
+        "evidence": "Instagram holds; TikTok 1:20 cut; YouTube 5:02 cut",
+        "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
+      },
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "// SHORT_CUT:BEGIN",
+          "how": "the one block every tool reads"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "def short_band",
+          "how": "story_check holds the short cut to SHORT_CUT and warns past most_s as he says it"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "def short_cut()",
+          "how": "dialogue.short_max refuses a 9:16 cut past most_s from SHORT_CUT.from"
+        },
+        {
+          "file": "scripts/post-pack/publish_kit.py",
+          "contains": "VERTICAL_MAX_SECONDS = _short_cut_most_s()",
+          "how": "the publish kit names the short cut by its ceiling"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "and the short cut, 20 to 35 seconds, 9:16,",
+          "how": "make-piece writes the short to it"
+        }
+      ]
+    },
+    {
+      "id": "audience-one-concrete-thing",
+      "on": "2026-11-16",
+      "krish": "apply 1 to 6 from the next piece you make this week",
+      "why": "Average watch on Instagram: Higgsfield 44.6 s, Disney and Character.AI 39.7 s, the UK number two 28.5 s with 4 shares, the refund bot 24.9 s; the abstract \"Every AI has two passports\" held 17.5 s and earned no share. People stay with a thing they recognise or could use today.",
+      "means": "Every piece is built on one named, concrete thing (a product, a deal, a number or a person), named in the title, the first sentence of each script and the first line of every caption and written post, then follows the money or the surprise. An abstract framing may be the angle, never the opening. Checked: story_check refuses a first sentence that names no product, company, person or number on any named cut; plan-week judges every idea on it.",
+      "status": "encoded",
+      "brief": {
+        "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
+        "material_sha256": "f0aed19ad9875e58b5935f8214f40eb14a5ebc4db70c8a7a752692a93e2f482f",
+        "path": "growth-makeyourmindup docs/briefs/2026-11-16-content-engine-what-the-audience-tells-us.md",
+        "read_from": "branch claude/2026-11-16-growth-push at a35f633 (5,136 bytes, sha256 28dc8784); the board material is 5,023 bytes with another sha256 and returned no text on 16 Nov, so the two may differ",
+        "change": 3,
+        "becomes": [
+          "house_rule",
+          "skill",
+          "test"
+        ],
+        "evidence": "Instagram average watch per post, 5 Oct to 14 Nov",
+        "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
+      },
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'ONE_CONCRETE_THING'",
+          "how": "the house rule, read by the idea and draft judges, every writer and the final pass"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "def names_a_thing",
+          "how": "the refusal on the first sentence of every named cut"
+        },
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "6. **One named thing, for a leader.**",
+          "how": "the sixth idea test"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "1c. **Audience rules, 16 Nov** (ONE_CONCRETE_THING",
+          "how": "the Scripts step"
+        }
+      ]
+    },
+    {
+      "id": "audience-for-the-leader",
+      "on": "2026-11-16",
+      "krish": "apply 1 to 6 from the next piece you make this week",
+      "why": "The reader is a senior commercial leader, and the publication promises \"for leaders working out what AI changes in their business\", but the posts rarely said so. The pop-culture hook drew the most reach of the run and no reader. 47 of the 57 scripts on file name no business stake in their first two sentences.",
+      "means": "By the second sentence of each script, in the article's subtitle and in the first line of every caption and written post, say what this changes for a business in a leader's terms: budget, team, customers, suppliers, contracts, prices or margin. A pop-culture hook is welcome when the next line turns it into their business. Words cannot judge a stake, so the check is a warning and a fresh reader's answer.",
+      "status": "encoded",
+      "brief": {
+        "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
+        "material_sha256": "f0aed19ad9875e58b5935f8214f40eb14a5ebc4db70c8a7a752692a93e2f482f",
+        "path": "growth-makeyourmindup docs/briefs/2026-11-16-content-engine-what-the-audience-tells-us.md",
+        "read_from": "branch claude/2026-11-16-growth-push at a35f633 (5,136 bytes, sha256 28dc8784); the board material is 5,023 bytes with another sha256 and returned no text on 16 Nov, so the two may differ",
+        "change": 4,
+        "becomes": [
+          "house_rule",
+          "skill",
+          "test"
+        ],
+        "evidence": "reach and subscribers by hook type",
+        "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
+      },
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'FOR_THE_LEADER'",
+          "how": "the house rule, read by every writer, the draft judges and the final pass"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "def leader_stake_warning",
+          "how": "story_check warns when the first two sentences name no business stake"
+        },
+        {
+          "file": ".agents/skills/make-piece/references/audience-rules.md",
+          "contains": "who is it for and what does it change for their business",
+          "how": "one more fresh reader after each read-back"
+        }
+      ]
+    },
+    {
+      "id": "audience-written-edition",
+      "on": "2026-11-16",
+      "krish": "apply 1 to 6 from the next piece you make this week",
+      "why": "Video cross-posted to Threads, X and Facebook reached a median of 5 to 11 people. The one written Note, on Claude Duet, reached 208 against a Notes median of 4 and brought the only subscriber of the run. Feeds that are read reward words written to be read.",
+      "means": "Every piece ships a written edition beside its videos: a post of 3 to 6 short lines for X and Threads (at most 280 characters) and a written opinion of 60 to 180 words for Substack Notes, each opening on the named thing and its business stake, carrying only checked facts and no link. Content-engine writes the words and files them on the piece; Growth makes the posts from them and writes the Notes for the other days (the 28 Oct ruling keeps posting and Notes with Growth).",
+      "status": "encoded",
+      "brief": {
+        "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
+        "material_sha256": "f0aed19ad9875e58b5935f8214f40eb14a5ebc4db70c8a7a752692a93e2f482f",
+        "path": "growth-makeyourmindup docs/briefs/2026-11-16-content-engine-what-the-audience-tells-us.md",
+        "read_from": "branch claude/2026-11-16-growth-push at a35f633 (5,136 bytes, sha256 28dc8784); the board material is 5,023 bytes with another sha256 and returned no text on 16 Nov, so the two may differ",
+        "change": 5,
+        "becomes": [
+          "house_rule",
+          "skill",
+          "test"
+        ],
+        "evidence": "Buffer reach by channel and format; the Claude Duet Note, 4 Nov",
+        "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
+      },
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'WRITTEN_EDITION'",
+          "how": "the house rule"
+        },
+        {
+          "file": "scripts/post-pack/written_edition_check.py",
+          "contains": "def problems(text)",
+          "how": "the check on written-edition.md"
+        },
+        {
+          "file": ".agents/skills/make-piece/references/audience-rules.md",
+          "contains": "## The written edition (after the fact gate, before the pack)",
+          "how": "the make-piece step and its filing for Growth"
+        }
+      ]
+    },
+    {
+      "id": "audience-article-subscribe-ask",
+      "on": "2026-11-16",
+      "krish": "apply 1 to 6 from the next piece you make this week",
+      "why": "The newest article asked for the subscription only in the navigation, the sidebar and after the sources and comments at the very end. New organic subscribers were 1 and 0 in the weeks of 2 and 9 Nov.",
+      "means": "Every article asks twice inside its body: a plain paragraph before the first heading, for a reader who is not yet a subscriber, and one right after the three actions of \"3 things you can do tomorrow\". Each says what the reader gets (\"Three pieces a week on what AI changes in your business, each ending on a dated call\") and links the subscribe page. It never promises a public scorecard until makeyourmindup.ai shows a live one: the brief's suggested words (\"every call dated and scored, misses included\") are not true on the site yet. The publish check reads both, not blocking until Krish has seen pieces carry it.",
+      "status": "encoded",
+      "brief": {
+        "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
+        "material_sha256": "f0aed19ad9875e58b5935f8214f40eb14a5ebc4db70c8a7a752692a93e2f482f",
+        "path": "growth-makeyourmindup docs/briefs/2026-11-16-content-engine-what-the-audience-tells-us.md",
+        "read_from": "branch claude/2026-11-16-growth-push at a35f633 (5,136 bytes, sha256 28dc8784); the board material is 5,023 bytes with another sha256 and returned no text on 16 Nov, so the two may differ",
+        "change": 6,
+        "becomes": [
+          "house_rule",
+          "skill",
+          "test"
+        ],
+        "evidence": "Substack subscribers by week; the article page as published",
+        "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
+      },
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'ARTICLE_SUBSCRIBE_ASK'",
+          "how": "the house rule, read by every writer and the publish check"
+        },
+        {
+          "file": "apps/control-plane/api/_publishChecks.ts",
+          "contains": "export function articleSubscribeAsks",
+          "how": "the publish check ARTICLE_SUBSCRIBE_ASK"
+        },
+        {
+          "file": ".agents/skills/make-piece/references/audience-rules.md",
+          "contains": "**Two subscribe asks inside the body**",
+          "how": "the article step"
+        }
+      ]
+    },
+    {
+      "id": "audience-public-scorecard",
+      "on": "2026-11-16",
+      "krish": "Record each of its nine changes through your learning route. Relayed by the brief, 16 Nov: \"some of it is about my content itself ... you need to ensure my content-engine understands what needs to be improved from a content production POV.\"",
+      "why": "\"Every call dated and scored in public\" is the publication's most distinctive promise, but makeyourmindup.ai shows an \"Example board\". A live board gives a leader a reason to come back and to subscribe.",
+      "means": "Not content-engine's to build: the scorecard page belongs to the makeyourmindup site's repository. Content-engine already holds its side: every article carries a dated call with a confidence (publish checks CALL, CALL_HORIZON and CLEAR_STANCE block without one), and from 16 Nov its subscribe asks never promise the scorecard until it is live (ARTICLE_SUBSCRIBE_ASK). Open until the site shows a live board; then the asks may name it.",
+      "status": "open",
+      "brief": {
+        "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
+        "material_sha256": "f0aed19ad9875e58b5935f8214f40eb14a5ebc4db70c8a7a752692a93e2f482f",
+        "path": "growth-makeyourmindup docs/briefs/2026-11-16-content-engine-what-the-audience-tells-us.md",
+        "read_from": "branch claude/2026-11-16-growth-push at a35f633 (5,136 bytes, sha256 28dc8784); the board material is 5,023 bytes with another sha256 and returned no text on 16 Nov, so the two may differ",
+        "change": 7,
+        "becomes": [
+          "not_adopted_here"
+        ],
+        "evidence": "makeyourmindup.ai as a stranger sees it, 16 Nov",
+        "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
+      },
+      "encoded": []
+    },
+    {
+      "id": "audience-grid-covers",
+      "on": "2026-11-16",
+      "krish": "Record each of its nine changes through your learning route. Relayed by the brief, 16 Nov: \"some of it is about my content itself ... you need to ensure my content-engine understands what needs to be improved from a content production POV.\"",
+      "why": "TikTok grid covers carry two to three lines of small type. Growth calls it a hypothesis: there is no cover-level data yet, only the grid as a stranger sees it.",
+      "means": "A cover reads at phone-grid size: one claim of five words or fewer, any second line legible on the grid. Kept as an aim, not a check: thumbnail-designer already mocks the Instagram grid and channel_safe.py checks the grid crop (F43), and the cover words are Krish's pick after he records (TITLES_AFTER_RECORDING), so a word cap would refuse his choice. A cap becomes a proposal for him once Growth reports cover-level numbers.",
+      "status": "open",
+      "brief": {
+        "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
+        "material_sha256": "f0aed19ad9875e58b5935f8214f40eb14a5ebc4db70c8a7a752692a93e2f482f",
+        "path": "growth-makeyourmindup docs/briefs/2026-11-16-content-engine-what-the-audience-tells-us.md",
+        "read_from": "branch claude/2026-11-16-growth-push at a35f633 (5,136 bytes, sha256 28dc8784); the board material is 5,023 bytes with another sha256 and returned no text on 16 Nov, so the two may differ",
+        "change": 8,
+        "becomes": [
+          "skill"
+        ],
+        "evidence": "TikTok grid covers, 16 Nov (no cover-level metrics)",
+        "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
+      },
+      "encoded": []
+    },
+    {
+      "id": "audience-forwardable-line",
+      "on": "2026-11-16",
+      "krish": "Record each of its nine changes through your learning route. Relayed by the brief, 16 Nov: \"some of it is about my content itself ... you need to ensure my content-engine understands what needs to be improved from a content production POV.\"",
+      "why": "Four shares was the best organic result of the whole run, and shares came only from concrete, usable pieces.",
+      "means": "Each piece names one sentence a leader would send to their boss or team. Proposed home: the narrative lock (a \"Forward line\" Krish signs) and the written edition's last line. Not applied this week: he asked for changes 1 to 6; this one waits for his word, then it is a lock field and a line in written_edition_check.py.",
+      "status": "open",
+      "brief": {
+        "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
+        "material_sha256": "f0aed19ad9875e58b5935f8214f40eb14a5ebc4db70c8a7a752692a93e2f482f",
+        "path": "growth-makeyourmindup docs/briefs/2026-11-16-content-engine-what-the-audience-tells-us.md",
+        "read_from": "branch claude/2026-11-16-growth-push at a35f633 (5,136 bytes, sha256 28dc8784); the board material is 5,023 bytes with another sha256 and returned no text on 16 Nov, so the two may differ",
+        "change": 9,
+        "becomes": [
+          "skill",
+          "test"
+        ],
+        "evidence": "shares per post, 5 Oct to 14 Nov",
+        "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
+      },
+      "encoded": []
     }
   ]
 }
