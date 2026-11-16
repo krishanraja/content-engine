@@ -10,6 +10,7 @@ this guard makes every firing after the first one that built the Ideas tab do no
     python3 scripts/sunday_ideas.py week [--today YYYY-MM-DD]   # the Monday the run plans
     python3 scripts/sunday_ideas.py week --date YYYY-MM-DD      # a typed Monday, checked and printed as YYYY-MM-DD
     python3 scripts/sunday_ideas.py built MONDAY                 # built=true once the Ideas tab is live
+    python3 scripts/sunday_ideas.py built MONDAY --days tue,thu  # a re-run of some days: only those days answer
 
 One refresh a week, everything in it (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's
 good news included; the Thursday good-news schedule is retired). So this run finds Saturday's five good-news stories
@@ -60,30 +61,42 @@ def monday_arg(text: str) -> dt.date:
     return day
 
 
-def view_has_ideas(view: dict) -> bool:
-    """Whether the week's view (contract 1.2.0) carries the whole ideas board: options on each publishing day, Monday,
-    Wednesday and Friday, and, when the week has the weekly good news, a good-news option holding its stories."""
-    days = {d.get('day'): d for d in view.get('days') or [] if isinstance(d, dict)}
+PUBLISHING = ('mon', 'wed', 'fri')
+
+
+def _ideas(d: dict) -> list:
     # The board's own lines (a subject not offered again, a return held back) are not ideas (_viewExtras.ts ideaLines).
-    ideas = lambda d: [o for o in d.get('options') or [] if isinstance(o, dict) and not str(o.get('doc_id') or '').startswith(('veto-', 'held-'))]
-    if not all(isinstance(days.get(k), dict) and len(ideas(days[k])) > 0 for k in ('mon', 'wed', 'fri')):
-        return False
-    weekly = [o for d in days.values() for o in d.get('options') or [] if isinstance(o, dict) and 'stories_fresh' in o]
-    return not weekly or any(o.get('stories_fresh') is True for o in weekly)
+    return [o for o in d.get('options') or [] if isinstance(o, dict) and not str(o.get('doc_id') or '').startswith(('veto-', 'held-'))]
 
 
-def missing(view: dict) -> list[str]:
+def _named(days: list[str] | None) -> list[str]:
+    return [d for d in (days or []) if d]
+
+
+def missing(view: dict, days: list[str] | None = None) -> list[str]:
     """What keeps the week's view from carrying the whole ideas board, in words that name no idea and no source (the
     repository is public, so a run's log may show only this): each publishing day with no option, and a weekly good-news
-    option whose stories are not this week's."""
-    days = {d.get('day'): d for d in view.get('days') or [] if isinstance(d, dict)}
-    ideas = lambda d: [o for o in d.get('options') or [] if isinstance(o, dict) and not str(o.get('doc_id') or '').startswith(('veto-', 'held-'))]
-    out = [f'{k}: no options' for k in ('mon', 'wed', 'fri') if not (isinstance(days.get(k), dict) and ideas(days[k]))]
-    weekly = [o for d in days.values() for o in d.get('options') or [] if isinstance(o, dict) and 'stories_fresh' in o]
+    option whose stories are not this week's. With days (a re-run of some days, sunday-ideas.yml `days`), only those
+    days answer: each of them carries an option, and the good news counts only when Saturday is one of them, so a re-run
+    of Tuesday and Thursday is never failed for stories that are Saturday's to find (16 Nov, run 43866949707)."""
+    by_day = {d.get('day'): d for d in view.get('days') or [] if isinstance(d, dict)}
+    named = _named(days)
+    wanted = named or list(PUBLISHING)
+    out = [f'{k}: no options' for k in wanted if not (isinstance(by_day.get(k), dict) and _ideas(by_day[k]))]
+    if named and 'sat' not in named:
+        return out
+    weekly = [o for d in by_day.values() for o in d.get('options') or [] if isinstance(o, dict) and 'stories_fresh' in o]
     if weekly and not any(o.get('stories_fresh') is True for o in weekly):
         due = sorted({str(o.get('stories_due') or 'none') for o in weekly})
         out.append(f"good news: this week's five stories are not in (stories_due {', '.join(due)}); saturday-goodnews.yml finds them")
     return out
+
+
+def view_has_ideas(view: dict, days: list[str] | None = None) -> bool:
+    """Whether the week's view (contract 1.2.0) carries the whole ideas board: options on each publishing day, Monday,
+    Wednesday and Friday, and, when the week has the weekly good news, a good-news option holding its stories. With
+    days, whether those days carry theirs (missing says what each asks)."""
+    return not missing(view, days)
 
 
 def read_view(monday: str) -> dict:
@@ -98,8 +111,8 @@ def read_view(monday: str) -> dict:
         return json.loads(response.read().decode('utf-8'))
 
 
-def built(monday: str) -> bool:
-    return view_has_ideas(read_view(monday))
+def built(monday: str, days: list[str] | None = None) -> bool:
+    return view_has_ideas(read_view(monday), days)
 
 
 def main() -> int:
@@ -110,8 +123,10 @@ def main() -> int:
     week.add_argument('--date', help='a typed Monday, YYYY-MM-DD: checked and printed in that form')
     done = sub.add_parser('built')
     done.add_argument('monday')
+    done.add_argument('--days', default='', help='a re-run of some days: only these days answer, e.g. tue,thu')
     why = sub.add_parser('why', help="what keeps the week's view from carrying the whole ideas board; nothing when built")
     why.add_argument('monday')
+    why.add_argument('--days', default='', help='a re-run of some days: only these days answer, e.g. tue,thu')
     args = parser.parse_args()
     try:
         if args.command == 'week' and args.date:
@@ -127,10 +142,10 @@ def main() -> int:
         return 2
     try:
         if args.command == 'why':
-            for line in missing(read_view(monday.isoformat())):
+            for line in missing(read_view(monday.isoformat()), args.days.split(',')):
                 print(line)
             return 0
-        print(f'built={"true" if built(monday.isoformat()) else "false"}')
+        print(f'built={"true" if built(monday.isoformat(), args.days.split(',')) else "false"}')
     except Exception as error:  # an unreadable board is never read as built or as not built
         print(f'sunday ideas: could not read the week board for {monday}: {error}', file=sys.stderr)
         return 1
