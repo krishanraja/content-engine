@@ -959,6 +959,37 @@ def keep_problems(before, after, status, days):
     return out
 
 
+REFILL_OPEN = 4  # unanswered options each day a `days` re-run made again ends with (Krish, 2026-11-16)
+
+
+def refill_breadth(before, after, status, days):
+    """Krish, 2026-11-16: "There's not enough quality and breadth of ideas flowing through to this week's or next week's
+    boards." A re-run of some days (sunday-ideas.yml `days`) leaves each of them with at least REFILL_OPEN options he has
+    not answered: the new ones it wrote and the open or revised ones it kept (the 16 Nov re-run left Tue 17 with one).
+    An option held back, or answered, is not a choice he has there. [] when every day it made again has enough."""
+    days = {str(d).strip().lower()[:3] for d in days if str(d).strip()}
+    out = []
+    for day in sorted(days):
+        for group in ('days', 'offdays'):
+            b = (before or {}).get(group) if isinstance((before or {}).get(group), dict) else {}
+            a = (after or {}).get(group) if isinstance((after or {}).get(group), dict) else {}
+            if day not in a and day not in b:
+                continue
+            old = {str(o.get('id') or '').lower() for o in b.get(day) or [] if isinstance(o, dict)}
+            choices = 0
+            for o in a.get(day) or []:
+                if not isinstance(o, dict) or o.get('weekly'):
+                    continue
+                oid = str(o.get('id') or '').lower()
+                key = f'idea:{oid}' if group == 'days' else f'off:{day}:{oid}'
+                if oid not in old or status.get(key) in ('open', 'revised'):
+                    choices += 1
+            if choices < REFILL_OPEN:
+                out.append(f'{day}: {choices} option(s) he has not answered after the re-run; a day made again offers at least '
+                           f'{REFILL_OPEN} (new ones and the open ones kept), so he has a real choice there')
+    return out
+
+
 def merged_status(paths):
     """One status from several reads of it (before and after the run): an option answered in any read stays answered
     (that read's answer); an option open in every read it appears in is open. Raises ValueError when a read failed:
@@ -984,7 +1015,7 @@ def keep(week, days, before_path, status_path, ideas_path=None, plans=None):
         status = merged_status(status_path)
     except ValueError as error:
         return [str(error)]
-    return keep_problems(before, after, status, days)
+    return keep_problems(before, after, status, days) + refill_breadth(before, after, status, days)
 
 
 def load_recent(path):
@@ -1282,7 +1313,7 @@ def main(argv=None):
         except (FeedError, OSError, ValueError) as error:
             print(f'board_feed keep: could not read the week: {error}', file=sys.stderr)
             return 2
-        print('keep: ' + ('REFUSED:\n  ' + '\n  '.join(problems) if problems else f'only the open options on {args.days} were made again'))
+        print('keep: ' + ('REFUSED:\n  ' + '\n  '.join(problems) if problems else f'only the open options on {args.days} were made again, each with at least {REFILL_OPEN} to choose from'))
         return 1 if problems else 0
     if args.cmd == 'taps':
         try:
