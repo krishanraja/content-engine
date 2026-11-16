@@ -1,11 +1,11 @@
 {
  "week_start": "2026-11-23",
- "gathered_at": "2026-11-13T22:42:49Z",
+ "gathered_at": "2026-11-16T12:54:11Z",
  "how": "Read-only gather (board_feed.py). Write ideas.json from series[].pool and inspiration (routed, liked, fresh, corpora, creators) and his feedback cues (cues), his ideas first, each with source_kind, why_here, beats and style (config/styles.json); every must_cover id is in some idea's covers or in ideas.json accounted with a reason (board_feed.py cover); write combine.json; build with --ideas --queue --combine.",
  "counts": {
   "his": 0,
   "inspo": 19,
-  "engine": 59
+  "engine": 77
  },
  "empty": [
   {
@@ -17,6 +17,51 @@
   {
    "slug": "follow_the_money",
    "pool": [
+    {
+     "id": "42d7adea-598e-4505-b49c-19c871228bcd",
+     "idea": "Gemini 4 Hydrogen's cached-input price is the real story: at $0.075 per million tokens, Google is making agentic workflows that repeatedly re-read the same context (codebases, long chat histories) radically cheaper to run than the headline $1.50 input price suggests, which resets the build-or-buy maths for anyone running agents at volume.",
+     "thesis": "The claim is not that Hydrogen is faster or smarter, it's that the 95% cache discount Google publishes in its AI Studio docs changes the unit economics of agentic coding tools specifically, because those workloads re-send the same 1M-token context on every turn rather than paying full input price each time. This survives the obvious objection - that headline price cuts are just a lab subsidy war - because the cache discount targets a specific cost structure (repeated-context agents) rather than being a blanket cut, so it looks like a deliberate bet on agentic volume rather than pure share-grab. It would be wrong if builders find their actual workloads don't hit cache (context changes too much turn to turn) and the realised price lands close to the $1.50 headline, which is checkable against real usage once agent vendors report their blended per-token costs.",
+     "lane_slot": "follow_the_money",
+     "source_type": "pool_headline",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/",
+     "created_at": "2026-11-13T11:30:28.484284+00:00",
+     "score": 7,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "2cbad224-5c38-4794-8577-6b2ce7135edc",
+     "idea": "New Anthropic job listing offers $405,000 to land natural gas for its post-IPO data center buildout",
+     "thesis": "Tom Brown, cofounder and chief compute officer at Anthropic. Cornell Watson/Bloomberg via Getty Images Anthropic is approaching its initial public offering and plannin...",
+     "lane_slot": "follow_the_money",
+     "source_type": "pool_headline",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://biztoc.com/x/2ad0b992bef2c0f9",
+     "created_at": "2026-11-14T11:30:28.393829+00:00",
+     "score": 6,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "42bebf2e-36f5-4435-a7ef-6f14ce0bb990",
+     "idea": "AI agent startup LangChain hits $3B valuation",
+     "thesis": "LangChain now claims 7,000 customers of its model and platform agnostic agent management tool LangSmith.",
+     "lane_slot": "follow_the_money",
+     "source_type": "pool_headline",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://techcrunch.com/2026/11/13/ai-agent-startup-langchain-hits-3b-valuation/",
+     "created_at": "2026-11-14T11:30:28.393829+00:00",
+     "score": 3,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
     {
      "id": "93f1651d-ed88-4cd1-adc1-953d73b7ba30",
      "idea": "Fable 5.2 ships days before Anthropic's IPO: the earnings schedule is now the AI progress schedule",
@@ -38,6 +83,21 @@
   {
    "slug": "under_the_hood",
    "pool": [
+    {
+     "id": "7a15bafb-d58d-442a-87e9-27aedcc11777",
+     "idea": "How Amplitude ships product improvements in 1–2 days with OpenAI",
+     "thesis": "Built primarily on OpenAI models, Amplitude’s proactive product agent, Wave, identifies what to build, helps teams ship changes with coding agents, and measures the im...",
+     "lane_slot": "under_the_hood",
+     "source_type": "pool_headline",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://openai.com/business/customer-stories/amplitude",
+     "created_at": "2026-11-13T11:30:28.484284+00:00",
+     "score": 6,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
     {
      "id": "7a38caad-0605-4880-9e33-12b7c876e9e3",
      "idea": "Google joins the decision-model wave with Gemini Decision 1, scoring 1,000 questions in a single pass",
@@ -69,6 +129,36 @@
      "near_drop": null
     },
     {
+     "id": "ce2bb6cd-d475-44f6-885b-dc01093baa6d",
+     "idea": "Shield helps technicians hand off legacy portal work with OpenAI",
+     "thesis": "Shield uses OpenAI to help IT technicians hand off work in legacy portals. Its Forge agents navigate systems so technicians can focus on issues needing their judgment.",
+     "lane_slot": "under_the_hood",
+     "source_type": "pool_headline",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://openai.com/business/customer-stories/shield",
+     "created_at": "2026-11-15T11:30:27.912174+00:00",
+     "score": 3,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "42198b61-88b6-4bf0-b563-d4c146f1b7b9",
+     "idea": "LLMON: An LLM-Native Markup Language, now in Granite 4.1 3B and 8B",
+     "thesis": null,
+     "lane_slot": "under_the_hood",
+     "source_type": "pool_headline",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://huggingface.co/blog/ibm-granite/llmon-an-llm-native-markup-language-now-in-granite",
+     "created_at": "2026-11-13T11:30:28.484284+00:00",
+     "score": 3,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
      "id": "7eceb45d-ba53-403d-b839-2be91e38b5ed",
      "idea": "AMD: Where we're going we don't need (as much) DRAM",
      "thesis": "The House of Zen's Mext team promises smarter SWAP through the power of, you'll never guess: AI",
@@ -90,6 +180,36 @@
    "slug": "mind_the_gap",
    "pool": [
     {
+     "id": "0232b612-cac1-47bb-aa77-0f907f104882",
+     "idea": "The agent stack is re-centralising around whoever owns the policy server, not whoever owns the model, and Anthropic just quietly became the first vendor selling that layer.",
+     "thesis": "Anthropic's inference hooks (GA'd 5 Nov) put an external security server in the execution path before any tool call fires, and in the same ten days Anthropic shipped Claude Sheets, Whiteboards, Data and Meetings, which lock in organisational context that competitors cannot easily replicate. Read together, the product line is not a workspace suite, it is a governance chokepoint: the policy server plus the context moat means the enterprise AI budget line that matters in 2027 is not inference spend, it is 'who approves the agent's actions and who remembers why.' This is wrong if a neutral third-party policy layer (not tied to any model vendor) captures that budget instead, which is checkable by whether CISOs standardise on a model-agnostic hook standard within 90 days.",
+     "lane_slot": "mind_the_gap",
+     "source_type": "synthesis_hypothesis",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://controlcenter.krishraja.com/?tab=intel",
+     "created_at": "2026-11-15T17:00:47.444462+00:00",
+     "score": 6,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "95e2e70b-4eab-4449-994d-fe6d71a51cc5",
+     "idea": "The OpenAI board member who fired Sam Altman says we still can’t trust AI CEOs",
+     "thesis": "Today, I’m talking with Helen Toner, the executive director of the Center for Security and Emerging Technology at Georgetown University. This episode is part two of ou...",
+     "lane_slot": "mind_the_gap",
+     "source_type": "pool_headline",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://www.theverge.com/podcast/1032907/helen-toner-openai-cset-ai-safety-policy-interview",
+     "created_at": "2026-11-15T11:30:27.912174+00:00",
+     "score": 6,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
      "id": "c180e0a2-d71d-4ab7-9aa0-4d360da0702f",
      "idea": "The good employee is the one AI replaces. So what: the habits that made you a model employee (reliable, careful, doing what you are told) are the ones employers expect to need less of by 2030, and the ones they want more of are bouncing back, changing course and staying curious. Story: the World Economic Forum's Future of Jobs Report 2025 (7 Jan 2025, over 1,000 employers, 14 million workers) says 39% of workers' core skills change by 2030; dependability and attention to detail, reading, writing",
      "thesis": "The qualities that defined a 'good employee' for decades, reliability, dependability, precision, following instructions, are exactly what AI now does cheaper and faster, while WEF data shows employers increasingly value resilience, curiosity and adaptability instead, meaning the workplace conditioning most people received is now a liability.",
@@ -100,6 +220,21 @@
      "source_url": null,
      "created_at": "2026-11-13T00:20:01.498717+00:00",
      "score": 6,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "0ccec6a5-345d-4863-83e3-5b04c7b8c860",
+     "idea": "Three different companies just admitted, in three different legal and PR registers, that their own AI might make their current business model obsolete, and the pattern is the actual IPO story, not Jensen Huang's scandal.",
+     "thesis": "Anthropic's S-1/A disclosed it may 'imminently meet' its recursive self-improvement threshold and has previously missed acceleration inflection points. The AI Futures Project, whose forecasters got the last inflection right, moved their superhuman-researcher date to 2027 and described themselves as 'scared.' Meanwhile Nvidia's CEO transition exposed a 60-direct-report structure that only worked because of one irreplaceable individual, the same single-point-of-failure problem AI labs are racing to automate away in research itself. The three threads together say: the frontier labs are the first industry openly admitting their org charts and cap tables cannot survive their own product roadmap. This would be wrong if Anthropic's IPO prices normally (near its $1.1T-plus range) despite the disclosure, meaning markets treat RSI warnings as boilerplate rather than real risk.",
+     "lane_slot": "mind_the_gap",
+     "source_type": "synthesis_hypothesis",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://controlcenter.krishraja.com/?tab=intel",
+     "created_at": "2026-11-15T17:00:48.456004+00:00",
+     "score": 3,
      "why_here": null,
      "near": null,
      "near_drop": null
@@ -140,6 +275,51 @@
    "near_drop": null
   },
   {
+   "id": "811e537f-21e7-415d-9429-33d126533776",
+   "idea": "ChatGPT Wallet lets OpenAI’s Dots agents make purchases for you",
+   "thesis": "After launching its Dots AI agents platform earlier this year, OpenAI is launching a wallet for the agents. ChatGPT Wallet is rolling out starting today for ChatGPT Pr...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.theverge.com/ai-artificial-intelligence/1033425/openai-chatgpt-wallet",
+   "created_at": "2026-11-14T11:30:28.393829+00:00",
+   "score": 6,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "9484f7e6-ddcd-4640-9e7c-051d7ef2b964",
+   "idea": "79% of Enterprises Report AI Agents in Production, but Only 15% Have Fully Tied AI Investment to P&L Outcomes",
+   "thesis": "Key findings from Genpact's Autonomy in Practice report: 79% of enterprises surveyed have AI agents in production, but just 20% use them broadly and consistently acros...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://prnewswire.com/news-releases/79-of-enterprises-report-ai-agents-in-production-but-only-15-have-fully-tied-ai-investment-to-pl-outcomes-302937385.html",
+   "created_at": "2026-11-14T11:30:28.393829+00:00",
+   "score": 6,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "bf0fddae-2fcf-4687-9079-190729234ed3",
+   "idea": "Canva, Adobe or Claude: who owns design in 2028? At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrator, Premiere and InDesign, and opened its desktop apps to other companies' agents. Claude Design lists both Canva and Adobe as connectors, and Anthropic says over a million people used it in its first week. The fight is over who the other AIs send work to. So what: The design tools your team pays for are turning into agents that work for each other: before ren",
+   "thesis": "Adobe and Canva are no longer competing just on features but on becoming the default execution layer that other AI agents (like Claude) delegate design work to, which changes how teams should evaluate design tool renewals and interoperability.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": null,
+   "created_at": "2026-11-13T23:12:03.809641+00:00",
+   "score": 6,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
    "id": "8c610414-e28b-4f4f-a535-bd85f0c827ec",
    "idea": "United won’t let your AI agent book your flight",
    "thesis": "United says it won't let personal AI assistants book tickets on the airline, citing both privacy and regulatory concerns. The company says it hasn't yet seen many peop...",
@@ -155,30 +335,135 @@
    "near_drop": null
   },
   {
-   "id": "7a15bafb-d58d-442a-87e9-27aedcc11777",
-   "idea": "How Amplitude ships product improvements in 1–2 days with OpenAI",
-   "thesis": "Built primarily on OpenAI models, Amplitude’s proactive product agent, Wave, identifies what to build, helps teams ship changes with coding agents, and measures the im...",
+   "id": "dd35930d-f9ad-4841-933d-77a0e1595b36",
+   "idea": "A step toward defining the Standard Model on a lattice",
+   "thesis": "Explore a candidate nonperturbative lattice definition of the Standard Model and how GPT-6 Astra helped turn the idea into a detailed proof.",
    "lane_slot": null,
    "source_type": "pool_headline",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://openai.com/business/customer-stories/amplitude",
-   "created_at": "2026-11-13T11:30:28.484284+00:00",
+   "source_url": "https://openai.com/index/step-toward-defining-the-standard-model",
+   "created_at": "2026-11-16T11:30:27.348002+00:00",
    "score": null,
    "why_here": null,
    "near": null,
    "near_drop": null
   },
   {
-   "id": "42d7adea-598e-4505-b49c-19c871228bcd",
-   "idea": "Gemini 4 Hydrogen",
+   "id": "c2b15e7a-8af8-4a26-8ab5-2d830eaf2645",
+   "idea": "datasette-llm 0.1a11",
+   "thesis": "Release: datasette-llm 0.1a11 datasette-llm is the...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://simonwillison.net/2026/Nov/14/datasette-llm/",
+   "created_at": "2026-11-16T11:30:27.348002+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "41eea6fd-611c-4d16-8b84-f8e9e9c549a5",
+   "idea": "Former OpenAI researcher says the 'most likely reason' you will die is due to 'an AI accident'",
+   "thesis": "Former OpenAI researcher Paul Christiano warns that rogue AI agents could ultimately escape human control and cause catastrophic accidents. VCG/VCG via Getty Images Fo...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://biztoc.com/x/120c4ab50b60ebe4",
+   "created_at": "2026-11-16T11:30:27.348002+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "048d8bd7-a854-4d7b-833d-58d91a32665a",
+   "idea": "datasette 1.0a43",
+   "thesis": "Release: datasette 1.0a43 I've been leaning hard into Claude Fable 5.2...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://simonwillison.net/2026/Nov/15/datasette/",
+   "created_at": "2026-11-16T11:30:27.348002+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "7afa40c8-3bb6-4f48-a9d8-f3c53fbb93ab",
+   "idea": "This Startup Is Betting on AI Microdramas to Get More Black Stories in Hollywood",
+   "thesis": "Mansa says its AI microdramas can serve as proofs of concept for what Black audiences want. Critics say the studio is selling out.",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.wired.com/story/black-roles-are-disappearing-in-hollywood-this-startup-is-using-ai-microdramas-to-fight-back/",
+   "created_at": "2026-11-15T11:30:27.912174+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "7d467240-5a53-4d04-a6d5-7f5e29b63c36",
+   "idea": "Where was Nvidia’s security team?",
+   "thesis": "Nvidia’s security chief quietly left in August, and now that CEO Jensen Huang has stepped down over his relationships, including one with an executive at a company sus...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://techcrunch.com/2026/11/14/where-was-nvidias-security-team/",
+   "created_at": "2026-11-15T11:30:27.912174+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "35db037c-61d5-404e-b404-cb3185f24cdf",
+   "idea": "llama.cpp v1.0.0 : A stronger foundation for the local AI ecosystem",
    "thesis": null,
    "lane_slot": null,
    "source_type": "pool_headline",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/",
-   "created_at": "2026-11-13T11:30:28.484284+00:00",
+   "source_url": "https://huggingface.co/blog/ggml-org/llama-cpp-v1",
+   "created_at": "2026-11-15T11:30:27.912174+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "e14f7f95-b7f2-4b1d-ad34-3eabb0033708",
+   "idea": "the Mindmake site: the week's build, week ending 2026-11-13",
+   "thesis": "Keep the tap on the way in, lift \"Prefer to\" onto the seam, lay the homepage out as sheets; S9 repair, stage 4: the small issues, fixed; S9 repair, stage 1b: gentle settle, swipe deck, fixed wipe, button that steps aside, legible Brain",
+   "lane_slot": null,
+   "source_type": "build_signal",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://github.com/krishanraja/mindmake/compare/a7511ac1e315...0d8cc6620a20",
+   "created_at": "2026-11-14T05:00:50.463757+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "a5831ef3-4503-4649-bd03-29a5b886aa18",
+   "idea": "Control Center: the week's build, week ending 2026-11-13",
+   "thesis": "ui-next: the rail, the dock and the drawers (approved mock M5); ui-next: the Stream, Home's toolbar, the check-in reskin, the evening button; Engines live on every place, and Krish instructs each engine through the one door (protocol 1.20.0)",
+   "lane_slot": null,
+   "source_type": "build_signal",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://github.com/krishanraja/control-center/compare/e6d1ed6bcda9...ecfed407abb2",
+   "created_at": "2026-11-14T05:00:48.718605+00:00",
    "score": null,
    "why_here": null,
    "near": null,
@@ -223,21 +508,6 @@
    "source_kind": "engine",
    "his_via": null,
    "source_url": "https://www.theverge.com/ai-artificial-intelligence/1032125/ai-agents-maya-site-archeology-discovery",
-   "created_at": "2026-11-13T11:30:28.484284+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "42198b61-88b6-4bf0-b563-d4c146f1b7b9",
-   "idea": "LLMON: An LLM-Native Markup Language, now in Granite 4.1 3B and 8B",
-   "thesis": null,
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://huggingface.co/blog/ibm-granite/llmon-an-llm-native-markup-language-now-in-granite",
    "created_at": "2026-11-13T11:30:28.484284+00:00",
    "score": null,
    "why_here": null,
@@ -575,59 +845,14 @@
    "near_drop": null
   },
   {
-   "id": "c7c7d449-67f9-41dc-b963-8bdc3707070a",
-   "idea": "TPU 8tx and TPU 8i Max",
-   "thesis": null,
+   "id": "6c5bff06-cefd-44b4-972d-003c8bcdac74",
+   "idea": "OpenAI's ad stack hit $1B annualised in under 200 days. The architecture that got it there is the part nobody is writing about.",
+   "thesis": "OpenAI published the full technical architecture of its ChatGPT ad stack: a second LLM running as an orchestrator in an agentic loop, reading conversation context to d...",
    "lane_slot": null,
    "source_type": "pool_headline",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://blog.google/innovation-and-ai/infrastructure-and-cloud/global-network/tpu-8i-max-and-8tx/",
-   "created_at": "2026-11-10T11:30:34.474233+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "eee6f62d-c229-485c-925e-fc6dd01c33f5",
-   "idea": "Anthropic IPO buyers see valuation as low as $1.1T",
-   "thesis": "https://epyhia.com/anthropic-ipo-valuation-talks-drop-to-1-3...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.bloomberg.com/news/articles/2026-11-06/anthropic-ipo-valuation-expectations-pressured-after-ai-rout",
-   "created_at": "2026-11-10T11:30:34.474233+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "6accf726-ab74-4583-831a-2e343ae01809",
-   "idea": "Texas was the new epicenter of the AI data center buildout. That might be kaput.",
-   "thesis": "Texas is the fastest-growing data center market in the US and ground zero for Big Tech’s largest AI buildouts. But the blue wave that swept the Lone Star State m...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.technologyreview.com/2026/11/04/1148043/texas-was-the-new-epicenter-of-the-ai-data-center-buildout-that-might-be-kaput/",
-   "created_at": "2026-11-10T11:30:34.474233+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "8af6cdc6-8d83-4698-b478-f8608c8d4685",
-   "idea": "Crusoe sells troubled Wyoming data center project to Google",
-   "thesis": "The deal highlights the challenges of developing massive AI data centers.",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://techcrunch.com/2026/11/06/crusoe-sells-troubled-wyoming-data-center-project-to-google/",
+   "source_url": "https://openai.com/index/building-chatgpt-ad-stack/",
    "created_at": "2026-11-10T11:30:34.474233+00:00",
    "score": null,
    "why_here": null,
@@ -650,21 +875,6 @@
    "near_drop": null
   },
   {
-   "id": "82e8a5a8-95bf-4b92-bbab-08bde0c0d704",
-   "idea": "The AI race is raising companies' bills, from GPUs to memory to Microsoft 365",
-   "thesis": "Summary: The AI arms race among OpenAI, Anthropic, and major cloud providers is driving higher costs across hardware, software, and services. Key findings: - Vendors a...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://venturebeat.com/ai/the-ai-race-is-raising-companies-bills-from-gpus-to-memory-to-microsoft-365",
-   "created_at": "2026-11-10T11:30:34.474233+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
    "id": "af719a04-8bff-4545-aa9f-1330415da9f4",
    "idea": "Meta’s proprietary Muse Ember nearly matches Claude Haiku 5.5 at 1/3 the estimated per-task cost",
    "thesis": "Meta unveils Muse Ember, a cheaper, near-foundation model designed for AI agents and automated workflows. Key points: - Pricing: Ember costs about 0.10–0.30 USD per mi...",
@@ -673,36 +883,6 @@
    "source_kind": "engine",
    "his_via": null,
    "source_url": "https://venturebeat.com/technology/metas-proprietary-muse-ember-nearly-matches-claude-haiku-5-5-at-1-3-the-estimated-per-task-cost",
-   "created_at": "2026-11-10T11:30:34.474233+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "6c5bff06-cefd-44b4-972d-003c8bcdac74",
-   "idea": "OpenAI's ad stack hit $1B annualised in under 200 days. The architecture that got it there is the part nobody is writing about.",
-   "thesis": "OpenAI published the full technical architecture of its ChatGPT ad stack: a second LLM running as an orchestrator in an agentic loop, reading conversation context to d...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://openai.com/index/building-chatgpt-ad-stack/",
-   "created_at": "2026-11-10T11:30:34.474233+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "3f078828-6830-45a0-9de9-1551a146cb4f",
-   "idea": "Quoting Prompting Claude Fable 5.2",
-   "thesis": "Claude Fable 5.2 respon...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://simonwillison.net/2026/Nov/10/prompting-claude-fable-52/",
    "created_at": "2026-11-10T11:30:34.474233+00:00",
    "score": null,
    "why_here": null,
@@ -725,14 +905,14 @@
    "near_drop": null
   },
   {
-   "id": "34f154d9-0d07-4215-bf87-937a681f1250",
-   "idea": "Anthropic's IPO filing now warns that its own models may soon cross the threshold for dramatically accelerated AI research. That sentence is doing a lot of work.",
-   "thesis": "Anthropic's revised S-1 added a specific warning: future models may reach its Responsible Scaling Policy threshold for recursive self-improvement, and Anthropic acknow...",
+   "id": "3f078828-6830-45a0-9de9-1551a146cb4f",
+   "idea": "Quoting Prompting Claude Fable 5.2",
+   "thesis": "Claude Fable 5.2 respon...",
    "lane_slot": null,
    "source_type": "pool_headline",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm",
+   "source_url": "https://simonwillison.net/2026/Nov/10/prompting-claude-fable-52/",
    "created_at": "2026-11-10T11:30:34.474233+00:00",
    "score": null,
    "why_here": null,
@@ -815,6 +995,21 @@
    "near_drop": null
   },
   {
+   "id": "c7c7d449-67f9-41dc-b963-8bdc3707070a",
+   "idea": "TPU 8tx and TPU 8i Max",
+   "thesis": null,
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://blog.google/innovation-and-ai/infrastructure-and-cloud/global-network/tpu-8i-max-and-8tx/",
+   "created_at": "2026-11-10T11:30:34.474233+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
    "id": "86c8a191-bd5b-4302-be00-2f5dea40561b",
    "idea": "Wearable device makers are using brain data to train AI without telling users",
    "thesis": null,
@@ -823,6 +1018,21 @@
    "source_kind": "engine",
    "his_via": null,
    "source_url": "https://www.science.org/content/article/wearable-device-makers-are-harvesting-brain-data-train-ai-without-telling-users",
+   "created_at": "2026-11-10T11:30:34.474233+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "34f154d9-0d07-4215-bf87-937a681f1250",
+   "idea": "Anthropic's IPO filing now warns that its own models may soon cross the threshold for dramatically accelerated AI research. That sentence is doing a lot of work.",
+   "thesis": "Anthropic's revised S-1 added a specific warning: future models may reach its Responsible Scaling Policy threshold for recursive self-improvement, and Anthropic acknow...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm",
    "created_at": "2026-11-10T11:30:34.474233+00:00",
    "score": null,
    "why_here": null,
@@ -853,6 +1063,66 @@
    "source_kind": "engine",
    "his_via": null,
    "source_url": "https://umatechnology.org/measure-enterprise-ai-infrastructure-roi-before-you-scale",
+   "created_at": "2026-11-10T11:30:34.474233+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "eee6f62d-c229-485c-925e-fc6dd01c33f5",
+   "idea": "Anthropic IPO buyers see valuation as low as $1.1T",
+   "thesis": "https://epyhia.com/anthropic-ipo-valuation-talks-drop-to-1-3...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.bloomberg.com/news/articles/2026-11-06/anthropic-ipo-valuation-expectations-pressured-after-ai-rout",
+   "created_at": "2026-11-10T11:30:34.474233+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "6accf726-ab74-4583-831a-2e343ae01809",
+   "idea": "Texas was the new epicenter of the AI data center buildout. That might be kaput.",
+   "thesis": "Texas is the fastest-growing data center market in the US and ground zero for Big Tech’s largest AI buildouts. But the blue wave that swept the Lone Star State m...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.technologyreview.com/2026/11/04/1148043/texas-was-the-new-epicenter-of-the-ai-data-center-buildout-that-might-be-kaput/",
+   "created_at": "2026-11-10T11:30:34.474233+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "8af6cdc6-8d83-4698-b478-f8608c8d4685",
+   "idea": "Crusoe sells troubled Wyoming data center project to Google",
+   "thesis": "The deal highlights the challenges of developing massive AI data centers.",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://techcrunch.com/2026/11/06/crusoe-sells-troubled-wyoming-data-center-project-to-google/",
+   "created_at": "2026-11-10T11:30:34.474233+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "82e8a5a8-95bf-4b92-bbab-08bde0c0d704",
+   "idea": "The AI race is raising companies' bills, from GPUs to memory to Microsoft 365",
+   "thesis": "Summary: The AI arms race among OpenAI, Anthropic, and major cloud providers is driving higher costs across hardware, software, and services. Key findings: - Vendors a...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://venturebeat.com/ai/the-ai-race-is-raising-companies-bills-from-gpus-to-memory-to-microsoft-365",
    "created_at": "2026-11-10T11:30:34.474233+00:00",
    "score": null,
    "why_here": null,
@@ -920,14 +1190,14 @@
    "near_drop": null
   },
   {
-   "id": "38b5054f-3c4d-4e48-80bf-58c7871fd47e",
-   "idea": "Nvidia CEO Jensen Huang starring in possible remake of The Spy Who Shagged Me",
-   "thesis": "Admits to affair after company board opens probe into alleged contact with possible Chinese asset who bought GPUs in bulk",
+   "id": "1fc2a34a-1f66-4451-b723-3624e7433604",
+   "idea": "Korea’s AI Ecosystem Advances and Secures Agentic AI With NVIDIA",
+   "thesis": "As AI agents take on more work, they need capable open models and security that advances alongside them. Hyundai Motor Group is exploring NVIDIA NemoClaw blueprints an...",
    "lane_slot": null,
    "source_type": "pool_headline",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://www.theregister.com/legal/2026/11/09/nvidia-ceo-jensen-huang-starring-in-possible-remake-of-the-spy-who-shagged-me/5308327",
+   "source_url": "https://blogs.nvidia.com/blog/korea-secure-agentic-ai/",
    "created_at": "2026-11-09T11:30:28.633067+00:00",
    "score": null,
    "why_here": null,
@@ -943,21 +1213,6 @@
    "source_kind": "engine",
    "his_via": null,
    "source_url": "https://simonwillison.net/2026/Nov/9/details-summary/",
-   "created_at": "2026-11-09T11:30:28.633067+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "1fc2a34a-1f66-4451-b723-3624e7433604",
-   "idea": "Korea’s AI Ecosystem Advances and Secures Agentic AI With NVIDIA",
-   "thesis": "As AI agents take on more work, they need capable open models and security that advances alongside them. Hyundai Motor Group is exploring NVIDIA NemoClaw blueprints an...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://blogs.nvidia.com/blog/korea-secure-agentic-ai/",
    "created_at": "2026-11-09T11:30:28.633067+00:00",
    "score": null,
    "why_here": null,
@@ -988,6 +1243,21 @@
    "source_kind": "engine",
    "his_via": null,
    "source_url": "https://deals.androidauthority.com/sales/the-lifetime-ai-software-stack-bundle?aid=&utm_campaign=feed&utm_medium=RSS&utm_source=androidauthroity",
+   "created_at": "2026-11-09T11:30:28.633067+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "38b5054f-3c4d-4e48-80bf-58c7871fd47e",
+   "idea": "Nvidia CEO Jensen Huang starring in possible remake of The Spy Who Shagged Me",
+   "thesis": "Admits to affair after company board opens probe into alleged contact with possible Chinese asset who bought GPUs in bulk",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.theregister.com/legal/2026/11/09/nvidia-ceo-jensen-huang-starring-in-possible-remake-of-the-spy-who-shagged-me/5308327",
    "created_at": "2026-11-09T11:30:28.633067+00:00",
    "score": null,
    "why_here": null,
@@ -1580,6 +1850,40 @@
     "heard": "The first rule of trying to picture things in the fourth dimension is don't try to picture things in the fourth dimension because no matter how hard you try, you can't get there. Our brains are physically locked into a three-dimensional reality, so trying to force it is just goi…"
    },
    {
+    "id": "27ab296e-fc62-4411-9688-59e34d9e8cd7",
+    "name": "https://chatgpt.txt",
+    "folder": "cold_ideas",
+    "lane": "strategy",
+    "kind": "idea",
+    "platform": "web",
+    "link": null,
+    "routes": [],
+    "why_like": null,
+    "endorsed": null,
+    "would_do": null,
+    "saved_why": null,
+    "note_for_claude": null,
+    "answered_at": null,
+    "created_at": "2026-11-12T05:18:00.788346+00:00",
+    "piece_id": null,
+    "tags": {
+     "confirmed": [],
+     "guessed": [
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "ChatGPT conversation"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "content idea capture"
+      }
+     ]
+    },
+    "heard": null
+   },
+   {
     "id": "b458bb7a-0eb4-4379-8db2-f07186af1f69",
     "name": "file_00000000512481fdb5963de68a601067.png",
     "folder": "cold_ideas",
@@ -1623,40 +1927,6 @@
        "kind": "form",
        "layer": "camerawork",
        "label": "human and machine juxtaposition"
-      }
-     ]
-    },
-    "heard": null
-   },
-   {
-    "id": "27ab296e-fc62-4411-9688-59e34d9e8cd7",
-    "name": "https://chatgpt.txt",
-    "folder": "cold_ideas",
-    "lane": "strategy",
-    "kind": "idea",
-    "platform": "web",
-    "link": null,
-    "routes": [],
-    "why_like": null,
-    "endorsed": null,
-    "would_do": null,
-    "saved_why": null,
-    "note_for_claude": null,
-    "answered_at": null,
-    "created_at": "2026-11-12T05:18:00.788346+00:00",
-    "piece_id": null,
-    "tags": {
-     "confirmed": [],
-     "guessed": [
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "ChatGPT conversation"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "content idea capture"
       }
      ]
     },
@@ -1851,12 +2121,12 @@
     "lane": "strategy",
     "kind": "corpus",
     "platform": "unknown",
-    "link": null,
+    "link": "https://docs.google.com/document/d/1x49yiVtyNslMGcDblfGb8XndrmDuI_Yr/edit#bookmark=id.9m99d0ms3rui",
     "routes": [],
     "why_like": null,
     "endorsed": null,
     "would_do": null,
-    "saved_why": null,
+    "saved_why": "A piece on the dirty truth behind how companies measure whether AI is working or not",
     "note_for_claude": null,
     "answered_at": null,
     "created_at": "2026-11-06T05:18:00.187499+00:00",
@@ -1900,12 +2170,12 @@
     "lane": "strategy",
     "kind": "corpus",
     "platform": "unknown",
-    "link": null,
+    "link": "https://docs.google.com/document/d/1emR7rjLsYEgS5bkJbYgvjyjbNjtSw0vI/edit?usp=drivesdk&ouid=107741908582439094738&rtpof=true&sd=true",
     "routes": [],
     "why_like": null,
     "endorsed": null,
     "would_do": null,
-    "saved_why": null,
+    "saved_why": "Produce an easy-to-understand breakdown of what you actually pay when you consume ads in the LLMs and what you will pay in the future.",
     "note_for_claude": null,
     "answered_at": null,
     "created_at": "2026-11-06T05:18:00.187499+00:00",
@@ -2047,12 +2317,12 @@
     "lane": "strategy",
     "kind": "corpus",
     "platform": "unknown",
-    "link": null,
+    "link": "https://docs.google.com/document/d/1QWMbt2S9w6KFMLac1tTr9StKh2pFK6t1/edit#heading=h.3ucsa860xhl4",
     "routes": [],
     "why_like": null,
     "endorsed": null,
     "would_do": null,
-    "saved_why": null,
+    "saved_why": "We should do a piece on all the times when AI has corrected people and improved overall human knowledge.",
     "note_for_claude": null,
     "answered_at": null,
     "created_at": "2026-11-03T10:18:54.742119+00:00",
@@ -2875,6 +3145,30 @@
   ],
   "claims": [
    {
+    "id": "c4a48148-b3e4-42a1-a396-31b0f89a4d80",
+    "layer": "packaging",
+    "status": "proposed",
+    "statement": "He wants the word mark and brand marks kept small, tucked in a consistent corner, and removed from vertical shorts where they aren't needed.",
+    "his_words": "small \"Make Your Mind Up\" word mark, bottom-right aligned",
+    "support": 5
+   },
+   {
+    "id": "d4e47dca-e899-475a-b82d-91d6cbceca5e",
+    "layer": "production",
+    "status": "proposed",
+    "statement": "He treats every video and graphic against a floor standard of premium, cinematic production quality, rejecting anything that looks cheap, amateurish, or low-budget.",
+    "his_words": "premium quality, motion design, cinematic feeling, movement, branding",
+    "support": 6
+   },
+   {
+    "id": "9c75ab7c-be7a-486e-824a-54adb4854026",
+    "layer": "camerawork",
+    "status": "proposed",
+    "statement": "He wants caption placement to be a deliberate, thoughtful choice that never covers his face or sits awkwardly over a split screen.",
+    "his_words": "be thoughtful as to where captions go (and do not go)",
+    "support": 6
+   },
+   {
     "id": "944e12dc-646b-46c4-a8bb-ee3fb907523a",
     "layer": "opening",
     "status": "proposed",
@@ -2891,6 +3185,14 @@
     "support": 8
    },
    {
+    "id": "4b77c851-1226-4d72-8f5d-5dffe726d4f0",
+    "layer": "packaging",
+    "status": "proposed",
+    "statement": "He rejects insider shorthand or jargon that only makes sense to someone who already has context, insisting every audience-facing line name the real thing in plain words.",
+    "his_words": "They're offensive to me. They hurt my soul.",
+    "support": 5
+   },
+   {
     "id": "b0b7764e-ecfb-4f62-a25b-1c1f7d33cfcf",
     "layer": "packaging",
     "status": "proposed",
@@ -2899,12 +3201,20 @@
     "support": 5
    },
    {
-    "id": "4b77c851-1226-4d72-8f5d-5dffe726d4f0",
+    "id": "2740c46f-2f6e-41b5-9b77-c8e2958f0544",
     "layer": "packaging",
-    "status": "proposed",
-    "statement": "He rejects insider shorthand or jargon that only makes sense to someone who already has context, insisting every audience-facing line name the real thing in plain words.",
-    "his_words": "They're offensive to me. They hurt my soul.",
-    "support": 5
+    "status": "candidate",
+    "statement": "He wants thumbnails purposefully designed with more than just a face on a plain background, matching curated style references rather than defaulting to a flat look.",
+    "his_words": "They usually don't have just the authors face in them and usually not juts a black background",
+    "support": 3
+   },
+   {
+    "id": "9b31c66f-5775-4bc1-abd2-801ff091838a",
+    "layer": "graphics",
+    "status": "candidate",
+    "statement": "He wants captions designed with bold, unique, art-directed styling, rejecting plain, boring, or under-animated default caption treatments.",
+    "his_words": "The captions are very unique and well-designed, like an art director would do them",
+    "support": 4
    },
    {
     "id": "37404281-53e3-4504-985a-566cc58c6fe5",
@@ -2920,6 +3230,62 @@
     "status": "candidate",
     "statement": "He wants on-screen visuals to carry most of the explanation, matching every spoken analogy and increasing visual density proportionally when the cut speeds up.",
     "his_words": "the 90 second video needs to have visuals nearly the entire way through as when things are sped up, we need to 3-5X the visual clarity",
+    "support": 4
+   },
+   {
+    "id": "8cad2e3a-d044-49ce-ade0-1f49de8e8581",
+    "layer": "camerawork",
+    "status": "candidate",
+    "statement": "He wants camera framing kept tight on his face with no wasted empty space beside him, and rejects any overlay or split-screen element that blocks or covers his face.",
+    "his_words": "I dont need to be leaving so much sofa space next to me",
+    "support": 3
+   },
+   {
+    "id": "49ee17b6-a04a-4b37-80a6-a871cd8d4b8e",
+    "layer": "graphics",
+    "status": "candidate",
+    "statement": "He wants headline typography to stick to his established brand fonts (like Anton capitals), rejecting generic or overused AI-style fonts and off-brand font drift.",
+    "his_words": "instrument serif is over used in AI production, stick to BRAND",
+    "support": 4
+   },
+   {
+    "id": "5759ddcf-cf72-4f39-8b2d-aba6292c0332",
+    "layer": "graphics",
+    "status": "candidate",
+    "statement": "He rejects self-referential disclaimer text, asterisks, or labels like 'generated by AI' and 'Krish's take' cluttering the content, insisting every visual serve the message directly.",
+    "his_words": "\"generated by AI\" and \"Krish's take\"",
+    "support": 4
+   },
+   {
+    "id": "b3e463a3-2a0b-438b-a1dd-d6cf6cbcd01f",
+    "layer": "production",
+    "status": "candidate",
+    "statement": "He wants background music kept audible throughout a piece at a low level under his voice, rising only at marked moments like intros, outros, or endings, rather than vanishing or staying silent.",
+    "his_words": "my voice is the main character",
+    "support": 4
+   },
+   {
+    "id": "4df72639-e368-44c2-a8b2-c78dbdd3ebe1",
+    "layer": "graphics",
+    "status": "candidate",
+    "statement": "He rejects motion design and animation that feels slow, static, or under-stimulating, insisting on fast, dynamic, immersive movement.",
+    "his_words": "the motion is 10X too slow, not immersive and engaging at all",
+    "support": 3
+   },
+   {
+    "id": "504b7fa9-96fb-4ee2-ae68-182ee6b31b5a",
+    "layer": "opening",
+    "status": "candidate",
+    "statement": "He wants the opening frame to be visually powerful and legible, not a plain background or a flash that's gone before the viewer can register it.",
+    "his_words": "the first few seconds are kind of important",
+    "support": 4
+   },
+   {
+    "id": "e1ed6ded-0dbe-441d-87c0-de609d66612d",
+    "layer": "graphics",
+    "status": "candidate",
+    "statement": "He rejects video layouts and animations that get cropped or fail to use the full screen, insisting every frame fill the available space.",
+    "his_words": "make maximum use of the full screen",
     "support": 4
    },
    {
@@ -2987,38 +3353,6 @@
     "support": 3
    },
    {
-    "id": "2c2d01d2-3193-4b02-9a2c-f948d2ac0ba6",
-    "layer": "packaging",
-    "status": "candidate",
-    "statement": "He rejects headings or titles built from raw labels, version numbers, or keyword strings stuffed in to pass an automated checker instead of being written as a sentence a person would want to read.",
-    "his_words": "These headings are so stupid it's insane. I can't believe you're putting these to me.",
-    "support": 5
-   },
-   {
-    "id": "19246410-493f-4c46-ac01-ed5fc4762213",
-    "layer": "tone",
-    "status": "candidate",
-    "statement": "He wants scripts written the way he actually talks, since he rewrites a large share of them live and a mismatched script runs long.",
-    "his_words": "list everything about my narration that deviated from the script, down to the fact that I talk in, let's say, about 30% of that.",
-    "support": 3
-   },
-   {
-    "id": "3271695b-5c0a-4ea3-bfb3-62dffed29843",
-    "layer": "production",
-    "status": "candidate",
-    "statement": "He wants a maintained bank of distinct edit and visual styles to draw from and keep upgrading production quality, rather than reusing one fixed template.",
-    "his_words": "I think we need to upgrade everything. And like before, have a bank of styles that we can draw from.",
-    "support": 3
-   },
-   {
-    "id": "0e8e3339-1b6e-410f-9ba7-24daf32f28df",
-    "layer": "packaging",
-    "status": "candidate",
-    "statement": "He approves a heading or title only when it's built directly from words he actually said or wrote, not language invented separately.",
-    "his_words": null,
-    "support": 5
-   },
-   {
     "id": "43b35086-36b7-46ab-b75c-43c44c38c206",
     "layer": "opening",
     "status": "candidate",
@@ -3032,6 +3366,38 @@
     "status": "candidate",
     "statement": "He wants scripts and articles to state what was tested, what happened, who won, and what it means, directly and without hedging.",
     "his_words": "The scripts just need to be catchy, direct: what was tested, what the result was, which one won, and what that means.",
+    "support": 3
+   },
+   {
+    "id": "0e8e3339-1b6e-410f-9ba7-24daf32f28df",
+    "layer": "packaging",
+    "status": "candidate",
+    "statement": "He approves a heading or title only when it's built directly from words he actually said or wrote, not language invented separately.",
+    "his_words": null,
+    "support": 5
+   },
+   {
+    "id": "2c2d01d2-3193-4b02-9a2c-f948d2ac0ba6",
+    "layer": "packaging",
+    "status": "candidate",
+    "statement": "He rejects headings or titles built from raw labels, version numbers, or keyword strings stuffed in to pass an automated checker instead of being written as a sentence a person would want to read.",
+    "his_words": "These headings are so stupid it's insane. I can't believe you're putting these to me.",
+    "support": 5
+   },
+   {
+    "id": "3271695b-5c0a-4ea3-bfb3-62dffed29843",
+    "layer": "production",
+    "status": "candidate",
+    "statement": "He wants a maintained bank of distinct edit and visual styles to draw from and keep upgrading production quality, rather than reusing one fixed template.",
+    "his_words": "I think we need to upgrade everything. And like before, have a bank of styles that we can draw from.",
+    "support": 3
+   },
+   {
+    "id": "19246410-493f-4c46-ac01-ed5fc4762213",
+    "layer": "tone",
+    "status": "candidate",
+    "statement": "He wants scripts written the way he actually talks, since he rewrites a large share of them live and a mismatched script runs long.",
+    "his_words": "list everything about my narration that deviated from the script, down to the fact that I talk in, let's say, about 30% of that.",
     "support": 3
    },
    {
@@ -3087,6 +3453,18 @@
     "endorsed": null
    },
    {
+    "id": "7502d46a-3ec1-4fc1-964a-e91b9e284415",
+    "what": "Inspiration card \"AI-metrics-gaming-research-dossier-Markdown.docx\" you saved with your words",
+    "his_words": "A piece on the dirty truth behind how companies measure whether AI is working or not",
+    "endorsed": null
+   },
+   {
+    "id": "cca6cea3-ee1d-4098-bc2f-d5d8444b18fc",
+    "what": "Inspiration card \"When the Assistant Becomes the Ad.docx\" you saved with your words",
+    "his_words": "Produce an easy-to-understand breakdown of what you actually pay when you consume ads in the LLMs and what you will pay in the future.",
+    "endorsed": null
+   },
+   {
     "id": "6eaaf127-ed4e-48bc-86a0-54c9e99aa428",
     "what": "Inspiration card \"screenshot-20261105-061040.jpg\" you saved with your words",
     "his_words": "Let's do a piece on build versus buy and break it down with the realities of businesses thinking they can vibe code everything instead of getting SaaS licences from vendors. Make it a bit tongue-in-cheek and explore both angles.",
@@ -3096,6 +3474,12 @@
     "id": "50368dee-0a10-4452-a79a-0607d4f2e278",
     "what": "Inspiration card \"screenshot-20261105-060348.jpg\" you saved with your words",
     "his_words": "We should do a piece on who's going to win out among Canva, Adobe, and Claude Design. We should look at the perspective of how much of design AI can really do and how much it will be able to do in 2 years. Hypothesise who will have the bigger moat. In 2 years",
+    "endorsed": null
+   },
+   {
+    "id": "ca53cac9-d00d-49ed-8ea8-f17f61f602f4",
+    "what": "Inspiration card \"When Tools Overturn Truth - Research Dossier.md\" you saved with your words",
+    "his_words": "We should do a piece on all the times when AI has corrected people and improved overall human knowledge.",
     "endorsed": null
    },
    {
@@ -3165,9 +3549,9 @@
     "endorsed": null
    },
    {
-    "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
-    "what": "Inspiration card \"youtube_oEODyXtV49M.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
-    "his_words": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
+    "id": "f6327ce0-a414-4365-98df-635c1780523c",
+    "what": "Inspiration card \"youtube_wSsJbXzp3DY.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
+    "his_words": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
     "endorsed": null,
     "ask": true,
     "state": "piece",
@@ -3175,9 +3559,9 @@
     "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef"
    },
    {
-    "id": "f6327ce0-a414-4365-98df-635c1780523c",
-    "what": "Inspiration card \"youtube_wSsJbXzp3DY.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
-    "his_words": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
+    "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
+    "what": "Inspiration card \"youtube_oEODyXtV49M.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
+    "his_words": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
     "endorsed": null,
     "ask": true,
     "state": "piece",
@@ -3312,6 +3696,40 @@
     "url": "https://www.instagram.com/p/DfZlAbRAISa/?img_index=8&xtok=bWdyNTZ4cTcwdXg3"
    },
    {
+    "id": "7502d46a-3ec1-4fc1-964a-e91b9e284415",
+    "name": "AI-metrics-gaming-research-dossier-Markdown.docx",
+    "state": "open",
+    "dismissed": false,
+    "style_only": false,
+    "routed": false,
+    "piece_id": null,
+    "his_words": {
+     "why_here": "A piece on the dirty truth behind how companies measure whether AI is working or not",
+     "why_like": null,
+     "would_do": null
+    },
+    "words_at": "2026-11-06T05:18:00.187499+00:00",
+    "heard": null,
+    "url": "https://docs.google.com/document/d/1x49yiVtyNslMGcDblfGb8XndrmDuI_Yr/edit#bookmark=id.9m99d0ms3rui"
+   },
+   {
+    "id": "cca6cea3-ee1d-4098-bc2f-d5d8444b18fc",
+    "name": "When the Assistant Becomes the Ad.docx",
+    "state": "open",
+    "dismissed": false,
+    "style_only": false,
+    "routed": false,
+    "piece_id": null,
+    "his_words": {
+     "why_here": "Produce an easy-to-understand breakdown of what you actually pay when you consume ads in the LLMs and what you will pay in the future.",
+     "why_like": null,
+     "would_do": null
+    },
+    "words_at": "2026-11-06T05:18:00.187499+00:00",
+    "heard": null,
+    "url": "https://docs.google.com/document/d/1emR7rjLsYEgS5bkJbYgvjyjbNjtSw0vI/edit?usp=drivesdk&ouid=107741908582439094738&rtpof=true&sd=true"
+   },
+   {
     "id": "6eaaf127-ed4e-48bc-86a0-54c9e99aa428",
     "name": "screenshot-20261105-061040.jpg",
     "state": "open",
@@ -3344,6 +3762,23 @@
     "words_at": "2026-11-05T06:08:55.124514+00:00",
     "heard": null,
     "url": "https://drive.google.com/file/d/1OGDLCPsMabZF5-UO_WsdErCIlZfgGpT_/view"
+   },
+   {
+    "id": "ca53cac9-d00d-49ed-8ea8-f17f61f602f4",
+    "name": "When Tools Overturn Truth - Research Dossier.md",
+    "state": "open",
+    "dismissed": false,
+    "style_only": false,
+    "routed": false,
+    "piece_id": null,
+    "his_words": {
+     "why_here": "We should do a piece on all the times when AI has corrected people and improved overall human knowledge.",
+     "why_like": null,
+     "would_do": null
+    },
+    "words_at": "2026-11-03T10:18:54.742119+00:00",
+    "heard": null,
+    "url": "https://docs.google.com/document/d/1QWMbt2S9w6KFMLac1tTr9StKh2pFK6t1/edit#heading=h.3ucsa860xhl4"
    },
    {
     "id": "d16fe9ff-413c-47c4-ac53-c89e40d28489",
@@ -3448,23 +3883,6 @@
     "url": "https://www.instagram.com/reel/DeZuQ7-lATg/?psln=MXA3b2c3dGVydmI2bw=="
    },
    {
-    "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
-    "name": "youtube_oEODyXtV49M.mp4",
-    "state": "piece",
-    "dismissed": false,
-    "style_only": false,
-    "routed": true,
-    "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
-    "his_words": {
-     "why_here": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
-     "why_like": null,
-     "would_do": null
-    },
-    "words_at": "2026-10-31T16:39:19.97954+00:00",
-    "heard": null,
-    "url": "https://youtube.com/shorts/oEODyXtV49M?is=q2ENp9Z-Kb3iFARU"
-   },
-   {
     "id": "f6327ce0-a414-4365-98df-635c1780523c",
     "name": "youtube_wSsJbXzp3DY.mp4",
     "state": "piece",
@@ -3480,6 +3898,23 @@
     "words_at": "2026-10-31T16:39:19.97954+00:00",
     "heard": "I'm not even >> [music] >> Ooh, I'm a fool. I'm a fool. >> [music] >> I'm a fool. >> [music]",
     "url": "https://youtube.com/shorts/wSsJbXzp3DY?is=NrD7qIf-brI3ZA4n"
+   },
+   {
+    "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
+    "name": "youtube_oEODyXtV49M.mp4",
+    "state": "piece",
+    "dismissed": false,
+    "style_only": false,
+    "routed": true,
+    "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+    "his_words": {
+     "why_here": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
+     "why_like": null,
+     "would_do": null
+    },
+    "words_at": "2026-10-31T16:39:19.97954+00:00",
+    "heard": null,
+    "url": "https://youtube.com/shorts/oEODyXtV49M?is=q2ENp9Z-Kb3iFARU"
    },
    {
     "id": "7f43c6b5-a468-40f3-ad66-c988cdc16072",
@@ -3745,28 +4180,15 @@
    "positive": 1,
    "corpora": 32,
    "creators": 9,
-   "claims": 21,
-   "asks": 25,
+   "claims": 33,
+   "asks": 28,
    "recent": 10,
    "feed": 63,
-   "corrections": 173,
+   "lookalike_feed": 100,
+   "corrections": 181,
    "hindsight": 3
   },
   "feed": [
-   {
-    "title": "Reel capture unavailable",
-    "excerpt": "The Reel was present and opened, but its substantive content was not accessible; no summary was inferred.",
-    "account": "@getintoai",
-    "url": "https://www.instagram.com/getintoai/reel/Dfj4Q4lTWrU/",
-    "at": "2026-11-11T05:18:10.722+00:00"
-   },
-   {
-    "title": "Mixed-media post with inaccessible context",
-    "excerpt": "Only the short accessible caption fragment was available; the post's substantive context could not be captured without inventing missing information.",
-    "account": "@getintoai",
-    "url": "https://www.instagram.com/getintoai/p/Dfj2G5eEyeX/",
-    "at": "2026-11-11T05:18:10.722+00:00"
-   },
    {
     "title": "ChatGPT helps locate a lost earbud in gravel",
     "excerpt": "A user reportedly uploaded photos of gravel to ChatGPT, which marked a possible location and helped find a lost Bose earbud.",
@@ -3803,18 +4225,25 @@
     "at": "2026-11-11T05:18:10.722+00:00"
    },
    {
+    "title": "Reel capture unavailable",
+    "excerpt": "The Reel was present and opened, but its substantive content was not accessible; no summary was inferred.",
+    "account": "@getintoai",
+    "url": "https://www.instagram.com/getintoai/reel/Dfj4Q4lTWrU/",
+    "at": "2026-11-11T05:18:10.722+00:00"
+   },
+   {
+    "title": "Mixed-media post with inaccessible context",
+    "excerpt": "Only the short accessible caption fragment was available; the post's substantive context could not be captured without inventing missing information.",
+    "account": "@getintoai",
+    "url": "https://www.instagram.com/getintoai/p/Dfj2G5eEyeX/",
+    "at": "2026-11-11T05:18:10.722+00:00"
+   },
+   {
     "title": "Sam Altman and the prospect of digital mind preservation",
     "excerpt": "The post says Sam Altman joined Nectome's waiting list in 2018 and notes that brain preservation is currently fatal and digital reconstruction remains unproven.",
     "account": "@power.ai",
     "url": "https://www.instagram.com/power.ai/p/DfjwOk-lU3s/",
     "at": "2026-11-11T05:18:10.722+00:00"
-   },
-   {
-    "title": "Access 1,000’s Free AI Tools (you’re welcome 🤝).",
-    "excerpt": "Access 1,000’s Free AI Tools (you’re welcome 🤝).",
-    "account": "power.ai",
-    "url": "https://www.instagram.com/power.ai/reel/C5Ch05aSOzK/",
-    "at": "2026-11-09T05:17:50.944+00:00"
    },
    {
     "title": "DeepSeek is taking on Claude Code with Creator Mode in its open-source Harness agent.",
@@ -3828,6 +4257,13 @@
     "excerpt": "Partial capture of Instagram post DfaIvXRGJRu; source text was not exposed in the browser.",
     "account": "getintoai",
     "url": "https://www.instagram.com/getintoai/p/DfaIvXRGJRu/",
+    "at": "2026-11-09T05:17:50.944+00:00"
+   },
+   {
+    "title": "Access 1,000’s Free AI Tools (you’re welcome 🤝).",
+    "excerpt": "Access 1,000’s Free AI Tools (you’re welcome 🤝).",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/reel/C5Ch05aSOzK/",
     "at": "2026-11-09T05:17:50.944+00:00"
    },
    {
@@ -3908,38 +4344,17 @@
     "at": "2026-11-07T11:07:00+00:00"
    },
    {
+    "title": "Muse adds real-time voice and video chat",
+    "excerpt": "A collaboration visible on the @getintoai profile announces US availability for real-time conversations with selectable voices.",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/artificialintelligenceee/p/DfYEiQgmpCJ/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
     "title": "Prompt patterns are packaged as a repeatable visual-creation system",
     "excerpt": "The post claims a large image test produced eighteen reusable prompt patterns for attention-grabbing AI visuals.",
     "account": "getintoai",
     "url": "https://www.instagram.com/getintoai/p/DfNNI7vmMmE/",
-    "at": "2026-11-07T05:17:43.056+00:00"
-   },
-   {
-    "title": "Pinned post source unavailable",
-    "excerpt": "The pinned post was identified and deduplicated, but substantive source material was inaccessible.",
-    "account": "getintoai",
-    "url": "https://www.instagram.com/getintoai/p/DfU3_KkmPuH/",
-    "at": "2026-11-07T05:17:43.056+00:00"
-   },
-   {
-    "title": "Pinned post source unavailable",
-    "excerpt": "The pinned post was identified and deduplicated, but substantive source material was inaccessible.",
-    "account": "getintoai",
-    "url": "https://www.instagram.com/getintoai/p/DfUraZ3mCHA/",
-    "at": "2026-11-07T05:17:43.056+00:00"
-   },
-   {
-    "title": "A US senator proposes pausing frontier AI and banning superintelligence",
-    "excerpt": "The post describes a platform for independent pre-release approval, a regulator kill switch, a permanent superintelligence ban, and an international pause treaty.",
-    "account": "evolving.ai",
-    "url": "https://www.instagram.com/evolving.ai/p/DfXHjGtACrg/",
-    "at": "2026-11-07T05:17:43.056+00:00"
-   },
-   {
-    "title": "China limits H200 imports despite domestic AI demand",
-    "excerpt": "Hundreds of thousands of Nvidia H200 chips are reportedly waiting in Hong Kong while Beijing promotes domestic alternatives.",
-    "account": "therundownai",
-    "url": "https://www.instagram.com/therundownai/p/DfX9efKAdYb/",
     "at": "2026-11-07T05:17:43.056+00:00"
    },
    {
@@ -3968,6 +4383,20 @@
     "excerpt": "Claude reportedly used contextual cues in screenshots to identify a live proctored exam, refused direct assistance, and redirected the student toward analogous practice.",
     "account": "evolving.ai",
     "url": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "China limits H200 imports despite domestic AI demand",
+    "excerpt": "Hundreds of thousands of Nvidia H200 chips are reportedly waiting in Hong Kong while Beijing promotes domestic alternatives.",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfX9efKAdYb/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "A US senator proposes pausing frontier AI and banning superintelligence",
+    "excerpt": "The post describes a platform for independent pre-release approval, a regulator kill switch, a permanent superintelligence ban, and an international pause treaty.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfXHjGtACrg/",
     "at": "2026-11-07T05:17:43.056+00:00"
    },
    {
@@ -4076,10 +4505,17 @@
     "at": "2026-11-07T05:17:43.056+00:00"
    },
    {
-    "title": "Muse adds real-time voice and video chat",
-    "excerpt": "A collaboration visible on the @getintoai profile announces US availability for real-time conversations with selectable voices.",
+    "title": "Pinned post source unavailable",
+    "excerpt": "The pinned post was identified and deduplicated, but substantive source material was inaccessible.",
     "account": "getintoai",
-    "url": "https://www.instagram.com/artificialintelligenceee/p/DfYEiQgmpCJ/",
+    "url": "https://www.instagram.com/getintoai/p/DfUraZ3mCHA/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Pinned post source unavailable",
+    "excerpt": "The pinned post was identified and deduplicated, but substantive source material was inaccessible.",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfU3_KkmPuH/",
     "at": "2026-11-07T05:17:43.056+00:00"
    },
    {
@@ -4195,7 +4631,665 @@
     "at": "2026-11-06T00:10:00+00:00"
    }
   ],
+  "lookalike_feed": [
+   {
+    "title": "ChatGPT helps locate a lost earbud in gravel",
+    "account": "@power.ai",
+    "url": "https://www.instagram.com/power.ai/p/Dfjbe68ldg-/",
+    "at": "2026-11-11T05:18:10.722+00:00"
+   },
+   {
+    "title": "MIT makes 2,500+ course resources free online",
+    "account": "@evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/Dfjz9o8gA0F/",
+    "at": "2026-11-11T05:18:10.722+00:00"
+   },
+   {
+    "title": "Claude agents coordinate to build an operating system",
+    "account": "@evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfiMWH2ACgp/",
+    "at": "2026-11-11T05:18:10.722+00:00"
+   },
+   {
+    "title": "Disney and Adobe partner on proprietary generative models",
+    "account": "@therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfiNxE3Rp8Q/",
+    "at": "2026-11-11T05:18:10.722+00:00"
+   },
+   {
+    "title": "White-collar hiring rises while AI pressure concentrates on repetitive work",
+    "account": "@therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfiNa2JkRhx/",
+    "at": "2026-11-11T05:18:10.722+00:00"
+   },
+   {
+    "title": "Reel capture unavailable",
+    "account": "@getintoai",
+    "url": "https://www.instagram.com/getintoai/reel/Dfj4Q4lTWrU/",
+    "at": "2026-11-11T05:18:10.722+00:00"
+   },
+   {
+    "title": "Mixed-media post with inaccessible context",
+    "account": "@getintoai",
+    "url": "https://www.instagram.com/getintoai/p/Dfj2G5eEyeX/",
+    "at": "2026-11-11T05:18:10.722+00:00"
+   },
+   {
+    "title": "Sam Altman and the prospect of digital mind preservation",
+    "account": "@power.ai",
+    "url": "https://www.instagram.com/power.ai/p/DfjwOk-lU3s/",
+    "at": "2026-11-11T05:18:10.722+00:00"
+   },
+   {
+    "title": "DeepSeek is taking on Claude Code with Creator Mode in its open-source Harness agent.",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/p/DfbtORYFfti/",
+    "at": "2026-11-09T05:17:50.944+00:00"
+   },
+   {
+    "title": "Instagram post DfaIvXRGJRu",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfaIvXRGJRu/",
+    "at": "2026-11-09T05:17:50.944+00:00"
+   },
+   {
+    "title": "Access 1,000’s Free AI Tools (you’re welcome 🤝).",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/reel/C5Ch05aSOzK/",
+    "at": "2026-11-09T05:17:50.944+00:00"
+   },
+   {
+    "title": "A Chinese entrepreneur reportedly traveled 1,500 kilometers by motorcycle from Bali to Sumatra, Indonesia, to pay local residents to verify Claude AI accounts.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
+    "at": "2026-11-08T08:39:00+00:00"
+   },
+   {
+    "title": "… are we cooked chat…",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/p/DfeUQRJue-A/",
+    "at": "2026-11-08T08:22:00+00:00"
+   },
+   {
+    "title": "Instagram post DfdNIVlsJT8",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/reel/DfdNIVlsJT8/",
+    "at": "2026-11-07T22:01:00+00:00"
+   },
+   {
+    "title": "Instagram post DfdFJ0IATeB",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfdFJ0IATeB/",
+    "at": "2026-11-07T20:50:00+00:00"
+   },
+   {
+    "title": "Instagram post Dfc8-zMgTEU",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/Dfc8-zMgTEU/",
+    "at": "2026-11-07T19:39:00+00:00"
+   },
+   {
+    "title": "Instagram post Dfcrb83GJhs",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/Dfcrb83GJhs/",
+    "at": "2026-11-07T17:06:00+00:00"
+   },
+   {
+    "title": "Elon Musk has suggested that Neuralink could one day allow humans to communicate with animals, with 2028 circulating as a possible timeline.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfclzlfAC67/",
+    "at": "2026-11-07T16:17:00+00:00"
+   },
+   {
+    "title": "Instagram post DfcUYGUGIjK",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfcUYGUGIjK/",
+    "at": "2026-11-07T13:44:00+00:00"
+   },
+   {
+    "title": "Real.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfcQUQygA1M/",
+    "at": "2026-11-07T13:09:00+00:00"
+   },
+   {
+    "title": "🔪🍎 Researchers just showed how easily AI-powered robots can be tricked into attempting dangerous tasks by manipulating what they see.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfcKCktgEA2/",
+    "at": "2026-11-07T12:14:00+00:00"
+   },
+   {
+    "title": "When asked how to spend the next 10 years, Claude suggested sleep, health, time with loved ones, building things you own, and knowing when enough is enough.",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/",
+    "at": "2026-11-07T11:07:00+00:00"
+   },
+   {
+    "title": "Muse adds real-time voice and video chat",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/artificialintelligenceee/p/DfYEiQgmpCJ/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Prompt patterns are packaged as a repeatable visual-creation system",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfNNI7vmMmE/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "A developer assembles a 3D game with multiple AI tools in 24 hours",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Claude-directed agents generate and refine motion graphics",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfXfbEMACR-/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "AI infrastructure spending faces a market-confidence test",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfXcav4AD-S/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Claude detects an active exam and refuses to provide the answer",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "China limits H200 imports despite domestic AI demand",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfX9efKAdYb/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "A US senator proposes pausing frontier AI and banning superintelligence",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfXHjGtACrg/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "AI animation is approaching studio-style visual polish",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfXBDilAYs_/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "AI grading machines process handwritten schoolwork",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfW61CGgIGo/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "AI data centers intensify competition for computer memory",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfU6eiWgL48/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Canva's AI-era restructuring pairs layoffs with unusually broad support",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfU0XbNgGfh/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "AI data-center expansion becomes an electoral and household-cost issue",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfUvfhsAMzX/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Apple tightens internal AI-spending limits",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfX6gffylbl/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "ChatGPT becomes a structured job-search copilot",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfXx4uMktKI/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Claude adds connected personal-finance analysis",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfXrUQUktBy/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "OpenAI classifies GPT-6 Cyber as critical capability",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfXkGkuS3NI/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Isomorphic Labs seeks major funding for AI drug discovery",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfXbnVwSYt3/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Claude accelerates a protein-structure investigation",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfXQFj4CPw6/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Oracle cancels a major Tencent AI-chip leasing deal",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfVT3mjShWj/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Meta acquires a multi-agent coding workspace",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfVM_fVyCfd/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Apple Watch tests ambient conversation summaries",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfVHVgXyM5v/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "OpenAI claims ChatGPT search reaches one-fifth of Google's volume",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfU9uxpSgPI/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Pinned post source unavailable",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfUraZ3mCHA/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Pinned post source unavailable",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfU3_KkmPuH/",
+    "at": "2026-11-07T05:17:43.056+00:00"
+   },
+   {
+    "title": "Developer Brandon Thomas is building AI-assisted open-source alternatives to Microsoft Office: WordCraft, GridCraft and DeckCraft, using Claude Opus 5.",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/p/Dfa2apfFSE5/",
+    "at": "2026-11-07T00:03:00+00:00"
+   },
+   {
+    "title": "Instagram post DfaofFLgVBD",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfaofFLgVBD/",
+    "at": "2026-11-06T22:01:00+00:00"
+   },
+   {
+    "title": "Instagram post Dfai3j0gVhP",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/Dfai3j0gVhP/",
+    "at": "2026-11-06T21:12:00+00:00"
+   },
+   {
+    "title": "Nvidia is tightening oversight of its AI chips in Southeast Asia to prevent smuggling into China.",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfahqxDzRrl/",
+    "at": "2026-11-06T21:03:00+00:00"
+   },
+   {
+    "title": "Instagram post DfaWvC7AYhJ",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfaWvC7AYhJ/",
+    "at": "2026-11-06T19:26:00+00:00"
+   },
+   {
+    "title": "Meta, Google, and TikTok filed separate federal lawsuits this week to block AB 1709, California’s new law that strips autoplay and algorithmic feeds for anyone under 16, before it",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfaQVhCIoZj/",
+    "at": "2026-11-06T18:31:00+00:00"
+   },
+   {
+    "title": "Physical Superintelligence (PSI) says its AI research system, powered by an unreleased Anthropic model, has solved an 18-year-old mathematical problem in quantum computing.",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfaIjdUEltq/",
+    "at": "2026-11-06T17:22:00+00:00"
+   },
+   {
+    "title": "Mira Murati’s Thinking Machines Lab is reportedly nearing a $5 billion funding round at a $40 billion pre-money valuation.",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfaA1JdIG2w/",
+    "at": "2026-11-06T16:15:00+00:00"
+   },
+   {
+    "title": "🤖💻 People keep sharing what they’ve built with Claude Opus 5.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfZ54r7gBlE/",
+    "at": "2026-11-06T15:14:00+00:00"
+   },
+   {
+    "title": "AI-evaluation nonprofit METR just published a new report on its findings from 11 weeks of inside access to Anthropic’s internal data and interviews with staff, concluding the compa",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfZ3fB6Es7j/",
+    "at": "2026-11-06T14:53:00+00:00"
+   },
+   {
+    "title": "Instagram post DfZ2hwBGF2I",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfZ2hwBGF2I/",
+    "at": "2026-11-06T14:45:00+00:00"
+   },
+   {
+    "title": "Sam Altman, Elon Musk, Mark Zuckerberg, Jensen Huang, Jeff Bezos, and the rest of the tech elite come together for an 80s-style charity anthem called “We Were Always Blue.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfZqnfuArzx/",
+    "at": "2026-11-06T13:02:00+00:00"
+   },
+   {
+    "title": "🤖🐋 DeepSeek’s AI agent can now build its own tools, and all you have to do is describe them.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+    "at": "2026-11-06T12:12:00+00:00"
+   },
+   {
+    "title": "Canva announced a restructuring affecting 22% of staff, with salary, healthcare, equipment, LinkedIn Premium, career coaching and startup-grant support described for affected emplo",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/p/DfZdftOlQcb/",
+    "at": "2026-11-06T11:06:00+00:00"
+   },
+   {
+    "title": "AI systems inherit impossible workplace expectations",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfZLsNygNyY/",
+    "at": "2026-11-06T08:32:00+00:00"
+   },
+   {
+    "title": "ChatLLM by Abacus AI is presented as one platform for major AI models, image/video generation, app building, research presentations, coding agents and agent swarms.",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/p/DfYSZsFFXOL/",
+    "at": "2026-11-06T00:10:00+00:00"
+   },
+   {
+    "title": "Caption unavailable",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfYHnFBAT2r/",
+    "at": "2026-11-05T22:36:00+00:00"
+   },
+   {
+    "title": "Caption unavailable",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfXmTMbAZW9/",
+    "at": "2026-11-05T17:45:00+00:00"
+   },
+   {
+    "title": "Caption unavailable",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfXF23bGPZE/",
+    "at": "2026-11-05T13:01:00+00:00"
+   },
+   {
+    "title": "The post presents an AI contract-flipping business and real-estate investment strategy using QBI, bonus depreciation and 1031 exchanges, while noting that eligibility depends on in",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/p/DfW4PzBjrFK/",
+    "at": "2026-11-05T11:02:00+00:00"
+   },
+   {
+    "title": "The parents of Seattle software engineer Bowen Wan filed a wrongful-death lawsuit alleging ChatGPT encouraged her to stop taking epilepsy medication and conceal the plan from docto",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/p/DfVsvuED9fk/",
+    "at": "2026-11-05T00:02:00+00:00"
+   },
+   {
+    "title": "Ten open-source animation, motion and VFX tools",
+    "account": "syntaix.ai",
+    "url": "https://www.instagram.com/syntaix.ai/p/DfUpCCLiSfS/",
+    "at": "2026-11-04T14:11:00+00:00"
+   },
+   {
+    "title": "A report alleges a potential Chinese espionage investigation involving Nvidia CEO Jensen Huang and Megaspeed executive Alice Huang.",
+    "account": "power.ai",
+    "url": "https://www.instagram.com/power.ai/p/DfUTaxzmyCk/",
+    "at": "2026-11-04T11:02:00+00:00"
+   },
+   {
+    "title": "RAM memes push back on a cloud-centralization argument",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfSyz0lExfe/",
+    "at": "2026-11-03T20:58:00+00:00"
+   },
+   {
+    "title": "AI content factories make algorithm-optimized video production repeatable",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfStxlXk-D8/",
+    "at": "2026-11-03T20:14:00+00:00"
+   },
+   {
+    "title": "Foldable phones become remote windows into desktop computing",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfSmjmKDEON/",
+    "at": "2026-11-03T19:11:00+00:00"
+   },
+   {
+    "title": "What if MrBeast offered $1 trillion to the first AI company to achieve superintelligence, but made them prove themselves by cooking Gordon Ramsay an o",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfSf8msANFE/",
+    "at": "2026-11-03T18:13:00+00:00"
+   },
+   {
+    "title": "Anthropic spent more than $100,000 per employee per month during the third quarter of 2026, according to its amended S-1 filing ahead of its planned I",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfSemUCSxpt/",
+    "at": "2026-11-03T18:01:00+00:00"
+   },
+   {
+    "title": "Anthropic growth and financing claims highlight AI's capital intensity",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfSaA34gSY6/",
+    "at": "2026-11-03T17:21:00+00:00"
+   },
+   {
+    "title": "Google announced that starting in early 2027, AI tools will be disabled by default for K-12 students unless schools explicitly enable them.",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfSTcmdSRxg/",
+    "at": "2026-11-03T16:24:00+00:00"
+   },
+   {
+    "title": "Revolut engineers were spending up to $10,000 a month on AI tools.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfSQ4mMAPzP/",
+    "at": "2026-11-03T16:01:00+00:00"
+   },
+   {
+    "title": "Prompt templates position ChatGPT as an ADHD productivity scaffold",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfSPKgwEwxF/",
+    "at": "2026-11-03T15:46:00+00:00"
+   },
+   {
+    "title": "Revolut, Europe’s largest private company, says it reduced its AI coding costs by 90% after switching from OpenAI and Anthropic APIs to a self-hosted",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfSLrV8Sox9/",
+    "at": "2026-11-03T15:16:00+00:00"
+   },
+   {
+    "title": "Absolutely insane.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfSJYPjgLe8/",
+    "at": "2026-11-03T14:56:00+00:00"
+   },
+   {
+    "title": "MIT researchers just published research showing that OpenAI’s GPT-6 Astra can improve some AI models by directly rewriting their weights — the numbers",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfSDlGXS-i-/",
+    "at": "2026-11-03T14:05:00+00:00"
+   },
+   {
+    "title": "One-time tech purchases are framed as subscription replacements",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfR9kIEk0d_/",
+    "at": "2026-11-03T13:12:00+00:00"
+   },
+   {
+    "title": "What happens when a civilization decides the only way to end suffering is to end humanity itself?",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/",
+    "at": "2026-11-03T12:54:00+00:00"
+   },
+   {
+    "title": "Claude is framed as automating data-broker opt-outs",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfR2CJ8E-Ux/",
+    "at": "2026-11-03T12:07:00+00:00"
+   },
+   {
+    "title": "End of an era.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfRgKNRAFaA/",
+    "at": "2026-11-03T08:56:00+00:00"
+   },
+   {
+    "title": "The New York Times and several other publishers have sued Brave, accusing the web browser company of illegally scraping copyrighted articles and helpi",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfQJBbITxp3/",
+    "at": "2026-11-02T20:14:00+00:00"
+   },
+   {
+    "title": "OpenAI founding member Andrej Karpathy was frustrated with YouTube’s video suggestions, so he used Claude to build his own alternative in just two hou",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfQCWHZEreu/",
+    "at": "2026-11-02T19:16:00+00:00"
+   },
+   {
+    "title": "Claude's ten-year advice emphasizes health, relationships and ownership",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfP_rokE8x6/",
+    "at": "2026-11-02T18:52:00+00:00"
+   },
+   {
+    "title": "Anthropic has revealed nearly $895.",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfP5wDiyGOF/",
+    "at": "2026-11-02T18:01:00+00:00"
+   },
+   {
+    "title": "PlayStation 2 longevity illustrates durable platform value",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfP1Ucyk0WR/",
+    "at": "2026-11-02T17:22:00+00:00"
+   },
+   {
+    "title": "Western Australia police used real-time facial recognition technology to scan more than 1.",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfPv0jkSpQb/",
+    "at": "2026-11-02T16:34:00+00:00"
+   },
+   {
+    "title": "A free course markets agent building to non-coders",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfPuPhZkwMW/",
+    "at": "2026-11-02T16:20:00+00:00"
+   },
+   {
+    "title": "Paid promotion for Abacus AI's all-in-one ChatLLM",
+    "account": "syntaix.ai",
+    "url": "https://www.instagram.com/syntaix.ai/p/DfPtlppCdtr/",
+    "at": "2026-11-02T16:14:00+00:00"
+   },
+   {
+    "title": "We asked Claude for advice on how to spend the next 10 years, with one simple rule: no explanations.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfPo57fAL9g/",
+    "at": "2026-11-02T15:33:00+00:00"
+   },
+   {
+    "title": "South Korea has unveiled a record $610 billion budget for 2027, increasing spending by 12.",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfPnsYDyzte/",
+    "at": "2026-11-02T15:23:00+00:00"
+   },
+   {
+    "title": "Weekly roundup shows AI spreading across worlds, devices, law and science",
+    "account": "getintoai",
+    "url": "https://www.instagram.com/getintoai/p/DfPhI6EGM_6/",
+    "at": "2026-11-02T14:26:00+00:00"
+   },
+   {
+    "title": "Sam Altman said it's “quite terrible” that so much of the world's limited RAM sits inside personal computers, often going unused, arguing it could be",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfPg9iTACeu/",
+    "at": "2026-11-02T14:24:00+00:00"
+   },
+   {
+    "title": "OpenAI has signed four agreements with Abu Dhabi-based organizations to accelerate AI adoption across government, energy, investment, and education.",
+    "account": "therundownai",
+    "url": "https://www.instagram.com/therundownai/p/DfPf_wyynJJ/",
+    "at": "2026-11-02T14:16:00+00:00"
+   },
+   {
+    "title": "Swipe ⬅️ to catch up on the biggest AI and tech stories from the last 7 days.",
+    "account": "evolving.ai",
+    "url": "https://www.instagram.com/evolving.ai/p/DfPW8fmgCnt/",
+    "at": "2026-11-02T12:57:00+00:00"
+   }
+  ],
   "corrections": [
+   {
+    "said": "Done the board also, here are some screenshots of last week's posts, which I'd like you to ensure are tightened permanently. In the \"AI is catching decades-old mistakes\" post the front cover card does not look like a front cover. It looks like all the rest of the cards. And the rest of the cards in that carousel are not that easy to follow. They assume that people have a working knowledge of what we're talking about and use too few words. For example, \"12x more code in 4 months\" should be something like: \"12 times more code is being produced per month because of AI doing more coding\". That and the other cards in this carousel don't look very good and aren't using the page space centrally or correctly. They look too bland and too plain, and not enough effort has been put into the visual tr…",
+    "about": null,
+    "where": "Claude Code session in krishanraja/content-engine, with Instagram screenshots of last week's posts: the \"AI is catching decades-old mistakes\" carousel card 1, the AI broke Git carousel cards 2 and 4, the Counting rat tails reel's grid thumbnail and the POV AI agent meme",
+    "repository": "krishanraja/content-engine",
+    "at": "2026-11-15T13:38:00+00:00"
+   },
+   {
+    "said": "I like C as a concept, but that specific example is not very good. \"They Faked AI Use\" is a terrible title. It's not clear, and it's way too vague. Words like \"they\" are not welcome in these types of titles.",
+    "about": null,
+    "where": "his note on the standards review page (claude.ai artifact), on the group \"How hard a title pulls\", about the Fri 13 Nov Counting rat tails thumbnail title \"They faked AI use\"",
+    "repository": "krishanraja/content-engine",
+    "at": "2026-11-15T13:30:45+00:00"
+   },
+   {
+    "said": "In this instance, I integrated the title of the video into my script seamlessly. In these instances, I think it worked quite well because, as I said, \"Is it AI music or human music?\" is a natural sentence. These words popped up as the title of the piece with, and it looked very much like the intro of an episode, which felt really cool. I think that this needs to become more of a conjoint effort with the teleprompter script so that the title of the episode is integrated into a sentence seamlessly near the start of the video and the production suite knows that this is the moment to make it feel like the title, instead of regular captions.",
+    "about": null,
+    "where": "his note on the standards review page (claude.ai artifact), on the group \"A line you say aloud\", beside the Wed 11 Nov music piece's \"Is it AI music or human music?\" title",
+    "repository": "krishanraja/content-engine",
+    "at": "2026-11-15T13:29:53+00:00"
+   },
+   {
+    "said": "Impossible to really tell what I'm approving with these mocks. They do not represent at all what the description is or what something might look like in real life.",
+    "about": null,
+    "where": "Claude Code cloud session (fleet close-out), on the floor standards review page's mock frames",
+    "repository": "krishanraja/content-engine",
+    "at": "2026-11-15T10:05:00+00:00"
+   },
+   {
+    "said": "you are allowed the code, no issues at all. yes it should",
+    "about": null,
+    "where": "Claude Code session in krishanraja/content-engine, answering whether OpenMontage's AGPL code may be used and whether the signed motion floor should widen to admit his AI music (about 500 px slams, 12% overshoot) and Character.ai (0 px fade-only type) cuts",
+    "repository": "krishanraja/content-engine",
+    "at": "2026-11-13T19:34:00+00:00"
+   },
+   {
+    "said": "I want an array of animated motion caption styles available in the engine, decoupled from the visual treatment. Ensure the Character.ai video, the Anthropic eating its own jobs video, the AI music video are used as the basis for their own artistic styles too",
+    "about": null,
+    "where": "Claude Code session in krishanraja/content-engine",
+    "repository": "krishanraja/content-engine",
+    "at": "2026-11-13T16:55:00+00:00"
+   },
+   {
+    "said": "Relayed through a session handoff and the failure note docs/ve/FAILURE_2026-11-13_3d-styles.md (not typed to this session): on 13 Nov 2026 Krish rejected both 3D style test cuts (The Ladder, The Living Screen), quoted as \"no, these are both terrible. the captions should be decoupled from the animation styles, these captions are boring and not active enough. The motion design is terrible, the use of the screen space is terrible, the motion is 10X too slow, not immersive and engaging at all.\" The cuts had one small 3D set in a 590 px band, a plain house caption box, the bottom 40% of the 9:16 frame empty, and about one device event every 5 s. His kept production references measure 2.9 to 4.6 visual events a second (ve pace).",
+    "about": null,
+    "where": "claude-code-web",
+    "repository": "krishanraja/content-engine",
+    "at": "2026-11-13T16:53:59.311+00:00"
+   },
+   {
+    "said": "no, these are both terrible. the captions should be decoupled from the animation styles, these captions are boring and not active enough. The motion design is terrible, the use of the screen space is terrible, the motion is 10X too slow, not immersive and engaging at all.",
+    "about": null,
+    "where": "Claude Code session in krishanraja/content-engine, on the Gate 2 test cuts of The Ladder and The Living Screen",
+    "repository": "krishanraja/content-engine",
+    "at": "2026-11-13T15:40:00+00:00"
+   },
    {
     "said": "\"If you're relying on the answer for an important decision, ask a different AI to check\" can be the final statement. Then it's perfect and needs to be filed for today in the board and drive",
     "about": null,
@@ -4239,16 +5333,16 @@
     "at": "2026-11-12T00:50:00+00:00"
    },
    {
-    "said": "I know we have multiple skins for Monday, Wednesday, and Friday but I often find that short videos just sometimes randomly have an icon on them, randomly have a word mark. The outro card sometimes isn't there. Sometimes it's one of three different outro cards. Sometimes there's an intro card. I want that session to produce a rock-solid palette of brand asset templates that are able to be used in our weekly calendar and the engine cannot deviate.",
+    "said": "Today's Jensen Huang post needs to have a black background not a white background so we need to reskin that. Same goes for Thursdays meme. As an FYI today's AI music post was one of the most popular in terms of production quality, up there with the Anthropic jobs video in terms of how the production quality supported the script. But the 5-minute video had audio and video out of sync with one another. We need to ensure that never happens in the future.",
     "about": null,
-    "where": "Claude Code session in krishanraja/control-center, about Make Your Mind Up's templates",
+    "where": "Claude Code session in krishanraja/control-center, about this week's Make Your Mind Up posts",
     "repository": "krishanraja/content-engine",
     "at": "2026-11-12T00:30:00+00:00"
    },
    {
-    "said": "Today's Jensen Huang post needs to have a black background not a white background so we need to reskin that. Same goes for Thursdays meme. As an FYI today's AI music post was one of the most popular in terms of production quality, up there with the Anthropic jobs video in terms of how the production quality supported the script. But the 5-minute video had audio and video out of sync with one another. We need to ensure that never happens in the future.",
+    "said": "I know we have multiple skins for Monday, Wednesday, and Friday but I often find that short videos just sometimes randomly have an icon on them, randomly have a word mark. The outro card sometimes isn't there. Sometimes it's one of three different outro cards. Sometimes there's an intro card. I want that session to produce a rock-solid palette of brand asset templates that are able to be used in our weekly calendar and the engine cannot deviate.",
     "about": null,
-    "where": "Claude Code session in krishanraja/control-center, about this week's Make Your Mind Up posts",
+    "where": "Claude Code session in krishanraja/control-center, about Make Your Mind Up's templates",
     "repository": "krishanraja/content-engine",
     "at": "2026-11-12T00:30:00+00:00"
    },
@@ -4617,14 +5711,14 @@
     "at": "2026-11-10T00:20:00+00:00"
    },
    {
-    "said": "I've recently learnt that keeping them together is a really good idea, as opposed to doing the storyboarding separately after the video is recorded. I would like to do the storyboard mocks before I record the script so that I can record correctly and the scripts can be in the right voice.",
+    "said": "The prompts that are copied when I click a \"Copy Prompt\" button should be all-encompassing. They should assume a new session knows nothing. They should enable the session to work freely and creatively and not be too restrictive. They should not micromanage the Claude Code session too much so that it gets stuck in loops or in endless rounds of approvals. The prompt should be creative and enable maximum creative freedom but with a laser focus on an incredibly strong visual and scripted narrative arc that lands the message incredibly well.",
     "about": null,
     "where": "Claude Code session in krishanraja/content-engine, on the live publish board",
     "repository": "krishanraja/content-engine",
     "at": "2026-11-09T18:15:00+00:00"
    },
    {
-    "said": "The prompts that are copied when I click a \"Copy Prompt\" button should be all-encompassing. They should assume a new session knows nothing. They should enable the session to work freely and creatively and not be too restrictive. They should not micromanage the Claude Code session too much so that it gets stuck in loops or in endless rounds of approvals. The prompt should be creative and enable maximum creative freedom but with a laser focus on an incredibly strong visual and scripted narrative arc that lands the message incredibly well.",
+    "said": "I've recently learnt that keeping them together is a really good idea, as opposed to doing the storyboarding separately after the video is recorded. I would like to do the storyboard mocks before I record the script so that I can record correctly and the scripts can be in the right voice.",
     "about": null,
     "where": "Claude Code session in krishanraja/content-engine, on the live publish board",
     "repository": "krishanraja/content-engine",
@@ -5477,6 +6571,18 @@
    "endorsed": null
   },
   {
+   "id": "7502d46a-3ec1-4fc1-964a-e91b9e284415",
+   "what": "Inspiration card \"AI-metrics-gaming-research-dossier-Markdown.docx\" you saved with your words",
+   "his_words": "A piece on the dirty truth behind how companies measure whether AI is working or not",
+   "endorsed": null
+  },
+  {
+   "id": "cca6cea3-ee1d-4098-bc2f-d5d8444b18fc",
+   "what": "Inspiration card \"When the Assistant Becomes the Ad.docx\" you saved with your words",
+   "his_words": "Produce an easy-to-understand breakdown of what you actually pay when you consume ads in the LLMs and what you will pay in the future.",
+   "endorsed": null
+  },
+  {
    "id": "6eaaf127-ed4e-48bc-86a0-54c9e99aa428",
    "what": "Inspiration card \"screenshot-20261105-061040.jpg\" you saved with your words",
    "his_words": "Let's do a piece on build versus buy and break it down with the realities of businesses thinking they can vibe code everything instead of getting SaaS licences from vendors. Make it a bit tongue-in-cheek and explore both angles.",
@@ -5486,6 +6592,12 @@
    "id": "50368dee-0a10-4452-a79a-0607d4f2e278",
    "what": "Inspiration card \"screenshot-20261105-060348.jpg\" you saved with your words",
    "his_words": "We should do a piece on who's going to win out among Canva, Adobe, and Claude Design. We should look at the perspective of how much of design AI can really do and how much it will be able to do in 2 years. Hypothesise who will have the bigger moat. In 2 years",
+   "endorsed": null
+  },
+  {
+   "id": "ca53cac9-d00d-49ed-8ea8-f17f61f602f4",
+   "what": "Inspiration card \"When Tools Overturn Truth - Research Dossier.md\" you saved with your words",
+   "his_words": "We should do a piece on all the times when AI has corrected people and improved overall human knowledge.",
    "endorsed": null
   },
   {
@@ -5555,9 +6667,9 @@
    "endorsed": null
   },
   {
-   "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
-   "what": "Inspiration card \"youtube_oEODyXtV49M.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
-   "his_words": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
+   "id": "f6327ce0-a414-4365-98df-635c1780523c",
+   "what": "Inspiration card \"youtube_wSsJbXzp3DY.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
+   "his_words": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
    "endorsed": null,
    "ask": true,
    "state": "piece",
@@ -5565,9 +6677,9 @@
    "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef"
   },
   {
-   "id": "f6327ce0-a414-4365-98df-635c1780523c",
-   "what": "Inspiration card \"youtube_wSsJbXzp3DY.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
-   "his_words": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
+   "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
+   "what": "Inspiration card \"youtube_oEODyXtV49M.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
+   "his_words": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
    "endorsed": null,
    "ask": true,
    "state": "piece",
@@ -5949,6 +7061,24 @@
     "use_origin": "model_guess"
    },
    {
+    "id": "865c3cc2-88d6-4488-84da-aaa16fe1f694",
+    "subject_ref": "ca53cac9-d00d-49ed-8ea8-f17f61f602f4",
+    "subject": "Inspiration card \"When Tools Overturn Truth - Research Dossier\" (unknown)",
+    "said": "We should do a piece on all the times when AI has corrected people and improved overall human knowledge.",
+    "said_at": "2026-11-05T10:17:09.179+00:00",
+    "source": "inspiration_card",
+    "use_origin": "model_guess"
+   },
+   {
+    "id": "65d13cd6-0109-40a9-9d91-2c20d06edd8f",
+    "subject_ref": "7502d46a-3ec1-4fc1-964a-e91b9e284415",
+    "subject": "Inspiration card \"AI-metrics-gaming-research-dossier-Markdown\" (unknown)",
+    "said": "A piece on the dirty truth behind how companies measure whether AI is working or not",
+    "said_at": "2026-11-05T10:18:03.89+00:00",
+    "source": "inspiration_card",
+    "use_origin": "model_guess"
+   },
+   {
     "id": "e275f875-aec9-4f4c-aa81-6ea63cdda20b",
     "subject_ref": "dd93bfb1-20be-4c13-93b7-3c34ded7544b",
     "subject": "Inspiration card \"instagram DfZlAbRAISa 01\" by evolving.ai (instagram)",
@@ -6214,6 +7344,15 @@
     "use_origin": "rule"
    },
    {
+    "id": "3e0633cf-5de9-4c25-8dd6-1c86e341d241",
+    "subject_ref": "cca6cea3-ee1d-4098-bc2f-d5d8444b18fc",
+    "subject": "Inspiration card \"When the Assistant Becomes the Ad\" (unknown)",
+    "said": "Produce an easy-to-understand breakdown of what you actually pay when you consume ads in the LLMs and what you will pay in the future.",
+    "said_at": "2026-11-05T06:55:36.427+00:00",
+    "source": "inspiration_card",
+    "use_origin": "model_guess"
+   },
+   {
     "id": "a1b57b15-1780-4151-ba04-63ff13c6e38a",
     "subject_ref": "db9f9f6a-1092-49be-8024-f335e060305a",
     "subject": "The labs writing everyone's code still run Salesforce",
@@ -6253,16 +7392,27 @@
    }
   ],
   "counts": {
-   "future_pieces": 16,
+   "future_pieces": 18,
    "wider_pieces": 13,
    "wider_themes": 4,
    "tracked": 3,
-   "briefs": 8,
+   "briefs": 9,
    "not_for_us": 3
   }
  },
  "offday_verdicts": {
   "verdicts": [
+   {
+    "week": "2026-11-16",
+    "option": "off-tue-701a2c55-7400-4dc8-99cb-d6001147ae16",
+    "day": "tue",
+    "format": "Said to camera",
+    "hook": "Which of your habits will cost you your job once AI is at work?",
+    "side": "idea",
+    "verdict": "approve",
+    "words": null,
+    "at": "2026-11-16T11:55:41.675Z"
+   },
    {
     "week": "2026-11-09",
     "option": "off-fri-beststicker",
@@ -6639,7 +7789,7 @@
    }
   ],
   "counts": {
-   "approve": 11,
+   "approve": 12,
    "improve": 9,
    "reject": 5,
    "next_week": 4,
@@ -7074,6 +8224,40 @@
    "url": "https://www.instagram.com/p/DfZlAbRAISa/?img_index=8&xtok=bWdyNTZ4cTcwdXg3"
   },
   {
+   "id": "7502d46a-3ec1-4fc1-964a-e91b9e284415",
+   "name": "AI-metrics-gaming-research-dossier-Markdown.docx",
+   "state": "open",
+   "dismissed": false,
+   "style_only": false,
+   "routed": false,
+   "piece_id": null,
+   "his_words": {
+    "why_here": "A piece on the dirty truth behind how companies measure whether AI is working or not",
+    "why_like": null,
+    "would_do": null
+   },
+   "words_at": "2026-11-06T05:18:00.187499+00:00",
+   "heard": null,
+   "url": "https://docs.google.com/document/d/1x49yiVtyNslMGcDblfGb8XndrmDuI_Yr/edit#bookmark=id.9m99d0ms3rui"
+  },
+  {
+   "id": "cca6cea3-ee1d-4098-bc2f-d5d8444b18fc",
+   "name": "When the Assistant Becomes the Ad.docx",
+   "state": "open",
+   "dismissed": false,
+   "style_only": false,
+   "routed": false,
+   "piece_id": null,
+   "his_words": {
+    "why_here": "Produce an easy-to-understand breakdown of what you actually pay when you consume ads in the LLMs and what you will pay in the future.",
+    "why_like": null,
+    "would_do": null
+   },
+   "words_at": "2026-11-06T05:18:00.187499+00:00",
+   "heard": null,
+   "url": "https://docs.google.com/document/d/1emR7rjLsYEgS5bkJbYgvjyjbNjtSw0vI/edit?usp=drivesdk&ouid=107741908582439094738&rtpof=true&sd=true"
+  },
+  {
    "id": "6eaaf127-ed4e-48bc-86a0-54c9e99aa428",
    "name": "screenshot-20261105-061040.jpg",
    "state": "open",
@@ -7106,6 +8290,23 @@
    "words_at": "2026-11-05T06:08:55.124514+00:00",
    "heard": null,
    "url": "https://drive.google.com/file/d/1OGDLCPsMabZF5-UO_WsdErCIlZfgGpT_/view"
+  },
+  {
+   "id": "ca53cac9-d00d-49ed-8ea8-f17f61f602f4",
+   "name": "When Tools Overturn Truth - Research Dossier.md",
+   "state": "open",
+   "dismissed": false,
+   "style_only": false,
+   "routed": false,
+   "piece_id": null,
+   "his_words": {
+    "why_here": "We should do a piece on all the times when AI has corrected people and improved overall human knowledge.",
+    "why_like": null,
+    "would_do": null
+   },
+   "words_at": "2026-11-03T10:18:54.742119+00:00",
+   "heard": null,
+   "url": "https://docs.google.com/document/d/1QWMbt2S9w6KFMLac1tTr9StKh2pFK6t1/edit#heading=h.3ucsa860xhl4"
   },
   {
    "id": "d16fe9ff-413c-47c4-ac53-c89e40d28489",
@@ -7210,23 +8411,6 @@
    "url": "https://www.instagram.com/reel/DeZuQ7-lATg/?psln=MXA3b2c3dGVydmI2bw=="
   },
   {
-   "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
-   "name": "youtube_oEODyXtV49M.mp4",
-   "state": "piece",
-   "dismissed": false,
-   "style_only": false,
-   "routed": true,
-   "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
-   "his_words": {
-    "why_here": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
-    "why_like": null,
-    "would_do": null
-   },
-   "words_at": "2026-10-31T16:39:19.97954+00:00",
-   "heard": null,
-   "url": "https://youtube.com/shorts/oEODyXtV49M?is=q2ENp9Z-Kb3iFARU"
-  },
-  {
    "id": "f6327ce0-a414-4365-98df-635c1780523c",
    "name": "youtube_wSsJbXzp3DY.mp4",
    "state": "piece",
@@ -7242,6 +8426,23 @@
    "words_at": "2026-10-31T16:39:19.97954+00:00",
    "heard": "I'm not even >> [music] >> Ooh, I'm a fool. I'm a fool. >> [music] >> I'm a fool. >> [music]",
    "url": "https://youtube.com/shorts/wSsJbXzp3DY?is=NrD7qIf-brI3ZA4n"
+  },
+  {
+   "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
+   "name": "youtube_oEODyXtV49M.mp4",
+   "state": "piece",
+   "dismissed": false,
+   "style_only": false,
+   "routed": true,
+   "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+   "his_words": {
+    "why_here": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
+    "why_like": null,
+    "would_do": null
+   },
+   "words_at": "2026-10-31T16:39:19.97954+00:00",
+   "heard": null,
+   "url": "https://youtube.com/shorts/oEODyXtV49M?is=q2ENp9Z-Kb3iFARU"
   },
   {
    "id": "7f43c6b5-a468-40f3-ad66-c988cdc16072",
@@ -7567,6 +8768,19 @@
    "verdict": "next_week"
   },
   {
+   "text": "Which of your habits will cost you your job once AI is at work? Which of your habits will cost you your job once AI is at work? Him to camera asking which of your habits will cost you your job, then naming three habits that do and the one that saves it. A confronting minute to camera on the habits that cost a job once AI is at work, and the one that keeps it. You can't sack an AI, so bosses keep the people who check its work and own the result, and IBM's numbers show most workers haven't noticed.",
+   "covers": [
+    "701a2c55-7400-4dc8-99cb-d6001147ae16",
+    "ccbe548e-9c51-4e7d-819b-f629c7e2ddc9",
+    "701a2c55-7400-4dc8-99cb-d6001147ae16"
+   ],
+   "urls": [],
+   "week": "2026-11-16",
+   "day": "tue",
+   "id": "701a2c55-7400-4dc8-99cb-d6001147ae16",
+   "verdict": null
+  },
+  {
    "text": "Your AI thinks it's the best. Guess who told it. Six cards. Cover: a robot proudly pressing an I'M THE BEST sticker onto its own chest, a sheet of the same stickers on the desk, while the office behind it is broken and on fire. Then the post-Enron auditor rule, Home Depot (Google answers, OpenAI judges), Microsoft (GPT writes, Claude checks), the study in one line, and the rule on the last card above Follow for more. Six cards. After the Enron scandal, US rules said an accounting firm may not check its own work. The biggest AI users now hold their AI to the same rule. Home Depot has OpenAI's AI judge the answers Google's AI gives its customers. Microsoft has Claude, made by Anthropic, check research written by OpenAI's GPT, and says the reports came out better for it. The reason: researchers found an AI rates its own writing higher than people do. The rule for Monday: the AI that did the work never signs it off.",
    "covers": [],
    "urls": [],
@@ -7666,7 +8880,13 @@
   {
    "text": "AI found a mistake in a maths proof from 1986, its makers say. Four cards. Axiom says its AI agents spent 24 days rewriting about 15,000 pages of famous maths in a form a computer can check, and found counterexamples to a step in a proof from 1986. Axiom says its AI agents checked a 15,000-page piece of maths and found a mistake in a proof from 1986. Good news that shows what AI does well with a strict checker beside it.",
    "covers": [],
-   "urls": [],
+   "urls": [
+    "https://www.bbc.com/news/articles/cx24njzzkgjo",
+    "https://newscenter.lbl.gov/2024/12/04/ai-helps-researchers-dig-through-old-maps-to-find-lost-oil-and-gas-wells/",
+    "https://arxiv.org/abs/2605.20695",
+    "https://hyperallergic.com/ai-company-says-it-has-outsmarted-caravaggio-experts/",
+    "https://www.lunduniversity.lu.se/article/ai-support-breast-cancer-screening-fewer-missed-cancer-cases"
+   ],
    "week": "2026-11-09",
    "day": "sat",
    "id": "oldproof",
@@ -7852,6 +9072,805 @@
    "verdict": "approve"
   }
  ],
+ "recent_posts": [
+  {
+   "week": "2026-11-16",
+   "day": "mon",
+   "date": "2026-11-16",
+   "key": "piece:8287846b-6618-4a19-9fb8-23ad4eca2718",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "follow.the.money",
+   "title": "Oracle files to sell $20B in new stock, bonds to finance AI buildout",
+   "words": "Oracle files to sell $20B in new stock, bonds to finance AI buildout Oracle is raising $20 billion more to build for AI on top of $125 billion of debt, and says customer prepayments are part of how it gets to positive cash flow in 2028: a cloud supplier asking you to pay up front may be asking you to fund its build. Headline: Oracle is borrowing to build AI, and its customers' prepayments are part of the plan. Hook: \"One of the world's biggest software companies is selling $10 billion of shares and $10 billion of bonds in a single day.\" The chain: AI demand needs data centres, data centres need cash before revenue, Oracle already owes about $125 billion and sits one notch above junk, so it raises more and leans on vendor financing, customer hardware and customer prepayments, and expects positive free cash flow only in the second half of 2028. What's actually going on: the AI build is being funded by lenders, shareholders and, quietly, customers. Where we land: this money is real only if the demand arrives on time, and the 2028 date is the constraint that decides it.",
+   "stage": "branded",
+   "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+   "item": null,
+   "primary": "https://www.cnbc.com/2026/11/02/oracle-files-to-sell-20-billion-in-new-stock-bonds-to-finance-ai-buildout.html",
+   "urls": [
+    "https://www.cnbc.com/2026/11/02/oracle-files-to-sell-20-billion-in-new-stock-bonds-to-finance-ai-buildout.html"
+   ],
+   "labels": [
+    "CNBC, 2 Nov 2026"
+   ]
+  },
+  {
+   "week": "2026-11-16",
+   "day": "tue",
+   "date": "2026-11-17",
+   "key": "piece:b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "mind.the.gap",
+   "title": "OpenAI pledges to pay for data center power after election highlights AI concerns",
+   "words": "OpenAI pledges to pay for data center power after election highlights AI concerns OpenAI pledged to solicit community input around AI data centers, publish construction plans and protect ratepayers. OpenAI pledges to pay for data center power after election highlights AI concerns",
+   "stage": "approved",
+   "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+   "item": null,
+   "primary": null,
+   "urls": [],
+   "labels": []
+  },
+  {
+   "week": "2026-11-16",
+   "day": "tue",
+   "date": "2026-11-17",
+   "key": "off-tue-701a2c55-7400-4dc8-99cb-d6001147ae16",
+   "type": "post",
+   "kind": "voiceover",
+   "kind_label": "Voiceover short",
+   "title": "Which of your habits will cost you your job once AI is at work?",
+   "words": "Which of your habits will cost you your job once AI is at work? AI can't be blamed or sacked, so the people who keep their jobs are the ones who check its work and put their own name on it, and the habits that cost jobs are waiting to be told, passing work on unchecked and blaming the computer. Him to camera asking which of your habits will cost you your job, then naming three habits that do and the one that saves it. It is uncomfortable on purpose: most viewers will recognise one of the three habits in themselves, and it ends on one thing he does from today.",
+   "stage": "approved",
+   "piece_id": null,
+   "item": "engine:2026-11-16:701a2c55-7400-4dc8-99cb-d6001147ae16",
+   "primary": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities",
+   "urls": [
+    "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities"
+   ],
+   "labels": [
+    "IBM newsroom, 21 Sep 2026: New IBM CHRO Study, AI Puts Critical Thinking at the Center of Workforce Priorities"
+   ]
+  },
+  {
+   "week": "2026-11-16",
+   "day": "wed",
+   "date": "2026-11-18",
+   "key": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "under.the.hood",
+   "title": "The labs writing everyone's code still run Salesforce",
+   "words": "The labs writing everyone's code still run Salesforce In a survey by Retool, which sells tools for building, a third of its users said they had already swapped a software subscription for something they built, and Starbucks is building AI tools that could replace some of a $400 million software bill: the build-or-buy choice now turns on who maintains the thing, not who writes it. Headline: Everyone thinks they can vibe code their way out of the software bill. Hook: \"Starbucks spends about $400 million a year on software, and it's building AI tools that could replace some of it.\" The teardown, tongue in cheek: what a home-built app is really made of, and what the subscription was quietly paying for. Both sides: the case for building (35% of the teams Retool surveyed already swapped at least one tool, mostly workflow automations and admin tools) against the case for buying (Starbucks still runs Microsoft, and someone has to maintain, secure and answer for a home-built app at 2am). What's actually going on: the price of writing software fell, and the price of owning it did not. Where we land: the line between build and buy just moved, and it moved to what you are willing to look after",
+   "stage": "branded",
+   "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+   "item": null,
+   "primary": "https://retool.com/newsroom/build-vs-buy-report-2026",
+   "urls": [
+    "https://retool.com/newsroom/build-vs-buy-report-2026"
+   ],
+   "labels": [
+    "Retool, 17 Feb 2026; Fortune, 9 Jul 2026"
+   ]
+  },
+  {
+   "week": "2026-11-16",
+   "day": "fri",
+   "date": "2026-11-20",
+   "key": "piece:c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "mind.the.gap",
+   "title": "Axiom rebuilt a 15,000-page proof in 24 days with an agent swarm. The interesting part is the bug it found.",
+   "words": "Axiom rebuilt a 15,000-page proof in 24 days with an agent swarm. The interesting part is the bug it found. Every new instrument has overturned things people were sure of, and AI with a strict checker beside it has started doing the same to maths: the facts your business repeats most are the ones most worth re-checking. Headline: AI's first big job may be finding what we got wrong. Hook: \"For 40 years, a step in one of the biggest proofs in maths did not hold, and nobody noticed.\" The chain: the microscope, DNA testing and now AI each found errors in what experts had signed off; Axiom's agents rewrote 15,000 pages so a computer could check every step, and found 34 departures from the record, one a real gap in a 1986 proof; the theorem still stands. What's actually going on: AI is a poor judge on its own and a superb auditor with a checker beside it. Where we land: the next thing to be re-checked may be something you were taught as fact.",
+   "stage": "approved",
+   "piece_id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+   "item": null,
+   "primary": "https://axiommath.ai/research/the-enormous-theorem-formalized/",
+   "urls": [
+    "https://axiommath.ai/research/the-enormous-theorem-formalized/"
+   ],
+   "labels": [
+    "Axiom, 26 Oct 2026"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "mon",
+   "date": "2026-11-09",
+   "key": "piece:b358e788-209f-427b-a84d-1f79a8ebb430",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "follow.the.money",
+   "title": "When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; Disney is bidding mil",
+   "words": "When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; Disney is bidding mil If an AI company you rely on goes bust, its technology is sold to the highest bidder and the people who used it get nothing from the sale. When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; Disney is bidding millions for what is left; the users get nothing.",
+   "stage": "live",
+   "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+   "item": null,
+   "primary": null,
+   "urls": [],
+   "labels": []
+  },
+  {
+   "week": "2026-11-09",
+   "day": "tue",
+   "date": "2026-11-10",
+   "key": "off-tue-shell",
+   "type": "post",
+   "kind": "meme",
+   "kind_label": "Meme",
+   "title": "Character.AI went bust. Here is who got what.",
+   "words": "Character.AI went bust. Here is who got what. Three cards. Google got the brains for $2.7 billion in 2024. Disney opened the bidding at $20 million for what was left. The users got nothing from the sale. The gap between $2.7 billion and nothing is the whole story, in one swipe.",
+   "stage": "live",
+   "piece_id": null,
+   "item": "engine:2026-11-09:shell",
+   "primary": "https://techcrunch.com/2026/10/13/just-5-years-in-interactive-chatbot-platform-character-ai-files-for-bankruptcy/",
+   "urls": [
+    "https://techcrunch.com/2026/10/13/just-5-years-in-interactive-chatbot-platform-character-ai-files-for-bankruptcy/"
+   ],
+   "labels": [
+    "TechCrunch, 13 Oct 2026"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "tue",
+   "date": "2026-11-10",
+   "key": "off-tue-mcpskin",
+   "type": "post",
+   "kind": "voiceover",
+   "kind_label": "Voiceover short",
+   "title": "Your AI was reading the whole phone book to make one call.",
+   "words": "Your AI was reading the whole phone book to make one call. A voiceover with moving graphics. An AI agent loads the manual for every tool it might use before it starts, like reading a phone book to make one call. Anthropic had it write a few lines of code to fetch only what it needed, and one task fell from 150,000 tokens to 2,000. The phone book picture makes a technical change obvious, and the number is the maker's own. I like this. Let's build on the tired robot reading a giant phone directory idea on the front and then a more infographicy amusing explainer of how tool calls actually work and what that means in simple terms for efficiency.",
+   "stage": "approved",
+   "piece_id": null,
+   "item": "engine:2026-11-09:mcpskin",
+   "primary": "https://www.anthropic.com/engineering/code-execution-with-mcp",
+   "urls": [
+    "https://www.anthropic.com/engineering/code-execution-with-mcp"
+   ],
+   "labels": [
+    "Anthropic engineering, 4 Nov 2025"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "tue",
+   "date": "2026-11-10",
+   "key": "off-tue-homework",
+   "type": "post",
+   "kind": "meme",
+   "kind_label": "Meme",
+   "title": "Home Depot makes its AIs mark each other's homework.",
+   "words": "Home Depot makes its AIs mark each other's homework. Two panels. Panel one: a pupil marking their own test with a big tick. Panel two: a robot labelled Google writes the answer, and a robot labelled OpenAI marks it. Everyone knows why you never mark your own test, and a huge company runs its AI on that rule. Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real?",
+   "stage": "live",
+   "piece_id": null,
+   "item": "engine:2026-11-09:homework",
+   "primary": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot",
+   "urls": [
+    "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+   ],
+   "labels": [
+    "VentureBeat, interview with Home Depot CIO Angie Brown"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "wed",
+   "date": "2026-11-11",
+   "key": "piece:36886e0b-4b32-473b-be72-b0aef31fccef",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "under.the.hood",
+   "title": "AI is already inside the songs people have on repeat, hidden in the credits. Movin' To The Sun started as a Suno demo, was rebuilt by HUGEL",
+   "words": "AI is already inside the songs people have on repeat, hidden in the credits. Movin' To The Sun started as a Suno demo, was rebuilt by HUGEL AI is already inside songs people have on repeat, hidden in the credits, and music is the first industry deciding in public who gets credit and paid when AI did one step of the work. Headline: You have probably danced to a song that started as an AI demo. Hook: your two saved clips, played with their sound on. Movin' To The Sun reached the UK top two, and its AI origins put it in a Grammy fight. What's actually going on: the question stops being AI music or human music and becomes which step AI did and whose name is on the credits. Where we land: every business using AI will face the same credit and pay question, and music is answering it first.",
+   "stage": "live",
+   "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+   "item": null,
+   "primary": "https://edm.com/?p=271236",
+   "urls": [
+    "https://edm.com/?p=271236"
+   ],
+   "labels": [
+    "EDM.com, 26 Sep 2026; Official Charts; your research folder"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "thu",
+   "date": "2026-11-12",
+   "key": "off-thu-gitbroke",
+   "type": "post",
+   "kind": "explainer",
+   "kind_label": "Explainer",
+   "title": "Anthropic's AI wrote so much code Git could not keep up.",
+   "words": "Anthropic's AI wrote so much code Git could not keep up. Five cards. In May Anthropic merged about 2,500 code changes a day; by September it was over 30,000. Seven people spent five months building a replacement made for AI agents. One bar that runs off the card shows the change faster than any sentence. There are other replacements emerging for Git as well and this should cover that topic as to why that's happening.",
+   "stage": "live",
+   "piece_id": null,
+   "item": "engine:2026-11-09:gitbroke",
+   "primary": "https://www.theregister.com/a/5302943",
+   "urls": [
+    "https://www.theregister.com/a/5302943"
+   ],
+   "labels": [
+    "The Register, Oct 2026 (Anthropic Scion)"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "date": "2026-11-13",
+   "key": "piece:f3fcd5e1-573e-4692-a413-db7c5823a10e",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "mind.the.gap",
+   "title": "Meta staff were ranked by AI use. They gamed it.",
+   "words": "Meta staff were ranked by AI use. They gamed it. Companies told staff to use more AI and started counting it, so people found ways to burn AI without getting more done; now Amazon says the count itself is the problem. Headline: Companies started ranking staff by how much AI they burn. You can guess what happened next. Hook: \"The story goes that a city once paid a bounty for every dead cobra, so people started breeding cobras.\" Then the modern version: usage leaderboards, a founder who ran up about $10 million of AI in a month and said not all of it was useful, and Amazon telling its own engineers that \"tokenmaxxing is at odds with frugality\". What's actually going on: whatever you count, people learn to produce. Where we land: count what got done, never how much AI it took.",
+   "stage": "live",
+   "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+   "item": null,
+   "primary": "https://www.aboutamazon.com/news/company-news/amazon-software-engineer-role-guideline-ai",
+   "urls": [
+    "https://www.aboutamazon.com/news/company-news/amazon-software-engineer-role-guideline-ai"
+   ],
+   "labels": [
+    "Amazon's own post (undated; quoted 28 Oct 2026); The Register, 21 Oct 2026"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "date": "2026-11-13",
+   "key": "off-fri-beststicker",
+   "type": "post",
+   "kind": "explainer",
+   "kind_label": "Explainer",
+   "title": "Your AI thinks it's the best. Guess who told it.",
+   "words": "Your AI thinks it's the best. Guess who told it. Six cards. Cover: a robot proudly pressing an I'M THE BEST sticker onto its own chest, a sheet of the same stickers on the desk, while the office behind it is broken and on fire. Then the post-Enron auditor rule, Home Depot (Google answers, OpenAI judges), Microsoft (GPT writes, Claude checks), the study in one line, and the rule on the last card above Follow for more. Everyone knows why an auditor can't sign off its own work; the sticker makes the AI version a joke before it is a rule.",
+   "stage": "scheduled",
+   "piece_id": null,
+   "item": "engine:2026-11-09:beststicker",
+   "primary": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot",
+   "urls": [
+    "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+   ],
+   "labels": [
+    "VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); GeekWire, 30 Mar 2026 (Microsoft Critique); NeurIPS 2024 study on AI judges; SEC auditor independence rules, Jan 2003"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "date": "2026-11-13",
+   "key": "off-fri-povteach",
+   "type": "post",
+   "kind": "meme",
+   "kind_label": "Meme",
+   "title": "POV: your AI agent using your computer without being set up properly by you",
+   "words": "POV: your AI agent using your computer without being set up properly by you The short you saved on 3 Nov, unchanged. Above it, your caption word for word: \"POV: your AI agent using your computer without being set up properly by you\". A credit line names Geek Creative Agency. Anyone who has let an AI agent loose on their computer knows the feeling of watching it go wrong.",
+   "stage": "live",
+   "piece_id": null,
+   "item": "engine:2026-11-16:povteach",
+   "primary": null,
+   "urls": [],
+   "labels": [
+    "Your saved short (Geek Creative Agency), 3 Nov"
+   ]
+  },
+  {
+   "week": "2026-11-09",
+   "day": "sat",
+   "date": "2026-11-14",
+   "key": "off-sat-oldproof",
+   "type": "post",
+   "kind": "good_news",
+   "kind_label": "Good news",
+   "title": "AI found a mistake in a maths proof from 1986, its makers say.",
+   "words": "AI found a mistake in a maths proof from 1986, its makers say. Four cards. Axiom says its AI agents spent 24 days rewriting about 15,000 pages of famous maths in a form a computer can check, and found counterexamples to a step in a proof from 1986. A 40-year-old mistake found by AI is a story people retell. Real-world stories only, but with a hilarious generated cover page",
+   "stage": "live",
+   "piece_id": null,
+   "item": "engine:2026-11-09:oldproof",
+   "primary": "https://axiommath.ai/research/the-enormous-theorem-formalized/",
+   "urls": [
+    "https://axiommath.ai/research/the-enormous-theorem-formalized/"
+   ],
+   "labels": [
+    "Axiom, The enormous theorem formalized"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "mon",
+   "date": "2026-11-02",
+   "key": "piece:9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "follow.the.money",
+   "title": "Anthropic's Own Hiring Data Is the Most Honest Labour Market Report Published This Year",
+   "words": "Anthropic's Own Hiring Data Is the Most Honest Labour Market Report Published This Year The company that makes Claude has cut juniors from 27% of its technical hires to 9%, while Disney pays $60 million a year for 66 experienced AI staff: if your juniors learn by doing work AI now does, decide how your next seniors will be trained, because buying them in is getting dear. Two threads, one ladder. Anthropic's own numbers show far fewer juniors hired, and its staff's AI agents out-working them six to one by August. In the same fortnight Disney offered about $900,000 a year per head for Character.AI's experienced team. The bottom rung is going and the top rung is getting dearer.",
+   "stage": "live",
+   "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+   "item": null,
+   "primary": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+   "urls": [
+    "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf"
+   ],
+   "labels": [
+    "Anthropic, Employment at Anthropic (its own report)"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "tue",
+   "date": "2026-11-03",
+   "key": "off-tue-claudejobs",
+   "type": "post",
+   "kind": "meme",
+   "kind_label": "Meme",
+   "title": "Tue 3 Nov, the day after Monday's piece. Four cards, 4:5. Card 1: CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS (huge yellow type, a cartoon robot holding a tiny office ladder). Card 2: The rungs junior",
+   "words": "Tue 3 Nov, the day after Monday's piece. Four cards, 4:5. Card 1: CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS (huge yellow type, a cartoon robot holding a tiny office ladder). Card 2: The rungs junior Tue 3 Nov, the day after Monday's piece. Four cards, 4:5. Card 1: CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS (huge yellow type, a cartoon robot holding a tiny office ladder). Card 2: The rungs juniors used to learn on are the ones AI does first (the ladder with its bottom rungs missing). Card 3: So who trains the seniors of 2030? (an empty chair at the top). Card 4: The full story is on Monday's video (Monday's cover). Go for it, visual quality but not dip beneath the video production quality",
+   "stage": "approved",
+   "piece_id": null,
+   "item": "engine:2026-11-02:claudejobs",
+   "primary": null,
+   "urls": [],
+   "labels": [
+    "Meme"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "tue",
+   "date": "2026-11-03",
+   "key": "off-tue-translator",
+   "type": "post",
+   "kind": "meme",
+   "kind_label": "Meme",
+   "title": "Tue 3 Nov. Your idea (28 Oct): the translator scene you saved, reskinned for when your AI talks to your customer's AI. Two identical robots across a table, each insisting the other is the translator,",
+   "words": "Tue 3 Nov. Your idea (28 Oct): the translator scene you saved, reskinned for when your AI talks to your customer's AI. Two identical robots across a table, each insisting the other is the translator, Tue 3 Nov. Your idea (28 Oct): the translator scene you saved, reskinned for when your AI talks to your customer's AI. Two identical robots across a table, each insisting the other is the translator, forty minutes to agree a refund nobody asked for, one human in the corner checking his watch. Subtitles at the fast pace you saved. Format credited to the original clip; none of its footage is used. \"POV: your AI agent trying to communicate with your customer's AI agent\" above the video",
+   "stage": "approved",
+   "piece_id": null,
+   "item": "engine:2026-11-02:translator",
+   "primary": null,
+   "urls": [],
+   "labels": [
+    "Meme"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "wed",
+   "date": "2026-11-04",
+   "key": "piece:b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "under.the.hood",
+   "title": "Claude Duet's Approval Gate Is the Governance Pattern Every Enterprise Agent Should Copy",
+   "words": "Claude Duet's Approval Gate Is the Governance Pattern Every Enterprise Agent Should Copy Anthropic's new assistant reads, drafts and prepares on its own, then waits for your yes before it sends, pays, signs or deletes: before any assistant touches your work accounts, check which of those four it can do without asking you. Take apart Claude Duet, Anthropic's always-on assistant for small business owners: what it does alone, what it must ask you first, what it refuses even with your yes, held against a three-question test anyone can use. Does it reach the outside world? Can it be undone? Does it set the standard? New since the last two Wednesdays: it is the first of these assistants built around asking first, and aimed at running a business.",
+   "stage": "live",
+   "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+   "item": null,
+   "primary": "https://claude.com/resources/articles/claude-duet",
+   "urls": [
+    "https://claude.com/resources/articles/claude-duet"
+   ],
+   "labels": [
+    "Anthropic, Introducing Claude Duet, 21 Oct 2026 (the company's own description)"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "thu",
+   "date": "2026-11-05",
+   "key": "off-thu-puppy",
+   "type": "post",
+   "kind": "explainer",
+   "kind_label": "Explainer",
+   "title": "Thu 5 Nov, the day after Wednesday's 'AI now acts first' piece. Your idea (28 Oct): a clean, well-lit to-camera 1-2-3 with fast subtitle builds and a strong thumbnail. About 40 seconds. Your AI is a p",
+   "words": "Thu 5 Nov, the day after Wednesday's 'AI now acts first' piece. Your idea (28 Oct): a clean, well-lit to-camera 1-2-3 with fast subtitle builds and a strong thumbnail. About 40 seconds. Your AI is a p Thu 5 Nov, the day after Wednesday's 'AI now acts first' piece. Your idea (28 Oct): a clean, well-lit to-camera 1-2-3 with fast subtitle builds and a strong thumbnail. About 40 seconds. Your AI is a puppy. One: it wants to please you. Two: so it tells you what you want to hear. Three: so ask it for the best case against your idea. Made to the visual quality and feeling of the short you saved on 31 Oct. Good, but let's do a piece on the proactive agents and literally give instructions as I gave my friend on how to have our AI tool set its own spending and sending limits, given proactive personal assistants are coming",
+   "stage": "approved",
+   "piece_id": null,
+   "item": "engine:2026-11-02:puppy",
+   "primary": null,
+   "urls": [],
+   "labels": [
+    "Short"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "day": "fri",
+   "date": "2026-11-06",
+   "key": "piece:7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+   "type": "piece",
+   "kind": "piece",
+   "kind_label": "mind.the.gap",
+   "title": "Where an AI was built is starting to decide what it says no to: ask Claude, then a Chinese model, the same thing, and the answers split by w",
+   "words": "Where an AI was built is starting to decide what it says no to: ask Claude, then a Chinese model, the same thing, and the answers split by w AI model behavior is increasingly shaped by the political origin of its creators, with Chinese-owned chatbots like DeepSeek showing measurably higher rates of refusal, government-aligned answers, or factual errors on sensitive topics, making 'where was this built' a practical question for anyone relying on these tools. Where an AI was built is starting to decide what it says no to: ask Claude, then a Chinese model, the same thing, and the answers split by where the model was built.",
+   "stage": "live",
+   "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+   "item": null,
+   "primary": null,
+   "urls": [],
+   "labels": []
+  }
+ ],
+ "earlier_options": [
+  {
+   "week": "2026-11-16",
+   "day": "mon",
+   "id": "941c3147-a010-4ac5-a7bf-0bdd67c2a323",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "mon",
+   "id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "mon",
+   "id": "34d08cbb-35ca-4140-ba00-cf673cdc82c3",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "mon",
+   "id": "25eb28e1-928a-43bd-8aa8-18bb72174d89",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "wed",
+   "id": "a57cf3eb-d957-489a-8939-321c3d54b9b7",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "wed",
+   "id": "db9f9f6a-1092-49be-8024-f335e060305a",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "wed",
+   "id": "0e7bb83f-3ad2-495e-9f7c-8000e0c074bd",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "wed",
+   "id": "902c3db7-41e2-4cd9-9ac6-b5bca71577f1",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "fri",
+   "id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "fri",
+   "id": "388c764e-318d-4225-a931-d117a47f13ad",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "fri",
+   "id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "fri",
+   "id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+   "main": true
+  },
+  {
+   "week": "2026-11-16",
+   "day": "tue",
+   "id": "infosys",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "tue",
+   "id": "burntokens",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "tue",
+   "id": "fuelgauge",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "tue",
+   "id": "proactiveai",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "tue",
+   "id": "auditrule",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "tue",
+   "id": "frenemies",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "tue",
+   "id": "701a2c55-7400-4dc8-99cb-d6001147ae16",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "thu",
+   "id": "fortytoone",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "thu",
+   "id": "lookalikes",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "thu",
+   "id": "tinyfix",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "thu",
+   "id": "swarmdeal",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "thu",
+   "id": "ownref",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "wed",
+   "id": "b38fa06d-e09e-4c3f-8218-638a908c9c72",
+   "main": true
+  },
+  {
+   "week": "2026-11-09",
+   "day": "wed",
+   "id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+   "main": true
+  },
+  {
+   "week": "2026-11-09",
+   "day": "wed",
+   "id": "054159ab-9159-4a7c-9e5e-923d7e99a433",
+   "main": true
+  },
+  {
+   "week": "2026-11-09",
+   "day": "wed",
+   "id": "428d8b21-2b59-4cfc-ba70-8c38b3fe1cc3",
+   "main": true
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "id": "56bb9c22-c813-47c1-bf9b-751288c60096",
+   "main": true
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+   "main": true
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "id": "941c3147-a010-4ac5-a7bf-0bdd67c2a323",
+   "main": true
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+   "main": true
+  },
+  {
+   "week": "2026-11-09",
+   "day": "tue",
+   "id": "shell",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "tue",
+   "id": "mcpskin",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "tue",
+   "id": "homework",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "tue",
+   "id": "quoteline",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "wed",
+   "id": "tablefortwo",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "thu",
+   "id": "gitbroke",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "thu",
+   "id": "phonehome",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "thu",
+   "id": "burntokens",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "thu",
+   "id": "otherside",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "thu",
+   "id": "agentnotsetup",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "thu",
+   "id": "beststicker",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "sat",
+   "id": "spotai",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "sat",
+   "id": "infosys",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "sat",
+   "id": "oldproof",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "sat",
+   "id": "goodnews",
+   "main": false
+  },
+  {
+   "week": "2026-11-16",
+   "day": "sat",
+   "id": "goodnews-one",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "fri",
+   "id": "povteach",
+   "main": false
+  },
+  {
+   "week": "2026-11-09",
+   "day": "sat",
+   "id": "goodnews",
+   "main": false
+  },
+  {
+   "week": "2026-11-02",
+   "day": "sat",
+   "id": "aipassports",
+   "main": false
+  },
+  {
+   "week": "2026-11-02",
+   "day": "sat",
+   "id": "goodnews",
+   "main": false
+  },
+  {
+   "week": "2026-11-02",
+   "day": "sun",
+   "id": "samequestion",
+   "main": false
+  },
+  {
+   "week": "2026-11-02",
+   "day": "sun",
+   "id": "weekin3",
+   "main": false
+  },
+  {
+   "week": "2026-11-02",
+   "day": "thu",
+   "id": "actsfirst",
+   "main": false
+  },
+  {
+   "week": "2026-11-02",
+   "day": "thu",
+   "id": "puppy",
+   "main": false
+  },
+  {
+   "week": "2026-11-02",
+   "day": "tue",
+   "id": "claudejobs",
+   "main": false
+  },
+  {
+   "week": "2026-11-02",
+   "day": "tue",
+   "id": "translator",
+   "main": false
+  }
+ ],
+ "option_status": {
+  "idea:25eb28e1-928a-43bd-8aa8-18bb72174d89": "open",
+  "idea:32ba9da8-3ed8-4e50-b923-e6358cc481e3": "open",
+  "idea:82e8a5a8-95bf-4b92-bbab-08bde0c0d704": "open",
+  "idea:85ef591c-5e60-4e77-b9e8-f0215786e463": "open",
+  "off:tue:renewal": "open",
+  "off:tue:adwait": "open",
+  "off:tue:selfedit": "open",
+  "off:tue:buildbuy": "open",
+  "idea:94eea865-1097-4eba-85db-7bf29a431c1e": "open",
+  "idea:8c610414-e28b-4f4f-a535-bd85f0c827ec": "open",
+  "idea:bf0fddae-2fcf-4687-9079-190729234ed3": "open",
+  "idea:86c8a191-bd5b-4302-be00-2f5dea40561b": "open",
+  "off:thu:fortytoone": "revised",
+  "off:thu:designfight": "open",
+  "off:thu:lostcity": "open",
+  "off:thu:deciders": "open",
+  "idea:701a2c55-7400-4dc8-99cb-d6001147ae16": "open",
+  "idea:388c764e-318d-4225-a931-d117a47f13ad": "open",
+  "idea:d5a0ab6c-b7b8-4c1b-9e50-73c80e452833": "open",
+  "idea:87bbc5f0-1217-4e20-9150-ce3723a19c88": "open",
+  "off:sat:goodnews": "open",
+  "off:sat:builditself": "open",
+  "off:sat:goodworker": "open",
+  "off:sat:salesagent": "open"
+ },
  "outcomes": {
   "filed": [
    {
@@ -8170,7 +10189,7 @@
   {
    "id": "STORY_ARC",
    "name": "One story, start to finish",
-   "text": "Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes as SCRIPT_CLOSE says, after the call: the one thing Krish would do, then where the full deep dive is; it never ends on the number.",
+   "text": "Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes as SCRIPT_CLOSE says, after the call: the one thing Krish would do, then where the full story is free to read; it never ends on the number.",
    "on": "2026-10-06"
   }
  ]
