@@ -81,7 +81,7 @@ A failover is a manual operator action. Never infer that one is needed, or that 
 1. **Primary.** `scripts/runner.ps1 -Mode status` must show zero pending and zero conflicted receipt journals, zero pending and zero conflicted project journals, and no active command. Then `Stop-ScheduledTask -TaskName "Mindmake Video Studio Runner"` and `Disable-ScheduledTask -TaskName "Mindmake Video Studio Runner"`. `scripts/runner.ps1 -Mode stop-preflight` must return exactly `"active": false`. If the primary machine is lost and cannot be inspected, stop here: its pending receipts and leases can be finished only by it.
 2. **Cloud, read-only.** The primary's heartbeat row stops advancing (an idle runner heartbeats about every five seconds, so a minute of silence is decisive). There are 0 `queued` or `leased` rows in `video_studio_commands`, and 0 claimable production briefs in `content_ideas.transformed_outputs.production_briefs` (status `ready_for_studio`, or `leased` with an expired lease).
 3. **Standby.** `Enable-ScheduledTask` and `Start-ScheduledTask` for the same task name. `scripts/runner.ps1 -Mode status` must show `active: true`, the exact expected commit, source provenance `verified`, Drive `ready` and zero conflicts, and the standby's heartbeat row must be fresh.
-4. **Switch the active role** (once the runner roles are live, below). Until this step the standby heartbeats and is leased nothing. In Control Center, or with `POST /api/video-studio/runner-roles`, switch the active role from the primary's hash to the standby's, with a reason. The switch is refused unless the primary has been silent for a minute, its last heartbeat reported no pending receipts and no active command, no command is queued or leased to it (or was last leased to it), no brief is leased to it, and the standby is heartbeating idle with Drive ready. A refusal names its reason and changes nothing.
+4. **Switch the active role** (the runner roles have been live since 2026-09-30, below). Until this step the standby heartbeats and is leased nothing. In Control Center, or with `POST /api/video-studio/runner-roles`, switch the active role from the primary's hash to the standby's, with a reason. The switch is refused unless the primary has been silent for a minute, its last heartbeat reported no pending receipts and no active command, no command is queued or leased to it (or was last leased to it), no brief is leased to it, and the standby is heartbeating idle with Drive ready. A refusal names its reason and changes nothing.
 5. **Failback** is the same procedure in reverse, ending with the switch back. Afterwards the machine that is not running keeps its task disabled.
 
 The drill of 2026-09-28 followed steps 1 to 3 with an empty queue, before the roles existed: the primary was stopped and disabled, the standby started, heartbeated idle with Drive ready, claimed nothing, and was stopped and disabled again; the primary restarted healthy.
@@ -247,9 +247,10 @@ reviewed `SourceBundleV1`:
 .\scripts\studio.ps1 v2 production-brief materialize --brief-id <brief-id> --source-bundle <source-bundle.json>
 ```
 
-Carousel-only briefs enter the same intake ledger and continue to visual
-direction without creating a video job. Import does not re-ideate, rewrite or
-relax the approved argument.
+Carousel-only briefs enter the same intake ledger without creating a video
+job; the Studio has had no carousel stage since 13 Nov 2026, and the carousel is
+made in a Claude session (`docs/CAROUSEL-STANDARD.md`, "How a carousel is
+made"). Import does not re-ideate, rewrite or relax the approved argument.
 
 ## Typical V2 extracted-video run
 
@@ -317,7 +318,7 @@ For source or visual calibration, create the V2 job with `--purpose calibration`
 
 ## Cloud engine recovery
 
-The control plane runs 24 scheduled jobs from `apps/control-plane/vercel.json`.
+The control plane runs 25 scheduled jobs from `apps/control-plane/vercel.json`.
 Everything here works with the Windows machine off. Only the job-based Studio runner's rendering, packaging
 and upload need it, and those wait rather than fail; ve rendering is a separate CLI path.
 
@@ -486,9 +487,12 @@ preflight proves a week early whether each machine could run it unattended.
     "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture". The overnight run is
     Codex and scripts, started by his Titles press, so the headless `claude -p` turn this used to make tested
     something the run never does, and making it from a Saturday timer was itself a scheduled Claude run.
-  - The Codex plugin companion that `ve dispatch` uses runs `node <companion> help` and offers the task route with
-    the flags dispatch passes. It never runs `task --help`: the companion reads help only as its first word, so that
-    would start a real Codex task and spend.
+  - The route `ve dispatch` starts Codex by: Windows `node.exe` and `codex.exe` are found, and
+    `node scripts/codex_thread.mjs` with no arguments prints its usage (Claude starts Codex only through
+    `scripts/codex_thread.mjs`, Ruling, Krish, 2026-11-15; the Codex plugin's companion is no longer used). It never
+    runs `open` or `send`: either would start a real Codex turn and spend.
+  - Codex's tool profile (`config/codex-profile.json`) passes its audit, and the MCP servers of the Codex that runs
+    cards (`codex mcp list --json`, which only lists) are read for a forbidden kind, such as publish, deploy or Buffer.
   - `codex login status` says ChatGPT.
   - The weekly Codex allowance, read with `python scripts/session_token_audit.py --codex --json`, is at or under
     `ALLOWANCE_CEILING` in `scripts/velib/cards.py`.

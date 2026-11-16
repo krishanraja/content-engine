@@ -88,3 +88,6 @@ six questions it put to him).
 - Before 4 Nov 2026 no receipts existed, so the history cannot show `standard_not_read`; only incidents from now on can.
 - `brief_score` is carried when a writer gives it; no writer scores the brief yet.
 - `taste_new` compares his words with the floor's standards by shared words.
+- Its line goes into `NOW.md` on its own branch (`scripts/learning/report.py`), where every other branch writes a
+  `now-notes/` file instead. The first run's pull request (#743, the week to 15 Nov) took `NOW.md` to 14,100 bytes, over
+  the 14,000 `check:workbench` allows, so it is red and has not merged itself (16 Nov).

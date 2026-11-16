@@ -10,7 +10,7 @@ same day, which Krish supplied; this version folds in his answers of
 claims tables. Version 2 is kept verbatim at
 `docs/history/2026-09-25-CREATIVE_IDENTITY_UPGRADE_v2.md`.
 
-**Where it stands (checked 4 November 2026).** This is the plan of 25
+**Where it stands (checked 16 November 2026).** This is the plan of 25
 September, and the pack itself was never built: no `SignaturePackV1` or
 `SignatureInputsV1` exists in the code. What shipped took other shapes. The
 Call (P6) is the piece's dated prediction, read by
@@ -21,7 +21,9 @@ in place of the CSV over `investigation_claims` that P6 planned. Video is
 made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`), with
 quick-edit as the fallback until ve passes Phase 3, and licensed music comes
 from the ledger in `config/music-library.json`. Growth has made the derived
-carousels (P7) since 28 October, to `docs/CAROUSEL-STANDARD.md`. How a video
+carousels (P7) since 28 October, to `docs/CAROUSEL-STANDARD.md`, and since 13
+November every carousel is made in a Claude session with Codex building it
+(that standard's "How a carousel is made"). How a video
 looks, sounds and moves today is held by `docs/production/THE_BAR.md`, the
 brand book (through `config/ve/brand-tokens.json`), the signed motion
 standard (`docs/ve/MOTION_STANDARD.md`) and the style bank

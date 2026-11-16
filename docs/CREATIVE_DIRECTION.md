@@ -22,7 +22,7 @@ before he recorded (`docs/plans/2026-10-23-friday/creative-direction.md`). This 
 | Sunday, recording | Krish | Both takes per piece, as the direction says (on camera or voiceover). |
 | After he records | Claude | Line the takes up (`narration_diff.py`), re-time the beats to what he said, build the storyboard from real captures, put it on the day's Brief step. The storyboard shows both lead pictures as stills, the series picture from the brand book and a story object, with Claude's pick marked (`creative_direction.py choices`; Krish picked: "Choose per piece", 29 Oct). What he says off-script is his natural speech, not slips (Krish, 2026-10-26: "That's just how I talk"): propose a cut only for a serious flaw, only where it cuts cleanly, and only after hearing it. |
 | His sign-off | Krish | He signs the storyboard in his own words. The words go into `signed` with the hash of each script (`creative_direction.py hash`). His signature accepts Claude's lead-picture pick unless he ticks the other (`production_choices.lead_picture.ticked`); no storyboard waits on a tick. Then `making.py <piece> choices creative-direction.json` records the choices under test on the piece; if he has a cut open another way, `--opening` records what it used, so the making record stays the one home for these choices. |
-| Production | Claude, with Codex for named plates | On ve, Claude runs `python scripts/ve.py` from the signed spec (`docs/ve/RUNBOOK.md`), and Codex only builds the plates and library devices its cards name; it never edits a cut. On the quick-edit fallback, `produce-video` renders exactly the signed direction. Neither invents a visual, a caption, a figure or a style. A gap goes back to Claude. |
+| Production | Claude, with Codex for named plates | On ve, Claude runs `python scripts/ve.py` from the signed spec (`docs/ve/RUNBOOK.md`), and Codex only does what its cards name: art direction (candidate stills for named slots), plates and library devices, with at least one verified receipt of that work for every whole cut published from 16 Nov (`config/codex-minimum.json`); it never edits a cut. On the quick-edit fallback, `produce-video` renders exactly the signed direction. Neither invents a visual, a caption, a figure or a style. A gap goes back to Claude. |
 | Review | A reviewer who did not make the cut | Watches every cut at full size and listens across every join, against `acceptance`. Reports fact, transport and editorial status separately. |
 | The board | Claude | The day's Publish step through the piece's record, which the live board reads (`docs/PUBLISH_BOARDS.md`). |
 
@@ -37,14 +37,16 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
 ```
 
 - `style`: the script and production format he picked, from the bank, and from 9 November `style.motion` (held on the ve route by `ve lint` `motion.required`, under the signed [motion standard](ve/MOTION_STANDARD.md))
-  (`{"module", "reason"}`): the piece's one motion system from the bank's `motion` layer, 17 styles studied from
-  awesomeclaude.ai/claude-motion-graphics and rewritten on the house base (brand tokens and the design lock always win).
+  (`{"module", "reason"}`): the piece's one motion system from the bank's `motion` layer, 23 styles: 17 studied from
+  awesomeclaude.ai/claude-motion-graphics and rewritten on the house base, two built in the style lab, one from
+  keyframes and three from Krish's own cuts (brand tokens and the design lock always win).
   `creative_direction.py motion --points number,comparison --format long_video` gives a ranked shortlist: only styles
   made for that format, never one he marked not for us, his liked ones first. Each style enters `untested` and becomes
   a default only once he rates a trial on his own footage.
 - `brand`: the series, a `reference` (an approved earlier frame or board, a path or a link), the captions module
-  (`captions`, house or word, or a caption style in `caption_theme`: one of the 15 in
-  `apps/renderer/src/engine/captions/names.ts`, with `art-directed` the style Krish picked on 11 Nov 2026) and
+  (`captions`, house or word, or a caption style in `caption_theme`: one of the 27 in
+  `apps/renderer/src/engine/captions/names.ts`, with `art-directed` the style Krish picked on 11 Nov 2026; on ve,
+  `style.captions.theme` wins over it, `docs/ve/INGREDIENTS.md`) and
   `intro_sting`, always the no-sting sentence `none: this piece opens on its hook, and nothing goes before it`
   (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."). The template
   fills it; `ve lint` and the contract refuse a series sting there and any `opening_exception` (the 9 Nov episode card

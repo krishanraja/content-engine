@@ -5,7 +5,9 @@ Owner: Krish Raja
 Last verified: 2026-09-25 against `main` at `fd467e1`: every route file read,
 crons and run ledger read back from the database, guards run locally. On
 2026-11-04 the route paths, crons, guards, checks, Studio handoff and library
-limits were checked again against `main`; the run ledger was not read.
+limits were checked again against `main`; the run ledger was not read. On
+2026-11-16 the crons and the replay registry were checked again against
+`vercel.json` and `_jobs.ts`.
 
 Scope: the editorial half of this repository, everything under
 `apps/control-plane/`. The Studio half is in `docs/STUDIO.md`. Why either
@@ -291,8 +293,10 @@ comparison reads markdown link syntax as the words a reader sees
 in those words, never only in a link's address (walk log F33). A research
 dive is read once, under the names it is stored with (`query`, `findings`,
 `citations`), and skipped when dive-deeper already filed its findings as a
-material. Krish runs a check from
-the composer's "Check the facts" strip in Control Center. Piece 2 took ten
+material. Krish ran a check from
+the composer's "Check the facts" strip in Control Center; since 13 November
+2026 the composer is retired from Control Centre's rebuilt UI and opens only
+on the old app (`?ui=old`). Piece 2 took ten
 runs to pass, and the fixes each run forced are in the walk log (H12 to H14).
 
 **When the fact gate cannot reach the model** (since 2026-09-28, walk log
@@ -624,7 +628,7 @@ with or without it, so it can be applied before or after the deploy.
 
 ## Crons (`apps/control-plane/vercel.json`, all UTC)
 
-There are 24 (2026-11-04). On 2026-09-25 all 20 scheduled then had run-ledger
+There are 25 (2026-11-16). On 2026-09-25 all 20 scheduled then had run-ledger
 rows in the last seven days.
 
 | Schedule | Job | Route |
@@ -653,8 +657,9 @@ rows in the last seven days.
 | Sun 16:00 | `learning_compile` | `/api/learning/compile` |
 | hourly at :17 | `publish_watch` | `/api/publish/watch` |
 | every 10 min | `recordings_drive_inbox` | `/api/library/recordings/drive-inbox` |
+| hourly at :40 | `research_library_mirror` | `/api/research-library/sweep` |
 
-The replay registry (`api/content-engine/_jobs.ts`) has 26 entries: the 24
+The replay registry (`api/content-engine/_jobs.ts`) has 27 entries: the 25
 cron jobs, `judge_ladder` (manual only) and `aeo_ingest`. `check-run-recovery`
 passes (2026-11-04). The dashboard's copy of the schedule is `apps/control-plane/lib/contentEngineSchedule.ts`,
 checked against `vercel.json` by `check-content-engine-schedule`.
@@ -875,7 +880,8 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 16. **The split.** Control Center plans, suggests and tracks; Claude Code
     makes (Krish, 2026-10-10). The week is planned on Sunday
     (`docs/CADENCE.md`, `.agents/skills/plan-week`): a session writes each
-    day's options with `/api/week/options`, Krish picks on the publish board, and
+    day's options with `/api/week/options`, Krish approves one on the ideas board
+    (the ideas gate, `docs/PUBLISH_BOARDS.md`), and
     a narrative lock he signs starts the making. A session that starts with `piece_id: <uuid>`
     (from 29 October one `make-piece.yml` run in GitHub Actions, dispatched by
     the Sunday room or a press; for the publication Control Center sends
