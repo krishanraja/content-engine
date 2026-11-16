@@ -1154,8 +1154,72 @@
           "I want actual news items and the content we are going to use here - embedded real world images or videos (2 Nov)"
         ],
         "weekly": "good_news",
-        "stories_due": "2026-11-19",
-        "recommended": true
+        "stories_due": "2026-11-16",
+        "recommended": true,
+        "topic": "AI spotting trouble early",
+        "stories": [
+          {
+            "headline": "Dublin gets AI flood warnings up to 21 hours ahead",
+            "what": "Dublin City Council starts a trial this week of an AI system that warns of big floods. It learned from 10 years of the council's flood sensors, plus river levels, rainfall, tides and Met Éireann data. In tests on past floods it gave warnings 13 to 21 hours early.",
+            "why": "More warning means more time to move cars, block doors and get people out. Council staff check every alert before anyone acts, and people can sign up for alerts through the council's MapAlerter service.",
+            "kind": "climate",
+            "date": "2026-11-16",
+            "source": {
+              "label": "The Irish Times",
+              "url": "https://www.irishtimes.com/ireland/dublin/2026/11/16/the-most-valuable-thing-we-can-give-people-is-time-ai-to-help-provide-dublin-flood-warnings/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://www.irishtimes.com/resizer/v2/N6DZVCJJWNHXXJ3I72J2CEOESM.jpg?auth=b316a1e9b374e52e4d28dbbde3ede24aab91cb291da0701ad1383b0df0f1dd2e&smart=true&width=1024&height=683"
+            }
+          },
+          {
+            "headline": "AI reads emergency room patients' own words to spot who may get PTSD",
+            "what": "Doctors at NYU Langone in New York built an AI that reads what injured patients say about how they got hurt. In 145 patients at two trauma centres, it picked out about 95 in 100 of the people who had PTSD a month later.",
+            "why": "Only about 28 in 100 US emergency rooms check for PTSD at all. An early flag means people can get help in the first month after the injury, before many lose touch with the hospital.",
+            "kind": "health",
+            "date": "2026-11-09",
+            "source": {
+              "label": "NYU Langone Health",
+              "url": "https://nyulangone.org/news/ai-predicts-ptsd-risk-based-stories-about-what-brought-patients-emergency-room"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://media.springernature.com/lw1200/springer-static/image/art%3A10.1038%2Fs41467-026-78768-3/MediaObjects/41467_2026_78768_Fig1_HTML.png"
+            }
+          },
+          {
+            "headline": "Google's AI turns smartwatch data into a health age you can lower",
+            "what": "Google researchers built an AI that reads resting heart rate, steps, sleep and active minutes from a smartwatch and works out a health age. Among 22,748 people followed over eight years, healthy people whose health age was older than their real age were more likely to get high blood pressure, heart disease or type 2 diabetes.",
+            "why": "Heart, kidney and blood sugar trouble often starts years before you feel it. This spots the early signs and shows which habit, like more sleep or a daily walk, would help you most. It is still a research project.",
+            "kind": "health",
+            "date": "2026-11-11",
+            "source": {
+              "label": "Google Research",
+              "url": "https://research.google/blog/using-wearables-to-enable-cardiovascular-kidney-metabolic-ckm-risk-profiling-for-personalized-coaching/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://storage.googleapis.com/gweb-research2023-media/images/CKMHealth1_Overview.width-1250.png"
+            }
+          },
+          {
+            "headline": "A weather warning box with AI inside goes worldwide",
+            "what": "China's weather agency launched its MAZU box at the COP31 climate talks in Antalya, Türkiye. The box runs AI storm and flood warnings on the spot, over a cable, 5G or satellite. It is already used in eight countries, including Pakistan, Ethiopia and Sri Lanka, and has been tested in more than 50.",
+            "why": "Countries can run warnings locally, tuned to their own weather. Nepal got its own version after a deadly mudslide on its border with China.",
+            "kind": "safety",
+            "date": "2026-11-12",
+            "source": {
+              "label": "Global Times, from the China Meteorological Administration",
+              "url": "https://www.globaltimes.cn/page/202611/1374141.shtml"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://www.globaltimes.cn/Portals/0/attachment/2026/2026-07-27/182b57b8-487d-496b-95cf-0a559977b71f.jpeg"
+            }
+          }
+        ],
+        "stories_short": "4 of 5 found on 16 Nov. A fifth on the topic, checked against its source, dated 9 to 16 Nov and with a real picture of the thing itself, was not found: AlphaGenome 2 ran in last week's good news, and the FDA clearance of Bracco and Avicenna.AI's brain aneurysm software (13 Nov) has only a logo card, no picture of the software."
       },
       {
         "id": "goodnews-one",
