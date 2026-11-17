@@ -103,11 +103,20 @@ describe('after it is saved', () => {
       { send: async i => { sent.push(i as Body); return { status: 'sent' } }, now: () => '2026-11-13T09:12:05Z' })
     expect(out?.send?.status).toBe('held')
     expect(sent).toEqual([])
-    // Checked and read back by two fresh readers: sent, with his typed approval as the approval.
+    // Checked, read back by two fresh readers and at the tone floor: sent, with his typed approval as the approval.
     const sha = scriptHash(LONG)
     const ready = fakeDb({ making: { script_check: { passed: true, hashes: { long: sha },
       read_back: { long: { script_sha256: sha, found: 'nothing lost', readers: ['Reader A', 'Reader B'] } } } } })
-    const done = await afterPress(ready as any, { week: WEEK, collection: 'picks', id, body, who: OPERATOR, saved: { ok: true, revision: 1 } },
+    // Read back but never judged against his AI Music take: held (the tone floor).
+    const unjudged = await afterPress(ready as any, { week: WEEK, collection: 'picks', id, body, who: OPERATOR, saved: { ok: true, revision: 1 } },
+      { send: async i => { sent.push(i as Body); return { status: 'sent' } }, now: () => '2026-11-13T09:12:05Z' })
+    expect(unjudged?.send?.status).toBe('held')
+    expect(unjudged?.send?.error).toMatch(/tone floor/)
+    expect(sent).toEqual([])
+    const floored = fakeDb({ making: { script_check: { passed: true, hashes: { long: sha },
+      read_back: { long: { script_sha256: sha, found: 'nothing lost', readers: ['Reader A', 'Reader B'] } },
+      tone_floor: { long: { script_sha256: sha, reference_sha256: 'c8ded6f8268569a5c07ad2073f635ec07d3e556c269b28e2ca07ce6494bc2466', reader: 'a fresh reader', verdict: 'pass', why: 'at or above', at: '2026-11-13T09:00:00Z' } } } } })
+    const done = await afterPress(floored as any, { week: WEEK, collection: 'picks', id, body, who: OPERATOR, saved: { ok: true, revision: 1 } },
       { send: async i => { sent.push(i as Body); return { status: 'sent', scripts: [] } }, now: () => '2026-11-13T09:12:05Z' })
     expect(done?.send?.status).toBe('sent')
     expect(sent[0].approval).toMatchObject({ id, updated_by: OPERATOR })

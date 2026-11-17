@@ -77,6 +77,17 @@ def _short_cut_most_s():
 
 
 VERTICAL_MAX_SECONDS = _short_cut_most_s()  # inside WhatsApp Status's limit too
+
+
+def vertical_max_seconds(p):
+    """The short cut's ceiling for one piece: VERTICAL_MAX_SECONDS, or its own length when config/short-cuts.json lifts the
+    piece's short cut (short_cut.lift_for; Ruling, Krish, 2026-11-17), so the steps never tell him to expect 35 s of a 104 s cut."""
+    here = str(Path(__file__).resolve().parent)
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import short_cut
+    lift = short_cut.lift_for((p or {}).get('piece_id'))[0]
+    return max(VERTICAL_MAX_SECONDS, short_cut.most_s(lift)) if lift else VERTICAL_MAX_SECONDS
 FEATURE_NAME = '15-minute feature'  # making.CUT_NAME['feature']
 # Named so the board's YouTube tick ("YouTube (the ...)") stays the 5-minute video's alone.
 FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'
@@ -291,7 +302,7 @@ def steps(p):
                      ('Pinned comment', pinned_comment('youtube', p, q))],
         },
         {
-            'where': 'YouTube Shorts', 'tag': f'The short cut (at most {VERTICAL_MAX_SECONDS} seconds), linked to the full video',
+            'where': 'YouTube Shorts', 'tag': f'The short cut (at most {vertical_max_seconds(p)} seconds), linked to the full video',
             'why': 'Links in Shorts are not clickable, so the Short points to the full video instead.',
             'files': [short_video, vertical],
             'do': [f'Upload the tall video as a Short with the title {words_at}.',
@@ -301,7 +312,7 @@ def steps(p):
             'copy': [('Title', p.get('short_title') or p.get('youtube_title'))],
         },
         {
-            'where': 'TikTok', 'tag': f'The same short cut (at most {VERTICAL_MAX_SECONDS} seconds)',
+            'where': 'TikTok', 'tag': f'The same short cut (at most {vertical_max_seconds(p)} seconds)',
             'why': 'Links in TikTok captions are not clickable, and a clickable link in your profile needs 1,000 followers '
                    'or a business account. The video says makeyourmindup.ai out loud, so the caption only has to name it.',
             'files': [short_video, vertical],
@@ -312,7 +323,7 @@ def steps(p):
             'copy': [('Caption', with_bio_pointer(p.get('tiktok_caption') or short_caption))],
         },
         {
-            'where': 'Instagram Reels', 'tag': f'The same short cut (at most {VERTICAL_MAX_SECONDS} seconds)',
+            'where': 'Instagram Reels', 'tag': f'The same short cut (at most {vertical_max_seconds(p)} seconds)',
             'why': 'Reel captions cannot hold a clickable link, so the caption sends people to the link in your bio.',
             'files': [short_video, vertical, square],
             'do': [f'New Reel, add the tall video and paste the caption {words_at}.',
@@ -597,7 +608,12 @@ def self_test():
             failures.append(f'{where}: its words are below its steps on publish.html')
     making.FEATURES = saved_features
     tmp.cleanup()
-    checks = 34
+    wed = 'db9f9f6a-1092-49be-8024-f335e060305a'
+    if vertical_max_seconds({'piece_id': wed}) != 104 or vertical_max_seconds(sample) != VERTICAL_MAX_SECONDS or vertical_max_seconds(None) != VERTICAL_MAX_SECONDS:
+        failures.append('the short cut\'s ceiling is its own length for a piece config/short-cuts.json lifts (104 s), the house ceiling for any other')
+    if not any('at most 104 seconds' in x['tag'] for x in steps(dict(sample, piece_id=wed)) if x['where'] == 'TikTok'):
+        failures.append('a lifted piece\'s TikTok step names its own ceiling')
+    checks = 36
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1

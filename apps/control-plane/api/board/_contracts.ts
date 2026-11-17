@@ -446,6 +446,10 @@ function recordedOffday(body: Record<string, unknown>): boolean {
     && (!('script_sha256' in body) || SHA256.test(String(body.script_sha256)))
     && oneLine(body.folder_title, 200) && oneLine(body.title, 200)
     && (!('readers' in body) || Array.isArray(body.readers) && body.readers.length <= 6 && body.readers.every(r => oneLine(r, 200)))
+    // A separate reader's tone-floor verdict on these words against his AI Music short (Ruling, Krish, 2026-11-17); the server binds it
+    // to the words' hash and the reference, and holds the send without a pass.
+    && (!('tone_floor' in body) || (!!body.tone_floor && typeof body.tone_floor === 'object' && !Array.isArray(body.tone_floor)
+      && (t => oneLine(t.reader, 200) && (t.verdict === 'pass' || t.verdict === 'fail') && oneLine(t.why, 600))(body.tone_floor as Record<string, unknown>)))
 }
 // What a comment may carry beyond its words (Krish, 2026-10-21: comment on any passage of a draft, and his taps on
 // "Also changed" and "What I learned from your edits"): where in which draft and the words he picked, or one of his

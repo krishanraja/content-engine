@@ -25,6 +25,17 @@ def short_cut() -> dict:
     text = (ROOT / 'apps' / 'control-plane' / 'api' / '_houseRules.ts').read_text(encoding='utf-8')
     block = text.split('// SHORT_CUT:BEGIN', 1)[1].split('// SHORT_CUT:END', 1)[0]
     return json.loads(block[block.index('{'):block.rindex('}') + 1])
+
+
+def lifted_short_s(spec: dict) -> int | None:
+    """The seconds a 9:16 short may run when config/short-cuts.json lifts this piece's short cut (short_cut.lift_for), else None."""
+    import sys  # noqa: PLC0415
+    sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+    import short_cut as lift_config  # noqa: PLC0415
+    lift = lift_config.lift_for(spec.get('piece_id'))[0]
+    return lift_config.most_s(lift) if lift else None
+
+
 # His name, a spelling or handle of it, or a possessive of it ("KRISH'S TEST", "@TheRealKrisho", "krishraja.com").
 # Krish, 28 Oct 2026: "Remember, no content refers to Krish, ever." One pattern: copy-lint's no_name once
 # config/copy-lint.json carries it, this same regex until then. "Raja" alone and "Krishna" pass.
@@ -587,7 +598,13 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         # dialogue
         short = short_cut()
         vertical_now = cut['aspect'] == '9:16' and (spec.get('publish_day') or '') >= short['from']
-        if vertical_now and cut['max_s'] > short['most_s']:
+        lifted_s = lifted_short_s(spec) if cut['aspect'] == '9:16' else None
+        if lifted_s is not None:
+            # config/short-cuts.json lifts this piece's short cut (Ruling, Krish, 2026-11-17): it runs to its own length.
+            if cut['max_s'] > lifted_s:
+                out.append(f'dialogue.short_max {where}.max_s: this piece\'s short cut is lifted to {lifted_s} s by '
+                           'config/short-cuts.json (Ruling, Krish, 2026-11-17); the cut runs no longer')
+        elif vertical_now and cut['max_s'] > short['most_s']:
             out.append(f'dialogue.short_max {where}.max_s: a 9:16 short published from {short["from"]} is {short["most_s"]} s or '
                        'less, one idea (house rule TWO_CUTS; Ruling, Krish, 2026-11-16)')
         elif cut['aspect'] == '9:16' and cut['max_s'] > 89:
@@ -707,8 +724,39 @@ def novelty_note(spec: dict, history: list[dict] | None = None) -> str | None:
     return f"Repeats {' and '.join(repeats)} from one of the last {NOVELTY_LAST} pieces filed; say why, or change it."
 
 
+def _said_words(text: str) -> list[str]:
+    return re.findall(r"[a-z0-9]+", str(text).lower().replace('\u2019', "'").replace("'", ''))
+
+
+def title_line_lints(spec: dict, spec_path: Path) -> list[str]:
+    """title.line: a spec's title_line (the title question his intro speaks, which the title animation is keyed to) is
+    words the script says, in order, ignoring case and punctuation (house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17).
+    The script is the spec's own script.words.json beside it, else title_moment.line; with neither there is nothing to
+    check it against here, and the making record's script_check.title_line is the other witness."""
+    line = spec.get('title_line')
+    if not line:
+        return []
+    want = _said_words(line)
+    text = None
+    words_file = Path(spec_path).parent / 'script.words.json'
+    if words_file.is_file():
+        try:
+            text = (json.loads(words_file.read_text(encoding='utf-8')) or {}).get('text')
+        except (OSError, ValueError):
+            text = None
+    if not text:
+        text = (spec.get('title_moment') or {}).get('line')
+    if not text:
+        return []
+    said = _said_words(text)
+    if not want or not any(said[i:i + len(want)] == want for i in range(len(said) - len(want) + 1)):
+        return [f'title.line title_line: "{line}" is not in the script\'s spoken words; the title animation is keyed to words '
+                'he says, so title_line is the question exactly as the intro speaks it (house rule INTRO_PATTERN)']
+    return []
+
+
 def lint(spec_path: Path) -> tuple[dict | None, list[str]]:
     spec, problems = schema(spec_path)
     if spec is None:
         return None, problems
-    return spec, crew_lints(spec)
+    return spec, crew_lints(spec) + title_line_lints(spec, spec_path)

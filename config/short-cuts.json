@@ -1,0 +1,16 @@
+{
+  "_about": [
+    "A short cut longer than SHORT_CUT's 75 spoken words (house rule TWO_CUTS, since 16 Nov 2026), for one piece at a time. Ruling (Krish, 2026-11-17), typed in a Claude Code session about the Wednesday 18 Nov piece: \"The 90-second script needs to be hilarious and relatable to all, and make the viewer want to see the full 5-minute video, which is something we've not done before.\"",
+    "An entry lifts the piece's short cut from 75 spoken words to `words` (the floor stays SHORT_CUT's 45), never past SHORT_LIFT_MOST in scripts/post-pack/short_cut.py (300, about two minutes at 150 a minute), and swaps its required last sentence from the house close (SCRIPT_CLOSE_LINE) to `close`. `reason` is one line saying why; `krish` is his own typed words asking for it and `said_at` the day he typed them. Unlike config/long-cuts.json it is keyed on his words, not on a narrative-lock line, because he asked in a session. making.py scripts records the lift as script_check.short_cut, which the piece's Scripts step on the board shows, so a cut is never lifted silently.",
+    "A session adds an entry only for words Krish typed himself, copied exactly into `krish`, never a paraphrase and never its own judgment. scripts/post-pack/short_cut.py checks every entry (--check); story_check.py --piece and making.py scripts read it. Nothing else lifts the short cut."
+  ],
+  "pieces": {
+    "db9f9f6a-1092-49be-8024-f335e060305a": {
+      "words": 260,
+      "close": "The full five-minute video is on my channel.",
+      "reason": "A 90-second cut that sends viewers to the 5-minute video, as he asked.",
+      "krish": "The 90-second script needs to be hilarious and relatable to all, and make the viewer want to see the full 5-minute video, which is something we've not done before.",
+      "said_at": "2026-11-17"
+    }
+  }
+}

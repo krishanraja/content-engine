@@ -97,6 +97,12 @@ const CUT_NAME: Record<string, string> = { long: '5-minute', short: '90-second',
 // himself and signed them off in his own words.
 const READ_BACK_FOUND = 'nothing lost'
 const READ_BACK_KRISH = 'approved by Krish'
+// config/script-floor.json: the sha256 of the AI Music take each cut is judged against (tests/control-plane/teleprompter-server.test.ts
+// holds these to the file). The feature is a long cut. Ruling, Krish, 2026-11-17: the AI Music take is the tonal floor for every script.
+export const TONE_FLOOR_REFERENCE: Record<string, string> = {
+  long: 'c8ded6f8268569a5c07ad2073f635ec07d3e556c269b28e2ca07ce6494bc2466',
+  short: 'a6459ee2a98b8a059472c57a6d76129daf3fcf20d95bbd494e43f3ab9aa34a03',
+}
 const THEN = 'so nothing was sent: a session checks them (making.py scripts), has two fresh readers read them back, then '
   + 'sends exactly these words (teleprompter_send.py plan)'
 
@@ -147,6 +153,10 @@ export async function heldBecause(making: unknown, texts: Record<string, string>
         // His sign-off records his approval and never stands in for the readers, unless his words skipped them (F45).
         && ((Array.isArray(read.readers) && read.readers.length >= 2) || read.readers_skipped === true)))
     if (!heard) return `${name} has not been read back by two fresh readers, ${THEN}`
+    // The tone floor (making.py tone_floor_of): a separate reader found these exact words at or above his AI Music take.
+    const tones = isObj(check.tone_floor) ? check.tone_floor : {}, tone = tones[cut]
+    const toned = isObj(tone) && tone.script_sha256 === sha && tone.reference_sha256 === (TONE_FLOOR_REFERENCE[cut] ?? TONE_FLOOR_REFERENCE.long) && tone.verdict === 'pass'
+    if (!toned) return `${name} has not passed the tone floor (a fresh reader comparing it with his AI Music take, config/script-floor.json; making.py tone-floor), ${THEN}`
   }
   return null
 }
@@ -558,6 +568,8 @@ export async function placeOffday(db: SupabaseClient, ctx: { week: string; id: s
           passed: true, problems: [], one_cut: true, cuts: ['short'], hashes: { short: sha },
           checked_at: same && check?.checked_at ? check.checked_at : now,
           changed_at: { short: same && check?.changed_at?.short ? check.changed_at.short : now },
+          ...(isObj(body.tone_floor) ? { tone_floor: { short: { script_sha256: sha, reference_sha256: TONE_FLOOR_REFERENCE.short, reader: String(body.tone_floor.reader).slice(0, 200),
+            verdict: body.tone_floor.verdict === 'pass' ? 'pass' as const : 'fail' as const, why: String(body.tone_floor.why).slice(0, 600), at: now } } } : {}),
           ...(readers.length >= 2 ? { read_back: { short: { script_sha256: sha, at: now, by: 'week_board.py', readers, found: 'nothing lost' as const } } } : {}),
         },
       }, SERVER, now)
@@ -602,14 +614,18 @@ async function offdayRecorded(db: SupabaseClient, ctx: { week: string; id: strin
         ...(tp?.cuts?.short?.script_id ? { script_id: tp.cuts.short.script_id } : {}) }],
       approval: { id, updated_by: who, updated_at: now, body },
     }
-    let result: SendResult
-    try {
+    let result: Omit<SendResult, 'status'> & { status: SendResult['status'] | 'held' }
+    // The same tone floor the day cuts hold to (heldBecause): a pass against his AI Music short, for these exact words (Ruling, Krish, 2026-11-17).
+    const tone = (placed.making?.script_check as { tone_floor?: Body } | undefined)?.tone_floor?.short as Body | undefined
+    if (!(isObj(tone) && tone.script_sha256 === scriptHash(text) && tone.reference_sha256 === TONE_FLOOR_REFERENCE.short && tone.verdict === 'pass')) {
+      result = { status: 'held', error: `the 90-second script has not passed the tone floor (a fresh reader comparing it with his AI Music take, config/script-floor.json; making.py tone-floor), ${THEN}` }
+    } else try {
       const send = deps.send ?? (async (i: SendApprovedInput) => (await import('../_teleprompter.js')).sendApprovedScripts(i))
       result = await send(input)
     } catch (error) {
       result = { status: 'error', error: String((error as Error)?.message || error).slice(0, 300) }
     }
-    const unrecorded = result.status === 'sent' ? await recordSend(db, input, result, now).catch(() => 'the piece\'s making record could not be written') : null
+    const unrecorded = result.status === 'sent' ? await recordSend(db, input, result as SendResult, now).catch(() => 'the piece\'s making record could not be written') : null
     answer = { status: result.status, at: now, by: SERVER, date: offdayDate(week, String(body.day)),
       ...(result.folder_id ? { folder_id: result.folder_id } : {}), ...(result.scripts ? { scripts: result.scripts } : {}), ...(result.error ? { error: result.error } : {}),
       ...(result.status === 'sent' ? { recorded: !unrecorded, ...(unrecorded ? { record_error: unrecorded } : {}) } : {}) }
