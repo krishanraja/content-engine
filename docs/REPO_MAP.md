@@ -2342,6 +2342,26 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function cutIncident(place: CutPlace, v: CutVerdict): Incident | null`
 - `async function fileCutLearning(db: SupabaseClient, place: CutPlace, v: CutVerdict, now = new Date()): Promise<CutLearni…`
 
+### `apps/control-plane/api/board/_decisions.ts`
+
+Krish's decisions on a piece, read live from the records, so no session asks him for a press he has already made.
+
+- `type DecisionKey = 'lock' | 'look' | 'motion' | 'captions' | 'scripts'`
+- `interface Decision`
+- `type DecidedStep = 'story' | 'look' | 'board' | 'record'`
+- `interface PieceDecisions`
+- `const DECISIONS_RULE`
+- `interface LockState`
+- `interface ScriptsState`
+- `interface DecisionInputs`
+- `function pieceDecisions(i: DecisionInputs): PieceDecisions`
+- `function nextStep(items: Decision[]): DecidedStep | null`
+- `function decisionsText(p: PieceDecisions): string`
+- `interface FiledScript`
+- `function scriptCut(title: string): 'long' | 'short' | null`
+- `function newestScripts<M extends { id: string; title: string; role?: string | null; at?: string | null; where?: string;…`
+- `function lockRead(text: string | null | undefined): { so_what: string | null; story: string | null }`
+
 ### `apps/control-plane/api/board/_drivePosts.ts`
 
 - `const POSTS_FOLDER_ID`
@@ -2886,11 +2906,16 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: st…`
 - `function inYourWords(words: string, on: string | null, where?: string | null): string`
 - `function lockSigned(text: string | null | undefined): boolean`
+- `function lockStateOf(locks: ViewInputs['locks'], picks: Array<{ doc_id: string; body: Body }>, day: PostedDay, pieceId:…`
+- `function scriptsStateOf(picks: Array<{ doc_id: string; body: Body; updated_by?: string | null; updated_at?: string | nu…`
+- `function weekDecisions(i: ViewInputs, days: Array<{ day: PostedDay; pieces: Array<{ id: string; approval?: unknown }> }…`
 - `function postingStarted(live: Pick<LiveDay, 'steps'>): boolean`
 - `function backupPrompt(week: string, d: DayView): string`
 - `function buildView(i: ViewInputs): WeekView`
 - `function viewProblems(v: WeekView): string[]`
 - `async function branchSha(f: Fetcher, env: Record<string, string | undefined>, branch: string): Promise<string | null | …`
+- `async function readPieceDecisions(db: SupabaseClient, pieceId: string, env: Record<string, string | undefined> = proces…`
+- `async function readFiledScripts(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string…`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
 - `async function readWeekIdeas(week: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
 - `function growthLiveLine(posts: GrowthPost[]): string`
@@ -2965,6 +2990,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function offdayHead(route: MakeRoute | null): string`
 - `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
 - `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
 - `function primaryUrl(raw: Body | null, fallback: unknown = null): string | null`
 - `function citesOf(raw: Body | null): { urls: string[]; parts: string[] }`
@@ -2986,7 +3012,7 @@ What every prompt the board copies out says about reporting back, and what the b
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
-- `function withWriteBack<T extends DayLike>(week: string, days: T[]): T[]`
+- `function withWriteBack<T extends DayLike>(week: string, days: T[], decisions: Record<string, PieceDecisions> = {}): T[]`
 - `interface ViewSession`
 - `interface ViewMaterial`
 - `interface Overlay`
@@ -3246,6 +3272,7 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 - `const config`
 - `type LibraryCopy`
+- `type DecisionsReader`
 - `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy, readLink?: () => Promise<LinkReader | nu…`
 - `export default createStoreHandler( async () => (await import('../_supabase.`
 
