@@ -1,0 +1,3 @@
+Status: iso_world (card ve-style-5-iso-world) built by Codex on Lorimer and checked by Claude: its acceptance passed, and drawing its fixture in brand colours found five faults its tests did not (labels cream on cream faces, a picture pasted across a block's edge, exit blocks falling through the ground and out of the safe area, the view off centre in both shapes, a fill growing a block off frame), each fixed with a test that fails on the old code. `isometric-world` stays `needs_device` until Krish's yes.
+Next: render iso_world's test cut on the house test take, measure it with `ve pace` beside his references, get a `ve-critic` verdict, then put it to Krish at Gate 2.
+North Star check (2026-11-17): holds.
