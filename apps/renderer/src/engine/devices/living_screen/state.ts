@@ -39,3 +39,22 @@ export function screenState(object:EngineObject,events:readonly EngineEvent[],fr
     expected:draw?progress(frame-draw.atFrame,45,t=>t):0,
     real:draw?progress(frame-draw.atFrame-45,27,t=>t):0}
 }
+
+// Ambient UI events are derived from enter, bounded by the object's lifetime and
+// replayed through the same event clock as editorial cues. They never alter data.
+export function activityEvents(object:EngineObject,events:readonly EngineEvent[]) {
+ const enter=events.find(e=>e.obj===object.obj&&e.verb==='enter')
+ if(!enter)return []
+ const start=Math.max(object.fromFrame,enter.atFrame)
+ return Array.from({length:Math.max(0,Math.ceil((object.toFrame-start)/8))},(_,i)=>({
+  id:`${object.obj}:ui:${i}`,obj:object.obj,verb:'highlight',toState:'',atFrame:start+i*8,
+  x:100+(i%3)*260,y:180+(Math.floor(i/3)%3)*130,
+ }))
+}
+export function activityAt(object:EngineObject,events:readonly EngineEvent[],frame:number) {
+ const cues=activityEvents(object,events)
+ const fired=stateAt(cues,object.obj,frame).fired
+ const current=cues.find(e=>e.id===fired.at(-1)?.id)??{atFrame:frame,x:100,y:180}
+ const previous=cues.find(e=>e.id===fired.at(-2)?.id)??current
+ return {current,previous}
+}
