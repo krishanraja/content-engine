@@ -2617,6 +2617,15 @@ How an off-day post is made, said once for every prompt the board copies out (th
 
 - `function libraryFollower(db: SupabaseClient, f: typeof fetch = fetch): LibraryFollower`
 
+### `apps/control-plane/api/board/_offdayPiece.ts`
+
+- `const OFFDAY_DOC`
+- `function videoOffday(kind: string | null | undefined, format: string | null | undefined): boolean`
+- `function offdayPieceId(week: string, docId: string, raw: Body | null | undefined): string`
+- `function inWeek(row: { scheduled_for?: unknown; meta?: unknown } | null | undefined, week: string): boolean`
+- `interface OffdayLink`
+- `async function linkOffdayPiece(db: SupabaseClient, pieceId: string, link: OffdayLink, now: string): Promise<boolean>`
+
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
 A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, locking the off-day mock: Improve
@@ -3010,6 +3019,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface OffdayScripts`
 - `function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Bod…`
 - `function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, pieceI…`
+- `function productionStage(m: ModelInputs, p: { pieceId: string; title: string; item: string | null; style: DayStyle | nu…`
 - `function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: string): { line: string; approval: OffdayScripts }…`
 - `function recordHead(sc: OffdayScripts): string`
 - `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`
