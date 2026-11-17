@@ -3,6 +3,7 @@ import { buildView, readPieceDecisions, type ViewInputs } from '../../apps/contr
 import { DECISIONS_RULE, nextStep, pieceDecisions, scriptsChanged, spokenTitle } from '../../apps/control-plane/api/board/_decisions'
 import { createStoreHandler } from '../../apps/control-plane/api/content-ideas/store'
 import { approval } from './_approvals'
+import { thisWeek } from './board-week-model.test'
 
 // F46-asked-for-a-press-already-made (config/failures.json). Tue 17 Nov 2026, piece b019dbf8, the data-centres piece
 // placed on Tuesday: at 11:09 UTC Krish pressed Pick the look, Pick the motion style and Pick the captions on the board
@@ -352,5 +353,19 @@ describe('the workflow in one page: one rule, the same result on every card', ()
     const said = v.model!.days.flatMap(d => d.items).flatMap((it: any) => [it.line, ...[it.next, ...it.others].filter((a: any) => a && a.kind === 'press').flatMap((a: any) => [a.label, a.goes, a.done, a.scripts?.edited_note])])
       .filter((x: unknown): x is string => typeof x === 'string')
     for (const s of said) expect(s, s).not.toMatch(/\.py\b|making record|a session (checks|files)|\bF\d{2}\b/)
+  })
+})
+
+// Krish, 2026-11-17: "there should have been an area for me to edit or give my thoughts prior to a prompt button being
+// pressed surely for all cards. If not, then yes a small optional last minute notes could be handy". Every prompt the
+// board draws carries his notes (Control Centre shows "Your notes" above the button; they are optional).
+describe('every prompt on every card takes his notes first', () => {
+  it('no prompt on the week is drawn without its notes box', () => {
+    const v = buildView(thisWeek())
+    const missing: string[] = []
+    for (const d of v.model!.days) for (const i of d.items as Body[]) for (const a of [i.next, ...i.others]) {
+      if (a?.kind === 'prompt' && !a.notes) missing.push(`${d.day} ${i.type} ${i.key}: ${a.label}`)
+    }
+    expect(missing).toEqual([])
   })
 })
