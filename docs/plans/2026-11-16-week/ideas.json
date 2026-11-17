@@ -999,6 +999,412 @@
           "kit": "Brand kit, small source line"
         },
         "ties_to": "Wed: under.the.hood, if you pick the agents-and-secrets piece"
+      },
+      {
+        "id": "tpl-cat",
+        "kind": "meme",
+        "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+        "source": {
+          "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+          "url": "https://www.tiktok.com/@greenscreenmemes.com/video/7682238060355964174"
+        },
+        "copy": "A ginger cat sits upright on a green screen and counts a thick wad of cash, paw by paw. Your caption turns it into an AI moment.",
+        "hook": "Cat counting cash",
+        "title": "Cat counting cash",
+        "pitch": {
+          "see": "A ginger cat sits upright on a green screen and counts a thick wad of cash, paw by paw.",
+          "lands": "Personification: a cat doing accounts is absurd, and it maps onto any AI company taking your money for a tiny job."
+        },
+        "aim": "humour",
+        "shape": "story",
+        "funny": "The AI company counting the money I paid it to summarise an email I wrote.",
+        "template": {
+          "title": "Cat counting cash",
+          "clip": {
+            "url": "https://www.tiktok.com/@greenscreenmemes.com/video/7682238060355964174",
+            "page": "https://www.tiktok.com/@greenscreenmemes.com/video/7682238060355964174",
+            "poster": "https://p16-common-sign.tiktokcdn.com/tos-useast5-p-0068-tx/o4ym1BI5VBB6wrAoIbSCA99cKpiuITLiZIojfN~tplv-tiktokx-origin.image?dr=14575&x-expires=1795122000&x-signature=yvc0m4h906%2B64Z7hAIOKaR1QM9A%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my",
+            "seconds": 11
+          },
+          "found": {
+            "place": "tiktok",
+            "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+            "url": "https://www.tiktok.com/@greenscreenmemes.com/video/7682238060355964174"
+          },
+          "credit": "@greenscreenmemes.com on TikTok",
+          "what_happens": "A ginger cat sits upright on a green screen and counts a thick wad of cash, paw by paw.",
+          "why_it_works": "Personification: a cat doing accounts is absurd, and it maps onto any AI company taking your money for a tiny job.",
+          "mechanism": [
+            "personification",
+            "incongruity"
+          ],
+          "moment": null,
+          "date": "2026-09-06"
+        },
+        "caption_ideas": [
+          "The AI company counting the money I paid it to summarise an email I wrote.",
+          "Usage-based pricing, explained by the only one who understands it.",
+          "My AI subscription on the first of the month, again."
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Haiku, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "The AI company is charging for the email summary, and the cat counts out the fee paw by paw.",
+            "The AI is a greedy cat counting cash to do a tiny job."
+          ],
+          "against": 31
+        }
+      },
+      {
+        "id": "tpl-punisher",
+        "kind": "meme",
+        "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+        "source": {
+          "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+          "url": "https://www.tiktok.com/@flurrist/video/7276797232144305414"
+        },
+        "copy": "A man stares in rising horror and says no, no, no, no as something goes wrong in front of him. Your caption turns it into an AI moment.",
+        "hook": "No no no no (The Punisher)",
+        "title": "No no no no (The Punisher)",
+        "pitch": {
+          "see": "A man stares in rising horror and says no, no, no, no as something goes wrong in front of him.",
+          "lands": "Horror at a disaster you can see coming; the caption names the AI doing it, and the escalation lands on the last no."
+        },
+        "aim": "humour",
+        "shape": "story",
+        "funny": "Me watching my AI agent hit Reply All to apologise for hitting Reply All.",
+        "template": {
+          "title": "No no no no (The Punisher)",
+          "clip": {
+            "url": "https://www.tiktok.com/@flurrist/video/7276797232144305414",
+            "page": "https://www.tiktok.com/@flurrist/video/7276797232144305414",
+            "poster": "https://p16-common-sign.tiktokcdn.com/tos-maliva-p-0068/ogJzviNVhHZAIFfQkJ1AlYjtiAAVBdCf8EBB0h~tplv-tiktokx-origin.image?dr=14575&x-expires=1795122000&x-signature=bXhl%2F%2BSf%2B8tCX34sr0bNkAUcwGo%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my",
+            "seconds": 5
+          },
+          "found": {
+            "place": "tiktok",
+            "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+            "url": "https://www.tiktok.com/@flurrist/video/7276797232144305414"
+          },
+          "credit": "The Punisher (Netflix), clip by @flurrist on TikTok",
+          "what_happens": "A man stares in rising horror and says no, no, no, no as something goes wrong in front of him.",
+          "why_it_works": "Horror at a disaster you can see coming; the caption names the AI doing it, and the escalation lands on the last no.",
+          "mechanism": [
+            "exaggeration",
+            "self_defeating_logic"
+          ],
+          "moment": null,
+          "date": "2023-09-13"
+        },
+        "caption_ideas": [
+          "Me watching my AI agent hit Reply All to apologise for hitting Reply All.",
+          "When the chatbot says great question and you know the next 400 words are wrong.",
+          "Watching the agent tidy up the production database."
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Haiku, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "The AI agent apologises for a Reply All by doing another Reply All, so the mistake repeats while it apologises.",
+            "The robot hit Reply All by accident, then apologised to everyone for that too."
+          ],
+          "against": 31
+        }
+      },
+      {
+        "id": "tpl-hank",
+        "kind": "meme",
+        "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+        "source": {
+          "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+          "url": "https://www.tiktok.com/@flurrist/video/7253444036411854086"
+        },
+        "copy": "A bald man reading a book on the toilet slowly realises something huge. Your caption turns it into an AI moment.",
+        "hook": "Hank slowly realises (Breaking Bad)",
+        "title": "Hank slowly realises (Breaking Bad)",
+        "pitch": {
+          "see": "A bald man reading a book on the toilet slowly realises something huge.",
+          "lands": "The slow dawning reveal: perfect for the moment you see what the AI really did."
+        },
+        "aim": "humour",
+        "shape": "story",
+        "funny": "Reading the AI's sources and finding my own LinkedIn post.",
+        "template": {
+          "title": "Hank slowly realises (Breaking Bad)",
+          "clip": {
+            "url": "https://www.tiktok.com/@flurrist/video/7253444036411854086",
+            "page": "https://www.tiktok.com/@flurrist/video/7253444036411854086",
+            "poster": "https://p16-common-sign.tiktokcdn.com/tos-maliva-p-0068/oEIViJkAWBt5hAepnBEfnq8SorABMQbjDaCyOJ~tplv-tiktokx-origin.image?dr=14575&x-expires=1795122000&x-signature=SaVuW4%2F8sSG4uKv0xR6u%2F%2BaW640%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my",
+            "seconds": 7
+          },
+          "found": {
+            "place": "tiktok",
+            "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+            "url": "https://www.tiktok.com/@flurrist/video/7253444036411854086"
+          },
+          "credit": "Breaking Bad (AMC), clip by @flurrist on TikTok",
+          "what_happens": "A bald man reading a book on the toilet slowly realises something huge.",
+          "why_it_works": "The slow dawning reveal: perfect for the moment you see what the AI really did.",
+          "mechanism": [
+            "reversal",
+            "irony"
+          ],
+          "moment": null,
+          "date": "2023-07-08"
+        },
+        "caption_ideas": [
+          "Reading the AI's sources and finding my own LinkedIn post.",
+          "Realising the AI-powered feature is three interns and a spreadsheet.",
+          "Page three of the AI's confident answer, where it cites page two, which it invented."
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Haiku, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "The AI cited his own LinkedIn post as a source, and he is shocked to see it.",
+            "He found his own LinkedIn post quoted in the AI's sources and is shocked it read it."
+          ],
+          "against": 31
+        }
+      },
+      {
+        "id": "tpl-nvidia",
+        "kind": "meme",
+        "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+        "source": {
+          "label": "This week's pop culture, on TikTok",
+          "url": "https://www.tiktok.com/@klsgh4/video/7707516769874775310"
+        },
+        "copy": "Nvidia's boss, in his leather jacket, dances a viral AI dance template with two colleagues. Your caption turns it into an AI moment.",
+        "hook": "Jensen Huang does the AI dance",
+        "title": "Jensen Huang does the AI dance",
+        "pitch": {
+          "see": "Nvidia's boss, in his leather jacket, dances a viral AI dance template with two colleagues.",
+          "lands": "Incongruity: the most powerful man in AI hardware doing a TikTok dance, so the caption can puncture the hype around him, never him."
+        },
+        "aim": "humour",
+        "shape": "story",
+        "funny": "Every AI stock chart this year, performed as interpretive dance.",
+        "template": {
+          "title": "Jensen Huang does the AI dance",
+          "clip": {
+            "url": "https://www.tiktok.com/@klsgh4/video/7707516769874775310",
+            "page": "https://www.tiktok.com/@klsgh4/video/7707516769874775310",
+            "poster": "https://p16-common-sign.tiktokcdn-eu.com/tos-useast5-p-0068-tx/oMt41FBRSDqn9JEkMgFXAe4FIfF7lkDEw7QspC~tplv-tiktokx-origin.image?dr=10395&x-expires=1795122000&x-signature=28ZfraQnqgoJ31%2FueJZx0a2E5MI%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast2b",
+            "seconds": 19
+          },
+          "found": {
+            "place": "pop_culture",
+            "label": "This week's pop culture, on TikTok",
+            "url": "https://www.tiktok.com/@klsgh4/video/7707516769874775310"
+          },
+          "credit": "Nvidia's Jensen Huang, clip by @klsgh4 on TikTok",
+          "what_happens": "Nvidia's boss, in his leather jacket, dances a viral AI dance template with two colleagues.",
+          "why_it_works": "Incongruity: the most powerful man in AI hardware doing a TikTok dance, so the caption can puncture the hype around him, never him.",
+          "mechanism": [
+            "incongruity",
+            "exaggeration"
+          ],
+          "moment": "Nvidia's Jensen Huang joins the viral AI dance template, the funniest AI meme of the week of 13 Nov 2026",
+          "date": "2026-11-13"
+        },
+        "caption_ideas": [
+          "Every AI stock chart this year, performed as interpretive dance.",
+          "When everyone argues about the AI bubble but you sell the shovels.",
+          "Earnings call energy."
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Haiku, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "Nvidia's boss dances the AI stock chart swings, so the market's wild moves look like a dance routine.",
+            "The big AI company boss dancing about how wobbly the AI money charts are."
+          ],
+          "against": 31
+        }
+      },
+      {
+        "id": "tpl-pigeon",
+        "kind": "meme",
+        "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+        "source": {
+          "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+          "url": "https://www.tiktok.com/@greenscreens4memes/video/7601210826011266324"
+        },
+        "copy": "A man with a pigeon's head, in a doctor's coat and stethoscope, struts down a backstage corridor like he owns it. Your caption turns it into an AI moment.",
+        "hook": "Pigeon doctor walks in",
+        "title": "Pigeon doctor walks in",
+        "pitch": {
+          "see": "A man with a pigeon's head, in a doctor's coat and stethoscope, struts down a backstage corridor like he owns it.",
+          "lands": "Unearned confidence made visible: a pigeon in a doctor's coat is exactly an AI that read one article."
+        },
+        "aim": "humour",
+        "shape": "story",
+        "funny": "My AI after reading one medical article: I'll take it from here.",
+        "template": {
+          "title": "Pigeon doctor walks in",
+          "clip": {
+            "url": "https://www.tiktok.com/@greenscreens4memes/video/7601210826011266324",
+            "page": "https://www.tiktok.com/@greenscreens4memes/video/7601210826011266324",
+            "poster": "https://p16-common-sign.tiktokcdn-eu.com/tos-alisg-p-0037/oI7peF3IEIdIA7fcO8fzK8xAj51TSDoWDBMQCN~tplv-tiktokx-origin.image?dr=10395&x-expires=1795122000&x-signature=XjWkSwYHPXePB%2BgvgbBsP0G36WA%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast2b",
+            "seconds": 8
+          },
+          "found": {
+            "place": "tiktok",
+            "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+            "url": "https://www.tiktok.com/@greenscreens4memes/video/7601210826011266324"
+          },
+          "credit": "@greenscreens4memes on TikTok",
+          "what_happens": "A man with a pigeon's head, in a doctor's coat and stethoscope, struts down a backstage corridor like he owns it.",
+          "why_it_works": "Unearned confidence made visible: a pigeon in a doctor's coat is exactly an AI that read one article.",
+          "mechanism": [
+            "personification",
+            "incongruity"
+          ],
+          "moment": null,
+          "date": "2026-01-30"
+        },
+        "caption_ideas": [
+          "My AI after reading one medical article: I'll take it from here.",
+          "The chatbot that passed the bar exam, walking in to fight my parking ticket.",
+          "AI walking into my job interview with zero years' experience and a stethoscope."
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Haiku, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "After reading one medical article, the AI acts like a qualified doctor and takes over.",
+            "The AI read one medical article and now thinks it's the doctor."
+          ],
+          "against": 31
+        }
+      },
+      {
+        "id": "tpl-ghost",
+        "kind": "meme",
+        "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+        "source": {
+          "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+          "url": "https://www.tiktok.com/@sillyrutip/video/7165191879393381674"
+        },
+        "copy": "A soldier in a skull mask turns and stares, silent and unblinking. Your caption turns it into an AI moment.",
+        "hook": "Ghost stares (Call of Duty)",
+        "title": "Ghost stares (Call of Duty)",
+        "pitch": {
+          "see": "A soldier in a skull mask turns and stares, silent and unblinking.",
+          "lands": "A silent stare that says everything; it gives the AI a feeling it should not have."
+        },
+        "aim": "humour",
+        "shape": "story",
+        "funny": "My AI assistant when I say thanks, that's all for today.",
+        "template": {
+          "title": "Ghost stares (Call of Duty)",
+          "clip": {
+            "url": "https://www.tiktok.com/@sillyrutip/video/7165191879393381674",
+            "page": "https://www.tiktok.com/@sillyrutip/video/7165191879393381674",
+            "poster": "https://p16-common-sign.tiktokcdn-eu.com/tos-useast5-p-0068-tx/f64c5699bea74c0e83abf31dc09f6d00~tplv-tiktokx-origin.image?dr=10395&x-expires=1795122000&x-signature=XemElQW7bb8Gq6pMhwTnP9jz2wg%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast2b",
+            "seconds": 9
+          },
+          "found": {
+            "place": "tiktok",
+            "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+            "url": "https://www.tiktok.com/@sillyrutip/video/7165191879393381674"
+          },
+          "credit": "Call of Duty (Activision), clip by @sillyrutip on TikTok",
+          "what_happens": "A soldier in a skull mask turns and stares, silent and unblinking.",
+          "why_it_works": "A silent stare that says everything; it gives the AI a feeling it should not have.",
+          "mechanism": [
+            "personification",
+            "understatement"
+          ],
+          "moment": null,
+          "date": "2022-11-12"
+        },
+        "caption_ideas": [
+          "My AI assistant when I say thanks, that's all for today.",
+          "The chatbot waiting for me to admit its first answer was right.",
+          "Copilot watching me write the code myself, just this once."
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Haiku, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "When he thanks the AI and ends the chat, the AI stares back silently, which is an awkward reply to a goodbye.",
+            "The AI goes creepy-silent when you say bye, like it's annoyed you're leaving."
+          ],
+          "against": 31
+        }
+      },
+      {
+        "id": "tpl-wishlist",
+        "kind": "meme",
+        "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+        "source": {
+          "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+          "url": "https://www.tiktok.com/@green.scream.memes/video/7586480654787841301"
+        },
+        "copy": "A grinning man on a green screen points at a sign that says ALL I WANT IS THIS! Your caption turns it into an AI moment.",
+        "hook": "All I want is this",
+        "title": "All I want is this",
+        "pitch": {
+          "see": "A grinning man on a green screen points at a sign that says ALL I WANT IS THIS!",
+          "lands": "A tiny, reasonable wish shouted like a demand: the gap between what we ask AI for and what it gives back."
+        },
+        "aim": "humour",
+        "shape": "story",
+        "funny": "Me asking the AI for one sentence, not a 12-step framework with emojis.",
+        "template": {
+          "title": "All I want is this",
+          "clip": {
+            "url": "https://www.tiktok.com/@green.scream.memes/video/7586480654787841301",
+            "page": "https://www.tiktok.com/@green.scream.memes/video/7586480654787841301",
+            "poster": "https://p16-common-sign.tiktokcdn.com/tos-alisg-p-0037/oEbKQMwGARulqCGZGAALCIftIeLal3IJ6AfeRA~tplv-tiktokx-dmt-logom:tos-alisg-i-0068/oAJfAXLICLEAIRlAQlIGdfeMgAYKAfWbGwi3SG.image?dr=14573&x-expires=1795122000&x-signature=2dqWnEoEP9pZP%2F2TS5HvIrXEN8I%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=my",
+            "seconds": 9
+          },
+          "found": {
+            "place": "tiktok",
+            "label": "TikTok, #memetemplate (Apify run 17 Nov)",
+            "url": "https://www.tiktok.com/@green.scream.memes/video/7586480654787841301"
+          },
+          "credit": "@treniner, template by @green.scream.memes on TikTok",
+          "what_happens": "A grinning man on a green screen points at a sign that says ALL I WANT IS THIS!",
+          "why_it_works": "A tiny, reasonable wish shouted like a demand: the gap between what we ask AI for and what it gives back.",
+          "mechanism": [
+            "understatement",
+            "irony"
+          ],
+          "moment": null,
+          "date": "2025-12-22"
+        },
+        "caption_ideas": [
+          "Me asking the AI for one sentence, not a 12-step framework with emojis.",
+          "All I want from AI is to read my email without replying to it.",
+          "My one wish for the 2027 AI roadmap: an off switch that stays off."
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Haiku, a 12-year-old reading once)",
+            "Fresh reader B (Haiku, a 12-year-old reading once)"
+          ],
+          "says": [
+            "He asked for one sentence and got a 12-step framework with emojis, so the AI overcomplicated a simple request.",
+            "The AI gives you a huge emoji list when you only asked for one sentence."
+          ],
+          "against": 31
+        }
       }
     ],
     "sat": [
@@ -1620,6 +2026,48 @@
         "verdict": "new",
         "of": "off-sat-oldproof",
         "why": "AlphaGenome 2 and how DNA changes act differently in different cells is a new science story, and no recent post covers it."
+      },
+      {
+        "ref": "off-thu-tpl-cat",
+        "verdict": "new",
+        "of": "off-burntokens",
+        "why": "The vendor counting what you paid it; burntokens is staff wasting tokens for a boss. (Fresh reader, Haiku, 17 Nov; the six recent pieces are articles on other stories.)"
+      },
+      {
+        "ref": "off-thu-tpl-punisher",
+        "verdict": "new",
+        "of": "off-povteach",
+        "why": "Reply All apologising for Reply All is its own joke, not the agent left unset. (Fresh reader, Haiku, 17 Nov; the six recent pieces are articles on other stories.)"
+      },
+      {
+        "ref": "off-thu-tpl-hank",
+        "verdict": "new",
+        "of": "off-mcpskin",
+        "why": "Finding your own post in the AI's sources is new; mcpskin is over-reading to make one call. (Fresh reader, Haiku, 17 Nov; the six recent pieces are articles on other stories.)"
+      },
+      {
+        "ref": "off-thu-tpl-nvidia",
+        "verdict": "new",
+        "of": "off-tablefortwo",
+        "why": "Same public figure, a new joke: stock charts as dance, not the dinner toast. (Fresh reader, Haiku, 17 Nov; the six recent pieces are articles on other stories.)"
+      },
+      {
+        "ref": "off-thu-tpl-pigeon",
+        "verdict": "new",
+        "of": "off-otherside",
+        "why": "An AI's one-article confidence, not checking its advice before you act. (Fresh reader, Haiku, 17 Nov; the six recent pieces are articles on other stories.)"
+      },
+      {
+        "ref": "off-thu-tpl-ghost",
+        "verdict": "new",
+        "of": "off-puppy",
+        "why": "No recent post covers the AI reacting to being signed off. (Fresh reader, Haiku, 17 Nov; the six recent pieces are articles on other stories.)"
+      },
+      {
+        "ref": "off-thu-tpl-wishlist",
+        "verdict": "new",
+        "of": "off-quoteline",
+        "why": "No recent post covers AI padding one sentence into a framework. (Fresh reader, Haiku, 17 Nov; the six recent pieces are articles on other stories.)"
       }
     ]
   },
