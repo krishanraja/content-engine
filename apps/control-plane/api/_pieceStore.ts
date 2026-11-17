@@ -305,7 +305,8 @@ export async function addText(db: StoreDb, body: Body, bearer: boolean, by: stri
       bytes: isLink ? url.length : content.length, at: new Date().toISOString(), by,
       ...(base.role ? { role: base.role } : {}), ...(base.note ? { note: base.note } : {}), ...(base.session_id ? { session_id: base.session_id } : {}),
       // The store's own kind (a corpus, a storyboard, a note), which the working set's four kinds cannot say.
-      store_kind: isLink ? 'link' : base.kind, source,
+      // A link keeps the kind it was filed with (research, a corpus): a research link is research (Krish, 2026-11-17).
+      store_kind: base.kind, source,
     } as Material & Body
     const added = await addToWorkingSet(db, base.scope.piece_id!, material)
     const key = `meta:${id}`
@@ -315,7 +316,7 @@ export async function addText(db: StoreDb, body: Body, bearer: boolean, by: stri
     // not run), it is filed in the store directly under the same key, so it is on record either way.
     const stored = row ? { ok: true, duplicate: false, material: row } : await put(db, {
       piece_id: base.scope.piece_id, material_key: key, storage: isLink ? 'link' : 'text', content: isLink ? null : content, url: isLink ? url : null,
-      kind: isLink ? 'link' : base.kind, role: base.role, title, note: base.note, source, source_ref: `meta.materials:${id}`, added_by: by, session_id: base.session_id,
+      kind: base.kind, role: base.role, title, note: base.note, source, source_ref: `meta.materials:${id}`, added_by: by, session_id: base.session_id,
     })
     return { ...stored, working_set: added.ok === true ? 'added' : added.reason }
   }

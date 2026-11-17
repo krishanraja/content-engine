@@ -12,6 +12,7 @@ import type { MediaItem } from './_media.js'
 import { mediaWithAnswers } from './_cuts.js'
 import { dayThumbs, type DayThumbs } from './_thumbs.js'
 import { VIEW_CONTRACT_VERSION } from './_viewContract.js'
+import { withResearchPrompts } from './_researchPrompt.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
 import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, offdayApproval, offdayList, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
@@ -72,8 +73,51 @@ export type PromptAction = {
   kind: 'prompt'
   label: string
   prompt: string
-  notes?: { ask: string; heading: string; save?: PressAction }
+  notes?: { ask: string; heading: string; save?: PressAction; saved?: SavedNote[] }
   open?: { app: 'claude_code'; repository: string }
+  /** Contract 1.19.0: who the prompt is for. A Perplexity research prompt is only copied (no session opens), and its
+   *  answer comes back through Paste research on the piece (_researchPrompt.ts). */
+  tool?: 'claude' | 'perplexity'
+}
+/** Contract 1.19.0: a note of his already saved on the item, newest first, whole (Krish, 2026-11-17: "when I add feedback
+ *  in to the control center UI, it obviously loads in to the prompt that comes here, but when i reopen the piece at a later
+ *  date it seems to have vanished"). The box stays empty for new words; these show beside it. */
+export interface SavedNote { at: string; text: string }
+
+/** The heading his earlier notes go under in a Claude prompt. */
+export const EARLIER_NOTES = "Krish's earlier notes on this piece, newest first (each is also on file on the piece, kind note). They still stand unless newer words of his say otherwise:"
+
+/** The most saved notes one prompt carries, and the most of each note's words (the press keeps 2,000). */
+export const SAVED_NOTES_MAX = 10
+const SAVED_NOTE_CHARS = 2000
+
+/** His saved notes for one item (its piece, or an off-day post's key), newest first: the claude_notes comments he left. */
+export function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }): SavedNote[] {
+  const piece = typeof target.piece_id === 'string' ? target.piece_id.toLowerCase() : null
+  const item = !piece && typeof target.item === 'string' ? target.item : null
+  if (!piece && !item) return []
+  return (rows || []).filter(c => isObj(c.body) && c.body.use === 'claude_notes' && c.updated_by === 'Krish' && typeof c.body.text === 'string' && c.body.text.trim()
+    && (piece ? String(c.body.piece_id || '').toLowerCase() === piece : c.body.item === item))
+    .map(c => ({ at: String(c.body.at || c.updated_at || ''), text: String(c.body.text).trim().slice(0, SAVED_NOTE_CHARS) }))
+    .sort((a, b) => b.at.localeCompare(a.at))
+    .filter((n, i, all) => all.findIndex(x => x.text === n.text) === i)
+    .slice(0, SAVED_NOTES_MAX)
+}
+
+/** Every Claude prompt in the week model that asks for his notes carries the ones he already saved on its item. */
+export function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): WeekModel {
+  const fill = (a: Action | null): void => {
+    if (!a || a.kind !== 'prompt' || !a.notes?.save) return
+    const body = (a.notes.save as { body?: Body }).body || {}
+    if (body.use !== 'claude_notes') return
+    a.notes.saved = savedNotesFor(rows, body)
+    // The Claude session starts with nothing to assume: his earlier notes are in its prompt too (the research prompt
+    // carries them in its own words).
+    if (a.tool !== 'perplexity' && a.notes.saved.length && !a.prompt.includes(EARLIER_NOTES))
+      a.prompt = `${a.prompt}\n\n${EARLIER_NOTES}\n${a.notes.saved.map(n => `- ${n.at ? `${n.at.slice(0, 16).replace('T', ' ')} UTC: ` : ''}${n.text}`).join('\n')}`
+  }
+  for (const d of model.days) for (const it of d.items) { fill(it.next); for (const o of it.others) fill(o) }
+  return model
 }
 export interface DayView {
   day: PostedDay
@@ -874,7 +918,14 @@ export function buildView(i: ViewInputs): WeekView {
   }
   // What went out or is on its way around the week, so an idea that retells it leaves the ideas board (contract 1.17.0).
   const recentOut = recentOutOf({ week: i.week, ideas: i.ideas, plans: i.plans, pieces: i.pieces }, days, i.all_items ?? null, i.recent_pieces ?? [])
-  const model = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut })
+  const built = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut })
+  // Beside each piece's Claude production prompt, its Perplexity research prompt, from everything on record (1.19.0).
+  const model = withSavedNotes(withResearchPrompts(built, (day, it) => {
+    const dv = days.find(x => x.day === day)
+    if (!dv || !it.piece_id) return null
+    return { series: dv.series || null, dayLabel: dv.label, lock: lockOf(i.locks, day as PostedDay, it.piece_id)?.text ?? null,
+      materials: dv.piece_id === it.piece_id ? dv.materials : [], saved: savedNotesFor(i.comments, { piece_id: it.piece_id }) }
+  }), i.comments)
   // What waits on his press: only his real decisions (Approve for publish on a made piece, an approved post's missing
   // choice), never an idea (Ruling, Krish, 2026-11-13).
   const yours: WeekView['yours'] = model.days.flatMap(md => md.items.filter(it => it.decision && it.next)

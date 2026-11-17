@@ -2629,6 +2629,7 @@ One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Rul
 - `function gateReport(week: string, id: string, body: Body, now: string)`
 - `function feelReport(week: string, id: string, body: Body, now: string)`
 - `function notesReport(week: string, id: string, body: Body, now: string)`
+- `function notesMaterial(week: string, id: string, body: Body): Body | null`
 - `function offdayReports(week: string, id: string, body: Body, now: string)`
 - `function scoreRow(week: string, id: string, body: Body, now: string)`
 - `async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null>`
@@ -2656,6 +2657,7 @@ Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md
 - `const MAX_MATERIAL`
 - `async function runResearch(prompt: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
 - `class MaterialError`
+- `function pastedKind(role: unknown): 'file' | 'research'`
 - `async function fileMaterial(db: SupabaseClient, pieceId: string, m: { kind: 'file' | 'research'; title: string; content…`
 - `interface LookPick`
 - `async function saveLook(db: SupabaseClient, pieceId: string, pick: { production: string; experiment?: string | null; in…`
@@ -2816,6 +2818,11 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done' | 'missed'`
 - `type Action`
 - `type PromptAction`
+- `interface SavedNote`
+- `const EARLIER_NOTES`
+- `const SAVED_NOTES_MAX`
+- `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }): SavedNote[]`
+- `function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): WeekModel`
 - `interface DayView`
 - `interface ViewPost`
 - `type DayCore`
@@ -2936,6 +2943,7 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const WRITE_BACK_HEAD`
 - `const RESEARCH_RULE`
 - `const WALLS`
+- `const CLOSE_LOOP`
 - `const APPROVAL_RULE`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
@@ -3200,7 +3208,7 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 - `const config`
 - `type LibraryCopy`
-- `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy)`
+- `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy, readLink?: () => Promise<LinkReader | nu…`
 - `export default createStoreHandler( async () => (await import('../_supabase.`
 
 ### `apps/control-plane/api/content-ideas/synthesize.ts`

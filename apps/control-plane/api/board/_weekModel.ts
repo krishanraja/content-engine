@@ -71,8 +71,9 @@ export const POST_PATH = [
 /** How many stories a week's good news carries: five, on one topic (Krish, 2026-11-13: "The Saturday carousel is
  *  supposed to be five good news stories on that same topic"). */
 export const GOOD_NEWS_STORIES = 5
-/** The one label every hand-off to a session wears. */
-export const CLAUDE_LABEL = 'Copy prompt for Claude'
+/** The one label every hand-off to a Claude session wears (Ruling, Krish, 2026-11-17: "We can distinguish the buttons by
+ *  changing 'copy prompt for Claude' to \"Claude production prompt\" and the other button to \"Perplexity research prompt\""). */
+export const CLAUDE_LABEL = 'Claude production prompt'
 /** Where a prompt opens (contract 1.17.0): a new Claude Code session with the repository chosen and the prompt filled
  *  in (claude.ai/code's own prefill, code.claude.com/docs/en/web-quickstart: it fills the box and he presses send). The
  *  board builds the address from this; the view carries no link. */
@@ -394,7 +395,7 @@ export function itemPrompt(week: string, it: { day: PostedDay; date: string; tit
   const save: PressAction = { ...base, label: 'Your notes for Claude', done: 'Saved on the board, and in the prompt.',
     body: { ...base.body, use: 'claude_notes', title: cut(it.title, 300), ...(it.piece_id ? { piece_id: it.piece_id } : { item: it.key }) },
     words: { path: 'text', ask: 'Your notes for Claude', required: true } }
-  const action: PromptAction = { kind: 'prompt', label: CLAUDE_LABEL, prompt,
+  const action: PromptAction = { kind: 'prompt', label: CLAUDE_LABEL, tool: 'claude', prompt,
     notes: { ask: 'Your notes for Claude: what to change, or what you think the next step is', heading: NOTES_HEADING, save },
     open: { ...(growth && !route ? GROWTH_CODE_OPEN : CLAUDE_CODE_OPEN) } }
   return action

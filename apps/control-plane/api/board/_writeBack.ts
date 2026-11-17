@@ -27,6 +27,15 @@ export const WALLS = 'This Publish Board in Control Centre is the only place to 
   + 'content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on '
   + 'the publish board: propose it, and only Krish\'s Approve places it.'
 
+/** How every session ends, so nothing it did is left for the next one to guess (Ruling, Krish, 2026-11-17: "Every prompt
+ *  created for Claude or Perplexity should leave the new session with nothing to assume, and it should also close the loop
+ *  on updating the board, the drive, and everything else as it goes"). */
+export const CLOSE_LOOP = 'Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; '
+  + 'anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; '
+  + 'a finished post asset goes in that post\'s own folder); work in the repository is committed and pushed by its own rules, with its '
+  + 'closeout note (AGENTS.md, "Commit and closeout"). Before you stop, report done (or blocked) with one line saying what changed and '
+  + 'where each thing now is, and end your last message with the one next step and who takes it.'
+
 /** Where his typed approval of a lock or scripts goes (Ruling, Krish, 2026-11-12: "Scripts and locks only."). On 13 Nov
  *  he had approved Mon 16's and Wed 18's stories and scripts in sessions, and the board said "No approved scripts are
  *  filed yet": the approvals stayed in the chats and in draft files the board never reads. */
@@ -58,6 +67,7 @@ export function writeBack(t: WriteBackTarget): string {
     + `4. ${RESEARCH_RULE} The script: board_session.py ${cli} add <file> --kind research\n`
     + (t.pieceId ? `5. ${APPROVAL_RULE} The script: board_session.py ${cli} approve lock|scripts (docs/PUBLISH_BOARDS.md, "His typed approval")\n` : '')
     + `${t.pieceId ? 6 : 5}. ${WALLS}\n`
+    + `${t.pieceId ? 7 : 6}. ${CLOSE_LOOP}\n`
     + 'Nothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, '
     + 'and the script uses the engine key this machine already holds.'
 }
