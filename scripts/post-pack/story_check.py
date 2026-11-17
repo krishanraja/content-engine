@@ -743,6 +743,8 @@ def problems(text, cut=None, series=None, lift=None):
             break
     found += reading_problems(beats)
     found += listening_problems(beats, cut)
+    if cut == 'short':
+        found += one_story_problems(beats)
     return found
 
 
@@ -962,6 +964,47 @@ def cut_by_length(count):
     return None
 
 
+# House rule ONE_STORY_SHORT (Ruling, Krish, 2026-11-17): a short cut (the 90-second vertical) follows one clear story thread
+# from start to end. Wed 18's short cut brought in a second company beside the story ("his boss has read that Curative, an
+# insurer, binned its sales software"), then teased it ("And Curative? That story's in the full video."); he cut it: "cut
+# curative, one story only is critical for 90 second pieces", then "permanent rule for 90 second videos, only one clear
+# story thread". These catch the words that bring in a second story; the separate reader judges the rest.
+ONE_STORY_SAID = ('Krish, 2026-11-17: "cut curative, one story only is critical for 90 second pieces"; '
+                  '"only one clear story thread"')
+SECOND_STORY = (
+    (re.compile(r"\b(?:that|this|the|its|their|whose|his|her)\s+(?:whole\s+|full\s+)?(?:story|one|tale)(?:'s|\s+is|\s+are)?\s+"
+                r"(?:all\s+)?in\s+the\s+(?:full|long|longer|five[- ]minute|5[- ]minute)\s+(?:video|cut|version|piece)", re.I),
+     'it teases another story into the full video'),
+    (re.compile(r"\b(?:more|the\s+rest)\s+(?:of\s+(?:that|this|it)\s+)?(?:is\s+|are\s+)?in\s+the\s+(?:full|long|longer)\s+(?:video|cut|version)", re.I),
+     'it teases another story into the full video'),
+    (re.compile(r"\banother\s+(?:company|firm|business|example|story|case)\b|\bcase\s+in\s+point\b|"
+                r"\bsame\s+(?:thing|story)\s+(?:happened\s+)?(?:at|with)\b|\btake\s+(?:another|a\s+second)\b", re.I),
+     'it brings in a second example'),
+)
+# A company brought in by what it is ("Curative, an insurer,"): two of them in a short cut are two stories.
+INTRODUCED = re.compile(r"\b([A-Z][\w&.'-]+(?:\s+[A-Z][\w&.'-]+)*),\s+(?:an?|the)\s+(?:[A-Za-z-]+\s+){0,3}?"
+                        r"(?:company|firm|insurer|bank|startup|start-up|lab|maker|retailer|chain|giant|group|business|platform|"
+                        r"agency|provider|seller|network|carrier|brand|airline|hospital|charity|council|school|university|app)\b")
+
+
+def one_story_problems(beats):
+    """Why a short cut tells more than one story (house rule ONE_STORY_SHORT), or []."""
+    text = ' '.join(beats)
+    found = []
+    for rx, why in SECOND_STORY:
+        hit = rx.search(text)
+        if hit and why not in ' '.join(found):
+            found.append(f'{why} ("{hit.group(0)}"): a short cut follows one story thread from start to end, with no second '
+                         f'example, side-story or named case, not even as a teaser; give it to the long cut or the article '
+                         f'(house rule ONE_STORY_SHORT; {ONE_STORY_SAID})')
+    introduced = list(dict.fromkeys(m.group(1) for m in INTRODUCED.finditer(text)))
+    if len(introduced) > 1:
+        found.append(f'it brings in {len(introduced)} companies by what they are ({", ".join(introduced)}): a short cut follows one '
+                     f'story thread, so keep the one the story is about and give the other to the long cut or the article '
+                     f'(house rule ONE_STORY_SHORT; {ONE_STORY_SAID})')
+    return found
+
+
 def listening_problems(beats, cut=None):
     """Why a listener could not hold this script, heard once (house rule LISTENING), or []."""
     if not beats:
@@ -979,8 +1022,10 @@ def listening_problems(beats, cut=None):
                      'the rest to the article (house rule LISTENING, Krish, 2026-10-31: "a little bit hard to follow")')
     names = names_in(sentences(beats))
     if len(names) > limit['names']:
-        found.append(f'it names {len(names)} things ({", ".join(names[:12])}); a {cut} cut keeps about {limit["names"]}: one story, '
-                     'at most one side-story, and the rest to the article (house rule LISTENING, Krish, 2026-10-31)')
+        story = ('one story thread and no side-story (ONE_STORY_SHORT)' if cut == 'short'
+                 else 'one story, at most one side-story')
+        found.append(f'it names {len(names)} things ({", ".join(names[:12])}); a {cut} cut keeps about {limit["names"]}: {story}, '
+                     'and the rest to the article (house rule LISTENING, Krish, 2026-10-31)')
     return found
 
 CHAPTER_START = re.compile(r'starts:\s*"([^"]+)"')
@@ -1091,6 +1136,25 @@ def self_test():
         count += 1
         if got != want:
             failures.append(f'{label}: got {got!r}, want {want!r}')
+
+    # House rule ONE_STORY_SHORT (Krish, 2026-11-17): Wed 18's short cut with Curative beside the story, as it was written.
+    curative = ['So he tries vibe coding instead. Now he wants to build a bot for your customers over a weekend. And his boss '
+                'has read that Curative, an insurer, binned its sales software and built its own.',
+                "So what did Anthropic do? It went shopping. It bought a help desk bot. And Curative? That story's in the full video."]
+    told = one_story_problems(curative)
+    check('Wed 18\'s short cut with Curative teased into the full video is refused, citing his words',
+          (len(told) >= 1, all('ONE_STORY_SHORT' in p and 'cut curative' in p for p in told)), (True, True))
+    check('the same short cut without Curative passes',
+          one_story_problems(['So he tries vibe coding instead. Now he wants to build a bot for your customers over a weekend.',
+                              'So what did Anthropic do? It went shopping. It bought a help desk bot, and that bot runs on Claude.']), [])
+    check('two companies brought in by what they are are two stories',
+          len(one_story_problems(['Anthropic, the AI lab, bought a help desk bot. Curative, an insurer, built its own.'])), 1)
+    check('another example and "case in point" are a second story',
+          [bool(one_story_problems([t])) for t in ('Another company did the same.', 'Case in point: Klarna.', 'The labs bought it.')],
+          [True, True, False])
+    check('a short script is checked for one story, a long one is not',
+          (any('ONE_STORY_SHORT' in p for p in problems('\n\n'.join(curative), 'short')),
+           any('ONE_STORY_SHORT' in p for p in problems('\n\n'.join(curative), 'long'))), (True, False))
 
     v1 = problems(HIGGSFIELD_V1)
     check('version 1 has no opening question', any('open on a question' in p for p in v1), True)

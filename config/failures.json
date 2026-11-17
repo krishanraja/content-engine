@@ -2646,6 +2646,46 @@
           "how": "the view reads the scripts filed on each piece"
         }
       ]
+    },
+    {
+      "id": "F48-short-cut-second-story",
+      "on": "2026-11-17",
+      "status": "guarded",
+      "mode": "short_cut_second_story",
+      "guard_level": "lint_refuse",
+      "krish": "cut curative, one story only is critical for 90 second pieces. Then: send that feedback to the sub session for permanent rule for 90 second videos, only one clear story thread. Then: yes, make it permanent",
+      "what": "Wed 18 Nov, piece db9f9f6a (the labs still buy software): the 90-second script brought in a second company beside the Anthropic story (\"his boss has read that Curative, an insurer, binned its sales software and built its own\") and teased it at the end (\"And Curative? That story's in the full video.\"). He cut it.",
+      "symptom": "A short cut tells two stories, or points at a second one, so the one thread a viewer can follow in 90 seconds splits.",
+      "cause": "LISTENING allowed one story with at most one side-story in every cut, and nothing told a short cut apart: the script check capped the names a short cut says, never how many stories it tells.",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "House rule LISTENING said \"one story, with at most one side-story\" for both cuts; no rule held the short cut to one thread."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "scripts/post-pack/story_check.py counted names and figures in a short cut, never a teaser for another story or a second company brought in by what it is."
+        }
+      ],
+      "surface": "A short cut that teases another story into the full video, says another company, another example or case in point, or brings in two companies by what they are is refused by story_check.py, citing his words; house rule ONE_STORY_SHORT tells every writer and the separate reader.",
+      "guards": [
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "def one_story_problems(",
+          "how": "refuses a short cut with a second story, citing his words",
+          "test": "python3 scripts/post-pack/story_check.py --self-test"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "Wed 18\\'s short cut with Curative teased into the full video is refused",
+          "how": "the self-test holds Wed 18's Curative short cut as written"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'ONE_STORY_SHORT'",
+          "how": "the house rule every writer and the separate reader read"
+        }
+      ]
     }
   ]
 }
