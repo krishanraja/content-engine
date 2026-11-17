@@ -36,7 +36,8 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
    `real_image` (a real photo or footage of what he names, from its source), `screenshot` (the real page or product he
    names), `social_post` (a real viral post that relates to his words, with its link), `motion` (a ve device or a Codex
    plate in his picked motion style), `generated` (a scene made with the higgsfield-generator skills,
-   krishanraja/higgsfield-generator), `humour` (a comic absurdity on a line that carries one). Give each beat one or two
+   krishanraja/higgsfield-generator; his face in one only from a likeness approved in krishanraja/krish-clone's
+   registry, `config/synthetic-approvals.json`, judged with `clone likeness`), `humour` (a comic absurdity on a line that carries one). Give each beat one or two
    other good options of a different kind, so he has something real to swap to.
 4. The humour: read krishanraja/humour-engine's README (section 4, integrating) and ask it what comic readings his own
    words carry; read his humour style from ai-harness (skills/krish-voice/references/humour.md, by its raw link in the
