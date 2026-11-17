@@ -1,0 +1,29 @@
+{
+  "path": "docs/ve/cards/w-face-covers/ve-cover-face-6.md",
+  "card_id": "ve-cover-face-6",
+  "kind": "cover",
+  "channel": "tiktok",
+  "date": "2026-11-16",
+  "references": [
+    "krish-chat-2026-11-17-rio-meets (the Rio Meets 'I LOVE CRISTIANO!' thumbnail Krish sent: two cutout faces large either side, the headline huge between them on a deep colour)"
+  ],
+  "photos": [
+    ".scratch/covers/photos/denim.png",
+    ".scratch/covers/photos/glasses.png",
+    ".scratch/covers/photos/natural.png"
+  ],
+  "title": "Face-led covers, round six: the tall headline leads",
+  "goal": "The separate critic passes all three wide files; change only the three tall files in .scratch/covers/draw.py:\n1. The headline spans only about 680 of 1080 px, so the face outweighs it. Set it as large as fits the clear box, about 1000 px wide on the same left edge, so it is the largest thing in the 3:4 grid crop; keep the label above it and the wordmark under it on the same edge, the wordmark the same size relative to the headline as on the wide covers.\n2. Options 1 and 2 tall: the jacket still ends in a hard vertical edge at about x 163 from about y 1700 down. Place or scale each cutout so that edge lies off the left edge of the canvas.\n3. If the larger headline needs the room, shrink the yellow panel and the face with it; the face stays about a third of the frame, shoulders off the bottom.\nThe three wide files stay byte-for-byte as they are.",
+  "contract": "Outputs: .scratch/covers/out/option-{1,2,3}-wide.png (1280x720) and option-{1,2,3}-tall.png (1080x1920). Colours and fonts only from the Brand sections below and config/ve/brand-tokens.json; fonts from the repository's font files named there, never a system font. At most three parts besides the headline: the face, the quiet series label, the wordmark. No logos, badges or proof tags. His name never appears. The tall cover keeps the headline and face inside the 3:4 grid crop and clear of the caption zone (config/channel-safe-zones.json). Never edit, recolour or redraw the photos: scale and position only.",
+  "acceptance": "python3 .scratch/covers/draw.py\npython3 -c \"from PIL import Image; import sys; [sys.exit(1) for n in (1,2,3) for s,w,h in (('wide',1280,720),('tall',1080,1920)) if Image.open(f'.scratch/covers/out/option-{n}-{s}.png').size!=(w,h)]\"\npython3 scripts/channel_safe.py --shape cover_tall .scratch/covers/out/option-1-tall.png\npython3 scripts/channel_safe.py --shape cover_tall .scratch/covers/out/option-2-tall.png\npython3 scripts/channel_safe.py --shape cover_tall .scratch/covers/out/option-3-tall.png",
+  "write_allow": [
+    ".scratch/covers/draw.py",
+    ".scratch/covers/out/option-1-tall.png",
+    ".scratch/covers/out/option-2-tall.png",
+    ".scratch/covers/out/option-3-tall.png"
+  ],
+  "read": "config/ve/brand-tokens.json, config/brand-palette.json, config/channel-safe-zones.json, docs/production/COVER-STANDARD.md, .scratch/covers/photos/*, .scratch/covers/brand/wordmark.png",
+  "max_minutes": 30,
+  "max_calls": 30,
+  "cwd": "/root/dev/makeyourmindup/.worktrees/content-engine/ve-card/ve-cover-face-1"
+}
