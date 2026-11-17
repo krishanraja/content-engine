@@ -126,7 +126,7 @@ export function dayThumbs(week: string, piece: Body | undefined): DayThumbs | nu
       }),
       critic: { line: criticLine(v), blocking, best: verdict.best === o.id },
       press: open && !blocking ? { kind: 'press', label: 'Pick', op: THUMB_OP, body: body({ verdict: 'pick', option: o.id }), stamp: [],
-        done: `Picked. Option ${IDS(o)} is the thumbnail; a session files it with the cuts.` } : null,
+        done: `Picked. Option ${IDS(o)} is the thumbnail; it goes out with the cuts.` } : null,
     }
   })
   const names = t.options.map(IDS)

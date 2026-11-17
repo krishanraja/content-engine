@@ -303,3 +303,54 @@ describe('F49 review: the spoken title and the staleness rule hold on awkward sc
     expect(scriptsChanged({ long: 'A' }, [{ ...f[0], at: '2026-11-17T17:00:00Z' }], '2026-11-17T16:20:00Z')).toEqual(['long'])
   })
 })
+
+// The review of 17 Nov (Krish: "distill the workflow i want to be in place down to its simplest form, and [...] ensure
+// that every single element of the content tab is stable, consistent, predictable and delivers on this at every step of
+// the way"). The workflow is docs/PUBLISH_BOARDS.md, "The workflow in one page"; each test below holds one of its rules.
+describe('the workflow in one page: one rule, the same result on every card', () => {
+  const LOCK17 = `# Narrative lock: Tue 17\n\npiece_id: ${TUE}\nPublishes: 2026-11-17\n\n## Surface story\nTowns say no.\n\n## Deeper story\nThe bill.\n\nSigned by Krish: "Signed.", 2026-11-17`
+  const filed = [
+    { cut: 'long' as const, id: '6503bef2-62ac-4192-83a5-f1607d9d3f30', title: 'Tue 17 script, 5-minute cut (for your Approve)', text: 'Session words long.', at: '2026-11-17T11:30:14Z' },
+    { cut: 'short' as const, id: '81ff7074-8a15-43c1-b78c-793ca9b2bfcd', title: 'Tue 17 script, short cut (for your Approve)', text: 'Session words short.', at: '2026-11-17T11:30:17Z' },
+  ]
+  const EDITED = { long: 'His long words. Where does AI get built when towns say no? Let\'s find out.\n\nMore.', short: 'His short words.' }
+  const approvalOn = (day: string, send: Body | null, at = '2026-11-17T16:20:16.888Z') => ({ doc_id: `${day}-scripts-words-b019dbf8`, updated_by: 'Krish', updated_at: at, revision: 2, body: {
+    kind: 'approve_scripts', day, via: 'words', approved: true, piece_id: TUE, texts: EDITED, titles: { long: 'a', short: 'b' }, folder_title: 'Data centres',
+    words: 'Approve both scripts, with my edits', at, said_at: at, said_where: 'the Publish Board in Control Centre',
+    session_ref: 'https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=tue', ...(send ? { send } : {}) } })
+  const sent = { status: 'sent', at: '2026-11-17T16:20:17.095Z', by: 'content-engine server', folder_id: 'A08795EC', recorded: true }
+  const view = (picks: Body[], meta: Body = PICKED) => buildView({ ...inputs(meta), now: new Date('2026-11-17T16:30:00Z'), locks: { tue: LOCK17 }, scripts: { [TUE]: filed }, picks } as ViewInputs)
+
+  it('R3, R4: Edit the scripts opens the words he approved, never the older filed ones', () => {
+    const it = item(view([approvalOn('tue', sent)]))
+    const edit = it.others.find((a: any) => a?.label === 'Edit the scripts') as any
+    expect(edit).toBeTruthy()
+    expect(edit.body.texts).toEqual(EDITED)
+    expect(edit.scripts.cuts.map((c: any) => c.text)).toEqual([EDITED.long, EDITED.short])
+  })
+  it('R1: his approval follows the piece to any day, so a moved piece never asks for it again', () => {
+    const it = item(view([approvalOn('wed', sent)]))
+    expect(it.next).not.toMatchObject({ label: 'Read and approve the scripts' })
+    expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'done', 'current', 'todo'])
+  })
+  it('R4: once his takes are in, Edit and Take back leave the card so nothing hides his takes', () => {
+    const takes = { ...PICKED, making: { recordings: [{ path: 'takes/long.mp4', at: '2026-11-17T18:00:00Z' }] } }
+    const labels = (it: any) => [it.next, ...it.others].filter(Boolean).map((a: any) => a.label)
+    expect(labels(item(view([approvalOn('tue', sent)])))).toEqual(expect.arrayContaining(['Edit the scripts', 'Take back my approval']))
+    expect(labels(item(view([approvalOn('tue', sent)], takes)))).not.toEqual(expect.arrayContaining(['Edit the scripts']))
+  })
+  it('R2, R6: a send that did not go through says its own reason in plain words, never engine steps', () => {
+    const refused = { status: 'refused', at: '2026-11-17T16:20:17.095Z', by: 'content-engine server', error: 'Folder quota reached' }
+    expect(item(view([approvalOn('tue', refused)])).line).toMatch(/never reached your Teleprompter: the send did not go through \(folder quota reached\)\./)
+    const technical = { ...refused, error: 'the piece\'s making record could not be read, so nothing was sent: a session checks them (making.py scripts)' }
+    const line = item(view([approvalOn('tue', technical)])).line
+    expect(line).toMatch(/the send did not go through\. Read or edit them/)
+    expect(line).not.toMatch(/\.py|making record|a session/)
+  })
+  it('R6: no card on the week speaks engine words to him', () => {
+    const v = view([approvalOn('tue', sent)])
+    const said = v.model!.days.flatMap(d => d.items).flatMap((it: any) => [it.line, ...[it.next, ...it.others].filter((a: any) => a && a.kind === 'press').flatMap((a: any) => [a.label, a.goes, a.done, a.scripts?.edited_note])])
+      .filter((x: unknown): x is string => typeof x === 'string')
+    for (const s of said) expect(s, s).not.toMatch(/\.py\b|making record|a session (checks|files)|\bF\d{2}\b/)
+  })
+})

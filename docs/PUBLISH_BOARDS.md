@@ -6,6 +6,32 @@ for good (Ruling, Krish, 2026-11-13: "We need to retire the old publish boards n
 content.krishraja.com/board/<Monday> included, redirects to the live board ("The old board pages are retired for good",
 below).
 
+## The workflow in one page (Krish, 2026-11-17)
+
+Krish, 2026-11-17: "distill the workflow i want to be in place down to its simplest form, and [...] ensure that every
+single element of the content tab is stable, consistent, predictable and delivers on this at every step of the way".
+Every card on every day follows this page. A change to the board that breaks a line here is wrong, whatever else it fixes.
+
+**A piece:** Idea → Approve (ideas board) → Sign the lock → Production picks (look, motion, captions) → Scripts (read,
+edit, Approve: they go to his Teleprompter at once) → Record (My takes are in the Inbox) → Produce → Approve to publish →
+Live. An off-day post follows the same rules on its own path.
+
+1. **One next action, his, from live state.** Read from the records on every view. Never a press he has already made
+   (F46). The card never moves back a step unless it says why (a script filed after his approval).
+2. **Every press shows its effect at once.** The card moves on, and the press answers in plain words what it did
+   (`line`); a refusal says why, in the sheet he is looking at. Nothing fails silently (F47, F49, F50).
+3. **His words are his.** Edits are saved, become the words, and survive a closed sheet or a refused save. His Approve
+   sends them to his Teleprompter at once; the checks run after and report to him (F49). An approval goes stale only
+   when a script is filed after it.
+4. **The scripts stay on the card until he has recorded.** Before Approve: Read and approve. After: Edit the scripts
+   (his approved words) and Take back my approval. A send that never reached his Teleprompter puts his words back for
+   Approve (F50).
+5. **Prompts only copy.** A session reports to the board; the board never waits on a chat.
+6. **Plain words.** No script names, no "making record", no failure numbers on the card.
+7. **One rule, one result, every card.** A series day's piece, a piece moved to another day and an off-day post at the
+   same state show the same step and the same action. A rule lives in one function every card builder calls
+   (tests/control-plane/board-every-card.test.ts, board-decisions.test.ts, "the workflow in one page").
+
 ## The live board is Control Centre's
 
 Ruling (Krish, 2026-11-11): Control Centre's Publish Board is where everything wires in, live; engine changes upgrade

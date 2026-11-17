@@ -426,11 +426,16 @@ export function lockStateOf(locks: ViewInputs['locks'], picks: Array<{ doc_id: s
   const typed = lk ? typedApproval(picks, lk.day, 'lock', pieceId, lk.text) : null
   return { signed: lockSigned(lk?.text), on: lockSignedOn(lk?.text), typed: typed ? { words: typed.words, said_at: typed.said_at } : null }
 }
+const SCRIPT_DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 export function scriptsStateOf(picks: Array<{ doc_id: string; body: Body; updated_by?: string | null; updated_at?: string | null }>, day: PostedDay, pieceId: string): ScriptsState {
   const back = takenBackAt(picks, 'scripts', pieceId)
-  const pressed = picks.find(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && isObj(p.body) && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === pieceId
+  // His approval follows its piece to any day (review of 17 Nov: a piece moved after he approved asked for it again):
+  // the day it is on first, then any other day.
+  const days = [day, ...SCRIPT_DAYS.filter(x => x !== day)]
+  const pressedOn = (dd: string) => picks.find(p => p.doc_id === `${dd}-scripts` && p.updated_by === 'Krish' && isObj(p.body) && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === pieceId
     && !(Date.parse(String(p.updated_at || p.body.at || '')) <= back))
-  const typed = typedApproval(picks, day, 'scripts', pieceId)
+  const pressed = days.map(pressedOn).find(Boolean)
+  const typed = days.map(dd => typedApproval(picks, dd, 'scripts', pieceId)).find(Boolean) ?? null
   const at = pressed ? str(pressed.updated_at) ?? (isObj(pressed.body) ? str(pressed.body.at) : null) : null
   // His words written by his own login are timed by the server (updated_at), never by his device's clock, so a slow or fast
   // phone cannot make his approval look older or newer than a filed script (scriptsChanged; review of F49).
@@ -493,13 +498,13 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   const signed = lockSigned(lock) || Boolean(typedLock)
   const make = i.runs['make-piece']
   const meta = isObj(piece.meta) ? piece.meta : {}
-  const scriptsPressed = i.picks.some(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === id)
-  // An approval counts only for the words it approved (scriptsChanged): scripts filed since with other words send the
-  // card back to his edit and Approve (Krish, 2026-11-17: "move the board state back to wher I can edit scripts and then
-  // approve again").
-  const approvedTexts = scriptsStateOf(i.picks, day, id).texts
-  const rewritten = scriptsChanged(approvedTexts, i.scripts?.[id])
-  const scriptsApproved = (scriptsPressed || Boolean(typedScripts)) && !rewritten.length
+  // His approval, read by one reader on every card (scriptsStateOf: any day, his take-back respected), and counted only for
+  // the words it approved: scripts filed AFTER it with other words send the card back to his edit and Approve (Krish,
+  // 2026-11-17: "move the board state back to wher I can edit scripts and then approve again"); his own edits never do.
+  const scriptsState = scriptsStateOf(i.picks, day, id)
+  const scriptsPressed = scriptsState.pressed
+  const rewritten = scriptsChanged(scriptsState.texts, i.scripts?.[id], scriptsState.pressed_at ?? scriptsState.typed?.said_at ?? null)
+  const scriptsApproved = (scriptsPressed || Boolean(scriptsState.typed)) && !rewritten.length
   // What the Sunday room wrote about the idea, and his note on his pick: the brief every prompt starts from.
   const ideaRow = (isObj(i.ideas) && isObj(i.ideas.days) && Array.isArray(i.ideas.days[day]) ? i.ideas.days[day] as Body[] : []).find(x => String(x.id).toLowerCase() === id)
   const pick = i.picks.find(p => p.doc_id === day && p.updated_by === 'Krish')
