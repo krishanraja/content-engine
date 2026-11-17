@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { thisWeek } from './board-week-model.test'
-import { buildView } from '../../apps/control-plane/api/board/_view'
+import { buildView, scriptsStateOf } from '../../apps/control-plane/api/board/_view'
+import { WORDS_ID, wordsBody, wordsDocId } from '../../apps/control-plane/api/board/_contracts'
+import { TYPED_SCRIPTS_ID } from '../../apps/control-plane/api/_teleprompter'
 import { newestScripts, scriptCut, scriptCuts, scriptSection } from '../../apps/control-plane/api/board/_decisions'
 import { recordedPiece, scriptsReady, withWork } from '../../apps/control-plane/api/board/_weekModel'
 
@@ -112,5 +114,37 @@ describe('the frozen week, with work filed on its days', () => {
       expect(it.read.research, it.key).toContain('Tue carousel, cards v1')
       expect(it.read.said, it.key).toBeTruthy()
     }
+  })
+})
+
+describe('two pieces on one day each keep their own approval (Tue 17 Nov)', () => {
+  const A = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118', B = '701a2c55-7400-4dc8-99cb-d6001147ae16'
+  const said = { words: 'Approved.', said_at: '2026-11-17T11:00:00Z', said_where: 'a Claude Code session', session_ref: 'https://claude.ai/code/session_x', at: '2026-11-17T11:00:00Z' }
+  const scripts = (piece: string) => ({ kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: piece,
+    texts: { short: 'Words.' }, titles: { short: 'Title' }, folder_title: 'Folder', ...said })
+  it('each piece gets a document of its own, named for it', () => {
+    expect(wordsDocId('tue', 'scripts', A)).toBe('tue-scripts-words-b019dbf8')
+    expect(wordsDocId('tue', 'lock', B.toUpperCase())).toBe('tue-lock-words-701a2c55')
+    expect(WORDS_ID.test('tue-scripts-words')).toBe(true)
+    expect(WORDS_ID.test('tue-scripts-words-701a2c55')).toBe(true)
+    expect(TYPED_SCRIPTS_ID.test('tue-scripts-words-701a2c55')).toBe(true)
+  })
+  it('a document named for one piece never carries another piece\'s approval', () => {
+    expect(wordsBody('tue-scripts-words-701a2c55', scripts(B))).toBe(true)
+    expect(wordsBody('tue-scripts-words-701a2c55', scripts(A))).toBe(false)
+  })
+  it('both approvals count, the older day-named one and the new piece-named one, each for its own piece only', () => {
+    const picks = [{ doc_id: 'tue-scripts-words', body: scripts(B) }, { doc_id: wordsDocId('tue', 'scripts', A), body: scripts(A) }]
+    expect(scriptsStateOf(picks, 'tue', A).typed?.words).toBe('Approved.')
+    expect(scriptsStateOf(picks, 'tue', B).typed?.words).toBe('Approved.')
+    expect(scriptsStateOf([{ doc_id: 'tue-scripts-words', body: scripts(B) }], 'tue', A).typed).toBeNull()
+  })
+})
+
+describe('the engine\'s read of one piece says its day', () => {
+  it('the columns it returns include scheduled_for', () => {
+    // Read from the source: importing the route needs the live database's settings.
+    const cols = /export const PIECE_COLUMNS = '([^']+)'/.exec(readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8'))?.[1] ?? ''
+    expect(cols.split(',')).toContain('scheduled_for')
   })
 })

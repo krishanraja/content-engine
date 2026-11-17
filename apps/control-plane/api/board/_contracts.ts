@@ -228,7 +228,15 @@ export function yesBody(id: string, body: Record<string, unknown>): boolean {
 // gate), any other decision and taking an approval back stay his presses alone (hisOnlyRefusal).
 // Any day a piece is placed on (Ruling, Krish, 2026-11-13: he moved the data-centres piece to Tue 17 with place_piece;
 // a piece on an off day is still a piece, and its lock and scripts are approved the same way).
-export const WORDS_ID = /^(mon|tue|wed|thu|fri|sat)-(lock|scripts)-words$/
+// One document per piece, never per day (Ruling, Krish, 2026-11-17: board feedback is done to every day): Tue 17 held two
+// pieces, and his approval of one piece's scripts sat in the one picks/tue-scripts-words the other piece's approval
+// would overwrite. A new approval is picks/<day>-<lock|scripts>-words-<the piece id's first 8 hex> (wordsDocId); the
+// unsuffixed name stays readable, for the approvals saved under it before 17 Nov.
+export const WORDS_ID = /^(mon|tue|wed|thu|fri|sat)-(lock|scripts)-words(?:-([0-9a-f]{8}))?$/
+/** The typed-approval document of one piece's lock or scripts on its day. */
+export function wordsDocId(day: string, what: 'lock' | 'scripts', pieceId: string): string {
+  return `${day}-${what}-words-${pieceId.toLowerCase().slice(0, 8)}`
+}
 export const WORDS_KIND = { lock: 'sign_lock', scripts: 'approve_scripts' } as const
 const LOCK_PATH = /^docs\/plans\/\d{4}-\d{2}-\d{2}-week\/narrative-lock-(mon|tue|wed|thu|fri|sat)\.md$/
 /** His words as a session carries them: verbatim, when and where he typed them, and the session they came from. */
@@ -242,6 +250,7 @@ export function wordsBody(id: string, body: Record<string, unknown>): boolean {
   if (!m || body.day !== m[1] || body.via !== 'words' || body.approved !== true || 'send' in body) return false
   if (body.kind !== WORDS_KIND[m[2] as keyof typeof WORDS_KIND]) return false
   if (typeof body.piece_id !== 'string' || !UUID.test(body.piece_id)) return false
+  if (m[3] && !body.piece_id.toLowerCase().startsWith(m[3])) return false
   if (typeof body.at !== 'string' || !Number.isFinite(Date.parse(body.at)) || !saidInWords(body)) return false
   if (m[2] === 'lock') {
     const path = LOCK_PATH.exec(String(body.lock_path))
