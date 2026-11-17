@@ -95,6 +95,12 @@ const CUT_NAME: Record<string, string> = { long: '5-minute', short: '90-second',
 // himself and signed them off in his own words.
 const READ_BACK_FOUND = 'nothing lost'
 const READ_BACK_KRISH = 'approved by Krish'
+// config/script-floor.json: the sha256 of the AI Music take each cut is judged against (tests/control-plane/teleprompter-server.test.ts
+// holds these to the file). The feature is a long cut. Ruling, Krish, 2026-11-17: the AI Music take is the tonal floor for every script.
+export const TONE_FLOOR_REFERENCE: Record<string, string> = {
+  long: 'c8ded6f8268569a5c07ad2073f635ec07d3e556c269b28e2ca07ce6494bc2466',
+  short: 'a6459ee2a98b8a059472c57a6d76129daf3fcf20d95bbd494e43f3ab9aa34a03',
+}
 const THEN = 'so nothing was sent: a session checks them (making.py scripts), has two fresh readers read them back, then '
   + 'sends exactly these words (teleprompter_send.py plan)'
 
@@ -145,6 +151,10 @@ export async function heldBecause(making: unknown, texts: Record<string, string>
         // His sign-off records his approval and never stands in for the readers, unless his words skipped them (F45).
         && ((Array.isArray(read.readers) && read.readers.length >= 2) || read.readers_skipped === true)))
     if (!heard) return `${name} has not been read back by two fresh readers, ${THEN}`
+    // The tone floor (making.py tone_floor_of): a separate reader found these exact words at or above his AI Music take.
+    const tones = isObj(check.tone_floor) ? check.tone_floor : {}, tone = tones[cut]
+    const toned = isObj(tone) && tone.script_sha256 === sha && tone.reference_sha256 === (TONE_FLOOR_REFERENCE[cut] ?? TONE_FLOOR_REFERENCE.long) && tone.verdict === 'pass'
+    if (!toned) return `${name} has not passed the tone floor (a fresh reader comparing it with his AI Music take, config/script-floor.json; making.py tone-floor), ${THEN}`
   }
   return null
 }

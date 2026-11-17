@@ -417,6 +417,18 @@ read `.agents/skills/make-piece/references/long-cut.md`.
    "reader C, ..."`, and the same for `short`. It writes who
    read it, when, "nothing lost" and the hash of the words they heard onto
    the script check; new words need a new read-back.
+   **The tone floor (Ruling, Krish, 2026-11-17).** Before writing any
+   script, read `config/script-floor/ai-music-long.said.txt`, what he said
+   on film: it is the floor for every script, tonally. After the read-back,
+   a separate reader (a fresh subagent that did not write it, given only the
+   script and that reference) judges it against the qualities in
+   `config/script-floor.json`, and `python3 scripts/post-pack/making.py
+   <uuid> tone-floor CUT --reader "a fresh subagent" --verdict pass|fail
+   --why "one line per quality"` records it on the script check, bound to
+   the script's exact words. A fail is rewritten, never argued. The LISTENING
+   caps are met by cutting side-stories, never by anonymising names ("a
+   firm", "a brand"). `teleprompter_send.py plan` and the board's Approve
+   scripts press send nothing without it.
 6. **His Approve scripts press, then Teleprompter**, where he reads them
    while he records ("The Teleprompter send", above). The storyboard is drawn
    first (step 7) and filed on the day; with none, the board reminds (Krish,

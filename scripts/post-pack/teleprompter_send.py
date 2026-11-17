@@ -495,6 +495,13 @@ def plan(piece_id, script_paths, call=None, cfg=None, post_path=None, plans=PLAN
                                 'have not been read back: two fresh readers, each an ordinary 12-year-old hearing it once, must find nothing '
                                 'that loses them (make-piece, "The Scripts step"), then making.py PIECE read-back CUT --readers ... records it; '
                                 'nothing is sent until then')
+    # Words Krish reads were also judged against his AI Music take by a separate reader (the tone floor; Ruling, Krish, 2026-11-17).
+    low = [cut for cut in cuts if states[cut][0] != 'in' and not making.tone_floor_of(record, cut)]
+    if low:
+        raise TeleprompterError(f'the {" and ".join(making.CUT_NAME[c] for c in low)} script{"s" if len(low) > 1 else ""}\' current words have not passed '
+                                'the tone floor: a fresh reader that did not write them compares them with his AI Music take '
+                                '(config/script-floor.json, make-piece, "The Scripts step") and finds them at or above it on every quality, then '
+                                'making.py PIECE tone-floor CUT --reader ... --verdict pass --why ... records it; nothing is sent until then')
     # A send made by hand that the record does not hold yet: its line first, never a second script.
     for cut, (state, _entry) in states.items():
         line = hand_made(piece_id, cut, workbench) if state in ('missing', 'failed') and not (_entry or {}).get('script_id') else None
@@ -895,8 +902,10 @@ def self_test():
         (t / 'short.md').write_text(short_words, encoding='utf-8')
         long_sha, short_sha = making.script_hash(long_words), making.script_hash(short_words)
         read = lambda sha: {'script_sha256': sha, 'at': '2026-10-12T15:36:00Z', 'by': 'Claude Code', 'readers': ['A', 'B'], 'found': 'nothing lost'}
+        tone = lambda sha, cut='long': {'script_sha256': sha, 'reference_sha256': making.tone_floor_reference(cut), 'reader': 'R', 'verdict': 'pass', 'why': 'w', 'at': 'x'}
         holds = {'script_check': {'passed': True, 'checked_at': '2026-10-12T15:35:35Z', 'problems': [], 'hashes': {'long': long_sha, 'short': short_sha},
-                                  'read_back': {'long': read(long_sha), 'short': read(short_sha)}}}
+                                  'read_back': {'long': read(long_sha), 'short': read(short_sha)},
+                                  'tone_floor': {'long': tone(long_sha, 'long'), 'short': tone(short_sha, 'short')}}}
         gets, board_reads = [], []
         approvals = [his(pid, {'long': long_sha, 'short': short_sha})]
         making_ = lambda method, path, body: (gets.append((method, path)), (200, json.dumps({'ok': True, 'making': holds, 'steps': []})))[1]
@@ -970,6 +979,17 @@ def self_test():
         check('plan: a cut whose words are already there needs no read-back to say so',
               [c['action'] for c in go()['cuts']], ['none', 'none'])
         holds['script_check']['read_back']['short'] = read(short_sha)
+        holds['teleprompter']['cuts']['long']['script_sha256'] = 'd' * 64
+        holds['script_check']['tone_floor'].pop('long')
+        refused('plan: a cut to send whose words never passed the tone floor is refused', go, 'have not passed the tone floor')
+        holds['script_check']['tone_floor']['long'] = {**tone(long_sha), 'script_sha256': 'c' * 64}
+        refused('plan: a tone floor of other words does not count', go, 'the 5-minute script\' current words have not passed the tone floor')
+        holds['script_check']['tone_floor']['long'] = {**tone(long_sha), 'verdict': 'fail'}
+        refused('plan: a failed tone floor does not count', go, 'have not passed the tone floor')
+        holds['script_check']['tone_floor']['long'] = {**tone(long_sha), 'reference_sha256': 'e' * 64}
+        refused('plan: a tone floor against another reference does not count', go, 'have not passed the tone floor')
+        holds['script_check']['tone_floor']['long'] = tone(long_sha)
+        holds['teleprompter']['cuts']['long']['script_sha256'] = long_sha
         holds['script_check']['hashes']['long'] = 'f' * 64
         refused('plan: a file that is not the words the check passed is refused', go, 'does not hold the long words the check passed')
         holds['script_check']['hashes']['long'] = long_sha
@@ -1128,7 +1148,9 @@ def self_test():
         feature_id = '0C3E7F55-9C1B-4F6A-8E2D-3B5A1C7D9E01'
         sent = {c: {'script_id': long_id if c == 'long' else short_id, 'title': 't', 'script_sha256': shas[c], 'sent_at': 'x', 'by': 'y'} for c in CUTS}
         feature_record = {'script_check': {'passed': True, 'checked_at': '2026-10-21T12:00:00Z', 'problems': [], 'hashes': dict(shas),
-                                           'read_back': {c: read(s) for c, s in shas.items()}},
+                                           'read_back': {c: read(s) for c, s in shas.items()},
+                                           'tone_floor': {c: {'script_sha256': s, 'reference_sha256': making.tone_floor_reference(c), 'reader': 'R', 'verdict': 'pass', 'why': 'w', 'at': 'x'}
+                                                          for c, s in shas.items()}},
                           'teleprompter': {'folder_id': folder, 'folder_name': folder_name(names), 'cuts': dict(sent)}}
         features = t / 'features.json'
         features.write_text(json.dumps({'pieces': {pid: {'said': 'Krish, 2026-10-21: a feature for this one'}}}), encoding='utf-8')
