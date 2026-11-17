@@ -30,7 +30,8 @@
     "e. A real twist or favourite detail, paid off.",
     "f. A close that reframes the opening question and says what he will do.",
     "g. Every line makes sense heard once with no visuals.",
-    "h. Great fun to deliver and to consume, like the AI Music take: lines he enjoys saying out loud, with play, rhythm and jokes, and a listener who is entertained, not lectured."
+    "h. Great fun to deliver and to consume, like the AI Music take: lines he enjoys saying out loud, with play, rhythm and jokes, and a listener who is entertained, not lectured.",
+    "i. The intro hits the four beats in config/script-floor/intros.json as well as his two reference intros do; a 90-second cut opens with the same four beats compressed, never a different opening."
   ],
   "pass": "at or above the floor on every quality"
 }

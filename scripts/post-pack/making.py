@@ -989,7 +989,7 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
     prev_feature = current_hashes({'script_check': previous}).get('feature') if isinstance(previous, dict) else None
     if feature and len(paths) == len(CUTS):
         warn(FEATURE_NOT_RECHECKED if prev_feature else FEATURE_TO_COME)
-    problems, cuts, hashes, found = [], [], {}, []
+    problems, cuts, hashes, found, titles = [], [], {}, [], {}
     for cut, p in zip(order, paths):
         name = Path(p).name
         said = story_check.cut_of(name)
@@ -1006,6 +1006,9 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
             continue
         cuts.append(cut)
         code, out = run(cut, p)
+        said_title = next((line.strip()[6:].strip() for line in out.splitlines() if line.strip().startswith('TITLE ')), None)
+        if said_title and len(said_title) <= 300:
+            titles[cut] = said_title  # the title question his intro speaks (story_check INTRO), which the video's title is keyed to
         if code != 0:
             lines = [line.strip() for line in out.strip().splitlines() if line.strip()]
             found.extend([f'{name}: {line}' for line in lines][:10] or [f'{name}: the {cut} cut failed its check'])
@@ -1040,6 +1043,9 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
         check['long_cut'] = {'words': lift['words'], 'reason': lift['reason']}
     if short_lift and 'short' in cuts:
         check['short_cut'] = {'words': short_lift['words'], 'close': short_lift['close'], 'reason': short_lift['reason']}
+    # The title line each intro speaks, bound to the words it was read from (house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17).
+    if titles and not problems:
+        check['title_line'] = {cut: {'title': t, 'script_sha256': hashes[cut]} for cut, t in titles.items() if hashes.get(cut)}
     # A read-back holds for the words the readers heard: kept while they stay the same.
     read = prev.get('read_back') if isinstance(prev.get('read_back'), dict) else {}
     still = {cut: entry for cut, entry in read.items() if isinstance(entry, dict) and hashes.get(cut) and entry.get('script_sha256') == hashes[cut]}
@@ -2007,6 +2013,13 @@ def self_test():
               (asked, lifted.get('short_cut'), 'long_cut' in lifted),
               ([('long', wed), ('short', wed)], {'words': 260, 'close': 'The full five-minute video is on my channel.',
                'reason': 'A 90-second cut that sends viewers to the 5-minute video, as he asked.'}, False))
+
+        # The title line each intro speaks is recorded, bound to its script's hash (house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17).
+        titled = scripts_patch([t / 'long.md', t / 'short.md'], lambda cut, path: (0, 'ready\n  TITLE Is it AI music or is it human music?\n' if cut == 'long' else 'ready\n'),
+                               warned.append)['script_check']
+        check('the title line the long intro speaks is on the record with its script hash; a cut with none records none',
+              titled.get('title_line'), {'long': {'title': 'Is it AI music or is it human music?', 'script_sha256': titled['hashes']['long']}})
+        check('a record from a check that printed no title has no title_line', 'title_line' in scripts_patch([t / 'long.md', t / 'short.md'], ok, warned.append)['script_check'], False)
 
         # The 15-minute feature (house rule FEATURE): a third script, only on a piece Krish called one for.
         features = t / 'features.json'
