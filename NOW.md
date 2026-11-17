@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-17","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Fri 20 Nov narrative lock signed by Krish in his typed words (carried to the board, "Approved in your words"); scripts recorded on the making record (making.py scripts: done, not in Teleprompter yet). (2026-11-17)
 - Fri 20 Nov lock carries Krish's title ("Your AI auditor will find your missing money. And the skeletons in your closet."); week plan recommends ai-music-slam motion and art-directed captions; both scripts drafted, three reader rounds run, and filed on the piece for his edit. Lock still unsigned: his message did not name an approval (typed-approval rule, 17 Nov). (2026-11-17)
 - Fri 20 Nov narrative lock rewritten to Krish's 17 Nov note (The Auditor: AI audits your business's past, and digs up the skeletons too), with new research filed on the piece; making.py narrative passes all but his signature. (2026-11-17)
 - Only scripts Krish records go to his Teleprompter: his pieces and the voiceovers he records himself. A carousel's, meme's or other post's copy is approved and kept, and the press says it never goes there (teleprompter false, which the server honours by sending nothing). Every prompt on every card carries his optional notes box; a test holds the whole week to it. Both rulings are in docs/PUBLISH_BOARDS.md, "The workflow in one page". (2026-11-17)
@@ -51,7 +52,7 @@ Older lines: `docs/history/2026-11-17-NOW-moved-21.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-17): Krish signs the lock and picks look, motion and captions on Friday's card, then edits and approves the scripts there.
+- Next (2026-11-17): Krish picks look, motion style and captions on Friday's card, then edits and approves both scripts there.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
