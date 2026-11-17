@@ -441,12 +441,21 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             const { scriptsApproval } = await import('./_weekModel.js')
             const approval = scriptsApproval((picks.data || []) as never, pieceId)
             if (!approval) throw new BoardError(409, 'scripts_not_approved')
-            const others = await db.from('content_ideas').select('id,meta').not('meta->takes_in', 'is', null).neq('id', pieceId).limit(300)
-            if (others.error) throw new BoardError(503, 'pieces_unavailable')
-            const claimed = new Set<string>((others.data || []).flatMap((r: Record<string, any>) => (takesInOf(r.meta)?.files || []).map(f => f.drive_id)))
+            const held = await db.from('content_ideas').select('id,meta').not('meta->takes_in', 'is', null).neq('id', pieceId).limit(300)
+            if (held.error) throw new BoardError(503, 'pieces_unavailable')
+            const claimed = new Set<string>((held.data || []).flatMap((r: Record<string, any>) => (takesInOf(r.meta)?.files || []).map(f => f.drive_id)))
             const listing = await (deps.inbox ?? (async () => (await import('../library/_inboxDrive.js')).listInbox((await import('../library/_inboxDrive.js')).INBOX_FOLDER_ID)))()
             if (listing.ok === false) return res.status(503).json({ ok: false, error: 'inbox_unreadable', reason: listing.reason, fix: listing.fix })
-            const files = newTakes(listing.files, approval.at, claimed)
+            // Which piece a take is, by its name: this piece's title and its approved scripts' titles, against the week's
+            // other pieces (series and off-day records alike), so a take dropped for another piece is never taken here.
+            const end = new Date(`${week}T00:00:00Z`); end.setUTCDate(end.getUTCDate() + 6)
+            const weekRows = await db.from('content_ideas').select('id,idea,scheduled_for,meta')
+              .or(`and(scheduled_for.gte.${week},scheduled_for.lte.${end.toISOString().slice(0, 10)}),meta->offday_link->>week.eq.${week}`).limit(200)
+            const titleOf = (r: Record<string, any>) => [String(r.idea || ''), ...Object.values(scriptsApproval((picks.data || []) as never, String(r.id))?.titles ?? {})]
+            const own = [String(row.data.idea || ''), ...Object.values(approval.titles), approval.folder ?? ''].filter(Boolean)
+            const others = (weekRows.error ? [] : (weekRows.data || []) as Array<Record<string, any>>)
+              .filter(r => String(r.id).toLowerCase() !== pieceId).flatMap(titleOf).filter(Boolean)
+            const files = newTakes(listing.files, approval.at, claimed, own, others)
             if (!files.length) return res.status(409).json({ ok: false, error: 'no_new_takes',
               line: `No recording is in the Video Engine Inbox since you approved the scripts${approval.on ? ` on ${approval.on}` : ''}. If you have just dropped it, give Drive a minute and press again.` })
             const now = (deps.now ?? (() => new Date().toISOString()))()

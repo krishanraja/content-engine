@@ -59,7 +59,7 @@ import engine  # noqa: E402  scripts/engine.py: the engine's address and key
 DEFAULT_OUT = REPO / '.cache' / 'recordings'
 POLL_SECONDS = 30
 # The same rule the engine holds (api/library/_recordings.ts).
-EXTENSIONS = {'mp4', 'mov', 'webm', 'mkv', 'm4a', 'wav', 'mp3'}
+EXTENSIONS = {'mp4', 'mov', 'webm', 'mkv', 'm4a', 'aac', 'wav', 'mp3'}
 UNSAFE = re.compile(r'[<>:"/\\|?*\x00-\x1f\x7f-\x9f]')
 RESERVED = re.compile(r'^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$', re.IGNORECASE)
 DOWNLOAD_PATH = '/storage/v1/object/sign/content-library/recordings/'
