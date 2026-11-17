@@ -24,11 +24,14 @@ Sunday session's roaster step writes them, adds the week's pop-culture moments f
 "pop_culture"), picks 6 to 10, and drafts the caption ideas. A clip page offered on the three boards before is left out.
 A source that cannot be read is said in `sources` with why, and never stops the others.
 
-Trending meme accounts on Instagram and TikTok come through Apify, which costs money, so it is off by default:
---apify runs only with --max-items N (at most 30) and --i-approved-spend, and with APIFY_TOKEN set. One run reads at
-most N items from one scraper actor; at the per-result prices the Store's TikTok and Instagram scrapers list (a few
-dollars per 1,000 results), 30 items is estimated at under $0.20. The session reads the actor's live price and asks
-Krish before it ever passes the flag: his approval names the run and its cap (docs/COST_GUARDS.md).
+Trending meme videos on TikTok come through Apify, which costs money: --apify runs only with --max-items N (at most
+30) and --i-approved-spend, and with APIFY_TOKEN set. One run reads at most N items from one scraper actor, split across
+its hashtags, under Apify's own charge cap (APIFY_CHARGE_CAP_USD, the lowest Apify accepts); the first run, 17 Nov 2026,
+read 30 items for about $0.09. Ruling (Krish, 2026-11-17): "run Apify weekly in the Sunday ideas run", so the Sunday
+ideas workflow passes the flags once a week, in a step of its own before the Claude step, with the key only in that step
+(.github/workflows/sunday-ideas.yml); no session passes them on its own. That step's results are also kept in
+meme-template-apify.json (never committed), and a later gather without --apify reads them back in, so the Claude
+step's own gather keeps them.
 """
 import argparse
 import html
@@ -52,6 +55,9 @@ REDDIT_URL = 'https://www.reddit.com/r/{sub}/top.json?t=week&limit=50'
 APIFY_MAX = 30
 APIFY_ACTOR = 'clockworks~tiktok-scraper'
 APIFY_HASHTAGS = ('memetemplate', 'memetemplates')
+# Apify refuses a run whose charge cap is under $0.50; the item cap keeps the real charge far below it (about $0.09).
+APIFY_CHARGE_CAP_USD = 0.5
+APIFY_FILE = 'meme-template-apify.json'
 SHEET_DAYS = 30
 # A post that says it is a meme, a joke or a relatable bit: the words meme people use about their own posts.
 MEME_SIGNAL = re.compile(r'\b(?:memes?|meme ?template|lol|lmao|funny|humou?r|joke|pov|relatable|when your|me when|nobody:|'
@@ -184,9 +190,11 @@ def apify_candidates(max_items, token, fetch=fetch_json):
     --apify, with --max-items and --i-approved-spend, ever calls it."""
     if not isinstance(max_items, int) or not 1 <= max_items <= APIFY_MAX:
         raise GatherError(f'--max-items is 1 to {APIFY_MAX}')
-    body = json.dumps({'hashtags': list(APIFY_HASHTAGS), 'resultsPerPage': max_items, 'maxItems': max_items,
+    per_tag = -(-max_items // len(APIFY_HASHTAGS))  # the cap is the run's total, not each hashtag's
+    body = json.dumps({'hashtags': list(APIFY_HASHTAGS), 'resultsPerPage': per_tag, 'maxItems': max_items,
                        'shouldDownloadVideos': False, 'shouldDownloadCovers': False}).encode('utf-8')
-    url = f'https://api.apify.com/v2/acts/{APIFY_ACTOR}/run-sync-get-dataset-items?maxItems={max_items}'
+    url = (f'https://api.apify.com/v2/acts/{APIFY_ACTOR}/run-sync-get-dataset-items?maxItems={max_items}'
+           f'&maxTotalChargeUsd={APIFY_CHARGE_CAP_USD}')
     items = fetch(url, {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}, body, 300)
     out = []
     for it in (items if isinstance(items, list) else [])[:max_items]:
@@ -268,8 +276,23 @@ def gather(week, plans=None, today=None, network=True, reddit_files=None, apify=
                 raise GatherError('not read: --no-network')
             return reddit_candidates(fetch(REDDIT_URL.format(sub=sub)), sub)
         took(f'reddit:r/{sub}', reddit)
+    kept = folder / APIFY_FILE
     if apify:
-        took('apify:tiktok', lambda: apify_candidates(apify['max_items'], apify['token'], fetch))
+        def paid():
+            got = apify_candidates(apify['max_items'], apify['token'], fetch)
+            kept.write_text(json.dumps({'week_start': wk.isoformat(), 'read_at': datetime.now(timezone.utc).isoformat(timespec='seconds'),
+                                        'max_items': apify['max_items'], 'candidates': got}, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
+            return got
+        took('apify:tiktok', paid)
+    elif kept.exists():
+        def earlier():
+            data, err = read_json(kept)
+            if err:
+                raise GatherError(err)
+            if data.get('week_start') != wk.isoformat():
+                raise GatherError(f'{APIFY_FILE} is for the week of {data.get("week_start")}, not {wk.isoformat()}')
+            return [c for c in data.get('candidates') or [] if isinstance(c, dict) and isinstance(c.get('clip'), dict)]
+        took('apify:tiktok (read earlier this run)', earlier)
     before = earlier_pages(wk, plans)
     out, seen, dropped = [], set(), 0
     for c in found:

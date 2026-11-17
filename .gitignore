@@ -76,3 +76,4 @@ docs/plans/*-week/lookalike-input.json
 docs/plans/*-week/goodnews-input.json
 # The meme templates lane's candidates (meme_templates.py gather): other people's titles and clips, never committed.
 docs/plans/*-week/meme-template-candidates.json
+docs/plans/*-week/meme-template-apify.json

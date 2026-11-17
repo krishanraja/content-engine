@@ -14,8 +14,9 @@ His answers the same day: meme templates get their own "Meme templates" row on t
 the clip, why it fits and a caption box; his caption plus Approve turns it into a meme post, which he can move to any
 off day. The footage is the original clip, credited, his caption on top, like the translator meme. The sources are his
 Instagram inspo sheet's meme videos and liked cards, Reddit's meme-template subreddits, the week's pop-culture moments
-from the Sunday run's web search, and trending meme accounts on Instagram and TikTok through Apify (costed, off by
-default, never without his approval of the run and its cap).
+from the Sunday run's web search, and trending meme accounts on Instagram and TikTok through Apify (costed). Ruling
+(Krish, 2026-11-17): "run Apify weekly in the Sunday ideas run": once a week, at most 30 TikTok template videos (about
+$0.09 on 17 Nov), in the workflow's own step before the session starts, never from a session on its own.
 
 ## His humour, read live
 
@@ -33,9 +34,11 @@ traits, so this file cannot stand in for them. Never copy them into this reposit
    `lookalike.py prepare`) writes `docs/plans/<Monday>-week/meme-template-candidates.json`, never committed: video posts
    from his sheet and his video cards with a meme or humour signal, and the top video posts of the week on
    r/MemeTemplatesOfficial and r/memes. A source it cannot read is said in `sources` with why; say each count and each
-   failure in your reply. A clip offered on the last three boards is already left out. Never pass `--apify`: it costs
-   money and runs only once Krish approved that run and its cap (`--max-items`, at most 30, and
-   `--i-approved-spend`).
+   failure in your reply. A clip offered on the last three boards is already left out. The Sunday ideas workflow has
+   already read the week's trending TikTok templates through Apify in a step of its own (`--apify --max-items 30
+   --i-approved-spend`, his weekly approval of 17 Nov, the key only in that step), and your gather reads them back in
+   from `meme-template-apify.json` as `apify:tiktok (read earlier this run)`. Never pass `--apify` yourself: any other
+   paid run needs his approval of that run and its cap.
 2. **The week's moments.** Search the web for the pop-culture moments of the week (a film, a match, a launch, a
    viral clip people are already remixing). A moment with a clip people reuse is a candidate with place
    `pop_culture` and `moment` set, dated ("The final whistle at the 29 Nov derby, 2026-11-29").
