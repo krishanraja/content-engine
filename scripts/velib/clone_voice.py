@@ -119,6 +119,10 @@ def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=
     voice bank id he picked on the Content Board (config/voice-bank.json); none, or his own (krish-remix), is his
     approved clone from krish-clone's registry, as before; a stock voice must be one he approved."""
     from . import lint, voice_bank  # noqa: PLC0415
+    if voice == voice_bank.RECORD_MYSELF:
+        raise ValueError('he picked Record it myself on the board: no voice is generated. Send the approved script to his '
+                         'Teleprompter (scripts/post-pack/teleprompter_send.py) and ingest his take from the Video Engine Inbox '
+                         '(docs/ve/RUNBOOK.md S3), as for any recording')
     cfg = cfg or config()
     problems = list(lint.clone_route_problems(spec))
     for index, asset in lint.clone_voices(spec):
