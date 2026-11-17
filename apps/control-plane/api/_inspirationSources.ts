@@ -27,8 +27,20 @@
 //                card dismissed on 26 Oct never reached it; one routed to study_style named its topic in his words).
 //   recent       pieces scheduled in the RECENT_DAYS before the week, with the must_cover ids each answered: the
 //                board may not offer them again (board_feed.py cover, no-repeat).
+//   style        on any card: the engine's read of it in this repository's style vocabulary (inspirationhouse tag-v4,
+//                facets.style; labelled origin 'engine_read'): the caption, motion, transition, camera, energy, script
+//                and production format, series and teaches ids it points to, `grounded` when built on his own words on
+//                the card, `grounded_in` naming which (why_here, why_like, would_do). A grounded read is his steer, not
+//                a guess (Krish, 2026-11-17: "If I put actual feedback in the inspiration board as to why I like
+//                something, that is not really a guess is it?"); a bare read is a guess. His own presses still decide.
+//   reference sets  a file he filed in a subfolder of an Inspo folder (facets.collection, e.g. his thumbnail study) is a
+//                reference for making, not something to say: it is left out of the story sources unless he wrote on it
+//                or routed it, and counted (reference_set_left_out). The candidates offer it for making
+//                (GET /api/inspiration/candidates).
 //
 // Nothing here ranks for the judges (they stay blind, scripts/check-judges.ts) and nothing writes.
+
+import { collectionOf, groundedIn, styleRead, type StyleRead } from './inspiration/_cards.js'
 
 export const INSPO_FRESH_DAYS = 21
 export const ASK_DAYS = 45
@@ -80,6 +92,10 @@ export interface InspoCard {
   piece_id: string | null
   tags: ReturnType<typeof labels>
   heard: string | null
+  /** The engine's read of the card (facets.style, origin engine_read), or null; `grounded` when built on his words. */
+  style: StyleRead | null
+  /** Which of his own fields the read was built on; empty for a bare read or no read. */
+  grounded_in: string[]
 }
 
 /** His paste-time note (facets.link.note) while the card's why_here is still that note: an Undo on the page clears
@@ -101,6 +117,7 @@ export function card(r: Row): InspoCard {
     would_do: clip(r.would_do, 600), saved_why: savedWhy(r), note_for_claude: clip(r.note_for_claude, 600),
     answered_at: r.answered_at || null, created_at: r.created_at || null, piece_id: r.piece_id || null,
     tags: labels(r), heard: clip(r.transcript),
+    style: styleRead(r), grounded_in: groundedIn(r),
   }
 }
 
@@ -214,7 +231,10 @@ export function buildInspiration(input: { weekStart: string; items: Row[]; reads
   const listed = new Set(input.listedIdeas || [])
   const twice = (r: Row) => r.facets?.said?.landed_table === 'content_ideas' && listed.has(String(r.facets.said.landed_id))
     && !r.answered_at && !routesOf(r).length
-  const live = input.items.filter(r => !r.dismissed_at && !r.facets?.part_of && !twice(r))
+  // A reference set's file (facets.collection) is for making, not what to say: left out unless he wrote on it or routed it.
+  const reference = (r: Row) => Boolean(collectionOf(r)) && !hisWords(r) && !routesOf(r).length && !r.answered_at
+  const undismissed = input.items.filter(r => !r.dismissed_at && !r.facets?.part_of && !twice(r))
+  const live = undismissed.filter(r => !reference(r))
   const cards = live.map(card)
   const byNewest = (a: InspoCard, b: InspoCard) => String(b.answered_at || b.created_at || '').localeCompare(String(a.answered_at || a.created_at || ''))
   // A routed card that already became a piece (piece_id) is done; the rest are owed a place on the board.
@@ -289,7 +309,8 @@ export function buildInspiration(input: { weekStart: string; items: Row[]; reads
   return {
     routed, study_style: studyStyle, liked, fresh, positive, corpora, creators, claims, must_cover, asks, recent,
     counts: { routed: routed.length, study_style: studyStyle.length, liked: liked.length, fresh: fresh.length,
-      fresh_left_out_bulk_wordless: unseen.length - fresh.length, positive: positive.length,
+      fresh_left_out_bulk_wordless: unseen.length - fresh.length, reference_set_left_out: undismissed.length - live.length,
+      grounded_reads: cards.filter(c => c.style?.grounded).length, positive: positive.length,
       corpora: corpora.length, creators: creators.length, claims: claims.length, asks: asks.length, recent: recent.length },
   }
 }

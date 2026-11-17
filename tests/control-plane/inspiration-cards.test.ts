@@ -8,12 +8,22 @@ type Row = Record<string, any>
 const db = vi.hoisted(() => ({ tables: {} as Record<string, Row[]>, writes: [] as Array<[string, string, any]>, missing: new Set<string>() }))
 
 vi.mock('../../apps/control-plane/api/_supabase.js', () => {
+  // A column, or a JSON path the way PostgREST reads one ("facets->style").
+  const read = (r: Row, k: string) => k.split(/->>?/).reduce<any>((v, part) => (v == null ? undefined : v[part]), r)
+  // PostgREST's or(): "a.not.is.null,b.eq.x".
+  const orOf = (expr: string) => (r: Row) => expr.split(',').some(term => {
+    const m = /^(.+?)\.(not\.is\.null|eq\.(.*))$/.exec(term)
+    if (!m) throw new Error(`mock or(): ${term}`)
+    return m[2] === 'not.is.null' ? read(r, m[1]) != null : String(read(r, m[1])) === m[3]
+  })
   function query(table: string) {
     const rows = () => db.tables[table] || (db.tables[table] = [])
     const filters: Array<(r: Row) => boolean> = []
     let op: 'select' | 'update' | 'upsert' = 'select'
     let payload: any = {}
     let cols = ''
+    let order: [string, boolean] | null = null
+    let cap = Infinity
     const run = () => {
       if (db.missing.has(table)) return { data: null, error: { message: `relation "public.${table}" does not exist` } }
       if (table === 'inspiration_items' && db.missing.has('teaches') && /teaches/.test(cols)) return { data: null, error: { message: 'column inspiration_items.teaches does not exist' } }
@@ -27,7 +37,9 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
         db.writes.push([table, 'upsert', list])
         return { data: list, error: null }
       }
-      const hit = rows().filter(r => filters.every(f => f(r)))
+      let hit = rows().filter(r => filters.every(f => f(r)))
+      if (order) { const [k, asc] = order; hit = [...hit].sort((a, b) => String(read(a, k) ?? '').localeCompare(String(read(b, k) ?? '')) * (asc ? 1 : -1)) }
+      if (op === 'select') hit = hit.slice(0, cap)
       if (op === 'update') { hit.forEach(r => Object.assign(r, payload)); db.writes.push([table, 'update', { ...payload, n: hit.length }]); return { data: hit, error: null } }
       return { data: hit, error: null }
     }
@@ -35,11 +47,13 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
       select(c = '') { if (op === 'select') cols = c; return chain },
       update(p: Row) { op = 'update'; payload = p; return chain },
       upsert(p: Row[]) { op = 'upsert'; payload = p; return chain },
-      eq(k: string, v: unknown) { filters.push(r => r[k] === v); return chain },
-      in(k: string, vs: unknown[]) { filters.push(r => vs.includes(r[k])); return chain },
-      is(k: string, v: unknown) { filters.push(r => (r[k] ?? null) === v); return chain },
-      order() { return chain },
-      limit() { return chain },
+      eq(k: string, v: unknown) { filters.push(r => read(r, k) === v); return chain },
+      in(k: string, vs: unknown[]) { filters.push(r => vs.includes(read(r, k))); return chain },
+      is(k: string, v: unknown) { filters.push(r => (read(r, k) ?? null) === v); return chain },
+      not(k: string, o: string, v: unknown) { if (o !== 'is' || v !== null) throw new Error('mock not()'); filters.push(r => read(r, k) != null); return chain },
+      or(expr: string) { filters.push(orOf(expr)); return chain },
+      order(k: string, o: { ascending?: boolean } = {}) { order = [k, o.ascending !== false]; return chain },
+      limit(n: number) { cap = n; return chain },
       then(resolve: (v: unknown) => unknown, reject: (e: unknown) => unknown) { try { return Promise.resolve(run()).then(resolve, reject) } catch (e) { return reject(e) } },
     }
     return chain
@@ -145,6 +159,63 @@ describe('GET /api/inspiration/candidates', () => {
     const uses = usesByCard([{ card_id: 'a0000000-0000-4000-8000-000000000003', piece_id: null, spec_path: 's', cut: '', role: 'motion', critic_score: null, published: false, krish_verdict: null }])
     const order = rankCandidates(rows, uses, { role: 'motion', format: 'reel', limit: 4 }).map(c => c.id.slice(-1))
     expect(order).toEqual(['4', '2', '1', '3'])
+  })
+})
+
+// Krish, 2026-11-17: "If I put actual feedback in the inspiration board as to why I like something, that is not really a
+// guess is it?" The engine's read of a card (inspirationhouse tag-v4) grounded in his own words is his steer.
+describe('the engine read of a card steers the candidates', () => {
+  const read = (over: Row = {}) => ({ origin: 'engine_read', grounded_in: [], captions: [], motion: [], transitions: [], camera: [],
+    energy: null, script_formats: [], production_formats: [], series: null, teaches: [], ...over })
+  const id = (n: number) => `c0000000-0000-4000-8000-00000000000${n}`
+
+  it('ranks his word, then a read grounded in his words, then a bare guess, and shows the read', () => {
+    const rows = [
+      card(id(1), { teaches: ['captions'], teaches_source: 'engine_guess', drive_created_at: '2026-11-10T00:00:00Z', facets: { style: read({ teaches: ['captions'], captions: ['kinetic_pop'] }) } }),
+      card(id(2), { teaches: ['captions'], teaches_source: 'engine_guess', drive_created_at: '2026-10-01T00:00:00Z', why_like: 'the captions bounce on the beat', why_like_source: 'typed',
+        facets: { grounded_in: ['why_like'], style: read({ grounded_in: ['why_like', 'not_a_field'], teaches: ['captions'], captions: ['beat_bounce', 'bad id!'], motion: ['kinetic_type'], energy: 'high' }) } }),
+      card(id(3), { teaches: ['captions'], teaches_source: 'krish', drive_created_at: '2026-09-01T00:00:00Z' }),
+    ]
+    const out = rankCandidates(rows, new Map(), { role: 'captions', limit: 3 })
+    expect(out.map(c => c.id)).toEqual([id(3), id(2), id(1)])
+    expect(out[1].why[0]).toBe('the engine read it from his own words (why_like): it teaches captions')
+    expect(out[2].why[0]).toBe('the engine guesses it teaches captions')
+    expect(out[1].grounded_in).toEqual(['why_like'])
+    expect(out[1].style).toMatchObject({ origin: 'engine_read', grounded: true, captions: ['beat_bounce'], motion: ['kinetic_type'], energy: 'high' })
+    expect(out[2].style).toMatchObject({ grounded: false, grounded_in: [] })
+    expect(out[0].style).toBeNull()
+  })
+
+  it('offers his thumbnail study first for a thumbnail, and a loose card before a reference set for anything else', () => {
+    const set = { collection: { name: 'VEED Studio - Instagram Thumbnail Study', path: 'Production Inspo/VEED Studio - Instagram Thumbnail Study' } }
+    const rows = [
+      card(id(1), { kind: 'image', drive_created_at: '2026-11-12T00:00:00Z', facets: { ...set, style: read({ teaches: ['thumbnail', 'look'] }) } }),
+      card(id(2), { kind: 'image', drive_created_at: '2026-11-01T00:00:00Z', facets: { style: read({ teaches: ['look'] }) } }),
+      card(id(3), { kind: 'image', drive_created_at: '2026-11-11T00:00:00Z', facets: { ...set } }),
+    ]
+    const thumb = rankCandidates(rows, new Map(), { role: 'thumbnail', limit: 3 })
+    expect(thumb.map(c => c.id)).toEqual([id(1), id(3), id(2)])
+    expect(thumb[0].why).toContain('from his reference set "VEED Studio - Instagram Thumbnail Study"')
+    expect(thumb[0].collection).toEqual(set.collection)
+    expect(rankCandidates(rows, new Map(), { role: 'look', limit: 3 }).map(c => c.id)).toEqual([id(2), id(1), id(3)])
+  })
+
+  it('reads the window by value: a bulk drop never pushes out a card with his words or a read on it', async () => {
+    const bulk = Array.from({ length: 520 }, (_, n) => card(`d0000000-0000-4000-8000-${String(n).padStart(12, '0')}`,
+      { kind: 'image', drive_created_at: '2026-11-15T00:00:00Z', facets: { collection: { name: 'A bulk drop', path: null } } }))
+    const worded = card(id(7), { drive_created_at: '2026-08-01T00:00:00Z', why_like: 'the hand-drawn arrows', why_like_source: 'typed', answered_at: '2026-08-02T00:00:00Z' })
+    const readOnly = card(id(8), { drive_created_at: '2026-08-01T00:00:00Z', facets: { style: read({ grounded_in: ['why_here'], teaches: ['motion'], motion: ['kinetic_type'] }) }, why_here: 'this pace' })
+    db.tables.inspiration_items = [...bulk, worded, readOnly]
+    const motion = await call('candidates', 'GET', { role: 'motion', limit: '2' })
+    expect(motion.status).toBe(200)
+    expect(motion.body.candidates.map((c: Row) => c.id)).toEqual([id(8), id(7)])
+    expect(motion.body.candidates[0].style.motion).toEqual(['kinetic_type'])
+  })
+
+  it('takes a thumbnail role and records a thumbnail use', async () => {
+    expect((await call('candidates', 'GET', { role: 'thumbnail' })).status).toBe(200)
+    const out = await call('uses', 'POST', {}, { uses: [{ card_id: JACK, piece_id: PIECE, spec_path: 'docs/plans/x/ve/spec.json', cut: 'wide', role: 'thumbnail', critic_score: 8 }] })
+    expect(out.status).toBe(200)
   })
 })
 

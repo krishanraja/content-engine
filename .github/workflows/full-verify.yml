@@ -154,6 +154,7 @@ jobs:
           python tests/board_session_test.py
           python tests/recover_research_test.py
           node tests/inspiration-said-cards.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+          node tests/inspiration-teaches-thumbnail-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
       - name: Board sessions on a real Postgres (four at once, and a copied prompt followed end to end)
         run: |
           PGBIN=$(ls -d /usr/lib/postgresql/*/bin | sort -V | tail -1)

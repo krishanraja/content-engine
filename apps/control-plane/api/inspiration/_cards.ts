@@ -8,8 +8,16 @@
 //
 // Pure functions here; the routes beside this file read and write. Nothing here picks for Krish: a candidate is an
 // offer the session confirms, and a card's `teaches` is his word only when teaches_source is 'krish'.
+//
+// The engine's read of a card (inspirationhouse tag-v4, krishanraja/inspirationhouse #54): facets.style holds the ids
+// of this repository's own style vocabulary the card points to (captions, motion, transitions, camera, energy, script
+// and production formats, series, teaches), and facets.style.grounded_in names which of his own fields on the card
+// (why_here, why_like, would_do) the read was built on. A read grounded in his words is his steer, not a guess (Krish,
+// 2026-11-17: "If I put actual feedback in the inspiration board as to why I like something, that is not really a guess
+// is it?"); a bare read of the file is still a guess. facets.collection marks a file he filed in a subfolder of an Inspo
+// folder (a reference set, such as his thumbnail study): offered first for a thumbnail, after loose cards otherwise.
 
-export const ROLES = ['look', 'motion', 'captions', 'hook', 'pacing', 'layout'] as const
+export const ROLES = ['look', 'motion', 'captions', 'hook', 'pacing', 'layout', 'thumbnail'] as const
 export type Role = typeof ROLES[number]
 export const CARD_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export const MAX_IDS = 20
@@ -52,6 +60,64 @@ export function teaches(row: Row): string[] {
   return Array.isArray(row.teaches) ? row.teaches.filter((t: unknown) => typeof t === 'string') : []
 }
 
+/** His own fields on a card a read can be grounded in. */
+export const GROUND_FIELDS = ['why_here', 'why_like', 'would_do'] as const
+const STYLE_LISTS = ['captions', 'motion', 'transitions', 'camera', 'script_formats', 'production_formats', 'teaches'] as const
+const ID = /^[a-z0-9][a-z0-9_.:-]{0,79}$/i
+
+const ids = (v: unknown, max = 12): string[] =>
+  (Array.isArray(v) ? v : []).filter((x): x is string => typeof x === 'string' && ID.test(x)).slice(0, max)
+
+/** Which of his own fields the engine's read was built on (facets.style.grounded_in, else facets.grounded_in), in a
+ *  fixed order; empty for a bare read of the file or a card the engine has not read. */
+export function groundedIn(row: Row): string[] {
+  const f = row.facets || {}
+  const raw = Array.isArray(f.style?.grounded_in) ? f.style.grounded_in : Array.isArray(f.grounded_in) ? f.grounded_in : []
+  return GROUND_FIELDS.filter(g => raw.includes(g))
+}
+
+export interface StyleRead {
+  origin: 'engine_read'
+  /** True when the read was built on his own words on the card (grounded_in not empty): his steer, not a guess. */
+  grounded: boolean
+  grounded_in: string[]
+  captions: string[]; motion: string[]; transitions: string[]; camera: string[]
+  energy: string | null
+  script_formats: string[]; production_formats: string[]
+  series: string | null
+  teaches: string[]
+}
+
+/** The engine's read of a card in this repository's style vocabulary (facets.style), or null when it has none. Ids are
+ *  kept as the tagger wrote them (it checks them against config/caption-themes.json and config/style-references.json);
+ *  anything that is not an id is dropped. */
+export function styleRead(row: Row): StyleRead | null {
+  const s = row.facets?.style
+  if (!s || typeof s !== 'object' || Array.isArray(s) || s.origin !== 'engine_read') return null
+  const g = groundedIn(row)
+  const lists = Object.fromEntries(STYLE_LISTS.map(k => [k, ids(s[k])])) as Record<typeof STYLE_LISTS[number], string[]>
+  const one = (v: unknown) => (typeof v === 'string' && ID.test(v) ? v : null)
+  return { origin: 'engine_read', grounded: g.length > 0, grounded_in: g, ...lists, energy: one(s.energy), series: one(s.series) }
+}
+
+/** The reference set a card was filed in (facets.collection: {name, path}), or null for a loose card. */
+export function collectionOf(row: Row): { name: string; path: string | null } | null {
+  const c = row.facets?.collection
+  if (!c || typeof c !== 'object' || typeof c.name !== 'string' || !c.name.trim()) return null
+  return { name: c.name.trim().slice(0, 200), path: typeof c.path === 'string' ? c.path.slice(0, 400) : null }
+}
+
+/** How strongly a card teaches a role: 3 Krish said so, 2 the engine's read grounded in his words says so, 1 a bare
+ *  engine guess says so, 0 nothing does. `thumbnail` may live only in the read (facets.style.teaches) until the
+ *  teaches migration that allows it runs. */
+export function teachStrength(row: Row, role: string): 0 | 1 | 2 | 3 {
+  const read = styleRead(row)
+  const inColumn = teaches(row).includes(role)
+  if (inColumn && row.teaches_source === 'krish') return 3
+  if (!inColumn && !read?.teaches.includes(role)) return 0
+  return read?.grounded ? 2 : 1
+}
+
 export function cardView(row: Row, uses: CardUse[]) {
   return {
     id: String(row.id),
@@ -73,6 +139,9 @@ export function cardView(row: Row, uses: CardUse[]) {
     kept: kept(row),
     teaches: teaches(row),
     teaches_source: row.teaches_source ?? null,
+    style: styleRead(row),
+    grounded_in: groundedIn(row),
+    collection: collectionOf(row),
     uses: uses.map(u => ({ piece_id: u.piece_id, spec_path: u.spec_path, cut: u.cut, role: u.role, critic_score: u.critic_score, published: u.published, krish_verdict: u.krish_verdict })),
   }
 }
@@ -116,22 +185,25 @@ export function tickRoles(row: Row): Role[] {
 }
 
 /** The cards to offer for a role, best first: a card he ticked as a style to use within a week (the soonest due first;
- *  an instruction, not a suggestion), then a card that teaches the role (his word before the engine's guess), then his
- *  kept or liked signal, then a card in the asked format, then one never used, then the newest. Cards that cannot hold
- *  a cut are left out. Deterministic: the same rows give the same order. */
+ *  an instruction, not a suggestion), then a card that teaches the role (his word, then the engine's read grounded in
+ *  his words, then a bare guess), then for a thumbnail a card from a reference set (his thumbnail study) and for any
+ *  other role a loose card before a reference set's, then his kept or liked signal, then a card in the asked format,
+ *  then one never used, then the newest. Cards that cannot hold a cut are left out. Deterministic: the same rows give
+ *  the same order. */
 export function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: { role: Role; format?: string; limit: number },
   ticks: ReadonlyMap<string, StyleTick> = new Map()) {
   const format = (opts.format || '').toLowerCase()
   const scored = rows.filter(r => !refusal(r)).map(r => {
-    const t = teaches(r)
-    const teach = t.includes(opts.role) ? (r.teaches_source === 'krish' ? 2 : 1) : 0
+    const teach = teachStrength(r, opts.role)
+    const inSet = collectionOf(r) ? 1 : 0
+    const place = opts.role === 'thumbnail' ? inSet : 1 - inSet
     const used = (uses.get(String(r.id).toLowerCase()) || []).length
     const tick = ticks.get(String(r.id).toLowerCase())
     const told = tick && tickRoles(r).includes(opts.role) ? tick : null
-    return { r, told, teach, kept: kept(r), fits: format && formatOf(r) === format ? 1 : 0, used, at: String(r.drive_created_at || '') }
+    return { r, told, teach, place, kept: kept(r), fits: format && formatOf(r) === format ? 1 : 0, used, at: String(r.drive_created_at || '') }
   })
   scored.sort((a, b) => Number(!!b.told) - Number(!!a.told) || (a.told && b.told ? a.told.due_at.localeCompare(b.told.due_at) : 0)
-    || b.teach - a.teach || b.kept - a.kept || b.fits - a.fits || (a.used === 0 ? 0 : 1) - (b.used === 0 ? 0 : 1)
+    || b.teach - a.teach || b.place - a.place || b.kept - a.kept || b.fits - a.fits || (a.used === 0 ? 0 : 1) - (b.used === 0 ? 0 : 1)
     || b.at.localeCompare(a.at) || String(a.r.id).localeCompare(String(b.r.id)))
   return scored.slice(0, opts.limit).map(s => ({
     ...cardView(s.r, uses.get(String(s.r.id).toLowerCase()) || []),
@@ -139,7 +211,10 @@ export function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: 
     ...(s.told ? { instruction: { action_id: s.told.action_id, due_at: s.told.due_at, words: s.told.words } } : {}),
     why: [
       ...(s.told ? [`Krish ticked it: use this style in a made asset by ${s.told.due_at.slice(0, 10)}, an instruction, not a suggestion`] : []),
-      s.teach === 2 ? `Krish says it teaches ${opts.role}` : s.teach === 1 ? `the engine guesses it teaches ${opts.role}` : `nothing says it teaches ${opts.role} yet`,
+      s.teach === 3 ? `Krish says it teaches ${opts.role}`
+        : s.teach === 2 ? `the engine read it from his own words (${groundedIn(s.r).join(', ')}): it teaches ${opts.role}`
+          : s.teach === 1 ? `the engine guesses it teaches ${opts.role}` : `nothing says it teaches ${opts.role} yet`,
+      ...(collectionOf(s.r) ? [`from his reference set "${collectionOf(s.r)!.name}"`] : []),
       s.kept === 2 ? 'he sent it to study its style' : s.kept === 1 ? 'he said why he likes it' : 'he has not said he likes it',
       s.used ? `used ${s.used} time(s)` : 'never used',
     ],
@@ -185,6 +260,39 @@ export async function readCards(db: any, build: (q: any) => any): Promise<{ rows
   const second = await build(db.from('inspiration_items').select(BASE_COLS))
   if (second.error) return { rows: [], pending: true, error: second.error.message }
   return { rows: second.data || [], pending: true }
+}
+
+/** How many cards each read of the candidate window takes. */
+export const READ_LIMIT = 500
+/** A card he answered or typed words on. */
+const WORDED = 'why_here.not.is.null,why_like.not.is.null,would_do.not.is.null,answered_at.not.is.null'
+
+/** The production cards the candidates are ranked from, read by value as well as by age: the newest READ_LIMIT, then
+ *  every card he answered or wrote on, every card with a teaches, every card the engine read (facets.style), and for a
+ *  thumbnail his reference sets (facets.collection), merged once each. A bulk drop of images can fill the newest window,
+ *  and must never push out a card with his words or a read on it. Before the teaches migration the teaches read is
+ *  skipped, as the rest of this file does. */
+export async function readCandidateWindow(db: any, role: Role): Promise<{ rows: Row[]; pending: boolean; error?: string }> {
+  const live = (q: any) => q.eq('lane', 'production').is('dismissed_at', null)
+  const newest = (q: any) => q.order('drive_created_at', { ascending: false }).limit(READ_LIMIT)
+  const first = await readCards(db, q => newest(live(q)))
+  if (first.error) return first
+  const reads = [
+    readCards(db, q => newest(live(q).or(WORDED))),
+    readCards(db, q => newest(live(q).not('facets->style', 'is', null))),
+    ...(first.pending ? [] : [readCards(db, q => newest(live(q).not('teaches_source', 'is', null)))]),
+    ...(role === 'thumbnail' ? [readCards(db, q => newest(live(q).not('facets->collection', 'is', null)))] : []),
+  ]
+  const more = await Promise.all(reads)
+  const failed = more.find(m => m.error)
+  if (failed) return { rows: [], pending: first.pending, error: failed.error }
+  const seen = new Set<string>()
+  const rows: Row[] = []
+  for (const r of [first, ...more].flatMap(m => m.rows)) {
+    const id = String(r.id).toLowerCase()
+    if (!seen.has(id)) { seen.add(id); rows.push(r) }
+  }
+  return { rows, pending: first.pending || more.some(m => m.pending) }
 }
 
 /** The uses of these cards; none (and said) before the migration runs. */

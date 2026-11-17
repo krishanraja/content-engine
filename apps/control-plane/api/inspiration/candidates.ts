@@ -1,15 +1,21 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
 import { guardEngine } from '../_auth.js'
-import { ROLES, type Role, type StyleTick, rankCandidates, readCards, readUses } from './_cards.js'
+import { ROLES, type Role, type StyleTick, rankCandidates, readCandidateWindow, readUses } from './_cards.js'
 
 // GET /api/inspiration/candidates?role=look&format=reel&limit=3
-//        the production-lane cards to offer a piece for one role (look, motion, captions, hook, pacing, layout), best
-//        first: a card that teaches the role (his word before the engine's guess), then his kept or liked signal
+//        the production-lane cards to offer a piece for one role (look, motion, captions, hook, pacing, layout,
+//        thumbnail), best first: a card that teaches the role (his word, then the engine's read grounded in his own
+//        words on the card, then a bare engine guess), then for a thumbnail a card from a reference set he filed (his
+//        thumbnail study, facets.collection) and for any other role a loose card before a reference set's, then his kept
+//        or liked signal
 //        (study_style, then why he likes it), then a card in `format` (the clip's facets.format) when one is given,
 //        then a card never used (card_uses), then the newest. Dismissed cards and cards that teach no cut (a feed, a
 //        corpus, an idea) are never offered. `ve init` writes the top one per role into brand.references marked
-//        `offered: true`, and ve lint refuses a spec until the session confirms each.
+//        `offered: true`, and ve lint refuses a spec until the session confirms each. Each candidate carries the
+//        engine's read (`style`: the caption, motion, transition, camera, energy, format and series ids the card points
+//        to, `grounded` when built on his words) and `grounded_in` (which of his fields it was built on), so a session
+//        can see which ids a reference suggests; his own presses still pick (Pick a style).
 //        A card Krish ticked as a style to use within a week (control-center inspiration_actions, kind copy_style, still
 //        open; Ruling, Krish, 2026-11-12) comes before every other, the soonest due first, for the roles it teaches (or
 //        look, motion and captions when it teaches none), carrying `instruction` { action_id, due_at, words }: the next
@@ -18,9 +24,10 @@ import { ROLES, type Role, type StyleTick, rankCandidates, readCards, readUses }
 // The ranking is deterministic over the rows (no model, no embedding call): the readings in content_reads carry no
 // stored embedding, and embedding every reading on each request would be a paid call per offer.
 //
+// The window is read by value as well as by age (readCandidateWindow): a bulk drop never pushes out a card with his
+// words, a teaches or an engine read on it.
+//
 // Read only: nothing here writes, spends or picks.
-
-const READ_LIMIT = 500
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['GET'])) return
@@ -31,7 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!Number.isInteger(limit) || limit < 1 || limit > 10) return res.status(400).json({ ok: false, error: 'bad_limit', problems: ['limit is 1 to 10'] })
   const format = typeof req.query?.format === 'string' ? req.query.format.slice(0, 40) : ''
 
-  const cards = await readCards(supabase, q => q.eq('lane', 'production').is('dismissed_at', null).order('drive_created_at', { ascending: false }).limit(READ_LIMIT))
+  const cards = await readCandidateWindow(supabase, role)
   if (cards.error) return res.status(500).json({ ok: false, error: cards.error })
   const uses = await readUses(supabase, cards.rows.map(r => String(r.id).toLowerCase()))
   if (uses.error) return res.status(500).json({ ok: false, error: uses.error })
