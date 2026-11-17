@@ -2,7 +2,7 @@ Anthropic, which makes Claude, pays other companies for customer service. Everyo
 
 Your Crocodile Hunter's feed is wall to wall Claude packs, ready-made instructions for Claude. Every post says, install this, and Claude becomes your whole sales team. Just comment pack below. Free! Well, sort of.
 
-He's also watched one video on vibe coding. Honestly, so have I. That's where you tell the AI what you want, and it writes the code. Now he wants to build a bot to answer your customers over a weekend. And his boss? He's just read that Curative, an insurer, binned six hundred thousand dollars a year of sales software. He wants that too.
+He's also watched one video on vibe coding. Honestly, so have I. That's where you tell the AI what you want, and it writes the code. Now he wants to build a bot to answer your customers over a weekend. And his boss? He's read that Curative, an insurer, binned its sales software and built its own. Now he wants everything rebuilt by Friday.
 
 Then it's two in the morning. His homemade bot tells a customer they owe the price of a small yacht. Who gets that call? Him. The AI sleeps right through it.
 
