@@ -2866,6 +2866,21 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle`
 - `async function saveStyle(db: SupabaseClient, pieceId: string, pick: StylePick, now = new Date()): Promise<SavedStyle>`
 
+### `apps/control-plane/api/board/_takesIn.ts`
+
+His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I press approve script, the new board
+
+- `const TAKES_OP`
+- `const TAKES_SLACK_MS`
+- `interface InboxTake`
+- `interface TakesIn`
+- `function takesInOf(meta: unknown): TakesIn | null`
+- `function newTakes(files: Array<{ id: string; name?: string; mimeType?: string; size?: string; md5Checksum?: string; sha…`
+- `function takesPress(pieceId: string, item: string | null = null): Body`
+- `function takesLine(t: TakesIn): string`
+- `interface BriefInputs`
+- `function productionBrief(b: BriefInputs): string`
+
 ### `apps/control-plane/api/board/_thumbs.ts`
 
 - `const THUMB_OP`
