@@ -1,5 +1,6 @@
 import { Device as FlatMechanism } from './flat_mechanism'
 import { Device as MorphStage } from './morph_stage'
+import { Device as PixelStage } from './pixel_stage'
 import { Device as IsoWorld } from './iso_world'
 import { Device as InkWash } from './ink_wash'
 import { Device as FilmFrame } from './film_frame'
@@ -52,6 +53,7 @@ import { Device as ReceiptPrint } from './receipt_print'
 export const DEVICES: DeviceRegistry = {
   flat_mechanism: FlatMechanism,
   morph_stage: MorphStage,
+  pixel_stage: PixelStage,
   iso_world: IsoWorld,
   ink_wash: InkWash,
   film_frame: FilmFrame,
