@@ -1,0 +1,3 @@
+Status: House rule ONE_STORY_SHORT is live in code: every 90-second or short cut follows one story thread, with no second example, side-story, named case or second company, not even as a teaser. scripts/post-pack/story_check.py refuses a short cut that teases another story into the full video, says another company, another example or case in point, or brings in two companies by what they are; F48 in config/failures.json guards it.
+Next: once pull request #790 merges, add the same rule to config/script-floor.json's one-story quality so the separate reader holds it before any teleprompter send.
+North Star check (2026-11-17): holds.
