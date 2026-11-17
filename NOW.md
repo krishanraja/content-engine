@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-17","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- All nine motion-style devices are on main. The last three (living screen, toy 3D, flat mechanism) are merged, with toy_object's camera and slot faults fixed and tested. Every one stays Coming soon until Krish says yes to its test render, and shape morph is last in his picker. No Codex cards were sent. (2026-11-17)
 - Tue 17 Nov habits voiceover short (off-tue-701a2c55): script v4 final (docs/plans/2026-11-16-week/tue-habits-vo/script.md). The synthetic voice was dropped for this piece: Krish v2 on eleven_v3 drifted off his accent on the full script (every round logged in krish-clone docs/GENERATORS.md, PR #14). Krish records the voiceover himself. ve spec, Codex cards and render not started. (2026-11-17)
 - Krish v2 (ElevenLabs EWMCMyM8o9ZcYCijk7nx, a Voice Remix of Krish Remix with softer T's) is his default voice in config/voice-bank.json and in `ve voice clone`: eleven_v3, stability 0.5, the .wav sped up 15% keeping pitch (Krish, 2026-11-17: "yes, 15% is right, go ahead"). Krish Remix stays approved as the backup. The board offers Krish v2 first. Generation in Krish v2 is refused until krish-clone's registry holds krish-voice-elevenlabs-v2 (krish-clone PR #13). (2026-11-17)
 - Krish stopped the nine-style run (17 Nov: "lets stop here, leave the ones undone as marked undone and move them to the bottom in my UI as coming soon"). Seven devices are merged and checked (iso_world, ink_wash, film_frame, ladder_stage pace, flat_mechanism, morph_stage, pixel_stage); living_screen's pace rework and toy_object are not; every one of the nine is coming soon in his picker until its test cut and his yes. (2026-11-17)
@@ -43,13 +44,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-17 apps/renderer/src/engine/devices/{living_screen,toy_object,flat_mechanism}, houseGolden.json (those devices only), apps/control-plane/api/board/_style.ts (LAST_MOTION), docs/ve/STATUS.md.
 - 2026-11-17 docs/plans/2026-11-16-week/narrative-lock-tue.md (new tone, arc, fun and facts; spine, use and close unchanged; unsourced Gallup "up from 47%" removed).
 Older lines: `docs/history/2026-11-17-NOW-moved-6.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-17): Krish records the script and drops it in the Video Engine Inbox; then the ve spec, storyboard and Codex cards for the visuals.
+- Next (2026-11-17): Krish picks which style, if any, gets a test cut and his yes next; until then nothing is pickable.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
