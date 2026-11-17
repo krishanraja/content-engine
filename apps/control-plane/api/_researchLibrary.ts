@@ -61,7 +61,7 @@ export const LIBRARY_LEASE_MS = 180_000
 export const LEASE_RETRY_MS = 1_000
 
 /** The properties every folder and file the mirror makes carries, so it is found again whatever it is called. */
-export const PROP = { root: 'ce_root', kind: 'ce_library', week: 'ce_week', slot: 'ce_slot', material: 'ce_material', sha: 'ce_sha256' } as const
+export const PROP = { root: 'ce_root', kind: 'ce_library', week: 'ce_week', slot: 'ce_slot', material: 'ce_material', sha: 'ce_sha256', named: 'ce_named' } as const
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const
 const DAY_NAMES: Record<string, string> = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' }
@@ -96,10 +96,11 @@ export interface StoredMaterial {
 /** A piece as the library names it. */
 export interface PieceInfo { id: string; idea: string | null; scheduled_for: string | null; series: string | null }
 
+const UUID_SLOT = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export interface LibraryFolder { id: string; name: string; props: Record<string, string> }
 export interface LibraryFile { id: string; name: string; link: string; sha256: string | null; material: string; trashed?: boolean }
 
-/** Drive, as the mirror uses it. Every method adds or reads; none renames, moves, overwrites or deletes. */
+/** Drive, as the mirror uses it. Every method adds or reads, except renameFolder: none moves, overwrites or deletes. */
 export interface LibraryDrive {
   /** The library folder itself: there, not binned, and open to new files. */
   root(rootId: string): Promise<{ ok: true } | { ok: false; why: string }>
@@ -108,6 +109,10 @@ export interface LibraryDrive {
   /** The copies already made: of these materials, or of every material when none are named. Binned copies count. */
   files(rootId: string, materialIds?: string[]): Promise<LibraryFile[]>
   createFolder(parentId: string, name: string, props: Record<string, string>): Promise<string>
+  /** The one rename: a piece's own folder, by its id, to the name its piece now has (Ruling, Krish, 2026-11-17: "rename
+   *  research folders when titles change"). Its name, and its ce_named property set to that name; never its parent,
+   *  contents or other properties. */
+  renameFolder(folderId: string, name: string): Promise<void>
   createFile(input: { parentId: string; name: string; mime: string; bytes: Uint8Array; description: string; props: Record<string, string> }): Promise<LibraryFile>
 }
 
@@ -175,6 +180,8 @@ export interface MirrorReport {
   index_repaired: number
   settling: number
   later: number
+  /** Piece folders renamed to their piece's title, date and series as they are now. */
+  renamed: number
   failed: Array<{ id: string; why: string }>
   index_error?: string
   /** Why the index was not tidied: it could not be read, its read looked short or malformed, or the batchUpdate failed. */
@@ -220,6 +227,15 @@ export interface Place {
   sources: boolean
 }
 
+/** A piece's folder name, from its record as it is now: "Fri 20 Nov mind.the.gap - <title> (c00cd4e0)". */
+export function pieceSlotName(pieceId: string, piece: PieceInfo | null): string {
+  const scheduled = piece && isDate(piece.scheduled_for) ? piece.scheduled_for.slice(0, 10) : null
+  const series = piece?.series ? SERIES[piece.series] || piece.series : ''
+  const idea = shortWords(piece?.idea || 'Untitled piece', 70)
+  const when = scheduled ? dayLabel(scheduled) : 'No date'
+  return clean(`${when}${series ? ` ${series}` : ''} - ${idea} (${pieceId.slice(0, 8)})`, 150)
+}
+
 /** Where a material's copy goes: its piece's week (the piece's own date, else the day it was filed) and its piece or day. */
 export function placeOf(m: StoredMaterial, piece: PieceInfo | null): Place {
   const scheduled = piece && isDate(piece.scheduled_for) ? piece.scheduled_for.slice(0, 10) : null
@@ -227,11 +243,7 @@ export function placeOf(m: StoredMaterial, piece: PieceInfo | null): Place {
   if (m.piece_id) {
     const week = scheduled ? mondayOf(scheduled) : isDate(m.week) ? m.week.slice(0, 10) : mondayOf(filed)
     const day = scheduled ? dayOf(scheduled) : (DAYS as readonly string[]).includes(String(m.day)) ? String(m.day) : dayOf(filed)
-    const series = piece?.series ? SERIES[piece.series] || piece.series : ''
-    const idea = shortWords(piece?.idea || 'Untitled piece', 70)
-    const when = scheduled ? dayLabel(scheduled) : 'No date'
-    return { week, slot: m.piece_id, weekName: week, day, sources: isSource(m),
-      slotName: clean(`${when}${series ? ` ${series}` : ''} - ${idea} (${m.piece_id.slice(0, 8)})`, 150) }
+    return { week, slot: m.piece_id, weekName: week, day, sources: isSource(m), slotName: pieceSlotName(m.piece_id, piece) }
   }
   const match = /^day:(\d{4}-\d{2}-\d{2})\/(mon|tue|wed|thu|fri|sat|sun|week)$/.exec(m.scope)
   const week = match ? match[1] : isDate(m.week) ? m.week.slice(0, 10) : mondayOf(filed)
@@ -377,7 +389,7 @@ async function takeLease(lock: LibraryLock, waitMs: number, retryMs: number): Pr
 export async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, lock: LibraryLock, opts: MirrorOptions = {}): Promise<MirrorReport> {
   const only = opts.only?.length ? [...new Set(opts.only)] : undefined
   const budget = Math.min(opts.budgetMs ?? 80_000, LIBRARY_LEASE_MS / 2)
-  const report: MirrorReport = { ok: true, eligible: 0, already: 0, mirrored: 0, indexed: 0, index_deduped: 0, index_repaired: 0, settling: 0, later: 0, failed: [], copies: [] }
+  const report: MirrorReport = { ok: true, eligible: 0, already: 0, mirrored: 0, indexed: 0, index_deduped: 0, index_repaired: 0, settling: 0, later: 0, renamed: 0, failed: [], copies: [] }
 
   const all = await source.materials(only)
   const eligible = all.filter(inLibrary).sort((a, b) => String(a.added_at).localeCompare(String(b.added_at)) || a.version - b.version)
@@ -426,6 +438,27 @@ async function mirrorHeld(source: LibrarySource, drive: LibraryDrive, index: Lib
     if (kind === 'week' && f.props[PROP.week] && !weekFolder.has(f.props[PROP.week])) weekFolder.set(f.props[PROP.week], f.id)
     if (kind === 'slot' && f.props[PROP.slot] && !slotFolder.has(f.props[PROP.slot])) slotFolder.set(f.props[PROP.slot], f.id)
     if (kind === 'sources' && f.props[PROP.slot] && !sourcesFolder.has(f.props[PROP.slot])) sourcesFolder.set(f.props[PROP.slot], f.id)
+  }
+
+  // The sweep renames each piece's folder whose piece's title, date or series changed since it was made (Ruling, Krish,
+  // 2026-11-17: "rename research folders when titles change"). By its id and its name only; a piece that cannot be read
+  // keeps its folder's name. The folder stays in the week it was made in, as before.
+  if (!only) {
+    const slots = folders.filter(f => f.props[PROP.kind] === 'slot' && UUID_SLOT.test(f.props[PROP.slot] || ''))
+    let current = new Map<string, PieceInfo>()
+    try { current = await source.pieces([...new Set(slots.map(f => f.props[PROP.slot]))]) } catch { current = new Map() }
+    for (const f of slots) {
+      const piece = current.get(f.props[PROP.slot])
+      if (!piece || !piece.idea) continue
+      const want = pieceSlotName(f.props[PROP.slot], piece)
+      if (want === f.name) continue
+      // A name Krish gave it is his: the folder is renamed only while it holds the name the mirror gave it (ce_named),
+      // or, made before 17 Nov without one, a name of the mirror's shape, ending in its piece's short id.
+      const ours = f.props[PROP.named] ? f.props[PROP.named] === f.name : f.name.endsWith(`(${f.props[PROP.slot].slice(0, 8)})`)
+      if (!ours) continue
+      try { await drive.renameFolder(f.id, want); f.name = want; report.renamed++ }
+      catch (e) { report.failed.push({ id: f.id, why: `rename: ${(e as Error).message.slice(0, 120)}` }) }
+    }
   }
 
   let listed: Set<string> | null = null
@@ -488,7 +521,7 @@ async function mirrorHeld(source: LibrarySource, drive: LibraryDrive, index: Lib
         if (!bytes) { report.failed.push({ id: m.id, why: 'bytes_unavailable' }); continue }
         if (bytes.byteLength !== Number(m.bytes) || sha256Hex(bytes) !== m.sha256) { report.failed.push({ id: m.id, why: 'store_bytes_differ' }); continue }
         const weekId = await ensure(weekFolder, place.week, rootId, place.weekName, { [PROP.kind]: 'week', [PROP.week]: place.week })
-        const slotId = await ensure(slotFolder, place.slot, weekId, place.slotName, { [PROP.kind]: 'slot', [PROP.slot]: place.slot })
+        const slotId = await ensure(slotFolder, place.slot, weekId, place.slotName, { [PROP.kind]: 'slot', [PROP.slot]: place.slot, [PROP.named]: place.slotName })
         const parent = place.sources ? await ensure(sourcesFolder, place.slot, slotId, 'Sources', { [PROP.kind]: 'sources', [PROP.slot]: place.slot }) : slotId
         copy = await drive.createFile({
           parentId: parent, name: fileNameOf(m), mime: mimeOf(m), bytes, description: descriptionOf(m, piece, place),
