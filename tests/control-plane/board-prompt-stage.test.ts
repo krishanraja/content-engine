@@ -84,7 +84,10 @@ describe("an off-day voiceover's prompt follows its stage (Tue 17 Nov)", () => {
 
   it('once he approved the script, it assumes the take is in the Inbox and cuts it on the ve route, with no engine row', () => {
     const it = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: TUE_WORDS }])
-    expect(it.line).toMatch(/You approved its script on Tue 17 Nov: record it from your Teleprompter and drop the take in the Video Engine Inbox/)
+    // Its send was held (17 Nov): the card says his approval counts and why it is not in his Teleprompter yet.
+    expect(it.line).toMatch(/You approved the script on Tue 17 Nov, and your approval counts\. It is not in your Teleprompter yet: the send was held \(the piece's making record could not be read, so nothing was sent\)/)
+    const sent = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: { ...TUE_WORDS, send: { ...TUE_WORDS.send, status: 'sent', error: undefined } } }])
+    expect(sent.line).toMatch(/You approved its script on Tue 17 Nov: record it from your Teleprompter and drop the take in the Video Engine Inbox/)
     const p = promptOf(it.next)
     for (const words of ['python scripts/post-pack/recording.py get NAME', 'AGENTS.md rule 9', 'docs/ve/ENGINE.md', 'docs/ve/RUNBOOK.md',
       've card, ve dispatch, ve verify-card', ROUTE_RULING, NEVER_HEADLESS, PIECE, 'Habits that cost your job (voiceover, 90 s)',

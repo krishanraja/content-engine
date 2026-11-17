@@ -394,12 +394,14 @@ describe('his "Signed." on a narrative lock, one press on the board, on any day 
   it('saves his typed approval of the lock as his, on Tuesday as on Monday', async () => {
     for (const day of ['tue', 'mon']) {
       const t = setup()
-      const { status, out } = await t.put('picks', `${day}-lock-words`, filled(day))
+      const { status, out } = await t.put('picks', `${day}-lock-words-${TUE.slice(0, 8)}`, filled(day))
       expect(status, `${day}: ${JSON.stringify(out)}`).toBe(200)
-      expect(t.calls[0].args).toMatchObject({ p_collection: 'picks', p_id: `${day}-lock-words`, p_actor: 'Krish', p_body: { kind: 'sign_lock', words: 'Signed.', piece_id: TUE } })
+      expect(t.calls[0].args).toMatchObject({ p_collection: 'picks', p_id: `${day}-lock-words-${TUE.slice(0, 8)}`, p_actor: 'Krish', p_body: { kind: 'sign_lock', words: 'Signed.', piece_id: TUE } })
     }
   })
   it('refuses a lock filed under another day, a day with no pieces (Sunday), and a no', async () => {
+    // The bare day-wide name is refused for a new approval (17 Nov: one piece's approval overwrote another's there).
+    expect((await setup().put('picks', 'tue-lock-words', filled('tue'))).status).toBe(400)
     expect((await setup().put('picks', 'tue-lock-words', filled('tue', { lock_path: 'docs/plans/2026-11-16-week/narrative-lock-fri.md' }))).status).toBe(400)
     expect((await setup().put('picks', 'sun-lock-words', filled('sun'))).status).toBe(400)
     expect((await setup().put('picks', 'tue-lock-words', filled('tue', { approved: false }))).status).toBe(400)
