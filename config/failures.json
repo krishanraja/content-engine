@@ -2787,6 +2787,45 @@
           "how": "the card's title is the title his approved scripts speak"
         }
       ]
+    },
+    {
+      "id": "F50-scripts-vanished-after-approve",
+      "on": "2026-11-17",
+      "status": "guarded",
+      "mode": "press_held_silently",
+      "guard_level": "gate",
+      "krish": "jesus christ, now the board has gone back a step to the production brainstorming, and I cannot see or edit the scripts. Then: I want theWhere does AI get built when towns say no? piece to be at the stage where it has my hand edited scripts in there, and theboard is at the stage where i can edit the scripts and then press appove",
+      "what": "Tue 17 Nov about 17:40, piece b019dbf8: after F49 made his approval count, the card showed Production planned ticked, the look, motion and captions panel and a line in engine words (\"Next, a session checks them (making.py scripts) ... (teleprompter_send.py)\"), read from the 16:20 send the server had held. His scripts were nowhere on it.",
+      "symptom": "His scripts disappeared from the card once his approval counted, and the card spoke to sessions, not to him.",
+      "cause": "heldSend made the card's next action a Claude prompt and listed only the look presses beside it, and its line named scripts and engine steps. A send that never reached his Teleprompter still counted as a finished step.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "no test asked that his scripts stay on the card, readable and editable, while the send had not reached his Teleprompter"
+        },
+        {
+          "cause": "standard_not_read",
+          "evidence": "the held line was written for sessions (making.py, teleprompter_send.py) and shown to him"
+        }
+      ],
+      "related": [
+        "F49-approve-held-his-own-edits",
+        "F47-card-never-moved-on"
+      ],
+      "surface": "While approved scripts have not reached his Teleprompter, the card stays at Production planned and leads with Read and approve the scripts, filled with the exact words he approved (his edits included); his Approve sends them. The line says so in plain words, never a script name or engine step.",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "export function approveAgainPress(",
+          "how": "a held send puts his approved words back in front of him for Approve, on a series day, a placed piece and an off-day post"
+        },
+        {
+          "file": "tests/control-plane/board-decisions.test.ts",
+          "contains": "17:40 reproduced: a send that never reached his Teleprompter",
+          "how": "Production planned current, his edited words in the Approve review, a plain line",
+          "test": "npx vitest run tests/control-plane/board-decisions.test.ts"
+        }
+      ]
     }
   ]
 }

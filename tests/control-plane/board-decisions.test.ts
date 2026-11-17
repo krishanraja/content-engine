@@ -254,12 +254,23 @@ describe('F49: his Approve scripts with his own edits moves the card on, keeps h
     const before = [{ ...filed[0], at: '2026-11-17T16:15:00Z' }, filed[1]]
     expect(item(buildView(at17([slow], before))).next).not.toMatchObject({ label: 'Read and approve the scripts' })
   })
-  it('the server\'s old hold never sends the card back to Read and approve: his approval counts and the card says why it is not in Teleprompter', () => {
+  // F50, Tue 17 Nov 17:40, Krish: "now the board has gone back a step to the production brainstorming, and I cannot see or
+  // edit the scripts"; then "I want the [...] piece to be at the stage where it has my hand edited scripts in there, and
+  // the board is at the stage where i can edit the scripts and then press appove".
+  it('17:40 reproduced: a send that never reached his Teleprompter puts his own edited words back to edit and Approve, at Production planned', () => {
     const held = { status: 'held', at: '2026-11-17T16:20:17.095Z', by: 'content-engine server', error: 'these words have not passed the scripts\' check, so nothing was sent' }
-    const it = item(buildView(at17([his(held)])))
-    expect(it.next).not.toMatchObject({ label: 'Read and approve the scripts' })
-    expect(it.line).toMatch(/^You approved the scripts on Tue 17 Nov, and your approval counts\. They are not in your Teleprompter yet: the send was held \(these words have not passed the scripts' check, so nothing was sent\)/)
-    expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'done', 'current', 'todo'])
+    // The scripts filed since are his own edits (the session filed them at 17:35), so nothing is stale.
+    const his17 = [{ ...filed[0], text: EDITED.long, at: '2026-11-17T17:35:00Z' }, { ...filed[1], text: EDITED.short, at: '2026-11-17T17:35:02Z' }]
+    const it = item(buildView(at17([his(held)], his17)))
+    expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'current', 'todo', 'todo'])
+    expect(it.decision).toBe(true)
+    expect(it.next).toMatchObject({ kind: 'press', label: 'Read and approve the scripts', id: 'tue-scripts-words-b019dbf8',
+      body: { kind: 'approve_scripts', piece_id: TUE, texts: EDITED } })
+    expect((it.next as any).scripts).toMatchObject({ approve: 'Approve both scripts', cuts: [{ cut: 'long', text: EDITED.long }, { cut: 'short', text: EDITED.short }] })
+    expect(it.line).toMatch(/^Your approved scripts are saved \(Tue 17 Nov\) but never reached your Teleprompter: .*Read or edit them, then press Approve/)
+    expect(it.line).not.toMatch(/\.py|making\b|a session/)
+    // The look panel is not what leads, and the title is his.
+    expect(it.title).toBe('Where does AI get built when towns say no?')
   })
   it('only a script filed after his approval makes it stale, and then the review offers the new words with their own spoken title', () => {
     const later = [{ ...filed[0], text: 'Rewritten after he approved. Where do the servers go when a town votes no? Let\'s find out.\n\nMore.', at: '2026-11-17T17:00:00Z' }, filed[1]]

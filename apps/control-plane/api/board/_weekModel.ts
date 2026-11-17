@@ -509,7 +509,11 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   }
   // His approval counts; a send the server held is said in one line, and the next action checks the scripts and sends.
   const held = !recorded && !missed ? heldSend(m, d.piece_id) : null
-  if (held) return { ...base, line: held.line, next: itemPrompt(m.week, { ...base, line: held.line }, 'teleprompter', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null), decision: false, others: picks }
+  if (held) {
+    const edit = approveAgainPress(m, d.day, d.piece_id, d.title)
+    return { ...base, line: held.line, next: (edit ?? itemPrompt(m.week, { ...base, line: held.line }, 'teleprompter', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null)) as Action,
+      decision: Boolean(edit), others: [...(edit ? [itemPrompt(m.week, { ...base, line: held.line }, 'teleprompter', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction] : []), ...picks] }
+  }
   // Scripts approved: his takes in the Inbox, then the one post-production prompt (_takesIn.ts).
   const scriptsMade = m.decisions?.[d.piece_id]?.items.find(x => x.key === 'scripts')?.made === true
   const produce = scriptsMade && !out && !missed && !isDone('cut') ? productionStage(m, { pieceId: d.piece_id, title: d.title, item: null, style: d.path?.style, offday: false,
@@ -545,7 +549,9 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const decided = m.decisions?.[p.id] ?? null
   const lookPicked = Boolean(m.placedStyles?.[p.id]?.treatment.picked)
   const scriptsOk = decided?.items.find(x => x.key === 'scripts')?.made === true
-  const done = out ? PIECE_PATH.length : branded ? (lookPicked ? (scriptsOk ? 3 : 2) : 1) : 0
+  // An approval whose send never reached his Teleprompter leaves the card at Production planned, his words to Approve (F50).
+  const unsent = !out && scriptsOk && Boolean(heldSend(m, p.id))
+  const done = out ? PIECE_PATH.length : branded ? (lookPicked ? (scriptsOk && !unsent ? 3 : 2) : 1) : 0
   // What it says now: the signed lock, never the idea row it started from (F47).
   const said = m.lockReads?.[p.id]
   const missed = !out && d.date < m.today
@@ -580,7 +586,12 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
       others: [itemPrompt(m.week, { ...base, line: readyLine }, 'board', null, { approved: true }, decided) as unknown as PressAction, ...picks] }
   }
   const held = !out && !missed && scriptsOk ? heldSend(m, p.id) : null
-  if (held) return { ...base, line: held.line, next: itemPrompt(m.week, { ...base, line: held.line }, 'teleprompter', null, { approved: true }, decided), decision: false, others: picks }
+  if (held) {
+    // His scripts lead, to read, edit and send (F50); the session prompt stays beside them.
+    const edit = approveAgainPress(m, d.day, p.id, p.title)
+    const prompt = itemPrompt(m.week, { ...base, line: held.line }, 'teleprompter', null, { approved: true }, decided)
+    return { ...base, line: held.line, next: (edit ?? prompt) as Action, decision: Boolean(edit), others: [...(edit ? [prompt as unknown as PressAction] : []), ...picks] }
+  }
   const stage = !out && !missed && scriptsOk ? productionStage(m, { pieceId: p.id, title: p.title, item: null, style: m.placedStyles?.[p.id], offday: false,
     read: base.read, decided, reportAs: null, base }) : null
   if (stage) return { ...base, line: stage.line, next: stage.next, decision: stage.decision, others: [...stage.others, ...picks] }
@@ -674,7 +685,7 @@ export function scriptsOnCard(m: ModelInputs, d: DayView, it: ModelItem): ModelI
     return { ...it, line, next: press as Action, decision: true, others: [...(it.next ? [it.next as unknown as PressAction] : []), ...(it.others || [])] }
   }
   const edit = { ...scriptsPress(m.week, d.day, pid, title, filed, m.picks || []), label: filed.length > 1 ? 'Edit the scripts' : 'Edit the script',
-    goes: 'Opens the approved words to read and edit. Your Approve at the end approves the words you leave; edited words go back through the scripts\' check and fresh readers before they reach your Teleprompter.' } as PressAction
+    goes: 'Opens the approved words to read and edit. Your Approve at the end approves the words you leave and sends them to your Teleprompter straight away; the checks run after and report to you (F49).' } as PressAction
   const back = takeBackPress(m, d.day, pid)
   return { ...it, others: [...(it.others || []), edit, back] }
 }
@@ -765,7 +776,9 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
     const decided = own ? m.decisions?.[own] ?? null : null
     if (held) {
       const heldLine = `${where}. ${held.line}`.replace(/\.\./g, '.')
-      return { ...base, line: heldLine, next: itemPrompt(m.week, { ...base, line: heldLine }, 'record', 'motion', null, decided, own, recordHead(scripts)), decision: false }
+      const edit = approveAgainPress(m, d.day, scripts.piece_id, base.title)
+      const prompt = itemPrompt(m.week, { ...base, line: heldLine }, 'record', 'motion', null, decided, own, recordHead(scripts))
+      return { ...base, line: heldLine, next: (edit ?? prompt) as Action, decision: Boolean(edit), others: edit ? [prompt as unknown as PressAction] : [] }
     }
     // Approved and in his Teleprompter: his takes in the Inbox, then the one post-production prompt (_takesIn.ts).
     const row = m.pieces.find(x => String(x.id).toLowerCase() === scripts.piece_id)
@@ -911,6 +924,18 @@ export function workingTitle(m: Pick<ModelInputs, 'picks' | 'decisions'>, pieceI
   return cut((a && spokenTitle(a.texts)) || fallback, 200)
 }
 
+/** His approved words back in front of him when their send never reached his Teleprompter (F50; Krish, 2026-11-17: "I
+ *  want the [...] piece to be at the stage where it has my hand edited scripts in there, and the board is at the stage
+ *  where i can edit the scripts and then press appove"): the Approve scripts review, filled with the words he approved,
+ *  newest first. His Approve sends them at once (F49), into the folder already there (sendInput). */
+export function approveAgainPress(m: Pick<ModelInputs, 'week' | 'picks'>, day: string, pieceId: string, title: string): PressAction | null {
+  const a = scriptsApproval(m.picks || [], pieceId)
+  if (!a) return null
+  const filed: FiledScript[] = Object.entries(a.texts).filter(([c]) => c === 'long' || c === 'short')
+    .map(([c, text]) => ({ cut: c as 'long' | 'short', id: '', title: c, text, at: a.at }))
+  return filed.length ? scriptsPress(m.week, day, pieceId, a.folder ?? cut(title, 150), filed, m.picks || []) : null
+}
+
 /** His approved scripts that the server's send did not put in his Teleprompter (held, refused, failed or no key), with the
  *  making record not showing them in it since: his approval counts, the card says why they are not there yet, and the
  *  next action is the session that checks them and sends (Krish, 2026-11-17: "the button does not seem to work. Would it
@@ -923,10 +948,13 @@ export function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: stri
   const tp = making && isObj(making.teleprompter) && isObj(making.teleprompter.cuts) ? making.teleprompter.cuts as Body : null
   const cuts = Object.keys(a.texts)
   if (tp && cuts.length && cuts.every(c => isObj(tp[c]) && typeof (tp[c] as Body).script_id === 'string' && !(tp[c] as Body).error)) return null
-  const why = a.send_error ? ` (${cut(a.send_error.split(/[:;]/)[0], 160)})` : ''
-  const line = `You approved ${cuts.length > 1 ? 'the scripts' : 'the script'}${a.on ? ` on ${a.on}` : ''}, and your approval counts. `
-    + `${cuts.length > 1 ? 'They are' : 'It is'} not in your Teleprompter yet: the send was ${a.send}${why}. `
-    + 'Next, a session checks them (making.py scripts), has two fresh readers read them back, then sends exactly the words you approved (teleprompter_send.py).'
+  // In his words, never the engine's (Krish, 2026-11-17: "I cannot see or edit the scripts"; F50): why they are not in
+  // his Teleprompter, and that the scripts are below to read, edit and send.
+  const n = cuts.length > 1
+  const why = a.send === 'held' ? 'the send before today\'s fix waited on checks that your own words no longer wait on'
+    : a.send === 'no_key' ? 'the engine has no Teleprompter key yet' : 'the send did not go through'
+  const line = `Your approved ${n ? 'scripts are' : 'script is'} saved${a.on ? ` (${a.on})` : ''} but never reached your Teleprompter: ${why}. `
+    + `Read or edit ${n ? 'them' : 'it'}, then press Approve to send exactly ${n ? 'those words' : 'those words'} to your Teleprompter.`
   return { line, approval: a }
 }
 

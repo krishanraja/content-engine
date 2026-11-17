@@ -90,14 +90,15 @@ describe("an off-day voiceover's prompt follows its stage (Tue 17 Nov)", () => {
 
   it('once he approved the script, it assumes the take is in the Inbox and cuts it on the ve route, with no engine row', () => {
     const it = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: APPROVED }])
-    // Its send was held (17 Nov): the card says his approval counts and why it is not in his Teleprompter yet.
-    expect(it.line).toMatch(/You approved the script on Tue 17 Nov, and your approval counts\. It is not in your Teleprompter yet: the send was held \(the piece's making record could not be read, so nothing was sent\)/)
+    // Its send was held (17 Nov): the card says in plain words it never reached his Teleprompter, and his Approve leads (F50).
+    expect(it.line).toMatch(/Your approved script is saved \(Tue 17 Nov\) but never reached your Teleprompter/)
+    expect(it.next).toMatchObject({ kind: 'press', label: 'Read and approve the script', body: { kind: 'approve_scripts', piece_id: PIECE } })
     const sent = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: { ...APPROVED, send: { ...TUE_WORDS.send, status: 'sent', error: undefined } } }])
     // In his Teleprompter: the card waits on his My takes are in the Inbox (17 Nov), with the record step's prompt beside it.
     expect(sent.line).toMatch(/Script approved Tue 17 Nov, sent to your Teleprompter at \d\d:\d\d UTC\. Record it from your Teleprompter, drop the take in the Video Engine Inbox, then press My takes are in the Inbox\./)
     expect(sent.next).toMatchObject({ kind: 'press', op: 'takes-in', body: { piece_id: PIECE, item: 'off-tue-mcpskin' } })
     expect(anyPrompt(sent)).toContain('recording.py get NAME')
-    const p = promptOf(it.next)
+    const p = promptOf(it.others.find((a: any) => a?.kind === 'prompt'))
     for (const words of ['python scripts/post-pack/recording.py get NAME', 'AGENTS.md rule 9', 'docs/ve/ENGINE.md', 'docs/ve/RUNBOOK.md',
       've card, ve dispatch, ve verify-card', ROUTE_RULING, NEVER_HEADLESS, PIECE, 'Habits that cost your job (voiceover, 90 s)',
       'Tue 17 Nov off-day: habits voiceover', "the board's own send was held", 'scripts/post-pack/teleprompter_send.py', 'Keep the board current as you work']) {
