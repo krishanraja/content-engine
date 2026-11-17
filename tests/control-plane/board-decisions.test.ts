@@ -180,8 +180,9 @@ describe('F47: the card moves on when a session reaches a milestone, and offers 
     expect(it.next).toMatchObject({ label: 'Read and approve the scripts' })
   })
   it('after his approval the card is at Production planned and asks him to record', () => {
+    // His approval carries the words filed: an approval counts only for the words it approved (Krish, 17 Nov).
     const words = { doc_id: 'tue-scripts-words', updated_by: 'Krish', body: { kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: TUE,
-      texts: { long: 'a', short: 'b' }, titles: { long: 'a', short: 'b' }, folder_title: 'x', words: 'Approved.', at: '2026-11-17T12:00:00Z',
+      texts: { long: filed[0].text, short: filed[1].text }, titles: { long: 'a', short: 'b' }, folder_title: 'x', words: 'Approved.', at: '2026-11-17T12:00:00Z',
       said_at: '2026-11-17T12:00:00Z', said_where: 'the Publish Board in Control Centre', session_ref: 'https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=tue' } }
     const it = item(buildView(at17({ scripts: { [TUE]: filed }, picks: [words] })))
     expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'done', 'current', 'todo'])

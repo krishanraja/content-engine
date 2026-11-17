@@ -378,7 +378,7 @@ export function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: stri
   const own = locks[day]
   return own && !lockPieceId(own) ? { text: own, day } : null
 }
-export type Typed = { words: string; said_where: string; said_at: string }
+export type Typed = { words: string; said_where: string; said_at: string; body?: Body }
 /** A piece's lock on file, unsigned, under the day the piece is on: what his "Signed." press binds (_weekModel.ts). */
 export interface LockToSign { day: PostedDay; path: string; sha256: string; revision: number }
 /** His typed approval of this piece's lock or scripts, carried from a session (picks/<day>-<lock|scripts>-words; Ruling,
@@ -393,7 +393,7 @@ export function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day:
   const b = doc && isObj(doc.body) ? doc.body : null
   if (!b) return null
   if (what === 'lock' && (!lockText || lockBodyHash(lockText) !== b.lock_sha256)) return null
-  return { words: String(b.words), said_where: String(b.said_where), said_at: String(b.said_at) }
+  return { words: String(b.words), said_where: String(b.said_where), said_at: String(b.said_at), body: b }
 }
 /** "Approved in your words: "...", Thu 12 Nov, in a Claude Code session" (Ruling, Krish, 2026-11-12). */
 export function inYourWords(words: string, on: string | null, where?: string | null): string {
@@ -427,14 +427,18 @@ export function scriptsStateOf(picks: Array<{ doc_id: string; body: Body; update
   const pressed = picks.find(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && isObj(p.body) && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === pieceId)
   const typed = typedApproval(picks, day, 'scripts', pieceId)
   const at = pressed ? str(pressed.updated_at) ?? (isObj(pressed.body) ? str(pressed.body.at) : null) : null
-  return { pressed: Boolean(pressed), pressed_at: at, typed: typed ? { words: typed.words, said_at: typed.said_at } : null }
+  // The words he approved, so the approval counts only for them (pieceDecisions, scriptsChanged).
+  const bodyOf = pressed && isObj(pressed.body) ? pressed.body : typed ? typed.body : null
+  const texts = bodyOf && isObj(bodyOf.texts) ? Object.fromEntries(Object.entries(bodyOf.texts as Body).filter(([, v]) => typeof v === 'string')) as ScriptsState['texts'] : null
+  return { pressed: Boolean(pressed), pressed_at: at, typed: typed ? { words: typed.words, said_at: typed.said_at } : null, texts }
 }
 /** Every approved piece's decisions on the week, by piece id: what the prompts carry and the step they leave (F46). */
 export function weekDecisions(i: ViewInputs, days: Array<{ day: PostedDay; pieces: Array<{ id: string; approval?: unknown }> }>): Record<string, PieceDecisions> {
   const out: Record<string, PieceDecisions> = {}
   for (const d of days) for (const p of d.pieces.filter(x => x.approval)) {
     const row = i.pieces.find(x => String(x.id).toLowerCase() === p.id)
-    out[p.id] = pieceDecisions({ meta: row?.meta, lock: lockStateOf(i.locks, i.picks, d.day, p.id), scripts: scriptsStateOf(i.picks, d.day, p.id) })
+    out[p.id] = pieceDecisions({ meta: row?.meta, lock: lockStateOf(i.locks, i.picks, d.day, p.id), scripts: scriptsStateOf(i.picks, d.day, p.id),
+      filed: i.scripts ? i.scripts[p.id] ?? [] : undefined })
   }
   return out
 }
@@ -1047,8 +1051,11 @@ export async function readPieceDecisions(db: SupabaseClient, pieceId: string, en
   const picks = picksRead.error ? null : (picksRead.data || []) as Array<{ doc_id: string; body: Body; updated_by: string; updated_at?: string }>
   const locksRead = !texts.includes(undefined)
   const locks = Object.fromEntries(LOCK_DAYS.map((d, k) => [d, texts[k] ?? null])) as ViewInputs['locks']
+  // The scripts filed on the piece now, so his approval counts only for the words he approved; unread leaves them unknown.
+  const overlay = await readOverlay(db as never, week, [id]).catch(() => null)
+  const filed = overlay ? (await readFiledScripts(db, overlay, [id]).catch(() => null))?.[id] ?? [] : undefined
   return { ...pieceDecisions({ meta: row.data.meta, lock: locksRead && picks ? lockStateOf(locks, picks, day, id) : undefined,
-    scripts: picks ? scriptsStateOf(picks, day, id) : undefined }), week, day }
+    scripts: picks ? scriptsStateOf(picks, day, id) : undefined, filed }), week, day }
 }
 
 /** The newest filed script of each cut on each piece, with its words (F47). */
