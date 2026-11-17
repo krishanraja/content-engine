@@ -542,6 +542,8 @@ export async function placeOffday(db: SupabaseClient, ctx: { week: string; id: s
           passed: true, problems: [], one_cut: true, cuts: ['short'], hashes: { short: sha },
           checked_at: same && check?.checked_at ? check.checked_at : now,
           changed_at: { short: same && check?.changed_at?.short ? check.changed_at.short : now },
+          ...(isObj(body.tone_floor) ? { tone_floor: { short: { script_sha256: sha, reference_sha256: TONE_FLOOR_REFERENCE.short, reader: String(body.tone_floor.reader).slice(0, 200),
+            verdict: body.tone_floor.verdict === 'pass' ? 'pass' as const : 'fail' as const, why: String(body.tone_floor.why).slice(0, 600), at: now } } } : {}),
           ...(readers.length >= 2 ? { read_back: { short: { script_sha256: sha, at: now, by: 'week_board.py', readers, found: 'nothing lost' as const } } } : {}),
         },
       }, SERVER, now)
@@ -586,14 +588,18 @@ async function offdayRecorded(db: SupabaseClient, ctx: { week: string; id: strin
         ...(tp?.cuts?.short?.script_id ? { script_id: tp.cuts.short.script_id } : {}) }],
       approval: { id, updated_by: who, updated_at: now, body },
     }
-    let result: SendResult
-    try {
+    let result: Omit<SendResult, 'status'> & { status: SendResult['status'] | 'held' }
+    // The same tone floor the day cuts hold to (heldBecause): a pass against his AI Music short, for these exact words (Ruling, Krish, 2026-11-17).
+    const tone = (placed.making?.script_check as { tone_floor?: Body } | undefined)?.tone_floor?.short as Body | undefined
+    if (!(isObj(tone) && tone.script_sha256 === scriptHash(text) && tone.reference_sha256 === TONE_FLOOR_REFERENCE.short && tone.verdict === 'pass')) {
+      result = { status: 'held', error: `the 90-second script has not passed the tone floor (a fresh reader comparing it with his AI Music take, config/script-floor.json; making.py tone-floor), ${THEN}` }
+    } else try {
       const send = deps.send ?? (async (i: SendApprovedInput) => (await import('../_teleprompter.js')).sendApprovedScripts(i))
       result = await send(input)
     } catch (error) {
       result = { status: 'error', error: String((error as Error)?.message || error).slice(0, 300) }
     }
-    const unrecorded = result.status === 'sent' ? await recordSend(db, input, result, now).catch(() => 'the piece\'s making record could not be written') : null
+    const unrecorded = result.status === 'sent' ? await recordSend(db, input, result as SendResult, now).catch(() => 'the piece\'s making record could not be written') : null
     answer = { status: result.status, at: now, by: SERVER, date: offdayDate(week, String(body.day)),
       ...(result.folder_id ? { folder_id: result.folder_id } : {}), ...(result.scripts ? { scripts: result.scripts } : {}), ...(result.error ? { error: result.error } : {}),
       ...(result.status === 'sent' ? { recorded: !unrecorded, ...(unrecorded ? { record_error: unrecorded } : {}) } : {}) }
