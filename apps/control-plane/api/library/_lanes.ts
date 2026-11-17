@@ -98,7 +98,7 @@ export interface WindowsHealth {
  *  preflight that did not finish. Plan Wave 1, the clock's "Sat 18:00 Preflight" row: whether this machine could run
  *  the overnight production unattended, proved a week before the runner exists. */
 export const PREFLIGHT_CHECKS: readonly string[] = Object.freeze([
-  'claude_cli', 'codex_companion', 'codex_login', 'codex_profile', 'codex_allowance', 'ffmpeg', 'tesseract', 'disk', 'drive',
+  'claude_cli', 'codex_companion', 'codex_login', 'codex_profile', 'ffmpeg', 'tesseract', 'disk', 'drive',
   'preflight_stopped',
 ])
 
@@ -121,8 +121,6 @@ export interface PreflightHealth {
   /** The machine's part in the overnight run (MINDMAKE_OVERNIGHT_ROLE): primary makes the long cuts and builds the
    *  Monday board, standby makes the shorts. */
   role: 'primary' | 'standby' | 'none' | null
-  codex_weekly_used_pct: number | null
-  codex_resets_at: string | null
   ffmpeg: string | null
   tesseract: string | null
   free_gb: number | null
@@ -251,8 +249,6 @@ export function parsePreflightHealth(value: unknown): PreflightHealth | undefine
     codex_profile: typeof p.codex_profile === 'boolean' ? p.codex_profile : null,
     codex_flagged: count(p.codex_flagged),
     role: p.role === 'primary' || p.role === 'standby' || p.role === 'none' ? p.role : null,
-    codex_weekly_used_pct: number(p.codex_weekly_used_pct, 100),
-    codex_resets_at: isoOrNull(p.codex_resets_at),
     ffmpeg: wordOrNull(p.ffmpeg, VERSION_RE),
     tesseract: wordOrNull(p.tesseract, VERSION_RE),
     free_gb: number(p.free_gb, 1_000_000),

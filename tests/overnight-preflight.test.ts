@@ -45,11 +45,10 @@ const RUNS = [
   "Invoke-Quiet $codex @('login', 'status') 30 $CodexEnv",
   "Invoke-Quiet $python.path ($python.prefix + @($check, 'check')) 60 @{ PYTHONUTF8 = '1'; PYTHONIOENCODING = 'utf-8' }",
   "Invoke-Quiet $codex @('mcp', 'list', '--json') 30 $CodexEnv",
-  "Invoke-Quiet $python ($prefix + @($audit, '--codex', '--json')) 120 @{ PYTHONUTF8 = '1'; PYTHONIOENCODING = 'utf-8' }",
   "Invoke-Quiet $ffmpeg @('-version') 30",
   "Invoke-Quiet $tesseract @('--version') 30",
 ]
-const CHECKS = ['claude_cli', 'codex_companion', 'codex_login', 'codex_profile', 'codex_allowance', 'ffmpeg', 'tesseract', 'disk', 'drive']
+const CHECKS = ['claude_cli', 'codex_companion', 'codex_login', 'codex_profile', 'ffmpeg', 'tesseract', 'disk', 'drive']
 const WRITES = /\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Set-Item|Set-ItemProperty|New-ItemProperty|Remove-ItemProperty|Tee-Object|Export-[A-Za-z]+|Start-Process|Stop-Process|Invoke-Expression|Invoke-WebRequest|Invoke-RestMethod|Start-BitsTransfer|Send-MailMessage|Register-ScheduledTask|Set-ScheduledTask|Unregister-ScheduledTask|Start-ScheduledTask|Stop-ScheduledTask|Enable-ScheduledTask|Disable-ScheduledTask|Save-JsonFile|Send-Engine|Invoke-Engine|Send-LaneReport)\b/i
 // File and Directory only for reading; no environment setting kept, no network client, no process ended by .Kill.
 const NET_WRITES = /\[(System\.IO\.)?(File|Directory|FileInfo|DirectoryInfo)\]::(?!(ReadAllText|ReadAllLines|Exists)\b)\w+|::SetEnvironmentVariable\b|\b(HttpClient|WebClient|WebRequest|TcpClient|UploadString|UploadFile|SendAsync|PostAsync|PutAsync)\b|FileMode\]::|FileAccess\]::(Write|ReadWrite)|\$env:[A-Za-z_]+\s*=(?!=)|\.Kill\(/
@@ -120,9 +119,10 @@ describe('the overnight preflight on a home computer', () => {
     expect(build).toBe('n8.1.2-53-g1005b294ff')
     expect(pinned).toContain("'ffmpeg-(n[0-9.]+-[0-9]+-g[0-9a-f]+)'")
     expect(path!.split(':').some((entry) => /Tesseract/.test(entry))).toBe(true)
-    const ceiling = /'\(\?m\)\^ALLOWANCE_CEILING = \(\\d\+\)'/.test(code)
-    expect(ceiling).toBe(true)
-    expect(/^ALLOWANCE_CEILING = (\d+)/m.exec(read('scripts/velib/cards.py'))?.[1]).toBe('80')
+    // Codex use is never counted (Ruling, Krish, 2026-11-17: "We have plenty of Codex credits, you need to permanently
+    // stop counting codex credits everywhere"): no allowance check, no ceiling, nothing reserved before a dispatch.
+    expect(code).not.toMatch(/codex_allowance|ALLOWANCE_CEILING|weekly_used_pct/)
+    expect(read('scripts/velib/cards.py')).not.toMatch(/ALLOWANCE_CEILING|_reserve\(|codex_allowance_points|codex_paid_credits/)
     // What ve dispatch runs, and the flags it passes: scripts/codex_thread.mjs since 15 Nov (Ruling, Krish, 2026-11-15:
     // Claude starts Codex only through scripts/codex_thread.mjs), and the preflight checks that same script and the
     // Windows node and codex that run it (scripts/velib/codex_route.py), not the plugin's companion.
@@ -147,10 +147,11 @@ describe('the overnight preflight on a home computer', () => {
 
   it('never gives the engine a path, a message or an account', () => {
     const report = code.slice(code.indexOf('$report = [ordered]@{'), code.indexOf('$result = [ordered]@{', code.indexOf('$report = [ordered]@{')))
-    expect(report).toContain('codex_weekly_used_pct = ')
+    expect(report).toContain('codex_login = ')
+    expect(report).not.toContain('codex_weekly_used_pct')
     expect(report).not.toMatch(/detail|plan|credits|\$RepoRoot|machine|permission_mode|mcp_servers|auth/)
     // codex login status can name the account; the check keeps only whether it says ChatGPT.
-    const login = code.slice(code.indexOf("Invoke-Check 'codex_login'"), code.indexOf("Invoke-Check 'codex_allowance'"))
+    const login = code.slice(code.indexOf("Invoke-Check 'codex_login'"), code.indexOf("Invoke-Check 'codex_profile'"))
     expect(login).toContain('-match \'ChatGPT\'')
     expect(login).not.toMatch(/detail = "[^"]*\$\(\$run\.(out|err)\)/)
   })
@@ -161,7 +162,7 @@ describe('the preflight in the lane report', () => {
     const report = parseLaneReport({
       machine: 'SURFACE', problems: ['preflight_failed'],
       preflight: {
-        at: '2026-10-31T18:02:11Z', ok: false, failed: ['codex_allowance', 'made_up', 'codex_allowance'],
+        at: '2026-10-31T18:02:11Z', ok: false, failed: ['codex_login', 'made_up', 'codex_login'],
         claude_version: '2.1.312', permission_mode: 'dontAsk', auth: 'none',
         mcp_servers: [{ name: 'mindmake-studio', status: 'connected' }],
         codex_companion: '1.0.6', codex_login: true, codex_weekly_used_pct: 86.04, codex_resets_at: '2026-11-02T09:00:00Z',
@@ -171,10 +172,9 @@ describe('the preflight in the lane report', () => {
     }, new Date(0).toISOString())!
     expect(report.problems).toEqual(['preflight_failed'])
     expect(report.preflight).toEqual({
-      at: '2026-10-31T18:02:11Z', ok: false, failed: ['codex_allowance'],
+      at: '2026-10-31T18:02:11Z', ok: false, failed: ['codex_login'],
       claude_version: '2.1.312',
       codex_companion: '1.0.6', codex_login: true, codex_profile: null, codex_flagged: null, role: null,
-      codex_weekly_used_pct: 86, codex_resets_at: '2026-11-02T09:00:00Z',
       ffmpeg: 'n8.1.2-53-g1005b294ff', tesseract: '5.4.0.20240606', free_gb: 212.4, drive_reachable: 4, drive_folders: 4,
     })
     expect(LANE_PROBLEMS.preflight_failed).toMatch(/overnight preflight/)
@@ -335,8 +335,7 @@ $seen = Watch-Run $process 200
     expect(run.checks.drive).toMatchObject({ ok: reachable === 4, reachable, folders: 4 })
     expect(run.checks.disk.free_gb).toBeGreaterThan(0)
     expect(run.checks.codex_login.ok).toBe(false)
-    // The audit ran and its totals were read: nothing in the empty home, so the allowance is unknown and passes.
-    expect(run.checks.codex_allowance).toMatchObject({ ok: true, used_pct: null, limit_pct: 80 })
+    expect(run.checks.codex_allowance).toBeUndefined()
     if (toolchain) expect(run.checks.ffmpeg).toMatchObject({ ok: true, version: expect.stringMatching(/^n8\.1\.2-53-g1005b294ff/) })
     const kept = parseLaneReport({ machine: 'CI', problems: [], preflight: run.report }, new Date(0).toISOString())!.preflight!
     expect(kept.ok).toBe(false)

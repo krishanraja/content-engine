@@ -140,34 +140,10 @@ def fields_path_for(card: Path) -> Path:
                      'the card with its own worktree path (ve card)')
 
 
-SPEND_ID = re.compile(r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')
-
-
-def require_booking(spend_id: str | None) -> str | None:
-    """The Control Center reservation the queuing session made (reserve_credit_spend), so no credit file has to live
-    on the computer that builds; Control Center is then the guard that refuses over_share, held or no_pool, and the
-    session settles it (settle_credit_spend) once the result is back. A session with no connector (Claude Code on his
-    PC has none) has no booking: that never blocks a card. It returns None with one warning line, and the computer that
-    builds reserves the card provisionally in its local ledger, reconciled later (ve budget provisional). A value that
-    is given but is not a spend_id is a mistake, and is refused."""
-    if not spend_id:
-        print('ve lane: no Control Center booking (no connector here); the card goes ahead on a provisional local '
-              'reservation, reconciled later', file=sys.stderr)
-        return None
-    if not SPEND_ID.match(spend_id):
-        raise SystemExit(f've lane: --spend-id {spend_id!r} is not a reserve_credit_spend spend_id')
-    return spend_id
-
-
-def queue_item(fields_rel: str, fields: dict, ref: str, piece: str | None, client: str, at: str | None = None,
-               spend_id: str | None = None) -> dict:
+def queue_item(fields_rel: str, fields: dict, ref: str, piece: str | None, client: str, at: str | None = None) -> dict:
     card_id = fields['card_id']
     stamp = at or now()
     close_ref = {'lane': 'codex', 'fields': fields_rel, 'ref': ref, 'state': 'queued', 'queued_at': stamp, 'by': client}
-    if spend_id:
-        close_ref['spend_id'] = spend_id
-    else:
-        close_ref['booking'] = 'provisional'
     if piece:
         close_ref['piece'] = piece
     return {
@@ -207,8 +183,7 @@ def unknown_verbs(fields: dict, props_text: str | None = None) -> list[str]:
     return sorted({v for v in named if v not in known})
 
 
-def queue(card: Path, piece: str | None, ref: str = 'main', client: str = 'claude_code', spend_id: str | None = None) -> dict:
-    spend_id = require_booking(spend_id)
+def queue(card: Path, piece: str | None, ref: str = 'main', client: str = 'claude_code') -> dict:
     fields_file = fields_path_for(card.resolve())
     rel = fields_file.relative_to(ROOT).as_posix()
     # The home computer cuts the card's worktree from main, so the verbs must be on origin/main, not only here: on
@@ -230,7 +205,7 @@ def queue(card: Path, piece: str | None, ref: str = 'main', client: str = 'claud
                  and (i.get('close_ref') or {}).get('state') in ('queued', 'running')), None)
     if held:
         raise SystemExit(f've lane: {held["id"]} is already {held["close_ref"]["state"]}; wait for its result (ve lane status)')
-    item = queue_item(rel, fields, ref, piece, client, spend_id=spend_id)
+    item = queue_item(rel, fields, ref, piece, client)
     _upsert(item, client)
     return item
 
@@ -292,7 +267,7 @@ def dispatch_problems(done, changed: list[str]) -> list[str]:
     return []
 
 
-def build(fields_rel: str, ref: str = 'main', piece: str | None = None, spend_id: str | None = None) -> dict:
+def build(fields_rel: str, ref: str = 'main', piece: str | None = None) -> dict:
     """Write the card from its fields on this machine, dispatch it and wait, then verify-card. Returns a summary."""
     from .cards import dispatch, verify, write_card
     from .common import card_worktree, native_path
@@ -314,7 +289,7 @@ def build(fields_rel: str, ref: str = 'main', piece: str | None = None, spend_id
         # {repo}\\{branch} tail, and ensure_worktree refused the card (2026-11-01).
         fields['cwd'] = str(native_path(card_worktree(card_id)))
         write_card(out, **fields)
-        done = dispatch(out, background=False, booked=require_booking(spend_id))
+        done = dispatch(out, background=False)
         result['dispatch_code'] = done.returncode
         result['dispatch_tail'] = '\n'.join((done.stdout + done.stderr).strip().splitlines()[-8:])
         result['changed_files'] = changed_files(Path(fields['cwd']), 'origin/main')
@@ -340,7 +315,7 @@ def report_item(item: dict, result: dict, at: str | None = None) -> dict:
     if result.get('sha'):
         ref['sha'] = str(result['sha'])[:12]
     if len(json.dumps(ref)) > 1000:
-        ref = {k: ref[k] for k in ('lane', 'venture', 'fields', 'path', 'ref', 'piece', 'spend_id', 'state', 'queued_at',
+        ref = {k: ref[k] for k in ('lane', 'venture', 'fields', 'path', 'ref', 'piece', 'state', 'queued_at',
                                     'finished_at', 'branch', 'sha') if k in ref}
     if result.get('ok'):
         detail = (f'Codex built it on {result.get("host")} and verify-card passes (branch {ref.get("branch")}). '
@@ -353,9 +328,8 @@ def report_item(item: dict, result: dict, at: str | None = None) -> dict:
 
 # ---- serve (the home computer's recordings pass) ------------------------------------------------------------------
 
-def wsl_command(fields_rel: str, ref: str, piece: str | None, distro: str, repo: str, spend_id: str | None = None) -> list[str]:
-    inner = ['lane', 'build', fields_rel, '--ref', ref, '--json'] + (['--piece', piece] if piece else []) \
-        + (['--spend-id', spend_id] if spend_id else [])
+def wsl_command(fields_rel: str, ref: str, piece: str | None, distro: str, repo: str) -> list[str]:
+    inner = ['lane', 'build', fields_rel, '--ref', ref, '--json'] + (['--piece', piece] if piece else [])
     return wsl_ve(inner, distro, repo)
 
 
@@ -460,11 +434,11 @@ def _run(ref: dict) -> dict:
     # An explicit WSL route wins over a companion found on this machine: on 2026-11-01 Lorimer's Windows side had a
     # companion that did nothing, while Codex works inside WSL. Inside WSL itself _wsl_route() is None.
     if has_companion() and not _wsl_route():
-        return build(ref['fields'], ref.get('ref', 'main'), ref.get('piece'), ref.get('spend_id'))
+        return build(ref['fields'], ref.get('ref', 'main'), ref.get('piece'))
     if _wsl_route():
         safe(ref['fields'], ref.get('ref', 'main'))
         inner = ['lane', 'build', ref['fields'], '--ref', ref.get('ref', 'main'), '--json'] \
-            + (['--piece', ref['piece']] if ref.get('piece') else []) + (['--spend-id', ref['spend_id']] if ref.get('spend_id') else [])
+            + (['--piece', ref['piece']] if ref.get('piece') else [])
         return _in_wsl(inner)
     return {'ok': False, 'host': platform.node(), 'problems': [NO_ROUTE]}
 
@@ -594,7 +568,7 @@ def build_venture(name: str, branch: str, path: str) -> dict:
             subprocess.run(['corepack', 'pnpm', 'install', '--frozen-lockfile'], cwd=wt, check=True, capture_output=True)
         elif (wt / 'package-lock.json').exists():
             subprocess.run(['npm', 'ci', '--no-audit', '--no-fund'], cwd=wt, check=True, capture_output=True)
-        done = dispatch(out, background=False, booked=require_booking(meta.get('spend_id')))
+        done = dispatch(out, background=False)
         result['dispatch_code'] = done.returncode
         result['dispatch_tail'] = '\n'.join((done.stdout + done.stderr).strip().splitlines()[-8:])
         result['changed_files'] = changed_files(wt, f'origin/{branch}')

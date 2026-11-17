@@ -69,7 +69,7 @@ class PieceLedger(unittest.TestCase):
         for index, kind in enumerate(ledger.KINDS[2:], 3):
             self.assertEqual(usage[kind], index)
         rows = [json.loads(line) for line in self.path.read_text(encoding='utf-8').splitlines()]
-        self.assertEqual(len(rows), 7)
+        self.assertEqual(len(rows), len(ledger.KINDS) + 1)
         self.assertEqual(rows[0]['note'], 'first\nsecond')
         self.assertIsNotNone(datetime.fromisoformat(rows[0]['ts']).utcoffset())
 
@@ -153,7 +153,7 @@ class PieceLedger(unittest.TestCase):
         result = self.call_cli('ledger', self.piece)
         self.assertEqual(result.returncode, 0, result.stderr)
         for label in ('claude tokens', 'codex tokens', 'total tokens', 'engine minutes',
-                      'allowance points', 'credits', 'Krish-wait minutes', 'OK'):
+                      'credits', 'Krish-wait minutes', 'OK'):
             self.assertIn(label, result.stdout)
         result = self.call_cli('ledger', self.piece, 'add', 'claude_tokens', '1200000', '--note', 'trial')
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -205,7 +205,7 @@ class PieceLedger(unittest.TestCase):
             dispatch.assert_not_called()
             self.assertIn('queued codex-test', output.getvalue())
             queue.reset_mock()
-            ledger.add(self.piece, 'allowance_points', 1.21)
+            ledger.add(self.piece, 'engine_seconds', ledger.budget()['engine_minutes_cap'] * 60 + 60)  # over the engine-minutes cap
             with self.assertRaises(SystemExit):
                 ve.cmd_dispatch(args)
             queue.assert_not_called()
@@ -218,7 +218,7 @@ class PieceLedger(unittest.TestCase):
                 self.assertEqual(ve.cmd_dispatch(args), 0)
             dispatch.assert_called_once()
             dispatch.reset_mock()
-            ledger.add(self.piece, 'allowance_points', 1.21)
+            ledger.add(self.piece, 'engine_seconds', ledger.budget()['engine_minutes_cap'] * 60 + 60)  # over the engine-minutes cap
             with self.assertRaises(SystemExit):
                 ve.cmd_dispatch(args)
             dispatch.assert_not_called()
