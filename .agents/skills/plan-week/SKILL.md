@@ -473,6 +473,12 @@ he ticks: `references/inspiration-piece.md`.
    he gave them. The lock is what he signs; the make session then judges it
    and declares it in `config/long-cuts.json` quoting those words
    (`make-piece`, "A longer long cut"). Never propose one to fill time.
+6d. **The funny lines** (Krish, 2026-11-17: humour-engine on call). Every option carries its humorous angle in
+   `funny` (idea_checks.py checks its shape, not whether it is funny). Before the board, run
+   `python3 scripts/post-pack/humour_check.py ideas <the week's ideas.json>` (at most 20 calls): a line flagged "not a
+   joke", "does not land" or "needs explaining" is rewritten and read again. Exit 2 (unavailable) never holds the
+   board: write the options as they are and say on the run's summary that the funny lines were not read.
+
 7. **Put the week on the live board**, last, once the options are written
    (Ruling, Krish, 2026-11-11: one live board, in Control Centre). The live board draws the week from
    `GET /api/board/<Monday>/view`, which reads `ideas.json` (each publishing
