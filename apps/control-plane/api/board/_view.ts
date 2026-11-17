@@ -432,10 +432,14 @@ export function scriptsStateOf(picks: Array<{ doc_id: string; body: Body; update
     && !(Date.parse(String(p.updated_at || p.body.at || '')) <= back))
   const typed = typedApproval(picks, day, 'scripts', pieceId)
   const at = pressed ? str(pressed.updated_at) ?? (isObj(pressed.body) ? str(pressed.body.at) : null) : null
+  // His words written by his own login are timed by the server (updated_at), never by his device's clock, so a slow or fast
+  // phone cannot make his approval look older or newer than a filed script (scriptsChanged; review of F49).
+  const own = typed ? picks.find(p => isObj(p.body) && p.body === typed.body && p.updated_by === 'Krish') : null
+  const typedAt = typed ? (own ? str(own.updated_at) : null) ?? typed.said_at : null
   // The words he approved, so the approval counts only for them (pieceDecisions, scriptsChanged).
   const bodyOf = pressed && isObj(pressed.body) ? pressed.body : typed ? typed.body : null
   const texts = bodyOf && isObj(bodyOf.texts) ? Object.fromEntries(Object.entries(bodyOf.texts as Body).filter(([, v]) => typeof v === 'string')) as ScriptsState['texts'] : null
-  return { pressed: Boolean(pressed), pressed_at: at, typed: typed ? { words: typed.words, said_at: typed.said_at } : null, texts }
+  return { pressed: Boolean(pressed), pressed_at: at, typed: typed ? { words: typed.words, said_at: typedAt ?? typed.said_at } : null, texts }
 }
 /** Every approved piece's decisions on the week, by piece id: what the prompts carry and the step they leave (F46). */
 export function weekDecisions(i: ViewInputs, days: Array<{ day: PostedDay; pieces: Array<{ id: string; approval?: unknown }> }>): Record<string, PieceDecisions> {

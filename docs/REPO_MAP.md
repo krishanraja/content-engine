@@ -2372,7 +2372,8 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `interface LockState`
 - `interface ScriptsState`
 - `interface DecisionInputs`
-- `function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScript[] | undefined): Array<'long' | 'short'>`
+- `function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScript[] | undefined, approvedAt: string | null = …`
+- `function spokenTitle(texts: Partial<Record<string, string>> | null | undefined): string | null`
 - `function pieceDecisions(i: DecisionInputs): PieceDecisions`
 - `function nextStep(items: Decision[]): DecidedStep | null`
 - `function decisionsText(p: PieceDecisions): string`
@@ -2699,6 +2700,7 @@ One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Rul
 - `interface PressDeps`
 - `class PressError`
 - `const TONE_FLOOR_REFERENCE: Record<string, string>`
+- `function sendLine(send: Body): string`
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
 - `function gatePatch(kind: GateKind, body: Body, now: string): MakingGates`
@@ -3046,6 +3048,121 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Bod…`
 - `function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, pieceI…`
 - `function productionStage(m: ModelInputs, p: { pieceId: string; title: string; item: string | null; style: DayStyle | nu…`
+- `function sentNote(a: OffdayScripts | null): string | null`
+- `function checksFirst(a: OffdayScripts): string`
+- `function workingTitle(m: Pick<ModelInputs, 'picks' | 'decisions'>, pieceId: string, fallback: string, out = false): str…`
+- `function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: string): { line: string; approval: OffdayScripts }…`
+- `function recordHead(sc: OffdayScripts): string`
+- `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`
+- `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
+- `function primaryUrl(raw: Body | null, fallback: unknown = null): string | null`
+- `function citesOf(raw: Body | null): { urls: string[]; parts: string[] }`
+- `function hookNorm(v: unknown): string | null`
+- `function repeatOf(own: { keys: string[]; week: string; date: string; url: string | null; hook: string | null; recurring…`
+- `function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'pieces'>, _days: DayView[], items: OffdayItem[]…`
+- `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
+- `function modelProblems(model: WeekModel, days: DayView[]): string[]`
+
+### `apps/control-plane/api/board/_weekModel.ts`
+
+- `const OFFDAY_KINDS`
+- `type OffdayKind = typeof OFFDAY_KINDS[number]['key']`
+- `const PIECE_KIND`
+- `const PIECE_PATH`
+- `const POST_PATH`
+- `const GOOD_NEWS_STORIES`
+- `const CLAUDE_LABEL`
+- `const NOTES_HEADING`
+- `interface ModelStep`
+- `interface ModelSource`
+- `interface ModelStory`
+- `interface ModelRead`
+- `type ModelAction = Action`
+- `interface ModelItem`
+- `interface ModelRepeatOf`
+- `interface ModelRepeat`
+- `interface RecentOut`
+- `interface ModelIdea`
+- `interface ModelDay`
+- `interface WeekModel`
+- `interface ModelInputs`
+- `function signPress(week: string, pieceId: string, lock: LockToSign): PressAction`
+- `function lookPresses(pieceId: string, style: DayStyle | null | undefined): PressAction[]`
+- `function offdayKind(o: Body): { kind: OffdayKind; supports: 'mon' | 'wed' | 'fri' | null }`
+- `function kindLabel(kind: OffdayKind, supports: string | null): string`
+- `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
+- `function offdayHead(route: MakeRoute | null): string`
+- `interface StoryState`
+- `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
+- `function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead`
+- `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
+- `function scriptsOnCard(m: ModelInputs, d: DayView, it: ModelItem): ModelItem`
+- `function takeBackPress(m: Pick<ModelInputs, 'picks'>, day: string, pieceId: string): PressAction`
+- `function recordsItself(kind: string, picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string): …`
+- `interface OffdayScripts`
+- `function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Bod…`
+- `function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, pieceI…`
+- `function productionStage(m: ModelInputs, p: { pieceId: string; title: string; item: string | null; style: DayStyle | nu…`
+- `function sentNote(a: OffdayScripts | null): string | null`
+- `function checksFirst(a: OffdayScripts): string`
+- `function workingTitle(m: Pick<ModelInputs, 'picks' | 'decisions'>, pieceId: string, fallback: string, out = false): str…`
+- `function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: string): { line: string; approval: OffdayScripts }…`
+- `function recordHead(sc: OffdayScripts): string`
+- `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`
+- `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
+- `function primaryUrl(raw: Body | null, fallback: unknown = null): string | null`
+- `function citesOf(raw: Body | null): { urls: string[]; parts: string[] }`
+- `function hookNorm(v: unknown): string | null`
+- `function repeatOf(own: { keys: string[]; week: string; date: string; url: string | null; hook: string | null; recurring…`
+- `function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'pieces'>, _days: DayView[], items: OffdayItem[]…`
+- `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
+- `function modelProblems(model: WeekModel, days: DayView[]): string[]`
+
+### `apps/control-plane/api/board/_weekModel.ts`
+
+- `const OFFDAY_KINDS`
+- `type OffdayKind = typeof OFFDAY_KINDS[number]['key']`
+- `const PIECE_KIND`
+- `const PIECE_PATH`
+- `const POST_PATH`
+- `const GOOD_NEWS_STORIES`
+- `const CLAUDE_LABEL`
+- `const NOTES_HEADING`
+- `interface ModelStep`
+- `interface ModelSource`
+- `interface ModelStory`
+- `interface ModelRead`
+- `type ModelAction = Action`
+- `interface ModelItem`
+- `interface ModelRepeatOf`
+- `interface ModelRepeat`
+- `interface RecentOut`
+- `interface ModelIdea`
+- `interface ModelDay`
+- `interface WeekModel`
+- `interface ModelInputs`
+- `function signPress(week: string, pieceId: string, lock: LockToSign): PressAction`
+- `function lookPresses(pieceId: string, style: DayStyle | null | undefined): PressAction[]`
+- `function offdayKind(o: Body): { kind: OffdayKind; supports: 'mon' | 'wed' | 'fri' | null }`
+- `function kindLabel(kind: OffdayKind, supports: string | null): string`
+- `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
+- `function offdayHead(route: MakeRoute | null): string`
+- `interface StoryState`
+- `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
+- `function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead`
+- `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
+- `function scriptsOnCard(m: ModelInputs, d: DayView, it: ModelItem): ModelItem`
+- `function takeBackPress(m: Pick<ModelInputs, 'picks'>, day: string, pieceId: string): PressAction`
+- `function recordsItself(kind: string, picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string): …`
+- `interface OffdayScripts`
+- `function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Bod…`
+- `function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, pieceI…`
+- `function productionStage(m: ModelInputs, p: { pieceId: string; title: string; item: string | null; style: DayStyle | nu…`
+- `function sentNote(a: OffdayScripts | null): string | null`
+- `function checksFirst(a: OffdayScripts): string`
+- `function workingTitle(m: Pick<ModelInputs, 'picks' | 'decisions'>, pieceId: string, fallback: string, out = false): str…`
 - `function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: string): { line: string; approval: OffdayScripts }…`
 - `function recordHead(sc: OffdayScripts): string`
 - `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`

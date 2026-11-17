@@ -25,7 +25,7 @@ export interface Decision {
   at: string | null
   /** Where it is recorded: his press on the board, his typed words, or his signature on the lock. */
   how: string | null
-  /** Why an approval he gave no longer counts: the scripts filed since are not the words he approved. */
+  /** Why an approval he gave no longer counts: scripts filed after it are not the words he approved. */
   note?: string
 }
 /** The step a piece is at from his decisions: story (sign the lock), look (his three production picks), board (the
@@ -62,9 +62,42 @@ const sameWords = (a: string, b: string) => a.replace(/\s+/g, ' ').trim() === b.
  *  Wed 18's scripts were approved in his words at 09:01 and rewritten at 13:43, and an approval that ignores its words
  *  would count for scripts he never read. An older approval saved without its words cannot be compared and stands as
  *  it was, so no piece he already approved and recorded is sent back a step. */
-export function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScript[] | undefined): Array<'long' | 'short'> {
+export function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScript[] | undefined, approvedAt: string | null = null): Array<'long' | 'short'> {
   if (!filed?.length || !approved || !Object.keys(approved).length) return []
-  return filed.filter(f => typeof approved[f.cut] !== 'string' || !sameWords(approved[f.cut] as string, f.text)).map(f => f.cut)
+  // Only a script filed AFTER his approval makes it stale. Words he edited himself on the board differ from the older
+  // filed text by design, and his approval is the newer act (F49, Tue 17 Nov 16:20: "pressed approve, and it just
+  // deleted all my edits, and the board looks like i never did anything").
+  const since = approvedAt && Number.isFinite(Date.parse(approvedAt)) ? Date.parse(approvedAt) : null
+  // A filing time that cannot be read counts as after his approval: unknown never counts as approved (review of F49).
+  const filedAfter = (f: FiledScript) => since === null || f.at === null || !Number.isFinite(Date.parse(f.at)) || Date.parse(f.at) > since
+  return filed.filter(f => (typeof approved[f.cut] !== 'string' || !sameWords(approved[f.cut] as string, f.text)) && filedAfter(f)).map(f => f.cut)
+}
+
+/** The title his approved scripts speak (house rule INTRO_PATTERN: the title said as a question in the intro), as a
+ *  working title: the last question in each cut's first paragraph, a compound question cut to its last clause ("what
+ *  happened and where does AI get built when towns say no?" -> "Where does AI get built when towns say no?"), the
+ *  shortest across the cuts. Null when no intro asks one. Titles are settled with the finished video (packaging). */
+const STOCK_QUESTION = /^(want to know why|sound familiar|guess what|know what|you know what|ready|right|why|how|what|really|seriously)\??$/i
+export function spokenTitle(texts: Partial<Record<string, string>> | null | undefined): string | null {
+  const found: string[] = []
+  for (const text of Object.values(texts || {})) {
+    if (typeof text !== 'string') continue
+    // The first paragraph he speaks: no heading, bold label or bracketed direction (review of F49).
+    const spoken = (p: string) => p.replace(/\[[^\]]*\]/g, ' ').replace(/\*\*[^*]*\*\*:?/g, ' ').replace(/["\u201c\u201d]/g, '').replace(/\s+/g, ' ').trim()
+    // Initials and titles (U.S., U.K., Dr.) keep their dots inside the sentence they sit in.
+    const first = (text.split(/\n\s*\n/).map(x => spoken(x.trim())).find(x => x && !/^#/.test(x) && /[a-z]/.test(x)) || '')
+      .replace(/\b((?:[A-Z]\.){2,}|(?:Mr|Mrs|Ms|Dr|St|vs|etc|e\.g|i\.e)\.)/g, m => m.replace(/\./g, '\u2024'))
+    // Sentences end at . ? ! followed by a space or the end, so "$2.5 billion" and "U.S." stay whole.
+    const qs = (first.match(/(?:[^.?!]|[.?!](?!\s|$))*\?(?=\s|$)/g) || []).map(q => q.trim())
+    let q = ([...qs].reverse().find(x => !STOCK_QUESTION.test(x.replace(/^(and|so|but|or|now)\b[,\s]*/i, ''))) || '')
+      .replace(/^(and|so|but|or|now)\b[,\s]*/i, '')
+    const clause = /\b(?:and|or)\s+((?:where|what|how|why|who|when|which|is|are|can|could|will|would|should|do|does|did)\b[^?]*\?)$/i.exec(q)
+    if (clause) q = clause[1]
+    q = q.replace(/\u2024/g, '.').replace(/\s+/g, ' ').trim()
+    if (q.split(' ').length >= 5 && q.length <= 140) found.push(q.charAt(0).toUpperCase() + q.slice(1))
+  }
+  // The shortest that is still a full question (the cuts ask the same one, the short cut most plainly).
+  return found.length ? found.sort((a, b) => a.length - b.length)[0] : null
 }
 
 const LABELS: Record<DecisionKey, string> = { lock: 'Narrative lock signed', look: 'Look', motion: 'Motion style', captions: 'Captions', scripts: 'Scripts approved' }
@@ -90,7 +123,7 @@ export function pieceDecisions(i: DecisionInputs): PieceDecisions {
     : i.scripts.typed ? d('scripts', true, `"${i.scripts.typed.words}"`, 'Krish', i.scripts.typed.said_at, 'his typed words')
     : d('scripts', false)
   // An approval counts only for the words it approved: scripts filed since with other words wait on his Approve again.
-  const changed = approvedScripts.made ? scriptsChanged(i.scripts?.texts ?? null, i.filed) : []
+  const changed = approvedScripts.made ? scriptsChanged(i.scripts?.texts ?? null, i.filed, approvedScripts.at) : []
   const cutName = (c: string) => (c === 'long' ? 'the 5-minute script' : 'the 90-second script')
   const scripts: Decision = changed.length
     ? { ...d('scripts', false), note: `you approved earlier words; ${changed.map(cutName).join(' and ')} ${changed.length > 1 ? 'have' : 'has'} been rewritten since (approved ${approvedScripts.at ?? 'before'}), so ${changed.length > 1 ? 'they wait' : 'it waits'} on your Approve again` }
