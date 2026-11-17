@@ -29,13 +29,33 @@ export function screenState(object:EngineObject,events:readonly EngineEvent[],fr
     if(index<0&&!['wide','chart'].includes(cue.toState))throw new Error('living_screen: unknown camera target')
     const r=index>=0?rect(index,params.cards.length):cue.toState==='chart'?[60,1080,2280,460]:[0,0,2400,1600]
     const dest=[r[0]!+r[2]!/2,r[1]!+r[3]!/2,r[2]!,r[3]!]
-    const k=progress(Math.min(frame,moves[i+1]?.atFrame??frame)-cue.atFrame,30,HERO)
+    const k=progress(Math.min(frame,moves[i+1]?.atFrame??frame)-cue.atFrame,18,HERO)
     target=target.map((v,j)=>v+(dest[j]!-v)*k)
   }
   return {params,values,old,source,target,enter,exit,pick,add,draw,copies,
     tab:pick?.toState??params.tabs[0],mark:last('mark')?.toState,highlight:last('highlight')?.toState,
     visible:!!enter&&frame<=object.toFrame&&(!exit||exit.atFrame<enter.atFrame||frame<exit.atFrame+MOTION.exitFrames),
     opacity:exit&&enter&&exit.atFrame>enter.atFrame?1-progress(frame-exit.atFrame,MOTION.exitFrames):1,
-    expected:draw?progress(frame-draw.atFrame,45,t=>t):0,
-    real:draw?progress(frame-draw.atFrame-45,27,t=>t):0}
+    expected:draw?progress(frame-draw.atFrame,18,t=>t):0,
+    real:draw?progress(frame-draw.atFrame-18,18,t=>t):0}
+}
+
+// Ambient UI events are derived from enter, bounded by the object's lifetime and
+// replayed through the same event clock as editorial cues. They never alter data.
+export function activityEvents(object:EngineObject,events:readonly EngineEvent[]) {
+ const enter=events.find(e=>e.obj===object.obj&&e.verb==='enter')
+ if(!enter)return []
+ const start=Math.max(object.fromFrame,enter.atFrame)
+ const end=Math.min(object.toFrame,...events.filter(e=>e.obj===object.obj&&e.verb==='exit'&&e.atFrame>=start).map(e=>e.atFrame))
+ return Array.from({length:Math.max(0,Math.ceil((end-start)/8))},(_,i)=>({
+  id:`${object.obj}:ui:${i}`,obj:object.obj,verb:'highlight' as const,toState:'',atFrame:start+i*8,
+  x:100+(i%3)*260,y:180+(Math.floor(i/3)%3)*130,
+ }))
+}
+export function activityAt(object:EngineObject,events:readonly EngineEvent[],frame:number) {
+ const cues=activityEvents(object,events)
+ const fired=stateAt(cues,object.obj,frame).fired
+ const current=cues.find(e=>e.id===fired.at(-1)?.id)??{atFrame:frame,x:100,y:180}
+ const previous=cues.find(e=>e.id===fired.at(-2)?.id)??current
+ return {current,previous}
 }
