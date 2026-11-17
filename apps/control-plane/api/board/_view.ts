@@ -985,7 +985,7 @@ export function buildView(i: ViewInputs): WeekView {
   // 2026-11-17: "at no point does a voiceover short give me the same controls as a mon/wed/fri piece"). A short only.
   const offdayStyle = (pieceId: string, meta: unknown) => dayStyle({ pieceId, meta: isObj(meta) ? meta : {}, formats: ['short_video'], points: null,
     motion: i.motion || [], looks: i.formats?.production || [], recommendedLook: null })
-  const built = weekModel(days, { week: i.week, work: workByScope(i.overlay ?? null), today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, offdayStyle, locksToSign, recentOut, picks: i.picks, decisions,
+  const built = weekModel(days, { week: i.week, now: i.now, work: workByScope(i.overlay ?? null), today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, offdayStyle, locksToSign, recentOut, picks: i.picks, decisions,
     scripts: i.scripts ?? {}, productionPlans: i.productionPlans ?? {}, lockReads: Object.fromEntries(Object.keys(decisions).map(id => {
       const lk = Object.values(i.locks).find(t => t && lockPieceId(t) === id)
       // Signed by its own last line or by his words on the board (signedLocks counts both; 17 Nov: Tue 17 was signed in his

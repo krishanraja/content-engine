@@ -6,7 +6,7 @@ Krish, 2026-11-17: "The UI should also have mocked up 2 or 3 scenes using my rea
 I selected, and give me the final opportunity to switch something out if it does not work".
 
     python3 scripts/post-pack/plan_scene.py --frame TAKE.mp4 --at 12.4 --caption "Blame the computer" --mark computer \
-        --series mind_the_gap --placement lower --face anton --out docs/plans/<week>/<slug>/scene-b3.png
+        --series mind_the_gap --placement lower --face anton --out .scratch/plan/scene-b3.png
     python3 scripts/post-pack/plan_scene.py --image SOURCE.jpg ... --out ...
     python3 scripts/post-pack/plan_scene.py --self-test
 

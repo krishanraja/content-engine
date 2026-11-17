@@ -6,12 +6,13 @@ Krish, 2026-11-17: "the prompt should ensure it gets the session to look for pla
 clip those out, clip out empty awkward silences, and then measure the total duration, and then speed it up if needed to
 get it under the 90 second limit (longer video length does not matter)".
 
-    python3 scripts/post-pack/edit_pass.py --transcribe TAKE [--words-out WORDS.json] [--cap 90] [--out edit.json]
-    python3 scripts/post-pack/edit_pass.py WORDS.json [--cap 90] [--out edit.json]
+    python3 scripts/post-pack/edit_pass.py --transcribe TAKE [--words-out WORDS.json] [--script SCRIPT.md] [--cap 90] [--out edit.json]
+    python3 scripts/post-pack/edit_pass.py WORDS.json [--script SCRIPT.md] [--cap 90] [--out edit.json]
     python3 scripts/post-pack/edit_pass.py --self-test
 
 WORDS.json is the take's word timings: whisper's JSON (segments with words) or a plain list of {word, start, end}.
 --cap is the most seconds the cut may run (a short: 90; leave it out for a long cut, which is never sped up).
+--script is the approved words: a phrase the script itself says twice is never taken for a restart.
 
 It writes, and prints:
   raw_seconds     the take from its first word to its last
@@ -23,9 +24,12 @@ It writes, and prints:
                   never past 1.25, and over_cap says so when even that is not enough
   final_seconds   kept_seconds / speed
 
-A restart is a run of at least two words he says again within the next 25 words: the first attempt is dropped, the
-last full attempt kept (three words, or two after a pause of a third of a second, so a phrase he repeats on purpose
-for effect, said without a stop, is kept). Every cut is a proposal by rule: the session listens to each before it
+A restart is an attempt he abandoned: a run of at least two words he says again soon after (three words, or two
+after a pause of a third of a second), where the attempt he dropped is short (at most four words past the repeat) and
+never holds the end of a sentence. The first attempt is dropped, the last full attempt kept. So a sentence he finished
+("You need to learn it. You need to use it") and a phrase he repeats for effect ("AI is going to change your job and
+your team and AI is going to change how you hire") are kept, and so is any phrase the approved script says twice.
+Every cut is a proposal by rule: the session checks each against the approved words and listens to it before it
 builds on it.
 """
 import argparse
@@ -66,8 +70,25 @@ def read_words(data):
     return sorted(out, key=lambda w: w['start'])
 
 
-def find_restarts(words):
+SENTENCE_END = re.compile(r'[.?!]["\')\]]*$')
+SPARE = 4              # an abandoned attempt runs at most this many words past the words it repeats
+
+
+def script_twice(script):
+    """Every run of two to five words the approved script itself says more than once."""
+    w = [norm(x) for x in str(script or '').split()]
+    w = [x for x in w if x]
+    seen, twice = set(), set()
+    for k in range(2, 6):
+        for i in range(len(w) - k + 1):
+            t = tuple(w[i:i + k])
+            (twice if t in seen else seen).add(t)
+    return twice
+
+
+def find_restarts(words, script=None):
     """The indexes to drop (each abandoned attempt), and what each attempt said."""
+    meant = script_twice(script)
     drop, found = set(), []
     i = 0
     while i < len(words):
@@ -79,7 +100,11 @@ def find_restarts(words):
             if k < 2:
                 continue
             pause = words[j]['start'] - words[j - 1]['end']
-            if k >= 3 or pause >= 0.33:
+            attempt = words[i:j]
+            finished = any(SENTENCE_END.search(w['word']) for w in attempt)
+            if tuple(w['n'] for w in words[i:i + k]) in meant or tuple(w['n'] for w in words[i:i + min(k, 5)]) in meant:
+                continue
+            if (k >= 3 or pause >= 0.33) and len(attempt) <= k + SPARE and not finished:
                 best = j  # the latest retry that matches wins: the last full attempt is kept
         if best is not None:
             found.append({'at': round(words[i]['start'], 2), 'said': ' '.join(w['word'] for w in words[i:best])[:300]})
@@ -90,20 +115,24 @@ def find_restarts(words):
     return drop, found
 
 
-def edit(words, cap=None):
+def edit(words, cap=None, script=None):
     if not words:
         return {'raw_seconds': 0, 'restarts': [], 'silences_cut': 0, 'keep': [], 'kept_seconds': 0, 'cap_seconds': cap,
                 'speed': 1.0, 'final_seconds': 0, 'over_cap': False}
-    drop, restarts = find_restarts(words)
-    kept = [w for i, w in enumerate(words) if i not in drop]
-    spans, cut = [], 0
-    for w in kept:
-        if spans and w['start'] - spans[-1][1] <= SILENCE:
+    drop, restarts = find_restarts(words, script)
+    spans, cut, prev = [], 0, None
+    for i, w in enumerate(words):
+        if i in drop:
+            continue
+        # A dropped attempt between two kept words always ends the span, so the clipped words never stay in the cut.
+        clipped = prev is not None and any(j in drop for j in range(prev + 1, i))
+        if spans and not clipped and w['start'] - spans[-1][1] <= SILENCE:
             spans[-1][1] = max(spans[-1][1], w['end'])
         else:
-            if spans:
+            if spans and not clipped:
                 cut += 1
             spans.append([w['start'], w['end']])
+        prev = i
     # A cut pause leaves a breath; the spans join with one between them.
     kept_seconds = sum(e - s for s, e in spans) + BREATH * (len(spans) - 1)
     for s in spans:
@@ -132,6 +161,15 @@ def timed(text, start=0.0, step=0.4, pauses=None):
 
 
 def self_test():
+    # A sentence he finished, and a phrase repeated for effect, are never taken for restarts (review, 17 Nov).
+    assert edit(read_words(timed('You need to learn it. You need to use it every single day')))['restarts'] == []
+    assert edit(read_words(timed('AI is going to change your job and your team and AI is going to change how you hire')))['restarts'] == []
+    # A phrase the approved script says twice is kept.
+    assert edit(read_words(timed('the thing is the thing is it works', pauses={3: 0.5})), script='The thing is, the thing is: it works.')['restarts'] == []
+    # A clipped restart leaves the cut even when he restarted fast: the kept spans skip it.
+    r = edit(read_words(timed('so the thing is the thing is it works', step=0.2)))
+    assert [x['said'] for x in r['restarts']] == ['so the thing is'] or [x['said'] for x in r['restarts']] == ['the thing is'], r['restarts']
+    assert len(r['keep']) == 2 and r['silences_cut'] == 0, r
     # A restart after a stop: "The habit that" ... "The habit that costs you" keeps the second attempt only.
     r = edit(read_words(timed('The habit that the habit that costs you your job is blame', pauses={3: 0.5})))
     assert [x['said'] for x in r['restarts']] == ['The habit that'], r['restarts']
@@ -170,21 +208,26 @@ def main(argv=None):
     p.add_argument('--transcribe', metavar='TAKE', help='transcribe this take first (audio or video)')
     p.add_argument('--words-out', help='where to keep the transcribed words')
     p.add_argument('--cap', type=float)
+    p.add_argument('--script', help='the approved words, so a phrase the script says twice is kept')
     p.add_argument('--out')
     p.add_argument('--self-test', action='store_true')
     a = p.parse_args(argv)
     if a.self_test:
         self_test()
         return 0
+    script = None
+    if a.script:
+        with open(a.script, encoding='utf-8') as f:
+            script = f.read()
     if a.transcribe:
         words = transcribe(a.transcribe)
         if a.words_out:
             with open(a.words_out, 'w', encoding='utf-8') as f:
                 json.dump(words, f)
-        result = edit(read_words(words), a.cap)
+        result = edit(read_words(words), a.cap, script)
     elif a.words:
         with open(a.words, encoding='utf-8') as f:
-            result = edit(read_words(json.load(f)), a.cap)
+            result = edit(read_words(json.load(f)), a.cap, script)
     else:
         p.error('WORDS.json or --transcribe TAKE is required')
     text = json.dumps(result, indent=1)

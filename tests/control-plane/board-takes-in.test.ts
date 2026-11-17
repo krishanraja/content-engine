@@ -78,8 +78,12 @@ describe('the production plan on the card (contract 1.25.0; Krish, 2026-11-17: "
   })
 
   it('while it is being made the card says so; once filed it shows the scenes, the beats and a Use this on every other option', () => {
-    const making = card(inputs({ ...PICKED, takes_in: TAKES }))
-    expect((making.plan as Body).status).toBe('making')
+    const run = (at: string, sent = true) => ({ ...PICKED, takes_in: { ...TAKES, plan_run: { sent, at, reason: sent ? null : 'not_configured' } } })
+    expect((card(inputs(run('2026-11-17T11:00:00Z'))).plan as Body).status).toBe('making')
+    // Never "being made" forever: a run that did not start, or filed nothing in two hours, says so.
+    expect(card(inputs(run('2026-11-17T11:00:00Z', false))).plan).toMatchObject({ status: 'not_made', line: expect.stringContaining('the plan run did not start') })
+    expect(card(inputs(run('2026-11-17T09:00:00Z'))).plan).toMatchObject({ status: 'not_made', line: expect.stringContaining('filed nothing in two hours') })
+    expect(card(inputs({ ...PICKED, takes_in: TAKES })).plan).toBeUndefined()
     const it = card(withPlan())
     const p = it.plan as Body
     expect(p.status).toBe('ready')
@@ -99,6 +103,13 @@ describe('the production plan on the card (contract 1.25.0; Krish, 2026-11-17: "
       expect(prompt).toContain(s)
     expect(prompt).toContain('A real social post: The viral post about the power bill (source: https://example.org/post)   [Krish swapped this in]')
     expect((it.plan as Body).beats[0]).toMatchObject({ swapped: true, picture: { id: 'post' } })
+  })
+
+  it('never claims a cut fits when even 1.25x leaves it over the limit', () => {
+    const over = parsePlan(JSON.stringify({ ...PLAN, edit: { ...PLAN.edit, kept_seconds: 120, speed: 1.25, final_seconds: 96, over_cap: true } }), TUE, sha)!
+    const it = card({ ...inputs({ ...PICKED, takes_in: TAKES }), productionPlans: { [TUE]: over } } as unknown as ViewInputs)
+    expect(it.line).toContain('even sped up 25% it runs 1:36, 6 seconds over the 90-second limit, so lines must come out')
+    expect(it.line).not.toContain('under the 90-second limit')
   })
 
   it('can fail: a swap made on another version of the plan, or naming an option the beat lacks, does not count', () => {
@@ -142,7 +153,7 @@ describe('after his Approve scripts, every card waits on his takes, then makes o
 
   it('his takes on the piece: the card names them, and the next action is the one-shot production prompt with everything decided', () => {
     const it = card(inputs({ ...PICKED, takes_in: TAKES }))
-    expect(it.line).toBe('Your takes are on the piece: "2026-11-17 openai long.mp4", "2026-11-17 openai short.mp4". Your production plan is being made from your take: the edit, the picture for every beat, and two or three scenes mocked from real stills. It shows here when it is ready.')
+    expect(it.line).toBe('Your takes are on the piece: "2026-11-17 openai long.mp4", "2026-11-17 openai short.mp4". Next: one Claude production session makes the finished cut from them.')
     expect(it.decision).toBe(false)
     const p = String((it.next as Body).prompt)
     for (const words of [`piece_id ${TUE}`, 'in one go', 'never ask him for one again', 'The motion style: The unwanted neighbour (eating-jobs-ladder), picked by Krish',
