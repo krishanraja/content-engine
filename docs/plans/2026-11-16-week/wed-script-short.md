@@ -1,6 +1,6 @@
-Claude uses a ton of other companies' software internally. And we all know it's the business most other businesses build their software on. If they still buy, is the Crocodile Hunter on your team, who'll build anything, wrong? Build or buy your tools in an AI world? Let's dive in.
+Claude uses a ton of other companies' software internally. And we all know it's the business most other businesses build their software on. If even they buy, is the Crocodile Hunter on your team, who'll build anything, wrong? Build or buy your tools in an AI world? Let's dive in.
 
-Picture your Crocodile Hunter on LinkedIn. Wall to wall Claude packs, ready-made instructions for your AI. Install this and Claude becomes your whole sales team. Comment pack below and it's yours. Free! And nobody to call when it breaks. So he comments, installs it, and his new AI sales team emails every customer, calling them all Dave.
+Picture your Crocodile Hunter on LinkedIn. Wall to wall Claude packs, ready-made instructions for your AI. Every post says: install this and Claude becomes your whole sales team, comment pack below. Free! Nobody to call when it breaks, though. So he comments, installs it, and his new AI sales team emails every customer, calling them all Dave.
 
 So he tries vibe coding instead. Honestly, so have I. That's where you tell the AI what you want, and it writes the code. Now he wants to build a whole customer service bot by Friday. And his boss, eyes bigger than his stomach, wants everything else rebuilt too.
 
