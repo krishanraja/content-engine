@@ -1,11 +1,11 @@
-Claude uses a ton of other companies' software internally. And we all know it's the business most other businesses build their software on. If even they buy, is the Crocodile Hunter on your team, who'll build anything, wrong? Build or buy your tools in an AI world? Let's dive in.
+Klarna, the buy now, pay later app, made headlines for switching off Salesforce and Workday and replacing them with AI. That's a huge software bill gone, and your boss has definitely read about it. So, build or buy your tools in an AI world? Let's dive in.
 
-Picture your Crocodile Hunter on LinkedIn. Wall to wall Claude packs, ready-made instructions for your AI. Every post says: install this and Claude becomes your whole sales team, comment pack below. Free! Nobody to call when it breaks, though. So he comments, installs it, and his new AI sales team emails every customer, calling them all Dave.
+Salesforce is the software sales teams use to track every customer, and Workday runs your pay and your holidays. Both cost a fortune. So when Klarna said it had switched them off, the internet went wild, because AI had killed software!
 
-So he tries vibe coding instead. Honestly, so have I. That's where you tell the AI what you want, and it writes the code. Now he wants to build a whole customer service bot by Friday. And his boss, eyes bigger than his stomach, wants everything else rebuilt too.
+So I went digging, and then Klarna's boss went online and said they did not replace that software with AI. So what did replace Workday? Another app for paying staff, which they also rent.
 
-Then it's two in the morning. His homemade bot tells a customer they owe the price of a small yacht. Who gets that call? Him. His boss sleeps through it, and so does the AI.
+So picture the meeting. Great news, everyone, we've switched off Workday! Payroll's now on another app, which we also rent. And their own engineers built the bit that pulls all their data together, which they now have to look after.
 
-So what did Anthropic, the company that makes Claude, do? It went shopping. It bought a ready-made help desk bot. And that bot runs on Claude! So at two in the morning, the help desk company's phone rings.
+And now for my favourite detail. Klarna still uses Slack, the office chat app. And who owns Slack? Salesforce!
 
-I reckon the real question is who answers at two in the morning. So before I build anything, I'll ask who picks up. The full five-minute video is on my channel.
+So did AI kill software? Not even at Klarna, who built the bit that makes them different and still bought the plumbing. I reckon that's the rule, so that's what I'll do too. The full five-minute video is on my channel.
