@@ -32,16 +32,18 @@ const PICK = /^[a-z0-9][a-z0-9_.-]{0,79}$/
 const DRIVE_ID = /^[A-Za-z0-9_-]{20,80}$/
 const PREVIEW_HOSTS = new Set(['storage.googleapis.com', 'api.us.elevenlabs.io', 'api.elevenlabs.io'])
 
-export interface BankVoice { id: string; name: string; kind: 'krish' | 'stock'; voice_id: string; line: string; why: string; preview_url: string; status: string }
+export interface BankVoice { id: string; name: string; kind: 'krish' | 'stock'; default: boolean; voice_id: string; line: string; why: string; preview_url: string; status: string }
 export interface Track { id: string; title: string; artist: string; status: string; drive_file_id: string | null; mood: string | null }
 
 /** The voices the board offers: his own first, then the stock voices in bank order; a retired one never. */
 export function bankVoices(bank: unknown = voiceBank): BankVoice[] {
   const list = isObj(bank) && Array.isArray(bank.voices) ? bank.voices.filter(isObj) : []
   const voices = list.filter(v => typeof v.id === 'string' && PICK.test(v.id) && (v.kind === 'krish' || v.kind === 'stock') && v.status !== 'retired')
-    .map(v => ({ id: String(v.id), name: String(v.name || v.id), kind: v.kind as 'krish' | 'stock', voice_id: String(v.voice_id || ''),
+    .map(v => ({ id: String(v.id), name: String(v.name || v.id), kind: v.kind as 'krish' | 'stock', default: v.default === true, voice_id: String(v.voice_id || ''),
       line: String(v.line || ''), why: String(v.why || ''), preview_url: String(v.preview_url || ''), status: String(v.status || 'proposed') }))
-  return [...voices.filter(v => v.kind === 'krish'), ...voices.filter(v => v.kind === 'stock')]
+  // His default voice first (Krish v2 since 17 Nov 2026), then his other voices, then the stock voices.
+  const mine = voices.filter(v => v.kind === 'krish').sort((a, b) => Number(b.default) - Number(a.default))
+  return [...mine, ...voices.filter(v => v.kind === 'stock')]
 }
 
 /** The off-day rotation (config/music-library.json "for": "off-day"), in ledger order. */

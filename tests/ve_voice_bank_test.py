@@ -43,9 +43,12 @@ def bank_with(**status) -> dict:
 class TheBankHolds(unittest.TestCase):
     def test_the_bank_on_file_holds(self):
         self.assertEqual(voice_bank.problems(BANK), [])
+        # His default is Krish v2 (Krish, 2026-11-17: "this is the best choice thus far"); Krish Remix is the backup.
         mine = voice_bank.krish(BANK)
-        self.assertEqual(mine['id'], 'krish-remix')
-        self.assertEqual(mine['registry_name'], 'krish-voice-elevenlabs')
+        self.assertEqual((mine['id'], mine['registry_name'], mine['model'], mine['speed']),
+                         ('krish-v2', 'krish-voice-elevenlabs-v2', 'eleven_v3', 1.15))
+        backup = voice_bank.krish(BANK, 'krish-remix')
+        self.assertEqual((backup['registry_name'], backup['status'], backup.get('default')), ('krish-voice-elevenlabs', 'approved', False))
         stock = [v for v in BANK['voices'] if v['kind'] == 'stock']
         self.assertTrue(3 <= len(stock) <= 4, 'three or four stock voices are proposed')
         # Nothing is approved for him: every stock voice waits on his press on the board.
@@ -53,8 +56,11 @@ class TheBankHolds(unittest.TestCase):
 
     def test_a_broken_bank_is_refused(self):
         two = copy.deepcopy(BANK)
-        two['voices'][1]['kind'] = 'krish'
-        self.assertTrue(any('exactly one' in p for p in voice_bank.problems(two)))
+        next(v for v in two['voices'] if v['id'] == 'krish-remix')['default'] = True
+        self.assertTrue(any('exactly one is (default: true)' in p for p in voice_bank.problems(two)))
+        fast = copy.deepcopy(BANK)
+        fast['voices'][0]['speed'] = 2
+        self.assertTrue(any('speed' in p for p in voice_bank.problems(fast)))
         outside = copy.deepcopy(BANK)
         outside['voices'][1]['preview_url'] = 'https://example.com/a.mp3'
         self.assertTrue(any('preview_url' in p for p in voice_bank.problems(outside)))
@@ -62,7 +68,7 @@ class TheBankHolds(unittest.TestCase):
         del next(v for v in unsigned['voices'] if v['id'] == 'clyde')['approved_by']
         self.assertTrue(any('approved_by Krish' in p for p in voice_bank.problems(unsigned)))
         unpinned = copy.deepcopy(BANK)
-        del unpinned['voices'][0]['model']
+        del unpinned['voices'][2]['model']
         self.assertTrue(any('pins its own model' in p for p in voice_bank.problems(unpinned)))
         dup = copy.deepcopy(BANK)
         dup['voices'][2]['voice_id'] = dup['voices'][1]['voice_id']
@@ -90,6 +96,7 @@ class AStockVoiceIsNeverHisVoice(unittest.TestCase):
     def test_his_own_voice_named_as_stock_is_refused(self):
         problem = voice_bank.stock_problem('elevenlabs.stock_voice:krish-remix', BANK)
         self.assertIn('his own voice, never a stock voice', problem)
+        self.assertIn('his own voice', voice_bank.stock_problem('elevenlabs.stock_voice:krish-v2', BANK))
 
     def test_lint_holds_a_stock_voice_to_the_bank_not_the_registry(self):
         asset = voice_asset(tool='elevenlabs.stock_voice:clyde', licence='an approved stock voice (test)')
@@ -127,15 +134,43 @@ class ThePlanReadsThePickedVoice(unittest.TestCase):
             clone_voice.plan(short(), SCRIPT, voice='nobody', bank=BANK)
 
     def test_his_own_voice_picked_must_be_the_one_the_registry_approves(self):
-        with served(registry(CLONE)), self.assertRaisesRegex(ValueError, 'the registry wins'):
-            clone_voice.plan(short(), SCRIPT, voice='krish-remix', bank=BANK)
-        mine = {**CLONE, 'platform_ref': voice_bank.krish(BANK)['voice_id']}
+        remix = {**CLONE, 'name': 'krish-voice-elevenlabs'}
+        with served(registry(remix)), self.assertRaisesRegex(ValueError, 'the registry wins'):
+            clone_voice.plan(short(approve=remix), SCRIPT, voice='krish-remix', bank=BANK)
+        mine = {**remix, 'platform_ref': voice_bank.krish(BANK, 'krish-remix')['voice_id']}
         with served(registry(mine)):
             doc = clone_voice.plan(short(approve=mine), SCRIPT, voice='krish-remix', bank=BANK)
         self.assertEqual(doc['tool'], 'elevenlabs.voice_clone:krish-voice-elevenlabs')
         self.assertEqual(doc['clone']['voice_id'], mine['platform_ref'])
-        # Krish, 2026-11-17: "v3 sounds right" for his Krish Remix voice.
+        # Krish, 2026-11-17: "v3 sounds right" for his Krish Remix voice; the backup is read at its own speed.
         self.assertEqual(doc['model'], 'eleven_v3')
+        self.assertNotIn('speed', doc)
+
+    def test_his_default_is_krish_v2_on_v3_fifteen_percent_faster(self):
+        v2 = {**CLONE, 'platform_ref': voice_bank.krish(BANK)['voice_id']}
+        with served(registry(v2)):
+            doc = clone_voice.plan(short(approve=v2), SCRIPT, bank=BANK)
+        self.assertEqual(doc['tool'], 'elevenlabs.voice_clone:krish-voice-elevenlabs-v2')
+        self.assertEqual((doc['model'], doc['speed']), ('eleven_v3', 1.15))
+        # Until krish-clone's registry holds Krish v2, nothing is generated in it.
+        with served(registry({**CLONE, 'name': 'krish-voice-elevenlabs'})), self.assertRaisesRegex(ValueError, 'not an approved voice'):
+            clone_voice.plan(short(), SCRIPT, bank=BANK)
+
+    def test_the_wav_is_sped_up_keeping_pitch(self):
+        v2 = {**CLONE, 'platform_ref': voice_bank.krish(BANK)['voice_id']}
+        with served(registry(v2)):
+            doc = clone_voice.plan(short(approve=v2), SCRIPT, bank=BANK)
+        runs = []
+        def ffmpeg_run(cmd, **_):
+            runs.append(cmd)
+            Path(cmd[-1]).write_bytes(b'RIFF')
+        import tempfile  # noqa: PLC0415
+        with tempfile.TemporaryDirectory() as out, patch.object(clone_voice.subprocess, 'run', side_effect=ffmpeg_run):
+            receipt = clone_voice.generate(doc, plan_sha256=doc['plan_sha256'], spend_id='00000000-0000-4000-8000-000000000000',
+                                           assets_dir=out, env={'ELEVENLABS_API_KEY': 'test'},
+                                           post=lambda *a: (b'mp3', {'character-cost': '10'}), reserve=lambda *a: 'r1', settle=lambda *a: None)
+        self.assertIn('atempo=1.15', runs[0])
+        self.assertEqual(receipt['speed'], 1.15)
 
 
 if __name__ == '__main__':
