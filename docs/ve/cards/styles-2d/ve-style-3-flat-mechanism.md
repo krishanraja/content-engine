@@ -21,7 +21,11 @@ His floor (python3 scripts/floor.py --format motion): every state change is moti
 
 Pace and room (his reference cuts, config/ve/pace-references.json: about 3 to 4.6 events a second, half the gaps under 0.3 s, 80% of the frame in use): every verb lands in 0.6 s or less, the device never rests between events (drift above 0), and it fills its box: tall, from y 270 down the whole slot; nothing that must be read right of x 860 or below y 1320 (config/channel-safe-zones.json).
 
+## Rework
+The first build is on main and works (checked 17 Nov, drawn in brand colours, tall and wide); change only this. The count it rolls to is drawn 36 px in a card's corner, so the figure the beat is about cannot be read; the links are inkSoft on the ink ground and barely show; the token is a 14 px dot. Make the count the size of its point (at least a third of its part's height, inside x 60 to 860 and above y 1090 on a tall frame), and the links and token plainly visible on the ground. Edit the device in place.
+
 ## Tests (`device.test.ts`, stills from `fixture.json`)
+- the count's type is at least a third of its part's height; links and token are drawn in a token that is not the ground's
 - nothing before `enter`; after three `add`s exactly three parts, each holding its image
 - `move` puts the token on the named part within 0.6 s and it never jumps
 - a part with no image draws its label, never a stand-in icon
@@ -29,7 +33,7 @@ Pace and room (his reference cuts, config/ve/pace-references.json: about 3 to 4.
 - the same frame twice renders identical pixels; no colour outside tokens; tall and wide stills render
 
 ## After it builds (Claude, not Codex)
-`ve verify-card`, then a test cut of the house test take in this style, measured with `ve pace` beside his references and watched at speed beside one, a `ve-critic` verdict, then Krish's Gate 2. On his yes Claude takes `needs_device` out of the `flat-vector-explainer` entry's `ve_route` in config/style-references.json (a guarded file: his yes, in person) and out of `needs_device` in apps/renderer/src/engine/kit/motion-profiles.json and adds its profile there, then records its StyleStill cover (docs/ve/cards/style-stills/ve-style-still-template-*) with `record_still`.
+Claude re-runs the acceptance, renders a test cut on the house take, measures it with `ve pace`, gets a `ve-critic` verdict and puts it to Krish at Gate 2. Only his yes takes `needs_device` off and adds the motion profile.
 
 ## Contract
 Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Register `flat_mechanism` in `devices/registry.ts` and `config/ve/devices.json` with exactly enter, add, move, fill, highlight, count_to, exit; update `verbs.test.ts`. Draw in SVG and canvas from the frame alone; any texture or noise is seeded by the frame number, never random. Reuse packages/moves, never copy a move. Add no motion profile and leave apps/renderer/src/engine/kit/motion-profiles.json untouched: profiles hold drawable styles only (kit.test.ts), and this style stays `needs_device` until Krish's yes, when Claude adds it.
@@ -53,6 +57,7 @@ npx vitest run apps/renderer/src/engine/devices/flat_mechanism
 npx vitest run apps/renderer/src/engine/devices/verbs.test.ts
 npx vitest run apps/renderer/src/engine/kit
 python scripts/ve/check_route.py
+npx tsc --noEmit
 
 ## Return
 Your final message is only JSON matching config/ve/task-result.schema.json:
