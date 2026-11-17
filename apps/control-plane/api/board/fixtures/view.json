@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.21.0",
+ "contract_version": "1.22.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -8768,7 +8768,7 @@
         "Screen grab two",
         "Oracle research corpus"
        ],
-       "said": null
+       "said": "Claude Code, 2026-11-16 08:50 UTC (working, board): Drafting the 90-second script"
       },
       "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
       "item": null,
@@ -9539,10 +9539,6 @@
          "done": "Saved on the board, and in the prompt."
         },
         "saved": []
-       },
-       "open": {
-        "app": "claude_code",
-        "repository": "krishanraja/content-engine"
        }
       },
       "decision": false
@@ -9840,10 +9836,6 @@
           "done": "Saved on the board, and in the prompt."
          },
          "saved": []
-        },
-        "open": {
-         "app": "claude_code",
-         "repository": "krishanraja/content-engine"
         }
        },
        {
@@ -10929,10 +10921,6 @@
          "done": "Saved on the board, and in the prompt."
         },
         "saved": []
-       },
-       "open": {
-        "app": "claude_code",
-        "repository": "krishanraja/content-engine"
        }
       },
       "decision": false

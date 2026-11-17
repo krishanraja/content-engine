@@ -2248,6 +2248,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function audioPick(picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, layer: AudioLayer, item: string):…`
 - `function audioPresses(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: stri…`
 - `function audioBody(id: string, body: Body, bank: unknown = voiceBank, library: unknown = musicLibrary): boolean`
+- `function voiceOf(picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string, bank: unknown = voice…`
 - `function soundLine(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: string …`
 
 ### `apps/control-plane/api/board/_carry.ts`
@@ -2299,6 +2300,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const WORDS_ID`
 - `function wordsDocId(day: string, what: 'lock' | 'scripts', pieceId: string): string`
 - `const WORDS_KIND`
+- `function asWritten(body: Record<string, unknown>): Record<string, unknown>`
 - `function saidInWords(body: Record<string, unknown>): boolean`
 - `function wordsBody(id: string, body: Record<string, unknown>): boolean`
 - `const LIVE_ID`
@@ -2979,8 +2981,6 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `const POST_PATH`
 - `const GOOD_NEWS_STORIES`
 - `const CLAUDE_LABEL`
-- `const CLAUDE_CODE_OPEN`
-- `const GROWTH_CODE_OPEN`
 - `const NOTES_HEADING`
 - `interface ModelStep`
 - `interface ModelSource`
@@ -3006,6 +3006,10 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
 - `function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead`
 - `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
+- `function recordsItself(kind: string, picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string): …`
+- `interface OffdayScripts`
+- `function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Bod…`
+- `function recordHead(sc: OffdayScripts): string`
 - `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`
 - `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
 - `function primaryUrl(raw: Body | null, fallback: unknown = null): string | null`
