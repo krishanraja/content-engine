@@ -6,7 +6,7 @@ And at the same time, building suddenly feels free. You've probably heard of vib
 
 So I went digging into the companies that actually did it. And the headlines are much bigger than what happened.
 
-Start with Klarna, the buy now, pay later app. The headlines said Klarna had switched off Salesforce, the software sales teams use to track every customer. And Workday too, the software that runs pay and holidays. Both replaced with AI! Then Klarna's boss went online and said they did not replace that software with AI. So what did replace them? For Workday, another app for paying staff, which they also rent. For Salesforce, more rented apps and some of their own code. So they swapped rented software for rented software!
+Start with Klarna, the buy now, pay later app. The headlines said Klarna had switched off Salesforce, the software sales teams use to track every customer. And Workday too, the software that runs pay and holidays. Both replaced with AI! Then Klarna's boss went online and said they did not replace that software with AI. So what did replace them? For Workday, another app for paying staff, which they also rent. For Salesforce, more rented apps and some of their own code. So mostly, they swapped rented software for rented software!
 
 Then there's Curative, a health insurer. This summer its boss said they'd cancelled Salesforce, because they'd vibe coded their own. That contract was worth about six hundred thousand dollars a year. And they built their own in two months. Brilliant! Except their boss has since admitted that keeping it running is hard.
 
