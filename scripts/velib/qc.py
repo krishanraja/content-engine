@@ -322,6 +322,29 @@ def inputs_from_props(props: dict) -> dict:
                 opening=opening_view(props))
 
 
+def picture_smeared(path: str, publish_day: str | None = None) -> dict:
+    """Row picture.smeared: no picture smeared into stripes on the rendered cut (scripts/frame_smear.py). Measured on
+    every cut; counted only for a piece published from config/ve/onscreen-checks.json picture.binds_from (F33)."""
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT / 'scripts'))
+    import frame_smear
+    rules = load_json(CONFIG / 'onscreen-checks.json')['picture']
+    target = 'no picture smeared into stripes (scripts/frame_smear.py)'
+    try:
+        result = frame_smear.measure(path)
+        row = {'value': result['smears'][:10], 'target': target,
+               'pass': None if result['status'] == 'inconclusive' else result['pass']}
+        if result['status'] == 'inconclusive':
+            row.update(status='not_run', reason='no frames decoded')
+    except (OSError, ValueError, subprocess.CalledProcessError, frame_smear.FrameSmearError) as exc:
+        # A missing decoder never passes and never crashes the qc that called it (as qc_onscreen's frame rows).
+        row = {'value': None, 'target': target, 'pass': None, 'status': 'not_run', 'reason': str(exc)[:300]}
+    if not (publish_day and str(publish_day) >= rules['binds_from']):
+        row['status'] = 'advisory'
+        row['note'] = f"binds pieces published from {rules['binds_from']} (config/ve/onscreen-checks.json picture)"
+    return row
+
+
 def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            dialogue_master: str | None = None, edl=None, joins=None, pages=None, region=None,
            mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None,
@@ -481,6 +504,8 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         from . import qc_onscreen
         checks.update(qc_onscreen.rows(path, composition_props, publish_day, read=onscreen_reader,
                                        lead=opening_lead(composition_props)))
+    # A picture smeared into stripes (8 Nov, the proactive-AI opening's plate): every cut, advisory before its own date.
+    checks['picture.smeared'] = picture_smeared(path, publish_day)
     # A tall meme is centred on the screen (Ruling, Krish, 2026-11-15: tall memes are centred; scripts/layout_centre.py,
     # the bars in config/brand-palette.json formats.meme_tall).
     if 'meme' in str(format_id) and aspect == '9:16':

@@ -1,5 +1,5 @@
 {
- "about": "Cuts made outside ve and quick-edit that Krish approved, file by file, after watching them. making.py video files one of these only when the piece, the cut and the exact bytes (sha256) match an entry here, and the entry carries his own words. Every other cut keeps the full validation receipt (quality.delivery_problems). Ruling (Krish, 2026-11-11): hand-built cuts he approved may be filed with his words on those exact files; nothing else is exempt.",
+ "about": "Cuts made outside ve and quick-edit that Krish approved, file by file, after watching them. making.py video files one of these only when the piece, the cut and the exact bytes (sha256) match an entry here, and the entry carries his own words. Every other cut keeps the full validation receipt (quality.delivery_problems). Ruling (Krish, 2026-11-11): hand-built cuts he approved may be filed with his words on those exact files; nothing else is exempt. His words never waive two receipts for those bytes: picture against sound (scripts/av_sync.py) and no smeared picture (scripts/frame_smear.py); docs/ve/ENGINE.md, \"Hand-built composites\".",
  "cuts": [
   {
    "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",

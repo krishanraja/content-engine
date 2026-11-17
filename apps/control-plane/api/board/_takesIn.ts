@@ -15,6 +15,8 @@
 //   every decision in one place, the takes by name with how to fetch them, and the creative calls it makes itself. A
 //   production pick still missing comes first, as his press, so the session never decides one for him.
 
+import { SHORT_CAP_SECONDS } from './_productionPlan.js'
+
 type Body = Record<string, unknown>
 const isObj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
 const str = (v: unknown): string | null => (typeof v === 'string' && v.trim() ? v.trim() : null)
@@ -22,7 +24,36 @@ const str = (v: unknown): string | null => (typeof v === 'string' && v.trim() ? 
 export const TAKES_OP = 'takes-in'
 /** A take recorded a little before his approval still counts (he may record as the approval lands). */
 export const TAKES_SLACK_MS = 3 * 60 * 60 * 1000
-const VIDEO = /\.(mp4|mov|m4v|webm|mkv)$/i
+/** A take is a video or an audio recording: a voiceover short recorded in his Teleprompter arrives as audio only, an
+ *  .aac named after the script (17 Nov: "Which of your habits will cost you your job once AI is at work__ short cut.aac"
+ *  was skipped by a video-only rule, and the press said no take was there). */
+const TAKE = /\.(mp4|mov|m4v|webm|mkv|aac|m4a|wav|mp3)$/i
+const TAKE_MIME = /^(video|audio)\//
+
+/** The words that say nothing about which piece a file is: joining words, cut and file words, and "AI", which every
+ *  piece has. */
+const FILLER = new Set(('a an and are as at be by can do does for from has have how i in is it its my of on once or our the this to '
+  + 'was we what when where which who why will with you your ai cut cuts short long take takes final video audio voiceover vo '
+  + 'mp4 mov aac m4a wav mp3 copy edit editor export dji mimo glamour minute second seconds').split(' '))
+
+/** The words of a name or title that can tell one piece from another, stemmed to a plain root. */
+export function nameWords(text: string): Set<string> {
+  return new Set(String(text || '').toLowerCase().replace(/\.[a-z0-9]{2,4}$/, '').split(/[^a-z0-9]+/)
+    .filter(w => w.length > 1 && !FILLER.has(w) && !/^\d+$/.test(w)).map(w => w.replace(/(ies|es|s)$/, m => (m === 'ies' ? 'y' : '')).replace(/ing$/, '')))
+}
+
+/** How many of a file name's telling words a title holds. */
+function shared(file: Set<string>, title: Set<string>): number {
+  let n = 0
+  for (const w of file) if (title.has(w)) n += 1
+  return n
+}
+
+/** Whether a file name names a title: two telling words in common, or one when the name has only one. */
+function names(file: Set<string>, title: Set<string>): boolean {
+  const n = shared(file, title)
+  return n >= 2 || (n === 1 && file.size === 1)
+}
 
 export interface InboxTake { name: string; drive_id: string; bytes: number | null; sha256: string | null; md5: string | null; modified: string }
 export interface TakesIn { confirmed_at: string; by: string; since: string | null; files: InboxTake[] }
@@ -36,16 +67,29 @@ export function takesInOf(meta: unknown): TakesIn | null {
   return { confirmed_at: t.confirmed_at, by: String(t.by || ''), since: str(t.since), files }
 }
 
-/** The Inbox files that are his takes for this piece: video files, changed since he approved its scripts (less the
- *  slack), and not already held by another piece of the week. The oldest first, so the order is the order he recorded. */
+/** The Inbox files that are his takes for this piece: video or audio recordings, changed since he approved its scripts
+ *  (less the slack), and not already held by another piece. The oldest first, so the order is the order he recorded.
+ *  When `own` names this piece (its title, its script titles) and `others` the week's other pieces, a file whose name
+ *  names this piece is its take, and only those count once one does; a file whose name names another piece and not this
+ *  one is never taken (17 Nov: the build-or-buy takes, dropped minutes after his habits take, would otherwise have gone
+ *  on the habits post). A name that names no piece (dji_export_...) still counts when nothing names this piece. */
 export function newTakes(files: Array<{ id: string; name?: string; mimeType?: string; size?: string; md5Checksum?: string; sha256Checksum?: string; modifiedTime?: string }>,
-  since: string | null, claimed: ReadonlySet<string>): InboxTake[] {
+  since: string | null, claimed: ReadonlySet<string>, own: readonly string[] = [], others: readonly string[] = []): InboxTake[] {
   const from = since && Number.isFinite(Date.parse(since)) ? Date.parse(since) - TAKES_SLACK_MS : -Infinity
-  return files
-    .filter(f => f.id && f.name && (VIDEO.test(f.name) || /^video\//.test(String(f.mimeType || ''))))
+  const mine = own.map(nameWords).filter(t => t.size)
+  const theirs = others.map(nameWords).filter(t => t.size)
+  const fresh = files
+    .filter(f => f.id && f.name && (TAKE.test(f.name) || TAKE_MIME.test(String(f.mimeType || ''))))
     .filter(f => Number.isFinite(Date.parse(String(f.modifiedTime || ''))) && Date.parse(String(f.modifiedTime)) >= from)
     .filter(f => !claimed.has(f.id))
-    .map(f => ({ name: String(f.name), drive_id: f.id, bytes: f.size && /^\d+$/.test(f.size) ? Number(f.size) : null,
+    .map(f => {
+      const w = nameWords(String(f.name))
+      const best = (ts: Set<string>[]) => ts.reduce((n, t) => Math.max(n, names(w, t) ? shared(w, t) : 0), 0)
+      return { f, ours: best(mine), theirs: best(theirs) }
+    })
+  const named = fresh.filter(x => x.ours > 0 && x.ours >= x.theirs)
+  const picked = named.length ? named : fresh.filter(x => x.theirs === 0)
+  return picked.map(({ f }) => ({ name: String(f.name), drive_id: f.id, bytes: f.size && /^\d+$/.test(f.size) ? Number(f.size) : null,
       sha256: str(f.sha256Checksum)?.toLowerCase() ?? null, md5: str(f.md5Checksum)?.toLowerCase() ?? null, modified: String(f.modifiedTime) }))
     .sort((a, b) => a.modified.localeCompare(b.modified))
 }
@@ -53,8 +97,8 @@ export function newTakes(files: Array<{ id: string; name?: string; mimeType?: st
 /** The press on a card: his only, one tap, no words. `item` names an off-day post, whose record the press may link. */
 export function takesPress(pieceId: string, item: string | null = null): Body {
   return { kind: 'press', label: 'My takes are in the Inbox', op: TAKES_OP, body: { piece_id: pieceId, ...(item ? { item } : {}) }, stamp: [],
-    goes: 'Reads the Video Engine Inbox, puts the takes you recorded since approving the scripts on this piece by name, and has them placed on their cuts by their words.',
-    done: 'Your takes are on the piece. The next Claude production prompt makes the whole cut in one go.' }
+    goes: 'Reads the Video Engine Inbox, puts the takes you recorded since approving the scripts on this piece by name, has them placed on their cuts by their words, and starts your production plan.',
+    done: 'Your takes are on the piece. Your production plan is being made from them; open it on the card when it is ready.' }
 }
 
 /** The card's line once his takes are on the piece. */
@@ -75,6 +119,8 @@ export interface BriefInputs {
   scripts: Record<string, string>
   /** Whether this is an off-day post (one short) or a series piece (the long cut and the short cut). */
   offday: boolean
+  /** The production plan he reviewed, with his swaps applied (_productionPlan.ts planBrief), when it is on file. */
+  plan?: string | null
 }
 
 /** The one post-production prompt's head: everything decided, the takes by name, and the creative calls it makes. */
@@ -89,14 +135,22 @@ export function productionBrief(b: BriefInputs): string {
     + 'If a take is not in the engine yet, recording.py get NAME --wait 15 waits for the Inbox copy; the take-placing job puts each on its cut by its words.\n\n'
     + (b.research.length ? `The research and materials on file (read each with read_piece_material before you plan):\n${b.research.slice(0, 30).map(r => `- ${r}`).join('\n')}\n\n` : '')
     + (words ? `${words}\n\n` : '')
+    + (b.plan ? `${b.plan}\n` : 'No production plan is on file yet: make it first, as docs/production/PRODUCTION_PLAN.md says, then make the cut from it.\n\n')
     + 'Make it in one shot:\n'
     + '1. Fetch every take, check each says the approved words, and measure picture against sound (scripts/av_sync.py) before anything is built on it.\n'
-    + '2. Plan the cut beat by beat in the signed spec (creative-direction.json, schema_version 2) in his picked look, motion style and captions. '
+    + `2. The edit pass, before any picture (python3 scripts/post-pack/edit_pass.py on the take's word timings): find every place he restarted a sentence and keep only his last full attempt; cut the empty, awkward silences (leave a breath, about a quarter second); then measure the total. ${b.offday ? `A short must run under ${SHORT_CAP_SECONDS} seconds: if the kept take is longer, speed the whole of it up evenly (pitch kept, never past 1.25x) until it fits.` : `The short cut must run under ${SHORT_CAP_SECONDS} seconds: if its kept take is longer, speed it up evenly (pitch kept, never past 1.25x) until it fits. The long cut has no length limit and is never sped up.`} Listen to every cut and the sped-up result before going on.\n`
+    + '3. Plan the cut beat by beat in the signed spec (creative-direction.json, schema_version 2) in his picked look, motion style and captions, on the timings of the edited take. '
     + 'For every beat decide, from the research and the words being said, what the picture is: his face on camera, a logo or wordmark (official files only), '
-    + 'real visuals (photos, footage, product shots, from their source), a social post or a screenshot (captured from the real page, with its source kept), '
-    + 'motion design (a ve device or a Codex plate from a card), or cinematic generation (stills before video, inside the credits he approved). '
-    + 'Each choice makes the point land faster (AGENTS.md rule 6), and never repeats the sentence being said.\n'
-    + '3. Codex builds the devices and plates from cards (ve card, ve dispatch, ve verify-card); ve renders the cut; ve qc and ve refs run; a separate reviewer '
-    + 'watches and listens at full size against the approved words before it is called ready.\n'
-    + '4. File the cuts, thumbnails and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n\n'
+    + 'real visuals (photos or footage of what he is talking about, from their source), a social post or a screenshot (a screenshot of the real page or product he '
+    + 'names, or a real viral social post that relates to what he says, captured from the post itself with its link kept), motion design (a ve device or a Codex plate from a card), or a '
+    + 'generated scene (cinematic generation). Each choice makes the point land faster (AGENTS.md rule 6), and never repeats the sentence being said.\n'
+    + '4. The humour: ask the humour engine (krishanraja/humour-engine, its README section 4) what comic readings his own words carry, and read his humour '
+    + 'style from ai-harness (krish-principles and krish-voice, through get_skill). Where a line holds a gold moment, put a hilarious, absurd picture on '
+    + 'it: in the build-or-buy piece he called a software engineer as confident as a crocodile hunter, so the picture is a nerdy engineer creeping up on a '
+    + 'crocodile. Never invent a joke his words do not carry, and never point it at the viewer or at a named person\'s competence.\n'
+    + '5. Generated stills and motion: make them with the higgsfield-generator skills (krishanraja/higgsfield-generator: higgsfield-generate for images '
+    + 'and video, higgsfield-soul-id for a face that must stay his), stills before video, inside the credits he approved; record each generation\'s piece, '
+    + 'beat and file. Codex builds the devices and plates from cards (ve card, ve dispatch, ve verify-card).\n'
+    + '6. ve renders the cut; ve qc and ve refs run; a separate reviewer watches and listens at full size against the approved words before it is called ready.\n'
+    + '7. File the cuts, thumbnails and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n\n'
 }
