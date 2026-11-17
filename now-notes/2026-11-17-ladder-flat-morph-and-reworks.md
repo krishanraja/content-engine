@@ -1,3 +1,0 @@
-Status: three more style devices checked and merged: ladder_stage's pace rework (Codex; it fills the frame and fires about 3.9 events a second), flat_mechanism (Codex; its count, links and token go back for legibility on the merged device) and morph_stage (Codex stopped on a broken test, a wrong import path and a rounding error, fixed here). living_screen's pace rework and toy_object go back to Codex with what their full-size renders showed; toy_object's tests no longer need the renderer's browser, which the build machine cannot start. Every style stays `needs_device` until Krish's yes.
-Next: re-queue ve-style-2-living-screen-pace, ve-style-9-toy-object and ve-style-3-flat-mechanism on their existing bookings.
-North Star check (2026-11-17): holds.
