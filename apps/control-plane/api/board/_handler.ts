@@ -12,7 +12,7 @@ import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
-import { StyleError, needsMotion, sampleFiles, saveStyle, stillFiles, stylePick } from './_style.js'
+import { StyleError, motionBank, needsMotion, sampleFiles, saveStyle, stillFiles, stylePick, undrawableMotion } from './_style.js'
 import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
 import { THUMB_OP, ThumbError, fileThumbLearning, saveThumbs, thumbDriveIds, thumbPick } from './_thumbs.js'
 import { LIVE_OP, recordLive } from './_itsLive.js'
@@ -93,12 +93,23 @@ async function thumbOfWeek(db: SupabaseClient, week: string, id: string): Promis
 /** A view read that does not need the week's posts in Drive (the gate, a research prompt). */
 const NO_DRIVE = async () => null
 
+/** How long a style's sample or still link lasts (seconds), how long an instance hands the same one out (ms), and how
+ *  long the browser keeps the redirect: 60 minutes, 25 and 30, so every link handed out has at least 35 minutes left. */
+export const STYLE_LINK_TTL = 3600
+export const STYLE_LINK_KEEP_MS = 25 * 60_000
+export const STYLE_CACHE = 'private, max-age=1800'
+
 export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {}) {
   /** The board's Drive (_drivePosts.ts), as the folder's owner; a test passes its own. */
   const driveOf = (db: SupabaseClient) => (deps.drive ? deps.drive(db) : boardDrive(db as never))
   /** The sign-off cards (config/ve/sign-offs.json and the configs it writes), from main at the commit it points at now. */
   const signOffSources = () => (deps.signOffs ? deps.signOffs()
     : branchSha(fetch as never, process.env, 'main').then(sha => readSignOffSources(fetch as never, sha)))
+  /** A style's sample or still, signed for STYLE_LINK_TTL and handed out again by this instance for STYLE_LINK_KEEP_MS,
+   *  so a still he hovers again costs no Google, Drive or storage call (Krish, 2026-11-17: "The motion screenshots take
+   *  so long to load when I hover over them"). Kept for less than the link lasts less the browser's own keep
+   *  (STYLE_CACHE), so a link the browser still holds has never expired. */
+  const styleLinks = new Map<string, { url: string; until: number }>()
   return async (req: VercelRequest, res: VercelResponse) => {
     res.setHeader('Cache-Control', 'private, no-store')
     res.setHeader('Vary', 'Cookie, Authorization')
@@ -272,17 +283,23 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         const file = scalar(req.query.file)
         if (file) {
           let url: string | null
+          // A style's sample or still (contracts 1.16.0 and 1.17.0): the same file every time, kept and long cached.
+          const style = sampleFiles().has(file) || stillFiles().has(file)
           try {
-            // A style's still (contract 1.17.0, the stills_drive map) is served the same way as its sample.
-            if (!sampleFiles().has(file) && !stillFiles().has(file)) {
+            if (!style) {
               const { manifest } = await signOffSources()
               if (!manifest) throw new BoardError(503, 'sign_offs_unavailable')
               if (!signOffFiles(manifest).has(file)) throw new BoardError(404, 'sample_not_found')
             }
-            url = await driveOf(db).serve(file)
+            const kept = style ? styleLinks.get(file) : undefined
+            if (kept && kept.until > Date.now()) url = kept.url
+            else {
+              url = await driveOf(db).serve(file, style ? { ttl: STYLE_LINK_TTL } : undefined)
+              if (url && style) styleLinks.set(file, { url, until: Date.now() + STYLE_LINK_KEEP_MS })
+            }
           } catch (e) { if (e instanceof BoardError) throw e; throw new BoardError(503, 'drive_unavailable') }
           if (!url) throw new BoardError(404, 'sample_not_found')
-          res.setHeader('Cache-Control', 'private, max-age=300')
+          res.setHeader('Cache-Control', style ? STYLE_CACHE : 'private, max-age=300')
           if (scalar(req.query.link) === '1') return res.status(200).json({ ok: true, url })
           return res.redirect(302, url)
         }
@@ -429,11 +446,11 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           if (op === 'style') {
             // The motion styles are the bank's motion layer, read from main only when the press names one; the caption
             // styles are config/caption-themes.json. It writes meta.style beside meta.look and never edits a spec.
-            const motion = needsMotion(body) ? await fetch(`https://raw.githubusercontent.com/krishanraja/content-engine/main/config/style-references.json`, { signal: AbortSignal.timeout(15_000) })
-              .then(r => (r.ok ? r.json() : null)).catch(() => null)
-              .then((b: { bank?: Array<{ id?: unknown; layer?: unknown }> } | null) => new Set((b?.bank || []).filter(m => m.layer === 'motion' && typeof m.id === 'string').map(m => String(m.id))))
-              : null
-            const style = await saveStyle(db, pieceId, stylePick(body, motion))
+            const bank = needsMotion(body) ? await fetch(`https://raw.githubusercontent.com/krishanraja/content-engine/main/config/style-references.json`, { signal: AbortSignal.timeout(15_000) })
+              .then(r => (r.ok ? r.json() : null)).catch(() => null) : null
+            const motion = needsMotion(body) ? new Set(motionBank(bank).map(m => m.id)) : null
+            // A style ve cannot draw yet is refused (not_drawable_yet): its pick would render the house motion instead.
+            const style = await saveStyle(db, pieceId, stylePick(body, motion, undrawableMotion(bank)))
             return res.status(200).json({ ok: true, style })
           }
           // The looks the engine can make, read once from the style bank: a production format, and any format as the experiment.

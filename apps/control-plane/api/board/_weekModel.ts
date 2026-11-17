@@ -229,7 +229,10 @@ function layerPress(pieceId: string, style: DayStyle, layer: 'treatment' | 'moti
   const L: StyleLayer = style[layer]
   const opts = L.options.filter(o => !o.rejected)
   if (!opts.length) return null
-  const ordered = [...opts].sort((a, b) => Number(b.id === L.picked) - Number(a.id === L.picked) || Number(b.recommended) - Number(a.recommended))
+  // His pick, then the recommended, then the rest, with any style ve cannot draw yet last (Krish, 2026-11-17: "Mark them
+  // and build all nine"): it is shown, marked "(not ready yet)", and the style press refuses it.
+  const ordered = [...opts].sort((a, b) => Number(b.id === L.picked) - Number(a.id === L.picked) || Number(b.recommended) - Number(a.recommended)
+    || Number(a.ready === false) - Number(b.ready === false))
   // Each option carries its one line and, once recorded, its still (contract 1.17.0), which the board shows when he
   // hovers or picks it.
   const options = ordered.map(o => ({ value: o.id, label: `${o.name}${o.id === L.picked ? ' (picked)' : o.recommended ? ' (recommended)' : o.ready === false ? ' (not ready yet)' : ''}`,
