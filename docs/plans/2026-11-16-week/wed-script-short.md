@@ -2,12 +2,10 @@ Anthropic, which makes Claude, pays other companies for its customer service. Ev
 
 Because right now, everyone is selling you an answer. My feed is wall to wall Claude packs, ready-made instructions you load into Claude. Install this, and Claude becomes your whole sales team. Just comment pack below. Free! Well, sort of.
 
-And then there's your Crocodile Hunter. He's watched one video on vibe coding. That's where you tell the AI what you want, and it writes the code. Now he wants to rebuild your whole sales system over a weekend. And the boss is nodding along, already spending the savings.
+Your Crocodile Hunter has watched one video on vibe coding. That's where you tell the AI what you want, and it writes the code. Now he wants to rebuild your whole sales system over a weekend. And the boss is nodding along, already spending the savings. And one insurer, Curative, really did it. It binned six hundred thousand dollars of sales software and built its own in two months.
 
-Then it's two in the morning. His homemade bot tells a customer they owe the price of a small yacht. Who gets that call? Him. And the boss. The AI sleeps right through it.
+Then it's two in the morning. His homemade bot tells a customer they owe the price of a small yacht. Who gets that call? Him. The AI sleeps right through it.
 
-So what did Anthropic do about its own customer service? It went shopping. It bought a help desk bot from a firm that makes them. And that bot runs on Claude! So now their engineers get the two in the morning call.
+So what did Anthropic do about its own customer service? It went shopping. It bought a help desk bot from a company that makes them. And that bot runs on Claude! So now the help desk company takes the two in the morning call.
 
-And one insurer, Curative, really did it. It binned six hundred thousand dollars of sales software and built its own in two months.
-
-So how's that going? I'll tell you, and the one question I now ask. The full five-minute video is on my channel.
+So how's that going for Curative? I'll show you, plus the one question I now ask before anyone builds anything. The full five-minute video is on my channel.
