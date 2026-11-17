@@ -412,10 +412,24 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
         const pieceId = String(body.piece_id || '').toLowerCase()
         if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(pieceId)) throw new BoardError(400, 'invalid_piece')
-        const row = await db.from('content_ideas').select('id,idea,scheduled_for,lane_slot').eq('id', pieceId).single()
-        const end = new Date(`${week}T00:00:00Z`); end.setUTCDate(end.getUTCDate() + 6)
-        if (row.error || !row.data || !row.data.scheduled_for || row.data.scheduled_for < week || row.data.scheduled_for > end.toISOString().slice(0, 10))
-          throw new BoardError(404, 'piece_not_in_week')
+        const { inWeek, linkOffdayPiece, OFFDAY_DOC } = await import('./_offdayPiece.js')
+        const readRow = () => db.from('content_ideas').select('id,idea,scheduled_for,lane_slot,meta').eq('id', pieceId).maybeSingle()
+        let row = await readRow()
+        // An off-day video post's look or style pick (_offdayPiece.ts; Krish, 2026-11-17: "at no point does a voiceover
+        // short give me the same controls as a mon/wed/fri piece"): its record is made and linked to the week here when
+        // it has none, and only when the board itself offers this press, with this piece id, on that post.
+        if ((op === 'look' || op === 'style') && !row.error && !inWeek(row.data, week) && typeof body.item === 'string' && OFFDAY_DOC.test(body.item)) {
+          const view = await readView(db, week, process.env, undefined, undefined, NO_DRIVE)
+          const post = (view.model?.days || []).flatMap(d => d.items.map(it => ({ d, it }))).find(x => x.it.key === body.item && x.it.type === 'post')
+          const offers = post && (post.it.others || []).some(a => a.kind === 'press' && (a.op === 'look' || a.op === 'style')
+            && String((a.body as Record<string, unknown> | undefined)?.piece_id || '').toLowerCase() === pieceId)
+          if (!post || !offers) throw new BoardError(404, 'piece_not_in_week')
+          const linked = await linkOffdayPiece(db, pieceId, { week, day: post.d.day, item: String(body.item), title: post.it.title,
+            so_what: post.it.read?.so_what ?? null }, new Date().toISOString())
+          if (!linked) throw new BoardError(503, 'offday_record_unavailable')
+          row = await readRow()
+        }
+        if (row.error || !row.data || !inWeek(row.data, week)) throw new BoardError(404, 'piece_not_in_week')
         try {
           if (op === 'material') {
             const name = String(body.title || 'Research').slice(0, 180)
