@@ -7,9 +7,16 @@ export { worldState, project, routePoint } from './state'
 
 /** Half a block's width and the slope of its edges on the 2:1 grid. */
 const HALF = 78, SLOPE = 39, STOREY = 90
-/** Where a tall frame's readable picture sits: right of x 60, left of x 860 (config/channel-safe-zones.json), below the
- *  top band at y 270 and above the house caption box, which starts at y 1090 (kit/lock.ts). Frame pixels. */
-export const TALL_REGION = { left: 60, right: 860, top: 270, bottom: 1080 } as const
+/** The label face's size and its average advance per character (IBM Plex Mono is 0.6 em). */
+const LABEL_SIZE = 19, LABEL_ADVANCE = LABEL_SIZE * 0.62
+/** A tall frame (frame pixels). The picture fills the slot from the top band at y 270 to the foot of the house caption
+ *  box at y 1320 (captions are their own layer, drawn over it); what must be read (the labels) stays right of x 60, left
+ *  of x 860 (config/channel-safe-zones.json) and above the caption box at y 1090 (kit/lock.ts). Krish, 13 Nov, of a
+ *  set held in a safe band: "the use of the screen space is terrible". */
+export const TALL_PICTURE = { left: 24, right: 1056, top: 270, bottom: 1320 } as const
+export const TALL_READ = { left: 60, right: 860, top: 270, bottom: 1080 } as const
+/** The largest drift a scene takes (clock.ts drift is under 0.5% of its scale), fitted for in advance. */
+const MAX_DRIFT = 0.006
 
 type Poly = { id: string; color: string; points: number[][]; lit?: boolean }
 /** A picture set on a block's lit face: the face's own plane, verticals kept upright (no rotation, only the 2:1 slope). */
@@ -28,16 +35,39 @@ function tallest(p: DeviceProps, blocks: readonly { id: string; height: number }
   return most
 }
 
-/** The region the diorama is fitted into, in box pixels: a tall frame's readable picture, or the wide box. */
-function region(p: DeviceProps) {
+type Rect = { left: number; right: number; top: number; bottom: number }
+/** A frame rect in box pixels, or the box itself when the box does not reach it. */
+function inBox(p: DeviceProps, r: Rect): Rect {
   const { left, top, width, height } = p.box
-  if (p.aspect !== '9:16') return { left: width * 0.05, top: height * 0.08, width: width * 0.9, height: height * 0.84 }
-  const l = Math.max(left, TALL_REGION.left), r = Math.min(left + width, TALL_REGION.right)
-  const t = Math.max(top, TALL_REGION.top), b = Math.min(top + height, TALL_REGION.bottom)
-  return r - l > 100 && b - t > 100
-    ? { left: l - left, top: t - top, width: r - l, height: b - t }
-    : { left: 0, top: 0, width, height }
+  const l = Math.max(left, r.left), rr = Math.min(left + width, r.right), t = Math.max(top, r.top), b = Math.min(top + height, r.bottom)
+  return rr - l > 100 && b - t > 100 ? { left: l - left, right: rr - left, top: t - top, bottom: b - top } : { left: 0, right: width, top: 0, bottom: height }
 }
+
+/** Where the picture may reach and where its labels must stay, in box pixels. */
+function regions(p: DeviceProps): { picture: Rect; read: Rect } {
+  if (p.aspect === '9:16') return { picture: inBox(p, TALL_PICTURE), read: inBox(p, TALL_READ) }
+  const { width: w, height: h } = p.box
+  return { picture: { left: w * 0.04, right: w * 0.96, top: h * 0.05, bottom: h * 0.95 }, read: { left: w * 0.05, right: w * 0.95, top: h * 0.06, bottom: h * 0.94 } }
+}
+
+/** The view's scale and offset: as large as the picture region allows while every label stays in the readable region,
+ *  then centred in the picture region as far as the labels let it. `scale` and `range` are fitted once per scene. */
+function fit(p: DeviceProps, world: Rect, labels: Rect | undefined) {
+  const { picture, read } = regions(p)
+  let scale = Math.min((picture.right - picture.left) / (world.right - world.left), (picture.bottom - picture.top) / (world.bottom - world.top))
+  const range = (k: number) => ({
+    x: [Math.max(picture.left - world.left * k, labels ? read.left - labels.left * k : -Infinity), Math.min(picture.right - world.right * k, labels ? read.right - labels.right * k : Infinity)],
+    y: [Math.max(picture.top - world.top * k, labels ? read.top - labels.top * k : -Infinity), Math.min(picture.bottom - world.bottom * k, labels ? read.bottom - labels.bottom * k : Infinity)],
+  })
+  for (let i = 0; i < 60; i++) {
+    const r = range(scale * (1 + MAX_DRIFT))
+    if (r.x[0]! <= r.x[1]! && r.y[0]! <= r.y[1]!) break
+    scale *= 0.97
+  }
+  return { scale, range, centre: { x: (picture.left + picture.right) / 2, y: (picture.top + picture.bottom) / 2 } }
+}
+
+const clamp = (v: number, [lo, hi]: number[]) => Math.min(Math.max(v, lo!), Math.max(lo!, hi!))
 
 /** A 2:1 orthographic grid. All surfaces share this projection. */
 export function worldGeometry(p: DeviceProps) {
@@ -46,14 +76,23 @@ export function worldGeometry(p: DeviceProps) {
   const maxA = Math.max(...s.params.blocks.map(b => b.cell[0])) + 1, maxB = Math.max(...s.params.blocks.map(b => b.cell[1])) + 1
   const floor = [[-0.55, -0.55], [maxA - 0.45, -0.55], [maxA - 0.45, maxB - 0.45], [-0.55, maxB - 0.45]].map(project)
   const left = Math.min(...floor.map(p => p.x)), right = Math.max(...floor.map(p => p.x))
-  // Room above the tallest block for its label, measured at the height it will reach, not where it starts.
-  const top = Math.min(...s.params.blocks.map(b => project(b.cell).y - most.get(b.id)! * STOREY - SLOPE - 70))
   const bottom = Math.max(...floor.map(p => p.y)) + 20
-  const room = region(p)
-  const scale = Math.min(room.width / (right - left), room.height / (bottom - top)) * (1 + s.drift)
-  // Centred in its region; `move` slides the view a little towards the block it names.
-  const tx = room.left + room.width / 2 - ((left + right) / 2 + s.focus.x * 0.12) * scale
-  const ty = room.top + room.height / 2 - ((top + bottom) / 2 + s.focus.y * 0.12) * scale
+  // Each label at the height its block will reach (its top) and at no height at all (its baseline), so a fill never
+  // carries one out of the readable region; its width is the data face's average advance, with its ink edge.
+  const named = s.params.blocks.filter(b => b.label)
+  const labels: Rect | undefined = named.length ? {
+    left: Math.min(...named.map(b => project(b.cell).x - b.label!.length * LABEL_ADVANCE / 2 - 6)),
+    right: Math.max(...named.map(b => project(b.cell).x + b.label!.length * LABEL_ADVANCE / 2 + 6)),
+    top: Math.min(...named.map(b => project(b.cell).y - most.get(b.id)! * STOREY - SLOPE - 22 - LABEL_SIZE)),
+    // A landed block can still be in its drop's overshoot (about 12% of the 170 px fall), so allow for it below.
+    bottom: Math.max(...named.map(b => project(b.cell).y - SLOPE - 22 + 26)),
+  } : undefined
+  const top = Math.min(labels?.top ?? Infinity, ...s.params.blocks.map(b => project(b.cell).y - most.get(b.id)! * STOREY - SLOPE))
+  const view = fit(p, { left, right, top, bottom }, labels)
+  const scale = view.scale * (1 + s.drift), room = view.range(scale)
+  // Centred in the picture region as far as the labels allow; `move` slides the view a little towards its block.
+  const tx = clamp(view.centre.x - ((left + right) / 2 + s.focus.x * 0.12) * scale, room.x)
+  const ty = clamp(view.centre.y - ((top + bottom) / 2 + s.focus.y * 0.12) * scale, room.y)
   const gy = -100 * (1 - s.ground) + s.out * 100
   const ground: Poly = { id: 'ground', color: t.inkSoft, points: floor.map(p => [p.x, p.y + gy]) }
   const blocks = s.blocks.map(b => {
@@ -107,7 +146,7 @@ export function Device(p: DeviceProps) {
       {g.s.token && <circle data-route={g.s.token.route} cx={g.s.token.x} cy={g.s.token.y} r={12} fill={t.mint} stroke={t.ink} strokeWidth={3} />}
       {/* Labels last, each on its own ink edge, so no block in front can hide one and none sits cream on a cream face. */}
       {g.blocks.map(b => b.label && b.shown && <text key={b.id} data-label={b.id} x={b.labelX} y={b.labelY} textAnchor="middle"
-        fontFamily={HOUSE_FONTS.data} fontSize={19} fill={t.cream} stroke={t.ink} strokeWidth={5} paintOrder="stroke" strokeLinejoin="round">{b.label}</text>)}
+        fontFamily={HOUSE_FONTS.data} fontSize={LABEL_SIZE} fill={t.cream} stroke={t.ink} strokeWidth={5} paintOrder="stroke" strokeLinejoin="round">{b.label}</text>)}
     </g>
     {p.object.dataset && <text x={24} y={Math.min(p.box.height - 20, 1290 - p.box.top)} fontFamily={HOUSE_FONTS.data} fontSize={22} fill={t.cream}>{p.object.dataset.producerLabel}</text>}
   </svg>
@@ -131,7 +170,7 @@ export function drawCanvas(ctx: CanvasRenderingContext2D, p: DeviceProps, images
     if (pic && img) { ctx.save(); ctx.transform(...pic.matrix); ctx.drawImage(img, 0, 0, pic.pixelWidth, pic.pixelHeight); ctx.restore() }
   }
   if (g.s.token) { ctx.beginPath(); ctx.arc(g.s.token.x, g.s.token.y, 12, 0, Math.PI * 2); ctx.fillStyle = t.mint; ctx.fill(); ctx.strokeStyle = t.ink; ctx.lineWidth = 3; ctx.stroke() }
-  ctx.font = `19px "${HOUSE_FONTS.data}"`; ctx.textAlign = 'center'; ctx.lineJoin = 'round'
+  ctx.font = `${LABEL_SIZE}px "${HOUSE_FONTS.data}"`; ctx.textAlign = 'center'; ctx.lineJoin = 'round'
   for (const b of g.blocks) if (b.label && b.shown) { ctx.strokeStyle = t.ink; ctx.lineWidth = 5; ctx.strokeText(b.label, b.labelX, b.labelY); ctx.fillStyle = t.cream; ctx.fillText(b.label, b.labelX, b.labelY) }
   ctx.restore()
   if (p.object.dataset) { ctx.save(); ctx.font = `22px "${HOUSE_FONTS.data}"`; ctx.textAlign = 'left'; ctx.fillStyle = t.cream; ctx.fillText(p.object.dataset.producerLabel, p.box.left + 24, p.box.top + Math.min(p.box.height - 20, 1290 - p.box.top)); ctx.restore() }
