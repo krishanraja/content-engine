@@ -1,0 +1,4 @@
+interface:
+  display_name: "Make a meme"
+  short_description: "A meme video or static to the guaranteed floor, with one named experiment above it"
+  default_prompt: "Use $meme to make this meme to the floor and try one new thing above it: <the clip or idea>."
