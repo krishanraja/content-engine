@@ -2087,7 +2087,7 @@
         },
         {
           "file": "scripts/velib/compile.py",
-          "contains": "'channel': tokens['mint'] if off else",
+          "contains": "tokens['mint'] if off else publication['channel_colors'][channel]",
           "how": "compile draws an off day in the house mint"
         }
       ]

@@ -1659,7 +1659,7 @@
         },
         {
           "file": "apps/renderer/src/engine/BrandFrame.tsx",
-          "contains": "{props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>",
+          "contains": "{props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={house} /> : <>",
           "how": "on the wide cut, SPLIT beats and face-with-proof's light STAGE beats keep the legible mark tile and series pill; the vertical cut carries none (Ruling, Krish, 2026-11-11)",
           "test": "npx vitest run apps/renderer/src/engine/layouts/split.test.ts"
         }
@@ -2024,7 +2024,7 @@
         },
         {
           "file": "scripts/velib/compile.py",
-          "contains": "'channel': tokens['mint'] if off else",
+          "contains": "tokens['mint'] if off else publication['channel_colors'][channel]",
           "how": "an off-day cut never wears the series colour or promise",
           "test": "python3 tests/ve_thursday_guards_test.py"
         }
