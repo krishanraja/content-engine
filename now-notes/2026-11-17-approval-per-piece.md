@@ -1,3 +1,0 @@
-Status: A typed or pressed approval of a lock or scripts is now one board document per piece (picks/<day>-<lock|scripts>-words-<first 8 of the piece id>), so two pieces on one day never overwrite each other's approval (Tue 17 held the OpenAI piece and the habits voiceover under one picks/tue-scripts-words). The older day-named documents stay readable, each for the piece it names only, so Tue's and Wed's approvals already saved still count. The engine's read of one piece (GET /api/content-ideas?id=) now returns its day: scheduled_for was missing from its columns for every piece.
-Next: Watch the Tue 17 OpenAI piece's Approve scripts land in its own document beside the habits approval, on the live board.
-North Star check (2026-11-17): holds.
