@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { CAPTIONS, StyleError, dayStyle, motionBank, nextStyle, sampleUrl, saveStyle, stylePick, undrawableMotion, type MotionModule, type StyleInputs } from '../../apps/control-plane/api/board/_style.js'
+import { CAPTIONS, LAST_MOTION, StyleError, dayStyle, motionBank, nextStyle, sampleUrl, saveStyle, stylePick, undrawableMotion, type MotionModule, type StyleInputs } from '../../apps/control-plane/api/board/_style.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
 vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => false, mediaQualityRollout: () => ({ status: 'candidate_pending_calibration' }) }))
 
@@ -47,6 +47,18 @@ describe('the motion styles on a piece', () => {
     expect(ids(s.motion.options)).toEqual(['morph'])
     expect(s.motion.options.find(o => o.id === 'morph')!.why).toBe('It draws the transformation points this piece makes. It suits the channel sometimes.')
     expect(ids(dayStyle(inputs({ formats: ['short_video'], points: ['number'] })).motion.options)).toEqual(['ladder', 'swiss', 'tall-only'])
+  })
+
+  it('shows shape morph last of all, after every other style, and not ready (Krish, 2026-11-17)', () => {
+    const styles = JSON.parse(readFileSync('config/style-references.json', 'utf8'))
+    const bank = motionBank(styles)
+    expect(LAST_MOTION).toBe('shape-morph')
+    expect(bank.some(x => x.id === LAST_MOTION)).toBe(true)
+    for (const extra of [{}, { points: ['number'] }, { recommendedMotion: bank[0]!.id }] as Partial<StyleInputs>[]) {
+      const options = dayStyle(inputs({ motion: bank, ...extra })).motion.options
+      expect(options.at(-1)).toMatchObject({ id: LAST_MOTION, ready: false, recommended: false })
+      expect(options).toHaveLength(bank.length)
+    }
   })
 
   it('never recommends one ve cannot draw yet (needs_device), the rule ve styles keeps', () => {
