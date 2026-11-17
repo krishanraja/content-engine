@@ -70,7 +70,13 @@ catches the rest.
     python scripts/post-pack/story_check.py --cut long SCRIPT    # or --cut short
     python scripts/post-pack/story_check.py --cut long --series follow_the_money SCRIPT
     python scripts/post-pack/story_check.py --cut long --piece PIECE_ID SCRIPT   # a long cut config/long-cuts.json lifts
+    python scripts/post-pack/story_check.py --cut long --title "Is it AI music or is it human music?" SCRIPT   # the intro must speak that title
     python scripts/post-pack/story_check.py --self-test
+
+The first paragraph of every long cut, and of every short cut config/short-cuts.json lifts, is his intro (house rule
+INTRO_PATTERN; Ruling, Krish, 2026-11-17; config/script-floor/intros.json): a named company or person in its first two
+sentences, a "Let's..." turn, the title spoken as a question (printed as TITLE <line>), and 85 words at most for a long
+cut, 50 for a lifted short. An unlifted 45 to 75 word vertical is exempt.
 
 Without --cut, a file whose name says "90", "short" or "vertical" is the
 short cut and one whose name says "long", "3min", "5min" or "wide" is the long cut;
@@ -191,8 +197,8 @@ def close_line():
     return line.strip()
 
 
-def _is_close(sentence):
-    return _plain(sentence).rstrip('"\' ').lower() == close_line().lower()
+def _is_close(sentence, close=None):
+    return _plain(sentence).rstrip('"\' ').lower() == (close or close_line()).lower()
 
 
 @functools.lru_cache(maxsize=None)
@@ -251,7 +257,7 @@ def name_problems(spoken):
             'so cut the line (house rule NO_NAME; Krish, 2026-10-28: "Remember, no content refers to Krish, ever.")']
 
 
-def close_problems(beats):
+def close_problems(beats, close=None):
     """Why the script's close breaks house rule SCRIPT_CLOSE, or [].
 
     Ruling (Krish, 2026-10-31): "the last paragraph of all my scripts still
@@ -268,7 +274,7 @@ def close_problems(beats):
         found.append('it still says "Here\'s what I\'d do with this info if I were you", which Krish retired on 2026-10-31 because '
                      'what followed it was a list of orders ("sounds a bit bossy and preachy"): say the one thing he would do, '
                      'in his own first person (house rule SCRIPT_CLOSE)')
-    tail, orders = close_orders(beats)
+    tail, orders = close_orders(beats, close)
     if not tail:
         found.append('it has no close before the last line: after the call, one short beat saying the one thing Krish would do, '
                      'in his own first person (house rule SCRIPT_CLOSE, Krish, 2026-10-31)')
@@ -284,12 +290,12 @@ def close_problems(beats):
                          '"If I ran a team, I\'d do one thing this week..." (house rule SCRIPT_CLOSE, Krish, 2026-10-31)')
     last = (sentences(beats) or [''])[-1]
     banned = BANNED_LAST.search(_plain(last))
-    if banned and not _is_close(last):
+    if banned and not _is_close(last, close):
         found.append(f'its last sentence says "{banned.group(0)}", which the voice check bans, so the script fails it on its last line: '
-                     f'end on exactly "{close_line()}" with nothing after it (house rule SCRIPT_CLOSE; Ruling, Krish, 2026-11-14: '
+                     f'end on exactly "{close or close_line()}" with nothing after it (house rule SCRIPT_CLOSE; Ruling, Krish, 2026-11-14: '
                      '"stick to voice check")')
-    elif not _is_close(last):
-        found.append(f'its last sentence must be exactly "{close_line()}" with nothing after it: no sign-off, '
+    elif not _is_close(last, close):
+        found.append(f'its last sentence must be exactly "{close or close_line()}" with nothing after it: no sign-off, '
                      f'no "I\'m Krish", no question for the comments (house rule SCRIPT_CLOSE). It ends: "{_plain(last)[-90:]}"')
     return found
 
@@ -496,7 +502,12 @@ def length_problem(words, cut, lift=None):
         return None
     low, high, asked = CUTS[cut]
     rule = RULE_OF.get(cut, 'TWO_CUTS')
-    if cut == 'long' and lift:
+    if cut == 'short' and lift and lift.get('close'):
+        high = lift['words']
+        asked = (f'a short cut lifted to {lift["words"]} words (about {lift["minutes"]}) for this piece, ending on "{lift["close"]}" '
+                 f'({lift["reason"]})')
+        rule = 'TWO_CUTS, lifted for this piece by config/short-cuts.json; Ruling, Krish, ' + lift['said_at'] + ': "' + lift['krish'] + '"'
+    elif cut == 'long' and lift and not lift.get('close'):
         high = lift['words']
         asked = f'a long cut lifted to about {lift["minutes"]} for this piece ({lift["reason"]})'
         rule = 'TWO_CUTS, lifted for this piece by config/long-cuts.json; Ruling, Krish, 2026-11-14: "lift if worth it"'
@@ -529,7 +540,7 @@ def spoken_length_warning(words, cut, ledger=None, lift=None):
     if not got:
         return None
     secs, how = got
-    cap = round(lift['words'] / WORDS_PER_MINUTE * 60) if cut == 'long' and lift else SPOKEN_CAP_S[cut]
+    cap = round(lift['words'] / WORDS_PER_MINUTE * 60) if cut in ('long', 'short') and lift else SPOKEN_CAP_S[cut]
     if secs <= cap:
         return None
     return (f'as Krish says it, this {cut} cut will run about {int(secs) // 60}:{int(secs) % 60:02d}, over {cap // 60}:{cap % 60:02d} '
@@ -679,17 +690,17 @@ def leader_stake_warning(beats):
             'sentence (house rule FOR_THE_LEADER; a warning, not a refusal)')
 
 
-def short_close_problems(beats):
+def short_close_problems(beats, close=None):
     """The short cut under a minute (SHORT_CUT) keeps SCRIPT_CLOSE's last sentence, with his beat of what he would do
     at most one sentence or left out (house rule TWO_CUTS, Ruling, Krish, 2026-11-16)."""
     last = (sentences(beats) or [''])[-1]
-    if _is_close(last):
+    if _is_close(last, close):
         return []
-    return [f'the short cut\'s last sentence must be exactly "{close_line()}" with nothing after it (house rules TWO_CUTS '
+    return [f'the short cut\'s last sentence must be exactly "{close or close_line()}" with nothing after it (house rules TWO_CUTS '
             f'and SCRIPT_CLOSE). It ends: "{_plain(last)[-90:]}"']
 
 
-def problems(text, cut=None, series=None, lift=None):
+def problems(text, cut=None, series=None, lift=None, title=None):
     """Plain-words reasons this script is not ready, or [] when it passes.
     `cut` ('long' or 'short') adds the length rule; `series` (the piece's
     lane_slot) is accepted and ignored: the series line is retired (house rule
@@ -698,7 +709,7 @@ def problems(text, cut=None, series=None, lift=None):
     cut (long_cut.lift_for), which holds the long cut to its own length."""
     parts = takes(text)
     if parts:
-        return [f'{label}: {why}' for label, words in parts for why in problems(words, cut, series, lift)]
+        return [f'{label}: {why}' for label, words in parts for why in problems(words, cut, series, lift, title)]
     found = []
     if UNCHECKED in text:
         found.append(f'some lines are marked {UNCHECKED}: add those facts to the article and run the fact check, or cut them')
@@ -724,10 +735,11 @@ def problems(text, cut=None, series=None, lift=None):
     if extra:
         found.append(f'it carries more than the words Krish says ({", ".join(extra)}): a script is only the spoken '
                      'words as plain paragraphs; shots go in the shot list and joke options beside it (house rule SCRIPT_ONLY)')
+    close = lift['close'] if cut == 'short' and lift and lift.get('close') else None  # a short cut lifted for this piece
     if len(words) >= SHORT_WORDS:
-        found += close_problems(beats)
+        found += close_problems(beats, close)
     elif cut == 'short':
-        found += short_close_problems(beats)
+        found += short_close_problems(beats, close)
     if cut in CUTS and not names_a_thing(first):
         found.append(f'its first sentence names no concrete thing ("{_plain(first)[:70]}"): open on the piece\'s one named thing, '
                      'a product, company, person or number, then follow the money or the surprise (house rule ONE_CONCRETE_THING; '
@@ -743,6 +755,7 @@ def problems(text, cut=None, series=None, lift=None):
             break
     found += reading_problems(beats)
     found += listening_problems(beats, cut)
+    found += intro_problems(beats, cut, lift, title)  # house rule INTRO_PATTERN, Ruling, Krish, 2026-11-17
     return found
 
 
@@ -938,7 +951,7 @@ def names_in(sents):
     return seen
 
 
-def close_orders(beats):
+def close_orders(beats, close=None):
     """The close (the sentences of the beat before the last line, the last line left out) and which are orders."""
     sents_by_beat = [sentences([b]) for b in beats]
     flat = [(i, x) for i, ss in enumerate(sents_by_beat) for x in ss]
@@ -946,7 +959,7 @@ def close_orders(beats):
         return [], []
     # The last line is left out when it is the line or another line naming makeyourmindup (the retired one among them),
     # so a script ending on the wrong line is told about that line once, and its close beat is still read as its close.
-    body = flat[:-1] if _is_close(flat[-1][1]) or OUTRO.search(flat[-1][1]) else flat
+    body = flat[:-1] if _is_close(flat[-1][1], close) or OUTRO.search(flat[-1][1]) else flat
     if not body:
         return [], []
     beat = body[-1][0]
@@ -983,6 +996,86 @@ def listening_problems(beats, cut=None):
                      'at most one side-story, and the rest to the article (house rule LISTENING, Krish, 2026-10-31)')
     return found
 
+# The intro (house rule INTRO_PATTERN). Ruling (Krish, 2026-11-17): "how can you encode this intro style for the future? I
+# want my introductions to be consistent, particularly the 90 second ones". His two intros are the reference
+# (config/script-floor/intros.json): a named player and a surprising fact, why it is strange, the viewer's own world, then
+# a "Let's..." turn and the title spoken as a question, which the video shows as its title. The check holds the first
+# paragraph of every long cut, and of every short cut config/short-cuts.json lifts, to those beats; an unlifted 45 to 75
+# word vertical has no room for them and is exempt.
+INTRO_RULING = ('house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17: "how can you encode this intro style for the future? '
+                'I want my introductions to be consistent, particularly the 90 second ones"')
+INTRO_MOST_WORDS = {'long': 85, 'short': 50}
+LETS = re.compile(r"\bLet(?:'|’)s\b", re.I)
+INTRO_NOT_NAMES = NOT_NAMES | {'Does', 'Do', 'Did', 'Is', 'Are', 'Was', 'Were', 'It', 'This', 'That', 'These', 'Those', 'There', 'They',
+                               'We', 'You', 'He', 'She', 'What', 'Why', 'How', 'When', 'Where', 'Who', 'Which', 'If', 'Then', 'Imagine',
+                               'Let', 'Every', 'Most', 'Some', 'Many', 'One', 'Two', 'Three', 'A', 'An', 'In', 'On', 'At', 'To', 'Of',
+                               'For', 'With', 'Not', 'Just', 'Even', 'Still', 'Yet', 'Or', 'As', 'My', 'Your', 'Our', 'His', 'Her', 'Its'}
+_TOKEN = re.compile(r"[A-Za-z][A-Za-z0-9]*(?:[.'’-][A-Za-z0-9]+)*")
+
+
+def intro_names(sentence):
+    """The company or person names in one sentence: a capitalised word that is not the sentence's first word alone (the
+    first word counts only when it is written like a brand, TikTok or OpenAI, or a second capitalised word follows it)."""
+    tokens = _TOKEN.findall(sentence)
+    caps = [t[0].isupper() and t.split("'")[0].split('’')[0] not in INTRO_NOT_NAMES for t in tokens]
+    out = []
+    for i, token in enumerate(tokens):
+        if not caps[i]:
+            continue
+        brand = bool(re.search(r'[a-z][A-Z]|[A-Z]{2,}', token))
+        if i == 0 and not (brand or (len(tokens) > 1 and caps[1])):
+            continue
+        out.append(token)
+    return out
+
+
+def _norm(text):
+    return re.sub(r'\s+', ' ', re.sub(r'[^a-z0-9 ]+', ' ', str(text).lower().replace('’', "'").replace("'", ''))).strip()
+
+
+def intro_title(paragraph, declared=None):
+    """The title line the intro speaks: the declared one when it is said in the paragraph, else its last question."""
+    if declared:
+        return declared if _norm(declared) in _norm(paragraph) else None
+    questions = [x for x in sentences([paragraph]) if x.endswith('?')]
+    return questions[-1] if questions else None
+
+
+def intro_applies(cut, lift=None):
+    """True for every long cut and every short cut config/short-cuts.json lifts; an unlifted 45 to 75 word vertical is exempt."""
+    return cut == 'long' or (cut == 'short' and bool(lift and lift.get('close')))
+
+
+def intro_problems(beats, cut, lift=None, declared=None):
+    """Why the first paragraph is not his intro (house rule INTRO_PATTERN), or []."""
+    if not beats or not intro_applies(cut, lift):
+        return []
+    para = beats[0]
+    sents = sentences([para])
+    found = []
+    if not any(intro_names(x) for x in sents[:2]):
+        found.append('the intro opens on no named company or person in its first two sentences: his intros open on a surprising '
+                     'fact about a named player ("Anthropic, which makes Claude, subscribe to other tools...")')
+    if not LETS.search(para):
+        found.append('the intro has no "Let\'s..." turn (Let\'s find out, Let\'s dive in) leading into the title')
+    if not any(x.endswith('?') for x in sents) or (declared and not intro_title(para, declared)):
+        found.append('the intro does not speak the title as a question' + (f' ("{declared}")' if declared else '')
+                     + ': the title is a question the video shows as its title')
+    cap = INTRO_MOST_WORDS['short' if cut == 'short' else 'long']
+    n = len(re.findall(r"[A-Za-z0-9][A-Za-z0-9'\u2019.,-]*", para))  # words, not stray punctuation
+    if n > cap:
+        found.append(f'the intro is {n} words; a {"90-second" if cut == "short" else "5-minute"} cut holds it to {cap}: compress the four beats, never a different opening')
+    return [f'{p} ({INTRO_RULING})' for p in found]
+
+
+def title_of(text, cut=None, lift=None, declared=None):
+    """The title line a script's intro speaks (printed as TITLE <line>), or None when the intro check does not apply or finds none."""
+    beats = spoken_paragraphs(text)
+    if not beats or not intro_applies(cut, lift):
+        return None
+    return intro_title(beats[0], declared)
+
+
 CHAPTER_START = re.compile(r'starts:\s*"([^"]+)"')
 
 
@@ -1004,9 +1097,9 @@ def chapter_problems(text, chapters):
     return found
 
 
-def check_file(path, cut=None, series=None, lift=None):
+def check_file(path, cut=None, series=None, lift=None, title=None):
     text = Path(path).read_text(encoding='utf-8-sig')
-    found = problems(text, cut or cut_of(Path(path).name), series, lift)
+    found = problems(text, cut or cut_of(Path(path).name), series, lift, title)
     chapters = Path(path).with_suffix('.chapters.md')
     if chapters.is_file():
         found += chapter_problems(text, chapters.read_text(encoding='utf-8-sig'))
@@ -1223,6 +1316,34 @@ def self_test():
     check('a lifted long cut past its own length is refused, naming the length, the reason and the ruling',
           ('cut it to 675 to 1200' in over, 'about 8:00' in over, 'Two stories in one piece.' in over, 'lift if worth it' in over), (True, True, True, True))
     check('a lift never moves the short cut', 'TWO_CUTS' in (length_problem(filler(300).split(), 'short', lifted) or ''), True)
+    # A piece whose short cut config/short-cuts.json lifts (short_cut.py; Ruling, Krish, 2026-11-17).
+    short_lift = {'words': 260, 'minutes': '1:44', 'close': 'The full five-minute video is on my channel.',
+                  'reason': 'A 90-second cut that sends viewers on.', 'said_at': '2026-11-17',
+                  'krish': 'The 90-second script needs to be hilarious and relatable to all.'}
+    long_short = ('Disney is paying Character.AI to put its films inside a chatbot. So what does your brand lose when fans '
+                  'can talk to it? Let\'s find out.\n\n' + '\n\n'.join(['Here is the deal. Fans chat with the heroes. Disney gets paid each time. '
+                  'The chatbot learns what fans want from every single chat they have.'] * 7)
+                  + '\n\nSo I reckon every big brand signs a deal like this by next summer. If I ran a brand, I\'d ask who owns '
+                  'those chats.\n\n')
+    words230 = len(' '.join(spoken_paragraphs(long_short + 'The full five-minute video is on my channel.')).split())
+    check('the test short is about 230 words', 215 <= words230 <= 245, True)
+    on_lift = long_short + 'The full five-minute video is on my channel.'
+    check('a lifted piece accepts a 230-word short ending on its own close', problems(on_lift, 'short', None, short_lift), [])
+    check('a piece that is not lifted still refuses that 230-word short, naming TWO_CUTS',
+          any('TWO_CUTS' in p for p in problems(on_lift, 'short')), True)
+    check('a lifted short ending on the old house close is refused: it must end on the lift\'s close',
+          [bool(any('must be exactly "The full five-minute video is on my channel."' in p for p in problems(
+              long_short + 'The full story is free at makeyourmindup.ai.', 'short', None, short_lift)))], [True])
+    check('a lifted short past its own words is refused, naming the lift', 'config/short-cuts.json' in (length_problem(
+          filler(300).split(), 'short', short_lift) or ''), True)
+    check('a lifted short under the floor is still refused', 'TWO_CUTS' in (length_problem(filler(30).split(), 'short', short_lift) or ''), True)
+    check('a short lift never moves the long cut', 'cut it to 675 to 825' in (length_problem(filler(1000).split(), 'long', short_lift) or ''), True)
+    import tempfile as _t
+    with _t.TemporaryDirectory() as tmp:
+        led = Path(tmp) / 'ledger.json'
+        led.write_text(json.dumps({'takes': [{'take': 'x', 'cut': 'short', 'date': '2026-10-14', 'said_more_pct': 38.3, 'words_a_minute': 174.2}]}))
+        check('the 20-to-35-second warning respects a short lift: 200 words warns without it, not with it',
+              (bool(spoken_length_warning(['w'] * 200, 'short', led)), spoken_length_warning(['w'] * 200, 'short', led, short_lift)), (True, None))
     check('the ordinary long cut is the house rules\' LONG_CUT', CUTS['long'][:2],
           (house_block('LONG_CUT')['fewest_words'], house_block('LONG_CUT')['most_words']))
     check('no cut, no length rule', length_problem(filler(900).split(), None), None)
@@ -1345,6 +1466,35 @@ def self_test():
     check('a long cut holding three figures passes', listening_problems(['It cost 11 dollars, then 12, then 13.'], 'long'), [])
     check('a script between the cuts is not held to a cut', listening_problems([many]), [])
 
+    # His intro (house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17): config/script-floor/intros.json is the reference.
+    intros = json.loads((Path(__file__).resolve().parents[2] / 'config' / 'script-floor' / 'intros.json').read_text(encoding='utf-8'))['intros']
+    rest = ('\n\n' + GOOD.split('\n\n', 1)[1]) if '\n\n' in GOOD else ''
+    for ref in intros:
+        check(f'his reference intro "{ref["title"]}" passes as a long cut and names its title',
+              (intro_problems([ref['text']], 'long'), intro_title(ref['text'], ref['title']) == ref['title']), ([], True))
+    check('a reference intro speaks its own title, and the check prints the last question when none is declared',
+          [intro_title(r['text']) for r in intros],
+          ['And is it AI music or is it human music?', 'So does that mean that the one engineer in your team who now feels like a Crocodile Hunter and build anything internally is completely wrong?'])
+    plain = 'Anthropic subscribes to other tools. That is odd. Plenty of firms do the same.'
+    check('a long script whose first paragraph is a plain statement, no Let\'s and no question, is refused naming INTRO_PATTERN and his words',
+          (len(intro_problems([plain], 'long')), all('INTRO_PATTERN' in p and 'consistent' in p for p in intro_problems([plain], 'long'))), (3, True))
+    check('no named company or person in the first two sentences is refused',
+          [('named company' in p) for p in intro_problems(["Does this sound familiar? It is all over the charts. Let's find out, is it real?"], 'long')], [True])
+    check('a first word alone is no name; a brand-shaped first word is', (intro_names('Does it work?'), intro_names('TikTok took over.'), intro_names('Why did Disney pay?')),
+          ([], ['TikTok'], ['Disney']))
+    long_intro = intros[1]['text'] + ' ' + ' '.join(['Word'] * 20) + ' Let\'s go?'
+    check('an intro past 85 words is refused for a long cut, 50 for a lifted short', (any('85' in p for p in intro_problems([long_intro], 'long')),
+          any('50' in p for p in intro_problems([intros[1]['text']], 'short', {'close': 'x.'}))), (True, True))
+    check('a declared title the intro never says is refused', any('title as a question' in p for p in intro_problems(
+          [intros[0]['text']], 'long', None, 'Should you build or buy?')), True)
+    unlifted = ' '.join(['Plain word here.'] * 23)
+    check('an unlifted 70-word vertical is not checked, and a cut with no name is not checked', (intro_problems([unlifted], 'short'), intro_problems([unlifted], None),
+          intro_title(unlifted, 'short')), ([], [], None))
+    check('problems() refuses a long script that opens plain, and passes one that opens on his intro',
+          (any('INTRO_PATTERN' in p for p in problems(plain + '\n\n' + GOOD, 'long')),
+           any('INTRO_PATTERN' in p for p in problems(intros[1]['text'] + '\n\n' + GOOD, 'long'))), (True, False))
+    check('the title is read from the script text', title_of(intros[1]['text'] + '\n\n' + GOOD, 'long') is not None, True)
+
     if failures:
         print('story check self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1
@@ -1356,14 +1506,16 @@ def main(argv):
     if argv[1:2] == ['--self-test']:
         return self_test()
     args = list(argv[1:])
-    cut = series = piece = None
-    while args[:1] in (['--cut'], ['--series'], ['--piece']) and len(args) >= 2:
+    cut = series = piece = title = None
+    while args[:1] in (['--cut'], ['--series'], ['--piece'], ['--title']) and len(args) >= 2:
         flag, value, args = args[0], args[1], args[2:]
         if flag == '--cut':
             cut = value if value in CUTS else None
             if cut is None:
                 print(f'--cut must be one of {", ".join(CUTS)}')
                 return 2
+        elif flag == '--title':
+            title = value  # the title line the video's title animation is keyed to (ve spec title_line); the intro must speak it
         elif flag == '--piece':
             piece = value  # its long cut may be lifted by config/long-cuts.json (long_cut.py)
         else:
@@ -1371,15 +1523,18 @@ def main(argv):
     if not args:
         print(__doc__.strip())
         return 2
-    lift, lift_why = None, []
+    long_lift, long_why, short_lift, short_why = None, [], None, []
     if piece:
         import long_cut
-        lift, lift_why = long_cut.lift_for(piece)
+        import short_cut
+        long_lift, long_why = long_cut.lift_for(piece)
+        short_lift, short_why = short_cut.lift_for(piece)  # config/short-cuts.json, keyed on his own typed words
     worst = 0
     for path in args:
         this_cut = cut or cut_of(Path(path).name)
-        found = check_file(path, cut, series, lift)
-        if this_cut == 'long' and lift_why:
+        lift, lift_why = (short_lift, short_why) if this_cut == 'short' else (long_lift, long_why)
+        found = check_file(path, cut, series, lift if this_cut in ('long', 'short') else None, title)
+        if this_cut in ('long', 'short') and lift_why:
             found = lift_why + found  # a lift that does not hold is never applied quietly
         if found:
             worst = 1
@@ -1390,10 +1545,15 @@ def main(argv):
             print(f'ready      {path}')
         if this_cut == 'long' and lift:
             print(f'  LIFTED {long_cut.notice(lift)} (config/long-cuts.json; Ruling, Krish, 2026-11-14: "lift if worth it")')
+        if this_cut == 'short' and lift:
+            print(f'  LIFTED {short_cut.notice(lift)} (config/short-cuts.json; Ruling, Krish, {lift["said_at"]}: "{lift["krish"]}")')
+        said_title = title_of(Path(path).read_text(encoding='utf-8-sig'), this_cut, lift if this_cut == 'short' else None, title)
+        if said_title:
+            print(f'  TITLE {said_title}')  # the question the video shows as its title (ve spec title_line)
         for item in warn_file(path):
             print(f'  WARN {item}')
         long_said = spoken_length_warning(words_of(' '.join(spoken_paragraphs(Path(path).read_text(encoding='utf-8-sig')))), this_cut,
-                                          lift=lift if this_cut == 'long' else None)
+                                          lift=lift if this_cut in ('long', 'short') else None)
         if long_said:
             print(f'  WARN {long_said}')
     return worst

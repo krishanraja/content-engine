@@ -18,6 +18,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `assets/`
 - `config/`
 - `config/schema/`
+- `config/script-floor/`
 - `config/ve/`
 - `config/voice/`
 - `docs/`
@@ -1269,6 +1270,9 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingCheck`
 - `type MakingScriptCheck`
 - `interface MakingLongCut`
+- `interface MakingShortCut`
+- `const SHORT_LIFT_MOST`
+- `interface MakingToneFloor`
 - `interface MakingReadBack`
 - `interface MakingLink`
 - `interface MakingPack`
@@ -1307,6 +1311,7 @@ The making record: where one piece is on its way from the workroom to
 - `type TeleprompterState = 'in' | 'older' | 'failed' | 'missing'`
 - `function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut, TeleprompterState>>`
 - `function longCutNote(check: Partial<MakingScriptCheck> | undefined): string`
+- `function shortCutNote(check: Partial<MakingScriptCheck> | undefined): string`
 - `function teleprompterNote(m: Partial<Making>): string`
 - `function oneCut(m: Partial<Making>): boolean`
 - `function makingCuts(m: Partial<Making>): MakingCut[]`
@@ -2668,6 +2673,7 @@ One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Rul
 - `type Sender = (input: SendApprovedInput) => Promise<SendResult>`
 - `interface PressDeps`
 - `class PressError`
+- `const TONE_FLOOR_REFERENCE: Record<string, string>`
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
 - `function gatePatch(kind: GateKind, body: Body, now: string): MakingGates`

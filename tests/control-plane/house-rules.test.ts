@@ -513,6 +513,18 @@ describe('two cuts, each from its own script, inside the lengths story_check hol
     assert.equal(monday.status, 0, monday.stdout + monday.stderr)
     assert.match(monday.stdout, /^long cut lifted to about 8:00 \(1200 words\) for this piece: /)
   })
+
+  test('a piece can have its short cut lifted on Krish\'s own typed words (config/short-cuts.json, Ruling 2026-11-17)', async () => {
+    const { spawnSync } = await import('node:child_process')
+    const py = process.platform === 'win32' ? 'python' : 'python3'
+    for (const args of [['--self-test'], ['--check']]) {
+      const out = spawnSync(py, ['scripts/post-pack/short_cut.py', ...args], { encoding: 'utf8' })
+      assert.equal(out.status, 0, out.stdout + out.stderr)
+    }
+    const wed = spawnSync(py, ['scripts/post-pack/short_cut.py', 'db9f9f6a-1092-49be-8024-f335e060305a'], { encoding: 'utf8' })
+    assert.equal(wed.status, 0, wed.stdout + wed.stderr)
+    assert.match(wed.stdout, /^short cut lifted to about 1:44 \(260 words\), ending on "The full five-minute video is on my channel\."/)
+  })
 })
 
 describe('TikTok is a standing channel (Krish, 2026-10-11)', () => {

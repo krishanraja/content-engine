@@ -272,6 +272,17 @@ describe('the send', () => {
   })
 })
 
+describe('the tone floor rides on the making record', () => {
+  it('keeps a separate reader\'s verdict on a cut, bound to the words and to the reference, and refuses a malformed one', () => {
+    const entry = { script_sha256: 'a'.repeat(64), reference_sha256: 'c8ded6f8268569a5c07ad2073f635ec07d3e556c269b28e2ca07ce6494bc2466', reader: 'a fresh reader', verdict: 'pass', why: 'one line per quality', at: '2026-11-17T10:00:00Z' }
+    const ok = parseMakingPatch({ script_check: { passed: true, checked_at: 'x', problems: [], hashes: { long: 'a'.repeat(64) }, tone_floor: { long: entry } } }, '2026-11-17T10:01:00Z') as any
+    expect(ok.problems ?? []).toEqual([])
+    expect(ok.patch.script_check.tone_floor.long).toMatchObject(entry)
+    const bad = parseMakingPatch({ script_check: { passed: true, checked_at: 'x', problems: [], tone_floor: { long: { ...entry, verdict: 'maybe' } } } }, '2026-11-17T10:01:00Z') as any
+    expect(JSON.stringify(bad.problems)).toMatch(/tone_floor/)
+  })
+})
+
 describe('what the server sends is what the engine records and counts', () => {
   it('scriptHash is making.py script_hash, and spokenText is teleprompter_send.py spoken_text, on every shape of words', () => {
     const samples = ['plain words', 'Line one  \r\nLine two\t\r\n\r\n\r\n', '\ufeff\n\nCafé au lait\n', 'Paragraph one.\n\nParagraph two.', '', '   \n\t\n',

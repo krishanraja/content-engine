@@ -16,10 +16,15 @@ from velib.lint import lint, no_name_pattern  # noqa: E402
 FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
 
 
-def lint_lines(spec: dict) -> list[str]:
+FIXTURE_WORDS_TEXT = json.loads((ROOT / 'fixtures/ve/my-test-19s/script.words.json').read_text(encoding='utf-8'))['text']
+
+
+def lint_lines(spec: dict, with_words: bool = False) -> list[str]:
     with tempfile.TemporaryDirectory() as temp:
         path = Path(temp) / 'spec.json'
         path.write_text(json.dumps(spec), encoding='utf-8')
+        if with_words:
+            (Path(temp) / 'script.words.json').write_text(json.dumps({'text': FIXTURE_WORDS_TEXT}), encoding='utf-8')
         _, problems = lint(path)
     return problems
 
@@ -152,6 +157,22 @@ class FridayFailuresAreRefused(unittest.TestCase):
         self.assertRefused(mutate(dated(60)), 'dialogue.short_max')
         self.assertNotIn('dialogue.short_max', codes_for(mutate(dated(35))))
         self.assertNotIn('dialogue.short_max', codes_for(mutate(lambda s: s['cuts']['proof-tall'].update(max_s=60))))
+
+    def test_a_lifted_short_cut_runs_to_its_own_length(self):
+        # Ruling (Krish, 2026-11-17): config/short-cuts.json lifts the Wednesday 18 piece's short cut to 260 words (104 s).
+        wed = 'db9f9f6a-1092-49be-8024-f335e060305a'
+
+        def lifted(max_s):
+            return lambda s: (s.update(publish_day='2026-11-18', piece_id=wed), s['cuts']['proof-tall'].update(max_s=max_s))
+        self.assertNotIn('dialogue.short_max', codes_for(mutate(lifted(104))))
+        self.assertRefused(mutate(lifted(120)), 'dialogue.short_max')
+
+    def test_title_line_must_be_said_in_the_script(self):
+        # House rule INTRO_PATTERN (Ruling, Krish, 2026-11-17): the title animation is keyed to words he says.
+        said = FIXTURE_WORDS_TEXT.split('.')[0].strip()
+        self.assertEqual(lint_lines(mutate(lambda s: s.update(title_line=said + '?')), with_words=True), [])
+        found = lint_lines(mutate(lambda s: s.update(title_line='Is it AI music or is it human music?')), with_words=True)
+        self.assertTrue(any(p.startswith('title.line') for p in found), found)
 
     def test_vertical_from_16_nov_shows_its_thing_by_the_second_word(self):
         # House rule FIRST_TWO_SECONDS (Ruling, Krish, 2026-11-16), Growth's audience brief, change 1.
