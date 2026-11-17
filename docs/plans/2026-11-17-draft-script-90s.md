@@ -6,6 +6,6 @@ But Meta's data centre was already being built. So Piqua now has a data centre g
 
 When towns say no, the AI companies have to find that power somewhere else, and pay for it. And I reckon that cost lands in your subscription.
 
-Next time I renew an AI tool, I'm asking where its new data centres are being built. Because if it's a town like Piqua, that power bill is heading for my desk.
+Next time I renew an AI tool, I'm asking where its new data centres are being built. Because if it's a town like Piqua, that fight ends up on my bill.
 
 The full story is free at makeyourmindup.ai.
