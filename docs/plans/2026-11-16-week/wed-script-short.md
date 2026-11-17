@@ -1,7 +1,7 @@
-Anthropic makes Claude, an AI that codes. Why did Anthropic buy its help bot?
+Anthropic makes Claude, an AI that writes code. So why did it buy a customer help bot?
 
-Building looks easy. You type, make me a help bot, and code appears. But who gets the call at two in the morning?
+Building looks easy. You type, make me a help bot, and code appears. But when it breaks at two in the morning, who gets the call?
 
-Anthropic bought Fin from Intercom. My favourite bit? Fin runs on Claude. They bought their own AI back.
+So Anthropic bought Fin, a bot from Intercom. My favourite detail? Fin runs on Claude. Intercom takes the call.
 
-I won't ask build or buy. I'll ask who gets that call. The full story is free at makeyourmindup.ai.
+I'll ask who picks up. The full story is free at makeyourmindup.ai.
