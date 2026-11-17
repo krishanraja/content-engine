@@ -2963,6 +2963,8 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function buildView(i: ViewInputs): WeekView`
 - `function viewProblems(v: WeekView): string[]`
 - `async function branchSha(f: Fetcher, env: Record<string, string | undefined>, branch: string): Promise<string | null | …`
+- `async function mergeBaseSha(f: Fetcher, env: Record<string, string | undefined>, a: string, b: string): Promise<string …`
+- `function mergeWeekPlan(base: unknown, main: unknown, week: unknown): unknown`
 - `async function readPieceDecisions(db: SupabaseClient, pieceId: string, env: Record<string, string | undefined> = proces…`
 - `async function readFiledScripts(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string…`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
