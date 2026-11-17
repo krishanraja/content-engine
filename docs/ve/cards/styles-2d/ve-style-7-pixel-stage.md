@@ -21,9 +21,14 @@ His floor (python3 scripts/floor.py --format motion): every state change is moti
 
 Pace and room (his reference cuts, config/ve/pace-references.json: about 3 to 4.6 events a second, half the gaps under 0.3 s, 80% of the frame in use): every verb lands in 0.6 s or less, the device never rests between events (drift above 0), and it fills its box: tall, from y 270 down the whole slot; nothing that must be read right of x 860 or below y 1320 (config/channel-safe-zones.json).
 
+## Rework
+The first build (checked 17 Nov in a real browser) cut each picture to 24 by 24 samples, so a screenshot drew 144 px across a tall frame, unrecognisable, on an empty screen (Krish, 13 Nov: "the use of the screen space is terrible"). Keep the 320 by 180 stage (180 by 320 tall) at x6, one sample per logical pixel, but one sprite spans at least 60% of the stage's width or 70% of its height, whichever its shape reaches first; several share the stage; `at` cells are the stage divided by the sprite size. tsc must pass: put `// @ts-ignore shared move library` above the `@mymu/moves/_kit.mjs` import.
+
 ## Tests (`device.test.ts`, stills from `fixture.json`)
 - every pixel is a token colour; the pixel size is constant across the frame
 - a sprite moves on whole cells only
+- one sprite spans at least 60% of the stage's width or 70% of its height in both shapes, measured from the layout SVG and canvas share
+- the count and producer label sit inside x 60 to 860 and above y 1090 on a tall frame
 - the same frame twice renders identical pixels; no colour outside tokens; tall and wide stills render
 
 ## After it builds (Claude, not Codex)
@@ -47,6 +52,7 @@ npx vitest run apps/renderer/src/engine/devices/pixel_stage
 npx vitest run apps/renderer/src/engine/devices/verbs.test.ts
 npx vitest run apps/renderer/src/engine/kit
 python scripts/ve/check_route.py
+npx tsc --noEmit
 
 ## Return
 Your final message is only JSON matching config/ve/task-result.schema.json:

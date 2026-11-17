@@ -4909,6 +4909,21 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function evidenceState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/film_frame/index.tsx`
+
+- `function plateCrop(image: { pixelWidth: number; pixelHeight: number }, w: number, h: number, focus: { x: number; y: num…`
+- `function onPicture(r: { x: number; y: number; width: number; height: number }, crop: { x: number; y: number; w: number;…`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/film_frame/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/film_frame/state.ts`
+
+- `function grainSample(frame: number, sample: number): number`
+- `function filmState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/focus.ts`
 
 - `const FOCUS: Readonly<Record<string, (p: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | 'frame'>) => Focus …`
