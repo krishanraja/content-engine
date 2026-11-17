@@ -1,7 +1,7 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
 import { asWritten, wordsBody, wordsDocId } from './_contracts.js'
-import type { FiledScript, PieceDecisions } from './_decisions.js'
+import { spokenTitle, type FiledScript, type PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
 import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
 import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
@@ -462,7 +462,7 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const where = stageOf(PIECE_PATH, done)
   const label = where.label
   const base = { key: `piece:${d.piece_id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: d.series,
-    title: cut(d.title, 200), approved: p.approval.label, stage: where, path, missed, read, piece_id: d.piece_id,
+    title: workingTitle(m, d.piece_id, d.title), approved: p.approval.label, stage: where, path, missed, read, piece_id: d.piece_id,
     item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null, stories_planned: null, others: [] as PressAction[] }
   if (out) return { ...base, line: p.stage?.state === 'live' ? p.stage.label : d.next, next: null, decision: false }
   // His Approve for publish on the made piece, bound to its manifest: his decision for the day.
@@ -550,7 +550,7 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const said = m.lockReads?.[p.id]
   const missed = !out && d.date < m.today
   const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
-    title: cut(p.title, 200), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
+    title: workingTitle(m, p.id, p.title), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
     read: withWork(withLock(readOf(null, { row }), said), m, [p.id]), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
     stories_planned: null, others: [] as PressAction[] }
   const step = decided?.next_step ?? (branded ? 'look' : 'next')
@@ -631,22 +631,24 @@ export function scriptsPress(week: string, day: string, pieceId: string, title: 
   const doc = wordsDocId(day, 'scripts', pieceId)
   const ordered = [...filed].sort((a, b) => (a.cut === b.cut ? 0 : a.cut === 'long' ? -1 : 1))
   const texts = Object.fromEntries(ordered.map(f => [f.cut, f.text]))
-  const titles = Object.fromEntries(ordered.map(f => [f.cut, cut(`${title}: ${f.cut === 'long' ? 'long cut' : 'short cut'}`, 200)]))
+  // The title the scripts speak names the Teleprompter folder and scripts (F49: an idea's headline no longer matched them).
+  const named = spokenTitle(texts) ?? title
+  const titles = Object.fromEntries(ordered.map(f => [f.cut, cut(`${named}: ${f.cut === 'long' ? 'long cut' : 'short cut'}`, 200)]))
   const words = (t: string) => t.split(/\s+/).filter(Boolean).length
   const both = ordered.length > 1
   return { kind: 'press', label: both ? 'Read and approve the scripts' : 'Read and approve the script', collection: 'picks', id: doc, revision: picks.find(x => x.doc_id === doc)?.revision ?? 0,
-    body: { kind: 'approve_scripts', day, via: 'words', approved: true, piece_id: pieceId, texts, titles, folder_title: cut(title, 200),
+    body: { kind: 'approve_scripts', day, via: 'words', approved: true, piece_id: pieceId, texts, titles, folder_title: cut(named, 200),
       said_where: 'the Publish Board in Control Centre', session_ref: boardAt(week, day) },
     // A board before contract 1.21.0 still asks his words this way; a board that knows `scripts` shows the review instead.
     words: { path: 'words', ask: `Your words to approve ${both ? 'both scripts' : 'the script'} as filed ("Approved.")`, required: true }, stamp: ['at', 'said_at'],
     scripts: {
       path: 'texts', approve: both ? 'Approve both scripts' : 'Approve the script', approve_edited: both ? 'Approve both scripts, with my edits' : 'Approve the script, with my edits',
-      edited_note: 'Your edits are saved with your approval. Edited words go back through the scripts\' check and fresh readers before they reach your Teleprompter; nothing else changes them.',
+      edited_note: 'Your edits are saved with your approval and become the scripts. Approve sends them to your Teleprompter straight away; the scripts\' check and fresh readers run after and report to you, and never change or hold your words.',
       cuts: ordered.map(f => ({ cut: f.cut, label: f.cut === 'long' ? 'Long cut' : 'Short cut', text: f.text, words: words(f.text),
         minutes: Math.round((words(f.text) / 150) * 10) / 10, filed_at: f.at, material_id: f.id })),
     },
-    goes: `Approves ${both ? 'both scripts' : 'the script'} exactly as shown, and sends ${both ? 'them' : 'it'} to your Teleprompter once ${both ? 'they pass' : 'it passes'} the scripts' check.`,
-    done: 'Approved. The scripts go to your Teleprompter once their check passes.' } as PressAction
+    goes: `Approves ${both ? 'both scripts' : 'the script'} exactly as shown, with any edits you made, and sends ${both ? 'them' : 'it'} to your Teleprompter now.`,
+    done: 'Approved and sent to your Teleprompter. The card moves on to recording.' } as PressAction
 }
 
 /** An approved off-day post on the board: its kind, its path, where it is and its one next action. */
@@ -744,7 +746,9 @@ export function recordsItself(kind: string, picks: Array<{ doc_id: string; body:
  *  for it (Tue 17's habits voiceover, 701a2c55, has none): his Approve scripts press (picks/<day>-scripts, his login) or
  *  his typed approval (picks/<day>-scripts-words[-<8 hex>], wordsBody, read past the server's own send answer). Any day:
  *  a post moved after he approved keeps the approval saved under the day it was on. */
-export interface OffdayScripts { piece_id: string; at: string | null; on: string | null; words: string | null; texts: Record<string, string>; titles: Record<string, string>; folder: string | null; send: string | null; send_error: string | null }
+export interface OffdayScripts { piece_id: string; at: string | null; on: string | null; words: string | null; texts: Record<string, string>; titles: Record<string, string>; folder: string | null; send: string | null; send_error: string | null
+  /** When the server's send answered, and the checks still to run after his own press sent (F49). */
+  send_at?: string | null; checks?: string | null }
 const SCRIPTS_DOC = /^(mon|tue|wed|thu|fri|sat|sun)-scripts(-words(-[0-9a-f]{8})?)?$/
 export function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Body | null): OffdayScripts | null {
   const id = typeof raw?.piece_id === 'string' && UUID_RE.test(raw.piece_id) ? raw.piece_id.toLowerCase() : null
@@ -762,7 +766,8 @@ export function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updat
   const at = str(b.said_at) ?? str(b.at) ?? str(doc.updated_at)
   const on = at && Number.isFinite(Date.parse(at)) ? new Date(at).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).replace(',', '') : null
   return { piece_id: id, at: at && Number.isFinite(Date.parse(at)) ? new Date(at).toISOString() : null, on, words: str(b.words), texts: strings(b.texts), titles: strings(b.titles), folder: str(b.folder_title),
-    send: isObj(b.send) ? str(b.send.status) : null, send_error: isObj(b.send) ? str(b.send.error) : null }
+    send: isObj(b.send) ? str(b.send.status) : null, send_error: isObj(b.send) ? str(b.send.error) : null,
+    send_at: isObj(b.send) ? str(b.send.at) : null, checks: isObj(b.send) ? str(b.send.checks) : null }
 }
 
 /** After his approved scripts are in his Teleprompter, on every card holding the piece (Krish, 2026-11-17: "whenever I
@@ -784,8 +789,10 @@ export function productionStage(m: ModelInputs, p: { pieceId: string; title: str
     files: placed.map(r => ({ name: String(r.path), drive_id: String(r.path), bytes: null, sha256: /([0-9a-f]{64})/.exec(String(r.path))?.[1] ?? null, md5: null, modified: String(r.at || '') })) } : null)
   const promptOf = (line: string, head: string | null) => itemPrompt(m.week, { ...p.base, line }, 'produce', p.offday ? 'motion' : null, null, p.decided, p.reportAs, head) as unknown as PressAction
   if (!takes || !takes.files.length) {
-    const line = p.offday ? 'Your script is approved. Record it from your Teleprompter, drop the take in the Video Engine Inbox, then press My takes are in the Inbox.'
-      : 'Your scripts are approved. Record both cuts from your Teleprompter, drop the takes in the Video Engine Inbox, then press My takes are in the Inbox.'
+    const sent = sentNote(scriptsApproval(m.picks || [], p.pieceId))
+    const line = (p.offday ? 'Your script is approved. Record it from your Teleprompter, drop the take in the Video Engine Inbox, then press My takes are in the Inbox.'
+      : 'Your scripts are approved. Record both cuts from your Teleprompter, drop the takes in the Video Engine Inbox, then press My takes are in the Inbox.')
+      .replace(/^Your scripts? (is|are) approved\. /, sent ? `${sent} ` : '$&')
     const record = itemPrompt(m.week, { ...p.base, line }, 'record', p.offday ? 'motion' : null, null, p.decided, p.reportAs, p.recordHead ?? null) as unknown as PressAction
     return { line, next: takesPress(p.pieceId, p.item) as unknown as Action, decision: true, others: [record] }
   }
@@ -811,6 +818,24 @@ export function productionStage(m: ModelInputs, p: { pieceId: string; title: str
   const line = takesLine(takes)
   const head = productionBrief({ pieceId: p.pieceId, title: p.title, takes, decisions, research: p.read.research, scripts: approval?.texts ?? {}, offday: p.offday })
   return { line, next: promptOf(line, head) as unknown as Action, decision: false, others: missing }
+}
+
+/** "Scripts approved Tue 17 Nov, sent to your Teleprompter at 16:20 UTC." once his press sent them, so the card shows
+ *  what his press did (F49), with a line when the checks on his own words still run after it. Null before a send. */
+export function sentNote(a: OffdayScripts | null): string | null {
+  if (!a || a.send !== 'sent') return null
+  const t = a.send_at && Number.isFinite(Date.parse(a.send_at)) ? new Date(a.send_at).toISOString().slice(11, 16) : null
+  const n = Object.keys(a.texts).length
+  return `${n > 1 ? 'Scripts' : 'Script'} approved${a.on ? ` ${a.on}` : ''}, sent to your Teleprompter${t ? ` at ${t} UTC` : ''}.`
+    + (a.checks ? ' The checks on your words run next and report to you; they never hold or change them.' : '')
+}
+
+/** The card's title: the title his approved scripts speak (spokenTitle), as a working title, else the piece's own. His
+ *  edited scripts asked "Where does AI get built when towns say no?" under the idea headline "OpenAI pledges to pay for
+ *  data center power after election highlights AI concerns" (F49). The final title is his pick with the finished video. */
+export function workingTitle(m: Pick<ModelInputs, 'picks'>, pieceId: string, fallback: string): string {
+  const a = scriptsApproval(m.picks || [], pieceId)
+  return cut((a && spokenTitle(a.texts)) || fallback, 200)
 }
 
 /** His approved scripts that the server's send did not put in his Teleprompter (held, refused, failed or no key), with the

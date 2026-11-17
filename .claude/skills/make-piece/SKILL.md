@@ -444,8 +444,9 @@ read `.agents/skills/make-piece/references/long-cut.md`.
    words he typed to this session verbatim with `board_session.py approve
    scripts` (or `approve lock`), as `../plan-week/references/typed-approval.md`
    says: the board shows "Approved in your words" and the server sends the
-   scripts to Teleprompter as it does for the press, held until their checks
-   pass. Never a summary of his words, and never an idea.
+   scripts to Teleprompter once their checks pass; his own board press sends
+   at once and `send.checks` names the checks to run after it and report (F49).
+   Never a summary of his words, and never an idea.
    His press and its answer are in the board's `approvals` collection
    (`python3 scripts/post-pack/board_web.py read <Monday> approvals`, the
    collection `config/teleprompter.json` names; `updated_by` Krish only). A

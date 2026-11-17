@@ -200,3 +200,63 @@ describe('F47: the card moves on when a session reaches a milestone, and offers 
     expect(it.line).toMatch(/Next: the storyboard and both scripts/)
   })
 })
+
+// F49-approve-held-his-own-edits (config/failures.json). Tue 17 Nov 2026, 16:20 UTC, piece b019dbf8: Krish edited both
+// scripts in the review and pressed "Approve both scripts, with my edits". The board saved his words (revision 5), the
+// server held the send because his edited words had no scripts' check (revision 6), and the card still offered the old
+// filed words under "Read and approve the scripts". His words: "pressed approve, and it just deleted all my edits, and
+// the board looks like i never did anything. The title of this article also now doesnt make sense given my new scripts";
+// then "you need to fix every instance of this workflow everywhere - I need to see the board state change and my edits
+// get saved, and the approve scripts button auto sends to teleprompter" (Ruling, Krish, 2026-11-17).
+describe('F49: his Approve scripts with his own edits moves the card on, keeps his words and sends them', () => {
+  const LOCK17 = `# Narrative lock: Tue 17\n\npiece_id: ${TUE}\nPublishes: 2026-11-17\n\n## Surface story\nTowns say no.\n\n## Deeper story\nThe bill.\n\nSigned by Krish: "Signed.", 2026-11-17`
+  const filed = [
+    { cut: 'long' as const, id: '6503bef2-62ac-4192-83a5-f1607d9d3f30', title: 'Tue 17 script, 5-minute cut (for your Approve)', text: 'America has a new neighbour nobody wants.', at: '2026-11-17T11:30:14Z' },
+    { cut: 'short' as const, id: '81ff7074-8a15-43c1-b78c-793ca9b2bfcd', title: 'Tue 17 script, short cut (for your Approve)', text: 'Forty towns said no.', at: '2026-11-17T11:30:17Z' },
+  ]
+  const EDITED = {
+    long: 'This month, a little town in Ohio called Piqua just got rid of its mayor for approving a Meta data centre. So if you pay for AI at work, could the midterm results in America push up your bill? And where does AI get built when towns say no to the big data centers? Let\'s find out.\n\nSo I\'ve been digging.',
+    short: 'A tiny town in Ohio just fired its mayor because he green lit a data centre for Meta. Sacked, over a building. So what just happened to AI with the midterms in America and where does AI get built when towns say no? Let\'s find out.\n\nMeta wanted a giant data centre.',
+  }
+  const pressAt = '2026-11-17T16:20:16.888Z'
+  const his = (send: Body | null) => ({ doc_id: 'tue-scripts-words-b019dbf8', updated_by: 'Krish', updated_at: '2026-11-17T16:20:17.528Z', revision: 6, body: {
+    kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: TUE, texts: EDITED,
+    titles: { long: 'OpenAI pledges to pay for data center power after election highlights AI concerns: long cut', short: 'OpenAI pledges to pay for data center power after election highlights AI concerns: short cut' },
+    folder_title: 'OpenAI pledges to pay for data center power after election highlights AI concerns', words: 'Approve both scripts, with my edits',
+    at: pressAt, said_at: pressAt, said_where: 'the Publish Board in Control Centre', session_ref: 'https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=tue',
+    ...(send ? { send } : {}) } })
+  const at17 = (picks: Body[], more: Body[] = filed) => ({ ...inputs(PICKED), now: new Date('2026-11-17T16:21:00Z'), locks: { tue: LOCK17 }, scripts: { [TUE]: more }, picks }) as ViewInputs
+
+  it('16:20 reproduced: his edited words count as approved, the card is at Production planned and says it was sent, and the old press is gone', () => {
+    const sent = { status: 'sent', at: '2026-11-17T16:20:17.095Z', by: 'content-engine server', folder_id: 'A08795EC', recorded: true,
+      checks: 'sent on his own press; still to run after it: these words have not passed the scripts\' check' }
+    const it = item(buildView(at17([his(sent)])))
+    expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'done', 'current', 'todo'])
+    expect(it.next).not.toMatchObject({ label: 'Read and approve the scripts' })
+    expect(it.line).toBe('Scripts approved Tue 17 Nov, sent to your Teleprompter at 16:20 UTC. The checks on your words run next and report to you; they never hold or change them. '
+      + 'Record both cuts from your Teleprompter, drop the takes in the Video Engine Inbox, then press My takes are in the Inbox.')
+    expect(it.next).toMatchObject({ kind: 'press', op: 'takes-in' })
+    // The working title is the one his scripts speak, not the idea's headline.
+    expect(it.title).toBe('Where does AI get built when towns say no?')
+    // The post-production prompt carries his edited words, never the older filed ones.
+    const all = prompts(it).join('\n')
+    expect(all).not.toContain('America has a new neighbour nobody wants.')
+  })
+  it('the server\'s old hold never sends the card back to Read and approve: his approval counts and the card says why it is not in Teleprompter', () => {
+    const held = { status: 'held', at: '2026-11-17T16:20:17.095Z', by: 'content-engine server', error: 'these words have not passed the scripts\' check, so nothing was sent' }
+    const it = item(buildView(at17([his(held)])))
+    expect(it.next).not.toMatchObject({ label: 'Read and approve the scripts' })
+    expect(it.line).toMatch(/^You approved the scripts on Tue 17 Nov, and your approval counts\. They are not in your Teleprompter yet: the send was held \(these words have not passed the scripts' check, so nothing was sent\)/)
+    expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'done', 'current', 'todo'])
+  })
+  it('only a script filed after his approval makes it stale, and then the review offers the new words with their own spoken title', () => {
+    const later = [{ ...filed[0], text: 'Rewritten after he approved. Where do the servers go when a town votes no? Let\'s find out.\n\nMore.', at: '2026-11-17T17:00:00Z' }, filed[1]]
+    const it = item(buildView(at17([his(null)], later)))
+    expect(it.next).toMatchObject({ label: 'Read and approve the scripts' })
+    expect(it.line).toMatch(/Rewritten since you approved them/)
+    const press = it.next as any
+    expect(press.body.folder_title).toBe('Where do the servers go when a town votes no?')
+    expect(press.goes).toMatch(/sends them to your Teleprompter now\.$/)
+    expect(press.scripts.edited_note).toMatch(/Approve sends them to your Teleprompter straight away/)
+  })
+})

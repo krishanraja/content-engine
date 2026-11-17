@@ -109,6 +109,22 @@ export const TONE_FLOOR_REFERENCE: Record<string, string> = {
 }
 const THEN = 'so nothing was sent: a session checks them (making.py scripts), has two fresh readers read them back, then '
   + 'sends exactly these words (teleprompter_send.py plan)'
+// His own press is his approval, and it sends (Ruling, Krish, 2026-11-17: "you need to fix every instance of this workflow
+// everywhere - I need to see the board state change and my edits get saved, and the approve scripts button auto sends to
+// teleprompter"; F49). The checks a session's send waits on (heldBecause) still run, after his send, and report to him;
+// they never hold his own words. A session's send, or his typed words carried by a session, stays held until they pass.
+const AFTER = (why: string) => `sent on his own press; still to run after it: ${why.replace(/,\s*so nothing was sent:.*$/s, '')}`
+  + ' (a session runs the scripts\' check, two fresh readers and the tone floor on these exact words and reports what they find to him)'
+const hisPress = (who: string) => who === 'Krish'
+/** What his Approve did, in his words, for the board to say back to him (Control Centre shows a press answer's line):
+ *  never "Approved" over a send that did not happen (F49). */
+export function sendLine(send: Body): string {
+  const at = typeof send.at === 'string' && Number.isFinite(Date.parse(send.at)) ? new Date(send.at).toISOString().slice(11, 16) : null
+  if (send.status === 'sent') return `Approved and sent to your Teleprompter${at ? ` at ${at} UTC` : ''}.`
+    + (send.checks ? ' The checks on your words run next and report to you; they never hold or change them.' : '')
+  const why = String(send.error || send.status || 'the send did not answer').split(/,\s*so nothing was sent/)[0].slice(0, 220)
+  return `Approved, and your words are saved, but they are not in your Teleprompter yet: ${why}. The card says what happens next.`
+}
 
 /** His Approve scripts body with the hash of each cut's words worked out here (scripts), or refused when the hashes it
  *  brought are not the hashes of its words. Any other body is returned as it came. */
@@ -644,8 +660,12 @@ async function offdayRecorded(db: SupabaseClient, ctx: { week: string; id: strin
     let result: Omit<SendResult, 'status'> & { status: SendResult['status'] | 'held' }
     // The same tone floor the day cuts hold to (heldBecause): a pass against his AI Music short, for these exact words (Ruling, Krish, 2026-11-17).
     const tone = (placed.making?.script_check as { tone_floor?: Body } | undefined)?.tone_floor?.short as Body | undefined
-    if (!(isObj(tone) && tone.script_sha256 === scriptHash(text) && tone.reference_sha256 === TONE_FLOOR_REFERENCE.short && tone.verdict === 'pass')) {
-      result = { status: 'held', error: `the 90-second script has not passed the tone floor (a fresh reader comparing it with his AI Music take, config/script-floor.json; making.py tone-floor), ${THEN}` }
+    const toned = isObj(tone) && tone.script_sha256 === scriptHash(text) && tone.reference_sha256 === TONE_FLOOR_REFERENCE.short && tone.verdict === 'pass'
+    const untoned = `the 90-second script has not passed the tone floor (a fresh reader comparing it with his AI Music take, config/script-floor.json; making.py tone-floor), ${THEN}`
+    // His own press sends at once (F49); the tone floor runs after it and reports to him. A session's send waits on it.
+    const checks = toned ? null : hisPress(who) ? AFTER(untoned) : null
+    if (!toned && !hisPress(who)) {
+      result = { status: 'held', error: untoned }
     } else try {
       const send = deps.send ?? (async (i: SendApprovedInput) => (await import('../_teleprompter.js')).sendApprovedScripts(i))
       result = await send(input)
@@ -655,11 +675,12 @@ async function offdayRecorded(db: SupabaseClient, ctx: { week: string; id: strin
     const unrecorded = result.status === 'sent' ? await recordSend(db, input, result as SendResult, now).catch(() => 'the piece\'s making record could not be written') : null
     answer = { status: result.status, at: now, by: SERVER, date: offdayDate(week, String(body.day)),
       ...(result.folder_id ? { folder_id: result.folder_id } : {}), ...(result.scripts ? { scripts: result.scripts } : {}), ...(result.error ? { error: result.error } : {}),
-      ...(result.status === 'sent' ? { recorded: !unrecorded, ...(unrecorded ? { record_error: unrecorded } : {}) } : {}) }
+      ...(result.status === 'sent' ? { recorded: !unrecorded, ...(unrecorded ? { record_error: unrecorded } : {}) } : {}),
+      ...(checks ? { checks } : {}) }
   }
   const again = await db.rpc('board_save', { p_week: week, p_collection: 'queue', p_id: id, p_body: { ...body, send: answer }, p_revision: saved.revision, p_actor: who })
-  if (!again.error && again.data?.ok) return { ...again.data, send: answer }
-  return { ...saved, send: answer, send_recorded: false }
+  if (!again.error && again.data?.ok) return { ...again.data, send: answer, line: sendLine(answer) }
+  return { ...saved, send: answer, send_recorded: false, line: sendLine(answer) }
 }
 
 const PICKABLE = ['seeded', 'researching', 'drafting']
@@ -874,13 +895,15 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
   if (collection === 'picks' && body.kind === 'approve_scripts' && body.approved === true) {
     let result: Omit<SendResult, 'status'> & { status: SendResult['status'] | 'held' }
     let unrecorded: string | null = null
+    let checks: string | null = null
     try {
       const input = await sendInput(id, body, who, now)
       const row = await makingOf(db, input.piece_id)
       const held = row ? await heldBecause(row.making, body.texts as Record<string, string>) : `the piece's making record could not be read, ${THEN}`
-      if (held) {
+      if (held && !hisPress(who)) {
         result = { status: 'held', error: held }
       } else {
+        if (held) checks = AFTER(held)
         const send = deps.send ?? (async (i: SendApprovedInput) => (await import('../_teleprompter.js')).sendApprovedScripts(i))
         result = await send(input)
         if (result.status === 'sent') unrecorded = await recordSend(db, input, result as SendResult, now).catch(() => 'the piece\'s making record could not be written')
@@ -891,11 +914,12 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
     const answer = { status: result.status, at: now, by: SERVER,
       ...(result.folder_id ? { folder_id: result.folder_id } : {}), ...(result.scripts ? { scripts: result.scripts } : {}), ...(result.error ? { error: result.error } : {}),
       // A send that read back is on the piece's making record, or says why not, so a session records it by hand.
-      ...(result.status === 'sent' ? { recorded: !unrecorded, ...(unrecorded ? { record_error: unrecorded } : {}) } : {}) }
+      ...(result.status === 'sent' ? { recorded: !unrecorded, ...(unrecorded ? { record_error: unrecorded } : {}) } : {}),
+      ...(checks ? { checks } : {}) }
     // His approval and what the send did, in one document: a session finishing the send reads both together.
     const again = await db.rpc('board_save', { p_week: week, p_collection: collection, p_id: id, p_body: { ...body, send: answer }, p_revision: saved.revision, p_actor: who })
-    if (!again.error && again.data?.ok) return { ...again.data, send: answer }
-    return { ...saved, send: answer, send_recorded: false }
+    if (!again.error && again.data?.ok) return { ...again.data, send: answer, line: sendLine(answer) }
+    return { ...saved, send: answer, send_recorded: false, line: sendLine(answer) }
   }
   return null
 }

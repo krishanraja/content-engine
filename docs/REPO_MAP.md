@@ -2363,7 +2363,8 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `interface LockState`
 - `interface ScriptsState`
 - `interface DecisionInputs`
-- `function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScript[] | undefined): Array<'long' | 'short'>`
+- `function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScript[] | undefined, approvedAt: string | null = …`
+- `function spokenTitle(texts: Partial<Record<string, string>> | null | undefined): string | null`
 - `function pieceDecisions(i: DecisionInputs): PieceDecisions`
 - `function nextStep(items: Decision[]): DecidedStep | null`
 - `function decisionsText(p: PieceDecisions): string`
@@ -2690,6 +2691,7 @@ One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Rul
 - `interface PressDeps`
 - `class PressError`
 - `const TONE_FLOOR_REFERENCE: Record<string, string>`
+- `function sendLine(send: Body): string`
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
 - `function gatePatch(kind: GateKind, body: Body, now: string): MakingGates`
@@ -3035,6 +3037,8 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Bod…`
 - `function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, pieceI…`
 - `function productionStage(m: ModelInputs, p: { pieceId: string; title: string; item: string | null; style: DayStyle | nu…`
+- `function sentNote(a: OffdayScripts | null): string | null`
+- `function workingTitle(m: Pick<ModelInputs, 'picks'>, pieceId: string, fallback: string): string`
 - `function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: string): { line: string; approval: OffdayScripts }…`
 - `function recordHead(sc: OffdayScripts): string`
 - `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`
