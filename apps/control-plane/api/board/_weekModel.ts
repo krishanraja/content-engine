@@ -12,6 +12,7 @@ import { RECORD_MYSELF, audioPresses, soundLine, voiceOf } from './_audio.js'
 import { canonicalUrl, titleNorm } from '../_text.js'
 import { offdayPieceId, videoOffday } from './_offdayPiece.js'
 import { productionBrief, takesInOf, takesLine, takesPress, type TakesIn } from './_takesIn.js'
+import { planBrief, planView, swapsOf, type ProductionPlan } from './_productionPlan.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
 //
@@ -133,6 +134,9 @@ export interface ModelItem {
   supports: 'mon' | 'wed' | 'fri' | null
   move: MoveSpec | null
   links: Array<{ label: string; href: string }>
+  /** The production plan once his takes are in (1.25.0, _productionPlan.ts): being made, or ready with its scenes and
+   *  every beat's picture and the swaps he can make. Absent before his takes are in. */
+  plan?: Record<string, unknown> | null
   /** Good news: the stories in full, and how many it should hold. Null for any other kind. */
   stories: ModelStory[] | null
   stories_planned: number | null
@@ -214,6 +218,8 @@ export interface ModelInputs {
   decisions?: Record<string, PieceDecisions>
   /** The newest script of each cut filed on each piece, with its words (_view.ts readFiledScripts; F47). */
   scripts?: Record<string, FiledScript[]>
+  /** Each piece's production plan (_productionPlan.ts), by piece id. */
+  productionPlans?: Record<string, ProductionPlan>
   /** What each piece's signed lock says (lockRead), for the card's read sheet (F47). */
   lockReads?: Record<string, { so_what: string | null; story: string | null }>
   /** Each piece's lock on file and unsigned, by piece id (_view.ts locksToSign). */
@@ -522,7 +528,7 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const produce = scriptsMade && !out && !missed && !isDone('cut') ? productionStage(m, { pieceId: d.piece_id, title: d.title, item: null, style: d.path?.style, offday: false,
     read, decided: m.decisions?.[d.piece_id] ?? null, reportAs: null, base }) : null
   const link = d.actions.find(a => a.kind === 'open' && doable(a))
-  if (produce) return { ...base, line: produce.line, next: produce.next, decision: produce.decision, others: [...produce.others, ...(link ? [link as unknown as PressAction] : []), ...picks] }
+  if (produce) return { ...base, line: produce.line, next: produce.next, decision: produce.decision, others: [...produce.others, ...(link ? [link as unknown as PressAction] : []), ...picks], ...(produce.plan ? { plan: produce.plan } : {}) }
   const lead = d.actions[0]
   if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) {
     const tweak = recorded || missed ? [] : [itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction]
@@ -597,7 +603,7 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   }
   const stage = !out && !missed && scriptsOk ? productionStage(m, { pieceId: p.id, title: p.title, item: null, style: m.placedStyles?.[p.id], offday: false,
     read: base.read, decided, reportAs: null, base }) : null
-  if (stage) return { ...base, line: stage.line, next: stage.next, decision: stage.decision, others: [...stage.others, ...picks] }
+  if (stage) return { ...base, line: stage.line, next: stage.next, decision: stage.decision, others: [...stage.others, ...picks], ...(stage.plan ? { plan: stage.plan } : {}) }
   return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, step, null, branded && !out && !missed ? { approved: true } : null, decided), decision: false, others: picks }
 }
 
@@ -805,7 +811,7 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
       read, decided, reportAs: own, base, recordHead: recordHead(scripts) })
     if (stage) {
       const line = `${where}. ${stage.line}`.replace(/\.\./g, '.')
-      return { ...base, line, next: stage.next, decision: stage.decision, others: stage.others }
+      return { ...base, line, next: stage.next, decision: stage.decision, others: stage.others, ...(stage.plan ? { plan: stage.plan } : {}) }
     }
   }
   // Scripts filed on its own record and not approved yet: his edit and Approve scripts lead, the same press a piece's card
@@ -864,7 +870,7 @@ export function productionStage(m: ModelInputs, p: { pieceId: string; title: str
   read: ModelRead; decided: PieceDecisions | null; reportAs: string | null; base: { day: PostedDay; date: string; title: string; kind_label: string; piece_id: string | null; key: string };
   /** How the take is made, for the record step's prompt (an off-day post's recordHead). */
   recordHead?: string | null }):
-  { line: string; next: Action; decision: boolean; others: PressAction[] } | null {
+  { line: string; next: Action; decision: boolean; others: PressAction[]; plan?: Record<string, unknown> | null } | null {
   const row = m.pieces.find(x => String(x.id).toLowerCase() === p.pieceId.toLowerCase())
   const meta = isObj(row?.meta) ? row!.meta as Body : {}
   const making = isObj(meta.making) ? meta.making as Body : {}
@@ -906,9 +912,14 @@ export function productionStage(m: ModelInputs, p: { pieceId: string; title: str
     .filter((x): x is string => Boolean(x))
   const word = { treatment: 'the look', motion: 'the motion style', captions: 'the captions' }
   for (const l of layers) decisions.push(`Not picked yet: ${word[l]}. Use the option marked recommended on the board, say so in your done report, and leave his Pick press open.`)
-  const line = takesLine(takes)
-  const head = productionBrief({ pieceId: p.pieceId, title: p.title, takes, decisions, research: p.read.research, scripts: approval?.texts ?? {}, offday: p.offday })
-  return { line, next: promptOf(line, head) as unknown as Action, decision: false, others: missing }
+  // The production plan (_productionPlan.ts): being made once his takes are in, then ready for his review and swaps; the
+  // prompt carries it with his swaps applied.
+  const made = m.productionPlans?.[p.pieceId.toLowerCase()] ?? null
+  const plan = planView(made, { picks: m.picks || [], making: Boolean(takesInOf(meta)) })
+  const line = plan ? `${takesLine(takes).replace(/ Next: .*$/, '')} ${String(plan.line)}` : takesLine(takes)
+  const head = productionBrief({ pieceId: p.pieceId, title: p.title, takes, decisions, research: p.read.research, scripts: approval?.texts ?? {}, offday: p.offday,
+    plan: made ? planBrief(made, swapsOf(m.picks || [], made)) : null })
+  return { line, next: promptOf(line, head) as unknown as Action, decision: false, others: missing, plan }
 }
 
 /** "Scripts approved Tue 17 Nov, sent to your Teleprompter at 16:20 UTC." once his press sent them, so the card shows
