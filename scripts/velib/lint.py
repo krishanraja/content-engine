@@ -21,7 +21,8 @@ LONG_CUT_S = 90  # a cut allowed past this is a long cut: its bed is episode_bed
 def short_cut() -> dict:
     """The short (tall) cut's limits, house rule TWO_CUTS: the JSON between // SHORT_CUT:BEGIN and :END in the house
     rules. Ruling (Krish, 2026-11-16), of Growth's audience brief, changes 1 and 2: "apply 1 to 6 from the next piece
-    you make this week" (verticals of 20 to 35 seconds that win their first two seconds)."""
+    you make this week" (verticals that win their first two seconds). Ruling (Krish, 2026-11-17): 60 to 90 seconds,
+    about the length of his AI music short ("75 word script is insanely short")."""
     text = (ROOT / 'apps' / 'control-plane' / 'api' / '_houseRules.ts').read_text(encoding='utf-8')
     block = text.split('// SHORT_CUT:BEGIN', 1)[1].split('// SHORT_CUT:END', 1)[0]
     return json.loads(block[block.index('{'):block.rindex('}') + 1])
@@ -606,8 +607,8 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
                            'config/short-cuts.json (Ruling, Krish, 2026-11-17); the cut runs no longer')
         elif vertical_now and cut['max_s'] > short['most_s']:
             out.append(f'dialogue.short_max {where}.max_s: a 9:16 short published from {short["from"]} is {short["most_s"]} s or '
-                       'less, one idea (house rule TWO_CUTS; Ruling, Krish, 2026-11-16)')
-        elif cut['aspect'] == '9:16' and cut['max_s'] > 89:
+                       'less, one story (house rule TWO_CUTS, SHORT_CUT; Ruling, Krish, 2026-11-17)')
+        elif not vertical_now and cut['aspect'] == '9:16' and cut['max_s'] > 89:
             out.append(f'dialogue.short_max {where}.max_s: a 9:16 short is 89 s or less')
         # story
         first = beats[0]

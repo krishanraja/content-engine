@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """How long one piece's short cut may run, and the line it ends on (house rule TWO_CUTS).
 
-Since 16 Nov 2026 a short cut is SHORT_CUT's 45 to 75 spoken words and ends on exactly the house close
+A short cut is SHORT_CUT's spoken words (160 to 210 since 17 Nov 2026; 45 to 75 from 16 Nov) and ends on exactly the house close
 (SCRIPT_CLOSE_LINE). Ruling (Krish, 2026-11-17), typed in a Claude Code session about the Wednesday 18 Nov piece:
 "The 90-second script needs to be hilarious and relatable to all, and make the viewer want to see the full 5-minute
 video, which is something we've not done before." config/short-cuts.json lifts the short cut for one piece at a time,
@@ -178,7 +178,7 @@ def self_test():
               ((260, good['close'], '1:44', KRISH_WORDS), []))
         check('a piece with no entry is not lifted and nothing is wrong', lift(good, '99999999-2222-4333-8444-555555555555'), (None, []))
         for label, change, says in [
-            ('75 words or fewer is no lift', {'words': 75}, 'above 75'),
+            ('SHORT_CUT.most_words or fewer is no lift', {'words': 210}, 'above 210'),
             ('past the most is refused', {'words': 400}, 'at most 300'),
             ('a close with no full stop is refused', {'close': 'The full video is on my channel'}, 'close must be one sentence'),
             ('a close of two sentences is refused', {'close': 'Watch it now. The full video is on my channel.'}, 'close must be one sentence'),

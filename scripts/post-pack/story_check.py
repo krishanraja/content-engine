@@ -76,7 +76,7 @@ catches the rest.
 The first paragraph of every long cut, and of every short cut config/short-cuts.json lifts, is his intro (house rule
 INTRO_PATTERN; Ruling, Krish, 2026-11-17; config/script-floor/intros.json): a named company or person in its first two
 sentences, a "Let's..." turn, the title spoken as a question (printed as TITLE <line>), and 85 words at most for a long
-cut, 50 for a lifted short. An unlifted 45 to 75 word vertical is exempt.
+cut, 50 for a lifted short. An unlifted vertical is exempt until Krish rules on it.
 
 Without --cut, a file whose name says "90", "short" or "vertical" is the
 short cut and one whose name says "long", "3min", "5min" or "wide" is the long cut;
@@ -102,8 +102,9 @@ CUTS = {
     'long': (675, 825, 'a 5-minute video'),
     # The short cut's band is SHORT_CUT in the house rules (short_band() below sets it after house_block is defined).
     # Ruling (Krish, 2026-11-16), of Growth's audience brief, change 2: "apply 1 to 6 from the next piece you make
-    # this week", so the vertical is 20 to 35 seconds, one idea. It was 160 to 195 words (a 90-second cut) from
-    # 2026-10-14 to 2026-11-15, after Reels over 90 s were cut off.
+    # this week", made the vertical 20 to 35 seconds for one day. Ruling (Krish, 2026-11-17): "75 word script is insanely
+    # short. the AI music short is about the right amount of words, maybe just less", so 60 to 90 seconds, 160 to 210
+    # words, one story (ONE_STORY_SHORT). It was 160 to 195 words (a 90-second cut) from 2026-10-14 to 2026-11-15.
     'short': None,
     # The Spotify audio edition (docs/SPOTIFY.md; Krish, 2026-10-14: "create scripts for everything"): the article
     # read for the ear, about 8 to 12 minutes. Its chapters live beside it in <script>.chapters.md: the script is
@@ -1036,7 +1037,7 @@ def listening_problems(beats, cut=None):
     names = names_in(sentences(beats))
     if len(names) > limit['names']:
         story = ('one story thread and no side-story (ONE_STORY_SHORT)' if cut == 'short'
-                 else 'one story, at most one side-story')
+                 else 'one main story, any other example coherently explained as further evidence or a counterpoint')
         found.append(f'it names {len(names)} things ({", ".join(names[:12])}); a {cut} cut keeps about {limit["names"]}: {story}, '
                      'and the rest to the article (house rule LISTENING, Krish, 2026-10-31)')
     return found
@@ -1045,8 +1046,8 @@ def listening_problems(beats, cut=None):
 # want my introductions to be consistent, particularly the 90 second ones". His two intros are the reference
 # (config/script-floor/intros.json): a named player and a surprising fact, why it is strange, the viewer's own world, then
 # a "Let's..." turn and the title spoken as a question, which the video shows as its title. The check holds the first
-# paragraph of every long cut, and of every short cut config/short-cuts.json lifts, to those beats; an unlifted 45 to 75
-# word vertical has no room for them and is exempt.
+# paragraph of every long cut, and of every short cut config/short-cuts.json lifts, to those beats; an unlifted vertical
+# is exempt until Krish rules on it (the off-day voiceover shorts are not his on-camera intros).
 INTRO_RULING = ('house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17: "how can you encode this intro style for the future? '
                 'I want my introductions to be consistent, particularly the 90 second ones"')
 INTRO_MOST_WORDS = {'long': 85, 'short': 50}
@@ -1087,7 +1088,7 @@ def intro_title(paragraph, declared=None):
 
 
 def intro_applies(cut, lift=None):
-    """True for every long cut and every short cut config/short-cuts.json lifts; an unlifted 45 to 75 word vertical is exempt."""
+    """True for every long cut and every short cut config/short-cuts.json lifts; an unlifted vertical is exempt."""
     return cut == 'long' or (cut == 'short' and bool(lift and lift.get('close')))
 
 
@@ -1334,17 +1335,17 @@ def self_test():
     with tempfile.TemporaryDirectory() as tmp:
         led = Path(tmp) / 'ledger.json'
         led.write_text(json.dumps({'takes': [{'take': 'x', 'cut': 'short', 'date': '2026-10-14', 'said_more_pct': 38.3, 'words_a_minute': 174.2}]}))
-        warned = spoken_length_warning(['w'] * 100, 'short', led)
+        warned = spoken_length_warning(['w'] * 230, 'short', led)
         check('a short script that will run past SHORT_CUT.most_s as he says it is a warning naming the time and the cut to make',
-              (bool(warned), '0:4' in (warned or ''), '0:35' in (warned or ''), 'SCRIPT_AS_HE_TALKS' in (warned or '')), (True, True, True, True))
+              (bool(warned), '1:4' in (warned or ''), '1:30' in (warned or ''), 'SCRIPT_AS_HE_TALKS' in (warned or '')), (True, True, True, True))
         check('one that fits is not', spoken_length_warning(['w'] * 60, 'short', led), None)
         check('no take of the cut, no warning', spoken_length_warning(['w'] * 900, 'deep', led), None)
     filler = lambda n: 'Why does the price matter? ' + ' '.join(['word'] * (n - 5))
     check('a 5-minute long cut passes the length rule', length_problem(filler(750).split(), 'long'), None)
     check('a 7-minute long cut is refused', 'cut it to 675 to 825' in (length_problem(filler(1000).split(), 'long') or ''), True)
-    check('a short cut inside SHORT_CUT passes', length_problem(filler(60).split(), 'short'), None)
-    check('the old 90-second short cut is refused since 16 Nov, naming TWO_CUTS',
-          'TWO_CUTS' in (length_problem(filler(185).split(), 'short') or ''), True)
+    check('a short cut inside SHORT_CUT passes', length_problem(filler(185).split(), 'short'), None)
+    check('the 75-word short cut of 16 Nov is refused since 17 Nov, naming TWO_CUTS (Krish: "75 word script is insanely short")',
+          'TWO_CUTS' in (length_problem(filler(75).split(), 'short') or ''), True)
     check('the short cut\'s band is the house rules\' SHORT_CUT', CUTS['short'][:2],
           (house_block('SHORT_CUT')['fewest_words'], house_block('SHORT_CUT')['most_words']))
     check('a two-minute short cut is refused', 'TWO_CUTS' in (length_problem(filler(300).split(), 'short') or ''), True)
@@ -1356,10 +1357,16 @@ def self_test():
                                       'Claude Duet messages you first.', 'Every AI has two passports.', 'Why does it matter?',
                                       'So this changes everything for you.')],
           [True, True, True, True, True, False, False, False])
-    short_good = ('Disney is paying Character.AI to put its films inside a chatbot. So what does your brand lose when fans '
-                  'can talk to it?\n\nHere is the deal. Fans chat with the heroes. Disney gets paid each time. The chatbot '
-                  'learns what fans want.\n\nSo I reckon every big brand signs a deal like this by next summer. If I ran a '
-                  'brand, I\'d ask who owns those chats.\n\nThe full story is free at makeyourmindup.ai.')
+    short_good = ('Disney is paying Character.AI to put its films inside a chatbot. Your customers could soon be '
+                  'chatting to your brand the same way. Let\'s ask the real question: what does your brand lose when fans can talk to it?\n\n'
+                  'Here is the deal. Fans chat with the heroes. Disney gets paid each time. And the chatbot learns what fans '
+                  'want, chat by chat. That last part is the bit most people miss. Every chat is a fan telling Disney '
+                  'what they love, in their own words, for free.\n\nThink about what that used to cost. A survey nobody '
+                  'finished. A focus group in a room with bad biscuits. Now the fans queue up to do it themselves, and they '
+                  'even enjoy it. Honestly, it is the cheapest market research ever invented, and the fans think it is a '
+                  'treat.\n\nSo I reckon every big brand signs a deal like this by next summer. And the brands that wait '
+                  'will be guessing while their rivals are listening. If I ran a brand, I\'d ask who owns those chats.\n\n'
+                  'The full story is free at makeyourmindup.ai.')
     check('a short cut on one named thing, with its stake and the last line, passes', problems(short_good, 'short'), [])
     check('and carries no leader-stake warning', leader_stake_warning(spoken_paragraphs(short_good)), None)
     abstract = short_good.replace('Disney is paying Character.AI to put its films inside a chatbot.', 'Every AI has two passports.')
@@ -1367,8 +1374,8 @@ def self_test():
           any('ONE_CONCRETE_THING' in p for p in problems(abstract, 'short')), True)
     check('with no cut named, the opening rule waits for the cut (a bare hook passes as before)',
           any('ONE_CONCRETE_THING' in p for p in problems(abstract)), False)
-    check('a short cut that ends past the last line is refused naming TWO_CUTS',
-          any('TWO_CUTS' in p for p in problems(short_good + ' What do you think?', 'short')), True)
+    check('a short cut that ends past the last line is refused naming SCRIPT_CLOSE (a 160-word short has the full close)',
+          any('SCRIPT_CLOSE' in p for p in problems(short_good + ' What do you think?', 'short')), True)
     check('an opening with no business stake in two sentences is a FOR_THE_LEADER warning',
           'FOR_THE_LEADER' in (leader_stake_warning(['Every AI has two passports. It travels light and fast.']) or ''), True)
     check('a long cut far too short is refused', 'short of a 5-minute video' in (length_problem(filler(250).split(), 'long') or ''), True)
@@ -1552,7 +1559,7 @@ def self_test():
     check('a declared title the intro never says is refused', any('title as a question' in p for p in intro_problems(
           [intros[0]['text']], 'long', None, 'Should you build or buy?')), True)
     unlifted = ' '.join(['Plain word here.'] * 23)
-    check('an unlifted 70-word vertical is not checked, and a cut with no name is not checked', (intro_problems([unlifted], 'short'), intro_problems([unlifted], None),
+    check('an unlifted vertical is not checked, and a cut with no name is not checked', (intro_problems([unlifted], 'short'), intro_problems([unlifted], None),
           intro_title(unlifted, 'short')), ([], [], None))
     check('problems() refuses a long script that opens plain, and passes one that opens on his intro',
           (any('INTRO_PATTERN' in p for p in problems(plain + '\n\n' + GOOD, 'long')),
