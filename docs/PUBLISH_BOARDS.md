@@ -325,7 +325,8 @@ creates, drops or closes one.
   board, made before the gate existed, already failed it on its own Infosys Monday and two off-day returns; his idea
   matched no refusal.
 - **Production: the style within a week.** An open Production tick comes first among the cards `ve init` offers a cut
-  (`GET /api/inspiration/candidates`, for the roles it teaches, else look, motion and captions), with its
+  (`GET /api/inspiration/candidates`, for the roles it teaches, else look, motion and captions; a card teaches a role
+  by his word first, then by the engine's read grounded in his words, then by a bare guess), with its
   `instruction` `{action_id, due_at, words}`. The next fitting cut names it in `brand.references` (failure F26's path,
   `.agents/skills/ve/references/board-references.md`), and `ve verdict` records the use in `card_uses`, which closes
   his tick in Control Centre (its done-check, `inspiration_act`). Growth reads the same tick in its directive (protocol
@@ -1461,7 +1462,11 @@ Inspiration House comes as `inspiration` (`_inspirationSources.ts`): the cards
 he routed to Make a piece, the cards he answered, the ones he has not seen yet,
 the production references he routed to Study style, content-watcher readings,
 creator moves and taste claims; `must_cover` lists every routed card and
-relayed board item the ideas board owes him. `board_feed.py cover <Monday>` checks the week's `ideas.json` against
+relayed board item the ideas board owes him. Every card carries the engine's read of it (`style`, inspirationhouse
+tag-v4's `facets.style` in this repository's ids) and `grounded_in`, which of his own fields on the card the read was
+built on: a grounded read is his steer, a bare one a guess (Ruling, Krish, 2026-11-17). Files in a reference set he
+filed together (`facets.collection`, such as his thumbnail study) are for making, not story sources: they stay out of
+the newest-500 window and out of the block unless he wrote on or routed one (`counts.reference_set_left_out`). `board_feed.py cover <Monday>` checks the week's `ideas.json` against
 them before the board reads it: the file's own shape (at least four ideas a publishing day, each with what a business
 person finds out, its story, why now, its fact and its linked source, `scripts/post-pack/week_plan.py`), every
 `must_cover` id carried or accounted for, the style rules and the Wave 1 checks. The gather stops when the route has

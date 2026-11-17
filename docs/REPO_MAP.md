@@ -3412,6 +3412,12 @@ The inspiration board as ve reads it: a card by its id, the cards to offer for a
 - `function refusal(row: Row): 'not_production_lane' | 'dismissed' | 'not_a_clip' | null`
 - `function kept(row: Row): number`
 - `function teaches(row: Row): string[]`
+- `const GROUND_FIELDS`
+- `function groundedIn(row: Row): string[]`
+- `interface StyleRead`
+- `function styleRead(row: Row): StyleRead | null`
+- `function collectionOf(row: Row): { name: string; path: string | null } | null`
+- `function teachStrength(row: Row, role: string): 0 | 1 | 2 | 3`
 - `function cardView(row: Row, uses: CardUse[])`
 - `function parseIds(raw: unknown): { ids: string[]; bad: string[] }`
 - `function usesByCard(rows: Row[]): Map<string, CardUse[]>`
@@ -3422,6 +3428,8 @@ The inspiration board as ve reads it: a card by its id, the cards to offer for a
 - `function parseUses(body: unknown): { uses: UseInput[]; problems: string[] }`
 - `function migrationPending(error: { message?: string } | null | undefined): boolean`
 - `async function readCards(db: any, build: (q: any) => any): Promise<{ rows: Row[]; pending: boolean; error?: string }>`
+- `const READ_LIMIT`
+- `async function readCandidateWindow(db: any, role: Role): Promise<{ rows: Row[]; pending: boolean; error?: string }>`
 - `async function readUses(db: any, ids: string[]): Promise<{ uses: Map<string, CardUse[]>; pending: boolean; error?: stri…`
 - `async function markPublished(db: any, pieceId: string, now: string): Promise<string | null>`
 
