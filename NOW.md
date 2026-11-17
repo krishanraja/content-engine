@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-17","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The Sunday ideas run reads up to 30 trending TikTok meme templates through Apify once a week (about $0.09 a run, Apify's own $0.50 charge cap above it), in a workflow step of its own before the Claude step, and the roaster's gather reads them back in; without the APIFY_TOKEN repository secret the step warns and the lane stays on its free sources. (2026-11-17)
 - My takes are in the Inbox now starts the production plan run (production-plan.yml): the edit pass on his take (restarts clipped, silences cut, length measured, the speed-up that brings a short under 90 seconds), every beat's picture with options to swap, the humour in his words, and two or three scenes mocked from real stills; the card carries the plan (contract 1.25.0) and the Claude production prompt carries it with his swaps, the humour engine and higgsfield-generator. (2026-11-17)
 - Every past production failure now prints as one technical watch-out for the maker reading it (`python3 scripts/check_failures.py --watch short_video,long_video`, read at ve's S0 and in produce-video), with what stops it now or that nothing does. The 6 to 8 Nov proactive-AI faults are registered (F53 to F56), a smeared picture fails `ve qc picture.smeared` and hand-built filing (`scripts/frame_smear.py`), the full verify runs every guard's own test, and Krish closed F39 and the 3D styles entry as solved (both now guarded by existing gates). (2026-11-17)
 - My takes are in the Inbox now takes an audio take (his Teleprompter .aac voiceover export) and matches takes to the piece by name, so a take dropped for another piece is never taken; the engine's recordings store accepts .aac. (2026-11-17)
@@ -44,13 +45,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-17 Ruling (Krish, 2026-11-17): "run Apify weekly in the Sunday ideas run".
 - 2026-11-17 Krish, 2026-11-17: "i need to turn this in to surgical, precise, technical watch outs for my next batch of productions", then "yes, go ahead and close the gaps in content-engine".
 Older lines: `docs/history/2026-11-17-NOW-moved-26.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-17): Control Centre draws the plan (Open the production plan, Use this swaps); then Krish presses My takes are in the Inbox on the Tue 17 habits voiceover and the first plan run is checked end to end.
+- Next (2026-11-17): After the next Sunday ideas run, check its Apify step read 30 items and the Memes tab shows TikTok templates; if it warned, add the APIFY_TOKEN Actions secret.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
