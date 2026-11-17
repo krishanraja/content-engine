@@ -1,16 +1,1512 @@
 {
-  "object":{"obj":"branch","device":"ladder_stage","meaning":"People working in one branch","params":{},"variants":{},"fromFrame":0,"toFrame":600,"dataset":{"unit":"people","denominator":20,"producerLabel":"IMF · BESSEN 2015","rows":[{"label":"Tellers","value":20},{"label":"Tellers","value":13}]}},
-  "events":[
-    {"id":"e","obj":"branch","verb":"enter","toState":"branch","atFrame":1},
-    {"id":"c","obj":"branch","verb":"count_to","toState":"20","atFrame":40},
-    {"id":"d","obj":"branch","verb":"count_to","toState":"13","atFrame":80},
-    {"id":"m","obj":"branch","verb":"move","toState":"street","atFrame":120},
-    {"id":"a","obj":"branch","verb":"add","toState":"3","atFrame":130},
-    {"id":"l","obj":"branch","verb":"draw","toState":"level","atFrame":170},
-    {"id":"t","obj":"branch","verb":"move","toState":"towers","atFrame":210},
-    {"id":"f","obj":"branch","verb":"fill","toState":"{\"left\":13,\"right\":10}","atFrame":220},
-    {"id":"h","obj":"branch","verb":"highlight","toState":"right","atFrame":300},
-    {"id":"k","obj":"branch","verb":"carry","toState":"task","atFrame":340},
-    {"id":"x","obj":"branch","verb":"exit","toState":"ink","atFrame":550}
+  "object": {
+    "obj": "branch",
+    "device": "ladder_stage",
+    "meaning": "People working in one branch",
+    "params": {},
+    "variants": {},
+    "fromFrame": 0,
+    "toFrame": 1620,
+    "dataset": {
+      "unit": "people",
+      "denominator": 20,
+      "producerLabel": "IMF \u00b7 BESSEN 2015",
+      "rows": [
+        {
+          "label": "Tellers",
+          "value": 20
+        },
+        {
+          "label": "Tellers",
+          "value": 13
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "id": "e",
+      "obj": "branch",
+      "verb": "enter",
+      "toState": "branch",
+      "atFrame": 1
+    },
+    {
+      "id": "detail-0",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "0",
+      "atFrame": 8
+    },
+    {
+      "id": "detail-1",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "1",
+      "atFrame": 16
+    },
+    {
+      "id": "detail-2",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "2",
+      "atFrame": 24
+    },
+    {
+      "id": "detail-3",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "3",
+      "atFrame": 32
+    },
+    {
+      "id": "c",
+      "obj": "branch",
+      "verb": "count_to",
+      "toState": "20",
+      "atFrame": 40
+    },
+    {
+      "id": "detail-4",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "4",
+      "atFrame": 40
+    },
+    {
+      "id": "detail-5",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "5",
+      "atFrame": 48
+    },
+    {
+      "id": "detail-6",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "6",
+      "atFrame": 56
+    },
+    {
+      "id": "detail-7",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "7",
+      "atFrame": 64
+    },
+    {
+      "id": "detail-8",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "8",
+      "atFrame": 72
+    },
+    {
+      "id": "d",
+      "obj": "branch",
+      "verb": "count_to",
+      "toState": "13",
+      "atFrame": 80
+    },
+    {
+      "id": "detail-9",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "9",
+      "atFrame": 80
+    },
+    {
+      "id": "detail-10",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "10",
+      "atFrame": 88
+    },
+    {
+      "id": "detail-11",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "11",
+      "atFrame": 96
+    },
+    {
+      "id": "detail-12",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "12",
+      "atFrame": 104
+    },
+    {
+      "id": "detail-13",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "13",
+      "atFrame": 112
+    },
+    {
+      "id": "m",
+      "obj": "branch",
+      "verb": "move",
+      "toState": "street",
+      "atFrame": 120
+    },
+    {
+      "id": "detail-14",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "14",
+      "atFrame": 120
+    },
+    {
+      "id": "detail-15",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "15",
+      "atFrame": 128
+    },
+    {
+      "id": "a",
+      "obj": "branch",
+      "verb": "add",
+      "toState": "3",
+      "atFrame": 130
+    },
+    {
+      "id": "detail-16",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "16",
+      "atFrame": 136
+    },
+    {
+      "id": "detail-17",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "17",
+      "atFrame": 144
+    },
+    {
+      "id": "detail-18",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "18",
+      "atFrame": 152
+    },
+    {
+      "id": "detail-19",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "19",
+      "atFrame": 160
+    },
+    {
+      "id": "detail-20",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "0",
+      "atFrame": 168
+    },
+    {
+      "id": "l",
+      "obj": "branch",
+      "verb": "draw",
+      "toState": "level",
+      "atFrame": 170
+    },
+    {
+      "id": "detail-21",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "1",
+      "atFrame": 176
+    },
+    {
+      "id": "detail-22",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "2",
+      "atFrame": 184
+    },
+    {
+      "id": "detail-23",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "3",
+      "atFrame": 192
+    },
+    {
+      "id": "detail-24",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "4",
+      "atFrame": 200
+    },
+    {
+      "id": "detail-25",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "5",
+      "atFrame": 208
+    },
+    {
+      "id": "t",
+      "obj": "branch",
+      "verb": "move",
+      "toState": "towers",
+      "atFrame": 210
+    },
+    {
+      "id": "detail-26",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 216
+    },
+    {
+      "id": "f",
+      "obj": "branch",
+      "verb": "fill",
+      "toState": "{\"left\":13,\"right\":10}",
+      "atFrame": 220
+    },
+    {
+      "id": "detail-27",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 224
+    },
+    {
+      "id": "detail-28",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 232
+    },
+    {
+      "id": "detail-29",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 240
+    },
+    {
+      "id": "detail-30",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 248
+    },
+    {
+      "id": "detail-31",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 256
+    },
+    {
+      "id": "detail-32",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 264
+    },
+    {
+      "id": "detail-33",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 272
+    },
+    {
+      "id": "detail-34",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 280
+    },
+    {
+      "id": "detail-35",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 288
+    },
+    {
+      "id": "detail-36",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 296
+    },
+    {
+      "id": "h",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 300
+    },
+    {
+      "id": "detail-37",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 304
+    },
+    {
+      "id": "detail-38",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 312
+    },
+    {
+      "id": "detail-39",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 320
+    },
+    {
+      "id": "detail-40",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 328
+    },
+    {
+      "id": "detail-41",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 336
+    },
+    {
+      "id": "k",
+      "obj": "branch",
+      "verb": "carry",
+      "toState": "task",
+      "atFrame": 340
+    },
+    {
+      "id": "detail-42",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 344
+    },
+    {
+      "id": "detail-43",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 352
+    },
+    {
+      "id": "detail-44",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 360
+    },
+    {
+      "id": "detail-45",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 368
+    },
+    {
+      "id": "detail-46",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 376
+    },
+    {
+      "id": "detail-47",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 384
+    },
+    {
+      "id": "detail-48",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 392
+    },
+    {
+      "id": "detail-49",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 400
+    },
+    {
+      "id": "detail-50",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 408
+    },
+    {
+      "id": "detail-51",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 416
+    },
+    {
+      "id": "detail-52",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 424
+    },
+    {
+      "id": "detail-53",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 432
+    },
+    {
+      "id": "detail-54",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 440
+    },
+    {
+      "id": "detail-55",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 448
+    },
+    {
+      "id": "detail-56",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 456
+    },
+    {
+      "id": "detail-57",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 464
+    },
+    {
+      "id": "detail-58",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 472
+    },
+    {
+      "id": "detail-59",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 480
+    },
+    {
+      "id": "detail-60",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 488
+    },
+    {
+      "id": "detail-61",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 496
+    },
+    {
+      "id": "detail-62",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 504
+    },
+    {
+      "id": "detail-63",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 512
+    },
+    {
+      "id": "detail-64",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 520
+    },
+    {
+      "id": "detail-65",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 528
+    },
+    {
+      "id": "detail-66",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 536
+    },
+    {
+      "id": "detail-67",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 544
+    },
+    {
+      "id": "detail-68",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 552
+    },
+    {
+      "id": "detail-69",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 560
+    },
+    {
+      "id": "detail-70",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 568
+    },
+    {
+      "id": "detail-71",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 576
+    },
+    {
+      "id": "detail-72",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 584
+    },
+    {
+      "id": "detail-73",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 592
+    },
+    {
+      "id": "detail-74",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 600
+    },
+    {
+      "id": "detail-75",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 608
+    },
+    {
+      "id": "detail-76",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 616
+    },
+    {
+      "id": "detail-77",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 624
+    },
+    {
+      "id": "detail-78",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 632
+    },
+    {
+      "id": "detail-79",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 640
+    },
+    {
+      "id": "detail-80",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 648
+    },
+    {
+      "id": "detail-81",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 656
+    },
+    {
+      "id": "detail-82",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 664
+    },
+    {
+      "id": "detail-83",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 672
+    },
+    {
+      "id": "detail-84",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 680
+    },
+    {
+      "id": "detail-85",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 688
+    },
+    {
+      "id": "detail-86",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 696
+    },
+    {
+      "id": "detail-87",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 704
+    },
+    {
+      "id": "detail-88",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 712
+    },
+    {
+      "id": "detail-89",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 720
+    },
+    {
+      "id": "detail-90",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 728
+    },
+    {
+      "id": "detail-91",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 736
+    },
+    {
+      "id": "detail-92",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 744
+    },
+    {
+      "id": "detail-93",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 752
+    },
+    {
+      "id": "detail-94",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 760
+    },
+    {
+      "id": "detail-95",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 768
+    },
+    {
+      "id": "detail-96",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 776
+    },
+    {
+      "id": "detail-97",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 784
+    },
+    {
+      "id": "detail-98",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 792
+    },
+    {
+      "id": "detail-99",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 800
+    },
+    {
+      "id": "detail-100",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 808
+    },
+    {
+      "id": "detail-101",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 816
+    },
+    {
+      "id": "detail-102",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 824
+    },
+    {
+      "id": "detail-103",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 832
+    },
+    {
+      "id": "detail-104",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 840
+    },
+    {
+      "id": "detail-105",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 848
+    },
+    {
+      "id": "detail-106",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 856
+    },
+    {
+      "id": "detail-107",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 864
+    },
+    {
+      "id": "detail-108",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 872
+    },
+    {
+      "id": "detail-109",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 880
+    },
+    {
+      "id": "detail-110",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 888
+    },
+    {
+      "id": "detail-111",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 896
+    },
+    {
+      "id": "detail-112",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 904
+    },
+    {
+      "id": "detail-113",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 912
+    },
+    {
+      "id": "detail-114",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 920
+    },
+    {
+      "id": "detail-115",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 928
+    },
+    {
+      "id": "detail-116",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 936
+    },
+    {
+      "id": "detail-117",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 944
+    },
+    {
+      "id": "detail-118",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 952
+    },
+    {
+      "id": "detail-119",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 960
+    },
+    {
+      "id": "detail-120",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 968
+    },
+    {
+      "id": "detail-121",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 976
+    },
+    {
+      "id": "detail-122",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 984
+    },
+    {
+      "id": "detail-123",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 992
+    },
+    {
+      "id": "detail-124",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1000
+    },
+    {
+      "id": "detail-125",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1008
+    },
+    {
+      "id": "detail-126",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1016
+    },
+    {
+      "id": "detail-127",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1024
+    },
+    {
+      "id": "detail-128",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1032
+    },
+    {
+      "id": "detail-129",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1040
+    },
+    {
+      "id": "detail-130",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1048
+    },
+    {
+      "id": "detail-131",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1056
+    },
+    {
+      "id": "detail-132",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1064
+    },
+    {
+      "id": "detail-133",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1072
+    },
+    {
+      "id": "detail-134",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1080
+    },
+    {
+      "id": "detail-135",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1088
+    },
+    {
+      "id": "detail-136",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1096
+    },
+    {
+      "id": "detail-137",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1104
+    },
+    {
+      "id": "detail-138",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1112
+    },
+    {
+      "id": "detail-139",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1120
+    },
+    {
+      "id": "detail-140",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1128
+    },
+    {
+      "id": "detail-141",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1136
+    },
+    {
+      "id": "detail-142",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1144
+    },
+    {
+      "id": "detail-143",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1152
+    },
+    {
+      "id": "detail-144",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1160
+    },
+    {
+      "id": "detail-145",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1168
+    },
+    {
+      "id": "detail-146",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1176
+    },
+    {
+      "id": "detail-147",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1184
+    },
+    {
+      "id": "detail-148",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1192
+    },
+    {
+      "id": "detail-149",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1200
+    },
+    {
+      "id": "detail-150",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1208
+    },
+    {
+      "id": "detail-151",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1216
+    },
+    {
+      "id": "detail-152",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1224
+    },
+    {
+      "id": "detail-153",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1232
+    },
+    {
+      "id": "detail-154",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1240
+    },
+    {
+      "id": "detail-155",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1248
+    },
+    {
+      "id": "detail-156",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1256
+    },
+    {
+      "id": "detail-157",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1264
+    },
+    {
+      "id": "detail-158",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1272
+    },
+    {
+      "id": "detail-159",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1280
+    },
+    {
+      "id": "detail-160",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1288
+    },
+    {
+      "id": "detail-161",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1296
+    },
+    {
+      "id": "detail-162",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1304
+    },
+    {
+      "id": "detail-163",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1312
+    },
+    {
+      "id": "detail-164",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1320
+    },
+    {
+      "id": "detail-165",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1328
+    },
+    {
+      "id": "detail-166",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1336
+    },
+    {
+      "id": "detail-167",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1344
+    },
+    {
+      "id": "detail-168",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1352
+    },
+    {
+      "id": "detail-169",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1360
+    },
+    {
+      "id": "detail-170",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1368
+    },
+    {
+      "id": "detail-171",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1376
+    },
+    {
+      "id": "detail-172",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1384
+    },
+    {
+      "id": "detail-173",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1392
+    },
+    {
+      "id": "detail-174",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1400
+    },
+    {
+      "id": "detail-175",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1408
+    },
+    {
+      "id": "detail-176",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1416
+    },
+    {
+      "id": "detail-177",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1424
+    },
+    {
+      "id": "detail-178",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1432
+    },
+    {
+      "id": "detail-179",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1440
+    },
+    {
+      "id": "detail-180",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1448
+    },
+    {
+      "id": "detail-181",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1456
+    },
+    {
+      "id": "detail-182",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1464
+    },
+    {
+      "id": "detail-183",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1472
+    },
+    {
+      "id": "detail-184",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1480
+    },
+    {
+      "id": "detail-185",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1488
+    },
+    {
+      "id": "detail-186",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1496
+    },
+    {
+      "id": "detail-187",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1504
+    },
+    {
+      "id": "detail-188",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1512
+    },
+    {
+      "id": "detail-189",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1520
+    },
+    {
+      "id": "detail-190",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1528
+    },
+    {
+      "id": "detail-191",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1536
+    },
+    {
+      "id": "detail-192",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1544
+    },
+    {
+      "id": "detail-193",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1552
+    },
+    {
+      "id": "detail-194",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1560
+    },
+    {
+      "id": "detail-195",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1568
+    },
+    {
+      "id": "detail-196",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1576
+    },
+    {
+      "id": "detail-197",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1584
+    },
+    {
+      "id": "detail-198",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1592
+    },
+    {
+      "id": "detail-199",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "left",
+      "atFrame": 1600
+    },
+    {
+      "id": "detail-200",
+      "obj": "branch",
+      "verb": "highlight",
+      "toState": "right",
+      "atFrame": 1608
+    },
+    {
+      "id": "x",
+      "obj": "branch",
+      "verb": "exit",
+      "toState": "ink",
+      "atFrame": 1614
+    }
   ]
 }
