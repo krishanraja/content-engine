@@ -2826,6 +2826,62 @@
           "test": "npx vitest run tests/control-plane/board-decisions.test.ts"
         }
       ]
+    },
+    {
+      "id": "F51-one-workflow-many-paths",
+      "on": "2026-11-17",
+      "status": "guarded",
+      "mode": "card_stale_after_milestone",
+      "guard_level": "gate",
+      "krish": "merge this to main asap, and then after that look at the last 6 hours of work, distill the workflow i want to be in place down to its simplest form, and based on all the PRs ensure that every single element of the content tab is stable, consistent, predictable and delivers on this at every step of the way",
+      "what": "Between 12:00 and 18:00 UTC on 17 Nov about twenty board pull requests from different sessions each fixed one card kind or one step (content-engine #788 to #811, control-center #944 to #951). Two independent reviews then found eight places in the engine and eight in Control Centre where the same state showed different steps or lost his work. Examples: Edit the scripts opened older filed words, not the words he approved; a Mon/Wed/Fri piece went back a step after he approved his own edits while a placed piece did not; a voiceover with no piece id in its option lost its recording step; a piece moved after Approve asked for it again; closing the scripts sheet lost his edits.",
+      "symptom": "The board moved forward on one card and back on another for the same press, and his edits were lost or overwritten.",
+      "cause": "Each rule was fixed in the code path the incident came through. Three card builders (pieceItem, placedPieceItem, postItem) and two approval readers (scriptsStateOf by day, scriptsApproval by piece) each kept their own version of the same rule.",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "no one-page workflow existed that every board change was held to"
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "tests reproduced each incident on one card kind, never the same state on every kind"
+        }
+      ],
+      "related": [
+        "F46-asked-for-a-press-already-made",
+        "F47-card-never-moved-on",
+        "F49-approve-held-his-own-edits",
+        "F50-scripts-vanished-after-approve"
+      ],
+      "surface": "docs/PUBLISH_BOARDS.md, \"The workflow in one page\", is the board's rule set; a change that breaks a line of it is wrong. One reader of his approval (scriptsStateOf: any day, his take-back respected, approval time from the server); Edit opens his approved words; a held send leaves Production planned current on every piece; no Edit or Take back once his takes are in; refusals in plain words; his edits kept in Control Centre until his Approve lands.",
+      "guards": [
+        {
+          "file": "docs/PUBLISH_BOARDS.md",
+          "contains": "## The workflow in one page",
+          "how": "the one page every board change is held to"
+        },
+        {
+          "file": "apps/control-plane/api/board/_view.ts",
+          "contains": "scriptsState.pressed_at ?? scriptsState.typed?.said_at",
+          "how": "the series path counts an approval stale only for scripts filed after it, and reads it on any day"
+        },
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "isDone('board') && !unsent",
+          "how": "a held send leaves Production planned current on a series piece as on a placed one"
+        },
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "(own ? scriptsApproval(m.picks || [], own) : null)",
+          "how": "an off-day post finds his approval by its record id too"
+        },
+        {
+          "file": "tests/control-plane/board-decisions.test.ts",
+          "contains": "the workflow in one page: one rule, the same result on every card",
+          "how": "Edit opens his words, approval on any day, no Edit after takes, plain refusal reasons, no engine words on any card",
+          "test": "npx vitest run tests/control-plane/board-decisions.test.ts"
+        }
+      ]
     }
   ]
 }
