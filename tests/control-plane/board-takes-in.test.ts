@@ -117,6 +117,40 @@ describe('after his Approve scripts, every card waits on his takes, then makes o
   })
 })
 
+describe('which Inbox files are this piece\'s takes (17 Nov: his .aac voiceover take was skipped)', () => {
+  const at = (t: string) => `2026-11-17T${t}:00Z`
+  // The Video Engine Inbox as it stood at 22:20 UTC on 17 Nov, his habits approval at 17:57.
+  const INBOX17 = [
+    { id: 'bb-long', name: 'Build-or-buy-long.mp4', mimeType: 'video/mp4', modifiedTime: at('22:07') },
+    { id: 'bb-short', name: 'Build-or-buy-short.mp4', mimeType: 'video/mp4', modifiedTime: at('22:05') },
+    { id: 'habits', name: 'Which of your habits will cost you your job once AI is at work__ short cut.aac', mimeType: 'audio/aac', modifiedTime: at('22:03') },
+    { id: 'sk-long', name: 'ai-finding-your-skeletons-long.mp4', mimeType: 'video/mp4', modifiedTime: at('21:32') },
+    { id: 'dc-short', name: 'data-centers-and-midterms-short.mp4', mimeType: 'video/mp4', modifiedTime: at('20:47') },
+  ]
+  const HABITS = 'Which of your habits will cost you your job once AI is at work?'
+  const WEEK = ['Should you build or buy your AI?', 'AI is finding your skeletons', 'Data centers and the midterms']
+
+  it('takes his audio take by its name, and none of the takes dropped for other pieces', () => {
+    const got = newTakes(INBOX17, '2026-11-17T17:57:14Z', new Set(), [HABITS, `${HABITS}: short cut`], WEEK)
+    expect(got.map(t => t.drive_id)).toEqual(['habits'])
+  })
+
+  it('a take named for another piece is never taken, even when nothing names this one', () => {
+    const got = newTakes(INBOX17.filter(f => f.id !== 'habits'), '2026-11-17T17:57:14Z', new Set(), [HABITS], WEEK)
+    expect(got).toEqual([])
+  })
+
+  it('a name that names no piece still counts when nothing names this one (a camera export)', () => {
+    const dji = { id: 'dji', name: 'dji_export_20261117_202539_editor.mp4', mimeType: 'video/mp4', modifiedTime: at('20:30') }
+    expect(newTakes([...INBOX17.filter(f => f.id !== 'habits'), dji], '2026-11-17T17:57:14Z', new Set(), [HABITS], WEEK).map(t => t.drive_id)).toEqual(['dji'])
+  })
+
+  it('can fail: a document or picture in the Inbox is never a take', () => {
+    const doc = { id: 'doc', name: 'habits notes.pdf', mimeType: 'application/pdf', modifiedTime: at('22:00') }
+    expect(newTakes([doc], '2026-11-17T17:57:14Z', new Set(), [HABITS], WEEK)).toEqual([])
+  })
+})
+
 /** content_ideas and board_documents, enough for the route: reads by id, a list with a filter, and guarded writes. */
 function fakeDb(row: Body, picks: Body[], others: Body[] = []) {
   const state = { row: JSON.parse(JSON.stringify(row)) as Body }
@@ -126,7 +160,7 @@ function fakeDb(row: Body, picks: Body[], others: Body[] = []) {
       from: (table: string) => {
         const f: Body = {}; let upd: Body | null = null
         const q: any = {
-          select: () => q, eq: (k: string, v: unknown) => { f[k] = v; return q }, neq: () => q, not: () => q, limit: () => q,
+          select: () => q, eq: (k: string, v: unknown) => { f[k] = v; return q }, neq: () => q, not: () => q, or: () => q, limit: () => q,
           update: (u: Body) => { upd = u; return q },
           maybeSingle: async () => ({ data: f.id === state.row.id ? JSON.parse(JSON.stringify(state.row)) : null, error: null }),
           single: async () => ({ data: f.id === state.row.id ? JSON.parse(JSON.stringify(state.row)) : null, error: null }),

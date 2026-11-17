@@ -44,6 +44,9 @@ export const RECORDING_CONTENT_TYPES: Readonly<Record<string, string>> = Object.
   webm: 'video/webm',
   mkv: 'video/x-matroska',
   m4a: 'audio/mp4',
+  // His Teleprompter app exports an audio-only take as AAC (17 Nov, the habits voiceover). It is stored under the
+  // bucket's own AAC type, audio/mp4, so no bucket change is needed; ffmpeg reads it by its bytes either way.
+  aac: 'audio/mp4',
   wav: 'audio/wav',
   mp3: 'audio/mpeg',
 })
@@ -90,7 +93,7 @@ export function recordingManifestKey(sha256: string): string {
 }
 
 const MANIFEST_NAME_RE = /^[a-f0-9]{64}\.json$/
-const OBJECT_KEY_RE = /^recordings\/[a-f0-9]{64}\.(mp4|mov|webm|mkv|m4a|wav|mp3)$/
+const OBJECT_KEY_RE = /^recordings\/[a-f0-9]{64}\.(mp4|mov|webm|mkv|m4a|aac|wav|mp3)$/
 
 export function isRecordingManifestName(value: unknown): value is string {
   return typeof value === 'string' && MANIFEST_NAME_RE.test(value)

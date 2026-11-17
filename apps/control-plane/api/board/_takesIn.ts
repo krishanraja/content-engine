@@ -22,7 +22,36 @@ const str = (v: unknown): string | null => (typeof v === 'string' && v.trim() ? 
 export const TAKES_OP = 'takes-in'
 /** A take recorded a little before his approval still counts (he may record as the approval lands). */
 export const TAKES_SLACK_MS = 3 * 60 * 60 * 1000
-const VIDEO = /\.(mp4|mov|m4v|webm|mkv)$/i
+/** A take is a video or an audio recording: a voiceover short recorded in his Teleprompter arrives as audio only, an
+ *  .aac named after the script (17 Nov: "Which of your habits will cost you your job once AI is at work__ short cut.aac"
+ *  was skipped by a video-only rule, and the press said no take was there). */
+const TAKE = /\.(mp4|mov|m4v|webm|mkv|aac|m4a|wav|mp3)$/i
+const TAKE_MIME = /^(video|audio)\//
+
+/** The words that say nothing about which piece a file is: joining words, cut and file words, and "AI", which every
+ *  piece has. */
+const FILLER = new Set(('a an and are as at be by can do does for from has have how i in is it its my of on once or our the this to '
+  + 'was we what when where which who why will with you your ai cut cuts short long take takes final video audio voiceover vo '
+  + 'mp4 mov aac m4a wav mp3 copy edit editor export dji mimo glamour minute second seconds').split(' '))
+
+/** The words of a name or title that can tell one piece from another, stemmed to a plain root. */
+export function nameWords(text: string): Set<string> {
+  return new Set(String(text || '').toLowerCase().replace(/\.[a-z0-9]{2,4}$/, '').split(/[^a-z0-9]+/)
+    .filter(w => w.length > 1 && !FILLER.has(w) && !/^\d+$/.test(w)).map(w => w.replace(/(ies|es|s)$/, m => (m === 'ies' ? 'y' : '')).replace(/ing$/, '')))
+}
+
+/** How many of a file name's telling words a title holds. */
+function shared(file: Set<string>, title: Set<string>): number {
+  let n = 0
+  for (const w of file) if (title.has(w)) n += 1
+  return n
+}
+
+/** Whether a file name names a title: two telling words in common, or one when the name has only one. */
+function names(file: Set<string>, title: Set<string>): boolean {
+  const n = shared(file, title)
+  return n >= 2 || (n === 1 && file.size === 1)
+}
 
 export interface InboxTake { name: string; drive_id: string; bytes: number | null; sha256: string | null; md5: string | null; modified: string }
 export interface TakesIn { confirmed_at: string; by: string; since: string | null; files: InboxTake[] }
@@ -36,16 +65,29 @@ export function takesInOf(meta: unknown): TakesIn | null {
   return { confirmed_at: t.confirmed_at, by: String(t.by || ''), since: str(t.since), files }
 }
 
-/** The Inbox files that are his takes for this piece: video files, changed since he approved its scripts (less the
- *  slack), and not already held by another piece of the week. The oldest first, so the order is the order he recorded. */
+/** The Inbox files that are his takes for this piece: video or audio recordings, changed since he approved its scripts
+ *  (less the slack), and not already held by another piece. The oldest first, so the order is the order he recorded.
+ *  When `own` names this piece (its title, its script titles) and `others` the week's other pieces, a file whose name
+ *  names this piece is its take, and only those count once one does; a file whose name names another piece and not this
+ *  one is never taken (17 Nov: the build-or-buy takes, dropped minutes after his habits take, would otherwise have gone
+ *  on the habits post). A name that names no piece (dji_export_...) still counts when nothing names this piece. */
 export function newTakes(files: Array<{ id: string; name?: string; mimeType?: string; size?: string; md5Checksum?: string; sha256Checksum?: string; modifiedTime?: string }>,
-  since: string | null, claimed: ReadonlySet<string>): InboxTake[] {
+  since: string | null, claimed: ReadonlySet<string>, own: readonly string[] = [], others: readonly string[] = []): InboxTake[] {
   const from = since && Number.isFinite(Date.parse(since)) ? Date.parse(since) - TAKES_SLACK_MS : -Infinity
-  return files
-    .filter(f => f.id && f.name && (VIDEO.test(f.name) || /^video\//.test(String(f.mimeType || ''))))
+  const mine = own.map(nameWords).filter(t => t.size)
+  const theirs = others.map(nameWords).filter(t => t.size)
+  const fresh = files
+    .filter(f => f.id && f.name && (TAKE.test(f.name) || TAKE_MIME.test(String(f.mimeType || ''))))
     .filter(f => Number.isFinite(Date.parse(String(f.modifiedTime || ''))) && Date.parse(String(f.modifiedTime)) >= from)
     .filter(f => !claimed.has(f.id))
-    .map(f => ({ name: String(f.name), drive_id: f.id, bytes: f.size && /^\d+$/.test(f.size) ? Number(f.size) : null,
+    .map(f => {
+      const w = nameWords(String(f.name))
+      const best = (ts: Set<string>[]) => ts.reduce((n, t) => Math.max(n, names(w, t) ? shared(w, t) : 0), 0)
+      return { f, ours: best(mine), theirs: best(theirs) }
+    })
+  const named = fresh.filter(x => x.ours > 0 && x.ours >= x.theirs)
+  const picked = named.length ? named : fresh.filter(x => x.theirs === 0)
+  return picked.map(({ f }) => ({ name: String(f.name), drive_id: f.id, bytes: f.size && /^\d+$/.test(f.size) ? Number(f.size) : null,
       sha256: str(f.sha256Checksum)?.toLowerCase() ?? null, md5: str(f.md5Checksum)?.toLowerCase() ?? null, modified: String(f.modifiedTime) }))
     .sort((a, b) => a.modified.localeCompare(b.modified))
 }
