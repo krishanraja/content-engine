@@ -1,0 +1,4 @@
+interface:
+  display_name: "Make the cover art"
+  short_description: "Each channel's cover by the approved strategy: the Receipt skins on brand accounts, face-led on his own, both on YouTube"
+  default_prompt: "Use $cover-art to make this piece's covers for every channel it posts on: piece_id: <uuid>."
