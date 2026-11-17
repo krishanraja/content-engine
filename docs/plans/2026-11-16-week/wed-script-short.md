@@ -1,4 +1,4 @@
-Anthropic, which makes Claude, pays for other companies' tools. Everyone else builds with it. And it still shops outside, even though it could build them. So is your engineer who builds everything himself, like the Crocodile Hunter, wrong? Let's dive in. Build or buy your tools in an AI world?
+Anthropic, which makes Claude, pays other companies for its customer service. Everyone else builds their tools with Claude. It still shops outside. So is the engineer on your team who now feels like the Crocodile Hunter wrong? Let's dive in. Build or buy your tools in an AI world?
 
 Because right now, everyone is selling you an answer. My LinkedIn feed is wall to wall Claude packs, ready-made instructions you load into Claude. Install this, and Claude becomes your whole sales team. Just comment pack below. Free! Well, sort of.
 
@@ -8,4 +8,6 @@ Then it's two in the morning. His homemade bot tells a customer they owe the pri
 
 So what did Anthropic do about its own customer service? It went shopping. It bought a help desk bot from a company called Intercom. And that bot runs on Claude! So now Intercom's engineers get the two in the morning call.
 
-So is building wrong? Not quite. I've got one question I'll ask every time now, and it's not the one your Crocodile Hunter is asking. The full five-minute video is on my channel.
+One health insurer binned its six-hundred-thousand-dollar sales software and built its own in two months.
+
+So is building wrong? I'll tell you how that went, and the one question I now ask. The full five-minute video is on my channel.

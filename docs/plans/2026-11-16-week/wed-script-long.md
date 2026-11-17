@@ -8,11 +8,11 @@ And then there's the other thing filling up my feed. Every day on LinkedIn, some
 
 So right now, everyone is being sold how to use AI. And that's where your Crocodile Hunter comes in. He's seen the app builders and the packs, and he's sure he can build it all by Friday. And his boss is already spending the savings.
 
-And some bosses have jumped straight to the building end. This summer, the boss of a US health insurer called Curative said they'd cancelled Salesforce. That's the software sales teams use to track every customer and every deal. They'd been paying about six hundred thousand dollars a year for it. So they built their own, with AI, in two months. Eyes bigger than their stomach? Maybe. Because he's since admitted that keeping it running is hard.
+And this has already happened for real. This summer, the boss of a US health insurer called Curative said they'd cancelled Salesforce. That's the software sales teams use to track every customer and every deal. They'd been paying about six hundred thousand dollars a year for it. So they built their own, with AI, in two months. Eyes bigger than their stomach? Maybe. Because he's since admitted that keeping it running is hard.
 
 And that's the bit most people miss. Writing the tool is the cheap part now. The cost is everything that comes after. Think of it like getting a puppy. The puppy's free. It's the next fifteen years that cost you. So picture a bot you built yourself. Two in the morning, and it tells a customer they owe the price of a small yacht. Who gets that call? Not the AI. One of your engineers. And every time your product changes, someone has to teach the bot about it. And when your Crocodile Hunter leaves, who even knows how it works?
 
-The packs have exactly the same catch, by the way, and nobody selling them mentions it. Someone still has to set it up, check what it says, and fix it when it goes wrong. You've just bought a shortcut, with no one on call.
+The packs have exactly the same catch, by the way. Install the pack, and Claude becomes your sales team. Then it emails your biggest client the wrong price. Who fixes that? Not the guy on LinkedIn.
 
 So back to Anthropic. They could build almost anything. But for customer service, they went shopping. They bought a help desk bot called Fin, from a company called Intercom. And it was answering customers within days.
 
