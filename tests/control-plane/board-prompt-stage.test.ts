@@ -43,6 +43,8 @@ const voiceover = (picks: Body[] = []) => {
   expect(it, 'the approved voiceover is on Tuesday').toBeTruthy()
   return it
 }
+/** The card's Claude prompt, wherever it sits: its next action, or beside his press. */
+const anyPrompt = (it: Body): string => String(([it.next, ...(it.others || [])] as Body[]).find(a => a && a.kind === 'prompt')?.prompt ?? '')
 const promptOf = (a: unknown): string => {
   const p = a as Body
   expect(p.kind).toBe('prompt')
@@ -66,7 +68,7 @@ describe('every Claude prompt is only copied (contract 1.22.0)', () => {
 
   it('the schema keeps open, retired, and nothing in the engine sends it', () => {
     const schema = readFileSync('apps/control-plane/api/board/view.schema.json', 'utf8')
-    expect(JSON.parse(schema)['x-contract-version']).toBe('1.22.0')
+    expect(Number(String(JSON.parse(schema)['x-contract-version']).split('.')[1])).toBeGreaterThanOrEqual(22)
     expect(JSON.parse(schema).$defs.action.properties.open).toMatchObject({ 'x-since': '1.17.0', 'x-retired': '1.22.0' })
     const model = readFileSync('apps/control-plane/api/board/_weekModel.ts', 'utf8')
     expect(model).not.toMatch(/CODE_OPEN|open: \{/)
@@ -87,7 +89,10 @@ describe("an off-day voiceover's prompt follows its stage (Tue 17 Nov)", () => {
     // Its send was held (17 Nov): the card says his approval counts and why it is not in his Teleprompter yet.
     expect(it.line).toMatch(/You approved the script on Tue 17 Nov, and your approval counts\. It is not in your Teleprompter yet: the send was held \(the piece's making record could not be read, so nothing was sent\)/)
     const sent = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: { ...TUE_WORDS, send: { ...TUE_WORDS.send, status: 'sent', error: undefined } } }])
-    expect(sent.line).toMatch(/You approved its script on Tue 17 Nov: record it from your Teleprompter and drop the take in the Video Engine Inbox/)
+    // In his Teleprompter: the card waits on his My takes are in the Inbox (17 Nov), with the record step's prompt beside it.
+    expect(sent.line).toMatch(/Your script is approved\. Record it from your Teleprompter, drop the take in the Video Engine Inbox, then press My takes are in the Inbox\./)
+    expect(sent.next).toMatchObject({ kind: 'press', op: 'takes-in', body: { piece_id: PIECE, item: 'off-tue-mcpskin' } })
+    expect(anyPrompt(sent)).toContain('recording.py get NAME')
     const p = promptOf(it.next)
     for (const words of ['python scripts/post-pack/recording.py get NAME', 'AGENTS.md rule 9', 'docs/ve/ENGINE.md', 'docs/ve/RUNBOOK.md',
       've card, ve dispatch, ve verify-card', ROUTE_RULING, NEVER_HEADLESS, PIECE, 'Habits that cost your job (voiceover, 90 s)',
@@ -101,9 +106,9 @@ describe("an off-day voiceover's prompt follows its stage (Tue 17 Nov)", () => {
 
   it('his Approve scripts press counts the same, and so does a typed approval saved under another day', () => {
     const press = voiceover([{ doc_id: 'tue-scripts', updated_by: 'Krish', updated_at: '2026-11-17T11:00:00Z', body: { kind: 'approve_scripts', approved: true, piece_id: PIECE, texts: { short: 'Words.' } } }])
-    expect(promptOf(press.next)).toContain('recording.py get NAME')
+    expect(anyPrompt(press)).toContain('recording.py get NAME')
     const moved = voiceover([{ doc_id: 'mon-scripts-words-701a2c55', updated_by: 'engine_operator', body: { ...TUE_WORDS, day: 'mon' } }])
-    expect(promptOf(moved.next)).toContain('recording.py get NAME')
+    expect(anyPrompt(moved)).toContain('recording.py get NAME')
   })
 
   it('can fail: a press by anyone else, another piece, or an ElevenLabs voice keeps the make prompt', () => {

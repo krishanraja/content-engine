@@ -1,0 +1,190 @@
+import { describe, expect, it, afterEach } from 'vitest'
+import { createHash } from 'node:crypto'
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
+import { createBoardHandler } from '../../apps/control-plane/api/board/_handler'
+import { TAKES_OP, TAKES_SLACK_MS, newTakes, productionBrief, takesInOf, takesPress } from '../../apps/control-plane/api/board/_takesIn'
+import { approval } from './_approvals'
+
+// Krish, 2026-11-17: "whenever I press approve script, the new board state should be waiting for me to confirm the videos
+// are in the Inbox, at which point it will fetch the name of the video(s) and integrate them in the piece on the board so
+// the next post production prompt does a completely accurate job, with all the research, motion styles etc being in one
+// place and decided as well, the post production should always be one shot - and can decide where to bring in logos, real
+// visuals, social posts, screen shots, motion design, cinematic generation, my face etc etc."
+// The case: Tue 17's OpenAI data-centre piece (b019dbf8), scripts approved on the board at 14:57.
+
+type Body = Record<string, any>
+const W16 = '2026-11-16'
+const TUE = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118'
+const AT = '2026-11-17T11:09:12.000Z'
+const APPROVED_AT = '2026-11-17T14:57:28.000Z'
+const LOCK = `# Narrative lock: Tue 17\n\npiece_id: ${TUE}\nPublishes: 2026-11-17\n\nThe arc.\n\nSigned by Krish: "Signed.", 2026-11-17`
+const PICKED = {
+  look: { production: 'face-with-proof', experiment: null, inspiration: [], by: 'Krish', at: AT },
+  style: { motion: 'eating-jobs-ladder', captions: 'art-directed', rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: AT },
+}
+const mod = (id: string, name: string) => ({ id, name, how: `${name}.`, rules: [], point_types: ['claim'], formats: ['long_video', 'short_video'], fits: 'often', krish_verdict: '', ve_route: ['ve'] })
+const said = { said_at: APPROVED_AT, said_where: 'the Publish Board in Control Centre', session_ref: 'https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=tue', at: APPROVED_AT }
+const SCRIPTS = { doc_id: `tue-scripts-words-${TUE.slice(0, 8)}`, updated_by: 'Krish', updated_at: APPROVED_AT, body: { kind: 'approve_scripts', day: 'tue', via: 'words',
+  approved: true, piece_id: TUE, texts: { long: 'OpenAI says it will pay for the power.', short: 'Who pays for the power?' }, titles: { long: 'L', short: 'S' }, folder_title: 'F',
+  words: 'Approve both scripts', ...said, send: { at: APPROVED_AT, by: 'content-engine server', status: 'sent' } } }
+const filed = [{ cut: 'long', id: 'a', title: 'Long', text: 'OpenAI says it will pay for the power.', at: null }, { cut: 'short', id: 'b', title: 'Short', text: 'Who pays for the power?', at: null }]
+const TAKES = { confirmed_at: '2026-11-17T16:00:00.000Z', by: 'Krish', since: APPROVED_AT, files: [
+  { name: '2026-11-17 openai long.mp4', drive_id: 'drv1', bytes: 400_000_000, sha256: 'a'.repeat(64), md5: null, modified: '2026-11-17T15:40:00.000Z' },
+  { name: '2026-11-17 openai short.mp4', drive_id: 'drv2', bytes: 90_000_000, sha256: null, md5: null, modified: '2026-11-17T15:50:00.000Z' }] }
+
+function inputs(meta: Body = PICKED, picks: Body[] = [SCRIPTS]): ViewInputs {
+  return {
+    week: W16, now: new Date('2026-11-17T12:00:00Z'),
+    pieces: [{ id: TUE, idea: 'OpenAI pledges to pay for data center power', thesis: 'x', scheduled_for: '2026-11-17', lane_slot: 'mind_the_gap',
+      state: 'drafting', buried_at: null, body: '', updated_at: AT, meta }],
+    picks, queue: [], history: [], runs: {}, north_star: null, ideas: { days: {} }, locks: { tue: LOCK }, scripts: { [TUE]: filed },
+    motion: [mod('eating-jobs-ladder', 'The unwanted neighbour'), mod('swiss-kinetic-type', 'Swiss grid')],
+    formats: { production: [{ id: 'face-with-proof', name: 'Face with proof', pitch: 'x', status: 'live' }], script: [] },
+    approvals: [approval(W16, 'tue', TUE)], items: [], all_items: [], plans: {},
+  } as unknown as ViewInputs
+}
+const card = (i: ViewInputs) => buildView(i).model!.days.find(d => d.day === 'tue')!.items.find(x => x.piece_id === TUE)!
+
+describe('which Inbox files are his takes', () => {
+  const file = (id: string, name: string, modifiedTime: string, extra: Body = {}) => ({ id, name, modifiedTime, mimeType: 'video/mp4', size: '100', ...extra })
+  it('video files changed since he approved the scripts (less three hours), held by no other piece, in the order recorded', () => {
+    const files = [file('b', 'take 2.mp4', '2026-11-17T16:00:00Z', { sha256Checksum: 'B'.repeat(64) }), file('a', 'take 1.MOV', '2026-11-17T15:00:00Z'),
+      file('old', 'last week.mp4', '2026-11-10T09:00:00Z'), file('doc', 'notes.txt', '2026-11-17T15:30:00Z', { mimeType: 'text/plain' }), file('mine', 'other piece.mp4', '2026-11-17T15:30:00Z')]
+    const got = newTakes(files, APPROVED_AT, new Set(['mine']))
+    expect(got.map(f => f.drive_id)).toEqual(['a', 'b'])
+    expect(got[1]).toEqual({ name: 'take 2.mp4', drive_id: 'b', bytes: 100, sha256: 'b'.repeat(64), md5: null, modified: '2026-11-17T16:00:00Z' })
+    // Recorded just before the approval landed still counts; before the slack does not.
+    const edge = Date.parse(APPROVED_AT) - TAKES_SLACK_MS
+    expect(newTakes([file('e', 'e.mp4', new Date(edge).toISOString())], APPROVED_AT, new Set()).length).toBe(1)
+    expect(newTakes([file('e', 'e.mp4', new Date(edge - 1000).toISOString())], APPROVED_AT, new Set()).length).toBe(0)
+  })
+  it('reads back what the press wrote, and nothing from a malformed record', () => {
+    expect(takesInOf({ takes_in: TAKES })!.files.map(f => f.name)).toEqual(['2026-11-17 openai long.mp4', '2026-11-17 openai short.mp4'])
+    expect(takesInOf({})).toBeNull()
+    expect(takesInOf({ takes_in: { files: [] } })).toBeNull()
+  })
+})
+
+describe('after his Approve scripts, every card waits on his takes, then makes one post-production prompt', () => {
+  it('approved and in his Teleprompter: the next action is his My takes are in the Inbox, the record step\'s prompt beside it', () => {
+    const it = card(inputs())
+    expect(it.next).toEqual(expect.objectContaining({ kind: 'press', op: TAKES_OP, label: 'My takes are in the Inbox', body: { piece_id: TUE } }))
+    expect(it.decision).toBe(true)
+    expect(it.line).toBe('Your scripts are approved. Record both cuts from your Teleprompter, drop the takes in the Video Engine Inbox, then press My takes are in the Inbox.')
+    expect(it.others.some((a: Body) => a.kind === 'prompt' && /step record\)/.test(a.prompt))).toBe(true)
+  })
+
+  it('his takes on the piece: the card names them, and the next action is the one-shot production prompt with everything decided', () => {
+    const it = card(inputs({ ...PICKED, takes_in: TAKES }))
+    expect(it.line).toBe('Your takes are on the piece: "2026-11-17 openai long.mp4", "2026-11-17 openai short.mp4". Next: one Claude production session makes the finished cut from them.')
+    expect(it.decision).toBe(false)
+    const p = String((it.next as Body).prompt)
+    for (const words of [`piece_id ${TUE}`, 'in one go', 'never ask him for one again', 'The motion style: The unwanted neighbour (eating-jobs-ladder), picked by Krish',
+      'The captions:', 'The look:', 'in his words "Approve both scripts"', 'python scripts/post-pack/recording.py get "2026-11-17 openai long.mp4"   (or --sha256 ' + 'a'.repeat(64),
+      'python scripts/post-pack/recording.py get "2026-11-17 openai short.mp4"', '--- long cut, as he approved it ---\nOpenAI says it will pay for the power.',
+      'his face on camera', 'a logo or wordmark', 'real visuals', 'a social post or a screenshot', 'motion design', 'cinematic generation', 'scripts/av_sync.py',
+      'separate reviewer', 'Keep the board current as you work']) expect(p, words).toContain(words)
+    expect(p).not.toContain('Not picked yet')
+  })
+
+  it('a production pick still missing comes first as his press, so the session never decides one', () => {
+    const noCaptions = { ...PICKED, style: { ...PICKED.style, captions: null }, takes_in: TAKES }
+    const it = card(inputs(noCaptions))
+    expect(it.next).toMatchObject({ kind: 'press', op: 'style', label: 'Pick the captions' })
+    expect(it.decision).toBe(true)
+    expect(it.line).toMatch(/First, pick the captions, so the cut is fully decided\.$/)
+  })
+
+  it('a take already recorded is never sent back to a pick: the prompt names what is not picked', () => {
+    const recorded = { ...PICKED, style: { ...PICKED.style, captions: null }, making: { recordings: [{ cut: 'long', path: `recordings/${'c'.repeat(64)}.mp4`, at: '2026-11-17T16:10:00Z' }] } }
+    const it = card(inputs(recorded))
+    expect((it.next as Body).kind).toBe('prompt')
+    expect(String((it.next as Body).prompt)).toContain(`recording.py get "recordings/${'c'.repeat(64)}.mp4"`)
+    expect(String((it.next as Body).prompt)).toContain('Not picked yet: the captions')
+  })
+
+  it('can fail: not approved, no stage; a cut already made, no stage', () => {
+    expect((card(inputs(PICKED, [])).next as Body)?.op).not.toBe(TAKES_OP)
+    const cut = card(inputs({ ...PICKED, takes_in: TAKES, making: { video_assets: [{ cut: 'long', name: 'x', path: 'y', at: 'z' }] } }))
+    expect(String((cut.next as Body)?.prompt ?? '')).not.toContain('This is the one post-production session')
+  })
+
+  it('the press and the brief say the same thing on every kind of card', () => {
+    expect(takesPress(TUE, 'off-tue-x')).toMatchObject({ op: TAKES_OP, body: { piece_id: TUE, item: 'off-tue-x' } })
+    const brief = productionBrief({ pieceId: TUE, title: 'T', takes: TAKES, decisions: ['A'], research: ['R'], scripts: {}, offday: true })
+    expect(brief).toContain('finished short in one go')
+  })
+})
+
+/** content_ideas and board_documents, enough for the route: reads by id, a list with a filter, and guarded writes. */
+function fakeDb(row: Body, picks: Body[], others: Body[] = []) {
+  const state = { row: JSON.parse(JSON.stringify(row)) as Body }
+  return {
+    state,
+    db: {
+      from: (table: string) => {
+        const f: Body = {}; let upd: Body | null = null
+        const q: any = {
+          select: () => q, eq: (k: string, v: unknown) => { f[k] = v; return q }, neq: () => q, not: () => q, limit: () => q,
+          update: (u: Body) => { upd = u; return q },
+          maybeSingle: async () => ({ data: f.id === state.row.id ? JSON.parse(JSON.stringify(state.row)) : null, error: null }),
+          single: async () => ({ data: f.id === state.row.id ? JSON.parse(JSON.stringify(state.row)) : null, error: null }),
+          then: (res: (v: unknown) => unknown) => {
+            if (table === 'board_documents') return Promise.resolve({ data: picks, error: null }).then(res)
+            if (upd) { const ok = f.id === state.row.id && f.updated_at === state.row.updated_at; if (ok) state.row = { ...state.row, ...upd }; return Promise.resolve({ data: ok ? [{ id: state.row.id }] : [], error: null }).then(res) }
+            return Promise.resolve({ data: others, error: null }).then(res)
+          },
+        }
+        return q
+      },
+    },
+  }
+}
+
+describe('POST /api/board/<Monday>/takes-in', () => {
+  const previous = { ...process.env }
+  afterEach(() => { for (const k of ['ACCESS_CODE', 'ENGINE_OPERATOR_TOKEN']) { if (previous[k] === undefined) delete process.env[k]; else process.env[k] = previous[k] } })
+  const ROW = { id: TUE, idea: 'OpenAI', scheduled_for: '2026-11-17', lane_slot: 'mind_the_gap', updated_at: AT, meta: { ...PICKED } }
+  const INBOX = [{ id: 'drv1', name: 'openai long.mp4', mimeType: 'video/mp4', size: '400', modifiedTime: '2026-11-17T15:40:00Z' },
+    { id: 'drv2', name: 'openai short.mp4', mimeType: 'video/mp4', size: '90', modifiedTime: '2026-11-17T15:50:00Z' },
+    { id: 'drv0', name: 'old.mp4', mimeType: 'video/mp4', size: '9', modifiedTime: '2026-11-01T09:00:00Z' }]
+  async function press(opts: { operator?: boolean; picks?: Body[]; inbox?: Body; others?: Body[] } = {}) {
+    process.env.ACCESS_CODE = 'synthetic-board-test'
+    process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'
+    const { db, state } = fakeDb(ROW, opts.picks ?? [SCRIPTS], opts.others ?? [])
+    const dispatched: number[] = []
+    const handler = createBoardHandler(async () => db as never, {
+      now: () => '2026-11-17T16:00:00.000Z',
+      inbox: async () => (opts.inbox ?? { ok: true, folderName: 'Video Engine Inbox', files: INBOX, truncated: false }) as never,
+      placeTakes: async (n: number) => { dispatched.push(n); return { sent: true } as never },
+    })
+    const cookie = `cc_access=${createHash('sha256').update(process.env.ACCESS_CODE).digest('hex')}`
+    const headers = opts.operator ? { authorization: 'Bearer synthetic-operator' } : { cookie, origin: 'https://controlcenter.krishraja.com' }
+    let status = 0; let out: Body = {}
+    const res = { setHeader() {}, status(code: number) { status = code; return this }, json(v: Body) { out = v } } as unknown as VercelResponse
+    await handler({ method: 'POST', headers, query: { week: W16, op: TAKES_OP }, body: { piece_id: TUE } } as unknown as VercelRequest, res)
+    return { status, out, state, dispatched }
+  }
+
+  it('writes his takes on the piece by name and asks GitHub to place them on their cuts', async () => {
+    const { status, out, state, dispatched } = await press()
+    expect(status).toBe(200)
+    expect(out.takes.map((t: Body) => t.name)).toEqual(['openai long.mp4', 'openai short.mp4'])
+    expect(state.row.meta.takes_in).toMatchObject({ confirmed_at: '2026-11-17T16:00:00.000Z', by: 'Krish', since: APPROVED_AT })
+    expect(state.row.meta.style).toEqual(PICKED.style)
+    expect(dispatched).toEqual([2])
+  })
+
+  it('can fail: his press only, scripts approved first, takes there, the Inbox readable, none another piece holds', async () => {
+    expect((await press({ operator: true })).out).toMatchObject({ error: 'his_press' })
+    expect(await press({ picks: [] })).toMatchObject({ status: 409, out: { error: 'scripts_not_approved' } })
+    const none = await press({ inbox: { ok: true, folderName: 'x', files: [INBOX[2]], truncated: false } })
+    expect(none).toMatchObject({ status: 409, out: { error: 'no_new_takes' } })
+    expect(none.out.line).toMatch(/^No recording is in the Video Engine Inbox since you approved the scripts on Tue 17 Nov\./)
+    expect(none.state.row.meta.takes_in).toBeUndefined()
+    expect(await press({ inbox: { ok: false, reason: 'not shared', fix: 'share it' } })).toMatchObject({ status: 503, out: { error: 'inbox_unreadable', fix: 'share it' } })
+    const held = await press({ others: [{ id: 'other', meta: { takes_in: { confirmed_at: 'x', files: [{ name: 'openai long.mp4', drive_id: 'drv1' }, { name: 'openai short.mp4', drive_id: 'drv2' }] } } }] })
+    expect(held).toMatchObject({ status: 409, out: { error: 'no_new_takes' } })
+  })
+})

@@ -242,9 +242,11 @@ describe('scripts agreed before the production pick: the look is his next press,
   it('once the look is picked, the next step is recording, never the look again', () => {
     const v = buildView(inputs({ look: { production: 'face-with-proof', experiment: null, inspiration: [], at: '2026-11-14T09:00:00Z' } }))
     const it = model(v, 'mon').items[0]
-    expect(it.next).toMatchObject({ kind: 'open', label: 'Open Teleprompter' })
+    // Recording is next: the card waits on his My takes are in the Inbox, with Open Teleprompter beside it (17 Nov).
+    expect(it.next).toMatchObject({ kind: 'press', op: 'takes-in', label: 'My takes are in the Inbox' })
+    expect(it.others).toContainEqual(expect.objectContaining({ kind: 'open', label: 'Open Teleprompter' }))
     expect(it.path.slice(0, 3).map(s => s.state)).toEqual(['done', 'done', 'done'])
-    expect(it.decision).toBe(false)
+    expect(it.decision).toBe(true)
   })
   it('a take already recorded is never sent back to the look', () => {
     const v = buildView(inputs({}, { recordings: [{ cut: 'long', at: '2026-11-14T10:00:00Z' }, { cut: 'short', at: '2026-11-14T10:10:00Z' }] }))
