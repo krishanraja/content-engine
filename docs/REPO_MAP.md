@@ -1730,6 +1730,17 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `async function runMirror(opts: { only?: string[]; budgetMs?: number } = {}): Promise<MirrorReport>`
 - `async function copyNow(materialId: string | null | undefined, waitMs = 20_000): Promise<Record<string, unknown>>`
 
+### `apps/control-plane/api/_researchLink.ts`
+
+- `const LINK_TEXT_MAX`
+- `type LinkReader`
+- `function driveFileIdOf(url: string): string | null`
+- `function zipEntry(bytes: Uint8Array, name: string): Uint8Array | null`
+- `function docxText(bytes: Uint8Array): string | null`
+- `function googleLinkReader(token: string, f: typeof fetch = fetch): LinkReader`
+- `async function driveLinkReader(): Promise<LinkReader | null>`
+- `const isResearchLink = (body: Record<string, unknown>) =>`
+
 ### `apps/control-plane/api/_retry.ts`
 
 One retry policy for model calls, because an overload is weather.
@@ -2663,6 +2674,14 @@ Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md
 - `async function saveLook(db: SupabaseClient, pieceId: string, pick: { production: string; experiment?: string | null; in…`
 - `async function recentResearch(db: SupabaseClient, pieceId: string, now = Date.now()): Promise<boolean>`
 - `function researchForPiece(pieceId: string, prompt: string)`
+
+### `apps/control-plane/api/board/_researchPrompt.ts`
+
+- `const PERPLEXITY_LABEL`
+- `const RESEARCH_NOTES_HEADING`
+- `interface ResearchContext`
+- `function researchPromptFor(c: ResearchContext): string`
+- `function withResearchPrompts(model: WeekModel, contextOf: (day: string, item: ModelItem) => Omit<ResearchContext, 'item…`
 
 ### `apps/control-plane/api/board/_run.ts`
 
