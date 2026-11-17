@@ -756,6 +756,62 @@
      "beats": "https://www.instagram.com/evolving.ai/p/DfiMWH2ACgp/",
      "our_take": "The discovery was real and the 'first' was not: we add the prior-art check every AI finding needs."
     }
+   },
+   {
+    "id": "4f8f23b2-8cb2-4498-b07c-243840f8a1ba",
+    "source_kind": "his",
+    "source_tag": "his_idea",
+    "so_what": "Your staff and customers are about to start making small tools every week without knowing it, because ChatGPT and Claude now answer everyday questions with a working calculator or chart, and almost nobody checks the sums inside.",
+    "story": "Since 8 Oct 2026, ChatGPT's Intelligent UI can answer a free user's question with a bill splitter, a calculator, a form or a map built on the spot, and Claude's custom visuals are on for every user on web and desktop with nothing to switch on. Ask what a loan costs and you get sliders. That is software made to order from a sentence, which is what vibe coding is, minus the name. The case we argue: within a year most people who use AI will be making little apps every week and never call it that. The catch, from a UC Davis study of 7 Nov: novices checked the data in 3 of 60 sessions and failed 11 of 16 fixes, while feeling fairly confident. And half of US adults still have never used a chatbot.",
+    "why_now": "ChatGPT's Intelligent UI reached free users on 8 Oct 2026; the UC Davis 'Vibe Visualizing' study came out on 7 Nov 2026.",
+    "fact": "Digital Trends, 7 Oct 2026: Intelligent UI lets ChatGPT mix text with charts, buttons, forms and diagrams and \"can build tools inside the chat, such as a bill splitter or calculator\"; Free and Go users get it from 8 Oct 2026. Claude Help Center (updated 22 Apr 2026): custom visuals are \"available to all Claude users on web and desktop\" and \"You don't need to turn anything on.\" Lee et al., UC Davis (arXiv, 7 Nov 2026): 3 data checks in 60 sessions, 11 of 16 fixes failed, confidence 3.73 out of 5. Pew (survey Feb 2026, published 17 Jun 2026): 51% of US adults have never used an AI chatbot.",
+    "source": {
+     "label": "Digital Trends: Intelligent UI turns ChatGPT answers into interactive tools (7 Oct 2026)",
+     "url": "https://digitaltrends.com/computing/intelligent-ui-turns-chatgpt-answers-into-interactive-tools-while-gpt-6-rolls-out-to-a-broader-audience/"
+    },
+    "asks": [
+     {
+      "id": "38671b48-9fd3-41dc-9baa-60c597a435ec",
+      "said": "I think everyone will vibe code without even realizing they're vibe coding in a year. I want to argue the case.",
+      "scope": "as_typed"
+     }
+    ],
+    "beats": [
+     "Ask ChatGPT what a loan costs and it hands you sliders: you just ordered software.",
+     "Vibe coding means making software by asking for it. Millions now do that by accident.",
+     "The case: it is free, it is switched on by default, and it turns up unasked.",
+     "The catch: people almost never check the sums, and most fixes fail.",
+     "Our dated call."
+    ],
+    "pitch": {
+     "question": "Will most people who use AI be making their own software within a year, without ever knowing they are doing it?",
+     "headline": "ChatGPT now answers with an app. You are a vibe coder and nobody told you.",
+     "hook": "Since 8 October, ask ChatGPT what a loan costs and its new Intelligent UI can hand you a working calculator with sliders, on the free plan.",
+     "examples": [
+      "ChatGPT Intelligent UI builds a bill splitter or calculator inside the chat, free users included from 8 Oct 2026.",
+      "Claude's custom visuals are on for every user on web and desktop, with nothing to switch on.",
+      "A UC Davis study found (7 Nov 2026) that novices checked the data in 3 of 60 sessions and 11 of 16 fixes failed."
+     ],
+     "chain": [
+      "Your staff and customers already ask AI their everyday questions.",
+      "The answers now arrive as small working tools instead of paragraphs.",
+      "Ask for a change, and the tool is rebuilt from your sentence.",
+      "That is vibe coding, with nobody using the name.",
+      "People trust a tool that looks finished.",
+      "So the sums inside go unchecked, by people who do not know they built anything."
+     ],
+     "take": "The case we argue: by November 2027 most people who use AI every week will be making little tools without calling it coding, and the half who never touch a chatbot are the limit. OUR PREDICTION closes it, with how sure we are."
+    },
+    "research_prompt": "Act as a research journalist. Plain question: Will most people who use AI be making their own software within a year, without ever knowing they are doing it? From primary sources first (vendor help pages, launch posts, peer-reviewed or preprint studies, official surveys), find the newest dated evidence from 1 September to 22 November 2026 on: assistants that answer ordinary questions with interactive tools (ChatGPT Intelligent UI, Claude custom visuals and artifacts, Gemini dynamic view, Copilot Pages), which plans and devices get them and whether they appear unasked; any usage or retention numbers for those tools; studies of whether ordinary users check or fix what they get; and how many adults use AI chatbots at all. Give at least three threads that point towards the claim and one that points against. For every claim give the exact wording or number, its URL and its publication date, and list anything you could not confirm.",
+    "shape": "story",
+    "dive": "Chat answers have quietly turned into small apps made to order, and the people using them are writing software by asking, without the name or the habit of checking.",
+    "aim": "interest",
+    "funny": "Congratulations, you are now a software developer: your first app splits a restaurant bill and nobody has tested it.",
+    "from_inspiration": {
+     "action_id": "0259682a-01ac-4408-a07b-532fd67a3086",
+     "card_id": null,
+     "card_name": null
+    }
    }
   ]
  },
@@ -2668,6 +2724,12 @@
     "verdict": "new",
     "of": "off-tue-701a2c55-7400-4dc8-99cb-d6001147ae16",
     "why": "No recent post covers the parents' poll on AI in school; the closest is a loose match about AI habits."
+   },
+   {
+    "ref": "fri-5",
+    "verdict": "new",
+    "of": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
+    "why": "The nearest post is about companies deciding whether to build software or buy it, judged on who maintains it. fri-5 is different news (ChatGPT Intelligent UI and Claude custom visuals turning everyday answers into small tools) with different advice: ordinary users are vibe coding without knowing it and almost never check the sums. It shares the topic, not the story."
    }
   ],
   "note": "Two rounds: the first read every option; the second read the five written after it to replace those cut (16 Nov). Its refs use each option's place after the swap."
