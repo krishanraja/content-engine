@@ -17,9 +17,13 @@ before the pack.
 - **Who it is for, by the second sentence** (FOR_THE_LEADER). Say what this changes for a business, in a leader's
   terms: budget, team, customers, suppliers, contracts, prices or margin. A pop-culture hook is welcome when the next
   line turns it into their business. `story_check.py` warns when the first two sentences name no stake.
-- **The short cut is one idea, 20 to 35 seconds** (TWO_CUTS, SHORT_CUT): 45 to 75 script words. The hook, the one idea,
-  the call, then the last line ("The full story is free at makeyourmindup.ai."); his beat of what he would do is one
-  sentence at most, or left out. A second idea goes to the long cut or the article. `story_check.py --cut short`
+- **The short cut is one story, 60 to 90 seconds** (TWO_CUTS, SHORT_CUT, ONE_STORY_SHORT): 160 to 210 script words,
+  about the length of his AI music short, a little less (Ruling, Krish, 2026-11-17: "75 word script is insanely short.
+  the AI music short is about the right amount of words, maybe just less"). The hook, the one story told with room to
+  be fun, the call, then the last line ("The full story is free at makeyourmindup.ai."). A second story or example
+  goes to the long cut or the article; the long cut may bring other examples in when each is coherently explained as
+  further evidence or a counterpoint ("the one story rule is only really for the 90 second video"). Both cuts are
+  always fun to make and to watch. `story_check.py --cut short`
   refuses a short outside the band or not ending on the last line. The file keeps its old name, `-90s.md`.
 - **One more fresh reader** after each read-back of each cut (a fourth subagent, "Separate reader: read-back D"),
   given only the script's words and this prompt, word for word:
