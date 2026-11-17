@@ -1,6 +1,6 @@
 You can't sack an AI. So when it screws up, who gets the boot? Probably you.
 
-And honestly, that's fair, because loads of people are blaming the AI for their own mistakes. They just shrug and say, well, AI isn't very good, is it? But that's someone blaming their tools for their own work, and that has never gone down well.
+And honestly, that's fair, because loads of people are blaming the AI for their own mistakes right now. They just shrug and say, well, AI isn't very good, is it? But that's someone blaming their tools for their own work, and that has never gone down well.
 
 When a car crashes, we don't put the car on trial, we look at whoever was driving. AI is the car and you're the driver, so "the AI did it" is never going to save you.
 
