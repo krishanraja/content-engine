@@ -2362,7 +2362,7 @@
           "evidence": "the reader prompts did not ask for unexplained names, an opening that only teases, wrong-way comparisons or advice past the evidence"
         }
       ],
-      "surface": "Every script is heard by fresh readers before it reaches his teleprompter; his sign-off adds to them and never replaces them unless he says in his own words to skip them.",
+      "surface": "Every script is heard by fresh readers before it reaches his teleprompter; his sign-off adds to them and never replaces them unless he says in his own words to skip them. From 17 Nov his own Approve scripts press on the board is the exception: it is his approval of the exact words he read, edits included, and it sends at once; the readers and the checks run after it and report to him, and never hold or change his words (F49; Ruling (Krish, 2026-11-17): \"you need to fix every instance of this workflow everywhere - I need to see the board state change and my edits get saved, and the approve scripts button auto sends to teleprompter\"). A session sending, or carrying his typed words, still waits on the readers.",
       "guards": [
         {
           "file": "scripts/post-pack/making.py",
@@ -2579,7 +2579,7 @@
         }
       ],
       "related": [],
-      "surface": "Nothing goes to Teleprompter, by a session or by his Approve scripts press or typed approval, until a separate reader has compared those exact words with his AI Music take on every quality in config/script-floor.json and making.py tone-floor recorded a pass bound to the script's hash. A fail is rewritten, never argued. The off-day recorded press holds to the same floor (week_plan.py requires the option's tone_floor from the week of 23 Nov).",
+      "surface": "Nothing a session sends goes to Teleprompter, nor his typed approval carried by a session, until a separate reader has compared those exact words with his AI Music take on every quality in config/script-floor.json and making.py tone-floor recorded a pass bound to the script's hash. A fail is rewritten, never argued. A session's off-day recorded send holds to the same floor (week_plan.py requires the option's tone_floor from the week of 23 Nov). His own Approve or off-day Approve scripts press on the board sends at once (F49; Ruling (Krish, 2026-11-17): \"you need to fix every instance of this workflow everywhere - I need to see the board state change and my edits get saved, and the approve scripts button auto sends to teleprompter\"): the tone floor then runs on his exact words and its verdict goes to him.",
       "guards": [
         {
           "file": "scripts/post-pack/teleprompter_send.py",
@@ -2734,6 +2734,57 @@
           "file": "apps/control-plane/api/_houseRules.ts",
           "contains": "id: 'ONE_STORY_SHORT'",
           "how": "the house rule every writer and the separate reader read"
+        }
+      ]
+    },
+    {
+      "id": "F49-approve-held-his-own-edits",
+      "on": "2026-11-17",
+      "status": "guarded",
+      "mode": "press_held_silently",
+      "guard_level": "gate",
+      "krish": "pressed approve, and it just deleted all my edits, and the board looks like i never did anything. The title of this article also now doesnt make sense given my new scripts. Then: you need to fix every instance of this workflow everywhere - I need to see the board state change and my edits get saved, and the approve scripts button auto sends to teleprompter",
+      "what": "Tue 17 Nov 16:20 UTC, piece b019dbf8: Krish edited both scripts in the board's review and pressed \"Approve both scripts, with my edits\". The board saved his edited words (board_history picks/tue-scripts-words-b019dbf8 revision 5). The server held the send because his edited words had no scripts' check (revision 6), and the card went on showing Production planned with \"Read and approve the scripts\" over the older filed words. The same hold had happened at 14:57. A session sent his words to Teleprompter by hand.",
+      "symptom": "His Approve scripts press seemed to do nothing and to throw away his edits; the card never moved on and the title no longer matched his words.",
+      "cause": "Two faults, both reproduced by tests. The server held every press whose words had no scripts' check, read-back and tone floor (heldBecause), and new words he types can never have one, so his own edits could never send. The board counted an approval as stale whenever its words differed from the filed scripts (scriptsChanged), so his edits, which differ by design, read as an approval of older words and the press came back with the old text.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "scriptsChanged compared his approved words with the filed scripts and never asked which came first, so his own later edits made his approval stale"
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "heldBecause held his own press until checks that cannot exist for words he has just typed, and the answer was written only into the press document, which the card did not show as a change"
+        }
+      ],
+      "related": [
+        "F45-scripts-sent-unread",
+        "scripts-regressed-below-ai-music",
+        "F47-card-never-moved-on"
+      ],
+      "surface": "His own Approve scripts press sends his exact words, edits included, at once, on a series day, a placed piece and an off-day recorded voiceover alike; the checks still to run go beside the send (send.checks) and run after it, reporting to him. His approval goes stale only when a script is filed after it. The card then says when it was sent and moves on to recording, and its title is the one his approved scripts speak. A session's send, or his typed words carried by a session, still waits on the checks.",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/board/_presses.ts",
+          "contains": "const hisPress = (who: string) => who === 'Krish'",
+          "how": "his own press sends past heldBecause and the off-day tone floor; the checks go in send.checks",
+          "test": "npx vitest run tests/control-plane/board-presses.test.ts tests/control-plane/offday-recorded.test.ts"
+        },
+        {
+          "file": "apps/control-plane/api/board/_decisions.ts",
+          "contains": "Only a script filed AFTER his approval makes it stale",
+          "how": "scriptsChanged counts only scripts filed after his approval"
+        },
+        {
+          "file": "tests/control-plane/board-decisions.test.ts",
+          "contains": "16:20 reproduced: his edited words count as approved",
+          "how": "16:20's press: Production planned, sent at 16:20 UTC, no old press, the spoken title",
+          "test": "npx vitest run tests/control-plane/board-decisions.test.ts"
+        },
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "export function workingTitle(",
+          "how": "the card's title is the title his approved scripts speak"
         }
       ]
     }

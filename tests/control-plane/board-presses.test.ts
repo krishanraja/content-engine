@@ -252,7 +252,11 @@ describe('Approve scripts sends his exact words to Teleprompter from the server'
     expect(answer).toMatchObject({ status: 'sent', recorded: false, record_error: 'the piece changed twice while the send was being recorded', folder_id: FOLDER })
     expect(twice.pieces).toHaveLength(0)
   })
-  it('holds words the scripts\' check did not pass or no fresh readers read back, his own edits included, and sends nothing', async () => {
+  // Ruling (Krish, 2026-11-17), F49: his own press sends, his edits included; the checks run after and report to him.
+  // Tue 17 Nov 16:20, piece b019dbf8: he edited both scripts and pressed "Approve both scripts, with my edits", and the
+  // server held the send ("these words have not passed the scripts' check"). A session carrying his typed words is still
+  // held until the checks pass (tests/control-plane/board-typed-approval.test.ts).
+  it('sends his own press at once, his edits included, and names the checks still to run after it', async () => {
     const cases: Array<[string, unknown, Record<string, unknown>, RegExp]> = [
       ['no making record', null, {}, /making record could not be read/],
       ['the check never ran', { by: 'Claude Code' }, {}, /have not passed the scripts' check/],
@@ -271,13 +275,21 @@ describe('Approve scripts sends his exact words to Teleprompter from the server'
       const t = setup(sentOk, { making })
       const { status, out } = await t.put('picks', 'mon-scripts', approval(extra))
       expect(status, what).toBe(200)
-      expect(t.sent, what).toHaveLength(0)
-      expect(out.send.status, what).toBe('held')
-      expect(out.send.error, what).toMatch(said)
-      expect(out.send.error, what).toMatch(/a session checks them/)
-      expect(out.send, what).not.toHaveProperty('recorded')
+      expect(t.sent, what).toHaveLength(1)
+      expect(t.sent[0].scripts.map((x: { source: string }) => x.source), what).toEqual(Object.values(approval(extra).texts))
+      expect(out.send.status, what).toBe('sent')
+      expect(out.send.checks, what).toMatch(said)
+      expect(out.send.checks, what).toMatch(/^sent on his own press; still to run after it/)
+      expect(out.send.checks, what).not.toMatch(/nothing was sent/)
       expect(t.calls[0].args.p_body.approved, what).toBe(true)
     }
+    // His press answers in plain words what it did, which the board says back to him (F49).
+    const edited = await setup(sentOk, { making: checked() }).put('picks', 'mon-scripts', approval({ texts: { long: `${LONG}\n\nOne more line he typed.`, short: SHORT } }))
+    expect(edited.out.line).toMatch(/^Approved and sent to your Teleprompter at \d\d:\d\d UTC\. The checks on your words run next and report to you/)
+    expect((await setup(async () => ({ status: 'no_key', error: 'TELEPROMPTER_API_KEY is not set, so nothing was sent: a session sends' })).put('picks', 'mon-scripts', approval())).out.line)
+      .toBe('Approved, and your words are saved, but they are not in your Teleprompter yet: TELEPROMPTER_API_KEY is not set. The card says what happens next.')
+    // Words that passed every check send with nothing left to run.
+    expect((await setup(sentOk, { making: checked() }).put('picks', 'mon-scripts', approval())).out.send).not.toHaveProperty('checks')
     // The spoken words the check passed, and his own sign-off in his words, both count.
     const spoken = setup(sentOk, { making: checked({ long: spokenText(LONG), short: SHORT }) })
     expect((await spoken.put('picks', 'mon-scripts', approval())).out.send.status).toBe('sent')

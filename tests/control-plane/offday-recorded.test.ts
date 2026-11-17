@@ -106,17 +106,25 @@ describe('after his Approve the piece is on its day and the words go to Teleprom
     expect(makingSteps({ id: PIECE, state: db.row.state, meta: db.row.meta }).find(s => s.key === 'scripts')).toMatchObject({ state: 'done', note: 'short; in Teleprompter' })
   })
 
-  it('holds the send, but still puts the piece on its day, when the tone floor is missing or not a pass', async () => {
+  // F49 (Ruling, Krish, 2026-11-17): his own press sends; the tone floor runs after it and reports to him.
+  it('sends his own press when the tone floor is missing or not a pass, names it as still to run, and puts the piece on its day', async () => {
     for (const [what, over] of [['missing', { tone_floor: undefined }], ['a fail', { tone_floor: { reader: 'a fresh separate reader', verdict: 'fail', why: 'a list of exhibits' } }]] as const) {
       const db = fakeDb({ id: PIECE, state: 'seeded', scheduled_for: null, lane_slot: null, meta: {}, buried_at: null, updated_at: 't0' })
       let calls = 0
       const out = await afterPress(db as any, { week: WEEK, collection: 'queue', id: ID, body: await preparePress('queue', ID, press(over)), who: 'Krish', saved: { ok: true, revision: 1 } },
         { send: async () => { calls++; return { status: 'sent' as const } }, now: () => '2026-11-01T09:00:05Z' })
-      expect(calls, what).toBe(0)
-      expect(out?.send, what).toMatchObject({ status: 'held' })
-      expect(String(out?.send?.error), what).toMatch(/has not passed the tone floor/)
+      expect(calls, what).toBe(1)
+      expect(out?.send, what).toMatchObject({ status: 'sent' })
+      expect(String(out?.send?.checks), what).toMatch(/^sent on his own press; still to run after it: the 90-second script has not passed the tone floor/)
       expect(db.row.scheduled_for, what).toBe('2026-11-05')
     }
+    // A session's press carrying his approval still waits on the tone floor.
+    const db = fakeDb({ id: PIECE, state: 'seeded', scheduled_for: null, lane_slot: null, meta: {}, buried_at: null, updated_at: 't0' })
+    let calls = 0
+    const out = await afterPress(db as any, { week: WEEK, collection: 'queue', id: ID, body: await preparePress('queue', ID, press({ tone_floor: undefined })), who: 'engine_operator', saved: { ok: true, revision: 1 } },
+      { send: async () => { calls++; return { status: 'sent' as const } }, now: () => '2026-11-01T09:00:05Z' })
+    expect(calls).toBe(0)
+    expect(out?.send).toMatchObject({ status: 'held' })
   })
 
   it('an idea already on another day stays there, and nothing is sent', async () => {

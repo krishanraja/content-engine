@@ -30,8 +30,8 @@ Usage (PIECE is the piece id; for a day with no piece yet it is day:MONDAY/mon..
       2026-11-12: "Scripts and locks only. Typed approval counts for locking a story and approving a script; putting an
       idea on the publish board still needs your press, so that gate is unchanged."). Only words he typed to this
       session, verbatim; never a summary, never for an idea. The board shows it as "Approved in your words"; approved
-      scripts go to his Teleprompter as the Approve scripts press sends them (held until the scripts' check and the two
-      fresh readers have passed). --sign also writes his words as the lock's signature line, bound to its sha256.
+      scripts carried this way go to his Teleprompter once the scripts' check and the two fresh readers have passed (his
+      own Approve scripts press on the board sends at once and its checks run after it: F49, Krish, 2026-11-17). --sign also writes his words as the lock's signature line, bound to its sha256.
 
 The engine key comes from scripts/engine.py (ENGINE_OPERATOR_TOKEN, the cloud session's network secret, or Windows
 Credential Manager); it is never printed or written anywhere. Writes are recorded as --by (default "Claude Code", or
