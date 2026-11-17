@@ -1,0 +1,4 @@
+interface:
+  display_name: "Teach it like Hannah Fry"
+  short_description: "Plan a script's breakdown on Hannah Fry's shape, then have a separate reader check it against her eight teaching moves"
+  default_prompt: "Use $hannah-fry to check this script against Hannah Fry's teaching craft: <script path>."
