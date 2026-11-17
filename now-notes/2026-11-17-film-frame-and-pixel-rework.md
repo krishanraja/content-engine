@@ -1,0 +1,3 @@
+Status: film_frame (card ve-style-8-film-frame) built by Codex and checked by Claude: its rings and lifts were placed on the slot while the plate was crop-filled, so they hit different content in tall and wide; regions are now fractions of the plate's own picture and the crop centres on them. pixel_stage's first build drew each picture 144 px across, unrecognisable, so its card goes back to Codex sized to the stage. `film-crt` and `pixel-retro` stay `needs_device` until Krish's yes.
+Next: re-queue ve-style-7-pixel-stage on its existing booking once this merges, and render film_frame's test cut on the house test take.
+North Star check (2026-11-17): holds.
