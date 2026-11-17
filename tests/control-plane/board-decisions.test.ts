@@ -187,7 +187,11 @@ describe('F47: the card moves on when a session reaches a milestone, and offers 
     const it = item(buildView(at17({ scripts: { [TUE]: filed }, picks: [words] })))
     expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'done', 'current', 'todo'])
     expect(it.next).not.toMatchObject({ label: 'Read and approve the scripts' })
-    expect(it.line).toMatch(/Scripts approved\. Next: record both cuts/)
+    // Approved: the card waits on his My takes are in the Inbox (Krish, 2026-11-17: "whenever I press approve script, the
+    // new board state should be waiting for me to confirm the videos are in the Inbox").
+    expect(it.line).toMatch(/^Your scripts are approved\. Record both cuts from your Teleprompter, drop the takes in the Video Engine Inbox, then press My takes are in the Inbox\.$/)
+    expect(it.next).toMatchObject({ kind: 'press', op: 'takes-in', label: 'My takes are in the Inbox', body: { piece_id: TUE } })
+    expect(it.decision).toBe(true)
   })
   it('no scripts filed yet: past Fleshed out, and the card says the scripts are next, with no press to approve', () => {
     const it = item(buildView(at17()))

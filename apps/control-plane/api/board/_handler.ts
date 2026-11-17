@@ -1,3 +1,4 @@
+import { TAKES_OP, newTakes, takesInOf } from './_takesIn.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { LIVE_ID, actor, growthWriter, collections, hisOnlyRefusal, monday, revision, validBody, validManifest, views, type Manifest, type View } from './_contracts.js'
@@ -402,7 +403,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         res.setHeader('Cache-Control', 'private, max-age=300')
         return res.redirect(302, url)
       }
-      if (op === 'research' || op === 'material' || op === 'look' || op === 'style' || op === CUT_OP || op === THUMB_OP) {
+      if (op === 'research' || op === 'material' || op === 'look' || op === 'style' || op === CUT_OP || op === THUMB_OP || op === TAKES_OP) {
         // The day path's presses on a piece of this week (_research.ts): research it now (sonar-pro), file research he
         // dropped, his pick of the look, his pick or "Not this" of a motion or caption style (_style.ts, contract
         // 1.4.0), his Yes or Not this on one of its cuts (_cuts.ts, contract 1.6.0), and his Pick or Not this on its
@@ -418,10 +419,10 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         // An off-day video post's look or style pick (_offdayPiece.ts; Krish, 2026-11-17: "at no point does a voiceover
         // short give me the same controls as a mon/wed/fri piece"): its record is made and linked to the week here when
         // it has none, and only when the board itself offers this press, with this piece id, on that post.
-        if ((op === 'look' || op === 'style') && !row.error && !inWeek(row.data, week) && typeof body.item === 'string' && OFFDAY_DOC.test(body.item)) {
+        if ((op === 'look' || op === 'style' || op === TAKES_OP) && !row.error && !inWeek(row.data, week) && typeof body.item === 'string' && OFFDAY_DOC.test(body.item)) {
           const view = await readView(db, week, process.env, undefined, undefined, NO_DRIVE)
           const post = (view.model?.days || []).flatMap(d => d.items.map(it => ({ d, it }))).find(x => x.it.key === body.item && x.it.type === 'post')
-          const offers = post && (post.it.others || []).some(a => a.kind === 'press' && (a.op === 'look' || a.op === 'style')
+          const offers = post && [post.it.next, ...(post.it.others || [])].some(a => a && a.kind === 'press' && (a.op === 'look' || a.op === 'style' || a.op === TAKES_OP)
             && String((a.body as Record<string, unknown> | undefined)?.piece_id || '').toLowerCase() === pieceId)
           if (!post || !offers) throw new BoardError(404, 'piece_not_in_week')
           const linked = await linkOffdayPiece(db, pieceId, { week, day: post.d.day, item: String(body.item), title: post.it.title,
@@ -431,6 +432,29 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         }
         if (row.error || !row.data || !inWeek(row.data, week)) throw new BoardError(404, 'piece_not_in_week')
         try {
+          if (op === TAKES_OP) {
+            // My takes are in the Inbox (_takesIn.ts, contract 1.23.0): the recordings in the Video Engine Inbox since he
+            // approved the scripts, held by no other piece, written on the piece by name; then placed on their cuts.
+            const picks = await db.from('board_documents').select('doc_id,body,updated_by,updated_at').eq('week', week).eq('collection', 'picks')
+            if (picks.error) throw new BoardError(503, 'board_unavailable')
+            const { scriptsApproval } = await import('./_weekModel.js')
+            const approval = scriptsApproval((picks.data || []) as never, pieceId)
+            if (!approval) throw new BoardError(409, 'scripts_not_approved')
+            const others = await db.from('content_ideas').select('id,meta').not('meta->takes_in', 'is', null).neq('id', pieceId).limit(300)
+            if (others.error) throw new BoardError(503, 'pieces_unavailable')
+            const claimed = new Set<string>((others.data || []).flatMap((r: Record<string, any>) => (takesInOf(r.meta)?.files || []).map(f => f.drive_id)))
+            const listing = await (deps.inbox ?? (async () => (await import('../library/_inboxDrive.js')).listInbox((await import('../library/_inboxDrive.js')).INBOX_FOLDER_ID)))()
+            if (listing.ok === false) return res.status(503).json({ ok: false, error: 'inbox_unreadable', reason: listing.reason, fix: listing.fix })
+            const files = newTakes(listing.files, approval.at, claimed)
+            if (!files.length) return res.status(409).json({ ok: false, error: 'no_new_takes',
+              line: `No recording is in the Video Engine Inbox since you approved the scripts${approval.on ? ` on ${approval.on}` : ''}. If you have just dropped it, give Drive a minute and press again.` })
+            const now = (deps.now ?? (() => new Date().toISOString()))()
+            const { patchMeta } = await import('../_pieceStore.js')
+            const saved = await patchMeta(db as never, pieceId, meta => ({ ...meta, takes_in: { confirmed_at: now, by: 'Krish', since: approval.at, files } }))
+            if (saved.ok === false) throw new BoardError(saved.reason === 'busy' ? 409 : 503, saved.reason === 'busy' ? 'piece_busy' : 'piece_unavailable')
+            const placed = await (deps.placeTakes ?? (async (n: number) => (await import('../library/_placeTakes.js')).dispatchPlaceTakes(n)))(files.length).catch(() => ({ sent: false as const, reason: 'failed' as const }))
+            return res.status(200).json({ ok: true, takes: files, place_takes: placed })
+          }
           if (op === 'material') {
             const name = String(body.title || 'Research').slice(0, 180)
             // A storyboard the session made is filed with its role in the title, so the day knows one is on file.
