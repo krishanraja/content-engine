@@ -1,0 +1,25 @@
+{
+  "_about": [
+    "His reference intros, word for word (Ruling, Krish, 2026-11-17: \"how can you encode this intro style for the future? I want my introductions to be consistent, particularly the 90 second ones\"). Every 5-minute and 90-second intro is judged against these: four beats (a surprising fact about a named player; why it is strange; turned onto the viewer's world with a character they recognise; a 'Let's...' turn and the title spoken as a question, which the video shows as its title, flowing out of the captions and back in)."
+  ],
+  "intros": [
+    {
+      "piece": "Wed 11 Nov, AI music or human music",
+      "source": "config/script-floor/ai-music-long.said.txt (what he said on film)",
+      "title": "Is it AI music or is it human music?",
+      "text": "Does this track sound familiar? It's all over TikTok and it's all over the charts, but which came first, TikTok or the charts? And is it AI music or is it human music? That's the important question. Let's find out about that."
+    },
+    {
+      "piece": "Wed 18 Nov, build or buy (db9f9f6a-1092-49be-8024-f335e060305a)",
+      "source": "typed by Krish in a Claude Code session, 2026-11-17",
+      "title": "Build or buy your tools in an AI world?",
+      "text": "Anthropic, which makes Claude, subscribe to other tools for CRM , customer service and even maintaining their own AI. This is the company that everyone else builds tools with. And yet, they shop externally instead of building everything even though they definitely can. So does that mean that the one engineer in your team who now feels like a Crocodile Hunter and build anything internally is completely wrong? Let's dive in and see whether you should actually build or buy your tools in an AI world."
+    }
+  ],
+  "beats": [
+    "1. A surprising, concrete fact about a named player, in the first sentence.",
+    "2. Why that is strange or unexpected.",
+    "3. Turned onto the viewer's own world, with a character or situation they recognise.",
+    "4. A 'Let's...' turn (Let's find out, Let's dive in) and the piece's title spoken as a question, which the video shows as its title."
+  ]
+}
