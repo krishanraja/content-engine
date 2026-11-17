@@ -71,7 +71,7 @@ describe('after his Approve scripts, every card waits on his takes, then makes o
     const it = card(inputs())
     expect(it.next).toEqual(expect.objectContaining({ kind: 'press', op: TAKES_OP, label: 'My takes are in the Inbox', body: { piece_id: TUE } }))
     expect(it.decision).toBe(true)
-    expect(it.line).toBe('Your scripts are approved. Record both cuts from your Teleprompter, drop the takes in the Video Engine Inbox, then press My takes are in the Inbox.')
+    expect(it.line).toBe('Scripts approved Tue 17 Nov, sent to your Teleprompter at 14:57 UTC. Record both cuts from your Teleprompter, drop the takes in the Video Engine Inbox, then press My takes are in the Inbox.')
     expect(it.others.some((a: Body) => a.kind === 'prompt' && /step record\)/.test(a.prompt))).toBe(true)
   })
 

@@ -94,7 +94,7 @@ describe("an off-day voiceover's prompt follows its stage (Tue 17 Nov)", () => {
     expect(it.line).toMatch(/You approved the script on Tue 17 Nov, and your approval counts\. It is not in your Teleprompter yet: the send was held \(the piece's making record could not be read, so nothing was sent\)/)
     const sent = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: { ...APPROVED, send: { ...TUE_WORDS.send, status: 'sent', error: undefined } } }])
     // In his Teleprompter: the card waits on his My takes are in the Inbox (17 Nov), with the record step's prompt beside it.
-    expect(sent.line).toMatch(/Your script is approved\. Record it from your Teleprompter, drop the take in the Video Engine Inbox, then press My takes are in the Inbox\./)
+    expect(sent.line).toMatch(/Script approved Tue 17 Nov, sent to your Teleprompter at \d\d:\d\d UTC\. Record it from your Teleprompter, drop the take in the Video Engine Inbox, then press My takes are in the Inbox\./)
     expect(sent.next).toMatchObject({ kind: 'press', op: 'takes-in', body: { piece_id: PIECE, item: 'off-tue-mcpskin' } })
     expect(anyPrompt(sent)).toContain('recording.py get NAME')
     const p = promptOf(it.next)
