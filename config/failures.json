@@ -2579,7 +2579,7 @@
         }
       ],
       "related": [],
-      "surface": "Nothing goes to Teleprompter, by a session or by his Approve scripts press or typed approval, until a separate reader has compared those exact words with his AI Music take on every quality in config/script-floor.json and making.py tone-floor recorded a pass bound to the script's hash. A fail is rewritten, never argued.",
+      "surface": "Nothing goes to Teleprompter, by a session or by his Approve scripts press or typed approval, until a separate reader has compared those exact words with his AI Music take on every quality in config/script-floor.json and making.py tone-floor recorded a pass bound to the script's hash. A fail is rewritten, never argued. The off-day recorded press holds to the same floor (week_plan.py requires the option's tone_floor from the week of 23 Nov).",
       "guards": [
         {
           "file": "scripts/post-pack/teleprompter_send.py",
@@ -2590,6 +2590,11 @@
           "file": "apps/control-plane/api/board/_presses.ts",
           "contains": "has not passed the tone floor",
           "how": "the Approve scripts press and his typed approval hold the send until the tone floor passed for those exact words"
+        },
+        {
+          "file": "apps/control-plane/api/board/_presses.ts",
+          "contains": "const tone = (placed.making?.script_check",
+          "how": "an off-day piece he records holds its Teleprompter send until a tone floor pass is recorded for those exact words, against the short reference"
         },
         {
           "file": "config/script-floor.json",
