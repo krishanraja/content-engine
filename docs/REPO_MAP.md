@@ -3501,6 +3501,8 @@ His ticks on Inspiration cards, as this engine reads and answers them (docs/PUBL
 - `function jobPatch(action: Record<string, any>, r: JobInput, now: string): { patch: Record<string, unknown> } | { refuse…`
 - `function cardWords(card: Record<string, any> | null): string[]`
 - `function brief(action: Record<string, any>, card: Record<string, any> | null, request: Record<string, any> | null, read…`
+- `const IDEA_READER`
+- `function researchToFile(before: Record<string, any>, report: JobInput, reading: Record<string, any> | null): Record<str…`
 
 ### `apps/control-plane/api/inspiration/_cards.ts`
 

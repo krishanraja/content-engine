@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-17","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- When the inspiration-piece run reports his tick drafted, the engine files his Markdown idea file (the reading Control Centre wrote from it) on the new piece as research and copies it to his research library, so it is on the piece's shelf on the ideas board and the publish board. (2026-11-17)
 - Tue 17 data-centres scripts final and in Krish's Teleprompter (folder A08795EC, long DD48E428, short ECBC1295), updated in place and read back after his "shed" correction: no "shed" anywhere, data centre explained once in plain words; both pass story check, INTRO_PATTERN, kill list, copy lint and the tone floor. The engine's script records could not be written from the cloud session. (2026-11-17)
 - Tue 17 data-centres scripts rewritten to Krish's 17 Nov ruling (one story for the 90-second cut only; long cut keeps the lock's three ways as evidence; short lifted to about 220 words via config/short-cuts.json with his words); all mechanical gates pass, round 9 readers in progress. Teleprompter still holds the earlier approved words. (2026-11-17)
 - The scripts are on every card that holds them, every day. Filed and not approved, the card offers Read and approve the scripts (read, edit in place, approve); on an off-day post he records, like Tue 17's habits voiceover, that is the card's next action. Approved, the card keeps Edit the scripts and Take back my approval. His take-back, by press or in his words carried by board_session.py approve --take-back, voids every earlier approval of that piece's scripts; teleprompter_send.py reads it as a withdrawal. A typed approval counts only when his words name it (approve, approval, sign; a lock also "lock it"), in the board, the server's and the session's Teleprompter gates and board_session.py. The Tue 17 habits voiceover's carried approval ("ready in teleprompter for me") no longer counts, so its card asks for his Approve with the filed script (material eb036615) once this is live. (2026-11-17)
@@ -42,13 +43,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-17 Krish asked that research he adds as an idea stays bound to it through the ideas board and the publish board, so the filing is done by the report route, not left to the run's model.
 - 2026-11-17 config/short-cuts.json (this piece's short lifted to 220 words, his words), docs/plans/2026-11-17-draft-script.md and -90s.md.
 Older lines: `docs/history/2026-11-17-NOW-moved-18.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-17): Krish records both cuts from Teleprompter.
+- Next (2026-11-17): Control Centre's "Add an idea" (control-center branch claude/sharp-pascal-0x57ab) merges, so the first idea file reaches this path.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
