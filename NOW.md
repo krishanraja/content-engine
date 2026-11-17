@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-17","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The logo appears on a cut only on the animated title frame and the close card, wide and tall alike, for every piece published from Mon 23 Nov (config/brand-palette.json logo_rule). ve's wide cut drops its mark tile and stage header logo from that date (compile bodyLogo false), and ve qc then proves the mark absent; pieces of the week of 16 Nov render as signed. (2026-11-17)
 - Each generated beat in the production plan carries its higgsfield-generator recipe (model, prompt, the still it starts from, length, estimated credits), and the Claude production prompt uses the skills as their own guide says: stills before video on the right model, motion from the approved still on Seedance 2.5, reframe for a clip at the wrong shape, cost before generation, no Soul ID, presets or Higgsfield audio, and the Virality Predictor as a signal on the reviewed short. (2026-11-17)
 - Krish approved the cover palette; the carousel and meme skills guarantee each format's floor with one named experiment above it; the cover-art skill sets covers by channel (Receipt skins on brand accounts, face-led on his own, both on YouTube) and rotates face-led covers between his real cutout with the piece's figure and a generated headshot with a generated scene; the home pass now also publishes his All other photos (never DO-NOT-USE) as likeness references. (2026-11-17)
 - The Claude production prompt puts his face in a generated scene only from a likeness approved in krish-clone's registry (krish-avatar-heygen today), judged with clone likeness, and hands the covers to thumbnail-designer with the face-led cover cards once they are on main. (2026-11-17)
@@ -43,13 +44,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-17 Ruling (Krish, 2026-11-17): the logo only on the final animated close card and the title frame that animates as he introduces the title, "so we can have focuson the hook in the opening seconds".
 - 2026-11-17 Ruling (Krish, 2026-11-17): "run Apify weekly in the Sunday ideas run".
 Older lines: `docs/history/2026-11-17-NOW-moved-28.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-17): Krish presses My takes are in the Inbox on the Tue 17 habits voiceover; the first plan run is checked end to end.
+- Next (2026-11-17): Build the animated title frame into ve (the AI music piece's full-frame title with the stacked logo underneath) so it can appear on ve cuts; until then a ve cut shows the logo on its close alone.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
