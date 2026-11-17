@@ -19,7 +19,7 @@ import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, of
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
 import { HELD_CHANGED, HELD_TITLE, approvedLabel, approvedWhen, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
-import { pieceDecisions, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
+import { lockRead, newestScripts, pieceDecisions, type FiledScript, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
 import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
@@ -313,6 +313,8 @@ export interface ViewInputs {
   revision?: number | null
   /** The sessions and the materials store for the week's pieces and days (board_overlay; _writeBack.ts). */
   overlay?: Overlay | null
+  /** The newest script of each cut a session filed on each piece for his Approve, with its words (F47; readView). */
+  scripts?: Record<string, FiledScript[]>
   /** The approvals that stand now (board_approvals_now, _gate.ts), or null when they cannot be read: then every piece
    *  is held. Required, so no caller builds a view that skips the gate. */
   approvals: Approval[] | null
@@ -943,7 +945,11 @@ export function buildView(i: ViewInputs): WeekView {
   }
   // What went out or is on its way around the week, so an idea that retells it leaves the ideas board (contract 1.17.0).
   const recentOut = recentOutOf({ week: i.week, ideas: i.ideas, plans: i.plans, pieces: i.pieces }, days, i.all_items ?? null, i.recent_pieces ?? [])
-  const built = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut, picks: i.picks, decisions })
+  const built = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut, picks: i.picks, decisions,
+    scripts: i.scripts ?? {}, lockReads: Object.fromEntries(Object.keys(decisions).map(id => {
+      const lk = Object.values(i.locks).find(t => t && lockPieceId(t) === id)
+      return [id, lockSigned(lk) ? lockRead(lk) : { so_what: null, story: null }]
+    })) })
   // Beside each piece's Claude production prompt, its Perplexity research prompt, from everything on record (1.19.0).
   const model = withSavedNotes(withResearchPrompts(built, (day, it) => {
     const dv = days.find(x => x.day === day)
@@ -1040,6 +1046,28 @@ export async function readPieceDecisions(db: SupabaseClient, pieceId: string, en
     scripts: picks ? scriptsStateOf(picks, day, id) : undefined }), week, day }
 }
 
+/** The newest filed script of each cut on each piece, with its words (F47). */
+export async function readFiledScripts(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string, FiledScript[]>> {
+  const out: Record<string, FiledScript[]> = {}
+  if (!overlay) return out
+  const mats = (overlay.materials || []).filter(isObj).map(m => ({ id: String(m.id || ''), title: String(m.title || ''), role: typeof m.role === 'string' ? m.role : null,
+    at: typeof m.at === 'string' ? m.at : null, scope: m.scope, where: m.scope === m.piece_id ? 'piece' : 'day', storage: m.storage }))
+  const { readMaterial } = await import('../_pieceStore.js')
+  for (const id of pieceIds) {
+    const found = newestScripts(mats.filter(m => m.scope === id && m.storage === 'text'), id)
+    const read = await Promise.all(found.map(async ({ cut, m }) => {
+      try {
+        const got = await readMaterial(db as never, m.id)
+        const text = got.kind === 'text' && typeof got.body.content === 'string' ? got.body.content.trim() : ''
+        return text ? { cut, id: m.id, title: m.title, text, at: m.at } : null
+      } catch { return null }
+    }))
+    const ok = read.filter((x): x is FiledScript => Boolean(x))
+    if (ok.length) out[id] = ok
+  }
+  return out
+}
+
 /** Read every input of the week now and build its view. Each source that cannot be read is said in sources, never a failure. */
 export async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env,
   fetcher: Fetcher = fetch as unknown as Fetcher, now = new Date(),
@@ -1092,6 +1120,9 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // Beside it, everything made for the week's posts, from their folders in Drive (_drivePosts.ts; contract 1.7.0).
   const drivePosts = drive ? drive(week) : weekPosts(week, () => ownerDriveToken(env))
   const overlay = await readOverlay(db as never, week, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
+  // The scripts sessions filed on each piece for his Approve, with their words, so the card can offer his Approve
+  // scripts the moment they are filed (F47). A script that cannot be read is left off, never guessed.
+  const scripts = await readFiledScripts(db, overlay, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
   // Each piece's draft manifest (1.8.0), whose sha256 his Approve for publish binds.
   const drafts = await readDrafts(db, (pieces as Body[]).filter(p => SERIES_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
   // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held. Beside
@@ -1135,7 +1166,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     history: history as ViewInputs['history'], ideas, runs, north_star: north,
     locks: Object.fromEntries(LOCK_DAYS.map((d, k) => [d, locks[k] as string | null])),
     research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
-    specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, approvals,
+    specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, scripts, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
     drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items, all_items: allItems, recent_pieces: recentPieces as Body[],
     plans: { [shiftYmd(week, -7)]: beside[0] ?? null, [shiftYmd(week, 7)]: beside[1] ?? null }, sign_offs: await signOffs })

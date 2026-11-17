@@ -99,3 +99,40 @@ export function decisionsText(p: PieceDecisions): string {
     : `- ${x.label}: not made yet`
   return `His decisions on this piece when this prompt was copied:\n${p.items.map(line).join('\n')}\n${p.rule}`
 }
+
+/** A script a session filed on the piece for his Approve (a material of role script), with its words. */
+export interface FiledScript { cut: 'long' | 'short'; id: string; title: string; text: string; at: string | null }
+
+/** Which cut a filed script is, from its title: the short or 90-second cut, else the long (5-minute) one. null when it
+ *  names neither, so a stray note is never offered as a script. */
+export function scriptCut(title: string): 'long' | 'short' | null {
+  const t = title.toLowerCase()
+  if (/\bshort\b|\b\d+[- ]?second|\babout \d+ ?s\b/.test(t)) return 'short'
+  if (/\blong\b|\bminute\b|\b\d+-min\b/.test(t)) return 'long'
+  return null
+}
+
+/** The newest filed script of each cut among a piece's materials (role script, filed on the piece itself). */
+export function newestScripts<M extends { id: string; title: string; role?: string | null; at?: string | null; where?: string; scope?: unknown }>(materials: M[], pieceId: string): Array<{ cut: 'long' | 'short'; m: M }> {
+  const out = new Map<'long' | 'short', M>()
+  for (const m of materials) {
+    if (m.role !== 'script' || (m.where !== undefined && m.where !== 'piece') || (m.scope !== undefined && m.scope !== pieceId)) continue
+    const cut = scriptCut(m.title)
+    if (!cut) continue
+    const was = out.get(cut)
+    if (!was || String(m.at || '') > String(was.at || '')) out.set(cut, m)
+  }
+  return [...out.entries()].map(([cut, m]) => ({ cut, m }))
+}
+
+/** What a signed lock says, for the card's read sheet: its deeper story as the so-what and its surface story as the
+ *  story, so the card says what the piece is now, never the idea row it started from (Krish, 17 Nov). */
+export function lockRead(text: string | null | undefined): { so_what: string | null; story: string | null } {
+  if (!text) return { so_what: null, story: null }
+  const section = (name: string) => {
+    const m = new RegExp(`^##\\s*${name}\\s*$([\\s\\S]*?)(?=^##\\s|(?![\\s\\S]))`, 'mi').exec(text)
+    const body = m ? m[1].trim().split(/\n\s*\n/)[0].replace(/\s+/g, ' ').trim() : ''
+    return body || null
+  }
+  return { so_what: section('Deeper story'), story: section('Surface story') }
+}
