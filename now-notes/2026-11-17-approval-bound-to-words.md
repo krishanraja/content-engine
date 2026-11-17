@@ -1,0 +1,3 @@
+Status: His approval of a piece's scripts now counts only for the words he approved. When the scripts filed on the piece differ from the words in his approval, ignoring spacing, the scripts decision is not made, the session prompt and get_piece_board say they were rewritten since he approved them, and every piece card brings back Read and approve the scripts, bound to the new words. Wed 18's approval of 09:01 was of the scripts rewritten at 13:43. An older approval saved without its words stands as it was.
+Next: Krish approves Wed 18's v2 scripts on the board; that approval carries the v2 words, so the card moves on to recording.
+North Star check (2026-11-17): holds.

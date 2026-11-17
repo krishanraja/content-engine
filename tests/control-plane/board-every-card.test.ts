@@ -4,7 +4,7 @@ import { thisWeek } from './board-week-model.test'
 import { buildView, scriptsStateOf } from '../../apps/control-plane/api/board/_view'
 import { WORDS_ID, wordsBody, wordsDocId } from '../../apps/control-plane/api/board/_contracts'
 import { TYPED_SCRIPTS_ID } from '../../apps/control-plane/api/_teleprompter'
-import { newestScripts, scriptCut, scriptCuts, scriptSection } from '../../apps/control-plane/api/board/_decisions'
+import { decisionsText, newestScripts, pieceDecisions, scriptCut, scriptCuts, scriptSection, scriptsChanged } from '../../apps/control-plane/api/board/_decisions'
 import { recordedPiece, scriptsReady, withWork } from '../../apps/control-plane/api/board/_weekModel'
 
 // Ruling (Krish, 2026-11-17): "any feedback on the board UI or UX must be done to every single day present and future".
@@ -146,5 +146,44 @@ describe('the engine\'s read of one piece says its day', () => {
     // Read from the source: importing the route needs the live database's settings.
     const cols = /export const PIECE_COLUMNS = '([^']+)'/.exec(readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8'))?.[1] ?? ''
     expect(cols.split(',')).toContain('scheduled_for')
+  })
+})
+
+describe('an approval counts only for the words it approved (Krish, 17 Nov: "tie approvals to the words")', () => {
+  const P = 'db9f9f6a-1092-49be-8024-f335e060305a'
+  const v1 = { long: 'Starbucks spends about four hundred million dollars a year on software.', short: 'Should Starbucks build its own tools?' }
+  const v2 = [{ cut: 'long' as const, id: 'm2', title: 'Wed 18 scripts v2 (5-minute and 90-second)', text: 'Anthropic, which makes Claude, pays for other companies\' tools.', at: '2026-11-17T13:43:13Z' },
+    { cut: 'short' as const, id: 'm2', title: 'Wed 18 scripts v2 (5-minute and 90-second)', text: 'Anthropic pays for its tools. Should you?', at: '2026-11-17T13:43:13Z' }]
+  const typed = (texts: Record<string, string>) => [{ doc_id: wordsDocId('wed', 'scripts', P), body: { kind: 'approve_scripts', day: 'wed', via: 'words', approved: true, piece_id: P,
+    texts, titles: Object.fromEntries(Object.keys(texts).map(k => [k, 'T'])), folder_title: 'F', words: 'approve the scripts', said_at: '2026-11-17T09:01:28Z',
+    said_where: 'a Claude Code session', session_ref: 'https://claude.ai/code/session_x', at: '2026-11-17T09:01:28Z' } }]
+  it('the words he approved come with the approval', () => {
+    expect(scriptsStateOf(typed(v1), 'wed', P).texts).toEqual(v1)
+  })
+  it('scripts rewritten after his approval wait on his Approve again, and the decision says why', () => {
+    const dec = pieceDecisions({ meta: {}, lock: { signed: true, on: null, typed: null }, scripts: scriptsStateOf(typed(v1), 'wed', P), filed: v2 })
+    const s = dec.items.find(x => x.key === 'scripts')!
+    expect(s.made).toBe(false)
+    expect(s.note).toMatch(/the 5-minute script and the 90-second script have been rewritten since/)
+    expect(decisionsText(dec)).toMatch(/Scripts approved: not made yet: you approved earlier words/)
+  })
+  it('the same words, whatever the spacing, still count as approved', () => {
+    const same = { long: `  ${v2[0].text}\n`, short: v2[1].text.replace(' ', '\n') }
+    const dec = pieceDecisions({ meta: {}, lock: undefined, scripts: scriptsStateOf(typed(same), 'wed', P), filed: v2 })
+    expect(dec.items.find(x => x.key === 'scripts')!.made).toBe(true)
+  })
+  it('one cut rewritten is named on its own', () => {
+    expect(scriptsChanged({ long: v2[0].text, short: 'Older short words.' }, v2)).toEqual(['short'])
+  })
+  it('nothing filed, scripts not read, or an older approval saved without its words: the approval stands as it was', () => {
+    expect(scriptsChanged(v1, [])).toEqual([])
+    expect(scriptsChanged(v1, undefined)).toEqual([])
+    expect(scriptsChanged(null, v2)).toEqual([])
+  })
+  it('the card says the scripts were rewritten since he approved them, and offers the Approve on the new words', () => {
+    const dec = pieceDecisions({ meta: {}, lock: undefined, scripts: scriptsStateOf(typed(v1), 'wed', P), filed: v2 })
+    const ready = scriptsReady({ week: '2026-11-16', scripts: { [P]: v2 }, picks: [], decisions: { [P]: dec } }, 'wed', P, 'Build or buy', 'Fleshed out')
+    expect(ready?.line).toMatch(/^Fleshed out\. Rewritten since you approved them, so they need your Approve again: /)
+    expect((ready?.press.body as Record<string, any>).texts).toEqual({ long: v2[0].text, short: v2[1].text })
   })
 })
