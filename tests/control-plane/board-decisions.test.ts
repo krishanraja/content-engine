@@ -146,13 +146,17 @@ describe('F47: the card moves on when a session reaches a milestone, and offers 
     expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'current', 'todo', 'todo'])
     expect(it.line).toMatch(/^Branded for Tue 17\. Your production picks are in\. Both scripts are ready for your Approve: Tue 17 script, 5-minute cut/)
     expect(it.decision).toBe(true)
-    expect(it.next).toMatchObject({ kind: 'press', label: 'Approve scripts', collection: 'picks', id: 'tue-scripts-words',
+    expect(it.next).toMatchObject({ kind: 'press', label: 'Read and approve the scripts', collection: 'picks', id: 'tue-scripts-words',
       body: { kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: TUE, texts: { long: filed[0].text, short: filed[1].text } },
       words: { path: 'words', required: true } })
     // What it says is the signed lock, never the idea row it started from.
     expect(it.read.so_what).toBe('The midterms turned AI into a vote about the electricity bill.')
     expect(it.read.story).toBe('America has a new least-wanted neighbour.')
-    expect(it.read.research).toEqual(expect.arrayContaining([filed[0].title, filed[1].title]))
+    // The scripts are read in the review the press opens, never as links to raw text (Krish, 17 Nov: "the scripts are
+    // shitty links to awful looking text").
+    expect(it.read.research).not.toEqual(expect.arrayContaining([filed[0].title]))
+    expect((it.next as any).scripts).toMatchObject({ path: 'texts', approve: 'Approve both scripts', approve_edited: 'Approve both scripts, with my edits',
+      cuts: [{ cut: 'long', label: 'Long cut', text: filed[0].text, words: 7, material_id: filed[0].id }, { cut: 'short', label: 'Short cut', text: filed[1].text, words: 4 }] })
   })
   it('his press, as the board saves it, is a body the engine accepts; only his words approve', async () => {
     const { validBody } = await import('../../apps/control-plane/api/board/_contracts')
@@ -160,6 +164,20 @@ describe('F47: the card moves on when a session reaches a milestone, and offers 
     const saved = { ...press.body, words: 'Approved.', at: '2026-11-17T12:00:00Z', said_at: '2026-11-17T12:00:00Z' }
     expect(validBody('picks', press.id, saved)).toBe(true)
     expect(validBody('picks', press.id, { ...saved, words: '' })).toBe(false)
+    // His edits, approved with the review's own words, are a body the engine accepts too.
+    const edited = { ...saved, words: press.scripts.approve_edited, texts: { ...press.body.texts, long: `${press.body.texts.long} Mate, it's a hum.` } }
+    expect(validBody('picks', press.id, edited)).toBe(true)
+  })
+  it('a lock he signed in his words on the board gives the card its words too, not the idea row\'s', () => {
+    const unsigned = LOCK17.replace(/\n\nSigned by Krish:.*$/, '')
+    const base = at17({ locks: { tue: unsigned }, scripts: { [TUE]: filed } })
+    const sha = (item(buildView(base)).next as any).body.lock_sha256
+    const words = { doc_id: 'tue-lock-words', updated_by: 'Krish', revision: 1, body: { kind: 'sign_lock', day: 'tue', via: 'words', approved: true, piece_id: TUE,
+      lock_path: 'docs/plans/2026-11-16-week/narrative-lock-tue.md', lock_sha256: sha, words: 'Signed.', at: '2026-11-17T11:05:00Z', said_at: '2026-11-17T11:05:00Z',
+      said_where: 'the Publish Board in Control Centre', session_ref: 'https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=tue' } }
+    const it = item(buildView({ ...base, picks: [words] } as ViewInputs))
+    expect(it.read.so_what).toBe('The midterms turned AI into a vote about the electricity bill.')
+    expect(it.next).toMatchObject({ label: 'Read and approve the scripts' })
   })
   it('after his approval the card is at Production planned and asks him to record', () => {
     const words = { doc_id: 'tue-scripts-words', updated_by: 'Krish', body: { kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: TUE,
@@ -167,13 +185,13 @@ describe('F47: the card moves on when a session reaches a milestone, and offers 
       said_at: '2026-11-17T12:00:00Z', said_where: 'the Publish Board in Control Centre', session_ref: 'https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=tue' } }
     const it = item(buildView(at17({ scripts: { [TUE]: filed }, picks: [words] })))
     expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'done', 'current', 'todo'])
-    expect(it.next).not.toMatchObject({ label: 'Approve scripts' })
+    expect(it.next).not.toMatchObject({ label: 'Read and approve the scripts' })
     expect(it.line).toMatch(/Scripts approved\. Next: record both cuts/)
   })
   it('no scripts filed yet: past Fleshed out, and the card says the scripts are next, with no press to approve', () => {
     const it = item(buildView(at17()))
     expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'current', 'todo', 'todo'])
-    expect(it.next).not.toMatchObject({ label: 'Approve scripts' })
+    expect(it.next).not.toMatchObject({ label: 'Read and approve the scripts' })
     expect(it.line).toMatch(/Next: the storyboard and both scripts/)
   })
 })
