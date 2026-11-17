@@ -1,0 +1,3 @@
+Status: ink_wash (card ve-style-6-ink-wash) built by Codex on Lorimer and checked by Claude: its acceptance passed but it failed tsc, and drawn in brand colours it stretched the picture, flooded the space round it with ink, left a bare cream frame after exit and placed its marks on the slot; each is fixed with a test that fails on the build. `watercolour-ink` stays `needs_device` until Krish's yes.
+Next: render ink_wash's test cut on the house test take with a portrait evidence photo, measure it with `ve pace`, get a `ve-critic` verdict, then put it to Krish at Gate 2.
+North Star check (2026-11-17): holds.
