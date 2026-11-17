@@ -213,7 +213,25 @@ anywhere" (2026-11-02) for these two decisions and adds nothing else.
 - **What it never does.** Put an idea on the publish board: his Approve on an idea (`picks/<day>`), his answers on the
   ideas board (`queue`), and the database's gate (`idea_outcomes`, `content_ideas_board_gate`) are unchanged and stay his
   presses alone (`hisOnlyRefusal`: `pick_is_his`, `press_is_his`). Nor any other decision (titles, publish, cuts, the
-  production gates), nor taking an approval back.
+  production gates).
+- **His words must name it** (Ruling, Krish, 2026-11-17). A typed approval counts only when his words say "approve",
+  "approved", "approval", "sign" or "signed" (a lock also "lock it"; `_contracts.ts` `APPROVAL_WORDS`, `LOCK_WORDS`,
+  in `wordsBody`, so the board, `_teleprompter.ts typedApproval`, `teleprompter_send.py` and `board_session.py` hold the
+  same rule). "Merge all to main and then let me know when all done, ready in teleprompter for me" was carried as an
+  approval of Tue 17's voiceover script and was not one; since this rule it does not count.
+- **Taking it back** (Ruling, Krish, 2026-11-17). His Take back my approval press, or his typed words that name it
+  (`TAKE_BACK_WORDS`: take it back, undo, reopen, unapprove, withdraw, revoke, edit), saves
+  `picks/<day>-<lock|scripts>-back-<piece>` (kind `take_back`, `approved: false`, `backBody`). Every approval of that
+  piece's lock or scripts made at or before it stops counting (`takenBackAt`); a newer approval counts again. The
+  `approvals` view carries it, so `teleprompter_send.py` reads it as a withdrawal; Teleprompter keeps what it has. A
+  session writes one only as his words (`board_session.py approve scripts --take-back`); a press-shaped one is his
+  alone (`take_back_is_his`).
+- **The scripts are on every card** (Ruling, Krish, 2026-11-17: "I want the board in a state where I can see the script
+  and edit it, and then press approve"). Filed and not approved, the card offers Read and approve the scripts (the
+  review he reads and edits in place); on an off-day post he records, that is the card's next action. Approved, the
+  card keeps Edit the scripts (the same review, whose Approve approves the words he leaves) and Take back my approval
+  beside its own action (`scriptsOnCard`, applied to every card the week model draws). A new approval goes under the
+  piece's own document name; the bare day-wide name is refused for writes.
 
 Held by `tests/control-plane/board-typed-approval.test.ts` (the shape, who may write it, a typed approval that places
 nothing, the Teleprompter send, the board's words) and `tests/board_session_test.py`.

@@ -26,6 +26,10 @@ Usage (PIECE is the piece id; for a day with no piece yet it is day:MONDAY/mon..
       --words "his exact words" --said-at ISO --where "where he typed them" --session-ref URL [--sign]
   python3 scripts/post-pack/board_session.py PIECE approve scripts --week MONDAY --day mon --long FILE [--short FILE] \
       --long-title T [--short-title T] --folder-title T --words "his exact words" --said-at ISO --where "..." --session-ref URL
+  python3 scripts/post-pack/board_session.py PIECE approve scripts --take-back --week MONDAY --day tue --words "..." \
+      --said-at ISO --where "..." --session-ref URL
+      his typed words taking his approval back (Ruling, Krish, 2026-11-17); they must name it (take it back, undo,
+      reopen, unapprove, withdraw, revoke, edit), and an approval's words must name it too (approve, signed, ...)
       his typed approval of the narrative lock or of the scripts, carried to the board as his words (Ruling, Krish,
       2026-11-12: "Scripts and locks only. Typed approval counts for locking a story and approving a script; putting an
       idea on the publish board still needs your press, so that gate is unchanged."). Only words he typed to this
@@ -174,6 +178,14 @@ class Refused(ValueError):
     """A typed approval that cannot be carried, in plain words."""
 
 
+# His words name an approval, or taking one back (Ruling, Krish, 2026-11-17; the same as _contracts.ts APPROVAL_WORDS and
+# TAKE_BACK_WORDS). "ready in teleprompter for me" was carried as an approval of Tue 17's voiceover script and was not one.
+APPROVAL_WORDS = re.compile(r'(?:^|[^a-z])(?:approv(?:e|ed|es|ing|al)|sign(?:ed|s)?)(?![a-z])', re.I)
+# A narrative lock may also be approved in words that say to lock it ("Yes, lock it.").
+LOCK_WORDS = re.compile(r'(?:^|[^a-z])(?:approv(?:e|ed|es|ing|al)|sign(?:ed|s)?|lock(?:ed|s)?)(?![a-z])', re.I)
+TAKE_BACK_WORDS = re.compile(r'(?:^|[^a-z])(?:take\b.{0,30}\bback|undo|re-?open|unapprov(?:e|ed)|withdraw(?:n)?|revoke|edit)(?![a-z])', re.I)
+
+
 def said(words, said_at, where, session_ref):
     """His words as the board keeps them: verbatim, when and where he typed them, and the session link."""
     if not isinstance(words, str) or not words.strip() or len(words) > 2000:
@@ -189,6 +201,24 @@ def said(words, said_at, where, session_ref):
     return {'words': words, 'said_at': said_at, 'said_where': where, 'session_ref': session_ref}
 
 
+def naming(words, pattern, what):
+    """His words, only when they name what they are carried as (17 Nov)."""
+    if not isinstance(words, str) or not pattern.search(words):
+        raise Refused(f'his words do not name {what}: "{str(words)[:120]}". Ask him; never carry other words as one (Ruling, Krish, 2026-11-17)')
+    return words
+
+
+def take_back_body(piece, day, what, words, said_at, where, session_ref, at=None):
+    """picks/<day>-<lock|scripts>-back-<8 hex>: his typed words taking his approval back. Approvals made before it stop
+    counting, and teleprompter_send.py reads it as a withdrawal; Teleprompter keeps what it has."""
+    if day not in DAYS:
+        raise Refused(f'{day}: an approval is taken back on the day its piece is on, mon to sat')
+    carried = said(words, said_at, where, session_ref)
+    naming(words, TAKE_BACK_WORDS, 'taking his approval back')
+    return {'kind': 'take_back', 'what': what, 'day': day, 'via': 'words', 'approved': False, 'piece_id': piece,
+            'at': at or now_iso(), **carried}
+
+
 def lock_words_body(piece, day, lock_path, text, words, said_at, where, session_ref, at=None):
     """picks/<day>-lock-words: his typed approval of the narrative lock, bound to the words above any signature
     (making.py lock_body_hash). A signature already on the lock must carry these same words."""
@@ -200,8 +230,10 @@ def lock_words_body(piece, day, lock_path, text, words, said_at, where, session_
     signed = making.lock_signature(text)
     if signed and signed[0] != words.strip():
         raise Refused(f'the lock is already signed with other words ("{signed[0]}"); his typed approval must be the words he signed')
+    carried = said(words, said_at, where, session_ref)
+    naming(words, LOCK_WORDS, 'an approval of the lock')
     return {'kind': 'sign_lock', 'day': day, 'via': 'words', 'approved': True, 'piece_id': piece, 'lock_path': lock_path,
-            'lock_sha256': making.lock_body_hash(text), 'at': at or now_iso(), **said(words, said_at, where, session_ref)}
+            'lock_sha256': making.lock_body_hash(text), 'at': at or now_iso(), **carried}
 
 
 def scripts_words_body(piece, day, texts, titles, folder_title, words, said_at, where, session_ref, at=None):
@@ -215,8 +247,10 @@ def scripts_words_body(piece, day, texts, titles, folder_title, words, said_at, 
         raise Refused('a Teleprompter title for each cut given (--long-title, --short-title, --feature-title)')
     if not folder_title or len(folder_title) > 200:
         raise Refused('--folder-title: the Teleprompter folder they go in')
+    carried = said(words, said_at, where, session_ref)
+    naming(words, APPROVAL_WORDS, 'an approval of the scripts')
     return {'kind': 'approve_scripts', 'day': day, 'via': 'words', 'approved': True, 'piece_id': piece, 'texts': texts,
-            'titles': titles, 'folder_title': folder_title, 'at': at or now_iso(), **said(words, said_at, where, session_ref)}
+            'titles': titles, 'folder_title': folder_title, 'at': at or now_iso(), **carried}
 
 
 def now_iso():
@@ -244,6 +278,14 @@ def approve(args):
         raise Refused('the piece id is the content_ideas uuid')
     if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', args.week or ''):
         raise Refused('--week: the Monday of the board week')
+    if args.take_back:
+        body = take_back_body(piece, args.day, args.what, args.words, args.said_at, args.where, args.session_ref)
+        doc = f'{args.day}-{args.what}-back-{piece[:8]}'
+        path = f'/api/board/{args.week}/picks/{doc}'
+        status, answer = call('PUT', path, {'body': body, 'revision': current_revision(args.week, doc)})
+        if status == 409 and answer.get('error') == 'revision_conflict' and isinstance(answer.get('revision'), int):
+            status, answer = call('PUT', path, {'body': body, 'revision': answer['revision']})
+        return status, answer, doc
     if args.what == 'lock':
         if not args.lock:
             raise Refused('--lock: the narrative lock file he approved')
@@ -322,6 +364,8 @@ def main(argv=None):
     p.add_argument('--long'); p.add_argument('--short'); p.add_argument('--feature')
     p.add_argument('--long-title'); p.add_argument('--short-title'); p.add_argument('--feature-title'); p.add_argument('--folder-title')
     p.add_argument('--words'); p.add_argument('--said-at'); p.add_argument('--where'); p.add_argument('--session-ref')
+    # take-back: his typed words taking his approval of the lock or the scripts back (Ruling, Krish, 2026-11-17).
+    p.add_argument('--take-back', action='store_true', help='with approve: carry his words taking the approval back')
     args = p.parse_args(argv)
     try:
         if args.command == 'approve':
@@ -332,7 +376,7 @@ def main(argv=None):
                 print(f'Not carried: {e}'); return 1
             if status in (200, 201) and answer.get('ok') is not False:
                 send = (answer.get('send') or {})
-                print(f'Carried his words to the board as picks/{doc}: it shows "Approved in your words".'
+                print(f'Carried his words to the board as picks/{doc}: ' + ('his approval is taken back, and the card asks for his Approve again.' if args.take_back else 'it shows "Approved in your words".')
                       + (f' Teleprompter: {send.get("status")}{" (" + send.get("error") + ")" if send.get("error") else ""}.' if send else ''))
                 return 0
             print(json.dumps(answer)); return 1

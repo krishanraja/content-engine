@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
-import { wordsBody, asWritten, wordsDocId } from './_contracts.js'
+import { wordsBody, asWritten, wordsDocId, takenBackAt } from './_contracts.js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
 import { makingSteps } from '../_making.js'
@@ -19,7 +19,7 @@ import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, of
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
 import { HELD_CHANGED, HELD_TITLE, approvedLabel, approvedWhen, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, workByScope, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
-import { lockRead, newestScripts, pieceDecisions, scriptSection, type FiledScript, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
+import { lockRead, newestScripts, pieceDecisions, scriptSection, scriptsChanged, type FiledScript, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
 import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
@@ -392,6 +392,9 @@ export function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day:
     && String(p.body.piece_id).toLowerCase() === pieceId)
   const b = doc && isObj(doc.body) ? doc.body : null
   if (!b) return null
+  // Taken back since (his take-back press or his words; 17 Nov): this approval no longer counts.
+  const madeAt = Date.parse(String(b.said_at || b.at || ''))
+  if (Number.isFinite(madeAt) && madeAt <= takenBackAt(picks, what, pieceId)) return null
   if (what === 'lock' && (!lockText || lockBodyHash(lockText) !== b.lock_sha256)) return null
   return { words: String(b.words), said_where: String(b.said_where), said_at: String(b.said_at), body: b }
 }
@@ -424,7 +427,9 @@ export function lockStateOf(locks: ViewInputs['locks'], picks: Array<{ doc_id: s
   return { signed: lockSigned(lk?.text), on: lockSignedOn(lk?.text), typed: typed ? { words: typed.words, said_at: typed.said_at } : null }
 }
 export function scriptsStateOf(picks: Array<{ doc_id: string; body: Body; updated_by?: string | null; updated_at?: string | null }>, day: PostedDay, pieceId: string): ScriptsState {
-  const pressed = picks.find(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && isObj(p.body) && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === pieceId)
+  const back = takenBackAt(picks, 'scripts', pieceId)
+  const pressed = picks.find(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && isObj(p.body) && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === pieceId
+    && !(Date.parse(String(p.updated_at || p.body.at || '')) <= back))
   const typed = typedApproval(picks, day, 'scripts', pieceId)
   const at = pressed ? str(pressed.updated_at) ?? (isObj(pressed.body) ? str(pressed.body.at) : null) : null
   // His words written by his own login are timed by the server (updated_at), never by his device's clock, so a slow or fast
@@ -489,7 +494,12 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   const make = i.runs['make-piece']
   const meta = isObj(piece.meta) ? piece.meta : {}
   const scriptsPressed = i.picks.some(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === id)
-  const scriptsApproved = scriptsPressed || Boolean(typedScripts)
+  // An approval counts only for the words it approved (scriptsChanged): scripts filed since with other words send the
+  // card back to his edit and Approve (Krish, 2026-11-17: "move the board state back to wher I can edit scripts and then
+  // approve again").
+  const approvedTexts = scriptsStateOf(i.picks, day, id).texts
+  const rewritten = scriptsChanged(approvedTexts, i.scripts?.[id])
+  const scriptsApproved = (scriptsPressed || Boolean(typedScripts)) && !rewritten.length
   // What the Sunday room wrote about the idea, and his note on his pick: the brief every prompt starts from.
   const ideaRow = (isObj(i.ideas) && isObj(i.ideas.days) && Array.isArray(i.ideas.days[day]) ? i.ideas.days[day] as Body[] : []).find(x => String(x.id).toLowerCase() === id)
   const pick = i.picks.find(p => p.doc_id === day && p.updated_by === 'Krish')
@@ -564,7 +574,8 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
     { h: 'Look', p: look ? [nameOf(i, String(look.production)), look.experiment ? nameOf(i, String(look.experiment)) : ''].filter(Boolean).join(' + ') : 'Not picked yet' },
     // Where the scripts are, from the records only (Ruling, Krish, 2026-11-12: the board shows exactly where everything
     // is): his Approve scripts press, the making record's Scripts step, the send to his Teleprompter.
-    { h: 'Scripts', p: scriptsPressed ? 'Approved by you on the board' : typedScripts ? inYourWords(typedScripts.words, typedScripts.said_at, typedScripts.said_where)
+    { h: 'Scripts', p: rewritten.length ? `Rewritten since you approved them (${rewritten.map(c => c === 'long' ? 'the 5-minute script' : 'the 90-second script').join(' and ')}): edit them if you like, then approve them again`
+      : scriptsPressed ? 'Approved by you on the board' : typedScripts ? inYourWords(typedScripts.words, typedScripts.said_at, typedScripts.said_where)
       : stepState(live, 'scripts') === 'done' ? 'Written, waiting for your Approve scripts'
       : 'Not filed yet: none on the piece\'s record and none sent to your Teleprompter' },
   ]

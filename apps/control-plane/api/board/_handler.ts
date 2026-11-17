@@ -47,10 +47,11 @@ function must(result: { error?: unknown }) { if (result.error) throw new BoardEr
 
 // Ten maximum-sized documents stay safely below the host's buffered JSON limit.
 const PAGE_SIZE = 10
-async function rows(db: SupabaseClient, table: string, week: string, collection: string | undefined, offset: number, kind?: string) {
+async function rows(db: SupabaseClient, table: string, week: string, collection: string | undefined, offset: number, kind?: string | readonly string[]) {
     let query = db.from(table).select('*').eq('week', week)
     if (collection) query = query.eq('collection', collection)
-    if (kind) query = query.eq('body->>kind', kind)
+    if (typeof kind === 'string') query = query.eq('body->>kind', kind)
+    else if (kind) query = query.in('body->>kind', [...kind])
     const result = await query.order(table === 'board_ticks' ? 'tick_id' : 'doc_id').range(offset, offset + PAGE_SIZE - 1)
     must(result)
     return result.data
