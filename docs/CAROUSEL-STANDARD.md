@@ -53,8 +53,8 @@ headless model run or a template engine. The Studio's old carousel commands are 
    the brand palette's record for that day and format and the deck's shape: how many cards and what each one does,
    never its words.
 3. **Claude sends the card to Codex through the Codex plugin**, as `ve` does for every card: `ve dispatch` where Codex is on
-   the machine. A card for Growth's renderer (`render/` in growth-makeyourmindup, kind `carousel` with its `spend_id`,
-   the Control Center booking) goes in that repository's `codex/queue/<id>.md` on the session's `claude/` branch, and
+   the machine. A card for Growth's renderer (`render/` in growth-makeyourmindup, kind `carousel`;
+   Codex use is never booked or counted) goes in that repository's `codex/queue/<id>.md` on the session's `claude/` branch, and
    the Codex lane on Krish's home computer builds it through the same plugin (`docs/ve/RUNBOOK.md`, S2;
    `config/codex-lanes.json`). Codex is the visual asset maker (Ruling, Krish, 2026-10-28): it never decides taste.
 4. **Codex builds the card images in code** from the card: each card's look as code, rendered to pictures, held to the

@@ -117,38 +117,29 @@ class Guards(unittest.TestCase):
                 lane.LOCK = was
 
 
-class Booking(unittest.TestCase):
-    def test_a_booking_is_checked_and_a_missing_one_never_blocks_the_card(self):
-        with self.assertRaises(SystemExit):
-            lane.require_booking('not-a-uuid')
-        # No connector, no booking (Krish, 2026-11-15): the card goes ahead on a provisional local reservation.
-        with unittest.mock.patch('sys.stderr', new_callable=io.StringIO) as err:
-            for missing in (None, ''):
-                self.assertIsNone(lane.require_booking(missing))
-        self.assertIn('provisional', err.getvalue())
-        bare = lane.queue_item('docs/ve/cards/x.fields.json', FIELDS, 'main', None, 'claude_code')
-        self.assertEqual(bare['close_ref']['booking'], 'provisional')
-        good = '12345678-1234-4234-9234-123456789abc'
-        self.assertEqual(lane.require_booking(good), good)
-        item = lane.queue_item('docs/ve/cards/x.fields.json', FIELDS, 'main', None, 'claude_code', spend_id=good)
-        self.assertEqual(item['close_ref']['spend_id'], good)
-        self.assertLessEqual(len(json.dumps(item['close_ref'])), 1024)
+class NothingCounted(unittest.TestCase):
+    # Ruling (Krish, 2026-11-17): "We have plenty of Codex credits, you need to permanently stop counting codex credits
+    # everywhere". A card is queued with no booking and dispatched with nothing reserved, read or refused on credit.
+    def test_a_queued_card_carries_no_booking(self):
+        item = lane.queue_item('docs/ve/cards/x.fields.json', FIELDS, 'main', None, 'claude_code')
+        self.assertNotIn('spend_id', item['close_ref'])
+        self.assertNotIn('booking', item['close_ref'])
+        self.assertFalse(hasattr(lane, 'require_booking'))
+        self.assertNotIn('--spend-id', lane.wsl_command('docs/ve/cards/x.fields.json', 'main', None, 'Ubuntu', '/repo'))
 
-    def test_a_booked_dispatch_skips_the_local_credit_file(self):
+    def test_dispatch_reserves_nothing(self):
         from unittest.mock import patch
         from velib import cards
+        self.assertFalse(any(hasattr(cards, name) for name in ('_reserve', 'exhausted', 'allowance', 'ALLOWANCE_CEILING')))
         with tempfile.TemporaryDirectory() as temp:
             card = Path(temp) / 'c.md'
             card.write_text('---\ncard: c\ncwd: ' + temp + '\n---\n## Acceptance\npnpm test\n## Return\n', encoding='utf-8')
-            self.assertEqual(cards.parse_card(card)['acceptance'], ['pnpm test'])
-            with patch.object(cards, '_admit'), patch.object(cards, '_reserve') as reserve, \
+            with patch.object(cards, '_admit'), patch('velib.ledger.reserve') as reserve, \
                     patch.object(cards, 'launch', return_value=(['node', 'c.mjs'], {}, 'linux')), patch.object(cards, 'codex_env', return_value={}), \
                     patch.object(cards.subprocess, 'run') as run, patch.object(cards, 'fresh_modules', return_value=False):
-                cards.dispatch(card, booked='12345678-1234-4234-9234-123456789abc')
+                cards.dispatch(card)
                 reserve.assert_not_called()
                 run.assert_called_once()
-                cards.dispatch(card)
-                reserve.assert_called_once()
 
 
 class SessionLogs(unittest.TestCase):
@@ -257,7 +248,7 @@ class BuildPaths(unittest.TestCase):
                 patch('velib.cards.write_card', side_effect=write_card), patch('velib.cards.dispatch', return_value=done), \
                 patch('velib.cards.verify', return_value=[]), patch.object(lane, 'publish_branch', return_value=('a' * 40, None)), \
                 patch.object(lane, 'changed_files', return_value=['f.ts']), patch.object(lane.subprocess, 'run', side_effect=run):
-            result = lane.build('docs/ve/cards/x.fields.json', spend_id='12345678-1234-4234-9234-123456789abc')
+            result = lane.build('docs/ve/cards/x.fields.json')
             expected = str(native_path(card_worktree('ve-x')))
         self.assertTrue(result['ok'], result['problems'])
         if os.sep == '/':
