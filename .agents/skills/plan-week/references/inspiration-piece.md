@@ -63,6 +63,9 @@ is held to, and it still waits for his Approve.
 Once it has its row, report on it as you work and file what the research found there
 (`python3 scripts/post-pack/board_session.py <piece id> start`, `progress`, `add`, `done`; docs/PUBLISH_BOARDS.md,
 "Sessions and materials"), so the live board shows who is working on it and what is on file.
+When the brief's reading is his own idea file (a Markdown file he added on Inspiration), you need not file it: the
+engine files it on the piece as research when the run reports drafted (docs/PUBLISH_BOARDS.md, "His idea file goes on
+the piece"). File what your own research found.
 
 ## Placing it
 
