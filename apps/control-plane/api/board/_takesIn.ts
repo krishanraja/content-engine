@@ -97,8 +97,8 @@ export function newTakes(files: Array<{ id: string; name?: string; mimeType?: st
 /** The press on a card: his only, one tap, no words. `item` names an off-day post, whose record the press may link. */
 export function takesPress(pieceId: string, item: string | null = null): Body {
   return { kind: 'press', label: 'My takes are in the Inbox', op: TAKES_OP, body: { piece_id: pieceId, ...(item ? { item } : {}) }, stamp: [],
-    goes: 'Reads the Video Engine Inbox, puts the takes you recorded since approving the scripts on this piece by name, and has them placed on their cuts by their words.',
-    done: 'Your takes are on the piece. The next Claude production prompt makes the whole cut in one go.' }
+    goes: 'Reads the Video Engine Inbox, puts the takes you recorded since approving the scripts on this piece by name, has them placed on their cuts by their words, and starts your production plan.',
+    done: 'Your takes are on the piece. Your production plan is being made from them; open it on the card when it is ready.' }
 }
 
 /** The card's line once his takes are on the piece. */

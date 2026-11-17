@@ -12,7 +12,7 @@ import { RECORD_MYSELF, audioPresses, soundLine, voiceOf } from './_audio.js'
 import { canonicalUrl, titleNorm } from '../_text.js'
 import { offdayPieceId, videoOffday } from './_offdayPiece.js'
 import { productionBrief, takesInOf, takesLine, takesPress, type TakesIn } from './_takesIn.js'
-import { planBrief, planView, swapsOf, type ProductionPlan } from './_productionPlan.js'
+import { planBrief, planRunOf, planView, swapsOf, type ProductionPlan } from './_productionPlan.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
 //
@@ -203,6 +203,8 @@ export interface ModelInputs {
   /** The work on file by scope: each piece id, and day:<Monday>/<day> (_writeBack.ts workByScope). */
   work?: Record<string, { sessions: Array<{ by: string; state: string; step: string | null; doing: string | null; last_at: string }>; materials: Array<{ title: string; at: string | null; where?: string }> }>
   today: string
+  /** The read's clock, for how long a plan run has been going (_productionPlan.ts planView). */
+  now?: Date
   ideas: Body | null
   /** Every plan beside this week's, by Monday (an item carried from another week keeps its words there). */
   plans?: Record<string, Body | null>
@@ -915,7 +917,7 @@ export function productionStage(m: ModelInputs, p: { pieceId: string; title: str
   // The production plan (_productionPlan.ts): being made once his takes are in, then ready for his review and swaps; the
   // prompt carries it with his swaps applied.
   const made = m.productionPlans?.[p.pieceId.toLowerCase()] ?? null
-  const plan = planView(made, { picks: m.picks || [], making: Boolean(takesInOf(meta)) })
+  const plan = planView(made, { picks: m.picks || [], run: planRunOf(meta.takes_in), now: m.now ?? new Date() })
   const line = plan ? `${takesLine(takes).replace(/ Next: .*$/, '')} ${String(plan.line)}` : takesLine(takes)
   const head = productionBrief({ pieceId: p.pieceId, title: p.title, takes, decisions, research: p.read.research, scripts: approval?.texts ?? {}, offday: p.offday,
     plan: made ? planBrief(made, swapsOf(m.picks || [], made)) : null })

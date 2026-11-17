@@ -45,9 +45,13 @@ const UUID = MATERIAL
 export interface PlanOption { id: string; kind: string; what: string; source: string | null }
 export interface PlanBeat { id: string; from: number; to: number; words: string; picture: PlanOption; options: PlanOption[]; humour: { mechanism: string; gag: string } | null }
 export interface PlanScene { beat: string; still: string; caption: string; style: string }
-export interface PlanEdit { raw_seconds: number; restarts: Array<{ at: number; said: string }>; silences_cut: number; kept_seconds: number; cap_seconds: number | null; speed: number; final_seconds: number }
+export interface PlanEdit { raw_seconds: number; restarts: Array<{ at: number; said: string }>; silences_cut: number; kept_seconds: number; cap_seconds: number | null; speed: number; final_seconds: number
+  /** Even 1.25x leaves it over the cap (edit_pass.py): the plan must name what to cut, never claim it fits. */
+  over_cap: boolean }
 export interface ProductionPlan {
   version: 1; piece_id: string; made_at: string; takes: string[]; edit: PlanEdit
+  /** A series piece's long cut, measured the same way with no cap (never sped up); null for a short alone. */
+  edit_long: PlanEdit | null
   style: { look: string | null; motion: string | null; captions: string | null }
   beats: PlanBeat[]; scenes: PlanScene[]; humour: Array<{ words: string; mechanism: string; gag: string; beat: string | null }>
   /** The sha256 of the material's text, which his swaps bind. */
@@ -67,13 +71,17 @@ export function parsePlan(text: string, pieceId: string, sha256: string): Produc
   let raw: unknown
   try { raw = JSON.parse(text) } catch { return null }
   if (!isObj(raw) || raw.version !== 1 || String(raw.piece_id || '').toLowerCase() !== pieceId.toLowerCase() || !isObj(raw.edit)) return null
-  const e = raw.edit
-  const edit: PlanEdit = {
-    raw_seconds: num(e.raw_seconds) ?? 0,
-    restarts: (Array.isArray(e.restarts) ? e.restarts : []).filter(isObj).map(r => ({ at: num(r.at) ?? 0, said: str(r.said, 300) ?? '' })).slice(0, 60),
-    silences_cut: num(e.silences_cut) ?? 0, kept_seconds: num(e.kept_seconds) ?? 0,
-    cap_seconds: num(e.cap_seconds), speed: num(e.speed) ?? 1, final_seconds: num(e.final_seconds) ?? 0,
+  const editOf = (e: Body): PlanEdit => {
+    const cap = num(e.cap_seconds); const final = num(e.final_seconds) ?? 0
+    return {
+      raw_seconds: num(e.raw_seconds) ?? 0,
+      restarts: (Array.isArray(e.restarts) ? e.restarts : []).filter(isObj).map(r => ({ at: num(r.at) ?? 0, said: str(r.said, 300) ?? '' })).slice(0, 60),
+      silences_cut: num(e.silences_cut) ?? 0, kept_seconds: num(e.kept_seconds) ?? 0, cap_seconds: cap, speed: num(e.speed) ?? 1, final_seconds: final,
+      // Over the cap whenever the run says so, or its own figures show it: a plan never claims a fit it does not have.
+      over_cap: e.over_cap === true || (cap !== null && final > cap),
+    }
   }
+  const edit = editOf(raw.edit)
   const beats: PlanBeat[] = (Array.isArray(raw.beats) ? raw.beats : []).filter(isObj).flatMap(b => {
     const id = str(b.id, 40); const picture = option(b.picture); const words = str(b.words, 1200)
     if (!id || !ID.test(id) || !picture || !words) return []
@@ -91,7 +99,7 @@ export function parsePlan(text: string, pieceId: string, sha256: string): Produc
   return {
     version: 1, piece_id: pieceId.toLowerCase(), made_at: str(raw.made_at, 40) ?? '', sha256,
     takes: (Array.isArray(raw.takes) ? raw.takes : []).map(t => str(t, 300)).filter((t): t is string => Boolean(t)).slice(0, 6),
-    edit, style: { look: str(st.look, 120), motion: str(st.motion, 120), captions: str(st.captions, 120) }, beats, scenes,
+    edit, edit_long: isObj(raw.edit_long) ? editOf(raw.edit_long) : null, style: { look: str(st.look, 120), motion: str(st.motion, 120), captions: str(st.captions, 120) }, beats, scenes,
     humour: (Array.isArray(raw.humour) ? raw.humour : []).filter(isObj).flatMap(h => {
       const words = str(h.words, 400); const gag = str(h.gag, 500)
       return words && gag ? [{ words, mechanism: str(h.mechanism, 60) ?? 'absurdity', gag, beat: str(h.beat, 40) }] : []
@@ -105,7 +113,8 @@ export const PLAN_DOC = /^plan-[0-9a-f]{8}$/
 
 /** His swaps for this plan: beat id to option id. Swaps made on another version of the plan do not count. */
 export function swapsOf(picks: Array<{ doc_id: string; body: unknown; updated_by?: string | null }>, plan: ProductionPlan): Record<string, string> {
-  const doc = picks.find(p => p.doc_id === planDocId(plan.piece_id))
+  // Only his own saves count, as every reader of his decisions does (the server already refuses any other writer).
+  const doc = picks.find(p => p.doc_id === planDocId(plan.piece_id) && (p.updated_by === undefined || p.updated_by === 'Krish'))
   const b = doc && isObj(doc.body) ? doc.body : null
   if (!b || b.kind !== 'plan_swaps' || b.plan_sha256 !== plan.sha256 || !isObj(b.swaps)) return {}
   const out: Record<string, string> = {}
@@ -131,7 +140,7 @@ export function planSwapsBody(id: string, body: Body): boolean {
     && Object.keys(body).every(k => ['kind', 'piece_id', 'plan_sha256', 'swaps', 'at'].includes(k))
 }
 
-const secs = (n: number) => `${Math.floor(n / 60)}:${String(Math.round(n % 60)).padStart(2, '0')}`
+const secs = (n: number) => { const t = Math.round(n); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}` }
 
 /** The edit numbers in one plain line. */
 export function editLine(e: PlanEdit): string {
@@ -139,14 +148,35 @@ export function editLine(e: PlanEdit): string {
   if (e.restarts.length) parts.push(`${e.restarts.length} restarted sentence${e.restarts.length > 1 ? 's' : ''} clipped`)
   if (e.silences_cut) parts.push(`${e.silences_cut} silence${e.silences_cut > 1 ? 's' : ''} cut`)
   parts.push(`${secs(e.kept_seconds)} kept`)
+  if (e.over_cap && e.cap_seconds) {
+    parts.push(`and even sped up ${Math.round((e.speed - 1) * 100)}% it runs ${secs(e.final_seconds)}, ${Math.ceil(e.final_seconds - e.cap_seconds)} seconds over the ${e.cap_seconds}-second limit, so lines must come out`)
+    return `${parts.join(', ')}.`
+  }
   if (e.speed > 1.001) parts.push(`sped up ${Math.round((e.speed - 1) * 100)}% to ${secs(e.final_seconds)}${e.cap_seconds ? `, under the ${e.cap_seconds}-second limit` : ''}`)
   else if (e.cap_seconds) parts.push(`under the ${e.cap_seconds}-second limit as it is`)
   return `${parts.join(', ')}.`
 }
 
 /** What the card draws: the plan with his swaps, each other option with its Use this press. */
-export function planView(plan: ProductionPlan | null, ctx: { picks: Array<{ doc_id: string; body: unknown; revision?: number }>; making: boolean }): Body | null {
-  if (!plan) return ctx.making ? { status: 'making', line: 'Your production plan is being made from your take: the edit, the picture for every beat, and two or three scenes mocked from real stills. It shows here when it is ready.', made_at: null, edit: null, scenes: [], beats: [] } : null
+/** How long a plan run may take before the card stops saying it is being made. */
+export const PLAN_RUN_MS = 2 * 60 * 60 * 1000
+/** The plan run as his press started it (meta.takes_in.plan_run): sent or not, and when. */
+export interface PlanRun { sent: boolean; at: string; reason: string | null }
+export function planRunOf(takesIn: unknown): PlanRun | null {
+  const r = isObj(takesIn) && isObj(takesIn.plan_run) ? takesIn.plan_run : null
+  return r && typeof r.sent === 'boolean' && typeof r.at === 'string' ? { sent: r.sent, at: r.at, reason: str(r.reason, 120) } : null
+}
+
+export function planView(plan: ProductionPlan | null, ctx: { picks: Array<{ doc_id: string; body: unknown; revision?: number; updated_by?: string | null }>; run: PlanRun | null; now: Date }): Body | null {
+  if (!plan) {
+    if (!ctx.run) return null
+    const age = ctx.now.getTime() - Date.parse(ctx.run.at)
+    if (ctx.run.sent && Number.isFinite(age) && age < PLAN_RUN_MS)
+      return { status: 'making', line: 'Your production plan is being made from your take: the edit, the picture for every beat, and two or three scenes mocked from real stills. It shows here when it is ready.', made_at: null, edit: null, scenes: [], beats: [] }
+    // Never "being made" forever (review, 17 Nov): a run that did not start, or has not filed a plan in two hours.
+    return { status: 'not_made', line: `Your production plan was not made (${ctx.run.sent ? 'the plan run has filed nothing in two hours' : 'the plan run did not start'}). The Claude production prompt makes the plan first, then the cut.`,
+      made_at: null, edit: null, scenes: [], beats: [] }
+  }
   const swaps = swapsOf(ctx.picks as never, plan)
   const revision = ctx.picks.find(p => p.doc_id === planDocId(plan.piece_id))?.revision ?? 0
   const press = (beat: PlanBeat, o: PlanOption) => ({ kind: 'press', label: 'Use this', collection: 'picks', id: planDocId(plan.piece_id), revision,
@@ -159,8 +189,8 @@ export function planView(plan: ProductionPlan | null, ctx: { picks: Array<{ doc_
       options: [b.picture, ...b.options].filter(o => o.id !== chosen.id).map(o => ({ ...pic(o), press: press(b, o) })) }
   })
   return {
-    status: 'ready', line: `Your production plan is ready: ${editLine(plan.edit)} Open it, swap anything that does not work, then copy the Claude production prompt.`,
-    made_at: plan.made_at, edit: plan.edit, style: plan.style, humour: plan.humour,
+    status: 'ready', line: `Your production plan is ready: ${editLine(plan.edit)}${plan.edit_long ? ` The long cut: ${editLine(plan.edit_long).replace(/^Your take/, 'its take')}` : ''} Open it, swap anything that does not work, then copy the Claude production prompt.`,
+    made_at: plan.made_at, edit: plan.edit, edit_long: plan.edit_long, style: plan.style, humour: plan.humour,
     scenes: plan.scenes.map(s => {
       const b = beats.find(x => x.id === s.beat)!
       return { beat: s.beat, src: `/api/content-ideas/store?op=read&id=${s.still}`, caption: s.caption, style: s.style, words: b.words, picture: b.picture }
@@ -179,8 +209,11 @@ export function planBrief(plan: ProductionPlan, swaps: Record<string, string>): 
   }).join('\n')
   return `The production plan he reviewed (plan sha256 ${plan.sha256.slice(0, 12)}, made ${plan.made_at.slice(0, 16).replace('T', ' ')} UTC; read it whole `
     + 'with read_piece_material, role production_plan). Make exactly this; his swaps are final.\n'
-    + `The edit: ${editLine(e)}${e.restarts.length ? ` The restarts it found: ${e.restarts.map(r => `at ${r.at.toFixed(1)} s "${r.said}"`).join('; ')}.` : ''} `
-    + 'Check each cut by ear before you build on it.\n'
+    + `The edit${plan.edit_long ? ' (the short cut)' : ''}: ${editLine(e)}${e.restarts.length ? ` The restarts it found: ${e.restarts.map(r => `at ${r.at.toFixed(1)} s "${r.said}"`).join('; ')}.` : ''} `
+    + (plan.edit_long ? `The long cut: ${editLine(plan.edit_long)} `: '')
+    + 'Check each cut against the approved words and by ear before you build on it.\n'
+    + 'The beat times below are on the edited take before any speed-up: once it is sped up, transcribe the sped file afresh and re-time every '
+    + 'beat, cut and caption from that transcript (learning speedup-without-glitches), never by scaling these times.\n'
     + `Styles: look ${plan.style.look ?? 'as picked'}, motion ${plan.style.motion ?? 'as picked'}, captions ${plan.style.captions ?? 'as picked'}.\n`
     + `The beats:\n${beats}\n`
     + (plan.scenes.length ? `The scenes he saw mocked (match them): ${plan.scenes.map(s => `${s.beat} (${s.style})`).join(', ')}.\n` : '')

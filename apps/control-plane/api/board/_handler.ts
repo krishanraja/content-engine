@@ -466,6 +466,9 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             // Then the production plan run (production-plan.yml; _productionPlan.ts): the edit pass, every beat's picture,
             // the humour in his words and two or three scenes mocked from real stills, filed on the piece for his review.
             const planning = await (deps.dispatch ?? dispatchJob)('production-plan', { piece_id: pieceId }).catch(() => ({ sent: false as const, reason: 'failed' as const }))
+            // Kept on the piece, so the card says "being made" only while a run it started is going, never forever.
+            await patchMeta(db as never, pieceId, meta => ({ ...meta, takes_in: { ...(meta.takes_in as Record<string, unknown>), plan_run: { sent: planning.sent, at: now,
+              reason: planning.sent ? null : String((planning as { reason?: string }).reason || 'failed') } } })).catch(() => null)
             return res.status(200).json({ ok: true, takes: files, place_takes: placed, production_plan: planning })
           }
           if (op === 'material') {
