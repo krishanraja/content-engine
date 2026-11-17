@@ -738,6 +738,14 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   file (a Google Doc, a Word file, a text or JSON file) and files its words beside the link as research, copied to the
   library (`api/_researchLink.ts`; the answer's `research_text`).
 
+- **1.21.0 (17 Nov 2026)** added **`scripts` on an Approve scripts press**: the scripts a session filed on the piece,
+  each cut's words with its word count and rough length, so the board shows them as a review he reads and can edit in
+  place, then approves with one press (Krish, 2026-11-17: "Surely we can do a 10x better job of having the scripts easy
+  to review, and ideally I can manually edit them too (to add some final Krish-isms), and then press Approve"). The
+  board writes the words he approves at `path` (`body.texts.<cut>`) and the press's own words, `approve` as filed or
+  `approve_edited` when he changed any; edited words are held from his Teleprompter until the scripts' check and fresh
+  readers pass them (`heldBecause`). A board before 1.21.0 still asks his words through `words`.
+
 - **1.20.0 (17 Nov 2026)** added **`audio` on a choice's option**: a sample to hear before he picks, a same-site path
   (an off-day track's brand-kit file through `GET /api/board/sign-offs?file=<drive id>`, or a voice's ElevenLabs preview
   through `GET /api/board/sign-offs?voice=<bank id>`, a redirect to the bank's own preview clip; no sample spends a
