@@ -174,6 +174,13 @@ class ThePlanReadsThePickedVoice(unittest.TestCase):
         proven['voices'][0]['whole_script'] = {'passed': True, 'on': '2026-11-20', 'note': 'held'}
         self.assertIsNone(voice_bank.whole_script_warning(proven['voices'][0]))
 
+    def test_record_it_myself_is_the_default_until_a_voice_passes(self):
+        # Ruling (Krish, 2026-11-17): "make Record it myself the default until a voice passes".
+        self.assertEqual(voice_bank.default_voice(BANK), voice_bank.RECORD_MYSELF)
+        proven = copy.deepcopy(BANK)
+        proven['voices'][0]['whole_script'] = {'passed': True, 'on': '2026-11-20', 'note': 'held'}
+        self.assertEqual(voice_bank.default_voice(proven), 'krish-v2')
+
     def test_the_wav_is_sped_up_keeping_pitch(self):
         v2 = {**CLONE, 'platform_ref': voice_bank.krish(BANK)['voice_id']}
         with served(registry(v2)):
