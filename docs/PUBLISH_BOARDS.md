@@ -78,7 +78,11 @@ board has everything up to date and, not only that, is genuinely live?" The audi
 - **Every writer lands where the view reads.** The pieces' records, his presses, Growth's ticks and the week's builds
   are tables the view reads on every request. The week's plan files are read from the week's branch
   `offday-revise/<Monday>` before main, at the commit each points at now (`branchSha`), so a push reaches the board
-  in seconds, not after raw.githubusercontent.com's five-minute cache. The Sunday ideas run, the good-news run (by hand
+  in seconds, not after raw.githubusercontent.com's five-minute cache. The week's `ideas.json` is read from both and
+  merged from the commit where they split (`mergeWeekPlan`, `mergeBaseSha`): each row, matched by id, and each value
+  comes from the side that changed it since, so a session's write to main (a piece's production pick) is never hidden by
+  the branch's older copy, and a run's write to the branch is never hidden by main; a value both changed keeps the
+  branch's. Without the board's GitHub token the split cannot be found and the branch's copy is read whole. The Sunday ideas run, the good-news run (by hand
   since the Thursday schedule was retired, Ruling, Krish, 2026-11-11), the inspiration piece run and the revise run all put the week's folder on that branch (`scripts/week_branch_keep.sh`: main, then what is on
   the branch, then the run's commit; a fast-forward, never a force), each with a pull request to main that merges
   itself. Nothing builds or publishes a board page any more.
@@ -241,6 +245,13 @@ anywhere" (2026-11-02) for these two decisions and adds nothing else.
   `sendApprovedScripts`, held until the scripts' check and two fresh readers have passed); the Teleprompter gate
   (`_teleprompter.ts typedApproval`, `teleprompter_send.py typed_approval`) counts his press or this document, never
   another session's.
+  Every send names his Teleprompter folder and scripts by the one rule in `config/teleprompter.json` (`folder_name`,
+  `script_title`): "Fri 20 Nov mind.the.gap - <subject>" and "Fri 20 Nov - 5-minute - <subject>". The server works the
+  names out itself from the day's date and the piece's series (`teleprompterNames`, `_presses.ts namedByRule`), whatever
+  names the press carried, on a series day, a piece placed on an off day and a recorded off-day post alike (Ruling,
+  Krish, 2026-11-17: "it doesn't name it correctly under the right naming convention"). A piece whose folder is already
+  on its record keeps that folder: the engine never renames a folder or moves a script (`config/teleprompter.json`
+  never), so a folder named wrongly before 17 Nov is renamed by Krish in the app.
 - **What it never does.** Put an idea on the publish board: his Approve on an idea (`picks/<day>`), his answers on the
   ideas board (`queue`), and the database's gate (`idea_outcomes`, `content_ideas_board_gate`) are unchanged and stay his
   presses alone (`hisOnlyRefusal`: `pick_is_his`, `press_is_his`). Nor any other decision (titles, publish, cuts, the
@@ -321,7 +332,8 @@ creates, drops or closes one.
   board, made before the gate existed, already failed it on its own Infosys Monday and two off-day returns; his idea
   matched no refusal.
 - **Production: the style within a week.** An open Production tick comes first among the cards `ve init` offers a cut
-  (`GET /api/inspiration/candidates`, for the roles it teaches, else look, motion and captions), with its
+  (`GET /api/inspiration/candidates`, for the roles it teaches, else look, motion and captions; a card teaches a role
+  by his word first, then by the engine's read grounded in his words, then by a bare guess), with its
   `instruction` `{action_id, due_at, words}`. The next fitting cut names it in `brand.references` (failure F26's path,
   `.agents/skills/ve/references/board-references.md`), and `ve verdict` records the use in `card_uses`, which closes
   his tick in Control Centre (its done-check, `inspiration_act`). Growth reads the same tick in its directive (protocol
@@ -498,7 +510,13 @@ showed that day (`tests/control-plane/board-state-truth.test.ts`):
   and the other two wait in the read sheet; at an earlier step (a lock still to sign) all three wait in the read sheet,
   so he can pick before or after he signs; a piece moved to an off day (Tue 17) has the same three, from its own record.
   The recommendation a session makes for a piece is its row's `style` in the week's plan (`production`, `motion`,
-  `captions`): named there, it is the one recommended, first, in place of the channel's own three.
+  `captions`): named there, it is the one recommended, first, in place of the channel's own three. When it cannot be
+  recommended (he said Not this to it, called it not for us, or ve cannot draw it yet), the plan's next choices
+  (`motion_alternatives`, `captions_alternatives`, `production_alternatives`) are tried in order, and the one that stands
+  says why ("its first, Living screen, is one you said Not this to"); only when none stands are the channel's own shown.
+  A session writes the row on main as usual: the board reads main and the week branch together (below), so its write
+  reaches the card at the next read (Ruling, Krish, 2026-11-17: "Why do recommendations in my UI never adapt to the
+  piece?").
 - **A post scheduled after its day says when it goes, never Missed** (`postedStage`): Fri 13's "Your AI thinks it's the
   best" was scheduled in Buffer for Tue 17, so its card says "Scheduled on Instagram, X for Tue 17 Nov, 08:30, after its
   day (Fri 13 Nov)". Its day on the board moves only with his Move to…. A schedule whose time passed with no send is
@@ -888,6 +906,19 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   - **A new typed approval goes under its piece's own name.** A write of `picks/<day>-<lock|scripts>-words` without the
     piece suffix is refused; saved ones are still read. (On 17 Nov the history of `picks/tue-scripts-words` showed no
     approval was lost there: its first revision was already the habits voiceover's.)
+
+- **1.24.0 (17 Nov 2026)** added **`template`** and **`caption_ideas`** on an off-day option: the meme templates lane,
+  from the 30 Nov board.
+  - `template` (an option of kind `meme` with a template only; `_viewExtras.ts`, `templateOf`): `{title, clip {url, page,
+    poster, seconds}, found {place, label, url}, credit, what_happens, why_it_works, mechanism, moment, date}`. Links are
+    https only (a template without an https clip and page, or with an unknown place, is not shown as one), strings are
+    trimmed and capped, and `mechanism` keeps only the humour engine's ids. `caption_ideas` is up to four strings.
+  - Nothing else changes: the option keeps its presses, its note (his caption box), Move to and its item. His caption
+    plus Approve makes it a meme post; Move to puts it on any day. Control Centre draws the new fields generically until
+    its "Meme templates" row reads them.
+  - Ruling (Krish, 2026-11-17): "why can we not create a pipeline of existing meme videos that could be good to reskin,
+    and show me those in here? Then I could think of a funny caption for it thats related to AI."
+    (`.agents/skills/plan-week/references/meme-roaster.md`, `docs/MEME-STANDARD.md`)
 
 - **1.20.0 (17 Nov 2026)** added **`audio` on a choice's option**: a sample to hear before he picks, a same-site path
   (an off-day track's brand-kit file through `GET /api/board/sign-offs?file=<drive id>`, or a voice's ElevenLabs preview
@@ -1451,7 +1482,11 @@ Inspiration House comes as `inspiration` (`_inspirationSources.ts`): the cards
 he routed to Make a piece, the cards he answered, the ones he has not seen yet,
 the production references he routed to Study style, content-watcher readings,
 creator moves and taste claims; `must_cover` lists every routed card and
-relayed board item the ideas board owes him. `board_feed.py cover <Monday>` checks the week's `ideas.json` against
+relayed board item the ideas board owes him. Every card carries the engine's read of it (`style`, inspirationhouse
+tag-v4's `facets.style` in this repository's ids) and `grounded_in`, which of his own fields on the card the read was
+built on: a grounded read is his steer, a bare one a guess (Ruling, Krish, 2026-11-17). Files in a reference set he
+filed together (`facets.collection`, such as his thumbnail study) are for making, not story sources: they stay out of
+the newest-500 window and out of the block unless he wrote on or routed one (`counts.reference_set_left_out`). `board_feed.py cover <Monday>` checks the week's `ideas.json` against
 them before the board reads it: the file's own shape (at least four ideas a publishing day, each with what a business
 person finds out, its story, why now, its fact and its linked source, `scripts/post-pack/week_plan.py`), every
 `must_cover` id carried or accounted for, the style rules and the Wave 1 checks. The gather stops when the route has

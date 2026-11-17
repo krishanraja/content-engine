@@ -241,6 +241,32 @@ def social_clip_problems(report, target=None):
     words = checks.get('approval', {})
     if not str(words.get('krish_words', '')).strip() or not words.get('where'):
         problems.append('approval carries no words of Krish and where he said them')
+    return problems + meme_template_problems(report)
+
+
+# A meme template reskin (docs/MEME-STANDARD.md; Krish, 2026-11-17: "lets bring up the production value of the meme to
+# looking more like the production quality of the rest of the carousels etc."): its receipt names the template it
+# reskins and passes three more checks. The original clip at its full frame (Krish, 2026-11-02: "the sides of the
+# original video have been cut off, which makes the video less funny"), his caption on a clean band in the brand
+# palette, and a small credit line naming the original.
+MEME_TEMPLATE_CHECKS = ('full_frame', 'caption_band', 'credit_line')
+BRAND_PALETTE = 'config/brand-palette.json'
+
+
+def meme_template_problems(report):
+    """[] for a social clip that is no meme template; otherwise what its receipt still lacks."""
+    template = report.get('template')
+    if template is None:
+        return []
+    if not isinstance(template, dict) or not str(template.get('page', '')).startswith('https://'):
+        return ['template names no https page of the clip it reskins']
+    checks = report.get('checks', {})
+    problems = [f'{key} is missing' if key not in checks else f'{key} is not passed'
+                for key in MEME_TEMPLATE_CHECKS if checks.get(key, {}).get('status') != 'pass']
+    if checks.get('caption_band', {}).get('status') == 'pass' and checks['caption_band'].get('palette') != BRAND_PALETTE:
+        problems.append(f'caption_band names no palette; the band is in the brand palette ({BRAND_PALETTE})')
+    if checks.get('credit_line', {}).get('status') == 'pass' and not str(checks['credit_line'].get('text', '')).strip():
+        problems.append('credit_line carries no text')
     return problems
 
 

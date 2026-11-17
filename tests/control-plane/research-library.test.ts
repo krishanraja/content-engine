@@ -66,6 +66,14 @@ class FakeDrive implements LibraryDrive {
     this.folderList.push({ id, name, props, parent })
     return id
   }
+  renameFails = false
+  async renameFolder(id: string, name: string) {
+    await this.wait()
+    this.calls.push(`rename ${id} ${name}`)
+    if (this.renameFails) throw new Error('drive_rename_500')
+    const f = this.folderList.find(x => x.id === id)
+    if (f) { f.name = name; f.props = { ...f.props, [PROP.named]: name } }
+  }
   async createFile(input: { parentId: string; name: string; mime: string; bytes: Uint8Array; description: string; props: Record<string, string> }) {
     await this.wait()
     this.calls.push(`file ${input.name}`)
@@ -263,6 +271,10 @@ describe('the mirror, against a fake Drive', () => {
     await mirror(source([text('two')]), drive, index, free(), { now: NOW })
     expect(drive.folderList).toHaveLength(2)
     expect(drive.fileList).toHaveLength(2)
+    // A name he gave a piece's folder stays his, even when the piece's title changes after (17 Nov).
+    await mirror(source([text('two')], [{ id: PIECE, idea: 'A new title', scheduled_for: '2026-11-16', series: 'follow_the_money' }]), drive, index, free(), { now: NOW })
+    expect(drive.folderList.every(f => f.name.startsWith('renamed '))).toBe(true)
+    expect(drive.calls.some(c => c.startsWith('rename'))).toBe(false)
   })
 
   it('a new version is a new file beside the old one, never a replacement', async () => {
@@ -784,5 +796,57 @@ describe('the rule every session follows, and where the library is', () => {
     expect(LIBRARY_LEASE).toMatch(/^[a-z][a-z0-9_.:/-]{1,119}$/)
     expect(LIBRARY_LEASE_MS / 1000).toBeGreaterThan(120)
     expect(CONTENT_ENGINE_JOBS.find(j => j.job === 'research_library_mirror')?.path).toBe('/api/research-library/sweep')
+  })
+})
+
+describe('a piece folder follows its piece (Ruling, Krish, 2026-11-17: "rename research folders when titles change")', () => {
+  it('renames a piece\'s folder by its id when its title, date or series changed, and nothing else', async () => {
+    const drive = new FakeDrive(), index = new FakeIndex()
+    await mirror(source([text('one')]), drive, index, free(), { now: NOW })
+    const slot = drive.folderList.find(f => f.props[PROP.kind] === 'slot')!
+    const week = drive.folderList.find(f => f.props[PROP.kind] === 'week')!
+    expect(slot.name).toBe('Mon 16 Nov follow.the.money - Oracle files to sell $20B in new stock, bonds to finance AI buildout (8287846b)')
+    const before = drive.folderList.map(f => ({ ...f }))
+    const renamed = { id: PIECE, idea: 'Oracle sells $20B of stock to pay for AI', scheduled_for: '2026-11-18', series: 'under_the_hood' }
+    const r = await mirror(source([text('one')], [renamed]), drive, index, free(), { now: NOW })
+    expect(r.renamed).toBe(1)
+    expect(slot.name).toBe('Wed 18 Nov under.the.hood - Oracle sells $20B of stock to pay for AI (8287846b)')
+    // The same folder, parent and properties; no folder made, no other folder touched.
+    expect(drive.folderList).toHaveLength(before.length)
+    expect(drive.folderList.map(f => [f.id, f.parent])).toEqual(before.map(f => [f.id, f.parent]))
+    expect(slot.props).toEqual({ ...before.find(f => f.id === slot.id)!.props, [PROP.named]: slot.name })
+    expect(week.name).toBe(before.find(f => f.id === week.id)!.name)
+    expect(drive.calls.filter(c => c.startsWith('rename'))).toEqual([`rename ${slot.id} ${slot.name}`])
+    // Once named, the next sweep renames nothing.
+    expect((await mirror(source([text('one')], [renamed]), drive, index, free(), { now: NOW })).renamed).toBe(0)
+  })
+
+  it('keeps the name when the piece cannot be read, and reports a rename Drive refused', async () => {
+    const drive = new FakeDrive(), index = new FakeIndex()
+    await mirror(source([text('one')]), drive, index, free(), { now: NOW })
+    const slot = drive.folderList.find(f => f.props[PROP.kind] === 'slot')!
+    const name = slot.name
+    expect((await mirror(source([text('one')], []), drive, index, free(), { now: NOW })).renamed).toBe(0)
+    expect(slot.name).toBe(name)
+    drive.renameFails = true
+    const r = await mirror(source([text('one')], [{ id: PIECE, idea: 'New title', scheduled_for: '2026-11-16', series: 'follow_the_money' }]), drive, index, free(), { now: NOW })
+    expect(r.renamed).toBe(0)
+    expect(r.failed).toEqual([{ id: slot.id, why: 'rename: drive_rename_500' }])
+    expect(slot.name).toBe(name)
+  })
+})
+
+describe('a piece folder made before 17 Nov', () => {
+  it('is renamed when it holds a name of the mirror\'s shape, and kept when it does not', async () => {
+    const drive = new FakeDrive(), index = new FakeIndex()
+    await mirror(source([text('one')]), drive, index, free(), { now: NOW })
+    const slot = drive.folderList.find(f => f.props[PROP.kind] === 'slot')!
+    delete slot.props[PROP.named]
+    const later = [{ id: PIECE, idea: 'A new title', scheduled_for: '2026-11-16', series: 'follow_the_money' }]
+    expect((await mirror(source([text('one')], later), drive, index, free(), { now: NOW })).renamed).toBe(1)
+    expect(slot.name).toBe('Mon 16 Nov follow.the.money - A new title (8287846b)')
+    slot.name = 'Oracle research (mine)'; delete slot.props[PROP.named]
+    expect((await mirror(source([text('one')], later), drive, index, free(), { now: NOW })).renamed).toBe(0)
+    expect(slot.name).toBe('Oracle research (mine)')
   })
 })

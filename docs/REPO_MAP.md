@@ -1712,6 +1712,7 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `function inLibrary(m: Pick<StoredMaterial, 'kind' | 'role' | 'storage' | 'archived_at' | 'bytes'> & { scope?: string | …`
 - `const isSource = (m: Pick<StoredMaterial, 'kind' | 'role'>) =>`
 - `interface Place`
+- `function pieceSlotName(pieceId: string, piece: PieceInfo | null): string`
 - `function placeOf(m: StoredMaterial, piece: PieceInfo | null): Place`
 - `function fileNameOf(m: StoredMaterial): string`
 - `function mimeOf(m: StoredMaterial): string`
@@ -1973,6 +1974,8 @@ What Krish has confirmed he likes, for the writers.
 - `class TeleprompterError`
 - `function assertAllowedCall(tool: string, args: unknown): void`
 - `function normalScript(text: string): string`
+- `const CONVENTION_FOLDER`
+- `function teleprompterNames(i: { date: string; day: string; lane_slot?: string | null; subject: string; cuts: string[] }…`
 - `function scriptHash(text: string): string`
 - `function spokenText(text: string): string`
 - `function durationSeconds(text: string): number`
@@ -2963,6 +2966,8 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function buildView(i: ViewInputs): WeekView`
 - `function viewProblems(v: WeekView): string[]`
 - `async function branchSha(f: Fetcher, env: Record<string, string | undefined>, branch: string): Promise<string | null | …`
+- `async function mergeBaseSha(f: Fetcher, env: Record<string, string | undefined>, a: string, b: string): Promise<string …`
+- `function mergeWeekPlan(base: unknown, main: unknown, week: unknown): unknown`
 - `async function readPieceDecisions(db: SupabaseClient, pieceId: string, env: Record<string, string | undefined> = proces…`
 - `async function readFiledScripts(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string…`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
@@ -2981,6 +2986,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `type PressAction`
 - `interface ScriptReview`
 - `interface ViewOption`
+- `interface ViewTemplate`
 - `interface ViewPiece`
 - `interface ViewComment`
 - `interface ViewPosted`
@@ -3001,6 +3007,9 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
 - `function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day: string): Body[]`
 - `function offdayOptions(i: ExtrasInputs, day: string): ViewOption[]`
+- `const TEMPLATE_PLACES`
+- `const MECHANISMS`
+- `function templateOf(o: Body): ViewTemplate | null`
 - `function mixOf(stories: Body[]): string`
 - `function thoughtPress(day: string, step: string): PressAction`
 - `function materialPress(pieceId: string): PressAction`
@@ -3410,6 +3419,12 @@ The inspiration board as ve reads it: a card by its id, the cards to offer for a
 - `function refusal(row: Row): 'not_production_lane' | 'dismissed' | 'not_a_clip' | null`
 - `function kept(row: Row): number`
 - `function teaches(row: Row): string[]`
+- `const GROUND_FIELDS`
+- `function groundedIn(row: Row): string[]`
+- `interface StyleRead`
+- `function styleRead(row: Row): StyleRead | null`
+- `function collectionOf(row: Row): { name: string; path: string | null } | null`
+- `function teachStrength(row: Row, role: string): 0 | 1 | 2 | 3`
 - `function cardView(row: Row, uses: CardUse[])`
 - `function parseIds(raw: unknown): { ids: string[]; bad: string[] }`
 - `function usesByCard(rows: Row[]): Map<string, CardUse[]>`
@@ -3420,6 +3435,8 @@ The inspiration board as ve reads it: a card by its id, the cards to offer for a
 - `function parseUses(body: unknown): { uses: UseInput[]; problems: string[] }`
 - `function migrationPending(error: { message?: string } | null | undefined): boolean`
 - `async function readCards(db: any, build: (q: any) => any): Promise<{ rows: Row[]; pending: boolean; error?: string }>`
+- `const READ_LIMIT`
+- `async function readCandidateWindow(db: any, role: Role): Promise<{ rows: Row[]; pending: boolean; error?: string }>`
 - `async function readUses(db: any, ids: string[]): Promise<{ uses: Map<string, CardUse[]>; pending: boolean; error?: stri…`
 - `async function markPublished(db: any, pieceId: string, now: string): Promise<string | null>`
 

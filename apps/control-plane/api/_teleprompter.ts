@@ -125,6 +125,32 @@ export function normalScript(text: string): string {
 }
 
 /** The sha256 of a script's words (normalScript), as making.py script_hash gives it. */
+/** The series as the brand writes it in a folder name (config/library-paths.cases.json: the subchannels and off.day). */
+const SERIES_LABEL: Record<string, string> = { follow_the_money: 'follow.the.money', under_the_hood: 'under.the.hood', mind_the_gap: 'mind.the.gap' }
+const DAY_SERIES: Record<string, string> = { mon: 'follow.the.money', wed: 'under.the.hood', fri: 'mind.the.gap' }
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+/** A folder already named by the rule ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"). */
+export const CONVENTION_FOLDER = /^([A-Z][a-z]{2} \d{1,2} [A-Z][a-z]{2}) (\S+) - (.+)$/
+
+/** The folder and script names his Teleprompter keeps for a piece (config/teleprompter.json folder_name and
+ *  script_title; Ruling, Krish, 2026-11-17: "it doesn't name it correctly under the right naming convention"):
+ *  "<Ddd D Mon> <series> - <subject>" and "<Ddd D Mon> - <cut name> - <subject>", the same as teleprompter_send.py.
+ *  The day is the date it goes out; the series its day's (Mon, Wed, Fri), else the piece's own series, else off.day.
+ *  A subject already named by the rule keeps only its subject. Null when the date cannot be read. */
+export function teleprompterNames(i: { date: string; day: string; lane_slot?: string | null; subject: string; cuts: string[] }): { folder: string; titles: Record<string, string> } | null {
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(i.date) ? new Date(`${i.date}T12:00:00Z`) : null
+  if (!d || Number.isNaN(d.getTime())) return null
+  const label = `${WEEKDAYS[d.getUTCDay()]} ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`
+  const series = DAY_SERIES[i.day] ?? SERIES_LABEL[String(i.lane_slot ?? '').replace(/\./g, '_')] ?? 'off.day'
+  const said = i.subject.replace(/\s+/g, ' ').trim()
+  const subject = (CONVENTION_FOLDER.exec(said)?.[3] ?? said).replace(new RegExp(`^[A-Z][a-z]{2} \\d{1,2} [A-Z][a-z]{2} - (?:${Object.values(CUT_NAME).join('|')}) - `), '')
+  if (!subject) return null
+  const fit = (prefix: string) => `${prefix}${subject}`.slice(0, MAX_NAME).trim()
+  return { folder: fit(`${label} ${series} - `),
+    titles: Object.fromEntries(i.cuts.map(c => [c, fit(`${label} - ${CUT_NAME[c as keyof typeof CUT_NAME] ?? c} - `)])) }
+}
+
 export function scriptHash(text: string): string {
   return createHash('sha256').update(normalScript(text), 'utf8').digest('hex')
 }
