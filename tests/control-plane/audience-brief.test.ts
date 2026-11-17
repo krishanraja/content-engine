@@ -34,13 +34,15 @@ Three pieces a week on what AI changes in your business, each ending on a dated 
 `
 
 describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from the next piece', () => {
-  test('the short cut is 20 to 35 seconds, one idea, read from one block (change 2)', () => {
-    assert.deepEqual([SHORT_CUT.fewest_s, SHORT_CUT.most_s, SHORT_CUT.from], [20, 35, '2026-11-16'])
-    assert.ok(SHORT_CUT.fewest_words < SHORT_CUT.most_words)
+  test('the short cut is read from one block: 20 to 35 seconds from change 2, then 60 to 90 from his ruling of 17 Nov', () => {
+    // Ruling (Krish, 2026-11-17): "75 word script is insanely short. the AI music short is about the right amount of
+    // words, maybe just less" (config/script-floor/ai-music-short.said.txt).
+    assert.deepEqual([SHORT_CUT.fewest_s, SHORT_CUT.most_s, SHORT_CUT.fewest_words, SHORT_CUT.most_words, SHORT_CUT.from], [60, 90, 160, 210, '2026-11-18'])
     const two = rule('TWO_CUTS')
-    assert.match(two.text, /20 to 35 seconds as he says it, one idea/)
+    assert.match(two.text, /60 to 90 seconds as he says it, about the length of his AI music short/)
     assert.match(two.said, /apply 1 to 6 from the next piece you make this week/)
-    assert.doesNotMatch(rule('HOOK_AND_CTA').text, /inside 90 seconds/)
+    assert.match(two.said, /75 word script is insanely short/)
+    assert.match(rule('HOOK_AND_CTA').text, /inside 90 seconds/) // true again since 17 Nov
     assert.doesNotMatch(rule('SCRIPT_AS_HE_TALKS').text, /200 script words for the 90-second cut/)
   })
 
@@ -96,12 +98,12 @@ describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from t
     }
   })
 
-  test('this week\'s off-day options, made before the ruling, still read; the week of 23 Nov\'s are held to the short cut', () => {
+  test('this week\'s off-day options, made before the ruling, still read; the week of 23 Nov\'s are held to the new short rules (since 17 Nov a 90-second take fits SHORT_CUT again, so ONE_CONCRETE_THING holds it)', () => {
     const py3 = ['import sys, json', "sys.path.insert(0, 'scripts/post-pack')", 'import week_plan as wb',
       "d = json.load(open('tests/fixtures/plans/2026-11-16-ideas.json', encoding='utf-8'))",
       "print(sorted(wb.read_offdays(d['offdays'], week='2026-11-16')))",
       'try:', "    wb.read_offdays(d['offdays'], week='2026-11-23'); print('passed')",
-      'except wb.BoardError as e:', "    print('held' if '45 to 75 words' in str(e) else str(e))"].join('\n')
+      'except wb.BoardError as e:', "    print('held' if 'ONE_CONCRETE_THING' in str(e) else str(e))"].join('\n')
     const run = spawnSync(py, ['-c', py3], { encoding: 'utf8' })
     assert.equal(run.status, 0, run.stderr)
     assert.deepEqual(run.stdout.trim().split('\n'), ["['sat', 'thu', 'tue']", 'held'])

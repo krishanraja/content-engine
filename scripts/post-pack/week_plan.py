@@ -242,7 +242,8 @@ RECORDED_STYLES = {'to_camera': 'Said to camera', 'voiceover': 'Voiceover with m
 
 RECORDED_WORDS = (160, 195)  # a 90-second cut that finishes under 89 seconds: off-day options of weeks before SHORT_FROM_WEEK
 # Ruling (Krish, 2026-11-16), of Growth's audience brief: "apply 1 to 6 from the next piece you make this week". The
-# short cut is 20 to 35 seconds (SHORT_CUT in the house rules) and its first sentence names one concrete thing
+# short cut is SHORT_CUT in the house rules (60 to 90 seconds since Krish's ruling of 17 Nov: "75 word script is
+# insanely short") and its first sentence names one concrete thing
 # (ONE_CONCRETE_THING). This week's off-day options were made before that ruling and stay as they were; the ideas run
 # makes the week of 23 Nov's under it. A caller that does not say the week keeps the old check.
 SHORT_FROM_WEEK = '2026-11-23'
@@ -679,7 +680,7 @@ def recorded_problems(o, week=None):
     low, high = (story_check.CUTS['short'][0], story_check.CUTS['short'][1]) if now else RECORDED_WORDS
     if not low <= words <= high:
         out.append(f'script is the exact words he reads, {low} to {high} words (it has {words})'
-                   + (' (house rule TWO_CUTS: a short of 20 to 35 seconds, Ruling, Krish, 2026-11-16)' if now else ''))
+                   + (' (house rule TWO_CUTS: a short of 60 to 90 seconds, Ruling, Krish, 2026-11-17)' if now else ''))
     else:
         found = [p for p in story_check.problems(script, 'short') if 'SCRIPT_CLOSE' not in p
                  and (now or not any(rule in p for rule in NEW_SHORT_RULES))]
