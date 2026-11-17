@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { spawnSync } from 'node:child_process'
 import { join } from 'node:path'
-import { brief, cardWords, jobPatch, parseJobReport } from '../../apps/control-plane/api/inspiration/_actions.js'
+import { IDEA_READER, brief, cardWords, jobPatch, parseJobReport, researchToFile } from '../../apps/control-plane/api/inspiration/_actions.js'
 import { rankCandidates, tickRoles, type StyleTick } from '../../apps/control-plane/api/inspiration/_cards.js'
 import { MAX_INSPIRED, MAX_OPTIONS, parseOptions } from '../../apps/control-plane/api/_weekOptions.js'
 
@@ -48,6 +48,28 @@ describe('the piece job reports on his tick, and never past drafted', () => {
       expect(Object.keys(p)).not.toContain('scheduled_for')
       expect(['done', 'dropped', 'in_use']).not.toContain(p.state)
     }
+  })
+})
+
+describe('his idea file is filed on the piece his tick drafted', () => {
+  const drafted = parseJobReport({ id: TICK, job_state: 'drafted', piece_id: PIECE }).report!
+  const idea = { source_url: 'https://drive.google.com/file/d/invented/view', engine_rev: IDEA_READER, read: { name: 'vibe.md', title: 'Vibe coding stops being a toy', cut: false }, read_md: '# Vibe coding\n\nThe research.' }
+
+  it('files the reading, whole, as research on the new piece, naming the tick and the Drive file', () => {
+    expect(researchToFile(open, drafted, idea)).toEqual({
+      piece_id: PIECE, content: idea.read_md, kind: 'research', role: 'research', title: 'Vibe coding stops being a toy',
+      note: 'His idea file from Inspiration (https://drive.google.com/file/d/invented/view), filed on this piece when his tick drafted it.',
+      source_ref: `inspiration_actions:${TICK}`,
+    })
+    expect(researchToFile(open, drafted, { ...idea, read: { name: 'vibe.md', cut: true } })).toMatchObject({ title: 'vibe.md', note: expect.stringContaining('the whole file is in his Drive') })
+  })
+
+  it('files nothing twice, nothing before drafted, and never a fetched post\'s reading', () => {
+    expect(researchToFile({ ...open, state: 'drafted', piece_id: PIECE }, drafted, idea)).toBeNull()
+    expect(researchToFile(open, parseJobReport({ id: TICK, job_state: 'running' }).report!, idea)).toBeNull()
+    expect(researchToFile(open, drafted, { ...idea, engine_rev: 'content-watcher@abc' })).toBeNull()
+    expect(researchToFile(open, drafted, { ...idea, read_md: '  ' })).toBeNull()
+    expect(researchToFile(open, drafted, null)).toBeNull()
   })
 })
 

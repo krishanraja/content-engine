@@ -264,6 +264,16 @@ creates, drops or closes one.
   (`POST /api/inspiration/actions`, the operator's key: running, then drafted with the idea, or failed with the reason
   in words, which Control Centre shows on the card and in To approve with Try again). Control Centre lists the idea
   first in To approve, with the card's preview and its Drive link.
+- **His idea file goes on the piece.** Krish, 2026-11-17: "The research needs to stay concretely bound to the idea as it
+  travels through this UI in to the ideas board, then in to the publish board. nothing should ever get lost." A
+  Markdown idea he adds on Control Centre's Inspiration ("Add an idea") is filed in his Drive and its text written as
+  the request's reading (`content_reads`, `engine_rev` `control-center-idea`), which the brief carries. When the run
+  reports his tick drafted on a new piece, `POST /api/inspiration/actions` files that reading on the piece as
+  `research` through the materials store (`addText`, `source_ref` `inspiration_actions:<id>`, by "Inspiration tick")
+  and copies it to his research library, so it is on the piece's shelf on the ideas board and the publish board
+  without depending on the run's model (`researchToFile` in `api/inspiration/_actions.ts`). Only his own idea files,
+  never a fetched post's reading; once per piece; a filing that fails never fails the report, and the answer's
+  `research` says what happened. Tests: `tests/control-plane/inspiration-actions.test.ts`.
 - **The gate is untouched.** The idea waits for his Approve like every other; the run never sets a day, saves a pick or
   writes `decided`, and the database refuses any other placement. `tests/ideas-gate-db.mjs` tries it: an idea his ticked
   card made is refused a day by the run's own write and by a pick the run saves, and placed by his Approve only.
