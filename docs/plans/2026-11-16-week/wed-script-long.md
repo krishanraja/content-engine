@@ -18,4 +18,4 @@ So is it build or buy? Honestly, I think that's the wrong question now. Anthropi
 
 And this goes way beyond help desks and sales software. It's the dashboard your team knocked up last week. It's the spreadsheet that only one person in finance understands. And what happens when they go on holiday?
 
-So next time someone shows me a tool they built at the weekend, I won't ask build or buy. I'll ask who gets the call when it breaks at two in the morning. If the answer is no one, I'll buy. The full story is free at makeyourmindup.ai.
+So next time someone wants to build a tool with AI, I won't ask build or buy. I'll ask who gets the call when it breaks at two in the morning. If the answer is no one, I'll buy. The full story is free at makeyourmindup.ai.
