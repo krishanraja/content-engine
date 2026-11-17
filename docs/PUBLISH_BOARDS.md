@@ -78,7 +78,11 @@ board has everything up to date and, not only that, is genuinely live?" The audi
 - **Every writer lands where the view reads.** The pieces' records, his presses, Growth's ticks and the week's builds
   are tables the view reads on every request. The week's plan files are read from the week's branch
   `offday-revise/<Monday>` before main, at the commit each points at now (`branchSha`), so a push reaches the board
-  in seconds, not after raw.githubusercontent.com's five-minute cache. The Sunday ideas run, the good-news run (by hand
+  in seconds, not after raw.githubusercontent.com's five-minute cache. The week's `ideas.json` is read from both and
+  merged from the commit where they split (`mergeWeekPlan`, `mergeBaseSha`): each row, matched by id, and each value
+  comes from the side that changed it since, so a session's write to main (a piece's production pick) is never hidden by
+  the branch's older copy, and a run's write to the branch is never hidden by main; a value both changed keeps the
+  branch's. Without the board's GitHub token the split cannot be found and the branch's copy is read whole. The Sunday ideas run, the good-news run (by hand
   since the Thursday schedule was retired, Ruling, Krish, 2026-11-11), the inspiration piece run and the revise run all put the week's folder on that branch (`scripts/week_branch_keep.sh`: main, then what is on
   the branch, then the run's commit; a fast-forward, never a force), each with a pull request to main that merges
   itself. Nothing builds or publishes a board page any more.
@@ -498,7 +502,13 @@ showed that day (`tests/control-plane/board-state-truth.test.ts`):
   and the other two wait in the read sheet; at an earlier step (a lock still to sign) all three wait in the read sheet,
   so he can pick before or after he signs; a piece moved to an off day (Tue 17) has the same three, from its own record.
   The recommendation a session makes for a piece is its row's `style` in the week's plan (`production`, `motion`,
-  `captions`): named there, it is the one recommended, first, in place of the channel's own three.
+  `captions`): named there, it is the one recommended, first, in place of the channel's own three. When it cannot be
+  recommended (he said Not this to it, called it not for us, or ve cannot draw it yet), the plan's next choices
+  (`motion_alternatives`, `captions_alternatives`, `production_alternatives`) are tried in order, and the one that stands
+  says why ("its first, Living screen, is one you said Not this to"); only when none stands are the channel's own shown.
+  A session writes the row on main as usual: the board reads main and the week branch together (below), so its write
+  reaches the card at the next read (Ruling, Krish, 2026-11-17: "Why do recommendations in my UI never adapt to the
+  piece?").
 - **A post scheduled after its day says when it goes, never Missed** (`postedStage`): Fri 13's "Your AI thinks it's the
   best" was scheduled in Buffer for Tue 17, so its card says "Scheduled on Instagram, X for Tue 17 Nov, 08:30, after its
   day (Fri 13 Nov)". Its day on the board moves only with his Move to…. A schedule whose time passed with no send is
