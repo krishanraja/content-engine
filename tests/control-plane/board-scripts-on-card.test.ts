@@ -157,6 +157,12 @@ describe('every off-day kind with copy on its record keeps Edit and Take back on
     }
     const meme = build(true)
     expect(meme.others.map((a: Body) => a.label)).toEqual(expect.arrayContaining(['Edit the script', 'Take back my approval']))
+    // Only scripts he records go to his Teleprompter (Ruling, Krish, 2026-11-17: "only scripts i record go to
+    // teleprompter"): a meme's copy is approved and kept, and its press says it never goes there.
+    const edit = meme.others.find((a: Body) => a.label === 'Edit the script') as Body
+    expect(edit.body).toMatchObject({ teleprompter: false })
+    expect(String(edit.goes)).toMatch(/never goes to your Teleprompter/)
+    expect(String(edit.scripts.edited_note)).toMatch(/never goes to your Teleprompter/)
     // can fail: no record, so no copy on file to show
     expect(build(false).others.some((a: Body) => a.label === 'Take back my approval')).toBe(false)
   })

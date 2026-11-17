@@ -900,6 +900,9 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
   if (collection === 'queue' && body.use === 'offday' && body.note_only === true) return null
   if (isRecordedOffday(collection, body)) return offdayRecorded(db, { week, id, body, who, saved }, now, deps)
   if (collection === 'picks' && body.kind === 'approve_scripts' && body.approved === true) {
+    // Only scripts he records go to his Teleprompter (Ruling, Krish, 2026-11-17: "only scripts i record go to
+    // teleprompter"): copy for a post he does not record is approved and kept, and nothing is sent.
+    if (body.teleprompter === false) return { ...saved, line: 'Approved. Your Teleprompter is only for scripts you record, so nothing was sent there.' }
     let result: Omit<SendResult, 'status'> & { status: SendResult['status'] | 'held' }
     let unrecorded: string | null = null
     let checks: string | null = null
