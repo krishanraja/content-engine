@@ -1,0 +1,3 @@
+Status: Each generated beat in the production plan carries its higgsfield-generator recipe (model, prompt, the still it starts from, length, estimated credits), and the Claude production prompt uses the skills as their own guide says: stills before video on the right model, motion from the approved still on Seedance 2.5, reframe for a clip at the wrong shape, cost before generation, no Soul ID, presets or Higgsfield audio, and the Virality Predictor as a signal on the reviewed short.
+Next: Krish presses My takes are in the Inbox on the Tue 17 habits voiceover; the first plan run is checked end to end.
+North Star check (2026-11-17): holds.
