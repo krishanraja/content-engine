@@ -56,3 +56,5 @@ Answer: Yes: it is the best auditor you will ever hire, because the past holds s
 
 ## Music bed
 NO CURVES (Instrumental Version), Superintendent McCupcakes (Epidemic Sound), `no-curves-instrumental` in `config/music-library.json`, the one series bed in the ledger, in the one bed shape (`config/music-bed.json`).
+
+Signed by Krish: "signed, lock it and get the piece on the board to a place wher I can pick all the visual choices and edit the scripts", 2026-11-17, lock sha256 edaae91c5c56347c68e70ff275807c606f68e1a7dcd317d47db2fb6e771ea5c9
