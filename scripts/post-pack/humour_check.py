@@ -19,7 +19,7 @@ Krish, 2026-11-17: "go ahead on both" (content-engine as an on-call consultant).
 
 Exit 0: passes. Exit 1: flagged, each finding names its paragraph or line and the floor standard. Exit 2: the
 humour engine is unavailable, which is never a pass. Each read is one model call on Control Center's key
-(POST /api/humour/content-engine, CONTROL_CENTER_HUMOUR_TOKEN, about half a cent, capped at 200 a day). Install:
+(POST /api/humour/content-engine on the engine's operator key ENGINE_OPERATOR_TOKEN, about half a cent, capped at 200 a day). Install:
 pip install -r requirements-humour.txt && pip install --no-deps -r requirements-humour-engine.txt
 """
 import argparse
@@ -35,7 +35,7 @@ sys.path.insert(0, str(HERE))
 
 ORIGIN = 'https://controlcenter.krishraja.com'
 CALLER = 'content-engine'
-TOKEN_ENV = 'CONTROL_CENTER_HUMOUR_TOKEN'
+TOKEN_ENV = 'ENGINE_OPERATOR_TOKEN'  # the engine's operator key, which Control Center already holds (Krish, 2026-11-17)
 EXIT = {'pass': 0, 'flagged': 1, 'unavailable': 2}
 AUDIENCE = 'Leaders and operators who follow AI news: smart, busy, not specialists'
 FLAT = 'flat: no wit, opinion, sarcasm, exaggeration or analogy the engine can find (floor: never flat and purely factual)'
@@ -207,8 +207,8 @@ def doctor(poster=post, package=None):
     """(ok, rows). An empty body reaches the route's auth and its count without a model call: 400 means ready."""
     rows, ok = [], True
     token = os.environ.get(TOKEN_ENV, '')
-    rows.append('token: %s is set' % TOKEN_ENV if token else 'token: NOT SET. %s holds content-engine\'s humour '
-                'bearer (a GitHub Actions secret; Control Center holds it as CONTENT_ENGINE_HUMOUR_TOKEN)' % TOKEN_ENV)
+    rows.append('token: %s is set' % TOKEN_ENV if token else 'token: NOT SET. %s is the engine\'s operator key '
+                '(a GitHub Actions secret and on each runner; docs/INTEGRATIONS.md)' % TOKEN_ENV)
     ok = ok and bool(token)
     if package is None:
         try:
