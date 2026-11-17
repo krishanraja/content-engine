@@ -4924,6 +4924,23 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function grainSample(frame: number, sample: number): number`
 - `function filmState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/flat_mechanism/index.tsx`
+
+- `export { mechanismState } from './state'`
+- `function geometry(p:DeviceProps)`
+- `function Device(p:DeviceProps)`
+- `function drawCanvas(ctx:CanvasRenderingContext2D,p:DeviceProps,images:Readonly<Record<string,CanvasImageSource>>={})`
+
+### `apps/renderer/src/engine/devices/flat_mechanism/schema.ts`
+
+- `const ParamsSchema`
+- `const FillSchema`
+
+### `apps/renderer/src/engine/devices/flat_mechanism/state.ts`
+
+- `function route(from:string, to:string, links:readonly {from:string;to:string}[]):string[]`
+- `function mechanismState(p:DeviceProps)`
+
 ### `apps/renderer/src/engine/devices/focus.ts`
 
 - `const FOCUS: Readonly<Record<string, (p: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | 'frame'>) => Focus …`
@@ -5017,6 +5034,7 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 - `function buildSet(p:DeviceProps)`
 - `function Device(p:DeviceProps)`
+- `function cameraAt(p:DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/ladder_stage/schema.ts`
 
@@ -5109,6 +5127,23 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 - `const DRAW_FRAMES`
 - `function ringGeometry(object: EngineObject)`
 - `function mintRingState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/morph_stage/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/morph_stage/schema.ts`
+
+- `const ParamsSchema`
+- `type MorphState = z.infer<typeof State>`
+
+### `apps/renderer/src/engine/devices/morph_stage/state.ts`
+
+- `type Point = [number, number]`
+- `function resample(vertices: Point[], count = 96): Point[]`
+- `function outline(s: MorphState): Point[]`
+- `const blend = (a: Point[], b: Point[], t: number): Point[] =>`
+- `function morphState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/office_floor/index.tsx`
 
