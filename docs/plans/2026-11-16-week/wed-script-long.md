@@ -6,7 +6,7 @@ And on the face of it, building looks easy now. People call it vibe coding, and 
 
 So if it's that easy, why didn't Anthropic just do that? This is the bit most people miss. Writing the tool is the cheap part now. The cost is everything that comes after. So let me walk you through what building it would have meant for Anthropic.
 
-Picture a bot Anthropic built itself. Two in the morning, and it tells a customer they owe the price of a small yacht. Who gets that call? One of Anthropic's own engineers, pulled off making Claude better. And it doesn't stop there. Every time Claude changes, someone has to change the bot's answers too. If no one does, the bot tells customers things that stopped being true weeks ago.
+Picture a bot Anthropic built itself. Two in the morning, and it tells a customer they owe the price of a small yacht. Who gets that call? One of Anthropic's own engineers, pulled off making Claude better. And it doesn't stop there. Every time Claude gets a new feature, someone has to teach the bot about it. If no one does, the bot tells customers things that stopped being true weeks ago.
 
 So what did Anthropic actually do? It went shopping. Its support team wanted something fast that kept their own engineers working on Claude. So they bought a bot called Fin, from a company called Intercom, which sells help desk bots. Emily Lampert, who helps run Anthropic's support, said the choice was pretty easy. Intercom's team keeps making Fin better, she said. Translation: let someone else's engineers lose sleep over it. And honestly, most of us would make that choice too. Fin was answering customers within days. And soon it was sorting out about half the questions on its own.
 
