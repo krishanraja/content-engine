@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-17","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Tue 17 data-centres piece at its look; the week plan's recommended set corrected (fry-explainer script, face-with-proof and voice-led-pictures, eating-jobs-ladder motion with ai-music-slam and full-visual as alternatives, art-directed captions). (2026-11-17)
 - Pick the voice on an off-day voiceover ends with Record it myself (Krish, 2026-11-17: "I should be able to choose to record manually myself as well, and then the teleprompter workflow will activate, as opposed to the ElevenLabs workflow"). His pick is written into the post's Claude prompt: Record it myself sends the approved script to his Teleprompter and cuts from his take, and `ve voice clone --voice record-myself` refuses; an ElevenLabs pick names the voice and its --voice. (2026-11-17)
 - All nine motion-style devices are on main. The last three (living screen, toy 3D, flat mechanism) are merged, with toy_object's camera and slot faults fixed and tested. Every one stays Coming soon until Krish says yes to its test render, and shape morph is last in his picker. No Codex cards were sent. (2026-11-17)
 - Tue 17 Nov habits voiceover short (off-tue-701a2c55): script v4 final (docs/plans/2026-11-16-week/tue-habits-vo/script.md). The synthetic voice was dropped for this piece: Krish v2 on eleven_v3 drifted off his accent on the full script (every round logged in krish-clone docs/GENERATORS.md, PR #14). Krish records the voiceover himself. ve spec, Codex cards and render not started. (2026-11-17)
@@ -43,13 +44,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-17 docs/plans/2026-11-16-week/ideas.json (piece b019dbf8 style row).
 - 2026-11-17 apps/renderer/src/engine/devices/{living_screen,toy_object,flat_mechanism}, houseGolden.json (those devices only), apps/control-plane/api/board/_style.ts (LAST_MOTION), docs/ve/STATUS.md.
 Older lines: `docs/history/2026-11-17-NOW-moved-7.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-17): Krish picks a voice, or Record it myself, on the next off-day voiceover on the Content Board.
+- Next (2026-11-17): Krish presses Pick the look, the motion style and the captions on the Tue 17 card.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
