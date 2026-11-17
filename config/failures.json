@@ -299,7 +299,7 @@
         {
           "file": "scripts/post-pack/story_check.py",
           "contains": "def short_band",
-          "how": "a short script past SHORT_CUT.most_words is refused before Krish records it; since 2026-11-16 the short cut is 20 to 35 seconds (Ruling, Krish, 2026-11-16), well inside every platform's line"
+          "how": "a short script past SHORT_CUT.most_words is refused before Krish records it; since 2026-11-17 the short cut is 60 to 90 seconds (Ruling, Krish, 2026-11-17), well inside every platform's line"
         },
         {
           "file": "scripts/produce_day.py",

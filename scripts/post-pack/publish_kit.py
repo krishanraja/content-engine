@@ -69,7 +69,8 @@ from pathlib import Path
 ARTICLE = '{ARTICLE_URL}'
 YOUTUBE = '{YOUTUBE_URL}'
 # The short cut's ceiling, house rule TWO_CUTS: SHORT_CUT in the house rules (Ruling, Krish, 2026-11-16: "apply 1 to 6
-# from the next piece you make this week", so verticals of 20 to 35 seconds). It was 90 until 15 Nov.
+# from the next piece you make this week", 20 to 35 seconds for one day; Ruling, Krish, 2026-11-17: "75 word script is
+# insanely short", so 90 again, about the length of his AI music short).
 def _short_cut_most_s():
     text = (Path(__file__).resolve().parents[2] / 'apps' / 'control-plane' / 'api' / '_houseRules.ts').read_text(encoding='utf-8')
     block = text.split('// SHORT_CUT:BEGIN', 1)[1].split('// SHORT_CUT:END', 1)[0]
