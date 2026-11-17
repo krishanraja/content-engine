@@ -2244,7 +2244,9 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `interface Track`
 - `function defaultVoice(bank: unknown = voiceBank): string`
 - `function bankVoices(bank: unknown = voiceBank): BankVoice[]`
-- `function offdayTracks(library: unknown = musicLibrary): Track[]`
+- `type TrackGroup = 'off-day' | 'good_news' | 'tips'`
+- `function trackGroup(kind: string): TrackGroup`
+- `function offdayTracks(library: unknown = musicLibrary, group: TrackGroup | null = 'off-day'): Track[]`
 - `function voicePreview(id: string, bank: unknown = voiceBank): string | null`
 - `function trackFiles(library: unknown = musicLibrary): Set<string>`
 - `function audioLayers(kind: string): AudioLayer[]`
@@ -2986,6 +2988,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `type PressAction`
 - `interface ScriptReview`
 - `interface ViewOption`
+- `interface ViewTemplate`
 - `interface ViewPiece`
 - `interface ViewComment`
 - `interface ViewPosted`
@@ -3006,6 +3009,9 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
 - `function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day: string): Body[]`
 - `function offdayOptions(i: ExtrasInputs, day: string): ViewOption[]`
+- `const TEMPLATE_PLACES`
+- `const MECHANISMS`
+- `function templateOf(o: Body): ViewTemplate | null`
 - `function mixOf(stories: Body[]): string`
 - `function thoughtPress(day: string, step: string): PressAction`
 - `function materialPress(pieceId: string): PressAction`

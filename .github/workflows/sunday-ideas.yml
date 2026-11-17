@@ -193,7 +193,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 400
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/lookalike.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/lookalike.py:*),Bash(python3 scripts/post-pack/meme_templates.py gather:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             The Sunday ideas run for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub Actions
@@ -233,6 +233,23 @@ jobs:
             lookalike). Copy every warning lookalike-input.json carries into ideas.json _about word for word. Nothing
             that went out or is on its way on the last three weeks' boards is offered again, and no story sits on the
             board twice: board_feed.py gate refuses a repeat.
+
+            Saturday and the meme templates, from the 30 Nov board (Ruling, Krish, 2026-11-17: "Each suggestion should
+            be a carousel like one carousel from my Instagram Inspo sheet, not just one story"; "why can we not create a
+            pipeline of existing meme videos that could be good to reskin, and show me those in here?"): every Saturday
+            option is a carousel modelled card for card on one named carousel in his sheet, the good news included
+            (.agents/skills/plan-week/references/offdays.md, "Saturday is carousels modelled on his sheet"), and no
+            meme, voiceover or recorded option goes on Saturday. Then the roaster step for the meme templates lane,
+            following .agents/skills/plan-week/references/meme-roaster.md: run python3
+            scripts/post-pack/meme_templates.py gather <Monday> (never with --apify: it costs money and needs his
+            approval of that run), say each source's count and every source it could not read, add the week's
+            pop-culture moments from your web search, pick 6 to 10 templates from at least two kinds of place, and
+            draft 2 to 4 caption ideas each in his humour, read live: there is no Control Center connector here, so
+            WebFetch https://raw.githubusercontent.com/krishanraja/ai-harness/main/skills/krish-voice/references/humour.md
+            (the same file get_skill krish-voice reads), use its Make Your Mind Up row, and never copy it into the
+            repository. If it cannot be read, say so and write no caption idea from memory. Write the templates on
+            Tuesday and Thursday as kind meme with a template. board_feed.py gate refuses a Saturday option that is not
+            a sheet carousel (saturday) and a week whose templates are not whole (template).
 
             Days to make again: ${{ steps.guard.outputs.days || 'none, this run fills the whole board' }}. When days are
             named, make again only the options nobody answered (open in sources.json option_status) on those days of

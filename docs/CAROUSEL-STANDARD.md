@@ -77,8 +77,12 @@ cards, `ve` renders, and a separate reviewer watches and listens before it is ca
 `docs/ve/RUNBOOK.md`). The voice is an ElevenLabs voice from `config/voice-bank.json` (his Krish v2 voice by default,
 Krish Remix as the backup, or a stock voice he approved), the one he picked on the Content Board (Pick the voice), or his own take when he picks
 Record it myself there (then the script goes to his Teleprompter once he approves its words, never ElevenLabs), with a light off-day track under it
-(Pick the music under the voice). Every carousel carries an approved audio track the same way: the off-day rotation in
-`config/music-library.json`, his Pick the track on the board, at the one bed shape (`config/music-bed.json`). A session
+(Pick the music under the voice). Every carousel carries an approved audio track the same way: its group in
+`config/music-library.json`, his Pick the track on the board, at the one bed shape (`config/music-bed.json`). A good-news
+carousel is offered the funky-house group (`carousel: good_news`), a supporting carousel or explainer the gym group
+(`carousel: tips`); a meme, still or video, keeps its own sound and gets no track (Ruling, Krish, 2026-11-17: "good news
+stuff should get funky house and uplifting tunes from epidemic, advice and tips carousels should get a more gym-type
+focus track. Video memes keep their original sound"; `apps/control-plane/api/board/_audio.ts`, `trackGroup`). A session
 never picks either for him (Krish, 2026-11-17: "for all voiceovers and carousels, I want there to either be an audio
 track over the carousel, or, if it's a voiceover, then I want Eleven Labs voices used to do the voiceovers").
 
@@ -488,6 +492,15 @@ with a third of the screen empty below it. A tall meme is the brand palette's `m
 picture centred within 4 px across and within 48 px of y 920 (where Growth's tall templates centre the clip), the
 column's margins within 16 px of each other, every word and mark inside the clear box x 200 to 880, y 270 to 1320 and
 clear of every channel's buttons and caption area (`config/channel-safe-zones.json`), no empty band over 25% above it.
+
+## Meme videos and static memes (Ruling, Krish, 17 November 2026)
+
+His words: "lets bring up the production value of the meme to looking more like the production quality of the rest of
+the carousels etc." From the 30 Nov board a meme template reskin is the original clip at its full frame, credited, his
+caption on a clean band in the brand palette at carousel-grade type, the mark and a credit line, in 9:16 and 4:5, with
+its social_clip receipt; and a static meme meets this standard, the same type, palette and picture quality as a
+carousel card. The rules are `docs/MEME-STANDARD.md`. The Tuesday meme rule below still places the mark; its free look
+gives way to this standard.
 
 ## The Tuesday meme (Ruling, Krish, 4 November 2026)
 

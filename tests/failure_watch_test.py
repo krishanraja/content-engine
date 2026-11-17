@@ -65,7 +65,7 @@ class WatchList(unittest.TestCase):
                             cwd=ROOT, capture_output=True, text=True)
         self.assertEqual(ok.returncode, 0, ok.stdout[-2000:] + ok.stderr[-2000:])
         self.assertIn('technical watch-outs for long_video, short_video', ok.stdout)
-        self.assertIn('F52-plate-smeared-into-stripes', ok.stdout)
+        self.assertIn('F53-plate-smeared-into-stripes', ok.stdout)
         bad = subprocess.run([sys.executable, 'scripts/check_failures.py', '--watch', 'reels'],
                              cwd=ROOT, capture_output=True, text=True)
         self.assertEqual(bad.returncode, 2)
@@ -74,13 +74,13 @@ class WatchList(unittest.TestCase):
 class TheSixToEightNovemberFailures(unittest.TestCase):
     def test_each_is_registered_with_a_watch_out(self):
         by = {f['id']: f for f in REGISTER['failures']}
-        for fid, status in (('F52-plate-smeared-into-stripes', 'guarded'), ('F53-known-fault-rendered-with-caveat', 'guarded'),
-                            ('F54-cues-timed-to-transcript', 'guarded'), ('F55-text-cut-at-the-device-edge', 'open')):
+        for fid, status in (('F53-plate-smeared-into-stripes', 'guarded'), ('F54-known-fault-rendered-with-caveat', 'guarded'),
+                            ('F55-cues-timed-to-transcript', 'guarded'), ('F56-text-cut-at-the-device-edge', 'open')):
             with self.subTest(fid=fid):
                 self.assertEqual(by[fid]['status'], status)
                 self.assertTrue(by[fid]['watch']['line'])
         self.assertTrue(all(g.get('test') == 'python3 tests/frame_smear_test.py'
-                            for g in by['F52-plate-smeared-into-stripes']['guards']))
+                            for g in by['F53-plate-smeared-into-stripes']['guards']))
 
     def test_the_runbook_sends_every_ve_session_to_the_watch_outs(self):
         runbook = (ROOT / 'docs/ve/RUNBOOK.md').read_text(encoding='utf-8')

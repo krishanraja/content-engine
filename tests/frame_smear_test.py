@@ -1,5 +1,5 @@
 """A picture smeared into stripes on a finished cut (scripts/frame_smear.py; config/failures.json,
-plate-smeared-into-stripes: on 8 Nov a plate resized from a one-row crop turned the whole frame into vertical stripes).
+F53-plate-smeared-into-stripes: on 8 Nov a plate resized from a one-row crop turned the whole frame into vertical stripes).
 
 Real frames from the repository's plates and approved design frames never read as smeared; the same frames with a
 band, a column band or the whole picture stretched from one line always do; a flat card and a gradient never do. On

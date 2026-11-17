@@ -3078,7 +3078,7 @@ def main(argv=None, call=None):
                 import av_sync
                 problems = av_sync.receipt_problems(a.video_file)
                 # Nor a smeared picture: a hand-built composite never passed ve qc's picture.smeared row, so it carries
-                # its own receipt for these bytes (scripts/frame_smear.py; failures.json plate-smeared-into-stripes).
+                # its own receipt for these bytes (scripts/frame_smear.py; failures.json F53-plate-smeared-into-stripes).
                 import frame_smear
                 problems += frame_smear.receipt_problems(a.video_file)
                 patch['video_assets'][0]['hand_built']={'sha256': approved['sha256'], 'krish': approved['krish']}

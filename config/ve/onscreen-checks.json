@@ -31,7 +31,7 @@
     "min_token_chars": 3
   },
   "picture": {
-    "why": "8 Nov, the proactive-AI connected opening: the breakfast plate was resized from a one-row crop and the whole picture became vertical stripes. The session coordinating the work caught it by eye on one frame; nothing in the engine would have (config/failures.json, plate-smeared-into-stripes). Measured by scripts/frame_smear.py.",
+    "why": "8 Nov, the proactive-AI connected opening: the breakfast plate was resized from a one-row crop and the whole picture became vertical stripes. The session coordinating the work caught it by eye on one frame; nothing in the engine would have (config/failures.json, F53-plate-smeared-into-stripes). Measured by scripts/frame_smear.py.",
     "enforces": "floor group real_evidence and the aim \"Every frame designed and owned by the brand\": a picture is shown as itself, never smeared",
     "binds_from": "2026-11-24",
     "binds_from_why": "Its own date, the week after it landed, so pieces already in production are measured and shown, never refused mid-piece (F33)."

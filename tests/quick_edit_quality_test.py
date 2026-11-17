@@ -297,7 +297,6 @@ class QualityTests(unittest.TestCase):
             with self.assertRaises(send.SendError): send.send([(target,path,'review')],None)
 
 
-if __name__=='__main__': unittest.main()
 
 
 class SocialClipReceipt(unittest.TestCase):
@@ -334,3 +333,26 @@ class SocialClipReceipt(unittest.TestCase):
         target = '3 Posts/2026-11-04 Wed under.the.hood - X/3 Video/clip.mp4'
         self.assertEqual(quality.delivery_problems(self.video, self.receipt(library_path=target), target),
                          ['a social clip receipt files only into an off-day post'])
+
+    def test_a_meme_template_reskin_passes_its_three_more_checks(self):
+        path = self.receipt()
+        report = json.loads(path.read_text())
+        report['template'] = {'page': 'https://www.reddit.com/r/MemeTemplatesOfficial/comments/abc/x/'}
+        path.write_text(json.dumps(report))
+        got = quality.delivery_problems(self.video, path, self.target)
+        self.assertEqual(got, [f'{k} is missing' for k in quality.MEME_TEMPLATE_CHECKS])
+        report['checks'].update(full_frame={'status': 'pass'}, caption_band={'status': 'pass'}, credit_line={'status': 'pass', 'text': ''})
+        path.write_text(json.dumps(report))
+        self.assertEqual(quality.delivery_problems(self.video, path, self.target),
+                         ['caption_band names no palette; the band is in the brand palette (config/brand-palette.json)', 'credit_line carries no text'])
+        report['checks']['caption_band']['palette'] = 'config/brand-palette.json'
+        report['checks']['credit_line']['text'] = 'Original: u/someone on Reddit'
+        path.write_text(json.dumps(report))
+        self.assertEqual(quality.delivery_problems(self.video, path, self.target), [])
+        report['template'] = {'page': 'http://insecure.example/x'}
+        path.write_text(json.dumps(report))
+        self.assertEqual(quality.delivery_problems(self.video, path, self.target), ['template names no https page of the clip it reskins'])
+
+
+if __name__ == '__main__':
+    unittest.main()

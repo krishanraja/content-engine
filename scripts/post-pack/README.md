@@ -258,6 +258,12 @@ marked NOT YET FACT-CHECKED. Run it on any script before sending it to Krish:
 python scripts/post-pack/story_check.py --cut long SCRIPT    # or --cut short
 ```
 
+Whether the wit lands is a reading, not a rule: `humour_check.py` asks humour-engine (krishanraja/humour-engine,
+through Control Center's `POST /api/humour/content-engine`, on the engine's operator key, `ENGINE_OPERATOR_TOKEN`). `script SCRIPT` flags a
+flat script and wit that needs outside explanation, `joke` reads each joke option alone, `ideas IDEAS.json` reads the
+board's `funny` lines, and `doctor` proves the route with no model call. Exit 0 passes, 1 is flagged, 2 is unavailable
+and never a pass. It holds no taste: whether the joke is good stays Krish's.
+
 Every piece has two scripts, one per cut, each with its own hook and outro
 (house rule TWO_CUTS, Krish, 2026-10-11): the 5-minute long cut (3 minutes until Krish, 2026-10-19: "let's make the
 3-minute scripts into 5-minute scripts and videos"), 675 to 825
