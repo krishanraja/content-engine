@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-16
-head: 3379360
+as_of: 2026-11-17
+head: e7b785b
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,21 +30,18 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-16)
+## Where it is right now (as of 2026-11-17)
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-16","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (3 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
-- the fourth pass on the held style covers is carried onto main (Codex built it on an older copy of the stills); 15 of the 16 passed a separate review and are filed in Drive and recorded, and the live living-ui cover's label (ink on ink) is fixed and refiled. The other 31 live covers render byte for byte as before. (2026-11-16)
-- Codex's third StyleStill pass is merged and 24 more covers passed a separate reviewer, filed and recorded for the board: motion dark-keynote and living-ui; looks scoreboard-test, kinetic-movement and receipt-animation; 19 caption styles, now fitted large over a talking-head frame. With the first eight, 32 of 48 covers are live. A fourth card for the 16 still held back is queued. (2026-11-16)
-- eight motion-style covers from Codex's second StyleStill pass are filed in Inbox from My AI and recorded in config/ve/style-samples.json, so the board's motion picker shows them (ai-music-slam, data-story, eating-jobs-ladder, full-visual, hud-terminal, riso-halftone, single-line-drawing, swiss-kinetic-type); the card's composition is merged. A separate reviewer and Claude both held back the looks, the captions and six motion covers (paper-cutout, line-boil, dark-keynote, living-ui, vertical-captions, character-ai-receipts). (2026-11-16)
-- the second StyleStill cover card (ve-style-still-template-2) is queued on the Codex lane with today's last 4% of the allowance (spend e2669ebf); `ve lab covers` now renders every cover from the composition into a template manifest that `ve lab still` accepts, so the covers can be filed and recorded for the board's pickers once built and reviewed. (2026-11-16)
+- **StyleStill covers: 47 of 48 passed a separate review and are filed and recorded for the board's style pickers** (`config/ve/style-samples.json`). Eight came from Codex's second pass, 24 from its third, and 15 of the 16 held back from its fourth, after the reviewer's five named faults were fixed (`82360c9b`: line-boil passes too thick to read as three lines, receipt and living-ui labels ink on ink, the data story's chart now the sourced monthly sales indexed 100 to 107, flip-hinge sampled with its key word lit). slot-roll stays held: its uneven word gap is in the caption theme itself (`c631e0ac`). (2026-11-16)
 - a ve piece may now be drawn in a style's own palette (style.palette; six to start in config/ve/style-palettes.json, held to contrast by scripts/velib/palettes.py and ve lint), with Krish's brand marks kept in the house colours (brandTokens), per his ruling that a style may bring its own colours and theming. (2026-11-16)
 - the Saturday good news now looks wide before it chooses its topic: fifteen candidates or more from at least three of the news, Reddit, YouTube, LinkedIn, Krish's sheet and his saved cards, written on the option (board_feed.py wide_problems holds it from stories due 17 Nov), and a business that succeeded with AI counts as good news (kind business). (2026-11-16)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
-- 2026-11-16 apps/renderer/src/engine/stills (StyleStill, plan, tests), config/ve/style-samples.json, the fourth-pass card's line-boil note.
+- 2026-11-16 Codex built the fourth StyleStill pass on an older copy of the stills, so it was carried onto main by hand; a separate reviewer then held five of its sixteen covers and each named fault was fixed before they were filed (`5054cd7a`, `82360c9b`, `c631e0ac`). The other 31 live covers render byte for byte as before.
 - 2026-11-15 HyperFrames became kit's opt-in film backend for the moving end card, with Playwright still the default and byte-identical before and after (frame hashes compared). Its check filmed 16:9 at SSIM 0.9978 and 9:16 at 0.9990 against Playwright, two runs byte-identical, with no key and no spend. Open Generative AI was not adopted because "every cloud call is a paid muapi.ai credit" and ve already has the generation contract (commit 7e3f19ee, `docs/production/HYPERFRAMES.md`).
 Older lines: `docs/history/2026-11-16-NOW-moved-8.md` (it names every earlier move) and `LOG.md`.
 
