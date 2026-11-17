@@ -36,5 +36,9 @@
     "schema": "bed-shape-receipt/1",
     "engines": ["ve", "quick-edit"],
     "_about": "Each engine writes <video>.bed-shape.json beside the finished video it made, bound to that file's sha256 and carrying the bed-shape QC. Every filing route (ve file, send.py, produce_day.py's send, quality.delivery_problems) refuses a video for 3 Posts without a passing receipt for those exact bytes."
+  },
+  "exceptions": {
+    "_about": "Ruling (Krish, 2026-11-17): video memes keep their original sound; no bed goes under a meme, still or video. Series-day music rotates week by week (config/music-library.json, days; scripts/quick-edit/music.py, day_pool), and every rotated track takes this one shape, so only the track changes.",
+    "video_meme": "original sound, no bed"
   }
 }
