@@ -129,7 +129,10 @@ export function productionBrief(b: BriefInputs): string {
   const words = Object.entries(b.scripts).map(([c, w]) => `--- ${c} cut, as he approved it ---\n${w}`).join('\n\n')
   return `This is the one post-production session for "${b.title}" (piece_id ${b.pieceId}). It makes the finished `
     + `${b.offday ? 'short' : 'long cut and the short cut'} in one go from Krish's takes, with nothing left to ask him: every decision is below. `
-    + 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once, then docs/ve/ENGINE.md and docs/ve/RUNBOOK.md.\n\n'
+    + 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once, then docs/ve/ENGINE.md and docs/ve/RUNBOOK.md. '
+    + `Before anything else run python3 scripts/check_failures.py and python3 scripts/floor.py --format ${b.offday ? 'short_video' : 'long_video and --format short_video'}: `
+    + 'every past post-production failure and rejection there (smeared plates, cues timed to a transcript, text cut at the device edge, a known fault '
+    + 'rendered with a caveat, glitched speed-ups) is a check this cut must pass, and any production skill added since is followed.\n\n'
     + `His decisions (read live with get_piece_board too; never ask him for one again):\n${b.decisions.map(d => `- ${d}`).join('\n')}\n\n`
     + `His takes, confirmed in the Video Engine Inbox ${b.takes.confirmed_at.slice(0, 16).replace('T', ' ')} UTC (meta.takes_in on the piece):\n${fetches}\n`
     + 'If a take is not in the engine yet, recording.py get NAME --wait 15 waits for the Inbox copy; the take-placing job puts each on its cut by its words.\n\n'

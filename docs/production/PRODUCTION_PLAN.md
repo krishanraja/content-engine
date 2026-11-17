@@ -21,6 +21,10 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
 
 ## The run's steps
 
+0. Run `python3 scripts/check_failures.py` and `python3 scripts/floor.py --format short_video` (and `long_video` for a
+   series piece) first: every past post-production failure is a rule the plan must not repeat (a plate that smears, a
+   cue timed to a transcript, text cut at the device edge, a known fault rendered with a caveat). Plan no beat that one
+   of them refuses.
 1. Fetch each take: `python3 scripts/post-pack/recording.py get "NAME" --wait 15` (names in `meta.takes_in`, read with
    `board_session.py PIECE show`).
 2. The edit pass, by rule: `python3 scripts/post-pack/edit_pass.py --transcribe TAKE --words-out words.json --cap 90
