@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-17","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Tue 17 data-centres scripts redrafted to the signed lock (5-minute 806 words, short 75 words); story check ready, kill list and copy lint clean, voice check pass; three rounds of four fresh readers, every retelling matched. Filed on the piece for his Approve. (2026-11-17)
 - Record it myself is the default voice for a voiceover until a voice holds on a whole script (Ruling, Krish, 2026-11-17: "make Record it myself the default until a voice passes"). On the board it leads Pick the voice marked "(default)"; a post with no voice picked is told to send the approved script to his Teleprompter; `ve voice clone` with no --voice refuses and points to Teleprompter. An ElevenLabs voice is still his to pick. When a voice holds on a whole script, set its whole_script.passed in config/voice-bank.json and it becomes the default. (2026-11-17)
 - Every voice in config/voice-bank.json records whether it has held on a whole script. Krish v2's failed test is written there: it held his voice for a ten-second opening only, and on the Tue 17 full script it drifted to an accent he does not have. Until a voice passes, the board's line on it starts "Not yet proven on a whole script" and `ve voice clone` prints a caution with its plan. Record it myself stays beside it. (2026-11-17)
 - Tue 17 data-centres piece at its look; the week plan's recommended set corrected (fry-explainer script, face-with-proof and voice-led-pictures, eating-jobs-ladder motion with ai-music-slam and full-visual as alternatives, art-directed captions). (2026-11-17)
@@ -43,13 +44,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-17 docs/plans/2026-11-17-draft-script.md, docs/plans/2026-11-17-draft-script-90s.md.
 - 2026-11-17 docs/plans/2026-11-16-week/ideas.json (piece b019dbf8 style row).
 Older lines: `docs/history/2026-11-17-NOW-moved-8.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-17): a whole-script test of Krish v2 (or another voice) that Krish hears and passes, written into config/voice-bank.json.
+- Next (2026-11-17): Krish reads both scripts on the Tue 17 card and presses Approve scripts or says what to change.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
