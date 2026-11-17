@@ -166,6 +166,39 @@ class TypedApprovalTest(unittest.TestCase):
                           {'long': 'Mon 16 Nov - 5-minute - Oracle'}))
         self.assertIn('Teleprompter: held', out)
 
+    def scripts_argv(self):
+        long = Path(self.tmp.name) / 'long.md'
+        long.write_text('Oracle just borrowed another twenty billion dollars.', encoding='utf-8')
+        return [PIECE, 'approve', 'scripts', '--week', '2026-11-16', '--day', 'wed', '--long', str(long),
+                '--long-title', 'T', '--folder-title', 'F', *self.SAID]
+
+    def test_a_second_approval_finds_its_document_on_a_later_page(self):
+        # 17 Nov, piece db9f9f6a: the second approval read no revision and the board refused it as a conflict.
+        page1 = {'next_offset': 10, 'documents': [{'id': f'other-{i}', 'revision': 1} for i in range(10)]}
+        page2 = {'next_offset': None, 'documents': [{'id': 'wed-scripts-words-8287846b', 'revision': 4}]}
+        code, out, calls, _ = run(self.scripts_argv(), [(200, page1), (200, page2), (200, {'ok': True})])
+        self.assertEqual(code, 0, out)
+        self.assertEqual([c[1] for c in calls], ['/api/board/2026-11-16/picks', '/api/board/2026-11-16/picks?offset=10',
+                                                 '/api/board/2026-11-16/picks/wed-scripts-words-8287846b'])
+        self.assertEqual(calls[2][2]['revision'], 4)
+
+    def test_a_conflict_is_written_once_more_at_the_revision_on_file(self):
+        conflict = (409, {'ok': False, 'error': 'revision_conflict', 'revision': 4})
+        code, out, calls, _ = run(self.scripts_argv(), [(200, {'documents': [], 'next_offset': None}), conflict, (200, {'ok': True})])
+        self.assertEqual(code, 0, out)
+        self.assertEqual([(c[0], c[2] and c[2]['revision']) for c in calls[1:]], [('PUT', 0), ('PUT', 4)])
+        # Never more than once: a second conflict is reported, not chased.
+        code, out, calls, _ = run(self.scripts_argv(), [(200, {'documents': []}), conflict, conflict])
+        self.assertEqual((code, len(calls)), (1, 3))
+        self.assertIn('revision_conflict', out)
+
+    def test_an_answer_encoded_twice_is_still_read(self):
+        import json
+        listing = json.dumps(json.dumps({'documents': [{'id': 'x', 'revision': 3}]}))
+        self.assertEqual(bs.parsed(listing), {'documents': [{'id': 'x', 'revision': 3}]})
+        self.assertEqual(bs.parsed(''), {})
+        self.assertEqual(bs.parsed('not json')['ok'], False)
+
     def test_nothing_else_is_carried_and_never_without_his_words(self):
         for argv, why in (([PIECE, 'approve', 'idea', '--week', '2026-11-16', '--day', 'mon', *self.SAID], 'typed approval counts for nothing else'),
                           ([PIECE, 'approve', 'lock', '--week', '2026-11-16', '--day', 'mon', '--lock', str(self.lock),
