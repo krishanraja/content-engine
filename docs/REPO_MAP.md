@@ -2302,7 +2302,16 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const WORDS_KIND`
 - `function asWritten(body: Record<string, unknown>): Record<string, unknown>`
 - `function saidInWords(body: Record<string, unknown>): boolean`
+- `const APPROVAL_WORDS`
+- `function namesApproval(words: unknown): boolean`
+- `const LOCK_WORDS`
+- `const TAKE_BACK_WORDS`
+- `function namesTakeBack(words: unknown): boolean`
 - `function wordsBody(id: string, body: Record<string, unknown>): boolean`
+- `const BACK_ID`
+- `function backDocId(day: string, what: 'lock' | 'scripts', pieceId: string): string`
+- `function backBody(id: string, body: Record<string, unknown>): boolean`
+- `function takenBackAt(picks: Array<{ doc_id: string; body: unknown; updated_by?: string | null }>, what: 'lock' | 'scrip…`
 - `const LIVE_ID`
 - `function liveBody(id: string, body: Record<string, unknown>): boolean`
 - `const SIGN_OFF_ID`
@@ -3030,6 +3039,8 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
 - `function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead`
 - `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
+- `function scriptsOnCard(m: ModelInputs, d: DayView, it: ModelItem): ModelItem`
+- `function takeBackPress(m: Pick<ModelInputs, 'picks'>, day: string, pieceId: string): PressAction`
 - `function recordsItself(kind: string, picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string): …`
 - `interface OffdayScripts`
 - `function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Bod…`
