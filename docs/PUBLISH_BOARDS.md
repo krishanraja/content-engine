@@ -770,6 +770,31 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
     Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
     held, still counts. A `send` written by anyone else is still refused.
 
+- **1.23.0 (17 Nov 2026)** added the press op **`takes-in`**: **My takes are in the Inbox**, and the stage around it, on
+  every card that holds a piece (the day's own piece, a placed piece, an off-day post he records), every day.
+  - Once his scripts are approved and in his Teleprompter (a held send is said first, `heldSend`), the card waits on his
+    one press, with Open Teleprompter and the record step's Claude prompt beside it.
+  - The press (`POST /api/board/<Monday>/takes-in`, his login only) reads the Video Engine Inbox by its Drive ID
+    (`library/_inboxDrive.ts listInbox`). It takes the video files changed since he approved the scripts (less three
+    hours) that no other piece holds, oldest first (`newTakes`), and writes their names, Drive ids, sizes and checksums
+    on the piece (`meta.takes_in`). Then it asks GitHub to place them on their cuts by their words (`place-takes.yml`).
+    None there: a 409 `no_new_takes` with a line saying so, and nothing written.
+  - From then on the card names the takes. A production pick still missing (look, motion style, captions) is his press
+    first, unless a take is already on the making record (a recorded take is never sent back to a pick; the prompt then
+    names what is not picked). Then its next action is the **one post-production prompt** (`productionBrief`). It carries
+    every decision with who made it, the approved words, the research on file, each take with its exact
+    `recording.py get` line, and the creative calls it makes beat by beat: his face, a logo or wordmark, real visuals, a
+    social post or screenshot, motion design (a ve device or Codex plate), or cinematic generation. The prompt makes the
+    finished cut in one go, to a separate reviewer.
+  - Takes the home pass or the take-placing job already put on the making record count as his takes too.
+    `api/board/_takesIn.ts`.
+  - Ruling (Krish, 2026-11-17): "whenever I press approve script, the new board state should be waiting for me to
+    confirm the videos are in the Inbox, at which point it will fetch the name of the video(s) and integrate them in the
+    piece on the board so the next post production prompt does a completely accurate job, with all the research, motion
+    styles etc being in one place and decided as well, the post production should always be one shot - and can decide
+    where to bring in logos, real visuals, social posts, screen shots, motion design, cinematic generation, my face etc
+    etc."
+
 - **17 Nov 2026, no contract change: two system fixes on every day.** Ruling (Krish, 2026-11-17): "well ultimately all
   this feedback applies to all relevant days, i told you i do not want one off fixes but system upgrades".
   - **An off-day video post gets a piece's production picks.** Every off-day post cut on the ve route (a voiceover short,
