@@ -4,13 +4,17 @@ can build a cover with his face.
 
     python photos.py publish     a home computer: send every photo in Video Engine > Krish Clone - Assets > Photos
     python photos.py fetch       any machine: get them back from the library (default .cache/photos)
+    python photos.py fetch --references   the All other photos references instead
     python photos.py --self-test
 
 Ruling (Krish, 2026-11-17): face-led covers on his own accounts ("yes to the face plan"), drawn by Codex ("actually use
 codex to draw"). His cutout headshots live only in that Drive folder; the recordings pass on each home computer
 (scripts/recordings-upload.ps1, Publish-Photos) runs `publish` every five minutes, as it publishes the music, and the
 library sync writes them into "1 Brand kit (permanent)/Photos/Headshots", where every brand photo belongs
-(docs/DRIVE.md, "The brand kit"). Only the top of the folder is sent, never a subfolder ("All other photos" stays put).
+(docs/DRIVE.md, "The brand kit"). The top of the folder goes there. The images at the top of its subfolder "All other
+photos" go to "1 Brand kit (permanent)/Photos/Likeness references", for krish-clone's face profile and generated
+likeness only, never a cover (Krish, 2026-11-17: "you can use the All other photos sub folder ... but not the
+DO-NOT-USE folder"). Nothing inside DO-NOT-USE, or any other subfolder, is ever read.
 """
 import argparse
 import json
@@ -25,8 +29,11 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(REPO / 'scripts'))
 
 LIBRARY_PHOTOS = '1 Brand kit (permanent)/Photos/Headshots'
+LIBRARY_REFERENCES = '1 Brand kit (permanent)/Photos/Likeness references'
+OTHER = 'All other photos'  # its own subfolders (DO-NOT-USE among them) are never read
 FOLDER = ('Krish Clone - Assets', 'Photos')  # under the Video Engine root (config/studio.json drive_ids.drive_root)
 EXTENSIONS = ('.png', '.jpg', '.jpeg', '.webp')
+REFERENCE_PURPOSE = "a photo of Krish for his likeness profile and generated headshots only, never a cover (Krish, 2026-11-17)"
 PURPOSE = "a photo of Krish for face-led covers on his own accounts (Ruling, Krish, 2026-11-17)"
 
 
@@ -43,10 +50,20 @@ def photos_folder(environ=os.environ):
     return root.joinpath(*FOLDER) if root else None
 
 
-def planned(folder):
-    """[(library path, file, purpose)] for each photo at the top of the folder."""
-    return [(f'{LIBRARY_PHOTOS}/{p.name}', p, PURPOSE) for p in sorted(Path(folder).iterdir())
+def _images(folder):
+    return [p for p in sorted(Path(folder).iterdir())
             if p.is_file() and p.suffix.lower() in EXTENSIONS and not p.name.startswith('.')]
+
+
+def planned(folder):
+    """[(library path, file, purpose)] for each photo at the top of the folder, and each at the top of its
+    "All other photos" subfolder; no deeper folder (DO-NOT-USE) is ever listed."""
+    folder = Path(folder)
+    out = [(f'{LIBRARY_PHOTOS}/{p.name}', p, PURPOSE) for p in _images(folder)]
+    other = folder / OTHER
+    if other.is_dir():
+        out += [(f'{LIBRARY_REFERENCES}/{p.name}', p, REFERENCE_PURPOSE) for p in _images(other)]
+    return out
 
 
 def cmd_publish(out=print, environ=os.environ):
@@ -66,11 +83,11 @@ def cmd_publish(out=print, environ=os.environ):
     return done
 
 
-def cmd_fetch(out_dir):
+def cmd_fetch(out_dir, prefix=LIBRARY_PHOTOS):
     import engine
     import urllib.request
     status, answer = engine.call('GET', '/api/library/find?library=makeyourmindup&prefix='
-                                 + urllib.parse.quote(LIBRARY_PHOTOS + '/') + '&type=image')
+                                 + urllib.parse.quote(prefix + '/') + '&type=image')
     answer = answer if isinstance(answer, dict) else json.loads(answer)
     if status != 200 or not answer.get('ok'):
         raise SystemExit(f'photos: the library did not answer ({status})')
@@ -98,8 +115,14 @@ def self_test():
         (folder / 'notes.txt').write_text('x')
         (folder / 'All other photos').mkdir()
         (folder / 'All other photos' / 'old.jpg').write_bytes(b'x')
+        (folder / 'All other photos' / 'beach.jpg').write_bytes(b'x')
+        (folder / 'All other photos' / 'DO-NOT-USE').mkdir()
+        (folder / 'All other photos' / 'DO-NOT-USE' / 'never.jpg').write_bytes(b'x')
         got = [t for t, _, _ in planned(folder)]
-        checks.append(('only photos at the top of the folder are sent', got == [f'{LIBRARY_PHOTOS}/Denim headshot.png']))
+        checks.append(('the top of the folder and the top of All other photos are sent, nothing deeper',
+                       got == [f'{LIBRARY_PHOTOS}/Denim headshot.png', f'{LIBRARY_REFERENCES}/beach.jpg',
+                               f'{LIBRARY_REFERENCES}/old.jpg']))
+        checks.append(('DO-NOT-USE is never read', not any('never' in t for t in got)))
         checks.append(('MINDMAKE_PHOTOS names the folder', photos_folder({'MINDMAKE_PHOTOS': tmp}) == folder))
     import library
     checks.append(('the library takes the headshot path', library.refusal(f'{LIBRARY_PHOTOS}/Natural headshot cutout.png') is None))
@@ -111,6 +134,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('cmd', nargs='?', choices=('publish', 'fetch'))
     ap.add_argument('--out', default=str(REPO / '.cache' / 'photos'))
+    ap.add_argument('--references', action='store_true', help='fetch the likeness references (All other photos) instead')
     ap.add_argument('--self-test', action='store_true')
     a = ap.parse_args()
     if a.self_test:
@@ -122,7 +146,7 @@ def main():
     if a.cmd == 'publish':
         print(json.dumps(cmd_publish(), indent=2))
     elif a.cmd == 'fetch':
-        print(json.dumps(cmd_fetch(Path(a.out)), indent=2))
+        print(json.dumps(cmd_fetch(Path(a.out), LIBRARY_REFERENCES if a.references else LIBRARY_PHOTOS), indent=2))
     else:
         ap.error('say publish or fetch')
 

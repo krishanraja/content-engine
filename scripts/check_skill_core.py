@@ -35,6 +35,8 @@ CORE_CAPS = {'make-piece': 63_000, 'plan-week': 49_000, 'produce-video': 60_000,
              've': 6_000, 'video-engine': 4_500,
              # thumbnail-designer (15 Nov 2026): its size that day with about a tenth of headroom; its detail is in references/.
              'thumbnail-designer': 9_500,
+             # cover-art (17 Nov 2026): its size that day with about a tenth of headroom.
+             'cover-art': 8_000,
              # motion-designer (15 Nov 2026): its size that day with about a tenth of headroom; its method is in references/.
              'motion-designer': 7_000}
 
