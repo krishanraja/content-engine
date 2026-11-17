@@ -28,6 +28,7 @@ import { carriedItems, channelWord, dayLabel, dayOptions, liveOn, readItems, rea
 import { ideaStage, postedStage, truthProblems } from './_stage.js'
 import { modelProblems, offdayHead, offdayKind, recentOutOf, weekModel, type ModelInputs, type WeekModel } from './_weekModel.js'
 import { makeRoute } from './_makeRoute.js'
+import { PLAN_ROLE, parsePlan, type ProductionPlan } from './_productionPlan.js'
 import { scheduledOf } from './_posted.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -315,6 +316,8 @@ export interface ViewInputs {
   overlay?: Overlay | null
   /** The newest script of each cut a session filed on each piece for his Approve, with its words (F47; readView). */
   scripts?: Record<string, FiledScript[]>
+  /** Each piece's production plan (_productionPlan.ts), by piece id. */
+  productionPlans?: Record<string, ProductionPlan>
   /** The approvals that stand now (board_approvals_now, _gate.ts), or null when they cannot be read: then every piece
    *  is held. Required, so no caller builds a view that skips the gate. */
   approvals: Approval[] | null
@@ -982,8 +985,8 @@ export function buildView(i: ViewInputs): WeekView {
   // 2026-11-17: "at no point does a voiceover short give me the same controls as a mon/wed/fri piece"). A short only.
   const offdayStyle = (pieceId: string, meta: unknown) => dayStyle({ pieceId, meta: isObj(meta) ? meta : {}, formats: ['short_video'], points: null,
     motion: i.motion || [], looks: i.formats?.production || [], recommendedLook: null })
-  const built = weekModel(days, { week: i.week, work: workByScope(i.overlay ?? null), today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, offdayStyle, locksToSign, recentOut, picks: i.picks, decisions,
-    scripts: i.scripts ?? {}, lockReads: Object.fromEntries(Object.keys(decisions).map(id => {
+  const built = weekModel(days, { week: i.week, now: i.now, work: workByScope(i.overlay ?? null), today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, offdayStyle, locksToSign, recentOut, picks: i.picks, decisions,
+    scripts: i.scripts ?? {}, productionPlans: i.productionPlans ?? {}, lockReads: Object.fromEntries(Object.keys(decisions).map(id => {
       const lk = Object.values(i.locks).find(t => t && lockPieceId(t) === id)
       // Signed by its own last line or by his words on the board (signedLocks counts both; 17 Nov: Tue 17 was signed in his
       // words, and the card kept the idea row's summary).
@@ -1157,6 +1160,26 @@ export async function readFiledScripts(db: SupabaseClient, overlay: Overlay | nu
   return out
 }
 
+/** Each piece's production plan (_productionPlan.ts): the newest text material with role production_plan on the piece,
+ *  parsed and bound to its sha256. A plan that cannot be read or parsed is left off, never guessed. */
+export async function readProductionPlans(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string, ProductionPlan>> {
+  const out: Record<string, ProductionPlan> = {}
+  if (!overlay) return out
+  const mats = (overlay.materials || []).filter(isObj).filter(m => m.role === PLAN_ROLE && m.storage === 'text')
+  const { readMaterial } = await import('../_pieceStore.js')
+  for (const id of pieceIds) {
+    const newest = mats.filter(m => m.scope === id).sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')))[0]
+    if (!newest) continue
+    try {
+      const got = await readMaterial(db as never, String(newest.id))
+      const text = got.kind === 'text' && typeof got.body.content === 'string' ? got.body.content : ''
+      const plan = text ? parsePlan(text, id, createHash('sha256').update(text).digest('hex')) : null
+      if (plan) out[id] = plan
+    } catch { /* left off */ }
+  }
+  return out
+}
+
 /** Read every input of the week now and build its view. Each source that cannot be read is said in sources, never a failure. */
 export async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env,
   fetcher: Fetcher = fetch as unknown as Fetcher, now = new Date(),
@@ -1230,6 +1253,8 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // The scripts sessions filed on each piece for his Approve, with their words, so the card can offer his Approve
   // scripts the moment they are filed (F47). A script that cannot be read is left off, never guessed.
   const scripts = await readFiledScripts(db, overlay, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
+  // Each piece's production plan, made after his takes are in (_productionPlan.ts, contract 1.25.0).
+  const productionPlans = await readProductionPlans(db, overlay, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
   // Each piece's draft manifest (1.8.0), whose sha256 his Approve for publish binds.
   const drafts = await readDrafts(db, (pieces as Body[]).filter(p => SERIES_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
   // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held. Beside
@@ -1273,7 +1298,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     history: history as ViewInputs['history'], ideas, runs, north_star: north,
     locks: Object.fromEntries(LOCK_DAYS.map((d, k) => [d, locks[k] as string | null])),
     research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
-    specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, scripts, approvals,
+    specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, scripts, productionPlans, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
     drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items, all_items: allItems, recent_pieces: recentPieces as Body[],
     plans: { [shiftYmd(week, -7)]: beside[0] ?? null, [shiftYmd(week, 7)]: beside[1] ?? null }, sign_offs: await signOffs })

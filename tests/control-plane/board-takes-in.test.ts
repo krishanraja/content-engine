@@ -5,6 +5,8 @@ import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler'
 import { TAKES_OP, TAKES_SLACK_MS, newTakes, productionBrief, takesInOf, takesPress } from '../../apps/control-plane/api/board/_takesIn'
 import { approval } from './_approvals'
+import { parsePlan, swapsOf } from '../../apps/control-plane/api/board/_productionPlan'
+import { validBody } from '../../apps/control-plane/api/board/_contracts'
 
 // Krish, 2026-11-17: "whenever I press approve script, the new board state should be waiting for me to confirm the videos
 // are in the Inbox, at which point it will fetch the name of the video(s) and integrate them in the piece on the board so
@@ -45,6 +47,80 @@ function inputs(meta: Body = PICKED, picks: Body[] = [SCRIPTS]): ViewInputs {
   } as unknown as ViewInputs
 }
 const card = (i: ViewInputs) => buildView(i).model!.days.find(d => d.day === 'tue')!.items.find(x => x.piece_id === TUE)!
+
+describe('the production plan on the card (contract 1.25.0; Krish, 2026-11-17: "mocked up 2 or 3 scenes [...] the final opportunity to switch something out")', () => {
+  const STILL = '11111111-2222-4333-8444-555555555555'
+  const PLAN = {
+    version: 1, piece_id: TUE, made_at: '2026-11-17T22:40:00Z', takes: ['2026-11-17 openai short.mp4'],
+    edit: { raw_seconds: 101.2, restarts: [{ at: 14.2, said: 'The habit that' }], silences_cut: 9, kept_seconds: 93.4, cap_seconds: 90, speed: 1.064, final_seconds: 87.8 },
+    style: { look: 'face-with-proof', motion: 'eating-jobs-ladder', captions: 'art-directed' },
+    beats: [
+      { id: 'b1', from: 0, to: 4.1, words: 'Who pays for the power?', picture: { id: 'face', kind: 'face', what: 'Him to camera' },
+        options: [{ id: 'post', kind: 'social_post', what: 'The viral post about the power bill', source: 'https://example.org/post' }, { id: 'bad', kind: 'nonsense', what: 'x' }] },
+      { id: 'b2', from: 4.1, to: 9, words: 'Your engineer is as confident as a crocodile hunter', picture: { id: 'croc', kind: 'humour', what: 'A nerdy engineer creeping up on a crocodile' },
+        options: [{ id: 'shot', kind: 'screenshot', what: 'The pricing page' }], humour: { mechanism: 'incongruity', gag: 'Khaki hat, laptop bag' } },
+      { id: 'BAD ID', from: 0, to: 1, words: 'x', picture: { id: 'face', kind: 'face', what: 'x' } },
+    ],
+    scenes: [{ beat: 'b1', still: STILL, caption: 'Who pays for the power?', style: 'art-directed' }, { beat: 'nope', still: STILL, caption: '', style: '' }],
+    humour: [{ words: 'as confident as a crocodile hunter', mechanism: 'incongruity', gag: 'A nerdy engineer creeping up on a crocodile', beat: 'b2' }],
+  }
+  const text = JSON.stringify(PLAN)
+  const sha = createHash('sha256').update(text).digest('hex')
+  const plan = parsePlan(text, TUE, sha)!
+  const withPlan = (picks: Body[] = [SCRIPTS]) => ({ ...inputs({ ...PICKED, takes_in: TAKES }, picks), productionPlans: { [TUE]: plan } }) as unknown as ViewInputs
+
+  it('reads the plan, dropping only what is malformed', () => {
+    expect(plan.beats.map(b => b.id)).toEqual(['b1', 'b2'])
+    expect(plan.beats[0].options.map(o => o.id)).toEqual(['post'])
+    expect(plan.scenes).toEqual([{ beat: 'b1', still: STILL, caption: 'Who pays for the power?', style: 'art-directed' }])
+    expect(parsePlan(text, '99999999-2222-4333-8444-555555555555', sha)).toBeNull()
+    expect(parsePlan('not json', TUE, sha)).toBeNull()
+  })
+
+  it('while it is being made the card says so; once filed it shows the scenes, the beats and a Use this on every other option', () => {
+    const run = (at: string, sent = true) => ({ ...PICKED, takes_in: { ...TAKES, plan_run: { sent, at, reason: sent ? null : 'not_configured' } } })
+    expect((card(inputs(run('2026-11-17T11:00:00Z'))).plan as Body).status).toBe('making')
+    // Never "being made" forever: a run that did not start, or filed nothing in two hours, says so.
+    expect(card(inputs(run('2026-11-17T11:00:00Z', false))).plan).toMatchObject({ status: 'not_made', line: expect.stringContaining('the plan run did not start') })
+    expect(card(inputs(run('2026-11-17T09:00:00Z'))).plan).toMatchObject({ status: 'not_made', line: expect.stringContaining('filed nothing in two hours') })
+    expect(card(inputs({ ...PICKED, takes_in: TAKES })).plan).toBeUndefined()
+    const it = card(withPlan())
+    const p = it.plan as Body
+    expect(p.status).toBe('ready')
+    expect(it.line).toContain('Your production plan is ready: Your take runs 1:41, 1 restarted sentence clipped, 9 silences cut, 1:33 kept, sped up 6% to 1:28, under the 90-second limit.')
+    expect(p.scenes[0]).toMatchObject({ beat: 'b1', src: `/api/content-ideas/store?op=read&id=${STILL}`, picture: { kind: 'face', label: 'You on camera' } })
+    const use = p.beats[0].options[0].press
+    expect(use).toMatchObject({ kind: 'press', label: 'Use this', collection: 'picks', id: `plan-${TUE.slice(0, 8)}`, body: { kind: 'plan_swaps', piece_id: TUE, plan_sha256: sha, swaps: { b1: 'post' } } })
+    expect(validBody('picks', use.id, { ...use.body, at: '2026-11-17T22:50:00Z' })).toBe(true)
+  })
+
+  it('the Claude production prompt carries the edit pass, the humour, higgsfield-generator and the plan with his swaps', () => {
+    const swapped = { doc_id: `plan-${TUE.slice(0, 8)}`, updated_by: 'Krish', body: { kind: 'plan_swaps', piece_id: TUE, plan_sha256: sha, swaps: { b1: 'post' } } }
+    const it = card(withPlan([SCRIPTS, swapped]))
+    const prompt = String((it.next as Body).prompt)
+    expect((it.next as Body).label).toBe('Claude production prompt')
+    for (const s of ['edit_pass.py', 'restarted a sentence', 'under 90 seconds', 'humour-engine', 'crocodile', 'higgsfield-generator', 'real viral social post', 'screenshot'])
+      expect(prompt).toContain(s)
+    expect(prompt).toContain('A real social post: The viral post about the power bill (source: https://example.org/post)   [Krish swapped this in]')
+    expect((it.plan as Body).beats[0]).toMatchObject({ swapped: true, picture: { id: 'post' } })
+  })
+
+  it('never claims a cut fits when even 1.25x leaves it over the limit', () => {
+    const over = parsePlan(JSON.stringify({ ...PLAN, edit: { ...PLAN.edit, kept_seconds: 120, speed: 1.25, final_seconds: 96, over_cap: true } }), TUE, sha)!
+    const it = card({ ...inputs({ ...PICKED, takes_in: TAKES }), productionPlans: { [TUE]: over } } as unknown as ViewInputs)
+    expect(it.line).toContain('even sped up 25% it runs 1:36, 6 seconds over the 90-second limit, so lines must come out')
+    expect(it.line).not.toContain('under the 90-second limit')
+  })
+
+  it('can fail: a swap made on another version of the plan, or naming an option the beat lacks, does not count', () => {
+    const stale = { doc_id: `plan-${TUE.slice(0, 8)}`, body: { kind: 'plan_swaps', piece_id: TUE, plan_sha256: 'b'.repeat(64), swaps: { b1: 'post' } } }
+    expect(swapsOf([stale], plan)).toEqual({})
+    const unknown = { doc_id: `plan-${TUE.slice(0, 8)}`, body: { kind: 'plan_swaps', piece_id: TUE, plan_sha256: sha, swaps: { b1: 'nothing' } } }
+    expect(swapsOf([unknown], plan)).toEqual({})
+    expect(validBody('picks', `plan-${TUE.slice(0, 8)}`, { kind: 'plan_swaps', piece_id: TUE, plan_sha256: sha, swaps: { b1: 'post' }, extra: 1 })).toBe(false)
+    expect(validBody('picks', 'plan-00000000', { kind: 'plan_swaps', piece_id: TUE, plan_sha256: sha, swaps: {} })).toBe(false)
+  })
+})
 
 describe('which Inbox files are his takes', () => {
   const file = (id: string, name: string, modifiedTime: string, extra: Body = {}) => ({ id, name, modifiedTime, mimeType: 'video/mp4', size: '100', ...extra })

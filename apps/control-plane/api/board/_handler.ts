@@ -463,7 +463,13 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             const saved = await patchMeta(db as never, pieceId, meta => ({ ...meta, takes_in: { confirmed_at: now, by: 'Krish', since: approval.at, files } }))
             if (saved.ok === false) throw new BoardError(saved.reason === 'busy' ? 409 : 503, saved.reason === 'busy' ? 'piece_busy' : 'piece_unavailable')
             const placed = await (deps.placeTakes ?? (async (n: number) => (await import('../library/_placeTakes.js')).dispatchPlaceTakes(n)))(files.length).catch(() => ({ sent: false as const, reason: 'failed' as const }))
-            return res.status(200).json({ ok: true, takes: files, place_takes: placed })
+            // Then the production plan run (production-plan.yml; _productionPlan.ts): the edit pass, every beat's picture,
+            // the humour in his words and two or three scenes mocked from real stills, filed on the piece for his review.
+            const planning = await (deps.dispatch ?? dispatchJob)('production-plan', { piece_id: pieceId }).catch(() => ({ sent: false as const, reason: 'failed' as const }))
+            // Kept on the piece, so the card says "being made" only while a run it started is going, never forever.
+            await patchMeta(db as never, pieceId, meta => ({ ...meta, takes_in: { ...(meta.takes_in as Record<string, unknown>), plan_run: { sent: planning.sent, at: now,
+              reason: planning.sent ? null : String((planning as { reason?: string }).reason || 'failed') } } })).catch(() => null)
+            return res.status(200).json({ ok: true, takes: files, place_takes: placed, production_plan: planning })
           }
           if (op === 'material') {
             const name = String(body.title || 'Research').slice(0, 180)

@@ -2727,6 +2727,32 @@ One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Rul
 - `function ideaReport(week: string, id: string, body: Body, now: string)`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
 
+### `apps/control-plane/api/board/_productionPlan.ts`
+
+The production plan he opens, reviews and changes before the one production session (view contract 1.25.0; Krish,
+
+- `const PICTURE_KINDS: Readonly<Record<string, string>>`
+- `const SHORT_CAP_SECONDS`
+- `const PLAN_ROLE`
+- `const SCENE_ROLE`
+- `interface PlanOption`
+- `interface PlanBeat`
+- `interface PlanScene`
+- `interface PlanEdit`
+- `interface ProductionPlan`
+- `function parsePlan(text: string, pieceId: string, sha256: string): ProductionPlan | null`
+- `const planDocId = (pieceId: string) =>`
+- `const PLAN_DOC`
+- `function swapsOf(picks: Array<{ doc_id: string; body: unknown; updated_by?: string | null }>, plan: ProductionPlan): Re…`
+- `function chosenPicture(beat: PlanBeat, swaps: Record<string, string>): PlanOption`
+- `function planSwapsBody(id: string, body: Body): boolean`
+- `function editLine(e: PlanEdit): string`
+- `const PLAN_RUN_MS`
+- `interface PlanRun`
+- `function planRunOf(takesIn: unknown): PlanRun | null`
+- `function planView(plan: ProductionPlan | null, ctx: { picks: Array<{ doc_id: string; body: unknown; revision?: number; …`
+- `function planBrief(plan: ProductionPlan, swaps: Record<string, string>): string`
+
 ### `apps/control-plane/api/board/_prompts.ts`
 
 Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md, "The prompts, one shape for all").
@@ -2973,6 +2999,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function mergeWeekPlan(base: unknown, main: unknown, week: unknown): unknown`
 - `async function readPieceDecisions(db: SupabaseClient, pieceId: string, env: Record<string, string | undefined> = proces…`
 - `async function readFiledScripts(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string…`
+- `async function readProductionPlans(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<str…`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
 - `async function readWeekIdeas(week: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
 - `function growthLiveLine(posts: GrowthPost[]): string`

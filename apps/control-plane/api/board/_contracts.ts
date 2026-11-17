@@ -1,3 +1,4 @@
+import { PLAN_DOC, planSwapsBody } from './_productionPlan.js'
 import { createHash, timingSafeEqual } from 'node:crypto'
 import type { VercelRequest } from '@vercel/node'
 import { hasEngineAccess, operatorBearerAllowed } from '../_auth.js'
@@ -412,6 +413,9 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'picks' && (CREATIVE_ID.test(id) || body.kind === 'sign_creative')) return creativeBody(id, body)
   // His pick of an off-day post's voice or track (picks/audio-<voice|bed>-<item>; contract 1.20.0, _audio.ts).
   if (collection === 'picks' && (AUDIO_ID.test(id) || body.kind === 'audio_pick')) return audioBody(id, body)
+  // His swaps on a piece's production plan (picks/plan-<8 hex>, kind plan_swaps, bound to the plan's sha256; contract
+  // 1.25.0, _productionPlan.ts). His press only: a picks document with a kind is his.
+  if (collection === 'picks' && (PLAN_DOC.test(id) || body.kind === 'plan_swaps')) return planSwapsBody(id, body)
   // His typed approval of a lock or of scripts (WORDS_ID); "via: words" anywhere else is refused, so a session's words
   // never stand as one of his presses.
   // A new approval goes under its piece's own name (wordsDocId: <day>-<lock|scripts>-words-<8 hex>). The bare day-wide name

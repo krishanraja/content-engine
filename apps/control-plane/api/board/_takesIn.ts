@@ -15,6 +15,8 @@
 //   every decision in one place, the takes by name with how to fetch them, and the creative calls it makes itself. A
 //   production pick still missing comes first, as his press, so the session never decides one for him.
 
+import { SHORT_CAP_SECONDS } from './_productionPlan.js'
+
 type Body = Record<string, unknown>
 const isObj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
 const str = (v: unknown): string | null => (typeof v === 'string' && v.trim() ? v.trim() : null)
@@ -95,8 +97,8 @@ export function newTakes(files: Array<{ id: string; name?: string; mimeType?: st
 /** The press on a card: his only, one tap, no words. `item` names an off-day post, whose record the press may link. */
 export function takesPress(pieceId: string, item: string | null = null): Body {
   return { kind: 'press', label: 'My takes are in the Inbox', op: TAKES_OP, body: { piece_id: pieceId, ...(item ? { item } : {}) }, stamp: [],
-    goes: 'Reads the Video Engine Inbox, puts the takes you recorded since approving the scripts on this piece by name, and has them placed on their cuts by their words.',
-    done: 'Your takes are on the piece. The next Claude production prompt makes the whole cut in one go.' }
+    goes: 'Reads the Video Engine Inbox, puts the takes you recorded since approving the scripts on this piece by name, has them placed on their cuts by their words, and starts your production plan.',
+    done: 'Your takes are on the piece. Your production plan is being made from them; open it on the card when it is ready.' }
 }
 
 /** The card's line once his takes are on the piece. */
@@ -117,6 +119,8 @@ export interface BriefInputs {
   scripts: Record<string, string>
   /** Whether this is an off-day post (one short) or a series piece (the long cut and the short cut). */
   offday: boolean
+  /** The production plan he reviewed, with his swaps applied (_productionPlan.ts planBrief), when it is on file. */
+  plan?: string | null
 }
 
 /** The one post-production prompt's head: everything decided, the takes by name, and the creative calls it makes. */
@@ -131,14 +135,22 @@ export function productionBrief(b: BriefInputs): string {
     + 'If a take is not in the engine yet, recording.py get NAME --wait 15 waits for the Inbox copy; the take-placing job puts each on its cut by its words.\n\n'
     + (b.research.length ? `The research and materials on file (read each with read_piece_material before you plan):\n${b.research.slice(0, 30).map(r => `- ${r}`).join('\n')}\n\n` : '')
     + (words ? `${words}\n\n` : '')
+    + (b.plan ? `${b.plan}\n` : 'No production plan is on file yet: make it first, as docs/production/PRODUCTION_PLAN.md says, then make the cut from it.\n\n')
     + 'Make it in one shot:\n'
     + '1. Fetch every take, check each says the approved words, and measure picture against sound (scripts/av_sync.py) before anything is built on it.\n'
-    + '2. Plan the cut beat by beat in the signed spec (creative-direction.json, schema_version 2) in his picked look, motion style and captions. '
+    + `2. The edit pass, before any picture (python3 scripts/post-pack/edit_pass.py on the take's word timings): find every place he restarted a sentence and keep only his last full attempt; cut the empty, awkward silences (leave a breath, about a quarter second); then measure the total. ${b.offday ? `A short must run under ${SHORT_CAP_SECONDS} seconds: if the kept take is longer, speed the whole of it up evenly (pitch kept, never past 1.25x) until it fits.` : `The short cut must run under ${SHORT_CAP_SECONDS} seconds: if its kept take is longer, speed it up evenly (pitch kept, never past 1.25x) until it fits. The long cut has no length limit and is never sped up.`} Listen to every cut and the sped-up result before going on.\n`
+    + '3. Plan the cut beat by beat in the signed spec (creative-direction.json, schema_version 2) in his picked look, motion style and captions, on the timings of the edited take. '
     + 'For every beat decide, from the research and the words being said, what the picture is: his face on camera, a logo or wordmark (official files only), '
-    + 'real visuals (photos, footage, product shots, from their source), a social post or a screenshot (captured from the real page, with its source kept), '
-    + 'motion design (a ve device or a Codex plate from a card), or cinematic generation (stills before video, inside the credits he approved). '
-    + 'Each choice makes the point land faster (AGENTS.md rule 6), and never repeats the sentence being said.\n'
-    + '3. Codex builds the devices and plates from cards (ve card, ve dispatch, ve verify-card); ve renders the cut; ve qc and ve refs run; a separate reviewer '
-    + 'watches and listens at full size against the approved words before it is called ready.\n'
-    + '4. File the cuts, thumbnails and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n\n'
+    + 'real visuals (photos or footage of what he is talking about, from their source), a social post or a screenshot (a screenshot of the real page or product he '
+    + 'names, or a real viral social post that relates to what he says, captured from the post itself with its link kept), motion design (a ve device or a Codex plate from a card), or a '
+    + 'generated scene (cinematic generation). Each choice makes the point land faster (AGENTS.md rule 6), and never repeats the sentence being said.\n'
+    + '4. The humour: ask the humour engine (krishanraja/humour-engine, its README section 4) what comic readings his own words carry, and read his humour '
+    + 'style from ai-harness (krish-principles and krish-voice, through get_skill). Where a line holds a gold moment, put a hilarious, absurd picture on '
+    + 'it: in the build-or-buy piece he called a software engineer as confident as a crocodile hunter, so the picture is a nerdy engineer creeping up on a '
+    + 'crocodile. Never invent a joke his words do not carry, and never point it at the viewer or at a named person\'s competence.\n'
+    + '5. Generated stills and motion: make them with the higgsfield-generator skills (krishanraja/higgsfield-generator: higgsfield-generate for images '
+    + 'and video, higgsfield-soul-id for a face that must stay his), stills before video, inside the credits he approved; record each generation\'s piece, '
+    + 'beat and file. Codex builds the devices and plates from cards (ve card, ve dispatch, ve verify-card).\n'
+    + '6. ve renders the cut; ve qc and ve refs run; a separate reviewer watches and listens at full size against the approved words before it is called ready.\n'
+    + '7. File the cuts, thumbnails and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n\n'
 }
