@@ -85,3 +85,28 @@ export function brief(action: Record<string, any>, card: Record<string, any> | n
     ready: Boolean(card || (reading && typeof reading.read_md === 'string')),
   }
 }
+
+/** The reader Control Centre stamps on the reading of a Markdown idea he added on Inspiration (control-center
+ *  src/lib/inspirationIdeas.ts, IDEA_READER): his research, which the drafted piece files as its own. */
+export const IDEA_READER = 'control-center-idea'
+
+/**
+ * His research, filed on the piece his tick made (Krish, 2026-11-17: "The research needs to stay concretely bound to the
+ * idea as it travels through this UI in to the ideas board, then in to the publish board. nothing should ever get
+ * lost"). Only when the report moves the tick to drafted on a new piece, and only for a reading Control Centre wrote from
+ * his own idea file: a fetched post's reading is the post, not his research. Null when there is nothing to file.
+ */
+export function researchToFile(before: Record<string, any>, report: JobInput, reading: Record<string, any> | null): Record<string, unknown> | null {
+  if (report.job_state !== 'drafted' || !report.piece_id) return null
+  if (before.state === 'drafted' && String(before.piece_id || '').toLowerCase() === report.piece_id) return null
+  if (!reading || reading.engine_rev !== IDEA_READER || typeof reading.read_md !== 'string' || !reading.read_md.trim()) return null
+  const read = reading.read && typeof reading.read === 'object' ? reading.read as Record<string, unknown> : {}
+  const named = [read.title, read.name].find(v => typeof v === 'string' && v.trim()) as string | undefined
+  const source = typeof reading.source_url === 'string' ? reading.source_url : null
+  return {
+    piece_id: report.piece_id, content: reading.read_md, kind: 'research', role: 'research',
+    title: (named ?? 'His idea file').slice(0, 280),
+    note: `His idea file from Inspiration${source ? ` (${source})` : ''}, filed on this piece when his tick drafted it.${read.cut ? ' The reading holds the start of the file; the whole file is in his Drive.' : ''}`,
+    source_ref: `inspiration_actions:${report.id}`,
+  }
+}
