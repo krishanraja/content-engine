@@ -2229,6 +2229,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 ### `apps/control-plane/api/board/_audio.ts`
 
 - `type AudioLayer = 'voice' | 'bed'`
+- `const RECORD_MYSELF`
 - `const AUDIO_ID`
 - `interface BankVoice`
 - `interface Track`
@@ -2240,6 +2241,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function audioPick(picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, layer: AudioLayer, item: string):…`
 - `function audioPresses(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: stri…`
 - `function audioBody(id: string, body: Body, bank: unknown = voiceBank, library: unknown = musicLibrary): boolean`
+- `function soundLine(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: string …`
 
 ### `apps/control-plane/api/board/_carry.ts`
 
