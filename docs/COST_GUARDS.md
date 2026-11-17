@@ -80,6 +80,13 @@ for the week from Monday 00:00 UTC (`tests/control-plane/chain-cap.test.ts`). Le
 file: `aeo-*`, Apify actors, Control Center's own agents and Claude Code on his subscription. Measured on 14 Nov 2026:
 $15.45 (week of 26 Oct), $14.53 (2 Nov), $19.64 (9 Nov, to 14 Nov).
 
+The weekly meme-template read (Ruling, Krish, 2026-11-17: "run Apify weekly in the Sunday ideas run") is one Apify run a
+week in `.github/workflows/sunday-ideas.yml`: at most 30 TikTok template videos from `clockworks/tiktok-scraper`, its
+results per hashtag split so 30 is the total, under Apify's own charge cap of $0.50 (the lowest it accepts). The first
+run, 17 Nov 2026, read 30 for about $0.09 at the Bronze tier's $0.003 a result and $0.001 a start, so about $0.40 a
+month. It sits with the other Apify actors outside the $15 chain cap. `scripts/post-pack/meme_templates.py` refuses
+`--apify` without `--max-items` (at most 30), `--i-approved-spend` and the key.
+
 The cap is enforced, as the proposal said, with no new table and no new cron (`apps/control-plane/api/_chainCap.ts`):
 
 - The existing daily sweep, the triage sweep (`api/triage/sweep.ts`, 03:00 UTC), reads the week's chain spend and

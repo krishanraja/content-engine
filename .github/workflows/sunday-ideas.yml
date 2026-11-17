@@ -182,6 +182,24 @@ jobs:
           cp "$folder/ideas.json" "$RUNNER_TEMP/ideas-before.json"
           python3 scripts/post-pack/board_feed.py status "$MONDAY" --out "$RUNNER_TEMP/status.json"
 
+      - name: Trending meme videos through Apify, once a week (costed, his standing approval)
+        # Ruling (Krish, 2026-11-17): "run Apify weekly in the Sunday ideas run". One run of at most 30 TikTok meme
+        # template videos (about $0.09 on 17 Nov; Apify's own charge cap of $0.50 above it), here and not in the Claude
+        # step, so the key never reaches a model session in this public repository. The results stay in
+        # meme-template-apify.json (never committed) and the roaster's own gather reads them back in. No key, or a
+        # failed run, leaves the lane on its free sources and says so; it never stops the ideas run.
+        if: steps.guard.outputs.go == 'true'
+        continue-on-error: true
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          MONDAY: ${{ steps.guard.outputs.monday }}
+        run: |
+          if [ -z "$APIFY_TOKEN" ]; then
+            echo "::warning::No APIFY_TOKEN secret, so this week's meme templates come from the free sources only. Add the repository secret APIFY_TOKEN (Settings > Secrets and variables > Actions) to read trending TikTok templates."
+            exit 0
+          fi
+          python3 scripts/post-pack/meme_templates.py gather "$MONDAY" --apify --max-items 30 --i-approved-spend
+
       - name: The ideas stage of plan-week, in Claude Code on his subscription
         if: steps.guard.outputs.go == 'true'
         uses: anthropics/claude-code-action@v1
@@ -241,8 +259,8 @@ jobs:
             (.agents/skills/plan-week/references/offdays.md, "Saturday is carousels modelled on his sheet"), and no
             meme, voiceover or recorded option goes on Saturday. Then the roaster step for the meme templates lane,
             following .agents/skills/plan-week/references/meme-roaster.md: run python3
-            scripts/post-pack/meme_templates.py gather <Monday> (never with --apify: it costs money and needs his
-            approval of that run), say each source's count and every source it could not read, add the week's
+            scripts/post-pack/meme_templates.py gather <Monday> (never with --apify yourself: the workflow's own step read
+            this week's trending TikTok templates through Apify before you started, and your gather reads them back in), say each source's count and every source it could not read, add the week's
             pop-culture moments from your web search, pick 6 to 10 templates from at least two kinds of place, and
             draft 2 to 4 caption ideas each in his humour, read live: there is no Control Center connector here, so
             WebFetch https://raw.githubusercontent.com/krishanraja/ai-harness/main/skills/krish-voice/references/humour.md

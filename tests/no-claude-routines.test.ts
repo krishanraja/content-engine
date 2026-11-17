@@ -33,6 +33,13 @@ const CODE = [...files('scripts', (p) => /\.(py|ts|mts|mjs|cjs|js|ps1|sh|cmd|bat
   ...files('apps/control-plane/api', (p) => /\.(ts|mts|js)$/.test(p))]
 // The only secrets a workflow that runs Claude Code may name: his subscription, the board, and GitHub's own token.
 const CLAUDE_SECRETS = new Set(['CLAUDE_CODE_OAUTH_TOKEN', 'ENGINE_OPERATOR_TOKEN', 'GITHUB_TOKEN'])
+// A paid source's key may sit in a workflow that runs Claude only inside one named step of its own, which the Claude
+// step cannot read (a step's env is its own). Ruling (Krish, 2026-11-17): "run Apify weekly in the Sunday ideas run".
+const STEP_SECRETS: Record<string, Array<{ secret: string; step: string }>> = {
+  '.github/workflows/sunday-ideas.yml': [{ secret: 'APIFY_TOKEN', step: 'Trending meme videos through Apify, once a week (costed, his standing approval)' }],
+}
+/** The text of each step in a workflow, by its name. */
+const stepsOf = (text: string) => text.split(/\n(?=\s+- name: )/).map((block) => ({ name: (block.match(/- name: (.+)/) || [])[1]?.trim() ?? '', block }))
 const runsClaude = (text: string) => /anthropics\/claude-code-action|\bclaude\s+(?:-p|--print)\b|npx\s+@anthropic-ai\/claude-code/.test(text)
 
 // What creates, changes or fires a Claude routine: the claude.ai triggers API and its tools, and the routine id the
@@ -90,7 +97,14 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
       expect(text).not.toMatch(/dangerously-skip-permissions|bypassPermissions/)
       // No other secret reaches it: a key under another name would pass the API_KEY patterns.
       const named = [...text.matchAll(/secrets\.([A-Za-z0-9_]+)/g)].map((m) => m[1]!)
-      expect(named.filter((name) => !CLAUDE_SECRETS.has(name)), path).toEqual([])
+      const fenced = STEP_SECRETS[path] ?? []
+      expect(named.filter((name) => !CLAUDE_SECRETS.has(name) && !fenced.some((f) => f.secret === name)), path).toEqual([])
+      // A fenced key appears only in its own step, never in the Claude step or any other.
+      for (const { secret, step } of fenced) {
+        const holding = stepsOf(text).filter((st) => st.block.includes(`secrets.${secret}`)).map((st) => st.name)
+        expect(holding, `${path}: ${secret}`).toEqual([step])
+        expect(stepsOf(text).find((st) => st.name === step)?.block ?? '', `${path}: ${step}`).not.toMatch(/claude-code-action/)
+      }
     }
   })
 
