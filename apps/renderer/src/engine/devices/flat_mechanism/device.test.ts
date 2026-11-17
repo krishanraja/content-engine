@@ -16,5 +16,21 @@ describe('flat_mechanism',()=>{
  it('uses labels without stand-in icons',()=>{const p=props(36);delete (p.object.params.parts as {image?:string}[])[0]!.image;const html=still(p);expect(html).toContain('Source</text>');expect(html).not.toContain('source.png');expect(html).not.toContain('<path')})
  it('fills, highlights, counts dataset figures and exits in reverse',()=>{expect(mechanismState(props(78)).parts[1]!.level).toBe(.7);const s=mechanismState(props(110));expect(s.parts[1]!.active).toBe(true);expect(s.parts[0]!.dim).toBe(true);expect(s.parts[2]!.number).toBe(42);expect(still(props(110))).toContain('House test evidence');const out=mechanismState(props(122)).parts;expect(out[2]!.out).toBeGreaterThan(out[0]!.out);expect(still(props(132))).toBe('')})
  it('renders deterministic token-colour SVG stills in both aspects and drifts between events',()=>{for(const aspect of fixture.aspects as DeviceProps['aspect'][])for(const f of fixture.stills){const p=props(f,aspect),html=still(p);expect(html).toBe(still(p));for(const m of html.matchAll(/(?:fill|stroke)="([^"]+)"/g))expect(Object.values(tokens)).toContain(m[1])}expect(still(props(110))).not.toBe(still(props(116)))})
+ it('makes the count prominent and safe, with contrasting links and a visible token',()=>{
+   for(const aspect of fixture.aspects as DeviceProps['aspect'][]){
+     const p=props(110,aspect),g=geometry(p),part=g.parts.find(b=>b.number!==undefined)!,html=still(p)
+     const count=html.match(/<text data-count="true"[^>]+>/)![0]
+     expect(Number(count.match(/font-size="([^"]+)"/)![1])).toBeGreaterThanOrEqual(part.height/3)
+     if(aspect==='9:16'){
+       expect(part.y-part.height*.12).toBeLessThan(1090)
+       expect(part.x+part.width*.01).toBeGreaterThanOrEqual(60)
+       expect(part.x+part.width*.43).toBeLessThanOrEqual(860)
+     }
+     expect(html).toContain(`stroke="${tokens.cream}" stroke-width="4"`)
+     expect(html).not.toContain(`stroke="${tokens.inkSoft}"`)
+     expect(html).toContain('r="28"')
+     expect(tokens.mint).not.toBe(tokens.ink)
+   }
+ })
  it('rejects missing images and bad link endpoints',()=>{expect(ParamsSchema.safeParse({parts:[{id:'a',image:'missing'}]}).success).toBe(false);expect(ParamsSchema.safeParse({parts:[{id:'a'}],links:[{from:'a',to:'b'}]}).success).toBe(false)})
 })
