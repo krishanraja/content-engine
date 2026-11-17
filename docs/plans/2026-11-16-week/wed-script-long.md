@@ -6,7 +6,7 @@ And here's what it actually looks like. You type something like, give me a page 
 
 And every day, his LinkedIn feed sells him something else. A Claude pack. That's a bundle of ready-made instructions you load into Claude. Install this one, and Claude becomes your marketer. Install that, and Claude becomes your whole sales team. Just comment pack below, and it's yours for free. Well, sort of.
 
-So everyone is being sold how to use AI, and he's bought all of it. He's seen the app builders and the packs, and he's sure he can build it all by Friday. And his boss is already spending the savings.
+So everyone is being sold how to use AI, and he's bought all of it. He's seen the app builders and the packs. And he's sure he can build a bot to answer your customers by Friday. And his boss is already spending the savings.
 
 And his boss has read about Curative. This summer, the boss of a US health insurer called Curative said they'd cancelled Salesforce. That's the software sales teams use to track every customer and every deal. They'd been paying about six hundred thousand dollars a year for it. So they built their own, with AI, in two months. Eyes bigger than their stomach? Maybe. Because Curative's boss has since admitted that keeping it running is hard.
 
