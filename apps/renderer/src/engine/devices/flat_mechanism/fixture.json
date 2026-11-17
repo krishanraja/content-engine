@@ -1,0 +1,147 @@
+{
+  "objects": [
+    {
+      "obj": "mechanism",
+      "device": "flat_mechanism",
+      "meaning": "Evidence passes through a system",
+      "fromFrame": 0,
+      "toFrame": 160,
+      "params": {
+        "parts": [
+          {
+            "id": "source",
+            "label": "Source",
+            "image": "source"
+          },
+          {
+            "id": "compute",
+            "label": "Compute",
+            "image": "compute"
+          },
+          {
+            "id": "store",
+            "label": "Store",
+            "image": "store"
+          }
+        ],
+        "images": {
+          "source": {
+            "src": "source.png",
+            "pixelWidth": 400,
+            "pixelHeight": 240
+          },
+          "compute": {
+            "src": "compute.png",
+            "pixelWidth": 400,
+            "pixelHeight": 240
+          },
+          "store": {
+            "src": "store.png",
+            "pixelWidth": 400,
+            "pixelHeight": 240
+          }
+        },
+        "links": [
+          {
+            "from": "source",
+            "to": "compute"
+          },
+          {
+            "from": "compute",
+            "to": "store"
+          }
+        ]
+      },
+      "dataset": {
+        "unit": "",
+        "denominator": null,
+        "producerLabel": "House test evidence",
+        "rows": [
+          {
+            "label": "store",
+            "value": 42
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "0",
+      "obj": "mechanism",
+      "verb": "enter",
+      "toState": "frame",
+      "atFrame": 1
+    },
+    {
+      "id": "1",
+      "obj": "mechanism",
+      "verb": "add",
+      "toState": "source",
+      "atFrame": 10
+    },
+    {
+      "id": "2",
+      "obj": "mechanism",
+      "verb": "add",
+      "toState": "compute",
+      "atFrame": 18
+    },
+    {
+      "id": "3",
+      "obj": "mechanism",
+      "verb": "add",
+      "toState": "store",
+      "atFrame": 26
+    },
+    {
+      "id": "4",
+      "obj": "mechanism",
+      "verb": "move",
+      "toState": "store",
+      "atFrame": 40
+    },
+    {
+      "id": "5",
+      "obj": "mechanism",
+      "verb": "fill",
+      "toState": "{\"id\":\"compute\",\"level\":0.7}",
+      "atFrame": 60
+    },
+    {
+      "id": "6",
+      "obj": "mechanism",
+      "verb": "highlight",
+      "toState": "compute",
+      "atFrame": 80
+    },
+    {
+      "id": "7",
+      "obj": "mechanism",
+      "verb": "count_to",
+      "toState": "store",
+      "atFrame": 90
+    },
+    {
+      "id": "8",
+      "obj": "mechanism",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 120
+    }
+  ],
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "stills": [
+    0,
+    8,
+    36,
+    46,
+    58,
+    76,
+    96,
+    124
+  ]
+}

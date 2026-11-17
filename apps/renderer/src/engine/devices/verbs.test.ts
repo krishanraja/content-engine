@@ -4,6 +4,7 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('flat_mechanism declares seven cues', () => { expect(manifest.devices.flat_mechanism.verbs).toEqual(['enter','add','move','fill','highlight','count_to','exit']) })
   it('iso_world declares its seven cues', () => { expect(manifest.devices.iso_world.verbs).toEqual(['enter', 'add', 'fill', 'carry', 'move', 'highlight', 'exit']) })
   it('ink_wash declares exactly five cues', () => { expect(manifest.devices.ink_wash.verbs).toEqual(['enter', 'draw', 'fill', 'highlight', 'exit']) })
   it('cursor_path declares its six cues', () => { expect(manifest.devices.cursor_path.verbs).toEqual(['enter', 'move', 'pick', 'type', 'send', 'exit']) })
