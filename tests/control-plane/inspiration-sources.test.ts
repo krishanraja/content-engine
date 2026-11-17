@@ -160,4 +160,41 @@ describe('the Inspiration House block', () => {
     ] })
     expect(out.recent).toEqual([{ id: 'p1', idea: 'Who pays', state: 'published', scheduled_for: '2026-10-26', series: 'follow_the_money', covers: ['card-9'] }])
   })
+  // Krish, 2026-11-17: "If I put actual feedback in the inspiration board as to why I like something, that is not really
+  // a guess is it?" The engine's read of a card (inspirationhouse tag-v4) rides each card, labelled grounded or bare.
+  describe('the engine read of each card', () => {
+    const style = (over: Record<string, any> = {}) => ({ origin: 'engine_read', grounded_in: [], captions: [], motion: [], transitions: [], camera: [],
+      energy: null, script_formats: [], production_formats: [], series: null, teaches: [], ...over })
+
+    it('carries style and grounded_in, grounded when built on his words, bare otherwise', () => {
+      const out = buildInspiration({ weekStart: WEEK, items: [
+        item('grounded', { why_like: 'the arrows land on the number', why_like_source: 'typed', answered_at: '2026-10-23T08:00:00Z',
+          facets: { platform: 'instagram', grounded_in: ['why_like'], style: style({ grounded_in: ['why_like'], motion: ['kinetic_type'], series: 'follow_the_money', script_formats: ['receipt'] }) } }),
+        item('bare', { facets: { platform: 'instagram', style: style({ captions: ['kinetic_pop'] }) } }),
+        item('none'),
+      ] })
+      const liked = out.liked.find(c => c.id === 'grounded')!
+      expect(liked.grounded_in).toEqual(['why_like'])
+      expect(liked.style).toMatchObject({ origin: 'engine_read', grounded: true, motion: ['kinetic_type'], series: 'follow_the_money', script_formats: ['receipt'] })
+      const bare = out.fresh.find(c => c.id === 'bare')!
+      expect(bare.style).toMatchObject({ grounded: false, grounded_in: [], captions: ['kinetic_pop'] })
+      expect(out.fresh.find(c => c.id === 'none')!.style).toBeNull()
+      expect(out.counts.grounded_reads).toBe(1)
+    })
+
+    it('leaves a reference set out of the story sources unless he wrote on or routed one of its files', () => {
+      const set = { platform: null, collection: { name: 'VEED Studio - Instagram Thumbnail Study', path: 'Production Inspo/VEED Studio - Instagram Thumbnail Study' } }
+      const out = buildInspiration({ weekStart: WEEK, items: [
+        ...Array.from({ length: 30 }, (_, n) => item(`thumb${n}`, { facets: set, lane: 'production' })),
+        item('worded', { facets: set, why_here: 'this cover makes the number the face' }),
+        item('loose'),
+      ] })
+      const ids = [...out.fresh, ...out.liked, ...out.routed].map(c => c.id)
+      expect(ids).toContain('loose')
+      expect(ids).toContain('worded')
+      expect(ids.filter(i => i.startsWith('thumb'))).toEqual([])
+      expect(out.counts.reference_set_left_out).toBe(30)
+      expect(out.must_cover.map(m => m.id)).toContain('worded')
+    })
+  })
 })

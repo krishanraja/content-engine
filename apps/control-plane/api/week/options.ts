@@ -340,7 +340,9 @@ async function readInspiration(week: string, listed: string[] = []) {
   const lookalikeSince = new Date(Date.parse(`${week}T00:00:00Z`) - (LOOKALIKE_FEED_DAYS + 9) * 86_400_000).toISOString()
   const correctionsSince = new Date(Date.parse(`${week}T00:00:00Z`) - (CORRECTION_DAYS + 9) * 86_400_000).toISOString()
   const [items, routed, asked, recent, reads, moves, claims, feed, corrections, hindsight] = await Promise.all([
-    supabase.from('inspiration_items').select(INSPO_COLS).order('created_at', { ascending: false }).limit(500),
+    // The newest 500 loose cards: a reference set's files (facets.collection, a bulk study of thumbnails) are for making,
+    // not story sources, and would crowd the window. A file in one he wrote on still arrives through `asked` below.
+    supabase.from('inspiration_items').select(INSPO_COLS).is('facets->collection', null).order('created_at', { ascending: false }).limit(500),
     // Every card he routed to Make a piece, however old: the newest 500 above could leave one out of must_cover.
     supabase.from('inspiration_items').select(INSPO_COLS).or('route.eq.make_piece,routes.cs.{make_piece}').is('piece_id', null).limit(1000),
     // Every card he typed words on, dismissed or routed included (asks, Krish 2026-10-31); buildAsks keeps the ASK_DAYS window.

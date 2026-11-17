@@ -272,7 +272,8 @@ he ticks: `references/inspiration-piece.md`.
    gather stops when production has no `inspiration` block, and the board
    build refuses ideas that drop one (`board_feed.py cover <Monday>`). A
    card's `why_like` is his typed words; `endorsed` is a suggestion he
-   tapped, never quoted as his.
+   tapped, never quoted as his. Each card's engine read (`style`,
+   `grounded_in`) and reference sets: `references/engine-reads.md`.
    **Then read his feedback cues** (Krish, 2026-10-26: "all the feedback
    I've given you goes into a really clear set of cues that you can draw
    from in the future"). `sources.json` holds `cues` (`_feedbackCues.ts`;
