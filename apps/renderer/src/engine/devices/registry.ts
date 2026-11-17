@@ -1,4 +1,5 @@
 import { Device as IsoWorld } from './iso_world'
+import { Device as InkWash } from './ink_wash'
 import { Device as CursorPath } from './cursor_path'
 import { Device as CharacterLayer } from '../character'
 import { Device as AnswerStream } from './answer_stream'
@@ -47,6 +48,7 @@ import { Device as ReceiptPrint } from './receipt_print'
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
   iso_world: IsoWorld,
+  ink_wash: InkWash,
   cursor_path: CursorPath,
   character_layer: CharacterLayer,
   answer_stream: AnswerStream,

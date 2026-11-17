@@ -1,0 +1,72 @@
+{
+  "objects": [
+    {
+      "obj": "reflection",
+      "device": "ink_wash",
+      "meaning": "A real reflective photograph with a hand drawn focus",
+      "fromFrame": 0,
+      "toFrame": 180,
+      "params": {
+        "images": [
+          {
+            "src": "/evidence/reflective-portrait.jpg",
+            "pixelWidth": 800,
+            "pixelHeight": 1000
+          }
+        ],
+        "strokes": [
+          {
+            "id": "underline",
+            "d": "M .18 .68 Q .4 .71 .7 .67"
+          }
+        ],
+        "regions": [
+          {
+            "id": "focus",
+            "x": 0.43,
+            "y": 0.4,
+            "rx": 0.25,
+            "ry": 0.28
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "enter",
+      "obj": "reflection",
+      "verb": "enter",
+      "toState": "paper",
+      "atFrame": 4
+    },
+    {
+      "id": "draw",
+      "obj": "reflection",
+      "verb": "draw",
+      "toState": "underline",
+      "atFrame": 20
+    },
+    {
+      "id": "fill",
+      "obj": "reflection",
+      "verb": "fill",
+      "toState": "focus",
+      "atFrame": 30
+    },
+    {
+      "id": "highlight",
+      "obj": "reflection",
+      "verb": "highlight",
+      "toState": "focus",
+      "atFrame": 40
+    },
+    {
+      "id": "exit",
+      "obj": "reflection",
+      "verb": "exit",
+      "toState": "dry",
+      "atFrame": 90
+    }
+  ]
+}
