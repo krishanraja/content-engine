@@ -2725,6 +2725,31 @@
         "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
       },
       "encoded": []
+    },
+    {
+      "id": "board-feedback-every-day",
+      "on": "2026-11-17",
+      "krish": "from this point onwards, any feedback on the board UI or UX must be done to every single day present and future",
+      "why": "Fixes kept landing on one card only. The Approve scripts rule (F47) reached a piece moved to another day but not a series day's own piece, so Wed 18 sat at \"Make the storyboard and the script together\" with both scripts filed; and an off-day post showed none of the reports and materials filed for it. He asked \"why fixes are not happening consistently to the entire engine/board\".",
+      "means": "A change to what the board shows or offers is made once, in a rule every card builder calls (pieceItem, placedPieceItem, postItemBase in _weekModel.ts), never inside one builder: scriptsReady for his Approve scripts, withWork for the work on file. tests/control-plane/board-every-card.test.ts fails when a builder stops calling a shared rule or a new builder is added without being held to them. A fix for one day is checked against every kind of card: a series day's own piece, a moved piece and an off-day post.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "export function scriptsReady(",
+          "how": "his Approve scripts, one rule for every piece card"
+        },
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "export function withWork(",
+          "how": "the work on file, one rule for every card"
+        },
+        {
+          "file": "tests/control-plane/board-every-card.test.ts",
+          "contains": "no card builder is added without being listed here",
+          "how": "the test that holds every card builder to the shared rules"
+        }
+      ]
     }
   ]
 }
