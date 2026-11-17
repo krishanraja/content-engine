@@ -489,6 +489,15 @@ picture centred within 4 px across and within 48 px of y 920 (where Growth's tal
 column's margins within 16 px of each other, every word and mark inside the clear box x 200 to 880, y 270 to 1320 and
 clear of every channel's buttons and caption area (`config/channel-safe-zones.json`), no empty band over 25% above it.
 
+## Meme videos and static memes (Ruling, Krish, 17 November 2026)
+
+His words: "lets bring up the production value of the meme to looking more like the production quality of the rest of
+the carousels etc." From the 30 Nov board a meme template reskin is the original clip at its full frame, credited, his
+caption on a clean band in the brand palette at carousel-grade type, the mark and a credit line, in 9:16 and 4:5, with
+its social_clip receipt; and a static meme meets this standard, the same type, palette and picture quality as a
+carousel card. The rules are `docs/MEME-STANDARD.md`. The Tuesday meme rule below still places the mark; its free look
+gives way to this standard.
+
 ## The Tuesday meme (Ruling, Krish, 4 November 2026)
 
 His words: "the Saturday carousel and the Tuesday meme are likely to follow their own random visual style ... The

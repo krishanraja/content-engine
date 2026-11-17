@@ -7,6 +7,11 @@ instruction, not a suggestion (`.agents/skills/ve/references/board-references.md
 
 ## Reading them
 
+- Start with the thumbnail reference set: `GET /api/inspiration/candidates?role=thumbnail&limit=10`. It offers his
+  thumbnail study first (the files he filed together in a subfolder of an Inspo folder, such as "VEED Studio - Instagram
+  Thumbnail Study"; each candidate's `collection` names the set), then any card the engine's read says teaches a
+  thumbnail. A read grounded in his own words (`style.grounded: true`, `grounded_in`) is his steer; a bare read is a
+  guess. Read the set before drawing, and still look at each card you name (below).
 - Find the cards through the routes that already read them: the board's cards by id (`GET /api/inspiration/cards`,
   as `scripts/velib/board.py` reads them), and the style bank's entries in `config/style-references.json`.
 - Open each one by its Drive id with the Drive connector, or fetch it with

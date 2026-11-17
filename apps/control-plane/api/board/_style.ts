@@ -203,6 +203,17 @@ export interface StyleInputs {
    *  `style.captions`): the one recommended, first, in place of the channel's own three. */
   recommendedMotion?: string | null
   recommendedCaptions?: string | null
+  /** The plan's next choices, in order (`style.motion_alternatives`, `style.captions_alternatives`,
+   *  `style.production_alternatives`): tried before the channel's own when its first choice cannot be recommended. */
+  motionAlternatives?: string[]
+  captionsAlternatives?: string[]
+  lookAlternatives?: string[]
+}
+
+/** The production pick's own words on an option: its first choice, or the next choice it named and why the earlier did not stand. */
+function plannedWhy(first: string, chosen: string, nameOf: (id: string) => string, why: (id: string) => string): string {
+  return chosen === first ? 'The production pick recommended for this piece.'
+    : `The production pick's next choice for this piece: its first, ${nameOf(first)}, ${why(first)}.`
 }
 
 /** The piece's style choices: motion, captions and treatment, each with every option and the press that answers it. */
@@ -223,9 +234,18 @@ export function dayStyle(i: StyleInputs): DayStyle {
   // The planned pick passes the same filter as the ranked list: ve can draw it now (no needs_device) and he never called
   // it not for us. A plan naming one that fails is not recommended; the channel's own three are (fleet audit 14 Nov,
   // ve-1: the week plan named the two 3D styles he rejected on 13 Nov, and a pick would have rendered house motion).
-  const plannedModule = i.recommendedMotion ? i.motion.find(m => m.id === i.recommendedMotion) : undefined
-  const planned = plannedModule && ready(plannedModule) && !NOT_FOR_US.has(plannedModule.krish_verdict) && !mine.rejected.motion.includes(plannedModule.id) ? plannedModule.id : null
-  const recommended = planned ? new Map([[planned, 'The production pick recommended for this piece.']])
+  // The plan's alternatives are tried in order before the channel's own three (Ruling, Krish, 2026-11-17: "Why do
+  // recommendations in my UI never adapt to the piece?": Fri 20 Nov's plan named living-screen, rejected 13 Nov, and
+  // the card fell back to the channel's three though the plan named ai-music-slam next).
+  const motionNo = (id: string) => {
+    const m = i.motion.find(x => x.id === id)
+    return !m ? 'is not in the style bank' : mine.rejected.motion.includes(id) ? 'is one you said Not this to'
+      : NOT_FOR_US.has(m.krish_verdict) ? 'is one you called not for us' : !ready(m) ? 'cannot be drawn yet' : ''
+  }
+  const motionPlan = i.recommendedMotion ? [i.recommendedMotion, ...(i.motionAlternatives ?? [])] : []
+  const planned = motionPlan.find(id => !motionNo(id)) ?? null
+  const motionName = (id: string) => i.motion.find(x => x.id === id)?.name ?? id
+  const recommended = planned ? new Map([[planned, plannedWhy(motionPlan[0]!, planned, motionName, motionNo)]])
     : new Map(ranked.map(x => [x.m.id, motionWhy(x.m, x.hits)]))
   const motionIds = new Set(i.motion.map(m => m.id))
   const gateModule = i.gate?.state === 'picked' && i.gate.module && motionIds.has(i.gate.module) && !mine.rejected.motion.includes(i.gate.module) ? i.gate.module : null
@@ -251,12 +271,15 @@ export function dayStyle(i: StyleInputs): DayStyle {
   const captionPick: Pick<StyleLayer, 'picked' | 'picked_by' | 'picked_at'> = mine.captions && CAPTION_IDS.has(mine.captions) ? { picked: mine.captions, picked_by: 'Krish', picked_at: mine.at }
     : specCaption && CAPTION_IDS.has(specCaption) && !mine.rejected.captions.includes(specCaption) ? { picked: specCaption, picked_by: 'spec', picked_at: signedOn }
     : { picked: null, picked_by: null, picked_at: null }
+  const captionNo = (id: string) => !CAPTION_IDS.has(id) ? 'is not a caption style' : mine.rejected.captions.includes(id) ? 'is one you said Not this to' : ''
+  const captionPlan = i.recommendedCaptions ? [i.recommendedCaptions, ...(i.captionsAlternatives ?? [])] : []
+  const plannedCaption = captionPlan.find(id => !captionNo(id)) ?? null
+  const captionName = (id: string) => CAPTIONS.find(c => c.id === id)?.name ?? id
   const captions: StyleLayer = {
     options: CAPTIONS.map(c => {
       const rejected = mine.rejected.captions.includes(c.id)
-      const plannedCaption = i.recommendedCaptions && CAPTION_IDS.has(i.recommendedCaptions) && !mine.rejected.captions.includes(i.recommendedCaptions) ? i.recommendedCaptions : null
       const rec = plannedCaption ? c.id === plannedCaption : Boolean(c.recommended_why) && !rejected
-      const why = plannedCaption ? (rec ? 'The production pick recommended for this piece.' : null) : rec ? c.recommended_why! : null
+      const why = plannedCaption ? (rec ? plannedWhy(captionPlan[0]!, plannedCaption, captionName, captionNo) : null) : rec ? c.recommended_why! : null
       return { id: c.id, name: c.name, line: c.line, rules: c.rules, recommended: rec, why, sample_url: sampleUrl('captions', c.id), sample_drive: sampleDrive('captions', c.id), still_url: stillUrl('captions', c.id), rejected,
         presses: { yes: press('Yes', 'style', { captions: c.id }, `Picked. ${c.name} is the caption style for this piece.`),
           not_this: press('Not this', 'style', { reject: { layer: 'captions', id: c.id } }, 'Noted. It is not recommended for this piece any more.') } }
@@ -272,7 +295,10 @@ export function dayStyle(i: StyleInputs): DayStyle {
   // With no look from the Sunday room, the proven one he has not turned down is recommended, so the board can always
   // offer a whole recommended set (Krish, 2026-11-16: "or the system itself can considerately recommend the best
   // combination for me").
-  const roomLook = i.recommendedLook && i.looks.some(l => l.id === i.recommendedLook && !mine.rejected.treatment.includes(l.id)) ? i.recommendedLook : null
+  const lookNo = (id: string) => !i.looks.some(l => l.id === id) ? 'is not a look on offer' : mine.rejected.treatment.includes(id) ? 'is one you said Not this to' : ''
+  const lookPlan = i.recommendedLook ? [i.recommendedLook, ...(i.lookAlternatives ?? [])] : []
+  const roomLook = lookPlan.find(id => !lookNo(id)) ?? null
+  const lookName = (id: string) => i.looks.find(l => l.id === id)?.name ?? id
   const provenLook = roomLook ? null : i.looks.find(l => l.status === 'proven' && !mine.rejected.treatment.includes(l.id))?.id ?? null
   const treatment: StyleLayer = {
     options: i.looks.map(l => {
@@ -280,7 +306,8 @@ export function dayStyle(i: StyleInputs): DayStyle {
       const rejected = mine.rejected.treatment.includes(l.id) && !(look && look.production === l.id)
       const rec = (l.id === roomLook || l.id === provenLook) && !rejected
       return { id: l.id, name: l.name, line: l.pitch, rules: [], recommended: rec,
-        why: rec ? (l.id === roomLook ? 'The Sunday room recommends it for this idea.' : 'It is proven: every piece so far was made in it.') : null,
+        why: rec ? (l.id === roomLook ? (roomLook === lookPlan[0] ? 'The Sunday room recommends it for this idea.' : plannedWhy(lookPlan[0]!, roomLook, lookName, lookNo))
+          : 'It is proven: every piece so far was made in it.') : null,
         sample_url: null, sample_drive: null, still_url: stillUrl('treatment', l.id), rejected,
         // The picked look takes no "Not this": a no would leave it picked (the look op holds the pick); he picks another.
         presses: { yes: press('Yes', 'look', { production: l.id, ...keep }, `Picked. ${l.name} is the look for this piece.`),

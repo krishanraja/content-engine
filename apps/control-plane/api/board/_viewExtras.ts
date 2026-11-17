@@ -122,6 +122,26 @@ export interface ViewOption {
   /** Contract 1.10.0 (_stage.ts): the one state the board shows it in, from the records: idea, approved, made,
    *  scheduled (with when), live (with its links) or missed (its day passed and it is not marked live). */
   stage?: ViewStage
+  /** Contract 1.24.0, a meme template (Krish, 2026-11-17: "why can we not create a pipeline of existing meme videos that
+   *  could be good to reskin, and show me those in here? Then I could think of a funny caption for it thats related to
+   *  AI."): the clip to reskin, where it was found, who made it, what happens in it and why it fits an AI caption. An
+   *  off-day option of kind meme only; https links only. His caption goes in the option's note, his Approve makes it a
+   *  meme post, and Move to puts it on any day. */
+  template?: ViewTemplate
+  /** Contract 1.24.0: 2 to 4 caption drafts for a meme template, ideas only; his own caption is the one used. */
+  caption_ideas?: string[]
+}
+/** A meme template as the view shows it (contract 1.24.0). */
+export interface ViewTemplate {
+  title: string
+  clip: { url: string; page: string; poster: string | null; seconds: number | null }
+  found: { place: string; label: string; url: string | null }
+  credit: string
+  what_happens: string
+  why_it_works: string
+  mechanism: string[]
+  moment: string | null
+  date: string | null
 }
 export interface ViewPiece {
   id: string; title: string; series: string; state: string; published: boolean; on_day: boolean
@@ -491,6 +511,11 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
       const record = twin ? [] : viewPosts(placed.row)
       if (record.length) out.posts = record
     }
+    const template = templateOf(o)
+    if (template) {
+      out.template = template
+      out.caption_ideas = (Array.isArray(o.caption_ideas) ? o.caption_ideas : []).map(c => cut(c, 200)).filter(Boolean).slice(0, 4)
+    }
     if (o.weekly) {
       const stories = Array.isArray(o.stories) ? o.stories.filter(isObj) : []
       out.stories = stories.slice(0, 8).map(st => {
@@ -507,6 +532,33 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     }
     return out
   })
+}
+
+/** Where a meme template was found (contract 1.24.0). */
+export const TEMPLATE_PLACES = ['sheet', 'card', 'reddit', 'instagram', 'tiktok', 'youtube', 'pop_culture'] as const
+/** The humour engine's mechanism ids, pinned from krishanraja/humour-engine schemas/ontology.json (the same list as
+ *  scripts/post-pack/idea_checks.py MECHANISMS). */
+export const MECHANISMS = ['ambiguity', 'incongruity', 'misdirection', 'reversal', 'literalisation', 'exaggeration', 'understatement',
+  'callback', 'self_defeating_logic', 'personification', 'irony', 'sarcasm', 'absurd_reasoning'] as const
+/** A meme template on an off-day option (kind meme with a template object), sanitised for the view: strings trimmed and
+ *  capped, links https only. Null when it has no https clip and page, or no known place it was found (contract 1.24.0). */
+export function templateOf(o: Body): ViewTemplate | null {
+  if (o.kind !== 'meme' || !isObj(o.template)) return null
+  const t = o.template, clip = isObj(t.clip) ? t.clip : {}, found = isObj(t.found) ? t.found : {}
+  const url = https(clip.url), page = https(clip.page)
+  if (!url || !page || !(TEMPLATE_PLACES as readonly string[]).includes(String(found.place))) return null
+  const seconds = typeof clip.seconds === 'number' && Number.isFinite(clip.seconds) && clip.seconds > 0 ? Math.round(clip.seconds * 10) / 10 : null
+  return {
+    title: cut(t.title, 200) || cut(o.hook, 200),
+    clip: { url, page, poster: https(clip.poster) ?? null, seconds },
+    found: { place: String(found.place), label: cut(found.label, 200), url: https(found.url) ?? null },
+    credit: cut(t.credit, 200),
+    what_happens: cut(t.what_happens, 400),
+    why_it_works: cut(t.why_it_works, 400),
+    mechanism: (Array.isArray(t.mechanism) ? t.mechanism : []).map(m => cut(m, 40)).filter(m => (MECHANISMS as readonly string[]).includes(m)).slice(0, 6),
+    moment: cut(t.moment, 300) || null,
+    date: typeof t.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(t.date) ? t.date : null,
+  }
 }
 
 /** "2 health, 1 work, 1 money": the kinds of the week's good-news stories, most first, or '' when none says its kind. */

@@ -831,5 +831,188 @@ class DaysGateTest(unittest.TestCase):
         self.assertFalse(board_feed.remakeable('no subject here', ['sat'], None))
 
 
+CAROUSEL_POST = 'https://www.instagram.com/p/sheetcarousel1/'
+FLOW = ['a claim that stops the scroll', 'the proof', 'what it means for you', 'the three things to try', 'the close']
+FLOWS = {'p1': FLOW, 'gn': ['the topic', 'story', 'story', 'story', 'story', 'story', 'the close']}
+
+
+def sat_option(**kw):
+    o = {'id': 'toolkit', 'kind': 'explainer', 'lookalike': {'pattern': 'p1', 'beats': CAROUSEL_POST, 'our_take': 'Ours names the free tools.'},
+         'cards': [{'words': f'Card {n}', 'picture': 'x'} for n in range(5)],
+         'direction': {'look': 'house', 'frames': [{'words': f'Card {n}', 'picture': 'x'} for n in range(5)]}}
+    o.update(kw)
+    return o
+
+
+def good_news(n_cards=7, pattern='gn'):
+    return {'id': 'goodnews', 'weekly': 'good_news', 'lookalike': {'pattern': pattern},
+            'stories': [{'headline': f'S{n}'} for n in range(5)],
+            'cards': [{'words': 'w', 'picture': 'p'}] * n_cards, 'direction': {'look': 'l', 'frames': [{'words': 'w', 'picture': 'p'}] * n_cards}}
+
+
+def sat(*opts):
+    return {'week_start': '2026-11-30', 'offdays': {'sat': list(opts)}}
+
+
+class SaturdayTest(unittest.TestCase):
+    """Krish, 2026-11-17: "Each suggestion should be a carousel like one carousel from my Instagram Inspo sheet, not
+    just one story." From the 30 Nov board every Saturday option is a sheet carousel followed card for card."""
+
+    def run_(self, ideas, feed=(CAROUSEL_POST,), carousels=(CAROUSEL_POST,), flows=FLOWS):
+        return ic.saturday_findings(ideas, '2026-11-30', flows, list(feed), None if carousels is None else list(carousels))
+
+    def test_a_sheet_carousel_followed_card_for_card_passes_and_the_good_news_too(self):
+        self.assertEqual(self.run_(sat(sat_option(), good_news())), [])
+        self.assertTrue(all(f['code'] in ic.GATE_CODES for f in self.run_(sat(sat_option(kind='meme')))))
+
+    def test_no_meme_voiceover_or_recorded_option_on_saturday(self):
+        for kind in ('meme', 'voiceover', 'recorded', None):
+            got = self.run_(sat(sat_option(kind=kind)))
+            self.assertEqual(len(got), 1, kind)
+            self.assertIn('every Saturday option is a carousel', got[0]['line'])
+            self.assertTrue(got[0]['line'].startswith('saturday: off-sat-toolkit '), 'the gate reads its subject')
+
+    def test_it_names_a_carousel_in_the_sheet(self):
+        self.assertIn('lookalike.beats', self.run_(sat(sat_option(lookalike={'pattern': 'p1'})))[0]['line'])
+        self.assertIn('not in the week', self.run_(sat(sat_option(lookalike={'pattern': 'p1', 'beats': 'https://www.instagram.com/p/other/'})))[0]['line'])
+        self.assertIn('as a carousel', self.run_(sat(sat_option()), carousels=[])[0]['line'])
+        self.assertEqual(self.run_(sat(sat_option()), carousels=None), [], 'an input that does not say what a post is cannot refuse it')
+
+    def test_its_cards_and_frames_follow_the_card_flow(self):
+        short = sat_option(cards=[{'words': 'a', 'picture': 'b'}] * 4)
+        lines = [f['line'] for f in self.run_(sat(short))]
+        self.assertEqual(len(lines), 1)
+        self.assertIn('has 4 cards', lines[0])
+        frames = sat_option(direction={'look': 'l', 'frames': []})
+        self.assertIn('direction.frames', self.run_(sat(frames))[0]['line'])
+        self.assertIn('card_flow', self.run_(sat(sat_option(lookalike={'pattern': 'nope', 'beats': CAROUSEL_POST})))[0]['line'])
+        self.assertIn('no lookalike.json', self.run_(sat(sat_option()), flows=None)[0]['line'])
+        long_flow = {'p1': [f'job {n}' for n in range(11)]}
+        eleven = sat_option(cards=[{'words': 'a', 'picture': 'b'}] * 11, direction={'look': 'l', 'frames': [{'words': 'a', 'picture': 'b'}] * 11})
+        self.assertIn('4 to 10 cards', self.run_(sat(eleven), flows=long_flow)[0]['line'])
+
+    def test_the_good_news_follows_a_flow_with_room_for_its_stories(self):
+        self.assertIn('names a lookalike pattern', self.run_(sat(good_news(pattern=None)))[0]['line'])
+        small = {'gn': ['cover', 's', 's', 's', 'close']}
+        lines = [f['line'] for f in self.run_(sat(good_news(n_cards=5)), flows=small)]
+        self.assertTrue(any('for 5 stories' in x for x in lines), lines)
+
+    def test_earlier_boards_keep_their_shape(self):
+        self.assertEqual(ic.saturday_findings(dict(sat(sat_option(kind='meme')), week_start='2026-11-23'), '2026-11-23', FLOWS, [], None), [])
+
+
+CLIP_PAGE = 'https://www.reddit.com/r/MemeTemplatesOfficial/comments/abc{n}/x/'
+
+
+def template(n=1, place='reddit', day_ok=True, **kw):
+    t = {'title': f'The dog and the doorbell {n}', 'clip': {'url': f'https://v.redd.it/abc{n}/DASH_720.mp4', 'page': CLIP_PAGE.format(n=n), 'poster': None, 'seconds': 12},
+         'found': {'place': place, 'label': 'r/MemeTemplatesOfficial, top of the week', 'url': CLIP_PAGE.format(n=n)},
+         'credit': 'Posted by u/doggomaker on r/MemeTemplatesOfficial', 'what_happens': 'A dog runs to the door every time the TV rings a bell.',
+         'why_it_works': 'Reversal: the helper answers every signal, as an eager AI agent does.', 'mechanism': ['reversal', 'personification'],
+         'moment': None, 'date': '2026-11-25'}
+    o = {'id': f'tpl{n}', 'kind': 'meme', 'format': 'Meme template, your caption on the clip, 9:16', 'hook': t['title'], 'aim': 'humour', 'shape': 'story',
+         'source': {'label': t['found']['label'], 'url': t['clip']['page']}, 'copy': 'A dog answers every bell. Your caption makes it an AI agent.',
+         'funny': 'The helper that answers every bell is every AI agent you have met.', 'template': t,
+         'caption_ideas': ['My AI agent when any email says urgent', 'Copilot hearing the word quick in a meeting']}
+    o.update(kw)
+    return o
+
+
+def templates_board(n=6, places=('reddit', 'sheet')):
+    tpls = [template(i, place=places[i % len(places)]) for i in range(n)]
+    return {'week_start': '2026-11-30', 'offdays': {'tue': tpls[: n // 2], 'thu': tpls[n // 2:]}}
+
+
+CLEAN = lambda text: []  # the kill list stubbed clean: the real one is node, tested in its own vendor self-test
+
+
+class TemplateTest(unittest.TestCase):
+    """Krish, 2026-11-17: "show me those in here? Then I could think of a funny caption for it thats related to AI."
+    From the 30 Nov board, 6 to 10 meme templates on Tuesday and Thursday, each whole and new."""
+
+    def test_a_whole_week_of_templates_passes(self):
+        self.assertEqual(ic.template_findings(templates_board(), '2026-11-30', kill=CLEAN), [])
+        self.assertEqual(ic.template_findings({'offdays': {}}, '2026-11-23', kill=CLEAN), [], 'earlier boards keep their shape')
+
+    def test_six_to_ten_from_two_kinds_of_place(self):
+        self.assertIn('offers 5 meme templates', ic.template_findings(templates_board(5), '2026-11-30', kill=CLEAN)[0]['line'])
+        self.assertIn('offers 11', ic.template_findings(templates_board(11), '2026-11-30', kill=CLEAN)[0]['line'])
+        self.assertIn('1 kind of place', ic.template_findings(templates_board(6, ('reddit',)), '2026-11-30', kill=CLEAN)[0]['line'])
+
+    def test_each_template_is_whole(self):
+        board = templates_board()
+        bad = template(9, place='myspace', aim='interest', caption_ideas=['only one'])
+        bad['template']['clip']['url'] = 'http://v.redd.it/abc9.mp4'
+        bad['template']['mechanism'] = ['pun']
+        bad['template']['credit'] = ''
+        bad['template']['moment'] = 'Some moment with no date'
+        board['offdays']['tue'].append(bad)
+        lines = [f['line'] for f in ic.template_findings(board, '2026-11-30', kill=CLEAN) if f['ref'] == 'off-tue-tpl9']
+        for says in ('https url', 'found says where', 'credit', 'mechanism', 'moment', 'aim is "humour"', 'caption_ideas holds 2 to 4'):
+            self.assertTrue(any(says in x for x in lines), (says, lines))
+        self.assertTrue(all(f['code'] == 'template' and f['code'] in ic.GATE_CODES for f in ic.template_findings(board, '2026-11-30', kill=CLEAN)))
+
+    def test_caption_ideas_are_short_clean_and_name_nobody(self):
+        dash = '\u2014'
+        for text, says in (('one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty twentyone', 'at most 20'),
+                           (f'My agent {dash} again', 'em dash'), ('Tag @someone who does this', 'names an account'),
+                           ('Doggomaker when the agent rings', 'from the clip')):
+            self.assertTrue(any(says in p for p in ic.caption_problems(text, 'Posted by u/doggomaker on r/MemeTemplatesOfficial', CLEAN)), (text, says))
+        self.assertEqual(ic.caption_problems('My AI agent when any email says urgent', 'u/doggomaker', CLEAN), [])
+        self.assertIn('fails the kill list (em_dash)', ic.caption_problems('ok', '', lambda t: ['em_dash']))
+
+    def test_the_real_kill_list_runs(self):
+        self.assertEqual(ic.kill_list_vetoes('My AI agent when any email says urgent'), [])
+        self.assertTrue(ic.kill_list_vetoes('My agent \u2014 again'))
+
+    def test_a_template_is_offered_once(self):
+        got = ic.template_findings(templates_board(), '2026-11-30', earlier_pages=[CLIP_PAGE.format(n=0)], kill=CLEAN)
+        self.assertEqual([f['ref'] for f in got], ['off-tue-tpl0'])
+        twin = templates_board()
+        twin['offdays']['thu'].append(template(0))
+        self.assertTrue(any('same clip' in f['line'] for f in ic.template_findings(twin, '2026-11-30', kill=CLEAN)))
+        sat_tpl = templates_board()
+        sat_tpl['offdays']['sat'] = [template(7)]
+        self.assertTrue(any('on sat' in f['line'] for f in ic.template_findings(sat_tpl, '2026-11-30', kill=CLEAN)))
+
+    def test_templates_need_no_lookalike_and_never_count_toward_a_days_options(self):
+        board = templates_board()
+        aim = [f for f in ic.aim_findings(board, '2026-11-30', ['p1'], [FEED_POST]) if f['ref'].startswith('off-')]
+        self.assertEqual(aim, [], 'a template is a story: its clip page is its source, why_it_works its dive')
+        breadth = ic.breadth_findings(board, '2026-11-30')
+        self.assertTrue(any('tue offers 0 options' in f['line'] for f in breadth), breadth)
+        self.assertEqual(ic.learned_findings(board, {}), [])
+        self.assertEqual(ic.shape_findings(board, '2026-11-30'), [])
+
+
+class SaturdayGateTest(unittest.TestCase):
+    """The Saturday and template checks fail the Sunday run through board_feed.py gate, and a template is an off-day
+    option week_plan.read_offdays reads, on top of the day's own options."""
+
+    def test_gate_fails_a_meme_on_saturday_and_a_week_without_templates(self):
+        src = dict(sources(), week_start='2026-11-30')
+        ideas = {'week_start': '2026-11-30', 'days': {}, 'offdays': {'sat': [sat_option(kind='meme')]}}
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp) / '2026-11-30-week'
+            folder.mkdir()
+            (folder / 'sources.json').write_text(json.dumps(src))
+            (folder / 'ideas.json').write_text(json.dumps(reviewed(ideas)))
+            (folder / 'lookalike-input.json').write_text(json.dumps({'posts': [{'url': CAROUSEL_POST, 'headline': 'A post', 'type': 'Sidecar'}], 'warnings': []}))
+            (folder / 'lookalike.json').write_text(json.dumps({'patterns': [{'id': 'p1', 'card_flow': FLOW}]}))
+            problems, _ = board_feed.gate('2026-11-30', plans=tmp)
+            sat_lines = [x for x in problems if x.startswith('saturday: ')]
+            self.assertEqual(len(sat_lines), 1, problems)
+            self.assertTrue(board_feed.remakeable(sat_lines[0], ['sat']), 'a days re-run reads the subject of the line')
+            self.assertTrue(any(x.startswith('template: the week offers 0') for x in problems), problems)
+
+    def test_read_offdays_takes_templates_on_top_and_every_kind(self):
+        import week_plan
+        own = [dict(main_option(), id=f'own{n}', kind='explainer', format='Carousel, 5 cards', copy='Two plain sentences.') for n in range(5)]
+        rows = week_plan.read_offdays({'tue': own + [template(n) for n in range(6)]}, week='2026-11-30')
+        self.assertEqual(len(rows['tue']), 11)
+        with self.assertRaises(week_plan.BoardError):
+            week_plan.read_offdays({'tue': [dict(o, kind='podcast') for o in own]}, week='2026-11-30')
+
+
 if __name__ == '__main__':
     unittest.main()

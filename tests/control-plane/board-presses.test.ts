@@ -210,6 +210,17 @@ const sentOk = async (input: SendApprovedInput): Promise<SendResult> => ({ statu
   scripts: input.scripts.map(s => ({ cut: s.cut, script_id: SCRIPT, readback_ok: true })) })
 
 describe('Approve scripts sends his exact words to Teleprompter from the server', () => {
+  it('names the folder and scripts by the rule whatever the press carried (Ruling, Krish, 2026-11-17)', async () => {
+    // The board's Approve sent the piece title alone ("Axiom rebuilt a ...", "<title>: long cut"); the server names them.
+    const t = setup(sentOk)
+    await t.put('picks', 'mon-scripts', approval({ folder_title: 'Who pays for AI pictures',
+      titles: { long: 'Who pays for AI pictures: long cut', short: 'Who pays for AI pictures: short cut' } }))
+    expect(t.sent).toHaveLength(1)
+    expect(t.sent[0].folder_title).toBe('Mon 9 Nov follow.the.money - Who pays for AI pictures')
+    expect(Object.fromEntries(t.sent[0].scripts.map(s => [s.cut, s.title]))).toEqual({
+      long: 'Mon 9 Nov - 5-minute - Who pays for AI pictures', short: 'Mon 9 Nov - 90-second - Who pays for AI pictures' })
+  })
+
   it('binds the hash of the words he saw, sends them with his document as the approval, and records the answer', async () => {
     const t = setup(sentOk)
     const { status, out } = await t.put('picks', 'mon-scripts', approval())
@@ -433,5 +444,30 @@ describe('his "Signed." on a narrative lock, one press on the board, on any day 
     expect((await setup().put('picks', 'tue-lock-words', filled('tue', { lock_path: 'docs/plans/2026-11-16-week/narrative-lock-fri.md' }))).status).toBe(400)
     expect((await setup().put('picks', 'sun-lock-words', filled('sun'))).status).toBe(400)
     expect((await setup().put('picks', 'tue-lock-words', filled('tue', { approved: false }))).status).toBe(400)
+  })
+})
+
+describe('the Teleprompter naming rule (config/teleprompter.json folder_name, script_title)', () => {
+  it('names by date, series and subject, for series days, a series piece on an off day and an off-day post', async () => {
+    const { teleprompterNames } = await import('../../apps/control-plane/api/_teleprompter.js')
+    const cfg = JSON.parse((await import('node:fs')).readFileSync('config/teleprompter.json', 'utf8'))
+    expect(teleprompterNames({ date: '2026-10-12', day: 'mon', subject: 'Who gets paid for AI songs', cuts: ['long', 'short'] }))
+      .toEqual({ folder: cfg.folder_examples[0], titles: { long: cfg.title_examples[0], short: 'Mon 12 Oct - 90-second - Who gets paid for AI songs' } })
+    expect(teleprompterNames({ date: '2026-11-17', day: 'tue', lane_slot: 'mind_the_gap', subject: 'Where does AI live', cuts: ['short'] })!.folder)
+      .toBe('Tue 17 Nov mind.the.gap - Where does AI live')
+    expect(teleprompterNames({ date: '2026-11-19', day: 'thu', lane_slot: null, subject: 'One boring job', cuts: ['short'] }))
+      .toEqual({ folder: 'Thu 19 Nov off.day - One boring job', titles: { short: 'Thu 19 Nov - 90-second - One boring job' } })
+    // A subject already named by the rule is never named twice.
+    expect(teleprompterNames({ date: '2026-11-20', day: 'fri', subject: 'Fri 20 Nov mind.the.gap - The Auditor', cuts: ['long'] })!.folder)
+      .toBe('Fri 20 Nov mind.the.gap - The Auditor')
+    expect(teleprompterNames({ date: 'not a date', day: 'fri', subject: 'x', cuts: [] })).toBeNull()
+  })
+})
+
+describe('the naming rule keeps a script title\'s subject', () => {
+  it('strips a whole script title, cut name and all, to its subject', async () => {
+    const { teleprompterNames } = await import('../../apps/control-plane/api/_teleprompter.js')
+    expect(teleprompterNames({ date: '2026-11-05', day: 'thu', lane_slot: 'under_the_hood', subject: 'Thu 5 Nov - 90-second - One boring job', cuts: ['short'] }))
+      .toEqual({ folder: 'Thu 5 Nov under.the.hood - One boring job', titles: { short: 'Thu 5 Nov - 90-second - One boring job' } })
   })
 })

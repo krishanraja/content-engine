@@ -571,7 +571,9 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   const points = spec && isObj(spec.style) && Array.isArray(spec.style.points) ? spec.style.points.filter((p): p is string => typeof p === 'string') : []
   path.style = dayStyle({ pieceId: id, meta, formats: SERIES_FORMATS, points: points.length ? points : null, motion: i.motion || [],
     looks: i.formats?.production || [], recommendedLook: path.look.recommended.production?.id ?? null, gate: live.gates.style, spec,
-    recommendedMotion: typeof style?.motion === 'string' ? style.motion : null, recommendedCaptions: typeof style?.captions === 'string' ? style.captions : null })
+    recommendedMotion: typeof style?.motion === 'string' ? style.motion : null, recommendedCaptions: typeof style?.captions === 'string' ? style.captions : null,
+    motionAlternatives: planAlternatives(style, 'motion_alternatives'), captionsAlternatives: planAlternatives(style, 'captions_alternatives'),
+    lookAlternatives: planAlternatives(style, 'production_alternatives') })
   const detail: DayView['detail'] = [
     { h: 'Research', p: materials.length ? materials.map(m => m.title).join(' · ') : researchFile ? `${day}-research.md in the week's folder` : 'None yet' },
     { h: 'Narrative lock', p: typedLock ? inYourWords(typedLock.words, typedLock.said_at, typedLock.said_where)
@@ -649,6 +651,8 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
     actions: [{ kind: 'open', label: 'Watch and approve', href: boardTab(week, day) }, ...(posting ? [] : [yesPress(i, day)])] }
 }
 
+const planAlternatives = (st: Body | null | undefined, key: string): string[] =>
+  st && Array.isArray(st[key]) ? (st[key] as unknown[]).filter((x): x is string => typeof x === 'string') : []
 function formatOf(i: ViewInputs, id: unknown): LookOption | null {
   if (typeof id !== 'string') return null
   return [...(i.formats?.production || []), ...(i.formats?.script || [])].find(f => f.id === id) || null
@@ -953,7 +957,9 @@ export function buildView(i: ViewInputs): WeekView {
     const st = planRow && isObj(planRow.style) ? planRow.style as Body : null
     return [p.id, dayStyle({ pieceId: p.id, meta, formats: SERIES_FORMATS, points: null, motion: i.motion || [], looks: i.formats?.production || [],
       recommendedLook: typeof st?.production === 'string' ? st.production : null,
-      recommendedMotion: typeof st?.motion === 'string' ? st.motion : null, recommendedCaptions: typeof st?.captions === 'string' ? st.captions : null })]
+      recommendedMotion: typeof st?.motion === 'string' ? st.motion : null, recommendedCaptions: typeof st?.captions === 'string' ? st.captions : null,
+      motionAlternatives: planAlternatives(st, 'motion_alternatives'), captionsAlternatives: planAlternatives(st, 'captions_alternatives'),
+      lookAlternatives: planAlternatives(st, 'production_alternatives') })]
   })))
   // Each piece on a day with its lock written and not yet signed: his "Signed." is one press there, his typed approval of
   // the lock (picks/<day>-lock-words), on whatever day the piece is placed (Tue 17's data-centres piece too). A lock his
@@ -1046,6 +1052,51 @@ export async function branchSha(f: Fetcher, env: Record<string, string | undefin
   } catch { return undefined }
 }
 
+/** Where two branches split: the merge base of main and the week's branch, by GitHub's compare API on the board's own
+ *  token (as branchSha), or null when it cannot be asked. */
+export async function mergeBaseSha(f: Fetcher, env: Record<string, string | undefined>, a: string, b: string): Promise<string | null> {
+  const t = String(env.OFFDAY_REVISE_DISPATCH_TOKEN || env.PLACE_TAKES_DISPATCH_TOKEN || '').trim()
+  if (!t) return null
+  try {
+    const r = await f(`https://api.github.com/repos/${ENGINE_REPO}/compare/${a}...${b}`,
+      { method: 'GET', headers: { Authorization: `Bearer ${t}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } })
+    if (r.status !== 200) return null
+    const sha = (JSON.parse(await r.text()) as { merge_base_commit?: { sha?: string } }).merge_base_commit?.sha
+    return typeof sha === 'string' && /^[0-9a-f]{40}$/.test(sha) ? sha : null
+  } catch { return null }
+}
+
+/** One value written out with its keys in order, so two copies of the same thing compare equal. */
+const canon = (v: unknown): string => JSON.stringify(v, (_k, x) => (isObj(x) && !Array.isArray(x)
+  ? Object.fromEntries(Object.keys(x).sort().map(k => [k, (x as Body)[k]])) : x))
+const sameValue = (a: unknown, b: unknown) => canon(a) === canon(b)
+const idRows = (v: unknown): v is Body[] => Array.isArray(v) && v.every(x => isObj(x) && typeof x.id === 'string')
+
+/** The week's plan as main and the week's branch hold it together (Ruling, Krish, 2026-11-17: "Why do recommendations in
+ *  my UI never adapt to the piece?"). Each part comes from the side that changed it since the two split (base): a
+ *  session's write to main (a piece's production pick) and a run's write to the week branch (an Improve's revision, the
+ *  good news) both reach the card. Rows are matched by id. A part both changed keeps the week branch's, as before. */
+export function mergeWeekPlan(base: unknown, main: unknown, week: unknown): unknown {
+  if (sameValue(week, base)) return main
+  if (sameValue(main, base)) return week
+  if (idRows(main) && idRows(week)) {
+    const b = idRows(base) ? base : []
+    const ids = [...week.map(x => x.id as string), ...main.map(x => x.id as string).filter(id => !week.some(x => x.id === id))]
+    return ids.map(id => mergeWeekPlan(b.find(x => x.id === id), main.find(x => x.id === id), week.find(x => x.id === id)))
+      .filter(x => x !== undefined)
+  }
+  if (isObj(main) && isObj(week) && !Array.isArray(main) && !Array.isArray(week)) {
+    const b = isObj(base) && !Array.isArray(base) ? base : {}
+    const out: Body = {}
+    for (const k of [...Object.keys(week), ...Object.keys(main).filter(k => !(k in week))]) {
+      const v = mergeWeekPlan(b[k], main[k], week[k])
+      if (v !== undefined) out[k] = v
+    }
+    return out
+  }
+  return week
+}
+
 /** A piece's decisions read live for its own read (GET /api/content-ideas/store?piece=<id>, which the Control Center
  *  connector's get_piece_board returns; F46): his look, motion and captions from the piece's meta, the lock from the
  *  week's narrative-lock files at main's newest commit, and his presses and typed approvals from the board. A record
@@ -1114,8 +1165,21 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // main and the week's branch, each at the commit it points at now when the token can ask (branchSha); otherwise by name.
   const [mainSha, weekSha] = await Promise.all([branchSha(fetcher, env, 'main'), branchSha(fetcher, env, `offday-revise/${week}`)])
   const RAW = `https://raw.githubusercontent.com/${ENGINE_REPO}/${mainSha || 'main'}`
-  const weekIdeas = weekSha === null ? Promise.resolve(null)
-    : fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/${weekSha || `offday-revise/${week}`}/docs/plans/${week}-week/ideas.json`)
+  // The week's plan from both: main (where a session writes a piece's production pick) and the week's branch (where the
+  // runs write), merged from where they split (mergeWeekPlan), so neither side's newer write is hidden by the other's.
+  const ideasPath = `docs/plans/${week}-week/ideas.json`
+  const weekIdeas: Promise<string | null> = weekSha === null ? Promise.resolve(null) : (async () => {
+    const [w, m, base] = await Promise.all([
+      fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/${weekSha || `offday-revise/${week}`}/${ideasPath}`),
+      fetchText(fetcher, `${RAW}/${ideasPath}`),
+      mainSha && weekSha ? mergeBaseSha(fetcher, env, mainSha, weekSha) : Promise.resolve(null),
+    ])
+    if (!w || !m) return w ?? m
+    // Without the point they split, the week branch's copy is read whole, as before.
+    const b = base ? await fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/${base}/${ideasPath}`) : null
+    if (!b) return w
+    try { return JSON.stringify(mergeWeekPlan(JSON.parse(b), JSON.parse(m), JSON.parse(w))) } catch { return w }
+  })()
   const [pieces, picks, queue, history, ideasText, nowText, runs, ...locks] = await Promise.all([
     // The week's pieces, and the records of its off-day video posts, linked to it and never scheduled (_offdayPiece.ts).
     Promise.all([
@@ -1128,9 +1192,9 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     db.from('board_documents').select('doc_id,body,updated_by,updated_at,revision').eq('week', week).eq('collection', 'queue').then(r => (r.error ? [] : r.data || [])),
     db.from('board_history').select('collection,doc_id,updated_at,updated_by').eq('week', week).order('updated_at', { ascending: false }).limit(12)
       .then(r => (r.error ? [] : r.data || [])),
-    // The week's revise branch first: offday-revise pushes his revised cards there, and GitHub Actions may not open
+    // The week's revise branch with main: offday-revise pushes his revised cards there, and GitHub Actions may not open
     // the pull request that brings them to main, so the board reads them where they are, the moment they exist.
-    weekIdeas.then(t => t ?? fetchText(fetcher, `${RAW}/docs/plans/${week}-week/ideas.json`)),
+    weekIdeas.then(t => t ?? fetchText(fetcher, `${RAW}/${ideasPath}`)),
     fetchText(fetcher, `${RAW}/NOW.md`),
     readRuns(env, fetcher as never),
     // Every day's lock, not only the series days': a lock follows its piece (lockOf), and a piece moved to an off day

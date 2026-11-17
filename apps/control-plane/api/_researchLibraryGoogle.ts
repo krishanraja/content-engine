@@ -87,6 +87,13 @@ export function googleLibraryDrive(token: string, f: Fetch = fetch): LibraryDriv
       if (typeof j.id !== 'string') throw new GoogleRefused('drive_folder_no_id')
       return j.id
     },
+    async renameFolder(folderId, name) {
+      // By id, its name and its ce_named property only: no parents, other properties or contents in the request.
+      const j = await json(await f(`${DRIVE}/files/${encodeURIComponent(folderId)}?supportsAllDrives=true&fields=id,name`, {
+        method: 'PATCH', headers: { ...headers, 'Content-Type': 'application/json; charset=UTF-8' }, body: JSON.stringify({ name, properties: { [PROP.named]: name } }),
+      }), 'drive_rename')
+      if (j.name !== name) throw new GoogleRefused('drive_rename_not_applied')
+    },
     async createFile({ parentId, name, mime, bytes, description, props }) {
       const start = await f(`${UPLOAD}?uploadType=resumable&supportsAllDrives=true&fields=id,name,webViewLink,sha256Checksum,properties`, {
         method: 'POST',
@@ -237,7 +244,7 @@ export function storeSource(db: SourceDb, bucket: string): LibrarySource {
 
 /** One pass with the real store and his real Drive. `only` copies those materials now; with none it is the sweep. */
 export async function runMirror(opts: { only?: string[]; budgetMs?: number } = {}): Promise<MirrorReport> {
-  const empty: MirrorReport = { ok: false, eligible: 0, already: 0, mirrored: 0, indexed: 0, index_deduped: 0, index_repaired: 0, settling: 0, later: 0, failed: [], copies: [] }
+  const empty: MirrorReport = { ok: false, eligible: 0, already: 0, mirrored: 0, indexed: 0, index_deduped: 0, index_repaired: 0, settling: 0, later: 0, renamed: 0, failed: [], copies: [] }
   if (!googleConfigured()) return { ...empty, error: 'the engine has no Google service account, so it cannot reach the research library' }
   let why = 'no_token'
   const token = await googleAccessToken([DRIVE_SCOPE], { subject: DRIVE_OWNER(), onError: r => { why = r } })

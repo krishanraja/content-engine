@@ -272,7 +272,8 @@ he ticks: `references/inspiration-piece.md`.
    gather stops when production has no `inspiration` block, and the board
    build refuses ideas that drop one (`board_feed.py cover <Monday>`). A
    card's `why_like` is his typed words; `endorsed` is a suggestion he
-   tapped, never quoted as his.
+   tapped, never quoted as his. Each card's engine read (`style`,
+   `grounded_in`) and reference sets: `references/engine-reads.md`.
    **Then read his feedback cues** (Krish, 2026-10-26: "all the feedback
    I've given you goes into a really clear set of cues that you can draw
    from in the future"). `sources.json` holds `cues` (`_feedbackCues.ts`;
@@ -408,11 +409,11 @@ he ticks: `references/inspiration-piece.md`.
    the fact gate; each option's copy passes the copy lint and the kill list
    before it reaches the tab; they go into ideas.json `offdays`, which the
    live board reads, never a page.
-   Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week
-   and its five real stories, found now, in this run (Ruling, Krish, 2026-11-11: the ideas board fills once a week in
-   full, Saturday's good news included), each checked against its primary source the same day, with `stories_due`
-   today. The trade-off is said on the card and in the reply: a story found now is about two weeks old by the
-   Saturday it posts on, and the fact gate checks each one against its source again before Growth makes the post.
+   Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): five real stories, found
+   in this run (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's good news included),
+   each checked against its primary source, `stories_due` today (the trade-off is said, as the reference says). From 30 Nov every Saturday option is a sheet carousel
+   followed card for card (Ruling, Krish, 2026-11-17: "Each suggestion should be a carousel like one carousel from my
+   Instagram Inspo sheet"), and memes are 6 to 10 templates on Tue and Thu (`references/meme-roaster.md`).
    Growth makes what he approved. **His own
    ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
    idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day
