@@ -1,0 +1,12 @@
+{
+  "_about": "High or critical npm advisories CI's dependency-audit allows for now (scripts/audit_check.mjs). Each entry names the advisory, why it is allowed, who decided, and the date to look again; on or after that date CI fails until someone rechecks it and moves the date or removes the entry. Any advisory not listed still fails CI.",
+  "allow": [
+    {
+      "advisory": "GHSA-fc5q-39xc-vjpf",
+      "package": "picomatch",
+      "why": "A ReDoS in picomatch, which reaches this repository only through vite and vitest (build and test tooling, never served). The advisory covers every version and no fixed release exists; npm's only offered fix downgrades vitest to 3.1.4, a breaking major. Remove this entry once picomatch ships a fix and npm audit fix takes it.",
+      "decided": "Krish, 2026-11-17, in a Claude Code session: allow it and recheck weekly",
+      "recheck_by": "2026-11-24"
+    }
+  ]
+}
