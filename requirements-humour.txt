@@ -1,0 +1,4 @@
+# The humour engine (scripts/post-pack/humour_check.py): optional, only for sessions that consult it.
+#   pip install -r requirements-humour.txt && pip install --no-deps -r requirements-humour-engine.txt
+pydantic==2.13.5
+PyYAML==6.0.3

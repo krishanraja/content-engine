@@ -13,7 +13,8 @@ single element of the content tab is stable, consistent, predictable and deliver
 Every card on every day follows this page. A change to the board that breaks a line here is wrong, whatever else it fixes.
 
 **A piece:** Idea → Approve (ideas board) → Sign the lock → Production picks (look, motion, captions) → Scripts (read,
-edit, Approve: they go to his Teleprompter at once) → Record (My takes are in the Inbox) → Produce → Approve to publish →
+edit, Approve: they go to his Teleprompter at once) → Record (My takes are in the Inbox) → Production plan (open, review,
+swap; docs/production/PRODUCTION_PLAN.md) → Produce (the Claude production prompt) → Approve to publish →
 Live. An off-day post follows the same rules on its own path.
 
 1. **One next action, his, from live state.** Read from the records on every view. Never a press he has already made
@@ -846,6 +847,26 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   - A typed approval now counts after the server has answered it: the `send` the server writes on the document (its
     Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
     held, still counts. A `send` written by anyone else is still refused.
+
+- **1.25.0 (17 Nov 2026)** added **`plan`** on a card that holds a piece once his takes are in: the production plan
+  (`api/board/_productionPlan.ts`; the run and the plan's shape: `docs/production/PRODUCTION_PLAN.md`).
+  - Takes are now video **or audio** (his Teleprompter exports a voiceover take as `.aac`; the Tue 17 habits take was
+    skipped by the video-only rule), matched to the piece by its title and its approved scripts' titles against the
+    week's other pieces; a file named for another piece is never taken (`newTakes`). The recordings store takes `.aac`.
+  - His My takes are in the Inbox press also starts `production-plan.yml` (job `production-plan`), Claude Code on his
+    subscription: the edit pass (`edit_pass.py`: restarts clipped, silences cut, length measured, the even speed-up
+    that brings a short under 90 seconds), every beat's picture with one or two other options, the humour already in
+    his words (krishanraja/humour-engine, his style from ai-harness), and two or three scenes mocked from real stills
+    in his picked styles (`plan_scene.py`), filed on the piece (roles `production_plan`, `plan_scene`).
+  - `plan.status` is `making` until the plan is filed, then `ready`, with the edit numbers, the scenes (each a
+    same-site still) and every beat. Each other option carries **Use this**, a picks document `plan-<8 hex>`, kind
+    `plan_swaps`, bound to the plan's sha256 (a swap on an older plan does not count). The plan file never changes.
+  - The card's Claude production prompt carries the plan with his swaps (`planBrief`), the edit pass, the humour and
+    the higgsfield-generator skills for generated stills and motion (Krish, 2026-11-17: "it should also leverage the
+    https://github.com/krishanraja/higgsfield-generator where needed in post production").
+  - Ruling (Krish, 2026-11-17): "create the final production plan for me to open, review and then press the Claude
+    production prompt button [...] The UI should also have mocked up 2 or 3 scenes using my real content stills using
+    the visual styles I selected, and give me the final opportunity to switch something out".
 
 - **1.23.0 (17 Nov 2026)** added the press op **`takes-in`**: **My takes are in the Inbox**, and the stage around it, on
   every card that holds a piece (the day's own piece, a placed piece, an off-day post he records), every day.
