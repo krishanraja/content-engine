@@ -4,7 +4,7 @@ Meta wanted a giant data centre, and the mayor said yes. A shed like that uses a
 
 Here's the twist. Meta's shed was already being built, so it's still going up in a town that just banned it. Someone's still paying for that power.
 
-So I reckon the bigger question is who pays for the power. Piqua just said, not us. So if towns won't carry the cost, the AI company has to. And that goes into its prices. You, at renewal.
+So I reckon the bigger question is who pays for the power. Piqua said, not us. So if towns won't carry the cost, the AI company does. And that goes into its prices. You, at renewal.
 
 Next time we renew an AI tool, I'm asking where its new data centres are being built. And who pays for their power. Because if it's a town that's just said no, that bill is heading for my desk.
 
