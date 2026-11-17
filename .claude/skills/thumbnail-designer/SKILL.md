@@ -33,7 +33,8 @@ Every option is held to these, and none of them is the session's to relax:
 2. The words are his picks: each line on a thumbnail has his `picked` verdict for the piece
    (`title_check.py verdict ... --surface thumbnail` or `tall_cover`); the drawer refuses any other.
 3. Read `.agents/skills/thumbnail-designer/references/drawing.md` (the facts, the logos, the machine) and
-   `.agents/skills/thumbnail-designer/references/reference-library.md` (the inspiration cards) before the brief.
+   `.agents/skills/thumbnail-designer/references/reference-library.md` (the inspiration cards) before the brief, and
+   read his thumbnail reference set as it says (`GET /api/inspiration/candidates?role=thumbnail`) before drawing.
 
 ## 1. The brief, first
 

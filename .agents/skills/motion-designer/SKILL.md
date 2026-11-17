@@ -41,6 +41,8 @@ The plan answers to the house, never the other way round:
 
 ## 1. The piece's choices
 
+First read what his inspiration says: `.agents/skills/motion-designer/references/board-reads.md`.
+
 Set each with its `reason` in one plain line (`.agents/skills/motion-designer/references/plan-template.md`):
 
 - `style.idea`: the one object, what each move means, the never-list, and the real artifact shown as itself (`ve lint`
@@ -56,15 +58,9 @@ Set each with its `reason` in one plain line (`.agents/skills/motion-designer/re
 
 For each beat of each cut, in order, write: `role`, `span` (his words), `point` (one idea, one sentence a stranger
 would follow muted), `layout`, `uses`, `events` (each `at_w` on the word that names the change) and `transition_out`.
-Follow the method:
-
-- an entrance follows the style's own profile, inside the signed floor;
-- the outgoing beat leaves before the incoming arrives, and a light-to-dark hand-off never shows a grey frame;
-- a cursor glides, waits, presses and acts, each on his words;
-- every box is placed at its final size from the beat's first frame, so nothing re-wraps;
-- one accent, mint, on the active or result thing;
-- one idea per frame;
-- density from small events inside a beat, never from more scenes.
+Follow the method's rules 1 to 7 (`method.md`, read in "Before anything"): the style's own entrances inside the
+signed floor, the outgoing beat gone before the incoming, a cursor on his words, every box at its final size from the
+first frame, one mint accent, one idea per frame, density from small events, never more scenes.
 
 When the beat that is hardest to make move is not the one the proof rule would pick (most distinct devices), name it in
 `style.proof.beat` and say why in the storyboard document.
