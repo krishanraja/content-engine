@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://content.krishraja.com/api/board/view.schema.json",
   "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
-  "x-contract-version": "1.19.0",
+  "x-contract-version": "1.20.0",
   "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
   "type": "object",
   "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources", "revision"],
@@ -311,7 +311,7 @@
           "required": ["path", "ask", "multi", "required", "options"],
           "properties": {
             "path": { "type": "string" }, "ask": { "type": "string" }, "multi": { "type": "boolean" }, "required": { "type": "boolean" }, "from_link": { "type": "boolean" },
-            "options": { "type": "array", "items": { "type": "object", "required": ["value", "label"], "properties": { "value": { "type": "string" }, "label": { "type": "string" }, "hosts": { "type": "array", "items": { "type": "string" } }, "line": { "type": "string", "x-since": "1.17.0", "description": "One line on what the option is." }, "still": { "type": "string", "x-since": "1.17.0", "description": "A still of what the option looks like, a same-site path (the style's still_url); shown when he hovers or picks it." }, "why": { "type": "string", "x-since": "1.18.0", "description": "Why the engine recommends it for this piece, in plain words; on a recommended option only, so the board can show the recommended look, motion and captions together with their reasons (Krish, 2026-11-16)." } } } }
+            "options": { "type": "array", "items": { "type": "object", "required": ["value", "label"], "properties": { "value": { "type": "string" }, "label": { "type": "string" }, "hosts": { "type": "array", "items": { "type": "string" } }, "line": { "type": "string", "x-since": "1.17.0", "description": "One line on what the option is." }, "still": { "type": "string", "x-since": "1.17.0", "description": "A still of what the option looks like, a same-site path (the style's still_url); shown when he hovers or picks it." }, "why": { "type": "string", "x-since": "1.18.0", "description": "Why the engine recommends it for this piece, in plain words; on a recommended option only, so the board can show the recommended look, motion and captions together with their reasons (Krish, 2026-11-16)." }, "audio": { "type": "string", "x-since": "1.20.0", "description": "A sample to hear before he picks it, a same-site path: an off-day track's brand-kit file (GET /api/board/sign-offs?file=<drive id>) or a voice's ElevenLabs preview (GET /api/board/sign-offs?voice=<bank id>). The board plays it in place (Krish, 2026-11-17: \"I always want to be given a few options in my control center\")." } } } }
           },
           "description": "press: a choice he makes before the press, written at path as the values he chose (a list when multi); from_link: the option whose hosts his link names is chosen for him first."
         },
