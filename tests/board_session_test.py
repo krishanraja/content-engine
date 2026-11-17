@@ -141,10 +141,10 @@ class TypedApprovalTest(unittest.TestCase):
     def test_a_lock_is_carried_as_his_words_bound_to_its_hash_and_signed_when_asked(self):
         import making
         code, out, calls, _ = run([PIECE, 'approve', 'lock', '--week', '2026-11-16', '--day', 'mon', '--lock', str(self.lock), '--sign', *self.SAID],
-                                  [(200, {'documents': [{'id': 'mon-lock-words', 'revision': 2}]}), (200, {'ok': True})])
+                                  [(200, {'documents': [{'id': 'mon-lock-words-8287846b', 'revision': 2}]}), (200, {'ok': True})])
         self.assertEqual(code, 0, out)
         method, path, body = calls[1]
-        self.assertEqual((method, path, body['revision']), ('PUT', '/api/board/2026-11-16/picks/mon-lock-words', 2))
+        self.assertEqual((method, path, body['revision']), ('PUT', '/api/board/2026-11-16/picks/mon-lock-words-8287846b', 2))
         doc = body['body']
         self.assertEqual((doc['kind'], doc['via'], doc['approved'], doc['words'], doc['lock_path']),
                          ('sign_lock', 'words', True, 'Yes, lock it.', 'docs/plans/2026-11-16-week/narrative-lock-mon.md'))
@@ -162,7 +162,7 @@ class TypedApprovalTest(unittest.TestCase):
         self.assertEqual(code, 0, out)
         doc = calls[1][2]['body']
         self.assertEqual((calls[1][1], doc['kind'], doc['texts'], doc['titles']),
-                         ('/api/board/2026-11-16/picks/mon-scripts-words', 'approve_scripts', {'long': 'Oracle just borrowed another twenty billion dollars.'},
+                         ('/api/board/2026-11-16/picks/mon-scripts-words-8287846b', 'approve_scripts', {'long': 'Oracle just borrowed another twenty billion dollars.'},
                           {'long': 'Mon 16 Nov - 5-minute - Oracle'}))
         self.assertIn('Teleprompter: held', out)
 

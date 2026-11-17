@@ -146,7 +146,7 @@ describe('F47: the card moves on when a session reaches a milestone, and offers 
     expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'current', 'todo', 'todo'])
     expect(it.line).toMatch(/^Branded for Tue 17\. Your production picks are in\. Both scripts are ready for your Approve: Tue 17 script, 5-minute cut/)
     expect(it.decision).toBe(true)
-    expect(it.next).toMatchObject({ kind: 'press', label: 'Read and approve the scripts', collection: 'picks', id: 'tue-scripts-words',
+    expect(it.next).toMatchObject({ kind: 'press', label: 'Read and approve the scripts', collection: 'picks', id: 'tue-scripts-words-b019dbf8',
       body: { kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: TUE, texts: { long: filed[0].text, short: filed[1].text } },
       words: { path: 'words', required: true } })
     // What it says is the signed lock, never the idea row it started from.

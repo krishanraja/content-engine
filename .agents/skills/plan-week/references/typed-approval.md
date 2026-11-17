@@ -17,7 +17,7 @@ python3 scripts/post-pack/board_session.py <uuid> approve lock --week <Monday> -
 ```
 
 `--sign` writes the lock's signature line (`Signed by Krish: "<his words>", <date>, lock sha256 <hash>`) when it is
-not there yet. The board saves picks `<day>-lock-words`, bound to the lock body's sha256, and shows the lock as
+not there yet. The board saves picks `<day>-lock-words-<first 8 of the piece id>`, one document a piece, bound to the lock body's sha256, and shows the lock as
 "Approved in your words" with his quote, the day and where.
 
 ## The scripts
@@ -29,6 +29,6 @@ python3 scripts/post-pack/board_session.py <uuid> approve scripts --week <Monday
   --session-ref <session link>
 ```
 
-The board saves picks `<day>-scripts-words`, bound to the words he approved, and the server sends them to
+The board saves picks `<day>-scripts-words-<first 8 of the piece id>`, one document a piece, bound to the words he approved, and the server sends them to
 Teleprompter exactly as it does for his Approve scripts press, held the same way until the scripts' check and the
 two fresh readers have passed. A refusal (`typed_approval_is_a_yes`, or any other) is reported to him as it came.

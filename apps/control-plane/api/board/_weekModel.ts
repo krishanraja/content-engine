@@ -1,5 +1,6 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
+import { wordsDocId } from './_contracts.js'
 import type { FiledScript, PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
 import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
@@ -228,7 +229,7 @@ const boardAt = (week: string, day: string) => `https://controlcenter.krishraja.
 /** His "Signed." on a piece's narrative lock, as one press on the board: his typed approval of the lock as it stands
  *  (picks/<day>-lock-words, bound to the lock's words by their hash), on whatever day the piece is placed. */
 export function signPress(week: string, pieceId: string, lock: LockToSign): PressAction {
-  return { kind: 'press', label: 'Sign the lock', collection: 'picks', id: `${lock.day}-lock-words`, revision: lock.revision,
+  return { kind: 'press', label: 'Sign the lock', collection: 'picks', id: wordsDocId(lock.day, 'lock', pieceId), revision: lock.revision,
     body: { kind: 'sign_lock', day: lock.day, via: 'words', approved: true, piece_id: pieceId, lock_path: lock.path, lock_sha256: lock.sha256,
       said_where: 'the Publish Board in Control Centre', session_ref: boardAt(week, lock.day) },
     words: { path: 'words', ask: 'Your words to sign it ("Signed.")', required: true }, stamp: ['at', 'said_at'],
@@ -610,7 +611,7 @@ function withLock(read: ModelRead, said: { so_what: string | null; story: string
 /** His Approve scripts on a piece, in his words (picks/<day>-scripts-words, the shape the engine checks: _contracts.ts
  *  wordsBody, scriptsBody), carrying the exact words of each filed cut so his approval binds those words (F47). */
 export function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ doc_id: string; revision?: number }> = []): PressAction {
-  const doc = `${day}-scripts-words`
+  const doc = wordsDocId(day, 'scripts', pieceId)
   const ordered = [...filed].sort((a, b) => (a.cut === b.cut ? 0 : a.cut === 'long' ? -1 : 1))
   const texts = Object.fromEntries(ordered.map(f => [f.cut, f.text]))
   const titles = Object.fromEntries(ordered.map(f => [f.cut, cut(`${title}: ${f.cut === 'long' ? 'long cut' : 'short cut'}`, 200)]))

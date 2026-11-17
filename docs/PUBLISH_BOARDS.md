@@ -195,13 +195,14 @@ anywhere" (2026-11-02) for these two decisions and adds nothing else.
 
 - **What a session carries.** His exact typed words, verbatim, with when and where he typed them and the session's link,
   as one board document per day the piece is on (Monday to Saturday, since 14 Nov: a piece he places on an off day is
-  still a piece), or his own "Signed." press on the board (Sign the lock): `picks/<day>-lock-words` (kind `sign_lock`, bound to the lock he approved by
-  `lock_path` and `lock_sha256`, `making.py lock_body_hash`) or `picks/<day>-scripts-words` (kind `approve_scripts`, the
+  still a piece), or his own "Signed." press on the board (Sign the lock): `picks/<day>-lock-words-<piece>` (kind `sign_lock`, bound to the lock he approved by
+  `lock_path` and `lock_sha256`, `making.py lock_body_hash`) or `picks/<day>-scripts-words-<piece>` (kind `approve_scripts`, the
   exact words of each cut as the Approve scripts press carries them, with their Teleprompter titles and folder). Written
   only with `python3 scripts/post-pack/board_session.py <uuid> approve lock|scripts ...` (the board session tools, on the
   operator's key); `--sign` also writes his words as the lock's signature line when it has none, so `making.py`'s
   narrative check and the board agree. `_contracts.ts` (`WORDS_ID`, `wordsBody`) holds the shape; a session's document
   with `via: words` anywhere else is refused.
+  Each approval is a document of its own piece: `<piece>` is the first 8 hex of its piece id (`wordsDocId`), so two pieces on one day never share one (Ruling, Krish, 2026-11-17: board feedback is done to every day; Tue 17 held two pieces and one approval document). The older day-named document stays readable, for the piece it names only.
 - **What it does.** The board draws it as "Approved in your words: "...", Fri 13 Nov (where)" on the day's Narrative lock
   or Scripts line, and the piece's path moves on as for his press. A lock's typed approval counts only while the lock on
   the board is the text his words approved (its hash); a lock he signed in the file shows his signature words the same
@@ -445,7 +446,7 @@ showed that day (`tests/control-plane/board-state-truth.test.ts`):
   missed, as before.
 - **His "Signed." is one press on the board, on any day the piece is placed.** A piece whose narrative lock is written
   under the day it is on and not signed offers **Sign the lock** (his words, "Signed.", saved as his typed approval of the
-  lock as it stands, `picks/<day>-lock-words`, bound by the lock's hash), with the lock to read in its read sheet. The
+  lock as it stands, `picks/<day>-lock-words-<piece>`, bound by the lock's hash), with the lock to read in its read sheet. The
   typed-approval route takes any day from Monday to Saturday (`WORDS_ID`): a piece he moved to an off day with
   `place_piece` (Tue 17's data-centres piece) is still a piece. His words there sign it on the board; the producing
   session writes the signature line into the lock file (`board_session.py approve lock --sign`) for `making.py`'s gate.

@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
-import { wordsBody } from './_contracts.js'
+import { wordsBody, wordsDocId } from './_contracts.js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
 import { makingSteps } from '../_making.js'
@@ -386,9 +386,12 @@ export interface LockToSign { day: PostedDay; path: string; sha256: string; revi
  *  lock_sha256 is that text's lockBodyHash), so a lock changed after his words is never shown as approved. */
 export function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: string,
   lockText?: string | null): Typed | null {
-  const doc = picks.find(p => p.doc_id === `${day}-${what}-words`)
+  // The piece's own document first (wordsDocId), then the day's older one, each only for this piece.
+  const ids = [wordsDocId(day, what, pieceId), `${day}-${what}-words`]
+  const doc = ids.map(id => picks.find(p => p.doc_id === id)).find(p => p && isObj(p.body) && wordsBody(p.doc_id, p.body)
+    && String(p.body.piece_id).toLowerCase() === pieceId)
   const b = doc && isObj(doc.body) ? doc.body : null
-  if (!b || !wordsBody(`${day}-${what}-words`, b) || String(b.piece_id).toLowerCase() !== pieceId) return null
+  if (!b) return null
   if (what === 'lock' && (!lockText || lockBodyHash(lockText) !== b.lock_sha256)) return null
   return { words: String(b.words), said_where: String(b.said_where), said_at: String(b.said_at) }
 }
@@ -938,7 +941,7 @@ export function buildView(i: ViewInputs): WeekView {
       if (!lk) continue
       if (typedApproval(i.picks, lk.day, 'lock', p.id, lk.text)) { signedLocks.push(p.id); continue }
       if (lockSigned(lk.text) || lk.day !== d.day) continue
-      const doc = `${d.day}-lock-words`
+      const doc = wordsDocId(d.day, 'lock', p.id)
       locksToSign[p.id] = { day: d.day, path: `docs/plans/${i.week}-week/narrative-lock-${d.day}.md`, sha256: lockBodyHash(lk.text),
         revision: i.picks.find(x => x.doc_id === doc)?.revision ?? 0 }
     }
