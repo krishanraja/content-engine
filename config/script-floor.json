@@ -31,7 +31,7 @@
     "f. A close that reframes the opening question and says what he will do.",
     "g. Every line makes sense heard once with no visuals.",
     "h. Always great fun to produce, deliver and consume, every cut, like the AI Music take (Krish, 2026-11-17: \"always needs to be fun to produce and consume\"): lines he enjoys saying out loud, with play, rhythm and jokes, and a listener who is entertained, not lectured.",
-    "i. The intro hits the four beats in config/script-floor/intros.json as well as his two reference intros do; a 90-second cut opens with the same four beats compressed, never a different opening."
+    "i. The intro hits the four beats in config/script-floor/intros.json as well as his two reference intros do; a 90-second cut opens with the same four beats compressed, never a different opening. The first sentence is a hook the viewer feels (a surprise, a contradiction or a question about their world), never a flat statement of who pays whom (Krish, 2026-11-17: \"When we say \\\"Anthropic, which makes Claude, pays other companies for customer service\\\", that does not introduce the piece properly. The first paragraph is just not hooking enough on the 90 sec script\")."
   ],
   "pass": "at or above the floor on every quality"
 }
