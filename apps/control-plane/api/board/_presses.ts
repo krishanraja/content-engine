@@ -183,9 +183,12 @@ export async function heldBecause(making: unknown, texts: Record<string, string>
 
 /** The Teleprompter send his approval asks for: each cut's words as Teleprompter shows them (spokenText), the words he
  *  approved given as their source, and his document as the approval, checked again by sendApprovedScripts. */
-async function sendInput(id: string, body: Body, who: string, at: string, making: Making | null = null): Promise<SendApprovedInput> {
+async function sendInput(id: string, body: Body, who: string, at: string, making: Making | null = null, week: string | null = null, laneSlot: string | null = null): Promise<SendApprovedInput> {
   const { scriptHash, spokenText } = await import('../_teleprompter.js')
-  const texts = body.texts as Record<string, string>, titles = body.titles as Record<string, string>
+  const texts = body.texts as Record<string, string>
+  const given = { folder: String(body.folder_title), titles: body.titles as Record<string, string> }
+  const named = week ? await namedByRule(week, body, laneSlot, given.folder, given) : given
+  const titles = named.titles
   // The folder and scripts already in his Teleprompter for this piece, so a second send updates them, never a second
   // folder (as offdayRecorded does; review of F49).
   const tp = making && isObj(making.teleprompter) ? making.teleprompter as { folder_id?: string; cuts?: Record<string, { script_id?: string }> } : null
@@ -196,18 +199,36 @@ async function sendInput(id: string, body: Body, who: string, at: string, making
     return { cut: cut as 'long' | 'short' | 'feature', title: titles[cut], text, sha256: scriptHash(text), source: texts[cut], ...(ids[cut] ? { script_id: ids[cut] } : {}) }
   })
   return {
-    piece_id: String(body.piece_id), day: body.day as SendApprovedInput['day'], folder_title: String(body.folder_title),
+    piece_id: String(body.piece_id), day: body.day as SendApprovedInput['day'], folder_title: named.folder,
     ...(typeof body.folder_id === 'string' ? { folder_id: body.folder_id } : typeof tp?.folder_id === 'string' ? { folder_id: tp.folder_id } : {}),
     scripts, approval: { id, updated_by: who, updated_at: at, body },
   }
 }
 
 /** The piece's row as the making route reads it (content_ideas.meta.making), or null when it cannot be read. */
-async function makingOf(db: SupabaseClient, pieceId: string): Promise<{ meta: Body; making: Making | null; updated_at: string } | null> {
-  const read = await db.from('content_ideas').select('meta, updated_at').eq('id', pieceId).maybeSingle()
+async function makingOf(db: SupabaseClient, pieceId: string): Promise<{ meta: Body; making: Making | null; updated_at: string; lane_slot: string | null } | null> {
+  const read = await db.from('content_ideas').select('meta, updated_at, lane_slot').eq('id', pieceId).maybeSingle()
   if (read.error || !read.data) return null
   const meta = isObj(read.data.meta) ? read.data.meta : {}
-  return { meta, making: isObj(meta.making) ? meta.making as unknown as Making : null, updated_at: String(read.data.updated_at) }
+  return { meta, making: isObj(meta.making) ? meta.making as unknown as Making : null, updated_at: String(read.data.updated_at),
+    lane_slot: typeof read.data.lane_slot === 'string' ? read.data.lane_slot : null }
+}
+
+const DAY_OFFSET: Record<string, number> = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 }
+/** The date a day of the board's week falls on (its Monday), YYYY-MM-DD. */
+function weekDate(week: string, day: string): string {
+  const d = new Date(`${week}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + (DAY_OFFSET[day] ?? 0))
+  return d.toISOString().slice(0, 10)
+}
+
+/** The folder and script names a send uses: always the rule in config/teleprompter.json (teleprompterNames), worked
+ *  out here from the piece's day, date and series, whatever names the press carried (Ruling, Krish, 2026-11-17: "it
+ *  doesn't name it correctly under the right naming convention"). The press's own names only when the date cannot be read. */
+async function namedByRule(week: string, body: Body, laneSlot: string | null, subject: string, given: { folder: string; titles: Record<string, string> }) {
+  const { teleprompterNames } = await import('../_teleprompter.js')
+  return teleprompterNames({ date: weekDate(week, String(body.day)), day: String(body.day), lane_slot: laneSlot ?? (typeof body.series === 'string' ? body.series : null),
+    subject, cuts: Object.keys(given.titles) }) ?? given
 }
 
 /** Records a send that read back on the piece's making record, merged as the making route merges a patch
@@ -657,10 +678,11 @@ async function offdayRecorded(db: SupabaseClient, ctx: { week: string; id: strin
     const { scriptHash, spokenText } = await import('../_teleprompter.js')
     const tp = placed.making?.teleprompter
     const text = spokenText(String(body.script))
+    const named = await namedByRule(week, body, null, String(body.folder_title || body.title), { folder: String(body.folder_title), titles: { short: String(body.title) } })
     const input: SendApprovedInput = {
-      piece_id: String(body.piece_id), day: body.day as SendApprovedInput['day'], folder_title: String(body.folder_title),
+      piece_id: String(body.piece_id), day: body.day as SendApprovedInput['day'], folder_title: named.folder,
       ...(tp?.folder_id ? { folder_id: tp.folder_id } : {}),
-      scripts: [{ cut: 'short', title: String(body.title), text, sha256: scriptHash(text), source: String(body.script),
+      scripts: [{ cut: 'short', title: named.titles.short ?? String(body.title), text, sha256: scriptHash(text), source: String(body.script),
         ...(tp?.cuts?.short?.script_id ? { script_id: tp.cuts.short.script_id } : {}) }],
       approval: { id, updated_by: who, updated_at: now, body },
     }
@@ -908,7 +930,7 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
     let checks: string | null = null
     try {
       const row = await makingOf(db, String(body.piece_id))
-      const input = await sendInput(id, body, who, now, row?.making ?? null)
+      const input = await sendInput(id, body, who, now, row?.making ?? null, week, row?.lane_slot ?? null)
       const held = row ? await heldBecause(row.making, body.texts as Record<string, string>) : `the piece's making record could not be read, ${THEN}`
       if (held && !hisPress(who)) {
         result = { status: 'held', error: held }
