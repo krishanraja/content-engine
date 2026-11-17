@@ -1,7 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
-import { ACTION_COLS, brief, jobPatch, parseJobReport } from './_actions.js'
+import { ACTION_COLS, brief, jobPatch, parseJobReport, researchToFile } from './_actions.js'
+import { addText, type StoreDb } from '../_pieceStore.js'
 
 // GET  /api/inspiration/actions?id=<uuid>
 //        one of Krish's ticks on an Inspiration card (control-center inspiration_actions), as the inspiration-piece job
@@ -12,7 +13,10 @@ import { ACTION_COLS, brief, jobPatch, parseJobReport } from './_actions.js'
 //        the job's report on its own tick, the operator's key only: running, then drafted with the idea it wrote onto
 //        the ideas board (the tick moves to drafted and names it), or failed with the reason in words, which Control
 //        Centre shows on the card and in To approve. It never creates, drops or closes a tick, never moves one past
-//        drafted, and never writes a piece's day: only his Approve does (the ideas gate).
+//        drafted, and never writes a piece's day: only his Approve does (the ideas gate). When it moves a tick to
+//        drafted and the tick's reading is a Markdown idea he added on Inspiration, that reading is filed on the piece as
+//        research through the piece materials store and copied to his research library (`research` in the answer:
+//        filed, or why not). Filing never fails the report.
 //
 // Ruling (Krish, 2026-11-12): an inspiration card he ticks is an instruction that jumps the queue: Content means make
 // it into a piece now, Production means use the style within a week. docs/PUBLISH_BOARDS.md, "His instruction".
@@ -65,5 +69,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const w = await supabase.from('inspiration_actions').update(decided.patch).eq('id', report.id).in('state', ['open', 'drafted']).select(ACTION_COLS).maybeSingle()
   if (w.error) return res.status(500).json({ ok: false, error: w.error.message })
   if (!w.data) return res.status(409).json({ ok: false, error: 'moved_on' })
-  return res.status(200).json({ ok: true, action: w.data })
+  const research = report.job_state === 'drafted' ? await fileResearch(a.data as Record<string, any>, report) : null
+  return res.status(200).json({ ok: true, action: w.data, ...(research ? { research } : {}) })
+}
+
+/** The tick's reading filed on its piece as research (researchToFile); says what happened, never throws. */
+async function fileResearch(before: Record<string, any>, report: NonNullable<ReturnType<typeof parseJobReport>['report']>): Promise<Record<string, unknown> | null> {
+  try {
+    const request = before.watch_request_id
+      ? await supabase.from('content_watch_requests').select('read_id').eq('id', before.watch_request_id).maybeSingle()
+      : before.item_id
+        ? await supabase.from('content_watch_requests').select('read_id').eq('item_id', before.item_id).order('requested_at', { ascending: true }).limit(1).maybeSingle()
+        : { data: null, error: null }
+    const readId = (request.data as Record<string, any> | null)?.read_id
+    if (!readId) return null
+    const reading = await supabase.from('content_reads').select('source_url,engine_rev,read,read_md').eq('id', readId).maybeSingle()
+    const body = researchToFile(before, report, reading.data as Record<string, any> | null)
+    if (!body) return null
+    const filed = await addText(supabase as unknown as StoreDb, { ...body, op: 'text' }, true, 'Inspiration tick')
+    const id = (filed.material as Record<string, unknown> | undefined)?.id
+    let library: unknown = null
+    try { library = await (await import('../_researchLibraryGoogle.js')).copyNow(typeof id === 'string' ? id : null) } catch { library = { state: 'later', why: 'copy_failed' } }
+    return { state: 'filed', material: id ?? null, duplicate: filed.duplicate ?? false, library }
+  } catch (e) {
+    // The class only: this repository's logs can be public, and the text is his.
+    console.warn('[inspiration actions] research_not_filed', e instanceof Error ? e.message.slice(0, 80) : 'error')
+    return { state: 'not_filed' }
+  }
 }
