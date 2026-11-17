@@ -484,6 +484,35 @@ describe('the pure helpers', () => {
     }
   })
 
+  // House rule INTRO_PATTERN (Ruling, Krish, 2026-11-17): the title question each intro speaks rides the script check, bound to the words.
+  it('keeps the title line each intro speaks, bound to its script hash, and refuses a malformed one', () => {
+    const sha = 'a'.repeat(64)
+    const { patch, problems } = parseMakingPatch({ script_check: { passed: true, problems: [], title_line: { long: { title: 'Is it AI music or is it human music?', script_sha256: sha, extra: 1 } } } }, '2026-11-17T09:00:00Z')
+    expect(problems).toEqual([])
+    expect(patch.script_check?.title_line).toEqual({ long: { title: 'Is it AI music or is it human music?', script_sha256: sha } })
+    for (const bad of [{ long: { title: 'x', script_sha256: 'nope' } }, { huge: { title: 'x', script_sha256: sha } }, { long: { title: 'a\nb', script_sha256: sha } }, 'title']) {
+      const out = parseMakingPatch({ script_check: { passed: true, problems: [], title_line: bad } }, '2026-11-17T09:00:00Z')
+      expect(out.problems.some(p => /script_check\.title_line/.test(p)), JSON.stringify(bad)).toBe(true)
+    }
+  })
+
+  // Ruling (Krish, 2026-11-17): a 90-second short cut that sends viewers to the 5-minute video, for one piece
+  // (config/short-cuts.json). The lift rides the script check as short_cut and the Scripts step says so.
+  it('a lifted short cut is kept on the script check and named on the Scripts step, with its length, close and reason', () => {
+    const reason = 'A 90-second cut that sends viewers to the 5-minute video, as he asked.'
+    const close = 'The full five-minute video is on my channel.'
+    const { patch, problems } = parseMakingPatch({ script_check: { passed: true, problems: [], cuts: ['long', 'short'], short_cut: { words: 260, close, reason } } }, '2026-11-17T09:00:00Z')
+    expect(problems).toEqual([])
+    expect(patch.script_check?.short_cut).toEqual({ words: 260, close, reason })
+    const note = (check: any) => makingSteps({ state: 'drafting', meta: { making: { script_check: check } } }).find(s => s.key === 'scripts')!.note
+    expect(note(patch.script_check)).toBe(`short cut lifted to about 1:44 (260 words), ending on "${close}": ${reason}; long and short`)
+    for (const bad of [{ words: 75, close, reason }, { words: 400, close, reason }, { words: 260, close: '', reason }, { words: 260, close, reason: '' }, { words: 260, close, reason: 'one\ntwo' }, 'ninety seconds']) {
+      const out = parseMakingPatch({ script_check: { passed: true, problems: [], short_cut: bad } }, '2026-11-17T09:00:00Z')
+      expect(out.problems.some(p => /script_check\.short_cut/.test(p)), JSON.stringify(bad)).toBe(true)
+      expect(out.patch.script_check).toBeUndefined()
+    }
+  })
+
   it('makingSteps: only takes of an older script, on both cuts, leave Record at now', () => {
     const steps = makingSteps({ state: 'review', meta: { making: { script_check: { passed: true, checked_at: 'x', problems: [], hashes: { long: SHA('a'), short: SHA('b') } }, recordings: [
       { cut: 'long', path: 'a', at: '2026-10-12T08:00:00Z', script_sha256: SHA('c') },

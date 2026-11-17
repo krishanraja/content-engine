@@ -18,7 +18,8 @@ const press = (over: Record<string, unknown> = {}) => ({
   pick: ID, use: 'offday', day: 'thu', approved: true, copy_sha256: 'c'.repeat(64), format: 'Said to camera', source: 'Your idea',
   option_id: 'mine', week: WEEK, at: '2026-11-01T09:00:00Z', kind: 'recorded', piece_id: PIECE, series: 'under_the_hood',
   style: 'to_camera', script: SCRIPT, script_sha256: SHA, folder_title: 'Thu 5 Nov under.the.hood - One boring job',
-  title: 'Thu 5 Nov - 90-second - One boring job', readers: ['Reader A', 'Reader B'], ...over,
+  title: 'Thu 5 Nov - 90-second - One boring job', readers: ['Reader A', 'Reader B'],
+  tone_floor: { reader: 'a fresh separate reader', verdict: 'pass', why: 'story, names, scenes, twist and close all at the floor' }, ...over,
 })
 
 /** The two calls the press makes: one content_ideas row (read, then a guarded update) and board_save. */
@@ -55,7 +56,7 @@ describe('the board takes a press on an off-day piece he records', () => {
     expect(validBody('queue', ID, press())).toBe(true)
   })
   it('a plain off-day press still writes as it did', () => {
-    const { kind, piece_id, series, style, script, script_sha256, folder_title, title, readers, ...plain } = press()
+    const { kind, piece_id, series, style, script, script_sha256, folder_title, title, readers, tone_floor, ...plain } = press()
     expect(validBody('queue', ID, plain)).toBe(true)
   })
   it('refuses a send of its own, a style or series it does not know, and a piece that is not a uuid', () => {
@@ -95,6 +96,7 @@ describe('after his Approve the piece is on its day and the words go to Teleprom
     expect(db.row.meta.offday).toMatchObject({ day: 'thu', date: '2026-11-05', doc: `queue/${ID}`, style: 'to_camera', script_sha256: SHA, approved_by: 'Krish', prior_state: 'seeded' })
     expect(db.row.meta.making.script_check).toMatchObject({ passed: true, one_cut: true, cuts: ['short'], hashes: { short: SHA } })
     expect(db.row.meta.making.script_check.read_back.short).toMatchObject({ script_sha256: SHA, found: 'nothing lost', readers: ['Reader A', 'Reader B'] })
+    expect(db.row.meta.making.script_check.tone_floor.short).toMatchObject({ script_sha256: SHA, reference_sha256: 'a6459ee2a98b8a059472c57a6d76129daf3fcf20d95bbd494e43f3ab9aa34a03', verdict: 'pass' })
     expect(sent).toHaveLength(1)
     expect(sent[0]).toMatchObject({ piece_id: PIECE, day: 'thu', folder_title: body.folder_title, approval: { id: ID, updated_by: 'Krish' } })
     expect(sent[0].scripts).toEqual([expect.objectContaining({ cut: 'short', title: body.title, sha256: SHA })])
@@ -102,6 +104,19 @@ describe('after his Approve the piece is on its day and the words go to Teleprom
     expect(out?.send).toMatchObject({ status: 'sent', date: '2026-11-05', recorded: true })
     expect(db.saves[0].p_body.send.status).toBe('sent')
     expect(makingSteps({ id: PIECE, state: db.row.state, meta: db.row.meta }).find(s => s.key === 'scripts')).toMatchObject({ state: 'done', note: 'short; in Teleprompter' })
+  })
+
+  it('holds the send, but still puts the piece on its day, when the tone floor is missing or not a pass', async () => {
+    for (const [what, over] of [['missing', { tone_floor: undefined }], ['a fail', { tone_floor: { reader: 'a fresh separate reader', verdict: 'fail', why: 'a list of exhibits' } }]] as const) {
+      const db = fakeDb({ id: PIECE, state: 'seeded', scheduled_for: null, lane_slot: null, meta: {}, buried_at: null, updated_at: 't0' })
+      let calls = 0
+      const out = await afterPress(db as any, { week: WEEK, collection: 'queue', id: ID, body: await preparePress('queue', ID, press(over)), who: 'Krish', saved: { ok: true, revision: 1 } },
+        { send: async () => { calls++; return { status: 'sent' as const } }, now: () => '2026-11-01T09:00:05Z' })
+      expect(calls, what).toBe(0)
+      expect(out?.send, what).toMatchObject({ status: 'held' })
+      expect(String(out?.send?.error), what).toMatch(/has not passed the tone floor/)
+      expect(db.row.scheduled_for, what).toBe('2026-11-05')
+    }
   })
 
   it('an idea already on another day stays there, and nothing is sent', async () => {

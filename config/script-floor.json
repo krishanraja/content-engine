@@ -1,0 +1,37 @@
+{
+  "reference": {
+    "long": {
+      "file": "config/script-floor/ai-music-long.said.txt",
+      "sha256": "c8ded6f8268569a5c07ad2073f635ec07d3e556c269b28e2ca07ce6494bc2466"
+    },
+    "short": {
+      "file": "config/script-floor/ai-music-short.said.txt",
+      "sha256": "a6459ee2a98b8a059472c57a6d76129daf3fcf20d95bbd494e43f3ab9aa34a03"
+    }
+  },
+  "ruling": {
+    "by": "Krish",
+    "on": "2026-11-17",
+    "typed_in": "a Claude Code session",
+    "words": [
+      "these scripts are awful - they make zero sense and have regressed a huge amount. I want the quality of the AI Music or Human Music script (what I actually said on film) to be the floor for all future scripts tonally",
+      "dont just file this to the taste ledger, I need harder guarantees than that. this is totally insane after the amount of work we have done together on content"
+    ],
+    "fun": {
+      "date": "2026-11-17",
+      "words": "remember - every script should be great fun to deliver, and to consume, like the AI Music one was"
+    }
+  },
+  "qualities": [
+    "a. One story followed from start to end, told in order like a story, never a list of exhibits.",
+    "b. Every person, product and term is named and explained in plain words the first time, never anonymised to 'a firm' or 'a brand'.",
+    "c. The narrator walks the listener through ('So I've been digging into...', 'this is the bit most people miss'), with his own asides and opinions.",
+    "d. Concrete scenes the listener can picture: what you type, what you press, what comes back.",
+    "e. A real twist or favourite detail, paid off.",
+    "f. A close that reframes the opening question and says what he will do.",
+    "g. Every line makes sense heard once with no visuals.",
+    "h. Great fun to deliver and to consume, like the AI Music take: lines he enjoys saying out loud, with play, rhythm and jokes, and a listener who is entertained, not lectured.",
+    "i. The intro hits the four beats in config/script-floor/intros.json as well as his two reference intros do; a 90-second cut opens with the same four beats compressed, never a different opening."
+  ],
+  "pass": "at or above the floor on every quality"
+}

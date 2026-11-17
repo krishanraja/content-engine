@@ -690,6 +690,15 @@ def recorded_problems(o, week=None):
         out.append('read_back is {"readers": [two to six fresh readers], "found": "nothing lost"} for these exact words (house rule R7)')
     elif rb.get('script_sha256') not in (None, making.script_hash(script)):
         out.append('read_back.script_sha256 is not the hash of these words: they changed after the readers heard them')
+    # The tone floor (Ruling, Krish, 2026-11-17): a separate reader found these exact words at or above his AI Music short. From the week
+    # after the ruling every option carries it; the server holds the Teleprompter send without it either way.
+    if bool(week) and str(week) >= SHORT_FROM_WEEK:
+        tf = o.get('tone_floor') if isinstance(o.get('tone_floor'), dict) else {}
+        if tf.get('verdict') != 'pass' or not str(tf.get('reader') or '').strip() or not str(tf.get('why') or '').strip():
+            out.append('tone_floor is {"reader": a fresh separate reader, "verdict": "pass", "why": one line per quality, "script_sha256"} '
+                       'against config/script-floor/ai-music-short.said.txt for these exact words (config/script-floor.json)')
+        elif tf.get('script_sha256') != making.script_hash(script):
+            out.append('tone_floor.script_sha256 is not the hash of these words: they changed after the reader judged them')
     return out
 
 
@@ -702,7 +711,8 @@ def recorded_fields(o):
     rb = o['read_back']
     return {'kind': 'recorded', 'style': o['style'], 'piece_id': str(o['piece_id']).lower(), 'series': o['series'],
             'title': ' '.join(str(o['title']).split()), 'script': script, 'script_sha256': making.script_hash(script),
-            'read_back': {'readers': [str(r).strip() for r in rb['readers']], 'found': 'nothing lost'}}
+            'read_back': {'readers': [str(r).strip() for r in rb['readers']], 'found': 'nothing lost'},
+            **({'tone_floor': {k: ' '.join(str(o['tone_floor'][k]).split()) for k in ('reader', 'verdict', 'why')}} if isinstance(o.get('tone_floor'), dict) else {})}
 
 
 def finished(o):

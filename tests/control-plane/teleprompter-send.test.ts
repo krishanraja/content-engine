@@ -156,7 +156,8 @@ with tempfile.TemporaryDirectory() as tmp:
         (t / f'{cut}.md').write_text(text)
     sha = {cut: making.script_hash(text) for cut, text in words.items()}
     read = {cut: {'script_sha256': s, 'at': 'x', 'by': 'C', 'readers': ['A', 'B'], 'found': 'nothing lost'} for cut, s in sha.items()}
-    record = {'script_check': {'passed': True, 'checked_at': 'x', 'problems': [], 'hashes': sha, 'read_back': read}}
+    tone = {cut: {'script_sha256': s, 'reference_sha256': making.tone_floor_reference(cut), 'reader': 'R', 'verdict': 'pass', 'why': 'w', 'at': 'x'} for cut, s in sha.items()}
+    record = {'script_check': {'passed': True, 'checked_at': 'x', 'problems': [], 'hashes': sha, 'read_back': read, 'tone_floor': tone}}
     def board(docs):
         def call(method, path, body):
             if path.startswith('/api/board/'):
@@ -170,7 +171,14 @@ with tempfile.TemporaryDirectory() as tmp:
             out[name] = 'planned: ' + ', '.join(c['action'] for c in p['cuts'])
         except ts.TeleprompterError as error:
             out[name] = str(error)
+    record['script_check']['tone_floor'] = {'short': tone['short']}
+    try:
+        ts.plan(pid, [t / 'long.md', t / 'short.md'], board([his(sha)]), cfg, post_path=t / 'post.json', workbench=t / 'WORKBENCH.md')
+        out['no tone floor'] = 'planned'
+    except ts.TeleprompterError as error:
+        out['no tone floor'] = str(error)
 print(json.dumps(out))`)
+    expect(refusals['no tone floor']).toMatch(/the 5-minute script' current words have not passed the tone floor/)
     expect(refusals.none).toMatch(/^nothing goes to Teleprompter until Krish approves those exact words .*the 5-minute script has no approval from him/)
     expect(refusals.session).toMatch(/written by someone else and do not count/)
     expect(refusals['other words']).toMatch(/he approved other words for the 90-second script/)
