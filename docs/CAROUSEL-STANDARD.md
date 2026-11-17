@@ -75,7 +75,8 @@ and Notes rules below and the palette. Off-day voiceover shorts, and meme videos
 content-engine session: the session writes the script and the signed spec, Codex builds the devices and plates from
 cards, `ve` renders, and a separate reviewer watches and listens before it is called ready (`docs/ve/ENGINE.md`,
 `docs/ve/RUNBOOK.md`). The voice is an ElevenLabs voice from `config/voice-bank.json` (his Krish v2 voice by default,
-Krish Remix as the backup, or a stock voice he approved), the one he picked on the Content Board (Pick the voice), with a light off-day track under it
+Krish Remix as the backup, or a stock voice he approved), the one he picked on the Content Board (Pick the voice), or his own take when he picks
+Record it myself there (then the script goes to his Teleprompter once he approves its words, never ElevenLabs), with a light off-day track under it
 (Pick the music under the voice). Every carousel carries an approved audio track the same way: the off-day rotation in
 `config/music-library.json`, his Pick the track on the board, at the one bed shape (`config/music-bed.json`). A session
 never picks either for him (Krish, 2026-11-17: "for all voiceovers and carousels, I want there to either be an audio

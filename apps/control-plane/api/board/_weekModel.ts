@@ -6,7 +6,7 @@ import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
 import { thumbsPress } from './_thumbs.js'
 import { makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
 import type { DayStyle, StyleLayer } from './_style.js'
-import { audioPresses } from './_audio.js'
+import { audioPresses, soundLine } from './_audio.js'
 import { canonicalUrl, titleNorm } from '../_text.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
@@ -536,7 +536,12 @@ function postItem(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const it = postItemBase(m, d, o)
   const settled = it.missed || o.stage?.state === 'live' || o.stage?.state === 'scheduled'
   const sound = settled ? [] : audioPresses({ key: o.doc_id, kind: it.kind }, m.picks || [])
-  return sound.length ? { ...it, others: [...(it.others || []), ...sound] } : it
+  // The session making it reads his picks in its prompt: an ElevenLabs voice, or his own take through Teleprompter.
+  const said = soundLine({ key: o.doc_id, kind: it.kind }, m.picks || [])
+  const told = <T,>(a: T): T => (said && isObj(a) && (a as Body).kind === 'prompt' && typeof (a as Body).prompt === 'string'
+    ? { ...a, prompt: `${(a as Body).prompt}${said}` } : a)
+  const out = said ? { ...it, next: told(it.next), others: (it.others || []).map(told) } : it
+  return sound.length ? { ...out, others: [...(out.others || []), ...sound] } : out
 }
 function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const raw = rawOption(m, d.day, o.id)
