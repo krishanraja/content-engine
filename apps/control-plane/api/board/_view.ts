@@ -952,7 +952,11 @@ export function buildView(i: ViewInputs): WeekView {
   }
   // What went out or is on its way around the week, so an idea that retells it leaves the ideas board (contract 1.17.0).
   const recentOut = recentOutOf({ week: i.week, ideas: i.ideas, plans: i.plans, pieces: i.pieces }, days, i.all_items ?? null, i.recent_pieces ?? [])
-  const built = weekModel(days, { week: i.week, work: workByScope(i.overlay ?? null), today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut, picks: i.picks, decisions,
+  // An off-day video post's look, motion and caption choices, from its own record's meta (_offdayPiece.ts; Krish,
+  // 2026-11-17: "at no point does a voiceover short give me the same controls as a mon/wed/fri piece"). A short only.
+  const offdayStyle = (pieceId: string, meta: unknown) => dayStyle({ pieceId, meta: isObj(meta) ? meta : {}, formats: ['short_video'], points: null,
+    motion: i.motion || [], looks: i.formats?.production || [], recommendedLook: null })
+  const built = weekModel(days, { week: i.week, work: workByScope(i.overlay ?? null), today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, offdayStyle, locksToSign, recentOut, picks: i.picks, decisions,
     scripts: i.scripts ?? {}, lockReads: Object.fromEntries(Object.keys(decisions).map(id => {
       const lk = Object.values(i.locks).find(t => t && lockPieceId(t) === id)
       // Signed by its own last line or by his words on the board (signedLocks counts both; 17 Nov: Tue 17 was signed in his
@@ -1093,8 +1097,13 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   const weekIdeas = weekSha === null ? Promise.resolve(null)
     : fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/${weekSha || `offday-revise/${week}`}/docs/plans/${week}-week/ideas.json`)
   const [pieces, picks, queue, history, ideasText, nowText, runs, ...locks] = await Promise.all([
-    db.from('content_ideas').select('id, idea, thesis, scheduled_for, lane_slot, state, buried_at, body, meta, updated_at')
-      .gte('scheduled_for', week).lte('scheduled_for', dayDate(week, 'sun')).then(r => (r.error ? [] : r.data || [])),
+    // The week's pieces, and the records of its off-day video posts, linked to it and never scheduled (_offdayPiece.ts).
+    Promise.all([
+      db.from('content_ideas').select('id, idea, thesis, scheduled_for, lane_slot, state, buried_at, body, meta, updated_at')
+        .gte('scheduled_for', week).lte('scheduled_for', dayDate(week, 'sun')).then(r => (r.error ? [] : r.data || [])),
+      db.from('content_ideas').select('id, idea, thesis, scheduled_for, lane_slot, state, buried_at, body, meta, updated_at')
+        .eq('meta->offday_link->>week', week).limit(60).then(r => (r.error ? [] : r.data || [])),
+    ]).then(([on, linked]) => [...on, ...linked.filter(x => !on.some(y => y.id === x.id))]),
     db.from('board_documents').select('doc_id,body,updated_by,updated_at,revision').eq('week', week).eq('collection', 'picks').then(r => (r.error ? [] : r.data || [])),
     db.from('board_documents').select('doc_id,body,updated_by,updated_at,revision').eq('week', week).eq('collection', 'queue').then(r => (r.error ? [] : r.data || [])),
     db.from('board_history').select('collection,doc_id,updated_at,updated_by').eq('week', week).order('updated_at', { ascending: false }).limit(12)

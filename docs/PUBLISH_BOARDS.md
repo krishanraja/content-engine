@@ -770,6 +770,31 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
     Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
     held, still counts. A `send` written by anyone else is still refused.
 
+- **17 Nov 2026, no contract change: two system fixes on every day.** Ruling (Krish, 2026-11-17): "well ultimately all
+  this feedback applies to all relevant days, i told you i do not want one off fixes but system upgrades".
+  - **An off-day video post gets a piece's production picks.** Every off-day post cut on the ve route (a voiceover short,
+    a meme video, a good-news short; `videoOffday`) offers the look, motion and caption presses a series piece offers,
+    until it is scheduled. Each press carries the post's record id and `item`, its document. The record id is the piece id
+    its option names, else one derived from the week and the document (`offdayPieceId`, the same on every read). His
+    Approve on the option makes the record (`syncApprove`, `linkOffdayPiece`); for a post approved before 17 Nov, his first
+    pick makes it, and only when the board itself offers that press with that id on that post. The record is seeded and
+    linked to its week in `meta.offday_link`, never scheduled, so it is never a second card on the day; the view reads
+    linked records beside the week's pieces, and the post's prompt reports to the record once it exists.
+    `api/board/_offdayPiece.ts`.
+    - Krish, 2026-11-17: "at no point does a voiceover short give me the same controls as a mon/wed/fri piece in terms of
+      the motion, captions etc etc. why not?"
+  - **His Approve scripts counts the moment he presses it, and a held send is said.** The server's own Teleprompter answer
+    no longer cancels his approval (`asWritten`, 1.22.0). When that answer is not `sent` and the making record does not
+    show the scripts in his Teleprompter since, every card holding the piece (`heldSend`: the day's own piece, a placed
+    piece, an off-day post he records) says in one line that his approval counts and why the send was held, and its next
+    action is the Claude prompt whose session checks the scripts (`making.py scripts`), has two fresh readers read them
+    back, and sends exactly the approved words (`teleprompter_send.py`).
+    - Krish, 2026-11-17: "the button does not seem to work. Would it not just send to teleprompter directly and change the
+      board state immediately?"
+  - **A new typed approval goes under its piece's own name.** A write of `picks/<day>-<lock|scripts>-words` without the
+    piece suffix is refused; saved ones are still read. (On 17 Nov the history of `picks/tue-scripts-words` showed no
+    approval was lost there: its first revision was already the habits voiceover's.)
+
 - **1.20.0 (17 Nov 2026)** added **`audio` on a choice's option**: a sample to hear before he picks, a same-site path
   (an off-day track's brand-kit file through `GET /api/board/sign-offs?file=<drive id>`, or a voice's ElevenLabs preview
   through `GET /api/board/sign-offs?voice=<bank id>`, a redirect to the bank's own preview clip; no sample spends a
