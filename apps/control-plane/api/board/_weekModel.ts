@@ -656,7 +656,8 @@ export function scriptsPress(week: string, day: string, pieceId: string, title: 
  *  review is left as it is. */
 export function scriptsOnCard(m: ModelInputs, d: DayView, it: ModelItem): ModelItem {
   if (it.missed || it.stage.key === 'live') return it
-  const pid = it.piece_id ?? (it.type === 'post' && it.kind === 'voiceover' ? postRecord(m, d, it.key) : null)
+  // Every off-day kind once it has its record (#804; Krish, 2026-11-17: "there is copy on every single post").
+  const pid = it.piece_id ?? (it.type === 'post' ? postRecord(m, d, it.key) : null)
   if (!pid) return it
   const filed = m.scripts?.[pid] ?? []
   if (!filed.length) return it

@@ -3,6 +3,7 @@ import { thisWeek } from './board-week-model.test'
 import { buildView, scriptsStateOf, typedApproval, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { APPROVAL_WORDS, backBody, backDocId, hisOnlyRefusal, namesApproval, namesTakeBack, takenBackAt, validBody, wordsBody, wordsDocId } from '../../apps/control-plane/api/board/_contracts'
 import { approval } from './_approvals'
+import { offdayPieceId } from '../../apps/control-plane/api/board/_offdayPiece'
 
 // Three rulings, 17 Nov, made system rules for every card on every day:
 // - "I want the board in a state where I can see the script and edit it, and then press approve."
@@ -127,7 +128,8 @@ describe('an off-day post he records shows its script on its card for his Approv
     expect(it.decision).toBe(true)
     expect(it.next).toMatchObject({ kind: 'press', label: 'Read and approve the script', id: wordsDocId('tue', 'scripts', HABITS), body: { piece_id: HABITS } })
     expect((it.next as Body).scripts.cuts[0].text).toBe('You can\'t sack an AI.')
-    expect(it.line).toMatch(/The script is on the card: read it, edit it if you like, and approve it\.$/)
+    // Built by the off-day card's own scripts section (#804, scriptsReady); scriptsOnCard leaves a card that offers it.
+    expect(it.line).toMatch(/The script is ready for your Approve: 90-second cut script, Tue 17 voiceover \(for your Approve\)\.$/)
     expect(it.others.some((a: Body) => a.kind === 'prompt')).toBe(true)
   })
   it('the real Tue 17 document does not count, so his Approve is still asked; one in his approval words moves the card on', () => {
@@ -136,5 +138,26 @@ describe('an off-day post he records shows its script on its card for his Approv
     const approved = week([{ ...scriptsDoc(HABITS, 'Approve the script'), body: { ...scriptsDoc(HABITS, 'Approve the script').body, texts: { short: 'You can\'t sack an AI.' }, titles: { short: 'S' } } }])
     expect(approved.next).toMatchObject({ op: 'takes-in' })
     expect(approved.others.map((a: Body) => a.label)).toEqual(expect.arrayContaining(['Edit the script', 'Take back my approval']))
+  })
+})
+
+describe('every off-day kind with copy on its record keeps Edit and Take back once approved (Krish, 2026-11-17: "there is copy on every single post")', () => {
+  it('an approved meme offers Edit the script and Take back my approval; with no record, nothing is added', () => {
+    const build = (withRecord: boolean) => {
+      const i = thisWeek()
+      i.now = new Date('2026-11-09T09:00:00Z')
+      const id = offdayPieceId('2026-11-09', 'off-tue-homework', {})
+      if (withRecord) i.pieces = [...i.pieces, { id, idea: 'One AI does the homework', scheduled_for: null, state: 'seeded', buried_at: null, body: '', updated_at: AT,
+        meta: { offday_link: { week: '2026-11-09', day: 'tue', item: 'off-tue-homework' } } }] as never
+      ;(i as Body).scripts = { [id]: [{ cut: 'short', id: 'm1', title: 'Meme copy, short cut', text: 'One AI does the homework, another marks it.', at: '2026-11-08T10:00:00Z' }] }
+      i.picks = [...i.picks, { doc_id: wordsDocId('tue', 'scripts', id), updated_by: 'Krish', updated_at: '2026-11-08T11:00:00Z',
+        body: { kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: id, texts: { short: 'One AI does the homework, another marks it.' }, titles: { short: 'S' },
+          folder_title: 'F', ...said('approve', '2026-11-08T11:00:00.000Z') } }] as never
+      return buildView(i).model!.days.find(d => d.day === 'tue')!.items.find(x => x.key === 'off-tue-homework')!
+    }
+    const meme = build(true)
+    expect(meme.others.map((a: Body) => a.label)).toEqual(expect.arrayContaining(['Edit the script', 'Take back my approval']))
+    // can fail: no record, so no copy on file to show
+    expect(build(false).others.some((a: Body) => a.label === 'Take back my approval')).toBe(false)
   })
 })
