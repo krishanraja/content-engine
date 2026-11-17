@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { EngineObjectSchema, EngineEventSchema } from '../../props'
 import type { DeviceProps } from '../types'
-import { palettePixels, pixelGeometry, StageSVG, stageLayout, stageState, drawCanvas } from './index'
+import { labelWidth, palettePixels, pixelGeometry, StageSVG, stageLayout, stageState, drawCanvas } from './index'
 import fixture from './fixture.json'
 const tokens = { ink: 'navy', inkDeep: 'midnightblue', inkSoft: 'slategray', cream: 'ivory', mint: 'seagreen', channel: 'coral' }
 function props(aspect: DeviceProps['aspect'] = '9:16'): DeviceProps {
@@ -44,6 +44,20 @@ describe('pixel_stage', () => {
     expect(stageState({ ...p, frame: 76 }).sprites[0]!.mint).toBe(true)
     expect(stageState({ ...p, frame: 94 }).sprites[0]!.mint).toBe(false)
     expect(stageState({ ...p, frame: 168 }).visible).toBe(false)
+  })
+  // Claude's check of the rebuild (17 Nov): on a wide frame the sprite lands on the first cell, under the count, and the
+  // count was cream on the cream picture. It now has an ink backing that covers both lines, drawn above the sprites.
+  it('draws the count and its source on an ink backing, above the sprites, in both shapes', () => {
+    for (const aspect of ['9:16', '16:9'] as const) {
+      const p = props(aspect), rasters = raster(p), g = pixelGeometry(p, rasters)
+      const svg = renderToStaticMarkup(React.createElement(StageSVG, { ...p, rasters }))
+      const backing = /<rect data-label-backing="" x="([\d.-]+)" y="([\d.-]+)" width="([\d.]+)" height="([\d.]+)"[^>]*fill="navy"/.exec(svg)
+      expect(backing).not.toBeNull()
+      const [x, y, w, h] = backing!.slice(1).map(Number)
+      expect(x!).toBeLessThanOrEqual(g.labelX); expect(x! + w!).toBeGreaterThanOrEqual(g.labelX + labelWidth(g))
+      expect(y!).toBeLessThanOrEqual(g.labelY - 30); expect(y! + h!).toBeGreaterThanOrEqual(g.labelY + 36)
+      expect(svg.indexOf('data-label-backing')).toBeGreaterThan(svg.lastIndexOf('width="1" height="1"'))
+    }
   })
   it('renders identical stills in both shapes with constant sixfold pixels and token-only surfaces', () => {
     for (const aspect of ['9:16', '16:9'] as const) {
