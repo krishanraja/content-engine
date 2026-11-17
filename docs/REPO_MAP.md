@@ -4916,6 +4916,25 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function headlineState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/iso_world/index.tsx`
+
+- `export { worldState, project, routePoint } from './state'`
+- `const TALL_REGION`
+- `function worldGeometry(p: DeviceProps)`
+- `function Device(p: DeviceProps)`
+- `function drawCanvas(ctx: CanvasRenderingContext2D, p: DeviceProps, images: Readonly<Record<string, CanvasImageSource>> …`
+
+### `apps/renderer/src/engine/devices/iso_world/schema.ts`
+
+- `const ParamsSchema`
+- `const FillSchema`
+
+### `apps/renderer/src/engine/devices/iso_world/state.ts`
+
+- `const project = ([a, b]: readonly number[]) =>`
+- `function routePoint(cells: number[][], p: number)`
+- `function worldState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+
 ### `apps/renderer/src/engine/devices/kinetic_stat/index.tsx`
 
 - `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'], ghos…`
