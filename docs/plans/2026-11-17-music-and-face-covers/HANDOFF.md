@@ -1,5 +1,7 @@
 # Music rotation and face-led covers: hand-off to a home-computer session (17 Nov 2026)
 
+Status, later on 17 Nov: steps 1 and 2 are done from the cloud (the tracks went in through `send.py` and the library sync; ledger, rotation and carousel groups are on main). Step 3 waits only on his photos reaching the library (`scripts/post-pack/photos.py`, published by the home computers' pass), then a cloud session fetches them and dispatches the cover cards to Codex.
+
 A cloud session agreed all of this with Krish on 17 Nov 2026. It could not finish two steps from the cloud: the Drive
 connector refuses uploads over about 3.1 MB, and the headshots and Codex sign-in are only reachable from his
 computer. A session on either home computer does the steps below, in order. Krish's words are quoted as he typed them.

@@ -57,9 +57,23 @@ export function bankVoices(bank: unknown = voiceBank): BankVoice[] {
 }
 
 /** The off-day rotation (config/music-library.json "for": "off-day"), in ledger order. */
-export function offdayTracks(library: unknown = musicLibrary): Track[] {
+/** Which tracks a post of this kind is offered (Ruling, Krish, 2026-11-17: "good news stuff should get funky house and
+ *  uplifting tunes from epidemic, advice and tips carousels should get a more gym-type focus track. Video memes keep their
+ *  original sound"): a good-news carousel the funky-house group, a supporting carousel or explainer the gym group, a
+ *  voiceover the light off-day tracks under the voice. A meme is offered none (audioLayers). */
+export type TrackGroup = 'off-day' | 'good_news' | 'tips'
+export function trackGroup(kind: string): TrackGroup {
+  if (kind === 'good_news') return 'good_news'
+  if (kind === 'supporting' || kind === 'explainer') return 'tips'
+  return 'off-day'
+}
+
+/** The tracks of one group (null: every off-day and carousel track, for serving their files and checking a press). */
+export function offdayTracks(library: unknown = musicLibrary, group: TrackGroup | null = 'off-day'): Track[] {
   const list = isObj(library) && Array.isArray(library.tracks) ? library.tracks.filter(isObj) : []
-  return list.filter(t => t.for === 'off-day' && typeof t.id === 'string' && PICK.test(t.id) && t.status !== 'retired')
+  const inGroup = (t: Record<string, unknown>) => group === null ? t.for === 'off-day' || t.for === 'carousel'
+    : group === 'off-day' ? t.for === 'off-day' : t.for === 'carousel' && t.carousel === group
+  return list.filter(t => inGroup(t) && typeof t.id === 'string' && PICK.test(t.id) && t.status !== 'retired')
     .map(t => ({ id: String(t.id), title: String(t.title || t.id), artist: String(t.artist || ''), status: String(t.status || ''),
       drive_file_id: typeof t.drive_file_id === 'string' && DRIVE_ID.test(t.drive_file_id) ? t.drive_file_id : null,
       mood: typeof t.mood === 'string' ? t.mood : null }))
@@ -77,7 +91,7 @@ export function voicePreview(id: string, bank: unknown = voiceBank): string | nu
 
 /** Every Drive id a track sample is served from (GET /api/board/sign-offs?file=), beside the style samples. */
 export function trackFiles(library: unknown = musicLibrary): Set<string> {
-  return new Set(offdayTracks(library).map(t => t.drive_file_id).filter((x): x is string => Boolean(x)))
+  return new Set(offdayTracks(library, null).map(t => t.drive_file_id).filter((x): x is string => Boolean(x)))
 }
 
 /** Which layers a post of this kind is offered: a voiceover short the voice and the bed; a carousel the track. */
@@ -112,9 +126,10 @@ export function audioPresses(item: { key: string; kind: string }, picks: Array<{
         line: cut(`${v.wholeScript ? '' : 'Not yet proven on a whole script. '}${v.line} ${v.why}`, 240), audio: `/api/board/sign-offs?voice=${v.id}` } as { value: string; label: string; line: string; audio?: string })),
         { value: RECORD_MYSELF, label: `Record it myself${picked === RECORD_MYSELF ? ' (picked)' : ''}`,
           line: 'Your own take, not ElevenLabs: the script goes to your Teleprompter once you approve its words, and the cut is made from your recording.' }]
-      : offdayTracks(library).map(t => ({ value: t.id, label: `${t.title}${t.artist ? `, ${t.artist}` : ''}${t.id === picked ? ' (picked)' : ''}`,
+      : offdayTracks(library, trackGroup(item.kind)).map(t => ({ value: t.id, label: `${t.title}${t.artist ? `, ${t.artist}` : ''}${t.id === picked ? ' (picked)' : ''}`,
         line: layer === 'bed' && item.kind === 'voiceover' ? 'Light under the voice: loud open, low and steady under it, louder end (the one bed shape).'
-          : 'Over the carousel, from the off-day rotation (Epidemic Sound, licensed).',
+          : item.kind === 'good_news' ? 'Over the carousel: funky house, uplifting (Epidemic Sound, licensed).'
+          : 'Over the carousel: a gym-energy track (Epidemic Sound, licensed).',
         ...(t.drive_file_id ? { audio: `/api/board/sign-offs?file=${t.drive_file_id}` } : {}) }))
     if (!options.length) return []
     // His pick first, else the default (Record it myself until a voice holds on a whole script), then the rest in order.
@@ -139,7 +154,7 @@ export function audioBody(id: string, body: Body, bank: unknown = voiceBank, lib
   if (!m || body.kind !== 'audio_pick' || body.layer !== m[1] || body.item !== m[2] || 'send' in body) return false
   if (typeof body.pick !== 'string' || !PICK.test(body.pick)) return false
   if (!(typeof body.at === 'string' && Number.isFinite(Date.parse(body.at)))) return false
-  const known = m[1] === 'voice' ? body.pick === RECORD_MYSELF || bankVoices(bank).some(v => v.id === body.pick) : offdayTracks(library).some(t => t.id === body.pick)
+  const known = m[1] === 'voice' ? body.pick === RECORD_MYSELF || bankVoices(bank).some(v => v.id === body.pick) : offdayTracks(library, null).some(t => t.id === body.pick)
   return known && Object.keys(body).every(k => ['kind', 'layer', 'item', 'pick', 'at'].includes(k))
 }
 
@@ -167,7 +182,7 @@ export function soundLine(item: { key: string; kind: string }, picks: Array<{ do
   }
   if (layers.includes('bed')) {
     const t = audioPick(picks, 'bed', item.key)
-    const track = t ? offdayTracks(library).find(x => x.id === t) : null
+    const track = t ? offdayTracks(library, null).find(x => x.id === t) : null
     if (track) lines.push(`${item.kind === 'voiceover' ? 'Music under the voice' : 'Track over the carousel'}: ${track.title} (config/music-library.json ${track.id}), at the one bed shape.`)
   }
   return lines.length ? `\n\nThe sound Krish picked on the board:\n${lines.map(l => `- ${l}`).join('\n')}` : ''

@@ -122,6 +122,10 @@ like you're just off doing more random shit. I asked you to heal the engine, not
 - Deliver the thing asked for first, in the form asked: files he asks for are sent to him as files
   (`SendUserFile`) in the same turn, before anything else.
 - Work handed to another session or tool is theirs. Do not start it yourself, not even "just to check".
+- Never call anything blocked until the documented route has been tried: read the doc the table above names for it
+  (`docs/DRIVE.md` for anything in Drive: `send.py` files through the engine's library), follow the SessionStart
+  notices (the Codex sign-in is yours to run), and when the network refuses a host, ask to allow it
+  (`update_environment`) before reporting it as a wall (`config/failures.json`, F52).
 - Never tell him a cause is found until a test you ran proves it. Write "suspected" until then. A measurement
   must not share the fault it is measuring (seeking by timestamps cannot measure a timestamp problem).
 - Never call a video done from proxy checks. Watch it at full size and hear it against its script first

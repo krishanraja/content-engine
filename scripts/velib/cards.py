@@ -125,7 +125,13 @@ def _piece_motion(fields: dict) -> None:
 # to the brand palette for its day and to the inspiration cards Krish ticked (F26), and a carousel's to its deck, which
 # must pass scripts/carousel_check.py before anything is drawn. The deck's words never go into the card: a venture's
 # card sits in a public repository, so the card carries only the deck's shape.
-VISUAL_KINDS = ('carousel', 'meme', 'notes_image')
+VISUAL_KINDS = ('carousel', 'meme', 'notes_image', 'cover')
+# A face-led cover (Ruling, Krish, 2026-11-17: "yes to the face plan", "actually use codex to draw"): his own accounts
+# (TikTok, X, LinkedIn, Threads, Substack Notes) and the face arm of the YouTube test carry his cutout headshot large,
+# like the Rio Meets reference; Instagram, Facebook and Substack keep the Receipt. The card names the channel and the
+# photos (from scripts/post-pack/photos.py), and is held to the palette's thumbnail_wide and cover_tall formats and the
+# cover standard (docs/production/COVER-STANDARD.md).
+FACE_CHANNELS = ('tiktok', 'x', 'linkedin', 'threads', 'substack-notes', 'youtube')
 
 
 def visual_sections(fields: dict) -> str:
@@ -142,10 +148,33 @@ def visual_sections(fields: dict) -> str:
         datetime.date.fromisoformat(when)
     except ValueError:
         sys.exit(f've card: a {kind} card names the day it posts ("date": YYYY-MM-DD), so it wears that day\'s palette')
-    palette_kind = fields.pop('palette_kind', None) or 'off'
+    palette_kind = fields.pop('palette_kind', None) or ('series' if kind == 'cover' else 'off')
     fmt = 'saturday_good_news' if kind == 'carousel' and fields.pop('good_news', False) else kind
     sys.path.insert(0, str(ROOT / 'scripts'))
     import brand_palette
+    out = ''
+    if kind == 'cover':
+        channel = str(fields.pop('channel', '') or '')
+        photos = fields.pop('photos', None) or []
+        if channel not in FACE_CHANNELS:
+            sys.exit(f've card: a cover card names its channel, one of {", ".join(FACE_CHANNELS)} (Instagram, Facebook and '
+                     'Substack keep the Receipt, Ruling, Krish, 2026-11-17)')
+        if not photos:
+            sys.exit('ve card: a cover card names the headshot cutouts it may use ("photos", from .cache/photos via '
+                     'scripts/post-pack/photos.py fetch)')
+        for f in ('thumbnail_wide', 'cover_tall'):
+            out += (f'\n## Brand ({f}, {palette_kind}, {when}; config/brand-palette.json, Ruling, Krish, 2026-11-12)\n'
+                    f'{json.dumps(brand_palette.expect(when, f, palette_kind), sort_keys=True)}\n')
+        out += (f'\n## Face (channel {channel}; Ruling, Krish, 2026-11-17)\n'
+                'His cutout headshot fills about a third of the frame, cut out on the series colour, never a circle; the '
+                'headline is the largest thing (at most 7 words, docs/production/COVER-STANDARD.md); at most three parts '
+                'besides it; no badge; his name never appears. Use only these photos, unedited apart from scale and '
+                'position: ' + ', '.join(str(p) for p in photos) + '.\n'
+                'Draw both sizes: 1280x720 and 1080x1920, the tall one clear of the 3:4 grid crop (scripts/channel_safe.py).\n')
+        out += ('Colours and type only from the brand tokens; the mark is the official file, sized and placed, never type.\n'
+                '\n## References (the inspiration cards Krish ticked; build to them, never copy them)\n'
+                + ''.join(f'- {r}\n' for r in refs))
+        return out
     brand = brand_palette.expect(when, fmt, palette_kind)
     if brand is None:
         sys.exit(f've card: config/brand-palette.json has no {fmt} ({palette_kind}) for {when}')

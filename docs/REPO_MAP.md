@@ -2244,7 +2244,9 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `interface Track`
 - `function defaultVoice(bank: unknown = voiceBank): string`
 - `function bankVoices(bank: unknown = voiceBank): BankVoice[]`
-- `function offdayTracks(library: unknown = musicLibrary): Track[]`
+- `type TrackGroup = 'off-day' | 'good_news' | 'tips'`
+- `function trackGroup(kind: string): TrackGroup`
+- `function offdayTracks(library: unknown = musicLibrary, group: TrackGroup | null = 'off-day'): Track[]`
 - `function voicePreview(id: string, bank: unknown = voiceBank): string | null`
 - `function trackFiles(library: unknown = musicLibrary): Set<string>`
 - `function audioLayers(kind: string): AudioLayer[]`
