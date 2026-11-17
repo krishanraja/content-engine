@@ -137,10 +137,27 @@ class ApifyGuardTest(unittest.TestCase):
             return [{'webVideoUrl': f'https://www.tiktok.com/@a/video/{n}', 'text': 'meme', 'authorMeta': {'name': 'a'}} for n in range(50)]
         got = mt.apify_candidates(5, 'token', fetch)
         self.assertEqual(len(got), 5)
-        self.assertEqual(sent['body']['resultsPerPage'], 5)
+        self.assertEqual(sent['body']['resultsPerPage'], 3)  # 5 across two hashtags, rounded up
         self.assertIn('maxItems=5', sent['url'])
+        self.assertIn(f'maxTotalChargeUsd={mt.APIFY_CHARGE_CAP_USD}', sent['url'])
         with self.assertRaises(mt.GatherError):
             mt.apify_candidates(31, 'token', fetch)
+
+    def test_a_later_gather_keeps_the_paid_results(self):
+        """The workflow's paid step runs first; the Claude step's own gather (no --apify) must not lose what it read."""
+        def fetch(url, headers=None, body=None, timeout=None):
+            if 'apify' not in url:
+                raise mt.GatherError('offline')
+            return [{'webVideoUrl': f'https://www.tiktok.com/@a/video/{n}', 'text': 'meme', 'authorMeta': {'name': 'a'}} for n in range(3)]
+        with tempfile.TemporaryDirectory() as tmp:
+            mt.gather(WEEK, plans=tmp, apify={'max_items': 3, 'token': 't'}, fetch=fetch)
+            called = []
+            path, lines = mt.gather(WEEK, plans=tmp, fetch=lambda url, *a, **k: called.append(url) or (_ for _ in ()).throw(mt.GatherError('offline')))
+            doc = json.loads(Path(path).read_text())
+            self.assertFalse([u for u in called if 'apify' in u])
+            self.assertEqual(sum(1 for c in doc['candidates'] if c['found']['place'] == 'tiktok'), 3)
+            self.assertTrue(any(s['source'].startswith('apify:tiktok (read earlier') and s['count'] == 3 for s in doc['sources']))
+        self.assertIn('docs/plans/*-week/meme-template-apify.json', (ROOT / '.gitignore').read_text())
 
 
 if __name__ == '__main__':
