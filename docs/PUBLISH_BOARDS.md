@@ -245,6 +245,13 @@ anywhere" (2026-11-02) for these two decisions and adds nothing else.
   `sendApprovedScripts`, held until the scripts' check and two fresh readers have passed); the Teleprompter gate
   (`_teleprompter.ts typedApproval`, `teleprompter_send.py typed_approval`) counts his press or this document, never
   another session's.
+  Every send names his Teleprompter folder and scripts by the one rule in `config/teleprompter.json` (`folder_name`,
+  `script_title`): "Fri 20 Nov mind.the.gap - <subject>" and "Fri 20 Nov - 5-minute - <subject>". The server works the
+  names out itself from the day's date and the piece's series (`teleprompterNames`, `_presses.ts namedByRule`), whatever
+  names the press carried, on a series day, a piece placed on an off day and a recorded off-day post alike (Ruling,
+  Krish, 2026-11-17: "it doesn't name it correctly under the right naming convention"). A piece whose folder is already
+  on its record keeps that folder: the engine never renames a folder or moves a script (`config/teleprompter.json`
+  never), so a folder named wrongly before 17 Nov is renamed by Krish in the app.
 - **What it never does.** Put an idea on the publish board: his Approve on an idea (`picks/<day>`), his answers on the
   ideas board (`queue`), and the database's gate (`idea_outcomes`, `content_ideas_board_gate`) are unchanged and stay his
   presses alone (`hisOnlyRefusal`: `pick_is_his`, `press_is_his`). Nor any other decision (titles, publish, cuts, the

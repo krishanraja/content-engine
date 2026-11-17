@@ -1,0 +1,4 @@
+Status: Every Teleprompter send from his Approve (series day, a piece placed on an off day, and a recorded off-day post) now names the folder and scripts by the rule in config/teleprompter.json ("Fri 20 Nov mind.the.gap - Subject", "Fri 20 Nov - 5-minute - Subject"), worked out on the server whatever names the press carried. A sweep found the Drive post folders and the research library named to their rules; three Teleprompter folders made on 17 Nov carry the bare piece title, and one piece has two folders.
+Changed: apps/control-plane/api/_teleprompter.ts, apps/control-plane/api/board/_presses.ts, docs/PUBLISH_BOARDS.md, tests/control-plane/board-presses.test.ts.
+Next: Krish renames the three wrongly named Teleprompter folders in the app (the engine may not rename a folder) and says which of the two "Which of your habits" folders to keep.
+North Star check (2026-11-17): holds.
