@@ -1,3 +1,0 @@
-Status: a style still or sample is signed for an hour and handed out again by the instance (private, max-age=1800), so a still Krish hovers again costs no Drive call; a motion style ve cannot draw yet is listed last and its pick refused (409 not_drawable_yet); nine device cards are written for the undrawable styles (seven new in styles-2d and toy 3D, two reworks of the 3D pair to the 13 Nov bar), each held to his floor and his reference cuts' pace; the week fixture is refreshed for the stills recorded since it was frozen.
-Next: queue the nine cards to the Codex lane on his PC with their codex-pool bookings, then check each build, render its test cut, measure it with ve pace and put it to Krish.
-North Star check (2026-11-17): holds.
