@@ -1,5 +1,6 @@
 {
   "devices": {
+    "toy_object": {"verbs": ["enter", "count_to", "add", "move", "highlight", "exit"]},
     "morph_stage": { "verbs": ["enter", "move", "highlight", "exit"] },
     "flat_mechanism": {"verbs": ["enter", "add", "move", "fill", "highlight", "count_to", "exit"]},
     "pixel_stage": {"verbs": ["enter", "add", "move", "count_to", "highlight", "exit"]},
