@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { CAPTIONS, StyleError, dayStyle, motionBank, nextStyle, sampleUrl, saveStyle, stylePick, type MotionModule, type StyleInputs } from '../../apps/control-plane/api/board/_style.js'
+import { CAPTIONS, StyleError, dayStyle, motionBank, nextStyle, sampleUrl, saveStyle, stylePick, undrawableMotion, type MotionModule, type StyleInputs } from '../../apps/control-plane/api/board/_style.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
 vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => false, mediaQualityRollout: () => ({ status: 'candidate_pending_calibration' }) }))
 
@@ -172,6 +172,16 @@ describe('his press on a style', () => {
     expect(refused({ motion: 'ladder' }, null)).toEqual([503, 'styles_unavailable'])
   })
 
+  it('refuses a pick of a style ve cannot draw yet, and still takes his Not this on one', () => {
+    // Krish, 2026-11-17: "Mark them and build all nine." A pick of one rendered the house motion instead.
+    const undrawable = new Set(['undrawn'])
+    const pick = (body: Body) => { try { return stylePick(body, motionIds, undrawable) } catch (e) { return e instanceof StyleError ? [e.status, e.message] : e } }
+    expect(pick({ piece_id: PIECE, motion: 'undrawn' })).toEqual([409, 'not_drawable_yet'])
+    expect(pick({ piece_id: PIECE, motion: 'ladder' })).toEqual({ motion: 'ladder' })
+    expect(pick({ piece_id: PIECE, reject: { layer: 'motion', id: 'undrawn' } })).toEqual({ reject: { layer: 'motion', id: 'undrawn' } })
+    expect(undrawableMotion({ bank: BANK.map(x => ({ ...x, layer: 'motion' })) })).toEqual(new Set(['undrawn']))
+  })
+
   it('keeps what he said before: a Not this takes the pick away, a pick takes a style off the Not this list', () => {
     const before = { look: { production: 'face-with-proof' }, style: { motion: 'ladder', captions: 'pop', rejected: { motion: ['swiss'], captions: [] } } }
     expect(nextStyle(before, { reject: { layer: 'motion', id: 'ladder' } }, 'T')).toEqual({ motion: null, captions: 'pop', rejected: { motion: ['swiss', 'ladder'], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
@@ -272,6 +282,10 @@ describe('POST /api/board/<Monday>/style', () => {
     expect(await press({ motion: 'ladder' }, { row: { ...ROW, scheduled_for: '2026-11-25' } })).toMatchObject({ status: 404, out: { error: 'piece_not_in_week' } })
     expect(await press({ captions: 'nope' })).toMatchObject({ status: 400, out: { error: 'unknown_caption' } })
     expect(await press({ motion: 'nope' })).toMatchObject({ status: 400, out: { error: 'unknown_motion' } })
+    // The bank read from main says which styles ve cannot draw yet: a pick of one is refused and nothing is written.
+    const undrawn = await press({ motion: 'undrawn' })
+    expect(undrawn).toMatchObject({ status: 409, out: { error: 'not_drawable_yet' } })
+    expect(undrawn.state.writes).toBe(0)
     expect(await press({ motion: 'ladder' }, { bank: null })).toMatchObject({ status: 503, out: { error: 'styles_unavailable' } })
     const none = await press({})
     expect(none).toMatchObject({ status: 400, out: { error: 'nothing_to_record' } })

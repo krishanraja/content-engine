@@ -274,7 +274,8 @@ describe('a post scheduled after its day says when it goes, never Missed', () =>
 describe('his production pick on every piece before recording: the look, the motion style and the captions, each one press', () => {
   const MON = '8287846b-6618-4a19-9fb8-23ad4eca2718', WED = 'db9f9f6a-1092-49be-8024-f335e060305a', TUE = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118'
   const mod = (id: string, name: string, extra: Body = {}) => ({ id, name, how: `${name}.`, rules: [], point_types: ['claim'], formats: ['long_video', 'short_video'], fits: 'often', krish_verdict: '', ve_route: ['ve'], ...extra })
-  const motion = [mod('swiss-kinetic-type', 'Swiss grid'), mod('ladder', 'The Ladder', { ve_route: ['needs_device'], krish_verdict: 'liked' }), mod('character-ai-receipts', 'Receipts on the ink desk', { fits: 'sometimes' })]
+  // The ladder, which waits on a device, is first in the bank, so only "drawable first" puts it after Swiss grid.
+  const motion = [mod('ladder', 'The Ladder', { ve_route: ['needs_device'], krish_verdict: 'liked' }), mod('swiss-kinetic-type', 'Swiss grid'), mod('character-ai-receipts', 'Receipts on the ink desk', { fits: 'sometimes' })]
   const looks = [{ id: 'face-with-proof', name: 'Face with proof', pitch: 'x', status: 'live' }, { id: 'fry-talking-head', name: 'The lit talking head', pitch: 'x', status: 'live' }]
   const LOCK = `# Narrative lock\n\npiece_id: ${MON}\n\nThe arc.\n\nSigned by Krish: "signed", 2026-11-10`
   const piece = (id: string, date: string, slot: string, meta: Body = {}) => ({ id, idea: `Piece ${id.slice(0, 4)}`, thesis: 'x', scheduled_for: date, lane_slot: slot, state: 'drafting', buried_at: null, body: '', updated_at: '2026-11-13T22:00:00Z', meta })
@@ -330,6 +331,10 @@ describe('his production pick on every piece before recording: the look, the mot
     // channel's own pick leads and the ladder is never recommended (fleet audit 14 Nov, ve-1).
     expect(labels(it.others[1])[0]).toBe('Swiss grid (recommended)')
     expect(labels(it.others[1])).toContain('The Ladder (not ready yet)')
+    // A style ve cannot draw yet comes last, after every style it can, whatever the bank's order (Krish, 2026-11-17:
+    // "Mark them and build all nine"); the bank lists the ladder before Receipts on the ink desk.
+    expect(labels(it.others[1]).at(-1)).toBe('The Ladder (not ready yet)')
+    expect(labels(it.others[1]).indexOf('The Ladder (not ready yet)')).toBeGreaterThan(labels(it.others[1]).findIndex(l => l.startsWith('Receipts on the ink desk')))
   })
   it('once picked it says so and offers a change; once a take is recorded, no pick is offered', () => {
     const picked = model(buildView(inputs({ look: { production: 'face-with-proof', experiment: 'data-story', inspiration: ['a'], at: '2026-11-14T09:00:00Z' }, style: { motion: 'ladder', at: '2026-11-14T09:00:00Z' } })), 'mon').items[0]
