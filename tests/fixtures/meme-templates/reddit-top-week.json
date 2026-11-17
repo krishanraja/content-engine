@@ -1,0 +1,110 @@
+{
+ "kind": "Listing",
+ "data": {
+  "after": null,
+  "children": [
+   {
+    "kind": "t3",
+    "data": {
+     "over_18": false,
+     "stickied": false,
+     "is_video": true,
+     "post_hint": "hosted:video",
+     "author": "templatemaker",
+     "created_utc": 1764288000,
+     "score": 900,
+     "title": "Dog keeps answering the TV doorbell (template)",
+     "permalink": "/r/MemeTemplatesOfficial/comments/abc123/dog_keeps_answering/",
+     "url": "https://v.redd.it/abc123",
+     "secure_media": {
+      "reddit_video": {
+       "fallback_url": "https://v.redd.it/abc123/DASH_720.mp4?source=fallback",
+       "duration": 12
+      }
+     },
+     "preview": {
+      "images": [
+       {
+        "source": {
+         "url": "https://preview.redd.it/abc123.jpg?width=640&amp;format=pjpg"
+        }
+       }
+      ]
+     }
+    }
+   },
+   {
+    "kind": "t3",
+    "data": {
+     "over_18": false,
+     "stickied": false,
+     "is_video": false,
+     "post_hint": "rich:video",
+     "author": "templatemaker",
+     "created_utc": 1764288000,
+     "score": 900,
+     "title": "Green screen: man slowly closing laptop",
+     "permalink": "/r/MemeTemplatesOfficial/comments/def456/green_screen/",
+     "url": "https://www.youtube.com/watch?v=xyz",
+     "url_overridden_by_dest": "https://www.youtube.com/watch?v=xyz",
+     "thumbnail": "https://b.thumbs.redditmedia.com/def456.jpg"
+    }
+   },
+   {
+    "kind": "t3",
+    "data": {
+     "over_18": false,
+     "stickied": false,
+     "is_video": false,
+     "post_hint": "image",
+     "author": "templatemaker",
+     "created_utc": 1764288000,
+     "score": 900,
+     "title": "A still image template",
+     "permalink": "/r/MemeTemplatesOfficial/comments/ghi789/still/",
+     "url": "https://i.redd.it/ghi789.png"
+    }
+   },
+   {
+    "kind": "t3",
+    "data": {
+     "over_18": true,
+     "stickied": false,
+     "is_video": true,
+     "post_hint": null,
+     "author": "templatemaker",
+     "created_utc": 1764288000,
+     "score": 900,
+     "title": "Adult clip",
+     "permalink": "/r/MemeTemplatesOfficial/comments/jkl000/adult/",
+     "secure_media": {
+      "reddit_video": {
+       "fallback_url": "https://v.redd.it/jkl000/DASH_720.mp4",
+       "duration": 5
+      }
+     }
+    }
+   },
+   {
+    "kind": "t3",
+    "data": {
+     "over_18": false,
+     "stickied": true,
+     "is_video": true,
+     "post_hint": null,
+     "author": "templatemaker",
+     "created_utc": 1764288000,
+     "score": 900,
+     "title": "Pinned rules",
+     "permalink": "/r/MemeTemplatesOfficial/comments/mno111/rules/",
+     "secure_media": {
+      "reddit_video": {
+       "fallback_url": "https://v.redd.it/mno111/DASH_720.mp4",
+       "duration": 5
+      }
+     }
+    }
+   }
+  ]
+ }
+}
