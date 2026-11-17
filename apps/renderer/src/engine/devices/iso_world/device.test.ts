@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
 import type { DeviceProps } from '../types'
-import { Device, TALL_REGION, project, routePoint, worldState, worldGeometry } from './index'
+import { Device, TALL_PICTURE, TALL_READ, project, routePoint, worldState, worldGeometry } from './index'
 import { ParamsSchema } from './schema'
 import fixture from './fixture.json'
 const object=EngineObjectSchema.parse(fixture.objects[0]), events=fixture.events.map(e=>EngineEventSchema.parse(e))
@@ -18,21 +18,26 @@ describe('iso_world',()=>{
       for(const b of s.blocks) expect([b.x,b.y]).toEqual(Object.values(project(b.cell)))
     }
   })
-  // Krish's tall frame keeps what must be read right of x 60, left of x 860 and above the caption box at y 1090; the
-  // view is fitted to the height each block will reach, so a fill never grows a block off frame (Claude's check, 17 Nov).
-  it('fits the whole world inside the readable region at every frame, the fill included, centred in it',()=>{
+  // Krish, 13 Nov, of a 3D set held in a safe band: "the use of the screen space is terrible". The picture fills the
+  // tall slot from y 270 to the caption box's foot at y 1320; only what must be read stays in x 60 to 860, above y 1090.
+  // The view is fitted to the height each block will reach, so a fill never grows a block off frame (Claude's check).
+  it('fills the slot with the world while every label stays readable, at every frame, the fill included',()=>{
     for(const aspect of fixture.aspects as DeviceProps['aspect'][]){
-      const [l,r,t,b]=aspect==='9:16'?[TALL_REGION.left,TALL_REGION.right,TALL_REGION.top,TALL_REGION.bottom]:[0,1920,0,1080]
+      const tall=aspect==='9:16',pic=tall?TALL_PICTURE:{left:0,right:1920,top:0,bottom:1080},read=tall?TALL_READ:{left:0,right:1920,top:0,bottom:1080}
       for(let frame=1;frame<120;frame+=3){
         const g=worldGeometry(props(frame,aspect)),at=([x,y]:number[]):[number,number]=>[g.tx+x!*g.scale,g.ty+y!*g.scale]
         for(const block of g.blocks){
-          for(const poly of block.polys)for(const q of poly.points){const [x,y]=at(q);expect(x).toBeGreaterThanOrEqual(l-1);expect(x).toBeLessThanOrEqual(r+1);expect(y).toBeLessThanOrEqual(b+1)}
-          if(block.label){const [x,y]=at([block.labelX,block.labelY]),half=block.label.length*19*0.62*g.scale/2;expect(x-half).toBeGreaterThanOrEqual(l);expect(x+half).toBeLessThanOrEqual(r);expect(y-19*g.scale).toBeGreaterThanOrEqual(t)}
+          if(!block.label)continue // still falling: a block may enter from above the slot
+          for(const poly of block.polys)for(const q of poly.points){const [x,y]=at(q);expect(x).toBeGreaterThanOrEqual(pic.left-1);expect(x).toBeLessThanOrEqual(pic.right+1);expect(y).toBeLessThanOrEqual(pic.bottom+1)}
+          const [x,y]=at([block.labelX,block.labelY]),half=block.label.length*19*0.62*g.scale/2
+          expect(x-half).toBeGreaterThanOrEqual(read.left);expect(x+half).toBeLessThanOrEqual(read.right)
+          expect(y-19*g.scale).toBeGreaterThanOrEqual(read.top);expect(y).toBeLessThanOrEqual(read.bottom)
         }
       }
-      const g=worldGeometry(props(60,aspect)),xs=g.ground.points.map(q=>g.tx+q[0]!*g.scale)
-      expect((Math.min(...xs)+Math.max(...xs))/2).toBeCloseTo((l+r)/2,0)
     }
+    // The ground spans most of a tall frame's width, not a band inside the words-safe column.
+    const g=worldGeometry(props(60)),xs=g.ground.points.map(q=>g.tx+q[0]!*g.scale)
+    expect(Math.max(...xs)-Math.min(...xs)).toBeGreaterThan(0.8*1080)
   })
   it('draws every label last, on an ink edge, so a block in front never hides it and none is cream on cream',()=>{
     const html=still(props(94)),labels=[...html.matchAll(/<text[^>]*data-label="([^"]+)"[^>]*>/g)]

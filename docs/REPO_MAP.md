@@ -4919,7 +4919,8 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/iso_world/index.tsx`
 
 - `export { worldState, project, routePoint } from './state'`
-- `const TALL_REGION`
+- `const TALL_PICTURE`
+- `const TALL_READ`
 - `function worldGeometry(p: DeviceProps)`
 - `function Device(p: DeviceProps)`
 - `function drawCanvas(ctx: CanvasRenderingContext2D, p: DeviceProps, images: Readonly<Record<string, CanvasImageSource>> …`
