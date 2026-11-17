@@ -115,10 +115,12 @@ describe('his Approve scripts counts the moment he presses it; a held send is sa
     titles: { long: 'L', short: 'S' }, folder_title: 'F', ...said, ...(send ? { send } : {}) })
   const HELD = { at: 'x', by: 'content-engine server', status: 'held', error: "these words have not passed the scripts' check, so nothing was sent: a session checks them" }
 
-  it('says in one line that his approval counts and why the send was held, and names the session that checks and sends', () => {
+  // F50 (Krish, 2026-11-17): in his words, never the engine's, and his Approve is the way on.
+  it('says in plain words that his scripts never reached his Teleprompter, and that Approve sends them', () => {
     const h = heldSend({ pieces: [], picks: [{ doc_id: wordsDocId('tue', 'scripts', FRI), body: approval(HELD) }] }, FRI)!
-    expect(h.line).toBe("You approved the scripts on Tue 17 Nov, and your approval counts. They are not in your Teleprompter yet: the send was held (these words have not passed the scripts' check, so nothing was sent). "
-      + 'Next, a session checks them (making.py scripts), has two fresh readers read them back, then sends exactly the words you approved (teleprompter_send.py).')
+    expect(h.line).toBe('Your approved scripts are saved (Tue 17 Nov) but never reached your Teleprompter: the send before today\'s fix waited on checks that your own words no longer wait on. '
+      + 'Read or edit them, then press Approve to send exactly those words to your Teleprompter.')
+    expect(h.line).not.toMatch(/\.py|making|session/)
   })
 
   it('can fail: a sent approval, none at all, or a making record that shows them in Teleprompter since, says nothing', () => {
