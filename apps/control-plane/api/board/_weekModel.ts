@@ -731,6 +731,14 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
       return { ...base, line, next: stage.next, decision: stage.decision, others: stage.others }
     }
   }
+  // Scripts filed on its own record and not approved yet: his edit and Approve scripts lead, the same press a piece's card
+  // offers (scriptsReady), on every off-day kind and every day (Krish, 2026-11-17: "I want the board in a state where I can
+  // see the script and edit it, and then press approve"; "just add the scripts section to the off-day card").
+  const ready = own && !made && !missed && !scriptsApproval(m.picks || [], own) ? scriptsReady(m, d.day, own, base.title, where) : null
+  if (ready) {
+    return { ...base, line: ready.line, next: ready.press as Action, decision: true,
+      others: [itemPrompt(m.week, { ...base, line: ready.line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format), null, m.decisions?.[own!] ?? null, own) as unknown as PressAction] }
+  }
   return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format), null, own ? m.decisions?.[own] ?? null : null, own), decision: false }
 }
 

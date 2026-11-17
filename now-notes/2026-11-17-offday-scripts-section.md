@@ -1,0 +1,3 @@
+Status: an off-day post with its own engine record now offers its filed scripts for Krish's edit and Approve scripts on its card (postItemBase calls scriptsReady, as pieceItem and placedPieceItem do), on every off-day kind and every day; board-every-card.test.ts holds all three builders to it. First case: the Tue 17 habits voiceover (701a2c55), whose script is filed on its record (material eb036615) and whose earlier typed approval was taken back on his instruction.
+Next: Krish edits and approves the habits voiceover script on its card.
+North Star check (2026-11-17): holds.
