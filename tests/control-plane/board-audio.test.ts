@@ -32,6 +32,8 @@ describe('the options he hears', () => {
     // His own take is always an option, with nothing to play (Krish, 2026-11-17: "I should be able to choose to record
     // manually myself as well").
     expect(opts.at(-1)).toMatchObject({ value: RECORD_MYSELF, label: 'Record it myself' })
+    // A voice not proven on a whole script says so first (Tue 17 Nov: Krish v2 drifted on the full script).
+    expect(opts[0].line).toMatch(/^Not yet proven on a whole script\./)
     expect(opts.at(-1)!.audio).toBeUndefined()
     expect(voice).toMatchObject({ collection: 'picks', id: `audio-voice-${ITEM}`, body: { kind: 'audio_pick', layer: 'voice', item: ITEM }, stamp: ['at'] })
   })
