@@ -238,6 +238,13 @@ export function wordsDocId(day: string, what: 'lock' | 'scripts', pieceId: strin
   return `${day}-${what}-words-${pieceId.toLowerCase().slice(0, 8)}`
 }
 export const WORDS_KIND = { lock: 'sign_lock', scripts: 'approve_scripts' } as const
+/** A typed approval as the session wrote it: without the `send` answer the server adds once it has tried his Teleprompter
+ *  (afterPress). wordsBody refuses `send` from a session; read back, the server's own answer must not unmake his approval
+ *  (Tue 17 Nov's voiceover approval, picks/tue-scripts-words, carried a held send and stopped counting). */
+export function asWritten(body: Record<string, unknown>): Record<string, unknown> {
+  const { send, ...rest } = body
+  return object(send) && send.by === 'content-engine server' ? rest : body
+}
 const LOCK_PATH = /^docs\/plans\/\d{4}-\d{2}-\d{2}-week\/narrative-lock-(mon|tue|wed|thu|fri|sat)\.md$/
 /** His words as a session carries them: verbatim, when and where he typed them, and the session they came from. */
 export function saidInWords(body: Record<string, unknown>): boolean {
