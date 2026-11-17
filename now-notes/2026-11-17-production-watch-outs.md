@@ -1,0 +1,4 @@
+Status: Every past production failure now prints as one technical watch-out for the maker reading it (`python3 scripts/check_failures.py --watch short_video,long_video`, read at ve's S0 and in produce-video), with what stops it now or that nothing does. The 6 to 8 Nov proactive-AI faults are registered (F52 to F55), a smeared picture fails `ve qc picture.smeared` and hand-built filing (`scripts/frame_smear.py`), and the full verify now runs every guard's own test, not just its marker.
+Changed: Krish, 2026-11-17: "i need to turn this in to surgical, precise, technical watch outs for my next batch of productions", then "yes, go ahead and close the gaps in content-engine".
+Next: Krish decides the brand-mark caption rule (hide the mark on full-screen layouts, or keep captions clear of it), so F55 can get its check.
+North Star check (2026-11-17): holds.

@@ -188,6 +188,21 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
   `GET /api/publish/catalogue` serves them to the site (which takes each article's cover from Substack itself). Nothing in ve publishes; a session never edits the site's
   copy of a video by hand.
 
+## Hand-built composites
+
+A one-off composite (Ruling, Krish, 2026-11-10: "One-off composite") is built outside ve, so none of ve's gates see
+it. It carries these itself (`config/failures.json` F52, F54 and av-sync-drift-converted-take):
+
+- **Cues from the forced clocks.** Every cue is timed from the take's two forced-aligner clocks
+  (`<piece>/ve/takes/<take>.json`), never from `script.words.json` or any whisper transcript. Whisper's word times ran
+  3 to 19 frames off his voice (Thursday 5 Nov), and on 7 Nov a composite's cue was planned on them.
+- **Every picture keeps its aspect.** Fit a plate by cover (scale to the larger ratio, then crop the middle) and
+  assert the output's dimensions before the first frame is written. On 8 Nov a plate resized from a one-row crop became
+  stripes across the whole frame.
+- **Two receipts for its exact bytes before filing.** `python scripts/frame_smear.py measure CUT --receipt` and
+  `python scripts/av_sync.py measure CUT --take TAKE --edl EDL --receipt`; `making.py video` refuses a hand-built cut
+  without both, his words on the file notwithstanding.
+
 ## Phase 3: when ve replaces quick-edit (Ruling, Krish, 2026-11-14)
 
 Ruling (Krish, 2026-11-14): the video engine's Phase 3 pass criteria, approved as written in

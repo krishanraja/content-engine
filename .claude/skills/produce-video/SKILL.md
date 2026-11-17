@@ -40,6 +40,8 @@ reaches him, check the finished file against each one, by eye and by ear.
 Preflight first: add `--piece <plan folder or uuid>` to each floor read and to
 `python3 scripts/check_failures.py`, then `python3 scripts/preflight.py <piece>
 --skill produce-video`; from 9 Nov ve refuses without them (docs/learning/README.md).
+Before the storyboard, read `python3 scripts/check_failures.py --watch short_video,long_video`:
+every past production failure as one technical line, with what stops it now or that nothing does.
 
 ## Publish-board routing
 
