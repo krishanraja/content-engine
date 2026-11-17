@@ -1,108 +1,109 @@
-# Wed 18 Nov · under.the.hood · The labs writing everyone's code still buy software · storyboard
+# Wed 18 Nov · under.the.hood · Build or buy your tools in an AI world? · storyboard v2
 
 piece_id: db9f9f6a-1092-49be-8024-f335e060305a
-Made with the scripts, before he records (Krish, 2026-11-09). Scripts: `wed-script-long.md` (732 words, about 5 min), `wed-script-short.md` (vertical, about 30 s). Both pass `story_check.py`. Read back by three fresh readers (Sonnet subagents A, B, C, 17 Nov): each retold the story and the one action; their stumbles (vibe coded, CRM, the BBC joke, Joe and Claude unexplained in the vertical) were fixed after, so those changed lines need a second read-back.
-Evidence: the signed lock, `wed-research.md`, `wed-community.md`, and Krish's round-2 Perplexity research and cost model (17 Nov, filed on the piece).
+Drawn to the scripts Krish approved on 17 Nov ("can you just get the updated scripts in teleprompter?"), now in his teleprompter:
+`wed-script-long.md` (sha256 cad6d8bc…) and `wed-script-short.md` (sha256 79f6eef8…). Both passed the tone floor, the script check and two fresh readers.
+This replaces the trial storyboard (v1, courtroom and receipt), which belonged to the old scripts.
 
 ## The one idea, and the look
 
-A courtroom, told straight-faced. Build and buy each take the stand twice. Every piece of evidence arrives as an exhibit slammed onto the desk: a real logo, a real page, a real number with its date. The joke is in the gap between Joe's confidence and the receipt.
+One week in the life of your Crocodile Hunter engineer, played straight and a little heroic, against one quiet fact: the lab that makes Claude went shopping. The joke lives in the gap between his confidence and the 2am phone call.
 
 | Layer | Choice (proposed; his Pick a style press decides) |
 |---|---|
-| World | A clean ink courtroom drawn in house tokens: the dock, the witness stand, the judge's bench. Flat, enterprise-calm. No cartoon faces (floor, 12 Oct). |
-| Exhibits | Real logos (Krish, 6 Oct: "don't be afraid to use the real logos"), real screenshots of the source pages, each tagged EXHIBIT A, B, C… with source and date. Evidence words at least 40 px tall on 9:16 (F44). |
-| Krish | Full frame on the hook, the "I've spent the week" line, the verdict and the close; a small rounded window elsewhere (bottom right wide, bottom left tall). |
-| Signature device | The itemised receipt (lock experiment): a till printer that keeps printing. |
-| Motion | Proposed `living-ui` for exhibits, hard cuts on his words; one camera move per beat at most. |
+| Krish | Full frame for the intro, his asides ("Honestly…", "I reckon…") and the close; a small rounded window elsewhere (bottom right wide, bottom left tall). |
+| The Crocodile Hunter | A recurring faceless figure: khaki shirt, bush hat, laptop under one arm like a wrestled croc. Never a cartoon face (rejection floor, 12 Oct). Same pose kit every time he appears. |
+| Evidence | Real pages and real logos (Krish, 6 Oct), each marked on the exact words it proves, with source and date. Evidence words at least 40 px tall on 9:16 (F44). |
+| Title | "Build or buy your tools in an AI world?" is the spec's `title_line`: as he says it, the caption words lift out of the caption bar, grow into the title card, hold, then fall back into the captions (Krish, 17 Nov: "seamlessly flowing out of the captions and back in to them again"). |
+| The 2am phone | The one recurring device: a phone on a bedside table, 02:00 on the clock. It rings in his house when he built; it rings at the vendor when Anthropic bought. |
+| Motion | `living-ui` for pages and posts; hard cuts on his words; one camera move per beat at most. |
 | Captions | His pick in `style.captions`; never repeat the line being said (F42); marks land on the words they name (F41). |
 | Music | NO CURVES (Instrumental), `no-curves-instrumental`, one bed shape (F40). |
-
-On-screen words add, never repeat (house rule): each card carries the source, date or exact number the voice rounds off.
 
 ## The 5-minute cut, line by line
 
 | # | His words (start) | Mock frame | On screen (adds) |
 |---|---|---|---|
-| 1 | "Starbucks spends about four hundred million dollars a year on software." | Krish full frame. A Starbucks cup slides in beside him; its sleeve is a software invoice. | "$400M a year · CTO, internal forum · Bloomberg, 9 Jul 2026" |
-| 2 | "So now that AI can write code, should it build its own tools and stop paying?" | The question types itself across the cup, cursor blinking. | BUILD or BUY? |
-| 3 | "Starbucks thinks so, because it's building AI tools…" | Fortune headline page, mark on "replace Microsoft, IBM software". | Exhibit A · Fortune, 9 Jul 2026 |
-| 4 | "But here's the funny bit. Anthropic, the lab that makes Claude, needed a help desk bot, and it bought one." | Anthropic logo walks up to a shop counter; Intercom Fin logo handed over in a box. Hard stop on "bought one". | Exhibit B · Intercom customer story: Anthropic chose Fin |
-| 5 | "And it runs its sales on Salesforce, like the rest of us." | Anthropic's careers page, mark on "Salesforce powers core customer and quote-to-cash operations". | Exhibit C · Anthropic job posting, Nov 2026 |
-| 6 | "I've spent the week reading build versus buy stories…" | Krish full frame, a tower of printed posts on his desk. | — |
-| 7 | "So let's put build versus buy on trial, with Starbucks in the dock." | Wide: the courtroom builds in. Starbucks logo in the dock. Gavel. | BUILD v BUY |
-| 8 | "First, meet the star witness. Every firm now has a Joe from engineering." | Witness stand: a faceless hoodie silhouette with a laptop, name plate JOE, ENGINEERING. | — |
-| 9 | "Joe has a laptop and an AI. And he has the calm of a man who's never been woken at two in the morning." | Joe sips coffee; behind him a pager on the wall reads 02:00, unplugged. | — |
-| 10 | "And Joe says he can rebuild the CRM, the system your sales team lives in, over a weekend." | A calendar: Sat, Sun circled. A Salesforce logo on the desk gets a sticky note: "replace by Monday". | Lock quote option: "the confidence of an alligator hunter" (only if the post checks out) |
-| 11 | "Now, upstairs, the bosses are listening." | Camera tilts up: a glass boardroom above the court, execs leaning over the rail. | — |
-| 12 | "This summer, the boss of a health firm said they dropped Salesforce. They'd built their own with AI in two months." | Business Insider page, mark on "canceled our Salesforce contract". Curative logo. | Curative CEO Fred Turner · $600k a year contract · BI, 21 Jul 2026 |
-| 13 | "He also said keeping it running is hard. And we don't know how that one ends yet." | The same page; a "TO BE CONTINUED" stamp, slightly crooked. | Net saving: not disclosed |
-| 14 | "So, the case for build. It works more often than you'd think." | Build takes the stand (a hard-hat icon). Scoreboard flips. | Posts gathered: 62 working · 3 failed |
-| 15 | "One team swapped out its help desk in a few days, for about the price of a nice dinner." | Hacker News post as a page; a dinner bill slides beside it. | "2-3 days… about $100" · HN, 15 Jun 2026 |
-| 16 | "And it takes them about an hour a week to look after." | A clock with one hour shaded. | "Maybe an hour… per week" |
-| 17 | "But here's the case against build, and it comes as a receipt." | Exhibit D: a till printer on the evidence table. | EXHIBIT D |
-| 18 | "The first line is writing it, and it's tiny." | Receipt line 1 prints: WRITING IT, small figure. | Writing it ……. $ |
-| 19 | "Then it keeps printing. Weeks of moving everyone over." | Receipt grows; line: MOVING EVERYONE OVER, 3 WEEKS. | X post, 13 Jun 2026 |
-| 20 | "Job candidates asking why you're on a homegrown CRM." | Line: HIRING. A candidate's speech bubble from the LinkedIn post. | Surface Labs CEO, 4 Mar 2026 |
-| 21 | "And the tool no one owned, which went to hell over the next few years." | Line: NO OWNER, printed in coral. The receipt hits the floor and keeps going out of frame. | Reddit r/sales, 9 Nov 2026 |
-| 22 | "And none of this is new." | Cut to a dusty evidence box labelled PRIOR CASES. | — |
-| 23 | "A razor brand once said two in five of its tech people were just keeping its web shop alive." | Dollar Shave Club logo; a razor shaving a stack of server racks. | Dollar Shave Club · "roughly 40%" · Shopify case study |
-| 24 | "One software firm had one or two of its senior engineers fixing its own billing every single week." | Intercom logo; a weekly rota board with BILLING on every week. | Intercom · Stripe case study, 2025 |
-| 25 | "And the BBC spent a fortune on a digital system that was used to make one show." | NAO report page, mark on "£98.4 million". BBC logo. | £98.4M net · NAO, Jan 2014 |
-| 26 | "That show was called Bang Goes the Theory. Which is pretty much what happened to the plan." | Krish full frame, deadpan; the show's title card behind him. Hold one beat. | Public Accounts Committee, Apr 2014 |
-| 27 | "So what goes wrong? It's rarely the code. It's the people around it." | The receipt again; every line after WRITING IT lights up. | — |
-| 28 | "Who moves to it, who learns it, and who fixes it when it breaks." | Three icons stamp on: a moving box, a book, a pager. | MOVE · LEARN · FIX |
-| 29 | "Those lines never make it onto the plan, and they're the ones that cost." | A project plan with one line, "Build it"; the receipt drapes over it. | — |
-| 30 | "Now, the case for buy." | Buy takes the stand (a shopping-bag icon). | — |
-| 31 | "Someone else takes the two a.m. phone call, the audits and the blame." | The pager rings on a vendor's desk instead; a SOC 2 badge; a "BLAME" arrow points at the vendor. | — |
-| 32 | "And the people you hire next already know how to use it." | A job ad: "Salesforce experience" ticked. | — |
-| 33 | "But the case against buy is the bill, because it keeps going up." | A price tag on a lift going up floors. | — |
-| 34 | "A chat app most offices use put its business plan up by a fifth last year." | Slack pricing announcement, mark on $12.50 → $15. | Slack Business+ · +20% · 17 Jun 2025 |
-| 35 | "One finance tech firm said its server software bill went up ten times. That was after the maker was sold." | VMware logo with a Broadcom sticker; a bill multiplies into ten bills. | Beeks · VMware · Ars Technica, 2 Dec 2024 |
-| 36 | "So it left. And when tools add AI, the price tends to jump again when your contract comes up." | A renewal letter with an "AI" sticker; the number jumps. | AI-driven renewal asks: 20-37% · Tropic (sells negotiation) |
-| 37 | "So let's do the sums for a mid-sized business, with a CRM for its sales team." | Enterprise chart frame: two stacked bars, BUY and BUILD, empty. | 200 people · 50 seats · 3 years · our estimate |
-| 38 | "On our sums, buying it costs about a quarter of a million dollars over three years." | BUY bar fills: subscription, admin, training. | $248,650 |
-| 39 | "And building it costs more than twice that, because the engineer's wages don't stop when the code is written." | BUILD bar fills, and the engineering slice keeps climbing after "launch". | $569,550 |
-| 40 | "Even if AI halves the time to build it, building still costs more." | The first-year build slice halves; the bar drops but stays above BUY. | Still $415,800 |
-| 41 | "So here's the verdict, and it's my call." | Krish full frame; gavel raised. | — |
-| 42 | "The winners give every tool an owner and a home before anyone builds a thing." | Each app icon gets a name tag and a little house. | — |
-| 43 | "One marketing software firm built a safe place for its staff to make apps. Every app sat behind their staff login." | Klaviyo CTO's LinkedIn post, mark on "every one sits behind SSO". | Klaviyo · K:Forge · 13 Oct 2026 |
-| 44 | "They made hundreds in two weeks, and none of them were loose on the internet." | Counter spins to 356; a padlock on each. | 356 apps in two weeks |
-| 45 | "So Starbucks can do this, if it does that first. And Joe, on his own, can't." | Starbucks in the dock nods; Joe's name plate swings off its hinge. | — |
-| 46 | "And the labs? They build the AI that writes our code, and they still buy the boring stuff." | Callback to Exhibits B and C: Fin, Salesforce and Workday logos lined up behind Anthropic. | Anthropic runs finance and people on Workday · 13 Oct 2026 |
-| 47 | "That way their people spend their time on the one thing only they can do. I reckon that's the real lesson here." | Krish full frame. | — |
-| 48 | "If I ran a team, I'd do one thing this week…" | Krish full frame, the pager on the desk. | — |
-| 49 | "…whose name goes on the two a.m. call, and if no one's does, I'd buy." | The pager's screen: "On call: ________". | — |
-| 50 | "The full story is free at makeyourmindup.ai." | House close from `config/brand-palette.json`. | makeyourmindup.ai |
+| 1 | "Anthropic, which makes Claude, pays for other companies' tools." | Krish full frame. Anthropic logo beside him. | — |
+| 2 | "For tracking its customers, for customer service, even for running its own finance and payroll." | Three real pages stack in: Anthropic's Salesforce job post, Intercom's Fin case study, Workday's release. Each marked on its line. | Salesforce · Fin · Workday · sources, dates |
+| 3 | "This is the company that everyone else builds their tools with." | Claude logo; a crowd of app icons orbiting it. | — |
+| 4 | "And yet, it shops outside, even though it definitely could build them." | A shopping trolley rolls into frame and parks beside the Claude logo. | — |
+| 5 | "So is the engineer in your team who now feels like the Crocodile Hunter…" | The Crocodile Hunter strides in, hat tipped, laptop wrestled under one arm. | — |
+| 6 | "Let's dive in. Build or buy your tools in an AI world?" | TITLE: the caption words lift into the title card, hold one beat, fall back into captions. | Build or buy your tools in an AI world? |
+| 7 | "So let's follow your Crocodile Hunter for a week." | A week planner, Monday to Friday; his hat pinned on Monday. | MON → FRI |
+| 8 | "First, he's been vibe coding, like millions of others. Vibe coding just means…" | His laptop: a chat box, plain words typed in, code pouring out the other side. | — |
+| 9 | "One app builder, Lovable, says people start about a million new projects on it every week. Every week!" | TechCrunch page, marked on "1 million new projects a week". Counter spins. | Lovable · TechCrunch, 9 Jun 2026 |
+| 10 | "And here's what it actually looks like. You type something like, give me a page with all my customers on it…" | Screen recording style: the prompt types out letter by letter; a customer list page appears; a "Log call" button pops in. | — |
+| 11 | "Don't like it? Just ask again. Honestly, it's a bit magic…" | Krish full frame, the aside. | — |
+| 12 | "And every day, his LinkedIn feed sells him something else. A Claude pack." | A scrolling LinkedIn-style feed (no real person's post or name): post after post, "Claude pack", "comment PACK below". | — |
+| 13 | "That's a bundle of ready-made instructions you load into Claude." | A box labelled PACK opens; instruction cards slide into a Claude window. | ready-made instructions |
+| 14 | "Install this one, and Claude becomes your marketer. Install that…your whole sales team." | Two install buttons; a tiny megaphone, then a tiny sales team of stick figures pop out. | — |
+| 15 | "Just comment pack below, and it's yours for free. Well, sort of." | The comment box fills with "PACK" x 400. A price tag peeks from behind "free". | — |
+| 16 | "So everyone is being sold how to use AI, and he's bought all of it." | The Crocodile Hunter's arms full: app builders, packs, a course certificate. | — |
+| 17 | "And he's sure he can build a bot to answer your customers by Friday." | Planner: FRIDAY circled in red; "BOT" written on it. | — |
+| 18 | "And his manager is already spending the money they'll save on software." | A manager silhouette with a shopping list headed "SAVINGS". | — |
+| 19 | "Because his manager has read about Curative." | The manager holding a printed article. | — |
+| 20 | "This summer, the man running a US health insurer called Curative said they'd cancelled Salesforce." | Business Insider page, marked on "canceled our Salesforce contract". Curative logo. | Business Insider, 21 Jul 2026 |
+| 21 | "That's the software sales teams use to track every customer and every deal." | Salesforce logo over a pipeline board. | — |
+| 22 | "They'd been paying about six hundred thousand dollars a year for it. So they built their own, with AI, in two months." | A $600,000 invoice slides off; a calendar flips two months. | $600k a year · built in 2 months |
+| 23 | "Eyes bigger than their stomach? Maybe." | Krish full frame, eyebrow up. | — |
+| 24 | "Because the man running Curative has since admitted that keeping it running is hard." | Same page, second mark on "maintenance". | — |
+| 25 | "And that's the bit most people miss. Writing the tool is the cheap part now." | Krish full frame. | — |
+| 26 | "Think of it like getting a puppy. The puppy's free. It's the next fifteen years that cost you." | A puppy with a FREE tag; time-lapse: food, vet bills, chewed sofa, years ticking to 15. | — |
+| 27 | "So it's Friday, and he's built his bot." | The Crocodile Hunter plants a flag on the laptop. BOT LIVE. | — |
+| 28 | "Two in the morning, it tells a customer they owe the price of a small yacht." | The 2am phone. On the laptop, the bot's reply: "Your balance: one small yacht." A yacht icon. | — |
+| 29 | "Who gets that call? Your Crocodile Hunter. The AI sleeps right through it." | His phone rings by his bed; across the room, a laptop with a sleeping "zzz". | — |
+| 30 | "And every time your product changes, someone has to teach the bot about it." | A product update badge; the bot's answers shown going stale. | — |
+| 31 | "And when your Crocodile Hunter leaves, who even knows how it works?" | His hat left on an empty chair. | — |
+| 32 | "The packs have exactly the same catch… Then it emails your biggest client the wrong price." | An email from "Claude sales team" to "Biggest Client": "Price: $1". | — |
+| 33 | "Who fixes that? Not the guy on LinkedIn." | The LinkedIn-style seller's post, now with a beach emoji status. | — |
+| 34 | "So back to Anthropic. They could build almost anything. But for customer service, they went shopping." | The trolley from line 4, now loaded. | — |
+| 35 | "They bought a help desk bot called Fin, from a company called Intercom." | Intercom's Fin case study page, marked on Anthropic's choice. Fin and Intercom logos. | Intercom customer story |
+| 36 | "And it was answering customers within days." | Same page, mark on "less than a week". | — |
+| 37 | "And now for my favourite detail. Fin runs on Claude." | Krish full frame; the Claude logo slides inside the Fin logo. | — |
+| 38 | "So the people who make the AI bought a bot that runs on their own AI." | A loop arrow: Claude → Fin → bought by Anthropic → makes Claude. | — |
+| 39 | "They just let Intercom take the two in the morning call." | The 2am phone, now ringing on Intercom's desk; Anthropic's bedroom dark and quiet. | — |
+| 40 | "And their best people stay on the one thing only they can do, which is making Claude better." | Anthropic team silhouettes at a single glowing Claude build. | — |
+| 41 | "So is your Crocodile Hunter wrong? Not completely." | The Crocodile Hunter, hat back on. | — |
+| 42 | "Building can work, and so can the packs, as long as someone's name is on what you end up with." | Name tags clip onto a bot, a pack and an app. | — |
+| 43 | "Your customer list, your help desk, that dashboard your team knocked up last week. Each one needs a name on it." | Three tools in a row, each getting a name tag. | — |
+| 44 | "So next time someone pitches me a new tool or the latest pack, I'll skip build or buy." | Krish full frame. The title card flickers back for a beat and folds away. | — |
+| 45 | "I'll ask who gets the call when it breaks at two in the morning. If nobody here wants that call, I'll buy." | The 2am phone ringing on a table; nobody's hand reaches for it. | — |
+| 46 | "The full story is free at makeyourmindup.ai." | House close from `config/brand-palette.json`. | makeyourmindup.ai |
 
-## The vertical, line by line
+## The 90-second cut, line by line
 
-| # | His words | Mock frame | On screen (adds) |
+| # | His words (start) | Mock frame | On screen (adds) |
 |---|---|---|---|
-| 1 | "Anthropic, the lab that makes Claude, needed a help desk bot, and it bought one." | Anthropic logo at a shop counter, handed a Fin box. | Anthropic chose Intercom's Fin |
-| 2 | "So why does your engineer think he can rebuild your sales system over a weekend?" | Joe on the witness stand, laptop open, Salesforce logo with "replace by Monday". | — |
-| 3 | "Writing it is the cheap bit now." | The receipt: first line WRITING IT, tiny. | — |
-| 4 | "The costly bit is your people, like who gets woken when it breaks." | The receipt keeps printing to the floor; a pager buzzes at 02:00. | MOVE · LEARN · FIX |
-| 5 | "If I ran a team, I'd ask that first. If no one's name goes there, I'd buy." | Krish (tall frame); the pager screen: "On call: ________". | — |
-| 6 | "The full story is free at makeyourmindup.ai." | House close. | makeyourmindup.ai |
+| 1 | "Anthropic, which makes Claude, pays other companies for customer service." | Krish (tall frame); Anthropic logo. | — |
+| 2 | "Everyone builds with Claude, yet Anthropic shops for its help desk." | App icons orbit the Claude logo; a shopping trolley rolls in. | — |
+| 3 | "Your engineer feels like Crocodile Hunter, sure he can build any tool himself. Is he wrong?" | The Crocodile Hunter strides in, laptop under his arm. | — |
+| 4 | "Build or buy your tools in an AI world? Let's dive in." | TITLE: caption words lift into the title card, hold, fall back into captions. | Build or buy your tools in an AI world? |
+| 5 | "Picture him scrolling LinkedIn. Wall to wall Claude packs…" | The feed scrolls past his thumb: "Claude pack" after "Claude pack". | ready-made instructions |
+| 6 | "One post says, install this and Claude becomes your whole sales team." | Install button; a tiny sales team pops out. | — |
+| 7 | "Every post says, comment pack below and it's yours. Free!" | Comment box fills with "PACK" x 400. | — |
+| 8 | "So he comments, installs it, and his new sales team is one very confident spreadsheet." | The sales team collapses into a single spreadsheet wearing sunglasses. | — |
+| 9 | "So he tries vibe coding instead. Honestly, so have I." | His laptop chat box; Krish's small window nods. | — |
+| 10 | "That's where you tell the AI what you want, and it writes the code." | Plain words in, code pouring out. | — |
+| 11 | "Now he wants to build a whole customer service bot in one weekend." | Calendar: SAT, SUN circled. | — |
+| 12 | "And his boss, eyes bigger than his stomach, wants everything rebuilt by Friday." | Boss silhouette with an enormous plate labelled EVERYTHING. | — |
+| 13 | "Then it's two in the morning." | The 2am phone on the bedside table. | 02:00 |
+| 14 | "His homemade bot tells a customer they owe the price of a small yacht." | The bot's reply: "Your balance: one small yacht." | — |
+| 15 | "Who gets that call? Him. The AI sleeps right through it." | His phone rings; the laptop snores "zzz". | — |
+| 16 | "So what did Anthropic do? It went shopping." | The trolley returns, loaded. | — |
+| 17 | "It signed up for a ready-made help desk bot." | A help desk bot in a box with a subscription tag. | — |
+| 18 | "And that bot runs on Claude!" | The Claude logo slides inside the bot box. | — |
+| 19 | "So at two in the morning, it's the help desk company's phone that rings." | The 2am phone ringing on the vendor's desk; Anthropic's room dark. | — |
+| 20 | "I reckon the real question is who answers the phone at two in the morning." | Krish (tall frame), the phone beside him. | — |
+| 21 | "So before I build anything, I'll ask who picks up." | Krish's hand hovers over the ringing phone. | — |
+| 22 | "The full five-minute video is on my channel." | House close with the channel end card pointing to the 5-minute video. | Full video on the channel |
 
-## What changed against the signed lock (for his eye)
+## Facts the fact gate checks before render (new in these scripts)
 
-- Same trial, same verdict, same end message. His 17 Nov notes add evidence, so the labs now sit second in the open (beats 4-5) and return at the end (46).
-- New exhibits from his research: Curative (the boss who dropped Salesforce), the razor brand, the billing rota, the BBC, Slack's rise, VMware, the CRM sums.
-- The 90-second voice-only cut is now a vertical of about 30 seconds, because the house rule TWO_CUTS asks for 45 to 75 words.
-- His close is still his to say on camera; the working line is in both scripts.
-
-## Facts to check before the fact gate (new this round)
-
-- Anthropic chose Fin over an internal agent | intercom.com/customers/anthropic | vendor story
-- Anthropic: "Salesforce powers core customer and quote-to-cash operations" | Anthropic Greenhouse job 5413374008 | job posting
-- Anthropic runs finance and people on Workday | Workday release, 13 Oct 2026
-- Curative cancelled a $600k a year Salesforce contract after a two-month vibe coded CRM; said maintenance is hard | Business Insider, 21 Jul 2026 | REPORTED
-- Dollar Shave Club: roughly 40% of technology resources maintaining the old platform | Shopify case study | vendor story
-- Intercom: one or two of seven senior engineers on billing each week | Stripe case study | vendor story
-- BBC DMI £98.4M net, used to make one programme, Bang Goes the Theory | NAO 28 Jan 2014; PAC 10 Apr 2014
-- Slack Business+ $12.50 → $15, 17 Jun 2025 | Slack announcement
-- Beeks: VMware bill ten times | Ars Technica, 2 Dec 2024 | REPORTED
-- Tropic: AI-driven renewal asks 20-37% | Tropic report | seller of negotiation services
-- CRM sums $248,650 buy v $569,550 build over 3 years; $415,800 with build engineering halved | Krish's cost model, 17 Nov | ESTIMATE, say "on our sums"
+- Anthropic pays for Salesforce (customer and quote-to-cash operations) | Anthropic Greenhouse job 5413374008 | job posting
+- Anthropic chose Intercom's Fin for customer service, live in under a week | intercom.com/customers/anthropic | vendor story
+- Fin runs on Claude | Fin case study ("including using Claude") | vendor story
+- Anthropic runs finance and payroll on Workday (Financials and HCM) | Workday release, 13 Oct 2026
+- Lovable: about one million new projects a week | TechCrunch, 9 Jun 2026 | company claim
+- Curative cancelled a roughly $600,000-a-year Salesforce contract after a two-month AI-built CRM; said maintenance is hard | Business Insider, 21 Jul 2026 | REPORTED
+- The Claude-pack LinkedIn posts are drawn as a generic feed, never a real person's post or name.

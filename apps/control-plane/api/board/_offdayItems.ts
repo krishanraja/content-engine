@@ -774,20 +774,20 @@ export async function syncApprove(db: SupabaseClient, week: string, docId: strin
       option_id: optionId, option, drive_folder: driveFolderIdOf(option?.drive), piece_id: typeof body.piece_id === 'string' ? body.piece_id : null,
       state: 'approved', place: { week, day }, writes: [] } })
     if (r.error || !isObj(r.data) || r.data.ok !== true) return 'failed'
-    await linkVideoRecord(db, week, day, docId, option, now)
+    await linkPostRecord(db, week, day, docId, option, now)
     return 'placed'
   } catch { return 'failed' }
 }
 
-/** His Approve on an off-day post cut on the ve route makes its engine record and links it to the week, so its look,
- *  motion and caption picks, scripts approval and making all attach to one id (_offdayPiece.ts). Never blocks his
- *  Approve: a record that cannot be made now is made by his first pick. */
-async function linkVideoRecord(db: SupabaseClient, week: string, day: string, docId: string, option: Body | null, now: Date): Promise<void> {
+/** His Approve on any off-day post makes its engine record and links it to the week, so its copy (the script a session
+ *  files on it, shown on the card for his edit and Approve), its scripts approval, its making and, for a post cut on the
+ *  ve route, its look, motion and caption picks all attach to one id (_offdayPiece.ts). Every kind, since every post has
+ *  copy (Krish, 2026-11-17: "scripts should show for carousels and memes as well - there is copy on every single post").
+ *  Never blocks his Approve: a record that cannot be made now is made by his first pick. */
+async function linkPostRecord(db: SupabaseClient, week: string, day: string, docId: string, option: Body | null, now: Date): Promise<void> {
   if (!option) return
   try {
-    const { offdayKind } = await import('./_weekModel.js')
-    const { linkOffdayPiece, offdayPieceId, videoOffday } = await import('./_offdayPiece.js')
-    if (!videoOffday(offdayKind(option).kind, typeof option.format === 'string' ? option.format : null)) return
+    const { linkOffdayPiece, offdayPieceId } = await import('./_offdayPiece.js')
     const title = [option.hook, option.title, option.copy].find(v => typeof v === 'string' && v.trim()) as string | undefined
     if (!title) return
     await linkOffdayPiece(db, offdayPieceId(week, docId, option), { week, day, item: docId, title,
