@@ -1,3 +1,4 @@
+import { Device as FlatMechanism } from './flat_mechanism'
 import { Device as IsoWorld } from './iso_world'
 import { Device as InkWash } from './ink_wash'
 import { Device as CursorPath } from './cursor_path'
@@ -47,6 +48,7 @@ import { Device as ReceiptPrint } from './receipt_print'
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
+  flat_mechanism: FlatMechanism,
   iso_world: IsoWorld,
   ink_wash: InkWash,
   cursor_path: CursorPath,
