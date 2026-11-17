@@ -21,13 +21,17 @@ His floor (python3 scripts/floor.py --format motion): every state change is moti
 
 Pace and room (his reference cuts, config/ve/pace-references.json: about 3 to 4.6 events a second, half the gaps under 0.3 s, 80% of the frame in use): every verb lands in 0.6 s or less, the device never rests between events (drift above 0), and it fills its box: tall, from y 270 down the whole slot; nothing that must be read right of x 860 or below y 1320 (config/channel-safe-zones.json).
 
+## Rework
+The first build (checked 17 Nov, rendered through Remotion at full size) has framing faults. Wide: the capsule is scaled to 85% of the frame width, so it runs off the top and bottom and the copies `add` drops land off frame. Tall: a dropped copy is half off the bottom-left edge and the count label sits on the row of studs. Both: the picture is a flat card laid over the canvas at fixed percentages, not on the object, and it does not turn with it. Fix: the hero fits the slot in both shapes (tall at least 80% of the width, wide fitted by height), copies land inside the frame, the label clears the studs, and the picture sits on the object's front face (a texture, kept upright) so it turns with it. Its tests check the scene and its projected layout without launching a browser, as ladder_stage and living_screen do: the build machine cannot start the renderer's browser, and Claude renders its stills.
+
 ## Tests (`device.test.ts`, stills from `fixture.json`)
+- in both shapes the hero, every copy and the label project inside the slot, and the label's box clears every stud
+- the picture is a texture on the hero's front face, so its projected corners move with a `move`
 - the camera is never still: two frames 6 apart differ
 - the object fills the tall slot's width (at least 80%)
-- the same frame twice renders identical pixels; no colour outside tokens; tall and wide stills render
 
 ## After it builds (Claude, not Codex)
-`ve verify-card`, then a test cut of the house test take in this style, measured with `ve pace` beside his references and watched at speed beside one, a `ve-critic` verdict, then Krish's Gate 2. On his yes Claude takes `needs_device` out of the `toy-3d` entry's `ve_route` in config/style-references.json (a guarded file: his yes, in person) and out of `needs_device` in apps/renderer/src/engine/kit/motion-profiles.json and adds its profile there, then records its StyleStill cover (docs/ve/cards/style-stills/ve-style-still-template-*) with `record_still`.
+Claude re-runs the acceptance, renders a test cut on the house take, measures it with `ve pace`, gets a `ve-critic` verdict and puts it to Krish at Gate 2. Only his yes takes `needs_device` off and adds the motion profile.
 
 ## Contract
 Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Register `toy_object` in `devices/registry.ts` and `config/ve/devices.json` with exactly enter, count_to, add, move, highlight, exit; update `verbs.test.ts`. Draw with three.js through @remotion/three (card ve-style-0-three-and-moves), from the frame alone. Reuse packages/moves, never copy a move. Add no motion profile and leave apps/renderer/src/engine/kit/motion-profiles.json untouched: profiles hold drawable styles only (kit.test.ts), and this style stays `needs_device` until Krish's yes, when Claude adds it.
@@ -48,6 +52,7 @@ npx vitest run apps/renderer/src/engine/devices/toy_object
 npx vitest run apps/renderer/src/engine/devices/verbs.test.ts
 npx vitest run apps/renderer/src/engine/kit
 python scripts/ve/check_route.py
+npx tsc --noEmit
 
 ## Return
 Your final message is only JSON matching config/ve/task-result.schema.json:
