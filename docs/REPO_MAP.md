@@ -1712,6 +1712,7 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `function inLibrary(m: Pick<StoredMaterial, 'kind' | 'role' | 'storage' | 'archived_at' | 'bytes'> & { scope?: string | …`
 - `const isSource = (m: Pick<StoredMaterial, 'kind' | 'role'>) =>`
 - `interface Place`
+- `function pieceSlotName(pieceId: string, piece: PieceInfo | null): string`
 - `function placeOf(m: StoredMaterial, piece: PieceInfo | null): Place`
 - `function fileNameOf(m: StoredMaterial): string`
 - `function mimeOf(m: StoredMaterial): string`
