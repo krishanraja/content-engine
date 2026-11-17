@@ -2888,6 +2888,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 
 - `const TAKES_OP`
 - `const TAKES_SLACK_MS`
+- `function nameWords(text: string): Set<string>`
 - `interface InboxTake`
 - `interface TakesIn`
 - `function takesInOf(meta: unknown): TakesIn | null`
