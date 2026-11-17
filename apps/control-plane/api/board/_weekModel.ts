@@ -493,6 +493,18 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
     return { ...base, read: { ...read, sources: [lockSource(toSign.path), ...read.sources] }, line, next: signPress(m.week, d.piece_id, toSign) as Action,
       decision: true, others: [prompt, ...picks] }
   }
+  // The scripts filed for his Approve on the day's own piece: his Approve scripts leads, bound to the exact words filed,
+  // as on a placed piece (F47). Wed 18 Nov sat at "Make the storyboard and the script together" with both scripts filed
+  // (Krish, 2026-11-17: "the board just has no idea of the work done or what next steps are (I need to approve the
+  // scripts)").
+  const filed = m.scripts?.[d.piece_id] ?? []
+  const scriptsMade = m.decisions?.[d.piece_id]?.items.find(x => x.key === 'scripts')?.made === true
+  if (d.path?.current === 'board' && filed.length && !scriptsMade && !recorded && !missed) {
+    const press = scriptsPress(m.week, d.day, d.piece_id, cut(d.title, 150), filed, m.picks || [])
+    const readyLine = `${label}. ${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve: ${filed.map(f => f.title).join('; ')}.`
+    return { ...base, line: readyLine, next: press as Action, decision: true,
+      others: [itemPrompt(m.week, { ...base, line: readyLine }, 'board', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction, ...picks] }
+  }
   const lead = d.actions[0]
   if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) {
     const tweak = recorded || missed ? [] : [itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction]
