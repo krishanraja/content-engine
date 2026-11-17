@@ -3009,6 +3009,8 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function recordsItself(kind: string, picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string): …`
 - `interface OffdayScripts`
 - `function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Bod…`
+- `function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, pieceI…`
+- `function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: string): { line: string; approval: OffdayScripts }…`
 - `function recordHead(sc: OffdayScripts): string`
 - `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`
 - `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`

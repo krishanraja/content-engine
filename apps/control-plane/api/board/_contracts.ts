@@ -365,7 +365,10 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'picks' && (AUDIO_ID.test(id) || body.kind === 'audio_pick')) return audioBody(id, body)
   // His typed approval of a lock or of scripts (WORDS_ID); "via: words" anywhere else is refused, so a session's words
   // never stand as one of his presses.
-  if (collection === 'picks' && WORDS_ID.test(id)) return wordsBody(id, body)
+  // A new approval goes under its piece's own name (wordsDocId: <day>-<lock|scripts>-words-<8 hex>). The bare day-wide name
+  // is refused for writes: on 17 Nov one piece's approval was written over another's under picks/tue-scripts-words. Saved
+  // ones are still read (typedApproval).
+  if (collection === 'picks' && WORDS_ID.test(id)) return Boolean(WORDS_ID.exec(id)?.[3]) && wordsBody(id, body)
   if (collection === 'picks' && body.via === 'words') return false
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
   if (collection === 'picks' && (SCORE_ID.test(id) || SCORE_DATE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)

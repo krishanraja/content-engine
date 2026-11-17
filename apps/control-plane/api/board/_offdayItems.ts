@@ -773,8 +773,26 @@ export async function syncApprove(db: SupabaseClient, week: string, docId: strin
     const r = await db.rpc('offday_item_move', { p: { item: key, version: row?.version ?? 0, actor: 'Krish', source: row?.source ?? 'engine', origin_week: row?.origin_week ?? week,
       option_id: optionId, option, drive_folder: driveFolderIdOf(option?.drive), piece_id: typeof body.piece_id === 'string' ? body.piece_id : null,
       state: 'approved', place: { week, day }, writes: [] } })
-    return r.error || !isObj(r.data) || r.data.ok !== true ? 'failed' : 'placed'
+    if (r.error || !isObj(r.data) || r.data.ok !== true) return 'failed'
+    await linkVideoRecord(db, week, day, docId, option, now)
+    return 'placed'
   } catch { return 'failed' }
+}
+
+/** His Approve on an off-day post cut on the ve route makes its engine record and links it to the week, so its look,
+ *  motion and caption picks, scripts approval and making all attach to one id (_offdayPiece.ts). Never blocks his
+ *  Approve: a record that cannot be made now is made by his first pick. */
+async function linkVideoRecord(db: SupabaseClient, week: string, day: string, docId: string, option: Body | null, now: Date): Promise<void> {
+  if (!option) return
+  try {
+    const { offdayKind } = await import('./_weekModel.js')
+    const { linkOffdayPiece, offdayPieceId, videoOffday } = await import('./_offdayPiece.js')
+    if (!videoOffday(offdayKind(option).kind, typeof option.format === 'string' ? option.format : null)) return
+    const title = [option.hook, option.title, option.copy].find(v => typeof v === 'string' && v.trim()) as string | undefined
+    if (!title) return
+    await linkOffdayPiece(db, offdayPieceId(week, docId, option), { week, day, item: docId, title,
+      so_what: typeof option.so_what === 'string' ? option.so_what : typeof option.copy === 'string' ? option.copy : null }, now.toISOString())
+  } catch { /* his first pick makes it */ }
 }
 
 /** The item a post already is, anywhere (on a day or in his Ideas for Later), other than `own`: null when it is none,
