@@ -1,3 +1,3 @@
-More Americans object to an AI data centre next door than to a nuclear plant. They worry it pushes up power bills, and your business could pay more for AI. In 41 local votes, all but one backed limits on data centres. So where does AI go? Some moves to smaller sites and phones. If I ran a team, I'd ask our AI supplier where it's building next.
+More Americans object to an AI data centre next door than a nuclear plant. Odd, for a shed full of computers. They fear the power bills, and your AI prices could follow. In 41 local votes, all but one backed limits. So let's find out. Where does AI go when towns say no? It's moving to smaller sites, and even onto your phone.
 
 The full story is free at makeyourmindup.ai.

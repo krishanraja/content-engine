@@ -1,10 +1,10 @@
-More Americans object to an AI data centre next door than to a nuclear power plant. And if your business pays for AI, that grudge could hold up new features in the tools you use. It could push up their price, too. So if towns say no, where does AI get built now?
+More Americans object to an AI data centre next door than to a nuclear power plant. Which is odd, because a data centre is just a big shed full of computers, and it doesn't even glow. But say you're the one at work who signs off the AI bill. That grudge could hold up new features in your tools. It could push up their price, too. So let's find out. Where does AI get built when towns say no?
 
 I've been digging into this all week, and the answer surprised me. The companies building AI are learning to need less from the towns that don't want them. So first, I'll show you why towns say no. Then the three tricks they're using to get round them. And then what that means for you.
 
 A data centre is a giant warehouse full of computers. It's where tools like ChatGPT really do their thinking. The big ones use as much electricity as a small city. To feed one, the power company often has to build new power lines and power plants. And the cost of those can end up on everyone's electricity bill. So people worry they'll be the ones paying for it.
 
-Seven in ten Americans told the polling firm Gallup they'd object to one nearby. Only about half object to a nuclear plant. Losing to a nuclear plant is quite an achievement for a building that mostly just hums. Mind you, it's a very expensive hum.
+Seven in ten Americans told the polling firm Gallup they'd object to one nearby. Only about half object to a nuclear plant.
 
 Then on the third of November, America held its midterm elections, the big vote halfway through a president's term. Ballotpedia, which tracks American elections, counted 41 local votes on data centres. They were about things like bans, pauses and limits. And in all but one, voters backed the limits.
 
