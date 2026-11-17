@@ -305,6 +305,14 @@ describe('Approve scripts sends his exact words to Teleprompter from the server'
     const skipped = setup(sentOk, { making: checked(undefined, { found: 'approved by Krish', krish_words: 'Krish: skip the readers, send it', readers: [], readers_skipped: true }) })
     expect((await skipped.put('picks', 'mon-scripts', approval())).out.send.status).toBe('sent')
   })
+  it('sends nothing for copy he does not record, and says so (Ruling, Krish, 2026-11-17: "only scripts i record go to teleprompter")', async () => {
+    const t = setup(sentOk, { making: checked() })
+    const { status, out } = await t.put('picks', 'mon-scripts', approval({ teleprompter: false }))
+    expect(status).toBe(200)
+    expect(t.sent).toHaveLength(0)
+    expect(out.line).toBe('Approved. Your Teleprompter is only for scripts you record, so nothing was sent there.')
+    expect(out).not.toHaveProperty('send')
+  })
   it('records no_key so a session can finish the send, and an error without losing his approval', async () => {
     const t = setup()
     const { out } = await t.put('picks', 'mon-scripts', approval())
