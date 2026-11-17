@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
-import { wordsBody, wordsDocId } from './_contracts.js'
+import { wordsBody, asWritten, wordsDocId } from './_contracts.js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
 import { makingSteps } from '../_making.js'
@@ -388,7 +388,7 @@ export function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day:
   lockText?: string | null): Typed | null {
   // The piece's own document first (wordsDocId), then the day's older one, each only for this piece.
   const ids = [wordsDocId(day, what, pieceId), `${day}-${what}-words`]
-  const doc = ids.map(id => picks.find(p => p.doc_id === id)).find(p => p && isObj(p.body) && wordsBody(p.doc_id, p.body)
+  const doc = ids.map(id => picks.find(p => p.doc_id === id)).find(p => p && isObj(p.body) && wordsBody(p.doc_id, asWritten(p.body))
     && String(p.body.piece_id).toLowerCase() === pieceId)
   const b = doc && isObj(doc.body) ? doc.body : null
   if (!b) return null

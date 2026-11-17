@@ -297,9 +297,10 @@ describe('his production pick on every piece before recording: the look, the mot
     expect(it.next).toMatchObject({ kind: 'press', op: 'look', label: 'Pick the look', body: { piece_id: MON, experiment: null, inspiration: [] }, choose: { path: 'production' } })
     expect(labels(it.next)[0]).toBe('Face with proof (recommended)')
     // After his approval of the story, Copy prompt for Claude stays beside the picks so he can still change the story
-    // (Ruling, Krish, 2026-11-16), with his notes asked first and the session opened on content-engine (1.17.0).
-    expect(it.others[0]).toMatchObject({ kind: 'prompt', label: 'Claude production prompt', notes: { heading: expect.stringContaining("Krish's notes") },
-      open: { app: 'claude_code', repository: 'krishanraja/content-engine' } })
+    // (Ruling, Krish, 2026-11-16), with his notes asked first. It is only copied, never opened (1.22.0; Ruling, Krish,
+    // 2026-11-17: "Just copy to clipboard is enough for all such buttons").
+    expect(it.others[0]).toMatchObject({ kind: 'prompt', label: 'Claude production prompt', notes: { heading: expect.stringContaining("Krish's notes") } })
+    expect('open' in (it.others[0] as object)).toBe(false)
     expect((it.others[0] as any).prompt).toContain('Krish has approved it')
     expect((it.others[0] as any).notes.save).toMatchObject({ kind: 'press', collection: 'comments', body: { use: 'claude_notes', piece_id: MON } })
     const picks = it.others.slice(2)
