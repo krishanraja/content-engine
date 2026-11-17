@@ -84,18 +84,19 @@ def take_of(spec: dict) -> str:
     return takes[0]
 
 
-def registry_entry(cfg: dict, fetch=None) -> dict:
+def registry_entry(cfg: dict, fetch=None, name: str | None = None) -> dict:
     """The clone's active entry in krish-clone's registry, read live (lint.read_synthetic_registry); refuses one that is
-    missing, withdrawn or names no voice id."""
+    missing, withdrawn or names no voice id. name is the bank voice's registry_name (default: the config's clone)."""
     from . import lint  # noqa: PLC0415
+    name = name or cfg['clone']
     entries = lint.read_synthetic_registry(fetch)
-    entry = next((e for e in entries if e['name'] == cfg['clone'] and e['kind'] == 'voice'
+    entry = next((e for e in entries if e['name'] == name and e['kind'] == 'voice'
                   and e['platform'] == cfg['platform']), None)
     if entry is None:
-        raise ValueError(f"{cfg['clone']} is not an approved voice from {cfg['platform']} in krish-clone's registry "
+        raise ValueError(f"{name} is not an approved voice from {cfg['platform']} in krish-clone's registry "
                          f'({lint.SYNTHETIC_REGISTRY}); nothing is generated until he approves it')
     if not VOICE_ID.match(str(entry.get('platform_ref') or '')):
-        raise ValueError(f"{cfg['clone']}'s registry entry names no platform_ref, the voice id the clone is called by")
+        raise ValueError(f"{name}'s registry entry names no platform_ref, the voice id the clone is called by")
     return entry
 
 
@@ -133,9 +134,11 @@ def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=
         clone = stock_voice(voice, bank)
         tool = f"elevenlabs.stock_voice:{clone['name']}"
     else:
-        entry = registry_entry(cfg, fetch)
+        # His own voice: the one he picked, else the bank's default (Krish v2 since 17 Nov 2026), read from the registry.
+        mine = voice_bank.krish(bank, voice)
+        entry = registry_entry(cfg, fetch, mine['registry_name'])
         # His own voice picked on the board: the voice he heard there (the bank's) is the one the registry approves.
-        mismatch = voice_bank.registry_problems(bank, [entry]) if voice is not None else []
+        mismatch = voice_bank.registry_problems(bank, [entry], voice) if voice is not None else []
         if mismatch:
             raise ValueError('; '.join(mismatch))
         if not any(lint._synthetic_match(entry, approval) for approval in spec.get('approvals') or []):
@@ -147,9 +150,11 @@ def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=
         tool = f"{cfg['platform']}.{cfg['capability']}:{entry['name']}"
         # His voice is read on the model the bank pins for it (Krish, 2026-11-17: "v3 sounds right"), when the bank's
         # voice is the one the registry approves; otherwise on the engine's default model.
-        mine = voice_bank.krish(bank)
         if mine['voice_id'] == entry['platform_ref']:
             clone['model'] = mine['model']
+            # Krish, 2026-11-17: "yes, 15% is right" (Krish v2 read 15% faster, pitch kept, after generation).
+            if mine.get('speed') and mine['speed'] != 1:
+                clone['speed'] = mine['speed']
     text, script_sha, words = signed_text(script_path)
     characters = len(text)
     doc = {
@@ -157,6 +162,7 @@ def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=
         'take': take, 'cuts': sorted(spec['cuts']),
         'clone': clone,
         'tool': tool,
+        **({'speed': clone['speed']} if clone.get('speed') else {}),
         'model': clone.get('model') or cfg['model'], 'output_format': cfg['output_format'], 'endpoint': cfg['endpoint'],
         'script': {'file': Path(script_path).name, 'sha256': script_sha, 'words': words},
         'text': text, 'text_sha256': hashlib.sha256(text.encode('utf-8')).hexdigest(), 'characters': characters,
@@ -224,7 +230,9 @@ def generate(doc: dict, *, plan_sha256: str, spend_id: str, assets_dir: str | Pa
     provider_file = assets / f"{doc['take']}.{doc['output_format'].split('_')[0]}"
     provider_file.write_bytes(audio)
     voice = assets / f"{doc['take']}.wav"
-    subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-y', '-i', str(provider_file), '-ac', '1',
+    # His voice's speed (Krish v2: 15% faster, pitch kept; the v3 settings have no speed control).
+    tempo = ['-filter:a', f"atempo={doc['speed']}"] if doc.get('speed') else []
+    subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-y', '-i', str(provider_file), *tempo, '-ac', '1',
                     '-ar', str(cfg.get('sample_rate', 48000)), '-c:a', 'pcm_s16le', str(voice)], check=True, capture_output=True)
     voice_sha = sha256_file(voice)
     request_id = headers.get('request-id') or headers.get('x-request-id')
@@ -238,7 +246,7 @@ def generate(doc: dict, *, plan_sha256: str, spend_id: str, assets_dir: str | Pa
     return {
         'schema': RECEIPT_SCHEMA, 'piece': doc['piece'], 'take': doc['take'], 'plan_sha256': doc['plan_sha256'],
         'text_sha256': doc['text_sha256'], 'script_sha256': doc['script']['sha256'], 'clone': doc['clone']['name'],
-        'model': doc['model'], 'generated_at': now or datetime.now(timezone.utc).isoformat(timespec='seconds'),
+        'model': doc['model'], **({'speed': doc['speed']} if doc.get('speed') else {}), 'generated_at': now or datetime.now(timezone.utc).isoformat(timespec='seconds'),
         'credits': {'provider': doc['credits']['provider'], 'estimate': estimate, 'charged': cost, 'charged_from': source,
                     'reservation': reservation, 'spend_id': spend_id},
         'request_id': request_id,

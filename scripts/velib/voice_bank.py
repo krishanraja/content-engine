@@ -84,8 +84,14 @@ def problems(bank: dict) -> list[str]:
             out.append(f'{where}: an approved voice names approved_by Krish and approved_on')
         if kind == 'krish' and not v.get('registry_name'):
             out.append(f"{where}: his own voice names its krish-clone registry_name")
-    if krish != 1:
-        out.append(f'the bank holds {krish} of his own voices; it holds exactly one (kind krish)')
+    defaults = [v for v in voices if isinstance(v, dict) and v.get('kind') == 'krish' and v.get('default') is True]
+    if not krish:
+        out.append('the bank holds none of his own voices (kind krish)')
+    elif len(defaults) != 1:
+        out.append(f'{len(defaults)} of his own voices are the default; exactly one is (default: true)')
+    for n, v in enumerate(voices):
+        if isinstance(v, dict) and 'speed' in v and not (isinstance(v['speed'], (int, float)) and 0.7 <= v['speed'] <= 1.3):
+            out.append(f'voices[{n}].speed is not between 0.7 and 1.3')
     return out
 
 
@@ -105,14 +111,20 @@ def voice(bank: dict, voice_id: str) -> dict:
     return entry
 
 
-def krish(bank: dict) -> dict:
-    return next(v for v in bank['voices'] if v['kind'] == 'krish')
+def krish(bank: dict, voice_id: str | None = None) -> dict:
+    """One of his own voices: the one named, else the default (Krish v2 since 17 Nov 2026)."""
+    if voice_id is not None:
+        entry = voice(bank, voice_id)
+        if entry['kind'] != 'krish':
+            raise ValueError(f'{voice_id} is not one of his own voices')
+        return entry
+    return next(v for v in bank['voices'] if v['kind'] == 'krish' and v.get('default') is True)
 
 
-def registry_problems(bank: dict, entries: list[dict]) -> list[str]:
+def registry_problems(bank: dict, entries: list[dict], voice_id: str | None = None) -> list[str]:
     """His own voice in the bank names the registry entry krish-clone approves, with the same voice id. The registry
     wins: a bank that disagrees is refused, never used."""
-    mine = krish(bank)
+    mine = krish(bank, voice_id)
     entry = next((e for e in entries if e.get('name') == mine['registry_name'] and e.get('kind') == 'voice'
                   and e.get('platform') == 'elevenlabs'), None)
     if entry is None:
