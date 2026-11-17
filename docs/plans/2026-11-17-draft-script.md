@@ -10,16 +10,16 @@ Now here's my favourite detail. Meta's shed was already being built. So Piqua no
 
 Even OpenAI, which makes ChatGPT, has noticed. Two days after the vote, it promised to pay the full cost of the new power its data centres need. That way, the neighbours' bills don't go up. Lovely promise. It's also the exact same one it made in January. And the towns still voted no.
 
-So picture a builder that a town like Piqua has just turned away. Where does it go next? It has two ways round. And there's a third that no one planned.
+So what do Meta and its rivals do when a town says no? Here's what they're already trying.
 
-Way one, bring your own power. It's like a neighbour who promises your electricity bill won't go up. Then they build a gas power station in their garden. Oracle, the software giant, has signed up for a whole fleet of these gas plants. And, shockingly, neighbours don't love a gas plant either.
+Oracle, the software giant, went first with its own power. It's like a neighbour who promises your electricity bill won't go up. Then they build a gas power station in their garden. Oracle has signed up for a whole fleet of these gas plants. And, shockingly, neighbours don't love a gas plant either.
 
-Way two, move to the countryside. Lots of little sheds next to solar and wind farms. Those farms often make more power than the cables can carry away. So the little sheds use it up right there. Think of it as AI moving to a cottage, with lovely views. But a little shed can only run the AI tools that already exist. Building the next, smarter AI needs thousands of computers working together in one giant shed. So you're right back to needing a Piqua to say yes.
+So other builders are moving to the countryside instead, with lots of little sheds next to solar and wind farms. Those farms often make more power than the cables can carry away. So the little sheds use it up right there. Think of it as AI moving to a cottage, with lovely views. But a little shed can only run the AI tools that already exist. Building the next, smarter AI needs thousands of computers working together in one giant shed. So you're right back to needing a Piqua to say yes.
 
-And the third way, no one planned. It's the phone in your pocket. On a newer iPhone, ask it to sum up a long email. The answer comes back without ever leaving the phone. No shed, no power lines, and no one in Piqua gets a vote. The catch? A pocket-sized AI does less. Great for that email, and less great for your quarterly report.
+And then there's the one no one planned. It's the phone in your pocket. On a newer iPhone, ask it to sum up a long email. The answer comes back without ever leaving the phone. No shed, no power lines, and no one in Piqua gets a vote. The catch? A pocket-sized AI does less. Great for that email, and less great for your quarterly report.
 
-So, where does AI get built when towns say no? Honestly, I think that's the wrong question now. The everyday stuff, like email summaries and meeting notes, can live in a little shed or in your pocket. The real question is whether the next big leap gets a yes from a town like Piqua. Because if it doesn't, the shiny new features in your team's tools arrive later. And I reckon they cost more. And Meta's shed in Piqua? Still going up, in a town that just banned it. I'd love to be at that council meeting.
+So here's the whole story in one breath. A town said no. A mayor got sacked. A shed kept going up. And the builders went looking for ways round. So where does AI get built when towns say no? The everyday stuff, like email summaries and meeting notes, can live in a little shed or in your pocket. But the next big leap still needs a giant shed and a town that says yes. And if fewer towns say yes, I reckon the new features in your team's tools arrive later, and cost more. As for Meta's shed in Piqua, it's still going up in a town that just banned it. I'd love to be at that council meeting.
 
-Here's what I'm going to do. Next time we renew an AI tool, I'll ask the seller where its next upgrade is being built. And if the answer is a town like Piqua, I'll budget for a price rise.
+Here's what I'm going to do. Next time we renew an AI tool, I'll ask the seller where its next upgrade is being built. And if it's a town that's just said no, I'll budget for a price rise.
 
 The full story is free at makeyourmindup.ai.
