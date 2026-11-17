@@ -163,6 +163,17 @@ class ThePlanReadsThePickedVoice(unittest.TestCase):
         with served(registry({**CLONE, 'name': 'krish-voice-elevenlabs'})), self.assertRaisesRegex(ValueError, 'not an approved voice'):
             clone_voice.plan(short(), SCRIPT, bank=BANK)
 
+    def test_a_voice_not_proven_on_a_whole_script_is_said_so(self):
+        # Tue 17 Nov: Krish v2 held for a ten-second opening and drifted on the full script.
+        self.assertFalse(voice_bank.krish(BANK)['whole_script']['passed'])
+        v2 = {**CLONE, 'platform_ref': voice_bank.krish(BANK)['voice_id']}
+        with served(registry(v2)):
+            doc = clone_voice.plan(short(approve=v2), SCRIPT, bank=BANK)
+        self.assertIn('not proven on a whole script', doc['caution'])
+        proven = copy.deepcopy(BANK)
+        proven['voices'][0]['whole_script'] = {'passed': True, 'on': '2026-11-20', 'note': 'held'}
+        self.assertIsNone(voice_bank.whole_script_warning(proven['voices'][0]))
+
     def test_the_wav_is_sped_up_keeping_pitch(self):
         v2 = {**CLONE, 'platform_ref': voice_bank.krish(BANK)['voice_id']}
         with served(registry(v2)):
