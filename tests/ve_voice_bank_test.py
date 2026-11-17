@@ -129,6 +129,13 @@ class ThePlanReadsThePickedVoice(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'proposed in the voice bank'):
             clone_voice.plan(short(approve=None), SCRIPT, voice='jackson', bank=BANK)
 
+    def test_record_it_myself_generates_nothing_and_points_to_teleprompter(self):
+        # Krish, 2026-11-17: "I should be able to choose to record manually myself as well, and then the teleprompter
+        # workflow will activate, as opposed to the ElevenLabs workflow".
+        with patch.object(ve_lint, 'fetch_synthetic_registry', side_effect=AssertionError('no registry read')), \
+                self.assertRaisesRegex(ValueError, 'Teleprompter'):
+            clone_voice.plan(short(), SCRIPT, voice=voice_bank.RECORD_MYSELF, bank=BANK)
+
     def test_an_unknown_voice_is_refused(self):
         with self.assertRaisesRegex(ValueError, 'not in the voice bank'):
             clone_voice.plan(short(), SCRIPT, voice='nobody', bank=BANK)

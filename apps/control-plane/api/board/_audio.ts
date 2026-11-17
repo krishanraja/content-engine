@@ -27,6 +27,9 @@ type Body = Record<string, unknown>
 const isObj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
 
 export type AudioLayer = 'voice' | 'bed'
+/** His own take in place of an ElevenLabs voice (Krish, 2026-11-17: "I should be able to choose to record manually myself
+ *  as well, and then the teleprompter workflow will activate, as opposed to the ElevenLabs workflow"). */
+export const RECORD_MYSELF = 'record-myself'
 export const AUDIO_ID = /^audio-(voice|bed)-([a-zA-Z0-9][a-zA-Z0-9_.:-]{0,139})$/
 const PICK = /^[a-z0-9][a-z0-9_.-]{0,79}$/
 const DRIVE_ID = /^[A-Za-z0-9_-]{20,80}$/
@@ -95,9 +98,11 @@ export function audioPresses(item: { key: string; kind: string }, picks: Array<{
     const id = `audio-${layer}-${item.key}`
     const revision = picks.find(p => p.doc_id === id)?.revision ?? 0
     const options = layer === 'voice'
-      ? bankVoices(bank).map(v => ({ value: v.id,
+      ? [...bankVoices(bank).map(v => ({ value: v.id,
         label: `${v.name}${v.id === picked ? ' (picked)' : v.kind === 'krish' ? ' (your voice)' : v.status === 'proposed' ? ' (proposed)' : ''}`,
-        line: cut(`${v.line} ${v.why}`, 240), audio: `/api/board/sign-offs?voice=${v.id}` }))
+        line: cut(`${v.line} ${v.why}`, 240), audio: `/api/board/sign-offs?voice=${v.id}` } as { value: string; label: string; line: string; audio?: string })),
+        { value: RECORD_MYSELF, label: `Record it myself${picked === RECORD_MYSELF ? ' (picked)' : ''}`,
+          line: 'Your own take, not ElevenLabs: the script goes to your Teleprompter once you approve its words, and the cut is made from your recording.' }]
       : offdayTracks(library).map(t => ({ value: t.id, label: `${t.title}${t.artist ? `, ${t.artist}` : ''}${t.id === picked ? ' (picked)' : ''}`,
         line: layer === 'bed' && item.kind === 'voiceover' ? 'Light under the voice: loud open, low and steady under it, louder end (the one bed shape).'
           : 'Over the carousel, from the off-day rotation (Epidemic Sound, licensed).',
@@ -120,6 +125,30 @@ export function audioBody(id: string, body: Body, bank: unknown = voiceBank, lib
   if (!m || body.kind !== 'audio_pick' || body.layer !== m[1] || body.item !== m[2] || 'send' in body) return false
   if (typeof body.pick !== 'string' || !PICK.test(body.pick)) return false
   if (!(typeof body.at === 'string' && Number.isFinite(Date.parse(body.at)))) return false
-  const known = m[1] === 'voice' ? bankVoices(bank).some(v => v.id === body.pick) : offdayTracks(library).some(t => t.id === body.pick)
+  const known = m[1] === 'voice' ? body.pick === RECORD_MYSELF || bankVoices(bank).some(v => v.id === body.pick) : offdayTracks(library).some(t => t.id === body.pick)
   return known && Object.keys(body).every(k => ['kind', 'layer', 'item', 'pick', 'at'].includes(k))
+}
+
+/** What the session making the post is told about his sound picks, appended to its Claude prompt: the voice route
+ *  (ElevenLabs, or his own take through Teleprompter) and the track. Empty when he has picked nothing. */
+export function soundLine(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, bank: unknown = voiceBank, library: unknown = musicLibrary): string {
+  const layers = audioLayers(item.kind)
+  const lines: string[] = []
+  if (layers.includes('voice')) {
+    const v = audioPick(picks, 'voice', item.key)
+    if (v === RECORD_MYSELF) {
+      lines.push('Voice: Krish records this one himself (his pick on the board, Record it myself). Do not generate a voice: once he approves the '
+        + 'script\'s exact words, send them to his Teleprompter (scripts/post-pack/teleprompter_send.py), then make the cut from his take in the Video '
+        + 'Engine Inbox on the ve route, as for any recording.')
+    } else if (v) {
+      const name = bankVoices(bank).find(x => x.id === v)?.name ?? v
+      lines.push(`Voice: ${name}, ElevenLabs (his pick on the board): python scripts/ve.py voice clone <piece> --voice ${v}; never Teleprompter for this one.`)
+    }
+  }
+  if (layers.includes('bed')) {
+    const t = audioPick(picks, 'bed', item.key)
+    const track = t ? offdayTracks(library).find(x => x.id === t) : null
+    if (track) lines.push(`${item.kind === 'voiceover' ? 'Music under the voice' : 'Track over the carousel'}: ${track.title} (config/music-library.json ${track.id}), at the one bed shape.`)
+  }
+  return lines.length ? `\n\nThe sound Krish picked on the board:\n${lines.map(l => `- ${l}`).join('\n')}` : ''
 }

@@ -27,6 +27,10 @@ ID = re.compile(r'^[a-z0-9][a-z0-9-]{0,39}$')
 VOICE_ID = re.compile(r'^[A-Za-z0-9]{8,64}$')
 KINDS = ('krish', 'stock')
 STATUSES = ('approved', 'proposed', 'retired')
+# His pick on the board when he records the voiceover himself: Teleprompter, never ElevenLabs (Krish, 2026-11-17: "I should
+# be able to choose to record manually myself as well, and then the teleprompter workflow will activate, as opposed to the
+# ElevenLabs workflow").
+RECORD_MYSELF = 'record-myself'
 # The ElevenLabs text-to-speech models a voice may be pinned to (Krish, 2026-11-17, on his Krish Remix voice: "v3 sounds
 # right"; on eleven_v4 it did not sound like the voice he made).
 MODELS = ('eleven_v3', 'eleven_multilingual_v2', 'eleven_v4', 'eleven_flash_v2_5')

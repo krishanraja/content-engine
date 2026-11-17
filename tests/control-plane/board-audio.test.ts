@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import voiceBank from '../../config/voice-bank.json' with { type: 'json' }
-import { AUDIO_ID, audioBody, audioLayers, audioPick, audioPresses, bankVoices, offdayTracks, trackFiles, voicePreview } from '../../apps/control-plane/api/board/_audio.js'
+import { AUDIO_ID, RECORD_MYSELF, audioBody, audioLayers, audioPick, audioPresses, bankVoices, offdayTracks, soundLine, trackFiles, voicePreview } from '../../apps/control-plane/api/board/_audio.js'
 import { validBody } from '../../apps/control-plane/api/board/_contracts.js'
 
 // The voice and the track on an off-day post (contract 1.20.0; Krish, 2026-11-17: "I always want to be given a few
@@ -26,9 +26,13 @@ describe('the options he hears', () => {
     const opts = voice.choose!.options
     expect(opts[0]).toMatchObject({ value: 'krish-v2', label: 'Krish v2 (your voice)' })
     expect(opts[1]).toMatchObject({ value: 'krish-remix', label: 'Krish Remix (backup) (your voice)' })
-    expect(opts.length).toBe(bankVoices().length)
-    expect(opts.slice(2).every(o => o.label.endsWith('(proposed)'))).toBe(true)
-    for (const o of opts) expect(o.audio).toBe(`/api/board/sign-offs?voice=${o.value}`)
+    expect(opts.length).toBe(bankVoices().length + 1)
+    expect(opts.slice(2, -1).every(o => o.label.endsWith('(proposed)'))).toBe(true)
+    for (const o of opts.slice(0, -1)) expect(o.audio).toBe(`/api/board/sign-offs?voice=${o.value}`)
+    // His own take is always an option, with nothing to play (Krish, 2026-11-17: "I should be able to choose to record
+    // manually myself as well").
+    expect(opts.at(-1)).toMatchObject({ value: RECORD_MYSELF, label: 'Record it myself' })
+    expect(opts.at(-1)!.audio).toBeUndefined()
     expect(voice).toMatchObject({ collection: 'picks', id: `audio-voice-${ITEM}`, body: { kind: 'audio_pick', layer: 'voice', item: ITEM }, stamp: ['at'] })
   })
 
@@ -75,5 +79,26 @@ describe('his press', () => {
     expect(voice.label).toBe('Change the voice')
     expect(voice.revision).toBe(3)
     expect(voice.choose!.options[0]).toMatchObject({ value: 'clyde', label: 'Clyde (picked)' })
+  })
+})
+
+describe('his pick reaches the session that makes the post', () => {
+  const pick = (layer: string, value: string) => ({ doc_id: `audio-${layer}-${ITEM}`, body: { kind: 'audio_pick', layer, item: ITEM, pick: value, at }, updated_by: 'Krish' })
+
+  it('Record it myself is a press he can make, and sends the session to Teleprompter, never ElevenLabs', () => {
+    expect(validBody('picks', `audio-voice-${ITEM}`, { kind: 'audio_pick', layer: 'voice', item: ITEM, pick: RECORD_MYSELF, at })).toBe(true)
+    const line = soundLine({ key: ITEM, kind: 'voiceover' }, [pick('voice', RECORD_MYSELF)])
+    expect(line).toMatch(/records this one himself/)
+    expect(line).toMatch(/teleprompter_send\.py/)
+    expect(line).not.toMatch(/voice clone/)
+  })
+
+  it('an ElevenLabs voice and the track are named for the session; nothing picked says nothing', () => {
+    const line = soundLine({ key: ITEM, kind: 'voiceover' }, [pick('voice', 'krish-v2'), pick('bed', offdayTracks()[0].id)])
+    expect(line).toMatch(/Krish v2, ElevenLabs/)
+    expect(line).toMatch(/--voice krish-v2/)
+    expect(line).toMatch(new RegExp(offdayTracks()[0].title))
+    expect(soundLine({ key: ITEM, kind: 'voiceover' }, [])).toBe('')
+    expect(soundLine({ key: ITEM, kind: 'voiceover' }, [{ ...pick('voice', RECORD_MYSELF), updated_by: 'engine' }])).toBe('')
   })
 })
