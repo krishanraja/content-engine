@@ -1973,6 +1973,8 @@ What Krish has confirmed he likes, for the writers.
 - `class TeleprompterError`
 - `function assertAllowedCall(tool: string, args: unknown): void`
 - `function normalScript(text: string): string`
+- `const CONVENTION_FOLDER`
+- `function teleprompterNames(i: { date: string; day: string; lane_slot?: string | null; subject: string; cuts: string[] }…`
 - `function scriptHash(text: string): string`
 - `function spokenText(text: string): string`
 - `function durationSeconds(text: string): number`
