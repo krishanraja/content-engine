@@ -99,9 +99,25 @@ def registry_entry(cfg: dict, fetch=None) -> dict:
     return entry
 
 
-def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=None) -> dict:
-    """The exact generation, checked and costed, spending nothing. Raises with every reason it is refused."""
-    from . import lint  # noqa: PLC0415
+def stock_voice(voice: str, bank: dict | None = None) -> dict:
+    """An approved stock voice from the voice bank (config/voice-bank.json), as the plan names it; refuses his own voice
+    (that is the clone route, held to krish-clone's registry) and any voice he has not approved on the board."""
+    from . import voice_bank  # noqa: PLC0415
+    bank = bank or voice_bank.load()
+    entry = voice_bank.voice(bank, voice)
+    problem = voice_bank.stock_problem(voice_bank.stock_tool(entry), bank) if entry['kind'] == 'stock' else None
+    if problem:
+        raise ValueError(f'--voice {problem}; nothing is generated')
+    return {'name': entry['id'], 'platform': 'elevenlabs', 'voice_id': entry['voice_id'], 'kind': 'stock',
+            'approved_sha256': None, 'approved_on': entry.get('approved_on')}
+
+
+def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=None, voice: str | None = None,
+         bank: dict | None = None) -> dict:
+    """The exact generation, checked and costed, spending nothing. Raises with every reason it is refused. voice is the
+    voice bank id he picked on the Content Board (config/voice-bank.json); none, or his own (krish-remix), is his
+    approved clone from krish-clone's registry, as before; a stock voice must be one he approved."""
+    from . import lint, voice_bank  # noqa: PLC0415
     cfg = cfg or config()
     problems = list(lint.clone_route_problems(spec))
     for index, asset in lint.clone_voices(spec):
@@ -111,19 +127,31 @@ def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=
     if problems:
         raise ValueError('; '.join(problems))
     take = take_of(spec)
-    entry = registry_entry(cfg, fetch)
-    if not any(lint._synthetic_match(entry, approval) for approval in spec.get('approvals') or []):
-        raise ValueError(f"the spec carries no approval of {entry['name']}: add approvals[gate=synthetic] with by Krish, and "
-                         f"said, on and artifact_hash copied exactly from its registry entry (artifact_hash "
-                         f"{entry['approved_sha256']})")
+    bank = bank or voice_bank.load()
+    stock = voice is not None and voice_bank.voice(bank, voice)['kind'] == 'stock'
+    if stock:
+        clone = stock_voice(voice, bank)
+        tool = f"elevenlabs.stock_voice:{clone['name']}"
+    else:
+        entry = registry_entry(cfg, fetch)
+        # His own voice picked on the board: the voice he heard there (the bank's) is the one the registry approves.
+        mismatch = voice_bank.registry_problems(bank, [entry]) if voice is not None else []
+        if mismatch:
+            raise ValueError('; '.join(mismatch))
+        if not any(lint._synthetic_match(entry, approval) for approval in spec.get('approvals') or []):
+            raise ValueError(f"the spec carries no approval of {entry['name']}: add approvals[gate=synthetic] with by Krish, and "
+                             f"said, on and artifact_hash copied exactly from its registry entry (artifact_hash "
+                             f"{entry['approved_sha256']})")
+        clone = {'name': entry['name'], 'platform': entry['platform'], 'voice_id': entry['platform_ref'],
+                 'approved_sha256': entry['approved_sha256'], 'approved_on': entry['approved_on']}
+        tool = f"{cfg['platform']}.{cfg['capability']}:{entry['name']}"
     text, script_sha, words = signed_text(script_path)
     characters = len(text)
     doc = {
         'schema': PLAN_SCHEMA, 'ruling': cfg['ruling'], 'piece': spec['piece_id'], 'publish_day': spec.get('publish_day'),
         'take': take, 'cuts': sorted(spec['cuts']),
-        'clone': {'name': entry['name'], 'platform': entry['platform'], 'voice_id': entry['platform_ref'],
-                  'approved_sha256': entry['approved_sha256'], 'approved_on': entry['approved_on']},
-        'tool': f"{cfg['platform']}.{cfg['capability']}:{entry['name']}",
+        'clone': clone,
+        'tool': tool,
         'model': cfg['model'], 'output_format': cfg['output_format'], 'endpoint': cfg['endpoint'],
         'script': {'file': Path(script_path).name, 'sha256': script_sha, 'words': words},
         'text': text, 'text_sha256': hashlib.sha256(text.encode('utf-8')).hexdigest(), 'characters': characters,
@@ -196,7 +224,9 @@ def generate(doc: dict, *, plan_sha256: str, spend_id: str, assets_dir: str | Pa
     voice_sha = sha256_file(voice)
     request_id = headers.get('request-id') or headers.get('x-request-id')
     asset = {'id': doc['take'], 'kind': 'voice', 'origin': 'generated', 'path': voice.name, 'sha256': voice_sha,
-             'licence': f"generated with his approved ElevenLabs voice clone ({doc['clone']['name']}, krish-clone's registry)",
+             'licence': (f"generated with the approved ElevenLabs stock voice {doc['clone']['name']} (config/voice-bank.json)"
+                         if doc['clone'].get('kind') == 'stock' else
+                         f"generated with his approved ElevenLabs voice clone ({doc['clone']['name']}, krish-clone's registry)"),
              'tool': doc['tool'], 'prompt_ref': PLAN_FILE, 'credits': cost}
     if request_id:
         asset['job_id'] = str(request_id)
