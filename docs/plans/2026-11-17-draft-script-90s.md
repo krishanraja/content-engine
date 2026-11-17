@@ -4,8 +4,8 @@ Meta wanted a giant data centre, and the mayor said yes. A shed like that uses a
 
 Meta's shed was already being built, so it's still going up anyway. Meta says it'll work with local officials. Which is a polite way of saying, we'll get back to you.
 
-So the bigger question is who pays for the power. Piqua refused to foot that bill. So now the AI companies pay for their own power. And I reckon they pass that cost on, straight into your next renewal.
+So the bigger question is who pays for the power. And towns like Piqua are now making the AI companies pay for their own power. And I reckon they pass that cost on, into your next renewal.
 
-Next time we renew an AI tool, I'm asking where its new data centres are being built. Because if it's a town that's just said no, that cost is heading for my renewal.
+Next time we renew an AI tool, I'm asking where its new data centres are being built. Because wherever it's built, someone's paying for that power. And I'd rather know before it lands on my renewal.
 
 The full story is free at makeyourmindup.ai.
