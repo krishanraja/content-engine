@@ -2226,6 +2226,21 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function archiveRows(pieces: readonly ArchivePiece[], scores: readonly ArchiveScore[]): ArchiveRow[]`
 - `async function readArchive(db: SupabaseClient): Promise<{ rows: ArchiveRow[]; scores: 'live' | 'waits_on_migration' }>`
 
+### `apps/control-plane/api/board/_audio.ts`
+
+- `type AudioLayer = 'voice' | 'bed'`
+- `const AUDIO_ID`
+- `interface BankVoice`
+- `interface Track`
+- `function bankVoices(bank: unknown = voiceBank): BankVoice[]`
+- `function offdayTracks(library: unknown = musicLibrary): Track[]`
+- `function voicePreview(id: string, bank: unknown = voiceBank): string | null`
+- `function trackFiles(library: unknown = musicLibrary): Set<string>`
+- `function audioLayers(kind: string): AudioLayer[]`
+- `function audioPick(picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, layer: AudioLayer, item: string):…`
+- `function audioPresses(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: stri…`
+- `function audioBody(id: string, body: Body, bank: unknown = voiceBank, library: unknown = musicLibrary): boolean`
+
 ### `apps/control-plane/api/board/_carry.ts`
 
 - `const CARRY_DAYS`
