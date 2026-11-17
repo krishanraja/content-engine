@@ -259,7 +259,7 @@ python scripts/post-pack/story_check.py --cut long SCRIPT    # or --cut short
 ```
 
 Whether the wit lands is a reading, not a rule: `humour_check.py` asks humour-engine (krishanraja/humour-engine,
-through Control Center's `POST /api/humour/content-engine`, on `CONTROL_CENTER_HUMOUR_TOKEN`). `script SCRIPT` flags a
+through Control Center's `POST /api/humour/content-engine`, on the engine's operator key, `ENGINE_OPERATOR_TOKEN`). `script SCRIPT` flags a
 flat script and wit that needs outside explanation, `joke` reads each joke option alone, `ideas IDEAS.json` reads the
 board's `funny` lines, and `doctor` proves the route with no model call. Exit 0 passes, 1 is flagged, 2 is unavailable
 and never a pass. It holds no taste: whether the joke is good stays Krish's.
