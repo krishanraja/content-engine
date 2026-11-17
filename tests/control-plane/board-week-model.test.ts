@@ -127,7 +127,7 @@ describe('the week model (contract 1.12.0)', () => {
   const v = buildView(thisWeek())
 
   it('keeps the contract and every rule of the view and the model', () => {
-    expect(v.contract_version).toBe('1.18.0')
+    expect(v.contract_version).toBe('1.19.0')
     expect(validate(SCHEMA, JSON.parse(JSON.stringify({ ok: true, ...v })), SCHEMA, '$', { open: true })).toEqual([])
     expect(viewProblems(v)).toEqual([])
     expect(modelProblems(v.model!, v.days)).toEqual([])
@@ -135,6 +135,8 @@ describe('the week model (contract 1.12.0)', () => {
   })
 
   it('the frozen fixture of this week is what the builder makes now', () => {
+    // UPDATE_VIEW_FIXTURE=1 writes it again, as board-view-contract.test.ts does for its own fixture.
+    if (process.env.UPDATE_VIEW_FIXTURE) writeFileSync(FIXTURE, `${JSON.stringify({ ok: true, ...v }, null, 1)}\n`)
     const frozen = JSON.parse(readFileSync(FIXTURE, 'utf8')) as Body
     const { as_of: _a, ...now } = JSON.parse(JSON.stringify({ ok: true, ...v })) as Body
     const { as_of: _b, ...was } = frozen

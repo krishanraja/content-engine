@@ -81,7 +81,7 @@ describe('the one route for carousels, memes, Notes images and off-day voiceover
     const still = itemPrompt('2026-11-16', { ...base, kind_label: 'Carousel for Monday\'s piece' }, 'post', 'still')
     const motion = itemPrompt('2026-11-16', { ...base, kind_label: 'Voiceover short' }, 'post', 'motion')
     for (const a of [still, motion]) {
-      expect(a.label).toBe('Copy prompt for Claude')
+      expect(a.label).toBe('Claude production prompt')
       if (a.kind !== 'prompt') throw new Error('not a prompt')
       expect(a.prompt).toContain(ROUTE_RULING)
       expect(a.prompt).toContain(NEVER_HEADLESS)
