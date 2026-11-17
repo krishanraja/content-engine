@@ -18,7 +18,8 @@ posts, sends or publishes.
 | TikTok @therealkrisho, X @TheRealKrisho, LinkedIn, Threads, Substack Notes | His own | Face-led, in the week's face variant (below). His name never appears in the post text. |
 | YouTube @makeyourmind-up | Brand | Both: the Receipt and the face-led cover, as YouTube's Test & Compare pair; Growth reports click rate. |
 
-It runs as a four-week test from 17 Nov 2026; then Krish decides from the numbers. A new channel takes the row its
+Krish approved this palette, its channels and its rotation on 17 Nov 2026, on the approval pack ("this looks god to
+me"). It runs as a four-week test from 17 Nov 2026; then Krish decides from the numbers. A new channel takes the row its
 account type matches; ask him once if it fits neither.
 
 ## The two rotations
