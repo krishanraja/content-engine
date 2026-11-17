@@ -7,7 +7,7 @@ effort: medium
 max_minutes: 90
 max_calls: 80
 cwd: /home/user/ve-wt\content-engine\ve-card\ve-style-1-ladder-stage-pace
-write_allow: [apps/renderer/src/engine/devices/ladder_stage/**, apps/renderer/src/engine/kit/motion-profiles.json]
+write_allow: [apps/renderer/src/engine/devices/ladder_stage/**]
 read: [apps/renderer/src/engine/devices/CONTRACT.md, packages/moves/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/kit/**, config/ve/devices.json, config/channel-safe-zones.json, config/ve/pace-references.json, docs/ve/MOTION_STANDARD.md, docs/ve/FAILURE_2026-11-13_3d-styles.md, lab/styles/ladder/**]
 never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, raw hex colours, useCurrentFrame outside apps/renderer/src/engine/clock.ts, edits outside write_allow
 ---
@@ -28,10 +28,10 @@ Pace and room (his reference cuts, config/ve/pace-references.json: about 3 to 4.
 - the same frame twice renders identical pixels; no colour outside tokens; tall and wide stills render
 
 ## After it builds (Claude, not Codex)
-`ve verify-card`, then a test cut of the house test take in this style, measured with `ve pace` beside his references and watched at speed beside one, a `ve-critic` verdict, then Krish's Gate 2. On his yes Claude takes `needs_device` out of the `ladder` entry's `ve_route` in config/style-references.json (a guarded file: his yes, in person) and out of `needs_device` in apps/renderer/src/engine/kit/motion-profiles.json, then records its StyleStill cover (docs/ve/cards/style-stills/ve-style-still-template-*) with `record_still`.
+`ve verify-card`, then a test cut of the house test take in this style, measured with `ve pace` beside his references and watched at speed beside one, a `ve-critic` verdict, then Krish's Gate 2. On his yes Claude takes `needs_device` out of the `ladder` entry's `ve_route` in config/style-references.json (a guarded file: his yes, in person) and out of `needs_device` in apps/renderer/src/engine/kit/motion-profiles.json and adds its profile there, then records its StyleStill cover (docs/ve/cards/style-stills/ve-style-still-template-*) with `record_still`.
 
 ## Contract
-Device rules: apps/renderer/src/engine/devices/CONTRACT.md. `ladder_stage` keeps its verbs (enter, count_to, add, draw, move, fill, highlight, carry, exit). Draw with three.js through @remotion/three (card ve-style-0-three-and-moves), from the frame alone. Reuse packages/moves, never copy a move. Keep the `ladder` profile inside the signed floor (the kit tests check it) and under `needs_device`.
+Device rules: apps/renderer/src/engine/devices/CONTRACT.md. `ladder_stage` keeps its verbs (enter, count_to, add, draw, move, fill, highlight, carry, exit). Draw with three.js through @remotion/three (card ve-style-0-three-and-moves), from the frame alone. Reuse packages/moves, never copy a move. Add no motion profile and leave apps/renderer/src/engine/kit/motion-profiles.json untouched: profiles hold drawable styles only (kit.test.ts), and this style stays `needs_device` until Krish's yes, when Claude adds it.
 
 ## Motion style: The Ladder (ladder, liked)
 One real object carries the whole piece, built in lit 3D with mass, and every number is a change to it: twenty lit windows are twenty tellers, three branches drop into the street for +43%.
