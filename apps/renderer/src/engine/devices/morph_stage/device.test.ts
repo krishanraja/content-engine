@@ -13,7 +13,7 @@ const at = (frame: number) => morphState(object, events, frame)
 const markup = (frame: number, aspect: '9:16' | '16:9' = '9:16') => renderToStaticMarkup(React.createElement(Device, { object, events, tokens, frame, aspect, box: { left: 0, top: 0, width: aspect === '9:16' ? 1080 : 1920, height: aspect === '9:16' ? 1920 : 1080 } }))
 describe('morph_stage', () => {
   it('resamples one outline and makes a true intermediate geometry', () => {
-    expect(resample([[0,0],[1,0],[1,1],[0,1]])).length).toBe(96)
+    expect(resample([[0,0],[1,0],[1,1],[0,1]]).length).toBe(96)
     expect(at(29).points).not.toEqual(at(20).points)
     expect(at(29).points).not.toEqual(at(38).points)
     expect(markup(29).match(/data-outline=/g)).toHaveLength(1)

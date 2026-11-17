@@ -2,7 +2,7 @@ import { drift, HERO, MOTION, progress, stateAt } from '../../clock'
 import type { EngineEvent, EngineObject } from '../../props'
 // Shared move arithmetic, rather than a second interpolation implementation.
 // @ts-ignore The moves bank is shared JavaScript.
-import { lerp } from '../../../../../../../packages/moves/_kit.mjs'
+import { lerp } from '@mymu/moves/_kit.mjs'
 import { ParamsSchema, type MorphState } from './schema'
 export type Point = [number, number]
 export function resample(vertices: Point[], count = 96): Point[] {
@@ -21,7 +21,8 @@ export function outline(s: MorphState): Point[] {
   if (s.shape === 'circle') return resample(Array.from({ length: 96 }, (_, i): Point => { const a = -Math.PI / 2 + i * Math.PI * 2 / 96; return [.5 + .5 * Math.cos(a), .5 + .5 * Math.sin(a)] }))
   return resample(s.shape === 'triangle' ? [[.5, 0], [1, 1], [0, 1]] : s.shape === 'diamond' ? [[.5, 0], [1, .5], [.5, 1], [0, .5]] : [[0, 0], [1, 0], [1, 1], [0, 1]])
 }
-export const blend = (a: Point[], b: Point[], t: number): Point[] => a.map((p, i) => [lerp(p[0], b[i]![0], t), lerp(p[1], b[i]![1], t)])
+/** Part way between two outlines; a finished morph is the target outline itself, never a rounding error short of it. */
+export const blend = (a: Point[], b: Point[], t: number): Point[] => t >= 1 ? b : a.map((p, i) => [lerp(p[0], b[i]![0], t), lerp(p[1], b[i]![1], t)])
 export function morphState(object: EngineObject, events: readonly EngineEvent[], frame: number) {
   const params = ParamsSchema.parse(object.params), state = stateAt(events, object.obj, frame)
   for (const s of params.states) if (s.kind === 'number' && !object.dataset?.rows[s.row]) throw new Error('Number states require a dataset row and producerLabel')
