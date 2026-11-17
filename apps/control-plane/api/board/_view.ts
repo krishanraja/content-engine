@@ -19,6 +19,7 @@ import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, of
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
 import { HELD_CHANGED, HELD_TITLE, approvedLabel, approvedWhen, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
+import { pieceDecisions, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
 import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
@@ -408,6 +409,29 @@ export function lockSigned(text: string | null | undefined): boolean {
   if (!m || /^<[^>]*>$/.test(m[1].trim())) return false
   const bound = /lock sha256 ([0-9a-f]{64})\b/.exec(last)?.[1]
   return !bound || bound === lockBodyHash(String(text))
+}
+
+const str = (v: unknown): string | null => (typeof v === 'string' && v.trim() ? v.trim() : null)
+/** His lock and scripts decisions on a piece placed on `day`, from the week's locks and presses (_decisions.ts). */
+export function lockStateOf(locks: ViewInputs['locks'], picks: Array<{ doc_id: string; body: Body }>, day: PostedDay, pieceId: string): LockState {
+  const lk = lockOf(locks, day, pieceId)
+  const typed = lk ? typedApproval(picks, lk.day, 'lock', pieceId, lk.text) : null
+  return { signed: lockSigned(lk?.text), on: lockSignedOn(lk?.text), typed: typed ? { words: typed.words, said_at: typed.said_at } : null }
+}
+export function scriptsStateOf(picks: Array<{ doc_id: string; body: Body; updated_by?: string | null; updated_at?: string | null }>, day: PostedDay, pieceId: string): ScriptsState {
+  const pressed = picks.find(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && isObj(p.body) && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === pieceId)
+  const typed = typedApproval(picks, day, 'scripts', pieceId)
+  const at = pressed ? str(pressed.updated_at) ?? (isObj(pressed.body) ? str(pressed.body.at) : null) : null
+  return { pressed: Boolean(pressed), pressed_at: at, typed: typed ? { words: typed.words, said_at: typed.said_at } : null }
+}
+/** Every approved piece's decisions on the week, by piece id: what the prompts carry and the step they leave (F46). */
+export function weekDecisions(i: ViewInputs, days: Array<{ day: PostedDay; pieces: Array<{ id: string; approval?: unknown }> }>): Record<string, PieceDecisions> {
+  const out: Record<string, PieceDecisions> = {}
+  for (const d of days) for (const p of d.pieces.filter(x => x.approval)) {
+    const row = i.pieces.find(x => String(x.id).toLowerCase() === p.id)
+    out[p.id] = pieceDecisions({ meta: row?.meta, lock: lockStateOf(i.locks, i.picks, d.day, p.id), scripts: scriptsStateOf(i.picks, d.day, p.id) })
+  }
+  return out
 }
 
 const short = (week: string, day: PostedDay) => {
@@ -885,7 +909,8 @@ export function buildView(i: ViewInputs): WeekView {
   // His thoughts on any day not done, pinned to the step it is on, as the desk's "Add your thoughts" saved them.
   for (const d of days) if (d.who !== 'done') d.actions.push(thoughtPress(d.day, d.path?.current || 'day'))
   // Every Claude and Growth prompt says how the session reports back to the board, with no key in it (_writeBack.ts).
-  withWriteBack(i.week, days)
+  const decisions = weekDecisions(i, days)
+  withWriteBack(i.week, days, decisions)
   // The week model (contract 1.12.0): the one thing the Publish Board draws, from the days built above.
   const signedLocks = Object.values(i.locks).filter(t => lockSigned(t)).map(t => lockPieceId(t)).filter((x): x is string => Boolean(x))
   // A piece his approval holds on a day that is not its series day (Tue 17's data-centres piece) has no day path of its
@@ -918,7 +943,7 @@ export function buildView(i: ViewInputs): WeekView {
   }
   // What went out or is on its way around the week, so an idea that retells it leaves the ideas board (contract 1.17.0).
   const recentOut = recentOutOf({ week: i.week, ideas: i.ideas, plans: i.plans, pieces: i.pieces }, days, i.all_items ?? null, i.recent_pieces ?? [])
-  const built = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut, picks: i.picks })
+  const built = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut, picks: i.picks, decisions })
   // Beside each piece's Claude production prompt, its Perplexity research prompt, from everything on record (1.19.0).
   const model = withSavedNotes(withResearchPrompts(built, (day, it) => {
     const dv = days.find(x => x.day === day)
@@ -980,6 +1005,39 @@ export async function branchSha(f: Fetcher, env: Record<string, string | undefin
     const sha = (JSON.parse(await r.text()) as { object?: { sha?: string } }).object?.sha
     return typeof sha === 'string' && /^[0-9a-f]{40}$/.test(sha) ? sha : undefined
   } catch { return undefined }
+}
+
+/** A piece's decisions read live for its own read (GET /api/content-ideas/store?piece=<id>, which the Control Center
+ *  connector's get_piece_board returns; F46): his look, motion and captions from the piece's meta, the lock from the
+ *  week's narrative-lock files at main's newest commit, and his presses and typed approvals from the board. A record
+ *  that cannot be read is unknown (made: null), never "not made", so a session reads it again rather than asking. */
+export async function readPieceDecisions(db: SupabaseClient, pieceId: string, env: Record<string, string | undefined> = process.env,
+  fetcher: Fetcher = fetch as unknown as Fetcher): Promise<(PieceDecisions & { week: string; day: PostedDay }) | null> {
+  const id = pieceId.toLowerCase()
+  const row = await db.from('content_ideas').select('id,scheduled_for,meta').eq('id', id).maybeSingle()
+  if (row.error || !row.data) return null
+  const date = typeof row.data.scheduled_for === 'string' ? row.data.scheduled_for.slice(0, 10) : null
+  if (!date) return null
+  const at = new Date(`${date}T00:00:00Z`)
+  const day = (['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const)[at.getUTCDay()]
+  at.setUTCDate(at.getUTCDate() - ((at.getUTCDay() + 6) % 7))
+  const week = at.toISOString().slice(0, 10)
+  if (day === 'sun') return { ...pieceDecisions({ meta: row.data.meta, lock: undefined, scripts: undefined }), week, day: 'mon' }
+  const sha = await branchSha(fetcher, env, 'main')
+  const RAW = `https://raw.githubusercontent.com/${ENGINE_REPO}/${sha || 'main'}`
+  // A lock file that is not there is no lock; any other failure leaves every lock unknown.
+  const lockText = async (d: PostedDay): Promise<string | null | undefined> => {
+    try { const r = await fetcher(`${RAW}/docs/plans/${week}-week/narrative-lock-${d}.md`); return r.status === 200 ? await r.text() : r.status === 404 ? null : undefined } catch { return undefined }
+  }
+  const [picksRead, ...texts] = await Promise.all([
+    db.from('board_documents').select('doc_id,body,updated_by,updated_at').eq('week', week).eq('collection', 'picks'),
+    ...LOCK_DAYS.map(lockText),
+  ])
+  const picks = picksRead.error ? null : (picksRead.data || []) as Array<{ doc_id: string; body: Body; updated_by: string; updated_at?: string }>
+  const locksRead = !texts.includes(undefined)
+  const locks = Object.fromEntries(LOCK_DAYS.map((d, k) => [d, texts[k] ?? null])) as ViewInputs['locks']
+  return { ...pieceDecisions({ meta: row.data.meta, lock: locksRead && picks ? lockStateOf(locks, picks, day, id) : undefined,
+    scripts: picks ? scriptsStateOf(picks, day, id) : undefined }), week, day }
 }
 
 /** Read every input of the week now and build its view. Each source that cannot be read is said in sources, never a failure. */

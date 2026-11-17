@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
 import { StoreError, addText, archive, confirmFile, listing, parseScope, readMaterial, uploadUrl, writerOf, type StoreDb } from '../_pieceStore.js'
 import { driveFileIdOf, isResearchLink, type LinkReader } from '../_researchLink.js'
+import { DECISIONS_RULE } from '../board/_decisions.js'
 
 // The piece materials store (api/_pieceStore.ts; docs/PUBLISH_BOARDS.md, "Sessions and materials"): one listing every
 // session reads, and the one door the board and every session file through. On the engine key or his login; Control
@@ -44,7 +45,10 @@ const materialIdOf = (r: Record<string, unknown>): string | null => {
   return typeof m?.id === 'string' ? m.id : null
 }
 
-export function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy, readLink?: () => Promise<LinkReader | null>) {
+/** His decisions on a piece, read live (_view.ts readPieceDecisions; F46); null when they could not be read. */
+export type DecisionsReader = (db: StoreDb, pieceId: string) => Promise<Record<string, unknown> | null>
+
+export function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy, readLink?: () => Promise<LinkReader | null>, decide?: DecisionsReader) {
   const withCopy = async (r: Record<string, unknown>) => {
     if (!copy) return r
     try { return { ...r, library: await copy(materialIdOf(r)) } } catch { return { ...r, library: { state: 'later', why: 'copy_failed' } } }
@@ -82,7 +86,12 @@ export function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: Library
           return res.status(200).json(got.body)
         }
         const scope = parseScope({ piece: q(req.query.piece) ?? q(req.query.piece_id), week: q(req.query.week), day: q(req.query.day) })
-        return res.status(200).json(await listing(db, scope, { all: q(req.query.all) === '1', archived: q(req.query.archived) === '1' }))
+        const listed = await listing(db, scope, { all: q(req.query.all) === '1', archived: q(req.query.archived) === '1' })
+        // A piece's read carries his decisions, so a session checks before it asks him for a press (F46). Unread is said
+        // as unread, never as not made.
+        if (!scope.piece_id || !decide) return res.status(200).json(listed)
+        const decisions = await decide(db, scope.piece_id).catch(() => null)
+        return res.status(200).json({ ...listed, decisions: decisions ?? { unread: true, rule: DECISIONS_RULE } })
       }
       const body = (req.body && typeof req.body === 'object' && !Array.isArray(req.body) ? req.body : {}) as Record<string, unknown>
       const bearer = operatorBearerAllowed(req)
@@ -109,4 +118,5 @@ export default createStoreHandler(
   async () => (await import('../_supabase.js')).supabase as unknown as StoreDb,
   async id => (await import('../_researchLibraryGoogle.js')).copyNow(id),
   async () => (await import('../_researchLink.js')).driveLinkReader(),
+  async (db, pieceId) => (await import('../board/_view.js')).readPieceDecisions(db as never, pieceId) as unknown as Promise<Record<string, unknown> | null>,
 )
