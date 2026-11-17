@@ -1,10 +1,50 @@
 {
   "devices": {
-    "iso_world": {"verbs": ["enter", "add", "fill", "carry", "move", "highlight", "exit"]},
-    "ink_wash": { "verbs": ["enter", "draw", "fill", "highlight", "exit"] },
-    "cursor_path": {"verbs": ["enter", "move", "pick", "type", "send", "exit"]},
-    "character_layer": { "verbs": ["enter", "exit"] },
-    "answer_stream": { "verbs": ["enter", "type", "mark", "light", "exit"] },
+    "iso_world": {
+      "verbs": [
+        "enter",
+        "add",
+        "fill",
+        "carry",
+        "move",
+        "highlight",
+        "exit"
+      ]
+    },
+    "ink_wash": {
+      "verbs": [
+        "enter",
+        "draw",
+        "fill",
+        "highlight",
+        "exit"
+      ]
+    },
+    "cursor_path": {
+      "verbs": [
+        "enter",
+        "move",
+        "pick",
+        "type",
+        "send",
+        "exit"
+      ]
+    },
+    "character_layer": {
+      "verbs": [
+        "enter",
+        "exit"
+      ]
+    },
+    "answer_stream": {
+      "verbs": [
+        "enter",
+        "type",
+        "mark",
+        "light",
+        "exit"
+      ]
+    },
     "office_floor": {
       "verbs": [
         "enter",
@@ -344,6 +384,14 @@
       "verbs": [
         "enter",
         "type",
+        "highlight",
+        "exit"
+      ]
+    },
+    "morph_stage": {
+      "verbs": [
+        "enter",
+        "move",
         "highlight",
         "exit"
       ]

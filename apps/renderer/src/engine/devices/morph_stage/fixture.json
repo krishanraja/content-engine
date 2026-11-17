@@ -1,0 +1,109 @@
+{
+  "objects": [
+    {
+      "obj": "before-after",
+      "device": "morph_stage",
+      "meaning": "The evidence becomes a measurable result",
+      "fromFrame": 0,
+      "toFrame": 180,
+      "dataset": {
+        "unit": "hours",
+        "denominator": null,
+        "producerLabel": "Measured trial",
+        "rows": [
+          {
+            "label": "before",
+            "value": 40
+          },
+          {
+            "label": "after",
+            "value": 12
+          }
+        ]
+      },
+      "params": {
+        "states": [
+          {
+            "kind": "shape",
+            "shape": "rectangle"
+          },
+          {
+            "kind": "shape",
+            "shape": "triangle"
+          },
+          {
+            "kind": "image",
+            "image": 0,
+            "shape": "circle"
+          },
+          {
+            "kind": "number",
+            "row": 0
+          },
+          {
+            "kind": "number",
+            "row": 1
+          }
+        ],
+        "images": [
+          {
+            "src": "/evidence/trial.jpg",
+            "pixelWidth": 1000,
+            "pixelHeight": 800
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "0",
+      "obj": "before-after",
+      "verb": "enter",
+      "toState": "0",
+      "atFrame": 0
+    },
+    {
+      "id": "1",
+      "obj": "before-after",
+      "verb": "move",
+      "toState": "1",
+      "atFrame": 20
+    },
+    {
+      "id": "2",
+      "obj": "before-after",
+      "verb": "highlight",
+      "toState": "1",
+      "atFrame": 25
+    },
+    {
+      "id": "3",
+      "obj": "before-after",
+      "verb": "move",
+      "toState": "2",
+      "atFrame": 50
+    },
+    {
+      "id": "4",
+      "obj": "before-after",
+      "verb": "move",
+      "toState": "3",
+      "atFrame": 80
+    },
+    {
+      "id": "5",
+      "obj": "before-after",
+      "verb": "move",
+      "toState": "4",
+      "atFrame": 110
+    },
+    {
+      "id": "6",
+      "obj": "before-after",
+      "verb": "exit",
+      "toState": "4",
+      "atFrame": 150
+    }
+  ]
+}
