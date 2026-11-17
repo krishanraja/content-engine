@@ -4,13 +4,44 @@
   "ruling": "Krish, 2026-11-17 (typed in a Claude session): for all voiceovers, ElevenLabs voices, a few options on the Content Board, some approved stock voices and his own Krish Remix voice; voiceovers have light approved Epidemic audio behind the voice; carousels carry an approved audio track",
   "voices": [
     {
+      "id": "krish-v2",
+      "name": "Krish v2",
+      "kind": "krish",
+      "default": true,
+      "voice_id": "EWMCMyM8o9ZcYCijk7nx",
+      "registry_name": "krish-voice-elevenlabs-v2",
+      "line": "His own voice: a Voice Remix of Krish Remix, \"Same man, same accent and tone. Softer, glottal T's like relaxed London speech\" (its ElevenLabs description).",
+      "why": "His best narration voice so far (Krish, 2026-11-17: \"yes, 15% is right, go ahead - ensure the krish-clone repo and the other two sessions know that this is the best choice thus far in terms of voice ID and your usage of it\", relayed by the voice-design session).",
+      "preview_url": "https://api.us.elevenlabs.io/v1/voices/EWMCMyM8o9ZcYCijk7nx/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI0Mjk1MzQzYjQ2MmI0YjVmYTc5YjZlZjFlMmRjNTk2ZCIsImZpbGVuYW1lIjoiOTIyNWEyZDUtZWE3Yy00Zjc5LTgzM2QtNTc3NDFmYzYyNTg3Lm1wMyIsInRpbWVzdGFtcCI6MTc5NDkwOTYwMDAwMDAwMH0%3D",
+      "model": "eleven_v3",
+      "model_why": "eleven_v3, never v4: on v4 his voice did not sound like itself (Krish, 2026-11-17: \"v3 sounds right\").",
+      "stability": 0.5,
+      "speed": 1.15,
+      "speed_how": "The chosen take is sped up 15% keeping pitch (ffmpeg atempo=1.15) after generation: the v3 settings have no speed control. ve voice clone does it when it makes the .wav.",
+      "delivery": "eleven_v3 audio tags before the beats ([excited] on the hook, [casual], [playful] on the turn, [conversational] on the explanation); his approved words unchanged. Render two takes and keep the better.",
+      "approved_sample": {
+        "said": "yes, 15% is right, go ahead",
+        "on": "2026-11-17",
+        "elevenlabs_flow": "lyaAZ5OQj8bp08tbDKPJ",
+        "elevenlabs_node": "kxAAP0hs02YJa30rDxKc",
+        "elevenlabs_asset": "5h0k0j3mcJ51YBbUO7p1",
+        "model": "eleven_v3",
+        "speed": 1.15,
+        "relayed_by": "the voice-design session"
+      },
+      "status": "approved",
+      "approved_by": "Krish",
+      "approved_on": "2026-11-17",
+      "approval_source": "krish-clone config/synthetic-approvals.json, entry krish-voice-elevenlabs-v2 (krishanraja/krish-clone PR #13; generation is refused until it is on main)"
+    },
+    {
       "id": "krish-remix",
-      "name": "Krish Remix",
+      "name": "Krish Remix (backup)",
       "kind": "krish",
       "voice_id": "FOupAntbAMhJ9n9Q4dfC",
       "registry_name": "krish-voice-elevenlabs",
       "line": "His own ElevenLabs voice: \"more of a posh london accent with an aussie twang\" (its ElevenLabs description).",
-      "why": "His own voice, the one krish-clone's registry approves (krish-voice-elevenlabs, 15 Nov 2026).",
+      "why": "His first ElevenLabs voice, the registry voice krish-voice-elevenlabs (15 Nov 2026); kept approved as the backup since Krish v2 (17 Nov).",
       "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/4295343b462b4b5fa79b6ef1e2dc596d/voices/FOupAntbAMhJ9n9Q4dfC/80be4e3a-2d38-4f42-a16c-af9923457b18.mp3",
       "status": "approved",
       "approved_by": "Krish",
@@ -28,7 +59,8 @@
         "model": "eleven_v3",
         "stability": 0.5,
         "relayed_by": "the voice-design session"
-      }
+      },
+      "default": false
     },
     {
       "id": "clyde",

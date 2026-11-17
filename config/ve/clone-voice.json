@@ -1,7 +1,7 @@
 {
-  "_about": "How ve voice clone voices an off-day voiceover short with his approved ElevenLabs clone (scripts/velib/clone_voice.py). The clone itself, its voice id included, is read live from krish-clone's registry (scripts/velib/lint.py SYNTHETIC_REGISTRY, platform_ref); nothing here keeps a voice id or a key. The key is ELEVENLABS_API_KEY on the machine that generates (docs/INTEGRATIONS.md). The estimate is characters times credits_per_character; the reservation is settled with what ElevenLabs reports (its character-cost header).",
+  "_about": "His voice is the voice bank's default krish voice (config/voice-bank.json, Krish v2 since 17 Nov 2026); clone names it for anything that reads this file alone. How ve voice clone voices an off-day voiceover short with his approved ElevenLabs clone (scripts/velib/clone_voice.py). The clone itself, its voice id included, is read live from krish-clone's registry (scripts/velib/lint.py SYNTHETIC_REGISTRY, platform_ref); nothing here keeps a voice id or a key. The key is ELEVENLABS_API_KEY on the machine that generates (docs/INTEGRATIONS.md). The estimate is characters times credits_per_character; the reservation is settled with what ElevenLabs reports (its character-cost header).",
   "ruling": "Ruling, Krish, 2026-11-15: off-day voiceover shorts may be voiced with his approved ElevenLabs clone; hero cuts stay on his real takes",
-  "clone": "krish-voice-elevenlabs",
+  "clone": "krish-voice-elevenlabs-v2",
   "platform": "elevenlabs",
   "capability": "voice_clone",
   "provider": "elevenlabs_credits",

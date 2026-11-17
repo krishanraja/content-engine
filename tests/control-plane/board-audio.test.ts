@@ -24,9 +24,10 @@ describe('the options he hears', () => {
   it('his own Krish Remix voice comes first, then the stock voices, each marked and each with a sample on this site', () => {
     const [voice] = audioPresses({ key: ITEM, kind: 'voiceover' }, [])
     const opts = voice.choose!.options
-    expect(opts[0]).toMatchObject({ value: 'krish-remix', label: 'Krish Remix (your voice)' })
+    expect(opts[0]).toMatchObject({ value: 'krish-v2', label: 'Krish v2 (your voice)' })
+    expect(opts[1]).toMatchObject({ value: 'krish-remix', label: 'Krish Remix (backup) (your voice)' })
     expect(opts.length).toBe(bankVoices().length)
-    expect(opts.slice(1).every(o => o.label.endsWith('(proposed)'))).toBe(true)
+    expect(opts.slice(2).every(o => o.label.endsWith('(proposed)'))).toBe(true)
     for (const o of opts) expect(o.audio).toBe(`/api/board/sign-offs?voice=${o.value}`)
     expect(voice).toMatchObject({ collection: 'picks', id: `audio-voice-${ITEM}`, body: { kind: 'audio_pick', layer: 'voice', item: ITEM }, stamp: ['at'] })
   })
@@ -40,9 +41,10 @@ describe('the options he hears', () => {
 
   it('a voice sample is only the bank\'s ElevenLabs preview; anything else is nothing', () => {
     expect(voicePreview('krish-remix')).toMatch(/^https:\/\/storage\.googleapis\.com\//)
+    expect(voicePreview('krish-v2')).toMatch(/^https:\/\/api\.us\.elevenlabs\.io\//)
     expect(voicePreview('nobody')).toBeNull()
     const bad = { voices: [{ ...voiceBank.voices[0], preview_url: 'https://example.org/a.mp3' }] }
-    expect(voicePreview('krish-remix', bad)).toBeNull()
+    expect(voicePreview(voiceBank.voices[0].id, bad)).toBeNull()
   })
 })
 
