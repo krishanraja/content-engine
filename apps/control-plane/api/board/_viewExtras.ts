@@ -64,6 +64,21 @@ export type PressAction = {
   /** Contract 1.17.0: what the board does once the press is saved: the prompt it opens (Open a production session
    *  saves his approval of the story, then opens the production session). */
   after?: import('./_view.js').PromptAction
+  /** Contract 1.21.0: an Approve scripts press carries the scripts for the board to show as a review: each cut's words,
+   *  readable and editable in place, with one Approve (Krish, 2026-11-17: "Surely we can do a 10x better job of having
+   *  the scripts easy to review, and ideally I can manually edit them too"). The board writes the words he approves at
+   *  `path` (body.texts.<cut>) and his press's own words: `approve` as he leaves them, `approve_edited` when he changed any. */
+  scripts?: ScriptReview
+}
+
+/** The scripts an Approve scripts press shows (contract 1.21.0). */
+export interface ScriptReview {
+  path: string
+  approve: string
+  approve_edited: string
+  /** Said under the scripts once he changes a word: what happens to edited words before his Teleprompter. */
+  edited_note: string
+  cuts: Array<{ cut: 'long' | 'short'; label: string; text: string; words: number; minutes: number; filed_at: string | null; material_id: string }>
 }
 
 export interface ViewOption {
