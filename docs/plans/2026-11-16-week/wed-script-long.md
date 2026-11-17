@@ -6,9 +6,9 @@ And here's what it actually looks like. You type something like, give me a page 
 
 And every day, his LinkedIn feed sells him something else. A Claude pack. That's a bundle of ready-made instructions you load into Claude. Install this one, and Claude becomes your marketer. Install that, and Claude becomes your whole sales team. Just comment pack below, and it's yours for free. Well, sort of.
 
-So everyone is being sold how to use AI, and he's bought all of it. He's seen the app builders and the packs. And he's sure he can build a bot to answer your customers by Friday. And his boss is already spending the savings.
+So everyone is being sold how to use AI, and he's bought all of it. He's seen the app builders and the packs. And he's sure he can build a bot to answer your customers by Friday. And his manager is already spending the money they'll save on software.
 
-And his boss has read about Curative. This summer, the boss of a US health insurer called Curative said they'd cancelled Salesforce. That's the software sales teams use to track every customer and every deal. They'd been paying about six hundred thousand dollars a year for it. So they built their own, with AI, in two months. Eyes bigger than their stomach? Maybe. Because Curative's boss has since admitted that keeping it running is hard.
+Because his manager has read about Curative. This summer, the man running a US health insurer called Curative said they'd cancelled Salesforce. That's the software sales teams use to track every customer and every deal. They'd been paying about six hundred thousand dollars a year for it. So they built their own, with AI, in two months. Eyes bigger than their stomach? Maybe. Because the man running Curative has since admitted that keeping it running is hard.
 
 And that's the bit most people miss. Writing the tool is the cheap part now. The cost is everything that comes after. Think of it like getting a puppy. The puppy's free. It's the next fifteen years that cost you. So it's Friday, and he's built his bot. Two in the morning, it tells a customer they owe the price of a small yacht. Who gets that call? Your Crocodile Hunter. The AI sleeps right through it. And every time your product changes, someone has to teach the bot about it. And when your Crocodile Hunter leaves, who even knows how it works?
 
