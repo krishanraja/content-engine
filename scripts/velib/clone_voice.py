@@ -109,7 +109,7 @@ def stock_voice(voice: str, bank: dict | None = None) -> dict:
     if problem:
         raise ValueError(f'--voice {problem}; nothing is generated')
     return {'name': entry['id'], 'platform': 'elevenlabs', 'voice_id': entry['voice_id'], 'kind': 'stock',
-            'approved_sha256': None, 'approved_on': entry.get('approved_on')}
+            'approved_sha256': None, 'approved_on': entry.get('approved_on'), 'model': entry['model']}
 
 
 def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=None, voice: str | None = None,
@@ -145,6 +145,11 @@ def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=
         clone = {'name': entry['name'], 'platform': entry['platform'], 'voice_id': entry['platform_ref'],
                  'approved_sha256': entry['approved_sha256'], 'approved_on': entry['approved_on']}
         tool = f"{cfg['platform']}.{cfg['capability']}:{entry['name']}"
+        # His voice is read on the model the bank pins for it (Krish, 2026-11-17: "v3 sounds right"), when the bank's
+        # voice is the one the registry approves; otherwise on the engine's default model.
+        mine = voice_bank.krish(bank)
+        if mine['voice_id'] == entry['platform_ref']:
+            clone['model'] = mine['model']
     text, script_sha, words = signed_text(script_path)
     characters = len(text)
     doc = {
@@ -152,7 +157,7 @@ def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=
         'take': take, 'cuts': sorted(spec['cuts']),
         'clone': clone,
         'tool': tool,
-        'model': cfg['model'], 'output_format': cfg['output_format'], 'endpoint': cfg['endpoint'],
+        'model': clone.get('model') or cfg['model'], 'output_format': cfg['output_format'], 'endpoint': cfg['endpoint'],
         'script': {'file': Path(script_path).name, 'sha256': script_sha, 'words': words},
         'text': text, 'text_sha256': hashlib.sha256(text.encode('utf-8')).hexdigest(), 'characters': characters,
         'credits': {'provider': cfg['provider'], 'per_character': cfg['credits_per_character'],

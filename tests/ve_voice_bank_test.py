@@ -61,6 +61,9 @@ class TheBankHolds(unittest.TestCase):
         unsigned = bank_with(clyde='approved')
         del next(v for v in unsigned['voices'] if v['id'] == 'clyde')['approved_by']
         self.assertTrue(any('approved_by Krish' in p for p in voice_bank.problems(unsigned)))
+        unpinned = copy.deepcopy(BANK)
+        del unpinned['voices'][0]['model']
+        self.assertTrue(any('pins its own model' in p for p in voice_bank.problems(unpinned)))
         dup = copy.deepcopy(BANK)
         dup['voices'][2]['voice_id'] = dup['voices'][1]['voice_id']
         self.assertTrue(any('listed twice' in p for p in voice_bank.problems(dup)))
@@ -112,6 +115,7 @@ class ThePlanReadsThePickedVoice(unittest.TestCase):
         self.assertEqual(doc['clone']['voice_id'], jackson['voice_id'])
         self.assertEqual(doc['clone']['kind'], 'stock')
         self.assertEqual(doc['tool'], 'elevenlabs.stock_voice:jackson')
+        self.assertEqual(doc['model'], jackson['model'])
         self.assertEqual(doc['plan_sha256'], clone_voice.digest(doc))
 
     def test_a_proposed_stock_voice_is_never_generated(self):
@@ -130,6 +134,8 @@ class ThePlanReadsThePickedVoice(unittest.TestCase):
             doc = clone_voice.plan(short(approve=mine), SCRIPT, voice='krish-remix', bank=BANK)
         self.assertEqual(doc['tool'], 'elevenlabs.voice_clone:krish-voice-elevenlabs')
         self.assertEqual(doc['clone']['voice_id'], mine['platform_ref'])
+        # Krish, 2026-11-17: "v3 sounds right" for his Krish Remix voice.
+        self.assertEqual(doc['model'], 'eleven_v3')
 
 
 if __name__ == '__main__':

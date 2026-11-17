@@ -27,6 +27,9 @@ ID = re.compile(r'^[a-z0-9][a-z0-9-]{0,39}$')
 VOICE_ID = re.compile(r'^[A-Za-z0-9]{8,64}$')
 KINDS = ('krish', 'stock')
 STATUSES = ('approved', 'proposed', 'retired')
+# The ElevenLabs text-to-speech models a voice may be pinned to (Krish, 2026-11-17, on his Krish Remix voice: "v3 sounds
+# right"; on eleven_v4 it did not sound like the voice he made).
+MODELS = ('eleven_v3', 'eleven_multilingual_v2', 'eleven_v4', 'eleven_flash_v2_5')
 # Where ElevenLabs serves its own preview clips; the board's sample route redirects only to these.
 PREVIEW_HOSTS = ('storage.googleapis.com', 'api.us.elevenlabs.io', 'api.elevenlabs.io')
 # The tool a stock voice is generated with in a spec: elevenlabs.stock_voice:<bank id>. It is never his voice, so
@@ -69,6 +72,8 @@ def problems(bank: dict) -> list[str]:
             out.append(f'{where}.voice_id {voice_id} is listed twice')
         else:
             seen_voice.add(voice_id)
+        if v.get('model') not in MODELS:
+            out.append(f'{where}.model {v.get("model")!r} is not one of {", ".join(MODELS)}; each voice pins its own model')
         for key in ('name', 'line', 'why'):
             if not isinstance(v.get(key), str) or not v[key].strip():
                 out.append(f'{where}.{key} is missing')
