@@ -21,14 +21,19 @@ His floor (python3 scripts/floor.py --format motion): every state change is moti
 
 Pace and room (his reference cuts, config/ve/pace-references.json: about 3 to 4.6 events a second, half the gaps under 0.3 s, 80% of the frame in use): every verb lands in 0.6 s or less, the device never rests between events (drift above 0), and it fills its box: tall, from y 270 down the whole slot; nothing that must be read right of x 860 or below y 1320 (config/channel-safe-zones.json).
 
+## Rework
+The first rework (rendered 17 Nov through Remotion, full-frame box) still wastes the frame. Wide: the interface sits in the top-left corner and runs off the left edge. Tall: it is a band from y 270 to about 760, the frame below it empty. Both: long lines cross the frame diagonally, outside the screen. Fix: the screen fills the slot (tall x 24 to 1056, y 270 to 1320; wide the box inside a 4% margin), every word inside x 60 to 860 and above y 1090 on a tall frame, nothing drawn outside the screen.
+
 ## Tests (`device.test.ts`, stills from `fixture.json`)
+- at every fixture still in both shapes, the screen's projected corners lie inside the slot and cover at least 70% of it
+- every text element's projected box lies inside the readable region; no line or edge is drawn outside the screen
 - the interface covers at least 80% of the tall frame below y 270 at every frame after `enter`
 - the camera moves between any two frames 6 apart
 - no caption box is drawn
 - the same frame twice renders identical pixels; no colour outside tokens; tall and wide stills render
 
 ## After it builds (Claude, not Codex)
-`ve verify-card`, then a test cut of the house test take in this style, measured with `ve pace` beside his references and watched at speed beside one, a `ve-critic` verdict, then Krish's Gate 2. On his yes Claude takes `needs_device` out of the `living-screen` entry's `ve_route` in config/style-references.json (a guarded file: his yes, in person) and out of `needs_device` in apps/renderer/src/engine/kit/motion-profiles.json and adds its profile there, then records its StyleStill cover (docs/ve/cards/style-stills/ve-style-still-template-*) with `record_still`.
+Claude re-runs the acceptance, renders a test cut on the house take, measures it with `ve pace`, gets a `ve-critic` verdict and puts it to Krish at Gate 2. Only his yes takes `needs_device` off and adds the motion profile.
 
 ## Contract
 Device rules: apps/renderer/src/engine/devices/CONTRACT.md. `living_screen` keeps its verbs (enter, move, count_to, mark, draw, pick, highlight, add, exit). Draw with three.js through @remotion/three (card ve-style-0-three-and-moves), from the frame alone. Reuse packages/moves, never copy a move. Add no motion profile and leave apps/renderer/src/engine/kit/motion-profiles.json untouched: profiles hold drawable styles only (kit.test.ts), and this style stays `needs_device` until Krish's yes, when Claude adds it.
@@ -53,6 +58,7 @@ npx vitest run apps/renderer/src/engine/devices/living_screen
 npx vitest run apps/renderer/src/engine/devices/verbs.test.ts
 npx vitest run apps/renderer/src/engine/kit
 python scripts/ve/check_route.py
+npx tsc --noEmit
 
 ## Return
 Your final message is only JSON matching config/ve/task-result.schema.json:
