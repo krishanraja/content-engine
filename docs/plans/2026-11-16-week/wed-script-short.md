@@ -4,7 +4,7 @@ Salesforce is the software sales teams use to track every customer, and Workday 
 
 So I went digging. And it turns out Klarna's boss had already gone online and said they did not replace that software with AI. So what did replace Workday? Another app for paying staff, which they also rent.
 
-So picture the meeting. Great news, everyone, we've switched off Workday! Payroll's now on another app, which we also rent. And their own engineers built one thing, a system that keeps all their customer information in one place. Which they now have to look after.
+So picture the meeting. Great news, everyone, we've switched off Workday! Payroll's now on another app, which we also rent. And our engineers built one thing, a system that keeps all our customer information in one place. Which we now have to look after.
 
 And now for my favourite detail. Klarna still uses Slack, the office chat app. And who owns Slack? Salesforce! So even Klarna never quite got away from Salesforce.
 
