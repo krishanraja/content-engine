@@ -59,6 +59,8 @@ describe('the production plan on the card (contract 1.25.0; Krish, 2026-11-17: "
         options: [{ id: 'post', kind: 'social_post', what: 'The viral post about the power bill', source: 'https://example.org/post' }, { id: 'bad', kind: 'nonsense', what: 'x' }] },
       { id: 'b2', from: 4.1, to: 9, words: 'Your engineer is as confident as a crocodile hunter', picture: { id: 'croc', kind: 'humour', what: 'A nerdy engineer creeping up on a crocodile' },
         options: [{ id: 'shot', kind: 'screenshot', what: 'The pricing page' }], humour: { mechanism: 'incongruity', gag: 'Khaki hat, laptop bag' } },
+      { id: 'b4', from: 9, to: 13, words: 'Nobody checks the work', picture: { id: 'gen', kind: 'generated', what: 'A conveyor of unchecked reports',
+        recipe: 'gpt_image_2_6, 9:16: "a conveyor belt of unchecked reports"; then seedance_2_5 omni_reference from that still, 4 s, 1080p' }, options: [] },
       { id: 'BAD ID', from: 0, to: 1, words: 'x', picture: { id: 'face', kind: 'face', what: 'x' } },
     ],
     scenes: [{ beat: 'b1', still: STILL, caption: 'Who pays for the power?', style: 'art-directed' }, { beat: 'nope', still: STILL, caption: '', style: '' }],
@@ -70,7 +72,7 @@ describe('the production plan on the card (contract 1.25.0; Krish, 2026-11-17: "
   const withPlan = (picks: Body[] = [SCRIPTS]) => ({ ...inputs({ ...PICKED, takes_in: TAKES }, picks), productionPlans: { [TUE]: plan } }) as unknown as ViewInputs
 
   it('reads the plan, dropping only what is malformed', () => {
-    expect(plan.beats.map(b => b.id)).toEqual(['b1', 'b2'])
+    expect(plan.beats.map(b => b.id)).toEqual(['b1', 'b2', 'b4'])
     expect(plan.beats[0].options.map(o => o.id)).toEqual(['post'])
     expect(plan.scenes).toEqual([{ beat: 'b1', still: STILL, caption: 'Who pays for the power?', style: 'art-directed' }])
     expect(parsePlan(text, '99999999-2222-4333-8444-555555555555', sha)).toBeNull()
@@ -110,6 +112,15 @@ describe('the production plan on the card (contract 1.25.0; Krish, 2026-11-17: "
     const it = card({ ...inputs({ ...PICKED, takes_in: TAKES }), productionPlans: { [TUE]: over } } as unknown as ViewInputs)
     expect(it.line).toContain('even sped up 25% it runs 1:36, 6 seconds over the 90-second limit, so lines must come out')
     expect(it.line).not.toContain('under the 90-second limit')
+  })
+
+  it('a generated beat carries its higgsfield recipe into the prompt, stills before video, with the house limits', () => {
+    const it = card(withPlan())
+    const prompt = String((it.next as Body).prompt)
+    expect(prompt).toContain('recipe: gpt_image_2_6, 9:16: "a conveyor belt of unchecked reports"; then seedance_2_5 omni_reference from that still')
+    for (const s of ['higgsfield-generate/SKILL.md', 'Stills before video', 'higgsfield generate cost', 'reframe workflow', 'never Soul ID for him',
+      'never Higgsfield audio', 'Virality Predictor']) expect(prompt).toContain(s)
+    expect((it.plan as Body).beats.find((b: Body) => b.id === 'b4').picture.recipe).toContain('seedance_2_5')
   })
 
   it('can fail: a swap made on another version of the plan, or naming an option the beat lacks, does not count', () => {
