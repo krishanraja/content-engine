@@ -57,7 +57,7 @@ A style proved here reaches ve in four steps, and nothing else moves it there:
    with `rules` and `avoid` from its `STYLE.md` and `ve_route` naming the device it needs plus `needs_device`, and add it
    to `needs_device` in `apps/renderer/src/engine/kit/motion-profiles.json`. A spec can then name it.
 3. **Codex cards.** One card per device, written as fields in `docs/ve/cards/<set>/` with `motion_style: <id>`, pushed to
-   main, then queued on the lane (`ve lane queue`) after he approves the Codex spend. The cards reuse `lab/moves`
+   main, then queued on the lane (`ve lane queue`); Codex use is never booked or counted. The cards reuse `lab/moves`
    (card ve-style-0 makes them one package the renderer imports); they never copy a move.
 4. **Verified and switched on.** `ve verify-card`, `ve lab render` and `ve lab diff` (the house look unchanged), a fixture
    render of the house test take in the style for his Gate 2, then `needs_device` comes out of both files.

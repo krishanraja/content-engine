@@ -117,5 +117,6 @@ class VisualCardsTakeTheOneRoute(unittest.TestCase):
                 text = self.card(tmp, kind=kind, deck=None, spend_id='f2bfdae8').read_text(encoding='utf-8')
                 self.assertIn(f'## Brand ({kind}, off, 2026-11-17', text)
                 self.assertIn('"close": "none"', text)
-                self.assertIn('\nspend_id: f2bfdae8\nkind: ' + kind, text)
+                # Codex is not counted (Ruling, Krish, 2026-11-17): a booking passed in is never written onto the card.
+                self.assertNotIn('spend_id', text)
                 self.assertNotIn('## Deck', text)

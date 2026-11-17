@@ -31,10 +31,6 @@ The checks, each { ok, detail, ... }:
                    once built, which must pass its check and have none, since video cards run there and are
                    never shown in Codex Desktop (Ruling, Krish, 2026-11-15); with VE_CODEX_VISIBLE=1 it is
                    Krish's everyday home, the one Codex Desktop reads, where such servers are counted and named but kept.
-  codex_allowance  the weekly Codex allowance used, from python scripts\session_token_audit.py --codex --json. Above
-                   the ceiling in scripts\velib\cards.py (ALLOWANCE_CEILING) dispatch refuses a card the weekly credit
-                   budget Krish signed does not cover (config\ve\credit-budget.json), so an overnight run spends nothing alone. Unknown (no Codex thread on this machine in
-                   the last 7 days) passes and says so.
   ffmpeg           the pinned build that scripts\ve-env.sh names runs from its path and is that build.
   tesseract        Tesseract at the path scripts\ve-env.sh names runs.
   disk             free space on the drive that holds the Studio runtime (takes and renders), at least -MinFreeGB.
@@ -390,52 +386,8 @@ Invoke-Check 'codex_profile' {
   return [ordered]@{ ok = $true; flagged = 0; detail = "the profile passes its audit and none of the $($servers.Count) MCP server(s) $whose has is a forbidden kind." }
 }
 
-Invoke-Check 'codex_allowance' {
-  $cards = [System.IO.File]::ReadAllText((Join-Path $RepoRoot 'scripts\velib\cards.py'))
-  $ceiling = [regex]::Match($cards, '(?m)^ALLOWANCE_CEILING = (\d+)')
-  if (-not $ceiling.Success) { throw 'scripts\velib\cards.py no longer names ALLOWANCE_CEILING' }
-  $limit = [int]$ceiling.Groups[1].Value
-  $found = Find-Python
-  $python = $null
-  $prefix = @()
-  if ($found) { $python = $found.path; $prefix = $found.prefix }
-  if (-not $python) { return [ordered]@{ ok = $false; used_pct = $null; detail = 'No Python on this machine to read the Codex allowance with.' } }
-  $audit = Join-Path $RepoRoot 'scripts\session_token_audit.py'
-  $run = Invoke-Quiet $python ($prefix + @($audit, '--codex', '--json')) 120 @{ PYTHONUTF8 = '1'; PYTHONIOENCODING = 'utf-8' }
-  # "totals" is the last key the audit prints, so it is read alone: the session list before it can run past what
-  # Windows PowerShell's ConvertFrom-Json takes.
-  $at = $run.out.LastIndexOf('"totals":')
-  $close = $run.out.LastIndexOf('}')
-  if ($run.code -ne 0 -or $at -lt 0 -or $close -le $at) { return [ordered]@{ ok = $false; used_pct = $null; detail = "the Codex audit did not answer ($(Get-Short $run))." } }
-  $totals = $run.out.Substring($at + 9, $close - $at - 9) | ConvertFrom-Json
-  $used = Get-Field (Get-Field $totals 'weekly_used_pct') 'end'
-  $resets = [string](Get-Field $totals 'weekly_resets_at')
-  $plan = [string](Get-Field $totals 'plan_type')
-  $credits = Get-Field (Get-Field $totals 'credits') 'end'
-  $result = [ordered]@{ ok = $true; used_pct = $null; limit_pct = $limit; resets_at = $null; plan = $plan; credits = $credits; detail = '' }
-  if ($null -eq $used) {
-    $result.detail = 'unknown: no Codex thread on this machine in the last 7 days to read the allowance from.'
-    return $result
-  }
-  $used = [double]$used
-  $resetAt = ConvertTo-UtcTime $resets
-  if ($resetAt) { $result.resets_at = $resetAt.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", $Invariant) }
-  if ($resetAt -and $resetAt -lt [DateTime]::UtcNow) {
-    # The window has reset since the last reading (ve doctor reads it the same way).
-    $used = 0
-    $result.detail = 'the weekly window has reset since the last Codex thread, so 0% is used.'
-  }
-  $result.used_pct = [math]::Round($used, 1)
-  $result.ok = ($used -le $limit)
-  if (-not $result.detail) {
-    if ($result.ok) { $result.detail = "$($result.used_pct)% of the weekly Codex allowance is used (ceiling $limit%)." }
-    else { $result.detail = "$($result.used_pct)% of the weekly Codex allowance is used, over the $limit% ceiling: ve dispatch refuses a card the weekly credit budget Krish signed does not cover." }
-  }
-  return $result
-}
-
-$Pinned = $null
-try { $Pinned = Get-PinnedTools } catch { $Pinned = $_.Exception.Message }
+# No Codex allowance check: Codex use is never counted (Ruling, Krish, 2026-11-17: "We have plenty of Codex credits,
+# you need to permanently stop counting codex credits everywhere").
 
 Invoke-Check 'ffmpeg' {
   if ($Pinned -is [string]) { throw $Pinned }
@@ -487,7 +439,6 @@ $Role = ([string](Get-Setting 'MINDMAKE_OVERNIGHT_ROLE')).Trim().ToLowerInvarian
 if (@('primary', 'standby') -notcontains $Role) { $Role = 'none' }
 $failed = @($Checks.Keys | Where-Object { -not [bool](Get-Field $Checks[$_] 'ok') })
 $at = $Started.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", $Invariant)
-$allowance = $Checks['codex_allowance']
 $report = [ordered]@{
   at = $at
   ok = ($failed.Count -eq 0)
@@ -498,8 +449,6 @@ $report = [ordered]@{
   codex_profile = [bool](Get-Field $Checks['codex_profile'] 'ok')
   codex_flagged = Get-Field $Checks['codex_profile'] 'flagged'
   role = $Role
-  codex_weekly_used_pct = Get-Field $allowance 'used_pct'
-  codex_resets_at = Get-Field $allowance 'resets_at'
   ffmpeg = Get-Field $Checks['ffmpeg'] 'version'
   tesseract = Get-Field $Checks['tesseract'] 'version'
   free_gb = Get-Field $Checks['disk'] 'free_gb'
