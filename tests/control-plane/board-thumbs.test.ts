@@ -41,7 +41,7 @@ describe('the view: thumbs on a day', () => {
     expect(t.options[0].files[0]).toEqual({ shape: 'tall', src: `/api/board/${WEEK}/drive/${did('atall')}`, drive: { file_id: did('atall'), url: `https://drive.google.com/file/d/${did('atall')}/view` }, sha256: sha('atall') })
     expect(t.options[2].critic.line).toBe('Held by the critic. A logo the headline does not name.')
     expect(t.options[1].press).toEqual({ kind: 'press', label: 'Pick', op: 'thumb-pick', body: { piece_id: PIECE, set_sha256: SET.set_sha256, verdict: 'pick', option: 'b' }, stamp: [],
-      done: 'Picked. Option B is the thumbnail; a session files it with the cuts.' })
+      done: 'Picked. Option B is the thumbnail; it goes out with the cuts.' })
     expect(t.not_this).toMatchObject({ label: 'Not this', op: 'thumb-pick', body: { piece_id: PIECE, set_sha256: SET.set_sha256, verdict: 'not_this' }, words: { path: 'words', required: false } })
     expect(t.grid_mock).toMatchObject({ src: `/api/board/${WEEK}/drive/${did('mock')}`, past_read: 5 })
     expect(t.answer).toBeNull()
