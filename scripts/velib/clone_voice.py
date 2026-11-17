@@ -84,24 +84,46 @@ def take_of(spec: dict) -> str:
     return takes[0]
 
 
-def registry_entry(cfg: dict, fetch=None) -> dict:
+def registry_entry(cfg: dict, fetch=None, name: str | None = None) -> dict:
     """The clone's active entry in krish-clone's registry, read live (lint.read_synthetic_registry); refuses one that is
-    missing, withdrawn or names no voice id."""
+    missing, withdrawn or names no voice id. name is the bank voice's registry_name (default: the config's clone)."""
     from . import lint  # noqa: PLC0415
+    name = name or cfg['clone']
     entries = lint.read_synthetic_registry(fetch)
-    entry = next((e for e in entries if e['name'] == cfg['clone'] and e['kind'] == 'voice'
+    entry = next((e for e in entries if e['name'] == name and e['kind'] == 'voice'
                   and e['platform'] == cfg['platform']), None)
     if entry is None:
-        raise ValueError(f"{cfg['clone']} is not an approved voice from {cfg['platform']} in krish-clone's registry "
+        raise ValueError(f"{name} is not an approved voice from {cfg['platform']} in krish-clone's registry "
                          f'({lint.SYNTHETIC_REGISTRY}); nothing is generated until he approves it')
     if not VOICE_ID.match(str(entry.get('platform_ref') or '')):
-        raise ValueError(f"{cfg['clone']}'s registry entry names no platform_ref, the voice id the clone is called by")
+        raise ValueError(f"{name}'s registry entry names no platform_ref, the voice id the clone is called by")
     return entry
 
 
-def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=None) -> dict:
-    """The exact generation, checked and costed, spending nothing. Raises with every reason it is refused."""
-    from . import lint  # noqa: PLC0415
+def stock_voice(voice: str, bank: dict | None = None) -> dict:
+    """An approved stock voice from the voice bank (config/voice-bank.json), as the plan names it; refuses his own voice
+    (that is the clone route, held to krish-clone's registry) and any voice he has not approved on the board."""
+    from . import voice_bank  # noqa: PLC0415
+    bank = bank or voice_bank.load()
+    entry = voice_bank.voice(bank, voice)
+    problem = voice_bank.stock_problem(voice_bank.stock_tool(entry), bank) if entry['kind'] == 'stock' else None
+    if problem:
+        raise ValueError(f'--voice {problem}; nothing is generated')
+    return {'name': entry['id'], 'platform': 'elevenlabs', 'voice_id': entry['voice_id'], 'kind': 'stock',
+            'approved_sha256': None, 'approved_on': entry.get('approved_on'), 'model': entry['model']}
+
+
+def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=None, voice: str | None = None,
+         bank: dict | None = None) -> dict:
+    """The exact generation, checked and costed, spending nothing. Raises with every reason it is refused. voice is the
+    voice bank id he picked on the Content Board (config/voice-bank.json); none, or his own (krish-remix), is his
+    approved clone from krish-clone's registry, as before; a stock voice must be one he approved."""
+    from . import lint, voice_bank  # noqa: PLC0415
+    if voice == voice_bank.RECORD_MYSELF:
+        raise ValueError('Record it myself (his pick on the board, or the default until a voice holds on a whole script; '
+                         'pass --voice <id> for a voice he picked): no voice is generated. Send the approved script to his '
+                         'Teleprompter (scripts/post-pack/teleprompter_send.py) and ingest his take from the Video Engine Inbox '
+                         '(docs/ve/RUNBOOK.md S3), as for any recording')
     cfg = cfg or config()
     problems = list(lint.clone_route_problems(spec))
     for index, asset in lint.clone_voices(spec):
@@ -111,20 +133,46 @@ def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=
     if problems:
         raise ValueError('; '.join(problems))
     take = take_of(spec)
-    entry = registry_entry(cfg, fetch)
-    if not any(lint._synthetic_match(entry, approval) for approval in spec.get('approvals') or []):
-        raise ValueError(f"the spec carries no approval of {entry['name']}: add approvals[gate=synthetic] with by Krish, and "
-                         f"said, on and artifact_hash copied exactly from its registry entry (artifact_hash "
-                         f"{entry['approved_sha256']})")
+    bank = bank or voice_bank.load()
+    stock = voice is not None and voice_bank.voice(bank, voice)['kind'] == 'stock'
+    if stock:
+        clone = stock_voice(voice, bank)
+        tool = f"elevenlabs.stock_voice:{clone['name']}"
+    else:
+        # His own voice: the one he picked, else the bank's default (Krish v2 since 17 Nov 2026), read from the registry.
+        mine = voice_bank.krish(bank, voice)
+        entry = registry_entry(cfg, fetch, mine['registry_name'])
+        # His own voice picked on the board: the voice he heard there (the bank's) is the one the registry approves.
+        mismatch = voice_bank.registry_problems(bank, [entry], voice) if voice is not None else []
+        if mismatch:
+            raise ValueError('; '.join(mismatch))
+        if not any(lint._synthetic_match(entry, approval) for approval in spec.get('approvals') or []):
+            raise ValueError(f"the spec carries no approval of {entry['name']}: add approvals[gate=synthetic] with by Krish, and "
+                             f"said, on and artifact_hash copied exactly from its registry entry (artifact_hash "
+                             f"{entry['approved_sha256']})")
+        clone = {'name': entry['name'], 'platform': entry['platform'], 'voice_id': entry['platform_ref'],
+                 'approved_sha256': entry['approved_sha256'], 'approved_on': entry['approved_on']}
+        tool = f"{cfg['platform']}.{cfg['capability']}:{entry['name']}"
+        # His voice is read on the model the bank pins for it (Krish, 2026-11-17: "v3 sounds right"), when the bank's
+        # voice is the one the registry approves; otherwise on the engine's default model.
+        if mine['voice_id'] == entry['platform_ref']:
+            clone['model'] = mine['model']
+            # Krish, 2026-11-17: "yes, 15% is right" (Krish v2 read 15% faster, pitch kept, after generation).
+            if mine.get('speed') and mine['speed'] != 1:
+                clone['speed'] = mine['speed']
     text, script_sha, words = signed_text(script_path)
     characters = len(text)
+    # Whether the voice has held on a whole script (config/voice-bank.json whole_script); printed with the plan.
+    bank_entry = next((v for v in bank['voices'] if v['voice_id'] == clone['voice_id']), None)
+    caution = voice_bank.whole_script_warning(bank_entry) if bank_entry else None
     doc = {
         'schema': PLAN_SCHEMA, 'ruling': cfg['ruling'], 'piece': spec['piece_id'], 'publish_day': spec.get('publish_day'),
         'take': take, 'cuts': sorted(spec['cuts']),
-        'clone': {'name': entry['name'], 'platform': entry['platform'], 'voice_id': entry['platform_ref'],
-                  'approved_sha256': entry['approved_sha256'], 'approved_on': entry['approved_on']},
-        'tool': f"{cfg['platform']}.{cfg['capability']}:{entry['name']}",
-        'model': cfg['model'], 'output_format': cfg['output_format'], 'endpoint': cfg['endpoint'],
+        **({'caution': caution} if caution else {}),
+        'clone': clone,
+        'tool': tool,
+        **({'speed': clone['speed']} if clone.get('speed') else {}),
+        'model': clone.get('model') or cfg['model'], 'output_format': cfg['output_format'], 'endpoint': cfg['endpoint'],
         'script': {'file': Path(script_path).name, 'sha256': script_sha, 'words': words},
         'text': text, 'text_sha256': hashlib.sha256(text.encode('utf-8')).hexdigest(), 'characters': characters,
         'credits': {'provider': cfg['provider'], 'per_character': cfg['credits_per_character'],
@@ -191,19 +239,23 @@ def generate(doc: dict, *, plan_sha256: str, spend_id: str, assets_dir: str | Pa
     provider_file = assets / f"{doc['take']}.{doc['output_format'].split('_')[0]}"
     provider_file.write_bytes(audio)
     voice = assets / f"{doc['take']}.wav"
-    subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-y', '-i', str(provider_file), '-ac', '1',
+    # His voice's speed (Krish v2: 15% faster, pitch kept; the v3 settings have no speed control).
+    tempo = ['-filter:a', f"atempo={doc['speed']}"] if doc.get('speed') else []
+    subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-y', '-i', str(provider_file), *tempo, '-ac', '1',
                     '-ar', str(cfg.get('sample_rate', 48000)), '-c:a', 'pcm_s16le', str(voice)], check=True, capture_output=True)
     voice_sha = sha256_file(voice)
     request_id = headers.get('request-id') or headers.get('x-request-id')
     asset = {'id': doc['take'], 'kind': 'voice', 'origin': 'generated', 'path': voice.name, 'sha256': voice_sha,
-             'licence': f"generated with his approved ElevenLabs voice clone ({doc['clone']['name']}, krish-clone's registry)",
+             'licence': (f"generated with the approved ElevenLabs stock voice {doc['clone']['name']} (config/voice-bank.json)"
+                         if doc['clone'].get('kind') == 'stock' else
+                         f"generated with his approved ElevenLabs voice clone ({doc['clone']['name']}, krish-clone's registry)"),
              'tool': doc['tool'], 'prompt_ref': PLAN_FILE, 'credits': cost}
     if request_id:
         asset['job_id'] = str(request_id)
     return {
         'schema': RECEIPT_SCHEMA, 'piece': doc['piece'], 'take': doc['take'], 'plan_sha256': doc['plan_sha256'],
         'text_sha256': doc['text_sha256'], 'script_sha256': doc['script']['sha256'], 'clone': doc['clone']['name'],
-        'model': doc['model'], 'generated_at': now or datetime.now(timezone.utc).isoformat(timespec='seconds'),
+        'model': doc['model'], **({'speed': doc['speed']} if doc.get('speed') else {}), 'generated_at': now or datetime.now(timezone.utc).isoformat(timespec='seconds'),
         'credits': {'provider': doc['credits']['provider'], 'estimate': estimate, 'charged': cost, 'charged_from': source,
                     'reservation': reservation, 'spend_id': spend_id},
         'request_id': request_id,

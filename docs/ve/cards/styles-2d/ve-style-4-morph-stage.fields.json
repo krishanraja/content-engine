@@ -1,0 +1,29 @@
+{
+  "path": "docs/ve/cards/styles-2d/ve-style-4-morph-stage.md",
+  "card_id": "ve-style-4-morph-stage",
+  "kind": "device",
+  "motion_style": "shape-morph",
+  "title": "morph_stage: one shape becomes the next, a before turning into an after without a cut",
+  "goal": "Krish, 17 Nov 2026, on the motion styles ve cannot draw yet: \"Mark them and build all nine.\" One STAGE device, `morph_stage`: a sequence of states (`params.states`: {kind: shape | image | number, ...}) where each `move` with toState n morphs the current state into state n. Shapes morph by resampling both outlines to the same number of points (no new dependency); a real picture morphs through a mask that changes outline; a number rolls. `enter` draws the first state, `highlight` turns the changing part mint, `exit` collapses to a point.\n\nHis floor (python3 scripts/floor.py --format motion): every state change is motion that changes the object, never a thing that arrives and sits, a crossfade or a drawn arrow; every picture is real, passed in `params.images` (a logo, a dated screenshot, a photo from the piece's evidence) and set in brand colours, never an icon set, clipart figure or emoji; no words that repeat what he says (numbers and short labels from `dataset` and `params` only). Captions are their own layer: the device draws no caption box. Where the style's own rules below differ (an icon family), this floor wins.\n\nPace and room (his reference cuts, config/ve/pace-references.json: about 3 to 4.6 events a second, half the gaps under 0.3 s, 80% of the frame in use): every verb lands in 0.6 s or less, the device never rests between events (drift above 0), and it fills its box: tall, from y 270 down the whole slot; nothing that must be read right of x 860 or below y 1320 (config/channel-safe-zones.json).\n\n## Tests (`device.test.ts`, stills from `fixture.json`)\n- halfway through a `move` the outline is neither state (a true in-between), never a crossfade of two outlines\n- a morph lands in 0.6 s or less and holds its drift\n- a picture state shows the picture passed in, inside the moving mask\n- the same frame twice renders identical pixels; no colour outside tokens; tall and wide stills render\n\n## After it builds (Claude, not Codex)\n`ve verify-card`, then a test cut of the house test take in this style, measured with `ve pace` beside his references and watched at speed beside one, a `ve-critic` verdict, then Krish's Gate 2. On his yes Claude takes `needs_device` out of the `shape-morph` entry's `ve_route` in config/style-references.json (a guarded file: his yes, in person) and out of `needs_device` in apps/renderer/src/engine/kit/motion-profiles.json and adds its profile there, then records its StyleStill cover (docs/ve/cards/style-stills/ve-style-still-template-*) with `record_still`.",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Register `morph_stage` in `devices/registry.ts` and `config/ve/devices.json` with exactly enter, move, highlight, exit; update `verbs.test.ts`. Draw in SVG and canvas from the frame alone; any texture or noise is seeded by the frame number, never random. Reuse packages/moves, never copy a move. Add no motion profile and leave apps/renderer/src/engine/kit/motion-profiles.json untouched: profiles hold drawable styles only (kit.test.ts), and this style stays `needs_device` until Krish's yes, when Claude adds it.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/morph_stage\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\nnpx vitest run apps/renderer/src/engine/kit\npython scripts/ve/check_route.py",
+  "write_allow": [
+    "apps/renderer/src/engine/devices/morph_stage/**",
+    "apps/renderer/src/engine/devices/registry.ts",
+    "apps/renderer/src/engine/devices/verbs.test.ts",
+    "config/ve/devices.json"
+  ],
+  "read": [
+    "apps/renderer/src/engine/devices/CONTRACT.md",
+    "packages/moves/**",
+    "apps/renderer/src/engine/clock.ts",
+    "apps/renderer/src/engine/props.ts",
+    "apps/renderer/src/engine/kit/**",
+    "config/ve/devices.json",
+    "config/channel-safe-zones.json",
+    "config/ve/pace-references.json",
+    "docs/ve/MOTION_STANDARD.md"
+  ],
+  "max_minutes": 90,
+  "max_calls": 80
+}

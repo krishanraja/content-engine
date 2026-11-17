@@ -1,0 +1,11 @@
+{
+  "objects": [{"obj":"stage","device":"pixel_stage","meaning":"Evidence as a pixel screen","fromFrame":0,"toFrame":180,"dataset":{"unit":"","denominator":null,"producerLabel":"Source, 17 Nov 2026","rows":[{"label":"score","value":42}]},"params":{"images":{"proof":{"src":"/evidence/screenshot.png","pixelWidth":1280,"pixelHeight":720}},"sprites":[{"id":"proof","image":"proof","at":[0,0]}]}}],
+  "events":[
+    {"id":"e","obj":"stage","verb":"enter","toState":"screen","atFrame":0},
+    {"id":"a","obj":"stage","verb":"add","toState":"proof","atFrame":6},
+    {"id":"m","obj":"stage","verb":"move","toState":"{\"id\":\"proof\",\"at\":[0,1]}","atFrame":30},
+    {"id":"c","obj":"stage","verb":"count_to","toState":"score","atFrame":50},
+    {"id":"h","obj":"stage","verb":"highlight","toState":"proof","atFrame":75},
+    {"id":"x","obj":"stage","verb":"exit","toState":"off","atFrame":150}
+  ]
+}

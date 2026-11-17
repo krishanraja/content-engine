@@ -1,0 +1,28 @@
+{
+  "path": "docs/ve/cards/styles-3d/ve-style-2-living-screen-pace.md",
+  "card_id": "ve-style-2-living-screen-pace",
+  "kind": "device",
+  "motion_style": "living-screen",
+  "title": "living_screen, again: the whole frame, a moving camera and a beat every few tenths of a second",
+  "goal": "Krish, 17 Nov 2026, on the motion styles ve cannot draw yet: \"Mark them and build all nine.\" His words on the first cut, 13 Nov: \"the motion is 10X too slow, not immersive and engaging at all\"; the bar is docs/ve/FAILURE_2026-11-13_3d-styles.md, \"The bar for the next attempt\". Rework `living_screen` to it. Remove the plain caption box and the small band: the interface fills the tall frame from y 270 down and the camera moves through it every moment. Add the small motions of a working interface between his words (a cursor, a row updating, a chart ticking), so a 54 s cut carries 150 events or more. Numbers still land on the spoken word.\n\nHis floor (python3 scripts/floor.py --format motion): every state change is motion that changes the object, never a thing that arrives and sits, a crossfade or a drawn arrow; every picture is real, passed in `params.images` (a logo, a dated screenshot, a photo from the piece's evidence) and set in brand colours, never an icon set, clipart figure or emoji; no words that repeat what he says (numbers and short labels from `dataset` and `params` only). Captions are their own layer: the device draws no caption box. Where the style's own rules below differ (an icon family), this floor wins.\n\nPace and room (his reference cuts, config/ve/pace-references.json: about 3 to 4.6 events a second, half the gaps under 0.3 s, 80% of the frame in use): every verb lands in 0.6 s or less, the device never rests between events (drift above 0), and it fills its box: tall, from y 270 down the whole slot; nothing that must be read right of x 860 or below y 1320 (config/channel-safe-zones.json).\n\n## Rework\nThe first rework (rendered 17 Nov through Remotion, full-frame box) still wastes the frame. Wide: the interface sits in the top-left corner and runs off the left edge. Tall: it is a band from y 270 to about 760, the frame below it empty. Both: long lines cross the frame diagonally, outside the screen. Fix: the screen fills the slot (tall x 24 to 1056, y 270 to 1320; wide the box inside a 4% margin), every word inside x 60 to 860 and above y 1090 on a tall frame, nothing drawn outside the screen.\n\n## Tests (`device.test.ts`, stills from `fixture.json`)\n- at every fixture still in both shapes, the screen's projected corners lie inside the slot and cover at least 70% of it\n- every text element's projected box lies inside the readable region; no line or edge is drawn outside the screen\n- the interface covers at least 80% of the tall frame below y 270 at every frame after `enter`\n- the camera moves between any two frames 6 apart\n- no caption box is drawn\n- the same frame twice renders identical pixels; no colour outside tokens; tall and wide stills render\n\n## After it builds (Claude, not Codex)\nClaude re-runs the acceptance, renders a test cut on the house take, measures it with `ve pace`, gets a `ve-critic` verdict and puts it to Krish at Gate 2. Only his yes takes `needs_device` off and adds the motion profile.",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. `living_screen` keeps its verbs (enter, move, count_to, mark, draw, pick, highlight, add, exit). Draw with three.js through @remotion/three (card ve-style-0-three-and-moves), from the frame alone. Reuse packages/moves, never copy a move. Add no motion profile and leave apps/renderer/src/engine/kit/motion-profiles.json untouched: profiles hold drawable styles only (kit.test.ts), and this style stays `needs_device` until Krish's yes, when Claude adds it.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/living_screen\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\nnpx vitest run apps/renderer/src/engine/kit\npython scripts/ve/check_route.py\nnpx tsc --noEmit",
+  "write_allow": [
+    "apps/renderer/src/engine/devices/living_screen/**"
+  ],
+  "read": [
+    "apps/renderer/src/engine/devices/CONTRACT.md",
+    "packages/moves/**",
+    "apps/renderer/src/engine/clock.ts",
+    "apps/renderer/src/engine/props.ts",
+    "apps/renderer/src/engine/kit/**",
+    "config/ve/devices.json",
+    "config/channel-safe-zones.json",
+    "config/ve/pace-references.json",
+    "docs/ve/MOTION_STANDARD.md",
+    "docs/ve/FAILURE_2026-11-13_3d-styles.md",
+    "lab/styles/living-screen/**"
+  ],
+  "max_minutes": 90,
+  "max_calls": 80
+}

@@ -1,0 +1,15 @@
+{
+  "objects": [{"obj":"world","device":"iso_world","meaning":"A connected system","fromFrame":0,"toFrame":150,"params":{"blocks":[{"id":"source","cell":[0,0],"height":1,"label":"Source"},{"id":"compute","cell":[1,0],"height":2,"label":"Compute"},{"id":"store","cell":[1,1],"height":1.4,"label":"Store"}],"routes":[{"id":"flow","cells":[[0,0],[1,0],[1,1]]}]}}],
+  "events": [
+    {"id":"enter","obj":"world","verb":"enter","toState":"ground","atFrame":1},
+    {"id":"a","obj":"world","verb":"add","toState":"source","atFrame":10},
+    {"id":"b","obj":"world","verb":"add","toState":"compute","atFrame":18},
+    {"id":"c","obj":"world","verb":"add","toState":"store","atFrame":26},
+    {"id":"fill","obj":"world","verb":"fill","toState":"{\"id\":\"source\",\"height\":2}","atFrame":38},
+    {"id":"carry","obj":"world","verb":"carry","toState":"flow","atFrame":52},
+    {"id":"focus","obj":"world","verb":"move","toState":"compute","atFrame":70},
+    {"id":"highlight","obj":"world","verb":"highlight","toState":"store","atFrame":86},
+    {"id":"exit","obj":"world","verb":"exit","toState":"gone","atFrame":120}
+  ],
+  "aspects":["9:16","16:9"],"stills":[9,17,34,44,57,94,123]
+}

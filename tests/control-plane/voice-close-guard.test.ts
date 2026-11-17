@@ -50,7 +50,7 @@ describe('the voice-close guard', () => {
     expect(hits).toHaveLength(1)
     expect(hits[0]).toMatch(/^\.agents\/skills\/make-piece\/SKILL\.md:\d+ asks for the phrase the voice check bans/)
     const lint = 'scripts/post-pack/story_check.py'
-    expect(textProblems(plant(lint, 'end on exactly "{close_line()}"', 'end on exactly "the full deep-dive"')).length).toBe(1)
+    expect(textProblems(plant(lint, 'end on exactly "{close or close_line()}"', 'end on exactly "the full deep-dive"')).length).toBe(1)
     const doc = 'docs/AMPLIFICATION.md'
     expect(textProblems(plant(doc, '("The full story is free at makeyourmindup.ai."', `("${OLD}"`)).length).toBe(1)
     // A house rule's said: line is his words, which no model reads; its text is not.

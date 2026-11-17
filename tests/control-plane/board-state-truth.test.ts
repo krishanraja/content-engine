@@ -274,7 +274,8 @@ describe('a post scheduled after its day says when it goes, never Missed', () =>
 describe('his production pick on every piece before recording: the look, the motion style and the captions, each one press', () => {
   const MON = '8287846b-6618-4a19-9fb8-23ad4eca2718', WED = 'db9f9f6a-1092-49be-8024-f335e060305a', TUE = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118'
   const mod = (id: string, name: string, extra: Body = {}) => ({ id, name, how: `${name}.`, rules: [], point_types: ['claim'], formats: ['long_video', 'short_video'], fits: 'often', krish_verdict: '', ve_route: ['ve'], ...extra })
-  const motion = [mod('swiss-kinetic-type', 'Swiss grid'), mod('ladder', 'The Ladder', { ve_route: ['needs_device'], krish_verdict: 'liked' }), mod('character-ai-receipts', 'Receipts on the ink desk', { fits: 'sometimes' })]
+  // The ladder, which waits on a device, is first in the bank, so only "drawable first" puts it after Swiss grid.
+  const motion = [mod('ladder', 'The Ladder', { ve_route: ['needs_device'], krish_verdict: 'liked' }), mod('swiss-kinetic-type', 'Swiss grid'), mod('character-ai-receipts', 'Receipts on the ink desk', { fits: 'sometimes' })]
   const looks = [{ id: 'face-with-proof', name: 'Face with proof', pitch: 'x', status: 'live' }, { id: 'fry-talking-head', name: 'The lit talking head', pitch: 'x', status: 'live' }]
   const LOCK = `# Narrative lock\n\npiece_id: ${MON}\n\nThe arc.\n\nSigned by Krish: "signed", 2026-11-10`
   const piece = (id: string, date: string, slot: string, meta: Body = {}) => ({ id, idea: `Piece ${id.slice(0, 4)}`, thesis: 'x', scheduled_for: date, lane_slot: slot, state: 'drafting', buried_at: null, body: '', updated_at: '2026-11-13T22:00:00Z', meta })
@@ -297,11 +298,11 @@ describe('his production pick on every piece before recording: the look, the mot
     expect(labels(it.next)[0]).toBe('Face with proof (recommended)')
     // After his approval of the story, Copy prompt for Claude stays beside the picks so he can still change the story
     // (Ruling, Krish, 2026-11-16), with his notes asked first and the session opened on content-engine (1.17.0).
-    expect(it.others[0]).toMatchObject({ kind: 'prompt', label: 'Copy prompt for Claude', notes: { heading: expect.stringContaining("Krish's notes") },
+    expect(it.others[0]).toMatchObject({ kind: 'prompt', label: 'Claude production prompt', notes: { heading: expect.stringContaining("Krish's notes") },
       open: { app: 'claude_code', repository: 'krishanraja/content-engine' } })
     expect((it.others[0] as any).prompt).toContain('Krish has approved it')
     expect((it.others[0] as any).notes.save).toMatchObject({ kind: 'press', collection: 'comments', body: { use: 'claude_notes', piece_id: MON } })
-    const picks = it.others.slice(1)
+    const picks = it.others.slice(2)
     expect(picks.map(a => [a.label, (a as any).op, (a as any).choose.path])).toEqual([['Pick the motion style', 'style', 'motion'], ['Pick the captions', 'style', 'captions']])
     expect(labels(picks[0])).toEqual(['Receipts on the ink desk (recommended)', 'Swiss grid', 'The Ladder (not ready yet)'])
     expect((picks[0] as any).body).toEqual({ piece_id: MON })
@@ -315,21 +316,56 @@ describe('his production pick on every piece before recording: the look, the mot
     expect((picks[1] as any).choose.options[0].why).toEqual(expect.any(String))
     expect((picks[0] as any).choose.options[1].why).toBeUndefined()
   })
+  it('every piece has a Perplexity research prompt beside its Claude production prompt, self-contained (1.19.0; Krish, 2026-11-17)', () => {
+    const v = buildView({ ...inputs(), comments: [{ doc_id: 'desk-mon-look-a', updated_by: 'Krish', updated_at: '2026-11-17T07:00:00.000Z',
+      body: { text: 'Find who raised prices this year.', use: 'claude_notes', piece_id: MON, anchor: 'desk:mon:look', at: '2026-11-17T07:00:00.000Z' } }] } as ViewInputs)
+    const others = model(v, 'mon').items[0].others as any[]
+    const claude = others[0], research = others[1]
+    expect(claude).toMatchObject({ kind: 'prompt', label: 'Claude production prompt', tool: 'claude' })
+    expect(research).toMatchObject({ kind: 'prompt', label: 'Perplexity research prompt', tool: 'perplexity', notes: { save: claude.notes.save } })
+    expect(research.open).toBeUndefined()
+    // Nothing to assume: the publication, the piece, the signed story, his notes, and how the answer comes back.
+    expect(research.prompt).toMatch(/You have no other context/)
+    expect(research.prompt).toContain('The arc.')
+    expect(research.prompt).toContain('Find who raised prices this year.')
+    expect(research.prompt).toContain(`piece_id: ${MON}`)
+    expect(research.prompt).not.toMatch(/report_board_session|\u2014/)
+    expect(research.notes.saved).toEqual([{ at: '2026-11-17T07:00:00.000Z', text: 'Find who raised prices this year.' }])
+    // The Claude prompt carries his earlier notes too, and closes the loop on the board, Drive and the repository.
+    expect(claude.prompt).toContain('Find who raised prices this year.')
+    expect(claude.prompt).toMatch(/Close the loop as you go/)
+    expect(claude.prompt).toMatch(/end your last message with the one next step/)
+  })
+  it('his saved notes come back on the piece\'s prompt when he reopens it (1.19.0; Krish, 2026-11-17)', () => {
+    const note = (text: string, at: string, piece = WED) => ({ doc_id: `desk-wed-board-${at.slice(11, 13)}`, updated_by: 'Krish', updated_at: at,
+      body: { text, use: 'claude_notes', piece_id: piece, anchor: 'desk:wed:board', at, thread_id: 'x' } })
+    const long = 'Add the engineers gone wild and the price hikes. '.repeat(14).trim()
+    const v = buildView({ ...inputs(), comments: [note(long, '2026-11-17T07:38:37.000Z'), note('Monday only.', '2026-11-17T06:00:00.000Z', MON)] } as ViewInputs)
+    const prompt = model(v, 'wed').items[0].others[0] as any
+    expect(prompt.kind).toBe('prompt')
+    expect(prompt.notes.saved).toEqual([{ at: '2026-11-17T07:38:37.000Z', text: long }])
+    // Monday's prompt carries Monday's note only.
+    expect((model(v, 'mon').items[0].others[0] as any).notes.saved.map((n: any) => n.text)).toEqual(['Monday only.'])
+  })
   it('Wed 18 before its lock is signed: the step stays the lock, and the three picks wait in the read sheet', () => {
     const it = model(buildView(inputs()), 'wed').items[0]
     expect(it.next).not.toMatchObject({ op: 'look' })
     expect(it.decision).toBe(false)
-    expect(it.others.map(a => a.label)).toEqual(['Copy prompt for Claude', 'Pick the look', 'Pick the motion style', 'Pick the captions'])
-    expect(labels(it.others[1])[0]).toBe('The lit talking head (recommended)')
+    expect(it.others.map(a => a.label)).toEqual(['Claude production prompt', 'Perplexity research prompt', 'Pick the look', 'Pick the motion style', 'Pick the captions'])
+    expect(labels(it.others[2])[0]).toBe('The lit talking head (recommended)')
   })
   it('Tue 17\'s moved piece has the same three picks, from its own row in the plan', () => {
     const it = model(buildView(inputs()), 'tue').items.find(x => x.piece_id === TUE)!
-    expect(it.others.map(a => a.label)).toEqual(['Pick the look', 'Pick the motion style', 'Pick the captions'])
+    expect(it.others.map(a => a.label)).toEqual(['Pick the look', 'Pick the motion style', 'Pick the captions', 'Perplexity research prompt'])
     expect((it.others[1] as any).body).toEqual({ piece_id: TUE })
     // Its plan row names the ladder, which waits on a device: the planned pick passes the ranked list's filter, so the
     // channel's own pick leads and the ladder is never recommended (fleet audit 14 Nov, ve-1).
     expect(labels(it.others[1])[0]).toBe('Swiss grid (recommended)')
     expect(labels(it.others[1])).toContain('The Ladder (not ready yet)')
+    // A style ve cannot draw yet comes last, after every style it can, whatever the bank's order (Krish, 2026-11-17:
+    // "Mark them and build all nine"); the bank lists the ladder before Receipts on the ink desk.
+    expect(labels(it.others[1]).at(-1)).toBe('The Ladder (not ready yet)')
+    expect(labels(it.others[1]).indexOf('The Ladder (not ready yet)')).toBeGreaterThan(labels(it.others[1]).findIndex(l => l.startsWith('Receipts on the ink desk')))
   })
   it('once picked it says so and offers a change; once a take is recorded, no pick is offered', () => {
     const picked = model(buildView(inputs({ look: { production: 'face-with-proof', experiment: 'data-story', inspiration: ['a'], at: '2026-11-14T09:00:00Z' }, style: { motion: 'ladder', at: '2026-11-14T09:00:00Z' } })), 'mon').items[0]

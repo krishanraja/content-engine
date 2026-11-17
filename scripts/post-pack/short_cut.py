@@ -10,8 +10,8 @@ An entry holds when:
 
   - `words`: more than SHORT_CUT's most_words and at most SHORT_LIFT_MOST (300, about two minutes), the most the
     short cut may run (its floor stays SHORT_CUT's fewest_words);
-  - `close`: the one sentence the cut must end on instead of the house close, ending in a full stop, never the
-    retired deep-dive line;
+  - `close`: the one sentence the cut must end on instead of the house close, ending in a full stop, never a
+    line the voice check bans;
   - `reason`: one line saying why, which the Scripts step shows on the board (making.py scripts records
     script_check.short_cut), so a cut is never lifted silently;
   - `krish`: his own typed words asking for it, non-empty (six words or more); `said_at`: the day he typed them.
@@ -182,7 +182,7 @@ def self_test():
             ('past the most is refused', {'words': 400}, 'at most 300'),
             ('a close with no full stop is refused', {'close': 'The full video is on my channel'}, 'close must be one sentence'),
             ('a close of two sentences is refused', {'close': 'Watch it now. The full video is on my channel.'}, 'close must be one sentence'),
-            ('the retired deep-dive close is refused', {'close': 'The full deep dive is at makeyourmindup.ai.'}, 'close must be'),
+            ('a close with a long dash is refused', {'close': 'The full video \u2014 on my channel.'}, 'close must be'),
             ('a reason is required', {'reason': ''}, 'reason must be one line'),
             ('his words are required', {'krish': ''}, 'krish must be his own typed words'),
             ('a date is required', {'said_at': 'yesterday'}, 'said_at'),

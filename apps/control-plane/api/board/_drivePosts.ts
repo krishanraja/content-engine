@@ -254,8 +254,9 @@ export function copyKey(f: Pick<DriveFile, 'id' | 'name' | 'md5Checksum' | 'modi
 }
 
 /** A short signed link to the board's copy of one Drive file, copying it from Drive first when the store has none. Null
- *  when it cannot be copied (too large for one press, refused). */
-export async function servedDrive(store: DriveStore, copy: DriveCopier, f: DriveFile): Promise<string | null> {
+ *  when it cannot be copied (too large for one press, refused). `ttl` is how long the link lasts, in seconds (TTL unless
+ *  a caller keeps the link longer: a style's still, _handler.ts). */
+export async function servedDrive(store: DriveStore, copy: DriveCopier, f: DriveFile, ttl = TTL): Promise<string | null> {
   const key = copyKey(f)
   if (!(await store.exists(key))) {
     const bytes = Number(f.size)
@@ -265,7 +266,7 @@ export async function servedDrive(store: DriveStore, copy: DriveCopier, f: Drive
     const sent = await copy(f.id, url, f.mimeType || 'application/octet-stream', bytes, COPY_BUDGET_MS)
     if (sent.status < 200 || sent.status >= 300) return null
   }
-  return store.sign(key, TTL)
+  return store.sign(key, ttl)
 }
 
 /** The store, over the engine's Supabase client. */
@@ -311,7 +312,7 @@ export interface BoardDrive {
   /** The week's posts (cached a minute), or null when Drive cannot be read. */
   posts(week: string): Promise<DrivePost[] | null>
   /** A short signed link to the board's copy of one Drive file, or null (not in Drive, a folder, or not copied). */
-  serve(fileId: string): Promise<string | null>
+  serve(fileId: string, opts?: { ttl?: number }): Promise<string | null>
 }
 
 export function boardDrive(db: { storage: { from(b: string): any } }, opts: { token?: () => Promise<string | null>; fetch?: typeof fetch; copy?: DriveCopier } = {}): BoardDrive {
@@ -319,7 +320,7 @@ export function boardDrive(db: { storage: { from(b: string): any } }, opts: { to
   const f = opts.fetch ?? fetch
   return {
     posts: (week) => weekPosts(week, token, Date.now(), f),
-    async serve(fileId) {
+    async serve(fileId, how) {
       if (!DRIVE_ID.test(fileId)) return null
       const t = await token().catch(() => null)
       if (!t) return null
@@ -328,7 +329,7 @@ export function boardDrive(db: { storage: { from(b: string): any } }, opts: { to
       // The Inbox's streaming copy (library/_inboxDrive.ts), loaded only here: the library module reads the store's
       // settings when it loads, which a view read never needs.
       const copy: DriveCopier = opts.copy ?? (async (id, url, type, bytes, ms) => (await import('../library/_inboxDrive.js')).copyDriveFile(id, url, type, bytes, ms, t))
-      return servedDrive(supabaseDriveStore(db), copy, file)
+      return servedDrive(supabaseDriveStore(db), copy, file, how?.ttl ?? TTL)
     },
   }
 }

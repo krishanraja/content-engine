@@ -53,8 +53,8 @@ headless model run or a template engine. The Studio's old carousel commands are 
    the brand palette's record for that day and format and the deck's shape: how many cards and what each one does,
    never its words.
 3. **Claude sends the card to Codex through the Codex plugin**, as `ve` does for every card: `ve dispatch` where Codex is on
-   the machine. A card for Growth's renderer (`render/` in growth-makeyourmindup, kind `carousel` with its `spend_id`,
-   the Control Center booking) goes in that repository's `codex/queue/<id>.md` on the session's `claude/` branch, and
+   the machine. A card for Growth's renderer (`render/` in growth-makeyourmindup, kind `carousel`;
+   Codex use is never booked or counted) goes in that repository's `codex/queue/<id>.md` on the session's `claude/` branch, and
    the Codex lane on Krish's home computer builds it through the same plugin (`docs/ve/RUNBOOK.md`, S2;
    `config/codex-lanes.json`). Codex is the visual asset maker (Ruling, Krish, 2026-10-28): it never decides taste.
 4. **Codex builds the card images in code** from the card: each card's look as code, rendered to pictures, held to the
@@ -74,7 +74,13 @@ writes the words and the direction, Codex builds the picture in code, and the se
 and Notes rules below and the palette. Off-day voiceover shorts, and meme videos, take the video engine's route in a
 content-engine session: the session writes the script and the signed spec, Codex builds the devices and plates from
 cards, `ve` renders, and a separate reviewer watches and listens before it is called ready (`docs/ve/ENGINE.md`,
-`docs/ve/RUNBOOK.md`). The voice comes from wherever it comes from today.
+`docs/ve/RUNBOOK.md`). The voice is an ElevenLabs voice from `config/voice-bank.json` (his Krish v2 voice by default,
+Krish Remix as the backup, or a stock voice he approved), the one he picked on the Content Board (Pick the voice), or his own take when he picks
+Record it myself there (then the script goes to his Teleprompter once he approves its words, never ElevenLabs), with a light off-day track under it
+(Pick the music under the voice). Every carousel carries an approved audio track the same way: the off-day rotation in
+`config/music-library.json`, his Pick the track on the board, at the one bed shape (`config/music-bed.json`). A session
+never picks either for him (Krish, 2026-11-17: "for all voiceovers and carousels, I want there to either be an audio
+track over the carousel, or, if it's a voiceover, then I want Eleven Labs voices used to do the voiceovers").
 
 `tests/control-plane/make-route.test.ts` holds the board's prompts and the documents that tell a session how to make
 one of these to this route, and refuses the retired routes by name.

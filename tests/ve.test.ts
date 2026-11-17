@@ -110,6 +110,7 @@ describe('ve', () => {
     ['the listen pass: hesitations the transcript left out are cut, no join lands on sound, the reading that sounded right wins, his lexicon learns facts and never taste (Krish, 5 Nov)', 'tests/ve_listen_test.py'],
     ['the voice pass: sniffs turned down, never cut; the repair chain only with his words (Krish, 17 Oct)', 'tests/ve_voice_test.py'],
     ['his approved clone voices off-day voiceover shorts only, read as his recording, behind his Approve proof, generated only from the printed plan through the credit ledger (Ruling, Krish, 2026-11-15)', 'tests/ve_clone_voice_test.py'],
+    ['the voice bank: his Krish Remix voice from the registry and stock ElevenLabs voices, a stock voice generated only once he approved it on the board and never as his own (Krish, 2026-11-17)', 'tests/ve_voice_bank_test.py'],
     ['one sound on the big moment: auditioned on his cut, approved only from his words, the kit from approved rows (ruling 11)', 'tests/ve_sfx_test.py'],
     ['the three video sign-offs: samples on his board, and only his presses write the sound, golden-frame and Gate 2 configs (Ruling, Krish, 2026-11-12)', 'tests/ve_signoffs_test.py'],
     ['the Critic sees the cut in motion: every frame around each cut, each move at +10, the hardest beat and each beat built, and QC numbers marked not heard (F16, F38)', 'tests/ve_critic_inputs_test.py'],
