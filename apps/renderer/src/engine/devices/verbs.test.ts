@@ -4,6 +4,7 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('iso_world declares its seven cues', () => { expect(manifest.devices.iso_world.verbs).toEqual(['enter', 'add', 'fill', 'carry', 'move', 'highlight', 'exit']) })
   it('cursor_path declares its six cues', () => { expect(manifest.devices.cursor_path.verbs).toEqual(['enter', 'move', 'pick', 'type', 'send', 'exit']) })
   it('character_layer exposes only layer entrance and exit', () => {
     expect(manifest.devices.character_layer.verbs).toEqual(['enter', 'exit'])
