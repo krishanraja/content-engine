@@ -155,6 +155,16 @@ describe('on the board', () => {
     expect(steps.find(s => s.key === 'story')!.state).toBe('done')
     expect(steps.find(s => s.key === 'board')!.state).toBe('done')
   })
+  it('scripts rewritten after his words send the card back to his edit and Approve (Krish, 2026-11-17)', () => {
+    const filed = (text: string) => [{ cut: 'long' as const, id: 'm1', title: 'Script: 5-minute', text, at: '2026-11-17T13:43:00Z' }]
+    const base = inputs([row('mon-lock-words', lockDoc()), row('mon-scripts-words', scriptsDoc())])
+    const same = buildView({ ...base, scripts: { [MON]: filed(LONG) } })
+    expect(same.days.find(x => x.day === 'mon')!.path!.steps.find(s => s.key === 'board')!.state).toBe('done')
+    const v = buildView({ ...base, scripts: { [MON]: filed('Oracle borrowed again, and here is who pays.') } })
+    const steps = v.days.find(x => x.day === 'mon')!.path!.steps
+    expect(steps.find(s => s.key === 'board')!.state).not.toBe('done')
+    expect(detail(v, 'mon', 'Scripts')).toMatch(/^Rewritten since you approved them \(the 5-minute script\)/)
+  })
   it('a lock changed after his words is not approved, and a lock he signed in the file shows his signature words', () => {
     const changed = buildView(inputs([row('mon-lock-words', lockDoc())], { mon: `${LOCK}\nA line a session added later.` }))
     expect(detail(changed, 'mon', 'Narrative lock')).toBe('Written, waiting for your signature')

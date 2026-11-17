@@ -28,6 +28,10 @@ const TUE_WORDS = {
   session_ref: 'https://claude.ai/code/session_01JRhKytFcFVtUWn8teqtkUB', folder_title: 'Tue 17 Nov off-day: habits voiceover',
 }
 
+// The real document's words never named an approval, so since 17 Nov it is not one (Ruling, Krish, 2026-11-17). The
+// stage tests carry the same document with words that do.
+const APPROVED = { ...TUE_WORDS, words: 'Approve the script, ready in teleprompter for me' }
+
 /** The frozen week with Tuesday's approved voiceover carrying the habits piece id. */
 function week(picks: Body[] = []) {
   const i = thisWeek()
@@ -85,10 +89,10 @@ describe("an off-day voiceover's prompt follows its stage (Tue 17 Nov)", () => {
   })
 
   it('once he approved the script, it assumes the take is in the Inbox and cuts it on the ve route, with no engine row', () => {
-    const it = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: TUE_WORDS }])
+    const it = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: APPROVED }])
     // Its send was held (17 Nov): the card says his approval counts and why it is not in his Teleprompter yet.
     expect(it.line).toMatch(/You approved the script on Tue 17 Nov, and your approval counts\. It is not in your Teleprompter yet: the send was held \(the piece's making record could not be read, so nothing was sent\)/)
-    const sent = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: { ...TUE_WORDS, send: { ...TUE_WORDS.send, status: 'sent', error: undefined } } }])
+    const sent = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: { ...APPROVED, send: { ...TUE_WORDS.send, status: 'sent', error: undefined } } }])
     // In his Teleprompter: the card waits on his My takes are in the Inbox (17 Nov), with the record step's prompt beside it.
     expect(sent.line).toMatch(/Script approved Tue 17 Nov, sent to your Teleprompter at \d\d:\d\d UTC\. Record it from your Teleprompter, drop the take in the Video Engine Inbox, then press My takes are in the Inbox\./)
     expect(sent.next).toMatchObject({ kind: 'press', op: 'takes-in', body: { piece_id: PIECE, item: 'off-tue-mcpskin' } })
@@ -107,17 +111,17 @@ describe("an off-day voiceover's prompt follows its stage (Tue 17 Nov)", () => {
   it('his Approve scripts press counts the same, and so does a typed approval saved under another day', () => {
     const press = voiceover([{ doc_id: 'tue-scripts', updated_by: 'Krish', updated_at: '2026-11-17T11:00:00Z', body: { kind: 'approve_scripts', approved: true, piece_id: PIECE, texts: { short: 'Words.' } } }])
     expect(anyPrompt(press)).toContain('recording.py get NAME')
-    const moved = voiceover([{ doc_id: 'mon-scripts-words-701a2c55', updated_by: 'engine_operator', body: { ...TUE_WORDS, day: 'mon' } }])
+    const moved = voiceover([{ doc_id: 'mon-scripts-words-701a2c55', updated_by: 'engine_operator', body: { ...APPROVED, day: 'mon' } }])
     expect(anyPrompt(moved)).toContain('recording.py get NAME')
   })
 
   it('can fail: a press by anyone else, another piece, or an ElevenLabs voice keeps the make prompt', () => {
     const notHis = voiceover([{ doc_id: 'tue-scripts', updated_by: 'engine_operator', body: { approved: true, piece_id: PIECE } }])
     expect(promptOf(notHis.next)).not.toContain('recording.py get')
-    const other = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: { ...TUE_WORDS, piece_id: 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118' } }])
+    const other = voiceover([{ doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: { ...APPROVED, piece_id: 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118' } }])
     expect(promptOf(other.next)).not.toContain('recording.py get')
     const eleven = { doc_id: 'audio-voice-off-tue-mcpskin', updated_by: 'Krish', body: { kind: 'audio_pick', layer: 'voice', item: 'off-tue-mcpskin', pick: 'krish-v2', at: '2026-11-17T10:00:00Z' } }
-    const cloned = voiceover([eleven, { doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: TUE_WORDS }])
+    const cloned = voiceover([eleven, { doc_id: 'tue-scripts-words', updated_by: 'engine_operator', body: APPROVED }])
     expect(promptOf(cloned.next)).not.toContain('recording.py get')
   })
 
@@ -129,23 +133,26 @@ describe("an off-day voiceover's prompt follows its stage (Tue 17 Nov)", () => {
   })
 
   it('reads the approval by the option\'s piece id, and none without one', () => {
-    const picks = [{ doc_id: 'tue-scripts-words', body: TUE_WORDS }]
+    const picks = [{ doc_id: 'tue-scripts-words', body: APPROVED }]
     const sc = offdayScripts(picks, { piece_id: PIECE })!
     expect(sc).toMatchObject({ piece_id: PIECE, on: 'Tue 17 Nov', send: 'held', folder: 'Tue 17 Nov off-day: habits voiceover' })
     expect(offdayScripts(picks, {})).toBeNull()
     expect(offdayScripts(picks, null)).toBeNull()
-    expect(recordHead(sc)).toContain('merge all to main')
+    expect(recordHead(sc)).toContain('ready in teleprompter for me')
   })
 })
 
 describe("the server's own send answer never unmakes his typed approval", () => {
   it('wordsBody refuses send from a session; read back past the server\'s answer, the approval counts', () => {
-    expect(wordsBody('tue-scripts-words', TUE_WORDS)).toBe(false)
-    expect(wordsBody('tue-scripts-words', asWritten(TUE_WORDS))).toBe(true)
-    expect(typedApproval([{ doc_id: 'tue-scripts-words', body: TUE_WORDS }], 'tue', 'scripts', PIECE)?.words).toBe(TUE_WORDS.words)
+    expect(wordsBody('tue-scripts-words', APPROVED)).toBe(false)
+    expect(wordsBody('tue-scripts-words', asWritten(APPROVED))).toBe(true)
+    expect(typedApproval([{ doc_id: 'tue-scripts-words', body: APPROVED }], 'tue', 'scripts', PIECE)?.words).toBe(APPROVED.words)
+    // The real Tue 17 document: his words never named an approval, so it is not one (Ruling, Krish, 2026-11-17).
+    expect(wordsBody('tue-scripts-words', asWritten(TUE_WORDS))).toBe(false)
+    expect(typedApproval([{ doc_id: 'tue-scripts-words', body: TUE_WORDS }], 'tue', 'scripts', PIECE)).toBeNull()
   })
   it('can fail: a send a session wrote is still refused', () => {
-    const forged = { ...TUE_WORDS, send: { by: 'a session', status: 'sent' } }
+    const forged = { ...APPROVED, send: { by: 'a session', status: 'sent' } }
     expect(wordsBody('tue-scripts-words', asWritten(forged))).toBe(false)
     expect(typedApproval([{ doc_id: 'tue-scripts-words', body: forged }], 'tue', 'scripts', PIECE)).toBeNull()
   })

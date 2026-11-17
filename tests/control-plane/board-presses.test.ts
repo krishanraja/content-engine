@@ -170,7 +170,7 @@ function fakeDb(opts: DbOpts = {}) {
           piece = { ...piece, meta: update.meta, updated_at: update.updated_at }; pieces.push(update)
           return Promise.resolve({ data: [{ id: PIECE }], error: null })
         },
-        eq: (k: string, v: unknown) => { filters.push([k, v]); return q }, order: () => q,
+        eq: (k: string, v: unknown) => { filters.push([k, v]); return q }, in: (k: string, v: unknown) => { filters.push([k, v]); return q }, order: () => q,
         maybeSingle: async () => {
           if (table === 'content_ideas') return { data: has('id') === PIECE && opts.making !== null ? piece : null, error: null }
           const by = writers.get(`${has('collection')}/${has('doc_id')}`)
@@ -332,7 +332,8 @@ describe('Approve scripts sends his exact words to Teleprompter from the server'
     const listed = await t.call('GET', { collection: 'approvals' })
     expect(listed.status).toBe(200)
     expect(listed.out.documents[0]).toMatchObject({ id: 'mon-scripts', updated_by: 'Krish' })
-    expect(t.reads[0]).toEqual([['week', '2026-11-09'], ['collection', 'picks'], ['body->>kind', 'approve_scripts']])
+    // His take-backs ride the same view, so teleprompter_send.py reads one as a withdrawal (17 Nov).
+    expect(t.reads[0]).toEqual([['week', '2026-11-09'], ['collection', 'picks'], ['body->>kind', ['approve_scripts', 'take_back']]])
     await t.call('GET', { collection: 'titles' })
     expect(t.reads[1]).toContainEqual(['body->>kind', 'titles'])
     expect(await t.put('approvals', 'mon-scripts', approval())).toMatchObject({ status: 400, out: { error: 'read_only_view' } })

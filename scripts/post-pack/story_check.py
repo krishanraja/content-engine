@@ -1059,9 +1059,10 @@ INTRO_NOT_NAMES = NOT_NAMES | {'Does', 'Do', 'Did', 'Is', 'Are', 'Was', 'Were', 
 _TOKEN = re.compile(r"[A-Za-z][A-Za-z0-9]*(?:[.'’-][A-Za-z0-9]+)*")
 
 
-def intro_names(sentence):
+def intro_names(sentence, named=frozenset()):
     """The company or person names in one sentence: a capitalised word that is not the sentence's first word alone (the
-    first word counts only when it is written like a brand, TikTok or OpenAI, or a second capitalised word follows it)."""
+    first word counts only when it is written like a brand, TikTok or OpenAI, a second capitalised word follows it, or the
+    script also writes it capitalised mid-sentence, as his own "Claude uses a ton of other companies' software" does)."""
     tokens = _TOKEN.findall(sentence)
     caps = [t[0].isupper() and t.split("'")[0].split('’')[0] not in INTRO_NOT_NAMES for t in tokens]
     out = []
@@ -1069,7 +1070,7 @@ def intro_names(sentence):
         if not caps[i]:
             continue
         brand = bool(re.search(r'[a-z][A-Z]|[A-Z]{2,}', token))
-        if i == 0 and not (brand or (len(tokens) > 1 and caps[1])):
+        if i == 0 and not (brand or (len(tokens) > 1 and caps[1]) or token in named):
             continue
         out.append(token)
     return out
@@ -1099,7 +1100,9 @@ def intro_problems(beats, cut, lift=None, declared=None):
     para = beats[0]
     sents = sentences([para])
     found = []
-    if not any(intro_names(x) for x in sents[:2]):
+    named = frozenset(t for x in sentences(beats) for t in _TOKEN.findall(x)[1:]
+                      if t[0].isupper() and t not in INTRO_NOT_NAMES)
+    if not any(intro_names(x, named) for x in sents[:2]):
         found.append('the intro opens on no named company or person in its first two sentences: his intros open on a surprising '
                      'fact about a named player ("Anthropic, which makes Claude, subscribe to other tools...")')
     if not LETS.search(para):
@@ -1551,6 +1554,7 @@ def self_test():
           (len(intro_problems([plain], 'long')), all('INTRO_PATTERN' in p and 'consistent' in p for p in intro_problems([plain], 'long'))), (3, True))
     check('no named company or person in the first two sentences is refused',
           [('named company' in p) for p in intro_problems(["Does this sound familiar? It is all over the charts. Let's find out, is it real?"], 'long')], [True])
+    check('a first word the script names again mid-sentence is a name', intro_names('Claude uses other software.', frozenset({'Claude'})), ['Claude'])
     check('a first word alone is no name; a brand-shaped first word is', (intro_names('Does it work?'), intro_names('TikTok took over.'), intro_names('Why did Disney pay?')),
           ([], ['TikTok'], ['Disney']))
     long_intro = intros[1]['text'] + ' ' + ' '.join(['Word'] * 20) + ' Let\'s go?'
