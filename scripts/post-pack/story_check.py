@@ -191,8 +191,8 @@ def close_line():
     return line.strip()
 
 
-def _is_close(sentence):
-    return _plain(sentence).rstrip('"\' ').lower() == close_line().lower()
+def _is_close(sentence, close=None):
+    return _plain(sentence).rstrip('"\' ').lower() == (close or close_line()).lower()
 
 
 @functools.lru_cache(maxsize=None)
@@ -251,7 +251,7 @@ def name_problems(spoken):
             'so cut the line (house rule NO_NAME; Krish, 2026-10-28: "Remember, no content refers to Krish, ever.")']
 
 
-def close_problems(beats):
+def close_problems(beats, close=None):
     """Why the script's close breaks house rule SCRIPT_CLOSE, or [].
 
     Ruling (Krish, 2026-10-31): "the last paragraph of all my scripts still
@@ -268,7 +268,7 @@ def close_problems(beats):
         found.append('it still says "Here\'s what I\'d do with this info if I were you", which Krish retired on 2026-10-31 because '
                      'what followed it was a list of orders ("sounds a bit bossy and preachy"): say the one thing he would do, '
                      'in his own first person (house rule SCRIPT_CLOSE)')
-    tail, orders = close_orders(beats)
+    tail, orders = close_orders(beats, close)
     if not tail:
         found.append('it has no close before the last line: after the call, one short beat saying the one thing Krish would do, '
                      'in his own first person (house rule SCRIPT_CLOSE, Krish, 2026-10-31)')
@@ -284,12 +284,12 @@ def close_problems(beats):
                          '"If I ran a team, I\'d do one thing this week..." (house rule SCRIPT_CLOSE, Krish, 2026-10-31)')
     last = (sentences(beats) or [''])[-1]
     banned = BANNED_LAST.search(_plain(last))
-    if banned and not _is_close(last):
+    if banned and not _is_close(last, close):
         found.append(f'its last sentence says "{banned.group(0)}", which the voice check bans, so the script fails it on its last line: '
-                     f'end on exactly "{close_line()}" with nothing after it (house rule SCRIPT_CLOSE; Ruling, Krish, 2026-11-14: '
+                     f'end on exactly "{close or close_line()}" with nothing after it (house rule SCRIPT_CLOSE; Ruling, Krish, 2026-11-14: '
                      '"stick to voice check")')
-    elif not _is_close(last):
-        found.append(f'its last sentence must be exactly "{close_line()}" with nothing after it: no sign-off, '
+    elif not _is_close(last, close):
+        found.append(f'its last sentence must be exactly "{close or close_line()}" with nothing after it: no sign-off, '
                      f'no "I\'m Krish", no question for the comments (house rule SCRIPT_CLOSE). It ends: "{_plain(last)[-90:]}"')
     return found
 
@@ -496,7 +496,12 @@ def length_problem(words, cut, lift=None):
         return None
     low, high, asked = CUTS[cut]
     rule = RULE_OF.get(cut, 'TWO_CUTS')
-    if cut == 'long' and lift:
+    if cut == 'short' and lift and lift.get('close'):
+        high = lift['words']
+        asked = (f'a short cut lifted to {lift["words"]} words (about {lift["minutes"]}) for this piece, ending on "{lift["close"]}" '
+                 f'({lift["reason"]})')
+        rule = 'TWO_CUTS, lifted for this piece by config/short-cuts.json; Ruling, Krish, ' + lift['said_at'] + ': "' + lift['krish'] + '"'
+    elif cut == 'long' and lift and not lift.get('close'):
         high = lift['words']
         asked = f'a long cut lifted to about {lift["minutes"]} for this piece ({lift["reason"]})'
         rule = 'TWO_CUTS, lifted for this piece by config/long-cuts.json; Ruling, Krish, 2026-11-14: "lift if worth it"'
@@ -529,7 +534,7 @@ def spoken_length_warning(words, cut, ledger=None, lift=None):
     if not got:
         return None
     secs, how = got
-    cap = round(lift['words'] / WORDS_PER_MINUTE * 60) if cut == 'long' and lift else SPOKEN_CAP_S[cut]
+    cap = round(lift['words'] / WORDS_PER_MINUTE * 60) if cut in ('long', 'short') and lift else SPOKEN_CAP_S[cut]
     if secs <= cap:
         return None
     return (f'as Krish says it, this {cut} cut will run about {int(secs) // 60}:{int(secs) % 60:02d}, over {cap // 60}:{cap % 60:02d} '
@@ -679,13 +684,13 @@ def leader_stake_warning(beats):
             'sentence (house rule FOR_THE_LEADER; a warning, not a refusal)')
 
 
-def short_close_problems(beats):
+def short_close_problems(beats, close=None):
     """The short cut under a minute (SHORT_CUT) keeps SCRIPT_CLOSE's last sentence, with his beat of what he would do
     at most one sentence or left out (house rule TWO_CUTS, Ruling, Krish, 2026-11-16)."""
     last = (sentences(beats) or [''])[-1]
-    if _is_close(last):
+    if _is_close(last, close):
         return []
-    return [f'the short cut\'s last sentence must be exactly "{close_line()}" with nothing after it (house rules TWO_CUTS '
+    return [f'the short cut\'s last sentence must be exactly "{close or close_line()}" with nothing after it (house rules TWO_CUTS '
             f'and SCRIPT_CLOSE). It ends: "{_plain(last)[-90:]}"']
 
 
@@ -724,10 +729,11 @@ def problems(text, cut=None, series=None, lift=None):
     if extra:
         found.append(f'it carries more than the words Krish says ({", ".join(extra)}): a script is only the spoken '
                      'words as plain paragraphs; shots go in the shot list and joke options beside it (house rule SCRIPT_ONLY)')
+    close = lift['close'] if cut == 'short' and lift and lift.get('close') else None  # a short cut lifted for this piece
     if len(words) >= SHORT_WORDS:
-        found += close_problems(beats)
+        found += close_problems(beats, close)
     elif cut == 'short':
-        found += short_close_problems(beats)
+        found += short_close_problems(beats, close)
     if cut in CUTS and not names_a_thing(first):
         found.append(f'its first sentence names no concrete thing ("{_plain(first)[:70]}"): open on the piece\'s one named thing, '
                      'a product, company, person or number, then follow the money or the surprise (house rule ONE_CONCRETE_THING; '
@@ -938,7 +944,7 @@ def names_in(sents):
     return seen
 
 
-def close_orders(beats):
+def close_orders(beats, close=None):
     """The close (the sentences of the beat before the last line, the last line left out) and which are orders."""
     sents_by_beat = [sentences([b]) for b in beats]
     flat = [(i, x) for i, ss in enumerate(sents_by_beat) for x in ss]
@@ -946,7 +952,7 @@ def close_orders(beats):
         return [], []
     # The last line is left out when it is the line or another line naming makeyourmindup (the retired one among them),
     # so a script ending on the wrong line is told about that line once, and its close beat is still read as its close.
-    body = flat[:-1] if _is_close(flat[-1][1]) or OUTRO.search(flat[-1][1]) else flat
+    body = flat[:-1] if _is_close(flat[-1][1], close) or OUTRO.search(flat[-1][1]) else flat
     if not body:
         return [], []
     beat = body[-1][0]
@@ -1223,6 +1229,34 @@ def self_test():
     check('a lifted long cut past its own length is refused, naming the length, the reason and the ruling',
           ('cut it to 675 to 1200' in over, 'about 8:00' in over, 'Two stories in one piece.' in over, 'lift if worth it' in over), (True, True, True, True))
     check('a lift never moves the short cut', 'TWO_CUTS' in (length_problem(filler(300).split(), 'short', lifted) or ''), True)
+    # A piece whose short cut config/short-cuts.json lifts (short_cut.py; Ruling, Krish, 2026-11-17).
+    short_lift = {'words': 260, 'minutes': '1:44', 'close': 'The full five-minute video is on my channel.',
+                  'reason': 'A 90-second cut that sends viewers on.', 'said_at': '2026-11-17',
+                  'krish': 'The 90-second script needs to be hilarious and relatable to all.'}
+    long_short = ('Disney is paying Character.AI to put its films inside a chatbot. So what does your brand lose when fans '
+                  'can talk to it?\n\n' + '\n\n'.join(['Here is the deal. Fans chat with the heroes. Disney gets paid each time. '
+                  'The chatbot learns what fans want from every single chat they have.'] * 7)
+                  + '\n\nSo I reckon every big brand signs a deal like this by next summer. If I ran a brand, I\'d ask who owns '
+                  'those chats.\n\n')
+    words230 = len(' '.join(spoken_paragraphs(long_short + 'The full five-minute video is on my channel.')).split())
+    check('the test short is about 230 words', 215 <= words230 <= 245, True)
+    on_lift = long_short + 'The full five-minute video is on my channel.'
+    check('a lifted piece accepts a 230-word short ending on its own close', problems(on_lift, 'short', None, short_lift), [])
+    check('a piece that is not lifted still refuses that 230-word short, naming TWO_CUTS',
+          any('TWO_CUTS' in p for p in problems(on_lift, 'short')), True)
+    check('a lifted short ending on the old house close is refused: it must end on the lift\'s close',
+          [bool(any('must be exactly "The full five-minute video is on my channel."' in p for p in problems(
+              long_short + 'The full story is free at makeyourmindup.ai.', 'short', None, short_lift)))], [True])
+    check('a lifted short past its own words is refused, naming the lift', 'config/short-cuts.json' in (length_problem(
+          filler(300).split(), 'short', short_lift) or ''), True)
+    check('a lifted short under the floor is still refused', 'TWO_CUTS' in (length_problem(filler(30).split(), 'short', short_lift) or ''), True)
+    check('a short lift never moves the long cut', 'cut it to 675 to 825' in (length_problem(filler(1000).split(), 'long', short_lift) or ''), True)
+    import tempfile as _t
+    with _t.TemporaryDirectory() as tmp:
+        led = Path(tmp) / 'ledger.json'
+        led.write_text(json.dumps({'takes': [{'take': 'x', 'cut': 'short', 'date': '2026-10-14', 'said_more_pct': 38.3, 'words_a_minute': 174.2}]}))
+        check('the 20-to-35-second warning respects a short lift: 200 words warns without it, not with it',
+              (bool(spoken_length_warning(['w'] * 200, 'short', led)), spoken_length_warning(['w'] * 200, 'short', led, short_lift)), (True, None))
     check('the ordinary long cut is the house rules\' LONG_CUT', CUTS['long'][:2],
           (house_block('LONG_CUT')['fewest_words'], house_block('LONG_CUT')['most_words']))
     check('no cut, no length rule', length_problem(filler(900).split(), None), None)
@@ -1371,15 +1405,18 @@ def main(argv):
     if not args:
         print(__doc__.strip())
         return 2
-    lift, lift_why = None, []
+    long_lift, long_why, short_lift, short_why = None, [], None, []
     if piece:
         import long_cut
-        lift, lift_why = long_cut.lift_for(piece)
+        import short_cut
+        long_lift, long_why = long_cut.lift_for(piece)
+        short_lift, short_why = short_cut.lift_for(piece)  # config/short-cuts.json, keyed on his own typed words
     worst = 0
     for path in args:
         this_cut = cut or cut_of(Path(path).name)
-        found = check_file(path, cut, series, lift)
-        if this_cut == 'long' and lift_why:
+        lift, lift_why = (short_lift, short_why) if this_cut == 'short' else (long_lift, long_why)
+        found = check_file(path, cut, series, lift if this_cut in ('long', 'short') else None)
+        if this_cut in ('long', 'short') and lift_why:
             found = lift_why + found  # a lift that does not hold is never applied quietly
         if found:
             worst = 1
@@ -1390,10 +1427,12 @@ def main(argv):
             print(f'ready      {path}')
         if this_cut == 'long' and lift:
             print(f'  LIFTED {long_cut.notice(lift)} (config/long-cuts.json; Ruling, Krish, 2026-11-14: "lift if worth it")')
+        if this_cut == 'short' and lift:
+            print(f'  LIFTED {short_cut.notice(lift)} (config/short-cuts.json; Ruling, Krish, {lift["said_at"]}: "{lift["krish"]}")')
         for item in warn_file(path):
             print(f'  WARN {item}')
         long_said = spoken_length_warning(words_of(' '.join(spoken_paragraphs(Path(path).read_text(encoding='utf-8-sig')))), this_cut,
-                                          lift=lift if this_cut == 'long' else None)
+                                          lift=lift if this_cut in ('long', 'short') else None)
         if long_said:
             print(f'  WARN {long_said}')
     return worst

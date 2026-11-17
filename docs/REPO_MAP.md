@@ -1270,6 +1270,8 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingCheck`
 - `type MakingScriptCheck`
 - `interface MakingLongCut`
+- `interface MakingShortCut`
+- `const SHORT_LIFT_MOST`
 - `interface MakingToneFloor`
 - `interface MakingReadBack`
 - `interface MakingLink`
@@ -1309,6 +1311,7 @@ The making record: where one piece is on its way from the workroom to
 - `type TeleprompterState = 'in' | 'older' | 'failed' | 'missing'`
 - `function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut, TeleprompterState>>`
 - `function longCutNote(check: Partial<MakingScriptCheck> | undefined): string`
+- `function shortCutNote(check: Partial<MakingScriptCheck> | undefined): string`
 - `function teleprompterNote(m: Partial<Making>): string`
 - `function oneCut(m: Partial<Making>): boolean`
 - `function makingCuts(m: Partial<Making>): MakingCut[]`

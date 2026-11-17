@@ -609,7 +609,7 @@ def _story_check(cut, path, series=None, piece=None):
     if series:
         command += ['--series', series]
     if piece:
-        command += ['--piece', piece]  # its long cut is lifted by config/long-cuts.json (long_cut.py)
+        command += ['--piece', piece]  # its long cut is lifted by config/long-cuts.json (long_cut.py), its short cut by config/short-cuts.json (short_cut.py)
     result = subprocess.run(command + [str(path)], capture_output=True, text=True)
     return result.returncode, result.stdout + result.stderr
 
@@ -960,18 +960,24 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
     (long_cut.declared): the long cut is then checked with story_check
     --piece, at the piece's lifted length, or refused with why the lift does
     not hold; and a lift that holds is recorded as long_cut, {words, reason},
+    (the same for the short cut, config/short-cuts.json, recorded as short_cut, {words, close, reason}; Ruling,
+    Krish, 2026-11-17),
     which the Scripts step on the board shows (Ruling, Krish, 2026-11-14:
     "lift if worth it")."""
     import story_check
     if krish is not None and (not krish_words(krish) or len(krish.strip()) > 600):
         raise MakingError('--krish-words are Krish\'s own words putting the scripts through as they are, starting "Krish" and the date '
                           '(for example "Krish, 2026-10-16: just put them in teleprompter"), at most 600 characters')
-    lift = None
+    lift = short_lift = None
+    short_declared = False
     if piece:
         import long_cut
+        import short_cut
         lift = long_cut.lift_for(piece)[0]
+        short_lift = short_cut.lift_for(piece)[0]
+        short_declared = short_cut.declared(piece)  # a lift that does not hold is refused by story_check, with why
     run = run or (lambda cut, path: _story_check('deep' if (deep and cut == 'long') else cut, path, series)
-                  if not (piece and cut == 'long' and not deep) else _story_check(cut, path, series, piece))
+                  if not (piece and ((cut == 'long' and not deep) or (cut == 'short' and short_declared))) else _story_check(cut, path, series, piece))
     warn = warn or (lambda line: print(line, file=sys.stderr))
     paths = list(paths or [])
     order = ALL_CUTS if feature else CUTS
@@ -1032,6 +1038,8 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
              'checked_at': kept or stamp, 'changed_at': changed_at}
     if lift and 'long' in cuts:
         check['long_cut'] = {'words': lift['words'], 'reason': lift['reason']}
+    if short_lift and 'short' in cuts:
+        check['short_cut'] = {'words': short_lift['words'], 'close': short_lift['close'], 'reason': short_lift['reason']}
     # A read-back holds for the words the readers heard: kept while they stay the same.
     read = prev.get('read_back') if isinstance(prev.get('read_back'), dict) else {}
     still = {cut: entry for cut, entry in read.items() if isinstance(entry, dict) and hashes.get(cut) and entry.get('script_sha256') == hashes[cut]}
@@ -1988,6 +1996,17 @@ def self_test():
         check('a lifted piece\'s long cut is checked with its piece id, its short cut without, and the lift is on the record',
               (asked, (lifted.get('long_cut') or {}).get('words'), bool((lifted.get('long_cut') or {}).get('reason')), 'long_cut' in unlifted),
               ([('long', monday), ('short', None), ('long', None), ('short', None)], 1200, True, False))
+        wed = 'db9f9f6a-1092-49be-8024-f335e060305a'
+        asked = []
+        globals()['_story_check'], real_sc = (lambda cut, path, series=None, piece=None: (asked.append((cut, piece)), (0, ''))[1]), globals()['_story_check']
+        try:
+            lifted = scripts_patch([t / 'long.md', t / 'short.md'], warn=warned.append, piece=wed)['script_check']
+        finally:
+            globals()['_story_check'] = real_sc
+        check('a piece whose short cut is lifted has its short cut checked with its piece id and the lift on the record, never silent',
+              (asked, lifted.get('short_cut'), 'long_cut' in lifted),
+              ([('long', wed), ('short', wed)], {'words': 260, 'close': 'The full five-minute video is on my channel.',
+               'reason': 'A 90-second cut that sends viewers to the 5-minute video, as he asked.'}, False))
 
         # The 15-minute feature (house rule FEATURE): a third script, only on a piece Krish called one for.
         features = t / 'features.json'
@@ -2960,8 +2979,14 @@ def main(argv=None, call=None):
             # The piece's series is still passed on; the series line is retired (house rule SERIES_OPENER, 2026-10-21).
             series = a.series or series_of(a.piece_id, answer, call)
             import long_cut
+            import short_cut
             patch = scripts_patch(a.args, previous=previous, series=series, deep=deep_piece(a.piece_id), krish=a.krish_words,
-                                  feature=feature_piece(a.piece_id), piece=a.piece_id if long_cut.declared(a.piece_id) else None)
+                                  feature=feature_piece(a.piece_id),
+                                  piece=a.piece_id if long_cut.declared(a.piece_id) or short_cut.declared(a.piece_id) else None)
+            if patch['script_check'].get('short_cut'):
+                print('making: ' + short_cut.notice({**patch['script_check']['short_cut'],
+                                                     'minutes': short_cut.minutes(patch['script_check']['short_cut']['words'])})
+                      + ' (config/short-cuts.json); the Scripts step on the board says so', file=sys.stderr)
             if patch['script_check'].get('long_cut'):
                 print('making: ' + long_cut.notice({**patch['script_check']['long_cut'],
                                                     'minutes': long_cut.minutes(patch['script_check']['long_cut']['words'])})
