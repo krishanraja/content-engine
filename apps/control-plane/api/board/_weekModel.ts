@@ -605,10 +605,10 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
  *  present and future): scripts filed on the piece and not yet approved by him make his Approve scripts the card's next
  *  action, bound to the exact words filed (F47). A series day's own piece (pieceItem) and a piece moved to another day
  *  (placedPieceItem) both call it; tests/control-plane/board-every-card.test.ts holds every card kind to it. */
-export function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, title: string, where: string): { press: PressAction; line: string } | null {
+export function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, title: string, where: string, recorded = true): { press: PressAction; line: string } | null {
   const filed = m.scripts?.[pieceId] ?? []
   if (!filed.length || m.decisions?.[pieceId]?.items.find(x => x.key === 'scripts')?.made === true) return null
-  const press = scriptsPress(m.week, day, pieceId, cut(title, 150), filed, m.picks || [])
+  const press = scriptsPress(m.week, day, pieceId, cut(title, 150), filed, m.picks || [], recorded)
   // An approval of earlier words says so, so he knows why the press is back (pieceDecisions, scriptsChanged).
   const note = m.decisions?.[pieceId]?.items.find(x => x.key === 'scripts')?.note
   const line = `${where.replace(/[.\s]+$/, '')}. ${note ? 'Rewritten since you approved them, so they need your Approve again' : `${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve`}: ${filed.map(f => f.title).join('; ')}.`
@@ -641,7 +641,7 @@ function withLock(read: ModelRead, said: { so_what: string | null; story: string
 
 /** His Approve scripts on a piece, in his words (picks/<day>-scripts-words, the shape the engine checks: _contracts.ts
  *  wordsBody, scriptsBody), carrying the exact words of each filed cut so his approval binds those words (F47). */
-export function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ doc_id: string; revision?: number }> = []): PressAction {
+export function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ doc_id: string; revision?: number }> = [], recorded = true): PressAction {
   const doc = wordsDocId(day, 'scripts', pieceId)
   const ordered = [...filed].sort((a, b) => (a.cut === b.cut ? 0 : a.cut === 'long' ? -1 : 1))
   const texts = Object.fromEntries(ordered.map(f => [f.cut, f.text]))
@@ -651,18 +651,22 @@ export function scriptsPress(week: string, day: string, pieceId: string, title: 
   const words = (t: string) => t.split(/\s+/).filter(Boolean).length
   const both = ordered.length > 1
   return { kind: 'press', label: both ? 'Read and approve the scripts' : 'Read and approve the script', collection: 'picks', id: doc, revision: picks.find(x => x.doc_id === doc)?.revision ?? 0,
+    // Only scripts he records go to his Teleprompter (Ruling, Krish, 2026-11-17): copy for a post he does not record
+    // carries teleprompter false, and the server sends nothing for it (_presses.ts). The flag only ever stops a send.
     body: { kind: 'approve_scripts', day, via: 'words', approved: true, piece_id: pieceId, texts, titles, folder_title: cut(named, 200),
-      said_where: 'the Publish Board in Control Centre', session_ref: boardAt(week, day) },
+      said_where: 'the Publish Board in Control Centre', session_ref: boardAt(week, day), ...(recorded ? {} : { teleprompter: false }) },
     // A board before contract 1.21.0 still asks his words this way; a board that knows `scripts` shows the review instead.
     words: { path: 'words', ask: `Your words to approve ${both ? 'both scripts' : 'the script'} as filed ("Approved.")`, required: true }, stamp: ['at', 'said_at'],
     scripts: {
       path: 'texts', approve: both ? 'Approve both scripts' : 'Approve the script', approve_edited: both ? 'Approve both scripts, with my edits' : 'Approve the script, with my edits',
-      edited_note: 'Your edits are saved with your approval and become the scripts. Approve sends them to your Teleprompter straight away; the checks run after and report to you, and never change or hold your words.',
+      edited_note: recorded ? 'Your edits are saved with your approval and become the scripts. Approve sends them to your Teleprompter straight away; the checks run after and report to you, and never change or hold your words.'
+        : 'Your edits are saved with your approval and become the words. This is copy for a post you do not record, so it never goes to your Teleprompter.',
       cuts: ordered.map(f => ({ cut: f.cut, label: f.cut === 'long' ? 'Long cut' : 'Short cut', text: f.text, words: words(f.text),
         minutes: Math.round((words(f.text) / 150) * 10) / 10, filed_at: f.at, material_id: f.id })),
     },
-    goes: `Approves ${both ? 'both scripts' : 'the script'} exactly as shown, with any edits you made, and sends ${both ? 'them' : 'it'} to your Teleprompter now.`,
-    done: 'Approved and sent to your Teleprompter. The card moves on to recording.' } as PressAction
+    goes: recorded ? `Approves ${both ? 'both scripts' : 'the script'} exactly as shown, with any edits you made, and sends ${both ? 'them' : 'it'} to your Teleprompter now.`
+      : 'Approves the words exactly as shown, with any edits you made. They do not go to your Teleprompter: only scripts you record do.',
+    done: recorded ? 'Approved and sent to your Teleprompter. The card moves on to recording.' : 'Approved. Your Teleprompter is only for scripts you record.' } as PressAction
 }
 
 /** The scripts on every card that holds them, every day (Ruling, Krish, 2026-11-17: "I want the board in a state where I
@@ -680,10 +684,12 @@ export function scriptsOnCard(m: ModelInputs, d: DayView, it: ModelItem): ModelI
   const all = [it.next, ...(it.others || [])].filter(Boolean) as Body[]
   if (all.some(a => a.kind === 'press' && isObj(a.scripts))) return it
   const title = it.title
+  // A piece is always his to record; an off-day post only when it is a voiceover he records himself.
+  const recorded = it.type !== 'post' || recordsItself(it.kind, m.picks || [], it.key)
   const approval = scriptsApproval(m.picks || [], pid)
   if (!approval) {
     if (it.type !== 'post') return it
-    const press = scriptsPress(m.week, d.day, pid, title, filed, m.picks || [])
+    const press = scriptsPress(m.week, d.day, pid, title, filed, m.picks || [], recorded)
     const line = `${it.line.replace(/[.\s]+$/, '')}. ${filed.length > 1 ? 'Both scripts are' : 'The script is'} on the card: read it, edit it if you like, and approve it.`
     return { ...it, line, next: press as Action, decision: true, others: [...(it.next ? [it.next as unknown as PressAction] : []), ...(it.others || [])] }
   }
@@ -693,9 +699,10 @@ export function scriptsOnCard(m: ModelInputs, d: DayView, it: ModelItem): ModelI
   const making = isObj(meta.making) ? meta.making as Body : {}
   if (takesInOf(meta) || (Array.isArray(making.recordings) && making.recordings.length)) return it
   // Edit opens the words he approved, never older filed words (review of 17 Nov, F49).
-  const again = approveAgainPress(m, d.day, pid, title)
-  const edit = { ...(again ?? scriptsPress(m.week, d.day, pid, title, filed, m.picks || [])), label: filed.length > 1 ? 'Edit the scripts' : 'Edit the script',
-    goes: 'Opens the words you approved to read and edit. Approve at the end sends the words you leave to your Teleprompter straight away; the checks run after and report to you.' } as PressAction
+  const again = approveAgainPress(m, d.day, pid, title, recorded)
+  const edit = { ...(again ?? scriptsPress(m.week, d.day, pid, title, filed, m.picks || [], recorded)), label: filed.length > 1 ? 'Edit the scripts' : 'Edit the script',
+    goes: recorded ? 'Opens the words you approved to read and edit. Approve at the end sends the words you leave to your Teleprompter straight away; the checks run after and report to you.'
+      : 'Opens the words you approved to read and edit. Approve at the end keeps the words you leave; copy for a post you do not record never goes to your Teleprompter.' } as PressAction
   const back = takeBackPress(m, d.day, pid)
   return { ...it, others: [...(it.others || []), edit, back] }
 }
@@ -804,7 +811,7 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   // Scripts filed on its own record and not approved yet: his edit and Approve scripts lead, the same press a piece's card
   // offers (scriptsReady), on every off-day kind and every day (Krish, 2026-11-17: "I want the board in a state where I can
   // see the script and edit it, and then press approve"; "just add the scripts section to the off-day card").
-  const ready = own && !made && !missed && !scriptsApproval(m.picks || [], own) ? scriptsReady(m, d.day, own, base.title, where) : null
+  const ready = own && !made && !missed && !scriptsApproval(m.picks || [], own) ? scriptsReady(m, d.day, own, base.title, where, recordsItself(kind, m.picks || [], o.doc_id)) : null
   if (ready) {
     return { ...base, line: ready.line, next: ready.press as Action, decision: true,
       others: [itemPrompt(m.week, { ...base, line: ready.line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format), null, m.decisions?.[own!] ?? null, own) as unknown as PressAction] }
@@ -947,12 +954,12 @@ function plainReason(error: string | null): string {
   return ` (${cut(first.charAt(0).toLowerCase() + first.slice(1), 120)})`
 }
 
-export function approveAgainPress(m: Pick<ModelInputs, 'week' | 'picks'>, day: string, pieceId: string, title: string): PressAction | null {
+export function approveAgainPress(m: Pick<ModelInputs, 'week' | 'picks'>, day: string, pieceId: string, title: string, recorded = true): PressAction | null {
   const a = scriptsApproval(m.picks || [], pieceId)
   if (!a) return null
   const filed: FiledScript[] = Object.entries(a.texts).filter(([c]) => c === 'long' || c === 'short')
     .map(([c, text]) => ({ cut: c as 'long' | 'short', id: '', title: c, text, at: a.at }))
-  return filed.length ? scriptsPress(m.week, day, pieceId, a.folder ?? cut(title, 150), filed, m.picks || []) : null
+  return filed.length ? scriptsPress(m.week, day, pieceId, a.folder ?? cut(title, 150), filed, m.picks || [], recorded) : null
 }
 
 /** His approved scripts that the server's send did not put in his Teleprompter (held, refused, failed or no key), with the

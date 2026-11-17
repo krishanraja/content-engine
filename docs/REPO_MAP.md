@@ -3051,7 +3051,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function sentNote(a: OffdayScripts | null): string | null`
 - `function checksFirst(a: OffdayScripts): string`
 - `function workingTitle(m: Pick<ModelInputs, 'picks' | 'decisions'>, pieceId: string, fallback: string, out = false): str…`
-- `function approveAgainPress(m: Pick<ModelInputs, 'week' | 'picks'>, day: string, pieceId: string, title: string): PressA…`
+- `function approveAgainPress(m: Pick<ModelInputs, 'week' | 'picks'>, day: string, pieceId: string, title: string, recorde…`
 - `function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: string): { line: string; approval: OffdayScripts }…`
 - `function recordHead(sc: OffdayScripts): string`
 - `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`

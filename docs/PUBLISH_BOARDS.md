@@ -21,12 +21,17 @@ Live. An off-day post follows the same rules on its own path.
 2. **Every press shows its effect at once.** The card moves on, and the press answers in plain words what it did
    (`line`); a refusal says why, in the sheet he is looking at. Nothing fails silently (F47, F49, F50).
 3. **His words are his.** Edits are saved, become the words, and survive a closed sheet or a refused save. His Approve
-   sends them to his Teleprompter at once; the checks run after and report to him (F49). An approval goes stale only
-   when a script is filed after it.
+   sends them to his Teleprompter at once; the checks run after and report to him (F49). Only scripts he records go to
+   his Teleprompter: his pieces and the voiceovers he records himself. Copy for a carousel, meme or other post is
+   approved and kept, never sent there (Ruling, Krish, 2026-11-17: "only scripts i record go to teleprompter"). An
+   approval goes stale only when a script is filed after it.
 4. **The scripts stay on the card until he has recorded.** Before Approve: Read and approve. After: Edit the scripts
    (his approved words) and Take back my approval. A send that never reached his Teleprompter puts his words back for
    Approve (F50).
-5. **Prompts only copy.** A session reports to the board; the board never waits on a chat.
+5. **His notes first, then the prompt copies.** Every prompt on every card has an optional notes box above it ("Your
+   notes"); what he types goes at the end of the prompt and is kept on the board (Krish, 2026-11-17: "there should have
+   been an area for me to edit or give my thoughts prior to a prompt button being pressed surely for all cards"). The
+   button only copies; a session reports to the board, and the board never waits on a chat.
 6. **Plain words.** No script names, no "making record", no failure numbers on the card.
 7. **One rule, one result, every card.** A series day's piece, a piece moved to another day and an off-day post at the
    same state show the same step and the same action. A rule lives in one function every card builder calls
