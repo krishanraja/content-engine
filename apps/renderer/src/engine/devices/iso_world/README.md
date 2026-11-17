@@ -21,8 +21,9 @@ Event toState values:
   arrival order (a base never leaves the ground).
 
 Framing: the view is fitted once, to the height each block will reach after its
-fills, and centred. A tall frame fits inside x 60 to 860 and y 270 to 1080 (above
-the house caption box at y 1090); a wide frame inside the middle 90% of the box.
+fills. On a tall frame the world fills the slot from y 270 to the foot of the
+caption box at y 1320, edge to edge, while every label stays inside x 60 to 860
+and above y 1090; on a wide frame it fills the box inside a 4% margin.
 One light from the upper left: lit top, half-lit left face, shaded right face.
 
 All events use engine clock timing. Space add cues by at least dropFrames to
