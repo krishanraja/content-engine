@@ -649,7 +649,7 @@ after his presses, by 10:00.
    checked and read back). Read each press and its answer on the board: `python3
    scripts/post-pack/board_web.py read <Monday> approvals` (the collection
    `config/teleprompter.json` `approval.collection` names; only documents
-   whose `updated_by` is Krish are his press, and `<day>-scripts-words` is his
+   whose `updated_by` is Krish are his press, and `<day>-scripts-words-<piece>` (or the older `<day>-scripts-words`) is his
    typed approval). When he approves the scripts in his own typed words in the
    room instead, carry them with `board_session.py approve scripts`
    (`references/typed-approval.md`): the server sends them to Teleprompter as

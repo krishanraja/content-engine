@@ -2297,6 +2297,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const YES_ID`
 - `function yesBody(id: string, body: Record<string, unknown>): boolean`
 - `const WORDS_ID`
+- `function wordsDocId(day: string, what: 'lock' | 'scripts', pieceId: string): string`
 - `const WORDS_KIND`
 - `function saidInWords(body: Record<string, unknown>): boolean`
 - `function wordsBody(id: string, body: Record<string, unknown>): boolean`
