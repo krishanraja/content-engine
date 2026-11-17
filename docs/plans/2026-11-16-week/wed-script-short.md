@@ -1,7 +1,7 @@
-Anthropic makes Claude, an AI that writes code. So when it needed a help desk bot, why did it buy one?
+Anthropic makes Claude, an AI that writes code. So why did it buy its help desk bot?
 
-Picture two in the morning. A home-made bot gets a customer's bill wrong. One of Anthropic's own engineers gets the call.
+If a home-made bot gets a bill wrong at two in the morning, your engineer gets the call. So Anthropic bought one from Intercom, which sells them.
 
-So it bought one from Intercom. And the best bit? It runs on Claude anyway.
+And it runs on Claude. They just let Intercom take that call.
 
-Before building anything, I'll ask who gets that call. The full story is free at makeyourmindup.ai.
+So I won't ask build or buy. I'll ask who gets the call. The full story is free at makeyourmindup.ai.
