@@ -1,0 +1,71 @@
+{
+  "objects": [
+    {
+      "obj": "archive",
+      "device": "film_frame",
+      "meaning": "Archive evidence lifts into the present",
+      "params": {
+        "plates": [
+          {
+            "image": "archive-1991.png",
+            "date": "1991",
+            "source": "Archive photo"
+          },
+          {
+            "image": "screenshot-2001.png",
+            "date": "2001",
+            "source": "Archived screenshot"
+          }
+        ],
+        "regions": {
+          "proof": {
+            "x": 0.2,
+            "y": 0.25,
+            "width": 0.4,
+            "height": 0.2
+          }
+        },
+        "mode": "crt"
+      },
+      "fromFrame": 0,
+      "toFrame": 180
+    }
+  ],
+  "events": [
+    {
+      "id": "enter",
+      "obj": "archive",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 10
+    },
+    {
+      "id": "mark",
+      "obj": "archive",
+      "verb": "mark",
+      "toState": "proof",
+      "atFrame": 30
+    },
+    {
+      "id": "highlight",
+      "obj": "archive",
+      "verb": "highlight",
+      "toState": "proof",
+      "atFrame": 45
+    },
+    {
+      "id": "move",
+      "obj": "archive",
+      "verb": "move",
+      "toState": "1",
+      "atFrame": 70
+    },
+    {
+      "id": "exit",
+      "obj": "archive",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 100
+    }
+  ]
+}
