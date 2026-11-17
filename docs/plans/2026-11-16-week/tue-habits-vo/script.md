@@ -4,7 +4,7 @@ And honestly, that's fair, because loads of people are blaming the AI for their 
 
 Think about it. When a car crashes, we don't put the car on trial, we look at whoever was driving. AI is the car and you're the driver, so "the AI did it" is never going to save you.
 
-And bosses already get this. IBM asked HR chiefs which skill matters most now, and 71% said the same thing: check the AI's work, and overrule it when it's wrong. Then they asked the staff, and only 29% even ranked judgment as important.
+And bosses already get this. IBM asked HR chiefs which skill matters most now. And 71% said the same thing: check the AI's work, and overrule it when it's wrong. Then they asked the staff, and only 29% even ranked judgment as important.
 
 So here's what I reckon. The only way AI doesn't replace you is if you own its mistakes like they're yours. Because they are.
 
