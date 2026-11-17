@@ -10,7 +10,7 @@ import { ManifestBindError, checkPublishBind } from './_manifest.js'
 import { DRIVE_ID, boardDrive, filesOfPosts } from './_drivePosts.js'
 import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
-import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
+import { MaterialError, fileMaterial, pastedKind, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
 import { StyleError, motionBank, needsMotion, sampleFiles, saveStyle, stillFiles, stylePick, undrawableMotion } from './_style.js'
 import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
@@ -409,7 +409,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             const name = String(body.title || 'Research').slice(0, 180)
             // A storyboard the session made is filed with its role in the title, so the day knows one is on file.
             const title = body.role === 'storyboard' && !/^Storyboard:/.test(name) ? `Storyboard: ${name}` : name
-            const filed = await fileMaterial(db, pieceId, { kind: 'file', title, content: String(body.content || ''), by: 'Krish' })
+            const filed = await fileMaterial(db, pieceId, { kind: pastedKind(body.role), title, content: String(body.content || ''), by: 'Krish' })
             return res.status(201).json({ ok: true, material: filed })
           }
           if (op === 'research') {
