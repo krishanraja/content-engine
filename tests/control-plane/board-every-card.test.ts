@@ -29,7 +29,8 @@ describe('every card builder calls the shared rules', () => {
     for (const b of BUILDERS) expect(body(b), b).toMatch(/withWork\(/)
   })
   it('every builder of a piece card offers his Approve scripts through scriptsReady', () => {
-    for (const b of ['pieceItem', 'placedPieceItem']) expect(body(b), b).toMatch(/scriptsReady\(/)
+    // An off-day post with its own record too (Krish, 2026-11-17: "just add the scripts section to the off-day card").
+    for (const b of ['pieceItem', 'placedPieceItem', 'postItemBase']) expect(body(b), b).toMatch(/scriptsReady\(/)
   })
   it('no card builder is added without being listed here', () => {
     const builders = [...SRC.matchAll(/^(?:export )?function (\w+Item(?:Base)?)\(m: ModelInputs/gm)].map(x => x[1])
