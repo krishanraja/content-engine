@@ -3038,7 +3038,8 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, pieceI…`
 - `function productionStage(m: ModelInputs, p: { pieceId: string; title: string; item: string | null; style: DayStyle | nu…`
 - `function sentNote(a: OffdayScripts | null): string | null`
-- `function workingTitle(m: Pick<ModelInputs, 'picks'>, pieceId: string, fallback: string): string`
+- `function checksFirst(a: OffdayScripts): string`
+- `function workingTitle(m: Pick<ModelInputs, 'picks' | 'decisions'>, pieceId: string, fallback: string, out = false): str…`
 - `function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: string): { line: string; approval: OffdayScripts }…`
 - `function recordHead(sc: OffdayScripts): string`
 - `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`

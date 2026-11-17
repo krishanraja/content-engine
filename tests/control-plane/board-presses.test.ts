@@ -281,8 +281,15 @@ describe('Approve scripts sends his exact words to Teleprompter from the server'
       expect(out.send.checks, what).toMatch(said)
       expect(out.send.checks, what).toMatch(/^sent on his own press; still to run after it/)
       expect(out.send.checks, what).not.toMatch(/nothing was sent/)
+      // The words sent are recorded on the making record, so no session sends them again (review of F49).
+      if (making) expect(out.send, what).toMatchObject({ recorded: true })
       expect(t.calls[0].args.p_body.approved, what).toBe(true)
     }
+    // A second send updates the folder already in his Teleprompter, never a second one.
+    const again = setup(sentOk, { making: { ...checked(), teleprompter: { folder_id: 'F0LDER-1', cuts: { long: { script_id: 'L-1' }, short: { script_id: 'S-1' } } } } })
+    await again.put('picks', 'mon-scripts', approval({ texts: { long: `${LONG}\n\nAnother line.`, short: SHORT } }))
+    expect(again.sent[0]).toMatchObject({ folder_id: 'F0LDER-1' })
+    expect(again.sent[0].scripts.map((x: { script_id?: string }) => x.script_id)).toEqual(['L-1', 'S-1'])
     // His press answers in plain words what it did, which the board says back to him (F49).
     const edited = await setup(sentOk, { making: checked() }).put('picks', 'mon-scripts', approval({ texts: { long: `${LONG}\n\nOne more line he typed.`, short: SHORT } }))
     expect(edited.out.line).toMatch(/^Approved and sent to your Teleprompter at \d\d:\d\d UTC\. The checks on your words run next and report to you/)

@@ -462,7 +462,7 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const where = stageOf(PIECE_PATH, done)
   const label = where.label
   const base = { key: `piece:${d.piece_id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: d.series,
-    title: workingTitle(m, d.piece_id, d.title), approved: p.approval.label, stage: where, path, missed, read, piece_id: d.piece_id,
+    title: workingTitle(m, d.piece_id, d.title, out), approved: p.approval.label, stage: where, path, missed, read, piece_id: d.piece_id,
     item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null, stories_planned: null, others: [] as PressAction[] }
   if (out) return { ...base, line: p.stage?.state === 'live' ? p.stage.label : d.next, next: null, decision: false }
   // His Approve for publish on the made piece, bound to its manifest: his decision for the day.
@@ -550,7 +550,7 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const said = m.lockReads?.[p.id]
   const missed = !out && d.date < m.today
   const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
-    title: workingTitle(m, p.id, p.title), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
+    title: workingTitle(m, p.id, p.title, out), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
     read: withWork(withLock(readOf(null, { row }), said), m, [p.id]), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
     stories_planned: null, others: [] as PressAction[] }
   const step = decided?.next_step ?? (branded ? 'look' : 'next')
@@ -631,8 +631,8 @@ export function scriptsPress(week: string, day: string, pieceId: string, title: 
   const doc = wordsDocId(day, 'scripts', pieceId)
   const ordered = [...filed].sort((a, b) => (a.cut === b.cut ? 0 : a.cut === 'long' ? -1 : 1))
   const texts = Object.fromEntries(ordered.map(f => [f.cut, f.text]))
-  // The title the scripts speak names the Teleprompter folder and scripts (F49: an idea's headline no longer matched them).
-  const named = spokenTitle(texts) ?? title
+  // The Teleprompter folder keeps the piece's own title, so a send never makes a second folder (review of F49).
+  const named = title
   const titles = Object.fromEntries(ordered.map(f => [f.cut, cut(`${named}: ${f.cut === 'long' ? 'long cut' : 'short cut'}`, 200)]))
   const words = (t: string) => t.split(/\s+/).filter(Boolean).length
   const both = ordered.length > 1
@@ -793,7 +793,12 @@ export function productionStage(m: ModelInputs, p: { pieceId: string; title: str
     const line = (p.offday ? 'Your script is approved. Record it from your Teleprompter, drop the take in the Video Engine Inbox, then press My takes are in the Inbox.'
       : 'Your scripts are approved. Record both cuts from your Teleprompter, drop the takes in the Video Engine Inbox, then press My takes are in the Inbox.')
       .replace(/^Your scripts? (is|are) approved\. /, sent ? `${sent} ` : '$&')
-    const record = itemPrompt(m.week, { ...p.base, line }, 'record', p.offday ? 'motion' : null, null, p.decided, p.reportAs, p.recordHead ?? null) as unknown as PressAction
+    // His own press sent words no check has seen yet (F49): the next session runs those checks first and reports them to
+    // him, so the card's promise is kept (review of F49).
+    const approved = scriptsApproval(m.picks || [], p.pieceId)
+    const checksHead = approved?.send === 'sent' && approved.checks ? checksFirst(approved) : null
+    const record = itemPrompt(m.week, { ...p.base, line }, 'record', p.offday ? 'motion' : null, null, p.decided, p.reportAs,
+      [checksHead, p.recordHead ?? null].filter(Boolean).join('\n\n') || null) as unknown as PressAction
     return { line, next: takesPress(p.pieceId, p.item) as unknown as Action, decision: true, others: [record] }
   }
   // Every production pick decided before the one-shot cut: a missing one is his press first, unless a take is already
@@ -830,11 +835,25 @@ export function sentNote(a: OffdayScripts | null): string | null {
     + (a.checks ? ' The checks on your words run next and report to you; they never hold or change them.' : '')
 }
 
+/** The first job of the session after his own press sent unchecked words (F49): run the checks on exactly those words
+ *  and report what they find to him; never rewrite or resend them, never ask him to press again. */
+export function checksFirst(a: OffdayScripts): string {
+  return `First, before the recording step: his own Approve scripts press${a.on ? ` (${a.on})` : ''} sent his exact words to his Teleprompter `
+    + 'before their checks ran (F49; Ruling, Krish, 2026-11-17: "the approve scripts button auto sends to teleprompter"). Run them now on exactly '
+    + 'the words he approved (the texts of his approval on the week\'s picks, piece ' + a.piece_id + '): the scripts\' check (making.py scripts), two '
+    + 'fresh readers (making.py read-back) and the tone floor against his AI Music take (making.py tone-floor). Report what they find to him on the '
+    + 'board in plain words. Never rewrite or resend his words, and never ask him to press Approve again. Still to run: ' + cut(String(a.checks), 400)
+}
+
 /** The card's title: the title his approved scripts speak (spokenTitle), as a working title, else the piece's own. His
  *  edited scripts asked "Where does AI get built when towns say no?" under the idea headline "OpenAI pledges to pay for
  *  data center power after election highlights AI concerns" (F49). The final title is his pick with the finished video. */
-export function workingTitle(m: Pick<ModelInputs, 'picks'>, pieceId: string, fallback: string): string {
-  const a = scriptsApproval(m.picks || [], pieceId)
+export function workingTitle(m: Pick<ModelInputs, 'picks' | 'decisions'>, pieceId: string, fallback: string, out = false): string {
+  // Only while it is a working title: not once the piece is out, not once he picked its titles, and only from an approval
+  // that still counts (review of F49).
+  const titled = (m.picks || []).some(p => /-titles$/.test(p.doc_id) && isObj(p.body) && String((p.body as Body).piece_id || '').toLowerCase() === pieceId.toLowerCase())
+  const counts = m.decisions?.[pieceId]?.items.find(x => x.key === 'scripts')?.made === true
+  const a = out || titled || !counts ? null : scriptsApproval(m.picks || [], pieceId)
   return cut((a && spokenTitle(a.texts)) || fallback, 200)
 }
 

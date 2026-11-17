@@ -183,17 +183,21 @@ export async function heldBecause(making: unknown, texts: Record<string, string>
 
 /** The Teleprompter send his approval asks for: each cut's words as Teleprompter shows them (spokenText), the words he
  *  approved given as their source, and his document as the approval, checked again by sendApprovedScripts. */
-async function sendInput(id: string, body: Body, who: string, at: string): Promise<SendApprovedInput> {
+async function sendInput(id: string, body: Body, who: string, at: string, making: Making | null = null): Promise<SendApprovedInput> {
   const { scriptHash, spokenText } = await import('../_teleprompter.js')
   const texts = body.texts as Record<string, string>, titles = body.titles as Record<string, string>
-  const ids = isObj(body.script_ids) ? body.script_ids as Record<string, string> : {}
+  // The folder and scripts already in his Teleprompter for this piece, so a second send updates them, never a second
+  // folder (as offdayRecorded does; review of F49).
+  const tp = making && isObj(making.teleprompter) ? making.teleprompter as { folder_id?: string; cuts?: Record<string, { script_id?: string }> } : null
+  const known = Object.fromEntries(Object.entries(tp?.cuts || {}).filter(([, c]) => typeof c?.script_id === 'string').map(([cut, c]) => [cut, c.script_id as string]))
+  const ids = { ...known, ...(isObj(body.script_ids) ? body.script_ids as Record<string, string> : {}) }
   const scripts = Object.keys(texts).map(cut => {
     const text = spokenText(texts[cut])
     return { cut: cut as 'long' | 'short' | 'feature', title: titles[cut], text, sha256: scriptHash(text), source: texts[cut], ...(ids[cut] ? { script_id: ids[cut] } : {}) }
   })
   return {
     piece_id: String(body.piece_id), day: body.day as SendApprovedInput['day'], folder_title: String(body.folder_title),
-    ...(typeof body.folder_id === 'string' ? { folder_id: body.folder_id } : {}),
+    ...(typeof body.folder_id === 'string' ? { folder_id: body.folder_id } : typeof tp?.folder_id === 'string' ? { folder_id: tp.folder_id } : {}),
     scripts, approval: { id, updated_by: who, updated_at: at, body },
   }
 }
@@ -209,14 +213,17 @@ async function makingOf(db: SupabaseClient, pieceId: string): Promise<{ meta: Bo
 /** Records a send that read back on the piece's making record, merged as the making route merges a patch
  *  (api/content-ideas/[id]/making.ts: mergeMaking, guarded on the row's updated_at, read again once on a stale row),
  *  so teleprompter_send.py pending sees it and no session sends it twice. Why it was not recorded, or null. */
-async function recordSend(db: SupabaseClient, input: SendApprovedInput, result: SendResult, now: string): Promise<string | null> {
+async function recordSend(db: SupabaseClient, input: SendApprovedInput, result: SendResult, now: string, ownWords = false): Promise<string | null> {
   const { teleprompterPatch } = await import('../_teleprompter.js')
   const { mergeMaking } = await import('../_making.js')
   for (let tries = 0; tries < 2; tries++) {
     const row = await makingOf(db, input.piece_id)
     if (!row) return 'the piece\'s making record could not be read'
     const check = row.making?.script_check
-    const patch = teleprompterPatch(input, result, { by: SERVER, now, fileHashes: isObj(check?.hashes) ? check!.hashes! : {} })
+    // His own press sent words no check has seen yet (F49): the record binds exactly the words sent, so the making record
+    // says they are in his Teleprompter and no session sends them again.
+    const fileHashes = ownWords ? Object.fromEntries(input.scripts.map(x => [x.cut, x.sha256])) : isObj(check?.hashes) ? check!.hashes! : {}
+    const patch = teleprompterPatch(input, result, { by: SERVER, now, fileHashes })
     if (!patch) return 'the piece\'s checked words changed while the scripts were sent'
     const written = await db.from('content_ideas').update({ meta: { ...row.meta, making: mergeMaking(row.making, patch, SERVER, now) }, updated_at: now })
       .eq('id', input.piece_id).eq('updated_at', row.updated_at).select('id')
@@ -672,7 +679,7 @@ async function offdayRecorded(db: SupabaseClient, ctx: { week: string; id: strin
     } catch (error) {
       result = { status: 'error', error: String((error as Error)?.message || error).slice(0, 300) }
     }
-    const unrecorded = result.status === 'sent' ? await recordSend(db, input, result as SendResult, now).catch(() => 'the piece\'s making record could not be written') : null
+    const unrecorded = result.status === 'sent' ? await recordSend(db, input, result as SendResult, now, Boolean(checks)).catch(() => 'the piece\'s making record could not be written') : null
     answer = { status: result.status, at: now, by: SERVER, date: offdayDate(week, String(body.day)),
       ...(result.folder_id ? { folder_id: result.folder_id } : {}), ...(result.scripts ? { scripts: result.scripts } : {}), ...(result.error ? { error: result.error } : {}),
       ...(result.status === 'sent' ? { recorded: !unrecorded, ...(unrecorded ? { record_error: unrecorded } : {}) } : {}),
@@ -897,8 +904,8 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
     let unrecorded: string | null = null
     let checks: string | null = null
     try {
-      const input = await sendInput(id, body, who, now)
-      const row = await makingOf(db, input.piece_id)
+      const row = await makingOf(db, String(body.piece_id))
+      const input = await sendInput(id, body, who, now, row?.making ?? null)
       const held = row ? await heldBecause(row.making, body.texts as Record<string, string>) : `the piece's making record could not be read, ${THEN}`
       if (held && !hisPress(who)) {
         result = { status: 'held', error: held }
@@ -906,7 +913,7 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
         if (held) checks = AFTER(held)
         const send = deps.send ?? (async (i: SendApprovedInput) => (await import('../_teleprompter.js')).sendApprovedScripts(i))
         result = await send(input)
-        if (result.status === 'sent') unrecorded = await recordSend(db, input, result as SendResult, now).catch(() => 'the piece\'s making record could not be written')
+        if (result.status === 'sent') unrecorded = await recordSend(db, input, result as SendResult, now, Boolean(checks)).catch(() => 'the piece\'s making record could not be written')
       }
     } catch (error) {
       result = { status: 'error', error: String((error as Error)?.message || error).slice(0, 300) }

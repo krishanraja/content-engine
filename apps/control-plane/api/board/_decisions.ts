@@ -68,7 +68,8 @@ export function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScri
   // filed text by design, and his approval is the newer act (F49, Tue 17 Nov 16:20: "pressed approve, and it just
   // deleted all my edits, and the board looks like i never did anything").
   const since = approvedAt && Number.isFinite(Date.parse(approvedAt)) ? Date.parse(approvedAt) : null
-  const filedAfter = (f: FiledScript) => since === null || (f.at !== null && Number.isFinite(Date.parse(f.at)) && Date.parse(f.at) > since)
+  // A filing time that cannot be read counts as after his approval: unknown never counts as approved (review of F49).
+  const filedAfter = (f: FiledScript) => since === null || f.at === null || !Number.isFinite(Date.parse(f.at)) || Date.parse(f.at) > since
   return filed.filter(f => (typeof approved[f.cut] !== 'string' || !sameWords(approved[f.cut] as string, f.text)) && filedAfter(f)).map(f => f.cut)
 }
 
@@ -76,18 +77,26 @@ export function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScri
  *  working title: the last question in each cut's first paragraph, a compound question cut to its last clause ("what
  *  happened and where does AI get built when towns say no?" -> "Where does AI get built when towns say no?"), the
  *  shortest across the cuts. Null when no intro asks one. Titles are settled with the finished video (packaging). */
+const STOCK_QUESTION = /^(want to know why|sound familiar|guess what|know what|you know what|ready|right|why|how|what|really|seriously)\??$/i
 export function spokenTitle(texts: Partial<Record<string, string>> | null | undefined): string | null {
   const found: string[] = []
   for (const text of Object.values(texts || {})) {
     if (typeof text !== 'string') continue
-    const first = text.split(/\n\s*\n/).map(x => x.trim()).find(x => x && !/^#/.test(x)) || ''
-    const qs = first.match(/[^.?!]*\?/g) || []
-    let q = (qs[qs.length - 1] || '').trim().replace(/^(and|so|but|or|now)\b[,\s]*/i, '')
+    // The first paragraph he speaks: no heading, bold label or bracketed direction (review of F49).
+    const spoken = (p: string) => p.replace(/\[[^\]]*\]/g, ' ').replace(/\*\*[^*]*\*\*:?/g, ' ').replace(/["\u201c\u201d]/g, '').replace(/\s+/g, ' ').trim()
+    // Initials and titles (U.S., U.K., Dr.) keep their dots inside the sentence they sit in.
+    const first = (text.split(/\n\s*\n/).map(x => spoken(x.trim())).find(x => x && !/^#/.test(x) && /[a-z]/.test(x)) || '')
+      .replace(/\b((?:[A-Z]\.){2,}|(?:Mr|Mrs|Ms|Dr|St|vs|etc|e\.g|i\.e)\.)/g, m => m.replace(/\./g, '\u2024'))
+    // Sentences end at . ? ! followed by a space or the end, so "$2.5 billion" and "U.S." stay whole.
+    const qs = (first.match(/(?:[^.?!]|[.?!](?!\s|$))*\?(?=\s|$)/g) || []).map(q => q.trim())
+    let q = ([...qs].reverse().find(x => !STOCK_QUESTION.test(x.replace(/^(and|so|but|or|now)\b[,\s]*/i, ''))) || '')
+      .replace(/^(and|so|but|or|now)\b[,\s]*/i, '')
     const clause = /\b(?:and|or)\s+((?:where|what|how|why|who|when|which|is|are|can|could|will|would|should|do|does|did)\b[^?]*\?)$/i.exec(q)
     if (clause) q = clause[1]
-    q = q.replace(/\s+/g, ' ').trim()
-    if (q.split(' ').length >= 3 && q.length <= 140) found.push(q.charAt(0).toUpperCase() + q.slice(1))
+    q = q.replace(/\u2024/g, '.').replace(/\s+/g, ' ').trim()
+    if (q.split(' ').length >= 5 && q.length <= 140) found.push(q.charAt(0).toUpperCase() + q.slice(1))
   }
+  // The shortest that is still a full question (the cuts ask the same one, the short cut most plainly).
   return found.length ? found.sort((a, b) => a.length - b.length)[0] : null
 }
 
