@@ -1,0 +1,90 @@
+{
+  "schema": "voice-bank/1",
+  "_about": "The ElevenLabs voices a voiceover may be read in, and the only place a voice id for one is kept (his own clone's id is also in krish-clone's registry, which wins; scripts/velib/voice_bank.py refuses a bank whose krish entry disagrees with it). Krish, 2026-11-17: \"for all voiceovers and carousels, I want there to either be an audio track over the carousel, or, if it's a voiceover, then I want Eleven Labs voices used to do the voiceovers. I always want to be given a few options in my control center. We should have some stock voices approved in Eleven Labs and, obviously, my own Krish remix voice too as an option on the control center Content Board. voiceovers would have light approved epidemic audio behind the voice.\" Each voice pins its own ElevenLabs model (model): a voice is generated on it and nothing else. Every voice id was read from ElevenLabs (creative_list_voices, 2026-11-17), never typed from memory. A stock voice is proposed until his press on the Content Board approves it for the bank; only an approved voice is generated (ve voice clone --voice), and the board offers proposed ones marked as proposed so he can hear them. preview_url is ElevenLabs' own free preview clip (no credits spent); the board plays it through GET /api/board/sign-offs?voice=<id>. The words of a sample are never his script: a preview is ElevenLabs' own line.",
+  "ruling": "Krish, 2026-11-17 (typed in a Claude session): for all voiceovers, ElevenLabs voices, a few options on the Content Board, some approved stock voices and his own Krish Remix voice; voiceovers have light approved Epidemic audio behind the voice; carousels carry an approved audio track",
+  "voices": [
+    {
+      "id": "krish-remix",
+      "name": "Krish Remix",
+      "kind": "krish",
+      "voice_id": "FOupAntbAMhJ9n9Q4dfC",
+      "registry_name": "krish-voice-elevenlabs",
+      "line": "His own ElevenLabs voice: \"more of a posh london accent with an aussie twang\" (its ElevenLabs description).",
+      "why": "His own voice, the one krish-clone's registry approves (krish-voice-elevenlabs, 15 Nov 2026).",
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/4295343b462b4b5fa79b6ef1e2dc596d/voices/FOupAntbAMhJ9n9Q4dfC/80be4e3a-2d38-4f42-a16c-af9923457b18.mp3",
+      "status": "approved",
+      "approved_by": "Krish",
+      "approved_on": "2026-11-15",
+      "approval_source": "krish-clone config/synthetic-approvals.json, entry krish-voice-elevenlabs",
+      "model": "eleven_v3",
+      "model_why": "Krish, 2026-11-17, after hearing the same lines on eleven_v4, eleven_v3 and eleven_multilingual_v2 (relayed by the Tuesday habits voiceover session): \"v3 sounds right\". On eleven_v4 he asked \"Why does this not sound like that Krish Remix voice when I play it in ElevenLabs?\"",
+      "stability": 0.5,
+      "delivery": "eleven_v3 audio tags ([excited], [casual], [playful], [conversational]) give the more animated delivery he approved; the words stay exactly as signed.",
+      "approved_sample": {
+        "said": "take 2 is good",
+        "on": "2026-11-17",
+        "elevenlabs_generation": "NTGInE9H8lsyZUNsU7Z0",
+        "elevenlabs_flow": "lyaAZ5OQj8bp08tbDKPJ",
+        "model": "eleven_v3",
+        "stability": 0.5,
+        "relayed_by": "the voice-design session"
+      }
+    },
+    {
+      "id": "clyde",
+      "name": "Clyde",
+      "kind": "stock",
+      "voice_id": "wyWA56cQNU2KqUW4eCsI",
+      "accent": "en-british",
+      "gender": "male",
+      "line": "British, middle-aged; power with nuance and humour (ElevenLabs library, professional).",
+      "why": "The nearest stock voice to his own register: a British narrator who can land a dry line, so a short read in it still sounds like the channel.",
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/T05GPpk2fvSBb625DXd4BJHZtu22/voices/wyWA56cQNU2KqUW4eCsI/RNPfnL6pqQi9eI02rhnL.mp3",
+      "status": "proposed",
+      "model": "eleven_multilingual_v2",
+      "model_why": "Not yet heard by him on any model; the engine default (config/ve/clone-voice.json) until he says otherwise."
+    },
+    {
+      "id": "jackson",
+      "name": "Jackson",
+      "kind": "stock",
+      "voice_id": "ZthjuvLPty3kTMaNKVKb",
+      "accent": "en-american",
+      "gender": "male",
+      "line": "American, middle-aged; a confident, credible narrator (ElevenLabs library, professional).",
+      "why": "A plain, trusted American read for the follow.the.money numbers stories, where the audience is mostly US business owners.",
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/T05GPpk2fvSBb625DXd4BJHZtu22/voices/ZthjuvLPty3kTMaNKVKb/2nBO0beUcX6fsrvPZbcE.mp3",
+      "status": "proposed",
+      "model": "eleven_multilingual_v2",
+      "model_why": "Not yet heard by him on any model; the engine default (config/ve/clone-voice.json) until he says otherwise."
+    },
+    {
+      "id": "nichalia",
+      "name": "Nichalia Schwartz",
+      "kind": "stock",
+      "voice_id": "XfNU2rGpBa01ckF309OY",
+      "accent": "en-american",
+      "gender": "female",
+      "line": "American, 20s to 30s; friendly, bright and clear, made for explainers (ElevenLabs library, professional).",
+      "why": "A warm explainer voice for the good-news and how-it-works shorts, and a contrast to his own so a week's off days do not all sound alike.",
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/XfNU2rGpBa01ckF309OY/kuFJZI5s8GbgYm5f0hMo.mp3",
+      "status": "proposed",
+      "model": "eleven_multilingual_v2",
+      "model_why": "Not yet heard by him on any model; the engine default (config/ve/clone-voice.json) until he says otherwise."
+    },
+    {
+      "id": "allison",
+      "name": "Allison",
+      "kind": "stock",
+      "voice_id": "Se2Vw1WbHmGbBbyWTuu4",
+      "accent": "en-british",
+      "gender": "female",
+      "line": "British; smooth, elegant and engaging, made for narration and YouTube (ElevenLabs library, professional).",
+      "why": "A calm British read for the under.the.hood explainers, where a slower, even voice helps a listener follow a mechanism heard once.",
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/Se2Vw1WbHmGbBbyWTuu4/3criMPMqBy1hVGIVhW2Q.mp3",
+      "status": "proposed",
+      "model": "eleven_multilingual_v2",
+      "model_why": "Not yet heard by him on any model; the engine default (config/ve/clone-voice.json) until he says otherwise."
+    }
+  ]
+}

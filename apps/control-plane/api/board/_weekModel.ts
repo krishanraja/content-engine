@@ -6,6 +6,7 @@ import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
 import { thumbsPress } from './_thumbs.js'
 import { makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
 import type { DayStyle, StyleLayer } from './_style.js'
+import { audioPresses } from './_audio.js'
 import { canonicalUrl, titleNorm } from '../_text.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
@@ -208,6 +209,8 @@ export interface ModelInputs {
   locksToSign?: Record<string, LockToSign>
   /** Pieces and posts approved, scheduled or live from 14 days before the week to its end (_view.ts recentOut). */
   recentOut?: RecentOut[]
+  /** The week's picks documents (board_documents, picks): his voice and track picks on an off-day post (_audio.ts). */
+  picks?: Array<{ doc_id: string; body: Body; updated_by?: string; revision?: number }>
 }
 
 /** The address of the live board on a week and day: where his typed approval was given. */
@@ -526,7 +529,16 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
 }
 
 /** An approved off-day post on the board: its kind, its path, where it is and its one next action. */
+/** An off-day post, with his sound picks beside its other presses until it is scheduled: the voice and the music under
+ *  it on a voiceover short, the track over a carousel (contract 1.20.0, _audio.ts; Krish, 2026-11-17: "I always want
+ *  to be given a few options in my control center"). */
 function postItem(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
+  const it = postItemBase(m, d, o)
+  const settled = it.missed || o.stage?.state === 'live' || o.stage?.state === 'scheduled'
+  const sound = settled ? [] : audioPresses({ key: o.doc_id, kind: it.kind }, m.picks || [])
+  return sound.length ? { ...it, others: [...(it.others || []), ...sound] } : it
+}
+function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const raw = rawOption(m, d.day, o.id)
   const { kind, supports } = offdayKind({ ...(raw || {}), format: raw?.format ?? o.format })
   const kind_label = kindLabel(kind, supports)

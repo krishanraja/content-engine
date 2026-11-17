@@ -74,7 +74,12 @@ writes the words and the direction, Codex builds the picture in code, and the se
 and Notes rules below and the palette. Off-day voiceover shorts, and meme videos, take the video engine's route in a
 content-engine session: the session writes the script and the signed spec, Codex builds the devices and plates from
 cards, `ve` renders, and a separate reviewer watches and listens before it is called ready (`docs/ve/ENGINE.md`,
-`docs/ve/RUNBOOK.md`). The voice comes from wherever it comes from today.
+`docs/ve/RUNBOOK.md`). The voice is an ElevenLabs voice from `config/voice-bank.json` (his Krish Remix voice, or a
+stock voice he approved), the one he picked on the Content Board (Pick the voice), with a light off-day track under it
+(Pick the music under the voice). Every carousel carries an approved audio track the same way: the off-day rotation in
+`config/music-library.json`, his Pick the track on the board, at the one bed shape (`config/music-bed.json`). A session
+never picks either for him (Krish, 2026-11-17: "for all voiceovers and carousels, I want there to either be an audio
+track over the carousel, or, if it's a voiceover, then I want Eleven Labs voices used to do the voiceovers").
 
 `tests/control-plane/make-route.test.ts` holds the board's prompts and the documents that tell a session how to make
 one of these to this route, and refuses the retired routes by name.

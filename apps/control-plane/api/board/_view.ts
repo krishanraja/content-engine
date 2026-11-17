@@ -918,7 +918,7 @@ export function buildView(i: ViewInputs): WeekView {
   }
   // What went out or is on its way around the week, so an idea that retells it leaves the ideas board (contract 1.17.0).
   const recentOut = recentOutOf({ week: i.week, ideas: i.ideas, plans: i.plans, pieces: i.pieces }, days, i.all_items ?? null, i.recent_pieces ?? [])
-  const built = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut })
+  const built = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut, picks: i.picks })
   // Beside each piece's Claude production prompt, its Perplexity research prompt, from everything on record (1.19.0).
   const model = withSavedNotes(withResearchPrompts(built, (day, it) => {
     const dv = days.find(x => x.day === day)

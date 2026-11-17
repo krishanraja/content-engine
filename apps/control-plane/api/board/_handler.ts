@@ -13,6 +13,7 @@ import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, pastedKind, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
 import { StyleError, motionBank, needsMotion, sampleFiles, saveStyle, stillFiles, stylePick, undrawableMotion } from './_style.js'
+import { trackFiles, voicePreview } from './_audio.js'
 import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
 import { THUMB_OP, ThumbError, fileThumbLearning, saveThumbs, thumbDriveIds, thumbPick } from './_thumbs.js'
 import { LIVE_OP, recordLive } from './_itsLive.js'
@@ -280,11 +281,22 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         // card shows, or a style sample Pick a style shows (config/ve/style-samples.json's drive map, contract 1.16.0),
         // as a short signed link (302, or {url} with link=1) to the board's copy of it. Read-only.
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        // A voice to hear before he picks one (contract 1.20.0, _audio.ts): ElevenLabs' own free preview of a voice in
+        // config/voice-bank.json, a redirect to the bank's preview URL only. No credit is spent.
+        const voice = scalar(req.query.voice)
+        if (voice) {
+          const url = voicePreview(voice)
+          if (!url) throw new BoardError(404, 'sample_not_found')
+          res.setHeader('Cache-Control', STYLE_CACHE)
+          if (scalar(req.query.link) === '1') return res.status(200).json({ ok: true, url })
+          return res.redirect(302, url)
+        }
         const file = scalar(req.query.file)
         if (file) {
           let url: string | null
           // A style's sample or still (contracts 1.16.0 and 1.17.0): the same file every time, kept and long cached.
-          const style = sampleFiles().has(file) || stillFiles().has(file)
+          // An off-day track to hear before he picks one (contract 1.20.0): its brand-kit file, kept like a style sample.
+          const style = sampleFiles().has(file) || stillFiles().has(file) || trackFiles().has(file)
           try {
             if (!style) {
               const { manifest } = await signOffSources()
