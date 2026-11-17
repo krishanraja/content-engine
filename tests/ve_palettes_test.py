@@ -56,5 +56,25 @@ class SpecTest(unittest.TestCase):
         self.assertEqual(props['tokens']['channel'], house['tokens']['channel'])
 
 
+class TheLogoOnlyOnTheTitleFrameAndTheClose(unittest.TestCase):
+    """Ruling (Krish, 2026-11-17): the logo only on the animated title frame and the close card (config/brand-palette.json
+    logo_rule). From its date compile tells the renderer the body carries no logo; before it the props are unchanged."""
+
+    def compiled(self, day):
+        spec = copy.deepcopy(load_json(FIXTURE / 'spec.json'))
+        spec['publish_day'] = day
+        return {cut: compile_cut(spec, cut, timed_words(), FIXTURE) for cut in spec['cuts']}
+
+    def test_from_its_date_no_cut_carries_a_body_logo(self):
+        for cut, props in self.compiled('2026-11-23').items():
+            with self.subTest(cut=cut):
+                self.assertIs(props.get('bodyLogo'), False)
+
+    def test_before_its_date_the_props_are_as_they_were(self):
+        for cut, props in self.compiled('2026-11-18').items():
+            with self.subTest(cut=cut):
+                self.assertNotIn('bodyLogo', props)
+
+
 if __name__ == '__main__':
     unittest.main()

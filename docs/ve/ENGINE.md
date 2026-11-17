@@ -153,7 +153,10 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
   headline, lower line, marquee, platform) still predate this and are open (`STATUS.md`, Cannot do yet).
 - **No wordmark over vertical content.** The 9:16 cut carries no wordmark, mark tile or series tag over its animated
   content and no animation ever passes over a wordmark; the closing outro card keeps the wordmark (Ruling, Krish,
-  2026-11-11; `MOTION_STANDARD.md` rule 3). The 16:9 cut keeps its mark tile and pill, and nothing may overlap them.
+  2026-11-11; `MOTION_STANDARD.md` rule 3). The 16:9 cut keeps its pill; from pieces published on 23 Nov it carries no
+  mark tile and no header logo either (Ruling, Krish, 2026-11-17: the logo only on the animated title frame and the
+  close; `docs/production/BRAND_PALETTE.md`, compile's `bodyLogo: false`, and `ve qc` then proves the mark absent).
+  Before that date it keeps its mark tile, and nothing may overlap it.
 - **Caption styles.** A spec sets `brand.caption_theme` to one of 15 names (`captions/names.ts`); with none, the house
   caption draws. Since 13 Nov there are 27, picked with `style.captions`, which wins over `brand.caption_theme` (above). `art-directed` is the one Krish picked; `cinematic` is Audrey's system (one scored hero word per page
   in silver tinted glass, support words in a cascade, layout states rotating); the other 13 are house rebuilds. Every

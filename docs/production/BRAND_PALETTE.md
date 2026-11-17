@@ -37,10 +37,24 @@ format is refused before it renders. Only Krish changes the palette, and only in
 
 An asset on a series day that is not the week's series piece, and does not carry it, is an off-day asset.
 
+## The logo on a cut: the title frame and the close, nowhere else
+
+Ruling (Krish, 2026-11-17): "we decided to eliminate all logos from everywhere other than the final animated close
+card and the title frame that animates as I introduce the title of the piece (like we did in the ai-music video) so we
+can have focuson the hook in the opening seconds"; then "yes, change the brand rules". On 10 Nov, of the wide cut's
+mark tile: "I don't get why that icon even appears ... Get rid of it."
+
+So a cut, wide or tall, shows the logo in two places only: the one full-frame title in the pause after he says the
+piece's title, with the stacked logo underneath it (the AI music piece, Wed 11 Nov), and the close card. No mark tile,
+no header logo and no wordmark anywhere else in the body. It binds every piece published from Mon 23 Nov
+(`config/brand-palette.json` `logo_rule`); the pieces in production in the week of 16 Nov keep the engine their
+storyboard was signed on (F33). ve draws it from compile's `bodyLogo: false`; ve has no built title frame yet, so
+until it does the logo appears on the close alone.
+
 ## The formats, in one line each
 
-- **Long cut (16:9).** Opens on the hook, with nothing before it (the sting is retired). The body carries the icon tile only, with the series pill on section beats. Closes on `statement_card`.
-- **Short cut (9:16).** Opens on the hook, with no intro card and no sting. The body carries captions only: no icon, no wordmark, no pill. Closes on `statement_beat`, the only place a wordmark appears.
+- **Long cut (16:9).** Opens on the hook, with nothing before it (the sting is retired). The body carries no logo, only the series pill on section beats (from 23 Nov; before it, the icon tile). Closes on `statement_card`.
+- **Short cut (9:16).** Opens on the hook, with no intro card and no sting. The body carries captions only: no icon, no wordmark, no pill. Closes on `statement_beat`; the title frame and the close are the only places a logo appears.
 - **Carousel (4:5).** Card 1 is the cover scene, with no logo at the top. Every card carries the wordmark small in the bottom right. The last card is `house_close_slide`.
 - **Meme and Notes image.** No logo at the top, and the wordmark small in the bottom right. No close.
 - **Saturday good news.** Photo cover. The wordmark in a bottom corner. Krish's fixed good-news close.
