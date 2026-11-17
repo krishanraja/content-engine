@@ -306,7 +306,13 @@
           "contains": "SHORT_MAX_SECONDS = 89",
           "how": "a finished vertical cut over 89 s is never sent"
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video"
+        ],
+        "line": "A short cut runs 60 to 90 s; over 89 s it is never sent."
+      }
     },
     {
       "id": "caption-splits-names",
@@ -1058,7 +1064,14 @@
           "on": "2026-11-04",
           "what": "Thursday 5 Nov: Krish was asked to judge stills (\"the stills gave me no clue as to what you're going to produce\"); stills mode came only at the end of a render-first workflow. Its guard (ve proof, from 9 Nov) did not yet bind this piece."
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video"
+        ],
+        "line": "Judge in motion with sound: ve proof of the hardest beat on his real take, and his Approve proof bound to its sha256, before any whole cut renders; never stills."
+      }
     },
     {
       "id": "F05-motion-decorated",
@@ -1543,7 +1556,15 @@
             "scripts/post-pack/board_web.py: def ready_video_problems"
           ]
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "intro_outro"
+        ],
+        "line": "Frame 0 is the hook: his voice in the first half second, a finished first frame, nothing (no card, no music-only open) before it."
+      }
     },
     {
       "id": "F22-codex-lane-left-unwatched",
@@ -1649,7 +1670,7 @@
           "file": "scripts/velib/lint.py",
           "contains": "sound.whole_cut_bed",
           "how": "lint refuses a finished cut whose bed is not the approved episode bed (intro and outro lifts)",
-          "test": "python3 scripts/ve.py lint <spec>"
+          "test": "python3 -m unittest tests.ve_lint_test.AWholeCutBedsOnTheEpisodeBed"
         },
         {
           "file": "scripts/velib/compile.py",
@@ -1663,7 +1684,16 @@
           "how": "on the wide cut, SPLIT beats and face-with-proof's light STAGE beats keep the legible mark tile and series pill; the vertical cut carries none (Ruling, Krish, 2026-11-11)",
           "test": "npx vitest run apps/renderer/src/engine/layouts/split.test.ts"
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "audio",
+          "intro_outro"
+        ],
+        "line": "Every whole cut closes on the ending band and beds on its approved bed with its intro and outro lifts, never a flat continuous bed; an entrance on the first word lands on frame 0."
+      }
     },
     {
       "id": "F25-frame-grab-headshot",
@@ -1732,7 +1762,14 @@
           "contains": "## Against its references",
           "how": "the Critic opens each reference sheet first and scores the cut against what each card is for"
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video"
+        ],
+        "line": "Name a board card for look, motion and captions in the spec, and score the cut 8/10 or more against every one with ve refs before it reaches him."
+      }
     },
     {
       "id": "F27-filed-where-krish-does-not-look",
@@ -1756,7 +1793,14 @@
           "how": "a finished off-day card says 'Not in its 3 Posts folder yet' until it links that folder",
           "test": "python3 tests/board_posts_test.py"
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video"
+        ],
+        "line": "A cut is DONE only when its copy in the post's 3 Posts folder reads back with the approved hash; never point him to a second home."
+      }
     },
     {
       "id": "F28-captions-on-his-face",
@@ -1773,7 +1817,15 @@
           "how": "ve qc finds the face in the frame each caption page is read at and fails any page whose box overlaps the face box grown by 10%; not_run, never pass, without a detector",
           "test": "python3 tests/ve_qc_faces_test.py"
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "captions"
+        ],
+        "line": "No caption page overlaps his face box (grown 10%) on the frame it is read at."
+      }
     },
     {
       "id": "F29-drive-request-not-answered-done",
@@ -1829,7 +1881,15 @@
           "on": "2026-11-07",
           "what": "The 6 Nov reel's cover lost its top line to Instagram's 3:4 profile grid crop and its title sat under the account row: zones channel_safe did not have (F43)."
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "cover",
+          "thumbnail"
+        ],
+        "line": "Keep every caption, title and slot out of each channel's button zones and account row as measured in config/channel-safe-zones.json; ve qc channel.safe_zones fails anything under them."
+      }
     },
     {
       "id": "F31-no-single-visual-idea",
@@ -1860,7 +1920,15 @@
           "evidence": "the Thursday spec style block holds a storyboard path and a signed line, no object, moves or never-list (docs/plans/2026-11-05-thursday-no-spending/ve/spec.json)"
         }
       ],
-      "guard_level": "lint_refuse"
+      "guard_level": "lint_refuse",
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "motion"
+        ],
+        "line": "Name one visual idea before the storyboard (style.idea: one object, what its moves mean, a never-list); never a device per sentence."
+      }
     },
     {
       "id": "F32-real-artifact-retyped",
@@ -1890,7 +1958,15 @@
           "evidence": "approved floor group real_evidence: \"Show the real thing: dated screenshots, real products, real interactions\"; the spec's assets list is empty"
         }
       ],
-      "guard_level": "lint_refuse"
+      "guard_level": "lint_refuse",
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "card"
+        ],
+        "line": "Show the real screenshot, report or page as itself and point at the line; never re-type its words into a device, cut its prompt, or invent a line it never said."
+      }
     },
     {
       "id": "F33-engine-changed-mid-piece",
@@ -1920,7 +1996,14 @@
           "evidence": "33 commits on claude/thursday-no-spending-recut and engine PRs #374-#377, #380 merged mid-production"
         }
       ],
-      "guard_level": "gate"
+      "guard_level": "gate",
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video"
+        ],
+        "line": "Freeze the engine for the piece: ve expect records it, and any engine change before the cut renders needs his exception approval on the new hash."
+      }
     },
     {
       "id": "F34-render-loops-past-two",
@@ -1955,6 +2038,13 @@
         "by": "Krish",
         "on": "2026-11-04",
         "said": "Yes, I would assume one piece and one session would be good, with Claude orchestrating and Codex doing asset production."
+      },
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video"
+        ],
+        "line": "At most two full renders per press: then bring him the cut or a question."
       }
     },
     {
@@ -1992,6 +2082,14 @@
         "by": "Krish",
         "on": "2026-11-04",
         "said": "No, I just don't think that is true at all. I just think that it needs to look good, and it didn't that time. We still need to experiment and make videos that are impactful, which, in my eyes, isn't just going to be in the future where every video has boring captions. Sometimes the words will be taking up most of the screen, but we need to figure out what looks good. When we're experimenting, instead of using proven, approved templates, we need to experiment carefully, as opposed to just producing videos experimentally and then seeing that they're shit."
+      },
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "captions"
+        ],
+        "line": "Count the type treatments on the proof (four at most is the aim); face captions stay inside the signed caption band. Advisory: judged moving, never refused."
       }
     },
     {
@@ -2033,6 +2131,14 @@
         "by": "Krish",
         "on": "2026-11-04",
         "said": "Yes, give off days their own music and look - Rotate."
+      },
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "audio"
+        ],
+        "line": "An off-day cut wears no series chrome, colour or sting and beds on an off-day track from config/music-library.json."
       }
     },
     {
@@ -2070,6 +2176,15 @@
         "by": "Krish",
         "on": "2026-11-04",
         "said": "I think the session would need to listen to what I actually said on the script, as opposed to reading the teleprompter folders, because sometimes I paraphrase the teleprompter script and that only gets picked up in the live recording."
+      },
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "script",
+          "captions"
+        ],
+        "line": "Read ve said (his take against the Teleprompter script), the board and the glossary before questioning a name or line he used."
       }
     },
     {
@@ -2112,6 +2227,13 @@
         "by": "Krish",
         "on": "2026-11-04",
         "said": "Yeah, sure."
+      },
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video"
+        ],
+        "line": "The Critic judges beside Monday 2 Nov, his favourite, in motion and with sound; a failing check is resolved, never waved off as a misread."
       }
     },
     {
@@ -2140,6 +2262,13 @@
         "by": "Krish",
         "on": "2026-11-04",
         "said": "Whatever you think is the best coherent outcome. I don't really care. / Yes, I would assume one piece and one session would be good, with Claude orchestrating and Codex doing asset production."
+      },
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video"
+        ],
+        "line": "During a piece, Codex builds only that piece's named plates and devices, never engine or library backlog."
       }
     },
     {
@@ -2201,7 +2330,15 @@
           "contains": "raise SystemExit('RETIRED_COMPOSITOR",
           "how": "the Wednesday compositor (and Monday's two) stop before they run anything"
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "audio"
+        ],
+        "line": "No voice-keyed or level-chasing filter on music: one loud open, a steady bed within 2 LU under his voice, at most two turns, a louder end."
+      }
     },
     {
       "id": "F41-mark-off-its-words",
@@ -2236,7 +2373,16 @@
       ],
       "related": [
         "F30-designed-blind-to-the-channel"
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "card",
+          "motion"
+        ],
+        "line": "A scribble names its words and lands under or round them on the rendered frame; never draw it in frame pixels over a surface the camera tilts or scales."
+      }
     },
     {
       "id": "F42-caption-repeats-the-title",
@@ -2271,7 +2417,15 @@
       ],
       "related": [
         "F35-type-treatments-multiplied"
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "captions"
+        ],
+        "line": "No caption page repeats the headline on screen, and none ends on a weak word or breaks mid-phrase."
+      }
     },
     {
       "id": "F43-cover-cut-by-the-grid",
@@ -2311,7 +2465,15 @@
       ],
       "related": [
         "F30-designed-blind-to-the-channel"
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "cover",
+          "thumbnail"
+        ],
+        "line": "Keep cover words inside Instagram's 3:4 grid crop (the middle 1080 x 1440 of a 9:16 frame) and clear of the account row."
+      }
     },
     {
       "id": "F44-evidence-too-small-to-read",
@@ -2340,7 +2502,15 @@
       ],
       "related": [
         "F32-real-artifact-retyped"
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "card"
+        ],
+        "line": "Evidence words read at 40 px or more on the 9:16 frame; a screenshot on a hand-held phone is usually too small."
+      }
     },
     {
       "id": "F45-scripts-sent-unread",
@@ -2441,7 +2611,15 @@
           "contains": "fps=$RATE:round=near",
           "how": "the rate is changed with the fps filter, and the converted take is measured against the original before Maxine runs"
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "audio"
+        ],
+        "line": "Change a take's frame rate with the fps filter, never output -r; a hand-built cut files only with an av_sync receipt (|drift| 45 ms or less) for its bytes."
+      }
     },
     {
       "id": "carousel-fails-the-ten-second-swipe",
@@ -2519,7 +2697,16 @@
           "contains": "## The bar for the next attempt",
           "how": "the failure note and the bar the next session builds to"
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "motion",
+          "captions"
+        ],
+        "line": "Build captions as their own layer, pace motion to a measured cut density, fill the frame, and watch every test cut at speed beside a reference."
+      }
     },
     {
       "id": "stills-from-rejected-thu5-take",
@@ -2556,7 +2743,15 @@
           "contains": "test_a_sample_of_his_take_is_never_recorded_for_the_board",
           "how": "a sample of his take is refused"
         }
-      ]
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "board"
+        ],
+        "line": "Never use a frame of a take or cut he rejected as an example; board stills are StyleStill cover art, never a cut of a take."
+      }
     },
     {
       "id": "scripts-regressed-below-ai-music",
@@ -2882,6 +3077,142 @@
           "test": "npx vitest run tests/control-plane/board-decisions.test.ts"
         }
       ]
+    },
+    {
+      "id": "F52-plate-smeared-into-stripes",
+      "on": "2026-11-08",
+      "krish": "Krish, 2026-11-17, on the production errors of the two weeks before: \"i need to turn this in to surgical, precise, technical watch outs for my next batch of productions\"; then \"yes, go ahead and close the gaps in content-engine\"",
+      "status": "guarded",
+      "mode": "picture-smeared",
+      "guard_level": "gate",
+      "what": "The proactive-AI connected opening (8 Nov, a one-off composite outside ve) resized its breakfast plate from a one-row crop, so frame b_0282 and the whole plate showed vertical stripes. The session coordinating the work caught it on one frame and stopped the build; nothing in the engine would have.",
+      "symptom": "The picture is smeared into stripes: one line of pixels repeated across the frame.",
+      "cause": "The composite resized the plate with a crop box one row high and asserted no output dimensions; no check looked at a rendered frame for a stretched picture, in ve qc or at filing.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "ve qc had no row for a smeared picture, and making.py filed a hand-built cut on his words with only its sync receipt."
+        }
+      ],
+      "surface": "A hand-built composite fits every plate by cover with its dimensions asserted, and carries a smeared-picture receipt for its exact bytes (scripts/frame_smear.py) as well as its sync receipt.",
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "card",
+          "motion"
+        ],
+        "line": "Fit every plate by cover (scale, then crop the middle) and assert output dimensions before the first frame; a picture stretched from one line of pixels fails ve qc picture.smeared and hand-built filing."
+      },
+      "guards": [
+        {
+          "file": "scripts/frame_smear.py",
+          "contains": "def bands(",
+          "how": "a band of 12% or more of the frame whose lines repeat one line of picture, held for 1 s or more, fails the cut; flat cards, gradients and a half-second smear do not",
+          "test": "python3 tests/frame_smear_test.py"
+        },
+        {
+          "file": "scripts/velib/qc.py",
+          "contains": "checks['picture.smeared'] = picture_smeared(path, publish_day)",
+          "how": "ve qc row picture.smeared on every cut, counted from config/ve/onscreen-checks.json picture.binds_from",
+          "test": "python3 tests/frame_smear_test.py"
+        },
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "problems += frame_smear.receipt_problems(a.video_file)",
+          "how": "a hand-built cut is filed only with a smeared-picture receipt for those bytes",
+          "test": "python3 tests/frame_smear_test.py"
+        }
+      ]
+    },
+    {
+      "id": "F53-known-fault-rendered-with-caveat",
+      "on": "2026-11-06",
+      "krish": "Krish, 2026-11-17, on the production errors of the two weeks before: \"i need to turn this in to surgical, precise, technical watch outs for my next batch of productions\"; then \"yes, go ahead and close the gaps in content-engine\"",
+      "status": "guarded",
+      "mode": "known-break-shipped-with-note",
+      "guard_level": "prose",
+      "what": "The proactive-AI proof (6 Nov) was about to render an evidence card that broke the piece's own never-list (a permanent outlet and date footer, and the screenshot replaced by typed text), with the break written up as a caveat. The session coordinating the work stopped it: \"do NOT render a known violation merely with a caveat\".",
+      "symptom": "A cut that breaks a known rule goes to render, or to Krish, with a note saying so.",
+      "cause": "Nothing said a known break is a blocker; a caveat read as an honest way to keep moving.",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "docs/ve/RUNBOOK.md said never fabricate passes, but not never ship a known break with a note."
+        }
+      ],
+      "surface": "A known break of a rule, the never-list or the floor is a blocker, never a caveat: fix it, or stop and name the exact blocker and the smallest separate engine request.",
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Never render or send a cut with a known rule break written up as a caveat: fix it, or stop and name the exact blocker and the smallest separate engine request."
+      },
+      "guards": [
+        {
+          "file": "docs/ve/RUNBOOK.md",
+          "contains": "Never render or send a cut that breaks a known rule with a caveat attached",
+          "how": "the runbook every ve session follows says it at the Critic step, and every session reads this entry's surface line at the start"
+        }
+      ]
+    },
+    {
+      "id": "F54-cues-timed-to-transcript",
+      "on": "2026-11-07",
+      "krish": "Krish, 2026-11-17, on the production errors of the two weeks before: \"i need to turn this in to surgical, precise, technical watch outs for my next batch of productions\"; then \"yes, go ahead and close the gaps in content-engine\"",
+      "status": "guarded",
+      "mode": "cue-off-his-voice",
+      "guard_level": "prose",
+      "what": "The plane-in-shot test (7 Nov, a one-off composite) planned its cue on \"Now\" at 8.50 s from the whisper transcript (script.words.json) when the take already held two forced-aligner clocks putting it at 8.622 and 8.642 s. The session coordinating the work corrected it before render.",
+      "symptom": "A visual cue lands several frames off the word it is timed to.",
+      "cause": "ve times every cue from the forced clocks, but a hand-built composite reads whatever word times it finds, and script.words.json is the nearest.",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "No document said where a hand-built composite takes its word times from."
+        }
+      ],
+      "surface": "A hand-built composite times every cue from the take's two forced-aligner clocks (<piece>/ve/takes/<take>.json), never from script.words.json or any whisper transcript.",
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "motion",
+          "captions"
+        ],
+        "line": "Time every cue from the take's two forced-aligner clocks (ve/takes/<take>.json), never from script.words.json or a whisper transcript (whisper ran 3 to 19 frames off his voice)."
+      },
+      "guards": [
+        {
+          "file": "docs/ve/ENGINE.md",
+          "contains": "**Cues from the forced clocks.**",
+          "how": "the hand-built composites section of the engine document names the clocks as the only source of word times"
+        }
+      ]
+    },
+    {
+      "id": "F55-text-cut-at-the-device-edge",
+      "on": "2026-11-06",
+      "krish": "Krish, 2026-11-17, on the production errors of the two weeks before: \"i need to turn this in to surgical, precise, technical watch outs for my next batch of productions\"; then \"yes, go ahead and close the gaps in content-engine\"",
+      "status": "open",
+      "mode": "text-cut-off",
+      "what": "The proactive-AI proof's first preview (6 Nov) cropped the chat device's \"Assistant, online\" header in the hook, let it overlap the brand mark on the stage, and showed a prompt and a question cut off mid-sentence. The session coordinating the work caught all three from frame strips.",
+      "symptom": "Words on a device are cut off at its edge, or sit under the brand mark.",
+      "cause": "qc_composition reads caption words clipped at their box edge, but nothing reads a device's own text against its bounds or the mark; the brand-mark caption check is unmerged and waits on Krish (hide the mark on full-screen layouts, or keep captions clear of it).",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No ve qc row reads a device's text against the device's own bounds or the brand mark."
+        }
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "card"
+        ],
+        "line": "Every line of meaning-bearing text sits whole inside its device and clear of the brand mark: no cropped headers, no prompt or question cut mid-sentence. Nothing checks this yet; read every text cue on the proof frames."
+      }
     }
   ]
 }
