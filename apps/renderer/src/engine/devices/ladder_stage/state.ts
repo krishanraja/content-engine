@@ -14,7 +14,7 @@ export function ladderState(object:EngineObject,events:readonly EngineEvent[],fr
     if(!Number.isInteger(target)||target<0||target>params.parts) throw new Error('ladder_stage: count outside parts')
     if(!object.dataset?.rows.some(r=>r.value===target)) throw new Error('ladder_stage: count requires sourced dataset value')
     const end=Math.min(frame,counts[i+1]?.atFrame??frame)
-    const duration=target<count?Math.abs(target-count)*2.1:MOTION.countFrames
+    const duration=Math.min(18,MOTION.countFrames)
     count=Math.round(count+(target-count)*progress(end-cue.atFrame,duration,t=>t))
   }
   const add=last('add'), fill=last('fill'), move=last('move')
@@ -27,5 +27,6 @@ export function ladderState(object:EngineObject,events:readonly EngineEvent[],fr
   return {params,count,copies,heights,act,enter,exit,add,fill,move,draw:last('draw'),carry:last('carry'),highlight:last('highlight')?.toState,
     visible:!!enter&&(!exit||exit.atFrame<enter.atFrame||frame<exit.atFrame+MOTION.exitFrames),
     opacity:exit&&(!enter||exit.atFrame>enter.atFrame)?1-progress(frame-exit.atFrame,MOTION.exitFrames):1,
-    rise:enter?progress(frame-enter.atFrame,33,HERO):0}
+    detail:last('highlight'),
+    rise:enter?progress(frame-enter.atFrame,Math.min(7,MOTION.enterFrames),HERO):0}
 }

@@ -14,7 +14,7 @@ import { update as levelLine } from '@mymu/moves/level-line/move.mjs'
 import { update as slabTowers } from '@mymu/moves/slab-towers/move.mjs'
 // @ts-ignore shared JavaScript move
 import { update as taskCopies } from '@mymu/moves/task-copies-3d/move.mjs'
-import { HERO, ENTER, EXIT, drift, progress } from '../../clock'
+import { HERO, ENTER, EXIT, MOTION, drift, progress } from '../../clock'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import type { DeviceProps } from '../types'
 import { ladderState } from './state'
@@ -44,12 +44,14 @@ export function buildSet(p:DeviceProps) {
     })
     root.add(group);return {group,windows}
   }
+  // The plinth is part of the same architectural object, full bleed below the safe type.
+  root.add(mesh(30,0.5,36,dark,0,-0.35,3))
   const hero=branch()
   countParts(hero.windows,s.count,{c,e:ease,from:Math.max(1,s.count),to:s.count,times:{countStart:-100,countLand:-99,drop:-100,ghost:Infinity,ghostEnd:Infinity,first:Infinity}},c)
   hero.windows.forEach((w,i)=>{if(s.highlight===String(i)){w.glass.material.color.set(c.mint);w.glass.material.emissive.set(c.mint)}})
   const street=Array.from({length:s.copies},(_,i)=>({...branch(0.55),home:new T.Vector3((i-(s.copies-1)/2)*4.2,0,-4)}))
-  streetDrop(street,p.frame/30,{c,e:ease,first:0,times:{more:(s.add?.atFrame??Infinity)/30,first:Infinity,end:Infinity}},c)
-  hero.group.visible=s.act==='branch'
+  streetDrop(street,((s.add?.atFrame??0)+(p.frame-(s.add?.atFrame??0))*4)/30,{c,e:ease,first:0,times:{more:(s.add?.atFrame??Infinity)/30,first:Infinity,end:Infinity}},c)
+  hero.group.visible=s.act==='branch'||(s.act==='street'&&s.copies===0)
   hero.group.position.y=-6*(1-s.rise)
   for(const b of street) b.group.visible=b.group.visible&&s.act==='street'
   const line=mesh(16,0.06,0.22,lit,0,0.04,-1)
@@ -64,13 +66,32 @@ export function buildSet(p:DeviceProps) {
   for(let side=0;side<2;side++){
     const key=side===0?'left':'right',before=old[key],after=s.heights[key],xs=[side===0?-2.4:2.4,side===0?-2.4:2.4]
     const falling=after<before
-    slabTowers(falling?[towers[side],[]]:[[],towers[side]],p.frame/30,{c,e:ease,xs,z:0,left:[before,after],right:[before,after],mats:{plain,lit},times:{show:-Infinity,fall:at,grow:at,watch:s.highlight===key?-Infinity:Infinity}},c)
+    slabTowers(falling?[towers[side],[]]:[[],towers[side]],at+(p.frame/30-at)*Math.max(3,Math.max(before,after)/2),{c,e:ease,xs,z:0,left:[before,after],right:[before,after],mats:{plain,lit},times:{show:-Infinity,fall:at,grow:at,watch:s.highlight===key?-Infinity:Infinity}},c)
     towers[side]!.forEach(m=>{m.visible=m.visible&&s.act==='towers';if(s.highlight===key)m.material=lit})
   }
   const tasks=Array.from({length:5},()=>{const m=mesh(2.4,0.22,1.6,lit);root.add(m);return m})
-  taskCopies(tasks,p.frame/30,{c,e:ease,from:[2.4,Math.max(0,s.heights.right-1)*0.26],z:0,times:{lift:(s.carry?.atFrame??Infinity)/30,copies:(s.carry?.atFrame??Infinity)/30+0.9}},c)
+  taskCopies(tasks,((s.carry?.atFrame??0)+(p.frame-(s.carry?.atFrame??0))*5)/30,{c,e:ease,from:[2.4,Math.max(0,s.heights.right-1)*0.26],z:0,times:{lift:(s.carry?.atFrame??Infinity)/30,copies:(s.carry?.atFrame??Infinity)/30+0.9}},c)
   tasks.forEach(m=>m.visible=m.visible&&s.act==='towers')
   if(s.carry&&s.act==='towers') {const top=towers[1]?.[s.heights.right-1];if(top)top.visible=false}
+  // Explicit highlight cues articulate a facade part (or slab), never change its count.
+  const cue=s.detail
+  const k=cue?progress(p.frame-cue.atFrame,MOTION.slapFrames,HERO):1
+  const settle=4*k*(1-k)
+  const index=Number(cue?.toState)
+  if(Number.isInteger(index)&&index>=0) {
+    for(const b of [hero,...street]) {
+      const pane=b.windows[index]?.glass
+      if(pane) {pane.position.z+=settle*0.35;pane.rotation.x=settle*0.12}
+    }
+  }
+  if(cue?.toState==='right'||cue?.toState==='left') {
+    const side=cue.toState==='left'?0:1
+    const slab=towers[side]?.[s.heights[side===0?'left':'right']-1]
+    if(slab) {slab.position.y+=settle*0.3;slab.rotation.y=settle*0.12}
+  }
+  // Non-repeating light travel and physical drift remain alive between authored cues.
+  const travel=drift(p.frame,p.object.fromFrame,p.object.toFrame,8)
+  root.rotation.y=travel
   root.visible=s.visible
   return {root,s,plain}
 }
@@ -80,32 +101,20 @@ export function Device(p:DeviceProps) {
   const {s}=rig
   if(!s.visible)return null
   const tall=p.aspect==='9:16',w=p.box.width,h=p.box.height
-  const d=drift(p.frame,p.object.fromFrame,p.object.toFrame)*12
-  const shots={branch:[6,4,14],street:[0,15,22],towers:[5,5,16]} as const
-  const fired=p.events.filter(e=>e.obj===p.object.obj&&e.verb==='move'&&e.atFrame<=p.frame).sort((a,b)=>a.atFrame-b.atFrame)
-  let camera:number[]=[...shots.branch]
-  for(let i=0;i<fired.length;i++){
-    const e=fired[i]!,target=shots[e.toState as keyof typeof shots]
-    const k=progress(Math.min(p.frame,fired[i+1]?.atFrame??p.frame)-e.atFrame,33,HERO)
-    camera=camera.map((v,j)=>v+(target[j]!-v)*k)
-  }
+  const {eye,orientation}=cameraAt(p)
   const number=p.object.dataset?.rows.find(r=>r.value===s.count)
-  // A 9:16 frame sees less width through the same lens: pull the camera back and aim above the set so it sits under the number.
-  const back=tall?2.9:1, aim=new T.Vector3(0,tall?1:2,0)
-  const eye=new T.Vector3((camera[0]!+d)*back,(camera[1]!+d*0.4)*back,camera[2]!*back)
-  const orientation=new T.Euler().setFromRotationMatrix(new T.Matrix4().lookAt(eye,aim,new T.Vector3(0,1,0)))
   return <div data-device="ladder_stage" style={{position:'absolute',...p.box,left:p.box.left,top:p.box.top,background:p.tokens.ink,opacity:s.opacity,overflow:'hidden'}}>
     <div style={{position:'absolute',left:0,top:0,width:w,height:h}}>
       <ThreeCanvas width={Math.round(w)} height={Math.round(h)} camera={{position:[eye.x,eye.y,eye.z],rotation:[orientation.x,orientation.y,orientation.z],fov:36}}
         shadows gl={{antialias:true,toneMapping:T.ACESFilmicToneMapping,toneMappingExposure:1.05}} onCreated={({gl})=>{
           gl.shadowMap.type=T.PCFSoftShadowMap
         }}>
-        <color attach="background" args={[p.tokens.ink]}/><fog attach="fog" args={[p.tokens.ink,30*back,70*back]}/>
+        <color attach="background" args={[p.tokens.ink]}/><fog attach="fog" args={[p.tokens.ink,30,70]}/>
         <hemisphereLight args={[p.tokens.cream,p.tokens.ink,0.55]}/>
-        <directionalLight color={p.tokens.cream} intensity={2.6} position={[-8,14,10]} castShadow shadow-mapSize={[2048,2048]}/>
+        <directionalLight color={p.tokens.cream} intensity={2.6} position={[-8+drift(p.frame,p.object.fromFrame,p.object.toFrame,100)*10,14,10]} castShadow shadow-mapSize={[2048,2048]}/>
         <directionalLight color={p.tokens.mint} intensity={0.3} position={[10,6,-12]}/>
         <mesh rotation={[-Math.PI/2,0,0]} receiveShadow><planeGeometry args={[200,200]}/><meshStandardMaterial color={p.tokens.inkSoft} roughness={0.92}/></mesh>
-        <Paper rig={rig}/><primitive object={rig.root}/>
+        <Evidence rig={rig} images={s.params.images} tokens={p.tokens}/><primitive object={rig.root}/>
       </ThreeCanvas>
     </div>
     <div style={{position:'absolute',left:tall?w*72/1080:w*0.06,top:tall?h*270/1920:h*0.14,color:p.tokens.cream,maxWidth:tall?w*760/1080:w*0.33}}>
@@ -115,12 +124,43 @@ export function Device(p:DeviceProps) {
     </div>
   </div>
 }
-function Paper({rig}:{rig:ReturnType<typeof buildSet>}) {
+/** A continuous orbit/crane, plus a hero-curve reframe when an act changes. */
+export function cameraAt(p:DeviceProps) {
+  const s=ladderState(p.object,p.events,p.frame)
+  const tall=p.aspect==='9:16'
+  const travel=drift(p.frame,p.object.fromFrame,p.object.toFrame,100)
+  const shots={branch:[4,5,12],street:[1,8,15],towers:[4,5,12]} as const
+  let camera:number[]=[...shots.branch]
+  const fired=p.events.filter(e=>e.obj===p.object.obj&&e.verb==='move'&&e.atFrame<=p.frame).sort((a,b)=>a.atFrame-b.atFrame)
+  for(let i=0;i<fired.length;i++) {
+    const e=fired[i]!,target=shots[e.toState as keyof typeof shots]
+    const k=progress(Math.min(p.frame,fired[i+1]?.atFrame??p.frame)-e.atFrame,33,HERO)
+    camera=camera.map((v,j)=>v+(target[j]!-v)*k)
+  }
+  const angle=travel*0.32
+  const distance=tall?0.78:1
+  const eye=new T.Vector3((camera[0]!*Math.cos(angle)+camera[2]!*Math.sin(angle))*distance,
+    (camera[1]!+travel*1.2)*distance,(camera[2]!*Math.cos(angle)-camera[0]!*Math.sin(angle))*distance)
+  const aim=new T.Vector3(0,s.act==='street'?1:1.8,0)
+  const orientation=new T.Euler().setFromRotationMatrix(new T.Matrix4().lookAt(eye,aim,new T.Vector3(0,1,0)))
+  return {eye,orientation}
+}
+
+// Evidence is supplied by the piece. No stock texture, invented logo or icon fallback.
+function Evidence({rig,images,tokens}:{rig:ReturnType<typeof buildSet>;images:string[];tokens:DeviceProps['tokens']}) {
   React.useEffect(()=>{
-    const handle=delayRender('ladder house paper')
-    const tx=new T.TextureLoader().load(staticFile('plates/two-passports/paper.jpg'),()=>continueRender(handle),undefined,error=>cancelRender(error instanceof Error?error:new Error(String(error))))
-    tx.colorSpace=T.SRGBColorSpace;tx.wrapS=tx.wrapT=T.RepeatWrapping;rig.plain.map=tx;rig.plain.needsUpdate=true
-    return ()=>tx.dispose()
-  },[rig])
+    const textures:T.Texture[]=[],plates:T.Mesh[]=[]
+    const handles=new Set<number>()
+    for(const [i,src] of images.entries()) {
+      const handle=delayRender('ladder evidence');handles.add(handle)
+      const tx=new T.TextureLoader().load(staticFile(src),()=>{handles.delete(handle);continueRender(handle)},undefined,error=>{
+        handles.delete(handle);cancelRender(error instanceof Error?error:new Error(String(error)))
+      })
+      tx.colorSpace=T.SRGBColorSpace;textures.push(tx)
+      const plate=new T.Mesh(new T.PlaneGeometry(1.5,0.85),new T.MeshStandardMaterial({map:tx,color:tokens.cream,roughness:0.8}))
+      plate.position.set(-1.8+i*1.8,0.8,1.82);rig.root.add(plate);plates.push(plate)
+    }
+    return ()=>{handles.forEach(continueRender);textures.forEach(t=>t.dispose());plates.forEach(m=>{rig.root.remove(m);m.geometry.dispose();(m.material as T.Material).dispose()})}
+  },[rig,images,tokens])
   return null
 }
