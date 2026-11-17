@@ -1,0 +1,3 @@
+Status: Krish stopped the nine-style run (17 Nov: "lets stop here, leave the ones undone as marked undone and move them to the bottom in my UI as coming soon"). Seven devices are merged and checked (iso_world, ink_wash, film_frame, ladder_stage pace, flat_mechanism, morph_stage, pixel_stage); living_screen's pace rework and toy_object are not; every one of the nine is coming soon in his picker until its test cut and his yes.
+Next: when Krish restarts it, render the merged styles' test cuts on the house take, measure them with `ve pace`, get `ve-critic` verdicts and put them to him at Gate 2.
+North Star check (2026-11-17): holds.
