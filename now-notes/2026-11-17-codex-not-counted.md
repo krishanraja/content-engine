@@ -1,0 +1,3 @@
+Status: Codex use is no longer counted anywhere in content-engine: ve dispatch reserves nothing and never refuses on Codex's weekly percentage, the lane takes no booking (an old --spend-id is accepted and ignored), the credit reader has no Codex pools, the per-piece budget has no allowance points, the overnight preflight has no allowance check and the lane report no allowance fields, and no doc or skill tells a session to book Codex spend (Krish, 17 Nov: "We have plenty of Codex credits, you need to permanently stop counting codex credits everywhere").
+Next: Control Center drops its Codex pools from every credits block, the economics read and reserve_credit_spend.
+North Star check (2026-11-17): holds.

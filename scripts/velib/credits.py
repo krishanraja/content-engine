@@ -13,9 +13,9 @@ Control Center connector, or Growth's runner, writes FILE. Nothing here invents 
 unknown credits, a read older than MAX_AGE_DAYS or a provider with no pool placed all hold with that reason.
 
 How Control Center states a pool (its credits session, 29 Oct 2026): each pool has a mode, use_it (prepaid, spend
-before reset; the default when none is given) or ceiling (pay as you go, a cap and never a target). codex is a weekly
-percent window and codex-credits a ceiling whose grant is its balance, so both are weekly as read. runway and
+before reset; the default when none is given) or ceiling (pay as you go, a cap and never a target). runway and
 higgsfield are shares of a monthly cycle, so their weekly cap is remaining_for_you over the weeks left before use_by.
+Codex is never read, reserved or capped here (Ruling, Krish, 2026-11-17).
 This local ledger only refuses before anything is sent: the booking itself is Control Center's (reserve_credit_spend,
 then settle_credit_spend, then record_credit_balance, by the session that runs the dispatch; docs/ve/RUNBOOK.md).
 """
@@ -35,10 +35,11 @@ SOURCE = 'control-center get_engine_credits (protocol 1.16.0)'
 ENGINE = 'growth-makeyourmindup'
 RECORD = Path(os.environ['VE_CREDIT_BUDGET']) if os.environ.get('VE_CREDIT_BUDGET') else WORK / 'credits' / 'credit-budget.json'
 MAX_AGE_DAYS = 8
-PROVIDERS = ('codex_allowance_points', 'codex_paid_credits', 'runway_credits', 'higgsfield_credits', 'elevenlabs_credits')
+# Codex is not among them: its use is never counted, reserved or capped (Ruling, Krish, 2026-11-17: "We have plenty of
+# Codex credits, you need to permanently stop counting codex credits everywhere").
+PROVIDERS = ('runway_credits', 'higgsfield_credits', 'elevenlabs_credits')
 # Each provider is reserved against one Control Center pool of the publication, by pool key.
-POOLS = {'codex_allowance_points': 'codex', 'codex_paid_credits': 'codex-credits', 'runway_credits': 'runway',
-         'higgsfield_credits': 'higgsfield', 'elevenlabs_credits': 'elevenlabs'}
+POOLS = {'runway_credits': 'runway', 'higgsfield_credits': 'higgsfield', 'elevenlabs_credits': 'elevenlabs'}
 # Shares of a monthly cycle: a week may spend what is left over the weeks before use_by.
 MONTHLY_POOLS = ('runway', 'higgsfield')
 MODES = ('use_it', 'ceiling')

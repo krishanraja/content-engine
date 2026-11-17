@@ -1205,8 +1205,8 @@ function Get-PreflightBlock {
   $report = Get-Field $script:Preflight 'report'
   if ($null -eq $report) { return $null }
   $block = [ordered]@{}
-  foreach ($name in @('at', 'ok', 'claude_version', 'codex_companion', 'codex_login', 'codex_profile', 'codex_flagged', 'role', 'codex_weekly_used_pct',
-      'codex_resets_at', 'ffmpeg', 'tesseract', 'free_gb', 'drive_reachable', 'drive_folders')) {
+  foreach ($name in @('at', 'ok', 'claude_version', 'codex_companion', 'codex_login', 'codex_profile', 'codex_flagged', 'role',
+      'ffmpeg', 'tesseract', 'free_gb', 'drive_reachable', 'drive_folders')) {
     $value = Get-Field $report $name
     if ($null -ne $value) { $block[$name] = $value }
   }
