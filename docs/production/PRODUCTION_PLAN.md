@@ -21,6 +21,10 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
 
 ## The run's steps
 
+0. Run `python3 scripts/check_failures.py` and `python3 scripts/floor.py --format short_video` (and `long_video` for a
+   series piece) first: every past post-production failure is a rule the plan must not repeat (a plate that smears, a
+   cue timed to a transcript, text cut at the device edge, a known fault rendered with a caveat). Plan no beat that one
+   of them refuses.
 1. Fetch each take: `python3 scripts/post-pack/recording.py get "NAME" --wait 15` (names in `meta.takes_in`, read with
    `board_session.py PIECE show`).
 2. The edit pass, by rule: `python3 scripts/post-pack/edit_pass.py --transcribe TAKE --words-out words.json --cap 90
@@ -36,7 +40,8 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
    `real_image` (a real photo or footage of what he names, from its source), `screenshot` (the real page or product he
    names), `social_post` (a real viral post that relates to his words, with its link), `motion` (a ve device or a Codex
    plate in his picked motion style), `generated` (a scene made with the higgsfield-generator skills,
-   krishanraja/higgsfield-generator), `humour` (a comic absurdity on a line that carries one). Give each beat one or two
+   krishanraja/higgsfield-generator; his face in one only from a likeness approved in krishanraja/krish-clone's
+   registry, `config/synthetic-approvals.json`, judged with `clone likeness`), `humour` (a comic absurdity on a line that carries one). Give each beat one or two
    other good options of a different kind, so he has something real to swap to.
 4. The humour: read krishanraja/humour-engine's README (section 4, integrating) and ask it what comic readings his own
    words carry; read his humour style from ai-harness (skills/krish-voice/references/humour.md, by its raw link in the

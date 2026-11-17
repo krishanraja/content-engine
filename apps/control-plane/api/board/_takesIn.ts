@@ -129,7 +129,10 @@ export function productionBrief(b: BriefInputs): string {
   const words = Object.entries(b.scripts).map(([c, w]) => `--- ${c} cut, as he approved it ---\n${w}`).join('\n\n')
   return `This is the one post-production session for "${b.title}" (piece_id ${b.pieceId}). It makes the finished `
     + `${b.offday ? 'short' : 'long cut and the short cut'} in one go from Krish's takes, with nothing left to ask him: every decision is below. `
-    + 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once, then docs/ve/ENGINE.md and docs/ve/RUNBOOK.md.\n\n'
+    + 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once, then docs/ve/ENGINE.md and docs/ve/RUNBOOK.md. '
+    + `Before anything else run python3 scripts/check_failures.py and python3 scripts/floor.py --format ${b.offday ? 'short_video' : 'long_video and --format short_video'}: `
+    + 'every past post-production failure and rejection there (smeared plates, cues timed to a transcript, text cut at the device edge, a known fault '
+    + 'rendered with a caveat, glitched speed-ups) is a check this cut must pass, and any production skill added since is followed.\n\n'
     + `His decisions (read live with get_piece_board too; never ask him for one again):\n${b.decisions.map(d => `- ${d}`).join('\n')}\n\n`
     + `His takes, confirmed in the Video Engine Inbox ${b.takes.confirmed_at.slice(0, 16).replace('T', ' ')} UTC (meta.takes_in on the piece):\n${fetches}\n`
     + 'If a take is not in the engine yet, recording.py get NAME --wait 15 waits for the Inbox copy; the take-placing job puts each on its cut by its words.\n\n'
@@ -148,9 +151,12 @@ export function productionBrief(b: BriefInputs): string {
     + 'style from ai-harness (krish-principles and krish-voice, through get_skill). Where a line holds a gold moment, put a hilarious, absurd picture on '
     + 'it: in the build-or-buy piece he called a software engineer as confident as a crocodile hunter, so the picture is a nerdy engineer creeping up on a '
     + 'crocodile. Never invent a joke his words do not carry, and never point it at the viewer or at a named person\'s competence.\n'
-    + '5. Generated stills and motion: make them with the higgsfield-generator skills (krishanraja/higgsfield-generator: higgsfield-generate for images '
-    + 'and video, higgsfield-soul-id for a face that must stay his), stills before video, inside the credits he approved; record each generation\'s piece, '
-    + 'beat and file. Codex builds the devices and plates from cards (ve card, ve dispatch, ve verify-card).\n'
+    + '5. Generated stills and motion: make them with the higgsfield-generator skills (krishanraja/higgsfield-generator, higgsfield-generate for images '
+    + 'and video), stills before video, inside the credits he approved; record each generation\'s piece, beat and file. His face in a generated scene '
+    + 'comes only from a likeness approved in krishanraja/krish-clone\'s registry (config/synthetic-approvals.json; krish-avatar-heygen today), never '
+    + 'from a new face model; judge every such still or clip with clone likeness against his own photos, and ve lint (voice.synthetic) must pass. '
+    + 'Codex builds the devices and plates from cards (ve card, ve dispatch, ve verify-card).\n'
     + '6. ve renders the cut; ve qc and ve refs run; a separate reviewer watches and listens at full size against the approved words before it is called ready.\n'
-    + '7. File the cuts, thumbnails and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n\n'
+    + '7. The covers: the thumbnail-designer skill makes them, face-led in his own photos (the face-led cover cards, docs/ve/cards/w-face-covers, once '
+    + 'they are on main). File the cuts, covers and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n\n'
 }
