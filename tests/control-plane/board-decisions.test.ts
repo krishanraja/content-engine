@@ -146,7 +146,7 @@ describe('F47: the card moves on when a session reaches a milestone, and offers 
     expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'current', 'todo', 'todo'])
     expect(it.line).toMatch(/^Branded for Tue 17\. Your production picks are in\. Both scripts are ready for your Approve: Tue 17 script, 5-minute cut/)
     expect(it.decision).toBe(true)
-    expect(it.next).toMatchObject({ kind: 'press', label: 'Read and approve the scripts', collection: 'picks', id: 'tue-scripts-words',
+    expect(it.next).toMatchObject({ kind: 'press', label: 'Read and approve the scripts', collection: 'picks', id: 'tue-scripts-words-b019dbf8',
       body: { kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: TUE, texts: { long: filed[0].text, short: filed[1].text } },
       words: { path: 'words', required: true } })
     // What it says is the signed lock, never the idea row it started from.
@@ -180,13 +180,18 @@ describe('F47: the card moves on when a session reaches a milestone, and offers 
     expect(it.next).toMatchObject({ label: 'Read and approve the scripts' })
   })
   it('after his approval the card is at Production planned and asks him to record', () => {
+    // His approval carries the words filed: an approval counts only for the words it approved (Krish, 17 Nov).
     const words = { doc_id: 'tue-scripts-words', updated_by: 'Krish', body: { kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: TUE,
-      texts: { long: 'a', short: 'b' }, titles: { long: 'a', short: 'b' }, folder_title: 'x', words: 'Approved.', at: '2026-11-17T12:00:00Z',
+      texts: { long: filed[0].text, short: filed[1].text }, titles: { long: 'a', short: 'b' }, folder_title: 'x', words: 'Approved.', at: '2026-11-17T12:00:00Z',
       said_at: '2026-11-17T12:00:00Z', said_where: 'the Publish Board in Control Centre', session_ref: 'https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=tue' } }
     const it = item(buildView(at17({ scripts: { [TUE]: filed }, picks: [words] })))
     expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'done', 'current', 'todo'])
     expect(it.next).not.toMatchObject({ label: 'Read and approve the scripts' })
-    expect(it.line).toMatch(/Scripts approved\. Next: record both cuts/)
+    // Approved: the card waits on his My takes are in the Inbox (Krish, 2026-11-17: "whenever I press approve script, the
+    // new board state should be waiting for me to confirm the videos are in the Inbox").
+    expect(it.line).toMatch(/^Your scripts are approved\. Record both cuts from your Teleprompter, drop the takes in the Video Engine Inbox, then press My takes are in the Inbox\.$/)
+    expect(it.next).toMatchObject({ kind: 'press', op: 'takes-in', label: 'My takes are in the Inbox', body: { piece_id: TUE } })
+    expect(it.decision).toBe(true)
   })
   it('no scripts filed yet: past Fleshed out, and the card says the scripts are next, with no press to approve', () => {
     const it = item(buildView(at17()))

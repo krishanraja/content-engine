@@ -145,12 +145,17 @@ export function audioBody(id: string, body: Body, bank: unknown = voiceBank, lib
 
 /** What the session making the post is told about his sound picks, appended to its Claude prompt: the voice route
  *  (ElevenLabs, or his own take through Teleprompter) and the track. Empty when he has picked nothing. */
+/** The voice a post is made with: his pick on the board, else the default (Record it myself until a voice holds). */
+export function voiceOf(picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string, bank: unknown = voiceBank): string {
+  return audioPick(picks, 'voice', item) ?? defaultVoice(bank)
+}
+
 export function soundLine(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, bank: unknown = voiceBank, library: unknown = musicLibrary): string {
   const layers = audioLayers(item.kind)
   const lines: string[] = []
   if (layers.includes('voice')) {
     const own = audioPick(picks, 'voice', item.key)
-    const v = own ?? defaultVoice(bank)
+    const v = voiceOf(picks, item.key, bank)
     if (v === RECORD_MYSELF) {
       lines.push(`Voice: Krish records this one himself (${own ? 'his pick on the board, Record it myself' : 'the default until a voice holds on a whole script; he has not picked a voice'}). Do not generate a voice: once he approves the `
         + 'script\'s exact words, send them to his Teleprompter (scripts/post-pack/teleprompter_send.py), then make the cut from his take in the Video '

@@ -29,8 +29,11 @@ const scriptsDoc = (over: Body = {}): Body => ({ kind: 'approve_scripts', day: '
 
 describe('what a typed approval carries', () => {
   it('his words verbatim, when and where he typed them, the session, and what he approved', () => {
-    expect(validBody('picks', 'mon-lock-words', lockDoc())).toBe(true)
-    expect(validBody('picks', 'mon-scripts-words', scriptsDoc())).toBe(true)
+    expect(validBody('picks', `mon-lock-words-${MON.slice(0, 8)}`, lockDoc())).toBe(true)
+    expect(validBody('picks', `mon-scripts-words-${MON.slice(0, 8)}`, scriptsDoc())).toBe(true)
+    // A new approval goes under its piece's own name; the bare day-wide one is refused (17 Nov).
+    expect(validBody('picks', 'mon-lock-words', lockDoc())).toBe(false)
+    expect(validBody('picks', 'mon-scripts-words', scriptsDoc())).toBe(false)
     for (const bad of [{ words: '' }, { said_at: 'this morning' }, { said_where: '' }, { session_ref: 'http://x' }, { approved: false },
       { day: 'wed' }, { lock_sha256: 'abc' }, { lock_path: `docs/plans/${WEEK}-week/narrative-lock-wed.md` }, { send: {} }])
       expect(validBody('picks', 'mon-lock-words', lockDoc(bad)), JSON.stringify(bad)).toBe(false)
@@ -92,7 +95,7 @@ describe('after it is saved', () => {
     expect(db.writes).toEqual([])
   })
   it('typed approval of scripts goes to Teleprompter as the press does, held until the scripts\' check and two readers pass', async () => {
-    const id = 'mon-scripts-words'
+    const id = `mon-scripts-words-${MON.slice(0, 8)}`
     const body = await preparePress('picks', id, scriptsDoc())
     expect(body.scripts).toEqual({ long: scriptHash(LONG) })
     expect(validBody('picks', id, body)).toBe(true)

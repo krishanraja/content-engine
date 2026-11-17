@@ -25,6 +25,8 @@ export interface Decision {
   at: string | null
   /** Where it is recorded: his press on the board, his typed words, or his signature on the lock. */
   how: string | null
+  /** Why an approval he gave no longer counts: the scripts filed since are not the words he approved. */
+  note?: string
 }
 /** The step a piece is at from his decisions: story (sign the lock), look (his three production picks), board (the
  *  storyboard and scripts, to his Approve), record (his takes). null when a record that decides it could not be read. */
@@ -38,7 +40,11 @@ export const DECISIONS_RULE = 'Before asking Krish for any press or decision, re
 /** His signature or typed approval of the lock, as the view reads it (_view.ts lockSigned, lockSignedOn, typedApproval). */
 export interface LockState { signed: boolean; on: string | null; typed: { words: string; said_at: string } | null }
 /** His scripts approval: the Approve scripts press, or his typed words. */
-export interface ScriptsState { pressed: boolean; pressed_at: string | null; typed: { words: string; said_at: string } | null }
+export interface ScriptsState {
+  pressed: boolean; pressed_at: string | null; typed: { words: string; said_at: string } | null
+  /** The words each cut held when he approved them (the approval's texts); null when the approval carries none. */
+  texts?: Partial<Record<'long' | 'short' | 'feature', string>> | null
+}
 
 export interface DecisionInputs {
   meta: unknown
@@ -46,6 +52,19 @@ export interface DecisionInputs {
   lock: LockState | undefined
   /** undefined when the board's presses could not be read. */
   scripts: ScriptsState | undefined
+  /** The scripts filed on the piece now (readFiledScripts); undefined when they were not read, so nothing is compared. */
+  filed?: FiledScript[]
+}
+
+/** Words as compared for an approval: the same words, whatever the spacing and line breaks. */
+const sameWords = (a: string, b: string) => a.replace(/\s+/g, ' ').trim() === b.replace(/\s+/g, ' ').trim()
+/** The cuts filed now whose words are not the words he approved (Krish, 2026-11-17: "tie approvals to the words"):
+ *  Wed 18's scripts were approved in his words at 09:01 and rewritten at 13:43, and an approval that ignores its words
+ *  would count for scripts he never read. An older approval saved without its words cannot be compared and stands as
+ *  it was, so no piece he already approved and recorded is sent back a step. */
+export function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScript[] | undefined): Array<'long' | 'short'> {
+  if (!filed?.length || !approved || !Object.keys(approved).length) return []
+  return filed.filter(f => typeof approved[f.cut] !== 'string' || !sameWords(approved[f.cut] as string, f.text)).map(f => f.cut)
 }
 
 const LABELS: Record<DecisionKey, string> = { lock: 'Narrative lock signed', look: 'Look', motion: 'Motion style', captions: 'Captions', scripts: 'Scripts approved' }
@@ -66,10 +85,16 @@ export function pieceDecisions(i: DecisionInputs): PieceDecisions {
   const captions = style ? str(style.captions) : null
   const styleBy = style ? str(style.by) ?? 'Krish' : null
   const styleAt = style ? str(style.at) : null
-  const scripts = i.scripts === undefined ? d('scripts', null)
+  const approvedScripts = i.scripts === undefined ? d('scripts', null)
     : i.scripts.pressed ? d('scripts', true, 'approved', 'Krish', i.scripts.pressed_at, 'his Approve scripts press on the board')
     : i.scripts.typed ? d('scripts', true, `"${i.scripts.typed.words}"`, 'Krish', i.scripts.typed.said_at, 'his typed words')
     : d('scripts', false)
+  // An approval counts only for the words it approved: scripts filed since with other words wait on his Approve again.
+  const changed = approvedScripts.made ? scriptsChanged(i.scripts?.texts ?? null, i.filed) : []
+  const cutName = (c: string) => (c === 'long' ? 'the 5-minute script' : 'the 90-second script')
+  const scripts: Decision = changed.length
+    ? { ...d('scripts', false), note: `you approved earlier words; ${changed.map(cutName).join(' and ')} ${changed.length > 1 ? 'have' : 'has'} been rewritten since (approved ${approvedScripts.at ?? 'before'}), so ${changed.length > 1 ? 'they wait' : 'it waits'} on your Approve again` }
+    : approvedScripts
   const items = [
     lock,
     d('look', Boolean(lookId), lookId, look ? str(look.by) ?? 'Krish' : null, look ? str(look.at) : null, 'his press on the board'),
@@ -96,7 +121,7 @@ export function nextStep(items: Decision[]): DecidedStep | null {
 export function decisionsText(p: PieceDecisions): string {
   const line = (x: Decision) => x.made === null ? `- ${x.label}: could not be read; read it from get_piece_board before asking`
     : x.made ? `- ${x.label}: done, ${x.value}${x.by ? `, by ${x.by}` : ''}${x.at ? ` at ${x.at}` : ''}${x.how ? ` (${x.how})` : ''}`
-    : `- ${x.label}: not made yet`
+    : `- ${x.label}: not made yet${x.note ? `: ${x.note}` : ''}`
   return `His decisions on this piece when this prompt was copied:\n${p.items.map(line).join('\n')}\n${p.rule}`
 }
 
@@ -106,23 +131,56 @@ export interface FiledScript { cut: 'long' | 'short'; id: string; title: string;
 /** Which cut a filed script is, from its title: the short or 90-second cut, else the long (5-minute) one. null when it
  *  names neither, so a stray note is never offered as a script. */
 export function scriptCut(title: string): 'long' | 'short' | null {
-  const t = title.toLowerCase()
-  if (/\bshort\b|\b\d+[- ]?second|\babout \d+ ?s\b/.test(t)) return 'short'
-  if (/\blong\b|\bminute\b|\b\d+-min\b/.test(t)) return 'long'
-  return null
+  const cuts = scriptCuts(title)
+  return cuts.length === 1 ? cuts[0] : cuts.length ? 'short' : null
 }
 
-/** The newest filed script of each cut among a piece's materials (role script, filed on the piece itself). */
-export function newestScripts<M extends { id: string; title: string; role?: string | null; at?: string | null; where?: string; scope?: unknown }>(materials: M[], pieceId: string): Array<{ cut: 'long' | 'short'; m: M }> {
-  const out = new Map<'long' | 'short', M>()
+const SHORT_WORDS = /\bshort\b|\b\d+[- ]?second|\babout \d+ ?s\b|\bvertical\b/
+const LONG_WORDS = /\blong\b|\bminute\b|\b\d+-min\b/
+/** Every cut a filed script's title names: one material may hold both cuts ("Wed 18 scripts v2 ... (5-minute and
+ *  90-second)", 17 Nov), and then its words are split by their cut headings (scriptSection). */
+export function scriptCuts(title: string): Array<'long' | 'short'> {
+  const t = title.toLowerCase()
+  return [...(LONG_WORDS.test(t) ? ['long' as const] : []), ...(SHORT_WORDS.test(t) ? ['short' as const] : [])]
+}
+
+/** A heading line that names a cut in a material holding both: "5-MINUTE CUT", "90-SECOND CUT", "LONG CUT", "SHORT
+ *  CUT", "VERTICAL", optionally as a Markdown heading or with a colon. */
+function headingCut(line: string): 'long' | 'short' | null {
+  const t = line.trim().replace(/^#+\s*/, '').replace(/[:*_]+$/g, '').replace(/^[*_]+/, '').trim()
+  if (!t || t.length > 60 || !/\bcut\b|^vertical\b|^short\b|^long\b/i.test(t)) return null
+  const cuts = scriptCuts(t)
+  return cuts.length === 1 ? cuts[0] : null
+}
+/** One cut's words from a material holding both cuts under their headings; null when it has no such heading, so a
+ *  material is never offered for a cut it does not hold. */
+export function scriptSection(text: string, cut: 'long' | 'short'): string | null {
+  const lines = text.split(/\r?\n/)
+  let at: 'long' | 'short' | null = null
+  const out: string[] = []
+  let found = false
+  for (const line of lines) {
+    const h = headingCut(line)
+    if (h) { at = h; if (h === cut) found = true; continue }
+    if (at === cut) out.push(line)
+  }
+  const body = out.join('\n').trim()
+  return found && body ? body : null
+}
+
+/** The newest filed script of each cut among a piece's materials (role script, filed on the piece itself). A material
+ *  whose title names both cuts is a candidate for each (`both`), its words split by heading when read. */
+export function newestScripts<M extends { id: string; title: string; role?: string | null; at?: string | null; where?: string; scope?: unknown }>(materials: M[], pieceId: string): Array<{ cut: 'long' | 'short'; m: M; both: boolean }> {
+  const out = new Map<'long' | 'short', { m: M; both: boolean }>()
   for (const m of materials) {
     if (m.role !== 'script' || (m.where !== undefined && m.where !== 'piece') || (m.scope !== undefined && m.scope !== pieceId)) continue
-    const cut = scriptCut(m.title)
-    if (!cut) continue
-    const was = out.get(cut)
-    if (!was || String(m.at || '') > String(was.at || '')) out.set(cut, m)
+    const cuts = scriptCuts(m.title)
+    for (const cut of cuts) {
+      const was = out.get(cut)
+      if (!was || String(m.at || '') > String(was.m.at || '')) out.set(cut, { m, both: cuts.length > 1 })
+    }
   }
-  return [...out.entries()].map(([cut, m]) => ({ cut, m }))
+  return [...out.entries()].map(([cut, x]) => ({ cut, m: x.m, both: x.both }))
 }
 
 /** What a signed lock says, for the card's read sheet: its deeper story as the so-what and its surface story as the

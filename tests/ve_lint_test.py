@@ -150,12 +150,13 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_R18_short_over_89_seconds(self):
         self.assertRefused(mutate(lambda s: s['cuts']['proof-tall'].update(max_s=95)), 'dialogue.short_max')
 
-    def test_short_from_16_nov_is_35_seconds_or_less(self):
-        # Ruling (Krish, 2026-11-16), Growth's audience brief, change 2: verticals of 20 to 35 seconds (SHORT_CUT).
+    def test_short_from_18_nov_is_90_seconds_or_less(self):
+        # Ruling (Krish, 2026-11-17): the short cut is about the length of his AI music short, 60 to 90 seconds (SHORT_CUT),
+        # "75 word script is insanely short"; it replaced the 20 to 35 seconds of 16 Nov.
         def dated(max_s):
             return lambda s: (s.update(publish_day='2026-11-18'), s['cuts']['proof-tall'].update(max_s=max_s))
-        self.assertRefused(mutate(dated(60)), 'dialogue.short_max')
-        self.assertNotIn('dialogue.short_max', codes_for(mutate(dated(35))))
+        self.assertRefused(mutate(dated(95)), 'dialogue.short_max')
+        self.assertNotIn('dialogue.short_max', codes_for(mutate(dated(90))))
         self.assertNotIn('dialogue.short_max', codes_for(mutate(lambda s: s['cuts']['proof-tall'].update(max_s=60))))
 
     def test_a_lifted_short_cut_runs_to_its_own_length(self):

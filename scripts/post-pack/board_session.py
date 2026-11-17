@@ -134,11 +134,40 @@ def material_body(args, target):
 
 def call(method, path, body=None):
     status, text = engine.call(method, path, body, token=engine.operator_key())
-    try:
-        answer = json.loads(text) if text else {}
-    except ValueError:
-        answer = {'ok': False, 'error': text[:300]}
-    return status, answer
+    return status, parsed(text)
+
+
+def parsed(text):
+    """The engine's answer as a dict. engine.call hands back the body as text; a body that is itself a JSON string
+    (encoded twice on the way) is read again, so a listing never reads as empty (17 Nov: approve read no revision)."""
+    answer = text
+    for _ in range(2):
+        if not isinstance(answer, str):
+            break
+        if not answer:
+            return {}
+        try:
+            answer = json.loads(answer)
+        except ValueError:
+            return {'ok': False, 'error': answer[:300]}
+    return answer if isinstance(answer, dict) else {'ok': False, 'error': str(answer)[:300]}
+
+
+def current_revision(week, doc, pages=50):
+    """The picks document's revision now, paging the listing (ten to a page, next_offset) until it is found; 0 when
+    it is not on the board yet. The board has no single-document GET."""
+    offset = 0
+    for _ in range(pages):
+        status, listing = call('GET', f'/api/board/{week}/picks' + (f'?offset={offset}' if offset else ''))
+        if status != 200:
+            return 0
+        for d in listing.get('documents') or []:
+            if isinstance(d, dict) and d.get('id') == doc:
+                return d.get('revision', 0)
+        offset = listing.get('next_offset')
+        if not isinstance(offset, int) or offset <= 0:
+            return 0
+    return 0
 
 
 class Refused(ValueError):
@@ -227,10 +256,15 @@ def approve(args):
         texts = {c: Path(f).read_text(encoding='utf-8') for c, f in (('long', args.long), ('short', args.short), ('feature', args.feature)) if f}
         titles = {c: t for c, t in (('long', args.long_title), ('short', args.short_title), ('feature', args.feature_title)) if t}
         body = scripts_words_body(piece, args.day, texts, titles, args.folder_title, args.words, args.said_at, args.where, args.session_ref)
-    doc = f'{args.day}-{args.what}-words'
-    status, listing = call('GET', f'/api/board/{args.week}/picks')
-    revisions = {d.get('id'): d.get('revision', 0) for d in (listing.get('documents') or [])} if status == 200 else {}
-    status, answer = call('PUT', f'/api/board/{args.week}/picks/{doc}', {'body': body, 'revision': revisions.get(doc, 0)})
+    # One document per piece (picks/<day>-<what>-words-<first 8 of the piece id>, _contracts.ts wordsDocId): two pieces
+    # on one day never share an approval (Tue 17 Nov).
+    doc = f'{args.day}-{args.what}-words-{piece[:8]}'
+    path = f'/api/board/{args.week}/picks/{doc}'
+    status, answer = call('PUT', path, {'body': body, 'revision': current_revision(args.week, doc)})
+    # A save between the read and the write (or a listing that missed it) answers revision_conflict with the revision
+    # on file: write once more at that revision, never more (17 Nov, piece db9f9f6a, put by hand at revision 4).
+    if status == 409 and answer.get('error') == 'revision_conflict' and isinstance(answer.get('revision'), int):
+        status, answer = call('PUT', path, {'body': body, 'revision': answer['revision']})
     return status, answer, doc
 
 

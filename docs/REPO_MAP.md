@@ -2248,6 +2248,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function audioPick(picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, layer: AudioLayer, item: string):…`
 - `function audioPresses(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: stri…`
 - `function audioBody(id: string, body: Body, bank: unknown = voiceBank, library: unknown = musicLibrary): boolean`
+- `function voiceOf(picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string, bank: unknown = voice…`
 - `function soundLine(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: string …`
 
 ### `apps/control-plane/api/board/_carry.ts`
@@ -2297,7 +2298,9 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const YES_ID`
 - `function yesBody(id: string, body: Record<string, unknown>): boolean`
 - `const WORDS_ID`
+- `function wordsDocId(day: string, what: 'lock' | 'scripts', pieceId: string): string`
 - `const WORDS_KIND`
+- `function asWritten(body: Record<string, unknown>): Record<string, unknown>`
 - `function saidInWords(body: Record<string, unknown>): boolean`
 - `function wordsBody(id: string, body: Record<string, unknown>): boolean`
 - `const LIVE_ID`
@@ -2360,11 +2363,14 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `interface LockState`
 - `interface ScriptsState`
 - `interface DecisionInputs`
+- `function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScript[] | undefined): Array<'long' | 'short'>`
 - `function pieceDecisions(i: DecisionInputs): PieceDecisions`
 - `function nextStep(items: Decision[]): DecidedStep | null`
 - `function decisionsText(p: PieceDecisions): string`
 - `interface FiledScript`
 - `function scriptCut(title: string): 'long' | 'short' | null`
+- `function scriptCuts(title: string): Array<'long' | 'short'>`
+- `function scriptSection(text: string, cut: 'long' | 'short'): string | null`
 - `function newestScripts<M extends { id: string; title: string; role?: string | null; at?: string | null; where?: string;…`
 - `function lockRead(text: string | null | undefined): { so_what: string | null; story: string | null }`
 
@@ -2611,6 +2617,15 @@ How an off-day post is made, said once for every prompt the board copies out (th
 
 - `function libraryFollower(db: SupabaseClient, f: typeof fetch = fetch): LibraryFollower`
 
+### `apps/control-plane/api/board/_offdayPiece.ts`
+
+- `const OFFDAY_DOC`
+- `function videoOffday(kind: string | null | undefined, format: string | null | undefined): boolean`
+- `function offdayPieceId(week: string, docId: string, raw: Body | null | undefined): string`
+- `function inWeek(row: { scheduled_for?: unknown; meta?: unknown } | null | undefined, week: string): boolean`
+- `interface OffdayLink`
+- `async function linkOffdayPiece(db: SupabaseClient, pieceId: string, link: OffdayLink, now: string): Promise<boolean>`
+
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
 A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, locking the off-day mock: Improve
@@ -2691,6 +2706,7 @@ One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Rul
 - `async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null>`
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
+- `async function offdayRecord(db: SupabaseClient, pieceId: string, body: Body, now: string): Promise<boolean>`
 - `async function placePick(db: SupabaseClient, ctx: { week: string; day: string; body: Body; now: string }): Promise<{ st…`
 - `function ideaReport(week: string, id: string, body: Body, now: string)`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
@@ -2850,6 +2866,21 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle`
 - `async function saveStyle(db: SupabaseClient, pieceId: string, pick: StylePick, now = new Date()): Promise<SavedStyle>`
 
+### `apps/control-plane/api/board/_takesIn.ts`
+
+His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I press approve script, the new board
+
+- `const TAKES_OP`
+- `const TAKES_SLACK_MS`
+- `interface InboxTake`
+- `interface TakesIn`
+- `function takesInOf(meta: unknown): TakesIn | null`
+- `function newTakes(files: Array<{ id: string; name?: string; mimeType?: string; size?: string; md5Checksum?: string; sha…`
+- `function takesPress(pieceId: string, item: string | null = null): Body`
+- `function takesLine(t: TakesIn): string`
+- `interface BriefInputs`
+- `function productionBrief(b: BriefInputs): string`
+
 ### `apps/control-plane/api/board/_thumbs.ts`
 
 - `const THUMB_OP`
@@ -2908,7 +2939,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `const LOCK_DAYS: PostedDay[]`
 - `function lockPieceId(text: string | null | undefined): string | null`
 - `function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: string): { text: string; day: PostedDay } | null`
-- `type Typed = { words: string; said_where: string; said_at: string }`
+- `type Typed`
 - `interface LockToSign`
 - `function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: st…`
 - `function inYourWords(words: string, on: string | null, where?: string | null): string`
@@ -2974,8 +3005,6 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `const POST_PATH`
 - `const GOOD_NEWS_STORIES`
 - `const CLAUDE_LABEL`
-- `const CLAUDE_CODE_OPEN`
-- `const GROWTH_CODE_OPEN`
 - `const NOTES_HEADING`
 - `interface ModelStep`
 - `interface ModelSource`
@@ -2998,7 +3027,17 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function offdayHead(route: MakeRoute | null): string`
 - `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
+- `function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead`
 - `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
+- `function recordsItself(kind: string, picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string): …`
+- `interface OffdayScripts`
+- `function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Bod…`
+- `function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, pieceI…`
+- `function productionStage(m: ModelInputs, p: { pieceId: string; title: string; item: string | null; style: DayStyle | nu…`
+- `function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: string): { line: string; approval: OffdayScripts }…`
+- `function recordHead(sc: OffdayScripts): string`
+- `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`
 - `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
 - `function primaryUrl(raw: Body | null, fallback: unknown = null): string | null`
 - `function citesOf(raw: Body | null): { urls: string[]; parts: string[] }`
@@ -3025,6 +3064,7 @@ What every prompt the board copies out says about reporting back, and what the b
 - `interface ViewMaterial`
 - `interface Overlay`
 - `function attachOverlay<T extends { day: string; piece_id: string | null }>(week: string, days: T[], overlay: Overlay | …`
+- `function workByScope(overlay: Overlay | null): Record<string, { sessions: ViewSession[]; materials: ViewMaterial[] }>`
 - `async function readOverlay(db: Rpc, week: string, pieceIds: string[]): Promise<Overlay | null>`
 
 ### `apps/control-plane/api/board/_yes.ts`

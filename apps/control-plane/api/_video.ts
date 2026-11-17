@@ -66,14 +66,14 @@ export const VIDEO_FORMATS: VideoFormat[] = [
   },
   {
     // The short cut of every piece (house rule TWO_CUTS): YouTube Shorts, TikTok and Instagram Reels. Ruling (Krish,
-    // 2026-11-16), of Growth's audience brief, changes 1 to 4: "apply 1 to 6 from the next piece you make this week",
-    // so 20 to 35 seconds, one idea, from 45 to 75 script words (SHORT_CUT in _houseRules.ts, which story_check.py
-    // reads). The target sits under the top so its ceiling (wordCeiling) does too. The id stays '90s' because records
-    // and the video-script route name it; it was the 90-second cut (160 to 195 words) until 15 Nov.
-    id: '90s', label: 'Short cut (20 to 35 seconds)', seconds: 35, words: 62,
+    // 2026-11-17): about the length of his AI music short, a little less, so 60 to 90 seconds, one story, from 160 to
+    // 210 script words (SHORT_CUT in _houseRules.ts, which story_check.py reads): "75 word script is insanely short".
+    // It was 20 to 35 seconds (45 to 75 words) for one day from 16 Nov. The target sits under the top so its ceiling
+    // (wordCeiling) does too. The id stays '90s' because records and the video-script route name it.
+    id: '90s', label: 'Short cut (60 to 90 seconds)', seconds: 90, words: 185,
     shape: [
       'Hook: the first sentence names the piece\'s one concrete thing (a product, a deal, a number or a person) and makes it surprising; the second says what it changes for a business, in a leader\'s terms (ONE_CONCRETE_THING, FOR_THE_LEADER), then the one question.',
-      'One idea, one beat, its one number. No second beat: it goes to the long cut or the article.',
+      'One story, told in order with room to be fun to say and to watch: its scene, its twist, its one number (ONE_STORY_SHORT). No second story, example or company: it goes to the long cut or the article.',
       'The call answers the question in one sentence, then the last line, where the full story is free at makeyourmindup.ai, nothing else (STORY_OUTRO). The beat of what Krish would do is one sentence at most, or left out.',
     ].join(' '),
   },

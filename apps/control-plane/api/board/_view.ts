@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
-import { wordsBody } from './_contracts.js'
+import { wordsBody, asWritten, wordsDocId } from './_contracts.js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
 import { makingSteps } from '../_making.js'
@@ -18,8 +18,8 @@ import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt
 import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, offdayApproval, offdayList, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
 import { HELD_CHANGED, HELD_TITLE, approvedLabel, approvedWhen, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
-import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
-import { lockRead, newestScripts, pieceDecisions, type FiledScript, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
+import { attachOverlay, readOverlay, withWriteBack, workByScope, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
+import { lockRead, newestScripts, pieceDecisions, scriptSection, type FiledScript, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
 import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
@@ -378,7 +378,7 @@ export function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: stri
   const own = locks[day]
   return own && !lockPieceId(own) ? { text: own, day } : null
 }
-export type Typed = { words: string; said_where: string; said_at: string }
+export type Typed = { words: string; said_where: string; said_at: string; body?: Body }
 /** A piece's lock on file, unsigned, under the day the piece is on: what his "Signed." press binds (_weekModel.ts). */
 export interface LockToSign { day: PostedDay; path: string; sha256: string; revision: number }
 /** His typed approval of this piece's lock or scripts, carried from a session (picks/<day>-<lock|scripts>-words; Ruling,
@@ -386,11 +386,14 @@ export interface LockToSign { day: PostedDay; path: string; sha256: string; revi
  *  lock_sha256 is that text's lockBodyHash), so a lock changed after his words is never shown as approved. */
 export function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: string,
   lockText?: string | null): Typed | null {
-  const doc = picks.find(p => p.doc_id === `${day}-${what}-words`)
+  // The piece's own document first (wordsDocId), then the day's older one, each only for this piece.
+  const ids = [wordsDocId(day, what, pieceId), `${day}-${what}-words`]
+  const doc = ids.map(id => picks.find(p => p.doc_id === id)).find(p => p && isObj(p.body) && wordsBody(p.doc_id, asWritten(p.body))
+    && String(p.body.piece_id).toLowerCase() === pieceId)
   const b = doc && isObj(doc.body) ? doc.body : null
-  if (!b || !wordsBody(`${day}-${what}-words`, b) || String(b.piece_id).toLowerCase() !== pieceId) return null
+  if (!b) return null
   if (what === 'lock' && (!lockText || lockBodyHash(lockText) !== b.lock_sha256)) return null
-  return { words: String(b.words), said_where: String(b.said_where), said_at: String(b.said_at) }
+  return { words: String(b.words), said_where: String(b.said_where), said_at: String(b.said_at), body: b }
 }
 /** "Approved in your words: "...", Thu 12 Nov, in a Claude Code session" (Ruling, Krish, 2026-11-12). */
 export function inYourWords(words: string, on: string | null, where?: string | null): string {
@@ -424,14 +427,18 @@ export function scriptsStateOf(picks: Array<{ doc_id: string; body: Body; update
   const pressed = picks.find(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && isObj(p.body) && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === pieceId)
   const typed = typedApproval(picks, day, 'scripts', pieceId)
   const at = pressed ? str(pressed.updated_at) ?? (isObj(pressed.body) ? str(pressed.body.at) : null) : null
-  return { pressed: Boolean(pressed), pressed_at: at, typed: typed ? { words: typed.words, said_at: typed.said_at } : null }
+  // The words he approved, so the approval counts only for them (pieceDecisions, scriptsChanged).
+  const bodyOf = pressed && isObj(pressed.body) ? pressed.body : typed ? typed.body : null
+  const texts = bodyOf && isObj(bodyOf.texts) ? Object.fromEntries(Object.entries(bodyOf.texts as Body).filter(([, v]) => typeof v === 'string')) as ScriptsState['texts'] : null
+  return { pressed: Boolean(pressed), pressed_at: at, typed: typed ? { words: typed.words, said_at: typed.said_at } : null, texts }
 }
 /** Every approved piece's decisions on the week, by piece id: what the prompts carry and the step they leave (F46). */
 export function weekDecisions(i: ViewInputs, days: Array<{ day: PostedDay; pieces: Array<{ id: string; approval?: unknown }> }>): Record<string, PieceDecisions> {
   const out: Record<string, PieceDecisions> = {}
   for (const d of days) for (const p of d.pieces.filter(x => x.approval)) {
     const row = i.pieces.find(x => String(x.id).toLowerCase() === p.id)
-    out[p.id] = pieceDecisions({ meta: row?.meta, lock: lockStateOf(i.locks, i.picks, d.day, p.id), scripts: scriptsStateOf(i.picks, d.day, p.id) })
+    out[p.id] = pieceDecisions({ meta: row?.meta, lock: lockStateOf(i.locks, i.picks, d.day, p.id), scripts: scriptsStateOf(i.picks, d.day, p.id),
+      filed: i.scripts ? i.scripts[p.id] ?? [] : undefined })
   }
   return out
 }
@@ -938,14 +945,18 @@ export function buildView(i: ViewInputs): WeekView {
       if (!lk) continue
       if (typedApproval(i.picks, lk.day, 'lock', p.id, lk.text)) { signedLocks.push(p.id); continue }
       if (lockSigned(lk.text) || lk.day !== d.day) continue
-      const doc = `${d.day}-lock-words`
+      const doc = wordsDocId(d.day, 'lock', p.id)
       locksToSign[p.id] = { day: d.day, path: `docs/plans/${i.week}-week/narrative-lock-${d.day}.md`, sha256: lockBodyHash(lk.text),
         revision: i.picks.find(x => x.doc_id === doc)?.revision ?? 0 }
     }
   }
   // What went out or is on its way around the week, so an idea that retells it leaves the ideas board (contract 1.17.0).
   const recentOut = recentOutOf({ week: i.week, ideas: i.ideas, plans: i.plans, pieces: i.pieces }, days, i.all_items ?? null, i.recent_pieces ?? [])
-  const built = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut, picks: i.picks, decisions,
+  // An off-day video post's look, motion and caption choices, from its own record's meta (_offdayPiece.ts; Krish,
+  // 2026-11-17: "at no point does a voiceover short give me the same controls as a mon/wed/fri piece"). A short only.
+  const offdayStyle = (pieceId: string, meta: unknown) => dayStyle({ pieceId, meta: isObj(meta) ? meta : {}, formats: ['short_video'], points: null,
+    motion: i.motion || [], looks: i.formats?.production || [], recommendedLook: null })
+  const built = weekModel(days, { week: i.week, work: workByScope(i.overlay ?? null), today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, offdayStyle, locksToSign, recentOut, picks: i.picks, decisions,
     scripts: i.scripts ?? {}, lockReads: Object.fromEntries(Object.keys(decisions).map(id => {
       const lk = Object.values(i.locks).find(t => t && lockPieceId(t) === id)
       // Signed by its own last line or by his words on the board (signedLocks counts both; 17 Nov: Tue 17 was signed in his
@@ -1044,8 +1055,11 @@ export async function readPieceDecisions(db: SupabaseClient, pieceId: string, en
   const picks = picksRead.error ? null : (picksRead.data || []) as Array<{ doc_id: string; body: Body; updated_by: string; updated_at?: string }>
   const locksRead = !texts.includes(undefined)
   const locks = Object.fromEntries(LOCK_DAYS.map((d, k) => [d, texts[k] ?? null])) as ViewInputs['locks']
+  // The scripts filed on the piece now, so his approval counts only for the words he approved; unread leaves them unknown.
+  const overlay = await readOverlay(db as never, week, [id]).catch(() => null)
+  const filed = overlay ? (await readFiledScripts(db, overlay, [id]).catch(() => null))?.[id] ?? [] : undefined
   return { ...pieceDecisions({ meta: row.data.meta, lock: locksRead && picks ? lockStateOf(locks, picks, day, id) : undefined,
-    scripts: picks ? scriptsStateOf(picks, day, id) : undefined }), week, day }
+    scripts: picks ? scriptsStateOf(picks, day, id) : undefined, filed }), week, day }
 }
 
 /** The newest filed script of each cut on each piece, with its words (F47). */
@@ -1057,10 +1071,12 @@ export async function readFiledScripts(db: SupabaseClient, overlay: Overlay | nu
   const { readMaterial } = await import('../_pieceStore.js')
   for (const id of pieceIds) {
     const found = newestScripts(mats.filter(m => m.scope === id && m.storage === 'text'), id)
-    const read = await Promise.all(found.map(async ({ cut, m }) => {
+    const read = await Promise.all(found.map(async ({ cut, m, both }) => {
       try {
         const got = await readMaterial(db as never, m.id)
-        const text = got.kind === 'text' && typeof got.body.content === 'string' ? got.body.content.trim() : ''
+        const whole = got.kind === 'text' && typeof got.body.content === 'string' ? got.body.content.trim() : ''
+        // One material holding both cuts gives each cut only its own words, under its heading (17 Nov, Wed 18).
+        const text = both ? (scriptSection(whole, cut) ?? '') : whole
         return text ? { cut, id: m.id, title: m.title, text, at: m.at } : null
       } catch { return null }
     }))
@@ -1081,8 +1097,13 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   const weekIdeas = weekSha === null ? Promise.resolve(null)
     : fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/${weekSha || `offday-revise/${week}`}/docs/plans/${week}-week/ideas.json`)
   const [pieces, picks, queue, history, ideasText, nowText, runs, ...locks] = await Promise.all([
-    db.from('content_ideas').select('id, idea, thesis, scheduled_for, lane_slot, state, buried_at, body, meta, updated_at')
-      .gte('scheduled_for', week).lte('scheduled_for', dayDate(week, 'sun')).then(r => (r.error ? [] : r.data || [])),
+    // The week's pieces, and the records of its off-day video posts, linked to it and never scheduled (_offdayPiece.ts).
+    Promise.all([
+      db.from('content_ideas').select('id, idea, thesis, scheduled_for, lane_slot, state, buried_at, body, meta, updated_at')
+        .gte('scheduled_for', week).lte('scheduled_for', dayDate(week, 'sun')).then(r => (r.error ? [] : r.data || [])),
+      db.from('content_ideas').select('id, idea, thesis, scheduled_for, lane_slot, state, buried_at, body, meta, updated_at')
+        .eq('meta->offday_link->>week', week).limit(60).then(r => (r.error ? [] : r.data || [])),
+    ]).then(([on, linked]) => [...on, ...linked.filter(x => !on.some(y => y.id === x.id))]),
     db.from('board_documents').select('doc_id,body,updated_by,updated_at,revision').eq('week', week).eq('collection', 'picks').then(r => (r.error ? [] : r.data || [])),
     db.from('board_documents').select('doc_id,body,updated_by,updated_at,revision').eq('week', week).eq('collection', 'queue').then(r => (r.error ? [] : r.data || [])),
     db.from('board_history').select('collection,doc_id,updated_at,updated_by').eq('week', week).order('updated_at', { ascending: false }).limit(12)

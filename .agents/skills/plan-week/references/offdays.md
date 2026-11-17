@@ -224,9 +224,10 @@ take. Every idea he dropped in through Control Center is in `sources.json`
 name Monday, Wednesday or Friday, offer it as a recorded option on the off day
 it fits best, ranked first that day. It is one short cut, nothing else:
 
-1. Write the script from his words: 45 to 75 spoken words, one idea (it runs 20
-   to 35 seconds as he says it: house rules TWO_CUTS and SHORT_CUT, Ruling, Krish, 2026-11-16; the ideas gate
-   holds it from the week of 23 Nov, and a week before keeps 160 to 195 words), its first sentence naming one
+1. Write the script from his words: 160 to 210 spoken words, one story (it runs 60
+   to 90 seconds as he says it, about the length of his AI music short: house rules TWO_CUTS, SHORT_CUT and
+   ONE_STORY_SHORT, Ruling, Krish, 2026-11-17: "75 word script is insanely short"; the ideas gate holds it from the
+   week of 23 Nov, and a week before keeps 160 to 195 words), great fun to say and to hear, its first sentence naming one
    concrete thing (ONE_CONCRETE_THING), opening on a question, for the ear, a 12-year-old can follow
    it, never his name, and closing on the one thing he would do, in his first
    person and one short beat, never a list of orders (house rule SCRIPT_CLOSE,
