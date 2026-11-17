@@ -10,7 +10,8 @@ export type Collection = typeof collections[number]
 // teleprompter_send.py), titles his Titles presses. Each is the picks documents of that kind; nothing writes to a view.
 // The production gates (GATE_KINDS) are views too, so GET /api/board/<Monday>/storyboard (style, proof, cut) lists his
 // presses on each gate, one per day: storyboard/<day> is the picks document <day>-storyboard.
-export const views = { approvals: 'approve_scripts', titles: 'titles', storyboard: 'sign_storyboard', style: 'pick_style', proof: 'approve_proof', cut: 'approve_cut', creative: 'sign_creative' } as const
+// approvals carries his take-backs beside his approvals (17 Nov): teleprompter_send.py reads a take-back as a withdrawal.
+export const views = { approvals: ['approve_scripts', 'take_back'], titles: 'titles', storyboard: 'sign_storyboard', style: 'pick_style', proof: 'approve_proof', cut: 'approve_cut', creative: 'sign_creative' } as const
 export type View = keyof typeof views
 export const MAX_HTML = 16 * 1024 * 1024
 export const digest = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex')
@@ -252,9 +253,26 @@ export function saidInWords(body: Record<string, unknown>): boolean {
     && typeof body.said_at === 'string' && Number.isFinite(Date.parse(body.said_at))
     && oneLine(body.said_where, 300) && typeof body.session_ref === 'string' && /^https:\/\/[^\s]{1,290}$/.test(body.session_ref)
 }
+/** His words name an approval: approve, approved, approval, sign or signed, said as a word (Ruling, Krish, 2026-11-17:
+ *  a typed approval carried from a session counts only when his words name it; "ready in teleprompter for me" was carried
+ *  as an approval of Tue 17's voiceover script and he never meant it as one). The board's own presses say "approve",
+ *  "approve_edited" or "Signed.", so they pass. */
+export const APPROVAL_WORDS = /(?:^|[^a-z])(?:approv(?:e|ed|es|ing|al)|sign(?:ed|s)?)(?![a-z])/i
+export function namesApproval(words: unknown): boolean {
+  return typeof words === 'string' && APPROVAL_WORDS.test(words)
+}
+/** A narrative lock may also be approved in words that say to lock it ("Yes, lock it."). */
+export const LOCK_WORDS = /(?:^|[^a-z])(?:approv(?:e|ed|es|ing|al)|sign(?:ed|s)?|lock(?:ed|s)?)(?![a-z])/i
+/** His words name taking an approval back (to edit it, reopen it or withdraw it). */
+export const TAKE_BACK_WORDS = /(?:^|[^a-z])(?:take\b.{0,30}\bback|undo|re-?open|unapprov(?:e|ed)|withdraw(?:n)?|revoke|edit)(?![a-z])/i
+export function namesTakeBack(words: unknown): boolean {
+  return typeof words === 'string' && TAKE_BACK_WORDS.test(words)
+}
+
 export function wordsBody(id: string, body: Record<string, unknown>): boolean {
   const m = WORDS_ID.exec(id)
   if (!m || body.day !== m[1] || body.via !== 'words' || body.approved !== true || 'send' in body) return false
+  if (!(m[2] === 'lock' ? typeof body.words === 'string' && LOCK_WORDS.test(body.words) : namesApproval(body.words))) return false
   if (body.kind !== WORDS_KIND[m[2] as keyof typeof WORDS_KIND]) return false
   if (typeof body.piece_id !== 'string' || !UUID.test(body.piece_id)) return false
   if (m[3] && !body.piece_id.toLowerCase().startsWith(m[3])) return false
@@ -265,6 +283,37 @@ export function wordsBody(id: string, body: Record<string, unknown>): boolean {
   }
   return scriptsBody(body)
 }
+// Taking his approval back (Ruling, Krish, 2026-11-17: he gets a take-back press on any approval, and his typed words
+// carried from a session can take one back too): picks/<day>-<lock|scripts>-back-<the piece id's first 8 hex>, kind
+// take_back, approved false. Any approval of that piece's lock or scripts made at or before its `at` stops counting
+// (takenBackAt); a newer approval counts again. Teleprompter keeps what it has (nothing there is ever deleted), and
+// teleprompter_send.py reads it as a withdrawal. His press, or his words carried from a session that name taking it back.
+export const BACK_ID = /^(mon|tue|wed|thu|fri|sat)-(lock|scripts)-back-([0-9a-f]{8})$/
+export function backDocId(day: string, what: 'lock' | 'scripts', pieceId: string): string {
+  return `${day}-${what}-back-${pieceId.toLowerCase().slice(0, 8)}`
+}
+export function backBody(id: string, body: Record<string, unknown>): boolean {
+  const m = BACK_ID.exec(id)
+  if (!m || body.kind !== 'take_back' || body.what !== m[2] || body.day !== m[1] || body.approved !== false || 'send' in body) return false
+  if (typeof body.piece_id !== 'string' || !UUID.test(body.piece_id) || !body.piece_id.toLowerCase().startsWith(m[3])) return false
+  if (typeof body.at !== 'string' || !Number.isFinite(Date.parse(body.at))) return false
+  if (body.via === 'words') return saidInWords(body) && namesTakeBack(body.words)
+  return body.via === undefined && (body.words === undefined || (typeof body.words === 'string' && body.words.length <= 2000))
+}
+/** When his approval of a piece's lock or scripts was last taken back (ms), or -Infinity. An approval made at or before
+ *  it no longer counts. */
+export function takenBackAt(picks: Array<{ doc_id: string; body: unknown; updated_by?: string | null }>, what: 'lock' | 'scripts', pieceId: string): number {
+  const id = pieceId.toLowerCase()
+  let at = -Infinity
+  for (const p of picks) {
+    const m = BACK_ID.exec(p.doc_id)
+    if (!m || m[2] !== what || !object(p.body) || String(p.body.piece_id || '').toLowerCase() !== id || !backBody(p.doc_id, p.body)) continue
+    if (p.body.via !== 'words' && p.updated_by !== undefined && p.updated_by !== null && p.updated_by !== 'Krish') continue
+    at = Math.max(at, Date.parse(String(p.body.at)))
+  }
+  return at
+}
+
 // "It's live" (Krish, 2026-11-12: "How do I indicate that Tuesday the 10th was posted correctly?"): picks/live-<day>,
 // the posts he marked live on that day, each with its link and the channels it went out on, appended only by the board's
 // own live route (_itsLive.ts recordLive); a plain write of the document is refused (live_is_its_own_press).
@@ -369,6 +418,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   // is refused for writes: on 17 Nov one piece's approval was written over another's under picks/tue-scripts-words. Saved
   // ones are still read (typedApproval).
   if (collection === 'picks' && WORDS_ID.test(id)) return Boolean(WORDS_ID.exec(id)?.[3]) && wordsBody(id, body)
+  if (collection === 'picks' && BACK_ID.test(id)) return backBody(id, body)
   if (collection === 'picks' && body.via === 'words') return false
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
   if (collection === 'picks' && (SCORE_ID.test(id) || SCORE_DATE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)
@@ -504,6 +554,8 @@ export function hisOnlyRefusal(collection: string, body: unknown, who: string | 
   if (collection === 'picks' && object(body) && body.via === 'words' && (body.kind === WORDS_KIND.lock || body.kind === WORDS_KIND.scripts)) {
     return body.approved === true ? null : 'typed_approval_is_a_yes'
   }
+  // Taking an approval back in his words (17 Nov): carried only as his words that name it (backBody holds them).
+  if (collection === 'picks' && object(body) && body.kind === 'take_back') return body.via === 'words' ? null : 'take_back_is_his'
   if (combineWriterRefused(collection, body, who)) return 'combine_is_his_tap'
   if (collection === 'edits') return 'edit_is_his_save'
   if (collection === 'comments' && object(body) && 'act' in body) return 'tap_is_his'

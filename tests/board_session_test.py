@@ -125,7 +125,7 @@ class TypedApprovalTest(unittest.TestCase):
     """approve lock|scripts: his typed approval carried to the board (Ruling, Krish, 2026-11-12: "Scripts and locks only.
     Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs
     your press, so that gate is unchanged.")."""
-    SAID = ['--words', 'Yes, lock it.', '--said-at', '2026-11-13T09:10:00Z', '--where', 'Claude Code session', '--session-ref', 'https://claude.ai/code/s']
+    SAID = ['--words', 'Yes, approved. Lock it.', '--said-at', '2026-11-13T09:10:00Z', '--where', 'Claude Code session', '--session-ref', 'https://claude.ai/code/s']
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -147,10 +147,10 @@ class TypedApprovalTest(unittest.TestCase):
         self.assertEqual((method, path, body['revision']), ('PUT', '/api/board/2026-11-16/picks/mon-lock-words-8287846b', 2))
         doc = body['body']
         self.assertEqual((doc['kind'], doc['via'], doc['approved'], doc['words'], doc['lock_path']),
-                         ('sign_lock', 'words', True, 'Yes, lock it.', 'docs/plans/2026-11-16-week/narrative-lock-mon.md'))
+                         ('sign_lock', 'words', True, 'Yes, approved. Lock it.', 'docs/plans/2026-11-16-week/narrative-lock-mon.md'))
         text = self.lock.read_text(encoding='utf-8')
         self.assertEqual(doc['lock_sha256'], making.lock_body_hash(text))
-        self.assertEqual(making.lock_signature(text), ('Yes, lock it.', '2026-11-13', making.lock_body_hash(text)))
+        self.assertEqual(making.lock_signature(text), ('Yes, approved. Lock it.', '2026-11-13', making.lock_body_hash(text)))
         self.assertIn('Approved in your words', out)
 
     def test_scripts_carry_each_cut_its_title_and_folder(self):
@@ -165,6 +165,44 @@ class TypedApprovalTest(unittest.TestCase):
                          ('/api/board/2026-11-16/picks/mon-scripts-words-8287846b', 'approve_scripts', {'long': 'Oracle just borrowed another twenty billion dollars.'},
                           {'long': 'Mon 16 Nov - 5-minute - Oracle'}))
         self.assertIn('Teleprompter: held', out)
+
+    def test_his_words_must_name_an_approval_and_a_take_back_is_carried_in_his_words(self):
+        """Ruling (Krish, 2026-11-17): a typed approval counts only when his words name it, and his typed words can take
+        one back. Tue 17's voiceover was carried from "ready in teleprompter for me", which was not one."""
+        long = Path(self.tmp.name) / 'long.md'
+        long.write_text('You cannot sack an AI.', encoding='utf-8')
+        base = [PIECE, 'approve', 'scripts', '--week', '2026-11-16', '--day', 'tue', '--long', str(long), '--long-title', 'T', '--folder-title', 'F']
+        words = ['--words', 'merge all to main and then let me know when all done, ready in teleprompter for me', '--said-at', '2026-11-17T11:06:00Z',
+                 '--where', 'Claude Code session', '--session-ref', 'https://claude.ai/code/s']
+        code, out, calls, _ = run(base + words, [])
+        self.assertEqual(code, 1)
+        self.assertIn('do not name an approval of the scripts', out)
+        self.assertEqual(calls, [])
+        back = [PIECE, 'approve', 'scripts', '--take-back', '--week', '2026-11-16', '--day', 'tue', '--words',
+                'I want the board in a state where I can see the script and edit it, and then press approve.', '--said-at', '2026-11-17T16:20:00Z',
+                '--where', 'Claude Code session', '--session-ref', 'https://claude.ai/code/s']
+        code, out, calls, _ = run(back, [(200, {'documents': []}), (200, {'ok': True})])
+        self.assertEqual(code, 0, out)
+        method, path, body = calls[1]
+        self.assertEqual((method, path), ('PUT', '/api/board/2026-11-16/picks/tue-scripts-back-8287846b'))
+        self.assertEqual({k: body['body'][k] for k in ('kind', 'what', 'day', 'via', 'approved', 'piece_id')},
+                         {'kind': 'take_back', 'what': 'scripts', 'day': 'tue', 'via': 'words', 'approved': False, 'piece_id': PIECE})
+        self.assertIn('taken back', out)
+        # can fail: words that do not name taking it back are never carried as one.
+        code, out, calls, _ = run(back[:9] + ['looks good'] + back[10:], [])
+        self.assertEqual((code, calls), (1, []))
+        self.assertIn('do not name taking his approval back', out)
+
+    def test_the_teleprompter_gate_reads_the_same_rules(self):
+        import teleprompter_send as tp
+        said = {'said_at': '2026-11-17T11:06:00Z', 'said_where': 'x', 'session_ref': 'https://claude.ai/code/s', 'via': 'words'}
+        doc = lambda i, **b: {'id': i, 'body': {'kind': 'approve_scripts', 'approved': True, 'piece_id': PIECE, **said, **b}}
+        self.assertTrue(tp.typed_approval(doc('tue-scripts-words-8287846b', words='Approve both scripts')))
+        self.assertFalse(tp.typed_approval(doc('tue-scripts-words-8287846b', words='ready in teleprompter for me')))
+        back = {'id': 'tue-scripts-back-8287846b', 'body': {'kind': 'take_back', 'approved': False, 'piece_id': PIECE, 'words': 'take it back, I want to edit it', **said}}
+        self.assertTrue(tp.typed_take_back(back))
+        self.assertFalse(tp.typed_take_back({**back, 'body': {**back['body'], 'words': 'looks good'}}))
+        self.assertFalse(tp.typed_take_back({**back, 'id': 'tue-scripts-words-8287846b'}))
 
     def scripts_argv(self):
         long = Path(self.tmp.name) / 'long.md'

@@ -1,6 +1,6 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
-import { asWritten, wordsBody, wordsDocId } from './_contracts.js'
+import { asWritten, backDocId, takenBackAt, wordsBody, wordsDocId } from './_contracts.js'
 import type { FiledScript, PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
 import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
@@ -649,6 +649,48 @@ export function scriptsPress(week: string, day: string, pieceId: string, title: 
     done: 'Approved. The scripts go to your Teleprompter once their check passes.' } as PressAction
 }
 
+/** The scripts on every card that holds them, every day (Ruling, Krish, 2026-11-17: "I want the board in a state where I
+ *  can see the script and edit it, and then press approve"): filed and not approved, his Approve scripts review, which
+ *  on an off-day post he records is the card's next action; approved, Edit the scripts (the same review, ending in his
+ *  Approve of the words he leaves) and Take back my approval beside the card's own action. A card that already offers the
+ *  review is left as it is. */
+export function scriptsOnCard(m: ModelInputs, d: DayView, it: ModelItem): ModelItem {
+  if (it.missed || it.stage.key === 'live') return it
+  const pid = it.piece_id ?? (it.type === 'post' && it.kind === 'voiceover' ? postRecord(m, d, it.key) : null)
+  if (!pid) return it
+  const filed = m.scripts?.[pid] ?? []
+  if (!filed.length) return it
+  const all = [it.next, ...(it.others || [])].filter(Boolean) as Body[]
+  if (all.some(a => a.kind === 'press' && isObj(a.scripts))) return it
+  const title = it.title
+  const approval = scriptsApproval(m.picks || [], pid)
+  if (!approval) {
+    if (it.type !== 'post') return it
+    const press = scriptsPress(m.week, d.day, pid, title, filed, m.picks || [])
+    const line = `${it.line.replace(/[.\s]+$/, '')}. ${filed.length > 1 ? 'Both scripts are' : 'The script is'} on the card: read it, edit it if you like, and approve it.`
+    return { ...it, line, next: press as Action, decision: true, others: [...(it.next ? [it.next as unknown as PressAction] : []), ...(it.others || [])] }
+  }
+  const edit = { ...scriptsPress(m.week, d.day, pid, title, filed, m.picks || []), label: filed.length > 1 ? 'Edit the scripts' : 'Edit the script',
+    goes: 'Opens the approved words to read and edit. Your Approve at the end approves the words you leave; edited words go back through the scripts\' check and fresh readers before they reach your Teleprompter.' } as PressAction
+  const back = takeBackPress(m, d.day, pid)
+  return { ...it, others: [...(it.others || []), edit, back] }
+}
+/** His Take back my approval on a piece's scripts: they wait on his Approve again; Teleprompter keeps what it has. */
+export function takeBackPress(m: Pick<ModelInputs, 'picks'>, day: string, pieceId: string): PressAction {
+  const doc = backDocId(day, 'scripts', pieceId)
+  return { kind: 'press', label: 'Take back my approval', collection: 'picks', id: doc, revision: (m.picks || []).find(x => x.doc_id === doc)?.revision ?? 0,
+    body: { kind: 'take_back', what: 'scripts', day, piece_id: pieceId, approved: false }, stamp: ['at'],
+    goes: 'Your approval of these scripts stops counting, and the card asks for your Approve again. Nothing in your Teleprompter is deleted.',
+    done: 'Taken back. The scripts wait on your Approve again.' } as PressAction
+}
+/** The engine record of an off-day post on the card, once it exists: the piece id its option names or the one derived
+ *  from the week and the option (_offdayPiece.ts). */
+function postRecord(m: ModelInputs, d: DayView, key: string): string | null {
+  const optionId = key.replace(/^off-[a-z]{3}-/, '')
+  const raw = rawOption(m, d.day, optionId)
+  return recordedPiece(m, raw) ?? linkedPiece(m, offdayPieceId(m.week, key, raw))
+}
+
 /** An approved off-day post on the board: its kind, its path, where it is and its one next action. */
 /** An off-day post, with his sound picks beside its other presses until it is scheduled: the voice and the music under
  *  it on a voiceover short, the track over a carousel (contract 1.20.0, _audio.ts; Krish, 2026-11-17: "I always want
@@ -758,6 +800,9 @@ export function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updat
     .find(p => /-words/.test(p.doc_id) ? wordsBody(p.doc_id, asWritten(p.body)) : p.updated_by === 'Krish')
   if (!doc) return null
   const b = doc.body
+  // Taken back since (17 Nov): it no longer counts, and the scripts wait on his Approve again.
+  const madeAt = Date.parse(String(b.said_at || b.at || doc.updated_at || ''))
+  if (Number.isFinite(madeAt) && madeAt <= takenBackAt(picks, 'scripts', id)) return null
   const strings = (v: unknown): Record<string, string> => (isObj(v) ? Object.fromEntries(Object.entries(v).filter((e): e is [string, string] => typeof e[1] === 'string')) : {})
   const at = str(b.said_at) ?? str(b.at) ?? str(doc.updated_at)
   const on = at && Number.isFinite(Date.parse(at)) ? new Date(at).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).replace(',', '') : null
@@ -1005,6 +1050,8 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
       ideas.push({ doc_id: `piece-${id}`, piece_id: id, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: d.series, title: cut(h.piece.idea ?? h.piece.thesis, 200),
         why: 'held_piece', line: 'Held: on this day with no Approve of yours.', read: readOf(null, { row: h.piece }), actions: [h.press], stories: null, move: null })
     }
+    // The scripts on every card that holds them (scriptsOnCard; Krish, 2026-11-17).
+    for (let n = 0; n < items.length; n++) items[n] = scriptsOnCard(m, d, items[n])
     const day: ModelDay = { day: d.day, date: d.date, label: d.label, series: SERIES_DAYS.includes(d.day) ? d.series : null, items,
       decisions: items.filter(i => i.decision).length, ideas: ideas.filter(x => x.day === d.day).length, line: '' }
     day.line = dayLine(day)

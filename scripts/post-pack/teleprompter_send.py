@@ -359,6 +359,26 @@ def approved_hashes(body):
 
 
 TYPED_SCRIPTS_ID = re.compile(r'^(mon|tue|wed|thu|fri|sat)-scripts-words(?:-[0-9a-f]{8})?$')
+TAKE_BACK_ID = re.compile(r'^(mon|tue|wed|thu|fri|sat)-scripts-back-[0-9a-f]{8}$')
+# His words name an approval, or taking one back (Ruling, Krish, 2026-11-17; the same as _contracts.ts APPROVAL_WORDS and
+# TAKE_BACK_WORDS): "ready in teleprompter for me" was carried as an approval of Tue 17's voiceover script and was not one.
+APPROVAL_WORDS = re.compile(r'(?:^|[^a-z])(?:approv(?:e|ed|es|ing|al)|sign(?:ed|s)?)(?![a-z])', re.I)
+TAKE_BACK_WORDS = re.compile(r'(?:^|[^a-z])(?:take\b.{0,30}\bback|undo|re-?open|unapprov(?:e|ed)|withdraw(?:n)?|revoke|edit)(?![a-z])', re.I)
+
+
+def _carried(body):
+    """His words carried from a session: verbatim, when and where he typed them, and the session link."""
+    words = body.get('words')
+    return bool(body.get('via') == 'words' and isinstance(words, str) and words.strip() and len(words) <= 2000 and _when(body.get('said_at'))
+                and str(body.get('said_where') or '').strip() and re.match(r'^https://\S+$', str(body.get('session_ref') or '')))
+
+
+def typed_take_back(doc):
+    """His typed words taking his approval of a piece's scripts back (picks/<day>-scripts-back-<8 hex>, kind take_back):
+    read as a withdrawal, as his Take back my approval press is."""
+    body = doc.get('body') if isinstance(doc.get('body'), dict) else {}
+    return bool(TAKE_BACK_ID.match(str(doc.get('id') or '')) and body.get('kind') == 'take_back' and body.get('approved') is False
+                and _carried(body) and TAKE_BACK_WORDS.search(body.get('words')))
 
 
 def typed_approval(doc):
@@ -367,11 +387,8 @@ def typed_approval(doc):
     words with when and where he typed them and the session link. It approves as his press does (the same as
     _teleprompter.ts typedApproval)."""
     body = doc.get('body') if isinstance(doc.get('body'), dict) else {}
-    words = body.get('words')
     return bool(TYPED_SCRIPTS_ID.match(str(doc.get('id') or '')) and body.get('kind') == 'approve_scripts'
-                and body.get('via') == 'words' and body.get('approved') is True
-                and isinstance(words, str) and words.strip() and len(words) <= 2000 and _when(body.get('said_at'))
-                and str(body.get('said_where') or '').strip() and re.match(r'^https://\S+$', str(body.get('session_ref') or '')))
+                and body.get('approved') is True and _carried(body) and APPROVAL_WORDS.search(body.get('words')))
 
 
 def his_approval(piece_id, wanted, cfg, weeks, call=None):
@@ -388,7 +405,7 @@ def his_approval(piece_id, wanted, cfg, weeks, call=None):
             body = doc.get('body') if isinstance(doc.get('body'), dict) else {}
             if str(body.get('piece_id') or '').lower() != piece_id:
                 continue
-            if doc.get('updated_by') != rule['writer'] and not typed_approval(doc):
+            if doc.get('updated_by') != rule['writer'] and not typed_approval(doc) and not typed_take_back(doc):
                 others += 1  # a session wrote it, and it is not his own typed words: never his approval
                 continue
             at = _when(doc.get('updated_at') or body.get('at')) or oldest

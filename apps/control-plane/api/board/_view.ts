@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
-import { wordsBody, asWritten, wordsDocId } from './_contracts.js'
+import { wordsBody, asWritten, wordsDocId, takenBackAt } from './_contracts.js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
 import { makingSteps } from '../_making.js'
@@ -392,6 +392,9 @@ export function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day:
     && String(p.body.piece_id).toLowerCase() === pieceId)
   const b = doc && isObj(doc.body) ? doc.body : null
   if (!b) return null
+  // Taken back since (his take-back press or his words; 17 Nov): this approval no longer counts.
+  const madeAt = Date.parse(String(b.said_at || b.at || ''))
+  if (Number.isFinite(madeAt) && madeAt <= takenBackAt(picks, what, pieceId)) return null
   if (what === 'lock' && (!lockText || lockBodyHash(lockText) !== b.lock_sha256)) return null
   return { words: String(b.words), said_where: String(b.said_where), said_at: String(b.said_at), body: b }
 }
@@ -424,7 +427,9 @@ export function lockStateOf(locks: ViewInputs['locks'], picks: Array<{ doc_id: s
   return { signed: lockSigned(lk?.text), on: lockSignedOn(lk?.text), typed: typed ? { words: typed.words, said_at: typed.said_at } : null }
 }
 export function scriptsStateOf(picks: Array<{ doc_id: string; body: Body; updated_by?: string | null; updated_at?: string | null }>, day: PostedDay, pieceId: string): ScriptsState {
-  const pressed = picks.find(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && isObj(p.body) && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === pieceId)
+  const back = takenBackAt(picks, 'scripts', pieceId)
+  const pressed = picks.find(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && isObj(p.body) && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === pieceId
+    && !(Date.parse(String(p.updated_at || p.body.at || '')) <= back))
   const typed = typedApproval(picks, day, 'scripts', pieceId)
   const at = pressed ? str(pressed.updated_at) ?? (isObj(pressed.body) ? str(pressed.body.at) : null) : null
   // The words he approved, so the approval counts only for them (pieceDecisions, scriptsChanged).
