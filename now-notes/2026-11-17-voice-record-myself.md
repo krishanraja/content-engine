@@ -1,3 +1,0 @@
-Status: Pick the voice on an off-day voiceover ends with Record it myself (Krish, 2026-11-17: "I should be able to choose to record manually myself as well, and then the teleprompter workflow will activate, as opposed to the ElevenLabs workflow"). His pick is written into the post's Claude prompt: Record it myself sends the approved script to his Teleprompter and cuts from his take, and `ve voice clone --voice record-myself` refuses; an ElevenLabs pick names the voice and its --voice.
-Next: Krish picks a voice, or Record it myself, on the next off-day voiceover on the Content Board.
-North Star check (2026-11-17): holds.
