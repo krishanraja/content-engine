@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import featuresConfig from '../../../config/features.json' with { type: 'json' }
 import { TELEPROMPTER_ID, type MakingCut, type MakingPatch } from './_making.js'
+import { namesApproval } from './board/_contracts.js'
 
 // The server's own Teleprompter send: the scripts Krish approved go into his
 // teleprompter.com account, one folder per piece and one script per cut, and
@@ -72,6 +73,8 @@ export function typedApproval(a: { id?: unknown; body?: unknown }): boolean {
   const b = isObj(a?.body) ? a.body : null
   return Boolean(b) && typeof a.id === 'string' && TYPED_SCRIPTS_ID.test(a.id) && b!.kind === 'approve_scripts' && b!.via === 'words'
     && b!.approved === true && typeof b!.words === 'string' && b!.words.trim().length > 0 && b!.words.length <= 2000
+    // His words name an approval (Ruling, Krish, 2026-11-17; board/_contracts.ts APPROVAL_WORDS, the one rule).
+    && namesApproval(b!.words)
     && typeof b!.said_at === 'string' && Number.isFinite(Date.parse(b!.said_at))
     && typeof b!.said_where === 'string' && b!.said_where.trim().length > 0 && typeof b!.session_ref === 'string' && /^https:\/\/\S+$/.test(b!.session_ref)
 }
