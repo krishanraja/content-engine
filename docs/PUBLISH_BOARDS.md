@@ -433,7 +433,8 @@ showed that day (`tests/control-plane/board-state-truth.test.ts`):
 - **His whole production pick, one press each, on every piece before recording** (contract 1.15.0, `lookPresses`):
   **Pick the look** (the treatment, `op: look`), **Pick the motion style** and **Pick the captions** (`op: style`, the
   engine's style route), each with its options, the recommended one first and marked, the one he picked marked, a
-  motion style ve cannot draw yet marked "not ready yet", nothing he said Not this to. At the look step the look leads
+  motion style ve cannot draw yet marked "not ready yet" and listed last (the style press refuses it; Krish, 2026-11-17:
+  "Mark them and build all nine"), nothing he said Not this to. At the look step the look leads
   and the other two wait in the read sheet; at an earlier step (a lock still to sign) all three wait in the read sheet,
   so he can pick before or after he signs; a piece moved to an off day (Tue 17) has the same three, from its own record.
   The recommendation a session makes for a piece is its row's `style` in the week's plan (`production`, `motion`,
@@ -884,7 +885,11 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   reject?: { layer: 'motion' | 'captions' | 'treatment', id } }`, his press only, on a piece scheduled in that week, the same guards
   as the look. A motion id is checked against the bank on main and a caption id against `config/caption-themes.json`
   (400 `unknown_motion` or `unknown_caption`; a look id is checked by its shape, 400 `unknown_look`; 400 `invalid_reject`, 400 `nothing_to_record`; 503 `styles_unavailable`
-  when the bank cannot be read). It writes `content_ideas.meta.style` `{ motion, captions, rejected: { motion, captions, treatment },
+  when the bank cannot be read; 409 `not_drawable_yet` for a pick of a motion style whose `ve_route` says `needs_device`,
+  while a Not this on one is still taken). A style sample or still (`GET /api/board/sign-offs?file=`) is signed for an
+  hour and handed out again by the instance for 25 minutes, with `Cache-Control: private, max-age=1800`, so a still he
+  hovers again costs no Drive call (Krish, 2026-11-17: "The motion screenshots take so long to load when I hover over
+  them"). It writes `content_ideas.meta.style` `{ motion, captions, rejected: { motion, captions, treatment },
   by, at }` beside `meta.look`, read and written guarded on the row's `updated_at` (`patchMeta`), so a write that lands
   in between is kept, never overwritten (409 `piece_busy` when they never stop); the `content_ideas` trigger bumps the
   week's `board_signal`. "Not this" on the picked style takes the pick away; a later Yes takes a style back off the
