@@ -1059,6 +1059,8 @@ def cmd_voice_clone(args) -> int:
         else:
             print(f"  clone: {clone['name']} ({clone['platform']}, voice id {clone['voice_id']}), approved by Krish on "
                   f"{clone['approved_on']} (registry sha256 {clone['approved_sha256'][:12]})")
+        if doc.get('caution'):
+            print(f"  caution: {doc['caution']}")
         print(f"  model: {doc['model']}; output: {doc['output_format']}, made into {doc['take']}.wav for ve ingest")
         print(f"  script: {doc['script']['file']} (sha256 {doc['script']['sha256'][:12]}, {doc['script']['words']} words)")
         print(f"  cost: {doc['characters']} characters, about {credits['estimate']} ElevenLabs credits ({credits['provider']}, "

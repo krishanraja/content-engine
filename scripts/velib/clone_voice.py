@@ -161,9 +161,13 @@ def plan(spec: dict, script_path: str | Path, *, cfg: dict | None = None, fetch=
                 clone['speed'] = mine['speed']
     text, script_sha, words = signed_text(script_path)
     characters = len(text)
+    # Whether the voice has held on a whole script (config/voice-bank.json whole_script); printed with the plan.
+    bank_entry = next((v for v in bank['voices'] if v['voice_id'] == clone['voice_id']), None)
+    caution = voice_bank.whole_script_warning(bank_entry) if bank_entry else None
     doc = {
         'schema': PLAN_SCHEMA, 'ruling': cfg['ruling'], 'piece': spec['piece_id'], 'publish_day': spec.get('publish_day'),
         'take': take, 'cuts': sorted(spec['cuts']),
+        **({'caution': caution} if caution else {}),
         'clone': clone,
         'tool': tool,
         **({'speed': clone['speed']} if clone.get('speed') else {}),
