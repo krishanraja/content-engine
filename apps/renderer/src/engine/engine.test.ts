@@ -219,6 +219,34 @@ describe('the hook is the intro', () => {
   })
 })
 
+describe('the logo only on the title frame and the close (Ruling, Krish, 2026-11-17)', () => {
+  it('a wide cut with bodyLogo false draws no mark tile and no header logo, and keeps its series pill', () => {
+    const props = { ...EngineRenderPropsSchema.parse({ ...fixture, bodyLogo: false }), aspect: '16:9' as const }
+    expect(props.bodyLogo).toBe(false)
+    for (const layout of ['STAGE', 'P1', 'P3', 'P6', 'F3'] as const) {
+      const beat = { ...props.beats[0]!, layout }
+      const nodes = elements(BrandFrame({ props, beat, frame: 0 }))
+      expect(nodes.filter((node) => node.type === MarkTile)).toHaveLength(0)
+      if (layout === 'STAGE') {
+        const header = nodes.filter((node) => node.type === StageHeader)
+        expect(header).toHaveLength(1)
+        const drawn = elements(StageHeader({ props }))
+        expect(drawn.some((node) => (node.props as { image?: unknown }).image === props.brand.logo)).toBe(false)
+        expect(drawn.some((node) => node.props.children === props.series.label)).toBe(true)
+      } else {
+        expect(nodes.filter((node) => node.type === ChannelPill)).toHaveLength(1)
+      }
+    }
+  })
+
+  it('without bodyLogo the wide cut keeps its house dress, so older pieces render as signed', () => {
+    const props = { ...EngineRenderPropsSchema.parse(fixture), aspect: '16:9' as const }
+    const beat = { ...props.beats[0]!, layout: 'P1' as const }
+    expect(elements(BrandFrame({ props, beat, frame: 0 })).filter((node) => node.type === MarkTile)).toHaveLength(1)
+    expect(elements(StageHeader({ props })).some((node) => (node.props as { image?: unknown }).image === props.brand.logo)).toBe(true)
+  })
+})
+
 describe('vertical video carries no wordmark (Ruling, Krish, 2026-11-11)', () => {
   it('draws no mark tile, series pill or header on any 9:16 beat, of any format or layout', () => {
     const base = { ...EngineRenderPropsSchema.parse(fixture), aspect: '9:16' as const }

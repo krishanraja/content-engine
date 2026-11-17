@@ -37,8 +37,10 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
         audio and outro"; the house mark sits at the start of every beat, Krish 2026-09-26). */}
     {/* Vertical video carries no wordmark, mark tile or series pill (Ruling, Krish, 2026-11-11: "I don't think they're
         necessary and should be permanently removed from all templates"). The wide cut keeps them. */}
+    {/* The logo only on the title frame and the close (Ruling, Krish, 2026-11-17): with bodyLogo false the wide cut
+        keeps its series pill and draws no mark tile and no header logo. */}
     {props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={house} /> : <>
-      <MarkTile props={house} />
+      {props.bodyLogo === false ? null : <MarkTile props={house} />}
       <ChannelPill props={house} beat={beat} />
     </>}
     {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);

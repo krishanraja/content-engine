@@ -13,6 +13,20 @@
   },
   "applies_from": "2026-11-16",
   "applies_from_why": "Fri 13 Nov is made on an engine frozen at its storyboard (F33); the palette binds every piece dated from Mon 16 Nov.",
+  "logo_rule": {
+    "ruled": "Ruling (Krish, 2026-11-17): the logo appears on no cut except the animated title frame and the final close card, wide and tall alike, so the opening seconds belong to the hook.",
+    "words": [
+      "Krish, 2026-11-10, of the wide cut's mark tile: \"I don't get why that icon even appears ... Get rid of it.\"",
+      "Krish, 2026-11-17: \"we decided to eliminate all logos from everywhere other than the final animated close card and the title frame that animates as I introduce the title of the piece (like we did in the ai-music video) so we can have focuson the hook in the opening seconds\"; then \"yes, change the brand rules\""
+    ],
+    "logo_on": ["title_frame", "close"],
+    "title_frame": "The one full-frame title in the pause after he says the piece's title, the stacked logo underneath it (Wed 11 Nov, AI music: docs/plans/2026-11-11-wednesday/short-composite/brand_frames.py title_full). Never before the hook, and never a second intro.",
+    "from": "2026-11-23",
+    "from_why": "The pieces in production in the week of 16 Nov keep the engine their storyboard was signed on (F33); every piece published from Mon 23 Nov carries no logo in its body.",
+    "before": {
+      "long_cut": {"icon": "tile"}
+    }
+  },
   "days": {
     "monday": {
       "kind": "series",
@@ -185,7 +199,7 @@
         "opening": "hook",
         "sting": "none",
         "body": {
-          "icon": "tile",
+          "icon": false,
           "wordmark": false,
           "series_pill": "section_beats"
         },
@@ -203,7 +217,7 @@
         "opening": "hook",
         "sting": "none",
         "body": {
-          "icon": "tile",
+          "icon": false,
           "wordmark": false,
           "series_pill": false
         },

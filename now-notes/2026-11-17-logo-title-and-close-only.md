@@ -1,0 +1,4 @@
+Status: The logo appears on a cut only on the animated title frame and the close card, wide and tall alike, for every piece published from Mon 23 Nov (config/brand-palette.json logo_rule). ve's wide cut drops its mark tile and stage header logo from that date (compile bodyLogo false), and ve qc then proves the mark absent; pieces of the week of 16 Nov render as signed.
+Changed: Ruling (Krish, 2026-11-17): the logo only on the final animated close card and the title frame that animates as he introduces the title, "so we can have focuson the hook in the opening seconds".
+Next: Build the animated title frame into ve (the AI music piece's full-frame title with the stacked logo underneath) so it can appear on ve cuts; until then a ve cut shows the logo on its close alone.
+North Star check (2026-11-17): holds.

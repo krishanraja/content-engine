@@ -316,6 +316,7 @@ def inputs_from_props(props: dict) -> dict:
     # The plate's frame under file frame F of a beat is F - the beat's shift + the segment's trim.
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
+                body_logo=props.get('bodyLogo') is not False,
                 edl=edl, joins=joins, caption_style=props.get('captionStyle') or 'house',
                 plate_video=(props.get('segments') or [{}])[0].get('src') if len(props.get('segments') or []) == 1 else None,
                 plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)),
@@ -352,6 +353,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            captions_drawn_by: str = 'faster-whisper', caption_ocr=None, fps: float = 30,
            caption_style: str = 'house', face_detector=None, plate_video: str | None = None,
            plate_offset: int = 0, opening: dict | None = None, publish_day: str | None = None,
+           body_logo: bool = True,
            onscreen_reader=None) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
@@ -371,7 +373,8 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         'motion.periodicity': {'value': move['loop_period_s'], 'target': 'no repeating loop 2-10 s', 'pass': move['loop_period_s'] is None},
     }
     # The vertical cut proves the mark is absent instead of present (Ruling, Krish, 2026-11-11).
-    brand_row = 'brand.no_mark' if aspect == '9:16' else 'brand.mark_tile'
+    # So does a wide cut whose body carries no logo (props bodyLogo false; Ruling, Krish, 2026-11-17).
+    brand_row = 'brand.no_mark' if aspect == '9:16' or not body_logo else 'brand.mark_tile'
     for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', brand_row, 'motion.cue_sync', 'audio.bed', 'audio.bed_continuity',
                  'opening'):
         checks[name] = {'value': None, 'target': 'see config/ve/crew', 'pass': None, 'status': 'not_run'}
@@ -397,10 +400,12 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         ('audio.bed', dialogue_master is not None, lambda: qc_audio.bed(dialogue_master)),
         ('audio.bed_continuity', dialogue_master is not None, lambda: qc_audio.continuity(path, dialogue_master)),
         ('captions.ocr', pages is not None and region is not None, lambda: qc_captions.ocr(path, pages, region)),
-        # The wide cut wears the mark tile; the vertical cut must not (Ruling, Krish, 2026-11-11).
-        ('brand.mark_tile', mark_png is not None and beats is not None and aspect is not None and aspect != '9:16',
+        # The wide cut wears the mark tile; the vertical cut must not (Ruling, Krish, 2026-11-11). From the logo rule's
+        # date (props bodyLogo false; Ruling, Krish, 2026-11-17: the logo only on the title frame and the close) the
+        # wide cut must not either.
+        ('brand.mark_tile', mark_png is not None and beats is not None and aspect is not None and aspect != '9:16' and body_logo,
          lambda: qc_brand.mark_tile(path, mark_png, beats, aspect)),
-        ('brand.no_mark', mark_png is not None and beats is not None and aspect == '9:16',
+        ('brand.no_mark', mark_png is not None and beats is not None and aspect is not None and (aspect == '9:16' or not body_logo),
          lambda: qc_brand.no_mark(path, mark_png, beats, aspect)),
         ('motion.cue_sync', events is not None and slots is not None, lambda: qc_cues.cue_sync(path, events, slots)),
         ('words.lost', bool(heard) and script is not None and take_words is not None,
