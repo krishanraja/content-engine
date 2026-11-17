@@ -1,27 +1,29 @@
-This month, America held 41 local votes on new AI data centres. All but one went against them. That's the count from Ballotpedia, which tracks American elections. So if towns keep saying no, where does AI get built now?
+More Americans object to an AI data centre next door than to a nuclear power plant. And if your business pays for AI, that grudge could hold up new features in the tools you use. It could push up their price, too. So if towns say no, where does AI get built now?
 
-I've been watching this one closely, because it changes what AI will look like for all of us. So let me break it down in three steps. Why people are voting no. How the builders are trying to get round it. And what that does to the AI you'll be using.
+I've been digging into this all week, and the answer surprised me. The companies building AI are learning to need less from the towns that don't want them. So first, I'll show you why towns say no. Then the three tricks they're using to get round them. And then what that means for you.
 
-Step one is why people vote no. A data centre is a giant building full of computers that run AI. Those computers need a lot of power from the local power network. When the power company builds new lines and power plants for a data centre, someone has to pay. And people fear that cost ends up on their own electricity bill.
+A data centre is a giant warehouse full of computers. It's where tools like ChatGPT really do their thinking. The big ones use as much electricity as a small city. To feed one, the power company often has to build new power lines and power plants. And the cost of those can end up on everyone's electricity bill. So people worry they'll be the ones paying for it.
 
-So this month, the fight went onto the ballot. On the day of the midterm elections, people also voted on local rules for new data centres. Nearly every one of those votes went against the builders.
+Seven in ten Americans told the polling firm Gallup they'd object to one nearby. Only about half object to a nuclear plant. Losing to a nuclear plant is quite an achievement for a building that mostly just hums. Mind you, it's a very expensive hum.
 
-And the builders noticed. Two days later, OpenAI, which makes ChatGPT, promised to pay the full cost of powering its own data centres. It also promised to ask local people first, and to publish its building plans. So AI stopped being a tech story. It became a kitchen-table story, about the power bill.
+Then on the third of November, America held its midterm elections, the big vote halfway through a president's term. Ballotpedia, which tracks American elections, counted 41 local votes on data centres. They were about things like bans, pauses and limits. And in all but one, voters backed the limits.
 
-Step two is the ways round. Picture a giant data centre turned away at the door, trying to get back in by getting smaller. The builders have three ways to do that, and each one has a catch.
+Two days later, OpenAI, which makes ChatGPT, made a big promise. It said it would pay the full cost of the new power its data centres need. That way, the neighbours' bills don't go up. It's a good promise. It's also the same promise it made in January. Which suggests a promise alone isn't winning the towns round.
 
-Way round one is to bring your own power. Some builders now plan their own power plants, right next to the data centre. That way they never touch the town's power network. Oracle, which rents out computing for AI, signed a deal for gas generators across sites in Texas. But here's the catch. A gas plant brings its own fight, about noise and the air. And it still needs a town that says yes.
+Now the three tricks, and this is the bit I love. Picture the data centre as the neighbour no one wants. It keeps getting turned away. So each time, it comes back needing less from the town. And each trick comes with a catch.
 
-Way round two is to go small and spread out. Instead of one giant campus, you build lots of small data centres. Each one sits next to a solar or wind farm that makes more power than it can sell. The catch is that a small site can't train a brand new AI, which takes a giant site. So small sites mostly run the AI that already exists.
+Trick one, it brings its own power. Some builders now plan gas power plants right beside the data centre, so they never touch the town's power lines. It's like a neighbour who promises not to touch your electricity, then builds a power station in their garden. That's the catch. Neighbours don't love a gas plant either.
 
-Way round three is to shrink the AI onto your own device. Phones and laptops can now run small AI tools that used to need a data centre. And every job your phone does is one less job for a data centre. Apple's newer phones already run some of their AI on the phone itself. The catch is that a small AI does less. It's great for a quick email, and less great for the hard stuff.
+Trick two, it splits up and moves out of town. Instead of one giant warehouse, builders put little ones next to solar and wind farms. Those farms often have power to spare, so the little site uses it up. The catch is that a little site can only run the AI tools that already exist. Running a tool is a small job, like answering your question. Building the next, smarter AI is a giant job, with thousands of computers working together in one place. That still takes a giant warehouse.
 
-Now, step three is what that does to AI. I think each way round pushes AI in the same direction. It gets smaller, closer to you, and it brings its own power. The giant buildings won't vanish. But I reckon more of the AI you use will run somewhere small and nearby, or in your pocket. And the AI that needs a giant building will be the AI you pay most for.
+Trick three is the sneakiest. It needs nothing from the town at all, because the AI moves into your pocket. Phones and laptops can now run small AI tools that once needed a data centre. Apple's newer iPhones already do some of their AI on the phone itself. And no one holds a town vote about your phone. The catch is that a pocket-sized AI does less. It's great for a quick email, and less great for a long, tricky report.
 
-And that changes what you're buying. When you pay for an AI tool, you're also paying for where it runs. If that place is stuck in a fight with its town, your tool can arrive later or cost more. If it runs on your own laptop, that fight never touches it.
+Now, where this is heading. Put the three tricks together and you get a trend. AI is spreading out, finding its own power, and some of it is shrinking right into your pocket. The giant warehouses won't disappear. So the newest, smartest AI is still stuck in the fight. And I reckon fights mean delays.
 
-So if you remember one thing, make it this. Where AI gets built is now being decided by voters and power bills, not just by tech firms. And that is pushing AI to get smaller and closer to you.
+So here's what that changes for you. When you pay for an AI tool, you're also paying for the warehouse it runs in. If new warehouses get held up, there's less computer power to go round. And when there's less to go round, I'd expect prices to go up and new features to come later. But the simple jobs your own laptop or phone can do dodge that fight completely.
 
-If I ran a business, I'd ask my AI supplier one question this week. Where are you building the data centres my tools will run on? If it's a town that's fighting them, I'd expect delays and higher prices.
+So if you remember one thing, make it this. Towns now get a real say in where AI gets built. And that's pushing AI to spread out, find its own power and move closer to you.
+
+If I ran a team, I'd do one thing this week. I'd ask whoever sells us our AI tools where their new data centres are being built. If they can't say, or it's a town that's fighting them, I'd budget for a price rise.
 
 The full story is free at makeyourmindup.ai.
