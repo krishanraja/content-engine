@@ -148,6 +148,16 @@ export function attachOverlay<T extends { day: string; piece_id: string | null }
   })
 }
 
+/** The week's work on file by scope (a piece id, or day:<Monday>/<day>), so every card on every day reads its own
+ *  sessions and materials through one rule (workOf in _weekModel.ts; Ruling, Krish, 2026-11-17). */
+export function workByScope(overlay: Overlay | null): Record<string, { sessions: ViewSession[]; materials: ViewMaterial[] }> {
+  const out: Record<string, { sessions: ViewSession[]; materials: ViewMaterial[] }> = {}
+  const at = (scope: string) => (out[scope] ??= { sessions: [], materials: [] })
+  for (const s of overlay?.sessions || []) if (obj(s) && s.scope) at(String(s.scope)).sessions.push(sessionOf(s))
+  for (const m of overlay?.materials || []) if (obj(m) && m.scope) at(String(m.scope)).materials.push(materialOf(m))
+  return out
+}
+
 type Rpc = { rpc(fn: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: unknown }> }
 /** The week's overlay in one read, or null when the store cannot be read (the view then says no sessions and no materials). */
 export async function readOverlay(db: Rpc, week: string, pieceIds: string[]): Promise<Overlay | null> {

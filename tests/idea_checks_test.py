@@ -313,6 +313,32 @@ class TickTest(unittest.TestCase):
             self.assertEqual(len(held), 1)
             self.assertTrue(held[0].startswith('refused: mon-3 is on Acme'))
 
+    def test_place_refuses_a_piece_id_the_engine_has_no_record_of(self):
+        # 13 Nov: the habits idea was placed as 701a2c55, which the engine never held; every session on it got
+        # piece_not_found and its card showed none of their work (Krish, 17 Nov: "the board absolutely does not show that").
+        import inspiration_act as act
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            folder = root / 'docs' / 'plans' / '2026-11-23-week'
+            folder.mkdir(parents=True)
+            (folder / 'ideas.json').write_text(json.dumps({'week_start': '2026-11-23', 'days': {}, 'offdays': {}}))
+            idea = {'action_id': TICK, 'week': '2026-11-23', 'day': 'tue', 'piece_id': PIECE,
+                    'option': {'so_what': 'x', 'why_now': 'y', 'source': {'label': 'l', 'url': 'https://x.invalid'}}}
+            path = root / 'idea.json'
+            path.write_text(json.dumps(idea))
+
+            def ask(method, path_, body=None):
+                if path_.startswith('/api/content-ideas'):
+                    raise RuntimeError(f'{method} {path_} answered 404: not_found')
+                return {'action': {'kind': 'make_piece'}, 'card': {'id': CARD, 'name': 'a-reel.mp4'}}
+            saved = (act.ROOT, act.ask)
+            act.ROOT, act.ask = root, ask
+            try:
+                self.assertEqual(act.cmd_place(type('A', (), {'idea_file': str(path)})), 2)
+            finally:
+                act.ROOT, act.ask = saved
+            self.assertEqual(json.loads((folder / 'ideas.json').read_text())['offdays'], {}, 'nothing is placed')
+
     def test_place_writes_the_refusal_onto_his_idea_and_offer_says_it_first(self):
         import inspiration_act as act
         with tempfile.TemporaryDirectory() as tmp:
@@ -331,7 +357,8 @@ class TickTest(unittest.TestCase):
             path = root / 'idea.json'
             path.write_text(json.dumps(idea))
             series = {'series': [{'slug': 'follow_the_money', 'cadence': 'Mondays', 'options': [], 'scheduled': []}]}
-            answers = {'/api/inspiration/actions': {'action': {'kind': 'make_piece'}, 'card': {'id': CARD, 'name': 'a-reel.mp4'}}, '/api/week/options': series}
+            answers = {'/api/inspiration/actions': {'action': {'kind': 'make_piece'}, 'card': {'id': CARD, 'name': 'a-reel.mp4'}}, '/api/week/options': series,
+                       '/api/content-ideas': {'ok': True, 'idea': {'id': PIECE}}}
             sent = []
 
             def ask(method, path_, body=None):

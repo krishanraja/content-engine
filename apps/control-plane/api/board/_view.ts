@@ -18,8 +18,8 @@ import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt
 import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, offdayApproval, offdayList, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
 import { HELD_CHANGED, HELD_TITLE, approvedLabel, approvedWhen, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
-import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
-import { lockRead, newestScripts, pieceDecisions, type FiledScript, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
+import { attachOverlay, readOverlay, withWriteBack, workByScope, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
+import { lockRead, newestScripts, pieceDecisions, scriptSection, type FiledScript, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
 import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
@@ -945,7 +945,7 @@ export function buildView(i: ViewInputs): WeekView {
   }
   // What went out or is on its way around the week, so an idea that retells it leaves the ideas board (contract 1.17.0).
   const recentOut = recentOutOf({ week: i.week, ideas: i.ideas, plans: i.plans, pieces: i.pieces }, days, i.all_items ?? null, i.recent_pieces ?? [])
-  const built = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut, picks: i.picks, decisions,
+  const built = weekModel(days, { week: i.week, work: workByScope(i.overlay ?? null), today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut, picks: i.picks, decisions,
     scripts: i.scripts ?? {}, lockReads: Object.fromEntries(Object.keys(decisions).map(id => {
       const lk = Object.values(i.locks).find(t => t && lockPieceId(t) === id)
       // Signed by its own last line or by his words on the board (signedLocks counts both; 17 Nov: Tue 17 was signed in his
@@ -1057,10 +1057,12 @@ export async function readFiledScripts(db: SupabaseClient, overlay: Overlay | nu
   const { readMaterial } = await import('../_pieceStore.js')
   for (const id of pieceIds) {
     const found = newestScripts(mats.filter(m => m.scope === id && m.storage === 'text'), id)
-    const read = await Promise.all(found.map(async ({ cut, m }) => {
+    const read = await Promise.all(found.map(async ({ cut, m, both }) => {
       try {
         const got = await readMaterial(db as never, m.id)
-        const text = got.kind === 'text' && typeof got.body.content === 'string' ? got.body.content.trim() : ''
+        const whole = got.kind === 'text' && typeof got.body.content === 'string' ? got.body.content.trim() : ''
+        // One material holding both cuts gives each cut only its own words, under its heading (17 Nov, Wed 18).
+        const text = both ? (scriptSection(whole, cut) ?? '') : whole
         return text ? { cut, id: m.id, title: m.title, text, at: m.at } : null
       } catch { return null }
     }))

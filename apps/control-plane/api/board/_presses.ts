@@ -550,7 +550,15 @@ export async function placeOffday(db: SupabaseClient, ctx: { week: string; id: s
   for (let tries = 0; tries < 2; tries++) {
     const read = await db.from('content_ideas').select('id, state, scheduled_for, lane_slot, meta, buried_at, updated_at').eq('id', pieceId).maybeSingle()
     if (read.error) return { ok: false, error: 'the idea could not be read' }
-    if (!read.data) return { ok: false, error: 'the idea is not in the engine' }
+    if (!read.data) {
+      // An off-day option he approved whose record was never made (Tue 17 Nov's habits voiceover, 701a2c55: placed on
+      // 13 Nov with an id the engine never held, so every session on it got piece_not_found): his Approve makes it, with
+      // the id the option already names, then puts it on its day as below. A Skip makes nothing.
+      if (body.approved !== true) return { ok: true, making: null, changed: false }
+      const made = await offdayRecord(db, pieceId, body, now)
+      if (!made) return { ok: false, error: 'the idea is not in the engine, and its record could not be made' }
+      continue
+    }
     const row = read.data as Record<string, any>
     const meta: Body = isObj(row.meta) ? row.meta : {}
     const prev = isObj(meta.making) ? meta.making as unknown as Making : null
@@ -591,6 +599,21 @@ export async function placeOffday(db: SupabaseClient, ctx: { week: string; id: s
     if (written.data?.length) return { ok: true, making: (update.meta as Body).making as Making ?? prev, changed: true }
   }
   return { ok: false, error: 'the idea changed twice while it was being put on its day' }
+}
+
+/** The record of an off-day piece he approved that has none, under the id its option names: seeded, as every idea row
+ *  starts (content-ideas.ts), with the option's own words. The day and its making are written by placeOffday's update
+ *  under the ideas gate, never here. */
+export async function offdayRecord(db: SupabaseClient, pieceId: string, body: Body, now: string): Promise<boolean> {
+  const text = (v: unknown, cap: number) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, cap) : null)
+  const idea = text(body.title, 500) ?? text(body.folder_title, 500)
+  if (!idea) return false
+  const made = await db.from('content_ideas').insert({
+    id: pieceId, idea, thesis: text(body.so_what, 2000), source_type: 'week_research', source_snippet: text(body.so_what, 280) ?? idea.slice(0, 280),
+    source_captured_at: now, state: 'seeded', origin: 'agent', distribution: [], confidence: 0,
+  }).select('id')
+  // Made by another press a moment ago is as good as made here.
+  return !made.error || /duplicate key/i.test(String(made.error.message || ''))
 }
 
 /** His press on an off-day option he records: the piece on its day (placeOffday), then, on an Approve, the exact words

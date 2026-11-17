@@ -2365,6 +2365,8 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `function decisionsText(p: PieceDecisions): string`
 - `interface FiledScript`
 - `function scriptCut(title: string): 'long' | 'short' | null`
+- `function scriptCuts(title: string): Array<'long' | 'short'>`
+- `function scriptSection(text: string, cut: 'long' | 'short'): string | null`
 - `function newestScripts<M extends { id: string; title: string; role?: string | null; at?: string | null; where?: string;…`
 - `function lockRead(text: string | null | undefined): { so_what: string | null; story: string | null }`
 
@@ -2691,6 +2693,7 @@ One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Rul
 - `async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null>`
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
+- `async function offdayRecord(db: SupabaseClient, pieceId: string, body: Body, now: string): Promise<boolean>`
 - `async function placePick(db: SupabaseClient, ctx: { week: string; day: string; body: Body; now: string }): Promise<{ st…`
 - `function ideaReport(week: string, id: string, body: Body, now: string)`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
@@ -2998,7 +3001,10 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function offdayHead(route: MakeRoute | null): string`
 - `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
+- `function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead`
 - `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
+- `function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null`
 - `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
 - `function primaryUrl(raw: Body | null, fallback: unknown = null): string | null`
 - `function citesOf(raw: Body | null): { urls: string[]; parts: string[] }`
@@ -3025,6 +3031,7 @@ What every prompt the board copies out says about reporting back, and what the b
 - `interface ViewMaterial`
 - `interface Overlay`
 - `function attachOverlay<T extends { day: string; piece_id: string | null }>(week: string, days: T[], overlay: Overlay | …`
+- `function workByScope(overlay: Overlay | null): Record<string, { sessions: ViewSession[]; materials: ViewMaterial[] }>`
 - `async function readOverlay(db: Rpc, week: string, pieceIds: string[]): Promise<Overlay | null>`
 
 ### `apps/control-plane/api/board/_yes.ts`
