@@ -1,0 +1,4 @@
+Status: Every past production failure now prints as one technical watch-out for the maker reading it (`python3 scripts/check_failures.py --watch short_video,long_video`, read at ve's S0 and in produce-video), with what stops it now or that nothing does. The 6 to 8 Nov proactive-AI faults are registered (F53 to F56), a smeared picture fails `ve qc picture.smeared` and hand-built filing (`scripts/frame_smear.py`), the full verify runs every guard's own test, and Krish closed F39 and the 3D styles entry as solved (both now guarded by existing gates).
+Changed: Krish, 2026-11-17: "i need to turn this in to surgical, precise, technical watch outs for my next batch of productions", then "yes, go ahead and close the gaps in content-engine".
+Next: On a machine holding the engine key, point `config/ve/lab.json` at the AI music short take (Krish, 2026-11-17: "character.ai or ai music are good") and re-run `ve lab` on it.
+North Star check (2026-11-17): holds.

@@ -335,5 +335,18 @@ class StampsNeverCarryTheHero(unittest.TestCase):
         self.assertIn('motion.stamp_not_hero', codes_for(spec))
 
 
+class AWholeCutBedsOnTheEpisodeBed(unittest.TestCase):
+    """F24 (Thursday 5 Nov's preview had a flat continuous bed and no outro lift): a finished cut's bed is episode_bed;
+    only a proof excerpt may run a plain bed. The register's guard named a placeholder command until 17 Nov."""
+
+    def test_a_whole_cut_on_a_flat_bed_is_refused(self):
+        self.assertIn('sound.whole_cut_bed', codes_for(mutate(whole_tall)))
+
+    def test_the_episode_bed_passes_and_a_proof_excerpt_may_run_plain(self):
+        episode = mutate(lambda s: (whole_tall(s), s['audio']['bed'].update(mode='episode_bed')))
+        self.assertNotIn('sound.whole_cut_bed', codes_for(episode))
+        self.assertNotIn('sound.whole_cut_bed', codes_for(FIXTURE))
+
+
 if __name__ == '__main__':
     unittest.main()

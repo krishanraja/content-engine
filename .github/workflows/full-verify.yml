@@ -93,6 +93,14 @@ jobs:
           python tests/ve_composition_test.py
           python tests/ve_qc_modules_test.py
           python tests/ve_qc_captions_where_test.py
+      # Every guard in the failure register proved by running its own test, not only found by its marker
+      # (scripts/check_failures.py; Krish, 2026-11-17: close the gaps). A guard whose test fails names its failure here.
+      - name: Every failure guard's behavioural test (config/failures.json)
+        if: runner.os == 'Linux'
+        env:
+          VE_REQUIRE_OCR: '1'
+          INCIDENTS_OFFLINE: '1'
+        run: python scripts/check_failures.py --run
 
   browser-buttons:
     # Every Download, Copy picture and Copy button on a built publish page,
