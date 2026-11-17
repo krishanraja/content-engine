@@ -18,6 +18,6 @@ And then Apple is going the other way entirely. Instead of finding a town, it's 
 
 So here's the whole story in one breath. A town said no. A mayor got sacked. A shed kept going up. And the builders went looking for ways round. But honestly, I don't think the big question is where AI gets built. It's who pays for the power. Piqua decided it wasn't going to be them. OpenAI says it'll be OpenAI. And I reckon when the builders end up paying more for power, they pass it on. Guess to who? You, at your next renewal. As for Meta's shed, it's still going up in a town that just banned it. I'd love to be at Piqua's next council meeting.
 
-Here's what I'm going to do. Next time we renew an AI tool, I'll ask our supplier where its new data centres are being built. And who pays for their power. And if the answer is a town that's just said no, I'll budget for a price rise.
+Next time we renew an AI tool, I'll ask our supplier where its new data centres are being built. And who pays for their power. And if the answer is a town that's just said no, I'll budget for a price rise.
 
 The full story is free at makeyourmindup.ai.
