@@ -195,6 +195,8 @@ export interface WeekModel {
 /** What the model reads besides the view's days: the week, today, the week's plan and the pieces' rows. */
 export interface ModelInputs {
   week: string
+  /** The work on file by scope: each piece id, and day:<Monday>/<day> (_writeBack.ts workByScope). */
+  work?: Record<string, { sessions: Array<{ by: string; state: string; step: string | null; doing: string | null; last_at: string }>; materials: Array<{ title: string; at: string | null; where?: string }> }>
   today: string
   ideas: Body | null
   /** Every plan beside this week's, by Monday (an item carried from another week keeps its words there). */
@@ -392,7 +394,7 @@ function storyLines(story: StoryState | null | undefined): string {
 /** The one Claude prompt for an item: what it is, where it stands, how it is made and how to report back to the board.
  *  Contract 1.17.0: it asks for his notes first (`notes`, saved as his comment on the day) and opens claude.ai/code with
  *  the prompt filled in (`open`). */
-export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null, decisions: PieceDecisions | null = null): ModelAction {
+export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null, decisions: PieceDecisions | null = null, reportAs: string | null = null): ModelAction {
   const what = it.piece_id ? `the ${DAY_WORD[it.day]} ${it.date} piece ${it.piece_id}` : `the ${DAY_WORD[it.day]} ${it.date} off-day post ${it.key} (${it.kind_label})`
   const growth = !it.piece_id
   const prompt = `You are picking up ${what} of the Make Your Mind Up content engine with no prior context: "${it.title}". `
@@ -401,7 +403,7 @@ export function itemPrompt(week: string, it: { day: PostedDay; date: string; tit
       ? offdayHead(route)
       : 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules. Work freely; when you need Krish, ask him the one question that changes the work most.\n\n')
     + storyLines(story)
-    + writeBack({ pieceId: it.piece_id, week, day: it.day, step, decisions })
+    + writeBack({ pieceId: it.piece_id ?? reportAs, week, day: it.day, step, decisions })
   const base = thoughtPress(it.day, stepAnchor(step))
   const save: PressAction = { ...base, label: 'Your notes for Claude', done: 'Saved on the board, and in the prompt.',
     body: { ...base.body, use: 'claude_notes', title: cut(it.title, 300), ...(it.piece_id ? { piece_id: it.piece_id } : { item: it.key }) },
@@ -454,7 +456,7 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const missed = d.who === 'missed'
   const raw = rawOption(m, d.day, d.piece_id)
   const row = m.pieces.find(x => String(x.id).toLowerCase() === d.piece_id) ?? null
-  const read = readOf(raw, { row, research: [...(d.path?.materials || []).map(x => x.title), ...d.materials.map(x => x.title)] })
+  const read = withWork(readOf(raw, { row, research: [...(d.path?.materials || []).map(x => x.title), ...d.materials.map(x => x.title)] }), m, [d.piece_id, dayScope(m.week, d.day)])
   const where = stageOf(PIECE_PATH, done)
   const label = where.label
   const base = { key: `piece:${d.piece_id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: d.series,
@@ -497,11 +499,9 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   // as on a placed piece (F47). Wed 18 Nov sat at "Make the storyboard and the script together" with both scripts filed
   // (Krish, 2026-11-17: "the board just has no idea of the work done or what next steps are (I need to approve the
   // scripts)").
-  const filed = m.scripts?.[d.piece_id] ?? []
-  const scriptsMade = m.decisions?.[d.piece_id]?.items.find(x => x.key === 'scripts')?.made === true
-  if (d.path?.current === 'board' && filed.length && !scriptsMade && !recorded && !missed) {
-    const press = scriptsPress(m.week, d.day, d.piece_id, cut(d.title, 150), filed, m.picks || [])
-    const readyLine = `${label}. ${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve: ${filed.map(f => f.title).join('; ')}.`
+  const ready = !recorded && !missed && d.path?.current === 'board' ? scriptsReady(m, d.day, d.piece_id, d.title, label) : null
+  if (ready) {
+    const { press, line: readyLine } = ready
     return { ...base, line: readyLine, next: press as Action, decision: true,
       others: [itemPrompt(m.week, { ...base, line: readyLine }, 'board', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction, ...picks] }
   }
@@ -537,11 +537,10 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const done = out ? PIECE_PATH.length : branded ? (lookPicked ? (scriptsOk ? 3 : 2) : 1) : 0
   // What it says now: the signed lock, never the idea row it started from (F47).
   const said = m.lockReads?.[p.id]
-  const filed = m.scripts?.[p.id] ?? []
   const missed = !out && d.date < m.today
   const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
     title: cut(p.title, 200), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
-    read: withLock(readOf(null, { row }), said), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
+    read: withWork(withLock(readOf(null, { row }), said), m, [p.id]), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
     stories_planned: null, others: [] as PressAction[] }
   const step = decided?.next_step ?? (branded ? 'look' : 'next')
   const line = out ? 'Live.' : missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.`
@@ -563,14 +562,44 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   }
   // His production picks in and the scripts filed for his Approve: his Approve scripts leads, in his words, bound to the
   // exact words filed (F47). Only his press approves; a session filing them only puts the press in front of him.
-  if (branded && lookPicked && !scriptsOk && step === 'board' && filed.length) {
-    const press = scriptsPress(m.week, d.day, p.id, cut(p.title, 150), filed, m.picks || [])
-    const readyLine = `Branded for ${d.label}. Your production picks are in. ${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve: ${filed.map(f => f.title).join('; ')}.`
+  const ready = branded && lookPicked && !scriptsOk && step === 'board' && !missed ? scriptsReady(m, d.day, p.id, p.title, `Branded for ${d.label}. Your production picks are in`) : null
+  if (ready) {
+    const { press, line: readyLine } = ready
     return { ...base, line: readyLine, next: press as Action, decision: true,
       others: [itemPrompt(m.week, { ...base, line: readyLine }, 'board', null, { approved: true }, decided) as unknown as PressAction, ...picks] }
   }
   return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, step, null, branded && !out && !missed ? { approved: true } : null, decided), decision: false, others: picks }
 }
+
+/** The one rule every card that carries a piece obeys (Ruling, Krish, 2026-11-17: board feedback is done to every day,
+ *  present and future): scripts filed on the piece and not yet approved by him make his Approve scripts the card's next
+ *  action, bound to the exact words filed (F47). A series day's own piece (pieceItem) and a piece moved to another day
+ *  (placedPieceItem) both call it; tests/control-plane/board-every-card.test.ts holds every card kind to it. */
+export function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, title: string, where: string): { press: PressAction; line: string } | null {
+  const filed = m.scripts?.[pieceId] ?? []
+  if (!filed.length || m.decisions?.[pieceId]?.items.find(x => x.key === 'scripts')?.made === true) return null
+  const press = scriptsPress(m.week, day, pieceId, cut(title, 150), filed, m.picks || [])
+  const line = `${where.replace(/[.\s]+$/, '')}. ${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve: ${filed.map(f => f.title).join('; ')}.`
+  return { press, line }
+}
+
+/** What is on file and who reported last, for any card on any day (Ruling, Krish, 2026-11-17: "any feedback on the
+ *  board UI or UX must be done to every single day present and future"). Every card builder calls it with its own
+ *  scopes: a piece's id, and for a card that owns its day's reports (the day's own piece, an off-day post) the day's
+ *  scope too. Tue 17's habits voiceover had nine reports and a dozen materials on day:2026-11-16/tue and its card
+ *  showed none of them. The materials' titles go in `research`; the newest session's line goes in `said` when
+ *  nothing else is said there. */
+export function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead {
+  const work = scopes.map(s => m.work?.[s]).filter((x): x is NonNullable<typeof x> => Boolean(x))
+  if (!work.length) return read
+  const materials = work.flatMap(w => w.materials).sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')))
+  const research = [...new Set([...read.research, ...materials.map(x => x.title)])].slice(0, 40)
+  const last = work.flatMap(w => w.sessions).filter(x => x.doing).sort((a, b) => b.last_at.localeCompare(a.last_at))[0]
+  const said = read.said ?? (last ? cut(`${last.by}, ${last.last_at.slice(0, 16).replace('T', ' ')} UTC (${last.state}${last.step ? `, ${last.step}` : ''}): ${last.doing}`, 1200) : null)
+  return { ...read, research, said }
+}
+/** The day's own scope for the work on file. */
+const dayScope = (week: string, day: string) => `day:${week}/${day}`
 
 /** The read sheet with the signed lock's words in place of the idea row's (F47). */
 function withLock(read: ModelRead, said: { so_what: string | null; story: string | null } | undefined): ModelRead {
@@ -629,7 +658,10 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const path = steps(POST_PATH, done, [o.outcome?.at?.slice(0, 10) ?? null, null, o.stage?.state === 'scheduled' ? o.stage.at?.slice(0, 10) ?? null : null, o.stage?.state === 'live' ? o.stage.at?.slice(0, 10) ?? null : null])
   const missed = state === 'missed'
   const stories = kind === 'good_news' ? storiesOf(raw, o) : null
-  const read = readOf(raw, { text: o.text, said: o.said, source: o.source })
+  // An off-day piece he records has its own record in the engine (placeOffday): its reports and materials, and its
+  // prompt's write-back, go to that piece; the day's scope is read beside it, where sessions reported before it had one.
+  const own = recordedPiece(m, raw)
+  const read = withWork(readOf(raw, { text: o.text, said: o.said, source: o.source }), m, [...(own ? [own] : []), dayScope(m.week, d.day)])
   const base = { key: o.doc_id, type: 'post' as const, day: d.day, date: d.date, kind, kind_label, title: cut(o.title, 200), approved: o.outcome?.label ?? null,
     stage: stageOf(POST_PATH, done), path, missed, read, piece_id: null,
     item: o.item?.key ?? null, supports, move: o.move ?? null, links: o.stage?.links ?? [], stories, stories_planned: kind === 'good_news' ? GOOD_NEWS_STORIES : null, others: [] as PressAction[] }
@@ -651,7 +683,15 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
       next: { kind: 'run', label: `Find the other ${GOOD_NEWS_STORIES - stories.length} stories`, job: 'saturday-goodnews', input: { week: m.week, fill: o.doc_id }, runs_on: 'GitHub · saturday-goodnews.yml' } }
   }
   if (state === 'scheduled') return { ...base, line, next: null, decision: false }
-  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format)), decision: false }
+  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format), null, own ? m.decisions?.[own] ?? null : null, own), decision: false }
+}
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+/** The engine record an off-day option names (its piece_id, a piece he records), only when that record exists: an id
+ *  with no row (Tue 17's habits voiceover, 701a2c55, never made) is never handed to a session as a piece. */
+export function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null {
+  const id = typeof raw?.piece_id === 'string' && UUID_RE.test(raw.piece_id) ? raw.piece_id.toLowerCase() : null
+  return id && m.pieces.some(x => String(x.id).toLowerCase() === id) ? id : null
 }
 
 /** Why an idea is on the ideas board, in one line. */
@@ -770,7 +810,10 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
     if (piece) items.push(piece)
     // Every other piece his approval holds on the day (contract 1.13.0): one he moved here, or one he kept alongside the
     // piece that replaced it. Drawn as a piece with its Move to…, never hidden behind the day's own piece.
-    for (const p of d.pieces) if (p.approval && p.id !== piece?.piece_id) items.push(placedPieceItem(m, d, p))
+    // An off-day piece he records is drawn once, as its off-day post (its record follows it there, recordedPiece).
+    const recordedHere = new Set(d.options.filter(o => o.doc_id.startsWith('off-') && o.status === 'approved' && o.outcome?.id === 'approved')
+      .map(o => recordedPiece(m, rawOption(m, d.day, o.id))).filter((x): x is string => Boolean(x)))
+    for (const p of d.pieces) if (p.approval && p.id !== piece?.piece_id && !recordedHere.has(p.id)) items.push(placedPieceItem(m, d, p))
     for (const o of d.options) {
       // The day's piece is drawn as the piece; a publishing day's other Sunday options and every off-day option he has
       // not approved are ideas, on the ideas board only.

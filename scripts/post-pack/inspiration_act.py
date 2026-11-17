@@ -269,6 +269,16 @@ def series_of(idea: dict, week: dict) -> tuple:
     return series, None
 
 
+def piece_missing(piece_id: str) -> str | None:
+    """Why the idea's record cannot be found in the engine, or None when it is there."""
+    try:
+        ask('GET', f'/api/content-ideas?id={piece_id}')
+    except RuntimeError as error:
+        return (f'piece_id {piece_id} has no record in the engine ({error}); make the row with POST /api/content-ideas '
+                'and use the id it answers with')
+    return None
+
+
 def cmd_place(args) -> int:
     idea, tick, code = read_idea('place', args.idea_file)
     if code is not None:
@@ -282,6 +292,12 @@ def cmd_place(args) -> int:
         if why:
             print(f'place: refused: {why}')
             return 2
+    # The idea's record must exist before an option names it: on 13 Nov the habits idea (701a2c55) was placed with an id
+    # the engine never held, so every session on it got piece_not_found and its card showed none of their work.
+    why = piece_missing(idea['piece_id'])
+    if why:
+        print(f'place: refused: {why}')
+        return 2
     plan = json.loads(path.read_text(encoding='utf-8'))
     option = insert_option(plan, idea, tick.get('card'))
     # His tick outranks an older refusal (Ruling, Krish, 2026-11-12): the idea is placed, carrying each refusal it is on.
