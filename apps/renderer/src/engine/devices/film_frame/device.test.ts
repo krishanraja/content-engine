@@ -2,7 +2,7 @@ import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, it, expect } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
-import { Device } from './index'
+import { Device, onPicture, plateCrop } from './index'
 import { filmState, grainSample } from './state'
 import { ParamsSchema } from './schema'
 import fixture from './fixture.json'
@@ -47,7 +47,26 @@ describe('film_frame', () => {
       expect(['none', ...Object.values(tokens)]).toContain(match[1])
     }
   })
+  // Claude's check of the Codex build (17 Nov): regions were fractions of the slot while the plate was crop-filled to it,
+  // so a ring aimed at a headline landed on different content in a tall frame than in a wide one, or off the picture.
+  it('rings and lifts the same part of the picture in both shapes, inside the crop, at the plate\'s own aspect', () => {
+    const proof = fixture.objects[0]!.params.regions.proof
+    const image = fixture.objects[0]!.params.images.archive
+    for (const [w, h] of [[1080, 1500], [800, 900], [1728, 560]] as const) {
+      const crop = plateCrop(image, w, h, at(50).focus)
+      expect(crop.w / crop.h).toBeCloseTo(image.pixelWidth / image.pixelHeight)
+      expect(crop.w).toBeGreaterThanOrEqual(w - 0.001); expect(crop.h).toBeGreaterThanOrEqual(h - 0.001)
+      const ring = onPicture(proof, crop)
+      expect((ring.x - crop.x) / crop.w).toBeCloseTo(proof.x); expect((ring.y - crop.y) / crop.h).toBeCloseTo(proof.y)
+      expect(ring.x).toBeGreaterThanOrEqual(0); expect(ring.x + ring.width).toBeLessThanOrEqual(w)
+      expect(ring.y).toBeGreaterThanOrEqual(0); expect(ring.y + ring.height).toBeLessThanOrEqual(h)
+    }
+    // The crop is chosen once a plate: it does not jump when the ring arrives.
+    expect(at(20).focus).toEqual(at(50).focus)
+    expect(still(50, '9:16')).not.toContain('slice')
+  })
   it('requires real image inputs, provenance and bounded named regions', () => {
+    expect(ParamsSchema.safeParse({ ...object.params, plates: [{ image: 'missing', date: '1991', source: 'Archive' }] }).success).toBe(false)
     expect(ParamsSchema.safeParse({ plates: [{ image: '', date: '1991', source: 'Archive' }] }).success).toBe(false)
     expect(ParamsSchema.safeParse({ plates: [{ image: 'a.png', date: '1991' }] }).success).toBe(false)
     expect(ParamsSchema.safeParse({ ...object.params, regions: { bad: { x: 0.9, y: 0, width: 0.5, height: 1 } } }).success).toBe(false)

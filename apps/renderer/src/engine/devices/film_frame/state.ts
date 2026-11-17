@@ -29,8 +29,20 @@ export function filmState(object: EngineObject, events: readonly EngineEvent[], 
   }
   const amount = (e: EngineEvent | undefined, duration: number) => !e ? 0
     : e.atFrame < 0 ? 1 : progress(frame - e.atFrame, Math.min(18, duration))
+  // What this plate's marks and lifts point at, over its whole time on screen, so its crop is chosen once.
+  let showing = 0
+  const named: string[] = []
+  for (const e of [...events].filter(e => e.obj === object.obj).sort((a, b) => a.atFrame - b.atFrame)) {
+    if (e.verb === 'move' && /^\d+$/.test(e.toState)) showing = Number(e.toState)
+    if ((e.verb === 'mark' || e.verb === 'highlight') && showing === plateIndex && params.regions[e.toState]) named.push(e.toState)
+  }
+  const boxes = named.map(n => params.regions[n]!)
+  const focus = boxes.length ? {
+    x: (Math.min(...boxes.map(b => b.x)) + Math.max(...boxes.map(b => b.x + b.width))) / 2,
+    y: (Math.min(...boxes.map(b => b.y)) + Math.max(...boxes.map(b => b.y + b.height))) / 2,
+  } : { x: 0.5, y: 0.5 }
   const warm = amount(enter, MOTION.enterFrames), collapse = amount(exit, MOTION.exitFrames)
-  return { params, plateIndex, plate: params.plates[plateIndex]!,
+  return { params, plateIndex, plate: params.plates[plateIndex]!, focus,
     visible: !!enter && frame >= object.fromFrame && frame < object.toFrame && collapse < 1,
     warm, collapse, mark: mark ? params.regions[mark.toState] : undefined,
     marked: amount(mark, MOTION.slapFrames), region: highlight ? params.regions[highlight.toState] : undefined,

@@ -5,14 +5,26 @@
       "device": "film_frame",
       "meaning": "Archive evidence lifts into the present",
       "params": {
+        "images": {
+          "archive": {
+            "src": "archive-1991.png",
+            "pixelWidth": 1600,
+            "pixelHeight": 1200
+          },
+          "shot": {
+            "src": "screenshot-2001.png",
+            "pixelWidth": 1920,
+            "pixelHeight": 1080
+          }
+        },
         "plates": [
           {
-            "image": "archive-1991.png",
+            "image": "archive",
             "date": "1991",
             "source": "Archive photo"
           },
           {
-            "image": "screenshot-2001.png",
+            "image": "shot",
             "date": "2001",
             "source": "Archived screenshot"
           }
