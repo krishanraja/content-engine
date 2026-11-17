@@ -1,3 +1,0 @@
-Status: Krish v2 (ElevenLabs EWMCMyM8o9ZcYCijk7nx, a Voice Remix of Krish Remix with softer T's) is his default voice in config/voice-bank.json and in `ve voice clone`: eleven_v3, stability 0.5, the .wav sped up 15% keeping pitch (Krish, 2026-11-17: "yes, 15% is right, go ahead"). Krish Remix stays approved as the backup. The board offers Krish v2 first. Generation in Krish v2 is refused until krish-clone's registry holds krish-voice-elevenlabs-v2 (krish-clone PR #13).
-Next: krish-clone PR #13 merges, then the next off-day voiceover plans in Krish v2 with no flag.
-North Star check (2026-11-17): holds.
