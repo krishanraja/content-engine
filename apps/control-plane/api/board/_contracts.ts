@@ -1,6 +1,7 @@
 import { createHash, timingSafeEqual } from 'node:crypto'
 import type { VercelRequest } from '@vercel/node'
 import { hasEngineAccess, operatorBearerAllowed } from '../_auth.js'
+import { AUDIO_ID, audioBody } from './_audio.js'
 
 export const collections = ['ticks', 'links', 'edits', 'picks', 'queue', 'comments'] as const
 export type Collection = typeof collections[number]
@@ -344,6 +345,8 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'picks' && FEEL_ID.test(id)) return feelBody(id, body)
   if (collection === 'picks' && (id === MIX_ID || body.kind === 'mix')) return id === MIX_ID && mixBody(body)
   if (collection === 'picks' && (CREATIVE_ID.test(id) || body.kind === 'sign_creative')) return creativeBody(id, body)
+  // His pick of an off-day post's voice or track (picks/audio-<voice|bed>-<item>; contract 1.20.0, _audio.ts).
+  if (collection === 'picks' && (AUDIO_ID.test(id) || body.kind === 'audio_pick')) return audioBody(id, body)
   // His typed approval of a lock or of scripts (WORDS_ID); "via: words" anywhere else is refused, so a session's words
   // never stand as one of his presses.
   if (collection === 'picks' && WORDS_ID.test(id)) return wordsBody(id, body)

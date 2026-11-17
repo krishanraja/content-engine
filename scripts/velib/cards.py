@@ -17,7 +17,6 @@ from .common import ROOT, card_worktree, load_json, native_path, write_json
 
 MODEL = 'gpt-6.1-sol'   # measured cheapest per allowance point (27.0M tokens per 1%); pin, never inherit astra/high
 EFFORT = 'medium'
-ALLOWANCE_CEILING = 80  # percent of the weekly Codex window; dispatch refuses above this
 
 CARD_TEMPLATE = """---
 card: {card_id}
@@ -196,9 +195,6 @@ def write_card(path: Path, **fields) -> Path:
         text = text.replace('\nkind:', f'\nmotion_style: {fields["motion_style"]}\nkind:', 1)
         text = text.replace('\n## Acceptance', motion_section(fields['motion_style']) + recipe_section(fields['motion_style'])
                             + '\n## Acceptance', 1)
-    if fields.get('spend_id'):
-        # A venture's card carries its Control Center booking (reserve_credit_spend, pool codex) for the Codex lane.
-        text = text.replace('\nkind:', f'\nspend_id: {fields["spend_id"]}\nkind:', 1)
     if visual:
         text = text.replace('\n## Acceptance', visual + '\n## Acceptance', 1)
     if len(text.encode('utf-8')) > 6144:
@@ -227,36 +223,6 @@ def codex_thread() -> str:
     server per command, so each card is a permanent thread in Krish's Desktop home that he can open and type in. Which
     node and codex run it is velib.codex_route's (thread_command): in WSL with his Windows home, the Windows ones."""
     return str(CODEX_THREAD)
-
-
-def allowance() -> dict | None:
-    """The latest Codex rate_limits record: weekly used_percent (0 once its window has reset), resets_at, credits."""
-    import time
-    logs = sorted({log for home in codex_homes() for log in glob.glob(str(home / 'sessions' / '*' / '*' / '*' / '*.jsonl'))},
-                  key=os.path.getmtime)
-    for log in reversed(logs[-5:]):
-        lines = Path(log).read_text(encoding='utf-8', errors='replace').splitlines()
-        for line in reversed(lines):
-            if '"rate_limits"' not in line:
-                continue
-            try:
-                payload = json.loads(line).get('payload', {})
-                limits = payload.get('rate_limits') or {}
-                primary = limits.get('primary') or {}
-                if 'used_percent' not in primary:
-                    continue
-                resets = primary.get('resets_at')
-                used = 0.0 if resets and time.time() > resets else float(primary['used_percent'])
-                credits = (limits.get('credits') or {}).get('balance')
-                return {'used_percent': used, 'resets_at': resets, 'credits': float(credits) if credits else None}
-            except (ValueError, AttributeError, TypeError):
-                continue
-    return None
-
-
-def weekly_used_percent() -> float | None:
-    info = allowance()
-    return info['used_percent'] if info else None
 
 
 # A card's own limits (W2.12): max_minutes and max_calls are enforced, not advice. A foreground dispatch is stopped at
@@ -501,8 +467,6 @@ def remove_worktree(cwd: Path) -> None:
 
 
 DEFAULT_TOOLS = 'shell, apply_patch'
-DEFAULT_ALLOWANCE_RESERVE = 1.0   # percent points of the weekly Codex window a card reserves unless it says (allowance_points:)
-DEFAULT_PAID_RESERVE = 40.0       # Codex credits a card reserves past the ceiling unless it says (paid_credits:)
 
 
 def _hold(card_path: Path, reasons: list[str]) -> None:
@@ -526,38 +490,6 @@ def _admit(card_path: Path, meta: dict) -> None:
     reasons = codex_profile.admit(tools, profile)
     if reasons:
         _hold(card_path, reasons)
-
-
-def exhausted(info: dict | None) -> str | None:
-    """Why Codex's own readable allowance says no card can run, or None: the weekly window is used up and the paid
-    credit balance it reports is nothing. Unread is never exhausted."""
-    if not info or info.get('used_percent') is None or info['used_percent'] < 100:
-        return None
-    if info.get('credits') is None or info['credits'] > 0:
-        return None
-    return (f'Codex reports its weekly allowance used ({info["used_percent"]:.0f}%) and no paid credits left'
-            + (f'; it resets {info["resets_at"]}' if info.get('resets_at') else ''))
-
-
-def _reserve(card_path: Path, meta: dict) -> str:
-    """Reserve the card's credits against Control Center's credit read, before anything is sent; refuse over it.
-    Past the weekly allowance ceiling Codex draws paid credits, which reserve against their own cap.
-
-    A machine with no Control Center connector (a local Claude Code install) has no credit read: the card is then
-    reserved provisionally in the local ledger, with one warning line, and goes ahead (reconciled later by a session
-    with the connector). The real limits still hold: a read that stands refuses over its cap, and Codex's own
-    allowance read as exhausted refuses the card."""
-    from . import ledger
-    why = exhausted(allowance())
-    if why:
-        sys.exit(f've dispatch: not sent: {why}')
-    used = weekly_used_percent()
-    card = meta.get('card', card_path.stem)
-    if used is not None and used > ALLOWANCE_CEILING:
-        return ledger.reserve('codex_paid_credits', float(meta.get('paid_credits') or DEFAULT_PAID_RESERVE),
-                              note=f'card {card}: allowance at {used:.0f}%', provisional_ok=True)
-    return ledger.reserve('codex_allowance_points', float(meta.get('allowance_points') or DEFAULT_ALLOWANCE_RESERVE),
-                          note=f'card {card}', provisional_ok=True)
 
 
 def codex_env(visible: bool = False) -> dict:
@@ -621,17 +553,13 @@ def titled_prompt(card_path: Path, meta: dict, piece: str | None = None) -> Path
     return out
 
 
-def dispatch(card_path: Path, background: bool = True, booked: str | None = None,
-             visible: bool = False, piece: str | None = None) -> subprocess.CompletedProcess:
-    """booked: the id of a Control Center reservation (reserve_credit_spend) the queuing session already made for this
-    card. Control Center is then the guard that refused anything over the share, so the local cap file is not read;
-    the session settles the booking with settle_credit_spend once it has the result. visible: run under the home his
+def dispatch(card_path: Path, background: bool = True, visible: bool = False, piece: str | None = None) -> subprocess.CompletedProcess:
+    """Send a card to Codex. Codex use is not counted or reserved anywhere (Ruling, Krish, 2026-11-17: "We have plenty of
+    Codex credits, you need to permanently stop counting codex credits everywhere"). visible: run under the home his
     Codex Desktop app reads, for social-media legwork started from his own computer; a video card never sets it."""
     meta = parse_card(card_path)
     _require_design_lock(meta)
     _admit(card_path, meta)
-    if not booked:
-        _reserve(card_path, meta)
     cwd = meta.get('cwd') or str(ROOT)
     minutes, _ = card_limits(meta)
     ensure_worktree(Path(cwd), meta.get('card', 'card'))

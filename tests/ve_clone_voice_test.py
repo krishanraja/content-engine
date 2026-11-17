@@ -36,7 +36,7 @@ import ve  # noqa: E402
 FIXTURE = ROOT / 'fixtures/ve/my-test-19s'
 SERIES_DAY, OFF_DAY = '2026-10-23', '2026-10-22'   # the fixture is mind.the.gap, a Friday series; Thursday is an off day
 TAKE = 'clone-vo'
-CLONE = {'name': 'krish-voice-elevenlabs', 'kind': 'voice', 'platform': 'elevenlabs', 'platform_ref': 'TestVoice0000000001',
+CLONE = {'name': 'krish-voice-elevenlabs-v2', 'kind': 'voice', 'platform': 'elevenlabs', 'platform_ref': 'TestVoice0000000001',
          'approved_sha256': 'c' * 64, 'approved_words': "test words, not Krish's", 'approved_on': '2026-11-20'}
 HEYGEN_VOICE = {**CLONE, 'name': 'krish-voice-heygen', 'platform': 'heygen', 'approved_sha256': 'd' * 64}
 
@@ -60,7 +60,7 @@ def unreachable():
 
 def voice_asset(sha: str = 'e' * 64, **extra) -> dict:
     return {'id': TAKE, 'kind': 'voice', 'origin': 'generated', 'path': f'{TAKE}.wav', 'sha256': sha,
-            'licence': 'generated with his approved clone (test)', 'tool': 'elevenlabs.voice_clone:krish-voice-elevenlabs',
+            'licence': 'generated with his approved clone (test)', 'tool': 'elevenlabs.voice_clone:krish-voice-elevenlabs-v2',
             **extra}
 
 
@@ -196,7 +196,7 @@ class CompileReadsTheCloneAsItReadsHim(unittest.TestCase):
         clone = compile_cut(short(voice=voice_asset(self.sha)), 'proof-tall', words, self.assets, report=report)
         self.assertEqual(clone, his)
         self.assertEqual(clone['segments'], [])
-        self.assertEqual(report['voice'], {'master': 'clone', 'asset': TAKE, 'tool': 'elevenlabs.voice_clone:krish-voice-elevenlabs',
+        self.assertEqual(report['voice'], {'master': 'clone', 'asset': TAKE, 'tool': 'elevenlabs.voice_clone:krish-voice-elevenlabs-v2',
                                            'sha256': self.sha})
         mine = {}
         compile_cut(recorded(), 'proof-tall', words, self.assets, report=mine)
@@ -243,7 +243,7 @@ class HisApproveProofStandsForTheVoiceHeHeard(unittest.TestCase):
         self.assertNotIn('voice', proof.structure(his, 'proof-tall'))
         clone = short(voice=voice_asset('1' * 64))
         self.assertEqual(proof.structure(clone, 'proof-tall')['voice'],
-                         [TAKE, 'elevenlabs.voice_clone:krish-voice-elevenlabs', '1' * 64])
+                         [TAKE, 'elevenlabs.voice_clone:krish-voice-elevenlabs-v2', '1' * 64])
         again = short(voice=voice_asset('2' * 64))
         self.assertNotEqual(proof.structural_hash(clone, 'proof-tall'), proof.structural_hash(again, 'proof-tall'))
         self.assertEqual(proof.changes(proof.structure(clone, 'proof-tall'), proof.structure(again, 'proof-tall')),
@@ -263,7 +263,7 @@ class ThePlanSpendsNothingAndReadsTheSignedWords(unittest.TestCase):
         self.assertEqual(doc['text'].split(' '), signed)
         self.assertEqual(doc['clone']['voice_id'], CLONE['platform_ref'])
         self.assertEqual(doc['take'], TAKE)
-        self.assertEqual(doc['tool'], 'elevenlabs.voice_clone:krish-voice-elevenlabs')
+        self.assertEqual(doc['tool'], 'elevenlabs.voice_clone:krish-voice-elevenlabs-v2')
         self.assertEqual(doc['model'], clone_voice.config()['model'])
         self.assertEqual(doc['credits'], {'provider': 'elevenlabs_credits', 'per_character': 1, 'estimate': len(doc['text'])})
         self.assertEqual(doc['plan_sha256'], clone_voice.digest(doc))
@@ -387,6 +387,8 @@ class TheCommand(unittest.TestCase):
         self.spec.write_text(json.dumps(short()), encoding='utf-8')
         shutil.copy(FIXTURE / 'script.words.json', folder / 'script.words.json')
         self.folder = folder
+        # His default voice proven on a whole script, as the earlier CLI tests assume; the default test turns it off.
+        self.proven = True
 
     def tearDown(self):
         self.temp.cleanup()
@@ -397,7 +399,11 @@ class TheCommand(unittest.TestCase):
         for key, value in given.items():
             setattr(args, key, value)
         out, err = io.StringIO(), io.StringIO()
-        with served(registry(CLONE)), redirect_stdout(out), redirect_stderr(err):
+        bank = load_json(ROOT / 'config' / 'voice-bank.json')
+        if self.proven:
+            bank['voices'][0]['whole_script'] = {'passed': True, 'on': '2026-11-20', 'note': 'test'}
+        from velib import voice_bank  # noqa: PLC0415
+        with served(registry(CLONE)), patch.object(voice_bank, 'load', return_value=bank), redirect_stdout(out), redirect_stderr(err):
             code = ve.cmd_voice(args)
         return code, out.getvalue(), err.getvalue()
 
@@ -424,6 +430,15 @@ class TheCommand(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn('holds no ELEVENLABS_API_KEY', err)
         request.assert_not_called()
+
+    def test_with_no_voice_proven_the_default_is_record_it_myself(self):
+        # Ruling (Krish, 2026-11-17): "make Record it myself the default until a voice passes".
+        self.proven = False
+        code, _, err = self.call()
+        self.assertEqual(code, 1)
+        self.assertIn('Record it myself', err)
+        self.assertIn('Teleprompter', err)
+        self.assertFalse((self.folder / clone_voice.PLAN_FILE).exists())
 
     def test_a_hero_piece_gets_no_plan(self):
         spec = short(SERIES_DAY)

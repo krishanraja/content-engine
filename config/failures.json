@@ -1659,7 +1659,7 @@
         },
         {
           "file": "apps/renderer/src/engine/BrandFrame.tsx",
-          "contains": "{props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>",
+          "contains": "{props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={house} /> : <>",
           "how": "on the wide cut, SPLIT beats and face-with-proof's light STAGE beats keep the legible mark tile and series pill; the vertical cut carries none (Ruling, Krish, 2026-11-11)",
           "test": "npx vitest run apps/renderer/src/engine/layouts/split.test.ts"
         }
@@ -2024,7 +2024,7 @@
         },
         {
           "file": "scripts/velib/compile.py",
-          "contains": "'channel': tokens['mint'] if off else",
+          "contains": "tokens['mint'] if off else publication['channel_colors'][channel]",
           "how": "an off-day cut never wears the series colour or promise",
           "test": "python3 tests/ve_thursday_guards_test.py"
         }
@@ -2605,6 +2605,95 @@
           "file": "scripts/post-pack/story_check.py",
           "contains": "the intro has no \"Let\\'s...\" turn",
           "how": "story_check refuses a long cut, or a short cut config/short-cuts.json lifts, whose first paragraph misses his intro beats (house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17)"
+        }
+      ]
+    },
+    {
+      "id": "F46-asked-for-a-press-already-made",
+      "on": "2026-11-17",
+      "status": "guarded",
+      "mode": "asked_for_a_decision_already_made",
+      "guard_level": "gate",
+      "krish": "I already did that in the UI, before I pasted my last prompt to you. Why are you asking me to go back and repeat this?",
+      "what": "Tue 17 Nov, piece b019dbf8 (data centres, placed on Tuesday): at 11:09 UTC he pressed Pick the look, Pick the motion style and Pick the captions on the board (face-with-proof, eating-jobs-ladder, art-directed, by Krish in meta.look and meta.style). The board's prompt he pasted said \"step look\", get_piece_board returned none of his picks, and the engine's own address was blocked from the cloud session, so at 11:13 the session asked him to press all three again.",
+      "symptom": "A session asks Krish to repeat a press he has already made.",
+      "cause": "The week model's prompt for a piece placed off its series day named step look whenever its lock was signed, whatever he had picked (placedPieceItem), and the piece read that every board prompt calls first carried none of his decisions.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "placedPieceItem in _weekModel.ts passed step 'look' for any branded placed piece; proven on 17 Nov's records: the old code wrote step look and named none of his picks, the fixed code writes step board and names all three (tests/control-plane/board-decisions.test.ts)."
+        },
+        {
+          "cause": "handoff_loss",
+          "evidence": "GET /api/content-ideas/store?piece=<id> (get_piece_board) returned materials, sessions and events only; his look, motion, captions, lock and scripts were nowhere in it (fields came back {} on 17 Nov)."
+        },
+        {
+          "cause": "tool_limit",
+          "evidence": "board_session.py and making.py show answered 403 from the cloud session (the engine's host is outside its network); the prompt still pointed sessions at them."
+        }
+      ],
+      "surface": "Every board prompt carries his decisions (lock, look, motion, captions, scripts) with who made each and when, and its step is the first one he has not made; get_piece_board returns the same decisions, read live. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step.",
+      "guards": [
+        {
+          "file": "tests/control-plane/board-decisions.test.ts",
+          "contains": "17 Nov reproduced",
+          "how": "17 Nov's records: look, motion and captions picked, so the prompt's step is board, never look, and it names his picks; the piece read returns them as decisions",
+          "test": "npx vitest run tests/control-plane/board-decisions.test.ts"
+        },
+        {
+          "file": "apps/control-plane/api/board/_decisions.ts",
+          "contains": "Before asking Krish for any press or decision, read it from get_piece_board",
+          "how": "the rule every board prompt and every piece read carries"
+        },
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "const step = decided?.next_step",
+          "how": "a placed piece's prompt step comes from his decisions"
+        },
+        {
+          "file": "apps/control-plane/api/content-ideas/store.ts",
+          "contains": "decisions: decisions ?? { unread: true",
+          "how": "the piece read (get_piece_board) carries his decisions; an unread record is said as unread"
+        }
+      ]
+    },
+    {
+      "id": "F47-card-never-moved-on",
+      "on": "2026-11-17",
+      "status": "guarded",
+      "mode": "card_stale_after_milestone",
+      "guard_level": "gate",
+      "krish": "Why does this never actually update the board and move to Production Planned? This should happen automatically when sessions like this get to this point. I'm still shown the card and the details I was shown before this session existed.",
+      "what": "Tue 17 Nov, piece b019dbf8 (data centres, placed on Tuesday): lock signed, look, motion and captions picked at 11:09, both scripts filed on the piece for his Approve at 11:30. At about 11:35 the card still showed Fleshed out current, \"Its make picks up from where it is\", the idea row's old summary, and no way to approve the scripts.",
+      "symptom": "The card stays where it was before a session reached its milestone, and offers him no next press.",
+      "cause": "For a piece placed off its series day, the week model counted only the lock (placedPieceItem: done = branded ? 1 : 0), read the card's summary from the idea row (readOf with the row's thesis) and never read the scripts filed on the piece; reproduced exactly on untouched main with 17 Nov's records.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "placedPieceItem set the path from the lock alone, so his look, his motion and captions and the filed scripts never moved it on."
+        },
+        {
+          "cause": "handoff_loss",
+          "evidence": "The scripts the session filed (role script, 6503bef2 and 81ff7074) were never read by the view, so the card could not offer his Approve scripts."
+        }
+      ],
+      "surface": "A placed piece's card moves on from his decisions on the next read (look picked: past Fleshed out; scripts approved: past Production planned), says what its signed lock says, and once scripts are filed on the piece it leads with Approve scripts in his words, bound to exactly the words filed. Only his press approves.",
+      "guards": [
+        {
+          "file": "tests/control-plane/board-decisions.test.ts",
+          "contains": "F47: the card moves on when a session reaches a milestone",
+          "how": "17 Nov's records: past Fleshed out, scripts ready line, Approve scripts press the engine accepts, the signed lock's words; Production planned after his approval",
+          "test": "npx vitest run tests/control-plane/board-decisions.test.ts"
+        },
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "export function scriptsPress(",
+          "how": "the Approve scripts press a placed piece's card offers once scripts are filed"
+        },
+        {
+          "file": "apps/control-plane/api/board/_view.ts",
+          "contains": "export async function readFiledScripts(",
+          "how": "the view reads the scripts filed on each piece"
         }
       ]
     }

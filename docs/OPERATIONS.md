@@ -494,8 +494,6 @@ preflight proves a week early whether each machine could run it unattended.
   - Codex's tool profile (`config/codex-profile.json`) passes its audit, and the MCP servers of the Codex that runs
     cards (`codex mcp list --json`, which only lists) are read for a forbidden kind, such as publish, deploy or Buffer.
   - `codex login status` says ChatGPT.
-  - The weekly Codex allowance, read with `python scripts/session_token_audit.py --codex --json`, is at or under
-    `ALLOWANCE_CEILING` in `scripts/velib/cards.py`.
   - The pinned ffmpeg and Tesseract that `scripts/ve-env.sh` names are at their paths and run.
   - At least 40 GB is free on the Studio runtime's drive.
   - The Video Engine, Inbox, Archive and library folders in `config/studio.json` are reachable.

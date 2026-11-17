@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.18.0",
+ "contract_version": "1.20.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -9470,7 +9470,8 @@
           "at"
          ],
          "done": "Saved on the board, and in the prompt."
-        }
+        },
+        "saved": []
        },
        "open": {
         "app": "claude_code",
@@ -9769,7 +9770,8 @@
            "at"
           ],
           "done": "Saved on the board, and in the prompt."
-         }
+         },
+         "saved": []
         },
         "open": {
          "app": "claude_code",
@@ -10743,7 +10745,8 @@
           "at"
          ],
          "done": "Saved on the board, and in the prompt."
-        }
+        },
+        "saved": []
        },
        "open": {
         "app": "claude_code",

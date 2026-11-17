@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.18.0",
+ "contract_version": "1.20.0",
  "week": "2026-11-09",
  "as_of": "2026-11-13T15:00:00.000Z",
  "days": [
@@ -91,9 +91,9 @@
     },
     "prompts": {
      "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nUse primary sources: filings, earnings, regulators, rating agencies and the companies' own pages. Date every figure and mark every estimate as one. Write one Markdown file with: a one-paragraph answer; the ten most surprising facts, each sourced; a table of the main players and the numbers that matter; what the sceptics and the believers each say; and the open questions. Follow the evidence where it goes, and if the real story differs from the idea, say so first.",
-     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-mon.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-mon.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     "storyboard": null,
     "style": {
@@ -118,7 +118,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1NE-0O6EOYwnqfIj06f5RrvPAZELURZRF",
         "rejected": false,
         "presses": {
          "yes": {
@@ -157,7 +157,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1M8WLwwQl0BX50UJRtkpTHlHn4RMWX6LQ",
         "rejected": false,
         "presses": {
          "yes": {
@@ -196,7 +196,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1F2H0pr4BT0bY18evUfttG9SgG3g7NceI",
         "rejected": false,
         "presses": {
          "yes": {
@@ -235,7 +235,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1m61Jb1aW0a8fMvwToiUuHASPubT2QuLj",
         "rejected": false,
         "presses": {
          "yes": {
@@ -273,7 +273,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1eukiVGP-XfW7xS9qlh7XqlRCOtvjCQSR",
         "rejected": false,
         "presses": {
          "yes": {
@@ -312,7 +312,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1b2d9u0-Y-qjyN8dGlyUhRr1N2bYzuEWd",
         "rejected": false,
         "presses": {
          "yes": {
@@ -352,7 +352,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1wFcWNyqYgWL787FtSBqnALTvjvd4CwYs",
         "rejected": false,
         "presses": {
          "yes": {
@@ -391,7 +391,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1puEcGQR7qlIB4aofGySCYUvdiBfrGIlD",
         "rejected": false,
         "presses": {
          "yes": {
@@ -430,7 +430,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1t8nqxFAza78Ofx-Um1p1Xw_3FYcJDMzC",
         "rejected": false,
         "presses": {
          "yes": {
@@ -469,7 +469,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1w9n6PUI1nb52xC50wfG91cJ6hfjWuX1h",
         "rejected": false,
         "presses": {
          "yes": {
@@ -507,7 +507,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=16l1brGocCpQPIaoJsKtr0JKh03uENnVO",
         "rejected": false,
         "presses": {
          "yes": {
@@ -546,7 +546,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=197qf2CcFQNykVehcrWi6b_grs2a7bV4b",
         "rejected": false,
         "presses": {
          "yes": {
@@ -585,7 +585,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1odFEa3jzR9_iOasuLi97IvuKN4rD1TYu",
         "rejected": false,
         "presses": {
          "yes": {
@@ -625,7 +625,7 @@
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
         "rejected": false,
         "presses": {
          "yes": {
@@ -665,7 +665,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1aVC8fDi_Kkk9SsYTWsL07sqnpdZuQ7la",
         "rejected": false,
         "presses": {
          "yes": {
@@ -705,7 +705,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1GDBVFc30kJywUtwQbpwySBQJ1Skexg-z",
         "rejected": false,
         "presses": {
          "yes": {
@@ -745,7 +745,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1Ffa3saJ6D93IYsR75rjQ4QyVY3vGd4wX",
         "rejected": false,
         "presses": {
          "yes": {
@@ -785,7 +785,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=158BqsUMeplN_sRdRvzsagXjrbRmYRpzk",
         "rejected": false,
         "presses": {
          "yes": {
@@ -825,7 +825,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1h5HkovL7sUeV_tugeoYdvrS_iDTpj53x",
         "rejected": false,
         "presses": {
          "yes": {
@@ -865,7 +865,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1Ix2KAjWDaJYMWuNc09ma9hyfn-HI6RXb",
         "rejected": false,
         "presses": {
          "yes": {
@@ -905,7 +905,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1xtrXjdbR0rm4ImVnfNyDVVEuMIEELB6r",
         "rejected": false,
         "presses": {
          "yes": {
@@ -945,7 +945,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1TSpNlscMNh69tBz6jamyW2C9Oi97JpRe",
         "rejected": false,
         "presses": {
          "yes": {
@@ -985,7 +985,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1rz4QXIqtIrDkb3eaqzrlo6BxcUm3An-p",
         "rejected": false,
         "presses": {
          "yes": {
@@ -1065,7 +1065,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1wimTz66mETNNnv6YGhc9QsMrRwGB3b1c",
         "rejected": false,
         "presses": {
          "yes": {
@@ -1105,7 +1105,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1cbx6mqGYMRvSinx8CuPkzcY-IWzCK4DW",
         "rejected": false,
         "presses": {
          "yes": {
@@ -1145,7 +1145,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1QqqcuNpas17EsG1P2pGW_r-NX4V3rlh0",
         "rejected": false,
         "presses": {
          "yes": {
@@ -2662,9 +2662,9 @@
     },
     "prompts": {
      "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nUse primary sources: filings, earnings, regulators, rating agencies and the companies' own pages. Date every figure and mark every estimate as one. Write one Markdown file with: a one-paragraph answer; the ten most surprising facts, each sourced; a table of the main players and the numbers that matter; what the sceptics and the believers each say; and the open questions. Follow the evidence where it goes, and if the real story differs from the idea, say so first.",
-     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-wed.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-wed.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     "storyboard": null,
     "style": {
@@ -2689,7 +2689,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1NE-0O6EOYwnqfIj06f5RrvPAZELURZRF",
         "rejected": false,
         "presses": {
          "yes": {
@@ -2728,7 +2728,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1M8WLwwQl0BX50UJRtkpTHlHn4RMWX6LQ",
         "rejected": false,
         "presses": {
          "yes": {
@@ -2767,7 +2767,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1F2H0pr4BT0bY18evUfttG9SgG3g7NceI",
         "rejected": false,
         "presses": {
          "yes": {
@@ -2806,7 +2806,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1m61Jb1aW0a8fMvwToiUuHASPubT2QuLj",
         "rejected": false,
         "presses": {
          "yes": {
@@ -2844,7 +2844,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1eukiVGP-XfW7xS9qlh7XqlRCOtvjCQSR",
         "rejected": false,
         "presses": {
          "yes": {
@@ -2883,7 +2883,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1b2d9u0-Y-qjyN8dGlyUhRr1N2bYzuEWd",
         "rejected": false,
         "presses": {
          "yes": {
@@ -2923,7 +2923,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1wFcWNyqYgWL787FtSBqnALTvjvd4CwYs",
         "rejected": false,
         "presses": {
          "yes": {
@@ -2962,7 +2962,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1puEcGQR7qlIB4aofGySCYUvdiBfrGIlD",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3001,7 +3001,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1t8nqxFAza78Ofx-Um1p1Xw_3FYcJDMzC",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3040,7 +3040,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1w9n6PUI1nb52xC50wfG91cJ6hfjWuX1h",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3078,7 +3078,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=16l1brGocCpQPIaoJsKtr0JKh03uENnVO",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3117,7 +3117,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=197qf2CcFQNykVehcrWi6b_grs2a7bV4b",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3156,7 +3156,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1odFEa3jzR9_iOasuLi97IvuKN4rD1TYu",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3196,7 +3196,7 @@
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3236,7 +3236,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1aVC8fDi_Kkk9SsYTWsL07sqnpdZuQ7la",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3276,7 +3276,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1GDBVFc30kJywUtwQbpwySBQJ1Skexg-z",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3316,7 +3316,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1Ffa3saJ6D93IYsR75rjQ4QyVY3vGd4wX",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3356,7 +3356,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=158BqsUMeplN_sRdRvzsagXjrbRmYRpzk",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3396,7 +3396,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1h5HkovL7sUeV_tugeoYdvrS_iDTpj53x",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3436,7 +3436,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1Ix2KAjWDaJYMWuNc09ma9hyfn-HI6RXb",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3476,7 +3476,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1xtrXjdbR0rm4ImVnfNyDVVEuMIEELB6r",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3516,7 +3516,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1TSpNlscMNh69tBz6jamyW2C9Oi97JpRe",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3556,7 +3556,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1rz4QXIqtIrDkb3eaqzrlo6BxcUm3An-p",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3636,7 +3636,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1wimTz66mETNNnv6YGhc9QsMrRwGB3b1c",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3676,7 +3676,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1cbx6mqGYMRvSinx8CuPkzcY-IWzCK4DW",
         "rejected": false,
         "presses": {
          "yes": {
@@ -3716,7 +3716,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1QqqcuNpas17EsG1P2pGW_r-NX4V3rlh0",
         "rejected": false,
         "presses": {
          "yes": {
@@ -4558,12 +4558,12 @@
     {
      "kind": "prompt",
      "label": "Copy prompt for Growth",
-     "prompt": "Make the Thursday 2026-11-12 off-day post gitbroke that Krish approved on the content-engine board (week of 2026-11-09).\n\nMake it in this Claude session, with the Codex plugin building it. Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, with the Codex plugin building it, as in the other usual workflows; memes, Notes images and off-day voiceover shorts are made the same way. The route is content-engine docs/CAROUSEL-STANDARD.md, \"How a carousel is made\". 1. Write the words, the story and the creative direction yourself. A carousel's deck comes first, as carousel-deck/1, and passes python3 scripts/carousel_check.py DECK.json: five whys, the wider trend with an outside source, every card after the cover one full plain sentence of 8 to 20 words a stranger can follow, at most 10 cards, ending on the palette's close: the takeaway, then \"Subscribe free (makeyourmindup.ai)\". 2. Write one Codex card for the pictures with python3 scripts/ve.py card (kind carousel, meme or notes_image, with the day and the inspiration cards Krish ticked), held to config/brand-palette.json, and send it to Codex through the plugin: ve dispatch, or, for a card in growth-makeyourmindup, its codex/queue/ on your claude/ branch, which the Codex lane builds. 3. Codex builds the pictures in code. You verify them: the deck check again, the drawn cards with python3 scripts/carousel_check.py --cards (a cover that looks like a front cover, body cards that use the page centrally with real visual effort), the 10/10 judges for a carousel, shown every card, and a look at every card at phone size. 4. File them in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. Never a scheduled job, a headless model run or a template engine.\n\nMake exactly what Krish approved, nothing else, to the rejection floor and content-engine docs/CAROUSEL-STANDARD.md; Growth (krishanraja/growth-makeyourmindup) posts it.\n\nKeep the board current as you work (week 2026-11-09 and day thu, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with week 2026-11-09 and day thu. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/thu show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with week 2026-11-09 and day thu, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/thu start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/thu add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/thu read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/thu add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "prompt": "Make the Thursday 2026-11-12 off-day post gitbroke that Krish approved on the content-engine board (week of 2026-11-09).\n\nMake it in this Claude session, with the Codex plugin building it. Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, with the Codex plugin building it, as in the other usual workflows; memes, Notes images and off-day voiceover shorts are made the same way. The route is content-engine docs/CAROUSEL-STANDARD.md, \"How a carousel is made\". 1. Write the words, the story and the creative direction yourself. A carousel's deck comes first, as carousel-deck/1, and passes python3 scripts/carousel_check.py DECK.json: five whys, the wider trend with an outside source, every card after the cover one full plain sentence of 8 to 20 words a stranger can follow, at most 10 cards, ending on the palette's close: the takeaway, then \"Subscribe free (makeyourmindup.ai)\". 2. Write one Codex card for the pictures with python3 scripts/ve.py card (kind carousel, meme or notes_image, with the day and the inspiration cards Krish ticked), held to config/brand-palette.json, and send it to Codex through the plugin: ve dispatch, or, for a card in growth-makeyourmindup, its codex/queue/ on your claude/ branch, which the Codex lane builds. 3. Codex builds the pictures in code. You verify them: the deck check again, the drawn cards with python3 scripts/carousel_check.py --cards (a cover that looks like a front cover, body cards that use the page centrally with real visual effort), the 10/10 judges for a carousel, shown every card, and a look at every card at phone size. 4. File them in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. Never a scheduled job, a headless model run or a template engine.\n\nMake exactly what Krish approved, nothing else, to the rejection floor and content-engine docs/CAROUSEL-STANDARD.md; Growth (krishanraja/growth-makeyourmindup) posts it.\n\nKeep the board current as you work (week 2026-11-09 and day thu, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with week 2026-11-09 and day thu. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/thu show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with week 2026-11-09 and day thu, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/thu start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/thu add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/thu read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/thu add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n6. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     {
      "kind": "prompt",
      "label": "Copy Claude prompt",
-     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Thu 12 (off day, Off day: Explainer carousel): Anthropic's AI wrote so much code Git could not keep up..\nWhere it stands: Missed: Thu 12 has passed and nothing on it is marked live. If it went out, press It's live with its link.\n\nWhere everything lives:\n- the week's plan, ideas and off-day options: docs/plans/2026-11-09-week/ (ideas.json, and the offday-revise/2026-11-09 branch when it exists)\n- Krish's presses on the board: GET /api/board/2026-11-09/view; the live board, where he works, is controlcenter.krishraja.com/#/content?week=2026-11-09&day=thu (the old pages at content.krishraja.com/board are retired and redirect there; the view carries no https link, by the media rule)\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nShow Krish what you made in one message before anything is sent or published.\n\nKeep the board current as you work (week 2026-11-09 and day thu, step next). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with week 2026-11-09 and day thu. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/thu show\n2. Choose a session id once (for example next- and four random letters) and report with it: report_board_session with week 2026-11-09 and day thu, your session_id, step \"next\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/thu start|progress|done|blocked \"one line\" --session <your id> --step next\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/thu add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/thu read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/thu add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Thu 12 (off day, Off day: Explainer carousel): Anthropic's AI wrote so much code Git could not keep up..\nWhere it stands: Missed: Thu 12 has passed and nothing on it is marked live. If it went out, press It's live with its link.\n\nWhere everything lives:\n- the week's plan, ideas and off-day options: docs/plans/2026-11-09-week/ (ideas.json, and the offday-revise/2026-11-09 branch when it exists)\n- Krish's presses on the board: GET /api/board/2026-11-09/view; the live board, where he works, is controlcenter.krishraja.com/#/content?week=2026-11-09&day=thu (the old pages at content.krishraja.com/board are retired and redirect there; the view carries no https link, by the media rule)\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nShow Krish what you made in one message before anything is sent or published.\n\nKeep the board current as you work (week 2026-11-09 and day thu, step next). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with week 2026-11-09 and day thu. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/thu show\n2. Choose a session id once (for example next- and four random letters) and report with it: report_board_session with week 2026-11-09 and day thu, your session_id, step \"next\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/thu start|progress|done|blocked \"one line\" --session <your id> --step next\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/thu add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/thu read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/thu add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n6. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     {
      "kind": "press",
@@ -5336,9 +5336,9 @@
     },
     "prompts": {
      "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nUse primary sources: filings, earnings, regulators, rating agencies and the companies' own pages. Date every figure and mark every estimate as one. Write one Markdown file with: a one-paragraph answer; the ten most surprising facts, each sourced; a table of the main players and the numbers that matter; what the sceptics and the believers each say; and the open questions. Follow the evidence where it goes, and if the real story differs from the idea, say so first.",
-     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-fri.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-fri.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     "storyboard": null,
     "style": {
@@ -5363,7 +5363,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1NE-0O6EOYwnqfIj06f5RrvPAZELURZRF",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5402,7 +5402,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1M8WLwwQl0BX50UJRtkpTHlHn4RMWX6LQ",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5441,7 +5441,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1F2H0pr4BT0bY18evUfttG9SgG3g7NceI",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5480,7 +5480,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1m61Jb1aW0a8fMvwToiUuHASPubT2QuLj",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5518,7 +5518,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1eukiVGP-XfW7xS9qlh7XqlRCOtvjCQSR",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5557,7 +5557,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1b2d9u0-Y-qjyN8dGlyUhRr1N2bYzuEWd",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5597,7 +5597,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1wFcWNyqYgWL787FtSBqnALTvjvd4CwYs",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5636,7 +5636,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1puEcGQR7qlIB4aofGySCYUvdiBfrGIlD",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5675,7 +5675,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1t8nqxFAza78Ofx-Um1p1Xw_3FYcJDMzC",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5714,7 +5714,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1w9n6PUI1nb52xC50wfG91cJ6hfjWuX1h",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5752,7 +5752,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=16l1brGocCpQPIaoJsKtr0JKh03uENnVO",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5791,7 +5791,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=197qf2CcFQNykVehcrWi6b_grs2a7bV4b",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5830,7 +5830,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1odFEa3jzR9_iOasuLi97IvuKN4rD1TYu",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5870,7 +5870,7 @@
         "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5910,7 +5910,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1aVC8fDi_Kkk9SsYTWsL07sqnpdZuQ7la",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5950,7 +5950,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1GDBVFc30kJywUtwQbpwySBQJ1Skexg-z",
         "rejected": false,
         "presses": {
          "yes": {
@@ -5990,7 +5990,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1Ffa3saJ6D93IYsR75rjQ4QyVY3vGd4wX",
         "rejected": false,
         "presses": {
          "yes": {
@@ -6030,7 +6030,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=158BqsUMeplN_sRdRvzsagXjrbRmYRpzk",
         "rejected": false,
         "presses": {
          "yes": {
@@ -6070,7 +6070,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1h5HkovL7sUeV_tugeoYdvrS_iDTpj53x",
         "rejected": false,
         "presses": {
          "yes": {
@@ -6110,7 +6110,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1Ix2KAjWDaJYMWuNc09ma9hyfn-HI6RXb",
         "rejected": false,
         "presses": {
          "yes": {
@@ -6150,7 +6150,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1xtrXjdbR0rm4ImVnfNyDVVEuMIEELB6r",
         "rejected": false,
         "presses": {
          "yes": {
@@ -6190,7 +6190,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1TSpNlscMNh69tBz6jamyW2C9Oi97JpRe",
         "rejected": false,
         "presses": {
          "yes": {
@@ -6230,7 +6230,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1rz4QXIqtIrDkb3eaqzrlo6BxcUm3An-p",
         "rejected": false,
         "presses": {
          "yes": {
@@ -6310,7 +6310,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1wimTz66mETNNnv6YGhc9QsMrRwGB3b1c",
         "rejected": false,
         "presses": {
          "yes": {
@@ -6350,7 +6350,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1cbx6mqGYMRvSinx8CuPkzcY-IWzCK4DW",
         "rejected": false,
         "presses": {
          "yes": {
@@ -6390,7 +6390,7 @@
         "why": null,
         "sample_url": null,
         "sample_drive": null,
-        "still_url": null,
+        "still_url": "/api/board/sign-offs?file=1QqqcuNpas17EsG1P2pGW_r-NX4V3rlh0",
         "rejected": false,
         "presses": {
          "yes": {
@@ -6586,12 +6586,12 @@
     {
      "kind": "prompt",
      "label": "Copy prompt for Growth",
-     "prompt": "Post the Friday 2026-11-13 piece f3fcd5e1-573e-4692-a413-db7c5823a10e that Krish approved on the content-engine board (week of 2026-11-09), from its 3 Posts folder.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "prompt": "Post the Friday 2026-11-13 piece f3fcd5e1-573e-4692-a413-db7c5823a10e that Krish approved on the content-engine board (week of 2026-11-09), from its 3 Posts folder.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     {
      "kind": "prompt",
      "label": "Copy Claude prompt",
-     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by AI use. They gamed it.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe step it is on: Approved in your words. Ready to post: Growth posts it on the day. Once it is out, press It's live with the post's link. Do it, working from the record first.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nShow Krish what you made in one message before anything is sent or published.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step cut). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example cut- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"cut\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step cut\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by AI use. They gamed it.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe step it is on: Approved in your words. Ready to post: Growth posts it on the day. Once it is out, press It's live with the post's link. Do it, working from the record first.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nShow Krish what you made in one message before anything is sent or published.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step cut). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\nHis decisions on this piece when this prompt was copied:\n- Narrative lock signed: done, signed, by Krish at 2026-11-08 (his signature on the lock)\n- Look: done, face-with-proof, by Krish at 2026-11-08T12:00:00Z (his press on the board)\n- Motion style: not made yet\n- Captions: not made yet\n- Scripts approved: done, approved, by Krish (his Approve scripts press on the board)\nBefore asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example cut- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"cut\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step cut\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n7. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     {
      "kind": "press",
@@ -7284,7 +7284,7 @@
     {
      "kind": "prompt",
      "label": "Copy prompt for Growth",
-     "prompt": "Make the Saturday 2026-11-14 off-day post oldproof that Krish approved on the content-engine board (week of 2026-11-09).\n\nMake it in this Claude session, with the Codex plugin building it. Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, with the Codex plugin building it, as in the other usual workflows; memes, Notes images and off-day voiceover shorts are made the same way. The route is content-engine docs/CAROUSEL-STANDARD.md, \"How a carousel is made\". 1. Write the words, the story and the creative direction yourself. A carousel's deck comes first, as carousel-deck/1, and passes python3 scripts/carousel_check.py DECK.json: five whys, the wider trend with an outside source, every card after the cover one full plain sentence of 8 to 20 words a stranger can follow, at most 10 cards, ending on the palette's close: the takeaway, then \"Subscribe free (makeyourmindup.ai)\". 2. Write one Codex card for the pictures with python3 scripts/ve.py card (kind carousel, meme or notes_image, with the day and the inspiration cards Krish ticked), held to config/brand-palette.json, and send it to Codex through the plugin: ve dispatch, or, for a card in growth-makeyourmindup, its codex/queue/ on your claude/ branch, which the Codex lane builds. 3. Codex builds the pictures in code. You verify them: the deck check again, the drawn cards with python3 scripts/carousel_check.py --cards (a cover that looks like a front cover, body cards that use the page centrally with real visual effort), the 10/10 judges for a carousel, shown every card, and a look at every card at phone size. 4. File them in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. Never a scheduled job, a headless model run or a template engine.\n\nMake exactly what Krish approved, nothing else, to the rejection floor and content-engine docs/CAROUSEL-STANDARD.md; Growth (krishanraja/growth-makeyourmindup) posts it.\n\nKeep the board current as you work (week 2026-11-09 and day sat, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with week 2026-11-09 and day sat. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/sat show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with week 2026-11-09 and day sat, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/sat start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/sat add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/sat read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/sat add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "prompt": "Make the Saturday 2026-11-14 off-day post oldproof that Krish approved on the content-engine board (week of 2026-11-09).\n\nMake it in this Claude session, with the Codex plugin building it. Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, with the Codex plugin building it, as in the other usual workflows; memes, Notes images and off-day voiceover shorts are made the same way. The route is content-engine docs/CAROUSEL-STANDARD.md, \"How a carousel is made\". 1. Write the words, the story and the creative direction yourself. A carousel's deck comes first, as carousel-deck/1, and passes python3 scripts/carousel_check.py DECK.json: five whys, the wider trend with an outside source, every card after the cover one full plain sentence of 8 to 20 words a stranger can follow, at most 10 cards, ending on the palette's close: the takeaway, then \"Subscribe free (makeyourmindup.ai)\". 2. Write one Codex card for the pictures with python3 scripts/ve.py card (kind carousel, meme or notes_image, with the day and the inspiration cards Krish ticked), held to config/brand-palette.json, and send it to Codex through the plugin: ve dispatch, or, for a card in growth-makeyourmindup, its codex/queue/ on your claude/ branch, which the Codex lane builds. 3. Codex builds the pictures in code. You verify them: the deck check again, the drawn cards with python3 scripts/carousel_check.py --cards (a cover that looks like a front cover, body cards that use the page centrally with real visual effort), the 10/10 judges for a carousel, shown every card, and a look at every card at phone size. 4. File them in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. Never a scheduled job, a headless model run or a template engine.\n\nMake exactly what Krish approved, nothing else, to the rejection floor and content-engine docs/CAROUSEL-STANDARD.md; Growth (krishanraja/growth-makeyourmindup) posts it.\n\nKeep the board current as you work (week 2026-11-09 and day sat, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with week 2026-11-09 and day sat. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/sat show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with week 2026-11-09 and day sat, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/sat start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/sat add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/sat read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/sat add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n6. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     {
      "kind": "press",
@@ -7384,7 +7384,7 @@
     {
      "kind": "prompt",
      "label": "Copy Claude prompt",
-     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Sat 14 (good news, Off day: Uplifting explainer carousel): AI found a mistake in a maths proof from 1986, its makers say..\nWhere it stands: Approved. Growth makes it and posts it on the day.\n\nWhere everything lives:\n- the week's plan, ideas and off-day options: docs/plans/2026-11-09-week/ (ideas.json, and the offday-revise/2026-11-09 branch when it exists)\n- Krish's presses on the board: GET /api/board/2026-11-09/view; the live board, where he works, is controlcenter.krishraja.com/#/content?week=2026-11-09&day=sat (the old pages at content.krishraja.com/board are retired and redirect there; the view carries no https link, by the media rule)\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nShow Krish what you made in one message before anything is sent or published.\n\nKeep the board current as you work (week 2026-11-09 and day sat, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with week 2026-11-09 and day sat. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/sat show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with week 2026-11-09 and day sat, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/sat start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/sat add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/sat read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/sat add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Sat 14 (good news, Off day: Uplifting explainer carousel): AI found a mistake in a maths proof from 1986, its makers say..\nWhere it stands: Approved. Growth makes it and posts it on the day.\n\nWhere everything lives:\n- the week's plan, ideas and off-day options: docs/plans/2026-11-09-week/ (ideas.json, and the offday-revise/2026-11-09 branch when it exists)\n- Krish's presses on the board: GET /api/board/2026-11-09/view; the live board, where he works, is controlcenter.krishraja.com/#/content?week=2026-11-09&day=sat (the old pages at content.krishraja.com/board are retired and redirect there; the view carries no https link, by the media rule)\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nShow Krish what you made in one message before anything is sent or published.\n\nKeep the board current as you work (week 2026-11-09 and day sat, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with week 2026-11-09 and day sat. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/sat show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with week 2026-11-09 and day sat, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/sat start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/sat add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/sat read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/sat add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n6. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     {
      "kind": "press",
@@ -9824,7 +9824,56 @@
        }
       ],
       "stories_planned": 5,
-      "others": [],
+      "others": [
+       {
+        "kind": "press",
+        "label": "Pick the track",
+        "collection": "picks",
+        "id": "audio-bed-off-sat-oldproof",
+        "revision": 0,
+        "body": {
+         "kind": "audio_pick",
+         "layer": "bed",
+         "item": "off-sat-oldproof"
+        },
+        "choose": {
+         "path": "pick",
+         "ask": "Which track? Play each first.",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "goodie-bags",
+           "label": "Goodie Bags, Dylan Sitts",
+           "line": "Over the carousel, from the off-day rotation (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1s6245EBWBB2O06OtHfPyksEadC1ZRsEL"
+          },
+          {
+           "value": "aspire",
+           "label": "Aspire, Joel Rampage",
+           "line": "Over the carousel, from the off-day rotation (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1azUzaAUR1-3t2v0EcZMtS2P5eVunvgH6"
+          },
+          {
+           "value": "illusions",
+           "label": "Illusions, Taelimb",
+           "line": "Over the carousel, from the off-day rotation (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1ZXro5S75Nqsu8jHW3ePYrd3RSuGJ_FzH"
+          },
+          {
+           "value": "be-alone",
+           "label": "Be Alone, Swif7",
+           "line": "Over the carousel, from the off-day rotation (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1nstb5j7yS_ipsQFbzr8hKrAftpxPcQrx"
+          }
+         ]
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Picked. It is the track for this post."
+       }
+      ],
       "line": "Approved by you, Sun 8 Nov, 09:07.",
       "decision": false,
       "next": {

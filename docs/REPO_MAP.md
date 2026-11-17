@@ -1735,6 +1735,17 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `async function runMirror(opts: { only?: string[]; budgetMs?: number } = {}): Promise<MirrorReport>`
 - `async function copyNow(materialId: string | null | undefined, waitMs = 20_000): Promise<Record<string, unknown>>`
 
+### `apps/control-plane/api/_researchLink.ts`
+
+- `const LINK_TEXT_MAX`
+- `type LinkReader`
+- `function driveFileIdOf(url: string): string | null`
+- `function zipEntry(bytes: Uint8Array, name: string): Uint8Array | null`
+- `function docxText(bytes: Uint8Array): string | null`
+- `function googleLinkReader(token: string, f: typeof fetch = fetch): LinkReader`
+- `async function driveLinkReader(): Promise<LinkReader | null>`
+- `const isResearchLink = (body: Record<string, unknown>) =>`
+
 ### `apps/control-plane/api/_retry.ts`
 
 One retry policy for model calls, because an overload is weather.
@@ -2220,6 +2231,24 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function archiveRows(pieces: readonly ArchivePiece[], scores: readonly ArchiveScore[]): ArchiveRow[]`
 - `async function readArchive(db: SupabaseClient): Promise<{ rows: ArchiveRow[]; scores: 'live' | 'waits_on_migration' }>`
 
+### `apps/control-plane/api/board/_audio.ts`
+
+- `type AudioLayer = 'voice' | 'bed'`
+- `const RECORD_MYSELF`
+- `const AUDIO_ID`
+- `interface BankVoice`
+- `interface Track`
+- `function defaultVoice(bank: unknown = voiceBank): string`
+- `function bankVoices(bank: unknown = voiceBank): BankVoice[]`
+- `function offdayTracks(library: unknown = musicLibrary): Track[]`
+- `function voicePreview(id: string, bank: unknown = voiceBank): string | null`
+- `function trackFiles(library: unknown = musicLibrary): Set<string>`
+- `function audioLayers(kind: string): AudioLayer[]`
+- `function audioPick(picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, layer: AudioLayer, item: string):…`
+- `function audioPresses(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: stri…`
+- `function audioBody(id: string, body: Body, bank: unknown = voiceBank, library: unknown = musicLibrary): boolean`
+- `function soundLine(item: { key: string; kind: string }, picks: Array<{ doc_id: string; body: Body; updated_by?: string …`
+
 ### `apps/control-plane/api/board/_carry.ts`
 
 - `const CARRY_DAYS`
@@ -2318,6 +2347,26 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function cutIncident(place: CutPlace, v: CutVerdict): Incident | null`
 - `async function fileCutLearning(db: SupabaseClient, place: CutPlace, v: CutVerdict, now = new Date()): Promise<CutLearni…`
 
+### `apps/control-plane/api/board/_decisions.ts`
+
+Krish's decisions on a piece, read live from the records, so no session asks him for a press he has already made.
+
+- `type DecisionKey = 'lock' | 'look' | 'motion' | 'captions' | 'scripts'`
+- `interface Decision`
+- `type DecidedStep = 'story' | 'look' | 'board' | 'record'`
+- `interface PieceDecisions`
+- `const DECISIONS_RULE`
+- `interface LockState`
+- `interface ScriptsState`
+- `interface DecisionInputs`
+- `function pieceDecisions(i: DecisionInputs): PieceDecisions`
+- `function nextStep(items: Decision[]): DecidedStep | null`
+- `function decisionsText(p: PieceDecisions): string`
+- `interface FiledScript`
+- `function scriptCut(title: string): 'long' | 'short' | null`
+- `function newestScripts<M extends { id: string; title: string; role?: string | null; at?: string | null; where?: string;…`
+- `function lockRead(text: string | null | undefined): { so_what: string | null; story: string | null }`
+
 ### `apps/control-plane/api/board/_drivePosts.ts`
 
 - `const POSTS_FOLDER_ID`
@@ -2344,7 +2393,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `interface DriveStore`
 - `type DriveCopier`
 - `function copyKey(f: Pick<DriveFile, 'id' | 'name' | 'md5Checksum' | 'modifiedTime' | 'size'>): string`
-- `async function servedDrive(store: DriveStore, copy: DriveCopier, f: DriveFile): Promise<string | null>`
+- `async function servedDrive(store: DriveStore, copy: DriveCopier, f: DriveFile, ttl = TTL): Promise<string | null>`
 - `function supabaseDriveStore(db: { storage: { from(b: string): any } }): DriveStore`
 - `async function driveFile(token: string, id: string, f: typeof fetch = fetch): Promise<DriveFile | null>`
 - `function ownerDriveToken(env: Record<string, string | undefined> = process.env): Promise<string | null>`
@@ -2377,6 +2426,9 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 ### `apps/control-plane/api/board/_handler.ts`
 
 - `function boardPolicy(storeUrl?: string)`
+- `const STYLE_LINK_TTL`
+- `const STYLE_LINK_KEEP_MS`
+- `const STYLE_CACHE`
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
 
 ### `apps/control-plane/api/board/_itsLive.ts`
@@ -2632,6 +2684,7 @@ One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Rul
 - `function gateReport(week: string, id: string, body: Body, now: string)`
 - `function feelReport(week: string, id: string, body: Body, now: string)`
 - `function notesReport(week: string, id: string, body: Body, now: string)`
+- `function notesMaterial(week: string, id: string, body: Body): Body | null`
 - `function offdayReports(week: string, id: string, body: Body, now: string)`
 - `function scoreRow(week: string, id: string, body: Body, now: string)`
 - `async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null>`
@@ -2659,11 +2712,20 @@ Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md
 - `const MAX_MATERIAL`
 - `async function runResearch(prompt: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
 - `class MaterialError`
+- `function pastedKind(role: unknown): 'file' | 'research'`
 - `async function fileMaterial(db: SupabaseClient, pieceId: string, m: { kind: 'file' | 'research'; title: string; content…`
 - `interface LookPick`
 - `async function saveLook(db: SupabaseClient, pieceId: string, pick: { production: string; experiment?: string | null; in…`
 - `async function recentResearch(db: SupabaseClient, pieceId: string, now = Date.now()): Promise<boolean>`
 - `function researchForPiece(pieceId: string, prompt: string)`
+
+### `apps/control-plane/api/board/_researchPrompt.ts`
+
+- `const PERPLEXITY_LABEL`
+- `const RESEARCH_NOTES_HEADING`
+- `interface ResearchContext`
+- `function researchPromptFor(c: ResearchContext): string`
+- `function withResearchPrompts(model: WeekModel, contextOf: (day: string, item: ModelItem) => Omit<ResearchContext, 'item…`
 
 ### `apps/control-plane/api/board/_run.ts`
 
@@ -2774,6 +2836,8 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `type StillLayerKey = StyleLayerKey | 'treatment'`
 - `function stillUrl(layer: StillLayerKey, id: string, samples: unknown = styleSamples): string | null`
 - `function stillFiles(samples: unknown = styleSamples): Set<string>`
+- `const LAST_MOTION`
+- `function undrawableMotion(styles: unknown): Set<string>`
 - `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, str…`
 - `interface StyleInputs`
 - `function dayStyle(i: StyleInputs): DayStyle`
@@ -2781,7 +2845,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface StylePick`
 - `interface SavedStyle`
 - `function needsMotion(body: Body): boolean`
-- `function stylePick(body: Body, motionIds: Set<string> | null): StylePick`
+- `function stylePick(body: Body, motionIds: Set<string> | null, undrawable: ReadonlySet<string> = new Set()): StylePick`
 - `function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle`
 - `async function saveStyle(db: SupabaseClient, pieceId: string, pick: StylePick, now = new Date()): Promise<SavedStyle>`
 
@@ -2818,6 +2882,11 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done' | 'missed'`
 - `type Action`
 - `type PromptAction`
+- `interface SavedNote`
+- `const EARLIER_NOTES`
+- `const SAVED_NOTES_MAX`
+- `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }): SavedNote[]`
+- `function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): WeekModel`
 - `interface DayView`
 - `interface ViewPost`
 - `type DayCore`
@@ -2843,11 +2912,16 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: st…`
 - `function inYourWords(words: string, on: string | null, where?: string | null): string`
 - `function lockSigned(text: string | null | undefined): boolean`
+- `function lockStateOf(locks: ViewInputs['locks'], picks: Array<{ doc_id: string; body: Body }>, day: PostedDay, pieceId:…`
+- `function scriptsStateOf(picks: Array<{ doc_id: string; body: Body; updated_by?: string | null; updated_at?: string | nu…`
+- `function weekDecisions(i: ViewInputs, days: Array<{ day: PostedDay; pieces: Array<{ id: string; approval?: unknown }> }…`
 - `function postingStarted(live: Pick<LiveDay, 'steps'>): boolean`
 - `function backupPrompt(week: string, d: DayView): string`
 - `function buildView(i: ViewInputs): WeekView`
 - `function viewProblems(v: WeekView): string[]`
 - `async function branchSha(f: Fetcher, env: Record<string, string | undefined>, branch: string): Promise<string | null | …`
+- `async function readPieceDecisions(db: SupabaseClient, pieceId: string, env: Record<string, string | undefined> = proces…`
+- `async function readFiledScripts(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string…`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
 - `async function readWeekIdeas(week: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
 - `function growthLiveLine(posts: GrowthPost[]): string`
@@ -2922,6 +2996,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function offdayHead(route: MakeRoute | null): string`
 - `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
 - `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
 - `function primaryUrl(raw: Body | null, fallback: unknown = null): string | null`
 - `function citesOf(raw: Body | null): { urls: string[]; parts: string[] }`
@@ -2938,11 +3013,12 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const WRITE_BACK_HEAD`
 - `const RESEARCH_RULE`
 - `const WALLS`
+- `const CLOSE_LOOP`
 - `const APPROVAL_RULE`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
-- `function withWriteBack<T extends DayLike>(week: string, days: T[]): T[]`
+- `function withWriteBack<T extends DayLike>(week: string, days: T[], decisions: Record<string, PieceDecisions> = {}): T[]`
 - `interface ViewSession`
 - `interface ViewMaterial`
 - `interface Overlay`
@@ -3202,7 +3278,8 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 - `const config`
 - `type LibraryCopy`
-- `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy)`
+- `type DecisionsReader`
+- `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy, readLink?: () => Promise<LinkReader | nu…`
 - `export default createStoreHandler( async () => (await import('../_supabase.`
 
 ### `apps/control-plane/api/content-ideas/synthesize.ts`
@@ -4884,6 +4961,38 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function evidenceState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/film_frame/index.tsx`
+
+- `function plateCrop(image: { pixelWidth: number; pixelHeight: number }, w: number, h: number, focus: { x: number; y: num…`
+- `function onPicture(r: { x: number; y: number; width: number; height: number }, crop: { x: number; y: number; w: number;…`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/film_frame/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/film_frame/state.ts`
+
+- `function grainSample(frame: number, sample: number): number`
+- `function filmState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/flat_mechanism/index.tsx`
+
+- `export { mechanismState } from './state'`
+- `function geometry(p:DeviceProps)`
+- `function Device(p:DeviceProps)`
+- `function drawCanvas(ctx:CanvasRenderingContext2D,p:DeviceProps,images:Readonly<Record<string,CanvasImageSource>>={})`
+
+### `apps/renderer/src/engine/devices/flat_mechanism/schema.ts`
+
+- `const ParamsSchema`
+- `const FillSchema`
+
+### `apps/renderer/src/engine/devices/flat_mechanism/state.ts`
+
+- `function route(from:string, to:string, links:readonly {from:string;to:string}[]):string[]`
+- `function mechanismState(p:DeviceProps)`
+
 ### `apps/renderer/src/engine/devices/focus.ts`
 
 - `const FOCUS: Readonly<Record<string, (p: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | 'frame'>) => Focus …`
@@ -4918,6 +5027,48 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function headlineState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/ink_wash/brush.ts`
+
+The hand-drawn geometry is the shared move's geometry, used by SVG and canvas alike.
+
+- `type BrushShape = 'circle' | 'underline'`
+- `function brushPath(shape: BrushShape, box: readonly [number, number, number, number], seed: number): string`
+
+### `apps/renderer/src/engine/devices/ink_wash/index.tsx`
+
+- `const TALL_PICTURE`
+- `function washLayout({ object, box, aspect }: Pick<DeviceProps, 'object' | 'box' | 'aspect'>)`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `const INK_MATRIX`
+
+### `apps/renderer/src/engine/devices/ink_wash/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/ink_wash/state.ts`
+
+- `function washState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/iso_world/index.tsx`
+
+- `export { worldState, project, routePoint } from './state'`
+- `const TALL_PICTURE`
+- `const TALL_READ`
+- `function worldGeometry(p: DeviceProps)`
+- `function Device(p: DeviceProps)`
+- `function drawCanvas(ctx: CanvasRenderingContext2D, p: DeviceProps, images: Readonly<Record<string, CanvasImageSource>> …`
+
+### `apps/renderer/src/engine/devices/iso_world/schema.ts`
+
+- `const ParamsSchema`
+- `const FillSchema`
+
+### `apps/renderer/src/engine/devices/iso_world/state.ts`
+
+- `const project = ([a, b]: readonly number[]) =>`
+- `function routePoint(cells: number[][], p: number)`
+- `function worldState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+
 ### `apps/renderer/src/engine/devices/kinetic_stat/index.tsx`
 
 - `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'], ghos…`
@@ -4935,6 +5086,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function buildSet(p:DeviceProps)`
 - `function Device(p:DeviceProps)`
+- `function cameraAt(p:DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/ladder_stage/schema.ts`
 
@@ -4962,7 +5114,9 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function viewport(p:DeviceProps)`
 - `function safeBox(p:DeviceProps)`
+- `function screenSize(p:DeviceProps)`
 - `function cameraFor(p:DeviceProps)`
+- `function projectScreen(p:DeviceProps,x:number,y:number)`
 - `function countText(value:number,sourced:number[])`
 - `function paint(g:CanvasRenderingContext2D,p:DeviceProps)`
 - `function Device(p:DeviceProps)`
@@ -4975,6 +5129,8 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `const rect = (index:number,count:number):[number,number,number,number] =>`
 - `function screenState(object:EngineObject,events:readonly EngineEvent[],frame:number)`
+- `function activityEvents(object:EngineObject,events:readonly EngineEvent[])`
+- `function activityAt(object:EngineObject,events:readonly EngineEvent[],frame:number)`
 
 ### `apps/renderer/src/engine/devices/logo_card/index.tsx`
 
@@ -5028,6 +5184,23 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function ringGeometry(object: EngineObject)`
 - `function mintRingState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/morph_stage/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/morph_stage/schema.ts`
+
+- `const ParamsSchema`
+- `type MorphState = z.infer<typeof State>`
+
+### `apps/renderer/src/engine/devices/morph_stage/state.ts`
+
+- `type Point = [number, number]`
+- `function resample(vertices: Point[], count = 96): Point[]`
+- `function outline(s: MorphState): Point[]`
+- `const blend = (a: Point[], b: Point[], t: number): Point[] =>`
+- `function morphState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/office_floor/index.tsx`
 
 - `function Device({ object, events, box, tokens: t, aspect, frame }: DeviceProps)`
@@ -5058,6 +5231,28 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function passportState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 - `function mrzLine(text: string)`
+
+### `apps/renderer/src/engine/devices/pixel_stage/index.tsx`
+
+- `export { stageLayout, stageState } from './state'`
+- `function palettePixels(raster: Raster, tokens: DeviceProps['tokens']): Pixel[]`
+- `type Rasters = Readonly<Record<string, Raster>>`
+- `function pixelGeometry(p: DeviceProps, rasters: Rasters)`
+- `function Device(p: DeviceProps)`
+- `function labelWidth(g: { score: number; dataset?: { unit: string; producerLabel: string } | null | undefined })`
+- `function StageSVG(p: DeviceProps & { rasters: Rasters })`
+- `function drawCanvas(ctx: CanvasRenderingContext2D, p: DeviceProps, rasters: Rasters)`
+
+### `apps/renderer/src/engine/devices/pixel_stage/schema.ts`
+
+- `const Cell`
+- `const MoveSchema`
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/pixel_stage/state.ts`
+
+- `function stageLayout(p: DeviceProps)`
+- `function stageState(p: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/pull_quote/index.tsx`
 
@@ -5277,6 +5472,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `const entranceFrames = () =>`
 - `function throughLineState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/toy_object/index.tsx`
+
+- `function Device(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/toy_object/scene.ts`
+
+- `function buildSet(p: DeviceProps, texture?: T.Texture)`
+- `function projectedBounds(node:T.Object3D,camera:T.Camera,p:DeviceProps)`
+- `function labelBox(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/toy_object/schema.ts`
+
+- `const Params`
 
 ### `apps/renderer/src/engine/devices/types.ts`
 

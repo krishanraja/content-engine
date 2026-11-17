@@ -433,7 +433,8 @@ showed that day (`tests/control-plane/board-state-truth.test.ts`):
 - **His whole production pick, one press each, on every piece before recording** (contract 1.15.0, `lookPresses`):
   **Pick the look** (the treatment, `op: look`), **Pick the motion style** and **Pick the captions** (`op: style`, the
   engine's style route), each with its options, the recommended one first and marked, the one he picked marked, a
-  motion style ve cannot draw yet marked "not ready yet", nothing he said Not this to. At the look step the look leads
+  motion style ve cannot draw yet marked "not ready yet" and listed last (the style press refuses it; Krish, 2026-11-17:
+  "Mark them and build all nine"), nothing he said Not this to. At the look step the look leads
   and the other two wait in the read sheet; at an earlier step (a lock still to sign) all three wait in the read sheet,
   so he can pick before or after he signs; a piece moved to an off day (Tue 17) has the same three, from its own record.
   The recommendation a session makes for a piece is its row's `style` in the week's plan (`production`, `motion`,
@@ -709,6 +710,58 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   what went out on the last three weeks' boards, because a retold story shares no link and no sentence with its post
   (Thu 5 Nov's No spending, no sending short came back for Tue 17 as "Your AI is about to start messaging you first").
   `plan-week`, `references/lookalike.md`, "The same story under new words".
+- **1.19.0 (17 Nov 2026)** added **`saved` on a prompt's `notes`**: his notes already saved on that item (its piece, or
+  an off-day post's key), newest first, whole, `{ at, text }`. The box stays empty for new words and the board shows these
+  beside it. His notes were saved as a comment on the week and filed to his taste ledger, but nothing carried them back,
+  so the box he typed in came back empty when he reopened the piece. Each note is also filed on the piece itself, kind
+  `note`, role `krish_notes`, so every session's `get_piece_board` reads it.
+  - Krish, 2026-11-17: "when I add feedback in to the control center UI, it obviously loads in to the prompt that comes
+    here, but when i reopen the piece at a later date it seems to have vanished".
+
+  The same release added **`tool` on a prompt** (`claude` or `perplexity`) and a second prompt on every piece: the
+  **Perplexity research prompt** beside the **Claude production prompt** (the label that was "Copy prompt for Claude").
+  It shares the notes box and its save, and is built from everything on record: the publication, the piece, the signed
+  story, the sources found, the research already on file (so it goes past it) and his notes (`board/_researchPrompt.ts`).
+  It is only copied. Its answer is one Markdown document that starts with the piece's `piece_id:` line, and his Paste
+  research press files it on the piece as research, which the research library copies into Drive by itself (that press
+  filed a `file` until 17 Nov, which the library never copied). Every Claude prompt now also carries his earlier notes and
+  a last write-back step, "Close the loop as you go": files on the piece as they exist, Drive where docs/DRIVE.md places
+  things, the repository committed with its closeout note, a done report saying where each thing is, and the one next step.
+  - Ruling (Krish, 2026-11-17): "There should probably just be a Perplexity research prompt button that gathers everything
+    we've gotten to date (including my latest comments if I've just made some in the box above) and turns that into a
+    Perplexity research prompt instead of a Claude production prompt. We can distinguish the buttons by changing 'copy
+    prompt for Claude' to \"Claude production prompt\" and the other button to \"Perplexity research prompt\"".
+  - Ruling (Krish, 2026-11-17): "Every prompt created for Claude or Perplexity should leave the new session with nothing to
+    assume, and it should also close the loop on updating the board, the drive, and everything else as it goes."
+
+  A link filed by url with kind research now stays research, and when it names a file in his Drive the store reads the
+  file (a Google Doc, a Word file, a text or JSON file) and files its words beside the link as research, copied to the
+  library (`api/_researchLink.ts`; the answer's `research_text`).
+
+- **1.20.0 (17 Nov 2026)** added **`audio` on a choice's option**: a sample to hear before he picks, a same-site path
+  (an off-day track's brand-kit file through `GET /api/board/sign-offs?file=<drive id>`, or a voice's ElevenLabs preview
+  through `GET /api/board/sign-offs?voice=<bank id>`, a redirect to the bank's own preview clip; no sample spends a
+  credit). With it, every approved off-day post not yet scheduled carries its sound picks in `others`: a voiceover short
+  **Pick the voice** (`config/voice-bank.json`: his Krish Remix voice first, then the stock voices, a proposed one marked
+  "proposed") and **Pick the music under the voice**; a carousel (supporting, good news, explainer) **Pick the track**. The
+  tracks are the off-day rotation in `config/music-library.json` (`"for": "off-day"`), laid at the one bed shape
+  (`config/music-bed.json`, F40). Each is one press, his only: `picks/audio-<voice|bed>-<item>`, kind `audio_pick`,
+  `{layer, item, pick, at}` (`_audio.ts audioBody`), counted only when the board saved it under his login. A session reads
+  his pick and makes the post with it (`ve voice clone --voice <id>`); it never writes one, and a stock voice is generated
+  only once the bank marks it approved from his press. Control Centre plays `audio` in place on each option.
+  Pick the voice always offers **Record it myself** (`record-myself`, no sample): his own take in place of an
+  ElevenLabs voice. The post's Claude prompt then says so, and the making session sends the approved script to his
+  Teleprompter (`teleprompter_send.py`) and cuts from his take; `ve voice clone --voice record-myself` refuses. With an
+  ElevenLabs voice picked, the prompt names it and the `--voice` to use (`_audio.ts soundLine`). Krish, 2026-11-17: "I
+  should be able to choose to record manually myself as well, and then the teleprompter workflow will activate, as
+  opposed to the ElevenLabs workflow".
+  Until a voice holds on a whole script (`config/voice-bank.json` `whole_script.passed`), Record it myself is the
+  **default**: it leads the list marked "(default)", a post with no voice picked is told to go to Teleprompter, and `ve
+  voice clone` with no `--voice` refuses with that route (Ruling, Krish, 2026-11-17: "make Record it myself the default
+  until a voice passes"). Once his default voice passes, it is the default instead.
+  - Krish, 2026-11-17: "I always want to be given a few options in my control center. We should have some stock voices
+    approved in Eleven Labs and, obviously, my own Krish remix voice too as an option on the control center Content
+    Board. voiceovers would have light approved epidemic audio behind the voice."
 
 ## To review: the video sign-offs (contract 1.11.0)
 
@@ -884,7 +937,11 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   reject?: { layer: 'motion' | 'captions' | 'treatment', id } }`, his press only, on a piece scheduled in that week, the same guards
   as the look. A motion id is checked against the bank on main and a caption id against `config/caption-themes.json`
   (400 `unknown_motion` or `unknown_caption`; a look id is checked by its shape, 400 `unknown_look`; 400 `invalid_reject`, 400 `nothing_to_record`; 503 `styles_unavailable`
-  when the bank cannot be read). It writes `content_ideas.meta.style` `{ motion, captions, rejected: { motion, captions, treatment },
+  when the bank cannot be read; 409 `not_drawable_yet` for a pick of a motion style whose `ve_route` says `needs_device`,
+  while a Not this on one is still taken). A style sample or still (`GET /api/board/sign-offs?file=`) is signed for an
+  hour and handed out again by the instance for 25 minutes, with `Cache-Control: private, max-age=1800`, so a still he
+  hovers again costs no Drive call (Krish, 2026-11-17: "The motion screenshots take so long to load when I hover over
+  them"). It writes `content_ideas.meta.style` `{ motion, captions, rejected: { motion, captions, treatment },
   by, at }` beside `meta.look`, read and written guarded on the row's `updated_at` (`patchMeta`), so a write that lands
   in between is kept, never overwritten (409 `piece_busy` when they never stop); the `content_ideas` trigger bumps the
   week's `board_signal`. "Not this" on the picked style takes the pick away; a later Yes takes a style back off the

@@ -8,7 +8,7 @@ from numbers import Real
 
 from .common import CONFIG, load_json, piece_dir
 
-KINDS = ('claude_tokens', 'codex_tokens', 'allowance_points', 'credits',
+KINDS = ('claude_tokens', 'codex_tokens', 'credits',
          'engine_seconds', 'krish_wait_seconds')
 # Not usage: the preflight receipt (scripts/preflight.py) shares the piece's ledger so a sandbox with no engine still
 # keeps it; totals passes over it.
@@ -18,7 +18,6 @@ MEASURES = (
     ('codex_tokens', 'codex tokens', 'codex_tokens_cap'),
     ('total_tokens', 'total tokens', 'total_tokens_cap'),
     ('engine_minutes', 'engine minutes', 'engine_minutes_cap'),
-    ('allowance_points', 'allowance points', 'allowance_points_cap'),
 )
 
 

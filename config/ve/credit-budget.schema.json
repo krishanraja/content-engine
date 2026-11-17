@@ -44,27 +44,11 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "codex_allowance_points",
-        "codex_paid_credits",
         "runway_credits",
         "higgsfield_credits",
         "elevenlabs_credits"
       ],
       "properties": {
-        "codex_allowance_points": {
-          "type": [
-            "number",
-            "null"
-          ],
-          "minimum": 0
-        },
-        "codex_paid_credits": {
-          "type": [
-            "number",
-            "null"
-          ],
-          "minimum": 0
-        },
         "runway_credits": {
           "type": [
             "number",

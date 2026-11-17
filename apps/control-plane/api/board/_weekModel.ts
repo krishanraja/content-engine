@@ -1,11 +1,13 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
+import type { FiledScript, PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
 import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
 import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
 import { thumbsPress } from './_thumbs.js'
 import { makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
 import type { DayStyle, StyleLayer } from './_style.js'
+import { audioPresses, soundLine } from './_audio.js'
 import { canonicalUrl, titleNorm } from '../_text.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
@@ -71,8 +73,9 @@ export const POST_PATH = [
 /** How many stories a week's good news carries: five, on one topic (Krish, 2026-11-13: "The Saturday carousel is
  *  supposed to be five good news stories on that same topic"). */
 export const GOOD_NEWS_STORIES = 5
-/** The one label every hand-off to a session wears. */
-export const CLAUDE_LABEL = 'Copy prompt for Claude'
+/** The one label every hand-off to a Claude session wears (Ruling, Krish, 2026-11-17: "We can distinguish the buttons by
+ *  changing 'copy prompt for Claude' to \"Claude production prompt\" and the other button to \"Perplexity research prompt\""). */
+export const CLAUDE_LABEL = 'Claude production prompt'
 /** Where a prompt opens (contract 1.17.0): a new Claude Code session with the repository chosen and the prompt filled
  *  in (claude.ai/code's own prefill, code.claude.com/docs/en/web-quickstart: it fills the box and he presses send). The
  *  board builds the address from this; the view carries no link. */
@@ -203,10 +206,19 @@ export interface ModelInputs {
   signedLocks?: string[]
   /** The look choices of a piece on a day that is not its series day, by piece id (_view.ts placedStyles). */
   placedStyles?: Record<string, DayStyle>
+  /** His decisions on each approved piece, by piece id (_view.ts weekDecisions; _decisions.ts, F46): every Claude prompt
+   *  carries them, and a placed piece's step comes from them. */
+  decisions?: Record<string, PieceDecisions>
+  /** The newest script of each cut filed on each piece, with its words (_view.ts readFiledScripts; F47). */
+  scripts?: Record<string, FiledScript[]>
+  /** What each piece's signed lock says (lockRead), for the card's read sheet (F47). */
+  lockReads?: Record<string, { so_what: string | null; story: string | null }>
   /** Each piece's lock on file and unsigned, by piece id (_view.ts locksToSign). */
   locksToSign?: Record<string, LockToSign>
   /** Pieces and posts approved, scheduled or live from 14 days before the week to its end (_view.ts recentOut). */
   recentOut?: RecentOut[]
+  /** The week's picks documents (board_documents, picks): his voice and track picks on an off-day post (_audio.ts). */
+  picks?: Array<{ doc_id: string; body: Body; updated_by?: string; revision?: number }>
 }
 
 /** The address of the live board on a week and day: where his typed approval was given. */
@@ -229,7 +241,10 @@ function layerPress(pieceId: string, style: DayStyle, layer: 'treatment' | 'moti
   const L: StyleLayer = style[layer]
   const opts = L.options.filter(o => !o.rejected)
   if (!opts.length) return null
-  const ordered = [...opts].sort((a, b) => Number(b.id === L.picked) - Number(a.id === L.picked) || Number(b.recommended) - Number(a.recommended))
+  // His pick, then the recommended, then the rest, with any style ve cannot draw yet last (Krish, 2026-11-17: "Mark them
+  // and build all nine"): it is shown, marked "(not ready yet)", and the style press refuses it.
+  const ordered = [...opts].sort((a, b) => Number(b.id === L.picked) - Number(a.id === L.picked) || Number(b.recommended) - Number(a.recommended)
+    || Number(a.ready === false) - Number(b.ready === false))
   // Each option carries its one line and, once recorded, its still (contract 1.17.0), which the board shows when he
   // hovers or picks it.
   const options = ordered.map(o => ({ value: o.id, label: `${o.name}${o.id === L.picked ? ' (picked)' : o.recommended ? ' (recommended)' : o.ready === false ? ' (not ready yet)' : ''}`,
@@ -377,7 +392,7 @@ function storyLines(story: StoryState | null | undefined): string {
 /** The one Claude prompt for an item: what it is, where it stands, how it is made and how to report back to the board.
  *  Contract 1.17.0: it asks for his notes first (`notes`, saved as his comment on the day) and opens claude.ai/code with
  *  the prompt filled in (`open`). */
-export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null): ModelAction {
+export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null, decisions: PieceDecisions | null = null): ModelAction {
   const what = it.piece_id ? `the ${DAY_WORD[it.day]} ${it.date} piece ${it.piece_id}` : `the ${DAY_WORD[it.day]} ${it.date} off-day post ${it.key} (${it.kind_label})`
   const growth = !it.piece_id
   const prompt = `You are picking up ${what} of the Make Your Mind Up content engine with no prior context: "${it.title}". `
@@ -386,12 +401,12 @@ export function itemPrompt(week: string, it: { day: PostedDay; date: string; tit
       ? offdayHead(route)
       : 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules. Work freely; when you need Krish, ask him the one question that changes the work most.\n\n')
     + storyLines(story)
-    + writeBack({ pieceId: it.piece_id, week, day: it.day, step })
+    + writeBack({ pieceId: it.piece_id, week, day: it.day, step, decisions })
   const base = thoughtPress(it.day, stepAnchor(step))
   const save: PressAction = { ...base, label: 'Your notes for Claude', done: 'Saved on the board, and in the prompt.',
     body: { ...base.body, use: 'claude_notes', title: cut(it.title, 300), ...(it.piece_id ? { piece_id: it.piece_id } : { item: it.key }) },
     words: { path: 'text', ask: 'Your notes for Claude', required: true } }
-  const action: PromptAction = { kind: 'prompt', label: CLAUDE_LABEL, prompt,
+  const action: PromptAction = { kind: 'prompt', label: CLAUDE_LABEL, tool: 'claude', prompt,
     notes: { ask: 'Your notes for Claude: what to change, or what you think the next step is', heading: NOTES_HEADING, save },
     open: { ...(growth && !route ? GROWTH_CODE_OPEN : CLAUDE_CODE_OPEN) } }
   return action
@@ -469,60 +484,118 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const story = (approved: boolean, path: string | null = null): StoryState => ({ approved, path })
   if (d.path?.current === 'look' && picks.length) {
     return { ...base, line, next: picks[0] as Action, decision: true,
-      others: [itemPrompt(m.week, { ...base, line }, 'look', null, story(true)) as unknown as PressAction, ...picks.slice(1)] }
+      others: [itemPrompt(m.week, { ...base, line }, 'look', null, story(true), m.decisions?.[d.piece_id] ?? null) as unknown as PressAction, ...picks.slice(1)] }
   }
   // His "Signed." on the lock on file, one press, when the story is the step.
   const toSign = m.locksToSign?.[d.piece_id]
   if (d.path?.current === 'story' && toSign && !missed) {
-    const prompt = itemPrompt(m.week, { ...base, line }, 'story', null, story(false, toSign.path)) as unknown as PressAction
+    const prompt = itemPrompt(m.week, { ...base, line }, 'story', null, story(false, toSign.path), m.decisions?.[d.piece_id] ?? null) as unknown as PressAction
     return { ...base, read: { ...read, sources: [lockSource(toSign.path), ...read.sources] }, line, next: signPress(m.week, d.piece_id, toSign) as Action,
       decision: true, others: [prompt, ...picks] }
   }
   const lead = d.actions[0]
   if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) {
-    const tweak = recorded || missed ? [] : [itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, isDone('story') ? story(true) : null) as unknown as PressAction]
+    const tweak = recorded || missed ? [] : [itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction]
     return { ...base, line, next: lead, decision: false, others: [...tweak, ...picks] }
   }
   const signedStory = isDone('story') && !recorded ? story(true) : null
-  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, signedStory), decision: false, others: picks }
+  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, signedStory, m.decisions?.[d.piece_id] ?? null), decision: false, others: picks }
 }
 
 /** A piece his approval holds on a day that is not the day's own piece (moved there, or kept alongside). */
+/** What a placed piece waits on next, by the step his decisions leave (_decisions.ts). */
+const PLACED_NEXT: Record<'story' | 'look' | 'board' | 'record', string> = {
+  story: 'Next: sign the narrative lock',
+  look: 'Next: the production picks not made yet (look, motion style, captions)',
+  board: 'Your production picks are in. Next: the storyboard and both scripts, for your Approve',
+  record: 'Scripts approved. Next: record both cuts from your Teleprompter',
+}
+
 function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number]): ModelItem {
   const row = m.pieces.find(x => String(x.id).toLowerCase() === p.id) ?? null
   const out = p.published || p.stage?.state === 'live'
   // Its signed narrative lock comes with it (a lock follows its piece, not its day), so a piece moved to another day
   // keeps Branded; and a day that passed with it not out says it was missed, like every other item.
   const branded = (m.signedLocks || []).includes(p.id)
-  const done = out ? PIECE_PATH.length : branded ? 1 : 0
+  // His decisions on it (F46): the look he picked moves it on to Fleshed out, and its step is the first one he has not
+  // made, never a step he has already pressed (Tue 17 Nov: "step look" after his three picks at 11:09).
+  const decided = m.decisions?.[p.id] ?? null
+  const lookPicked = Boolean(m.placedStyles?.[p.id]?.treatment.picked)
+  const scriptsOk = decided?.items.find(x => x.key === 'scripts')?.made === true
+  const done = out ? PIECE_PATH.length : branded ? (lookPicked ? (scriptsOk ? 3 : 2) : 1) : 0
+  // What it says now: the signed lock, never the idea row it started from (F47).
+  const said = m.lockReads?.[p.id]
+  const filed = m.scripts?.[p.id] ?? []
   const missed = !out && d.date < m.today
   const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
     title: cut(p.title, 200), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
-    read: readOf(null, { row }), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
+    read: withLock(readOf(null, { row, research: filed.map(f => f.title) }), said), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
     stories_planned: null, others: [] as PressAction[] }
+  const step = decided?.next_step ?? (branded ? 'look' : 'next')
   const line = out ? 'Live.' : missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.`
-    : `${branded ? 'Branded: its narrative lock is signed' : 'Approved'} for ${d.label}. Its make picks up from where it is.`
+    : `${branded ? 'Branded: its narrative lock is signed' : 'Approved'} for ${d.label}. ${branded && decided?.next_step ? `${PLACED_NEXT[decided.next_step]}.` : 'Its make picks up from where it is.'}`
   const picks = out || missed ? [] : lookPresses(p.id, m.placedStyles?.[p.id])
   const toSign = !out && !missed && !branded ? m.locksToSign?.[p.id] : undefined
   if (toSign) {
     const signLine = `Approved for ${d.label}. Read the narrative lock and sign it, or say what to change.`
     return { ...base, read: { ...base.read, sources: [lockSource(toSign.path), ...base.read.sources] }, line: signLine,
       next: signPress(m.week, p.id, toSign) as Action, decision: true,
-      others: [itemPrompt(m.week, { ...base, line: signLine }, 'story', null, { approved: false, path: toSign.path }) as unknown as PressAction, ...picks] }
+      others: [itemPrompt(m.week, { ...base, line: signLine }, 'story', null, { approved: false, path: toSign.path }, decided) as unknown as PressAction, ...picks] }
   }
   // Signed and its look not picked: his production pick leads, as on a series day (Tue 17's piece is still a piece).
-  const lookPicked = Boolean(m.placedStyles?.[p.id]?.treatment.picked)
   const lookPress = picks.find(a => a.op === 'look')
   if (branded && !lookPicked && lookPress) {
     const brandedLine = `Branded for ${d.label}. Pick the look: the recommended one, another, or fold in your inspiration.`
     return { ...base, line: brandedLine, next: lookPress as Action, decision: true,
-      others: [itemPrompt(m.week, { ...base, line: brandedLine }, 'look', null, { approved: true }) as unknown as PressAction, ...picks.filter(a => a !== lookPress)] }
+      others: [itemPrompt(m.week, { ...base, line: brandedLine }, 'look', null, { approved: true }, decided) as unknown as PressAction, ...picks.filter(a => a !== lookPress)] }
   }
-  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, branded ? 'look' : 'next', null, branded && !out && !missed ? { approved: true } : null), decision: false, others: picks }
+  // His production picks in and the scripts filed for his Approve: his Approve scripts leads, in his words, bound to the
+  // exact words filed (F47). Only his press approves; a session filing them only puts the press in front of him.
+  if (branded && lookPicked && !scriptsOk && step === 'board' && filed.length) {
+    const press = scriptsPress(m.week, d.day, p.id, cut(p.title, 150), filed, m.picks || [])
+    const readyLine = `Branded for ${d.label}. Your production picks are in. ${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve: ${filed.map(f => f.title).join('; ')}.`
+    return { ...base, line: readyLine, next: press as Action, decision: true,
+      others: [itemPrompt(m.week, { ...base, line: readyLine }, 'board', null, { approved: true }, decided) as unknown as PressAction, ...picks] }
+  }
+  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, step, null, branded && !out && !missed ? { approved: true } : null, decided), decision: false, others: picks }
+}
+
+/** The read sheet with the signed lock's words in place of the idea row's (F47). */
+function withLock(read: ModelRead, said: { so_what: string | null; story: string | null } | undefined): ModelRead {
+  if (!said) return read
+  return { ...read, so_what: said.so_what ?? read.so_what, story: said.story ? cut(said.story, 4000) : read.story }
+}
+
+/** His Approve scripts on a piece, in his words (picks/<day>-scripts-words, the shape the engine checks: _contracts.ts
+ *  wordsBody, scriptsBody), carrying the exact words of each filed cut so his approval binds those words (F47). */
+export function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ doc_id: string; revision?: number }> = []): PressAction {
+  const doc = `${day}-scripts-words`
+  const texts = Object.fromEntries(filed.map(f => [f.cut, f.text]))
+  const titles = Object.fromEntries(filed.map(f => [f.cut, cut(`${title}: ${f.cut === 'long' ? 'long cut' : 'short cut'}`, 200)]))
+  return { kind: 'press', label: 'Approve scripts', collection: 'picks', id: doc, revision: picks.find(x => x.doc_id === doc)?.revision ?? 0,
+    body: { kind: 'approve_scripts', day, via: 'words', approved: true, piece_id: pieceId, texts, titles, folder_title: cut(title, 200),
+      said_where: 'the Publish Board in Control Centre', session_ref: boardAt(week, day) },
+    words: { path: 'words', ask: 'Your words to approve both scripts as filed ("Approved.")', required: true }, stamp: ['at', 'said_at'],
+    goes: `Approves exactly the words filed on the piece (${filed.map(f => f.title).join('; ')}) and sends them to your Teleprompter once they pass the scripts' check.`,
+    done: 'Approved in your words. The scripts go to your Teleprompter once their check passes.' } as PressAction
 }
 
 /** An approved off-day post on the board: its kind, its path, where it is and its one next action. */
+/** An off-day post, with his sound picks beside its other presses until it is scheduled: the voice and the music under
+ *  it on a voiceover short, the track over a carousel (contract 1.20.0, _audio.ts; Krish, 2026-11-17: "I always want
+ *  to be given a few options in my control center"). */
 function postItem(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
+  const it = postItemBase(m, d, o)
+  const settled = it.missed || o.stage?.state === 'live' || o.stage?.state === 'scheduled'
+  const sound = settled ? [] : audioPresses({ key: o.doc_id, kind: it.kind }, m.picks || [])
+  // The session making it reads his picks in its prompt: an ElevenLabs voice, or his own take through Teleprompter.
+  const said = soundLine({ key: o.doc_id, kind: it.kind }, m.picks || [])
+  const told = <T,>(a: T): T => (said && isObj(a) && (a as Body).kind === 'prompt' && typeof (a as Body).prompt === 'string'
+    ? { ...a, prompt: `${(a as Body).prompt}${said}` } : a)
+  const out = said ? { ...it, next: told(it.next), others: (it.others || []).map(told) } : it
+  return sound.length ? { ...out, others: [...(out.others || []), ...sound] } : out
+}
+function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const raw = rawOption(m, d.day, o.id)
   const { kind, supports } = offdayKind({ ...(raw || {}), format: raw?.format ?? o.format })
   const kind_label = kindLabel(kind, supports)

@@ -114,19 +114,11 @@ def cmd_doctor(_args) -> int:
     login = subprocess.run([codex, 'login', 'status'], capture_output=True, text=True) if codex else None
     status = (login.stdout + login.stderr).strip() if login else ''
     check('codex login', 'ChatGPT' in status, status or 'codex CLI missing: Codex cards cannot run', hard=False)
-    from velib.cards import allowance, codex_thread
-    import time
+    from velib.cards import codex_thread
     try:
         check('codex_thread.mjs (the one way Claude starts Codex)', True, codex_thread())
     except SystemExit as error:
         check('codex_thread.mjs (the one way Claude starts Codex)', False, str(error), hard=False)
-    info = allowance()
-    if info:
-        days = (info['resets_at'] - time.time()) / 86400 if info['resets_at'] else None
-        detail = f"{info['used_percent']:.0f}% of the week used" + (f", resets in {days:.1f} days" if days and days > 0 else '') +                  (f"; above 80% Codex draws paid credits (balance {info['credits']:,.0f}), so cards need Krish's spend approval" if info['used_percent'] > 80 else '')
-        check('codex weekly allowance', info['used_percent'] <= 80, detail, hard=False)
-    else:
-        check('codex weekly allowance', True, 'unknown (no Codex session log yet)', hard=False)
     tools = load_json(CONFIG / 'tools.json')['tools']
     mcp = sorted(k for k, v in tools.items() if 'MCP' in v.get('route', ''))
     rows.append(('INFO', 'connectors', 'Claude: probe these with ToolSearch for this account and record gaps: ' + ', '.join(mcp)))
@@ -545,7 +537,7 @@ def cmd_dispatch(args) -> int:
     if getattr(args, 'queue', False) or codex_lane.route() == 'queue':
         # Codex is not on this machine (a cloud session, Claude Desktop, a Windows-side Claude Code): the card goes to
         # the lane and his home computer builds it. Never a question to Krish about how to reach Codex.
-        item = codex_lane.queue(Path(args.card), getattr(args, 'piece', None), spend_id=getattr(args, 'spend_id', None))
+        item = codex_lane.queue(Path(args.card), getattr(args, 'piece', None))
         print(f've dispatch: Codex is not on this machine; queued {item["id"]} for Codex on the home computer '
               '(its recordings pass picks it up within five minutes). Read the result with ve lane status.')
         return 0
@@ -629,7 +621,7 @@ def cmd_lane(args) -> int:
     if args.action == 'route':
         print(codex_lane.route())
     elif args.action == 'queue':
-        item = codex_lane.queue(Path(args.card), args.piece, args.ref, spend_id=args.spend_id)
+        item = codex_lane.queue(Path(args.card), args.piece, args.ref)
         print(f've lane: queued {item["id"]} for Codex on the home computer. Follow it now, in the background: '
               f'python scripts/ve.py lane wait {item["id"]}')
     elif args.action == 'wait':
@@ -643,7 +635,7 @@ def cmd_lane(args) -> int:
         print(json.dumps(result))
         return 0 if result['ok'] else 1
     elif args.action == 'build':
-        result = codex_lane.build(args.fields, args.ref, args.piece, args.spend_id)
+        result = codex_lane.build(args.fields, args.ref, args.piece)
         if not args.json:
             for problem in result['problems']:
                 print(problem)
@@ -1056,13 +1048,25 @@ def cmd_voice_clone(args) -> int:
         script = Path(args.script) if args.script else directory / 'script.words.json'
         if not script.is_file():
             raise ValueError(f'no signed script words at {script}: give --script')
-        doc = clone_voice.plan(spec, script)
+        # No --voice: Record it myself until his default voice holds on a whole script (Ruling, Krish, 2026-11-17: "make
+        # Record it myself the default until a voice passes"), which plan refuses with the Teleprompter route.
+        from velib import voice_bank  # noqa: PLC0415
+        voice = getattr(args, 'voice', None)
+        if voice is None and voice_bank.default_voice(voice_bank.load()) == voice_bank.RECORD_MYSELF:
+            voice = voice_bank.RECORD_MYSELF
+        doc = clone_voice.plan(spec, script, voice=voice)
         plan_path = write_json(directory / clone_voice.PLAN_FILE, doc)
         clone, credits = doc['clone'], doc['credits']
         print(f"ve voice clone: {doc['piece']}, take {doc['take']} (cuts {', '.join(doc['cuts'])}; published {doc['publish_day']}, "
               'an off day)')
-        print(f"  clone: {clone['name']} ({clone['platform']}, voice id {clone['voice_id']}), approved by Krish on "
-              f"{clone['approved_on']} (registry sha256 {clone['approved_sha256'][:12]})")
+        if clone.get('kind') == 'stock':
+            print(f"  voice: {clone['name']}, an ElevenLabs stock voice (voice id {clone['voice_id']}), approved by Krish on "
+                  f"{clone['approved_on']} (config/voice-bank.json)")
+        else:
+            print(f"  clone: {clone['name']} ({clone['platform']}, voice id {clone['voice_id']}), approved by Krish on "
+                  f"{clone['approved_on']} (registry sha256 {clone['approved_sha256'][:12]})")
+        if doc.get('caution'):
+            print(f"  caution: {doc['caution']}")
         print(f"  model: {doc['model']}; output: {doc['output_format']}, made into {doc['take']}.wav for ve ingest")
         print(f"  script: {doc['script']['file']} (sha256 {doc['script']['sha256'][:12]}, {doc['script']['words']} words)")
         print(f"  cost: {doc['characters']} characters, about {credits['estimate']} ElevenLabs credits ({credits['provider']}, "
@@ -1518,7 +1522,7 @@ def cmd_budget(args) -> int:
         for r in rows:
             print(f'{r["id"]}  {r["week"]}  {r["provider"]} {r["amount"]:g}  {r["note"]}  ({r.get("why", "")})')
         print(f've budget: {len(rows)} provisional reservation(s) to book with Control Center (reserve_credit_spend, '
-              'engine growth-makeyourmindup, pool codex or codex-credits), then ve budget reconcile ID --spend-id UUID')
+              'engine growth-makeyourmindup, the provider\'s own pool), then ve budget reconcile ID --spend-id UUID')
         return 0
     if args.action == 'reconcile':
         if not (args.id and args.spend_id):
@@ -2020,7 +2024,8 @@ def main() -> int:
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
     p.add_argument('--queue', action='store_true', help='send it to the Codex lane even when Codex is on this machine')
-    p.add_argument('--spend-id', help='with the lane: the Control Center reservation booked for this card')
+    # Codex is not counted (Ruling, Krish, 2026-11-17): an old --spend-id is accepted and ignored, never booked.
+    p.add_argument('--spend-id', help=argparse.SUPPRESS)
     p.add_argument('--visible', action='store_true',
                    help="run under the Codex home his Desktop app reads, for social-media legwork started from his own "
                         "computer; video cards never use it (Ruling, Krish, 2026-11-15)")
@@ -2045,10 +2050,10 @@ def main() -> int:
     actions = p.add_subparsers(dest='action', required=True)
     actions.add_parser('route', help='local when Codex is on this machine, else queue')
     a = actions.add_parser('queue'); a.add_argument('card'); a.add_argument('--piece'); a.add_argument('--ref', default='main')
-    a.add_argument('--spend-id', help="the Control Center reservation (reserve_credit_spend, pool codex) booked for this card")
+    a.add_argument('--spend-id', help=argparse.SUPPRESS)  # accepted and ignored: Codex is not counted
     a = actions.add_parser('build', help='on the machine with Codex: write the card, dispatch, verify-card, push its branch')
     a.add_argument('fields'); a.add_argument('--ref', default='main'); a.add_argument('--piece'); a.add_argument('--json', action='store_true')
-    a.add_argument('--spend-id')
+    a.add_argument('--spend-id', help=argparse.SUPPRESS)  # accepted and ignored: a lane item queued before 17 Nov may carry one
     a = actions.add_parser('pending', help="the ventures' queued cards (config/codex-lanes.json)"); a.add_argument('--json', action='store_true')
     a = actions.add_parser('build-venture', help="on the machine with Codex: build one venture card and push codex/<id>")
     a.add_argument('venture'); a.add_argument('branch'); a.add_argument('path'); a.add_argument('--json', action='store_true')
@@ -2109,14 +2114,13 @@ def main() -> int:
     actions = p.add_subparsers(dest='action')
     a = actions.add_parser('add', help='append a usage entry and report the resulting totals',
                            description='Append usage without changing existing ledger lines.')
-    a.add_argument('kind', choices=('claude_tokens', 'codex_tokens', 'allowance_points', 'credits',
+    a.add_argument('kind', choices=('claude_tokens', 'codex_tokens', 'credits',
                                    'engine_seconds', 'krish_wait_seconds'))
     a.add_argument('amount', type=float, help='finite non-negative amount')
     a.add_argument('--note', default='', help='description of this usage')
     a = actions.add_parser('reserve', help='reserve credits against the Control Center credit caps; refused over a cap',
                            description='Reserve before a dispatch or generation runs; settle it with what the provider charged.')
-    a.add_argument('provider', choices=('codex_allowance_points', 'codex_paid_credits', 'runway_credits', 'higgsfield_credits',
-                                        'elevenlabs_credits'))
+    a.add_argument('provider', choices=('runway_credits', 'higgsfield_credits', 'elevenlabs_credits'))
     a.add_argument('amount', type=float, help='finite non-negative amount')
     a.add_argument('--note', default='', help='what it is for')
     a = actions.add_parser('settle', help='record what a reservation really cost')
@@ -2170,6 +2174,8 @@ def main() -> int:
     p.add_argument('action', choices=('profile', 'clone')); p.add_argument('pieces', nargs='+')
     p.add_argument('--out', help='profile: default config/voice/profile.json')
     p.add_argument('--script', help="clone: the signed script words (default <ve dir>/script.words.json)")
+    p.add_argument('--voice', help='clone: the voice bank id he picked on the Content Board (config/voice-bank.json); '
+                                   'default his own Krish Remix voice, the registry clone')
     p.add_argument('--plan', action='store_true', help='clone: print and write the exact generation, spending nothing (the default)')
     p.add_argument('--generate', action='store_true',
                    help='clone: run the plan once, on the machine holding ELEVENLABS_API_KEY, through the credit ledger')

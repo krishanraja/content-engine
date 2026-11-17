@@ -345,8 +345,13 @@ def synthetic_uses(spec: dict) -> list[dict]:
     generated recording, which can only be a voice."""
     ruled = synthetic_capabilities()
     uses = []
+    from . import voice_bank  # noqa: PLC0415
     for index, asset in enumerate(spec.get('assets') or []):
         tool = str(asset.get('tool') or '').strip().lower()
+        # A stock ElevenLabs voice from the voice bank is never his voice or likeness: voice.clone_route holds it to the
+        # bank instead (an approved stock voice; his own voice named as stock is refused there).
+        if asset.get('kind') == 'voice' and voice_bank.stock_name(tool):
+            continue
         head = CLONE_NAME.sub('', tool)  # the capability is read before the clone's name, never inside it
         base = re.split(r'[.:/\s]', head, maxsplit=1)[0]
         matched = [(owner, capability_kind) for owner, capabilities in ruled.items()
@@ -484,14 +489,20 @@ def clone_route_problems(spec: dict) -> list[str]:
 
 
 def clone_tool_problem(asset: dict) -> str | None:
-    """None when the asset's tool is ElevenLabs' voice clone with a registry name after the colon."""
+    """None when the asset's tool is ElevenLabs' voice clone with a registry name after the colon, or an approved stock
+    voice from the voice bank (elevenlabs.stock_voice:<id>; Krish, 2026-11-17: "We should have some stock voices
+    approved in Eleven Labs")."""
+    from . import voice_bank  # noqa: PLC0415
     tool = str(asset.get('tool') or '').strip().lower()
+    if voice_bank.stock_name(tool):
+        return voice_bank.stock_problem(tool)
     head = CLONE_NAME.sub('', tool)
     platform = re.split(r'[.:/\s]', head, maxsplit=1)[0]
     if platform == CLONE_VOICE_PLATFORM and re.search(r'(?<![a-z])voice[ _-]?clone(?![a-z])', head) and CLONE_NAME.search(tool):
         return None
     return (f'{tool or "(no tool)"} is not his ElevenLabs voice clone; write it as '
-            f'{CLONE_VOICE_PLATFORM}.{CLONE_VOICE_CAPABILITY}:<name in krish-clone\'s registry> ({CLONE_VOICE_RULING})')
+            f'{CLONE_VOICE_PLATFORM}.{CLONE_VOICE_CAPABILITY}:<name in krish-clone\'s registry>, or an approved stock voice as '
+            f'elevenlabs.stock_voice:<id in config/voice-bank.json> ({CLONE_VOICE_RULING})')
 
 
 def clone_voice_lints(spec: dict) -> list[str]:
