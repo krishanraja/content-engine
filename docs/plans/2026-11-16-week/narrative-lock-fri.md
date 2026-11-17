@@ -2,8 +2,7 @@
 
 piece_id: c00cd4e0-e1bb-4c60-b36f-cea92897e38c
 Publishes: 2026-11-20
-Working title: AI makes a brilliant auditor. Careful what it digs up.
-(Other titles for his pick: "Let AI read your old files. Bring a shovel." / "Your AI auditor will find the money. And the bodies.")
+Title (Krish's pick, 17 Nov): Your AI auditor will find your missing money. And the skeletons in your closet.
 Rewritten 17 Nov to Krish's note of 17 Nov 18:18 UTC; the earlier draft (The Great Recount) is in git history and on the piece.
 
 ## Surface story
