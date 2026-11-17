@@ -289,6 +289,18 @@ describe('POST /api/board/<Monday>/style', () => {
     expect(state.row.meta.style.rejected).toEqual({ motion: [], captions: ['beast'], treatment: [] })
   })
 
+  it('takes a pick on an off-day video post\'s record linked to this week, never scheduled (Krish, 2026-11-17)', async () => {
+    // "at no point does a voiceover short give me the same controls as a mon/wed/fri piece in terms of the motion, captions"
+    const linked = { ...ROW, scheduled_for: null, lane_slot: null, meta: { offday_link: { week: '2026-11-16', day: 'tue', item: 'off-tue-habits' } } }
+    const { status, state } = await press({ motion: 'ladder', item: 'off-tue-habits' }, { row: linked })
+    expect(status).toBe(200)
+    expect(state.row.meta.style.motion).toBe('ladder')
+    expect(state.row.meta.offday_link).toEqual({ week: '2026-11-16', day: 'tue', item: 'off-tue-habits' })
+    // Linked to another week is not this week's.
+    const other = { ...linked, meta: { offday_link: { week: '2026-11-23', day: 'tue', item: 'off-tue-habits' } } }
+    expect((await press({ motion: 'ladder' }, { row: other })).status).toBe(404)
+  })
+
   it('is his press only, on a piece of this week, with a style the engine knows', async () => {
     expect((await press({ motion: 'ladder' }, { operator: true })).out).toMatchObject({ error: 'his_press' })
     expect(await press({ motion: 'ladder' }, { row: { ...ROW, scheduled_for: '2026-11-25' } })).toMatchObject({ status: 404, out: { error: 'piece_not_in_week' } })

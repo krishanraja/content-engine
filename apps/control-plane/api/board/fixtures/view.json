@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.21.0",
+ "contract_version": "1.23.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -8768,7 +8768,7 @@
         "Screen grab two",
         "Oracle research corpus"
        ],
-       "said": null
+       "said": "Claude Code, 2026-11-16 08:50 UTC (working, board): Drafting the 90-second script"
       },
       "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
       "item": null,
@@ -9539,10 +9539,6 @@
          "done": "Saved on the board, and in the prompt."
         },
         "saved": []
-       },
-       "open": {
-        "app": "claude_code",
-        "repository": "krishanraja/content-engine"
        }
       },
       "decision": false
@@ -9840,10 +9836,6 @@
           "done": "Saved on the board, and in the prompt."
          },
          "saved": []
-        },
-        "open": {
-         "app": "claude_code",
-         "repository": "krishanraja/content-engine"
         }
        },
        {
@@ -10849,6 +10841,269 @@
       "others": [
        {
         "kind": "press",
+        "label": "Pick the look",
+        "op": "look",
+        "body": {
+         "piece_id": "474cd077-a4ea-4d79-8219-13ad3f8c12aa",
+         "experiment": null,
+         "inspiration": [],
+         "item": "off-sat-goodnews"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "production",
+         "ask": "Which look?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "face-with-proof",
+           "label": "Face-led",
+           "line": "Face-led, pitched.",
+           "still": "/api/board/sign-offs?file=1fmbpyjl7qYMe0-Fd3kXnv77ECJ059xj2"
+          },
+          {
+           "value": "kinetic-movement",
+           "label": "Everything moves",
+           "line": "Everything moves, pitched.",
+           "still": "/api/board/sign-offs?file=12MPDJHZPWonuBXzNJ-Ugvq_07IlAmv7M"
+          }
+         ]
+        },
+        "done": "Picked. It is the look for this piece."
+       },
+       {
+        "kind": "press",
+        "label": "Pick the motion style",
+        "op": "style",
+        "body": {
+         "piece_id": "474cd077-a4ea-4d79-8219-13ad3f8c12aa",
+         "item": "off-sat-goodnews"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "motion",
+         "ask": "Which motion style?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "ladder",
+           "label": "The ladder style (recommended)",
+           "line": "How ladder moves.",
+           "why": "You liked it before. It suits the channel often."
+          },
+          {
+           "value": "data-story",
+           "label": "The data-story style (recommended)",
+           "line": "How data-story moves.",
+           "still": "/api/board/sign-offs?file=1IE2CRNYOL2-x2280D7WlK_3CVvCiM994",
+           "why": "It suits the channel often."
+          },
+          {
+           "value": "shape-morph",
+           "label": "The shape-morph style (recommended)",
+           "line": "How shape-morph moves.",
+           "why": "It suits the channel sometimes."
+          },
+          {
+           "value": "full-visual",
+           "label": "The full-visual style",
+           "line": "How full-visual moves.",
+           "still": "/api/board/sign-offs?file=1oiSyDx_3_YPxnLFZF6QRoOGnILnGooxt"
+          },
+          {
+           "value": "toy-3d",
+           "label": "The toy-3d style (not ready yet)",
+           "line": "How toy-3d moves."
+          }
+         ]
+        },
+        "done": "Picked. It is the motion style for this piece."
+       },
+       {
+        "kind": "press",
+        "label": "Pick the captions",
+        "op": "style",
+        "body": {
+         "piece_id": "474cd077-a4ea-4d79-8219-13ad3f8c12aa",
+         "item": "off-sat-goodnews"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "captions",
+         "ask": "Which captions?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "art-directed",
+           "label": "Art-directed phrases (recommended)",
+           "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+           "still": "/api/board/sign-offs?file=1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
+           "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\"."
+          },
+          {
+           "value": "pop",
+           "label": "Pop",
+           "line": "Bold capitals land word by word, and the word being said wears the series colour.",
+           "still": "/api/board/sign-offs?file=1NE-0O6EOYwnqfIj06f5RrvPAZELURZRF"
+          },
+          {
+           "value": "karaoke",
+           "label": "Karaoke",
+           "line": "The whole line is set at once, and each word fills to full cream as he says it.",
+           "still": "/api/board/sign-offs?file=1M8WLwwQl0BX50UJRtkpTHlHn4RMWX6LQ"
+          },
+          {
+           "value": "kinetic-01",
+           "label": "Justified stack",
+           "line": "One word per row in Anton capitals, every row the same width, so the phrase becomes a block of type.",
+           "still": "/api/board/sign-offs?file=1F2H0pr4BT0bY18evUfttG9SgG3g7NceI"
+          },
+          {
+           "value": "kinetic-02",
+           "label": "Edge snap",
+           "line": "Condensed capitals snap in from alternating sides of the frame into one left-aligned lockup.",
+           "still": "/api/board/sign-offs?file=1m61Jb1aW0a8fMvwToiUuHASPubT2QuLj"
+          },
+          {
+           "value": "hustle",
+           "label": "Marker",
+           "line": "Anton capitals, with a series-colour bar drawn under the key word just after he says it.",
+           "still": "/api/board/sign-offs?file=1eukiVGP-XfW7xS9qlh7XqlRCOtvjCQSR"
+          },
+          {
+           "value": "grape",
+           "label": "Ink card",
+           "line": "The line sits on a deep-ink card that opens as the phrase starts, and the word being said is mint.",
+           "still": "/api/board/sign-offs?file=1b2d9u0-Y-qjyN8dGlyUhRr1N2bYzuEWd"
+          },
+          {
+           "value": "beast",
+           "label": "Punch",
+           "line": "Huge outlined Anton capitals punch in, one or two words on screen at a time.",
+           "still": "/api/board/sign-offs?file=1wFcWNyqYgWL787FtSBqnALTvjvd4CwYs"
+          },
+          {
+           "value": "poppin",
+           "label": "Spring",
+           "line": "Mixed-case words spring up from their baseline with one small overshoot.",
+           "still": "/api/board/sign-offs?file=1puEcGQR7qlIB4aofGySCYUvdiBfrGIlD"
+          },
+          {
+           "value": "aarit",
+           "label": "Editorial",
+           "line": "The setup in a quiet Fraunces italic, then the hero word alone in Anton capitals at three times the size.",
+           "still": "/api/board/sign-offs?file=1t8nqxFAza78Ofx-Um1p1Xw_3FYcJDMzC"
+          },
+          {
+           "value": "soft-ai",
+           "label": "Bloom",
+           "line": "Each word comes into focus from a soft blur, and the key word blooms with a brief mint glow.",
+           "still": "/api/board/sign-offs?file=1w9n6PUI1nb52xC50wfG91cJ6hfjWuX1h"
+          },
+          {
+           "value": "gaming-stream",
+           "label": "Terminal",
+           "line": "Plex Mono on a deep-ink tag, each word typing itself out as he says it.",
+           "still": "/api/board/sign-offs?file=16l1brGocCpQPIaoJsKtr0JKh03uENnVO"
+          },
+          {
+           "value": "simple-one-word",
+           "label": "One word",
+           "line": "Only the word being said, in Archivo Black capitals fitted to the width of the caption band.",
+           "still": "/api/board/sign-offs?file=197qf2CcFQNykVehcrWi6b_grs2a7bV4b"
+          },
+          {
+           "value": "podcast",
+           "label": "Two-line scroll",
+           "line": "The line being said brightens word by word, and the line before it slides up and away.",
+           "still": "/api/board/sign-offs?file=1odFEa3jzR9_iOasuLi97IvuKN4rD1TYu"
+          },
+          {
+           "value": "cinematic",
+           "label": "Cinematic",
+           "line": "Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass.",
+           "still": "/api/board/sign-offs?file=1aVC8fDi_Kkk9SsYTWsL07sqnpdZuQ7la"
+          },
+          {
+           "value": "slam",
+           "label": "Slam",
+           "line": "Every word slams in as it is said, and the words already said stack above it, smaller.",
+           "still": "/api/board/sign-offs?file=1GDBVFc30kJywUtwQbpwySBQJ1Skexg-z"
+          },
+          {
+           "value": "georgia-build",
+           "label": "Georgia build",
+           "line": "Small mixed-case words at chest height, one to three at a time, where the typeface shows the stress: Fraunces for small words, Archivo ExtraBold for content, a size up for numbers and names, and Fraunces italic for the key word. Each chunk…",
+           "still": "/api/board/sign-offs?file=1Ffa3saJ6D93IYsR75rjQ4QyVY3vGd4wX"
+          },
+          {
+           "value": "stair-flash",
+           "label": "Staircase flash",
+           "line": "Anton capitals build a stepped lockup word by word on hard cuts, with small connector words at about half size on the same baseline. The key word lands with a short series-colour streak and then cools to cream under a left-to-right wipe.",
+           "still": "/api/board/sign-offs?file=158BqsUMeplN_sRdRvzsagXjrbRmYRpzk"
+          },
+          {
+           "value": "tuck-stack",
+           "label": "Tuck stack",
+           "line": "Tiny lead words tuck tight above big lowercase-as-said Archivo words, so each phrase sets as a mixed-scale lockup. The key word is a size up in the series colour, and the stack lifts away as the page ends.",
+           "still": "/api/board/sign-offs?file=1h5HkovL7sUeV_tugeoYdvrS_iDTpj53x"
+          },
+          {
+           "value": "anchor-quote",
+           "label": "Quote anchor",
+           "line": "A small running caption of up to three words changes every few words, while the page's hero holds beneath it in big Fraunces capitals between mint curly quotes, staying still across the next pages until a new anchor lands or 3 s pass.",
+           "still": "/api/board/sign-offs?file=1Ix2KAjWDaJYMWuNc09ma9hyfn-HI6RXb"
+          },
+          {
+           "value": "rack-focus",
+           "label": "Rack focus",
+           "line": "Focus travels along the line: the word being said is sharp, the words already said slip out of focus, and the hero arrives on its own row in big Anton capitals from a deep blur.",
+           "still": "/api/board/sign-offs?file=1xtrXjdbR0rm4ImVnfNyDVVEuMIEELB6r"
+          },
+          {
+           "value": "flip-hinge",
+           "label": "Hinge",
+           "line": "Each word swings up into place on a hinge at its baseline, like a card flipped upright, lighting as it faces the camera, and the phrase falls away backward word after word as the page ends.",
+           "still": "/api/board/sign-offs?file=1TSpNlscMNh69tBz6jamyW2C9Oi97JpRe"
+          },
+          {
+           "value": "slice",
+           "label": "Slice",
+           "line": "Each Anton capital word arrives cut in two: the top half slides in from the left and the bottom half from the right, and they close on a mint hairline that flashes and fades.",
+           "still": "/api/board/sign-offs?file=1rz4QXIqtIrDkb3eaqzrlo6BxcUm3An-p"
+          },
+          {
+           "value": "slot-roll",
+           "label": "Slot Roll",
+           "line": "Letters roll up one after another into their own little windows like a slot reel, and every digit spins through four other digits before it lands on the true one."
+          },
+          {
+           "value": "receipt-chip",
+           "label": "Receipt chip",
+           "line": "Words type onto a till receipt as he says them, in lower-case mono on deep ink, the paper jolting down on every word and the figure printed on a mint fill.",
+           "still": "/api/board/sign-offs?file=1wimTz66mETNNnv6YGhc9QsMrRwGB3b1c"
+          },
+          {
+           "value": "ink-block",
+           "label": "Ink block",
+           "line": "The phrase builds word by word on stepped full-width ink slabs, each slab wiping in from the left with a thick series-colour bar drawing under the newest word.",
+           "still": "/api/board/sign-offs?file=1cbx6mqGYMRvSinx8CuPkzcY-IWzCK4DW"
+          },
+          {
+           "value": "mint-word",
+           "label": "Mint word",
+           "line": "One big word at a time slams into its own box, which wipes open just ahead of it; small words sit small, and the key word lands in a mint box.",
+           "still": "/api/board/sign-offs?file=1QqqcuNpas17EsG1P2pGW_r-NX4V3rlh0"
+          }
+         ]
+        },
+        "done": "Picked. It is the captions for this piece."
+       },
+       {
+        "kind": "press",
         "label": "Pick the track",
         "collection": "picks",
         "id": "audio-bed-off-sat-goodnews",
@@ -10929,10 +11184,6 @@
          "done": "Saved on the board, and in the prompt."
         },
         "saved": []
-       },
-       "open": {
-        "app": "claude_code",
-        "repository": "krishanraja/content-engine"
        }
       },
       "decision": false

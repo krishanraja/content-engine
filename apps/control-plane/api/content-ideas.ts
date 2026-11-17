@@ -96,7 +96,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export const SAID_REF = /^said:[0-9a-f-]{36}$/
 
 /** The columns a read of one piece returns. */
-export const PIECE_COLUMNS = 'id,state,lane_slot,idea,thesis,body,updated_at'
+export const PIECE_COLUMNS = 'id,state,lane_slot,scheduled_for,idea,thesis,body,updated_at'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['GET', 'POST', 'PATCH'])) return

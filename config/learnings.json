@@ -2457,7 +2457,7 @@
       "on": "2026-11-16",
       "krish": "apply 1 to 6 from the next piece you make this week",
       "why": "The longest Instagram holds were 14 to 45 seconds; the 1:20 TikTok and the 5:02 YouTube cut lost nearly everyone. The session disagreed with the ceiling, once: the brief's own best Instagram videos averaged 44.6 s and 39.7 s of watch, longer than 35, so a 35-second cut sits below what the best pieces held. Applied as he said; the ceiling is one number (SHORT_CUT.most_s) for him to move.",
-      "means": "The short cut runs 20 to 35 seconds as he says it, 45 to 75 script words, one idea: hook, the idea, the call, the last line. A second idea goes to the long cut or the article. Long cuts belong to YouTube search and the Substack post, never the feeds. It replaced the 90-second cut (160 to 195 words) from the pieces published 16 Nov.",
+      "means": "The short cut runs 20 to 35 seconds as he says it, 45 to 75 script words, one idea: hook, the idea, the call, the last line. A second idea goes to the long cut or the article. Long cuts belong to YouTube search and the Substack post, never the feeds. It replaced the 90-second cut (160 to 195 words) from the pieces published 16 Nov. Krish moved it on 17 Nov to 60 to 90 seconds, 160 to 210 words (short-cut-ai-music-length).",
       "status": "encoded",
       "brief": {
         "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
@@ -2496,8 +2496,38 @@
         },
         {
           "file": ".agents/skills/make-piece/SKILL.md",
-          "contains": "and the short cut, 20 to 35 seconds, 9:16,",
+          "contains": "and the short cut, 60 to 90 seconds (160 to 210 words, one story, ONE_STORY_SHORT: Ruling, Krish, 2026-11-17), 9:16,",
           "how": "make-piece writes the short to it"
+        }
+      ]
+    },
+    {
+      "id": "short-cut-ai-music-length",
+      "on": "2026-11-17",
+      "krish": "the one story rule is only really for the 90 second video. the long cut can have more to it, but it needs to be coherently explained, always - or used as further evidence, or a counterpoint. Remember - always needs to be fun to produce and consume. 75 word script is insanely short. the AI music short is about the right amount of words, maybe just less",
+      "why": "The 45 to 75 word short of 16 Nov left no room for a story told well. His AI music short, the reference for tone (config/script-floor/ai-music-short.said.txt), ran 254 words as he said it, and he wants a little less than that.",
+      "means": "The short cut runs 60 to 90 seconds as he says it, 160 to 210 script words, one story with no second example (ONE_STORY_SHORT). The long cut has one main story and may bring in other examples only when each is coherently explained as further evidence or a counterpoint. Every cut is fun to make and to watch (script floor quality h).",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "\"most_words\": 210",
+          "how": "SHORT_CUT, the one block story_check, ve lint, the publish kit and the ideas gate read"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "coherently explained as further evidence or a counterpoint",
+          "how": "TWO_CUTS and LISTENING let the long cut bring other examples in that way, never the short"
+        },
+        {
+          "file": "config/script-floor.json",
+          "contains": "always needs to be fun to produce and consume",
+          "how": "the script floor's quality h, which every script is judged against"
+        },
+        {
+          "file": "apps/control-plane/api/_video.ts",
+          "contains": "seconds: 90, words: 185",
+          "how": "the writer aims the short cut inside the band"
         }
       ]
     },
@@ -2725,6 +2755,31 @@
         "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
       },
       "encoded": []
+    },
+    {
+      "id": "board-feedback-every-day",
+      "on": "2026-11-17",
+      "krish": "from this point onwards, any feedback on the board UI or UX must be done to every single day present and future",
+      "why": "Fixes kept landing on one card only. The Approve scripts rule (F47) reached a piece moved to another day but not a series day's own piece, so Wed 18 sat at \"Make the storyboard and the script together\" with both scripts filed; and an off-day post showed none of the reports and materials filed for it. He asked \"why fixes are not happening consistently to the entire engine/board\".",
+      "means": "A change to what the board shows or offers is made once, in a rule every card builder calls (pieceItem, placedPieceItem, postItemBase in _weekModel.ts), never inside one builder: scriptsReady for his Approve scripts, withWork for the work on file. tests/control-plane/board-every-card.test.ts fails when a builder stops calling a shared rule or a new builder is added without being held to them. A fix for one day is checked against every kind of card: a series day's own piece, a moved piece and an off-day post.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "export function scriptsReady(",
+          "how": "his Approve scripts, one rule for every piece card"
+        },
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "export function withWork(",
+          "how": "the work on file, one rule for every card"
+        },
+        {
+          "file": "tests/control-plane/board-every-card.test.ts",
+          "contains": "no card builder is added without being listed here",
+          "how": "the test that holds every card builder to the shared rules"
+        }
+      ]
     }
   ]
 }

@@ -1,14 +1,17 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
+import { asWritten, wordsBody, wordsDocId } from './_contracts.js'
 import type { FiledScript, PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
 import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
 import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
 import { thumbsPress } from './_thumbs.js'
-import { makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
+import { NEVER_HEADLESS, ROUTE_RULING, makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
 import type { DayStyle, StyleLayer } from './_style.js'
-import { audioPresses, soundLine } from './_audio.js'
+import { RECORD_MYSELF, audioPresses, soundLine, voiceOf } from './_audio.js'
 import { canonicalUrl, titleNorm } from '../_text.js'
+import { offdayPieceId, videoOffday } from './_offdayPiece.js'
+import { productionBrief, takesInOf, takesLine, takesPress, type TakesIn } from './_takesIn.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
 //
@@ -76,11 +79,9 @@ export const GOOD_NEWS_STORIES = 5
 /** The one label every hand-off to a Claude session wears (Ruling, Krish, 2026-11-17: "We can distinguish the buttons by
  *  changing 'copy prompt for Claude' to \"Claude production prompt\" and the other button to \"Perplexity research prompt\""). */
 export const CLAUDE_LABEL = 'Claude production prompt'
-/** Where a prompt opens (contract 1.17.0): a new Claude Code session with the repository chosen and the prompt filled
- *  in (claude.ai/code's own prefill, code.claude.com/docs/en/web-quickstart: it fills the box and he presses send). The
- *  board builds the address from this; the view carries no link. */
-export const CLAUDE_CODE_OPEN = { app: 'claude_code', repository: 'krishanraja/content-engine' } as const
-export const GROWTH_CODE_OPEN = { app: 'claude_code', repository: 'krishanraja/growth-makeyourmindup' } as const
+/** A Claude prompt is only copied, never opened (contract 1.22.0; Ruling, Krish, 2026-11-17: "can you stop having my Claude
+ *  production prompt buttons open up a new browser window? Just copy to clipboard is enough for all such buttons"). The
+ *  `open` field 1.17.0 added is never sent again; the schema keeps it, retired, so no board breaks on an older view. */
 /** The heading his own words go under at the end of a prompt (Ruling, Krish, 2026-11-16: "I should be able to provide
  *  feedback or what I think the next steps are first, and then click the \"Copy to Claude\" button, and the prompt
  *  incorporates that"). */
@@ -195,6 +196,8 @@ export interface WeekModel {
 /** What the model reads besides the view's days: the week, today, the week's plan and the pieces' rows. */
 export interface ModelInputs {
   week: string
+  /** The work on file by scope: each piece id, and day:<Monday>/<day> (_writeBack.ts workByScope). */
+  work?: Record<string, { sessions: Array<{ by: string; state: string; step: string | null; doing: string | null; last_at: string }>; materials: Array<{ title: string; at: string | null; where?: string }> }>
   today: string
   ideas: Body | null
   /** Every plan beside this week's, by Monday (an item carried from another week keeps its words there). */
@@ -219,6 +222,8 @@ export interface ModelInputs {
   recentOut?: RecentOut[]
   /** The week's picks documents (board_documents, picks): his voice and track picks on an off-day post (_audio.ts). */
   picks?: Array<{ doc_id: string; body: Body; updated_by?: string; revision?: number }>
+  /** The look, motion and caption choices of an off-day video post's record (_offdayPiece.ts), from its meta (_view.ts). */
+  offdayStyle?: (pieceId: string, meta: unknown) => DayStyle | null
 }
 
 /** The address of the live board on a week and day: where his typed approval was given. */
@@ -226,7 +231,7 @@ const boardAt = (week: string, day: string) => `https://controlcenter.krishraja.
 /** His "Signed." on a piece's narrative lock, as one press on the board: his typed approval of the lock as it stands
  *  (picks/<day>-lock-words, bound to the lock's words by their hash), on whatever day the piece is placed. */
 export function signPress(week: string, pieceId: string, lock: LockToSign): PressAction {
-  return { kind: 'press', label: 'Sign the lock', collection: 'picks', id: `${lock.day}-lock-words`, revision: lock.revision,
+  return { kind: 'press', label: 'Sign the lock', collection: 'picks', id: wordsDocId(lock.day, 'lock', pieceId), revision: lock.revision,
     body: { kind: 'sign_lock', day: lock.day, via: 'words', approved: true, piece_id: pieceId, lock_path: lock.path, lock_sha256: lock.sha256,
       said_where: 'the Publish Board in Control Centre', session_ref: boardAt(week, lock.day) },
     words: { path: 'words', ask: 'Your words to sign it ("Signed.")', required: true }, stamp: ['at', 'said_at'],
@@ -390,25 +395,24 @@ function storyLines(story: StoryState | null | undefined): string {
 }
 
 /** The one Claude prompt for an item: what it is, where it stands, how it is made and how to report back to the board.
- *  Contract 1.17.0: it asks for his notes first (`notes`, saved as his comment on the day) and opens claude.ai/code with
- *  the prompt filled in (`open`). */
-export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null, decisions: PieceDecisions | null = null): ModelAction {
+ *  Contract 1.17.0: it asks for his notes first (`notes`, saved as his comment on the day). The board only copies it
+ *  (contract 1.22.0). `head`, when given, says how an off-day post is made at its stage in place of offdayHead. */
+export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null, decisions: PieceDecisions | null = null, reportAs: string | null = null, head: string | null = null): ModelAction {
   const what = it.piece_id ? `the ${DAY_WORD[it.day]} ${it.date} piece ${it.piece_id}` : `the ${DAY_WORD[it.day]} ${it.date} off-day post ${it.key} (${it.kind_label})`
   const growth = !it.piece_id
   const prompt = `You are picking up ${what} of the Make Your Mind Up content engine with no prior context: "${it.title}". `
     + `Where it stands: ${it.line}\n\n`
-    + (growth
+    + (head ?? (growth
       ? offdayHead(route)
-      : 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules. Work freely; when you need Krish, ask him the one question that changes the work most.\n\n')
+      : 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules. Work freely; when you need Krish, ask him the one question that changes the work most.\n\n'))
     + storyLines(story)
-    + writeBack({ pieceId: it.piece_id, week, day: it.day, step, decisions })
+    + writeBack({ pieceId: it.piece_id ?? reportAs, week, day: it.day, step, decisions })
   const base = thoughtPress(it.day, stepAnchor(step))
   const save: PressAction = { ...base, label: 'Your notes for Claude', done: 'Saved on the board, and in the prompt.',
     body: { ...base.body, use: 'claude_notes', title: cut(it.title, 300), ...(it.piece_id ? { piece_id: it.piece_id } : { item: it.key }) },
     words: { path: 'text', ask: 'Your notes for Claude', required: true } }
   const action: PromptAction = { kind: 'prompt', label: CLAUDE_LABEL, tool: 'claude', prompt,
-    notes: { ask: 'Your notes for Claude: what to change, or what you think the next step is', heading: NOTES_HEADING, save },
-    open: { ...(growth && !route ? GROWTH_CODE_OPEN : CLAUDE_CODE_OPEN) } }
+    notes: { ask: 'Your notes for Claude: what to change, or what you think the next step is', heading: NOTES_HEADING, save } }
   return action
 }
 /** A step as the comment anchor's last part: lower case letters, digits and dashes. */
@@ -454,7 +458,7 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const missed = d.who === 'missed'
   const raw = rawOption(m, d.day, d.piece_id)
   const row = m.pieces.find(x => String(x.id).toLowerCase() === d.piece_id) ?? null
-  const read = readOf(raw, { row, research: [...(d.path?.materials || []).map(x => x.title), ...d.materials.map(x => x.title)] })
+  const read = withWork(readOf(raw, { row, research: [...(d.path?.materials || []).map(x => x.title), ...d.materials.map(x => x.title)] }), m, [d.piece_id, dayScope(m.week, d.day)])
   const where = stageOf(PIECE_PATH, done)
   const label = where.label
   const base = { key: `piece:${d.piece_id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: d.series,
@@ -493,6 +497,25 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
     return { ...base, read: { ...read, sources: [lockSource(toSign.path), ...read.sources] }, line, next: signPress(m.week, d.piece_id, toSign) as Action,
       decision: true, others: [prompt, ...picks] }
   }
+  // The scripts filed for his Approve on the day's own piece: his Approve scripts leads, bound to the exact words filed,
+  // as on a placed piece (F47). Wed 18 Nov sat at "Make the storyboard and the script together" with both scripts filed
+  // (Krish, 2026-11-17: "the board just has no idea of the work done or what next steps are (I need to approve the
+  // scripts)").
+  const ready = !recorded && !missed && d.path?.current === 'board' ? scriptsReady(m, d.day, d.piece_id, d.title, label) : null
+  if (ready) {
+    const { press, line: readyLine } = ready
+    return { ...base, line: readyLine, next: press as Action, decision: true,
+      others: [itemPrompt(m.week, { ...base, line: readyLine }, 'board', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction, ...picks] }
+  }
+  // His approval counts; a send the server held is said in one line, and the next action checks the scripts and sends.
+  const held = !recorded && !missed ? heldSend(m, d.piece_id) : null
+  if (held) return { ...base, line: held.line, next: itemPrompt(m.week, { ...base, line: held.line }, 'teleprompter', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null), decision: false, others: picks }
+  // Scripts approved: his takes in the Inbox, then the one post-production prompt (_takesIn.ts).
+  const scriptsMade = m.decisions?.[d.piece_id]?.items.find(x => x.key === 'scripts')?.made === true
+  const produce = scriptsMade && !out && !missed && !isDone('cut') ? productionStage(m, { pieceId: d.piece_id, title: d.title, item: null, style: d.path?.style, offday: false,
+    read, decided: m.decisions?.[d.piece_id] ?? null, reportAs: null, base }) : null
+  const link = d.actions.find(a => a.kind === 'open' && doable(a))
+  if (produce) return { ...base, line: produce.line, next: produce.next, decision: produce.decision, others: [...produce.others, ...(link ? [link as unknown as PressAction] : []), ...picks] }
   const lead = d.actions[0]
   if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) {
     const tweak = recorded || missed ? [] : [itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction]
@@ -525,11 +548,10 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const done = out ? PIECE_PATH.length : branded ? (lookPicked ? (scriptsOk ? 3 : 2) : 1) : 0
   // What it says now: the signed lock, never the idea row it started from (F47).
   const said = m.lockReads?.[p.id]
-  const filed = m.scripts?.[p.id] ?? []
   const missed = !out && d.date < m.today
   const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
     title: cut(p.title, 200), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
-    read: withLock(readOf(null, { row }), said), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
+    read: withWork(withLock(readOf(null, { row }), said), m, [p.id]), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
     stories_planned: null, others: [] as PressAction[] }
   const step = decided?.next_step ?? (branded ? 'look' : 'next')
   const line = out ? 'Live.' : missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.`
@@ -551,14 +573,51 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   }
   // His production picks in and the scripts filed for his Approve: his Approve scripts leads, in his words, bound to the
   // exact words filed (F47). Only his press approves; a session filing them only puts the press in front of him.
-  if (branded && lookPicked && !scriptsOk && step === 'board' && filed.length) {
-    const press = scriptsPress(m.week, d.day, p.id, cut(p.title, 150), filed, m.picks || [])
-    const readyLine = `Branded for ${d.label}. Your production picks are in. ${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve: ${filed.map(f => f.title).join('; ')}.`
+  const ready = branded && lookPicked && !scriptsOk && step === 'board' && !missed ? scriptsReady(m, d.day, p.id, p.title, `Branded for ${d.label}. Your production picks are in`) : null
+  if (ready) {
+    const { press, line: readyLine } = ready
     return { ...base, line: readyLine, next: press as Action, decision: true,
       others: [itemPrompt(m.week, { ...base, line: readyLine }, 'board', null, { approved: true }, decided) as unknown as PressAction, ...picks] }
   }
+  const held = !out && !missed && scriptsOk ? heldSend(m, p.id) : null
+  if (held) return { ...base, line: held.line, next: itemPrompt(m.week, { ...base, line: held.line }, 'teleprompter', null, { approved: true }, decided), decision: false, others: picks }
+  const stage = !out && !missed && scriptsOk ? productionStage(m, { pieceId: p.id, title: p.title, item: null, style: m.placedStyles?.[p.id], offday: false,
+    read: base.read, decided, reportAs: null, base }) : null
+  if (stage) return { ...base, line: stage.line, next: stage.next, decision: stage.decision, others: [...stage.others, ...picks] }
   return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, step, null, branded && !out && !missed ? { approved: true } : null, decided), decision: false, others: picks }
 }
+
+/** The one rule every card that carries a piece obeys (Ruling, Krish, 2026-11-17: board feedback is done to every day,
+ *  present and future): scripts filed on the piece and not yet approved by him make his Approve scripts the card's next
+ *  action, bound to the exact words filed (F47). A series day's own piece (pieceItem) and a piece moved to another day
+ *  (placedPieceItem) both call it; tests/control-plane/board-every-card.test.ts holds every card kind to it. */
+export function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, title: string, where: string): { press: PressAction; line: string } | null {
+  const filed = m.scripts?.[pieceId] ?? []
+  if (!filed.length || m.decisions?.[pieceId]?.items.find(x => x.key === 'scripts')?.made === true) return null
+  const press = scriptsPress(m.week, day, pieceId, cut(title, 150), filed, m.picks || [])
+  // An approval of earlier words says so, so he knows why the press is back (pieceDecisions, scriptsChanged).
+  const note = m.decisions?.[pieceId]?.items.find(x => x.key === 'scripts')?.note
+  const line = `${where.replace(/[.\s]+$/, '')}. ${note ? 'Rewritten since you approved them, so they need your Approve again' : `${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve`}: ${filed.map(f => f.title).join('; ')}.`
+  return { press, line }
+}
+
+/** What is on file and who reported last, for any card on any day (Ruling, Krish, 2026-11-17: "any feedback on the
+ *  board UI or UX must be done to every single day present and future"). Every card builder calls it with its own
+ *  scopes: a piece's id, and for a card that owns its day's reports (the day's own piece, an off-day post) the day's
+ *  scope too. Tue 17's habits voiceover had nine reports and a dozen materials on day:2026-11-16/tue and its card
+ *  showed none of them. The materials' titles go in `research`; the newest session's line goes in `said` when
+ *  nothing else is said there. */
+export function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead {
+  const work = scopes.map(s => m.work?.[s]).filter((x): x is NonNullable<typeof x> => Boolean(x))
+  if (!work.length) return read
+  const materials = work.flatMap(w => w.materials).sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')))
+  const research = [...new Set([...read.research, ...materials.map(x => x.title)])].slice(0, 40)
+  const last = work.flatMap(w => w.sessions).filter(x => x.doing).sort((a, b) => b.last_at.localeCompare(a.last_at))[0]
+  const said = read.said ?? (last ? cut(`${last.by}, ${last.last_at.slice(0, 16).replace('T', ' ')} UTC (${last.state}${last.step ? `, ${last.step}` : ''}): ${last.doing}`, 1200) : null)
+  return { ...read, research, said }
+}
+/** The day's own scope for the work on file. */
+const dayScope = (week: string, day: string) => `day:${week}/${day}`
 
 /** The read sheet with the signed lock's words in place of the idea row's (F47). */
 function withLock(read: ModelRead, said: { so_what: string | null; story: string | null } | undefined): ModelRead {
@@ -569,7 +628,7 @@ function withLock(read: ModelRead, said: { so_what: string | null; story: string
 /** His Approve scripts on a piece, in his words (picks/<day>-scripts-words, the shape the engine checks: _contracts.ts
  *  wordsBody, scriptsBody), carrying the exact words of each filed cut so his approval binds those words (F47). */
 export function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ doc_id: string; revision?: number }> = []): PressAction {
-  const doc = `${day}-scripts-words`
+  const doc = wordsDocId(day, 'scripts', pieceId)
   const ordered = [...filed].sort((a, b) => (a.cut === b.cut ? 0 : a.cut === 'long' ? -1 : 1))
   const texts = Object.fromEntries(ordered.map(f => [f.cut, f.text]))
   const titles = Object.fromEntries(ordered.map(f => [f.cut, cut(`${title}: ${f.cut === 'long' ? 'long cut' : 'short cut'}`, 200)]))
@@ -597,7 +656,17 @@ export function scriptsPress(week: string, day: string, pieceId: string, title: 
 function postItem(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const it = postItemBase(m, d, o)
   const settled = it.missed || o.stage?.state === 'live' || o.stage?.state === 'scheduled'
-  const sound = settled ? [] : audioPresses({ key: o.doc_id, kind: it.kind }, m.picks || [])
+  // An off-day post cut on the ve route gets a piece's look, motion and caption picks, saved on its own record
+  // (_offdayPiece.ts; Krish, 2026-11-17: "at no point does a voiceover short give me the same controls as a mon/wed/fri
+  // piece in terms of the motion, captions etc etc. why not?"). `item` lets the press make that record when it has none.
+  const raw = rawOption(m, d.day, o.id)
+  const video = !settled && videoOffday(it.kind, str(raw?.format) ?? o.format)
+  const pid = video ? offdayPieceId(m.week, o.doc_id, raw) : null
+  const row = pid ? m.pieces.find(x => String(x.id).toLowerCase() === pid) : undefined
+  const style = pid && m.offdayStyle ? m.offdayStyle(pid, row?.meta) : null
+  const shown = new Set([it.next, ...(it.others || [])].map(a => (isObj(a) ? String((a as Body).label) : '')))
+  const looks = pid && style ? lookPresses(pid, style).filter(a => !shown.has(a.label)).map(a => ({ ...a, body: { ...(a.body as Body), item: o.doc_id } }) as PressAction) : []
+  const sound = [...looks, ...(settled ? [] : audioPresses({ key: o.doc_id, kind: it.kind }, m.picks || []))]
   // The session making it reads his picks in its prompt: an ElevenLabs voice, or his own take through Teleprompter.
   const said = soundLine({ key: o.doc_id, kind: it.kind }, m.picks || [])
   const told = <T,>(a: T): T => (said && isObj(a) && (a as Body).kind === 'prompt' && typeof (a as Body).prompt === 'string'
@@ -617,7 +686,10 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const path = steps(POST_PATH, done, [o.outcome?.at?.slice(0, 10) ?? null, null, o.stage?.state === 'scheduled' ? o.stage.at?.slice(0, 10) ?? null : null, o.stage?.state === 'live' ? o.stage.at?.slice(0, 10) ?? null : null])
   const missed = state === 'missed'
   const stories = kind === 'good_news' ? storiesOf(raw, o) : null
-  const read = readOf(raw, { text: o.text, said: o.said, source: o.source })
+  // An off-day piece he records has its own record in the engine (placeOffday): its reports and materials, and its
+  // prompt's write-back, go to that piece; the day's scope is read beside it, where sessions reported before it had one.
+  const own = recordedPiece(m, raw) ?? linkedPiece(m, offdayPieceId(m.week, o.doc_id, raw))
+  const read = withWork(readOf(raw, { text: o.text, said: o.said, source: o.source }), m, [...(own ? [own] : []), dayScope(m.week, d.day)])
   const base = { key: o.doc_id, type: 'post' as const, day: d.day, date: d.date, kind, kind_label, title: cut(o.title, 200), approved: o.outcome?.label ?? null,
     stage: stageOf(POST_PATH, done), path, missed, read, piece_id: null,
     item: o.item?.key ?? null, supports, move: o.move ?? null, links: o.stage?.links ?? [], stories, stories_planned: kind === 'good_news' ? GOOD_NEWS_STORIES : null, others: [] as PressAction[] }
@@ -639,7 +711,157 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
       next: { kind: 'run', label: `Find the other ${GOOD_NEWS_STORIES - stories.length} stories`, job: 'saturday-goodnews', input: { week: m.week, fill: o.doc_id }, runs_on: 'GitHub · saturday-goodnews.yml' } }
   }
   if (state === 'scheduled') return { ...base, line, next: null, decision: false }
-  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format)), decision: false }
+  // A post he records himself, its script approved: the next session assumes the take is in the Video Engine Inbox and
+  // cuts it (Krish, 2026-11-17: "when it gets to this stage and the files are in teleprompter, the next action presumes I
+  // have recorded the video and put it in the inbox").
+  const scripts = !made && !missed && recordsItself(kind, m.picks || [], o.doc_id) ? offdayScripts(m.picks || [], raw) : null
+  if (scripts) {
+    const held = scripts.send && scripts.send !== 'sent' ? heldSend(m, scripts.piece_id) : null
+    const decided = own ? m.decisions?.[own] ?? null : null
+    if (held) {
+      const heldLine = `${where}. ${held.line}`.replace(/\.\./g, '.')
+      return { ...base, line: heldLine, next: itemPrompt(m.week, { ...base, line: heldLine }, 'record', 'motion', null, decided, own, recordHead(scripts)), decision: false }
+    }
+    // Approved and in his Teleprompter: his takes in the Inbox, then the one post-production prompt (_takesIn.ts).
+    const row = m.pieces.find(x => String(x.id).toLowerCase() === scripts.piece_id)
+    const stage = productionStage(m, { pieceId: scripts.piece_id, title: base.title, item: o.doc_id, style: m.offdayStyle?.(scripts.piece_id, row?.meta) ?? null, offday: true,
+      read, decided, reportAs: own, base, recordHead: recordHead(scripts) })
+    if (stage) {
+      const line = `${where}. ${stage.line}`.replace(/\.\./g, '.')
+      return { ...base, line, next: stage.next, decision: stage.decision, others: stage.others }
+    }
+  }
+  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format), null, own ? m.decisions?.[own] ?? null : null, own), decision: false }
+}
+
+/** Whether an off-day post has a recorded step: a voiceover short whose voice is his own take (Record it myself, his
+ *  pick or the default until a voice holds on a whole script; _audio.ts). An ElevenLabs voice has no take to wait for. */
+export function recordsItself(kind: string, picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string): boolean {
+  return kind === 'voiceover' && voiceOf(picks, item) === RECORD_MYSELF
+}
+
+/** His approval of an off-day post's script, read by the piece id its option carries, whether or not the engine has a row
+ *  for it (Tue 17's habits voiceover, 701a2c55, has none): his Approve scripts press (picks/<day>-scripts, his login) or
+ *  his typed approval (picks/<day>-scripts-words[-<8 hex>], wordsBody, read past the server's own send answer). Any day:
+ *  a post moved after he approved keeps the approval saved under the day it was on. */
+export interface OffdayScripts { piece_id: string; at: string | null; on: string | null; words: string | null; texts: Record<string, string>; titles: Record<string, string>; folder: string | null; send: string | null; send_error: string | null }
+const SCRIPTS_DOC = /^(mon|tue|wed|thu|fri|sat|sun)-scripts(-words(-[0-9a-f]{8})?)?$/
+export function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Body | null): OffdayScripts | null {
+  const id = typeof raw?.piece_id === 'string' && UUID_RE.test(raw.piece_id) ? raw.piece_id.toLowerCase() : null
+  return id ? scriptsApproval(picks, id) : null
+}
+/** His approval of a piece's scripts, by its id, on any day: his Approve scripts press or his typed approval, newest first,
+ *  with the server's own Teleprompter answer beside it (send, send_error), never counted against it. */
+export function scriptsApproval(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, pieceId: string): OffdayScripts | null {
+  const id = pieceId.toLowerCase()
+  const doc = [...picks].sort((a, b) => String(b.updated_at || b.body?.at || '').localeCompare(String(a.updated_at || a.body?.at || ''))).filter(p => SCRIPTS_DOC.test(p.doc_id) && isObj(p.body) && String(p.body.piece_id || '').toLowerCase() === id && p.body.approved === true)
+    .find(p => /-words/.test(p.doc_id) ? wordsBody(p.doc_id, asWritten(p.body)) : p.updated_by === 'Krish')
+  if (!doc) return null
+  const b = doc.body
+  const strings = (v: unknown): Record<string, string> => (isObj(v) ? Object.fromEntries(Object.entries(v).filter((e): e is [string, string] => typeof e[1] === 'string')) : {})
+  const at = str(b.said_at) ?? str(b.at) ?? str(doc.updated_at)
+  const on = at && Number.isFinite(Date.parse(at)) ? new Date(at).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).replace(',', '') : null
+  return { piece_id: id, at: at && Number.isFinite(Date.parse(at)) ? new Date(at).toISOString() : null, on, words: str(b.words), texts: strings(b.texts), titles: strings(b.titles), folder: str(b.folder_title),
+    send: isObj(b.send) ? str(b.send.status) : null, send_error: isObj(b.send) ? str(b.send.error) : null }
+}
+
+/** After his approved scripts are in his Teleprompter, on every card holding the piece (Krish, 2026-11-17: "whenever I
+ *  press approve script, the new board state should be waiting for me to confirm the videos are in the Inbox"): his
+ *  press My takes are in the Inbox until he makes it; then the takes by name, a production pick still missing as his
+ *  press, and then the one post-production prompt (_takesIn.ts). Null once a cut is made. */
+export function productionStage(m: ModelInputs, p: { pieceId: string; title: string; item: string | null; style: DayStyle | null | undefined; offday: boolean;
+  read: ModelRead; decided: PieceDecisions | null; reportAs: string | null; base: { day: PostedDay; date: string; title: string; kind_label: string; piece_id: string | null; key: string };
+  /** How the take is made, for the record step's prompt (an off-day post's recordHead). */
+  recordHead?: string | null }):
+  { line: string; next: Action; decision: boolean; others: PressAction[] } | null {
+  const row = m.pieces.find(x => String(x.id).toLowerCase() === p.pieceId.toLowerCase())
+  const meta = isObj(row?.meta) ? row!.meta as Body : {}
+  const making = isObj(meta.making) ? meta.making as Body : {}
+  if (Array.isArray(making.video_assets) && making.video_assets.length) return null
+  // Takes the home pass or the take-placing job already put on the making record count as his takes too.
+  const placed = (Array.isArray(making.recordings) ? making.recordings : []).filter(isObj)
+  const takes: TakesIn | null = takesInOf(meta) ?? (placed.length ? { confirmed_at: String(placed[0].at || ''), by: 'the take-placing job', since: null,
+    files: placed.map(r => ({ name: String(r.path), drive_id: String(r.path), bytes: null, sha256: /([0-9a-f]{64})/.exec(String(r.path))?.[1] ?? null, md5: null, modified: String(r.at || '') })) } : null)
+  const promptOf = (line: string, head: string | null) => itemPrompt(m.week, { ...p.base, line }, 'produce', p.offday ? 'motion' : null, null, p.decided, p.reportAs, head) as unknown as PressAction
+  if (!takes || !takes.files.length) {
+    const line = p.offday ? 'Your script is approved. Record it from your Teleprompter, drop the take in the Video Engine Inbox, then press My takes are in the Inbox.'
+      : 'Your scripts are approved. Record both cuts from your Teleprompter, drop the takes in the Video Engine Inbox, then press My takes are in the Inbox.'
+    const record = itemPrompt(m.week, { ...p.base, line }, 'record', p.offday ? 'motion' : null, null, p.decided, p.reportAs, p.recordHead ?? null) as unknown as PressAction
+    return { line, next: takesPress(p.pieceId, p.item) as unknown as Action, decision: true, others: [record] }
+  }
+  // Every production pick decided before the one-shot cut: a missing one is his press first, unless a take is already
+  // recorded on the making record (a recorded take is never sent back to the look); then the prompt names it.
+  const layers = (['treatment', 'motion', 'captions'] as const).filter(l => p.style && !p.style[l].picked)
+  const missing = lookPresses(p.pieceId, p.style).filter(a => /^Pick /.test(a.label)).map(a => (p.item ? { ...a, body: { ...(a.body as Body), item: p.item } } as PressAction : a))
+  if (layers.length && missing.length && !placed.length) {
+    const line = `${takesLine(takes)} First, ${missing[0].label.toLowerCase()}, so the cut is fully decided.`
+    return { line, next: missing[0] as unknown as Action, decision: true, others: missing.slice(1) }
+  }
+  const picked = (l: 'treatment' | 'motion' | 'captions', word: string) => {
+    const L = p.style?.[l]
+    const o = L?.options.find(x => x.id === L.picked)
+    return L?.picked ? `${word}: ${o?.name ?? L.picked} (${L.picked}), picked by ${L.picked_by === 'spec' ? 'Krish in the spec he signed' : 'Krish'}${L.picked_at ? ` on ${L.picked_at.slice(0, 10)}` : ''}.` : null
+  }
+  const approval = scriptsApproval(m.picks || [], p.pieceId)
+  const decisions = [picked('treatment', 'The look'), picked('motion', 'The motion style'), picked('captions', 'The captions'),
+    approval ? `The scripts: approved by Krish${approval.on ? ` on ${approval.on}` : ''}${approval.words ? `, in his words "${cut(approval.words, 160)}"` : ''}; the words are below.` : 'The scripts: approved by Krish.']
+    .filter((x): x is string => Boolean(x))
+  const word = { treatment: 'the look', motion: 'the motion style', captions: 'the captions' }
+  for (const l of layers) decisions.push(`Not picked yet: ${word[l]}. Use the option marked recommended on the board, say so in your done report, and leave his Pick press open.`)
+  const line = takesLine(takes)
+  const head = productionBrief({ pieceId: p.pieceId, title: p.title, takes, decisions, research: p.read.research, scripts: approval?.texts ?? {}, offday: p.offday })
+  return { line, next: promptOf(line, head) as unknown as Action, decision: false, others: missing }
+}
+
+/** His approved scripts that the server's send did not put in his Teleprompter (held, refused, failed or no key), with the
+ *  making record not showing them in it since: his approval counts, the card says why they are not there yet, and the
+ *  next action is the session that checks them and sends (Krish, 2026-11-17: "the button does not seem to work. Would it
+ *  not just send to teleprompter directly and change the board state immediately?"). Null when nothing waits. */
+export function heldSend(m: Pick<ModelInputs, 'picks' | 'pieces'>, pieceId: string): { line: string; approval: OffdayScripts } | null {
+  const a = scriptsApproval(m.picks || [], pieceId)
+  if (!a || !a.send || a.send === 'sent') return null
+  const row = m.pieces.find(x => String(x.id).toLowerCase() === pieceId.toLowerCase())
+  const making = isObj(row?.meta) && isObj((row!.meta as Body).making) ? (row!.meta as Body).making as Body : null
+  const tp = making && isObj(making.teleprompter) && isObj(making.teleprompter.cuts) ? making.teleprompter.cuts as Body : null
+  const cuts = Object.keys(a.texts)
+  if (tp && cuts.length && cuts.every(c => isObj(tp[c]) && typeof (tp[c] as Body).script_id === 'string' && !(tp[c] as Body).error)) return null
+  const why = a.send_error ? ` (${cut(a.send_error.split(/[:;]/)[0], 160)})` : ''
+  const line = `You approved ${cuts.length > 1 ? 'the scripts' : 'the script'}${a.on ? ` on ${a.on}` : ''}, and your approval counts. `
+    + `${cuts.length > 1 ? 'They are' : 'It is'} not in your Teleprompter yet: the send was ${a.send}${why}. `
+    + 'Next, a session checks them (making.py scripts), has two fresh readers read them back, then sends exactly the words you approved (teleprompter_send.py).'
+  return { line, approval: a }
+}
+
+/** How a post he records is made once its script is approved: get his take from the Inbox and cut it on the ve route. */
+export function recordHead(sc: OffdayScripts): string {
+  const cuts = Object.keys(sc.texts)
+  const named = cuts.map(c => `${c}${sc.titles[c] ? ` ("${sc.titles[c]}")` : ''}`).join(', ')
+  return `Krish records this one himself, and he has approved its script${sc.on ? ` (${sc.on}` : ''}${sc.words ? `${sc.on ? ', ' : ' ('}in his words: "${cut(sc.words, 200)}")` : sc.on ? ')' : ''}. `
+    + `Its piece id is ${sc.piece_id}${named ? `; the approved words are the ${named} script on the week's picks` : ''}${sc.folder ? `, in his Teleprompter folder "${sc.folder}"` : ''}. `
+    + 'Assume he has recorded it from his Teleprompter and dropped the take in the Video Engine Inbox. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules.\n\n'
+    + '1. Get the take: python scripts/post-pack/recording.py list, then python scripts/post-pack/recording.py get NAME (AGENTS.md rule 9). '
+    + 'If no take for this post is in the Inbox, check his Teleprompter holds exactly the approved words'
+    + `${sc.send && sc.send !== 'sent' ? ` (the board's own send was ${sc.send})` : ''}; if it does not, send them (scripts/post-pack/teleprompter_send.py). `
+    + 'Then tell Krish in one line that it waits on his recording, and stop.\n'
+    + '2. Check the take says the approved words, and measure picture against sound before anything is built on it (scripts/av_sync.py).\n'
+    + `3. Cut it in this Claude session on the ve route, with the Codex plugin building its pictures. ${ROUTE_RULING} `
+    + 'Read docs/ve/ENGINE.md, then follow docs/ve/RUNBOOK.md: one signed spec (creative-direction.json, schema_version 2) '
+    + 'from his take and the approved words; Codex builds the devices and plates from cards (ve card, ve dispatch, ve verify-card); '
+    + 've renders the cut; a separate reviewer watches and listens to it at full size against the approved words before it is called ready.\n'
+    + `4. File it in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. ${NEVER_HEADLESS}\n\n`
+}
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+/** An off-day post's own record once it exists (_offdayPiece.ts linkOffdayPiece): its reports and its prompt's write-back
+ *  go to it, as for a piece he records. */
+function linkedPiece(m: Pick<ModelInputs, 'pieces'>, id: string): string | null {
+  return m.pieces.some(x => String(x.id).toLowerCase() === id) ? id : null
+}
+/** The engine record an off-day option names (its piece_id, a piece he records), only when that record exists: an id
+ *  with no row (Tue 17's habits voiceover, 701a2c55, never made) is never handed to a session as a piece. */
+export function recordedPiece(m: Pick<ModelInputs, 'pieces'>, raw: Body | null): string | null {
+  const id = typeof raw?.piece_id === 'string' && UUID_RE.test(raw.piece_id) ? raw.piece_id.toLowerCase() : null
+  return id && m.pieces.some(x => String(x.id).toLowerCase() === id) ? id : null
 }
 
 /** Why an idea is on the ideas board, in one line. */
@@ -758,7 +980,10 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
     if (piece) items.push(piece)
     // Every other piece his approval holds on the day (contract 1.13.0): one he moved here, or one he kept alongside the
     // piece that replaced it. Drawn as a piece with its Move to…, never hidden behind the day's own piece.
-    for (const p of d.pieces) if (p.approval && p.id !== piece?.piece_id) items.push(placedPieceItem(m, d, p))
+    // An off-day piece he records is drawn once, as its off-day post (its record follows it there, recordedPiece).
+    const recordedHere = new Set(d.options.filter(o => o.doc_id.startsWith('off-') && o.status === 'approved' && o.outcome?.id === 'approved')
+      .map(o => recordedPiece(m, rawOption(m, d.day, o.id))).filter((x): x is string => Boolean(x)))
+    for (const p of d.pieces) if (p.approval && p.id !== piece?.piece_id && !recordedHere.has(p.id)) items.push(placedPieceItem(m, d, p))
     for (const o of d.options) {
       // The day's piece is drawn as the piece; a publishing day's other Sunday options and every off-day option he has
       // not approved are ideas, on the ideas board only.

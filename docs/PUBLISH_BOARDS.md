@@ -195,13 +195,14 @@ anywhere" (2026-11-02) for these two decisions and adds nothing else.
 
 - **What a session carries.** His exact typed words, verbatim, with when and where he typed them and the session's link,
   as one board document per day the piece is on (Monday to Saturday, since 14 Nov: a piece he places on an off day is
-  still a piece), or his own "Signed." press on the board (Sign the lock): `picks/<day>-lock-words` (kind `sign_lock`, bound to the lock he approved by
-  `lock_path` and `lock_sha256`, `making.py lock_body_hash`) or `picks/<day>-scripts-words` (kind `approve_scripts`, the
+  still a piece), or his own "Signed." press on the board (Sign the lock): `picks/<day>-lock-words-<piece>` (kind `sign_lock`, bound to the lock he approved by
+  `lock_path` and `lock_sha256`, `making.py lock_body_hash`) or `picks/<day>-scripts-words-<piece>` (kind `approve_scripts`, the
   exact words of each cut as the Approve scripts press carries them, with their Teleprompter titles and folder). Written
   only with `python3 scripts/post-pack/board_session.py <uuid> approve lock|scripts ...` (the board session tools, on the
   operator's key); `--sign` also writes his words as the lock's signature line when it has none, so `making.py`'s
   narrative check and the board agree. `_contracts.ts` (`WORDS_ID`, `wordsBody`) holds the shape; a session's document
   with `via: words` anywhere else is refused.
+  Each approval is a document of its own piece: `<piece>` is the first 8 hex of its piece id (`wordsDocId`), so two pieces on one day never share one (Ruling, Krish, 2026-11-17: board feedback is done to every day; Tue 17 held two pieces and one approval document). The older day-named document stays readable, for the piece it names only.
 - **What it does.** The board draws it as "Approved in your words: "...", Fri 13 Nov (where)" on the day's Narrative lock
   or Scripts line, and the piece's path moves on as for his press. A lock's typed approval counts only while the lock on
   the board is the text his words approved (its hash); a lock he signed in the file shows his signature words the same
@@ -445,7 +446,7 @@ showed that day (`tests/control-plane/board-state-truth.test.ts`):
   missed, as before.
 - **His "Signed." is one press on the board, on any day the piece is placed.** A piece whose narrative lock is written
   under the day it is on and not signed offers **Sign the lock** (his words, "Signed.", saved as his typed approval of the
-  lock as it stands, `picks/<day>-lock-words`, bound by the lock's hash), with the lock to read in its read sheet. The
+  lock as it stands, `picks/<day>-lock-words-<piece>`, bound by the lock's hash), with the lock to read in its read sheet. The
   typed-approval route takes any day from Monday to Saturday (`WORDS_ID`): a piece he moved to an off day with
   `place_piece` (Tue 17's data-centres piece) is still a piece. His words there sign it on the board; the producing
   session writes the signature line into the lock file (`board_session.py approve lock --sign`) for `making.py`'s gate.
@@ -667,7 +668,7 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
       then click the "Copy to Claude" button, and the prompt incorporates that."
   - **`open` on the Claude prompt**, `{ app: 'claude_code', repository }`. The board opens a new Claude Code session on
     claude.ai/code with that repository chosen and the prompt filled in. The board builds the address; the view still
-    carries no link.
+    carries no link. Retired in 1.22.0: the prompt is only copied.
     - From approval of the story until a take is recorded, the prompt stays beside the picks. A session that changes an
       approved story takes his approval line off its end, so the board asks him to approve the new story. A story
       changed under its old line reads as unsigned too: `lockSigned` checks the line's `lock sha256` against the words
@@ -745,6 +746,79 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   board writes the words he approves at `path` (`body.texts.<cut>`) and the press's own words, `approve` as filed or
   `approve_edited` when he changed any; edited words are held from his Teleprompter until the scripts' check and fresh
   readers pass them (`heldBecause`). A board before 1.21.0 still asks his words through `words`.
+
+- **1.22.0 (17 Nov 2026)** made two changes.
+  - **Every Claude prompt is only copied.** `open` on a prompt is retired: the engine never sends it, and the schema keeps
+    it, marked `x-retired`, so a view built before 1.22.0 still validates. Control Centre copies the prompt, says it
+    copied, and opens no window or tab for any prompt, Claude or Perplexity, on any card or day.
+    - Ruling (Krish, 2026-11-17): "can you stop having my Claude production prompt buttons open up a new browser window?
+      Just copy to clipboard is enough for all such buttons".
+  - **An off-day voiceover's prompt follows its stage.** A voiceover short he records himself (Record it myself, his pick
+    or the default until a voice holds; `recordsItself`) keeps the make prompt until he approves its script: write it,
+    get his approval, send it to his Teleprompter. Once he has approved it, the card says to record it and drop the take
+    in the Video Engine Inbox, and the prompt assumes he has: get the take (`recording.py get NAME`, AGENTS.md rule 9),
+    check it against the approved words, cut it on the ve route with Codex building the visuals from cards, file it.
+    The signal is his approval of the scripts for the piece id the option carries (`offdayScripts`): his Approve scripts
+    press (`picks/<day>-scripts`, his login) or his typed approval (`picks/<day>-scripts-words[-<8 hex>]`), on any day,
+    whether or not the engine has a row for that id (Tue 17's habits voiceover, 701a2c55, has none). An ElevenLabs voice
+    has no take to wait for, so it keeps the make prompt. No take in the Inbox yet: the session checks his Teleprompter
+    holds the approved words, sends them if not, tells him in one line and stops.
+    - Krish, 2026-11-17: "presumably when it gets to this stage and the files are in teleprompter, the next action
+      presumes I have recorded the video and put it in the inbox, and thats what the next button's prompt is there to
+      do in Claude?"
+  - A typed approval now counts after the server has answered it: the `send` the server writes on the document (its
+    Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
+    held, still counts. A `send` written by anyone else is still refused.
+
+- **1.23.0 (17 Nov 2026)** added the press op **`takes-in`**: **My takes are in the Inbox**, and the stage around it, on
+  every card that holds a piece (the day's own piece, a placed piece, an off-day post he records), every day.
+  - Once his scripts are approved and in his Teleprompter (a held send is said first, `heldSend`), the card waits on his
+    one press, with Open Teleprompter and the record step's Claude prompt beside it.
+  - The press (`POST /api/board/<Monday>/takes-in`, his login only) reads the Video Engine Inbox by its Drive ID
+    (`library/_inboxDrive.ts listInbox`). It takes the video files changed since he approved the scripts (less three
+    hours) that no other piece holds, oldest first (`newTakes`), and writes their names, Drive ids, sizes and checksums
+    on the piece (`meta.takes_in`). Then it asks GitHub to place them on their cuts by their words (`place-takes.yml`).
+    None there: a 409 `no_new_takes` with a line saying so, and nothing written.
+  - From then on the card names the takes. A production pick still missing (look, motion style, captions) is his press
+    first, unless a take is already on the making record (a recorded take is never sent back to a pick; the prompt then
+    names what is not picked). Then its next action is the **one post-production prompt** (`productionBrief`). It carries
+    every decision with who made it, the approved words, the research on file, each take with its exact
+    `recording.py get` line, and the creative calls it makes beat by beat: his face, a logo or wordmark, real visuals, a
+    social post or screenshot, motion design (a ve device or Codex plate), or cinematic generation. The prompt makes the
+    finished cut in one go, to a separate reviewer.
+  - Takes the home pass or the take-placing job already put on the making record count as his takes too.
+    `api/board/_takesIn.ts`.
+  - Ruling (Krish, 2026-11-17): "whenever I press approve script, the new board state should be waiting for me to
+    confirm the videos are in the Inbox, at which point it will fetch the name of the video(s) and integrate them in the
+    piece on the board so the next post production prompt does a completely accurate job, with all the research, motion
+    styles etc being in one place and decided as well, the post production should always be one shot - and can decide
+    where to bring in logos, real visuals, social posts, screen shots, motion design, cinematic generation, my face etc
+    etc."
+
+- **17 Nov 2026, no contract change: two system fixes on every day.** Ruling (Krish, 2026-11-17): "well ultimately all
+  this feedback applies to all relevant days, i told you i do not want one off fixes but system upgrades".
+  - **An off-day video post gets a piece's production picks.** Every off-day post cut on the ve route (a voiceover short,
+    a meme video, a good-news short; `videoOffday`) offers the look, motion and caption presses a series piece offers,
+    until it is scheduled. Each press carries the post's record id and `item`, its document. The record id is the piece id
+    its option names, else one derived from the week and the document (`offdayPieceId`, the same on every read). His
+    Approve on the option makes the record (`syncApprove`, `linkOffdayPiece`); for a post approved before 17 Nov, his first
+    pick makes it, and only when the board itself offers that press with that id on that post. The record is seeded and
+    linked to its week in `meta.offday_link`, never scheduled, so it is never a second card on the day; the view reads
+    linked records beside the week's pieces, and the post's prompt reports to the record once it exists.
+    `api/board/_offdayPiece.ts`.
+    - Krish, 2026-11-17: "at no point does a voiceover short give me the same controls as a mon/wed/fri piece in terms of
+      the motion, captions etc etc. why not?"
+  - **His Approve scripts counts the moment he presses it, and a held send is said.** The server's own Teleprompter answer
+    no longer cancels his approval (`asWritten`, 1.22.0). When that answer is not `sent` and the making record does not
+    show the scripts in his Teleprompter since, every card holding the piece (`heldSend`: the day's own piece, a placed
+    piece, an off-day post he records) says in one line that his approval counts and why the send was held, and its next
+    action is the Claude prompt whose session checks the scripts (`making.py scripts`), has two fresh readers read them
+    back, and sends exactly the approved words (`teleprompter_send.py`).
+    - Krish, 2026-11-17: "the button does not seem to work. Would it not just send to teleprompter directly and change the
+      board state immediately?"
+  - **A new typed approval goes under its piece's own name.** A write of `picks/<day>-<lock|scripts>-words` without the
+    piece suffix is refused; saved ones are still read. (On 17 Nov the history of `picks/tue-scripts-words` showed no
+    approval was lost there: its first revision was already the habits voiceover's.)
 
 - **1.20.0 (17 Nov 2026)** added **`audio` on a choice's option**: a sample to hear before he picks, a same-site path
   (an off-day track's brand-kit file through `GET /api/board/sign-offs?file=<drive id>`, or a voice's ElevenLabs preview
