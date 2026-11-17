@@ -5176,6 +5176,28 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 - `function passportState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 - `function mrzLine(text: string)`
 
+### `apps/renderer/src/engine/devices/pixel_stage/index.tsx`
+
+- `export { stageLayout, stageState } from './state'`
+- `function palettePixels(raster: Raster, tokens: DeviceProps['tokens']): Pixel[]`
+- `type Rasters = Readonly<Record<string, Raster>>`
+- `function pixelGeometry(p: DeviceProps, rasters: Rasters)`
+- `function Device(p: DeviceProps)`
+- `function labelWidth(g: { score: number; dataset?: { unit: string; producerLabel: string } | null | undefined })`
+- `function StageSVG(p: DeviceProps & { rasters: Rasters })`
+- `function drawCanvas(ctx: CanvasRenderingContext2D, p: DeviceProps, rasters: Rasters)`
+
+### `apps/renderer/src/engine/devices/pixel_stage/schema.ts`
+
+- `const Cell`
+- `const MoveSchema`
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/pixel_stage/state.ts`
+
+- `function stageLayout(p: DeviceProps)`
+- `function stageState(p: DeviceProps)`
+
 ### `apps/renderer/src/engine/devices/pull_quote/index.tsx`
 
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`

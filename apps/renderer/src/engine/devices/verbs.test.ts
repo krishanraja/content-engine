@@ -6,6 +6,7 @@ import { DEVICES } from './registry'
 describe('device verb declarations', () => {
   it('flat_mechanism declares seven cues', () => { expect(manifest.devices.flat_mechanism.verbs).toEqual(['enter','add','move','fill','highlight','count_to','exit']) })
   it('morph_stage declares exactly four cues', () => { expect(manifest.devices.morph_stage.verbs).toEqual(['enter', 'move', 'highlight', 'exit']) })
+  it('pixel_stage declares its six cues', () => { expect(manifest.devices.pixel_stage.verbs).toEqual(['enter', 'add', 'move', 'count_to', 'highlight', 'exit']) })
   it('iso_world declares its seven cues', () => { expect(manifest.devices.iso_world.verbs).toEqual(['enter', 'add', 'fill', 'carry', 'move', 'highlight', 'exit']) })
   it('ink_wash declares exactly five cues', () => { expect(manifest.devices.ink_wash.verbs).toEqual(['enter', 'draw', 'fill', 'highlight', 'exit']) })
   it('film_frame declares its five cues', () => { expect(manifest.devices.film_frame.verbs).toEqual(['enter', 'move', 'mark', 'highlight', 'exit']) })
