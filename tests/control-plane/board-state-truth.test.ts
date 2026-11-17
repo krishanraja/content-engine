@@ -408,7 +408,7 @@ describe('his "Signed." is one press on the piece whose lock is written and not 
     const v = buildView(inputs())
     for (const [day, id] of [['tue', TUE], ['wed', WED]] as const) {
       const it = model(v, day).items.find(x => x.piece_id === id)!
-      expect(it.next, day).toMatchObject({ kind: 'press', label: 'Sign the lock', collection: 'picks', id: `${day}-lock-words`,
+      expect(it.next, day).toMatchObject({ kind: 'press', label: 'Sign the lock', collection: 'picks', id: `${day}-lock-words-${id.slice(0, 8)}`,
         body: { kind: 'sign_lock', day, via: 'words', approved: true, piece_id: id, lock_path: `docs/plans/${W16}-week/narrative-lock-${day}.md` },
         words: { path: 'words', required: true } })
       expect(it.decision).toBe(true)

@@ -227,7 +227,9 @@ def approve(args):
         texts = {c: Path(f).read_text(encoding='utf-8') for c, f in (('long', args.long), ('short', args.short), ('feature', args.feature)) if f}
         titles = {c: t for c, t in (('long', args.long_title), ('short', args.short_title), ('feature', args.feature_title)) if t}
         body = scripts_words_body(piece, args.day, texts, titles, args.folder_title, args.words, args.said_at, args.where, args.session_ref)
-    doc = f'{args.day}-{args.what}-words'
+    # One document per piece (picks/<day>-<what>-words-<first 8 of the piece id>, _contracts.ts wordsDocId): two pieces
+    # on one day never share an approval (Tue 17 Nov).
+    doc = f'{args.day}-{args.what}-words-{piece[:8]}'
     status, listing = call('GET', f'/api/board/{args.week}/picks')
     revisions = {d.get('id'): d.get('revision', 0) for d in (listing.get('documents') or [])} if status == 200 else {}
     status, answer = call('PUT', f'/api/board/{args.week}/picks/{doc}', {'body': body, 'revision': revisions.get(doc, 0)})

@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // rewrite: content-ideas allowed only POST and PATCH on the operator bearer,
 // and GET /fact-check returns the checklist without the text, so the session
 // confirmed v10 with read-only SQL. GET /api/content-ideas?id= returns the
-// row's id, state, lane_slot, idea, thesis, body and updated_at, and nothing
+// row's id, state, lane_slot, scheduled_for (its day; missing until 17 Nov, so every read said no day), idea, thesis, body and updated_at, and nothing
 // else, behind the gate the route already has.
 
 const db = vi.hoisted(() => ({ selected: [] as string[], filters: [] as Array<[string, unknown]>, row: null as Record<string, unknown> | null }))
@@ -54,7 +54,7 @@ describe('GET /api/content-ideas?id=', () => {
     const r = await get({ id: ID })
     expect(r.status).toBe(200)
     expect(r.body).toEqual({ ok: true, piece: db.row })
-    expect(db.selected).toEqual(['id,state,lane_slot,idea,thesis,body,updated_at'])
+    expect(db.selected).toEqual(['id,state,lane_slot,scheduled_for,idea,thesis,body,updated_at'])
     expect(db.filters).toEqual([['id', ID]])
   })
 
