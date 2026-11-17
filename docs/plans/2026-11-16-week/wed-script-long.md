@@ -4,9 +4,9 @@ So first, let's be honest about where we are. There are millions of vibe coded t
 
 And here's what it actually looks like. You type something like, give me a page with all my customers on it. And a button to log a call. A few minutes later, there it is. Don't like it? You don't rewrite it. You just ask again. Honestly, it's a bit magic the first time you see it.
 
-And then there's the other thing filling up my feed. Every day on LinkedIn, someone's selling a Claude pack. Install this, and Claude becomes your marketer. Install that, and Claude becomes your whole sales team. Just comment pack below, and it's yours for free. Well, sort of.
+And then there's the other thing filling up my feed. Every day on LinkedIn, someone's selling a Claude pack. That's a bundle of ready-made instructions you load into Claude. Install this one, and Claude becomes your marketer. Install that, and Claude becomes your whole sales team. Just comment pack below, and it's yours for free. Well, sort of.
 
-So right now, everyone is being sold how to use AI. Buy the software. Install a pack. Build it yourself. Or pay someone to build it for you. That's the full spectrum, and every leader I talk to is somewhere on it, slightly confused.
+So right now, everyone is being sold how to use AI. And that's where your Crocodile Hunter comes in. He's seen the app builders and the packs, and he's sure he can build it all by Friday. And his boss is already spending the savings.
 
 And some bosses have jumped straight to the building end. This summer, the boss of a US health insurer called Curative said they'd cancelled Salesforce. That's the software sales teams use to track every customer and every deal. They'd been paying about six hundred thousand dollars a year for it. So they built their own, with AI, in two months. Eyes bigger than their stomach? Maybe. Because he's since admitted that keeping it running is hard.
 
@@ -18,6 +18,6 @@ So back to Anthropic. They could build almost anything. But for customer service
 
 And now for my favourite detail. Fin runs on Claude. So the people who make the AI bought a bot that runs on their own AI. They just let Intercom take the two in the morning call. And their best people stay on the one thing only they can do, which is making Claude better.
 
-So is your Crocodile Hunter wrong? Not completely. Building can work, and so can the packs, as long as someone owns what you end up with. That's true for your customer list, your help desk, and that dashboard your team knocked up last week.
+So is your Crocodile Hunter wrong? Not completely. Building can work, and so can the packs, as long as someone's name is on what you end up with. That's true for your customer list, your help desk, and that dashboard your team knocked up last week.
 
 So next time someone pitches me a new tool or the latest pack, I'll skip build or buy. I'll ask who gets the call when it breaks at two in the morning. If the answer is no one, I'll buy. The full story is free at makeyourmindup.ai.
