@@ -1,59 +1,59 @@
-# Narrative lock: Fri 20 Nov mind.the.gap - The Great Recount
+# Narrative lock: Fri 20 Nov mind.the.gap - The Auditor
 
 piece_id: c00cd4e0-e1bb-4c60-b36f-cea92897e38c
 Publishes: 2026-11-20
+Working title: AI makes a brilliant auditor. Careful what it digs up.
+(Other titles for his pick: "Let AI read your old files. Bring a shovel." / "Your AI auditor will find the money. And the bodies.")
+Rewritten 17 Nov to Krish's note of 17 Nov 18:18 UTC; the earlier draft (The Great Recount) is in git history and on the piece.
 
 ## Surface story
-In October, an AI company called Axiom had its agents rewrite about 15,000 pages of one of the biggest proofs in maths in a form a computer can check, and they found a step in a 1986 paper that does not hold. The theorem still stands. In May, nine mathematicians checked and wrote up a counterexample an OpenAI model found to a guess Paul Erdős made in 1946. In January, a Swedish trial of 106,000 women found that AI plus radiologists caught 29% more cancers than radiologists alone, with 44% less reading work.
+A family got a bill for about $195,000 for four hours in an emergency room. They asked for the itemised bill, gave it to an AI, and it found double charges and wrong codes; the hospital came down to about $33,000. A tenant on Reddit pasted his old lease into ChatGPT and found his landlord had taken more deposit than New York allows; the landlord countersued for $5,000 and lost. AI tools are finding a 20-year-old bug in the code that secures the internet and cancers missed on old scans. And it cuts both ways: a blogger using AI image software went through a cancer institute's papers back to 1999 and it moved to retract six and correct 31, and a games company CEO who asked ChatGPT how to get out of paying a $250 million earnout watched a court quote his chats back to him.
 
 ## Deeper story
-For centuries, nobody went back and rechecked the old work, because nobody had the time. Now AI can dig through it all, and it is finding things we got wrong. But AI on its own overclaims: it raises false alarms, makes up court cases and announces discoveries that turn out to be old papers. The wins all have the same shape: AI flags, and a person or a strict checker confirms. Human plus AI beats either one alone. Krish's brief, 13 Nov: "a commentary on how human + AI is way better than human OR AI. Make this pure entertainment and awesome fun to consume." And it applies to every business: the bottleneck was never the evidence, it was nobody having time to look again.
+AI is a poor fortune teller and a brilliant accountant. The future has no page to check against; the past does. Old records sit still, the rules they should have followed are known, and every flag can be checked against the page, so AI is at its best in hindsight. That makes it the best auditor a business will ever hire: it never gets bored, and it reads everything nobody had time to reread. But an auditor does not choose what it finds. Point it at your past and it finds the overcharge you are owed and the shortcut you hoped nobody would see, and now even your own AI chats are part of the record. Krish, 17 Nov: "set it to work as an auditor that picks up tiny details from your business's past. But be careful what you wish for, and if you have any skeletons in the closet, then it might dig those up too."
 
 ## Arc
-- Hook: "For 40 years, a step in one of the biggest proofs in maths did not hold, and nobody noticed."
-- The recount, three quick cases, each told as a find and then its check: the 1986 proof (Axiom's agents, the theorem still stands, the maker's claim until outside review); the 1946 guess (an OpenAI model's counterexample, nine named mathematicians checked it); the old mammograms (AI flagged most of the cancers radiologists had missed, and the radiologists confirmed).
-- The double-cross, AI alone: OpenAI's "solved ten Erdős problems" claim that turned out to be old papers; made-up cases in court filings; AI alone adds mistakes as fast as it finds them.
-- The partnership: the Swedish screening trial, AI plus radiologists, more cancers found with less work; a maths journal that only takes proofs a computer has checked.
-- The honest counterweight: when AI leads alone, people still find more problems than it does.
-- The rule: AI digs, a human or a strict checker holds the shovel.
-- Your recount: every business has its own 1986 proof, the contracts, price lists and spreadsheets nobody has opened since they were signed.
+- Hook: "Four hours in an emergency room. A bill for $195,000. Then somebody showed it to an AI."
+- The win, told for laughs: the bill comes down to $33,000; the Reddit tenant whose landlord countersued for $5,000 and lost.
+- The light lesson, why hindsight: the past sits still and the rules are known, so AI can check it line by line, and a person can check AI's flag; ask it about next year and it guesses. Quick proof it reaches far back: a 20-year-old bug in the code that secures the internet, cancers missed on old scans.
+- Your business: the auditor that never gets bored. Duplicate supplier payments, credits nobody claimed, and the best one: employees faking expense receipts with AI, caught by AI (a vendor's own figures, said as such).
+- The twist, careful what you wish for: the cancer institute that went back to 1999 and moved to retract six papers and correct 31 (no misconduct found); the CEO whose ChatGPT chats ended up quoted in a court ruling. The newest skeleton in the closet is your own chat history.
+- The rule: every flag is a question, and a person answers it; and decide who reads the findings before you start digging.
 - His close.
 
 ## The fun
-A heist in four acts, told for fun: the recount (three fast finds), the double-cross (AI alone gets it wrong), the partnership (the pair wins), and your own recount. One running picture: an old document being stamped CHECKED, line by line, where a stamp only lands once a person or a strict checker has confirmed what the AI flagged, and the lines AI flagged alone get a red question mark instead. Every line is said plainly, the way you would say it to a friend; no clever phrasing (Krish, 9 Nov: "It's really important we aren't trying to cryptically confuse everyone.").
+A heist told backwards: the audit as a treasure hunt that turns into a horror film. Act one, the money (the bill, the tenant). Act two, the lesson in one picture: the past as a filing cabinet that holds still, the future as fog. Act three, the twist: the drawer AI opens that you did not want opened. Running picture: an old filing cabinet, drawers sliding open one by one; most drawers hold cash, the last one rattles. Every line is said plainly, the way you would say it to a friend (Krish, 9 Nov: "It's really important we aren't trying to cryptically confuse everyone."). The jokes come from the real details: four hours for $195,000, a landlord who countersued and lost, staff faking receipts with the AI the company pays for.
 
 ## The use
-Pick one old document your business still runs on, a contract, a price list or a supplier's terms, and have AI read it for anything that no longer holds, then have the person who owns it check every flag before anything changes. Best guess, for Krish to confirm: his own words on this are still to come.
+Pick one money pile from your business's last two years, supplier invoices or expense claims, and have AI audit it for duplicates, overcharges and credits nobody claimed. Before it starts, decide who reads the findings first; then have the person who owns each flag check it before anything changes or anyone is told. New against recent pieces: no contract check, no prediction; it is an audit of money already spent, with a rule for the findings.
 
 ## His close
-His call, in his own words, still to come (the one question for him: "What is one old document you trusted for years that turned out to be wrong, and what would you tell a junior about checking?"). Working line until then, no dated prediction (he is bored of predictions): the job of checking is becoming the valuable one, so what in your business has nobody reread since it was signed?
+His call, in his own words, still to come. Working line until then, no dated prediction: AI will be the best auditor you ever hire. Point it at your past on purpose, before somebody else does.
 
 ## Facts to check
-- Axiom: "roughly 15,000 pages in more than 500 articles"; formalised "over 24 days"; "34 noteworthy deviations from the published record"; counterexamples to "a closure assertion used in Walter's proof" (John Walter, 1986); they "did not refute the desired goal" | https://axiommath.ai/research/the-enormous-theorem-formalized/ (Axiom, 26 Oct 2026) | to check; a maker's claim until outside review lands; Kevin Buzzard (12 Nov) says no human has checked the formal statement's definitions yet
-- Erdős's 1946 unit-distance guess disproved by an OpenAI-generated counterexample; nine mathematicians published "a short, digested, human-verified version" | https://arxiv.org/abs/2605.20695 (20 May 2026) | to check
-- UCLA Health, JNCI, 5 May 2025: in about 185,000 mammograms from 2010 to 2019, AI flagged 90% of the cancers that were visible but missed; authors: "AI isn't perfect and shouldn't be used on its own." | https://www.uclahealth.org/news/release/ai-could-help-improve-early-detection-interval-breast | checked 2026-11-13 in the carousel research
-- MASAI trial, The Lancet, 30 Jan 2026: 106,000 women; AI-supported screening found 29% more cancers with no rise in false positives, cut reading work by 44%, 12% fewer interval cancers | https://www.lunduniversity.lu.se/article/ai-support-breast-cancer-screening-fewer-missed-cancer-cases | checked 2026-11-13 in the carousel research
-- Google OSS-Fuzz: an OpenSSL flaw "likely present for two decades" found by AI-written fuzz targets | https://security.googleblog.com/2024/11/leveling-up-fuzzing-finding-more.html (20 Nov 2024) | checked 2026-11-13 in the carousel research
-- OpenAI's October 2025 claim that GPT-5 "solved" ten Erdős problems was withdrawn: the model had found existing papers | press reports, Oct 2025 | to check on a primary record
-- AI-made-up material in court filings: 2,262 cases by 2 Nov 2026 | Damien Charlotin's AI Hallucination Cases database | to check on the database itself
-- Terence Tao's new journal accepts only proofs checked in Lean | Tao, 17 Oct 2026 | to check on his own post
-- In replication games, human-only teams found more problems than AI-led teams | Brodeur et al., 2025 | to check on the paper
-- Berkeley Lab: AI read oil maps from 1947 to 1992 and flagged 1,301 possible wells missing from the records; 29 confirmed by satellite and 15 in the field (never added together) | Berkeley Lab, 4 Dec 2024; Environmental Science & Technology | to check
+- $195,000 hospital bill cut to about $33,000 with Claude (some outlets $37,000) | Threads post by "nthmonkey", Oct 2025; https://www.techspot.com/news/110064-family-turns-ai-audit-195000-hospital-bill-reducing.html | to check; his own account, the hospital has not confirmed, said as his account
+- Reddit tenant (u/monkeyincidentof93, Chris Maloney, Amherst NY): New York caps a deposit at one month's rent; landlord's $5,000 counterclaim dismissed; awarded $1,180 | https://scoop.upworthy.com/tenant-uses-chat-gpt-to-uncover-crucial-evidence-and-win-legal-battle-against-greedy-landlord | to check on his own Reddit update; amounts vary by outlet
+- OpenSSL flaw "likely present for two decades", found by AI-written fuzz targets | https://security.googleblog.com/2024/11/leveling-up-fuzzing-finding-more.html (20 Nov 2024) | checked 2026-11-13
+- UCLA Health, JNCI, 5 May 2025: AI flagged 90% of the visible but missed cancers on old mammograms; "AI isn't perfect and shouldn't be used on its own." | https://www.uclahealth.org/news/release/ai-could-help-improve-early-detection-interval-breast | checked 2026-11-13
+- AppZen: AI-made receipts 70.8% of the fake receipts it caught by May 2026; 1,471 from 745 employees at 174 companies | https://www.appzen.com/blog/catching-ai-generated-fake-receipts-with-ai | to check; vendor data, said as such
+- Dana-Farber, Jan 2024: Sholto David, by eye and with ImageTwin, flagged papers from 1999 to 2017; six retractions under way, 31 corrections; no misconduct concluded | https://www.nbcnews.com/science/science-news/allegations-research-misconduct-roil-dana-farber-cancer-institute-rcna135521 | to check
+- Fortis Advisors v. Krafton, Delaware Court of Chancery, 16 Mar 2026: the CEO's ChatGPT chats on avoiding the $250m earnout quoted in the ruling | https://corpgov.law.harvard.edu/2026/04/20/how-a-buyers-ai-conversations-sank-its-earnout-avoidance-strategy/ | to check on the opinion itself
+- Chatbots alone miscalculate tax refunds by over $2,000 on average (NYT test, TaxCalcBench) | https://www.kiplinger.com/taxes/can-ai-help-you-find-a-bigger-tax-refund | to check on the primary test
 
 ## Outline
-Spine: Now that AI can recheck the old work, who should we trust: the AI, the people, or both?
-Answer: Both: AI finds what people never had time to recheck, but on its own it overclaims, so the wins come from AI flagging and a person or a strict checker confirming.
-1. THE RECOUNT | proves: AI is finding real mistakes in work people trusted for decades
-2. THE DOUBLE-CROSS | proves: AI on its own overclaims and adds mistakes
-3. THE PARTNERSHIP | proves: AI plus a person or a strict checker beats either one alone
-4. THE HONEST CATCH | proves: when AI leads alone, people still find more problems
-5. YOUR RECOUNT | proves: every business has old documents nobody has reread since they were signed
-6. WHO HOLDS THE SHOVEL | proves: the job of checking is becoming the valuable one
+Spine: Should you set AI loose on your business's past?
+Answer: Yes: it is the best auditor you will ever hire, because the past holds still and every flag can be checked; but it digs up everything, so decide who reads the findings before you start and have a person check each one.
+1. THE $195,000 BILL | proves: AI rereading old paperwork finds real money
+2. WHY HINDSIGHT | proves: AI is strongest on the finished past, where the records hold still and every flag can be checked
+3. THE AUDITOR WHO NEVER GETS BORED | proves: pointed at a business's past, it catches the small things nobody had time for
+4. THE SKELETONS | proves: it does not choose what it finds, and your own AI chats are now part of the record
+5. WHO READS IT FIRST | proves: every flag is a question a person answers, and you decide who sees the findings before you dig
+6. YOUR AUDIT | proves: one money pile from the last two years is the place to start
 
 ## Style recipe
-- Script: fry-explainer told as a heist in four acts, each case a find and then its check.
-- Production: face-with-proof for the 5-minute cut; voice-led-pictures for the 90-second cut; every case shown as the real page it comes from, with its date.
-- Experiment: the CHECKED stamp, landing only where a person or a strict checker confirmed the AI's flag, with a red question mark on what AI flagged alone.
+- Script: fry-explainer told as a treasure hunt that turns into a horror film; every joke comes from a real detail.
+- Production: face-with-proof for the 5-minute cut; voice-led-pictures for the 90-second cut (one story only: the $195,000 bill and the lesson, house rule ONE_STORY_SHORT); every case shown as the real page it comes from, with its date, and every company's real logo.
+- Experiment: the filing cabinet: drawers slide open one by one, most hold cash, the last one rattles.
 
 ## Music bed
 NO CURVES (Instrumental Version), Superintendent McCupcakes (Epidemic Sound), `no-curves-instrumental` in `config/music-library.json`, the one series bed in the ledger, in the one bed shape (`config/music-bed.json`).
