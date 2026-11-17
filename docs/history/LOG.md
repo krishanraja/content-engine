@@ -5,6 +5,15 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-17
+
+- reconciled at `e7b785b`: NOW.md re-stamped from `3379360`; sessions had folded their own closeout notes through `e7b785b` (109 non-steward commits), and the NOW.md audit passed. Four "Where it is right now" bullets told the StyleStill covers pass by pass and two still called cards queued that had since been built, merged and reviewed (`2faede8f`, `5054cd7a`); they are one bullet now, from the commits and `config/ve/style-samples.json`. The one "What changed recently" bullet for 16 Nov was a list of files; it now says what was built and why, in the words of `82360c9b` and `c631e0ac`. The digest's stale stamps (`docs/STATE.md`, `docs/SYSTEM_MAP.md`, `docs/STUDIO.md`, `docs/GLOSSARY.md`, `docs/CONTENT_ENGINE.md`) were left as they are: their bodies were not rechecked in this run.
+- rolled from NOW.md, verbatim (superseded by the StyleStill covers bullet):
+  - the fourth pass on the held style covers is carried onto main (Codex built it on an older copy of the stills); 15 of the 16 passed a separate review and are filed in Drive and recorded, and the live living-ui cover's label (ink on ink) is fixed and refiled. The other 31 live covers render byte for byte as before. (2026-11-16)
+  - Codex's third StyleStill pass is merged and 24 more covers passed a separate reviewer, filed and recorded for the board: motion dark-keynote and living-ui; looks scoreboard-test, kinetic-movement and receipt-animation; 19 caption styles, now fitted large over a talking-head frame. With the first eight, 32 of 48 covers are live. A fourth card for the 16 still held back is queued. (2026-11-16)
+  - eight motion-style covers from Codex's second StyleStill pass are filed in Inbox from My AI and recorded in config/ve/style-samples.json, so the board's motion picker shows them (ai-music-slam, data-story, eating-jobs-ladder, full-visual, hud-terminal, riso-halftone, single-line-drawing, swiss-kinetic-type); the card's composition is merged. A separate reviewer and Claude both held back the looks, the captions and six motion covers (paper-cutout, line-boil, dark-keynote, living-ui, vertical-captions, character-ai-receipts). (2026-11-16)
+  - the second StyleStill cover card (ve-style-still-template-2) is queued on the Codex lane with today's last 4% of the allowance (spend e2669ebf); `ve lab covers` now renders every cover from the composition into a template manifest that `ve lab still` accepts, so the covers can be filed and recorded for the board's pickers once built and reviewed. (2026-11-16)
+
 ## 2026-11-13
 
 - retired as old, by evidence (no caller, no workflow, no route, no skill, no live write): three one-shot control-plane scripts, the Content Engine v2 preview check, `backfill_closes.ts` and its test, and three quick-edit one-offs. What was kept and why, the carousel engine among it (its owner is unsettled): `docs/history/2026-11-13-old-scripts-retired.md`.
