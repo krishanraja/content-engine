@@ -1056,13 +1056,17 @@ def cmd_voice_clone(args) -> int:
         script = Path(args.script) if args.script else directory / 'script.words.json'
         if not script.is_file():
             raise ValueError(f'no signed script words at {script}: give --script')
-        doc = clone_voice.plan(spec, script)
+        doc = clone_voice.plan(spec, script, voice=getattr(args, 'voice', None))
         plan_path = write_json(directory / clone_voice.PLAN_FILE, doc)
         clone, credits = doc['clone'], doc['credits']
         print(f"ve voice clone: {doc['piece']}, take {doc['take']} (cuts {', '.join(doc['cuts'])}; published {doc['publish_day']}, "
               'an off day)')
-        print(f"  clone: {clone['name']} ({clone['platform']}, voice id {clone['voice_id']}), approved by Krish on "
-              f"{clone['approved_on']} (registry sha256 {clone['approved_sha256'][:12]})")
+        if clone.get('kind') == 'stock':
+            print(f"  voice: {clone['name']}, an ElevenLabs stock voice (voice id {clone['voice_id']}), approved by Krish on "
+                  f"{clone['approved_on']} (config/voice-bank.json)")
+        else:
+            print(f"  clone: {clone['name']} ({clone['platform']}, voice id {clone['voice_id']}), approved by Krish on "
+                  f"{clone['approved_on']} (registry sha256 {clone['approved_sha256'][:12]})")
         print(f"  model: {doc['model']}; output: {doc['output_format']}, made into {doc['take']}.wav for ve ingest")
         print(f"  script: {doc['script']['file']} (sha256 {doc['script']['sha256'][:12]}, {doc['script']['words']} words)")
         print(f"  cost: {doc['characters']} characters, about {credits['estimate']} ElevenLabs credits ({credits['provider']}, "
@@ -2170,6 +2174,8 @@ def main() -> int:
     p.add_argument('action', choices=('profile', 'clone')); p.add_argument('pieces', nargs='+')
     p.add_argument('--out', help='profile: default config/voice/profile.json')
     p.add_argument('--script', help="clone: the signed script words (default <ve dir>/script.words.json)")
+    p.add_argument('--voice', help='clone: the voice bank id he picked on the Content Board (config/voice-bank.json); '
+                                   'default his own Krish Remix voice, the registry clone')
     p.add_argument('--plan', action='store_true', help='clone: print and write the exact generation, spending nothing (the default)')
     p.add_argument('--generate', action='store_true',
                    help='clone: run the plan once, on the machine holding ELEVENLABS_API_KEY, through the credit ledger')

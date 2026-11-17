@@ -738,6 +738,21 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   file (a Google Doc, a Word file, a text or JSON file) and files its words beside the link as research, copied to the
   library (`api/_researchLink.ts`; the answer's `research_text`).
 
+- **1.20.0 (17 Nov 2026)** added **`audio` on a choice's option**: a sample to hear before he picks, a same-site path
+  (an off-day track's brand-kit file through `GET /api/board/sign-offs?file=<drive id>`, or a voice's ElevenLabs preview
+  through `GET /api/board/sign-offs?voice=<bank id>`, a redirect to the bank's own preview clip; no sample spends a
+  credit). With it, every approved off-day post not yet scheduled carries its sound picks in `others`: a voiceover short
+  **Pick the voice** (`config/voice-bank.json`: his Krish Remix voice first, then the stock voices, a proposed one marked
+  "proposed") and **Pick the music under the voice**; a carousel (supporting, good news, explainer) **Pick the track**. The
+  tracks are the off-day rotation in `config/music-library.json` (`"for": "off-day"`), laid at the one bed shape
+  (`config/music-bed.json`, F40). Each is one press, his only: `picks/audio-<voice|bed>-<item>`, kind `audio_pick`,
+  `{layer, item, pick, at}` (`_audio.ts audioBody`), counted only when the board saved it under his login. A session reads
+  his pick and makes the post with it (`ve voice clone --voice <id>`); it never writes one, and a stock voice is generated
+  only once the bank marks it approved from his press. Control Centre plays `audio` in place on each option.
+  - Krish, 2026-11-17: "I always want to be given a few options in my control center. We should have some stock voices
+    approved in Eleven Labs and, obviously, my own Krish remix voice too as an option on the control center Content
+    Board. voiceovers would have light approved epidemic audio behind the voice."
+
 ## To review: the video sign-offs (contract 1.11.0)
 
 Ruling (Krish, 2026-11-12): the three video sign-offs are one review card each on his board, with samples, and only his
