@@ -1,7 +1,11 @@
-Anthropic makes Claude, an AI that writes code. So why buy a help bot?
+Anthropic, which makes Claude, pays for other companies' tools. Anthropic! The lab everyone else builds with! So is the Crocodile Hunter engineer in your team wrong? Let's dive in. Build or buy your tools in an AI world?
 
-Picture a homemade one at two in the morning, telling a customer they owe the price of a yacht. Who gets that call? Anthropic's engineers.
+Because right now, everyone is selling you an answer. My LinkedIn feed is wall to wall Claude packs. Install this, and Claude becomes your whole sales team. Just comment pack below.
 
-It bought Fin, a help bot from Intercom. My favourite bit? Fin runs on Claude.
+And then there's your Crocodile Hunter. He's watched one video about vibe coding, and now he wants to rebuild the CRM over a weekend. And the boss is nodding along, because it might save a fortune.
 
-I won't ask build or buy. I'll ask who gets the call. The full story is free at makeyourmindup.ai.
+Then it's two in the morning. His homemade bot tells a customer they owe the price of a small yacht. Who gets that call? Not the AI. Him. And the boss.
+
+So what did Anthropic do with its own help desk bot? It went shopping. It bought a bot called Fin from Intercom. And Fin runs on Claude! So now Intercom's engineers get the two in the morning call.
+
+So is building wrong? Not quite. I've got one question I'll ask every time now, and it's not the one your Crocodile Hunter is asking. The full five-minute video is on my channel.
