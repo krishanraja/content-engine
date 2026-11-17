@@ -1,0 +1,4 @@
+{
+  "object":{"obj":"toy","device":"toy_object","meaning":"sourced parts","fromFrame":0,"toFrame":300,"variants":{},"params":{"object":"capsule","parts":8,"images":["evidence/product.png"]},"dataset":{"unit":"parts","denominator":8,"producerLabel":"Product evidence","rows":[{"label":"active","value":6}]}},
+  "events":[{"id":"e","obj":"toy","verb":"enter","toState":"set","atFrame":0},{"id":"c","obj":"toy","verb":"count_to","toState":"6","atFrame":20},{"id":"a","obj":"toy","verb":"add","toState":"4","atFrame":50},{"id":"m","obj":"toy","verb":"move","toState":"right","atFrame":80},{"id":"h","obj":"toy","verb":"highlight","toState":"7","atFrame":130},{"id":"x","obj":"toy","verb":"exit","toState":"gone","atFrame":200}]
+}
