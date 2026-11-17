@@ -10,7 +10,7 @@
 // The repository is public, so the runs' status is read from GitHub's public API (readRuns), with the same token when
 // one is set (a higher rate limit). The board shows each job's latest run: queued, running, done or failed.
 
-export type JobName = 'make-piece' | 'offday-revise' | 'saturday-goodnews' | 'sunday-ideas' | 'produce-day' | 'repair-round' | 'signoff-apply'
+export type JobName = 'make-piece' | 'offday-revise' | 'saturday-goodnews' | 'sunday-ideas' | 'produce-day' | 'repair-round' | 'signoff-apply' | 'production-plan'
 
 interface Job {
   workflow: string
@@ -55,6 +55,12 @@ export const JOBS: Record<JobName, Job> = {
   // His press on a sign-off card (_signOffs.ts) starts the job that writes the configs from his presses, read back from
   // the board, never from this payload (Ruling, Krish, 2026-11-12: only his presses write the configs). No Claude runs.
   'signoff-apply': { workflow: 'signoff-apply.yml', payload: () => ({}) },
+  // His My takes are in the Inbox press starts the production plan run for that piece (_productionPlan.ts; Krish,
+  // 2026-11-17: "create the final production plan for me to open, review and then press the Claude production prompt").
+  'production-plan': {
+    workflow: 'production-plan.yml',
+    payload: i => (typeof i.piece_id === 'string' && UUID.test(i.piece_id) ? { piece_id: i.piece_id.toLowerCase() } : null),
+  },
 }
 
 export const isJob = (v: unknown): v is JobName => typeof v === 'string' && Object.hasOwn(JOBS, v)
