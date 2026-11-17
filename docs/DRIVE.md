@@ -205,10 +205,14 @@ or `publication` is Make Your Mind Up's). Each hit says `fresh`; the answer says
 empty shelf reads differently from no match (migration `20261203100000_research_find_filters.sql`).
 
 **How.** The engine writes as the owner of his Drive (`GOOGLE_DRIVE_OWNER`, the delegated `drive` scope, as the feedback
-lane does). In Drive it only adds: week, piece, day and `Sources` folders inside the library and files inside them. It
-never renames, moves, overwrites or deletes anything there. In the index it adds rows, and its one other write is the
-tidy above. Folders are found by their properties, never by name,
-so Krish may rename or move any folder inside the library. The library and its index are found by the IDs above
+lane does). In Drive it adds week, piece, day and `Sources` folders inside the library and files inside them, and makes
+one rename: the hourly sweep renames a piece's folder, by its ID, when the piece's title, date or series changed since
+the folder was named, so the folder always reads as the piece does now (Ruling, Krish, 2026-11-17: "rename research
+folders when titles change"; `renameFolder`, `pieceSlotName`). It renames only a folder still holding the name the
+engine gave it (its `ce_named` property; a folder made before 17 Nov, a name of the engine's shape ending in the piece's
+short id), so a name Krish gave a folder stays his. The folder stays in the week it was made in, and nothing else is
+renamed, moved, overwritten or deleted there. In the index it adds rows, and its one other write is the tidy above.
+Folders are found by their properties, never by name, so Krish may rename or move any folder inside the library. The library and its index are found by the IDs above
 (`RESEARCH_LIBRARY_FOLDER_ID` and `RESEARCH_LIBRARY_INDEX_ID` in `apps/control-plane/api/_researchLibrary.ts`, and
 `folder_id` and `index_id` in `config/research-library.json`, which a test holds equal; not in `config/studio.json`,
 whose contents are bound into the media standard's hash).
