@@ -1,4 +1,0 @@
-Status: A piece's production recommendation now reaches its card. The board reads the week's ideas.json from main and offday-revise/<Monday> together, merged from where they split (mergeWeekPlan), so a session's write to main is no longer hidden by the week branch's stale row; a planned motion, caption or look that cannot stand gives way to the plan's own alternatives before the channel's defaults, and says why. Friday 20 Nov's row on offday-revise/2026-11-16 was set to match main (ai-music-slam; eating-jobs-ladder, full-visual; art-directed).
-Changed: apps/control-plane/api/board/_view.ts, apps/control-plane/api/board/_style.ts, docs/PUBLISH_BOARDS.md, tests/control-plane/board-plan-recommendation.test.ts.
-Next: Krish picks look, motion style and captions on Friday's card, where ai-music-slam is now the recommended motion.
-North Star check (2026-11-17): holds.
