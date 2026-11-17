@@ -10,7 +10,7 @@ Picture a bot Anthropic built itself. At two in the morning, it gets a customer'
 
 Then there's keeping its answers up to date. Every time Anthropic changes Claude, the bot's answers have to change too. If no one does that, the bot tells customers things that stopped being true weeks ago. And then there's people. Every new person they hire would have to learn a tool that only exists inside their building. And the one person who built it might leave.
 
-And Anthropic's support team said they wanted something reliable and fast. And they wanted their people focused on Anthropic's own work. So they decided not to build. Instead, they bought a bot from a company called Intercom, which sells help desk bots. It was answering customers within days. And soon it was sorting out about half the questions on its own.
+And Anthropic's support team said they wanted something reliable and fast. And they wanted their people focused on Anthropic's own work. So they decided not to build. Instead, they bought a bot called Fin, from a company called Intercom, which sells help desk bots. It was answering customers within days. And soon it was sorting out about half the questions on its own.
 
 And now for my favourite detail. That bot runs on Claude. So the people who make the AI bought a bot that runs on their own AI. They just let Intercom take the two in the morning call. Their own team still checks and tunes the bot's answers, by the way. So buying didn't make the looking after go away. It just made it a lot smaller.
 
