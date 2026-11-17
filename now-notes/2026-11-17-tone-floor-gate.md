@@ -1,4 +1,0 @@
-Status: The tone floor is a hard gate. No script reaches Teleprompter (his Approve press, his typed approval, the off-day press or teleprompter_send.py) until a separate reader has judged its exact words at or above his AI Music take on eight qualities, fun to deliver and to consume included (config/script-floor.json; making.py tone-floor; failures.json scripts-regressed-below-ai-music). Wed 18 scripts rewritten to it: the long cut passed.
-Next: Merge, then record the Wed 18 tone-floor and read-back passes on the live engine and put the scripts to Krish for his approval.
-Changed: config/script-floor.json and the two reference takes; making.py, teleprompter_send.py, api/board/_presses.ts, api/_making.ts, api/board/_contracts.ts, week_plan.py; make-piece skill; tests.
-North Star check (2026-11-17): holds.

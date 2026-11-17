@@ -948,7 +948,9 @@ export function buildView(i: ViewInputs): WeekView {
   const built = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign, recentOut, picks: i.picks, decisions,
     scripts: i.scripts ?? {}, lockReads: Object.fromEntries(Object.keys(decisions).map(id => {
       const lk = Object.values(i.locks).find(t => t && lockPieceId(t) === id)
-      return [id, lockSigned(lk) ? lockRead(lk) : { so_what: null, story: null }]
+      // Signed by its own last line or by his words on the board (signedLocks counts both; 17 Nov: Tue 17 was signed in his
+      // words, and the card kept the idea row's summary).
+      return [id, lk && signedLocks.includes(id) ? lockRead(lk) : { so_what: null, story: null }]
     })) })
   // Beside each piece's Claude production prompt, its Perplexity research prompt, from everything on record (1.19.0).
   const model = withSavedNotes(withResearchPrompts(built, (day, it) => {

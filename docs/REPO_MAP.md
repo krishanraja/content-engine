@@ -1272,6 +1272,7 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingLongCut`
 - `interface MakingShortCut`
 - `const SHORT_LIFT_MOST`
+- `interface MakingTitleLine`
 - `interface MakingToneFloor`
 - `interface MakingReadBack`
 - `interface MakingLink`
@@ -2936,6 +2937,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 ### `apps/control-plane/api/board/_viewExtras.ts`
 
 - `type PressAction`
+- `interface ScriptReview`
 - `interface ViewOption`
 - `interface ViewPiece`
 - `interface ViewComment`
