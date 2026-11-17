@@ -6,7 +6,7 @@ And on the face of it, building looks easy now. People call it vibe coding, and 
 
 So if it's that easy, why didn't Anthropic just do that? This is the bit most people miss. Writing the tool is the cheap part now. The cost is everything that comes after. So let me walk you through what building it would have meant for Anthropic.
 
-Picture it. A customer asks the bot about their bill at two in the morning, and the bot gets it wrong. Who gets the call? A help desk bot talks to customers all night. If Anthropic had built its own, that call goes to one of its own engineers. And that engineer should be spending their days making Claude better.
+Picture a bot Anthropic built itself. At two in the morning, it gets a customer's bill wrong. Who gets the call? One of Anthropic's own engineers. And that engineer should be spending their days making Claude better.
 
 Then there's keeping its answers up to date. Every time Anthropic changes Claude, the bot's answers have to change too. If no one does that, the bot tells customers things that stopped being true weeks ago. And then there's people. Every new person they hire would have to learn a tool that only exists inside their building. And the one person who built it might leave.
 
@@ -16,8 +16,8 @@ And now for my favourite detail. That bot runs on Claude. So the people who make
 
 Now, compare that with a boss who went the other way. Fred Turner runs a US health insurer called Curative. This summer, he said they'd cancelled Salesforce. That's the software sales teams use to track every customer, every call and every deal. It was costing them about six hundred thousand dollars a year. So they built their own instead, in two months, with AI. But Fred has also said that keeping it running is hard. That's the cost that comes after. How his story ends, honestly, we don't know yet. I'll be watching.
 
-So is it build or buy? Honestly, I think that's the wrong question now. Anthropic could build almost anything. It chose to spend its best people on the one thing only it can do, and paid for the rest. Curative chose to build. Both can work. But only if someone's name is on the thing when it breaks.
+So is it build or buy? Honestly, I think that's the wrong question now. Anthropic could build almost anything. It chose to spend its best people on the one thing only it can do, and paid for the rest. Curative chose to build. Both can work. But only if someone picks up when it breaks.
 
 And this goes way beyond help desks and sales software. It's the dashboard your team knocked up last week. It's the spreadsheet that only one person in finance understands. And what happens when they go on holiday?
 
-So next time someone shows me a tool they built at the weekend, I won't ask build or buy. I'll ask whose name goes on it when it breaks at two in the morning. If no one's name goes on it, I'll buy. The full story is free at makeyourmindup.ai.
+So next time someone shows me a tool they built at the weekend, I won't ask build or buy. I'll ask who gets the call when it breaks at two in the morning. If the answer is no one, I'll buy. The full story is free at makeyourmindup.ai.
