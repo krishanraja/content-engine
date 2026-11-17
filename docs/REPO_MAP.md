@@ -2807,6 +2807,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `type StillLayerKey = StyleLayerKey | 'treatment'`
 - `function stillUrl(layer: StillLayerKey, id: string, samples: unknown = styleSamples): string | null`
 - `function stillFiles(samples: unknown = styleSamples): Set<string>`
+- `const LAST_MOTION`
 - `function undrawableMotion(styles: unknown): Set<string>`
 - `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, str…`
 - `interface StyleInputs`
@@ -5077,7 +5078,9 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 - `function viewport(p:DeviceProps)`
 - `function safeBox(p:DeviceProps)`
+- `function screenSize(p:DeviceProps)`
 - `function cameraFor(p:DeviceProps)`
+- `function projectScreen(p:DeviceProps,x:number,y:number)`
 - `function countText(value:number,sourced:number[])`
 - `function paint(g:CanvasRenderingContext2D,p:DeviceProps)`
 - `function Device(p:DeviceProps)`
@@ -5090,6 +5093,8 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 - `const rect = (index:number,count:number):[number,number,number,number] =>`
 - `function screenState(object:EngineObject,events:readonly EngineEvent[],frame:number)`
+- `function activityEvents(object:EngineObject,events:readonly EngineEvent[])`
+- `function activityAt(object:EngineObject,events:readonly EngineEvent[],frame:number)`
 
 ### `apps/renderer/src/engine/devices/logo_card/index.tsx`
 
@@ -5431,6 +5436,20 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 - `const entranceFrames = () =>`
 - `function throughLineState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/toy_object/index.tsx`
+
+- `function Device(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/toy_object/scene.ts`
+
+- `function buildSet(p: DeviceProps, texture?: T.Texture)`
+- `function projectedBounds(node:T.Object3D,camera:T.Camera,p:DeviceProps)`
+- `function labelBox(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/toy_object/schema.ts`
+
+- `const Params`
 
 ### `apps/renderer/src/engine/devices/types.ts`
 

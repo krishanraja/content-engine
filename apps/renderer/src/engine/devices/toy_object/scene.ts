@@ -24,6 +24,8 @@ export function buildSet(p: DeviceProps, texture?: T.Texture) {
     angle += (target-angle)*progress(Math.min(p.frame,moves[i+1]?.atFrame??p.frame)-cue.atFrame,33,t=>t)
   }
   angle += drift(p.frame,p.object.fromFrame,p.object.toFrame,1.5)
+  // The canvas resets an orthographic frustum to pixel units unless the camera is manual.
+  Object.assign(camera, { manual: true })
   camera.position.set(20*Math.sin(angle), .25, 20*Math.cos(angle)); camera.lookAt(0,0,0); camera.updateMatrixWorld()
   const root = new T.Group(), cream = new T.MeshStandardMaterial({color:p.tokens.cream,roughness:.85})
   const mint = new T.MeshStandardMaterial({color:p.tokens.mint,roughness:params.object==='candy'?.45:.9})
@@ -60,7 +62,7 @@ export function buildSet(p: DeviceProps, texture?: T.Texture) {
   for(let i=0;i<copies;i++) {
     const k=progress(p.frame-(add?.atFrame??0)-i*Math.min(2,MOTION.staggerFrames),Math.min(7,MOTION.dropFrames))
     const scale=tall?.25:.3, x=(i-(copies-1)/2)*(tall?1.65:2.2)
-    copyGroups.push(toy(scale,x,(tall?-2.5:-2)+ (1-k)*worldHeight-fall*worldHeight*2,false))
+    copyGroups.push(toy(scale,x,(tall?-1.9:-2)+ (1-k)*worldHeight-fall*worldHeight*2,false))
   }
   root.updateMatrixWorld(true)
   return {root,hero,copies:copyGroups,camera,move,visible:!!enter&&(!exit||p.frame<exit.atFrame+MOTION.exitFrames)}

@@ -16,6 +16,8 @@ for(const aspect of ['9:16','16:9'] as const) {
         node.traverse(stud=>{if(stud.name==='stud'){const r=projectedBounds(stud,s.camera,p);expect(r.top).toBeGreaterThan(label.top+label.height)}})
       }
       if(aspect==='9:16'){const b=projectedBounds(s.hero,s.camera,p);expect(b.right-b.left).toBeGreaterThanOrEqual(.8*p.box.width)}
+      // Tall: every toy stays inside the picture slot (y 270 to 1320, config/channel-safe-zones.json).
+      if(aspect==='9:16')for(const node of [s.hero,...s.copies]){const b=projectedBounds(node,s.camera,p);expect(b.top).toBeGreaterThanOrEqual(270);expect(b.bottom).toBeLessThanOrEqual(1320)}
     }
   })
   it(`${aspect}: real picture texture is attached upright and follows camera`,()=>{
@@ -32,4 +34,7 @@ it('count lights sourced studs; highlight and exit change the object',()=>{
  expect(studs.filter(s=>s.material.color.equals(new T.Color('aquamarine')))).toHaveLength(6)
  expect(b.hero.children.filter(c=>c.name==='stud')[7]!.scale.x).toBeGreaterThan(1)
  expect(buildSet(props('9:16',206)).visible).toBe(false)
+})
+it('the canvas keeps the scene camera: it is manual, so its frustum is never reset to pixel units',()=>{
+  for(const aspect of ['9:16','16:9'] as const){const s=buildSet(props(aspect,40));expect((s.camera as T.OrthographicCamera & {manual?:boolean}).manual).toBe(true);expect(s.camera.right-s.camera.left).toBeLessThan(20)}
 })
