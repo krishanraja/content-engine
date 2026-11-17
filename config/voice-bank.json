@@ -17,7 +17,18 @@
       "approved_on": "2026-11-15",
       "approval_source": "krish-clone config/synthetic-approvals.json, entry krish-voice-elevenlabs",
       "model": "eleven_v3",
-      "model_why": "Krish, 2026-11-17, after hearing the same lines on eleven_v4, eleven_v3 and eleven_multilingual_v2 (relayed by the Tuesday habits voiceover session): \"v3 sounds right\". On eleven_v4 he asked \"Why does this not sound like that Krish Remix voice when I play it in ElevenLabs?\""
+      "model_why": "Krish, 2026-11-17, after hearing the same lines on eleven_v4, eleven_v3 and eleven_multilingual_v2 (relayed by the Tuesday habits voiceover session): \"v3 sounds right\". On eleven_v4 he asked \"Why does this not sound like that Krish Remix voice when I play it in ElevenLabs?\"",
+      "stability": 0.5,
+      "delivery": "eleven_v3 audio tags ([excited], [casual], [playful], [conversational]) give the more animated delivery he approved; the words stay exactly as signed.",
+      "approved_sample": {
+        "said": "take 2 is good",
+        "on": "2026-11-17",
+        "elevenlabs_generation": "NTGInE9H8lsyZUNsU7Z0",
+        "elevenlabs_flow": "lyaAZ5OQj8bp08tbDKPJ",
+        "model": "eleven_v3",
+        "stability": 0.5,
+        "relayed_by": "the voice-design session"
+      }
     },
     {
       "id": "clyde",
