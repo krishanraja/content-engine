@@ -635,7 +635,7 @@ def shape_findings(ideas, week):
     offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
     for day, opts in offdays.items():
         for o in opts if isinstance(opts, list) else []:
-            if isinstance(o, dict) and not o.get('weekly') and o.get('source_tag') not in SOURCE_TAGS:
+            if isinstance(o, dict) and not o.get('weekly') and not is_template(o) and o.get('source_tag') not in SOURCE_TAGS:
                 ref = f'off-{day}-{o.get("id")}'
                 out.append({'code': 'source_tag', 'ref': ref, 'line': f'{ref}: source_tag is one of {", ".join(SOURCE_TAGS)}'})
     return out
@@ -777,7 +777,7 @@ def learned_findings(ideas, sources):
     offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
     for day, opts in offdays.items():
         for o in opts if isinstance(opts, list) else []:
-            if not isinstance(o, dict) or o.get('weekly'):
+            if not isinstance(o, dict) or o.get('weekly') or is_template(o):
                 continue
             lines = [str(x) for x in o.get('learned_from') or [] if isinstance(x, str)]
             spans = [q for x in lines for q in re.findall(r'["“]([^"”]+)["”]', x)] + [re.sub(r'\s*\([^)]*\)\s*$', '', x) for x in lines]
@@ -908,6 +908,9 @@ def source_of(o):
         s = st.get('source') if isinstance(st, dict) else None
         if isinstance(s, dict) and s.get('url'):
             return {'label': str(s.get('label') or ''), 'url': s['url']}
+    clip = (o.get('template') or {}).get('clip') if isinstance(o, dict) and is_template(o) else None
+    if isinstance(clip, dict) and clip.get('page'):  # a meme template: its clip's page is its source
+        return {'label': str((o.get('template') or {}).get('credit') or ''), 'url': clip['page']}
     if isinstance(src, dict):
         return {'label': str(src.get('label') or ''), 'url': None}
     if isinstance(src, str):
@@ -1344,8 +1347,9 @@ def theme_urls(o):
 
 def needs_lookalike(o):
     """Whether an option names the lookalike pattern it comes from: every option but his own (his idea, an idea he
-    recorded, his tick) and the weekly series."""
-    return not (o.get('weekly') or o.get('source_kind') == 'his' or o.get('kind') == 'recorded' or o.get('from_inspiration'))
+    recorded, his tick), the weekly series and a meme template (its clip is the model, template_findings)."""
+    return not (o.get('weekly') or o.get('source_kind') == 'his' or o.get('kind') == 'recorded' or o.get('from_inspiration')
+                or is_template(o))
 
 
 def offday_carousel(ref, o):
@@ -1385,7 +1389,7 @@ def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=(), feed_t
         elif shape == 'theme' and len(theme_urls(o)) < THEME_STORIES:
             out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} is a theme with {len(theme_urls(o))} sourced stories; a theme '
                         f'carries at least {THEME_STORIES} different ones (stories or sources, each with its url)'})
-        elif shape == 'story' and not (primary_url(o) and len(str(o.get('dive') or '').strip()) >= DIVE_MIN):
+        elif shape == 'story' and not (primary_url(o) and len(str(o.get('dive') or ((o.get('template') or {}).get('why_it_works') if is_template(o) else '') or '').strip()) >= DIVE_MIN):
             out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} is a story: one primary source (source.url) and dive, the '
                         'mechanism to dive into, in a sentence'})
         if o.get('aim') not in AIMS:
@@ -1397,7 +1401,7 @@ def aim_findings(ideas, week, patterns=None, feed_urls=None, warnings=(), feed_t
                         'picture that stop the scroll and something the reader can use the same day, at the level of the best posts '
                         'in his Instagram inspo sheet'})
         funny = str(o.get('funny') or '').strip()
-        if len(funny) < 10 or '\n' in funny or len(funny) > 240 or '—' in funny:
+        if len(funny) < 10 or '\n' in funny or len(funny) > 240 or '\u2014' in funny:
             out.append({'code': 'aim', 'ref': ref, 'line': f'aim: {label} carries its humorous angle in funny: one plain line, no em dash'})
         if not needs_lookalike(o) or no_feed:
             continue
@@ -1435,10 +1439,11 @@ def breadth_findings(ideas, week):
     out = []
     by_day = {}
     for ref, day, main, o in board_raw(ideas):
-        by_day.setdefault((day, main), []).append(o)
+        if not is_template(o):  # a meme template rides on top of the day's options (Krish, 2026-11-17)
+            by_day.setdefault((day, main), []).append(o)
     offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
     for day in ('tue', 'thu', 'sat'):
-        n = len([o for o in offdays.get(day) or [] if isinstance(o, dict)])
+        n = len([o for o in offdays.get(day) or [] if isinstance(o, dict) and not is_template(o)])
         if day in offdays and n < OFFDAY_BREADTH:
             out.append({'code': 'aim', 'ref': f'off-{day}', 'line': f'aim: {day} offers {n} options; an off day offers at least {OFFDAY_BREADTH}, '
                         'from different sources (the sheet, the web, his cards), so he has a real choice'})
@@ -1451,6 +1456,254 @@ def breadth_findings(ideas, week):
 
 
 COPY_RUN = 7
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Saturday is carousels modelled on his sheet, and memes have their own lane (Krish, 2026-11-17, looking at Sat 21 Nov's
+# board: "I feel like we are very much missing the point of the Saturday suggestions. Each suggestion should be a
+# carousel like one carousel from my Instagram Inspo sheet, not just one story."). From the 30 Nov board; earlier boards
+# keep the shape they were made in, as SHAPE_FROM does.
+
+SATURDAY_FROM = '2026-11-30'
+SATURDAY_KINDS = ('good_news', 'explainer', 'supporting')
+SATURDAY_CARDS = (4, 10)  # a Saturday carousel's cards: at least four, at most ten (Buffer posts ten images at most)
+
+
+def saturday_kind(o):
+    """A Saturday option's kind: its own `kind`, or good_news for the weekly series that predates the field."""
+    return o.get('kind') or ('good_news' if o.get('weekly') == 'good_news' else None)
+
+
+def saturday_findings(ideas, week, flows=None, feed_urls=None, carousel_urls=None):
+    """From SATURDAY_FROM every Saturday option is a carousel (kind good_news, explainer or supporting; no meme,
+    voiceover or recorded option on Saturday) modelled card for card on one carousel in his Instagram inspo sheet: its
+    lookalike.beats names that post (a URL in the week's lookalike-input.json, a carousel there when the input says what
+    each post is), its lookalike.pattern has a card_flow in lookalike.json, and its cards and direction.frames follow that
+    card_flow one for one, 4 to 10 cards. The weekly good news follows a pattern's card_flow too: its stories fill the
+    middle cards, so its flow holds a card for each story and two more (the cover and the close).
+
+    flows: {pattern id: [card jobs]} from lookalike.json, or None when the week has none; feed_urls: the post URLs in
+    lookalike-input.json (the input is never committed, so a later job may not hold it: the post is then held to an https
+    page, and the aim check says the rest); carousel_urls: those of them the input says are carousels, or None when it
+    cannot say."""
+    if str(week) < SATURDAY_FROM:
+        return []
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    feed = {canon_url(u) for u in feed_urls or [] if canon_url(u)}
+    carousels = None if carousel_urls is None else {canon_url(u) for u in carousel_urls if canon_url(u)}
+    lo, hi = SATURDAY_CARDS
+    out = []
+
+    def say(ref, line):
+        out.append({'code': 'saturday', 'ref': ref, 'line': f'saturday: {ref} {line}'})
+
+    for o in offdays.get('sat') or []:
+        if not isinstance(o, dict):
+            continue
+        ref = f'off-sat-{o.get("id")}'
+        kind = saturday_kind(o)
+        if kind not in SATURDAY_KINDS:
+            say(ref, f'is a {kind or "post with no kind"}; every Saturday option is a carousel (kind {", ".join(SATURDAY_KINDS)}): '
+                     'memes have their own lane on Tuesday and Thursday, and no voiceover or recorded option goes on Saturday')
+            continue
+        look = o.get('lookalike') if isinstance(o.get('lookalike'), dict) else {}
+        weekly = kind == 'good_news' or bool(o.get('weekly'))
+        if not weekly:
+            beats = canon_url(look.get('beats'))
+            if not beats or not str(look.get('beats')).startswith('https://'):
+                say(ref, 'names the carousel in his Instagram inspo sheet it is modelled on (lookalike.beats, an https post URL)')
+            elif feed and beats not in feed:
+                say(ref, 'names a post that is not in the week\'s lookalike-input.json (lookalike.beats); model it on a carousel in his sheet')
+            elif carousels is not None and feed and beats not in carousels:
+                say(ref, 'is modelled on a post the sheet does not hold as a carousel (lookalike.beats); pick one of his sheet\'s carousels')
+        if flows is None:
+            say(ref, 'has no lookalike.json for the week to take its card flow from; run lookalike.py prepare and check')
+            continue
+        flow = flows.get(str(look.get('pattern') or ''))
+        if not isinstance(flow, list) or len(flow) < 3:
+            say(ref, 'names a lookalike pattern with a card_flow (lookalike.pattern), the sheet carousel\'s card-by-card flow it follows')
+            continue
+        cards = o.get('cards') if isinstance(o.get('cards'), list) else []
+        frames = ((o.get('direction') or {}).get('frames') if isinstance(o.get('direction'), dict) else None) or []
+        if not lo <= len(flow) <= hi:
+            say(ref, f'follows a card_flow of {len(flow)} cards; a Saturday carousel is {lo} to {hi} cards')
+        if len(cards) != len(flow):
+            say(ref, f'has {len(cards)} cards; it follows its pattern\'s card_flow card for card ({len(flow)} cards: '
+                     + '; '.join(str(x) for x in flow)[:300] + ')')
+        if len(frames) != len(flow):
+            say(ref, f'has {len(frames)} direction.frames; the direction follows the same card_flow ({len(flow)} frames)')
+        if weekly:
+            n = len([s for s in o.get('stories') or [] if isinstance(s, dict)])
+            if n and len(flow) < n + 2:
+                say(ref, f'follows a card_flow of {len(flow)} cards for {n} stories; its stories fill the middle cards, '
+                         'so the flow holds a cover, a card for each story and a close')
+    return out
+
+
+# The meme templates lane (Krish, 2026-11-17: "why can we not create a pipeline of existing meme videos that could be good
+# to reskin, and show me those in here? Then I could think of a funny caption for it thats related to AI."). Each is an
+# off-day option on Tuesday or Thursday with kind "meme" and a `template`, so his presses, notes, Move to and offday_items
+# work as for any option; it never counts toward the day's options (OFFDAY_BREADTH).
+
+TEMPLATE_FROM = '2026-11-30'
+TEMPLATE_DAYS = ('tue', 'thu')
+TEMPLATES = (6, 10)          # templates a week
+TEMPLATE_PLACE_KINDS = 2     # kinds of place a week's templates come from, at least
+TEMPLATE_PLACES = ('sheet', 'card', 'reddit', 'instagram', 'tiktok', 'youtube', 'pop_culture')
+TEMPLATE_WEEKS = 3           # a template offered on the three boards before is not offered again
+CAPTION_IDEAS = (2, 4)
+CAPTION_WORDS = 20
+# The humour engine's mechanism ids, pinned from krishanraja/humour-engine schemas/ontology.json (its mechanisms list).
+# A template names the mechanisms that make its clip funny, in the engine's own words, so the two speak one language.
+MECHANISMS = ('ambiguity', 'incongruity', 'misdirection', 'reversal', 'literalisation', 'exaggeration', 'understatement',
+              'callback', 'self_defeating_logic', 'personification', 'irony', 'sarcasm', 'absurd_reasoning')
+EM_DASH = '\u2014'
+HANDLE = re.compile(r'(?:^|[\s(])(?:@[A-Za-z0-9_.]{2,}|/?u/[A-Za-z0-9_-]{3,})')
+
+
+def is_template(o):
+    """Whether an off-day option is a meme template: kind meme with a template object."""
+    return isinstance(o, dict) and o.get('kind') == 'meme' and isinstance(o.get('template'), dict)
+
+
+def template_page(o):
+    """The page a template's clip lives on, canonical: how a template is known across weeks."""
+    clip = (o.get('template') or {}).get('clip') if is_template(o) else None
+    return canon_url(clip.get('page')) if isinstance(clip, dict) else None
+
+
+def kill_list_vetoes(text):
+    """The kill list's vetoes on some words ([] when clean): node vendor/makeyourmindup/kill-list/kill-list.mjs --stdin.
+    A kill list that cannot run is a veto, never a pass."""
+    import subprocess
+    from pathlib import Path as _P
+    script = _P(__file__).resolve().parents[2] / 'vendor' / 'makeyourmindup' / 'kill-list' / 'kill-list.mjs'
+    try:
+        run = subprocess.run(['node', str(script), '--stdin'], input=str(text), capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.SubprocessError) as error:
+        return [f'the kill list could not run ({error})']
+    if run.returncode == 0:
+        return []
+    return [line.split('  ')[2] if len(line.split('  ')) > 2 else line for line in run.stdout.splitlines() if line.startswith('VETO')] or ['the kill list refused it']
+
+
+def caption_problems(text, credit='', kill=None):
+    """Why one caption idea is not ready, or []: one line of at most CAPTION_WORDS words, no em dash, clean of the copy
+    lint (channel_copy) and the kill list, and naming no handle and nobody from the clip's credit (never a real private
+    person)."""
+    import copy_lint as _cl
+    t = ' '.join(str(text or '').split())
+    if not t:
+        return ['is empty']
+    out = []
+    if len(t.split()) > CAPTION_WORDS:
+        out.append(f'is {len(t.split())} words; at most {CAPTION_WORDS}')
+    if EM_DASH in str(text):
+        out.append('has an em dash')
+    hits = _cl.copy_lint(t, 'channel_copy')
+    if hits:
+        out.append('fails the copy lint (' + ', '.join(sorted({h['id'] for h in hits})) + ')')
+    vetoes = (kill or kill_list_vetoes)(t)
+    if vetoes:
+        out.append('fails the kill list (' + ', '.join(sorted(set(vetoes))) + ')')
+    if HANDLE.search(t):
+        out.append('names an account; a caption never names a real private person')
+    low = t.lower()
+    names = [w for w in re.findall(r"[A-Za-z][A-Za-z0-9_'.-]{2,}", str(credit or '')) if w.lower() not in STOP and w.lower() not in ('reddit', 'instagram', 'tiktok', 'youtube', 'via', 'original', 'unknown')]
+    named = [w for w in names if re.search(rf'\b{re.escape(w.lower())}\b', low)]
+    if named:
+        out.append(f'names {", ".join(named)} from the clip\'s credit; a caption never names a real private person')
+    return out
+
+
+def template_problems(o, kill=None):
+    """Why one meme template option is not ready to show, or [] (references/meme-roaster.md)."""
+    t = o.get('template') if isinstance(o.get('template'), dict) else {}
+    clip = t.get('clip') if isinstance(t.get('clip'), dict) else {}
+    found = t.get('found') if isinstance(t.get('found'), dict) else {}
+    https = lambda v: isinstance(v, str) and re.match(r'^https://[^\s"<>]+$', v) is not None
+    line = lambda v: isinstance(v, str) and v.strip() and '\n' not in v.strip()
+    out = []
+    if not line(t.get('title')):
+        out.append('template.title is one line')
+    if not https(clip.get('url')) or not https(clip.get('page')):
+        out.append('template.clip has an https url (the playable clip, or its page) and an https page')
+    if clip.get('poster') is not None and not https(clip.get('poster')):
+        out.append('template.clip.poster is an https image or null')
+    if clip.get('seconds') is not None and (isinstance(clip.get('seconds'), bool) or not isinstance(clip.get('seconds'), (int, float)) or clip['seconds'] <= 0):
+        out.append('template.clip.seconds is a number or null')
+    if found.get('place') not in TEMPLATE_PLACES or not line(found.get('label')) or not https(found.get('url')):
+        out.append(f'template.found says where it was found: place (one of {", ".join(TEMPLATE_PLACES)}), label and an https url')
+    if not line(t.get('credit')):
+        out.append('template.credit names who made the original')
+    for k in ('what_happens', 'why_it_works'):
+        if not line(t.get(k)) or len(t[k].strip()) < 12:
+            out.append(f'template.{k} is one plain line')
+        elif EM_DASH in t[k]:
+            out.append(f'template.{k} has an em dash')
+    mech = t.get('mechanism')
+    if not isinstance(mech, list) or not mech or any(m not in MECHANISMS for m in mech):
+        out.append(f'template.mechanism names the humour engine\'s mechanisms ({", ".join(MECHANISMS)})')
+    moment = t.get('moment')
+    if moment is not None and not (line(moment) and dates_in(moment)):
+        out.append('template.moment is the pop-culture moment it rides, dated (YYYY-MM-DD or 28 Nov 2026), or null')
+    if not (isinstance(t.get('date'), str) and re.match(r'^20\d\d-\d\d-\d\d$', t['date'])):
+        out.append('template.date is YYYY-MM-DD')
+    if o.get('aim') != 'humour':
+        out.append('its aim is "humour"')
+    if o.get('shape') != 'story':
+        out.append('its shape is "story"')
+    if not line(o.get('hook')):
+        out.append('its hook is the template\'s title')
+    ideas = o.get('caption_ideas')
+    lo, hi = CAPTION_IDEAS
+    if not isinstance(ideas, list) or not lo <= len(ideas) <= hi or not all(isinstance(x, str) for x in ideas):
+        out.append(f'caption_ideas holds {lo} to {hi} drafts')
+    else:
+        for n, c in enumerate(ideas, 1):
+            out += [f'caption idea {n} {p}' for p in caption_problems(c, t.get('credit'), kill)]
+    return out
+
+
+def template_findings(ideas, week, earlier_pages=(), kill=None):
+    """From TEMPLATE_FROM: each meme template is whole (template_problems), on Tuesday or Thursday, and new (its clip's
+    page offered on none of the TEMPLATE_WEEKS boards before, earlier_pages, and once on this board); the week offers
+    TEMPLATES of them, found in at least TEMPLATE_PLACE_KINDS kinds of place. kill: the kill list's checker (tests pass
+    their own)."""
+    if str(week) < TEMPLATE_FROM:
+        return []
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    before = {canon_url(u) for u in earlier_pages or [] if canon_url(u)}
+    out, seen, places, count = [], {}, set(), 0
+    for day, opts in offdays.items():
+        for o in opts if isinstance(opts, list) else []:
+            if not is_template(o):
+                continue
+            count += 1
+            ref = f'off-{day}-{o.get("id")}'
+            say = lambda line: out.append({'code': 'template', 'ref': ref, 'line': f'template: {ref} {line}'})
+            if day not in TEMPLATE_DAYS:
+                say(f'is a meme template on {day}; templates go on Tuesday or Thursday (Move to puts the post on any day once he approves it)')
+            for p in template_problems(o, kill):
+                say(p)
+            place = ((o.get('template') or {}).get('found') or {}).get('place')
+            if place in TEMPLATE_PLACES:
+                places.add(place)
+            page = template_page(o)
+            if page and page in before:
+                say(f'was offered on a board in the last {TEMPLATE_WEEKS} weeks ({page}); a template is offered once')
+            if page and page in seen:
+                say(f'is the same clip as {seen[page]} on this board ({page})')
+            if page:
+                seen.setdefault(page, ref)
+    lo, hi = TEMPLATES
+    if not lo <= count <= hi:
+        out.append({'code': 'template', 'ref': 'templates', 'line': f'template: the week offers {count} meme templates; it offers {lo} to {hi} '
+                    'on Tuesday and Thursday (Krish, 2026-11-17), each with its clip, why it fits and caption ideas'})
+    elif len(places) < TEMPLATE_PLACE_KINDS:
+        out.append({'code': 'template', 'ref': 'templates', 'line': f'template: the week\'s templates come from {len(places)} kind of place; '
+                    f'they come from at least {TEMPLATE_PLACE_KINDS} ({", ".join(TEMPLATE_PLACES)})'})
+    return out
 
 
 def option_words(o):
@@ -1477,9 +1730,10 @@ def copied_run(ours, theirs, n=COPY_RUN):
 
 # The findings that fail the Sunday run (board_feed.py gate): a subject he refused offered again, a warned option placed
 # first or shown without his words, a return that came back no deeper, a repeat of what went out (Krish, 2026-11-16),
-# and from the 23 Nov board an option without its shape, aim, humour and lookalike. The rest of cover stays the run's to
-# fix before it stops, as before.
-GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim')
+# from the 23 Nov board an option without its shape, aim, humour and lookalike, and from the 30 Nov board a Saturday
+# option that is not a sheet carousel followed card for card, or a meme template that is not whole (Krish, 2026-11-17).
+# The rest of cover stays the run's to fix before it stops, as before.
+GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template')
 # What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
 # subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
 NOTE_CODES = ('warned', 'his_tick', 'his_repeat')
