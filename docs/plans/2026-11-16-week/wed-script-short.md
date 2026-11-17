@@ -1,7 +1,7 @@
-Anthropic, the lab that makes Claude, needed a help desk bot, and it bought one.
+Anthropic makes Claude, a coding AI. So why did it pay someone else for its help desk bot?
 
-So why does your engineer think he can rebuild your sales system over a weekend?
+Writing the code is the cheap bit. The hard bit is fixing it at two in the morning. So it bought one from Intercom, which sells them.
 
-Writing it is the cheap bit now. The costly bit is your people, like who gets woken when it breaks.
+And my favourite detail? That bot runs on Claude.
 
-If I ran a team, I'd ask that first. If no one's name goes there, I'd buy. The full story is free at makeyourmindup.ai.
+So I won't ask build or buy. I'll ask whose name is on it. The full story is free at makeyourmindup.ai.
