@@ -128,3 +128,52 @@ describe('F46: the piece\'s own read (get_piece_board) carries his decisions', (
     expect(failed.body.decisions).toEqual({ unread: true, rule: DECISIONS_RULE })
   })
 })
+
+// F47-card-never-moved-on (config/failures.json). Tue 17 Nov, about 11:35 UTC, after the script session filed both scripts
+// for his Approve: the card still showed Fleshed out current, "Its make picks up from where it is", the idea row's old
+// summary, and no way to approve the scripts. Krish: "Why does this never actually update the board and move to
+// Production Planned? This should happen automatically when sessions like this get to this point."
+describe('F47: the card moves on when a session reaches a milestone, and offers his next press', () => {
+  const LOCK17 = `# Narrative lock: Tue 17\n\npiece_id: ${TUE}\nPublishes: 2026-11-17\n\n## Surface story\nAmerica has a new least-wanted neighbour.\n\n## Deeper story\nThe midterms turned AI into a vote about the electricity bill.\n\n## Arc\n- Hook.\n\nSigned by Krish: "Signed.", 2026-11-17`
+  const filed = [
+    { cut: 'long' as const, id: '6503bef2-62ac-4192-83a5-f1607d9d3f30', title: 'Tue 17 script, 5-minute cut, redrafted 17 Nov to the signed lock (for your Approve)', text: 'America has a new neighbour nobody wants.', at: '2026-11-17T11:30:14Z' },
+    { cut: 'short' as const, id: '81ff7074-8a15-43c1-b78c-793ca9b2bfcd', title: 'Tue 17 script, short cut (about 30 s), redrafted 17 Nov to the signed lock (for your Approve)', text: 'Forty towns said no.', at: '2026-11-17T11:30:17Z' },
+  ]
+  const at17 = (extra: Body = {}) => ({ ...inputs(PICKED), locks: { tue: LOCK17 }, pieces: [{ ...inputs(PICKED).pieces[0], thesis: 'OpenAI pledged to solicit community input.' }], ...extra }) as ViewInputs
+
+  it('17 Nov reproduced: look picked and both scripts filed, so the card is past Fleshed out, says the scripts are ready and offers Approve scripts', () => {
+    const it = item(buildView(at17({ scripts: { [TUE]: filed } })))
+    expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'current', 'todo', 'todo'])
+    expect(it.line).toMatch(/^Branded for Tue 17\. Your production picks are in\. Both scripts are ready for your Approve: Tue 17 script, 5-minute cut/)
+    expect(it.decision).toBe(true)
+    expect(it.next).toMatchObject({ kind: 'press', label: 'Approve scripts', collection: 'picks', id: 'tue-scripts-words',
+      body: { kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: TUE, texts: { long: filed[0].text, short: filed[1].text } },
+      words: { path: 'words', required: true } })
+    // What it says is the signed lock, never the idea row it started from.
+    expect(it.read.so_what).toBe('The midterms turned AI into a vote about the electricity bill.')
+    expect(it.read.story).toBe('America has a new least-wanted neighbour.')
+    expect(it.read.research).toEqual(expect.arrayContaining([filed[0].title, filed[1].title]))
+  })
+  it('his press, as the board saves it, is a body the engine accepts; only his words approve', async () => {
+    const { validBody } = await import('../../apps/control-plane/api/board/_contracts')
+    const press = item(buildView(at17({ scripts: { [TUE]: filed } }))).next as any
+    const saved = { ...press.body, words: 'Approved.', at: '2026-11-17T12:00:00Z', said_at: '2026-11-17T12:00:00Z' }
+    expect(validBody('picks', press.id, saved)).toBe(true)
+    expect(validBody('picks', press.id, { ...saved, words: '' })).toBe(false)
+  })
+  it('after his approval the card is at Production planned and asks him to record', () => {
+    const words = { doc_id: 'tue-scripts-words', updated_by: 'Krish', body: { kind: 'approve_scripts', day: 'tue', via: 'words', approved: true, piece_id: TUE,
+      texts: { long: 'a', short: 'b' }, titles: { long: 'a', short: 'b' }, folder_title: 'x', words: 'Approved.', at: '2026-11-17T12:00:00Z',
+      said_at: '2026-11-17T12:00:00Z', said_where: 'the Publish Board in Control Centre', session_ref: 'https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=tue' } }
+    const it = item(buildView(at17({ scripts: { [TUE]: filed }, picks: [words] })))
+    expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'done', 'current', 'todo'])
+    expect(it.next).not.toMatchObject({ label: 'Approve scripts' })
+    expect(it.line).toMatch(/Scripts approved\. Next: record both cuts/)
+  })
+  it('no scripts filed yet: past Fleshed out, and the card says the scripts are next, with no press to approve', () => {
+    const it = item(buildView(at17()))
+    expect(it.path.map(s => s.state)).toEqual(['done', 'done', 'current', 'todo', 'todo'])
+    expect(it.next).not.toMatchObject({ label: 'Approve scripts' })
+    expect(it.line).toMatch(/Next: the storyboard and both scripts/)
+  })
+})

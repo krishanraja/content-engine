@@ -2606,6 +2606,46 @@
           "how": "the piece read (get_piece_board) carries his decisions; an unread record is said as unread"
         }
       ]
+    },
+    {
+      "id": "F47-card-never-moved-on",
+      "on": "2026-11-17",
+      "status": "guarded",
+      "mode": "card_stale_after_milestone",
+      "guard_level": "gate",
+      "krish": "Why does this never actually update the board and move to Production Planned? This should happen automatically when sessions like this get to this point. I'm still shown the card and the details I was shown before this session existed.",
+      "what": "Tue 17 Nov, piece b019dbf8 (data centres, placed on Tuesday): lock signed, look, motion and captions picked at 11:09, both scripts filed on the piece for his Approve at 11:30. At about 11:35 the card still showed Fleshed out current, \"Its make picks up from where it is\", the idea row's old summary, and no way to approve the scripts.",
+      "symptom": "The card stays where it was before a session reached its milestone, and offers him no next press.",
+      "cause": "For a piece placed off its series day, the week model counted only the lock (placedPieceItem: done = branded ? 1 : 0), read the card's summary from the idea row (readOf with the row's thesis) and never read the scripts filed on the piece; reproduced exactly on untouched main with 17 Nov's records.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "placedPieceItem set the path from the lock alone, so his look, his motion and captions and the filed scripts never moved it on."
+        },
+        {
+          "cause": "handoff_loss",
+          "evidence": "The scripts the session filed (role script, 6503bef2 and 81ff7074) were never read by the view, so the card could not offer his Approve scripts."
+        }
+      ],
+      "surface": "A placed piece's card moves on from his decisions on the next read (look picked: past Fleshed out; scripts approved: past Production planned), says what its signed lock says, and once scripts are filed on the piece it leads with Approve scripts in his words, bound to exactly the words filed. Only his press approves.",
+      "guards": [
+        {
+          "file": "tests/control-plane/board-decisions.test.ts",
+          "contains": "F47: the card moves on when a session reaches a milestone",
+          "how": "17 Nov's records: past Fleshed out, scripts ready line, Approve scripts press the engine accepts, the signed lock's words; Production planned after his approval",
+          "test": "npx vitest run tests/control-plane/board-decisions.test.ts"
+        },
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "export function scriptsPress(",
+          "how": "the Approve scripts press a placed piece's card offers once scripts are filed"
+        },
+        {
+          "file": "apps/control-plane/api/board/_view.ts",
+          "contains": "export async function readFiledScripts(",
+          "how": "the view reads the scripts filed on each piece"
+        }
+      ]
     }
   ]
 }

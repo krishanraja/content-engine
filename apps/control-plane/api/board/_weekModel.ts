@@ -1,6 +1,6 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
-import type { PieceDecisions } from './_decisions.js'
+import type { FiledScript, PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
 import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
 import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
@@ -209,6 +209,10 @@ export interface ModelInputs {
   /** His decisions on each approved piece, by piece id (_view.ts weekDecisions; _decisions.ts, F46): every Claude prompt
    *  carries them, and a placed piece's step comes from them. */
   decisions?: Record<string, PieceDecisions>
+  /** The newest script of each cut filed on each piece, with its words (_view.ts readFiledScripts; F47). */
+  scripts?: Record<string, FiledScript[]>
+  /** What each piece's signed lock says (lockRead), for the card's read sheet (F47). */
+  lockReads?: Record<string, { so_what: string | null; story: string | null }>
   /** Each piece's lock on file and unsigned, by piece id (_view.ts locksToSign). */
   locksToSign?: Record<string, LockToSign>
   /** Pieces and posts approved, scheduled or live from 14 days before the week to its end (_view.ts recentOut). */
@@ -517,11 +521,15 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   // made, never a step he has already pressed (Tue 17 Nov: "step look" after his three picks at 11:09).
   const decided = m.decisions?.[p.id] ?? null
   const lookPicked = Boolean(m.placedStyles?.[p.id]?.treatment.picked)
-  const done = out ? PIECE_PATH.length : branded ? (lookPicked ? 2 : 1) : 0
+  const scriptsOk = decided?.items.find(x => x.key === 'scripts')?.made === true
+  const done = out ? PIECE_PATH.length : branded ? (lookPicked ? (scriptsOk ? 3 : 2) : 1) : 0
+  // What it says now: the signed lock, never the idea row it started from (F47).
+  const said = m.lockReads?.[p.id]
+  const filed = m.scripts?.[p.id] ?? []
   const missed = !out && d.date < m.today
   const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
     title: cut(p.title, 200), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
-    read: readOf(null, { row }), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
+    read: withLock(readOf(null, { row, research: filed.map(f => f.title) }), said), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
     stories_planned: null, others: [] as PressAction[] }
   const step = decided?.next_step ?? (branded ? 'look' : 'next')
   const line = out ? 'Live.' : missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.`
@@ -541,7 +549,35 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
     return { ...base, line: brandedLine, next: lookPress as Action, decision: true,
       others: [itemPrompt(m.week, { ...base, line: brandedLine }, 'look', null, { approved: true }, decided) as unknown as PressAction, ...picks.filter(a => a !== lookPress)] }
   }
+  // His production picks in and the scripts filed for his Approve: his Approve scripts leads, in his words, bound to the
+  // exact words filed (F47). Only his press approves; a session filing them only puts the press in front of him.
+  if (branded && lookPicked && !scriptsOk && step === 'board' && filed.length) {
+    const press = scriptsPress(m.week, d.day, p.id, cut(p.title, 150), filed, m.picks || [])
+    const readyLine = `Branded for ${d.label}. Your production picks are in. ${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve: ${filed.map(f => f.title).join('; ')}.`
+    return { ...base, line: readyLine, next: press as Action, decision: true,
+      others: [itemPrompt(m.week, { ...base, line: readyLine }, 'board', null, { approved: true }, decided) as unknown as PressAction, ...picks] }
+  }
   return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, step, null, branded && !out && !missed ? { approved: true } : null, decided), decision: false, others: picks }
+}
+
+/** The read sheet with the signed lock's words in place of the idea row's (F47). */
+function withLock(read: ModelRead, said: { so_what: string | null; story: string | null } | undefined): ModelRead {
+  if (!said) return read
+  return { ...read, so_what: said.so_what ?? read.so_what, story: said.story ? cut(said.story, 4000) : read.story }
+}
+
+/** His Approve scripts on a piece, in his words (picks/<day>-scripts-words, the shape the engine checks: _contracts.ts
+ *  wordsBody, scriptsBody), carrying the exact words of each filed cut so his approval binds those words (F47). */
+export function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ doc_id: string; revision?: number }> = []): PressAction {
+  const doc = `${day}-scripts-words`
+  const texts = Object.fromEntries(filed.map(f => [f.cut, f.text]))
+  const titles = Object.fromEntries(filed.map(f => [f.cut, cut(`${title}: ${f.cut === 'long' ? 'long cut' : 'short cut'}`, 200)]))
+  return { kind: 'press', label: 'Approve scripts', collection: 'picks', id: doc, revision: picks.find(x => x.doc_id === doc)?.revision ?? 0,
+    body: { kind: 'approve_scripts', day, via: 'words', approved: true, piece_id: pieceId, texts, titles, folder_title: cut(title, 200),
+      said_where: 'the Publish Board in Control Centre', session_ref: boardAt(week, day) },
+    words: { path: 'words', ask: 'Your words to approve both scripts as filed ("Approved.")', required: true }, stamp: ['at', 'said_at'],
+    goes: `Approves exactly the words filed on the piece (${filed.map(f => f.title).join('; ')}) and sends them to your Teleprompter once they pass the scripts' check.`,
+    done: 'Approved in your words. The scripts go to your Teleprompter once their check passes.' } as PressAction
 }
 
 /** An approved off-day post on the board: its kind, its path, where it is and its one next action. */
