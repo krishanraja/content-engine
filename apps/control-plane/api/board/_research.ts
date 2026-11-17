@@ -48,6 +48,13 @@ export async function runResearch(prompt: string, env: Record<string, string | u
 export class MaterialError extends Error { constructor(public status: number, message: string) { super(message) } }
 
 /** File one piece of research on the piece (meta.materials), as Krish's. Returns what was filed, without its text. */
+/** What his Paste research press files as: research, which the research library copies into his Drive, unless a session
+ *  filed a storyboard through it. It was 'file' until 17 Nov 2026, which the library never copies (Krish, 2026-11-17: "was
+ *  the research i gave you auto logged to this piece too?"). */
+export function pastedKind(role: unknown): 'file' | 'research' {
+  return role === 'storyboard' ? 'file' : 'research'
+}
+
 export async function fileMaterial(db: SupabaseClient, pieceId: string, m: { kind: 'file' | 'research'; title: string; content: string; by: string })
   : Promise<{ id: string; title: string; bytes: number; at: string }> {
   const content = String(m.content || '')

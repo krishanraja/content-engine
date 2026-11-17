@@ -710,6 +710,33 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   what went out on the last three weeks' boards, because a retold story shares no link and no sentence with its post
   (Thu 5 Nov's No spending, no sending short came back for Tue 17 as "Your AI is about to start messaging you first").
   `plan-week`, `references/lookalike.md`, "The same story under new words".
+- **1.19.0 (17 Nov 2026)** added **`saved` on a prompt's `notes`**: his notes already saved on that item (its piece, or
+  an off-day post's key), newest first, whole, `{ at, text }`. The box stays empty for new words and the board shows these
+  beside it. His notes were saved as a comment on the week and filed to his taste ledger, but nothing carried them back,
+  so the box he typed in came back empty when he reopened the piece. Each note is also filed on the piece itself, kind
+  `note`, role `krish_notes`, so every session's `get_piece_board` reads it.
+  - Krish, 2026-11-17: "when I add feedback in to the control center UI, it obviously loads in to the prompt that comes
+    here, but when i reopen the piece at a later date it seems to have vanished".
+
+  The same release added **`tool` on a prompt** (`claude` or `perplexity`) and a second prompt on every piece: the
+  **Perplexity research prompt** beside the **Claude production prompt** (the label that was "Copy prompt for Claude").
+  It shares the notes box and its save, and is built from everything on record: the publication, the piece, the signed
+  story, the sources found, the research already on file (so it goes past it) and his notes (`board/_researchPrompt.ts`).
+  It is only copied. Its answer is one Markdown document that starts with the piece's `piece_id:` line, and his Paste
+  research press files it on the piece as research, which the research library copies into Drive by itself (that press
+  filed a `file` until 17 Nov, which the library never copied). Every Claude prompt now also carries his earlier notes and
+  a last write-back step, "Close the loop as you go": files on the piece as they exist, Drive where docs/DRIVE.md places
+  things, the repository committed with its closeout note, a done report saying where each thing is, and the one next step.
+  - Ruling (Krish, 2026-11-17): "There should probably just be a Perplexity research prompt button that gathers everything
+    we've gotten to date (including my latest comments if I've just made some in the box above) and turns that into a
+    Perplexity research prompt instead of a Claude production prompt. We can distinguish the buttons by changing 'copy
+    prompt for Claude' to \"Claude production prompt\" and the other button to \"Perplexity research prompt\"".
+  - Ruling (Krish, 2026-11-17): "Every prompt created for Claude or Perplexity should leave the new session with nothing to
+    assume, and it should also close the loop on updating the board, the drive, and everything else as it goes."
+
+  A link filed by url with kind research now stays research, and when it names a file in his Drive the store reads the
+  file (a Google Doc, a Word file, a text or JSON file) and files its words beside the link as research, copied to the
+  library (`api/_researchLink.ts`; the answer's `research_text`).
 
 ## To review: the video sign-offs (contract 1.11.0)
 

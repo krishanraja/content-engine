@@ -66,6 +66,8 @@ const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 
 export type Sender = (input: SendApprovedInput) => Promise<SendResult>
 export interface PressDeps { send?: Sender; now?: () => string; revise?: typeof import('./_offdayRevise.js').dispatchOffdayRevise
+  /** Files his notes for Claude on the piece (or the day) in the piece store (notesMaterial); a test passes its own. */
+  fileNotes?: (db: SupabaseClient, input: Body) => Promise<Body>
   /** A move's followers (_offdayItems.ts): the post folders' renamer in Drive, and the research library's index. */
   renamer?: () => import('./_offdayItems.js').DriveRenamer | null
   library?: (db: SupabaseClient) => import('./_offdayItems.js').LibraryFollower | null
@@ -389,6 +391,30 @@ export function notesReport(week: string, id: string, body: Body, now: string) {
   }
 }
 
+/** His notes for Claude as a material on the piece, or on the day for an off-day post: kind note, role krish_notes, so
+ *  the piece keeps them and every session's get_piece_board reads them (Krish, 2026-11-17: "when i reopen the piece at a
+ *  later date it seems to have vanished"). Null for any other comment. */
+export function notesMaterial(week: string, id: string, body: Body): Body | null {
+  if (body.use !== 'claude_notes') return null
+  const words = typeof body.text === 'string' && body.text.trim() ? body.text.trim().slice(0, 2000) : null
+  if (!words) return null
+  const piece = typeof body.piece_id === 'string' && PIECE_UUID.test(body.piece_id) ? body.piece_id.toLowerCase() : null
+  const day = String(body.anchor || '').match(/^desk:(mon|tue|wed|thu|fri|sat|sun):/)?.[1] ?? null
+  if (!piece && !day) return null
+  const at = typeof body.at === 'string' && Number.isFinite(Date.parse(body.at)) ? new Date(body.at).toISOString() : null
+  return {
+    ...(piece ? { piece_id: piece } : { week, day }),
+    content: words, kind: 'note', role: 'krish_notes',
+    title: `Krish's notes for Claude${at ? `, ${at.slice(0, 16).replace('T', ' ')} UTC` : ''}`,
+    note: `Typed on the publish board in Control Centre (${week} comments/${id})${typeof body.item === 'string' ? `, on ${body.item.slice(0, 160)}` : ''}.`,
+  }
+}
+
+async function fileNotesInStore(db: SupabaseClient, input: Body): Promise<Body> {
+  const { addText } = await import('../_pieceStore.js')
+  return addText(db as unknown as import('../_pieceStore.js').StoreDb, input, false, 'Krish')
+}
+
 /** His words on an off-day option, one taste_reports row per side he improved or rejected (Ruling, Krish,
  *  2026-11-01: "...approve or improve or flat out reject for a reason, and the machine can learn over time"). */
 export function offdayReports(week: string, id: string, body: Body, now: string) {
@@ -674,12 +700,21 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
   if (collection === 'comments' && who === 'Krish' && body.use === 'claude_notes') {
     const report = notesReport(week, id, body, now)
     if (!report) return null
+    // On the piece too, so the notes stay with it; a store that cannot take them never fails the save.
+    const input = notesMaterial(week, id, body)
+    let piece: string = 'not_filed'
+    if (input) {
+      try {
+        const r = await (deps.fileNotes ?? fileNotesInStore)(db, input)
+        piece = r && r.ok !== false ? 'filed' : 'failed'
+      } catch { piece = 'failed' }
+    }
     try {
       const filed = await db.from('taste_reports').upsert(report, { onConflict: 'emitter_id,client_report_id', ignoreDuplicates: true })
       const code = String((filed.error as { code?: string } | null)?.code || '')
-      return { ...saved, taste: !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed' }
+      return { ...saved, taste: !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed', piece }
     } catch {
-      return { ...saved, taste: 'failed' }
+      return { ...saved, taste: 'failed', piece }
     }
   }
   if (collection === 'queue' && who === 'Krish' && (body.use === 'not_for_us' || body.use === 'improve')) {
