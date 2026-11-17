@@ -153,6 +153,9 @@ export function stillFiles(samples: unknown = styleSamples): Set<string> {
 const NOT_FOR_US = new Set(['not for us', 'not_for_us', 'not-for-us', 'rejected'])
 const FITS_ORDER: Record<string, number> = { often: 0, sometimes: 1, rarely: 2 }
 const LIKED = new Set(['liked', 'tested'])
+/** Shown last of all, after every other style, until its device passes his test render (Krish, 2026-11-17: "leave morph
+ *  stage as Coming Soon and put it last in the list in my UI"). */
+export const LAST_MOTION = 'shape-morph'
 const MOTION_ID = /^[a-z0-9][a-z0-9_.-]{0,79}$/
 /** Whether ve can draw a motion style now: its route does not say needs_device (scripts/velib/styles.py built). */
 const ready = (m: MotionModule) => !m.ve_route.includes('needs_device')
@@ -231,8 +234,9 @@ export function dayStyle(i: StyleInputs): DayStyle {
     : gateModule ? { picked: gateModule, picked_by: 'Krish', picked_at: i.gate?.at ?? null }
     : specMotion && MOTION_ID.test(specMotion) && !mine.rejected.motion.includes(specMotion) ? { picked: specMotion, picked_by: 'spec', picked_at: signedOn }
     : { picked: null, picked_by: null, picked_at: null }
-  const order = planned ? [...i.motion.filter(m => m.id === planned), ...i.motion.filter(m => m.id !== planned)]
-    : [...ranked.map(x => x.m), ...i.motion.filter(m => !recommended.has(m.id))]
+  const order = (planned ? [...i.motion.filter(m => m.id === planned), ...i.motion.filter(m => m.id !== planned)]
+    : [...ranked.map(x => x.m), ...i.motion.filter(m => !recommended.has(m.id))])
+    .sort((a, b) => Number(a.id === LAST_MOTION) - Number(b.id === LAST_MOTION))
   const motion: StyleLayer = {
     options: order.map(m => ({ id: m.id, name: m.name, line: m.how, rules: m.rules, point_types: m.point_types, formats: m.formats, ready: ready(m),
       recommended: recommended.has(m.id), why: recommended.get(m.id) ?? null, sample_url: sampleUrl('motion', m.id), sample_drive: sampleDrive('motion', m.id), still_url: stillUrl('motion', m.id),

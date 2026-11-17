@@ -35,15 +35,15 @@ export function geometry(p:DeviceProps){
 }
 export function Device(p:DeviceProps){const g=geometry(p),t=p.tokens;if(!g.visible)return null
   return <svg width={p.box.width} height={p.box.height} style={{position:'absolute',left:p.box.left,top:p.box.top,overflow:'hidden'}}>
-    {g.links.map((l,i)=><line key={i} x1={l.a.x} y1={l.a.y} x2={l.b.x} y2={l.b.y} stroke={t.inkSoft} strokeWidth={4}/>)}
+    {g.links.map((l,i)=><line key={i} x1={l.a.x} y1={l.a.y} x2={l.b.x} y2={l.b.y} stroke={t.cream} strokeWidth={4}/>)}
     {g.parts.filter(b=>b.out<1).map(b=><g key={b.id} data-part={b.id} opacity={b.dim?.4:1} transform={`translate(${b.x} ${b.y}) scale(${Math.max(0,b.arrival)})`}>
       <rect x={-b.width/2} y={-b.height/2} width={b.width} height={b.height} rx={18} fill={b.active?t.mint:t.cream}/>
       {b.level>0&&<rect data-level={b.level} x={-b.width/2} y={b.height/2-b.height*b.level} width={b.width} height={b.height*b.level} fill={t.mint}/>}
-      {b.image&&<image href={g.s.params.images[b.image]!.src} x={-b.width*.44} y={-b.height*.4} width={b.width*.88} height={b.height*.57} preserveAspectRatio="xMidYMid meet"/>}
+      {b.image&&<image href={g.s.params.images[b.image]!.src} x={-b.width*.44} y={-b.height*.4} width={b.width*(b.number===undefined?.88:.4)} height={b.height*.57} preserveAspectRatio="xMidYMid meet"/>}
       {b.label&&<text y={b.image?b.height*.34:0} textAnchor="middle" fontFamily={HOUSE_FONTS.data} fontSize={Math.min(28,b.width/(b.label.length*.65))} fill={t.ink}>{b.label}</text>}
-      {b.number!==undefined&&<text x={b.width*.4} y={b.height*.13} textAnchor="end" fontFamily={HOUSE_FONTS.display} fontSize={36} fill={t.ink}>{Math.round(b.number)}{p.object.dataset?.unit}</text>}
+      {b.number!==undefined&&<text data-count="true" x={b.width*.22} y={-b.height*.12} textAnchor="middle" textLength={`${Math.round(b.number)}${p.object.dataset?.unit??''}`.length*b.height/3*.65>b.width*.42?b.width*.42:undefined} lengthAdjust="spacingAndGlyphs" fontFamily={HOUSE_FONTS.display} fontSize={b.height/3} fill={t.ink}>{Math.round(b.number)}{p.object.dataset?.unit}</text>}
     </g>)}
-    {g.token&&<circle data-token="true" cx={g.token.x} cy={g.token.y} r={14} fill={t.mint} stroke={t.ink} strokeWidth={3}/>}
+    {g.token&&<circle data-token="true" cx={g.token.x} cy={g.token.y} r={28} fill={t.mint} stroke={t.cream} strokeWidth={4}/>}
     {p.object.dataset&&<text x={g.producer.x} y={g.producer.y} fontFamily={HOUSE_FONTS.data} fontSize={20} fill={t.cream}>{p.object.dataset.producerLabel}</text>}
   </svg>
 }
@@ -51,16 +51,16 @@ export function Device(p:DeviceProps){const g=geometry(p),t=p.tokens;if(!g.visib
 export function drawCanvas(ctx:CanvasRenderingContext2D,p:DeviceProps,images:Readonly<Record<string,CanvasImageSource>>={}){
   const g=geometry(p),t=p.tokens;if(!g.visible)return
   ctx.save();ctx.translate(p.box.left,p.box.top);ctx.beginPath();ctx.rect(0,0,p.box.width,p.box.height);ctx.clip()
-  ctx.strokeStyle=t.inkSoft;ctx.lineWidth=4
+  ctx.strokeStyle=t.cream;ctx.lineWidth=4
   for(const l of g.links){ctx.beginPath();ctx.moveTo(l.a.x,l.a.y);ctx.lineTo(l.b.x,l.b.y);ctx.stroke()}
   for(const b of g.parts.filter(b=>b.out<1)){ctx.save();ctx.translate(b.x,b.y);ctx.scale(Math.max(0,b.arrival),Math.max(0,b.arrival));ctx.globalAlpha=b.dim?.4:1
     ctx.fillStyle=b.active?t.mint:t.cream;ctx.beginPath();ctx.roundRect(-b.width/2,-b.height/2,b.width,b.height,18);ctx.fill()
     ctx.fillStyle=t.mint;ctx.fillRect(-b.width/2,b.height/2-b.height*b.level,b.width,b.height*b.level)
     const pic=b.image?g.s.params.images[b.image]:undefined,img=pic&&images[pic.src]
-    if(pic&&img){const k=Math.min(b.width*.88/pic.pixelWidth,b.height*.57/pic.pixelHeight);ctx.drawImage(img,-pic.pixelWidth*k/2,-b.height*.4+(b.height*.57-pic.pixelHeight*k)/2,pic.pixelWidth*k,pic.pixelHeight*k)}
+    if(pic&&img){const k=Math.min(b.width*(b.number===undefined?.88:.4)/pic.pixelWidth,b.height*.57/pic.pixelHeight);ctx.drawImage(img,(b.number===undefined?0:-b.width*.24)-pic.pixelWidth*k/2,-b.height*.4+(b.height*.57-pic.pixelHeight*k)/2,pic.pixelWidth*k,pic.pixelHeight*k)}
     ctx.fillStyle=t.ink;ctx.textAlign='center';ctx.font=`${Math.min(28,b.width/((b.label?.length||1)*.65))}px ${HOUSE_FONTS.data}`;if(b.label)ctx.fillText(b.label,0,b.image?b.height*.34:0)
-    if(b.number!==undefined){ctx.textAlign='right';ctx.font=`36px ${HOUSE_FONTS.display}`;ctx.fillText(`${Math.round(b.number)}${p.object.dataset?.unit??''}`,b.width*.4,b.height*.13)}ctx.restore()
+    if(b.number!==undefined){ctx.textAlign='center';ctx.font=`${b.height/3}px ${HOUSE_FONTS.display}`;ctx.fillText(`${Math.round(b.number)}${p.object.dataset?.unit??''}`,b.width*.22,-b.height*.12,b.width*.42)}ctx.restore()
   }
-  if(g.token){ctx.beginPath();ctx.arc(g.token.x,g.token.y,14,0,Math.PI*2);ctx.fillStyle=t.mint;ctx.fill();ctx.strokeStyle=t.ink;ctx.lineWidth=3;ctx.stroke()}
+  if(g.token){ctx.beginPath();ctx.arc(g.token.x,g.token.y,28,0,Math.PI*2);ctx.fillStyle=t.mint;ctx.fill();ctx.strokeStyle=t.cream;ctx.lineWidth=4;ctx.stroke()}
   if(p.object.dataset){ctx.fillStyle=t.cream;ctx.font=`20px ${HOUSE_FONTS.data}`;ctx.fillText(p.object.dataset.producerLabel,g.producer.x,g.producer.y)}ctx.restore()
 }
