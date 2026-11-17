@@ -118,7 +118,7 @@ describe('his Approve scripts counts the moment he presses it; a held send is sa
   // F50 (Krish, 2026-11-17): in his words, never the engine's, and his Approve is the way on.
   it('says in plain words that his scripts never reached his Teleprompter, and that Approve sends them', () => {
     const h = heldSend({ pieces: [], picks: [{ doc_id: wordsDocId('tue', 'scripts', FRI), body: approval(HELD) }] }, FRI)!
-    expect(h.line).toBe('Your approved scripts are saved (Tue 17 Nov) but never reached your Teleprompter: the send before today\'s fix waited on checks that your own words no longer wait on. '
+    expect(h.line).toBe('Your approved scripts are saved (Tue 17 Nov) but never reached your Teleprompter: the send waited on checks. '
       + 'Read or edit them, then press Approve to send exactly those words to your Teleprompter.')
     expect(h.line).not.toMatch(/\.py|making|session/)
   })
