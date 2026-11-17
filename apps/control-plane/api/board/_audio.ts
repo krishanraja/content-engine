@@ -38,6 +38,13 @@ const PREVIEW_HOSTS = new Set(['storage.googleapis.com', 'api.us.elevenlabs.io',
 export interface BankVoice { id: string; name: string; kind: 'krish' | 'stock'; default: boolean; wholeScript: boolean; voice_id: string; line: string; why: string; preview_url: string; status: string }
 export interface Track { id: string; title: string; artist: string; status: string; drive_file_id: string | null; mood: string | null }
 
+/** The voice a voiceover is made in when he has picked none: his default own voice once it has held on a whole script,
+ *  else Record it myself (Ruling, Krish, 2026-11-17: "make Record it myself the default until a voice passes"). */
+export function defaultVoice(bank: unknown = voiceBank): string {
+  const mine = bankVoices(bank).find(v => v.kind === 'krish' && v.default)
+  return mine && mine.wholeScript ? mine.id : RECORD_MYSELF
+}
+
 /** The voices the board offers: his own first, then the stock voices in bank order; a retired one never. */
 export function bankVoices(bank: unknown = voiceBank): BankVoice[] {
   const list = isObj(bank) && Array.isArray(bank.voices) ? bank.voices.filter(isObj) : []
@@ -110,8 +117,13 @@ export function audioPresses(item: { key: string; kind: string }, picks: Array<{
           : 'Over the carousel, from the off-day rotation (Epidemic Sound, licensed).',
         ...(t.drive_file_id ? { audio: `/api/board/sign-offs?file=${t.drive_file_id}` } : {}) }))
     if (!options.length) return []
-    // His pick first, then the rest in bank or ledger order.
-    options.sort((a, b) => Number(b.value === picked) - Number(a.value === picked))
+    // His pick first, else the default (Record it myself until a voice holds on a whole script), then the rest in order.
+    const lead = picked ?? (layer === 'voice' ? defaultVoice(bank) : null)
+    if (layer === 'voice' && !picked) {
+      const d = options.find(o => o.value === lead)
+      if (d) d.label = `${d.label} (default)`
+    }
+    options.sort((a, b) => Number(b.value === lead) - Number(a.value === lead))
     const word = layer === 'voice' ? 'the voice' : item.kind === 'voiceover' ? 'the music under the voice' : 'the track'
     return [{ kind: 'press', label: `${picked ? 'Change' : 'Pick'} ${word}`, collection: 'picks', id, revision,
       body: { kind: 'audio_pick', layer, item: item.key },
@@ -137,14 +149,15 @@ export function soundLine(item: { key: string; kind: string }, picks: Array<{ do
   const layers = audioLayers(item.kind)
   const lines: string[] = []
   if (layers.includes('voice')) {
-    const v = audioPick(picks, 'voice', item.key)
+    const own = audioPick(picks, 'voice', item.key)
+    const v = own ?? defaultVoice(bank)
     if (v === RECORD_MYSELF) {
-      lines.push('Voice: Krish records this one himself (his pick on the board, Record it myself). Do not generate a voice: once he approves the '
+      lines.push(`Voice: Krish records this one himself (${own ? 'his pick on the board, Record it myself' : 'the default until a voice holds on a whole script; he has not picked a voice'}). Do not generate a voice: once he approves the `
         + 'script\'s exact words, send them to his Teleprompter (scripts/post-pack/teleprompter_send.py), then make the cut from his take in the Video '
         + 'Engine Inbox on the ve route, as for any recording.')
     } else if (v) {
       const name = bankVoices(bank).find(x => x.id === v)?.name ?? v
-      lines.push(`Voice: ${name}, ElevenLabs (his pick on the board): python scripts/ve.py voice clone <piece> --voice ${v}; never Teleprompter for this one.`)
+      lines.push(`Voice: ${name}, ElevenLabs (${own ? 'his pick on the board' : 'the default, proven on a whole script'}): python scripts/ve.py voice clone <piece> --voice ${v}; never Teleprompter for this one.`)
     }
   }
   if (layers.includes('bed')) {

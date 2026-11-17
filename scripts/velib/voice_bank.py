@@ -189,3 +189,10 @@ def whole_script_warning(entry: dict) -> str | None:
         return None
     return (f"{entry['name']} is not proven on a whole script ({test.get('note') or 'not yet tested'}); hear the whole "
             'generation before it reaches him, and offer Record it myself if it drifts')
+
+
+def default_voice(bank: dict) -> str:
+    """The voice a voiceover is made in when he has picked none: his default own voice once it has held on a whole script,
+    else Record it myself (Ruling, Krish, 2026-11-17: "make Record it myself the default until a voice passes")."""
+    mine = krish(bank)
+    return mine['id'] if (mine.get('whole_script') or {}).get('passed') is True else RECORD_MYSELF

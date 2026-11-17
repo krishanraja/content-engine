@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import voiceBank from '../../config/voice-bank.json' with { type: 'json' }
-import { AUDIO_ID, RECORD_MYSELF, audioBody, audioLayers, audioPick, audioPresses, bankVoices, offdayTracks, soundLine, trackFiles, voicePreview } from '../../apps/control-plane/api/board/_audio.js'
+import { AUDIO_ID, RECORD_MYSELF, audioBody, defaultVoice, audioLayers, audioPick, audioPresses, bankVoices, offdayTracks, soundLine, trackFiles, voicePreview } from '../../apps/control-plane/api/board/_audio.js'
 import { validBody } from '../../apps/control-plane/api/board/_contracts.js'
 
 // The voice and the track on an off-day post (contract 1.20.0; Krish, 2026-11-17: "I always want to be given a few
@@ -21,21 +21,28 @@ describe('the options he hears', () => {
     expect(audioPresses({ key: ITEM, kind: 'meme' }, [])).toEqual([])
   })
 
-  it('his own Krish Remix voice comes first, then the stock voices, each marked and each with a sample on this site', () => {
+  it('Record it myself leads, marked default, until a voice holds on a whole script; then his voices, then the stock voices', () => {
+    // Ruling (Krish, 2026-11-17): "make Record it myself the default until a voice passes".
     const [voice] = audioPresses({ key: ITEM, kind: 'voiceover' }, [])
     const opts = voice.choose!.options
-    expect(opts[0]).toMatchObject({ value: 'krish-v2', label: 'Krish v2 (your voice)' })
-    expect(opts[1]).toMatchObject({ value: 'krish-remix', label: 'Krish Remix (backup) (your voice)' })
+    expect(defaultVoice()).toBe(RECORD_MYSELF)
+    expect(opts[0]).toMatchObject({ value: RECORD_MYSELF, label: 'Record it myself (default)' })
+    expect(opts[0].audio).toBeUndefined()
+    expect(opts[1]).toMatchObject({ value: 'krish-v2', label: 'Krish v2 (your voice)' })
+    expect(opts[2]).toMatchObject({ value: 'krish-remix', label: 'Krish Remix (backup) (your voice)' })
     expect(opts.length).toBe(bankVoices().length + 1)
-    expect(opts.slice(2, -1).every(o => o.label.endsWith('(proposed)'))).toBe(true)
-    for (const o of opts.slice(0, -1)) expect(o.audio).toBe(`/api/board/sign-offs?voice=${o.value}`)
-    // His own take is always an option, with nothing to play (Krish, 2026-11-17: "I should be able to choose to record
-    // manually myself as well").
-    expect(opts.at(-1)).toMatchObject({ value: RECORD_MYSELF, label: 'Record it myself' })
+    expect(opts.slice(3).every(o => o.label.endsWith('(proposed)'))).toBe(true)
+    for (const o of opts.slice(1)) expect(o.audio).toBe(`/api/board/sign-offs?voice=${o.value}`)
     // A voice not proven on a whole script says so first (Tue 17 Nov: Krish v2 drifted on the full script).
-    expect(opts[0].line).toMatch(/^Not yet proven on a whole script\./)
-    expect(opts.at(-1)!.audio).toBeUndefined()
+    expect(opts[1].line).toMatch(/^Not yet proven on a whole script\./)
     expect(voice).toMatchObject({ collection: 'picks', id: `audio-voice-${ITEM}`, body: { kind: 'audio_pick', layer: 'voice', item: ITEM }, stamp: ['at'] })
+  })
+
+  it('once his default voice holds on a whole script, it is the default', () => {
+    const proven = { ...voiceBank, voices: voiceBank.voices.map(v => (v.id === 'krish-v2' ? { ...v, whole_script: { passed: true, on: '2026-11-20', note: 'held' } } : v)) }
+    expect(defaultVoice(proven)).toBe('krish-v2')
+    const [voice] = audioPresses({ key: ITEM, kind: 'voiceover' }, [], proven)
+    expect(voice.choose!.options[0]).toMatchObject({ value: 'krish-v2', label: 'Krish v2 (your voice) (default)' })
   })
 
   it('the tracks are the off-day rotation, each played from its brand-kit file', () => {
@@ -100,7 +107,9 @@ describe('his pick reaches the session that makes the post', () => {
     expect(line).toMatch(/Krish v2, ElevenLabs/)
     expect(line).toMatch(/--voice krish-v2/)
     expect(line).toMatch(new RegExp(offdayTracks()[0].title))
-    expect(soundLine({ key: ITEM, kind: 'voiceover' }, [])).toBe('')
-    expect(soundLine({ key: ITEM, kind: 'voiceover' }, [{ ...pick('voice', RECORD_MYSELF), updated_by: 'engine' }])).toBe('')
+    // Nothing picked: the default, Record it myself, until a voice holds on a whole script; a session's write is no pick.
+    expect(soundLine({ key: ITEM, kind: 'voiceover' }, [])).toMatch(/the default until a voice holds on a whole script/)
+    expect(soundLine({ key: ITEM, kind: 'voiceover' }, [{ ...pick('voice', 'clyde'), updated_by: 'engine' }])).toMatch(/records this one himself/)
+    expect(soundLine({ key: ITEM, kind: 'supporting' }, [])).toBe('')
   })
 })
