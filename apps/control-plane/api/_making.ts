@@ -56,7 +56,7 @@ export interface MakingCheck { passed: boolean; checked_at: string; problems: st
  *  take look older than its script. `changed_at` is when each cut's words
  *  last changed, so a change to one cut never makes the other's take look
  *  old (scripts/post-pack/recording_match.py's time rule). */
-export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>>; /** The one question the piece answers (house rule ONE_SPINE): the publish page then needs a passing spine check. */ spine?: string; /** An off-day piece he records is one short cut (Ruling, Krish, 2026-10-29), written by the server when he approves its option; makingCuts then asks for the short alone. */ one_cut?: boolean; /** The piece's long cut lifted past 825 words by config/long-cuts.json, with why (Ruling, Krish, 2026-11-14: "lift if worth it"); the Scripts step says so, so a cut is never lifted silently. */ long_cut?: MakingLongCut }
+export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>>; /** A separate reader's tone-floor verdict on each cut (Ruling, Krish, 2026-11-17), bound to the words and to config/script-floor.json's reference. */ tone_floor?: Partial<Record<MakingCut, MakingToneFloor>>; /** The one question the piece answers (house rule ONE_SPINE): the publish page then needs a passing spine check. */ spine?: string; /** An off-day piece he records is one short cut (Ruling, Krish, 2026-10-29), written by the server when he approves its option; makingCuts then asks for the short alone. */ one_cut?: boolean; /** The piece's long cut lifted past 825 words by config/long-cuts.json, with why (Ruling, Krish, 2026-11-14: "lift if worth it"); the Scripts step says so, so a cut is never lifted silently. */ long_cut?: MakingLongCut }
 /** A lifted long cut: the most words it may run (up to LONG_CUT.lifted_most_words in _houseRules.ts) and the one-line reason the story is worth it. */
 export interface MakingLongCut { words: number; reason: string }
 /** A cut read back by two fresh readers, each an ordinary 12-year-old
@@ -68,6 +68,7 @@ export interface MakingLongCut { words: number; reason: string }
  *  own sign-off stands in for the readers when he gives it in words (Krish,
  *  2026-10-14: "Fix it in the engine"): found 'approved by Krish', with his
  *  words in `krish_words` (starting "Krish"), and any readers who heard it. */
+export interface MakingToneFloor { script_sha256: string; reference_sha256: string; reader: string; verdict: 'pass' | 'fail'; why: string; at: string }
 export interface MakingReadBack { script_sha256: string; at: string; by: string; readers: string[]; found: 'nothing lost' | 'approved by Krish'; krish_words?: string; readers_skipped?: true }
 export interface MakingLink { url: string; at: string }
 export interface MakingPack { folder: string; packed_at: string; files: number; sent_at?: string; headline?: string }
@@ -381,6 +382,19 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
         script_sha256: r.script_sha256, at: when(r.at, now), by: str(r.by, 60) || str(body.by, 60) || 'Claude Code', readers: [...r.readers],
         ...(r.found === 'approved by Krish' ? { found: 'approved by Krish' as const, krish_words: r.krish_words, ...(r.readers_skipped === true ? { readers_skipped: true as const } : {}) } : { found: 'nothing lost' as const }),
       }])) as Partial<Record<MakingCut, MakingReadBack>>
+    }
+    if (key === 'script_check' && v.tone_floor !== undefined) {
+      const entries = isObj(v.tone_floor) ? Object.entries(v.tone_floor) : null
+      const ok = (c: string, r: unknown) => isCut(c) && isObj(r) && typeof r.script_sha256 === 'string' && SCRIPT_SHA256.test(r.script_sha256)
+        && typeof r.reference_sha256 === 'string' && SCRIPT_SHA256.test(r.reference_sha256) && (r.verdict === 'pass' || r.verdict === 'fail')
+        && typeof r.reader === 'string' && str(r.reader, 200) === r.reader && typeof r.why === 'string' && str(r.why, 600) === r.why
+      if (!entries || !entries.every(([c, r]) => ok(c, r))) {
+        problems.push('script_check.tone_floor is each cut\'s tone-floor verdict: {long, short, feature}, each {script_sha256, reference_sha256, reader, verdict: "pass" or "fail", why, at}')
+        continue
+      }
+      check.tone_floor = Object.fromEntries(entries.map(([c, r]: [string, any]) => [c, {
+        script_sha256: r.script_sha256, reference_sha256: r.reference_sha256, reader: r.reader, verdict: r.verdict as 'pass' | 'fail', why: r.why, at: when(r.at, now),
+      }])) as Partial<Record<MakingCut, MakingToneFloor>>
     }
     patch[key] = check
   }

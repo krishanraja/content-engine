@@ -2557,6 +2557,46 @@
           "how": "a sample of his take is refused"
         }
       ]
+    },
+    {
+      "id": "scripts-regressed-below-ai-music",
+      "on": "2026-11-17",
+      "status": "guarded",
+      "mode": "script-tone-regressed",
+      "guard_level": "lint_refuse",
+      "krish": "these scripts are awful - they make zero sense and have regressed a huge amount. I want the quality of the AI Music or Human Music script (what I actually said on film) to be the floor for all future scripts tonally. Then: dont just file this to the taste ledger, I need harder guarantees than that. this is totally insane after the amount of work we have done together on content",
+      "what": "The Wed 18 Nov build-versus-buy scripts passed story_check and five fresh readers yet read as a list of anonymised exhibits ('a razor brand', 'a health firm', 'one finance tech firm') with no story, because the figure and name caps pushed the writer to strip names and the read-back only checked comprehension, never tone against his best take.",
+      "symptom": "Scripts bound for his teleprompter that made no sense as a story, far below what he said on film for the AI Music piece.",
+      "cause": "Every gate before Teleprompter asked whether the words were clear and within the caps; none asked whether they were as good as his best spoken take, so meeting the caps by anonymising names went unseen.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "no check compared a script with his best spoken take"
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "the LISTENING caps were met by anonymising names instead of cutting side-stories"
+        }
+      ],
+      "related": [],
+      "surface": "Nothing goes to Teleprompter, by a session or by his Approve scripts press or typed approval, until a separate reader has compared those exact words with his AI Music take on every quality in config/script-floor.json and making.py tone-floor recorded a pass bound to the script's hash. A fail is rewritten, never argued.",
+      "guards": [
+        {
+          "file": "scripts/post-pack/teleprompter_send.py",
+          "contains": "have not passed the tone floor",
+          "how": "plan refuses a cut to send whose words have no tone-floor pass"
+        },
+        {
+          "file": "apps/control-plane/api/board/_presses.ts",
+          "contains": "has not passed the tone floor",
+          "how": "the Approve scripts press and his typed approval hold the send until the tone floor passed for those exact words"
+        },
+        {
+          "file": "config/script-floor.json",
+          "contains": "c8ded6f8",
+          "how": "the reference take"
+        }
+      ]
     }
   ]
 }

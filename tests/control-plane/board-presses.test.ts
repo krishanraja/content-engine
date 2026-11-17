@@ -1,8 +1,10 @@
+import { readFileSync } from 'node:fs'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createHash } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { hisOnlyRefusal, validBody } from '../../apps/control-plane/api/board/_contracts.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
+import { TONE_FLOOR_REFERENCE } from '../../apps/control-plane/api/board/_presses.js'
 import { signPress } from '../../apps/control-plane/api/board/_weekModel.js'
 import { scriptHash, spokenText, type SendApprovedInput, type SendResult } from '../../apps/control-plane/api/_teleprompter.js'
 vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => true, mediaQualityRollout: () => ({ status: 'active' }) }))
@@ -33,15 +35,24 @@ const offday = (extra: Record<string, unknown> = {}) => ({
   pick: 'off-tue-meme-1', use: 'offday', day: 'tue', approved: true, copy_sha256: 'c'.repeat(64), format: 'meme', source: 'A cue', option_id: 'meme-1', ...extra,
 })
 // The piece's making record once the scripts' check passed on these words and two fresh readers read them back.
-const checked = (texts: Record<string, string> = { long: LONG, short: SHORT }, read: Record<string, unknown> = { found: 'nothing lost' }) => {
+const FLOOR = { long: 'c8ded6f8268569a5c07ad2073f635ec07d3e556c269b28e2ca07ce6494bc2466', short: 'a6459ee2a98b8a059472c57a6d76129daf3fcf20d95bbd494e43f3ab9aa34a03' } as Record<string, string>
+const toned = (sha: string, cut: string, extra: Record<string, unknown> = {}) => ({ script_sha256: sha, reference_sha256: FLOOR[cut] ?? FLOOR.long, reader: 'a fresh reader', verdict: 'pass', why: 'at or above', at: '2026-11-01T10:06:00.000Z', ...extra })
+const checked = (texts: Record<string, string> = { long: LONG, short: SHORT }, read: Record<string, unknown> = { found: 'nothing lost' }, tone: Record<string, unknown> | null = {}) => {
   const hashes = Object.fromEntries(Object.entries(texts).map(([cut, text]) => [cut, scriptHash(text)]))
   return { started_at: '2026-11-01T09:00:00.000Z', updated_at: '2026-11-01T10:00:00.000Z', by: 'Claude Code', script_check: {
     passed: true, checked_at: '2026-11-01T10:00:00.000Z', problems: [], cuts: Object.keys(texts), hashes,
-    read_back: Object.fromEntries(Object.entries(hashes).map(([cut, sha]) => [cut, { script_sha256: sha, at: '2026-11-01T10:05:00.000Z', by: 'Claude Code', readers: ['one', 'two'], ...read }])) } }
+    read_back: Object.fromEntries(Object.entries(hashes).map(([cut, sha]) => [cut, { script_sha256: sha, at: '2026-11-01T10:05:00.000Z', by: 'Claude Code', readers: ['one', 'two'], ...read }])),
+    ...(tone ? { tone_floor: Object.fromEntries(Object.entries(hashes).map(([cut, sha]) => [cut, toned(sha, cut, tone)])) } : {}) } }
 }
 const reject = (extra: Record<string, unknown> = {}) => ({
   kind: 'reject_asset', day: 'mon', piece_id: PIECE, asset: 'video-short', label: '90-second video', reason: 'The captions drift off his words at the start.',
   drive_id: 'a'.repeat(33), formats: ['short_video'], at: '2026-11-09T07:40:00Z', ...extra,
+})
+
+it('holds the tone floor constants to config/script-floor.json', () => {
+  const floor = JSON.parse(readFileSync(new URL('../../config/script-floor.json', import.meta.url), 'utf8'))
+  expect(FLOOR).toEqual({ long: floor.reference.long.sha256, short: floor.reference.short.sha256 })
+  expect(TONE_FLOOR_REFERENCE).toEqual(FLOOR)
 })
 
 describe('what each press may carry', () => {
@@ -251,6 +262,9 @@ describe('Approve scripts sends his exact words to Teleprompter from the server'
       ['a read-back of older words', checked({ long: 'Older words.', short: SHORT }), {}, /5-minute script is not the words/],
       ['readers who lost the thread', checked(undefined, { found: 'lost at line 3' }), {}, /has not been read back/],
       ['his sign-off not in his words', checked(undefined, { found: 'approved by Krish', krish_words: 'fine' }), {}, /has not been read back/],
+      ['no tone floor', checked(undefined, undefined, null), {}, /5-minute script has not passed the tone floor/],
+      ['a failed tone floor', checked(undefined, undefined, { verdict: 'fail' }), {}, /has not passed the tone floor/],
+      ['a tone floor against another reference', checked(undefined, undefined, { reference_sha256: 'e'.repeat(64) }), {}, /has not passed the tone floor/],
       ['his sign-off with no readers, not skipped by his word (F45)', checked(undefined, { found: 'approved by Krish', krish_words: 'Krish: send it', readers: [] }), {}, /has not been read back/],
     ]
     for (const [what, making, extra, said] of cases) {
