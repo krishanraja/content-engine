@@ -848,6 +848,12 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
     Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
     held, still counts. A `send` written by anyone else is still refused.
 
+- **1.26.0 (17 Nov 2026)** added **`recipe`** on a plan's picture: a generated picture's exact higgsfield-generator recipe
+  (model, prompt, the still it starts from, length, estimated credits), shown in the plan and carried into the Claude
+  production prompt, which follows the skills' own guide: stills before video, motion from the approved still on
+  Seedance 2.5, reframe for a clip at the wrong shape, cost before generation, no Soul ID, presets or Higgsfield audio,
+  and the Virality Predictor as a signal on the reviewed short (Krish, 2026-11-17: "ensure
+  https://github.com/krishanraja/higgsfield-generator is also used elegantly if post production uses higgsfield").
 - **1.25.0 (17 Nov 2026)** added **`plan`** on a card that holds a piece once his takes are in: the production plan
   (`api/board/_productionPlan.ts`; the run and the plan's shape: `docs/production/PRODUCTION_PLAN.md`).
   - Takes are now video **or audio** (his Teleprompter exports a voiceover take as `.aac`; the Tue 17 habits take was

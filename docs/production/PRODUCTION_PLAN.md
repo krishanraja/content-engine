@@ -41,7 +41,7 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
    names), `social_post` (a real viral post that relates to his words, with its link), `motion` (a ve device or a Codex
    plate in his picked motion style), `generated` (a scene made with the higgsfield-generator skills,
    krishanraja/higgsfield-generator; his face in one only from a likeness approved in krishanraja/krish-clone's
-   registry, `config/synthetic-approvals.json`, judged with `clone likeness`), `humour` (a comic absurdity on a line that carries one). Give each beat one or two
+   registry, `config/synthetic-approvals.json`, judged with `clone likeness`; its `recipe` below), `humour` (a comic absurdity on a line that carries one). Give each beat one or two
    other good options of a different kind, so he has something real to swap to.
 4. The humour: read krishanraja/humour-engine's README (section 4, integrating) and ask it what comic readings his own
    words carry; read his humour style from ai-harness (skills/krish-voice/references/humour.md, by its raw link in the
@@ -74,7 +74,8 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
   "beats": [
     { "id": "b1", "from": 0.0, "to": 4.1, "words": "Which of your habits will cost you your job?",
       "picture": { "id": "face", "kind": "face", "what": "Him to camera, tight", "source": null },
-      "options": [ { "id": "post", "kind": "social_post", "what": "The LinkedIn post ...", "source": "https://..." } ],
+      "options": [ { "id": "post", "kind": "social_post", "what": "The LinkedIn post ...", "source": "https://..." },
+                   { "id": "gen", "kind": "generated", "what": "...", "recipe": "gpt_image_2_6, 9:16: \"...\"; then seedance_2_5 ..." } ],
       "humour": null }
   ],
   "scenes": [ { "beat": "b1", "still": "<plan_scene material id>", "caption": "Which of your habits will cost you your job?",
@@ -83,6 +84,29 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
                 "gag": "A nerdy engineer in a khaki hat creeping up on a crocodile" } ]
 }
 ```
+
+### A generated picture's recipe
+
+Every option of kind `generated` (and a `humour` picture that is generated) carries `recipe`: one line saying exactly
+how the production session makes it with krishanraja/higgsfield-generator (`higgsfield-generate/SKILL.md`, its model
+catalog and prompt guide). Stills before video: the still first, at the cut's shape, then motion from that still.
+
+| What it is | Still | Then motion |
+|---|---|---|
+| A real-looking scene, a comic absurdity, a product or a page idea | `gpt_image_2_6` | `seedance_2_5`, mode `omni_reference`, `--start-image` the still |
+| A cinematic frame | `soul_cinematic` | the same |
+| A place with no people | `soul_location` | the same |
+| An icon or vector mark | `recraft_v4_1 --model_type vector` | usually a ve device, not a clip |
+| An illustrated character | `nano_banana_flash` | the same |
+| A clip that exists at the wrong shape | none | the `reframe` workflow |
+
+A recipe reads, for example: `gpt_image_2_6, 9:16, 2k: "a nervous software engineer in a lanyard creeping through tall
+grass toward a sleeping crocodile, documentary photo, golden hour"; then seedance_2_5 omni_reference from that still,
+4 s, 1080p, slow push in; about N credits (higgsfield generate cost)`. The plan run prices each recipe with `higgsfield
+generate cost` when the CLI is signed in, and otherwise says the cost is not known; it generates nothing. Never Marketing
+Studio presets or avatars, never Higgsfield audio (licensed music only), never Soul ID for him (his face only from the
+registry). After the cut is reviewed, the Virality Predictor (`brain_activity --video`) scores the finished short's hook
+and sustain for him, as a signal and never a gate.
 
 Ids are lower case letters, digits, `-` and `_`. Kinds are the eight above. A beat's `options` never repeat its
 `picture`. At most three scenes, each on a beat of the plan, each still a material filed on this piece.

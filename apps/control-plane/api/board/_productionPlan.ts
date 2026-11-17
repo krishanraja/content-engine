@@ -42,7 +42,9 @@ const ID = /^[a-z0-9][a-z0-9_-]{0,39}$/
 const MATERIAL = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const UUID = MATERIAL
 
-export interface PlanOption { id: string; kind: string; what: string; source: string | null }
+/** `recipe`: for a generated picture, exactly how it is made with higgsfield-generator (model, prompt, the still it starts from, length,
+ *  estimated credits), so the cost is seen before anything is spent. */
+export interface PlanOption { id: string; kind: string; what: string; source: string | null; recipe: string | null }
 export interface PlanBeat { id: string; from: number; to: number; words: string; picture: PlanOption; options: PlanOption[]; humour: { mechanism: string; gag: string } | null }
 export interface PlanScene { beat: string; still: string; caption: string; style: string }
 export interface PlanEdit { raw_seconds: number; restarts: Array<{ at: number; said: string }>; silences_cut: number; kept_seconds: number; cap_seconds: number | null; speed: number; final_seconds: number
@@ -62,7 +64,7 @@ function option(v: unknown): PlanOption | null {
   if (!isObj(v)) return null
   const id = str(v.id, 40); const kind = str(v.kind, 30); const what = str(v.what, 500)
   if (!id || !ID.test(id) || !kind || !Object.hasOwn(PICTURE_KINDS, kind) || !what) return null
-  return { id, kind, what, source: str(v.source, 500) }
+  return { id, kind, what, source: str(v.source, 500), recipe: str(v.recipe, 800) }
 }
 
 /** The plan as the run filed it, or null when the text is not a plan for this piece. Anything malformed in a beat drops
@@ -182,7 +184,7 @@ export function planView(plan: ProductionPlan | null, ctx: { picks: Array<{ doc_
   const press = (beat: PlanBeat, o: PlanOption) => ({ kind: 'press', label: 'Use this', collection: 'picks', id: planDocId(plan.piece_id), revision,
     body: { kind: 'plan_swaps', piece_id: plan.piece_id, plan_sha256: plan.sha256, swaps: { ...swaps, [beat.id]: o.id } }, stamp: ['at'],
     goes: `Beat ${beat.id} becomes: ${o.what}`, done: 'Swapped. The Claude production prompt now carries it.' })
-  const pic = (o: PlanOption) => ({ id: o.id, kind: o.kind, label: PICTURE_KINDS[o.kind], what: o.what, source: o.source })
+  const pic = (o: PlanOption) => ({ id: o.id, kind: o.kind, label: PICTURE_KINDS[o.kind], what: o.what, source: o.source, recipe: o.recipe })
   const beats = plan.beats.map(b => {
     const chosen = chosenPicture(b, swaps)
     return { id: b.id, from: b.from, to: b.to, words: b.words, picture: pic(chosen), swapped: chosen.id !== b.picture.id, humour: b.humour,
@@ -205,7 +207,7 @@ export function planBrief(plan: ProductionPlan, swaps: Record<string, string>): 
   const beats = plan.beats.map(b => {
     const p = chosenPicture(b, swaps)
     return `- ${b.id} (${b.from.toFixed(1)} to ${b.to.toFixed(1)} s, on the kept take) "${b.words}"\n    picture: ${PICTURE_KINDS[p.kind]}: ${p.what}${p.source ? ` (source: ${p.source})` : ''}`
-      + `${p.id !== b.picture.id ? '   [Krish swapped this in]' : ''}${b.humour && p.kind === 'humour' ? `\n    the gag: ${b.humour.gag} (${b.humour.mechanism})` : ''}`
+      + `${p.id !== b.picture.id ? '   [Krish swapped this in]' : ''}${p.recipe ? `\n    recipe: ${p.recipe}` : ''}${b.humour && p.kind === 'humour' ? `\n    the gag: ${b.humour.gag} (${b.humour.mechanism})` : ''}`
   }).join('\n')
   return `The production plan he reviewed (plan sha256 ${plan.sha256.slice(0, 12)}, made ${plan.made_at.slice(0, 16).replace('T', ' ')} UTC; read it whole `
     + 'with read_piece_material, role production_plan). Make exactly this; his swaps are final.\n'
