@@ -4916,6 +4916,28 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function headlineState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/ink_wash/brush.ts`
+
+The hand-drawn geometry is the shared move's geometry, used by SVG and canvas alike.
+
+- `type BrushShape = 'circle' | 'underline'`
+- `function brushPath(shape: BrushShape, box: readonly [number, number, number, number], seed: number): string`
+
+### `apps/renderer/src/engine/devices/ink_wash/index.tsx`
+
+- `const TALL_PICTURE`
+- `function washLayout({ object, box, aspect }: Pick<DeviceProps, 'object' | 'box' | 'aspect'>)`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `const INK_MATRIX`
+
+### `apps/renderer/src/engine/devices/ink_wash/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/ink_wash/state.ts`
+
+- `function washState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/iso_world/index.tsx`
 
 - `export { worldState, project, routePoint } from './state'`
