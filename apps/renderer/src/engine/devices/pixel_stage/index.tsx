@@ -52,6 +52,11 @@ export function Device(p: DeviceProps) {
   }, [key, handle])
   return <StageSVG {...p} rasters={loaded.key === key ? loaded.rasters : {}} />
 }
+/** The width the count and its source line take, from the data face's advance (0.6 em) and the source's drawn length. */
+export function labelWidth(g: { score: number; dataset?: { unit: string; producerLabel: string } | null | undefined }) {
+  if (!g.dataset) return 0
+  return Math.max(`${g.score}${g.dataset.unit}`.length * 30 * 0.62, Math.min(760, g.dataset.producerLabel.length * 12))
+}
 export function StageSVG(p: DeviceProps & { rasters: Rasters }) {
   const g = pixelGeometry(p, p.rasters)
   if (!g.visible) return null
@@ -61,6 +66,8 @@ export function StageSVG(p: DeviceProps & { rasters: Rasters }) {
       {g.pixels.map((q, i) => <rect key={i} x={q.x} y={q.y} width={1} height={1} fill={q.color} />)}
     </g>
     {g.dataset && <g fill={p.tokens.cream} fontFamily={HOUSE_FONTS.data}>
+      {/* An ink backing, so the count and its source read over a cream picture as well as the dark stage. */}
+      <rect data-label-backing="" x={g.labelX - 12} y={g.labelY - 34} width={labelWidth(g) + 24} height={74} rx={6} fill={p.tokens.ink} />
       <text x={g.labelX} y={g.labelY} fontSize={30}>{g.score}{g.dataset.unit}</text>
       <text x={g.labelX} y={g.labelY + 30} fontSize={20} textLength={Math.min(760, g.dataset.producerLabel.length * 12)} lengthAdjust="spacingAndGlyphs">{g.dataset.producerLabel}</text>
     </g>}
@@ -76,7 +83,8 @@ export function drawCanvas(ctx: CanvasRenderingContext2D, p: DeviceProps, raster
   for (const q of g.pixels) { ctx.fillStyle = q.color; ctx.fillRect(q.x, q.y, 1, 1) }
   ctx.restore()
   if (g.dataset) {
-    ctx.save(); ctx.fillStyle = p.tokens.cream; ctx.font = `30px "${HOUSE_FONTS.data}"`
+    ctx.save(); ctx.fillStyle = p.tokens.ink; ctx.beginPath(); ctx.roundRect(p.box.left + g.labelX - 12, p.box.top + g.labelY - 34, labelWidth(g) + 24, 74, 6); ctx.fill()
+    ctx.fillStyle = p.tokens.cream; ctx.font = `30px "${HOUSE_FONTS.data}"`
     ctx.fillText(`${g.score}${g.dataset.unit}`, p.box.left + g.labelX, p.box.top + g.labelY)
     ctx.font = `20px "${HOUSE_FONTS.data}"`; ctx.fillText(g.dataset.producerLabel, p.box.left + g.labelX, p.box.top + g.labelY + 30, 760); ctx.restore()
   }
