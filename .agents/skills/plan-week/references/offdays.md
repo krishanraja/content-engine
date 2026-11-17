@@ -24,7 +24,7 @@ support Monday, Wednesday, or Friday. We have voiceovers, explainers, uplifting 
 | `voiceover` | Voiceover short | A short with his voice over motion graphics or footage. A piece he records keeps `"kind": "recorded"` (below) and reads as a Voiceover short |
 | `explainer` | Explainer | An explainer carousel or infographic that stands on its own |
 | `good_news` | Good news | Saturday's uplifting good news: one topic and five stories on it (below) |
-| `meme` | Meme | A meme, a meme carousel or a meme video |
+| `meme` | Meme | A meme, a meme carousel or a meme video; from the 30 Nov board also a meme template (below, and `references/meme-roaster.md`) |
 
 An older plan with no `kind` is read from its format by one rule (`offdayKind`); a quiz or level-up carousel is a
 supporting carousel when it ties to a publishing day and an explainer when it does not. A suggestion that is none of
@@ -38,8 +38,9 @@ Ruling, Krish, 2026-11-02, "Let's eliminate Sunday from Publishing anythign
 permanently. Sunday is rest and planning and ideation day."), for the Make Your Mind Up Instagram, TikTok
 and YouTube Shorts channels (Shorts takes video only, so a carousel goes
 there as a short slideshow). Each is one of four formats: a meme made fresh
-from a cue, in the makeyourmindup brand kit (a borrowed format is credited;
-someone else's image or clip is never reposted); an uplifting AI news
+from a cue, to the carousel standard (`docs/MEME-STANDARD.md`: the same type, palette and picture quality as a carousel
+card; a borrowed format is credited; someone else's image or clip is never reposted, except a meme template's clip,
+below); an uplifting AI news
 carousel, every claim naming its primary source and dated within 7 days of
 its day, each checked against that source the same day and through the fact
 gate before it is made; one level-up move, a single practical way to get more
@@ -259,8 +260,45 @@ piece by its words or its Teleprompter name, the short cut alone
 on the card as `saved_why`). When his words ask for a meme or another off-day
 format ("We should reskin this as a hilarious video meme for when your AI
 talks to your customer's AI.", 29 October), offer it on an off day in that
-format, its `covers` holding the card's id: a meme is made fresh in the brand
-kit from the format he pointed at, credited, and never reposts the clip itself.
+format, its `covers` holding the card's id. A meme video he asks to reskin is a meme template (below): the original
+clip, credited, his caption on top (Ruling, Krish, 2026-11-17, which overrides "a meme is made fresh in the brand kit
+... never reposts the clip itself" for meme templates only). Any other meme is made fresh to `docs/MEME-STANDARD.md`.
+
+## Saturday is carousels modelled on his sheet (Ruling, Krish, 17 November 2026)
+
+His words, looking at Sat 21 Nov's board (a good news carousel, two 2-panel memes, "My AI agent bought 72 eggs" and "My
+translator now sounds exactly as fed up as I do", and a voiceover short): "I feel like we are very much missing the
+point of the Saturday suggestions. Each suggestion should be a carousel like one carousel from my Instagram Inspo sheet,
+not just one story." And his answer the same day: every Saturday suggestion is a full carousel modelled on one named
+carousel in his Instagram inspo sheet (the same card-by-card flow, our copy, brand and images); the weekly good news
+stays the five-story carousel and also follows a sheet carousel's card flow; memes move off Saturday into their own
+lane.
+
+From the 30 Nov board (earlier boards keep their shape):
+
+- Every Saturday option is a carousel: `kind` `good_news`, `explainer` or `supporting`. No meme, voiceover or recorded
+  option goes on Saturday; a meme belongs in the meme templates lane (below), a recorded idea of his on Tuesday or
+  Thursday.
+- Each Saturday option but the weekly good news names the sheet carousel it is modelled on in `lookalike.beats` (a
+  post URL in that week's `lookalike-input.json`, one the sheet holds as a carousel), its `lookalike.pattern` has a
+  `card_flow` (`references/lookalike.md`), and its `cards` and `direction.frames` follow that card_flow card for card:
+  the same count, 4 to 10 cards, each card doing that card's job in our words.
+- The weekly good news follows a pattern's card_flow too (its `lookalike.pattern`): its five stories fill the middle
+  cards, so the flow holds a cover, a card for each story and a close, and its cards and frames follow it one for one.
+
+`board_feed.py gate` fails the run on a Saturday option that breaks this (code `saturday`,
+`idea_checks.saturday_findings`).
+
+## The meme templates lane (Ruling, Krish, 17 November 2026)
+
+His words: "why can we not create a pipeline of existing meme videos that could be good to reskin, and show me those
+in here? Then I could think of a funny caption for it thats related to AI." From the 30 Nov board the Ideas tab carries
+6 to 10 meme templates a week, each an existing meme video with why it fits an AI caption and 2 to 4 caption ideas,
+for his own caption. They are off-day options of `kind` `meme` with a `template`, written on `offdays.tue` or
+`offdays.thu`, so his presses, his note (the caption box), Move to and `offday_items` work as for any option; they never
+count toward a day's five options. His caption and Approve turn one into a meme post, which he can move to any off day.
+How the Sunday run finds and writes them, and what the gate checks (code `template`): `references/meme-roaster.md`.
+How one is made once he approves: `docs/MEME-STANDARD.md`.
 
 ## The Saturday good news
 

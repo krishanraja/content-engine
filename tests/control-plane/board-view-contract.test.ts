@@ -32,6 +32,14 @@ const SIGNED = '# Narrative lock\n\nThe arc.\n\nSigned by Krish: "Yes, this is t
 const piece = (id: string, date: string, slot: string, making: Body = {}, meta: Body = {}) =>
   ({ id, idea: `Piece ${id.slice(0, 4)}. It says one thing.`, scheduled_for: date, lane_slot: slot, state: 'drafting', buried_at: null, body: '', updated_at: '2026-11-09T12:00:00Z', meta: { making, ...meta } })
 const option = (id: string, extra: Body = {}) => ({ id, format: 'Meme video, 9:16', copy: `Option ${id}`, ...extra })
+/** A meme template (1.24.0; Krish, 2026-11-17: "show me those in here? Then I could think of a funny caption for it"). */
+const TEMPLATE: Body = { kind: 'meme', hook: 'The dog who cannot stop the doorbell', aim: 'humour', shape: 'story',
+  template: { title: 'The dog who cannot stop the doorbell', clip: { url: 'https://v.redd.it/abc123/DASH_720.mp4', page: 'https://www.reddit.com/r/MemeTemplatesOfficial/comments/abc123/x/', poster: 'https://i.redd.it/abc123.jpg', seconds: 12.4 },
+    found: { place: 'reddit', label: 'r/MemeTemplatesOfficial, top of the week', url: 'https://www.reddit.com/r/MemeTemplatesOfficial/comments/abc123/x/' },
+    credit: 'u/someone on Reddit', what_happens: 'A dog runs to the door every time the bell rings, even when it is the TV.',
+    why_it_works: 'Reversal: the helper reacts to every signal, which is what an over-eager AI agent does.', mechanism: ['reversal', 'personification'],
+    moment: null, date: '2026-11-25' },
+  caption_ideas: ['My AI agent when any email says "urgent"', 'Copilot hearing the word "quick" in a meeting'] }
 const verdict = (day: string, id: string, side: Body) => ({ doc_id: `off-${day}-${id}`, updated_by: 'Krish', revision: 2, body: { use: 'offday', pick: `off-${day}-${id}`, day, ...side } })
 const run = (job: JobName, state: 'queued' | 'running' | 'done' | 'failed') => ({ job, workflow: JOBS[job].workflow, state, started_at: '2026-11-09T17:00:00Z', updated_at: '2026-11-09T17:05:00Z', url: `https://github.com/krishanraja/content-engine/actions/runs/1`, event: 'repository_dispatch' })
 const look = (id: string, name: string) => ({ id, name, pitch: `${name}, pitched.`, status: 'trial' })
@@ -82,7 +90,7 @@ function full(): ViewInputs {
     north_star: { current: 3, target: 8 },
     ideas: {
       days: { wed: [{ id: WED, so_what: 'Why it matters', story: 'The story', style: { production: 'face-with-proof', script: 'fry-explainer', experiment: { format: 'kinetic-movement', why: 'Because it moves.' } } }] },
-      offdays: { tue: [option('povteach', { revised: { side: 'idea', words: 'his words' }, drive: `https://drive.google.com/drive/folders/${DRIVE.tuePost}` })], thu: [option('lookalikes')],
+      offdays: { tue: [option('povteach', { revised: { side: 'idea', words: 'his words' }, drive: `https://drive.google.com/drive/folders/${DRIVE.tuePost}` })], thu: [option('lookalikes'), option('doorbell', TEMPLATE)],
         sat: [option('goodnews', { weekly: 'good_news', stories_due: '2026-11-19', decided: 'Signed off (Krish, 15 Nov).', stories: [1, 2, 3, 4, 5].map(n => ({
           headline: `Story ${n}`, what: 'What happened.', why: 'Why it helps.', date: '2026-11-18', source: { label: 'The source', url: `https://example.org/${n}` }, media: { kind: 'photo', url: `https://example.org/${n}.jpg` } })) })] },
     },
@@ -306,6 +314,25 @@ describe('the Publish Board view contract', () => {
     const keys = (o: unknown, at = ''): string[] => (o && typeof o === 'object' && !Array.isArray(o)
       ? Object.entries(o).flatMap(([k, x]) => [`${at}.${k}`, ...keys(x, `${at}.${k}`)]) : Array.isArray(o) && o.length ? keys(o[0], `${at}[]`) : [])
     expect(new Set(keys(frozen))).toEqual(new Set(keys(shorten(served(full())))))
+  })
+
+  it('shows a meme template and its caption ideas on an off-day option, links https only (1.24.0)', () => {
+    const f = full()
+    const thuOf = (v: ReturnType<typeof buildView>) => v.days.find(d => d.day === 'thu')!.options!.find(o => o.id === 'doorbell')
+    const shown = thuOf(buildView(f))!
+    expect(shown.template).toMatchObject({ title: 'The dog who cannot stop the doorbell', clip: { seconds: 12.4 }, found: { place: 'reddit' }, mechanism: ['reversal', 'personification'] })
+    expect(shown.caption_ideas).toEqual(TEMPLATE.caption_ideas)
+    const messy = { ...TEMPLATE, caption_ideas: ['  one  ', 'two', 'three', 'four', 'five', 7],
+      template: { ...(TEMPLATE.template as Body), mechanism: ['reversal', 'made_up'], clip: { url: 'https://v.redd.it/abc123/DASH_720.mp4', page: 'https://www.reddit.com/r/x/comments/abc123/', poster: 'http://insecure.example/p.jpg', seconds: 'long' } } }
+    const plan = (o: Body) => ({ ...f, ideas: { ...(f.ideas as Body), offdays: { ...((f.ideas as Body).offdays as Body), thu: [option('doorbell', o)] } } })
+    const tidy = thuOf(buildView(plan(messy)))!
+    expect(tidy.caption_ideas).toEqual(['one', 'two', 'three', 'four'])
+    expect(tidy.template!.mechanism).toEqual(['reversal'])
+    expect(tidy.template!.clip).toEqual({ url: 'https://v.redd.it/abc123/DASH_720.mp4', page: 'https://www.reddit.com/r/x/comments/abc123/', poster: null, seconds: null })
+    const insecure = { ...TEMPLATE, template: { ...(TEMPLATE.template as Body), clip: { url: 'http://v.redd.it/abc123.mp4', page: 'https://www.reddit.com/r/x/' } } }
+    expect(thuOf(buildView(plan(insecure)))!.template).toBeUndefined()
+    expect(thuOf(buildView(plan({ ...TEMPLATE, kind: 'explainer' })))!.template).toBeUndefined()
+    for (const v of [buildView(plan(messy)), buildView(plan(insecure))]) expect(validate(SCHEMA, JSON.parse(JSON.stringify({ ok: true, ...v })))).toEqual([])
   })
 
   it('judges a schema change: an addition passes with a bump, a removal needs a major', () => {

@@ -274,6 +274,18 @@ def his_tick(o):
     return bool(idea_checks.his_tick(o))
 
 
+def meme_template(o):
+    """True when an off-day option is a meme template (kind meme with a template: idea_checks.is_template), which rides
+    on top of the day's own options, as his tick's does."""
+    import idea_checks
+    return idea_checks.is_template(o)
+
+
+# The kinds an off-day option names (apps/control-plane/api/board/_weekModel.ts, OFFDAY_KINDS; Ruling, Krish,
+# 2026-11-13), and recorded, a piece he records, which reads as a voiceover short.
+OFFDAY_KINDS = ('supporting', 'voiceover', 'explainer', 'good_news', 'meme', 'recorded')
+
+
 OFF_FRAMES = (1, 12)
 
 
@@ -489,7 +501,8 @@ def read_offdays(data, where='ideas.json offdays', whole=False, week=None):
         least = 1 if key in ('mon', 'wed', 'fri') else OFF_OPTIONS[0]
         # An option from his tick rides on top of the day's own (his_tick), so a day holds 2 to 6 options a session
         # wrote plus whatever his ticks brought, or only what his ticks brought.
-        own = len([o for o in opts if not his_tick(o)]) if isinstance(opts, list) else -1
+        # A meme template rides on top too (Krish, 2026-11-17: memes have their own lane of templates, 6 to 10 a week).
+        own = len([o for o in opts if not his_tick(o) and not meme_template(o)]) if isinstance(opts, list) else -1
         if not isinstance(opts, list) or not (least <= own <= OFF_OPTIONS[1] or own == 0 < len(opts)):
             problems.append(f'{weekday}: give {least} to {OFF_OPTIONS[1]} options, plus any from his ticked inspiration')
             continue
@@ -564,8 +577,8 @@ def read_offdays(data, where='ideas.json offdays', whole=False, week=None):
                 problems.extend(f'{weekday} option {n}: {p}' for p in found)
                 if not found:
                     row.update(recorded_fields(o))
-            elif o.get('kind') is not None:
-                problems.append(f'{weekday} option {n}: kind is "recorded" or left out')
+            elif o.get('kind') is not None and o.get('kind') not in OFFDAY_KINDS:
+                problems.append(f'{weekday} option {n}: kind is one of {", ".join(OFFDAY_KINDS)}, or left out')
             rows.append(row)
         out[key] = rows
     if problems:

@@ -745,7 +745,53 @@ def wave1(ideas, sources, plans=None, p6=None):
         patterns, feed_urls, warnings = lookalike_of(week, plans)
         found += idea_checks.aim_findings(ideas, week, patterns, feed_urls, warnings, lookalike_text(week, plans))
         found += idea_checks.breadth_findings(ideas, week)
+    # Saturday is sheet carousels followed card for card, and memes have their own lane of templates (Krish, 2026-11-17:
+    # "Each suggestion should be a carousel like one carousel from my Instagram Inspo sheet, not just one story").
+    if week >= idea_checks.SATURDAY_FROM:
+        flows, feed_urls, carousel_urls = saturday_inputs(week, plans)
+        found += idea_checks.saturday_findings(ideas, week, flows, feed_urls, carousel_urls)
+    if week >= idea_checks.TEMPLATE_FROM:
+        found += idea_checks.template_findings(ideas, week, earlier_template_pages(week, plans))
     return found
+
+
+def saturday_inputs(week, plans=None):
+    """({pattern id: card_flow} or None, feed post URLs, the carousel posts' URLs or None) for the Saturday check, from the
+    week's lookalike.json and lookalike-input.json. None for the carousels when the input says no post's type."""
+    import lookalike
+    folder = Path(plans or ROOT / 'docs' / 'plans') / f'{week}-week'
+    flows, urls, carousels = None, [], None
+    try:
+        data = json.loads((folder / 'lookalike.json').read_text(encoding='utf-8'))
+        flows = {str(p.get('id')): [str(x) for x in p.get('card_flow') or []] for p in data.get('patterns') or [] if isinstance(p, dict) and p.get('id')}
+    except (OSError, ValueError):
+        pass
+    try:
+        data = json.loads((folder / 'lookalike-input.json').read_text(encoding='utf-8'))
+        posts = [p for p in data.get('posts') or [] if isinstance(p, dict) and p.get('url')]
+        urls = [p['url'] for p in posts]
+        if any(p.get('type') or p.get('pages') for p in posts):
+            carousels = [p['url'] for p in posts if lookalike.is_carousel(p)]
+    except (OSError, ValueError):
+        pass
+    return flows, urls, carousels
+
+
+def earlier_template_pages(week, plans=None):
+    """The clip pages of every meme template the idea_checks.TEMPLATE_WEEKS boards before the week offered, from their
+    ideas.json: a template is offered once."""
+    folder = Path(plans or ROOT / 'docs' / 'plans')
+    start = date.fromisoformat(week)
+    out = []
+    for back in range(1, idea_checks.TEMPLATE_WEEKS + 1):
+        path = folder / f'{(start - timedelta(days=7 * back)).isoformat()}-week' / 'ideas.json'
+        try:
+            data = json.loads(path.read_text(encoding='utf-8'))
+        except (OSError, ValueError):
+            continue
+        for opts in (data.get('offdays') if isinstance(data.get('offdays'), dict) else {}).values():
+            out += [idea_checks.template_page(o) for o in opts if idea_checks.is_template(o)] if isinstance(opts, list) else []
+    return [u for u in out if u]
 
 
 def lookalike_text(week, plans=None):
