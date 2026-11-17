@@ -355,6 +355,21 @@ class QCContracts(unittest.TestCase):
                 return mocks
         return Measurements()
 
+    def test_a_wide_cut_with_no_body_logo_is_checked_for_its_absence(self):
+        """Ruling (Krish, 2026-11-17): the logo only on the title frame and the close. With props bodyLogo false the wide
+        cut is measured with brand.no_mark, never brand.mark_tile; without it the wide cut keeps its tile check."""
+        absent = {'value': [], 'target': 'no mark', 'pass': True, 'status': 'measured'}
+        with self.measurements() as mocks, patch.object(qc_brand, 'no_mark', return_value=absent) as no_mark:
+            result = qc.run_qc('unused', 'scoreboard-test', **qc.inputs_from_props(dict(self.props(), bodyLogo=False)))
+        mocks['mark_tile'].assert_not_called()
+        no_mark.assert_called_once()
+        self.assertIn('brand.no_mark', result['checks'])
+        self.assertNotIn('brand.mark_tile', result['checks'])
+        with self.measurements() as mocks, patch.object(qc_brand, 'no_mark', return_value=absent) as no_mark:
+            qc.run_qc('unused', 'scoreboard-test', **qc.inputs_from_props(self.props()))
+        mocks['mark_tile'].assert_called_once()
+        no_mark.assert_not_called()
+
     def test_props_command_supplies_every_measurement_and_can_complete(self):
         props = self.props()
         gates = {'heard': {'faster-whisper': [{'w': 'hello', 's': 0.7, 'e': 0.9}]}, 'script': 'hello', 'take_words': []}
@@ -365,7 +380,8 @@ class QCContracts(unittest.TestCase):
             self.assertEqual(ve.main(), 0)
         self.assertEqual(set(run_qc.call_args.kwargs),
                          {'pages', 'beats', 'aspect', 'events', 'slots', 'region', 'mark_png', 'dialogue_master', 'edl', 'joins',
-                          'heard', 'script', 'take_words', 'caption_style', 'plate_video', 'plate_offset', 'opening'})
+                          'heard', 'script', 'take_words', 'caption_style', 'plate_video', 'plate_offset', 'opening',
+                          'body_logo'})
         mocks['opening'].assert_called_once_with('cut.mp4', qc.opening_view(props))
         report = write.call_args.args[1]
         self.assertTrue(report['complete'], report)

@@ -43,6 +43,20 @@ def _render_tokens(t: dict, channel: str) -> dict:
     return {'ink': t['ink'], 'inkDeep': t['ink_deep'], 'inkSoft': t['ink_soft'], 'cream': t['cream'], 'mint': t['mint'], 'channel': channel}
 
 
+def _body_logo(spec: dict, aspect: str, off: bool) -> bool:
+    """Whether the palette lets this cut's body carry a logo (scripts/brand_palette.py body_logo). An undated spec
+    keeps the house dress it always had."""
+    if not spec.get('publish_day'):
+        return True
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import brand_palette  # noqa: PLC0415
+    rule = brand_palette.load().get('logo_rule') or {}
+    if str(spec['publish_day'])[:10] < str(rule.get('from') or '9999'):
+        return True
+    fmt = 'long_cut' if aspect == '16:9' else 'short_cut'
+    return brand_palette.body_logo(spec['publish_day'], fmt, 'off' if off else None)
+
+
 def _series_day(series_day: str, publish_day: str | None) -> str:
     """The day the ending band and its strip name. A piece published on its series' own day keeps the series day
     ("Wednesdays"); one published on another day names that day ("Thursday"), so an off-day cut never claims the
@@ -560,6 +574,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                    'promise': house['copy']['site'] if off else identity['promise'], 'site': house['copy']['site']},
         'brand': {key: {'src': resolve_source(publication[key]['source_path']), 'pixelWidth': publication[key]['pixel_width'],
                         'pixelHeight': publication[key]['pixel_height']} for key in ('mark', 'logo', 'stacked')},
+        # The logo only on the title frame and the close (Ruling, Krish, 2026-11-17; config/brand-palette.json logo_rule):
+        # from its date the body carries no mark tile and no header logo. Absent for older pieces, so their props hold.
+        **({'bodyLogo': False} if not _body_logo(spec, cut['aspect'], off) else {}),
         'segments': [] if spec['audio']['master'] == 'vo' else [
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},

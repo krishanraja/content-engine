@@ -69,7 +69,19 @@ def expect(date, fmt, kind=None, palette=None):
     rules = palette['formats'][fmt].get(k)
     if rules is None:
         raise ValueError(f'the palette has no {k} {fmt} (it is made only on {", ".join(palette["formats"][fmt])} days)')
+    rules = dict(rules)
+    # The logo rule (Ruling, Krish, 2026-11-17: the logo only on the animated title frame and the close card) binds from
+    # its own date; a piece published before it keeps the body it was signed with (logo_rule.before, F33).
+    rule = palette.get('logo_rule') or {}
+    if rule.get('from') and str(date)[:10] < rule['from'] and fmt in (rule.get('before') or {}):
+        rules['body'] = {**(rules.get('body') or {}), **rule['before'][fmt]}
     return {'kind': k, 'series': d.get('series') if k == 'series' else None, 'shape': palette['formats'][fmt]['shape'], **rules}
+
+
+def body_logo(date, fmt, kind=None, palette=None) -> bool:
+    """Whether the body of this cut carries any logo (the icon tile or the wordmark): False from the logo rule's date."""
+    body = expect(date, fmt, kind, palette).get('body') or {}
+    return bool(body.get('icon') or body.get('wordmark'))
 
 
 def retired_close(name, palette=None):
@@ -165,6 +177,14 @@ def self_test():
     long_cut = {'date': '2026-11-18', 'format': 'long_cut', 'opening': 'hook', 'sting': 'before_hook'}
     ok.append(('a sting in front of the hook is refused', bool(check(long_cut, p)), True))
     ok.append(('a long cut on the hook with no sting passes', check(dict(long_cut, sting='none'), p), []))
+    # The logo only on the title frame and the close (Ruling, Krish, 2026-11-17), from logo_rule.from.
+    ok.append(('a long cut of the week of 16 Nov keeps its icon tile', body_logo('2026-11-18', 'long_cut', None, p), True))
+    ok.append(('a long cut from 23 Nov carries no logo in its body', body_logo('2026-11-23', 'long_cut', None, p), False))
+    ok.append(('an off-day long cut from 23 Nov carries none either', body_logo('2026-11-24', 'long_cut', 'off', p), False))
+    ok.append(('a short cut never carries one', body_logo('2026-11-18', 'short_cut', None, p), False))
+    ok.append(('a mark tile on a long cut from 23 Nov is refused',
+               bool(check(dict(long_cut, date='2026-11-23', sting='none', body={'icon': 'tile'}), p)), True))
+    ok.append(('the logo rule names the title frame and the close only', p['logo_rule']['logo_on'], ['title_frame', 'close']))
     bad = [(name, got, want) for name, got, want in ok if got != want]
     for name, got, want in ok:
         print(('ok   ' if (name, got, want) not in bad else 'FAIL ') + name + ('' if (name, got, want) not in bad else f': {got!r}'))

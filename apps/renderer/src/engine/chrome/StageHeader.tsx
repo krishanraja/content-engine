@@ -18,9 +18,11 @@ export function StageHeader({ props }: { props: EngineRenderProps }) {
   const wide = props.aspect === '16:9'
   const LOGO_AT = wide ? WIDE_LOGO : LOGO, PILL_AT = wide ? WIDE_PILL : PILL
   return <>
-    <div style={{ position: 'absolute', left: LOGO_AT.left, top: LOGO_AT.top, width: LOGO_AT.width }}>
+    {/* No header logo where the body carries none (Ruling, Krish, 2026-11-17: the logo only on the title frame and
+        the close card); the pill stays. */}
+    {props.bodyLogo === false ? null : <div style={{ position: 'absolute', left: LOGO_AT.left, top: LOGO_AT.top, width: LOGO_AT.width }}>
       <HouseLogo image={props.brand.logo} width={LOGO_AT.width} />
-    </div>
+    </div>}
     <div style={{
       position: 'absolute', ...PILL_AT, boxSizing: 'border-box', display: 'grid', placeItems: 'center',
       borderRadius: PILL_AT.height / 2, background: tokens.section, color: tokens.ink,
