@@ -1,3 +1,4 @@
+import { Device as PixelStage } from './pixel_stage'
 import { Device as IsoWorld } from './iso_world'
 import { Device as InkWash } from './ink_wash'
 import { Device as FilmFrame } from './film_frame'
@@ -48,6 +49,7 @@ import { Device as ReceiptPrint } from './receipt_print'
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
+  pixel_stage: PixelStage,
   iso_world: IsoWorld,
   ink_wash: InkWash,
   film_frame: FilmFrame,
