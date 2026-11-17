@@ -2,7 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
+import { STYLE_CACHE, STYLE_LINK_KEEP_MS, STYLE_LINK_TTL, createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
+import { stillFiles } from '../../apps/control-plane/api/board/_style.js'
 import { hisOnlyRefusal, validBody } from '../../apps/control-plane/api/board/_contracts.js'
 import { JOBS } from '../../apps/control-plane/api/board/_run.js'
 import {
@@ -247,6 +248,32 @@ describe('the routes', () => {
       rows: [doc('sfx', [press('sfx', 'thud', 'approve', h('thud'), '2026-11-13T10:00:00Z')]), doc('golden', [press('golden', 'x', 'approve', h('x'), '2026-11-13T10:00:00Z')], 'engine_operator')] })
     expect(r.status).toBe(200)
     expect(r.out.presses).toEqual([{ ...press('sfx', 'thud', 'approve', h('thud'), '2026-11-13T10:00:00Z'), week: '2026-11-09' }])
+  })
+
+  it('serves a style still from a link this instance keeps, signed for an hour and kept by the browser', async () => {
+    // Krish, 2026-11-17: "The motion screenshots take so long to load when I hover over them."
+    process.env.ACCESS_CODE = 'synthetic-board-test'
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 404, text: async () => '' })))
+    const still = [...stillFiles()][0]
+    expect(still).toEqual(expect.any(String))
+    const served: Array<{ id: string; ttl?: number }> = []
+    const handler = createBoardHandler(async () => store().db as never, {
+      signOffs: async () => { throw new Error('a style still never reads the sign-off cards') },
+      drive: () => ({ posts: async () => [], serve: async (id: string, opts?: { ttl?: number }) => { served.push({ id, ttl: opts?.ttl }); return `https://store.example/signed/${id}?n=${served.length}` } }),
+    })
+    const cookie = `cc_access=${createHash('sha256').update(process.env.ACCESS_CODE!).digest('hex')}`
+    const ask = async () => {
+      let status = 0; let location = ''; const headers: Record<string, string> = {}
+      const res = { setHeader(k: string, v: string) { headers[k.toLowerCase()] = v }, status(code: number) { status = code; return this }, json() {}, redirect(code: number, url: string) { status = code; location = url } } as unknown as VercelResponse
+      await handler({ method: 'GET', headers: { cookie, origin: 'https://controlcenter.krishraja.com' }, query: { op: 'sign-offs', file: still } } as unknown as VercelRequest, res)
+      return { status, location, cache: headers['cache-control'] }
+    }
+    const first = await ask(), again = await ask()
+    // One Drive call for two asks, the same link both times, signed for an hour, and kept by the browser for half of it.
+    expect(served).toEqual([{ id: still, ttl: STYLE_LINK_TTL }])
+    expect([first.status, again.status, again.location]).toEqual([302, 302, first.location])
+    expect(first.cache).toBe(STYLE_CACHE)
+    expect(STYLE_LINK_TTL * 1000 - STYLE_LINK_KEEP_MS).toBeGreaterThan(30 * 60_000)
   })
 
   it('serves a sample by its Drive id only when a card shows it', async () => {

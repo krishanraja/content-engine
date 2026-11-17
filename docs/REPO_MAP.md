@@ -2339,7 +2339,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `interface DriveStore`
 - `type DriveCopier`
 - `function copyKey(f: Pick<DriveFile, 'id' | 'name' | 'md5Checksum' | 'modifiedTime' | 'size'>): string`
-- `async function servedDrive(store: DriveStore, copy: DriveCopier, f: DriveFile): Promise<string | null>`
+- `async function servedDrive(store: DriveStore, copy: DriveCopier, f: DriveFile, ttl = TTL): Promise<string | null>`
 - `function supabaseDriveStore(db: { storage: { from(b: string): any } }): DriveStore`
 - `async function driveFile(token: string, id: string, f: typeof fetch = fetch): Promise<DriveFile | null>`
 - `function ownerDriveToken(env: Record<string, string | undefined> = process.env): Promise<string | null>`
@@ -2372,6 +2372,9 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 ### `apps/control-plane/api/board/_handler.ts`
 
 - `function boardPolicy(storeUrl?: string)`
+- `const STYLE_LINK_TTL`
+- `const STYLE_LINK_KEEP_MS`
+- `const STYLE_CACHE`
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
 
 ### `apps/control-plane/api/board/_itsLive.ts`
@@ -2768,6 +2771,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `type StillLayerKey = StyleLayerKey | 'treatment'`
 - `function stillUrl(layer: StillLayerKey, id: string, samples: unknown = styleSamples): string | null`
 - `function stillFiles(samples: unknown = styleSamples): Set<string>`
+- `function undrawableMotion(styles: unknown): Set<string>`
 - `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, str…`
 - `interface StyleInputs`
 - `function dayStyle(i: StyleInputs): DayStyle`
@@ -2775,7 +2779,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface StylePick`
 - `interface SavedStyle`
 - `function needsMotion(body: Body): boolean`
-- `function stylePick(body: Body, motionIds: Set<string> | null): StylePick`
+- `function stylePick(body: Body, motionIds: Set<string> | null, undrawable: ReadonlySet<string> = new Set()): StylePick`
 - `function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle`
 - `async function saveStyle(db: SupabaseClient, pieceId: string, pick: StylePick, now = new Date()): Promise<SavedStyle>`
 
