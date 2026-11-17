@@ -30,6 +30,7 @@ export const LANE_PROBLEMS: Readonly<Record<string, string>> = Object.freeze({
   pinned_python_missing: 'has no pinned Python, so it cannot place takes or publish music, references or working files (npm run bootstrap:python)',
   music_publish_failed: 'could not publish the licensed music to the library',
   references_publish_failed: 'could not publish the style references to the library',
+  photos_publish_failed: 'could not publish Krish\'s photos to the library (scripts/post-pack/photos.py)',
   working_publish_failed: 'could not publish the working files to the library',
   library_root_missing: 'cannot find the asset library (makeyourmindup) folder on its H: drive',
   library_env_stale: 'has a MINDMAKE_LIBRARY_ROOT setting that points at a folder that is not there; it used config/studio.json instead. Delete the setting',

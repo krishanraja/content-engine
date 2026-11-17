@@ -86,7 +86,12 @@ TRACK_FIELDS = (
     'intro_cue_s', 'outro_cue_s', 'mood', 'status', 'approved_by', 'approved_on', 'approval_words')
 # beats: the track's measured grid (tempo, bars, drops), written only by `python scripts/ve.py beats --grid ... --write`
 # on a machine that holds the music (scripts/velib/beats.py); measured, never a clock.
-OPTIONAL_FIELDS = ('loopable', 'drive_file_id', 'for', 'beats')
+# days: the series days whose weekly rotation the track is in ('mon', 'wed', 'fri'); carousel: the off-day carousel
+# group it plays over ('good_news' or 'tips'). Ruling (Krish, 2026-11-17): series music rotates week by week, treated
+# the same way every time; good-news carousels get funky house, advice and tips carousels a gym track.
+OPTIONAL_FIELDS = ('loopable', 'drive_file_id', 'for', 'beats', 'days', 'carousel')
+SERIES_DAYS = ('mon', 'wed', 'fri')
+CAROUSEL_GROUPS = ('good_news', 'tips')
 LEVEL_KEYS = ('intro_lufs', 'bed_lufs', 'outro_lufs', 'ramp_down_s', 'ramp_up_s', 'final_integrated_lufs', 'tolerance_lu', 'max_true_peak_dbtp')
 RATE = 48000
 FADE_IN_S = bed_shape.shape()['fade_in_s']    # no click where the track is cut in (config/music-bed.json)
@@ -275,11 +280,33 @@ def track_use(track):
     return str(track.get('for') or 'series')
 
 
-def rotation(piece, data, use='series'):
-    """Every approved track for `use`, in the order this piece tries them: by id,
-    starting at a stable index from the piece. The index is taken over all
-    approved tracks, before any is checked against a cut, so the order is
+def day_pool(data, when):
+    """The approved tracks in the weekly rotation of the series day `when` (YYYY-MM-DD) falls on, by id, with the
+    ISO week's track first; [] when the date is not a series day or no track names that day. Ruling (Krish,
+    2026-11-17): Monday, Wednesday and Friday music rotates week by week, every track in the one bed shape."""
+    import datetime
+    try:
+        d = datetime.date.fromisoformat(str(when or '')[:10])
+    except ValueError:
+        return []
+    day = ('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')[d.weekday()]
+    pool = sorted((t for t in data.get('tracks', []) if t.get('status') == 'approved' and day in (t.get('days') or [])),
+                  key=lambda t: str(t.get('id')))
+    if not pool:
+        return []
+    at = d.isocalendar()[1] % len(pool)
+    return pool[at:] + pool[:at]
+
+
+def rotation(piece, data, use='series', when=None):
+    """Every approved track for `use`, in the order this piece tries them. A series piece with a date on a series day
+    takes that day's weekly rotation (day_pool) when the day has one; otherwise by id, starting at a stable index from
+    the piece. The index is taken over all approved tracks, before any is checked against a cut, so the order is
     the piece's alone and never depends on which cut is asking."""
+    if use == 'series' and when:
+        pool = day_pool(data, when)
+        if pool:
+            return pool
     approved = sorted((t for t in data.get('tracks', []) if t.get('status') == 'approved' and track_use(t) == use),
                       key=lambda t: str(t.get('id')))
     if not approved:
@@ -288,7 +315,7 @@ def rotation(piece, data, use='series'):
     return approved[at:] + approved[:at]
 
 
-def pick(seconds, piece=None, platforms=(), data=None, today=None, use='series'):
+def pick(seconds, piece=None, platforms=(), data=None, today=None, use='series', when=None):
     """The track for `seconds` of music posted to `platforms`, or None, and
     why each track was passed over: every track not approved, and each
     approved one tried before the pick. It goes round the piece's rotation
@@ -303,7 +330,7 @@ def pick(seconds, piece=None, platforms=(), data=None, today=None, use='series')
             skipped[track.get('id', '?')] = problems(track, platforms, today, seconds)
     # A track that plays the whole length straight first; else one that starts
     # again under a crossfade, so the bed never drops out for want of length.
-    turn = rotation(piece, data, use)
+    turn = rotation(piece, data, use, when)
     for track in turn:
         if not problems(track, platforms, today, seconds) and covers(track, seconds):
             return track, skipped
@@ -325,13 +352,13 @@ def piece_needs(*seconds, longest=None):
     return {'seconds': round(max([floor, *given]), 3), 'platforms': list(PIECE_PLATFORMS)}
 
 
-def pick_for_piece(piece, seconds=None, data=None, today=None, longest=None, use='series'):
+def pick_for_piece(piece, seconds=None, data=None, today=None, longest=None, use='series', when=None):
     """The one track both cuts of a piece carry: (track or None, skipped,
     needs). `longest` is the piece's longer cut, the same for both cuts
     (make.py reads it from kit.json); `seconds` is the asking cut's own
     length, which only counts if it is longer still (make.py says so)."""
     needs = piece_needs(seconds, longest=longest)
-    track, skipped = pick(needs['seconds'], piece, needs['platforms'], data, today, use)
+    track, skipped = pick(needs['seconds'], piece, needs['platforms'], data, today, use, when)
     return track, skipped, needs
 
 
@@ -580,6 +607,10 @@ def check(data, strict=False):
             warnings.append(f'{tid}: fields the ledger does not know: {", ".join(unknown)}')
         if absent:
             errors.append(f'{tid}: missing {", ".join(absent)}')
+        if 'days' in t and not (isinstance(t['days'], list) and all(d in SERIES_DAYS for d in t['days'])):
+            errors.append(f'{tid}: days is a list of {", ".join(SERIES_DAYS)}')
+        if 'carousel' in t and t['carousel'] not in CAROUSEL_GROUPS:
+            errors.append(f'{tid}: carousel is one of {", ".join(CAROUSEL_GROUPS)}')
         if t.get('file') and not t.get('sha256'):
             warnings.append(f'{tid}: listed but not measured yet: on a runner machine, '
                             f'run music.py add on "{t["file"]}" in the music folder with its licence')
@@ -729,6 +760,15 @@ def self_test():
         b_track = dict(data['tracks'][0], id='b-long-track', duration_s=500.0, intro_cue_s=0.0, loopable=False)
         ab = {'tracks': [a_track, b_track]}
         checks.append(('the A/B case: its rotation starts on A, the short track', [t['id'] for t in rotation(mon, ab)], ['a-short-track', 'b-long-track']))
+        week = {'tracks': [dict(a_track, id='mon-one', days=['mon']), dict(a_track, id='mon-two', days=['mon']),
+                           dict(b_track, id='wed-one', days=['wed'])]}
+        checks.append(('a Monday takes the Monday rotation, the ISO week\'s track first (week 47 of 2026 is odd)',
+                       [t['id'] for t in rotation(mon, week, when='2026-11-16')], ['mon-two', 'mon-one']))
+        checks.append(('the next Monday takes the other Monday track first',
+                       [t['id'] for t in rotation(mon, week, when='2026-11-23')], ['mon-one', 'mon-two']))
+        checks.append(('a Wednesday takes only its own day\'s tracks', [t['id'] for t in rotation(mon, week, when='2026-11-18')], ['wed-one']))
+        checks.append(('a day with no rotation keeps the piece\'s own order', [t['id'] for t in rotation(mon, ab, when='2026-11-20')],
+                       ['a-short-track', 'b-long-track']))
         checks.append(('the A/B case: cut by cut, the two cuts land on different tracks',
                        (pick(205.0, mon, SHAPE_PLATFORMS['16x9'], ab)[0]['id'], pick(92.0, mon, SHAPE_PLATFORMS['9x16'], ab)[0]['id']),
                        ('b-long-track', 'a-short-track')))
@@ -1053,6 +1093,7 @@ def main():
     p.add_argument('--seconds', type=float, help='the cut\'s length in seconds (with --both-cuts: optional, the piece\'s long cut, '
                    f'the length both cuts ask for; without it, {PIECE_SECONDS:g} s)')
     p.add_argument('--piece')
+    p.add_argument('--date', help='the piece\'s publish date (YYYY-MM-DD): a Monday, Wednesday or Friday takes that day\'s weekly rotation')
     p.add_argument('--both-cuts', action='store_true', help='the track both cuts of --piece get, chosen as make.py chooses it')
     p.add_argument('--platforms', help='where the cut is posted, such as youtube,substack (default: no limit)')
     p.add_argument('--shape', choices=sorted(SHAPE_PLATFORMS), help='the platforms for a 16x9 or a 9x16 cut')
@@ -1114,12 +1155,12 @@ def main():
             if a.both_cuts:
                 if not a.piece or a.shape or a.platforms:
                     raise MusicError('--both-cuts takes --piece PIECE_ID (and --seconds, optional), and no --shape or --platforms: it covers both')
-                track, skipped, needs = pick_for_piece(a.piece, None, data, longest=a.seconds)
+                track, skipped, needs = pick_for_piece(a.piece, None, data, longest=a.seconds, when=a.date)
             else:
                 if a.seconds is None:
                     raise MusicError('--seconds is the cut\'s length; or give --both-cuts --piece PIECE_ID for the track both cuts get')
                 platforms = SHAPE_PLATFORMS[a.shape] if a.shape else [p.strip() for p in (a.platforms or '').split(',') if p.strip()]
-                track, skipped = pick(a.seconds, a.piece, platforms, data)
+                track, skipped = pick(a.seconds, a.piece, platforms, data, when=a.date)
                 needs = {'seconds': a.seconds, 'platforms': list(platforms)}
             print(json.dumps({'track': track and track['id'], 'file': track and track['file'], 'needs': needs, 'skipped': skipped}, indent=1))
             sys.exit(0 if track else 1)

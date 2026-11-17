@@ -49,7 +49,19 @@ describe('the options he hears', () => {
     const [, bed] = audioPresses({ key: ITEM, kind: 'voiceover' }, [])
     expect(bed.choose!.options.map(o => o.value)).toEqual(offdayTracks().map(t => t.id))
     for (const o of bed.choose!.options) expect(o.audio).toMatch(/^\/api\/board\/sign-offs\?file=[A-Za-z0-9_-]{20,80}$/)
-    expect(trackFiles().size).toBe(offdayTracks().filter(t => t.drive_file_id).length)
+    expect(trackFiles().size).toBe(offdayTracks(undefined, null).filter(t => t.drive_file_id).length)
+  })
+
+  it('a good-news carousel is offered the funky-house group, a supporting carousel or explainer the gym group, a meme nothing', () => {
+    const good = audioPresses({ key: ITEM, kind: 'good_news' }, [])[0]
+    const tips = audioPresses({ key: ITEM, kind: 'supporting' }, [])[0]
+    expect(good.choose!.options.map(o => o.value)).toEqual(offdayTracks(undefined, 'good_news').map(t => t.id))
+    expect(good.choose!.options.map(o => o.value)).toEqual(expect.arrayContaining(['mojito', 'cheetah-print', 'style', 'make-up-your-mind-instrumental']))
+    expect(tips.choose!.options.map(o => o.value)).toEqual(expect.arrayContaining(['coronation', 'gifted-instrumental', 'plenty-bands-instrumental']))
+    expect(audioPresses({ key: ITEM, kind: 'explainer' }, [])[0].choose!.options.map(o => o.value)).toEqual(tips.choose!.options.map(o => o.value))
+    expect(good.choose!.options.some(o => offdayTracks(undefined, 'tips').some(t => t.id === o.value))).toBe(false)
+    expect(audioPresses({ key: ITEM, kind: 'meme' }, [])).toEqual([])
+    expect(audioBody(`audio-bed-${ITEM}`, { kind: 'audio_pick', layer: 'bed', item: ITEM, pick: 'mojito', at: '2026-11-17T10:00:00Z' })).toBe(true)
   })
 
   it('a voice sample is only the bank\'s ElevenLabs preview; anything else is nothing', () => {

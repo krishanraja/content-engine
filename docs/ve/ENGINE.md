@@ -191,7 +191,7 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
 ## Hand-built composites
 
 A one-off composite (Ruling, Krish, 2026-11-10: "One-off composite") is built outside ve, so none of ve's gates see
-it. It carries these itself (`config/failures.json` F52, F54 and av-sync-drift-converted-take):
+it. It carries these itself (`config/failures.json` F53, F55 and av-sync-drift-converted-take):
 
 - **Cues from the forced clocks.** Every cue is timed from the take's two forced-aligner clocks
   (`<piece>/ve/takes/<take>.json`), never from `script.words.json` or any whisper transcript. Whisper's word times ran

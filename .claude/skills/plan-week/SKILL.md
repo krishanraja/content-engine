@@ -409,11 +409,11 @@ he ticks: `references/inspiration-piece.md`.
    the fact gate; each option's copy passes the copy lint and the kill list
    before it reaches the tab; they go into ideas.json `offdays`, which the
    live board reads, never a page.
-   Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week
-   and its five real stories, found now, in this run (Ruling, Krish, 2026-11-11: the ideas board fills once a week in
-   full, Saturday's good news included), each checked against its primary source the same day, with `stories_due`
-   today. The trade-off is said on the card and in the reply: a story found now is about two weeks old by the
-   Saturday it posts on, and the fact gate checks each one against its source again before Growth makes the post.
+   Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): five real stories, found
+   in this run (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's good news included),
+   each checked against its primary source, `stories_due` today (the trade-off is said, as the reference says). From 30 Nov every Saturday option is a sheet carousel
+   followed card for card (Ruling, Krish, 2026-11-17: "Each suggestion should be a carousel like one carousel from my
+   Instagram Inspo sheet"), and memes are 6 to 10 templates on Tue and Thu (`references/meme-roaster.md`).
    Growth makes what he approved. **His own
    ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
    idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day
@@ -456,15 +456,8 @@ he ticks: `references/inspiration-piece.md`.
    only), and it renders only from the
    signed direction; 21:30 is only the deadline for a surface he has not
    picked.
-6b. **No weekly deep cut: a 15-minute feature only when Krish calls one**
-   (house rule FEATURE, Krish, 2026-10-21: "all videos are generally 90 sec
-   and 5 min. From time to time I might do a special 15 min feature"; asked
-   whether that replaces the weekly deep cut: "Yes, replace it"). Every piece
-   is a 90-second and a 5-minute video. Never propose a feature. When he
-   calls one for a piece, in words, add it to `config/features.json` under
-   `pieces.<piece id>` with his words and the date; the board then shows the
-   feature as a third cut on that day. `config/deep-cuts.json` is retired
-   and gets no new week.
+6b. **No weekly deep cut** (house rule FEATURE). Never propose a feature. When he calls one, how it is recorded:
+   `.agents/skills/plan-week/references/no-deep-cut.md`.
 6c. **A longer long cut, only when the story is worth it** (house rule
    TWO_CUTS; Ruling, Krish, 2026-11-14: the long cut's word cap lifts for a
    piece when the story is worth it; the narrative lock says so and why;
@@ -474,6 +467,8 @@ he ticks: `references/inspiration-piece.md`.
    he gave them. The lock is what he signs; the make session then judges it
    and declares it in `config/long-cuts.json` quoting those words
    (`make-piece`, "A longer long cut"). Never propose one to fill time.
+6d. **The funny lines** (humour-engine on call): before the board, read each option's `funny` with
+   `humour_check.py ideas`: `.agents/skills/plan-week/references/funny-lines.md`.
 7. **Put the week on the live board**, last, once the options are written
    (Ruling, Krish, 2026-11-11: one live board, in Control Centre). The live board draws the week from
    `GET /api/board/<Monday>/view`, which reads `ideas.json` (each publishing

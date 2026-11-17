@@ -40,7 +40,7 @@ describe('the engine gates', () => {
     ['a hand-built cut is filed only with Krish\'s words on those exact bytes (Ruling, Krish, 2026-11-11)', ['tests/hand_built_cuts_test.py']],
     ['the ten-second swipe: every carousel card a whole sentence with its picture, the story under ten seconds, no jargon, read back by fresh readers (Krish, 2026-11-13)', ['tests/carousel_check_test.py']],
     ['picture against sound measured from the take on every span; a hand-built or excepted cut is never filed without it (Krish, 2026-11-12)', ['tests/av_sync_test.py']],
-    ['no picture smeared into stripes: ve qc picture.smeared, and a hand-built cut is never filed without its receipt (F52, 8 Nov)', ['tests/frame_smear_test.py']],
+    ['no picture smeared into stripes: ve qc picture.smeared, and a hand-built cut is never filed without its receipt (F53, 8 Nov)', ['tests/frame_smear_test.py']],
     ['the technical watch-outs: each in shape, listed per maker with what stops it, and the 6 to 8 Nov failures registered (Krish, 2026-11-17)', ['tests/failure_watch_test.py']],
     ['the calibrated cut gates: words on every aligner, joins in gaps, captions clock and renderer truth, receipts, the joins reel (W2.4)', ['tests/cutgates_test.py']],
     ['Claude model routing preserves strict skill validation', ['tests/validate_skills_test.py']],

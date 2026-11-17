@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """A stretched picture on a finished cut: one line of pixels smeared into stripes (config/failures.json,
-plate-smeared-into-stripes).
+F53-plate-smeared-into-stripes).
 
 On 8 Nov the proactive-AI connected opening resized its breakfast plate from a one-row crop, so the whole picture
 became vertical stripes. The session coordinating the work caught it by eye on one frame; nothing in the engine would
@@ -134,7 +134,7 @@ def receipt_problems(video) -> list[str]:
     path = receipt_path(video)
     if not path.is_file():
         return [f'no smeared-picture receipt beside {Path(video).name}: run python scripts/frame_smear.py measure '
-                f'{Path(video).name} --receipt (config/failures.json, plate-smeared-into-stripes)']
+                f'{Path(video).name} --receipt (config/failures.json, F53-plate-smeared-into-stripes)']
     try:
         doc = json.loads(path.read_text(encoding='utf-8'))
     except (OSError, ValueError):

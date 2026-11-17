@@ -111,6 +111,23 @@ class VisualCardsTakeTheOneRoute(unittest.TestCase):
         self.assertIn('carousel_check', str(stop.exception.code))
         self.assertIn('five times', str(stop.exception.code))
 
+    def test_a_face_cover_card_names_its_channel_and_photos_and_wears_both_cover_sizes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            text = self.card(tmp, kind='cover', deck=None, channel='tiktok', date='2026-11-16',
+                             photos=['.cache/photos/Denim-jacket headshot on transparent background.png']).read_text(encoding='utf-8')
+        self.assertIn('## Brand (thumbnail_wide, series, 2026-11-16', text)
+        self.assertIn('## Brand (cover_tall, series, 2026-11-16', text)
+        self.assertIn('## Face (channel tiktok', text)
+        self.assertIn('never a circle', text)
+        self.assertIn('Denim-jacket headshot', text)
+        self.assertLessEqual(len(text.encode('utf-8')), 6144)
+
+    def test_a_face_cover_is_refused_for_a_receipt_channel_or_without_photos(self):
+        for extra, said in ((dict(channel='instagram', photos=['a.png']), 'Receipt'), (dict(channel='x', photos=[]), 'photos')):
+            with self.subTest(said=said), tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
+                self.card(tmp, kind='cover', deck=None, date='2026-11-16', **extra)
+            self.assertIn(said, str(stop.exception.code))
+
     def test_a_meme_and_a_notes_image_wear_their_own_palette_and_need_no_deck(self):
         for kind in ('meme', 'notes_image'):
             with self.subTest(kind=kind), tempfile.TemporaryDirectory() as tmp:

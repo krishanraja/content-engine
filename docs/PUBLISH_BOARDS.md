@@ -907,6 +907,19 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
     piece suffix is refused; saved ones are still read. (On 17 Nov the history of `picks/tue-scripts-words` showed no
     approval was lost there: its first revision was already the habits voiceover's.)
 
+- **1.24.0 (17 Nov 2026)** added **`template`** and **`caption_ideas`** on an off-day option: the meme templates lane,
+  from the 30 Nov board.
+  - `template` (an option of kind `meme` with a template only; `_viewExtras.ts`, `templateOf`): `{title, clip {url, page,
+    poster, seconds}, found {place, label, url}, credit, what_happens, why_it_works, mechanism, moment, date}`. Links are
+    https only (a template without an https clip and page, or with an unknown place, is not shown as one), strings are
+    trimmed and capped, and `mechanism` keeps only the humour engine's ids. `caption_ideas` is up to four strings.
+  - Nothing else changes: the option keeps its presses, its note (his caption box), Move to and its item. His caption
+    plus Approve makes it a meme post; Move to puts it on any day. Control Centre draws the new fields generically until
+    its "Meme templates" row reads them.
+  - Ruling (Krish, 2026-11-17): "why can we not create a pipeline of existing meme videos that could be good to reskin,
+    and show me those in here? Then I could think of a funny caption for it thats related to AI."
+    (`.agents/skills/plan-week/references/meme-roaster.md`, `docs/MEME-STANDARD.md`)
+
 - **1.20.0 (17 Nov 2026)** added **`audio` on a choice's option**: a sample to hear before he picks, a same-site path
   (an off-day track's brand-kit file through `GET /api/board/sign-offs?file=<drive id>`, or a voice's ElevenLabs preview
   through `GET /api/board/sign-offs?voice=<bank id>`, a redirect to the bank's own preview clip; no sample spends a

@@ -1692,7 +1692,7 @@
           "audio",
           "intro_outro"
         ],
-        "line": "Every whole cut closes on the ending band and beds on its approved bed with its intro and outro lifts, never a flat continuous bed; an entrance on the first word lands on frame 0."
+        "line": "Every whole cut closes on the ending band and beds on the approved episode bed (intro and outro lifts); an entrance on the first word lands on frame 0."
       }
     },
     {
@@ -1888,7 +1888,7 @@
           "cover",
           "thumbnail"
         ],
-        "line": "Keep every caption, title and slot out of each channel's button zones and account row as measured in config/channel-safe-zones.json; ve qc channel.safe_zones fails anything under them."
+        "line": "Keep every caption, title and slot out of each channel's button zones (Instagram bottom 547 px, rail 185 px on a 1080 x 1920 frame)."
       }
     },
     {
@@ -2243,7 +2243,7 @@
       "what": "Codex was spent on engine cards (ve-qc-2, ve-motion-5, ve-motion-6, ve-motion-2 failed twice) and library devices (cursor_buddy, logo_orbit, typing_bubble, three passes each) during production, not on the piece's picture.",
       "symptom": "Three days of Codex work and no plate the piece needed.",
       "cause": "Nothing ties a Codex card dispatched during a piece to that piece's named slots.",
-      "status": "open",
+      "status": "guarded",
       "planned_mechanism": "Krish left it to the session (\"Whatever you think is the best coherent outcome\"), and ruled one piece per session with Claude orchestrating and Codex doing asset production: during a piece Codex is dispatched only for that piece's named plates; engine and library cards wait until the piece is filed (docs/ve/RUNBOOK.md). Not yet a check in ve dispatch.",
       "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
       "related": [
@@ -2257,7 +2257,7 @@
           "evidence": "cards ve-qc-2, ve-motion-2, ve-motion-5, ve-motion-6 dispatched during the Thursday piece"
         }
       ],
-      "guard_level": "prose",
+      "guard_level": "gate",
       "decided": {
         "by": "Krish",
         "on": "2026-11-04",
@@ -2269,7 +2269,16 @@
           "long_video"
         ],
         "line": "During a piece, Codex builds only that piece's named plates and devices, never engine or library backlog."
-      }
+      },
+      "guards": [
+        {
+          "file": "scripts/velib/codex_minimum.py",
+          "contains": "def problems(spec: dict, cut: str, directory: Path",
+          "how": "Codex's work in a video session is that piece's art direction, proved by receipts Claude checked; ve status and ve file hold a whole cut published from 16 Nov without them (Ruling, Krish, 2026-11-15)",
+          "test": "python3 tests/ve_codex_minimum_test.py"
+        }
+      ],
+      "closed": "Ruling (Krish, 2026-11-17), asked whether it was still open: \"i think we solved that one\""
     },
     {
       "id": "F40-bed-pumped-with-his-voice",
@@ -2670,9 +2679,9 @@
       "what": "The Gate 2 test cuts of The Ladder (ladder_stage) and The Living Screen (living_screen), 54 s each on his house test take: one small 3D set held in a 590 px band above a plain three-word caption box, the bottom 40% of the 9:16 frame empty, about one device event per spoken beat (roughly every 5 s), a near-still camera.",
       "symptom": "Both cuts read as slow, static and sparse; captions are passive boxes; the frame is mostly empty.",
       "cause": "Captions were built into each style's cut instead of as an independent layer; motion was paced to the script's beats, not to a measured cut density; the set was fitted into a small safe box; both cuts were judged from stills and frame sheets, never at speed beside a professional reference.",
-      "status": "open",
+      "status": "guarded",
       "mode": "style-judged-from-stills-not-at-speed",
-      "guard_level": "prose",
+      "guard_level": "gate",
       "causes": [
         {
           "cause": "standard_missing",
@@ -2696,6 +2705,12 @@
           "file": "docs/ve/FAILURE_2026-11-13_3d-styles.md",
           "contains": "## The bar for the next attempt",
           "how": "the failure note and the bar the next session builds to"
+        },
+        {
+          "file": "scripts/velib/styles.py",
+          "contains": "needs_device holds a style back until Krish's yes on its test render",
+          "how": "the reworked styles (17 Nov) stay needs_device, so ve styles never offers one and the board never recommends one until his yes on its test render",
+          "test": "python3 -m unittest tests.ve_proof_test"
         }
       ],
       "watch": {
@@ -2706,7 +2721,8 @@
           "captions"
         ],
         "line": "Build captions as their own layer, pace motion to a measured cut density, fill the frame, and watch every test cut at speed beside a reference."
-      }
+      },
+      "closed": "Ruling (Krish, 2026-11-17), asked whether it was still open: \"we solved that too\""
     },
     {
       "id": "stills-from-rejected-thu5-take",
@@ -2731,7 +2747,7 @@
       "related": [
         "cut-called-done-unheard"
       ],
-      "surface": "Every copy was burned (Drive bin, local caches). A board still is now the StyleStill cover art from Codex card docs/ve/cards/style-stills/ve-style-still-template-1.md, never a cut of a take; ve lab still and ve lab sample refuse any cut of a take. The lab's own pinned take is still that recording and is to be replaced with one he praised.",
+      "surface": "Every copy was burned (Drive bin, local caches). A board still is now the StyleStill cover art from Codex card docs/ve/cards/style-stills/ve-style-still-template-1.md, never a cut of a take; ve lab still and ve lab sample refuse any cut of a take. The lab's own pinned take is still that recording; Krish, 2026-11-17, named the replacement: \"character.ai or ai music are good\" (config/ve/lab.json take, then a lab run on the new take).",
       "guards": [
         {
           "file": "scripts/velib/lab.py",
@@ -3079,7 +3095,36 @@
       ]
     },
     {
-      "id": "F52-plate-smeared-into-stripes",
+      "id": "F52-called-blocked-without-the-route",
+      "on": "2026-11-17",
+      "status": "guarded",
+      "mode": "blocked_without_documented_route",
+      "guard_level": "prose",
+      "krish": "how did you miss both this and codex?",
+      "what": "Asked to file ten approved Epidemic tracks in his Music folder and have Codex draw face-led covers, a cloud session told him three times that both were blocked: the Drive connector refused files over 3.1 MB, Codex could not sign in, and it proposed a home-computer session instead. docs/DRIVE.md already named send.py, which files through the engine's library for his always-on machine to write into Drive, and the SessionStart notice told the session to run the Codex sign-in itself. Both worked once the environment allowed the hosts.",
+      "symptom": "He was told work was blocked and handed back to him when the engine's own route did it.",
+      "cause": "The session tried the nearest connector, met a limit, and reported a wall without reading the doc the start table names for Drive or asking to open the refused hosts.",
+      "causes": [
+        {
+          "cause": "standard_not_read",
+          "evidence": "CLAUDE.md's table sends anything in Drive to docs/DRIVE.md, which names send.py; it was not opened"
+        },
+        {
+          "cause": "tool_limit",
+          "evidence": "the Drive connector's 3.1 MB limit and the proxy's refusals of auth.openai.com, audiocdn.epidemicsound.com and the engine's storage host were taken as walls; update_environment opened each"
+        }
+      ],
+      "surface": "CLAUDE.md, \"Do what was asked, prove what you claim\": never call anything blocked until the documented route has been tried.",
+      "guards": [
+        {
+          "file": "CLAUDE.md",
+          "contains": "Never call anything blocked until the documented route has been tried",
+          "how": "every Claude session reads it at start"
+        }
+      ]
+    },
+    {
+      "id": "F53-plate-smeared-into-stripes",
       "on": "2026-11-08",
       "krish": "Krish, 2026-11-17, on the production errors of the two weeks before: \"i need to turn this in to surgical, precise, technical watch outs for my next batch of productions\"; then \"yes, go ahead and close the gaps in content-engine\"",
       "status": "guarded",
@@ -3126,7 +3171,7 @@
       ]
     },
     {
-      "id": "F53-known-fault-rendered-with-caveat",
+      "id": "F54-known-fault-rendered-with-caveat",
       "on": "2026-11-06",
       "krish": "Krish, 2026-11-17, on the production errors of the two weeks before: \"i need to turn this in to surgical, precise, technical watch outs for my next batch of productions\"; then \"yes, go ahead and close the gaps in content-engine\"",
       "status": "guarded",
@@ -3157,7 +3202,7 @@
       ]
     },
     {
-      "id": "F54-cues-timed-to-transcript",
+      "id": "F55-cues-timed-to-transcript",
       "on": "2026-11-07",
       "krish": "Krish, 2026-11-17, on the production errors of the two weeks before: \"i need to turn this in to surgical, precise, technical watch outs for my next batch of productions\"; then \"yes, go ahead and close the gaps in content-engine\"",
       "status": "guarded",
@@ -3191,18 +3236,18 @@
       ]
     },
     {
-      "id": "F55-text-cut-at-the-device-edge",
+      "id": "F56-text-cut-at-the-device-edge",
       "on": "2026-11-06",
       "krish": "Krish, 2026-11-17, on the production errors of the two weeks before: \"i need to turn this in to surgical, precise, technical watch outs for my next batch of productions\"; then \"yes, go ahead and close the gaps in content-engine\"",
       "status": "open",
       "mode": "text-cut-off",
       "what": "The proactive-AI proof's first preview (6 Nov) cropped the chat device's \"Assistant, online\" header in the hook, let it overlap the brand mark on the stage, and showed a prompt and a question cut off mid-sentence. The session coordinating the work caught all three from frame strips.",
-      "symptom": "Words on a device are cut off at its edge, or sit under the brand mark.",
-      "cause": "qc_composition reads caption words clipped at their box edge, but nothing reads a device's own text against its bounds or the mark; the brand-mark caption check is unmerged and waits on Krish (hide the mark on full-screen layouts, or keep captions clear of it).",
+      "symptom": "Words on a device are cut off at its edge.",
+      "cause": "qc_composition reads caption words clipped at their box edge, but nothing reads a device's own text against the device's bounds. (The logo overlap goes with the logo: the body of a cut carries no logo, config/brand-palette.json.)",
       "causes": [
         {
           "cause": "check_missing",
-          "evidence": "No ve qc row reads a device's text against the device's own bounds or the brand mark."
+          "evidence": "No ve qc row reads a device's text against the device's own bounds."
         }
       ],
       "watch": {
@@ -3211,7 +3256,7 @@
           "long_video",
           "card"
         ],
-        "line": "Every line of meaning-bearing text sits whole inside its device and clear of the brand mark: no cropped headers, no prompt or question cut mid-sentence. Nothing checks this yet; read every text cue on the proof frames."
+        "line": "Every line of meaning-bearing text sits whole inside its device: no cropped headers, no prompt or question cut mid-sentence. Nothing checks this yet; read every text cue on the proof frames."
       }
     }
   ]

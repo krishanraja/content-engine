@@ -66,6 +66,10 @@ scripts for pieces and all suggestions for off days."
   may match; their sentence may not.
 - A carousel drawn from a pattern follows that pattern's `card_flow`, card by card, in our copy, on our brand and with
   our own pictures (`docs/CAROUSEL-STANDARD.md`, "Off-day carousels are utility").
+- From the 30 Nov board every Saturday option is such a carousel, modelled on one named carousel in the sheet: its
+  `beats` is a carousel in `lookalike-input.json`, and its cards and frames follow the card_flow one for one, 4 to 10
+  cards, the weekly good news included (Ruling, Krish, 2026-11-17; `references/offdays.md`, "Saturday is carousels
+  modelled on his sheet"; gate code `saturday`). A meme template needs no lookalike (`references/meme-roaster.md`).
 
 ## Nothing that went out is offered again
 
