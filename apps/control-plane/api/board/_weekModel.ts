@@ -529,7 +529,7 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const missed = !out && d.date < m.today
   const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
     title: cut(p.title, 200), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
-    read: withLock(readOf(null, { row, research: filed.map(f => f.title) }), said), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
+    read: withLock(readOf(null, { row }), said), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
     stories_planned: null, others: [] as PressAction[] }
   const step = decided?.next_step ?? (branded ? 'look' : 'next')
   const line = out ? 'Live.' : missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.`
@@ -570,14 +570,24 @@ function withLock(read: ModelRead, said: { so_what: string | null; story: string
  *  wordsBody, scriptsBody), carrying the exact words of each filed cut so his approval binds those words (F47). */
 export function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ doc_id: string; revision?: number }> = []): PressAction {
   const doc = `${day}-scripts-words`
-  const texts = Object.fromEntries(filed.map(f => [f.cut, f.text]))
-  const titles = Object.fromEntries(filed.map(f => [f.cut, cut(`${title}: ${f.cut === 'long' ? 'long cut' : 'short cut'}`, 200)]))
-  return { kind: 'press', label: 'Approve scripts', collection: 'picks', id: doc, revision: picks.find(x => x.doc_id === doc)?.revision ?? 0,
+  const ordered = [...filed].sort((a, b) => (a.cut === b.cut ? 0 : a.cut === 'long' ? -1 : 1))
+  const texts = Object.fromEntries(ordered.map(f => [f.cut, f.text]))
+  const titles = Object.fromEntries(ordered.map(f => [f.cut, cut(`${title}: ${f.cut === 'long' ? 'long cut' : 'short cut'}`, 200)]))
+  const words = (t: string) => t.split(/\s+/).filter(Boolean).length
+  const both = ordered.length > 1
+  return { kind: 'press', label: both ? 'Read and approve the scripts' : 'Read and approve the script', collection: 'picks', id: doc, revision: picks.find(x => x.doc_id === doc)?.revision ?? 0,
     body: { kind: 'approve_scripts', day, via: 'words', approved: true, piece_id: pieceId, texts, titles, folder_title: cut(title, 200),
       said_where: 'the Publish Board in Control Centre', session_ref: boardAt(week, day) },
-    words: { path: 'words', ask: 'Your words to approve both scripts as filed ("Approved.")', required: true }, stamp: ['at', 'said_at'],
-    goes: `Approves exactly the words filed on the piece (${filed.map(f => f.title).join('; ')}) and sends them to your Teleprompter once they pass the scripts' check.`,
-    done: 'Approved in your words. The scripts go to your Teleprompter once their check passes.' } as PressAction
+    // A board before contract 1.21.0 still asks his words this way; a board that knows `scripts` shows the review instead.
+    words: { path: 'words', ask: `Your words to approve ${both ? 'both scripts' : 'the script'} as filed ("Approved.")`, required: true }, stamp: ['at', 'said_at'],
+    scripts: {
+      path: 'texts', approve: both ? 'Approve both scripts' : 'Approve the script', approve_edited: both ? 'Approve both scripts, with my edits' : 'Approve the script, with my edits',
+      edited_note: 'Your edits are saved with your approval. Edited words go back through the scripts\' check and fresh readers before they reach your Teleprompter; nothing else changes them.',
+      cuts: ordered.map(f => ({ cut: f.cut, label: f.cut === 'long' ? 'Long cut' : 'Short cut', text: f.text, words: words(f.text),
+        minutes: Math.round((words(f.text) / 150) * 10) / 10, filed_at: f.at, material_id: f.id })),
+    },
+    goes: `Approves ${both ? 'both scripts' : 'the script'} exactly as shown, and sends ${both ? 'them' : 'it'} to your Teleprompter once ${both ? 'they pass' : 'it passes'} the scripts' check.`,
+    done: 'Approved. The scripts go to your Teleprompter once their check passes.' } as PressAction
 }
 
 /** An approved off-day post on the board: its kind, its path, where it is and its one next action. */

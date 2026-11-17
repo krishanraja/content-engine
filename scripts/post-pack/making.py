@@ -30,6 +30,7 @@ that everything is fresh and synchronised in real time".
                                                              # which choice under test the piece used (the bar's
                                                              # under_test), for the retrospective; a record, never a gate
     python making.py PIECE_ID read-back long --readers "reader A, ..." "reader B, ..." [--at TIME]
+    python making.py PIECE_ID tone-floor long --reader "a fresh separate reader" --verdict pass --why "one line per quality"
     python making.py PIECE_ID read-back long --krish-words "Krish, DATE: his words" [--readers ...]
     python making.py PIECE_ID drive-link long https://drive.google.com/file/d/<id>/view [--thumb-url https://drive.google.com/file/d/<thumb id>/view]
     python making.py PIECE_ID teleprompter long --folder ID --script ID --sha SHA256 [--title TITLE]
@@ -171,6 +172,7 @@ FEATURE = 'feature'
 # Every cut a record can hold: the feature only on a piece Krish called a 15-minute feature for (house rule FEATURE).
 ALL_CUTS = CUTS + (FEATURE,)
 FEATURES = HERE.parents[1] / 'config' / 'features.json'
+SCRIPT_FLOOR = HERE.parents[1] / 'config' / 'script-floor.json'  # the tone floor: his AI Music take, and what a script is judged on
 UUID = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', re.I)
 SHA256 = re.compile(r'^[a-f0-9]{64}$')  # the engine's rule for script_check.hashes and script_sha256
 BY_ENV = 'MAKING_BY'
@@ -353,6 +355,7 @@ def show(piece_id, call=None):
         lines.append(f"older script: the {rec['cut']} take {rec.get('path')} was recorded from words that have changed "
                      f"since, so it does not count; record it again, or Krish says to use it")
     lines.extend(read_back_lines(record))
+    lines.extend(tone_floor_lines(record))
     lines.extend(teleprompter_lines(record))
     lines.extend(cut_verdict_lines(data.get('cut_verdicts')))
     chosen = record.get('production_choices') if isinstance(record.get('production_choices'), dict) else {}
@@ -606,7 +609,7 @@ def _story_check(cut, path, series=None, piece=None):
     if series:
         command += ['--series', series]
     if piece:
-        command += ['--piece', piece]  # its long cut is lifted by config/long-cuts.json (long_cut.py)
+        command += ['--piece', piece]  # its long cut is lifted by config/long-cuts.json (long_cut.py), its short cut by config/short-cuts.json (short_cut.py)
     result = subprocess.run(command + [str(path)], capture_output=True, text=True)
     return result.returncode, result.stdout + result.stderr
 
@@ -957,18 +960,24 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
     (long_cut.declared): the long cut is then checked with story_check
     --piece, at the piece's lifted length, or refused with why the lift does
     not hold; and a lift that holds is recorded as long_cut, {words, reason},
+    (the same for the short cut, config/short-cuts.json, recorded as short_cut, {words, close, reason}; Ruling,
+    Krish, 2026-11-17),
     which the Scripts step on the board shows (Ruling, Krish, 2026-11-14:
     "lift if worth it")."""
     import story_check
     if krish is not None and (not krish_words(krish) or len(krish.strip()) > 600):
         raise MakingError('--krish-words are Krish\'s own words putting the scripts through as they are, starting "Krish" and the date '
                           '(for example "Krish, 2026-10-16: just put them in teleprompter"), at most 600 characters')
-    lift = None
+    lift = short_lift = None
+    short_declared = False
     if piece:
         import long_cut
+        import short_cut
         lift = long_cut.lift_for(piece)[0]
+        short_lift = short_cut.lift_for(piece)[0]
+        short_declared = short_cut.declared(piece)  # a lift that does not hold is refused by story_check, with why
     run = run or (lambda cut, path: _story_check('deep' if (deep and cut == 'long') else cut, path, series)
-                  if not (piece and cut == 'long' and not deep) else _story_check(cut, path, series, piece))
+                  if not (piece and ((cut == 'long' and not deep) or (cut == 'short' and short_declared))) else _story_check(cut, path, series, piece))
     warn = warn or (lambda line: print(line, file=sys.stderr))
     paths = list(paths or [])
     order = ALL_CUTS if feature else CUTS
@@ -980,7 +989,7 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
     prev_feature = current_hashes({'script_check': previous}).get('feature') if isinstance(previous, dict) else None
     if feature and len(paths) == len(CUTS):
         warn(FEATURE_NOT_RECHECKED if prev_feature else FEATURE_TO_COME)
-    problems, cuts, hashes, found = [], [], {}, []
+    problems, cuts, hashes, found, titles = [], [], {}, [], {}
     for cut, p in zip(order, paths):
         name = Path(p).name
         said = story_check.cut_of(name)
@@ -997,6 +1006,9 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
             continue
         cuts.append(cut)
         code, out = run(cut, p)
+        said_title = next((line.strip()[6:].strip() for line in out.splitlines() if line.strip().startswith('TITLE ')), None)
+        if said_title and len(said_title) <= 300:
+            titles[cut] = said_title  # the title question his intro speaks (story_check INTRO), which the video's title is keyed to
         if code != 0:
             lines = [line.strip() for line in out.strip().splitlines() if line.strip()]
             found.extend([f'{name}: {line}' for line in lines][:10] or [f'{name}: the {cut} cut failed its check'])
@@ -1029,11 +1041,21 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
              'checked_at': kept or stamp, 'changed_at': changed_at}
     if lift and 'long' in cuts:
         check['long_cut'] = {'words': lift['words'], 'reason': lift['reason']}
+    if short_lift and 'short' in cuts:
+        check['short_cut'] = {'words': short_lift['words'], 'close': short_lift['close'], 'reason': short_lift['reason']}
+    # The title line each intro speaks, bound to the words it was read from (house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17).
+    if titles and not problems:
+        check['title_line'] = {cut: {'title': t, 'script_sha256': hashes[cut]} for cut, t in titles.items() if hashes.get(cut)}
     # A read-back holds for the words the readers heard: kept while they stay the same.
     read = prev.get('read_back') if isinstance(prev.get('read_back'), dict) else {}
     still = {cut: entry for cut, entry in read.items() if isinstance(entry, dict) and hashes.get(cut) and entry.get('script_sha256') == hashes[cut]}
     if still and not problems:
         check['read_back'] = still
+    # A tone-floor pass holds for the words the reader judged: kept while they stay the same.
+    toned = prev.get('tone_floor') if isinstance(prev.get('tone_floor'), dict) else {}
+    held_tone = {cut: entry for cut, entry in toned.items() if isinstance(entry, dict) and hashes.get(cut) and entry.get('script_sha256') == hashes[cut]}
+    if held_tone and not problems:
+        check['tone_floor'] = held_tone
     return {'script_check': check}
 
 
@@ -1114,6 +1136,63 @@ def read_back_lines(record):
         else:
             lines.append(f'Read back, {CUT_NAME[cut]} cut: not yet for these words; two fresh readers hear it as a 12-year-old '
                          '(make-piece, "The Scripts step"), then making.py PIECE read-back ' + cut)
+    return lines
+
+
+def tone_floor_reference(cut, path=None):
+    """The sha256 of the AI Music take a cut is judged against (config/script-floor.json). The feature is a long cut."""
+    config = json.loads(Path(path or SCRIPT_FLOOR).read_text(encoding='utf-8'))
+    return config['reference']['short' if cut == 'short' else 'long']['sha256']
+
+
+def tone_floor_of(record, cut, path=None):
+    """The tone-floor pass that holds for the cut's current words, or None: the reader's entry binds the script's hash and
+    the reference's hash, and its verdict is pass (Ruling, Krish, 2026-11-17: the AI Music take is the floor)."""
+    check = record.get('script_check') if isinstance(record, dict) and isinstance(record.get('script_check'), dict) else {}
+    entry = (check.get('tone_floor') or {}).get(cut) if isinstance(check.get('tone_floor'), dict) else None
+    current = current_hashes(record).get(cut)
+    if not (isinstance(entry, dict) and current and entry.get('script_sha256') == current):
+        return None
+    if entry.get('reference_sha256') != tone_floor_reference(cut, path) or entry.get('verdict') != 'pass':
+        return None
+    return entry
+
+
+def tone_floor_patch(record, cut, reader, verdict, why, at=None, path=None):
+    """The script check with one cut's tone-floor verdict added: who read it (a fresh, separate reader), pass or fail, one line
+    on each quality, and the hashes of the words and of the reference they were compared with."""
+    cut = _cut(cut)
+    check = record.get('script_check') if isinstance(record, dict) and isinstance(record.get('script_check'), dict) else None
+    current = current_hashes(record).get(cut)
+    if not check or check.get('passed') is not True or not current:
+        raise MakingError(f'the {cut} script has not passed its check with its words\' hash on the record: run making.py PIECE scripts '
+                          'long.md short.md first, then the tone floor')
+    reader = ' '.join(str(reader or '').split())
+    why = ' '.join(str(why or '').split())
+    if not reader or len(reader) > 200:
+        raise MakingError('--reader names the fresh, separate reader who compared the script with his AI Music take, one line of at most 200 characters')
+    if verdict not in ('pass', 'fail'):
+        raise MakingError('--verdict is pass or fail')
+    if not why or len(why) > MAX_TEXT:
+        raise MakingError(f'--why is one line on each quality, at most {MAX_TEXT} characters')
+    tone = dict(check.get('tone_floor') or {}) if isinstance(check.get('tone_floor'), dict) else {}
+    tone[cut] = {'script_sha256': current, 'reference_sha256': tone_floor_reference(cut, path), 'reader': reader, 'verdict': verdict,
+                 'why': why, 'at': _time(at, '--at') if at else now()}
+    return {'script_check': {**check, 'tone_floor': tone}}
+
+
+def tone_floor_lines(record):
+    """What `show` says about the tone floor, one line a cut, once the check has passed with hashes."""
+    lines = []
+    for cut in ALL_CUTS:
+        if not current_hashes(record).get(cut) or not (record.get('script_check') or {}).get('passed'):
+            continue
+        entry = tone_floor_of(record, cut)
+        if entry:
+            lines.append(f"Tone floor, {CUT_NAME[cut]} cut: at or above his AI Music take ({entry.get('reader')}, {entry.get('at')})")
+        else:
+            lines.append(f'Tone floor, {CUT_NAME[cut]} cut: not yet for these words; a fresh separate reader compares it with config/script-floor/ '
+                         '(make-piece, "The Scripts step"), then making.py PIECE tone-floor ' + cut + ' --reader ... --verdict pass --why ...')
     return lines
 
 
@@ -1923,6 +2002,24 @@ def self_test():
         check('a lifted piece\'s long cut is checked with its piece id, its short cut without, and the lift is on the record',
               (asked, (lifted.get('long_cut') or {}).get('words'), bool((lifted.get('long_cut') or {}).get('reason')), 'long_cut' in unlifted),
               ([('long', monday), ('short', None), ('long', None), ('short', None)], 1200, True, False))
+        wed = 'db9f9f6a-1092-49be-8024-f335e060305a'
+        asked = []
+        globals()['_story_check'], real_sc = (lambda cut, path, series=None, piece=None: (asked.append((cut, piece)), (0, ''))[1]), globals()['_story_check']
+        try:
+            lifted = scripts_patch([t / 'long.md', t / 'short.md'], warn=warned.append, piece=wed)['script_check']
+        finally:
+            globals()['_story_check'] = real_sc
+        check('a piece whose short cut is lifted has its short cut checked with its piece id and the lift on the record, never silent',
+              (asked, lifted.get('short_cut'), 'long_cut' in lifted),
+              ([('long', wed), ('short', wed)], {'words': 260, 'close': 'The full five-minute video is on my channel.',
+               'reason': 'A 90-second cut that sends viewers to the 5-minute video, as he asked.'}, False))
+
+        # The title line each intro speaks is recorded, bound to its script's hash (house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17).
+        titled = scripts_patch([t / 'long.md', t / 'short.md'], lambda cut, path: (0, 'ready\n  TITLE Is it AI music or is it human music?\n' if cut == 'long' else 'ready\n'),
+                               warned.append)['script_check']
+        check('the title line the long intro speaks is on the record with its script hash; a cut with none records none',
+              titled.get('title_line'), {'long': {'title': 'Is it AI music or is it human music?', 'script_sha256': titled['hashes']['long']}})
+        check('a record from a check that printed no title has no title_line', 'title_line' in scripts_patch([t / 'long.md', t / 'short.md'], ok, warned.append)['script_check'], False)
 
         # The 15-minute feature (house rule FEATURE): a third script, only on a piece Krish called one for.
         features = t / 'features.json'
@@ -2360,6 +2457,35 @@ def self_test():
     check('read-back: it holds for the words they heard, and not for changed words',
           (bool(read_back_of(held, 'long')), read_back_of(held, 'short'),
            read_back_of({'script_check': {**read, 'hashes': {'long': 'c' * 64, 'short': 'b' * 64}}}, 'long')), (True, None, None))
+    # The tone floor: a separate reader's verdict, bound to the words and to the reference take.
+    tone_ref = {'long': tone_floor_reference('long'), 'short': tone_floor_reference('short')}
+    check('tone floor: the references are the two AI Music takes', (tone_ref['long'][:8], tone_ref['short'][:8]), ('c8ded6f8', 'a6459ee2'))
+    toned = tone_floor_patch(passed, 'long', 'a fresh subagent that did not write it', 'pass', 'story yes; names yes', '2026-11-17T10:00:00Z')['script_check']
+    held_tone = {'script_check': toned}
+    check('tone floor: an entry binds the words and the reference, and a pass holds',
+          (toned['tone_floor']['long']['script_sha256'], toned['tone_floor']['long']['reference_sha256'], toned['tone_floor']['long']['verdict'], bool(tone_floor_of(held_tone, 'long')), tone_floor_of(held_tone, 'short')),
+          ('a' * 64, tone_ref['long'], 'pass', True, None))
+    failed_tone = {'script_check': tone_floor_patch(passed, 'long', 'reader', 'fail', 'a list of exhibits')['script_check']}
+    check('tone floor: a fail never holds', tone_floor_of(failed_tone, 'long'), None)
+    check('tone floor: changed words do not hold',
+          tone_floor_of({'script_check': {**toned, 'hashes': {'long': 'c' * 64, 'short': 'b' * 64}}}, 'long'), None)
+    check('tone floor: another reference does not hold',
+          tone_floor_of({'script_check': {**toned, 'tone_floor': {'long': {**toned['tone_floor']['long'], 'reference_sha256': 'd' * 64}}}}, 'long'), None)
+    for label, record, args, words in (('a check that did not pass', {'script_check': {**passed['script_check'], 'passed': False}}, ('reader', 'pass', 'why'), 'has not passed'),
+                                       ('no reader', passed, ('', 'pass', 'why'), '--reader'),
+                                       ('no reason', passed, ('reader', 'pass', ''), '--why'),
+                                       ('a verdict that is neither', passed, ('reader', 'maybe', 'why'), '--verdict')):
+        try:
+            tone_floor_patch(record, 'long', *args)
+            check(f'tone floor: {label} is refused', 'no error', 'error')
+        except MakingError as e:
+            check(f'tone floor: {label} is refused', words in str(e), True)
+    check('tone floor: show says which cuts passed', tone_floor_lines(held_tone)[0].startswith('Tone floor, 5-minute cut: at or above')
+          and 'not yet' in tone_floor_lines(held_tone)[1], True)
+    floor_config = json.loads(SCRIPT_FLOOR.read_text(encoding='utf-8'))
+    check('tone floor: each reference file still has the hash the floor names',
+          [hashlib.sha256((HERE.parents[1] / floor_config['reference'][c]['file']).read_bytes()).hexdigest() for c in ('long', 'short')],
+          [floor_config['reference'][c]['sha256'] for c in ('long', 'short')])
     check('show: the read-back of each cut', read_back_lines(held),
           ['Read back, 5-minute cut: nothing lost (2 readers, 2026-10-12T15:55:00Z)',
            'Read back, 90-second cut: not yet for these words; two fresh readers hear it as a 12-year-old (make-piece, "The Scripts step"), '
@@ -2772,7 +2898,7 @@ def main(argv=None, call=None):
     ap = argparse.ArgumentParser(description="Record where a piece is, for Control Center's board.")
     ap.add_argument('piece_id', nargs='?')
     ap.add_argument('what', nargs='?', choices=['show', 'workroom', 'publish-manager', 'visual-gate', 'scripts', 'pack', 'recorded', 'video', 'posted', 'session',
-                                                     'read-back', 'teleprompter', 'drive-link', 'narrative', 'choices', 'clips', 'thumbnails'])
+                                                     'read-back', 'tone-floor', 'teleprompter', 'drive-link', 'narrative', 'choices', 'clips', 'thumbnails'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--by', help=f'who is writing: Codex, Claude Code (default: {BY_ENV}, else {CODEX_BY} inside Codex, else {DEFAULT_BY})')
     ap.add_argument('--sent', action='store_true', help='with pack: the pack was sent to the library')
@@ -2790,6 +2916,9 @@ def main(argv=None, call=None):
     ap.add_argument('--skip-readers', action='store_true', help='with read-back and --krish-words: Krish said in his own words to '
                     'skip the fresh readers for these words; recorded as skipped (failure F45)')
     ap.add_argument('--readers', nargs='+', metavar='READER', help='with read-back: the two fresh readers who heard the cut, one line each')
+    ap.add_argument('--reader', metavar='WHO', help='with tone-floor: the fresh, separate reader who compared the script with his AI Music take')
+    ap.add_argument('--verdict', choices=['pass', 'fail'], help='with tone-floor: at or above the floor on every quality (pass), or not (fail)')
+    ap.add_argument('--why', metavar='LINE', help='with tone-floor: one line on each quality')
     ap.add_argument('--at', metavar='TIME', help='with read-back: when they read it (default now)')
     ap.add_argument('--series', metavar='LANE_SLOT', help='with scripts: the piece\'s series, when the engine does not say '
                     '(follow_the_money, under_the_hood or mind_the_gap)')
@@ -2863,8 +2992,14 @@ def main(argv=None, call=None):
             # The piece's series is still passed on; the series line is retired (house rule SERIES_OPENER, 2026-10-21).
             series = a.series or series_of(a.piece_id, answer, call)
             import long_cut
+            import short_cut
             patch = scripts_patch(a.args, previous=previous, series=series, deep=deep_piece(a.piece_id), krish=a.krish_words,
-                                  feature=feature_piece(a.piece_id), piece=a.piece_id if long_cut.declared(a.piece_id) else None)
+                                  feature=feature_piece(a.piece_id),
+                                  piece=a.piece_id if long_cut.declared(a.piece_id) or short_cut.declared(a.piece_id) else None)
+            if patch['script_check'].get('short_cut'):
+                print('making: ' + short_cut.notice({**patch['script_check']['short_cut'],
+                                                     'minutes': short_cut.minutes(patch['script_check']['short_cut']['words'])})
+                      + ' (config/short-cuts.json); the Scripts step on the board says so', file=sys.stderr)
             if patch['script_check'].get('long_cut'):
                 print('making: ' + long_cut.notice({**patch['script_check']['long_cut'],
                                                     'minutes': long_cut.minutes(patch['script_check']['long_cut']['words'])})
@@ -2972,6 +3107,10 @@ def main(argv=None, call=None):
                 ap.error('give the cut: read-back long --readers "reader A, ..." "reader B, ..."')
             patch = read_back_patch(record_of(a.piece_id, call), a.args[0], a.readers, a.at, by, krish=a.krish_words,
                                     skip_readers=a.skip_readers)
+        elif a.what == 'tone-floor':
+            if len(a.args) != 1:
+                ap.error('give the cut: tone-floor long --reader "..." --verdict pass --why "..."')
+            patch = tone_floor_patch(record_of(a.piece_id, call), a.args[0], a.reader, a.verdict, a.why, a.at)
         elif a.what == 'teleprompter':
             if len(a.args) != 1:
                 ap.error('give the cut: teleprompter long --folder ID --script ID --sha SHA256, or --error TEXT')

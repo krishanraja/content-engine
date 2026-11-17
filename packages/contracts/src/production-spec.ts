@@ -286,6 +286,10 @@ export const ProductionSpecV2Schema = z.object({
   // as written in the teleprompter script; `spans` marks that sentence's words in each cut's take once it is recorded.
   // The renderer shows the title there as its own animated title and the captions step aside for those words. ve lint
   // requires it for a series piece from 16 Nov 2026 (scripts/velib/lint.py, title_moment_lints).
+  // The title question his intro speaks (house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17: "how can you encode this intro
+  // style for the future?"): the one line the video's title animation is keyed to. making.py scripts records it as
+  // script_check.title_line; ve lint (title.line) refuses a spec whose script never says it.
+  title_line: z.string().min(3).max(160).optional(),
   title_moment: z.object({
     title: z.string().min(3).max(80),
     line: z.string().min(8).max(240),
