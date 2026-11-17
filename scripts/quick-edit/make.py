@@ -1280,7 +1280,7 @@ def resolve_music(cfg, asp, seconds, base='.'):
             # Both cuts of the piece ask with the piece's needs (the long cut's
             # length, from kit.json), so both get the same track.
             longest, how = piece_seconds(cfg, base)
-            track, skipped, needs = music.pick_for_piece(piece_key(cfg), seconds, data, longest=longest)
+            track, skipped, needs = music.pick_for_piece(piece_key(cfg), seconds, data, longest=longest, when=cfg.get('date'))
             needs_from = how if longest else f'{how}; asked for {music.PIECE_SECONDS:g} s'
             if not track:
                 passed = '; '.join(f'{k}: {", ".join(v)}' for k, v in skipped.items())

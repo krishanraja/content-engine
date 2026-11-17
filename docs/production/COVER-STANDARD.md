@@ -82,3 +82,19 @@ with no headline and no wordmark, while his own native posts the day before show
 - One canonical tall cover per cut: a tall cover's headline passes `title_check.py` on the piece's own words, which
   refuses "they", "it" or "this" standing in for a name (Krish, 2026-11-15: '"They Faked AI Use" is a terrible title.
   It's not clear, and it's way too vague. Words like "they" are not welcome in these types of titles.').
+
+## Face-led covers on his own accounts (Ruling, Krish, 17 November 2026)
+
+His words, answering the channel plan: "yes to the face plan", then "actually use codex to draw". The reference he sent
+was a Rio Meets thumbnail: two cutout faces large either side, the headline huge between them.
+
+| Channel | Cover |
+|---|---|
+| His own accounts: TikTok @therealkrisho, X @TheRealKrisho, LinkedIn, Threads, Substack Notes | Face-led: his cutout headshot over about a third of the frame on the series colour, never a small circle; the headline still leads (points 1 to 6 above hold). His name never appears. |
+| YouTube @makeyourmind-up | A test: the Receipt against face-led on every long video (YouTube's Test & Compare), click rate reported by Growth. |
+| Instagram @makeyourmind.up, the Facebook Page, the Substack cover and share card | The Receipt, unchanged. |
+
+It runs four weeks, then Krish decides from the numbers. This narrows THE_RECEIPT's "never his face" (2 Nov) to the
+brand accounts. The photos come only from his cutouts (`scripts/post-pack/photos.py fetch`, published from
+Video Engine > Krish Clone - Assets > Photos by the home computers), and Codex draws the options from a `ve card` of
+kind `cover` (`scripts/velib/cards.py`), checked with `scripts/channel_safe.py` and judged by the thumbnail-critic.
