@@ -580,7 +580,9 @@ export function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decision
   const filed = m.scripts?.[pieceId] ?? []
   if (!filed.length || m.decisions?.[pieceId]?.items.find(x => x.key === 'scripts')?.made === true) return null
   const press = scriptsPress(m.week, day, pieceId, cut(title, 150), filed, m.picks || [])
-  const line = `${where.replace(/[.\s]+$/, '')}. ${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve: ${filed.map(f => f.title).join('; ')}.`
+  // An approval of earlier words says so, so he knows why the press is back (pieceDecisions, scriptsChanged).
+  const note = m.decisions?.[pieceId]?.items.find(x => x.key === 'scripts')?.note
+  const line = `${where.replace(/[.\s]+$/, '')}. ${note ? 'Rewritten since you approved them, so they need your Approve again' : `${filed.length > 1 ? 'Both scripts are' : 'The script is'} ready for your Approve`}: ${filed.map(f => f.title).join('; ')}.`
   return { press, line }
 }
 

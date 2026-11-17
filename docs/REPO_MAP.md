@@ -2361,6 +2361,7 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `interface LockState`
 - `interface ScriptsState`
 - `interface DecisionInputs`
+- `function scriptsChanged(approved: ScriptsState['texts'], filed: FiledScript[] | undefined): Array<'long' | 'short'>`
 - `function pieceDecisions(i: DecisionInputs): PieceDecisions`
 - `function nextStep(items: Decision[]): DecidedStep | null`
 - `function decisionsText(p: PieceDecisions): string`
@@ -2912,7 +2913,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `const LOCK_DAYS: PostedDay[]`
 - `function lockPieceId(text: string | null | undefined): string | null`
 - `function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: string): { text: string; day: PostedDay } | null`
-- `type Typed = { words: string; said_where: string; said_at: string }`
+- `type Typed`
 - `interface LockToSign`
 - `function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: st…`
 - `function inYourWords(words: string, on: string | null, where?: string | null): string`
