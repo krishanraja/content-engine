@@ -179,3 +179,13 @@ def offday_tracks() -> list[dict]:
     ids = guards.off_day_beds()
     tracks = load_json(CONFIG.parent / 'music-library.json').get('tracks') or []
     return [t for i in ids for t in tracks if t.get('id') == i]
+
+
+def whole_script_warning(entry: dict) -> str | None:
+    """Why a voice may not hold on a whole script, or None when it has (Tue 17 Nov 2026: Krish v2 held his voice for a
+    ten-second opening and drifted to an accent he does not have on the full script)."""
+    test = entry.get('whole_script') or {}
+    if test.get('passed') is True:
+        return None
+    return (f"{entry['name']} is not proven on a whole script ({test.get('note') or 'not yet tested'}); hear the whole "
+            'generation before it reaches him, and offer Record it myself if it drifts')
