@@ -1,7 +1,7 @@
-Anthropic makes Claude, an AI that writes code. So why did it buy its customer help bot?
+Anthropic makes Claude, an AI that writes code. So why did it buy its help bot?
 
-I've been digging in. Building one is easy now. The catch is who gets woken when it breaks. So it paid a help-bot firm, Intercom, to get woken instead.
+Building is easy now. The hard part is who gets the call when it breaks at two in the morning. So it bought Fin from Intercom, and let them take that call.
 
-My favourite detail? That bot runs on Claude.
+The twist? Fin runs on Claude.
 
-So I won't ask build or buy. I'll ask who gets woken. The full story is free at makeyourmindup.ai.
+So I won't ask build or buy. I'll ask who picks up. The full story is free at makeyourmindup.ai.
