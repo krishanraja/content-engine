@@ -1272,6 +1272,7 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingLongCut`
 - `interface MakingShortCut`
 - `const SHORT_LIFT_MOST`
+- `interface MakingTitleLine`
 - `interface MakingToneFloor`
 - `interface MakingReadBack`
 - `interface MakingLink`
