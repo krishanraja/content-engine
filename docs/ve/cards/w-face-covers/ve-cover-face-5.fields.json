@@ -1,0 +1,27 @@
+{
+  "path": "docs/ve/cards/w-face-covers/ve-cover-face-5.md",
+  "card_id": "ve-cover-face-5",
+  "kind": "cover",
+  "channel": "tiktok",
+  "date": "2026-11-16",
+  "references": [
+    "krish-chat-2026-11-17-rio-meets (the Rio Meets 'I LOVE CRISTIANO!' thumbnail Krish sent: two cutout faces large either side, the headline huge between them on a deep colour)"
+  ],
+  "photos": [
+    ".scratch/covers/photos/denim.png",
+    ".scratch/covers/photos/glasses.png",
+    ".scratch/covers/photos/natural.png"
+  ],
+  "title": "Face-led covers, round five: option 2 wide's wordmark",
+  "goal": "One fix in .scratch/covers/draw.py, nothing else: on option-2-wide.png the wordmark sits at the bottom left, on the yellow photo panel over the jacket. Move it to the dark side, its left edge exactly on the headline's left edge, at the bottom of the dark area with the same margin as the series label has at the top, the same size as on option 1 wide. Every other file stays byte-for-byte as it is.",
+  "contract": "Outputs: .scratch/covers/out/option-{1,2,3}-wide.png (1280x720) and option-{1,2,3}-tall.png (1080x1920). Colours and fonts only from the Brand sections below and config/ve/brand-tokens.json; fonts from the repository's font files named there, never a system font. At most three parts besides the headline: the face, the quiet series label, the wordmark. No logos, badges or proof tags. His name never appears. The tall cover keeps the headline and face inside the 3:4 grid crop and clear of the caption zone (config/channel-safe-zones.json). Never edit, recolour or redraw the photos: scale and position only.",
+  "acceptance": "python3 .scratch/covers/draw.py\npython3 -c \"from PIL import Image; import sys; [sys.exit(1) for n in (1,2,3) for s,w,h in (('wide',1280,720),('tall',1080,1920)) if Image.open(f'.scratch/covers/out/option-{n}-{s}.png').size!=(w,h)]\"\npython3 scripts/channel_safe.py --shape cover_tall .scratch/covers/out/option-1-tall.png\npython3 scripts/channel_safe.py --shape cover_tall .scratch/covers/out/option-2-tall.png\npython3 scripts/channel_safe.py --shape cover_tall .scratch/covers/out/option-3-tall.png",
+  "write_allow": [
+    ".scratch/covers/draw.py",
+    ".scratch/covers/out/option-2-wide.png"
+  ],
+  "read": "config/ve/brand-tokens.json, config/brand-palette.json, config/channel-safe-zones.json, docs/production/COVER-STANDARD.md, .scratch/covers/photos/*, .scratch/covers/brand/wordmark.png",
+  "max_minutes": 30,
+  "max_calls": 30,
+  "cwd": "/root/dev/makeyourmindup/.worktrees/content-engine/ve-card/ve-cover-face-1"
+}
