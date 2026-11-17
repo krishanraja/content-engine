@@ -668,7 +668,7 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
       then click the "Copy to Claude" button, and the prompt incorporates that."
   - **`open` on the Claude prompt**, `{ app: 'claude_code', repository }`. The board opens a new Claude Code session on
     claude.ai/code with that repository chosen and the prompt filled in. The board builds the address; the view still
-    carries no link.
+    carries no link. Retired in 1.22.0: the prompt is only copied.
     - From approval of the story until a take is recorded, the prompt stays beside the picks. A session that changes an
       approved story takes his approval line off its end, so the board asks him to approve the new story. A story
       changed under its old line reads as unsigned too: `lockSigned` checks the line's `lock sha256` against the words
@@ -746,6 +746,29 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   board writes the words he approves at `path` (`body.texts.<cut>`) and the press's own words, `approve` as filed or
   `approve_edited` when he changed any; edited words are held from his Teleprompter until the scripts' check and fresh
   readers pass them (`heldBecause`). A board before 1.21.0 still asks his words through `words`.
+
+- **1.22.0 (17 Nov 2026)** made two changes.
+  - **Every Claude prompt is only copied.** `open` on a prompt is retired: the engine never sends it, and the schema keeps
+    it, marked `x-retired`, so a view built before 1.22.0 still validates. Control Centre copies the prompt, says it
+    copied, and opens no window or tab for any prompt, Claude or Perplexity, on any card or day.
+    - Ruling (Krish, 2026-11-17): "can you stop having my Claude production prompt buttons open up a new browser window?
+      Just copy to clipboard is enough for all such buttons".
+  - **An off-day voiceover's prompt follows its stage.** A voiceover short he records himself (Record it myself, his pick
+    or the default until a voice holds; `recordsItself`) keeps the make prompt until he approves its script: write it,
+    get his approval, send it to his Teleprompter. Once he has approved it, the card says to record it and drop the take
+    in the Video Engine Inbox, and the prompt assumes he has: get the take (`recording.py get NAME`, AGENTS.md rule 9),
+    check it against the approved words, cut it on the ve route with Codex building the visuals from cards, file it.
+    The signal is his approval of the scripts for the piece id the option carries (`offdayScripts`): his Approve scripts
+    press (`picks/<day>-scripts`, his login) or his typed approval (`picks/<day>-scripts-words[-<8 hex>]`), on any day,
+    whether or not the engine has a row for that id (Tue 17's habits voiceover, 701a2c55, has none). An ElevenLabs voice
+    has no take to wait for, so it keeps the make prompt. No take in the Inbox yet: the session checks his Teleprompter
+    holds the approved words, sends them if not, tells him in one line and stops.
+    - Krish, 2026-11-17: "presumably when it gets to this stage and the files are in teleprompter, the next action
+      presumes I have recorded the video and put it in the inbox, and thats what the next button's prompt is there to
+      do in Claude?"
+  - A typed approval now counts after the server has answered it: the `send` the server writes on the document (its
+    Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
+    held, still counts. A `send` written by anyone else is still refused.
 
 - **1.20.0 (17 Nov 2026)** added **`audio` on a choice's option**: a sample to hear before he picks, a same-site path
   (an off-day track's brand-kit file through `GET /api/board/sign-offs?file=<drive id>`, or a voice's ElevenLabs preview

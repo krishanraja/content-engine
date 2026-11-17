@@ -1,14 +1,14 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
-import { wordsDocId } from './_contracts.js'
+import { asWritten, wordsBody, wordsDocId } from './_contracts.js'
 import type { FiledScript, PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
 import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
 import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
 import { thumbsPress } from './_thumbs.js'
-import { makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
+import { NEVER_HEADLESS, ROUTE_RULING, makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
 import type { DayStyle, StyleLayer } from './_style.js'
-import { audioPresses, soundLine } from './_audio.js'
+import { RECORD_MYSELF, audioPresses, soundLine, voiceOf } from './_audio.js'
 import { canonicalUrl, titleNorm } from '../_text.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
@@ -77,11 +77,9 @@ export const GOOD_NEWS_STORIES = 5
 /** The one label every hand-off to a Claude session wears (Ruling, Krish, 2026-11-17: "We can distinguish the buttons by
  *  changing 'copy prompt for Claude' to \"Claude production prompt\" and the other button to \"Perplexity research prompt\""). */
 export const CLAUDE_LABEL = 'Claude production prompt'
-/** Where a prompt opens (contract 1.17.0): a new Claude Code session with the repository chosen and the prompt filled
- *  in (claude.ai/code's own prefill, code.claude.com/docs/en/web-quickstart: it fills the box and he presses send). The
- *  board builds the address from this; the view carries no link. */
-export const CLAUDE_CODE_OPEN = { app: 'claude_code', repository: 'krishanraja/content-engine' } as const
-export const GROWTH_CODE_OPEN = { app: 'claude_code', repository: 'krishanraja/growth-makeyourmindup' } as const
+/** A Claude prompt is only copied, never opened (contract 1.22.0; Ruling, Krish, 2026-11-17: "can you stop having my Claude
+ *  production prompt buttons open up a new browser window? Just copy to clipboard is enough for all such buttons"). The
+ *  `open` field 1.17.0 added is never sent again; the schema keeps it, retired, so no board breaks on an older view. */
 /** The heading his own words go under at the end of a prompt (Ruling, Krish, 2026-11-16: "I should be able to provide
  *  feedback or what I think the next steps are first, and then click the \"Copy to Claude\" button, and the prompt
  *  incorporates that"). */
@@ -393,15 +391,15 @@ function storyLines(story: StoryState | null | undefined): string {
 }
 
 /** The one Claude prompt for an item: what it is, where it stands, how it is made and how to report back to the board.
- *  Contract 1.17.0: it asks for his notes first (`notes`, saved as his comment on the day) and opens claude.ai/code with
- *  the prompt filled in (`open`). */
-export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null, decisions: PieceDecisions | null = null, reportAs: string | null = null): ModelAction {
+ *  Contract 1.17.0: it asks for his notes first (`notes`, saved as his comment on the day). The board only copies it
+ *  (contract 1.22.0). `head`, when given, says how an off-day post is made at its stage in place of offdayHead. */
+export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null, decisions: PieceDecisions | null = null, reportAs: string | null = null, head: string | null = null): ModelAction {
   const what = it.piece_id ? `the ${DAY_WORD[it.day]} ${it.date} piece ${it.piece_id}` : `the ${DAY_WORD[it.day]} ${it.date} off-day post ${it.key} (${it.kind_label})`
   const growth = !it.piece_id
   const prompt = `You are picking up ${what} of the Make Your Mind Up content engine with no prior context: "${it.title}". `
     + `Where it stands: ${it.line}\n\n`
     + (growth
-      ? offdayHead(route)
+      ? head ?? offdayHead(route)
       : 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules. Work freely; when you need Krish, ask him the one question that changes the work most.\n\n')
     + storyLines(story)
     + writeBack({ pieceId: it.piece_id ?? reportAs, week, day: it.day, step, decisions })
@@ -410,8 +408,7 @@ export function itemPrompt(week: string, it: { day: PostedDay; date: string; tit
     body: { ...base.body, use: 'claude_notes', title: cut(it.title, 300), ...(it.piece_id ? { piece_id: it.piece_id } : { item: it.key }) },
     words: { path: 'text', ask: 'Your notes for Claude', required: true } }
   const action: PromptAction = { kind: 'prompt', label: CLAUDE_LABEL, tool: 'claude', prompt,
-    notes: { ask: 'Your notes for Claude: what to change, or what you think the next step is', heading: NOTES_HEADING, save },
-    open: { ...(growth && !route ? GROWTH_CODE_OPEN : CLAUDE_CODE_OPEN) } }
+    notes: { ask: 'Your notes for Claude: what to change, or what you think the next step is', heading: NOTES_HEADING, save } }
   return action
 }
 /** A step as the comment anchor's last part: lower case letters, digits and dashes. */
@@ -686,7 +683,61 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
       next: { kind: 'run', label: `Find the other ${GOOD_NEWS_STORIES - stories.length} stories`, job: 'saturday-goodnews', input: { week: m.week, fill: o.doc_id }, runs_on: 'GitHub · saturday-goodnews.yml' } }
   }
   if (state === 'scheduled') return { ...base, line, next: null, decision: false }
+  // A post he records himself, its script approved: the next session assumes the take is in the Video Engine Inbox and
+  // cuts it (Krish, 2026-11-17: "when it gets to this stage and the files are in teleprompter, the next action presumes I
+  // have recorded the video and put it in the inbox").
+  const scripts = !made && !missed && recordsItself(kind, m.picks || [], o.doc_id) ? offdayScripts(m.picks || [], raw) : null
+  if (scripts) {
+    const said = scripts.on ? ` on ${scripts.on}` : ''
+    const recLine = `${where}. You approved its script${said}: record it from your Teleprompter and drop the take in the Video Engine Inbox; the next session cuts it.`.replace(/\.\./g, '.')
+    return { ...base, line: recLine, next: itemPrompt(m.week, { ...base, line: recLine }, 'record', 'motion', null, own ? m.decisions?.[own] ?? null : null, own, recordHead(scripts)), decision: false }
+  }
   return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format), null, own ? m.decisions?.[own] ?? null : null, own), decision: false }
+}
+
+/** Whether an off-day post has a recorded step: a voiceover short whose voice is his own take (Record it myself, his
+ *  pick or the default until a voice holds on a whole script; _audio.ts). An ElevenLabs voice has no take to wait for. */
+export function recordsItself(kind: string, picks: Array<{ doc_id: string; body: Body; updated_by?: string }>, item: string): boolean {
+  return kind === 'voiceover' && voiceOf(picks, item) === RECORD_MYSELF
+}
+
+/** His approval of an off-day post's script, read by the piece id its option carries, whether or not the engine has a row
+ *  for it (Tue 17's habits voiceover, 701a2c55, has none): his Approve scripts press (picks/<day>-scripts, his login) or
+ *  his typed approval (picks/<day>-scripts-words[-<8 hex>], wordsBody, read past the server's own send answer). Any day:
+ *  a post moved after he approved keeps the approval saved under the day it was on. */
+export interface OffdayScripts { piece_id: string; on: string | null; words: string | null; texts: Record<string, string>; titles: Record<string, string>; folder: string | null; send: string | null }
+const SCRIPTS_DOC = /^(mon|tue|wed|thu|fri|sat|sun)-scripts(-words(-[0-9a-f]{8})?)?$/
+export function offdayScripts(picks: Array<{ doc_id: string; body: Body; updated_by?: string; updated_at?: string }>, raw: Body | null): OffdayScripts | null {
+  const id = typeof raw?.piece_id === 'string' && UUID_RE.test(raw.piece_id) ? raw.piece_id.toLowerCase() : null
+  if (!id) return null
+  const doc = picks.filter(p => SCRIPTS_DOC.test(p.doc_id) && isObj(p.body) && String(p.body.piece_id || '').toLowerCase() === id && p.body.approved === true)
+    .find(p => /-words/.test(p.doc_id) ? wordsBody(p.doc_id, asWritten(p.body)) : p.updated_by === 'Krish')
+  if (!doc) return null
+  const b = doc.body
+  const strings = (v: unknown): Record<string, string> => (isObj(v) ? Object.fromEntries(Object.entries(v).filter((e): e is [string, string] => typeof e[1] === 'string')) : {})
+  const at = str(b.said_at) ?? str(b.at) ?? str(doc.updated_at)
+  const on = at && Number.isFinite(Date.parse(at)) ? new Date(at).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).replace(',', '') : null
+  return { piece_id: id, on, words: str(b.words), texts: strings(b.texts), titles: strings(b.titles), folder: str(b.folder_title),
+    send: isObj(b.send) ? str(b.send.status) : null }
+}
+
+/** How a post he records is made once its script is approved: get his take from the Inbox and cut it on the ve route. */
+export function recordHead(sc: OffdayScripts): string {
+  const cuts = Object.keys(sc.texts)
+  const named = cuts.map(c => `${c}${sc.titles[c] ? ` ("${sc.titles[c]}")` : ''}`).join(', ')
+  return `Krish records this one himself, and he has approved its script${sc.on ? ` (${sc.on}` : ''}${sc.words ? `${sc.on ? ', ' : ' ('}in his words: "${cut(sc.words, 200)}")` : sc.on ? ')' : ''}. `
+    + `Its piece id is ${sc.piece_id}${named ? `; the approved words are the ${named} script on the week's picks` : ''}${sc.folder ? `, in his Teleprompter folder "${sc.folder}"` : ''}. `
+    + 'Assume he has recorded it from his Teleprompter and dropped the take in the Video Engine Inbox. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules.\n\n'
+    + '1. Get the take: python scripts/post-pack/recording.py list, then python scripts/post-pack/recording.py get NAME (AGENTS.md rule 9). '
+    + 'If no take for this post is in the Inbox, check his Teleprompter holds exactly the approved words'
+    + `${sc.send && sc.send !== 'sent' ? ` (the board's own send was ${sc.send})` : ''}; if it does not, send them (scripts/post-pack/teleprompter_send.py). `
+    + 'Then tell Krish in one line that it waits on his recording, and stop.\n'
+    + '2. Check the take says the approved words, and measure picture against sound before anything is built on it (scripts/av_sync.py).\n'
+    + `3. Cut it in this Claude session on the ve route, with the Codex plugin building its pictures. ${ROUTE_RULING} `
+    + 'Read docs/ve/ENGINE.md, then follow docs/ve/RUNBOOK.md: one signed spec (creative-direction.json, schema_version 2) '
+    + 'from his take and the approved words; Codex builds the devices and plates from cards (ve card, ve dispatch, ve verify-card); '
+    + 've renders the cut; a separate reviewer watches and listens to it at full size against the approved words before it is called ready.\n'
+    + `4. File it in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. ${NEVER_HEADLESS}\n\n`
 }
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
