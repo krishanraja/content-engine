@@ -1,4 +1,4 @@
-Anthropic, which makes Claude, pays other companies for customer service. Everyone builds with Claude, yet Anthropic shops for its help desk. Your engineer feels like Crocodile Hunter, sure he can build any tool himself. Is he wrong? Build or buy your tools in an AI world? Let's dive in.
+Everyone's building their own tools with Claude. Except the people who make Claude. Anthropic buys its help desk, its sales software, even its payroll. So is the engineer in your team who thinks he's Crocodile Hunter wrong? Build or buy your tools in an AI world? Let's dive in.
 
 Picture him scrolling LinkedIn. Wall to wall Claude packs, ready-made instructions for your AI. One post says, install this and Claude becomes your whole sales team. Every post says, comment pack below and it's yours. Free! So he comments, installs it, and his new sales team is one very confident spreadsheet.
 
