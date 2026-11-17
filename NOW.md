@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-17","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- My takes are in the Inbox now takes an audio take (his Teleprompter .aac voiceover export) and matches takes to the piece by name, so a take dropped for another piece is never taken; the engine's recordings store accepts .aac. (2026-11-17)
 - humour-engine is on call: scripts/post-pack/humour_check.py reads a script (flat, or wit that needs outside explanation, against the floor), each joke option alone, and the ideas board's funny lines, through Control Center's POST /api/humour/content-engine; make-piece step 3a and plan-week step 6d run it. (2026-11-17)
 - ten approved Epidemic tracks filed in the brand kit Music folder and the ledger; series music rotates week by week per day; good-news and advice carousels get their own track groups; memes keep their sound; face-led covers approved for his own accounts, with a Codex cover card and a home publish step for his photos. (2026-11-17)
 - From the 30 Nov board every Saturday option is a carousel modelled card for card on one named carousel in Krish's Instagram inspo sheet (good news included), and memes have their own lane of 6 to 10 meme templates on Tuesday and Thursday, each with its clip, why it fits and 2 to 4 caption ideas; board_feed.py gate holds both (codes saturday and template), meme_templates.py gather finds candidates from his sheet, his cards and Reddit (Apify off by default), and the board view carries template and caption_ideas (contract 1.24.0). (2026-11-17)
@@ -50,7 +51,7 @@ Older lines: `docs/history/2026-11-17-NOW-moved-25.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-17): Once control-center#958 deploys, run `python3 scripts/post-pack/humour_check.py doctor` on a runner with ENGINE_OPERATOR_TOKEN and confirm it says ready.
+- Next (2026-11-17): Krish presses My takes are in the Inbox on the Tue 17 Nov habits voiceover once this is live; the production plan follows.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
