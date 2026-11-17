@@ -16,7 +16,7 @@ Others are heading for the countryside. Soluna, a small energy firm, builds smal
 
 And then Apple is going the other way entirely. It's putting more AI on your phone. On a newer iPhone, it can sum up a long email without sending it anywhere. No data centre, no power lines, and no one in Piqua gets a vote. The catch? A pocket-sized AI does less. It's great for that email, and less great for writing your quarterly report.
 
-So here's the whole story in one breath. A town said no. A mayor got sacked. A data centre kept going up. And the AI companies went looking for ways round. And honestly, I think the bigger question is who pays for the power. When a town says no, the AI companies have to find their own power, or pay for it. Think Oracle's gas plants, or OpenAI's promise. And I reckon that cost gets passed on to you, at your next renewal. As for Meta's data centre, it's still going up in a town that just banned it. I'd love to be at Piqua's next council meeting.
+So here's the whole story in one breath. A town said no. A mayor got sacked. A data centre kept going up. And the AI companies went looking for ways round. And honestly, I think the bigger question is who pays for the power. When a town says no, the AI companies have to find their own power, or pay for it. Think Oracle's gas plants, or OpenAI's promise. And I reckon that cost gets passed on to you, at your next AI tool renewal. As for Meta's data centre, it's still going up in a town that just banned it. I'd love to be at Piqua's next council meeting.
 
 Next time we renew an AI tool, I'll ask our supplier two things. Where are its new data centres being built, and who pays for their power? Because if it's a town that's just said no, that power bill is heading for my desk.
 
