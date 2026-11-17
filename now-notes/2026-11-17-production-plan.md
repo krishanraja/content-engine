@@ -1,3 +1,0 @@
-Status: My takes are in the Inbox now starts the production plan run (production-plan.yml): the edit pass on his take (restarts clipped, silences cut, length measured, the speed-up that brings a short under 90 seconds), every beat's picture with options to swap, the humour in his words, and two or three scenes mocked from real stills; the card carries the plan (contract 1.25.0) and the Claude production prompt carries it with his swaps, the humour engine and higgsfield-generator.
-Next: Control Centre draws the plan (Open the production plan, Use this swaps); then Krish presses My takes are in the Inbox on the Tue 17 habits voiceover and the first plan run is checked end to end.
-North Star check (2026-11-17): holds.
