@@ -2617,6 +2617,15 @@ How an off-day post is made, said once for every prompt the board copies out (th
 
 - `function libraryFollower(db: SupabaseClient, f: typeof fetch = fetch): LibraryFollower`
 
+### `apps/control-plane/api/board/_offdayPiece.ts`
+
+- `const OFFDAY_DOC`
+- `function videoOffday(kind: string | null | undefined, format: string | null | undefined): boolean`
+- `function offdayPieceId(week: string, docId: string, raw: Body | null | undefined): string`
+- `function inWeek(row: { scheduled_for?: unknown; meta?: unknown } | null | undefined, week: string): boolean`
+- `interface OffdayLink`
+- `async function linkOffdayPiece(db: SupabaseClient, pieceId: string, link: OffdayLink, now: string): Promise<boolean>`
+
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
 A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, locking the off-day mock: Improve
