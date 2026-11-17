@@ -1,0 +1,3 @@
+Status: Record it myself is the default voice for a voiceover until a voice holds on a whole script (Ruling, Krish, 2026-11-17: "make Record it myself the default until a voice passes"). On the board it leads Pick the voice marked "(default)"; a post with no voice picked is told to send the approved script to his Teleprompter; `ve voice clone` with no --voice refuses and points to Teleprompter. An ElevenLabs voice is still his to pick. When a voice holds on a whole script, set its whole_script.passed in config/voice-bank.json and it becomes the default.
+Next: a whole-script test of Krish v2 (or another voice) that Krish hears and passes, written into config/voice-bank.json.
+North Star check (2026-11-17): holds.

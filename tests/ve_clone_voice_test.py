@@ -387,6 +387,8 @@ class TheCommand(unittest.TestCase):
         self.spec.write_text(json.dumps(short()), encoding='utf-8')
         shutil.copy(FIXTURE / 'script.words.json', folder / 'script.words.json')
         self.folder = folder
+        # His default voice proven on a whole script, as the earlier CLI tests assume; the default test turns it off.
+        self.proven = True
 
     def tearDown(self):
         self.temp.cleanup()
@@ -397,7 +399,11 @@ class TheCommand(unittest.TestCase):
         for key, value in given.items():
             setattr(args, key, value)
         out, err = io.StringIO(), io.StringIO()
-        with served(registry(CLONE)), redirect_stdout(out), redirect_stderr(err):
+        bank = load_json(ROOT / 'config' / 'voice-bank.json')
+        if self.proven:
+            bank['voices'][0]['whole_script'] = {'passed': True, 'on': '2026-11-20', 'note': 'test'}
+        from velib import voice_bank  # noqa: PLC0415
+        with served(registry(CLONE)), patch.object(voice_bank, 'load', return_value=bank), redirect_stdout(out), redirect_stderr(err):
             code = ve.cmd_voice(args)
         return code, out.getvalue(), err.getvalue()
 
@@ -424,6 +430,15 @@ class TheCommand(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn('holds no ELEVENLABS_API_KEY', err)
         request.assert_not_called()
+
+    def test_with_no_voice_proven_the_default_is_record_it_myself(self):
+        # Ruling (Krish, 2026-11-17): "make Record it myself the default until a voice passes".
+        self.proven = False
+        code, _, err = self.call()
+        self.assertEqual(code, 1)
+        self.assertIn('Record it myself', err)
+        self.assertIn('Teleprompter', err)
+        self.assertFalse((self.folder / clone_voice.PLAN_FILE).exists())
 
     def test_a_hero_piece_gets_no_plan(self):
         spec = short(SERIES_DAY)

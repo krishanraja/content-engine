@@ -2233,6 +2233,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const AUDIO_ID`
 - `interface BankVoice`
 - `interface Track`
+- `function defaultVoice(bank: unknown = voiceBank): string`
 - `function bankVoices(bank: unknown = voiceBank): BankVoice[]`
 - `function offdayTracks(library: unknown = musicLibrary): Track[]`
 - `function voicePreview(id: string, bank: unknown = voiceBank): string | null`

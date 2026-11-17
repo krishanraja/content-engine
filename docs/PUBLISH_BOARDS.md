@@ -749,12 +749,16 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   `{layer, item, pick, at}` (`_audio.ts audioBody`), counted only when the board saved it under his login. A session reads
   his pick and makes the post with it (`ve voice clone --voice <id>`); it never writes one, and a stock voice is generated
   only once the bank marks it approved from his press. Control Centre plays `audio` in place on each option.
-  Pick the voice always ends with **Record it myself** (`record-myself`, no sample): his own take in place of an
+  Pick the voice always offers **Record it myself** (`record-myself`, no sample): his own take in place of an
   ElevenLabs voice. The post's Claude prompt then says so, and the making session sends the approved script to his
   Teleprompter (`teleprompter_send.py`) and cuts from his take; `ve voice clone --voice record-myself` refuses. With an
   ElevenLabs voice picked, the prompt names it and the `--voice` to use (`_audio.ts soundLine`). Krish, 2026-11-17: "I
   should be able to choose to record manually myself as well, and then the teleprompter workflow will activate, as
   opposed to the ElevenLabs workflow".
+  Until a voice holds on a whole script (`config/voice-bank.json` `whole_script.passed`), Record it myself is the
+  **default**: it leads the list marked "(default)", a post with no voice picked is told to go to Teleprompter, and `ve
+  voice clone` with no `--voice` refuses with that route (Ruling, Krish, 2026-11-17: "make Record it myself the default
+  until a voice passes"). Once his default voice passes, it is the default instead.
   - Krish, 2026-11-17: "I always want to be given a few options in my control center. We should have some stock voices
     approved in Eleven Labs and, obviously, my own Krish remix voice too as an option on the control center Content
     Board. voiceovers would have light approved epidemic audio behind the voice."

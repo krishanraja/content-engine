@@ -1048,7 +1048,13 @@ def cmd_voice_clone(args) -> int:
         script = Path(args.script) if args.script else directory / 'script.words.json'
         if not script.is_file():
             raise ValueError(f'no signed script words at {script}: give --script')
-        doc = clone_voice.plan(spec, script, voice=getattr(args, 'voice', None))
+        # No --voice: Record it myself until his default voice holds on a whole script (Ruling, Krish, 2026-11-17: "make
+        # Record it myself the default until a voice passes"), which plan refuses with the Teleprompter route.
+        from velib import voice_bank  # noqa: PLC0415
+        voice = getattr(args, 'voice', None)
+        if voice is None and voice_bank.default_voice(voice_bank.load()) == voice_bank.RECORD_MYSELF:
+            voice = voice_bank.RECORD_MYSELF
+        doc = clone_voice.plan(spec, script, voice=voice)
         plan_path = write_json(directory / clone_voice.PLAN_FILE, doc)
         clone, credits = doc['clone'], doc['credits']
         print(f"ve voice clone: {doc['piece']}, take {doc['take']} (cuts {', '.join(doc['cuts'])}; published {doc['publish_day']}, "
