@@ -427,7 +427,11 @@ read `.agents/skills/make-piece/references/long-cut.md`.
    --why "one line per quality"` records it on the script check, bound to
    the script's exact words. A fail is rewritten, never argued. The LISTENING
    caps are met by cutting side-stories, never by anonymising names ("a
-   firm", "a brand"). `teleprompter_send.py plan` and the board's Approve
+   firm", "a brand"). Before writing, read `config/script-floor/intros.json`
+   and write the intro to its four beats (a named player's surprising fact,
+   why it is strange, the viewer's own world, then "Let's..." and the title
+   spoken as a question); `story_check.py` refuses a long cut or a lifted
+   short cut whose first paragraph misses them (house rule INTRO_PATTERN). `teleprompter_send.py plan` and the board's Approve
    scripts press send nothing without it.
 6. **His Approve scripts press, then Teleprompter**, where he reads them
    while he records ("The Teleprompter send", above). The storyboard is drawn

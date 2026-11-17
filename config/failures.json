@@ -2564,7 +2564,7 @@
       "status": "guarded",
       "mode": "script-tone-regressed",
       "guard_level": "lint_refuse",
-      "krish": "these scripts are awful - they make zero sense and have regressed a huge amount. I want the quality of the AI Music or Human Music script (what I actually said on film) to be the floor for all future scripts tonally. Then: dont just file this to the taste ledger, I need harder guarantees than that. this is totally insane after the amount of work we have done together on content",
+      "krish": "these scripts are awful - they make zero sense and have regressed a huge amount. I want the quality of the AI Music or Human Music script (what I actually said on film) to be the floor for all future scripts tonally. Then: dont just file this to the taste ledger, I need harder guarantees than that. this is totally insane after the amount of work we have done together on content. Then, 2026-11-17: how can you encode this intro style for the future? I want my introductions to be consistent, particularly the 90 second ones",
       "what": "The Wed 18 Nov build-versus-buy scripts passed story_check and five fresh readers yet read as a list of anonymised exhibits ('a razor brand', 'a health firm', 'one finance tech firm') with no story, because the figure and name caps pushed the writer to strip names and the read-back only checked comprehension, never tone against his best take.",
       "symptom": "Scripts bound for his teleprompter that made no sense as a story, far below what he said on film for the AI Music piece.",
       "cause": "Every gate before Teleprompter asked whether the words were clear and within the caps; none asked whether they were as good as his best spoken take, so meeting the caps by anonymising names went unseen.",
@@ -2600,6 +2600,11 @@
           "file": "config/script-floor.json",
           "contains": "c8ded6f8",
           "how": "the reference take"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "the intro has no \"Let\\'s...\" turn",
+          "how": "story_check refuses a long cut, or a short cut config/short-cuts.json lifts, whose first paragraph misses his intro beats (house rule INTRO_PATTERN; Ruling, Krish, 2026-11-17)"
         }
       ]
     }

@@ -302,6 +302,10 @@ the production suite knows that this is the moment to make it feel like the titl
 - The renderer shows the title as its own animated title over that span and the captions step aside for those words,
   so the words appear once (the words_add amendment, 15 Nov). Not built yet: the renderer does not read
   `title_moment` today, so until it does the session lays the title over that span by hand and keeps captions off it.
+- The title question itself is the spec's `title_line` (one string, the question his intro speaks; `making.py scripts`
+  records the same line as `script_check.title_line`, and `ve lint` `title.line` refuses a `title_line` the script never
+  says). The title animation is keyed to `title_line`: it flows out of the captions as he says it and back into them
+  (Krish, 2026-11-17: "treated visually as such, seamlessly flowing out of the captions and back in to them again").
 
 ## The exit leads the entrance, the living drift, focus and blur from speed (15 Nov 2026)
 

@@ -118,6 +118,12 @@ def declared(piece_id, path=None):
     return isinstance(pieces, dict) and str(piece_id or '').strip().lower() in pieces
 
 
+def most_s(lift):
+    """The seconds a lifted short cut may run: its words at the house pace (260 words, 104 s). ve lint's dialogue.short_max and
+    publish_kit's ceiling read it, so the cut that ships is held to the length he asked for."""
+    return round(lift['words'] / story_check.WORDS_PER_MINUTE * 60)
+
+
 def notice(lift):
     """The line that says a short cut is lifted, for the check's output and the board's Scripts step."""
     return (f'short cut lifted to about {lift["minutes"]} ({lift["words"]} words), ending on "{lift["close"]}", for this piece: '
@@ -188,6 +194,7 @@ def self_test():
         config.write_text(json.dumps({'pieces': {WED: good, 'Not-An-Id': good}}), encoding='utf-8')
         check('the check names an entry keyed by anything but a lowercase piece id', check_all(config),
               ['Not-An-Id: a piece is named by its lowercase id'])
+    check('a lifted short cut\'s seconds follow its words at the house pace', most_s({'words': 260}), 104)
     check('the notice names the length, the close and the reason',
           notice({'words': 260, 'minutes': '1:44', 'close': 'Close.', 'reason': 'Why.'}),
           'short cut lifted to about 1:44 (260 words), ending on "Close.", for this piece: Why.')
