@@ -17,6 +17,9 @@ Every option is held to these, and none of them is the session's to relax:
   asset every time"): wide 1280 x 720 for the long cut, tall 1080 x 1920 for the short cut, both or neither.
 - **THE_RECEIPT** (Krish, 2026-11-02: "inviolable"): a real proof from one of the piece's checked sources, the
   wordmark and the real logos, drawn by `scripts/pages/build.py`; never his face, never a frame from a take.
+  On his own accounts (TikTok, X, LinkedIn, Threads, Substack Notes) and the face arm of the YouTube test, the cover is
+  face-led instead: his cutout headshot large, drawn by Codex from a `ve card` of kind `cover`, never a frame from a take
+  (Ruling, Krish, 2026-11-17: "yes to the face plan"; `docs/production/COVER-STANDARD.md`, "Face-led covers").
 - **The cover standard** (`docs/production/COVER-STANDARD.md`, approved 9 Nov: "approve the cover standard as
   written"): read it whole. The headline leads, at most 7 words; at most three parts besides it; logos only for the
   companies the headline or the picture names; no badges; a quiet series label; bright over dark; checked where it is

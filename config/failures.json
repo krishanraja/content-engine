@@ -2882,6 +2882,35 @@
           "test": "npx vitest run tests/control-plane/board-decisions.test.ts"
         }
       ]
+    },
+    {
+      "id": "F52-called-blocked-without-the-route",
+      "on": "2026-11-17",
+      "status": "guarded",
+      "mode": "blocked_without_documented_route",
+      "guard_level": "prose",
+      "krish": "how did you miss both this and codex?",
+      "what": "Asked to file ten approved Epidemic tracks in his Music folder and have Codex draw face-led covers, a cloud session told him three times that both were blocked: the Drive connector refused files over 3.1 MB, Codex could not sign in, and it proposed a home-computer session instead. docs/DRIVE.md already named send.py, which files through the engine's library for his always-on machine to write into Drive, and the SessionStart notice told the session to run the Codex sign-in itself. Both worked once the environment allowed the hosts.",
+      "symptom": "He was told work was blocked and handed back to him when the engine's own route did it.",
+      "cause": "The session tried the nearest connector, met a limit, and reported a wall without reading the doc the start table names for Drive or asking to open the refused hosts.",
+      "causes": [
+        {
+          "cause": "standard_not_read",
+          "evidence": "CLAUDE.md's table sends anything in Drive to docs/DRIVE.md, which names send.py; it was not opened"
+        },
+        {
+          "cause": "tool_limit",
+          "evidence": "the Drive connector's 3.1 MB limit and the proxy's refusals of auth.openai.com, audiocdn.epidemicsound.com and the engine's storage host were taken as walls; update_environment opened each"
+        }
+      ],
+      "surface": "CLAUDE.md, \"Do what was asked, prove what you claim\": never call anything blocked until the documented route has been tried.",
+      "guards": [
+        {
+          "file": "CLAUDE.md",
+          "contains": "Never call anything blocked until the documented route has been tried",
+          "how": "every Claude session reads it at start"
+        }
+      ]
     }
   ]
 }

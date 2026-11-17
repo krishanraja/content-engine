@@ -9843,28 +9843,28 @@
          "required": true,
          "options": [
           {
-           "value": "goodie-bags",
-           "label": "Goodie Bags, Dylan Sitts",
-           "line": "Over the carousel, from the off-day rotation (Epidemic Sound, licensed).",
-           "audio": "/api/board/sign-offs?file=1s6245EBWBB2O06OtHfPyksEadC1ZRsEL"
+           "value": "mojito",
+           "label": "Mojito, AGST",
+           "line": "Over the carousel: funky house, uplifting (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1i8rWFME15HzuKR2XobNbQdtgJ97-hyZn"
           },
           {
-           "value": "aspire",
-           "label": "Aspire, Joel Rampage",
-           "line": "Over the carousel, from the off-day rotation (Epidemic Sound, licensed).",
-           "audio": "/api/board/sign-offs?file=1azUzaAUR1-3t2v0EcZMtS2P5eVunvgH6"
+           "value": "cheetah-print",
+           "label": "Cheetah Print, Cushy",
+           "line": "Over the carousel: funky house, uplifting (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1DqqSp-lLEICb3Bj-DbSXewB23hSfKJmB"
           },
           {
-           "value": "illusions",
-           "label": "Illusions, Taelimb",
-           "line": "Over the carousel, from the off-day rotation (Epidemic Sound, licensed).",
-           "audio": "/api/board/sign-offs?file=1ZXro5S75Nqsu8jHW3ePYrd3RSuGJ_FzH"
+           "value": "style",
+           "label": "STYLE, Ballpoint",
+           "line": "Over the carousel: funky house, uplifting (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1QKlZiz8lkg24CE_jO3Dp6TOHmLK8Xwa4"
           },
           {
-           "value": "be-alone",
-           "label": "Be Alone, Swif7",
-           "line": "Over the carousel, from the off-day rotation (Epidemic Sound, licensed).",
-           "audio": "/api/board/sign-offs?file=1nstb5j7yS_ipsQFbzr8hKrAftpxPcQrx"
+           "value": "make-up-your-mind-instrumental",
+           "label": "Make up Your Mind (Instrumental Version), Relyae",
+           "line": "Over the carousel: funky house, uplifting (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1P3GjhmDrkJ0DBwZIUstvEmpyACoVB75d"
           }
          ]
         },

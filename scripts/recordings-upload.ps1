@@ -706,6 +706,7 @@ function Invoke-Pass {
     # Krish, 2026-10-14: "a folder where I can put videos that I really like
     # ... so that you can learn from them"). Never a reason to fail a pass.
     try { Publish-References } catch { Write-Log "the style references were not published this pass: $($_.Exception.Message)"; Add-Problem 'references_publish_failed' }
+    try { Publish-Photos } catch { Write-Log "Krish's photos were not published this pass: $($_.Exception.Message)"; Add-Problem 'photos_publish_failed' }
     try { Publish-Working } catch { Write-Log "the working files were not published this pass: $($_.Exception.Message)"; Add-Problem 'working_publish_failed' }
     try { Invoke-WatchKeeper } catch { Write-Log "the content watcher was not checked this pass: $($_.Exception.Message)" }
     try { Invoke-Windows } catch { Write-Log "the scheduled tasks' windows were not checked this pass: $($_.Exception.Message)" }
@@ -731,6 +732,16 @@ function Publish-References {
   $run = Invoke-StudioPython @($references, 'publish')
   if ($run.code -ne 0) { Write-Log "style references publish: $($run.err) $($run.out)"; Add-Problem 'references_publish_failed'; return }
   if ($run.out -match '"sent":\s*[1-9]') { Write-Log "style references published: $($run.out -replace "`n", ' | ')" }
+}
+
+function Publish-Photos {
+  # His cutout headshots (Video Engine > Krish Clone - Assets > Photos) go to the library, so any session can build a
+  # face-led cover from them (scripts/post-pack/photos.py; Ruling, Krish, 2026-11-17).
+  if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
+  $photos = Join-Path $RepoRoot 'scripts\post-pack\photos.py'
+  $run = Invoke-StudioPython @($photos, 'publish')
+  if ($run.code -ne 0) { Write-Log "photos publish: $($run.err) $($run.out)"; Add-Problem 'photos_publish_failed'; return }
+  if ($run.out -match '"sent":\s*[1-9]') { Write-Log "photos published: $($run.out -replace "`n", ' | ')" }
 }
 
 function Publish-Working {

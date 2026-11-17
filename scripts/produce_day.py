@@ -362,6 +362,21 @@ def take_edits(post_path):
     return out
 
 
+MUSIC_OF = {}  # cut -> the track id make.py's plan picked for it
+
+
+def track_args(cut, video):
+    """['--music', <id>] for the track this cut carries: the one make.py's plan picked, else the one its bed-shape
+    receipt names; [] when neither says, so no track is ever recorded that the cut does not carry."""
+    track = MUSIC_OF.get(cut)
+    if not track:
+        try:
+            track = (json.loads(Path(str(video) + '.bed-shape.json').read_text(encoding='utf-8')).get('track_id'))
+        except (OSError, ValueError):
+            track = None
+    return ['--music', track] if track else []
+
+
 def make_cuts(post_path, piece, takes_at, music_root, clips, work, dry_run):
     kit = work / 'kit'
     env = {'MINDMAKE_MUSIC_ROOT': music_root}
@@ -435,6 +450,8 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, work, dry_run):
             log(f'the {cut} cut: no line found for {", ".join(report["missing_cues"])}; those pictures are left out')
         if not (report.get('shapes', {}).get(shape) or {}).get('music'):
             raise Stop(f'the {cut} cut would go out without music: ' + '; '.join((report.get('shapes', {}).get(shape) or {}).get('warnings') or []))
+        # The track make.py picked for this cut (its day's weekly rotation, Ruling (Krish, 2026-11-17)), recorded on the piece.
+        MUSIC_OF[cut] = (report.get('shapes', {}).get(shape) or {}).get('music')
         # Nothing goes in front of the hook: a cut handed anything there does not go (make.py stops its render too).
         stop = (report.get('shapes', {}).get(shape) or {}).get('opening_stop')
         if stop:
@@ -617,7 +634,7 @@ def file_and_record(post_path, piece, rendered, thumb, work):
         run([PY, 'scripts/post-pack/making.py', '--by', 'Production run', piece, 'video', cut, f'{names[cut]}.mp4',
              cuts[cut][1], '--seconds', str(round(float(seconds))),
              '--thumb', f'3 Posts/{folder}/3 Video/{names[cut]}.jpg', '--thumb-file', thumb[cut],
-             '--music', 'no-curves-instrumental', '--video-file', cuts[cut][0]], what=f'recording the {cut} cut')
+             *track_args(cut, cuts[cut][0]), '--video-file', cuts[cut][0]], what=f'recording the {cut} cut')
     return folder
 
 
