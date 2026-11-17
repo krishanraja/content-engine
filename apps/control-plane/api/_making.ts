@@ -23,7 +23,7 @@ import { activeManualReviews, bodyHash, effectiveBlocking } from './_factGate.js
 import { MediaRefSchema, mediaReviewProblems, type MediaRef } from '../../../packages/core/src/media-quality.js'
 import { mediaQualityEnforced } from '../../../packages/core/src/media-rollout.js'
 import type { ClipPlacement, ClipUseRecord } from './_routedClips.js'
-import { LONG_CUT } from './_houseRules.js'
+import { LONG_CUT, SHORT_CUT } from './_houseRules.js'
 import { mergeThumbnailOptions, parseThumbnailOptions, type MakingThumbnailOptions, type ThumbnailOptionsPatch } from './_thumbOptions.js'
 
 /** Every channel a piece can go to, in the order Krish posts them
@@ -56,9 +56,12 @@ export interface MakingCheck { passed: boolean; checked_at: string; problems: st
  *  take look older than its script. `changed_at` is when each cut's words
  *  last changed, so a change to one cut never makes the other's take look
  *  old (scripts/post-pack/recording_match.py's time rule). */
-export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>>; /** A separate reader's tone-floor verdict on each cut (Ruling, Krish, 2026-11-17), bound to the words and to config/script-floor.json's reference. */ tone_floor?: Partial<Record<MakingCut, MakingToneFloor>>; /** The one question the piece answers (house rule ONE_SPINE): the publish page then needs a passing spine check. */ spine?: string; /** An off-day piece he records is one short cut (Ruling, Krish, 2026-10-29), written by the server when he approves its option; makingCuts then asks for the short alone. */ one_cut?: boolean; /** The piece's long cut lifted past 825 words by config/long-cuts.json, with why (Ruling, Krish, 2026-11-14: "lift if worth it"); the Scripts step says so, so a cut is never lifted silently. */ long_cut?: MakingLongCut }
+export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>>; /** A separate reader's tone-floor verdict on each cut (Ruling, Krish, 2026-11-17), bound to the words and to config/script-floor.json's reference. */ tone_floor?: Partial<Record<MakingCut, MakingToneFloor>>; /** The one question the piece answers (house rule ONE_SPINE): the publish page then needs a passing spine check. */ spine?: string; /** An off-day piece he records is one short cut (Ruling, Krish, 2026-10-29), written by the server when he approves its option; makingCuts then asks for the short alone. */ one_cut?: boolean; /** The piece's long cut lifted past 825 words by config/long-cuts.json, with why (Ruling, Krish, 2026-11-14: "lift if worth it"); the Scripts step says so, so a cut is never lifted silently. */ long_cut?: MakingLongCut; /** The piece's short cut lifted past SHORT_CUT's 75 words by config/short-cuts.json, with the sentence it ends on instead of the house close, and why (Ruling, Krish, 2026-11-17); the Scripts step says so. */ short_cut?: MakingShortCut }
 /** A lifted long cut: the most words it may run (up to LONG_CUT.lifted_most_words in _houseRules.ts) and the one-line reason the story is worth it. */
 export interface MakingLongCut { words: number; reason: string }
+export interface MakingShortCut { words: number; close: string; reason: string }
+/** The most a lifted short cut may run (scripts/post-pack/short_cut.py SHORT_LIFT_MOST, about two minutes). */
+export const SHORT_LIFT_MOST = 300
 /** A cut read back by two fresh readers, each an ordinary 12-year-old
  *  hearing it once, who found nothing that lost them (house rule R7, the hard
  *  gate on every script; Krish, 2026-10-12: "Every single script should be
@@ -350,6 +353,17 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
         continue
       }
       (check as MakingScriptCheck).long_cut = { words: Number(l.words), reason }
+    }
+    if (key === 'script_check' && v.short_cut !== undefined) {
+      const sc = v.short_cut
+      const reason = isObj(sc) && typeof sc.reason === 'string' ? sc.reason.trim() : ''
+      const close = isObj(sc) && typeof sc.close === 'string' ? sc.close.trim() : ''
+      if (!isObj(sc) || !Number.isInteger(sc.words) || Number(sc.words) <= SHORT_CUT.most_words || Number(sc.words) > SHORT_LIFT_MOST
+        || !reason || reason.length > 200 || /[\r\n]/.test(reason) || !close || close.length > 200 || /[\r\n]/.test(close)) {
+        problems.push(`script_check.short_cut is the lifted short cut: {words: a whole number above ${SHORT_CUT.most_words} and at most ${SHORT_LIFT_MOST}, close: one sentence, reason: one line} (config/short-cuts.json)`)
+        continue
+      }
+      (check as MakingScriptCheck).short_cut = { words: Number(sc.words), close, reason }
     }
     if (key === 'script_check' && v.hashes !== undefined) {
       const entries = isObj(v.hashes) ? Object.entries(v.hashes) : null
@@ -774,6 +788,14 @@ export function longCutNote(check: Partial<MakingScriptCheck> | undefined): stri
   return `long cut lifted to about ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')} (${l.words} words): ${l.reason}`
 }
 
+/** The lifted short cut, said on the Scripts step beside the long cut's (Ruling, Krish, 2026-11-17). */
+export function shortCutNote(check: Partial<MakingScriptCheck> | undefined): string {
+  const l = check?.short_cut
+  if (!l || !Number.isInteger(l.words) || !l.reason || !l.close) return ''
+  const secs = Math.round(l.words / LONG_CUT.words_per_minute * 60)
+  return `short cut lifted to about ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')} (${l.words} words), ending on "${l.close}": ${l.reason}`
+}
+
 export function teleprompterNote(m: Partial<Making>): string {
   const states = teleprompterStates(m)
   const cuts = MAKING_ALL_CUTS.filter(c => states[c])
@@ -839,7 +861,7 @@ export function makingSteps(row: { id?: string; state?: string | null; body?: st
     : { key: 'visual_gate', label: 'Visual gate', state: 'todo' })
   // Where the scripts are in Teleprompter is said on the step and never holds it back.
   steps.push(m.script_check
-    ? { key: 'scripts', label: 'Scripts', state: m.script_check.passed ? 'done' : 'failed', at: m.script_check.checked_at, note: m.script_check.passed ? [longCutNote(m.script_check), (m.script_check.cuts || []).join(' and '), teleprompterNote(m)].filter(Boolean).join('; ') || undefined : [m.script_check.problems[0], longCutNote(m.script_check)].filter(Boolean).join('; ') }
+    ? { key: 'scripts', label: 'Scripts', state: m.script_check.passed ? 'done' : 'failed', at: m.script_check.checked_at, note: m.script_check.passed ? [longCutNote(m.script_check), shortCutNote(m.script_check), (m.script_check.cuts || []).join(' and '), teleprompterNote(m)].filter(Boolean).join('; ') || undefined : [m.script_check.problems[0], longCutNote(m.script_check), shortCutNote(m.script_check)].filter(Boolean).join('; ') }
     : { key: 'scripts', label: 'Scripts', state: 'todo' })
   steps.push(m.pack
     ? { key: 'pack', label: m.pack.sent_at ? 'Pack in Drive' : 'Pack built', state: m.pack.sent_at ? 'done' : 'now', at: m.pack.sent_at || m.pack.packed_at, note: m.pack.folder }
