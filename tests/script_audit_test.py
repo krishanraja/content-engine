@@ -111,13 +111,43 @@ class FindingTheTexts(unittest.TestCase):
                 material('m5', '5-minute cut script', '2026-11-17T17:00:00Z', piece=OTHER),
                 material('m6', 'sources.json', '2026-11-17T17:50:00Z', role='research')]
         read = lambda m: texts[m['id']]  # noqa: E731
-        m, text = sa.pick_a(mats, 'long', PIECE, '2026-11-17T17:57:40Z', sa._hashes('his approved words'), read)
+        approved = {h: '2026-11-17T16:20:16.888Z' for h in sa._hashes('his approved words')}
+        m, text = sa.pick_a(mats, 'long', PIECE, '2026-11-17T17:57:40Z', approved, read)
         self.assertEqual((m['id'], text), ('m2', 'the final engine draft'))
-        m, _ = sa.pick_a(mats, 'long', PIECE, '2026-11-17T12:00:00Z', set(), read)
+        m, _ = sa.pick_a(mats, 'long', PIECE, '2026-11-17T12:00:00Z', {}, read)
         self.assertEqual(m['id'], 'm1')
-        m, why = sa.pick_a(mats, 'short', PIECE, '2026-11-17T17:57:40Z', set(), read)
+        m, why = sa.pick_a(mats, 'short', PIECE, '2026-11-17T17:57:40Z', {}, read)
         self.assertIsNone(m)
         self.assertIn('short', why)
+
+    def test_a_draft_he_approved_unchanged_before_editing_is_still_the_draft(self):
+        texts = {'m1': 'old draft words', 'm2': 'the final draft'}
+        mats = [material('m1', '5-minute cut script v1', '2026-11-17T11:00:00Z'),
+                material('m2', '5-minute cut script v2', '2026-11-17T12:00:00+00:00')]
+        approved = {h: '2026-11-17T13:00:00Z' for h in sa._hashes('the final draft')}
+        m, _ = sa.pick_a(mats, 'long', PIECE, '2026-11-17T15:00:00Z', approved, lambda m: texts[m['id']])
+        self.assertEqual(m['id'], 'm2')
+
+    def test_a_withdrawn_approval_does_not_count_and_a_lone_approval_is_bound(self):
+        hist = [
+            {'doc_id': 'tue-scripts-words-b019dbf8', 'revision': 1, 'updated_by': 'Krish', 'updated_at': '2026-11-17T14:57:04Z',
+             'body': {'kind': 'approve_scripts', 'approved': True, 'piece_id': PIECE, 'at': '2026-11-17T14:57:04Z', 'texts': {'long': 'v1'}}},
+            {'doc_id': 'tue-scripts-back-b019dbf8', 'revision': 1, 'updated_by': 'engine_operator', 'updated_at': '2026-11-17T17:54:51Z',
+             'body': {'kind': 'take_back', 'what': 'scripts', 'approved': False, 'piece_id': PIECE, 'at': '2026-11-17T17:54:51.045Z'}},
+            {'doc_id': 'tue-scripts-words-b019dbf8', 'revision': 7, 'updated_by': 'Krish', 'updated_at': '2026-11-17T17:57:40Z',
+             'body': {'kind': 'approve_scripts', 'approved': True, 'piece_id': PIECE, 'at': '2026-11-17T17:57:40.285Z', 'texts': {'long': 'v2'}}},
+        ]
+        approvals = sa.approvals_of(hist, PIECE)
+        self.assertEqual([a['revision'] for a in approvals], [7])
+        self.assertEqual(sa.pick_b(approvals, 'long')[1], 'only')
+
+    def test_ve_ingest_tells_the_cut_from_the_take_name_or_the_only_cut(self):
+        self.assertEqual(sa.cut_of_take('long-1110'), 'long')
+        self.assertEqual(sa.cut_of_take('short_2'), 'short')
+        self.assertEqual(sa.cut_of_take('thursday-take-1', ['short']), 'short')
+        self.assertIsNone(sa.cut_of_take('thursday-take-1', ['long', 'short']))
+        self.assertIsNone(sa.cut_of_take('longer-take'))
+        self.assertEqual(sa.weeks_of({'piece': {'week': '2026-11-16'}}), ['2026-11-09', '2026-11-16'])
 
     def test_the_recording_on_the_record(self):
         record = {'recordings': [{'cut': 'long', 'path': 'recordings/' + 'b' * 64 + '.mp4', 'script_sha256': 'c' * 64}]}

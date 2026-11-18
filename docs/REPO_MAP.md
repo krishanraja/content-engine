@@ -144,6 +144,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/judge/sweep`
 - `/api/learning/compile`
 - `/api/learning/incidents`
+- `/api/learning/script-audit`
 - `/api/learning/spoken-rules`
 - `/api/library/confirm`
 - `/api/library/file`
@@ -3630,6 +3631,19 @@ What the compiler looks for, as pure functions.
 - `function aside(said: string): boolean`
 - `function spokenProposals(rows: SpokenRow[]): Proposal[]`
 
+### `apps/control-plane/api/learning/_scriptAudit.ts`
+
+- `const HABIT_PIECES`
+- `const SWAP_PAIRS`
+- `interface AuditRow`
+- `interface Rate`
+- `interface LedgerSwap`
+- `interface AuditLedger`
+- `const UNBOUND`
+- `function auditLedger(rows: AuditRow[]): AuditLedger`
+- `function swapProposals(rows: AuditRow[]): Proposal[]`
+- `function auditRows(data: Array<{ id: string; script_audit: unknown }>): AuditRow[]`
+
 ### `apps/control-plane/api/learning/compile.ts`
 
 - `export default withContentRun('learning_compile', handler)`
@@ -3637,6 +3651,10 @@ What the compiler looks for, as pure functions.
 ### `apps/control-plane/api/learning/incidents.ts`
 
 - `const MAX_PROPOSALS`
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/learning/script-audit.ts`
+
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/learning/spoken-rules.ts`
