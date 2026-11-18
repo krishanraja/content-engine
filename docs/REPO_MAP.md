@@ -4833,6 +4833,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
 - `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
+- `function backdropPush(beat: EngineBeat, frame: number): number`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
 
 ### `apps/renderer/src/engine/VeCut.tsx`
