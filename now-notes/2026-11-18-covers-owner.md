@@ -1,0 +1,3 @@
+Status: covers and thumbnails have one stated owner, content-engine's production session (cover-art, thumbnail-designer, a separate critic), with Krish picking and Growth only posting and verifying; the one post-production prompt now says so and ends with `piece_manifest.py draft`, which refuses a video channel with no designed cover, so no manual ask is needed anywhere. docs/production/COVER-STANDARD.md has the owner table.
+Next: nothing manual; if a Mon/Wed/Fri piece reaches Produced without a manifest draft, the session did not run the new final step and the board will not offer Approve for publish.
+North Star check (2026-11-18): holds.
