@@ -1,0 +1,28 @@
+{
+  "path": "docs/ve/cards/habits/habits-cover-face-1.md",
+  "card_id": "habits-cover-face-1",
+  "kind": "cover",
+  "channel": "tiktok",
+  "date": "2026-11-17",
+  "references": [
+    "krish-chat-2026-11-17-rio-meets (the Rio Meets 'I LOVE CRISTIANO!' thumbnail Krish sent: cutout faces large, the headline huge on a deep colour)",
+    "7f43c6b5-a468-40f3-ad66-c988cdc16072 instagram_DePHDr_jRed (his note: 'a really good thumbnail like this one': one short plain line in one bright colour, set high and clear, nothing else competing)"
+  ],
+  "photos": [
+    ".scratch/covers-habits/photos/shoulders.png",
+    ".scratch/covers-habits/photos/natural.png",
+    ".scratch/covers-habits/photos/glasses.png"
+  ],
+  "title": "Face-led tall covers, real variant: 71% of HR chiefs want AI overruled",
+  "goal": "Write .scratch/covers-habits/draw.py (Pillow): three TALL face-led covers, 1080x1920 only, to .scratch/covers-habits/out/option-{1,2,3}-tall.png. No wide file (a 9:16 short only).\nWords, exactly: 71% OF HR CHIEFS WANT AI OVERRULED. No series label (an off day carries none).\nEach: flat ink ground; the headline in Anton, cream, as large as fits, left-aligned, the largest thing (OVERRULED may be mint); under it on the same edge the official wordmark .scratch/covers-habits/brand/wordmark.png, scaled only, on the ink; under that the proof once, a crisp card (the real IBM capture, scaled only, never redrawn or retyped), soft shadow, tilt at most 4 degrees, in its own space between the wordmark and his head; below, his cutout about a third of the frame, shoulders off the canvas bottom.\n- option 1: shoulders.png + proofs/proof-71.png (IBM's paragraph with the date and the 71% sentence)\n- option 2: natural.png + proofs/proof-title.png (IBM's masthead mark and the release title)\n- option 3: glasses.png + proofs/proof-71-strip.png (the three lines of the 71% sentence)\nEvery word (headline, wordmark, proof text) inside x 72-860, y 280-1300: Instagram's caption starts at y 1320, the rails at x 880 (config/channel-safe-zones.json). Face and shoulders may go below 1300.\nNOTHING BEHIND OR OVER HIS HEAD (Krish, 2026-11-18: \"The screenshots hide behind my head a little bit too much here.\"): assert no pixel of the card or its shadow overlaps the cutout's opaque pixels.\nSHOULDERS (Krish: \"the fact that my shoulders cut off is unacceptable\"): no photo edge visible in the canvas. shoulders.png touches only its bottom edge: that edge on the canvas bottom. natural.png's alpha meets its left side from 88% of its height, its right from 76%; glasses.png's left from 70%: every row from there down lies below the canvas bottom. Assert no opaque photo pixel sits on a photo edge inside the canvas.\nClassy: generous margins; no glow, neon, gradients, arrows, emoji, badges, logos or his name.",
+  "contract": "Outputs: .scratch/covers-habits/out/option-{1,2,3}-tall.png (1080x1920) and .scratch/covers-habits/draw.py. Colours and fonts only from config/ve/brand-tokens.json (ink, cream, mint) and the repository's font files, never a system font. At most three parts besides the headline: face, proof card, wordmark. His name never appears. Never edit, recolour or redraw the photos or proofs: scale, place and tilt only.",
+  "acceptance": "python3 .scratch/covers-habits/draw.py\npython3 -c \"from PIL import Image; import sys; [sys.exit(1) for n in (1,2,3) if Image.open(f'.scratch/covers-habits/out/option-{n}-tall.png').size!=(1080,1920)]\"\npython3 scripts/channel_safe.py .scratch/covers-habits/out/option-1-tall.png --shape cover_tall\npython3 scripts/channel_safe.py .scratch/covers-habits/out/option-2-tall.png --shape cover_tall\npython3 scripts/channel_safe.py .scratch/covers-habits/out/option-3-tall.png --shape cover_tall",
+  "write_allow": [
+    ".scratch/covers-habits/draw.py",
+    ".scratch/covers-habits/out/*"
+  ],
+  "read": "config/ve/brand-tokens.json, config/brand-palette.json, config/channel-safe-zones.json, docs/production/COVER-STANDARD.md, .scratch/covers-habits/photos/*, .scratch/covers-habits/proofs/*, .scratch/covers-habits/brand/wordmark.png",
+  "max_minutes": 40,
+  "max_calls": 40,
+  "cwd": "/root/dev/makeyourmindup/.worktrees/content-engine/ve-card/habits-cover-face-1"
+}
