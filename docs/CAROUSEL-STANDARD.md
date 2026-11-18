@@ -370,6 +370,25 @@ nature."
   the top.
 - Before delivery, check every slide at full size for both.
 
+## The house carousel look: Git and homework covers, Erdős body cards (Ruling, Krish, 18 November 2026)
+
+His words, sending three past decks as the reference: of "Anthropic's AI broke Git." and "Your AI thinks it's the best.
+Guess who told it.", "in these two, the cover image was great but the rest of the cards were not"; of "AI broke an
+80-year-old maths belief.", "in this one the cover was the most underwhelming, the rest of the cards were good"; and
+"We need real world images where possible. the carousel templates need to be 100X better in all ways". The decks are
+in his Drive (`3 Posts`: the Git post, the homework post, and "AI fixing what we got wrong v2").
+
+- **The cover, as the Git and homework covers.** The top 60% is one cinematic, photoreal scene of a specific funny
+  moment (dark, lit, real texture: a robot arm in a storm of paper over a filing cabinet; the house felt robot marking
+  its own homework). Under it, on the ink ground: the real company wordmark when the story names one, the headline in
+  Anton set huge on two lines (cream, then the turn in mint), one plain subline in Archivo, the mark small bottom right.
+  Never an abstract diagram or a chart as the cover: that is what made the Erdős cover underwhelming.
+- **The body cards, as the Erdős deck's.** Every card after the cover is image-led: its own real or photoreal picture
+  of that card's point in the same dark, lit look, with the card's one sentence set large below it. The deck reads as
+  one feature, never as slides of icons, grids or flat diagrams.
+- **Real-world images first.** A real photograph, a real screen or a real document the story names comes before a
+  generated scene; a generated scene is photoreal, never clip art, and its only robot is the house felt robot.
+
 ## The cover card is a scene, not a slide (Ruling, Krish, 4 November 2026)
 
 Series covers and thumbnails, and points 1, 5 and 6 of card 1 here, follow `docs/production/COVER-STANDARD.md`
