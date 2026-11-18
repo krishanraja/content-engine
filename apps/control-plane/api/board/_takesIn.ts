@@ -73,8 +73,19 @@ export function takesInOf(meta: unknown): TakesIn | null {
  *  names this piece is its take, and only those count once one does; a file whose name names another piece and not this
  *  one is never taken (17 Nov: the build-or-buy takes, dropped minutes after his habits take, would otherwise have gone
  *  on the habits post). A name that names no piece (dji_export_...) still counts when nothing names this piece. */
-export function newTakes(files: Array<{ id: string; name?: string; mimeType?: string; size?: string; md5Checksum?: string; sha256Checksum?: string; modifiedTime?: string }>,
-  since: string | null, claimed: ReadonlySet<string>, own: readonly string[] = [], others: readonly string[] = []): InboxTake[] {
+export function newTakes(files: InboxFile[], since: string | null, claimed: ReadonlySet<string>, own: readonly string[] = [], others: readonly string[] = []): InboxTake[] {
+  return pickTakes(files, since, claimed, own, others).files
+}
+
+type InboxFile = { id: string; name?: string; mimeType?: string; size?: string; md5Checksum?: string; sha256Checksum?: string; modifiedTime?: string }
+
+/** newTakes with how it chose: `named` when a file's name names this piece, and `groups`, the distinct recordings by
+ *  name (a long and a short of one name are one) among the takes it would take when none does. More than one group with
+ *  nothing naming this piece is never taken: on 18 Nov the data-centres press took the build-or-buy and skeletons takes
+ *  too, because no name matched any piece's stored title (Krish, 2026-11-18: "everything needs to tag to the right
+ *  piece"). */
+export function pickTakes(files: InboxFile[], since: string | null, claimed: ReadonlySet<string>, own: readonly string[] = [], others: readonly string[] = []):
+  { files: InboxTake[]; named: boolean; groups: string[] } {
   const from = since && Number.isFinite(Date.parse(since)) ? Date.parse(since) - TAKES_SLACK_MS : -Infinity
   const mine = own.map(nameWords).filter(t => t.size)
   const theirs = others.map(nameWords).filter(t => t.size)
@@ -89,9 +100,42 @@ export function newTakes(files: Array<{ id: string; name?: string; mimeType?: st
     })
   const named = fresh.filter(x => x.ours > 0 && x.ours >= x.theirs)
   const picked = named.length ? named : fresh.filter(x => x.theirs === 0)
-  return picked.map(({ f }) => ({ name: String(f.name), drive_id: f.id, bytes: f.size && /^\d+$/.test(f.size) ? Number(f.size) : null,
+  // The recordings by name: a file whose name holds no telling word (dji_0012.mp4) belongs to no group of its own.
+  const groupOf = (n: string) => [...nameWords(n)].sort().join(' ')
+  const groups = [...new Set(picked.map(({ f }) => groupOf(String(f.name))).filter(Boolean))]
+  return { named: named.length > 0, groups: named.length ? [] : groups,
+    files: picked.map(({ f }) => ({ name: String(f.name), drive_id: f.id, bytes: f.size && /^\d+$/.test(f.size) ? Number(f.size) : null,
       sha256: str(f.sha256Checksum)?.toLowerCase() ?? null, md5: str(f.md5Checksum)?.toLowerCase() ?? null, modified: String(f.modifiedTime) }))
-    .sort((a, b) => a.modified.localeCompare(b.modified))
+      .sort((a, b) => a.modified.localeCompare(b.modified)) }
+}
+
+/** Every name each piece and off-day post of the week goes by on the board (its day's title, its card's title), keyed
+ *  by piece id and by item key, from the week view the board draws. The stored `idea` can be a piece's first idea long
+ *  after the board renamed it (18 Nov: Wed's "Build or buy your tools in an AI world?" was stored as "The labs writing
+ *  everyone's code still run Salesforce"), so a take is matched against what Krish sees. */
+export function boardNames(view: unknown): Map<string, string[]> {
+  const out = new Map<string, string[]>()
+  const add = (k: unknown, t: unknown) => {
+    if (typeof k !== 'string' || !k || typeof t !== 'string' || !t.trim()) return
+    const key = k.toLowerCase().replace(/^piece:/, '')
+    out.set(key, [...new Set([...(out.get(key) || []), t.trim()])])
+  }
+  const v = isObj(view) ? view : {}
+  for (const d of Array.isArray(v.days) ? v.days.filter(isObj) : []) {
+    if (typeof d.piece_id === 'string') add(d.piece_id, d.title)
+    for (const p of Array.isArray(d.pieces) ? d.pieces.filter(isObj) : []) add(p.id, p.title)
+  }
+  const model = isObj(v.model) ? v.model : {}
+  for (const d of Array.isArray(model.days) ? model.days.filter(isObj) : []) {
+    for (const it of Array.isArray(d.items) ? d.items.filter(isObj) : []) { add(it.key, it.title); if (typeof it.piece_id === 'string') add(it.piece_id, it.title) }
+  }
+  return out
+}
+
+/** The line when the Inbox holds takes for more than one piece and none of their names says which is this one's. */
+export function unclearLine(groups: string[]): string {
+  return `Your Video Engine Inbox has takes for ${groups.length} different recordings (${groups.map(g => `"${g}"`).join(', ')}) and none of their names says which is this piece's. `
+    + 'Rename this piece\'s files with words from its title (or move the others out), then press again.'
 }
 
 /** The press on a card: his only, one tap, no words. `item` names an off-day post, whose record the press may link. */
@@ -125,7 +169,9 @@ export interface BriefInputs {
 
 /** The one post-production prompt's head: everything decided, the takes by name, and the creative calls it makes. */
 export function productionBrief(b: BriefInputs): string {
-  const fetches = b.takes.files.map(f => `   python scripts/post-pack/recording.py get "${f.name}"${f.sha256 ? `   (or --sha256 ${f.sha256})` : ''}`).join('\n')
+  // Each take by name, by its Drive link and by how to fetch it (Krish, 2026-11-18: "The My takes Are In button should
+  // already have fetched the right video URL from the Inbox and loaded it in to the prompt").
+  const fetches = b.takes.files.map(f => `   ${f.name}: https://drive.google.com/file/d/${f.drive_id}/view\n      python scripts/post-pack/recording.py get "${f.name}"${f.sha256 ? `   (or --sha256 ${f.sha256})` : ''}`).join('\n')
   const words = Object.entries(b.scripts).map(([c, w]) => `--- ${c} cut, as he approved it ---\n${w}`).join('\n\n')
   return `This is the one post-production session for "${b.title}" (piece_id ${b.pieceId}). It makes the finished `
     + `${b.offday ? 'short' : 'long cut and the short cut'} in one go from Krish's takes, with nothing left to ask him: every decision is below. `
@@ -143,7 +189,12 @@ export function productionBrief(b: BriefInputs): string {
     + '1. Fetch every take, check each says the approved words, and measure picture against sound (scripts/av_sync.py) before anything is built on it.\n'
     + `2. The edit pass, before any picture (python3 scripts/post-pack/edit_pass.py on the take's word timings): find every place he restarted a sentence and keep only his last full attempt; cut the empty, awkward silences (leave a breath, about a quarter second); then measure the total. ${b.offday ? `A short must run under ${SHORT_CAP_SECONDS} seconds: if the kept take is longer, speed the whole of it up evenly (pitch kept, never past 1.25x) until it fits.` : `The short cut must run under ${SHORT_CAP_SECONDS} seconds: if its kept take is longer, speed it up evenly (pitch kept, never past 1.25x) until it fits. The long cut has no length limit and is never sped up.`} Listen to every cut and the sped-up result before going on.\n`
     + '3. Plan the cut beat by beat in the signed spec (creative-direction.json, schema_version 2) in his picked look, motion style and captions, on the timings of the edited take. '
-    + 'For every beat decide, from the research and the words being said, what the picture is: his face on camera, a logo or wordmark (official files only), '
+    + 'Draw each picture from his own words in the approved script or from the research on the piece (read every research material first; a number, a place, '
+    + 'a named person or a real document there is often the strongest picture), and say which. Push each beat\'s picture to the top of one lever, '
+    + 'impact, hilarity, absurdity, exaggeration or beauty, never at the cost of clarity: ask what would make it a 100 out of 10 and not a 7, and make that. '
+    + 'Say who makes it: Codex in code (motion, a diagram, a device, a plate), a generation, the real thing from its source, or Krish himself when '
+    + 'only he can get it (a photo, a prop, a screen recording, a document on his desk); ask him for those once, together, at the start, and build the rest meanwhile. '
+    + 'For every beat decide what the picture is: his face on camera, a logo or wordmark (official files only), '
     + 'real visuals (photos or footage of what he is talking about, from their source), a social post or a screenshot (a screenshot of the real page or product he '
     + 'names, or a real viral social post that relates to what he says, captured from the post itself with its link kept), motion design (a ve device or a Codex plate from a card), or a '
     + 'generated scene (cinematic generation). Each choice makes the point land faster (AGENTS.md rule 6), and never repeats the sentence being said. '
@@ -166,8 +217,13 @@ export function productionBrief(b: BriefInputs): string {
     + 'comes only from a likeness approved in krishanraja/krish-clone\'s registry (config/synthetic-approvals.json; krish-avatar-heygen today), never '
     + 'from a new face model; judge every such still or clip with clone likeness against his own photos, and ve lint (voice.synthetic) must pass. '
     + 'Codex builds the devices and plates from cards (ve card, ve dispatch, ve verify-card).\n'
-    + '6. ve renders the cut; ve qc and ve refs run; a separate reviewer watches and listens at full size against the approved words before it is called ready.\n'
-    + '7. The covers: follow the cover-art skill (.agents/skills/cover-art/SKILL.md), which gives each channel its cover by his channel strategy '
+    + '6. Show him mocks along the way, never only at the end (Krish, 2026-11-18: "the prompt should have the session show me mocks along the way"): '
+    + 'once the beats are planned, a still of each key beat in his picked look (python3 scripts/post-pack/plan_scene.py on a real frame or a real image); '
+    + 'then each generated still and each Codex plate as it is made, before anything moves; then a low-resolution proof of the cut before the full render. '
+    + 'Show each in this session as you go, and file each on the piece (board_session.py PIECE add FILE --role plan_scene, with the beat in its title) so it '
+    + 'shows on his card. Keep working while he looks; whatever he changes, change before the full render.\n'
+    + '7. ve renders the cut; ve qc and ve refs run; a separate reviewer watches and listens at full size against the approved words before it is called ready.\n'
+    + '8. The covers: follow the cover-art skill (.agents/skills/cover-art/SKILL.md), which gives each channel its cover by his channel strategy '
     + '(the face-free Receipt from thumbnail-designer on the brand accounts, a face-led cover in the week\'s variant on his own, both on YouTube as its '
     + 'A/B pair; the face-led cards are docs/ve/cards/w-face-covers), a separate critic judging them and his pick in his own words. File the cuts, covers '
     + 'and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n\n'

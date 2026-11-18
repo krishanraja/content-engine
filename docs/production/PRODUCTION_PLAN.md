@@ -45,6 +45,22 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
    krishanraja/higgsfield-generator; his face in one only from a likeness approved in krishanraja/krish-clone's
    registry, `config/synthetic-approvals.json`, judged with `clone likeness`; its `recipe` below), `humour` (a comic absurdity on a line that carries one). Give each beat one or two
    other good options of a different kind, so he has something real to swap to.
+
+   Every picture and option also says (contract 1.29.0; Krish, 2026-11-18: "suggest how the production prompt should
+   make these visuals 100/10 in terms of either impact, hilarity, absurdity, exaggeration, or beauty, and clarity to the
+   point [...] visuals can come from my script or from the backing research too"):
+   - `basis`: `script` (his own words in the approved script, the final one in his Teleprompter) or `research` (a
+     material on the piece; read every research material first, and name it in `basis_ref` by its title). A number, a
+     place, a named person or a real document in the research is often the strongest picture.
+   - `lever`: the one it is pushed to the top of: `impact`, `hilarity`, `absurdity`, `exaggeration`, `beauty` or
+     `clarity`. Clarity is never traded for the others.
+   - `why`: one line on what makes this the 100 out of 10 and not the 7 (the specific, the scale, the surprise), never
+     a restatement of `what`.
+   - `maker`: `codex` (built in code: motion, a diagram, a device, a plate), `generated` (higgsfield-generator, with its
+     `recipe`), `real` (the real thing from its source: a photo, footage, a screenshot, a post), or `you` (only Krish
+     can get it: a photo of his own, a prop, a screen recording, a document on his desk).
+   Every picture whose `maker` is `you` is also in the plan's `fetch` list, `{ beat, what, why }`, which the card shows at
+   the top, so he can get it before the production session needs it.
 4. The humour: read krishanraja/humour-engine's README (section 4, integrating) and ask it what comic readings his own
    words carry; read his humour style from ai-harness (skills/krish-voice/references/humour.md, by its raw link in the
    run; a session with the Control Center connector reads it with get_skill). If either cannot be read, say so on the
@@ -75,13 +91,15 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
   "style": { "look": "<treatment id>", "motion": "<motion style id>", "captions": "<caption style id>" },
   "beats": [
     { "id": "b1", "from": 0.0, "to": 4.1, "words": "Which of your habits will cost you your job?",
-      "picture": { "id": "face", "kind": "face", "what": "Him to camera, tight", "source": null },
+      "picture": { "id": "face", "kind": "face", "what": "Him to camera, tight", "source": null,
+                   "basis": "script", "lever": "impact", "maker": "real", "why": "The question lands harder from his own face than any picture" },
       "options": [ { "id": "post", "kind": "social_post", "what": "The LinkedIn post ...", "source": "https://..." },
                    { "id": "gen", "kind": "generated", "what": "...", "recipe": "gpt_image_2_6, 9:16: \"...\"; then seedance_2_5 ..." } ],
       "humour": null }
   ],
   "scenes": [ { "beat": "b1", "still": "<plan_scene material id>", "caption": "Which of your habits will cost you your job?",
                 "style": "<caption style>, <motion style>" } ],
+  "fetch": [ { "beat": "b3", "what": "A photo of your own electricity bill on the kitchen table", "why": "A real bill beats any chart of prices" } ],
   "humour": [ { "words": "as confident as a crocodile hunter", "mechanism": "incongruity", "beat": "b4",
                 "gag": "A nerdy engineer in a khaki hat creeping up on a crocodile" } ]
 }
@@ -110,5 +128,5 @@ Studio presets or avatars, never Higgsfield audio (licensed music only), never S
 registry). After the cut is reviewed, the Virality Predictor (`brain_activity --video`) scores the finished short's hook
 and sustain for him, as a signal and never a gate.
 
-Ids are lower case letters, digits, `-` and `_`. Kinds are the eight above. A beat's `options` never repeat its
+Ids are lower case letters, digits, `-` and `_`. Kinds are the eight above; levers, makers and bases the ones in step 3. A beat's `options` never repeat its
 `picture`. At most three scenes, each on a beat of the plan, each still a material filed on this piece.

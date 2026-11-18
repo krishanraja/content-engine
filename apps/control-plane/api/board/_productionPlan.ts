@@ -33,6 +33,19 @@ export const PICTURE_KINDS: Readonly<Record<string, string>> = Object.freeze({
   humour: 'Comic absurdity',
 })
 
+/** What a beat's picture is pushed to the top of (Krish, 2026-11-18: "100/10 in terms of either impact, hilarity,
+ *  absurdity, exaggeration, or beauty, and clarity to the point"). Clarity is never traded away for the others. */
+export const LEVERS: Readonly<Record<string, string>> = Object.freeze({
+  impact: 'Impact', hilarity: 'Hilarity', absurdity: 'Absurdity', exaggeration: 'Exaggeration', beauty: 'Beauty', clarity: 'Clarity',
+})
+/** Who makes the picture: Codex in code (motion, diagrams, devices, plates), a generation, the real thing from its source, or
+ *  Krish himself (a photo, a prop, a screen recording only he can get). */
+export const MAKERS: Readonly<Record<string, string>> = Object.freeze({
+  codex: 'Codex builds it', generated: 'Generated', real: 'The real thing, from its source', you: 'You get this',
+})
+/** Where the idea for the picture came from: his own words in the approved script, or the research on the piece. */
+export const BASES: Readonly<Record<string, string>> = Object.freeze({ script: 'From your script', research: 'From the research' })
+
 /** The longest a short may run (seconds); a longer cut has no cap. */
 export const SHORT_CAP_SECONDS = 90
 /** The plan run's file on the piece. */
@@ -44,7 +57,12 @@ const UUID = MATERIAL
 
 /** `recipe`: for a generated picture, exactly how it is made with higgsfield-generator (model, prompt, the still it starts from, length,
  *  estimated credits), so the cost is seen before anything is spent. */
-export interface PlanOption { id: string; kind: string; what: string; source: string | null; recipe: string | null }
+export interface PlanOption { id: string; kind: string; what: string; source: string | null; recipe: string | null
+  /** 1.29.0 (all optional, absent on an older plan): the lever it is pushed to, who makes it, why it is a 100/10 and not a
+   *  7, and where the idea came from (his script, or a research material by its title). */
+  lever?: string | null; maker?: string | null; why?: string | null; basis?: string | null; basis_ref?: string | null }
+/** Something only Krish can get, asked for before the session needs it: on which beat, what, and why it beats the rest. */
+export interface PlanFetch { beat: string; what: string; why: string }
 export interface PlanBeat { id: string; from: number; to: number; words: string; picture: PlanOption; options: PlanOption[]; humour: { mechanism: string; gag: string } | null }
 export interface PlanScene { beat: string; still: string; caption: string; style: string }
 export interface PlanEdit { raw_seconds: number; restarts: Array<{ at: number; said: string }>; silences_cut: number; kept_seconds: number; cap_seconds: number | null; speed: number; final_seconds: number
@@ -55,7 +73,10 @@ export interface ProductionPlan {
   /** A series piece's long cut, measured the same way with no cap (never sped up); null for a short alone. */
   edit_long: PlanEdit | null
   style: { look: string | null; motion: string | null; captions: string | null }
-  beats: PlanBeat[]; scenes: PlanScene[]; humour: Array<{ words: string; mechanism: string; gag: string; beat: string | null }>
+  beats: PlanBeat[]; scenes: PlanScene[]
+  /** What he must get himself, at the top of the plan (empty when nothing). */
+  fetch: PlanFetch[]
+  humour: Array<{ words: string; mechanism: string; gag: string; beat: string | null }>
   /** The sha256 of the material's text, which his swaps bind. */
   sha256: string
 }
@@ -64,7 +85,9 @@ function option(v: unknown): PlanOption | null {
   if (!isObj(v)) return null
   const id = str(v.id, 40); const kind = str(v.kind, 30); const what = str(v.what, 500)
   if (!id || !ID.test(id) || !kind || !Object.hasOwn(PICTURE_KINDS, kind) || !what) return null
-  return { id, kind, what, source: str(v.source, 500), recipe: str(v.recipe, 800) }
+  const known = (x: unknown, set: Readonly<Record<string, string>>) => { const k = str(x, 30); return k && Object.hasOwn(set, k) ? k : null }
+  return { id, kind, what, source: str(v.source, 500), recipe: str(v.recipe, 800),
+    lever: known(v.lever, LEVERS), maker: known(v.maker, MAKERS), why: str(v.why, 400), basis: known(v.basis, BASES), basis_ref: str(v.basis_ref, 200) }
 }
 
 /** The plan as the run filed it, or null when the text is not a plan for this piece. Anything malformed in a beat drops
@@ -102,6 +125,10 @@ export function parsePlan(text: string, pieceId: string, sha256: string): Produc
     version: 1, piece_id: pieceId.toLowerCase(), made_at: str(raw.made_at, 40) ?? '', sha256,
     takes: (Array.isArray(raw.takes) ? raw.takes : []).map(t => str(t, 300)).filter((t): t is string => Boolean(t)).slice(0, 6),
     edit, edit_long: isObj(raw.edit_long) ? editOf(raw.edit_long) : null, style: { look: str(st.look, 120), motion: str(st.motion, 120), captions: str(st.captions, 120) }, beats, scenes,
+    fetch: (Array.isArray(raw.fetch) ? raw.fetch : []).filter(isObj).flatMap(f => {
+      const beat = str(f.beat, 40); const what = str(f.what, 400)
+      return beat && ids.has(beat) && what ? [{ beat, what, why: str(f.why, 300) ?? '' }] : []
+    }).slice(0, 12),
     humour: (Array.isArray(raw.humour) ? raw.humour : []).filter(isObj).flatMap(h => {
       const words = str(h.words, 400); const gag = str(h.gag, 500)
       return words && gag ? [{ words, mechanism: str(h.mechanism, 60) ?? 'absurdity', gag, beat: str(h.beat, 40) }] : []
@@ -184,7 +211,8 @@ export function planView(plan: ProductionPlan | null, ctx: { picks: Array<{ doc_
   const press = (beat: PlanBeat, o: PlanOption) => ({ kind: 'press', label: 'Use this', collection: 'picks', id: planDocId(plan.piece_id), revision,
     body: { kind: 'plan_swaps', piece_id: plan.piece_id, plan_sha256: plan.sha256, swaps: { ...swaps, [beat.id]: o.id } }, stamp: ['at'],
     goes: `Beat ${beat.id} becomes: ${o.what}`, done: 'Swapped. The Claude production prompt now carries it.' })
-  const pic = (o: PlanOption) => ({ id: o.id, kind: o.kind, label: PICTURE_KINDS[o.kind], what: o.what, source: o.source, recipe: o.recipe })
+  const pic = (o: PlanOption) => ({ id: o.id, kind: o.kind, label: PICTURE_KINDS[o.kind], what: o.what, source: o.source, recipe: o.recipe,
+    lever: o.lever ?? null, maker: o.maker ?? null, why: o.why ?? null, basis: o.basis ?? null, basis_ref: o.basis_ref ?? null })
   const beats = plan.beats.map(b => {
     const chosen = chosenPicture(b, swaps)
     return { id: b.id, from: b.from, to: b.to, words: b.words, picture: pic(chosen), swapped: chosen.id !== b.picture.id, humour: b.humour,
@@ -192,7 +220,7 @@ export function planView(plan: ProductionPlan | null, ctx: { picks: Array<{ doc_
   })
   return {
     status: 'ready', line: `Your production plan is ready: ${editLine(plan.edit)}${plan.edit_long ? ` The long cut: ${editLine(plan.edit_long).replace(/^Your take/, 'its take')}` : ''} Open it, swap anything that does not work, then copy the Claude production prompt.`,
-    made_at: plan.made_at, edit: plan.edit, edit_long: plan.edit_long, style: plan.style, humour: plan.humour,
+    made_at: plan.made_at, edit: plan.edit, edit_long: plan.edit_long, style: plan.style, humour: plan.humour, fetch: plan.fetch,
     scenes: plan.scenes.map(s => {
       const b = beats.find(x => x.id === s.beat)!
       return { beat: s.beat, src: `/api/content-ideas/store?op=read&id=${s.still}`, caption: s.caption, style: s.style, words: b.words, picture: b.picture }
@@ -206,7 +234,10 @@ export function planBrief(plan: ProductionPlan, swaps: Record<string, string>): 
   const e = plan.edit
   const beats = plan.beats.map(b => {
     const p = chosenPicture(b, swaps)
+    const how = [p.lever ? `pushed to ${LEVERS[p.lever].toLowerCase()}` : null, p.maker ? MAKERS[p.maker].toLowerCase() : null,
+      p.basis ? `${BASES[p.basis].toLowerCase()}${p.basis_ref ? ` (${p.basis_ref})` : ''}` : null].filter(Boolean).join('; ')
     return `- ${b.id} (${b.from.toFixed(1)} to ${b.to.toFixed(1)} s, on the kept take) "${b.words}"\n    picture: ${PICTURE_KINDS[p.kind]}: ${p.what}${p.source ? ` (source: ${p.source})` : ''}`
+      + `${how ? `\n    ${how}` : ''}${p.why ? `\n    why it is a 100/10: ${p.why}` : ''}`
       + `${p.id !== b.picture.id ? '   [Krish swapped this in]' : ''}${p.recipe ? `\n    recipe: ${p.recipe}` : ''}${b.humour && p.kind === 'humour' ? `\n    the gag: ${b.humour.gag} (${b.humour.mechanism})` : ''}`
   }).join('\n')
   return `The production plan he reviewed (plan sha256 ${plan.sha256.slice(0, 12)}, made ${plan.made_at.slice(0, 16).replace('T', ' ')} UTC; read it whole `
@@ -217,6 +248,7 @@ export function planBrief(plan: ProductionPlan, swaps: Record<string, string>): 
     + 'The beat times below are on the edited take before any speed-up: once it is sped up, transcribe the sped file afresh and re-time every '
     + 'beat, cut and caption from that transcript (learning speedup-without-glitches), never by scaling these times.\n'
     + `Styles: look ${plan.style.look ?? 'as picked'}, motion ${plan.style.motion ?? 'as picked'}, captions ${plan.style.captions ?? 'as picked'}.\n`
+    + (plan.fetch.length ? `What Krish gets himself (use his, never a stand-in; if one is not on the piece yet, ask him for it once and build the rest): ${plan.fetch.map(f => `${f.beat}: ${f.what}`).join('; ')}.\n` : '')
     + `The beats:\n${beats}\n`
     + (plan.scenes.length ? `The scenes he saw mocked (match them): ${plan.scenes.map(s => `${s.beat} (${s.style})`).join(', ')}.\n` : '')
 }
