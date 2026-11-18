@@ -24,3 +24,9 @@ Claude checked every frame. Four screens pass as they are (b13-overrule, b19-for
 2. b3-posts: post 2 now carries black redaction bars over words in the post, which reads as censored and changes the post. Drop post 2 entirely: three posts (1, 3, 4) landing at 0.2, 1.4 and 2.6 s, hold to 5.0 s, each scaled only, never retouched.
 
 Same acceptance (1080x1920, 30/1, h264, the stated lengths, no audio, contact sheets). Reply with the three files' paths and sha256s.
+Claude rendered your screens in the cut. The captions are cream Anton phrases drawn at y 1095 to 1320 on the 1080x1920 frame (apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx, ART_REGION '9:16'), and anything bright behind them makes them unreadable. My earlier brief was wrong about where they sit; this is the correct band. Redo three screens so that everything that matters sits between y 240 and y 1060, and the frame below y 1060 is the dark ink ground with nothing in it. Same files, same lengths, same timings as before, everything else unchanged.
+
+1. b11-ibm and b14-ibm29: show IBM's live page (as now: its own white page, header and fonts, the <mark> highlights in the DOM) inside a window from y 240 to y 1060, full width or with even side margins, body text still at least 44 px; the dark ink ground fills the frame below y 1060 and above y 240. Scroll and highlight inside that window as before.
+2. b20-resign: move the chat so its last line (the "You" signature) ends above y 1060 at every frame; the dark ground below.
+
+Same acceptance as before; reply with the three paths and sha256s.

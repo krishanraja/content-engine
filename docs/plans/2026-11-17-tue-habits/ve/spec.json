@@ -34,48 +34,7 @@
   "sound_palette": "house-v1 (no sound effects kit yet: the bed carries the cut)",
   "variants": {}
  },
- "datasets": [
-  {
-   "id": "ibm-chro",
-   "unit": "%",
-   "denominator": 100,
-   "rows": [
-    {
-     "label": "hr-chiefs",
-     "value": 71
-    },
-    {
-     "label": "staff",
-     "value": 29
-    }
-   ],
-   "producer_label": "IBM Institute for Business Value, CHRO study, Sep 2026",
-   "source_url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities",
-   "retrieved_at": "2026-11-18"
-  },
-  {
-   "id": "habits-list",
-   "unit": "habit",
-   "denominator": null,
-   "rows": [
-    {
-     "label": "one",
-     "value": 1
-    },
-    {
-     "label": "two",
-     "value": 2
-    },
-    {
-     "label": "three",
-     "value": 3
-    }
-   ],
-   "producer_label": "makeyourmindup",
-   "source_url": "https://makeyourmindup.ai",
-   "retrieved_at": "2026-11-18"
-  }
- ],
+ "datasets": [],
  "objects": [
   {
    "obj": "plate-b1",
@@ -251,7 +210,7 @@
    "meaning": "the generated picture on b23",
    "persist": {
     "from_beat": "b23",
-    "to_beat": "b23"
+    "to_beat": "b25"
    },
    "params": {
     "image": {
@@ -272,35 +231,119 @@
    }
   },
   {
-   "obj": "boot",
-   "device": "slam_word",
-   "meaning": "the blame lands on the viewer, not the machine",
+   "obj": "plate-b2",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b2",
    "persist": {
     "from_beat": "b2",
     "to_beat": "b2"
    },
    "params": {
-    "word": "YOU",
-    "tapeText": "NOT THE AI"
+    "image": {
+     "src": "gen/b2-boot.png",
+     "pixelWidth": 941,
+     "pixelHeight": 1672
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "boot": {
+      "x": 0.12,
+      "y": 0.1,
+      "w": 0.78,
+      "h": 0.28
+     },
+     "worker": {
+      "x": 0.04,
+      "y": 0.34,
+      "w": 0.6,
+      "h": 0.42
+     }
+    }
    }
   },
   {
-   "obj": "slop",
-   "device": "headline",
-   "meaning": "AI slop struck through and renamed human slop",
+   "obj": "plate-b6",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b6",
    "persist": {
     "from_beat": "b6",
     "to_beat": "b6"
    },
    "params": {
-    "lines": [
-     "HUMAN SLOP"
-    ],
-    "swipe": {
-     "line": 0,
-     "word": 0
+    "image": {
+     "src": "gen/b6-slop.png",
+     "pixelWidth": 941,
+     "pixelHeight": 1672
     },
-    "dek": "no accountability"
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "slop": {
+      "x": 0.2,
+      "y": 0.32,
+      "w": 0.55,
+      "h": 0.32
+     }
+    }
+   }
+  },
+  {
+   "obj": "plate-b15",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b15",
+   "persist": {
+    "from_beat": "b15",
+    "to_beat": "b16"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b15-signing.png",
+     "pixelWidth": 941,
+     "pixelHeight": 1672
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "pen": {
+      "x": 0.35,
+      "y": 0.25,
+      "w": 0.35,
+      "h": 0.25
+     },
+     "stack": {
+      "x": 0.4,
+      "y": 0.3,
+      "w": 0.55,
+      "h": 0.45
+     }
+    }
+   }
+  },
+  {
+   "obj": "plate-b17",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b17",
+   "persist": {
+    "from_beat": "b17",
+    "to_beat": "b17"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b17-boxes.png",
+     "pixelWidth": 941,
+     "pixelHeight": 1672
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "boxes": {
+      "x": 0.15,
+      "y": 0.25,
+      "w": 0.75,
+      "h": 0.3
+     }
+    }
    }
   },
   {
@@ -327,197 +370,162 @@
    }
   },
   {
-   "obj": "ibmstat",
-   "device": "kinetic_stat",
-   "dataset": "ibm-chro",
-   "meaning": "HR chiefs who rank checking and overruling AI first, then the staff who even rank judgment",
-   "persist": {
-    "from_beat": "b12",
-    "to_beat": "b14"
-   },
-   "params": {}
-  },
-  {
-   "obj": "check",
-   "device": "typing_bubble",
-   "meaning": "an AI answer with a wrong line caught and overruled",
-   "persist": {
-    "from_beat": "b13",
-    "to_beat": "b13"
-   },
-   "params": {
-    "kind": "chat",
-    "rows": [
-     {
-      "who": "AI",
-      "text": "Q3 revenue grew 40%",
-      "side": "left"
-     },
-     {
-      "who": "You",
-      "text": "No: 4%. Checked the source.",
-      "side": "right"
-     }
-    ]
-   }
-  },
-  {
-   "obj": "owned",
-   "device": "typing_bubble",
-   "meaning": "the AI mistakes, each signed with your name",
-   "persist": {
-    "from_beat": "b15",
-    "to_beat": "b16"
-   },
-   "params": {
-    "kind": "notification",
-    "rows": [
-     {
-      "who": "Wrong figure",
-      "text": "Signed: you"
-     },
-     {
-      "who": "Bad email",
-      "text": "Signed: you"
-     },
-     {
-      "who": "Made-up quote",
-      "text": "Signed: you"
-     }
-    ]
-   }
-  },
-  {
-   "obj": "theyare",
-   "device": "slam_word",
-   "meaning": "they are yours",
-   "persist": {
-    "from_beat": "b16",
-    "to_beat": "b16"
-   },
-   "params": {
-    "word": "YOURS",
-    "tapeText": "OWNED"
-   }
-  },
-  {
-   "obj": "habits",
-   "device": "checklist",
-   "dataset": "habits-list",
-   "meaning": "the three habits, filling one by one",
-   "persist": {
-    "from_beat": "b17",
-    "to_beat": "b21"
-   },
-   "params": {
-    "slots": [
-     {
-      "id": "one",
-      "line": "Waiting to be told"
-     },
-     {
-      "id": "two",
-      "line": "Forwarding unread AI work"
-     },
-     {
-      "id": "three",
-      "line": "\"The computer did it\""
-     }
-    ]
-   }
-  },
-  {
-   "obj": "fwd",
-   "device": "typing_bubble",
-   "meaning": "an unread AI draft forwarded with your name on it",
-   "persist": {
-    "from_beat": "b19",
-    "to_beat": "b19"
-   },
-   "params": {
-    "kind": "email",
-    "rows": [
-     {
-      "who": "From: You",
-      "text": "Fwd: Q3 report (AI draft, unread)"
-     }
-    ]
-   }
-  },
-  {
-   "obj": "boss",
-   "device": "typing_bubble",
-   "meaning": "the excuse typed to the boss, then autocompleting into a resignation",
-   "persist": {
-    "from_beat": "b20",
-    "to_beat": "b21"
-   },
-   "params": {
-    "kind": "chat",
-    "rows": [
-     {
-      "who": "To: Boss",
-      "text": "Sorry, the computer did it",
-      "side": "right"
-     },
-     {
-      "who": "Autocomplete",
-      "text": "Letter of resignation. Yours sincerely,",
-      "side": "right"
-     }
-    ]
-   }
-  },
-  {
-   "obj": "already",
-   "device": "slam_word",
-   "meaning": "the bet is already placed",
-   "persist": {
-    "from_beat": "b24",
-    "to_beat": "b24"
-   },
-   "params": {
-    "word": "ALREADY",
-    "tapeText": "ALL IN"
-   }
-  },
-  {
-   "obj": "posts",
-   "device": "video_wall",
-   "meaning": "real people saying AI is rubbish, at volume",
+   "obj": "screen-posts",
+   "device": "photo_plate",
+   "meaning": "four real public posts calling AI useless, landing one after another",
    "persist": {
     "from_beat": "b3",
     "to_beat": "b3"
    },
    "params": {
-    "clips": [
-     {
-      "id": "post-1",
-      "src": "source/b3-post-1.png",
-      "source": "@butter-flight.bsky.social on Bluesky, 2026-02-14",
-      "kind": "image"
-     },
-     {
-      "id": "post-2",
-      "src": "source/b3-post-2.png",
-      "source": "@bestonetx.bsky.social on Bluesky, 2025-12-28",
-      "kind": "image"
-     },
-     {
-      "id": "post-3",
-      "src": "source/b3-post-3.png",
-      "source": "@twarda.bsky.social on Bluesky, 2025-09-26",
-      "kind": "image"
-     },
-     {
-      "id": "post-4",
-      "src": "source/b3-post-4.png",
-      "source": "@battleshipbob.bsky.social on Bluesky, 2025-04-24",
-      "kind": "image"
-     }
-    ],
-    "mode": "wall",
-    "intervalFrames": 7
+    "video": {
+     "src": "screens/b3-posts.mp4",
+     "pixelWidth": 1080,
+     "pixelHeight": 1920,
+     "trimBeforeFrames": 0
+    },
+    "push": 0.0
+   }
+  },
+  {
+   "obj": "screen-ibm",
+   "device": "photo_plate",
+   "meaning": "IBM's own release, the 71% clause highlighted as he says it",
+   "persist": {
+    "from_beat": "b11",
+    "to_beat": "b12"
+   },
+   "params": {
+    "video": {
+     "src": "screens/b11-ibm.mp4",
+     "pixelWidth": 1080,
+     "pixelHeight": 1920,
+     "trimBeforeFrames": 0
+    },
+    "push": 0.0,
+    "source": "IBM Newsroom · 21 Sep 2026"
+   }
+  },
+  {
+   "obj": "screen-overrule",
+   "device": "photo_plate",
+   "meaning": "an AI's wrong figure struck out and overruled",
+   "persist": {
+    "from_beat": "b13",
+    "to_beat": "b13"
+   },
+   "params": {
+    "video": {
+     "src": "screens/b13-overrule.mp4",
+     "pixelWidth": 1080,
+     "pixelHeight": 1920,
+     "trimBeforeFrames": 0
+    },
+    "push": 0.0,
+    "generated": true
+   }
+  },
+  {
+   "obj": "screen-ibm29",
+   "device": "photo_plate",
+   "meaning": "the same release, the staff's 29% highlighted",
+   "persist": {
+    "from_beat": "b14",
+    "to_beat": "b14"
+   },
+   "params": {
+    "video": {
+     "src": "screens/b14-ibm29.mp4",
+     "pixelWidth": 1080,
+     "pixelHeight": 1920,
+     "trimBeforeFrames": 0
+    },
+    "push": 0.0,
+    "source": "IBM Newsroom · 21 Sep 2026"
+   }
+  },
+  {
+   "obj": "screen-forward",
+   "device": "photo_plate",
+   "meaning": "an unread AI draft forwarded, the From line zooming onto You",
+   "persist": {
+    "from_beat": "b19",
+    "to_beat": "b19"
+   },
+   "params": {
+    "video": {
+     "src": "screens/b19-forward.mp4",
+     "pixelWidth": 1080,
+     "pixelHeight": 1920,
+     "trimBeforeFrames": 0
+    },
+    "push": 0.0,
+    "generated": true
+   }
+  },
+  {
+   "obj": "screen-resign",
+   "device": "photo_plate",
+   "meaning": "the excuse to the boss autocompleting into a resignation letter",
+   "persist": {
+    "from_beat": "b20",
+    "to_beat": "b21"
+   },
+   "params": {
+    "video": {
+     "src": "screens/b20-resign.mp4",
+     "pixelWidth": 1080,
+     "pixelHeight": 1920,
+     "trimBeforeFrames": 0
+    },
+    "push": 0.0,
+    "generated": true
+   }
+  },
+  {
+   "obj": "yours",
+   "device": "stamp",
+   "meaning": "every AI mistake signed off as yours",
+   "persist": {
+    "from_beat": "b16",
+    "to_beat": "b16"
+   },
+   "params": {
+    "kind": "outline",
+    "paint": "mint",
+    "size": "hero",
+    "top": "SIGNED OFF BY",
+    "main": "YOU",
+    "tiltDeg": 5,
+    "at": {
+     "x": 140,
+     "y": 600,
+     "w": 800,
+     "h": 380
+    }
+   }
+  },
+  {
+   "obj": "allin",
+   "device": "stamp",
+   "meaning": "the job is already on the table",
+   "persist": {
+    "from_beat": "b24",
+    "to_beat": "b24"
+   },
+   "params": {
+    "kind": "outline",
+    "paint": "mint",
+    "size": "hero",
+    "top": "YOUR JOB",
+    "main": "ALL IN",
+    "tiltDeg": -5,
+    "at": {
+     "x": 140,
+     "y": 600,
+     "w": 800,
+     "h": 380
+    }
    }
   },
   {
@@ -576,22 +584,6 @@
       "h": 0.5
      }
     }
-   }
-  },
-  {
-   "obj": "ibm",
-   "device": "evidence_card",
-   "meaning": "the IBM release the numbers come from",
-   "persist": {
-    "from_beat": "b11",
-    "to_beat": "b12"
-   },
-   "params": {
-    "kind": "screenshot",
-    "src": "source/b11-ibm-page-phone.png",
-    "outlet": "IBM Newsroom",
-    "date": "21 Sep 2026",
-    "sourceAspectRatio": 0.6
    }
   },
   {
@@ -702,14 +694,48 @@
    "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b23-poker.png"
   },
   {
-   "id": "ibm-page",
-   "kind": "screenshot",
-   "origin": "source",
-   "path": "source/b11-ibm-page-phone.png",
-   "sha256": "7bc309514bb76eeacfbbb0efb117c1bf4ac4e82e42e52fe01961fc8d18d97597",
-   "source_url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities",
-   "licence": "editorial use of the publisher's own published material, credited on screen",
-   "credit": "IBM Newsroom, 21 Sep 2026"
+   "id": "gen-boot",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b2-boot.png",
+   "sha256": "2bddf38dffec3de23726f6124f61f1c7ceda9baa5579decd1bcdcb8a7c1d09b3",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b2-boot.png"
+  },
+  {
+   "id": "gen-slop",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b6-slop.png",
+   "sha256": "e98130ba16ea50a59447d16f1318c7799228bcbe2a39a913dc3e9e60846c6c02",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b6-slop.png"
+  },
+  {
+   "id": "gen-signing",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b15-signing.png",
+   "sha256": "ce5bc82a5f5c01494e208c35d6a011388ebf7629ae873245a55b1d63ce0e671c",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b15-signing.png"
+  },
+  {
+   "id": "gen-boxes",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b17-boxes.png",
+   "sha256": "5a200516b0b2682eeb2625148f62553bda70aba66ae8369a0f9c2ff2e81179ff",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b17-boxes.png"
   },
   {
    "id": "iihs-driver",
@@ -770,6 +796,69 @@
    "source_url": "https://bsky.app/profile/battleshipbob.bsky.social/post/3lnklp76gcs2l",
    "licence": "a public post captured from its own page, link kept, credited",
    "credit": "@battleshipbob.bsky.social on Bluesky, 2025-04-24"
+  },
+  {
+   "id": "screen-posts",
+   "kind": "recording",
+   "origin": "capture",
+   "path": "screens/b3-posts.mp4",
+   "sha256": "4e09347cbd816db160d910e2ea34edc7eaf8b57a298932eaa1096a1b293c5635",
+   "licence": "the publisher's own published page or post, recorded from its own page, credited",
+   "credit": "Bluesky posts, links in the spec",
+   "source_url": "https://bsky.app"
+  },
+  {
+   "id": "screen-ibm",
+   "kind": "recording",
+   "origin": "capture",
+   "path": "screens/b11-ibm.mp4",
+   "sha256": "ea16e83fa6eff133a47ebc20b734e9275c447821cbce58f006df339f116050f2",
+   "licence": "the publisher's own published page or post, recorded from its own page, credited",
+   "credit": "IBM Newsroom · 21 Sep 2026",
+   "source_url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities"
+  },
+  {
+   "id": "screen-overrule",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "screens/b13-overrule.mp4",
+   "sha256": "5c6c613a0229d160e26f4b046ecfad7c49b2c871267f5db96028b24136ea5392",
+   "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
+   "tool": "codex.playwright_capture",
+   "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
+   "prompt_ref": "docs/ve/cards/habits/habits-screens-1.md"
+  },
+  {
+   "id": "screen-ibm29",
+   "kind": "recording",
+   "origin": "capture",
+   "path": "screens/b14-ibm29.mp4",
+   "sha256": "92479b4eabd39dc70fcdf1a474463f1f9fbd358fe46cd2e0e3c3c571d8228225",
+   "licence": "the publisher's own published page or post, recorded from its own page, credited",
+   "credit": "IBM Newsroom · 21 Sep 2026",
+   "source_url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities"
+  },
+  {
+   "id": "screen-forward",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "screens/b19-forward.mp4",
+   "sha256": "e668982ad75dd24c0208f8379c4ebacbe6133b0cf8ea8c78f7cc4df3bda1a06d",
+   "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
+   "tool": "codex.playwright_capture",
+   "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
+   "prompt_ref": "docs/ve/cards/habits/habits-screens-1.md"
+  },
+  {
+   "id": "screen-resign",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "screens/b20-resign.mp4",
+   "sha256": "97812689738be60cd4a551fe42f4a7d37f49d97acf8b59e4c8bd343715973099",
+   "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
+   "tool": "codex.playwright_capture",
+   "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
+   "prompt_ref": "docs/ve/cards/habits/habits-screens-1.md"
   },
   {
    "id": "b22-screen",
@@ -879,26 +968,33 @@
      },
      "viewer_task": "connect_with_speaker",
      "point": "When AI gets it wrong, the boot lands on you, not the machine",
-     "layout": "F3",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "boot"
+      "plate-b2"
      ],
      "events": [
       {
        "at_w": 12,
-       "obj": "boot",
+       "obj": "plate-b2",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 26,
-       "obj": "boot",
-       "verb": "exit",
-       "to_state": "gone",
+       "at_w": 24,
+       "obj": "plate-b2",
+       "verb": "move",
+       "to_state": "boot",
+       "silent": true
+      },
+      {
+       "at_w": 25,
+       "obj": "plate-b2",
+       "verb": "move",
+       "to_state": "worker",
        "silent": true
       }
      ]
@@ -917,38 +1013,18 @@
       "source": "none"
      },
      "uses": [
-      "posts"
+      "screen-posts"
      ],
      "events": [
       {
        "at_w": 27,
-       "obj": "posts",
+       "obj": "screen-posts",
        "verb": "enter",
-       "to_state": "wall",
-       "silent": true
-      },
-      {
-       "at_w": 29,
-       "obj": "posts",
-       "verb": "add",
-       "to_state": "next",
-       "silent": true
-      },
-      {
-       "at_w": 34,
-       "obj": "posts",
-       "verb": "add",
-       "to_state": "next",
-       "silent": true
-      },
-      {
-       "at_w": 38,
-       "obj": "posts",
-       "verb": "add",
-       "to_state": "wall",
+       "to_state": "visible",
        "silent": true
       }
-     ]
+     ],
+     "override_reason": "the screen recording lands its four real posts at 0.2, 1.2, 2.2 and 3.2 s; each landing is the event"
     },
     {
      "id": "b4",
@@ -1032,26 +1108,26 @@
      },
      "viewer_task": "feel_stakes",
      "point": "AI slop is human slop with nobody accountable",
-     "layout": "F3",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "slop"
+      "plate-b6"
      ],
      "events": [
       {
        "at_w": 71,
-       "obj": "slop",
+       "obj": "plate-b6",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 79,
-       "obj": "slop",
-       "verb": "exit",
-       "to_state": "gone",
+       "at_w": 75,
+       "obj": "plate-b6",
+       "verb": "move",
+       "to_state": "slop",
        "silent": true
       }
      ]
@@ -1231,17 +1307,17 @@
      },
      "viewer_task": "inspect_artifact",
      "point": "Bosses already get it, and here is the study that shows it",
-     "layout": "P1",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "ibm"
+      "screen-ibm"
      ],
      "events": [
       {
        "at_w": 121,
-       "obj": "ibm",
+       "obj": "screen-ibm",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
@@ -1257,37 +1333,15 @@
      },
      "viewer_task": "verify_evidence",
      "point": "IBM: 71% of HR chiefs rank checking and overruling AI as the top skill",
-     "layout": "P6",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "ibm",
-      "ibmstat"
+      "screen-ibm"
      ],
-     "events": [
-      {
-       "at_w": 126,
-       "obj": "ibm",
-       "verb": "mark",
-       "to_state": "release",
-       "silent": true
-      },
-      {
-       "at_w": 133,
-       "obj": "ibmstat",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 137,
-       "obj": "ibmstat",
-       "verb": "count_to",
-       "to_state": "hr-chiefs",
-       "silent": true
-      }
-     ]
+     "events": [],
+     "override_reason": "IBM's own page carries the number: it scrolls to the paragraph and the 71% clause is highlighted as he says it, so a typed stat would only repeat it"
     },
     {
      "id": "b13",
@@ -1298,30 +1352,23 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "The skill itself: catch the AI being wrong and overrule it",
-     "layout": "P6",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "ibmstat",
-      "check"
+      "screen-overrule"
      ],
      "events": [
       {
        "at_w": 143,
-       "obj": "check",
+       "obj": "screen-overrule",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 149,
-       "obj": "check",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
       }
-     ]
+     ],
+     "override_reason": "the screen strikes the wrong figure and types the correction on its own clock; each is its event"
     },
     {
      "id": "b14",
@@ -1332,29 +1379,23 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Only 29% of staff even rank judgment as important",
-     "layout": "F3",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "ibmstat"
+      "screen-ibm29"
      ],
      "events": [
       {
        "at_w": 154,
-       "obj": "ibmstat",
+       "obj": "screen-ibm29",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 160,
-       "obj": "ibmstat",
-       "verb": "count_to",
-       "to_state": "staff",
-       "silent": true
       }
-     ]
+     ],
+     "override_reason": "IBM's own page carries the 29%, highlighted on the page as he says it; a typed stat would repeat it"
     },
     {
      "id": "b15",
@@ -1365,33 +1406,33 @@
      },
      "viewer_task": "land_payoff",
      "point": "The only way AI does not replace you is owning its mistakes as yours",
-     "layout": "F3",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "owned"
+      "plate-b15"
      ],
      "events": [
       {
        "at_w": 167,
-       "obj": "owned",
+       "obj": "plate-b15",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 174,
-       "obj": "owned",
-       "verb": "type",
-       "to_state": "1",
+       "at_w": 177,
+       "obj": "plate-b15",
+       "verb": "move",
+       "to_state": "pen",
        "silent": true
       },
       {
        "at_w": 179,
-       "obj": "owned",
-       "verb": "type",
-       "to_state": "2",
+       "obj": "plate-b15",
+       "verb": "move",
+       "to_state": "stack",
        "silent": true
       }
      ]
@@ -1405,20 +1446,20 @@
      },
      "viewer_task": "land_payoff",
      "point": "Because they are yours",
-     "layout": "F3",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "owned",
-      "theyare"
+      "plate-b15",
+      "yours"
      ],
      "events": [
       {
        "at_w": 184,
-       "obj": "theyare",
-       "verb": "enter",
-       "to_state": "visible",
+       "obj": "yours",
+       "verb": "stamp",
+       "to_state": "signed",
        "silent": true
       }
      ]
@@ -1432,26 +1473,26 @@
      },
      "viewer_task": "reset_attention",
      "point": "Three habits are getting people fired",
-     "layout": "F3",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "habits"
+      "plate-b17"
      ],
      "events": [
       {
        "at_w": 186,
-       "obj": "habits",
+       "obj": "plate-b17",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 192,
-       "obj": "habits",
-       "verb": "dim",
-       "to_state": "all",
+       "at_w": 191,
+       "obj": "plate-b17",
+       "verb": "move",
+       "to_state": "boxes",
        "silent": true
       }
      ]
@@ -1505,37 +1546,23 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "Habit two: forwarding AI work unread, with your name on it",
-     "layout": "P6",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "habits",
-      "fwd"
+      "screen-forward"
      ],
      "events": [
       {
        "at_w": 207,
-       "obj": "habits",
-       "verb": "fill",
-       "to_state": "two",
-       "silent": true
-      },
-      {
-       "at_w": 209,
-       "obj": "fwd",
+       "obj": "screen-forward",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 218,
-       "obj": "fwd",
-       "verb": "send",
-       "to_state": "sent",
-       "silent": true
       }
-     ]
+     ],
+     "override_reason": "the screen recording forwards the unread draft and zooms onto You on its own clock; each move is its event"
     },
     {
      "id": "b20",
@@ -1546,37 +1573,23 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "Habit three: telling your boss the computer did it",
-     "layout": "P6",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "habits",
-      "boss"
+      "screen-resign"
      ],
      "events": [
       {
        "at_w": 222,
-       "obj": "habits",
-       "verb": "fill",
-       "to_state": "three",
-       "silent": true
-      },
-      {
-       "at_w": 223,
-       "obj": "boss",
+       "obj": "screen-resign",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 227,
-       "obj": "boss",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
       }
-     ]
+     ],
+     "override_reason": "the screen types the excuse to the boss on its own clock; the typing is the event"
     },
     {
      "id": "b21",
@@ -1587,30 +1600,15 @@
      },
      "viewer_task": "feel_stakes",
      "point": "That excuse writes your resignation letter for you",
-     "layout": "P6",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "habits",
-      "boss"
+      "screen-resign"
      ],
-     "events": [
-      {
-       "at_w": 232,
-       "obj": "boss",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
-      },
-      {
-       "at_w": 236,
-       "obj": "boss",
-       "verb": "send",
-       "to_state": "sent",
-       "silent": true
-      }
-     ]
+     "events": [],
+     "override_reason": "the same screen autocompletes the excuse into a signed resignation letter as he says it"
     },
     {
      "id": "b22",
@@ -1687,19 +1685,20 @@
      },
      "viewer_task": "land_payoff",
      "point": "You already are betting it",
-     "layout": "F3",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "already"
+      "plate-b23",
+      "allin"
      ],
      "events": [
       {
        "at_w": 258,
-       "obj": "already",
-       "verb": "enter",
-       "to_state": "visible",
+       "obj": "allin",
+       "verb": "stamp",
+       "to_state": "allin",
        "silent": true
       }
      ]
@@ -1713,13 +1712,15 @@
      },
      "viewer_task": "reset_attention",
      "point": "The full story is free at makeyourmindup.ai",
-     "layout": "F3",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
-     "uses": [],
+     "uses": [
+      "plate-b23"
+     ],
      "events": [],
-     "override_reason": "the close is the palette close card the ending band draws (config/brand-palette.json closes); it carries makeyourmindup.ai as he says it, so the captions end on at"
+     "override_reason": "the close is the palette close card the ending band draws over the poker table as he says the address; the captions end on at"
     }
    ]
   }
@@ -1731,6 +1732,13 @@
    "said": "approved. you dont need to commentate on the board fixes here in this session, just focus on content",
    "on": "2026-11-18",
    "artifact_hash": "627defe3d2ab63707ac9fa1be0dd846c0c426a5a6db3f741bb4b222e24e978db"
+  },
+  {
+   "gate": "exception",
+   "by": "Krish",
+   "said": "Yes, waive it here (the layout-variety rule, for this short only: every beat full-frame)",
+   "on": "2026-11-18",
+   "artifact_hash": "e460e8aacabb57d3c08ab3f36cb3059f20a0ab20779374cb029f84c595c5cabe"
   }
  ],
  "budget": {
@@ -1778,12 +1786,16 @@
      "means": "the AI did it is no defence"
     },
     {
-     "move": "a number lands huge on the grid with its source line under it",
-     "means": "bosses already rank checking AI first; staff mostly do not"
-    },
-    {
      "move": "each AI mistake is signed with your name",
      "means": "owning its mistakes is the only way AI does not replace you"
+    },
+    {
+     "move": "IBM's own page scrolls to its first paragraph and a highlighter draws across the number",
+     "means": "bosses already rank checking and overruling AI first; staff mostly do not"
+    },
+    {
+     "move": "a mint ink stamp lands on the picture",
+     "means": "the excuse is void, the mistakes are yours, your job is already on the table"
     }
    ],
    "never": [
@@ -1795,16 +1807,20 @@
    ],
    "real_artifacts": [
     {
-     "asset": "ibm-page",
-     "holds": "IBM's own release: New IBM CHRO study, 21 Sep 2026"
-    },
-    {
      "asset": "iihs-driver",
      "holds": "IIHS footage from the driver seat of a small overlap test: the dummy at the wheel as the airbags fire"
     },
     {
      "asset": "iihs-crash",
      "holds": "IIHS small overlap front crash test footage"
+    },
+    {
+     "asset": "screen-ibm",
+     "holds": "IBM's own release, New IBM CHRO study, 21 Sep 2026, recorded from its page with the 71% clause highlighted"
+    },
+    {
+     "asset": "screen-posts",
+     "holds": "four real public Bluesky posts calling AI useless, recorded from their own pages"
     }
    ]
   }

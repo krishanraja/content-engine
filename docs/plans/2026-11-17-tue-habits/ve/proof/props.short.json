@@ -40,183 +40,134 @@
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.scratch/ve/habits/assets/audio.short.wav",
-      "trimBeforeFrames": 803
+      "trimBeforeFrames": 1120
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 13,
+      "toFrame": 20,
       "words": [
         {
-          "text": "we",
+          "text": "And",
           "atFrame": 0
         },
         {
-          "text": "don't",
-          "atFrame": 2
+          "text": "bosses",
+          "atFrame": 0
         },
         {
-          "text": "put",
-          "atFrame": 7
+          "text": "already",
+          "atFrame": 0
+        },
+        {
+          "text": "get",
+          "atFrame": 0
+        },
+        {
+          "text": "this.",
+          "atFrame": 0
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 13,
-      "toFrame": 42,
+      "fromFrame": 20,
+      "toFrame": 86,
       "words": [
         {
-          "text": "the",
-          "atFrame": 13
+          "text": "IBM",
+          "atFrame": 20
         },
         {
-          "text": "car",
-          "atFrame": 16
+          "text": "asked",
+          "atFrame": 29
         },
         {
-          "text": "on",
-          "atFrame": 22
+          "text": "HR",
+          "atFrame": 49
         },
         {
-          "text": "trial.",
-          "atFrame": 27
-        }
-      ],
-      "swipeIndex": 3
-    },
-    {
-      "fromFrame": 42,
-      "toFrame": 68,
-      "words": [
-        {
-          "text": "We",
-          "atFrame": 42
+          "text": "chiefs",
+          "atFrame": 64
         },
         {
-          "text": "look",
-          "atFrame": 52
-        },
-        {
-          "text": "at",
-          "atFrame": 57
-        },
-        {
-          "text": "whoever",
-          "atFrame": 62
+          "text": "which",
+          "atFrame": 72
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 68,
-      "toFrame": 85,
+      "fromFrame": 86,
+      "toFrame": 130,
       "words": [
         {
-          "text": "was",
-          "atFrame": 68
+          "text": "skill",
+          "atFrame": 86
         },
         {
-          "text": "driving.",
-          "atFrame": 75
-        }
-      ],
-      "swipeIndex": 1
-    },
-    {
-      "fromFrame": 85,
-      "toFrame": 120,
-      "words": [
-        {
-          "text": "AI",
-          "atFrame": 85
-        },
-        {
-          "text": "is",
-          "atFrame": 99
+          "text": "matters",
+          "atFrame": 101
         },
         {
           "text": "the",
-          "atFrame": 108
+          "atFrame": 111
         },
         {
-          "text": "car",
-          "atFrame": 113
+          "text": "most",
+          "atFrame": 117
+        },
+        {
+          "text": "right",
+          "atFrame": 123
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 120,
-      "toFrame": 155,
+      "fromFrame": 130,
+      "toFrame": 194,
       "words": [
         {
-          "text": "and",
-          "atFrame": 120
-        },
-        {
-          "text": "you're",
+          "text": "now",
           "atFrame": 130
         },
         {
-          "text": "the",
-          "atFrame": 138
-        },
-        {
-          "text": "driver",
+          "text": "and",
           "atFrame": 142
+        },
+        {
+          "text": "71%",
+          "atFrame": 149
+        },
+        {
+          "text": "said",
+          "atFrame": 180
         }
       ],
-      "swipeIndex": 3
+      "swipeIndex": 2
     },
     {
-      "fromFrame": 155,
-      "toFrame": 202,
-      "words": [
-        {
-          "text": "so",
-          "atFrame": 155
-        },
-        {
-          "text": "the",
-          "atFrame": 167
-        },
-        {
-          "text": "old",
-          "atFrame": 176
-        },
-        {
-          "text": "AI",
-          "atFrame": 181
-        },
-        {
-          "text": "did",
-          "atFrame": 194
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 202,
+      "fromFrame": 194,
       "toFrame": 240,
       "words": [
         {
-          "text": "it",
-          "atFrame": 202
+          "text": "the",
+          "atFrame": 194
         },
         {
-          "text": "excuse",
-          "atFrame": 212
+          "text": "same",
+          "atFrame": 198
         },
         {
-          "text": "is",
-          "atFrame": 230
+          "text": "thing.",
+          "atFrame": 204
         },
         {
-          "text": "never",
-          "atFrame": 240
+          "text": "Accountability.",
+          "atFrame": 220
         }
       ],
       "swipeIndex": null
@@ -226,62 +177,45 @@
   "captionTheme": "art-directed",
   "beats": [
     {
-      "id": "b8",
+      "id": "b11",
       "role": "bridge",
       "layout": "STAGE",
       "fromFrame": 0,
-      "toFrame": 42,
+      "toFrame": 20,
       "uses": [
-        "plate-b8"
+        "screen-ibm"
       ],
       "transitionOut": "cut",
       "sectionBeat": true,
       "plate": {
         "source": "none"
       },
-      "keyFrame": 34
+      "keyFrame": 8
     },
     {
-      "id": "b9",
+      "id": "b12",
       "role": "anchor",
       "layout": "STAGE",
-      "fromFrame": 42,
-      "toFrame": 85,
+      "fromFrame": 20,
+      "toFrame": 220,
       "uses": [
-        "driver"
+        "screen-ibm"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
         "source": "none"
       },
-      "keyFrame": 76
+      "keyFrame": 180
     },
     {
-      "id": "b10a",
-      "role": "pivot",
+      "id": "b13",
+      "role": "bridge",
       "layout": "STAGE",
-      "fromFrame": 85,
-      "toFrame": 155,
-      "uses": [
-        "plate-b10a"
-      ],
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "none"
-      },
-      "keyFrame": 141
-    },
-    {
-      "id": "b10b",
-      "role": "pivot",
-      "layout": "STAGE",
-      "fromFrame": 155,
+      "fromFrame": 220,
       "toFrame": 240,
       "uses": [
-        "plate-b10a",
-        "excuse"
+        "screen-overrule"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -293,157 +227,56 @@
   ],
   "objects": [
     {
-      "obj": "plate-b8",
+      "obj": "screen-ibm",
       "device": "photo_plate",
-      "meaning": "the generated picture on b8",
+      "meaning": "IBM's own release, the 71% clause highlighted as he says it",
       "fromFrame": 0,
-      "toFrame": 42,
-      "variants": {},
-      "params": {
-        "image": {
-          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b8-car-on-trial.png",
-          "pixelWidth": 1024,
-          "pixelHeight": 1536
-        },
-        "push": 0.06,
-        "generated": true,
-        "regions": {
-          "judge": {
-            "x": 0.56,
-            "y": 0.16,
-            "w": 0.34,
-            "h": 0.18
-          }
-        }
-      }
-    },
-    {
-      "obj": "plate-b10a",
-      "device": "photo_plate",
-      "meaning": "the generated picture on b10a",
-      "fromFrame": 85,
-      "toFrame": 240,
-      "variants": {},
-      "params": {
-        "image": {
-          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b10-outrun.png",
-          "pixelWidth": 1024,
-          "pixelHeight": 1819
-        },
-        "push": 0.06,
-        "generated": true,
-        "regions": {
-          "runner": {
-            "x": 0.02,
-            "y": 0.3,
-            "w": 0.62,
-            "h": 0.42
-          }
-        }
-      }
-    },
-    {
-      "obj": "excuse",
-      "device": "stamp",
-      "meaning": "the old excuse stamped void, in ink, never in caption type (his note of 18 Nov)",
-      "fromFrame": 155,
-      "toFrame": 240,
-      "variants": {},
-      "params": {
-        "kind": "outline",
-        "paint": "mint",
-        "size": "hero",
-        "top": "THE AI DID IT",
-        "main": "VOID",
-        "tiltDeg": -6,
-        "at": {
-          "x": 140,
-          "y": 640,
-          "w": 800,
-          "h": 380
-        }
-      }
-    },
-    {
-      "obj": "driver",
-      "device": "photo_plate",
-      "meaning": "the real driver seat in a real IIHS crash, ringed on driving",
-      "fromFrame": 42,
-      "toFrame": 85,
+      "toFrame": 220,
       "variants": {},
       "params": {
         "video": {
-          "src": "/home/user/content-engine/.scratch/ve/habits/assets/source/b9-driver-cam.mp4",
-          "pixelWidth": 1920,
-          "pixelHeight": 1080,
-          "trimBeforeFrames": 30
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b11-ibm.mp4",
+          "pixelWidth": 1080,
+          "pixelHeight": 1920,
+          "trimBeforeFrames": 0
         },
-        "push": 0.04,
-        "focus": {
-          "x": 0.35,
-          "y": 0.5
+        "push": 0,
+        "source": "IBM Newsroom · 21 Sep 2026"
+      }
+    },
+    {
+      "obj": "screen-overrule",
+      "device": "photo_plate",
+      "meaning": "an AI's wrong figure struck out and overruled",
+      "fromFrame": 220,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "video": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b13-overrule.mp4",
+          "pixelWidth": 1080,
+          "pixelHeight": 1920,
+          "trimBeforeFrames": 0
         },
-        "source": "IIHS · small overlap front test",
-        "regions": {
-          "driver": {
-            "x": 0.24,
-            "y": 0.08,
-            "w": 0.2,
-            "h": 0.5
-          }
-        }
+        "push": 0,
+        "generated": true
       }
     }
   ],
   "events": [
     {
-      "id": "b8-0",
-      "obj": "plate-b8",
+      "id": "b11-0",
+      "obj": "screen-ibm",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 0
     },
     {
-      "id": "b8-1",
-      "obj": "plate-b8",
-      "verb": "move",
-      "toState": "judge",
-      "atFrame": 16
-    },
-    {
-      "id": "b9-0",
-      "obj": "driver",
+      "id": "b13-0",
+      "obj": "screen-overrule",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 42
-    },
-    {
-      "id": "b9-1",
-      "obj": "driver",
-      "verb": "mark",
-      "toState": "driver",
-      "atFrame": 75
-    },
-    {
-      "id": "b10a-0",
-      "obj": "plate-b10a",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 85
-    },
-    {
-      "id": "b10a-1",
-      "obj": "plate-b10a",
-      "verb": "move",
-      "toState": "runner",
-      "atFrame": 130
-    },
-    {
-      "id": "b10b-0",
-      "obj": "excuse",
-      "verb": "stamp",
-      "toState": "void",
-      "atFrame": 212
+      "atFrame": 220
     }
   ],
   "motion": {

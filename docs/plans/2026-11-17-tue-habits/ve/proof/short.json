@@ -2,36 +2,24 @@
   "schema": "ve-proof/1",
   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16",
   "cut": "short",
-  "beat": "b10a",
+  "beat": "b12",
   "rule": "named in the spec (proof.beat)",
-  "start": 26.767,
-  "end": 34.767,
+  "start": 37.333,
+  "end": 45.333,
   "beat_s": [
-    29.6,
-    31.933
+    38.0,
+    44.667
   ],
-  "sha256": "627defe3d2ab63707ac9fa1be0dd846c0c426a5a6db3f741bb4b222e24e978db",
-  "spec_sha256": "1a80f2a0a985fd3e742464e3a0928dbd3c749587be94c3215ac547aa57fbd78d",
+  "sha256": "756843b57877c1cd1af784520eb0cf8cb8601e25c77434ac348a0e20c4b5f719",
+  "spec_sha256": "61c0174b97dccf9ff2fea46106baeef5435523218ddc02a67b3a03c61ef62c74",
   "structure": {
     "format": "voice-led-pictures",
     "aspect": "9:16",
     "motion": "swiss-kinetic-type",
     "objects": [
       [
-        "already",
-        "slam_word"
-      ],
-      [
-        "boot",
-        "slam_word"
-      ],
-      [
-        "boss",
-        "typing_bubble"
-      ],
-      [
-        "check",
-        "typing_bubble"
+        "allin",
+        "stamp"
       ],
       [
         "crash",
@@ -46,26 +34,6 @@
         "stamp"
       ],
       [
-        "fwd",
-        "typing_bubble"
-      ],
-      [
-        "habits",
-        "checklist"
-      ],
-      [
-        "ibm",
-        "evidence_card"
-      ],
-      [
-        "ibmstat",
-        "kinetic_stat"
-      ],
-      [
-        "owned",
-        "typing_bubble"
-      ],
-      [
         "plate-b1",
         "photo_plate"
       ],
@@ -74,7 +42,19 @@
         "photo_plate"
       ],
       [
+        "plate-b15",
+        "photo_plate"
+      ],
+      [
+        "plate-b17",
+        "photo_plate"
+      ],
+      [
         "plate-b18",
+        "photo_plate"
+      ],
+      [
+        "plate-b2",
         "photo_plate"
       ],
       [
@@ -94,20 +74,40 @@
         "photo_plate"
       ],
       [
+        "plate-b6",
+        "photo_plate"
+      ],
+      [
         "plate-b8",
         "photo_plate"
       ],
       [
-        "posts",
-        "video_wall"
+        "screen-forward",
+        "photo_plate"
       ],
       [
-        "slop",
-        "headline"
+        "screen-ibm",
+        "photo_plate"
       ],
       [
-        "theyare",
-        "slam_word"
+        "screen-ibm29",
+        "photo_plate"
+      ],
+      [
+        "screen-overrule",
+        "photo_plate"
+      ],
+      [
+        "screen-posts",
+        "photo_plate"
+      ],
+      [
+        "screen-resign",
+        "photo_plate"
+      ],
+      [
+        "yours",
+        "stamp"
       ]
     ],
     "beats": [
@@ -120,16 +120,16 @@
       ],
       [
         "b2",
-        "F3",
+        "STAGE",
         [
-          "boot"
+          "plate-b2"
         ]
       ],
       [
         "b3",
         "STAGE",
         [
-          "posts"
+          "screen-posts"
         ]
       ],
       [
@@ -148,9 +148,9 @@
       ],
       [
         "b6",
-        "F3",
+        "STAGE",
         [
-          "slop"
+          "plate-b6"
         ]
       ],
       [
@@ -191,54 +191,52 @@
       ],
       [
         "b11",
-        "P1",
+        "STAGE",
         [
-          "ibm"
+          "screen-ibm"
         ]
       ],
       [
         "b12",
-        "P6",
+        "STAGE",
         [
-          "ibm",
-          "ibmstat"
+          "screen-ibm"
         ]
       ],
       [
         "b13",
-        "P6",
+        "STAGE",
         [
-          "check",
-          "ibmstat"
+          "screen-overrule"
         ]
       ],
       [
         "b14",
-        "F3",
+        "STAGE",
         [
-          "ibmstat"
+          "screen-ibm29"
         ]
       ],
       [
         "b15",
-        "F3",
+        "STAGE",
         [
-          "owned"
+          "plate-b15"
         ]
       ],
       [
         "b16",
-        "F3",
+        "STAGE",
         [
-          "owned",
-          "theyare"
+          "plate-b15",
+          "yours"
         ]
       ],
       [
         "b17",
-        "F3",
+        "STAGE",
         [
-          "habits"
+          "plate-b17"
         ]
       ],
       [
@@ -250,26 +248,23 @@
       ],
       [
         "b19",
-        "P6",
+        "STAGE",
         [
-          "fwd",
-          "habits"
+          "screen-forward"
         ]
       ],
       [
         "b20",
-        "P6",
+        "STAGE",
         [
-          "boss",
-          "habits"
+          "screen-resign"
         ]
       ],
       [
         "b21",
-        "P6",
+        "STAGE",
         [
-          "boss",
-          "habits"
+          "screen-resign"
         ]
       ],
       [
@@ -288,31 +283,26 @@
       ],
       [
         "b24",
-        "F3",
+        "STAGE",
         [
-          "already"
+          "allin",
+          "plate-b23"
         ]
       ],
       [
         "b25",
-        "F3",
-        []
+        "STAGE",
+        [
+          "plate-b23"
+        ]
       ]
     ]
   },
   "style_module": "swiss-kinetic-type",
-  "props_sha256": "be60552752ac5fa2332c10843f01a8c60eab07751e4fa2d8b1c06ee05bd9b1c1",
+  "props_sha256": "1d3ff4dac7582394740f8903eb69b534e6dc53678901b291cab18203f62be074",
   "type": [
     [
       "data",
-      "card"
-    ],
-    [
-      "dek",
-      "card"
-    ],
-    [
-      "display",
       "card"
     ],
     [
