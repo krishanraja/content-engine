@@ -1,6 +1,7 @@
 """Approved design direction and hash-bound golden keyframes for ve formats."""
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import math
@@ -190,6 +191,11 @@ def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None, ap
             output = io.BytesIO()
             image.convert('RGB').resize(size, Image.Resampling.LANCZOS).save(output, format='JPEG', quality=85)
         prepared.append((beat, target, output.getvalue(), sha256_file(source)))
+    barred = retired_hashes(settings)
+    for beat, _target, data, source_hash in prepared:
+        if source_hash in barred or hashlib.sha256(data).hexdigest() in barred:
+            raise ValueError(f'{fmt}.{beat}: this picture is one Krish had deleted for good '
+                             f'({settings["retired"]["on"]}); freeze new key frames')
     entries = {}
     for beat, target, data, source_hash in prepared:
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -216,6 +222,52 @@ def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None, ap
     lock['status'] = 'frozen' if all(frozen(lock, name, root)[0] for name in lock['formats']) else 'direction_approved'
     path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
     return lock
+
+
+def retired_hashes(settings: dict) -> set[str]:
+    """The sha256 of every key frame (the golden file and the still it was cut from) a format's lock had deleted for good."""
+    return {value for entry in (settings.get('retired') or {}).get('keyframes', {}).values()
+            for value in (entry.get('sha256'), entry.get('source_sha256')) if value}
+
+
+def retire(fmt: str, *, words: str, on: str, by: str = 'Krish', lock_path=None, today=None) -> dict:
+    """Krish deletes a frozen format's golden key frames for good. The golden files are removed, the format leaves
+    `formats` and returns to `drafts` awaiting a new Gate 2, and the draft keeps his words and the hash of every frame
+    it lost: `freeze` refuses any of those pictures again, so a deleted frame cannot come back by accident. Until a new
+    freeze the format has no lock: lint, QC and the packet read it as unlocked, and the Critic is its design gate."""
+    if by != 'Krish':
+        raise ValueError('only Krish retires a lock')
+    if not str(words or '').strip():
+        raise ValueError('retire records his words: pass them with --words')
+    path = _path(lock_path).resolve()
+    root = path.parents[2] if path.parent.name == 've' and path.parent.parent.name == 'config' else path.parent
+    lock = load(path)
+    settings = lock['formats'].get(fmt)
+    if settings is None:
+        raise ValueError(f'{fmt} is not a lock')
+    keyframes = settings.get('keyframes') or {}
+    lost = {beat: {'sha256': entry.get('sha256'), 'source_sha256': entry.get('source_sha256')}
+            for beat, entry in keyframes.items()}
+    gone = []
+    for beat in keyframes:
+        golden = golden_path(lock, fmt, beat, root)
+        if golden.is_file():
+            golden.unlink()
+            gone.append(golden.relative_to(root).as_posix())
+    frames_dir = root / settings['frames_dir']
+    if frames_dir.is_dir() and not any(frames_dir.iterdir()):
+        frames_dir.rmdir()
+    retired = {'by': by, 'on': on, 'words': words.strip(), 'was_frozen_on': settings.get('frozen_on'),
+               'was_approved': settings.get('approved'), 'keyframes': lost, 'files_removed': gone}
+    entry = {k: v for k, v in settings.items() if k not in ('keyframes', 'frozen_on', 'approved')}
+    entry.update(status='awaiting Gate 2', drafted=(today or date.today()).isoformat() if not isinstance(today, str) else today,
+                 awaiting=f"Krish's Gate 2 approval of one still per beat, new pictures only; then ve lock freeze {fmt} --from <stills dir>",
+                 keyframe_slots={beat: None for beat in settings['beats']}, retired=retired)
+    del lock['formats'][fmt]
+    lock.setdefault('drafts', {})[fmt] = entry
+    lock['status'] = 'frozen' if all(frozen(lock, name, root)[0] for name in lock['formats']) else 'direction_approved'
+    path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
+    return entry
 
 
 def lock_key(fmt: str, aspect: str) -> str:

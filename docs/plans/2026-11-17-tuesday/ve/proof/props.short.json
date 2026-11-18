@@ -461,7 +461,7 @@
     }
   ],
   "captionStyle": "word",
-  "captionTheme": "art-directed",
+  "captionTheme": "podcast",
   "captionPlacement": "lower",
   "beats": [
     {
@@ -477,6 +477,9 @@
       "sectionBeat": true,
       "plate": {
         "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png"
       },
       "keyFrame": 62
     },
@@ -494,6 +497,9 @@
       "plate": {
         "source": "none"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png"
+      },
       "keyFrame": 141
     },
     {
@@ -508,8 +514,10 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/elevencreative-plans.png"
       },
       "keyFrame": 239
     }
@@ -665,13 +673,6 @@
       "atFrame": 0
     },
     {
-      "id": "built-0",
-      "obj": "block",
-      "verb": "grow",
-      "toState": "giant",
-      "atFrame": 0
-    },
-    {
       "id": "power-2",
       "obj": "block",
       "verb": "carry",
@@ -682,7 +683,7 @@
       "id": "power-3",
       "obj": "block",
       "verb": "move",
-      "toState": "target:0",
+      "toState": "target:1",
       "atFrame": 0
     },
     {

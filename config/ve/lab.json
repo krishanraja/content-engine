@@ -8,6 +8,16 @@
     "name": "thurs5Novrecording-nospendingnosending.mp4",
     "sha256": "203d10c946954c5343ccec5b0e3a3626e9b2dfd7ef376485ff1bbbf4f35dddd5"
   },
+  "retired_takes": [
+    {
+      "name": "thurs5Novrecording-nospendingnosending.mp4",
+      "sha256": "203d10c946954c5343ccec5b0e3a3626e9b2dfd7ef376485ff1bbbf4f35dddd5",
+      "by": "Krish",
+      "on": "2026-11-18",
+      "words": "DELETE THOSE FRAMES FOREVER. you need to rebuild everywhere it was to be 10X better using those two new references",
+      "next": "Pin a take from one of the two pieces he named (17 Nov: \"character.ai or ai music are good\"; 18 Nov: \"either ai music or character.ai is fine\"): the Wed 11 Nov AI music short (Inbox ai-music-short.mp4, 10 Nov) or the Mon 26 Oct Character.AI cut (Inbox \"Mon 26 Oct - 90-second - Disney, Google and Character.AI.mp4\"). Neither has a compiled ve piece yet (the AI music short was a one-off composite, Character.AI predates ve), so the lab needs a piece_dir with spec, props and an EDL on that take first."
+    }
+  ],
   "piece_dir": "docs/plans/2026-11-05-thursday-no-spending/ve",
   "cut": "short",
   "window": [315, 555],

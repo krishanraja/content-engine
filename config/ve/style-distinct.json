@@ -6,6 +6,7 @@
   "threshold": 1.5,
   "min_options": 2,
   "tuned_on": {
+    "retired": "The take these scores were measured on was retired by Krish on 18 Nov 2026 (config/ve/lab.json retired_takes). The scores stay as the record of how the threshold was tuned; re-measure on the new lab take and replace this block.",
     "window": "Thursday 5 Nov (2026-11-05-thursday-no-spending, short cut, frames 140 to 320, scale 0.5, stand-in take)",
     "renders": "PR #381 clips, before the strong styles",
     "scores_against_house": {"dark-keynote": 2.82, "riso-halftone": 4.56, "living-ui": 0.17},

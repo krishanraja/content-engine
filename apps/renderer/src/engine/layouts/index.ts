@@ -1,4 +1,4 @@
-import { FWP_SPLIT_SEAM_Y, FWP_POSTER_POSITIONS } from '../mocks/face-with-proof'
+import { SPLIT_SEAM_Y, SPLIT_POSTER_POSITIONS } from './splitGeometry'
 import type { Box } from '../devices/types'
 import type { EngineBeat, EngineRenderProps } from '../props'
 
@@ -8,7 +8,7 @@ type Aspect = EngineRenderProps['aspect']
 // These are key-content regions. The segment plate itself remains full bleed.
 // Each aspect is authored in its own frame coordinates, never scaled.
 const TALL: Record<Layout, readonly Box[]> = {
-  SPLIT: [{ left: 60, top: 300, width: 960, height: FWP_SPLIT_SEAM_Y - 360 }],
+  SPLIT: [{ left: 60, top: 300, width: 960, height: SPLIT_SEAM_Y - 360 }],
   WINDOW: [
     { left: 0, top: 0, width: 1080, height: 1250 },
   ],
@@ -87,7 +87,7 @@ export function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[] {
 /** Camera geometry shares the frozen seam with stage slots. */
 export function splitCameraBox(aspect: Aspect): Box {
   if (aspect !== '9:16') throw new Error('ve: SPLIT has no wide lock; use 9:16')
-  return { left: 0, top: FWP_SPLIT_SEAM_Y, width: 1080, height: 1920 - FWP_SPLIT_SEAM_Y }
+  return { left: 0, top: SPLIT_SEAM_Y, width: 1080, height: 1920 - SPLIT_SEAM_Y }
 }
 
 /** Named editorial crops are not CSS object positions. */
@@ -95,7 +95,7 @@ export function splitPlatePosition(crop?: string): string {
   const tokens = crop?.trim().split(/\s+/)
   return tokens && tokens.length >= 1 && tokens.length <= 4
     && tokens.every((token) => /^(?:left|right|top|bottom|center|0|-?\d+(?:\.\d+)?(?:%|px))$/.test(token))
-    ? crop!.trim() : FWP_POSTER_POSITIONS.proof
+    ? crop!.trim() : SPLIT_POSTER_POSITIONS.proof
 }
 
 /** A rectangular device region cannot express a canvas with a hole. WINDOW slots use

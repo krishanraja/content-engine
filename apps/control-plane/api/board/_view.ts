@@ -2,6 +2,8 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
 import { wordsBody, asWritten, wordsDocId, takenBackAt } from './_contracts.js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
+/** The days a piece is approved for publish on: the series days and the off days he records (tue, thu, sat). */
+const PUBLISH_DAYS: readonly PostedDay[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 import { liveDay, type LiveDay } from './_live.js'
 import { currentFolder, makingSteps } from '../_making.js'
 import { yesByDay } from './_yes.js'
@@ -862,7 +864,7 @@ export function buildView(i: ViewInputs): WeekView {
       }
     }
     // His Approve for publish, bound to the piece's manifest, leads while it waits on him (1.8.0).
-    const manifest = SERIES_DAYS.includes(d) && shown ? dayManifest(i.drafts?.[shown], i.picks, d) : null
+    const manifest = shown ? dayManifest(i.drafts?.[shown], i.picks, d) : null
     if (manifest?.press && core.who !== 'done') core.actions = [manifest.press, ...core.actions.filter(a => !(a.kind === 'press' && a.id === manifest.press!.id))]
     return { ...core, manifest, media: mediaWithAnswers(piece), thumbs: SERIES_DAYS.includes(d) ? dayThumbs(i.week, piece) : null,
       pieces: dayPieces(gate.approved, date, shown, gate.approvalOf, i.now),
@@ -1299,7 +1301,9 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // Each piece's production plan, made after his takes are in (_productionPlan.ts, contract 1.25.0).
   const productionPlans = await readProductionPlans(db, overlay, (pieces as Body[]).map(p => String(p.id).toLowerCase()), pieces as Body[])
   // Each piece's draft manifest (1.8.0), whose sha256 his Approve for publish binds.
-  const drafts = await readDrafts(db, (pieces as Body[]).filter(p => SERIES_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
+  // Every day's piece, an off-day piece he records included (Krish, 2026-11-18: once the final assets are made and filed,
+  // that is the final state, where he presses Publish).
+  const drafts = await readDrafts(db, (pieces as Body[]).filter(p => PUBLISH_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
   // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held. Beside
   // them, the one place every off-day item's day lives (offday_items).
   // One post, one item (contract 1.10.0): every item of every week on a day or in his Ideas for Later, and the plans of

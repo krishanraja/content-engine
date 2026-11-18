@@ -49,9 +49,12 @@ def lock_tree(root: Path) -> Path:
 
 
 def redraft(path: Path) -> None:
-    """Put the frozen 9:16 face-with-proof back to the draft it was before Krish's Gate 2 (3 Nov 2026), so the
-    promotion path is still tested on a temp copy after the real lock froze."""
+    """Put a frozen 9:16 face-with-proof back to the draft it was before Krish's Gate 2 (3 Nov 2026), so the promotion
+    path is tested on a temp copy. The real lock has been that draft since he had its key frames deleted (18 Nov
+    2026), and then there is nothing to put back."""
     lock = json.loads(path.read_text(encoding='utf-8'))
+    if 'face-with-proof' not in lock['formats']:
+        return
     entry = lock['formats'].pop('face-with-proof')
     for frame in (entry.get('keyframes') or {}).values():
         (path.parents[2] / frame['file']).unlink(missing_ok=True)
@@ -81,21 +84,33 @@ class DraftLockTest(unittest.TestCase):
             mapping[beat] = name
         return mapping
 
-    def test_the_real_lock_froze_face_with_proof_at_his_gate_2_and_keeps_the_wide_draft(self):
+    def test_the_real_lock_retired_face_with_proof_on_his_words_and_keeps_both_drafts(self):
         lock = designlock.load()
         self.assertEqual(designlock.validate(lock), [])
-        tall = lock['formats']['face-with-proof']
+        # Krish, 18 Nov 2026, deleted its four key frames for good: the format is a draft awaiting a new Gate 2.
+        self.assertNotIn('face-with-proof', lock['formats'])
+        self.assertFalse(designlock.frozen(lock, 'face-with-proof', ROOT)[0])
+        self.assertFalse((ROOT / 'fixtures/ve/design-lock/face-with-proof').exists(), 'the frames are gone from the tree')
+        tall = lock['drafts']['face-with-proof']
         self.assertEqual(tall['beats'], BEATS)
-        self.assertEqual(set(tall['keyframes']), set(BEATS))
-        self.assertTrue(designlock.frozen(lock, 'face-with-proof', ROOT)[0])
-        # Frozen only on his words at Gate 2, never by an agent's own call.
-        self.assertEqual((tall['approved']['by'], tall['approved']['words']), ('Krish', 'Looks good to me.'))
+        self.assertEqual(tall['status'], 'awaiting Gate 2')
+        self.assertEqual(tall['keyframe_slots'], {beat: None for beat in BEATS})
+        self.assertNotIn('keyframes', tall)
+        self.assertNotIn('approved', tall, 'the 3 Nov approval no longer stands for anything')
+        gone = tall['retired']
+        self.assertEqual((gone['by'], gone['on']), ('Krish', '2026-11-18'))
+        self.assertIn('DELETE THOSE FRAMES FOREVER', gone['words'])
+        self.assertEqual(set(gone['keyframes']), set(BEATS))
+        self.assertTrue(all(len(v['sha256']) == 64 for v in gone['keyframes'].values()))
+        self.assertEqual(len(designlock.retired_hashes(tall)), 2 * len(BEATS), 'a golden and its source, per beat, are barred')
         draft = lock['drafts']['face-with-proof@16:9']
         self.assertEqual(draft['status'], 'awaiting Gate 2')
         self.assertEqual(draft['keyframe_slots'], {beat: None for beat in BEATS})
         self.assertNotIn('face-with-proof@16:9', lock['formats'])
         self.assertEqual(draft['canvas'], {'w': 1920, 'h': 1080})
-        self.assertEqual(lock['formats']['hand-held-screen']['role'], 'module')  # joined it at Gate 2
+        # The two older formats stay frozen on their own key frames while their base waits.
+        for name in ('hand-held-screen', 'two-passports'):
+            self.assertTrue(designlock.frozen(lock, name, ROOT)[0])
 
     def test_a_draft_is_promoted_only_by_freeze_and_its_modules_join_it(self):
         redraft(self.path)

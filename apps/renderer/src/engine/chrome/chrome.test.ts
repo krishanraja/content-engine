@@ -133,7 +133,7 @@ describe('word caption build', () => {
 describe('word caption layout positions', () => {
   it.each(['9:16', '16:9'] as const)('places words by the active beat in %s', async (aspect) => {
     const { WordCaption, WORD_CAPTION } = await import('./WordCaption')
-    const { FWP_SPLIT_SEAM_Y } = await import('../mocks/face-with-proof')
+    const { SPLIT_SEAM_Y } = await import('../layouts/splitGeometry')
     const g = aspect === '9:16' ? WORD_CAPTION.tall : WORD_CAPTION.wide
     const beats: EngineRenderProps['beats'] = [
       { id: 'split', role: 'anchor', layout: 'SPLIT', fromFrame: 0, toFrame: 15,
@@ -144,7 +144,7 @@ describe('word caption layout positions', () => {
         fromFrame: 25, toFrame: 40, uses: [], transitionOut: 'cut', sectionBeat: false },
     ]
     const input = { ...props, aspect, beats }
-    for (const [frame, center] of [[14, FWP_SPLIT_SEAM_Y], [15, g.centerY], [30, g.graphicsCenterY]] as const) {
+    for (const [frame, center] of [[14, SPLIT_SEAM_Y], [15, g.centerY], [30, g.graphicsCenterY]] as const) {
       const html = renderToStaticMarkup(createElement(WordCaption, { props: input, frame }))
       expect(html).toContain('top:' + (center - g.size * 0.6) + 'px')
     }

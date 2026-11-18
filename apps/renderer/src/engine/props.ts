@@ -47,6 +47,7 @@ export const EngineBeatSchema = z.object({
   layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW']),
   face: z.enum(['full', 'window', 'off']).optional(),
   plate: z.object({ source: z.string().min(1), crop: z.string().min(1).optional() }).strict().optional(),
+  backdrop: z.object({ src: z.string().min(1) }).strict().optional(),
   fromFrame: Frame,
   toFrame: Frame,
   uses: z.array(z.string()),

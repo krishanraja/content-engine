@@ -1,5 +1,5 @@
 import type { Box } from '../devices/types'
-import { FWP_SPLIT_SEAM_Y } from '../mocks/face-with-proof'
+import { SPLIT_SEAM_Y } from '../layouts/splitGeometry'
 
 /** The two channels a device reports to the camera, and the arithmetic the camera does with them.
  *
@@ -32,7 +32,7 @@ export interface Room { left: number; top: number; right: number; bottom: number
  *  off his face. */
 export function focusRoom(aspect: '9:16' | '16:9', layout: string, takeBehind: boolean, slots: readonly Box[]): Room {
   const safe: Room = aspect === '9:16' ? { ...SAFE_TALL, rail: { ...SAFE_TALL.rail } } : { ...SAFE_WIDE }
-  if (layout === 'SPLIT') return { ...safe, bottom: Math.min(safe.bottom, FWP_SPLIT_SEAM_Y) }
+  if (layout === 'SPLIT') return { ...safe, bottom: Math.min(safe.bottom, SPLIT_SEAM_Y) }
   if (takeBehind && layout !== 'STAGE' && slots.length) {
     const band = slots.reduce((a, s) => ({ left: Math.min(a.left, s.left), top: Math.min(a.top, s.top),
       right: Math.max(a.right, s.left + s.width), bottom: Math.max(a.bottom, s.top + s.height) }),
