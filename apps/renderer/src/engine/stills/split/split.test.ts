@@ -31,6 +31,12 @@ describe('SplitKeyFrame', () => {
       })
     }
   }
+  it('keeps his whole head in the band: plateY sets the crop, and a plate with none is cropped from the top', () => {
+    const base = { variant: 'receipt' as const, beat: 'face' as const, plateSrc: 'real.png', series: 'follow.the.money' as const }
+    expect(renderToStaticMarkup(React.createElement(SplitKeyFrame, { ...base, plateY: 56 }))).toContain('object-position:50% 56%')
+    expect(renderToStaticMarkup(React.createElement(SplitKeyFrame, base))).toContain('object-position:center top')
+    expect(() => SplitKeyFrame({ ...base, plateY: 120 })).toThrow()
+  })
   it('refuses prohibited captions', () => {
     expect(()=>SplitKeyFrame({variant:'slam',beat:'face',plateSrc:'real.png',series:'under.the.hood',caption:'NO SENDING'})).toThrow()
   })

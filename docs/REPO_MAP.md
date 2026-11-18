@@ -6165,6 +6165,14 @@ Spot inks, paper and shadow. All still colour values live here, including device
 - `function stillIds(): {layer:Layer; id:string}[]`
 - `function coverPlan(layer:Layer,id:string)`
 
+### `apps/renderer/src/engine/stills/split/SplitKeyFrame.tsx`
+
+- `const SplitKeyFrameSchema`
+- `type SplitKeyFrameProps = z.infer<typeof SplitKeyFrameSchema>`
+- `const REFERENCES`
+- `const SPLIT_ASSETS`
+- `function SplitKeyFrame(input: SplitKeyFrameProps)`
+
 ### `apps/renderer/src/engine/transport.ts`
 
 JSON-value transport: escape values only; keys retain their original spelling.
