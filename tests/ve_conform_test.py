@@ -106,6 +106,42 @@ class ConformTest(unittest.TestCase):
         self.assertEqual([w['w'] for w in edl['words']], list(range(len(SCRIPT))))
         self.assertEqual(conform.lint_edl(edl, conform.records_for(edl, self.ve), spec()), [])
 
+    def test_a_long_pause_is_cut_to_a_breath_in_an_agreed_gap_and_a_short_one_plays(self):
+        # Krish, 2026-11-17: "clip out empty awkward silences". A 1.5 s pause after "models." is cut; the 0.4 s pauses
+        # after the other full stops play as recorded.
+        words, duration = clock(SCRIPT, extra_pause={3: 1.1})
+        self.ingest('take-1', words, duration)
+        said = 'clip out empty awkward silences'
+        edit = {'remove': [], 'speed': 1, 'pauses': {'longer_than_s': 0.6, 'said': said}}
+        edl = conform.conform(spec(edit), 'short', self.script, self.ve)
+        self.assertEqual(len(edl['segments']), 2)
+        self.assertEqual(edl['segments'][0]['last_word'], 3)
+        kept_pause = edl['segments'][0]['src_out_s'] - words[3]['end_s'] + words[4]['onset_s'] - edl['segments'][1]['src_in_s']
+        self.assertLessEqual(kept_pause, 2 * conform.PAD_S + 1e-6)
+        plain = conform.conform(spec(), 'short', self.script, self.ve)
+        self.assertAlmostEqual(plain['duration_s'] - edl['duration_s'], 1.5 - kept_pause, delta=0.01)
+        self.assertEqual(edl['edit']['pauses'], edit['pauses'])
+        self.assertEqual(edl['flubs_removed'], [])
+        self.assertEqual(conform.lint_edl(edl, conform.records_for(edl, self.ve), spec(edit)), [])
+        # A spec whose pause rule changed since conform is refused, like a changed speed.
+        self.assertTrue(conform.lint_edl(edl, conform.records_for(edl, self.ve), spec()))
+
+    def test_a_pause_rule_needs_his_words_and_a_sane_threshold(self):
+        words, duration = clock(SCRIPT, extra_pause={3: 1.1})
+        self.ingest('take-1', words, duration)
+        for pauses in ({'longer_than_s': 0.6}, {'longer_than_s': 0.1, 'said': 'clip out empty awkward silences'}):
+            with self.assertRaises(ValueError):
+                conform.conform(spec({'remove': [], 'speed': 1, 'pauses': pauses}), 'short', self.script, self.ve)
+
+    def test_a_long_pause_one_aligner_does_not_hear_is_never_cut(self):
+        words, duration = clock(SCRIPT, extra_pause={3: 1.1})
+        heard_b = copy.deepcopy(words)
+        heard_b[3]['end_s'] = round(heard_b[4]['onset_s'] - 0.01, 4)   # aligner B runs "models." into the next word
+        self.ingest('take-1', words, duration, words_b=heard_b)
+        edit = {'remove': [], 'speed': 1, 'pauses': {'longer_than_s': 0.6, 'said': 'clip out empty awkward silences'}}
+        edl = conform.conform(spec(edit), 'short', self.script, self.ve)
+        self.assertEqual(len(edl['segments']), 1)
+
     def test_silent_spans_find_a_pause_and_ignore_a_breath(self):
         loud, quiet = [-18.0] * 30, [-55.0] * 12
         self.assertEqual(takes.silent_spans(loud + quiet + loud), [[1.0, 1.4]])
@@ -262,6 +298,31 @@ class ConformTest(unittest.TestCase):
         reel = conform.joins_reel(edl, out['dialogue'], self.dir / 'joins.short.wav')
         self.assertEqual(len(reel['joins']), 1)
         self.assertTrue(Path(reel['reel']).is_file())
+
+    @unittest.skipUnless(have_ffmpeg(), 'ffmpeg is not installed')
+    def test_a_sped_cut_keeps_every_word_where_the_edl_puts_it_after_many_joins(self):
+        # 18 Nov 2026: a tempo change on each segment put the voice about 7 ms later at every join (154 ms after 18
+        # joins on Tuesday 17's short at 1.21x) while the picture held. The speed-up now runs once over the joined voice.
+        script = ('One. Two. Three. Four. Five. Six. Seven. Eight. Nine. Ten.').split()
+        words, duration = clock(script, word_s=0.25, pause_s=1.2)
+        tones = '+'.join(f"between(t,{w['onset_s']},{w['end_s']})" for w in words)
+        media = self.dir / 'take-1.wav'
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'lavfi', '-i', f'sine=f=440:r=48000:d={duration}',
+                        '-af', f"volume='if({tones},1,0)':eval=frame", str(media)], check=True)
+        self.ingest('take-1', words, duration, media=media)
+        self.script = [{'w': i, 'word': w} for i, w in enumerate(script)]
+        edit = {'remove': [], 'speed': 1.21, 'speed_said': 'speed it up if needed',
+                'pauses': {'longer_than_s': 0.6, 'said': 'clip out empty awkward silences'}}
+        edl = conform.conform(spec(edit), 'short', self.script, self.ve)
+        self.assertGreaterEqual(len(edl['joins']), 8)
+        out = conform.render(edl, conform.records_for(edl, self.ve), self.dir / 'assets')
+        import numpy as np
+        raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', out['voice']['raw'], '-f', 's16le', '-ac', '1', '-ar', '48000', '-'],
+                             capture_output=True, check=True).stdout
+        loud = np.abs(np.frombuffer(raw, dtype=np.int16).astype(float)) > 3000
+        last = edl['words'][-1]
+        heard = (np.flatnonzero(loud[int((last['onset_s'] - 0.2) * 48000):])[0] / 48000) + last['onset_s'] - 0.2
+        self.assertAlmostEqual(heard, last['onset_s'], delta=0.012)
 
 
     # numbers said his own way (D1, velib.words) ------------------------------------------------------------

@@ -47,7 +47,7 @@ export function throughLineState(object: EngineObject, events: readonly EngineEv
       const start = part.number?.value ?? 0
       part.number = { ...number, value: start }
       focus = part.id
-      transitions.push({ at: e.atFrame, duration: 30, apply: t => { part.number = { ...number, value: start + (number.value - start) * t } } })
+      transitions.push({ at: e.atFrame, duration: 30, apply: t => { const v = start + (number.value - start) * t; part.number = { ...number, value: Number.isInteger(start) && Number.isInteger(number.value) ? Math.round(v) : v } } })
     }
     const animate = (duration: number, apply: (t: number) => void) => transitions.push({ at: e.atFrame, duration, apply })
     if (c.verb === 'thin') { const start = part.thickness; animate(30, t => { part.thickness = start + (c.thickness - start) * t }) }

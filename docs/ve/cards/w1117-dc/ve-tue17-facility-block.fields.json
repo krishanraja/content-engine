@@ -1,0 +1,32 @@
+{
+ "path": "docs/ve/cards/w1117-dc/ve-tue17-facility-block.md",
+ "card_id": "ve-tue17-facility-block",
+ "kind": "device",
+ "spec": "docs/plans/2026-11-17-tuesday/ve/spec.json",
+ "title": "facility_block: one building that carries the story, changed on screen",
+ "goal": "Krish picked `eating-jobs-ladder` for Tue 17 Nov's piece (b019dbf8): one object carries the story, changed on screen, never replaced. Here the object is one data centre. Build the library device `facility_block`: one windowless building (data centre, factory, office or warehouse by `params.kind`), one lit block on the house ink ground that every beat changes.\n\n`params`: `kind`, `label` (place under the pin, at most 3 words), `logo` (optional registry id, the real mark on the block's side), `tag` (optional, at most 3 words), `targets` (up to 2 receipts, {label}), `copies` ({count 2..60, kept}), `skyline` ({lights 6..40}).\n\nVerbs and what each move means (every move changes the block itself, lands in 0.6 s or less; the block never rests):\n- `enter` (toState `pin`): the block drops onto a map pin with the label.\n- `fill` (toState `racks`): the roof opens like a lid and racks of servers slide up inside, a small mint glint on each rack.\n- `connect` (toState `city`): a cable runs from the block to a small-city skyline; the city's windows go dark one by one as the block glows brighter.\n- `add` (toState `ballot` or `pylons`): a ballot box drops beside the block; or pylons draw themselves towards it.\n- `stamp` (toState `ban`): a BAN stamp slams onto the block's face and the block shudders.\n- `carry` (toState `walk`): the block unplugs, grows two small legs and walks off looking for a socket, the price tag trailing behind it on a string.\n- `move` (toState `target:<index>`): the price tag flies off the block and lands on receipt `targets[index]`.\n- `multiply` (toState the count): the block becomes `copies.count` small blocks in a grid; `grey` (toState the kept count) stamps all but `copies.kept` of them with a small BAN.\n- `grow` / `thin` (toState `giant` / `small`): the block grows huge or shrinks to a container beside a wind turbine.\n- `exit`: the block folds flat to a line.\n\nHis floor (floor.py --format motion): every state change moves the object, never an arrival that sits, a crossfade or an arrow; drawn in brand tokens with light, shadow and texture, never icons, clipart or emoji; no words beyond `label`, `tag`, target labels and a count. No caption box.\n\nPace and room (config/ve/pace-references.json): fill the box; tall y 280 to 1050, nothing to read right of x 860; wide, the whole slot.\n\n## Tests (`device.test.ts`, stills from `fixture.json`)\n- each verb changes the block's own drawing\n- the `connect` city has fewer lit windows after the event than before; `grey` leaves exactly `kept` blocks unstamped\n- an unregistered `logo` id is refused\n- the same frame twice renders identical pixels; no colour outside tokens; tall and wide stills render",
+ "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Register `facility_block` in `devices/registry.ts` and `config/ve/devices.json` with exactly enter, fill, connect, add, stamp, carry, move, multiply, grey, grow, thin, exit; update `verbs.test.ts`. Draw in SVG from the frame alone; any texture is seeded by the frame number, never random. Reuse packages/moves and logo_card's resolveLogo for the mark, never copy a move. Add no motion profile and leave apps/renderer/src/engine/kit/motion-profiles.json untouched.",
+ "acceptance": "npx vitest run apps/renderer/src/engine/devices/facility_block\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+ "write_allow": [
+  "apps/renderer/src/engine/devices/facility_block/**",
+  "apps/renderer/src/engine/devices/registry.ts",
+  "apps/renderer/src/engine/devices/verbs.test.ts",
+  "config/ve/devices.json"
+ ],
+ "read": [
+  "apps/renderer/src/engine/devices/CONTRACT.md",
+  "apps/renderer/src/engine/devices/logo_card/**",
+  "apps/renderer/src/engine/devices/through_line/**",
+  "packages/moves/**",
+  "apps/renderer/src/engine/clock.ts",
+  "apps/renderer/src/engine/props.ts",
+  "apps/renderer/src/engine/kit/**",
+  "config/ve/devices.json",
+  "config/logo-registry.json",
+  "config/channel-safe-zones.json",
+  "config/ve/pace-references.json",
+  "docs/ve/MOTION_STANDARD.md"
+ ],
+ "max_minutes": 90,
+ "max_calls": 80
+}
