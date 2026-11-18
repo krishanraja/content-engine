@@ -426,7 +426,7 @@ export function offdayHead(route: MakeRoute | null, template: ViewTemplate | nul
   const clip = route === 'reskin' && template
     ? `The clip to download and reskin: ${template.clip.url}\nIts page: ${template.clip.page}\nFound on ${template.found.label || template.found.place}${template.found.url ? ` (${template.found.url})` : ''}; credit: ${template.credit || 'name the original poster from the page'}.\n`
       + `${template.what_happens ? `What happens in it: ${template.what_happens}\n` : ''}${template.clip.seconds ? `Its length: about ${template.clip.seconds} seconds.\n` : ''}`
-      + `${caption ? `His caption (his note on this post): ${caption}\n` : 'He has not written a caption yet: ask him once.\n'}\n`
+      + `${caption ? `His caption (his words on this post; set exactly these): ${caption}\n` : 'He has not written a caption yet: ask him once.\n'}\n`
     : ''
   return `${routeLine(route)}\n\n${clip}Make exactly what Krish approved, nothing else, to the rejection floor`
     + `${route === 'still' ? ' and content-engine docs/CAROUSEL-STANDARD.md' : route === 'reskin' ? ' and content-engine docs/MEME-STANDARD.md' : ''}; Growth (krishanraja/growth-makeyourmindup) posts it.\n\n`
@@ -436,10 +436,18 @@ export function offdayHead(route: MakeRoute | null, template: ViewTemplate | nul
 function routeFor(kind: string, raw: Body | null | undefined, format: unknown): MakeRoute | null {
   return makeRoute(kind, str(raw?.format) ?? (typeof format === 'string' ? format : null), Boolean(raw && templateOf(raw)))
 }
-/** A meme template's head for the prompt: the clip, where it was found and his caption (the option's note); null for anything else. */
-function reskinHead(raw: Body | null | undefined): string | null {
+/** His caption for a meme template, as he gave it: the words on his Approve press (typed in his own box, or a caption idea he
+ *  tapped, which fills the same box, so both arrive here the same way), else his words on the option, else a note on its record.
+ *  Never a caption idea he did not choose. (Krish, 2026-11-18: "the meme template prompt does not pull through if I choose my own
+ *  caption instead of selecting one of the choices".) */
+export function captionOf(o: ViewOption, raw: Body | null | undefined): string | null {
+  const said = typeof o.said === 'string' && !/^Said in a session, not pressed here/i.test(o.said) ? o.said : null
+  return str(o.outcome?.words) ?? str(said) ?? str(raw?.note)
+}
+/** A meme template's head for the prompt: the clip, where it was found and his caption; null for anything else. */
+function reskinHead(raw: Body | null | undefined, o: ViewOption): string | null {
   const t = raw ? templateOf(raw) : null
-  return t ? offdayHead('reskin', t, str(raw?.note)) : null
+  return t ? offdayHead('reskin', t, captionOf(o, raw)) : null
 }
 
 /** What the prompt says to do with the story, by where the piece is (Ruling, Krish, 2026-11-16: "Even though this piece is
@@ -914,9 +922,9 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const ready = own && !made && !missed && !scriptsApproval(m.picks || [], own) ? scriptsReady(m, d.day, own, base.title, where, recordsItself(kind, m.picks || [], o.doc_id)) : null
   if (ready) {
     return { ...base, line: ready.line, next: ready.press as Action, decision: true,
-      others: [itemPrompt(m.week, { ...base, line: ready.line }, 'post', routeFor(kind, raw, o.format), null, m.decisions?.[own!] ?? null, own, reskinHead(raw)) as unknown as PressAction] }
+      others: [itemPrompt(m.week, { ...base, line: ready.line }, 'post', routeFor(kind, raw, o.format), null, m.decisions?.[own!] ?? null, own, reskinHead(raw, o)) as unknown as PressAction] }
   }
-  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', routeFor(kind, raw, o.format), null, own ? m.decisions?.[own] ?? null : null, own, reskinHead(raw)), decision: false }
+  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', routeFor(kind, raw, o.format), null, own ? m.decisions?.[own] ?? null : null, own, reskinHead(raw, o)), decision: false }
 }
 
 /** Whether an off-day post has a recorded step: a voiceover short whose voice is his own take (Record it myself, his
