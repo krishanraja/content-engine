@@ -10,7 +10,7 @@
     38.0,
     44.667
   ],
-  "sha256": "756843b57877c1cd1af784520eb0cf8cb8601e25c77434ac348a0e20c4b5f719",
+  "sha256": "ae9d47d4693e309b279a208abe146d11ef340db949c019ff27e52283b2ee2b16",
   "spec_sha256": "61c0174b97dccf9ff2fea46106baeef5435523218ddc02a67b3a03c61ef62c74",
   "structure": {
     "format": "voice-led-pictures",
@@ -299,7 +299,7 @@
     ]
   },
   "style_module": "swiss-kinetic-type",
-  "props_sha256": "1d3ff4dac7582394740f8903eb69b534e6dc53678901b291cab18203f62be074",
+  "props_sha256": "8dfe24b1c7734f8262d216d64606e4169445b604950691437f72d2093eb88e50",
   "type": [
     [
       "data",
