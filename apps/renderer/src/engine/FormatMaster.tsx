@@ -23,6 +23,7 @@ import { regionSlots } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
 import { EngineAudio } from './audio'
+import { GradedBackdrop } from './treatments/Grade'
 import { band } from './captions/kit'
 import { TitleMoment } from './title/TitleMoment'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
@@ -86,9 +87,22 @@ function cameraView(profile: MotionProfile | undefined, beat: EngineBeat, slots:
  *  one it always was (houseGolden.test.ts). */
 /** One real picture under a beat's graphics, fitted by cover (never stretched: F53), with an ink scrim at its foot so
  *  the graphics and captions over it stay readable (Krish, 2026-11-18: "making actual use of the full screen"). */
-function Backdrop({ src, tokens }: { src: string; tokens: EngineRenderProps['tokens'] }) {
-  return <AbsoluteFill data-backdrop>
-    <Img src={src} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+/** One world (Krish, 2026-11-18: "create visual consistency between the two styles interchanging in a world class art
+ *  directed way"): a beat with a drawn device stands on its photograph thrown out of focus and graded down (focus 1), a
+ *  beat with none shows the photograph sharp (focus 0), both in one grade (treatments/Grade.tsx), and the focus racks
+ *  across RACK_FRAMES after a cut between the two kinds, so the picture never says the same thing twice. */
+const RACK_FRAMES = 12
+export function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number {
+  const kind = (b: EngineBeat) => (b.uses.length > 0 ? 1 : 0)
+  const index = beats.indexOf(beat), before = index > 0 ? beats[index - 1]! : undefined
+  const from = before?.backdrop ? kind(before) : kind(beat), to = kind(beat)
+  const t = Math.min(1, Math.max(0, (frame - beat.fromFrame) / RACK_FRAMES)), eased = t * t * (3 - 2 * t)
+  return from + (to - from) * eased
+}
+
+function Backdrop({ src, tokens, focus, frame, width, height }: { src: string; tokens: EngineRenderProps['tokens']; focus: number; frame: number; width: number; height: number }) {
+  return <AbsoluteFill data-backdrop data-backdrop-focus={focus.toFixed(3)}>
+    <GradedBackdrop src={src} focus={focus} tokens={tokens as unknown as Record<string, string>} frame={frame} width={width} height={height} />
     <AbsoluteFill style={{ background: `linear-gradient(180deg, color-mix(in srgb, ${tokens.ink} 38%, transparent) 0%, transparent 42%, color-mix(in srgb, ${tokens.ink} 72%, transparent) 100%)` }} />
   </AbsoluteFill>
 }
@@ -205,7 +219,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
                 tokens={props.tokens} sinceFrames={sinceBeat} boil={profile.boil} />}
               {torn && <TornFilter id={beat.id} tokens={props.tokens} />}
             </> : sweep && <AbsoluteFill style={sweep} />)
-        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} /> : undefined
+        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} /> : undefined
         const layer = (
           <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
             {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts); a backdrop joins it only
@@ -324,7 +338,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const panelBackdrop = stagingGround && activeBeat?.backdrop ? (
     <AbsoluteFill key="staging-backdrop" data-backdrop-panel>
       <div style={{ ...boxStyle(stagedNow!.panel), borderRadius: stagedNow!.panel.radius, overflow: 'hidden' }}>
-        <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} /></div>
+        <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={stagedNow!.panel.width} height={stagedNow!.panel.height} /></div>
     </AbsoluteFill>) : undefined
   const picture = stagingGround ? [stagingGround, ...(panelBackdrop ? [panelBackdrop] : []), ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)
   // With no ingredients the tree is exactly what it was before them (houseGolden.test.ts flattens it).
