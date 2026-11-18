@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import re
 import subprocess
+from pathlib import Path
 
 from .common import ffmpeg
 
@@ -21,8 +22,12 @@ TOLERANCE = {'L': 5.0, 'a': 4.0, 'b': 4.0}
 PER_BEAT = 3
 WIDTH = 120
 FRAME = (1080, 1920)          # a 9:16 cut, the only aspect SPLIT draws (layouts/index.ts)
-SEAM_Y = 760                  # SPLIT_SEAM_Y: his take sits in the box below it on a SPLIT beat
-DEFAULT_CROP = '50% 88%'      # SPLIT_POSTER_POSITIONS.proof, what splitPlatePosition falls back to
+# The seam and the default crop are read from the renderer's own geometry file, never copied (a copy kept the old crop here
+# after the renderer moved it).
+_GEOMETRY = (Path(__file__).resolve().parents[2] / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts'
+             ).read_text(encoding='utf-8')
+SEAM_Y = int(re.search(r'export const SPLIT_SEAM_Y = (\d+)', _GEOMETRY).group(1))   # his take sits below it on a SPLIT beat
+DEFAULT_CROP = re.search(r"proof: '([^']+)'", _GEOMETRY).group(1)   # SPLIT_POSTER_POSITIONS.proof, splitPlatePosition's fallback
 KEYWORDS = {'left': 0.0, 'top': 0.0, 'center': 0.5, 'right': 1.0, 'bottom': 1.0}
 
 

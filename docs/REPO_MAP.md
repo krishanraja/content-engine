@@ -6126,6 +6126,10 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 The SPLIT layout's geometry, as the renderer and QC both read it: one seam between the graphics stage above and
 
 - `const SPLIT_SEAM_Y`
+- `const SPLIT_STAGE_LEFT`
+- `const SPLIT_STAGE_TOP`
+- `const SPLIT_STAGE_WIDTH`
+- `const SPLIT_STAGE_HEIGHT`
 - `const SPLIT_STAGE_SCALE`
 - `const SPLIT_CAPTION_ZONE`
 - `const SPLIT_POSTER_POSITIONS`

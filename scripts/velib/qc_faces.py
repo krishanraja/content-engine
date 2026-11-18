@@ -157,6 +157,37 @@ CHIN = 0.08
 HEAD_SAMPLES = (0.25, 0.5, 0.75)   # shares of a beat: a head that moves is caught where it moves
 
 
+def crop_position(crop) -> float:
+    """The vertical position, in percent, a beat's `plate.crop` puts on the take (splitPlatePosition's reading; the
+    renderer's default when it names none). Only the `X% Y%` form is read; a keyword form falls back to the default."""
+    from .qc_as_shot import DEFAULT_CROP  # noqa: PLC0415  (the one copy of the renderer's default, read from its file)
+    for text in (crop, DEFAULT_CROP):
+        found = re.fullmatch(r'\s*\S+\s+(-?\d+(?:\.\d+)?)%\s*', text or '')
+        if found:
+            return float(found.group(1))
+    return 50.0
+
+
+def fitting_position(samples: list, position: float, *, seam: int, height: int = 1920) -> str | None:
+    """The `plate.crop` that puts every sampled head (crown, chin in the finished frame) inside the camera band, centred
+    between the two edges, or None when no vertical position of a take that tall can hold them (a head bigger than the band).
+    His take is as wide as the cut, so the take is `height` rows tall and shows `height - seam` of them: the overflow
+    is `seam`, and a position p shifts the take up by p% of it."""
+    overflow = seam
+    low = max(seam - crown for crown, _ in samples)       # move the take down at least this far to clear the crown
+    high = min(height - chin for _, chin in samples)      # and at most this far to keep the chin
+    if low > high:
+        return None
+    shift = (low + high) / 2
+    offset = position / 100 * overflow - shift
+    if not 0 <= offset <= overflow:
+        offset = min(max(offset, 0), overflow)
+        moved = position / 100 * overflow - offset
+        if not low <= moved <= high:
+            return None
+    return f'50% {round(offset / overflow * 100)}%'
+
+
 def head_in_band(video: str, beats: list, *, seam: int, aspect: str = '9:16', fps: float = 30, detector=None,
                  grab=None) -> dict:
     target = 'his whole head, crown to chin, inside the camera band of every SPLIT take beat'
@@ -169,10 +200,10 @@ def head_in_band(video: str, beats: list, *, seam: int, aspect: str = '9:16', fp
                 'reason': 'no face detector in this Python (opencv-python or mediapipe)'}
     grab = grab or (lambda frame: frame_at(video, frame, fps, (1080, 1920)))
     height = 1920
-    cut, no_face, samples = [], [], 0
+    cut, no_face, samples, suggest = [], [], 0, {}
     for beat in eligible:
         span = beat['toFrame'] - beat['fromFrame']
-        seen = 0
+        seen, heads, before = 0, [], len(cut)
         for share in HEAD_SAMPLES:
             frame = beat['fromFrame'] + int(span * share)
             samples += 1
@@ -182,6 +213,7 @@ def head_in_band(video: str, beats: list, *, seam: int, aspect: str = '9:16', fp
             seen += 1
             x, y, w, h = max(faces, key=lambda f: f[2] * f[3])
             crown, chin = y - CROWN * h, y + (1 + CHIN) * h
+            heads.append((crown, chin))
             at = round(frame / fps, 2)
             if crown < seam:
                 cut.append({'beat': beat.get('id'), 'at_s': at, 'edge': 'crown', 'by_px': round(seam - crown),
@@ -190,6 +222,10 @@ def head_in_band(video: str, beats: list, *, seam: int, aspect: str = '9:16', fp
                 cut.append({'beat': beat.get('id'), 'at_s': at, 'edge': 'chin', 'by_px': round(chin - height)})
         if not seen:
             no_face.append(beat.get('id'))
+        elif len(cut) > before:
+            # Name the crop that would hold every sampled head, so the fix is a value to set, not a search.
+            suggest[beat.get('id')] = fitting_position(
+                heads, crop_position((beat.get('plate') or {}).get('crop')), seam=seam, height=height) or 'none fits'
     return {'value': {'beats': len(eligible), 'samples': samples, 'cut': cut[:12], 'count': len(cut),
-                      'no_face_in_beat': no_face},
+                      'no_face_in_beat': no_face, 'suggest_crop': suggest},
             'target': target, 'pass': not cut and not no_face}

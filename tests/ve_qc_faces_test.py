@@ -133,6 +133,40 @@ class HeadInBand(unittest.TestCase):
         self.assertFalse(report['pass'])
         self.assertEqual(report['value']['count'], 1)
 
+    def test_a_cut_head_names_the_crop_that_would_fit(self):
+        # The Wed 18 failure: the take cropped at 88% put his crown 193 px up in the stage. The report says where to put it.
+        cropped = {**beat(), 'plate': {'source': 'take', 'crop': '50% 88%'}}
+        report = head([cropped], (390, 700, 300, 380))
+        self.assertFalse(report['pass'])
+        fix = report['value']['suggest_crop']['face']
+        self.assertRegex(fix, r'^50% \d+%$')
+        # Moving the take as suggested clears the crown and keeps the chin: the shift is (88 - p)% of the 760 row overflow.
+        shift = (88 - int(fix.split()[1].rstrip('%'))) / 100 * SEAM
+        crown, chin = 700 - 0.35 * 380 + shift, 700 + 1.08 * 380 + shift
+        self.assertGreaterEqual(crown, SEAM - 8)
+        self.assertLessEqual(chin, 1920)
+
+    def test_a_head_too_big_for_the_band_says_no_crop_fits(self):
+        report = head([beat()], (390, 200, 300, 1100))   # a face 1100 rows tall: crown to chin cannot fit 1160
+        self.assertFalse(report['pass'])
+        self.assertEqual(report['value']['suggest_crop']['face'], 'none fits')
+
+    def test_the_renderers_default_crop_keeps_both_portrait_takes_whole(self):
+        # Measured on the Wed 18 Build-or-buy short and the AI music short (1080 x 1920), 18 Nov 2026: face box top and
+        # height at each sample. With the renderer's default crop (read from splitGeometry.ts) no sample is cut.
+        from velib.qc_faces import crop_position
+        position = crop_position(None)
+        self.assertEqual(position, 16.0)
+        offset = position / 100 * SEAM
+        takes = {'wed18': [(434, 698), (441, 715), (489, 606), (456, 691), (532, 693), (539, 655)],
+                 'ai_music': [(260, 348), (298, 362), (334, 353), (321, 356), (312, 361), (299, 352)]}
+        for name, faces in takes.items():
+            for y, h in faces:
+                with self.subTest(take=name, y=y):
+                    crown, chin = y - 0.35 * h - offset + SEAM, y + 1.08 * h - offset + SEAM
+                    self.assertGreaterEqual(crown, SEAM)
+                    self.assertLessEqual(chin, 1920)
+
     def test_a_beat_where_no_face_is_found_fails(self):
         report = head([beat()], None)                   # the crop may have cut the face out entirely
         self.assertFalse(report['pass'])
