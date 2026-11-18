@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-18","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- a post that moved day now shows the files in its Drive folder (the folder is dated for the day it was first made for; the board now also takes a folder of another day of the week when an option names it or its title is in exactly one option's title), and the files stay on the card when it is Scheduled or Live. Thu 19 "Free ChatGPT has ads now" was really scheduled on Instagram for Fri 20 with its eight cards; the board just could not see its folder. (2026-11-18)
 - Tue 17 data-centres piece (b019dbf8): both cuts specced, conformed, mixed (Aspire 15% under the house bed) and rendering in full on the engine Krish approved on 18 Nov: one picture per beat in one shared grade with a focus rack, no face ghost in a dissolve, no logo or off.day tag in the body, the wordmark on the title frame and the close card, the episode title built from his own line. Short 85 s; long 5 min 19 s (two restarts kept as said where no quiet allowed a cut, flagged to Krish). (2026-11-18)
 - Migration 20261206090000_taste_evidence_reference.sql written, not applied: it adds reference_at and reference_note to taste_evidence and marks the 3,682 rows of the 17 Nov Instagram profile-grid backfill as reference material (record hygiene Krish approved on 18 Nov). (2026-11-18)
 - a meme template's production prompt now carries his caption from the words on his Approve press, however he gave it (typed in his own box or a caption idea tapped, which fill the same box), instead of reading a field that neither route wrote; a caption idea he did not choose is never used. (2026-11-18)
@@ -51,7 +52,7 @@ Older lines: `docs/history/2026-11-18-NOW-moved-28.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): QC both renders, run the separate Critic, then covers and filing for Krish's final yes.
+- Next (2026-11-18): Control Centre draws `assets` on the card (krishanraja/control-center); covers and thumbnails per channel are not made for a carousel and not requested, which Krish should say if he wants them.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-18): holds.
