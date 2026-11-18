@@ -37,7 +37,7 @@ def mechanical(spec, cut, directory):
     aspect = spec['cuts'][cut]['aspect']
     lock = designlock.for_aspect(designlock.load(), aspect)
     locked = spec['format'] in lock.get('formats', {})
-    frozen = locked and designlock.frozen(lock, spec['format'])[0]
+    frozen = locked and designlock.frozen(lock, spec['format'])[0] and designlock.picture_match(lock, spec['format'])
     # Composition zones are 9:16 only. Key frames apply to a wide cut once its format has a frozen <format>@16:9
     # lock; until then both rows are not applicable to it (QC says so itself) and the Critic is the design gate.
     tall = aspect == '9:16'

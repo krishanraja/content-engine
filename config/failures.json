@@ -2751,7 +2751,7 @@
       "related": [
         "cut-called-done-unheard"
       ],
-      "surface": "Every copy was burned (Drive bin, local caches). A board still is now the StyleStill cover art from Codex card docs/ve/cards/style-stills/ve-style-still-template-1.md, never a cut of a take; ve lab still and ve lab sample refuse any cut of a take. The 16 Nov purge missed the design lock: the four key frames of the face-with-proof lock (fixtures/ve/design-lock/face-with-proof/, hash-bound in config/ve/design-lock.json) were the same three frames he rejected, and every face-with-proof cut was matched against them. Krish, 2026-11-17: \"character.ai or ai music are good\"; 2026-11-18, asked where the image was still used: \"DELETE THOSE FRAMES FOREVER. you need to rebuild everywhere it was to be 10X better using those two new references\". 18 Nov: ve lock retire deleted the four frames and returned the format to a draft awaiting a new Gate 2, with their hashes barred from freeze and a test that none is back in the tree; the live split geometry left apps/renderer/src/engine/mocks/face-with-proof.tsx (deleted, with its Thursday mocks and their three Codex cards) for layouts/splitGeometry.ts; the lab refuses to stage the retired take (lab.json retired_takes). Still open: Codex card docs/ve/cards/fwp-rebuild/ve-fwp-rebuild-1.md builds the eight replacement stills from the AI music and Character.AI pieces for his Gate 2, and the lab needs a ve piece on a take from one of those two pieces before it can render again (neither has one: the AI music short was a one-off composite, Character.AI predates ve). This entry closes when both are done.",
+      "surface": "Every copy was burned (Drive bin, local caches). A board still is now the StyleStill cover art from Codex card docs/ve/cards/style-stills/ve-style-still-template-1.md, never a cut of a take; ve lab still and ve lab sample refuse any cut of a take. The 16 Nov purge missed the design lock: the four key frames of the face-with-proof lock (fixtures/ve/design-lock/face-with-proof/, hash-bound in config/ve/design-lock.json) were the same three frames he rejected, and every face-with-proof cut was matched against them. Krish, 2026-11-17: \"character.ai or ai music are good\"; 2026-11-18, asked where the image was still used: \"DELETE THOSE FRAMES FOREVER. you need to rebuild everywhere it was to be 10X better using those two new references\". 18 Nov: ve lock retire deleted the four frames and barred their hashes from freeze (a test fails if one is back in the tree), and ve lock rules-only then dropped the picture-matching on his words, so the format is a lock held to its rules, the Critic and his approval; the live split geometry left apps/renderer/src/engine/mocks/face-with-proof.tsx (deleted, with its Thursday mocks and their three Codex cards) for layouts/splitGeometry.ts; the lab refuses to stage the retired take (lab.json retired_takes). Still open: Codex cards docs/ve/cards/fwp-rebuild/ build the replacement stills from the AI music and Character.AI pieces, the design he approves, and the lab needs a ve piece on a take from one of those two pieces before it can render again (neither has one: the AI music short was a one-off composite, Character.AI predates ve). This entry closes when both are done.",
       "guards": [
         {
           "file": "scripts/velib/lab.py",
@@ -2827,6 +2827,53 @@
           "long_video"
         ],
         "line": "A cut never crops his head and never squeezes the picture above him; both are measured rules, never left to a reference image."
+      }
+    },
+    {
+      "id": "carousel-body-font",
+      "on": "2026-11-18",
+      "status": "guarded",
+      "mode": "brand-default-kept-after-rejection",
+      "guard_level": "prose",
+      "krish": "this font is crappy, i have given this feedback before (typed in the ChatGPT ads carousel session, 18 Nov 21:13, and again to this session: why would it still keep popping up in carousels?). Earlier, 18 Nov, recorded in docs/CAROUSEL-STANDARD.md: \"the font and look are substandard\". He then saw the deck set in Anton and said \"go\"",
+      "what": "Carousel body cards (the shipped ChatGPT ads carousel) set every sentence in Archivo at its heaviest weight, tight, with a mint phrase: the face he has now rejected twice.",
+      "symptom": "The same heavy body face on every carousel card after he had said the font was substandard.",
+      "cause": "The 18 Nov standard answered \"the font and look are substandard\" with a designed card (kicker, rule, large and tight) and named Archivo Black as the sentence face, so the fix changed everything but the face. The brand's structure face is Archivo (also every caption, at 900), the floor every maker reads says to use the brand typeface consistently (draft and approved lines, 4 Nov), and no check reads fonts: carousel_check.py measures words and layout only. His objection was in a standard's prose, not in the floor or a check.",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "No rule said which face a body sentence takes or that heavy Archivo is rejected; the floor's only font lines require brand-font consistency."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "Nothing in scripts/carousel_check.py or the card template reads or names a typeface."
+        }
+      ],
+      "surface": "18 Nov: the face is chosen by what he approved: Anton, uppercase, mint key phrase, Plex Mono kicker (the ads carousel session switched its cards to it within about a minute of his words and he said go). Now written into the standard and, because every carousel is built from a Codex card, into the card itself (CAROUSEL_BODY_TYPE, scripts/velib/cards.py; tested), together with a ban on Archivo Black and Archivo at 800 or heavier. This entry is printed to every session that runs check_failures.py. Not covered: no check reads a drawn card's font; the rejection floor (config/rejection-floor.json, written only by the Rejections engine from his reported words) does not carry it yet, and his words could not be reported on 18 Nov (the taste engine connection had reached its daily report limit); the ads carousel's cover subline is still Archivo and its session asked him about it.",
+      "guards": [
+        {
+          "file": "docs/CAROUSEL-STANDARD.md",
+          "contains": "Never Archivo Black, and never Archivo at weight 800",
+          "how": "the standard names the rejected face and weight"
+        },
+        {
+          "file": "scripts/velib/cards.py",
+          "contains": "CAROUSEL_BODY_TYPE",
+          "how": "every carousel Codex card states the body face and bans the rejected one"
+        },
+        {
+          "file": "tests/ve_cards_test.py",
+          "contains": "test_a_carousel_card_names_the_body_face_and_the_one_he_rejected",
+          "how": "the card text carries the rule"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "carousel",
+          "cover",
+          "card"
+        ],
+        "line": "Carousel body sentences are Anton, uppercase; never Archivo Black or Archivo at weight 800 or heavier (Krish, 2026-11-18: \"this font is crappy, i have given this feedback before\"); brand-font consistency never means that face."
       }
     },
     {

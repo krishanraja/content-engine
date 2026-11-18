@@ -1,4 +1,4 @@
-# FACE WITH PROOF: motion notes (9:16 lock retired 18 Nov 2026, a draft awaiting a new Gate 2; 16:9 draft awaiting Gate 2)
+# FACE WITH PROOF: motion notes (9:16 key frames retired 18 Nov 2026, now a rules-only lock; 16:9 draft awaiting Gate 2)
 
 > Motion for every cut in this format is held to [the signed motion standard](../../MOTION_STANDARD.md); each piece's own style comes from the bank (`config/style-references.json`, `motion` layer, `style.motion` in the spec) and works inside the frame these notes set.
 
