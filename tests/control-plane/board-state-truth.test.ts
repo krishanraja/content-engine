@@ -131,7 +131,11 @@ describe('a narrative lock follows its piece, never its day', () => {
     const tue = model(v, 'tue').items.find(x => x.piece_id === FRI_OLD)!
     expect(tue).toMatchObject({ stage: { key: 'branded' }, missed: false })
     expect(tue.line).toMatch(/^Branded: its narrative lock is signed for Tue 17/)
-    const later = buildView({ ...i, now: new Date('2026-11-18T15:00:00Z') })
+    // The day after, it is Late on its own step, still Branded (Ruling, Krish, 2026-11-18); the day after that, Missed.
+    const next = buildView({ ...i, now: new Date('2026-11-18T15:00:00Z') })
+    expect(model(next, 'tue').items.find(x => x.piece_id === FRI_OLD)).toMatchObject({ missed: false, stage: { key: 'branded' }, line: expect.stringMatching(/^Late: Tue 17 passed\. It stays on its next step until the end of Wed 18.* Branded: its narrative lock is signed for Tue 17/) })
+    expect(model(next, 'tue').line).toMatch(/^Late: Tue 17 passed/)
+    const later = buildView({ ...i, now: new Date('2026-11-19T15:00:00Z') })
     expect(model(later, 'tue').items.find(x => x.piece_id === FRI_OLD)).toMatchObject({ missed: true, line: expect.stringMatching(/^Missed: Tue 17 passed/) })
   })
 })

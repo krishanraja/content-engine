@@ -6,6 +6,7 @@ import type { MoveSpec, OffdayItem } from './_offdayItems.js'
 import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
 import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
 import { thumbsPress } from './_thumbs.js'
+import { lateLine, lateOn, missedOn } from './_stage.js'
 import { NEVER_HEADLESS, ROUTE_RULING, makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
 import { EXPERIMENTS, type DayStyle, type StyleLayer } from './_style.js'
 import { RECORD_MYSELF, audioPresses, soundLine, voiceOf } from './_audio.js'
@@ -586,7 +587,7 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const done = out ? PIECE_PATH.length : branded ? (lookPicked ? (scriptsOk && !unsent ? 3 : 2) : 1) : 0
   // What it says now: the signed lock, never the idea row it started from (F47).
   const said = m.lockReads?.[p.id]
-  const missed = !out && d.date < m.today
+  const missed = !out && missedOn(d.date, m.today)
   const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
     title: workingTitle(m, p.id, p.title, out), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
     read: withWork(withLock(readOf(null, { row }), said), m, [p.id]), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
@@ -1070,6 +1071,7 @@ export function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ide
   if (!d.items.length) return d.ideas ? `Nothing approved for ${d.label} yet. Its ideas are on the ideas board.` : `Nothing approved for ${d.label}.`
   if (d.decisions) return `${d.decisions === 1 ? 'One decision' : `${d.decisions} decisions`} for you.`
   if (d.items.some(i => i.missed)) return `Missed: ${d.label} passed and not everything on it is marked live.`
+  if (d.items.some(i => /^Late:/.test(i.line))) return `Late: ${d.label} passed and not everything on it is marked live. It stays open one more day.`
   const live = d.items.filter(i => i.stage.key === 'live').length
   if (live === d.items.length) return 'Done: everything on it is live.'
   const rest = d.items.length - live
@@ -1199,6 +1201,8 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
     }
     // The scripts on every card that holds them (scriptsOnCard; Krish, 2026-11-17).
     for (let n = 0; n < items.length; n++) items[n] = scriptsOnCard(m, d, items[n])
+    // The day after its own, an item not out is Late on its own next step, and says so first (_stage.ts, lateOn).
+    if (lateOn(d.date, m.today)) for (const it of items) if (!it.missed && it.stage.key !== 'live' && it.stage.key !== 'scheduled' && !/^Late:/.test(it.line)) it.line = `${lateLine(d.label, m.today)} ${it.line}`
     const day: ModelDay = { day: d.day, date: d.date, label: d.label, series: SERIES_DAYS.includes(d.day) ? d.series : null, items,
       decisions: items.filter(i => i.decision).length, ideas: ideas.filter(x => x.day === d.day).length, line: '' }
     day.line = dayLine(day)
