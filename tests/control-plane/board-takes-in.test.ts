@@ -181,6 +181,14 @@ describe('after his Approve scripts, every card waits on his takes, then makes o
     expect(p).not.toContain('Not picked yet')
   })
 
+  it('his experiment tick rides in the one-shot prompt: the session runs that skill beside his picks (1.27.0)', () => {
+    const on = card(inputs({ ...PICKED, style: { ...PICKED.style, experiment: 'directed-shoot' }, takes_in: TAKES }))
+    const p = String((on.next as Body).prompt)
+    expect(p).toContain('The experiment: directed-shoot, ticked by Krish.')
+    expect(p).toContain('.agents/skills/directed-shoot/SKILL.md')
+    expect(String((card(inputs({ ...PICKED, takes_in: TAKES })).next as Body).prompt)).not.toContain('The experiment:')
+  })
+
   it('a production pick still missing comes first as his press, so the session never decides one', () => {
     const noCaptions = { ...PICKED, style: { ...PICKED.style, captions: null }, takes_in: TAKES }
     const it = card(inputs(noCaptions))

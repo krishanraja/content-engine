@@ -2894,6 +2894,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface StyleOption`
 - `interface StyleLayer`
 - `interface DayStyle`
+- `const EXPERIMENTS: ReadonlyArray<{ id: string; name: string; line: string }>`
 - `interface MotionModule`
 - `interface Look`
 - `const CAPTIONS: Array<{ id: string } & CaptionTheme>`
@@ -2906,7 +2907,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function stillFiles(samples: unknown = styleSamples): Set<string>`
 - `const LAST_MOTION`
 - `function undrawableMotion(styles: unknown): Set<string>`
-- `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, str…`
+- `function styleOf(meta: unknown): { motion: string | null; captions: string | null; experiment: string | null; rejected:…`
 - `interface StyleInputs`
 - `function dayStyle(i: StyleInputs): DayStyle`
 - `class StyleError`

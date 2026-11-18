@@ -7,7 +7,7 @@ import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.j
 import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
 import { thumbsPress } from './_thumbs.js'
 import { NEVER_HEADLESS, ROUTE_RULING, makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
-import type { DayStyle, StyleLayer } from './_style.js'
+import { EXPERIMENTS, type DayStyle, type StyleLayer } from './_style.js'
 import { RECORD_MYSELF, audioPresses, soundLine, voiceOf } from './_audio.js'
 import { canonicalUrl, titleNorm } from '../_text.js'
 import { offdayPieceId, videoOffday } from './_offdayPiece.js'
@@ -280,7 +280,20 @@ function layerPress(pieceId: string, style: DayStyle, layer: 'treatment' | 'moti
  *  of the production before I get recording"). Empty once a take is recorded or nothing can be chosen. */
 export function lookPresses(pieceId: string, style: DayStyle | null | undefined): PressAction[] {
   if (!style) return []
-  return (['treatment', 'motion', 'captions'] as const).map(l => layerPress(pieceId, style, l)).filter((x): x is PressAction => Boolean(x))
+  const layers = (['treatment', 'motion', 'captions'] as const).map(l => layerPress(pieceId, style, l)).filter((x): x is PressAction => Boolean(x))
+  return [...layers, experimentPress(pieceId, style)]
+}
+
+/** His experiment tick, beside the look, motion and captions on every piece (contract 1.27.0; Krish, 2026-11-18: "add a
+ *  checkbox on every future piece that I'm planning ... Make it available as a feature in all"): one tick-box per
+ *  experiment, saved through the style route (meta.style.experiment). Unticked sends none, which takes it off. */
+function experimentPress(pieceId: string, style: DayStyle): PressAction {
+  const on = style.experiment ?? null
+  const options = EXPERIMENTS.map(e => ({ value: e.id, label: `${e.name}${e.id === on ? ' (on)' : ''}`, line: cut(e.line, 240) }))
+  return { kind: 'press', label: on ? 'Experiment: directed shoot is on' : 'Add an experiment', op: 'style',
+    body: { piece_id: pieceId, experiment: [] }, stamp: [],
+    choose: { path: 'experiment', ask: 'Run an experiment alongside your picks?', multi: true, required: false, options },
+    done: 'Saved. The production session runs it alongside your picks.' } as PressAction
 }
 
 /**
@@ -912,6 +925,7 @@ export function productionStage(m: ModelInputs, p: { pieceId: string; title: str
   const decisions = [picked('treatment', 'The look'), picked('motion', 'The motion style'), picked('captions', 'The captions'),
     approval ? `The scripts: approved by Krish${approval.on ? ` on ${approval.on}` : ''}${approval.words ? `, in his words "${cut(approval.words, 160)}"` : ''}; the words are below.` : 'The scripts: approved by Krish.']
     .filter((x): x is string => Boolean(x))
+  if (p.style?.experiment) decisions.push(`The experiment: ${p.style.experiment}, ticked by Krish. Run the ${p.style.experiment} skill (.agents/skills/${p.style.experiment}/SKILL.md) alongside his picks: its shot script goes to him before he records, and nothing is generated before his yes to the stills and the price.`)
   const word = { treatment: 'the look', motion: 'the motion style', captions: 'the captions' }
   for (const l of layers) decisions.push(`Not picked yet: ${word[l]}. Use the option marked recommended on the board, say so in your done report, and leave his Pick press open.`)
   // The production plan (_productionPlan.ts): being made once his takes are in, then ready for his review and swaps; the

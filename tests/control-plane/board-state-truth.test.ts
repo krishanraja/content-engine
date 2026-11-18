@@ -306,7 +306,9 @@ describe('his production pick on every piece before recording: the look, the mot
     expect((it.others[0] as any).prompt).toContain('Krish has approved it')
     expect((it.others[0] as any).notes.save).toMatchObject({ kind: 'press', collection: 'comments', body: { use: 'claude_notes', piece_id: MON } })
     const picks = it.others.slice(2)
-    expect(picks.map(a => [a.label, (a as any).op, (a as any).choose.path])).toEqual([['Pick the motion style', 'style', 'motion'], ['Pick the captions', 'style', 'captions']])
+    expect(picks.map(a => [a.label, (a as any).op, (a as any).choose.path])).toEqual([['Pick the motion style', 'style', 'motion'], ['Pick the captions', 'style', 'captions'], ['Add an experiment', 'style', 'experiment']])
+    // The experiment tick-box (1.27.0; Krish, 2026-11-18: "Make it available as a feature in all"): unticked sends none.
+    expect(picks[2]).toMatchObject({ body: { piece_id: MON, experiment: [] }, choose: { multi: true, required: false, options: [{ value: 'directed-shoot', label: 'Directed shoot' }] } })
     expect(labels(picks[0])).toEqual(['Receipts on the ink desk (recommended)', 'Swiss grid', 'The Ladder (not ready yet)'])
     expect((picks[0] as any).body).toEqual({ piece_id: MON })
     expect(labels(picks[1])[0]).toMatch(/\(recommended\)$/)
@@ -354,12 +356,12 @@ describe('his production pick on every piece before recording: the look, the mot
     const it = model(buildView(inputs()), 'wed').items[0]
     expect(it.next).not.toMatchObject({ op: 'look' })
     expect(it.decision).toBe(false)
-    expect(it.others.map(a => a.label)).toEqual(['Claude production prompt', 'Perplexity research prompt', 'Pick the look', 'Pick the motion style', 'Pick the captions'])
+    expect(it.others.map(a => a.label)).toEqual(['Claude production prompt', 'Perplexity research prompt', 'Pick the look', 'Pick the motion style', 'Pick the captions', 'Add an experiment'])
     expect(labels(it.others[2])[0]).toBe('The lit talking head (recommended)')
   })
   it('Tue 17\'s moved piece has the same three picks, from its own row in the plan', () => {
     const it = model(buildView(inputs()), 'tue').items.find(x => x.piece_id === TUE)!
-    expect(it.others.map(a => a.label)).toEqual(['Pick the look', 'Pick the motion style', 'Pick the captions', 'Perplexity research prompt'])
+    expect(it.others.map(a => a.label)).toEqual(['Pick the look', 'Pick the motion style', 'Pick the captions', 'Add an experiment', 'Perplexity research prompt'])
     expect((it.others[1] as any).body).toEqual({ piece_id: TUE })
     // Its plan row names the ladder, which waits on a device: the planned pick passes the ranked list's filter, so the
     // channel's own pick leads and the ladder is never recommended (fleet audit 14 Nov, ve-1).
