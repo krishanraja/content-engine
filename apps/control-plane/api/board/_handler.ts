@@ -1,4 +1,4 @@
-import { TAKES_OP, newTakes, takesInOf } from './_takesIn.js'
+import { TAKES_OP, boardNames, pickTakes, takesInOf, unclearLine } from './_takesIn.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { LIVE_ID, actor, growthWriter, collections, hisOnlyRefusal, monday, revision, validBody, validManifest, views, type Manifest, type View } from './_contracts.js'
@@ -454,10 +454,19 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             const weekRows = await db.from('content_ideas').select('id,idea,scheduled_for,meta')
               .or(`and(scheduled_for.gte.${week},scheduled_for.lte.${end.toISOString().slice(0, 10)}),meta->offday_link->>week.eq.${week}`).limit(200)
             const titleOf = (r: Record<string, any>) => [String(r.idea || ''), ...Object.values(scriptsApproval((picks.data || []) as never, String(r.id))?.titles ?? {})]
-            const own = [String(row.data.idea || ''), ...Object.values(approval.titles), approval.folder ?? ''].filter(Boolean)
-            const others = (weekRows.error ? [] : (weekRows.data || []) as Array<Record<string, any>>)
-              .filter(r => String(r.id).toLowerCase() !== pieceId).flatMap(titleOf).filter(Boolean)
-            const files = newTakes(listing.files, approval.at, claimed, own, others)
+            // And by every name the board shows for it (boardNames): a piece's stored idea can be its first idea long after
+            // the board renamed it, which let the data-centres press take the build-or-buy and skeletons takes (18 Nov).
+            const shown = await readView(db, week, process.env, undefined, undefined, NO_DRIVE).then(boardNames).catch(() => new Map<string, string[]>())
+            const item = typeof body.item === 'string' ? body.item.toLowerCase() : null
+            const mineKeys = new Set([pieceId, ...(item ? [item] : [])])
+            const own = [String(row.data.idea || ''), ...Object.values(approval.titles), approval.folder ?? '', ...[...mineKeys].flatMap(k => shown.get(k) || [])].filter(Boolean)
+            const others = [...(weekRows.error ? [] : (weekRows.data || []) as Array<Record<string, any>>)
+              .filter(r => String(r.id).toLowerCase() !== pieceId).flatMap(titleOf),
+              ...[...shown].filter(([k]) => !mineKeys.has(k)).flatMap(([, t]) => t)].filter(t => t && !own.includes(t))
+            const pick = pickTakes(listing.files, approval.at, claimed, own, others)
+            // Takes for more than one recording and none naming this piece: never all of them (Krish, 2026-11-18).
+            if (!pick.named && pick.groups.length > 1) return res.status(409).json({ ok: false, error: 'takes_unclear', line: unclearLine(pick.groups) })
+            const files = pick.files
             if (!files.length) return res.status(409).json({ ok: false, error: 'no_new_takes',
               line: `No recording is in the Video Engine Inbox since you approved the scripts${approval.on ? ` on ${approval.on}` : ''}. If you have just dropped it, give Drive a minute and press again.` })
             const now = (deps.now ?? (() => new Date().toISOString()))()
