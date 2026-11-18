@@ -754,8 +754,8 @@
    "kind": "recording",
    "origin": "capture",
    "path": "master.wav",
-   "sha256": "2fcce677b72d19e3517a3f4578a03b40c3debb8c78879f560cc3b21acd029616",
-   "licence": "his own voice, recorded 18 Nov 2026 (Video Engine Inbox take sha256 4fdc4e25b768); silences cut to a breath, sped 1.2x once",
+   "sha256": "d901ed34f5bf6d5487777475c13a665b9ff7839c63d7b43a381350451da2d760",
+   "licence": "his own voice, recorded 18 Nov 2026 (Video Engine Inbox take sha256 4fdc4e25b768); silences cut to a 0.12 s breath, two phrases he chose cut, sped 1.08x once",
    "credit": "makeyourmindup"
   }
  ],
@@ -776,30 +776,31 @@
    "excerpt": false,
    "edit": {
     "remove": [],
-    "speed": 1
+    "speed": 1,
+    "speed_said": "his take, silences cut to a breath and sped 1.08x once before ve (the master); ve plays it at 1"
    },
    "captions": {
     "region": "default",
     "emphasis": [
      11,
      26,
-     45,
-     59,
-     86,
-     100,
-     106,
-     114,
-     145,
-     156,
-     168,
-     191,
+     38,
+     52,
+     79,
+     93,
+     99,
+     107,
+     138,
+     149,
+     161,
+     179,
+     193,
      205,
-     217,
-     230,
-     248,
-     258,
-     265,
-     271
+     218,
+     236,
+     246,
+     253,
+     259
     ]
    },
    "beats": [
@@ -874,7 +875,7 @@
      "role": "anchor",
      "span": {
       "from_w": 27,
-      "to_w": 47
+      "to_w": 40
      },
      "viewer_task": "verify_evidence",
      "point": "Loads of real people are blaming AI for being rubbish, right now",
@@ -894,21 +895,21 @@
        "silent": true
       },
       {
-       "at_w": 36,
+       "at_w": 29,
        "obj": "posts",
        "verb": "add",
        "to_state": "next",
        "silent": true
       },
       {
-       "at_w": 41,
+       "at_w": 34,
        "obj": "posts",
        "verb": "add",
        "to_state": "next",
        "silent": true
       },
       {
-       "at_w": 45,
+       "at_w": 38,
        "obj": "posts",
        "verb": "add",
        "to_state": "wall",
@@ -920,8 +921,8 @@
      "id": "b4",
      "role": "bridge",
      "span": {
-      "from_w": 48,
-      "to_w": 59
+      "from_w": 41,
+      "to_w": 52
      },
      "viewer_task": "understand_mechanism",
      "point": "Shrugging off AI is fighting the new tool you already have: a paper map in a car with satnav",
@@ -934,14 +935,14 @@
      ],
      "events": [
       {
-       "at_w": 48,
+       "at_w": 41,
        "obj": "plate-b4",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 54,
+       "at_w": 47,
        "obj": "plate-b4",
        "verb": "move",
        "to_state": "satnav",
@@ -953,8 +954,8 @@
      "id": "b5",
      "role": "anchor",
      "span": {
-      "from_w": 60,
-      "to_w": 77
+      "from_w": 53,
+      "to_w": 70
      },
      "viewer_task": "understand_mechanism",
      "point": "Blaming your tools for your own work has never gone down well",
@@ -967,21 +968,21 @@
      ],
      "events": [
       {
-       "at_w": 60,
+       "at_w": 53,
        "obj": "plate-b5",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 67,
+       "at_w": 60,
        "obj": "plate-b5",
        "verb": "move",
        "to_state": "hammer",
        "silent": true
       },
       {
-       "at_w": 74,
+       "at_w": 67,
        "obj": "plate-b5",
        "verb": "move",
        "to_state": "shelf",
@@ -993,8 +994,8 @@
      "id": "b6",
      "role": "pivot",
      "span": {
-      "from_w": 78,
-      "to_w": 86
+      "from_w": 71,
+      "to_w": 79
      },
      "viewer_task": "feel_stakes",
      "point": "AI slop is human slop with nobody accountable",
@@ -1007,14 +1008,14 @@
      ],
      "events": [
       {
-       "at_w": 78,
+       "at_w": 71,
        "obj": "slop",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 86,
+       "at_w": 79,
        "obj": "slop",
        "verb": "exit",
        "to_state": "gone",
@@ -1026,8 +1027,8 @@
      "id": "b7",
      "role": "anchor",
      "span": {
-      "from_w": 87,
-      "to_w": 93
+      "from_w": 80,
+      "to_w": 86
      },
      "viewer_task": "verify_evidence",
      "point": "A real crash, at full violence",
@@ -1040,14 +1041,14 @@
      ],
      "events": [
       {
-       "at_w": 87,
+       "at_w": 80,
        "obj": "crash",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 92,
+       "at_w": 85,
        "obj": "crash",
        "verb": "move",
        "to_state": "impact",
@@ -1059,8 +1060,8 @@
      "id": "b8",
      "role": "bridge",
      "span": {
-      "from_w": 94,
-      "to_w": 100
+      "from_w": 87,
+      "to_w": 93
      },
      "viewer_task": "understand_mechanism",
      "point": "Nobody puts the car on trial",
@@ -1073,14 +1074,14 @@
      ],
      "events": [
       {
-       "at_w": 94,
+       "at_w": 87,
        "obj": "plate-b8",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 98,
+       "at_w": 91,
        "obj": "plate-b8",
        "verb": "move",
        "to_state": "judge",
@@ -1092,8 +1093,8 @@
      "id": "b9",
      "role": "anchor",
      "span": {
-      "from_w": 101,
-      "to_w": 106
+      "from_w": 94,
+      "to_w": 99
      },
      "viewer_task": "inspect_artifact",
      "point": "We look at whoever was driving",
@@ -1106,14 +1107,14 @@
      ],
      "events": [
       {
-       "at_w": 101,
+       "at_w": 94,
        "obj": "driver",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 106,
+       "at_w": 99,
        "obj": "driver",
        "verb": "mark",
        "to_state": "driver",
@@ -1125,8 +1126,8 @@
      "id": "b10a",
      "role": "pivot",
      "span": {
-      "from_w": 107,
-      "to_w": 114
+      "from_w": 100,
+      "to_w": 107
      },
      "viewer_task": "understand_mechanism",
      "point": "You cannot outrun the car: AI is the car and your job is to drive it",
@@ -1139,14 +1140,14 @@
      ],
      "events": [
       {
-       "at_w": 107,
+       "at_w": 100,
        "obj": "plate-b10a",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 112,
+       "at_w": 105,
        "obj": "plate-b10a",
        "verb": "move",
        "to_state": "runner",
@@ -1158,8 +1159,8 @@
      "id": "b10b",
      "role": "pivot",
      "span": {
-      "from_w": 115,
-      "to_w": 127
+      "from_w": 108,
+      "to_w": 120
      },
      "viewer_task": "feel_stakes",
      "point": "The old excuse that the AI did it will never save you",
@@ -1173,14 +1174,14 @@
      ],
      "events": [
       {
-       "at_w": 118,
+       "at_w": 111,
        "obj": "excuse",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 127,
+       "at_w": 120,
        "obj": "excuse",
        "verb": "exit",
        "to_state": "gone",
@@ -1192,8 +1193,8 @@
      "id": "b11",
      "role": "bridge",
      "span": {
-      "from_w": 128,
-      "to_w": 132
+      "from_w": 121,
+      "to_w": 125
      },
      "viewer_task": "inspect_artifact",
      "point": "Bosses already get it, and here is the study that shows it",
@@ -1206,7 +1207,7 @@
      ],
      "events": [
       {
-       "at_w": 128,
+       "at_w": 121,
        "obj": "ibm",
        "verb": "enter",
        "to_state": "visible",
@@ -1218,8 +1219,8 @@
      "id": "b12",
      "role": "anchor",
      "span": {
-      "from_w": 133,
-      "to_w": 149
+      "from_w": 126,
+      "to_w": 142
      },
      "viewer_task": "verify_evidence",
      "point": "IBM: 71% of HR chiefs rank checking and overruling AI as the top skill",
@@ -1233,21 +1234,21 @@
      ],
      "events": [
       {
-       "at_w": 133,
+       "at_w": 126,
        "obj": "ibm",
        "verb": "mark",
        "to_state": "release",
        "silent": true
       },
       {
-       "at_w": 140,
+       "at_w": 133,
        "obj": "ibmstat",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 144,
+       "at_w": 137,
        "obj": "ibmstat",
        "verb": "count_to",
        "to_state": "hr-chiefs",
@@ -1259,8 +1260,8 @@
      "id": "b13",
      "role": "bridge",
      "span": {
-      "from_w": 150,
-      "to_w": 160
+      "from_w": 143,
+      "to_w": 153
      },
      "viewer_task": "understand_mechanism",
      "point": "The skill itself: catch the AI being wrong and overrule it",
@@ -1274,14 +1275,14 @@
      ],
      "events": [
       {
-       "at_w": 150,
+       "at_w": 143,
        "obj": "check",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 156,
+       "at_w": 149,
        "obj": "check",
        "verb": "type",
        "to_state": "1",
@@ -1293,8 +1294,8 @@
      "id": "b14",
      "role": "anchor",
      "span": {
-      "from_w": 161,
-      "to_w": 173
+      "from_w": 154,
+      "to_w": 166
      },
      "viewer_task": "verify_evidence",
      "point": "Only 29% of staff even rank judgment as important",
@@ -1307,14 +1308,14 @@
      ],
      "events": [
       {
-       "at_w": 161,
+       "at_w": 154,
        "obj": "ibmstat",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 167,
+       "at_w": 160,
        "obj": "ibmstat",
        "verb": "count_to",
        "to_state": "staff",
@@ -1326,8 +1327,8 @@
      "id": "b15",
      "role": "payoff",
      "span": {
-      "from_w": 174,
-      "to_w": 194
+      "from_w": 167,
+      "to_w": 182
      },
      "viewer_task": "land_payoff",
      "point": "The only way AI does not replace you is owning its mistakes as yours",
@@ -1340,21 +1341,21 @@
      ],
      "events": [
       {
-       "at_w": 179,
+       "at_w": 167,
        "obj": "owned",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 186,
+       "at_w": 174,
        "obj": "owned",
        "verb": "type",
        "to_state": "1",
        "silent": true
       },
       {
-       "at_w": 191,
+       "at_w": 179,
        "obj": "owned",
        "verb": "type",
        "to_state": "2",
@@ -1366,8 +1367,8 @@
      "id": "b16",
      "role": "pivot",
      "span": {
-      "from_w": 195,
-      "to_w": 197
+      "from_w": 183,
+      "to_w": 185
      },
      "viewer_task": "land_payoff",
      "point": "Because they are yours",
@@ -1381,7 +1382,7 @@
      ],
      "events": [
       {
-       "at_w": 196,
+       "at_w": 184,
        "obj": "theyare",
        "verb": "enter",
        "to_state": "visible",
@@ -1393,8 +1394,8 @@
      "id": "b17",
      "role": "bridge",
      "span": {
-      "from_w": 198,
-      "to_w": 205
+      "from_w": 186,
+      "to_w": 193
      },
      "viewer_task": "reset_attention",
      "point": "Three habits are getting people fired",
@@ -1407,14 +1408,14 @@
      ],
      "events": [
       {
-       "at_w": 198,
+       "at_w": 186,
        "obj": "habits",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 204,
+       "at_w": 192,
        "obj": "habits",
        "verb": "dim",
        "to_state": "all",
@@ -1426,8 +1427,8 @@
      "id": "b18",
      "role": "anchor",
      "span": {
-      "from_w": 206,
-      "to_w": 218
+      "from_w": 194,
+      "to_w": 206
      },
      "viewer_task": "understand_mechanism",
      "point": "Habit one: waiting to be told, while AI never waits",
@@ -1440,21 +1441,21 @@
      ],
      "events": [
       {
-       "at_w": 206,
+       "at_w": 194,
        "obj": "plate-b18",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 211,
+       "at_w": 199,
        "obj": "plate-b18",
        "verb": "move",
        "to_state": "phone",
        "silent": true
       },
       {
-       "at_w": 216,
+       "at_w": 204,
        "obj": "plate-b18",
        "verb": "move",
        "to_state": "screen",
@@ -1466,8 +1467,8 @@
      "id": "b19",
      "role": "bridge",
      "span": {
-      "from_w": 219,
-      "to_w": 233
+      "from_w": 207,
+      "to_w": 221
      },
      "viewer_task": "understand_mechanism",
      "point": "Habit two: forwarding AI work unread, with your name on it",
@@ -1481,21 +1482,21 @@
      ],
      "events": [
       {
-       "at_w": 219,
+       "at_w": 207,
        "obj": "habits",
        "verb": "fill",
        "to_state": "two",
        "silent": true
       },
       {
-       "at_w": 221,
+       "at_w": 209,
        "obj": "fwd",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 230,
+       "at_w": 218,
        "obj": "fwd",
        "verb": "send",
        "to_state": "sent",
@@ -1507,8 +1508,8 @@
      "id": "b20",
      "role": "anchor",
      "span": {
-      "from_w": 234,
-      "to_w": 241
+      "from_w": 222,
+      "to_w": 229
      },
      "viewer_task": "understand_mechanism",
      "point": "Habit three: telling your boss the computer did it",
@@ -1522,21 +1523,21 @@
      ],
      "events": [
       {
-       "at_w": 234,
+       "at_w": 222,
        "obj": "habits",
        "verb": "fill",
        "to_state": "three",
        "silent": true
       },
       {
-       "at_w": 235,
+       "at_w": 223,
        "obj": "boss",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 239,
+       "at_w": 227,
        "obj": "boss",
        "verb": "type",
        "to_state": "0",
@@ -1548,8 +1549,8 @@
      "id": "b21",
      "role": "pivot",
      "span": {
-      "from_w": 242,
-      "to_w": 249
+      "from_w": 230,
+      "to_w": 237
      },
      "viewer_task": "feel_stakes",
      "point": "That excuse writes your resignation letter for you",
@@ -1563,14 +1564,14 @@
      ],
      "events": [
       {
-       "at_w": 244,
+       "at_w": 232,
        "obj": "boss",
        "verb": "type",
        "to_state": "1",
        "silent": true
       },
       {
-       "at_w": 248,
+       "at_w": 236,
        "obj": "boss",
        "verb": "send",
        "to_state": "sent",
@@ -1582,8 +1583,8 @@
      "id": "b22",
      "role": "bridge",
      "span": {
-      "from_w": 250,
-      "to_w": 260
+      "from_w": 238,
+      "to_w": 248
      },
      "viewer_task": "connect_with_speaker",
      "point": "Tomorrow: read every line before you hit send",
@@ -1596,14 +1597,14 @@
      ],
      "events": [
       {
-       "at_w": 250,
+       "at_w": 238,
        "obj": "plate-b22",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 258,
+       "at_w": 246,
        "obj": "plate-b22",
        "verb": "move",
        "to_state": "send",
@@ -1615,8 +1616,8 @@
      "id": "b23",
      "role": "anchor",
      "span": {
-      "from_w": 261,
-      "to_w": 267
+      "from_w": 249,
+      "to_w": 255
      },
      "viewer_task": "feel_stakes",
      "point": "Would I bet my job on this?",
@@ -1629,14 +1630,14 @@
      ],
      "events": [
       {
-       "at_w": 261,
+       "at_w": 249,
        "obj": "plate-b23",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 265,
+       "at_w": 253,
        "obj": "plate-b23",
        "verb": "move",
        "to_state": "badge",
@@ -1648,8 +1649,8 @@
      "id": "b24",
      "role": "pivot",
      "span": {
-      "from_w": 268,
-      "to_w": 271
+      "from_w": 256,
+      "to_w": 259
      },
      "viewer_task": "land_payoff",
      "point": "You already are betting it",
@@ -1662,7 +1663,7 @@
      ],
      "events": [
       {
-       "at_w": 270,
+       "at_w": 258,
        "obj": "already",
        "verb": "enter",
        "to_state": "visible",
@@ -1674,8 +1675,8 @@
      "id": "b25",
      "role": "bridge",
      "span": {
-      "from_w": 272,
-      "to_w": 277
+      "from_w": 260,
+      "to_w": 265
      },
      "viewer_task": "reset_attention",
      "point": "The full story is free at makeyourmindup.ai",

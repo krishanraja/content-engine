@@ -40,14 +40,14 @@
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.scratch/ve/habits/assets/audio.short.wav",
-      "trimBeforeFrames": 834
+      "trimBeforeFrames": 803
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 4,
+      "toFrame": 13,
       "words": [
         {
           "text": "we",
@@ -55,194 +55,167 @@
         },
         {
           "text": "don't",
-          "atFrame": 0
+          "atFrame": 2
         },
         {
           "text": "put",
-          "atFrame": 0
+          "atFrame": 7
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 4,
-      "toFrame": 25,
+      "fromFrame": 13,
+      "toFrame": 42,
       "words": [
         {
           "text": "the",
-          "atFrame": 4
-        },
-        {
-          "text": "car",
-          "atFrame": 8
-        },
-        {
-          "text": "on",
           "atFrame": 13
         },
         {
+          "text": "car",
+          "atFrame": 16
+        },
+        {
+          "text": "on",
+          "atFrame": 22
+        },
+        {
           "text": "trial.",
-          "atFrame": 17
+          "atFrame": 27
         }
       ],
       "swipeIndex": 3
     },
     {
-      "fromFrame": 25,
-      "toFrame": 57,
+      "fromFrame": 42,
+      "toFrame": 68,
       "words": [
         {
           "text": "We",
-          "atFrame": 25
-        },
-        {
-          "text": "look",
           "atFrame": 42
         },
         {
+          "text": "look",
+          "atFrame": 52
+        },
+        {
           "text": "at",
-          "atFrame": 47
+          "atFrame": 57
         },
         {
           "text": "whoever",
-          "atFrame": 52
+          "atFrame": 62
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 57,
-      "toFrame": 88,
+      "fromFrame": 68,
+      "toFrame": 85,
       "words": [
         {
           "text": "was",
-          "atFrame": 57
+          "atFrame": 68
         },
         {
           "text": "driving.",
-          "atFrame": 64
+          "atFrame": 75
         }
       ],
       "swipeIndex": 1
     },
     {
-      "fromFrame": 88,
-      "toFrame": 107,
+      "fromFrame": 85,
+      "toFrame": 120,
       "words": [
         {
           "text": "AI",
-          "atFrame": 88
+          "atFrame": 85
         },
         {
           "text": "is",
-          "atFrame": 89
+          "atFrame": 99
         },
         {
           "text": "the",
-          "atFrame": 97
+          "atFrame": 108
         },
         {
           "text": "car",
-          "atFrame": 101
+          "atFrame": 113
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 107,
-      "toFrame": 151,
+      "fromFrame": 120,
+      "toFrame": 155,
       "words": [
         {
           "text": "and",
-          "atFrame": 107
+          "atFrame": 120
         },
         {
           "text": "you're",
-          "atFrame": 116
+          "atFrame": 130
         },
         {
           "text": "the",
-          "atFrame": 123
+          "atFrame": 138
         },
         {
-          "text": "driver.",
-          "atFrame": 127
+          "text": "driver",
+          "atFrame": 142
         }
       ],
       "swipeIndex": 3
     },
     {
-      "fromFrame": 151,
-      "toFrame": 187,
+      "fromFrame": 155,
+      "toFrame": 202,
       "words": [
         {
-          "text": "So",
-          "atFrame": 151
+          "text": "so",
+          "atFrame": 155
         },
         {
           "text": "the",
-          "atFrame": 153
+          "atFrame": 167
         },
         {
           "text": "old",
-          "atFrame": 164
+          "atFrame": 176
         },
         {
           "text": "AI",
-          "atFrame": 169
+          "atFrame": 181
         },
         {
           "text": "did",
-          "atFrame": 180
+          "atFrame": 194
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 187,
-      "toFrame": 229,
-      "words": [
-        {
-          "text": "it",
-          "atFrame": 187
-        },
-        {
-          "text": "excuse",
-          "atFrame": 197
-        },
-        {
-          "text": "is",
-          "atFrame": 212
-        },
-        {
-          "text": "never",
-          "atFrame": 223
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 229,
+      "fromFrame": 202,
       "toFrame": 240,
       "words": [
         {
-          "text": "going",
-          "atFrame": 229
+          "text": "it",
+          "atFrame": 202
         },
         {
-          "text": "to",
-          "atFrame": 233
+          "text": "excuse",
+          "atFrame": 212
         },
         {
-          "text": "save",
-          "atFrame": 239
+          "text": "is",
+          "atFrame": 230
         },
         {
-          "text": "you",
-          "atFrame": 240
-        },
-        {
-          "text": "and",
+          "text": "never",
           "atFrame": 240
         }
       ],
@@ -257,7 +230,7 @@
       "role": "bridge",
       "layout": "STAGE",
       "fromFrame": 0,
-      "toFrame": 25,
+      "toFrame": 42,
       "uses": [
         "plate-b8"
       ],
@@ -266,14 +239,14 @@
       "plate": {
         "source": "none"
       },
-      "keyFrame": 17
+      "keyFrame": 34
     },
     {
       "id": "b9",
       "role": "anchor",
       "layout": "STAGE",
-      "fromFrame": 25,
-      "toFrame": 88,
+      "fromFrame": 42,
+      "toFrame": 85,
       "uses": [
         "driver"
       ],
@@ -282,14 +255,14 @@
       "plate": {
         "source": "none"
       },
-      "keyFrame": 75
+      "keyFrame": 76
     },
     {
       "id": "b10a",
       "role": "pivot",
       "layout": "STAGE",
-      "fromFrame": 88,
-      "toFrame": 151,
+      "fromFrame": 85,
+      "toFrame": 155,
       "uses": [
         "plate-b10a"
       ],
@@ -298,13 +271,13 @@
       "plate": {
         "source": "none"
       },
-      "keyFrame": 138
+      "keyFrame": 141
     },
     {
       "id": "b10b",
       "role": "pivot",
       "layout": "STAGE",
-      "fromFrame": 151,
+      "fromFrame": 155,
       "toFrame": 240,
       "uses": [
         "plate-b10a",
@@ -315,7 +288,7 @@
       "plate": {
         "source": "none"
       },
-      "keyFrame": 232
+      "keyFrame": 239
     }
   ],
   "objects": [
@@ -324,7 +297,7 @@
       "device": "photo_plate",
       "meaning": "the generated picture on b8",
       "fromFrame": 0,
-      "toFrame": 25,
+      "toFrame": 42,
       "variants": {},
       "params": {
         "image": {
@@ -348,7 +321,7 @@
       "obj": "plate-b10a",
       "device": "photo_plate",
       "meaning": "the generated picture on b10a",
-      "fromFrame": 88,
+      "fromFrame": 85,
       "toFrame": 240,
       "variants": {},
       "params": {
@@ -373,7 +346,7 @@
       "obj": "excuse",
       "device": "slam_word",
       "meaning": "the old excuse taped off and declared void",
-      "fromFrame": 151,
+      "fromFrame": 155,
       "toFrame": 240,
       "variants": {},
       "params": {
@@ -385,8 +358,8 @@
       "obj": "driver",
       "device": "photo_plate",
       "meaning": "the real driver seat in a real IIHS crash, ringed on driving",
-      "fromFrame": 25,
-      "toFrame": 88,
+      "fromFrame": 42,
+      "toFrame": 85,
       "variants": {},
       "params": {
         "video": {
@@ -425,42 +398,42 @@
       "obj": "plate-b8",
       "verb": "move",
       "toState": "judge",
-      "atFrame": 8
+      "atFrame": 16
     },
     {
       "id": "b9-0",
       "obj": "driver",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 25
+      "atFrame": 42
     },
     {
       "id": "b9-1",
       "obj": "driver",
       "verb": "mark",
       "toState": "driver",
-      "atFrame": 64
+      "atFrame": 75
     },
     {
       "id": "b10a-0",
       "obj": "plate-b10a",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 88
+      "atFrame": 85
     },
     {
       "id": "b10a-1",
       "obj": "plate-b10a",
       "verb": "move",
       "toState": "runner",
-      "atFrame": 116
+      "atFrame": 130
     },
     {
       "id": "b10b-0",
       "obj": "excuse",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 169
+      "atFrame": 181
     }
   ],
   "motion": {
