@@ -27,6 +27,9 @@ describe('the $15 a week chain', () => {
     }
     expect(chainFamily(row('fact-gate-web', 0, '2026-11-10', 'agent', 'perplexity'))).toBe('fact-gate')
     expect(chainFamily(row('fact-gate-extract', 0))).toBe('fact-gate')
+    // Ruling (Krish, 2026-11-18): divergent-thinker's calls for content-engine count inside the $15.
+    expect(chainFamily(row('divergent-content-engine', 0))).toBe('divergent')
+    expect(chainFamily(row('divergent-growth-mindmake', 0))).toBeNull()
   })
 
   it('leaves out what the proposal leaves out', () => {

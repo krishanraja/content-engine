@@ -19,6 +19,11 @@
       "what": "the fact gate (Anthropic and Perplexity)",
       "prefixes": ["fact-gate-"],
       "keys": []
+    },
+    "divergent": {
+      "what": "divergent-thinker on call for the ideas board (Control Center meters it as agent divergent-content-engine; Ruling, Krish, 2026-11-18: content-engine's divergent calls count inside its $15 weekly chain cap)",
+      "prefixes": [],
+      "keys": ["divergent-content-engine"]
     }
   },
   "skip_when_over": ["inspirationhouse-tag"],

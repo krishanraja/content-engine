@@ -75,7 +75,9 @@ run that would need one stops and says so.
 What counts against the $15 is measured by its own unit keys, never by everything metered (Ruling, Krish, 2026-11-14:
 the chain cap as proposed in `docs/proposals/2026-11-14-phase3-and-chain-cap.md`; his words: "I agree with everything
 else until Batch 6"). The families live in `config/chain-cap.json` (inspirationhouse's daily runs, the engine's Vercel
-crons, the fact gate; `unit_kind` agent only), and `chainWeekSpend()` in `apps/control-plane/api/_meter.ts` sums them
+crons, the fact gate, and divergent-thinker's calls for the ideas board, which Control Center meters as agent
+`divergent-content-engine` (Ruling, Krish, 2026-11-18: content-engine's divergent calls count inside its $15 weekly chain
+cap; `scripts/post-pack/divergent.py` refuses its paid call, the wildcard, once the week is over); `unit_kind` agent only), and `chainWeekSpend()` in `apps/control-plane/api/_meter.ts` sums them
 for the week from Monday 00:00 UTC (`tests/control-plane/chain-cap.test.ts`). Left out, each with its reason in that
 file: `aeo-*`, Apify actors, Control Center's own agents and Claude Code on his subscription. Measured on 14 Nov 2026:
 $15.45 (week of 26 Oct), $14.53 (2 Nov), $19.64 (9 Nov, to 14 Nov).
