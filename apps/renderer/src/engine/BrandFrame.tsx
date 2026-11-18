@@ -71,7 +71,7 @@ export function onFullPlate(props: EngineRenderProps, beat: EngineBeat): boolean
  *  which left the rack-focus words unreadable on the Wed 18 crocodile plate (ve qc captions.ocr and captions.render,
  *  18 Nov 2026). It hugs the glyphs and darkens nothing else, so the picture behind (the crocodile's eye) keeps its light,
  *  where a floor under the band would have dimmed it. */
-export const CAPTION_HALO = 'drop-shadow(0 0 2px rgba(0,0,0,0.92)) drop-shadow(0 0 9px rgba(0,0,0,0.62))'
+export const CAPTION_HALO = 'drop-shadow(0 0 2px rgba(0,0,0,0.95)) drop-shadow(0 0 3px rgba(0,0,0,0.9)) drop-shadow(0 2px 14px rgba(0,0,0,0.7))'
 
 /** Reuse caption timing, word layout and swipe; apply the frozen split frame's compact padding. */
 export function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number }) {

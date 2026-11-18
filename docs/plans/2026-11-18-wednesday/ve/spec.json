@@ -351,12 +351,12 @@
    "params": {
     "shots": [
      {
-      "src": "plates/croc-stare.png",
+      "src": "plates/croc-stare-up.png",
       "width": 1080,
       "height": 1920,
       "focus": {
-       "x": 0.55,
-       "y": 0.62
+       "x": 0.5,
+       "y": 0.3
       }
      }
     ],
@@ -390,11 +390,11 @@
    "id": "croc-stare",
    "kind": "illustration",
    "origin": "generated",
-   "path": "plates/croc-stare.png",
-   "sha256": "0859c1d65a87f359d038985db7f46fb741f5e7f0cc3f893ce4fc776a07d423bb",
+   "path": "plates/croc-stare-up.png",
+   "sha256": "99d1be8767b2887445205ef449caf6de4b96793cd74b5a61af8f5cbc04e467d7",
    "tool": "higgsfield:seedance_2_5",
    "job_id": "5360fb88-d33e-4973-9469-d6bb2dd819cc",
-   "licence": "the last frame of the hook clip, held"
+   "licence": "the last frame of the hook clip, held and reframed 1.6x so the head sits above the captions"
   },
   {
    "id": "confetti-layer",
