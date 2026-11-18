@@ -820,6 +820,17 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
       next: { kind: 'run', label: `Find the other ${GOOD_NEWS_STORIES - stories.length} stories`, job: 'saturday-goodnews', input: { week: m.week, fill: o.doc_id }, runs_on: 'GitHub · saturday-goodnews.yml' } }
   }
   if (state === 'scheduled') return { ...base, line, next: null, decision: false }
+  // Its final files made and filed in its post folder, with their draft manifest (the cut, covers and thumbnails, and each
+  // channel's words): his Approve for publish replaces the mocks and the proof as the card's final state, the same press a
+  // series piece's card carries, bound to the manifest's sha256; its seal is what Growth's go-live schedules in Buffer
+  // (Krish, 2026-11-18: "once the final assets, covers, thumbnails are produced and filed in drive, that then replaces the
+  // mocks/proofs stage ... at which point I can press Publish").
+  const sealed = own && !missed && d.piece_id && String(d.piece_id).toLowerCase() === own && d.manifest?.press && d.manifest.state !== 'approved'
+    ? d.manifest.press as unknown as PressAction : null
+  if (sealed) {
+    const filed = `${where}. Its final files are in its post folder (${d.manifest!.assets.length}): approve them for publish and Growth schedules every post.`.replace(/\.\./g, '.')
+    return { ...base, line: d.manifest!.why ? `${filed} ${d.manifest!.why}` : filed, next: sealed as Action, decision: true }
+  }
   // A post he records himself, its script approved: the next session assumes the take is in the Video Engine Inbox and
   // cuts it (Krish, 2026-11-17: "when it gets to this stage and the files are in teleprompter, the next action presumes I
   // have recorded the video and put it in the inbox").

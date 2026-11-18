@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.30.0",
+ "contract_version": "1.31.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -2347,7 +2347,8 @@
      "thumbnail": "11111111-2222-4333-8444-555555555555",
      "role": "inspiration",
      "version": 1,
-     "where": "piece"
+     "where": "piece",
+     "sha256": null
     },
     {
      "id": "22222222-3333-4444-8555-666666666666",
@@ -2359,7 +2360,8 @@
      "thumbnail": "22222222-3333-4444-8555-666666666666",
      "role": "inspiration",
      "version": 1,
-     "where": "piece"
+     "where": "piece",
+     "sha256": null
     },
     {
      "id": "33333333-4444-4555-8666-777777777777",
@@ -2371,7 +2373,8 @@
      "thumbnail": null,
      "role": "research",
      "version": 2,
-     "where": "piece"
+     "where": "piece",
+     "sha256": null
     }
    ]
   },
@@ -2934,7 +2937,8 @@
      "thumbnail": "44444444-5555-4666-8777-888888888888",
      "role": "inspiration",
      "version": 1,
-     "where": "day"
+     "where": "day",
+     "sha256": null
     }
    ]
   },

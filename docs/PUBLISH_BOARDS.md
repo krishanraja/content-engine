@@ -1280,6 +1280,30 @@ old board page's Approve for publish bound its sha256; the live board's view car
 - **Held by:** `tests/control-plane/board-manifest.test.ts` (the bind, the seal through piece_manifest.py itself, the
   refusal on a changed hash) and `tests/control-plane/board-view-contract.test.ts`.
 
+## The proof on any piece, and Approve for publish on an off-day piece (contract 1.31.0)
+
+Krish, 2026-11-18, on Tue 17's habits voiceover: "nothing has changed on the board - this seems like a system UI workflow
+failure"; "the board needs to update to a new state - the final state for me to press approve or make any comments /
+feedback, and copy the final prompt back in to that same session"; "once the final assets, covers, thumbnails are produced
+and filed in drive, that then replaces the mocks/proofs stage, which might be a final board state - at which point I can
+press Publish". The produce session filed its proof on the piece and the board had no press for it: `<day>-proof` was a
+Monday, Wednesday and Friday name, and an off-day piece he records had no Approve for publish.
+
+- **The proof press, any piece, any day:** `PUT /api/board/<Monday>/picks/<day>-proof-<the piece id's first 8 hex>`
+  (`PROOF_ID`), kind `approve_proof`, the same body (`gateBody`: the clip's sha256, approve, or reject with his words) and
+  the same write as `<day>-proof`: `meta.making.gates.proof`, which `ve proof` and `ve render` read
+  (`scripts/velib/gates.py`). One document a piece, so two pieces on one day never write over each other's answer.
+  Control Centre's card builds it once the proof is on the piece (role `proof`) and shows every asset with it.
+- **Each material's sha256** is in the view (`days[].materials[].sha256`, a stored file's, null for a link or a text),
+  so a press binds to exactly the file he saw.
+- **Approve for publish on an off-day piece he records:** the day's draft manifest is read for every day's piece, not only
+  the series days, and `picks/<tue|thu|sat>-publish` (`OFFDAY_PUBLISH_ID`) takes the series body (`approve_publish`, bound
+  to the manifest's sha256; `checkPublishBind`). Once the piece's final files and their draft manifest are in its post
+  folder, the off-day card's next step is that press, as his decision (`postItemBase`): it replaces the mocks and the
+  proof. Its seal (`piece_manifest.py seal`) is what Growth's go-live schedules in Buffer; content-engine never calls Buffer.
+- **Held by:** `tests/control-plane/board-offday-proof-publish.test.ts`, `board-view-contract.test.ts` and
+  `board-week-model.test.ts`.
+
 ## His answer on each cut (contract 1.6.0)
 
 The approved mock M5 gives every cut in the Cuts tab its own Yes, Not this, Change it and Add a note. Change it and Add
