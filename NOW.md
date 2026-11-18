@@ -34,6 +34,8 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-18","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Version 2 of the work building is planned (lab/universe/PLAN.md): a 3D scene with toy figurines that each do one small action, the building assembling itself, floors named after the work only, and Codex card ve-universe-figurines queued for the figurine kit, held to a check Claude wrote. (2026-11-18)
+- My takes are in the Inbox works from Control Centre. The press reached the engine as the collection 'takes-in' (no rewrite of its own) and was refused as invalid_collection on every card; it is now one of the engine's known POST presses, with a test that sends it the way Control Centre does. (2026-11-18)
 - The subject lift is built from Codex card ve-treat-1 (velib/matte.py makes a per-take matte offline; SubjectLift.tsx darkens and softens the background with a mint rim behind Krish) and checked by Claude against its card; it stays built: false, so nothing draws until it passes on a real take. (2026-11-18)
 - Krish's universe drawn as one building after the AI-native firm cutaway he sent: seven floors from Control Center on the roof to the second brain in the basement, day to night, sent to him as an 8 s video and two stills; the source is lab/universe/. (2026-11-18)
 - The publish board no longer marks an item Missed the day after its own. For one day it is Late: it keeps its stage and next step (Tue 17's mind.the.gap piece and habits voiceover are back on My takes are in the Inbox on Wed 18), and its line and its day's line say Late. From the second day after, it is Missed as before. (2026-11-18)
@@ -50,7 +52,7 @@ Older lines: `docs/history/2026-11-18-NOW-moved-8.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): Run scripts/velib/matte.py on one of Krish's real takes, make its smear receipt (scripts/frame_smear.py) and show him the treated clip beside the untreated one.
+- Next (2026-11-18): Build the 3D building and staging, drop in Codex's figurines, and review every frame before sending Krish the cut.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
