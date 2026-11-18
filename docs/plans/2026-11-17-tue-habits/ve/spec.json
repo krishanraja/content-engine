@@ -1845,9 +1845,9 @@
   {
    "gate": "proof",
    "by": "Krish",
-   "said": "approve v5",
+   "said": "Approve proof (his board press on proof v8, gates.proof 2026-11-18T21:09:53Z)",
    "on": "2026-11-18",
-   "artifact_hash": "d3d66e954f83b7e965bf7e2f00f02bd5b7221c00cf0f2fc4d29e2c66c56b46c9"
+   "artifact_hash": "c933779a6f0727545e16a0c648d25802cc643269db8efac397b8d439b4c82b79"
   },
   {
    "gate": "exception",
