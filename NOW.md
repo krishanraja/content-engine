@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-18","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The work building version 2 is rendered and sent to Krish (12 s, 1080x1350, day and night stills): Codex's second figurine pass (card ve-universe-figurines-2) passes check.mjs, shows the Claude mark on dark legs and readable props, and the dusk handover is clean. (2026-11-18)
 - The work building's 3D scene is staged (lab/universe/scene/): floors assemble on top of the AI brain, mint lines feed every floor, day turns to night, and the cards use Krish's plain but descriptive wording; it runs on Claude's stand-in figurines while Codex builds the real ones from card ve-universe-figurines. (2026-11-18)
 - Codex's first figurine kit (card ve-universe-figurines) is merged as the base: 20 personalities, pure actions, logos on heads; Claude's review sent a second card (ve-universe-figurines-2) for dark legs that show the Claude mark, readable props and the three footprint faults. (2026-11-18)
 - Version 2 of the work building is planned (lab/universe/PLAN.md): a 3D scene with toy figurines that each do one small action, the building assembling itself, floors named after the work only, and Codex card ve-universe-figurines queued for the figurine kit, held to a check Claude wrote. (2026-11-18)
@@ -51,7 +52,7 @@ Older lines: `docs/history/2026-11-18-NOW-moved-9.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): Drop in Codex's figurine kit once it passes lab/universe/figurines/check.mjs, render with lab/universe/render3d.cjs, review every frame at full size and send Krish the 12 s video.
+- Next (2026-11-18): Krish reacts to the video; change what he names, then re-render with lab/universe/render3d.cjs.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
