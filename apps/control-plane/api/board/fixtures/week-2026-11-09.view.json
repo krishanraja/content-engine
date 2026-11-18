@@ -614,15 +614,16 @@
        {
         "id": "art-directed",
         "name": "Art-directed phrases",
-        "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+        "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, always in the same corner, with the last phrase staying above it, dimmed, and a faint echo of an emphasised word behind.",
         "rules": [
          "Cream with a soft shadow, and no box, pill, underline or colour",
-         "Words pop in over 0.12 s as he says them",
+         "Every phrase is laid out whole and hangs left aligned from one fixed corner, so a word lands where the last one did and never switches sides",
          "The key word at 168 px, the rest at 92 px",
-         "Phrases alternate left and right inside the safe area"
+         "The phrase before stays above, smaller and dimmed, for 0.6 s after the next begins, then fades",
+         "Words fade up over 0.1 s with no scale and no overshoot; the echo is for an emphasised word or a phrase, and only fades"
         ],
         "recommended": true,
-        "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
+        "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\". Rebuilt on 18 Nov 2026 after: \"They are really jolty, and each word moving from left to right is really hard to look at and stressful.\"",
         "sample_url": null,
         "sample_drive": null,
         "still_url": "/api/board/sign-offs?file=1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
@@ -3187,15 +3188,16 @@
        {
         "id": "art-directed",
         "name": "Art-directed phrases",
-        "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+        "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, always in the same corner, with the last phrase staying above it, dimmed, and a faint echo of an emphasised word behind.",
         "rules": [
          "Cream with a soft shadow, and no box, pill, underline or colour",
-         "Words pop in over 0.12 s as he says them",
+         "Every phrase is laid out whole and hangs left aligned from one fixed corner, so a word lands where the last one did and never switches sides",
          "The key word at 168 px, the rest at 92 px",
-         "Phrases alternate left and right inside the safe area"
+         "The phrase before stays above, smaller and dimmed, for 0.6 s after the next begins, then fades",
+         "Words fade up over 0.1 s with no scale and no overshoot; the echo is for an emphasised word or a phrase, and only fades"
         ],
         "recommended": true,
-        "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
+        "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\". Rebuilt on 18 Nov 2026 after: \"They are really jolty, and each word moving from left to right is really hard to look at and stressful.\"",
         "sample_url": null,
         "sample_drive": null,
         "still_url": "/api/board/sign-offs?file=1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
@@ -5859,15 +5861,16 @@
        {
         "id": "art-directed",
         "name": "Art-directed phrases",
-        "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+        "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, always in the same corner, with the last phrase staying above it, dimmed, and a faint echo of an emphasised word behind.",
         "rules": [
          "Cream with a soft shadow, and no box, pill, underline or colour",
-         "Words pop in over 0.12 s as he says them",
+         "Every phrase is laid out whole and hangs left aligned from one fixed corner, so a word lands where the last one did and never switches sides",
          "The key word at 168 px, the rest at 92 px",
-         "Phrases alternate left and right inside the safe area"
+         "The phrase before stays above, smaller and dimmed, for 0.6 s after the next begins, then fades",
+         "Words fade up over 0.1 s with no scale and no overshoot; the echo is for an emphasised word or a phrase, and only fades"
         ],
         "recommended": true,
-        "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
+        "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\". Rebuilt on 18 Nov 2026 after: \"They are really jolty, and each word moving from left to right is really hard to look at and stressful.\"",
         "sample_url": null,
         "sample_drive": null,
         "still_url": "/api/board/sign-offs?file=1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
@@ -9278,9 +9281,9 @@
           {
            "value": "art-directed",
            "label": "Art-directed phrases (recommended)",
-           "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+           "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, always in the same corner, with the last phrase staying above it, dimmed, and a faint echo of an emphasised word behind.",
            "still": "/api/board/sign-offs?file=1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
-           "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\"."
+           "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\". Rebuilt on 18 Nov 2026 after: \"They are really jolty, and each word moving from left to…"
           },
           {
            "value": "pop",
