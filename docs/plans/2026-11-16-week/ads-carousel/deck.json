@@ -2,7 +2,7 @@
   "schema": "carousel-deck/1",
   "title": "Free ChatGPT has ads now. Here is what switching them off costs you. (off day, approved by Krish 17 Nov)",
   "aim": "utility",
-  "experiment": "A trade-off scale as the recurring device: every card after the cover shows what you give up against what you get, so the cost of each switch reads in one glance (meant to make the choice land faster than a list of settings).",
+  "experiment": "The house look at its fullest: a photoreal scene of each card's own point on every card (the felt robot with a 0 price tag on the cover, a fork signposted PAY and STAY FREE on the close), so the swipe reads as one magazine feature.",
   "five_whys": [
     {
       "q": "Why does a free ChatGPT user care?",
@@ -46,7 +46,8 @@
   "cards": [
     {
       "headline": "Free ChatGPT has ads now. Here are three ways round them.",
-      "picture": "A phone showing a ChatGPT answer with a Sponsored card tucked under it; the house felt robot holding a price tag that reads £0; ChatGPT logo"
+      "picture": "A phone showing a ChatGPT answer with a Sponsored card tucked under it; the house felt robot holding a price tag that reads £0; ChatGPT logo",
+      "line": "Paid Plus and Pro plans show no ads."
     },
     {
       "headline": "Free ChatGPT now shows a sponsored card under some answers in the countries where ads run.",
