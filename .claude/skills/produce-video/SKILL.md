@@ -478,6 +478,10 @@ after reading a script out loud than I do creating a script."
   verified caption fixes), then
   `python scripts/post-pack/narration_diff.py ledger WORK/narration.json --cut short|long|feature --date YYYY-MM-DD --piece PIECE_ID`.
   story_check reads the ledger to warn when the next script will run long.
+- **Then the three-way script audit of each cut, once ve ingest has its take**
+  (Krish, 2026-11-18; the tool's docstring says how each text is found):
+  `python scripts/voice/script_audit.py report PIECE_ID CUT --week MONDAY --take <piece>/ve/takes/<take>.json --md WORK/audit-CUT.md --record --file`.
+  A text it cannot find is named with why, never guessed: say which.
 - **The packaging round comes now, never earlier**: the Substack headline and
   cover words, the YouTube title and thumbnail words, the Shorts title, the
   video's title card, every picture heading and chapter divider, written from

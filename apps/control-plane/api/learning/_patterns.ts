@@ -217,7 +217,7 @@ export function repeatedEditClassProposals(rows: EditRow[], now: number = Date.n
 
 /** The table holds 1 to 100 evidence ids. Unique, in the order observed, capped. */
 export const MAX_EVIDENCE = 100
-function evidenceIds(ids: string[]): string[] {
+export function evidenceIds(ids: string[]): string[] {
   return [...new Set(ids)].slice(0, MAX_EVIDENCE)
 }
 
