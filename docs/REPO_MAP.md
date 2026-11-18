@@ -3120,6 +3120,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `const POST_PATH`
 - `const GOOD_NEWS_STORIES`
 - `const CLAUDE_LABEL`
+- `const PUBLISH_LABEL`
 - `const NOTES_HEADING`
 - `const VISUAL_POINTS_ASK`
 - `const VISUAL_POINTS_HEADING`
@@ -3128,6 +3129,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `interface ModelStory`
 - `interface ModelRead`
 - `type ModelAction = Action`
+- `interface ModelAsset`
 - `interface ModelItem`
 - `interface ModelRepeatOf`
 - `interface ModelRepeat`
@@ -3177,6 +3179,7 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const WRITE_BACK_HEAD`
 - `const RESEARCH_RULE`
 - `const WALLS`
+- `const WALLS_SCHEDULE`
 - `const CLOSE_LOOP`
 - `const APPROVAL_RULE`
 - `interface WriteBackTarget`
