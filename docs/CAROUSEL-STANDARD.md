@@ -7,9 +7,9 @@ November 2026; how a carousel is made rewritten on 13 November 2026; his rulings
 it falls in line with the attached."): the cover's logo, the wordmark, the colour of each day and the last card come
 from `config/brand-palette.json` (`docs/production/BRAND_PALETTE.md`), and where a section below says otherwise on one
 of them, the palette is right and the section is history. A carousel's last card is `house_close_slide`: the piece's
-takeaway in one or two lines, then Subscribe free (makeyourmindup.ai) and the wordmark small in the bottom right;
-Saturday's good news keeps his fixed good-news close. (Ruling, Krish, 2026-11-14: the carousel ends on the palette's close, the takeaway then "Subscribe free (makeyourmindup.ai)"; his words: "I agree with everything else until Batch 6"). No carousel ends on "Follow for more" any more, and
-`scripts/carousel_check.py` refuses one that does.
+takeaway in one or two lines, then "Follow for more" with the Make Your Mind Up wordmark centred under it, and no
+wordmark in the bottom-right corner on that card; Saturday's good news keeps his fixed good-news close. (Ruling, Krish, 2026-11-18: "The last card of the carousel should always have the "Make Your Mind Up" word mark centred under the "Follow for more" text, as opposed to the word mark in the bottom-right corner and an amateur call to action"; it replaces the 14 Nov "Subscribe free" close).
+`scripts/carousel_check.py` refuses a last card that says "Subscribe free" or lacks "Follow for more".
 
 Who makes carousels (Ruling, Krish, 28 October 2026: "take over posting as
 well as creating new assets like carousels"): Growth-MakeYourMindUp makes the
@@ -42,8 +42,7 @@ headless model run or a template engine. The Studio's old carousel commands are 
 1. **Claude writes the deck: the story, the words and the creative direction.** The story route is "The ten-second
    swipe" below: ask why five times, find the wider trend and prove it with an outside source, tell it in order, every
    card after the cover one full plain sentence of 8 to 20 words a stranger can follow, and at most 10 cards, ending on
-   the palette's close: the takeaway, then "Subscribe free
-   (makeyourmindup.ai)". The words live in a `carousel-deck/1` file
+   the palette's close: the takeaway, then "Follow for more" with the wordmark centred under it. The words live in a `carousel-deck/1` file
    and `python3 scripts/carousel_check.py DECK.json` passes before anything is drawn. Everything follows this
    standard, the brand palette (`config/brand-palette.json`, `docs/production/BRAND_PALETTE.md`) and the rejection
    floor (`python3 scripts/floor.py --format carousel`).
@@ -248,8 +247,9 @@ The route, for every carousel, whatever the topic. Nothing is drawn until the wo
 6. **At most 10 cards, the cover and the call-to-action card included.** The number in between is whatever the story
    needs.
 7. **The last card is the palette's close** (`house_close_slide`): the piece's takeaway as its headline in one or two
-   lines, one picture, then "Subscribe free (makeyourmindup.ai)" and the wordmark small in the bottom right. Never a bare
-   call to action and never "Follow for more" (Ruling, Krish, 2026-11-14: the carousel ends on the palette's close, the takeaway then "Subscribe free (makeyourmindup.ai)"; his words: "I agree with everything else until Batch 6"). Saturday's good news keeps his fixed good-news close.
+   lines, one picture, then "Follow for more" with the Make Your Mind Up wordmark centred under it; no wordmark in the
+   bottom-right corner on this card and never "Subscribe free" (Ruling, Krish, 2026-11-18: "The last card of the carousel should always have the "Make Your Mind Up" word mark centred under the "Follow for more" text, as opposed to the word mark in the bottom-right corner and an amateur call to action"; it replaces the 14 Nov "Subscribe free" close). Saturday's good news keeps his fixed
+   good-news close.
 8. **Two fresh readers see only the headlines, in order, once**, and answer in their own words what it is, what
    happened, why, why it matters to them and what to do. Every place either got stuck is fixed before drawing.
 
@@ -625,7 +625,7 @@ are what its card holds Codex to and what the session checks before filing it.
   or licence note and which cards use vendor images; within Instagram's 2,200 characters and content-engine's channel
   copy lint.
 
-## The last card says "Follow for more" (Ruling, Krish, 5 November 2026; superseded 12 November 2026)
+## The last card says "Follow for more" (Ruling, Krish, 5 November 2026; superseded 12 November 2026; restored 18 November 2026)
 
 Superseded by the brand palette Krish approved on 12 November 2026: the last card of a carousel is `house_close_slide`
 (the takeaway, Subscribe free, the wordmark small in the bottom right), which Growth's templates draw since

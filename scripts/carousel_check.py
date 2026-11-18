@@ -20,7 +20,7 @@ DECK.json (schema carousel-deck/1) is the deck's words as the cards carry them, 
   {"schema": "carousel-deck/1", "title": "...",
    "five_whys": [{"q": "Why ...?", "a": "..."}, x5],
    "arc": {"what": 1, "happened": [1, 2], "why": 3, "so_what": [5, 6, 7], "do": [8, 9]},
-   "cards": [{"headline": "...", "line": "...", "picture": "...", "source": "on the trend card"}, ..., {"headline": "the takeaway.", "picture": "...", "cta": "Subscribe free (makeyourmindup.ai)"}],
+   "cards": [{"headline": "...", "line": "...", "picture": "...", "source": "on the trend card"}, ..., {"headline": "the takeaway.", "picture": "...", "cta": "Follow for more"}],
    "read_back": [{"reader": "...", "answers": {"what": "...", "happened": "...", "why": "...", "so_what": "...", "do": "..."}}],
    "explains": {"git": "the tool programmers use to save code"}}
 
@@ -29,8 +29,7 @@ What it refuses (each is what a Git deck of 12 or 13 Nov got wrong; docs/CAROUSE
     or those steps out of order;
   - a wider-trend card with no evidence from outside the story ("source");
   - more than 10 cards, the cover and the last card included, or a last card that is not the brand palette's close
-    (house_close_slide: the piece's takeaway as its headline, then "Subscribe free (makeyourmindup.ai)", never "Follow for
-    more"; Ruling, Krish, 2026-11-14); a deck marked "good_news": true keeps his fixed good-news close instead;
+    (house_close_slide: the piece's takeaway as its headline, then "Follow for more" with the wordmark centred under it; Ruling, Krish, 2026-11-18); a deck marked "good_news": true keeps his fixed good-news close instead;
   - a cover headline over 12 words, or a body card whose headline is not one full plain sentence a stranger can follow
     cold (8 to 20 words, ending . ! ?, with a verb; 15 Nov 2026), so no card leads with a label such as "CODE CHANGES
     ANTHROPIC MERGED PER DAY" or shorthand such as "12x more code in four months.": no bare multiplier ("12x", write
@@ -128,10 +127,11 @@ def followable_problems(n: int, head: str, line: str) -> list[str]:
 
 
 # The last card is the brand palette's close (config/brand-palette.json, house_close_slide): the piece's takeaway, then
-# one small action (Ruling, Krish, 2026-11-14: the carousel ends on the palette's close, the takeaway then "Subscribe free
-# (makeyourmindup.ai)"; his words: "I agree with everything else until Batch 6"). Saturday's good news keeps his fixed
-# close (good_news_close).
-HOUSE_CLOSE = 'Subscribe free (makeyourmindup.ai)'
+# "Follow for more" with the Make Your Mind Up wordmark centred under it (Ruling, Krish, 2026-11-18: "The last card of
+# the carousel should always have the "Make Your Mind Up" word mark centred under the "Follow for more" text, as opposed
+# to the word mark in the bottom-right corner and an amateur call to action"; it replaces the 14 Nov "Subscribe free"
+# close). Saturday's good news keeps his fixed close (good_news_close).
+HOUSE_CLOSE = 'Follow for more'
 GOOD_NEWS_CLOSE = 'If this inspires you to MAKE THE WORLD BETTER by combining your ideas + AI, follow for more'
 
 
@@ -145,12 +145,12 @@ def close_problems(deck: dict, cards: list) -> list:
     out = []
     if not str(last.get('headline') or '').strip():
         out.append('the last card leads with the piece\'s takeaway as its headline (house_close_slide)')
-    if 'subscribe free' not in foot or 'makeyourmindup.ai' not in foot:
-        out.append(f'the last card ends on the palette\'s close: the takeaway, then "{HOUSE_CLOSE}" and the wordmark small '
-                   'bottom right (house_close_slide)')
-    if 'follow for more' in foot:
-        out.append('the last card says "Subscribe free (makeyourmindup.ai)", not "Follow for more" (retired by the palette, '
-                   '12 Nov 2026)')
+    if 'follow for more' not in foot:
+        out.append(f'the last card ends on the palette\'s close: the takeaway, then "{HOUSE_CLOSE}" with the wordmark '
+                   'centred under it (house_close_slide)')
+    if 'subscribe free' in foot:
+        out.append('the last card says "Follow for more" over the centred wordmark, not "Subscribe free" (Krish, 18 Nov '
+                   '2026: "an amateur call to action")')
     return out
 
 

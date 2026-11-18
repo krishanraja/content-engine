@@ -117,11 +117,12 @@ def body(n,card):
     return body_a(im,FONTS,KICKERS[n],card['headline'],KEYS[n],CREAM,MINT,top=730 if n==4 else 610 if n==5 else 650,bottom=1230)
 
 def close(card):
+    import sys; sys.path.insert(0,str(OUT)); from body_a import follow_foot
     im=base(7,560,110)
     f=font(70);ls=wrap(card['headline'].upper(),f)
-    sf=font(44,'SemiBold');cta=wrap(card['cta'],sf)
-    total=height(ls,f,74)+28+height(cta,sf,50)
-    y=600+(580-total)/2
+    # the takeaway, then the house foot: "Follow for more" over the centred wordmark (Krish, 2026-11-18)
+    total=height(ls,f,74)+40+48+26+60
+    y=600+(640-total)/2
     turn=False
     for line in ls:
         box=f.getbbox(line);x=(W-(box[2]-box[0]))/2-box[0]
@@ -130,12 +131,12 @@ def close(card):
             ImageDraw.Draw(im).text((round(x),round(y)-box[1]),word,font=f,fill=MINT if turn else CREAM)
             x+=f.getlength(word+' ')
         y+=74
-    draw_lines(im,cta,sf,y+20,MINT,50)
+    follow_foot(im,FONTS,OUT/'brand/wordmark.png',y+30,CREAM)
     return im
 
 if __name__=='__main__':
     assert len(DECK['cards'])==7
     for n,card in enumerate(DECK['cards'],1):
         im=cover(card) if n==1 else close(card) if n==7 else body(n,card)
-        mark(im)
+        if n!=7: mark(im)
         im.save(OUT/f'card-{n}.png')

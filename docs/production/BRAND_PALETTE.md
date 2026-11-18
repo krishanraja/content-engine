@@ -24,7 +24,7 @@ format is refused before it renders. Only Krish changes the palette, and only in
 | The wide close | `statement_card`: "Built to help you decide.", masthead, days, Subscribe free, address; 6 s, held for YouTube's end screen | `scripts/quick-edit/kit/endcard.html` (wide); ve `apps/renderer/src/engine/chrome/EndingBand.tsx` |
 | The tall close | `statement_beat`: the same words, at most 2 s, every word inside the tall core box x 120 to 820, y 330 to 1180 | `scripts/quick-edit/kit/endcard.html` (tall); ve `EndingBand.tsx` (`ENDING_TIMING_TALL`), its length `ENDING_FRAMES_BY_ASPECT` in `scripts/velib/compile.py` |
 | The sting | Retired for good (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."): no cut carries anything before its hook | `config/intro-sting.json` (`retired`; the clips stay in the Drive brand kit for the record) |
-| The carousel close | `house_close_slide`: the piece's takeaway, Subscribe free, the wordmark small in the bottom right | krishanraja/growth-makeyourmindup `render/templates/carousel-close.html` |
+| The carousel close | `house_close_slide`: the piece's takeaway, then "Follow for more" with the wordmark centred under it (Krish, 18 Nov) | krishanraja/growth-makeyourmindup `render/templates/carousel-close.html` |
 
 ## The days
 
