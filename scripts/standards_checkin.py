@@ -305,6 +305,11 @@ def build(week_of, apply):
     applied = apply_decisions() if apply else {}
     db_groups, fresh, amendments = read_live(since)
     new_groups, evolves = propose(floor, groups, db_groups, week_of)
+    # Every group still waiting on his answer is on the page, not only those proposed by this run: a second run the
+    # same week (18 Nov) would otherwise store a week with no items over the one he has not answered yet.
+    fresh_keys = {g['key'] for g in new_groups}
+    pending = [g for g in groups.get('groups') or [] if g.get('key') not in fresh_keys
+               and (db_groups.get(g.get('key')) or {}).get('status') == 'proposed']
     in_file = set(floor.get('standards') or {})
     waiting = sorted({sid(r['fingerprint']) for r in fresh} - in_file)
     revised = [r for r in fresh if r.get('supersedes')]
@@ -312,8 +317,17 @@ def build(week_of, apply):
     by_sid = {}
     for r in fresh:
         by_sid[sid(r['fingerprint'])] = r
+    # A new group's members may have been written before the last check-in (18 Nov: a second run the same day found
+    # every member older than its `since`, and the 13 items carried no quotes). Read their quotes by fingerprint.
+    missing = sorted({m for g in new_groups + pending for m in g['members'] if m not in by_sid})
+    if missing:
+        prefixes = text_array(m[1:] for m in missing)
+        for r in sql(f"""select id, fingerprint, statement, theme, quote_ids, supersedes, status, created_at
+            from public.taste_floor_standards where venture = '{VENTURE}'
+            and left(fingerprint, 10) in (select jsonb_array_elements_text({prefixes})) order by created_at"""):
+            by_sid.setdefault(sid(r['fingerprint']), r)
     quote_ids = []
-    for g in new_groups:
+    for g in new_groups + pending:
         for m in g['members']:
             quote_ids += (by_sid.get(m) or {}).get('quote_ids') or []
     for r in revised:
@@ -321,7 +335,7 @@ def build(week_of, apply):
     quotes, rejections, media = read_why(quote_ids)
 
     items = []
-    for g in new_groups:
+    for g in new_groups + pending:
         qids = [q for m in g['members'] for q in (by_sid.get(m) or {}).get('quote_ids') or []]
         items.append({
             'key': f'{"evolution" if g.get("evolves") else "group"}:{g["key"]}',
@@ -344,7 +358,7 @@ def build(week_of, apply):
                'counts': {'new_groups': sum(1 for g in new_groups if not g.get('evolves')),
                           'evolutions': sum(1 for g in new_groups if g.get('evolves')),
                           'new_standards_grouped': sum(len(g['members']) for g in new_groups),
-                          'new_standards_in_database': len(fresh), 'waiting_for_floor_file': len(waiting),
+                          'new_standards_in_database': len(fresh), 'waiting_on_krish': len(pending), 'waiting_for_floor_file': len(waiting),
                           'amendments': len(amendments), 'standards_revised': len(revised),
                           'quotes': sum(len(i['why']) for i in items),
                           'stills': sum(len(w['stills']) for i in items for w in i['why'])},
