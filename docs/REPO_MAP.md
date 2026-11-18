@@ -2331,6 +2331,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const VETO_ID`
 - `const OFFDAY_ID`
 - `const DECISION_ID`
+- `const PROOF_ID`
+- `const OFFDAY_PUBLISH_ID`
 - `const DECISION_KIND`
 - `const GATE_KINDS`
 - `type GateKind = keyof typeof GATE_KINDS`
