@@ -825,6 +825,28 @@ def _ve_dir(piece):
     return spec_file, load_json(spec_file), verdict.ve_dir(spec_file)
 
 
+def _script_audit(directory, spec, take, path) -> None:
+    """The three-way script audit of the take's cut (scripts/voice/script_audit.py), run as soon as its two clocks are
+    written: the engine's draft, his approved words and what he said (Krish, 2026-11-18: "The whole system would learn
+    so much from doing that after every video was produced"). Best effort, one line: it never fails the ingest. Only for
+    a piece whose folder names its uuid (post.json), and never with SCRIPT_AUDIT_OFFLINE=1."""
+    import os
+    from velib import gates
+    if os.environ.get('SCRIPT_AUDIT_OFFLINE') == '1':
+        return
+    piece = gates.piece_uuid(directory)
+    if not piece:
+        return
+    sys.path.insert(0, str(Path(__file__).resolve().parent / 'voice'))
+    import script_audit
+    cut = script_audit.cut_of_take(take, list((spec.get('cuts') or {}).keys()) if isinstance(spec.get('cuts'), dict) else spec.get('cuts'))
+    if not cut:
+        print(f've ingest: script audit waits: take {take} does not say its cut (name it long-..., short-... or feature-...), '
+              f'or run scripts/voice/script_audit.py report {piece} CUT --take {path}')
+        return
+    print(f've ingest: {script_audit.auto(piece, path, cut, Path(directory) / "audit")}')
+
+
 def cmd_ingest(args) -> int:
     from velib import takes
     try:
@@ -835,6 +857,7 @@ def cmd_ingest(args) -> int:
         record = takes.load_take(directory, args.take)
         print(f"ve ingest: {args.take} ({record['media']['duration_s']} s; {len(record['aligners']['a']['words'])} words from "
               f"{record['aligners']['a']['name']}, {len(record['aligners']['b']['words'])} from {record['aligners']['b']['name']}) -> {path}")
+        _script_audit(directory, spec, args.take, path)
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(f've ingest: {error}', file=sys.stderr)

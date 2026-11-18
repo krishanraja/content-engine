@@ -7,6 +7,7 @@ import {
   presetProposals, judgeProposals, handRewriteProposals, repeatedEditClassProposals, spokenProposals, toProposalRow,
   type CalibrationRow, type EditRow, type SpokenRow,
 } from './_patterns.js'
+import { auditRows, swapProposals } from './_scriptAudit.js'
 
 // The weekly compiler ADR-017 deferred.
 //
@@ -97,12 +98,22 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   const asked = await supabase.from('mindmake_studio_learning_proposals').select('scope').like('scope->>key', 'spoken:%').limit(1000)
   const askedKeys = new Set(((asked.data || []) as { scope: { key?: string } | null }[]).map(r => r.scope?.key).filter(Boolean))
   const spokenNew = asked.error ? [] : spokenProposals(spokenRows).filter(p => !askedKeys.has(String(p.scope.key)))
+  // The words he swaps out, from the three-way script audit of every recorded cut (making.script_audit; Krish,
+  // 2026-11-18: "The whole system would learn so much from doing that after every video was produced"). A swap seen
+  // in two pieces or more goes onto his list as a proposal; a failed read leaves these out, never the week.
+  const audited = await supabase
+    .from('content_ideas')
+    .select('id, meta->making->script_audit')
+    .not('meta->making->script_audit', 'is', null)
+    .limit(500)
+  const auditedRows = audited.error ? [] : auditRows((audited.data || []) as { id: string; script_audit: unknown }[])
+  const swapNew = asked.error ? [] : swapProposals(auditedRows).filter(p => !askedKeys.has(String(p.scope.key)))
 
   // Honest about a thin corpus. A compiler that invents a proposal from two
   // events teaches Krish to ignore the whole surface, which costs far more
   // than a quiet week. A thin week of edits still lets the read-aloud evidence speak.
   const thinEdits = editRows.length < MIN_INSTANCES
-  if (thinEdits && !spokenNew.length) {
+  if (thinEdits && !spokenNew.length && !swapNew.length) {
     return res.status(200).json({
       ok: true,
       skipped: `only ${editRows.length} edit events in ${LOOKBACK_DAYS} days: too thin to propose anything`,
@@ -119,10 +130,11 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       ...repeatedEditClassProposals(editRows),
     ]),
     ...spokenNew,
+    ...swapNew,
   ]
 
   if (!proposals.length) {
-    return res.status(200).json({ ok: true, proposals: 0, edits_read: editRows.length, spoken_pieces: spokenRows.length, note: 'nothing recurred often enough to propose' })
+    return res.status(200).json({ ok: true, proposals: 0, edits_read: editRows.length, spoken_pieces: spokenRows.length, audited_pieces: auditedRows.length, note: 'nothing recurred often enough to propose' })
   }
 
   // Every row is checked against the table's own rules before the insert, so
@@ -146,7 +158,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ ok: false, error: `write_failed: ${error.message}`.slice(0, 500), proposals: rows.length })
   }
 
-  return res.status(200).json({ ok: true, proposals: rows.length, set_aside: setAside, edits_read: editRows.length, spoken_pieces: spokenRows.length })
+  return res.status(200).json({ ok: true, proposals: rows.length, set_aside: setAside, edits_read: editRows.length, spoken_pieces: spokenRows.length, audited_pieces: auditedRows.length })
 }
 
 export default withContentRun('learning_compile', handler)

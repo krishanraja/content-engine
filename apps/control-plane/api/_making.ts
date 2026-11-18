@@ -147,6 +147,24 @@ export type MakingSpokenDelta = Record<(typeof SPOKEN_COUNTS)[number], number> &
   at: string
 }
 
+/** The three-way script audit of one cut (scripts/voice/script_audit.py; Krish, 2026-11-18: "comparing a script that
+ *  you put into the dashboard versus the script that went into Teleprompter after my edits versus the actual words I
+ *  said in the video"). Each text is bound to its sha256 and where it came from, or names why it is missing; each pair
+ *  holds counts and the word swaps (never the texts). */
+export const AUDIT_TEXTS = ['a', 'b', 'c'] as const
+export const AUDIT_PAIRS = ['a_b', 'b_c', 'a_c'] as const
+export const AUDIT_COUNTS = ['words_from', 'words_to', 'kept', 'swapped', 'cut', 'added', 'contracted', 'expanded', 'changes'] as const
+const AUDIT_SWAPS = 40
+const AUDIT_SWAP_CHARS = 80
+export interface MakingAuditText { sha256?: string; source?: string; ref?: string; at?: string; missing?: string }
+export interface MakingAuditSwap { from: string; to: string }
+export type MakingAuditPair = Record<(typeof AUDIT_COUNTS)[number], number> & { changes_per_100_words: number | null; swaps: MakingAuditSwap[] }
+export interface MakingScriptAudit {
+  texts: Record<(typeof AUDIT_TEXTS)[number], MakingAuditText>
+  pairs: Partial<Record<(typeof AUDIT_PAIRS)[number], MakingAuditPair>>
+  at: string
+}
+
 export interface Making {
   /** When the record began: written on its first write and never moved, so
    *  re-running a step never makes a take look as if it came before the
@@ -167,6 +185,9 @@ export interface Making {
   production_choices?: MakingProductionChoices
   /** What he changed reading each cut aloud; merged cut by cut. */
   spoken_delta?: Partial<Record<MakingCut, MakingSpokenDelta>>
+  /** The three-way audit of each cut (scripts/voice/script_audit.py): the engine's draft (a), the words his Approve
+   *  sent (b) and what he said on the take (c), each bound to its hash or named as missing; merged cut by cut. */
+  script_audit?: Partial<Record<MakingCut, MakingScriptAudit>>
   /** Where each cut plays the Inspiration clips routed to the piece (_routedClips.ts), keyed by card id; merged
    *  cut by cut and clip by clip. making.py video refuses a cut that leaves out a clip his words say to play with
    *  its sound. */
@@ -263,6 +284,49 @@ function parseClipPlacement(at: string, card: string, v: unknown, by: string, no
   if (v.audio !== 'on' && v.audio !== 'off') return { problem: `${at}.audio is on or off: whether the clip's own sound plays` }
   if (v.audio === 'off' && !said) return { problem: `${at}: playing a routed clip silent takes Krish's words in said` }
   return { entry: { at_s: start, ...(end !== undefined ? { end_s: end } : {}), audio: v.audio, ...(said ? { said } : {}), at: when(v.at, now), by } }
+}
+
+/** One cut of a script_audit patch, or the reason it is refused. Only hashes, sources, counts and short swaps are
+ *  taken: never a script's text. */
+export function parseScriptAudit(cut: string, v: unknown, now: string): { entry?: MakingScriptAudit; problem?: string } {
+  const at = `script_audit.${cut}`
+  if (!isCut(cut)) return { problem: `unknown cut "${cut}" in script_audit (long, short, feature)` }
+  if (!isObj(v) || !isObj(v.texts) || !isObj(v.pairs)) return { problem: `${at} is {texts: {a, b, c}, pairs}` }
+  const texts = {} as MakingScriptAudit['texts']
+  for (const k of AUDIT_TEXTS) {
+    const t = v.texts[k]
+    if (!isObj(t)) return { problem: `${at}.texts.${k} is {sha256, source} or {missing}` }
+    const missing = str(t.missing, 300)
+    if (missing) { texts[k] = { missing }; continue }
+    const sha = typeof t.sha256 === 'string' && SCRIPT_SHA256.test(t.sha256) ? t.sha256 : null
+    const source = str(t.source, 60)
+    if (!sha || !source) return { problem: `${at}.texts.${k} needs its sha256 and source, or says why it is missing` }
+    const ref = str(t.ref, 200)
+    const when_ = str(t.at, 40)
+    texts[k] = { sha256: sha, source, ...(ref ? { ref } : {}), ...(when_ && !Number.isNaN(Date.parse(when_)) ? { at: when_ } : {}) }
+  }
+  const pairs: MakingScriptAudit['pairs'] = {}
+  for (const [k, p] of Object.entries(v.pairs)) {
+    if (!(AUDIT_PAIRS as readonly string[]).includes(k)) return { problem: `unknown pair "${k}" in ${at}.pairs (${AUDIT_PAIRS.join(', ')})` }
+    const [from, to] = k.split('_') as Array<(typeof AUDIT_TEXTS)[number]>
+    if (texts[from].missing || texts[to].missing) return { problem: `${at}.pairs.${k}: one of its texts is missing` }
+    if (!isObj(p)) return { problem: `${at}.pairs.${k} must be an object` }
+    const nums: Partial<Record<(typeof AUDIT_COUNTS)[number], number>> = {}
+    for (const c of AUDIT_COUNTS) {
+      const n = count(p[c])
+      if (n === null) return { problem: `${at}.pairs.${k}.${c} is a whole number of words` }
+      nums[c] = n
+    }
+    const per = rate(p.changes_per_100_words)
+    if (per === undefined) return { problem: `${at}.pairs.${k}.changes_per_100_words is a number or null` }
+    const list = p.swaps === undefined ? [] : p.swaps
+    if (!Array.isArray(list) || list.length > AUDIT_SWAPS) return { problem: `${at}.pairs.${k}.swaps is a list of at most ${AUDIT_SWAPS}` }
+    const swaps = list.map(s => isObj(s) && typeof s.from === 'string' && typeof s.to === 'string' && s.from.trim() && s.to.trim()
+      && s.from.length <= AUDIT_SWAP_CHARS && s.to.length <= AUDIT_SWAP_CHARS ? { from: s.from.trim(), to: s.to.trim() } : null)
+    if (swaps.some(s => !s)) return { problem: `${at}.pairs.${k}.swaps: each is {from, to}, at most ${AUDIT_SWAP_CHARS} characters a side` }
+    pairs[k as (typeof AUDIT_PAIRS)[number]] = { ...(nums as Record<(typeof AUDIT_COUNTS)[number], number>), changes_per_100_words: per, swaps: swaps as MakingAuditSwap[] }
+  }
+  return { entry: { texts, pairs, at: when(v.at, now) } }
 }
 
 /** One cut of a spoken_delta patch, or the reason it is refused. Only counts and short examples are taken. */
@@ -564,6 +628,20 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
       if (problems.length === before) patch.spoken_delta = cuts
     }
   }
+  if (body.script_audit !== undefined) {
+    const v = body.script_audit
+    if (!isObj(v) || !Object.keys(v).length) problems.push('script_audit needs a cut: long, short or feature')
+    else {
+      const cuts: Partial<Record<MakingCut, MakingScriptAudit>> = {}
+      const before = problems.length
+      for (const [cut, d] of Object.entries(v)) {
+        const { entry, problem } = parseScriptAudit(cut, d, now)
+        if (problem || !entry) problems.push(problem || `${cut}: no audit`)
+        else cuts[cut as MakingCut] = entry
+      }
+      if (problems.length === before) patch.script_audit = cuts
+    }
+  }
   if (body.clip_uses !== undefined) {
     const v = body.clip_uses
     if (!isObj(v) || !Object.keys(v).length) problems.push('clip_uses maps an Inspiration card id to {use, said}')
@@ -694,6 +772,11 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
     // Cut by cut: the short's delta never drops the long's.
     const held = isObj(base.spoken_delta) ? base.spoken_delta : {}
     next.spoken_delta = { ...held, ...patch.spoken_delta }
+  }
+  if (patch.script_audit) {
+    // Cut by cut: the short's audit never drops the long's.
+    const held = isObj(base.script_audit) ? base.script_audit : {}
+    next.script_audit = { ...held, ...patch.script_audit }
   }
   if (patch.rounds !== undefined) next.rounds = patch.rounds
   if (patch.thumbnail_options && (patch.thumbnail_options.options || isObj(base.thumbnail_options))) {
