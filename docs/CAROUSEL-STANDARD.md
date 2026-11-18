@@ -383,6 +383,16 @@ in his Drive (`3 Posts`: the Git post, the homework post, and "AI fixing what we
   its own homework). Under it, on the ink ground: the real company wordmark when the story names one, the headline in
   Anton set huge on two lines (cream, then the turn in mint), one plain subline in Archivo, the mark small bottom right.
   Never an abstract diagram or a chart as the cover: that is what made the Erdős cover underwhelming.
+- **The cover is sensational** (Krish, 2026-11-18: "The cover image of the carousel should always be more sensational.
+  Have a real-life person in them, or a sensational real-life visual screenshot, or a really really well put together
+  generated image"; and of the first house-look covers: "more absurd, hilarious, and creative"). One of: a real person
+  in an absurd, funny, specific moment; a sensational real screenshot; or a generated image good enough to pass for a
+  photograph. A product story shows the product itself, not a stand-in (the ads cover is ChatGPT open and smothered in
+  sponsored links, with a person being sold to from every side, not the robot). The house robot is for covers where no
+  person or real screen fits.
+- **Body-card type is designed, not default** (Krish, 2026-11-18: "the font and look are substandard"): a small
+  IBM Plex Mono kicker in mint naming the card's step (WHAT IT IS, WHAT HAPPENED, WHY, THE BIGGER PICTURE, WHAT TO DO),
+  a short mint rule under it, then the sentence in Archivo Black, large and tight, with its key figure or phrase in mint.
 - **The body cards, as the Erdős deck's.** Every card after the cover is image-led: its own real or photoreal picture
   of that card's point in the same dark, lit look, with the card's one sentence set large below it. The deck reads as
   one feature, never as slides of icons, grids or flat diagrams.
