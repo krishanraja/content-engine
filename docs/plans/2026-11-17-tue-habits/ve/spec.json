@@ -6,9 +6,8 @@
  "theme": "makeyourmindup-video-v1",
  "brand": {
   "series": "mind.the.gap",
-  "captions": "word",
+  "captions": "house",
   "caption_theme": "art-directed",
-  "title": "Which habits will cost you your job?",
   "intro_sting": "none: this piece opens on its hook (an off day, or no wide long cut)",
   "references": [
    {
@@ -172,7 +171,7 @@
    "meaning": "the generated picture on b10a",
    "persist": {
     "from_beat": "b10a",
-    "to_beat": "b10a"
+    "to_beat": "b10b"
    },
    "params": {
     "image": {
@@ -284,24 +283,15 @@
   },
   {
    "obj": "excuse",
-   "device": "stamp",
-   "meaning": "the old excuse stamped void",
+   "device": "slam_word",
+   "meaning": "the old excuse taped off and declared void",
    "persist": {
     "from_beat": "b10b",
     "to_beat": "b10b"
    },
    "params": {
-    "kind": "block",
-    "paint": "mint",
-    "top": "THE AI DID IT",
-    "main": "VOID",
-    "tiltDeg": -4,
-    "at": {
-     "x": 140,
-     "y": 520,
-     "w": 800,
-     "h": 420
-    }
+    "word": "VOID",
+    "tapeText": "THE AI DID IT"
    }
   },
   {
@@ -361,24 +351,6 @@
      {
       "who": "Made-up quote",
       "text": "Signed: you"
-     }
-    ]
-   }
-  },
-  {
-   "obj": "slip",
-   "device": "typing_bubble",
-   "meaning": "the old excuse, handed in as a note",
-   "persist": {
-    "from_beat": "b10b",
-    "to_beat": "b10b"
-   },
-   "params": {
-    "kind": "notification",
-    "rows": [
-     {
-      "who": "Excuse",
-      "text": "The AI did it"
      }
     ]
    }
@@ -544,36 +516,33 @@
   },
   {
    "obj": "driver",
-   "device": "film_frame",
-   "meaning": "the real driver seat after a real crash, ringed on driving",
+   "device": "photo_plate",
+   "meaning": "the real driver seat in a real IIHS crash, ringed on driving",
    "persist": {
     "from_beat": "b9",
     "to_beat": "b9"
    },
    "params": {
-    "images": {
-     "iihs": {
-      "src": "source/b9-iihs-photo.jpg",
-      "pixelWidth": 600,
-      "pixelHeight": 400
-     }
+    "video": {
+     "src": "source/b9-driver-cam.mp4",
+     "pixelWidth": 1920,
+     "pixelHeight": 1080,
+     "trimBeforeFrames": 30
     },
-    "plates": [
-     {
-      "image": "iihs",
-      "date": "small overlap test",
-      "source": "IIHS"
-     }
-    ],
+    "push": 0.04,
+    "focus": {
+     "x": 0.35,
+     "y": 0.5
+    },
+    "source": "IIHS · small overlap front test",
     "regions": {
      "driver": {
-      "x": 0.56,
-      "y": 0.04,
-      "width": 0.38,
-      "height": 0.62
+      "x": 0.24,
+      "y": 0.08,
+      "w": 0.2,
+      "h": 0.5
      }
-    },
-    "mode": "film"
+    }
    }
   },
   {
@@ -708,14 +677,14 @@
    "credit": "IBM Newsroom, 21 Sep 2026"
   },
   {
-   "id": "iihs-photo",
-   "kind": "photo",
+   "id": "iihs-driver",
+   "kind": "recording",
    "origin": "source",
-   "path": "source/b9-iihs-photo.jpg",
-   "sha256": "355198b7bb7444bff9ed6fc3e90be870bd2b157153495f8767ff7beb19836a54",
-   "source_url": "https://www.iihs.org/ratings/about-our-tests/small-overlap-front",
+   "path": "source/b9-driver-cam.mp4",
+   "sha256": "d38bf300e1988116e473c21156fd8d85b84250f9c7f52fe28a723590f05f310c",
+   "source_url": "https://mmx.prnewswire.com/media/MS1738977/CN25001_FB.mp4",
    "licence": "editorial use of the publisher's own published material, credited on screen",
-   "credit": "IIHS"
+   "credit": "IIHS (press release footage, 3 Mar 2026), 27 to 33 s"
   },
   {
    "id": "iihs-crash",
@@ -789,7 +758,7 @@
  "audio": {
   "master": "vo",
   "bed": {
-   "ledger_id": "illusions",
+   "ledger_id": "aspire",
    "mode": "episode_bed",
    "under_vo_lu": -20
   },
@@ -1124,7 +1093,7 @@
      },
      "viewer_task": "inspect_artifact",
      "point": "We look at whoever was driving",
-     "layout": "F3",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
@@ -1190,32 +1159,25 @@
      },
      "viewer_task": "feel_stakes",
      "point": "The old excuse that the AI did it will never save you",
-     "layout": "F3",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "slip",
+      "plate-b10a",
       "excuse"
      ],
      "events": [
       {
-       "at_w": 115,
-       "obj": "slip",
+       "at_w": 118,
+       "obj": "excuse",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 121,
+       "at_w": 127,
        "obj": "excuse",
-       "verb": "stamp",
-       "to_state": "void",
-       "silent": true
-      },
-      {
-       "at_w": 126,
-       "obj": "slip",
        "verb": "exit",
        "to_state": "gone",
        "silent": true
@@ -1709,7 +1671,7 @@
      "role": "bridge",
      "span": {
       "from_w": 272,
-      "to_w": 278
+      "to_w": 277
      },
      "viewer_task": "reset_attention",
      "point": "The full story is free at makeyourmindup.ai",
@@ -1719,7 +1681,7 @@
      },
      "uses": [],
      "events": [],
-     "override_reason": "the close is the palette close card the ending band draws (config/brand-palette.json closes); nothing else goes on it"
+     "override_reason": "the close is the palette close card the ending band draws (config/brand-palette.json closes); it carries makeyourmindup.ai as he says it, so the captions end on at"
     }
    ]
   }
@@ -1750,10 +1712,6 @@
    "reason": "Each photo plate carries its own slow push; the type beats stay still on the grid"
   },
   "energy": "high",
-  "layout": {
-   "mode": "fill",
-   "reason": "Graphics-only beats fill the safe column the captions leave"
-  },
   "look": "voice-led-pictures (picked by Krish, 18 Nov 2026 15:54 UTC)",
   "proof": {
    "beat": "b10a"
@@ -1795,8 +1753,8 @@
      "holds": "IBM's own release: New IBM CHRO study, 21 Sep 2026"
     },
     {
-     "asset": "iihs-photo",
-     "holds": "an IIHS small overlap test car after the crash, the dummy at the wheel"
+     "asset": "iihs-driver",
+     "holds": "IIHS footage from the driver seat of a small overlap test: the dummy at the wheel as the airbags fire"
     },
     {
      "asset": "iihs-crash",
