@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-18","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Krish's universe drawn as one building after the AI-native firm cutaway he sent: seven floors from Control Center on the roof to the second brain in the basement, day to night, sent to him as an 8 s video and two stills; the source is lab/universe/. (2026-11-18)
 - The publish board no longer marks an item Missed the day after its own. For one day it is Late: it keeps its stage and next step (Tue 17's mind.the.gap piece and habits voiceover are back on My takes are in the Inbox on Wed 18), and its line and its day's line say Late. From the second day after, it is Missed as before. (2026-11-18)
 - The treatment bank is built: effects rebuilt from EffectCraft are applied by rule from each beat's role, face and devices (and each still's content), at the strength the look sets, with no new choice for Krish; the bank, planner, check and tests are in, and three Codex cards are written to draw them (docs/ve/TREATMENTS.md). (2026-11-18)
 - Face-led real-variant covers now set the post's figure in its own space, cropped to its one readable proof, never behind his head or over his face; the three old-post examples were redrawn to it and sent to Krish. (2026-11-18)
@@ -50,7 +51,7 @@ Older lines: `docs/history/2026-11-18-NOW-moved-7.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): Krish checks Tue 17's two cards on the live board today and presses My takes are in the Inbox once the takes are in.
+- Next (2026-11-18): Krish says what to change on the drawing, or where it should go.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
