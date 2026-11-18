@@ -784,4 +784,5 @@ def lint(spec_path: Path) -> tuple[dict | None, list[str]]:
     spec, problems = schema(spec_path)
     if spec is None:
         return None, problems
-    return spec, crew_lints(spec) + title_line_lints(spec, spec_path)
+    from . import guards  # noqa: PLC0415
+    return spec, crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)

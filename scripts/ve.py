@@ -663,11 +663,44 @@ def cmd_lane(args) -> int:
 
 def cmd_verify_card(args) -> int:
     from velib.cards import verify
-    problems = verify(Path(args.card), Path(args.cwd))
+    notes: list[str] = []
+    problems = verify(Path(args.card), Path(args.cwd), notes)
     for problem in problems:
         print(problem)
-    print('ve verify-card: ' + ('passes; now render its golden stills and look at them' if not problems else f'{len(problems)} problem(s)'))
+    for note in notes:
+        print(f've verify-card: {note}')
+    print('ve verify-card: ' + ('passes' + ('; the on-screen numbers were NOT checked (see not_run above)' if notes else '')
+                                + '; now render its golden stills and look at them' if not problems else f'{len(problems)} problem(s)'))
     return 1 if problems else 0
+
+
+def cmd_critic(args) -> int:
+    """`ve critic --pre <piece>`: the Critic's two questions, asked of the spec, the storyboard and the card briefs before anything is
+    made (velib/precritic.py). Without --write it writes the reviewer's inputs; with --write it records the answers."""
+    from velib import guards, ideaguard, precritic
+    if not args.pre:
+        sys.exit('ve critic: only --pre is built; the cut review is `ve verdict write`')
+    spec_file = spec_path_for(args.piece)
+    spec = load_json(spec_file)
+    mechanical = guards.idea_problems(spec) + [p for p in ideaguard.one_object_problems(spec, guards.config()['one_object'])]
+    if not args.write:
+        out = precritic.inputs(spec, spec_file, mechanical)
+        print(f've critic --pre: wrote {out}; a reviewer who did not write the spec answers its two questions, then '
+              f've critic --pre {args.piece} --write --reviewer NAME --answers answers.json [--findings findings.json]')
+        for line in mechanical:
+            print(f'  mechanical: {line}')
+        return 0
+    if not args.reviewer or not args.answers:
+        sys.exit('ve critic --pre --write: --reviewer NAME and --answers FILE ({"one_idea": {"pass": bool, "line": "..."}, "no_invented_numbers": {...}})')
+    try:
+        path = precritic.write(spec, spec_file, args.reviewer, load_json(args.answers),
+                               load_json(args.findings) if args.findings else [], mechanical)
+    except (OSError, ValueError) as error:
+        print(f've critic --pre: {error}')
+        return 1
+    ok, why = precritic.state(spec, spec_file)
+    print(f've critic --pre: wrote {path}; {"passes" if ok else "BLOCKS: " + why}')
+    return 0 if ok else 1
 
 
 def cmd_verdict(args) -> int:
@@ -2165,6 +2198,14 @@ def main() -> int:
     p = sub.add_parser('init', help="offer the board's top card per role into brand.references, marked offered")
     p.add_argument('piece'); p.add_argument('--format', help='prefer cards of this clip format (facets.format)')
     p.set_defaults(fn=cmd_init)
+    p = sub.add_parser('critic', help="the Critic's two questions (one idea beside The Ladder; no invented numbers) before anything is made")
+    p.add_argument('piece')
+    p.add_argument('--pre', action='store_true')
+    p.add_argument('--write', action='store_true')
+    p.add_argument('--reviewer')
+    p.add_argument('--answers')
+    p.add_argument('--findings')
+    p.set_defaults(fn=cmd_critic)
     p = sub.add_parser('refs', help="put the cut's frames beside each inspiration-board reference for the Critic")
     p.add_argument('piece'); p.add_argument('cut'); p.set_defaults(fn=cmd_refs)
     p = sub.add_parser('packet', help='assemble measured and judged cuts for approval')
