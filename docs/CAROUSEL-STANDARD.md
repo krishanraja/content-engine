@@ -88,6 +88,10 @@ track over the carousel, or, if it's a voiceover, then I want Eleven Labs voices
 `tests/control-plane/make-route.test.ts` holds the board's prompts and the documents that tell a session how to make
 one of these to this route, and refuses the retired routes by name.
 
+**Treatments (18 Nov 2026).** A carousel's still treatments (grain on the ground, duotone on a photo, a glow on the one
+number) come by rule from `config/ve/treatments.json`, never chosen per deck; once card `ve-treat-2-still-treatments`
+is built, the deck's renderer calls `scripts/velib/still_treatments.py`. `docs/ve/TREATMENTS.md` has the rules.
+
 ## Every carousel passes the 10/10 judges (Ruling, Krish, 12 November 2026)
 
 Krish: "Judge them; count passes. Every Growth carousel goes through the same 10/10 judges, and each one that passes and goes live counts." Whoever makes it, a carousel is judged

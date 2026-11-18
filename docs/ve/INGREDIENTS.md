@@ -2,6 +2,9 @@
 
 ## In short
 
+- **Effects are not an ingredient anyone picks.** Treatments (grain, glow, a hit on the hook word, Krish's background
+  treated behind him) are applied by rule from each beat's role, face and devices, at a strength `style.energy` sets:
+  [TREATMENTS.md](TREATMENTS.md). The only switch is `style.treatments: "off"`.
 - **A ve cut is built from separate ingredients.** Each is chosen in the spec on its own, with its own reason:
   - the caption style and where it sits;
   - the motion style;
