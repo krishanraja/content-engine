@@ -144,10 +144,10 @@ def measurement(rows: list, target: str) -> dict:
 
 
 def _split_geometry() -> tuple[float, tuple[int, int, int, int]]:
-    """The frozen mock stage scale and caption zone, read from the mocks file, never copied."""
-    mocks = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
-    scale = float(re.search(r'export const FWP_MOCK_STAGE_SCALE = ([0-9.]+)', mocks).group(1))
-    zone = re.search(r'export const FWP_SPLIT_CAPTION_ZONE = \{([^}]*)\}', mocks).group(1)
+    """The SPLIT stage scale and caption zone, read from the renderer's geometry file, never copied."""
+    geometry = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')
+    scale = float(re.search(r'export const SPLIT_STAGE_SCALE = ([0-9.]+)', geometry).group(1))
+    zone = re.search(r'export const SPLIT_CAPTION_ZONE = \{([^}]*)\}', geometry).group(1)
     get = lambda key: int(re.search(key + r': (\d+)', zone).group(1))
     return scale, (get('left'), get('top'), get('width'), get('height'))
 
@@ -155,13 +155,13 @@ def _renderer_layouts() -> dict:
     """Slot boxes parsed from the renderer's own table (apps/renderer/src/engine/layouts/index.ts),
     so QC can never measure a stale copy. Boxes are x, y, width, height in beat.uses order."""
     source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'index.ts').read_text(encoding='utf-8')
-    # Named numbers the table imports (the SPLIT seam, FWP_SPLIT_SEAM_Y) are read from their own file, never copied.
-    mocks = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
-    constants = {name: value for name, value in re.findall(r'export const (FWP_[A-Z_]+) = (-?\d+)\b', mocks)}
+    # Named numbers the table imports (the SPLIT seam, SPLIT_SEAM_Y) are read from their own file, never copied.
+    geometry = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')
+    constants = {name: value for name, value in re.findall(r'export const (SPLIT_[A-Z_]+) = (-?\d+)\b', geometry)}
     result = {}
     for aspect, name in (('9:16', 'TALL'), ('16:9', 'WIDE')):
         block = re.search(r'const ' + name + r': Record<.*?readonly Box\[\]> = \{(.*?)\n\}\n', source, re.S).group(1)
-        block = re.sub(r'\b(FWP_[A-Z_]+)\b', lambda m: constants[m.group(1)], block)
+        block = re.sub(r'\b(SPLIT_[A-Z_]+)\b', lambda m: constants[m.group(1)], block)
         # Layout dimensions may subtract a fixed inset from an imported seam.
         block = re.sub(r'(-?\d+)\s*-\s*(\d+)', lambda m: str(int(m[1]) - int(m[2])), block)
         result[aspect] = {layout: [tuple(int(n) for n in re.findall(r'-?\d+', box)) for box in re.findall(r'\{ left:[^}]*\}', body)]
@@ -247,8 +247,7 @@ def inputs_from_props(props: dict) -> dict:
     events = [_moved(e, props, 'atFrame') for e in props['events']]
     objects = {o['obj']: o for o in props.get('objects', [])}
     split_scale, split_caption = _split_geometry()
-    split_seam = int(re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks'
-                                / 'face-with-proof.tsx').read_text(encoding='utf-8')).group(1))
+    split_seam = int(re.search(r'export const SPLIT_SEAM_Y = (\d+)', (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')).group(1))
     slots = {}
     for event in events:
         at = event['atFrame']

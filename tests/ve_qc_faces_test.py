@@ -50,7 +50,7 @@ class OffFace(unittest.TestCase):
         self.assertTrue(run([split], (390, 1250, 300, 380), style='house', region=(72, 1180, 900, 217))['pass'])
 
     def test_word_split_region_uses_the_seam_and_clears_the_lower_face(self):
-        split = {**page('split'), 'region': (60, 670, 800, 180)}  # FWP_SPLIT_CAPTION_ZONE, on the seam
+        split = {**page('split'), 'region': (60, 670, 800, 180)}  # SPLIT_CAPTION_ZONE, on the seam
         g = qc_faces.word_geometry('9:16', 'SPLIT')
         self.assertEqual(g['centerY'], 760)
         self.assertEqual(qc_faces.caption_box(split, 'word', '9:16', None)[1],

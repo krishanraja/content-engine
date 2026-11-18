@@ -6087,18 +6087,6 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `function windowCameraBox(aspect: Aspect): Box`
 - `function windowCameraState(beats: readonly EngineBeat[], aspect: Aspect, frame: number): { box: Box; scale: number; win…`
 
-### `apps/renderer/src/engine/mocks/face-with-proof.tsx`
-
-- `interface FWPMockProps`
-- `const FWP_SPLIT_SEAM_Y`
-- `const FWP_MOCK_STAGE_SCALE`
-- `const FWP_SPLIT_CAPTION_ZONE`
-- `const FWP_POSTER_POSITIONS`
-- `const FWP_PLACEMENTS`
-- `const FWP_TARGETS`
-- `const FWP_SCALED_TARGETS`
-- `const FWP_MOCKS`
-
 ### `apps/renderer/src/engine/props.ts`
 
 - `const EngineTokensSchema`

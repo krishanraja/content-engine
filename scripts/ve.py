@@ -34,7 +34,7 @@
   python scripts/ve.py sfx approve --id <id> --words "<his words>" --on <date> --audition <ve>/sfx-audition.json | sfx stage --assets-dir <dir>
   python scripts/ve.py brief <piece> [--cut <cut>]   one brief per plate, with card fields; never dispatches
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
-  python scripts/ve.py lock draft|check|show|freeze  design locks (only Krish's Gate 2 freezes one)
+  python scripts/ve.py lock draft|check|show|freeze|retire  design locks (only Krish's Gate 2 freezes one; retire deletes a lock's key frames for good on his words)
   python scripts/ve.py golden show|check|fill        interim golden frames he names
   python scripts/ve.py signoff check|stills|gate2|add|apply   the three sign-offs as review cards on his board
   python scripts/ve.py expect <spec>                 expect.md: at most six lines of what this cut will and won't do
@@ -158,6 +158,11 @@ def cmd_lock(args) -> int:
                                      modules=args.modules or [], purpose=args.purpose)
             print(f'design lock: drafted {designlock.lock_key(args.format, args.aspect)}, {entry["status"]}; '
                   'only Krish freezes it at Gate 2')
+        elif args.action == 'retire':
+            from datetime import date as _date
+            entry = designlock.retire(args.format, words=args.words, on=args.on or _date.today().isoformat())
+            print(f'design lock: retired {args.format}; its key frames are deleted for good and the format is a draft, '
+                  f'{entry["status"]}; {len(entry["retired"]["files_removed"])} golden file(s) removed')
         else:
             if args.mapping is None:
                 entry = lock['formats'].get(args.format) or lock.get('drafts', {})[args.format]
@@ -2030,6 +2035,8 @@ def main() -> int:
     a.add_argument('--beats', nargs='+', required=True); a.add_argument('--modules', nargs='*')
     a.add_argument('--anatomy', required=True); a.add_argument('--motion', required=True)
     a.add_argument('--purpose', default='')
+    a = actions.add_parser('retire', help="Krish's deletion of a frozen format's key frames for good: they leave the repository and the format returns to a draft")
+    a.add_argument('format'); a.add_argument('--words', required=True, help='his exact words'); a.add_argument('--on', help='YYYY-MM-DD, default today')
     a = actions.add_parser('freeze'); a.add_argument('format'); a.add_argument('--from', dest='src_dir', required=True)
     a.add_argument('--map', dest='mapping', nargs='+', action='extend'); a.add_argument('--force', action='store_true')
     p.set_defaults(fn=cmd_lock)
