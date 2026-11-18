@@ -1796,6 +1796,13 @@
   {
    "gate": "exception",
    "by": "Krish",
+   "said": "Yes, render it (the caption fix: an over-long key word shrinks to fit; and another full render)",
+   "on": "2026-11-18",
+   "artifact_hash": "26c0f109f0945c9d2c28941bfb404fe697347b40f9e25fd4c032f266e58e726e"
+  },
+  {
+   "gate": "exception",
+   "by": "Krish",
    "said": "Yes, waive it here (the layout-variety rule, for this short only: every beat full-frame)",
    "on": "2026-11-18",
    "artifact_hash": "e460e8aacabb57d3c08ab3f36cb3059f20a0ab20779374cb029f84c595c5cabe"
