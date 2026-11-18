@@ -27,7 +27,9 @@ import { qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
 
 /** The presses posted to /api/board/<Monday>/<op> that reach the handler as a collection (no rewrite of their own). */
-const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP, THUMB_OP, LIVE_OP, SIGN_OFF_OP, 'replace'])
+// TAKES_OP too: My takes are in the Inbox reached the engine as the collection 'takes-in' and was refused as
+// invalid_collection on every card (Krish, 2026-11-18: "the button does nothing").
+const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP, THUMB_OP, LIVE_OP, SIGN_OFF_OP, 'replace', TAKES_OP])
 /** The ops vercel.json gives the old board pages' addresses (/board/<Monday>, /board, /board/next[/<Monday>]): each is
  *  a permanent redirect to the live board now (Ruling, Krish, 2026-11-13). */
 const OLD_PAGES: ReadonlySet<string> = new Set(['html', 'next', 'latest'])
