@@ -288,7 +288,7 @@ describe('POST /api/board/<Monday>/takes-in', () => {
   const INBOX = [{ id: 'drv1', name: 'openai long.mp4', mimeType: 'video/mp4', size: '400', modifiedTime: '2026-11-17T15:40:00Z' },
     { id: 'drv2', name: 'openai short.mp4', mimeType: 'video/mp4', size: '90', modifiedTime: '2026-11-17T15:50:00Z' },
     { id: 'drv0', name: 'old.mp4', mimeType: 'video/mp4', size: '9', modifiedTime: '2026-11-01T09:00:00Z' }]
-  async function press(opts: { operator?: boolean; picks?: Body[]; inbox?: Body; others?: Body[] } = {}) {
+  async function press(opts: { operator?: boolean; picks?: Body[]; inbox?: Body; others?: Body[]; routed?: boolean } = {}) {
     process.env.ACCESS_CODE = 'synthetic-board-test'
     process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'
     const { db, state } = fakeDb(ROW, opts.picks ?? [SCRIPTS], opts.others ?? [])
@@ -302,9 +302,16 @@ describe('POST /api/board/<Monday>/takes-in', () => {
     const headers = opts.operator ? { authorization: 'Bearer synthetic-operator' } : { cookie, origin: 'https://controlcenter.krishraja.com' }
     let status = 0; let out: Body = {}
     const res = { setHeader() {}, status(code: number) { status = code; return this }, json(v: Body) { out = v } } as unknown as VercelResponse
-    await handler({ method: 'POST', headers, query: { week: W16, op: TAKES_OP }, body: { piece_id: TUE } } as unknown as VercelRequest, res)
+    await handler({ method: 'POST', headers, query: opts.routed ? { week: W16, collection: TAKES_OP } : { week: W16, op: TAKES_OP }, body: { piece_id: TUE } } as unknown as VercelRequest, res)
     return { status, out, state, dispatched }
   }
+
+  it('arrives as Control Centre sends it: POST /api/board/<Monday>/takes-in has no rewrite of its own, so it comes as a collection', async () => {
+    // vercel.json routes it as /api/board/:week/:collection; refused as invalid_collection until 18 Nov ("the button does nothing").
+    const { status, dispatched } = await press({ routed: true })
+    expect(status).toBe(200)
+    expect(dispatched).toEqual([2])
+  })
 
   it('writes his takes on the piece by name and asks GitHub to place them on their cuts', async () => {
     const { status, out, state, dispatched } = await press()
