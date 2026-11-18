@@ -20,7 +20,7 @@ export function StageHeader({ props }: { props: EngineRenderProps }) {
   return <>
     {/* No header logo where the body carries none (Ruling, Krish, 2026-11-17: the logo only on the title frame and
         the close card); the pill stays. */}
-    {props.bodyLogo === false ? null : <div style={{ position: 'absolute', left: LOGO_AT.left, top: LOGO_AT.top, width: LOGO_AT.width }}>
+    {props.bodyLogo !== true ? null : <div style={{ position: 'absolute', left: LOGO_AT.left, top: LOGO_AT.top, width: LOGO_AT.width }}>
       <HouseLogo image={props.brand.logo} width={LOGO_AT.width} />
     </div>}
     <div style={{

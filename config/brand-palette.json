@@ -9,7 +9,7 @@
     "attached": "docs/production/SOCIAL-BEST-PRACTICES-2026.md",
     "sheet": "the brand palette sheet of 12 Nov 2026 (one brand palette, every day, every format)",
     "off_day_close": "the statement close in mint with no series days (the sheet's pick; the corpus rules out the held sting as a second, longer close)",
-    "long_body": "the icon only in the body; the wordmark only at the sting and the close (the sheet's proposal)"
+    "long_body": "SUPERSEDED by logo_rule (Krish, 2026-11-17 and 18): no icon and no wordmark in the body; the wordmark only on the title frame and the close"
   },
   "applies_from": "2026-11-16",
   "applies_from_why": "Fri 13 Nov is made on an engine frozen at its storyboard (F33); the palette binds every piece dated from Mon 16 Nov.",
@@ -21,11 +21,8 @@
     ],
     "logo_on": ["title_frame", "close"],
     "title_frame": "The one full-frame title in the pause after he says the piece's title, the stacked logo underneath it (Wed 11 Nov, AI music: docs/plans/2026-11-11-wednesday/short-composite/brand_frames.py title_full). Never before the hook, and never a second intro.",
-    "from": "2026-11-23",
-    "from_why": "The pieces in production in the week of 16 Nov keep the engine their storyboard was signed on (F33); every piece published from Mon 23 Nov carries no logo in its body.",
-    "before": {
-      "long_cut": {"icon": "tile"}
-    }
+    "from": "2026-11-16",
+    "from_why": "Krish, 2026-11-18: \"we have a strict NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME\", after the icon tile still appeared on this week's cuts. The earlier date of 23 Nov kept the tile on every piece of the week of 16 Nov; that carve-out is gone: the rule binds every piece from the palette's own start, Mon 16 Nov, and Fri 13 Nov (a frozen engine, F33) is the only older piece."
   },
   "days": {
     "monday": {

@@ -178,7 +178,7 @@ def self_test():
     ok.append(('a sting in front of the hook is refused', bool(check(long_cut, p)), True))
     ok.append(('a long cut on the hook with no sting passes', check(dict(long_cut, sting='none'), p), []))
     # The logo only on the title frame and the close (Ruling, Krish, 2026-11-17), from logo_rule.from.
-    ok.append(('a long cut of the week of 16 Nov keeps its icon tile', body_logo('2026-11-18', 'long_cut', None, p), True))
+    ok.append(('a long cut of the week of 16 Nov carries no icon tile either', body_logo('2026-11-18', 'long_cut', None, p), False))
     ok.append(('a long cut from 23 Nov carries no logo in its body', body_logo('2026-11-23', 'long_cut', None, p), False))
     ok.append(('an off-day long cut from 23 Nov carries none either', body_logo('2026-11-24', 'long_cut', 'off', p), False))
     ok.append(('a short cut never carries one', body_logo('2026-11-18', 'short_cut', None, p), False))

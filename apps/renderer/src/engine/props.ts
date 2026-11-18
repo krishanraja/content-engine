@@ -110,10 +110,11 @@ export const EngineRenderPropsSchema = z.object({
   brandTokens: EngineTokensSchema.optional(),
   series: z.object({ label: z.string().min(1), day: z.string().min(1), promise: z.string().min(1), site: z.string().min(1) }).strict(),
   brand: z.object({ mark: EngineImageSchema, logo: EngineImageSchema, stacked: EngineImageSchema }).strict(),
-  /** false: no logo in the body of the cut, neither the mark tile nor the stage header's logo (Ruling, Krish,
-   *  2026-11-17: the logo only on the animated title frame and the close card; config/brand-palette.json logo_rule).
-   *  Absent: the house dress as before. */
-  bodyLogo: z.literal(false).optional(),
+  /** true: the body of the cut carries the mark tile and the stage header's logo, only for a piece the palette still lets
+   *  (dated before its logo rule). Absent or false: no logo in the body (Ruling, Krish, 2026-11-17 and 18: the logo only on
+   *  the animated title frame and the close card, "NO ICONS"; config/brand-palette.json logo_rule). It was the other way
+   *  round, so every spec that forgot the flag drew the icon. */
+  bodyLogo: z.boolean().optional(),
   segments: z.array(EngineSegmentSchema).default([]),
   audio: EngineAudioSchema,
   captions: z.array(EngineCaptionPageSchema).min(1),

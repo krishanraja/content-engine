@@ -40,7 +40,7 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     {/* The logo only on the title frame and the close (Ruling, Krish, 2026-11-17): with bodyLogo false the wide cut
         keeps its series pill and draws no mark tile and no header logo. */}
     {props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={house} /> : <>
-      {props.bodyLogo === false ? null : <MarkTile props={house} />}
+      {props.bodyLogo === true ? <MarkTile props={house} /> : null}
       <ChannelPill props={house} beat={beat} />
     </>}
     {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);
