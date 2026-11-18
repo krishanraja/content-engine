@@ -1,0 +1,793 @@
+{
+  "pieceId": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+  "cutId": "short",
+  "format": "face-with-proof",
+  "aspect": "9:16",
+  "fps": 30,
+  "durationFrames": 240,
+  "tokens": {
+    "ink": "#0C1512",
+    "inkDeep": "#070D0B",
+    "inkSoft": "#16221D",
+    "cream": "#F4EFE4",
+    "mint": "#7EF0C0",
+    "channel": "#7EF0C0"
+  },
+  "series": {
+    "label": "off.day",
+    "day": "Tuesday",
+    "promise": "makeyourmindup.ai",
+    "site": "makeyourmindup.ai"
+  },
+  "brand": {
+    "mark": {
+      "src": "/home/user/content-engine/.scratch/b019/assets/src/assets/brand/makeyourmindup/makeyourmindup-mark.png",
+      "pixelWidth": 831,
+      "pixelHeight": 740
+    },
+    "logo": {
+      "src": "/home/user/content-engine/.scratch/b019/assets/src/assets/brand/makeyourmindup/makeyourmindup-horizontal.png",
+      "pixelWidth": 1200,
+      "pixelHeight": 141
+    },
+    "stacked": {
+      "src": "/home/user/content-engine/.scratch/b019/assets/src/assets/brand/makeyourmindup/makeyourmindup-stacked.png",
+      "pixelWidth": 2415,
+      "pixelHeight": 740
+    }
+  },
+  "segments": [
+    {
+      "src": "/home/user/content-engine/.scratch/b019/assets/conformed.short.mp4",
+      "trimBeforeFrames": 2001,
+      "fromFrame": 0,
+      "durationFrames": 240
+    }
+  ],
+  "audio": {
+    "stem": {
+      "src": "/home/user/content-engine/.scratch/b019/assets/audio.short.wav",
+      "trimBeforeFrames": 2001
+    },
+    "sfx": []
+  },
+  "captions": [
+    {
+      "fromFrame": 0,
+      "toFrame": 2,
+      "words": [
+        {
+          "text": "secretly",
+          "atFrame": 0
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2,
+      "toFrame": 5,
+      "words": [
+        {
+          "text": "they",
+          "atFrame": 2
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 5,
+      "toFrame": 13,
+      "words": [
+        {
+          "text": "charge",
+          "atFrame": 5
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 13,
+      "toFrame": 17,
+      "words": [
+        {
+          "text": "you",
+          "atFrame": 13
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 17,
+      "toFrame": 25,
+      "words": [
+        {
+          "text": "more",
+          "atFrame": 17
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 25,
+      "toFrame": 28,
+      "words": [
+        {
+          "text": "than",
+          "atFrame": 25
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 28,
+      "toFrame": 32,
+      "words": [
+        {
+          "text": "you'd",
+          "atFrame": 28
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 32,
+      "toFrame": 37,
+      "words": [
+        {
+          "text": "pay",
+          "atFrame": 32
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 37,
+      "toFrame": 40,
+      "words": [
+        {
+          "text": "if",
+          "atFrame": 37
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 40,
+      "toFrame": 48,
+      "words": [
+        {
+          "text": "you'd",
+          "atFrame": 40
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 48,
+      "toFrame": 56,
+      "words": [
+        {
+          "text": "stuck",
+          "atFrame": 48
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 56,
+      "toFrame": 58,
+      "words": [
+        {
+          "text": "to",
+          "atFrame": 56
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 58,
+      "toFrame": 61,
+      "words": [
+        {
+          "text": "your",
+          "atFrame": 58
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 61,
+      "toFrame": 69,
+      "words": [
+        {
+          "text": "current",
+          "atFrame": 61
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 69,
+      "toFrame": 85,
+      "words": [
+        {
+          "text": "terms",
+          "atFrame": 69
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 85,
+      "toFrame": 88,
+      "words": [
+        {
+          "text": "on",
+          "atFrame": 85
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 88,
+      "toFrame": 91,
+      "words": [
+        {
+          "text": "the",
+          "atFrame": 88
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 91,
+      "toFrame": 99,
+      "words": [
+        {
+          "text": "premise",
+          "atFrame": 91
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 99,
+      "toFrame": 109,
+      "words": [
+        {
+          "text": "of",
+          "atFrame": 99
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 109,
+      "toFrame": 118,
+      "words": [
+        {
+          "text": "bonus",
+          "atFrame": 109
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 118,
+      "toFrame": 128,
+      "words": [
+        {
+          "text": "credits",
+          "atFrame": 118
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 128,
+      "toFrame": 130,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 128
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 130,
+      "toFrame": 135,
+      "words": [
+        {
+          "text": "things",
+          "atFrame": 130
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 135,
+      "toFrame": 141,
+      "words": [
+        {
+          "text": "like",
+          "atFrame": 135
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 141,
+      "toFrame": 155,
+      "words": [
+        {
+          "text": "that.",
+          "atFrame": 141
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 155,
+      "toFrame": 158,
+      "words": [
+        {
+          "text": "I've",
+          "atFrame": 155
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 158,
+      "toFrame": 165,
+      "words": [
+        {
+          "text": "seen",
+          "atFrame": 158
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 165,
+      "toFrame": 169,
+      "words": [
+        {
+          "text": "this",
+          "atFrame": 165
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 169,
+      "toFrame": 189,
+      "words": [
+        {
+          "text": "happen",
+          "atFrame": 169
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 189,
+      "toFrame": 193,
+      "words": [
+        {
+          "text": "three",
+          "atFrame": 189
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 193,
+      "toFrame": 204,
+      "words": [
+        {
+          "text": "times",
+          "atFrame": 193
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 204,
+      "toFrame": 206,
+      "words": [
+        {
+          "text": "in",
+          "atFrame": 204
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 206,
+      "toFrame": 209,
+      "words": [
+        {
+          "text": "the",
+          "atFrame": 206
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 209,
+      "toFrame": 216,
+      "words": [
+        {
+          "text": "last",
+          "atFrame": 209
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 216,
+      "toFrame": 221,
+      "words": [
+        {
+          "text": "week",
+          "atFrame": 216
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 221,
+      "toFrame": 225,
+      "words": [
+        {
+          "text": "with",
+          "atFrame": 221
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 225,
+      "toFrame": 240,
+      "words": [
+        {
+          "text": "businesses",
+          "atFrame": 225
+        }
+      ],
+      "swipeIndex": null
+    }
+  ],
+  "captionStyle": "word",
+  "captionTheme": "art-directed",
+  "captionPlacement": "lower",
+  "beats": [
+    {
+      "id": "small_print",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 0,
+      "toFrame": 85,
+      "uses": [
+        "small_print"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": true,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 62
+    },
+    {
+      "id": "payoff",
+      "role": "payoff",
+      "layout": "STAGE",
+      "fromFrame": 85,
+      "toFrame": 155,
+      "uses": [
+        "meter"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 141
+    },
+    {
+      "id": "three",
+      "role": "anchor",
+      "layout": "P6",
+      "fromFrame": 155,
+      "toFrame": 240,
+      "uses": [
+        "el_deal"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take",
+        "crop": "50% 88%"
+      },
+      "keyFrame": 239
+    }
+  ],
+  "objects": [
+    {
+      "obj": "block",
+      "device": "facility_block",
+      "meaning": "Meta's data centre in Piqua, the one object the whole cut changes",
+      "fromFrame": 0,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "kind": "data centre",
+        "label": "PIQUA, OHIO",
+        "logo": "Meta",
+        "tag": "Power bill",
+        "targets": [
+          {
+            "label": "Your power bill"
+          },
+          {
+            "label": "Your AI plan"
+          }
+        ],
+        "copies": {
+          "count": 41,
+          "kept": 1
+        },
+        "skyline": {
+          "lights": 24
+        }
+      }
+    },
+    {
+      "obj": "el_deal",
+      "device": "evidence_card",
+      "meaning": "a second real offer: the discount is for the first year only",
+      "fromFrame": 155,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "kind": "screenshot",
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/elevencreative-creator-deal.png",
+        "outlet": "ElevenCreative",
+        "date": "18 Nov 2026",
+        "sourceAspectRatio": 1.043
+      }
+    },
+    {
+      "obj": "small_print",
+      "device": "evidence_card",
+      "meaning": "the small print on the offer: bonus credits that expire in 30 days",
+      "fromFrame": 0,
+      "toFrame": 85,
+      "variants": {},
+      "params": {
+        "kind": "screenshot",
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-bonus-expires.png",
+        "outlet": "Higgsfield plans page, small print",
+        "date": "18 Nov 2026",
+        "sourceAspectRatio": 8.25
+      }
+    },
+    {
+      "obj": "meter",
+      "device": "credit_meter",
+      "meaning": "the month's credits: a bonus pours in on top, then drains away after 30 days",
+      "fromFrame": 85,
+      "toFrame": 155,
+      "variants": {},
+      "params": {
+        "plan": {
+          "label": "Plan credits",
+          "row": "plan credits a month"
+        },
+        "bonus": {
+          "label": "Bonus credits",
+          "row": "bonus credits"
+        },
+        "days": 30,
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-bonus-expires.png",
+        "source": {
+          "outlet": "Higgsfield plans page",
+          "date": "18 Nov 2026"
+        }
+      },
+      "dataset": {
+        "unit": "credits",
+        "denominator": null,
+        "producerLabel": "Higgsfield Team plan",
+        "rows": [
+          {
+            "label": "plan credits a month",
+            "value": 2000
+          },
+          {
+            "label": "bonus credits",
+            "value": 400
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "dc-0",
+      "obj": "block",
+      "verb": "enter",
+      "toState": "pin",
+      "atFrame": 0
+    },
+    {
+      "id": "dc-1",
+      "obj": "block",
+      "verb": "fill",
+      "toState": "racks",
+      "atFrame": 0
+    },
+    {
+      "id": "city-0",
+      "obj": "block",
+      "verb": "connect",
+      "toState": "city",
+      "atFrame": 0
+    },
+    {
+      "id": "bill-0",
+      "obj": "block",
+      "verb": "move",
+      "toState": "target:0",
+      "atFrame": 0
+    },
+    {
+      "id": "bill-1",
+      "obj": "block",
+      "verb": "add",
+      "toState": "pylons",
+      "atFrame": 0
+    },
+    {
+      "id": "vote-0",
+      "obj": "block",
+      "verb": "add",
+      "toState": "ballot",
+      "atFrame": 0
+    },
+    {
+      "id": "proof-1",
+      "obj": "block",
+      "verb": "stamp",
+      "toState": "ban",
+      "atFrame": 0
+    },
+    {
+      "id": "built-0",
+      "obj": "block",
+      "verb": "grow",
+      "toState": "giant",
+      "atFrame": 0
+    },
+    {
+      "id": "power-2",
+      "obj": "block",
+      "verb": "carry",
+      "toState": "walk",
+      "atFrame": 0
+    },
+    {
+      "id": "power-3",
+      "obj": "block",
+      "verb": "move",
+      "toState": "target:0",
+      "atFrame": 0
+    },
+    {
+      "id": "small_print-0",
+      "obj": "small_print",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 0
+    },
+    {
+      "id": "payoff-0",
+      "obj": "meter",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 85
+    },
+    {
+      "id": "payoff-1",
+      "obj": "meter",
+      "verb": "fill",
+      "toState": "plan credits a month",
+      "atFrame": 88
+    },
+    {
+      "id": "payoff-2",
+      "obj": "meter",
+      "verb": "add",
+      "toState": "bonus credits",
+      "atFrame": 109
+    },
+    {
+      "id": "payoff-3",
+      "obj": "meter",
+      "verb": "mark",
+      "toState": "visible",
+      "atFrame": 118
+    },
+    {
+      "id": "payoff-4",
+      "obj": "meter",
+      "verb": "count_to",
+      "toState": "30",
+      "atFrame": 130
+    },
+    {
+      "id": "payoff-5",
+      "obj": "meter",
+      "verb": "drop",
+      "toState": "plan credits a month",
+      "atFrame": 135
+    },
+    {
+      "id": "three-0",
+      "obj": "el_deal",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 165
+    }
+  ],
+  "call": {
+    "statement": "AI tool renewals cost more as the AI firms pay for their own power",
+    "due": "2027-06-30",
+    "confidencePercent": 75
+  },
+  "motion": {
+    "style": "eating-jobs-ladder",
+    "profile": {
+      "entrance": {
+        "kind": "rise",
+        "frames": 7,
+        "easing": "enter",
+        "distancePx": 56,
+        "overshootPct": 2,
+        "spinDeg": -8,
+        "tiltDeg": -1.5
+      },
+      "stagger": {
+        "frames": 3,
+        "unit": "word"
+      },
+      "exitFrames": 10,
+      "onTwos": false,
+      "camera": {
+        "kind": "push",
+        "scaleTo": 1.04,
+        "dimOthers": false,
+        "easing": "hero"
+      },
+      "transition": "crossfade",
+      "transitionFrames": 10,
+      "typeReveal": {
+        "kind": "roll"
+      },
+      "ground": {
+        "kind": "dark",
+        "sweepFrames": 0,
+        "texture": "vignette",
+        "cards": "keep"
+      },
+      "driftPct": 1.5,
+      "countFrames": 27,
+      "note": "From Krish's eating-its-own-jobs cut (Mon 2 Nov, Who trains your 2030 seniors, mon02-tall, sha256 2cdff09a), measured 13 Nov: 3.91 events a second, 20 cuts a minute. One through-line object carries the piece; numbers roll onto it on the enter curve, a slow push holds every panel, every change is a 10-frame crossfade on its word and nothing holds still. The ladder object itself and the butter tray over his chest need devices (through_line card, docs/ve/cards/through-line/) and draw as the house devices until built."
+    }
+  },
+  "layout": {
+    "mode": "band"
+  }
+}

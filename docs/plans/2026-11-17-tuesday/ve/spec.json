@@ -7,7 +7,6 @@
  "brand": {
   "series": "mind.the.gap",
   "captions": "word",
-  "title": "Voters just said no to AI's power bill",
   "references": [
    {
     "id": "8ca0bd3d-454d-48fd-a2d1-98d0e5469779",
@@ -24,309 +23,390 @@
  },
  "signature": {
   "hero": {
-   "device": "cursor_buddy",
+   "device": "evidence_card",
    "status": "proven"
   },
-  "opening_break": "the cursor buddy lands with a notification it should not have sent, on the first word",
+  "opening_break": "the real headline that fired Piqua's mayor lands above his head on the first word",
   "finish_pack": "house_grain",
-  "sound_palette": "house-v1 (no kit exists yet: the effects named in the storyboard are left out, the music bed carries the cut; docs/ve/STATUS.md, \"No sound effects kit\")",
+  "sound_palette": "house-v1",
   "variants": {}
  },
  "objects": [
   {
-   "obj": "note",
-   "device": "typing_bubble",
-   "meaning": "the assistant reports a booking it made before anyone asked",
+   "obj": "ddn",
+   "device": "evidence_card",
+   "meaning": "the real headline that ousted Piqua's mayor",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "face"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "evidence/ddn-headline.png",
+    "outlet": "Dayton Daily News",
+    "date": "3 Nov 2026",
+    "sourceAspectRatio": 2.2941
+   }
+  },
+  {
+   "obj": "recalled",
+   "device": "stamp",
+   "meaning": "the vote that removed him, stamped on the headline",
    "persist": {
     "from_beat": "hook",
     "to_beat": "hook"
    },
    "params": {
-    "kind": "notification",
-    "rows": [
+    "kind": "outline",
+    "main": "RECALLED",
+    "top": "PIQUA, 3 NOV",
+    "tiltDeg": -4,
+    "at": {
+     "x": 470,
+     "y": 760,
+     "w": 380,
+     "h": 120
+    }
+   }
+  },
+  {
+   "obj": "block",
+   "device": "facility_block",
+   "meaning": "Meta's data centre in Piqua, the one object the whole cut changes",
+   "persist": {
+    "from_beat": "dc",
+    "to_beat": "carry_on"
+   },
+   "params": {
+    "kind": "data centre",
+    "label": "PIQUA, OHIO",
+    "logo": "Meta",
+    "tag": "Power bill",
+    "targets": [
      {
-      "text": "Done! Booked the team offsite in Ibiza"
+      "label": "Your power bill"
+     },
+     {
+      "label": "Your AI plan"
+     }
+    ],
+    "copies": {
+     "count": 41,
+     "kept": 1
+    },
+    "skyline": {
+     "lights": 24
+    }
+   }
+  },
+  {
+   "obj": "field41",
+   "device": "unit_field",
+   "meaning": "the 41 local data-centre votes on 3 Nov; 40 went against the data centre",
+   "persist": {
+    "from_beat": "questions",
+    "to_beat": "questions"
+   },
+   "params": {
+    "initialRow": "initial",
+    "columns": 7,
+    "mark": "block"
+   },
+   "dataset": "ballotpedia-41"
+  },
+  {
+   "obj": "stat41",
+   "device": "kinetic_stat",
+   "meaning": "how many of the 41 votes the data centre lost",
+   "persist": {
+    "from_beat": "questions",
+    "to_beat": "questions"
+   },
+   "params": {},
+   "dataset": "ballotpedia-41"
+  },
+  {
+   "obj": "meta_logo",
+   "device": "logo_card",
+   "meaning": "Meta, the company behind the Piqua data centre",
+   "persist": {
+    "from_beat": "meta",
+    "to_beat": "meta"
+   },
+   "params": {
+    "logos": [
+     {
+      "id": "Meta"
      }
     ]
    }
   },
   {
-   "obj": "logos",
-   "device": "logo_card",
-   "meaning": "the apps he names the assistants live inside, on equal tiles",
+   "obj": "piqua",
+   "device": "evidence_card",
+   "meaning": "the real Piqua: its red-brick North Main",
+   "persist": {
+    "from_beat": "piqua",
+    "to_beat": "piqua"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "evidence/piqua-north-main.jpg",
+    "outlet": "Wikimedia Commons",
+    "date": "North Main, Piqua",
+    "sourceAspectRatio": 1.7778
+   }
+  },
+  {
+   "obj": "ban_stat",
+   "device": "kinetic_stat",
+   "meaning": "the share of Piqua votes for the ban",
    "persist": {
     "from_beat": "proof",
     "to_beat": "proof"
    },
+   "params": {},
+   "dataset": "piqua-ban"
+  },
+  {
+   "obj": "recall_stat",
+   "device": "kinetic_stat",
+   "meaning": "the exact share that recalled the mayor",
+   "persist": {
+    "from_beat": "sack",
+    "to_beat": "sack"
+   },
+   "params": {},
+   "dataset": "piqua-recall"
+  },
+  {
+   "obj": "meta_line",
+   "device": "evidence_card",
+   "meaning": "Meta's real line to The Washington Post",
+   "persist": {
+    "from_beat": "meta_says",
+    "to_beat": "party_line"
+   },
    "params": {
-    "tiles": true,
+    "kind": "quote",
+    "quote": "work with local officials to determine the future of our investment in Piqua",
+    "outlet": "Meta, to The Washington Post",
+    "date": "Nov 2026"
+   }
+  },
+  {
+   "obj": "ai_logos",
+   "device": "logo_card",
+   "meaning": "the AI companies that now have to find their own power",
+   "persist": {
+    "from_beat": "power",
+    "to_beat": "power"
+   },
+   "params": {
     "logos": [
+     {
+      "id": "OpenAI"
+     },
      {
       "id": "Meta"
      },
      {
-      "id": "Amazon"
-     },
-     {
-      "id": "Google"
+      "id": "Oracle"
      }
     ],
-    "place": {
-     "left": -120,
-     "top": 260,
-     "width": 960,
-     "height": 520,
-     "scale": 1.45
-    }
+    "tiles": true
    }
   },
   {
-   "obj": "amazon_loop",
-   "device": "scribble",
-   "meaning": "circles Amazon as he says it",
+   "obj": "hf_deal",
+   "device": "evidence_card",
+   "meaning": "a real switch-your-plan offer he was sent this week",
    "persist": {
-    "from_beat": "proof",
-    "to_beat": "proof"
+    "from_beat": "deals",
+    "to_beat": "deals"
    },
    "params": {
-    "colour": "mint",
-    "seed": "fwp",
-    "shape": "loop",
-    "target": {
-     "x": 400,
-     "y": 460,
-     "w": 350,
-     "h": 350
-    }
+    "kind": "screenshot",
+    "src": "krish/higgsfield-ultra-deal.png",
+    "outlet": "Higgsfield plans page",
+    "date": "18 Nov 2026",
+    "sourceAspectRatio": 1.2706
    }
   },
   {
-   "obj": "chat",
-   "device": "typing_bubble",
-   "meaning": "the 8am reply the assistant sends for him",
+   "obj": "el_deal",
+   "device": "evidence_card",
+   "meaning": "a second real offer: the discount is for the first year only",
    "persist": {
-    "from_beat": "b4-8am",
-    "to_beat": "b5-rule"
+    "from_beat": "three",
+    "to_beat": "three"
    },
    "params": {
-    "kind": "chat",
-    "rows": [
-     {
-      "who": "Boss",
-      "text": "Can you join the 8am?",
-      "side": "left"
-     },
-     {
-      "who": "You",
-      "text": "Absolutely not, it's my lie-in day",
-      "side": "right"
-     }
-    ],
-    "place": {
-     "left": -135,
-     "top": 210,
-     "width": 1080,
-     "height": 640,
-     "scale": 1.25
-    }
+    "kind": "screenshot",
+    "src": "krish/elevencreative-creator-deal.png",
+    "outlet": "ElevenCreative",
+    "date": "18 Nov 2026",
+    "sourceAspectRatio": 1.043
    }
   },
   {
-   "obj": "ask",
-   "device": "typing_bubble",
-   "meaning": "his AI tool asking him its question back, and his three answers staying on screen as its rules",
+   "obj": "small_print",
+   "device": "evidence_card",
+   "meaning": "the small print on the offer: bonus credits that expire in 30 days",
    "persist": {
-    "from_beat": "b7-prompt",
-    "to_beat": "b7-prompt"
+    "from_beat": "small_print",
+    "to_beat": "small_print"
    },
    "params": {
-    "kind": "chat",
-    "rows": [
-     {
-      "who": "Your AI",
-      "text": "Which should need your yes?",
-      "side": "left"
-     },
-     {
-      "text": "Approve every individual send",
-      "side": "right"
-     },
-     {
-      "text": "Approve every financial commitment",
-      "side": "right"
-     },
-     {
-      "text": "Zero unapproved incremental usage costs",
-      "side": "right"
-     }
-    ]
+    "kind": "screenshot",
+    "src": "krish/higgsfield-bonus-expires.png",
+    "outlet": "Higgsfield plans page, small print",
+    "date": "18 Nov 2026",
+    "sourceAspectRatio": 8.25
    }
   },
   {
-   "obj": "rule_card",
-   "device": "typing_bubble",
-   "meaning": "his rule in his own words: no spending, no sending without his say-so",
+   "obj": "meter",
+   "device": "credit_meter",
+   "meaning": "the month's credits: a bonus pours in on top, then drains away after 30 days",
    "persist": {
-    "from_beat": "own-words",
-    "to_beat": "own-words"
+    "from_beat": "payoff",
+    "to_beat": "payoff"
    },
    "params": {
-    "kind": "notification",
-    "rows": [
-     {
-      "who": "Your AI",
-      "text": "Doesn't spend your money."
-     },
-     {
-      "text": "Doesn't send anything unless you say so."
-     }
-    ],
-    "place": {
-     "left": -135,
-     "top": 210,
-     "width": 1080,
-     "height": 640,
-     "scale": 1.25
-    }
-   }
-  },
-  {
-   "obj": "rule_close",
-   "device": "typing_bubble",
-   "meaning": "his rule in his own words: no spending, no sending without his say-so",
-   "params": {
-    "kind": "notification",
-    "rows": [
-     {
-      "who": "Your AI",
-      "text": "Doesn't spend your money."
-     },
-     {
-      "text": "Doesn't send anything unless you say so."
-     }
-    ],
-    "place": {
-     "left": -135,
-     "top": 210,
-     "width": 1080,
-     "height": 640,
-     "scale": 1.25
+    "plan": {
+     "label": "Plan credits",
+     "row": "plan credits a month"
+    },
+    "bonus": {
+     "label": "Bonus credits",
+     "row": "bonus credits"
+    },
+    "days": 30,
+    "src": "krish/higgsfield-bonus-expires.png",
+    "source": {
+     "outlet": "Higgsfield plans page",
+     "date": "18 Nov 2026"
     }
    },
-   "persist": {
-    "from_beat": "close",
-    "to_beat": "close"
-   }
-  },
-  {
-   "obj": "rules",
-   "device": "typing_bubble",
-   "meaning": "the two rules, as his AI would read them",
-   "persist": {
-    "from_beat": "b5-rule",
-    "to_beat": "b5-rule"
-   },
-   "params": {
-    "kind": "notification",
-    "rows": [
-     {
-      "who": "Your AI",
-      "text": "No spending."
-     },
-     {
-      "text": "No sending."
-     }
-    ],
-    "place": {
-     "left": -135,
-     "top": 210,
-     "width": 1080,
-     "height": 640,
-     "scale": 1.25
-    }
-   }
-  },
-  {
-   "obj": "rules_held",
-   "device": "typing_bubble",
-   "meaning": "the two rules held while he explains the prompt",
-   "persist": {
-    "from_beat": "b7-prompt",
-    "to_beat": "b7-prompt"
-   },
-   "params": {
-    "kind": "notification",
-    "rows": [
-     {
-      "who": "Your AI",
-      "text": "No spending."
-     },
-     {
-      "text": "No sending."
-     }
-    ]
-   }
-  },
-  {
-   "obj": "verdict",
-   "device": "typing_bubble",
-   "meaning": "AI that acts first: really helpful, a bit dangerous",
-   "persist": {
-    "from_beat": "face",
-    "to_beat": "face"
-   },
-   "params": {
-    "kind": "notification",
-    "rows": [
-     {
-      "who": "AI that acts first",
-      "text": "Really helpful."
-     },
-     {
-      "text": "A bit dangerous."
-     }
-    ],
-    "place": {
-     "left": -135,
-     "top": 210,
-     "width": 1080,
-     "height": 640,
-     "scale": 1.25
-    }
-   }
+   "dataset": "higgsfield-team"
   }
  ],
- "assets": [],
+ "assets": [
+  {
+   "id": "ddn-headline",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "evidence/ddn-headline.png",
+   "source_url": "https://www.daytondailynews.com/local/charter-amendment-banning-large-data-centers-wins-approval/article_d4cf4dc3-b418-58b1-8523-9348694b561b.html",
+   "licence": "screenshot of the published page, used as evidence (fair dealing, reporting)",
+   "credit": "Dayton Daily News, 3 Nov 2026",
+   "sha256": "747439fd15b47d77da609f71da27096a4bcf5a414c51318f8b9da0d9f6992727"
+  },
+  {
+   "id": "piqua-north-main",
+   "kind": "photo",
+   "origin": "source",
+   "path": "evidence/piqua-north-main.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:North_Main_in_the_Piqua-Caldwell_HD.jpg",
+   "licence": "public domain (Wikimedia Commons)",
+   "credit": "Wikimedia Commons",
+   "sha256": "b01af9c091b281a720ea1f3005e6833c50b922f3d1ac752d3d89ab547d731f5e"
+  },
+  {
+   "id": "el-plans",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "krish/elevencreative-plans.png",
+   "licence": "Krish's own screenshot of his ElevenCreative subscription page, 18 Nov 2026",
+   "sha256": "2fb634b6e0c404bb1fd06172d99f7075eb67548fecfd34ffdaaaaea7bffbe1eb"
+  },
+  {
+   "id": "el-creator-deal",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "krish/elevencreative-creator-deal.png",
+   "licence": "Krish's own screenshot, 18 Nov 2026",
+   "sha256": "fc0d51c196f8d92d5485ca74b83dede5d9f7f455956f6d636372371685a4aeae"
+  },
+  {
+   "id": "el-first-year",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "krish/elevencreative-first-year-only.png",
+   "licence": "Krish's own screenshot, 18 Nov 2026",
+   "sha256": "a410e40a9e8a1473e19057984288e3ac45da75205524bf5bb9f9b91ab522ff88"
+  },
+  {
+   "id": "hf-plans",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "krish/higgsfield-offer.png",
+   "licence": "Krish's own screenshot of the Higgsfield plans page, 18 Nov 2026",
+   "sha256": "cf4a4a758eaa17e8e8053381fe7a61e3e8692fa9c7f1132430e3fd638ff4cacc"
+  },
+  {
+   "id": "hf-ultra-deal",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "krish/higgsfield-ultra-deal.png",
+   "licence": "Krish's own screenshot, 18 Nov 2026",
+   "sha256": "9e325df57fcf769ca73965a7cd1d2ef3aae8fffd1284bec98e7074330cac36d3"
+  },
+  {
+   "id": "hf-team-credits",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "krish/higgsfield-team-credits.png",
+   "licence": "Krish's own screenshot, 18 Nov 2026",
+   "sha256": "ad9a0186fa4f36bb8b222666b1f85b740fe2a989a3fb72185e1b6148737ebe9b"
+  },
+  {
+   "id": "hf-bonus-expires",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "krish/higgsfield-bonus-expires.png",
+   "licence": "Krish's own screenshot, 18 Nov 2026",
+   "sha256": "44b870c56e9fcd7fbae4d21e7069aaccb866cb0a451503af521de60f4a202664"
+  }
+ ],
  "audio": {
   "master": "take",
   "bed": {
-   "ledger_id": "no-curves-instrumental",
+   "ledger_id": "goodie-bags",
    "mode": "episode_bed",
-   "under_vo_lu": -20
+   "under_vo_lu": -30
   },
   "sfx_kit": "house-v1"
  },
  "cuts": {
   "short": {
    "aspect": "9:16",
-   "take": "thursday-take-1",
-   "max_s": 60,
+   "take": "dc-short",
+   "max_s": 88,
    "excerpt": false,
    "edit": {
     "remove": [],
-    "speed": 1
+    "speed": 1.21,
+    "pauses": {
+     "longer_than_s": 0.6,
+     "said": "the prompt should ensure it gets the session to look for places I've had to restart a sentence, clip those out, clip out empty awkward silences"
+    },
+    "speed_said": "the prompt should ensure it gets the session to look for places I've had to restart a sentence, clip those out, clip out empty awkward silences, and then measure the total duration, and then speed it up if needed to get it under the 90 second limit (longer video length does not matter)"
    },
    "captions": {
     "region": "default",
     "emphasis": [
-     0,
-     25,
-     47,
-     55,
-     57,
-     89,
-     124,
-     126
+     6,
+     33,
+     92,
+     121,
+     147,
+     170,
+     219,
+     276,
+     286,
+     308
     ]
    },
    "beats": [
@@ -335,72 +415,269 @@
      "role": "hook",
      "span": {
       "from_w": 0,
-      "to_w": 14
+      "to_w": 16
      },
      "viewer_task": "locate_story",
-     "layout": "STAGE",
-     "point": "Proactive AI already acts before you ask: it booked the offsite in Ibiza without checking",
-     "plate": {
-      "source": "none"
-     },
-     "uses": [
-      "note"
-     ],
-     "events": [
-      {
-       "at_w": 0,
-       "obj": "note",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 0,
-       "obj": "note",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
-      }
-     ]
-    },
-    {
-     "id": "face",
-     "role": "bridge",
-     "span": {
-      "from_w": 15,
-      "to_w": 29
-     },
-     "viewer_task": "connect_with_speaker",
      "layout": "SPLIT",
-     "point": "Awesome, really helpful features, but a bit dangerous once they are connected to your apps",
+     "point": "A real headline above his face says it happened: Piqua's voters ousted the mayor who green-lit Meta's data centre",
      "plate": {
       "source": "take",
       "crop": "50% 88%"
      },
      "uses": [
-      "verdict"
+      "ddn",
+      "recalled"
      ],
      "events": [
       {
-       "at_w": 15,
-       "obj": "verdict",
+       "at_w": 0,
+       "obj": "ddn",
        "verb": "enter",
-       "to_state": "visible",
-       "silent": true
+       "to_state": "visible"
       },
       {
-       "at_w": 21,
-       "obj": "verdict",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
+       "at_w": 6,
+       "obj": "recalled",
+       "verb": "stamp",
+       "to_state": "RECALLED"
+      }
+     ],
+     "override_reason": "the hook is the real headline and one stamp on fired; his face carries the rest"
+    },
+    {
+     "id": "dc",
+     "role": "bridge",
+     "span": {
+      "from_w": 17,
+      "to_w": 30
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "STAGE",
+     "point": "What a data centre is, shown in one move: the block opens on racks of computers",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "block"
+     ],
+     "events": [
+      {
+       "at_w": 17,
+       "obj": "block",
+       "verb": "enter",
+       "to_state": "pin"
       },
       {
-       "at_w": 25,
-       "obj": "verdict",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
+       "at_w": 24,
+       "obj": "block",
+       "verb": "fill",
+       "to_state": "racks"
+      }
+     ]
+    },
+    {
+     "id": "face",
+     "role": "pivot",
+     "span": {
+      "from_w": 31,
+      "to_w": 36
+     },
+     "viewer_task": "connect_with_speaker",
+     "layout": "SPLIT",
+     "point": "The understatement lands on his face under the real headline: the man is gone, the building is fine",
+     "plate": {
+      "source": "take",
+      "crop": "50% 88%"
+     },
+     "uses": [
+      "ddn"
+     ],
+     "events": [],
+     "override_reason": "his understatement is the beat; the real headline holds above him"
+    },
+    {
+     "id": "questions",
+     "role": "anchor",
+     "span": {
+      "from_w": 37,
+      "to_w": 63
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "SPLIT",
+     "point": "The scale before he says it: of the local data-centre votes that day, the data centre lost all but one",
+     "plate": {
+      "source": "take",
+      "crop": "50% 88%"
+     },
+     "uses": [
+      "field41",
+      "stat41"
+     ],
+     "events": [
+      {
+       "at_w": 45,
+       "obj": "field41",
+       "verb": "enter",
+       "to_state": "visible"
+      },
+      {
+       "at_w": 49,
+       "obj": "stat41",
+       "verb": "enter",
+       "to_state": "visible"
+      },
+      {
+       "at_w": 58,
+       "obj": "field41",
+       "verb": "grey",
+       "to_state": "against"
+      },
+      {
+       "at_w": 60,
+       "obj": "stat41",
+       "verb": "count_to",
+       "to_state": "limits won"
+      }
+     ]
+    },
+    {
+     "id": "meta",
+     "role": "bridge",
+     "span": {
+      "from_w": 64,
+      "to_w": 77
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "STAGE",
+     "point": "Meta, named with its real mark beside the block: the company that wanted Piqua's data centre",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "block",
+      "meta_logo"
+     ],
+     "events": [
+      {
+       "at_w": 64,
+       "obj": "meta_logo",
+       "verb": "enter",
+       "to_state": "visible"
+      },
+      {
+       "at_w": 76,
+       "obj": "meta_logo",
+       "verb": "highlight",
+       "to_state": "0"
+      }
+     ]
+    },
+    {
+     "id": "city",
+     "role": "anchor",
+     "span": {
+      "from_w": 78,
+      "to_w": 88
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "STAGE",
+     "point": "One data centre takes a small city's electricity: the city's lights go out as the block glows",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "block"
+     ],
+     "events": [
+      {
+       "at_w": 81,
+       "obj": "block",
+       "verb": "connect",
+       "to_state": "city"
+      }
+     ],
+     "override_reason": "one move: the city goes dark as the block lights up"
+    },
+    {
+     "id": "piqua",
+     "role": "bridge",
+     "span": {
+      "from_w": 89,
+      "to_w": 95
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "SPLIT",
+     "point": "He says picture it; the real red-brick street in Piqua does the picturing",
+     "plate": {
+      "source": "take",
+      "crop": "50% 88%"
+     },
+     "uses": [
+      "piqua"
+     ],
+     "events": [
+      {
+       "at_w": 89,
+       "obj": "piqua",
+       "verb": "enter",
+       "to_state": "visible"
+      }
+     ]
+    },
+    {
+     "id": "bill",
+     "role": "anchor",
+     "span": {
+      "from_w": 96,
+      "to_w": 111
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "STAGE",
+     "point": "His picture made literal: the price tag flies off the block onto your power bill as new power lines draw towards it",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "block"
+     ],
+     "events": [
+      {
+       "at_w": 103,
+       "obj": "block",
+       "verb": "move",
+       "to_state": "target:0"
+      },
+      {
+       "at_w": 108,
+       "obj": "block",
+       "verb": "add",
+       "to_state": "pylons"
+      }
+     ],
+     "override_reason": "two moves on the one object carry his picture; the bill is the block own target"
+    },
+    {
+     "id": "vote",
+     "role": "bridge",
+     "span": {
+      "from_w": 112,
+      "to_w": 118
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "STAGE",
+     "point": "The turn from the worry to the vote: a ballot box drops beside the block",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "block"
+     ],
+     "events": [
+      {
+       "at_w": 117,
+       "obj": "block",
+       "verb": "add",
+       "to_state": "ballot"
       }
      ]
     },
@@ -408,349 +685,542 @@
      "id": "proof",
      "role": "anchor",
      "span": {
-      "from_w": 30,
-      "to_w": 41
+      "from_w": 119,
+      "to_w": 132
      },
      "viewer_task": "verify_evidence",
-     "layout": "SPLIT",
-     "point": "Meta Muse in WhatsApp, Amazon for groceries, Google for email: the assistants are already inside the apps",
+     "layout": "P6",
+     "point": "The ban passed two to one of the votes cast, and the exact share fixes his words on screen",
      "plate": {
       "source": "take",
       "crop": "50% 88%"
      },
      "uses": [
-      "logos",
-      "amazon_loop"
+      "block",
+      "ban_stat"
      ],
      "events": [
       {
-       "at_w": 30,
-       "obj": "logos",
+       "at_w": 121,
+       "obj": "ban_stat",
        "verb": "enter",
-       "to_state": "visible",
-       "silent": true
+       "to_state": "visible"
       },
       {
-       "at_w": 34,
-       "obj": "logos",
-       "verb": "highlight",
-       "to_state": "1",
-       "silent": true
+       "at_w": 126,
+       "obj": "block",
+       "verb": "stamp",
+       "to_state": "ban"
       },
       {
-       "at_w": 35,
-       "obj": "amazon_loop",
-       "verb": "draw",
-       "to_state": "Amazon",
-       "silent": true
-      },
-      {
-       "at_w": 38,
-       "obj": "logos",
-       "verb": "highlight",
-       "to_state": "2",
-       "silent": true
-      },
-      {
-       "at_w": 38,
-       "obj": "amazon_loop",
-       "verb": "exit",
-       "to_state": "gone",
-       "silent": true
+       "at_w": 130,
+       "obj": "ban_stat",
+       "verb": "count_to",
+       "to_state": "for the ban"
       }
      ]
     },
     {
-     "id": "b4-8am",
-     "role": "anchor",
+     "id": "sack",
+     "role": "bridge",
      "span": {
-      "from_w": 42,
-      "to_w": 47
-     },
-     "viewer_task": "inspect_artifact",
-     "layout": "SPLIT",
-     "point": "It can get dangerous: left alone, the assistant answers your boss for you",
-     "plate": {
-      "source": "take",
-      "crop": "50% 88%"
-     },
-     "uses": [
-      "chat"
-     ],
-     "events": [
-      {
-       "at_w": 42,
-       "obj": "chat",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 42,
-       "obj": "chat",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 44,
-       "obj": "chat",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
-      },
-      {
-       "at_w": 46,
-       "obj": "chat",
-       "verb": "send",
-       "to_state": "1",
-       "silent": true
-      }
-     ]
-    },
-    {
-     "id": "b5-rule",
-     "role": "pivot",
-     "span": {
-      "from_w": 48,
-      "to_w": 58
+      "from_w": 133,
+      "to_w": 147
      },
      "viewer_task": "understand_mechanism",
      "layout": "SPLIT",
-     "point": "His first step is one rule: no spending and no sending without him",
+     "point": "His rounded share stays in his voice; the exact recall figure for the mayor lands above him",
      "plate": {
       "source": "take",
       "crop": "50% 88%"
      },
      "uses": [
-      "chat",
-      "rules"
+      "recall_stat"
      ],
      "events": [
       {
-       "at_w": 53,
-       "obj": "chat",
-       "verb": "exit",
-       "to_state": "gone",
-       "silent": true
-      },
-      {
-       "at_w": 54,
-       "obj": "rules",
+       "at_w": 135,
+       "obj": "recall_stat",
        "verb": "enter",
-       "to_state": "visible",
-       "silent": true
+       "to_state": "visible"
       },
       {
-       "at_w": 54,
-       "obj": "rules",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 56,
-       "obj": "rules",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
+       "at_w": 142,
+       "obj": "recall_stat",
+       "verb": "count_to",
+       "to_state": "to recall the mayor"
       }
      ]
     },
     {
-     "id": "own-words",
-     "role": "anchor",
+     "id": "built",
+     "role": "pivot",
      "span": {
-      "from_w": 59,
-      "to_w": 73
+      "from_w": 148,
+      "to_w": 171
      },
-     "viewer_task": "connect_with_speaker",
-     "layout": "SPLIT",
-     "point": "In his own words: it never spends his money or sends anything unless he says so",
-     "plate": {
-      "source": "take",
-      "crop": "50% 88%"
-     },
-     "uses": [
-      "rule_card"
-     ],
-     "events": [
-      {
-       "at_w": 59,
-       "obj": "rule_card",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 60,
-       "obj": "rule_card",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 64,
-       "obj": "rule_card",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
-      },
-      {
-       "at_w": 70,
-       "obj": "rule_card",
-       "verb": "send",
-       "to_state": "0",
-       "silent": true
-      }
-     ]
-    },
-    {
-     "id": "b7-prompt",
-     "role": "anchor",
-     "span": {
-      "from_w": 74,
-      "to_w": 117
-     },
-     "viewer_task": "inspect_artifact",
+     "viewer_task": "understand_mechanism",
      "layout": "STAGE",
-     "point": "He did not write the rule himself: one prompt and the AI asked him questions, then locked itself down",
+     "point": "The irony in one object: the stamped block keeps growing in a town that just banned it",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "rules_held",
-      "ask"
+      "block"
      ],
      "events": [
       {
-       "at_w": 74,
-       "obj": "rules_held",
+       "at_w": 154,
+       "obj": "block",
+       "verb": "grow",
+       "to_state": "giant"
+      }
+     ],
+     "override_reason": "one move carries the irony; the BAN stamp stays on the block as it grows"
+    },
+    {
+     "id": "meta_says",
+     "role": "anchor",
+     "span": {
+      "from_w": 172,
+      "to_w": 179
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "STAGE",
+     "point": "Meta's own words on screen, so his sarcasm has something to bite",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "meta_line"
+     ],
+     "events": [
+      {
+       "at_w": 172,
+       "obj": "meta_line",
        "verb": "enter",
-       "to_state": "visible",
-       "silent": true
+       "to_state": "visible"
       },
       {
-       "at_w": 74,
-       "obj": "rules_held",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
-      },
-      {
-       "at_w": 92,
-       "obj": "ask",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 92,
-       "obj": "rules_held",
-       "verb": "exit",
-       "to_state": "gone",
-       "silent": true
-      },
-      {
-       "at_w": 94,
-       "obj": "ask",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 101,
-       "obj": "ask",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
-      },
-      {
-       "at_w": 103,
-       "obj": "ask",
-       "verb": "type",
-       "to_state": "2",
-       "silent": true
-      },
-      {
-       "at_w": 111,
-       "obj": "ask",
-       "verb": "type",
-       "to_state": "3",
-       "silent": true
-      },
-      {
-       "at_w": 113,
-       "obj": "ask",
-       "verb": "send",
-       "to_state": "0",
-       "silent": true
+       "at_w": 175,
+       "obj": "meta_line",
+       "verb": "fill",
+       "to_state": "visible"
       }
      ]
     },
     {
-     "id": "close",
-     "role": "payoff",
+     "id": "party_line",
+     "role": "bridge",
      "span": {
-      "from_w": 118,
-      "to_w": 147
+      "from_w": 180,
+      "to_w": 198
      },
-     "viewer_task": "land_payoff",
+     "viewer_task": "connect_with_speaker",
      "layout": "SPLIT",
-     "point": "Do this one easy step today: no spending, no sending, and enjoy the new tools without the fails",
+     "point": "He reads Meta's line for what it is; the card is struck through as he says it",
      "plate": {
       "source": "take",
       "crop": "50% 88%"
      },
      "uses": [
-      "rule_close"
+      "meta_line"
      ],
      "events": [
       {
-       "at_w": 128,
-       "obj": "rule_close",
+       "at_w": 185,
+       "obj": "meta_line",
+       "verb": "stamp",
+       "to_state": "struck"
+      }
+     ],
+     "override_reason": "his sarcasm on his face is the beat; the quote card is struck once"
+    },
+    {
+     "id": "power",
+     "role": "anchor",
+     "span": {
+      "from_w": 199,
+      "to_w": 221
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "STAGE",
+     "point": "No town, so the AI companies take their power, and its price tag, somewhere else",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "block",
+      "ai_logos"
+     ],
+     "events": [
+      {
+       "at_w": 205,
+       "obj": "ai_logos",
        "verb": "enter",
-       "to_state": "visible",
-       "silent": true
+       "to_state": "visible"
       },
       {
-       "at_w": 128,
-       "obj": "rule_close",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
+       "at_w": 208,
+       "obj": "ai_logos",
+       "verb": "exit",
+       "to_state": "visible"
       },
       {
-       "at_w": 131,
-       "obj": "rule_close",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
+       "at_w": 210,
+       "obj": "block",
+       "verb": "carry",
+       "to_state": "walk"
       },
       {
-       "at_w": 140,
-       "obj": "rule_close",
-       "verb": "send",
-       "to_state": "0",
-       "silent": true
+       "at_w": 219,
+       "obj": "block",
+       "verb": "move",
+       "to_state": "target:0"
       }
      ]
+    },
+    {
+     "id": "call",
+     "role": "call",
+     "span": {
+      "from_w": 222,
+      "to_w": 236
+     },
+     "viewer_task": "land_payoff",
+     "layout": "SPLIT",
+     "point": "His dated call: the cost of that power lands on what you pay for AI at renewal",
+     "plate": {
+      "source": "take",
+      "crop": "50% 88%"
+     },
+     "uses": [],
+     "events": []
+    },
+    {
+     "id": "deals",
+     "role": "bridge",
+     "span": {
+      "from_w": 237,
+      "to_w": 255
+     },
+     "viewer_task": "verify_evidence",
+     "layout": "P6",
+     "point": "The deal he means, a real one he was sent this week, on screen as he names it",
+     "plate": {
+      "source": "take",
+      "crop": "50% 88%"
+     },
+     "uses": [
+      "hf_deal"
+     ],
+     "events": [
+      {
+       "at_w": 246,
+       "obj": "hf_deal",
+       "verb": "enter",
+       "to_state": "visible"
+      }
+     ],
+     "override_reason": "one real offer arrives on his words; the next beats open its small print"
+    },
+    {
+     "id": "small_print",
+     "role": "anchor",
+     "span": {
+      "from_w": 256,
+      "to_w": 271
+     },
+     "viewer_task": "inspect_artifact",
+     "layout": "STAGE",
+     "point": "The small print on that offer, big enough to read: the bonus credits expire in a month",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "small_print"
+     ],
+     "events": [
+      {
+       "at_w": 256,
+       "obj": "small_print",
+       "verb": "enter",
+       "to_state": "visible"
+      }
+     ],
+     "override_reason": "the real small print is the picture; it holds whole while he says what it means"
+    },
+    {
+     "id": "payoff",
+     "role": "payoff",
+     "span": {
+      "from_w": 272,
+      "to_w": 281
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "STAGE",
+     "point": "Free bonus credits fill the first month, then drain away after it, and the monthly limit is what is left",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "meter"
+     ],
+     "events": [
+      {
+       "at_w": 272,
+       "obj": "meter",
+       "verb": "enter",
+       "to_state": "visible"
+      },
+      {
+       "at_w": 273,
+       "obj": "meter",
+       "verb": "fill",
+       "to_state": "plan credits a month"
+      },
+      {
+       "at_w": 276,
+       "obj": "meter",
+       "verb": "add",
+       "to_state": "bonus credits"
+      },
+      {
+       "at_w": 277,
+       "obj": "meter",
+       "verb": "mark",
+       "to_state": "visible"
+      },
+      {
+       "at_w": 279,
+       "obj": "meter",
+       "verb": "count_to",
+       "to_state": "30"
+      },
+      {
+       "at_w": 280,
+       "obj": "meter",
+       "verb": "drop",
+       "to_state": "plan credits a month"
+      }
+     ]
+    },
+    {
+     "id": "three",
+     "role": "anchor",
+     "span": {
+      "from_w": 282,
+      "to_w": 296
+     },
+     "viewer_task": "verify_evidence",
+     "layout": "P6",
+     "point": "Another of the real offers he got this week: the discount is for the first year only",
+     "plate": {
+      "source": "take",
+      "crop": "50% 88%"
+     },
+     "uses": [
+      "el_deal"
+     ],
+     "events": [
+      {
+       "at_w": 284,
+       "obj": "el_deal",
+       "verb": "enter",
+       "to_state": "visible"
+      }
+     ],
+     "override_reason": "a second real offer arrives on three times and holds while he says it"
+    },
+    {
+     "id": "carry_on",
+     "role": "bridge",
+     "span": {
+      "from_w": 297,
+      "to_w": 320
+     },
+     "viewer_task": "understand_mechanism",
+     "layout": "STAGE",
+     "point": "Where the fight in a little town ends up: on his own bill",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "block"
+     ],
+     "events": [
+      {
+       "at_w": 305,
+       "obj": "block",
+       "verb": "move",
+       "to_state": "target:1"
+      },
+      {
+       "at_w": 315,
+       "obj": "block",
+       "verb": "exit",
+       "to_state": "flat"
+      }
+     ],
+     "override_reason": "two moves close the one object: the tag lands on his AI plan, then the block folds away"
+    },
+    {
+     "id": "close",
+     "role": "bridge",
+     "span": {
+      "from_w": 321,
+      "to_w": 326
+     },
+     "viewer_task": "land_payoff",
+     "layout": "STAGE",
+     "point": "The full story is at makeyourmindup.ai, on the house close card",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [],
+     "events": [],
+     "override_reason": "the house close card carries the address; nothing else on screen"
     }
    ]
   }
  },
  "approvals": [],
- "budget": {
-  "tokens_cap": 3300000,
-  "credits": {
-   "higgsfield": 0,
-   "runway": 0
+ "style": {
+  "motion": {
+   "module": "eating-jobs-ladder",
+   "reason": "Krish's pick on the board, 17 Nov 2026"
+  },
+  "captions": {
+   "theme": "art-directed",
+   "reason": "Krish's pick on the board, 17 Nov 2026",
+   "placement": "lower"
+  },
+  "idea": {
+   "object": "One data centre, Meta's block in Piqua, carries the whole story: dropped on the town, opened, plugged in, stamped BAN, still growing, then walking off with the power bill's price tag.",
+   "moves": [
+    {
+     "move": "drops onto the Piqua pin",
+     "means": "this is a real place with a real data centre fight"
+    },
+    {
+     "move": "the roof opens on racks",
+     "means": "a data centre is a building full of computers that run AI"
+    },
+    {
+     "move": "plugs into the city as the city's lights go out",
+     "means": "one data centre takes a small city's electricity"
+    },
+    {
+     "move": "a BAN stamp slams onto it",
+     "means": "the town voted the data centre out"
+    },
+    {
+     "move": "it keeps growing under the stamp",
+     "means": "it is still being built in a town that banned it"
+    },
+    {
+     "move": "it walks off with a price tag and the tag lands on a bill",
+     "means": "the power goes somewhere else and someone pays for it"
+    }
+   ],
+   "never": [
+    "figures or icons acting out a sentence",
+    "on-screen words repeating what he says",
+    "a generated picture standing in for a real place, vote or offer"
+   ],
+   "real_artifacts": [
+    {
+     "asset": "ddn-headline",
+     "text": "Piqua voters oust mayor, two commissioners; approve data center ban"
+    },
+    {
+     "asset": "hf-bonus-expires",
+     "text": "Bonus credits expire in 30 days."
+    },
+    {
+     "asset": "piqua-north-main",
+     "text": "North Main, Piqua (photo, no words)"
+    }
+   ]
+  },
+  "layout": {
+   "mode": "band",
+   "reason": "his take frames his head low with the top of the frame empty: the graphics take the top band, as in his Character.ai cut; graphics-only beats fill the frame"
   }
  },
- "style": {},
  "call": {
-  "statement": "DRAFT for the styles pass only, not his call: how many US states pass a data-centre pause by the end of 2027",
-  "due": "2027-12-31",
-  "confidence_percent": 50
- }
+  "statement": "AI tool renewals cost more as the AI firms pay for their own power",
+  "due": "2027-06-30",
+  "confidence_percent": 75
+ },
+ "datasets": [
+  {
+   "id": "ballotpedia-41",
+   "unit": "local votes",
+   "denominator": 41,
+   "rows": [
+    {
+     "label": "initial",
+     "value": 41
+    },
+    {
+     "label": "against",
+     "value": 40
+    },
+    {
+     "label": "limits won",
+     "value": 40
+    }
+   ],
+   "producer_label": "Ballotpedia, 3 Nov 2026",
+   "source_url": "https://ballotpedia.org/2026_local_ballot_measures",
+   "retrieved_at": "2026-11-17"
+  },
+  {
+   "id": "higgsfield-team",
+   "unit": "credits",
+   "denominator": null,
+   "rows": [
+    {
+     "label": "plan credits a month",
+     "value": 2000
+    },
+    {
+     "label": "bonus credits",
+     "value": 400
+    }
+   ],
+   "producer_label": "Higgsfield Team plan",
+   "source_url": "https://higgsfield.ai/pricing",
+   "retrieved_at": "2026-11-18"
+  },
+  {
+   "id": "piqua-ban",
+   "unit": "%",
+   "denominator": 100,
+   "rows": [
+    {
+     "label": "for the ban",
+     "value": 66.7
+    }
+   ],
+   "producer_label": "Miami County Board of Elections, unofficial, via Dayton Daily News",
+   "source_url": "https://www.daytondailynews.com/local/charter-amendment-banning-large-data-centers-wins-approval/article_d4cf4dc3-b418-58b1-8523-9348694b561b.html",
+   "retrieved_at": "2026-11-18"
+  },
+  {
+   "id": "piqua-recall",
+   "unit": "%",
+   "denominator": 100,
+   "rows": [
+    {
+     "label": "to recall the mayor",
+     "value": 72.95
+    }
+   ],
+   "producer_label": "Miami County Board of Elections, unofficial, via Dayton Daily News",
+   "source_url": "https://www.daytondailynews.com/local/charter-amendment-banning-large-data-centers-wins-approval/article_d4cf4dc3-b418-58b1-8523-9348694b561b.html",
+   "retrieved_at": "2026-11-18"
+  }
+ ]
 }

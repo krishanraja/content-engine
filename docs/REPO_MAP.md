@@ -5118,6 +5118,18 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function codeState({ object, events, frame, aspect }: Pick<DeviceProps, 'object' | 'events' | 'frame' | 'aspect'>)`
 
+### `apps/renderer/src/engine/devices/credit_meter/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/credit_meter/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/credit_meter/state.ts`
+
+- `function creditState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
 
 - `function buddyState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
@@ -5154,6 +5166,18 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/evidence_card/state.ts`
 
 - `function evidenceState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/facility_block/index.tsx`
+
+- `function Device(props: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/facility_block/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/facility_block/state.ts`
+
+- `function facilityState({object, events, frame}: Pick<DeviceProps, 'object'|'events'|'frame'>)`
 
 ### `apps/renderer/src/engine/devices/film_frame/index.tsx`
 

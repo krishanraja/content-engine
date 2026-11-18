@@ -1,0 +1,3729 @@
+{
+  "schema": "ve-edl/1",
+  "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+  "cut": "short",
+  "aspect": "9:16",
+  "fps": 30,
+  "edit": {
+    "remove": [],
+    "speed": 1.21,
+    "speed_said": "the prompt should ensure it gets the session to look for places I've had to restart a sentence, clip those out, clip out empty awkward silences, and then measure the total duration, and then speed it up if needed to get it under the 90 second limit (longer video length does not matter)",
+    "pauses": {
+      "longer_than_s": 0.6,
+      "said": "the prompt should ensure it gets the session to look for places I've had to restart a sentence, clip those out, clip out empty awkward silences"
+    }
+  },
+  "speed": 1.21,
+  "crossfade_ms": 30.0,
+  "rule": {
+    "min_gap_ms": 80.0,
+    "clearance_ms": 30.0,
+    "crossfade_ms": [
+      20.0,
+      40.0
+    ],
+    "aligners": "both"
+  },
+  "script_sha256": "34972627be97fb1b7f50f58930e930fbe5ed4c909595815fb4e6ca4836876c4f",
+  "takes": {
+    "dc-short": {
+      "media": {
+        "path": "/home/user/content-engine/.scratch/b019/takes/data-centers-and-midterms-short.mp4",
+        "sha256": "2e763688969f2d2ca31001e8814ee4bb1b41aa6731e238154b2c44281fcf67e1",
+        "duration_s": 126.0,
+        "video": {
+          "avg_rate": 48.0,
+          "house_rate": 50,
+          "laid": "resampled",
+          "lay_offset_s": -0.0,
+          "jitter_p95_ms": 0.0,
+          "max_offset_ms": 0.0,
+          "rotation": 0,
+          "transfer": "bt709",
+          "hdr": null,
+          "primaries": "bt709",
+          "pix_fmt": "yuv420p",
+          "bit_depth": 8
+        }
+      },
+      "aligners": [
+        "torchaudio:mms-fa",
+        "torchaudio:wav2vec2-base-960h"
+      ]
+    }
+  },
+  "lines": [
+    {
+      "line": 1,
+      "text": "A tiny town in Ohio just fired its mayor because he greenlit a data centre for Meta.",
+      "take": "dc-short",
+      "from_w": 0,
+      "to_w": 16,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 2,
+      "text": "Data centres are big buildings full of computers that mainly just run AI nowadays, so it's sacked over a building.",
+      "take": "dc-short",
+      "from_w": 17,
+      "to_w": 36,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 3,
+      "text": "So what just happened to AI with the midterms in America and where does AI get built when the residents of towns say no?",
+      "take": "dc-short",
+      "from_w": 37,
+      "to_w": 60,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 4,
+      "text": "Let's find out.",
+      "take": "dc-short",
+      "from_w": 61,
+      "to_w": 63,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 5,
+      "text": "Meta wanted a giant data centre for more AI and the mayor said yes.",
+      "take": "dc-short",
+      "from_w": 64,
+      "to_w": 77,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 6,
+      "text": "A data centre uses as much electricity as a small city.",
+      "take": "dc-short",
+      "from_w": 78,
+      "to_w": 88,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 7,
+      "text": "Picture living in Piqua, this little town, and opening your power bill to find you're chipping in for the new power lines, right?",
+      "take": "dc-short",
+      "from_w": 89,
+      "to_w": 111,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 8,
+      "text": "So then the residents of Piqua voted.",
+      "take": "dc-short",
+      "from_w": 112,
+      "to_w": 118,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 9,
+      "text": "Should we ban the big data centres?",
+      "take": "dc-short",
+      "from_w": 119,
+      "to_w": 125,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 10,
+      "text": "Yes.",
+      "take": "dc-short",
+      "from_w": 126,
+      "to_w": 126,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 11,
+      "text": "And that was two to one.",
+      "take": "dc-short",
+      "from_w": 127,
+      "to_w": 132,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 12,
+      "text": "Should we sack the mayor?",
+      "take": "dc-short",
+      "from_w": 133,
+      "to_w": 137,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 13,
+      "text": "That was even more, 70% of the residents.",
+      "take": "dc-short",
+      "from_w": 138,
+      "to_w": 145,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 14,
+      "text": "The landslide.",
+      "take": "dc-short",
+      "from_w": 146,
+      "to_w": 147,
+      "unconfirmed_words": 1
+    },
+    {
+      "line": 15,
+      "text": "But Meta's data centre was already being built.",
+      "take": "dc-short",
+      "from_w": 148,
+      "to_w": 155,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 16,
+      "text": "So Piqua now has a data centre going up in the town that just banned them.",
+      "take": "dc-short",
+      "from_w": 156,
+      "to_w": 171,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 17,
+      "text": "Meta says it will work with local officials which is kind of their party line every time they do something which everyone hates, which is a lot.",
+      "take": "dc-short",
+      "from_w": 172,
+      "to_w": 198,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 18,
+      "text": "So when small towns say no, the AI companies have to find that power somewhere else.",
+      "take": "dc-short",
+      "from_w": 199,
+      "to_w": 214,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 19,
+      "text": "and they have to pay for it.",
+      "take": "dc-short",
+      "from_w": 215,
+      "to_w": 221,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 20,
+      "text": "And I reckon that cost lands in your electricity subscription and your business's AI subscriptions.",
+      "take": "dc-short",
+      "from_w": 222,
+      "to_w": 236,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 21,
+      "text": "So now when we renew an AI tool we might see special deals to change over to new plans when secretly they charge you more than you'd pay if you'd stuck to your current terms on the premise of bonus credits and things like that.",
+      "take": "dc-short",
+      "from_w": 237,
+      "to_w": 281,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 22,
+      "text": "I've seen this happen three times in the last week with businesses with AI tools.",
+      "take": "dc-short",
+      "from_w": 282,
+      "to_w": 296,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 23,
+      "text": "And it will continue because if it's a little town like Piqua, the fight ends up on my bill in one way or another.",
+      "take": "dc-short",
+      "from_w": 297,
+      "to_w": 320,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 24,
+      "text": "The full story is at makeyourmindup.ai.",
+      "take": "dc-short",
+      "from_w": 321,
+      "to_w": 326,
+      "unconfirmed_words": 0
+    }
+  ],
+  "segments": [
+    {
+      "take": "dc-short",
+      "src_in_s": 1.642,
+      "src_out_s": 7.426,
+      "out_in_s": 0.0,
+      "out_out_s": 4.7802,
+      "first_word": 0,
+      "last_word": 16,
+      "frames": 143
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 7.847,
+      "src_out_s": 12.433,
+      "out_in_s": 4.7802,
+      "out_out_s": 8.5702,
+      "first_word": 17,
+      "last_word": 30,
+      "frames": 114
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 13.052,
+      "src_out_s": 15.157,
+      "out_in_s": 8.5702,
+      "out_out_s": 10.3099,
+      "first_word": 31,
+      "last_word": 37,
+      "frames": 52
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 15.434,
+      "src_out_s": 22.38,
+      "out_in_s": 10.3099,
+      "out_out_s": 16.0504,
+      "first_word": 38,
+      "last_word": 60,
+      "frames": 173
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 23.08,
+      "src_out_s": 23.941,
+      "out_in_s": 16.0504,
+      "out_out_s": 16.762,
+      "first_word": 61,
+      "last_word": 63,
+      "frames": 21
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 25.761,
+      "src_out_s": 28.963,
+      "out_in_s": 16.762,
+      "out_out_s": 19.4083,
+      "first_word": 64,
+      "last_word": 72,
+      "frames": 79
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 29.343,
+      "src_out_s": 30.703,
+      "out_in_s": 19.4083,
+      "out_out_s": 20.5322,
+      "first_word": 73,
+      "last_word": 77,
+      "frames": 34
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 31.424,
+      "src_out_s": 38.367,
+      "out_in_s": 20.5322,
+      "out_out_s": 26.2702,
+      "first_word": 78,
+      "last_word": 100,
+      "frames": 172
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 38.767,
+      "src_out_s": 41.448,
+      "out_in_s": 26.2702,
+      "out_out_s": 28.486,
+      "first_word": 101,
+      "last_word": 111,
+      "frames": 67
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 41.968,
+      "src_out_s": 47.611,
+      "out_in_s": 28.486,
+      "out_out_s": 33.1496,
+      "first_word": 112,
+      "last_word": 132,
+      "frames": 139
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 48.052,
+      "src_out_s": 54.357,
+      "out_in_s": 33.1496,
+      "out_out_s": 38.3603,
+      "first_word": 133,
+      "last_word": 147,
+      "frames": 157
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 54.837,
+      "src_out_s": 61.843,
+      "out_in_s": 38.3603,
+      "out_out_s": 44.1504,
+      "first_word": 148,
+      "last_word": 171,
+      "frames": 174
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 62.593,
+      "src_out_s": 69.809,
+      "out_in_s": 44.1504,
+      "out_out_s": 50.114,
+      "first_word": 172,
+      "last_word": 198,
+      "frames": 178
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 71.29,
+      "src_out_s": 76.572,
+      "out_in_s": 50.114,
+      "out_out_s": 54.4793,
+      "first_word": 199,
+      "last_word": 214,
+      "frames": 131
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 86.535,
+      "src_out_s": 87.695,
+      "out_in_s": 54.4793,
+      "out_out_s": 55.438,
+      "first_word": 237,
+      "last_word": 243,
+      "frames": 29
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 88.235,
+      "src_out_s": 95.013,
+      "out_in_s": 55.438,
+      "out_out_s": 61.0397,
+      "first_word": 244,
+      "last_word": 258,
+      "frames": 168
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 95.517,
+      "src_out_s": 105.62,
+      "out_in_s": 61.0397,
+      "out_out_s": 69.3893,
+      "first_word": 259,
+      "last_word": 293,
+      "frames": 251
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 106.14,
+      "src_out_s": 119.67,
+      "out_in_s": 69.3893,
+      "out_out_s": 80.5711,
+      "first_word": 294,
+      "last_word": 342,
+      "frames": 335
+    },
+    {
+      "take": "dc-short",
+      "src_in_s": 120.351,
+      "src_out_s": 123.653,
+      "out_in_s": 80.5711,
+      "out_out_s": 83.3,
+      "first_word": 343,
+      "last_word": 348,
+      "frames": 82
+    }
+  ],
+  "joins": [
+    {
+      "at_s": 4.7802,
+      "at_frame": 143,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 7.426
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 7.847
+      }
+    },
+    {
+      "at_s": 8.5702,
+      "at_frame": 257,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 12.433
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 13.052
+      }
+    },
+    {
+      "at_s": 10.3099,
+      "at_frame": 309,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 15.157
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 15.434
+      }
+    },
+    {
+      "at_s": 16.0504,
+      "at_frame": 482,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 22.38
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 23.08
+      }
+    },
+    {
+      "at_s": 16.762,
+      "at_frame": 503,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 23.941
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 25.761
+      }
+    },
+    {
+      "at_s": 19.4083,
+      "at_frame": 582,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 28.963
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 29.343
+      }
+    },
+    {
+      "at_s": 20.5322,
+      "at_frame": 616,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 30.703
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 31.424
+      }
+    },
+    {
+      "at_s": 26.2702,
+      "at_frame": 788,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 38.367
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 38.767
+      }
+    },
+    {
+      "at_s": 28.486,
+      "at_frame": 855,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 41.448
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 41.968
+      }
+    },
+    {
+      "at_s": 33.1496,
+      "at_frame": 994,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 47.611
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 48.052
+      }
+    },
+    {
+      "at_s": 38.3603,
+      "at_frame": 1151,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 54.357
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 54.837
+      }
+    },
+    {
+      "at_s": 44.1504,
+      "at_frame": 1325,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 61.843
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 62.593
+      }
+    },
+    {
+      "at_s": 50.114,
+      "at_frame": 1503,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 69.809
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 71.29
+      }
+    },
+    {
+      "at_s": 54.4793,
+      "at_frame": 1634,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 76.572
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 86.535
+      }
+    },
+    {
+      "at_s": 55.438,
+      "at_frame": 1663,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 87.695
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 88.235
+      }
+    },
+    {
+      "at_s": 61.0397,
+      "at_frame": 1831,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 95.013
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 95.517
+      }
+    },
+    {
+      "at_s": 69.3893,
+      "at_frame": 2082,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 105.62
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 106.14
+      }
+    },
+    {
+      "at_s": 80.5711,
+      "at_frame": 2417,
+      "crossfade_ms": 30.0,
+      "from": {
+        "take": "dc-short",
+        "src_s": 119.67
+      },
+      "to": {
+        "take": "dc-short",
+        "src_s": 120.351
+      }
+    }
+  ],
+  "words": [
+    {
+      "w": 0,
+      "word": "A",
+      "onset_s": 0.0992,
+      "end_s": 0.1157,
+      "take": "dc-short",
+      "b_onset_s": 0.1157,
+      "b_end_s": 0.1322
+    },
+    {
+      "w": 1,
+      "word": "tiny",
+      "onset_s": 0.1818,
+      "end_s": 0.4628,
+      "take": "dc-short",
+      "b_onset_s": 0.1983,
+      "b_end_s": 0.4793
+    },
+    {
+      "w": 2,
+      "word": "town",
+      "onset_s": 0.562,
+      "end_s": 0.843,
+      "take": "dc-short",
+      "b_onset_s": 0.5785,
+      "b_end_s": 0.8099
+    },
+    {
+      "w": 3,
+      "word": "in",
+      "onset_s": 0.876,
+      "end_s": 0.9421,
+      "take": "dc-short",
+      "b_onset_s": 0.8926,
+      "b_end_s": 0.9256
+    },
+    {
+      "w": 4,
+      "word": "Ohio",
+      "onset_s": 0.9926,
+      "end_s": 1.3562,
+      "take": "dc-short",
+      "b_onset_s": 1.0421,
+      "b_end_s": 1.3727
+    },
+    {
+      "w": 5,
+      "word": "just",
+      "onset_s": 1.4554,
+      "end_s": 1.6207,
+      "take": "dc-short",
+      "b_onset_s": 1.4554,
+      "b_end_s": 1.6207
+    },
+    {
+      "w": 6,
+      "word": "fired",
+      "onset_s": 1.8386,
+      "end_s": 2.0843,
+      "take": "dc-short",
+      "heard_onset_s": 1.819,
+      "b_onset_s": 1.819,
+      "b_end_s": 2.0843
+    },
+    {
+      "w": 7,
+      "word": "its",
+      "onset_s": 2.1008,
+      "end_s": 2.1835,
+      "take": "dc-short",
+      "b_onset_s": 2.1174,
+      "b_end_s": 2.2
+    },
+    {
+      "w": 8,
+      "word": "mayor",
+      "onset_s": 2.2331,
+      "end_s": 2.4479,
+      "take": "dc-short",
+      "b_onset_s": 2.2331,
+      "b_end_s": 2.4645
+    },
+    {
+      "w": 9,
+      "word": "because",
+      "onset_s": 2.665,
+      "end_s": 2.9446,
+      "take": "dc-short",
+      "heard_onset_s": 2.6463,
+      "b_onset_s": 2.6628,
+      "b_end_s": 2.9116
+    },
+    {
+      "w": 10,
+      "word": "he",
+      "onset_s": 2.9612,
+      "end_s": 3.0107,
+      "take": "dc-short",
+      "b_onset_s": 2.9612,
+      "b_end_s": 3.0273
+    },
+    {
+      "w": 11,
+      "word": "greenlit",
+      "onset_s": 3.1264,
+      "end_s": 3.5066,
+      "take": "dc-short",
+      "b_onset_s": 3.1595,
+      "b_end_s": 3.5231
+    },
+    {
+      "w": 12,
+      "word": "a",
+      "onset_s": 3.5562,
+      "end_s": 3.5727,
+      "take": "dc-short",
+      "b_onset_s": 3.5727,
+      "b_end_s": 3.5893
+    },
+    {
+      "w": 13,
+      "word": "data",
+      "onset_s": 3.6719,
+      "end_s": 3.8711,
+      "take": "dc-short",
+      "b_onset_s": 3.6719,
+      "b_end_s": 3.8876
+    },
+    {
+      "w": 14,
+      "word": "centre",
+      "onset_s": 3.9372,
+      "end_s": 4.2017,
+      "take": "dc-short",
+      "b_onset_s": 3.9372,
+      "b_end_s": 4.1851
+    },
+    {
+      "w": 15,
+      "word": "for",
+      "onset_s": 4.2182,
+      "end_s": 4.3174,
+      "take": "dc-short",
+      "b_onset_s": 4.2347,
+      "b_end_s": 4.3174
+    },
+    {
+      "w": 16,
+      "word": "Meta.",
+      "onset_s": 4.4331,
+      "end_s": 4.6645,
+      "take": "dc-short",
+      "b_onset_s": 4.4331,
+      "b_end_s": 4.681
+    },
+    {
+      "w": 17,
+      "word": "Data",
+      "onset_s": 4.9066,
+      "end_s": 5.0447,
+      "take": "dc-short",
+      "heard_onset_s": 4.8959,
+      "b_onset_s": 4.8794,
+      "b_end_s": 5.0612
+    },
+    {
+      "w": 18,
+      "word": "centres",
+      "onset_s": 5.0777,
+      "end_s": 5.2595,
+      "take": "dc-short",
+      "b_onset_s": 5.0942,
+      "b_end_s": 5.243
+    },
+    {
+      "w": 19,
+      "word": "are",
+      "onset_s": 5.2761,
+      "end_s": 5.3595,
+      "take": "dc-short",
+      "b_onset_s": 5.2926,
+      "b_end_s": 5.3595
+    },
+    {
+      "w": 20,
+      "word": "big",
+      "onset_s": 5.3595,
+      "end_s": 5.4587,
+      "take": "dc-short",
+      "b_onset_s": 5.3761,
+      "b_end_s": 5.4587
+    },
+    {
+      "w": 21,
+      "word": "buildings",
+      "onset_s": 5.5083,
+      "end_s": 5.9215,
+      "take": "dc-short",
+      "b_onset_s": 5.5083,
+      "b_end_s": 5.8554
+    },
+    {
+      "w": 22,
+      "word": "full",
+      "onset_s": 6.2695,
+      "end_s": 6.3686,
+      "take": "dc-short",
+      "b_onset_s": 6.2695,
+      "b_end_s": 6.3686
+    },
+    {
+      "w": 23,
+      "word": "of",
+      "onset_s": 6.3852,
+      "end_s": 6.4182,
+      "take": "dc-short",
+      "b_onset_s": 6.3852,
+      "b_end_s": 6.4182
+    },
+    {
+      "w": 24,
+      "word": "computers",
+      "onset_s": 6.4513,
+      "end_s": 6.7819,
+      "take": "dc-short",
+      "b_onset_s": 6.4678,
+      "b_end_s": 6.7819
+    },
+    {
+      "w": 25,
+      "word": "that",
+      "onset_s": 6.7984,
+      "end_s": 6.8976,
+      "take": "dc-short",
+      "b_onset_s": 6.7984,
+      "b_end_s": 6.8976
+    },
+    {
+      "w": 26,
+      "word": "mainly",
+      "onset_s": 7.162,
+      "end_s": 7.3612,
+      "take": "dc-short",
+      "b_onset_s": 7.162,
+      "b_end_s": 7.3777
+    },
+    {
+      "w": 27,
+      "word": "just",
+      "onset_s": 7.4108,
+      "end_s": 7.5926,
+      "take": "dc-short",
+      "b_onset_s": 7.4273,
+      "b_end_s": 7.5926
+    },
+    {
+      "w": 28,
+      "word": "run",
+      "onset_s": 7.6422,
+      "end_s": 7.7579,
+      "take": "dc-short",
+      "b_onset_s": 7.6422,
+      "b_end_s": 7.7579
+    },
+    {
+      "w": 29,
+      "word": "AI",
+      "onset_s": 7.8075,
+      "end_s": 8.0719,
+      "take": "dc-short",
+      "b_onset_s": 7.824,
+      "b_end_s": 8.0554
+    },
+    {
+      "w": 30,
+      "word": "nowadays,",
+      "onset_s": 8.1389,
+      "end_s": 8.519,
+      "take": "dc-short",
+      "b_onset_s": 8.1389,
+      "b_end_s": 8.5025
+    },
+    {
+      "w": 31,
+      "word": "so",
+      "onset_s": 8.6694,
+      "end_s": 8.7355,
+      "take": "dc-short",
+      "b_onset_s": 8.6694,
+      "b_end_s": 8.7355
+    },
+    {
+      "w": 32,
+      "word": "it's",
+      "onset_s": 8.7851,
+      "end_s": 8.8512,
+      "take": "dc-short",
+      "b_onset_s": 8.8016,
+      "b_end_s": 8.8677
+    },
+    {
+      "w": 33,
+      "word": "sacked",
+      "onset_s": 8.9008,
+      "end_s": 9.1322,
+      "take": "dc-short",
+      "b_onset_s": 8.9008,
+      "b_end_s": 9.1157
+    },
+    {
+      "w": 34,
+      "word": "over",
+      "onset_s": 9.1818,
+      "end_s": 9.3471,
+      "take": "dc-short",
+      "b_onset_s": 9.1983,
+      "b_end_s": 9.3305
+    },
+    {
+      "w": 35,
+      "word": "a",
+      "onset_s": 9.3801,
+      "end_s": 9.3966,
+      "take": "dc-short",
+      "b_onset_s": 9.4132,
+      "b_end_s": 9.4297
+    },
+    {
+      "w": 36,
+      "word": "building.",
+      "onset_s": 9.4801,
+      "end_s": 9.7611,
+      "take": "dc-short",
+      "b_onset_s": 9.4801,
+      "b_end_s": 9.7281
+    },
+    {
+      "w": 37,
+      "word": "So",
+      "onset_s": 10.0586,
+      "end_s": 10.1247,
+      "take": "dc-short",
+      "b_onset_s": 10.0586,
+      "b_end_s": 10.1578
+    },
+    {
+      "w": 38,
+      "word": "what",
+      "onset_s": 10.4091,
+      "end_s": 10.5248,
+      "take": "dc-short",
+      "b_onset_s": 10.4256,
+      "b_end_s": 10.5413
+    },
+    {
+      "w": 39,
+      "word": "just",
+      "onset_s": 10.5909,
+      "end_s": 10.7562,
+      "take": "dc-short",
+      "b_onset_s": 10.5909,
+      "b_end_s": 10.7397
+    },
+    {
+      "w": 40,
+      "word": "happened",
+      "onset_s": 10.7892,
+      "end_s": 11.1033,
+      "take": "dc-short",
+      "b_onset_s": 10.7892,
+      "b_end_s": 11.0868
+    },
+    {
+      "w": 41,
+      "word": "to",
+      "onset_s": 11.1372,
+      "end_s": 11.1868,
+      "take": "dc-short",
+      "b_onset_s": 11.1537,
+      "b_end_s": 11.2198
+    },
+    {
+      "w": 42,
+      "word": "AI",
+      "onset_s": 11.2859,
+      "end_s": 11.5669,
+      "take": "dc-short",
+      "b_onset_s": 11.319,
+      "b_end_s": 11.5339
+    },
+    {
+      "w": 43,
+      "word": "with",
+      "onset_s": 11.6661,
+      "end_s": 11.7653,
+      "take": "dc-short",
+      "b_onset_s": 11.6661,
+      "b_end_s": 11.7487
+    },
+    {
+      "w": 44,
+      "word": "the",
+      "onset_s": 11.7818,
+      "end_s": 11.8314,
+      "take": "dc-short",
+      "b_onset_s": 11.7818,
+      "b_end_s": 11.8314
+    },
+    {
+      "w": 45,
+      "word": "midterms",
+      "onset_s": 11.8479,
+      "end_s": 12.2124,
+      "take": "dc-short",
+      "b_onset_s": 11.8644,
+      "b_end_s": 12.2124
+    },
+    {
+      "w": 46,
+      "word": "in",
+      "onset_s": 12.2289,
+      "end_s": 12.2785,
+      "take": "dc-short",
+      "b_onset_s": 12.2454,
+      "b_end_s": 12.2785
+    },
+    {
+      "w": 47,
+      "word": "America",
+      "onset_s": 12.3116,
+      "end_s": 12.6256,
+      "take": "dc-short",
+      "b_onset_s": 12.3281,
+      "b_end_s": 12.6091
+    },
+    {
+      "w": 48,
+      "word": "and",
+      "onset_s": 12.6752,
+      "end_s": 12.7909,
+      "take": "dc-short",
+      "b_onset_s": 12.6917,
+      "b_end_s": 12.7578
+    },
+    {
+      "w": 49,
+      "word": "where",
+      "onset_s": 13.0397,
+      "end_s": 13.2049,
+      "take": "dc-short",
+      "b_onset_s": 13.0397,
+      "b_end_s": 13.2049
+    },
+    {
+      "w": 50,
+      "word": "does",
+      "onset_s": 13.238,
+      "end_s": 13.3868,
+      "take": "dc-short",
+      "b_onset_s": 13.2545,
+      "b_end_s": 13.3868
+    },
+    {
+      "w": 51,
+      "word": "AI",
+      "onset_s": 13.519,
+      "end_s": 13.7504,
+      "take": "dc-short",
+      "b_onset_s": 13.552,
+      "b_end_s": 13.7173
+    },
+    {
+      "w": 52,
+      "word": "get",
+      "onset_s": 13.8165,
+      "end_s": 13.933,
+      "take": "dc-short",
+      "b_onset_s": 13.833,
+      "b_end_s": 13.9496
+    },
+    {
+      "w": 53,
+      "word": "built",
+      "onset_s": 13.9992,
+      "end_s": 14.181,
+      "take": "dc-short",
+      "b_onset_s": 14.0157,
+      "b_end_s": 14.1644
+    },
+    {
+      "w": 54,
+      "word": "when",
+      "onset_s": 14.214,
+      "end_s": 14.3628,
+      "take": "dc-short",
+      "b_onset_s": 14.214,
+      "b_end_s": 14.3463
+    },
+    {
+      "w": 55,
+      "word": "the",
+      "onset_s": 14.7171,
+      "end_s": 14.7595,
+      "take": "dc-short",
+      "heard_onset_s": 14.6934,
+      "b_onset_s": 14.7099,
+      "b_end_s": 14.776
+    },
+    {
+      "w": 56,
+      "word": "residents",
+      "onset_s": 14.8091,
+      "end_s": 15.1901,
+      "take": "dc-short",
+      "b_onset_s": 14.8256,
+      "b_end_s": 15.1735
+    },
+    {
+      "w": 57,
+      "word": "of",
+      "onset_s": 15.2231,
+      "end_s": 15.2892,
+      "take": "dc-short",
+      "b_onset_s": 15.2397,
+      "b_end_s": 15.2727
+    },
+    {
+      "w": 58,
+      "word": "towns",
+      "onset_s": 15.3388,
+      "end_s": 15.6198,
+      "take": "dc-short",
+      "b_onset_s": 15.3388,
+      "b_end_s": 15.6033
+    },
+    {
+      "w": 59,
+      "word": "say",
+      "onset_s": 15.6694,
+      "end_s": 15.7686,
+      "take": "dc-short",
+      "b_onset_s": 15.6529,
+      "b_end_s": 15.7859
+    },
+    {
+      "w": 60,
+      "word": "no?",
+      "onset_s": 15.8355,
+      "end_s": 15.9016,
+      "take": "dc-short",
+      "b_onset_s": 15.852,
+      "b_end_s": 15.9512
+    },
+    {
+      "w": 61,
+      "word": "Let's",
+      "onset_s": 16.1661,
+      "end_s": 16.2653,
+      "take": "dc-short",
+      "b_onset_s": 16.1496,
+      "b_end_s": 16.2983
+    },
+    {
+      "w": 62,
+      "word": "find",
+      "onset_s": 16.3149,
+      "end_s": 16.4967,
+      "take": "dc-short",
+      "b_onset_s": 16.3314,
+      "b_end_s": 16.4636
+    },
+    {
+      "w": 63,
+      "word": "out.",
+      "onset_s": 16.5463,
+      "end_s": 16.6628,
+      "take": "dc-short",
+      "b_onset_s": 16.5636,
+      "b_end_s": 16.6297
+    },
+    {
+      "w": 64,
+      "word": "Meta",
+      "onset_s": 16.8612,
+      "end_s": 17.0603,
+      "take": "dc-short",
+      "b_onset_s": 16.8777,
+      "b_end_s": 17.0603
+    },
+    {
+      "w": 65,
+      "word": "wanted",
+      "onset_s": 17.143,
+      "end_s": 17.424,
+      "take": "dc-short",
+      "b_onset_s": 17.1595,
+      "b_end_s": 17.4075
+    },
+    {
+      "w": 66,
+      "word": "a",
+      "onset_s": 17.4901,
+      "end_s": 17.5066,
+      "take": "dc-short",
+      "b_onset_s": 17.5066,
+      "b_end_s": 17.5232
+    },
+    {
+      "w": 67,
+      "word": "giant",
+      "onset_s": 17.6719,
+      "end_s": 17.9694,
+      "take": "dc-short",
+      "b_onset_s": 17.705,
+      "b_end_s": 17.9529
+    },
+    {
+      "w": 68,
+      "word": "data",
+      "onset_s": 17.986,
+      "end_s": 18.2008,
+      "take": "dc-short",
+      "b_onset_s": 18.0025,
+      "b_end_s": 18.2174
+    },
+    {
+      "w": 69,
+      "word": "centre",
+      "onset_s": 18.267,
+      "end_s": 18.581,
+      "take": "dc-short",
+      "b_onset_s": 18.267,
+      "b_end_s": 18.5645
+    },
+    {
+      "w": 70,
+      "word": "for",
+      "onset_s": 18.7777,
+      "end_s": 18.8289,
+      "take": "dc-short",
+      "heard_onset_s": 18.7463,
+      "b_onset_s": 18.7463,
+      "b_end_s": 18.8289
+    },
+    {
+      "w": 71,
+      "word": "more",
+      "onset_s": 18.862,
+      "end_s": 18.9951,
+      "take": "dc-short",
+      "b_onset_s": 18.862,
+      "b_end_s": 18.9951
+    },
+    {
+      "w": 72,
+      "word": "AI",
+      "onset_s": 19.0612,
+      "end_s": 19.3091,
+      "take": "dc-short",
+      "b_onset_s": 19.0612,
+      "b_end_s": 19.276
+    },
+    {
+      "w": 73,
+      "word": "and",
+      "onset_s": 19.5105,
+      "end_s": 19.5901,
+      "take": "dc-short",
+      "heard_onset_s": 19.5075,
+      "b_onset_s": 19.524,
+      "b_end_s": 19.5901
+    },
+    {
+      "w": 74,
+      "word": "the",
+      "onset_s": 19.6066,
+      "end_s": 19.6562,
+      "take": "dc-short",
+      "b_onset_s": 19.6232,
+      "b_end_s": 19.6728
+    },
+    {
+      "w": 75,
+      "word": "mayor",
+      "onset_s": 19.7058,
+      "end_s": 19.9042,
+      "take": "dc-short",
+      "b_onset_s": 19.7058,
+      "b_end_s": 19.9042
+    },
+    {
+      "w": 76,
+      "word": "said",
+      "onset_s": 19.9868,
+      "end_s": 20.1356,
+      "take": "dc-short",
+      "b_onset_s": 19.9868,
+      "b_end_s": 20.119
+    },
+    {
+      "w": 77,
+      "word": "yes.",
+      "onset_s": 20.1686,
+      "end_s": 20.4331,
+      "take": "dc-short",
+      "b_onset_s": 20.1521,
+      "b_end_s": 20.3504
+    },
+    {
+      "w": 78,
+      "word": "A",
+      "onset_s": 20.6314,
+      "end_s": 20.6479,
+      "take": "dc-short",
+      "b_onset_s": 20.6479,
+      "b_end_s": 20.6644
+    },
+    {
+      "w": 79,
+      "word": "data",
+      "onset_s": 20.6975,
+      "end_s": 20.8462,
+      "take": "dc-short",
+      "b_onset_s": 20.714,
+      "b_end_s": 20.8462
+    },
+    {
+      "w": 80,
+      "word": "centre",
+      "onset_s": 20.8793,
+      "end_s": 21.1438,
+      "take": "dc-short",
+      "b_onset_s": 20.8958,
+      "b_end_s": 21.1107
+    },
+    {
+      "w": 81,
+      "word": "uses",
+      "onset_s": 21.5735,
+      "end_s": 21.8719,
+      "take": "dc-short",
+      "b_onset_s": 21.6066,
+      "b_end_s": 21.8553
+    },
+    {
+      "w": 82,
+      "word": "as",
+      "onset_s": 21.938,
+      "end_s": 22.0041,
+      "take": "dc-short",
+      "b_onset_s": 21.9545,
+      "b_end_s": 22.0041
+    },
+    {
+      "w": 83,
+      "word": "much",
+      "onset_s": 22.0867,
+      "end_s": 22.3016,
+      "take": "dc-short",
+      "b_onset_s": 22.1033,
+      "b_end_s": 22.2851
+    },
+    {
+      "w": 84,
+      "word": "electricity",
+      "onset_s": 22.3347,
+      "end_s": 22.7975,
+      "take": "dc-short",
+      "b_onset_s": 22.3347,
+      "b_end_s": 22.814
+    },
+    {
+      "w": 85,
+      "word": "as",
+      "onset_s": 22.8801,
+      "end_s": 22.9462,
+      "take": "dc-short",
+      "b_onset_s": 22.9132,
+      "b_end_s": 22.9462
+    },
+    {
+      "w": 86,
+      "word": "a",
+      "onset_s": 22.9793,
+      "end_s": 22.9958,
+      "take": "dc-short",
+      "b_onset_s": 23.0124,
+      "b_end_s": 23.0289
+    },
+    {
+      "w": 87,
+      "word": "small",
+      "onset_s": 23.0785,
+      "end_s": 23.2934,
+      "take": "dc-short",
+      "b_onset_s": 23.0785,
+      "b_end_s": 23.2934
+    },
+    {
+      "w": 88,
+      "word": "city.",
+      "onset_s": 23.3595,
+      "end_s": 23.5743,
+      "take": "dc-short",
+      "b_onset_s": 23.3595,
+      "b_end_s": 23.5909
+    },
+    {
+      "w": 89,
+      "word": "Picture",
+      "onset_s": 23.6901,
+      "end_s": 23.9388,
+      "take": "dc-short",
+      "b_onset_s": 23.7066,
+      "b_end_s": 23.9223
+    },
+    {
+      "w": 90,
+      "word": "living",
+      "onset_s": 23.9553,
+      "end_s": 24.1867,
+      "take": "dc-short",
+      "b_onset_s": 23.9553,
+      "b_end_s": 24.1702
+    },
+    {
+      "w": 91,
+      "word": "in",
+      "onset_s": 24.2859,
+      "end_s": 24.3355,
+      "take": "dc-short",
+      "b_onset_s": 24.2859,
+      "b_end_s": 24.3355
+    },
+    {
+      "w": 92,
+      "word": "Piqua,",
+      "onset_s": 24.4016,
+      "end_s": 24.6,
+      "take": "dc-short",
+      "b_onset_s": 24.4182,
+      "b_end_s": 24.6
+    },
+    {
+      "w": 93,
+      "word": "this",
+      "onset_s": 24.6496,
+      "end_s": 24.7653,
+      "take": "dc-short",
+      "b_onset_s": 24.6661,
+      "b_end_s": 24.7653
+    },
+    {
+      "w": 94,
+      "word": "little",
+      "onset_s": 24.7983,
+      "end_s": 24.9471,
+      "take": "dc-short",
+      "b_onset_s": 24.7983,
+      "b_end_s": 24.9636
+    },
+    {
+      "w": 95,
+      "word": "town,",
+      "onset_s": 24.9801,
+      "end_s": 25.162,
+      "take": "dc-short",
+      "b_onset_s": 24.9967,
+      "b_end_s": 25.162
+    },
+    {
+      "w": 96,
+      "word": "and",
+      "onset_s": 25.2115,
+      "end_s": 25.2777,
+      "take": "dc-short",
+      "b_onset_s": 25.2115,
+      "b_end_s": 25.2611
+    },
+    {
+      "w": 97,
+      "word": "opening",
+      "onset_s": 25.4099,
+      "end_s": 25.6752,
+      "take": "dc-short",
+      "b_onset_s": 25.4429,
+      "b_end_s": 25.6586
+    },
+    {
+      "w": 98,
+      "word": "your",
+      "onset_s": 25.6917,
+      "end_s": 25.7909,
+      "take": "dc-short",
+      "b_onset_s": 25.6917,
+      "b_end_s": 25.7909
+    },
+    {
+      "w": 99,
+      "word": "power",
+      "onset_s": 25.8074,
+      "end_s": 26.0058,
+      "take": "dc-short",
+      "b_onset_s": 25.8239,
+      "b_end_s": 26.0058
+    },
+    {
+      "w": 100,
+      "word": "bill",
+      "onset_s": 26.0388,
+      "end_s": 26.171,
+      "take": "dc-short",
+      "b_onset_s": 26.0388,
+      "b_end_s": 26.171
+    },
+    {
+      "w": 101,
+      "word": "to",
+      "onset_s": 26.3801,
+      "end_s": 26.419,
+      "take": "dc-short",
+      "heard_onset_s": 26.3694,
+      "b_onset_s": 26.3694,
+      "b_end_s": 26.4355
+    },
+    {
+      "w": 102,
+      "word": "find",
+      "onset_s": 26.4851,
+      "end_s": 26.6504,
+      "take": "dc-short",
+      "b_onset_s": 26.4851,
+      "b_end_s": 26.6338
+    },
+    {
+      "w": 103,
+      "word": "you're",
+      "onset_s": 26.6669,
+      "end_s": 26.7661,
+      "take": "dc-short",
+      "b_onset_s": 26.6504,
+      "b_end_s": 26.7661
+    },
+    {
+      "w": 104,
+      "word": "chipping",
+      "onset_s": 26.7991,
+      "end_s": 27.0305,
+      "take": "dc-short",
+      "b_onset_s": 26.7991,
+      "b_end_s": 27.0305
+    },
+    {
+      "w": 105,
+      "word": "in",
+      "onset_s": 27.0471,
+      "end_s": 27.1297,
+      "take": "dc-short",
+      "b_onset_s": 27.0636,
+      "b_end_s": 27.1132
+    },
+    {
+      "w": 106,
+      "word": "for",
+      "onset_s": 27.2289,
+      "end_s": 27.3454,
+      "take": "dc-short",
+      "b_onset_s": 27.2289,
+      "b_end_s": 27.3454
+    },
+    {
+      "w": 107,
+      "word": "the",
+      "onset_s": 27.5768,
+      "end_s": 27.6429,
+      "take": "dc-short",
+      "b_onset_s": 27.5933,
+      "b_end_s": 27.6429
+    },
+    {
+      "w": 108,
+      "word": "new",
+      "onset_s": 27.6595,
+      "end_s": 27.7421,
+      "take": "dc-short",
+      "b_onset_s": 27.676,
+      "b_end_s": 27.7421
+    },
+    {
+      "w": 109,
+      "word": "power",
+      "onset_s": 27.7752,
+      "end_s": 27.9404,
+      "take": "dc-short",
+      "b_onset_s": 27.7917,
+      "b_end_s": 27.9404
+    },
+    {
+      "w": 110,
+      "word": "lines,",
+      "onset_s": 27.9735,
+      "end_s": 28.1719,
+      "take": "dc-short",
+      "b_onset_s": 27.9735,
+      "b_end_s": 28.1719
+    },
+    {
+      "w": 111,
+      "word": "right?",
+      "onset_s": 28.2049,
+      "end_s": 28.3867,
+      "take": "dc-short",
+      "b_onset_s": 28.2214,
+      "b_end_s": 28.3371
+    },
+    {
+      "w": 112,
+      "word": "So",
+      "onset_s": 28.6017,
+      "end_s": 28.6513,
+      "take": "dc-short",
+      "b_onset_s": 28.5852,
+      "b_end_s": 28.6513
+    },
+    {
+      "w": 113,
+      "word": "then",
+      "onset_s": 28.6843,
+      "end_s": 28.7843,
+      "take": "dc-short",
+      "b_onset_s": 28.6843,
+      "b_end_s": 28.7678
+    },
+    {
+      "w": 114,
+      "word": "the",
+      "onset_s": 28.8339,
+      "end_s": 28.8835,
+      "take": "dc-short",
+      "b_onset_s": 28.8505,
+      "b_end_s": 28.9
+    },
+    {
+      "w": 115,
+      "word": "residents",
+      "onset_s": 28.9166,
+      "end_s": 29.2472,
+      "take": "dc-short",
+      "b_onset_s": 28.9331,
+      "b_end_s": 29.2306
+    },
+    {
+      "w": 116,
+      "word": "of",
+      "onset_s": 29.2802,
+      "end_s": 29.3298,
+      "take": "dc-short",
+      "b_onset_s": 29.2967,
+      "b_end_s": 29.3298
+    },
+    {
+      "w": 117,
+      "word": "Piqua",
+      "onset_s": 29.3629,
+      "end_s": 29.5281,
+      "take": "dc-short",
+      "b_onset_s": 29.3629,
+      "b_end_s": 29.5447
+    },
+    {
+      "w": 118,
+      "word": "voted.",
+      "onset_s": 29.5777,
+      "end_s": 29.8587,
+      "take": "dc-short",
+      "b_onset_s": 29.5943,
+      "b_end_s": 29.8422
+    },
+    {
+      "w": 119,
+      "word": "Should",
+      "onset_s": 30.1102,
+      "end_s": 30.2058,
+      "take": "dc-short",
+      "heard_onset_s": 30.0901,
+      "b_onset_s": 30.0736,
+      "b_end_s": 30.2058
+    },
+    {
+      "w": 120,
+      "word": "we",
+      "onset_s": 30.2224,
+      "end_s": 30.272,
+      "take": "dc-short",
+      "b_onset_s": 30.2389,
+      "b_end_s": 30.2885
+    },
+    {
+      "w": 121,
+      "word": "ban",
+      "onset_s": 30.3877,
+      "end_s": 30.6025,
+      "take": "dc-short",
+      "b_onset_s": 30.3877,
+      "b_end_s": 30.586
+    },
+    {
+      "w": 122,
+      "word": "the",
+      "onset_s": 30.7191,
+      "end_s": 30.7852,
+      "take": "dc-short",
+      "b_onset_s": 30.7356,
+      "b_end_s": 30.7852
+    },
+    {
+      "w": 123,
+      "word": "big",
+      "onset_s": 30.8017,
+      "end_s": 30.9009,
+      "take": "dc-short",
+      "b_onset_s": 30.8182,
+      "b_end_s": 30.9009
+    },
+    {
+      "w": 124,
+      "word": "data",
+      "onset_s": 30.9339,
+      "end_s": 31.1158,
+      "take": "dc-short",
+      "b_onset_s": 30.9505,
+      "b_end_s": 31.1323
+    },
+    {
+      "w": 125,
+      "word": "centres?",
+      "onset_s": 31.1488,
+      "end_s": 31.4629,
+      "take": "dc-short",
+      "b_onset_s": 31.1653,
+      "b_end_s": 31.4463
+    },
+    {
+      "w": 126,
+      "word": "Yes.",
+      "onset_s": 31.7631,
+      "end_s": 31.9918,
+      "take": "dc-short",
+      "heard_onset_s": 31.7604,
+      "b_onset_s": 31.7439,
+      "b_end_s": 31.9091
+    },
+    {
+      "w": 127,
+      "word": "And",
+      "onset_s": 32.3692,
+      "end_s": 32.3893,
+      "take": "dc-short",
+      "heard_onset_s": 32.3397,
+      "b_onset_s": 32.3232,
+      "b_end_s": 32.3728
+    },
+    {
+      "w": 128,
+      "word": "that",
+      "onset_s": 32.3893,
+      "end_s": 32.4554,
+      "take": "dc-short",
+      "b_onset_s": 32.3893,
+      "b_end_s": 32.4554
+    },
+    {
+      "w": 129,
+      "word": "was",
+      "onset_s": 32.4554,
+      "end_s": 32.5381,
+      "take": "dc-short",
+      "b_onset_s": 32.472,
+      "b_end_s": 32.5381
+    },
+    {
+      "w": 130,
+      "word": "two",
+      "onset_s": 32.6042,
+      "end_s": 32.7364,
+      "take": "dc-short",
+      "b_onset_s": 32.6042,
+      "b_end_s": 32.7199
+    },
+    {
+      "w": 131,
+      "word": "to",
+      "onset_s": 32.7695,
+      "end_s": 32.8356,
+      "take": "dc-short",
+      "b_onset_s": 32.786,
+      "b_end_s": 32.8521
+    },
+    {
+      "w": 132,
+      "word": "one.",
+      "onset_s": 32.9348,
+      "end_s": 33.0505,
+      "take": "dc-short",
+      "b_onset_s": 32.9513,
+      "b_end_s": 33.0339
+    },
+    {
+      "w": 133,
+      "word": "Should",
+      "onset_s": 33.2719,
+      "end_s": 33.3975,
+      "take": "dc-short",
+      "heard_onset_s": 33.2653,
+      "b_onset_s": 33.2488,
+      "b_end_s": 33.3975
+    },
+    {
+      "w": 134,
+      "word": "we",
+      "onset_s": 33.4141,
+      "end_s": 33.4802,
+      "take": "dc-short",
+      "b_onset_s": 33.4306,
+      "b_end_s": 33.4802
+    },
+    {
+      "w": 135,
+      "word": "sack",
+      "onset_s": 33.662,
+      "end_s": 33.8777,
+      "take": "dc-short",
+      "b_onset_s": 33.662,
+      "b_end_s": 33.8612
+    },
+    {
+      "w": 136,
+      "word": "the",
+      "onset_s": 33.9273,
+      "end_s": 33.9934,
+      "take": "dc-short",
+      "b_onset_s": 33.9438,
+      "b_end_s": 33.9934
+    },
+    {
+      "w": 137,
+      "word": "mayor?",
+      "onset_s": 34.0265,
+      "end_s": 34.2413,
+      "take": "dc-short",
+      "b_onset_s": 34.043,
+      "b_end_s": 34.2579
+    },
+    {
+      "w": 138,
+      "word": "That",
+      "onset_s": 34.5391,
+      "end_s": 34.5719,
+      "take": "dc-short",
+      "heard_onset_s": 34.5058,
+      "b_onset_s": 34.5058,
+      "b_end_s": 34.5719
+    },
+    {
+      "w": 139,
+      "word": "was",
+      "onset_s": 34.5884,
+      "end_s": 34.6546,
+      "take": "dc-short",
+      "b_onset_s": 34.605,
+      "b_end_s": 34.6711
+    },
+    {
+      "w": 140,
+      "word": "even",
+      "onset_s": 34.7041,
+      "end_s": 34.8537,
+      "take": "dc-short",
+      "b_onset_s": 34.7207,
+      "b_end_s": 34.8537
+    },
+    {
+      "w": 141,
+      "word": "more,",
+      "onset_s": 34.9364,
+      "end_s": 35.1347,
+      "take": "dc-short",
+      "b_onset_s": 34.9529,
+      "b_end_s": 35.1347
+    },
+    {
+      "w": 142,
+      "word": "70%",
+      "onset_s": 35.2835,
+      "end_s": 35.8794,
+      "take": "dc-short",
+      "b_onset_s": 35.2835,
+      "b_end_s": 35.8794
+    },
+    {
+      "w": 143,
+      "word": "of",
+      "onset_s": 35.8959,
+      "end_s": 35.9455,
+      "take": "dc-short",
+      "b_onset_s": 35.9124,
+      "b_end_s": 35.9455
+    },
+    {
+      "w": 144,
+      "word": "the",
+      "onset_s": 35.9455,
+      "end_s": 35.9951,
+      "take": "dc-short",
+      "b_onset_s": 35.962,
+      "b_end_s": 36.0116
+    },
+    {
+      "w": 145,
+      "word": "residents.",
+      "onset_s": 36.0116,
+      "end_s": 36.3917,
+      "take": "dc-short",
+      "b_onset_s": 36.0446,
+      "b_end_s": 36.3752
+    },
+    {
+      "w": 146,
+      "word": "The",
+      "onset_s": 36.3917,
+      "end_s": 36.4413,
+      "take": "dc-short"
+    },
+    {
+      "w": 147,
+      "word": "landslide.",
+      "onset_s": 37.7975,
+      "end_s": 38.2612,
+      "take": "dc-short",
+      "b_onset_s": 37.8141,
+      "b_end_s": 38.2281
+    },
+    {
+      "w": 148,
+      "word": "But",
+      "onset_s": 38.495,
+      "end_s": 38.5595,
+      "take": "dc-short",
+      "heard_onset_s": 38.4595,
+      "b_onset_s": 38.4595,
+      "b_end_s": 38.5595
+    },
+    {
+      "w": 149,
+      "word": "Meta's",
+      "onset_s": 38.6421,
+      "end_s": 38.8901,
+      "take": "dc-short",
+      "b_onset_s": 38.6421,
+      "b_end_s": 38.8901
+    },
+    {
+      "w": 150,
+      "word": "data",
+      "onset_s": 38.9231,
+      "end_s": 39.1049,
+      "take": "dc-short",
+      "b_onset_s": 38.9231,
+      "b_end_s": 39.1215
+    },
+    {
+      "w": 151,
+      "word": "centre",
+      "onset_s": 39.1545,
+      "end_s": 39.4024,
+      "take": "dc-short",
+      "b_onset_s": 39.171,
+      "b_end_s": 39.3859
+    },
+    {
+      "w": 152,
+      "word": "was",
+      "onset_s": 39.4024,
+      "end_s": 39.5182,
+      "take": "dc-short",
+      "b_onset_s": 39.419,
+      "b_end_s": 39.5182
+    },
+    {
+      "w": 153,
+      "word": "already",
+      "onset_s": 39.6347,
+      "end_s": 39.8661,
+      "take": "dc-short",
+      "b_onset_s": 39.6347,
+      "b_end_s": 39.8826
+    },
+    {
+      "w": 154,
+      "word": "being",
+      "onset_s": 39.9157,
+      "end_s": 40.114,
+      "take": "dc-short",
+      "b_onset_s": 39.9322,
+      "b_end_s": 40.0975
+    },
+    {
+      "w": 155,
+      "word": "built.",
+      "onset_s": 40.1471,
+      "end_s": 40.3454,
+      "take": "dc-short",
+      "b_onset_s": 40.1471,
+      "b_end_s": 40.3289
+    },
+    {
+      "w": 156,
+      "word": "So",
+      "onset_s": 40.4942,
+      "end_s": 40.5777,
+      "take": "dc-short",
+      "b_onset_s": 40.4942,
+      "b_end_s": 40.6107
+    },
+    {
+      "w": 157,
+      "word": "Piqua",
+      "onset_s": 40.8752,
+      "end_s": 41.057,
+      "take": "dc-short",
+      "b_onset_s": 40.8752,
+      "b_end_s": 41.057
+    },
+    {
+      "w": 158,
+      "word": "now",
+      "onset_s": 41.1231,
+      "end_s": 41.2553,
+      "take": "dc-short",
+      "b_onset_s": 41.1396,
+      "b_end_s": 41.2388
+    },
+    {
+      "w": 159,
+      "word": "has",
+      "onset_s": 41.3049,
+      "end_s": 41.4206,
+      "take": "dc-short",
+      "b_onset_s": 41.3215,
+      "b_end_s": 41.4041
+    },
+    {
+      "w": 160,
+      "word": "a",
+      "onset_s": 41.4537,
+      "end_s": 41.4702,
+      "take": "dc-short",
+      "b_onset_s": 41.4702,
+      "b_end_s": 41.4867
+    },
+    {
+      "w": 161,
+      "word": "data",
+      "onset_s": 41.5198,
+      "end_s": 41.7024,
+      "take": "dc-short",
+      "b_onset_s": 41.5363,
+      "b_end_s": 41.719
+    },
+    {
+      "w": 162,
+      "word": "centre",
+      "onset_s": 41.7686,
+      "end_s": 41.9834,
+      "take": "dc-short",
+      "b_onset_s": 41.7686,
+      "b_end_s": 41.9834
+    },
+    {
+      "w": 163,
+      "word": "going",
+      "onset_s": 41.9834,
+      "end_s": 42.1653,
+      "take": "dc-short",
+      "b_onset_s": 42.0,
+      "b_end_s": 42.1487
+    },
+    {
+      "w": 164,
+      "word": "up",
+      "onset_s": 42.1818,
+      "end_s": 42.2479,
+      "take": "dc-short",
+      "b_onset_s": 42.2148,
+      "b_end_s": 42.2479
+    },
+    {
+      "w": 165,
+      "word": "in",
+      "onset_s": 42.3305,
+      "end_s": 42.4463,
+      "take": "dc-short",
+      "b_onset_s": 42.3967,
+      "b_end_s": 42.4297
+    },
+    {
+      "w": 166,
+      "word": "the",
+      "onset_s": 42.4793,
+      "end_s": 42.5289,
+      "take": "dc-short",
+      "b_onset_s": 42.4628,
+      "b_end_s": 42.5124
+    },
+    {
+      "w": 167,
+      "word": "town",
+      "onset_s": 42.562,
+      "end_s": 42.8934,
+      "take": "dc-short",
+      "b_onset_s": 42.5785,
+      "b_end_s": 42.8603
+    },
+    {
+      "w": 168,
+      "word": "that",
+      "onset_s": 43.1782,
+      "end_s": 43.2901,
+      "take": "dc-short",
+      "heard_onset_s": 43.1578,
+      "b_onset_s": 43.1578,
+      "b_end_s": 43.2901
+    },
+    {
+      "w": 169,
+      "word": "just",
+      "onset_s": 43.4223,
+      "end_s": 43.571,
+      "take": "dc-short",
+      "b_onset_s": 43.4388,
+      "b_end_s": 43.571
+    },
+    {
+      "w": 170,
+      "word": "banned",
+      "onset_s": 43.7041,
+      "end_s": 43.9355,
+      "take": "dc-short",
+      "b_onset_s": 43.7206,
+      "b_end_s": 43.919
+    },
+    {
+      "w": 171,
+      "word": "them.",
+      "onset_s": 43.9355,
+      "end_s": 44.0512,
+      "take": "dc-short",
+      "b_onset_s": 43.9686,
+      "b_end_s": 44.0512
+    },
+    {
+      "w": 172,
+      "word": "Meta",
+      "onset_s": 44.2752,
+      "end_s": 44.4735,
+      "take": "dc-short",
+      "b_onset_s": 44.2752,
+      "b_end_s": 44.4901
+    },
+    {
+      "w": 173,
+      "word": "says",
+      "onset_s": 44.5727,
+      "end_s": 44.7876,
+      "take": "dc-short",
+      "b_onset_s": 44.5727,
+      "b_end_s": 44.738
+    },
+    {
+      "w": 174,
+      "word": "it",
+      "onset_s": 44.8537,
+      "end_s": 44.9364,
+      "take": "dc-short",
+      "b_onset_s": 44.8868,
+      "b_end_s": 44.9198
+    },
+    {
+      "w": 175,
+      "word": "will",
+      "onset_s": 45.0521,
+      "end_s": 45.1686,
+      "take": "dc-short",
+      "b_onset_s": 45.0521,
+      "b_end_s": 45.2016
+    },
+    {
+      "w": 176,
+      "word": "work",
+      "onset_s": 45.2347,
+      "end_s": 45.433,
+      "take": "dc-short",
+      "b_onset_s": 45.2512,
+      "b_end_s": 45.4165
+    },
+    {
+      "w": 177,
+      "word": "with",
+      "onset_s": 45.4826,
+      "end_s": 45.5818,
+      "take": "dc-short",
+      "b_onset_s": 45.4826,
+      "b_end_s": 45.5653
+    },
+    {
+      "w": 178,
+      "word": "local",
+      "onset_s": 45.6149,
+      "end_s": 45.8297,
+      "take": "dc-short",
+      "b_onset_s": 45.6314,
+      "b_end_s": 45.8132
+    },
+    {
+      "w": 179,
+      "word": "officials",
+      "onset_s": 45.8628,
+      "end_s": 46.2107,
+      "take": "dc-short",
+      "b_onset_s": 45.8793,
+      "b_end_s": 46.1942
+    },
+    {
+      "w": 180,
+      "word": "which",
+      "onset_s": 46.2438,
+      "end_s": 46.3925,
+      "take": "dc-short",
+      "b_onset_s": 46.2603,
+      "b_end_s": 46.376
+    },
+    {
+      "w": 181,
+      "word": "is",
+      "onset_s": 46.4256,
+      "end_s": 46.5578,
+      "take": "dc-short",
+      "b_onset_s": 46.4587,
+      "b_end_s": 46.5248
+    },
+    {
+      "w": 182,
+      "word": "kind",
+      "onset_s": 46.9386,
+      "end_s": 47.0868,
+      "take": "dc-short",
+      "heard_onset_s": 46.9049,
+      "b_onset_s": 46.9215,
+      "b_end_s": 47.0702
+    },
+    {
+      "w": 183,
+      "word": "of",
+      "onset_s": 47.1033,
+      "end_s": 47.1364,
+      "take": "dc-short",
+      "b_onset_s": 47.1033,
+      "b_end_s": 47.1364
+    },
+    {
+      "w": 184,
+      "word": "their",
+      "onset_s": 47.1529,
+      "end_s": 47.2364,
+      "take": "dc-short",
+      "b_onset_s": 47.1529,
+      "b_end_s": 47.2529
+    },
+    {
+      "w": 185,
+      "word": "party",
+      "onset_s": 47.2859,
+      "end_s": 47.5173,
+      "take": "dc-short",
+      "b_onset_s": 47.3025,
+      "b_end_s": 47.5339
+    },
+    {
+      "w": 186,
+      "word": "line",
+      "onset_s": 47.5669,
+      "end_s": 47.7322,
+      "take": "dc-short",
+      "b_onset_s": 47.5835,
+      "b_end_s": 47.7157
+    },
+    {
+      "w": 187,
+      "word": "every",
+      "onset_s": 47.7487,
+      "end_s": 47.8644,
+      "take": "dc-short",
+      "b_onset_s": 47.7487,
+      "b_end_s": 47.8644
+    },
+    {
+      "w": 188,
+      "word": "time",
+      "onset_s": 47.8975,
+      "end_s": 48.0628,
+      "take": "dc-short",
+      "b_onset_s": 47.914,
+      "b_end_s": 48.0297
+    },
+    {
+      "w": 189,
+      "word": "they",
+      "onset_s": 48.0793,
+      "end_s": 48.1785,
+      "take": "dc-short",
+      "b_onset_s": 48.0793,
+      "b_end_s": 48.162
+    },
+    {
+      "w": 190,
+      "word": "do",
+      "onset_s": 48.2785,
+      "end_s": 48.3281,
+      "take": "dc-short",
+      "b_onset_s": 48.2785,
+      "b_end_s": 48.3611
+    },
+    {
+      "w": 191,
+      "word": "something",
+      "onset_s": 48.4107,
+      "end_s": 48.6256,
+      "take": "dc-short",
+      "b_onset_s": 48.4273,
+      "b_end_s": 48.6091
+    },
+    {
+      "w": 192,
+      "word": "which",
+      "onset_s": 48.6256,
+      "end_s": 48.7578,
+      "take": "dc-short",
+      "b_onset_s": 48.6421,
+      "b_end_s": 48.7413
+    },
+    {
+      "w": 193,
+      "word": "everyone",
+      "onset_s": 48.8074,
+      "end_s": 49.0223,
+      "take": "dc-short",
+      "b_onset_s": 48.824,
+      "b_end_s": 49.0223
+    },
+    {
+      "w": 194,
+      "word": "hates,",
+      "onset_s": 49.0388,
+      "end_s": 49.3041,
+      "take": "dc-short",
+      "b_onset_s": 49.0554,
+      "b_end_s": 49.2711
+    },
+    {
+      "w": 195,
+      "word": "which",
+      "onset_s": 49.3537,
+      "end_s": 49.4859,
+      "take": "dc-short",
+      "b_onset_s": 49.3537,
+      "b_end_s": 49.4859
+    },
+    {
+      "w": 196,
+      "word": "is",
+      "onset_s": 49.5355,
+      "end_s": 49.6512,
+      "take": "dc-short",
+      "b_onset_s": 49.5686,
+      "b_end_s": 49.6182
+    },
+    {
+      "w": 197,
+      "word": "a",
+      "onset_s": 49.8,
+      "end_s": 49.8165,
+      "take": "dc-short",
+      "b_onset_s": 49.8165,
+      "b_end_s": 49.833
+    },
+    {
+      "w": 198,
+      "word": "lot.",
+      "onset_s": 49.8661,
+      "end_s": 50.0149,
+      "take": "dc-short",
+      "b_onset_s": 49.8826,
+      "b_end_s": 49.9983
+    },
+    {
+      "w": 199,
+      "word": "So",
+      "onset_s": 50.2324,
+      "end_s": 50.2628,
+      "take": "dc-short",
+      "heard_onset_s": 50.2132,
+      "b_onset_s": 50.2132,
+      "b_end_s": 50.2628
+    },
+    {
+      "w": 200,
+      "word": "when",
+      "onset_s": 50.3123,
+      "end_s": 50.395,
+      "take": "dc-short",
+      "b_onset_s": 50.3123,
+      "b_end_s": 50.395
+    },
+    {
+      "w": 201,
+      "word": "small",
+      "onset_s": 50.4611,
+      "end_s": 50.6264,
+      "take": "dc-short",
+      "b_onset_s": 50.4611,
+      "b_end_s": 50.6429
+    },
+    {
+      "w": 202,
+      "word": "towns",
+      "onset_s": 50.6595,
+      "end_s": 50.8743,
+      "take": "dc-short",
+      "b_onset_s": 50.676,
+      "b_end_s": 50.8743
+    },
+    {
+      "w": 203,
+      "word": "say",
+      "onset_s": 50.9239,
+      "end_s": 51.0239,
+      "take": "dc-short",
+      "b_onset_s": 50.9074,
+      "b_end_s": 51.0239
+    },
+    {
+      "w": 204,
+      "word": "no,",
+      "onset_s": 51.0735,
+      "end_s": 51.1396,
+      "take": "dc-short",
+      "b_onset_s": 51.09,
+      "b_end_s": 51.1727
+    },
+    {
+      "w": 205,
+      "word": "the",
+      "onset_s": 51.3545,
+      "end_s": 51.4041,
+      "take": "dc-short",
+      "b_onset_s": 51.3545,
+      "b_end_s": 51.4206
+    },
+    {
+      "w": 206,
+      "word": "AI",
+      "onset_s": 51.652,
+      "end_s": 51.8338,
+      "take": "dc-short",
+      "b_onset_s": 51.6685,
+      "b_end_s": 51.8008
+    },
+    {
+      "w": 207,
+      "word": "companies",
+      "onset_s": 51.9,
+      "end_s": 52.2471,
+      "take": "dc-short",
+      "b_onset_s": 51.933,
+      "b_end_s": 52.2305
+    },
+    {
+      "w": 208,
+      "word": "have",
+      "onset_s": 52.2801,
+      "end_s": 52.4123,
+      "take": "dc-short",
+      "b_onset_s": 52.2966,
+      "b_end_s": 52.4123
+    },
+    {
+      "w": 209,
+      "word": "to",
+      "onset_s": 52.4454,
+      "end_s": 52.495,
+      "take": "dc-short",
+      "b_onset_s": 52.4454,
+      "b_end_s": 52.5115
+    },
+    {
+      "w": 210,
+      "word": "find",
+      "onset_s": 52.5611,
+      "end_s": 52.8421,
+      "take": "dc-short",
+      "b_onset_s": 52.5776,
+      "b_end_s": 52.809
+    },
+    {
+      "w": 211,
+      "word": "that",
+      "onset_s": 53.0074,
+      "end_s": 53.1561,
+      "take": "dc-short",
+      "b_onset_s": 53.0239,
+      "b_end_s": 53.1561
+    },
+    {
+      "w": 212,
+      "word": "power",
+      "onset_s": 53.2388,
+      "end_s": 53.4867,
+      "take": "dc-short",
+      "b_onset_s": 53.2553,
+      "b_end_s": 53.4867
+    },
+    {
+      "w": 213,
+      "word": "somewhere",
+      "onset_s": 53.5528,
+      "end_s": 53.8677,
+      "take": "dc-short",
+      "b_onset_s": 53.5694,
+      "b_end_s": 53.8677
+    },
+    {
+      "w": 214,
+      "word": "else.",
+      "onset_s": 54.0661,
+      "end_s": 54.3801,
+      "take": "dc-short",
+      "b_onset_s": 54.0991,
+      "b_end_s": 54.2809
+    },
+    {
+      "w": 215,
+      "word": "and",
+      "onset_s": 54.5881,
+      "end_s": 54.6776,
+      "take": "dc-short",
+      "heard_onset_s": 54.5785,
+      "b_onset_s": 54.5785,
+      "b_end_s": 54.6446
+    },
+    {
+      "w": 216,
+      "word": "they",
+      "onset_s": 54.6776,
+      "end_s": 54.7603,
+      "take": "dc-short",
+      "b_onset_s": 54.6776,
+      "b_end_s": 54.7603
+    },
+    {
+      "w": 217,
+      "word": "have",
+      "onset_s": 54.7768,
+      "end_s": 54.8595,
+      "take": "dc-short",
+      "b_onset_s": 54.7933,
+      "b_end_s": 54.8595
+    },
+    {
+      "w": 218,
+      "word": "to",
+      "onset_s": 54.876,
+      "end_s": 54.9091,
+      "take": "dc-short",
+      "b_onset_s": 54.8925,
+      "b_end_s": 54.9256
+    },
+    {
+      "w": 219,
+      "word": "pay",
+      "onset_s": 54.9586,
+      "end_s": 55.0743,
+      "take": "dc-short",
+      "b_onset_s": 54.9752,
+      "b_end_s": 55.0743
+    },
+    {
+      "w": 220,
+      "word": "for",
+      "onset_s": 55.1405,
+      "end_s": 55.2231,
+      "take": "dc-short",
+      "b_onset_s": 55.1405,
+      "b_end_s": 55.2231
+    },
+    {
+      "w": 221,
+      "word": "it.",
+      "onset_s": 55.2727,
+      "end_s": 55.3388,
+      "take": "dc-short",
+      "b_onset_s": 55.2892,
+      "b_end_s": 55.3223
+    },
+    {
+      "w": 222,
+      "word": "And",
+      "onset_s": 55.6019,
+      "end_s": 55.6198,
+      "take": "dc-short",
+      "heard_onset_s": 55.5372,
+      "b_onset_s": 55.5537,
+      "b_end_s": 55.6033
+    },
+    {
+      "w": 223,
+      "word": "I",
+      "onset_s": 55.6694,
+      "end_s": 55.6859,
+      "take": "dc-short",
+      "b_onset_s": 55.6363,
+      "b_end_s": 55.6529
+    },
+    {
+      "w": 224,
+      "word": "reckon",
+      "onset_s": 55.719,
+      "end_s": 55.9669,
+      "take": "dc-short",
+      "b_onset_s": 55.7355,
+      "b_end_s": 55.9504
+    },
+    {
+      "w": 225,
+      "word": "that",
+      "onset_s": 56.4283,
+      "end_s": 56.4628,
+      "take": "dc-short",
+      "heard_onset_s": 56.3471,
+      "b_onset_s": 56.3636,
+      "b_end_s": 56.4628
+    },
+    {
+      "w": 226,
+      "word": "cost",
+      "onset_s": 56.5454,
+      "end_s": 56.7934,
+      "take": "dc-short",
+      "b_onset_s": 56.562,
+      "b_end_s": 56.7768
+    },
+    {
+      "w": 227,
+      "word": "lands",
+      "onset_s": 56.843,
+      "end_s": 57.1248,
+      "take": "dc-short",
+      "b_onset_s": 56.843,
+      "b_end_s": 57.0917
+    },
+    {
+      "w": 228,
+      "word": "in",
+      "onset_s": 57.2735,
+      "end_s": 57.3562,
+      "take": "dc-short",
+      "b_onset_s": 57.3066,
+      "b_end_s": 57.3397
+    },
+    {
+      "w": 229,
+      "word": "your",
+      "onset_s": 57.6206,
+      "end_s": 57.7694,
+      "take": "dc-short",
+      "b_onset_s": 57.6041,
+      "b_end_s": 57.7694
+    },
+    {
+      "w": 230,
+      "word": "electricity",
+      "onset_s": 57.8355,
+      "end_s": 58.2818,
+      "take": "dc-short",
+      "b_onset_s": 57.852,
+      "b_end_s": 58.2983
+    },
+    {
+      "w": 231,
+      "word": "subscription",
+      "onset_s": 58.3479,
+      "end_s": 58.8438,
+      "take": "dc-short",
+      "b_onset_s": 58.3644,
+      "b_end_s": 58.8273
+    },
+    {
+      "w": 232,
+      "word": "and",
+      "onset_s": 58.943,
+      "end_s": 59.0421,
+      "take": "dc-short",
+      "b_onset_s": 58.9595,
+      "b_end_s": 59.0256
+    },
+    {
+      "w": 233,
+      "word": "your",
+      "onset_s": 59.1578,
+      "end_s": 59.3066,
+      "take": "dc-short",
+      "b_onset_s": 59.1578,
+      "b_end_s": 59.3397
+    },
+    {
+      "w": 234,
+      "word": "business's",
+      "onset_s": 59.6206,
+      "end_s": 60.0512,
+      "take": "dc-short",
+      "b_onset_s": 59.6206,
+      "b_end_s": 60.0347
+    },
+    {
+      "w": 235,
+      "word": "AI",
+      "onset_s": 60.1339,
+      "end_s": 60.3322,
+      "take": "dc-short",
+      "b_onset_s": 60.1669,
+      "b_end_s": 60.2992
+    },
+    {
+      "w": 236,
+      "word": "subscriptions.",
+      "onset_s": 60.3818,
+      "end_s": 60.9438,
+      "take": "dc-short",
+      "b_onset_s": 60.3983,
+      "b_end_s": 60.8942
+    },
+    {
+      "w": 237,
+      "word": "So",
+      "onset_s": 61.1634,
+      "end_s": 61.2215,
+      "take": "dc-short",
+      "heard_onset_s": 61.1554,
+      "b_onset_s": 61.1389,
+      "b_end_s": 61.238
+    },
+    {
+      "w": 238,
+      "word": "now",
+      "onset_s": 61.5686,
+      "end_s": 61.7835,
+      "take": "dc-short",
+      "b_onset_s": 61.5686,
+      "b_end_s": 61.7339
+    },
+    {
+      "w": 239,
+      "word": "when",
+      "onset_s": 62.2133,
+      "end_s": 62.3463,
+      "take": "dc-short",
+      "b_onset_s": 62.2133,
+      "b_end_s": 62.3298
+    },
+    {
+      "w": 240,
+      "word": "we",
+      "onset_s": 62.5281,
+      "end_s": 62.5942,
+      "take": "dc-short",
+      "b_onset_s": 62.5281,
+      "b_end_s": 62.5942
+    },
+    {
+      "w": 241,
+      "word": "renew",
+      "onset_s": 62.7265,
+      "end_s": 62.9744,
+      "take": "dc-short",
+      "b_onset_s": 62.7265,
+      "b_end_s": 62.9579
+    },
+    {
+      "w": 242,
+      "word": "an",
+      "onset_s": 63.0075,
+      "end_s": 63.0571,
+      "take": "dc-short",
+      "b_onset_s": 63.024,
+      "b_end_s": 63.0571
+    },
+    {
+      "w": 243,
+      "word": "AI",
+      "onset_s": 63.0901,
+      "end_s": 63.2719,
+      "take": "dc-short",
+      "b_onset_s": 63.1066,
+      "b_end_s": 63.2389
+    },
+    {
+      "w": 244,
+      "word": "tool",
+      "onset_s": 63.3215,
+      "end_s": 63.4868,
+      "take": "dc-short",
+      "b_onset_s": 63.305,
+      "b_end_s": 63.4703
+    },
+    {
+      "w": 245,
+      "word": "we",
+      "onset_s": 63.5529,
+      "end_s": 63.619,
+      "take": "dc-short",
+      "b_onset_s": 63.5529,
+      "b_end_s": 63.619
+    },
+    {
+      "w": 246,
+      "word": "might",
+      "onset_s": 63.6852,
+      "end_s": 63.867,
+      "take": "dc-short",
+      "b_onset_s": 63.7017,
+      "b_end_s": 63.8504
+    },
+    {
+      "w": 247,
+      "word": "see",
+      "onset_s": 63.9166,
+      "end_s": 64.0157,
+      "take": "dc-short",
+      "b_onset_s": 63.9166,
+      "b_end_s": 64.0323
+    },
+    {
+      "w": 248,
+      "word": "special",
+      "onset_s": 64.0818,
+      "end_s": 64.3463,
+      "take": "dc-short",
+      "b_onset_s": 64.0984,
+      "b_end_s": 64.3298
+    },
+    {
+      "w": 249,
+      "word": "deals",
+      "onset_s": 64.4124,
+      "end_s": 64.6438,
+      "take": "dc-short",
+      "b_onset_s": 64.4124,
+      "b_end_s": 64.6273
+    },
+    {
+      "w": 250,
+      "word": "to",
+      "onset_s": 64.6769,
+      "end_s": 64.7265,
+      "take": "dc-short",
+      "b_onset_s": 64.6769,
+      "b_end_s": 64.743
+    },
+    {
+      "w": 251,
+      "word": "change",
+      "onset_s": 64.7761,
+      "end_s": 65.0075,
+      "take": "dc-short",
+      "b_onset_s": 64.7926,
+      "b_end_s": 64.9744
+    },
+    {
+      "w": 252,
+      "word": "over",
+      "onset_s": 65.024,
+      "end_s": 65.1562,
+      "take": "dc-short",
+      "b_onset_s": 65.0405,
+      "b_end_s": 65.1397
+    },
+    {
+      "w": 253,
+      "word": "to",
+      "onset_s": 65.1728,
+      "end_s": 65.2232,
+      "take": "dc-short",
+      "b_onset_s": 65.1893,
+      "b_end_s": 65.2397
+    },
+    {
+      "w": 254,
+      "word": "new",
+      "onset_s": 65.2728,
+      "end_s": 65.3554,
+      "take": "dc-short",
+      "b_onset_s": 65.2893,
+      "b_end_s": 65.3554
+    },
+    {
+      "w": 255,
+      "word": "plans",
+      "onset_s": 65.3885,
+      "end_s": 65.6364,
+      "take": "dc-short",
+      "b_onset_s": 65.405,
+      "b_end_s": 65.6199
+    },
+    {
+      "w": 256,
+      "word": "when",
+      "onset_s": 65.6695,
+      "end_s": 65.7521,
+      "take": "dc-short",
+      "b_onset_s": 65.6529,
+      "b_end_s": 65.7521
+    },
+    {
+      "w": 257,
+      "word": "secretly",
+      "onset_s": 65.8347,
+      "end_s": 66.2314,
+      "take": "dc-short",
+      "b_onset_s": 65.8347,
+      "b_end_s": 66.248
+    },
+    {
+      "w": 258,
+      "word": "they",
+      "onset_s": 66.7557,
+      "end_s": 66.7934,
+      "take": "dc-short",
+      "heard_onset_s": 66.6942,
+      "b_onset_s": 66.6942,
+      "b_end_s": 66.7934
+    },
+    {
+      "w": 259,
+      "word": "charge",
+      "onset_s": 66.8595,
+      "end_s": 67.124,
+      "take": "dc-short",
+      "b_onset_s": 66.8761,
+      "b_end_s": 67.0909
+    },
+    {
+      "w": 260,
+      "word": "you",
+      "onset_s": 67.1405,
+      "end_s": 67.2066,
+      "take": "dc-short",
+      "b_onset_s": 67.124,
+      "b_end_s": 67.2066
+    },
+    {
+      "w": 261,
+      "word": "more",
+      "onset_s": 67.2562,
+      "end_s": 67.4546,
+      "take": "dc-short",
+      "b_onset_s": 67.2728,
+      "b_end_s": 67.4546
+    },
+    {
+      "w": 262,
+      "word": "than",
+      "onset_s": 67.5207,
+      "end_s": 67.6033,
+      "take": "dc-short",
+      "b_onset_s": 67.5207,
+      "b_end_s": 67.5868
+    },
+    {
+      "w": 263,
+      "word": "you'd",
+      "onset_s": 67.6199,
+      "end_s": 67.719,
+      "take": "dc-short",
+      "b_onset_s": 67.6199,
+      "b_end_s": 67.7356
+    },
+    {
+      "w": 264,
+      "word": "pay",
+      "onset_s": 67.7521,
+      "end_s": 67.8843,
+      "take": "dc-short",
+      "b_onset_s": 67.7686,
+      "b_end_s": 67.8843
+    },
+    {
+      "w": 265,
+      "word": "if",
+      "onset_s": 67.9339,
+      "end_s": 67.967,
+      "take": "dc-short",
+      "b_onset_s": 67.9174,
+      "b_end_s": 67.967
+    },
+    {
+      "w": 266,
+      "word": "you'd",
+      "onset_s": 68.0496,
+      "end_s": 68.1661,
+      "take": "dc-short",
+      "b_onset_s": 68.0496,
+      "b_end_s": 68.1661
+    },
+    {
+      "w": 267,
+      "word": "stuck",
+      "onset_s": 68.2984,
+      "end_s": 68.5133,
+      "take": "dc-short",
+      "b_onset_s": 68.3149,
+      "b_end_s": 68.5133
+    },
+    {
+      "w": 268,
+      "word": "to",
+      "onset_s": 68.5628,
+      "end_s": 68.6124,
+      "take": "dc-short",
+      "b_onset_s": 68.5794,
+      "b_end_s": 68.6124
+    },
+    {
+      "w": 269,
+      "word": "your",
+      "onset_s": 68.629,
+      "end_s": 68.7116,
+      "take": "dc-short",
+      "b_onset_s": 68.629,
+      "b_end_s": 68.7116
+    },
+    {
+      "w": 270,
+      "word": "current",
+      "onset_s": 68.7281,
+      "end_s": 68.9595,
+      "take": "dc-short",
+      "b_onset_s": 68.7447,
+      "b_end_s": 68.9595
+    },
+    {
+      "w": 271,
+      "word": "terms",
+      "onset_s": 68.9926,
+      "end_s": 69.2901,
+      "take": "dc-short",
+      "b_onset_s": 69.0091,
+      "b_end_s": 69.2571
+    },
+    {
+      "w": 272,
+      "word": "on",
+      "onset_s": 69.5215,
+      "end_s": 69.5546,
+      "take": "dc-short",
+      "heard_onset_s": 69.4885,
+      "b_onset_s": 69.505,
+      "b_end_s": 69.5381
+    },
+    {
+      "w": 273,
+      "word": "the",
+      "onset_s": 69.6207,
+      "end_s": 69.6876,
+      "take": "dc-short",
+      "b_onset_s": 69.6372,
+      "b_end_s": 69.6876
+    },
+    {
+      "w": 274,
+      "word": "premise",
+      "onset_s": 69.7207,
+      "end_s": 69.9521,
+      "take": "dc-short",
+      "b_onset_s": 69.7207,
+      "b_end_s": 69.9356
+    },
+    {
+      "w": 275,
+      "word": "of",
+      "onset_s": 69.9852,
+      "end_s": 70.0513,
+      "take": "dc-short",
+      "b_onset_s": 70.0017,
+      "b_end_s": 70.0348
+    },
+    {
+      "w": 276,
+      "word": "bonus",
+      "onset_s": 70.3323,
+      "end_s": 70.5802,
+      "take": "dc-short",
+      "b_onset_s": 70.3323,
+      "b_end_s": 70.5967
+    },
+    {
+      "w": 277,
+      "word": "credits",
+      "onset_s": 70.6298,
+      "end_s": 70.9281,
+      "take": "dc-short",
+      "b_onset_s": 70.6463,
+      "b_end_s": 70.9116
+    },
+    {
+      "w": 278,
+      "word": "and",
+      "onset_s": 70.9612,
+      "end_s": 71.0273,
+      "take": "dc-short",
+      "b_onset_s": 70.9447,
+      "b_end_s": 71.0108
+    },
+    {
+      "w": 279,
+      "word": "things",
+      "onset_s": 71.0273,
+      "end_s": 71.1926,
+      "take": "dc-short",
+      "b_onset_s": 71.0438,
+      "b_end_s": 71.1761
+    },
+    {
+      "w": 280,
+      "word": "like",
+      "onset_s": 71.2091,
+      "end_s": 71.3579,
+      "take": "dc-short",
+      "b_onset_s": 71.2257,
+      "b_end_s": 71.3414
+    },
+    {
+      "w": 281,
+      "word": "that.",
+      "onset_s": 71.391,
+      "end_s": 71.5562,
+      "take": "dc-short",
+      "b_onset_s": 71.391,
+      "b_end_s": 71.5232
+    },
+    {
+      "w": 282,
+      "word": "I've",
+      "onset_s": 71.8631,
+      "end_s": 71.9199,
+      "take": "dc-short",
+      "heard_onset_s": 71.8538,
+      "b_onset_s": 71.8207,
+      "b_end_s": 71.9372
+    },
+    {
+      "w": 283,
+      "word": "seen",
+      "onset_s": 71.9703,
+      "end_s": 72.1356,
+      "take": "dc-short",
+      "b_onset_s": 71.9703,
+      "b_end_s": 72.1025
+    },
+    {
+      "w": 284,
+      "word": "this",
+      "onset_s": 72.2017,
+      "end_s": 72.3009,
+      "take": "dc-short",
+      "b_onset_s": 72.2182,
+      "b_end_s": 72.3009
+    },
+    {
+      "w": 285,
+      "word": "happen",
+      "onset_s": 72.3339,
+      "end_s": 72.5488,
+      "take": "dc-short",
+      "b_onset_s": 72.3339,
+      "b_end_s": 72.5323
+    },
+    {
+      "w": 286,
+      "word": "three",
+      "onset_s": 72.9926,
+      "end_s": 73.1116,
+      "take": "dc-short",
+      "heard_onset_s": 72.9455,
+      "b_onset_s": 72.962,
+      "b_end_s": 73.1116
+    },
+    {
+      "w": 287,
+      "word": "times",
+      "onset_s": 73.1447,
+      "end_s": 73.4422,
+      "take": "dc-short",
+      "b_onset_s": 73.1612,
+      "b_end_s": 73.4091
+    },
+    {
+      "w": 288,
+      "word": "in",
+      "onset_s": 73.5083,
+      "end_s": 73.5579,
+      "take": "dc-short",
+      "b_onset_s": 73.5083,
+      "b_end_s": 73.5414
+    },
+    {
+      "w": 289,
+      "word": "the",
+      "onset_s": 73.5744,
+      "end_s": 73.624,
+      "take": "dc-short",
+      "b_onset_s": 73.591,
+      "b_end_s": 73.6405
+    },
+    {
+      "w": 290,
+      "word": "last",
+      "onset_s": 73.6736,
+      "end_s": 73.8719,
+      "take": "dc-short",
+      "b_onset_s": 73.6901,
+      "b_end_s": 73.8554
+    },
+    {
+      "w": 291,
+      "word": "week",
+      "onset_s": 73.905,
+      "end_s": 74.0207,
+      "take": "dc-short",
+      "b_onset_s": 73.905,
+      "b_end_s": 74.0207
+    },
+    {
+      "w": 292,
+      "word": "with",
+      "onset_s": 74.0703,
+      "end_s": 74.1695,
+      "take": "dc-short",
+      "b_onset_s": 74.0703,
+      "b_end_s": 74.1529
+    },
+    {
+      "w": 293,
+      "word": "businesses",
+      "onset_s": 74.186,
+      "end_s": 74.6,
+      "take": "dc-short",
+      "b_onset_s": 74.2033,
+      "b_end_s": 74.567
+    },
+    {
+      "w": 294,
+      "word": "with",
+      "onset_s": 74.9486,
+      "end_s": 74.9967,
+      "take": "dc-short",
+      "heard_onset_s": 74.881,
+      "b_onset_s": 74.881,
+      "b_end_s": 74.9802
+    },
+    {
+      "w": 295,
+      "word": "AI",
+      "onset_s": 75.0133,
+      "end_s": 75.1786,
+      "take": "dc-short",
+      "b_onset_s": 75.0298,
+      "b_end_s": 75.162
+    },
+    {
+      "w": 296,
+      "word": "tools.",
+      "onset_s": 75.2116,
+      "end_s": 75.4273,
+      "take": "dc-short",
+      "b_onset_s": 75.2116,
+      "b_end_s": 75.4108
+    },
+    {
+      "w": 297,
+      "word": "And",
+      "onset_s": 75.51,
+      "end_s": 75.5761,
+      "take": "dc-short",
+      "b_onset_s": 75.51,
+      "b_end_s": 75.5595
+    },
+    {
+      "w": 298,
+      "word": "it",
+      "onset_s": 75.5926,
+      "end_s": 75.6422,
+      "take": "dc-short",
+      "b_onset_s": 75.5926,
+      "b_end_s": 75.6257
+    },
+    {
+      "w": 299,
+      "word": "will",
+      "onset_s": 75.6422,
+      "end_s": 75.7248,
+      "take": "dc-short",
+      "b_onset_s": 75.6422,
+      "b_end_s": 75.7414
+    },
+    {
+      "w": 300,
+      "word": "continue",
+      "onset_s": 75.7414,
+      "end_s": 76.0224,
+      "take": "dc-short",
+      "b_onset_s": 75.7744,
+      "b_end_s": 76.0224
+    },
+    {
+      "w": 301,
+      "word": "because",
+      "onset_s": 76.0389,
+      "end_s": 76.3199,
+      "take": "dc-short",
+      "b_onset_s": 76.0554,
+      "b_end_s": 76.2703
+    },
+    {
+      "w": 302,
+      "word": "if",
+      "onset_s": 76.4191,
+      "end_s": 76.486,
+      "take": "dc-short",
+      "b_onset_s": 76.4356,
+      "b_end_s": 76.4686
+    },
+    {
+      "w": 303,
+      "word": "it's",
+      "onset_s": 76.5356,
+      "end_s": 76.7009,
+      "take": "dc-short",
+      "b_onset_s": 76.5521,
+      "b_end_s": 76.6678
+    },
+    {
+      "w": 304,
+      "word": "a",
+      "onset_s": 77.0645,
+      "end_s": 77.081,
+      "take": "dc-short",
+      "b_onset_s": 77.0645,
+      "b_end_s": 77.081
+    },
+    {
+      "w": 305,
+      "word": "little",
+      "onset_s": 77.1141,
+      "end_s": 77.2629,
+      "take": "dc-short",
+      "b_onset_s": 77.1306,
+      "b_end_s": 77.2794
+    },
+    {
+      "w": 306,
+      "word": "town",
+      "onset_s": 77.2959,
+      "end_s": 77.4777,
+      "take": "dc-short",
+      "b_onset_s": 77.3124,
+      "b_end_s": 77.4612
+    },
+    {
+      "w": 307,
+      "word": "like",
+      "onset_s": 77.4943,
+      "end_s": 77.6273,
+      "take": "dc-short",
+      "b_onset_s": 77.5108,
+      "b_end_s": 77.61
+    },
+    {
+      "w": 308,
+      "word": "Piqua,",
+      "onset_s": 77.6438,
+      "end_s": 77.8422,
+      "take": "dc-short",
+      "b_onset_s": 77.6604,
+      "b_end_s": 77.8587
+    },
+    {
+      "w": 309,
+      "word": "the",
+      "onset_s": 77.9414,
+      "end_s": 78.0075,
+      "take": "dc-short",
+      "b_onset_s": 77.9579,
+      "b_end_s": 78.0405
+    },
+    {
+      "w": 310,
+      "word": "fight",
+      "onset_s": 78.1728,
+      "end_s": 78.4042,
+      "take": "dc-short",
+      "b_onset_s": 78.1893,
+      "b_end_s": 78.3711
+    },
+    {
+      "w": 311,
+      "word": "ends",
+      "onset_s": 78.4868,
+      "end_s": 78.6356,
+      "take": "dc-short",
+      "b_onset_s": 78.5033,
+      "b_end_s": 78.6356
+    },
+    {
+      "w": 312,
+      "word": "up",
+      "onset_s": 78.6852,
+      "end_s": 78.8182,
+      "take": "dc-short",
+      "b_onset_s": 78.7348,
+      "b_end_s": 78.7852
+    },
+    {
+      "w": 313,
+      "word": "on",
+      "onset_s": 79.2185,
+      "end_s": 79.281,
+      "take": "dc-short",
+      "heard_onset_s": 79.1984,
+      "b_onset_s": 79.2314,
+      "b_end_s": 79.281
+    },
+    {
+      "w": 314,
+      "word": "my",
+      "onset_s": 79.4794,
+      "end_s": 79.6116,
+      "take": "dc-short",
+      "b_onset_s": 79.4959,
+      "b_end_s": 79.5951
+    },
+    {
+      "w": 315,
+      "word": "bill",
+      "onset_s": 79.6612,
+      "end_s": 79.81,
+      "take": "dc-short",
+      "b_onset_s": 79.6612,
+      "b_end_s": 79.8265
+    },
+    {
+      "w": 316,
+      "word": "in",
+      "onset_s": 79.8761,
+      "end_s": 79.943,
+      "take": "dc-short",
+      "b_onset_s": 79.8934,
+      "b_end_s": 79.9265
+    },
+    {
+      "w": 317,
+      "word": "one",
+      "onset_s": 80.0091,
+      "end_s": 80.0753,
+      "take": "dc-short",
+      "b_onset_s": 80.0091,
+      "b_end_s": 80.0753
+    },
+    {
+      "w": 318,
+      "word": "way",
+      "onset_s": 80.0918,
+      "end_s": 80.1744,
+      "take": "dc-short",
+      "b_onset_s": 80.0918,
+      "b_end_s": 80.1744
+    },
+    {
+      "w": 319,
+      "word": "or",
+      "onset_s": 80.191,
+      "end_s": 80.2571,
+      "take": "dc-short",
+      "b_onset_s": 80.2075,
+      "b_end_s": 80.2405
+    },
+    {
+      "w": 320,
+      "word": "another.",
+      "onset_s": 80.2736,
+      "end_s": 80.4719,
+      "take": "dc-short",
+      "b_onset_s": 80.2901,
+      "b_end_s": 80.4719
+    },
+    {
+      "w": 321,
+      "word": "The",
+      "onset_s": 80.6703,
+      "end_s": 80.7199,
+      "take": "dc-short",
+      "b_onset_s": 80.6703,
+      "b_end_s": 80.7364
+    },
+    {
+      "w": 322,
+      "word": "full",
+      "onset_s": 80.8686,
+      "end_s": 81.0339,
+      "take": "dc-short",
+      "b_onset_s": 80.8851,
+      "b_end_s": 81.0504
+    },
+    {
+      "w": 323,
+      "word": "story",
+      "onset_s": 81.1331,
+      "end_s": 81.3645,
+      "take": "dc-short",
+      "b_onset_s": 81.1331,
+      "b_end_s": 81.381
+    },
+    {
+      "w": 324,
+      "word": "is",
+      "onset_s": 81.5463,
+      "end_s": 81.6298,
+      "take": "dc-short",
+      "b_onset_s": 81.5794,
+      "b_end_s": 81.6298
+    },
+    {
+      "w": 325,
+      "word": "at",
+      "onset_s": 81.6959,
+      "end_s": 81.762,
+      "take": "dc-short",
+      "b_onset_s": 81.7124,
+      "b_end_s": 81.7455
+    },
+    {
+      "w": 326,
+      "word": "makeyourmindup.ai.",
+      "onset_s": 81.7951,
+      "end_s": 82.8868,
+      "take": "dc-short",
+      "b_onset_s": 81.7951,
+      "b_end_s": 82.8537
+    }
+  ],
+  "flubs_removed": [
+    {
+      "take": "dc-short",
+      "words": "<stutter:when> When towns say no, when the residents of towns say no, the AI companies have to find that power somewhere else",
+      "from_s": 77.65,
+      "to_s": 86.274,
+      "unwritten": [
+        {
+          "kind": "stutter",
+          "heard_by": [
+            "whisper-verbatim:large-v3"
+          ]
+        }
+      ]
+    }
+  ],
+  "unscripted_kept": [],
+  "sounded_wrong": [
+    {
+      "line": 2,
+      "take": "dc-short",
+      "word": "are",
+      "src_s": 8.447,
+      "why": [
+        "both clocks unsure of it"
+      ]
+    },
+    {
+      "line": 2,
+      "take": "dc-short",
+      "word": "it's",
+      "src_s": 13.312,
+      "why": [
+        "both clocks unsure of it"
+      ]
+    },
+    {
+      "line": 13,
+      "take": "dc-short",
+      "word": "70%",
+      "src_s": 50.634,
+      "why": [
+        "4.83x his usual length"
+      ]
+    },
+    {
+      "line": 16,
+      "take": "dc-short",
+      "word": "Piqua",
+      "src_s": 57.88,
+      "why": [
+        "both clocks unsure of it"
+      ]
+    },
+    {
+      "line": 23,
+      "take": "dc-short",
+      "word": "Piqua,",
+      "src_s": 116.128,
+      "why": [
+        "both clocks unsure of it"
+      ]
+    }
+  ],
+  "listen": {
+    "dc-short": {
+      "ears": [
+        "ctc:wav2vec2-960h",
+        "voicing",
+        "whisper-verbatim:large-v3"
+      ],
+      "events": {
+        "unworded:guard": 6,
+        "stutter:word": 1
+      }
+    }
+  },
+  "duration_s": 83.3,
+  "duration_frames": 2499,
+  "conformed": {
+    "picture": "conformed.short.mp4",
+    "dialogue": "dialogue.short.wav"
+  }
+}
