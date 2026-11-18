@@ -2,129 +2,136 @@
 
 Why this exists. Krish, 2026-11-17: "I really like her teaching style, her fluency of speech, how she doesn't talk
 down to anyone, but how she makes boring things so interesting." Earlier, of her stamp duty Short (2026-10-14,
-`config/style-references.json`, references[1]): "I generally love how she talks about complex topics observationally.
-She's not commentating on a specific thing or company but she's just unpacking how something works that people
-probably don't even realise they wondered about."
+`config/style-references.json`, references[1]): "I generally love how she talks about complex topics observationally."
 
-## What this is built from, and what is still missing
+## The evidence
 
-| Source | What it gives | Status |
+| Source | How it was read | What it gives |
 |---|---|---|
-| Her stamp duty Short, studied 2026-10-14 (`config/style-references.json`, references[1].study) | Measured pace, speech share, questions asked, shot length, her first ten seconds word for word | Measured |
-| The nine stamp duty moves in the style bank (`config/style-references.json`, bank, `"from": "Hannah Fry, stamp duty Short"`) | Opening, breakdown, proof, structure, close, tone, editing, graphics | Banked, every one `krish_verdict: untested` |
-| "Could Alzheimer's start in our nose?" (youtube.com/shorts/VADONXzhjTc, 2:34, 28 Oct 2026, 4.5M views), the Short Krish linked on 17 Nov | Title, length, description (YouTube API, read 2026-11-17) | **Words not yet read.** YouTube refuses cloud addresses ("sign in to confirm you're not a bot"). Read it with content-watcher on a home computer, then calibrate the moves below against her actual lines |
-| Her wider body of work (Shorts, documentaries, books, columns) | The craft patterns below | Observed from her published work, not measured here |
+| "Could Alzheimer's start in our nose?" (youtube.com/shorts/VADONXzhjTc, 28 Oct 2026, 153 s), the Short Krish chose on 17 Nov | His upload of the file, read with content-watcher (`content-watch read`, faster-whisper medium, 2026-11-18): timed transcript, shots, camera moves, pauses, loudness | **The primary source.** Every move below is shown in her own words from it, with the time it is said |
+| Her stamp duty Short, studied 2026-10-14 (`config/style-references.json`, references[1].study) | The engine's study | A second measurement of pace and editing, which agrees with the first |
 
-Treat every pattern below as a working model until her Alzheimer's words are on the record and checked against it.
+The transcript is machine-heard. Two words in it were misheard and are corrected in the quotes below: "bouncers"
+(heard as "bounces") at 0:24, and "Chlamydia pneumoniae" (heard as "pneumonia") at 0:56.
 
-## The numbers we have measured (stamp duty Short)
+## The numbers
 
-- 572 words in 174 seconds: **211 words a minute**, talking for 163 of the 174 seconds. She is fast. The pace reads as
-  fluent rather than rushed because each clause is short, simple and in order, and nothing in it needs re-reading.
-- **3 questions** in under three minutes: questions are her engine, used sparingly.
-- **About 3 cuts a minute** (median shot 11.5 s): long holds on her, with push-ins on the key lines. The talking does
-  the work and the edit stays out of the way.
-- Her first ten seconds, word for word: "Okay, let me start this one off by saying that I think tax is a good thing.
-  Okay schools roads the NHS massive fan I also think that Britain has One of the stupidest taxes in the entire world
-  because of the way that it makes people behave". She concedes the reasonable view, says why in four quick concrete
-  nouns, then makes the sharp claim, all inside ten seconds.
+| Measure | Alzheimer's Short | Stamp duty Short |
+|---|---|---|
+| Words a minute | 201 | 211 |
+| Talking, share of the runtime | 94% | 94% (163 of 174 s) |
+| First word | 0.05 s | at once |
+| Pauses over 0.6 s | 7, longest 1.4 s | not measured |
+| Spoken words | 515 | 572 |
+| Exact figures said | 1 ("within 72 hours") | not measured |
+| Cuts a minute, median shot | 4.7, 7.7 s (longest 34 s) | 3.1, 11.5 s |
+| Face on screen | 69%, close (face 38% of frame height) | tight frame, punch-ins |
 
-Krish's lengths stay his own (675 to 825 words for the long cut, 160 to 210 for the short; his ledger times them). Take
-her density from this: no dead air and no clause that has to be re-read. Don't copy her speed.
+**Where her pauses fall.** They sit right after a reveal or a joke, never mid-thought. 13.6 to 14.5 s, just before the
+payoff "because of your nose". 54.2 to 55.3 s, straight after "squirted Chlamydia up their noses". 145.4 to 146.8 s,
+the longest, after the whole theory has landed and before "Interesting, isn't it?". She leaves silence only where she
+wants a reaction.
 
-## Pace
+**Her sentences are long when spoken and simple inside.** Split at full stops, her 22 sentences average 23 words, and
+one runs to 71. Each is a chain of short clauses joined by "and", "that" and "which", in the order things happen, so
+none needs a second listen. On Krish's teleprompter the same chains are split at her "and"s (his cap is 20 words a
+sentence, 12 on average), and his So, And, But openers keep the run-on feel (SCRIPT_AS_HE_TALKS).
 
-- Short clauses delivered in a run, joined with "and", "so" and "because". Each sentence carries one idea, with the
-  next one hooked onto it. This is the same rhythm Krish's own takes show (SCRIPT_AS_HE_TALKS: sentences of 10 to 15
-  words joined with so, and or but).
-- Speed varies by job. She runs quickly through set-up the viewer can take on trust (the reasonable view, the
-  background), then slows down on the one line that matters. On a teleprompter that slow line is its own short
-  sentence.
-- Dead air never stands in for emphasis. A pause comes after a surprising line, as a beat for the viewer to react.
+## The shape, start to finish, with her lines
 
-## Vocabulary
+| Time | Beat | Her words |
+|---|---|---|
+| 0:00 to 0:16 | **The whole claim in the first sentence, then the known version moved aside.** | "There is a theory that Alzheimer's starts in the nose and I'm not talking here about the fact that Alzheimer's patients tend to lose their sense of smell often years before they notice any memory loss. I'm talking about the idea that maybe the whole thing just starts because of your nose." |
+| 0:16 to 0:47 | **The one thing you need to know, given as pictures.** Signposted, then three images stacked for one hard idea, and the proper term only after the image. | "So the thing you've got to know is that your brain is locked away from the rest of your body in like a fortress, right? Even your blood can't get into your brain without going past some really heavy-duty bouncers in the form of the blood-brain barrier." Then the nose as the one way in, the skull "covered in tiny holes through which your olfactory nerves will dangle", and "It's a bit like if you squished Play-Doh through a colander." |
+| 0:47 to 1:19 | **Rung one of the evidence: animals.** A pivot word, a physical verb, a self-correcting joke, the one number, then the refrain. | "Anyway, to see if that was a potential route into the brain for infection, a group of scientists, they took a bunch of mice and they squirted Chlamydia up their noses." Then: "Now, it was Chlamydia pneumoniae, which is a sort of bacterial cousin of the one that gives you an STI, but why let facts get in the way of a good sentence?" Then: "within 72 hours ... the same kind of inflammatory response and plaques that you see in brains that are riddled with Alzheimer's." |
+| 1:19 to 1:46 | **Rung two: closer to us.** A natural comparison (city dogs against country dogs), objects you can picture, the refrain again. | "Another study was looking at stray dogs in Mexico." The city dogs had "really tiny little flecks of metals thought to have come from exhausts and breaking of cars", each "surrounded again by the same plaques, same inflammatory responses that you end up seeing in Alzheimer's." |
+| 1:46 to 2:08 | **Rung three: people.** The refrain a third time, and scale said as repetition, not as a number. | "young children and adults who also grew up in really heavily polluted areas and found essentially the same thing, stuff that is theorised to have got into the brain through the nose, kind of sniffed up from the environment ... decades, decades, decades later" |
+| 2:08 to 2:25 | **The theory, numbered, and the reframe.** The opening claim comes back bigger, in two parts, and the villain changes. | "So here is the theory. Maybe one, the whole thing starts way, way, way, way, way before we thought. And two, maybe this isn't just something that goes wrong in your brain. Maybe the plaques that cause Alzheimer's are what's left over after your brain has fought off an outside invader." |
+| 2:25 to 2:33 | **Delight, then out in seven seconds.** No lesson, no list. | "Interesting, isn't it? Anyway, if you want the full rundown, I've done a New Scientist column on it and you can see it on their website. Enjoy." |
 
-- Everyday words for hard things: "the stupidest tax", "a queue", "right under our noses". The proper term, if it
-  is needed at all, comes after the picture has landed.
-- Concrete nouns over abstract ones (schools, roads, the NHS rather than "public services").
-- Conversational markers that show a person thinking: "okay", "right?", "now", "here's the thing", "and this is the
-  bit I love". Each one marks a turn in the argument, never filler.
-- Intensifiers that sound like real speech ("massive fan", "the entire world"), used for her own view, never to inflate
-  a fact.
-- **Borrow her moves, never her accent words.** Her Britishisms are hers. Krish speaks in his own lexicon
-  (`config/voice/lexicon.json`, the on-camera branch of krish-voice). A script that sounds like her doing an impression
-  fails his tone floor (`config/script-floor.json`, quality c).
+## What makes it work
 
-## Narrative style: how she gets from start to finish
+**The ladder and its refrain hold the attention.** The evidence climbs from mice to dogs to people, each rung closer
+to the viewer, and each rung ends on the same line: the same plaques you see in Alzheimer's. The repetition does the
+explaining, because by the third rung the viewer finishes the sentence before she does. The topic is a dull one for
+most viewers, and this repetition is what keeps them watching.
 
-The shape under almost every short explainer of hers:
+**Pictures come before terms, and the terms are few.** For the hard idea (how anything could get into the brain) she
+stacks four pictures: a fortress, bouncers, a skull with holes and Play-Doh through a colander. Each term is named
+inside the picture ("bouncers in the form of the blood-brain barrier"), and the olfactory nerves are explained in the
+same breath ("to give you your sense of smell"). "Plaques" she never defines. She ties it to the thing everyone knows
+("the plaques that you see in Alzheimer's") and lets it work as a label.
 
-1. **A question the viewer did not know they had.** The Alzheimer's title is a model of it: a big, familiar fear
-   ("Alzheimer's") put beside a small, everyday, unexpected place ("our nose"), as a question. The description
-   doubles it with a pun ("right under our noses"). The viewer is curious before a fact is given.
-2. **The obvious answer, said fairly.** She states what a reasonable person already believes, and gives it its due
-   ("I think tax is a good thing"). Doing this first is what makes her feel fair rather than contrarian.
-3. **The turn.** "But" or "and yet": the thing that does not fit.
-4. **One person, one moment.** The mechanism is shown through one ordinary person in one situation (the house buyer
-   at the moment they decide not to move), then widened to everyone.
-5. **One picture that names how it works.** A single everyday image that the viewer keeps: "a market becomes a
-   queue".
-6. **One number, after the story.** The hard figure comes once the viewer already wants it, so it lands as proof
-   rather than as homework.
-7. **How sure we are, in one plain line.** She says how strong the evidence is ("this is early", "nobody knows yet")
-   and moves on. The honesty is a single sentence, never a paragraph of caveats.
-8. **The better way, briefly.** Two lines on what would work instead.
-9. **A close that rewards the question.** She goes back to the opening question with the answer in hand, often with a
-   dry, understated last observation that makes the viewer smile.
+**Her verbs are physical.** Squirted, sniffed up, squished, dangle, embedded. Each is something the listener can
+picture. The nouns are the same: a bunch of mice, stray dogs, flecks of metal, exhausts.
 
-Each step answers the question the step before it raised. That chain is why "boring" topics hold: the viewer is
-always one sentence away from the answer to something they now want to know.
+**She hedges in single words.** The word "theory" opens and closes the piece, with "maybe", "thought to have come
+from" and "theorised" in between. She never stops to list caveats. The confidence travels in single words while the
+story keeps moving.
 
-## Tone
+**The respect is in what she leaves out.** She never says "simply", "basically" or "as you know". She hands over the
+one prerequisite as "the thing you've got to know", and keeps the listener with her using tag questions ("like a
+fortress, right?") rather than quizzing them.
 
-- **Curious with the viewer, never above them.** She explains as someone who found this out recently and can't
-  wait to share it. She never presents as the expert who always knew. Words like "simply", "basically just",
-  "obviously" and "as you know" are absent: each one tells a viewer who did not know that they should have.
-- **Delight, said out loud.** She lets the viewer see that she finds it fascinating ("this is the bit I love"). It
-  gives the viewer permission to find it fascinating too. Once or twice a piece, never on every line.
-- **Dry and understated.** The wit is British understatement and self-aware asides, never a set-up and punchline. It
-  is never at the expense of a real person. Krish asked for exactly this on 2026-10-21 ("Bit of dry wit and hannah fry
-  sarcasm too"; learning `dry-wit`).
-- **Opinionated and fair.** She takes a side ("one of the stupidest taxes in the entire world") after conceding the
-  other one.
+**The jokes show her thinking.** There is one joke, and it corrects herself ("why let facts get in the way of a good
+sentence?"), which is honest and funny at once. Then one beat of plain delight ("Interesting, isn't it?") after a
+pause. The fun is in her ease with the material. Nothing in it is a set-piece gag.
 
-## Explanation style
+**Signposts mark every turn.** "So" opens the background and the theory. "But" marks the way in. "Anyway" opens
+each new section, four times, and "Now" opens the correction. Each one marks a real change of section.
 
-- **Intuition first, name second.** Every hard idea arrives as something the viewer can picture, and the term (if it
-  is needed at all) follows. The reverse order is a lecture.
-- **One example, followed all the way through.** She works one case completely before generalising. A list of three
-  half-told examples is never her move. This matches ONE_STORY_SHORT and floor quality a.
-- **Explain the mechanism.** She tells you how the thing works, so the viewer could predict the next case
-  themselves.
-- **Numbers are rationed.** One strong figure per short piece, placed after the story (LISTENING caps the rest: 1 in the
-  short cut, 3 in the long).
-- **Questions as hinges.** About one a minute, each one asked just before its answer, so the viewer leans in.
+**The sources stay unnamed.** "A group of scientists", "another study", "the latest research": the result is
+named, and the paper trail is left for the column. This is Krish's own ruling too ("say the result, never the method";
+learning `mood-not-citations`).
+
+**The edit (production note, long cut only, through the style bank with his yes).** It stays mostly on her face,
+close, pushing in at each new section (0:00, 0:21, 0:47, 1:19). It cuts away to a picture while she describes one
+(the fortress and the skull around 0:18 to 0:32, the mice and dogs from 1:13 to 1:43), and pulls out for the theory
+and the close.
 
 ## Where it meets Krish's house rules (his rules win every time)
 
 | Her habit | His rule | How they fit |
 |---|---|---|
-| Opens with a concession about herself ("I think tax is a good thing") | INTRO_PATTERN, `config/script-floor/intros.json`: beat 1 is a surprising fact about a named player | Her question shape lives inside his four beats: beat 1's fact should be weird enough to raise a question, and beat 4 says the title as that question. The concession moves to beat 2 or straight after the title |
-| Talks about concepts, often with no company named | Floor quality b: every person, product and term named and explained | Keep his named players. Her lesson is to explain the mechanism and keep the commentary on the company short |
-| Ends on a wry observation | SCRIPT_CLOSE: his first-person one thing, then exactly "The full story is free at makeyourmindup.ai." | The wry observation can be the line before his one thing, never after the fixed last line |
-| States uncertainty plainly | "Say the result, never the method" (Krish, 2026-10-21) | One line of how sure, in plain words. Never limits, weighting or sourcing spoken aloud |
-| 211 words a minute | His lengths and his ledger | Take her density and leave her speed |
-| Long holds, about 3 cuts a minute | The ve motion standard and his signed spec | An editing note for the long cut only, and only through the style bank (`long-holds`) with his yes |
+| "I'm not talking here about X ... I'm talking about Y" (0:00 to 0:16) | Voice: no "Not X, Y" in either order | Keep the move and lose the construction: say the known fact first, then the bigger claim ("You might know X. This goes further: Y.") |
+| Sentences averaging 23 words, up to 71 | `story_check.py`: at most 20 words a sentence and 12 on average | Split her chains at each "and"; open the pieces with So, And, But |
+| Sources unnamed ("a group of scientists") | Floor quality b: every person, product and term named | Name the players the story is about (the companies and products); leave the research trail unnamed, as she does |
+| "Plaques" never explained | R7 and the reading gate: every hard word explained in its sentence | Use her other trick: tie the term to something the listener already knows, in the same sentence |
+| Three rungs of evidence | ONE_STORY_SHORT: a 90-second cut has one story thread | The short cut climbs one rung only, and the refrain lands once, as the payoff. The long cut may climb two or three |
+| No "Let's" turn | INTRO_PATTERN, `config/script-floor/intros.json` | Her first 16 seconds are his beats 1 to 3. He keeps beat 4, "Let's ..." and the title as a question |
+| Closes on "Interesting, isn't it?" and a pointer | SCRIPT_CLOSE: his first-person one thing, then exactly "The full story is free at makeyourmindup.ai." | Her beat of delight can come just before his one thing. His close line stays last |
+| 201 words a minute | His lengths and his ledger | Take her density (94% talking, pauses only after reveals and jokes); his pace is his own |
 
 ## How each cut uses it
 
-**The short cut (60 to 90 seconds, 160 to 210 words, one story).** The intro's four beats compressed, with the title
-said as a question. Then one line of the obvious answer, the turn, one person in one moment, one picture, one number,
-one line of how sure, his one thing and the close line. No second example, even as a teaser (ONE_STORY_SHORT).
+**The short cut (60 to 90 seconds, 160 to 210 words, one story).**
+1. The whole claim in the first sentence, then the known version moved aside.
+2. The one thing to know, as one or two pictures.
+3. One rung of evidence, with a physical verb and the one number.
+4. The theory, said back bigger.
+5. One beat of delight, then his one thing and the close line.
 
-**The long cut (5 minutes, 675 to 825 words).** The four-beat intro and the title question, then the map up front
-(LISTENING). The obvious answer gets a fair hearing, then the turn. The mechanism is shown through one person and
-followed all the way through, with one picture per hard idea and a signpost at each section turn. Then the number
-after the story, the counterpoint or second example only as further evidence (floor quality a), and how sure, in
-one line. Then the better way in two lines, the recap, a dry closing observation, his one thing and the close line.
-Thinking-out-loud asides are welcome here (style bank `thinking-aloud`).
+**The long cut (5 minutes, 675 to 825 words).**
+1. The four-beat intro, including the "Let's" turn and the title.
+2. The map up front (LISTENING).
+3. The one thing to know, with a picture for each hard idea.
+4. Two or three rungs, each closer to the viewer and each ending on the same refrain (further rungs count as further
+   evidence, floor quality a).
+5. Hedge words in place of caveats.
+6. "So here is ...", the claim numbered and reframed.
+7. The recap, the delight beat, his one thing and the close line.
+
+## Calibration (2026-11-18)
+
+The reader prompt was tried on two scripts, each read by its own fresh reader:
+
+- **Her transcript** passed all eight moves. Curiosity held until her closing pointer to the column.
+- **The 90-second script for Friday 20 Nov** (`docs/plans/2026-11-20-draft-script-90s.md`, the hospital bill)
+  failed two moves:
+  - Move 2: nothing the listener already half-knows is set aside before the bigger claim.
+  - Move 3: the background ("An old bill can't argue back") comes after the story, and "a dearer code" is said
+    before its steak-and-sandwich picture.
+
+  Its reader stopped being curious at that background line, the ninth of thirteen sentences.
+
+So the check tells her shape apart from a script that passes every other gate.
