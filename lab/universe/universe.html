@@ -1,0 +1,165 @@
+<!doctype html>
+<!-- Krish's universe as one building, after the "AI-native firm" cutaway Krish sent on 18 Nov 2026.
+     Facts come from live reads that day: PORTFOLIO.md and KRISH.md (Control Center canon) and every repository's
+     North Star (get_venture_state fleet). Render: node lab/universe/render.cjs. setT(t): 0 is day, 1 is night. -->
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Anton;src:url(../../assets/fonts/makeyourmindup/Anton-Regular.ttf)}
+@font-face{font-family:Archivo;src:url(../../assets/fonts/makeyourmindup/Archivo-Variable.ttf);font-weight:100 900}
+@font-face{font-family:FrauncesI;src:url(../../assets/fonts/makeyourmindup/Fraunces-Italic-Variable.ttf);font-weight:100 900}
+@font-face{font-family:Plex;src:url(../../assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf)}
+:root{--ink:#0C1512;--surface:#16221D;--line:#363C38;--cream:#F4EFE4;--cream2:#D1CEC4;--mint:#7EF0C0;
+  --butter:#FFD84D;--lilac:#B7A6FF;--coral:#FF6A4D;--t:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:1350px;overflow:hidden;font-family:Archivo,sans-serif;color:var(--ink);background:#E9E2D2}
+#sky{position:absolute;inset:0;background:linear-gradient(#EDE6D6,#E4DBC8)}
+#night{position:absolute;inset:0;background:radial-gradient(1200px 700px at 70% 0%,#16221D,#0C1512 70%);opacity:var(--t)}
+#stars{position:absolute;inset:0;opacity:var(--t)}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--cream)}
+#sun{position:absolute;right:70px;top:46px;width:96px;height:96px;border-radius:50%;
+  background:radial-gradient(circle at 40% 40%,#FFE27A,#FF8A4D);box-shadow:0 0 60px #FFB86B88;
+  transform:translateY(calc(var(--t) * 140px));opacity:calc(1 - var(--t))}
+#moon{position:absolute;right:70px;top:46px;width:86px;height:86px;border-radius:50%;background:var(--cream);
+  box-shadow:inset -18px -8px 0 #CFC9BA, 0 0 50px #F4EFE455;opacity:var(--t)}
+/* title */
+.title{position:absolute;left:56px;top:40px;width:760px}
+.title .big{font-family:Anton;font-size:88px;line-height:.98;letter-spacing:.5px;text-transform:uppercase}
+.title .pill{display:inline-block;margin-top:10px;font-family:FrauncesI;font-weight:500;font-size:62px;line-height:1.05;
+  padding:2px 22px 10px;border-radius:12px}
+#tday{opacity:clamp(0, calc(1 - var(--t) * 2.4), 1)} #tday .big{color:var(--ink)} #tday .pill{background:var(--ink);color:var(--mint)}
+#tnight{opacity:clamp(0, calc(var(--t) * 2.4 - 1.4), 1)} #tnight .big{color:var(--cream)} #tnight .pill{background:var(--cream);color:var(--ink)}
+/* building */
+#bld{position:absolute;left:24px;top:296px;width:680px;height:930px}
+.side{position:absolute;left:617px;top:46px;width:50px;height:870px;background:linear-gradient(90deg,#B5AB95,#C9C0AB);border:3px solid var(--ink);border-left:none;
+  clip-path:polygon(0 28px,100% 0,100% calc(100% - 28px),0 100%)}
+.top{position:absolute;left:20px;top:18px;width:647px;height:31px;background:#D9D1BE;clip-path:polygon(0 100%,50px 0,100% 0,calc(100% - 50px) 100%)}
+.sw{position:absolute;left:12px;width:22px;height:30px;border:2px solid var(--ink);background:#8E8572;transform:skewY(-29deg)}
+.sw:after{content:"";position:absolute;inset:0;background:#FFE28A;opacity:var(--t);box-shadow:0 0 14px #FFD84D}
+.roofcap{position:absolute;left:20px;top:46px;width:580px;height:24px;background:#CFC7B4;border:3px solid var(--ink);border-bottom:none}
+.floor{position:absolute;left:20px;width:580px;border:3px solid var(--ink);border-top:none;background:#F7F3EA;overflow:hidden}
+.floor .wall{position:absolute;inset:0;background:linear-gradient(#FBF8F1,#EFE8DA)}
+.floor .nightwall{position:absolute;inset:0;background:linear-gradient(#24342C,#16221D);opacity:calc(var(--t) * .55)}
+.floor .lamp{position:absolute;inset:0;background:radial-gradient(70% 90% at 50% 0%,#FFE9A866,transparent);opacity:var(--t)}
+.slab{position:absolute;left:0;right:0;bottom:0;height:12px;background:#CFC7B4;border-top:3px solid var(--ink)}
+.fname{position:absolute;left:10px;top:8px;font-family:Plex;font-size:13px;letter-spacing:1px;text-transform:uppercase;
+  background:var(--ink);color:var(--cream);padding:3px 8px 2px;border-radius:4px;z-index:3}
+.fname b{color:var(--mint);font-weight:500;margin-right:6px}
+.st{position:absolute;display:flex;flex-direction:column;align-items:center;z-index:2;top:38px}
+.st .bot{position:relative;width:34px;height:38px}
+.st .head{position:absolute;left:5px;top:0;width:24px;height:22px;border-radius:9px 9px 7px 7px;border:2.5px solid var(--ink);background:var(--mint)}
+.st .head:after{content:"";position:absolute;left:4px;top:6px;width:4px;height:5px;border-radius:2px;background:var(--ink);box-shadow:8px 0 0 var(--ink)}
+.st .desk{position:absolute;left:-8px;top:24px;width:50px;height:14px;border:2.5px solid var(--ink);border-radius:3px;background:#C9BFA8}
+.st.you .head{background:var(--cream);border-radius:50%}
+.st.off .head{background:#B9B3A6}
+.st .tag{margin-top:4px;font-family:Archivo;font-weight:800;font-size:11.5px;line-height:1.1;text-align:center;white-space:nowrap;width:100%;overflow:hidden;
+  background:var(--cream);border:2px solid var(--ink);border-radius:5px;padding:3px 6px 2px}
+.st .tag i{display:block;font-style:normal;font-family:Plex;font-weight:500;font-size:9px;color:#4A514D}
+.st .ring{position:absolute;left:1px;top:-4px;width:32px;height:30px;border-radius:50%;border:2px solid var(--mint);opacity:0}
+.hand{position:absolute;right:8px;font-family:Plex;font-size:11px;background:var(--mint);color:var(--ink);padding:3px 7px 2px;border:2px solid var(--ink);border-radius:20px;z-index:3}
+.chan{display:inline-block;width:10px;height:10px;border-radius:2px;border:1.5px solid var(--ink);margin:0 1px -1px}
+/* roof deck */
+.mast{position:absolute;left:300px;top:-40px;width:6px;height:90px;background:var(--ink)}
+.dish{position:absolute;left:272px;top:-58px;width:62px;height:30px;border:3px solid var(--ink);border-radius:0 0 40px 40px;background:var(--cream2)}
+.beacon{position:absolute;left:296px;top:-68px;width:14px;height:14px;border-radius:50%;background:var(--coral);box-shadow:0 0 18px var(--coral)}
+/* panel */
+#panel{position:absolute;left:712px;top:286px;width:330px;display:flex;flex-direction:column;gap:9px}
+.card{background:var(--cream);border:2.5px solid var(--ink);border-radius:10px;padding:9px 12px 9px}
+.card h3{font-family:Archivo;font-weight:900;font-size:21px;display:flex;align-items:center;gap:8px;line-height:1}
+.card h3 span{font-family:Plex;font-weight:500;font-size:12px;background:var(--ink);color:var(--mint);padding:3px 5px 2px;border-radius:4px}
+.card ul{list-style:none;margin-top:6px}
+.card li{font-size:12.5px;line-height:1.28;padding-left:12px;position:relative;color:#1E2723}
+.card li:before{content:"";position:absolute;left:1px;top:6px;width:5px;height:5px;border-radius:50%;background:var(--ink)}
+.card .ho{margin-top:6px;border-top:1.5px solid #CFC7B4;padding-top:5px;display:flex;justify-content:space-between;gap:8px}
+.card .ho em{font-style:normal;font-family:Plex;font-size:9.5px;letter-spacing:.8px;color:#5A615D;text-transform:uppercase}
+.card .ho b{font-size:12px;font-weight:800;text-align:right}
+/* footer */
+#foot{position:absolute;left:40px;right:40px;bottom:30px;height:84px;background:var(--cream);border:2.5px solid var(--ink);border-radius:14px;
+  display:flex;align-items:center;padding:0 24px;gap:18px}
+#foot .q{font-family:FrauncesI;font-weight:500;font-size:22px;line-height:1.2;flex:1}
+#foot .who{font-family:Plex;font-size:12px;text-align:right;line-height:1.5;white-space:nowrap}
+#foot .who b{font-family:Archivo;font-weight:900;font-size:17px;display:block}
+</style></head><body>
+<div id="sky"></div><div id="night"></div><div id="stars"></div><div id="sun"></div><div id="moon"></div>
+<div class="title" id="tday"><div class="big">My whole universe</div><div class="pill">is one building</div></div>
+<div class="title" id="tnight"><div class="big">And it keeps working</div><div class="pill">after I log off</div></div>
+<div id="bld"><div class="top"></div><div class="side" id="side"></div><div class="roofcap"></div>
+  <div class="mast"></div><div class="dish"></div><div class="beacon" id="beacon"></div>
+</div>
+<div id="panel"></div>
+<div id="foot"><div class="q">"I see what is coming before it is obvious and make it legible to people while it still counts."</div>
+  <div class="who"><b>Krish Raja</b>Mindmake · one company</div></div>
+<script>
+// Floors, top to bottom. x is the station's left edge inside the 580 px floor.
+const FLOORS = [
+  {n:'00', name:'The roof: Control Center', h:118, st:[
+    {x:22,l:'You',s:'send, spend, post',cls:'you'},{x:150,l:'Live board',s:'your presses'},
+    {x:270,l:'Taste ledger',s:'your words kept'},{x:390,l:'North Stars',s:'one number each'},{x:494,l:'Credits',s:'spend, booked'}]},
+  {n:'01', name:'Watch', h:118, st:[
+    {x:22,l:'Content watcher',s:'every link, read'},{x:150,l:'Inspo house',s:'inspo folders'},
+    {x:282,l:'Divergent',s:'new ideas'},{x:410,l:'AEO probes',s:'who AI cites'},{x:506,l:'Hunter',s:'mission roles'}]},
+  {n:'02', name:'Make: the content engine', h:132, hand:'Sunday room → Mon · Wed · Fri', st:[
+    {x:22,l:'Sunday room',s:'plan the week'},{x:132,l:'Script desk',s:'Hannah Fry check'},
+    {x:246,l:'ve',s:'cuts your takes'},{x:338,l:'Codex',s:'plates, devices'},{x:432,l:'Carousels',s:'and covers'}]},
+  {n:'03', name:'Grow', h:118, st:[
+    {x:22,l:'Publication',s:'subscribers'},{x:142,l:'Mindmake',s:'good meetings'},{x:252,l:'Heartside',s:'organic sales'},
+    {x:356,l:'Full Time',s:'shared clips'},{x:462,l:'Legibility',s:'builders'}]},
+  {n:'04', name:'Sell: Mindmake', h:118, st:[
+    {x:22,l:'Call prep',s:'every account'},{x:142,l:'The room',s:'leader at a fork',cls:'you'},
+    {x:268,l:'Keynotes',s:'paid bookings',cls:'you'},{x:386,l:'Outbound',s:'you press send'},{x:500,l:'30-day proof',s:'paid'}]},
+  {n:'05', name:'Products on the ladder', h:118, st:[
+    {x:16,l:'Heartside',s:'P1 · gifts'},{x:112,l:'Full Time',s:'P1 · podcast'},{x:212,l:'Legibility',s:'P2 · agent API'},
+    {x:314,l:'CTRL',s:'P3 · briefings'},{x:410,l:'Pulse',s:'P3 · demand'},{x:500,l:'Circle',s:'dormant',cls:'off'}]},
+  {n:'06', name:'Basement: the second brain', h:126, st:[
+    {x:22,l:'ai-harness',s:'skills + rulings'},{x:140,l:'Claude archive',s:'every session'},
+    {x:262,l:'Media archive',s:'photos, video'},{x:386,l:'Brand kit',s:'fonts, music'},{x:490,l:'Learnings',s:'never twice'}]},
+];
+const CARDS = [
+  {n:'01',t:'Watch',li:['Read every link I paste within 15 minutes','Find ideas outside the consensus','Track which answers AI cites first'],ho:'Cards and ideas'},
+  {n:'02',t:'Make',li:['Plan the week every Sunday','Scripts I approve, cut from my takes','Essay, Short and carousel per piece'],ho:'Assets at 10/10'},
+  {n:'03',t:'Grow',li:['One growth engine per venture','Post and amplify on every channel','Count what each post brought in'],ho:'Subscribers, listeners'},
+  {n:'04',t:'Sell',li:['Research the account before the call','I run the room and the keynote','Outbound drafted, I press send'],ho:'Good meetings'},
+  {n:'05',t:'Products',li:['Heartside and Full Time first','Then Legibility, CTRL and Pulse','Each with its own buyer and price'],ho:'Sales, listeners, reads'},
+  {n:'06',t:'Second brain',li:['Every correction becomes a rule','Every session filed, nothing lost','Agents read it before they act'],ho:'Nothing said twice'},
+];
+const bld = document.getElementById('bld'); let y = 70; const bots = [];
+FLOORS.forEach((f, i) => {
+  const el = document.createElement('div'); el.className = 'floor'; el.style.top = y + 'px'; el.style.height = f.h + 'px';
+  if (i === 0) el.style.borderTop = '3px solid var(--ink)';
+  if (i === FLOORS.length - 1) { el.style.background = '#E7DFCE'; }
+  el.innerHTML = '<div class="wall"></div><div class="nightwall"></div><div class="lamp"></div><div class="slab"></div>' +
+    `<div class="fname"><b>${f.n}</b>${f.name}</div>` + (f.hand ? `<div class="hand" style="top:8px">${f.hand} <span class="chan" style="background:var(--butter)"></span><span class="chan" style="background:var(--lilac)"></span><span class="chan" style="background:var(--coral)"></span></div>` : '');
+  f.st.forEach((s) => {
+    const n = f.st.length, W = 580 - 16, w = W / n - 6, k = f.st.indexOf(s);
+    const d = document.createElement('div'); d.className = 'st ' + (s.cls || ''); d.style.left = (8 + k * (W / n) + 3) + 'px'; d.style.width = w + 'px'; d.style.top = (f.hand ? 44 : 38) + 'px';
+    d.innerHTML = `<div class="bot"><div class="ring"></div><div class="desk"></div><div class="head"></div></div><div class="tag">${s.l}<i>${s.s}</i></div>`;
+    el.appendChild(d); if (s.cls !== 'off' && s.cls !== 'you') bots.push(d);
+  });
+  bld.appendChild(el); y += f.h;
+});
+// windows on the side wall, two per floor
+{ const side = document.getElementById('side'); let yy = 40;
+  FLOORS.forEach((f) => { [0, 1].forEach((j) => { const w = document.createElement('div'); w.className = 'sw';
+    w.style.top = (yy + 30 + j * 0 - 14) + 'px'; w.style.left = (8 + j * 0) + 'px'; if (j === 0) side.appendChild(w); }); yy += f.h; }); }
+const panel = document.getElementById('panel');
+CARDS.forEach((c) => {
+  const d = document.createElement('div'); d.className = 'card';
+  d.innerHTML = `<h3><span>${c.n}</span>${c.t}</h3><ul>${c.li.map((x) => `<li>${x}</li>`).join('')}</ul><div class="ho"><em>Hands off</em><b>${c.ho}</b></div>`;
+  panel.appendChild(d);
+});
+const stars = document.getElementById('stars'); let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+for (let i = 0; i < 60; i++) { const s = document.createElement('div'); s.className = 'star';
+  s.style.left = (rnd() * 1080) + 'px'; s.style.top = (rnd() * 300) + 'px'; s.style.opacity = .3 + rnd() * .7; stars.appendChild(s); }
+// frame f of a loop: agents take turns working (a ring pulses, the head bobs); the beacon blinks.
+window.setFrame = (t, f) => {
+  document.documentElement.style.setProperty('--t', t);
+  bots.forEach((b, i) => {
+    const p = ((f + i * 7) % 36) / 36; const on = p < 0.35;
+    b.querySelector('.ring').style.opacity = on ? (1 - p / 0.35) : 0;
+    b.querySelector('.ring').style.transform = `scale(${1 + p * 1.2})`;
+    b.querySelector('.head').style.transform = `translateY(${on ? -Math.sin(p / 0.35 * Math.PI) * 3 : 0}px)`;
+  });
+  document.getElementById('beacon').style.opacity = (f % 30) < 15 ? 1 : 0.35;
+};
+window.setFrame(0, 0);
+</script></body></html>
