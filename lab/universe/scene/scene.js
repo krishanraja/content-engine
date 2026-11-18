@@ -64,7 +64,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserv
 renderer.setPixelRatio(window.devicePixelRatio || 1); renderer.setSize(W, H); renderer.outputColorSpace = THREE.SRGBColorSpace
 document.body.insertBefore(renderer.domElement, document.getElementById('labels'))
 const scene = new THREE.Scene()
-const BW = 7.2, BD = 2.6, FH = 1.36, SLAB = 0.14, FIG = 1.12
+const BW = 7.2, BD = 2.6, FH = 1.36, SLAB = 0.14, FIG = 1.3
 const SCALE = 81
 const CX = 348, CY = 1262
 const camera = new THREE.OrthographicCamera(-CX / SCALE, (W - CX) / SCALE, CY / SCALE, -(H - CY) / SCALE, 0.1, 200)
@@ -243,7 +243,7 @@ window.setTime = (t) => {
 // A close-up is a slow push in on one or two floors of the finished building, in daylight, with only those floors'
 // cards. It crops the master framing (setViewOffset), so the building, the cast and the labels are the master's own.
 const SHOTS = {
-  roof: { keys: ['roof'], pill: 'the decision deck', cards: [0], at: 0.53 },
+  roof: { keys: ['roof'], pill: 'the decision deck', cards: [0], at: 0.42 },
   'watch-write': { keys: ['watch', 'write'], pill: 'watch + write', cards: [1, 2] },
   'share-sell': { keys: ['share', 'sell'], pill: 'share + sell', cards: [4, 5] },
 }
