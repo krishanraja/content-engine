@@ -1,3 +1,0 @@
-Status: New skill directed-shoot (.agents/skills/directed-shoot): experiments Krish acts out from a film-style shot script (lines, marks, blocking, props chosen to become something else), filmed in one take and transformed with AI in post. The first format is reveal-peel, deconstructed beat by beat from his "Nothing is real anymore" reference (read with content-watcher and frame by frame). It is separate from the style pickers. Stills come first and are priced, and nothing is spent without his yes. Post is a hand-built composite with its receipts, because ve does not compile generated layers yet.
-Next: Krish picks a point for the first reveal-peel experiment; write its shot script and put it on the day's board.
-North Star check (2026-11-18): holds.
