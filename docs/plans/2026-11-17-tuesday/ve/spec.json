@@ -2163,7 +2163,7 @@
      "role": "anchor",
      "span": {
       "from_w": 815,
-      "to_w": 854
+      "to_w": 853
      },
      "viewer_task": "connect_with_speaker",
      "layout": "P1",
@@ -2190,8 +2190,8 @@
      "id": "l25",
      "role": "call",
      "span": {
-      "from_w": 855,
-      "to_w": 884
+      "from_w": 854,
+      "to_w": 883
      },
      "viewer_task": "land_payoff",
      "layout": "STAGE",
@@ -2204,7 +2204,7 @@
      ],
      "events": [
       {
-       "at_w": 884,
+       "at_w": 883,
        "obj": "block_l",
        "verb": "move",
        "to_state": "target:1"
@@ -2217,8 +2217,8 @@
      "id": "l26a",
      "role": "anchor",
      "span": {
-      "from_w": 885,
-      "to_w": 908
+      "from_w": 884,
+      "to_w": 916
      },
      "viewer_task": "verify_evidence",
      "layout": "P6",
@@ -2232,7 +2232,7 @@
      ],
      "events": [
       {
-       "at_w": 892,
+       "at_w": 889,
        "obj": "hf_deal_l",
        "verb": "enter",
        "to_state": "visible"
@@ -2245,8 +2245,8 @@
      "id": "l26b",
      "role": "anchor",
      "span": {
-      "from_w": 909,
-      "to_w": 927
+      "from_w": 917,
+      "to_w": 935
      },
      "viewer_task": "inspect_artifact",
      "layout": "STAGE",
@@ -2259,7 +2259,7 @@
      ],
      "events": [
       {
-       "at_w": 909,
+       "at_w": 917,
        "obj": "small_print_l",
        "verb": "enter",
        "to_state": "visible"
@@ -2272,8 +2272,8 @@
      "id": "l26c",
      "role": "payoff",
      "span": {
-      "from_w": 928,
-      "to_w": 956
+      "from_w": 936,
+      "to_w": 964
      },
      "viewer_task": "understand_mechanism",
      "layout": "STAGE",
@@ -2286,37 +2286,37 @@
      ],
      "events": [
       {
-       "at_w": 928,
+       "at_w": 936,
        "obj": "meter_l",
        "verb": "enter",
        "to_state": "visible"
       },
       {
-       "at_w": 931,
+       "at_w": 939,
        "obj": "meter_l",
        "verb": "fill",
        "to_state": "plan credits a month"
       },
       {
-       "at_w": 937,
+       "at_w": 945,
        "obj": "meter_l",
        "verb": "add",
        "to_state": "bonus credits"
       },
       {
-       "at_w": 940,
+       "at_w": 948,
        "obj": "meter_l",
        "verb": "mark",
        "to_state": "visible"
       },
       {
-       "at_w": 948,
+       "at_w": 956,
        "obj": "meter_l",
        "verb": "count_to",
        "to_state": "30"
       },
       {
-       "at_w": 952,
+       "at_w": 960,
        "obj": "meter_l",
        "verb": "drop",
        "to_state": "plan credits a month"
@@ -2328,8 +2328,8 @@
      "id": "l27",
      "role": "pivot",
      "span": {
-      "from_w": 957,
-      "to_w": 987
+      "from_w": 965,
+      "to_w": 995
      },
      "viewer_task": "feel_stakes",
      "layout": "STAGE",
@@ -2346,8 +2346,8 @@
      "id": "l28",
      "role": "bridge",
      "span": {
-      "from_w": 988,
-      "to_w": 1044
+      "from_w": 996,
+      "to_w": 1052
      },
      "viewer_task": "land_payoff",
      "layout": "P1",
@@ -2361,7 +2361,7 @@
      ],
      "events": [
       {
-       "at_w": 1043,
+       "at_w": 1051,
        "obj": "block_l",
        "verb": "exit",
        "to_state": "flat"
@@ -2374,8 +2374,8 @@
      "id": "l29",
      "role": "bridge",
      "span": {
-      "from_w": 1045,
-      "to_w": 1050
+      "from_w": 1053,
+      "to_w": 1058
      },
      "viewer_task": "land_payoff",
      "layout": "STAGE",
