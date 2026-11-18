@@ -45,6 +45,13 @@ model run or a template engine.
   `full_frame` (nothing cut at the sides), `caption_band` (with `palette` naming `config/brand-palette.json`) and
   `credit_line` (with its `text`). A reviewer who did not make it watches it before it is called ready.
 
+**How the board's prompt reaches it.** A meme option that carries a template clip (`template`, contract 1.24.0) gets the
+reskin route in its Claude production prompt (`apps/control-plane/api/board/_makeRoute.ts`, route `reskin`): the exact
+clip to download and its page, the credit, and his caption (the option's note), then the steps above. It was sent down
+the carousel route on 18 Nov because its plan wrote the format as an image (Krish, 2026-11-18: "It tries to produce a
+carousel, when we actually want to make a meme - download that exact video, reskin it, put our caption, and the
+wordmark in the bottom right corner").
+
 ## Static memes
 
 A static meme is no longer "the house two-panel drawn fresh": it meets the carousel standard. The same type, the same
