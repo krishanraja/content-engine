@@ -568,9 +568,10 @@ def main():
             if piece and pack.get('post_folder'):
                 try:
                     record = making.record_of(piece)
+                    now_folder = making.post_folder_of(piece)
                 except Exception as error:  # noqa: BLE001 - no record read, no send: the freeze cannot be checked
                     raise SendError(f'the piece\'s record could not be read, so its folder name cannot be checked: {error}')
-                why = post_binding.frozen_problem(record, pack['post_folder'])
+                why = post_binding.frozen_problem(record, pack['post_folder'], now_folder)
                 if why:
                     raise SendError(why)
         if a.dry_run:

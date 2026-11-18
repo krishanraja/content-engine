@@ -955,9 +955,14 @@ export function productionStage(m: ModelInputs, p: { pieceId: string; title: str
   const head = productionBrief({ pieceId: p.pieceId, title: p.title, takes, decisions, research: p.read.research, scripts: approval?.texts ?? {}, offday: p.offday,
     plan: made ? planBrief(made, swapsOf(m.picks || [], made)) : null })
   const next = promptOf(line, head) as unknown as PromptAction
-  // A ready plan asks the one question only he can answer before the prompt is copied: the points his words did not make
-  // strongly enough, which the session then makes on screen (VISUAL_POINTS_ASK).
-  if (plan && plan.status === 'ready' && next.notes) next.notes = { ...next.notes, ask: VISUAL_POINTS_ASK, heading: VISUAL_POINTS_HEADING }
+  // A ready plan asks the one question only he can answer before he copies the prompt (VISUAL_POINTS_ASK): its own
+  // heading in the prompt, and its own saved notes (frame visual_points), so the read sheet's notes stay general notes
+  // and a later prompt carries his points with their framing. His words are saved as he typed them.
+  if (plan && plan.status === 'ready' && next.notes?.save) {
+    const save = next.notes.save as PressAction
+    plan.ask = { question: VISUAL_POINTS_ASK, heading: VISUAL_POINTS_HEADING,
+      save: { ...save, label: 'Points to make visually', body: { ...save.body, frame: 'visual_points' } } }
+  }
   return { line, next: next as unknown as Action, decision: false, others: missing, plan }
 }
 

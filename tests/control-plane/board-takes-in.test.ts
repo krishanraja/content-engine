@@ -108,17 +108,21 @@ describe('the production plan on the card (contract 1.25.0; Krish, 2026-11-17: "
     expect((it.plan as Body).beats[0]).toMatchObject({ swapped: true, picture: { id: 'post' } })
   })
 
-  it('a ready plan asks him which points to make visually before he copies the prompt (Krish, 2026-11-18)', () => {
+  it('a ready plan asks him which points to make visually, apart from the card\'s own notes (Krish, 2026-11-18)', () => {
     const it = card(withPlan())
-    const notes = (it.next as Body).notes as Body
-    expect(notes.ask).toBe(VISUAL_POINTS_ASK)
-    expect(notes.heading).toBe(VISUAL_POINTS_HEADING)
-    expect(notes.heading).toMatch(/a picture of its own/)
-    // His answer is saved on the board as his notes, the same press as every prompt's notes.
-    expect(notes.save).toMatchObject({ kind: 'press', body: { use: 'claude_notes', piece_id: TUE } })
-    // Before the plan is ready the prompt keeps the general notes question.
+    const ask = (it.plan as Body).ask as Body
+    expect(ask.question).toBe(VISUAL_POINTS_ASK)
+    expect(ask.heading).toBe(VISUAL_POINTS_HEADING)
+    expect(ask.heading).toMatch(/a picture of its own/)
+    // His answer is saved as his notes, marked so later prompts keep its framing; his words are never changed.
+    expect(ask.save).toMatchObject({ kind: 'press', collection: 'comments', body: { use: 'claude_notes', piece_id: TUE, frame: 'visual_points' } })
+    expect(validBody('comments', 'desk-tue-produce-1', { ...ask.save.body, thread_id: 'desk-tue-produce-1', text: 'Say what grandfathered pricing is.', at: '2026-11-18T12:00:00Z' })).toBe(true)
+    expect(validBody('comments', 'desk-tue-produce-1', { ...ask.save.body, frame: 'anything', thread_id: 'desk-tue-produce-1', text: 'x' })).toBe(false)
+    // The card's prompt keeps its own general notes question.
+    expect(((it.next as Body).notes as Body).ask).not.toBe(VISUAL_POINTS_ASK)
+    // Before the plan is ready there is no question.
     const making = card(inputs({ ...PICKED, takes_in: { ...TAKES, plan_run: { sent: true, at: '2026-11-17T11:00:00Z', reason: null } } }))
-    expect(((making.next as Body).notes as Body).ask).not.toBe(VISUAL_POINTS_ASK)
+    expect((making.plan as Body).ask).toBeUndefined()
   })
 
   it('never claims a cut fits when even 1.25x leaves it over the limit', () => {

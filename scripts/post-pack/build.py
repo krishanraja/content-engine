@@ -629,20 +629,19 @@ def read_me(post, folder, planned, made):
 
 
 def bound_folder_for(post_path):
-    """The post folder the post's piece is bound to, bound now to the one this post names when nothing bound it yet
-    (making.py bind_post_folder), or None for a post with no piece or when the engine cannot be reached (said in one
-    line; the pack is then named from its own subject, as before)."""
+    """The post folder the post's piece is bound to (making.py post_folder_of), or None for a post with no piece or a
+    piece nothing bound yet; the pack's own report then binds the folder it was built in (the first pack binds). A piece
+    whose binding cannot be read is refused: never a pack under a guessed name (Krish, 2026-11-18: "bound to the piece
+    in a bullet proof way")."""
     piece_id = making.piece_id_of(post_path)
     if not piece_id:
         return None
     try:
-        post = json.loads(Path(post_path).read_text(encoding='utf-8-sig'))
-        named = library.post_folder(post.get('date'), post.get('subject'), post.get('subchannel'), bool(post.get('launch')), post.get('day'))
-        bound = making.bind_post_folder(piece_id, named)
-    except (OSError, ValueError, LibraryError, making.MakingError) as error:
-        print(f'post-pack: the piece\'s post folder could not be read from the engine ({error}); naming it from the subject', file=sys.stderr)
-        return None
-    if bound != named:
+        bound = making.post_folder_of(piece_id)
+    except making.MakingError as error:
+        raise PackError(f'the piece\'s post folder could not be read from the engine ({error}), so the pack is not built: '
+                        'run it again once the engine answers')
+    if bound:
         print(f'post-pack: this piece is bound to the post folder "{bound}"; packing under it')
     return bound
 
@@ -973,8 +972,8 @@ def main():
         return
     if not a.post:
         ap.error('give the post file, or --self-test')
-    bound = bound_folder_for(a.post)
     try:
+        bound = bound_folder_for(a.post)
         result = build(a.post, a.out or DEFAULT_OUT, a.replace, bound=bound)
     except (PackError, LibraryError) as error:
         sys.exit(f'post-pack: {error}')

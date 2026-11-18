@@ -52,17 +52,37 @@ class FilingTests(unittest.TestCase):
         # make.py's bed-shape receipt for these bytes (config/music-bed.json): without it nothing is filed.
         bed_shape.write_receipt(video, 'quick-edit', {'pass': True, 'problems': []}, machine='test')
 
-    def file(self, sent):
+    def file(self, sent, bound=None, engine=None):
         def fake_run(args, env=None, ok=(0,), what=''):
             sent.append([str(a) for a in args])
         post = {'subject': 'Who pays for AI', 'files': []}
-        with patch.object(produce_day, 'run', side_effect=fake_run), \
+        engine = [] if engine is None else engine
+        def fake_call(method, path, body=None):
+            engine.append((method, path, body))
+            if method == 'GET':
+                return 200, {'ok': True, 'post_folder': bound}
+            return 200, {'ok': True, 'post_folder': (body or {}).get('post_folder', {}).get('folder')}
+        with patch.object(produce_day, 'run', side_effect=fake_run), patch.object(produce_day, 'call', side_effect=fake_call), \
                 patch.object(produce_day.plan_files, 'load_post', return_value=post), \
                 patch.object(produce_day.plan_files, 'pack_folder', return_value='2026-11-02 Mon follow.the.money - Who pays for AI'), \
                 patch.object(produce_day, 'review_sheet', side_effect=lambda src, out: Path(out).write_bytes(b'png')), \
                 patch('visual_clarity.delivery_problems', return_value=[]), patch('media_standard.enforced', return_value=False), \
                 patch('quality.motion_problems', return_value=[]), patch('opening_gate.delivery_problems', return_value=[]):
             return produce_day.file_and_record(self.work / 'post.json', 'p1', self.cuts, self.thumb, self.work)
+
+    def test_the_bound_post_folder_wins_and_a_first_filing_binds_its_own(self):
+        # One piece, one folder (Krish, 2026-11-18: "every resource along the way for a single piece needs to be bound to
+        # the piece in a bullet proof way").
+        for video in self.cuts.values():
+            self.receipt(video)
+        sent, engine = [], []
+        folder = self.file(sent, bound='2026-11-02 Mon follow.the.money - Bound by his drop', engine=engine)
+        self.assertEqual(folder, '2026-11-02 Mon follow.the.money - Bound by his drop')
+        self.assertTrue(any('3 Posts/2026-11-02 Mon follow.the.money - Bound by his drop/3 Video' in ' '.join(c) for c in sent))
+        self.assertFalse(any(m == 'POST' for m, _, _ in engine))
+        sent, engine = [], []
+        self.file(sent, bound=None, engine=engine)
+        self.assertIn(('POST', '/api/content-ideas/p1/making', {'post_folder': {'folder': '2026-11-02 Mon follow.the.money - Who pays for AI'}, 'by': 'Production run'}), engine)
 
     def test_a_cut_without_its_receipt_cannot_be_filed(self):
         sent = []

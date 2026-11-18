@@ -7,9 +7,9 @@ vi.hoisted(() => {
 })
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
-import { boundPostFolder, mergeMaking, parseMakingPatch, postFolderProblems, type Making } from '../../apps/control-plane/api/_making'
+import { boundPostFolder, currentFolder, mergeMaking, parseMakingPatch, postFolderProblems, redatedFolder, type Making } from '../../apps/control-plane/api/_making'
 import {
-  GOT_ROLE, PostFolderError, beatsOf, beatsOfKey, bindPostFolder, driveName, fileToPostFolder, folderForPiece, gotKey, postFolderName, safeText, shorten,
+  GOT_ROLE, PostFolderError, beatsOf, beatsOfKey, bindPostFolder, driveName, folderForPiece, gotKey, postFolderName, safeText, shorten, subjectOf,
 } from '../../apps/control-plane/api/_postFolder'
 import { GOT_ROLE as ROUTE_GOT_ROLE, confirmGot, sentByOf } from '../../apps/control-plane/api/content-ideas/store'
 import { gotBrief, planView, type ProductionPlan } from '../../apps/control-plane/api/board/_productionPlan'
@@ -36,12 +36,24 @@ describe('the folder is named exactly as scripts/post-pack/library.py names it',
     expect(shorten('one two three', 9)).toBe('one two')
     expect(shorten('abcdefghijk', 5)).toBe('abcde')
   })
-  it('a piece on a day with no series is off.day; its working title names it, else its idea', () => {
+  it('a piece on a day with no series is off.day; its approved scripts\' folder title names it, else its idea', () => {
     expect(folderForPiece({ scheduled_for: '2026-11-17', lane_slot: 'mind_the_gap', idea: 'Where does AI get built when towns say no?', meta: {} }))
       .toBe('2026-11-17 Tue off.day - Where does AI get built when towns say no')
-    expect(folderForPiece({ scheduled_for: '2026-11-18', lane_slot: 'under_the_hood', idea: 'The labs', meta: { working_title: 'Labs on Salesforce' } }))
-      .toBe('2026-11-18 Wed under.the.hood - Labs on Salesforce')
+    expect(folderForPiece({ scheduled_for: '2026-11-11', lane_slot: 'under_the_hood', idea: 'AI is already inside the songs people have on repeat',
+      meta: { making: { teleprompter: { folder_name: 'Wed 11 Nov under.the.hood - AI is already in the music you love' } } } }))
+      .toBe('2026-11-11 Wed under.the.hood - AI is already in the music you love')
+    expect(subjectOf({ idea: 'Idea', meta: { making: { teleprompter: { folder_name: 'The labs writing everyone\'s code' } } } })).toBe('The labs writing everyone\'s code')
     expect(() => folderForPiece({ scheduled_for: null, idea: 'x' })).toThrow('no day yet')
+    // A title that reads like a test is a folder the library refuses: never bound.
+    expect(() => folderForPiece({ scheduled_for: '2026-11-18', lane_slot: 'under_the_hood', idea: 'Testing whether AI agents can book travel' })).toThrow('library refuses')
+  })
+  it('a moved piece\'s binding follows it to its new date and day, as the move renames its folder in Drive', () => {
+    expect(redatedFolder('2026-11-17 Tue off.day - Data centres', '2026-11-19')).toBe('2026-11-19 Thu off.day - Data centres')
+    const m = { post_folder: { folder: '2026-11-17 Tue off.day - Data centres', bound_at: 'x', by: 'Krish' }, updated_at: 'x', by: 'x' } as Making
+    expect(currentFolder(m, '2026-11-19')).toBe('2026-11-19 Thu off.day - Data centres')
+    expect(currentFolder(m, '2026-11-17')).toBe('2026-11-17 Tue off.day - Data centres')
+    expect(currentFolder(m, null)).toBe('2026-11-17 Tue off.day - Data centres')
+    expect(currentFolder(null, '2026-11-19')).toBeNull()
   })
 })
 
@@ -52,6 +64,8 @@ describe('the binding on the making record', () => {
     expect(first.post_folder).toEqual({ folder: '2026-11-18 Wed under.the.hood - A', bound_at: now, by: 'Claude Code' })
     expect(postFolderProblems(first, { pack: { folder: '2026-11-18 Wed under.the.hood - B', packed_at: now, files: 1 } })[0]).toMatch(/bound to the post folder "2026-11-18 Wed under.the.hood - A"/)
     expect(postFolderProblems(first, { pack: { folder: '2026-11-18 Wed under.the.hood - A', packed_at: now, files: 4 } })).toEqual([])
+    // One patch naming two different folders is refused whole.
+    expect(postFolderProblems(null, { pack: { folder: 'A', packed_at: now, files: 1 }, post_folder: { folder: 'B', bound_at: now, by: 'x' } })[0]).toMatch(/two post folders/)
   })
   it('a writer binds or reads it through the making route: a post folder name only, and the binding already there wins', () => {
     expect(parseMakingPatch({ post_folder: { folder: 'my folder' } }, now).problems[0]).toMatch(/post_folder needs/)
@@ -136,17 +150,62 @@ describe('a file he drops is bound to the piece and filed in its Drive folder', 
     expect(await bindPostFolder(db, TUE, 'Krish')).toEqual({ folder: '2026-11-17 Tue off.day - Data centres', bound: 'already' })
   })
 
+  it('a binding left on the old day by a move is re-dated when the next file arrives, never a second folder', async () => {
+    const { db } = fakeDb({ making: { post_folder: { folder: '2026-11-14 Sat off.day - Where does AI get built when towns say no', bound_at: 'x', by: 'Krish' }, by: 'x', updated_at: '2026-11-15T00:00:00Z' } })
+    expect(await bindPostFolder(db, TUE, 'Krish')).toEqual({ folder: FOLDER, bound: 'redated' })
+    expect(db.rows.get(TUE).meta.making.post_folder.folder).toBe(FOLDER)
+    expect(await bindPostFolder(db, TUE, 'Krish')).toEqual({ folder: FOLDER, bound: 'already' })
+  })
+
+  it('a session filing his material is named as the one who filed it, never as Krish', async () => {
+    const { db, fetcher } = fakeDb()
+    db.objects.set(`files/${sha}.jpg`, bill)
+    const r = await confirmGot(db, { piece_id: TUE, name: 'bill.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: ['s8'] }, true, 'Claude Code', fetcher as never)
+    expect(String((r.material as Body).note)).toMatch(/^Claude Code filed this for Krish for beat s8/)
+    expect(db.library[0].sent_by).toBe('Claude_Code')
+  })
+
+  it('a file whose bytes do not check out binds no folder', async () => {
+    const { db, fetcher } = fakeDb()
+    db.objects.set(`files/${sha}.jpg`, bill)
+    await expect(confirmGot(db, { piece_id: TUE, name: 'bill.jpg', sha256: sha, bytes: bill.length + 3, role: GOT_ROLE }, false, 'Krish', fetcher as never)).rejects.toThrow('file_size_mismatch')
+    expect(db.rows.get(TUE).meta.making.post_folder).toBeUndefined()
+    expect(db.library).toHaveLength(0)
+  })
+
+  it('two different files given one name at once: the later steps aside to reserved and takes the next name', async () => {
+    const { db, fetcher } = fakeDb()
+    db.objects.set(`files/${sha}.jpg`, bill)
+    // Another drop of a different image.jpg lands between this one's look and its write.
+    const path = `3 Posts/${FOLDER}/3 Video/Your materials/S8 - image.jpg`
+    const from = db.from.bind(db)
+    let raced = false
+    db.from = (t: string) => {
+      const q = from(t)
+      if (t !== 'content_library_files') return q
+      const up = q.upsert
+      q.upsert = (row: Body, o: unknown) => { if (!raced && row.path === path) { raced = true; db.library.push({ path, sha256: 'e'.repeat(64), state: 'ready', sent_at: '2000-01-01' }) } return up(row, o) }
+      return q
+    }
+    const r = await confirmGot(db, { piece_id: TUE, name: 'image.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: ['s8'] }, false, 'Krish', fetcher as never)
+    expect((r.drive as Body).path).toBe(`3 Posts/${FOLDER}/3 Video/Your materials/S8 - image (2).jpg`)
+    expect(db.library.find((x: Body) => x.path === path && x.sha256 === sha).state).toBe('reserved')
+    // The same file dropped again keeps its own name, never the contested one.
+    const again = await confirmGot(db, { piece_id: TUE, name: 'image.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: ['s8'] }, false, 'Krish', fetcher as never)
+    expect(again.drive).toMatchObject({ state: 'already', path: `3 Posts/${FOLDER}/3 Video/Your materials/S8 - image (2).jpg` })
+  })
+
   it('drop to Drive: a material on the piece keyed by its beats, and a ready library row in 3 Video/Your materials', async () => {
     const { db, fetcher } = fakeDb()
     db.objects.set(`files/${sha}.jpg`, bill)
-    const r = await confirmGot(db, { piece_id: TUE, name: 'IMG_0412.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: ['s8', 'L9'], for: 'A photo of your own electricity bill' }, false, 'Krish', new Date('2026-11-18T10:00:00Z'), fetcher as never)
+    const r = await confirmGot(db, { piece_id: TUE, name: 'IMG_0412.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: ['s8', 'L9'], for: 'A photo of your own electricity bill' }, false, 'Krish', fetcher as never)
     expect(r.material).toMatchObject({ role: GOT_ROLE, material_key: gotKey(['s8', 'l9'], sha), kind: 'image', added_by: 'Krish' })
-    expect(String((r.material as Body).note)).toContain(`beat s8, l9: A photo of your own electricity bill. In his Drive: 3 Posts/${FOLDER}/3 Video/Your materials.`)
+    expect(String((r.material as Body).note)).toBe("Krish got this himself for beat s8, l9: A photo of your own electricity bill. In his Drive it goes in the piece's post folder, 3 Video/Your materials.")
     expect(r.drive).toEqual({ state: 'filed', path: `3 Posts/${FOLDER}/3 Video/Your materials/S8 L9 - IMG_0412.jpg`, folder: FOLDER })
     expect(db.library[0]).toMatchObject({ library: 'makeyourmindup', sha256: sha, md5, bytes: bill.length, content_type: 'image/jpeg', object_key: `files/${sha}.jpg`, state: 'ready', sent_by: 'Krish' })
     expect(checkLibraryPath(db.library[0].path).ok).toBe(true)
     // The same drop again is the same material and the same row.
-    const again = await confirmGot(db, { piece_id: TUE, name: 'IMG_0412.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: 's8 l9' }, false, 'Krish', new Date(), fetcher as never)
+    const again = await confirmGot(db, { piece_id: TUE, name: 'IMG_0412.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: 's8 l9' }, false, 'Krish', fetcher as never)
     expect(again.duplicate).toBe(true)
     expect(again.drive).toMatchObject({ state: 'already' })
     expect(db.library).toHaveLength(1)
@@ -155,28 +214,35 @@ describe('a file he drops is bound to the piece and filed in its Drive folder', 
   it('another file already at the name gets the next name, never over his first file', async () => {
     const { db, fetcher } = fakeDb({ libraryRows: [{ path: `3 Posts/${FOLDER}/3 Video/Your materials/S8 - bill.jpg`, sha256: 'e'.repeat(64), state: 'ready' }] })
     db.objects.set(`files/${sha}.jpg`, bill)
-    const r = await confirmGot(db, { piece_id: TUE, name: 'bill.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: ['s8'] }, false, 'Krish', new Date(), fetcher as never)
+    const r = await confirmGot(db, { piece_id: TUE, name: 'bill.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: ['s8'] }, false, 'Krish', fetcher as never)
     expect((r.drive as Body).path).toBe(`3 Posts/${FOLDER}/3 Video/Your materials/S8 - bill (2).jpg`)
   })
 
   it('a video is filed beside the cuts; a file type the library refuses is refused before anything is stored', async () => {
     const { db, fetcher } = fakeDb()
     db.objects.set(`files/${sha}.mp4`, bill)
-    const r = await confirmGot(db, { piece_id: TUE, name: 'offer screen.mp4', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: [] }, false, 'Krish', new Date(), fetcher as never)
+    const r = await confirmGot(db, { piece_id: TUE, name: 'offer screen.mp4', sha256: sha, bytes: bill.length, role: GOT_ROLE, beats: [] }, false, 'Krish', fetcher as never)
     expect((r.drive as Body).path).toBe(`3 Posts/${FOLDER}/3 Video/Your materials/offer screen.mp4`)
-    await expect(confirmGot(db, { piece_id: TUE, name: 'thing.exe', sha256: sha, bytes: 3, role: GOT_ROLE }, false, 'Krish', new Date(), fetcher as never)).rejects.toThrow('file_type_not_allowed')
+    await expect(confirmGot(db, { piece_id: TUE, name: 'thing.exe', sha256: sha, bytes: 3, role: GOT_ROLE }, false, 'Krish', fetcher as never)).rejects.toThrow('file_type_not_allowed')
   })
 
   it('a piece with no day yet keeps the file on the piece and says why it is not in Drive', async () => {
     const { db, fetcher } = fakeDb()
     db.rows.get(TUE).scheduled_for = null
     db.objects.set(`files/${sha}.jpg`, bill)
-    const r = await confirmGot(db, { piece_id: TUE, name: 'bill.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE }, false, 'Krish', new Date(), fetcher as never)
+    const r = await confirmGot(db, { piece_id: TUE, name: 'bill.jpg', sha256: sha, bytes: bill.length, role: GOT_ROLE }, false, 'Krish', fetcher as never)
     expect(r.material).toMatchObject({ role: GOT_ROLE })
     expect(r.drive).toMatchObject({ state: 'held' })
     expect(db.library).toHaveLength(0)
   })
 
+  it('names fit the library: beats first, long names cut, decomposed accents, emoji, hidden and reserved names', () => {
+    for (const name of ['cafe\u0301 menu.jpg', '\ud83d\udcb8'.repeat(60) + '.png', '.hidden.png', 'con.png', 'aux']) {
+      const n = driveName(FOLDER, name, [], name.endsWith('.jpg') ? 'jpg' : 'png')
+      expect(checkLibraryPath(`3 Posts/${FOLDER}/3 Video/Your materials/${n}`).ok, n).toBe(true)
+    }
+    expect(driveName(FOLDER, 'cafe\u0301 menu.jpg', [], 'jpg')).toBe('caf\u00e9 menu.jpg')
+  })
   it('names fit the library: beats first, long names cut, the sender a name the library takes', () => {
     expect(driveName('F', 'Screenshot 2026-11-18 at 10.42.11.png', ['s17', 'l26'], 'png')).toBe('S17 L26 - Screenshot 2026-11-18 at 10.42.11.png')
     const long = driveName('2026-11-17 Tue off.day - ' + 'x'.repeat(75), 'y'.repeat(120) + '.pdf', ['s8'], 'pdf')

@@ -153,8 +153,9 @@ piece (role `krish_got`, its beats in its key) and into `3 Posts/<the piece's bo
 file and where it is in Drive (`got`), and the production prompt names each by material id (`gotBrief`): use his, never
 a stand-in, and file what is made from them into the same post folder.
 
-Before he copies the prompt, a ready plan asks him: any point he wants made visually that the script does not make
-strongly enough (`VISUAL_POINTS_ASK`; Krish, 2026-11-18: "would be good if I can be asked if there were any points I
-want made visually that did not get made as strongly as I'd have liked in the script"). His answer rides the prompt
-under `VISUAL_POINTS_HEADING`: each point gets a picture of its own on the beat where he says it, and the done report
-says which beat carries each.
+Before he copies the prompt, a ready plan asks him (`plan.ask`, `VISUAL_POINTS_ASK`): any point he wants made visually
+that the script does not make strongly enough (Krish, 2026-11-18: "would be good if I can be asked if there were any
+points I want made visually that did not get made as strongly as I'd have liked in the script"). His answer rides the
+prompt under `VISUAL_POINTS_HEADING`: each point gets a picture of its own on the beat where he says it, and the done
+report says which beat carries each. It is saved as his own words, marked `frame: visual_points`, so a later prompt keeps
+the framing.

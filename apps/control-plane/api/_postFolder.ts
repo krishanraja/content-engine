@@ -1,5 +1,6 @@
-import { boundPostFolder, mergeMaking, type Making } from './_making.js'
-import { LIBRARY_BUCKET, LIBRARY_DEFAULT, LIBRARY_OFF_DAY, LIBRARY_PART_MAX, LIBRARY_PATH_MAX, LIBRARY_SUBCHANNELS, checkLibraryPath, libraryObjectKey } from './library/_library.js'
+import { boundPostFolder, currentFolder, mergeMaking, type Making } from './_making.js'
+export { currentFolder, redatedFolder } from './_making.js'
+import { LIBRARY_BUCKET, LIBRARY_DEFAULT, LIBRARY_OFF_DAY, LIBRARY_PART_MAX, LIBRARY_PATH_MAX, LIBRARY_SUBCHANNELS, RESERVED, checkLibraryPath, libraryObjectKey } from './library/_library.js'
 
 // One piece, one folder in Krish's Drive, and every file he gets himself for it filed there (Krish, 2026-11-18: "when
 // I drop stuff in there, it needs to be filed properly in my Drive in the right place, so its easily accessible later
@@ -86,16 +87,31 @@ export function postFolderName(p: { date: string; subject: string; subchannel?: 
 type Body = Record<string, any>
 const isObj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
 
+/** The subject a piece's folder is named by when a drop binds it first: the name his approved scripts' Teleprompter
+ *  folder took (making.teleprompter.folder_name, the subject after its " - " when it carries a date), else the idea. */
+export function subjectOf(row: { idea?: unknown; meta?: unknown }): string {
+  const meta = isObj(row.meta) ? row.meta : {}
+  const tp = isObj(meta.making) && isObj(meta.making.teleprompter) && typeof meta.making.teleprompter.folder_name === 'string' ? meta.making.teleprompter.folder_name.trim() : ''
+  const named = /^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun) \d{1,2} \w{3} \S+ - (.+)$/.exec(tp)?.[1] ?? tp
+  return [named, row.idea].find(v => typeof v === 'string' && safeText(v)) as string | undefined ?? ''
+}
+
 /** The folder a piece would be bound to now: its date, its day, its series (off.day on a day with no series) and its
- *  working title, else its idea. Pure. */
+ *  subject (subjectOf). Refused when the library would refuse it (a title that reads like a test), so a binding is
+ *  never frozen to a folder nothing can be filed into. Pure. */
 export function folderForPiece(row: { scheduled_for?: unknown; lane_slot?: unknown; idea?: unknown; meta?: unknown }): string {
   const date = typeof row.scheduled_for === 'string' ? row.scheduled_for.slice(0, 10) : ''
   if (!date) throw new PostFolderError('the piece has no day yet, so it has no post folder')
-  const meta = isObj(row.meta) ? row.meta : {}
-  const subject = [meta.working_title, row.idea].find(v => typeof v === 'string' && safeText(v)) as string | undefined
   const weekday = WEEKDAYS[new Date(`${date}T00:00:00Z`).getUTCDay()]
   const series = typeof row.lane_slot === 'string' && row.lane_slot ? row.lane_slot : OFF_WEEKDAYS.has(weekday) ? LIBRARY_OFF_DAY : null
-  return postFolderName({ date, subject: subject ?? '', subchannel: series })
+  const folder = postFolderName({ date, subject: subjectOf(row), subchannel: series })
+  if (!libraryFolderOk(folder)) throw new PostFolderError(`the library refuses the folder "${folder}" (a title that reads like a test or a canary): pack the piece to name its folder`)
+  return folder
+}
+
+/** A post folder name the library takes: the path rule run on the folder's own READ ME. */
+export function libraryFolderOk(folder: string): boolean {
+  return checkLibraryPath(`3 Posts/${folder}/READ ME.txt`).ok
 }
 
 /** The store's database client, as _pieceStore.ts uses it (only the calls made here). */
@@ -106,7 +122,7 @@ export interface FolderDb {
 /** The piece's post folder, bound now when nothing bound it yet: the same compare-and-set on the row's updated_at as
  *  every meta write (_pieceStore.ts patchMeta), so two drops at once bind one folder, and a pack that bound one first
  *  wins. Throws PostFolderError when the piece has no day yet, or the row could not be written. */
-export async function bindPostFolder(db: FolderDb, pieceId: string, by: string, now = new Date(), tries = 6): Promise<{ folder: string; bound: 'already' | 'now' }> {
+export async function bindPostFolder(db: FolderDb, pieceId: string, by: string, tries = 6): Promise<{ folder: string; bound: 'already' | 'now' | 'redated' }> {
   for (let i = 0; i < tries; i++) {
     const read = await db.from('content_ideas').select('id,idea,scheduled_for,lane_slot,meta,updated_at').eq('id', pieceId).maybeSingle()
     if (read.error) throw new PostFolderError('the piece could not be read')
@@ -114,15 +130,19 @@ export async function bindPostFolder(db: FolderDb, pieceId: string, by: string, 
     const meta: Body = isObj(read.data.meta) ? read.data.meta : {}
     const making = (isObj(meta.making) ? meta.making : null) as Making | null
     const held = boundPostFolder(making)
-    // A record from before the binding was kept holds its pack's folder: that is its binding; nothing is written.
-    if (held) return { folder: held, bound: 'already' }
-    const folder = folderForPiece(read.data)
-    const at = now.toISOString()
-    const next = mergeMaking(making, { post_folder: { folder, bound_at: at, by } }, by, at)
+    const now = currentFolder(making, read.data.scheduled_for)
+    // Bound and on its day: nothing is written.
+    if (held && now === held) return { folder: held, bound: 'already' }
+    const folder = now ?? folderForPiece(read.data)
+    const at = new Date().toISOString()
+    // A first binding, or the bound folder re-dated after a move (written over the old name: the folder was renamed).
+    const next = held
+      ? { ...mergeMaking(making, {}, by, at), post_folder: { folder, bound_at: at, by } }
+      : mergeMaking(making, { post_folder: { folder, bound_at: at, by } }, by, at)
     const write = await db.from('content_ideas').update({ meta: { ...meta, making: next }, updated_at: at })
       .eq('id', pieceId).eq('updated_at', read.data.updated_at).select('id')
     if (write.error) throw new PostFolderError('the piece could not be written')
-    if (write.data?.length) return { folder, bound: 'now' }
+    if (write.data?.length) return { folder, bound: held ? 'redated' : 'now' }
     await new Promise(r => setTimeout(r, 40 + Math.random() * 120 * (i + 1)))
   }
   throw new PostFolderError('the piece is busy; drop it again')
@@ -151,20 +171,29 @@ export function beatsOfKey(key: unknown): string[] | null {
  *  that the whole path fits the library's 180 characters. Pure. */
 export function driveName(folder: string, original: string, beats: string[], ext: string, copy = 1): string {
   const prefix = beats.length ? `${beats.map(b => b.toUpperCase()).join(' ')} - ` : ''
-  const stem = safeText(original.replace(/\.[A-Za-z0-9]{1,8}$/, '')) || 'file'
+  // A Mac sends a name decomposed (NFD) and the library takes NFC only; a leading dot hides a file; CON and the like
+  // are names Windows refuses.
+  let stem = safeText(original.normalize('NFC').replace(/\.[A-Za-z0-9]{1,8}$/, '')).replace(/^[. ]+/, '') || 'file'
+  if (!prefix && RESERVED.test(stem)) stem = `file ${stem}`
   const tail = `${copy > 1 ? ` (${copy})` : ''}.${ext}`
   const base = `3 Posts/${folder}/${MATERIALS_SECTION}/${MATERIALS_FOLDER}/`
-  const room = Math.min(LIBRARY_PART_MAX, LIBRARY_PATH_MAX - Array.from(base).length) - Array.from(prefix + tail).length
+  // The library measures in UTF-16 units (an emoji is two), so the room is measured the same way.
+  const room = Math.min(LIBRARY_PART_MAX, LIBRARY_PATH_MAX - base.length) - (prefix + tail).length
   if (room < 4) throw new PostFolderError('the post folder name leaves no room for the file name')
-  return `${prefix}${shorten(stem, room)}${tail}`
+  let cut = stem
+  while (cut.length > room) cut = shorten(cut, Array.from(cut).length - 1)
+  return `${prefix}${cut || 'file'}${tail}`
 }
 
 /** One file of his, filed into the piece's post folder through the asset library: the row the library sync on his home
  *  computer writes into Drive, pointing at the bytes the store already holds and has read back whole. Idempotent: the
  *  same bytes at the same path are one row; another file already at the name gets " (2)" and on. The answer is the
  *  library path, or why it waits. */
+/** When a library row was sent, for ordering: a row with no time (not read back yet) is the newest. */
+const sentAt = (t: unknown) => { const n = typeof t === 'string' ? Date.parse(t) : NaN; return Number.isFinite(n) ? n : Number.POSITIVE_INFINITY }
+
 export async function fileToPostFolder(db: FolderDb, f: {
-  folder: string; name: string; beats: string[]; ext: string; contentType: string; sha256: string; md5: string; bytes: number; purpose: string; sentBy: string; now?: Date
+  folder: string; name: string; beats: string[]; ext: string; contentType: string; sha256: string; md5: string; bytes: number; purpose: string; sentBy: string
 }): Promise<{ path: string; state: 'filed' | 'already' }> {
   const objectKey = libraryObjectKey(f.sha256, f.ext)
   for (let copy = 1; copy <= 20; copy++) {
@@ -176,16 +205,26 @@ export async function fileToPostFolder(db: FolderDb, f: {
     if (here.error) throw new PostFolderError('the library index could not be read')
     const rows = (Array.isArray(here.data) ? here.data : []) as Array<{ sha256: string; state: string }>
     const mine = rows.find(r => r.sha256 === f.sha256)
+    // Another file holds the name (or won it from this one, which stepped aside): the next name, never a second version
+    // over his first file.
+    if (rows.some(r => r.sha256 !== f.sha256)) continue
     if (mine?.state === 'ready') return { path, state: 'already' }
-    // Another file holds the name: the next name, never a second version over his first file.
-    if (!mine && rows.length) continue
-    const at = (f.now ?? new Date()).toISOString()
+    const at = new Date().toISOString()
     const row = { library: LIBRARY_DEFAULT, path, sha256: f.sha256, md5: f.md5, bytes: f.bytes, content_type: f.contentType, object_key: objectKey,
       purpose: f.purpose.slice(0, 200), sent_by: f.sentBy, state: 'ready', ready_at: at }
     const put = mine
       ? await db.from('content_library_files').update({ state: 'ready', ready_at: at }).eq('library', LIBRARY_DEFAULT).eq('path', path).eq('sha256', f.sha256)
       : await db.from('content_library_files').upsert(row, { onConflict: 'library,path,sha256', ignoreDuplicates: true })
     if (put.error) throw new PostFolderError('the library index could not be written')
+    // Two different files given the same name at once (two tabs, two phones' image.jpg): the sync writes only the
+    // newest at a path, so the later one steps aside, back to reserved (inert, never deleted), and takes the next name.
+    const after = await db.from('content_library_files').select('sha256,state,sent_at').eq('library', LIBRARY_DEFAULT).eq('path', path)
+    const others = (Array.isArray(after.data) ? after.data : []) as Array<{ sha256: string; state: string; sent_at?: string }>
+    const first = [...others].filter(r => r.state === 'ready').sort((a, b) => (sentAt(a.sent_at) - sentAt(b.sent_at)) || (a.sha256 < b.sha256 ? -1 : a.sha256 > b.sha256 ? 1 : 0))[0]
+    if (!after.error && first && first.sha256 !== f.sha256) {
+      await db.from('content_library_files').update({ state: 'reserved', ready_at: null }).eq('library', LIBRARY_DEFAULT).eq('path', path).eq('sha256', f.sha256)
+      continue
+    }
     return { path, state: 'filed' }
   }
   throw new PostFolderError('twenty files already hold that name')
