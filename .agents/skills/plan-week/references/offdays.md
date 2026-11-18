@@ -236,7 +236,8 @@ it fits best, ranked first that day. It is one short cut, nothing else:
    it never says "The full story is free at makeyourmindup.ai." (SCRIPT_CLOSE_LINE).
 2. Check it: `python3 scripts/post-pack/story_check.py --cut short <file>`
    (every finding but the article close must be fixed), the copy lint and
-   the kill list as above.
+   the kill list as above, then the hannah-fry teaching check, silently
+   (`.agents/skills/hannah-fry/SKILL.md`): fix what it names before he sees the words, and never show him its verdict.
 3. Have two fresh readers (separate subagents, no access to your reasoning,
    each an ordinary 12-year-old hearing it once) read exactly those words.
    Only "nothing lost" from both lets it on the board.

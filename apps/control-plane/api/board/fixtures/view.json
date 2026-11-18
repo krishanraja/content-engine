@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.26.0",
+ "contract_version": "1.27.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -1553,7 +1553,8 @@
       "picked": "face-with-proof",
       "picked_by": "Krish",
       "picked_at": "2026-11-15T10:00:00Z"
-     }
+     },
+     "experiment": null
     },
     "stages": [
      {
@@ -4504,7 +4505,8 @@
       "picked": null,
       "picked_by": null,
       "picked_at": null
-     }
+     },
+     "experiment": null
     },
     "stages": [
      {
@@ -7598,7 +7600,8 @@
       "picked": null,
       "picked_by": null,
       "picked_at": null
-     }
+     },
+     "experiment": null
     },
     "stages": [
      {
@@ -9866,6 +9869,30 @@
         "done": "Picked. It is the captions for this piece."
        },
        {
+        "kind": "press",
+        "label": "Add an experiment",
+        "op": "style",
+        "body": {
+         "piece_id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
+         "experiment": []
+        },
+        "stamp": [],
+        "choose": {
+         "path": "experiment",
+         "ask": "Run an experiment alongside your picks?",
+         "multi": true,
+         "required": false,
+         "options": [
+          {
+           "value": "directed-shoot",
+           "label": "Directed shoot",
+           "line": "An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend."
+          }
+         ]
+        },
+        "done": "Saved. The production session runs it alongside your picks."
+       },
+       {
         "kind": "prompt",
         "label": "Perplexity research prompt",
         "tool": "perplexity",
@@ -10493,6 +10520,30 @@
          ]
         },
         "done": "Picked. It is the captions for this piece."
+       },
+       {
+        "kind": "press",
+        "label": "Add an experiment",
+        "op": "style",
+        "body": {
+         "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+         "experiment": []
+        },
+        "stamp": [],
+        "choose": {
+         "path": "experiment",
+         "ask": "Run an experiment alongside your picks?",
+         "multi": true,
+         "required": false,
+         "options": [
+          {
+           "value": "directed-shoot",
+           "label": "Directed shoot",
+           "line": "An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend."
+          }
+         ]
+        },
+        "done": "Saved. The production session runs it alongside your picks."
        }
       ],
       "line": "Branded. Pick the look: the recommended one, another, or fold in your inspiration. No approved scripts are filed yet: if you approved them in a session, file them from that session.",
@@ -11495,6 +11546,31 @@
          ]
         },
         "done": "Picked. It is the captions for this piece."
+       },
+       {
+        "kind": "press",
+        "label": "Add an experiment",
+        "op": "style",
+        "body": {
+         "piece_id": "474cd077-a4ea-4d79-8219-13ad3f8c12aa",
+         "experiment": [],
+         "item": "off-sat-goodnews"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "experiment",
+         "ask": "Run an experiment alongside your picks?",
+         "multi": true,
+         "required": false,
+         "options": [
+          {
+           "value": "directed-shoot",
+           "label": "Directed shoot",
+           "line": "An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend."
+          }
+         ]
+        },
+        "done": "Saved. The production session runs it alongside your picks."
        },
        {
         "kind": "press",
