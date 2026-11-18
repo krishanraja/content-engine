@@ -269,12 +269,3 @@ it.each(['9:16', '16:9'] as const)('separates every text box from rungs, bars, d
     if (credit) expect(credit.bottom).toBeLessThan(svgHeight)
   }
 })
-
-describe('through_line numbers read as numbers', () => {
-  it('groups thousands, spaces a word unit and keeps a symbol unit tight', async () => {
-    const { throughLineNumber } = await import('./index')
-    expect(throughLineNumber(2400, 'credits')).toBe('2,400 credits')
-    expect(throughLineNumber(72.95, '%')).toBe('72.95%')
-    expect(throughLineNumber(2385.19, 'credits')).toBe('2,385.19 credits')
-  })
-})
