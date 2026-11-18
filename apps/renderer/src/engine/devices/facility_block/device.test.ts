@@ -3,7 +3,8 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, it, expect } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
 import { overlayTestProps } from '../../kit/overlayInvariants'
-import { Device } from './index'
+import { Device, facilityLayout, type Rect } from './index'
+import { drift } from '../../clock'
 import { facilityState } from './state'
 import { ParamsSchema } from './schema'
 import fixture from './fixture.json'
@@ -89,6 +90,33 @@ describe('facility_block slot treatment',()=>{
       expect(285*scale*outerScale).toBeGreaterThanOrEqual(box.width*.6)
       const naturalWidth=aspect==='9:16'?780:1400
       expect((box.width-naturalWidth*outerScale)/2+(x+2.5*scale)*outerScale).toBeCloseTo(box.width/2)
+    })
+  }
+})
+
+// Check screen-space geometry on every frame, including all verb endpoints.
+describe('facility evidence layout',()=>{
+  const intersects=(a:Rect,b:Rect)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+a.height>b.y
+  for(const aspect of ['9:16','16:9'] as const) {
+    const box={left:0,top:0,width:aspect==='9:16'?800:1920,height:aspect==='9:16'?770:1080}
+    it(`${aspect} keeps evidence inside the slot and outside the full body throughout each verb`,()=>{
+      for(let frame=30;frame<=410;frame++) {
+        const layout=facilityLayout(box,aspect,state(frame),ParamsSchema.parse(object.params),1+drift(frame,object.fromFrame,object.toFrame,1))
+        const rects=[...layout.receipts,layout.tag]
+        for(const [i,r] of rects.entries()) {
+          expect(r.x,`frame ${frame}`).toBeGreaterThanOrEqual(0)
+          expect(r.y).toBeGreaterThanOrEqual(0)
+          expect(r.x+r.width).toBeLessThanOrEqual(box.width)
+          expect(r.y+r.height).toBeLessThanOrEqual(box.height)
+          expect(intersects(r,layout.block),`body frame ${frame}`).toBe(false)
+          for(const other of rects.slice(i+1)) expect(intersects(r,other)).toBe(false)
+        }
+      }
+    })
+    it(`${aspect} draws papers and tag after the body`,()=>{
+      const markup=html(200,aspect)
+      expect(markup.indexOf('data-facility-receipt')).toBeGreaterThan(markup.indexOf('data-facility-body'))
+      expect(markup.indexOf('data-facility-tag')).toBeGreaterThan(markup.indexOf('data-facility-receipt'))
     })
   }
 })

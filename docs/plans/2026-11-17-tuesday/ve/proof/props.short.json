@@ -39,7 +39,7 @@
   "segments": [
     {
       "src": "/home/user/content-engine/.scratch/b019/assets/conformed.short.mp4",
-      "trimBeforeFrames": 227,
+      "trimBeforeFrames": 329,
       "fromFrame": 0,
       "durationFrames": 240
     }
@@ -47,249 +47,227 @@
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.scratch/b019/assets/audio.short.wav",
-      "trimBeforeFrames": 227
+      "trimBeforeFrames": 329
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 2,
+      "toFrame": 5,
       "words": [
         {
-          "text": "just",
+          "text": "happened",
           "atFrame": 0
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 2,
-      "toFrame": 7,
+      "fromFrame": 5,
+      "toFrame": 10,
       "words": [
         {
-          "text": "run",
-          "atFrame": 2
+          "text": "to",
+          "atFrame": 5
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 7,
-      "toFrame": 17,
+      "fromFrame": 10,
+      "toFrame": 21,
       "words": [
         {
           "text": "AI",
-          "atFrame": 7
+          "atFrame": 10
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 17,
-      "toFrame": 33,
+      "fromFrame": 21,
+      "toFrame": 24,
       "words": [
         {
-          "text": "nowadays,",
-          "atFrame": 17
+          "text": "with",
+          "atFrame": 21
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 33,
-      "toFrame": 37,
+      "fromFrame": 24,
+      "toFrame": 26,
       "words": [
         {
-          "text": "so",
-          "atFrame": 33
+          "text": "the",
+          "atFrame": 24
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 37,
+      "fromFrame": 26,
+      "toFrame": 38,
+      "words": [
+        {
+          "text": "midterms",
+          "atFrame": 26
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 38,
       "toFrame": 40,
       "words": [
         {
-          "text": "it's",
-          "atFrame": 37
+          "text": "in",
+          "atFrame": 38
         }
       ],
       "swipeIndex": null
     },
     {
       "fromFrame": 40,
-      "toFrame": 48,
-      "words": [
-        {
-          "text": "sacked",
-          "atFrame": 40
-        }
-      ],
-      "swipeIndex": 0
-    },
-    {
-      "fromFrame": 48,
-      "toFrame": 54,
-      "words": [
-        {
-          "text": "over",
-          "atFrame": 48
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 54,
-      "toFrame": 57,
-      "words": [
-        {
-          "text": "a",
-          "atFrame": 54
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 57,
-      "toFrame": 75,
-      "words": [
-        {
-          "text": "building.",
-          "atFrame": 57
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 75,
-      "toFrame": 85,
-      "words": [
-        {
-          "text": "So",
-          "atFrame": 75
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 85,
-      "toFrame": 91,
-      "words": [
-        {
-          "text": "what",
-          "atFrame": 85
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 91,
-      "toFrame": 97,
-      "words": [
-        {
-          "text": "just",
-          "atFrame": 91
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 97,
-      "toFrame": 107,
-      "words": [
-        {
-          "text": "happened",
-          "atFrame": 97
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 107,
-      "toFrame": 112,
-      "words": [
-        {
-          "text": "to",
-          "atFrame": 107
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 112,
-      "toFrame": 123,
-      "words": [
-        {
-          "text": "AI",
-          "atFrame": 112
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 123,
-      "toFrame": 126,
-      "words": [
-        {
-          "text": "with",
-          "atFrame": 123
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 126,
-      "toFrame": 128,
-      "words": [
-        {
-          "text": "the",
-          "atFrame": 126
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 128,
-      "toFrame": 140,
-      "words": [
-        {
-          "text": "midterms",
-          "atFrame": 128
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 140,
-      "toFrame": 142,
-      "words": [
-        {
-          "text": "in",
-          "atFrame": 140
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 142,
-      "toFrame": 153,
+      "toFrame": 51,
       "words": [
         {
           "text": "America",
-          "atFrame": 142
+          "atFrame": 40
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 153,
-      "toFrame": 164,
+      "fromFrame": 51,
+      "toFrame": 62,
       "words": [
         {
           "text": "and",
-          "atFrame": 153
+          "atFrame": 51
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 156,
+      "toFrame": 160,
+      "words": [
+        {
+          "text": "Let's",
+          "atFrame": 156
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 160,
+      "toFrame": 167,
+      "words": [
+        {
+          "text": "find",
+          "atFrame": 160
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 167,
+      "toFrame": 177,
+      "words": [
+        {
+          "text": "out.",
+          "atFrame": 167
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 177,
+      "toFrame": 185,
+      "words": [
+        {
+          "text": "Meta",
+          "atFrame": 177
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 185,
+      "toFrame": 196,
+      "words": [
+        {
+          "text": "wanted",
+          "atFrame": 185
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 196,
+      "toFrame": 201,
+      "words": [
+        {
+          "text": "a",
+          "atFrame": 196
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 201,
+      "toFrame": 211,
+      "words": [
+        {
+          "text": "giant",
+          "atFrame": 201
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 211,
+      "toFrame": 219,
+      "words": [
+        {
+          "text": "data",
+          "atFrame": 211
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 219,
+      "toFrame": 234,
+      "words": [
+        {
+          "text": "centre",
+          "atFrame": 219
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 234,
+      "toFrame": 237,
+      "words": [
+        {
+          "text": "for",
+          "atFrame": 234
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 237,
+      "toFrame": 240,
+      "words": [
+        {
+          "text": "more",
+          "atFrame": 237
         }
       ],
       "swipeIndex": null
@@ -355,66 +333,30 @@
   },
   "beats": [
     {
-      "id": "dc",
-      "role": "bridge",
-      "layout": "STAGE",
-      "fromFrame": 0,
-      "toFrame": 33,
-      "uses": [
-        "block"
-      ],
-      "transitionOut": "cut",
-      "sectionBeat": true,
-      "plate": {
-        "source": "none"
-      },
-      "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
-      },
-      "keyFrame": 10
-    },
-    {
-      "id": "sacked",
-      "role": "pivot",
-      "layout": "STAGE",
-      "fromFrame": 33,
-      "toFrame": 75,
-      "uses": [],
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "none"
-      },
-      "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/s3-nameplate-1.png"
-      },
-      "keyFrame": 67
-    },
-    {
       "id": "face",
       "role": "anchor",
       "layout": "P1",
-      "fromFrame": 75,
-      "toFrame": 164,
+      "fromFrame": 0,
+      "toFrame": 62,
       "uses": [
         "field41"
       ],
       "transitionOut": "cut",
-      "sectionBeat": false,
+      "sectionBeat": true,
       "plate": {
         "source": "take"
       },
       "backdrop": {
         "src": "/home/user/content-engine/.scratch/b019/assets/evidence/wyso-lead.jpg"
       },
-      "keyFrame": 146
+      "keyFrame": 44
     },
     {
       "id": "title",
       "role": "anchor",
       "layout": "P1",
-      "fromFrame": 164,
-      "toFrame": 240,
+      "fromFrame": 62,
+      "toFrame": 177,
       "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -423,6 +365,26 @@
       },
       "backdrop": {
         "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
+      },
+      "keyFrame": 154
+    },
+    {
+      "id": "meta",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 177,
+      "toFrame": 240,
+      "uses": [
+        "block",
+        "meta_logo"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
       },
       "keyFrame": 239
     }
@@ -461,8 +423,8 @@
       "obj": "field41",
       "device": "unit_field",
       "meaning": "the 41 local data-centre votes on 3 Nov; 40 went against the data centre",
-      "fromFrame": 75,
-      "toFrame": 164,
+      "fromFrame": 0,
+      "toFrame": 62,
       "variants": {},
       "params": {
         "initialRow": "initial",
@@ -488,6 +450,21 @@
           }
         ]
       }
+    },
+    {
+      "obj": "meta_logo",
+      "device": "logo_card",
+      "meaning": "Meta, the company behind the Piqua data centre",
+      "fromFrame": 177,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "logos": [
+          {
+            "id": "Meta"
+          }
+        ]
+      }
     }
   ],
   "events": [
@@ -510,14 +487,21 @@
       "obj": "field41",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 75
+      "atFrame": 0
     },
     {
       "id": "face-1",
       "obj": "field41",
       "verb": "grey",
       "toState": "against",
-      "atFrame": 128
+      "atFrame": 26
+    },
+    {
+      "id": "meta-0",
+      "obj": "meta_logo",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 177
     }
   ],
   "call": {
