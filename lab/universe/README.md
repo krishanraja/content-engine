@@ -22,3 +22,11 @@ Render (Playwright and ffmpeg): `node lab/universe/render.cjs lab/universe/out` 
 `universe-night.png` (2x) and `universe.mp4` (8 s, 1080x1350). The outputs are media and are not committed.
 
 Compound is left out on purpose: it is personal and its figures are never published.
+
+## Version 4 (the 3D scene) on a fresh machine
+
+`render3d.cjs` and `figurines/lineup.cjs` need three things the repository does not keep: `vendor/three.module.js`
+(three r170, `node_modules/three/build/three.module.js`), the ten logo files in `logos/` (fetched from Brandfetch:
+`claude-symbol.png` and the `icon` of openai, github, vercel, supabase, elevenlabs, runway, buffer, gmail and canva, named
+as in `scene/scene.js` `LOGO`), and `three` resolvable from `lab/universe` for `figurines/check.mjs`.
+
