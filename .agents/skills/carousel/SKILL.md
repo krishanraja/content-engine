@@ -56,8 +56,8 @@ light speed and needs to be able to follow the story within 10 seconds. This can
 
 11. Colours, type and marks only from `config/brand-palette.json`; no series colour or name unless the carousel
     carries that week's series piece. The mark is the official file, small in a bottom corner, never type.
-12. The last card is the palette's close: the takeaway, one picture, "Subscribe free (makeyourmindup.ai)", the
-    wordmark small bottom right. Saturday good news keeps its own fixed close. `carousel_check.py`.
+12. The last card is the palette's close: the takeaway, one picture, then "Follow for more" with the wordmark centred
+    under it, no corner mark (Krish, 18 Nov). Saturday good news keeps its own fixed close. `carousel_check.py`.
 13. No footnotes, source strips, dates or tiny URLs on the art; sources go in the caption.
 14. An approved track from its group (`trackGroup`: good news funky house, tips and explainers gym), picked by Krish.
 

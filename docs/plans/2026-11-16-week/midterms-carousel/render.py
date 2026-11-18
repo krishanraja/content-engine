@@ -94,8 +94,7 @@ def render(index, card):
         first, turn = card['headline'].split(' decides ',1)
         lines = rows(first.upper(),f,CREAM,84) + rows(('decides '+turn).upper(),f,MINT,84)
         lines[-1] = (*lines[-1][:3],lines[-1][3]+36)
-        lines += rows(card['cta'],font(44,'SemiBold'),MINT,51)
-        y = (790+1240-height(lines))/2
+        y = 800 + (360 - height(lines)) / 2   # the takeaway; the house foot follows (Krish, 2026-11-18)
     else:
         import sys; sys.path.insert(0,str(OUT)); from body_a import body_a
         K={2:('WHAT HAPPENED','40 out of 41'),3:('WHY','their own power bill'),4:('THE BIGGER PICTURE','their own power plants'),5:('WHAT TO DO','who pays for power')}
@@ -109,7 +108,11 @@ def render(index, card):
         y = (930+1240-height(lines))/2
     assert y >= MARGIN and y+height(lines) <= 1250
     block(draw,lines,y)
-    mark(canvas)
+    if index == 6:
+        import sys; sys.path.insert(0,str(OUT)); from body_a import follow_foot
+        follow_foot(canvas,FONTS,OUT/'brand/wordmark.png',y+height(lines)+40,CREAM)
+    else:
+        mark(canvas)
     path = OUT / f'card-{index}.png'
     canvas.save(path)
     print(path.relative_to(ROOT))
