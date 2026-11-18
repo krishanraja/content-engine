@@ -51,7 +51,9 @@ FLAGS = re.compile(
     r"that'?s not\b|isn'?t (?:right|it|good)\b|i said\b|i asked\b|instead\b|rather\b|reject|doesn'?t fly\b|"
     r"hate\b|too (?:long|short|much|many|busy|loud|generic|salesy)\b|why (?:did|would) you\b|undo\b|revert\b|"
     r"cut (?:it|that|this)\b|remove (?:it|that|this)\b|change (?:it|that|this)\b|less\b|ugly\b|cringe\b|"
-    r"off[- ]brand\b|not on brand\b|sounds like ai\b|ai slop\b)", re.I)
+    r"off[- ]brand\b|not on brand\b|sounds like ai\b|ai slop\b|"
+    r"crap(?:py)?\b|shit(?:ty)?\b|awful\b|terrible\b|embarrassing\b|insane\b|ruin(?:s|ed)?\b|"
+    r"why would (?:it|this|that)\b|given this feedback\b|delete (?:it|that|those|this)\b)", re.I)
 
 # Secret-guard patterns: anything shaped like a key, token, address or number is replaced.
 SECRETS = [
@@ -97,7 +99,10 @@ def his_texts(record):
         text = re.sub(r'<pasted_content\b.*?</pasted_content[^>]*>', ' ', text, flags=re.S)
         text = re.sub(r'<(system-reminder|command-[a-z-]+|local-command-[a-z-]+|task-notification)\b.*?</\1>', ' ',
                       text, flags=re.S)
-        if text.lstrip().startswith(('<', '[Request interrupted', 'Caveat:')):
+        # A compaction summary and a hook's feedback arrive as user turns but are written by the harness or the model,
+        # never typed by him: the 18 Nov session's summary alone carried a dozen of Claude's own lines past the filter.
+        if text.lstrip().startswith(('<', '[Request interrupted', 'Caveat:', 'Stop hook feedback',
+                                     'This session is being continued from a previous conversation')):
             continue
         out.append(text)
     return out
