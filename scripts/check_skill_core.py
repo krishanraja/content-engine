@@ -39,6 +39,8 @@ CORE_CAPS = {'make-piece': 63_000, 'plan-week': 49_000, 'produce-video': 60_000,
              'cover-art': 8_000,
              # carousel and meme (17 Nov 2026): their size that day with about a tenth of headroom.
              'carousel': 6_600, 'meme': 4_300,
+             # hannah-fry (17 Nov 2026): its size that day with about a tenth of headroom; its detail is in references/.
+             'hannah-fry': 4_500,
              # motion-designer (15 Nov 2026): its size that day with about a tenth of headroom; its method is in references/.
              'motion-designer': 7_000}
 

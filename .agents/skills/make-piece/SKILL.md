@@ -334,6 +334,13 @@ read `.agents/skills/make-piece/references/long-cut.md`.
    rewrite the paragraph or cut the joke it names, then run it again. Exit 2 (unavailable) is never a pass: say so
    where the scripts go to Krish. It judges whether a joke is understood, never whether it is good; that is his.
    `humour_check.py doctor` first in a session that has not used it.
+3c. **The teaching check** (Krish, 2026-11-17: "I really like her teaching style, her fluency of speech, how she
+   doesn't talk down to anyone, but how she makes boring things so interesting"). Before writing either cut, plan
+   its breakdown on the shape of her Short he chose ("Could Alzheimer's start in our nose?", read from his upload);
+   after 3 and 3a pass, a separate reader checks each cut against her eight moves and names the line where curiosity
+   drops. A fail is rewritten and read again by a new reader. Both steps,
+   the prompt and the file it leaves: `.agents/skills/hannah-fry/SKILL.md`. His house rules win any clash with her
+   habits; it never holds his own Approve scripts press (F49).
 3b. **The kill list and the copy lint, before any paid call.** Run both on every script before any paid call; the commands,
    what each refuses and what to do: `.agents/skills/make-piece/references/kill-list-and-copy-lint.md`.
 4. **The read-back, required.** Three fresh readers hear each script, every
