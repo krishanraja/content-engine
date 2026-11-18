@@ -94,6 +94,7 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
   inputProps.audio.stem.src = await stage(inputProps.audio.stem.src)
   for (const sfx of inputProps.audio.sfx) sfx.src = await stage(sfx.src)
   for (const segment of inputProps.segments) segment.src = await stage(segment.src)
+  for (const beat of inputProps.beats ?? []) if (beat?.backdrop) beat.backdrop.src = await stage(beat.backdrop.src)
   if ((inputProps.sting && !inputProps.sting.atFrame) || inputProps.opening) {
     // Nothing goes before the hook on any cut, ever (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove
     // the sting exception for good."): props carrying a sting or an episode card in front are refused before anything

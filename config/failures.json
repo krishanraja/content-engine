@@ -3277,6 +3277,59 @@
         ],
         "line": "Every line of meaning-bearing text sits whole inside its device: no cropped headers, no prompt or question cut mid-sentence. Nothing checks this yet; read every text cue on the proof frames."
       }
+    },
+    {
+      "id": "F57-captions-jolt-between-words",
+      "on": "2026-11-18",
+      "krish": "I have some issues with the subtitles. They are really jolty, and each word moving from left to right is really hard to look at and stressful. We can't have each new word appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer. I think you're going to need to get creative here or use a different caption set because this one feels really stressful. (Shown the same 8 seconds in podcast and karaoke, of podcast: \"the first one is better.\")",
+      "what": "The Tue 17 data-centres short (piece b019dbf8) was set in art-directed captions on a face-with-proof cut, whose pages are one word each (brand.captions \"word\"). Art-directed drew each page as an Anton phrase that alternated sides of the frame by page index, so on one-word pages every new word landed on the other side of the screen and the old word vanished at once. Measured on the sack window of his take (ve proof, 8 s): the word's left edge jumped 60 px or more 23 times, and 27 page starts drew a blank frame.",
+      "symptom": "Each new caption word appears somewhere else on the screen, the previous word is gone the instant it does, and the words flash: the captions read as jolty and stressful.",
+      "cause": "The style was built and picked on multi-word pages (the 9 Nov proactive-AI short) and then drawn on one-word pages, where its alternating sides, 0.12 s scale pop from nothing and per-word echo all fire on every word. Nothing in ve measured where a caption word lands from page to page, or whether the word before stays, so a style that moves its words was offered and picked.",
+      "status": "guarded",
+      "mode": "caption-words-jump-between-places",
+      "guard_level": "lint_refuse",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "ve qc read caption words, timing and the face (F28), never where each new word lands; art-directed alternated sides by index % 2 and nothing flagged it on one-word pages."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "No caption rule said a new word lands in one place, that the previous word stays a little longer, or that nothing jolts; captions/draw.tsx held only the page-exit rule."
+        }
+      ],
+      "surface": "Three rules for every caption style (docs/ve/INGREDIENTS.md, \"The caption rules\"): a new word never appears somewhere else; the previous word or phrase stays a little longer; nothing jolts. art-directed is rebuilt to them (one fixed corner, the last page dimmed above it for 0.6 s, words fade up with no scale pop, echo only for an emphasised word or a phrase) and proved on his take beside the old build. Every style is measured on one-word pages (config/ve/caption-steady.json) and ve lint refuses, from 18 Nov, a style that moves its word on a word-mode cut (cinematic, stair-flash, anchor-quote). Rule 2 is kept only by podcast and art-directed: the other 25 styles still cut the previous word at once, recorded as previous_word_kept false, so the gap is open and not yet a refusal.",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx",
+          "contains": "export function cutHeight(",
+          "how": "art-directed hangs every page from one fixed point, keeps the previous page above it, and fades words in with no scale; the tests count every one-word page's anchor, the ghost and the fade",
+          "test": "npx vitest run apps/renderer/src/engine/captions.test.ts"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "def caption_steady_problems(",
+          "how": "ve lint row captions.steady: a word-mode cut (brand.captions word), from 18 Nov, refuses a caption style whose new word lands somewhere else from page to page",
+          "test": "python3 -m unittest tests.ve_lint_test"
+        },
+        {
+          "file": "config/ve/caption-steady.json",
+          "contains": "\"anchor_moves\": true",
+          "how": "every caption style measured on one-word pages in real Chromium (scripts/audit-caption-steady.ts); a style added or changed is measured again, and the lint test fails if one is missing"
+        }
+      ],
+      "related": [
+        "F28-captions-on-his-face",
+        "ve-3d-styles-slow-static-captions"
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "captions"
+        ],
+        "line": "A caption style keeps three rules: a new word never appears somewhere else, the previous word or phrase stays a little longer, and nothing jolts. Watch the proof frame by frame on his take, not in stills; ve lint refuses a style that moves its word on a one-word cut."
+      }
     }
   ]
 }

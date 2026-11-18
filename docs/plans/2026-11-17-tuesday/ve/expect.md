@@ -1,3 +1,3 @@
 # What this cut will and will not do
 
-- Nothing this cut cannot do is known to apply.
+- face-with-proof has no frozen design lock yet: composition is checked at packet time only, and the Critic and your proof press are the design gate.

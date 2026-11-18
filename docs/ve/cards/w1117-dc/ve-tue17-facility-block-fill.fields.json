@@ -1,0 +1,22 @@
+{
+ "path": "docs/ve/cards/w1117-dc/ve-tue17-facility-block-fill.md",
+ "card_id": "ve-tue17-facility-block-fill",
+ "kind": "device",
+ "spec": "docs/plans/2026-11-17-tuesday/ve/spec.json",
+ "title": "facility_block: no box of its own, fills its slot, readable labels",
+ "goal": "Krish, 18 Nov 2026, on Tue 17's short (b019dbf8), whose full-screen beats now sit on a real or Codex-made photograph behind the graphics (a beat's `backdrop`): the screen must be used, not \"a black screen with not much on it\". `facility_block` (apps/renderer/src/engine/devices/facility_block) still draws inside its own opaque ink rectangle at a fixed small size, so over a photograph it reads as a dark card pasted in a corner.\n\nChange it so that:\n- it draws no background rectangle of its own: the block, its shadow, city, pylons, ballot box, tag and receipts sit directly on whatever is behind (a soft ground shadow under the block is fine);\n- it scales to fill its box: the block's footprint is at least 60% of the box width, centred in the box, in both shapes (tall boxes are about 800 x 770; wide boxes the whole slot);\n- every label it draws (place label, tag, receipt labels) is at least 34 px tall at 1080 x 1920 and stays readable on a light or dark photograph (cream on an ink pill);\n- nothing else about its verbs, states or schema changes.\n\n## Tests (`device.test.ts`)\n- the device markup contains no full-box background rect (no element filling the box with an opaque fill)\n- at the final state in a 800 x 770 box the block's drawn width is at least 480 px\n- the label font sizes are at least 34; the existing tests still pass",
+ "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Edit only facility_block; keep its registered verbs. Draw in SVG from the frame alone.",
+ "acceptance": "npx vitest run apps/renderer/src/engine/devices/facility_block\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+ "write_allow": [
+  "apps/renderer/src/engine/devices/facility_block/**"
+ ],
+ "read": [
+  "apps/renderer/src/engine/devices/CONTRACT.md",
+  "apps/renderer/src/engine/fit.ts",
+  "apps/renderer/src/engine/kit/**",
+  "apps/renderer/src/engine/props.ts",
+  "docs/ve/MOTION_STANDARD.md"
+ ],
+ "max_minutes": 60,
+ "max_calls": 60
+}

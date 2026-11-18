@@ -1,0 +1,195 @@
+{
+  "_about": "Each caption style measured on one-word pages, the pages of every face-with-proof cut (brand.captions \"word\"), against the caption rules Krish gave on 18 Nov 2026: \"We can't have each new word appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer.\" Written by scripts/audit-caption-steady.ts in real Chromium; never edited by hand. anchor_moves: the new word's best anchor strays 100 px or more between pages (rule 1), which ve lint refuses for a word-mode cut (captions.steady). previous_word_kept: the word before is still on screen, dimmed, when the next lands (rule 2); a style that says false cuts it at once, and is a known gap, not a refusal.",
+  "measured": "2026-11-18",
+  "tool": "scripts/audit-caption-steady.ts",
+  "pages": {
+    "words": [
+      "secretly",
+      "they",
+      "charge",
+      "you",
+      "more",
+      "than",
+      "you'd",
+      "pay",
+      "if",
+      "stuck",
+      "to",
+      "your",
+      "current",
+      "plan"
+    ],
+    "frames_each": 8,
+    "measured_frames_after_the_word": 3,
+    "emphasised": [
+      2,
+      7,
+      12
+    ]
+  },
+  "moves_px": 100,
+  "styles": {
+    "pop": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "karaoke": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "kinetic-01": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 3,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "kinetic-02": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "hustle": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "grape": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "beast": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "poppin": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "aarit": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 2,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "soft-ai": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "gaming-stream": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "simple-one-word": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 1,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "podcast": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": true,
+      "anchor_moves": false
+    },
+    "art-directed": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": true,
+      "anchor_moves": false
+    },
+    "cinematic": {
+      "x_anchor_spread_px": 741,
+      "y_anchor_spread_px": 958,
+      "previous_word_kept": false,
+      "anchor_moves": true
+    },
+    "slam": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "georgia-build": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "stair-flash": {
+      "x_anchor_spread_px": 742,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": true
+    },
+    "tuck-stack": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 5,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "anchor-quote": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 125,
+      "previous_word_kept": false,
+      "anchor_moves": true
+    },
+    "rack-focus": {
+      "x_anchor_spread_px": 1,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "flip-hinge": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "slice": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "slot-roll": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 60,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "receipt-chip": {
+      "x_anchor_spread_px": 21,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "ink-block": {
+      "x_anchor_spread_px": 0,
+      "y_anchor_spread_px": 0,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    },
+    "mint-word": {
+      "x_anchor_spread_px": 8,
+      "y_anchor_spread_px": 20,
+      "previous_word_kept": false,
+      "anchor_moves": false
+    }
+  }
+}

@@ -656,16 +656,29 @@ def cmd_add(a, data):
         rel = path.relative_to(root.resolve()).as_posix()
     except ValueError:
         raise MusicError(f'{path} is not inside the music folder {root}: put the file there first, then add it')
-    lic = Path(a.licence_file)
-    lic = lic.resolve() if lic.is_absolute() else in_root(root, a.licence_file).resolve()
-    if not lic.is_file():
-        raise MusicError(f'no licence file at {lic}: save the certificate in the music folder first')
-    lic_rel = lic.relative_to(root.resolve()).as_posix()
-    facts = measure(path)
     # A track listed before anyone could measure it (its file named, no
     # sha256 yet) is completed in place: what it already says stays unless
     # given again.
     seed = next((t for t in data['tracks'] if t.get('file') == rel and not t.get('sha256')), None)
+    # A listed track Krish has already approved in his words keeps the licence the ledger records for it: its
+    # certificate is never asked for again (Krish, 2026-11-18: "get rid of the aspire license issue, it is 100%
+    # licensed, remove that permanently and use it"; 2026-10-18: "only if I use a new music track"). Only a new
+    # track needs its certificate in the music folder.
+    vouched = bool(seed and seed.get('licence_id') and seed.get('licence_file')
+                   and str(seed.get('approved_by') or '').lower().startswith('krish')
+                   and str(seed.get('approval_words') or '').strip())
+    if vouched:
+        a.licence_id = a.licence_id or seed['licence_id']
+        lic_rel = a.licence_file or seed['licence_file']
+    else:
+        if not a.licence_id or not a.licence_file:
+            raise MusicError('a new track needs --licence-id and --licence-file, its certificate in the music folder')
+        lic = Path(a.licence_file)
+        lic = lic.resolve() if lic.is_absolute() else in_root(root, a.licence_file).resolve()
+        if not lic.is_file():
+            raise MusicError(f'no licence file at {lic}: save the certificate in the music folder first')
+        lic_rel = lic.relative_to(root.resolve()).as_posix()
+    facts = measure(path)
     others = [t for t in data['tracks'] if t is not seed]
     if any(t.get('sha256') == facts['sha256'] for t in others):
         raise MusicError(f'{path.name} is already in the ledger')
@@ -887,6 +900,29 @@ def self_test():
         checks.append(('add completes the listed track in place', (completed.returncode, len(done),
                        bool(done and done[0]['sha256']), done and done[0]['title'], done and done[0]['drive_file_id'],
                        done and done[0]['status']), (0, 1, True, 'Seeded', 'drive-id-1', 'proposed')))
+        # A listed track Krish approved in words keeps its recorded licence: no certificate is asked for again.
+        vouched = work / 'root' / 'vouched.wav'
+        subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-f', 'lavfi', '-i', f'sine=f=550:d=6:r={RATE}',
+                        '-ac', '2', str(vouched)], check=True)
+        listed = {k: None for k in TRACK_FIELDS}
+        listed.update(id='vouched-track', title='Vouched', provider='self-test', file='vouched.wav', platforms=['youtube'],
+                      licence_id='TEST-3', licence_file='licences/not-in-this-folder.jpg', status='proposed',
+                      approved_by='Krish', approved_on='2026-11-04', approval_words='synthetic self-test words, not a real approval')
+        data = load(ledger)
+        data['tracks'].append(listed)
+        save(data, ledger)
+        vouched_run = run('add', str(vouched), '--provider', 'self-test')
+        done = [t for t in load(ledger)['tracks'] if t['id'] == 'vouched-track']
+        checks.append(('a listed track Krish approved is measured with no certificate in the folder',
+                       (vouched_run.returncode, bool(done and done[0]['sha256']), done and done[0]['licence_id'],
+                        done and done[0]['licence_file']), (0, True, 'TEST-3', 'licences/not-in-this-folder.jpg')))
+        stranger = work / 'root' / 'stranger.wav'
+        subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-f', 'lavfi', '-i', f'sine=f=660:d=6:r={RATE}',
+                        '-ac', '2', str(stranger)], check=True)
+        checks.append(('a new track still needs its certificate',
+                       (run('add', str(stranger), '--provider', 'self-test').returncode != 0,
+                        run('add', str(stranger), '--provider', 'self-test', '--licence-id', 'TEST-4',
+                            '--licence-file', 'licences/missing.txt').returncode != 0), (True, True)))
     finally:
         for k, v in env_before.items():
             if v is None:
@@ -1069,8 +1105,8 @@ def main():
     p = sub.add_parser('add', help='measure a file in the music folder and add it as proposed')
     p.add_argument('file')
     p.add_argument('--provider', required=True)
-    p.add_argument('--licence-id', required=True)
-    p.add_argument('--licence-file', required=True, help='the certificate, relative to the music folder')
+    p.add_argument('--licence-id', help='needed for a new track; a listed track Krish approved keeps its own')
+    p.add_argument('--licence-file', help='the certificate, relative to the music folder (a new track only)')
     for flag in ('id', 'title', 'artist', 'provider-track-id', 'provider-url', 'licence-type', 'licensee', 'acquired-on', 'expires-on',
                  'platforms', 'monetisation-ok', 'content-id-cleared', 'attribution', 'restrictions', 'mood'):
         p.add_argument(f'--{flag}')
