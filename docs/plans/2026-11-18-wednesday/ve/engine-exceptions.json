@@ -1,6 +1,6 @@
 {
   "schema": "ve-engine-exceptions/1",
-  "about": "Krish's approval of the caption halo engine change (BrandFrame.tsx: a tight dark halo round a themed caption's letters on a full scene plate) for this piece. velib/guards.py reads it beside the spec's approvals; scope engine waives nothing else. If the engine changes again before this piece renders, the hash no longer matches and he is asked again.",
+  "about": "Krish's approvals of engine changes for this piece: the caption halo (BrandFrame.tsx), then the softer rack-focus defocus (said words blur 1 px and fade to 80%, from 3.5 px and 55%). velib/guards.py reads them beside the spec's approvals; scope engine waives nothing else. Each binds one engine hash; if the engine changes again before this piece renders, he is asked again.",
   "approvals": [
     {
       "gate": "exception",
@@ -9,6 +9,14 @@
       "said": "Approve halo",
       "on": "2026-11-18",
       "artifact_hash": "5cf6e6c8d55d536c89ac39dbdd1e7b10c7c3aa2f8c42859c00cf33811c9f738d"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "said": "soften, and get this to completion now",
+      "on": "2026-11-18",
+      "artifact_hash": "a2d1c7e35b628f68499e92d9579eb33caec41afbeba31f6519bcbce3a0b5bff8"
     }
   ]
 }

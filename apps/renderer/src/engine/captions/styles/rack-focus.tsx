@@ -66,10 +66,10 @@ export const rackFocus: Draw = (props, frame) => {
     const t = outCubic(since(frame, w.atFrame, fps) / 0.16)
     const nw = page.words[i + 1]
     const d = i < now && nw ? outCubic(since(frame, nw.atFrame, fps) / 0.25) : 0
-    const blur = (1 - t) * 12 + d * 3.5
+    const blur = (1 - t) * 12 + d * 1.0
     return <span key={i} style={{ fontFamily: F.structure, fontWeight: 700, fontSize: S, lineHeight: 1.08, letterSpacing: '-0.01em',
       color: props.tokens.cream, textShadow: LIFT, display: 'inline-block', transformOrigin: '50% 80%',
-      opacity: t * mix(1, 0.55, d), filter: blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : undefined,
+      opacity: t * mix(1, 0.8, d), filter: blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : undefined,
       transform: `scale(${(mix(1.12, 1, t) * mix(1, 0.97, d)).toFixed(4)})` }}>{words[i]}</span>
   }
 
