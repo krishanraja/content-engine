@@ -1,0 +1,23 @@
+{
+  "path": "docs/ve/cards/w-midterms-carousel/ve-carousel-midterms-3.md",
+  "card_id": "ve-carousel-midterms-3",
+  "kind": "carousel",
+  "date": "2026-11-19",
+  "deck": "docs/plans/2026-11-16-week/midterms-carousel/deck.json",
+  "cwd": "/root/dev/makeyourmindup/.worktrees/content-engine/ve-card/ve-carousel-midterms-1",
+  "references": [
+    "fortytoone-direction (the infographic style Krish saved for this idea: one number per card, a stadium scoreboard; week 2026-11-16 ideas.json, option fortytoone)",
+    "instagram-inspo-sheet (Krish's Drive 'Instagram inspo.xlsx': off-day utility bar, a scroll-stopping cover and cards the reader can use the same day; Krish, 2026-11-16)"
+  ],
+  "title": "Midterms carousel: fix the cover overlap, the close board and the last two checker failures",
+  "goal": "Same worktree and renderer (.scratch/carousel/midterms/draw.py, words.json unchanged). Five fixes, seen at full size by the session: 1) Card 1: the headline's last line collides with the line under it; give the headline and the line their own space with a clear gap, headline still at least 1.3 times the body size, the scoreboard scene still full-bleed. 2) Card 6: the board's lamp '=' signs read as noise; on card 6 draw the board as two lit text rows, WHERE IT'S BUILT then WHAT IT COSTS, joined by one clear large '=' drawn as two bars, no lamp digits. 3) Card 3: close the 12.1% empty band (at most 12%) by sizing the board or spacing. 4) Card 4: every piece of type at least 35 px of ink, the board label included. 5) Make the lamp digits on cards 1, 3 and 4 read clearly as 40, 1, 43 and 59 at phone size (390 px wide): bigger lamps or tighter spacing.",
+  "contract": "Edit only draw.py; outputs out/card-1.png to card-6.png at 1080x1350 from words.json. Colours and fonts only from config/ve/brand-tokens.json and the Brand section; no system font; no logos, clipart people, card numbers, footnotes or URLs except the close CTA; the mark is the official file.",
+  "acceptance": "python3 .scratch/carousel/midterms/draw.py .scratch/carousel/midterms/words.json\npython3 scripts/carousel_check.py --cards .scratch/carousel/midterms/out/card-1.png .scratch/carousel/midterms/out/card-2.png .scratch/carousel/midterms/out/card-3.png .scratch/carousel/midterms/out/card-4.png .scratch/carousel/midterms/out/card-5.png .scratch/carousel/midterms/out/card-6.png",
+  "write_allow": [
+    ".scratch/carousel/midterms/draw.py",
+    ".scratch/carousel/midterms/out/*"
+  ],
+  "read": "config/ve/brand-tokens.json, config/brand-palette.json, config/carousel-layout.json, scripts/carousel_layout.py, .scratch/carousel/midterms/words.json",
+  "max_minutes": 30,
+  "max_calls": 30
+}

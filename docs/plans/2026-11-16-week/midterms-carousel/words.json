@@ -1,0 +1,70 @@
+{
+ "cards": [
+  {
+   "headline": "Voters turned away AI's data centres. Where does AI live now?",
+   "line": "A data centre is the giant warehouse of computers that runs AI.",
+   "board": {
+    "labels": [
+     "VOTERS",
+     "DATA CENTRES"
+    ],
+    "values": [
+     "40",
+     "1"
+    ]
+   }
+  },
+  {
+   "headline": "Voters backed limits on new data centres in 40 out of 41 local votes, after rows over power bills.",
+   "line": "3 November, 10 states, counted by Ballotpedia.",
+   "board": {
+    "tile": "LIMIT"
+   }
+  },
+  {
+   "headline": "Voters fear a giant data centre will push up their own power bill.",
+   "line": "Of Americans whose bills rose, 43% call data centres a major reason.",
+   "board": {
+    "value": "43",
+    "labels": [
+     "PERCENT"
+    ]
+   }
+  },
+  {
+   "headline": "To dodge the fights, builders now bring their own power plants, and some AI runs on phones instead.",
+   "line": "One tracker counts 59 planned US data centres planning their own power.",
+   "board": {
+    "value": "59",
+    "labels": [
+     "OWN POWER PLANTS"
+    ]
+   }
+  },
+  {
+   "headline": "Ask the company selling you AI where its new computing gets built, and who pays for power.",
+   "line": "Where it is built decides its cost, its delays and its promises.",
+   "board": {
+    "questions": [
+     "Where is it built?",
+     "Who pays for the power?"
+    ]
+   }
+  },
+  {
+   "headline": "Where AI gets built now decides what AI costs you and where it runs.",
+   "line": "",
+   "board": {
+    "labels": [
+     "WHERE IT'S BUILT",
+     "WHAT IT COSTS"
+    ],
+    "values": [
+     "=",
+     "="
+    ]
+   }
+  }
+ ],
+ "close_cta": "Subscribe free (makeyourmindup.ai)"
+}
