@@ -1,0 +1,22 @@
+{
+  "path": "docs/ve/cards/w1116-carousels/ve-carousel-goodnews-1121-4.md",
+  "card_id": "ve-carousel-goodnews-1121-4",
+  "kind": "carousel",
+  "good_news": true,
+  "date": "2026-11-21",
+  "deck": "docs/plans/2026-11-16-week/goodnews-carousel/deck.json",
+  "cwd": "/root/dev/makeyourmindup/.worktrees/content-engine/ve-card/ve-carousel-goodnews-1121",
+  "references": [
+    "goodnews-source: Krish's saved Instagram post asking for a positive ray of sunshine, https://www.instagram.com/p/DfAY9PWFuEX/",
+    "goodnews-lookalike: the weekly-roundup post this beats, https://www.instagram.com/evolving.ai/p/DfPW8fmgCnt/",
+    "house-look: Git and homework covers, Erdos body cards; body type as G/body_a.py from the approved v2 ads and midterms decks (Krish, 18 Nov)"
+  ],
+  "title": "Good-news carousel, fix round 4: the close's lines lower, Glidance's symbol, two headline updates",
+  "goal": "FIX ROUND on G = .scratch/carousels/goodnews. Edit G/render.py and re-render all ten cards. Everything not named here stays exactly as round 3 drew it (G/round3/ holds it).\n1 G/deck.json changed: cards 7 and 9 have new headlines, card 7's mint phrase is now 'buy AI', and card 4's logo_files is now logos/glidance-symbol.png (Glidance's own symbol, no lettering). Read them; never type words.\n2 CLOSE 10: keep the two rows of ringed photos and the glow as they are. Move the type down so the big Anton line starts well below the cover's headline: line 1 (Archivo SemiBold 52 cream) top at y 700; line 2 (Anton 120 mint, one line) top at y 790; line 3 (Archivo SemiBold 52 cream) top at y 930; line 4 (Archivo SemiBold 60 mint) top at y 1020; the wordmark 680 px wide, centred, top at y 1110, ending above y 1265. Check no empty band over 12% of the height remains.\n3 Nothing else changes: cover, body layout, scenes, photos, tiles, mark.",
+  "contract": "Outputs: G/render.py and G/card-1.png to G/card-10.png (1080x1350); every acceptance command exits 0.",
+  "acceptance": "python3 .scratch/carousels/goodnews/render.py\npython3 scripts/carousel_check.py --cards .scratch/carousels/goodnews/card-1.png .scratch/carousels/goodnews/card-2.png .scratch/carousels/goodnews/card-3.png .scratch/carousels/goodnews/card-4.png .scratch/carousels/goodnews/card-5.png .scratch/carousels/goodnews/card-6.png .scratch/carousels/goodnews/card-7.png .scratch/carousels/goodnews/card-8.png .scratch/carousels/goodnews/card-9.png .scratch/carousels/goodnews/card-10.png",
+  "write_allow": [".scratch/carousels/goodnews/*"],
+  "read": "config/ve/brand-tokens.json, .scratch/carousels/goodnews/*, assets/fonts/makeyourmindup/*",
+  "max_minutes": 25,
+  "max_calls": 30
+}

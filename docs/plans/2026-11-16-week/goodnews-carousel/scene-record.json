@@ -1,0 +1,25 @@
+{
+  "model": "Codex image generation (hosted, built into Codex CLI 0.170.0)",
+  "job_id": "exec-e8208db4-3466-4af0-9979-93b5fa5a70a5",
+  "references": [
+    {
+      "file": "robot/robot-standing.webp",
+      "sha256": "0315292bd39980ffe26814cc7138151f53301ba4c6934a8eb90e1aa5cc2d4661"
+    },
+    {
+      "file": "robot/robot-theatre.webp",
+      "sha256": "285daa29be920f6670756509f149ef840e169364b9294efc74495d13e27f05e3"
+    }
+  ],
+  "prompt": "Photorealistic cinematic street photograph at golden hour, 35mm lens, shallow depth of field, landscape 4:3. On a busy city zebra crossing, the hand-sewn felt robot from the two reference photos (cream felt with grey patches, a blank dark visor, a stuffed seam down its front, three loose threads in lilac, butter and coral; keep it exactly this robot) is an over-keen tour guide: it walks backwards with one arm thrust high holding a small mint-green flag on a stick and a tiny megaphone held to its visor. Behind it a delighted crowd follows, laughing at its enthusiasm: a blind man with a white cane, a mother signing to her small daughter who signs back, an older woman mid-sentence talking with joy, a young man wearing glasses. Warm low sun, real street texture, rich dark shadows, deep ink-green tones in the background, the robot sharp and the faces natural. No words, letters, signs, logos or text anywhere in the picture.",
+  "scenes": {
+    "card-7": "Photorealistic close-up photograph at night, landscape 4:3: a cluttered kitchen-table workshop under one warm desk lamp, an open laptop showing a sound waveform, a phone, a pair of smart glasses, a small two-wheeled walking guide with a long handle leaning on the table, sticky notes, a half-drunk mug of tea. Deep ink-green shadows, warm light, real texture. No readable words, letters or logos.",
+    "card-8": "Photorealistic aerial photograph at dusk, landscape 4:3: a vast city crossing crowded with hundreds of people seen from above; among them a few people with white canes, a person in a wheelchair, people in glasses and with hearing aids, lit warm while the rest of the crowd falls into ink-green shadow. Real street texture. No words, letters or logos.",
+    "card-9": "Photorealistic close-up photograph, landscape 4:3: a hand holding a smartphone above a desk with a printed business invoice; on the phone screen a document with a thick black rectangle outlining one line, as a screen reader's focus box; white earbuds on the desk beside it; dark ink-green ambient light, warm key light. Any text blurred and unreadable; no logos."
+  },
+  "scene_ids": {
+    "card-7": "exec-7e0df335-c222-4b18-83a8-34d8ee24ed6f",
+    "card-8": "exec-b9da6885-4a51-4d9d-9652-9ea457998ec8",
+    "card-9": "exec-e8ec623c-a5b4-4964-924a-d4cf8cc79f3c"
+  }
+}
