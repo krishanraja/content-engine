@@ -37,6 +37,16 @@ class Zones(unittest.TestCase):
             self.assertGreaterEqual(rail, safe['right_px'], channel)
             self.assertGreaterEqual(bottom, safe['bottom_px'], channel)
 
+    def test_the_tall_receipt_lays_out_clear_of_every_cover_zone(self):
+        # 18 Nov: the tall thumbnail's safe box was drawn for the grid tile alone, so its proof sat under the Reel's
+        # caption and like rail on every piece. Whatever the drawer places inside its safe box must clear them all.
+        sys.path.insert(0, str(ROOT / 'scripts' / 'pages'))
+        import receipt
+        l, t, r, b = receipt.SHAPES['tall']['safe']
+        self.assertEqual(channel_safe.box_violations([('tall safe box', (l, t, r - l, b - t))], 'cover_tall'), [])
+        # and the box it replaced fails, so this test can see the fault it guards
+        self.assertTrue(channel_safe.box_violations([('old tall safe box', (72, 260, 1008 - 72, 1660 - 260))], 'cover_tall'))
+
     def test_mondays_layout_fails_where_his_phone_showed_it(self):
         # Boxes read off his 3 Nov screenshot, in video pixels.
         hits = channel_safe.box_violations([('headline slab', (56, 66, 885, 305)),
