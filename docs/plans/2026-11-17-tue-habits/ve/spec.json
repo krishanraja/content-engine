@@ -1866,6 +1866,13 @@
   {
    "gate": "exception",
    "by": "Krish",
+   "said": "Yes, use the fix (a caption row too wide for 92 px shrinks to fit)",
+   "on": "2026-11-18",
+   "artifact_hash": "923e8df9eee3ec8e678a30e6fc8a102e81681ba219b6765eabcb6e112249cba1"
+  },
+  {
+   "gate": "exception",
+   "by": "Krish",
    "said": "Yes, waive it here (the layout-variety rule, for this short only: every beat full-frame)",
    "on": "2026-11-18",
    "artifact_hash": "e460e8aacabb57d3c08ab3f36cb3059f20a0ab20779374cb029f84c595c5cabe"
@@ -1889,7 +1896,7 @@
   },
   "transitions": {
    "kind": "cut",
-   "reason": "Hard cuts on his words keep a 1.2x voiceover readable; the pictures change, never travel"
+   "reason": "Hard cuts on his words keep a 1.08x voiceover readable; the pictures change, never travel"
   },
   "camera": {
    "move": "none",
