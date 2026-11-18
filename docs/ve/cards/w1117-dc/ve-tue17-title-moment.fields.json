@@ -1,0 +1,25 @@
+{
+ "path": "docs/ve/cards/w1117-dc/ve-tue17-title-moment.md",
+ "card_id": "ve-tue17-title-moment",
+ "kind": "device",
+ "spec": "docs/plans/2026-11-17-tuesday/ve/spec.json",
+ "title": "TitleMoment: the line he says becomes the episode title, an epic hero title, flowing out of the captions and back",
+ "goal": "Krish, 18 Nov 2026, on Tue 17's short (b019dbf8): \"\\\"Where does AI get built when the residents of town say no to data centers?\\\" should be seamlessly made the title with epic hero title treatment as I am saying that line.\" And 17 Nov, on every intro: the title line is \"treated visually as such, seamlessly flowing out of the captions and back in to them again\". The spec already carries the moment (`title_moment`, docs/ve/INGREDIENTS.md, \"The episode title moment\"); the renderer does not draw it yet. Claude wires it (compile, props, FormatMaster, captions stepping aside); you build the title itself.\n\nBuild `apps/renderer/src/engine/title/TitleMoment.tsx`, exporting exactly:\n```ts\nexport type TitleWord = { text: string; atFrame: number }\nexport type Box = { left: number; top: number; width: number; height: number }\nexport type TitleMomentProps = {\n  words: TitleWord[]   // the words he says, in order, each on the frame its sound starts (cut clock)\n  fromFrame: number    // the first word's frame\n  toFrame: number      // the frame the next sentence starts: the title has gone back into the captions by then\n  frame: number        // the current frame\n  aspect: '9:16' | '16:9'\n  width: number; height: number\n  stage: Box           // where the title lands: the graphics panel above his face, or the whole frame\n  captionBox: Box      // where the captions sit; the words leave from here and return here\n  tokens: Record<string, string>  // the brand tokens devices get\n}\nexport function TitleMoment(props: TitleMomentProps): JSX.Element | null\n```\nTue 17's words (9:16, 30 fps, about 0.21 s apart): \"where does AI get built when the residents of towns say no?\", then \"Let's find out.\" Its stage is the panel above his face, over a photograph of a town at dusk; its captionBox is the band the two-line scroll captions use (podcast theme, apps/renderer/src/engine/captions/themes.tsx).\n\nWhat it must do:\n- each word appears on its own spoken frame, never before: it lifts out of the caption line and travels up into the title, growing as it goes, so the sentence builds into the title word by word as he says it;\n- the built title is an epic hero lockup in the house display face (HOUSE_FONTS; the cinematic theme in themes.tsx uses Anton for its heroes): 2 to 4 balanced lines, mixed weight or scale for the key words (AI, built, say no), at least 80% of the stage's width, centred in the stage, readable over a light or dark photograph (shadow, scrim or glow from the brand tokens, never a box);\n- on the last word the whole title lands with one firm settle (a small scale settle, a single light sweep across the glyphs, a brief bloom in a brand colour that settles within 0.3 s), then holds and breathes with a slow push;\n- in the last 10 frames before toFrame it flows back down into the caption line and fades into it, so the captions take over with no hard cut;\n- it draws nothing outside [fromFrame, toFrame), and is a pure function of its props (deterministic).\n\n## Tests (`apps/renderer/src/engine/title/TitleMoment.test.tsx`)\n- no word is in the markup before its atFrame; every word is at the last word's frame\n- at the hold, the lockup's measured width is at least 80% of the stage width in both aspects (use fit.ts to measure)\n- nothing renders before fromFrame or at toFrame\n- the same props give the same markup twice",
+ "contract": "Edit only apps/renderer/src/engine/title/**. Fonts and measuring: apps/renderer/src/engine/fit.ts and the kit; colours only from props.tokens (no raw hex). Use Remotion's interpolate/spring from the frame prop alone.",
+ "acceptance": "npx vitest run apps/renderer/src/engine/title\npython scripts/ve/check_route.py",
+ "write_allow": [
+  "apps/renderer/src/engine/title/**"
+ ],
+ "read": [
+  "apps/renderer/src/engine/captions/themes.tsx",
+  "apps/renderer/src/engine/fit.ts",
+  "apps/renderer/src/engine/kit/**",
+  "apps/renderer/src/engine/props.ts",
+  "apps/renderer/src/engine/FormatMaster.tsx",
+  "config/ve/brand-tokens.json",
+  "docs/ve/MOTION_STANDARD.md",
+  "docs/ve/INGREDIENTS.md"
+ ],
+ "max_minutes": 60,
+ "max_calls": 80
+}

@@ -39,7 +39,7 @@
   "segments": [
     {
       "src": "/home/user/content-engine/.scratch/b019/assets/conformed.short.mp4",
-      "trimBeforeFrames": 2001,
+      "trimBeforeFrames": 227,
       "fromFrame": 0,
       "durationFrames": 240
     }
@@ -47,7 +47,7 @@
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.scratch/b019/assets/audio.short.wav",
-      "trimBeforeFrames": 2001
+      "trimBeforeFrames": 227
     },
     "sfx": []
   },
@@ -57,7 +57,7 @@
       "toFrame": 2,
       "words": [
         {
-          "text": "secretly",
+          "text": "just",
           "atFrame": 0
         }
       ],
@@ -65,77 +65,44 @@
     },
     {
       "fromFrame": 2,
-      "toFrame": 5,
+      "toFrame": 7,
       "words": [
         {
-          "text": "they",
+          "text": "run",
           "atFrame": 2
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 5,
-      "toFrame": 13,
-      "words": [
-        {
-          "text": "charge",
-          "atFrame": 5
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 13,
+      "fromFrame": 7,
       "toFrame": 17,
       "words": [
         {
-          "text": "you",
-          "atFrame": 13
+          "text": "AI",
+          "atFrame": 7
         }
       ],
       "swipeIndex": null
     },
     {
       "fromFrame": 17,
-      "toFrame": 25,
+      "toFrame": 33,
       "words": [
         {
-          "text": "more",
+          "text": "nowadays,",
           "atFrame": 17
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 25,
-      "toFrame": 28,
-      "words": [
-        {
-          "text": "than",
-          "atFrame": 25
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 28,
-      "toFrame": 32,
-      "words": [
-        {
-          "text": "you'd",
-          "atFrame": 28
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 32,
+      "fromFrame": 33,
       "toFrame": 37,
       "words": [
         {
-          "text": "pay",
-          "atFrame": 32
+          "text": "so",
+          "atFrame": 33
         }
       ],
       "swipeIndex": null
@@ -145,7 +112,7 @@
       "toFrame": 40,
       "words": [
         {
-          "text": "if",
+          "text": "it's",
           "atFrame": 37
         }
       ],
@@ -156,305 +123,173 @@
       "toFrame": 48,
       "words": [
         {
-          "text": "you'd",
+          "text": "sacked",
           "atFrame": 40
         }
       ],
-      "swipeIndex": null
+      "swipeIndex": 0
     },
     {
       "fromFrame": 48,
-      "toFrame": 56,
+      "toFrame": 54,
       "words": [
         {
-          "text": "stuck",
+          "text": "over",
           "atFrame": 48
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 56,
-      "toFrame": 58,
+      "fromFrame": 54,
+      "toFrame": 57,
       "words": [
         {
-          "text": "to",
-          "atFrame": 56
+          "text": "a",
+          "atFrame": 54
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 58,
-      "toFrame": 61,
+      "fromFrame": 57,
+      "toFrame": 75,
       "words": [
         {
-          "text": "your",
-          "atFrame": 58
+          "text": "building.",
+          "atFrame": 57
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 61,
-      "toFrame": 69,
-      "words": [
-        {
-          "text": "current",
-          "atFrame": 61
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 69,
+      "fromFrame": 75,
       "toFrame": 85,
       "words": [
         {
-          "text": "terms",
-          "atFrame": 69
+          "text": "So",
+          "atFrame": 75
         }
       ],
       "swipeIndex": null
     },
     {
       "fromFrame": 85,
-      "toFrame": 88,
+      "toFrame": 91,
       "words": [
         {
-          "text": "on",
+          "text": "what",
           "atFrame": 85
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 88,
-      "toFrame": 91,
-      "words": [
-        {
-          "text": "the",
-          "atFrame": 88
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
       "fromFrame": 91,
-      "toFrame": 99,
+      "toFrame": 97,
       "words": [
         {
-          "text": "premise",
+          "text": "just",
           "atFrame": 91
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 99,
-      "toFrame": 109,
+      "fromFrame": 97,
+      "toFrame": 107,
       "words": [
         {
-          "text": "of",
-          "atFrame": 99
+          "text": "happened",
+          "atFrame": 97
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 109,
-      "toFrame": 118,
+      "fromFrame": 107,
+      "toFrame": 112,
       "words": [
         {
-          "text": "bonus",
-          "atFrame": 109
+          "text": "to",
+          "atFrame": 107
         }
       ],
-      "swipeIndex": 0
+      "swipeIndex": null
     },
     {
-      "fromFrame": 118,
+      "fromFrame": 112,
+      "toFrame": 123,
+      "words": [
+        {
+          "text": "AI",
+          "atFrame": 112
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 123,
+      "toFrame": 126,
+      "words": [
+        {
+          "text": "with",
+          "atFrame": 123
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 126,
       "toFrame": 128,
       "words": [
         {
-          "text": "credits",
-          "atFrame": 118
+          "text": "the",
+          "atFrame": 126
         }
       ],
       "swipeIndex": null
     },
     {
       "fromFrame": 128,
-      "toFrame": 130,
+      "toFrame": 140,
       "words": [
         {
-          "text": "and",
+          "text": "midterms",
           "atFrame": 128
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 130,
-      "toFrame": 135,
-      "words": [
-        {
-          "text": "things",
-          "atFrame": 130
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 135,
-      "toFrame": 141,
-      "words": [
-        {
-          "text": "like",
-          "atFrame": 135
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 141,
-      "toFrame": 155,
-      "words": [
-        {
-          "text": "that.",
-          "atFrame": 141
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 155,
-      "toFrame": 158,
-      "words": [
-        {
-          "text": "I've",
-          "atFrame": 155
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 158,
-      "toFrame": 165,
-      "words": [
-        {
-          "text": "seen",
-          "atFrame": 158
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 165,
-      "toFrame": 169,
-      "words": [
-        {
-          "text": "this",
-          "atFrame": 165
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 169,
-      "toFrame": 189,
-      "words": [
-        {
-          "text": "happen",
-          "atFrame": 169
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 189,
-      "toFrame": 193,
-      "words": [
-        {
-          "text": "three",
-          "atFrame": 189
-        }
-      ],
-      "swipeIndex": 0
-    },
-    {
-      "fromFrame": 193,
-      "toFrame": 204,
-      "words": [
-        {
-          "text": "times",
-          "atFrame": 193
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 204,
-      "toFrame": 206,
+      "fromFrame": 140,
+      "toFrame": 142,
       "words": [
         {
           "text": "in",
-          "atFrame": 204
+          "atFrame": 140
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 206,
-      "toFrame": 209,
+      "fromFrame": 142,
+      "toFrame": 153,
       "words": [
         {
-          "text": "the",
-          "atFrame": 206
+          "text": "America",
+          "atFrame": 142
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 209,
-      "toFrame": 216,
+      "fromFrame": 153,
+      "toFrame": 164,
       "words": [
         {
-          "text": "last",
-          "atFrame": 209
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 216,
-      "toFrame": 221,
-      "words": [
-        {
-          "text": "week",
-          "atFrame": 216
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 221,
-      "toFrame": 225,
-      "words": [
-        {
-          "text": "with",
-          "atFrame": 221
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 225,
-      "toFrame": 240,
-      "words": [
-        {
-          "text": "businesses",
-          "atFrame": 225
+          "text": "and",
+          "atFrame": 153
         }
       ],
       "swipeIndex": null
@@ -463,15 +298,70 @@
   "captionStyle": "word",
   "captionTheme": "podcast",
   "captionPlacement": "lower",
+  "titleMoment": {
+    "fromFrame": 391,
+    "toFrame": 506,
+    "release": "fade",
+    "words": [
+      {
+        "text": "Where",
+        "atFrame": 391
+      },
+      {
+        "text": "does",
+        "atFrame": 397
+      },
+      {
+        "text": "AI",
+        "atFrame": 406
+      },
+      {
+        "text": "get",
+        "atFrame": 414
+      },
+      {
+        "text": "built",
+        "atFrame": 420
+      },
+      {
+        "text": "when",
+        "atFrame": 426
+      },
+      {
+        "text": "the",
+        "atFrame": 442
+      },
+      {
+        "text": "residents",
+        "atFrame": 444
+      },
+      {
+        "text": "of",
+        "atFrame": 457
+      },
+      {
+        "text": "towns",
+        "atFrame": 460
+      },
+      {
+        "text": "say",
+        "atFrame": 470
+      },
+      {
+        "text": "no?",
+        "atFrame": 475
+      }
+    ]
+  },
   "beats": [
     {
-      "id": "small_print",
-      "role": "anchor",
+      "id": "dc",
+      "role": "bridge",
       "layout": "STAGE",
       "fromFrame": 0,
-      "toFrame": 85,
+      "toFrame": 33,
       "uses": [
-        "small_print"
+        "block"
       ],
       "transitionOut": "cut",
       "sectionBeat": true,
@@ -479,37 +369,35 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
       },
-      "keyFrame": 62
+      "keyFrame": 10
     },
     {
-      "id": "payoff",
-      "role": "payoff",
+      "id": "sacked",
+      "role": "pivot",
       "layout": "STAGE",
-      "fromFrame": 85,
-      "toFrame": 155,
-      "uses": [
-        "meter"
-      ],
+      "fromFrame": 33,
+      "toFrame": 75,
+      "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/s3-nameplate-1.png"
       },
-      "keyFrame": 141
+      "keyFrame": 67
     },
     {
-      "id": "three",
+      "id": "face",
       "role": "anchor",
-      "layout": "P6",
-      "fromFrame": 155,
-      "toFrame": 240,
+      "layout": "P1",
+      "fromFrame": 75,
+      "toFrame": 164,
       "uses": [
-        "el_deal"
+        "field41"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -517,7 +405,24 @@
         "source": "take"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/krish/elevencreative-plans.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/wyso-lead.jpg"
+      },
+      "keyFrame": 146
+    },
+    {
+      "id": "title",
+      "role": "anchor",
+      "layout": "P1",
+      "fromFrame": 164,
+      "toFrame": 240,
+      "uses": [],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
       },
       "keyFrame": 239
     }
@@ -534,13 +439,13 @@
         "kind": "data centre",
         "label": "PIQUA, OHIO",
         "logo": "Meta",
-        "tag": "Power bill",
+        "tag": "Your share",
         "targets": [
           {
-            "label": "Your power bill"
+            "label": "Power bill"
           },
           {
-            "label": "Your AI plan"
+            "label": "AI plan"
           }
         ],
         "copies": {
@@ -553,70 +458,33 @@
       }
     },
     {
-      "obj": "el_deal",
-      "device": "evidence_card",
-      "meaning": "a second real offer: the discount is for the first year only",
-      "fromFrame": 155,
-      "toFrame": 240,
+      "obj": "field41",
+      "device": "unit_field",
+      "meaning": "the 41 local data-centre votes on 3 Nov; 40 went against the data centre",
+      "fromFrame": 75,
+      "toFrame": 164,
       "variants": {},
       "params": {
-        "kind": "screenshot",
-        "src": "/home/user/content-engine/.scratch/b019/assets/krish/elevencreative-creator-deal.png",
-        "outlet": "ElevenCreative",
-        "date": "18 Nov 2026",
-        "sourceAspectRatio": 1.043
-      }
-    },
-    {
-      "obj": "small_print",
-      "device": "evidence_card",
-      "meaning": "the small print on the offer: bonus credits that expire in 30 days",
-      "fromFrame": 0,
-      "toFrame": 85,
-      "variants": {},
-      "params": {
-        "kind": "screenshot",
-        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-bonus-expires.png",
-        "outlet": "Higgsfield plans page, small print",
-        "date": "18 Nov 2026",
-        "sourceAspectRatio": 8.25
-      }
-    },
-    {
-      "obj": "meter",
-      "device": "credit_meter",
-      "meaning": "the month's credits: a bonus pours in on top, then drains away after 30 days",
-      "fromFrame": 85,
-      "toFrame": 155,
-      "variants": {},
-      "params": {
-        "plan": {
-          "label": "Plan credits",
-          "row": "plan credits a month"
-        },
-        "bonus": {
-          "label": "Bonus credits",
-          "row": "bonus credits"
-        },
-        "days": 30,
-        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-bonus-expires.png",
-        "source": {
-          "outlet": "Higgsfield plans page",
-          "date": "18 Nov 2026"
-        }
+        "initialRow": "initial",
+        "columns": 9,
+        "mark": "block"
       },
       "dataset": {
-        "unit": "credits",
-        "denominator": null,
-        "producerLabel": "Higgsfield Team plan",
+        "unit": "local votes",
+        "denominator": 41,
+        "producerLabel": "Ballotpedia, 3 Nov 2026",
         "rows": [
           {
-            "label": "plan credits a month",
-            "value": 2000
+            "label": "initial",
+            "value": 41
           },
           {
-            "label": "bonus credits",
-            "value": 400
+            "label": "against",
+            "value": 40
+          },
+          {
+            "label": "limits won",
+            "value": 40
           }
         ]
       }
@@ -638,109 +506,18 @@
       "atFrame": 0
     },
     {
-      "id": "city-0",
-      "obj": "block",
-      "verb": "connect",
-      "toState": "city",
-      "atFrame": 0
-    },
-    {
-      "id": "bill-0",
-      "obj": "block",
-      "verb": "move",
-      "toState": "target:0",
-      "atFrame": 0
-    },
-    {
-      "id": "bill-1",
-      "obj": "block",
-      "verb": "add",
-      "toState": "pylons",
-      "atFrame": 0
-    },
-    {
-      "id": "vote-0",
-      "obj": "block",
-      "verb": "add",
-      "toState": "ballot",
-      "atFrame": 0
-    },
-    {
-      "id": "proof-1",
-      "obj": "block",
-      "verb": "stamp",
-      "toState": "ban",
-      "atFrame": 0
-    },
-    {
-      "id": "power-2",
-      "obj": "block",
-      "verb": "carry",
-      "toState": "walk",
-      "atFrame": 0
-    },
-    {
-      "id": "power-3",
-      "obj": "block",
-      "verb": "move",
-      "toState": "target:1",
-      "atFrame": 0
-    },
-    {
-      "id": "small_print-0",
-      "obj": "small_print",
+      "id": "face-0",
+      "obj": "field41",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 0
+      "atFrame": 75
     },
     {
-      "id": "payoff-0",
-      "obj": "meter",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 85
-    },
-    {
-      "id": "payoff-1",
-      "obj": "meter",
-      "verb": "fill",
-      "toState": "plan credits a month",
-      "atFrame": 88
-    },
-    {
-      "id": "payoff-2",
-      "obj": "meter",
-      "verb": "add",
-      "toState": "bonus credits",
-      "atFrame": 109
-    },
-    {
-      "id": "payoff-3",
-      "obj": "meter",
-      "verb": "mark",
-      "toState": "visible",
-      "atFrame": 118
-    },
-    {
-      "id": "payoff-4",
-      "obj": "meter",
-      "verb": "count_to",
-      "toState": "30",
-      "atFrame": 130
-    },
-    {
-      "id": "payoff-5",
-      "obj": "meter",
-      "verb": "drop",
-      "toState": "plan credits a month",
-      "atFrame": 135
-    },
-    {
-      "id": "three-0",
-      "obj": "el_deal",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 165
+      "id": "face-1",
+      "obj": "field41",
+      "verb": "grey",
+      "toState": "against",
+      "atFrame": 128
     }
   ],
   "call": {

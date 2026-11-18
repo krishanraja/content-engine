@@ -1724,6 +1724,19 @@ def cmd_receipt(args) -> int:
     return 1 if result['problems'] else 0
 
 
+def bed_levels(levels: dict, bed: dict) -> dict:
+    """The ledger's approved music levels for this cut, moved by the spec's trim_db (Krish's ear on the piece's music,
+    never above the house levels). The premix records what it was given, so ve qc judges the bed by the same numbers."""
+    trim = float(bed.get('trim_db') or 0)
+    if trim > 0:
+        raise ValueError(f'audio.bed.trim_db is {trim}: a bed is only ever turned down from the house levels')
+    out = levels | {'chapter_lufs': levels.get('chapter_lufs', -22)}
+    for key in ('intro_lufs', 'bed_lufs', 'outro_lufs', 'chapter_lufs'):
+        if isinstance(out.get(key), (int, float)):
+            out[key] = round(float(out[key]) + trim, 2)
+    return out
+
+
 def cmd_premix(args) -> int:
     """The cut's premixed stem from the spec's own bed: the ledger track (by id, checked by hash, from
     MINDMAKE_MUSIC_ROOT), the ledger's approved levels, the cut's length from its props and the first and last word
@@ -1798,7 +1811,7 @@ def cmd_premix(args) -> int:
                               bed_start_s=float(track.get('intro_cue_s') or 0), under_vo_lu=bed['under_vo_lu'],
                               lufs=spec['audio'].get('targets', {}).get('lufs', -14), tp=spec['audio'].get('targets', {}).get('tp', -1),
                               mode=bed['mode'], last_word_end_s=moved(float(words[-1]['end_s']) - start_s),
-                              levels=ledger['levels'] | {'chapter_lufs': ledger['levels'].get('chapter_lufs', -22)},
+                              levels=bed_levels(ledger['levels'], bed),
                               voice_start_s=moved(float(words[0]['onset_s']) - start_s), lifts=lifts, lead_frames=lead, fps=fps,
                               clips=clips, bed_enter_s=moved(plan['bed_enter_s']) if plan.get('bed_enter_s') else 0.0,
                               bed_fade_in_s=float(plan.get('bed_fade_in_s') or 0),
