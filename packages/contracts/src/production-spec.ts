@@ -54,6 +54,9 @@ export const VeBeatSchema = z.object({
   layout: VeLayoutSchema,
   face: z.enum(['full', 'window', 'off']).optional(),
   plate: z.object({ source: z.string().regex(/^(take|none|asset:[a-z0-9][a-z0-9_-]*)$/), crop: z.string().min(1).optional() }).strict(),
+  // One real picture under the beat's graphics, fitted by cover: the panel above his face on a staged beat, the whole
+  // frame on a graphics-only beat (Krish, 2026-11-18: "making actual use of the full screen when it isn't my face").
+  backdrop: z.string().regex(/^asset:[a-z0-9][a-z0-9_-]*$/).optional(),
   uses: z.array(z.string().min(1)).default([]),
   events: z.array(VeEventSchema).default([]),
   transition_out: VeTransitionSchema.default('cut'),
@@ -94,6 +97,9 @@ export const VeCutSchema = z.object({
     remove: z.array(z.object({ from_w: WordSchema, to_w: WordSchema, why: z.string().min(3) }).strict()).default([]),
     speed: z.number().min(1).max(1.35).default(1),
     speed_said: z.string().min(2).optional(),
+    // A pause longer than longer_than_s, between two words he said straight through, is cut down to a breath where
+    // both aligners agree on a gap (velib/conform.py tighten; Krish, 2026-11-17: "clip out empty awkward silences").
+    pauses: z.object({ longer_than_s: z.number().min(0.4).max(3), said: z.string().min(12) }).strict().optional(),
   }).strict().refine((v) => v.speed === 1 || !!v.speed_said, { message: "a speed change needs Krish's words in speed_said", path: ['speed_said'] }),
   captions: z.object({ region: z.string().min(1).default('default'), emphasis: z.array(WordSchema).default([]) }).strict(),
   beats: z.array(VeBeatSchema).min(1),
@@ -167,6 +173,9 @@ export const VeAudioSchema = z.object({
     epidemic_edit_id: z.string().min(1).optional(),
     mode: z.enum(['continuous', 'episode', 'ducked', 'episode_bed']),
     under_vo_lu: z.number().max(-12).min(-30).default(-20),
+    // Krish's ear on this piece's music, in dB under the house levels (an episode_bed's intro, bed, chapter and outro
+    // all move by it). Krish, 2026-11-18: "Aspire, but turn the volume down 15%." (-1.41 dB).
+    trim_db: z.number().min(-6).max(0).optional(),
   }).strict(),
   sfx_kit: z.string().min(1).default('house-v1'),
   targets: z.object({ lufs: z.number().default(-14), tp: z.number().max(-1).default(-1) }).strict().default({ lufs: -14, tp: -1 }),
@@ -246,6 +255,10 @@ export const ProductionSpecV2Schema = z.object({
     caption_theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
       'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']).optional(),
     title: z.string().min(3).max(48).optional(),
+    // The logo rule (config/brand-palette.json logo_rule: no logo in a cut's body, only on the title frame and the close)
+    // applied to a piece ahead of the rule's date, on Krish's word for that piece (Tue 17, 18 Nov 2026: "we have a strict
+    // NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME").
+    body_logo: z.literal(false).optional(),
     reference: z.string().min(1).optional(),
     // Required by ve lint for every piece publishing after 5 Nov 2026: at least one card for look, one for motion
     // and one for the caption build (scripts/velib/lint.py, reference_lints).
@@ -345,6 +358,7 @@ export const ProductionSpecV2Schema = z.object({
       if (b.span.from_w <= lastEnd) c.addIssue({ code: 'custom', path: [...at, 'span'], message: 'beats run in script order and never overlap' })
       lastEnd = b.span.to_w
       if (b.plate.source.startsWith('asset:') && !assets.has(b.plate.source.slice(6))) c.addIssue({ code: 'custom', path: [...at, 'plate', 'source'], message: `unknown asset ${b.plate.source.slice(6)}` })
+      if (b.backdrop && !assets.has(b.backdrop.slice(6))) c.addIssue({ code: 'custom', path: [...at, 'backdrop'], message: `unknown asset ${b.backdrop.slice(6)}` })
       b.events.forEach((e, j) => {
         if (!objects.has(e.obj)) c.addIssue({ code: 'custom', path: [...at, 'events', j, 'obj'], message: `unknown object ${e.obj}` })
         if (e.at_w < b.span.from_w || e.at_w > b.span.to_w) c.addIssue({ code: 'custom', path: [...at, 'events', j, 'at_w'], message: 'an event fires on a word inside its beat' })

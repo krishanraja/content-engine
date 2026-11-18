@@ -2331,6 +2331,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const VETO_ID`
 - `const OFFDAY_ID`
 - `const DECISION_ID`
+- `const PROOF_ID`
+- `const OFFDAY_PUBLISH_ID`
 - `const DECISION_KIND`
 - `const GATE_KINDS`
 - `type GateKind = keyof typeof GATE_KINDS`
@@ -2580,8 +2582,8 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 
 How an off-day post is made, said once for every prompt the board copies out (the week model's "Copy prompt for
 
-- `type MakeRoute = 'still' | 'motion'`
-- `function makeRoute(kind: string | null | undefined, format: string | null | undefined): MakeRoute | null`
+- `type MakeRoute = 'still' | 'motion' | 'reskin'`
+- `function makeRoute(kind: string | null | undefined, format: string | null | undefined, template = false): MakeRoute | n…`
 - `const ROUTE_RULING`
 - `const NEVER_HEADLESS`
 - `function routeLine(route: MakeRoute): string`
@@ -3118,6 +3120,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `const POST_PATH`
 - `const GOOD_NEWS_STORIES`
 - `const CLAUDE_LABEL`
+- `const PUBLISH_LABEL`
 - `const NOTES_HEADING`
 - `const VISUAL_POINTS_ASK`
 - `const VISUAL_POINTS_HEADING`
@@ -3126,6 +3129,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `interface ModelStory`
 - `interface ModelRead`
 - `type ModelAction = Action`
+- `interface ModelAsset`
 - `interface ModelItem`
 - `interface ModelRepeatOf`
 - `interface ModelRepeat`
@@ -3139,7 +3143,8 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function offdayKind(o: Body): { kind: OffdayKind; supports: 'mon' | 'wed' | 'fri' | null }`
 - `function kindLabel(kind: OffdayKind, supports: string | null): string`
 - `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
-- `function offdayHead(route: MakeRoute | null): string`
+- `function offdayHead(route: MakeRoute | null, template: ViewTemplate | null = null, caption: string | null = null): stri…`
+- `function captionOf(o: ViewOption, raw: Body | null | undefined): string | null`
 - `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
 - `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
@@ -3175,6 +3180,7 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const WRITE_BACK_HEAD`
 - `const RESEARCH_RULE`
 - `const WALLS`
+- `const WALLS_SCHEDULE`
 - `const CLOSE_LOOP`
 - `const APPROVAL_RULE`
 - `interface WriteBackTarget`
@@ -4823,10 +4829,13 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `interface BrandFrameProps`
 - `function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement`
+- `function onFullPlate(props: EngineRenderProps, beat: EngineBeat): boolean`
+- `const CAPTION_HALO`
 - `function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
+- `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
 
 ### `apps/renderer/src/engine/VeCut.tsx`
@@ -4947,7 +4956,12 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 ### `apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx`
 
 - `const ART_REGION`
-- `function keyIndex(page: EngineRenderProps['captions'][number]): number`
+- `const ART`
+- `function keyIndex(page: Page): number`
+- `function echoIndex(page: Page): number | null`
+- `type ArtRow = { words: number[]; size: number }`
+- `function artLayout(page: Page, aspect: EngineRenderProps['aspect']): { rows: ArtRow[]; key: number; height: number }`
+- `function cutHeight(captions: readonly Page[], aspect: EngineRenderProps['aspect']): number`
 - `function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/CallCard.tsx`
@@ -5118,6 +5132,18 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function codeState({ object, events, frame, aspect }: Pick<DeviceProps, 'object' | 'events' | 'frame' | 'aspect'>)`
 
+### `apps/renderer/src/engine/devices/credit_meter/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/credit_meter/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/credit_meter/state.ts`
+
+- `function creditState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
 
 - `function buddyState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
@@ -5154,6 +5180,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/evidence_card/state.ts`
 
 - `function evidenceState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/facility_block/index.tsx`
+
+- `interface Rect`
+- `function facilityLayout(box: DeviceProps['box'], aspect: DeviceProps['aspect'], s: ReturnType<typeof facilityState>, p:…`
+- `function Device(props: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/facility_block/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/facility_block/state.ts`
+
+- `function facilityState({object, events, frame}: Pick<DeviceProps, 'object'|'events'|'frame'>)`
 
 ### `apps/renderer/src/engine/devices/film_frame/index.tsx`
 
@@ -5542,6 +5582,22 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 ### `apps/renderer/src/engine/devices/registry.ts`
 
 - `const DEVICES: DeviceRegistry`
+
+### `apps/renderer/src/engine/devices/scene_plate/index.tsx`
+
+- `export { coverRect } from './state'`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/scene_plate/schema.ts`
+
+- `const ShotSchema`
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/scene_plate/state.ts`
+
+- `function coverRect(shot: { width: number; height: number; focus?: { x: number; y: number } }, boxW: number, boxH: numbe…`
+- `function sceneState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `function cameraPose(camera: string, p: number, frame: number, w: number, h: number, focus: { x: number; y: number })`
 
 ### `apps/renderer/src/engine/devices/scribble/index.tsx`
 
@@ -6087,17 +6143,18 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `function windowCameraBox(aspect: Aspect): Box`
 - `function windowCameraState(beats: readonly EngineBeat[], aspect: Aspect, frame: number): { box: Box; scale: number; win…`
 
-### `apps/renderer/src/engine/mocks/face-with-proof.tsx`
+### `apps/renderer/src/engine/layouts/splitGeometry.ts`
 
-- `interface FWPMockProps`
-- `const FWP_SPLIT_SEAM_Y`
-- `const FWP_MOCK_STAGE_SCALE`
-- `const FWP_SPLIT_CAPTION_ZONE`
-- `const FWP_POSTER_POSITIONS`
-- `const FWP_PLACEMENTS`
-- `const FWP_TARGETS`
-- `const FWP_SCALED_TARGETS`
-- `const FWP_MOCKS`
+The SPLIT layout's geometry, as the renderer and QC both read it: one seam between the graphics stage above and
+
+- `const SPLIT_SEAM_Y`
+- `const SPLIT_STAGE_LEFT`
+- `const SPLIT_STAGE_TOP`
+- `const SPLIT_STAGE_WIDTH`
+- `const SPLIT_STAGE_HEIGHT`
+- `const SPLIT_STAGE_SCALE`
+- `const SPLIT_CAPTION_ZONE`
+- `const SPLIT_POSTER_POSITIONS`
 
 ### `apps/renderer/src/engine/props.ts`
 
@@ -6142,6 +6199,24 @@ Spot inks, paper and shadow. All still colour values live here, including device
 - `function stillIds(): {layer:Layer; id:string}[]`
 - `function coverPlan(layer:Layer,id:string)`
 
+### `apps/renderer/src/engine/stills/split/SplitKeyFrame.tsx`
+
+- `const SplitKeyFrameSchema`
+- `type SplitKeyFrameProps = z.infer<typeof SplitKeyFrameSchema>`
+- `const REFERENCES`
+- `function captionTokens(value: string): string[]`
+- `const STAGE_TEXT`
+- `const SPLIT_ASSETS`
+- `function SplitKeyFrame(input: SplitKeyFrameProps)`
+
+### `apps/renderer/src/engine/title/TitleMoment.tsx`
+
+- `type TitleWord = { text: string; atFrame: number }`
+- `type Box = { left: number; top: number; width: number; height: number }`
+- `type TitleMomentProps`
+- `function titleLayout(words: TitleWord[], stage: Box, aspect: TitleMomentProps['aspect'])`
+- `function TitleMoment(props: TitleMomentProps): JSX.Element | null`
+
 ### `apps/renderer/src/engine/transport.ts`
 
 JSON-value transport: escape values only; keys retain their original spelling.
@@ -6149,6 +6224,11 @@ JSON-value transport: escape values only; keys retain their original spelling.
 - `function toAsciiProps<T>(value: T): T`
 - `function fromAsciiProps<T>(value: T): T`
 - `function lagSamples(rendered: Float32Array, stem: Float32Array, maxLag: number): number`
+
+### `apps/renderer/src/engine/treatments/Grade.tsx`
+
+- `type GradeProps`
+- `function GradedBackdrop({ src, focus, tokens, frame, width, height }: GradeProps): JSX.Element`
 
 ### `apps/renderer/src/engine/treatments/SubjectLift.tsx`
 
@@ -7601,6 +7681,10 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 
 - `interface YoutubeUploadInput`
 - `async function uploadPrivateYoutubeVideo(input: YoutubeUploadInput): Promise<unknown>`
+
+### `scripts/audit-caption-steady.ts`
+
+Measure every caption style against the caption rules on one-word pages, in real Chromium, and write the table
 
 ### `scripts/check-control-plane.ts`
 

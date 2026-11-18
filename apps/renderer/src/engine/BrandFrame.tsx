@@ -1,7 +1,7 @@
 import { isStaging } from './kit/staging'
 import React from 'react'
 import { HOUSE } from '../house/geometry'
-import { FWP_SPLIT_CAPTION_ZONE } from './mocks/face-with-proof'
+import { SPLIT_CAPTION_ZONE } from './layouts/splitGeometry'
 import { Grain } from '../house/components'
 import { CallCard } from './chrome/CallCard'
 import { EndingBand } from './chrome/EndingBand'
@@ -40,7 +40,7 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     {/* The logo only on the title frame and the close (Ruling, Krish, 2026-11-17): with bodyLogo false the wide cut
         keeps its series pill and draws no mark tile and no header logo. */}
     {props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={house} /> : <>
-      {props.bodyLogo === false ? null : <MarkTile props={house} />}
+      {props.bodyLogo === true ? <MarkTile props={house} /> : null}
       <ChannelPill props={house} beat={beat} />
     </>}
     {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);
@@ -48,21 +48,39 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={house} frame={frame} />
       : call ? <CallCard props={house} frame={frame} />
-        : props.captionTheme ? <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />
+        : props.captionTheme ? (onFullPlate(props, beat)
+          ? <div data-caption-halo style={{ position: 'absolute', inset: 0, filter: CAPTION_HALO }}><ThemedCaption props={props} theme={props.captionTheme} frame={frame} /></div>
+          : <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />)
         : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />
         : props.captionStyle === 'word' ? <WordCaption props={props} frame={frame} />
         : beat.layout === 'SPLIT' ? <SplitCaptionTrack props={props} frame={frame} /> : <CaptionTrack props={props} frame={frame} />}
   </>
 }
 
+/** True when the beat is a full-bleed scene plate: a busy photograph fills the frame behind the captions. Never his take
+ *  (F1, SPLIT) and never the cream stage, whose devices sit on a plain ground. */
+export function onFullPlate(props: EngineRenderProps, beat: EngineBeat): boolean {
+  if (beat.layout !== 'STAGE') return false
+  return beat.uses.some((id) => {
+    const object = props.objects.find((o) => o.obj === id)
+    return object?.device === 'scene_plate' && object.params.full !== false
+  })
+}
+
+/** A tight dark halo around a themed caption's letters on a full scene plate: the step after the lift's soft shadow,
+ *  which left the rack-focus words unreadable on the Wed 18 crocodile plate (ve qc captions.ocr and captions.render,
+ *  18 Nov 2026). It hugs the glyphs and darkens nothing else, so the picture behind (the crocodile's eye) keeps its light,
+ *  where a floor under the band would have dimmed it. */
+export const CAPTION_HALO = 'drop-shadow(0 0 2px rgba(0,0,0,0.95)) drop-shadow(0 0 3px rgba(0,0,0,0.9)) drop-shadow(0 2px 14px rgba(0,0,0,0.7))'
+
 /** Reuse caption timing, word layout and swipe; apply the frozen split frame's compact padding. */
 export function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number }) {
   const caption = CaptionTrack({ props, frame })
   if (!caption) return null
   const height = Number(caption.props.style.height) - HOUSE.caption.paddingTop - HOUSE.caption.paddingBottom + 20
-  if (height > FWP_SPLIT_CAPTION_ZONE.height) throw new Error('ve: SPLIT caption exceeds frozen zone; repaginate')
+  if (height > SPLIT_CAPTION_ZONE.height) throw new Error('ve: SPLIT caption exceeds frozen zone; repaginate')
   return React.cloneElement(caption, { style: {
-    ...caption.props.style, ...FWP_SPLIT_CAPTION_ZONE, height,
+    ...caption.props.style, ...SPLIT_CAPTION_ZONE, height,
     padding: `10px ${HOUSE.caption.paddingX}px`,
   } })
 }

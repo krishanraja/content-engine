@@ -4,7 +4,7 @@ import { CAPTION_THEMES } from './captions/names'
 import { THEMES } from './captions/themes'
 import { REGIONS, hero, heroScore, key } from './captions/kit'
 import { ThemedCaption } from './chrome/ThemedCaption'
-import { ART_REGION, ANTON_EM_PER_LETTER, ArtDirectedCaption, ROW_GAP_PX, keyFontSize, keyIndex, rowFontSize } from './chrome/ArtDirectedCaption'
+import { ART_REGION, ArtDirectedCaption, artLayout, cutHeight, keyIndex } from './chrome/ArtDirectedCaption'
 import { BrandFrame } from './BrandFrame'
 import { exitProgress } from './captions/draw'
 import { EngineRenderPropsSchema } from './props'
@@ -136,29 +136,128 @@ describe('the caption styles (Krish, 2026-11-11)', () => {
     expect(keyIndex(props.captions[0]!)).toBe(3)
   })
 
-  it('art-directed: a key word too long for 168 px is set as large as fits its region (habits short, 18 Nov)', () => {
-    const w = ART_REGION['9:16'].width
-    expect(keyFontSize('branches.', w)).toBe(168)
-    const big = keyFontSize('Accountability.', w)
-    expect(big).toBeLessThan(168)
-    expect(big * 'ACCOUNTABILITY'.length * ANTON_EM_PER_LETTER).toBeLessThanOrEqual(w)
-    const base = EngineRenderPropsSchema.parse(fixture)
-    const props = { ...base, captionTheme: 'art-directed' as const, captions: [page(['Slop', 'with', 'no', 'accountability.']), ...base.captions.slice(1)] }
-    const html = render(ArtDirectedCaption({ props, frame: 40 }))
-    expect(html).not.toContain('"fontSize":168'); expect(html).toContain(`"fontSize":${big}`)
+  // The three caption rules (Krish, 2026-11-18, of the Tue 17 data-centres short, one word a page: "They are really
+  // jolty, and each word moving from left to right is really hard to look at and stressful. We can't have each new word
+  // appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer."):
+  // 1 a new word never appears somewhere else, 2 the previous page stays a little longer, 3 nothing jolts.
+  const oneWord = (texts: string[], per = 6, emphasised: number[] = []) => texts.map((text, i) =>
+    ({ fromFrame: i * per, toFrame: (i + 1) * per, words: [{ text, atFrame: i * per }], swipeIndex: emphasised.includes(i) ? 0 : null }))
+  const artProps = (captions: ReturnType<typeof oneWord>) =>
+    ({ ...EngineRenderPropsSchema.parse(fixture), captionTheme: 'art-directed' as const, captions })
+  /** Every element of a React tree that satisfies `pred`. */
+  const elements = (node: any, pred: (el: any) => boolean, out: any[] = []): any[] => {
+    if (!node || typeof node !== 'object') return out
+    if (Array.isArray(node)) { node.forEach((n) => elements(n, pred, out)); return out }
+    if (node.props && pred(node)) out.push(node)
+    elements(node.props?.children, pred, out)
+    return out
+  }
+  const flat = (el: any) => (typeof el.props.children === 'string' ? el.props.children : [el.props.children].flat(9).filter((c: unknown) => typeof c === 'string').join(''))
+  const words = (node: any) => elements(node, (e) => e.props['data-art-word'] !== undefined)
+  const stack = (node: any) => elements(node, (e) => e.props['data-art-stack'])[0]
+  const ghost = (node: any) => elements(node, (e) => e.props['data-caption-ghost'])[0]
+  const echoes = (node: any) => elements(node, (e) => e.props['data-caption-echo'])
+
+  it('art-directed rule 1: every one-word page lands in the same place, left aligned from one corner, never alternating', () => {
+    const props = artProps(oneWord(['Secretly', 'they', 'charge', 'you', 'more', 'than', 'you', 'would', 'pay']))
+    const anchors = props.captions.map((p) => {
+      const drawn = ArtDirectedCaption({ props, frame: p.words[0]!.atFrame + 2 })
+      const s = stack(drawn).props.style
+      const [w] = words(drawn)
+      return { left: s.left, top: s.top, align: s.alignItems, size: w.props.style.fontSize, row: artLayout(p, '9:16').rows.length }
+    })
+    expect(new Set(anchors.map((a) => JSON.stringify(a))).size).toBe(1)
+    // one row of 168 px at 0.96, hanging from the foot of the region (y 1320 on the tall frame)
+    expect(anchors[0]).toMatchObject({ left: 0, align: 'flex-start', size: 168, row: 1 })
+    expect(anchors[0]!.top + 168 * 0.96).toBeCloseTo(ART_REGION['9:16'].height, 5)
+    // phrase pages too: page after page is drawn from the same corner, whatever its words
+    const phrases = { ...props, captions: [page(['Banks', 'opened', 'more', 'branches.']),
+      { ...page(['Then', 'they', 'closed.']), fromFrame: 60, toFrame: 120, words: page(['Then', 'they', 'closed.']).words.map((w) => ({ ...w, atFrame: w.atFrame + 60 })) }] }
+    const a = JSON.stringify(stack(ArtDirectedCaption({ props: phrases, frame: 40 })).props.style)
+    const b = JSON.stringify(stack(ArtDirectedCaption({ props: phrases, frame: 100 })).props.style)
+    expect(a).toBe(b)
+    expect(render(ArtDirectedCaption({ props: phrases, frame: 100 }))).not.toContain('flex-end')
   })
 
-  it('art-directed: a row of words too wide for 92 px is set as large as fits (habits short, 61.8 s, 18 Nov)', () => {
-    const w = ART_REGION['9:16'].width
-    expect(rowFontSize(['the', 'only'], w)).toBe(92)
-    const row = ['that', 'are', 'getting', 'people']
-    const size = rowFontSize(row, w)
-    expect(size).toBeLessThan(92)
-    expect(size * row.join('').length * ANTON_EM_PER_LETTER + (row.length - 1) * ROW_GAP_PX).toBeLessThanOrEqual(w)
-    const base = EngineRenderPropsSchema.parse(fixture)
-    const props = { ...base, captionTheme: 'art-directed' as const, captions: [page(['that', 'are', 'getting', 'people', 'unaccountable.']), ...base.captions.slice(1)] }
-    const html = render(ArtDirectedCaption({ props, frame: 40 }))
-    expect(html).toContain(`"fontSize":${size}`)
+  it('art-directed rule 1, phrase pages: the first word of every page lands at the same point, whatever its row count', () => {
+    const at = (from: number, texts: string[], swipe: number | null = null) =>
+      ({ fromFrame: from, toFrame: from + 40, words: texts.map((text, i) => ({ text, atFrame: from + i * 7 })), swipeIndex: swipe })
+    const captions = [at(0, ['Banks', 'opened', 'more', 'branches.'], 3), at(40, ['Then', 'the', 'quiet', 'lender', 'closed.'], 4), at(80, ['Why?'], 0)]
+    const props = { ...EngineRenderPropsSchema.parse(fixture), captionTheme: 'art-directed' as const, captions }
+    const heights = captions.map((p) => artLayout(p, '9:16').height)
+    expect(heights[1]!).toBeGreaterThan(heights[0]!)           // a taller page than the first...
+    expect(cutHeight(captions, '9:16')).toBeCloseTo(Math.max(...heights), 5)  // ...so the stack hangs from the tallest
+    const first = captions.map((p) => {
+      const drawn = ArtDirectedCaption({ props, frame: p.fromFrame + 2 })
+      return { top: stack(drawn).props.style.top, left: stack(drawn).props.style.left, ghostBottom: ghost(drawn)?.props.style.bottom }
+    })
+    expect(first[0]!.top).toBe(first[1]!.top); expect(first[1]!.top).toBe(first[2]!.top)
+    expect(first[1]!.ghostBottom).toBe(first[2]!.ghostBottom)  // the ghost line never moves either
+    // and the tallest page never runs past the foot of the region into the platforms' bottom band (y 1320)
+    expect(first[0]!.top + Math.max(...heights)).toBeCloseTo(ART_REGION['9:16'].height, 5)
+  })
+
+  it('art-directed: a page is laid out whole before its words are said, so a word lands where it was reserved', () => {
+    const p = { ...artProps([]), captions: [page(['Banks', 'opened', 'more', 'branches.'])] }
+    const before = ArtDirectedCaption({ props: p, frame: 0 }), after = ArtDirectedCaption({ props: p, frame: 40 })
+    const rows = (n: any) => JSON.stringify(elements(n, (e) => typeof e.props.style?.height === 'number').map((e) => e.props.style.height))
+    expect(rows(before)).toBe(rows(after))
+    expect(words(before)).toHaveLength(4); expect(words(after)).toHaveLength(4)
+    expect(words(before).filter((e) => e.props.style.visibility === 'hidden')).toHaveLength(3)
+    expect(words(after).filter((e) => e.props.style.visibility === 'hidden')).toHaveLength(0)
+    expect(artLayout(p.captions[0]!, '9:16').rows.map((r) => r.size)).toEqual([92, 168])
+  })
+
+  it('art-directed: a long key word shrinks to the region, a short one stays at 168', () => {
+    const long = artLayout(page(['infrastructure.']), '9:16').rows[0]!
+    expect(long.size).toBeLessThan(168); expect(long.size * 'infrastructure'.length * 0.47).toBeLessThanOrEqual(ART_REGION['9:16'].width + 1)
+    expect(artLayout(page(['pay']), '9:16').rows[0]!.size).toBe(168)
+  })
+
+  it('art-directed rule 2: the previous word stays, smaller and dimmed on the line above, for a few hundred ms, then fades', () => {
+    const props = artProps(oneWord(['charge', 'you'], 6).map((p, i) => i === 1 ? { ...p, toFrame: 90 } : p)) // "you" runs 2.8 s
+    const at = (frame: number) => ArtDirectedCaption({ props, frame })
+    const g0 = ghost(at(6))
+    expect(g0, 'the previous word is there on the frame the next is said').toBeTruthy()
+    expect(flat(elements(g0, (e) => e.props.style?.fontSize === 52)[0])).toBe('CHARGE')
+    const size = (n: any) => n.props.style.fontSize
+    expect(size(elements(g0, (e) => e.props.style?.fontSize === 52)[0])).toBeLessThan(size(words(at(6))[0]))
+    // dimmer than the word being said, above it, and still there 0.3 s on
+    expect(g0.props.style.opacity).toBeLessThanOrEqual(0.5)
+    expect(g0.props.style.bottom).toBeGreaterThan(168 * 0.96) // above the stack of one 168 px row
+    const mid = ghost(at(6 + 9)); expect(mid.props.style.opacity).toBeCloseTo(0.5, 2)
+    // gone after the hold (0.6 s), not before it, and its last 0.2 s is a fade rather than a cut
+    expect(ghost(at(6 + 14))?.props.style.opacity).toBeLessThan(0.5)
+    expect(ghost(at(6 + 19))).toBeFalsy()
+    // the first page has nothing before it
+    expect(ghost(at(2))).toBeFalsy()
+  })
+
+  it('art-directed rule 3: nothing jolts: no scale or turn, a new word is never invisible, the echo and ghost only fade', () => {
+    const props = artProps(oneWord(['Secretly', 'they', 'charge', 'you', 'more'], 5, [2]))
+    let echoSeen = 0
+    for (let frame = 0; frame < 28; frame++) {
+      const drawn = ArtDirectedCaption({ props, frame })
+      if (!drawn) continue
+      expect(render(drawn), `frame ${frame}`).not.toMatch(/scale|rotate|skew/)
+      for (const w of words(drawn)) expect(w.props.style.transform).toMatch(/^translateY\(/)
+      for (const w of words(drawn).filter((e) => e.props.style.visibility === 'visible')) expect(w.props.style.opacity, `frame ${frame}`).toBeGreaterThanOrEqual(0.7)
+      for (const e of echoes(drawn)) { echoSeen++; expect(e.props.style.opacity).toBeLessThanOrEqual(0.07 + 1e-9) }
+    }
+    expect(echoSeen).toBeGreaterThan(0)
+    // the word said on frame 10 is already on screen on frame 9, one frame early, so it never pops on late
+    expect(words(ArtDirectedCaption({ props, frame: 9 }))[0]!.props.style.visibility).toBe('visible')
+  })
+
+  it('art-directed: the echo goes to an emphasised word or a phrase, never flickers behind every word of a one-word page', () => {
+    const plain = artProps(oneWord(['Secretly', 'they', 'charge']))
+    for (let frame = 0; frame < 18; frame++) expect(echoes(ArtDirectedCaption({ props: plain, frame }))).toHaveLength(0)
+    const emphasised = artProps(oneWord(['Secretly', 'they', 'charge'], 6, [1]))
+    expect(echoes(ArtDirectedCaption({ props: emphasised, frame: 9 })).map(flat)).toEqual(['THEY'])
+    // and when the next page begins the last echo fades out under it instead of cutting
+    const handover = echoes(ArtDirectedCaption({ props: emphasised, frame: 13 }))
+    expect(handover.map(flat)).toEqual(['THEY']); expect(handover[0].props.style.opacity).toBeLessThan(0.07)
+    expect(echoes(ArtDirectedCaption({ props: { ...plain, captions: [page(['Banks', 'opened', 'more', 'branches.'])] }, frame: 40 })).map(flat)).toEqual(['BRANCHES'])
   })
 
   it('refuses a style name the engine does not have', () => {

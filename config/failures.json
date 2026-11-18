@@ -2742,12 +2742,16 @@
         {
           "cause": "standard_missing",
           "evidence": "A still had no bar: it should be shop-window cover art that makes him want to pick the style, from the work he praised (the AI music piece, the Rat Tails piece, his drawn character)."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "The 16 Nov purge searched the board stills, Drive and caches, never the design lock, whose frozen key frames were the same frames, nor the lab pin; it was asked again on 18 Nov where the image was still used."
         }
       ],
       "related": [
         "cut-called-done-unheard"
       ],
-      "surface": "Every copy was burned (Drive bin, local caches). A board still is now the StyleStill cover art from Codex card docs/ve/cards/style-stills/ve-style-still-template-1.md, never a cut of a take; ve lab still and ve lab sample refuse any cut of a take. The lab's own pinned take is still that recording; Krish, 2026-11-17, named the replacement: \"character.ai or ai music are good\" (config/ve/lab.json take, then a lab run on the new take).",
+      "surface": "Every copy was burned (Drive bin, local caches). A board still is now the StyleStill cover art from Codex card docs/ve/cards/style-stills/ve-style-still-template-1.md, never a cut of a take; ve lab still and ve lab sample refuse any cut of a take. The 16 Nov purge missed the design lock: the four key frames of the face-with-proof lock (fixtures/ve/design-lock/face-with-proof/, hash-bound in config/ve/design-lock.json) were the same three frames he rejected, and every face-with-proof cut was matched against them. Krish, 2026-11-17: \"character.ai or ai music are good\"; 2026-11-18, asked where the image was still used: \"DELETE THOSE FRAMES FOREVER. you need to rebuild everywhere it was to be 10X better using those two new references\". 18 Nov: ve lock retire deleted the four frames and barred their hashes from freeze (a test fails if one is back in the tree), and ve lock rules-only then dropped the picture-matching on his words, so the format is a lock held to its rules, the Critic and his approval; the live split geometry left apps/renderer/src/engine/mocks/face-with-proof.tsx (deleted, with its Thursday mocks and their three Codex cards) for layouts/splitGeometry.ts; the lab refuses to stage the retired take (lab.json retired_takes). Still open: Codex cards docs/ve/cards/fwp-rebuild/ build the replacement stills from the AI music and Character.AI pieces, the design he approves, and the lab needs a ve piece on a take from one of those two pieces before it can render again (neither has one: the AI music short was a one-off composite, Character.AI predates ve). This entry closes when both are done.",
       "guards": [
         {
           "file": "scripts/velib/lab.py",
@@ -2758,6 +2762,21 @@
           "file": "tests/ve_lab_test.py",
           "contains": "test_a_sample_of_his_take_is_never_recorded_for_the_board",
           "how": "a sample of his take is refused"
+        },
+        {
+          "file": "scripts/velib/designlock.py",
+          "contains": "def retired_hashes",
+          "how": "ve lock freeze refuses any key frame whose hash was retired on his words"
+        },
+        {
+          "file": "tests/ve_designlock_test.py",
+          "contains": "test_no_retired_frame_is_back_in_the_tree",
+          "how": "no image under fixtures or docs may carry a retired frame's hash"
+        },
+        {
+          "file": "scripts/velib/lab.py",
+          "contains": "def retired_take",
+          "how": "the lab stages nothing from a take listed in lab.json retired_takes"
         }
       ],
       "watch": {
@@ -2767,6 +2786,109 @@
           "board"
         ],
         "line": "Never use a frame of a take or cut he rejected as an example; board stills are StyleStill cover art, never a cut of a take."
+      }
+    },
+    {
+      "id": "head-cut-off-and-visual-squeezed",
+      "on": "2026-11-18",
+      "status": "guarded",
+      "mode": "obvious-rule-left-to-a-reference",
+      "guard_level": "lint_refuse",
+      "krish": "\"Dont cut the top of my head off\" should not really need a reference image, should it? This session literally just did that [a link to this session] which I find insane that you wouldnt know not to do that. Then, of a proof video, wed18-proof-hook-video.mp4: But this treatment is not good. Can't cut my head off and also ruin the visual above",
+      "what": "A Wed 18 Nov proof video in the SPLIT layout cut the top of his head off and drew its picture in a thin strip above him. The first render of the replacement key frames did the same to his head (a face band cropped from the top of the take), and the tests Codex wrote asserted that crop.",
+      "symptom": "His head cropped by the camera band, and a 16:9 visual shrunk to a sliver.",
+      "cause": "The engine checked only that no caption sat on his face (qc_faces.off_face). Nothing checked that his whole head was in the picture: the camera crop defaulted to a value set on one earlier take (SPLIT_POSTER_POSITIONS, 50% 88%). His takes are 1080 x 1920 and the camera box is 1160 high, so 88% hides the top 669 rows, which is his forehead on the Wed 18 Build-or-buy take (reproduced 18 Nov: a render of that take at 88% shows the cut at the eyebrows, and the new check fails it with the crown 336 px up and no face found in two beats). The proof box was 960 x 400, 2.4 to 1, so photo_plate's cover crop trimmed a 16:9 visual. A rule he calls obvious was left to a card sentence and to key frames of an old video.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check measured the head against the band edge: only caption-over-face existed."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "No rule said the proof box must hold a 16:9 visual; the seam and the box were whatever the old frames had."
+        }
+      ],
+      "surface": "18 Nov: (1) plate.head_in_band measures the head (crown to chin) on every SPLIT take beat at three samples, fails the cut with the pixels it is cut by and names the plate.crop that would hold every sampled head (qc_faces.head_in_band, fitting_position; counted; starting values uncalibrated; not_run without a face detector). (2) The default crop is now 50% 16% (splitGeometry.ts), which keeps crown and chin in the box on both portrait takes measured (Wed 18, AI music; every sample), and qc_as_shot reads it from that file. (3) The SPLIT stage is a true 16:9 (768 x 432 at x 76, y 288, centred in the platform safe column and ending above the caption and his head), so a 16:9 visual is drawn whole. Rendered on both real takes with a 16:9 test visual: 12 of 12 head samples whole on each, and the old crop fails the same check. Not calibrated: the default is one value measured on two takes; a take framed differently is caught by the check, not by the default.",
+      "guards": [
+        {
+          "file": "scripts/velib/qc_faces.py",
+          "contains": "def head_in_band",
+          "how": "a cut whose head is cropped by the band fails with the pixels"
+        },
+        {
+          "file": "tests/ve_qc_faces_test.py",
+          "contains": "class HeadInBand",
+          "how": "crown, chin, a moving head, no face and no detector"
+        },
+        {
+          "file": "apps/renderer/src/engine/layouts/split.test.ts",
+          "contains": "never defaults the take to the bottom of its frame",
+          "how": "the default crop stays near the top of the take; the stage is 16:9, above the seam, inside the safe column"
+        },
+        {
+          "file": "tests/ve_qc_faces_test.py",
+          "contains": "test_the_renderers_default_crop_keeps_both_portrait_takes_whole",
+          "how": "the measured Wed 18 and AI music face boxes stay whole under the renderer's default crop"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video"
+        ],
+        "line": "A cut never crops his head and never squeezes the picture above him; both are measured rules, never left to a reference image."
+      }
+    },
+    {
+      "id": "carousel-body-font",
+      "on": "2026-11-18",
+      "status": "guarded",
+      "mode": "brand-default-kept-after-rejection",
+      "guard_level": "prose",
+      "krish": "this font is crappy, i have given this feedback before (typed in the ChatGPT ads carousel session, 18 Nov 21:13, and again to this session: why would it still keep popping up in carousels?). Earlier, 18 Nov, recorded in docs/CAROUSEL-STANDARD.md: \"the font and look are substandard\". He then saw the deck set in Anton and said \"go\"",
+      "what": "Carousel body cards (the shipped ChatGPT ads carousel) set every sentence in Archivo at its heaviest weight, tight, with a mint phrase: the face he has now rejected twice.",
+      "symptom": "The same heavy body face on every carousel card after he had said the font was substandard.",
+      "cause": "The 18 Nov standard answered \"the font and look are substandard\" with a designed card (kicker, rule, large and tight) and named Archivo Black as the sentence face, so the fix changed everything but the face. The brand's structure face is Archivo (also every caption, at 900), the floor every maker reads says to use the brand typeface consistently (draft and approved lines, 4 Nov), and no check reads fonts: carousel_check.py measures words and layout only. His objection was in a standard's prose, not in the floor or a check.",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "No rule said which face a body sentence takes or that heavy Archivo is rejected; the floor's only font lines require brand-font consistency."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "Nothing in scripts/carousel_check.py or the card template reads or names a typeface."
+        }
+      ],
+      "surface": "18 Nov: the face is chosen by what he approved: Anton, uppercase, mint key phrase, Plex Mono kicker (the ads carousel session switched its cards to it within about a minute of his words and he said go). Now written into the standard and, because every carousel is built from a Codex card, into the card itself (CAROUSEL_BODY_TYPE, scripts/velib/cards.py; tested), together with a ban on Archivo Black and Archivo at 800 or heavier. This entry is printed to every session that runs check_failures.py. Not covered: no check reads a drawn card's font; the rejection floor (config/rejection-floor.json, written only by the Rejections engine from his reported words) does not carry it yet, and his words could not be reported on 18 Nov (the taste engine connection had reached its daily report limit); the ads carousel's cover subline is still Archivo and its session asked him about it. Found later on 18 Nov: Growth's own renderer is where the face keeps coming from (growth-makeyourmindup render/kit.css `--body: 'Archivo'`, render/templates/carousel-body.html `.body`), so the standard and the card are not enough on their own. The change is Growth's to make and is written up in docs/GROWTH-HANDOFF.md (\\\"Open for Growth: the carousel body face\\\"); this session was refused write access to that repository, so it is not made.",
+      "guards": [
+        {
+          "file": "docs/CAROUSEL-STANDARD.md",
+          "contains": "Never Archivo Black, and never Archivo at weight 800",
+          "how": "the standard names the rejected face and weight"
+        },
+        {
+          "file": "scripts/velib/cards.py",
+          "contains": "CAROUSEL_BODY_TYPE",
+          "how": "every carousel Codex card states the body face and bans the rejected one"
+        },
+        {
+          "file": "tests/ve_cards_test.py",
+          "contains": "test_a_carousel_card_names_the_body_face_and_the_one_he_rejected",
+          "how": "the card text carries the rule"
+        },
+        {
+          "file": "docs/GROWTH-HANDOFF.md",
+          "contains": "Open for Growth: the carousel body face",
+          "how": "Growth's renderer change is written down with the file and the rule"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "carousel",
+          "cover",
+          "card"
+        ],
+        "line": "Carousel body sentences are Anton, uppercase; never Archivo Black or Archivo at weight 800 or heavier (Krish, 2026-11-18: \"this font is crappy, i have given this feedback before\"); brand-font consistency never means that face."
       }
     },
     {
@@ -3257,6 +3379,59 @@
           "card"
         ],
         "line": "Every line of meaning-bearing text sits whole inside its device: no cropped headers, no prompt or question cut mid-sentence. Nothing checks this yet; read every text cue on the proof frames."
+      }
+    },
+    {
+      "id": "F57-captions-jolt-between-words",
+      "on": "2026-11-18",
+      "krish": "I have some issues with the subtitles. They are really jolty, and each word moving from left to right is really hard to look at and stressful. We can't have each new word appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer. I think you're going to need to get creative here or use a different caption set because this one feels really stressful. (Shown the same 8 seconds in podcast and karaoke, of podcast: \"the first one is better.\")",
+      "what": "The Tue 17 data-centres short (piece b019dbf8) was set in art-directed captions on a face-with-proof cut, whose pages are one word each (brand.captions \"word\"). Art-directed drew each page as an Anton phrase that alternated sides of the frame by page index, so on one-word pages every new word landed on the other side of the screen and the old word vanished at once. Measured on the sack window of his take (ve proof, 8 s): the word's left edge jumped 60 px or more 23 times, and 27 page starts drew a blank frame.",
+      "symptom": "Each new caption word appears somewhere else on the screen, the previous word is gone the instant it does, and the words flash: the captions read as jolty and stressful.",
+      "cause": "The style was built and picked on multi-word pages (the 9 Nov proactive-AI short) and then drawn on one-word pages, where its alternating sides, 0.12 s scale pop from nothing and per-word echo all fire on every word. Nothing in ve measured where a caption word lands from page to page, or whether the word before stays, so a style that moves its words was offered and picked.",
+      "status": "guarded",
+      "mode": "caption-words-jump-between-places",
+      "guard_level": "lint_refuse",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "ve qc read caption words, timing and the face (F28), never where each new word lands; art-directed alternated sides by index % 2 and nothing flagged it on one-word pages."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "No caption rule said a new word lands in one place, that the previous word stays a little longer, or that nothing jolts; captions/draw.tsx held only the page-exit rule."
+        }
+      ],
+      "surface": "Three rules for every caption style (docs/ve/INGREDIENTS.md, \"The caption rules\"): a new word never appears somewhere else; the previous word or phrase stays a little longer; nothing jolts. art-directed is rebuilt to them (one fixed corner, the last page dimmed above it for 0.6 s, words fade up with no scale pop, echo only for an emphasised word or a phrase) and proved on his take beside the old build. Every style is measured on one-word pages (config/ve/caption-steady.json) and ve lint refuses, from 18 Nov, a style that moves its word on a word-mode cut (cinematic, stair-flash, anchor-quote). Rule 2 is kept only by podcast and art-directed: the other 25 styles still cut the previous word at once, recorded as previous_word_kept false, so the gap is open and not yet a refusal.",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx",
+          "contains": "export function cutHeight(",
+          "how": "art-directed hangs every page from one fixed point, keeps the previous page above it, and fades words in with no scale; the tests count every one-word page's anchor, the ghost and the fade",
+          "test": "npx vitest run apps/renderer/src/engine/captions.test.ts"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "def caption_steady_problems(",
+          "how": "ve lint row captions.steady: a word-mode cut (brand.captions word), from 18 Nov, refuses a caption style whose new word lands somewhere else from page to page",
+          "test": "python3 -m unittest tests.ve_lint_test"
+        },
+        {
+          "file": "config/ve/caption-steady.json",
+          "contains": "\"anchor_moves\": true",
+          "how": "every caption style measured on one-word pages in real Chromium (scripts/audit-caption-steady.ts); a style added or changed is measured again, and the lint test fails if one is missing"
+        }
+      ],
+      "related": [
+        "F28-captions-on-his-face",
+        "ve-3d-styles-slow-static-captions"
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video",
+          "captions"
+        ],
+        "line": "A caption style keeps three rules: a new word never appears somewhere else, the previous word or phrase stays a little longer, and nothing jolts. Watch the proof frame by frame on his take, not in stills; ve lint refuses a style that moves its word on a one-word cut."
       }
     }
   ]

@@ -53,7 +53,7 @@ until it does the logo appears on the close alone.
 
 ## The formats, in one line each
 
-- **Long cut (16:9).** Opens on the hook, with nothing before it (the sting is retired). The body carries no logo, only the series pill on section beats (from 23 Nov; before it, the icon tile). Closes on `statement_card`.
+- **Long cut (16:9).** Opens on the hook, with nothing before it (the sting is retired). The body carries no logo, only the series pill on section beats (from 16 Nov; no icon tile). Closes on `statement_card`.
 - **Short cut (9:16).** Opens on the hook, with no intro card and no sting. The body carries captions only: no icon, no wordmark, no pill. Closes on `statement_beat`; the title frame and the close are the only places a logo appears.
 - **Carousel (4:5).** Card 1 is the cover scene, with no logo at the top. Every card carries the wordmark small in the bottom right. The last card is `house_close_slide`.
 - **Meme and Notes image.** No logo at the top, and the wordmark small in the bottom right. No close.

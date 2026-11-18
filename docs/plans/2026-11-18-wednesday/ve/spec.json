@@ -1,0 +1,1195 @@
+{
+ "schema_version": 2,
+ "piece_id": "2026-11-18-wednesday",
+ "publish_day": "2026-11-18",
+ "format": "face-with-proof",
+ "theme": "makeyourmindup-video-v1",
+ "brand": {
+  "series": "under.the.hood",
+  "captions": "word",
+  "title": "Build or buy your tools in an AI world?",
+  "references": [
+   {
+    "id": "8ca0bd3d-454d-48fd-a2d1-98d0e5469779",
+    "card": "instagram_DfkCOCLt7KZ",
+    "for": [
+     "look"
+    ],
+    "drive_id": "1BfTNeNwSERAvHvtWSmEP9tONOP2jQqrq",
+    "takeaway": "His words on the card: \"Really well-animated and strong speaker production as well as K12 Newmalden. The captions are very unique and well-designed, like an art director would do them.\""
+   },
+   {
+    "id": "501c4fd1-4aa1-4cdd-b716-03e70c89c283",
+    "card": "instagram_DdCY4cJAQZk",
+    "for": [
+     "motion"
+    ],
+    "drive_id": "1pofv2sX1N0QptLEygxcx0YGYMOD1gjeB",
+    "takeaway": "His words on the card: \"I love the infographic style.\""
+   },
+   {
+    "id": "e73a0110-a108-456c-8781-350259b1b196",
+    "card": "instagram_DdcAPSuEw-o",
+    "for": [
+     "captions"
+    ],
+    "drive_id": "1cg1EXG6O91uOYzgyGm8Ef7I1Y0u-KVHq",
+    "takeaway": "His words on the card: \"The speed and visual engagement of the subtitles\""
+   }
+  ]
+ },
+ "signature": {
+  "hero": {
+   "device": "scene_plate",
+   "status": "new"
+  },
+  "opening_break": "a nerd in a lanyard creeping up on a crocodile asleep under the office coffee machine, on his first word",
+  "finish_pack": "house_grain",
+  "sound_palette": "house-v1 (no kit exists yet: the music bed carries the cut; docs/ve/STATUS.md, \"No sound effects kit\")",
+  "variants": {}
+ },
+ "objects": [
+  {
+   "obj": "croc_s",
+   "device": "scene_plate",
+   "meaning": "the in-house developer as a crocodile hunter: a nerd in a lanyard creeping up on a crocodile asleep under the office coffee machine (his own words, played straight)",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/croc-hook-video.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
+     }
+    ],
+    "camera": "still",
+    "full": true,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "hl_fullstack",
+   "device": "evidence_card",
+   "meaning": "the headline \"Klarna ditches Workday for AI.\" as published",
+   "persist": {
+    "from_beat": "headlines",
+    "to_beat": "headlines"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/hl-fullstackhr.png",
+    "outlet": "FullStack HR",
+    "date": "17 Sep 2024",
+    "sourceAspectRatio": 4.3689
+   }
+  },
+  {
+   "obj": "hl_itpro",
+   "device": "evidence_card",
+   "meaning": "the headline \"Marc Benioff questions Klarna CEO's move to scrap Workday, Salesforce\" as published",
+   "persist": {
+    "from_beat": "headlines",
+    "to_beat": "headlines"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/hl-itpro.png",
+    "outlet": "IT Pro",
+    "date": "13 Sep 2024",
+    "sourceAspectRatio": 1.9302
+   }
+  },
+  {
+   "obj": "gone_logos",
+   "device": "logo_card",
+   "meaning": "the two software bills Klarna said it switched off: Salesforce and Workday",
+   "persist": {
+    "from_beat": "headlines",
+    "to_beat": "headlines"
+   },
+   "params": {
+    "logos": [
+     {
+      "id": "Salesforce"
+     },
+     {
+      "id": "Workday"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "sf_screen",
+   "device": "evidence_card",
+   "meaning": "Salesforce's own picture of its customer record screen: what sales teams track every customer in",
+   "persist": {
+    "from_beat": "products",
+    "to_beat": "products"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/salesforce-screen.png",
+    "outlet": "Salesforce",
+    "date": "Sales Cloud",
+    "sourceAspectRatio": 1.3474
+   }
+  },
+  {
+   "obj": "wd_screen",
+   "device": "evidence_card",
+   "meaning": "Workday's own picture of its time-off request screen: the software that runs pay and holidays",
+   "persist": {
+    "from_beat": "products",
+    "to_beat": "products"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/workday-screen.png",
+    "outlet": "Workday",
+    "date": "Absence Management",
+    "sourceAspectRatio": 1.3474
+   }
+  },
+  {
+   "obj": "saas_dead",
+   "device": "evidence_card",
+   "meaning": "a real public post, \"SaaS is Dead.\", citing Klarna ripping out Salesforce and Workday",
+   "persist": {
+    "from_beat": "wild",
+    "to_beat": "wild"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/linkedin-saas-dead.png",
+    "outlet": "LinkedIn",
+    "date": "Sep 2024",
+    "sourceAspectRatio": 1.5134
+   }
+  },
+  {
+   "obj": "x_post",
+   "device": "evidence_card",
+   "meaning": "Klarna's CEO Sebastian Siemiatkowski's own post: \"No, I don't think it is the end of Salesforce\"",
+   "persist": {
+    "from_beat": "proof",
+    "to_beat": "proof"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/x-klarnaseb.png",
+    "outlet": "X, @klarnaseb",
+    "date": "3 Mar 2025",
+    "sourceAspectRatio": 1.4354
+   }
+  },
+  {
+   "obj": "check",
+   "device": "query_chip",
+   "meaning": "the terminal checks the headline against what the CEO wrote",
+   "persist": {
+    "from_beat": "proof",
+    "to_beat": "proof"
+   },
+   "params": {
+    "text": "FACT CHECK · @KLARNASEB"
+   }
+  },
+  {
+   "obj": "hl_diginomica",
+   "device": "evidence_card",
+   "meaning": "the headline \"no, we didn't replace SaaS with an LLM, admits CEO Sebastian Siemiatkowski\"",
+   "persist": {
+    "from_beat": "proof",
+    "to_beat": "proof"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/hl-diginomica.png",
+    "outlet": "diginomica",
+    "date": "7 Mar 2025",
+    "sourceAspectRatio": 2.381
+   }
+  },
+  {
+   "obj": "wd_out",
+   "device": "logo_card",
+   "meaning": "the HR software Klarna stopped renting: Workday",
+   "persist": {
+    "from_beat": "deel",
+    "to_beat": "deel"
+   },
+   "params": {
+    "logos": [
+     {
+      "id": "Workday"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "deel_in",
+   "device": "logo_card",
+   "meaning": "what replaced it: Deel, another rented app (CX Today, 11 Dec 2024)",
+   "persist": {
+    "from_beat": "deel",
+    "to_beat": "deel"
+   },
+   "params": {
+    "logos": [
+     {
+      "id": "Deel"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "confetti",
+   "device": "scene_plate",
+   "meaning": "an all-hands celebrating switching one rented app for another: confetti and a big red lever (his own scene, played straight)",
+   "persist": {
+    "from_beat": "meeting",
+    "to_beat": "meeting"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/confetti-layer.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
+     }
+    ],
+    "camera": "still",
+    "full": true,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "hl_cxtoday",
+   "device": "evidence_card",
+   "meaning": "the headline \"Klarna Didn't Replace Salesforce & Workday with AI; It Replaced Them with Alternative SaaS Apps\"",
+   "persist": {
+    "from_beat": "rented",
+    "to_beat": "rented"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/hl-cxtoday.png",
+    "outlet": "CX Today",
+    "date": "11 Dec 2024",
+    "sourceAspectRatio": 3.3557
+   }
+  },
+  {
+   "obj": "built",
+   "device": "query_chip",
+   "meaning": "the one part Klarna did build: its own data layer (CEO, 4 Mar 2025)",
+   "persist": {
+    "from_beat": "worth",
+    "to_beat": "worth"
+   },
+   "params": {
+    "text": "BUILT IN-HOUSE: ONE HOME FOR ALL CUSTOMER DATA"
+   }
+  },
+  {
+   "obj": "slack",
+   "device": "logo_card",
+   "meaning": "the chat app Klarna still uses: Slack",
+   "persist": {
+    "from_beat": "slack",
+    "to_beat": "slack"
+   },
+   "params": {
+    "logos": [
+     {
+      "id": "Slack"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "owner",
+   "device": "query_chip",
+   "meaning": "the terminal traces who owns Slack: Salesforce completed the deal in July 2021",
+   "persist": {
+    "from_beat": "slack",
+    "to_beat": "owner"
+   },
+   "params": {
+    "text": "OWNER OF SLACK SINCE JULY 2021"
+   }
+  },
+  {
+   "obj": "sf_back",
+   "device": "logo_card",
+   "meaning": "the twist: Salesforce, the software Klarna left, owns the chat app it kept",
+   "persist": {
+    "from_beat": "owner",
+    "to_beat": "owner"
+   },
+   "params": {
+    "logos": [
+     {
+      "id": "Salesforce"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "croc_stare",
+   "device": "scene_plate",
+   "meaning": "the stand-off: the crocodile awake and staring at the frozen developer (the hook clip's last frame, held)",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/croc-stare-up.png",
+      "width": 1080,
+      "height": 1920,
+      "focus": {
+       "x": 0.5,
+       "y": 0.3
+      }
+     }
+    ],
+    "camera": "push",
+    "full": true,
+    "grade": "none"
+   }
+  }
+ ],
+ "assets": [
+  {
+   "id": "short-master",
+   "kind": "recording",
+   "origin": "capture",
+   "path": "short.master.mov",
+   "sha256": "e9d286a0660b9816ed6bd01dba3bda928e936c4f860fef669c8e29d73728786e",
+   "licence": "Krish's own recording, 18 Nov 2026 (Build-or-buy-short.mp4), restarts and long pauses cut, sped 1.22x"
+  },
+  {
+   "id": "croc-hook-video",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "plates/croc-hook-video.mp4",
+   "sha256": "f456bdda6910e34a18d9a7ff28c760334bd3fe748dbe357774d0fdc5ef1c3f5d",
+   "tool": "higgsfield:seedance_2_5",
+   "job_id": "5360fb88-d33e-4973-9469-d6bb2dd819cc",
+   "licence": "generated for this piece from Codex's approved still (Krish approved 80 credits, 18 Nov: \"go 80\")",
+   "credits": 80
+  },
+  {
+   "id": "croc-stare",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "plates/croc-stare-up.png",
+   "sha256": "99d1be8767b2887445205ef449caf6de4b96793cd74b5a61af8f5cbc04e467d7",
+   "tool": "higgsfield:seedance_2_5",
+   "job_id": "5360fb88-d33e-4973-9469-d6bb2dd819cc",
+   "licence": "the last frame of the hook clip, held and reframed 1.6x so the head sits above the captions"
+  },
+  {
+   "id": "confetti-layer",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "plates/confetti-layer.mp4",
+   "sha256": "b600a21c83be84b6746c2f33ab123e632155fd89c72bfbd97628de2fc51bc61f",
+   "tool": "codex:code",
+   "job_id": "ve-w1118-motion-layers",
+   "licence": "made for this piece by Codex from its approved still: one continuous push with confetti drawn over it"
+  },
+  {
+   "id": "hl-fullstackhr",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "shots/hl-fullstackhr.png",
+   "sha256": "c5d515fc1022fd21fb3bd693fca2168e3373fb700880b36be9db7b7ecdca9d2a",
+   "source_url": "https://www.fullstackhr.io/p/klarna-ditches-workday-for-ai",
+   "licence": "screenshot of the public page as published by FullStack HR, shown as itself for commentary",
+   "credit": "FullStack HR"
+  },
+  {
+   "id": "hl-itpro",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "shots/hl-itpro.png",
+   "sha256": "c35e1ff4a6e2103b3c3674ce48fc3dcdb72599b2287701087f7b3853b57b1391",
+   "source_url": "https://www.itpro.com/technology/artificial-intelligence/how-is-he-doing-this-marc-benioff-questions-klarna-ceo-s-scrapping-of-workday-salesforce-in-saas-consolidation-drive",
+   "licence": "screenshot of the public page as published by IT Pro, shown as itself for commentary",
+   "credit": "IT Pro"
+  },
+  {
+   "id": "salesforce-screen",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "shots/salesforce-screen.png",
+   "sha256": "b932d0bc600c5399c6e5269cb65688f9cdcf39e9ba7d395c6e06afe5b819982c",
+   "source_url": "https://wp.sfdcdigital.com/en-us/wp-content/uploads/sites/4/2024/09/products-features-sales-cloud-account-and-opportunity-management.jpg?w=1024",
+   "licence": "screenshot of the public page as published by Salesforce, shown as itself for commentary",
+   "credit": "Salesforce"
+  },
+  {
+   "id": "workday-screen",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "shots/workday-screen.png",
+   "sha256": "59349243f94c505029c5a0fdff006809411ac23854391c497eee213e944032ae",
+   "source_url": "https://workday.scene7.com/is/image/workday/prod-workforce-management-product-feature-4-custom-label-1x1-desktop-1?fmt=webp-alpha",
+   "licence": "screenshot of the public page as published by Workday, shown as itself for commentary",
+   "credit": "Workday"
+  },
+  {
+   "id": "linkedin-saas-dead",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "shots/linkedin-saas-dead.png",
+   "sha256": "f81fb1d944a09e611f2a73971e038b3bd8629f96c6954cbd3c7c2c07a4cb8a0f",
+   "source_url": "https://www.linkedin.com/posts/better_saas-is-dead-ive-said-this-offline-for-activity-7246369831929733120-KBdA",
+   "licence": "screenshot of the public page as published by LinkedIn, shown as itself for commentary",
+   "credit": "LinkedIn"
+  },
+  {
+   "id": "x-klarnaseb",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "shots/x-klarnaseb.png",
+   "sha256": "82be8d0898696895c120f772e7730c3165ffce0974e60789269a44c2bf2ea302",
+   "source_url": "https://x.com/klarnaseb/status/1896698293759230429",
+   "licence": "screenshot of the public page as published by X, @klarnaseb, shown as itself for commentary",
+   "credit": "X, @klarnaseb"
+  },
+  {
+   "id": "hl-diginomica",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "shots/hl-diginomica.png",
+   "sha256": "c56f131a238c96c91d0ca8a0c059ae8ff87f98fdc5ac24a268ab93165f37ed2d",
+   "source_url": "https://diginomica.com/those-shutting-down-salesforce-and-workday-rumors-klarna-no-we-didnt-replace-saas-llm-admits-ceo",
+   "licence": "screenshot of the public page as published by diginomica, shown as itself for commentary",
+   "credit": "diginomica"
+  },
+  {
+   "id": "hl-cxtoday",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "shots/hl-cxtoday.png",
+   "sha256": "c86663e5c5ed314c50831919210e89076f81271d87c19ec9707eaf1e32598090",
+   "source_url": "https://cxtoday.com/klarna-didnt-replace-salesforce-it-replaced-them-with-alternative-saas-apps",
+   "licence": "screenshot of the public page as published by CX Today, shown as itself for commentary",
+   "credit": "CX Today"
+  }
+ ],
+ "audio": {
+  "master": "take",
+  "bed": {
+   "ledger_id": "mind-bender",
+   "mode": "episode_bed",
+   "under_vo_lu": -20
+  },
+  "sfx_kit": "house-v1"
+ },
+ "cuts": {
+  "short": {
+   "aspect": "9:16",
+   "take": "short-master",
+   "max_s": 89,
+   "excerpt": false,
+   "edit": {
+    "remove": [],
+    "speed": 1
+   },
+   "captions": {
+    "region": "default",
+    "emphasis": []
+   },
+   "beats": [
+    {
+     "id": "hook",
+     "role": "hook",
+     "span": {
+      "from_w": 0,
+      "to_w": 30
+     },
+     "viewer_task": "locate_story",
+     "point": "The in-house developer who learned AI now thinks he is a crocodile hunter",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "croc_s",
+      "croc_stare"
+     ],
+     "events": [
+      {
+       "at_w": 0,
+       "obj": "croc_s",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 16,
+       "obj": "croc_stare",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it (Krish, 18 Nov 2026: \"The crocodile scene just keeps pulsing as a still.\")"
+    },
+    {
+     "id": "headlines",
+     "role": "anchor",
+     "span": {
+      "from_w": 31,
+      "to_w": 58
+     },
+     "viewer_task": "verify_evidence",
+     "point": "Klarna made headlines for switching off Salesforce and Workday and replacing them with AI",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "hl_fullstack",
+      "hl_itpro",
+      "gone_logos"
+     ],
+     "events": [
+      {
+       "at_w": 31,
+       "obj": "hl_fullstack",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 38,
+       "obj": "hl_fullstack",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 39,
+       "obj": "hl_itpro",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 50,
+       "obj": "hl_itpro",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 51,
+       "obj": "gone_logos",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 55,
+       "obj": "gone_logos",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off"
+    },
+    {
+     "id": "face",
+     "role": "bridge",
+     "span": {
+      "from_w": 59,
+      "to_w": 83
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "So the question for your business: build or buy your tools now AI writes code?",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his title question to camera, the title moment drawn over it (production plan s4, which Krish reviewed)"
+    },
+    {
+     "id": "products",
+     "role": "anchor",
+     "span": {
+      "from_w": 84,
+      "to_w": 110
+     },
+     "viewer_task": "verify_evidence",
+     "point": "Salesforce tracks every customer, Workday runs pay and holidays, and both cost a fortune",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "sf_screen",
+      "wd_screen"
+     ],
+     "events": [
+      {
+       "at_w": 84,
+       "obj": "sf_screen",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 91,
+       "obj": "sf_screen",
+       "verb": "mark",
+       "to_state": "record",
+       "silent": true
+      },
+      {
+       "at_w": 99,
+       "obj": "sf_screen",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 100,
+       "obj": "wd_screen",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 107,
+       "obj": "wd_screen",
+       "verb": "mark",
+       "to_state": "request",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off"
+    },
+    {
+     "id": "fortune",
+     "role": "bridge",
+     "span": {
+      "from_w": 111,
+      "to_w": 117
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Both of them cost an absolute fortune",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"Can't cut my head off\"; \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "wild",
+     "role": "bridge",
+     "span": {
+      "from_w": 118,
+      "to_w": 129
+     },
+     "viewer_task": "inspect_artifact",
+     "point": "The internet decided AI had killed software",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "saas_dead"
+     ],
+     "events": [
+      {
+       "at_w": 118,
+       "obj": "saas_dead",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 125,
+       "obj": "saas_dead",
+       "verb": "mark",
+       "to_state": "post",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off"
+    },
+    {
+     "id": "proof",
+     "role": "anchor",
+     "span": {
+      "from_w": 130,
+      "to_w": 153
+     },
+     "viewer_task": "verify_evidence",
+     "point": "Klarna's own CEO said they did not replace that software with AI",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "x_post",
+      "check",
+      "hl_diginomica"
+     ],
+     "events": [
+      {
+       "at_w": 130,
+       "obj": "check",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 138,
+       "obj": "x_post",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 144,
+       "obj": "x_post",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 145,
+       "obj": "hl_diginomica",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 148,
+       "obj": "hl_diginomica",
+       "verb": "mark",
+       "to_state": "headline",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off"
+    },
+    {
+     "id": "deel",
+     "role": "pivot",
+     "span": {
+      "from_w": 154,
+      "to_w": 170
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "Workday was replaced by Deel, another app Klarna rents",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "wd_out",
+      "deel_in"
+     ],
+     "events": [
+      {
+       "at_w": 157,
+       "obj": "wd_out",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 159,
+       "obj": "wd_out",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 160,
+       "obj": "deel_in",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 169,
+       "obj": "deel_in",
+       "verb": "highlight",
+       "to_state": "Deel",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off"
+    },
+    {
+     "id": "meeting",
+     "role": "bridge",
+     "span": {
+      "from_w": 171,
+      "to_w": 177
+     },
+     "viewer_task": "feel_stakes",
+     "point": "Picture the all-hands that celebrates swapping one rented app for another",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "confetti"
+     ],
+     "events": [
+      {
+       "at_w": 171,
+       "obj": "confetti",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it (Krish, 18 Nov 2026: \"The crocodile scene just keeps pulsing as a still.\")"
+    },
+    {
+     "id": "punchline",
+     "role": "bridge",
+     "span": {
+      "from_w": 178,
+      "to_w": 190
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Payroll is now on another app, which they also rent",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his punchline to camera with his captions (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "rented",
+     "role": "anchor",
+     "span": {
+      "from_w": 191,
+      "to_w": 209
+     },
+     "viewer_task": "verify_evidence",
+     "point": "Salesforce gave way to more rented apps on top of Klarna's own data home",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "hl_cxtoday"
+     ],
+     "events": [
+      {
+       "at_w": 191,
+       "obj": "hl_cxtoday",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 205,
+       "obj": "hl_cxtoday",
+       "verb": "mark",
+       "to_state": "headline",
+       "silent": true
+      },
+      {
+       "at_w": 209,
+       "obj": "hl_cxtoday",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off"
+    },
+    {
+     "id": "worth",
+     "role": "bridge",
+     "span": {
+      "from_w": 210,
+      "to_w": 226
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "One home for all the customer data was worth building",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "built"
+     ],
+     "events": [
+      {
+       "at_w": 210,
+       "obj": "built",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 219,
+       "obj": "built",
+       "verb": "highlight",
+       "to_state": "BUILT",
+       "silent": true
+      },
+      {
+       "at_w": 225,
+       "obj": "built",
+       "verb": "highlight",
+       "to_state": "BUILT",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off"
+    },
+    {
+     "id": "upkeep",
+     "role": "bridge",
+     "span": {
+      "from_w": 227,
+      "to_w": 238
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "And now they have to look after all of it",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"Can't cut my head off\"; \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "slack",
+     "role": "pivot",
+     "span": {
+      "from_w": 239,
+      "to_w": 260
+     },
+     "viewer_task": "locate_story",
+     "point": "Klarna still uses Slack, so who owns Slack?",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "slack",
+      "owner"
+     ],
+     "events": [
+      {
+       "at_w": 249,
+       "obj": "slack",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 252,
+       "obj": "slack",
+       "verb": "highlight",
+       "to_state": "Slack",
+       "silent": true
+      },
+      {
+       "at_w": 258,
+       "obj": "owner",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "owner",
+     "role": "payoff",
+     "span": {
+      "from_w": 261,
+      "to_w": 272
+     },
+     "viewer_task": "land_payoff",
+     "point": "Salesforce owns Slack, so Klarna never got away from Salesforce",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "owner",
+      "sf_back"
+     ],
+     "events": [
+      {
+       "at_w": 261,
+       "obj": "sf_back",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 263,
+       "obj": "owner",
+       "verb": "highlight",
+       "to_state": "OWNER",
+       "silent": true
+      },
+      {
+       "at_w": 269,
+       "obj": "sf_back",
+       "verb": "highlight",
+       "to_state": "Salesforce",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off"
+    },
+    {
+     "id": "close",
+     "role": "call",
+     "span": {
+      "from_w": 273,
+      "to_w": 327
+     },
+     "viewer_task": "land_payoff",
+     "point": "Build the bit that makes you different and rent the rest",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full"
+    }
+   ]
+  }
+ },
+ "approvals": [],
+ "budget": {
+  "tokens_cap": 12600000,
+  "credits": {
+   "higgsfield": 0,
+   "runway": 0
+  }
+ },
+ "style": {
+  "motion": {
+   "module": "hud-terminal",
+   "reason": "Krish picked it on the board on 17 Nov: a terminal checks each headline against what really happened"
+  },
+  "captions": {
+   "theme": "rack-focus",
+   "placement": "lower",
+   "reason": "Krish picked it on the board on 17 Nov"
+  },
+  "transitions": {
+   "kind": "punch",
+   "lead": true,
+   "reason": "the look he picked, Everything moves: fast phrase cuts that punch in"
+  },
+  "camera": {
+   "move": "phased",
+   "hits": true,
+   "reason": "Everything moves: the camera never rests and the events kick it"
+  },
+  "energy": "high",
+  "layout": {
+   "mode": "stage",
+   "reason": "the piece shows his take, with the proof staged beside or over it"
+  },
+  "look": "kinetic-movement",
+  "idea": {
+   "object": "the HUD terminal that checks every big claim against what really happened, in the source's own words",
+   "moves": [
+    {
+     "move": "a real headline slams in",
+     "means": "the claim as the world heard it"
+    },
+    {
+     "move": "the terminal locks onto the line",
+     "means": "what really happened, on the source's own page"
+    },
+    {
+     "move": "a scene plate cuts in full frame",
+     "means": "the over-confident builder, played dead straight"
+    }
+   ],
+   "never": [
+    "a re-typed quote standing in for the real page",
+    "a generated picture standing in for a real record",
+    "green-on-black hacker cliches",
+    "a label saying a picture is generated",
+    "his name on screen"
+   ],
+   "real_artifacts": [
+    {
+     "asset": "x-klarnaseb",
+     "text": "No, I don't think it is the end of Salesforce; might be the opposite."
+    },
+    {
+     "asset": "hl-cxtoday",
+     "text": "Klarna Didn't Replace Salesforce & Workday with AI; It Replaced Them with Alternative SaaS Apps"
+    }
+   ]
+  },
+  "proof": {
+   "beat": "hook"
+  }
+ },
+ "title_line": "Build or buy your tools in an AI world?",
+ "title_moment": {
+  "title": "Build or buy your tools in an AI world?",
+  "line": "Build or buy your tools in an AI world?",
+  "spans": {
+   "short": {
+    "from_w": 72,
+    "to_w": 80
+   }
+  }
+ }
+}

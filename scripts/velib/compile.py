@@ -44,10 +44,14 @@ def _render_tokens(t: dict, channel: str) -> dict:
 
 
 def _body_logo(spec: dict, aspect: str, off: bool) -> bool:
-    """Whether the palette lets this cut's body carry a logo (scripts/brand_palette.py body_logo). An undated spec
-    keeps the house dress it always had."""
+    """Whether the palette lets this cut's body carry a logo (scripts/brand_palette.py body_logo). Only a piece dated
+    before the logo rule's start (Fri 13 Nov, a frozen engine) may; an undated spec carries none (Krish, 2026-11-18: "we
+    have a strict NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME [...] how does this keep creeping
+    through randomly"): the old default let every spec that forgot the date draw the icon."""
+    if (spec.get('brand') or {}).get('body_logo') is False:
+        return False  # a spec may also say so itself (Tue 17, on Krish's word ahead of the rule's date)
     if not spec.get('publish_day'):
-        return True
+        return False
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import brand_palette  # noqa: PLC0415
     rule = brand_palette.load().get('logo_rule') or {}
@@ -338,7 +342,7 @@ def _page_cost(rows: list[dict], start: int, n: int) -> int:
     if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and _word(rows[start + n]['text']) in opens:
         cost += 10  # the next page opens mid-phrase ("we don't put | the car on trial")
     if any(_PAUSE.search(r['text']) for r in page[:-1]):
-        cost += 3   # a clause break inside the page ("Amazon for your groceries, Google")
+        cost += 3   # a clause break inside the page ("Netflix for your evenings, Google")
     if not _held(rows, start + n):
         cost += 5   # its last word flips away before it can be read
     if not _PAUSE.search(page[-1]['text']) and start + n < len(rows):
@@ -385,7 +389,8 @@ def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list
 # comic beats). The first slice of Phase 2: a generated still or clip may fill a photo_plate, once it names the tool
 # that made it, the job that made it (the Codex thread or the generation id) and its sha256, and Claude has checked it
 # (`ve codex receipt`). Every other device still refuses it, and a beat's own plate still waits for the full pipeline.
-GENERATED_PLATE_DEVICES = frozenset({'photo_plate'})
+# scene_plate (18 Nov 2026, Wed 18): a full-frame generated scene or clip that draws no words, so it is never evidence.
+GENERATED_PLATE_DEVICES = frozenset({'photo_plate', 'scene_plate'})
 
 
 def generated_plate_problem(asset: dict, device: str) -> str:
@@ -396,6 +401,51 @@ def generated_plate_problem(asset: dict, device: str) -> str:
     if missing:
         return f'a generated plate names its {", ".join(missing)} before it is drawn'
     return ''
+
+
+def title_moment_props(spec: dict, cut_id: str, rows: list[dict], duration: int) -> dict | None:
+    """The episode title moment on this cut's clock (title_moment.spans; Krish, 2026-11-15 and 2026-11-17: the line he
+    says becomes the title, "seamlessly flowing out of the captions and back in to them again"; 2026-11-18, Tue 17:
+    "should be seamlessly made the title with epic hero title treatment as I am saying that line"). Each word keeps the
+    frame its sound starts; the moment ends where his next word starts, when the captions take over again."""
+    span = ((spec.get('title_moment') or {}).get('spans') or {}).get(cut_id)
+    if not span:
+        return None
+    said = [row for row in rows if span['from_w'] <= row['w'] <= span['to_w']]
+    if len(said) != span['to_w'] - span['from_w'] + 1:
+        raise ValueError(f'title_moment.spans.{cut_id}: words {span["from_w"]}-{span["to_w"]} are not all in the cut')
+    # The finished title holds until the beat that carries it ends (Tue 17: "Let's find out" follows "no?" by a third of a
+    # second, so a title that left on his next word was never seen whole); the captions take his next words meanwhile.
+    holder = next((b for b in spec['cuts'][cut_id].get('beats', []) if b['span']['from_w'] <= span['to_w'] <= b['span']['to_w']), None)
+    end_w = holder['span']['to_w'] if holder else span['to_w']
+    after = next((row['atFrame'] for row in rows if row['w'] > end_w), duration)
+    resumes = next((row['atFrame'] for row in rows if row['w'] > span['to_w']), duration)
+    return {'fromFrame': said[0]['atFrame'], 'toFrame': after, 'span': (span['from_w'], span['to_w']),
+            'release': 'fade' if resumes < after else 'captions',
+            'words': [{'text': row['text'][:1].upper() + row['text'][1:] if i == 0 else row['text'], 'atFrame': row['atFrame']}
+                      for i, row in enumerate(said)]}
+
+
+def backdrop(spec: dict, beat: dict, assets_dir) -> dict:
+    """The one real picture under a beat's graphics (Krish, 2026-11-18: "making actual use of the full screen when it
+    isn't my face"): a photo, a screenshot or a scene from the spec's assets, its staged bytes checked against the
+    sha256 the spec declares. A generated scene may sit here, never as evidence: it names the tool and job that made it and its sha256."""
+    aid = beat['backdrop'].removeprefix('asset:')
+    asset = next((a for a in spec.get('assets', []) if a['id'] == aid), None)
+    if asset is None:
+        raise ValueError(f'beat {beat["id"]}: backdrop asset {aid} is not in the spec')
+    if asset['kind'] not in ('photo', 'screenshot', 'illustration', 'broll', 'document'):
+        raise ValueError(f'beat {beat["id"]}: a backdrop is a picture, not a {asset["kind"]}')
+    if asset.get('origin') == 'generated':
+        missing = [key for key in ('tool', 'job_id', 'sha256') if not asset.get(key)]
+        if missing:
+            raise ValueError(f'beat {beat["id"]}: generated backdrop {aid} names its {", ".join(missing)} before it is drawn')
+    src = source(asset['path'], assets_dir)
+    if not Path(src).is_file():
+        raise ValueError(f'beat {beat["id"]}: backdrop {aid} is not staged at {asset["path"]}')
+    if asset.get('sha256') and sha256_file(Path(src)) != asset['sha256']:
+        raise ValueError(f'beat {beat["id"]}: backdrop {aid} does not match its declared sha256')
+    return {'src': src}
 
 
 def _params(params: dict, source) -> dict:
@@ -495,7 +545,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
                       **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
-                      **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {})})
+                      **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {}),
+                      **({'backdrop': backdrop(spec, beat, assets_dir)} if beat.get('backdrop') else {})})
         # The v2 spec reserves extensible metadata in style; beat-level keyFrame
         # is not yet in its strict schema. Always emit an explicit engine frame.
         fraction = spec.get('style', {}).get('keyFrames', {}).get(beat['id'], 0.8)
@@ -572,9 +623,16 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     channel = spec['brand']['series'].replace('.', '_')
     identity = house['channels'][channel]
     emphasis = set(cut['captions'].get('emphasis', []))
-    word_mode = spec['brand'].get('captions') == 'word'
-    groups = [[row] for row in rows] if word_mode else \
-        [g for part in _zone_runs(rows, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
+    # A picked caption style (style.captions; Krish, 2026-11-13: "the captions should be decoupled from the animation
+    # styles") draws ve's phrase pages itself: one word a page would undo it (rack-focus racks focus along the phrase), so
+    # the word build applies to the house caption only (18 Nov 2026, Wed 18, his rack-focus pick of 17 Nov).
+    picked_theme = (((spec.get('style') or {}).get('captions') or {}).get('theme'))
+    word_mode = spec['brand'].get('captions') == 'word' and not picked_theme
+    moment = title_moment_props(spec, cut_id, rows, duration)
+    # The captions step aside for the title's words, so they appear once (docs/ve/INGREDIENTS.md, the episode title moment).
+    spoken = [row for row in rows if not (moment and moment['span'][0] <= row['w'] <= moment['span'][1])]
+    groups = [[row] for row in spoken] if word_mode else \
+        [g for part in _zone_runs(spoken, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
     captions = []
     for index, group in enumerate(groups):
         hits = [i for i, word in enumerate(group) if word['w'] in emphasis]
@@ -584,6 +642,11 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                          'toFrame': groups[index + 1][0]['atFrame'] if index + 1 < len(groups) else duration,
                          'words': [{'text': word['text'], 'atFrame': word['atFrame']} for word in group],
                          'swipeIndex': hits[0] if hits else None})
+    if moment:
+        # The page before the title gives way to it as he starts the line; the title flows back into the next page.
+        for page in captions:
+            if page['fromFrame'] < moment['fromFrame'] < page['toFrame']:
+                page['toFrame'] = moment['fromFrame']
     assets = {asset['id']: asset for asset in spec.get('assets', [])}
     if edl is not None:
         take = resolve_source(edl['conformed']['picture'])
@@ -619,7 +682,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                         'pixelHeight': publication[key]['pixel_height']} for key in ('mark', 'logo', 'stacked')},
         # The logo only on the title frame and the close (Ruling, Krish, 2026-11-17; config/brand-palette.json logo_rule):
         # from its date the body carries no mark tile and no header logo. Absent for older pieces, so their props hold.
-        **({'bodyLogo': False} if not _body_logo(spec, cut['aspect'], off) else {}),
+        # Always said, never left to a default: false from the palette's logo rule (Mon 16 Nov), true only for a piece dated before
+        # it. The renderer also draws no body logo unless bodyLogo is true, so a spec that bypasses compile cannot draw one.
+        'bodyLogo': _body_logo(spec, cut['aspect'], off),
         'segments': [] if spec['audio']['master'] == 'vo' else [
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
@@ -627,6 +692,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
         **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
+        **({'titleMoment': {k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}} if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
     if sting:

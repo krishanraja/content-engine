@@ -4,7 +4,7 @@ import { OffthreadVideo } from 'remotion'
 import { describe, expect, it, vi } from 'vitest'
 import fixture from '../../../../../fixtures/ve/engine-core/props.json'
 import { slotsFor, splitCameraBox, splitPlatePosition } from './index'
-import { FWP_SPLIT_SEAM_Y, FWP_SPLIT_CAPTION_ZONE, FWP_POSTER_POSITIONS } from '../mocks/face-with-proof'
+import { SPLIT_SEAM_Y, SPLIT_CAPTION_ZONE, SPLIT_POSTER_POSITIONS, SPLIT_STAGE_LEFT, SPLIT_STAGE_TOP, SPLIT_STAGE_WIDTH, SPLIT_STAGE_HEIGHT } from './splitGeometry'
 import { EngineRenderPropsSchema } from '../props'
 import { FormatMaster } from '../FormatMaster'
 import { BrandFrame, SplitCaptionTrack } from '../BrandFrame'
@@ -35,18 +35,31 @@ it('accepts SPLIT and refuses unknown engine layouts', () => {
 })
 describe('frozen SPLIT geometry', () => {
   it('shares the stage for every device and refuses wide even without devices', () => {
-    const box = { left: 60, top: 300, width: 960, height: FWP_SPLIT_SEAM_Y - 360 }
+    const box = { left: SPLIT_STAGE_LEFT, top: SPLIT_STAGE_TOP, width: SPLIT_STAGE_WIDTH, height: SPLIT_STAGE_HEIGHT }
     expect(slotsFor('SPLIT', '9:16', 3)).toEqual([box, box, box])
     expect(slotsFor('SPLIT', '9:16', 0)).toEqual([])
     expect(() => slotsFor('SPLIT', '16:9', 0)).toThrow('no wide lock')
-    expect(splitCameraBox('9:16')).toEqual({ left: 0, top: FWP_SPLIT_SEAM_Y, width: 1080, height: 1920 - FWP_SPLIT_SEAM_Y })
+    expect(splitCameraBox('9:16')).toEqual({ left: 0, top: SPLIT_SEAM_Y, width: 1080, height: 1920 - SPLIT_SEAM_Y })
     expect(() => splitCameraBox('16:9')).toThrow('no wide lock')
+  })
+  it('draws the stage as a true 16:9 above the seam, inside the safe column', () => {
+    expect(SPLIT_STAGE_WIDTH * 9).toBe(SPLIT_STAGE_HEIGHT * 16)
+    expect(SPLIT_STAGE_TOP + SPLIT_STAGE_HEIGHT).toBeLessThanOrEqual(SPLIT_SEAM_Y)
+    expect(SPLIT_STAGE_LEFT).toBeGreaterThanOrEqual(60)
+    expect(SPLIT_STAGE_LEFT + SPLIT_STAGE_WIDTH).toBeLessThanOrEqual(860)
+    expect(SPLIT_STAGE_TOP).toBeGreaterThanOrEqual(288)
+  })
+  it('never defaults the take to the bottom of its frame, which hides his forehead (Krish, 2026-11-18)', () => {
+    for (const crop of Object.values(SPLIT_POSTER_POSITIONS)) {
+      const y = Number(/(\d+(?:\.\d+)?)%$/.exec(crop)![1])
+      expect(y).toBeLessThanOrEqual(30)
+    }
   })
   it('uses CSS crops and falls back for editorial crop names', () => {
     expect(splitPlatePosition('50% 88%')).toBe('50% 88%')
     expect(splitPlatePosition('center top')).toBe('center top')
-    expect(splitPlatePosition('face-close')).toBe(FWP_POSTER_POSITIONS.proof)
-    expect(splitPlatePosition()).toBe(FWP_POSTER_POSITIONS.proof)
+    expect(splitPlatePosition('face-close')).toBe(SPLIT_POSTER_POSITIONS.proof)
+    expect(splitPlatePosition()).toBe(SPLIT_POSTER_POSITIONS.proof)
   })
   it('crops camera below the full-width stage with no scale, leaving chrome outside', () => {
     const props = propsForSplit()
@@ -55,13 +68,13 @@ describe('frozen SPLIT geometry', () => {
     const nodes = elements(FormatMaster(props))
     const video = nodes.find((n) => n.type === OffthreadVideo)!
     expect(video.props.style).toMatchObject({ objectFit: 'cover', objectPosition: '50% 92%' })
-    const camera = nodes.find((n) => elements(n.props.children as ReactNode).includes(video) && (n.props.style as Record<string, unknown>)?.top === FWP_SPLIT_SEAM_Y)!
+    const camera = nodes.find((n) => elements(n.props.children as ReactNode).includes(video) && (n.props.style as Record<string, unknown>)?.top === SPLIT_SEAM_Y)!
     expect(camera.props.style).toMatchObject(splitCameraBox('9:16'))
     expect(nodes.filter((n) => (n.props.style as Record<string, unknown>)?.transform)).toHaveLength(0)
     const device = nodes.find((n) => n.props.object && n.props.box)!
-    expect(device.props.box).toEqual({ left: 60, top: 300, width: 960, height: FWP_SPLIT_SEAM_Y - 360 })
+    expect(device.props.box).toEqual({ left: SPLIT_STAGE_LEFT, top: SPLIT_STAGE_TOP, width: SPLIT_STAGE_WIDTH, height: SPLIT_STAGE_HEIGHT })
     const stage = nodes.find((n) => (n.props.style as Record<string, unknown>)?.backgroundColor === props.tokens.cream)!
-    expect(stage.props.style).toMatchObject({ height: FWP_SPLIT_SEAM_Y, overflow: 'hidden' })
+    expect(stage.props.style).toMatchObject({ height: SPLIT_SEAM_Y, overflow: 'hidden' })
     // No mark tile, pill or header on the vertical cut (Ruling, Krish, 2026-11-11).
     const chrome = elements(BrandFrame({ props, beat: props.beats[1]!, frame: 75 }))
     expect(chrome.some((n) => n.type === StageHeader)).toBe(false)
@@ -86,14 +99,14 @@ describe('frozen SPLIT geometry', () => {
       props.captions[0]!.words = text.split(' ').map((text) => ({ text, atFrame: 0 }))
       const caption = SplitCaptionTrack({ props, frame: 75 })!
       const style = caption.props.style
-      expect(style.left).toBe(FWP_SPLIT_CAPTION_ZONE.left)
-      expect(style.top).toBe(FWP_SPLIT_CAPTION_ZONE.top)
-      expect(style.width).toBe(FWP_SPLIT_CAPTION_ZONE.width)
-      expect(Number(style.height)).toBeLessThanOrEqual(FWP_SPLIT_CAPTION_ZONE.height)
+      expect(style.left).toBe(SPLIT_CAPTION_ZONE.left)
+      expect(style.top).toBe(SPLIT_CAPTION_ZONE.top)
+      expect(style.width).toBe(SPLIT_CAPTION_ZONE.width)
+      expect(Number(style.height)).toBeLessThanOrEqual(SPLIT_CAPTION_ZONE.height)
       // On the seam, and inside every channel's safe column (Krish, 2026-11-11).
-      expect(Number(style.top)).toBeLessThanOrEqual(FWP_SPLIT_SEAM_Y)
-      expect(Number(style.top) + Number(style.height)).toBeGreaterThanOrEqual(FWP_SPLIT_SEAM_Y)
-      expect(Number(style.left) + FWP_SPLIT_CAPTION_ZONE.width).toBeLessThanOrEqual(860)
+      expect(Number(style.top)).toBeLessThanOrEqual(SPLIT_SEAM_Y)
+      expect(Number(style.top) + Number(style.height)).toBeGreaterThanOrEqual(SPLIT_SEAM_Y)
+      expect(Number(style.left) + SPLIT_CAPTION_ZONE.width).toBeLessThanOrEqual(860)
     }
     props.beats[1]!.layout = 'P1'
     expect(CaptionTrack({ props, frame: 75 })!.props.style.top).toBe(boxFor('caption', '9:16').top)

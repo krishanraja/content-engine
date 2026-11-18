@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { NEVER_HEADLESS, ROUTE_RULING, makeRoute, routeLine } from '../../apps/control-plane/api/board/_makeRoute'
-import { OFFDAY_KINDS, itemPrompt, offdayHead } from '../../apps/control-plane/api/board/_weekModel'
+import { OFFDAY_KINDS, captionOf, itemPrompt, offdayHead } from '../../apps/control-plane/api/board/_weekModel'
 
 // The one route for a carousel, a meme, a Notes image and an off-day voiceover short (Rulings, Krish, 2026-11-13: "all
 // the carousels should now be done in Claude, but using the Codex plug in as per the other usual workflows"; "memes and
@@ -145,5 +145,62 @@ describe('the one route for carousels, memes, Notes images and off-day voiceover
     expect(findings('old', 'npm install --global @openai/codex@0.165.0 && printenv OPENAI_API_KEY | codex login --with-api-key')).toHaveLength(1)
     // The generated canon block is ai-harness's to change, so it is left out of a file's own text.
     expect(findings('AGENTS.md', '<!-- krish-canon:start x -->\n`docs/CAROUSEL_ENGINE_STATE.md`\n<!-- krish-canon:end -->')).toEqual([])
+  })
+})
+
+// Krish, 2026-11-18: "the meme Claude production prompt [...] tries to produce a carousel, when we actually want to make a
+// meme - download that exact video, reskin it, put our caption, and the wordmark in the bottom right corner."
+describe('a meme template is reskinned, never made as a carousel', () => {
+  const template = {
+    title: 'AI translator', clip: { url: 'https://v.redd.it/abc/DASH_720.mp4', page: 'https://www.reddit.com/r/memes/comments/abc/x/', poster: null, seconds: 12 },
+    found: { place: 'reddit' as const, label: 'r/memes, top of the week', url: null }, credit: 'u/someone', what_happens: 'A man talks to a machine.',
+    why_it_works: '', mechanism: [], moment: null, date: null,
+  }
+  it('routes a meme that carries a template clip to the reskin route, whatever its format says', () => {
+    expect(makeRoute('meme', 'Meme, 1 image, 4:5', true)).toBe('reskin')
+    expect(makeRoute('meme', 'Meme video, 9:16', true)).toBe('reskin')
+    // A meme with no template is made as before.
+    expect(makeRoute('meme', 'Meme, 1 image, 4:5', false)).toBe('still')
+    expect(makeRoute('meme', 'Meme video, 9:16')).toBe('motion')
+    // Only a meme: a template on another kind changes nothing.
+    expect(makeRoute('supporting', 'Level-up move, carousel, 4 cards, 4:5', true)).toBe('still')
+  })
+
+  it('the prompt says download that exact clip, reskin it, his caption and the wordmark bottom right, and asks for no carousel', () => {
+    const base = { day: 'sat' as const, date: '2026-11-21', title: 'AI translator meme', line: 'Approved by you.', piece_id: null, key: 'off-sat-x', kind_label: 'Meme' }
+    const a = itemPrompt('2026-11-16', base, 'post', 'reskin', null, null, null, offdayHead('reskin', template, '"When you realize your translator is also a lawyer"'))
+    if (a.kind !== 'prompt') throw new Error('not a prompt')
+    for (const words of ['not a carousel', 'Download that exact clip', template.clip.url, template.clip.page, 'full frame, never cropped at the sides', 'wordmark small at the bottom right',
+      'right-aligned to the clip', 'When you realize your translator is also a lawyer', 'docs/MEME-STANDARD.md', 'social_clip receipt', 'Keep the board current as you work']) {
+      expect(a.prompt).toContain(words)
+    }
+    expect(a.prompt).not.toContain('carousel-deck/1')
+    expect(a.prompt).not.toContain('scripts/carousel_check.py DECK.json')
+    expect(a.prompt).not.toContain('docs/CAROUSEL-STANDARD.md, "How a carousel is made"')
+    expect(findings('prompt', a.prompt)).toEqual([])
+    // No caption yet: it is asked for once, never invented.
+    expect(offdayHead('reskin', template, null)).toContain('He has not written a caption yet: ask him once.')
+  })
+})
+
+// Krish, 2026-11-18: "the meme template prompt does not pull through if I choose my own caption instead of selecting one of the
+// choices? not sure if it pulls that through either". Both routes fill one box and arrive as the words on his Approve press.
+describe('a meme template prompt carries his caption however he gave it', () => {
+  const opt = (over: Record<string, unknown>) => ({ id: 'x', doc_id: 'off-sat-x', status: 'approved', said: null, outcome: null, ...over }) as unknown as Parameters<typeof captionOf>[0]
+  it('takes the words on his Approve press, typed or tapped from an idea, the same way', () => {
+    const typed = 'POV: Anthropic counting what you paid it to summarize an email.'
+    expect(captionOf(opt({ outcome: { id: 'approved', label: 'Approved', at: null, words: typed } }), null)).toBe(typed)
+    // The caption ideas are only ideas: one he did not choose is never his caption.
+    expect(captionOf(opt({ caption_ideas: ['When you realize it is a meme'], outcome: { id: 'approved', label: 'Approved', at: null, words: null } }), null)).toBeNull()
+    expect(captionOf(opt({ said: typed }), null)).toBe(typed)
+  })
+  it('falls back to his words on the option, then a note on its record, and never a session\'s unpressed words', () => {
+    expect(captionOf(opt({ said: 'Said in a session, not pressed here: a caption' }), { note: 'POV: from the record' })).toBe('POV: from the record')
+    expect(captionOf(opt({}), null)).toBeNull()
+  })
+  it('puts his caption in the prompt exactly, and asks for it once when there is none', () => {
+    const t = { title: 'T', clip: { url: 'https://v.redd.it/a.mp4', page: 'https://www.reddit.com/r/memes/c/a/', poster: null, seconds: 9 }, found: { place: 'reddit' as const, label: 'r/memes', url: null }, credit: '', what_happens: '', why_it_works: '', mechanism: [], moment: null, date: null }
+    expect(offdayHead('reskin', t, 'POV: Anthropic counting what you paid it to summarize an email.')).toContain('set exactly these): POV: Anthropic counting what you paid it to summarize an email.')
+    expect(offdayHead('reskin', t, null)).toContain('He has not written a caption yet: ask him once.')
   })
 })

@@ -10,6 +10,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,7 +27,12 @@ class LabTest(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(prefix='ve-lab-')
         self.addCleanup(self.temp.cleanup)
         self.dir = Path(self.temp.name)
-        self.cfg = lab.config()
+        # The shipped lab is pinned to a take Krish retired (config/ve/lab.json retired_takes) and refuses to work until
+        # it is repinned, so the mechanics run here on the same config with no retirement.
+        self.cfg = {**lab.config(), 'retired_takes': []}
+        patcher = patch.object(lab, 'config', return_value=self.cfg)
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def fake_render(self, seen):
         def render(props_path, out):
@@ -34,6 +40,34 @@ class LabTest(unittest.TestCase):
             seen.append(props)
             Path(out).write_bytes(json.dumps({'motion': props.get('motion'), 'captions': props.get('captionStyle')}).encode())
         return render
+
+    def test_a_retired_take_is_never_staged_rendered_stilled_reeled_or_compared(self):
+        # Krish, 18 Nov 2026: "DELETE THOSE FRAMES FOREVER" (the Thu 5 Nov take's frames): the lab works from nothing of it.
+        pinned = self.cfg['take']
+        gone = {'name': pinned['name'], 'sha256': pinned['sha256'], 'on': '2026-11-18', 'words': 'delete it'}
+        cfg = {**self.cfg, 'retired_takes': [gone]}
+        self.assertEqual(lab.retired_take(cfg), gone)
+        self.assertIsNone(lab.retired_take(self.cfg))
+        self.assertIsNone(lab.retired_take({**cfg, 'take': {'name': 'new.mp4', 'sha256': 'f' * 64}}))
+        with self.assertRaisesRegex(ValueError, 'retired'):
+            lab.stage(cfg, self.dir / 'nothing.mp4', self.dir / 'brand', self.dir / 'out')
+        with self.assertRaisesRegex(ValueError, 'retired'):
+            lab.render(cfg, self.dir / 'a', self.fake_render([]), self.dir / 'refused')
+        self.assertFalse((self.dir / 'out').exists() or (self.dir / 'refused').exists(), 'a refused take stages nothing')
+        # A render already on disk whose manifest names the retired take is refused too, by every reader of it.
+        lab.render(self.cfg, self.dir / 'a', self.fake_render([]), self.dir / 'old', only=['house'])
+        lab.render(self.cfg, self.dir / 'a', self.fake_render([]), self.dir / 'older', only=['house'])
+        with self.assertRaisesRegex(ValueError, 'retired'):
+            lab.stills(self.dir / 'old', cfg={**cfg, 'take': {'name': 'new.mp4', 'sha256': 'f' * 64}})
+        with patch.object(lab, 'config', return_value=cfg):
+            for call in (lambda: lab.reel(self.dir / 'old'), lambda: lab.sheet(self.dir / 'old'),
+                         lambda: lab.diff(self.dir / 'old', self.dir / 'older', sample=lambda clip: [b'x'])):
+                with self.assertRaisesRegex(ValueError, 'retired'):
+                    call()
+        # The shipped config keeps the retirement for good, whatever the lab is pinned to next.
+        shipped = json.loads((ROOT / 'config/ve/lab.json').read_text(encoding='utf-8'))
+        self.assertIn('203d10c946954c5343ccec5b0e3a3626e9b2dfd7ef376485ff1bbbf4f35dddd5',
+                      [r['sha256'] for r in shipped['retired_takes']])
 
     def test_every_look_is_the_house_each_caption_look_and_each_drawable_style(self):
         looks = lab.looks(self.cfg)

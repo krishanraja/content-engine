@@ -357,7 +357,8 @@ class QCContracts(unittest.TestCase):
 
     def test_a_wide_cut_with_no_body_logo_is_checked_for_its_absence(self):
         """Ruling (Krish, 2026-11-17): the logo only on the title frame and the close. With props bodyLogo false the wide
-        cut is measured with brand.no_mark, never brand.mark_tile; without it the wide cut keeps its tile check."""
+        cut is measured with brand.no_mark, never brand.mark_tile. Krish, 2026-11-18 ("NO ICONS"): a cut with no flag is checked for
+        the icon's absence too; only bodyLogo true (a piece the palette still lets) is checked for its tile."""
         absent = {'value': [], 'target': 'no mark', 'pass': True, 'status': 'measured'}
         with self.measurements() as mocks, patch.object(qc_brand, 'no_mark', return_value=absent) as no_mark:
             result = qc.run_qc('unused', 'scoreboard-test', **qc.inputs_from_props(dict(self.props(), bodyLogo=False)))
@@ -367,11 +368,15 @@ class QCContracts(unittest.TestCase):
         self.assertNotIn('brand.mark_tile', result['checks'])
         with self.measurements() as mocks, patch.object(qc_brand, 'no_mark', return_value=absent) as no_mark:
             qc.run_qc('unused', 'scoreboard-test', **qc.inputs_from_props(self.props()))
+        mocks['mark_tile'].assert_not_called()
+        no_mark.assert_called_once()
+        with self.measurements() as mocks, patch.object(qc_brand, 'no_mark', return_value=absent) as no_mark:
+            qc.run_qc('unused', 'scoreboard-test', **qc.inputs_from_props(dict(self.props(), bodyLogo=True)))
         mocks['mark_tile'].assert_called_once()
         no_mark.assert_not_called()
 
     def test_props_command_supplies_every_measurement_and_can_complete(self):
-        props = self.props()
+        props = dict(self.props(), bodyLogo=True)  # the old dress, so this test still measures the tile
         gates = {'heard': {'faster-whisper': [{'w': 'hello', 's': 0.7, 'e': 0.9}]}, 'script': 'hello', 'take_words': []}
         with self.measurements() as mocks, patch.object(qc, 'run_qc', wraps=qc.run_qc) as run_qc, \
                 patch.object(ve, 'load_json', return_value=props), patch.object(ve, '_gate_inputs', return_value=gates), \
@@ -588,10 +593,17 @@ class RendererLayoutMirrorTest(unittest.TestCase):
         layouts = _renderer_layouts()
         self.assertEqual(layouts['9:16']['F1'][0], (60, 844, 700, 206))
         self.assertEqual(layouts['16:9']['F1'][0], (1176, 54, 648, 490))
-        # SPLIT is tall only (no wide lock); its stage box reads the seam from the mocks file (FWP_SPLIT_SEAM_Y).
+        # SPLIT is tall only (no wide lock); its stage box reads the seam from the geometry file (SPLIT_SEAM_Y).
         self.assertEqual(set(layouts['9:16']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW'})
         self.assertEqual(set(layouts['16:9']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'WINDOW'})
-        self.assertEqual(layouts['9:16']['SPLIT'], [(60, 300, 960, 400)])
+        self.assertEqual(layouts['9:16']['SPLIT'], [(76, 288, 768, 432)])
+        # The stage is a true 16:9 and ends above the seam, so a 16:9 visual is drawn whole and never reaches his head.
+        left, top, width, height = layouts['9:16']['SPLIT'][0]
+        self.assertEqual(width * 9, height * 16)
+        self.assertLessEqual(top + height, 760)
+        self.assertLessEqual(left + width, 860, 'inside the platform safe column')
+        self.assertGreaterEqual(left, 60)
+        self.assertGreaterEqual(top, 288, 'below every channel top bar (brand tokens tall_safe_key_text)')
         for aspect in layouts.values():
             self.assertTrue(all(len(box) == 4 for boxes in aspect.values() for box in boxes))
 

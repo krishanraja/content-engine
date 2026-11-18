@@ -4,6 +4,9 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('scene_plate declares three cues', () => { expect(manifest.devices.scene_plate.verbs).toEqual(['enter', 'move', 'exit']) })
+  it('facility_block declares its twelve cues', () => { expect(manifest.devices.facility_block.verbs).toEqual(['enter','fill','connect','add','stamp','carry','move','multiply','grey','grow','thin','exit']) })
+  it('credit_meter declares its seven cues', () => { expect(manifest.devices.credit_meter.verbs).toEqual(['enter', 'fill', 'add', 'mark', 'count_to', 'drop', 'exit']) })
   it('toy_object declares its six cues', () => { expect(manifest.devices.toy_object.verbs).toEqual(['enter','count_to','add','move','highlight','exit']) })
   it('flat_mechanism declares seven cues', () => { expect(manifest.devices.flat_mechanism.verbs).toEqual(['enter','add','move','fill','highlight','count_to','exit']) })
   it('morph_stage declares exactly four cues', () => { expect(manifest.devices.morph_stage.verbs).toEqual(['enter', 'move', 'highlight', 'exit']) })

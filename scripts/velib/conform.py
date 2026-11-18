@@ -274,6 +274,44 @@ def choose(clocks: dict[str, TakeClock], lines: list[list[dict]]) -> list[dict]:
     return chosen[::-1]
 
 
+def pause_rule(rule_: dict | None) -> float | None:
+    """The cut's pause rule (edit.pauses): a pause longer than longer_than_s, between two words he said straight
+    through, is cut down to a breath (Krish, 2026-11-17: "clip out empty awkward silences"). None leaves every pause
+    as recorded. The rule needs his words, as a speed change does."""
+    if rule_ is None:
+        return None
+    if not isinstance(rule_, dict) or not rule_.get('said'):
+        raise ValueError("edit.pauses needs Krish's words in edit.pauses.said")
+    longer = rule_.get('longer_than_s')
+    if isinstance(longer, bool) or not isinstance(longer, (int, float)) or not 0.4 <= longer <= 3:
+        raise ValueError('edit.pauses.longer_than_s must be between 0.4 and 3 seconds')
+    return float(longer)
+
+
+def tighten(pieces: list[dict], clocks: dict, longer_than_s: float) -> list[dict]:
+    """Split each straight-through piece at every pause longer than longer_than_s, where the take can be cut after the
+    word before it and before the word after it in a gap both aligners agree on (the same out and in points every other
+    join uses). What is left of the pause is the two pads either side of the join, about a breath (2 x PAD_S). A pause
+    with no agreed gap plays as recorded: nothing is cut on one aligner's word."""
+    out = []
+    for piece in pieces:
+        clock = clocks[piece['take']]
+        first = piece['first']
+        for j in range(piece['first'], piece['last']):
+            if fumbles.is_pseudo(clock.a[j]) or fumbles.is_pseudo(clock.a[j + 1]):
+                continue
+            pause = clock.a[j + 1]['onset_s'] - clock.a[j]['end_s']
+            if pause <= longer_than_s:
+                continue
+            cut_out, cut_in = clock.out_point(j), clock.in_point(j + 1)
+            if cut_out is None or cut_in is None or cut_in - cut_out <= 2 * PAD_S + 1e-6:
+                continue
+            out.append({'take': piece['take'], 'first': first, 'last': j})
+            first = j + 1
+        out.append({'take': piece['take'], 'first': first, 'last': piece['last']})
+    return out
+
+
 def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes: list[str] | None = None,
             crossfade_s: float = CROSSFADE_S, script_sha256: str | None = None) -> dict:
     """Return the EDL for one cut. Pure: reads the take records, writes nothing."""
@@ -298,6 +336,7 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
                              f'{clock.listen.get("quiet_line_db")} dBFS, {hear.QUIET_BELOW_SPEECH_DB} dB under his speech): the room is too loud '
                              f'to join in safely; nothing is cut')
     removed = {w for r in edit.get('remove', []) for w in range(r['from_w'], r['to_w'] + 1)}
+    pauses = pause_rule(edit.get('pauses'))
     lines = lines_of(script, removed)
     chosen = choose(clocks, lines)
 
@@ -309,6 +348,8 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
                 pieces[-1]['last'] = end
             else:
                 pieces.append({'take': reading['take'], 'first': start, 'last': end})
+    if pauses is not None:
+        pieces = tighten(pieces, clocks, pauses)
     by_line_word = {}
     for line, reading in zip(lines, chosen):
         for word, j, last in zip(line, reading['words'], reading['ends']):
@@ -393,7 +434,8 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
 
     return {
         'schema': SCHEMA, 'piece': spec['piece_id'], 'cut': cut_id, 'aspect': cut['aspect'], 'fps': FPS,
-        'edit': {'remove': edit.get('remove', []), 'speed': speed, **({'speed_said': edit['speed_said']} if edit.get('speed_said') else {})},
+        'edit': {'remove': edit.get('remove', []), 'speed': speed, **({'speed_said': edit['speed_said']} if edit.get('speed_said') else {}),
+                 **({'pauses': edit['pauses']} if edit.get('pauses') is not None else {})},
         'speed': speed, 'crossfade_ms': round(crossfade_s * 1000, 1),
         'rule': {'min_gap_ms': rule.MIN_GAP_S * 1000, 'clearance_ms': rule.CLEARANCE_S * 1000,
                  'crossfade_ms': [rule.CROSSFADE_MIN_S * 1000, rule.CROSSFADE_MAX_S * 1000], 'aligners': 'both'},
@@ -431,7 +473,7 @@ def lint_edl(edl: dict, records: dict[str, dict], spec: dict | None = None) -> l
         if edl.get('piece') != spec.get('piece_id') or not cut:
             out.append('edl is for a different piece or cut')
         elif (edit.get('remove', []) != edl['edit'].get('remove') or edit.get('speed', 1) != edl['edit'].get('speed')
-              or edit.get('speed_said') != edl['edit'].get('speed_said')):
+              or edit.get('speed_said') != edl['edit'].get('speed_said') or edit.get('pauses') != edl['edit'].get('pauses')):
             out.append("edl edit differs from the spec's approved edit: conform again")
     problem = rule.crossfade_problem((edl.get('crossfade_ms') or 0) / 1000)
     if problem:
@@ -576,34 +618,60 @@ def render(edl: dict, records: dict[str, dict], assets_dir: Path) -> dict:
         m = order.index(segment['take'])
         start = segment['src_in_s'] - (half * speed if k > 0 else 0)
         end = segment['src_out_s'] + (half * speed if k < last else 0)
-        tempo = f',atempo={speed:.6f}' if speed != 1 else ''
-        graph.append(f'[{m}:a]atrim=start={start:.6f}:end={end:.6f},asetpts=PTS-STARTPTS{tempo},'
+        # Cut and crossfade at the take's own speed; the one speed-up runs once over the joined voice (below). A tempo
+        # change per segment shifted the voice about 7 ms later at every join (18 Nov 2026: 154 ms by the end of a
+        # 19-segment short at 1.21x, measured by av_sync against the take at the same speed), while the picture held.
+        graph.append(f'[{m}:a]atrim=start={start:.6f}:end={end:.6f},asetpts=PTS-STARTPTS,'
                      f'aresample=48000,aformat=channel_layouts=mono[a{k}]')
-        if video:
-            span = (segment['frames'] + 1) / FPS * speed
-            picture = pictures[segment['take']]
-            graph.append(f'[{m}:v]{lay_filter(picture)}trim=start={segment["src_in_s"]:.6f}:end={segment["src_in_s"] + span:.6f},'
-                         f'setpts=(PTS-STARTPTS)/{speed:.6f},fps={FPS},trim=end_frame={segment["frames"]},'
-                         f'setpts=PTS-STARTPTS{tone_filter(picture)}[v{k}]')
+
     current = 'a0'
     for k in range(1, last + 1):
-        graph.append(f'[{current}][a{k}]acrossfade=d={edl["crossfade_ms"] / 1000:.4f}:c1=tri:c2=tri[x{k}]')
+        graph.append(f'[{current}][a{k}]acrossfade=d={edl["crossfade_ms"] / 1000 * speed:.5f}:c1=tri:c2=tri[x{k}]')
         current = f'x{k}'
-    graph.append(f'[{current}]asplit=2[amux][awav]')
-    if video:
-        graph.append(''.join(f'[v{k}]' for k in range(last + 1)) + f'concat=n={last + 1}:v=1:a=0[vout]')
+    if speed != 1:
+        graph.append(f'[{current}]atempo={speed:.6f}[sped]')
+        current = 'sped'
+    graph.append(f'[{current}]asplit=2[amux][awav]' if video else f'[{current}]anull[awav]')
     picture = assets_dir / edl['conformed']['picture']
     dialogue = assets_dir / edl['conformed']['dialogue']
     raw = dialogue.with_name(dialogue.stem + '.raw.wav')   # the graph's own voice; the voice pass writes the dialogue
+    laid = None
+    if video:
+        # The picture is laid one segment at a time, each through exactly the filters the one graph used (the same trim,
+        # speed, fps and frame count from the EDL), then joined without re-encoding. One graph with a branch per segment
+        # queued every decoded frame for every later branch until concat reached it: on 18 Nov a 19-segment 1080x1920
+        # take ran a 15 GB machine out of memory. Each segment's frame count is the EDL's, so picture and sound still
+        # take the one speed and the same cut points and cannot drift (F10).
+        laid = assets_dir / f'.laid.{edl["cut"]}'
+        laid.mkdir(parents=True, exist_ok=True)
+        listing = []
+        for k, segment in enumerate(edl['segments']):
+            m = order.index(segment['take'])
+            span = (segment['frames'] + 1) / FPS * speed
+            pic = pictures[segment['take']]
+            chain = (f'[0:v]{lay_filter(pic)}trim=start={segment["src_in_s"]:.6f}:end={segment["src_in_s"] + span:.6f},'
+                     f'setpts=(PTS-STARTPTS)/{speed:.6f},fps={FPS},trim=end_frame={segment["frames"]},'
+                     f'setpts=PTS-STARTPTS{tone_filter(pic)}[v]')
+            part = laid / f'{k:03d}.mp4'
+            subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-y', '-i', media[m], '-filter_complex', chain,
+                            '-map', '[v]', '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-r', str(FPS),
+                            '-x264-params', 'keyint=1000000:min-keyint=1000000', str(part)], check=True, capture_output=True)
+            listing.append(f"file '{part.resolve().as_posix()}'")
+        (laid / 'parts.txt').write_text('\n'.join(listing) + '\n', encoding='utf-8')
     cmd = [ffmpeg(), '-nostdin', '-v', 'error', '-y']
     for path in media:
         cmd += ['-i', path]
+    if video:
+        cmd += ['-f', 'concat', '-safe', '0', '-i', str(laid / 'parts.txt')]
     cmd += ['-filter_complex', ';'.join(graph)]
     if video:
-        cmd += ['-map', '[vout]', '-map', '[amux]', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-r', str(FPS),
-                '-c:a', 'aac', '-b:a', '192k', str(picture)]
+        cmd += ['-map', f'{len(media)}:v', '-map', '[amux]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', str(picture)]
     cmd += ['-map', '[awav]', '-c:a', 'pcm_s16le', '-ar', '48000', str(raw)]
     subprocess.run(cmd, check=True, capture_output=True)
+    if laid is not None:
+        for part in laid.iterdir():
+            part.unlink()
+        laid.rmdir()
     # Sniffs between his words turned down, never cut (Krish, 17 Oct 2026); the repair chain only with his approval.
     from . import voice  # noqa: PLC0415
     spoken = voice.prepare(raw, edl['words'] + kept_words(edl, records), dialogue, assets_dir / f'voice.{edl["cut"]}.json')

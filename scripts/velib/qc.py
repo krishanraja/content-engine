@@ -144,10 +144,10 @@ def measurement(rows: list, target: str) -> dict:
 
 
 def _split_geometry() -> tuple[float, tuple[int, int, int, int]]:
-    """The frozen mock stage scale and caption zone, read from the mocks file, never copied."""
-    mocks = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
-    scale = float(re.search(r'export const FWP_MOCK_STAGE_SCALE = ([0-9.]+)', mocks).group(1))
-    zone = re.search(r'export const FWP_SPLIT_CAPTION_ZONE = \{([^}]*)\}', mocks).group(1)
+    """The SPLIT stage scale and caption zone, read from the renderer's geometry file, never copied."""
+    geometry = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')
+    scale = float(re.search(r'export const SPLIT_STAGE_SCALE = ([0-9.]+)', geometry).group(1))
+    zone = re.search(r'export const SPLIT_CAPTION_ZONE = \{([^}]*)\}', geometry).group(1)
     get = lambda key: int(re.search(key + r': (\d+)', zone).group(1))
     return scale, (get('left'), get('top'), get('width'), get('height'))
 
@@ -155,13 +155,13 @@ def _renderer_layouts() -> dict:
     """Slot boxes parsed from the renderer's own table (apps/renderer/src/engine/layouts/index.ts),
     so QC can never measure a stale copy. Boxes are x, y, width, height in beat.uses order."""
     source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'index.ts').read_text(encoding='utf-8')
-    # Named numbers the table imports (the SPLIT seam, FWP_SPLIT_SEAM_Y) are read from their own file, never copied.
-    mocks = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
-    constants = {name: value for name, value in re.findall(r'export const (FWP_[A-Z_]+) = (-?\d+)\b', mocks)}
+    # Named numbers the table imports (the SPLIT seam, SPLIT_SEAM_Y) are read from their own file, never copied.
+    geometry = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')
+    constants = {name: value for name, value in re.findall(r'export const (SPLIT_[A-Z_]+) = (-?\d+)\b', geometry)}
     result = {}
     for aspect, name in (('9:16', 'TALL'), ('16:9', 'WIDE')):
         block = re.search(r'const ' + name + r': Record<.*?readonly Box\[\]> = \{(.*?)\n\}\n', source, re.S).group(1)
-        block = re.sub(r'\b(FWP_[A-Z_]+)\b', lambda m: constants[m.group(1)], block)
+        block = re.sub(r'\b(SPLIT_[A-Z_]+)\b', lambda m: constants[m.group(1)], block)
         # Layout dimensions may subtract a fixed inset from an imported seam.
         block = re.sub(r'(-?\d+)\s*-\s*(\d+)', lambda m: str(int(m[1]) - int(m[2])), block)
         result[aspect] = {layout: [tuple(int(n) for n in re.findall(r'-?\d+', box)) for box in re.findall(r'\{ left:[^}]*\}', body)]
@@ -247,8 +247,7 @@ def inputs_from_props(props: dict) -> dict:
     events = [_moved(e, props, 'atFrame') for e in props['events']]
     objects = {o['obj']: o for o in props.get('objects', [])}
     split_scale, split_caption = _split_geometry()
-    split_seam = int(re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks'
-                                / 'face-with-proof.tsx').read_text(encoding='utf-8')).group(1))
+    split_seam = int(re.search(r'export const SPLIT_SEAM_Y = (\d+)', (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')).group(1))
     slots = {}
     for event in events:
         at = event['atFrame']
@@ -307,6 +306,9 @@ def inputs_from_props(props: dict) -> dict:
         beat = next((b for b in beats if b['fromFrame'] <= page['fromFrame'] < b['toFrame']), {})
         if beat.get('layout') == 'SPLIT' and style != 'word':
             page['region'] = split_caption
+            page['split'] = True
+        if props.get('captionTheme') and style != 'word':
+            page['themed'] = True
         x, y, w, h = qc_faces.caption_box(page, style, aspect, region, layout=beat.get('layout'),
                                          plate=(beat.get('plate') or {}).get('source'))
         width, height = (1080, 1920) if aspect == '9:16' else (1920, 1080)
@@ -316,7 +318,7 @@ def inputs_from_props(props: dict) -> dict:
     # The plate's frame under file frame F of a beat is F - the beat's shift + the segment's trim.
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
-                body_logo=props.get('bodyLogo') is not False,
+                body_logo=props.get('bodyLogo') is True,
                 edl=edl, joins=joins, caption_style=props.get('captionStyle') or 'house',
                 plate_video=(props.get('segments') or [{}])[0].get('src') if len(props.get('segments') or []) == 1 else None,
                 plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)),
@@ -385,8 +387,10 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     checks['captions.off_face'] = ({'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not applicable'}
                                    if pages is not None and not pages else
                                    {'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not_run'})
+    checks['plate.head_in_band'] = {'value': None, 'target': 'his whole head inside the camera band', 'pass': None,
+                                    'status': 'not applicable'}
     checks['channel.safe_zones'] = {'value': None, 'target': 'nothing under a channel button', 'pass': None, 'status': 'advisory'}
-    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_as_shot, qc_opening
+    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_as_shot, qc_opening, qc_composition
     optional = [
         # The opening (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"): the
         # approved sting on the file's first frames and his cut on the very next frame, or no sting at all.
@@ -418,6 +422,10 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         ('captions.off_face', bool(pages) and aspect is not None,
          lambda: qc_faces.off_face(path, pages, style=caption_style, aspect=aspect, region=region, fps=fps,
                                    detector=face_detector, beats=beats)),
+        # Krish, 18 Nov 2026: his head is never cut off. On a SPLIT take beat the whole head sits in the camera band.
+        ('plate.head_in_band', aspect == '9:16' and any(b.get('layout') == 'SPLIT' for b in beats or []),
+         lambda: qc_faces.head_in_band(path, beats, seam=qc_composition.split_seam(), aspect=aspect, fps=fps,
+                                       detector=face_detector)),
         ('channel.safe_zones', aspect is not None and (bool(pages) or bool(beats)),
          lambda: qc_channel.safe_zones(pages, beats, aspect, region, caption_style)),
     ]

@@ -276,8 +276,8 @@ class CompileTest(unittest.TestCase):
         def pages(text, gap=10):
             rows = [{'w': i, 'text': t, 'atFrame': i * gap} for i, t in enumerate(text.split())]
             return [' '.join(r['text'] for r in g) for g in _caption_groups(rows)]
-        got = pages('Amazon for your groceries, Google for your emails, it can get a bit dangerous.')
-        self.assertIn('Amazon for your groceries,', got)
+        got = pages('Netflix for your evenings, Google for your emails, it can get a bit dangerous.')
+        self.assertIn('Netflix for your evenings,', got)
         self.assertIn('Google for your emails,', got)
         got = pages('I didn\'t even write this myself. I just put one prompt into my AI tool')
         self.assertFalse([p for p in got if 'myself.' in p and not p.endswith('myself.')], got)
@@ -306,6 +306,15 @@ class CompileTest(unittest.TestCase):
         self.assertEqual({len(page['words']) for page in props['captions']}, {1})
         for page, after in zip(props['captions'], props['captions'][1:]):
             self.assertEqual(page['toFrame'], after['fromFrame'])
+
+    def test_a_picked_caption_style_keeps_phrase_pages(self):
+        # Krish, 2026-11-13: "the captions should be decoupled from the animation styles"; rack-focus picked 17 Nov.
+        spec = load_json(FIXTURE / 'spec.json')
+        spec['brand'] = {**spec['brand'], 'captions': 'word'}
+        spec.setdefault('style', {})['captions'] = {'theme': 'rack-focus', 'placement': 'lower', 'reason': 'picked'}
+        props = compile_cut(spec, next(iter(spec['cuts'])), timed_words(), FIXTURE)
+        self.assertEqual(props['captionStyle'], 'house')
+        self.assertGreater(max(len(page['words']) for page in props['captions']), 1)
 
     def test_the_hook_is_the_intro(self):
         # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns
@@ -392,6 +401,7 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(generated_plate_problem(asset, 'photo_plate'), '')
         self.assertIn('Phase 2', generated_plate_problem(asset, 'evidence_card'))
         self.assertIn('job_id', generated_plate_problem(dict(asset, job_id=None), 'photo_plate'))
+        self.assertEqual(generated_plate_problem(asset, 'scene_plate'), '')
 
     def test_sfx_kit_present_and_absent(self):
         spec = load_json(FIXTURE / 'spec.json')

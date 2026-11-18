@@ -25,9 +25,9 @@ CHAR_WIDTH = 0.62  # an Archivo bold glyph is about this share of the font size 
 def word_geometry(aspect: str, layout: str | None = None, plate=None) -> dict:
     source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'chrome' / 'WordCaption.tsx').read_text(encoding='utf-8')
     row = re.search(r'\b' + ('tall' if aspect == '9:16' else 'wide') + r': \{([^}]*)\}', source).group(1)
-    seam_source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
-    seam = re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', seam_source).group(1)
-    row = row.replace('FWP_SPLIT_SEAM_Y', seam)
+    seam_source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')
+    seam = re.search(r'export const SPLIT_SEAM_Y = (\d+)', seam_source).group(1)
+    row = row.replace('SPLIT_SEAM_Y', seam)
     geometry = {}
     for key, expression in re.findall(r'(\w+): ([^,]+)', row):
         factors = expression.strip().split('*')
@@ -46,8 +46,8 @@ def caption_box(page: dict, style: str, aspect: str, region, *, layout=None, pla
     if style == 'word':
         # qc.py already marks sampled SPLIT pages with their own region.
         if layout is None and page.get('region') is not None:
-            source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
-            zone = re.search(r'export const FWP_SPLIT_CAPTION_ZONE = \{([^}]*)\}', source).group(1)
+            source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')
+            zone = re.search(r'export const SPLIT_CAPTION_ZONE = \{([^}]*)\}', source).group(1)
             split_region = tuple(int(n) for n in re.findall(r': (\d+)', zone))
             region_box = page['region']
             if isinstance(region_box, dict):
@@ -144,3 +144,88 @@ def off_face(video: str, pages: list, *, style: str = 'house', aspect: str = '9:
                             'face': list(hits[0])})
     return {'value': {'pages': len(pages), 'on_face': on_face[:12], 'count': len(on_face)}, 'target': target,
             'pass': not on_face}
+
+
+# ---------------------------------------------------------------- his whole head inside the camera band
+# Krish, 18 Nov 2026, of a proof video that cut the top of his head off under a squeezed picture: "'Don't cut the top of
+# my head off' should not really need a reference image". It is a rule, measured: on a SPLIT take beat his face sits in
+# the camera band below the seam, and the head from crown to chin must lie inside that band, never under the stage or
+# off the bottom of the frame. A frontal face box starts near the brow, so the crown stands CROWN of its height above
+# it and the chin CHIN of its height below its bottom edge (uncalibrated starting values, like the face flags).
+CROWN = 0.35
+CHIN = 0.08
+HEAD_SAMPLES = (0.25, 0.5, 0.75)   # shares of a beat: a head that moves is caught where it moves
+
+
+def crop_position(crop) -> float:
+    """The vertical position, in percent, a beat's `plate.crop` puts on the take (splitPlatePosition's reading; the
+    renderer's default when it names none). Only the `X% Y%` form is read; a keyword form falls back to the default."""
+    from .qc_as_shot import DEFAULT_CROP  # noqa: PLC0415  (the one copy of the renderer's default, read from its file)
+    for text in (crop, DEFAULT_CROP):
+        found = re.fullmatch(r'\s*\S+\s+(-?\d+(?:\.\d+)?)%\s*', text or '')
+        if found:
+            return float(found.group(1))
+    return 50.0
+
+
+def fitting_position(samples: list, position: float, *, seam: int, height: int = 1920) -> str | None:
+    """The `plate.crop` that puts every sampled head (crown, chin in the finished frame) inside the camera band, centred
+    between the two edges, or None when no vertical position of a take that tall can hold them (a head bigger than the band).
+    His take is as wide as the cut, so the take is `height` rows tall and shows `height - seam` of them: the overflow
+    is `seam`, and a position p shifts the take up by p% of it."""
+    overflow = seam
+    low = max(seam - crown for crown, _ in samples)       # move the take down at least this far to clear the crown
+    high = min(height - chin for _, chin in samples)      # and at most this far to keep the chin
+    if low > high:
+        return None
+    shift = (low + high) / 2
+    offset = position / 100 * overflow - shift
+    if not 0 <= offset <= overflow:
+        offset = min(max(offset, 0), overflow)
+        moved = position / 100 * overflow - offset
+        if not low <= moved <= high:
+            return None
+    return f'50% {round(offset / overflow * 100)}%'
+
+
+def head_in_band(video: str, beats: list, *, seam: int, aspect: str = '9:16', fps: float = 30, detector=None,
+                 grab=None) -> dict:
+    target = 'his whole head, crown to chin, inside the camera band of every SPLIT take beat'
+    eligible = [b for b in beats or [] if b.get('layout') == 'SPLIT' and (b.get('plate') or {}).get('source') == 'take']
+    if aspect != '9:16' or not eligible:
+        return {'value': None, 'target': target, 'pass': None, 'status': 'not applicable'}
+    detector = detector or default_detector()
+    if detector is None:
+        return {'value': None, 'target': target, 'pass': None, 'status': 'not_run',
+                'reason': 'no face detector in this Python (opencv-python or mediapipe)'}
+    grab = grab or (lambda frame: frame_at(video, frame, fps, (1080, 1920)))
+    height = 1920
+    cut, no_face, samples, suggest = [], [], 0, {}
+    for beat in eligible:
+        span = beat['toFrame'] - beat['fromFrame']
+        seen, heads, before = 0, [], len(cut)
+        for share in HEAD_SAMPLES:
+            frame = beat['fromFrame'] + int(span * share)
+            samples += 1
+            faces = detector(grab(frame))
+            if not faces:
+                continue
+            seen += 1
+            x, y, w, h = max(faces, key=lambda f: f[2] * f[3])
+            crown, chin = y - CROWN * h, y + (1 + CHIN) * h
+            heads.append((crown, chin))
+            at = round(frame / fps, 2)
+            if crown < seam:
+                cut.append({'beat': beat.get('id'), 'at_s': at, 'edge': 'crown', 'by_px': round(seam - crown),
+                            'band_top': seam})
+            if chin > height:
+                cut.append({'beat': beat.get('id'), 'at_s': at, 'edge': 'chin', 'by_px': round(chin - height)})
+        if not seen:
+            no_face.append(beat.get('id'))
+        elif len(cut) > before:
+            # Name the crop that would hold every sampled head, so the fix is a value to set, not a search.
+            suggest[beat.get('id')] = fitting_position(
+                heads, crop_position((beat.get('plate') or {}).get('crop')), seam=seam, height=height) or 'none fits'
+    return {'value': {'beats': len(eligible), 'samples': samples, 'cut': cut[:12], 'count': len(cut),
+                      'no_face_in_beat': no_face, 'suggest_crop': suggest},
+            'target': target, 'pass': not cut and not no_face}

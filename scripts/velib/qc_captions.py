@@ -206,11 +206,18 @@ def ocr(render, pages, region) -> dict:
                          'reason': 'tesseract is not on PATH'})
             continue
         page_region = page.get('region', region)  # a SPLIT page reads its own zone (qc.inputs_from_props)
+        # Only a SPLIT page (split: True) takes the compact crop; every page carries a region now (18 Nov 2026).
         _, _, w, h = pixel_box(page_region)
         pixels = gray_frames(render, frame, frame, page_region)[0].astype('uint8')
         words = ' '.join(word['text'] if isinstance(word, dict) else str(word) for word in page['words'])
         expected = _tokens(words)
-        best = _read_candidates(executable, crop_to_caption_box(pixels.reshape(h, w), page_lines(page, w > 1000), w > 1000, 'region' in page), expected)
+        frame_pixels = pixels.reshape(h, w)
+        # A picked caption style (themed: True) draws in its own band and sits on the band's foot when placed lower,
+        # so the house box crop (the top rows of the region) cut its one-line pages away (Wed 18, 18 Nov 2026): read
+        # the whole region, as the renderer read does.
+        if not page.get('themed'):
+            frame_pixels = crop_to_caption_box(frame_pixels, page_lines(page, w > 1000), w > 1000, bool(page.get('split')))
+        best = _read_candidates(executable, frame_pixels, expected)
         rows.append({'page': index, 'frame': frame, **best,
                      'pass': bool(expected) and best['agreement'] >= 0.98})
     report = measurement(rows, 'token agreement >= 0.98 on every page')

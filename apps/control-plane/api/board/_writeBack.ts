@@ -28,6 +28,11 @@ export const RESEARCH_RULE = 'Research is never left in scratch or a chat: file 
 export const WALLS = 'This Publish Board in Control Centre is the only place to put the work; the old pages at '
   + 'content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on '
   + 'the publish board: propose it, and only Krish\'s Approve places it.'
+/** The one prompt that may schedule (Krish, 2026-11-18: "Publish [...] would then schedule in Buffer directly, ideally, or
+ *  produce a prompt that I could do it in a session"): his pressing it is his approval to schedule exactly what it lists. */
+export const WALLS_SCHEDULE = 'This Publish Board in Control Centre is the only place to put the work. The one thing you may schedule is the post this '
+  + 'prompt lists, exactly as listed, because Krish pressing it is his approval for that; never publish anything now, never schedule anything else, and never '
+  + 'put an idea on the publish board.'
 
 /** How every session ends, so nothing it did is left for the next one to guess (Ruling, Krish, 2026-11-17: "Every prompt
  *  created for Claude or Perplexity should leave the new session with nothing to assume, and it should also close the loop
@@ -36,7 +41,8 @@ export const CLOSE_LOOP = 'Close the loop as you go, not only at the end: every 
   + 'anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; '
   + 'a finished post asset goes in that post\'s own folder); work in the repository is committed and pushed by its own rules, with its '
   + 'closeout note (AGENTS.md, "Commit and closeout"). Before you stop, report done (or blocked) with one line saying what changed and '
-  + 'where each thing now is, and end your last message with the one next step and who takes it.'
+  + 'where each thing now is, and end your last message with the one next step and who takes it. Filing a file in Drive does not update the board: '
+  + 'write the record the card reads, read the board back, and report done only when it shows the change (Krish, 2026-11-18).'
 
 /** Where his typed approval of a lock or scripts goes (Ruling, Krish, 2026-11-12: "Scripts and locks only."). On 13 Nov
  *  he had approved Mon 16's and Wed 18's stories and scripts in sessions, and the board said "No approved scripts are
@@ -44,7 +50,7 @@ export const CLOSE_LOOP = 'Close the loop as you go, not only at the end: every 
 export const APPROVAL_RULE = 'When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, '
   + 'with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file.'
 
-export interface WriteBackTarget { pieceId: string | null; week: string; day: string; step: string; decisions?: PieceDecisions | null }
+export interface WriteBackTarget { pieceId: string | null; week: string; day: string; step: string; decisions?: PieceDecisions | null; schedule?: boolean }
 
 const STEP = /^[a-z][a-z0-9_-]{0,40}$/
 /** A step as a short key the board shows ("storyboard", "post"), from a path key or a label. */
@@ -70,7 +76,7 @@ export function writeBack(t: WriteBackTarget): string {
     + `or board_session.py ${cli} add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py ${cli} read <id>.\n`
     + `4. ${RESEARCH_RULE} The script: board_session.py ${cli} add <file> --kind research\n`
     + (t.pieceId ? `5. ${APPROVAL_RULE} The script: board_session.py ${cli} approve lock|scripts (docs/PUBLISH_BOARDS.md, "His typed approval")\n` : '')
-    + `${t.pieceId ? 6 : 5}. ${WALLS}\n`
+    + `${t.pieceId ? 6 : 5}. ${t.schedule ? WALLS_SCHEDULE : WALLS}\n`
     + `${t.pieceId ? 7 : 6}. ${CLOSE_LOOP}\n`
     + 'Nothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, '
     + 'and the script uses the engine key this machine already holds.'
@@ -119,6 +125,8 @@ export interface ViewSession {
 export interface ViewMaterial {
   id: string; kind: string; title: string; size: number; added_by: string; at: string | null
   thumbnail: string | null; role: string | null; version: number; where: 'piece' | 'day'
+  /** The file's sha256 (a stored file), so a press can bind to exactly what he saw (the proof); null for a link or text. */
+  sha256: string | null
 }
 export interface Overlay { sessions: Body[]; materials: Body[] }
 
@@ -133,6 +141,7 @@ const materialOf = (m: Body): ViewMaterial => {
     id: String(m.id), kind: String(m.kind), title: String(m.title), size: Number(m.bytes) || 0, added_by: String(m.added_by || ''),
     at: typeof m.at === 'string' ? m.at : null, thumbnail: type.startsWith('image/') ? String(m.id) : null,
     role: typeof m.role === 'string' ? m.role : null, version: Number(m.version) || 1, where: m.piece_id ? 'piece' : 'day',
+    sha256: typeof m.sha256 === 'string' && /^[a-f0-9]{64}$/.test(m.sha256) ? m.sha256 : null,
   }
 }
 

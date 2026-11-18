@@ -137,7 +137,8 @@ linkedin posts scheduled in Buffer."
 - The version 3 video and its day and night stills are filed in Drive: `mind/make > 00_Brand-Assets > 03_Social-and-Ads`
   (folder `1u-35-pcnvdn-kRvSf-U2uAc-QW7Ri2QB`), each named `2026-11-18 Inside my AI-native firm - floor by floor - ...`.
   Video `1amysBFJJw6Ra8ws4BqR8pWleBVVMmqsQ`, day still `1ZrriySuJVrFBzSTnXsvsIQuETv6KYGRN`, night still
-  `17DZDWvvocz-EOh_MczMUT4MwWONI52K-`.
+  `17DZDWvvocz-EOh_MczMUT4MwWONI52K-`. Moved to the Drive trash on 18 Nov at Krish's word ("ok get rid of the old
+  assets"), once version 4 was filed; version 4 below replaces them.
 - The outcome: a series of LinkedIn posts, scheduled in Buffer, with this video in one of them. Scheduling is a
   publication: it waits for Krish's yes on the exact posts, every time.
 
@@ -149,7 +150,7 @@ figurine per job (`figurines/roles.json`, 49 jobs), built by Codex from card `ve
 (the second after Claude's full-size line-up review: builds, faces, costumes, real hats, bigger props), checked by
 `figurines/check.mjs` and looked at with `figurines/lineup.cjs`. Figures stand 1.3 in the building (was 1.12).
 
-Filed beside the version 3 files in `03_Social-and-Ads` (`1u-35-pcnvdn-kRvSf-U2uAc-QW7Ri2QB`), version 3 untouched:
+Filed in `03_Social-and-Ads` (`1u-35-pcnvdn-kRvSf-U2uAc-QW7Ri2QB`), where they replace version 3:
 - The master, version 4: video `1dhobSF8X6nN5vZsXCoY55_OcQOzIh8Nf`, day still `1PsF0HkRzeqhQdEWfJbhoc1vJCaxAK0Rt`, night
   still `1vQS-5K6CzW3XFvkaJcvdngb7MpGy0cZk`.
 - Floor close-ups for the LinkedIn series (growth-mindmake), 5 s, 1080x1350, 30 fps, a walk across the floor in daylight

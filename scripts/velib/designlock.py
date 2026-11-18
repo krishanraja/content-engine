@@ -1,6 +1,7 @@
 """Approved design direction and hash-bound golden keyframes for ve formats."""
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import math
@@ -17,6 +18,10 @@ WIDE_CANVAS = {'w': 1920, 'h': 1080}
 WIDE_CAPTION = {'x': 260, 'y': 773, 'w': 1400, 'h': 187}
 GATES = ['design_lock', 'composition_qc', 'keyframe_match', 'mechanical_qc',
          'critic_verdict', 'packet', 'krish_final_hash']
+# A rules-only lock (Krish, 2026-11-18: "why a visual pass plus obvious rules arent a better option than measuring it against
+# one frame of an old video"): the format keeps its beats, zones and thresholds, and its cuts are held to those rules, the
+# Critic's visual pass and his approval of the exact file. No key frame is stored and none is matched.
+RULES_ONLY = 'rules_only'
 
 
 def _path(path=None) -> Path:
@@ -99,6 +104,8 @@ def validate(lock, root=None) -> list[str]:
     for fmt, settings in formats.items():
         if settings.get('aspect', '9:16') == '16:9' and (not fmt.endswith(WIDE) or settings.get('canvas') != WIDE_CANVAS):
             out.append(f'formats.{fmt}: a 16:9 entry is named <format>{WIDE} and its canvas is 1920x1080')
+        if settings.get('match', RULES_ONLY) != RULES_ONLY:
+            out.append(f'formats.{fmt}.match must be {RULES_ONLY} or absent')
         beats = settings.get('beats')
         if (not isinstance(beats, list) or not beats or
                 any(not isinstance(b, str) or not b for b in beats) or len(set(beats)) != len(beats)):
@@ -125,6 +132,8 @@ def frozen(lock, fmt, root=None) -> tuple[bool, list[str]]:
     if settings is None:
         return False, [f'unknown format {fmt}']
     beats = settings.get('beats', [])
+    if settings.get('match') == RULES_ONLY:
+        return (True, []) if beats else (False, [f'{fmt}: a rules-only lock still names its beats'])
     frames = settings.get('keyframes', {})
     reasons = []
     if not beats or not isinstance(frames, dict) or set(frames) != set(beats):
@@ -169,6 +178,8 @@ def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None, ap
     if fmt not in lock['formats'] and fmt not in drafts:
         raise ValueError(f'unknown format {fmt}')
     settings = lock['formats'][fmt] if fmt in lock['formats'] else _promoted(drafts[fmt])
+    if settings.get('match') == RULES_ONLY:
+        raise ValueError(f'{fmt} is a rules-only lock: it keeps no key frames and none is frozen')
     beats = settings['beats']
     if set(mapping) != set(beats):
         raise ValueError(f'mapping must cover every beat of {fmt} exactly: {", ".join(beats)}')
@@ -190,6 +201,11 @@ def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None, ap
             output = io.BytesIO()
             image.convert('RGB').resize(size, Image.Resampling.LANCZOS).save(output, format='JPEG', quality=85)
         prepared.append((beat, target, output.getvalue(), sha256_file(source)))
+    barred = retired_hashes(settings)
+    for beat, _target, data, source_hash in prepared:
+        if source_hash in barred or hashlib.sha256(data).hexdigest() in barred:
+            raise ValueError(f'{fmt}.{beat}: this picture is one Krish had deleted for good '
+                             f'({settings["retired"]["on"]}); freeze new key frames')
     entries = {}
     for beat, target, data, source_hash in prepared:
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -216,6 +232,89 @@ def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None, ap
     lock['status'] = 'frozen' if all(frozen(lock, name, root)[0] for name in lock['formats']) else 'direction_approved'
     path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
     return lock
+
+
+def retired_hashes(settings: dict) -> set[str]:
+    """The sha256 of every key frame (the golden file and the still it was cut from) a format's lock had deleted for good."""
+    return {value for entry in (settings.get('retired') or {}).get('keyframes', {}).values()
+            for value in (entry.get('sha256'), entry.get('source_sha256')) if value}
+
+
+def retire(fmt: str, *, words: str, on: str, by: str = 'Krish', lock_path=None, today=None) -> dict:
+    """Krish deletes a frozen format's golden key frames for good. The golden files are removed, the format leaves
+    `formats` and returns to `drafts` awaiting a new Gate 2, and the draft keeps his words and the hash of every frame
+    it lost: `freeze` refuses any of those pictures again, so a deleted frame cannot come back by accident. Until a new
+    freeze the format has no lock: lint, QC and the packet read it as unlocked, and the Critic is its design gate."""
+    if by != 'Krish':
+        raise ValueError('only Krish retires a lock')
+    if not str(words or '').strip():
+        raise ValueError('retire records his words: pass them with --words')
+    path = _path(lock_path).resolve()
+    root = path.parents[2] if path.parent.name == 've' and path.parent.parent.name == 'config' else path.parent
+    lock = load(path)
+    settings = lock['formats'].get(fmt)
+    if settings is None:
+        raise ValueError(f'{fmt} is not a lock')
+    keyframes = settings.get('keyframes') or {}
+    lost = {beat: {'sha256': entry.get('sha256'), 'source_sha256': entry.get('source_sha256')}
+            for beat, entry in keyframes.items()}
+    gone = []
+    for beat in keyframes:
+        golden = golden_path(lock, fmt, beat, root)
+        if golden.is_file():
+            golden.unlink()
+            gone.append(golden.relative_to(root).as_posix())
+    frames_dir = root / settings['frames_dir']
+    if frames_dir.is_dir() and not any(frames_dir.iterdir()):
+        frames_dir.rmdir()
+    retired = {'by': by, 'on': on, 'words': words.strip(), 'was_frozen_on': settings.get('frozen_on'),
+               'was_approved': settings.get('approved'), 'keyframes': lost, 'files_removed': gone}
+    entry = {k: v for k, v in settings.items() if k not in ('keyframes', 'frozen_on', 'approved')}
+    entry.update(status='awaiting Gate 2', drafted=(today or date.today()).isoformat() if not isinstance(today, str) else today,
+                 awaiting=f"Krish's Gate 2 approval of one still per beat, new pictures only; then ve lock freeze {fmt} --from <stills dir>",
+                 keyframe_slots={beat: None for beat in settings['beats']}, retired=retired)
+    del lock['formats'][fmt]
+    lock.setdefault('drafts', {})[fmt] = entry
+    lock['status'] = 'frozen' if all(frozen(lock, name, root)[0] for name in lock['formats']) else 'direction_approved'
+    path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
+    return entry
+
+
+def picture_match(lock: dict, fmt: str) -> bool:
+    """Whether a cut in this format is matched against stored key frames: false for a rules-only lock and an unknown format."""
+    return fmt in lock.get('formats', {}) and lock['formats'][fmt].get('match') != RULES_ONLY
+
+
+def rules_only(fmt: str, *, words: str, on: str, by: str = 'Krish', lock_path=None, today=None) -> dict:
+    """Krish drops the picture-matching for a format (his words, recorded): the draft becomes a lock with no key frames. Its
+    beats, zones and thresholds stay the lock's rules; a cut is held to them, the Critic's visual pass and his approval of the
+    exact file. Only a draft converts, and `retire` or the draft's retirement record stays on the entry."""
+    if by != 'Krish':
+        raise ValueError('only Krish drops the picture-matching for a format')
+    if not str(words or '').strip():
+        raise ValueError('rules-only records his words: pass them with --words')
+    path = _path(lock_path).resolve()
+    root = path.parents[2] if path.parent.name == 've' and path.parent.parent.name == 'config' else path.parent
+    lock = load(path)
+    drafts = lock.get('drafts', {})
+    if fmt not in drafts or fmt in lock['formats']:
+        raise ValueError(f'{fmt} is not a draft to convert')
+    if fmt.endswith(WIDE):
+        raise ValueError('a wide draft keeps its own Gate 2: rules-only is for the 9:16 lock')
+    settings = _promoted(drafts[fmt])
+    settings['match'] = RULES_ONLY
+    settings['rules_only'] = {'by': by, 'on': on, 'words': words.strip()}
+    lock['formats'][fmt] = settings
+    del drafts[fmt]
+    if not drafts:
+        lock.pop('drafts', None)
+    for module in settings.get('modules', []):
+        if module in lock['formats']:
+            lock['formats'][module]['role'] = 'module'
+    settings['frozen_on'] = (today or date.today()).isoformat() if not isinstance(today, str) else today
+    lock['status'] = 'frozen' if all(frozen(lock, name, root)[0] for name in lock['formats']) else 'direction_approved'
+    path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
+    return settings
 
 
 def lock_key(fmt: str, aspect: str) -> str:

@@ -34,7 +34,7 @@
   python scripts/ve.py sfx approve --id <id> --words "<his words>" --on <date> --audition <ve>/sfx-audition.json | sfx stage --assets-dir <dir>
   python scripts/ve.py brief <piece> [--cut <cut>]   one brief per plate, with card fields; never dispatches
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
-  python scripts/ve.py lock draft|check|show|freeze  design locks (only Krish's Gate 2 freezes one)
+  python scripts/ve.py lock draft|check|show|freeze|retire|rules-only  design locks (only Krish's Gate 2 freezes one; retire deletes a lock's key frames for good on his words; rules-only drops the picture-matching on his words)
   python scripts/ve.py golden show|check|fill        interim golden frames he names
   python scripts/ve.py signoff check|stills|gate2|add|apply   the three sign-offs as review cards on his board
   python scripts/ve.py expect <spec>                 expect.md: at most six lines of what this cut will and won't do
@@ -149,7 +149,7 @@ def cmd_lock(args) -> int:
             print('design lock: valid')
             for fmt in lock['formats']:
                 ok, reasons = designlock.frozen(lock, fmt)
-                print(f'{fmt}: ' + ('frozen' if ok else 'not frozen: ' + '; '.join(reasons)))
+                print(f'{fmt}: ' + ('rules only (no key frames)' if ok and not designlock.picture_match(lock, fmt) else 'frozen' if ok else 'not frozen: ' + '; '.join(reasons)))
             for fmt, entry in lock.get('drafts', {}).items():
                 print(f'{fmt}: draft, {entry["status"]} ({len(entry["beats"])} key-frame slots; '
                       f'modules: {", ".join(entry.get("modules", [])) or "none"})')
@@ -158,6 +158,16 @@ def cmd_lock(args) -> int:
                                      modules=args.modules or [], purpose=args.purpose)
             print(f'design lock: drafted {designlock.lock_key(args.format, args.aspect)}, {entry["status"]}; '
                   'only Krish freezes it at Gate 2')
+        elif args.action == 'rules-only':
+            from datetime import date as _date
+            entry = designlock.rules_only(args.format, words=args.words, on=args.on or _date.today().isoformat())
+            print(f'design lock: {args.format} is a rules-only lock; no key frames are stored or matched, '
+                  f'its {len(entry["beats"])} beats and the lock\'s zones and thresholds are its rules')
+        elif args.action == 'retire':
+            from datetime import date as _date
+            entry = designlock.retire(args.format, words=args.words, on=args.on or _date.today().isoformat())
+            print(f'design lock: retired {args.format}; its key frames are deleted for good and the format is a draft, '
+                  f'{entry["status"]}; {len(entry["retired"]["files_removed"])} golden file(s) removed')
         else:
             if args.mapping is None:
                 entry = lock['formats'].get(args.format) or lock.get('drafts', {})[args.format]
@@ -489,11 +499,13 @@ def cmd_study(args) -> int:
 
 def cmd_card(args) -> int:
     from velib.cards import _require_design_lock, write_card
-    from velib.common import card_worktree
+    from velib.common import card_worktree, native_path
     fields = load_json(args.fields)
     out = Path(fields.pop('path'))
     _require_design_lock(fields)  # a card with no frozen lock is refused before anything else is resolved
-    fields.setdefault('cwd', card_worktree(fields['card_id']))  # the local layout's worktree, never a typed path (W2.11)
+    # The local layout's worktree, never a typed path (W2.11), in this machine's own form: dispatch compares it with
+    # native_path, so a card written off Windows names /a/b, never a\b (18 Nov 2026: a Linux card was refused).
+    fields.setdefault('cwd', str(native_path(card_worktree(fields['card_id']))))
     print(f've card: wrote {write_card(out, **fields)}')
     return 0
 
@@ -1717,6 +1729,19 @@ def cmd_receipt(args) -> int:
     return 1 if result['problems'] else 0
 
 
+def bed_levels(levels: dict, bed: dict) -> dict:
+    """The ledger's approved music levels for this cut, moved by the spec's trim_db (Krish's ear on the piece's music,
+    never above the house levels). The premix records what it was given, so ve qc judges the bed by the same numbers."""
+    trim = float(bed.get('trim_db') or 0)
+    if trim > 0:
+        raise ValueError(f'audio.bed.trim_db is {trim}: a bed is only ever turned down from the house levels')
+    out = levels | {'chapter_lufs': levels.get('chapter_lufs', -22)}
+    for key in ('intro_lufs', 'bed_lufs', 'outro_lufs', 'chapter_lufs'):
+        if isinstance(out.get(key), (int, float)):
+            out[key] = round(float(out[key]) + trim, 2)
+    return out
+
+
 def cmd_premix(args) -> int:
     """The cut's premixed stem from the spec's own bed: the ledger track (by id, checked by hash, from
     MINDMAKE_MUSIC_ROOT), the ledger's approved levels, the cut's length from its props and the first and last word
@@ -1791,7 +1816,7 @@ def cmd_premix(args) -> int:
                               bed_start_s=float(track.get('intro_cue_s') or 0), under_vo_lu=bed['under_vo_lu'],
                               lufs=spec['audio'].get('targets', {}).get('lufs', -14), tp=spec['audio'].get('targets', {}).get('tp', -1),
                               mode=bed['mode'], last_word_end_s=moved(float(words[-1]['end_s']) - start_s),
-                              levels=ledger['levels'] | {'chapter_lufs': ledger['levels'].get('chapter_lufs', -22)},
+                              levels=bed_levels(ledger['levels'], bed),
                               voice_start_s=moved(float(words[0]['onset_s']) - start_s), lifts=lifts, lead_frames=lead, fps=fps,
                               clips=clips, bed_enter_s=moved(plan['bed_enter_s']) if plan.get('bed_enter_s') else 0.0,
                               bed_fade_in_s=float(plan.get('bed_fade_in_s') or 0),
@@ -2030,6 +2055,10 @@ def main() -> int:
     a.add_argument('--beats', nargs='+', required=True); a.add_argument('--modules', nargs='*')
     a.add_argument('--anatomy', required=True); a.add_argument('--motion', required=True)
     a.add_argument('--purpose', default='')
+    a = actions.add_parser('retire', help="Krish's deletion of a frozen format's key frames for good: they leave the repository and the format returns to a draft")
+    a.add_argument('format'); a.add_argument('--words', required=True, help='his exact words'); a.add_argument('--on', help='YYYY-MM-DD, default today')
+    a = actions.add_parser('rules-only', help="Krish drops the picture-matching for a draft: it becomes a lock with no key frames, held to the rules, the Critic and his approval")
+    a.add_argument('format'); a.add_argument('--words', required=True, help='his exact words'); a.add_argument('--on', help='YYYY-MM-DD, default today')
     a = actions.add_parser('freeze'); a.add_argument('format'); a.add_argument('--from', dest='src_dir', required=True)
     a.add_argument('--map', dest='mapping', nargs='+', action='extend'); a.add_argument('--force', action='store_true')
     p.set_defaults(fn=cmd_lock)

@@ -40,6 +40,21 @@ class NowTrim(unittest.TestCase):
             if line.startswith("- "):
                 self.assertTrue(line in new.splitlines() or line in history.splitlines(), line[:30])
 
+    def test_old_dated_lines_of_what_is_next_move_when_nothing_else_can_but_standing_lines_never_do(self):
+        page = ("# N\n\n## What changed recently\n\n- only one\n\n## What is next and what is waiting on Krish\n\n- Next (2026-11-18): newest\n"
+                "- Old waiting (2026-11-09): " + "z" * 14200 + "\n- Krish declined required status checks (2026-10-25): standing\n"
+                "- Fresh (2026-11-17): same week stays\n- North Star check (2026-11-18): holds.\n")
+        new, name, history = trim(page, "2026-11-18", set())
+        self.assertIsNotNone(name)
+        self.assertLess(len(new.encode()), 14_000)
+        for kept in ("- Next (2026-11-18)", "- Krish declined required status checks (2026-10-25)", "- Fresh (2026-11-17)", "- North Star check (2026-11-18): holds."):
+            self.assertIn(kept, new)
+        self.assertIn("- Old waiting (2026-11-09): z", history)
+        self.assertNotIn("- Old waiting", new)
+        # An undated line and a young one are never moved.
+        undated = page.replace("- Old waiting (2026-11-09)", "- Old waiting without a date")
+        self.assertIsNone(trim(undated, "2026-11-18", set())[1])
+
     def test_a_long_list_of_earlier_moves_folds_into_history_when_no_line_can_move(self):
         older = "Older lines: " + ", ".join(f"`docs/history/2026-11-1{i}-NOW-moved-1.md`" for i in range(9)) + " and `LOG.md`."
         page = "# N\n\n## What changed recently\n\n- only " + "y" * 13800 + "\n" + older + "\n\n## Next\n"

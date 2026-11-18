@@ -1,7 +1,7 @@
 import { CharacterLayer } from './character'
 import { Fragment, type ReactElement } from 'react'
 import { z } from 'zod'
-import { AbsoluteFill, OffthreadVideo, Sequence } from 'remotion'
+import { AbsoluteFill, Img, OffthreadVideo, Sequence } from 'remotion'
 import { BrandFrame } from './BrandFrame'
 import { onTwos, progress, setMotionProfile, useEngineFrame } from './clock'
 import { stageBubbleBox } from './devices/typing_bubble'
@@ -23,6 +23,9 @@ import { regionSlots } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
 import { EngineAudio } from './audio'
+import { GradedBackdrop } from './treatments/Grade'
+import { band } from './captions/kit'
+import { TitleMoment } from './title/TitleMoment'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
 
 // Placement belongs to the composition, never to a strict device schema.
@@ -82,6 +85,28 @@ function cameraView(profile: MotionProfile | undefined, beat: EngineBeat, slots:
 /** The composition owns the clock; every device and chrome layer receives global frames. `stem={false}` leaves the
  *  stem to the wrapper that plays it from the render's frame 0, under the sting (VeCut); with no flag the tree is the
  *  one it always was (houseGolden.test.ts). */
+/** One real picture under a beat's graphics, fitted by cover (never stretched: F53), with an ink scrim at its foot so
+ *  the graphics and captions over it stay readable (Krish, 2026-11-18: "making actual use of the full screen"). */
+/** One world (Krish, 2026-11-18: "create visual consistency between the two styles interchanging in a world class art
+ *  directed way"): a beat with a drawn device stands on its photograph thrown out of focus and graded down (focus 1), a
+ *  beat with none shows the photograph sharp (focus 0), both in one grade (treatments/Grade.tsx), and the focus racks
+ *  across RACK_FRAMES after a cut between the two kinds, so the picture never says the same thing twice. */
+const RACK_FRAMES = 12
+export function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number {
+  const kind = (b: EngineBeat) => (b.uses.length > 0 ? 1 : 0)
+  const index = beats.indexOf(beat), before = index > 0 ? beats[index - 1]! : undefined
+  const from = before?.backdrop ? kind(before) : kind(beat), to = kind(beat)
+  const t = Math.min(1, Math.max(0, (frame - beat.fromFrame) / RACK_FRAMES)), eased = t * t * (3 - 2 * t)
+  return from + (to - from) * eased
+}
+
+function Backdrop({ src, tokens, focus, frame, width, height }: { src: string; tokens: EngineRenderProps['tokens']; focus: number; frame: number; width: number; height: number }) {
+  return <AbsoluteFill data-backdrop data-backdrop-focus={focus.toFixed(3)}>
+    <GradedBackdrop src={src} focus={focus} tokens={tokens as unknown as Record<string, string>} frame={frame} width={width} height={height} />
+    <AbsoluteFill style={{ background: `linear-gradient(180deg, color-mix(in srgb, ${tokens.ink} 38%, transparent) 0%, transparent 42%, color-mix(in srgb, ${tokens.ink} 72%, transparent) 100%)` }} />
+  </AbsoluteFill>
+}
+
 export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean }) {
   const frame = useEngineFrame()
   const objects = new Map(props.objects.map((object) => [object.obj, object]))
@@ -145,7 +170,11 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         // incoming one for the transition's frames. With no style every beat still cuts. A leading handover keeps it
         // LEAD_AFTER frames more, its clock still running so its exit carries on while the next beat arrives over it.
         const leadOut = leading && beat.transitionOut !== 'carry' && keepsOutgoing(profile, beat, next, true)
-        const overlap = leadOut ? LEAD_AFTER : profile && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
+        // A full-screen picture and a beat that shows his face never dissolve into each other: half of each is his face
+        // as a ghost through the picture (Krish, 2026-11-18, yes to cutting them clean). They cut; same kinds still dissolve.
+        const fullScreen = (b: EngineBeat) => b.layout === 'STAGE' && b.plate?.source === 'none'
+        const kindChange = !!next && !!props.layout && fullScreen(beat) !== fullScreen(next)
+        const overlap = leadOut ? LEAD_AFTER : profile && !kindChange && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
         const outgoing = frame >= beat.toFrame && frame < beat.toFrame + overlap
         if ((frame < beat.fromFrame || frame >= beat.toFrame) && !outgoing) return null
         const now = outgoing && !leadOut ? beat.toFrame - 1 : frame
@@ -166,7 +195,10 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const view = profile || focusOn ? cameraView(profile, beat, slots, objects, props, shown, focusOn) : undefined
         const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region, focusOn ? FOCUS_SCALE : undefined)
           : view?.focusable ? focusMotion(view, now, beat, FOCUS_SCALE, width, layerHeight) : undefined
-        const fade = (motion?.fade ?? 1) * (outgoing && !leadOut ? 1 - progress(frame - beat.toFrame, overlap, (t) => t) : 1)
+        // Between two full-screen pictures the outgoing one stays solid under the incoming one's fade, so nothing under
+        // both (his take) shows through the dissolve.
+        const underFullScreen = outgoing && !!next && fullScreen(beat) && fullScreen(next)
+        const fade = (motion?.fade ?? 1) * (outgoing && !leadOut && !underFullScreen ? 1 - progress(frame - beat.toFrame, overlap, (t) => t) : 1)
         // The beat's own move in a leading handover: arriving over the one before, and leaving, dimming to dark.
         const lead = leading ? leadMoveAt(ingredients!, beat, !!prev && prev.transitionOut !== 'carry', leadOut, frame, width, height) : undefined
         const sweep = profile && (beat.layout === 'STAGE' || beat.layout === 'SPLIT') ? sweepStyle(profile, props.tokens, beat, now) : null
@@ -185,10 +217,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const hero = profile?.type?.hero && grounded ? heroPhrase(beat, objects, props.events, props.captions, shown) : undefined
         const heroDraw = hero ? heroLayout(hero, heroArea(props.aspect, layerHeight, beat.uses.some(id => !hero.replaces.includes(id)))) : undefined
         const torn = overlays.includes('torn')
-        const layer = (
-          <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
-            {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts). */}
-            {profile ? <>
+        const styleGround = (profile ? <>
               {sweep && <AbsoluteFill style={sweep} />}
               {grounded && groundTexture(profile.ground.texture, props.tokens, frame) && <AbsoluteFill data-ground-texture style={groundTexture(profile.ground.texture, props.tokens, frame)!} />}
               {grounded && profile.ground.texture === 'paper' && <PaperTexture id={beat.id} width={width} height={layerHeight} tokens={props.tokens} />}
@@ -196,7 +225,13 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
               {grounded && overlays.includes('sketchFrame') && profile.boil && <SketchFrame id={beat.id} width={width} height={layerHeight}
                 tokens={props.tokens} sinceFrames={sinceBeat} boil={profile.boil} />}
               {torn && <TornFilter id={beat.id} tokens={props.tokens} />}
-            </> : sweep && <AbsoluteFill style={sweep} />}
+            </> : sweep && <AbsoluteFill style={sweep} />)
+        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} /> : undefined
+        const layer = (
+          <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
+            {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts); a backdrop joins it only
+                when the beat has one, so every cut without one draws the same tree. */}
+            {backdropEl ? <>{styleGround}{backdropEl}</> : styleGround}
             <AbsoluteFill style={motion?.layer}>
             {[heroDraw ? <HeroType key="hero-type" layout={heroDraw} frame={at} tokens={props.tokens} width={width} height={layerHeight} onDark={darkGround(profile)} /> : null,
               ...beat.uses.map((id, index) => {
@@ -213,6 +248,10 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
                 ? PlaceSchema.parse(place) : undefined
               const deviceObject = placement ? { ...object, params } : object
               let box = placement ? { left: 0, top: 0, width: placement.width, height: placement.height } : slots[index]
+              // A full scene plate on a graphics-only beat is the frame itself (18 Nov 2026: clipped to its slot it drew a
+              // small square on bare ink and cut the crocodile out of the Wed 18 hook).
+              if (object.device === 'scene_plate' && beat.layout === 'STAGE' && object.params.full !== false)
+                box = { left: 0, top: 0, width, height }
               if (!box) throw new Error(`ve: no slot ${index} in ${beat.layout}`)
               if (beat.layout === 'STAGE' && object.device === 'cursor_buddy') {
                 let bottom = 0
@@ -289,6 +328,15 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
           <BrandFrame props={props} beat={beat} frame={frame} />
         </AbsoluteFill>
       )))
+  // The episode title moment (props.titleMoment): the line he says becomes the title over the captions, which leave its
+  // words out. It lands in the panel above his face on a staged beat, else across the frame.
+  const titleLayer = props.titleMoment && frame >= props.titleMoment.fromFrame && frame < props.titleMoment.toFrame ? (
+    <AbsoluteFill key="title-moment" data-title-moment>
+      <TitleMoment words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame} {...(props.titleMoment.release ? { release: props.titleMoment.release } : {})}
+        frame={frame} aspect={props.aspect} width={width} height={height}
+        stage={stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height }}
+        captionBox={band(props)} tokens={props.tokens as unknown as Record<string, string>} />
+    </AbsoluteFill>) : null
   // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.
   const stagingGround = stagedNow && !stagedNow.rises ? (
     <AbsoluteFill key="staging-ground" data-staging={props.layout!.mode} style={{ backgroundColor: stagedNow.under === 'cream' ? props.tokens.cream : props.tokens.ink }}>
@@ -296,13 +344,20 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
       {groundTexture(profile?.ground.texture, props.tokens, frame) ? <div data-ground-texture style={{ ...boxStyle(stagedNow.panel), borderRadius: stagedNow.panel.radius, ...groundTexture(profile?.ground.texture, props.tokens, frame)! }} /> : null}
       {stagedNow.hairline ? <div style={{ ...boxStyle(stagedNow.hairline), backgroundColor: props.tokens.channel }} /> : null}
     </AbsoluteFill>) : undefined
-  const picture = stagingGround ? [stagingGround, ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)
+  // A backdrop fills the panel above his face, over the ink panel and under the take and the graphics; with none the
+  // staging ground is exactly as before.
+  const panelBackdrop = stagingGround && activeBeat?.backdrop ? (
+    <AbsoluteFill key="staging-backdrop" data-backdrop-panel>
+      <div style={{ ...boxStyle(stagedNow!.panel), borderRadius: stagedNow!.panel.radius, overflow: 'hidden' }}>
+        <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={stagedNow!.panel.width} height={stagedNow!.panel.height} /></div>
+    </AbsoluteFill>) : undefined
+  const picture = stagingGround ? [stagingGround, ...(panelBackdrop ? [panelBackdrop] : []), ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)
   // With no ingredients the tree is exactly what it was before them (houseGolden.test.ts flattens it).
   if (!ingredients) return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       {stagingGround ? picture : !hasWindow && take}
       {beatLayers}
-      {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers]}
+      {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers, ...(titleLayer ? [titleLayer] : [])]}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )
@@ -318,7 +373,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         {beatLayers}
       </AbsoluteFill>
       {flash > 0 ? <AbsoluteFill data-flash style={{ backgroundColor: props.tokens.cream, opacity: flash }} /> : null}
-      {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers]}
+      {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers, ...(titleLayer ? [titleLayer] : [])]}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )

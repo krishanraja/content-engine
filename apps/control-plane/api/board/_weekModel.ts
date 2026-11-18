@@ -3,7 +3,7 @@ import { writeBack } from './_writeBack.js'
 import { asWritten, backDocId, takenBackAt, wordsBody, wordsDocId } from './_contracts.js'
 import { spokenTitle, type FiledScript, type PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
-import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
+import { templateOf, thoughtPress, type PressAction, type ViewOption, type ViewTemplate } from './_viewExtras.js'
 import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
 import { thumbsPress } from './_thumbs.js'
 import { lateLine, lateOn, missedOn } from './_stage.js'
@@ -81,6 +81,8 @@ export const GOOD_NEWS_STORIES = 5
 /** The one label every hand-off to a Claude session wears (Ruling, Krish, 2026-11-17: "We can distinguish the buttons by
  *  changing 'copy prompt for Claude' to \"Claude production prompt\" and the other button to \"Perplexity research prompt\""). */
 export const CLAUDE_LABEL = 'Claude production prompt'
+/** The finished post's one button (Krish, 2026-11-18): it opens the prompt that schedules it, its files listed. */
+export const PUBLISH_LABEL = 'Publish'
 /** A Claude prompt is only copied, never opened (contract 1.22.0; Ruling, Krish, 2026-11-17: "can you stop having my Claude
  *  production prompt buttons open up a new browser window? Just copy to clipboard is enough for all such buttons"). The
  *  `open` field 1.17.0 added is never sent again; the schema keeps it, retired, so no board breaks on an older view. */
@@ -112,6 +114,9 @@ export interface ModelRead {
 }
 /** One next action: the engine's own press or run, a link to do it, or the one Claude prompt. */
 export type ModelAction = Action
+/** One file of a made post, for him to look at before it is scheduled. */
+export interface ModelAsset { name: string; kind: string; url: string; folder: string; slides: Array<{ name: string; url: string }> }
+
 export interface ModelItem {
   /** `piece:<id>` for a piece, the option's document id (off-<day>-<id>) for a post. */
   key: string
@@ -134,6 +139,9 @@ export interface ModelItem {
   decision: boolean
   /** The other answers to the same decision (Improve, Reject the direction), drawn only in the read sheet. */
   others: PressAction[]
+  /** A post made and filed in its Drive folder: every file he is about to schedule, so he sees each one (the cut, the slides, the covers, the
+   *  thumbnails, the captions) beside the Publish step (Krish, 2026-11-18). Absent until its files are filed. */
+  assets?: ModelAsset[]
   read: ModelRead
   piece_id: string | null
   /** A post: its row in offday_items, which day it supports, Move to… and Growth's live links. */
@@ -413,10 +421,33 @@ function readOf(raw: Body | null, extra: { title?: string; text?: string | null;
 /** How an off-day post is made, before the write-back: its route (a carousel, a meme or a Notes image in a Claude
  *  session with the Codex plugin; a voiceover short or a meme video on the ve route; Ruling, Krish, 2026-11-13;
  *  _makeRoute.ts), else the plain hand-off to Growth. */
-export function offdayHead(route: MakeRoute | null): string {
+export function offdayHead(route: MakeRoute | null, template: ViewTemplate | null = null, caption: string | null = null): string {
   if (!route) return 'Growth makes and posts off-day posts (krishanraja/growth-makeyourmindup), to content-engine docs/CAROUSEL-STANDARD.md and the rejection floor. Make or post exactly what Krish approved, nothing else.\n\n'
-  return `${routeLine(route)}\n\nMake exactly what Krish approved, nothing else, to the rejection floor`
-    + `${route === 'still' ? ' and content-engine docs/CAROUSEL-STANDARD.md' : ''}; Growth (krishanraja/growth-makeyourmindup) posts it.\n\n`
+  const clip = route === 'reskin' && template
+    ? `The clip to download and reskin: ${template.clip.url}\nIts page: ${template.clip.page}\nFound on ${template.found.label || template.found.place}${template.found.url ? ` (${template.found.url})` : ''}; credit: ${template.credit || 'name the original poster from the page'}.\n`
+      + `${template.what_happens ? `What happens in it: ${template.what_happens}\n` : ''}${template.clip.seconds ? `Its length: about ${template.clip.seconds} seconds.\n` : ''}`
+      + `${caption ? `His caption (his words on this post; set exactly these): ${caption}\n` : 'He has not written a caption yet: ask him once.\n'}\n`
+    : ''
+  return `${routeLine(route)}\n\n${clip}Make exactly what Krish approved, nothing else, to the rejection floor`
+    + `${route === 'still' ? ' and content-engine docs/CAROUSEL-STANDARD.md' : route === 'reskin' ? ' and content-engine docs/MEME-STANDARD.md' : ''}; Growth (krishanraja/growth-makeyourmindup) posts it.\n\n`
+}
+
+/** The route of an off-day post: a meme that carries a template clip is a reskin of it, never the carousel route. */
+function routeFor(kind: string, raw: Body | null | undefined, format: unknown): MakeRoute | null {
+  return makeRoute(kind, str(raw?.format) ?? (typeof format === 'string' ? format : null), Boolean(raw && templateOf(raw)))
+}
+/** His caption for a meme template, as he gave it: the words on his Approve press (typed in his own box, or a caption idea he
+ *  tapped, which fills the same box, so both arrive here the same way), else his words on the option, else a note on its record.
+ *  Never a caption idea he did not choose. (Krish, 2026-11-18: "the meme template prompt does not pull through if I choose my own
+ *  caption instead of selecting one of the choices".) */
+export function captionOf(o: ViewOption, raw: Body | null | undefined): string | null {
+  const said = typeof o.said === 'string' && !/^Said in a session, not pressed here/i.test(o.said) ? o.said : null
+  return str(o.outcome?.words) ?? str(said) ?? str(raw?.note)
+}
+/** A meme template's head for the prompt: the clip, where it was found and his caption; null for anything else. */
+function reskinHead(raw: Body | null | undefined, o: ViewOption): string | null {
+  const t = raw ? templateOf(raw) : null
+  return t ? offdayHead('reskin', t, captionOf(o, raw)) : null
 }
 
 /** What the prompt says to do with the story, by where the piece is (Ruling, Krish, 2026-11-16: "Even though this piece is
@@ -433,7 +464,7 @@ function storyLines(story: StoryState | null | undefined): string {
 /** The one Claude prompt for an item: what it is, where it stands, how it is made and how to report back to the board.
  *  Contract 1.17.0: it asks for his notes first (`notes`, saved as his comment on the day). The board only copies it
  *  (contract 1.22.0). `head`, when given, says how an off-day post is made at its stage in place of offdayHead. */
-export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null, decisions: PieceDecisions | null = null, reportAs: string | null = null, head: string | null = null): ModelAction {
+export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null, story: StoryState | null = null, decisions: PieceDecisions | null = null, reportAs: string | null = null, head: string | null = null, schedule = false): ModelAction {
   const what = it.piece_id ? `the ${DAY_WORD[it.day]} ${it.date} piece ${it.piece_id}` : `the ${DAY_WORD[it.day]} ${it.date} off-day post ${it.key} (${it.kind_label})`
   const growth = !it.piece_id
   const prompt = `You are picking up ${what} of the Make Your Mind Up content engine with no prior context: "${it.title}". `
@@ -442,7 +473,7 @@ export function itemPrompt(week: string, it: { day: PostedDay; date: string; tit
       ? offdayHead(route)
       : 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules. Work freely; when you need Krish, ask him the one question that changes the work most.\n\n'))
     + storyLines(story)
-    + writeBack({ pieceId: it.piece_id ?? reportAs, week, day: it.day, step, decisions })
+    + writeBack({ pieceId: it.piece_id ?? reportAs, week, day: it.day, step, decisions, schedule })
   const base = thoughtPress(it.day, stepAnchor(step))
   const save: PressAction = { ...base, label: 'Your notes for Claude', done: 'Saved on the board, and in the prompt.',
     body: { ...base.body, use: 'claude_notes', title: cut(it.title, 300), ...(it.piece_id ? { piece_id: it.piece_id } : { item: it.key }) },
@@ -783,6 +814,28 @@ function postItem(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const out = said ? { ...it, next: told(it.next), others: (it.others || []).map(told) } : it
   return sound.length ? { ...out, others: [...(out.others || []), ...sound] } : out
 }
+
+/** The files a made post has filed in its Drive folder, in the order he would check them: cuts, slides, covers, thumbnails, captions. */
+function madeAssets(d: DayView, option: string): ModelAsset[] {
+  const out: ModelAsset[] = []
+  for (const post of (d.posts || []).filter(p => p.option === option)) {
+    for (const a of post.assets) {
+      out.push({ name: cut(a.title, 160), kind: a.kind, url: a.url, folder: a.folder, slides: (a.slides || []).slice(0, 20).map(f => ({ name: cut(f.title, 160), url: f.url })) })
+    }
+  }
+  return out.slice(0, 60)
+}
+const ASSET_KIND_WORD: Record<string, string> = { cut: 'cut', video: 'video', meme: 'meme', carousel: 'carousel', image: 'image', cover: 'cover', figure: 'figure', thumbnail: 'thumbnail', note: 'caption or note' }
+/** The Publish prompt of a made post (Krish, 2026-11-18: "when a piece is complete [...] a button that just says Publish [...] schedule in Buffer directly, ideally, or produce a prompt that I could do it in a session"). */
+function publishLines(files: ModelAsset[]): string {
+  return files.map((f, i) => `${i + 1}. ${ASSET_KIND_WORD[f.kind] ?? f.kind}: ${f.name}${f.folder ? ` (${f.folder})` : ''} ${f.url}${f.slides.length ? ` [${f.slides.length} slides: ${f.slides.map(x => x.url).join(' ')}]` : ''}`).join('\n')
+}
+const PUBLISH_HEAD = 'This is the Publish step: schedule this one approved, finished post in Buffer, nothing else. Krish pressing this prompt is his approval to schedule exactly the files and words listed '
+  + 'below on its own channels. 1. Open every file below from its Drive link and check it is the finished one: the right images in order, the covers and thumbnails, and each caption. If a file is missing, wrong or '
+  + 'unreadable, stop and report blocked naming it; never schedule a different file or reword a caption. 2. Schedule through the Buffer connector (the Make Your Mind Up channels only, never Heartside\'s): one scheduled '
+  + 'post per channel the post is for, each with its own caption verbatim and its own files attached, due at the post\'s day and the channel\'s usual time (ask him once if the time is not on the board). Never publish '
+  + 'now, and never post a channel the board does not list. 3. Read each scheduled post back from Buffer and check its text and every attachment match the files below. 4. Report on the board with the Buffer post ids; '
+  + 'Control Centre also reads Buffer every 15 minutes and moves the card to Scheduled by itself. If you cannot schedule it, say exactly why on the board as blocked; never leave the card as it was.\n\n'
 function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const raw = rawOption(m, d.day, o.id)
   const { kind, supports } = offdayKind({ ...(raw || {}), format: raw?.format ?? o.format })
@@ -820,6 +873,25 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
       next: { kind: 'run', label: `Find the other ${GOOD_NEWS_STORIES - stories.length} stories`, job: 'saturday-goodnews', input: { week: m.week, fill: o.doc_id }, runs_on: 'GitHub · saturday-goodnews.yml' } }
   }
   if (state === 'scheduled') return { ...base, line, next: null, decision: false }
+  // Its final files made and filed in its post folder, with their draft manifest (the cut, covers and thumbnails, and each
+  // channel's words): his Approve for publish replaces the mocks and the proof as the card's final state, the same press a
+  // series piece's card carries, bound to the manifest's sha256; its seal is what Growth's go-live schedules in Buffer
+  // (Krish, 2026-11-18: "once the final assets, covers, thumbnails are produced and filed in drive, that then replaces the
+  // mocks/proofs stage ... at which point I can press Publish").
+  const sealed = own && !missed && d.piece_id && String(d.piece_id).toLowerCase() === own && d.manifest?.press && d.manifest.state !== 'approved'
+    ? d.manifest.press as unknown as PressAction : null
+  if (sealed) {
+    const filed = `${where}. Its final files are in its post folder (${d.manifest!.assets.length}): approve them for publish and Growth schedules every post.`.replace(/\.\./g, '.')
+    return { ...base, line: d.manifest!.why ? `${filed} ${d.manifest!.why}` : filed, next: sealed as Action, decision: true }
+  }
+  // A made post with its final files filed: the Publish step, with every file listed (the cut, slides, covers, thumbnails, captions).
+  const files = made && !missed && !scheduled ? madeAssets(d, o.id) : []
+  if (files.length) {
+    const lineMade = `${where}. Its ${files.length} file${files.length === 1 ? ' is' : 's are'} made and filed. Check each one, then publish: it is scheduled in Buffer exactly as listed.`.replace(/\.\./g, '.')
+    const prompt = itemPrompt(m.week, { ...base, line: lineMade }, 'publish', null, null, own ? m.decisions?.[own] ?? null : null, own,
+      `${PUBLISH_HEAD}The post: "${base.title}" (${base.kind_label}, ${DAY_WORD[d.day]} ${d.date}, item ${o.doc_id}).\nThe files:\n${publishLines(files)}\n\n`, true)
+    return { ...base, line: lineMade, assets: files, next: { ...prompt, label: PUBLISH_LABEL } as ModelAction, decision: false }
+  }
   // A post he records himself, its script approved: the next session assumes the take is in the Video Engine Inbox and
   // cuts it (Krish, 2026-11-17: "when it gets to this stage and the files are in teleprompter, the next action presumes I
   // have recorded the video and put it in the inbox").
@@ -850,9 +922,9 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const ready = own && !made && !missed && !scriptsApproval(m.picks || [], own) ? scriptsReady(m, d.day, own, base.title, where, recordsItself(kind, m.picks || [], o.doc_id)) : null
   if (ready) {
     return { ...base, line: ready.line, next: ready.press as Action, decision: true,
-      others: [itemPrompt(m.week, { ...base, line: ready.line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format), null, m.decisions?.[own!] ?? null, own) as unknown as PressAction] }
+      others: [itemPrompt(m.week, { ...base, line: ready.line }, 'post', routeFor(kind, raw, o.format), null, m.decisions?.[own!] ?? null, own, reskinHead(raw, o)) as unknown as PressAction] }
   }
-  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format), null, own ? m.decisions?.[own] ?? null : null, own), decision: false }
+  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', routeFor(kind, raw, o.format), null, own ? m.decisions?.[own] ?? null : null, own, reskinHead(raw, o)), decision: false }
 }
 
 /** Whether an off-day post has a recorded step: a voiceover short whose voice is his own take (Record it myself, his
@@ -1304,7 +1376,7 @@ export function modelProblems(model: WeekModel, days: DayView[]): string[] {
         if (it.path.length !== PIECE_PATH.length) out.push(`${md.day} ${it.key}: not on the piece path`)
       }
       if (it.stage.key !== 'live' && !it.next && it.stage.key !== 'scheduled') out.push(`${md.day} ${it.key}: not live and no next action`)
-      if (it.next?.kind === 'prompt' && it.next.label !== CLAUDE_LABEL) out.push(`${md.day} ${it.key}: a prompt not named ${CLAUDE_LABEL}`)
+      if (it.next?.kind === 'prompt' && it.next.label !== CLAUDE_LABEL && it.next.label !== PUBLISH_LABEL) out.push(`${md.day} ${it.key}: a prompt not named ${CLAUDE_LABEL} or ${PUBLISH_LABEL}`)
       if (it.next && (it.next.kind === 'open' && !/^https:\/\//.test(it.next.href))) out.push(`${md.day} ${it.key}: an action that opens the archive`)
       if (it.next && (it.next.kind === 'look' || it.next.kind === 'review')) out.push(`${md.day} ${it.key}: an action of the old board`)
       if (it.kind === 'good_news' && (!it.stories || it.stories_planned !== GOOD_NEWS_STORIES)) out.push(`${md.day} ${it.key}: good news without its stories`)

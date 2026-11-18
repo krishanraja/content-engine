@@ -124,6 +124,19 @@ The sections below still hold for anything Growth asks content-engine to
 make. Where they say content-engine renders a carousel, this ruling comes
 first.
 
+### Open for Growth: the carousel body face (Ruling, Krish, 2026-11-18)
+
+Krish: "this font is crappy, I have given this feedback before - why would it still keep popping up in carousels?" The standard
+(`docs/CAROUSEL-STANDARD.md`, body type) and the `ve card` template (`scripts/velib/cards.py`, `CAROUSEL_BODY_TYPE`, with a test)
+now say body sentences are Anton, uppercase, and ban Archivo Black and Archivo at weight 800 or heavier on a card. Growth's own
+renderer still sets the body sentence in Archivo: `render/kit.css` defines `--body: 'Archivo'` and `render/templates/carousel-body.html`
+styles `.body` with it (weight 500 from `.body` in the kit). That is the place the face keeps coming back from, so the standard alone
+will not stop it. The change is Growth's to make and check in its renderer: set the body sentence of `carousel-body.html` to
+`font-family: var(--heading)` (Anton), `text-transform: uppercase`, line height about 1.08, and re-fit its `data-max` and `data-min`
+for the narrower face, then render a deck and look at it at full and phone size. Not done from here: this session could read
+Growth's repository but was refused write access to it, and a quick render of the template outside Growth's renderer did not run its
+fit script, so the new sizes were not seen.
+
 ## Receive a distribution brief
 
 Growth originates the amplification idea. It identifies published work that

@@ -25,7 +25,7 @@ given on our 1080x1920 canvas (the reel's numbers x1.5). How each was measured i
 Rules that follow:
 
 1. **A SPLIT card draws at full width.** A device on the graphic half spans 80 to 90% of the canvas width. Shrinking
-   the whole stage by `FWP_STAGE_SCALE` (0.76) into a corner is the look he rejected. Codex card
+   the whole stage by `SPLIT_STAGE_SCALE` (0.76, apps/renderer/src/engine/layouts/splitGeometry.ts) into a corner is the look he rejected. Codex card
    `ve-motion-1-split-full-width`.
 2. **Stamps are labels, never hero type.** The stamp draws fixed 30 px mono text. It may tag a hero card; it never
    carries a beat alone and is never the piece's hero device. `ve lint` refuses both (`motion.stamp_not_hero`).
@@ -88,7 +88,7 @@ the social app UI features." So on the tall canvas:
 | Key content (every ve slot box, a lab style's type, a quick-edit picture) | starts by y 340, just under the top bar at 270; x 60 to 860; ends by y 1050 in ve |
 | House caption | x 60 to 860, y 1090 to 1320 (`house/geometry.ts` `HOUSE.caption`, `config/ve/design-lock.json` `zones.caption`) |
 | Word caption | centred at y 1250 on face beats, its box ending by 1320; on the seam on SPLIT beats |
-| SPLIT house caption | on the seam, y 670 to 850 (`FWP_SPLIT_CAPTION_ZONE`) |
+| SPLIT house caption | on the seam, y 670 to 850 (`SPLIT_CAPTION_ZONE`) |
 | Held title | from y 290 |
 | quick-edit captions | x 60 to 860 at y 1060 (over the speaker) or 1014 (over a picture); its tall picture from y 270, x 60 to 860 |
 | Footage, grounds, 3D, the end card | full bleed: only words and the point of a graphic keep to the safe area |

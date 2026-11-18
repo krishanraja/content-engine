@@ -66,14 +66,23 @@ class TheLogoOnlyOnTheTitleFrameAndTheClose(unittest.TestCase):
         return {cut: compile_cut(spec, cut, timed_words(), FIXTURE) for cut in spec['cuts']}
 
     def test_from_its_date_no_cut_carries_a_body_logo(self):
-        for cut, props in self.compiled('2026-11-23').items():
-            with self.subTest(cut=cut):
-                self.assertIs(props.get('bodyLogo'), False)
+        # From Mon 16 Nov, the week of 16 Nov included (Krish, 2026-11-18: "NO ICONS"): the old 23 Nov start gave that week the tile.
+        for day in ('2026-11-16', '2026-11-18', '2026-11-23'):
+            for cut, props in self.compiled(day).items():
+                with self.subTest(day=day, cut=cut):
+                    self.assertIs(props.get('bodyLogo'), False)
 
-    def test_before_its_date_the_props_are_as_they_were(self):
-        for cut, props in self.compiled('2026-11-18').items():
+    def test_an_undated_spec_carries_none_either(self):
+        spec = copy.deepcopy(load_json(FIXTURE / 'spec.json'))
+        spec.pop('publish_day', None)
+        for cut in spec['cuts']:
             with self.subTest(cut=cut):
-                self.assertNotIn('bodyLogo', props)
+                self.assertIs(compile_cut(spec, cut, timed_words(), FIXTURE).get('bodyLogo'), False)
+
+    def test_only_a_piece_before_the_rule_keeps_the_old_dress(self):
+        for cut, props in self.compiled('2026-11-13').items():
+            with self.subTest(cut=cut):
+                self.assertIs(props.get('bodyLogo'), True)
 
 
 if __name__ == '__main__':

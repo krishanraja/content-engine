@@ -47,6 +47,7 @@ export const EngineBeatSchema = z.object({
   layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW']),
   face: z.enum(['full', 'window', 'off']).optional(),
   plate: z.object({ source: z.string().min(1), crop: z.string().min(1).optional() }).strict().optional(),
+  backdrop: z.object({ src: z.string().min(1) }).strict().optional(),
   fromFrame: Frame,
   toFrame: Frame,
   uses: z.array(z.string()),
@@ -109,10 +110,11 @@ export const EngineRenderPropsSchema = z.object({
   brandTokens: EngineTokensSchema.optional(),
   series: z.object({ label: z.string().min(1), day: z.string().min(1), promise: z.string().min(1), site: z.string().min(1) }).strict(),
   brand: z.object({ mark: EngineImageSchema, logo: EngineImageSchema, stacked: EngineImageSchema }).strict(),
-  /** false: no logo in the body of the cut, neither the mark tile nor the stage header's logo (Ruling, Krish,
-   *  2026-11-17: the logo only on the animated title frame and the close card; config/brand-palette.json logo_rule).
-   *  Absent: the house dress as before. */
-  bodyLogo: z.literal(false).optional(),
+  /** true: the body of the cut carries the mark tile and the stage header's logo, only for a piece the palette still lets
+   *  (dated before its logo rule). Absent or false: no logo in the body (Ruling, Krish, 2026-11-17 and 18: the logo only on
+   *  the animated title frame and the close card, "NO ICONS"; config/brand-palette.json logo_rule). It was the other way
+   *  round, so every spec that forgot the flag drew the icon. */
+  bodyLogo: z.boolean().optional(),
   segments: z.array(EngineSegmentSchema).default([]),
   audio: EngineAudioSchema,
   captions: z.array(EngineCaptionPageSchema).min(1),
@@ -125,6 +127,16 @@ export const EngineRenderPropsSchema = z.object({
    *  the centre of the frame, or the upper strip. Every place is inside every channel's safe area (captions/kit.ts). */
   captionPlacement: z.enum(['lower', 'centre', 'upper']).optional(),
   title: z.string().min(1).optional(),
+  /** The episode title moment (spec title_moment; Krish, 2026-11-17: "seamlessly flowing out of the captions and back
+   *  in to them again"): the words he says as the title, each on its spoken frame. The captions leave these words out,
+   *  and the renderer draws them as the title (title/TitleMoment.tsx) until his next word. */
+  titleMoment: z.object({
+    fromFrame: z.number().int().nonnegative(),
+    toFrame: z.number().int().positive(),
+    /** 'fade' when the captions take his next words while the finished title still holds. */
+    release: z.enum(['captions', 'fade']).optional(),
+    words: z.array(z.object({ text: z.string().min(1), atFrame: z.number().int().nonnegative() }).strict()).min(1),
+  }).strict().optional(),
   beats: z.array(EngineBeatSchema).min(1),
   objects: z.array(EngineObjectSchema),
   events: z.array(EngineEventSchema),

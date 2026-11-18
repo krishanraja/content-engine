@@ -1,0 +1,18 @@
+{
+ "path": "docs/ve/cards/w1117-dc/ve-tue17-backdrops.md",
+ "card_id": "ve-tue17-backdrops",
+ "kind": "plates",
+ "spec": "docs/plans/2026-11-17-tuesday/ve/spec.json",
+ "title": "Tue 17: four full-screen backdrops, made by Codex",
+ "goal": "Krish, 18 Nov 2026, on Tue 17's piece (b019dbf8): the full-screen moments must use the whole screen (\"often I'm seeing it cut away to a black screen with not much on it but subtitles\") and \"Just get Codex to generate the scenes.\" Make four backdrop photographs with your `image_generation` tool, two candidates each, 9:16 at 1024x1536 or larger. They sit behind animated graphics, so: a documentary photograph, natural light, a muted grade with deep ink-green shadows, the lower third calm and dark enough for captions, no words, numbers, logos or recognisable people anywhere.\n\n- `bg-data-hall`: The inside of a vast data centre hall: long rows of black server racks with small blue and green status lights receding into the distance, cool haze, cinematic depth.\n- `bg-city-dusk`: A small Midwestern American city skyline at dusk seen from a low hill: brick downtown, water tower, warm window lights, power lines in the foreground.\n- `bg-polling`: A small-town American polling place inside a community hall: voting booths with privacy screens in a row, a ballot box on a table, folding chairs, morning light.\n- `bg-pylons`: A line of tall steel electricity pylons marching across flat Ohio farmland towards the horizon under a dramatic overcast sky.\n\nWrite each candidate to `docs/plans/2026-11-17-tuesday/ve/plates/<id>-<n>.png` (n = 1, 2) and one sidecar `docs/plans/2026-11-17-tuesday/ve/plates/backdrops.json`: {\"<id>\": {\"prompt\": the exact prompt, \"model\": the image model, \"candidates\": [\"<id>-1.png\", \"<id>-2.png\"]}}. Look at each image (view_image) and regenerate any with words or a recognisable person. Never edit anything outside that folder.",
+ "contract": "Stills only, made with the image_generation tool; no code, no edits outside the plates folder.",
+ "acceptance": "python3 -c \"import json,os,sys;d=json.load(open('docs/plans/2026-11-17-tuesday/ve/plates/backdrops.json'));ids=['bg-data-hall','bg-city-dusk','bg-polling','bg-pylons'];[sys.exit('missing '+i) for i in ids if i not in d];[sys.exit('missing '+c) for i in ids for c in d[i]['candidates'] if not os.path.isfile('docs/plans/2026-11-17-tuesday/ve/plates/'+c)];print('ok')\"",
+ "write_allow": [
+  "docs/plans/2026-11-17-tuesday/ve/plates/**"
+ ],
+ "read": [
+  "docs/plans/2026-11-17-tuesday/ve/spec.json"
+ ],
+ "max_minutes": 45,
+ "max_calls": 40
+}

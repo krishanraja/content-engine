@@ -1,0 +1,24 @@
+{
+ "path": "docs/ve/cards/w1117-dc/ve-tue17-one-world-grade.md",
+ "card_id": "ve-tue17-one-world-grade",
+ "kind": "device",
+ "spec": "docs/plans/2026-11-17-tuesday/ve/spec.json",
+ "title": "One world: a shared grade for photos and the drawn stage, with a focus rack between them",
+ "goal": "Krish, 18 Nov 2026, on Tue 17's short (b019dbf8): \"we have two concurrent visual styles trying to say the same thing over one another? why?\" (a flat drawn data-centre block over sharp photos of server halls, pylons and polling stations), then: \"as long as you can figure out how to not just have a black background behind the motion styles, which would look weird in frames after a full photograph, and I am interested to see how you manage to create visual consistency between the two styles interchanging in a world class art directed way\".\n\nThe decision (Claude's): each beat has one picture. A photo beat shows the photograph alone. A device beat shows the drawn device alone, on a stage made from the same photograph thrown far out of focus and graded down, so it is light and colour, never a second statement. Both wear one grade, so cutting between them reads like one camera racking focus from the real world into the diagram and back.\n\nBuild `apps/renderer/src/engine/treatments/Grade.tsx`, exporting exactly:\n```ts\nexport type GradeProps = { src: string; focus: number; tokens: Record<string, string>; frame: number; width: number; height: number }\nexport function GradedBackdrop(props: GradeProps): JSX.Element\n```\n- `focus` 0 is the photo beat: sharp, the house grade applied lightly (shadows toward ink, highlights toward cream, a whisper of mint in the mids, fine grain, a soft vignette), still clearly a real photograph.\n- `focus` 1 is the stage: the same image blurred heavily (about 48 px at 1080 wide, scaled up slightly so blurred edges never show), darkened and desaturated toward the ink so a cream drawing on it keeps at least 7:1 contrast, with the same grain and vignette and a gentle light falloff from the top so the stage has depth, not a flat fill.\n- Every value between interpolates smoothly (the renderer animates `focus` across 12 frames at a cut between the two kinds).\n- Colours only from `tokens` (ink, inkDeep, inkSoft, cream, mint, channel); grain from a fixed-seed SVG feTurbulence; a pure function of its props, no randomness, no useCurrentFrame (the grain may drift with `frame`, deterministically).\n\nAlso add `docs/ve/cards/w1117-dc/one-world.md`: in six lines or fewer, the grade's recipe in words (what each step does and why), for the art-direction record.\n\n## Tests (`apps/renderer/src/engine/treatments/Grade.test.ts`, React.createElement, no JSX in the test)\n- the markup at focus 0 has no blur, at focus 1 a blur of at least 40 px, and at 0.5 one in between\n- no raw hex or rgb literal in Grade.tsx; every colour comes from tokens\n- the same props give the same markup twice",
+ "contract": "Edit only apps/renderer/src/engine/treatments/Grade.tsx, its test, and docs/ve/cards/w1117-dc/one-world.md. Read SubjectLift.tsx for how a treatment is written here.",
+ "acceptance": "npx vitest run apps/renderer/src/engine/treatments\npython scripts/ve/check_route.py",
+ "write_allow": [
+  "apps/renderer/src/engine/treatments/Grade.tsx",
+  "apps/renderer/src/engine/treatments/Grade.test.ts",
+  "docs/ve/cards/w1117-dc/one-world.md"
+ ],
+ "read": [
+  "apps/renderer/src/engine/treatments/SubjectLift.tsx",
+  "apps/renderer/src/engine/FormatMaster.tsx",
+  "config/ve/brand-tokens.json",
+  "docs/ve/MOTION_STANDARD.md",
+  "docs/ve/TREATMENTS.md"
+ ],
+ "max_minutes": 60,
+ "max_calls": 80
+}

@@ -1,0 +1,24 @@
+{
+  "path": "docs/ve/cards/w1116-carousels/ve-carousel-goodnews-1121-6.md",
+  "card_id": "ve-carousel-goodnews-1121-6",
+  "kind": "carousel",
+  "good_news": true,
+  "date": "2026-11-21",
+  "deck": "docs/plans/2026-11-16-week/goodnews-carousel/deck.json",
+  "cwd": "/root/dev/makeyourmindup/.worktrees/content-engine/ve-card/ve-carousel-goodnews-1121",
+  "references": [
+    "goodnews-source: Krish's saved Instagram post asking for a positive ray of sunshine, https://www.instagram.com/p/DfAY9PWFuEX/",
+    "goodnews-lookalike: the weekly-roundup post this beats, https://www.instagram.com/evolving.ai/p/DfPW8fmgCnt/",
+    "house-look: Git and homework covers, Erdos body cards; body type as G/body_a.py from the approved v2 ads and midterms decks (Krish, 18 Nov)"
+  ],
+  "title": "Good-news carousel, fix round 6: card 6 edge to edge",
+  "goal": "FIX ROUND on G = .scratch/carousels/goodnews. Change card 6 only; every other card must come out byte-identical to G/round5/ (it passed every check). Card 6 now shows the photo boxed with dark bars at its sides: it must fill the full 1080 px width edge to edge like every body card (scale G/photos/visionably.jpg to 1080 wide, about 1440 tall, never letterboxed, never stretched). Take the 640 px window about 200 px higher in the photo than G/round4/card-6.png did, so the top of the boy-in-glasses' head sits near y 200, all three faces are whole between y 200 and y 620, and the logo tile at x 80-170, y 80-170 covers only the wall. Keep the fades, kicker, rule, headline and mark exactly as round 5.",
+  "contract": "Outputs: G/render.py and G/card-1.png to G/card-10.png (1080x1350); every acceptance command exits 0.",
+  "acceptance": "python3 .scratch/carousels/goodnews/render.py\npython3 scripts/carousel_check.py --cards .scratch/carousels/goodnews/card-1.png .scratch/carousels/goodnews/card-2.png .scratch/carousels/goodnews/card-3.png .scratch/carousels/goodnews/card-4.png .scratch/carousels/goodnews/card-5.png .scratch/carousels/goodnews/card-6.png .scratch/carousels/goodnews/card-7.png .scratch/carousels/goodnews/card-8.png .scratch/carousels/goodnews/card-9.png .scratch/carousels/goodnews/card-10.png",
+  "write_allow": [
+    ".scratch/carousels/goodnews/*"
+  ],
+  "read": "config/ve/brand-tokens.json, .scratch/carousels/goodnews/*, assets/fonts/makeyourmindup/*",
+  "max_minutes": 15,
+  "max_calls": 20
+}

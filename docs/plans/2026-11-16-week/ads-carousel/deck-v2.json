@@ -1,0 +1,122 @@
+{
+  "schema": "carousel-deck/1",
+  "title": "Free ChatGPT has ads now. Here is what switching them off costs you. (v2 story map, 18 Nov)",
+  "aim": "utility",
+  "experiment": "Sensational covers and designed body type: the cover is a man in pyjamas recoiling from a chat assistant smothered in sponsored links, salesmen reaching out of the screen; each body card has a mono kicker, a mint rule and Archivo Black with the key phrase in mint.",
+  "five_whys": [
+    {
+      "q": "Why does a free ChatGPT user care?",
+      "a": "The free and Go plans now show a labelled ad under some answers, and the ads are on by default."
+    },
+    {
+      "q": "Why are there ads at all?",
+      "a": "OpenAI says the free and Go plans need heavy infrastructure spending, and ads help fund wider access."
+    },
+    {
+      "q": "Why do people not switch them off?",
+      "a": "The off switch sits in Settings, and no one explains what it takes away from you."
+    },
+    {
+      "q": "Why is this wider than ChatGPT?",
+      "a": "Search and social media already run on ads, so free AI is following the same path."
+    },
+    {
+      "q": "Why act this week?",
+      "a": "Staff on free plans see ads beside work answers, so a team should pick its plan on purpose."
+    }
+  ],
+  "arc": {
+    "what": 1,
+    "happened": [
+      2
+    ],
+    "why": [
+      3
+    ],
+    "so_what": [
+      4
+    ],
+    "do": [
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "explains": {
+    "temporary chat": "a chat mode that shows no ads and does not save memories (card 7)"
+  },
+  "cards": [
+    {
+      "headline": "Free ChatGPT has ads now. Switching them off costs you.",
+      "picture": "Cover: a man in pyjamas recoiling from a chat assistant smothered in Sponsored cards, salesmen's arms reaching out of the screen",
+      "line": "Here is the price of each way out."
+    },
+    {
+      "headline": "OpenAI now shows a labelled ad below some answers on the free and Go plans.",
+      "picture": "Real-looking answer screen with the Sponsored card circled, ChatGPT wordmark",
+      "line": "Ad testing began in the United States on 9 February 2026."
+    },
+    {
+      "headline": "OpenAI says ads help pay for running the free and Go plans for hundreds of millions of people.",
+      "picture": "A free-plan ticket with a meter running behind it, ChatGPT wordmark",
+      "line": "Ads fund the free answers."
+    },
+    {
+      "headline": "Free search and social media already run on ads, and free AI is now paying its way the same way.",
+      "picture": "Three doors labelled attention, money and features",
+      "line": "You pay with ads, money or limits.",
+      "source": "OpenAI, Our approach to advertising and expanding access to ChatGPT, 16 Jan 2026; Krish's research doc 'When the Assistant Becomes the Ad' (5 Nov 2026)"
+    },
+    {
+      "headline": "ChatGPT's eight dollar Go plan can still show ads, but the paid Plus and Pro plans show none.",
+      "picture": "Three price tags side by side: Go with an ad still on it, Plus and Pro clean",
+      "line": "Ad-free by payment starts at Plus."
+    },
+    {
+      "headline": "In Settings, Ads controls lets free users go ad-free, at the cost of fewer daily messages and no image creation.",
+      "picture": "The settings path as three taps, then a crossed-out image tool and a short message meter",
+      "line": "Settings, Ads controls, Change plan to go ad-free."
+    },
+    {
+      "headline": "ChatGPT's temporary chat mode shows no ads, and it does not create memories of what you say.",
+      "picture": "The trade-off scale: no ads on one side, no memory on the other",
+      "line": "Good for one-off questions."
+    },
+    {
+      "headline": "Choose your price on purpose: ads, money or limits, because every free answer costs you something.",
+      "picture": "The trade-off scale balanced, the house robot shrugging",
+      "cta": "Follow for more"
+    }
+  ],
+  "read_back": [
+    {
+      "reader": "fresh reader A (Sonnet, headlines only, once)",
+      "answers": {
+        "what": "A carousel about ads now appearing in free ChatGPT and the choices for avoiding them.",
+        "happened": "OpenAI started showing a labelled ad under some answers on the free and Go plans.",
+        "why": "OpenAI says ads help pay for running those plans for hundreds of millions of people, as free search and social media already do.",
+        "so_what": "Free ChatGPT users will see ads, and getting rid of them costs money, messages, tools or memory.",
+        "do": "Decide on purpose which price to pay: ads, money or limits."
+      },
+      "stalls": "Cards 5 to 7 tangled: how to go ad-free on the free plan unsaid; cover promised an unnamed cost. Fixed: card 6 names Settings, Ads controls; cover subline says the price of each way out."
+    },
+    {
+      "reader": "fresh reader B (Haiku, headlines only, once)",
+      "answers": {
+        "what": "ChatGPT's free and cheaper plans now show ads, and what you give up to avoid them.",
+        "happened": "OpenAI started showing a labelled ad below some answers on the free and Go plans.",
+        "why": "OpenAI says ads help pay for running those plans for hundreds of millions of people.",
+        "so_what": "Every free answer is paid for by ads, money or fewer messages and tools, so you pick which.",
+        "do": "Choose your price on purpose: ads, money or limits."
+      },
+      "stalls": "Go, Plus and Pro unexplained; temporary chat unexplained; card 6 route unclear. Fixed: card 5 names them as plans, card 7 says forget-everything mode, card 6 names the setting."
+    }
+  ],
+  "facts_open": [],
+  "facts_checked": [
+    "help.openai.com/en/articles/20001047-ads-in-chatgpt read live 18 Nov 2026: ads on Free and Go; none on Plus, Pro, Business, Enterprise, Edu; Ads-Free on Free = lower limits, no image generation or deep research; Temporary Chats show no ads; testing began 9 Feb 2026 in the US.",
+    "Go $8 and Plus $20 per month: CBS News and MacRumors, to confirm on chatgpt.com/pricing at the fact gate.",
+    "chatgpt.com/pricing read live 18 Nov 2026: Go $8 per month and 'may include ads'; Plus $20; Pro from $100. Help page: Temporary Chats show no ads and do not create or update memories. Cards 5 and 7 reworded after the cold read to match these; headlines changed since read_back."
+  ]
+}

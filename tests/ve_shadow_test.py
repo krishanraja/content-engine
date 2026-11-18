@@ -49,13 +49,16 @@ def lock_tree(root: Path) -> Path:
 
 
 def redraft(path: Path) -> None:
-    """Put the frozen 9:16 face-with-proof back to the draft it was before Krish's Gate 2 (3 Nov 2026), so the
-    promotion path is still tested on a temp copy after the real lock froze."""
+    """Put a frozen 9:16 face-with-proof back to the draft it was before Krish's Gate 2 (3 Nov 2026), so the promotion
+    path is tested on a temp copy. The real lock has been that draft since he had its key frames deleted (18 Nov
+    2026), and then there is nothing to put back."""
     lock = json.loads(path.read_text(encoding='utf-8'))
+    if 'face-with-proof' not in lock['formats']:
+        return
     entry = lock['formats'].pop('face-with-proof')
     for frame in (entry.get('keyframes') or {}).values():
         (path.parents[2] / frame['file']).unlink(missing_ok=True)
-    for key in ('keyframes', 'frozen_on', 'approved'):
+    for key in ('keyframes', 'frozen_on', 'approved', 'match', 'rules_only', 'retired'):
         entry.pop(key, None)
     entry.update(status='awaiting Gate 2', keyframe_slots={beat: None for beat in BEATS})
     lock.setdefault('drafts', {})['face-with-proof'] = entry
@@ -81,21 +84,31 @@ class DraftLockTest(unittest.TestCase):
             mapping[beat] = name
         return mapping
 
-    def test_the_real_lock_froze_face_with_proof_at_his_gate_2_and_keeps_the_wide_draft(self):
+    def test_the_real_lock_dropped_the_picture_match_for_face_with_proof_on_his_words(self):
         lock = designlock.load()
         self.assertEqual(designlock.validate(lock), [])
-        tall = lock['formats']['face-with-proof']
-        self.assertEqual(tall['beats'], BEATS)
-        self.assertEqual(set(tall['keyframes']), set(BEATS))
-        self.assertTrue(designlock.frozen(lock, 'face-with-proof', ROOT)[0])
-        # Frozen only on his words at Gate 2, never by an agent's own call.
-        self.assertEqual((tall['approved']['by'], tall['approved']['words']), ('Krish', 'Looks good to me.'))
+        # Krish, 18 Nov 2026, had its four key frames deleted for good and then dropped the picture-matching: it is a
+        # lock held to its rules, the Critic's visual pass and his approval of the exact file.
+        fwp = lock['formats']['face-with-proof']
+        self.assertEqual(fwp['match'], 'rules_only')
+        self.assertNotIn('keyframes', fwp)
+        self.assertEqual(designlock.frozen(lock, 'face-with-proof', ROOT), (True, []))
+        self.assertFalse(designlock.picture_match(lock, 'face-with-proof'))
+        self.assertEqual(fwp['beats'], BEATS)
+        self.assertEqual((fwp['rules_only']['by'], fwp['rules_only']['on']), ('Krish', '2026-11-18'))
+        self.assertIn('a visual pass plus obvious rules', fwp['rules_only']['words'])
+        self.assertFalse((ROOT / 'fixtures/ve/design-lock/face-with-proof').exists(), 'the frames are gone from the tree')
+        gone = fwp['retired']
+        self.assertIn('DELETE THOSE FRAMES FOREVER', gone['words'])
+        self.assertEqual(len(designlock.retired_hashes(fwp)), 2 * len(BEATS), 'a golden and its source, per beat, stay barred')
+        # The wide draft is untouched: its own Gate 2, unchanged.
         draft = lock['drafts']['face-with-proof@16:9']
         self.assertEqual(draft['status'], 'awaiting Gate 2')
         self.assertEqual(draft['keyframe_slots'], {beat: None for beat in BEATS})
-        self.assertNotIn('face-with-proof@16:9', lock['formats'])
-        self.assertEqual(draft['canvas'], {'w': 1920, 'h': 1080})
-        self.assertEqual(lock['formats']['hand-held-screen']['role'], 'module')  # joined it at Gate 2
+        self.assertNotIn('face-with-proof', lock.get('drafts', {}))
+        for name in ('hand-held-screen', 'two-passports'):
+            self.assertTrue(designlock.frozen(lock, name, ROOT)[0])
+            self.assertTrue(designlock.picture_match(lock, name), 'the older formats keep their key frames')
 
     def test_a_draft_is_promoted_only_by_freeze_and_its_modules_join_it(self):
         redraft(self.path)

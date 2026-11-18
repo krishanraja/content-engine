@@ -15,7 +15,7 @@ import { SCRIBBLE } from './lock'
 import { MOTION_PROFILES } from './motionProfiles'
 import { typedText } from './reveal'
 import { SAFE_TALL, focusRoom, insideRoom, pathTrack, pointAlong, zoomTarget } from './focus'
-import { FWP_SPLIT_SEAM_Y } from '../mocks/face-with-proof'
+import { SPLIT_SEAM_Y } from '../layouts/splitGeometry'
 
 /** The four weak spots of the motion styles, strengthened (Krish, 2026-11-04: "strengthen the weak styles before
  *  Friday"): typing follows the style, living-ui zooms to the typed line, single-line-drawing follows the pen, and a
@@ -139,7 +139,7 @@ describe('2. living-ui zooms to the typed line', () => {
     for (let frame = 268; frame < 366; frame++) {
       const nodes = draw(props, frame)
       const layer = layerOf(beatFill(nodes, 'face')!)!
-      const cam = camera((layer.props.style as { transform: string }).transform, 1080, FWP_SPLIT_SEAM_Y)
+      const cam = camera((layer.props.style as { transform: string }).transform, 1080, SPLIT_SEAM_Y)
       largest = Math.max(largest, cam.s)
       expect(cam.s).toBeLessThanOrEqual(1.5)
       const { place: _p, ...params } = verdict.params
@@ -149,13 +149,13 @@ describe('2. living-ui zooms to the typed line', () => {
       // Mid-move between two lines the camera travels; once settled the line is inside the room.
       if (focus.since >= 12) {
         expect(insideRoom(mapped, room)).toBe(true)
-        expect(mapped.top + mapped.height).toBeLessThanOrEqual(FWP_SPLIT_SEAM_Y) // never on his face
+        expect(mapped.top + mapped.height).toBeLessThanOrEqual(SPLIT_SEAM_Y) // never on his face
         expect(mapped.top).toBeGreaterThanOrEqual(SAFE_TALL.top)
       }
     }
     expect(largest).toBe(1.5)
     // The card's own left edge leaves the frame at full zoom.
-    const cam = camera((layerOf(beatFill(draw(props, 300), 'face')!)!.props.style as { transform: string }).transform, 1080, FWP_SPLIT_SEAM_Y)
+    const cam = camera((layerOf(beatFill(draw(props, 300), 'face')!)!.props.style as { transform: string }).transform, 1080, SPLIT_SEAM_Y)
     expect(cam.map({ left: place.left, top: place.top, width: 10, height: 10 }).left).toBeLessThan(0)
   })
 
@@ -221,7 +221,7 @@ describe('3. single-line-drawing follows the pen', () => {
     const props = thursday('single-line-drawing')
     const { object, events } = loop()
     const pen = scribblePen(object, events)
-    const h = FWP_SPLIT_SEAM_Y
+    const h = SPLIT_SEAM_Y
     let before = Infinity
     for (let frame = 366; frame < 504; frame++) {
       const layer = layerOf(beatFill(draw(props, frame), 'proof')!)

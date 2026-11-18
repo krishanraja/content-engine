@@ -80,10 +80,23 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
    whose own words carry the joke: "your software engineer is as confident as a crocodile hunter" becomes a nerdy
    engineer creeping up on a crocodile. List each with the words, the mechanism and the picture. Never invent a joke
    his words do not carry; never aim one at the viewer or at a named person's competence.
-5. Mock two or three scenes, the beats that best show the look: a real still (a frame of his take,
-   `--frame TAKE --at SECONDS`, or a real image saved from its source, `--image FILE`) drawn by
-   `python3 scripts/post-pack/plan_scene.py` in his picked caption face and the series colour. The caption is the
-   beat's exact words, never a rewording. Nothing is generated for a mock. File each: `python3 scripts/post-pack/board_session.py PIECE add scene-b3.png --role plan_scene --title
+5. Mock two or three scenes, one for each kind of picture the plan uses, so he sees what he picked and not three frames of his face
+   (Krish, 2026-11-18: "it does not seem to matter what motion, look and captions I chose [...] it always gives me the same 3 crappy
+   mock ups of just me with some same same off brand captions"). Choose the beats by kind: a motion-design beat, a generated or
+   real-picture beat, and a beat on camera, whichever the plan holds. Draw each with `python3 scripts/post-pack/plan_scene.py`, always
+   passing his picks: `--captions <caption style id>` and `--motion <motion style id>` (the ids in plan.json style). The caption is
+   the beat's exact words, never a rewording; `--mark` is its key word.
+   - On camera: `--frame TAKE --at SECONDS --captions ID`.
+   - Motion design: `--kind motion --stage "<the statement on screen>" [--strike WORD] --motion ID --captions ID` (the slam).
+   - A generated, real, screenshot, social-post or logo beat: `--kind <kind> --plate "<what the picture is>" --maker "<who makes it>"`.
+     A run that has no image generator, or no credits placed for it, makes the plate: it says what the picture is and that the
+     production session shows the real still before anything moves. Where the run can generate and the credits are approved
+     (Krish, 2026-11-18: "yes to the credits"), make the one still for each generated beat it mocks, never more than three in all: a
+     still on gpt_image_2_6 at 9:16, priced first (`higgsfield generate cost`, about 0.25 credits an image), then draw the
+     scene with `--image STILL --made-still --kind generated --captions ID`, which fills the scene with the made still and puts his
+     caption style over it. Record each job's id on the piece. The picture is never faked, and never his face.
+   A style the script does not draw is printed on stderr and written by `--notes-out FILE`: put that note in the scene's `style`
+   text so the card says "not drawn here", never as if it were drawn. File each: `python3 scripts/post-pack/board_session.py PIECE add scene-b3.png --role plan_scene --title
    "Scene b3: ..."`, and keep the material id it prints.
 6. Write `plan.json` (below) under `.scratch/plan/` (the run writes nowhere else), check it parses, and file it:
    `python3 scripts/post-pack/board_session.py PIECE add plan.json --role production_plan --title "Production plan"`.

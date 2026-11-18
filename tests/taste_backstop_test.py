@@ -36,6 +36,10 @@ def main():
         record('user', 'No, that opening is too long. Keep the rest.'),
         record('user', [{'type': 'tool_result', 'content': 'never do this wrong thing'}]),
         record('user', '<system-reminder>stop and never do that</system-reminder>'),
+        record('user', 'This session is being continued from a previous conversation that ran out of context.\n- Tests pass while renders are wrong, never trust them.\n- Wrong crop, never use 88%.'),
+        record('user', 'this font is crappy, I have given this feedback before - why would it still keep popping up in carousels?'),
+        record('user', "Can't cut my head off and also ruin the visual above"),
+        record('user', 'Stop hook feedback:\n[command hook]: never leave changes uncommitted, that is wrong.'),
         record('user', 'stop the madness', isMeta=True),
         record('assistant', 'No, I would never do that.'),
         record('user', '<pasted_content id="x">Do not trust this wrong line</pasted_content>'),
@@ -47,21 +51,23 @@ def main():
 
         kept = tb.flagged(transcript)
         assert kept == ['No, that opening is too long.', 'I said never use that font.', 'Do not email [email]',
-                        'Wrong logo here, use [hex]'], kept
+                        'Wrong logo here, use [hex]',
+                        'this font is crappy, I have given this feedback before - why would it still keep popping up in carousels?',
+                        "Can't cut my head off and also ruin the visual above"], kept
 
         hook = json.dumps({'transcript_path': str(transcript), 'session_id': 'session_test'})
         said = []
         assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append, env=OFFLINE, post=no_network) == 0
         outbox = root / tb.OUTBOX
         first = [json.loads(x) for x in outbox.read_text(encoding='utf-8').splitlines()]
-        assert len(first) == 4, first
+        assert len(first) == 6, first
         assert all(r['schema'] == 'growth-taste-backstop/1' and r['repository'] == 'krishanraja/content-engine'
                    and r['venture'] == 'makeyourmindup' and r['posted'] is False for r in first)
         assert 'nothing sent' in said[0]
 
         # Once each: a second end of the same session keeps nothing new.
         assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append, env=OFFLINE, post=no_network) == 0
-        assert len(outbox.read_text(encoding='utf-8').splitlines()) == 4
+        assert len(outbox.read_text(encoding='utf-8').splitlines()) == 6
 
         # A hook never breaks the end of a session.
         assert tb.main([], stdin=io.StringIO('not json'), root=root, out=said.append, env=OFFLINE, post=no_network) == 0
@@ -86,12 +92,12 @@ def main():
         url, headers, body = calls[0]
         assert url == 'https://cc.example/api/taste/backstop', url
         assert headers['authorization'] == 'Bearer ' + secret and headers['content-type'] == 'application/json'
-        assert body['schema'] == 'growth-taste-backstop/1' and len(body['rows']) == 4, body
+        assert body['schema'] == 'growth-taste-backstop/1' and len(body['rows']) == 6, body
         assert {r['kind'] for r in body['rows']} <= {'correction', 'rejection'}, body
         assert all(r['repository'] == 'krishanraja/content-engine' and r['session'] == 'session_test'
                    and len(r['line_sha256']) == 64 for r in body['rows'])
         assert not (root / tb.OUTBOX).exists(), 'a posted line is not also kept locally'
-        assert '4 sent' in said[0] and secret not in ''.join(said), said
+        assert '6 sent' in said[0] and secret not in ''.join(said), said
 
         # A refused or unreachable post never blocks the session: the lines fall back to the file.
         def refuse(url, headers, body):
@@ -99,7 +105,7 @@ def main():
 
         assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append, env=env, post=refuse) == 0
         kept_rows = [json.loads(x) for x in (root / tb.OUTBOX).read_text(encoding='utf-8').splitlines()]
-        assert len(kept_rows) == 4 and all(r['posted'] is False for r in kept_rows), kept_rows
+        assert len(kept_rows) == 6 and all(r['posted'] is False for r in kept_rows), kept_rows
         assert secret not in (root / tb.OUTBOX).read_text(encoding='utf-8')
 
         def server_error(url, headers, body):
@@ -108,7 +114,7 @@ def main():
         root2 = root / 'again'
         root2.mkdir()
         assert tb.main([], stdin=io.StringIO(hook), root=root2, out=said.append, env=env, post=server_error) == 0
-        assert len((root2 / tb.OUTBOX).read_text(encoding='utf-8').splitlines()) == 4
+        assert len((root2 / tb.OUTBOX).read_text(encoding='utf-8').splitlines()) == 6
 
     # A cloud session holds no key: the network proxy injects the backstop secret, so it posts with a placeholder.
     with tempfile.TemporaryDirectory() as tmp:
@@ -125,7 +131,7 @@ def main():
         calls.clear()
         assert tb.main([], stdin=io.StringIO(hook), root=root, out=lambda _: None, env={},
                        post=lambda url, headers, body: (calls.append(headers), (200, {'ok': True}))[1]) == 0
-        assert calls == [] and len((root / tb.OUTBOX).read_text(encoding='utf-8').splitlines()) == 4
+        assert calls == [] and len((root / tb.OUTBOX).read_text(encoding='utf-8').splitlines()) == 6
 
     # Only the hook itself sends. A caller of main() that passes no post, a test above all, keeps the lines
     # locally whatever the environment says, even in a cloud session whose proxy holds the key (I-33 follow-up,
@@ -149,7 +155,7 @@ def main():
             said = []
             env = {'CLAUDE_CODE_REMOTE': 'true', 'TASTE_BACKSTOP_TOKEN': 'fixture-key'}
             assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append, env=env) == 0
-            assert len((root / tb.OUTBOX).read_text(encoding='utf-8').splitlines()) == 4
+            assert len((root / tb.OUTBOX).read_text(encoding='utf-8').splitlines()) == 6
             assert 'nothing sent' in said[0], said
             assert reached == [], 'main() without post never tries the network'
     finally:
