@@ -1561,7 +1561,15 @@ Read-only client for the CTRL shared headlines pool (portfolio hive mind).
 - `function folderForPiece(row: { scheduled_for?: unknown; lane_slot?: unknown; idea?: unknown; meta?: unknown }): string`
 - `function libraryFolderOk(folder: string): boolean`
 - `interface FolderDb`
-- `async function bindPostFolder(db: FolderDb, pieceId: string, by: string, tries = 6): Promise<{ folder: string; bound: '…`
+- `async function bindPostFolder(db: FolderDb, pieceId: string, by: string, drive: DriveOpener = postsDrive, tries = 6): P…`
+- `function movedFrom(folder: string, scheduledFor: unknown): boolean`
+- `interface PostsDrive`
+- `type DriveOpener = () => Promise<PostsDrive | null>`
+- `function googlePostsDrive(token: string, f: typeof fetch = fetch): PostsDrive`
+- `async function postsDrive(): Promise<PostsDrive | null>`
+- `type FollowState`
+- `async function followBinding(db: FolderDb, open: DriveOpener, pieceId: string, by: string, tries = 6): Promise<{ folder…`
+- `async function followMovedPieces(db: FolderDb, open: DriveOpener = postsDrive, now = new Date(), max = 10): Promise<{ f…`
 - `const BEAT`
 - `function beatsOf(value: unknown): string[]`
 - `function gotKey(beats: string[], sha256: string): string`

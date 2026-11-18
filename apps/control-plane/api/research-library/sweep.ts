@@ -22,6 +22,10 @@ import { runMirror } from '../_researchLibraryGoogle.js'
 // One sweep at a time: every run holds the library's lease (engine_leases), so a second sweep started while one runs, by
 // hand or on the hour, answers `skipped: already_running` with when that lease runs out, writes nothing, and is recorded
 // as skipped. Without the lease (its migration not applied, the database down) it writes nothing and fails.
+//
+// The same hourly run makes a moved piece's folder in 3 Posts follow it to its new date and day (api/_postFolder.ts
+// followMovedPieces; Krish, 2026-11-18: "close the gap"): it renames only that folder, by its ID, and never fails the
+// mirror; the answer's post_folders says how many followed and which were held, and why.
 
 export const config = { maxDuration: 120 }
 
@@ -36,8 +40,16 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   const material = raw.trim().toLowerCase()
   if (material && !UUID.test(material)) return res.status(400).json({ ok: false, error: 'invalid_material' })
   const report = await runMirror({ only: material ? [material] : undefined, budgetMs: 90_000 })
+  // Every piece that moved after its folder was bound, and that nothing filed into since, has its folder follow it
+  // (_postFolder.ts followMovedPieces: renamed in Drive by its ID, waiting files moved, the binding), at most 10 a run.
+  // A held one is said in the answer and tried again next hour; it never fails the mirror.
+  const post_folders = material ? null : await (async () => {
+    const { followMovedPieces } = await import('../_postFolder.js')
+    const { supabase } = await import('../_supabase.js')
+    return followMovedPieces(supabase as never).catch(() => ({ followed: 0, held: [{ piece: '*', why: 'the sweep failed' }] }))
+  })()
   // The ledger keeps counts, never payloads: the links stay in the answer only.
-  return res.status(200).json({ ...report, failed: report.failed.slice(0, 20), copies: report.copies.filter(c => c.created).slice(0, 50) })
+  return res.status(200).json({ ...report, failed: report.failed.slice(0, 20), copies: report.copies.filter(c => c.created).slice(0, 50), ...(post_folders ? { post_folders } : {}) })
 }
 
 export default withContentRun('research_library_mirror', handler)
