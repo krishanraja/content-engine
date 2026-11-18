@@ -60,43 +60,13 @@
    "params": {
     "shots": [
      {
-      "src": "plates/croc-creep-tall.png",
-      "width": 1024,
-      "height": 1536,
-      "focus": {
-       "x": 0.5,
-       "y": 0.5
-      }
-     },
-     {
-      "src": "plates/croc-creep-tall.png",
-      "width": 1024,
-      "height": 1536,
-      "focus": {
-       "x": 0.62,
-       "y": 0.68
-      }
-     },
-     {
-      "src": "plates/croc-creep-tall.png",
-      "width": 1024,
-      "height": 1536,
-      "focus": {
-       "x": 0.38,
-       "y": 0.4
-      }
-     },
-     {
-      "src": "plates/croc-creep-tall.png",
-      "width": 1024,
-      "height": 1536,
-      "focus": {
-       "x": 0.5,
-       "y": 0.55
-      }
+      "src": "plates/croc-hook.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
      }
     ],
-    "camera": "push",
+    "camera": "still",
     "full": true,
     "grade": "none"
    }
@@ -287,34 +257,13 @@
    "params": {
     "shots": [
      {
-      "src": "plates/confetti-tall.png",
-      "width": 1024,
-      "height": 1536,
-      "focus": {
-       "x": 0.5,
-       "y": 0.5
-      }
-     },
-     {
-      "src": "plates/confetti-tall.png",
-      "width": 1024,
-      "height": 1536,
-      "focus": {
-       "x": 0.45,
-       "y": 0.3
-      }
-     },
-     {
-      "src": "plates/confetti-tall.png",
-      "width": 1024,
-      "height": 1536,
-      "focus": {
-       "x": 0.42,
-       "y": 0.68
-      }
+      "src": "plates/confetti.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
      }
     ],
-    "camera": "push",
+    "camera": "still",
     "full": true,
     "grade": "none"
    }
@@ -402,26 +351,26 @@
    "licence": "Krish's own recording, 18 Nov 2026 (Build-or-buy-short.mp4), restarts and long pauses cut, sped 1.22x"
   },
   {
-   "id": "croc-creep-tall",
-   "kind": "illustration",
+   "id": "croc-hook",
+   "kind": "broll",
    "origin": "generated",
-   "path": "plates/croc-creep-tall.png",
-   "sha256": "c7f955587da05336202d87c98da26b0569d3fd7962834506ce4969675f3fd025",
-   "licence": "generated for this piece by Codex (card ve-w1118-comic-plates); no likeness of a real person",
+   "path": "plates/croc-hook.mp4",
+   "sha256": "313bbaaa2a355272ffeb3ea1e91c9d01462738c0f6b5299af88d085ec1a55259",
+   "licence": "made for this piece by Codex (card ve-w1118-comic-motion) from its approved still; no likeness of a real person",
    "tool": "codex:image_gen",
-   "job_id": "exec-b04fba3e-44fa-4553-b74f-8bd683bd6737",
-   "prompt_ref": "docs/ve/cards/w1118/ve-w1118-comic-plates.md#croc-creep-tall"
+   "job_id": "exec-be12faea-3cc6-4185-95c1-4a419f467bff,exec-464c9579-e6e7-4d47-8376-f583f85e2030,exec-ffdb0b3a-b737-4111-b4a2-17dfeb2482c9,exec-c03c8c09-34d5-4188-840d-d86d4367da9e,exec-aa553c7d-cb3c-49a8-bf80-288",
+   "prompt_ref": "docs/ve/cards/w1118/ve-w1118-comic-motion.md#croc-hook"
   },
   {
-   "id": "confetti-tall",
-   "kind": "illustration",
+   "id": "confetti-clip",
+   "kind": "broll",
    "origin": "generated",
-   "path": "plates/confetti-tall.png",
-   "sha256": "8865419735ee2107e655a4d33849371ba02d9be348962799a353e42fa0da2e98",
-   "licence": "generated for this piece by Codex (card ve-w1118-comic-plates); no likeness of a real person",
+   "path": "plates/confetti.mp4",
+   "sha256": "fd93bf6ae1ecfd82122882607f8235bb108be945f423e3808c530eb87d1abc23",
+   "licence": "made for this piece by Codex (card ve-w1118-comic-motion) from its approved still; no likeness of a real person",
    "tool": "codex:image_gen",
-   "job_id": "exec-219cfec4-740a-4126-96fc-000a3a4344e5",
-   "prompt_ref": "docs/ve/cards/w1118/ve-w1118-comic-plates.md#confetti-tall"
+   "job_id": "exec-f8510065-ab00-4e0a-b8f4-c7156ba378f3,exec-82c34754-b6e9-450c-a3ba-7dcbc41b6282,exec-bfc8c01a-a194-4434-be8f-7ddef150cb4b,exec-7de1707b-137e-4b67-8538-79d27e63100d",
+   "prompt_ref": "docs/ve/cards/w1118/ve-w1118-comic-motion.md#confetti"
   },
   {
    "id": "hl-fullstackhr",
@@ -551,38 +500,11 @@
        "verb": "enter",
        "to_state": "0",
        "silent": true
-      },
-      {
-       "at_w": 11,
-       "obj": "croc_s",
-       "verb": "move",
-       "to_state": "1",
-       "silent": true
-      },
-      {
-       "at_w": 14,
-       "obj": "croc_s",
-       "verb": "move",
-       "to_state": "2",
-       "silent": true
-      },
-      {
-       "at_w": 22,
-       "obj": "croc_s",
-       "verb": "move",
-       "to_state": "3",
-       "silent": true
-      },
-      {
-       "at_w": 27,
-       "obj": "croc_s",
-       "verb": "move",
-       "to_state": "1",
-       "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it (Krish, 18 Nov 2026: \"The crocodile scene just keeps pulsing as a still.\")"
     },
     {
      "id": "headlines",
@@ -888,31 +810,11 @@
        "verb": "enter",
        "to_state": "0",
        "silent": true
-      },
-      {
-       "at_w": 175,
-       "obj": "confetti",
-       "verb": "move",
-       "to_state": "1",
-       "silent": true
-      },
-      {
-       "at_w": 181,
-       "obj": "confetti",
-       "verb": "move",
-       "to_state": "2",
-       "silent": true
-      },
-      {
-       "at_w": 189,
-       "obj": "confetti",
-       "verb": "move",
-       "to_state": "0",
-       "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it (Krish, 18 Nov 2026: \"The crocodile scene just keeps pulsing as a still.\")"
     },
     {
      "id": "rented",
