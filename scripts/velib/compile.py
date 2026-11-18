@@ -652,8 +652,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                         'pixelHeight': publication[key]['pixel_height']} for key in ('mark', 'logo', 'stacked')},
         # The logo only on the title frame and the close (Ruling, Krish, 2026-11-17; config/brand-palette.json logo_rule):
         # from its date the body carries no mark tile and no header logo. Absent for older pieces, so their props hold.
-        # Drawn only where the palette says so: the renderer draws no body logo unless bodyLogo is true.
-        **({'bodyLogo': True} if _body_logo(spec, cut['aspect'], off) else {}),
+        # Always said, never left to a default: false from the palette's logo rule (Mon 16 Nov), true only for a piece dated before
+        # it. The renderer also draws no body logo unless bodyLogo is true, so a spec that bypasses compile cannot draw one.
+        'bodyLogo': _body_logo(spec, cut['aspect'], off),
         'segments': [] if spec['audio']['master'] == 'vo' else [
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
