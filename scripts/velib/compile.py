@@ -14,7 +14,7 @@ import re
 import sys
 from pathlib import Path, PureWindowsPath
 
-from .common import ROOT, load_json, sha256_file
+from .common import CONFIG, ROOT, load_json, sha256_file
 from .lint import pending_devices_error
 from . import palettes
 
@@ -308,15 +308,35 @@ _END = re.compile(r'[.!?]["\x27)\u2019\u201d]*$')
 _PAUSE = re.compile(r'[,.!?;:]["\x27)\u2019\u201d]*$')
 
 
+def _phrase_words() -> tuple[set, set]:
+    """The words ve qc's captions.phrase_breaks reads (config/ve/onscreen-checks.json): a page may not end on one of
+    the first, and the next page may not open on one of the second. The pager reads the same list so what it makes is
+    what QC passes (habits short, 18 Nov 2026: 12 pages broke as "going | to be harder", "put | the car on trial")."""
+    try:
+        rules = load_json(CONFIG / 'onscreen-checks.json')['captions']
+        return set(rules['weak_ends']), set(rules['opens_phrase'])
+    except (OSError, ValueError, KeyError):
+        return set(), set()
+
+
+def _word(text: str) -> str:
+    return re.sub(r'[^a-z\']', '', text.lower())
+
+
 def _page_cost(rows: list[dict], start: int, n: int) -> int:
     """How badly a page of rows[start:start+n] reads. Lower is better; every rule here is a reading, not a limit."""
     page = rows[start:start + n]
-    last = re.sub(r'[^a-z\']', '', page[-1]['text'].lower())
+    last = _word(page[-1]['text'])
+    weak, opens = _phrase_words()
     cost = 0
     if any(_END.search(r['text']) for r in page[:-1]):
         cost += 6   # a page runs past the end of a sentence ("myself. I just put")
-    if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in _WEAK_ENDS:
-        cost += 4   # it ends mid-phrase on a small word
+    if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in weak:
+        cost += 10  # it ends mid-phrase on a small word QC refuses (heavier than a quick flip, which QC passes)
+    elif start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in _WEAK_ENDS:
+        cost += 4   # it ends on one of the house's own small words (Thursday 5 Nov: "or tells | you how to lock it")
+    if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and _word(rows[start + n]['text']) in opens:
+        cost += 10  # the next page opens mid-phrase ("we don't put | the car on trial")
     if any(_PAUSE.search(r['text']) for r in page[:-1]):
         cost += 3   # a clause break inside the page ("Amazon for your groceries, Google")
     if not _held(rows, start + n):
@@ -329,14 +349,17 @@ def _page_cost(rows: list[dict], start: int, n: int) -> int:
 
 
 def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list[list[dict]]:
-    """Fit 2-5 words per page, choosing the breaks that read best over the whole run, never stranding an orphan."""
+    """Fit 2-5 words per page (6 when the sixth ends the sentence), choosing the breaks that read best over the whole run, never stranding an orphan."""
     size, available = (54, 1316) if aspect == '16:9' else (68, 816)
     for row in rows:
         caption_line_count([row], aspect, emphasis)
     # best[start] = (cost, page length) for the rest of the run from start; the run's end costs nothing.
     best = {len(rows): (0, 0)}
     for start in range(len(rows) - 1, -1, -1):
-        options = [(_page_cost(rows, start, n) + best[start + n][0], n) for n in range(2, min(5, len(rows) - start) + 1)
+        # A sixth word only when it ends the sentence: "it can get a bit dangerous." reads as one page, where every
+        # five-word split strands a small word QC refuses (18 Nov 2026).
+        longest = 6 if start + 5 < len(rows) and _END.search(rows[start + 5]['text']) else 5
+        options = [(_page_cost(rows, start, n) + best[start + n][0], n) for n in range(2, min(longest, len(rows) - start) + 1)
                    if start + n in best
                    and sum(r['w'] in emphasis for r in rows[start:start + n]) <= 1
                    and caption_line_count(rows[start:start + n], aspect, emphasis) <= 2]
