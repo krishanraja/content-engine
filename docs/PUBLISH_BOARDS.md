@@ -609,6 +609,12 @@ read "Missed" while the day was published on every channel, until 12 Nov). A day
 10 has passed and nothing on it is marked live. If it went out, press It's live with its link", It's live leads, and its
 line from before is kept in `detail` ("Before its day passed"). Carrying a missed item to today is today's To approve.
 
+**Late, for one day** (Ruling, Krish, 2026-11-18: an item not posted on its day goes back to its step, My takes are in
+the Inbox, and is marked late for a maximum of one day; Missed had blocked him from moving forward with anything). The
+day after its own (`LATE_DAYS`, `lateOn` in `_stage.ts`), a day or item not out keeps its own stage, `who` and next
+step, and its line leads "Late: Tue 17 passed. It stays on its next step until the end of Wed 18 Nov, then it is marked
+missed." A scheduled or live item never says Late. From the second day after (`missedOn`) it is Missed, as above.
+
 **A piece's scheduled posts.** `POST /api/board/<Monday>/offday-posts` (Growth's key) also takes a piece's own entries,
 `{piece_id, day, state: scheduled | cancelled, channel, due_at, buffer_post_id}`, each kept on the day's box for its
 channel (`board_ticks` `<day>-<channel>`, `done` stays false, `scheduled`); a box already out is never touched, and the

@@ -4356,18 +4356,14 @@
     {
      "h": "agentnotsetup",
      "p": "Meme video, 19 s, 9:16 · Approved by you, Sun 8 Nov, 09:07"
-    },
-    {
-     "h": "Before its day passed",
-     "p": "Approved. Growth makes it and posts it on the day. Once it is out, press It's live with the post's link"
     }
    ],
    "kind": "Off day: Explainer carousel",
    "title": "Anthropic's AI wrote so much code Git could not keep up.",
    "stop": 2,
-   "who": "missed",
+   "who": "growth",
    "runs_on": "Growth makes the approved off-day post",
-   "next": "Missed: Thu 12 has passed and nothing on it is marked live. If it went out, press It's live with its link",
+   "next": "Late: Thu 12 passed. It stays on its next step until the end of Fri 13 Nov, then it is marked missed. Approved. Growth makes it and posts it on the day. Once it is out, press It's live with the post's link",
    "actions": [
     {
      "kind": "press",
@@ -4567,7 +4563,7 @@
     {
      "kind": "prompt",
      "label": "Copy Claude prompt",
-     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Thu 12 (off day, Off day: Explainer carousel): Anthropic's AI wrote so much code Git could not keep up..\nWhere it stands: Missed: Thu 12 has passed and nothing on it is marked live. If it went out, press It's live with its link.\n\nWhere everything lives:\n- the week's plan, ideas and off-day options: docs/plans/2026-11-09-week/ (ideas.json, and the offday-revise/2026-11-09 branch when it exists)\n- Krish's presses on the board: GET /api/board/2026-11-09/view; the live board, where he works, is controlcenter.krishraja.com/#/content?week=2026-11-09&day=thu (the old pages at content.krishraja.com/board are retired and redirect there; the view carries no https link, by the media rule)\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nShow Krish what you made in one message before anything is sent or published.\n\nKeep the board current as you work (week 2026-11-09 and day thu, step next). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with week 2026-11-09 and day thu. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/thu show\n2. Choose a session id once (for example next- and four random letters) and report with it: report_board_session with week 2026-11-09 and day thu, your session_id, step \"next\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/thu start|progress|done|blocked \"one line\" --session <your id> --step next\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/thu add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/thu read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/thu add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n6. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Thu 12 (off day, Off day: Explainer carousel): Anthropic's AI wrote so much code Git could not keep up..\nWhere it stands: Late: Thu 12 passed. It stays on its next step until the end of Fri 13 Nov, then it is marked missed. Approved. Growth makes it and posts it on the day. Once it is out, press It's live with the post's link.\n\nWhere everything lives:\n- the week's plan, ideas and off-day options: docs/plans/2026-11-09-week/ (ideas.json, and the offday-revise/2026-11-09 branch when it exists)\n- Krish's presses on the board: GET /api/board/2026-11-09/view; the live board, where he works, is controlcenter.krishraja.com/#/content?week=2026-11-09&day=thu (the old pages at content.krishraja.com/board are retired and redirect there; the view carries no https link, by the media rule)\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nShow Krish what you made in one message before anything is sent or published.\n\nKeep the board current as you work (week 2026-11-09 and day thu, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with week 2026-11-09 and day thu. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/thu show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with week 2026-11-09 and day thu, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/thu start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/thu add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/thu read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/thu add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n6. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     {
      "kind": "press",
@@ -4780,8 +4776,8 @@
      },
      "post": "1ThuGitbrokePost000000000001",
      "stage": {
-      "state": "missed",
-      "label": "Missed: Thu 12 Nov passed and it is not marked live",
+      "state": "made",
+      "label": "Made: its files are made and filed",
       "at": null,
       "links": []
      }
@@ -5147,8 +5143,8 @@
      },
      "post": "1ThuAgentPost00000000000001",
      "stage": {
-      "state": "missed",
-      "label": "Missed: Thu 12 Nov passed and it is not marked live",
+      "state": "made",
+      "label": "Made: its files are made and filed",
       "at": null,
       "links": []
      }
@@ -9102,7 +9098,7 @@
         "when": null
        }
       ],
-      "missed": true,
+      "missed": false,
       "read": {
        "so_what": null,
        "story": null,
@@ -9125,102 +9121,84 @@
       "links": [],
       "stories": null,
       "stories_planned": null,
-      "others": [],
-      "line": "Missed: Thu 12 passed and it is not marked live. If it went out, press It's live with its link.",
+      "others": [
+       {
+        "kind": "press",
+        "label": "Pick the track",
+        "collection": "picks",
+        "id": "audio-bed-off-thu-gitbroke",
+        "revision": 0,
+        "body": {
+         "kind": "audio_pick",
+         "layer": "bed",
+         "item": "off-thu-gitbroke"
+        },
+        "choose": {
+         "path": "pick",
+         "ask": "Which track? Play each first.",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "coronation",
+           "label": "CORONATION, BLUE STEEL",
+           "line": "Over the carousel: a gym-energy track (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1ngGBKHy3fJIm5X5eNIV1ENJhU719eLIo"
+          },
+          {
+           "value": "gifted-instrumental",
+           "label": "GIFTED (Instrumental Version), Bhris Drip",
+           "line": "Over the carousel: a gym-energy track (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=18QEW26AB5ag4H29dT05Cm4Rj_H71Jfwk"
+          },
+          {
+           "value": "plenty-bands-instrumental",
+           "label": "Plenty Bands! (Instrumental Version), Enophi",
+           "line": "Over the carousel: a gym-energy track (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1A9OBoBxV-fvNcIov0cZo6ON1H1RobJ0y"
+          }
+         ]
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Picked. It is the track for this post."
+       }
+      ],
+      "line": "Late: Thu 12 passed. It stays on its next step until the end of Fri 13 Nov, then it is marked missed. Made: its files are made and filed.",
       "next": {
-       "kind": "press",
-       "label": "It's live",
-       "op": "live",
-       "body": {
-        "day": "thu",
-        "option": "off-thu-gitbroke",
-        "title": "Anthropic's AI wrote so much code Git could not keep up."
-       },
-       "words": {
-        "path": "url",
-        "ask": "The post's link",
-        "required": true
-       },
-       "choose": {
-        "path": "channels",
-        "ask": "Where did it go out?",
-        "multi": true,
-        "required": true,
-        "from_link": true,
-        "options": [
-         {
-          "value": "shorts",
-          "label": "YouTube Shorts",
-          "hosts": [
-           "youtube.com/shorts"
-          ]
+       "kind": "prompt",
+       "label": "Claude production prompt",
+       "tool": "claude",
+       "prompt": "You are picking up the Thursday 2026-11-12 off-day post off-thu-gitbroke (Explainer) of the Make Your Mind Up content engine with no prior context: \"Anthropic's AI wrote so much code Git could not keep up.\". Where it stands: Made: its files are made and filed.\n\nMake it in this Claude session, with the Codex plugin building it. Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, with the Codex plugin building it, as in the other usual workflows; memes, Notes images and off-day voiceover shorts are made the same way. The route is content-engine docs/CAROUSEL-STANDARD.md, \"How a carousel is made\". 1. Write the words, the story and the creative direction yourself. A carousel's deck comes first, as carousel-deck/1, and passes python3 scripts/carousel_check.py DECK.json: five whys, the wider trend with an outside source, every card after the cover one full plain sentence of 8 to 20 words a stranger can follow, at most 10 cards, ending on the palette's close: the takeaway, then \"Follow for more\" with the Make Your Mind Up wordmark centred under it. 2. Write one Codex card for the pictures with python3 scripts/ve.py card (kind carousel, meme or notes_image, with the day and the inspiration cards Krish ticked), held to config/brand-palette.json, and send it to Codex through the plugin: ve dispatch, or, for a card in growth-makeyourmindup, its codex/queue/ on your claude/ branch, which the Codex lane builds. 3. Codex builds the pictures in code. You verify them: the deck check again, the drawn cards with python3 scripts/carousel_check.py --cards (a cover that looks like a front cover, body cards that use the page centrally with real visual effort), the 10/10 judges for a carousel, shown every card, and a look at every card at phone size. 4. File them in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. Never a scheduled job, a headless model run or a template engine.\n\nMake exactly what Krish approved, nothing else, to the rejection floor and content-engine docs/CAROUSEL-STANDARD.md; Growth (krishanraja/growth-makeyourmindup) posts it.\n\nKeep the board current as you work (week 2026-11-09 and day thu, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with week 2026-11-09 and day thu. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/thu show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with week 2026-11-09 and day thu, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/thu start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/thu add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/thu read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/thu add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n6. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+       "notes": {
+        "ask": "Your notes for Claude: what to change, or what you think the next step is",
+        "heading": "Krish's notes, in his own words (typed on the board just now). They come first: do what they ask before anything else.",
+        "save": {
+         "kind": "press",
+         "label": "Your notes for Claude",
+         "collection": "comments",
+         "id": "desk-thu-post-{t}",
+         "revision": 0,
+         "body": {
+          "thread_id": "{id}",
+          "anchor": "desk:thu:post",
+          "use": "claude_notes",
+          "title": "Anthropic's AI wrote so much code Git could not keep up.",
+          "item": "off-thu-gitbroke"
          },
-         {
-          "value": "tiktok",
-          "label": "TikTok",
-          "hosts": [
-           "tiktok.com"
-          ]
+         "words": {
+          "path": "text",
+          "ask": "Your notes for Claude",
+          "required": true
          },
-         {
-          "value": "reels",
-          "label": "Instagram Reels",
-          "hosts": [
-           "instagram.com/reel"
-          ]
-         },
-         {
-          "value": "instagram",
-          "label": "Instagram",
-          "hosts": [
-           "instagram.com/p"
-          ]
-         },
-         {
-          "value": "linkedin",
-          "label": "LinkedIn",
-          "hosts": [
-           "linkedin.com"
-          ]
-         },
-         {
-          "value": "x",
-          "label": "X",
-          "hosts": [
-           "x.com",
-           "twitter.com"
-          ]
-         },
-         {
-          "value": "threads",
-          "label": "Threads",
-          "hosts": [
-           "threads.net",
-           "threads.com"
-          ]
-         },
-         {
-          "value": "facebook",
-          "label": "Facebook",
-          "hosts": [
-           "facebook.com",
-           "fb.watch"
-          ]
-         },
-         {
-          "value": "substack-notes",
-          "label": "Substack Notes",
-          "hosts": [
-           "substack.com/note",
-           "substack.com/@"
-          ]
-         }
-        ]
-       },
-       "stamp": [
-        "at"
-       ],
-       "done": "Recorded as live. The day is done, and Growth learns from the post."
+         "stamp": [
+          "at"
+         ],
+         "done": "Saved on the board, and in the prompt."
+        },
+        "saved": []
+       }
       },
       "decision": false
      },
@@ -9263,7 +9241,7 @@
         "when": null
        }
       ],
-      "missed": true,
+      "missed": false,
       "read": {
        "so_what": null,
        "story": null,
@@ -9281,109 +9259,250 @@
       "links": [],
       "stories": null,
       "stories_planned": null,
-      "others": [],
-      "line": "Missed: Thu 12 passed and it is not marked live. If it went out, press It's live with its link.",
+      "others": [
+       {
+        "kind": "press",
+        "label": "Pick the captions",
+        "op": "style",
+        "body": {
+         "piece_id": "575085d4-6dc7-4869-8510-48915663f588",
+         "item": "off-thu-agentnotsetup"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "captions",
+         "ask": "Which captions?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "art-directed",
+           "label": "Art-directed phrases (recommended)",
+           "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+           "still": "/api/board/sign-offs?file=1UHxsw0FJYkpg9O38SQxHXMkyTnVn3NnM",
+           "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\"."
+          },
+          {
+           "value": "pop",
+           "label": "Pop",
+           "line": "Bold capitals land word by word, and the word being said wears the series colour.",
+           "still": "/api/board/sign-offs?file=1NE-0O6EOYwnqfIj06f5RrvPAZELURZRF"
+          },
+          {
+           "value": "karaoke",
+           "label": "Karaoke",
+           "line": "The whole line is set at once, and each word fills to full cream as he says it.",
+           "still": "/api/board/sign-offs?file=1M8WLwwQl0BX50UJRtkpTHlHn4RMWX6LQ"
+          },
+          {
+           "value": "kinetic-01",
+           "label": "Justified stack",
+           "line": "One word per row in Anton capitals, every row the same width, so the phrase becomes a block of type.",
+           "still": "/api/board/sign-offs?file=1F2H0pr4BT0bY18evUfttG9SgG3g7NceI"
+          },
+          {
+           "value": "kinetic-02",
+           "label": "Edge snap",
+           "line": "Condensed capitals snap in from alternating sides of the frame into one left-aligned lockup.",
+           "still": "/api/board/sign-offs?file=1m61Jb1aW0a8fMvwToiUuHASPubT2QuLj"
+          },
+          {
+           "value": "hustle",
+           "label": "Marker",
+           "line": "Anton capitals, with a series-colour bar drawn under the key word just after he says it.",
+           "still": "/api/board/sign-offs?file=1eukiVGP-XfW7xS9qlh7XqlRCOtvjCQSR"
+          },
+          {
+           "value": "grape",
+           "label": "Ink card",
+           "line": "The line sits on a deep-ink card that opens as the phrase starts, and the word being said is mint.",
+           "still": "/api/board/sign-offs?file=1b2d9u0-Y-qjyN8dGlyUhRr1N2bYzuEWd"
+          },
+          {
+           "value": "beast",
+           "label": "Punch",
+           "line": "Huge outlined Anton capitals punch in, one or two words on screen at a time.",
+           "still": "/api/board/sign-offs?file=1wFcWNyqYgWL787FtSBqnALTvjvd4CwYs"
+          },
+          {
+           "value": "poppin",
+           "label": "Spring",
+           "line": "Mixed-case words spring up from their baseline with one small overshoot.",
+           "still": "/api/board/sign-offs?file=1puEcGQR7qlIB4aofGySCYUvdiBfrGIlD"
+          },
+          {
+           "value": "aarit",
+           "label": "Editorial",
+           "line": "The setup in a quiet Fraunces italic, then the hero word alone in Anton capitals at three times the size.",
+           "still": "/api/board/sign-offs?file=1t8nqxFAza78Ofx-Um1p1Xw_3FYcJDMzC"
+          },
+          {
+           "value": "soft-ai",
+           "label": "Bloom",
+           "line": "Each word comes into focus from a soft blur, and the key word blooms with a brief mint glow.",
+           "still": "/api/board/sign-offs?file=1w9n6PUI1nb52xC50wfG91cJ6hfjWuX1h"
+          },
+          {
+           "value": "gaming-stream",
+           "label": "Terminal",
+           "line": "Plex Mono on a deep-ink tag, each word typing itself out as he says it.",
+           "still": "/api/board/sign-offs?file=16l1brGocCpQPIaoJsKtr0JKh03uENnVO"
+          },
+          {
+           "value": "simple-one-word",
+           "label": "One word",
+           "line": "Only the word being said, in Archivo Black capitals fitted to the width of the caption band.",
+           "still": "/api/board/sign-offs?file=197qf2CcFQNykVehcrWi6b_grs2a7bV4b"
+          },
+          {
+           "value": "podcast",
+           "label": "Two-line scroll",
+           "line": "The line being said brightens word by word, and the line before it slides up and away.",
+           "still": "/api/board/sign-offs?file=1odFEa3jzR9_iOasuLi97IvuKN4rD1TYu"
+          },
+          {
+           "value": "cinematic",
+           "label": "Cinematic",
+           "line": "Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass.",
+           "still": "/api/board/sign-offs?file=1aVC8fDi_Kkk9SsYTWsL07sqnpdZuQ7la"
+          },
+          {
+           "value": "slam",
+           "label": "Slam",
+           "line": "Every word slams in as it is said, and the words already said stack above it, smaller.",
+           "still": "/api/board/sign-offs?file=1GDBVFc30kJywUtwQbpwySBQJ1Skexg-z"
+          },
+          {
+           "value": "georgia-build",
+           "label": "Georgia build",
+           "line": "Small mixed-case words at chest height, one to three at a time, where the typeface shows the stress: Fraunces for small words, Archivo ExtraBold for content, a size up for numbers and names, and Fraunces italic for the key word. Each chunk…",
+           "still": "/api/board/sign-offs?file=1Ffa3saJ6D93IYsR75rjQ4QyVY3vGd4wX"
+          },
+          {
+           "value": "stair-flash",
+           "label": "Staircase flash",
+           "line": "Anton capitals build a stepped lockup word by word on hard cuts, with small connector words at about half size on the same baseline. The key word lands with a short series-colour streak and then cools to cream under a left-to-right wipe.",
+           "still": "/api/board/sign-offs?file=158BqsUMeplN_sRdRvzsagXjrbRmYRpzk"
+          },
+          {
+           "value": "tuck-stack",
+           "label": "Tuck stack",
+           "line": "Tiny lead words tuck tight above big lowercase-as-said Archivo words, so each phrase sets as a mixed-scale lockup. The key word is a size up in the series colour, and the stack lifts away as the page ends.",
+           "still": "/api/board/sign-offs?file=1h5HkovL7sUeV_tugeoYdvrS_iDTpj53x"
+          },
+          {
+           "value": "anchor-quote",
+           "label": "Quote anchor",
+           "line": "A small running caption of up to three words changes every few words, while the page's hero holds beneath it in big Fraunces capitals between mint curly quotes, staying still across the next pages until a new anchor lands or 3 s pass.",
+           "still": "/api/board/sign-offs?file=1Ix2KAjWDaJYMWuNc09ma9hyfn-HI6RXb"
+          },
+          {
+           "value": "rack-focus",
+           "label": "Rack focus",
+           "line": "Focus travels along the line: the word being said is sharp, the words already said slip out of focus, and the hero arrives on its own row in big Anton capitals from a deep blur.",
+           "still": "/api/board/sign-offs?file=1xtrXjdbR0rm4ImVnfNyDVVEuMIEELB6r"
+          },
+          {
+           "value": "flip-hinge",
+           "label": "Hinge",
+           "line": "Each word swings up into place on a hinge at its baseline, like a card flipped upright, lighting as it faces the camera, and the phrase falls away backward word after word as the page ends.",
+           "still": "/api/board/sign-offs?file=1TSpNlscMNh69tBz6jamyW2C9Oi97JpRe"
+          },
+          {
+           "value": "slice",
+           "label": "Slice",
+           "line": "Each Anton capital word arrives cut in two: the top half slides in from the left and the bottom half from the right, and they close on a mint hairline that flashes and fades.",
+           "still": "/api/board/sign-offs?file=1rz4QXIqtIrDkb3eaqzrlo6BxcUm3An-p"
+          },
+          {
+           "value": "slot-roll",
+           "label": "Slot Roll",
+           "line": "Letters roll up one after another into their own little windows like a slot reel, and every digit spins through four other digits before it lands on the true one."
+          },
+          {
+           "value": "receipt-chip",
+           "label": "Receipt chip",
+           "line": "Words type onto a till receipt as he says them, in lower-case mono on deep ink, the paper jolting down on every word and the figure printed on a mint fill.",
+           "still": "/api/board/sign-offs?file=1wimTz66mETNNnv6YGhc9QsMrRwGB3b1c"
+          },
+          {
+           "value": "ink-block",
+           "label": "Ink block",
+           "line": "The phrase builds word by word on stepped full-width ink slabs, each slab wiping in from the left with a thick series-colour bar drawing under the newest word.",
+           "still": "/api/board/sign-offs?file=1cbx6mqGYMRvSinx8CuPkzcY-IWzCK4DW"
+          },
+          {
+           "value": "mint-word",
+           "label": "Mint word",
+           "line": "One big word at a time slams into its own box, which wipes open just ahead of it; small words sit small, and the key word lands in a mint box.",
+           "still": "/api/board/sign-offs?file=1QqqcuNpas17EsG1P2pGW_r-NX4V3rlh0"
+          }
+         ]
+        },
+        "done": "Picked. It is the captions for this piece."
+       },
+       {
+        "kind": "press",
+        "label": "Add an experiment (optional)",
+        "op": "style",
+        "body": {
+         "piece_id": "575085d4-6dc7-4869-8510-48915663f588",
+         "experiment": [
+          "directed-shoot"
+         ],
+         "item": "off-thu-agentnotsetup"
+        },
+        "stamp": [],
+        "words": {
+         "path": "experiment_idea",
+         "ask": "What do you want to experiment with, and how? Say it in your own words: the idea, what happens to you on camera, and the point it should land.",
+         "required": true
+        },
+        "goes": "Optional. Directed shoot: An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend. The production session fleshes out your idea and shows you mocks before anything is made.",
+        "done": "Saved. The Claude production prompt now carries your idea, and the session brings you mocks to keep or drop."
+       }
+      ],
+      "line": "Late: Thu 12 passed. It stays on its next step until the end of Fri 13 Nov, then it is marked missed. Made: its files are made and filed.",
       "next": {
-       "kind": "press",
-       "label": "It's live",
-       "op": "live",
-       "body": {
-        "day": "thu",
-        "option": "off-thu-agentnotsetup",
-        "title": "POV: your AI agent using your computer without being set up properly by you"
-       },
-       "words": {
-        "path": "url",
-        "ask": "The post's link",
-        "required": true
-       },
-       "choose": {
-        "path": "channels",
-        "ask": "Where did it go out?",
-        "multi": true,
-        "required": true,
-        "from_link": true,
-        "options": [
-         {
-          "value": "shorts",
-          "label": "YouTube Shorts",
-          "hosts": [
-           "youtube.com/shorts"
-          ]
+       "kind": "prompt",
+       "label": "Claude production prompt",
+       "tool": "claude",
+       "prompt": "You are picking up the Thursday 2026-11-12 off-day post off-thu-agentnotsetup (Meme) of the Make Your Mind Up content engine with no prior context: \"POV: your AI agent using your computer without being set up properly by you\". Where it stands: Made: its files are made and filed.\n\nMake it in a Claude session in krishanraja/content-engine on the ve route, with the Codex plugin building its pictures. Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, with the Codex plugin building it, as in the other usual workflows; memes, Notes images and off-day voiceover shorts are made the same way. Read docs/ve/ENGINE.md, then follow docs/ve/RUNBOOK.md. You write the script, the story and the signed spec (creative-direction.json, schema_version 2); Codex builds its devices and plates from cards (ve card, ve dispatch, ve verify-card); ve renders the cut; a separate reviewer watches and listens before it is called ready. The voice comes from where it comes from today. File it in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. Never a scheduled job, a headless model run or a template engine.\n\nMake exactly what Krish approved, nothing else, to the rejection floor; Growth (krishanraja/growth-makeyourmindup) posts it.\n\nKeep the board current as you work (week 2026-11-09 and day thu, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file, who else is on it and his decisions (look, motion, captions, lock, scripts): get_piece_board on the Control Center connector with week 2026-11-09 and day thu. Before asking Krish for any press or decision, read it from get_piece_board's decisions; if it is already made, take the next step. Never ask him to repeat a press he has made. The connector works everywhere; the script needs the engine's own address, which a cloud session's network may not allow. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py day:2026-11-09/thu show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with week 2026-11-09 and day thu, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py day:2026-11-09/thu start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py day:2026-11-09/thu add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py day:2026-11-09/thu read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py day:2026-11-09/thu add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\n6. Close the loop as you go, not only at the end: every file you make is on the piece the moment it exists; anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; a finished post asset goes in that post's own folder); work in the repository is committed and pushed by its own rules, with its closeout note (AGENTS.md, \"Commit and closeout\"). Before you stop, report done (or blocked) with one line saying what changed and where each thing now is, and end your last message with the one next step and who takes it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+       "notes": {
+        "ask": "Your notes for Claude: what to change, or what you think the next step is",
+        "heading": "Krish's notes, in his own words (typed on the board just now). They come first: do what they ask before anything else.",
+        "save": {
+         "kind": "press",
+         "label": "Your notes for Claude",
+         "collection": "comments",
+         "id": "desk-thu-post-{t}",
+         "revision": 0,
+         "body": {
+          "thread_id": "{id}",
+          "anchor": "desk:thu:post",
+          "use": "claude_notes",
+          "title": "POV: your AI agent using your computer without being set up properly by you",
+          "item": "off-thu-agentnotsetup"
          },
-         {
-          "value": "tiktok",
-          "label": "TikTok",
-          "hosts": [
-           "tiktok.com"
-          ]
+         "words": {
+          "path": "text",
+          "ask": "Your notes for Claude",
+          "required": true
          },
-         {
-          "value": "reels",
-          "label": "Instagram Reels",
-          "hosts": [
-           "instagram.com/reel"
-          ]
-         },
-         {
-          "value": "instagram",
-          "label": "Instagram",
-          "hosts": [
-           "instagram.com/p"
-          ]
-         },
-         {
-          "value": "linkedin",
-          "label": "LinkedIn",
-          "hosts": [
-           "linkedin.com"
-          ]
-         },
-         {
-          "value": "x",
-          "label": "X",
-          "hosts": [
-           "x.com",
-           "twitter.com"
-          ]
-         },
-         {
-          "value": "threads",
-          "label": "Threads",
-          "hosts": [
-           "threads.net",
-           "threads.com"
-          ]
-         },
-         {
-          "value": "facebook",
-          "label": "Facebook",
-          "hosts": [
-           "facebook.com",
-           "fb.watch"
-          ]
-         },
-         {
-          "value": "substack-notes",
-          "label": "Substack Notes",
-          "hosts": [
-           "substack.com/note",
-           "substack.com/@"
-          ]
-         }
-        ]
-       },
-       "stamp": [
-        "at"
-       ],
-       "done": "Recorded as live. The day is done, and Growth learns from the post."
+         "stamp": [
+          "at"
+         ],
+         "done": "Saved on the board, and in the prompt."
+        },
+        "saved": []
+       }
       },
       "decision": false
      }
     ],
     "decisions": 0,
     "ideas": 0,
-    "line": "Missed: Thu 12 passed and not everything on it is marked live."
+    "line": "Late: Thu 12 passed and not everything on it is marked live. It stays open one more day."
    },
    {
     "day": "fri",

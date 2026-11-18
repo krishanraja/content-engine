@@ -25,7 +25,7 @@ import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type L
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
 import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
 import { carriedItems, channelWord, dayLabel, dayOptions, liveOn, readItems, readItemsIn, type GrowthPost, type OffdayItem } from './_offdayItems.js'
-import { ideaStage, postedStage, truthProblems } from './_stage.js'
+import { ideaStage, lateLine, lateOn, postedStage, truthProblems } from './_stage.js'
 import { modelProblems, offdayHead, offdayKind, recentOutOf, weekModel, type ModelInputs, type WeekModel } from './_weekModel.js'
 import { makeRoute } from './_makeRoute.js'
 import { PLAN_ROLE, parsePlan, type ProductionPlan } from './_productionPlan.js'
@@ -930,6 +930,8 @@ export function buildView(i: ViewInputs): WeekView {
   }
   for (const d of days) {
     if (d.date >= today || d.who === 'done') continue
+    // The day after its own, a day not out is Late: its next step stays open (Ruling, Krish, 2026-11-18; _stage.ts).
+    if (lateOn(d.date, today)) { d.next = `${lateLine(d.label, today)} ${d.next}`; continue }
     const was = d.next
     d.who = 'missed'
     d.next = `Missed: ${d.label} has passed and nothing on it is marked live. If it went out, press It's live with its link`

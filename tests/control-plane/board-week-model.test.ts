@@ -171,8 +171,12 @@ describe('the week model (contract 1.12.0)', () => {
   it('Thu 12: the explainer and the meme video he approved, and the idea he never answered off the day and, its day gone, off the ideas board', () => {
     const thu = dayOf(v, 'thu')
     expect(thu.items.map(i => [i.key, i.kind_label])).toEqual([['off-thu-gitbroke', 'Explainer'], ['off-thu-agentnotsetup', 'Meme']])
-    expect(thu.items.every(i => i.missed && i.path.map(s => s.key).join() === POST_PATH.map(s => s.key).join())).toBe(true)
-    expect(thu.items[0].next).toMatchObject({ kind: 'press', op: 'live' })
+    // Fri 13 is the day after Thu 12: Late on their own next step, not Missed (Ruling, Krish, 2026-11-18).
+    expect(thu.items.every(i => !i.missed && /^Late: Thu 12 passed\./.test(i.line) && i.path.map(s => s.key).join() === POST_PATH.map(s => s.key).join())).toBe(true)
+    expect(thu.line).toMatch(/^Late: Thu 12 passed/)
+    const sat = dayOf(buildView({ ...thisWeek(), now: new Date('2026-11-14T12:00:00Z') }), 'thu')
+    expect(sat.items.every(i => i.missed)).toBe(true)
+    expect(sat.items[0].next).toMatchObject({ kind: 'press', op: 'live' })
     expect(thu.ideas).toBe(0)
     expect(v.model!.ideas.find(i => i.doc_id === 'off-thu-otherside')).toBeUndefined()
     // The day before, it waited on him on the ideas board, with its kind.
