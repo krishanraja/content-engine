@@ -1,3 +1,0 @@
-Status: directed-shoot now has zero creative limits, on Krish's ruling: space, turning into a famous person at random, shrinking, clones, the world swapped around him. A new reference, wild.md, gives each transformation a trigger, body and ground for the shoot, and adds four formats (wild, escalation, interruption, two-of-me). What stays is limited to spend, real people (change shown on camera, no factual claims put in their mouth, no cloned voice, a platform AI disclosure at upload), no sexual or defamatory content, real evidence, and no face drift outside the script.
-Next: Krish picks the first experiment's point and format; write its shot script.
-North Star check (2026-11-18): holds.
