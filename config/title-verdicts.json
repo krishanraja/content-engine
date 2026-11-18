@@ -92,6 +92,24 @@
  ],
  "verdicts": [
   {
+   "title": "71% of HR chiefs want AI to be over ruled by their human staff at work",
+   "surface": "title",
+   "verdict": "picked",
+   "why": "his own title for the post",
+   "krish": "Krish, 2026-11-18: I think the title should be \"71% of HR chiefs want AI to be over ruled by their human staff at work\"",
+   "on": "2026-11-18",
+   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16"
+  },
+  {
+   "title": "HR chiefs want humans overruling AI at work",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "his full line is the video title; the cover carries its 7-word cut",
+   "krish": "Krish, 2026-11-18: chose 'Video title, short cover' for his line \"71% of HR chiefs want AI to be over ruled by their human staff at work\"",
+   "on": "2026-11-18",
+   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16"
+  },
+  {
    "title": "71% of HR chiefs want you overruling AI",
    "surface": "tall_cover",
    "verdict": "rejected",

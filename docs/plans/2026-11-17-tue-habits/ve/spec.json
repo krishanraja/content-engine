@@ -909,7 +909,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "capture/b22-screen.mp4",
-   "sha256": "5c8a52d60978be0ad1423ad089103d310e319607cd186a0d6b04ca834a09f1ce",
+   "sha256": "b0ccd27842aa2fdc592bcff4e7553d1bfc6c62d17087f1b70883b1b22b27bf9a",
    "licence": "built by Codex from a code-made email draft and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1efa5-ff4d-7cf2-bc11-eca9de2b3be3",
@@ -1699,15 +1699,9 @@
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 246,
-       "obj": "plate-b22",
-       "verb": "move",
-       "to_state": "send",
-       "silent": true
       }
-     ]
+     ],
+     "override_reason": "the screen recording walks a highlight down the lines and rests the cursor on Send on its own clock; each line is its event"
     },
     {
      "id": "b23",
