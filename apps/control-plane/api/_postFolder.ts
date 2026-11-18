@@ -1,4 +1,5 @@
-import { boundPostFolder, currentFolder, mergeMaking, type Making } from './_making.js'
+import { boundPostFolder, currentFolder, mergeMaking, redatedFolder, type Making } from './_making.js'
+import { POSTS_FOLDER_ID } from './board/_drivePosts.js'
 export { currentFolder, redatedFolder } from './_making.js'
 import { LIBRARY_BUCKET, LIBRARY_DEFAULT, LIBRARY_OFF_DAY, LIBRARY_PART_MAX, LIBRARY_PATH_MAX, LIBRARY_SUBCHANNELS, RESERVED, checkLibraryPath, libraryObjectKey } from './library/_library.js'
 
@@ -122,7 +123,7 @@ export interface FolderDb {
 /** The piece's post folder, bound now when nothing bound it yet: the same compare-and-set on the row's updated_at as
  *  every meta write (_pieceStore.ts patchMeta), so two drops at once bind one folder, and a pack that bound one first
  *  wins. Throws PostFolderError when the piece has no day yet, or the row could not be written. */
-export async function bindPostFolder(db: FolderDb, pieceId: string, by: string, tries = 6): Promise<{ folder: string; bound: 'already' | 'now' | 'redated' }> {
+export async function bindPostFolder(db: FolderDb, pieceId: string, by: string, drive: DriveOpener = postsDrive, tries = 6): Promise<{ folder: string; bound: 'already' | 'now' | 'followed' }> {
   for (let i = 0; i < tries; i++) {
     const read = await db.from('content_ideas').select('id,idea,scheduled_for,lane_slot,meta,updated_at').eq('id', pieceId).maybeSingle()
     if (read.error) throw new PostFolderError('the piece could not be read')
@@ -130,22 +131,158 @@ export async function bindPostFolder(db: FolderDb, pieceId: string, by: string, 
     const meta: Body = isObj(read.data.meta) ? read.data.meta : {}
     const making = (isObj(meta.making) ? meta.making : null) as Making | null
     const held = boundPostFolder(making)
-    const now = currentFolder(making, read.data.scheduled_for)
-    // Bound and on its day: nothing is written.
-    if (held && now === held) return { folder: held, bound: 'already' }
-    const folder = now ?? folderForPiece(read.data)
+    if (held) {
+      // Bound and on its day: nothing is written. Bound and the piece has moved: its folder follows it first (the
+      // folder in Drive renamed by its ID, then the binding), or the file waits; never a second folder.
+      if (!movedFrom(held, read.data.scheduled_for)) return { folder: held, bound: 'already' }
+      const f = await followBinding(db, drive, pieceId, by)
+      if (f.state === 'held' || !f.folder) throw new PostFolderError(f.why ?? 'the piece moved and its folder could not follow it yet')
+      return { folder: f.folder, bound: 'followed' }
+    }
+    const folder = folderForPiece(read.data)
     const at = new Date().toISOString()
-    // A first binding, or the bound folder re-dated after a move (written over the old name: the folder was renamed).
-    const next = held
-      ? { ...mergeMaking(making, {}, by, at), post_folder: { folder, bound_at: at, by } }
-      : mergeMaking(making, { post_folder: { folder, bound_at: at, by } }, by, at)
+    const next = mergeMaking(making, { post_folder: { folder, bound_at: at, by } }, by, at)
     const write = await db.from('content_ideas').update({ meta: { ...meta, making: next }, updated_at: at })
       .eq('id', pieceId).eq('updated_at', read.data.updated_at).select('id')
     if (write.error) throw new PostFolderError('the piece could not be written')
-    if (write.data?.length) return { folder, bound: held ? 'redated' : 'now' }
+    if (write.data?.length) return { folder, bound: 'now' }
     await new Promise(r => setTimeout(r, 40 + Math.random() * 120 * (i + 1)))
   }
   throw new PostFolderError('the piece is busy; drop it again')
+}
+
+/** The bound folder's date is not the piece's day: the piece moved after its folder was bound. */
+export function movedFrom(folder: string, scheduledFor: unknown): boolean {
+  const date = typeof scheduledFor === 'string' ? scheduledFor.slice(0, 10) : ''
+  return /^\d{4}-\d{2}-\d{2}$/.test(date) && /^\d{4}-\d{2}-\d{2} /.test(folder) && !folder.startsWith(date)
+}
+
+// ── A moved piece's folder follows it ────────────────────────────────────────────────────────────────────────────────
+//
+// Krish, 2026-11-18, of a series piece moved after its folder exists: "close the gap". Move to... renames an off-day
+// post's folder in Drive (board/_offdayItems.ts followDrive); nothing renamed a series piece's. Now every piece's does,
+// before anything is filed into it: the folder in 3 Posts with the bound name is renamed, by its ID, to the piece's new
+// date and day (the same rename), any file still waiting for the library sync moves to the new path, and then the
+// binding takes the new name. Run by the next writer (a drop, build.py, ve file, produce_day.py, through the making
+// route) and by the research library's hourly sweep for a move nothing files after. It renames only a folder directly
+// in 3 Posts with exactly the bound name; it never deletes, moves or merges anything, and when it cannot see Drive, or
+// both names already exist, it holds and says why, so nothing is filed until it is put right.
+
+/** Drive as the owner of his Drive, for the one thing following a moved piece needs. */
+export interface PostsDrive {
+  /** The folder with exactly this name directly in 3 Posts (not binned), or null. Throws when Drive cannot be read. */
+  find(name: string): Promise<{ id: string; name: string } | null>
+  /** Renames that one folder by its ID. Throws when Drive refuses. */
+  rename(id: string, name: string): Promise<void>
+}
+export type DriveOpener = () => Promise<PostsDrive | null>
+
+/** 3 Posts over Drive's API with the owner's `drive` token (the token Move to... renames with). */
+export function googlePostsDrive(token: string, f: typeof fetch = fetch): PostsDrive {
+  const base = 'https://www.googleapis.com/drive/v3/files'
+  const headers = { Authorization: `Bearer ${token}` }
+  return {
+    async find(name) {
+      const q = `'${POSTS_FOLDER_ID}' in parents and name = '${name.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
+      const r = await f(`${base}?q=${encodeURIComponent(q)}&fields=files(id,name)&supportsAllDrives=true&includeItemsFromAllDrives=true&pageSize=10`, { headers })
+      if (!r.ok) throw new Error(`drive_${r.status}`)
+      const j = await r.json() as { files?: Array<{ id?: string; name?: string }> }
+      const hit = (j.files ?? []).filter(x => typeof x.id === 'string' && x.name === name)
+      if (hit.length > 1) throw new Error('two_folders_with_one_name')
+      return hit[0] ? { id: String(hit[0].id), name } : null
+    },
+    async rename(id, name) {
+      const r = await f(`${base}/${encodeURIComponent(id)}?supportsAllDrives=true&fields=id,name`, { method: 'PATCH', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) })
+      if (!r.ok) throw new Error(`drive_rename_${r.status}`)
+    },
+  }
+}
+
+/** The owner's Drive, or null when the engine cannot sign in to Google. */
+export async function postsDrive(): Promise<PostsDrive | null> {
+  const { googleAccessToken } = await import('./_google.js')
+  const token = await googleAccessToken(['https://www.googleapis.com/auth/drive'], { subject: process.env.GOOGLE_DRIVE_OWNER || 'krish@mindmake.co' }).catch(() => null)
+  return token ? googlePostsDrive(token) : null
+}
+
+export type FollowState = 'unbound' | 'current' | 'renamed' | 'already_renamed' | 'nothing_in_drive' | 'held'
+
+/** A moved piece's folder follows it (the section above says how). Idempotent: run again after a stop part way, it
+ *  finds the folder already renamed and finishes the rest. */
+export async function followBinding(db: FolderDb, open: DriveOpener, pieceId: string, by: string, tries = 6): Promise<{ folder: string | null; state: FollowState; why?: string; moved_files?: number }> {
+  const read = await db.from('content_ideas').select('id,scheduled_for,meta,updated_at').eq('id', pieceId).maybeSingle()
+  if (read.error) return { folder: null, state: 'held', why: 'the piece could not be read' }
+  if (!read.data) return { folder: null, state: 'held', why: 'piece_not_found' }
+  const making = (isObj(read.data.meta) && isObj(read.data.meta.making) ? read.data.meta.making : null) as Making | null
+  const bound = boundPostFolder(making)
+  if (!bound) return { folder: null, state: 'unbound' }
+  if (!movedFrom(bound, read.data.scheduled_for)) return { folder: bound, state: 'current' }
+  const target = redatedFolder(bound, String(read.data.scheduled_for).slice(0, 10))
+  const held = (why: string) => ({ folder: bound, state: 'held' as const, why })
+  if (!target || !libraryFolderOk(target)) return held(`the piece moved to ${read.data.scheduled_for}, and its folder's new name is one the library refuses`)
+  // 1. The folder in Drive.
+  const drive = await open().catch(() => null)
+  if (!drive) return held(`the piece moved to ${read.data.scheduled_for}; its folder in Drive could not be reached to follow it, so nothing is filed until it can`)
+  let state: FollowState
+  try {
+    const [old, now] = await Promise.all([drive.find(bound), drive.find(target)])
+    if (old && now) return held(`the piece moved to ${read.data.scheduled_for} and both "${bound}" and "${target}" are in 3 Posts: tell Krish, never a merge by the engine`)
+    if (old) {
+      await drive.rename(old.id, target)
+      const back = await drive.find(target)
+      if (!back || back.id !== old.id) return held(`the folder "${bound}" was renamed but did not read back as "${target}"`)
+      state = 'renamed'
+    } else state = now ? 'already_renamed' : 'nothing_in_drive'
+  } catch (e) {
+    return held(`the piece moved to ${read.data.scheduled_for}; Drive could not be read to follow its folder (${e instanceof Error ? e.message : 'error'})`)
+  }
+  // 2. Files still waiting for the library sync go to the new path; a file already written is history and stays.
+  let moved = 0
+  const prefix = `3 Posts/${bound}/`
+  const rows = await db.from('content_library_files').select('id,path,written').eq('library', LIBRARY_DEFAULT).like('path', `${prefix.replace(/[\\%_]/g, c => `\\${c}`)}%`)
+  if (rows.error) return held('the folder was renamed in Drive, but the library index could not be read; the next run finishes it')
+  for (const r of (Array.isArray(rows.data) ? rows.data : []) as Array<{ id: string; path: string; written: unknown }>) {
+    if (!r.path.startsWith(prefix) || (isObj(r.written) && Object.keys(r.written).length > 0)) continue
+    const up = await db.from('content_library_files').update({ path: `3 Posts/${target}/${r.path.slice(prefix.length)}` }).eq('id', r.id)
+    if (!up.error) moved++
+  }
+  // 3. The binding takes the new name.
+  for (let i = 0; i < tries; i++) {
+    const again = i === 0 ? read : await db.from('content_ideas').select('id,scheduled_for,meta,updated_at').eq('id', pieceId).maybeSingle()
+    if (again.error || !again.data) return held('the folder was renamed in Drive, but the piece could not be read again; the next run finishes it')
+    const meta: Body = isObj(again.data.meta) ? again.data.meta : {}
+    const m = (isObj(meta.making) ? meta.making : null) as Making | null
+    if (boundPostFolder(m) === target) return { folder: target, state, moved_files: moved }
+    const at = new Date().toISOString()
+    const next = { ...mergeMaking(m, {}, by, at), post_folder: { folder: target, bound_at: at, by } }
+    const write = await db.from('content_ideas').update({ meta: { ...meta, making: next }, updated_at: at })
+      .eq('id', pieceId).eq('updated_at', again.data.updated_at).select('id')
+    if (write.error) return held('the folder was renamed in Drive, but the piece could not be written; the next run finishes it')
+    if (write.data?.length) return { folder: target, state, moved_files: moved }
+    await new Promise(r => setTimeout(r, 40 + Math.random() * 120 * (i + 1)))
+  }
+  return held('the folder was renamed in Drive, but the piece is busy; the next run finishes it')
+}
+
+/** The research library's hourly sweep (research-library/sweep.ts) follows every moved piece nothing filed after:
+ *  the pieces of the last 30 days and the next 60 whose bound folder's date is not their day, at most `max` a run. */
+export async function followMovedPieces(db: FolderDb, open: DriveOpener = postsDrive, now = new Date(), max = 10): Promise<{ followed: number; held: Array<{ piece: string; why: string }> }> {
+  const from = new Date(now.getTime() - 30 * 86_400_000).toISOString().slice(0, 10)
+  const to = new Date(now.getTime() + 60 * 86_400_000).toISOString().slice(0, 10)
+  const r = await db.from('content_ideas').select('id,scheduled_for,meta').gte('scheduled_for', from).lte('scheduled_for', to)
+  if (r.error || !Array.isArray(r.data)) return { followed: 0, held: [{ piece: '*', why: 'the pieces could not be read' }] }
+  const moved = (r.data as Body[]).filter(p => {
+    const b = boundPostFolder(isObj(p.meta) && isObj(p.meta.making) ? p.meta.making as Making : null)
+    return b && movedFrom(b, p.scheduled_for)
+  }).slice(0, max)
+  let followed = 0
+  const held: Array<{ piece: string; why: string }> = []
+  for (const p of moved) {
+    const f = await followBinding(db, open, String(p.id), 'post folder sweep')
+    if (f.state === 'held') held.push({ piece: String(p.id), why: f.why ?? 'held' })
+    else followed++
+  }
+  return { followed, held }
 }
 
 /** The beat ids a file is for, as he tagged it: "s8", "l9". At most eight, each a plan beat id. */

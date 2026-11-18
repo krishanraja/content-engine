@@ -7,7 +7,7 @@ import { askChecksForPiece } from '../../_controlCenter.js'
 import { MediaQualityError, qualifyMedia, readMediaRef } from '../../_mediaQuality.js'
 
 import { verifiedMaking } from '../../_verifiedMaking.js'
-import { currentFolder, libraryFolderOk } from '../../_postFolder.js'
+import { followBinding, libraryFolderOk, movedFrom, postsDrive } from '../../_postFolder.js'
 import { markPublished } from '../../inspiration/_cards.js'
 import { recordIncident } from '../../_incidents.js'
 import { cutVerdicts } from '../../board/_cuts.js'
@@ -81,17 +81,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const ideaId = Array.isArray(raw) ? raw[0] : raw
   if (!ideaId) return res.status(400).json({ ok: false, error: 'id required' })
 
-  const { data: row, error } = await supabase.from('content_ideas').select('id, idea, body, state, lane_slot, scheduled_for, meta, buried_at, updated_at').eq('id', ideaId).maybeSingle()
+  const readRow = () => supabase.from('content_ideas').select('id, idea, body, state, lane_slot, scheduled_for, meta, buried_at, updated_at').eq('id', ideaId).maybeSingle()
+  let { data: row, error } = await readRow()
   if (error) return res.status(500).json({ ok: false, error: error.message })
   if (!row) return res.status(404).json({ ok: false, error: 'idea not found' })
+  // A piece that moved after its folder was bound: the folder follows it first (_postFolder.ts followBinding: renamed in
+  // Drive by its ID, waiting files moved, then the binding), so every writer reading or binding here gets the folder as
+  // it is in Drive. When it cannot follow yet, the answer says so and a writer files nothing (post_folder_held).
+  let folderHeld: string | null = null
+  {
+    const m = ((row as any).meta?.making ?? null) as Making | null
+    const b = boundPostFolder(m)
+    if (b && movedFrom(b, (row as any).scheduled_for)) {
+      const who0 = typeof (req.body as any)?.by === 'string' && (req.body as any).by.trim() ? String((req.body as any).by).trim().slice(0, 60) : operatorBearerAllowed(req) ? 'Claude Code' : 'Krish'
+      const f = await followBinding(supabase as never, postsDrive, ideaId, who0)
+      if (f.state === 'held') folderHeld = f.why ?? 'the piece moved and its folder could not follow it yet'
+      else {
+        const again = await readRow()
+        if (again.error || !again.data) return res.status(500).json({ ok: false, error: again.error?.message ?? 'idea not found' })
+        row = again.data
+      }
+    }
+  }
   const meta = ((row as any).meta && typeof (row as any).meta === 'object' ? (row as any).meta : {}) as Record<string, unknown>
   const prev = (meta.making || null) as Making | null
 
   if (req.method === 'GET') {
     const current = await verifiedMaking(supabase, ideaId, prev)
     return res.status(200).json({ ok: true, idea_id: ideaId, state: (row as any).state, lane_slot: (row as any).lane_slot ?? null, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps({ ...row, meta: { ...meta, making: current } } as any),
-      // The folder in 3 Posts the piece is bound to now (its date put right after a move), or null: every writer files there.
-      post_folder: currentFolder(current, (row as any).scheduled_for),
+      // The folder in 3 Posts the piece is bound to now (followed to its day after a move), or null: every writer files
+      // there. Held: the piece moved and its folder could not follow it yet, so a writer files nothing.
+      post_folder: folderHeld ? null : boundPostFolder(current),
+      ...(folderHeld ? { post_folder_held: folderHeld } : {}),
       // An off-day piece he records: the option he approved and its exact words, which recording_match.py hears takes against.
       ...(meta.offday && typeof meta.offday === 'object' ? { offday: meta.offday } : {}),
       // His Yes or Not this on each rendered cut (board/_cuts.ts), oldest first: making.py show prints them for the
@@ -107,20 +128,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // A thumbnail verdict or pick is kept only on the set it names, with that set's exact files (_thumbOptions.ts).
   const unbound = thumbnailOptionsProblems(prev?.thumbnail_options, patch.thumbnail_options)
   if (unbound.length) return res.status(409).json({ ok: false, error: 'thumbnail_options_unbound', problems: unbound })
-  // One piece, one post folder (_making.ts boundPostFolder, _postFolder.ts currentFolder): the binding as it stands now,
+  // One piece, one post folder (_making.ts boundPostFolder; a moved piece followed above): the binding as it stands now,
   // its date put right after a move; a pack under any other folder is refused, never a second folder.
   if (patch.post_folder && !libraryFolderOk(patch.post_folder.folder)) {
     return res.status(400).json({ ok: false, error: 'bad_patch', problems: [`the library refuses the post folder "${patch.post_folder.folder}" (a real date and its day, a live series or off.day, and no test or canary title)`] })
   }
+  // A writer about to file or pack waits while the folder cannot follow a move, never filing under the old date.
+  if (folderHeld && (patch.post_folder || patch.pack)) return res.status(409).json({ ok: false, error: 'post_folder_held', problems: [folderHeld] })
   const bound = boundPostFolder(prev)
-  const folderNow = currentFolder(prev, (row as any).scheduled_for)
-  const prevNow: Making | null = prev && folderNow && folderNow !== bound
-    ? { ...prev, post_folder: { folder: folderNow, bound_at: now, by: typeof body.by === 'string' && body.by.trim() ? body.by.trim().slice(0, 60) : 'Claude Code' } } : prev
-  const spread = postFolderProblems(prevNow, patch)
-  if (spread.length) return res.status(409).json({ ok: false, error: 'post_folder_bound', folder: boundPostFolder(prevNow), problems: spread })
-  // Bind or read, on a piece already bound and on its day: nothing to write, and the answer names the folder.
-  if (Object.keys(patch).length === 1 && patch.post_folder && folderNow && folderNow === bound) {
-    return res.status(200).json({ ok: true, idea_id: ideaId, unchanged: true, making: prev, post_folder: folderNow })
+  const spread = postFolderProblems(prev, patch)
+  if (spread.length) return res.status(409).json({ ok: false, error: 'post_folder_bound', folder: bound, problems: spread })
+  // Bind or read, on a piece already bound: nothing to write, and the answer names the folder.
+  if (Object.keys(patch).length === 1 && patch.post_folder && bound) {
+    return res.status(200).json({ ok: true, idea_id: ideaId, unchanged: true, making: prev, post_folder: bound })
   }
 
   try {
@@ -135,7 +155,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (e) { return res.status(e instanceof MediaQualityError ? 409 : 503).json({ ok: false, error: 'media_unqualified', problems: [e instanceof MediaQualityError ? e.message : 'review verification unavailable'] }) }
 
   const who = typeof body.by === 'string' && body.by.trim() ? body.by.trim().slice(0, 60) : operatorBearerAllowed(req) ? 'Claude Code' : 'Krish'
-  const next = mergeMaking(prevNow, patch, who, now)
+  const next = mergeMaking(prev, patch, who, now)
   const { data: written, error: upErr } = await supabase
     .from('content_ideas')
     .update({ meta: { ...meta, making: next }, updated_at: now })
@@ -159,5 +179,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const posted = Object.values(patch.channels || {}).some(Boolean)
   const usesProblem = posted ? await markPublished(supabase, ideaId, now) : null
   return res.status(200).json({ ok: true, idea_id: ideaId, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps(after), closed: [], looked: look.keys,
-    post_folder: currentFolder(next, (row as any).scheduled_for), ...(usesProblem ? { card_uses_problem: usesProblem } : {}) })
+    post_folder: boundPostFolder(next), ...(usesProblem ? { card_uses_problem: usesProblem } : {}) })
 }
