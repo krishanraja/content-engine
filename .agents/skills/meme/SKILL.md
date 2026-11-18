@@ -22,8 +22,8 @@ meme rules in `docs/CAROUSEL-STANDARD.md`); it grows as he judges finished memes
    caption band in the palette (`config/brand-palette.json`); never a system font or a meme-generator outline.
    Receipt check `caption_band`.
    Never first person: always "When you realize..." or "POV: you realize..." (Krish, 18 Nov).
-3. The wordmark small and right-aligned at the bottom of the frame, on the house ground, never over the clip or in the
-   band (Krish, 18 Nov: "the wordmark always goes right aligned at the bottom on memes"), and a credit line naming the original. Receipt check
+3. The wordmark small, just under the clip and right-aligned to the video's right edge, on the house ground, never
+   over the clip or in the band (Krish, 18 Nov: "right aligned to the video"), and a credit line naming the original. Receipt check
    `credit_line`.
 4. Two shapes laid out separately: 9:16 (`meme_tall`, centred: `python3 scripts/layout_centre.py FILE`) and 4:5.
 5. The clip's own sound, no music bed (Krish, 17 Nov: "Video memes keep their original sound"), loudness at the house
