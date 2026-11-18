@@ -303,8 +303,14 @@ the production suite knows that this is the moment to make it feel like the titl
   is recorded (`packages/contracts/src/production-spec.ts`). `ve lint` (`title.moment`) refuses a series piece
   publishing from 16 Nov 2026 without it, a line that does not carry the title, and a span past the first three beats.
 - The renderer shows the title as its own animated title over that span and the captions step aside for those words,
-  so the words appear once (the words_add amendment, 15 Nov). Not built yet: the renderer does not read
-  `title_moment` today, so until it does the session lays the title over that span by hand and keeps captions off it.
+  so the words appear once (the words_add amendment, 15 Nov). Built 18 Nov 2026 (Krish, Tue 17: "should be seamlessly
+  made the title with epic hero title treatment as I am saying that line"): compile turns `spans.<cut>` into
+  `props.titleMoment` (each word on its spoken frame) and leaves those words out of the caption pages; the renderer
+  draws `apps/renderer/src/engine/title/TitleMoment.tsx` (Codex card `ve-tue17-title-moment`): each word lifts out of
+  the caption line into a hero lockup in the panel above his face (the whole frame on a full-screen beat), lands with a
+  settle, a light sweep and a brief glow, and holds until the beat that carries it ends. It flows back into the caption
+  line when it hands straight to them; where the captions already took his next words while it held, it fades where it
+  stands (`release: fade`).
 - The title question itself is the spec's `title_line` (one string, the question his intro speaks; `making.py scripts`
   records the same line as `script_check.title_line`, and `ve lint` `title.line` refuses a `title_line` the script never
   says). The title animation is keyed to `title_line`: it flows out of the captions as he says it and back into them

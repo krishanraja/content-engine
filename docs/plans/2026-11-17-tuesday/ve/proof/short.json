@@ -2,16 +2,16 @@
   "schema": "ve-proof/1",
   "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
   "cut": "short",
-  "beat": "payoff",
+  "beat": "face",
   "rule": "named in the spec (proof.beat)",
-  "start": 66.7,
-  "end": 74.7,
+  "start": 7.567,
+  "end": 15.567,
   "beat_s": [
-    69.533,
-    71.867
+    10.067,
+    13.033
   ],
-  "sha256": "06b0c109afb35731580928881bbec1475ab165209f584e550d596315a6004e24",
-  "spec_sha256": "6f09b37511c8d4a003c0ea6d706d6079c51ed6effa7263f8dc2ed3056acf58c2",
+  "sha256": "0909e65a3e7cc17b0f6c8ab15ee5e9a0d73e70a0716165197f2368438d8a1f57",
+  "spec_sha256": "bef463a4cb9f5b617c676f3de9ccbcdf467edf98c42b109201964bb95159eb0f",
   "structure": {
     "format": "face-with-proof",
     "aspect": "9:16",
@@ -68,10 +68,6 @@
       [
         "small_print",
         "evidence_card"
-      ],
-      [
-        "stat41",
-        "kinetic_stat"
       ]
     ],
     "beats": [
@@ -97,11 +93,15 @@
       ],
       [
         "face",
-        "P6",
+        "P1",
         [
-          "field41",
-          "stat41"
+          "field41"
         ]
+      ],
+      [
+        "title",
+        "P1",
+        []
       ],
       [
         "meta",
@@ -227,7 +227,7 @@
     ]
   },
   "style_module": "eating-jobs-ladder",
-  "props_sha256": "c98bda64f7cc465984f0af266a70129da95c4db3fbffe0b213e6708bcb86b53e",
+  "props_sha256": "bfcbb40b7bd648ec003ea9e4bc74c8d0043064472e4380c25b4a34f327219f11",
   "type": [
     [
       "data",
