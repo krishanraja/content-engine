@@ -895,7 +895,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b13a-accountable.mp4",
-   "sha256": "f786e5e42c1baa24d2156333168d174a8b4975721e418199bb62607311e5c94b",
+   "sha256": "fec80baededd27010eaa3de7430b63faf8a4e5dc63127dea4afd8ee8b4c25d90",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
