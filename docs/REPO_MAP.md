@@ -1543,6 +1543,28 @@ Read-only client for the CTRL shared headlines pool (portfolio hive mind).
 - `function poolConfigured(): boolean`
 - `async function fetchPoolDays(sinceDate: string): Promise<{ days: number; stories: PoolStory[] }>`
 
+### `apps/control-plane/api/_postFolder.ts`
+
+- `const MATERIALS_SECTION`
+- `const MATERIALS_FOLDER`
+- `const GOT_ROLE`
+- `const POST_FOLDER_MAX`
+- `class PostFolderError`
+- `function safeText(text: string): string`
+- `function shorten(subject: string, budget: number): string`
+- `function subchannelName(value: unknown): string`
+- `function postFolderName(p: { date: string; subject: string; subchannel?: string | null; launch?: boolean; day?: string …`
+- `function folderForPiece(row: { scheduled_for?: unknown; lane_slot?: unknown; idea?: unknown; meta?: unknown }): string`
+- `interface FolderDb`
+- `async function bindPostFolder(db: FolderDb, pieceId: string, by: string, now = new Date(), tries = 6): Promise<{ folder…`
+- `const BEAT`
+- `function beatsOf(value: unknown): string[]`
+- `function gotKey(beats: string[], sha256: string): string`
+- `function beatsOfKey(key: unknown): string[] | null`
+- `function driveName(folder: string, original: string, beats: string[], ext: string, copy = 1): string`
+- `async function fileToPostFolder(db: FolderDb, f: { folder: string; name: string; beats: string[]; ext: string; contentT…`
+- `export { LIBRARY_BUCKET }`
+
 ### `apps/control-plane/api/_prices.ts`
 
 The one Anthropic price table.
