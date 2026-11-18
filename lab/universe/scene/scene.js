@@ -252,16 +252,18 @@ let shot = null, zoom = 1, shotRects = null
 function shotBounds(keys) {
   camera.clearViewOffset(); camera.updateProjectionMatrix()
   let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity
+  let xr = -Infinity // the right-hand room's outer wall: where the walk ends
   for (const L of levels.filter((l) => keys.includes(l.key))) {
     const lo = L.y0 - (L.roof ? 0.25 : 0), hi = L.y0 + (L.roof ? 1.55 : L.fh)
     for (const x of [-BW / 2, BW / 2 + 0.95]) for (const y of [lo, hi]) for (const z of [-BD / 2, BD / 2]) {
       const [px, py] = project(new THREE.Vector3(x, y, z)); x0 = Math.min(x0, px); x1 = Math.max(x1, px); y0 = Math.min(y0, py); y1 = Math.max(y1, py)
     }
+    for (const y of [lo, hi]) xr = Math.max(xr, project(new THREE.Vector3(BW / 2 + 0.3, y, BD / 2))[0])
   }
   // Up to three times the master's size: tall enough for the floors to fit between the title and the cards, and no wider.
   const w = Math.min(W, Math.max(W * 0.34, ((y1 - y0) / ((FLOORS_BOTTOM - FLOORS_TOP) / H)) * (W / H))), cy = (y0 + y1) / 2
   // The camera walks the floor from its left room to its right room (and the lift), easing in a little as it goes.
-  return { start: { w: Math.min(W, w * 1.18), cx: x0 + w * 0.56, cy }, end: { w, cx: x1 - w * 0.5, cy }, at: shot.at || (FLOORS_TOP + FLOORS_BOTTOM) / 2 / H }
+  return { start: { w: Math.min(W, w * 1.18), cx: x0 + w * 0.56, cy }, end: { w, cx: Math.min(x1, xr + w * 0.12) - w * 0.5, cy }, at: shot.at || (FLOORS_TOP + FLOORS_BOTTOM) / 2 / H }
 }
 function aimShot(t) {
   const k = smooth(0, 4.7, t - SHOT_T0), r = {}
