@@ -2742,12 +2742,16 @@
         {
           "cause": "standard_missing",
           "evidence": "A still had no bar: it should be shop-window cover art that makes him want to pick the style, from the work he praised (the AI music piece, the Rat Tails piece, his drawn character)."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "The 16 Nov purge searched the board stills, Drive and caches, never the design lock, whose frozen key frames were the same frames, nor the lab pin; it was asked again on 18 Nov where the image was still used."
         }
       ],
       "related": [
         "cut-called-done-unheard"
       ],
-      "surface": "Every copy was burned (Drive bin, local caches). A board still is now the StyleStill cover art from Codex card docs/ve/cards/style-stills/ve-style-still-template-1.md, never a cut of a take; ve lab still and ve lab sample refuse any cut of a take. The lab's own pinned take is still that recording; Krish, 2026-11-17, named the replacement: \"character.ai or ai music are good\" (config/ve/lab.json take, then a lab run on the new take).",
+      "surface": "Every copy was burned (Drive bin, local caches). A board still is now the StyleStill cover art from Codex card docs/ve/cards/style-stills/ve-style-still-template-1.md, never a cut of a take; ve lab still and ve lab sample refuse any cut of a take. The 16 Nov purge missed the design lock: the four key frames of the face-with-proof lock (fixtures/ve/design-lock/face-with-proof/, hash-bound in config/ve/design-lock.json) were the same three frames he rejected, and every face-with-proof cut was matched against them. Krish, 2026-11-17: \"character.ai or ai music are good\"; 2026-11-18, asked where the image was still used: \"DELETE THOSE FRAMES FOREVER. you need to rebuild everywhere it was to be 10X better using those two new references\". 18 Nov: ve lock retire deleted the four frames and returned the format to a draft awaiting a new Gate 2, with their hashes barred from freeze and a test that none is back in the tree; the live split geometry left apps/renderer/src/engine/mocks/face-with-proof.tsx (deleted, with its Thursday mocks and their three Codex cards) for layouts/splitGeometry.ts; the lab refuses to stage the retired take (lab.json retired_takes). Still open: Codex card docs/ve/cards/fwp-rebuild/ve-fwp-rebuild-1.md builds the eight replacement stills from the AI music and Character.AI pieces for his Gate 2, and the lab needs a ve piece on a take from one of those two pieces before it can render again (neither has one: the AI music short was a one-off composite, Character.AI predates ve). This entry closes when both are done.",
       "guards": [
         {
           "file": "scripts/velib/lab.py",
@@ -2758,6 +2762,21 @@
           "file": "tests/ve_lab_test.py",
           "contains": "test_a_sample_of_his_take_is_never_recorded_for_the_board",
           "how": "a sample of his take is refused"
+        },
+        {
+          "file": "scripts/velib/designlock.py",
+          "contains": "def retired_hashes",
+          "how": "ve lock freeze refuses any key frame whose hash was retired on his words"
+        },
+        {
+          "file": "tests/ve_designlock_test.py",
+          "contains": "test_no_retired_frame_is_back_in_the_tree",
+          "how": "no image under fixtures or docs may carry a retired frame's hash"
+        },
+        {
+          "file": "scripts/velib/lab.py",
+          "contains": "def retired_take",
+          "how": "the lab stages nothing from a take listed in lab.json retired_takes"
         }
       ],
       "watch": {

@@ -6111,17 +6111,14 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `function windowCameraBox(aspect: Aspect): Box`
 - `function windowCameraState(beats: readonly EngineBeat[], aspect: Aspect, frame: number): { box: Box; scale: number; win…`
 
-### `apps/renderer/src/engine/mocks/face-with-proof.tsx`
+### `apps/renderer/src/engine/layouts/splitGeometry.ts`
 
-- `interface FWPMockProps`
-- `const FWP_SPLIT_SEAM_Y`
-- `const FWP_MOCK_STAGE_SCALE`
-- `const FWP_SPLIT_CAPTION_ZONE`
-- `const FWP_POSTER_POSITIONS`
-- `const FWP_PLACEMENTS`
-- `const FWP_TARGETS`
-- `const FWP_SCALED_TARGETS`
-- `const FWP_MOCKS`
+The SPLIT layout's geometry, as the renderer and QC both read it: one seam between the graphics stage above and
+
+- `const SPLIT_SEAM_Y`
+- `const SPLIT_STAGE_SCALE`
+- `const SPLIT_CAPTION_ZONE`
+- `const SPLIT_POSTER_POSITIONS`
 
 ### `apps/renderer/src/engine/props.ts`
 

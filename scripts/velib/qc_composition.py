@@ -48,10 +48,10 @@ def _fused(text, allowed) -> bool:
     return reach[-1]
 
 def split_seam() -> int:
-    """FWP_SPLIT_SEAM_Y, read from the mocks file the renderer imports, never copied."""
+    """SPLIT_SEAM_Y, read from the geometry file the renderer imports, never copied."""
     import re  # noqa: PLC0415
-    mocks = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
-    return int(re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', mocks).group(1))
+    geometry = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')
+    return int(re.search(r'export const SPLIT_SEAM_Y = (\d+)', geometry).group(1))
 
 
 def _fragment(text, allowed) -> bool:
