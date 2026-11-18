@@ -495,7 +495,7 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     const outcome = approval ? { id: 'approved' as const, label: approvedLabel(approval), at: approval.decided_at, words: approval.words }
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof (idea as Body | null)?.at === 'string' ? String((idea as Body).at) : null, words: typeof idea?.words === 'string' ? idea.words : null } : null
     const out: ViewOption = { id: s.id, doc_id: docId, title: s.hook || cut(s.copy, 200) || s.id, text: tickNote(o) + cut(pitch || s.copy, 600), format: s.format || null,
-      source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}), post: driveFolderIdOf(o.drive) }
+      source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}), post: driveFolderIdOf(o.drive) ?? placed.row?.drive_folder ?? null }
     if (known) {
       out.item = { key: placed.key, version: placed.version, source: placed.source, state: placed.state, origin_week: placed.origin_week }
       out.move = moveSpec(placed, o, i.week, day, i.now ?? new Date())

@@ -680,7 +680,7 @@ export async function offerGrowth(db: SupabaseClient, week: string, body: unknow
  *  buffer_post_id, drive?}]}. Each entry is merged into the item's record: one made, and per channel its latest
  *  scheduled or live post (a live post is never taken back by a later scheduled one; cancelled takes a scheduled one
  *  off). Live needs the channel and the post's own link. Growth never reports a post it did not post. */
-export async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date()): Promise<MoveResult> {
+export async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date(), drive: DriveRenamer | null = null): Promise<MoveResult> {
   if (!isObj(body) || !Array.isArray(body.posts) || body.posts.length > 200) return { status: 400, body: { ok: false, error: 'invalid_posts' } }
   // A piece's own scheduled posts (a series day's, or an off-day piece's) are kept on its day's boxes (_posted.ts
   // recordScheduled), so the board says when it goes out.
@@ -725,8 +725,18 @@ export async function reportPosts(db: SupabaseClient, week: string, body: unknow
     if (folder && !row.drive_folder) cur.drive = folder
     next.set(row.item, cur)
   }
-  for (const [item, { posts, drive }] of next) {
-    const w = await db.from('offday_items').update({ posts: posts.slice(-40), ...(drive ? { drive_folder: drive } : {}) }).eq('item', item)
+  for (const [item, { row, posts, drive: bound }] of next) {
+    // The post's folder follows its day here too, not only at the press that moves it (Krish, 2026-11-18: the Thu 19 post moved at
+    // 21:25 UTC and Growth bound its folder, dated Tue 17, at 21:31, so nothing ever renamed it): whenever a report touches a placed
+    // item whose folder is bound, the folder's name is put right by its ID (followDrive: never a move or a deletion), and only a
+    // rename or a failure is written down.
+    const folder = bound ?? row.drive_folder
+    let followed: Body | null = null
+    if (drive && folder && row.date && row.state === 'approved') {
+      const result = await followDrive(drive, folder, row.date)
+      if (result === 'renamed' || result === 'failed') followed = { ...row.followed, drive: result, at: now.toISOString() }
+    }
+    const w = await db.from('offday_items').update({ posts: posts.slice(-40), ...(bound ? { drive_folder: bound } : {}), ...(followed ? { followed } : {}) }).eq('item', item)
     if (w.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   }
   return { status: 200, body: { ok: true, items: next.size, unknown, ...(check ? { check, already: kept } : {}), ...(pieces ? { pieces } : {}) } }

@@ -1303,6 +1303,11 @@ prompt, and no session could move it on.
   when its title is contained in exactly one option's title (never a guess between two). This was why Thu 19 "Free ChatGPT has
   ads now", scheduled on Instagram for Fri 20 with its eight cards and caption in `2026-11-17 Tue off.day - ...`, showed no
   files at all (Krish, 2026-11-18). Held by `tests/control-plane/board-week-model.test.ts`.
+- **A post's folder follows its day, even when its folder is bound after the move.** Move to... renames the bound folder to the
+  new date and day (`followDrive`). The Thu 19 post was moved at 21:25 UTC and Growth bound its folder, dated Tue 17, at 21:31, so
+  that rename never ran. `reportPosts` (every Growth or Buffer-sweep report on an item, 15 minutes apart) now also puts the bound
+  folder's name right by its ID whenever it touches a placed item, and records a rename or a failure in the item's `followed`. The
+  board also reads the item's own `drive_folder` as the option's folder when the plan names none. Never a move or a deletion.
 - **Not built yet.** Scheduling from the button itself, with no session: Control Centre's Buffer key can write, but its
   code is held to reads by a ruling and `tests/api/bufferSent.test.ts`, and a bound approval for a post with no manifest
   does not exist yet. Held for Krish's go on both.
