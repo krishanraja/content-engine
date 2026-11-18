@@ -57,6 +57,7 @@ them by hand. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | make or check a cover or thumbnail | `docs/production/COVER-STANDARD.md`; a recorded piece's thumbnails: `.agents/skills/thumbnail-designer/SKILL.md` |
 | read the carousel standard, or make a carousel, meme or Notes image (Growth makes them; each is made in a Claude session with the Codex plugin building it) | `docs/CAROUSEL-STANDARD.md`, "How a carousel is made" |
 | run anything that costs tokens or money | `docs/COST_GUARDS.md` |
+| consult divergent-thinker at will (a piece's angle, an off-day idea, a shoot's wildest version, a familiar title, what published) | `docs/DIVERGENT.md` |
 | refresh the weekly standards check-in | `docs/STANDARDS-CHECKIN.md` |
 | see how failures are recorded and how the weekly loop strengthens the guard on a repeat | `docs/learning/README.md` |
 | see what every capability is for and whether it works | `docs/CAPABILITIES.md` (rendered from `config/capabilities.json`) |

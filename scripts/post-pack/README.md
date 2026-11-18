@@ -264,6 +264,13 @@ flat script and wit that needs outside explanation, `joke` reads each joke optio
 board's `funny` lines, and `doctor` proves the route with no model call. Exit 0 passes, 1 is flagged, 2 is unavailable
 and never a pass. It holds no taste: whether the joke is good stays Krish's.
 
+`divergent.py` asks divergent-thinker (krishanraja/divergent-thinker, through Control Center's
+`POST /api/divergent/content-engine`, on the same key, namespace `content-engine:ideas`) for the ideas board:
+`wildcard` gives sparks for a day's wildcard slot (2 model calls, refused over the $15 chain cap), `score IDEAS.json`
+flags options that repeat what went out (no model call) and `record --live SOURCES.json` records what went live (no
+model call). Exit 0 done, 1 flagged, 2 not served or refused and never a pass. When and how plan-week uses it:
+`.agents/skills/plan-week/references/divergent.md`.
+
 Every piece has two scripts, one per cut, each with its own hook and outro
 (house rule TWO_CUTS, Krish, 2026-10-11): the 5-minute long cut (3 minutes until Krish, 2026-10-19: "let's make the
 3-minute scripts into 5-minute scripts and videos"), 675 to 825
