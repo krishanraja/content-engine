@@ -75,6 +75,28 @@ def decided_words(group, db_group):
     return group.get('never_beneath')
 
 
+def prune(floor, groups):
+    """Take out of the grouping every standard the floor no longer holds, in place, and return them as
+    {id: where}. The Rejections engine retires a standard when a newer one supersedes it: on 18 Nov the floor dropped
+    61 operating holds, the grouping still named them, and the check-in stopped with "not a standard on the floor".
+    A retired standard's successor is on the floor as a new id, so it is grouped as new below; a group is never
+    emptied silently (the check still refuses a group with no members)."""
+    ids = set(floor.get('standards') or {})
+    retired = {}
+    for g in groups.get('groups') or []:
+        gone = [m for m in g.get('members') or [] if m not in ids]
+        for m in gone:
+            retired[m] = g.get('key', '')
+        g['members'] = [m for m in g.get('members') or [] if m in ids]
+    op = groups.get('operating') or {}
+    gone = [m for m in op.get('members') or [] if m not in ids]
+    for m in gone:
+        retired[m] = 'operating'
+    if op:
+        op['members'] = [m for m in op.get('members') or [] if m in ids]
+    return dict(sorted(retired.items()))
+
+
 def propose(floor, groups, db_groups, week_of):
     """Every standard the grouping does not place, proposed into a group. Returns (new_groups, evolutions_of):
     new_groups are floor-groups.json entries (an evolution carries 'evolves'); evolutions_of maps a new key to its
@@ -276,6 +298,7 @@ def apply_decisions():
 def build(week_of, apply):
     floor = floor_group.load(floor_group.FLOOR)
     groups = floor_group.load(floor_group.GROUPS)
+    retired = prune(floor, groups)
     last = sql('select max(built_at) as at from public.standards_checkins')
     since = (last[0]['at'] if last and last[0].get('at') else
              (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=7)).isoformat())
@@ -327,8 +350,10 @@ def build(week_of, apply):
                           'stills': sum(len(w['stills']) for i in items for w in i['why'])},
                'applied': applied, 'items': items}
 
+    payload['counts']['retired_from_grouping'] = len(retired)
+    payload['retired'] = retired
     if apply:
-        if new_groups:
+        if new_groups or retired:
             groups['groups'] = (groups.get('groups') or []) + new_groups
             problems = floor_group.check(floor, groups)
             if problems:
@@ -360,6 +385,10 @@ def self_test():
     ok = keys == ['covers_e261122', 'new_pace_261122'] and evolves == {'covers_e261122': 'covers'}
     ok = ok and new[0]['never_beneath'] == 'His amended words.' and new[0]['members'] == ['s0000000003']
     ok = ok and floor_group.check(floor, {'groups': groups['groups'] + new, 'operating': groups['operating']}) == []
+    stale = {'groups': [{'key': 'covers', 'members': ['s0000000001', 's00000000ff']}],
+             'operating': {'title': 'Ops', 'members': ['s00000000fe', 's0000000004']}}
+    ok = ok and prune(floor, stale) == {'s00000000fe': 'operating', 's00000000ff': 'covers'}
+    ok = ok and stale['groups'][0]['members'] == ['s0000000001'] and stale['operating']['members'] == ['s0000000004']
     undecided, _ = propose(floor, groups, {'covers': {'status': 'proposed'}}, '2026-11-22')
     ok = ok and [g['key'] for g in undecided] == ['new_cover_261122', 'new_pace_261122'] and undecided[0]['near'] == 'covers'
     ok = ok and apply_choice({'item_key': 'group:x', 'choice': 'approve', 'decided_by': 'Krish'},
