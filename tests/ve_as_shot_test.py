@@ -95,8 +95,9 @@ class AsShotTest(unittest.TestCase):
     def test_a_crop_is_read_the_way_the_renderer_places_it(self):
         def rows(crop):
             return [round(v, 1) for v in qc_as_shot.shown_rows({'layout': 'SPLIT', 'plate': {'crop': crop}}, 1080, 1920)]
-        self.assertEqual(rows('nonsense here'), rows('50% 88%'), 'a crop splitPlatePosition refuses falls back as it does')
-        self.assertEqual(rows(None), rows('50% 88%'))
+        self.assertEqual(rows('nonsense here'), rows(qc_as_shot.DEFAULT_CROP), 'a crop splitPlatePosition refuses falls back as it does')
+        self.assertEqual(rows(None), rows(qc_as_shot.DEFAULT_CROP))
+        self.assertEqual(qc_as_shot.DEFAULT_CROP, '50% 16%', 'the default is read from splitGeometry.ts, not copied')
         self.assertEqual(rows('top left'), [0.0, 680.0, 1080.0, 1160.0])
         self.assertEqual(rows('10px 20px'), [-10.0, 660.0, 1070.0, 1140.0], 'a length moves the take, so the box starts before it')
         self.assertEqual(rows('right 10px bottom 20px'), [10.0, 1460.0, 1090.0, 1940.0])

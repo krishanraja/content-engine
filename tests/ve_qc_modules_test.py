@@ -591,7 +591,14 @@ class RendererLayoutMirrorTest(unittest.TestCase):
         # SPLIT is tall only (no wide lock); its stage box reads the seam from the geometry file (SPLIT_SEAM_Y).
         self.assertEqual(set(layouts['9:16']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW'})
         self.assertEqual(set(layouts['16:9']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'WINDOW'})
-        self.assertEqual(layouts['9:16']['SPLIT'], [(60, 300, 960, 400)])
+        self.assertEqual(layouts['9:16']['SPLIT'], [(76, 288, 768, 432)])
+        # The stage is a true 16:9 and ends above the seam, so a 16:9 visual is drawn whole and never reaches his head.
+        left, top, width, height = layouts['9:16']['SPLIT'][0]
+        self.assertEqual(width * 9, height * 16)
+        self.assertLessEqual(top + height, 760)
+        self.assertLessEqual(left + width, 860, 'inside the platform safe column')
+        self.assertGreaterEqual(left, 60)
+        self.assertGreaterEqual(top, 288, 'below every channel top bar (brand tokens tall_safe_key_text)')
         for aspect in layouts.values():
             self.assertTrue(all(len(box) == 4 for boxes in aspect.values() for box in boxes))
 
