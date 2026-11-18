@@ -119,6 +119,8 @@ export interface ViewSession {
 export interface ViewMaterial {
   id: string; kind: string; title: string; size: number; added_by: string; at: string | null
   thumbnail: string | null; role: string | null; version: number; where: 'piece' | 'day'
+  /** The file's sha256 (a stored file), so a press can bind to exactly what he saw (the proof); null for a link or text. */
+  sha256: string | null
 }
 export interface Overlay { sessions: Body[]; materials: Body[] }
 
@@ -133,6 +135,7 @@ const materialOf = (m: Body): ViewMaterial => {
     id: String(m.id), kind: String(m.kind), title: String(m.title), size: Number(m.bytes) || 0, added_by: String(m.added_by || ''),
     at: typeof m.at === 'string' ? m.at : null, thumbnail: type.startsWith('image/') ? String(m.id) : null,
     role: typeof m.role === 'string' ? m.role : null, version: Number(m.version) || 1, where: m.piece_id ? 'piece' : 'day',
+    sha256: typeof m.sha256 === 'string' && /^[a-f0-9]{64}$/.test(m.sha256) ? m.sha256 : null,
   }
 }
 

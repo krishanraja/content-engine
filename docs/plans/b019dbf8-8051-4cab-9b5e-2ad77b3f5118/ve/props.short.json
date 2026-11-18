@@ -3651,13 +3651,13 @@
     }
   ],
   "captionStyle": "word",
-  "captionTheme": "art-directed",
+  "captionTheme": "podcast",
   "captionPlacement": "lower",
   "beats": [
     {
       "id": "hook",
       "role": "hook",
-      "layout": "SPLIT",
+      "layout": "P1",
       "fromFrame": 0,
       "toFrame": 147,
       "uses": [
@@ -3667,8 +3667,10 @@
       "transitionOut": "cut",
       "sectionBeat": true,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/piqua-north-main.jpg"
       },
       "keyFrame": 118
     },
@@ -3686,29 +3688,32 @@
       "plate": {
         "source": "none"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
+      },
       "keyFrame": 237
     },
     {
-      "id": "face",
+      "id": "sacked",
       "role": "pivot",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 260,
       "toFrame": 302,
-      "uses": [
-        "ddn"
-      ],
+      "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/s3-nameplate-1.png"
       },
       "keyFrame": 294
     },
     {
-      "id": "questions",
+      "id": "face",
       "role": "anchor",
-      "layout": "SPLIT",
+      "layout": "P6",
       "fromFrame": 302,
       "toFrame": 506,
       "uses": [
@@ -3718,8 +3723,10 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/wyso-lead.jpg"
       },
       "keyFrame": 465
     },
@@ -3738,6 +3745,9 @@
       "plate": {
         "source": "none"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
+      },
       "keyFrame": 596
     },
     {
@@ -3754,29 +3764,32 @@
       "plate": {
         "source": "none"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
+      },
       "keyFrame": 693
     },
     {
       "id": "piqua",
       "role": "bridge",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 711,
       "toFrame": 756,
-      "uses": [
-        "piqua"
-      ],
+      "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/piqua-north-main.jpg"
       },
       "keyFrame": 747
     },
     {
       "id": "bill",
       "role": "anchor",
-      "layout": "STAGE",
+      "layout": "P1",
       "fromFrame": 756,
       "toFrame": 858,
       "uses": [
@@ -3785,7 +3798,10 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "none"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-pylons-1.png"
       },
       "keyFrame": 838
     },
@@ -3803,6 +3819,9 @@
       "plate": {
         "source": "none"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-polling-1.png"
+      },
       "keyFrame": 894
     },
     {
@@ -3818,15 +3837,17 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/ddn-lead.jpg"
       },
       "keyFrame": 979
     },
     {
       "id": "sack",
       "role": "bridge",
-      "layout": "SPLIT",
+      "layout": "P3",
       "fromFrame": 998,
       "toFrame": 1155,
       "uses": [
@@ -3835,8 +3856,10 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/wyso-lead.jpg"
       },
       "keyFrame": 1124
     },
@@ -3846,13 +3869,14 @@
       "layout": "STAGE",
       "fromFrame": 1155,
       "toFrame": 1328,
-      "uses": [
-        "block"
-      ],
+      "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
         "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/s13-ban-sign-1.png"
       },
       "keyFrame": 1293
     },
@@ -3870,12 +3894,15 @@
       "plate": {
         "source": "none"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/s13-ban-sign-1.png"
+      },
       "keyFrame": 1375
     },
     {
       "id": "party_line",
       "role": "bridge",
-      "layout": "SPLIT",
+      "layout": "P1",
       "fromFrame": 1387,
       "toFrame": 1507,
       "uses": [
@@ -3884,8 +3911,10 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/s13-ban-sign-1.png"
       },
       "keyFrame": 1483
     },
@@ -3904,27 +3933,32 @@
       "plate": {
         "source": "none"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-pylons-1.png"
+      },
       "keyFrame": 1636
     },
     {
       "id": "call",
       "role": "call",
-      "layout": "SPLIT",
+      "layout": "P1",
       "fromFrame": 1668,
       "toFrame": 1835,
       "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
       },
       "keyFrame": 1802
     },
     {
       "id": "deals",
       "role": "bridge",
-      "layout": "P6",
+      "layout": "P1",
       "fromFrame": 1835,
       "toFrame": 1970,
       "uses": [
@@ -3933,8 +3967,10 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png"
       },
       "keyFrame": 1943
     },
@@ -3952,6 +3988,9 @@
       "plate": {
         "source": "none"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png"
+      },
       "keyFrame": 2063
     },
     {
@@ -3968,6 +4007,9 @@
       "plate": {
         "source": "none"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png"
+      },
       "keyFrame": 2142
     },
     {
@@ -3982,15 +4024,17 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/elevencreative-plans.png"
       },
       "keyFrame": 2243
     },
     {
       "id": "carry_on",
       "role": "bridge",
-      "layout": "STAGE",
+      "layout": "P1",
       "fromFrame": 2265,
       "toFrame": 2420,
       "uses": [
@@ -3999,7 +4043,10 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "none"
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/piqua-north-main.jpg"
       },
       "keyFrame": 2389
     },
@@ -4015,6 +4062,9 @@
       "plate": {
         "source": "none"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/piqua-north-main.jpg"
+      },
       "keyFrame": 2483
     }
   ],
@@ -4024,7 +4074,7 @@
       "device": "evidence_card",
       "meaning": "the real headline that ousted Piqua's mayor",
       "fromFrame": 0,
-      "toFrame": 302,
+      "toFrame": 147,
       "variants": {},
       "params": {
         "kind": "screenshot",
@@ -4065,13 +4115,13 @@
         "kind": "data centre",
         "label": "PIQUA, OHIO",
         "logo": "Meta",
-        "tag": "Power bill",
+        "tag": "Your share",
         "targets": [
           {
-            "label": "Your power bill"
+            "label": "Power bill"
           },
           {
-            "label": "Your AI plan"
+            "label": "AI plan"
           }
         ],
         "copies": {
@@ -4159,21 +4209,6 @@
       }
     },
     {
-      "obj": "piqua",
-      "device": "evidence_card",
-      "meaning": "the real Piqua: its red-brick North Main",
-      "fromFrame": 711,
-      "toFrame": 756,
-      "variants": {},
-      "params": {
-        "kind": "screenshot",
-        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/piqua-north-main.jpg",
-        "outlet": "Wikimedia Commons",
-        "date": "North Main, Piqua",
-        "sourceAspectRatio": 1.7778
-      }
-    },
-    {
       "obj": "ban_stat",
       "device": "kinetic_stat",
       "meaning": "the share of Piqua votes for the ban",
@@ -4183,7 +4218,7 @@
       "params": {},
       "dataset": {
         "unit": "%",
-        "denominator": 100,
+        "denominator": null,
         "producerLabel": "Miami County Board of Elections, unofficial, via Dayton Daily News",
         "rows": [
           {
@@ -4203,7 +4238,7 @@
       "params": {},
       "dataset": {
         "unit": "%",
-        "denominator": 100,
+        "denominator": null,
         "producerLabel": "Miami County Board of Elections, unofficial, via Dayton Daily News",
         "rows": [
           {
@@ -4364,28 +4399,28 @@
       "atFrame": 194
     },
     {
-      "id": "questions-0",
+      "id": "face-0",
       "obj": "field41",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 355
     },
     {
-      "id": "questions-1",
+      "id": "face-1",
       "obj": "stat41",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 391
     },
     {
-      "id": "questions-2",
+      "id": "face-2",
       "obj": "field41",
       "verb": "grey",
       "toState": "against",
       "atFrame": 460
     },
     {
-      "id": "questions-3",
+      "id": "face-3",
       "obj": "stat41",
       "verb": "count_to",
       "toState": "limits won",
@@ -4411,13 +4446,6 @@
       "verb": "connect",
       "toState": "city",
       "atFrame": 647
-    },
-    {
-      "id": "piqua-0",
-      "obj": "piqua",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 711
     },
     {
       "id": "bill-0",
@@ -4476,13 +4504,6 @@
       "atFrame": 1059
     },
     {
-      "id": "built-0",
-      "obj": "block",
-      "verb": "grow",
-      "toState": "giant",
-      "atFrame": 1197
-    },
-    {
       "id": "meta_says-0",
       "obj": "meta_line",
       "verb": "enter",
@@ -4508,7 +4529,7 @@
       "obj": "ai_logos",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 1541
+      "atFrame": 1550
     },
     {
       "id": "power-1",
@@ -4528,7 +4549,7 @@
       "id": "power-3",
       "obj": "block",
       "verb": "move",
-      "toState": "target:0",
+      "toState": "target:1",
       "atFrame": 1649
     },
     {
@@ -4596,13 +4617,6 @@
     },
     {
       "id": "carry_on-0",
-      "obj": "block",
-      "verb": "move",
-      "toState": "target:1",
-      "atFrame": 2313
-    },
-    {
-      "id": "carry_on-1",
       "obj": "block",
       "verb": "exit",
       "toState": "flat",

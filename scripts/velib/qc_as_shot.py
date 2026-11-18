@@ -21,8 +21,8 @@ TOLERANCE = {'L': 5.0, 'a': 4.0, 'b': 4.0}
 PER_BEAT = 3
 WIDTH = 120
 FRAME = (1080, 1920)          # a 9:16 cut, the only aspect SPLIT draws (layouts/index.ts)
-SEAM_Y = 760                  # FWP_SPLIT_SEAM_Y: his take sits in the box below it on a SPLIT beat
-DEFAULT_CROP = '50% 88%'      # FWP_POSTER_POSITIONS.proof, what splitPlatePosition falls back to
+SEAM_Y = 760                  # SPLIT_SEAM_Y: his take sits in the box below it on a SPLIT beat
+DEFAULT_CROP = '50% 88%'      # SPLIT_POSTER_POSITIONS.proof, what splitPlatePosition falls back to
 KEYWORDS = {'left': 0.0, 'top': 0.0, 'center': 0.5, 'right': 1.0, 'bottom': 1.0}
 
 

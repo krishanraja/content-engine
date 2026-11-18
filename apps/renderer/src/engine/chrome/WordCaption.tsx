@@ -2,7 +2,7 @@ import { lightStage } from './lightStage'
 import React from 'react'
 import { HOUSE_FONTS } from '../../house/geometry'
 import type { EngineRenderProps } from '../props'
-import { FWP_SPLIT_SEAM_Y } from '../mocks/face-with-proof'
+import { SPLIT_SEAM_Y } from '../layouts/splitGeometry'
 import { captionPageAt } from './CaptionTrack'
 
 /** The word build (Krish, 2026-11-03: "its the georgia subtitles build"; inspiration card instagram_DePHDr_jRed):
@@ -10,8 +10,8 @@ import { captionPageAt } from './CaptionTrack'
  *  On the tall canvas every one of those sits inside every channel's safe area: the title from y 290, under the top
  *  bar, and the word above y 1320, clear of Instagram's handle and caption (Krish, 2026-11-11). */
 export const WORD_CAPTION = {
-  tall: { centerY: 1250, splitCenterY: FWP_SPLIT_SEAM_Y, graphicsCenterY: 1920 * 0.66, size: 88, titleTop: 290, titleSize: 66, width: 1080 },
-  wide: { centerY: 830, splitCenterY: FWP_SPLIT_SEAM_Y, graphicsCenterY: 1080 * 0.66, size: 72, titleTop: 120, titleSize: 54, width: 1920 },
+  tall: { centerY: 1250, splitCenterY: SPLIT_SEAM_Y, graphicsCenterY: 1920 * 0.66, size: 88, titleTop: 290, titleSize: 66, width: 1080 },
+  wide: { centerY: 830, splitCenterY: SPLIT_SEAM_Y, graphicsCenterY: 1080 * 0.66, size: 72, titleTop: 120, titleSize: 54, width: 1920 },
   /** The reference's pale title yellow; the one colour here that is not a house token. */
   titleColour: '#F4EC86',
   popFrames: 4,

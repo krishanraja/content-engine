@@ -318,7 +318,7 @@ def _page_cost(rows: list[dict], start: int, n: int) -> int:
     if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in _WEAK_ENDS:
         cost += 4   # it ends mid-phrase on a small word
     if any(_PAUSE.search(r['text']) for r in page[:-1]):
-        cost += 3   # a clause break inside the page ("Amazon for your groceries, Google")
+        cost += 3   # a clause break inside the page ("Netflix for your evenings, Google")
     if not _held(rows, start + n):
         cost += 5   # its last word flips away before it can be read
     if not _PAUSE.search(page[-1]['text']) and start + n < len(rows):
@@ -373,6 +373,28 @@ def generated_plate_problem(asset: dict, device: str) -> str:
     if missing:
         return f'a generated plate names its {", ".join(missing)} before it is drawn'
     return ''
+
+
+def backdrop(spec: dict, beat: dict, assets_dir) -> dict:
+    """The one real picture under a beat's graphics (Krish, 2026-11-18: "making actual use of the full screen when it
+    isn't my face"): a photo, a screenshot or a scene from the spec's assets, its staged bytes checked against the
+    sha256 the spec declares. A generated scene may sit here, never as evidence: it names the tool and job that made it and its sha256."""
+    aid = beat['backdrop'].removeprefix('asset:')
+    asset = next((a for a in spec.get('assets', []) if a['id'] == aid), None)
+    if asset is None:
+        raise ValueError(f'beat {beat["id"]}: backdrop asset {aid} is not in the spec')
+    if asset['kind'] not in ('photo', 'screenshot', 'illustration', 'broll', 'document'):
+        raise ValueError(f'beat {beat["id"]}: a backdrop is a picture, not a {asset["kind"]}')
+    if asset.get('origin') == 'generated':
+        missing = [key for key in ('tool', 'job_id', 'sha256') if not asset.get(key)]
+        if missing:
+            raise ValueError(f'beat {beat["id"]}: generated backdrop {aid} names its {", ".join(missing)} before it is drawn')
+    src = source(asset['path'], assets_dir)
+    if not Path(src).is_file():
+        raise ValueError(f'beat {beat["id"]}: backdrop {aid} is not staged at {asset["path"]}')
+    if asset.get('sha256') and sha256_file(Path(src)) != asset['sha256']:
+        raise ValueError(f'beat {beat["id"]}: backdrop {aid} does not match its declared sha256')
+    return {'src': src}
 
 
 def _params(params: dict, source) -> dict:
@@ -472,7 +494,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
                       **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
-                      **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {})})
+                      **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {}),
+                      **({'backdrop': backdrop(spec, beat, assets_dir)} if beat.get('backdrop') else {})})
         # The v2 spec reserves extensible metadata in style; beat-level keyFrame
         # is not yet in its strict schema. Always emit an explicit engine frame.
         fraction = spec.get('style', {}).get('keyFrames', {}).get(beat['id'], 0.8)

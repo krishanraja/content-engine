@@ -8,7 +8,7 @@ import { setMotionProfile } from '../clock'
 import { DEVICES } from '../devices/registry'
 import { EngineRenderPropsSchema, type EngineRenderProps } from '../props'
 import { chromeZone } from '../geometry'
-import { FWP_SPLIT_SEAM_Y } from '../mocks/face-with-proof'
+import { SPLIT_SEAM_Y } from '../layouts/splitGeometry'
 import { LEAD, LeadCaption, leadBox, leadCards } from '../chrome/LeadCaption'
 import { WORD_CAPTION, WordCaption } from '../chrome/WordCaption'
 import { MOTION_PROFILES, clampToFloor, floorProblems, resolveMotion, type MotionProfile } from './motionProfiles'
@@ -223,7 +223,7 @@ describe('each mode draws only from its own profile', () => {
     const chrome = chromeZone('9:16')
     for (const w of layout.words) {
       const box = { left: w.x, top: w.y, width: w.width, height: layout.size * layout.lineHeight }
-      expect(insideRoom(box, { ...SAFE_TALL, bottom: FWP_SPLIT_SEAM_Y })).toBe(true)
+      expect(insideRoom(box, { ...SAFE_TALL, bottom: SPLIT_SEAM_Y })).toBe(true)
       expect(box.top).toBeGreaterThanOrEqual(chrome.top + chrome.height)
     }
     expect(layout.size).toBeGreaterThanOrEqual(96) // the standard's headline floor
@@ -231,7 +231,7 @@ describe('each mode draws only from its own profile', () => {
     const proof = draw(props, 420)
     expect(proof.filter(n => DEVICE_TYPES.has(n.type)).length).toBe(2)
     const words = (ofType(proof, HeroType)[0]!.props as { layout: ReturnType<typeof heroLayout> }).layout.words
-    const area = heroArea('9:16', FWP_SPLIT_SEAM_Y, true)
+    const area = heroArea('9:16', SPLIT_SEAM_Y, true)
     for (const w of words) expect(w.y + 1).toBeGreaterThanOrEqual(area.top)
   })
 
@@ -266,11 +266,11 @@ describe('each mode draws only from its own profile', () => {
       const beat = beatAt(props, card.from)
       const box = leadBox(card, beat, props.aspect)
       // Inside the safe area (with the action rail rule), and never smaller than the house word.
-      expect(insideRoom(box, { ...SAFE_TALL, bottom: Math.max(SAFE_TALL.bottom, FWP_SPLIT_SEAM_Y + WORD_CAPTION.tall.size * 0.6) }), card.words.map(w => w.text).join(' ')).toBe(true)
+      expect(insideRoom(box, { ...SAFE_TALL, bottom: Math.max(SAFE_TALL.bottom, SPLIT_SEAM_Y + WORD_CAPTION.tall.size * 0.6) }), card.words.map(w => w.text).join(' ')).toBe(true)
       expect(box.size).toBeGreaterThanOrEqual(LEAD.minSize)
       if (beat.layout === 'SPLIT') {
         // On the seam, never further below it than the house word caption reaches.
-        expect(box.top + box.height).toBeLessThanOrEqual(FWP_SPLIT_SEAM_Y + WORD_CAPTION.tall.size * 0.6 + 0.5)
+        expect(box.top + box.height).toBeLessThanOrEqual(SPLIT_SEAM_Y + WORD_CAPTION.tall.size * 0.6 + 0.5)
       } else {
         // His take full frame or a graphics beat: in the face beats' off-face caption zone, inside the safe bottom.
         expect(box.top).toBeGreaterThanOrEqual(LEAD.tallFaceTop)
