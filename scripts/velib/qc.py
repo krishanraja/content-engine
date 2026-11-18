@@ -384,8 +384,10 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     checks['captions.off_face'] = ({'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not applicable'}
                                    if pages is not None and not pages else
                                    {'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not_run'})
+    checks['plate.head_in_band'] = {'value': None, 'target': 'his whole head inside the camera band', 'pass': None,
+                                    'status': 'not applicable'}
     checks['channel.safe_zones'] = {'value': None, 'target': 'nothing under a channel button', 'pass': None, 'status': 'advisory'}
-    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_as_shot, qc_opening
+    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_as_shot, qc_opening, qc_composition
     optional = [
         # The opening (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"): the
         # approved sting on the file's first frames and his cut on the very next frame, or no sting at all.
@@ -417,6 +419,10 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         ('captions.off_face', bool(pages) and aspect is not None,
          lambda: qc_faces.off_face(path, pages, style=caption_style, aspect=aspect, region=region, fps=fps,
                                    detector=face_detector, beats=beats)),
+        # Krish, 18 Nov 2026: his head is never cut off. On a SPLIT take beat the whole head sits in the camera band.
+        ('plate.head_in_band', aspect == '9:16' and any(b.get('layout') == 'SPLIT' for b in beats or []),
+         lambda: qc_faces.head_in_band(path, beats, seam=qc_composition.split_seam(), aspect=aspect, fps=fps,
+                                       detector=face_detector)),
         ('channel.safe_zones', aspect is not None and (bool(pages) or bool(beats)),
          lambda: qc_channel.safe_zones(pages, beats, aspect, region, caption_style)),
     ]
