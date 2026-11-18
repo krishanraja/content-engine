@@ -38,7 +38,7 @@
    "meaning": "the real headline that ousted Piqua's mayor",
    "persist": {
     "from_beat": "hook",
-    "to_beat": "face"
+    "to_beat": "hook"
    },
    "params": {
     "kind": "screenshot",
@@ -104,8 +104,8 @@
    "device": "unit_field",
    "meaning": "the 41 local data-centre votes on 3 Nov; 40 went against the data centre",
    "persist": {
-    "from_beat": "questions",
-    "to_beat": "questions"
+    "from_beat": "face",
+    "to_beat": "face"
    },
    "params": {
     "initialRow": "initial",
@@ -119,8 +119,8 @@
    "device": "kinetic_stat",
    "meaning": "how many of the 41 votes the data centre lost",
    "persist": {
-    "from_beat": "questions",
-    "to_beat": "questions"
+    "from_beat": "face",
+    "to_beat": "face"
    },
    "params": {},
    "dataset": "ballotpedia-41"
@@ -368,12 +368,92 @@
    "path": "krish/higgsfield-bonus-expires.png",
    "licence": "Krish's own screenshot, 18 Nov 2026",
    "sha256": "44b870c56e9fcd7fbae4d21e7069aaccb866cb0a451503af521de60f4a202664"
+  },
+  {
+   "id": "wyso-lead",
+   "kind": "photo",
+   "origin": "source",
+   "path": "evidence/wyso-lead.jpg",
+   "source_url": "https://www.wyso.org/government-politics-news/2026-11-04/piqua-voters-reject-data-centers-recall-city-commissioners",
+   "licence": "press photo shown as reporting, credited",
+   "credit": "WYSO, 4 Nov 2026",
+   "sha256": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
+  },
+  {
+   "id": "ddn-lead",
+   "kind": "photo",
+   "origin": "source",
+   "path": "evidence/ddn-lead.jpg",
+   "source_url": "https://www.daytondailynews.com/local/charter-amendment-banning-large-data-centers-wins-approval/article_d4cf4dc3-b418-58b1-8523-9348694b561b.html",
+   "licence": "press photo shown as reporting, credited",
+   "credit": "Dayton Daily News, 3 Nov 2026",
+   "sha256": "215bcbe5a998a19b621ce4f1a82db36c5ea3486cebce225bf622ddb243194fdd"
+  },
+  {
+   "id": "scene-nameplate",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "plates/s3-nameplate-1.png",
+   "licence": "made for the piece by Codex",
+   "tool": "codex image_generation",
+   "job_id": "card ve-tue17-scenes",
+   "sha256": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222"
+  },
+  {
+   "id": "scene-ban-sign",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "plates/s13-ban-sign-1.png",
+   "licence": "made for the piece by Codex",
+   "tool": "codex image_generation",
+   "job_id": "card ve-tue17-scenes",
+   "sha256": "8e1b10c25f4afbed9eb6117f49f97775fbe387173c750b607159b4d6efc32828"
+  },
+  {
+   "id": "bg-data-hall",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "plates/bg-data-hall-1.png",
+   "licence": "made for the piece by Codex",
+   "tool": "codex image_generation",
+   "job_id": "card ve-tue17-backdrops",
+   "sha256": "3730051bf5718d3577cfad4dc96c53bd8bd1abb0d20497ebed4630e065ea424c"
+  },
+  {
+   "id": "bg-city-dusk",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "plates/bg-city-dusk-1.png",
+   "licence": "made for the piece by Codex",
+   "tool": "codex image_generation",
+   "job_id": "card ve-tue17-backdrops",
+   "sha256": "107539f8d1b4c68f2d05ba9c1e2bc002109c35e1235b0cc166cfeab76cbeae2c"
+  },
+  {
+   "id": "bg-polling",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "plates/bg-polling-1.png",
+   "licence": "made for the piece by Codex",
+   "tool": "codex image_generation",
+   "job_id": "card ve-tue17-backdrops",
+   "sha256": "aac356ea0e5e482adfed416d67a671de86818696b76f6f16e801ff52d1b17d5c"
+  },
+  {
+   "id": "bg-pylons",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "plates/bg-pylons-1.png",
+   "licence": "made for the piece by Codex",
+   "tool": "codex image_generation",
+   "job_id": "card ve-tue17-backdrops",
+   "sha256": "df1bf828f3ef509082fa3c27222962813c53ebac28e5d1eb14f6b7790a611601"
   }
  ],
  "audio": {
   "master": "take",
   "bed": {
-   "ledger_id": "goodie-bags",
+   "ledger_id": "aspire",
    "mode": "episode_bed",
    "under_vo_lu": -30
   },
@@ -418,11 +498,10 @@
       "to_w": 16
      },
      "viewer_task": "locate_story",
-     "layout": "SPLIT",
-     "point": "A real headline above his face says it happened: Piqua's voters ousted the mayor who green-lit Meta's data centre",
+     "layout": "P1",
+     "point": "A real headline above his face says it happened, over the real street of the town",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "take"
      },
      "uses": [
       "ddn",
@@ -442,7 +521,8 @@
        "to_state": "RECALLED"
       }
      ],
-     "override_reason": "the hook is the real headline and one stamp on fired; his face carries the rest"
+     "override_reason": "the hook is the real headline over the real town, and one stamp on fired",
+     "backdrop": "asset:piqua-north-main"
     },
     {
      "id": "dc",
@@ -473,41 +553,39 @@
        "verb": "fill",
        "to_state": "racks"
       }
-     ]
+     ],
+     "backdrop": "asset:bg-data-hall"
     },
     {
-     "id": "face",
+     "id": "sacked",
      "role": "pivot",
      "span": {
       "from_w": 31,
       "to_w": 36
      },
-     "viewer_task": "connect_with_speaker",
-     "layout": "SPLIT",
-     "point": "The understatement lands on his face under the real headline: the man is gone, the building is fine",
+     "viewer_task": "feel_stakes",
+     "layout": "STAGE",
+     "point": "The understatement made literal: the MAYOR plate lies on the step while the data centre stands untouched",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
-     "uses": [
-      "ddn"
-     ],
+     "uses": [],
      "events": [],
-     "override_reason": "his understatement is the beat; the real headline holds above him"
+     "override_reason": "the whole frame is the gag for one line; his face returns on the next",
+     "backdrop": "asset:scene-nameplate"
     },
     {
-     "id": "questions",
+     "id": "face",
      "role": "anchor",
      "span": {
       "from_w": 37,
       "to_w": 63
      },
-     "viewer_task": "understand_mechanism",
-     "layout": "SPLIT",
+     "viewer_task": "connect_with_speaker",
+     "layout": "P6",
      "point": "The scale before he says it: of the local data-centre votes that day, the data centre lost all but one",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "take"
      },
      "uses": [
       "field41",
@@ -538,7 +616,8 @@
        "verb": "count_to",
        "to_state": "limits won"
       }
-     ]
+     ],
+     "backdrop": "asset:wyso-lead"
     },
     {
      "id": "meta",
@@ -570,7 +649,8 @@
        "verb": "highlight",
        "to_state": "0"
       }
-     ]
+     ],
+     "backdrop": "asset:bg-data-hall"
     },
     {
      "id": "city",
@@ -596,7 +676,8 @@
        "to_state": "city"
       }
      ],
-     "override_reason": "one move: the city goes dark as the block lights up"
+     "override_reason": "one move: the city goes dark as the block lights up",
+     "backdrop": "asset:bg-city-dusk"
     },
     {
      "id": "piqua",
@@ -605,24 +686,16 @@
       "from_w": 89,
       "to_w": 95
      },
-     "viewer_task": "understand_mechanism",
-     "layout": "SPLIT",
-     "point": "He says picture it; the real red-brick street in Piqua does the picturing",
+     "viewer_task": "feel_stakes",
+     "layout": "STAGE",
+     "point": "He says picture it; the real red-brick street in Piqua fills the screen",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
-     "uses": [
-      "piqua"
-     ],
-     "events": [
-      {
-       "at_w": 89,
-       "obj": "piqua",
-       "verb": "enter",
-       "to_state": "visible"
-      }
-     ]
+     "uses": [],
+     "events": [],
+     "override_reason": "the real street is the picture; nothing over it",
+     "backdrop": "asset:piqua-north-main"
     },
     {
      "id": "bill",
@@ -632,10 +705,10 @@
       "to_w": 111
      },
      "viewer_task": "understand_mechanism",
-     "layout": "STAGE",
+     "layout": "P1",
      "point": "His picture made literal: the price tag flies off the block onto your power bill as new power lines draw towards it",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "block"
@@ -654,7 +727,8 @@
        "to_state": "pylons"
       }
      ],
-     "override_reason": "two moves on the one object carry his picture; the bill is the block own target"
+     "override_reason": "two moves on the one object carry his picture, above his face",
+     "backdrop": "asset:bg-pylons"
     },
     {
      "id": "vote",
@@ -679,7 +753,8 @@
        "verb": "add",
        "to_state": "ballot"
       }
-     ]
+     ],
+     "backdrop": "asset:bg-polling"
     },
     {
      "id": "proof",
@@ -692,8 +767,7 @@
      "layout": "P6",
      "point": "The ban passed two to one of the votes cast, and the exact share fixes his words on screen",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "take"
      },
      "uses": [
       "block",
@@ -718,7 +792,8 @@
        "verb": "count_to",
        "to_state": "for the ban"
       }
-     ]
+     ],
+     "backdrop": "asset:ddn-lead"
     },
     {
      "id": "sack",
@@ -728,11 +803,10 @@
       "to_w": 147
      },
      "viewer_task": "understand_mechanism",
-     "layout": "SPLIT",
+     "layout": "P3",
      "point": "His rounded share stays in his voice; the exact recall figure for the mayor lands above him",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "take"
      },
      "uses": [
       "recall_stat"
@@ -750,7 +824,8 @@
        "verb": "count_to",
        "to_state": "to recall the mayor"
       }
-     ]
+     ],
+     "backdrop": "asset:wyso-lead"
     },
     {
      "id": "built",
@@ -759,24 +834,16 @@
       "from_w": 148,
       "to_w": 171
      },
-     "viewer_task": "understand_mechanism",
+     "viewer_task": "feel_stakes",
      "layout": "STAGE",
-     "point": "The irony in one object: the stamped block keeps growing in a town that just banned it",
+     "point": "The irony in one frame: WELCOME TO PIQUA, NO DATA CENTRES, and a crane lifting the data centre wall behind",
      "plate": {
       "source": "none"
      },
-     "uses": [
-      "block"
-     ],
-     "events": [
-      {
-       "at_w": 154,
-       "obj": "block",
-       "verb": "grow",
-       "to_state": "giant"
-      }
-     ],
-     "override_reason": "one move carries the irony; the BAN stamp stays on the block as it grows"
+     "uses": [],
+     "events": [],
+     "override_reason": "the whole frame is the gag while he says it",
+     "backdrop": "asset:scene-ban-sign"
     },
     {
      "id": "meta_says",
@@ -807,7 +874,8 @@
        "verb": "fill",
        "to_state": "visible"
       }
-     ]
+     ],
+     "backdrop": "asset:scene-ban-sign"
     },
     {
      "id": "party_line",
@@ -817,11 +885,10 @@
       "to_w": 198
      },
      "viewer_task": "connect_with_speaker",
-     "layout": "SPLIT",
+     "layout": "P1",
      "point": "He reads Meta's line for what it is; the card is struck through as he says it",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "take"
      },
      "uses": [
       "meta_line"
@@ -834,7 +901,8 @@
        "to_state": "struck"
       }
      ],
-     "override_reason": "his sarcasm on his face is the beat; the quote card is struck once"
+     "override_reason": "his sarcasm on his face is the beat; the quote card is struck once above him",
+     "backdrop": "asset:scene-ban-sign"
     },
     {
      "id": "power",
@@ -855,7 +923,7 @@
      ],
      "events": [
       {
-       "at_w": 205,
+       "at_w": 206,
        "obj": "ai_logos",
        "verb": "enter",
        "to_state": "visible"
@@ -876,9 +944,10 @@
        "at_w": 219,
        "obj": "block",
        "verb": "move",
-       "to_state": "target:0"
+       "to_state": "target:1"
       }
-     ]
+     ],
+     "backdrop": "asset:bg-pylons"
     },
     {
      "id": "call",
@@ -888,14 +957,14 @@
       "to_w": 236
      },
      "viewer_task": "land_payoff",
-     "layout": "SPLIT",
+     "layout": "P1",
      "point": "His dated call: the cost of that power lands on what you pay for AI at renewal",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "take"
      },
      "uses": [],
-     "events": []
+     "events": [],
+     "backdrop": "asset:bg-city-dusk"
     },
     {
      "id": "deals",
@@ -905,11 +974,10 @@
       "to_w": 255
      },
      "viewer_task": "verify_evidence",
-     "layout": "P6",
-     "point": "The deal he means, a real one he was sent this week, on screen as he names it",
+     "layout": "P1",
+     "point": "The deal he means, a real one he was sent this week, above his face as he names it",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "take"
      },
      "uses": [
       "hf_deal"
@@ -922,7 +990,8 @@
        "to_state": "visible"
       }
      ],
-     "override_reason": "one real offer arrives on his words; the next beats open its small print"
+     "override_reason": "one real offer arrives on his words; the next beats open its small print",
+     "backdrop": "asset:hf-plans"
     },
     {
      "id": "small_print",
@@ -948,7 +1017,8 @@
        "to_state": "visible"
       }
      ],
-     "override_reason": "the real small print is the picture; it holds whole while he says what it means"
+     "override_reason": "the real small print is the picture; it holds whole while he says what it means",
+     "backdrop": "asset:hf-plans"
     },
     {
      "id": "payoff",
@@ -1003,7 +1073,8 @@
        "verb": "drop",
        "to_state": "plan credits a month"
       }
-     ]
+     ],
+     "backdrop": "asset:hf-plans"
     },
     {
      "id": "three",
@@ -1016,8 +1087,7 @@
      "layout": "P6",
      "point": "Another of the real offers he got this week: the discount is for the first year only",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "take"
      },
      "uses": [
       "el_deal"
@@ -1030,7 +1100,8 @@
        "to_state": "visible"
       }
      ],
-     "override_reason": "a second real offer arrives on three times and holds while he says it"
+     "override_reason": "a second real offer arrives on three times and holds above his face",
+     "backdrop": "asset:el-plans"
     },
     {
      "id": "carry_on",
@@ -1040,21 +1111,15 @@
       "to_w": 320
      },
      "viewer_task": "understand_mechanism",
-     "layout": "STAGE",
+     "layout": "P1",
      "point": "Where the fight in a little town ends up: on his own bill",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "block"
      ],
      "events": [
-      {
-       "at_w": 305,
-       "obj": "block",
-       "verb": "move",
-       "to_state": "target:1"
-      },
       {
        "at_w": 315,
        "obj": "block",
@@ -1062,7 +1127,8 @@
        "to_state": "flat"
       }
      ],
-     "override_reason": "two moves close the one object: the tag lands on his AI plan, then the block folds away"
+     "override_reason": "his close on his face over the real town; the block folds away on my bill",
+     "backdrop": "asset:piqua-north-main"
     },
     {
      "id": "close",
@@ -1079,7 +1145,8 @@
      },
      "uses": [],
      "events": [],
-     "override_reason": "the house close card carries the address; nothing else on screen"
+     "override_reason": "the house close card carries the address over the real town",
+     "backdrop": "asset:piqua-north-main"
     }
    ]
   }
@@ -1091,9 +1158,9 @@
    "reason": "Krish's pick on the board, 17 Nov 2026"
   },
   "captions": {
-   "theme": "art-directed",
-   "reason": "Krish's pick on the board, 17 Nov 2026",
-   "placement": "lower"
+   "theme": "podcast",
+   "placement": "lower",
+   "reason": "Krish, 18 Nov 2026: each new word in one place, the previous word stays a little longer"
   },
   "idea": {
    "object": "One data centre, Meta's block in Piqua, carries the whole story: dropped on the town, opened, plugged in, stamped BAN, still growing, then walking off with the power bill's price tag.",

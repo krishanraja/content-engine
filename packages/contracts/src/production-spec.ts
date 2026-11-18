@@ -54,6 +54,9 @@ export const VeBeatSchema = z.object({
   layout: VeLayoutSchema,
   face: z.enum(['full', 'window', 'off']).optional(),
   plate: z.object({ source: z.string().regex(/^(take|none|asset:[a-z0-9][a-z0-9_-]*)$/), crop: z.string().min(1).optional() }).strict(),
+  // One real picture under the beat's graphics, fitted by cover: the panel above his face on a staged beat, the whole
+  // frame on a graphics-only beat (Krish, 2026-11-18: "making actual use of the full screen when it isn't my face").
+  backdrop: z.string().regex(/^asset:[a-z0-9][a-z0-9_-]*$/).optional(),
   uses: z.array(z.string().min(1)).default([]),
   events: z.array(VeEventSchema).default([]),
   transition_out: VeTransitionSchema.default('cut'),
@@ -348,6 +351,7 @@ export const ProductionSpecV2Schema = z.object({
       if (b.span.from_w <= lastEnd) c.addIssue({ code: 'custom', path: [...at, 'span'], message: 'beats run in script order and never overlap' })
       lastEnd = b.span.to_w
       if (b.plate.source.startsWith('asset:') && !assets.has(b.plate.source.slice(6))) c.addIssue({ code: 'custom', path: [...at, 'plate', 'source'], message: `unknown asset ${b.plate.source.slice(6)}` })
+      if (b.backdrop && !assets.has(b.backdrop.slice(6))) c.addIssue({ code: 'custom', path: [...at, 'backdrop'], message: `unknown asset ${b.backdrop.slice(6)}` })
       b.events.forEach((e, j) => {
         if (!objects.has(e.obj)) c.addIssue({ code: 'custom', path: [...at, 'events', j, 'obj'], message: `unknown object ${e.obj}` })
         if (e.at_w < b.span.from_w || e.at_w > b.span.to_w) c.addIssue({ code: 'custom', path: [...at, 'events', j, 'at_w'], message: 'an event fires on a word inside its beat' })

@@ -1,7 +1,7 @@
 import { CharacterLayer } from './character'
 import { Fragment, type ReactElement } from 'react'
 import { z } from 'zod'
-import { AbsoluteFill, OffthreadVideo, Sequence } from 'remotion'
+import { AbsoluteFill, Img, OffthreadVideo, Sequence } from 'remotion'
 import { BrandFrame } from './BrandFrame'
 import { onTwos, progress, setMotionProfile, useEngineFrame } from './clock'
 import { stageBubbleBox } from './devices/typing_bubble'
@@ -82,6 +82,15 @@ function cameraView(profile: MotionProfile | undefined, beat: EngineBeat, slots:
 /** The composition owns the clock; every device and chrome layer receives global frames. `stem={false}` leaves the
  *  stem to the wrapper that plays it from the render's frame 0, under the sting (VeCut); with no flag the tree is the
  *  one it always was (houseGolden.test.ts). */
+/** One real picture under a beat's graphics, fitted by cover (never stretched: F53), with an ink scrim at its foot so
+ *  the graphics and captions over it stay readable (Krish, 2026-11-18: "making actual use of the full screen"). */
+function Backdrop({ src, tokens }: { src: string; tokens: EngineRenderProps['tokens'] }) {
+  return <AbsoluteFill data-backdrop>
+    <Img src={src} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+    <AbsoluteFill style={{ background: `linear-gradient(180deg, transparent 45%, color-mix(in srgb, ${tokens.ink} 72%, transparent) 100%)` }} />
+  </AbsoluteFill>
+}
+
 export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean }) {
   const frame = useEngineFrame()
   const objects = new Map(props.objects.map((object) => [object.obj, object]))
@@ -185,10 +194,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const hero = profile?.type?.hero && grounded ? heroPhrase(beat, objects, props.events, props.captions, shown) : undefined
         const heroDraw = hero ? heroLayout(hero, heroArea(props.aspect, layerHeight, beat.uses.some(id => !hero.replaces.includes(id)))) : undefined
         const torn = overlays.includes('torn')
-        const layer = (
-          <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
-            {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts). */}
-            {profile ? <>
+        const styleGround = (profile ? <>
               {sweep && <AbsoluteFill style={sweep} />}
               {grounded && groundTexture(profile.ground.texture, props.tokens, frame) && <AbsoluteFill data-ground-texture style={groundTexture(profile.ground.texture, props.tokens, frame)!} />}
               {grounded && profile.ground.texture === 'paper' && <PaperTexture id={beat.id} width={width} height={layerHeight} tokens={props.tokens} />}
@@ -196,7 +202,13 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
               {grounded && overlays.includes('sketchFrame') && profile.boil && <SketchFrame id={beat.id} width={width} height={layerHeight}
                 tokens={props.tokens} sinceFrames={sinceBeat} boil={profile.boil} />}
               {torn && <TornFilter id={beat.id} tokens={props.tokens} />}
-            </> : sweep && <AbsoluteFill style={sweep} />}
+            </> : sweep && <AbsoluteFill style={sweep} />)
+        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} /> : undefined
+        const layer = (
+          <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
+            {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts); a backdrop joins it only
+                when the beat has one, so every cut without one draws the same tree. */}
+            {backdropEl ? <>{styleGround}{backdropEl}</> : styleGround}
             <AbsoluteFill style={motion?.layer}>
             {[heroDraw ? <HeroType key="hero-type" layout={heroDraw} frame={at} tokens={props.tokens} width={width} height={layerHeight} onDark={darkGround(profile)} /> : null,
               ...beat.uses.map((id, index) => {
@@ -296,7 +308,14 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
       {groundTexture(profile?.ground.texture, props.tokens, frame) ? <div data-ground-texture style={{ ...boxStyle(stagedNow.panel), borderRadius: stagedNow.panel.radius, ...groundTexture(profile?.ground.texture, props.tokens, frame)! }} /> : null}
       {stagedNow.hairline ? <div style={{ ...boxStyle(stagedNow.hairline), backgroundColor: props.tokens.channel }} /> : null}
     </AbsoluteFill>) : undefined
-  const picture = stagingGround ? [stagingGround, ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)
+  // A backdrop fills the panel above his face, over the ink panel and under the take and the graphics; with none the
+  // staging ground is exactly as before.
+  const panelBackdrop = stagingGround && activeBeat?.backdrop ? (
+    <AbsoluteFill key="staging-backdrop" data-backdrop-panel>
+      <div style={{ ...boxStyle(stagedNow!.panel), borderRadius: stagedNow!.panel.radius, overflow: 'hidden' }}>
+        <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} /></div>
+    </AbsoluteFill>) : undefined
+  const picture = stagingGround ? [stagingGround, ...(panelBackdrop ? [panelBackdrop] : []), ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)
   // With no ingredients the tree is exactly what it was before them (houseGolden.test.ts flattens it).
   if (!ingredients) return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
