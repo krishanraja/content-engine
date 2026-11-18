@@ -357,7 +357,8 @@ class QCContracts(unittest.TestCase):
 
     def test_a_wide_cut_with_no_body_logo_is_checked_for_its_absence(self):
         """Ruling (Krish, 2026-11-17): the logo only on the title frame and the close. With props bodyLogo false the wide
-        cut is measured with brand.no_mark, never brand.mark_tile; without it the wide cut keeps its tile check."""
+        cut is measured with brand.no_mark, never brand.mark_tile. Krish, 2026-11-18 ("NO ICONS"): a cut with no flag is checked for
+        the icon's absence too; only bodyLogo true (a piece the palette still lets) is checked for its tile."""
         absent = {'value': [], 'target': 'no mark', 'pass': True, 'status': 'measured'}
         with self.measurements() as mocks, patch.object(qc_brand, 'no_mark', return_value=absent) as no_mark:
             result = qc.run_qc('unused', 'scoreboard-test', **qc.inputs_from_props(dict(self.props(), bodyLogo=False)))
@@ -367,11 +368,15 @@ class QCContracts(unittest.TestCase):
         self.assertNotIn('brand.mark_tile', result['checks'])
         with self.measurements() as mocks, patch.object(qc_brand, 'no_mark', return_value=absent) as no_mark:
             qc.run_qc('unused', 'scoreboard-test', **qc.inputs_from_props(self.props()))
+        mocks['mark_tile'].assert_not_called()
+        no_mark.assert_called_once()
+        with self.measurements() as mocks, patch.object(qc_brand, 'no_mark', return_value=absent) as no_mark:
+            qc.run_qc('unused', 'scoreboard-test', **qc.inputs_from_props(dict(self.props(), bodyLogo=True)))
         mocks['mark_tile'].assert_called_once()
         no_mark.assert_not_called()
 
     def test_props_command_supplies_every_measurement_and_can_complete(self):
-        props = self.props()
+        props = dict(self.props(), bodyLogo=True)  # the old dress, so this test still measures the tile
         gates = {'heard': {'faster-whisper': [{'w': 'hello', 's': 0.7, 'e': 0.9}]}, 'script': 'hello', 'take_words': []}
         with self.measurements() as mocks, patch.object(qc, 'run_qc', wraps=qc.run_qc) as run_qc, \
                 patch.object(ve, 'load_json', return_value=props), patch.object(ve, '_gate_inputs', return_value=gates), \

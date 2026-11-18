@@ -315,7 +315,7 @@ def inputs_from_props(props: dict) -> dict:
     # The plate's frame under file frame F of a beat is F - the beat's shift + the segment's trim.
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
-                body_logo=props.get('bodyLogo') is not False,
+                body_logo=props.get('bodyLogo') is True,
                 edl=edl, joins=joins, caption_style=props.get('captionStyle') or 'house',
                 plate_video=(props.get('segments') or [{}])[0].get('src') if len(props.get('segments') or []) == 1 else None,
                 plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)),
