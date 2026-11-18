@@ -3,7 +3,7 @@ import { writeBack } from './_writeBack.js'
 import { asWritten, backDocId, takenBackAt, wordsBody, wordsDocId } from './_contracts.js'
 import { spokenTitle, type FiledScript, type PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
-import { thoughtPress, type PressAction, type ViewOption } from './_viewExtras.js'
+import { templateOf, thoughtPress, type PressAction, type ViewOption, type ViewTemplate } from './_viewExtras.js'
 import type { Action, DayView, LockToSign, PromptAction } from './_view.js'
 import { thumbsPress } from './_thumbs.js'
 import { lateLine, lateOn, missedOn } from './_stage.js'
@@ -413,10 +413,25 @@ function readOf(raw: Body | null, extra: { title?: string; text?: string | null;
 /** How an off-day post is made, before the write-back: its route (a carousel, a meme or a Notes image in a Claude
  *  session with the Codex plugin; a voiceover short or a meme video on the ve route; Ruling, Krish, 2026-11-13;
  *  _makeRoute.ts), else the plain hand-off to Growth. */
-export function offdayHead(route: MakeRoute | null): string {
+export function offdayHead(route: MakeRoute | null, template: ViewTemplate | null = null, caption: string | null = null): string {
   if (!route) return 'Growth makes and posts off-day posts (krishanraja/growth-makeyourmindup), to content-engine docs/CAROUSEL-STANDARD.md and the rejection floor. Make or post exactly what Krish approved, nothing else.\n\n'
-  return `${routeLine(route)}\n\nMake exactly what Krish approved, nothing else, to the rejection floor`
-    + `${route === 'still' ? ' and content-engine docs/CAROUSEL-STANDARD.md' : ''}; Growth (krishanraja/growth-makeyourmindup) posts it.\n\n`
+  const clip = route === 'reskin' && template
+    ? `The clip to download and reskin: ${template.clip.url}\nIts page: ${template.clip.page}\nFound on ${template.found.label || template.found.place}${template.found.url ? ` (${template.found.url})` : ''}; credit: ${template.credit || 'name the original poster from the page'}.\n`
+      + `${template.what_happens ? `What happens in it: ${template.what_happens}\n` : ''}${template.clip.seconds ? `Its length: about ${template.clip.seconds} seconds.\n` : ''}`
+      + `${caption ? `His caption (his note on this post): ${caption}\n` : 'He has not written a caption yet: ask him once.\n'}\n`
+    : ''
+  return `${routeLine(route)}\n\n${clip}Make exactly what Krish approved, nothing else, to the rejection floor`
+    + `${route === 'still' ? ' and content-engine docs/CAROUSEL-STANDARD.md' : route === 'reskin' ? ' and content-engine docs/MEME-STANDARD.md' : ''}; Growth (krishanraja/growth-makeyourmindup) posts it.\n\n`
+}
+
+/** The route of an off-day post: a meme that carries a template clip is a reskin of it, never the carousel route. */
+function routeFor(kind: string, raw: Body | null | undefined, format: unknown): MakeRoute | null {
+  return makeRoute(kind, str(raw?.format) ?? (typeof format === 'string' ? format : null), Boolean(raw && templateOf(raw)))
+}
+/** A meme template's head for the prompt: the clip, where it was found and his caption (the option's note); null for anything else. */
+function reskinHead(raw: Body | null | undefined): string | null {
+  const t = raw ? templateOf(raw) : null
+  return t ? offdayHead('reskin', t, str(raw?.note)) : null
 }
 
 /** What the prompt says to do with the story, by where the piece is (Ruling, Krish, 2026-11-16: "Even though this piece is
@@ -861,9 +876,9 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const ready = own && !made && !missed && !scriptsApproval(m.picks || [], own) ? scriptsReady(m, d.day, own, base.title, where, recordsItself(kind, m.picks || [], o.doc_id)) : null
   if (ready) {
     return { ...base, line: ready.line, next: ready.press as Action, decision: true,
-      others: [itemPrompt(m.week, { ...base, line: ready.line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format), null, m.decisions?.[own!] ?? null, own) as unknown as PressAction] }
+      others: [itemPrompt(m.week, { ...base, line: ready.line }, 'post', routeFor(kind, raw, o.format), null, m.decisions?.[own!] ?? null, own, reskinHead(raw)) as unknown as PressAction] }
   }
-  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format), null, own ? m.decisions?.[own] ?? null : null, own), decision: false }
+  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', routeFor(kind, raw, o.format), null, own ? m.decisions?.[own] ?? null : null, own, reskinHead(raw)), decision: false }
 }
 
 /** Whether an off-day post has a recorded step: a voiceover short whose voice is his own take (Record it myself, his
