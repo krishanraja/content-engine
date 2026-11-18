@@ -56,12 +56,10 @@ STILL_W, STILL_H = 540, 960   # the 9:16 frame at the lab's scale (0.5 of 1080x1
 STILL_SLACK = 8               # px a recorded still may differ from 540x960 either way (a plate cropped to 9:16)
 STILL_QUALITY = 3             # ffmpeg -q:v for the JPEG: 2 is the best, 31 the worst
 # The one frame every still is cut at, on the pinned short cut's own clock (config/ve/lab.json: window 315 to 555), so
-# every still shows the same moment and differs only by its style. Frame 445, 54% into the window, not its 60% point
-# (459, where the "Google" page is one frame old and the Amazon scribble has just begun to leave): the "groceries,"
-# caption page (420 to 458) has stood for 25 frames, so every caption style has finished its entrance; the proof beat
-# (366 to 504) is mid-way, the logo card lit since 402 and the Amazon scribble drawn since 412 (10 frames to draw), so
-# every motion style's device is on screen and settled; nothing changes until 458 and no cut is near (366, 504).
-# A new take or window needs a new frame: still_frame refuses one outside the window.
+# every still shows the same moment and differs only by its style. It was chosen on the take the lab was pinned to until
+# Krish retired it on 18 Nov 2026 (retired_takes): a moment where every caption style has finished its entrance, the
+# proof beat is mid-way and every motion style's device is on screen and settled. A new take or window needs a new
+# frame chosen the same way, from its own beats: still_frame refuses one outside the window.
 STILL_FRAME = 445
 STILLS_MANIFEST = 'stills.json'
 
@@ -99,10 +97,29 @@ def brand_marks() -> list[dict]:
     return found
 
 
+def retired_take(cfg: dict) -> dict | None:
+    """The record of a retirement when the pinned take is one Krish had deleted for good (config/ve/lab.json retired_takes)."""
+    pinned = (cfg.get('take') or {}).get('sha256')
+    return next((r for r in cfg.get('retired_takes') or [] if r.get('sha256') == pinned), None)
+
+
+def refuse_retired(cfg: dict | None = None, manifest: dict | None = None) -> None:
+    """Nothing is staged, rendered, stilled, reeled, sheeted or compared from a take Krish retired (retired_takes): not
+    from the pinned take, and not from a render already on disk whose manifest names one."""
+    cfg = config() if cfg is None else cfg
+    gone = retired_take(cfg)
+    if gone is None and manifest:
+        gone = next((r for r in cfg.get('retired_takes') or [] if r.get('sha256') == manifest.get('take_sha256')), None)
+    if gone:
+        raise ValueError(f'the lab will not work from {gone["name"]}, which Krish retired on {gone["on"]} ({gone["words"]!r}): '
+                         'pin a new take in config/ve/lab.json and render again. ' + gone.get('next', ''))
+
+
 def stage(cfg: dict, take: Path, brand_dir: Path, out: Path) -> Path:
     """The window's media, rebuilt where the props expect it: the conformed picture and his voice from the pinned take
     (its committed EDL), and the brand marks. Returns the assets folder."""
     from . import conform  # noqa: PLC0415
+    refuse_retired(cfg)
     take, brand_dir, out = Path(take), Path(brand_dir), Path(out)
     if sha256_file(take) != cfg['take']['sha256']:
         raise ValueError(f'{take} is not the pinned take ({cfg["take"]["name"]}): fetch it with scripts/post-pack/recording.py')
@@ -177,6 +194,7 @@ def props_for(look: dict, window: dict, spec: dict) -> dict:
 
 def render(cfg: dict, assets: Path, render_fn, out: Path | None = None, only: list[str] | None = None) -> dict:
     """Render every look on the window; write manifest.json beside the clips; return it."""
+    refuse_retired(cfg)
     engine = engine_id()
     out = Path(out or CACHE / engine)
     out.mkdir(parents=True, exist_ok=True)
@@ -238,6 +256,7 @@ def reel(out: Path) -> Path:
     """One mp4 of every look, each after a one-second title card, all at the same size, rate and sound format."""
     out = Path(out)
     manifest = load_json(out / 'manifest.json')
+    refuse_retired(manifest=manifest)
     parts = []
     shown = shown_looks(manifest)
     for look in shown:
@@ -266,6 +285,7 @@ def sheet(out: Path, frames: int = 6, width: int = 160) -> Path:
     from PIL import Image, ImageDraw  # noqa: PLC0415
     out = Path(out)
     manifest = load_json(out / 'manifest.json')
+    refuse_retired(manifest=manifest)
     rows = []
     for look in shown_looks(manifest):
         grabbed = []
@@ -295,6 +315,8 @@ def diff(out: Path, previous: Path, sample=None, moved_at: float | None = None) 
     from . import styles  # noqa: PLC0415
     out, previous = Path(out), Path(previous)
     now, before = load_json(out / 'manifest.json'), load_json(previous / 'manifest.json')
+    refuse_retired(manifest=now)
+    refuse_retired(manifest=before)
     moved_at = config()['house_moves_at'] if moved_at is None else moved_at
     sample = sample or (lambda clip: styles.sample_frames(clip, now['seconds']))
     old = {look['id']: look for look in before['looks']}
@@ -435,6 +457,7 @@ def stills(out: Path, only: list[str] | None = None, cfg: dict | None = None, gr
     if not (out / 'manifest.json').is_file():
         raise ValueError(f'no lab render in {out}: run ve lab render first, or pass --take and --brand-dir')
     manifest = load_json(out / 'manifest.json')
+    refuse_retired(cfg, manifest)
     if (manifest.get('take_sha256'), manifest.get('cut'), manifest.get('window')) != (cfg['take']['sha256'], cfg['cut'], cfg['window']):
         raise ValueError(f'{out} is not a render of the pinned take\'s window (config/ve/lab.json): the still frame is chosen for it')
     frame = still_frame(cfg)
