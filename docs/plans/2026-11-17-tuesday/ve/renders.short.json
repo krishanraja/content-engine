@@ -1,0 +1,11 @@
+{
+  "schema": "ve-renders/1",
+  "cut": "short",
+  "renders": [
+    {
+      "at": "2026-11-18T23:17:20Z",
+      "file": "short.mp4",
+      "sha256": "ea9f8c6d2b45c5d8d3d91e4e3e69218852164ecd5903236cb6ed370d74e801a2"
+    }
+  ]
+}

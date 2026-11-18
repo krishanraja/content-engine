@@ -120,9 +120,18 @@ function titleWordmark(props: EngineRenderProps, frame: number, stage: { left: n
     top: stage.top + stage.height - h - stage.height * 0.07, width: w, height: h, opacity }} />
 }
 
-function Backdrop({ src, tokens, focus, frame, width, height }: { src: string; tokens: EngineRenderProps['tokens']; focus: number; frame: number; width: number; height: number }) {
+/** A slow push holds every picture (the motion style's own rule: "a slow push holds every panel; nothing holds still"):
+ *  the backdrop eases from 100% to 106% across its beat, so a photo beat is never a still frame (qc motion.longest_still). */
+export function backdropPush(beat: EngineBeat, frame: number): number {
+  const t = Math.min(1, Math.max(0, (frame - beat.fromFrame) / Math.max(1, beat.toFrame - beat.fromFrame)))
+  return 1 + 0.06 * t
+}
+
+function Backdrop({ src, tokens, focus, frame, width, height, push = 1 }: { src: string; tokens: EngineRenderProps['tokens']; focus: number; frame: number; width: number; height: number; push?: number }) {
   return <AbsoluteFill data-backdrop data-backdrop-focus={focus.toFixed(3)}>
-    <GradedBackdrop src={src} focus={focus} tokens={tokens as unknown as Record<string, string>} frame={frame} width={width} height={height} />
+    <AbsoluteFill style={{ transform: `scale(${push.toFixed(5)})`, transformOrigin: '50% 45%' }}>
+      <GradedBackdrop src={src} focus={focus} tokens={tokens as unknown as Record<string, string>} frame={frame} width={width} height={height} />
+    </AbsoluteFill>
     <AbsoluteFill style={{ background: `linear-gradient(180deg, color-mix(in srgb, ${tokens.ink} 38%, transparent) 0%, transparent 42%, color-mix(in srgb, ${tokens.ink} 72%, transparent) 100%)` }} />
   </AbsoluteFill>
 }
@@ -246,7 +255,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
                 tokens={props.tokens} sinceFrames={sinceBeat} boil={profile.boil} />}
               {torn && <TornFilter id={beat.id} tokens={props.tokens} />}
             </> : sweep && <AbsoluteFill style={sweep} />)
-        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} /> : undefined
+        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} push={backdropPush(beat, at)} /> : undefined
         const layer = (
           <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
             {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts); a backdrop joins it only
@@ -368,7 +377,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const panelBackdrop = stagingGround && activeBeat?.backdrop ? (
     <AbsoluteFill key="staging-backdrop" data-backdrop-panel>
       <div style={{ ...boxStyle(stagedNow!.panel), borderRadius: stagedNow!.panel.radius, overflow: 'hidden' }}>
-        <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={stagedNow!.panel.width} height={stagedNow!.panel.height} /></div>
+        <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={stagedNow!.panel.width} height={stagedNow!.panel.height} push={backdropPush(activeBeat, frame)} /></div>
     </AbsoluteFill>) : undefined
   const picture = stagingGround ? [stagingGround, ...(panelBackdrop ? [panelBackdrop] : []), ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)
   // With no ingredients the tree is exactly what it was before them (houseGolden.test.ts flattens it).

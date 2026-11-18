@@ -1,7 +1,7 @@
 {
   "schema": "ve-engine/1",
-  "sha256": "d297dd646b146a87e262ebb3b3a1c05118c830fbce3d6b45e10eba438ade15bc",
-  "at": "2026-11-18T23:02:37Z",
+  "sha256": "329e1413068d307c14c7e48b2d76959fd8e02811c48067319953951324a0d754",
+  "at": "2026-11-18T23:25:15Z",
   "files": {
     "apps/renderer/src/Root.tsx": "96b88ae058476abe1883ab9d5fa7adeed4e7b5143ff22140f78dbb0d68031722",
     "apps/renderer/src/Short.tsx": "ccda63263e5bf4d3d2cf8a16923064f970deb57e1da0cdc398389f0379800aff",
@@ -18,7 +18,7 @@
     "apps/renderer/src/border-control/proof-entry.tsx": "16b48df73c95bc399e0aa5a2843ecf3d01285e478255d473c66d01d0ce101113",
     "apps/renderer/src/border-control/short-entry.tsx": "0399f8b5ed923fa30a0d4faa5acc26e074ca92e8f246d284730d6da7b21ccd6f",
     "apps/renderer/src/engine/BrandFrame.tsx": "32cd0c32794f3b3b697140d2355d57c433bb42e687b4acd1e754ec74954b6124",
-    "apps/renderer/src/engine/FormatMaster.tsx": "c26d14abdc6ca346d3b0d2ceb36f77430c75f88dc9cb6191b53c5dd26a714dba",
+    "apps/renderer/src/engine/FormatMaster.tsx": "02a9834ae47e76cbe9f0fccac4ada3c0e68698e1440e2d747947459c782fd66c",
     "apps/renderer/src/engine/VeCut.tsx": "5635e51bc0a21fe2a9b654ae7459c126d5fa408f47f150120479de82fabd6e39",
     "apps/renderer/src/engine/audio.tsx": "2f8f87297ab3f21c189b8b50082def2f8e37d78a9fa91cee5affc89b69e2fd0b",
     "apps/renderer/src/engine/captions/draw.tsx": "a1a1d64be94cfd76135466865288e1f47f752bb5f952718608ee4cb98a45f1f2",
@@ -36,7 +36,7 @@
     "apps/renderer/src/engine/captions/styles/slot-roll.tsx": "68ef2efa326be4ed2a1e5fd197883670030e8a9cd7897ad0ad62ac9c9f2593ad",
     "apps/renderer/src/engine/captions/styles/stair-flash.tsx": "2400fb1f6f52b3620358622e9c9492a283366a115297a8bc68fcdbbb36b034dc",
     "apps/renderer/src/engine/captions/styles/tuck-stack.tsx": "cfd69d09f4aaf84c7ddd505b85bc88cfd905970c08d31e17ead869560488c614",
-    "apps/renderer/src/engine/captions/themes.tsx": "21fdf1658d8d89adf57fb154ad93d4701e792648d51104cfa932cc995f3282e3",
+    "apps/renderer/src/engine/captions/themes.tsx": "c49a897dd4a78c4b0944725527e3952d3ab9bca487886fa30510c5bbfa09087f",
     "apps/renderer/src/engine/character/index.tsx": "29d23efec4ccfec37b69f2a4dca655fec20029f86d1b19a872d16411d631db3f",
     "apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx": "e1670f831afbf81ef14b8bc7b6ebdc2bb4e05086e4c44eee96784e9cc656f1cd",
     "apps/renderer/src/engine/chrome/CallCard.tsx": "73f7d6ee053be75209384e18c5d5c484fcaed71b0f27aea24526f9782db8e3af",

@@ -1,0 +1,3682 @@
+{
+  "file": ".scratch/b019/render/short.mp4",
+  "sha256": "ea9f8c6d2b45c5d8d3d91e4e3e69218852164ecd5903236cb6ed370d74e801a2",
+  "duration_s": 85.3,
+  "format": "face-with-proof",
+  "checks": {
+    "loudness.integrated": {
+      "value": -14.1,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.4,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 0.882,
+      "target": ">= 0.5",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 5,
+      "target": "<= 4 s",
+      "pass": false,
+      "runs": [
+        [
+          39,
+          5
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          18,
+          1
+        ],
+        [
+          68,
+          1
+        ],
+        [
+          82,
+          1
+        ],
+        [
+          84,
+          1
+        ]
+      ]
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999984
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999987
+        },
+        {
+          "segment": 2,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999977
+        },
+        {
+          "segment": 3,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 4,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999995
+        },
+        {
+          "segment": 5,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999984
+        },
+        {
+          "segment": 6,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999993
+        },
+        {
+          "segment": 7,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999998
+        },
+        {
+          "segment": 8,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        },
+        {
+          "segment": 9,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999992
+        },
+        {
+          "segment": 10,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99998
+        },
+        {
+          "segment": 11,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999985
+        },
+        {
+          "segment": 12,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999996
+        },
+        {
+          "segment": 13,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 14,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999997
+        },
+        {
+          "segment": 15,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999994
+        },
+        {
+          "segment": 16,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999996
+        },
+        {
+          "segment": 17,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999998
+        },
+        {
+          "segment": 18,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999977
+        },
+        {
+          "segment": 19,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 20,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999989
+        },
+        {
+          "segment": 21,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999983
+        },
+        {
+          "segment": 22,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999974
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": true,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [
+        {
+          "time_s": 4.7802,
+          "pass": true,
+          "rms_step_db": 1.1533160857700697,
+          "click_ratio": 1.3069294306558872,
+          "spectral_flux": 0.3357773937991898,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 8.5702,
+          "pass": true,
+          "rms_step_db": 2.266466679087414,
+          "click_ratio": 1.2370136733926875,
+          "spectral_flux": 0.39388567649448725,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 10.3099,
+          "pass": false,
+          "rms_step_db": 9.483568361577852,
+          "click_ratio": 0.9861001488794807,
+          "spectral_flux": 0.6745320646686218,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 16.0504,
+          "pass": false,
+          "rms_step_db": 4.062496493455433,
+          "click_ratio": 0.940657781277383,
+          "spectral_flux": 0.5090694594073785,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 16.762,
+          "pass": true,
+          "rms_step_db": 1.3772090351316564,
+          "click_ratio": 0.642037661366312,
+          "spectral_flux": 0.24149349932013328,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 19.4083,
+          "pass": true,
+          "rms_step_db": 2.039332274486031,
+          "click_ratio": 0.7023986413375118,
+          "spectral_flux": 0.3960597519837186,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 20.5322,
+          "pass": false,
+          "rms_step_db": 8.654878973975595,
+          "click_ratio": 1.9937449465317598,
+          "spectral_flux": 0.4974670206286282,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 26.2702,
+          "pass": true,
+          "rms_step_db": 0.3281663017343612,
+          "click_ratio": 0.6413395602988564,
+          "spectral_flux": 0.16102732282014223,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 28.486,
+          "pass": true,
+          "rms_step_db": 0.0663201080306815,
+          "click_ratio": 0.9096361759711566,
+          "spectral_flux": 0.1788657434667218,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 33.1496,
+          "pass": true,
+          "rms_step_db": 0.026897041101857467,
+          "click_ratio": 0.8090358669609963,
+          "spectral_flux": 0.31058084366624433,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 38.3603,
+          "pass": true,
+          "rms_step_db": 0.7923656803265365,
+          "click_ratio": 3.0961939209644993,
+          "spectral_flux": 0.1502162939466023,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 44.1504,
+          "pass": false,
+          "rms_step_db": 2.6811894719076563,
+          "click_ratio": 1.0027698868763582,
+          "spectral_flux": 0.6146901708471225,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 50.114,
+          "pass": false,
+          "rms_step_db": 1.3001119275378104,
+          "click_ratio": 3.0003554222188034,
+          "spectral_flux": 0.8423774664696195,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 54.4793,
+          "pass": true,
+          "rms_step_db": 3.585808163394268,
+          "click_ratio": 3.1647335067587017,
+          "spectral_flux": 0.4366172758679645,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 55.438,
+          "pass": false,
+          "rms_step_db": 0.2801749329279278,
+          "click_ratio": 6.423493644024567,
+          "spectral_flux": 0.5814519054819959,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 61.0397,
+          "pass": true,
+          "rms_step_db": 0.01118380247135062,
+          "click_ratio": 4.022236672143215,
+          "spectral_flux": 0.25335329555086017,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 69.3893,
+          "pass": false,
+          "rms_step_db": 2.368225294698692,
+          "click_ratio": 4.063034942240064,
+          "spectral_flux": 0.8732309848935081,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        },
+        {
+          "time_s": 80.5711,
+          "pass": true,
+          "rms_step_db": 0.8979683497421145,
+          "click_ratio": 1.3006136096976677,
+          "spectral_flux": 0.3148770161662498,
+          "thresholds": {
+            "rms_step_db": 6.0,
+            "click_ratio": 6.0,
+            "spectral_flux": 0.5
+          }
+        }
+      ],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": false,
+      "status": "measured",
+      "join_times_s": [
+        4.7802,
+        8.5702,
+        10.3099,
+        16.0504,
+        16.762,
+        19.4083,
+        20.5322,
+        26.2702,
+        28.486,
+        33.1496,
+        38.3603,
+        44.1504,
+        50.114,
+        54.4793,
+        55.438,
+        61.0397,
+        69.3893,
+        80.5711
+      ],
+      "failed_join_times_s": [
+        10.3099,
+        16.0504,
+        20.5322,
+        44.1504,
+        50.114,
+        55.438,
+        69.3893
+      ]
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 1,
+          "frame": 11,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 2,
+          "frame": 22,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 3,
+          "frame": 28,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 4,
+          "frame": 37,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 5,
+          "frame": 50,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 6,
+          "frame": 59,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 7,
+          "frame": 65,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 8,
+          "frame": 74,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 9,
+          "frame": 85,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 10,
+          "frame": 92,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 11,
+          "frame": 101,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 12,
+          "frame": 109,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 13,
+          "frame": 114,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 14,
+          "frame": 123,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 15,
+          "frame": 130,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 16,
+          "frame": 140,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 17,
+          "frame": 150,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 18,
+          "frame": 155,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 19,
+          "frame": 160,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 20,
+          "frame": 163,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 21,
+          "frame": 177,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 22,
+          "frame": 190,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 23,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 24,
+          "frame": 199,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 25,
+          "frame": 210,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 26,
+          "frame": 219,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 27,
+          "frame": 226,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 28,
+          "frame": 232,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 29,
+          "frame": 239,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 30,
+          "frame": 252,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 31,
+          "frame": 262,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 32,
+          "frame": 266,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 33,
+          "frame": 271,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 34,
+          "frame": 278,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 35,
+          "frame": 283,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 36,
+          "frame": 293,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 37,
+          "frame": 307,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 38,
+          "frame": 315,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 39,
+          "frame": 321,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 40,
+          "frame": 329,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 41,
+          "frame": 337,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 42,
+          "frame": 345,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 43,
+          "frame": 352,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 44,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 45,
+          "frame": 361,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 46,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 47,
+          "frame": 375,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 48,
+          "frame": 386,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 49,
+          "frame": 510,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 50,
+          "frame": 520,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 51,
+          "frame": 528,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 52,
+          "frame": 535,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 53,
+          "frame": 544,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 54,
+          "frame": 556,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 55,
+          "frame": 565,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 56,
+          "frame": 569,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 57,
+          "frame": 579,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 58,
+          "frame": 587,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 59,
+          "frame": 590,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 60,
+          "frame": 596,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 61,
+          "frame": 603,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 62,
+          "frame": 612,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 63,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 64,
+          "frame": 624,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 65,
+          "frame": 637,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 66,
+          "frame": 653,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 67,
+          "frame": 661,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 68,
+          "frame": 667,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 69,
+          "frame": 678,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 70,
+          "frame": 688,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 71,
+          "frame": 691,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 72,
+          "frame": 697,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 73,
+          "frame": 706,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 74,
+          "frame": 715,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 75,
+          "frame": 724,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 76,
+          "frame": 731,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 77,
+          "frame": 736,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 78,
+          "frame": 742,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 79,
+          "frame": 747,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 80,
+          "frame": 753,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 81,
+          "frame": 759,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 82,
+          "frame": 767,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 83,
+          "frame": 773,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 84,
+          "frame": 778,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 85,
+          "frame": 786,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 86,
+          "frame": 793,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 87,
+          "frame": 798,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 88,
+          "frame": 802,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 89,
+          "frame": 808,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 90,
+          "frame": 814,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 91,
+          "frame": 822,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 92,
+          "frame": 829,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 93,
+          "frame": 832,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 94,
+          "frame": 836,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 95,
+          "frame": 843,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 96,
+          "frame": 852,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 97,
+          "frame": 860,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 98,
+          "frame": 863,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 99,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 100,
+          "frame": 873,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 101,
+          "frame": 880,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 102,
+          "frame": 884,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 103,
+          "frame": 895,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 104,
+          "frame": 905,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 105,
+          "frame": 910,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 106,
+          "frame": 917,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 107,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 108,
+          "frame": 926,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 109,
+          "frame": 931,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 110,
+          "frame": 944,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 111,
+          "frame": 962,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 112,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 113,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 114,
+          "frame": 976,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 115,
+          "frame": 981,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 116,
+          "frame": 986,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 117,
+          "frame": 993,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 118,
+          "frame": 1000,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 119,
+          "frame": 1006,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 120,
+          "frame": 1014,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 121,
+          "frame": 1020,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 122,
+          "frame": 1029,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 123,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 124,
+          "frame": 1040,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 125,
+          "frame": 1045,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 126,
+          "frame": 1054,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 127,
+          "frame": 1068,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 128,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 129,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 130,
+          "frame": 1086,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 131,
+          "frame": 1113,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 132,
+          "frame": 1145,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 133,
+          "frame": 1157,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 134,
+          "frame": 1164,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 135,
+          "frame": 1172,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 136,
+          "frame": 1179,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 137,
+          "frame": 1186,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 138,
+          "frame": 1193,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 139,
+          "frame": 1201,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 140,
+          "frame": 1210,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 141,
+          "frame": 1221,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 142,
+          "frame": 1230,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 143,
+          "frame": 1237,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 144,
+          "frame": 1242,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 145,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 146,
+          "frame": 1250,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 147,
+          "frame": 1257,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 148,
+          "frame": 1263,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 149,
+          "frame": 1268,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 150,
+          "frame": 1272,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 151,
+          "frame": 1276,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 152,
+          "frame": 1286,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 153,
+          "frame": 1299,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 154,
+          "frame": 1307,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 155,
+          "frame": 1315,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 156,
+          "frame": 1323,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 157,
+          "frame": 1333,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 158,
+          "frame": 1342,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 159,
+          "frame": 1349,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 160,
+          "frame": 1355,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 161,
+          "frame": 1361,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 162,
+          "frame": 1366,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 163,
+          "frame": 1372,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 164,
+          "frame": 1382,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 165,
+          "frame": 1390,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 166,
+          "frame": 1401,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 167,
+          "frame": 1411,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 168,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 169,
+          "frame": 1417,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 170,
+          "frame": 1423,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 171,
+          "frame": 1430,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 172,
+          "frame": 1435,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 173,
+          "frame": 1440,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 174,
+          "frame": 1445,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 175,
+          "frame": 1450,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 176,
+          "frame": 1456,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 177,
+          "frame": 1462,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 178,
+          "frame": 1468,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 179,
+          "frame": 1476,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 180,
+          "frame": 1484,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 181,
+          "frame": 1490,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 182,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 183,
+          "frame": 1502,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 184,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 185,
+          "frame": 1512,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 186,
+          "frame": 1517,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 187,
+          "frame": 1524,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 188,
+          "frame": 1530,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 189,
+          "frame": 1537,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 190,
+          "frame": 1546,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 191,
+          "frame": 1554,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 192,
+          "frame": 1563,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 193,
+          "frame": 1571,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 194,
+          "frame": 1575,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 195,
+          "frame": 1584,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 196,
+          "frame": 1594,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 197,
+          "frame": 1602,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 198,
+          "frame": 1615,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 199,
+          "frame": 1630,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 200,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 201,
+          "frame": 1642,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 202,
+          "frame": 1645,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 203,
+          "frame": 1648,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 204,
+          "frame": 1652,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 205,
+          "frame": 1656,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 206,
+          "frame": 1663,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 207,
+          "frame": 1841,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 208,
+          "frame": 1857,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 209,
+          "frame": 1871,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 210,
+          "frame": 1879,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 211,
+          "frame": 1886,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 212,
+          "frame": 1892,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 213,
+          "frame": 1897,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 214,
+          "frame": 1904,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 215,
+          "frame": 1909,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 216,
+          "frame": 1914,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 217,
+          "frame": 1920,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 218,
+          "frame": 1927,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 219,
+          "frame": 1936,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 220,
+          "frame": 1942,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 221,
+          "frame": 1947,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 222,
+          "frame": 1953,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 223,
+          "frame": 1957,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 224,
+          "frame": 1960,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 225,
+          "frame": 1966,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 226,
+          "frame": 1973,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 227,
+          "frame": 1989,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 228,
+          "frame": 2005,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 229,
+          "frame": 2010,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 230,
+          "frame": 2016,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 231,
+          "frame": 2022,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 232,
+          "frame": 2028,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 233,
+          "frame": 2031,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 234,
+          "frame": 2036,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 235,
+          "frame": 2040,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 236,
+          "frame": 2045,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 237,
+          "frame": 2053,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 238,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 239,
+          "frame": 2061,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 240,
+          "frame": 2066,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 241,
+          "frame": 2078,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 242,
+          "frame": 2088,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 243,
+          "frame": 2091,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 244,
+          "frame": 2096,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 245,
+          "frame": 2105,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 246,
+          "frame": 2115,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 247,
+          "frame": 2124,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 248,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 249,
+          "frame": 2134,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 250,
+          "frame": 2139,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 251,
+          "frame": 2149,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 252,
+          "frame": 2158,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 253,
+          "frame": 2163,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 254,
+          "frame": 2168,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 255,
+          "frame": 2180,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 256,
+          "frame": 2192,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 257,
+          "frame": 2200,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 258,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 259,
+          "frame": 2209,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 260,
+          "frame": 2214,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 261,
+          "frame": 2220,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 262,
+          "frame": 2224,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 263,
+          "frame": 2237,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 264,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 265,
+          "frame": 2253,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 266,
+          "frame": 2261,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 267,
+          "frame": 2267,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 268,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 269,
+          "frame": 2271,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 270,
+          "frame": 2277,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 271,
+          "frame": 2287,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 272,
+          "frame": 2295,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 273,
+          "frame": 2304,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 274,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 275,
+          "frame": 2316,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 276,
+          "frame": 2322,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 277,
+          "frame": 2327,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 278,
+          "frame": 2334,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 279,
+          "frame": 2342,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 280,
+          "frame": 2350,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 281,
+          "frame": 2358,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 282,
+          "frame": 2369,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 283,
+          "frame": 2381,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 284,
+          "frame": 2387,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 285,
+          "frame": 2393,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 286,
+          "frame": 2398,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 287,
+          "frame": 2402,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 288,
+          "frame": 2405,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 289,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 290,
+          "frame": 2414,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 291,
+          "frame": 2423,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 292,
+          "frame": 2430,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 293,
+          "frame": 2440,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 294,
+          "frame": 2449,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 295,
+          "frame": 2453,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 296,
+          "frame": 2477,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": null,
+      "status": "incomplete"
+    },
+    "brand.no_mark": {
+      "value": [
+        {
+          "beat": "hook",
+          "frame": 73,
+          "score": 0.12012723414683162,
+          "pass": true
+        },
+        {
+          "beat": "dc",
+          "frame": 203,
+          "score": 0.41313070778710653,
+          "pass": true
+        },
+        {
+          "beat": "sacked",
+          "frame": 280,
+          "score": 0.0605416095422336,
+          "pass": true
+        },
+        {
+          "beat": "face",
+          "frame": 346,
+          "score": 0.44247109801786044,
+          "pass": true
+        },
+        {
+          "beat": "title",
+          "frame": 448,
+          "score": 0.26691556176825615,
+          "pass": true
+        },
+        {
+          "beat": "meta",
+          "frame": 562,
+          "score": 0.425672505807582,
+          "pass": true
+        },
+        {
+          "beat": "city",
+          "frame": 664,
+          "score": 0.3211085965456661,
+          "pass": true
+        },
+        {
+          "beat": "piqua",
+          "frame": 733,
+          "score": 0.29360503349628997,
+          "pass": true
+        },
+        {
+          "beat": "bill",
+          "frame": 806,
+          "score": 0.26839008414544163,
+          "pass": true
+        },
+        {
+          "beat": "vote",
+          "frame": 880,
+          "score": 0.3639429984414806,
+          "pass": true
+        },
+        {
+          "beat": "proof",
+          "frame": 950,
+          "score": 0.5833603646773214,
+          "pass": true
+        },
+        {
+          "beat": "sack",
+          "frame": 1076,
+          "score": 0.4444335824181947,
+          "pass": true
+        },
+        {
+          "beat": "built",
+          "frame": 1241,
+          "score": 0.5061621167159374,
+          "pass": true
+        },
+        {
+          "beat": "meta_says",
+          "frame": 1357,
+          "score": 0.2552130922621813,
+          "pass": true
+        },
+        {
+          "beat": "party_line",
+          "frame": 1446,
+          "score": 0.31824159769551014,
+          "pass": true
+        },
+        {
+          "beat": "power",
+          "frame": 1587,
+          "score": 0.011548552188934946,
+          "pass": true
+        },
+        {
+          "beat": "call",
+          "frame": 1751,
+          "score": 0.39760780518445477,
+          "pass": true
+        },
+        {
+          "beat": "deals",
+          "frame": 1902,
+          "score": 0.3353956158485363,
+          "pass": true
+        },
+        {
+          "beat": "small_print",
+          "frame": 2027,
+          "score": 0.266204650062536,
+          "pass": true
+        },
+        {
+          "beat": "payoff",
+          "frame": 2120,
+          "score": 0.21933962327233827,
+          "pass": true
+        },
+        {
+          "beat": "three",
+          "frame": 2210,
+          "score": 0.31294642978421716,
+          "pass": true
+        },
+        {
+          "beat": "carry_on",
+          "frame": 2342,
+          "score": 0.31462738586493727,
+          "pass": true
+        },
+        {
+          "beat": "close",
+          "frame": 2489,
+          "score": 0.29479978072255897,
+          "pass": true
+        }
+      ],
+      "target": "no mark on the vertical cut: mark NCC < 0.8 at every beat midpoint",
+      "pass": true,
+      "status": "measured"
+    },
+    "motion.cue_sync": {
+      "value": [
+        {
+          "event": "hook-0",
+          "atFrame": 0,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 1.8021354675292969,
+          "event_difference": 1.8021354675292969,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "hook-1",
+          "atFrame": 55,
+          "peak_frame": 49,
+          "lag_frames": -6,
+          "peak_difference": 0.664527952671051,
+          "event_difference": 0.6309009194374084,
+          "threshold": 2.020387351512909,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "dc-0",
+          "atFrame": 147,
+          "peak_frame": 147,
+          "lag_frames": 0,
+          "peak_difference": 87.84821319580078,
+          "event_difference": 87.84821319580078,
+          "threshold": 3.7144893407821655,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "dc-1",
+          "atFrame": 194,
+          "peak_frame": 198,
+          "lag_frames": 4,
+          "peak_difference": 2.4400675296783447,
+          "event_difference": 1.7799185514450073,
+          "threshold": 0.4809548556804657,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "face-0",
+          "atFrame": 302,
+          "peak_frame": 302,
+          "lag_frames": 0,
+          "peak_difference": 42.35670471191406,
+          "event_difference": 42.35670471191406,
+          "threshold": 0.33612093329429626,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "face-1",
+          "atFrame": 355,
+          "peak_frame": 356,
+          "lag_frames": 1,
+          "peak_difference": 6.853546142578125,
+          "event_difference": 6.853546142578125,
+          "threshold": 1.721773087978363,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "meta-0",
+          "atFrame": 506,
+          "peak_frame": 506,
+          "lag_frames": 0,
+          "peak_difference": 86.42041778564453,
+          "event_difference": 86.42041778564453,
+          "threshold": 13.765627384185791,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "meta-1",
+          "atFrame": 600,
+          "peak_frame": 599,
+          "lag_frames": -1,
+          "peak_difference": 0.845299482345581,
+          "event_difference": 0.845299482345581,
+          "threshold": 0.7492650300264359,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "city-0",
+          "atFrame": 647,
+          "peak_frame": 648,
+          "lag_frames": 1,
+          "peak_difference": 2.590951919555664,
+          "event_difference": 2.590951919555664,
+          "threshold": 1.1026547849178314,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "bill-0",
+          "atFrame": 800,
+          "peak_frame": 801,
+          "lag_frames": 1,
+          "peak_difference": 5.068933486938477,
+          "event_difference": 5.068933486938477,
+          "threshold": 1.0460666120052338,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "bill-1",
+          "atFrame": 830,
+          "peak_frame": 831,
+          "lag_frames": 1,
+          "peak_difference": 5.052142143249512,
+          "event_difference": 5.052142143249512,
+          "threshold": 0.27879754453897476,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "vote-0",
+          "atFrame": 881,
+          "peak_frame": 877,
+          "lag_frames": -4,
+          "peak_difference": 1.4407185316085815,
+          "event_difference": 1.337668776512146,
+          "threshold": 3.264181137084961,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "proof-0",
+          "atFrame": 912,
+          "peak_frame": 912,
+          "lag_frames": 0,
+          "peak_difference": 1.6114730834960938,
+          "event_difference": 1.6114730834960938,
+          "threshold": 2.602836012840271,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "proof-1",
+          "atFrame": 953,
+          "peak_frame": 954,
+          "lag_frames": 1,
+          "peak_difference": 1.9867912530899048,
+          "event_difference": 1.9867912530899048,
+          "threshold": 0.8889130353927612,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-2",
+          "atFrame": 978,
+          "peak_frame": 979,
+          "lag_frames": 1,
+          "peak_difference": 1.4472309350967407,
+          "event_difference": 1.4472309350967407,
+          "threshold": 0.23934658616781235,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "sack-0",
+          "atFrame": 1010,
+          "peak_frame": 1005,
+          "lag_frames": -5,
+          "peak_difference": 3.1570487022399902,
+          "event_difference": 3.1523494720458984,
+          "threshold": 9.357256650924683,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "sack-1",
+          "atFrame": 1059,
+          "peak_frame": 1060,
+          "lag_frames": 1,
+          "peak_difference": 0.2983449101448059,
+          "event_difference": 0.2983449101448059,
+          "threshold": 0.05883101932704449,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "meta_says-0",
+          "atFrame": 1328,
+          "peak_frame": 1334,
+          "lag_frames": 6,
+          "peak_difference": 4.537782192230225,
+          "event_difference": 2.081002712249756,
+          "threshold": 1.6154817938804626,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "meta_says-1",
+          "atFrame": 1352,
+          "peak_frame": 1352,
+          "lag_frames": 0,
+          "peak_difference": 11.251627922058105,
+          "event_difference": 11.251627922058105,
+          "threshold": 1.788640022277832,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "party_line-0",
+          "atFrame": 1419,
+          "peak_frame": 1420,
+          "lag_frames": 1,
+          "peak_difference": 8.367304801940918,
+          "event_difference": 8.367304801940918,
+          "threshold": 2.5315897464752197,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "power-0",
+          "atFrame": 1550,
+          "peak_frame": 1556,
+          "lag_frames": 6,
+          "peak_difference": 1.4436410665512085,
+          "event_difference": 0.8432368636131287,
+          "threshold": 1.4928081929683685,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "power-1",
+          "atFrame": 1568,
+          "peak_frame": 1572,
+          "lag_frames": 4,
+          "peak_difference": 4.7613372802734375,
+          "event_difference": 2.4545481204986572,
+          "threshold": 3.6507046222686768,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "power-2",
+          "atFrame": 1577,
+          "peak_frame": 1578,
+          "lag_frames": 1,
+          "peak_difference": 7.516287326812744,
+          "event_difference": 7.516287326812744,
+          "threshold": 4.571935772895813,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "power-3",
+          "atFrame": 1649,
+          "peak_frame": 1650,
+          "lag_frames": 1,
+          "peak_difference": 2.126321315765381,
+          "event_difference": 2.126321315765381,
+          "threshold": 0.2978573441505432,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "deals-0",
+          "atFrame": 1911,
+          "peak_frame": 1913,
+          "lag_frames": 2,
+          "peak_difference": 43.77885437011719,
+          "event_difference": 43.77885437011719,
+          "threshold": 0.20497962087392807,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "small_print-0",
+          "atFrame": 1970,
+          "peak_frame": 1970,
+          "lag_frames": 0,
+          "peak_difference": 78.6053237915039,
+          "event_difference": 78.6053237915039,
+          "threshold": 2.9981467723846436,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "payoff-0",
+          "atFrame": 2086,
+          "peak_frame": 2090,
+          "lag_frames": 4,
+          "peak_difference": 2.870114326477051,
+          "event_difference": 1.6634726524353027,
+          "threshold": 0.8017505407333374,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "payoff-1",
+          "atFrame": 2089,
+          "peak_frame": 2095,
+          "lag_frames": 6,
+          "peak_difference": 3.3652560710906982,
+          "event_difference": 2.870114326477051,
+          "threshold": 0.2075260430574417,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "payoff-2",
+          "atFrame": 2110,
+          "peak_frame": 2111,
+          "lag_frames": 1,
+          "peak_difference": 2.2852745056152344,
+          "event_difference": 2.2852745056152344,
+          "threshold": 2.686516284942627,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "payoff-3",
+          "atFrame": 2119,
+          "peak_frame": 2113,
+          "lag_frames": -6,
+          "peak_difference": 1.9228708744049072,
+          "event_difference": 1.176760196685791,
+          "threshold": 3.530280590057373,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "payoff-4",
+          "atFrame": 2131,
+          "peak_frame": 2137,
+          "lag_frames": 6,
+          "peak_difference": 1.5311391353607178,
+          "event_difference": 0.5301538109779358,
+          "threshold": 2.556996524333954,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "payoff-5",
+          "atFrame": 2136,
+          "peak_frame": 2138,
+          "lag_frames": 2,
+          "peak_difference": 2.104279041290283,
+          "event_difference": 2.104279041290283,
+          "threshold": 2.0732263326644897,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "three-0",
+          "atFrame": 2166,
+          "peak_frame": 2167,
+          "lag_frames": 1,
+          "peak_difference": 44.93460464477539,
+          "event_difference": 44.93460464477539,
+          "threshold": 0.20488451421260834,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "carry_on-0",
+          "atFrame": 2390,
+          "peak_frame": 2391,
+          "lag_frames": 1,
+          "peak_difference": 24.31218719482422,
+          "event_difference": 24.31218719482422,
+          "threshold": 0.1795312464237213,
+          "gradual": false,
+          "pass": true
+        }
+      ],
+      "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
+      "pass": false,
+      "status": "measured"
+    },
+    "audio.bed": {
+      "value": [
+        {
+          "check": "bed present",
+          "value": true,
+          "pass": true
+        },
+        {
+          "check": "under speech",
+          "value": -16.27,
+          "target": "-21.0 to -12.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "true peak",
+          "value": -1.7,
+          "target": "<= -1.0 dBTP",
+          "pass": true
+        },
+        {
+          "check": "a steady bed",
+          "value": "episode_bed",
+          "target": "episode_bed or continuous",
+          "pass": true
+        },
+        {
+          "check": "bed level in the master",
+          "value": -32.4,
+          "target": "-32.41 ±1.5 LUFS short-term median",
+          "pass": true
+        },
+        {
+          "check": "bed holds one level",
+          "value": 0.3,
+          "target": "<= 4.0 LU short-term p95-p5 outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never swells or sags",
+          "value": 0.2,
+          "target": "<= 3.0 LU from the median, held 1.0 s, outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never drops out",
+          "value": [],
+          "target": "no 0.25 s 15 dB under its own running level (50 ms windows)",
+          "pass": true
+        },
+        {
+          "check": "the one bed shape",
+          "value": {
+            "open_over_bed_lu": 14.6,
+            "bed_spread_lu": 0.2,
+            "direction_changes": 1,
+            "end_over_bed_lu": 13.3
+          },
+          "target": "config/music-bed.json qc (re-run the premix when missing)",
+          "pass": true
+        }
+      ],
+      "target": "bed present, under speech in range, true peak, (ducked) breathing in pauses, (episode) one steady level with no drop-outs",
+      "pass": true,
+      "status": "measured"
+    },
+    "audio.bed_continuity": {
+      "value": [],
+      "target": "no 0.25 s under -50.41 dBFS (50 ms RMS) from 3.0 to 83.8 s",
+      "pass": true,
+      "status": "measured"
+    },
+    "opening": {
+      "value": {
+        "opening": "hook",
+        "cut_frames": 2559,
+        "file_frames": 2559,
+        "lead_frames": 0,
+        "whole_cut": true,
+        "clips_compared": []
+      },
+      "target": "no sting: the cut's own frame 0 is the file's first, and 2559 frames in all",
+      "pass": true,
+      "status": "measured",
+      "calibration": "placeholder: measured on one real render, 5 Nov 2026 (velib/qc_opening.py)"
+    },
+    "words.lost": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "joins.in_gaps": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.clock": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.render": {
+      "value": null,
+      "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
+      "pass": null,
+      "status": "not_run",
+      "reason": "tesseract is not on PATH, so the burned captions cannot be read back; the check is missing and the cut is held"
+    },
+    "captions.off_face": {
+      "value": null,
+      "target": "no caption page overlaps the face box (+10%)",
+      "pass": null,
+      "status": "not_run",
+      "reason": "no face detector in this Python (opencv-python or mediapipe)"
+    },
+    "plate.head_in_band": {
+      "value": null,
+      "target": "his whole head inside the camera band",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "channel.safe_zones": {
+      "value": {
+        "under_buttons": [
+          {
+            "what": "caption 'makeyourmindup.ai.'",
+            "box": [
+              49,
+              1197,
+              982,
+              105
+            ],
+            "channel": "instagram_reels",
+            "zone": "action rail (like, comment, share, save)"
+          },
+          {
+            "what": "caption 'makeyourmindup.ai.'",
+            "box": [
+              49,
+              1197,
+              982,
+              105
+            ],
+            "channel": "tiktok",
+            "zone": "action rail"
+          },
+          {
+            "what": "caption 'makeyourmindup.ai.'",
+            "box": [
+              49,
+              1197,
+              982,
+              105
+            ],
+            "channel": "youtube_shorts",
+            "zone": "action rail"
+          }
+        ],
+        "count": 3
+      },
+      "target": "no caption, title or device box under a channel button (config/channel-safe-zones.json)",
+      "pass": false
+    },
+    "ground.not_bare": {
+      "value": [
+        {
+          "edge_frame": 147,
+          "barest_frame": 150,
+          "stage_std": 29.76,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 260,
+          "barest_frame": 263,
+          "stage_std": 25.23,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 302,
+          "barest_frame": 301,
+          "stage_std": 37.17,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 391,
+          "barest_frame": 390,
+          "stage_std": 69.86,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 506,
+          "barest_frame": 509,
+          "stage_std": 30.34,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 619,
+          "barest_frame": 622,
+          "stage_std": 39.56,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 711,
+          "barest_frame": 714,
+          "stage_std": 29.58,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 756,
+          "barest_frame": 755,
+          "stage_std": 37.31,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 858,
+          "barest_frame": 861,
+          "stage_std": 32.66,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 903,
+          "barest_frame": 902,
+          "stage_std": 37.31,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 998,
+          "barest_frame": 997,
+          "stage_std": 61.79,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1155,
+          "barest_frame": 1158,
+          "stage_std": 29.58,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1328,
+          "barest_frame": 1330,
+          "stage_std": 41.83,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1387,
+          "barest_frame": 1390,
+          "stage_std": 60.66,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1507,
+          "barest_frame": 1510,
+          "stage_std": 33.4,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1668,
+          "barest_frame": 1667,
+          "stage_std": 40.03,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1835,
+          "barest_frame": 1838,
+          "stage_std": 67.56,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1970,
+          "barest_frame": 1972,
+          "stage_std": 34.01,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 2086,
+          "barest_frame": 2089,
+          "stage_std": 44.97,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 2156,
+          "barest_frame": 2156,
+          "stage_std": 46.52,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 2265,
+          "barest_frame": 2268,
+          "stage_std": 59.96,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 2420,
+          "barest_frame": 2423,
+          "stage_std": 29.09,
+          "floor": 3.0,
+          "pass": true
+        }
+      ],
+      "target": "every frame within 3 of a beat edge has stage spread > 3.0 grey levels",
+      "pass": true,
+      "status": "advisory",
+      "shadow": true
+    },
+    "music.beats": {
+      "value": {
+        "tempo_bpm": 139.9,
+        "confidence": 8.18,
+        "grid": true,
+        "bars": 50,
+        "drops_s": [
+          81.361
+        ],
+        "onsets_per_s": 2.72,
+        "handovers": 22,
+        "handovers_on_a_beat": 8
+      },
+      "target": "measured only: nothing snaps to the beat; his words are the clock",
+      "pass": null,
+      "status": "advisory",
+      "shadow": true
+    },
+    "picture.as_shot": {
+      "value": {
+        "hook": {
+          "L": 50.34,
+          "a": 1.09,
+          "b": 4.36
+        },
+        "face": {
+          "L": 51.68,
+          "a": 1.13,
+          "b": 4.13
+        },
+        "title": {
+          "L": 51.41,
+          "a": 1.28,
+          "b": 4.46
+        },
+        "bill": {
+          "L": 51.6,
+          "a": 1.25,
+          "b": 4.33
+        },
+        "proof": {
+          "L": 50.98,
+          "a": 0.78,
+          "b": 3.55
+        },
+        "sack": {
+          "L": 49.54,
+          "a": 0.91,
+          "b": 3.89
+        },
+        "party_line": {
+          "L": 50.97,
+          "a": 0.3,
+          "b": 3.19
+        },
+        "call": {
+          "L": 50.32,
+          "a": 0.16,
+          "b": 4.14
+        },
+        "deals": {
+          "L": 52.09,
+          "a": 0.78,
+          "b": 3.45
+        },
+        "three": {
+          "L": 51.37,
+          "a": 0.57,
+          "b": 4.09
+        },
+        "carry_on": {
+          "L": 45.08,
+          "a": 7.84,
+          "b": 8.43
+        }
+      },
+      "moved": [
+        "hook",
+        "face",
+        "title",
+        "bill",
+        "proof",
+        "sack",
+        "party_line",
+        "call",
+        "deals",
+        "three",
+        "carry_on"
+      ],
+      "target": "his take as shot: the lower quarter within L 5.0, a 4.0, b 4.0 of the rows of the conformed take it shows (median L*a*b*)",
+      "pass": null,
+      "status": "advisory"
+    },
+    "keyframe_match": {
+      "value": null,
+      "target": "approved golden keyframes",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "composition": {
+      "value": {},
+      "target": "design lock composition thresholds",
+      "pass": false,
+      "status": "measured"
+    },
+    "annotation.target": {
+      "value": [],
+      "target": "every mark names its words and is not drawn over a moving surface",
+      "pass": true,
+      "status": "advisory",
+      "note": "binds pieces published from 2026-11-14 (config/ve/onscreen-checks.json)"
+    },
+    "captions.phrase_breaks": {
+      "value": [
+        {
+          "fromFrame": 3,
+          "page": "A",
+          "next": "tiny",
+          "why": "ends on \"a\""
+        },
+        {
+          "fromFrame": 26,
+          "page": "in",
+          "next": "Ohio",
+          "why": "ends on \"in\""
+        },
+        {
+          "fromFrame": 44,
+          "page": "just",
+          "next": "fired",
+          "why": "ends on \"just\""
+        },
+        {
+          "fromFrame": 55,
+          "page": "fired",
+          "next": "its",
+          "why": "the next page opens on \"its\""
+        },
+        {
+          "fromFrame": 63,
+          "page": "its",
+          "next": "mayor",
+          "why": "ends on \"its\""
+        },
+        {
+          "fromFrame": 94,
+          "page": "greenlit",
+          "next": "a",
+          "why": "the next page opens on \"a\""
+        },
+        {
+          "fromFrame": 107,
+          "page": "a",
+          "next": "data",
+          "why": "ends on \"a\""
+        },
+        {
+          "fromFrame": 127,
+          "page": "for",
+          "next": "Meta.",
+          "why": "ends on \"for\""
+        },
+        {
+          "fromFrame": 158,
+          "page": "are",
+          "next": "big",
+          "why": "ends on \"are\""
+        },
+        {
+          "fromFrame": 188,
+          "page": "full",
+          "next": "of",
+          "why": "the next page opens on \"of\""
+        },
+        {
+          "fromFrame": 192,
+          "page": "of",
+          "next": "computers",
+          "why": "ends on \"of\""
+        },
+        {
+          "fromFrame": 204,
+          "page": "that",
+          "next": "mainly",
+          "why": "ends on \"that\""
+        },
+        {
+          "fromFrame": 222,
+          "page": "just",
+          "next": "run",
+          "why": "ends on \"just\""
+        },
+        {
+          "fromFrame": 260,
+          "page": "so",
+          "next": "it's",
+          "why": "ends on \"so\""
+        },
+        {
+          "fromFrame": 275,
+          "page": "over",
+          "next": "a",
+          "why": "the next page opens on \"a\""
+        },
+        {
+          "fromFrame": 281,
+          "page": "a",
+          "next": "building.",
+          "why": "ends on \"a\""
+        },
+        {
+          "fromFrame": 302,
+          "page": "So",
+          "next": "what",
+          "why": "ends on \"so\""
+        },
+        {
+          "fromFrame": 318,
+          "page": "just",
+          "next": "happened",
+          "why": "ends on \"just\""
+        },
+        {
+          "fromFrame": 324,
+          "page": "happened",
+          "next": "to",
+          "why": "the next page opens on \"to\""
+        },
+        {
+          "fromFrame": 334,
+          "page": "to",
+          "next": "AI",
+          "why": "ends on \"to\""
+        }
+      ],
+      "target": "no caption page ends mid-phrase",
+      "pass": false,
+      "status": "advisory",
+      "note": "binds pieces published from 2026-11-14 (config/ve/onscreen-checks.json)"
+    },
+    "captions.repeat_title": {
+      "value": [],
+      "target": "no caption page repeats the headline on screen",
+      "pass": true,
+      "status": "advisory",
+      "note": "binds pieces published from 2026-11-14 (config/ve/onscreen-checks.json)"
+    },
+    "annotation.on_target": {
+      "value": [],
+      "target": "every mark lands on its words on the rendered frame",
+      "pass": true,
+      "status": "advisory",
+      "note": "binds pieces published from 2026-11-14 (config/ve/onscreen-checks.json)"
+    },
+    "evidence.readable": {
+      "value": null,
+      "target": "evidence words at least 40 px tall on 9:16",
+      "pass": null,
+      "status": "advisory",
+      "reason": "tesseract is not on PATH"
+    },
+    "picture.smeared": {
+      "value": [],
+      "target": "no picture smeared into stripes (scripts/frame_smear.py)",
+      "pass": true,
+      "status": "advisory",
+      "note": "binds pieces published from 2026-11-24 (config/ve/onscreen-checks.json picture)"
+    }
+  },
+  "keyframes": {
+    "applies": false,
+    "note": "rules-only lock: no key frames; the rules, the Critic and his approval are the design gate"
+  },
+  "composition": {
+    "applies": true,
+    "pass": false,
+    "beats": {},
+    "findings": [
+      "tesseract is not on PATH; composition text checks cannot run"
+    ]
+  },
+  "measured_pass": false,
+  "complete": false
+}

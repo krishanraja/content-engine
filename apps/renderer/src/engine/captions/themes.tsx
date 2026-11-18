@@ -299,7 +299,10 @@ const oneWord: Draw = (props, frame) => {
 const podcast: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
   const { page, index } = live, k = scale(props.aspect), box = band(props), prev = previousPage(props, index, frame, 90)
-  const size = Math.min(88 * k, fit(page.words.map((w) => clean(w.text)).join(' '), box.width * 2.1, 'archivo700', false, 88 * k))
+  // No single word may run past 82% of the band: a word cannot wrap, and Tue 17's "makeyourmindup.ai." ran 982 px wide,
+  // under the channels' action rail (qc channel.safe_zones).
+  const widest = Math.min(...page.words.map((w) => fit(clean(w.text), box.width * 0.82, 'archivo700', false, 88 * k)))
+  const size = Math.min(88 * k, widest, fit(page.words.map((w) => clean(w.text)).join(' '), box.width * 2.1, 'archivo700', false, 88 * k))
   const enter = outCubic(since(frame, page.fromFrame, props.fps) / 0.28)
   return root('podcast', box, (
     <div style={{ position: 'absolute', left: 0, bottom: 0, width: box.width, transform: `translateY(${(1 - enter) * size * 0.9}px)` }}>
