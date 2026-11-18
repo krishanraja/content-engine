@@ -344,14 +344,24 @@
     },
     {
       "obj": "excuse",
-      "device": "slam_word",
-      "meaning": "the old excuse taped off and declared void",
+      "device": "stamp",
+      "meaning": "the old excuse stamped void, in ink, never in caption type (his note of 18 Nov)",
       "fromFrame": 155,
       "toFrame": 240,
       "variants": {},
       "params": {
-        "word": "VOID",
-        "tapeText": "THE AI DID IT"
+        "kind": "outline",
+        "paint": "mint",
+        "size": "hero",
+        "top": "THE AI DID IT",
+        "main": "VOID",
+        "tiltDeg": -6,
+        "at": {
+          "x": 140,
+          "y": 640,
+          "w": 800,
+          "h": 380
+        }
       }
     },
     {
@@ -431,9 +441,9 @@
     {
       "id": "b10b-0",
       "obj": "excuse",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 181
+      "verb": "stamp",
+      "toState": "void",
+      "atFrame": 212
     }
   ],
   "motion": {

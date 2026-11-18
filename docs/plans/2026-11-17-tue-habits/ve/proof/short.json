@@ -10,8 +10,8 @@
     29.6,
     31.933
   ],
-  "sha256": "0f769b2e8c8383c1e4d1e7e57799945af1a2ed05f3140d1cc107fa5a37669c92",
-  "spec_sha256": "fd8910a9505e441abbcb82c883cdead1d3d1672951afb5913f970a9c841f769b",
+  "sha256": "627defe3d2ab63707ac9fa1be0dd846c0c426a5a6db3f741bb4b222e24e978db",
+  "spec_sha256": "1a80f2a0a985fd3e742464e3a0928dbd3c749587be94c3215ac547aa57fbd78d",
   "structure": {
     "format": "voice-led-pictures",
     "aspect": "9:16",
@@ -43,7 +43,7 @@
       ],
       [
         "excuse",
-        "slam_word"
+        "stamp"
       ],
       [
         "fwd",
@@ -301,7 +301,7 @@
     ]
   },
   "style_module": "swiss-kinetic-type",
-  "props_sha256": "b5e2b9aa6db4366affc65bc8100de85e11e7134aefd2392cd5cd8f41289b366c",
+  "props_sha256": "be60552752ac5fa2332c10843f01a8c60eab07751e4fa2d8b1c06ee05bd9b1c1",
   "type": [
     [
       "data",
@@ -318,6 +318,10 @@
     [
       "structure",
       "caption"
+    ],
+    [
+      "structure",
+      "card"
     ]
   ]
 }
