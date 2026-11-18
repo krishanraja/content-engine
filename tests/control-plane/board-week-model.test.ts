@@ -134,6 +134,32 @@ describe('the week model (contract 1.12.0)', () => {
     if (process.env.UPDATE_WEEK_FIXTURE) writeFileSync(FIXTURE, `${JSON.stringify({ ok: true, ...v }, null, 1)}\n`)
   })
 
+  // Krish, 2026-11-18: "when a piece is complete [...] Everything's there, ready to publish, with a button that just says
+  // 'Publish.' [...] schedule in Buffer directly, ideally, or produce a prompt that I could do it in a session"; "we need to
+  // ensure all the assets are visible in the board including the covers, thumbnails, captions etc".
+  it('a made post with its files in Drive leads with Publish: every file listed, and a prompt that may schedule exactly that', () => {
+    const thu = dayOf(v, 'thu')
+    const made = thu.items.find(i => i.key === 'off-thu-gitbroke')!
+    expect(made.stage.key).toBe('made')
+    expect(made.next?.kind).toBe('prompt')
+    expect(made.next?.label).toBe('Publish')
+    expect(made.assets?.length).toBeGreaterThan(0)
+    const prompt = (made.next as { prompt: string }).prompt
+    for (const a of made.assets!) for (const f of a.slides) expect(prompt).toContain(f.url)
+    expect(prompt).toContain('schedule this one approved, finished post in Buffer')
+    expect(prompt).toContain('never schedule anything else')
+    // The standard wall (never post or publish anything) is replaced, not contradicted.
+    expect(prompt).not.toContain('Never post or publish anything, and never put an idea')
+    expect(prompt).toContain('Keep the board current as you work')
+  })
+
+  it('a post with no files filed yet keeps its production prompt, and a missing file is never scheduled', () => {
+    for (const day of v.model!.days) for (const it of day.items) {
+      if (it.assets?.length) continue
+      if (it.next?.kind === 'prompt') expect(it.next.label).toBe(CLAUDE_LABEL)
+    }
+  })
+
   it('the frozen fixture of this week is what the builder makes now', () => {
     // UPDATE_VIEW_FIXTURE=1 writes it again, as board-view-contract.test.ts does for its own fixture.
     if (process.env.UPDATE_VIEW_FIXTURE) writeFileSync(FIXTURE, `${JSON.stringify({ ok: true, ...v }, null, 1)}\n`)
@@ -216,7 +242,7 @@ describe('the week model (contract 1.12.0)', () => {
     for (const it of v.model!.days.flatMap(d => d.items)) {
       if (it.stage.key === 'live') { expect(it.next).toBeNull(); continue }
       expect(it.next).toBeTruthy()
-      if (it.next!.kind === 'prompt') { expect(it.next!.label).toBe(CLAUDE_LABEL); expect(it.next!.prompt).toMatch(/report_board_session|board_session\.py/) }
+      if (it.next!.kind === 'prompt') { expect([CLAUDE_LABEL, 'Publish']).toContain(it.next!.label); expect(it.next!.prompt).toMatch(/report_board_session|board_session\.py/) }
       expect(['look', 'review']).not.toContain(it.next!.kind)
     }
   })
