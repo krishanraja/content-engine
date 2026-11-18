@@ -2663,7 +2663,7 @@ How an off-day post is made, said once for every prompt the board copies out (th
 - `interface OfferItem`
 - `function growthItems(week: string, body: unknown, plan: Body | null): { items?: OfferItem[]; problem?: string; left: Ar…`
 - `async function offerGrowth(db: SupabaseClient, week: string, body: unknown, plan: Body | null): Promise<MoveResult>`
-- `async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date()): Promise<MoveResult>`
+- `async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date(), drive: DriveRenamer…`
 - `function itemsForGrowth(items: OffdayItem[], week: string)`
 - `async function syncApprove(db: SupabaseClient, week: string, docId: string, body: Body, ideas: (w: string) => Promise<B…`
 - `async function twinItem(db: SupabaseClient, option: Body, own: string, week: string): Promise<OffdayItem | null | undef…`
