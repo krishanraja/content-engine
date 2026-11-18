@@ -8,6 +8,13 @@ import type { DeviceProps } from '../types'
 import { ParamsSchema } from './schema'
 import { throughLineState } from './state'
 
+/** A number as a viewer reads it: thousands grouped, a space before a word unit, and a whole-number count moves in whole
+ * numbers (state.ts) (18 Nov 2026: "2385.19credits" showed mid-count on a count from 2,000 to 2,400). */
+export function throughLineNumber(value: number, unit: string): string {
+  const text = Number(value.toFixed(2)).toLocaleString('en-GB', { maximumFractionDigits: 2 })
+  return /^[A-Za-z]/.test(unit) ? `${text} ${unit}` : `${text}${unit}`
+}
+
 export function Device({ object, events, box, tokens, aspect, frame }: DeviceProps) {
   const s = throughLineState(object, events, frame)
   if (!s.visible) return null
@@ -70,7 +77,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
     {number && <g data-number-on={focused!.id}>
       <text data-number-row="" x={labelLeft} y={numberSize + 20} fill={tokens.cream}
         fontFamily={HOUSE_FONTS.display} fontSize={numberSize}>
-        {Number(number.value.toFixed(2))}{number.unit}
+        {throughLineNumber(number.value, number.unit)}
       </text>
       <path d={`M${labelLeft} ${numberSize + 60}H${labelLeft + w * .24}`} stroke={tokens.channel} strokeWidth={5}/>
     </g>}
