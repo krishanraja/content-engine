@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-18","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The Saturday 21 Nov good-news carousel (piece 474cd077, "This week AI helped people speak, sign and get around.") is made: ten cards in the house look that pass carousel_check on the deck and on the drawn cards, built by Codex over seven card rounds, filed to its 3 Posts folder and on the piece. The 10/10 judges route answered 503 judgements_unavailable twice, so it is not judged yet. (2026-11-18)
 - The AI-native firm scene has a new cast, one figurine per job (49), built by Codex in two passes and reviewed at full size; the master is re-rendered as version 4 and the three floor close-ups for the LinkedIn series are made, all filed in Drive with their ids in lab/universe/PLAN.md. (2026-11-18)
 - A piece that moves to another day after its post folder is bound now has its folder follow it, series pieces included: the folder in 3 Posts is renamed by its ID to the new date and day, files still waiting for the library sync move to the new path, then the binding updates. The making route does it on every read and write of a moved piece and the research library's hourly sweep catches the rest; when Drive cannot be read or both names exist, writers stop (post_folder_held) and nothing is filed. (2026-11-18)
 - A file Krish drops on the production plan (role krish_got) is filed on the piece and into its one post folder in his Drive, 3 Posts/<folder>/3 Video/Your materials, through the asset library; the piece's post folder is now bound once on its making record (post_folder) by the first writer, and build.py and ve file bind or read it, so a piece is never spread across two folders. View contract 1.30.0 carries his files and the folder; the production prompt names each file by material id, and a ready plan's prompt asks which points to make visually. (2026-11-18)
@@ -43,13 +44,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-18 docs/plans/2026-11-16-week/goodnews-carousel (deck, research, caption, render.py, scene record, card hashes), docs/ve/cards/w1116-carousels/ve-carousel-goodnews-1121 and its fix rounds 2 to 7.
 - 2026-11-18 lab/universe (scene close-ups, render3d.cjs --shots, figurines/index.js v4, roles.json, check.mjs v4, line-up), docs/ve/cards/universe/ve-universe-figurines-3.
 Older lines: `docs/history/2026-11-18-NOW-moved-14.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): Krish looks at the version 4 master and the three close-ups; the coordinator session hands the ids to the LinkedIn session drafting posts 2 and 3.
+- Next (2026-11-18): Send it to the 10/10 judges again once the route answers (scratchpad judge request rebuilt from docs/plans/2026-11-16-week/goodnews-carousel), then Krish approves and picks the track and Growth posts it.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
