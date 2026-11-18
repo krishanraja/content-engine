@@ -60,7 +60,7 @@
    "params": {
     "shots": [
      {
-      "src": "plates/croc-hook.mp4",
+      "src": "plates/croc-hook-video.mp4",
       "kind": "video",
       "width": 1080,
       "height": 1920
@@ -257,7 +257,7 @@
    "params": {
     "shots": [
      {
-      "src": "plates/confetti.mp4",
+      "src": "plates/confetti-layer.mp4",
       "kind": "video",
       "width": 1080,
       "height": 1920
@@ -339,6 +339,31 @@
      }
     ]
    }
+  },
+  {
+   "obj": "croc_stare",
+   "device": "scene_plate",
+   "meaning": "the stand-off: the crocodile awake and staring at the frozen developer (the hook clip's last frame, held)",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/croc-stare.png",
+      "width": 1080,
+      "height": 1920,
+      "focus": {
+       "x": 0.55,
+       "y": 0.62
+      }
+     }
+    ],
+    "camera": "push",
+    "full": true,
+    "grade": "none"
+   }
   }
  ],
  "assets": [
@@ -351,26 +376,35 @@
    "licence": "Krish's own recording, 18 Nov 2026 (Build-or-buy-short.mp4), restarts and long pauses cut, sped 1.22x"
   },
   {
-   "id": "croc-hook",
+   "id": "croc-hook-video",
    "kind": "broll",
    "origin": "generated",
-   "path": "plates/croc-hook.mp4",
-   "sha256": "313bbaaa2a355272ffeb3ea1e91c9d01462738c0f6b5299af88d085ec1a55259",
-   "licence": "made for this piece by Codex (card ve-w1118-comic-motion) from its approved still; no likeness of a real person",
-   "tool": "codex:image_gen",
-   "job_id": "exec-be12faea-3cc6-4185-95c1-4a419f467bff,exec-464c9579-e6e7-4d47-8376-f583f85e2030,exec-ffdb0b3a-b737-4111-b4a2-17dfeb2482c9,exec-c03c8c09-34d5-4188-840d-d86d4367da9e,exec-aa553c7d-cb3c-49a8-bf80-288",
-   "prompt_ref": "docs/ve/cards/w1118/ve-w1118-comic-motion.md#croc-hook"
+   "path": "plates/croc-hook-video.mp4",
+   "sha256": "f456bdda6910e34a18d9a7ff28c760334bd3fe748dbe357774d0fdc5ef1c3f5d",
+   "tool": "higgsfield:seedance_2_5",
+   "job_id": "5360fb88-d33e-4973-9469-d6bb2dd819cc",
+   "licence": "generated for this piece from Codex's approved still (Krish approved 80 credits, 18 Nov: \"go 80\")",
+   "credits": 80
   },
   {
-   "id": "confetti-clip",
+   "id": "croc-stare",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "plates/croc-stare.png",
+   "sha256": "0859c1d65a87f359d038985db7f46fb741f5e7f0cc3f893ce4fc776a07d423bb",
+   "tool": "higgsfield:seedance_2_5",
+   "job_id": "5360fb88-d33e-4973-9469-d6bb2dd819cc",
+   "licence": "the last frame of the hook clip, held"
+  },
+  {
+   "id": "confetti-layer",
    "kind": "broll",
    "origin": "generated",
-   "path": "plates/confetti.mp4",
-   "sha256": "fd93bf6ae1ecfd82122882607f8235bb108be945f423e3808c530eb87d1abc23",
-   "licence": "made for this piece by Codex (card ve-w1118-comic-motion) from its approved still; no likeness of a real person",
-   "tool": "codex:image_gen",
-   "job_id": "exec-f8510065-ab00-4e0a-b8f4-c7156ba378f3,exec-82c34754-b6e9-450c-a3ba-7dcbc41b6282,exec-bfc8c01a-a194-4434-be8f-7ddef150cb4b,exec-7de1707b-137e-4b67-8538-79d27e63100d",
-   "prompt_ref": "docs/ve/cards/w1118/ve-w1118-comic-motion.md#confetti"
+   "path": "plates/confetti-layer.mp4",
+   "sha256": "b600a21c83be84b6746c2f33ab123e632155fd89c72bfbd97628de2fc51bc61f",
+   "tool": "codex:code",
+   "job_id": "ve-w1118-motion-layers",
+   "licence": "made for this piece by Codex from its approved still: one continuous push with confetti drawn over it"
   },
   {
    "id": "hl-fullstackhr",
@@ -491,12 +525,20 @@
       "source": "none"
      },
      "uses": [
-      "croc_s"
+      "croc_s",
+      "croc_stare"
      ],
      "events": [
       {
        "at_w": 0,
        "obj": "croc_s",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 16,
+       "obj": "croc_stare",
        "verb": "enter",
        "to_state": "0",
        "silent": true
@@ -515,9 +557,9 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Klarna made headlines for switching off Salesforce and Workday and replacing them with AI",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "plate": {
-      "source": "take"
+      "source": "none"
      },
      "uses": [
       "hl_fullstack",
@@ -568,7 +610,8 @@
        "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "face": "off"
     },
     {
      "id": "face",
@@ -594,13 +637,13 @@
      "role": "anchor",
      "span": {
       "from_w": 84,
-      "to_w": 117
+      "to_w": 110
      },
      "viewer_task": "verify_evidence",
      "point": "Salesforce tracks every customer, Workday runs pay and holidays, and both cost a fortune",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "plate": {
-      "source": "take"
+      "source": "none"
      },
      "uses": [
       "sf_screen",
@@ -643,7 +686,27 @@
        "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "face": "off"
+    },
+    {
+     "id": "fortune",
+     "role": "bridge",
+     "span": {
+      "from_w": 111,
+      "to_w": 117
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Both of them cost an absolute fortune",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"Can't cut my head off\"; \"The captions and my head, etc., would be better.\")"
     },
     {
      "id": "wild",
@@ -747,9 +810,9 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "Workday was replaced by Deel, another app Klarna rents",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "plate": {
-      "source": "take"
+      "source": "none"
      },
      "uses": [
       "wd_out",
@@ -785,14 +848,15 @@
        "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "face": "off"
     },
     {
      "id": "meeting",
      "role": "bridge",
      "span": {
       "from_w": 171,
-      "to_w": 190
+      "to_w": 177
      },
      "viewer_task": "feel_stakes",
      "point": "Picture the all-hands that celebrates swapping one rented app for another",
@@ -815,6 +879,25 @@
      "transition_out": "cut",
      "face": "off",
      "override_reason": "a moving clip carries this beat; more device events would only pulse it (Krish, 18 Nov 2026: \"The crocodile scene just keeps pulsing as a still.\")"
+    },
+    {
+     "id": "punchline",
+     "role": "bridge",
+     "span": {
+      "from_w": 178,
+      "to_w": 190
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Payroll is now on another app, which they also rent",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his punchline to camera with his captions (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
     },
     {
      "id": "rented",
@@ -863,13 +946,13 @@
      "role": "bridge",
      "span": {
       "from_w": 210,
-      "to_w": 238
+      "to_w": 226
      },
      "viewer_task": "understand_mechanism",
-     "point": "One home for all the customer data was worth building, and now they look after it",
-     "layout": "SPLIT",
+     "point": "One home for all the customer data was worth building",
+     "layout": "STAGE",
      "plate": {
-      "source": "take"
+      "source": "none"
      },
      "uses": [
       "built"
@@ -890,21 +973,34 @@
        "silent": true
       },
       {
-       "at_w": 226,
+       "at_w": 225,
        "obj": "built",
        "verb": "highlight",
        "to_state": "BUILT",
        "silent": true
-      },
-      {
-       "at_w": 237,
-       "obj": "built",
-       "verb": "exit",
-       "to_state": "gone",
-       "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "face": "off"
+    },
+    {
+     "id": "upkeep",
+     "role": "bridge",
+     "span": {
+      "from_w": 227,
+      "to_w": 238
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "And now they have to look after all of it",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"Can't cut my head off\"; \"The captions and my head, etc., would be better.\")"
     },
     {
      "id": "slack",
@@ -915,7 +1011,7 @@
      },
      "viewer_task": "locate_story",
      "point": "Klarna still uses Slack, so who owns Slack?",
-     "layout": "SPLIT",
+     "layout": "WINDOW",
      "plate": {
       "source": "take"
      },
@@ -946,7 +1042,8 @@
        "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "face": "window"
     },
     {
      "id": "owner",

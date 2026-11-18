@@ -5529,6 +5529,22 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 - `const DEVICES: DeviceRegistry`
 
+### `apps/renderer/src/engine/devices/scene_plate/index.tsx`
+
+- `export { coverRect } from './state'`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/scene_plate/schema.ts`
+
+- `const ShotSchema`
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/scene_plate/state.ts`
+
+- `function coverRect(shot: { width: number; height: number; focus?: { x: number; y: number } }, boxW: number, boxH: numbe…`
+- `function sceneState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `function cameraPose(camera: string, p: number, frame: number, w: number, h: number, focus: { x: number; y: number })`
+
 ### `apps/renderer/src/engine/devices/scribble/index.tsx`
 
 - `function Device({ object, events, tokens, frame }: DeviceProps)`
