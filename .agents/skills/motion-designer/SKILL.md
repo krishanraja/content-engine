@@ -45,22 +45,8 @@ First read what his inspiration says: `.agents/skills/motion-designer/references
 
 Set each with its `reason` in one plain line (`.agents/skills/motion-designer/references/plan-template.md`):
 
-- `style.idea`: the one object, what each move means, the never-list, and the real artifact shown as itself. Every beat
-  below serves this idea. What `ve lint` checks of it: `idea.*` that the idea EXISTS and is complete (an object, a `means`
-  per move, a non-empty never-list, a real artifact shown); `idea.one_object` (from 19 Nov 2026) its CONTENT, that no move's
-  meaning acts out the line ("his line taken literally") and that the piece does not draw a different generated picture for
-  almost every beat (more than 4 distinct, unless `style.idea.carrier` names one asset or object that persists across at
-  least 60% of the beats); `critic.pre` that the Critic's two questions below were answered for this spec. Lint does not
-  judge whether the idea is a good one: that is the reviewer's, before you sign the storyboard.
-- **Before Sign storyboard and before the first card (from 19 Nov 2026):** `ve critic --pre <piece>` writes the reviewer's
-  inputs (the spec digest, the storyboard table and every card brief). A reviewer who did not write the spec answers the
-  Critic's two blocking questions, in one line each citing a beat or card: (1) does this carry one idea as clearly as The
-  Ladder (Mon 2 Nov: one object, every move meaning something, nothing acting out a sentence)? (2) is any number on screen
-  invented (a figure the piece does not own: its datasets, real artifacts or his script)? `ve critic --pre <piece> --write
-  --reviewer NAME --answers answers.json` records `verdict.pre.json`; `ve card` and `ve lint` refuse a piece without a
-  passing one for the spec as it stands. Never-list items are not decoration: `ve card` writes them into every Codex card for
-  the piece and refuses a card whose quoted on-screen words carry a number the piece does not own (list a figure you supply
-  as `numbers_supplied`); `ve verify-card` reads the numbers off what Codex made.
+- `style.idea`: the one object, what each move means, the never-list, the real artifact shown as itself; every beat serves it.
+  Before Sign storyboard: `.agents/skills/motion-designer/references/pre-critic.md` (`ve critic --pre`).
 - `style.motion`: his pick, or before he records the proposal from
   `python3 scripts/post-pack/creative_direction.py motion --points ... --format ...`.
 - `style.transitions`, `style.camera`, `style.energy`, `style.layout`: chosen apart from the motion style, for this
