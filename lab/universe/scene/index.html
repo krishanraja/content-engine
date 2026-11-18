@@ -13,8 +13,8 @@ body{width:1080px;height:1350px;overflow:hidden;font-family:Archivo,sans-serif;b
 #sky{position:absolute;inset:0;background:linear-gradient(#EFE8D8,#E2D9C5)}
 #night{position:absolute;inset:0;background:radial-gradient(1100px 800px at 40% 20%,#16221D,#0A110E 75%);opacity:var(--n)}
 #stars{position:absolute;inset:0;opacity:var(--n)} .star{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--cream)}
-#sun{position:absolute;right:64px;top:40px;width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#FFE27A,#FF8A4D);box-shadow:0 0 60px #FFB86B88;transform:translateY(calc(var(--n) * 150px));opacity:calc(1 - var(--n))}
-#moon{position:absolute;right:70px;top:44px;width:80px;height:80px;border-radius:50%;background:var(--cream);box-shadow:inset -16px -7px 0 #CFC9BA,0 0 46px #F4EFE455;opacity:var(--n)}
+#sun{position:absolute;right:64px;top:40px;width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#FFE27A,#FF8A4D);box-shadow:0 0 60px #FFB86B88;transform:translateY(calc(var(--n) * 150px));opacity:clamp(0, calc(1 - var(--n) * 2.2), 1)}
+#moon{position:absolute;right:70px;top:44px;width:80px;height:80px;border-radius:50%;background:var(--cream);box-shadow:inset -16px -7px 0 #CFC9BA,0 0 46px #F4EFE455;opacity:clamp(0, calc(var(--n) * 2.2 - 1.2), 1)}
 canvas{position:absolute;inset:0}
 .title{position:absolute;left:52px;top:38px}
 .title .big{font-family:Anton;font-size:84px;line-height:1;text-transform:uppercase;letter-spacing:.5px}

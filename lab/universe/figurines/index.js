@@ -43,9 +43,9 @@ export function makeFigurine(THREE, spec) {
   }
   const legs = [-1, 1].map((side) => {
     const leg = pivot(side < 0 ? 'left-hip' : 'right-hip', side * 0.063, 0.18, 0);
-    box(leg, `${leg.name}-thigh`, 0.095, 0.15, 0.105, body, 0, -0.065, 0);
+    box(leg, `${leg.name}-thigh`, 0.095, 0.15, 0.105, dark, 0, -0.065, 0);
     box(leg, `${leg.name}-shoe`, 0.102, 0.055, 0.135, dark, 0, -0.1525, 0.009);
-    decal(leg, `${leg.name}-logo`, spec.legLogo, 0.057, 0.057, 0, -0.05, 0.054);
+    decal(leg, `${leg.name}-logo`, spec.legLogo, 0.075, 0.075, 0, -0.05, 0.054);
     return leg;
   });
   box(group, 'torso', 0.225, 0.225, 0.14, body, 0, 0.288, 0);
@@ -58,7 +58,7 @@ export function makeFigurine(THREE, spec) {
   } else {
     box(head, 'bot-head', 0.255, 0.225, 0.19, body);
     box(head, 'bot-flat-face-panel', 0.203, 0.147, 0.008, body, 0, -0.01, 0.098);
-    decal(head, 'head-logo', spec.headLogo, 0.105, 0.075, 0, -0.035, 0.104);
+    decal(head, 'head-logo', spec.headLogo, 0.15, 0.075, 0, -0.035, 0.104);
   }
   for (const side of [-1, 1]) {
     ball(head, side < 0 ? 'left-eye' : 'right-eye', 0.013, dark, side * 0.057, 0.025, spec.head === 'human' ? 0.103 : 0.105);
@@ -69,6 +69,10 @@ export function makeFigurine(THREE, spec) {
     ball(arm, `${arm.name}-hand`, 0.038, spec.head === 'human' ? skin : body, 0, -0.105, 0.007);
     return arm;
   });
+  if (p === 'scanner' || p === 'bulb') {
+    cylinder(head, 'antenna-stem', 0.009, 0.035, dark, 0.065, 0.126, 0);
+    ball(head, 'antenna-tip', 0.016, skin, 0.065, 0.148, 0);
+  }
   let actor = arms[1];
   let animate = () => {};
   const prop = pivot('held-prop', 0, -0.095, 0.035, actor);
@@ -88,61 +92,71 @@ export function makeFigurine(THREE, spec) {
     actor = head;
     if (p === 'chin') {
       actor = combine('thinking-head-and-hand', [head, arms[1]]);
+      actor.position.y = 0.509;
+      head.position.y -= 0.509; arms[1].position.y -= 0.509;
+      arms[1].position.z = -0.015;
       arms[1].rotation.x = -1.9; arms[1].rotation.z = -0.45;
     }
     animate = (q, phase) => {
       head.rotation.y = p === 'scanner' ? (q - 0.5) * 0.9 : p === 'skeptic' && phase < 0.6 ? (q - 0.5) * 0.8 : 0;
       if (p === 'chin') actor.rotation.x = -q * 0.38;
-      head.rotation.x = p === 'bobber' || (p === 'skeptic' && phase >= 0.6) ? -q * 0.38 : 0;
+      if (p !== 'chin') head.rotation.x = p === 'bobber' || (p === 'skeptic' && phase >= 0.6) ? -q * 0.38 : 0;
     };
   } else if (p === 'bulb') {
-    actor = pivot('idea-bulb', 0, 0.655, 0);
-    ball(actor, 'bulb-globe', 0.025, body, 0, 0, 0);
-    cylinder(actor, 'bulb-socket', 0.014, 0.02, dark, 0, -0.027, 0);
-    animate = (q) => { actor.position.y = 0.625 + q * 0.043; actor.scale.setScalar(0.7 + q * 0.3); };
+    actor = pivot('idea-bulb', 0, 0.65, 0);
+    const glow = material(spec.skin ?? spec.body);
+    glow.emissive.set(spec.skin ?? spec.body);
+    glow.emissiveIntensity = 0.6;
+    ball(actor, 'bulb-globe', 0.045, glow, 0, 0, 0);
+    cylinder(actor, 'bulb-socket', 0.02, 0.025, dark, 0, -0.048, 0);
+    animate = (q) => { actor.position.y = 0.61 + q * 0.043; glow.emissiveIntensity = 0.4 + q * 0.8; };
   } else if (p === 'pacer' || p === 'courier') {
     actor = group;
     if (p === 'courier') {
-      box(group, 'courier-parcel', 0.19, 0.14, 0.105, body, 0, 0.292, 0.11);
-      box(group, 'parcel-band', 0.03, 0.144, 0.108, dark, 0, 0.292, 0.11);
-      arms.forEach((a) => { a.rotation.x = -0.8; });
+      box(group, 'courier-parcel', 0.18, 0.14, 0.105, dark, 0.045, 0.405, 0.09);
+      box(group, 'parcel-band', 0.03, 0.144, 0.108, skin, 0.045, 0.405, 0.09);
+      arms.forEach((a, i) => { a.rotation.x = -2; a.rotation.z = i ? -0.35 : 0.7; });
     }
     animate = (q, phase) => {
-      group.position.x = p === 'pacer' ? (q - 0.5) * 0.3 : 0;
+      group.position.x = p === 'pacer' ? (q - 0.5) * 0.06 : 0;
       group.position.y = p === 'courier' ? q * 0.047 : 0;
-      legs[0].rotation.x = Math.sin(phase * Math.PI * 4) * 0.3;
+      legs[0].rotation.x = Math.sin(phase * Math.PI * 4) * 0.12;
       legs[1].rotation.x = -legs[0].rotation.x;
     };
   } else {
     if (p === 'sipper') {
-      cylinder(prop, 'mug', 0.032, 0.061, body);
-      cylinder(prop, 'mug-drink', 0.025, 0.003, dark, 0, 0.031, 0);
-      ring(prop, 'mug-handle', 0.022, 0.007, 0.037, 0, 0);
+      cylinder(prop, 'mug', 0.036, 0.09, dark);
+      cylinder(prop, 'mug-drink', 0.028, 0.003, skin, 0, 0.046, 0);
+      ring(prop, 'mug-handle', 0.025, 0.009, 0.043, 0, 0);
     } else if (p === 'stamper') {
       cylinder(prop, 'stamp-handle', 0.018, 0.062, dark);
-      box(prop, 'stamp-foot', 0.075, 0.022, 0.06, body, 0, -0.04, 0);
+      box(prop, 'stamp-foot', 0.095, 0.025, 0.065, dark, 0, -0.04, 0);
     } else if (p === 'binoculars') {
       actor = combine('binocular-sweep', [head, arms[0], arms[1]]);
       for (const x of [-0.045, 0.045]) {
-        const tube = cylinder(head, `binocular-barrel-${x}`, 0.032, 0.065, dark, x, 0, 0.12);
+        const tube = cylinder(head, `binocular-barrel-${x}`, 0.034, 0.065, dark, x, 0, 0.105);
         tube.rotation.x = Math.PI / 2;
       }
       arms.forEach((a) => { a.rotation.x = -2; });
     } else if (p === 'pageflip') {
       box(group, 'book-cover', 0.17, 0.016, 0.12, dark, 0, 0.29, 0.105);
       actor = pivot('page-hinge', -0.065, 0.303, 0.1);
-      box(actor, 'turning-page', 0.13, 0.008, 0.105, body, 0.065, 0, 0);
+      box(actor, 'turning-page', 0.13, 0.008, 0.105, skin, 0.065, 0, 0);
     } else if (p === 'typist') {
       box(group, 'laptop-base', 0.19, 0.018, 0.105, dark, 0, 0.258, 0.104);
-      box(group, 'laptop-screen', 0.19, 0.105, 0.016, body, 0, 0.312, 0.15);
+      box(group, 'laptop-screen', 0.19, 0.105, 0.016, dark, 0, 0.312, 0.15);
+      box(group, 'laptop-display', 0.16, 0.075, 0.004, skin, 0, 0.312, 0.16);
       actor = combine('typing-hands', arms);
     } else if (p === 'pentap') {
-      cylinder(prop, 'pen', 0.008, 0.108, dark);
+      cylinder(prop, 'pen', 0.012, 0.108, dark);
+      mesh(prop, 'pen-nib', new THREE.ConeGeometry(0.012, 0.025, 12), skin, 0, -0.066, 0).rotation.z = Math.PI;
+      box(prop, 'pen-clip', 0.008, 0.035, 0.012, skin, 0.014, 0.025, 0);
     } else if (p === 'button') {
       box(group, 'button-base', 0.115, 0.025, 0.09, dark, 0.08, 0.22, 0.105);
-      cylinder(group, 'big-button', 0.041, 0.023, body, 0.08, 0.243, 0.105);
-    } else if (p === 'caller') {
-      ring(head, 'headset-band', 0.126, 0.008, 0, 0, 0);
+      cylinder(group, 'big-button', 0.048, 0.027, skin, 0.08, 0.243, 0.105);
+    } else if (p === 'caller' || p === 'talker') {
+      mesh(head, 'headset-band', new THREE.TorusGeometry(0.126, 0.01, 8, 24, Math.PI), dark);
+      ball(head, 'headset-right-earpiece', 0.026, dark, 0.12, 0, 0);
       ball(head, 'headset-earpiece', 0.026, dark, -0.12, 0, 0);
       box(head, 'headset-mic', 0.065, 0.012, 0.013, dark, -0.09, -0.058, 0.1);
       actor = combine('caller-head-and-hand', [head, arms[1]]);
@@ -156,18 +170,18 @@ export function makeFigurine(THREE, spec) {
       box(prop, 'wrench-jaw-base', 0.06, 0.018, 0.024, dark, 0, 0.033, 0);
     } else if (p === 'filer') {
       actor = combine('box-lifting-arms', arms);
-      box(actor, 'filing-box', 0.17, 0.12, 0.11, body, 0, 0.27, 0.105);
-      box(actor, 'filing-box-label', 0.08, 0.03, 0.006, dark, 0, 0.28, 0.163);
+      box(actor, 'filing-box', 0.17, 0.12, 0.11, dark, 0, 0.27, 0.105);
+      box(actor, 'filing-box-label', 0.08, 0.03, 0.006, skin, 0, 0.28, 0.163);
     }
     animate = (q) => {
-      if (p === 'binoculars') actor.rotation.y = (q - 0.5) * 0.7;
+      if (p === 'binoculars') actor.rotation.y = (q - 0.5) * 0.45;
       else if (p === 'pageflip') actor.rotation.z = q * 2.4;
       else if (p === 'typist') {
         arms[0].rotation.x = -0.7 - q * 0.4;
         arms[1].rotation.x = -1.1 + q * 0.4;
         actor.position.y = q * 0.045;
       } else if (p === 'filer') actor.position.y = q * 0.09;
-      else if (p === 'caller') { head.rotation.z = (q - 0.5) * 0.35; arms[1].rotation.x = -q * 0.9; actor.rotation.y = q * 0.24; }
+      else if (p === 'caller' || p === 'talker') { head.rotation.z = (q - 0.5) * 0.35; arms[1].rotation.x = -q * 0.9; actor.rotation.y = q * 0.24; }
       else if (p === 'waver') actor.rotation.z = -0.7 - q * 0.9;
       else if (p === 'wrench') actor.rotation.z = (q - 0.5) * 0.9;
       else if (p === 'sipper') actor.rotation.x = -0.6 - q * 1.5;
