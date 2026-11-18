@@ -364,7 +364,8 @@ def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list
 # comic beats). The first slice of Phase 2: a generated still or clip may fill a photo_plate, once it names the tool
 # that made it, the job that made it (the Codex thread or the generation id) and its sha256, and Claude has checked it
 # (`ve codex receipt`). Every other device still refuses it, and a beat's own plate still waits for the full pipeline.
-GENERATED_PLATE_DEVICES = frozenset({'photo_plate'})
+# scene_plate (18 Nov 2026, Wed 18): a full-frame generated scene or clip that draws no words, so it is never evidence.
+GENERATED_PLATE_DEVICES = frozenset({'photo_plate', 'scene_plate'})
 
 
 def generated_plate_problem(asset: dict, device: str) -> str:
@@ -597,7 +598,11 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     channel = spec['brand']['series'].replace('.', '_')
     identity = house['channels'][channel]
     emphasis = set(cut['captions'].get('emphasis', []))
-    word_mode = spec['brand'].get('captions') == 'word'
+    # A picked caption style (style.captions; Krish, 2026-11-13: "the captions should be decoupled from the animation
+    # styles") draws ve's phrase pages itself: one word a page would undo it (rack-focus racks focus along the phrase), so
+    # the word build applies to the house caption only (18 Nov 2026, Wed 18, his rack-focus pick of 17 Nov).
+    picked_theme = (((spec.get('style') or {}).get('captions') or {}).get('theme'))
+    word_mode = spec['brand'].get('captions') == 'word' and not picked_theme
     moment = title_moment_props(spec, cut_id, rows, duration)
     # The captions step aside for the title's words, so they appear once (docs/ve/INGREDIENTS.md, the episode title moment).
     spoken = [row for row in rows if not (moment and moment['span'][0] <= row['w'] <= moment['span'][1])]

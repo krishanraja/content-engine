@@ -11,6 +11,9 @@ import { type Draw, exitProgress, exitStart, marked, root, upper } from '../draw
  *  upper bands, centred in the centre. Source: instagram_DfkCOCLt7KZ ('THE AD' resolving from blur; phrases leaving by
  *  blur). */
 const HERO_X = 2.0, HERO_IN = 1.3
+/** The lower band's rows sit this far above the band's foot, so descenders stay clear of the y 1320 line where
+ *  Instagram's handle and caption begin (Krish, 2026-11-18: "approve the lift"). */
+const LOWER_LIFT = 30
 
 export const rackFocus: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
@@ -66,14 +69,14 @@ export const rackFocus: Draw = (props, frame) => {
     const t = outCubic(since(frame, w.atFrame, fps) / 0.16)
     const nw = page.words[i + 1]
     const d = i < now && nw ? outCubic(since(frame, nw.atFrame, fps) / 0.25) : 0
-    const blur = (1 - t) * 12 + d * 3.5
+    const blur = (1 - t) * 12 + d * 1.0
     return <span key={i} style={{ fontFamily: F.structure, fontWeight: 700, fontSize: S, lineHeight: 1.08, letterSpacing: '-0.01em',
       color: props.tokens.cream, textShadow: LIFT, display: 'inline-block', transformOrigin: '50% 80%',
-      opacity: t * mix(1, 0.55, d), filter: blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : undefined,
+      opacity: t * mix(1, 0.8, d), filter: blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : undefined,
       transform: `scale(${(mix(1.12, 1, t) * mix(1, 0.97, d)).toFixed(4)})` }}>{words[i]}</span>
   }
 
-  const anchor: React.CSSProperties = place === 'upper' ? { top: 0 } : place === 'centre' ? { top: '50%', transform: 'translateY(-50%)' } : { bottom: 0 }
+  const anchor: React.CSSProperties = place === 'upper' ? { top: 0 } : place === 'centre' ? { top: '50%', transform: 'translateY(-50%)' } : { bottom: LOWER_LIFT * k }
   return root('rack-focus', box, (
     <div style={{ position: 'absolute', left: 0, right: 0, ...anchor, display: 'flex', flexDirection: 'column',
       opacity: 1 - exit, filter: exit > 0 ? `blur(${(exit * 16).toFixed(2)}px)` : undefined }}>

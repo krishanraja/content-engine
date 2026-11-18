@@ -1,0 +1,314 @@
+{
+ "take": ".cache/recordings/Build-or-buy-short.mp4",
+ "take_fps": 48.0,
+ "size": [
+  1080,
+  1920
+ ],
+ "speech_db": -28.7,
+ "quiet_ceiling_db": -46.7,
+ "segments": [
+  {
+   "in_s": 2.0833333,
+   "out_s": 4.7083333
+  },
+  {
+   "in_s": 4.9583333,
+   "out_s": 8.6041667
+  },
+  {
+   "in_s": 9.5208333,
+   "out_s": 10.2083333
+  },
+  {
+   "in_s": 10.3541667,
+   "out_s": 14.5208333
+  },
+  {
+   "in_s": 15.7291667,
+   "out_s": 25.1875
+  },
+  {
+   "in_s": 25.625,
+   "out_s": 28.8333333
+  },
+  {
+   "in_s": 29.6458333,
+   "out_s": 33.9166667
+  },
+  {
+   "in_s": 34.8125,
+   "out_s": 35.5833333
+  },
+  {
+   "in_s": 37.625,
+   "out_s": 38.75
+  },
+  {
+   "in_s": 39.0416667,
+   "out_s": 44.1458333
+  },
+  {
+   "in_s": 44.5,
+   "out_s": 60.9791667
+  },
+  {
+   "in_s": 61.3958333,
+   "out_s": 67.5
+  },
+  {
+   "in_s": 67.9375,
+   "out_s": 68.4375
+  },
+  {
+   "in_s": 69.0416667,
+   "out_s": 80.9791667
+  },
+  {
+   "in_s": 81.625,
+   "out_s": 89.2916667
+  },
+  {
+   "in_s": 89.9166667,
+   "out_s": 97.1875
+  },
+  {
+   "in_s": 97.5833333,
+   "out_s": 101.3958333
+  },
+  {
+   "in_s": 102.1666667,
+   "out_s": 114.7083333
+  },
+  {
+   "in_s": 115.0833333,
+   "out_s": 119.6041667
+  }
+ ],
+ "joins": [
+  {
+   "cut_out_s": 4.7083,
+   "cut_in_s": 4.9583,
+   "gap": [
+    4.471,
+    5.051
+   ],
+   "loudest_db": -59.7,
+   "removed_s": 0.25,
+   "pause_heard_s": 0.39
+  },
+  {
+   "cut_out_s": 8.6042,
+   "cut_in_s": 9.5208,
+   "gap": [
+    8.511,
+    9.652
+   ],
+   "loudest_db": -53.2,
+   "removed_s": 0.917,
+   "pause_heard_s": 0.284
+  },
+  {
+   "cut_out_s": 10.2083,
+   "cut_in_s": 10.3542,
+   "gap": [
+    9.892,
+    10.452
+   ],
+   "loudest_db": -58.0,
+   "removed_s": 0.146,
+   "pause_heard_s": 0.474
+  },
+  {
+   "cut_out_s": 14.5208,
+   "cut_in_s": 15.7292,
+   "gap": [
+    14.413,
+    15.813
+   ],
+   "loudest_db": -61.6,
+   "removed_s": 1.208,
+   "pause_heard_s": 0.252
+  },
+  {
+   "cut_out_s": 25.1875,
+   "cut_in_s": 25.625,
+   "gap": [
+    25.094,
+    25.715
+   ],
+   "loudest_db": -57.5,
+   "removed_s": 0.438,
+   "pause_heard_s": 0.244
+  },
+  {
+   "cut_out_s": 28.8333,
+   "cut_in_s": 29.6458,
+   "gap": [
+    28.595,
+    29.735
+   ],
+   "loudest_db": -53.0,
+   "removed_s": 0.812,
+   "pause_heard_s": 0.387
+  },
+  {
+   "cut_out_s": 33.9167,
+   "cut_in_s": 34.8125,
+   "gap": [
+    33.816,
+    34.916
+   ],
+   "loudest_db": -51.3,
+   "removed_s": 0.896,
+   "pause_heard_s": 0.264
+  },
+  {
+   "cut_out_s": 35.5833,
+   "cut_in_s": 37.625,
+   "gap": [
+    35.476,
+    37.717
+   ],
+   "loudest_db": -55.3,
+   "removed_s": 2.042,
+   "pause_heard_s": 0.259
+  },
+  {
+   "cut_out_s": 38.75,
+   "cut_in_s": 39.0417,
+   "gap": [
+    38.597,
+    39.157
+   ],
+   "loudest_db": -61.9,
+   "removed_s": 0.292,
+   "pause_heard_s": 0.328
+  },
+  {
+   "cut_out_s": 44.1458,
+   "cut_in_s": 44.5,
+   "gap": [
+    44.058,
+    44.598
+   ],
+   "loudest_db": -57.7,
+   "removed_s": 0.354,
+   "pause_heard_s": 0.246
+  },
+  {
+   "cut_out_s": 60.9792,
+   "cut_in_s": 61.3958,
+   "gap": [
+    60.881,
+    61.501
+   ],
+   "loudest_db": -52.2,
+   "removed_s": 0.417,
+   "pause_heard_s": 0.263
+  },
+  {
+   "cut_out_s": 67.5,
+   "cut_in_s": 67.9375,
+   "gap": [
+    67.402,
+    68.022
+   ],
+   "loudest_db": -50.0,
+   "removed_s": 0.438,
+   "pause_heard_s": 0.243
+  },
+  {
+   "cut_out_s": 68.4375,
+   "cut_in_s": 69.0417,
+   "gap": [
+    68.222,
+    69.142
+   ],
+   "loudest_db": -49.8,
+   "removed_s": 0.604,
+   "pause_heard_s": 0.376
+  },
+  {
+   "cut_out_s": 80.9792,
+   "cut_in_s": 81.625,
+   "gap": [
+    80.884,
+    81.724
+   ],
+   "loudest_db": -56.2,
+   "removed_s": 0.646,
+   "pause_heard_s": 0.254
+  },
+  {
+   "cut_out_s": 89.2917,
+   "cut_in_s": 89.9167,
+   "gap": [
+    88.026,
+    90.006
+   ],
+   "loudest_db": -52.8,
+   "removed_s": 0.625,
+   "pause_heard_s": 1.415
+  },
+  {
+   "cut_out_s": 97.1875,
+   "cut_in_s": 97.5833,
+   "gap": [
+    97.087,
+    97.707
+   ],
+   "loudest_db": -49.3,
+   "removed_s": 0.396,
+   "pause_heard_s": 0.284
+  },
+  {
+   "cut_out_s": 101.3958,
+   "cut_in_s": 102.1667,
+   "gap": [
+    100.828,
+    102.288
+   ],
+   "loudest_db": -53.7,
+   "removed_s": 0.771,
+   "pause_heard_s": 0.749
+  },
+  {
+   "cut_out_s": 114.7083,
+   "cut_in_s": 115.0833,
+   "gap": [
+    114.61,
+    115.17
+   ],
+   "loudest_db": -53.6,
+   "removed_s": 0.375,
+   "pause_heard_s": 0.245
+  }
+ ],
+ "kept_whole": [
+  {
+   "at": 53.489,
+   "why": "not quiet enough to join (-45.9 dBFS): plays through"
+  },
+  {
+   "at": 86.035,
+   "why": "the two clocks do not both see a gap here: plays through"
+  },
+  {
+   "at": 103.638,
+   "why": "not quiet enough to join (-45.1 dBFS): plays through"
+  },
+  {
+   "at": 106.859,
+   "why": "not quiet enough to join (-46.5 dBFS): plays through"
+  }
+ ],
+ "removed": [],
+ "first_word_s": 2.22,
+ "last_word_s": 119.101,
+ "speed": 1.22,
+ "speed_said": "Krish, 2026-11-17: the prompt should ensure it gets the session to look for places I've had to restart a sentence, clip those out, clip out empty awkward silences, and then measure the total duration, and then speed it up if needed to get it under the 90 second limit (longer video length does not matter)",
+ "fps_out": 30,
+ "kept_s": 105.896,
+ "final_s": 86.8
+}
