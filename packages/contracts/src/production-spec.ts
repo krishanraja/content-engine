@@ -219,6 +219,17 @@ export const VeCharacterSchema = z.object({
   cues: z.array(VeCharacterCueSchema).min(1),
 }).strict()
 
+// The day each series publishes on (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap; the
+// house channels in config/studio.json). A piece published on any other day is an off-day piece: it wears no series
+// promise and carries no dated call card, so the series call rule below does not reach it (velib/guards.off_day).
+const VE_SERIES_WEEKDAY: Record<string, number> = { 'follow.the.money': 1, 'under.the.hood': 3, 'mind.the.gap': 5 }
+
+export function veOffDay(spec: { publish_day?: string | undefined, brand: { series: string } }): boolean {
+  if (!spec.publish_day) return false
+  const weekday = new Date(`${spec.publish_day}T12:00:00Z`).getUTCDay()
+  return weekday !== VE_SERIES_WEEKDAY[spec.brand.series]
+}
+
 export const ProductionSpecV2Schema = z.object({
   schema_version: z.literal(2),
   piece_id: IdentifierV1Schema,
@@ -296,7 +307,7 @@ export const ProductionSpecV2Schema = z.object({
     spans: z.record(SlugSchema, VeSpanSchema).optional(),
   }).strict().optional(),
 }).strict().superRefine((spec, c) => {
-  if (spec.brand.series === 'mind.the.gap' && !spec.call) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })
+  if (spec.brand.series === 'mind.the.gap' && !spec.call && !veOffDay(spec)) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })
   if (spec.brand.intro_sting !== undefined && spec.brand.intro_sting !== VE_NO_STING && spec.brand.intro_sting !== VE_NO_STING_BEFORE) {
     c.addIssue({ code: 'custom', path: ['brand', 'intro_sting'], message: `nothing goes before the hook (Ruling, Krish, 2026-11-12: "${VE_NOTHING_BEFORE_HOOK}"): brand.intro_sting is "${VE_NO_STING}", or unset` })
   }

@@ -357,6 +357,24 @@ def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list
     return groups
 
 
+# A generated picture reaches a cut only as a picture plate, never as evidence (Ruling, Krish, 2026-11-18: "use codex
+# for all asset production, generation, sourcing"; the production prompt of 18 Nov asks for generated stills on the
+# comic beats). The first slice of Phase 2: a generated still or clip may fill a photo_plate, once it names the tool
+# that made it, the job that made it (the Codex thread or the generation id) and its sha256, and Claude has checked it
+# (`ve codex receipt`). Every other device still refuses it, and a beat's own plate still waits for the full pipeline.
+GENERATED_PLATE_DEVICES = frozenset({'photo_plate'})
+
+
+def generated_plate_problem(asset: dict, device: str) -> str:
+    """Why a generated asset may not be drawn by this device, '' when it may."""
+    if device not in GENERATED_PLATE_DEVICES:
+        return 'the generated assets pipeline arrives in Phase 2 (a generated picture fills a photo_plate only)'
+    missing = [key for key in ('tool', 'job_id', 'sha256') if not asset.get(key)]
+    if missing:
+        return f'a generated plate names its {", ".join(missing)} before it is drawn'
+    return ''
+
+
 def _params(params: dict, source) -> dict:
     """Copy device params, resolving media paths (src, rows[].logoSrc) against the assets folder."""
     def visit(value):
@@ -490,23 +508,25 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     datasets = {dataset['id']: dataset for dataset in spec.get('datasets', [])}
     objects = []
     used = {name for beat in selected for name in beat.get('uses', [])}
-    generated = {ref for asset in spec.get('assets', []) if asset.get('origin') == 'generated'
+    generated = {ref: asset for asset in spec.get('assets', []) if asset.get('origin') == 'generated'
                  for ref in (asset['id'], 'asset:' + asset['id'], asset['path'])}
 
-    def check_generated(node):
+    def check_generated(node, device):
         if isinstance(node, dict):
             for value in node.values():
-                check_generated(value)
+                check_generated(value, device)
         elif isinstance(node, list):
             for value in node:
-                check_generated(value)
+                check_generated(value, device)
         elif isinstance(node, str) and node.replace('\\', '/').removeprefix('./') in generated:
-            raise ValueError(f'generated asset {node}: the generated assets pipeline arrives in Phase 2')
+            problem = generated_plate_problem(generated[node.replace('\\', '/').removeprefix('./')], device)
+            if problem:
+                raise ValueError(f'generated asset {node}: {problem}')
 
     for obj in spec.get('objects', []):
         if obj['obj'] not in used:
             continue
-        check_generated(obj.get('params', {}))
+        check_generated(obj.get('params', {}), obj.get('device', ''))
         persist = obj['persist']
         if persist['from_beat'] not in by_beat or persist['to_beat'] not in by_beat:
             raise ValueError(f'object {obj["obj"]} references a persist beat missing from cut {cut_id}')

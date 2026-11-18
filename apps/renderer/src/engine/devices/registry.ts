@@ -5,6 +5,7 @@ import { Device as PixelStage } from './pixel_stage'
 import { Device as IsoWorld } from './iso_world'
 import { Device as InkWash } from './ink_wash'
 import { Device as FilmFrame } from './film_frame'
+import { Device as PhotoPlate } from './photo_plate'
 import { Device as CursorPath } from './cursor_path'
 import { Device as CharacterLayer } from '../character'
 import { Device as AnswerStream } from './answer_stream'
@@ -59,6 +60,7 @@ export const DEVICES: DeviceRegistry = {
   iso_world: IsoWorld,
   ink_wash: InkWash,
   film_frame: FilmFrame,
+  photo_plate: PhotoPlate,
   cursor_path: CursorPath,
   character_layer: CharacterLayer,
   answer_stream: AnswerStream,

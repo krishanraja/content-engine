@@ -5426,6 +5426,20 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 - `function passportState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 - `function mrzLine(text: string)`
 
+### `apps/renderer/src/engine/devices/photo_plate/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/photo_plate/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/photo_plate/state.ts`
+
+- `function coverCrop(picture: Picture, box: Size, focus = CENTRE, push = 0, zoom = 1): Box`
+- `function photoPlateCrop(box: Size, state: ReturnType<typeof photoPlateState>): Box`
+- `function photoPlateState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/pixel_stage/index.tsx`
 
 - `export { stageLayout, stageState } from './state'`
@@ -6685,6 +6699,7 @@ Artifact-bound user confirmation references.
 - `const VeReferenceSchema`
 - `const VeCharacterCueSchema`
 - `const VeCharacterSchema`
+- `function veOffDay(spec: { publish_day?: string | undefined, brand: { series: string } }): boolean`
 - `const ProductionSpecV2Schema`
 - `type ProductionSpecV2 = z.infer<typeof ProductionSpecV2Schema>`
 - `type VeBeat = z.infer<typeof VeBeatSchema>`
