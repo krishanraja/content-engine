@@ -2859,7 +2859,7 @@
           "evidence": "Nothing in scripts/carousel_check.py or the card template reads or names a typeface."
         }
       ],
-      "surface": "18 Nov: the face is chosen by what he approved: Anton, uppercase, mint key phrase, Plex Mono kicker (the ads carousel session switched its cards to it within about a minute of his words and he said go). Now written into the standard and, because every carousel is built from a Codex card, into the card itself (CAROUSEL_BODY_TYPE, scripts/velib/cards.py; tested), together with a ban on Archivo Black and Archivo at 800 or heavier. This entry is printed to every session that runs check_failures.py. Not covered: no check reads a drawn card's font; the rejection floor (config/rejection-floor.json, written only by the Rejections engine from his reported words) does not carry it yet, and his words could not be reported on 18 Nov (the taste engine connection had reached its daily report limit); the ads carousel's cover subline is still Archivo and its session asked him about it.",
+      "surface": "18 Nov: the face is chosen by what he approved: Anton, uppercase, mint key phrase, Plex Mono kicker (the ads carousel session switched its cards to it within about a minute of his words and he said go). Now written into the standard and, because every carousel is built from a Codex card, into the card itself (CAROUSEL_BODY_TYPE, scripts/velib/cards.py; tested), together with a ban on Archivo Black and Archivo at 800 or heavier. This entry is printed to every session that runs check_failures.py. Not covered: no check reads a drawn card's font; the rejection floor (config/rejection-floor.json, written only by the Rejections engine from his reported words) does not carry it yet, and his words could not be reported on 18 Nov (the taste engine connection had reached its daily report limit); the ads carousel's cover subline is still Archivo and its session asked him about it. Found later on 18 Nov: Growth's own renderer is where the face keeps coming from (growth-makeyourmindup render/kit.css `--body: 'Archivo'`, render/templates/carousel-body.html `.body`), so the standard and the card are not enough on their own. The change is Growth's to make and is written up in docs/GROWTH-HANDOFF.md (\\\"Open for Growth: the carousel body face\\\"); this session was refused write access to that repository, so it is not made.",
       "guards": [
         {
           "file": "docs/CAROUSEL-STANDARD.md",
@@ -2875,6 +2875,11 @@
           "file": "tests/ve_cards_test.py",
           "contains": "test_a_carousel_card_names_the_body_face_and_the_one_he_rejected",
           "how": "the card text carries the rule"
+        },
+        {
+          "file": "docs/GROWTH-HANDOFF.md",
+          "contains": "Open for Growth: the carousel body face",
+          "how": "Growth's renderer change is written down with the file and the rule"
         }
       ],
       "watch": {
