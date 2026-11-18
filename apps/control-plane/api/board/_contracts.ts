@@ -532,6 +532,8 @@ function commentExtras(body: Record<string, unknown>): boolean {
   if ('box' in body && !(typeof body.box === 'string' && validId(body.box))) return false
   if ('paragraph' in body && !(Number.isSafeInteger(body.paragraph) && Number(body.paragraph) >= 0 && Number(body.paragraph) < 10000)) return false
   if ('quote' in body && !(typeof body.quote === 'string' && body.quote.length > 0 && body.quote.length <= 2000)) return false
+  // His answer to the production plan's question (1.30.0) is marked so later prompts keep its framing; nothing else is.
+  if ('frame' in body && body.frame !== 'visual_points') return false
   if ('act' in body || 'ref' in body) {
     if (!(COMMENT_ACTS as readonly string[]).includes(String(body.act))) return false
     if (!(typeof body.ref === 'string' && validId(body.ref))) return false

@@ -1278,6 +1278,8 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingReadBack`
 - `interface MakingLink`
 - `interface MakingPack`
+- `const POST_FOLDER_NAME`
+- `interface MakingPostFolder`
 - `interface MakingRecording`
 - `interface MakingThumbnail`
 - `interface MakingVideoAsset`
@@ -1307,6 +1309,10 @@ The making record: where one piece is on its way from the workroom to
 - `type MakingStyleVerdict`
 - `interface MakingGates`
 - `type MakingPatch`
+- `function boundPostFolder(m: Partial<Making> | null | undefined): string | null`
+- `function currentFolder(making: Partial<Making> | null | undefined, scheduledFor: unknown): string | null`
+- `function redatedFolder(name: string, date: string): string | null`
+- `function postFolderProblems(prev: Partial<Making> | null | undefined, patch: MakingPatch): string[]`
 - `const SCRIPT_SHA256`
 - `const TELEPROMPTER_ID`
 - `function parseScriptAudit(cut: string, v: unknown, now: string): { entry?: MakingScriptAudit; problem?: string }`
@@ -1538,6 +1544,31 @@ Read-only client for the CTRL shared headlines pool (portfolio hive mind).
 - `function plainText(raw: unknown): string | null`
 - `function poolConfigured(): boolean`
 - `async function fetchPoolDays(sinceDate: string): Promise<{ days: number; stories: PoolStory[] }>`
+
+### `apps/control-plane/api/_postFolder.ts`
+
+- `export { currentFolder, redatedFolder } from './_making.js'`
+- `const MATERIALS_SECTION`
+- `const MATERIALS_FOLDER`
+- `const GOT_ROLE`
+- `const POST_FOLDER_MAX`
+- `class PostFolderError`
+- `function safeText(text: string): string`
+- `function shorten(subject: string, budget: number): string`
+- `function subchannelName(value: unknown): string`
+- `function postFolderName(p: { date: string; subject: string; subchannel?: string | null; launch?: boolean; day?: string …`
+- `function subjectOf(row: { idea?: unknown; meta?: unknown }): string`
+- `function folderForPiece(row: { scheduled_for?: unknown; lane_slot?: unknown; idea?: unknown; meta?: unknown }): string`
+- `function libraryFolderOk(folder: string): boolean`
+- `interface FolderDb`
+- `async function bindPostFolder(db: FolderDb, pieceId: string, by: string, tries = 6): Promise<{ folder: string; bound: '…`
+- `const BEAT`
+- `function beatsOf(value: unknown): string[]`
+- `function gotKey(beats: string[], sha256: string): string`
+- `function beatsOfKey(key: unknown): string[] | null`
+- `function driveName(folder: string, original: string, beats: string[], ext: string, copy = 1): string`
+- `async function fileToPostFolder(db: FolderDb, f: { folder: string; name: string; beats: string[]; ext: string; contentT…`
+- `export { LIBRARY_BUCKET }`
 
 ### `apps/control-plane/api/_prices.ts`
 
@@ -2749,6 +2780,7 @@ The production plan he opens, reviews and changes before the one production sess
 - `const SCENE_ROLE`
 - `interface PlanOption`
 - `interface PlanFetch`
+- `interface PlanGot`
 - `interface PlanBeat`
 - `interface PlanScene`
 - `interface PlanEdit`
@@ -2765,6 +2797,7 @@ The production plan he opens, reviews and changes before the one production sess
 - `function planRunOf(takesIn: unknown): PlanRun | null`
 - `function planView(plan: ProductionPlan | null, ctx: { picks: Array<{ doc_id: string; body: unknown; revision?: number; …`
 - `function planBrief(plan: ProductionPlan, swaps: Record<string, string>): string`
+- `function gotBrief(plan: Pick<ProductionPlan, 'got' | 'folder' | 'fetch'>): string`
 
 ### `apps/control-plane/api/board/_prompts.ts`
 
@@ -2979,6 +3012,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `type Action`
 - `type PromptAction`
 - `interface SavedNote`
+- `const VISUAL_POINT_LINE`
 - `const EARLIER_NOTES`
 - `const SAVED_NOTES_MAX`
 - `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }): SavedNote[]`
@@ -3020,7 +3054,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function mergeWeekPlan(base: unknown, main: unknown, week: unknown): unknown`
 - `async function readPieceDecisions(db: SupabaseClient, pieceId: string, env: Record<string, string | undefined> = proces…`
 - `async function readFiledScripts(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string…`
-- `async function readProductionPlans(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<str…`
+- `async function readProductionPlans(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[], pieces: Body[] = []…`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
 - `async function readWeekIdeas(week: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
 - `function growthLiveLine(posts: GrowthPost[]): string`
@@ -3077,6 +3111,8 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `const GOOD_NEWS_STORIES`
 - `const CLAUDE_LABEL`
 - `const NOTES_HEADING`
+- `const VISUAL_POINTS_ASK`
+- `const VISUAL_POINTS_HEADING`
 - `interface ModelStep`
 - `interface ModelSource`
 - `interface ModelStory`
@@ -3395,10 +3431,13 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 ### `apps/control-plane/api/content-ideas/store.ts`
 
+- `const GOT_ROLE`
 - `const config`
 - `type LibraryCopy`
 - `type DecisionsReader`
 - `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy, readLink?: () => Promise<LinkReader | nu…`
+- `async function confirmGot(db: StoreDb, body: Record<string, unknown>, bearer: boolean, by: string, fetcher?: Parameters…`
+- `const sentByOf = (by: string): string =>`
 - `export default createStoreHandler( async () => (await import('../_supabase.`
 
 ### `apps/control-plane/api/content-ideas/synthesize.ts`
