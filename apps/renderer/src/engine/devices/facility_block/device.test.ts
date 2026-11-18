@@ -51,3 +51,44 @@ describe('facility_block',()=>{
     expect(html(125,'9:16')).not.toBe(html(125,'16:9'))
   })
 })
+
+
+describe('facility_block slot treatment',()=>{
+  for(const aspect of ['9:16','16:9'] as const) {
+    const box = {left:0,top:0,width:aspect==='9:16'?800:1920,height:aspect==='9:16'?770:1080}
+    const draw = (frame:number,cues=events) => renderToStaticMarkup(React.createElement(Device,{...overlayTestProps,object,events:cues,frame,aspect,box}))
+    it(`${aspect} leaves the backdrop visible and labels on ink pills`,()=>{
+      const markup=draw(200)
+      for(const rect of markup.matchAll(/<rect\b[^>]*>/g)) {
+        expect(rect[0]).not.toContain(`width="${box.width}" height="${box.height}"`)
+      }
+      const texts=[...markup.matchAll(/<text\b[^>]*>/g)]
+      expect(texts.length).toBeGreaterThan(0)
+      for(const [text] of texts) {
+        expect(Number(text.match(/font-size="([^"]+)"/)![1])).toBeGreaterThanOrEqual(34)
+        expect(text).toContain(`fill="${overlayTestProps.tokens.cream}"`)
+      }
+      expect(markup).toContain(`rx="`)
+      expect(markup).toContain(`fill="${overlayTestProps.tokens.inkDeep}"`)
+    })
+    it(`${aspect} keeps the final grown copy footprint above sixty percent`,()=>{
+      const markup=draw(350)
+      const outerScale=Math.min(box.width/(aspect==='9:16'?780:1400),box.height/(aspect==='9:16'?740:780))
+      const bodyScale=Number(markup.match(/data-facility-body="" transform="translate\([^)]*\) scale\(([^ ]+) /)![1])
+      const cols=aspect==='9:16'?4:6
+      const rows=Math.ceil(fixture.objects[0]!.params.copies.count/cols)
+      const spacingY=Math.min(90,440/Math.max(1,rows-1))
+      const gridWidth=(cols-1)*(aspect==='9:16'?175:190)+285*Math.min(.48,spacingY/160)
+      expect(gridWidth*bodyScale*outerScale).toBeGreaterThanOrEqual(box.width*.6)
+    })
+    it(`${aspect} centres a settled shell spanning at least sixty percent of the slot`,()=>{
+      const markup=draw(50,[events[0]!])
+      const outerScale=Math.min(box.width/(aspect==='9:16'?780:1400),box.height/(aspect==='9:16'?740:780))
+      const body=markup.match(/data-facility-body="" transform="translate\(([^ ]+) [^)]+\) scale\(([^ ]+) /)!
+      const x=Number(body[1]), scale=Number(body[2])
+      expect(285*scale*outerScale).toBeGreaterThanOrEqual(box.width*.6)
+      const naturalWidth=aspect==='9:16'?780:1400
+      expect((box.width-naturalWidth*outerScale)/2+(x+2.5*scale)*outerScale).toBeCloseTo(box.width/2)
+    })
+  }
+})
