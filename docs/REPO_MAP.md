@@ -2582,8 +2582,8 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 
 How an off-day post is made, said once for every prompt the board copies out (the week model's "Copy prompt for
 
-- `type MakeRoute = 'still' | 'motion'`
-- `function makeRoute(kind: string | null | undefined, format: string | null | undefined): MakeRoute | null`
+- `type MakeRoute = 'still' | 'motion' | 'reskin'`
+- `function makeRoute(kind: string | null | undefined, format: string | null | undefined, template = false): MakeRoute | n…`
 - `const ROUTE_RULING`
 - `const NEVER_HEADLESS`
 - `function routeLine(route: MakeRoute): string`
@@ -3141,7 +3141,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function offdayKind(o: Body): { kind: OffdayKind; supports: 'mon' | 'wed' | 'fri' | null }`
 - `function kindLabel(kind: OffdayKind, supports: string | null): string`
 - `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
-- `function offdayHead(route: MakeRoute | null): string`
+- `function offdayHead(route: MakeRoute | null, template: ViewTemplate | null = null, caption: string | null = null): stri…`
 - `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
 - `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
