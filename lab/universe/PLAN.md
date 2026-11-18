@@ -19,6 +19,19 @@ out the work. Plan this properly, and involve Codex to produce the anchor visual
 | Quote footer | Gone. The building gets the space |
 | Logos absent | Claude agents wear the Claude mark on their legs; tool agents wear their tool's mark on their heads |
 
+## Version 3 (18 Nov 2026): richer, closer to the source post
+
+Krish, 18 Nov 2026, on version 2: "i preferred the amount of workers and how they were roughly split out in this one -
+taste, judgement, vision, standards, inspiration, divergent thinker consultant, voice checker. Librarian is just one part
+of an AI brain - it's really the proactive chief of staff that has a librarian, auditor, analyst, trend spotter,
+inspiration-house, file archives as well as content archives and all the above. It's been dumbed down way too much now
+as has have all the floors above it. we need to find something closer to the source post I sent you".
+
+The cast and copy now live in `scene/scene.js` (`LEVELS` and `CARDS`): five or six workers per floor in two named rooms
+each, the roof as the decision deck (vision, judgement, taste, standards, you), the basement as a double-height AI brain
+run by a proactive chief of staff with its archives and analysis teams, and cards that name the tools like the source.
+The tables below are the version 2 brief, kept as history.
+
 ## The floors (top to bottom): the work only, in plain words
 
 Krish, 18 Nov 2026: "Put everything in layman's terms as well, its important to not overwhelm people - and make sure

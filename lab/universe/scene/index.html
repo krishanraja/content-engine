@@ -17,7 +17,7 @@ body{width:1080px;height:1350px;overflow:hidden;font-family:Archivo,sans-serif;b
 #moon{position:absolute;right:70px;top:44px;width:80px;height:80px;border-radius:50%;background:var(--cream);box-shadow:inset -16px -7px 0 #CFC9BA,0 0 46px #F4EFE455;opacity:clamp(0, calc(var(--n) * 2.2 - 1.2), 1)}
 canvas{position:absolute;inset:0}
 .title{position:absolute;left:52px;top:38px}
-.title .big{font-family:Anton;font-size:84px;line-height:1;text-transform:uppercase;letter-spacing:.5px}
+.title .big{font-family:Anton;font-size:78px;line-height:1;text-transform:uppercase;letter-spacing:.5px}
 .title .pill{display:inline-block;margin-top:8px;font-family:FrauncesI;font-weight:500;font-size:58px;line-height:1.05;padding:0 20px 10px;border-radius:12px}
 #tday .big{color:var(--ink)} #tday .pill{background:var(--ink);color:var(--mint)}
 #tnight .big{color:var(--cream)} #tnight .pill{background:var(--cream);color:var(--ink)}
@@ -25,10 +25,15 @@ canvas{position:absolute;inset:0}
 .sign{position:absolute;transform:translate(0,-100%);font-family:Plex;font-size:14px;letter-spacing:.8px;text-transform:uppercase;background:var(--ink);color:var(--cream);padding:4px 9px 3px;border-radius:5px;white-space:nowrap}
 .sign b{color:var(--mint);font-weight:500;margin-right:7px}
 .sign.brain{background:var(--mint);color:var(--ink)} .sign.brain b{color:var(--ink)}
-.tag{position:absolute;transform:translate(-50%,0);font-weight:800;font-size:13px;background:var(--cream);border:2px solid var(--ink);border-radius:6px;padding:2px 6px 1px;white-space:nowrap;color:var(--ink)}
+.tag{position:absolute;transform:translate(-50%,0);font-weight:800;font-size:11px;line-height:1.1;background:var(--cream);border:1.5px solid var(--ink);border-radius:5px;padding:2px 5px 1px;white-space:nowrap;color:var(--ink)}
+.tag.chief{background:var(--mint);font-size:13px;border-width:2px}
+.room{position:absolute;transform:translate(-50%,0);font-family:Plex;font-size:10.5px;letter-spacing:.5px;background:#2A3A33;color:var(--cream);padding:2px 6px 1px;border-radius:4px;white-space:nowrap}
+.room.brain{background:var(--mint);color:var(--ink)}
 #panel{position:absolute;left:740px;top:240px;width:312px;display:flex;flex-direction:column;gap:7px}
 .card{background:var(--cream);border:2.5px solid var(--ink);border-radius:10px;padding:7px 11px 7px}
 .card h3{font-weight:900;font-size:18px;line-height:1.05;display:flex;align-items:center;gap:8px}
+.card h3 i{margin-left:auto;display:flex;gap:3px}
+.card h3 i img{width:16px;height:16px;border-radius:4px;object-fit:cover;border:1px solid #0C151233}
 .card h3 span{font-family:Plex;font-weight:500;font-size:12px;background:var(--ink);color:var(--mint);padding:3px 6px 2px;border-radius:4px}
 .card ul{list-style:none;margin-top:4px}
 .card li{font-size:12.5px;line-height:1.3;padding-left:12px;position:relative;color:#1E2723}
@@ -39,8 +44,8 @@ canvas{position:absolute;inset:0}
 .card.brain{background:var(--mint)} .card.brain h3 span{background:var(--ink);color:var(--mint)}
 </style></head><body>
 <div id="sky"></div><div id="night"></div><div id="stars"></div><div id="sun"></div><div id="moon"></div>
-<div class="title" id="tday"><div class="big">How the work gets done</div><div class="pill">one building</div></div>
-<div class="title" id="tnight"><div class="big">And it keeps going</div><div class="pill">after I log off</div></div>
+<div class="title" id="tday"><div class="big">Inside my AI-native firm</div><div class="pill">floor by floor</div></div>
+<div class="title" id="tnight"><div class="big">And it keeps working</div><div class="pill">after I log off</div></div>
 <div id="labels"></div>
 <div id="panel"></div>
 <script type="module" src="./scene.js"></script>
