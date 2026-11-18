@@ -843,6 +843,8 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const state = o.stage?.state ?? 'approved'
   const made = (o.posts || []).some(p => p.state === 'made') || (d.posts || []).some(p => p.option === o.id && p.assets.length > 0)
   const scheduled = (o.posts || []).some(p => p.state === 'scheduled')
+  // Its files in Drive, shown at every step from Made to Live, not only before it is scheduled (Krish, 2026-11-18).
+  const filed = madeAssets(d, o.id)
   const doneOf: Record<string, number> = { approved: 1, made: 2, scheduled: 3, live: 4 }
   const done = state === 'missed' ? (scheduled ? 3 : made ? 2 : 1) : doneOf[state] ?? 1
   const path = steps(POST_PATH, done, [o.outcome?.at?.slice(0, 10) ?? null, null, o.stage?.state === 'scheduled' ? o.stage.at?.slice(0, 10) ?? null : null, o.stage?.state === 'live' ? o.stage.at?.slice(0, 10) ?? null : null])
@@ -853,7 +855,7 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const own = recordedPiece(m, raw) ?? linkedPiece(m, offdayPieceId(m.week, o.doc_id, raw))
   const read = withWork(readOf(raw, { text: o.text, said: o.said, source: o.source }), m, [...(own ? [own] : []), dayScope(m.week, d.day)])
   const base = { key: o.doc_id, type: 'post' as const, day: d.day, date: d.date, kind, kind_label, title: cut(o.title, 200), approved: o.outcome?.label ?? null,
-    stage: stageOf(POST_PATH, done), path, missed, read, piece_id: null,
+    stage: stageOf(POST_PATH, done), path, missed, read, piece_id: null, ...(filed.length ? { assets: filed } : {}),
     item: o.item?.key ?? null, supports, move: o.move ?? null, links: o.stage?.links ?? [], stories, stories_planned: kind === 'good_news' ? GOOD_NEWS_STORIES : null, others: [] as PressAction[] }
   if (state === 'live') return { ...base, line: o.stage!.label, next: null, decision: false }
   const where = o.stage?.label ?? 'Approved by you'
@@ -885,7 +887,7 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
     return { ...base, line: d.manifest!.why ? `${filed} ${d.manifest!.why}` : filed, next: sealed as Action, decision: true }
   }
   // A made post with its final files filed: the Publish step, with every file listed (the cut, slides, covers, thumbnails, captions).
-  const files = made && !missed && !scheduled ? madeAssets(d, o.id) : []
+  const files = made && !missed && !scheduled ? filed : []
   if (files.length) {
     const lineMade = `${where}. Its ${files.length} file${files.length === 1 ? ' is' : 's are'} made and filed. Check each one, then publish: it is scheduled in Buffer exactly as listed.`.replace(/\.\./g, '.')
     const prompt = itemPrompt(m.week, { ...base, line: lineMade }, 'publish', null, null, own ? m.decisions?.[own] ?? null : null, own,

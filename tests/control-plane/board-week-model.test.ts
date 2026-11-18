@@ -160,6 +160,28 @@ describe('the week model (contract 1.12.0)', () => {
     }
   })
 
+  // Krish, 2026-11-18: a post scheduled for Fri 20 showed no files, "at no point did I ever see the covers, thumbnails etc". Its
+  // folder was dated Tue 17 (the day it was first made for) and its card sat on Thu 19, so the day's folders never held it.
+  it('a post moved to another day still shows the files in its folder, dated for the day it left', () => {
+    const base = thisWeek()
+    const moved = { ...base, drive_posts: (base.drive_posts || []).map(p => (p.name.includes('Git could not keep up')
+      ? { ...p, name: '2026-11-17 Tue off.day - Git could not keep up', date: '2026-11-17' } : p)) }
+    const v2 = buildView(moved)
+    const item = dayOf(v2, 'thu').items.find(i => i.key === 'off-thu-gitbroke')!
+    expect(item.assets?.length).toBeGreaterThan(0)
+    expect(item.assets![0].slides.length).toBe(5)
+    // Two options one folder title could name: neither is bound (never a guess).
+    const twin = { ...base, drive_posts: [...(base.drive_posts || []), { id: '1TwinFolder0000000000000001', name: '2026-11-17 Tue off.day - AI', url: 'https://drive.google.com/drive/folders/1TwinFolder0000000000000001', date: '2026-11-17', assets: [] }] }
+    for (const o of dayOf(buildView(twin), 'thu').items) expect(o.assets?.every(a => a.name !== 'x')).toBe(true)
+  })
+
+  it('the files stay on the card once it is scheduled or live, without a Publish button', () => {
+    const v2 = buildView(thisWeek())
+    for (const day of v2.model!.days) for (const it of day.items) {
+      if (it.type === 'post' && (it.stage.key === 'scheduled' || it.stage.key === 'live') && it.assets) expect(it.next?.label).not.toBe('Publish')
+    }
+  })
+
   it('the frozen fixture of this week is what the builder makes now', () => {
     // UPDATE_VIEW_FIXTURE=1 writes it again, as board-view-contract.test.ts does for its own fixture.
     if (process.env.UPDATE_VIEW_FIXTURE) writeFileSync(FIXTURE, `${JSON.stringify({ ok: true, ...v }, null, 1)}\n`)
