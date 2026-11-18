@@ -44,7 +44,7 @@
     ]
   },
   "explains": {
-    "temporary chat": "a chat ChatGPT forgets as soon as you close it (card 7)"
+    "temporary chat": "a chat mode that shows no ads and does not save memories (card 7)"
   },
   "cards": [
     {
@@ -69,7 +69,7 @@
       "source": "OpenAI, Our approach to advertising and expanding access to ChatGPT, 16 Jan 2026; Krish's research doc 'When the Assistant Becomes the Ad' (5 Nov 2026)"
     },
     {
-      "headline": "ChatGPT's eight dollar Go plan still shows ads, but the paid Plus and Pro plans show none.",
+      "headline": "ChatGPT's eight dollar Go plan can still show ads, but the paid Plus and Pro plans show none.",
       "picture": "Three price tags side by side: Go with an ad still on it, Plus and Pro clean",
       "line": "Ad-free by payment starts at Plus."
     },
@@ -79,7 +79,7 @@
       "line": "Settings, Ads controls, Change plan to go ad-free."
     },
     {
-      "headline": "A temporary chat, ChatGPT's forget-everything mode, shows no ads but erases the conversation when you close it.",
+      "headline": "ChatGPT's temporary chat mode shows no ads, and it does not create memories of what you say.",
       "picture": "The trade-off scale: no ads on one side, no memory on the other",
       "line": "Good for one-off questions."
     },
@@ -116,6 +116,7 @@
   "facts_open": [],
   "facts_checked": [
     "help.openai.com/en/articles/20001047-ads-in-chatgpt read live 18 Nov 2026: ads on Free and Go; none on Plus, Pro, Business, Enterprise, Edu; Ads-Free on Free = lower limits, no image generation or deep research; Temporary Chats show no ads; testing began 9 Feb 2026 in the US.",
-    "Go $8 and Plus $20 per month: CBS News and MacRumors, to confirm on chatgpt.com/pricing at the fact gate."
+    "Go $8 and Plus $20 per month: CBS News and MacRumors, to confirm on chatgpt.com/pricing at the fact gate.",
+    "chatgpt.com/pricing read live 18 Nov 2026: Go $8 per month and 'may include ads'; Plus $20; Pro from $100. Help page: Temporary Chats show no ads and do not create or update memories. Cards 5 and 7 reworded after the cold read to match these; headlines changed since read_back."
   ]
 }
