@@ -55,8 +55,10 @@
       "line": "A woman with ALS talks in her own voice again, and four more stories like hers.",
       "picture": "Photo-grade generated street scene: the hand-sewn felt house robot as an over-keen tour guide, mint flag held high and a tiny megaphone, leading a delighted crowd across a city zebra crossing at golden hour; in the crowd a blind man with a white cane, a mum signing to her small daughter, an older woman laughing as she speaks. The house robot's two reference photos passed to the model.",
       "cover_lines": [
-        "THIS WEEK AI HELPED PEOPLE",
-        "SPEAK, SIGN AND GET AROUND."
+        "THIS WEEK AI",
+        "HELPED PEOPLE",
+        "SPEAK, SIGN AND",
+        "GET AROUND."
       ],
       "scene_file": "scenes/cover.png"
     },
@@ -64,7 +66,7 @@
       "headline": "An AI app gives a Montreal woman who lost her speech to ALS her own voice back.",
       "line": "ALS is a disease that takes away speech; Vocality built her voice from recordings of her talking.",
       "picture": "The real Canadian Press photo (Christinne Muschi, 10 Nov): Anne-Marie Poirier with her iPad, the two co-founders beside her",
-      "kicker": "THE CANADIAN PRESS · 11 NOV 2026",
+      "kicker": "CANADIAN PRESS · 11 NOV",
       "logos": [
         "Vocality"
       ],
@@ -79,10 +81,10 @@
       "photo_file": "photos/vocality.jpg"
     },
     {
-      "headline": "A new app lets hearing parents and deaf children talk, turning speech into signs and signs into words.",
+      "headline": "A new app in testing lets hearing parents and deaf children talk, turning speech into signs and signs into words.",
       "line": "Thatsign, still in testing, is for the hearing parents of more than 9 in 10 deaf children.",
       "picture": "The real Techpoint Africa photo (supplied): Confidence Ugolo working on the Thatsign dashboard",
-      "kicker": "TECHPOINT AFRICA · 12 NOV 2026",
+      "kicker": "TECHPOINT AFRICA · 12 NOV",
       "logos": [
         "Thatsign"
       ],
@@ -98,7 +100,7 @@
       "headline": "Glide, an AI guide that steers blind people around obstacles, is reaching its first customers.",
       "line": "Ask it out loud, and it tells you what is around you.",
       "picture": "Glidance's own photo of a person walking with Glide, its handle in hand",
-      "kicker": "GLIDANCE · 10 NOV 2026",
+      "kicker": "GLIDANCE · 10 NOV",
       "logos": [
         "Glidance"
       ],
@@ -108,7 +110,7 @@
       },
       "mint": "first customers",
       "logo_files": [
-        "logos/glidance-lockup.png"
+        "logos/glidance-symbol.png"
       ],
       "photo_file": "photos/glide.webp"
     },
@@ -116,7 +118,7 @@
       "headline": "Google's new AI glasses describe the world to blind wearers and read small print aloud.",
       "line": "The feature is called Guided Vision, and the glasses go on sale on 10 December.",
       "picture": "Google's own lifestyle photo of a person wearing the new glasses",
-      "kicker": "GOOGLE · 12 NOV 2026",
+      "kicker": "GOOGLE · 12 NOV",
       "logos": [
         "Google"
       ],
@@ -134,7 +136,7 @@
       "headline": "A 17-year-old built an AI tool that lets blind people read bank statements by themselves.",
       "line": "Yash Bhatnagar's Visionably, built in India, works on about 95% of the PDFs it is tested on.",
       "picture": "A real photo of Yash Bhatnagar from The Better India's article (never its AI-generated lead image); else a real Visionably screen",
-      "kicker": "THE BETTER INDIA · 16 NOV 2026",
+      "kicker": "THE BETTER INDIA · 16 NOV",
       "logos": [
         "Visionably"
       ],
@@ -149,17 +151,15 @@
       "photo_file": "photos/visionably.jpg"
     },
     {
-      "headline": "Small teams now build helpers for disabled people, because AI that hears, speaks and sees is ready to buy.",
+      "headline": "Small teams build helpers for disabled people, because they can buy AI that hears, speaks and sees.",
       "line": "Two founders built Vocality on ElevenLabs' voice AI, and one teenager built Visionably.",
       "picture": "Photo-grade scene: a cluttered kitchen-table workshop at night, one laptop, a phone, a pair of smart glasses, a small wheeled walking guide and a mug under a desk lamp: a tiny team, big help",
       "kicker": "WHY NOW",
       "logos": [
         "ElevenLabs"
       ],
-      "mint": "ready to buy",
-      "logo_files": [
-        "logos/elevenlabs-icon.png"
-      ],
+      "mint": "buy AI",
+      "logo_files": [],
       "scene_file": "scenes/card-7.png"
     },
     {
@@ -178,7 +178,7 @@
       "scene_file": "scenes/card-8.png"
     },
     {
-      "headline": "Try your phone's free screen reader on your own PDFs to hear what blind customers hear.",
+      "headline": "Try your phone's free screen reader on your business's PDFs to hear what blind customers hear.",
       "line": "VoiceOver on iPhone and TalkBack on Android are built in; whatever they skip, a blind customer misses.",
       "picture": "Photo-grade close-up: a hand holding a phone over a business invoice PDF, the screen reader's black focus box around one line, earbuds beside it",
       "kicker": "TRY THIS WEEK",
@@ -187,10 +187,7 @@
         "Android"
       ],
       "mint": "what blind customers hear",
-      "logo_files": [
-        "logos/apple-logo.png",
-        "logos/android-robot.png"
-      ],
+      "logo_files": [],
       "scene_file": "scenes/card-9.png"
     },
     {
@@ -207,28 +204,29 @@
   ],
   "read_back": [
     {
-      "reader": "fresh reader I (Sonnet, headlines only, once, final words)",
+      "reader": "fresh reader K (Sonnet, headlines only, once)",
       "answers": {
-        "what": "AI tools that help disabled people communicate and get around: speech, sign language, and navigation or reading help for blind people.",
-        "happened": "Several AI apps and devices launched or reached users this week: a voice-restoring app for an ALS patient, a speech-to-sign app for deaf children and hearing parents, a guide for blind people called Glide, Google glasses that describe surroundings, and a teen's bank-statement reader.",
-        "why": "AI that can hear, speak and see has become good and cheap enough that small teams can build these helpers and sell them.",
-        "so_what": "Assistive technology is getting practical and available, and the WHO figure shows how many people (over 2.5 billion) could benefit, so there is a big opportunity and need.",
-        "do": "Try your phone's free screen reader on your own PDFs to see what blind customers experience, and follow the account if inspired to build something."
+        "what": "Good news about AI helping disabled people: this week's examples cover speech, sign language and navigation or reading for blind people.",
+        "happened": "Several AI tools were announced or reached users: an app gave a Montreal woman with ALS her own voice back, a sign-language app is in testing for hearing parents and deaf children, and Glide, an AI guide for blind people, is reaching its first customers. Google AI glasses describe the world and read small print aloud, and a 17-year-old built a tool to read bank statements for blind people.",
+        "why": "Because AI that can hear, speak and see is now good enough to buy, so small teams can build helpers for disabled people.",
+        "so_what": "Over 2.5 billion people need assistive help, such as glasses, hearing aids or wheelchairs, so tools like these could matter to a lot of people. It may also matter if you run a business with blind customers.",
+        "do": "Try your phone's free screen reader on your own PDFs to hear what blind customers hear. If inspired, build something that combines your ideas with AI, and follow for more."
       },
-      "stalls": "Card 7 a bit dense; card 8 a sudden jump to a statistic; card 9's link to the stories not obvious at first; card 10 generic. Fixed in the lines under cards 8 and 9 (why the number matters; what a screen reader skips, a blind customer misses). Card 10 is Krish's fixed good-news close."
+      "stalls": "Card 7 'ready to buy' vague; card 8 a jump to a global figure; card 9 unclear unless you have customers; card 3 dense. Fixed after this read: card 7 now says 'because they can buy AI that hears, speaks and sees'; card 9 says 'your business's PDFs'."
     },
     {
-      "reader": "fresh reader J (Haiku, headlines only, once, final words)",
+      "reader": "fresh reader L (Haiku, headlines only, once)",
       "answers": {
-        "what": "New AI tools are helping people who cannot speak, hear or see well, so they can talk, sign and get around.",
-        "happened": "This week several AI helpers came out: an app that gave a Montreal woman with ALS her voice back, an app that turns speech into signs and signs into words for hearing parents and deaf kids, a guide that steers blind people around obstacles, Google glasses that describe the world and read small print aloud, and a 17-year-old's tool that lets blind people read bank statements alone.",
-        "why": "AI can now hear, speak and see well enough to work in real products, so small teams are building helpers for disabled people.",
-        "so_what": "These tools give people back things they lost or never had, like their voice or their independence, and over 2.5 billion people need help such as glasses, hearing aids or wheelchairs.",
-        "do": "Try your phone's free screen reader on one of your own PDFs so you can hear what blind customers hear, then follow for more ideas."
+        "what": "New AI tools are helping disabled people talk, sign and get around, and the post shows several examples.",
+        "happened": "This week AI apps and devices were reported that help people who are blind, deaf or who lost their speech, including a voice app for an ALS patient, a speech-to-sign app in testing, a guide that steers blind people around obstacles, Google glasses that describe the world, and a 17-year-old's bank statement reader.",
+        "why": "Small teams are building these helpers because AI that can hear, speak and see is now good enough to sell.",
+        "so_what": "A lot of people need this kind of help, over 2.5 billion by the World Health Organization's count, and it is getting cheaper and easier to make, so more of them may get it.",
+        "do": "Try your phone's free screen reader on a PDF to hear what a blind person hears, then think about how you could mix your own ideas with AI to help someone."
       },
-      "stalls": "Card 2: did not know what ALS is; fixed in card 2's line ('ALS is a disease that takes away speech'). Card 7: read 'ready to buy' as 'can be bought now', which is the meaning. Card 9 a little unclear why; its line says what a screen reader skips, a blind customer misses."
+      "stalls": "Card 7 'ready to buy' does not say what is bought; card 9 'your PDFs' vague; card 3 dense. Fixed after this read on cards 7 and 9 as above; card 3 kept, since all twelve readers took it both ways."
     }
   ],
   "facts_checked": "docs/plans/2026-11-16-week/goodnews-carousel/research.md (every story and the WHO figure read at source on 18 Nov 2026)",
-  "read_back_rounds": "Ten fresh readers in five rounds (A-B, C-D, E-F, G-H, I-J), each on headlines only, once. Fixed between rounds: card 3 (both directions, read twice by A, B, D), card 7 (abstract or indirect cause: A, C, E, F, H), card 8 ('aid' and 'device' vague: B, H), card 9 (why a screen reader: C, G). Rounds I-J are on the final headlines, and both answered all five questions."
+  "read_back_rounds": "Twelve fresh readers in six rounds (A-B, C-D, E-F, G-H, I-J, K-L), each on headlines only, once. Fixed between rounds: card 3 (both directions; then 'in testing' added for truth once the lines moved to the caption), card 7 (indirect cause; then what is bought), card 8 ('aid' and 'device' vague), card 9 (why a screen reader; which PDFs). K and L read the final words except the two last clarifications on cards 7 and 9, and both answered all five questions.",
+  "lines_where": "The line under each body headline is said in the post description (caption.md), never drawn on the card: the approved v2 house decks carry kicker, rule and headline only, which keeps every card above the 35 px phone floor (carousel_check.py --cards)."
 }
