@@ -33,6 +33,14 @@
       "said": "approve the lift",
       "on": "2026-11-18",
       "artifact_hash": "1b895a827a69a894d36533ab6be0e98771ba80a88dc3b9671eb23900abfc47c3"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "said": "Approve the merged engine and both proofs",
+      "on": "2026-11-18",
+      "artifact_hash": "3a1184398fbfe0df720c36881a9dbc93cbeda5e8fec2ba6f1f939528a17c8da8"
     }
   ]
 }
