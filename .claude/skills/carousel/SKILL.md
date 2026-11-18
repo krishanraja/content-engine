@@ -41,7 +41,10 @@ light speed and needs to be able to follow the story within 10 seconds. This can
 
 **Cover: grabs the thumb** (15 Nov: "the front cover card does not look like a front cover")
 
-9. Card 1 is a full-bleed scene of one funny, specific moment that carries the idea at a glance; never a headline on
+9. The house look (Krish, 18 Nov; `docs/CAROUSEL-STANDARD.md`, "The house carousel look"): the cover as the Git and
+   homework covers (a photoreal scene in the top 60%, the real company wordmark, a huge two-line Anton headline in cream
+   then mint, one subline), every body card image-led as the Erdős deck's, real-world images before generated ones.
+   Card 1 is a full-bleed scene of one funny, specific moment that carries the idea at a glance; never a headline on
    plain ground, a logo row or a chart. Its headline at least 1.3 times the body cards' and its layout different in
    two of three ways. `carousel_check.py --cards`.
 10. Card 1 says in plain words what happened and why it matters; nothing cryptic. Before showing Krish, look at it at
