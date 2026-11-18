@@ -23,6 +23,8 @@ import { regionSlots } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
 import { EngineAudio } from './audio'
+import { band } from './captions/kit'
+import { TitleMoment } from './title/TitleMoment'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
 
 // Placement belongs to the composition, never to a strict device schema.
@@ -301,6 +303,15 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
           <BrandFrame props={props} beat={beat} frame={frame} />
         </AbsoluteFill>
       )))
+  // The episode title moment (props.titleMoment): the line he says becomes the title over the captions, which leave its
+  // words out. It lands in the panel above his face on a staged beat, else across the frame.
+  const titleLayer = props.titleMoment && frame >= props.titleMoment.fromFrame && frame < props.titleMoment.toFrame ? (
+    <AbsoluteFill key="title-moment" data-title-moment>
+      <TitleMoment words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame} {...(props.titleMoment.release ? { release: props.titleMoment.release } : {})}
+        frame={frame} aspect={props.aspect} width={width} height={height}
+        stage={stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height }}
+        captionBox={band(props)} tokens={props.tokens as unknown as Record<string, string>} />
+    </AbsoluteFill>) : null
   // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.
   const stagingGround = stagedNow && !stagedNow.rises ? (
     <AbsoluteFill key="staging-ground" data-staging={props.layout!.mode} style={{ backgroundColor: stagedNow.under === 'cream' ? props.tokens.cream : props.tokens.ink }}>
@@ -321,7 +332,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       {stagingGround ? picture : !hasWindow && take}
       {beatLayers}
-      {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers]}
+      {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers, ...(titleLayer ? [titleLayer] : [])]}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )
@@ -337,7 +348,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         {beatLayers}
       </AbsoluteFill>
       {flash > 0 ? <AbsoluteFill data-flash style={{ backgroundColor: props.tokens.cream, opacity: flash }} /> : null}
-      {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers]}
+      {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers, ...(titleLayer ? [titleLayer] : [])]}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )

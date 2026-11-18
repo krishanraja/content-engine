@@ -173,6 +173,9 @@ export const VeAudioSchema = z.object({
     epidemic_edit_id: z.string().min(1).optional(),
     mode: z.enum(['continuous', 'episode', 'ducked', 'episode_bed']),
     under_vo_lu: z.number().max(-12).min(-30).default(-20),
+    // Krish's ear on this piece's music, in dB under the house levels (an episode_bed's intro, bed, chapter and outro
+    // all move by it). Krish, 2026-11-18: "Aspire, but turn the volume down 15%." (-1.41 dB).
+    trim_db: z.number().min(-6).max(0).optional(),
   }).strict(),
   sfx_kit: z.string().min(1).default('house-v1'),
   targets: z.object({ lufs: z.number().default(-14), tp: z.number().max(-1).default(-1) }).strict().default({ lufs: -14, tp: -1 }),
