@@ -71,7 +71,21 @@ export interface StyleLayer {
   picked_by: 'Krish' | 'spec' | null
   picked_at: string | null
 }
-export interface DayStyle { motion: StyleLayer; captions: StyleLayer; treatment: StyleLayer }
+export interface DayStyle {
+  motion: StyleLayer; captions: StyleLayer; treatment: StyleLayer
+  /** Contract 1.27.0: the experiment he ticked for this piece beside his picks (EXPERIMENTS), or null. */
+  experiment?: string | null
+}
+
+/** The experiments he can tick on any piece beside the look, motion and captions (Krish, 2026-11-18: "add a checkbox on
+ *  every future piece that I'm planning, as I do the motion picking and caption picking, etc., that can activate this
+ *  skill alongside what I pick ... Make it available as a feature in all"). Each id names the skill the production
+ *  session runs (.agents/skills/<id>). */
+export const EXPERIMENTS: ReadonlyArray<{ id: string; name: string; line: string }> = [
+  { id: 'directed-shoot', name: 'Directed shoot',
+    line: 'An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend.' },
+]
+const EXPERIMENT_IDS = new Set(EXPERIMENTS.map(e => e.id))
 
 /** One motion style from the bank's motion layer. */
 export interface MotionModule { id: string; name: string; how: string; rules: string[]; point_types: string[]; formats: string[]; fits: string; krish_verdict: string; ve_route: string[] }
@@ -166,10 +180,11 @@ export function undrawableMotion(styles: unknown): Set<string> {
 }
 
 /** His style on the piece (meta.style), read safely. */
-export function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, string[]>; at: string | null } {
+export function styleOf(meta: unknown): { motion: string | null; captions: string | null; experiment: string | null; rejected: Record<RejectLayerKey, string[]>; at: string | null } {
   const s = isObj(meta) && isObj(meta.style) ? meta.style : {}
   const rejected = isObj(s.rejected) ? s.rejected : {}
   return { motion: typeof s.motion === 'string' ? s.motion : null, captions: typeof s.captions === 'string' ? s.captions : null,
+    experiment: typeof s.experiment === 'string' && EXPERIMENT_IDS.has(s.experiment) ? s.experiment : null,
     rejected: { motion: strings(rejected.motion), captions: strings(rejected.captions), treatment: strings(rejected.treatment) }, at: typeof s.at === 'string' ? s.at : null }
 }
 
@@ -315,12 +330,16 @@ export function dayStyle(i: StyleInputs): DayStyle {
     }),
     picked: look ? String(look.production) : null, picked_by: look ? 'Krish' : null, picked_at: look && typeof look.at === 'string' ? look.at : null,
   }
-  return { motion, captions, treatment }
+  return { motion, captions, treatment, experiment: mine.experiment }
 }
 
 export class StyleError extends Error { constructor(public status: number, message: string) { super(message) } }
-export interface StylePick { motion?: string; captions?: string; reject?: { layer: RejectLayerKey; id: string } }
-export interface SavedStyle { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, string[]>; by: 'Krish'; at: string }
+export interface StylePick {
+  motion?: string; captions?: string; reject?: { layer: RejectLayerKey; id: string }
+  /** His tick: an experiment id, or null to untick it (EXPERIMENTS). */
+  experiment?: string | null
+}
+export interface SavedStyle { motion: string | null; captions: string | null; experiment: string | null; rejected: Record<RejectLayerKey, string[]>; by: 'Krish'; at: string }
 
 /** A look's id, as the style bank names its formats. */
 const LOOK_ID = /^[a-z0-9][a-z0-9_.-]{0,79}$/
@@ -356,7 +375,14 @@ export function stylePick(body: Body, motionIds: Set<string> | null, undrawable:
     if (r.layer === 'treatment' && (typeof r.id !== 'string' || !LOOK_ID.test(r.id))) throw new StyleError(400, 'unknown_look')
     out.reject = { layer: r.layer, id: r.layer === 'motion' ? motion(r.id) : r.layer === 'captions' ? caption(r.id) : String(r.id) }
   }
-  if (!out.motion && !out.captions && !out.reject) throw new StyleError(400, 'nothing_to_record')
+  if (body.experiment !== undefined) {
+    // The board's tick-box sends the values he chose (none when unticked); a single id is taken too.
+    const v = body.experiment
+    const ids = Array.isArray(v) ? v : v === null || v === '' ? [] : [v]
+    if (ids.length > 1 || !ids.every(id => typeof id === 'string' && EXPERIMENT_IDS.has(id))) throw new StyleError(400, 'unknown_experiment')
+    out.experiment = ids.length ? String(ids[0]) : null
+  }
+  if (!out.motion && !out.captions && !out.reject && out.experiment === undefined) throw new StyleError(400, 'nothing_to_record')
   return out
 }
 
@@ -373,7 +399,9 @@ export function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle {
   }
   if (pick.motion) { motion = pick.motion; rejected.motion = rejected.motion.filter(x => x !== pick.motion) }
   if (pick.captions) { captions = pick.captions; rejected.captions = rejected.captions.filter(x => x !== pick.captions) }
-  return { motion, captions, rejected, by: 'Krish', at }
+  // A pick of motion or captions keeps the experiment he ticked; only his tick changes it.
+  const experiment = pick.experiment !== undefined ? pick.experiment : now.experiment
+  return { motion, captions, experiment, rejected, by: 'Krish', at }
 }
 
 /** Record his press on the piece (meta.style), guarded on the row's updated_at so a write in between is kept. */

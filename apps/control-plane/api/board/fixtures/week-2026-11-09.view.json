@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.26.0",
+ "contract_version": "1.27.0",
  "week": "2026-11-09",
  "as_of": "2026-11-13T15:00:00.000Z",
  "days": [
@@ -1181,7 +1181,8 @@
       "picked": "face-with-proof",
       "picked_by": "Krish",
       "picked_at": "2026-11-08T12:00:00Z"
-     }
+     },
+     "experiment": null
     },
     "stages": [
      {
@@ -3752,7 +3753,8 @@
       "picked": "face-with-proof",
       "picked_by": "Krish",
       "picked_at": "2026-11-08T12:00:00Z"
-     }
+     },
+     "experiment": null
     },
     "stages": [
      {
@@ -6426,7 +6428,8 @@
       "picked": "face-with-proof",
       "picked_by": "Krish",
       "picked_at": "2026-11-08T12:00:00Z"
-     }
+     },
+     "experiment": null
     },
     "stages": [
      {

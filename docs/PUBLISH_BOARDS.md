@@ -848,6 +848,16 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
     Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
     held, still counts. A `send` written by anyone else is still refused.
 
+- **1.27.0 (18 Nov 2026)** added **`experiment`** on a piece's style (`path.style.experiment`, `meta.style.experiment`):
+  the experiment Krish ticked beside his look, motion and captions, or null. Every piece's picks carry one more press,
+  **Add an experiment**: a tick-box (`choose.multi`, not required) over `EXPERIMENTS` in `_style.ts` (today
+  `directed-shoot`), posted to the style op as `experiment: [<id>]`, or `[]` to untick. A motion or captions pick keeps
+  the tick, and an unknown id is refused (400 `unknown_experiment`). Once ticked, the production prompt names the skill
+  to run beside his picks.
+  - Krish, 2026-11-18: "Can you add a checkbox on every future piece that I'm planning, as I do the motion picking and
+    caption picking, etc., that can activate this skill alongside what I pick? Don't just add it to one card. Make it
+    available as a feature in all."
+
 - **1.26.0 (17 Nov 2026)** added **`recipe`** on a plan's picture: a generated picture's exact higgsfield-generator recipe
   (model, prompt, the still it starts from, length, estimated credits), shown in the plan and carried into the Claude
   production prompt, which follows the skills' own guide: stills before video, motion from the approved still on
@@ -1155,6 +1165,7 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   in between is kept, never overwritten (409 `piece_busy` when they never stop); the `content_ideas` trigger bumps the
   week's `board_signal`. "Not this" on the picked style takes the pick away; a later Yes takes a style back off the
   "Not this" list. It never edits a `creative-direction.json`.
+- **The experiment tick** (1.27.0): `{ piece_id, experiment: ['directed-shoot'] }` on the same route sets `meta.style.experiment`, and `[]` clears it; the production session runs that skill beside his picks.
 - **Who reads it:** make-piece and ve read `meta.style` as the default for a new spec's `style.motion.module` and
   `brand.caption_theme` (`docs/ve/RUNBOOK.md`, S1), and a signed spec stays his.
 - **Held by:** `tests/control-plane/board-style.test.ts` and `tests/control-plane/board-view-contract.test.ts`.

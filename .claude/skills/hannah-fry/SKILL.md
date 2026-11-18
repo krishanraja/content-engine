@@ -1,6 +1,6 @@
 ---
 name: hannah-fry
-description: "Hold every video script to Hannah Fry's teaching craft, as measured from her Short 'Could Alzheimer's start in our nose?': before writing, plan the breakdown on her shape (the whole claim first, the known version moved aside, the one thing to know as pictures, a ladder of evidence with a refrain, the claim back bigger, delight); after writing, a separate reader checks the words against her eight moves and names the line where curiosity drops. Use in make-piece's Scripts step for both cuts, for a ve voiceover script, or when Krish asks for a script to be checked against Hannah Fry. A validator after the writer: it never writes the script, never overrides a house rule and never holds his own Approve scripts press."
+description: "Hold every video script to Hannah Fry's teaching craft, as measured from her Short 'Could Alzheimer's start in our nose?': before writing, plan the breakdown on her shape (the whole claim first, the known version moved aside, the one thing to know as pictures, a ladder of evidence with a refrain, the claim back bigger, delight); after writing, a separate reader checks the words against her eight moves and names the line where curiosity drops. Runs automatically and silently on every script any session writes (make-piece's Scripts step, off-day voiceovers, features, directed shoots), or when Krish asks for a script to be checked against Hannah Fry. A validator after the writer: it never writes the script, never overrides a house rule and never holds his own Approve scripts press."
 model: opus
 ---
 
@@ -44,6 +44,10 @@ Run it after `story_check.py` and `humour_check.py` pass and before the three-re
 its answer. A fail is rewritten and read again by a new reader. A pass is filed as `teaching-check-<cut>.md` in the
 piece's plan folder, bound to the script's sha256.
 
-The check runs on scripts a session writes and sends. His own Approve scripts press sends his exact words at once
-(F49). If the teaching check has not run on those words, it runs after the send and its verdict goes to him beside the
-other checks. It never holds or changes his words.
+**Automatic and silent** (Krish, 2026-11-18: "The Hannah Fry skill should invoke automatically but silently behind
+the scenes"). It runs on every script any session writes: both cuts of a series piece, a feature, an off-day voiceover
+and a directed shoot's lines. Nobody asks for it, and it never asks him anything. It never appears on the board, in a
+board prompt or in a message to him. A fail is fixed before he sees the words, and the file stays in the plan folder.
+His own Approve scripts press sends his exact words at once (F49). If the check has not run on those words, it runs
+after the send, files its verdict in the plan folder for the next script to learn from, and never holds, changes or
+reports on his words.
