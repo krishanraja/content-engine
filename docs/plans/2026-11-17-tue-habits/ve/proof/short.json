@@ -2,21 +2,25 @@
   "schema": "ve-proof/1",
   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16",
   "cut": "short",
-  "beat": "b12",
+  "beat": "b13a",
   "rule": "named in the spec (proof.beat)",
-  "start": 37.8,
-  "end": 45.8,
+  "start": 41.133,
+  "end": 49.133,
   "beat_s": [
-    38.0,
+    44.667,
     45.6
   ],
-  "sha256": "da2406765e7c52488111a9b89de11711cdee36a60d7ffdfabea1debd7179f103",
-  "spec_sha256": "bcfc9a83ecdd50e92750901ffdd4cf5bfd30ea89111753a78e4dd1f7a5e8d82e",
+  "sha256": "e6134a120578020b32e3f26616241639ac43fc61a1683eb2fbbba584de493028",
+  "spec_sha256": "ca66cecf2ae273faa4ff4d9be0fbdcc679234a83e45ff3105f57e882ad903640",
   "structure": {
     "format": "voice-led-pictures",
     "aspect": "9:16",
     "motion": "swiss-kinetic-type",
     "objects": [
+      [
+        "accountable",
+        "stamp"
+      ],
       [
         "allin",
         "stamp"
@@ -208,6 +212,14 @@
         ]
       ],
       [
+        "b13a",
+        "STAGE",
+        [
+          "accountable",
+          "screen-ibm"
+        ]
+      ],
+      [
         "b13",
         "STAGE",
         [
@@ -303,7 +315,7 @@
     ]
   },
   "style_module": "swiss-kinetic-type",
-  "props_sha256": "13f7af7856f9140d9e89391689015a2d8f5484daecba78b51cc803f216c1e780",
+  "props_sha256": "96a4081d51b08cd94540bd312e6ceb7a500d5985925766fd4c0842808f09e6d9",
   "type": [
     [
       "data",

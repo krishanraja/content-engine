@@ -40,152 +40,167 @@
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.scratch/ve/habits/assets/audio.short.wav",
-      "trimBeforeFrames": 1134
+      "trimBeforeFrames": 1234
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 6,
-      "words": [
-        {
-          "text": "And",
-          "atFrame": 0
-        },
-        {
-          "text": "bosses",
-          "atFrame": 0
-        },
-        {
-          "text": "already",
-          "atFrame": 0
-        },
-        {
-          "text": "get",
-          "atFrame": 0
-        },
-        {
-          "text": "this.",
-          "atFrame": 0
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 6,
-      "toFrame": 72,
-      "words": [
-        {
-          "text": "IBM",
-          "atFrame": 6
-        },
-        {
-          "text": "asked",
-          "atFrame": 15
-        },
-        {
-          "text": "HR",
-          "atFrame": 35
-        },
-        {
-          "text": "chiefs",
-          "atFrame": 50
-        },
-        {
-          "text": "which",
-          "atFrame": 58
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 72,
-      "toFrame": 116,
+      "toFrame": 16,
       "words": [
         {
           "text": "skill",
-          "atFrame": 72
+          "atFrame": 0
         },
         {
           "text": "matters",
-          "atFrame": 87
+          "atFrame": 0
         },
         {
           "text": "the",
-          "atFrame": 97
+          "atFrame": 0
         },
         {
           "text": "most",
-          "atFrame": 103
+          "atFrame": 3
         },
         {
           "text": "right",
-          "atFrame": 109
+          "atFrame": 9
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 116,
-      "toFrame": 180,
+      "fromFrame": 16,
+      "toFrame": 80,
       "words": [
         {
           "text": "now",
-          "atFrame": 116
+          "atFrame": 16
         },
         {
           "text": "and",
-          "atFrame": 128
+          "atFrame": 28
         },
         {
           "text": "71%",
-          "atFrame": 135
+          "atFrame": 35
         },
         {
           "text": "said",
-          "atFrame": 166
+          "atFrame": 66
         }
       ],
       "swipeIndex": 2
     },
     {
-      "fromFrame": 180,
-      "toFrame": 234,
+      "fromFrame": 80,
+      "toFrame": 134,
       "words": [
         {
           "text": "the",
-          "atFrame": 180
+          "atFrame": 80
         },
         {
           "text": "same",
-          "atFrame": 184
+          "atFrame": 84
         },
         {
           "text": "thing.",
-          "atFrame": 190
+          "atFrame": 90
         },
         {
           "text": "Accountability.",
-          "atFrame": 206
+          "atFrame": 106
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 234,
-      "toFrame": 240,
+      "fromFrame": 134,
+      "toFrame": 156,
       "words": [
         {
           "text": "Check",
-          "atFrame": 234
+          "atFrame": 134
         },
         {
           "text": "the",
-          "atFrame": 239
+          "atFrame": 139
         },
         {
           "text": "AI's",
+          "atFrame": 146
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 156,
+      "toFrame": 196,
+      "words": [
+        {
+          "text": "work",
+          "atFrame": 156
+        },
+        {
+          "text": "and",
+          "atFrame": 162
+        },
+        {
+          "text": "overrule",
+          "atFrame": 177
+        }
+      ],
+      "swipeIndex": 2
+    },
+    {
+      "fromFrame": 196,
+      "toFrame": 222,
+      "words": [
+        {
+          "text": "it",
+          "atFrame": 196
+        },
+        {
+          "text": "when",
+          "atFrame": 200
+        },
+        {
+          "text": "it's",
+          "atFrame": 204
+        },
+        {
+          "text": "wrong.",
+          "atFrame": 212
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 222,
+      "toFrame": 240,
+      "words": [
+        {
+          "text": "Then",
+          "atFrame": 222
+        },
+        {
+          "text": "they",
+          "atFrame": 228
+        },
+        {
+          "text": "asked",
+          "atFrame": 238
+        },
+        {
+          "text": "the",
+          "atFrame": 240
+        },
+        {
+          "text": "staff",
           "atFrame": 240
         }
       ],
@@ -196,45 +211,62 @@
   "captionTheme": "art-directed",
   "beats": [
     {
-      "id": "b11",
-      "role": "bridge",
+      "id": "b12",
+      "role": "anchor",
       "layout": "STAGE",
       "fromFrame": 0,
-      "toFrame": 6,
+      "toFrame": 106,
       "uses": [
-        "plate-b11"
+        "screen-ibm"
       ],
       "transitionOut": "cut",
       "sectionBeat": true,
       "plate": {
         "source": "none"
       },
-      "keyFrame": 0
+      "keyFrame": 66
     },
     {
-      "id": "b12",
-      "role": "anchor",
+      "id": "b13a",
+      "role": "pivot",
       "layout": "STAGE",
-      "fromFrame": 6,
-      "toFrame": 234,
+      "fromFrame": 106,
+      "toFrame": 134,
       "uses": [
-        "screen-ibm"
+        "screen-ibm",
+        "accountable"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
         "source": "none"
       },
-      "keyFrame": 188
+      "keyFrame": 128
     },
     {
       "id": "b13",
       "role": "bridge",
       "layout": "STAGE",
-      "fromFrame": 234,
-      "toFrame": 240,
+      "fromFrame": 134,
+      "toFrame": 222,
       "uses": [
         "screen-overrule"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 204
+    },
+    {
+      "id": "b14",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 222,
+      "toFrame": 240,
+      "uses": [
+        "plate-b14"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -246,26 +278,26 @@
   ],
   "objects": [
     {
-      "obj": "plate-b11",
+      "obj": "plate-b14",
       "device": "photo_plate",
-      "meaning": "the generated picture on b11",
-      "fromFrame": 0,
-      "toFrame": 6,
+      "meaning": "the generated picture on b14",
+      "fromFrame": 222,
+      "toFrame": 240,
       "variants": {},
       "params": {
         "image": {
-          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b11-boss.png",
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b14-stampers.png",
           "pixelWidth": 941,
           "pixelHeight": 1672
         },
         "push": 0.06,
         "generated": true,
         "regions": {
-          "pen": {
-            "x": 0.15,
-            "y": 0.58,
+          "stamps": {
+            "x": 0.25,
+            "y": 0.4,
             "w": 0.7,
-            "h": 0.22
+            "h": 0.35
           }
         }
       }
@@ -274,8 +306,8 @@
       "obj": "screen-ibm",
       "device": "photo_plate",
       "meaning": "IBM's own release, the 71% clause highlighted as he says it",
-      "fromFrame": 6,
-      "toFrame": 234,
+      "fromFrame": 0,
+      "toFrame": 134,
       "variants": {},
       "params": {
         "video": {
@@ -291,8 +323,8 @@
       "obj": "screen-overrule",
       "device": "photo_plate",
       "meaning": "an AI's wrong figure struck out and overruled",
-      "fromFrame": 234,
-      "toFrame": 240,
+      "fromFrame": 134,
+      "toFrame": 222,
       "variants": {},
       "params": {
         "video": {
@@ -304,36 +336,58 @@
         "push": 0,
         "generated": true
       }
+    },
+    {
+      "obj": "accountable",
+      "device": "stamp",
+      "meaning": "the one skill 71% of HR chiefs named, slammed down as he says it (his note of 18 Nov: \"Accountability should be way more epic\")",
+      "fromFrame": 106,
+      "toFrame": 134,
+      "variants": {},
+      "params": {
+        "kind": "outline",
+        "paint": "mint",
+        "size": "hero",
+        "top": "71% OF HR CHIEFS SAID",
+        "main": "ACCOUNTABILITY",
+        "tiltDeg": -4,
+        "at": {
+          "x": 60,
+          "y": 560,
+          "w": 960,
+          "h": 420
+        }
+      }
     }
   ],
   "events": [
-    {
-      "id": "b11-0",
-      "obj": "plate-b11",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 0
-    },
-    {
-      "id": "b11-1",
-      "obj": "plate-b11",
-      "verb": "move",
-      "toState": "pen",
-      "atFrame": 0
-    },
     {
       "id": "b12-0",
       "obj": "screen-ibm",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 6
+      "atFrame": 0
+    },
+    {
+      "id": "b13a-0",
+      "obj": "accountable",
+      "verb": "stamp",
+      "toState": "signed",
+      "atFrame": 106
     },
     {
       "id": "b13-0",
       "obj": "screen-overrule",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 234
+      "atFrame": 134
+    },
+    {
+      "id": "b14-0",
+      "obj": "plate-b14",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 222
     }
   ],
   "motion": {

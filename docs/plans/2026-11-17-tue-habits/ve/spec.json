@@ -445,7 +445,7 @@
    "meaning": "IBM's own release, the 71% clause highlighted as he says it",
    "persist": {
     "from_beat": "b12",
-    "to_beat": "b12"
+    "to_beat": "b13a"
    },
    "params": {
     "video": {
@@ -512,6 +512,29 @@
     },
     "push": 0.0,
     "generated": true
+   }
+  },
+  {
+   "obj": "accountable",
+   "device": "stamp",
+   "meaning": "the one skill 71% of HR chiefs named, slammed down as he says it (his note of 18 Nov: \"Accountability should be way more epic\")",
+   "persist": {
+    "from_beat": "b13a",
+    "to_beat": "b13a"
+   },
+   "params": {
+    "kind": "outline",
+    "paint": "mint",
+    "size": "hero",
+    "top": "71% OF HR CHIEFS SAID",
+    "main": "ACCOUNTABILITY",
+    "tiltDeg": -4,
+    "at": {
+     "x": 60,
+     "y": 560,
+     "w": 960,
+     "h": 420
+    }
    }
   },
   {
@@ -1380,7 +1403,7 @@
      "role": "anchor",
      "span": {
       "from_w": 126,
-      "to_w": 143
+      "to_w": 142
      },
      "viewer_task": "verify_evidence",
      "point": "IBM: 71% of HR chiefs rank checking and overruling AI as the top skill",
@@ -1401,6 +1424,33 @@
       }
      ],
      "override_reason": "IBM's own page carries the number: the 71% clause is highlighted on the page as he says it, so a typed stat would only repeat it"
+    },
+    {
+     "id": "b13a",
+     "role": "pivot",
+     "span": {
+      "from_w": 143,
+      "to_w": 143
+     },
+     "viewer_task": "land_payoff",
+     "point": "The one skill they named: accountability",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "screen-ibm",
+      "accountable"
+     ],
+     "events": [
+      {
+       "at_w": 143,
+       "obj": "accountable",
+       "verb": "stamp",
+       "to_state": "signed",
+       "silent": true
+      }
+     ]
     },
     {
      "id": "b13",
