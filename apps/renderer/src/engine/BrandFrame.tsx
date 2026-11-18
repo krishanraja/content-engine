@@ -48,12 +48,30 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={house} frame={frame} />
       : call ? <CallCard props={house} frame={frame} />
-        : props.captionTheme ? <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />
+        : props.captionTheme ? (onFullPlate(props, beat)
+          ? <div data-caption-halo style={{ position: 'absolute', inset: 0, filter: CAPTION_HALO }}><ThemedCaption props={props} theme={props.captionTheme} frame={frame} /></div>
+          : <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />)
         : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />
         : props.captionStyle === 'word' ? <WordCaption props={props} frame={frame} />
         : beat.layout === 'SPLIT' ? <SplitCaptionTrack props={props} frame={frame} /> : <CaptionTrack props={props} frame={frame} />}
   </>
 }
+
+/** True when the beat is a full-bleed scene plate: a busy photograph fills the frame behind the captions. Never his take
+ *  (F1, SPLIT) and never the cream stage, whose devices sit on a plain ground. */
+export function onFullPlate(props: EngineRenderProps, beat: EngineBeat): boolean {
+  if (beat.layout !== 'STAGE') return false
+  return beat.uses.some((id) => {
+    const object = props.objects.find((o) => o.obj === id)
+    return object?.device === 'scene_plate' && object.params.full !== false
+  })
+}
+
+/** A tight dark halo around a themed caption's letters on a full scene plate: the step after the lift's soft shadow,
+ *  which left the rack-focus words unreadable on the Wed 18 crocodile plate (ve qc captions.ocr and captions.render,
+ *  18 Nov 2026). It hugs the glyphs and darkens nothing else, so the picture behind (the crocodile's eye) keeps its light,
+ *  where a floor under the band would have dimmed it. */
+export const CAPTION_HALO = 'drop-shadow(0 0 2px rgba(0,0,0,0.92)) drop-shadow(0 0 9px rgba(0,0,0,0.62))'
 
 /** Reuse caption timing, word layout and swipe; apply the frozen split frame's compact padding. */
 export function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number }) {
