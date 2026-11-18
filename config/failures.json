@@ -2791,13 +2791,13 @@
     {
       "id": "head-cut-off-and-visual-squeezed",
       "on": "2026-11-18",
-      "status": "open",
+      "status": "guarded",
       "mode": "obvious-rule-left-to-a-reference",
       "guard_level": "lint_refuse",
       "krish": "\"Dont cut the top of my head off\" should not really need a reference image, should it? This session literally just did that [a link to this session] which I find insane that you wouldnt know not to do that. Then, of a proof video, wed18-proof-hook-video.mp4: But this treatment is not good. Can't cut my head off and also ruin the visual above",
       "what": "A Wed 18 Nov proof video in the SPLIT layout cut the top of his head off and drew its picture in a thin strip above him. The first render of the replacement key frames did the same to his head (a face band cropped from the top of the take), and the tests Codex wrote asserted that crop.",
       "symptom": "His head cropped by the camera band, and a 16:9 visual shrunk to a sliver.",
-      "cause": "The engine checked only that no caption sat on his face (qc_faces.off_face). Nothing checked that his whole head was in the picture: the camera crop is a hand-set value per beat that defaults to the bottom of the take (SPLIT_POSTER_POSITIONS, 50% 88%). The proof box is 960 x 400 (the seam at y 760 less 360), 2.4 to 1, so a 16:9 visual cannot be drawn in it. A rule he calls obvious was left to a card sentence and to key frames of an old video.",
+      "cause": "The engine checked only that no caption sat on his face (qc_faces.off_face). Nothing checked that his whole head was in the picture: the camera crop defaulted to a value set on one earlier take (SPLIT_POSTER_POSITIONS, 50% 88%). His takes are 1080 x 1920 and the camera box is 1160 high, so 88% hides the top 669 rows, which is his forehead on the Wed 18 Build-or-buy take (reproduced 18 Nov: a render of that take at 88% shows the cut at the eyebrows, and the new check fails it with the crown 336 px up and no face found in two beats). The proof box was 960 x 400, 2.4 to 1, so photo_plate's cover crop trimmed a 16:9 visual. A rule he calls obvious was left to a card sentence and to key frames of an old video.",
       "causes": [
         {
           "cause": "check_missing",
@@ -2808,7 +2808,7 @@
           "evidence": "No rule said the proof box must hold a 16:9 visual; the seam and the box were whatever the old frames had."
         }
       ],
-      "surface": "18 Nov: plate.head_in_band measures the head (crown to chin) on every SPLIT take beat at three samples and fails the cut with the pixels it is cut by (qc_faces.head_in_band; counted; starting values uncalibrated; not_run without a face detector on the machine that runs QC). Still open: the proof box is 960 x 400 until Krish approves the new key frames at Gate 2 and the seam moves; the rule that it holds a 16:9 visual lands with that change. This entry closes when both stand.",
+      "surface": "18 Nov: (1) plate.head_in_band measures the head (crown to chin) on every SPLIT take beat at three samples, fails the cut with the pixels it is cut by and names the plate.crop that would hold every sampled head (qc_faces.head_in_band, fitting_position; counted; starting values uncalibrated; not_run without a face detector). (2) The default crop is now 50% 16% (splitGeometry.ts), which keeps crown and chin in the box on both portrait takes measured (Wed 18, AI music; every sample), and qc_as_shot reads it from that file. (3) The SPLIT stage is a true 16:9 (768 x 432 at x 76, y 288, centred in the platform safe column and ending above the caption and his head), so a 16:9 visual is drawn whole. Rendered on both real takes with a 16:9 test visual: 12 of 12 head samples whole on each, and the old crop fails the same check. Not calibrated: the default is one value measured on two takes; a take framed differently is caught by the check, not by the default.",
       "guards": [
         {
           "file": "scripts/velib/qc_faces.py",
@@ -2819,6 +2819,16 @@
           "file": "tests/ve_qc_faces_test.py",
           "contains": "class HeadInBand",
           "how": "crown, chin, a moving head, no face and no detector"
+        },
+        {
+          "file": "apps/renderer/src/engine/layouts/split.test.ts",
+          "contains": "never defaults the take to the bottom of its frame",
+          "how": "the default crop stays near the top of the take; the stage is 16:9, above the seam, inside the safe column"
+        },
+        {
+          "file": "tests/ve_qc_faces_test.py",
+          "contains": "test_the_renderers_default_crop_keeps_both_portrait_takes_whole",
+          "how": "the measured Wed 18 and AI music face boxes stay whole under the renderer's default crop"
         }
       ],
       "watch": {

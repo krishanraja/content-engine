@@ -4,7 +4,7 @@ import { OffthreadVideo } from 'remotion'
 import { describe, expect, it, vi } from 'vitest'
 import fixture from '../../../../../fixtures/ve/engine-core/props.json'
 import { slotsFor, splitCameraBox, splitPlatePosition } from './index'
-import { SPLIT_SEAM_Y, SPLIT_CAPTION_ZONE, SPLIT_POSTER_POSITIONS } from './splitGeometry'
+import { SPLIT_SEAM_Y, SPLIT_CAPTION_ZONE, SPLIT_POSTER_POSITIONS, SPLIT_STAGE_LEFT, SPLIT_STAGE_TOP, SPLIT_STAGE_WIDTH, SPLIT_STAGE_HEIGHT } from './splitGeometry'
 import { EngineRenderPropsSchema } from '../props'
 import { FormatMaster } from '../FormatMaster'
 import { BrandFrame, SplitCaptionTrack } from '../BrandFrame'
@@ -35,12 +35,25 @@ it('accepts SPLIT and refuses unknown engine layouts', () => {
 })
 describe('frozen SPLIT geometry', () => {
   it('shares the stage for every device and refuses wide even without devices', () => {
-    const box = { left: 60, top: 300, width: 960, height: SPLIT_SEAM_Y - 360 }
+    const box = { left: SPLIT_STAGE_LEFT, top: SPLIT_STAGE_TOP, width: SPLIT_STAGE_WIDTH, height: SPLIT_STAGE_HEIGHT }
     expect(slotsFor('SPLIT', '9:16', 3)).toEqual([box, box, box])
     expect(slotsFor('SPLIT', '9:16', 0)).toEqual([])
     expect(() => slotsFor('SPLIT', '16:9', 0)).toThrow('no wide lock')
     expect(splitCameraBox('9:16')).toEqual({ left: 0, top: SPLIT_SEAM_Y, width: 1080, height: 1920 - SPLIT_SEAM_Y })
     expect(() => splitCameraBox('16:9')).toThrow('no wide lock')
+  })
+  it('draws the stage as a true 16:9 above the seam, inside the safe column', () => {
+    expect(SPLIT_STAGE_WIDTH * 9).toBe(SPLIT_STAGE_HEIGHT * 16)
+    expect(SPLIT_STAGE_TOP + SPLIT_STAGE_HEIGHT).toBeLessThanOrEqual(SPLIT_SEAM_Y)
+    expect(SPLIT_STAGE_LEFT).toBeGreaterThanOrEqual(60)
+    expect(SPLIT_STAGE_LEFT + SPLIT_STAGE_WIDTH).toBeLessThanOrEqual(860)
+    expect(SPLIT_STAGE_TOP).toBeGreaterThanOrEqual(288)
+  })
+  it('never defaults the take to the bottom of its frame, which hides his forehead (Krish, 2026-11-18)', () => {
+    for (const crop of Object.values(SPLIT_POSTER_POSITIONS)) {
+      const y = Number(/(\d+(?:\.\d+)?)%$/.exec(crop)![1])
+      expect(y).toBeLessThanOrEqual(30)
+    }
   })
   it('uses CSS crops and falls back for editorial crop names', () => {
     expect(splitPlatePosition('50% 88%')).toBe('50% 88%')
@@ -59,7 +72,7 @@ describe('frozen SPLIT geometry', () => {
     expect(camera.props.style).toMatchObject(splitCameraBox('9:16'))
     expect(nodes.filter((n) => (n.props.style as Record<string, unknown>)?.transform)).toHaveLength(0)
     const device = nodes.find((n) => n.props.object && n.props.box)!
-    expect(device.props.box).toEqual({ left: 60, top: 300, width: 960, height: SPLIT_SEAM_Y - 360 })
+    expect(device.props.box).toEqual({ left: SPLIT_STAGE_LEFT, top: SPLIT_STAGE_TOP, width: SPLIT_STAGE_WIDTH, height: SPLIT_STAGE_HEIGHT })
     const stage = nodes.find((n) => (n.props.style as Record<string, unknown>)?.backgroundColor === props.tokens.cream)!
     expect(stage.props.style).toMatchObject({ height: SPLIT_SEAM_Y, overflow: 'hidden' })
     // No mark tile, pill or header on the vertical cut (Ruling, Krish, 2026-11-11).

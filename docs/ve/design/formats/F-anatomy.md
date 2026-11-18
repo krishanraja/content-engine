@@ -57,7 +57,7 @@ What the retired frames did, set against what those two do:
 
 | | Retired frames | The two references |
 |---|---|---|
-| Stage share of the frame | 40% (seam y 760), every proof scaled to 0.76 inside it | 52% (Character.AI, seam y about 1000) to 64% (AI music, seam y about 1236) |
+| Stage share of the frame | 40% (seam y 760), every proof scaled to 0.76 inside it (the live stage since 18 Nov 2026 is a 768 x 432 16:9 at y 288, a visual drawn whole) | 52% (Character.AI, seam y about 1000) to 64% (AI music, seam y about 1236) |
 | Stage ground | flat cream, no texture | ink ground with grain, mint and a second material that means something |
 | Proof | five logo tiles in white squares and one ring; slabs that spell the caption | a real object per beat (a receipt, a chart, a screen, a real mark) that enters on its word |
 | Words on stage | repeat the caption | add a source, a date or a number the voice does not say |
