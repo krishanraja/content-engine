@@ -94,6 +94,9 @@ export const VeCutSchema = z.object({
     remove: z.array(z.object({ from_w: WordSchema, to_w: WordSchema, why: z.string().min(3) }).strict()).default([]),
     speed: z.number().min(1).max(1.35).default(1),
     speed_said: z.string().min(2).optional(),
+    // A pause longer than longer_than_s, between two words he said straight through, is cut down to a breath where
+    // both aligners agree on a gap (velib/conform.py tighten; Krish, 2026-11-17: "clip out empty awkward silences").
+    pauses: z.object({ longer_than_s: z.number().min(0.4).max(3), said: z.string().min(12) }).strict().optional(),
   }).strict().refine((v) => v.speed === 1 || !!v.speed_said, { message: "a speed change needs Krish's words in speed_said", path: ['speed_said'] }),
   captions: z.object({ region: z.string().min(1).default('default'), emphasis: z.array(WordSchema).default([]) }).strict(),
   beats: z.array(VeBeatSchema).min(1),

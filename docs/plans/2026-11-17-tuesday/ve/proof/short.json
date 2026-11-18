@@ -1,0 +1,268 @@
+{
+  "schema": "ve-proof/1",
+  "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+  "cut": "short",
+  "beat": "payoff",
+  "rule": "named in the spec (proof.beat)",
+  "start": 66.7,
+  "end": 74.7,
+  "beat_s": [
+    69.533,
+    71.867
+  ],
+  "sha256": "acd053ca06bef47e98cb6907e043a8f92930c615fc7ac1cbb68aedc71ccc27f2",
+  "spec_sha256": "8ec455361d209aa40b56ef5724b43d9f0ac0179eb8e3f7d68f72c17edcf86cae",
+  "structure": {
+    "format": "face-with-proof",
+    "aspect": "9:16",
+    "motion": "eating-jobs-ladder",
+    "objects": [
+      [
+        "ai_logos",
+        "logo_card"
+      ],
+      [
+        "ban_stat",
+        "kinetic_stat"
+      ],
+      [
+        "block",
+        "facility_block"
+      ],
+      [
+        "ddn",
+        "evidence_card"
+      ],
+      [
+        "el_deal",
+        "evidence_card"
+      ],
+      [
+        "field41",
+        "unit_field"
+      ],
+      [
+        "hf_deal",
+        "evidence_card"
+      ],
+      [
+        "meta_line",
+        "evidence_card"
+      ],
+      [
+        "meta_logo",
+        "logo_card"
+      ],
+      [
+        "meter",
+        "credit_meter"
+      ],
+      [
+        "piqua",
+        "evidence_card"
+      ],
+      [
+        "recall_stat",
+        "kinetic_stat"
+      ],
+      [
+        "recalled",
+        "stamp"
+      ],
+      [
+        "small_print",
+        "evidence_card"
+      ],
+      [
+        "stat41",
+        "kinetic_stat"
+      ]
+    ],
+    "beats": [
+      [
+        "hook",
+        "SPLIT",
+        [
+          "ddn",
+          "recalled"
+        ]
+      ],
+      [
+        "dc",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "face",
+        "SPLIT",
+        [
+          "ddn"
+        ]
+      ],
+      [
+        "questions",
+        "SPLIT",
+        [
+          "field41",
+          "stat41"
+        ]
+      ],
+      [
+        "meta",
+        "STAGE",
+        [
+          "block",
+          "meta_logo"
+        ]
+      ],
+      [
+        "city",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "piqua",
+        "SPLIT",
+        [
+          "piqua"
+        ]
+      ],
+      [
+        "bill",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "vote",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "proof",
+        "P6",
+        [
+          "ban_stat",
+          "block"
+        ]
+      ],
+      [
+        "sack",
+        "SPLIT",
+        [
+          "recall_stat"
+        ]
+      ],
+      [
+        "built",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "meta_says",
+        "STAGE",
+        [
+          "meta_line"
+        ]
+      ],
+      [
+        "party_line",
+        "SPLIT",
+        [
+          "meta_line"
+        ]
+      ],
+      [
+        "power",
+        "STAGE",
+        [
+          "ai_logos",
+          "block"
+        ]
+      ],
+      [
+        "call",
+        "SPLIT",
+        []
+      ],
+      [
+        "deals",
+        "P6",
+        [
+          "hf_deal"
+        ]
+      ],
+      [
+        "small_print",
+        "STAGE",
+        [
+          "small_print"
+        ]
+      ],
+      [
+        "payoff",
+        "STAGE",
+        [
+          "meter"
+        ]
+      ],
+      [
+        "three",
+        "P6",
+        [
+          "el_deal"
+        ]
+      ],
+      [
+        "carry_on",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "close",
+        "STAGE",
+        []
+      ]
+    ]
+  },
+  "style_module": "eating-jobs-ladder",
+  "props_sha256": "13f7ac4ebd808af10444a7b5996a3d66be78ffc2a4e1c39a10e262fb4a418ae1",
+  "qc": {
+    "measured_pass": null,
+    "complete": false,
+    "error": "Cue dc-0 has no unique beat slot"
+  },
+  "type": [
+    [
+      "data",
+      "card"
+    ],
+    [
+      "dek",
+      "loud caption word"
+    ],
+    [
+      "display",
+      "card"
+    ],
+    [
+      "structure",
+      "caption"
+    ],
+    [
+      "structure",
+      "caption on the light stage"
+    ]
+  ]
+}

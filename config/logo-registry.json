@@ -166,6 +166,25 @@
         "Grok"
       ],
       "domain": "x.ai"
+    },
+    {
+      "names": [
+        "Oracle"
+      ],
+      "domain": "oracle.com"
+    },
+    {
+      "names": [
+        "Apple",
+        "iPhone"
+      ],
+      "domain": "apple.com"
+    },
+    {
+      "names": [
+        "Soluna"
+      ],
+      "domain": "solunacomputing.com"
     }
   ],
   "mentions_only": [
@@ -212,6 +231,41 @@
       "file": "assets/logos/anthropic-symbol.svg",
       "sha256": "e129efc6982ff7df4baf15ed97486454a681286fcbaf16b6074517125e59fe88",
       "source": "https://cdn.brandfetch.io/idmJWF3N06/theme/dark/symbol.svg"
+    },
+    {
+      "company": "OpenAI",
+      "variant": "full_colour",
+      "file": "assets/logos/openai-logo.svg",
+      "sha256": "234e2d3083c5a78d03a9607349c83fb426ab9259ed451761ea1f146feb5e1274",
+      "source": "https://cdn.brandfetch.io/idR3duQxYl/theme/dark/logo.svg"
+    },
+    {
+      "company": "Oracle",
+      "variant": "full_colour",
+      "file": "assets/logos/oracle-logo.svg",
+      "sha256": "1d2dd1ee130c8e4c29bd985fe75a80fb22115cf4a5f995f05ac28ee9535d790e",
+      "source": "https://cdn.brandfetch.io/idnq7H7qT0/theme/dark/logo.svg"
+    },
+    {
+      "company": "Apple",
+      "variant": "full_colour",
+      "file": "assets/logos/apple-logo.svg",
+      "sha256": "e5c3d6a5c047ca111c882e9a1c5082244c6357918efeedbb83f56716a943b7ae",
+      "source": "https://cdn.brandfetch.io/idnrCPuv87/theme/dark/logo.svg"
+    },
+    {
+      "company": "Soluna",
+      "variant": "full_colour",
+      "file": "assets/logos/soluna-logo.svg",
+      "sha256": "cfa8251ba5a254d33c1b30d6cb3923f525c13a0b884857d8b5e1d9ccb8f98675",
+      "source": "https://cdn.brandfetch.io/idDpMaUQLL/theme/dark/logo.svg"
+    },
+    {
+      "company": "Higgsfield",
+      "variant": "full_colour",
+      "file": "assets/logos/higgsfield-logo.svg",
+      "sha256": "97c4c8f8fe81913bdc6a482332144123ee613554e7525d65c9465886684634ba",
+      "source": "https://cdn.brandfetch.io/id1Z9VD3Vt/theme/dark/logo.svg"
     }
   ],
   "marks_about": "The official mark files a render may use (floor never 6: real logos, used with the rights, never redrawn). scripts/post-pack/logo_gate.py hash-matches every logo file a cover, thumbnail or card uses against this list and refuses any file not here. Each entry: {\"company\": the first name above, \"variant\": \"full_colour\" or \"one_colour\" (the company's own one-colour version), \"file\": the path in this repository, \"sha256\": the file's, \"source\": where it came from (the company's brand page or Brandfetch asset URL, without its per-request token)}. Add one with: python3 scripts/post-pack/logo_gate.py register FILE --company NAME --variant full_colour --source URL. It starts empty: whether the house cream recolours in docs/plans/*/logos count as a one-colour version is Krish's call."
