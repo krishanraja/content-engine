@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-18","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Every piece's production picks on the live board now carry an "Add an experiment" tick-box beside the look, motion and captions (view contract 1.27.0). It is saved as meta.style.experiment through the style route and survives his other picks. Once ticked, the production prompt tells the session to run directed-shoot alongside his picks. The hannah-fry check now runs automatically and silently on every script any session writes, off-day voiceovers included: fixes happen before he sees the words, and nothing is shown to him. (2026-11-18)
 - the ads and midterms carousels are rebuilt to Krish's notes (sensational covers with a real person, "Where could AI live now?", designed body type) and filed to their posts. (2026-11-18)
 - carousel covers are sensational (a real person in an absurd moment, a real screenshot, or a photo-grade generated image) and body cards carry a designed type treatment (mono kicker, mint rule, Archivo Black). (2026-11-18)
 - the carousel skill's steps give every card a picture, real-world first, with scenes and company wordmarks briefed into the Codex card. (2026-11-18)
@@ -51,7 +52,7 @@ Older lines: `docs/history/2026-11-18-NOW-moved-4.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): the fact gate on both decks, then Krish's yes to post.
+- Next (2026-11-18): Check that Control Centre draws the new tick-box press on this week's pieces, and fix it there if it does not.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
