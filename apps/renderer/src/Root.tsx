@@ -1,4 +1,5 @@
 import React from 'react'
+import { SplitKeyFrame, SplitKeyFrameSchema } from './engine/stills/split/SplitKeyFrame'
 import { StyleStill, StyleStillSchema } from './engine/stills/StyleStill'
 import { Composition } from 'remotion'
 import { MindmakeShort } from './Short'
@@ -77,6 +78,7 @@ function TransportVeCut(props: EngineRenderProps) {
 export function RemotionRoot() {
   return (
     <>
+      <Composition id="SplitKeyFrame" component={SplitKeyFrame} width={1080} height={1920} fps={30} durationInFrames={1} schema={SplitKeyFrameSchema} defaultProps={{variant: 'slam', beat: 'hook', plateSrc: '', series: 'under.the.hood'}} />
       <Composition id="StyleStill" component={StyleStill} width={1080} height={1920} fps={30} durationInFrames={1} schema={StyleStillSchema} defaultProps={{layer: 'motion', id: 'ai-music-slam'}} />
       <Composition
         id="VeFormatMasterTall"
