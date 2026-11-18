@@ -1,0 +1,22 @@
+{
+ "path": "docs/ve/cards/w1117-dc/ve-tue17-facility-block-receipts.md",
+ "card_id": "ve-tue17-facility-block-receipts",
+ "kind": "device",
+ "spec": "docs/plans/2026-11-17-tuesday/ve/spec.json",
+ "title": "facility_block: receipts and tag sit clear of the block, on top",
+ "goal": "Krish, 18 Nov 2026, on Tue 17's short (b019dbf8): every full-screen beat must use the whole screen and read at a glance. In the 9:16 stills of `facility_block` (apps/renderer/src/engine/devices/facility_block) after the fill change, the two receipt papers (`targets`, here 'Power bill' and 'AI plan') and the moving `tag` ('Your share') are drawn before the block body and at fixed layout positions (x 470, y 140 and 260 in the 780-wide tall layout), so once the block grows to 64% of the box its racks cover them: the receipt pills read 'wer bill' and 'plan', and the tag lands half behind a rack.\n\nChange it so that:\n- the receipts and the tag are drawn after the block body, so nothing of the block ever covers them;\n- the receipts are placed from the block's drawn bounds, not fixed numbers: in the tall shape they stack in the clear space beside or below the block (whichever has room in the box), in the wide shape to its right; no part of a receipt (paper or pill) overlaps the block's bounding box, racks and lid included, at any state from `enter` through `exit`, and every receipt stays wholly inside the box (nothing clipped);\n- the tag's travel ends beside its target receipt, clear of the block and of the other receipt, with its whole pill readable;\n- labels keep their current size (at least 34 screen px) and their cream-on-ink pill; nothing else about the verbs, states, schema or the block's own size changes.\n\n## Tests (`device.test.ts`)\n- export a pure layout helper (box, aspect, state) that returns the block's bounds and each receipt's and the tag's rect in screen px, and use it in the drawing so the test measures what is drawn;\n- for both shapes (a tall 800 x 770 box and a wide 1920 x 1080 box) and for the states at each verb's end, no receipt or tag rect intersects the block bounds or another receipt, and every rect lies inside the box;\n- in the markup the receipts and the tag come after the `data-facility-body` group;\n- the existing tests still pass.",
+ "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Edit only facility_block; keep its registered verbs. Draw in SVG from the frame alone.",
+ "acceptance": "npx vitest run apps/renderer/src/engine/devices/facility_block\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+ "write_allow": [
+  "apps/renderer/src/engine/devices/facility_block/**"
+ ],
+ "read": [
+  "apps/renderer/src/engine/devices/CONTRACT.md",
+  "apps/renderer/src/engine/fit.ts",
+  "apps/renderer/src/engine/kit/**",
+  "apps/renderer/src/engine/props.ts",
+  "docs/ve/MOTION_STANDARD.md"
+ ],
+ "max_minutes": 60,
+ "max_calls": 60
+}
