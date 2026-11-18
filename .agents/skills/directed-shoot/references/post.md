@@ -32,7 +32,7 @@ Run video-to-video renders of the chosen take, one per stage of the peel. Each o
 standing at that stage: stage 1 has all of them, the last stage has none (the original itself). Use the same seed and
 settings across stages, so the parts that stay the same look the same. Read every render at full size, with these
 checks:
-- His face is unchanged.
+- His face is unchanged, except where the shot script transforms it on purpose.
 - The prop's silhouette matches his hands.
 - Nothing smears or melts (`scripts/frame_smear.py measure`).
 - The render is exactly as long as the take, frame for frame.
@@ -48,7 +48,7 @@ A render that fails is made again or its beat is cut. It is never shipped with a
   transformation.
 - Use the palette's one opening and one close (`config/brand-palette.json`; `scripts/brand_palette.py` refuses
   anything else).
-- Keep his voice from the take, and add no voiceover.
+- Keep his voice from the take, and add no voiceover. A voice effect (a robot, a famous person's gag) goes on his own words; nobody's voice is cloned.
 
 ## 5. Receipts and review
 
