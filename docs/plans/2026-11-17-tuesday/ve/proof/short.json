@@ -10,8 +10,8 @@
     69.533,
     71.867
   ],
-  "sha256": "cca78b3c8488670a9bf1d9370c1a7cb15a343745f211cdc4e1ef085f58651db3",
-  "spec_sha256": "57988f47b9c34bed61f53fa830eff0f09c3ea910037a3c712ee0a820c16d25f9",
+  "sha256": "acd053ca06bef47e98cb6907e043a8f92930c615fc7ac1cbb68aedc71ccc27f2",
+  "spec_sha256": "8ec455361d209aa40b56ef5724b43d9f0ac0179eb8e3f7d68f72c17edcf86cae",
   "structure": {
     "format": "face-with-proof",
     "aspect": "9:16",
@@ -24,10 +24,6 @@
       [
         "ban_stat",
         "kinetic_stat"
-      ],
-      [
-        "bill",
-        "receipt_print"
       ],
       [
         "block",
@@ -59,7 +55,7 @@
       ],
       [
         "meter",
-        "through_line"
+        "credit_meter"
       ],
       [
         "piqua",
@@ -139,7 +135,7 @@
         "bill",
         "STAGE",
         [
-          "bill"
+          "block"
         ]
       ],
       [
@@ -241,7 +237,7 @@
     ]
   },
   "style_module": "eating-jobs-ladder",
-  "props_sha256": "b9bc94b9598e850ec212b590d592015d86aaced0cfda7ed3336acaa5714422d2",
+  "props_sha256": "13f7ac4ebd808af10444a7b5996a3d66be78ffc2a4e1c39a10e262fb4a418ae1",
   "qc": {
     "measured_pass": null,
     "complete": false,
@@ -250,10 +246,6 @@
   "type": [
     [
       "data",
-      "card"
-    ],
-    [
-      "dek",
       "card"
     ],
     [

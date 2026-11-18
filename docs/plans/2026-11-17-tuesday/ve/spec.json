@@ -158,29 +158,6 @@
    }
   },
   {
-   "obj": "bill",
-   "device": "receipt_print",
-   "meaning": "his \"picture this\" made literal: the power bill with a new line on it",
-   "persist": {
-    "from_beat": "bill",
-    "to_beat": "bill"
-   },
-   "params": {
-    "title": "POWER BILL",
-    "stampText": "YOUR SHARE",
-    "lines": [
-     {
-      "key": "usage",
-      "row": "Electricity used"
-     },
-     {
-      "key": "lines",
-      "row": "New power lines: your share"
-     }
-    ]
-   }
-  },
-  {
    "obj": "ban_stat",
    "device": "kinetic_stat",
    "meaning": "the share of Piqua votes for the ban",
@@ -290,51 +267,26 @@
   },
   {
    "obj": "meter",
-   "device": "through_line",
-   "meaning": "the month's credits: up with the bonus, back down when the bonus expires",
+   "device": "credit_meter",
+   "meaning": "the month's credits: a bonus pours in on top, then drains away after 30 days",
    "persist": {
     "from_beat": "payoff",
     "to_beat": "payoff"
    },
    "params": {
-    "parts": [
-     {
-      "id": "month",
-      "label": "Credits this month",
-      "kind": "bar",
-      "number": {
-       "value": 2000,
-       "unit": "credits",
-       "producer": "Higgsfield Team plan",
-       "date": "18 Nov 2026"
-      }
-     }
-    ],
-    "states": {
-     "bonus": {
-      "part": "month",
-      "verb": "grow",
-      "size": 1.2,
-      "number": {
-       "value": 2400,
-       "unit": "credits",
-       "producer": "Higgsfield Team plan",
-       "date": "18 Nov 2026"
-      },
-      "annotation": "month one"
-     },
-     "expired": {
-      "part": "month",
-      "verb": "grow",
-      "size": 1.0,
-      "number": {
-       "value": 2000,
-       "unit": "credits",
-       "producer": "Higgsfield Team plan",
-       "date": "18 Nov 2026"
-      },
-      "annotation": "from day 31"
-     }
+    "plan": {
+     "label": "Plan credits",
+     "row": "plan credits a month"
+    },
+    "bonus": {
+     "label": "Bonus credits",
+     "row": "bonus credits"
+    },
+    "days": 30,
+    "src": "krish/higgsfield-bonus-expires.png",
+    "source": {
+     "outlet": "Higgsfield plans page",
+     "date": "18 Nov 2026"
     }
    },
    "dataset": "higgsfield-team"
@@ -532,7 +484,7 @@
      },
      "viewer_task": "connect_with_speaker",
      "layout": "SPLIT",
-     "point": "The understatement lands on his face under the headline: the man is gone, the building is fine",
+     "point": "The understatement lands on his face under the real headline: the man is gone, the building is fine",
      "plate": {
       "source": "take",
       "crop": "50% 88%"
@@ -540,15 +492,8 @@
      "uses": [
       "ddn"
      ],
-     "events": [
-      {
-       "at_w": 33,
-       "obj": "ddn",
-       "verb": "mark",
-       "to_state": "Sacked, over a building"
-      }
-     ],
-     "override_reason": "his understatement is the beat; the headline stays and one line replaces it"
+     "events": [],
+     "override_reason": "his understatement is the beat; the real headline holds above him"
     },
     {
      "id": "questions",
@@ -649,14 +594,9 @@
        "obj": "block",
        "verb": "connect",
        "to_state": "city"
-      },
-      {
-       "at_w": 87,
-       "obj": "block",
-       "verb": "add",
-       "to_state": "pylons"
       }
-     ]
+     ],
+     "override_reason": "one move: the city goes dark as the block lights up"
     },
     {
      "id": "piqua",
@@ -693,39 +633,28 @@
      },
      "viewer_task": "understand_mechanism",
      "layout": "STAGE",
-     "point": "His picture made literal: a power bill with a new line on it, your share of the power lines",
+     "point": "His picture made literal: the price tag flies off the block onto your power bill as new power lines draw towards it",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "bill"
+      "block"
      ],
      "events": [
       {
-       "at_w": 97,
-       "obj": "bill",
-       "verb": "enter",
-       "to_state": "visible"
+       "at_w": 103,
+       "obj": "block",
+       "verb": "move",
+       "to_state": "target:0"
       },
       {
-       "at_w": 99,
-       "obj": "bill",
+       "at_w": 108,
+       "obj": "block",
        "verb": "add",
-       "to_state": "usage"
-      },
-      {
-       "at_w": 106,
-       "obj": "bill",
-       "verb": "add",
-       "to_state": "lines"
-      },
-      {
-       "at_w": 109,
-       "obj": "bill",
-       "verb": "highlight",
-       "to_state": "lines"
+       "to_state": "pylons"
       }
-     ]
+     ],
+     "override_reason": "two moves on the one object carry his picture; the bill is the block own target"
     },
     {
      "id": "vote",
@@ -1030,7 +959,7 @@
      },
      "viewer_task": "understand_mechanism",
      "layout": "STAGE",
-     "point": "Free bonus credits fill the first month, then expire, and the monthly limit is what is left",
+     "point": "Free bonus credits fill the first month, then drain away after it, and the monthly limit is what is left",
      "plate": {
       "source": "none"
      },
@@ -1045,16 +974,34 @@
        "to_state": "visible"
       },
       {
+       "at_w": 273,
+       "obj": "meter",
+       "verb": "fill",
+       "to_state": "plan credits a month"
+      },
+      {
        "at_w": 276,
        "obj": "meter",
-       "verb": "grow",
-       "to_state": "bonus"
+       "verb": "add",
+       "to_state": "bonus credits"
+      },
+      {
+       "at_w": 277,
+       "obj": "meter",
+       "verb": "mark",
+       "to_state": "visible"
+      },
+      {
+       "at_w": 279,
+       "obj": "meter",
+       "verb": "count_to",
+       "to_state": "30"
       },
       {
        "at_w": 280,
        "obj": "meter",
-       "verb": "grow",
-       "to_state": "expired"
+       "verb": "drop",
+       "to_state": "plan credits a month"
       }
      ]
     },
@@ -1239,8 +1186,8 @@
      "value": 2000
     },
     {
-     "label": "with the bonus",
-     "value": 2400
+     "label": "bonus credits",
+     "value": 400
     }
    ],
    "producer_label": "Higgsfield Team plan",

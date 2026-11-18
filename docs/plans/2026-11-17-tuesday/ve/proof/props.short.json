@@ -576,50 +576,25 @@
     },
     {
       "obj": "meter",
-      "device": "through_line",
-      "meaning": "the month's credits: up with the bonus, back down when the bonus expires",
+      "device": "credit_meter",
+      "meaning": "the month's credits: a bonus pours in on top, then drains away after 30 days",
       "fromFrame": 85,
       "toFrame": 155,
       "variants": {},
       "params": {
-        "parts": [
-          {
-            "id": "month",
-            "label": "Credits this month",
-            "kind": "bar",
-            "number": {
-              "value": 2000,
-              "unit": "credits",
-              "producer": "Higgsfield Team plan",
-              "date": "18 Nov 2026"
-            }
-          }
-        ],
-        "states": {
-          "bonus": {
-            "part": "month",
-            "verb": "grow",
-            "size": 1.2,
-            "number": {
-              "value": 2400,
-              "unit": "credits",
-              "producer": "Higgsfield Team plan",
-              "date": "18 Nov 2026"
-            },
-            "annotation": "month one"
-          },
-          "expired": {
-            "part": "month",
-            "verb": "grow",
-            "size": 1,
-            "number": {
-              "value": 2000,
-              "unit": "credits",
-              "producer": "Higgsfield Team plan",
-              "date": "18 Nov 2026"
-            },
-            "annotation": "from day 31"
-          }
+        "plan": {
+          "label": "Plan credits",
+          "row": "plan credits a month"
+        },
+        "bonus": {
+          "label": "Bonus credits",
+          "row": "bonus credits"
+        },
+        "days": 30,
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-bonus-expires.png",
+        "source": {
+          "outlet": "Higgsfield plans page",
+          "date": "18 Nov 2026"
         }
       },
       "dataset": {
@@ -632,8 +607,8 @@
             "value": 2000
           },
           {
-            "label": "with the bonus",
-            "value": 2400
+            "label": "bonus credits",
+            "value": 400
           }
         ]
       }
@@ -662,7 +637,14 @@
       "atFrame": 0
     },
     {
-      "id": "city-1",
+      "id": "bill-0",
+      "obj": "block",
+      "verb": "move",
+      "toState": "target:0",
+      "atFrame": 0
+    },
+    {
+      "id": "bill-1",
       "obj": "block",
       "verb": "add",
       "toState": "pylons",
@@ -720,15 +702,36 @@
     {
       "id": "payoff-1",
       "obj": "meter",
-      "verb": "grow",
-      "toState": "bonus",
-      "atFrame": 109
+      "verb": "fill",
+      "toState": "plan credits a month",
+      "atFrame": 88
     },
     {
       "id": "payoff-2",
       "obj": "meter",
-      "verb": "grow",
-      "toState": "expired",
+      "verb": "add",
+      "toState": "bonus credits",
+      "atFrame": 109
+    },
+    {
+      "id": "payoff-3",
+      "obj": "meter",
+      "verb": "mark",
+      "toState": "visible",
+      "atFrame": 118
+    },
+    {
+      "id": "payoff-4",
+      "obj": "meter",
+      "verb": "count_to",
+      "toState": "30",
+      "atFrame": 130
+    },
+    {
+      "id": "payoff-5",
+      "obj": "meter",
+      "verb": "drop",
+      "toState": "plan credits a month",
       "atFrame": 135
     },
     {
