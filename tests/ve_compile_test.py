@@ -372,6 +372,14 @@ class CompileTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'generated assets pipeline arrives in Phase 2'):
                 compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
 
+    def test_generated_plate_needs_photo_plate_and_its_record(self):
+        from velib.compile import generated_plate_problem
+        asset = {'id': 'gen', 'path': 'gen/still.png', 'origin': 'generated', 'kind': 'illustration',
+                 'tool': 'codex.image_generation', 'job_id': 'thread-1', 'sha256': 'a' * 64}
+        self.assertEqual(generated_plate_problem(asset, 'photo_plate'), '')
+        self.assertIn('Phase 2', generated_plate_problem(asset, 'evidence_card'))
+        self.assertIn('job_id', generated_plate_problem(dict(asset, job_id=None), 'photo_plate'))
+
     def test_sfx_kit_present_and_absent(self):
         spec = load_json(FIXTURE / 'spec.json')
         real_load = load_json

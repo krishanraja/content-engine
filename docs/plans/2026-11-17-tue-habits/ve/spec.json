@@ -1,0 +1,1808 @@
+{
+ "schema_version": 2,
+ "piece_id": "701a2c55-7400-4dc8-99cb-d6001147ae16",
+ "publish_day": "2026-11-17",
+ "format": "voice-led-pictures",
+ "theme": "makeyourmindup-video-v1",
+ "brand": {
+  "series": "mind.the.gap",
+  "captions": "word",
+  "caption_theme": "art-directed",
+  "title": "Which habits will cost you your job?",
+  "intro_sting": "none: this piece opens on its hook (an off day, or no wide long cut)",
+  "references": [
+   {
+    "id": "8ca0bd3d-454d-48fd-a2d1-98d0e5469779",
+    "card": "instagram_DfkCOCLt7KZ",
+    "for": [
+     "look",
+     "motion",
+     "captions"
+    ],
+    "drive_id": "1BfTNeNwSERAvHvtWSmEP9tONOP2jQqrq",
+    "takeaway": "His words: \"Really well-animated and strong speaker production ... The captions are very unique and well-designed, like an art director would do them.\""
+   }
+  ]
+ },
+ "signature": {
+  "hero": {
+   "device": "photo_plate",
+   "status": "new",
+   "card": "habits-device-1"
+  },
+  "opening_break": "HR slides a laptop its cardboard box on the first word, and the laptop keeps typing",
+  "finish_pack": "house_grain",
+  "sound_palette": "house-v1 (no sound effects kit yet: the bed carries the cut)",
+  "variants": {}
+ },
+ "datasets": [
+  {
+   "id": "ibm-chro",
+   "unit": "%",
+   "denominator": 100,
+   "rows": [
+    {
+     "label": "hr-chiefs",
+     "value": 71
+    },
+    {
+     "label": "staff",
+     "value": 29
+    }
+   ],
+   "producer_label": "IBM Institute for Business Value, CHRO study, Sep 2026",
+   "source_url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities",
+   "retrieved_at": "2026-11-18"
+  }
+ ],
+ "objects": [
+  {
+   "obj": "plate-b1",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b1",
+   "persist": {
+    "from_beat": "b1",
+    "to_beat": "b1"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b1-hrbox.png",
+     "pixelWidth": 1024,
+     "pixelHeight": 1819
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "laptop": {
+      "x": 0.5,
+      "y": 0.44,
+      "w": 0.48,
+      "h": 0.26
+     }
+    }
+   }
+  },
+  {
+   "obj": "plate-b4",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b4",
+   "persist": {
+    "from_beat": "b4",
+    "to_beat": "b4"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b4-satnav-map.png",
+     "pixelWidth": 1024,
+     "pixelHeight": 1819
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "satnav": {
+      "x": 0.66,
+      "y": 0.54,
+      "w": 0.32,
+      "h": 0.18
+     }
+    }
+   }
+  },
+  {
+   "obj": "plate-b5",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b5",
+   "persist": {
+    "from_beat": "b5",
+    "to_beat": "b5"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b5-carpenter.png",
+     "pixelWidth": 1024,
+     "pixelHeight": 1819
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "hammer": {
+      "x": 0.4,
+      "y": 0.3,
+      "w": 0.34,
+      "h": 0.24
+     },
+     "shelf": {
+      "x": 0.5,
+      "y": 0.4,
+      "w": 0.48,
+      "h": 0.45
+     }
+    }
+   }
+  },
+  {
+   "obj": "plate-b8",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b8",
+   "persist": {
+    "from_beat": "b8",
+    "to_beat": "b8"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b8-car-on-trial.png",
+     "pixelWidth": 1024,
+     "pixelHeight": 1536
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "judge": {
+      "x": 0.56,
+      "y": 0.16,
+      "w": 0.34,
+      "h": 0.18
+     }
+    }
+   }
+  },
+  {
+   "obj": "plate-b10a",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b10a",
+   "persist": {
+    "from_beat": "b10a",
+    "to_beat": "b10a"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b10-outrun.png",
+     "pixelWidth": 1024,
+     "pixelHeight": 1819
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "runner": {
+      "x": 0.02,
+      "y": 0.3,
+      "w": 0.62,
+      "h": 0.42
+     }
+    }
+   }
+  },
+  {
+   "obj": "plate-b18",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b18",
+   "persist": {
+    "from_beat": "b18",
+    "to_beat": "b18"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b18-cobwebs.png",
+     "pixelWidth": 1024,
+     "pixelHeight": 1819
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "phone": {
+      "x": 0.3,
+      "y": 0.46,
+      "w": 0.36,
+      "h": 0.18
+     },
+     "screen": {
+      "x": 0.68,
+      "y": 0.28,
+      "w": 0.31,
+      "h": 0.34
+     }
+    }
+   }
+  },
+  {
+   "obj": "plate-b23",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b23",
+   "persist": {
+    "from_beat": "b23",
+    "to_beat": "b23"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b23-poker.png",
+     "pixelWidth": 1024,
+     "pixelHeight": 1819
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "badge": {
+      "x": 0.28,
+      "y": 0.36,
+      "w": 0.42,
+      "h": 0.4
+     }
+    }
+   }
+  },
+  {
+   "obj": "boot",
+   "device": "slam_word",
+   "meaning": "the blame lands on the viewer, not the machine",
+   "persist": {
+    "from_beat": "b2",
+    "to_beat": "b2"
+   },
+   "params": {
+    "word": "YOU",
+    "tapeText": "NOT THE AI"
+   }
+  },
+  {
+   "obj": "slop",
+   "device": "headline",
+   "meaning": "AI slop struck through and renamed human slop",
+   "persist": {
+    "from_beat": "b6",
+    "to_beat": "b6"
+   },
+   "params": {
+    "lines": [
+     "HUMAN SLOP"
+    ],
+    "swipe": {
+     "line": 0,
+     "word": 0
+    },
+    "dek": "no accountability"
+   }
+  },
+  {
+   "obj": "excuse",
+   "device": "stamp",
+   "meaning": "the old excuse stamped void",
+   "persist": {
+    "from_beat": "b10b",
+    "to_beat": "b10b"
+   },
+   "params": {
+    "kind": "block",
+    "paint": "mint",
+    "top": "THE AI DID IT",
+    "main": "VOID",
+    "tiltDeg": -4,
+    "at": {
+     "x": 140,
+     "y": 520,
+     "w": 800,
+     "h": 420
+    }
+   }
+  },
+  {
+   "obj": "ibmstat",
+   "device": "kinetic_stat",
+   "dataset": "ibm-chro",
+   "meaning": "HR chiefs who rank checking and overruling AI first, then the staff who even rank judgment",
+   "persist": {
+    "from_beat": "b12",
+    "to_beat": "b14"
+   },
+   "params": {}
+  },
+  {
+   "obj": "check",
+   "device": "typing_bubble",
+   "meaning": "an AI answer with a wrong line caught and overruled",
+   "persist": {
+    "from_beat": "b13",
+    "to_beat": "b13"
+   },
+   "params": {
+    "kind": "chat",
+    "rows": [
+     {
+      "who": "AI",
+      "text": "Q3 revenue grew 40%",
+      "side": "left"
+     },
+     {
+      "who": "You",
+      "text": "No: 4%. Checked the source.",
+      "side": "right"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "owned",
+   "device": "typing_bubble",
+   "meaning": "the AI mistakes, each signed with your name",
+   "persist": {
+    "from_beat": "b15",
+    "to_beat": "b16"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Wrong figure",
+      "text": "Signed: you"
+     },
+     {
+      "who": "Bad email",
+      "text": "Signed: you"
+     },
+     {
+      "who": "Made-up quote",
+      "text": "Signed: you"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "slip",
+   "device": "typing_bubble",
+   "meaning": "the old excuse, handed in as a note",
+   "persist": {
+    "from_beat": "b10b",
+    "to_beat": "b10b"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Excuse",
+      "text": "The AI did it"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "theyare",
+   "device": "slam_word",
+   "meaning": "they are yours",
+   "persist": {
+    "from_beat": "b16",
+    "to_beat": "b16"
+   },
+   "params": {
+    "word": "YOURS",
+    "tapeText": "OWNED"
+   }
+  },
+  {
+   "obj": "habits",
+   "device": "checklist",
+   "meaning": "the three habits, filling one by one",
+   "persist": {
+    "from_beat": "b17",
+    "to_beat": "b21"
+   },
+   "params": {
+    "slots": [
+     {
+      "id": "one",
+      "line": "Waiting to be told"
+     },
+     {
+      "id": "two",
+      "line": "Forwarding unread AI work"
+     },
+     {
+      "id": "three",
+      "line": "\"The computer did it\""
+     }
+    ]
+   }
+  },
+  {
+   "obj": "fwd",
+   "device": "typing_bubble",
+   "meaning": "an unread AI draft forwarded with your name on it",
+   "persist": {
+    "from_beat": "b19",
+    "to_beat": "b19"
+   },
+   "params": {
+    "kind": "email",
+    "rows": [
+     {
+      "who": "From: You",
+      "text": "Fwd: Q3 report (AI draft, unread)"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "boss",
+   "device": "typing_bubble",
+   "meaning": "the excuse typed to the boss, then autocompleting into a resignation",
+   "persist": {
+    "from_beat": "b20",
+    "to_beat": "b21"
+   },
+   "params": {
+    "kind": "chat",
+    "rows": [
+     {
+      "who": "To: Boss",
+      "text": "Sorry, the computer did it",
+      "side": "right"
+     },
+     {
+      "who": "Autocomplete",
+      "text": "Letter of resignation. Yours sincerely,",
+      "side": "right"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "already",
+   "device": "slam_word",
+   "meaning": "the bet is already placed",
+   "persist": {
+    "from_beat": "b24",
+    "to_beat": "b24"
+   },
+   "params": {
+    "word": "ALREADY",
+    "tapeText": "ALL IN"
+   }
+  },
+  {
+   "obj": "posts",
+   "device": "video_wall",
+   "meaning": "real people saying AI is rubbish, at volume",
+   "persist": {
+    "from_beat": "b3",
+    "to_beat": "b3"
+   },
+   "params": {
+    "clips": [
+     {
+      "id": "post-1",
+      "src": "source/b3-post-1.png",
+      "source": "@butter-flight.bsky.social on Bluesky, 2026-02-14",
+      "kind": "image"
+     },
+     {
+      "id": "post-2",
+      "src": "source/b3-post-2.png",
+      "source": "@bestonetx.bsky.social on Bluesky, 2025-12-28",
+      "kind": "image"
+     },
+     {
+      "id": "post-3",
+      "src": "source/b3-post-3.png",
+      "source": "@twarda.bsky.social on Bluesky, 2025-09-26",
+      "kind": "image"
+     },
+     {
+      "id": "post-4",
+      "src": "source/b3-post-4.png",
+      "source": "@battleshipbob.bsky.social on Bluesky, 2025-04-24",
+      "kind": "image"
+     }
+    ],
+    "mode": "wall",
+    "intervalFrames": 7
+   }
+  },
+  {
+   "obj": "crash",
+   "device": "photo_plate",
+   "meaning": "a real IIHS small overlap crash test",
+   "persist": {
+    "from_beat": "b7",
+    "to_beat": "b7"
+   },
+   "params": {
+    "video": {
+     "src": "source/b7-crash-impact.mp4",
+     "pixelWidth": 1920,
+     "pixelHeight": 1080,
+     "trimBeforeFrames": 30
+    },
+    "push": 0.03,
+    "source": "IIHS · small overlap front test",
+    "regions": {
+     "impact": {
+      "x": 0.34,
+      "y": 0.28,
+      "w": 0.32,
+      "h": 0.46
+     }
+    }
+   }
+  },
+  {
+   "obj": "driver",
+   "device": "film_frame",
+   "meaning": "the real driver seat after a real crash, ringed on driving",
+   "persist": {
+    "from_beat": "b9",
+    "to_beat": "b9"
+   },
+   "params": {
+    "images": {
+     "iihs": {
+      "src": "source/b9-iihs-photo.jpg",
+      "pixelWidth": 600,
+      "pixelHeight": 400
+     }
+    },
+    "plates": [
+     {
+      "image": "iihs",
+      "date": "small overlap test",
+      "source": "IIHS"
+     }
+    ],
+    "regions": {
+     "driver": {
+      "x": 0.56,
+      "y": 0.04,
+      "width": 0.38,
+      "height": 0.62
+     }
+    },
+    "mode": "film"
+   }
+  },
+  {
+   "obj": "ibm",
+   "device": "evidence_card",
+   "meaning": "the IBM release the numbers come from",
+   "persist": {
+    "from_beat": "b11",
+    "to_beat": "b12"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "source/b11-ibm-page-phone.png",
+    "outlet": "IBM Newsroom",
+    "date": "21 Sep 2026",
+    "sourceAspectRatio": 0.6
+   }
+  },
+  {
+   "obj": "plate-b22",
+   "device": "photo_plate",
+   "meaning": "his own screen: reading every line, the cursor over Send, not clicking",
+   "persist": {
+    "from_beat": "b22",
+    "to_beat": "b22"
+   },
+   "params": {
+    "video": {
+     "src": "capture/b22-screen.mp4",
+     "pixelWidth": 1080,
+     "pixelHeight": 1920,
+     "trimBeforeFrames": 0
+    },
+    "push": 0.03,
+    "regions": {
+     "send": {
+      "x": 0.55,
+      "y": 0.8,
+      "w": 0.4,
+      "h": 0.15
+     }
+    }
+   }
+  }
+ ],
+ "assets": [
+  {
+   "id": "gen-hrbox",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b1-hrbox.png",
+   "sha256": "6081d070c13fa46d6bc31cb5fdaece331dcaee029c1a32906f21ca196587b7fb",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b1-hrbox.png"
+  },
+  {
+   "id": "gen-satnav-map",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b4-satnav-map.png",
+   "sha256": "5282729ca19924a72eec52c6b464c3b241ca0c29d0c703767c965ad78608c0cf",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b4-satnav-map.png"
+  },
+  {
+   "id": "gen-carpenter",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b5-carpenter.png",
+   "sha256": "ab3e584e16d72b39084bbedb3b8a8a558b70b76ebbd4bbb957276eea7bafc3a0",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b5-carpenter.png"
+  },
+  {
+   "id": "gen-car-on-trial",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b8-car-on-trial.png",
+   "sha256": "b65e0922af60dbeca8a5f0e91b1779816165785e763855b16d639dcde80021ca",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b8-car-on-trial.png"
+  },
+  {
+   "id": "gen-outrun",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b10-outrun.png",
+   "sha256": "f2949d8a406411a5f9631f9ced4c7178c93cab434a6260653a66519b2a381630",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b10-outrun.png"
+  },
+  {
+   "id": "gen-cobwebs",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b18-cobwebs.png",
+   "sha256": "e5feafd82bb92b42762ff2909163f704433b5acba47c1b81d1ba7be429c6db03",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b18-cobwebs.png"
+  },
+  {
+   "id": "gen-poker",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b23-poker.png",
+   "sha256": "e1d057fd50758b27d3c3e998c15cb7e5f575b6ad3dd7f7226ce3b42e7b8167fc",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b23-poker.png"
+  },
+  {
+   "id": "ibm-page",
+   "kind": "screenshot",
+   "origin": "source",
+   "path": "source/b11-ibm-page-phone.png",
+   "sha256": "7bc309514bb76eeacfbbb0efb117c1bf4ac4e82e42e52fe01961fc8d18d97597",
+   "source_url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities",
+   "licence": "editorial use of the publisher's own published material, credited on screen",
+   "credit": "IBM Newsroom, 21 Sep 2026"
+  },
+  {
+   "id": "iihs-photo",
+   "kind": "photo",
+   "origin": "source",
+   "path": "source/b9-iihs-photo.jpg",
+   "sha256": "355198b7bb7444bff9ed6fc3e90be870bd2b157153495f8767ff7beb19836a54",
+   "source_url": "https://www.iihs.org/ratings/about-our-tests/small-overlap-front",
+   "licence": "editorial use of the publisher's own published material, credited on screen",
+   "credit": "IIHS"
+  },
+  {
+   "id": "iihs-crash",
+   "kind": "recording",
+   "origin": "source",
+   "path": "source/b7-crash-impact.mp4",
+   "sha256": "e00d197ff8803e43b0963ffb26f4a3efbc73761985f98afe7ca7df647fdb40e2",
+   "source_url": "https://mmx.prnewswire.com/media/MS1738977/CN25001_FB.mp4",
+   "licence": "editorial use of the publisher's own published material, credited on screen",
+   "credit": "IIHS (press release footage, 3 Mar 2026), 33.5 to 39.5 s"
+  },
+  {
+   "id": "post-1",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "source/b3-post-1.png",
+   "sha256": "fdb6414ed8b2ffe013d4373d2cc97c5d6359029bed2c119fb2b0f5b2fcb34b35",
+   "source_url": "https://bsky.app/profile/butter-flight.bsky.social/post/3metbjotdc22g",
+   "licence": "a public post captured from its own page, link kept, credited",
+   "credit": "@butter-flight.bsky.social on Bluesky, 2026-02-14"
+  },
+  {
+   "id": "post-2",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "source/b3-post-2.png",
+   "sha256": "44f5cfa71bedb15c9d069f3e912efae10b7db94601a9b171e842a291fc4a63e3",
+   "source_url": "https://bsky.app/profile/bestonetx.bsky.social/post/3mb2s6ydb5c24",
+   "licence": "a public post captured from its own page, link kept, credited",
+   "credit": "@bestonetx.bsky.social on Bluesky, 2025-12-28"
+  },
+  {
+   "id": "post-3",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "source/b3-post-3.png",
+   "sha256": "2ae56d0f1cbbbd4cd31f8dd14b055d30dad8956970b4050ab6ffbdd2e8ce2901",
+   "source_url": "https://bsky.app/profile/twarda.bsky.social/post/3lzqhnwlrhc2a",
+   "licence": "a public post captured from its own page, link kept, credited",
+   "credit": "@twarda.bsky.social on Bluesky, 2025-09-26"
+  },
+  {
+   "id": "post-4",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "source/b3-post-4.png",
+   "sha256": "4495e7026b30c684c31dc384654dbe49d6abf711dc0c0ec7aee7f941541f2bd3",
+   "source_url": "https://bsky.app/profile/battleshipbob.bsky.social/post/3lnklp76gcs2l",
+   "licence": "a public post captured from its own page, link kept, credited",
+   "credit": "@battleshipbob.bsky.social on Bluesky, 2025-04-24"
+  },
+  {
+   "id": "b22-screen",
+   "kind": "recording",
+   "origin": "capture",
+   "path": "capture/b22-screen.mp4",
+   "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+   "licence": "his own screen recording",
+   "credit": "makeyourmindup"
+  },
+  {
+   "id": "master",
+   "kind": "recording",
+   "origin": "capture",
+   "path": "master.wav",
+   "sha256": "2fcce677b72d19e3517a3f4578a03b40c3debb8c78879f560cc3b21acd029616",
+   "licence": "his own voice, recorded 18 Nov 2026 (Video Engine Inbox take sha256 4fdc4e25b768); silences cut to a breath, sped 1.2x once",
+   "credit": "makeyourmindup"
+  }
+ ],
+ "audio": {
+  "master": "vo",
+  "bed": {
+   "ledger_id": "illusions",
+   "mode": "episode_bed",
+   "under_vo_lu": -20
+  },
+  "sfx_kit": "house-v1"
+ },
+ "cuts": {
+  "short": {
+   "aspect": "9:16",
+   "take": "master",
+   "max_s": 89,
+   "excerpt": false,
+   "edit": {
+    "remove": [],
+    "speed": 1
+   },
+   "captions": {
+    "region": "default",
+    "emphasis": [
+     11,
+     26,
+     45,
+     59,
+     86,
+     100,
+     106,
+     114,
+     145,
+     156,
+     168,
+     191,
+     205,
+     217,
+     230,
+     248,
+     258,
+     265,
+     271
+    ]
+   },
+   "beats": [
+    {
+     "id": "b1",
+     "role": "hook",
+     "span": {
+      "from_w": 0,
+      "to_w": 11
+     },
+     "viewer_task": "locate_story",
+     "point": "You cannot fire a laptop: HR hands it its box and it keeps typing",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "plate-b1"
+     ],
+     "events": [
+      {
+       "at_w": 0,
+       "obj": "plate-b1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 9,
+       "obj": "plate-b1",
+       "verb": "move",
+       "to_state": "laptop",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "role": "bridge",
+     "span": {
+      "from_w": 12,
+      "to_w": 26
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "When AI gets it wrong, the boot lands on you, not the machine",
+     "layout": "F3",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "boot"
+     ],
+     "events": [
+      {
+       "at_w": 12,
+       "obj": "boot",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 26,
+       "obj": "boot",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "role": "anchor",
+     "span": {
+      "from_w": 27,
+      "to_w": 47
+     },
+     "viewer_task": "verify_evidence",
+     "point": "Loads of real people are blaming AI for being rubbish, right now",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "posts"
+     ],
+     "events": [
+      {
+       "at_w": 27,
+       "obj": "posts",
+       "verb": "enter",
+       "to_state": "wall",
+       "silent": true
+      },
+      {
+       "at_w": 36,
+       "obj": "posts",
+       "verb": "add",
+       "to_state": "next",
+       "silent": true
+      },
+      {
+       "at_w": 41,
+       "obj": "posts",
+       "verb": "add",
+       "to_state": "next",
+       "silent": true
+      },
+      {
+       "at_w": 45,
+       "obj": "posts",
+       "verb": "add",
+       "to_state": "wall",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b4",
+     "role": "bridge",
+     "span": {
+      "from_w": 48,
+      "to_w": 59
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "Shrugging off AI is fighting the new tool you already have: a paper map in a car with satnav",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "plate-b4"
+     ],
+     "events": [
+      {
+       "at_w": 48,
+       "obj": "plate-b4",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 54,
+       "obj": "plate-b4",
+       "verb": "move",
+       "to_state": "satnav",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b5",
+     "role": "anchor",
+     "span": {
+      "from_w": 60,
+      "to_w": 77
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "Blaming your tools for your own work has never gone down well",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "plate-b5"
+     ],
+     "events": [
+      {
+       "at_w": 60,
+       "obj": "plate-b5",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 67,
+       "obj": "plate-b5",
+       "verb": "move",
+       "to_state": "hammer",
+       "silent": true
+      },
+      {
+       "at_w": 74,
+       "obj": "plate-b5",
+       "verb": "move",
+       "to_state": "shelf",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b6",
+     "role": "pivot",
+     "span": {
+      "from_w": 78,
+      "to_w": 86
+     },
+     "viewer_task": "feel_stakes",
+     "point": "AI slop is human slop with nobody accountable",
+     "layout": "F3",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "slop"
+     ],
+     "events": [
+      {
+       "at_w": 78,
+       "obj": "slop",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 86,
+       "obj": "slop",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b7",
+     "role": "anchor",
+     "span": {
+      "from_w": 87,
+      "to_w": 93
+     },
+     "viewer_task": "verify_evidence",
+     "point": "A real crash, at full violence",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "crash"
+     ],
+     "events": [
+      {
+       "at_w": 87,
+       "obj": "crash",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 92,
+       "obj": "crash",
+       "verb": "move",
+       "to_state": "impact",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b8",
+     "role": "bridge",
+     "span": {
+      "from_w": 94,
+      "to_w": 100
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "Nobody puts the car on trial",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "plate-b8"
+     ],
+     "events": [
+      {
+       "at_w": 94,
+       "obj": "plate-b8",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 98,
+       "obj": "plate-b8",
+       "verb": "move",
+       "to_state": "judge",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b9",
+     "role": "anchor",
+     "span": {
+      "from_w": 101,
+      "to_w": 106
+     },
+     "viewer_task": "inspect_artifact",
+     "point": "We look at whoever was driving",
+     "layout": "F3",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "driver"
+     ],
+     "events": [
+      {
+       "at_w": 101,
+       "obj": "driver",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 106,
+       "obj": "driver",
+       "verb": "mark",
+       "to_state": "driver",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b10a",
+     "role": "pivot",
+     "span": {
+      "from_w": 107,
+      "to_w": 114
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "You cannot outrun the car: AI is the car and your job is to drive it",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "plate-b10a"
+     ],
+     "events": [
+      {
+       "at_w": 107,
+       "obj": "plate-b10a",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 112,
+       "obj": "plate-b10a",
+       "verb": "move",
+       "to_state": "runner",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b10b",
+     "role": "pivot",
+     "span": {
+      "from_w": 115,
+      "to_w": 127
+     },
+     "viewer_task": "feel_stakes",
+     "point": "The old excuse that the AI did it will never save you",
+     "layout": "F3",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "slip",
+      "excuse"
+     ],
+     "events": [
+      {
+       "at_w": 115,
+       "obj": "slip",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 121,
+       "obj": "excuse",
+       "verb": "stamp",
+       "to_state": "void",
+       "silent": true
+      },
+      {
+       "at_w": 126,
+       "obj": "slip",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b11",
+     "role": "bridge",
+     "span": {
+      "from_w": 128,
+      "to_w": 132
+     },
+     "viewer_task": "inspect_artifact",
+     "point": "Bosses already get it, and here is the study that shows it",
+     "layout": "P1",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "ibm"
+     ],
+     "events": [
+      {
+       "at_w": 128,
+       "obj": "ibm",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b12",
+     "role": "anchor",
+     "span": {
+      "from_w": 133,
+      "to_w": 149
+     },
+     "viewer_task": "verify_evidence",
+     "point": "IBM: 71% of HR chiefs rank checking and overruling AI as the top skill",
+     "layout": "P6",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "ibm",
+      "ibmstat"
+     ],
+     "events": [
+      {
+       "at_w": 133,
+       "obj": "ibm",
+       "verb": "mark",
+       "to_state": "release",
+       "silent": true
+      },
+      {
+       "at_w": 140,
+       "obj": "ibmstat",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 144,
+       "obj": "ibmstat",
+       "verb": "count_to",
+       "to_state": "hr-chiefs",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b13",
+     "role": "bridge",
+     "span": {
+      "from_w": 150,
+      "to_w": 160
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "The skill itself: catch the AI being wrong and overrule it",
+     "layout": "P6",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "ibmstat",
+      "check"
+     ],
+     "events": [
+      {
+       "at_w": 150,
+       "obj": "check",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 156,
+       "obj": "check",
+       "verb": "type",
+       "to_state": "1",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b14",
+     "role": "anchor",
+     "span": {
+      "from_w": 161,
+      "to_w": 173
+     },
+     "viewer_task": "verify_evidence",
+     "point": "Only 29% of staff even rank judgment as important",
+     "layout": "F3",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "ibmstat"
+     ],
+     "events": [
+      {
+       "at_w": 161,
+       "obj": "ibmstat",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 167,
+       "obj": "ibmstat",
+       "verb": "count_to",
+       "to_state": "staff",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b15",
+     "role": "payoff",
+     "span": {
+      "from_w": 174,
+      "to_w": 194
+     },
+     "viewer_task": "land_payoff",
+     "point": "The only way AI does not replace you is owning its mistakes as yours",
+     "layout": "F3",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "owned"
+     ],
+     "events": [
+      {
+       "at_w": 179,
+       "obj": "owned",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 186,
+       "obj": "owned",
+       "verb": "type",
+       "to_state": "1",
+       "silent": true
+      },
+      {
+       "at_w": 191,
+       "obj": "owned",
+       "verb": "type",
+       "to_state": "2",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b16",
+     "role": "pivot",
+     "span": {
+      "from_w": 195,
+      "to_w": 197
+     },
+     "viewer_task": "land_payoff",
+     "point": "Because they are yours",
+     "layout": "F3",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "owned",
+      "theyare"
+     ],
+     "events": [
+      {
+       "at_w": 196,
+       "obj": "theyare",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b17",
+     "role": "bridge",
+     "span": {
+      "from_w": 198,
+      "to_w": 205
+     },
+     "viewer_task": "reset_attention",
+     "point": "Three habits are getting people fired",
+     "layout": "F3",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "habits"
+     ],
+     "events": [
+      {
+       "at_w": 198,
+       "obj": "habits",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 204,
+       "obj": "habits",
+       "verb": "dim",
+       "to_state": "all",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b18",
+     "role": "anchor",
+     "span": {
+      "from_w": 206,
+      "to_w": 218
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "Habit one: waiting to be told, while AI never waits",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "plate-b18"
+     ],
+     "events": [
+      {
+       "at_w": 206,
+       "obj": "plate-b18",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 211,
+       "obj": "plate-b18",
+       "verb": "move",
+       "to_state": "phone",
+       "silent": true
+      },
+      {
+       "at_w": 216,
+       "obj": "plate-b18",
+       "verb": "move",
+       "to_state": "screen",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b19",
+     "role": "bridge",
+     "span": {
+      "from_w": 219,
+      "to_w": 233
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "Habit two: forwarding AI work unread, with your name on it",
+     "layout": "P6",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "habits",
+      "fwd"
+     ],
+     "events": [
+      {
+       "at_w": 219,
+       "obj": "habits",
+       "verb": "fill",
+       "to_state": "two",
+       "silent": true
+      },
+      {
+       "at_w": 221,
+       "obj": "fwd",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 230,
+       "obj": "fwd",
+       "verb": "send",
+       "to_state": "sent",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b20",
+     "role": "anchor",
+     "span": {
+      "from_w": 234,
+      "to_w": 241
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "Habit three: telling your boss the computer did it",
+     "layout": "P6",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "habits",
+      "boss"
+     ],
+     "events": [
+      {
+       "at_w": 234,
+       "obj": "habits",
+       "verb": "fill",
+       "to_state": "three",
+       "silent": true
+      },
+      {
+       "at_w": 235,
+       "obj": "boss",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 239,
+       "obj": "boss",
+       "verb": "type",
+       "to_state": "0",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b21",
+     "role": "pivot",
+     "span": {
+      "from_w": 242,
+      "to_w": 249
+     },
+     "viewer_task": "feel_stakes",
+     "point": "That excuse writes your resignation letter for you",
+     "layout": "P6",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "habits",
+      "boss"
+     ],
+     "events": [
+      {
+       "at_w": 244,
+       "obj": "boss",
+       "verb": "type",
+       "to_state": "1",
+       "silent": true
+      },
+      {
+       "at_w": 248,
+       "obj": "boss",
+       "verb": "send",
+       "to_state": "sent",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b22",
+     "role": "bridge",
+     "span": {
+      "from_w": 250,
+      "to_w": 260
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Tomorrow: read every line before you hit send",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "plate-b22"
+     ],
+     "events": [
+      {
+       "at_w": 250,
+       "obj": "plate-b22",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 258,
+       "obj": "plate-b22",
+       "verb": "move",
+       "to_state": "send",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b23",
+     "role": "anchor",
+     "span": {
+      "from_w": 261,
+      "to_w": 267
+     },
+     "viewer_task": "feel_stakes",
+     "point": "Would I bet my job on this?",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "plate-b23"
+     ],
+     "events": [
+      {
+       "at_w": 261,
+       "obj": "plate-b23",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 265,
+       "obj": "plate-b23",
+       "verb": "move",
+       "to_state": "badge",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b24",
+     "role": "pivot",
+     "span": {
+      "from_w": 268,
+      "to_w": 271
+     },
+     "viewer_task": "land_payoff",
+     "point": "You already are betting it",
+     "layout": "F3",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "already"
+     ],
+     "events": [
+      {
+       "at_w": 270,
+       "obj": "already",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ]
+    },
+    {
+     "id": "b25",
+     "role": "bridge",
+     "span": {
+      "from_w": 272,
+      "to_w": 278
+     },
+     "viewer_task": "reset_attention",
+     "point": "The full story is free at makeyourmindup.ai",
+     "layout": "F3",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [],
+     "events": [],
+     "override_reason": "the close is the palette close card the ending band draws (config/brand-palette.json closes); nothing else goes on it"
+    }
+   ]
+  }
+ },
+ "approvals": [],
+ "budget": {
+  "tokens_cap": 12600000,
+  "credits": {
+   "higgsfield": 0,
+   "runway": 0
+  }
+ },
+ "style": {
+  "motion": {
+   "module": "swiss-kinetic-type",
+   "reason": "Krish picked it on the board, 18 Nov 2026 15:55 UTC"
+  },
+  "captions": {
+   "theme": "art-directed",
+   "reason": "Krish picked it on the board, 18 Nov 2026 15:55 UTC"
+  },
+  "transitions": {
+   "kind": "cut",
+   "reason": "Hard cuts on his words keep a 1.2x voiceover readable; the pictures change, never travel"
+  },
+  "camera": {
+   "move": "none",
+   "reason": "Each photo plate carries its own slow push; the type beats stay still on the grid"
+  },
+  "energy": "high",
+  "layout": {
+   "mode": "fill",
+   "reason": "Graphics-only beats fill the safe column the captions leave"
+  },
+  "look": "voice-led-pictures (picked by Krish, 18 Nov 2026 15:54 UTC)",
+  "proof": {
+   "beat": "b10a"
+  },
+  "idea": {
+   "object": "The driver's seat: AI is the car, you are the one driving it, and every picture shows a person either refusing to drive (the paper map over the satnav, the sprint against the car, the shrug, the hammer blamed) or owning what the car does (the ring on the driver, the stamp with your name).",
+   "moves": [
+    {
+     "move": "a real or generated picture fills the frame on the word that names it",
+     "means": "his line taken literally, so the point lands before the caption is read"
+    },
+    {
+     "move": "a mint ring draws round the driver on the word driving",
+     "means": "the person at the wheel is the one answerable, never the machine"
+    },
+    {
+     "move": "an excuse slip is stamped VOID",
+     "means": "the AI did it is no defence"
+    },
+    {
+     "move": "a number lands huge on the grid with its source line under it",
+     "means": "bosses already rank checking AI first; staff mostly do not"
+    },
+    {
+     "move": "each AI mistake is signed with your name",
+     "means": "owning its mistakes is the only way AI does not replace you"
+    }
+   ],
+   "never": [
+    "no robot faces or glowing brains",
+    "no picture that repeats the sentence being said as words",
+    "no type over a face",
+    "no invented numbers: every figure is IBM's own, on its page",
+    "no joke aimed at a named person or at the viewer"
+   ],
+   "real_artifacts": [
+    {
+     "asset": "ibm-page",
+     "holds": "IBM's own release: New IBM CHRO study, 21 Sep 2026"
+    },
+    {
+     "asset": "iihs-photo",
+     "holds": "an IIHS small overlap test car after the crash, the dummy at the wheel"
+    },
+    {
+     "asset": "iihs-crash",
+     "holds": "IIHS small overlap front crash test footage"
+    }
+   ]
+  }
+ }
+}

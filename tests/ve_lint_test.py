@@ -64,6 +64,19 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_IR48_whole_cut_without_a_call_beat(self):
         self.assertRefused(mutate(whole_tall), 'story.call')
 
+    def test_off_day_mind_the_gap_needs_no_call(self):
+        # A mind.the.gap piece published on a Tuesday is an off day: no series promise, no dated call card (18 Nov 2026).
+        def off_day(s):
+            s.pop('call')
+            s['publish_day'] = '2026-11-17'
+        self.assertNotIn('SCHEMA', codes_for(mutate(off_day)))
+
+    def test_friday_mind_the_gap_still_needs_its_call(self):
+        def friday(s):
+            s.pop('call')
+            s['publish_day'] = '2026-11-20'
+        self.assertRefused(mutate(friday), 'SCHEMA')
+
     def test_R46_generated_picture_used_as_evidence(self):
         asset = {'id': 'fake-shot', 'kind': 'screenshot', 'origin': 'generated', 'path': 'x.png', 'sha256': '0' * 64,
                  'licence': 'generated', 'tool': 'imagegen'}
