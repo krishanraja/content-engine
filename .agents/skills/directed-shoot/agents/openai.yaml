@@ -1,0 +1,4 @@
+interface:
+  display_name: "Directed shoot"
+  short_description: "Plan, direct and post-produce an experimental video Krish acts out from a shot script, transformed with AI in post"
+  default_prompt: "Use $directed-shoot to plan an experiment for this piece: piece_id: <uuid>."
