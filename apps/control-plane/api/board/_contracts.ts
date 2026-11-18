@@ -73,6 +73,16 @@ const RECORDED_DAYS = ['tue', 'thu', 'sat']
 // moment?"): <day>-storyboard (Sign storyboard), <day>-style (Pick a style), <day>-proof (Approve or Reject the moving
 // proof) and <day>-cut (Approve cut). Each is bound to the sha256 of what the tab showed him (GATE_KINDS, gateBody).
 export const DECISION_ID = /^(mon|wed|fri)-(scripts|titles|publish|storyboard|style|proof|cut|reject-([a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}))$/
+// The moving proof of any piece, on any day it is made for (Krish, 2026-11-18, on Tue 17's habits voiceover: the
+// produce session filed the proof and the board had no press for it, because <day>-proof is a Monday, Wednesday and
+// Friday name): picks/<day>-proof-<the piece id's first 8 hex>, kind approve_proof, one document a piece so two pieces
+// on one day never write over each other's answer. The same gate body and the same write (gates.proof) as <day>-proof.
+export const PROOF_ID = /^(mon|tue|wed|thu|fri|sat)-proof-([0-9a-f]{8})$/
+// His Approve for publish on an off-day piece he records, once its final assets are made and filed (Krish, 2026-11-18:
+// "once the final assets, covers, thumbnails are produced and filed in drive, that then replaces the mocks/proofs stage
+// ... at which point I can press Publish"): picks/<tue|thu|sat>-publish, the same body and the same seal as a series
+// day's (decisionBody, checkPublishBind, piece_manifest.py seal), so Growth's go-live schedules it as it does any piece.
+export const OFFDAY_PUBLISH_ID = /^(tue|thu|sat)-(publish)$/
 export const DECISION_KIND = { scripts: 'approve_scripts', titles: 'titles', publish: 'approve_publish', reject: 'reject_asset',
   storyboard: 'sign_storyboard', style: 'pick_style', proof: 'approve_proof', cut: 'approve_cut' } as const
 /** Each production gate's press kind, and the key it is written under on the piece's making record (meta.making.gates). */
@@ -363,7 +373,7 @@ function keyed(v: unknown, keys: readonly string[], ok: (x: unknown) => boolean)
 /** A day decision (DECISION_ID): what each of his presses on a day's tab must carry. The server adds send to an
  *  approval of scripts, so a write that brings its own is refused. */
 function decisionBody(id: string, body: Record<string, unknown>): boolean {
-  const m = DECISION_ID.exec(id)
+  const m = DECISION_ID.exec(id) ?? OFFDAY_PUBLISH_ID.exec(id)
   if (!m || body.day !== m[1] || 'send' in body) return false
   const kind = m[2].startsWith('reject-') ? DECISION_KIND.reject : DECISION_KIND[m[2] as Exclude<keyof typeof DECISION_KIND, 'reject'>]
   if (body.kind !== kind) return false
@@ -383,6 +393,14 @@ function decisionBody(id: string, body: Record<string, unknown>): boolean {
   if (typeof body.approved !== 'boolean') return false
   if (body.approved === false) return true
   return scriptsBody(body)
+}
+/** His Approve proof or Reject on a piece's own proof document (PROOF_ID): the day it names, the piece whose id it names,
+ *  and the proof gate's body (gateBody: the clip's sha256, approve, or reject with his words). */
+function proofDecision(id: string, body: Record<string, unknown>): boolean {
+  const m = PROOF_ID.exec(id)
+  if (!m || body.day !== m[1] || body.kind !== 'approve_proof' || 'send' in body) return false
+  if (typeof body.piece_id !== 'string' || !UUID.test(body.piece_id) || !body.piece_id.toLowerCase().startsWith(m[2])) return false
+  return gateBody('approve_proof', body)
 }
 /** The words of an approval of scripts: each cut's text, its Teleprompter title and the folder they go in. */
 function scriptsBody(body: Record<string, unknown>): boolean {
@@ -424,6 +442,8 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'picks' && WORDS_ID.test(id)) return Boolean(WORDS_ID.exec(id)?.[3]) && wordsBody(id, body)
   if (collection === 'picks' && BACK_ID.test(id)) return backBody(id, body)
   if (collection === 'picks' && body.via === 'words') return false
+  if (collection === 'picks' && PROOF_ID.test(id)) return proofDecision(id, body)
+  if (collection === 'picks' && OFFDAY_PUBLISH_ID.test(id)) return decisionBody(id, body)
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
   if (collection === 'picks' && (SCORE_ID.test(id) || SCORE_DATE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)
   // His Approve on a publishing day's idea: the idea it names (idea_id), and the hash of the words he saw
