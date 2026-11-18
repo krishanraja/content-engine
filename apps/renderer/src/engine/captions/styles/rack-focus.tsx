@@ -11,6 +11,9 @@ import { type Draw, exitProgress, exitStart, marked, root, upper } from '../draw
  *  upper bands, centred in the centre. Source: instagram_DfkCOCLt7KZ ('THE AD' resolving from blur; phrases leaving by
  *  blur). */
 const HERO_X = 2.0, HERO_IN = 1.3
+/** The lower band's rows sit this far above the band's foot, so descenders stay clear of the y 1320 line where
+ *  Instagram's handle and caption begin (Krish, 2026-11-18: "approve the lift"). */
+const LOWER_LIFT = 30
 
 export const rackFocus: Draw = (props, frame) => {
   const live = livePage(props, frame); if (!live) return null
@@ -73,7 +76,7 @@ export const rackFocus: Draw = (props, frame) => {
       transform: `scale(${(mix(1.12, 1, t) * mix(1, 0.97, d)).toFixed(4)})` }}>{words[i]}</span>
   }
 
-  const anchor: React.CSSProperties = place === 'upper' ? { top: 0 } : place === 'centre' ? { top: '50%', transform: 'translateY(-50%)' } : { bottom: 0 }
+  const anchor: React.CSSProperties = place === 'upper' ? { top: 0 } : place === 'centre' ? { top: '50%', transform: 'translateY(-50%)' } : { bottom: LOWER_LIFT * k }
   return root('rack-focus', box, (
     <div style={{ position: 'absolute', left: 0, right: 0, ...anchor, display: 'flex', flexDirection: 'column',
       opacity: 1 - exit, filter: exit > 0 ? `blur(${(exit * 16).toFixed(2)}px)` : undefined }}>

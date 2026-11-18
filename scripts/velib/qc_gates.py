@@ -100,10 +100,12 @@ def captions_render(path: str, pages, region, ocr=None) -> dict:
         groups.setdefault(tuple(page.get('region', region)), []).append(page)
     if len(groups) <= 1:
         result = captions.renderer_truth(path, pages, tuple(next(iter(groups), region)), ocr=ocr,
-                                         compact=any('region' in p for p in pages))
+                                         compact=any(p.get('split') for p in pages))
     else:
-        # A page with its own region is a SPLIT page: read its compact box only (cutgates TesseractReader).
-        parts = [captions.renderer_truth(path, group, zone, ocr=ocr, compact=any('region' in p for p in group))
+        # A SPLIT page reads its compact box only (cutgates TesseractReader). qc.py gives every page a region since the
+        # caption box became per page, so the region alone no longer marks a split page: the compact crop read the
+        # Wed 18 full-frame captions as noise (18 Nov 2026). qc.py marks split pages with split: True.
+        parts = [captions.renderer_truth(path, group, zone, ocr=ocr, compact=any(p.get('split') for p in group))
                  for zone, group in groups.items()]
         result = dict(parts[0])
         result['pages'] = [row for part in parts for row in part.get('pages', [])]

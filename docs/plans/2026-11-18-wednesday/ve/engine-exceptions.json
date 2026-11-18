@@ -25,6 +25,14 @@
       "said": "Approve denser halo and the proof",
       "on": "2026-11-18",
       "artifact_hash": "bc72335d4196d1561d4a4e76779bea868873a68371001864b918b8708ff9add6"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "said": "approve the lift",
+      "on": "2026-11-18",
+      "artifact_hash": "1b895a827a69a894d36533ab6be0e98771ba80a88dc3b9671eb23900abfc47c3"
     }
   ]
 }

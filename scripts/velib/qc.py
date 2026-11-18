@@ -307,6 +307,9 @@ def inputs_from_props(props: dict) -> dict:
         beat = next((b for b in beats if b['fromFrame'] <= page['fromFrame'] < b['toFrame']), {})
         if beat.get('layout') == 'SPLIT' and style != 'word':
             page['region'] = split_caption
+            page['split'] = True
+        if props.get('captionTheme') and style != 'word':
+            page['themed'] = True
         x, y, w, h = qc_faces.caption_box(page, style, aspect, region, layout=beat.get('layout'),
                                          plate=(beat.get('plate') or {}).get('source'))
         width, height = (1080, 1920) if aspect == '9:16' else (1920, 1080)
