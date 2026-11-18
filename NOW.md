@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-18","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Migration 20261206090000_taste_evidence_reference.sql written, not applied: it adds reference_at and reference_note to taste_evidence and marks the 3,682 rows of the 17 Nov Instagram profile-grid backfill as reference material (record hygiene Krish approved on 18 Nov). (2026-11-18)
 - a meme template's production prompt now carries his caption from the words on his Approve press, however he gave it (typed in his own box or a caption idea tapped, which fill the same box), instead of reading a field that neither route wrote; a caption idea he did not choose is never used. (2026-11-18)
 - no cut draws an icon in its body unless its props say bodyLogo true. The palette's logo rule starts on Mon 16 Nov (it was 23 Nov, with an icon-tile carve-out for the week of 16 Nov), an undated spec carries none, the renderer's default is no logo, and ve qc proves the mark absent on every cut without the flag. (2026-11-18)
 - The weekly standards check-in opens its grouping pull request with CHECKIN_PR_TOKEN and writes its own closeout note, so the pull request runs CI and merges itself; without the secret it warns and waits for Krish's Approve and run as before. (2026-11-18)
@@ -50,7 +51,7 @@ Older lines: `docs/history/2026-11-18-NOW-moved-27.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): open an approved meme template's card and check its Claude production prompt names his caption.
+- Next (2026-11-18): Krish applies the migration to Mindmaker OS, then inspirationhouse's evidence readers add `reference_at is null`.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-18): holds.
