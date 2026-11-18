@@ -9,16 +9,17 @@ import type { DeviceProps } from '../types'
 import { ParamsSchema } from './schema'
 import { facilityState } from './state'
 
-export function Device(props: DeviceProps) {
-  const {object, box, tokens: t, aspect, frame} = props
-  const p = ParamsSchema.parse(object.params), s = facilityState(props)
-  if (!s.visible) return null
+
+export interface Rect { x: number; y: number; width: number; height: number }
+
+/** Slot-local screen pixels, including paper, pill, lid, racks and the slow push. */
+export function facilityLayout(box: DeviceProps['box'], aspect: DeviceProps['aspect'],
+  s: ReturnType<typeof facilityState>, p: ReturnType<typeof ParamsSchema.parse>, push = 1) {
   const tall = aspect === '9:16'
   const width = tall ? 780 : 1400, height = tall ? 740 : 780
   const scale = Math.min(box.width/width, box.height/height)
   const top = tall && box.height > 1100 ? Math.max(0,280-box.top) : (box.height-height*scale)/2
   const x0 = width/2, y0 = 430
-  const push = 1+drift(frame, object.fromFrame, object.toFrame, 1)
   // The shell owns the slot; the surrounding evidence stays in layout coordinates.
   const heroScale = box.width * .64 / (285 * scale)
   const cols = tall ? 4 : 6
@@ -27,6 +28,79 @@ export function Device(props: DeviceProps) {
   const copyScale = Math.min(.48,spacingY/160)
   const gridWidth = (Math.min(cols,p.copies.count)-1)*spacingX+285*copyScale
   const bodyScale = heroScale*s.size/lerp(1,gridWidth/285,s.copies)
+  const rows = Math.ceil(p.copies.count/cols)
+  // The block's outline as drawn: racks risen and legs out included, so the wide frame keeps a strip for the papers.
+  const outline = Array.from({length:p.copies.count}, (_,i) => {
+    const row=Math.floor(i/cols), gy=lerp(0,row*spacingY-130,s.copies), k=lerp(1,copyScale,s.copies)
+    return {y1:gy-Math.max(151+105*s.racks,p.kind==='factory'?226:0)*k, y2:gy+Math.max(47,58*s.walk)*k}
+  }).filter((_,i)=>i===0||s.copies>0)
+  // Tall keeps the nominal outline (Krish approved its proof on 18 Nov); wide sizes by the drawn one.
+  const bodyTop = tall ? lerp(-225,-130-225*copyScale,s.copies) : Math.min(...outline.map(o=>o.y1))
+  const bodyBottom = tall ? lerp(50,(rows-1)*spacingY-130+50*copyScale,s.copies) : Math.max(...outline.map(o=>o.y2))
+  const bodyScaleY = Math.min(bodyScale,(height-(tall ? 180 : 220))/(bodyBottom-bodyTop))
+  const bodyY = height/2-(bodyTop+bodyBottom)*bodyScaleY/2
+
+  const offsetX = (box.width-width*scale)/2
+  const bodyX = x0-2.5*bodyScale*lerp(1,copyScale,s.copies)+s.kick
+  const drawnY = bodyY-120*(1-s.pin)-s.walk*15
+  const sx = bodyScale*(1-s.out), sy = bodyScaleY*(1-s.out)+.004*s.out
+  const points = Array.from({length:p.copies.count}, (_,i) => {
+    const col=i%cols, row=Math.floor(i/cols)
+    const gx=lerp(0,(col-(Math.min(cols,p.copies.count)-1)/2)*spacingX,s.copies)
+    const gy=lerp(0,row*spacingY-130,s.copies)
+    const k=lerp(1,copyScale,s.copies)
+    return {x1:gx-146*k,x2:gx+166*k,y1:gy-Math.max(151+105*s.racks,p.kind==='factory'?226:0)*k,y2:gy+Math.max(47,58*s.walk)*k}
+  }).filter((_,i)=>i===0||s.copies>0)
+  const screenX = (x:number) => offsetX+(width/2+(x-width/2)*push)*scale
+  const screenY = (y:number) => top+(360+(y-360)*push)*scale
+  const block = {
+    x:screenX(bodyX+Math.min(...points.map(r=>r.x1))*sx),
+    y:screenY(drawnY+Math.min(...points.map(r=>r.y1))*sy),
+    width:(Math.max(...points.map(r=>r.x2))-Math.min(...points.map(r=>r.x1)))*sx*push*scale,
+    height:(Math.max(...points.map(r=>r.y2))-Math.min(...points.map(r=>r.y1)))*sy*push*scale,
+  }
+  const fontSize=Math.max(34,34*scale)*push
+  const gap=12, margin=8
+  const pillWidth=(text:string)=>text.length*fontSize*.62+28*scale*push
+  const naturalReceipt=Math.max(220*scale*push,...p.targets.map(t=>pillWidth(t.label)+16*scale*push))
+  const receiptHeight=Math.max(85*scale*push, fontSize*1.4+30*scale*push)
+  const tagWidth=p.tag ? Math.max(190*scale*push,pillWidth(p.tag)) : 0
+  const tagHeight=p.tag ? Math.max(55*scale*push,fontSize*1.4) : 0
+  const right=block.x+block.width+gap
+  const beside=right+Math.max(naturalReceipt,tagWidth)<=box.width-margin
+  const targetIndex=Math.max(0,s.target)
+  // A band of papers is never wider than the box: the papers narrow to fit it.
+  const fitWidth=(box.width-2*margin-tagWidth-gap*p.targets.length)/Math.max(1,p.targets.length)
+  const receiptWidth=beside ? naturalReceipt : Math.min(naturalReceipt,fitWidth)
+  const totalWidth=p.targets.length*receiptWidth+tagWidth+gap*p.targets.length
+  const bandHeight=Math.max(receiptHeight,tagHeight)
+  // Below the block when it fits, above it when that fits, else on the side with more room: never on the block.
+  const below=block.y+block.height+gap, above=block.y-gap-bandHeight
+  const bandY=below+bandHeight<=box.height-margin ? below
+    : above>=margin ? above
+    : (box.height-block.y-block.height>=block.y ? Math.min(below,box.height-margin-bandHeight) : Math.max(margin,above))
+  const startX=Math.max(margin,(box.width-totalWidth)/2)
+  const receipts=p.targets.map((_,i)=>({
+    x:beside ? right : startX+i*(receiptWidth+gap)+(i>targetIndex?tagWidth+gap:0),
+    y:beside ? margin+i*(receiptHeight+tagHeight+2*gap) : bandY,
+    width:receiptWidth,height:receiptHeight}))
+  const target=receipts[targetIndex]
+  const tag:Rect={x:beside ? right : (target ? target.x+receiptWidth+gap : startX),
+    y:beside && target ? target.y+receiptHeight+gap : bandY,
+    width:tagWidth,height:tagHeight}
+  // Flight stays inside the reserved lane; its target end is closest to the paper.
+  tag.y += (1-s.transfer)*Math.max(0,Math.min(8,bandHeight-tagHeight))
+  return {block,receipts,tag,fontSize,width,height,scale,top,x0,y0,cols,spacingX,spacingY,copyScale,bodyScale,bodyScaleY,bodyY}
+}
+
+export function Device(props: DeviceProps) {
+  const {object, box, tokens: t, aspect, frame} = props
+  const p = ParamsSchema.parse(object.params), s = facilityState(props)
+  const tall = aspect === '9:16'
+  if (!s.visible) return null
+  const push = 1+drift(frame, object.fromFrame, object.toFrame, 1)
+  const layout = facilityLayout(box,aspect,s,p,push)
+  const {width,height,scale,top,x0,y0,cols,spacingX,spacingY,copyScale,bodyScale,bodyScaleY,bodyY} = layout
   // Compensate for slot fitting so every label remains at least 34 screen pixels.
   const labelSize = Math.max(34,34/scale)
   const pillWidth = (text: string) => text.length*labelSize*.62+28
@@ -34,14 +108,7 @@ export function Device(props: DeviceProps) {
     <rect x={centred ? -pillWidth(text)/2 : -14} y={-labelSize} width={pillWidth(text)} height={labelSize*1.4} rx={labelSize*.3} fill={t.inkDeep}/>
     <text textAnchor={centred ? 'middle' : 'start'} fill={t.cream} fontFamily={HOUSE_FONTS.data} fontSize={labelSize}>{text}</text>
   </g>
-  const rows = Math.ceil(p.copies.count/cols)
-  const bodyTop = lerp(-225,-130-225*copyScale,s.copies)
-  const bodyBottom = lerp(50,(rows-1)*spacingY-130+50*copyScale,s.copies)
-  const bodyScaleY = Math.min(bodyScale,(height-180)/(bodyBottom-bodyTop))
-  const bodyY = height/2-(bodyTop+bodyBottom)*bodyScaleY/2
   const small = s.size < 1
-  const tx = s.target < 0 ? 0 : (tall ? 470 : 1030), ty = 140+s.target*120
-  const tagX = lerp(x0-140-s.walk*80, tx, s.transfer), tagY = lerp(650,ty,s.transfer)
   const stamp = (opacity: number) => <g transform={`translate(0 -50) scale(${1/Math.max(.001,bodyScale*lerp(1,copyScale,s.copies))} ${1/Math.max(.001,bodyScaleY*lerp(1,copyScale,s.copies))})`} opacity={opacity} fill={t.cream} stroke={t.cream}>
     {label('BAN',0,0,true)}
   </g>
@@ -87,11 +154,6 @@ export function Device(props: DeviceProps) {
         {Array.from({length:p.skyline.lights},(_,i)=><rect data-lit={i<s.lights} key={i} x={Math.floor(i/10)*44+8+(i%2)*16} y={-65+Math.floor((i%10)/2)*16} width="7" height="9" fill={i<s.lights?t.cream:t.inkDeep}/>)}
       </g>
       <path d={`M${x0+130} 385Q${x0+230} 480 ${tall?590:1110} 375`} fill="none" stroke={t.cream} strokeWidth="5" pathLength="1" strokeDasharray="1" strokeDashoffset={1-s.city} opacity={1-s.walk}/>
-      {p.targets.map((target,i)=><g key={i} transform={`translate(${tall?470:1030} ${140+i*120})`}>
-        <path d="M0 -45h220v85l-10 -8 -10 8 -10 -8 -10 8H0Z" fill={t.cream}/>
-        {label(target.label,15,-10)}
-        <path d="M15 12h180m-180 12h140" stroke={t.inkSoft} opacity=".3"/>
-      </g>)}
       <g transform={`translate(${x0-145} ${430-100*(1-s.ballot)})`} opacity={s.ballot}>
         <path d="M-65 -50h80v75h-80Z" fill={t.cream}/><path d="M-55 -40H5" stroke={t.ink} strokeWidth="5"/>
         <path d="M-35 -70l30 -20 20 30 -30 20Z" fill={t.cream} stroke={t.inkSoft}/>
@@ -108,10 +170,19 @@ export function Device(props: DeviceProps) {
           return <g key={i} opacity={k} transform={`translate(${lerp(0,gridX,s.copies)} ${lerp(0,gridY,s.copies)}) scale(${lerp(1,copyScale,s.copies)})`}>{block(i)}</g>
         })}
       </g>
-      {p.tag && <g>
-        <path d={`M${x0-100+s.walk*85} ${y0-30}Q${tagX} ${tagY-60} ${tagX} ${tagY}`} fill="none" stroke={t.cream} opacity={1-s.transfer}/>
-        <g transform={`translate(${tagX} ${tagY})`}><path d="M0 -18l20 -18h170v55H20Z" fill={t.cream}/><circle cx="16" cy="-8" r="4" fill={t.ink}/>{label(p.tag,36,0)}</g>
-      </g>}
     </g></g>
+    {p.targets.map((target,i)=>{
+      const r=layout.receipts[i]!
+      return <g data-facility-receipt={i} key={i} transform={`translate(${r.x} ${r.y})`}>
+        <path d={`M0 0h${r.width}v${r.height}l-10 -8 -10 8 -10 -8 -10 8H0Z`} fill={t.cream}/>
+        <rect x="0" y="0" width={r.width} height={layout.fontSize*1.4} rx={layout.fontSize*.3} fill={t.inkDeep}/>
+        <text x="14" y={layout.fontSize} fill={t.cream} fontFamily={HOUSE_FONTS.data} fontSize={layout.fontSize}>{target.label}</text>
+        <path d={`M15 ${r.height-18}h${r.width-30}`} stroke={t.inkSoft} opacity=".3"/>
+      </g>
+    })}
+    {p.tag && <g data-facility-tag="" transform={`translate(${layout.tag.x} ${layout.tag.y})`}>
+      <rect width={layout.tag.width} height={layout.tag.height} rx={layout.fontSize*.3} fill={t.inkDeep}/>
+      <text x="14" y={layout.fontSize} fill={t.cream} fontFamily={HOUSE_FONTS.data} fontSize={layout.fontSize}>{p.tag}</text>
+    </g>}
   </svg>
 }

@@ -2,15 +2,15 @@
   "schema": "ve-proof/1",
   "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
   "cut": "short",
-  "beat": "face",
+  "beat": "title",
   "rule": "named in the spec (proof.beat)",
-  "start": 7.567,
-  "end": 15.567,
+  "start": 10.967,
+  "end": 18.967,
   "beat_s": [
-    10.067,
-    13.033
+    13.033,
+    16.867
   ],
-  "sha256": "0909e65a3e7cc17b0f6c8ab15ee5e9a0d73e70a0716165197f2368438d8a1f57",
+  "sha256": "630823d9624dcc3ff9d93692ffdcc4290d86e7f48c63397e69023d0247496211",
   "spec_sha256": "bef463a4cb9f5b617c676f3de9ccbcdf467edf98c42b109201964bb95159eb0f",
   "structure": {
     "format": "face-with-proof",
@@ -227,7 +227,7 @@
     ]
   },
   "style_module": "eating-jobs-ladder",
-  "props_sha256": "bfcbb40b7bd648ec003ea9e4bc74c8d0043064472e4380c25b4a34f327219f11",
+  "props_sha256": "79cd5ee73380f6c2b060605488779cea329efef4082b1e99b1ad36ce90e46568",
   "type": [
     [
       "data",
