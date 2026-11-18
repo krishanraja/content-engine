@@ -128,3 +128,15 @@ export function makeFigurine(THREE, spec) // -> { group, update(t), actor }
   decal; a human head is a sphere with hair. `legLogo` sits on the front of both thighs.
 - Personalities: `sipper`, `stamper`, `scanner`, `binoculars`, `bulb`, `pageflip`, `typist`, `skeptic`, `bobber`,
   `pentap`, `talker`, `button`, `waver`, `caller`, `pacer`, `magnifier`, `wrench`, `filer`, `chin`, `courier`.
+
+## Where this is going (Krish, 18 Nov 2026)
+
+"note for later that we will add this video to one of my linkedin posts (the ultimate outcome of this is a series of
+linkedin posts scheduled in Buffer."
+
+- The version 3 video and its day and night stills are filed in Drive: `mind/make > 00_Brand-Assets > 03_Social-and-Ads`
+  (folder `1u-35-pcnvdn-kRvSf-U2uAc-QW7Ri2QB`), each named `2026-11-18 Inside my AI-native firm - floor by floor - ...`.
+  Video `1amysBFJJw6Ra8ws4BqR8pWleBVVMmqsQ`, day still `1ZrriySuJVrFBzSTnXsvsIQuETv6KYGRN`, night still
+  `17DZDWvvocz-EOh_MczMUT4MwWONI52K-`.
+- The outcome: a series of LinkedIn posts, scheduled in Buffer, with this video in one of them. Scheduling is a
+  publication: it waits for Krish's yes on the exact posts, every time.
