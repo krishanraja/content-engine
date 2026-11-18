@@ -4,7 +4,7 @@ import { addText, type StoreDb } from '../../apps/control-plane/api/_pieceStore'
 import { createStoreHandler } from '../../apps/control-plane/api/content-ideas/store'
 import { docxText, driveFileIdOf, googleLinkReader, zipEntry, type LinkReader } from '../../apps/control-plane/api/_researchLink'
 import { afterPress, notesMaterial } from '../../apps/control-plane/api/board/_presses'
-import { savedNotesFor, withSavedNotes } from '../../apps/control-plane/api/board/_view'
+import { VISUAL_POINT_LINE, savedNotesFor, withSavedNotes } from '../../apps/control-plane/api/board/_view'
 
 // Krish, 2026-11-17, on Wed 18's piece (db9f9f6a): "when I add feedback in to the control center UI, it obviously loads in
 // to the prompt that comes here, but when i reopen the piece at a later date it seems to have vanished - and was the
@@ -188,6 +188,13 @@ describe('his notes for Claude stay with the piece (cause 1)', () => {
     expect(model.days[0].items[0].next.notes.saved).toEqual([{ at: '2026-11-17T07:38:37.000Z', text: NOTE }])
     expect(model.days[0].items[0].others[0].notes.saved).toHaveLength(1)
     expect(model.days[0].items[0].others[1].notes).toBeUndefined()
+  })
+  it('his answer to the plan\'s visual question keeps its framing on later prompts, his words unchanged (1.30.0)', () => {
+    const rows = [comment({ text: 'Say what grandfathered pricing is.', frame: 'visual_points' }, 'desk-wed-produce-z', '2026-11-18T09:00:00.000Z')]
+    expect(savedNotesFor(rows, { piece_id: WED })).toEqual([{ at: '2026-11-18T09:00:00.000Z', text: 'Say what grandfathered pricing is.', frame: 'visual_points' }])
+    const model = { days: [{ items: [{ next: { kind: 'prompt', label: 'Claude production prompt', prompt: 'p', notes: { ask: 'a', heading: 'h', save: { kind: 'press', label: 'x', body: { use: 'claude_notes', piece_id: WED } } } }, others: [] }] }] } as any
+    withSavedNotes(model, rows)
+    expect(model.days[0].items[0].next.prompt).toContain(`${VISUAL_POINT_LINE} Say what grandfathered pricing is.`)
   })
   it('files his notes on the piece when he saves them, kind note, role krish_notes', async () => {
     const body = comment().body

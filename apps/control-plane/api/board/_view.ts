@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto'
 import { wordsBody, asWritten, wordsDocId, takenBackAt } from './_contracts.js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
-import { makingSteps } from '../_making.js'
+import { currentFolder, makingSteps } from '../_making.js'
 import { yesByDay } from './_yes.js'
 import { readRuns, ENGINE_REPO, type JobName, type RunInfo } from './_run.js'
 import { readSignOffPresses, readSignOffSources, signOffsView, type SignOffsView } from './_signOffs.js'
@@ -28,7 +28,7 @@ import { carriedItems, channelWord, dayLabel, dayOptions, liveOn, readItems, rea
 import { ideaStage, lateLine, lateOn, postedStage, truthProblems } from './_stage.js'
 import { modelProblems, offdayHead, offdayKind, recentOutOf, weekModel, type ModelInputs, type WeekModel } from './_weekModel.js'
 import { makeRoute } from './_makeRoute.js'
-import { PLAN_ROLE, parsePlan, type ProductionPlan } from './_productionPlan.js'
+import { PLAN_ROLE, parsePlan, type PlanGot, type ProductionPlan } from './_productionPlan.js'
 import { scheduledOf } from './_posted.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -84,9 +84,11 @@ export type PromptAction = {
 /** Contract 1.19.0: a note of his already saved on the item, newest first, whole (Krish, 2026-11-17: "when I add feedback
  *  in to the control center UI, it obviously loads in to the prompt that comes here, but when i reopen the piece at a later
  *  date it seems to have vanished"). The box stays empty for new words; these show beside it. */
-export interface SavedNote { at: string; text: string }
+export interface SavedNote { at: string; text: string; frame?: 'visual_points' }
 
 /** The heading his earlier notes go under in a Claude prompt. */
+/** How a saved answer to the production plan's question reads among his earlier notes, so its framing is never lost. */
+export const VISUAL_POINT_LINE = '(A point to make visually, with a picture of its own that makes it plain on screen.)'
 export const EARLIER_NOTES = "Krish's earlier notes on this piece, newest first (each is also on file on the piece, kind note). They still stand unless newer words of his say otherwise:"
 
 /** The most saved notes one prompt carries, and the most of each note's words (the press keeps 2,000). */
@@ -100,7 +102,9 @@ export function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?:
   if (!piece && !item) return []
   return (rows || []).filter(c => isObj(c.body) && c.body.use === 'claude_notes' && c.updated_by === 'Krish' && typeof c.body.text === 'string' && c.body.text.trim()
     && (piece ? String(c.body.piece_id || '').toLowerCase() === piece : c.body.item === item))
-    .map(c => ({ at: String(c.body.at || c.updated_at || ''), text: String(c.body.text).trim().slice(0, SAVED_NOTE_CHARS) }))
+    .map(c => ({ at: String(c.body.at || c.updated_at || ''), text: String(c.body.text).trim().slice(0, SAVED_NOTE_CHARS),
+      // His answer to the production plan's question (_weekModel.ts VISUAL_POINTS_ASK) keeps its framing on later prompts.
+      ...(c.body.frame === 'visual_points' ? { frame: 'visual_points' as const } : {}) }))
     .sort((a, b) => b.at.localeCompare(a.at))
     .filter((n, i, all) => all.findIndex(x => x.text === n.text) === i)
     .slice(0, SAVED_NOTES_MAX)
@@ -116,7 +120,7 @@ export function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): 
     // The Claude session starts with nothing to assume: his earlier notes are in its prompt too (the research prompt
     // carries them in its own words).
     if (a.tool !== 'perplexity' && a.notes.saved.length && !a.prompt.includes(EARLIER_NOTES))
-      a.prompt = `${a.prompt}\n\n${EARLIER_NOTES}\n${a.notes.saved.map(n => `- ${n.at ? `${n.at.slice(0, 16).replace('T', ' ')} UTC: ` : ''}${n.text}`).join('\n')}`
+      a.prompt = `${a.prompt}\n\n${EARLIER_NOTES}\n${a.notes.saved.map(n => `- ${n.at ? `${n.at.slice(0, 16).replace('T', ' ')} UTC: ` : ''}${n.frame === 'visual_points' ? `${VISUAL_POINT_LINE} ` : ''}${n.text}`).join('\n')}`
   }
   for (const d of model.days) for (const it of d.items) { fill(it.next); for (const o of it.others) fill(o) }
   return model
@@ -342,7 +346,8 @@ export interface ViewInputs {
  *  into it (pack.folder): the bound ones first, then by name. Null when Drive could not be read. */
 export function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost[] | null {
   if (!Array.isArray(posts)) return null
-  const packOf = (p: Body) => { const m = isObj(p.meta) && isObj(p.meta.making) && isObj(p.meta.making.pack) ? p.meta.making.pack : null; return m && typeof m.folder === 'string' ? m.folder.trim() : '' }
+  // The folder each piece is bound to now (its binding, else its pack's folder, its date put right after a move).
+  const packOf = (p: Body) => currentFolder(isObj(p.meta) && isObj(p.meta.making) ? p.meta.making as never : null, p.scheduled_for) ?? ''
   return posts.filter(p => p.date === date).map(p => {
     const option = options.find(o => o.post === p.id)?.id ?? null
     const piece = pieces.find(x => packOf(x) === p.name)
@@ -1164,7 +1169,7 @@ export async function readFiledScripts(db: SupabaseClient, overlay: Overlay | nu
 
 /** Each piece's production plan (_productionPlan.ts): the newest text material with role production_plan on the piece,
  *  parsed and bound to its sha256. A plan that cannot be read or parsed is left off, never guessed. */
-export async function readProductionPlans(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string, ProductionPlan>> {
+export async function readProductionPlans(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[], pieces: Body[] = []): Promise<Record<string, ProductionPlan>> {
   const out: Record<string, ProductionPlan> = {}
   if (!overlay) return out
   const mats = (overlay.materials || []).filter(isObj).filter(m => m.role === PLAN_ROLE && m.storage === 'text')
@@ -1178,6 +1183,42 @@ export async function readProductionPlans(db: SupabaseClient, overlay: Overlay |
       const plan = text ? parsePlan(text, id, createHash('sha256').update(text).digest('hex')) : null
       if (plan) out[id] = plan
     } catch { /* left off */ }
+  }
+  // 1.30.0: beside each plan, the files he got himself for it and the piece's bound post folder (_postFolder.ts).
+  const ids = Object.keys(out)
+  if (!ids.length) return out
+  const { GOT_ROLE, beatsOfKey } = await import('../_postFolder.js')
+  const gotMats = (overlay.materials || []).filter(isObj).filter(m => m.role === GOT_ROLE && ids.includes(String(m.scope)) && m.storage === 'bucket')
+  const drive = await readGotInDrive(db, [...new Set(gotMats.map(m => String(m.sha256 || '')).filter(x => /^[a-f0-9]{64}$/.test(x)))])
+  for (const id of ids) {
+    const piece = pieces.find(p => String(p.id).toLowerCase() === id)
+    const meta = piece && isObj(piece.meta) ? piece.meta : {}
+    const folder = currentFolder(isObj(meta.making) ? meta.making as never : null, piece?.scheduled_for)
+    out[id] = { ...out[id], folder, got: gotMats.filter(m => m.scope === id).sort((a, b) => String(a.at || '').localeCompare(String(b.at || ''))).map(m => {
+      const sha = String(m.sha256 || '')
+      const rows = (drive.get(sha) ?? []).filter(r => !folder || r.path.startsWith(`3 Posts/${folder}/`))
+      const written = rows.find(r => r.written)
+      const state: PlanGot['drive']['state'] = drive === UNREAD ? 'filing' : written ? 'in_drive' : rows.length ? 'filing' : 'not_filed'
+      return { id: String(m.id), title: String(m.title || 'file'), kind: String(m.kind || 'file'), content_type: typeof m.content_type === 'string' ? m.content_type : null,
+        beats: beatsOfKey(m.key) ?? [], at: typeof m.at === 'string' ? m.at : null, drive: { state, path: (written ?? rows[0])?.path ?? null } }
+    }) }
+  }
+  return out
+}
+
+const UNREAD = new Map<string, Array<{ path: string; written: boolean }>>()
+/** Where each of his files is in the asset library's folder for his own files: written into Drive by the library sync,
+ *  or waiting for it. A library that cannot be read answers UNREAD, so no file is called missing on a failed read. */
+async function readGotInDrive(db: SupabaseClient, shas: string[]): Promise<Map<string, Array<{ path: string; written: boolean }>>> {
+  if (!shas.length) return new Map()
+  const r = await db.from('content_library_files').select('path,sha256,state,written').in('sha256', shas)
+    .like('path', '3 Posts/%/3 Video/Your materials/%').eq('state', 'ready')
+  if (r.error || !Array.isArray(r.data)) return UNREAD
+  const out = new Map<string, Array<{ path: string; written: boolean }>>()
+  for (const row of r.data as Array<{ path: string; sha256: string; written: unknown }>) {
+    const list = out.get(row.sha256) ?? []
+    list.push({ path: row.path, written: isObj(row.written) && Object.keys(row.written).length > 0 })
+    out.set(row.sha256, list)
   }
   return out
 }
@@ -1256,7 +1297,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // scripts the moment they are filed (F47). A script that cannot be read is left off, never guessed.
   const scripts = await readFiledScripts(db, overlay, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
   // Each piece's production plan, made after his takes are in (_productionPlan.ts, contract 1.25.0).
-  const productionPlans = await readProductionPlans(db, overlay, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
+  const productionPlans = await readProductionPlans(db, overlay, (pieces as Body[]).map(p => String(p.id).toLowerCase()), pieces as Body[])
   // Each piece's draft manifest (1.8.0), whose sha256 his Approve for publish binds.
   const drafts = await readDrafts(db, (pieces as Body[]).filter(p => SERIES_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
   // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held. Beside

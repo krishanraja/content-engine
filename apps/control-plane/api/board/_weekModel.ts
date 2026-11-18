@@ -88,6 +88,12 @@ export const CLAUDE_LABEL = 'Claude production prompt'
  *  feedback or what I think the next steps are first, and then click the \"Copy to Claude\" button, and the prompt
  *  incorporates that"). */
 export const NOTES_HEADING = "Krish's notes, in his own words (typed on the board just now). They come first: do what they ask before anything else."
+/** The question the production plan asks before he copies its prompt (Krish, 2026-11-18: "would be good if I can be
+ *  asked if there were any points I want made visually that did not get made as strongly as I'd have liked in the
+ *  script - for example I talk about seeing a lot of upgrade offers which are hiding different pricing models - and I
+ *  dont mention clearly enough what a grandfathered pricing model is, and that you can stay on it if you like"). */
+export const VISUAL_POINTS_ASK = 'Any point you want made visually that the script does not make as strongly as you would like? Say the point and what it should make clear.'
+export const VISUAL_POINTS_HEADING = "Points Krish wants made visually that the script does not make strongly enough, in his own words (typed on the production plan just now). Each one gets a picture of its own that makes the point plainly on screen, on the beat where he says it (or the nearest one), as strong as any beat in the plan: a term he did not explain is explained on screen. Do these before anything else, and say in your done report which beat carries each."
 
 export interface ModelStep { key: string; label: string; state: 'done' | 'current' | 'todo'; when: string | null }
 export interface ModelSource { label: string; href: string | null }
@@ -948,7 +954,16 @@ export function productionStage(m: ModelInputs, p: { pieceId: string; title: str
   const line = plan ? `${takesLine(takes).replace(/ Next: .*$/, '')} ${String(plan.line)}` : takesLine(takes)
   const head = productionBrief({ pieceId: p.pieceId, title: p.title, takes, decisions, research: p.read.research, scripts: approval?.texts ?? {}, offday: p.offday,
     plan: made ? planBrief(made, swapsOf(m.picks || [], made)) : null })
-  return { line, next: promptOf(line, head) as unknown as Action, decision: false, others: missing, plan }
+  const next = promptOf(line, head) as unknown as PromptAction
+  // A ready plan asks the one question only he can answer before he copies the prompt (VISUAL_POINTS_ASK): its own
+  // heading in the prompt, and its own saved notes (frame visual_points), so the read sheet's notes stay general notes
+  // and a later prompt carries his points with their framing. His words are saved as he typed them.
+  if (plan && plan.status === 'ready' && next.notes?.save) {
+    const save = next.notes.save as PressAction
+    plan.ask = { question: VISUAL_POINTS_ASK, heading: VISUAL_POINTS_HEADING,
+      save: { ...save, label: 'Points to make visually', body: { ...save.body, frame: 'visual_points' } } }
+  }
+  return { line, next: next as unknown as Action, decision: false, others: missing, plan }
 }
 
 /** "Scripts approved Tue 17 Nov, sent to your Teleprompter at 16:20 UTC." once his press sent them, so the card shows

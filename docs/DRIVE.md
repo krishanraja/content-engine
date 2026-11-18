@@ -324,8 +324,28 @@ there, reads it back and replies "Done" with the link (`config/failures.json` F2
 
 ## Post folders are bound to their pieces (W3.5)
 
-A post's folder in `3 Posts` is bound to its piece: the piece's making record holds it (`pack.folder`). Its name freezes
-at the first send (`pack.sent_at`): `send.py` refuses the same piece under any other folder name. A canary, test,
+A post's folder in `3 Posts` is bound to its piece: the piece's making record holds it (`post_folder`, and `pack.folder`
+on a record from before 18 Nov). Krish, 2026-11-18: "every resource along the way for a single piece needs to be bound
+to the piece in a bullet proof way". Every writer into the post folder reads the binding first (`GET
+/api/content-ideas/<piece>/making` answers `post_folder`; `making.py post_folder_of`) and files there: `build.py`, ve
+file, `produce_day.py`, `send.py` (`post_binding.frozen_problem`) and a file he drops on the production plan. A piece
+nothing bound yet is bound by the first writer, and only once its own filing succeeded: the pack's report, ve file and
+`produce_day.py` after they filed (`post_folder: {folder}` on the making route; `making.py bind_post_folder`), a drop
+after its bytes were read back (`_postFolder.ts bindPostFolder`, naming it as `library.py post_folder` does, from the
+piece's date, day, series and the subject his approved scripts' Teleprompter folder took, else its idea). A writer that
+cannot read the binding stops and files nothing, never a guessed folder. The making route refuses a pack under any other
+folder (`post_folder_bound`), a binding the library would refuse (a test or canary title, a day that is not the date's,
+a series that is not live), and a patch naming two folders. The name is now fixed from the first binding, not the first
+send: a corrected headline is packed under the bound name. When the piece moves to another day, the binding follows it
+(`_making.ts currentFolder`: the same date and day rename as Move to…'s `followDrive` gives the folder in Drive, by its
+ID), so the next file goes into the renamed folder, never a second one under the old date. A series piece moved after
+its folder exists has no Drive rename (Move to… is for off-day items), so its folder keeps the old date until Krish
+renames it.
+
+His own files for a piece (the production plan's "What you get yourself": photos, screenshots, short videos, PDFs,
+text) go in its `3 Video/Your materials`, named with the beats they are for first (`S8 L9 - IMG_0412.jpg`), through the
+asset library like every file in `3 Posts`; the same bytes are a material on the piece (role `krish_got`), so the
+production session reads them by id and finds them in Drive. A canary, test,
 smoke-test, dry-run or fixture post is refused by the library's path rule (`path_test_folder`), and a rendered video
 inside a post goes only in `3 Video` (`path_render_outside_video`), in `scripts/post-pack/library.py` and the engine's
 routes alike. `python3 scripts/post-pack/post_binding.py report --records R --files F` flags any piece spread across

@@ -606,9 +606,24 @@ def held_next(work):
     return review + f'The cuts and their receipts are in {work}; run this again on this machine with --file-only and the same --date and --piece'
 
 
+def bound_folder(piece):
+    """The post folder the piece is bound to now (the engine's answer, its date put right after a move), or None."""
+    status, data = call('GET', f'/api/content-ideas/{piece}/making')
+    if status != 200:
+        raise Stop(f'the piece\'s record could not be read ({status}), so its post folder is unknown: nothing was filed')
+    body = data.get('data') or data
+    if 'post_folder' in body:
+        return body.get('post_folder') or None
+    m = body.get('making') or {}
+    return ((m.get('post_folder') or {}).get('folder') or (m.get('pack') or {}).get('folder') or None)
+
+
 def file_and_record(post_path, piece, rendered, thumb, work):
     post = plan_files.load_post(post_path)
-    folder = plan_files.pack_folder(post)
+    # One piece, one folder (Krish, 2026-11-18: "bound to the piece in a bullet proof way"): the bound folder wins over
+    # the one the post's subject names; a piece nothing bound yet is bound to this one once its cuts are sent.
+    bound = bound_folder(piece)
+    folder = bound or plan_files.pack_folder(post)
     subject = post.get('subject') or folder
     names = delivery_names(folder, subject)
     staged = work / 'send'
@@ -628,6 +643,13 @@ def file_and_record(post_path, piece, rendered, thumb, work):
                    + '. ' + held_next(work))
     run([PY, 'scripts/post-pack/send.py', staged, '--as', f'3 Posts/{folder}/3 Video', '--purpose',
          'the finished video, its thumbnail and its validation receipt, made by the production run'], what='sending the videos to the library')
+    if not bound:
+        status, data = call('POST', f'/api/content-ideas/{piece}/making', {'post_folder': {'folder': folder}, 'by': 'Production run'})
+        answered = (data.get('data') or data).get('post_folder') if status == 200 else None
+        if status != 200:
+            log(f'sent, but the post folder could not be bound on the piece ({status}); the next filing binds it')
+        elif answered and answered != folder:
+            log(f'another writer bound this piece to "{answered}" while this sent into "{folder}": tell Krish')
     for cut, src in rendered.items():
         seconds = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(src)],
                                  text=True, capture_output=True).stdout.strip() or '0'

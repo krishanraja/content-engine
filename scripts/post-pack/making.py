@@ -1811,6 +1811,37 @@ def ask_about_older_takes(piece_id, record, cuts, call=None, by=None):
     return board_upsert(items, call, by)[0]
 
 
+def bound_post_folder(record):
+    """The folder in 3 Posts the piece is bound to (its record's post_folder, else its pack's folder), or None.
+    Mirrors boundPostFolder in apps/control-plane/api/_making.ts."""
+    if not isinstance(record, dict):
+        return None
+    for key in ('post_folder', 'pack'):
+        held = record.get(key)
+        folder = held.get('folder') if isinstance(held, dict) else None
+        if isinstance(folder, str) and folder.strip():
+            return folder.strip()
+    return None
+
+
+def post_folder_of(piece_id, call=None):
+    """The folder in 3 Posts the piece is bound to now, as the engine answers (its date put right after a move), or None
+    before anything bound one. Raises MakingError when the engine cannot be read: a writer then stops, never guesses."""
+    data = read(piece_id, call)
+    folder = data.get('post_folder') if 'post_folder' in data else bound_post_folder(data.get('making'))
+    return folder.strip() if isinstance(folder, str) and folder.strip() else None
+
+
+def bind_post_folder(piece_id, folder, call=None, by=None):
+    """Binds the piece's post folder to `folder` when nothing bound it yet, and returns the folder it is bound to, which
+    wins over the one given (Krish, 2026-11-18: "every resource along the way for a single piece needs to be bound to
+    the piece in a bullet proof way"). A writer binds only after its own filing succeeded. Raises MakingError when the
+    engine cannot be reached or refuses."""
+    data = post(piece_id, {'post_folder': {'folder': folder}}, call, by)
+    answered = data.get('post_folder')
+    return answered if isinstance(answered, str) and answered else (bound_post_folder(data.get('making')) or folder)
+
+
 def piece_id_of(post_path):
     """The piece id a post.json names, or '' when it names none."""
     try:
@@ -1880,6 +1911,17 @@ def self_test():
         t = Path(tmp)
         (t / '.pack.json').write_text(json.dumps({'post_folder': '2026-10-09 Fri mind.the.gap - X', 'files': [1, 2, 3]}))
         p = pack_patch(t, sent=True)
+        check('the bound folder is the binding, else the pack folder', (bound_post_folder({'post_folder': {'folder': 'A'}, 'pack': {'folder': 'B'}}), bound_post_folder({'pack': {'folder': 'B'}}), bound_post_folder({})), ('A', 'B', None))
+        sent = []
+        def binder(method, path, body):
+            sent.append((method, path, body))
+            return 200, json.dumps({'ok': True, 'making': {'post_folder': {'folder': '2026-11-17 Tue off.day - Bound first'}}})
+        check('binding answers the folder already bound, which wins', bind_post_folder('b019dbf8-8051-4cab-9b5e-2ad77b3f5118', '2026-11-17 Tue off.day - Mine', binder),
+              '2026-11-17 Tue off.day - Bound first')
+        def reader(method, path, body=None):
+            return 200, json.dumps({'ok': True, 'making': {'post_folder': {'folder': 'OLD'}}, 'post_folder': '2026-11-19 Thu off.day - Moved'})
+        check('the engine\'s answer is the folder now, its date put right after a move', post_folder_of('b019dbf8-8051-4cab-9b5e-2ad77b3f5118', reader), '2026-11-19 Thu off.day - Moved')
+        check('binding sends post_folder to the making route', (sent[0][1], sent[0][2]['post_folder']), ('/api/content-ideas/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/making', {'folder': '2026-11-17 Tue off.day - Mine'}))
         check('a pack patch names the folder and count', (p['pack']['folder'], p['pack']['files'], 'sent_at' in p['pack']), ('2026-10-09 Fri mind.the.gap - X', 3, True))
         (t / 'post.json').write_text(json.dumps({'piece_id': pid}))
         check('piece_id is read from post.json', piece_id_of(t / 'post.json'), pid)
