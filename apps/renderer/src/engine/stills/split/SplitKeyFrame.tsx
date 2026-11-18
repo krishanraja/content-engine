@@ -74,9 +74,10 @@ export function SplitKeyFrame(input: SplitKeyFrameProps) {
         {variant==='slam' && beat==='face' && <g transform="rotate(3 470 680)"><rect x={85} y={280} width={760} height={720} fill={p.signal}/>{text('SINGING',120,520,170,p.ink)}{text('STILL IN',120,720,170,p.ink)}{text('Grammys · reportedly',120,910,34,p.ink,F.data)}</g>}
         {variant==='slam' && beat==='proof' && <>{text('No. 2',100,400,150)}{text('Official Charts · Nov 2026',100,465,32,p.paper,F.data)}</>}
         {variant==='receipt' && beat==='hook' && <>
-          <rect y={200} width={1080} height={786} fill={p.signal}/><rect y={986} width={1080} height={934} fill={c}/>
-          {[360,1030].map(y=><rect key={y} x={120} y={y} width={730} height={290} fill={p.ink}/>)}
-          {text('GOOGLE · 2024',155,445,48)}{text('$2.7B',155,590,140)}{text('(REPORTED)',155,645,36,p.paper,F.data)}{text('DISNEY · 2026',155,1120,48)}{text('~$60M A YEAR',155,1250,86)}
+          <rect y={0} width={1080} height={986} fill={p.signal}/><rect y={986} width={1080} height={934} fill={c}/>
+          <rect data-reported-card x={146} y={350} width={788} height={320} fill={p.ink}/>
+          {text('GOOGLE · 2024',180,435,48)}{text('$2.7B',180,575,140)}{text('(REPORTED)',180,625,36,p.paper,F.data)}
+          {text('Character.AI',155,790,70,p.ink)}{text('WHO GETS WHAT?',155,890,62,p.ink)}
           <circle cx={485} cy={986} r={64} fill={p.ink}/>{text('VS',448,1006,48)}
         </>}
         {variant==='receipt' && beat==='face' && <>
@@ -91,8 +92,8 @@ export function SplitKeyFrame(input: SplitKeyFrameProps) {
           {text('WIRED · REBUILT RECEIPT',115,775,32,p.ink,F.data)}
         </g>}
         {variant==='receipt' && beat==='hook' && <>
-          <rect x={120} y={1400} width={730} height={CONTENT_BOTTOM-1400} fill={p.ink}/>
-          {text('Character.AI',155,1500,70)}{text('WHO GETS WHAT?',155,CONTENT_BOTTOM-40,62)}
+          <rect x={146} y={1400} width={788} height={CONTENT_BOTTOM-1400} fill={p.ink}/>
+          {text('DISNEY · 2026',180,1485,48)}{text('~$60M A YEAR',180,1620,86)}
         </>}
         {beat==='close' && <>
           <rect data-close-upper y={0} width={1080} height={1300} fill={variant==='receipt'?c:inkDeep}/>
@@ -100,7 +101,7 @@ export function SplitKeyFrame(input: SplitKeyFrameProps) {
           {variant==='slam'?<>
             {text('WHO GETS',120,460,150)}{text('THE CREDIT',120,720,150)}{text('FOR THE',120,980,150)}{text('MUSIC?',120,1230,150)}
           </>:<>
-            {text('WHY IS DISNEY',120,450,105,p.ink)}{text('EATING THE',120,740,110,p.ink)}{text('SCRAPS?',120,1070,150,p.ink)}
+            {text('WHY IS DISNEY',120,450,105,p.ink)}{text('EATING THE',120,740,110,p.ink)}{text('SCRAPS?',120,1035,150,p.ink)}
           </>}
           {text('makeyourmindup.ai',120,1460,52,variant==='receipt'?p.paper:p.ink,F.data)}
           <rect data-close-pill x={120} y={1590} width={730} height={CONTENT_BOTTOM-1590} fill={variant==='receipt'?c:p.ink}/>
@@ -114,9 +115,9 @@ export function SplitKeyFrame(input: SplitKeyFrameProps) {
     {!full && <div data-band="hard-edge" style={{position:'absolute',left:0,top:seam,width:1080,height:1920-seam,overflow:'hidden',border:0,borderRadius:0}}>
       <Img src={plateSrc} style={{width:1080,height:'100%',objectFit:'cover',objectPosition:plateY === undefined ? 'center top' : `50% ${plateY}%`}}/>
     </div>}
-    <header data-header style={{background:variant==='receipt' && beat==='close'?inkDeep:undefined,position:'absolute',left:72,top:79,width:888,height:56,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-      <Img data-logo src={staticFile(SPLIT_ASSETS.logo)} style={{width:260,height:56,objectFit:'contain'}}/>
-      <span data-series style={{background:c,color:p.ink,fontFamily:F.data,fontSize:30,padding:'8px 14px'}}>{series}</span>
+    <header data-header style={{position:'absolute',left:72,top:79,width:888,height:56,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+      <Img data-logo src={staticFile(SPLIT_ASSETS.logo)} style={{width:260,height:56,objectFit:'contain',background:variant==='receipt' && beat==='close'?inkDeep:undefined}}/>
+      <span data-series style={{background:variant==='receipt' && beat==='close'?inkDeep:c,color:variant==='receipt' && beat==='close'?p.paper:p.ink,fontFamily:F.data,fontSize:30,padding:'8px 14px'}}>{series}</span>
     </header>
     {cap && <div data-caption data-caption-left={60} data-caption-right={860} style={{position:'absolute',left:HOUSE.caption.left,top:variant==='slam'?1090:920,width:800,boxSizing:'border-box',padding:`${HOUSE.caption.paddingTop}px ${HOUSE.caption.paddingX}px ${HOUSE.caption.paddingBottom}px`,background:p.ink,color:p.paper,fontFamily:F.structure,fontWeight:HOUSE.caption.weight,fontSize:HOUSE.caption.size,lineHeight:HOUSE.caption.lineHeight,boxShadow:`12px 12px 0 ${c}`}}>{cap}</div>}
   </div>
