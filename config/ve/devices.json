@@ -1,6 +1,7 @@
 {
   "devices": {
     "facility_block": {"verbs": ["enter", "fill", "connect", "add", "stamp", "carry", "move", "multiply", "grey", "grow", "thin", "exit"]},
+    "credit_meter": {"verbs": ["enter", "fill", "add", "mark", "count_to", "drop", "exit"]},
     "toy_object": {"verbs": ["enter", "count_to", "add", "move", "highlight", "exit"]},
     "morph_stage": { "verbs": ["enter", "move", "highlight", "exit"] },
     "flat_mechanism": {"verbs": ["enter", "add", "move", "fill", "highlight", "count_to", "exit"]},
