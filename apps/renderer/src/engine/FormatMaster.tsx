@@ -213,6 +213,10 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
                 ? PlaceSchema.parse(place) : undefined
               const deviceObject = placement ? { ...object, params } : object
               let box = placement ? { left: 0, top: 0, width: placement.width, height: placement.height } : slots[index]
+              // A full scene plate on a graphics-only beat is the frame itself (18 Nov 2026: clipped to its slot it drew a
+              // small square on bare ink and cut the crocodile out of the Wed 18 hook).
+              if (object.device === 'scene_plate' && beat.layout === 'STAGE' && object.params.full !== false)
+                box = { left: 0, top: 0, width, height }
               if (!box) throw new Error(`ve: no slot ${index} in ${beat.layout}`)
               if (beat.layout === 'STAGE' && object.device === 'cursor_buddy') {
                 let bottom = 0

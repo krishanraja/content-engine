@@ -1,7 +1,7 @@
 {
   "schema": "ve-engine/1",
-  "sha256": "c7e9262cb880172b328a55f34e673d0f2e2e98604e86c6f165a4717d7a6a0dfa",
-  "at": "2026-11-18T17:32:33Z",
+  "sha256": "290bb033ac93d91583485389aedc80a08d77e9608ea803bf7cf92bef768af126",
+  "at": "2026-11-18T17:58:51Z",
   "files": {
     "apps/renderer/src/Root.tsx": "5da7327453a3ace13fdea498fa2a63d7934d30482f4a4ff849cbef8af0112301",
     "apps/renderer/src/Short.tsx": "ccda63263e5bf4d3d2cf8a16923064f970deb57e1da0cdc398389f0379800aff",
@@ -18,7 +18,7 @@
     "apps/renderer/src/border-control/proof-entry.tsx": "16b48df73c95bc399e0aa5a2843ecf3d01285e478255d473c66d01d0ce101113",
     "apps/renderer/src/border-control/short-entry.tsx": "0399f8b5ed923fa30a0d4faa5acc26e074ca92e8f246d284730d6da7b21ccd6f",
     "apps/renderer/src/engine/BrandFrame.tsx": "b320bd478c9099a812b0a093cdb0755ad9b2488af1754fa054f366123d8ca319",
-    "apps/renderer/src/engine/FormatMaster.tsx": "0802f26ef820a3b297a72a8f9d1ef7bf63c704b9e40031f383913aea2b62628c",
+    "apps/renderer/src/engine/FormatMaster.tsx": "2c57d5abe03e1016e484fe9222063137677d24a9edb8828fbc4f30fee3b32c03",
     "apps/renderer/src/engine/VeCut.tsx": "5635e51bc0a21fe2a9b654ae7459c126d5fa408f47f150120479de82fabd6e39",
     "apps/renderer/src/engine/audio.tsx": "2f8f87297ab3f21c189b8b50082def2f8e37d78a9fa91cee5affc89b69e2fd0b",
     "apps/renderer/src/engine/captions/draw.tsx": "a1a1d64be94cfd76135466865288e1f47f752bb5f952718608ee4cb98a45f1f2",
@@ -255,7 +255,7 @@
     "apps/renderer/src/engine/devices/wall_screen/state.ts": "5382db3d4bfde11d1dc728f7cba8650a7d5b6087a73e7e15ddfa6a2ce7c1eefc",
     "apps/renderer/src/engine/fit.ts": "3651fb3547f5991fae29d7b61f78443f60fc84ff3e963f6bc8aafeb1175b526a",
     "apps/renderer/src/engine/geometry.ts": "e67ddda38fc449843f8bc307bcc1463e6b522083793cd635501277afec60949f",
-    "apps/renderer/src/engine/houseGolden.json": "3f3bded4f964a8c97d6d0e14366c8647927ac53c7bc4976d40f289565627b3b6",
+    "apps/renderer/src/engine/houseGolden.json": "acd8700da10a26e12cb0b4940bcf041f8eb48b0dfad809fa1be3904710503749",
     "apps/renderer/src/engine/index.ts": "f6c7e4c01407fdfcde82086b268731233af6fcabfc8477b543d9bff256dcbe11",
     "apps/renderer/src/engine/kit/Scribble.tsx": "c4e3319b1c1d6328c25957a14b5c33cd1e3984f3d45661424db52398ba79fd02",
     "apps/renderer/src/engine/kit/beatMotion.ts": "5a4bc0998ccba7fe3d8dbbf17c4f8e13c0990eb67fc7b1f28d979a98ecfdf48c",
