@@ -1,3 +1,0 @@
-Status: The experiment is now an optional press, never a fourth pick (view contract 1.28.0). It asks for Krish's idea in his words (meta.style.experiment_idea, required with the tick), then offers Change the experiment and Remove the experiment once it is on. The production prompt carries his idea verbatim and has the session flesh it out, draw 3 to 5 free mock frames and ask him to go, change it or call it, before any shot script or paid still. Control Centre draws it as a tick under the three picks (control-center, same branch name).
-Next: Krish ticks it on Wednesday's piece on his phone and pastes the production prompt into Claude, to confirm the mocks step runs.
-North Star check (2026-11-18): holds.
