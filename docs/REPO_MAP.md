@@ -6170,6 +6170,14 @@ Spot inks, paper and shadow. All still colour values live here, including device
 - `function stillIds(): {layer:Layer; id:string}[]`
 - `function coverPlan(layer:Layer,id:string)`
 
+### `apps/renderer/src/engine/title/TitleMoment.tsx`
+
+- `type TitleWord = { text: string; atFrame: number }`
+- `type Box = { left: number; top: number; width: number; height: number }`
+- `type TitleMomentProps`
+- `function titleLayout(words: TitleWord[], stage: Box, aspect: TitleMomentProps['aspect'])`
+- `function TitleMoment(props: TitleMomentProps): JSX.Element | null`
+
 ### `apps/renderer/src/engine/transport.ts`
 
 JSON-value transport: escape values only; keys retain their original spelling.
