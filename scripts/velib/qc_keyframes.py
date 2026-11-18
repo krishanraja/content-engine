@@ -76,6 +76,8 @@ def _applicability(lock, fmt):
     frozen, reasons = designlock.frozen(lock, fmt)
     if not frozen:
         return {'applies': False, 'note': 'not frozen: ' + '; '.join(reasons)}
+    if lock['formats'][fmt].get('keyframes_withdrawn') and not lock['formats'][fmt].get('keyframes'):
+        return {'applies': False, 'note': 'key frames withdrawn by Krish (design-lock keyframes_withdrawn): the Critic is the design gate'}
     return None
 
 

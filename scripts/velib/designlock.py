@@ -125,6 +125,12 @@ def frozen(lock, fmt, root=None) -> tuple[bool, list[str]]:
     if settings is None:
         return False, [f'unknown format {fmt}']
     beats = settings.get('beats', [])
+    # Key frames Krish withdrew (his words in keyframes_withdrawn) leave the lock frozen with nothing to compare a cut
+    # with: the Critic is the design gate until he picks new ones (18 Nov 2026: the face-with-proof frames were cut from
+    # his rejected Thu 5 Nov take; failures.json stills-from-rejected-thu5-take).
+    withdrawn = settings.get('keyframes_withdrawn')
+    if isinstance(withdrawn, dict) and withdrawn.get('by') == 'Krish' and withdrawn.get('words') and not settings.get('keyframes'):
+        return True, []
     frames = settings.get('keyframes', {})
     reasons = []
     if not beats or not isinstance(frames, dict) or set(frames) != set(beats):

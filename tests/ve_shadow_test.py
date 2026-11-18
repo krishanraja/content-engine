@@ -86,7 +86,11 @@ class DraftLockTest(unittest.TestCase):
         self.assertEqual(designlock.validate(lock), [])
         tall = lock['formats']['face-with-proof']
         self.assertEqual(tall['beats'], BEATS)
-        self.assertEqual(set(tall['keyframes']), set(BEATS))
+        # Its key frames were frames of his rejected Thu 5 Nov take; he withdrew them, in his words (18 Nov 2026), and
+        # none may come back from that take.
+        self.assertNotIn('keyframes', tall)
+        self.assertEqual(tall['keyframes_withdrawn']['by'], 'Krish')
+        self.assertFalse(any((ROOT / 'fixtures/ve/design-lock/face-with-proof').glob('*.jpg')))
         self.assertTrue(designlock.frozen(lock, 'face-with-proof', ROOT)[0])
         # Frozen only on his words at Gate 2, never by an agent's own call.
         self.assertEqual((tall['approved']['by'], tall['approved']['words']), ('Krish', 'Looks good to me.'))

@@ -166,6 +166,49 @@
         "Grok"
       ],
       "domain": "x.ai"
+    },
+    {
+      "names": [
+        "Klarna"
+      ],
+      "domain": "klarna.com"
+    },
+    {
+      "names": [
+        "Salesforce"
+      ],
+      "domain": "salesforce.com"
+    },
+    {
+      "names": [
+        "Workday"
+      ],
+      "domain": "workday.com"
+    },
+    {
+      "names": [
+        "Deel"
+      ],
+      "domain": "deel.com"
+    },
+    {
+      "names": [
+        "Slack"
+      ],
+      "domain": "slack.com"
+    },
+    {
+      "names": [
+        "Fin",
+        "Intercom"
+      ],
+      "domain": "fin.ai"
+    },
+    {
+      "names": [
+        "Curative"
+      ],
+      "domain": "curative.com"
     }
   ],
   "mentions_only": [
@@ -212,6 +255,55 @@
       "file": "assets/logos/anthropic-symbol.svg",
       "sha256": "e129efc6982ff7df4baf15ed97486454a681286fcbaf16b6074517125e59fe88",
       "source": "https://cdn.brandfetch.io/idmJWF3N06/theme/dark/symbol.svg"
+    },
+    {
+      "company": "Klarna",
+      "variant": "full_colour",
+      "file": "assets/logos/klarna-logo.svg",
+      "sha256": "88ede0914950cd773952587426897d2b5db0a35b246fa70a60aa50ffb95a15b2",
+      "source": "https://www.klarna.com/us/ (the site header's own wordmark, aria-label Klarna)"
+    },
+    {
+      "company": "Salesforce",
+      "variant": "full_colour",
+      "file": "assets/logos/salesforce-logo.svg",
+      "sha256": "c2e72790bb69c3765aeb9becf38814ce008ea1d011d8906e43c94a19c2a49cea",
+      "source": "https://cdn.brandfetch.io/idVE84WdIN/theme/dark/logo.svg"
+    },
+    {
+      "company": "Salesforce",
+      "variant": "one_colour",
+      "file": "assets/logos/salesforce-symbol.svg",
+      "sha256": "9b75d52965505a8973caf0ad2b7073c17c82dd9ac6005c3f064d0217a8427eff",
+      "source": "https://cdn.brandfetch.io/idVE84WdIN/theme/dark/symbol.svg"
+    },
+    {
+      "company": "Workday",
+      "variant": "full_colour",
+      "file": "assets/logos/workday-logo.svg",
+      "sha256": "053a436f1d44af7d4df90a9449ff9e83c618f33d4a994ac773ab3f283ba593ba",
+      "source": "https://cdn.brandfetch.io/id0V-YF4nE/theme/dark/logo.svg"
+    },
+    {
+      "company": "Deel",
+      "variant": "full_colour",
+      "file": "assets/logos/deel-logo.svg",
+      "sha256": "578bee02236fc4015c1e98af87f80c63a9f7b386ec2c2a5587c21a0c361e1d3e",
+      "source": "https://cdn.brandfetch.io/id4NSNrRnG/theme/dark/logo.svg"
+    },
+    {
+      "company": "Slack",
+      "variant": "full_colour",
+      "file": "assets/logos/slack-symbol.svg",
+      "sha256": "3b4e08eefa709e2a6209f116a0493c323da6a3a73713666fb524ccb91a95e8dd",
+      "source": "https://cdn.brandfetch.io/idJ_HhtG0Z/theme/dark/symbol.svg"
+    },
+    {
+      "company": "Fin",
+      "variant": "full_colour",
+      "file": "assets/logos/fin-logo.svg",
+      "sha256": "4b558274846afa6d6893d5f12f25ab29c56d4a7e5ccc4aafaeae29b38e3a6e51",
+      "source": "https://fin.ai/ (the site header's own mark)"
     }
   ],
   "marks_about": "The official mark files a render may use (floor never 6: real logos, used with the rights, never redrawn). scripts/post-pack/logo_gate.py hash-matches every logo file a cover, thumbnail or card uses against this list and refuses any file not here. Each entry: {\"company\": the first name above, \"variant\": \"full_colour\" or \"one_colour\" (the company's own one-colour version), \"file\": the path in this repository, \"sha256\": the file's, \"source\": where it came from (the company's brand page or Brandfetch asset URL, without its per-request token)}. Add one with: python3 scripts/post-pack/logo_gate.py register FILE --company NAME --variant full_colour --source URL. It starts empty: whether the house cream recolours in docs/plans/*/logos count as a one-colour version is Krish's call."

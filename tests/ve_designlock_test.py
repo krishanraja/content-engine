@@ -125,7 +125,9 @@ class DesignLockTest(unittest.TestCase):
         lock = self.freeze(mapping, force=True)
         self.assertTrue(designlock.frozen(lock, FMT, self.root)[0])
         # The lock reads frozen only once every format is: two-passports, then face-with-proof (frozen 3 Nov 2026).
-        for other in [name for name in self.lock['formats'] if name != FMT]:
+        # A format whose key frames Krish withdrew (keyframes_withdrawn, 18 Nov 2026) already reads frozen.
+        for other in [name for name in self.lock['formats'] if name != FMT
+                      and not self.lock['formats'][name].get('keyframes_withdrawn')]:
             self.assertEqual(lock['status'], 'direction_approved')
             lock = designlock.freeze(other, self.src, self.images(other), lock_path=self.path)
         self.assertEqual(lock['status'], 'frozen')

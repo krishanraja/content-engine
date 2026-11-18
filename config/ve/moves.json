@@ -159,6 +159,23 @@
         "\\.void\\b.*\\bs:\\["
       ],
       "example": "<div class=\"void\">VOID</div>"
+    },
+    {
+      "id": "scene-plate-push",
+      "name": "a generated comic scene filling the frame with one slow camera move (a push, drift or handheld wobble), no words on it",
+      "device": "scene_plate",
+      "verbs": [
+        "enter",
+        "move",
+        "exit"
+      ],
+      "card": "docs/ve/cards/w1118/ve-w1118-scene-plate.md",
+      "source": "Wed 18 Nov build-or-buy production plan (the crocodile hunter, the puppy's receipt, the 2 a.m. call)",
+      "signatures": [
+        "ken[-_ ]?burns",
+        "class=\"scene-plate"
+      ],
+      "example": "<div class=\"scene-plate ken-burns\"><img src=\"croc.png\"></div>"
     }
   ]
 }

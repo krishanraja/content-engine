@@ -1,0 +1,66 @@
+---
+card: ve-w1118-scene-plate
+format: face-with-proof
+motion_style: hud-terminal
+kind: device
+model: gpt-6.1-sol
+effort: medium
+max_minutes: 45
+max_calls: 45
+cwd: /root/ve-worktrees/content-engine/ve-card/ve-w1118-scene-plate
+write_allow: [apps/renderer/src/engine/devices/scene_plate/*, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/devices/verbs.test.ts, config/ve/devices.json]
+read: apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/film_frame/**, apps/renderer/src/engine/devices/video_wall/**, apps/renderer/src/engine/kit/glass/footage.tsx, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/kit/**, apps/renderer/src/engine/FormatMaster.tsx, config/ve/design-lock.json, config/ve/devices.json, tests/ve_port_acceptance_test.py
+never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, raw hex colours, useCurrentFrame outside apps/renderer/src/engine/clock.ts, edits outside write_allow
+---
+
+# The scene plate: a generated comic scene, full bleed, one camera move, no label
+
+## Goal
+Wed 18 Nov (under.the.hood, piece db9f9f6a, "Build or buy your tools in an AI world?") needs its comic beats on screen: a nerdy developer creeping up on a crocodile asleep under the office coffee machine, a puppy buried under its receipt, a phone buzzing at 2:00 a.m. Krish, 17 Nov: "This piece needs to be hilarious and tongue-in-cheek." Each is a still Codex generates for a named slot. Every image device today (film_frame, evidence_card, wall_screen, video_wall) is evidence and prints a source and date; a generated plate carries no on-screen label (Krish, 28 Oct: "No one cares that things are AI-generated"). Build library device `scene_plate`: pictures fitted by cover, full bleed, one slow camera move, no words at all. Compile's change (origin generated allowed only in this device) is Claude's, not this card's.
+
+## Contract
+Device rules (devices/CONTRACT.md): pure function of props; state only from `stateAt`; animation only from `progress()`/`drift()` with `MOTION`; colours only from `tokens`; no Math.random, no `f % N`, no wall clock; author 1080x1920 and 1920x1080. Register in `devices/registry.ts` and `config/ve/devices.json` with verbs enter, move, exit; update `verbs.test.ts`.
+
+1. `params` (zod, strict): `shots` (1 to 4) each `{src, kind: 'image'|'video' (default image), width, height (positive ints, the picture's own size), focus?: {x,y} fractions (default 0.5,0.5), from_s?: >=0 (video in-point)}`; `camera`: 'push'|'drift'|'handheld'|'still' (default push); `full?` (default true: fill the canvas); `grade?`: 'none'|'hud' (default hud).
+2. COVER fit: scale = max(boxW/width, boxH/height), centred on focus, clamped so no edge shows; never stretched. Export pure `coverRect(shot, boxW, boxH)`.
+3. Camera over the shot's time on screen, on EVERY frame even under a twos profile (Krish, 9 Nov: "The fade out of the cat video is glitchy"): push 1.00 to 1.08 about focus on the house ease; drift 3% of box width toward focus at scale 1.04; handheld a deterministic wobble (<=6 px, <=0.4 deg) from a hashed frame sample; still holds. Never below cover.
+4. `enter` (toState a shot index, or "cut"): hard cut in on the word with a 4-frame scanline wipe in tokens.mint at 30% crossing top to bottom (none for "cut").
+5. `move` (toState the next shot index): same wipe, the camera restarts. Out-of-range index throws.
+6. `exit`: leaves with no move.
+7. grade 'hud': four corner brackets in tokens.mint (2 px, 48 px long, 40 px in) and faint scanlines (tokens.inkDeep 10%, every 4 px). Nothing else.
+8. NEVER any text, label, tag, chip, source, date, logo or watermark.
+9. Video: `OffthreadVideo` always `muted`, in a `Sequence` from its shot's frame, `trimBefore = round(from_s*fps)`, holding its last frame.
+
+## Tests (`device.test.ts`, stills from `fixture.json`)
+- nothing before enter; on enter the shot fills its box (canvas when full)
+- coverRect contains the box and keeps the aspect (wide, tall, square pictures; wide and tall boxes)
+- camera transform changes on consecutive frames under twos; push ends at 1.08 +/- 0.005
+- move shows the next shot; a bad index throws
+- video muted in every state; Sequence starts on its shot's frame
+- no text node in any state or grade
+- tall and wide fixtures render
+
+## Motion style: HUD and terminal (hud-terminal, untested)
+Monospace text, lock-on brackets and rolling numbers, for pieces about what software or models actually do.
+Build to these rules; brand roles (config/ve/brand-tokens.json) and the design lock win where they differ.
+- IBM Plex Mono only, on ink; mint for the result line, cream for everything else
+- text types at a readable 25 to 40 characters a second, never a blur
+- brackets lock onto the one value that matters with the slap token
+- rolling numbers settle on the real figure and hold
+Never:
+- green-on-black hacker clichés
+- glitch and scan noise over the proof
+- walls of fake code
+
+## Acceptance (every command must exit 0 inside your sandbox)
+npx vitest run apps/renderer/src/engine/devices/scene_plate
+npx vitest run apps/renderer/src/engine/devices/verbs.test.ts
+python tests/ve_port_acceptance_test.py scene_plate
+python tests/ve_route_test.py
+python scripts/ve/check_route.py
+python scripts/ve.py lint fixtures/ve/my-test-19s/spec.json
+
+## Return
+Your final message is only JSON matching config/ve/task-result.schema.json:
+{"card": "ve-w1118-scene-plate", "files_changed": [...], "commands": [{"cmd": "...", "exit_code": 0}], "open_questions": [...]}
+Stop after two failed attempts at the same acceptance command and report the failure in open_questions.

@@ -294,6 +294,15 @@ class CompileTest(unittest.TestCase):
         for page, after in zip(props['captions'], props['captions'][1:]):
             self.assertEqual(page['toFrame'], after['fromFrame'])
 
+    def test_a_picked_caption_style_keeps_phrase_pages(self):
+        # Krish, 2026-11-13: "the captions should be decoupled from the animation styles"; rack-focus picked 17 Nov.
+        spec = load_json(FIXTURE / 'spec.json')
+        spec['brand'] = {**spec['brand'], 'captions': 'word'}
+        spec.setdefault('style', {})['captions'] = {'theme': 'rack-focus', 'placement': 'lower', 'reason': 'picked'}
+        props = compile_cut(spec, next(iter(spec['cuts'])), timed_words(), FIXTURE)
+        self.assertEqual(props['captionStyle'], 'house')
+        self.assertGreater(max(len(page['words']) for page in props['captions']), 1)
+
     def test_the_hook_is_the_intro(self):
         # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns
         # frame 0 even when the first word comes later; no story card or logo sting is compiled ahead of it, and the
@@ -369,8 +378,38 @@ class CompileTest(unittest.TestCase):
         spec['assets'].append({'id': 'generated', 'path': 'picture.png', 'origin': 'generated'})
         for ref in ('picture.png', 'generated', 'asset:generated'):
             spec['objects'][0]['params']['extra'] = {'nested': [ref]}
-            with self.assertRaisesRegex(ValueError, 'generated assets pipeline arrives in Phase 2'):
+            with self.assertRaisesRegex(ValueError, 'placed only by scene_plate, never as evidence'):
                 compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
+
+    def test_a_generated_picture_reaches_only_scene_plate_with_its_provenance(self):
+        # Phase 2, first step (18 Nov 2026): scene_plate draws no words, so a generated picture there is never evidence.
+        spec = load_json(FIXTURE / 'spec.json')
+        spec['assets'].append({'id': 'croc', 'kind': 'illustration', 'path': 'croc.png', 'origin': 'generated',
+                               'tool': 'codex:image_gen'})
+        obj = spec['objects'][0]
+        obj['device'] = 'scene_plate'
+        obj['params'] = {'shots': [{'src': 'croc.png', 'width': 1024, 'height': 1536}]}
+        real_load = load_json
+        verbs = sorted({e['verb'] for c in spec['cuts'].values() for b in c['beats'] for e in b.get('events', [])})
+
+        def read(path):  # scene_plate is a library device; any verb the fixture uses stands in for its own
+            data = real_load(path)
+            if Path(path).name == 'devices.json':
+                data = copy.deepcopy(data)
+                data['devices']['scene_plate'] = {'verbs': verbs}
+            return data
+        with patch.object(ve_compile, 'load_json', side_effect=read):
+            with self.assertRaisesRegex(ValueError, 'naming its tool and job_id'):
+                compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
+            spec['assets'][-1]['job_id'] = 'thread-1'
+            spec['assets'][-1]['kind'] = 'screenshot'
+            with self.assertRaisesRegex(ValueError, 'illustration or broll'):
+                compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
+            spec['assets'][-1]['kind'] = 'illustration'
+            try:
+                compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
+            except ValueError as error:
+                self.assertNotIn('generated', str(error))
 
     def test_sfx_kit_present_and_absent(self):
         spec = load_json(FIXTURE / 'spec.json')

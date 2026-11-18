@@ -490,23 +490,34 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     datasets = {dataset['id']: dataset for dataset in spec.get('datasets', [])}
     objects = []
     used = {name for beat in selected for name in beat.get('uses', [])}
-    generated = {ref for asset in spec.get('assets', []) if asset.get('origin') == 'generated'
-                 for ref in (asset['id'], 'asset:' + asset['id'], asset['path'])}
+    generated_assets = [asset for asset in spec.get('assets', []) if asset.get('origin') == 'generated']
+    generated = {ref for asset in generated_assets for ref in (asset['id'], 'asset:' + asset['id'], asset['path'])}
+    # Phase 2, first step (18 Nov 2026, Wed 18 build-or-buy): a generated picture reaches the frame only inside the
+    # scene_plate device, which draws no words, so it is never evidence and never carries a label (Krish, 28 Oct 2026:
+    # "No one cares that things are AI-generated"). Its asset names the tool and the job that made it; every other
+    # device still refuses it (a generated picture never stands in for a real place, record or test).
+    by_ref = {ref: asset for asset in generated_assets for ref in (asset['id'], 'asset:' + asset['id'], asset['path'])}
 
-    def check_generated(node):
+    def check_generated(node, device):
         if isinstance(node, dict):
             for value in node.values():
-                check_generated(value)
+                check_generated(value, device)
         elif isinstance(node, list):
             for value in node:
-                check_generated(value)
+                check_generated(value, device)
         elif isinstance(node, str) and node.replace('\\', '/').removeprefix('./') in generated:
-            raise ValueError(f'generated asset {node}: the generated assets pipeline arrives in Phase 2')
+            asset = by_ref[node.replace('\\', '/').removeprefix('./')]
+            if device != 'scene_plate':
+                raise ValueError(f'generated asset {node}: a generated picture is placed only by scene_plate, never as '
+                                 f'evidence (device {device})')
+            if asset.get('kind') not in ('illustration', 'broll') or not asset.get('tool') or not asset.get('job_id'):
+                raise ValueError(f'generated asset {asset["id"]}: a scene plate is an illustration or broll naming its '
+                                 'tool and job_id (its provenance stays in the spec)')
 
     for obj in spec.get('objects', []):
         if obj['obj'] not in used:
             continue
-        check_generated(obj.get('params', {}))
+        check_generated(obj.get('params', {}), obj.get('device'))
         persist = obj['persist']
         if persist['from_beat'] not in by_beat or persist['to_beat'] not in by_beat:
             raise ValueError(f'object {obj["obj"]} references a persist beat missing from cut {cut_id}')
@@ -529,7 +540,11 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     channel = spec['brand']['series'].replace('.', '_')
     identity = house['channels'][channel]
     emphasis = set(cut['captions'].get('emphasis', []))
-    word_mode = spec['brand'].get('captions') == 'word'
+    # A picked caption style (style.captions; Krish, 2026-11-13: "the captions should be decoupled from the animation
+    # styles") draws ve's phrase pages itself: one word a page would undo it (rack-focus racks focus along the phrase), so
+    # the word build applies to the house caption only (18 Nov 2026, Wed 18, his rack-focus pick of 17 Nov).
+    picked_theme = (((spec.get('style') or {}).get('captions') or {}).get('theme'))
+    word_mode = spec['brand'].get('captions') == 'word' and not picked_theme
     groups = [[row] for row in rows] if word_mode else \
         [g for part in _zone_runs(rows, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
     captions = []
