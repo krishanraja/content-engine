@@ -49,6 +49,14 @@
       "said": "Approve engine fdb1b867",
       "on": "2026-11-18",
       "artifact_hash": "fdb1b867246820a58e9ca73bda0ffbea3c600a8aeb6accda3a41fe0aa152d857"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "said": "Approve engine ac725e9",
+      "on": "2026-11-18",
+      "artifact_hash": "ac725e9078f545461e84ab061a28ba754d83c25006c1b5e996e736259741b60d"
     }
   ]
 }

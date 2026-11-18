@@ -402,9 +402,10 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   )
 }
 
-/** Where the title card lands on an unstaged beat: the lower band the captions leave for it, inside every channel's safe
- *  column, so his face stays clear (Krish, 18 Nov 2026: "having naked captions over my face looks stupid"). */
+/** Where the title card lands on an unstaged beat: the top of the safe column, under every channel's top bar and over
+ *  his hair, so his eyes and mouth stay clear (Krish, 18 Nov 2026: "having naked captions over my face looks stupid";
+ *  in the lower band the card covered his mouth). */
 export function titleSafe(aspect: string, width: number, height: number) {
-  return aspect === '9:16' ? { left: 60, top: 880, width: 800, height: 430 }
-    : { left: Math.round(width * 0.1), top: Math.round(height * 0.56), width: Math.round(width * 0.8), height: Math.round(height * 0.36) }
+  return aspect === '9:16' ? { left: 60, top: 220, width: 800, height: 330 }
+    : { left: Math.round(width * 0.1), top: Math.round(height * 0.06), width: Math.round(width * 0.8), height: Math.round(height * 0.3) }
 }
