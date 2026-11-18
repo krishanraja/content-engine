@@ -1,0 +1,50 @@
+{
+  "thresholds": {
+    "keyframe_compare_size": [
+      540,
+      960
+    ],
+    "keyframe_ssim_min": 0.8
+  },
+  "formats": {
+    "synthetic": {
+      "beats": [
+        "open",
+        "proof",
+        "close"
+      ],
+      "frames_dir": "goldens",
+      "keyframes": {
+        "open": {
+          "file": "goldens/open.jpg",
+          "sha256": "e1b840fe784327f575c77e1dd813a1853373cb56aea325767577c2739afdbbb3",
+          "source_sha256": "19ea1972d8139529b0a581dd3e9ebc9b6252f32ede82d45a1d7cc72fe5616d03",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "proof": {
+          "file": "goldens/proof.jpg",
+          "sha256": "727319cf684c7e9def9c143f5e516f9c20dcfbafe9dd2a44936a7c35e724483c",
+          "source_sha256": "58e6ffe8bbf9056f5f2269ea043dd92d3d3b6bf580240e2aaf5c2c789fbbf393",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "close": {
+          "file": "goldens/close.jpg",
+          "sha256": "ee7e087aa6571589d37088fd74801c014758f5787a939eccedacf1a9e805e483",
+          "source_sha256": "1c592d22698765ec771e11d390f431cf7cd3fc91ae3a9800a21cbaa729587251",
+          "size": [
+            540,
+            960
+          ]
+        }
+      },
+      "frozen_on": "2026-11-18"
+    }
+  },
+  "status": "frozen"
+}
