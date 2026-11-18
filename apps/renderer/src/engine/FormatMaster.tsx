@@ -92,12 +92,32 @@ function cameraView(profile: MotionProfile | undefined, beat: EngineBeat, slots:
  *  beat with none shows the photograph sharp (focus 0), both in one grade (treatments/Grade.tsx), and the focus racks
  *  across RACK_FRAMES after a cut between the two kinds, so the picture never says the same thing twice. */
 const RACK_FRAMES = 12
+const FIGURE_DEVICES = new Set(['kinetic_stat', 'stat_strip'])
 export function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number {
   const kind = (b: EngineBeat) => (b.uses.length > 0 ? 1 : 0)
   const index = beats.indexOf(beat), before = index > 0 ? beats[index - 1]! : undefined
   const from = before?.backdrop ? kind(before) : kind(beat), to = kind(beat)
   const t = Math.min(1, Math.max(0, (frame - beat.fromFrame) / RACK_FRAMES)), eased = t * t * (3 - 2 * t)
   return from + (to - from) * eased
+}
+
+/** The title frame carries the wordmark (config/brand-palette.json logo_rule: the logo only on the title frame and the
+ *  close; Krish, 2026-11-18: "ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME"): it fades in under the
+ *  finished title and leaves with it. */
+function titleWordmark(props: EngineRenderProps, frame: number, stage: { left: number; top: number; width: number; height: number }) {
+  const moment = props.titleMoment
+  if (!moment) return null
+  const landed = Math.max(...moment.words.map((w) => w.atFrame)) + 6
+  const fadeIn = Math.min(1, Math.max(0, (frame - landed) / 8)), fadeOut = Math.min(1, Math.max(0, (moment.toFrame - frame) / 10))
+  const opacity = Math.min(fadeIn, fadeOut)
+  if (opacity <= 0) return null
+  const logo = props.brand.logo
+  // Tall: centred under the title. Wide: on the panel's right, clear of the caption that returns on its left.
+  const wide = props.aspect === '16:9'
+  const w = Math.min(stage.width * (wide ? 0.5 : 0.56), 640), h = w * logo.pixelHeight / logo.pixelWidth
+  const left = wide ? stage.left + stage.width * 0.95 - w : stage.left + (stage.width - w) / 2
+  return <Img data-title-wordmark src={logo.src} style={{ position: 'absolute', left,
+    top: stage.top + stage.height - h - stage.height * 0.07, width: w, height: h, opacity }} />
 }
 
 function Backdrop({ src, tokens, focus, frame, width, height }: { src: string; tokens: EngineRenderProps['tokens']; focus: number; frame: number; width: number; height: number }) {
@@ -289,7 +309,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
               return (
                 <AbsoluteFill key={id} style={{ ...(placement ? { left: placement.left, top: placement.top, width: placement.width, height: placement.height, transform: `scale(${placement.scale})`, transformOrigin: 'top left' } : beat.layout === 'SPLIT' ? {} : { clipPath }),
                   // Everything outside the proof dims (living-ui), once the camera is on it.
-                  ...(motion && index !== (view?.focusIndex ?? 0) && motion.dim < 1 ? { opacity: motion.dim } : {}),
+                  // A figure is never dimmed: a number on screen is read, not set dressing (Tue 17, 18 Nov 2026: the
+                  // ban share and the 41 votes went dark behind the block).
+                  ...(motion && index !== (view?.focusIndex ?? 0) && motion.dim < 1 && !FIGURE_DEVICES.has(object.device) ? { opacity: motion.dim } : {}),
                   // paper-cutout: a card or logo tile is cut out with a torn edge and a hard shadow.
                   ...(cutout ? { filter: `url(#torn-${beat.id})` } : {}) }}>
                   {pose ? <div data-cutout={id} style={{ position: 'absolute', inset: 0,
@@ -336,6 +358,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         frame={frame} aspect={props.aspect} width={width} height={height}
         stage={stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height }}
         captionBox={band(props)} tokens={props.tokens as unknown as Record<string, string>} />
+      {titleWordmark(props, frame, stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height })}
     </AbsoluteFill>) : null
   // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.
   const stagingGround = stagedNow && !stagedNow.rises ? (

@@ -396,9 +396,8 @@ def title_moment_props(spec: dict, cut_id: str, rows: list[dict], duration: int)
     holder = next((b for b in spec['cuts'][cut_id].get('beats', []) if b['span']['from_w'] <= span['to_w'] <= b['span']['to_w']), None)
     end_w = holder['span']['to_w'] if holder else span['to_w']
     after = next((row['atFrame'] for row in rows if row['w'] > end_w), duration)
-    resumes = next((row['atFrame'] for row in rows if row['w'] > span['to_w']), duration)
     return {'fromFrame': said[0]['atFrame'], 'toFrame': after, 'span': (span['from_w'], span['to_w']),
-            'release': 'fade' if resumes < after else 'captions',
+            'release': 'captions',  # the captions stay away while it holds, so it always flows back into them
             'words': [{'text': row['text'][:1].upper() + row['text'][1:] if i == 0 else row['text'], 'atFrame': row['atFrame']}
                       for i, row in enumerate(said)]}
 
@@ -607,7 +606,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     word_mode = spec['brand'].get('captions') == 'word' and not picked_theme
     moment = title_moment_props(spec, cut_id, rows, duration)
     # The captions step aside for the title's words, so they appear once (docs/ve/INGREDIENTS.md, the episode title moment).
-    spoken = [row for row in rows if not (moment and moment['span'][0] <= row['w'] <= moment['span'][1])]
+    # They stay away while the title holds too, so no lone caption word sits under it (Tue 17, 18 Nov: "find" under
+    # the held title); the title flows back into the caption line as the next caption starts.
+    spoken = [row for row in rows if not (moment and (moment['span'][0] <= row['w'] <= moment['span'][1]
+                                                      or moment['fromFrame'] <= row['atFrame'] < moment['toFrame']))]
     groups = [[row] for row in spoken] if word_mode else \
         [g for part in _zone_runs(spoken, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
     captions = []
