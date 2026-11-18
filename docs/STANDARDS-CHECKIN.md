@@ -34,6 +34,16 @@ His answers apply exactly as the 23 were relayed on 15 Nov: the one decision wri
 (`apps/control-plane/api/_learningDecision.ts`), status only while proposed, `decided_by` 'Krish', his words only on a
 correction. The builder never decides anything, and the public log carries counts and keys only.
 
+## The grouping pull request
+
+The job opens its grouping pull request with `CHECKIN_PR_TOKEN` (Ruling, Krish, 2026-11-18), a fine-grained GitHub
+token limited to krishanraja/content-engine with Contents and Pull requests set to read and write, kept as a repository
+secret. A pull request opened with GitHub's own token starts no CI until a person presses "Approve and run", so
+auto-merge.yml never saw it (18 Nov). With the token its CI runs and auto-merge.yml merges it on green. The pull request
+carries its own closeout note (`now-notes/<date>-standards-checkin-<run>.md`, counts only). Without the secret the run
+warns and falls back to GitHub's own token, and the pull request waits for his "Approve and run". When the token
+expires, the run's warning is the sign: Krish makes a new one and replaces the secret.
+
 ## Run it
 
 ```
