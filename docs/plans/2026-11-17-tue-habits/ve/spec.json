@@ -564,7 +564,7 @@
   {
    "obj": "plate-b22",
    "device": "photo_plate",
-   "meaning": "his own screen: reading every line, the cursor over Send, not clicking",
+   "meaning": "a draft read line by line, the cursor over Send, not clicking (Codex built it, his call of 18 Nov)",
    "persist": {
     "from_beat": "b22",
     "to_beat": "b22"
@@ -577,6 +577,8 @@
      "trimBeforeFrames": 0
     },
     "push": 0.03,
+    "scrim": 0.4,
+    "generated": true,
     "regions": {
      "send": {
       "x": 0.55,
@@ -738,12 +740,14 @@
   },
   {
    "id": "b22-screen",
-   "kind": "recording",
-   "origin": "capture",
+   "kind": "broll",
+   "origin": "generated",
    "path": "capture/b22-screen.mp4",
-   "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-   "licence": "his own screen recording",
-   "credit": "makeyourmindup"
+   "sha256": "5c8a52d60978be0ad1423ad089103d310e319607cd186a0d6b04ca834a09f1ce",
+   "licence": "built by Codex from a code-made email draft and recorded with Playwright; no third-party rights",
+   "tool": "codex.playwright_capture",
+   "job_id": "01a1efa5-ff4d-7cf2-bc11-eca9de2b3be3",
+   "prompt_ref": "docs/ve/cards/habits/habits-b22-1.md"
   },
   {
    "id": "master",
