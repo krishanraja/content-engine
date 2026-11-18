@@ -347,6 +347,58 @@
    }
   },
   {
+   "obj": "plate-b11",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b11",
+   "persist": {
+    "from_beat": "b11",
+    "to_beat": "b11"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b11-boss.png",
+     "pixelWidth": 941,
+     "pixelHeight": 1672
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "pen": {
+      "x": 0.15,
+      "y": 0.58,
+      "w": 0.7,
+      "h": 0.22
+     }
+    }
+   }
+  },
+  {
+   "obj": "plate-b14",
+   "device": "photo_plate",
+   "meaning": "the generated picture on b14",
+   "persist": {
+    "from_beat": "b14",
+    "to_beat": "b14"
+   },
+   "params": {
+    "image": {
+     "src": "gen/b14-stampers.png",
+     "pixelWidth": 941,
+     "pixelHeight": 1672
+    },
+    "push": 0.06,
+    "generated": true,
+    "regions": {
+     "stamps": {
+      "x": 0.25,
+      "y": 0.4,
+      "w": 0.7,
+      "h": 0.35
+     }
+    }
+   }
+  },
+  {
    "obj": "excuse",
    "device": "stamp",
    "meaning": "the old excuse stamped void, in ink, never in caption type (his note of 18 Nov)",
@@ -392,7 +444,7 @@
    "device": "photo_plate",
    "meaning": "IBM's own release, the 71% clause highlighted as he says it",
    "persist": {
-    "from_beat": "b11",
+    "from_beat": "b12",
     "to_beat": "b12"
    },
    "params": {
@@ -400,7 +452,7 @@
      "src": "screens/b11-ibm.mp4",
      "pixelWidth": 1080,
      "pixelHeight": 1920,
-     "trimBeforeFrames": 0
+     "trimBeforeFrames": 60
     },
     "push": 0.0
    }
@@ -422,24 +474,6 @@
     },
     "push": 0.0,
     "generated": true
-   }
-  },
-  {
-   "obj": "screen-ibm29",
-   "device": "photo_plate",
-   "meaning": "the same release, the staff's 29% highlighted",
-   "persist": {
-    "from_beat": "b14",
-    "to_beat": "b14"
-   },
-   "params": {
-    "video": {
-     "src": "screens/b14-ibm29.mp4",
-     "pixelWidth": 1080,
-     "pixelHeight": 1920,
-     "trimBeforeFrames": 0
-    },
-    "push": 0.0
    }
   },
   {
@@ -736,6 +770,28 @@
    "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b17-boxes.png"
   },
   {
+   "id": "gen-boss",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b11-boss.png",
+   "sha256": "52f842672fae463551ea72be097f058f2c9ddadb2f7a9ba2161b1a822e0a6b7d",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b11-boss.png"
+  },
+  {
+   "id": "gen-stampers",
+   "kind": "illustration",
+   "origin": "generated",
+   "path": "gen/b14-stampers.png",
+   "sha256": "d4d63df85dc36bd0a7e19b992fba77211e70d77967f866706a42289b3af110d7",
+   "licence": "generated for makeyourmindup by Codex image generation (ChatGPT plan); no third-party rights",
+   "tool": "codex.image_generation",
+   "job_id": "01a1ef72-73c1-7e51-a1f9-3ae1c17e294a",
+   "prompt_ref": ".scratch/ve/habits/gen/manifest.json#b14-stampers.png"
+  },
+  {
    "id": "iihs-driver",
    "kind": "recording",
    "origin": "source",
@@ -800,7 +856,7 @@
    "kind": "recording",
    "origin": "capture",
    "path": "screens/b3-posts.mp4",
-   "sha256": "4e09347cbd816db160d910e2ea34edc7eaf8b57a298932eaa1096a1b293c5635",
+   "sha256": "93c98ee3804340a42bb604ca58ca551ce0a5ac3cf27b9e7a11a323bff6bd0866",
    "licence": "the publisher's own published page or post, recorded from its own page, credited",
    "credit": "Bluesky posts, links in the spec",
    "source_url": "https://bsky.app"
@@ -810,7 +866,7 @@
    "kind": "recording",
    "origin": "capture",
    "path": "screens/b11-ibm.mp4",
-   "sha256": "a879a1f0436e32f993a9f6bf3138e86d26594d7b7447a4b85d0b8f6219df5c5f",
+   "sha256": "95eb6fe6d6d85f91d6ade45596c0b0d926d99ccc6a3be33caa05ee70506f8895",
    "licence": "the publisher's own published page or post, recorded from its own page, credited",
    "credit": "IBM Newsroom, 21 Sep 2026",
    "source_url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities"
@@ -820,28 +876,18 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b13-overrule.mp4",
-   "sha256": "5c6c613a0229d160e26f4b046ecfad7c49b2c871267f5db96028b24136ea5392",
+   "sha256": "e7b731adab44614ade22a3f4f76c3faf0bc3aa99ab772c5d84068db385679998",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
    "prompt_ref": "docs/ve/cards/habits/habits-screens-1.md"
   },
   {
-   "id": "screen-ibm29",
-   "kind": "recording",
-   "origin": "capture",
-   "path": "screens/b14-ibm29.mp4",
-   "sha256": "f72d4997829e22ccda242faed4477497c3977a37861ba78e5fdfe0a3f7170f0c",
-   "licence": "the publisher's own published page or post, recorded from its own page, credited",
-   "credit": "IBM Newsroom, 21 Sep 2026",
-   "source_url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities"
-  },
-  {
    "id": "screen-forward",
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b19-forward.mp4",
-   "sha256": "e668982ad75dd24c0208f8379c4ebacbe6133b0cf8ea8c78f7cc4df3bda1a06d",
+   "sha256": "c1e952e4e8e8570fbe8124e3ea73a01fae16c69c3403eb29db61e28dd39775d2",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
@@ -852,7 +898,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b20-resign.mp4",
-   "sha256": "2ebc7565019b2ef9c07959f936c35d06da0c627669f31e2284dac281143e6a69",
+   "sha256": "10662b8500a6ee3152bf77d6a4dbb49e9b4bd3ea5810fe6b972071695388a13a",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
@@ -1303,21 +1349,28 @@
       "from_w": 121,
       "to_w": 125
      },
-     "viewer_task": "inspect_artifact",
-     "point": "Bosses already get it, and here is the study that shows it",
+     "viewer_task": "feel_stakes",
+     "point": "Bosses already get it: they check the AI line by line",
      "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "screen-ibm"
+      "plate-b11"
      ],
      "events": [
       {
        "at_w": 121,
-       "obj": "screen-ibm",
+       "obj": "plate-b11",
        "verb": "enter",
        "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 124,
+       "obj": "plate-b11",
+       "verb": "move",
+       "to_state": "pen",
        "silent": true
       }
      ]
@@ -1338,8 +1391,16 @@
      "uses": [
       "screen-ibm"
      ],
-     "events": [],
-     "override_reason": "IBM's own page carries the number: it scrolls to the paragraph and the 71% clause is highlighted as he says it, so a typed stat would only repeat it"
+     "events": [
+      {
+       "at_w": 126,
+       "obj": "screen-ibm",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "override_reason": "IBM's own page carries the number: the 71% clause is highlighted on the page as he says it, so a typed stat would only repeat it"
     },
     {
      "id": "b13",
@@ -1375,25 +1436,32 @@
       "from_w": 154,
       "to_w": 166
      },
-     "viewer_task": "verify_evidence",
-     "point": "Only 29% of staff even rank judgment as important",
+     "viewer_task": "feel_stakes",
+     "point": "Only 29% of staff even rank judgment as important: approvals on autopilot",
      "layout": "STAGE",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "screen-ibm29"
+      "plate-b14"
      ],
      "events": [
       {
        "at_w": 154,
-       "obj": "screen-ibm29",
+       "obj": "plate-b14",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
+      },
+      {
+       "at_w": 161,
+       "obj": "plate-b14",
+       "verb": "move",
+       "to_state": "stamps",
+       "silent": true
       }
      ],
-     "override_reason": "IBM's own page carries the 29%, highlighted on the page as he says it; a typed stat would repeat it"
+     "override_reason": "IBM's page in b12 shows the 29% in the same paragraph; this beat shows what it looks like, so a typed stat would only repeat it"
     },
     {
      "id": "b15",

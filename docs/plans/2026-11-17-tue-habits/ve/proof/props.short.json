@@ -183,7 +183,7 @@
       "fromFrame": 0,
       "toFrame": 20,
       "uses": [
-        "screen-ibm"
+        "plate-b11"
       ],
       "transitionOut": "cut",
       "sectionBeat": true,
@@ -227,10 +227,35 @@
   ],
   "objects": [
     {
+      "obj": "plate-b11",
+      "device": "photo_plate",
+      "meaning": "the generated picture on b11",
+      "fromFrame": 0,
+      "toFrame": 20,
+      "variants": {},
+      "params": {
+        "image": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b11-boss.png",
+          "pixelWidth": 941,
+          "pixelHeight": 1672
+        },
+        "push": 0.06,
+        "generated": true,
+        "regions": {
+          "pen": {
+            "x": 0.15,
+            "y": 0.58,
+            "w": 0.7,
+            "h": 0.22
+          }
+        }
+      }
+    },
+    {
       "obj": "screen-ibm",
       "device": "photo_plate",
       "meaning": "IBM's own release, the 71% clause highlighted as he says it",
-      "fromFrame": 0,
+      "fromFrame": 20,
       "toFrame": 220,
       "variants": {},
       "params": {
@@ -238,7 +263,7 @@
           "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b11-ibm.mp4",
           "pixelWidth": 1080,
           "pixelHeight": 1920,
-          "trimBeforeFrames": 0
+          "trimBeforeFrames": 60
         },
         "push": 0
       }
@@ -265,10 +290,24 @@
   "events": [
     {
       "id": "b11-0",
-      "obj": "screen-ibm",
+      "obj": "plate-b11",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 0
+    },
+    {
+      "id": "b11-1",
+      "obj": "plate-b11",
+      "verb": "move",
+      "toState": "pen",
+      "atFrame": 0
+    },
+    {
+      "id": "b12-0",
+      "obj": "screen-ibm",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 20
     },
     {
       "id": "b13-0",

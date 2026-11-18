@@ -10,8 +10,8 @@
     38.0,
     44.667
   ],
-  "sha256": "ae9d47d4693e309b279a208abe146d11ef340db949c019ff27e52283b2ee2b16",
-  "spec_sha256": "61c0174b97dccf9ff2fea46106baeef5435523218ddc02a67b3a03c61ef62c74",
+  "sha256": "d3d66e954f83b7e965bf7e2f00f02bd5b7221c00cf0f2fc4d29e2c66c56b46c9",
+  "spec_sha256": "bcfc9a83ecdd50e92750901ffdd4cf5bfd30ea89111753a78e4dd1f7a5e8d82e",
   "structure": {
     "format": "voice-led-pictures",
     "aspect": "9:16",
@@ -39,6 +39,14 @@
       ],
       [
         "plate-b10a",
+        "photo_plate"
+      ],
+      [
+        "plate-b11",
+        "photo_plate"
+      ],
+      [
+        "plate-b14",
         "photo_plate"
       ],
       [
@@ -87,10 +95,6 @@
       ],
       [
         "screen-ibm",
-        "photo_plate"
-      ],
-      [
-        "screen-ibm29",
         "photo_plate"
       ],
       [
@@ -193,7 +197,7 @@
         "b11",
         "STAGE",
         [
-          "screen-ibm"
+          "plate-b11"
         ]
       ],
       [
@@ -214,7 +218,7 @@
         "b14",
         "STAGE",
         [
-          "screen-ibm29"
+          "plate-b14"
         ]
       ],
       [
@@ -299,7 +303,7 @@
     ]
   },
   "style_module": "swiss-kinetic-type",
-  "props_sha256": "8dfe24b1c7734f8262d216d64606e4169445b604950691437f72d2093eb88e50",
+  "props_sha256": "fa41e5175c43c893b948f5df0a472c3fbe0027d52334ff2e747132c391e97604",
   "type": [
     [
       "data",
