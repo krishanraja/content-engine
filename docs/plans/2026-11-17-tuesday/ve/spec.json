@@ -286,8 +286,8 @@
    "device": "evidence_card",
    "meaning": "the real headline that ousted Piqua's mayor",
    "persist": {
-    "from_beat": "l1",
-    "to_beat": "l1"
+    "from_beat": "hook",
+    "to_beat": "hook"
    },
    "params": {
     "kind": "screenshot",
@@ -302,8 +302,8 @@
    "device": "stamp",
    "meaning": "the vote that removed him, stamped on the headline",
    "persist": {
-    "from_beat": "l1",
-    "to_beat": "l1"
+    "from_beat": "hook",
+    "to_beat": "hook"
    },
    "params": {
     "kind": "outline",
@@ -395,8 +395,8 @@
    "device": "kinetic_stat",
    "meaning": "the share of Piqua votes for the ban",
    "persist": {
-    "from_beat": "l10",
-    "to_beat": "l10"
+    "from_beat": "proof",
+    "to_beat": "proof"
    },
    "params": {},
    "dataset": "piqua-ban"
@@ -1498,7 +1498,7 @@
    },
    "beats": [
     {
-     "id": "l1",
+     "id": "hook",
      "role": "hook",
      "span": {
       "from_w": 0,
@@ -1637,7 +1637,7 @@
      "backdrop": "asset:bg-city-dusk"
     },
     {
-     "id": "l6",
+     "id": "face",
      "role": "bridge",
      "span": {
       "from_w": 149,
@@ -1751,7 +1751,7 @@
      "backdrop": "asset:bg-pylons"
     },
     {
-     "id": "l10",
+     "id": "proof",
      "role": "anchor",
      "span": {
       "from_w": 295,
@@ -2372,7 +2372,7 @@
      "backdrop": "asset:piqua-north-main"
     },
     {
-     "id": "l29",
+     "id": "close",
      "role": "bridge",
      "span": {
       "from_w": 1053,

@@ -30,9 +30,11 @@ class TitleMomentTest(unittest.TestCase):
         self.assertEqual([w['atFrame'] for w in got['words']], [10, 20, 30, 40, 50])
         self.assertEqual((got['fromFrame'], got['toFrame'], got['release']), (10, 60, 'captions'))
 
-    def test_a_title_held_through_its_beat_fades_where_it_stands(self):
+    def test_a_title_held_through_its_beat_flows_back_into_the_captions(self):
+        # The captions stay away while it holds (compile drops every word inside [fromFrame, toFrame)), so no lone
+        # caption word sits under the title, and it flows back into the caption line at the end.
         got = title_moment_props(spec({'from_w': 1, 'to_w': 5}, [{'span': {'from_w': 1, 'to_w': 8}}]), 'short', ROWS, 200)
-        self.assertEqual((got['toFrame'], got['release']), (90, 'fade'))
+        self.assertEqual((got['toFrame'], got['release']), (90, 'captions'))
 
     def test_a_span_the_cut_does_not_hold_is_refused(self):
         with self.assertRaises(ValueError):
