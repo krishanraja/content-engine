@@ -1,3 +1,0 @@
-Status: Every piece's production picks on the live board now carry an "Add an experiment" tick-box beside the look, motion and captions (view contract 1.27.0). It is saved as meta.style.experiment through the style route and survives his other picks. Once ticked, the production prompt tells the session to run directed-shoot alongside his picks. The hannah-fry check now runs automatically and silently on every script any session writes, off-day voiceovers included: fixes happen before he sees the words, and nothing is shown to him.
-Next: Check that Control Centre draws the new tick-box press on this week's pieces, and fix it there if it does not.
-North Star check (2026-11-18): holds.
