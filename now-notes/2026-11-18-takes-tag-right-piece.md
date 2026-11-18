@@ -1,3 +1,0 @@
-Status: My takes are in the Inbox now matches a take by every name the board shows for each piece of the week and refuses when the Inbox holds several recordings and no name says which is this piece's; the data-centres piece (b019dbf8) was repaired to its two takes, the other four kept under meta.takes_in.repaired. The production plan (contract 1.29.0) gives each picture its lever, maker, why and basis (script or research) and lists what Krish fetches; the post-production prompt carries each take's Drive link and shows him mocks as it goes.
-Next: once merged, re-run the data-centres production plan so it carries levers, makers and the fetch list, and draw those fields on Control Centre's plan view.
-North Star check (2026-11-18): holds.
