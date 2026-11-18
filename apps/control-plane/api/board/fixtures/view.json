@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.27.0",
+ "contract_version": "1.28.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -1554,7 +1554,8 @@
       "picked_by": "Krish",
       "picked_at": "2026-11-15T10:00:00Z"
      },
-     "experiment": null
+     "experiment": null,
+     "experiment_idea": null
     },
     "stages": [
      {
@@ -4506,7 +4507,8 @@
       "picked_by": null,
       "picked_at": null
      },
-     "experiment": null
+     "experiment": null,
+     "experiment_idea": null
     },
     "stages": [
      {
@@ -7601,7 +7603,8 @@
       "picked_by": null,
       "picked_at": null
      },
-     "experiment": null
+     "experiment": null,
+     "experiment_idea": null
     },
     "stages": [
      {
@@ -9870,27 +9873,22 @@
        },
        {
         "kind": "press",
-        "label": "Add an experiment",
+        "label": "Add an experiment (optional)",
         "op": "style",
         "body": {
          "piece_id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
-         "experiment": []
-        },
-        "stamp": [],
-        "choose": {
-         "path": "experiment",
-         "ask": "Run an experiment alongside your picks?",
-         "multi": true,
-         "required": false,
-         "options": [
-          {
-           "value": "directed-shoot",
-           "label": "Directed shoot",
-           "line": "An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend."
-          }
+         "experiment": [
+          "directed-shoot"
          ]
         },
-        "done": "Saved. The production session runs it alongside your picks."
+        "stamp": [],
+        "words": {
+         "path": "experiment_idea",
+         "ask": "What do you want to experiment with, and how? Say it in your own words: the idea, what happens to you on camera, and the point it should land.",
+         "required": true
+        },
+        "goes": "Optional. Directed shoot: An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend. The production session fleshes out you…",
+        "done": "Saved. The Claude production prompt now carries your idea, and the session brings you mocks to keep or drop."
        },
        {
         "kind": "prompt",
@@ -10523,27 +10521,22 @@
        },
        {
         "kind": "press",
-        "label": "Add an experiment",
+        "label": "Add an experiment (optional)",
         "op": "style",
         "body": {
          "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
-         "experiment": []
-        },
-        "stamp": [],
-        "choose": {
-         "path": "experiment",
-         "ask": "Run an experiment alongside your picks?",
-         "multi": true,
-         "required": false,
-         "options": [
-          {
-           "value": "directed-shoot",
-           "label": "Directed shoot",
-           "line": "An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend."
-          }
+         "experiment": [
+          "directed-shoot"
          ]
         },
-        "done": "Saved. The production session runs it alongside your picks."
+        "stamp": [],
+        "words": {
+         "path": "experiment_idea",
+         "ask": "What do you want to experiment with, and how? Say it in your own words: the idea, what happens to you on camera, and the point it should land.",
+         "required": true
+        },
+        "goes": "Optional. Directed shoot: An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend. The production session fleshes out you…",
+        "done": "Saved. The Claude production prompt now carries your idea, and the session brings you mocks to keep or drop."
        }
       ],
       "line": "Branded. Pick the look: the recommended one, another, or fold in your inspiration. No approved scripts are filed yet: if you approved them in a session, file them from that session.",
@@ -11549,28 +11542,23 @@
        },
        {
         "kind": "press",
-        "label": "Add an experiment",
+        "label": "Add an experiment (optional)",
         "op": "style",
         "body": {
          "piece_id": "474cd077-a4ea-4d79-8219-13ad3f8c12aa",
-         "experiment": [],
+         "experiment": [
+          "directed-shoot"
+         ],
          "item": "off-sat-goodnews"
         },
         "stamp": [],
-        "choose": {
-         "path": "experiment",
-         "ask": "Run an experiment alongside your picks?",
-         "multi": true,
-         "required": false,
-         "options": [
-          {
-           "value": "directed-shoot",
-           "label": "Directed shoot",
-           "line": "An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend."
-          }
-         ]
+        "words": {
+         "path": "experiment_idea",
+         "ask": "What do you want to experiment with, and how? Say it in your own words: the idea, what happens to you on camera, and the point it should land.",
+         "required": true
         },
-        "done": "Saved. The production session runs it alongside your picks."
+        "goes": "Optional. Directed shoot: An experiment you act out from a shot script, transformed with AI in post: space, clones, turning into someone else, anything. Stills and a price come to you before any spend. The production session fleshes out you…",
+        "done": "Saved. The Claude production prompt now carries your idea, and the session brings you mocks to keep or drop."
        },
        {
         "kind": "press",

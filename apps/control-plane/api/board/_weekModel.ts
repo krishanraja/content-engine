@@ -281,19 +281,27 @@ function layerPress(pieceId: string, style: DayStyle, layer: 'treatment' | 'moti
 export function lookPresses(pieceId: string, style: DayStyle | null | undefined): PressAction[] {
   if (!style) return []
   const layers = (['treatment', 'motion', 'captions'] as const).map(l => layerPress(pieceId, style, l)).filter((x): x is PressAction => Boolean(x))
-  return [...layers, experimentPress(pieceId, style)]
+  return [...layers, ...experimentPresses(pieceId, style)]
 }
 
-/** His experiment tick, beside the look, motion and captions on every piece (contract 1.27.0; Krish, 2026-11-18: "add a
- *  checkbox on every future piece that I'm planning ... Make it available as a feature in all"): one tick-box per
- *  experiment, saved through the style route (meta.style.experiment). Unticked sends none, which takes it off. */
-function experimentPress(pieceId: string, style: DayStyle): PressAction {
+/** His experiment, beside the look, motion and captions on every piece and never one of them (contract 1.28.0; Krish,
+ *  2026-11-18: "It should be an optional tick box, separate to the three things I need to pick as mandatory. If I were
+ *  to tick the tick box, I'd need to supply more long-form input as to what I think we should experiment with and
+ *  how"). No choice list, so the board never counts it as a pick: off, one optional press that asks for his idea in his
+ *  words; on, a press to change the idea and one to take the experiment off. Saved through the style route. */
+function experimentPresses(pieceId: string, style: DayStyle): PressAction[] {
   const on = style.experiment ?? null
-  const options = EXPERIMENTS.map(e => ({ value: e.id, label: `${e.name}${e.id === on ? ' (on)' : ''}`, line: cut(e.line, 240) }))
-  return { kind: 'press', label: on ? 'Experiment: directed shoot is on' : 'Add an experiment', op: 'style',
-    body: { piece_id: pieceId, experiment: [] }, stamp: [],
-    choose: { path: 'experiment', ask: 'Run an experiment alongside your picks?', multi: true, required: false, options },
-    done: 'Saved. The production session runs it alongside your picks.' } as PressAction
+  const ask = 'What do you want to experiment with, and how? Say it in your own words: the idea, what happens to you on camera, and the point it should land.'
+  const tick = (label: string, goes: string): PressAction => ({ kind: 'press', label, op: 'style',
+    body: { piece_id: pieceId, experiment: [EXPERIMENTS[0].id] }, stamp: [],
+    words: { path: 'experiment_idea', ask, required: true }, goes,
+    done: 'Saved. The Claude production prompt now carries your idea, and the session brings you mocks to keep or drop.' } as PressAction)
+  if (!on) return [tick('Add an experiment (optional)', `Optional. ${EXPERIMENTS[0].name}: ${EXPERIMENTS[0].line} The production session fleshes out your idea and shows you mocks before anything is made.`)]
+  return [
+    tick('Change the experiment', `Your idea now: "${cut(style.experiment_idea ?? '', 400)}". Saving replaces it.`),
+    { kind: 'press', label: 'Remove the experiment', op: 'style', body: { piece_id: pieceId, experiment: [] }, stamp: [],
+      done: 'Removed. The piece is made from your three picks alone.' } as PressAction,
+  ]
 }
 
 /**
@@ -925,7 +933,11 @@ export function productionStage(m: ModelInputs, p: { pieceId: string; title: str
   const decisions = [picked('treatment', 'The look'), picked('motion', 'The motion style'), picked('captions', 'The captions'),
     approval ? `The scripts: approved by Krish${approval.on ? ` on ${approval.on}` : ''}${approval.words ? `, in his words "${cut(approval.words, 160)}"` : ''}; the words are below.` : 'The scripts: approved by Krish.']
     .filter((x): x is string => Boolean(x))
-  if (p.style?.experiment) decisions.push(`The experiment: ${p.style.experiment}, ticked by Krish. Run the ${p.style.experiment} skill (.agents/skills/${p.style.experiment}/SKILL.md) alongside his picks: its shot script goes to him before he records, and nothing is generated before his yes to the stills and the price.`)
+  if (p.style?.experiment) decisions.push([
+    `The experiment: ${p.style.experiment}, ticked by Krish, alongside his three picks, never in their place. His idea, in his words:`,
+    `"${cut(p.style.experiment_idea ?? '', 4000)}"`,
+    `Before anything else on it, read .agents/skills/${p.style.experiment}/SKILL.md, then: (1) flesh his idea out into one concept, the point it lands, the format, and each transformation with its trigger; (2) draw 3 to 5 mock frames of the key moments in this session at no cost (scripts/pages/render_figure.mjs, before and after side by side) and show them to him; (3) ask him one question: go with the experiment, change it, or call it. Only on his go: the shot script, then priced AI stills for his yes. If he calls it, carry on with his three picks alone and remove the tick.`,
+  ].join('\n'))
   const word = { treatment: 'the look', motion: 'the motion style', captions: 'the captions' }
   for (const l of layers) decisions.push(`Not picked yet: ${word[l]}. Use the option marked recommended on the board, say so in your done report, and leave his Pick press open.`)
   // The production plan (_productionPlan.ts): being made once his takes are in, then ready for his review and swaps; the

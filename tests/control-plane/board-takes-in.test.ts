@@ -182,10 +182,14 @@ describe('after his Approve scripts, every card waits on his takes, then makes o
   })
 
   it('his experiment tick rides in the one-shot prompt: the session runs that skill beside his picks (1.27.0)', () => {
-    const on = card(inputs({ ...PICKED, style: { ...PICKED.style, experiment: 'directed-shoot' }, takes_in: TAKES }))
+    const idea = 'Turn me into Sam Altman for one line while I explain who owns the model.'
+    const on = card(inputs({ ...PICKED, style: { ...PICKED.style, experiment: 'directed-shoot', experiment_idea: idea }, takes_in: TAKES }))
     const p = String((on.next as Body).prompt)
-    expect(p).toContain('The experiment: directed-shoot, ticked by Krish.')
+    expect(p).toContain('The experiment: directed-shoot, ticked by Krish, alongside his three picks')
+    expect(p).toContain(`"${idea}"`)
     expect(p).toContain('.agents/skills/directed-shoot/SKILL.md')
+    expect(p).toMatch(/mock frames/)
+    expect(p).toMatch(/go with the experiment, change it, or call it/)
     expect(String((card(inputs({ ...PICKED, takes_in: TAKES })).next as Body).prompt)).not.toContain('The experiment:')
   })
 
