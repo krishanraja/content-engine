@@ -1,3 +1,5 @@
+import { Device as FacilityBlock } from './facility_block'
+import { Device as CreditMeter } from './credit_meter'
 import { Device as ToyObject } from './toy_object'
 import { Device as FlatMechanism } from './flat_mechanism'
 import { Device as MorphStage } from './morph_stage'
@@ -53,6 +55,8 @@ import { Device as ReceiptPrint } from './receipt_print'
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
+  facility_block: FacilityBlock,
+  credit_meter: CreditMeter,
   toy_object: ToyObject,
   flat_mechanism: FlatMechanism,
   morph_stage: MorphStage,
