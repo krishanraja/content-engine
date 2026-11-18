@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
 as_of: 2026-11-18
-head: e7b785b
+head: b0ca88d
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -44,7 +44,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-18 scripts/voice/script_audit.py, scripts/voice/spoken_delta.py (compare_tokens), apps/control-plane/api/_making.ts (script_audit), apps/control-plane/api/learning/_scriptAudit.ts, learning/script-audit.ts, learning/compile.ts, produce-video and make-piece skills, tests.
+- 2026-11-18 A three-way script audit runs after every recorded cut: the draft he was shown, the words his Approve sent to Teleprompter and what he said on the take, compared deterministically with no model call (`scripts/voice/script_audit.py`, `a49b0b71`). `ve ingest` now runs it as soon as a take's clocks are written (`95213553`), and a word he swaps in two or more pieces is proposed as a habit; only one he keeps reaches the Scripts step. First run on Wed 11 found the draft missing, because drafts lived only in the repository.
 Older lines: `docs/history/2026-11-18-NOW-moved-3.md` (it names every earlier move) and `LOG.md`.
 
 
