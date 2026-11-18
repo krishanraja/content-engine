@@ -11,8 +11,21 @@ refute pass and reviewer as every option, and only Krish's presses put anything 
         provoke: sparks for one day's wildcard slot (2 model calls, about $0.15), after the chain cap check
     python3 divergent.py score IDEAS.json --sources SOURCES.json
         the repeat guard: every option on the board against what went out (zero model calls: `obvious` is given)
-    python3 divergent.py record [ITEM ...] [--live SOURCES.json] [--label L]
+    python3 divergent.py record [ITEM ...] [--live SOURCES.json] [--items-file F] [--label L] [--lane NAME]
         what went live, into the archive the wildcard and the guard read (zero model calls; the engine skips repeats)
+
+At will, for any session (docs/DIVERGENT.md says when): each prints the engine's answer for the session to read and
+writes nothing to any board. Paid ops check the chain cap first and are refused over it.
+
+    python3 divergent.py map --problem "..." [--context "..."]                           the obvious answers (1 call)
+    python3 divergent.py provoke --problem "..." [--count N] [--temperament wild] ...     sparks (2 calls, about $0.15)
+    python3 divergent.py challenge --problem "..." --idea "..." [--context "..."]        attack one idea (3 calls)
+    python3 divergent.py diverge --problem "..." [--count N] ...                         a full run (about 25 calls,
+                                                                                          about $1.30, 1 a day)
+    python3 divergent.py score --problem "..." --ideas-file F [--obvious-file F] [--judge]
+        free with --obvious-file and no --judge; otherwise the engine spends calls to find the obvious, so it is paid
+    Shared flags: --context, --cliche (repeatable), --target (default writing), --temperament, --lane NAME (namespace
+    content-engine:<lane>, default ideas). A file is a JSON list of strings, or plain text with one item a line.
 
 Through Control Center's `POST /api/divergent/content-engine` on the engine's operator key ENGINE_OPERATOR_TOKEN (the
 same key humour_check.py uses), namespace `content-engine:ideas`. Its calls are metered as agent
@@ -38,6 +51,12 @@ CALLER = 'content-engine'
 NAMESPACE = 'content-engine:ideas'
 TOKEN_ENV = 'ENGINE_OPERATOR_TOKEN'
 EXIT = {'ok': 0, 'pass': 0, 'flagged': 1, 'unavailable': 2, 'refused': 2}
+LANE = re.compile(r'^[a-z0-9-]+$')  # the route's namespace rule: content-engine:<lane>
+TARGETS = ('generic', 'code', 'writing', 'research', 'strategy', 'design', 'video', 'product')
+TEMPERAMENTS = ('grounded', 'balanced', 'wild')
+# What each op spends (the route's own ceiling per op): the at-will ops that make model calls check the chain cap first.
+PAID = {'map': '1 model call', 'provoke': '2 model calls, about $0.15', 'challenge': '3 model calls',
+        'diverge': 'about 25 model calls, about $1.30, 1 a day', 'score': 'model calls to find the obvious or judge'}
 KILL_LIST = ROOT / 'vendor' / 'makeyourmindup' / 'kill-list' / 'kill-list.v1.json'
 # The route's own limits (control-center api/_divergent.ts, divergentCallSchema).
 MAX_CLICHES, MAX_CLICHE_CHARS = 50, 500
@@ -261,14 +280,15 @@ def live_items(sources):
     return _unique(out)
 
 
-def record(items, *, label=None, poster=post):
+def record(items, *, label=None, poster=post, lane=None):
     """Record items in the archive (zero model calls; the engine skips an item it already holds)."""
-    out = {'kind': 'record', 'namespace': NAMESPACE, 'items': len(items)}
+    namespace = namespace_for(lane)
+    out = {'kind': 'record', 'namespace': namespace, 'items': len(items)}
     if not items:
         return {**out, 'status': 'ok', 'recorded': 0, 'reason': 'nothing to record'}
     if not os.environ.get(TOKEN_ENV) and poster is post:
         return {**out, 'status': 'unavailable', 'reason': TOKEN_ENV + ' is not set: nothing recorded'}
-    body = {'op': 'record', 'items': [_clip(i, 4000) for i in items][:MAX_RECORD], 'namespace': NAMESPACE}
+    body = {'op': 'record', 'items': [_clip(i, 4000) for i in items][:MAX_RECORD], 'namespace': namespace}
     if label:
         body['label'] = str(label)[:80]
     status, answer = poster(body)
@@ -278,11 +298,128 @@ def record(items, *, label=None, poster=post):
     return {**out, 'status': 'ok', 'recorded': answer.get('recorded'), 'skipped_duplicates': answer.get('skippedDuplicates')}
 
 
+def namespace_for(lane=None):
+    """content-engine:<lane>, the default lane `ideas` (what plan-week reads). A lane is lowercase letters, digits and
+    hyphens, as the route takes it."""
+    lane = (lane or 'ideas').strip().lower()
+    if not LANE.match(lane):
+        raise ValueError('a lane is lowercase letters, digits and hyphens: %r' % lane)
+    return CALLER + ':' + lane
+
+
+def read_list(path):
+    """A file of items: a JSON list of strings (or of objects with a title), or plain text with one item a line."""
+    text = Path(path).read_text(encoding='utf-8')
+    try:
+        data = json.loads(text)
+    except ValueError:
+        return [line.strip() for line in text.splitlines() if line.strip()]
+    if isinstance(data, dict):
+        data = data.get('items') or data.get('ideas') or []
+    out = []
+    for x in data if isinstance(data, list) else []:
+        if isinstance(x, dict):
+            x = x.get('title') or x.get('text') or x.get('idea')
+        if x and str(x).strip():
+            out.append(str(x))
+    return out
+
+
+def at_will_body(op, *, problem=None, context=None, idea=None, ideas=None, obvious=None, cliches=None, count=None,
+                 target='writing', temperament=None, lane=None, judge=False, kill_list=KILL_LIST):
+    """The route's body for one at-will op, inside its limits (control-center api/_divergent.ts, divergentCallSchema).
+    `map` takes no namespace, target or word lists: the route refuses any field it does not name."""
+    body = {'op': op, 'problem': _clip(problem, 4000)}
+    if context:
+        body['context'] = str(context)[:8000]
+    if op == 'map':
+        return body
+    body['namespace'] = namespace_for(lane)
+    if target:
+        if target not in TARGETS:
+            raise ValueError('target is one of %s' % ', '.join(TARGETS))
+        body['target'] = target
+    if temperament:
+        if temperament not in TEMPERAMENTS:
+            raise ValueError('temperament is one of %s' % ', '.join(TEMPERAMENTS))
+        body['temperament'] = temperament
+    worn_ground = _unique([_clip(c, MAX_CLICHE_CHARS) for c in cliches or [] if str(c).strip()])[:MAX_CLICHES]
+    if worn_ground:
+        body['cliches'] = worn_ground
+    body['bannedWords'] = banned_words(kill_list)
+    if op in ('provoke', 'diverge') and count:
+        body['count'] = max(1, min(int(count), 8))
+    if op == 'challenge':
+        body['idea'] = _clip(idea, 4000)
+    if op == 'score':
+        body['ideas'] = [_clip(i, MAX_IDEA_CHARS) for i in ideas or [] if str(i).strip()][:MAX_IDEAS]
+        given = [_clip(o, MAX_OBVIOUS_CHARS) for o in obvious or [] if str(o).strip()][:MAX_OBVIOUS]
+        if given:
+            body['obvious'] = given
+        if judge:
+            body['judge'] = True
+    return body
+
+
+def spends(body):
+    """True when the call makes model calls: every op but record, and score unless `obvious` is given with no judge."""
+    if body['op'] == 'record':
+        return False
+    if body['op'] == 'score':
+        return not body.get('obvious') or bool(body.get('judge'))
+    return True
+
+
+def at_will(body, *, poster=post, cap=chain_week):
+    """One at-will op: the chain cap first when it spends, then the route. Prints for the session; writes no board."""
+    op = body['op']
+    out = {'kind': op, 'namespace': body.get('namespace'), 'spends': PAID[op] if spends(body) else 'no model call'}
+    if op == 'challenge' and not body.get('idea'):
+        return {**out, 'status': 'unavailable', 'reason': 'challenge needs --idea: no call made'}
+    if op == 'score' and not body.get('ideas'):
+        return {**out, 'status': 'unavailable', 'reason': 'score needs at least one idea: no call made'}
+    if not os.environ.get(TOKEN_ENV) and poster is post:
+        return {**out, 'status': 'unavailable', 'reason': TOKEN_ENV + ' is not set: no call made'}
+    if spends(body):
+        runs, why = chain_verdict(cap())
+        out['chain'] = why
+        if not runs:
+            return {**out, 'status': 'refused', 'reason': why}
+    status, answer = poster(body)
+    why = _served(status, answer)
+    if why:
+        return {**out, 'status': 'unavailable', 'reason': why}
+    out['result'] = {k: v for k, v in answer.items() if k != 'ok'}
+    if op in ('provoke', 'diverge', 'challenge'):
+        out['label'] = ('engine-made: an idea taken from this is source_kind engine, with divergent {"run_id", "spark"};'
+                        ' never his, never posed as his')
+    if op == 'score':
+        flagged = [i for i, r in enumerate(answer.get('results') or []) if isinstance(r, dict) and r.get('status') in FLAG]
+        out['flagged'] = flagged
+        return {**out, 'status': 'flagged' if flagged else 'pass'}
+    return {**out, 'status': 'ok'}
+
+
 def _load(path):
     return json.loads(Path(path).read_text(encoding='utf-8'))
 
 
-def main(argv=None):
+def _shared(sp, *, problem=True, count=False, idea=False, words=True):
+    if problem:
+        sp.add_argument('--problem', required=True)
+    sp.add_argument('--context')
+    if idea:
+        sp.add_argument('--idea', required=True)
+    if count:
+        sp.add_argument('--count', type=int, default=3)
+    if words:
+        sp.add_argument('--cliche', action='append', default=[], help='worn ground to steer away from (repeatable)')
+        sp.add_argument('--target', default='writing', choices=TARGETS)
+        sp.add_argument('--temperament', choices=TEMPERAMENTS)
+        sp.add_argument('--lane', help='namespace content-engine:<lane> (default ideas)')
+
+
+def main(argv=None, *, poster=post, cap=chain_week):
     p = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     sub = p.add_subparsers(dest='cmd', required=True)
     w = sub.add_parser('wildcard')
@@ -291,23 +428,57 @@ def main(argv=None):
     w.add_argument('--day')
     w.add_argument('--count', type=int, default=3)
     w.add_argument('--context')
+    _shared(sub.add_parser('map'), words=False)
+    _shared(sub.add_parser('provoke'), count=True)
+    _shared(sub.add_parser('challenge'), idea=True)
+    _shared(sub.add_parser('diverge'), count=True)
     s = sub.add_parser('score')
-    s.add_argument('ideas')
-    s.add_argument('--sources', required=True)
+    s.add_argument('ideas', nargs='?', help="the week's ideas.json, with --sources: plan-week's repeat guard")
+    s.add_argument('--sources')
+    s.add_argument('--problem')
+    s.add_argument('--context')
+    s.add_argument('--ideas-file')
+    s.add_argument('--obvious-file')
+    s.add_argument('--judge', action='store_true')
+    s.add_argument('--cliche', action='append', default=[])
+    s.add_argument('--target', default='writing', choices=TARGETS)
+    s.add_argument('--temperament', choices=TEMPERAMENTS)
+    s.add_argument('--lane')
     r = sub.add_parser('record')
     r.add_argument('items', nargs='*')
     r.add_argument('--live', metavar='SOURCES')
+    r.add_argument('--items-file')
     r.add_argument('--label')
+    r.add_argument('--lane')
     a = p.parse_args(argv)
-    if a.cmd == 'wildcard':
-        result = wildcard(a.problem, _load(a.sources), count=a.count, context=a.context, day=a.day)
-    elif a.cmd == 'score':
-        result = score(_load(a.ideas), _load(a.sources))
-    else:
-        items = list(a.items) + (live_items(_load(a.live)) if a.live else [])
-        if not items and not a.live:
-            p.error('give the item(s) as arguments or --live SOURCES.json')
-        result = record(items, label=a.label or ('live' if a.live else None))
+    try:
+        if a.cmd == 'wildcard':
+            result = wildcard(a.problem, _load(a.sources), count=a.count, context=a.context, day=a.day,
+                              poster=poster, cap=cap)
+        elif a.cmd == 'score' and a.ideas:
+            if not a.sources:
+                p.error('the board guard takes IDEAS.json with --sources SOURCES.json')
+            result = score(_load(a.ideas), _load(a.sources), poster=poster)
+        elif a.cmd == 'score':
+            if not (a.problem and a.ideas_file):
+                p.error('score at will takes --problem and --ideas-file (or IDEAS.json --sources for the board guard)')
+            body = at_will_body('score', problem=a.problem, context=a.context, ideas=read_list(a.ideas_file),
+                                obvious=read_list(a.obvious_file) if a.obvious_file else None, cliches=a.cliche,
+                                target=a.target, temperament=a.temperament, lane=a.lane, judge=a.judge)
+            result = at_will(body, poster=poster, cap=cap)
+        elif a.cmd == 'record':
+            items = list(a.items) + (live_items(_load(a.live)) if a.live else []) + (read_list(a.items_file) if a.items_file else [])
+            if not items and not a.live and not a.items_file:
+                p.error('give the item(s) as arguments, --items-file F or --live SOURCES.json')
+            result = record(items, label=a.label or ('live' if a.live else None), poster=poster, lane=a.lane)
+        else:
+            body = at_will_body(a.cmd, problem=a.problem, context=a.context, idea=getattr(a, 'idea', None),
+                                count=getattr(a, 'count', None), cliches=getattr(a, 'cliche', None),
+                                target=getattr(a, 'target', None), temperament=getattr(a, 'temperament', None),
+                                lane=getattr(a, 'lane', None))
+            result = at_will(body, poster=poster, cap=cap)
+    except ValueError as e:
+        p.error(str(e))
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return EXIT[result['status']]
 

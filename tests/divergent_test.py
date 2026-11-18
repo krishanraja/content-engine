@@ -149,5 +149,117 @@ class Record(unittest.TestCase):
         self.assertEqual(poster.calls[0]['namespace'], 'content-engine:ideas')
 
 
+class AtWill(unittest.TestCase):
+    """The at-will ops any session may call: each op's body, its lane, the chain cap on the paid ones, exit codes."""
+
+    def run_cli(self, argv, poster, cap=UNDER):
+        import contextlib
+        import io
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            code = dv.main(argv, poster=poster, cap=cap)
+        return code, json.loads(buf.getvalue())
+
+    def test_map_sends_only_problem_and_context(self):
+        poster = Poster(200, {'ok': True, 'consensus': {'answers': ['the obvious take']}})
+        code, out = self.run_cli(['map', '--problem', 'Why agents keep receipts', '--context', 'a Monday piece'], poster)
+        self.assertEqual(code, 0)
+        self.assertEqual(poster.calls[0], {'op': 'map', 'problem': 'Why agents keep receipts', 'context': 'a Monday piece'})
+        self.assertEqual(out['result'], {'consensus': {'answers': ['the obvious take']}})
+
+    def test_provoke_carries_count_target_temperament_cliches_lane_and_the_kill_list(self):
+        poster = Poster(200, {'ok': True, 'runId': 'r1', 'sparks': [{'title': 'T'}]})
+        code, out = self.run_cli(['provoke', '--problem', 'P', '--count', '12', '--temperament', 'wild', '--cliche', 'a',
+                                  '--cliche', 'b', '--lane', 'shoots'], poster)
+        body = poster.calls[0]
+        self.assertEqual(code, 0)
+        self.assertEqual((body['op'], body['namespace'], body['target'], body['temperament'], body['count']),
+                         ('provoke', 'content-engine:shoots', 'writing', 'wild', 8))
+        self.assertEqual(body['cliches'], ['a', 'b'])
+        self.assertIn('leverage', body['bannedWords'])
+        self.assertIn('never his', out['label'])
+
+    def test_challenge_sends_the_idea_and_no_count(self):
+        poster = Poster(200, {'ok': True, 'verdict': 'x'})
+        code, _ = self.run_cli(['challenge', '--problem', 'P', '--idea', 'The angle'], poster)
+        body = poster.calls[0]
+        self.assertEqual(code, 0)
+        self.assertEqual((body['op'], body['idea'], body['namespace']), ('challenge', 'The angle', 'content-engine:ideas'))
+        self.assertNotIn('count', body)
+
+    def test_diverge_and_the_default_lane(self):
+        poster = Poster(200, {'ok': True, 'runId': 'r2', 'sparks': []})
+        code, _ = self.run_cli(['diverge', '--problem', 'P', '--target', 'video'], poster)
+        body = poster.calls[0]
+        self.assertEqual(code, 0)
+        self.assertEqual((body['op'], body['namespace'], body['target'], body['count']), ('diverge', 'content-engine:ideas', 'video', 3))
+
+    def test_the_chain_cap_refuses_every_paid_op_before_any_call(self):
+        for argv in (['map', '--problem', 'P'], ['provoke', '--problem', 'P'], ['diverge', '--problem', 'P'],
+                     ['challenge', '--problem', 'P', '--idea', 'I']):
+            poster = Poster()
+            code, out = self.run_cli(argv, poster, cap=OVER)
+            self.assertEqual((code, out['status']), (2, 'refused'), argv)
+            self.assertIn('over its $15', out['reason'])
+            self.assertEqual(poster.calls, [])
+
+    def test_score_with_obvious_and_no_judge_is_free_and_runs_over_the_cap(self):
+        d = Path(tempfile.mkdtemp())
+        (d / 'ideas.json').write_text(json.dumps(['Robots claim lunch', 'A fresh title']), encoding='utf-8')
+        (d / 'past.txt').write_text('Robots now file their own expenses\n\nThe chip queue is shorter\n', encoding='utf-8')
+        poster = Poster(200, {'ok': True, 'results': [{'status': 'rejected_gravity'}, {'status': 'accepted'}]})
+        code, out = self.run_cli(['score', '--problem', 'Titles', '--ideas-file', str(d / 'ideas.json'),
+                                  '--obvious-file', str(d / 'past.txt'), '--lane', 'titles'], poster, cap=OVER)
+        body = poster.calls[0]
+        self.assertEqual((code, out['status'], out['flagged']), (1, 'flagged', [0]))
+        self.assertEqual(body['obvious'], ['Robots now file their own expenses', 'The chip queue is shorter'])
+        self.assertEqual(body['namespace'], 'content-engine:titles')
+        self.assertNotIn('judge', body)
+        self.assertNotIn('chain', out)
+
+    def test_score_with_a_judge_or_no_obvious_is_paid_and_capped(self):
+        d = Path(tempfile.mkdtemp())
+        (d / 'ideas.txt').write_text('One\n', encoding='utf-8')
+        for extra in (['--judge', '--obvious-file', str(d / 'ideas.txt')], []):
+            poster = Poster()
+            code, out = self.run_cli(['score', '--problem', 'P', '--ideas-file', str(d / 'ideas.txt')] + extra, poster, cap=OVER)
+            self.assertEqual((code, out['status'], poster.calls), (2, 'refused', []), extra)
+
+    def test_the_board_guard_still_takes_ideas_json_with_sources(self):
+        d = plans_dir()
+        (d / 'ideas.json').write_text(json.dumps(IDEAS), encoding='utf-8')
+        (d / 'sources.json').write_text(json.dumps(SOURCES), encoding='utf-8')
+        poster = Poster(200, {'ok': True, 'results': [{'status': 'accepted'}] * 3})
+        code, out = self.run_cli(['score', str(d / 'ideas.json'), '--sources', str(d / 'sources.json')], poster)
+        self.assertEqual((code, out['status'], out['namespace']), (0, 'pass', 'content-engine:ideas'))
+
+    def test_record_from_a_file_into_a_lane(self):
+        d = Path(tempfile.mkdtemp())
+        (d / 'items.json').write_text(json.dumps([{'title': 'A published piece'}, 'Another']), encoding='utf-8')
+        poster = Poster(200, {'ok': True, 'recorded': 2, 'skippedDuplicates': 0})
+        code, out = self.run_cli(['record', '--items-file', str(d / 'items.json'), '--lane', 'titles'], poster)
+        self.assertEqual((code, out['status'], out['namespace']), (0, 'ok', 'content-engine:titles'))
+        self.assertEqual(poster.calls[0]['items'], ['A published piece', 'Another'])
+
+    def test_not_served_is_exit_2_and_a_bad_lane_is_refused(self):
+        code, out = self.run_cli(['provoke', '--problem', 'P'], Poster(404, {'ok': False, 'error': 'unknown_caller'}))
+        self.assertEqual((code, out['status']), (2, 'unavailable'))
+        with self.assertRaises(ValueError):
+            dv.namespace_for('Bad Lane')
+        import contextlib
+        import io
+        with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):
+            self.run_cli(['provoke', '--problem', 'P', '--lane', 'Bad:Lane'], Poster())
+
+    def test_no_key_makes_no_call(self):
+        old = os.environ.pop(dv.TOKEN_ENV, None)
+        try:
+            out = dv.at_will(dv.at_will_body('provoke', problem='P'), cap=UNDER)
+            self.assertEqual(out['status'], 'unavailable')
+        finally:
+            if old is not None:
+                os.environ[dv.TOKEN_ENV] = old
+
+
 if __name__ == '__main__':
     unittest.main()

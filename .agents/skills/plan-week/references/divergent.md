@@ -6,7 +6,7 @@ Kept here, not in `.agents/skills/plan-week/SKILL.md`, so the core stays under i
 divergent-thinker (krishanraja/divergent-thinker) is the fleet's divergent thinking engine, reached through Control
 Center (`POST /api/divergent/content-engine`) by `python3 scripts/post-pack/divergent.py`, on the engine's operator
 key, namespace `content-engine:ideas`. It decides nothing and holds no taste: it proposes, and only Krish's presses put
-anything on a board. Its calls count inside the $15 a week chain (Ruling, Krish, 2026-11-18;
+anything on a board. At will, outside these two uses: `docs/DIVERGENT.md`. Its calls count inside the $15 a week chain (Ruling, Krish, 2026-11-18;
 `config/chain-cap.json`, family `divergent`).
 
 Exit 2 is never a pass: it means the engine is not served yet, the chain is over its cap, or there is no key. Then
