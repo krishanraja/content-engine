@@ -26,6 +26,16 @@ export function keyFontSize(text: string, width: number): number {
   return Math.min(168, Math.floor(width / (letters * ANTON_EM_PER_LETTER)))
 }
 
+/** The size every non-key word of a page takes: 92 px, or as large as the longest row it could make fits the width
+ *  (its letters at ANTON_EM_PER_LETTER plus the 22 px gaps between words). */
+export const ROW_GAP_PX = 22
+export function rowFontSize(words: string[], width: number): number {
+  const letters = words.reduce((n, w) => n + w.length, 0)
+  if (!letters) return 92
+  const gaps = Math.max(0, words.length - 1) * ROW_GAP_PX
+  return Math.min(92, Math.floor((width - gaps) / (letters * ANTON_EM_PER_LETTER)))
+}
+
 export function keyIndex(page: EngineRenderProps['captions'][number]): number {
   if (page.swipeIndex !== null && page.swipeIndex !== undefined) return page.swipeIndex
   let best = 0
@@ -42,11 +52,17 @@ export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps;
   const word = (text: string, at: number, big: boolean, i: number) => {
     const p = outBack((t - at / fps) / 0.12)
     return <span key={i} style={{
-      fontFamily: HOUSE_FONTS.display, fontSize: big ? keyFontSize(text, width) : Math.min(92, keyFontSize(text, width)), lineHeight: 0.96, letterSpacing: '0.5px', textTransform: 'uppercase',
+      fontFamily: HOUSE_FONTS.display, fontSize: big ? keyFontSize(text, width) : restSize, lineHeight: 0.96, letterSpacing: '0.5px', textTransform: 'uppercase',
       color: props.tokens.cream, textShadow: '0 6px 24px rgba(0,0,0,.45)', display: 'inline-block',
       transform: `translateY(${(1 - p) * 30}px) scale(${0.85 + 0.15 * p})`, opacity: clamp(p * 2),
     }}>{text.replace(/[,.]$/, '')}</span>
   }
+  // The rest of the phrase shares one row at 92 px unless the whole row, all its words with their gaps, is wider than
+  // the region: then every word on it takes the size that fits ("THAT ARE GETTING PEOPLE" ran off the left edge at
+  // 61.8 s of the habits short, 18 Nov 2026). Each row is sized from all its words (the words before the key word make one row, the words after it another, and both take the smaller size), so a row never grows as they pop in.
+  const clean = (w: { text: string }) => w.text.replace(/[,.]$/, '')
+  const restSize = Math.min(rowFontSize(page.words.slice(0, key).map(clean), width),
+    rowFontSize(page.words.slice(key + 1).map(clean), width))
   const rows: React.ReactElement[][] = []
   let row: React.ReactElement[] = []
   page.words.forEach((w, i) => {
@@ -66,7 +82,7 @@ export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps;
     <div data-caption-theme="art-directed" style={{ position: 'absolute', ...box, pointerEvents: 'none', zIndex: 40 }}>
       <div style={{ position: 'absolute', top: 0, [side]: 0, display: 'flex', flexDirection: 'column',
         alignItems: side === 'left' ? 'flex-start' : 'flex-end' }}>
-        {rows.map((r, i) => <div key={i} style={{ display: 'flex', gap: 22, alignItems: 'baseline' }}>{r}</div>)}
+        {rows.map((r, i) => <div key={i} style={{ display: 'flex', gap: ROW_GAP_PX, alignItems: 'baseline' }}>{r}</div>)}
       </div>
     </div>
   </>

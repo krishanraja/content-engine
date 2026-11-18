@@ -4,7 +4,7 @@ import { CAPTION_THEMES } from './captions/names'
 import { THEMES } from './captions/themes'
 import { REGIONS, hero, heroScore, key } from './captions/kit'
 import { ThemedCaption } from './chrome/ThemedCaption'
-import { ART_REGION, ANTON_EM_PER_LETTER, ArtDirectedCaption, keyFontSize, keyIndex } from './chrome/ArtDirectedCaption'
+import { ART_REGION, ANTON_EM_PER_LETTER, ArtDirectedCaption, ROW_GAP_PX, keyFontSize, keyIndex, rowFontSize } from './chrome/ArtDirectedCaption'
 import { BrandFrame } from './BrandFrame'
 import { exitProgress } from './captions/draw'
 import { EngineRenderPropsSchema } from './props'
@@ -146,6 +146,19 @@ describe('the caption styles (Krish, 2026-11-11)', () => {
     const props = { ...base, captionTheme: 'art-directed' as const, captions: [page(['Slop', 'with', 'no', 'accountability.']), ...base.captions.slice(1)] }
     const html = render(ArtDirectedCaption({ props, frame: 40 }))
     expect(html).not.toContain('"fontSize":168'); expect(html).toContain(`"fontSize":${big}`)
+  })
+
+  it('art-directed: a row of words too wide for 92 px is set as large as fits (habits short, 61.8 s, 18 Nov)', () => {
+    const w = ART_REGION['9:16'].width
+    expect(rowFontSize(['the', 'only'], w)).toBe(92)
+    const row = ['that', 'are', 'getting', 'people']
+    const size = rowFontSize(row, w)
+    expect(size).toBeLessThan(92)
+    expect(size * row.join('').length * ANTON_EM_PER_LETTER + (row.length - 1) * ROW_GAP_PX).toBeLessThanOrEqual(w)
+    const base = EngineRenderPropsSchema.parse(fixture)
+    const props = { ...base, captionTheme: 'art-directed' as const, captions: [page(['that', 'are', 'getting', 'people', 'unaccountable.']), ...base.captions.slice(1)] }
+    const html = render(ArtDirectedCaption({ props, frame: 40 }))
+    expect(html).toContain(`"fontSize":${size}`)
   })
 
   it('refuses a style name the engine does not have', () => {
