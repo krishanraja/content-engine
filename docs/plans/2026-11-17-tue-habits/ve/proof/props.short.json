@@ -40,14 +40,14 @@
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.scratch/ve/habits/assets/audio.short.wav",
-      "trimBeforeFrames": 1120
+      "trimBeforeFrames": 1134
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 20,
+      "toFrame": 6,
       "words": [
         {
           "text": "And",
@@ -73,101 +73,120 @@
       "swipeIndex": null
     },
     {
-      "fromFrame": 20,
-      "toFrame": 86,
+      "fromFrame": 6,
+      "toFrame": 72,
       "words": [
         {
           "text": "IBM",
-          "atFrame": 20
+          "atFrame": 6
         },
         {
           "text": "asked",
-          "atFrame": 29
+          "atFrame": 15
         },
         {
           "text": "HR",
-          "atFrame": 49
+          "atFrame": 35
         },
         {
           "text": "chiefs",
-          "atFrame": 64
+          "atFrame": 50
         },
         {
           "text": "which",
-          "atFrame": 72
+          "atFrame": 58
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 86,
-      "toFrame": 130,
+      "fromFrame": 72,
+      "toFrame": 116,
       "words": [
         {
           "text": "skill",
-          "atFrame": 86
+          "atFrame": 72
         },
         {
           "text": "matters",
-          "atFrame": 101
+          "atFrame": 87
         },
         {
           "text": "the",
-          "atFrame": 111
+          "atFrame": 97
         },
         {
           "text": "most",
-          "atFrame": 117
+          "atFrame": 103
         },
         {
           "text": "right",
-          "atFrame": 123
+          "atFrame": 109
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 130,
-      "toFrame": 194,
+      "fromFrame": 116,
+      "toFrame": 180,
       "words": [
         {
           "text": "now",
-          "atFrame": 130
+          "atFrame": 116
         },
         {
           "text": "and",
-          "atFrame": 142
+          "atFrame": 128
         },
         {
           "text": "71%",
-          "atFrame": 149
+          "atFrame": 135
         },
         {
           "text": "said",
-          "atFrame": 180
+          "atFrame": 166
         }
       ],
       "swipeIndex": 2
     },
     {
-      "fromFrame": 194,
-      "toFrame": 240,
+      "fromFrame": 180,
+      "toFrame": 234,
       "words": [
         {
           "text": "the",
-          "atFrame": 194
+          "atFrame": 180
         },
         {
           "text": "same",
-          "atFrame": 198
+          "atFrame": 184
         },
         {
           "text": "thing.",
-          "atFrame": 204
+          "atFrame": 190
         },
         {
           "text": "Accountability.",
-          "atFrame": 220
+          "atFrame": 206
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 234,
+      "toFrame": 240,
+      "words": [
+        {
+          "text": "Check",
+          "atFrame": 234
+        },
+        {
+          "text": "the",
+          "atFrame": 239
+        },
+        {
+          "text": "AI's",
+          "atFrame": 240
         }
       ],
       "swipeIndex": null
@@ -181,7 +200,7 @@
       "role": "bridge",
       "layout": "STAGE",
       "fromFrame": 0,
-      "toFrame": 20,
+      "toFrame": 6,
       "uses": [
         "plate-b11"
       ],
@@ -190,14 +209,14 @@
       "plate": {
         "source": "none"
       },
-      "keyFrame": 8
+      "keyFrame": 0
     },
     {
       "id": "b12",
       "role": "anchor",
       "layout": "STAGE",
-      "fromFrame": 20,
-      "toFrame": 220,
+      "fromFrame": 6,
+      "toFrame": 234,
       "uses": [
         "screen-ibm"
       ],
@@ -206,13 +225,13 @@
       "plate": {
         "source": "none"
       },
-      "keyFrame": 180
+      "keyFrame": 188
     },
     {
       "id": "b13",
       "role": "bridge",
       "layout": "STAGE",
-      "fromFrame": 220,
+      "fromFrame": 234,
       "toFrame": 240,
       "uses": [
         "screen-overrule"
@@ -231,7 +250,7 @@
       "device": "photo_plate",
       "meaning": "the generated picture on b11",
       "fromFrame": 0,
-      "toFrame": 20,
+      "toFrame": 6,
       "variants": {},
       "params": {
         "image": {
@@ -255,15 +274,15 @@
       "obj": "screen-ibm",
       "device": "photo_plate",
       "meaning": "IBM's own release, the 71% clause highlighted as he says it",
-      "fromFrame": 20,
-      "toFrame": 220,
+      "fromFrame": 6,
+      "toFrame": 234,
       "variants": {},
       "params": {
         "video": {
           "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b11-ibm.mp4",
           "pixelWidth": 1080,
           "pixelHeight": 1920,
-          "trimBeforeFrames": 60
+          "trimBeforeFrames": 45
         },
         "push": 0
       }
@@ -272,7 +291,7 @@
       "obj": "screen-overrule",
       "device": "photo_plate",
       "meaning": "an AI's wrong figure struck out and overruled",
-      "fromFrame": 220,
+      "fromFrame": 234,
       "toFrame": 240,
       "variants": {},
       "params": {
@@ -307,14 +326,14 @@
       "obj": "screen-ibm",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 20
+      "atFrame": 6
     },
     {
       "id": "b13-0",
       "obj": "screen-overrule",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 220
+      "atFrame": 234
     }
   ],
   "motion": {

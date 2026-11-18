@@ -4,13 +4,13 @@
   "cut": "short",
   "beat": "b12",
   "rule": "named in the spec (proof.beat)",
-  "start": 37.333,
-  "end": 45.333,
+  "start": 37.8,
+  "end": 45.8,
   "beat_s": [
     38.0,
-    44.667
+    45.6
   ],
-  "sha256": "d3d66e954f83b7e965bf7e2f00f02bd5b7221c00cf0f2fc4d29e2c66c56b46c9",
+  "sha256": "da2406765e7c52488111a9b89de11711cdee36a60d7ffdfabea1debd7179f103",
   "spec_sha256": "bcfc9a83ecdd50e92750901ffdd4cf5bfd30ea89111753a78e4dd1f7a5e8d82e",
   "structure": {
     "format": "voice-led-pictures",
@@ -303,7 +303,7 @@
     ]
   },
   "style_module": "swiss-kinetic-type",
-  "props_sha256": "fa41e5175c43c893b948f5df0a472c3fbe0027d52334ff2e747132c391e97604",
+  "props_sha256": "13f7af7856f9140d9e89391689015a2d8f5484daecba78b51cc803f216c1e780",
   "type": [
     [
       "data",
