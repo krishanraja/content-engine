@@ -1146,7 +1146,15 @@
    ]
   }
  },
- "approvals": [],
+ "approvals": [
+  {
+   "gate": "proof",
+   "by": "Krish",
+   "said": "looks good, continue",
+   "on": "2026-11-18",
+   "artifact_hash": "630823d9624dcc3ff9d93692ffdcc4290d86e7f48c63397e69023d0247496211"
+  }
+ ],
  "style": {
   "motion": {
    "module": "eating-jobs-ladder",
