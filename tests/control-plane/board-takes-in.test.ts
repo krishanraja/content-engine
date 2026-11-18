@@ -431,3 +431,15 @@ describe('the plan says how each picture becomes a 100/10, and what Krish gets h
     expect(brief).toMatch(/from the research on the piece/)
   })
 })
+
+// Krish, 2026-11-18: "when a piece is produced, the session has to be told to file things properly to the drive and then
+// never really bothers to update the board - this is unacceptable". The card reads the making record, not Drive.
+describe('the production prompt makes the board true before the session stops', () => {
+  it('tells the session to write each cut\'s making record and read the board back', () => {
+    const brief = productionBrief({ pieceId: TUE, title: 'T', takes: TAKES, decisions: ['A'], research: ['R'], scripts: {}, offday: false })
+    expect(brief).toContain(`making.py ${TUE} video long|short`)
+    expect(brief).toContain('Putting a file in Drive does not move his card')
+    expect(brief).toContain('read the board back'.replace('read', 'Then read'))
+    expect(brief).toMatch(/never call the piece done on the strength of the Drive upload alone/)
+  })
+})

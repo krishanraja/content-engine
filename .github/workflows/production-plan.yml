@@ -121,7 +121,9 @@ jobs:
             a question for Krish goes on the piece as blocked, with your best guess, never here. Write files only under
             .scratch/plan/. Run each python3 command on its own, with the piece id written out, with no variables,
             pipes, ";", "&&" or "echo"; never start anything in the background. The plan is done when plan.json is
-            filed on the piece with role production_plan and its scene stills with role plan_scene, and the done report
+            filed on the piece with role production_plan and its scene stills with role plan_scene (one scene per kind of
+            picture, each drawn in his picked captions and motion style with plan_scene.py --captions, --motion and --kind,
+            never three frames of his face with the same caption), and the done report
             names the edit line (how long the take ran, what was cut, the speed-up, the final length).
 
       - name: Keep the session record

@@ -36,7 +36,8 @@ export const CLOSE_LOOP = 'Close the loop as you go, not only at the end: every 
   + 'anything for his Drive goes where docs/DRIVE.md places it (research filed on the piece is copied to his Research library by itself; '
   + 'a finished post asset goes in that post\'s own folder); work in the repository is committed and pushed by its own rules, with its '
   + 'closeout note (AGENTS.md, "Commit and closeout"). Before you stop, report done (or blocked) with one line saying what changed and '
-  + 'where each thing now is, and end your last message with the one next step and who takes it.'
+  + 'where each thing now is, and end your last message with the one next step and who takes it. Filing a file in Drive does not update the board: '
+  + 'write the record the card reads, read the board back, and report done only when it shows the change (Krish, 2026-11-18).'
 
 /** Where his typed approval of a lock or scripts goes (Ruling, Krish, 2026-11-12: "Scripts and locks only."). On 13 Nov
  *  he had approved Mon 16's and Wed 18's stories and scripts in sessions, and the board said "No approved scripts are
