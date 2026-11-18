@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-17","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- the carousel skill's steps give every card a picture, real-world first, with scenes and company wordmarks briefed into the Codex card. (2026-11-18)
 - the carousel standard and skill carry the house look: covers as the Git and homework covers, body cards as the Erdős deck's, real-world images first. (2026-11-18)
 - a meme's wordmark sits just under the clip, right-aligned to the video's right edge; on the tall shape the clip keeps to the caption band's column, clear of the action rail. (2026-11-18)
 - memes are never first person ("When you realize..." or "POV: you realize...") and carry the wordmark right-aligned at the bottom, in the meme standard and the meme skill. (2026-11-18)
@@ -50,7 +51,7 @@ Older lines: `docs/history/2026-11-18-NOW-moved-3.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): rebuild the ads and midterms carousels to the house look once Krish approves the scene credits.
+- Next (2026-11-18): Krish reviews the ads and midterms carousels in the house look.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
