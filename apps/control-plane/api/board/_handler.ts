@@ -192,7 +192,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           return res.status(200).json({ ok: true, week, items: itemsForGrowth(items, week) })
         }
         if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
-        const result = op === 'offdays' ? await offerGrowth(db, week, req.body, await (deps.ideas ?? readWeekIdeas)(week)) : await reportPosts(db, week, req.body, deps.now ? new Date(deps.now()) : new Date())
+        const result = op === 'offdays' ? await offerGrowth(db, week, req.body, await (deps.ideas ?? readWeekIdeas)(week)) : await reportPosts(db, week, req.body, deps.now ? new Date(deps.now()) : new Date(), deps.renamer ? deps.renamer() : await moveRenamer().catch(() => null))
         return res.status(result.status).json(result.body)
       } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
     }
