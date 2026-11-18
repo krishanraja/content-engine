@@ -3780,7 +3780,7 @@
       "fromFrame": 756,
       "toFrame": 858,
       "uses": [
-        "bill"
+        "block"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -4174,28 +4174,6 @@
       }
     },
     {
-      "obj": "bill",
-      "device": "receipt_print",
-      "meaning": "his \"picture this\" made literal: the power bill with a new line on it",
-      "fromFrame": 756,
-      "toFrame": 858,
-      "variants": {},
-      "params": {
-        "title": "POWER BILL",
-        "stampText": "YOUR SHARE",
-        "lines": [
-          {
-            "key": "usage",
-            "row": "Electricity used"
-          },
-          {
-            "key": "lines",
-            "row": "New power lines: your share"
-          }
-        ]
-      }
-    },
-    {
       "obj": "ban_stat",
       "device": "kinetic_stat",
       "meaning": "the share of Piqua votes for the ban",
@@ -4318,50 +4296,25 @@
     },
     {
       "obj": "meter",
-      "device": "through_line",
-      "meaning": "the month's credits: up with the bonus, back down when the bonus expires",
+      "device": "credit_meter",
+      "meaning": "the month's credits: a bonus pours in on top, then drains away after 30 days",
       "fromFrame": 2086,
       "toFrame": 2156,
       "variants": {},
       "params": {
-        "parts": [
-          {
-            "id": "month",
-            "label": "Credits this month",
-            "kind": "bar",
-            "number": {
-              "value": 2000,
-              "unit": "credits",
-              "producer": "Higgsfield Team plan",
-              "date": "18 Nov 2026"
-            }
-          }
-        ],
-        "states": {
-          "bonus": {
-            "part": "month",
-            "verb": "grow",
-            "size": 1.2,
-            "number": {
-              "value": 2400,
-              "unit": "credits",
-              "producer": "Higgsfield Team plan",
-              "date": "18 Nov 2026"
-            },
-            "annotation": "month one"
-          },
-          "expired": {
-            "part": "month",
-            "verb": "grow",
-            "size": 1,
-            "number": {
-              "value": 2000,
-              "unit": "credits",
-              "producer": "Higgsfield Team plan",
-              "date": "18 Nov 2026"
-            },
-            "annotation": "from day 31"
-          }
+        "plan": {
+          "label": "Plan credits",
+          "row": "plan credits a month"
+        },
+        "bonus": {
+          "label": "Bonus credits",
+          "row": "bonus credits"
+        },
+        "days": 30,
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-bonus-expires.png",
+        "source": {
+          "outlet": "Higgsfield plans page",
+          "date": "18 Nov 2026"
         }
       },
       "dataset": {
@@ -4374,8 +4327,8 @@
             "value": 2000
           },
           {
-            "label": "with the bonus",
-            "value": 2400
+            "label": "bonus credits",
+            "value": 400
           }
         ]
       }
@@ -4409,13 +4362,6 @@
       "verb": "fill",
       "toState": "racks",
       "atFrame": 194
-    },
-    {
-      "id": "face-0",
-      "obj": "ddn",
-      "verb": "mark",
-      "toState": "Sacked, over a building",
-      "atFrame": 267
     },
     {
       "id": "questions-0",
@@ -4467,13 +4413,6 @@
       "atFrame": 647
     },
     {
-      "id": "city-1",
-      "obj": "block",
-      "verb": "add",
-      "toState": "pylons",
-      "atFrame": 692
-    },
-    {
       "id": "piqua-0",
       "obj": "piqua",
       "verb": "enter",
@@ -4482,31 +4421,17 @@
     },
     {
       "id": "bill-0",
-      "obj": "bill",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 762
+      "obj": "block",
+      "verb": "move",
+      "toState": "target:0",
+      "atFrame": 800
     },
     {
       "id": "bill-1",
-      "obj": "bill",
+      "obj": "block",
       "verb": "add",
-      "toState": "usage",
-      "atFrame": 774
-    },
-    {
-      "id": "bill-2",
-      "obj": "bill",
-      "verb": "add",
-      "toState": "lines",
-      "atFrame": 817
-    },
-    {
-      "id": "bill-3",
-      "obj": "bill",
-      "verb": "highlight",
-      "toState": "lines",
-      "atFrame": 833
+      "toState": "pylons",
+      "atFrame": 830
     },
     {
       "id": "vote-0",
@@ -4630,15 +4555,36 @@
     {
       "id": "payoff-1",
       "obj": "meter",
-      "verb": "grow",
-      "toState": "bonus",
-      "atFrame": 2110
+      "verb": "fill",
+      "toState": "plan credits a month",
+      "atFrame": 2089
     },
     {
       "id": "payoff-2",
       "obj": "meter",
-      "verb": "grow",
-      "toState": "expired",
+      "verb": "add",
+      "toState": "bonus credits",
+      "atFrame": 2110
+    },
+    {
+      "id": "payoff-3",
+      "obj": "meter",
+      "verb": "mark",
+      "toState": "visible",
+      "atFrame": 2119
+    },
+    {
+      "id": "payoff-4",
+      "obj": "meter",
+      "verb": "count_to",
+      "toState": "30",
+      "atFrame": 2131
+    },
+    {
+      "id": "payoff-5",
+      "obj": "meter",
+      "verb": "drop",
+      "toState": "plan credits a month",
       "atFrame": 2136
     },
     {
