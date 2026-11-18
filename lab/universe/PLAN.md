@@ -19,20 +19,36 @@ out the work. Plan this properly, and involve Codex to produce the anchor visual
 | Quote footer | Gone. The building gets the space |
 | Logos absent | Claude agents wear the Claude mark on their legs; tool agents wear their tool's mark on their heads |
 
-## The floors (top to bottom): the work only
+## The floors (top to bottom): the work only, in plain words
 
-| Floor | The work | Hands off |
+Krish, 18 Nov 2026: "Put everything in layman's terms as well, its important to not overwhelm people - and make sure
+you do not miss the opportunity to subtly show how important AI Brain in the basement is as being the most important
+foundational piece". So every label is a few everyday words, one idea per card, no jargon.
+
+| Floor | What happens (plain words, three lines per card) | What comes out |
 |---|---|---|
-| Roof: Decide | Approve, pick, press send | Yes or no, fast |
-| 01 Spot | Read every link, watch what is moving, catch the idea early | Ideas worth making |
-| 02 Write | Research it, script it, check every fact | Scripts ready to record |
-| 03 Make | Record, cut the video, design the visuals | Finished assets |
-| 04 Ship | Post, schedule, answer every comment | Posts live everywhere |
-| 05 Sell | Research the account, prep the call, draft the follow-up | Booked meetings |
-| 06 Build | Write the code, test it, fix what breaks | Things that work |
-| Basement: Remember | File everything, turn every correction into a rule | Nothing said twice |
+| Roof: I decide | Approve what goes out under my name; pick the strongest of the options; press send when it is ready | A fast, clear yes or no |
+| 1 Find ideas | Read every link and newsletter I save; track what people are talking about; flag ideas before they become obvious | A shortlist worth making |
+| 2 Write | Research the facts and the sources; draft each script in my own voice; double-check every claim and number | Scripts ready to film |
+| 3 Make | Film and edit the video into shape; design the covers and carousels; add the voice, captions and music | Finished videos and posts |
+| 4 Share | Post it on every channel at once; schedule it for the right time of day; reply to every comment and question | Posts out, people talking |
+| 5 Sell | Research each company before the call; prepare the questions worth asking; send the follow-up the same day | Meetings booked in the diary |
+| 6 Build | Build the tools the whole team uses; test them properly before they ship; fix whatever breaks, fast | Tools that keep working |
+| Basement: The AI brain | Remembers every piece, call and decision; turns each of my corrections into a rule; every floor checks it before acting | Every floor runs on this |
 
-A courier rides the lift shaft on the right carrying a parcel up the building: the hand-off made visible.
+Krish, 18 Nov 2026, after a first plain-words pass: "it's gotten too simple now in terms of words", then "make the
+wording 15% more descriptive". So each card carries three concrete everyday lines, each fitting on one line.
+
+A courier rides the lift on the right carrying a parcel up the building: work passing from floor to floor.
+
+## The AI brain is the foundation (shown, never said loudly)
+
+- **It is built first.** The animation opens on the empty ground; the brain lights up in the basement, then every floor
+  lands on top of it.
+- **It feeds every floor.** Thin mint lines run from the brain up the back corner of the building to each floor, and small
+  pulses of light travel up them all the time.
+- **It glows brightest at night.** As the day ends the floors dim and the brain's glow lights the building from below.
+- **Its card closes the panel** with "Every floor runs on this", the only card marked in mint.
 
 ## The cast (one figurine per role)
 
@@ -44,13 +60,13 @@ so it is visible within a second on a phone. Nothing else on it moves more than 
 | Roof | You | The calm one | sips a mug | none (human) |
 | Roof | Approver | Decisive | stamps | Claude on legs |
 | Spot | Reader | Curious | head turns, scanning | Claude on legs |
-| Spot | Scout | Watchful | binoculars sweep | head: a search tool |
+| Spot | Scout | Watchful | binoculars sweep | Claude on legs |
 | Spot | Ideas | Dreamer | lightbulb blinks over its head | Claude on legs |
 | Write | Researcher | Thorough | flips pages | Claude on legs |
 | Write | Writer | Eager | types fast | Claude on legs |
 | Write | Checker | Skeptic | shakes its head, then nods | Claude on legs |
 | Make | Editor | Rhythmic | head bobs to the beat | head: a video tool |
-| Make | Designer | Precise | taps a pen | head: a design tool |
+| Make | Designer | Precise | taps a pen | head: Codex (OpenAI) |
 | Make | Voice | Performer | arm gestures while talking | head: a voice tool |
 | Ship | Poster | Punchy | presses a big button | head: a scheduling tool |
 | Ship | Replier | Friendly | waves | Claude on legs |
