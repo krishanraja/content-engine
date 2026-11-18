@@ -125,7 +125,7 @@ class DesignLockTest(unittest.TestCase):
         lock = self.freeze(mapping, force=True)
         self.assertTrue(designlock.frozen(lock, FMT, self.root)[0])
         # The lock reads frozen only once every format in it is frozen (face-with-proof left it on 18 Nov 2026: retire).
-        for other in [name for name in self.lock['formats'] if name != FMT]:
+        for other in [name for name in self.lock['formats'] if name != FMT and designlock.picture_match(self.lock, name)]:
             self.assertEqual(lock['status'], 'direction_approved')
             lock = designlock.freeze(other, self.src, self.images(other), lock_path=self.path)
         self.assertEqual(lock['status'], 'frozen')
@@ -192,6 +192,43 @@ class DesignLockTest(unittest.TestCase):
                 if path.suffix.lower() in ('.jpg', '.jpeg', '.png', '.webp') and path.is_file() and sha256_file(path) in barred:
                     found.append(path.relative_to(ROOT).as_posix())
         self.assertEqual(found, [], 'a retired key frame is back in the repository')
+
+    def test_rules_only_drops_the_picture_match_and_keeps_the_rules(self):
+        # Krish, 2026-11-18: "why a visual pass plus obvious rules arent a better option than measuring it against one
+        # frame of an old video" and "i agree with your recommendations".
+        from velib import qc_keyframes
+        self.freeze(self.images())
+        designlock.retire(FMT, words='delete them', on='2026-11-18', lock_path=self.path, today=date(2026, 11, 18))
+        words = 'a visual pass plus obvious rules'
+        entry = designlock.rules_only(FMT, words=words, on='2026-11-18', lock_path=self.path, today='2026-11-18')
+        lock = designlock.load(self.path)
+        self.assertIn(FMT, lock['formats'])
+        self.assertNotIn(FMT, lock.get('drafts', {}))
+        self.assertEqual(entry['rules_only'], {'by': 'Krish', 'on': '2026-11-18', 'words': words})
+        self.assertEqual(designlock.frozen(lock, FMT, self.root), (True, []), 'it needs no key frame to read as a lock')
+        self.assertFalse(designlock.picture_match(lock, FMT))
+        self.assertTrue(designlock.picture_match(lock, next(n for n in lock['formats'] if n != FMT)))
+        self.assertIn('retired', lock['formats'][FMT], 'the retirement stays on the entry')
+        self.assertEqual(designlock.validate(lock, self.root), [])
+        # QC reads it as no picture match, whatever the cut's beats are.
+        report = qc_keyframes.keyframe_checks('cut.mp4', {'beats': []}, lock, FMT)
+        self.assertFalse(report['applies'])
+        self.assertIn('rules-only', report['note'])
+        # No picture is ever frozen for it.
+        with self.assertRaisesRegex(ValueError, 'rules-only'):
+            designlock.freeze(FMT, self.src, self.images(), lock_path=self.path, force=True)
+
+    def test_rules_only_refusals(self):
+        self.freeze(self.images())
+        designlock.retire(FMT, words='x', on='2026-11-18', lock_path=self.path, today=date(2026, 11, 18))
+        before = self.path.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'only Krish'):
+            designlock.rules_only(FMT, words='x', on='2026-11-18', by='Claude', lock_path=self.path)
+        with self.assertRaisesRegex(ValueError, 'his words'):
+            designlock.rules_only(FMT, words=' ', on='2026-11-18', lock_path=self.path)
+        with self.assertRaisesRegex(ValueError, 'not a draft'):
+            designlock.rules_only('two-passports', words='x', on='2026-11-18', lock_path=self.path)
+        self.assertEqual(self.path.read_bytes(), before)
 
     def test_retire_refusals(self):
         self.freeze()
