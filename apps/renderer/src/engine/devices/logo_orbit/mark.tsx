@@ -11,6 +11,9 @@ export const MARK_BOUNDS: Record<string, { canvas: [number, number, number, numb
   'google-symbol.svg': { canvas: [0, 0, 268.1522, 273.8827], drawn: [0, 0, 268.1522, 273.8827] },
   'amazon-symbol.svg': { canvas: [2.167, 0.438, 251.038, 259.969], drawn: [8.694, 0.438, 239, 254.978] },
   'anthropic-symbol.svg': { canvas: [0, 0, 92.2, 65], drawn: [0, 0, 92.2, 65] },
+  // Wordmarks with no separate symbol: the whole painted word (getBBox in Chromium, 18 Nov 2026).
+  'openai-logo.svg': { canvas: [0, 0, 288, 78], drawn: [0, 0.3984, 287.636, 77.35] },
+  'oracle-logo.svg': { canvas: [0, 0, 461.6, 60], drawn: [0, 0, 461.6, 60] },
 }
 
 export function Mark({ id, size }: { id: string; size: number }) {
