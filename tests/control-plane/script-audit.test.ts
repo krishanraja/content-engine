@@ -76,6 +76,11 @@ describe('the ledger across pieces', () => {
   it('counts a by-hand pair out of the rates and the swaps but keeps its take side', () => {
     expect(led.swaps.some(s => s.to.some(t => t.to === 'axed'))).toBe(false)
   })
+  it('leaves out a b that is only his newest of several approvals and a take that is not the recording', () => {
+    const r = auditRows([{ id: P1, script_audit: { long: auditOf({ a: 'material', b: 'approval_newest', c: 'take_unbound', ab: pair(100, 10, [['sacked', 'fired']]), bc: pair(100, 20, [['dearer', 'higher']]) }) } }])
+    const l = auditLedger(r)
+    expect([l.edit_rate.cuts, l.adlib_rate.cuts, l.swaps.length]).toEqual([0, 0, 0])
+  })
   it('names every text that could not be found', () => {
     const missing = auditLedger(auditRows([{ id: P1, script_audit: { short: auditOf({ b: 'approval', c: 'take', bc: pair(100, 10, []) }) } }])).missing
     expect(missing).toEqual([{ piece_id: P1, cut: 'short', text: 'a', why: 'not found' }])

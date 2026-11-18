@@ -39,12 +39,14 @@ export interface AuditLedger {
   missing: Array<{ piece_id: string; cut: string; text: string; why: string }>
 }
 
-const BY_HAND = 'by_hand'
+/** Texts shown on the piece and never counted here: given by hand, his newest of several approvals when the record
+ *  does not say which the take was made against, and a take whose media is not the recording on the record. */
+export const UNBOUND = ['by_hand', 'approval_newest', 'take_unbound']
 const clean = (s: string) => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim()
 function bound(a: MakingScriptAudit, pair: string): boolean {
   const [x, y] = pair.split('_') as Array<'a' | 'b' | 'c'>
   const tx = a.texts?.[x], ty = a.texts?.[y]
-  return Boolean(tx && ty && !tx.missing && !ty.missing && tx.source !== BY_HAND && ty.source !== BY_HAND)
+  return Boolean(tx && ty && !tx.missing && !ty.missing && !UNBOUND.includes(String(tx.source)) && !UNBOUND.includes(String(ty.source)))
 }
 
 /** The ledger across every audited cut. Pure. */
