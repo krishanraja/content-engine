@@ -123,6 +123,12 @@ describe('the production plan on the card (contract 1.25.0; Krish, 2026-11-17: "
     expect((it.plan as Body).beats.find((b: Body) => b.id === 'b4').picture.recipe).toContain('seedance_2_5')
   })
 
+  it('the covers go through cover-art by channel, and the house logo only on the title frame and the close card (17 Nov)', () => {
+    const prompt = String((card(withPlan()).next as Body).prompt)
+    for (const s of ['.agents/skills/cover-art/SKILL.md', 'docs/ve/cards/w-face-covers', 'the house logo appears only on the animated title frame and the close card',
+      'logo_rule']) expect(prompt).toContain(s)
+  })
+
   it('can fail: a swap made on another version of the plan, or naming an option the beat lacks, does not count', () => {
     const stale = { doc_id: `plan-${TUE.slice(0, 8)}`, body: { kind: 'plan_swaps', piece_id: TUE, plan_sha256: 'b'.repeat(64), swaps: { b1: 'post' } } }
     expect(swapsOf([stale], plan)).toEqual({})
