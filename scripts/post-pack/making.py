@@ -1828,6 +1828,9 @@ def post_folder_of(piece_id, call=None):
     """The folder in 3 Posts the piece is bound to now, as the engine answers (its date put right after a move), or None
     before anything bound one. Raises MakingError when the engine cannot be read: a writer then stops, never guesses."""
     data = read(piece_id, call)
+    if data.get('post_folder_held'):
+        # The piece moved after its folder was bound and the folder could not follow it yet: nothing is filed.
+        raise MakingError(f"the piece's post folder is held: {data['post_folder_held']}")
     folder = data.get('post_folder') if 'post_folder' in data else bound_post_folder(data.get('making'))
     return folder.strip() if isinstance(folder, str) and folder.strip() else None
 
@@ -1921,6 +1924,13 @@ def self_test():
         def reader(method, path, body=None):
             return 200, json.dumps({'ok': True, 'making': {'post_folder': {'folder': 'OLD'}}, 'post_folder': '2026-11-19 Thu off.day - Moved'})
         check('the engine\'s answer is the folder now, its date put right after a move', post_folder_of('b019dbf8-8051-4cab-9b5e-2ad77b3f5118', reader), '2026-11-19 Thu off.day - Moved')
+        def held(method, path, body=None):
+            return 200, json.dumps({'ok': True, 'making': {'post_folder': {'folder': 'OLD'}}, 'post_folder': None, 'post_folder_held': 'Drive could not be read'})
+        try:
+            post_folder_of('b019dbf8-8051-4cab-9b5e-2ad77b3f5118', held)
+            check('a held folder stops the writer', 'returned', 'raised')
+        except MakingError as error:
+            check('a held folder stops the writer, saying why', 'Drive could not be read' in str(error), True)
         check('binding sends post_folder to the making route', (sent[0][1], sent[0][2]['post_folder']), ('/api/content-ideas/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/making', {'folder': '2026-11-17 Tue off.day - Mine'}))
         check('a pack patch names the folder and count', (p['pack']['folder'], p['pack']['files'], 'sent_at' in p['pack']), ('2026-10-09 Fri mind.the.gap - X', 3, True))
         (t / 'post.json').write_text(json.dumps({'piece_id': pid}))

@@ -612,6 +612,8 @@ def bound_folder(piece):
     if status != 200:
         raise Stop(f'the piece\'s record could not be read ({status}), so its post folder is unknown: nothing was filed')
     body = data.get('data') or data
+    if body.get('post_folder_held'):
+        raise Stop(f"the piece's post folder is held: {body['post_folder_held']}; nothing was filed")
     if 'post_folder' in body:
         return body.get('post_folder') or None
     m = body.get('making') or {}

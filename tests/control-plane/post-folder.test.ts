@@ -9,7 +9,8 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { boundPostFolder, currentFolder, mergeMaking, parseMakingPatch, postFolderProblems, redatedFolder, type Making } from '../../apps/control-plane/api/_making'
 import {
-  GOT_ROLE, PostFolderError, beatsOf, beatsOfKey, bindPostFolder, driveName, folderForPiece, gotKey, postFolderName, safeText, shorten, subjectOf,
+  GOT_ROLE, PostFolderError, beatsOf, beatsOfKey, bindPostFolder, driveName, folderForPiece, followBinding, followMovedPieces, gotKey, postFolderName, safeText, shorten, subjectOf,
+  type PostsDrive,
 } from '../../apps/control-plane/api/_postFolder'
 import { GOT_ROLE as ROUTE_GOT_ROLE, confirmGot, sentByOf } from '../../apps/control-plane/api/content-ideas/store'
 import { gotBrief, planView, type ProductionPlan } from '../../apps/control-plane/api/board/_productionPlan'
@@ -103,15 +104,16 @@ function fakeDb(opts: { races?: number; making?: Body; libraryRows?: Body[] } = 
     from: (table: string) => {
       const f: Body = {}; let patch: Body | null = null; let up: Body | null = null
       const q: any = {
-        select: () => q, eq: (c: string, v: unknown) => { f[c] = v; return q }, in: () => q, like: () => q,
+        select: () => q, eq: (c: string, v: unknown) => { f[c] = v; return q }, in: () => q, like: () => q, gte: () => q, lte: () => q,
         update: (p: Body) => { patch = p; return q }, upsert: (p: Body) => { up = p; return q },
         maybeSingle: async () => ({ data: table === 'content_ideas' ? rows.get(String(f.id)) ?? null : null, error: null }),
         then: (ok: (r: unknown) => unknown) => {
           if (table === 'content_library_files') {
             if (up) { if (!library.some(r => r.path === up!.path && r.sha256 === up!.sha256)) library.push(up); return Promise.resolve({ data: null, error: null }).then(ok) }
-            if (patch) { for (const r of library) if (r.path === f.path && r.sha256 === f.sha256) Object.assign(r, patch); return Promise.resolve({ data: null, error: null }).then(ok) }
+            if (patch) { for (const r of library) if (f.id !== undefined ? r.id === f.id : r.path === f.path && r.sha256 === f.sha256) Object.assign(r, patch); return Promise.resolve({ data: null, error: null }).then(ok) }
             return Promise.resolve({ data: library.filter(r => (f.path === undefined || r.path === f.path)), error: null }).then(ok)
           }
+          if (!patch && f.id === undefined) return Promise.resolve({ data: [...rows.values()], error: null }).then(ok)
           const row = rows.get(String(f.id))
           if (!patch || !row) return Promise.resolve({ data: [], error: null }).then(ok)
           if (races > 0) { races--; row.updated_at = `t${Math.random()}` }
@@ -150,11 +152,64 @@ describe('a file he drops is bound to the piece and filed in its Drive folder', 
     expect(await bindPostFolder(db, TUE, 'Krish')).toEqual({ folder: '2026-11-17 Tue off.day - Data centres', bound: 'already' })
   })
 
-  it('a binding left on the old day by a move is re-dated when the next file arrives, never a second folder', async () => {
-    const { db } = fakeDb({ making: { post_folder: { folder: '2026-11-14 Sat off.day - Where does AI get built when towns say no', bound_at: 'x', by: 'Krish' }, by: 'x', updated_at: '2026-11-15T00:00:00Z' } })
-    expect(await bindPostFolder(db, TUE, 'Krish')).toEqual({ folder: FOLDER, bound: 'redated' })
+  // Krish, 2026-11-18: "close the gap": a piece moved after its folder exists has the folder follow it.
+  const OLD = '2026-11-14 Sat off.day - Where does AI get built when towns say no'
+  const fakeDrive = (names: string[]): PostsDrive & { names: Map<string, string>; renames: Array<[string, string]> } => {
+    const map = new Map(names.map((n, i) => [n, `folder${i}`]))
+    const renames: Array<[string, string]> = []
+    return { names: map, renames,
+      async find(name) { const id = map.get(name); return id ? { id, name } : null },
+      async rename(id, name) { const was = [...map].find(([, x]) => x === id)?.[0]; if (was !== undefined) { map.delete(was); map.set(name, id) } renames.push([id, name]) } }
+  }
+  const moved = (rows: Body[] = []) => fakeDb({ making: { post_folder: { folder: OLD, bound_at: 'x', by: 'Krish' }, by: 'x', updated_at: '2026-11-15T00:00:00Z' }, libraryRows: rows })
+
+  it('a moved piece\'s folder is renamed in Drive by its ID, its waiting files move, then the binding takes the new name', async () => {
+    const waiting = { id: 'r1', path: `3 Posts/${OLD}/3 Video/Your materials/S8 - bill.jpg`, sha256: 'a'.repeat(64), state: 'ready', written: {} }
+    const written = { id: 'r2', path: `3 Posts/${OLD}/1 Article/post.html`, sha256: 'b'.repeat(64), state: 'ready', written: { m: { as: 'x', at: 'y' } } }
+    const { db } = moved([waiting, written])
+    const drive = fakeDrive([OLD])
+    expect(await followBinding(db, async () => drive, TUE, 'Krish')).toEqual({ folder: FOLDER, state: 'renamed', moved_files: 1 })
+    expect(drive.renames).toEqual([['folder0', FOLDER]])
+    expect(db.library.find((r: Body) => r.id === 'r1').path).toBe(`3 Posts/${FOLDER}/3 Video/Your materials/S8 - bill.jpg`)
+    expect(db.library.find((r: Body) => r.id === 'r2').path).toBe(written.path)
     expect(db.rows.get(TUE).meta.making.post_folder.folder).toBe(FOLDER)
-    expect(await bindPostFolder(db, TUE, 'Krish')).toEqual({ folder: FOLDER, bound: 'already' })
+    // Run again: nothing left to do.
+    expect(await followBinding(db, async () => drive, TUE, 'Krish')).toEqual({ folder: FOLDER, state: 'current' })
+    expect(drive.renames).toHaveLength(1)
+  })
+
+  it('a folder Move to... already renamed, or none in Drive yet, only moves the binding', async () => {
+    const a = moved(); const renamed = fakeDrive([FOLDER])
+    expect(await followBinding(a.db, async () => renamed, TUE, 'Krish')).toMatchObject({ folder: FOLDER, state: 'already_renamed' })
+    expect(renamed.renames).toEqual([])
+    const b = moved()
+    expect(await followBinding(b.db, async () => fakeDrive([]), TUE, 'Krish')).toMatchObject({ folder: FOLDER, state: 'nothing_in_drive' })
+    expect(b.db.rows.get(TUE).meta.making.post_folder.folder).toBe(FOLDER)
+  })
+
+  it('holds, changing nothing, when Drive cannot be reached or both names are in 3 Posts', async () => {
+    const a = moved()
+    const off = await followBinding(a.db, async () => null, TUE, 'Krish')
+    expect(off).toMatchObject({ folder: OLD, state: 'held' })
+    expect(off.why).toMatch(/could not be reached/)
+    expect(a.db.rows.get(TUE).meta.making.post_folder.folder).toBe(OLD)
+    const both = fakeDrive([OLD, FOLDER])
+    const two = await followBinding(moved().db, async () => both, TUE, 'Krish')
+    expect(two.state).toBe('held'); expect(two.why).toMatch(/tell Krish/); expect(both.renames).toEqual([])
+  })
+
+  it('a drop on a moved piece files into the followed folder, and is held on the piece when the folder cannot follow', async () => {
+    const { db } = moved()
+    const drive = fakeDrive([OLD])
+    expect(await bindPostFolder(db, TUE, 'Krish', async () => drive)).toEqual({ folder: FOLDER, bound: 'followed' })
+    await expect(bindPostFolder(moved().db, TUE, 'Krish', async () => null)).rejects.toThrow(/could not be reached/)
+  })
+
+  it('the hourly sweep follows every moved piece nothing filed after', async () => {
+    const { db } = moved()
+    const drive = fakeDrive([OLD])
+    expect(await followMovedPieces(db, async () => drive, new Date('2026-11-18T12:00:00Z'))).toEqual({ followed: 1, held: [] })
+    expect(await followMovedPieces(db, async () => drive, new Date('2026-11-18T12:00:00Z'))).toEqual({ followed: 0, held: [] })
   })
 
   it('a session filing his material is named as the one who filed it, never as Krish', async () => {
