@@ -58,7 +58,7 @@ describe('round two regressions', () => {
       // The final foreground rectangle, not a ground field, ends at this bound.
       expect(html).toMatch(beat==='hook' && variant==='slam'
         ? /y="1370" width="780" height="330"/
-        : beat==='hook' ? /y="1400" width="730" height="300"/ : /y="1590" width="730" height="110"/)
+        : beat==='hook' ? /y="1400" width="788" height="300"/ : /y="1590" width="730" height="110"/)
     }
   })
   it('puts the receipt end colour above ink and content in both fields', () => {
@@ -109,5 +109,51 @@ describe('round two regressions', () => {
       ['receipt','face','Bankruptcy.'],
       ['receipt','proof','Google paid.'],
     ] as const) expect(() => draw(variant,beat,caption)).toThrow('Caption repeats stage words')
+  })
+})
+
+
+// Bounds use the rendered SVG coordinates and a conservative em ascent plus
+// quarter-em descent, rather than a second set of hand-maintained baselines.
+describe('round three receipt regressions', () => {
+  const draw = (beat: 'hook' | 'close', series = 'follow.the.money' as 'follow.the.money' | 'under.the.hood' | 'mind.the.gap') =>
+    renderToStaticMarkup(React.createElement(SplitKeyFrame, {variant:'receipt', beat, plateSrc:'real.png', series}))
+  const attr = (tag: string, name: string) => Number(tag.match(new RegExp(name + '="([0-9.]+)"'))![1])
+  it('keeps every full-frame text box clear of the caption rectangle', () => {
+    for (const beat of ['hook', 'close'] as const) {
+      const html = draw(beat)
+      for (const [tag, words] of [...html.matchAll(/(<text [^>]+)>([^<]+)<\/text>/g)].map(m => [m[1]!, m[2]!])) {
+        const x = attr(tag!, 'x'), baseline = attr(tag!, 'y'), size = attr(tag!, 'font-size')
+        const box = {left:x, right:x + words!.length*size, top:baseline-size, bottom:baseline+size*.25}
+        expect(box.right <= 60 || box.left >= 860 || box.bottom <= 1090 || box.top >= 1320, words).toBe(true)
+      }
+      // The HTML header is also text, above the reserved caption rectangle.
+      const header = html.match(/<header[^>]+/)![0]
+      const top = Number(header.match(/top:(\d+)px/)![1])
+      const height = Number(header.match(/height:(\d+)px/)![1])
+      expect(top+height).toBeLessThan(1090)
+    }
+  })
+  it('leaves at least 24px of card below the reported hedge including descent', () => {
+    const html = draw('hook')
+    const card = html.match(/<rect data-reported-card[^>]+/)![0]
+    const hedge = html.match(/(<text [^>]+)>\(REPORTED\)<\/text>/)![1]
+    expect(attr(card,'y')+attr(card,'height')-(attr(hedge!,'y')+attr(hedge!,'font-size')*.25)).toBeGreaterThanOrEqual(24)
+  })
+  it('gives the logo its own ink bar and the series tag a contrasting pill', () => {
+    for (const series of ['follow.the.money', 'under.the.hood', 'mind.the.gap'] as const) {
+      const html = draw('close',series)
+      const field = html.match(/data-close-upper[^>]+fill="([^"]+)"/)![1]
+      const header = html.match(/<header[^>]+/)![0]
+      const logo = html.match(/<img data-logo[^>]+/)![0]
+      const pill = html.match(/<span data-series[^>]+/)![0]
+      expect(header).not.toContain('background:')
+      const background = logo.match(/background:([^;"]+)/)![1]
+      expect(background).not.toBe(field)
+      expect(logo).toContain('split/wordmark.png')
+      expect(logo).toContain('width:260px;height:56px;object-fit:contain')
+      expect(pill.match(/background:([^;"]+)/)![1]).not.toBe(field)
+      expect(pill.match(/color:([^;"]+)/)![1]).not.toBe(pill.match(/background:([^;"]+)/)![1])
+    }
   })
 })
