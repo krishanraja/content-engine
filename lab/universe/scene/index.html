@@ -42,10 +42,20 @@ canvas{position:absolute;inset:0}
 .card .out{margin-top:5px;border-top:1.5px solid #CFC7B4;padding-top:4px;font-size:12.5px;font-weight:800;display:flex;justify-content:space-between;gap:6px}
 .card .out em{font-style:normal;font-family:Plex;font-weight:500;font-size:9.5px;letter-spacing:.8px;color:#5A615D;text-transform:uppercase;padding-top:2px}
 .card.brain{background:var(--mint)} .card.brain h3 span{background:var(--ink);color:var(--mint)}
+/* close-ups: the floors' own cards, larger, along the bottom */
+body.shot #panel{left:40px;right:40px;top:auto;bottom:44px;width:auto;flex-direction:row;gap:16px;zoom:1.5}
+body.shot #panel .card{flex:1}
+body.shot #tnight{display:none}
+body.shot .title{z-index:2}
+body.shot .sign{transform-origin:0 0} body.shot .tag{transform-origin:50% 0}
+body.shot #sun{z-index:2}
+#band{display:none}
+body.shot #band{display:block;position:absolute;left:0;right:0;top:0;height:300px;z-index:1;background:linear-gradient(#EFE8D8 0,#EDE6D5 215px,#EDE6D500 300px)}
 </style></head><body>
 <div id="sky"></div><div id="night"></div><div id="stars"></div><div id="sun"></div><div id="moon"></div>
 <div class="title" id="tday"><div class="big">Inside my AI-native firm</div><div class="pill">floor by floor</div></div>
 <div class="title" id="tnight"><div class="big">And it keeps working</div><div class="pill">after I log off</div></div>
+<div id="band"></div>
 <div id="labels"></div>
 <div id="panel"></div>
 <script type="module" src="./scene.js"></script>

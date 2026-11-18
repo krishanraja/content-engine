@@ -1,0 +1,30 @@
+<!doctype html>
+<!-- The whole cast in one frame, large, for review (lab/universe/PLAN.md). Rendered by figurines/lineup.cjs. -->
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:Plex;src:url(/assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf)}
+body{margin:0;width:2100px;height:2100px;background:#EFE8D8;overflow:hidden}
+canvas{position:absolute;inset:0} .n{position:absolute;transform:translate(-50%,0);font:15px Plex;background:#0C1512;color:#F4EFE4;padding:2px 6px;border-radius:4px;white-space:nowrap}
+</style></head><body><script type="module">
+import * as THREE from '../vendor/three.module.js'
+import { ROLES, makeFigurine } from './index.js'
+const W = 2100, H = 2100, COLS = 7, CELL = 300
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); renderer.setSize(W, H); renderer.outputColorSpace = THREE.SRGBColorSpace
+renderer.setClearColor('#EFE8D8'); document.body.appendChild(renderer.domElement)
+const scene = new THREE.Scene(), S = 0.0042
+const camera = new THREE.OrthographicCamera(-W / 2 * S, W / 2 * S, H / 2 * S, -H / 2 * S, 0.1, 100)
+camera.position.set(6.2, 2.7, 15); camera.lookAt(0, 0, 0)
+scene.add(new THREE.HemisphereLight('#FFFFFF', '#9C8F78', 1.5)); const sun = new THREE.DirectionalLight('#FFF3DE', 2.1); sun.position.set(6, 12, 9); scene.add(sun)
+const load = (f) => new Promise((r) => new THREE.TextureLoader().load(`../logos/${f}`, (t) => { t.colorSpace = THREE.SRGBColorSpace; r(t) }, undefined, () => r(null)))
+const claude = await load('claude-symbol.png'), openai = await load('openai.jpg')
+const palette = { ink: '#0C1512', cream: '#F4EFE4', mint: '#7EF0C0', butter: '#FFD84D', lilac: '#B7A6FF', coral: '#FF6A4D', wood: '#A88E6C', metal: '#9AA3A0', paper: '#FBF8F1', glow: '#FFE9A8' }
+const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion), up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion)
+const figs = ROLES.map((role, i) => {
+  const human = role === 'ceo', f = makeFigurine(THREE, { role, body: human || role === 'chief-of-staff' ? '#7EF0C0' : '#D97757', accent: '#0C1512', skin: '#E9C6A2', palette, head: human ? 'human' : 'bot', headLogo: human ? null : (i % 4 === 0 ? openai : null), legLogo: claude, seed: i * 0.61 })
+  const cx = (i % COLS + 0.5) * CELL - W / 2, cy = H / 2 - (Math.floor(i / COLS) + 0.86) * CELL
+  const p = right.clone().multiplyScalar(cx * S).add(up.clone().multiplyScalar(cy * S)); p.y -= 0; f.group.position.copy(p); f.group.scale.setScalar(1.45); f.group.rotation.y = -0.2; scene.add(f.group)
+  const d = document.createElement('div'); d.className = 'n'; d.textContent = role; d.style.left = (cx + W / 2) + 'px'; d.style.top = (H / 2 - cy + 18) + 'px'; document.body.appendChild(d)
+  return f
+})
+window.setTime = (t) => { figs.forEach((f) => f.update(t)); renderer.render(scene, camera) }
+window.setTime(1); await document.fonts.ready; window.ready = true
+</script></body></html>

@@ -140,3 +140,22 @@ linkedin posts scheduled in Buffer."
   `17DZDWvvocz-EOh_MczMUT4MwWONI52K-`.
 - The outcome: a series of LinkedIn posts, scheduled in Buffer, with this video in one of them. Scheduling is a
   publication: it waits for Krish's yes on the exact posts, every time.
+
+### Version 4 and the floor close-ups (18 Nov 2026)
+
+Krish, 18 Nov 2026: "I dont think the characters in the original video have enough personality for what they do,
+visually - I would not say no to you rerendering the characters and redoing the original video". The cast is now one
+figurine per job (`figurines/roles.json`, 49 jobs), built by Codex from card `ve-universe-figurines-3` in two passes
+(the second after Claude's full-size line-up review: builds, faces, costumes, real hats, bigger props), checked by
+`figurines/check.mjs` and looked at with `figurines/lineup.cjs`. Figures stand 1.3 in the building (was 1.12).
+
+Filed beside the version 3 files in `03_Social-and-Ads` (`1u-35-pcnvdn-kRvSf-U2uAc-QW7Ri2QB`), version 3 untouched:
+- The master, version 4: video `1dhobSF8X6nN5vZsXCoY55_OcQOzIh8Nf`, day still `1PsF0HkRzeqhQdEWfJbhoc1vJCaxAK0Rt`, night
+  still `1vQS-5K6CzW3XFvkaJcvdngb7MpGy0cZk`.
+- Floor close-ups for the LinkedIn series (growth-mindmake), 5 s, 1080x1350, 30 fps, a walk across the floor in daylight
+  with only those floors' cards (`node lab/universe/render3d.cjs <out> --shots all`):
+  - The decision deck: video `1FVxSZTw-qsfvvXJHzunMiGuuRLMJ9PeP`, still `1hT3a7E9Ryk9QcPSziq5lxwNCf9hIetAD`
+  - Watch + write: video `1Ur2huDJcv9Z39pGcapsyK07xkuPJ_PKc`, still `17WVlKoo5E9R5pkqxSMAliY-L_wdjvoC8`
+  - Share + sell: video `1tOqV2UrneLcSbz9FtFjdthtloESNZcuu`, still `1fiiIQ1iKNY5N3JiCDJHe6AsXfJo2cnDK`
+- Nothing is posted or scheduled; Krish said "do not schedule anything" for now.
+
