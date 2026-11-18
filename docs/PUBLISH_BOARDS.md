@@ -1297,6 +1297,12 @@ prompt, and no session could move it on.
   for exactly that list, so this one prompt's wall allows scheduling that post and nothing else (`WALLS_SCHEDULE`); every
   other prompt keeps "never post or publish anything". Control Centre reads Buffer every 15 minutes (done-check
   `buffer_sent`) and moves the card to Scheduled by itself.
+- **Its files at every step, and a moved post's folder.** `assets` stays on the card once it is Scheduled or Live (no Publish
+  button then). A post's Drive folder is dated for the day it was first made for, and a post he moves keeps it: `dayPosts`
+  now also takes a folder of another day of the week when an option on this day names it (`drive`), or, with nothing naming it,
+  when its title is contained in exactly one option's title (never a guess between two). This was why Thu 19 "Free ChatGPT has
+  ads now", scheduled on Instagram for Fri 20 with its eight cards and caption in `2026-11-17 Tue off.day - ...`, showed no
+  files at all (Krish, 2026-11-18). Held by `tests/control-plane/board-week-model.test.ts`.
 - **Not built yet.** Scheduling from the button itself, with no session: Control Centre's Buffer key can write, but its
   code is held to reads by a ruling and `tests/api/bufferSent.test.ts`, and a bound approval for a post with no manifest
   does not exist yet. Held for Krish's go on both.

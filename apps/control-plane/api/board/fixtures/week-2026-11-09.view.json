@@ -9118,6 +9118,36 @@
        "said": null
       },
       "piece_id": null,
+      "assets": [
+       {
+        "name": "5 slides",
+        "kind": "carousel",
+        "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000001/view",
+        "folder": "4 Social",
+        "slides": [
+         {
+          "name": "gitbroke-card-1.png",
+          "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000001/view"
+         },
+         {
+          "name": "gitbroke-card-2.png",
+          "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000002/view"
+         },
+         {
+          "name": "gitbroke-card-3.png",
+          "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000003/view"
+         },
+         {
+          "name": "gitbroke-card-4.png",
+          "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000004/view"
+         },
+         {
+          "name": "gitbroke-card-5.png",
+          "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000005/view"
+         }
+        ]
+       }
+      ],
       "item": null,
       "supports": null,
       "move": null,
@@ -9169,36 +9199,6 @@
        }
       ],
       "line": "Late: Thu 12 passed. It stays on its next step until the end of Fri 13 Nov, then it is marked missed. Made: its files are made and filed. Its 1 file is made and filed. Check each one, then publish: it is scheduled in Buffer exactly as listed.",
-      "assets": [
-       {
-        "name": "5 slides",
-        "kind": "carousel",
-        "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000001/view",
-        "folder": "4 Social",
-        "slides": [
-         {
-          "name": "gitbroke-card-1.png",
-          "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000001/view"
-         },
-         {
-          "name": "gitbroke-card-2.png",
-          "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000002/view"
-         },
-         {
-          "name": "gitbroke-card-3.png",
-          "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000003/view"
-         },
-         {
-          "name": "gitbroke-card-4.png",
-          "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000004/view"
-         },
-         {
-          "name": "gitbroke-card-5.png",
-          "url": "https://drive.google.com/file/d/1ThuGitbrokeCard000000000005/view"
-         }
-        ]
-       }
-      ],
       "next": {
        "kind": "prompt",
        "label": "Publish",
@@ -9286,6 +9286,15 @@
        "said": null
       },
       "piece_id": null,
+      "assets": [
+       {
+        "name": "agent not set up - tall 9x16.mp4",
+        "kind": "video",
+        "url": "https://drive.google.com/file/d/1ThuAgentVideo0000000000001/view",
+        "folder": "",
+        "slides": []
+       }
+      ],
       "item": null,
       "supports": null,
       "move": null,
@@ -9496,15 +9505,6 @@
        }
       ],
       "line": "Late: Thu 12 passed. It stays on its next step until the end of Fri 13 Nov, then it is marked missed. Made: its files are made and filed. Its 1 file is made and filed. Check each one, then publish: it is scheduled in Buffer exactly as listed.",
-      "assets": [
-       {
-        "name": "agent not set up - tall 9x16.mp4",
-        "kind": "video",
-        "url": "https://drive.google.com/file/d/1ThuAgentVideo0000000000001/view",
-        "folder": "",
-        "slides": []
-       }
-      ],
       "next": {
        "kind": "prompt",
        "label": "Publish",

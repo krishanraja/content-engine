@@ -1,0 +1,3 @@
+Status: a post that moved day now shows the files in its Drive folder (the folder is dated for the day it was first made for; the board now also takes a folder of another day of the week when an option names it or its title is in exactly one option's title), and the files stay on the card when it is Scheduled or Live. Thu 19 "Free ChatGPT has ads now" was really scheduled on Instagram for Fri 20 with its eight cards; the board just could not see its folder.
+Next: Control Centre draws `assets` on the card (krishanraja/control-center); covers and thumbnails per channel are not made for a carousel and not requested, which Krish should say if he wants them.
+North Star check (2026-11-18): holds.

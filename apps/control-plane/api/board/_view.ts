@@ -344,14 +344,37 @@ export interface ViewInputs {
   plans?: Record<string, Body | null>
 }
 
+/** A folder's or an option's title as a comparison key: letters and digits, lower case. */
+const titleKey = (t: string): string => t.toLowerCase().replace(/[^a-z0-9]+/g, '')
+/** The title a post folder carries after its date and day ("2026-11-17 Tue off.day - Free ChatGPT has ads now"). */
+const folderTitle = (name: string): string => name.replace(/^\d{4}-\d{2}-\d{2}\s+\w{3}\s+[^-]*-\s*/, '')
+
 /** The day's post folders, each bound to the option whose `drive` names it and to the piece whose making record files
- *  into it (pack.folder): the bound ones first, then by name. Null when Drive could not be read. */
+ *  into it (pack.folder): the bound ones first, then by name. Null when Drive could not be read.
+ *
+ *  A post's folder is dated for the day it was made for, and a post he moves to another day keeps its folder (Krish,
+ *  2026-11-18: a post scheduled for Fri 20 showed no files at all, because its folder was dated Tue 17 and its card sat on
+ *  Thu 19: "at no point did I ever see the covers, thumbnails etc"). So a folder of another day of the week is also this
+ *  day's when an option here names it (`drive`), or, with nothing naming it, when its title is the one option's title
+ *  (a folder named "... - Free ChatGPT has ads now" and an option "Free ChatGPT has ads now. Here is ..."): never when
+ *  more than one option here would claim it. */
 export function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost[] | null {
   if (!Array.isArray(posts)) return null
   // The folder each piece is bound to now (its binding, else its pack's folder, its date put right after a move).
   const packOf = (p: Body) => currentFolder(isObj(p.meta) && isObj(p.meta.making) ? p.meta.making as never : null, p.scheduled_for) ?? ''
-  return posts.filter(p => p.date === date).map(p => {
-    const option = options.find(o => o.post === p.id)?.id ?? null
+  const here = posts.filter(p => p.date === date)
+  const hereIds = new Set(here.map(p => p.id))
+  const claimed = (p: DrivePost): string | null => {
+    const named = options.find(o => o.post === p.id)
+    if (named) return named.id
+    const key = titleKey(folderTitle(p.name))
+    if (key.length < 12) return null
+    const hits = options.filter(o => !o.post && titleKey(o.title).includes(key))
+    return hits.length === 1 ? hits[0].id : null
+  }
+  const moved = posts.filter(p => p.date !== date && !hereIds.has(p.id) && claimed(p) !== null)
+  return [...here, ...moved].map(p => {
+    const option = claimed(p)
     const piece = pieces.find(x => packOf(x) === p.name)
     return { id: p.id, name: p.name, url: p.url, option, piece_id: piece ? String(piece.id).toLowerCase() : null, assets: p.assets }
   }).sort((a, b) => Number(!a.option && !a.piece_id) - Number(!b.option && !b.piece_id) || a.name.localeCompare(b.name))
