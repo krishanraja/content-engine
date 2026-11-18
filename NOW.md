@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-18","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The work building video and its stills are filed in Drive under mind/make > 00_Brand-Assets > 03_Social-and-Ads; Krish's goal for them is a series of LinkedIn posts scheduled in Buffer, with this video in one of them (lab/universe/PLAN.md, "Where this is going"). (2026-11-18)
 - The work building version 3 is rendered and sent to Krish: five or six workers per floor in named rooms, the roof as the decision deck, and the AI brain as a double-height basement run by a proactive chief of staff with its librarian, archives, auditor, analyst, trend spotter, inspiration house, taste and standards, and learnings. (2026-11-18)
 - My takes are in the Inbox now matches a take by every name the board shows for each piece of the week and refuses when the Inbox holds several recordings and no name says which is this piece's; the data-centres piece (b019dbf8) was repaired to its two takes, the other four kept under meta.takes_in.repaired. The production plan (contract 1.29.0) gives each picture its lever, maker, why and basis (script or research) and lists what Krish fetches; the post-production prompt carries each take's Drive link and shows him mocks as it goes. (2026-11-18)
 - The work building version 2 is rendered and sent to Krish (12 s, 1080x1350, day and night stills): Codex's second figurine pass (card ve-universe-figurines-2) passes check.mjs, shows the Claude mark on dark legs and readable props, and the dusk handover is clean. (2026-11-18)
@@ -51,7 +52,7 @@ Older lines: `docs/history/2026-11-18-NOW-moved-10.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): Krish reacts to version 3; change what he names and re-render with lab/universe/render3d.cjs.
+- Next (2026-11-18): Agree the LinkedIn series outline with Krish, draft the posts in his voice, then put the drafts in Buffer only on his yes.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
