@@ -1,6 +1,6 @@
 ---
 name: directed-shoot
-description: "Plan, direct and post-produce experimental videos built around Krish with zero creative limits: a film-style shot script he acts out (lines, marks, triggers, what his hands do, props chosen to become something else), filmed in one take, then transformed with AI in post into anything at all: him in space, turned into a famous person at random, shrunk, cloned, the world swapped around him. The formats so far are wild (anything goes), reveal-peel (lies undone beside the raw take), escalation, interruption and two-of-me. Use when Krish asks for an experiment, a directed shoot, a shot script or something nuts. Separate from the style pickers. Spend waits on his yes."
+description: "Plan, direct and post-produce experimental videos built around Krish with zero creative limits: a film-style shot script he acts out (lines, marks, triggers, what his hands do, props chosen to become something else), filmed in one take, then transformed with AI in post into anything at all: him in space, turned into a famous person at random, shrunk, cloned, the world swapped around him. The formats so far are wild (anything goes), reveal-peel (lies undone beside the raw take), escalation, interruption and two-of-me. Use when Krish ticks Add an experiment on a piece on the board (meta.style.experiment, the production prompt says so), or asks for an experiment, a directed shoot, a shot script or something nuts. Separate from the style pickers. Spend waits on his yes."
 model: opus
 ---
 
@@ -15,6 +15,12 @@ This route is for experiments, and the idea has no ceiling: space, other worlds,
 gravity off. Nothing is too much. Ask only whether it is striking or funny, and whether it makes the piece's point
 land (AGENTS.md rule 6). It stays apart from the series cuts. It never sets `style.motion`, `style.captions` or any
 style pick, never runs `ve lab`, and adds nothing to the style bank.
+
+## How it starts
+
+His tick, **Add an experiment**, beside the look, motion and captions on every piece (Krish, 2026-11-18: "Make it
+available as a feature in all"), saved as `meta.style.experiment`; the production prompt then names this skill. It
+runs alongside his picks, never in their place. He can also just ask.
 
 ## The steps
 

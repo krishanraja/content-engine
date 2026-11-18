@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { CAPTIONS, LAST_MOTION, StyleError, dayStyle, motionBank, nextStyle, sampleUrl, saveStyle, stylePick, undrawableMotion, type MotionModule, type StyleInputs } from '../../apps/control-plane/api/board/_style.js'
+import { CAPTIONS, EXPERIMENTS, LAST_MOTION, StyleError, dayStyle, motionBank, nextStyle, sampleUrl, saveStyle, stylePick, undrawableMotion, type MotionModule, type StyleInputs } from '../../apps/control-plane/api/board/_style.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
 vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => false, mediaQualityRollout: () => ({ status: 'candidate_pending_calibration' }) }))
 
@@ -196,9 +196,9 @@ describe('his press on a style', () => {
 
   it('keeps what he said before: a Not this takes the pick away, a pick takes a style off the Not this list', () => {
     const before = { look: { production: 'face-with-proof' }, style: { motion: 'ladder', captions: 'pop', rejected: { motion: ['swiss'], captions: [] } } }
-    expect(nextStyle(before, { reject: { layer: 'motion', id: 'ladder' } }, 'T')).toEqual({ motion: null, captions: 'pop', rejected: { motion: ['swiss', 'ladder'], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
-    expect(nextStyle(before, { motion: 'swiss' }, 'T')).toEqual({ motion: 'swiss', captions: 'pop', rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
-    expect(nextStyle({}, { captions: 'cinematic' }, 'T')).toEqual({ motion: null, captions: 'cinematic', rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
+    expect(nextStyle(before, { reject: { layer: 'motion', id: 'ladder' } }, 'T')).toEqual({ motion: null, captions: 'pop', experiment: null, rejected: { motion: ['swiss', 'ladder'], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
+    expect(nextStyle(before, { motion: 'swiss' }, 'T')).toEqual({ motion: 'swiss', captions: 'pop', experiment: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
+    expect(nextStyle({}, { captions: 'cinematic' }, 'T')).toEqual({ motion: null, captions: 'cinematic', experiment: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
     expect(nextStyle(before, { reject: { layer: 'treatment', id: 'face-with-proof' } }, 'T').rejected.treatment).toEqual(['face-with-proof'])
   })
 })
@@ -236,11 +236,44 @@ function fakeDb(row: Body, landBetween = 0) {
 const ROW = { id: PIECE, idea: 'A piece', scheduled_for: '2026-11-16', lane_slot: 'follow_the_money', updated_at: '2026-11-16T08:00:00Z',
   meta: { look: { production: 'face-with-proof', experiment: null, inspiration: [], at: '2026-11-15T10:00:00Z' } } }
 
+describe('his experiment tick (contract 1.27.0)', () => {
+  // Krish, 2026-11-18: "add a checkbox on every future piece that I'm planning, as I do the motion picking and caption
+  // picking, etc., that can activate this skill alongside what I pick ... Make it available as a feature in all."
+  const pick = (body: Body) => { try { return stylePick(body, null) } catch (e) { return e instanceof StyleError ? [e.status, e.message] : e } }
+
+  it('offers the directed shoot, a skill that exists', () => {
+    expect(EXPERIMENTS.map(e => e.id)).toEqual(['directed-shoot'])
+    for (const e of EXPERIMENTS) expect(readFileSync(`.agents/skills/${e.id}/SKILL.md`, 'utf8')).toContain(`name: ${e.id}`)
+  })
+
+  it('takes the tick-box values: ticked, unticked, and refuses an unknown or a second one', () => {
+    expect(pick({ piece_id: PIECE, experiment: ['directed-shoot'] })).toEqual({ experiment: 'directed-shoot' })
+    expect(pick({ piece_id: PIECE, experiment: 'directed-shoot' })).toEqual({ experiment: 'directed-shoot' })
+    expect(pick({ piece_id: PIECE, experiment: [] })).toEqual({ experiment: null })
+    expect(pick({ piece_id: PIECE, experiment: ['moon-landing'] })).toEqual([400, 'unknown_experiment'])
+    expect(pick({ piece_id: PIECE, experiment: ['directed-shoot', 'directed-shoot'] })).toEqual([400, 'unknown_experiment'])
+  })
+
+  it('keeps the tick through his other picks, and only his tick changes it', () => {
+    const on = nextStyle({}, { experiment: 'directed-shoot' }, 'T')
+    expect(on.experiment).toBe('directed-shoot')
+    expect(nextStyle({ style: on }, { motion: 'swiss' }, 'U').experiment).toBe('directed-shoot')
+    expect(nextStyle({ style: on }, { captions: 'pop' }, 'U').experiment).toBe('directed-shoot')
+    expect(nextStyle({ style: on }, { experiment: null }, 'U').experiment).toBeNull()
+  })
+
+  it('shows on the piece, and an unknown id on the record reads as none', () => {
+    expect(dayStyle(inputs({ meta: { style: { experiment: 'directed-shoot' } } })).experiment).toBe('directed-shoot')
+    expect(dayStyle(inputs({ meta: { style: { experiment: 'moon-landing' } } })).experiment).toBeNull()
+    expect(dayStyle(inputs()).experiment).toBeNull()
+  })
+})
+
 describe('the write', () => {
   it('writes meta.style beside meta.look, and keeps a write that lands in between', async () => {
     const { db, state } = fakeDb(ROW, 1)
     const saved = await saveStyle(db as never, PIECE, { motion: 'ladder' }, new Date('2026-11-16T09:30:00Z'))
-    expect(saved).toEqual({ motion: 'ladder', captions: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: '2026-11-16T09:30:00.000Z' })
+    expect(saved).toEqual({ motion: 'ladder', captions: null, experiment: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: '2026-11-16T09:30:00.000Z' })
     expect(state.conflicts).toBe(1)
     expect(state.writes).toBe(1)
     expect(state.row.meta.style).toEqual(saved)
