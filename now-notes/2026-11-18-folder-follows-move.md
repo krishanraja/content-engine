@@ -1,0 +1,3 @@
+Status: a post's Drive folder now follows its day whenever a Growth or Buffer-sweep report touches the placed item (renamed by its ID to the item's date and day, recorded in `followed`), not only at the press that moves it; the board also reads the item's own drive_folder as the option's folder. The Thu 19 post's Tue 17 folder will be renamed on the next report (within 15 minutes of the deploy).
+Next: Buffer's scheduled time does not follow a move (the engine never calls Buffer); Thu 19's post is still scheduled for Fri 20 12:00 UTC, which Krish should either accept or move through the approved posting route.
+North Star check (2026-11-18): holds.
