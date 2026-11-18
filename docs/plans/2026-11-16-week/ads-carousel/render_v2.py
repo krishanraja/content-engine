@@ -126,6 +126,15 @@ def body(n, card):
     im = phone_scene() if n == 2 else scene(n, 640, 130)
     return body_b(im, KICK[n], card['headline'], KEY[n], top=690 if n == 2 else 650, bottom=1235)
 
+def follow_foot2(im, y):
+    """'Follow for more' in the house display face (Anton, caps, mint), the wordmark centred directly under it."""
+    d = ImageDraw.Draw(im); f = R.font(70); t = 'FOLLOW FOR MORE'; bx = f.getbbox(t)
+    d.text(((W - (bx[2] - bx[0])) / 2 - bx[0], y - bx[1]), t, font=f, fill=MINT)
+    y += (bx[3] - bx[1]) + 34
+    wm = Image.open(OUT / 'brand/wordmark.png').convert('RGBA'); wm = wm.crop(wm.getbbox())
+    wm = wm.resize((440, round(wm.height * 440 / wm.width)), Image.Resampling.LANCZOS)
+    im.paste(wm, ((W - 440) // 2, round(y)), wm)
+
 def close(card):
     im = scene(8, 740, 120)
     f = R.font(66); words = card['headline'].upper().split()
@@ -143,7 +152,7 @@ def close(card):
     wd = 900
     while wd > 500 and len(fitc(wd - 10)) == len(lines): wd -= 10
     lines = fitc(wd)
-    lead = 72; total = (len(lines) - 1) * lead + 66 + 40 + 54 + 24 + 50
+    lead = 72; total = (len(lines) - 1) * lead + 66 + 40 + 70 + 34 + 52
     y = 800; d = ImageDraw.Draw(im); mint = False
     for ln in lines:
         txt = ' '.join(ln); bx = f.getbbox(txt); x = (W - (bx[2] - bx[0])) / 2 - bx[0]
@@ -153,7 +162,7 @@ def close(card):
             if w == 'LIMITS,': mint = False
             x += f.getlength(w + ' ')
         y += lead
-    follow_foot(im, FONTS, OUT / 'brand/wordmark.png', y + 26, MINT if False else CREAM)
+    follow_foot2(im, y + 30)
     return im
 
 if __name__ == '__main__':
