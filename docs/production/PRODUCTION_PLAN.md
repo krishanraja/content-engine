@@ -61,6 +61,18 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
      can get it: a photo of his own, a prop, a screen recording, a document on his desk).
    Every picture whose `maker` is `you` is also in the plan's `fetch` list, `{ beat, what, why }`, which the card shows at
    the top, so he can get it before the production session needs it.
+   **Two consultants, and who decides** (Ruling, Krish, 2026-11-18: "the two external consultants on humour and
+   divergence can give suggestions, but the session and me are in control. Quality is no1."). For the beats that carry
+   the piece (the hook, the turn, the number, the close), ask krishanraja/divergent-thinker for pictures outside the
+   obvious: `provoke` on each (the Control Center connector's `divergent_run`, or its CLI, `--mode provoke --target
+   video --namespace content-engine`), with the beat's words and its research as the problem, and `divergent_score` on
+   your own first choice to see whether it is the consensus in disguise. The humour engine (step 4) is the second
+   consultant. Both only suggest. The run judges every suggestion on quality first (clarity to the point, then the
+   lever, then the floor in `floor.py` and his approved taste) and takes one only when it beats its own choice; it never
+   takes one because a consultant offered it, and says in a beat's `why` when an idea came from one. Krish has the last
+   word through his swaps on the card. Record what the plan used with `divergent_record`, so it is never offered again.
+   If a consultant cannot be reached, say so on the piece and plan without it; never stall on one.
+
 4. The humour: read krishanraja/humour-engine's README (section 4, integrating) and ask it what comic readings his own
    words carry; read his humour style from ai-harness (skills/krish-voice/references/humour.md, by its raw link in the
    run; a session with the Control Center connector reads it with get_skill). If either cannot be read, say so on the
