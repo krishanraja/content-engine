@@ -40,6 +40,9 @@ of every tall cut. Carousel card 1 keeps its own rule ("the cover card is a scen
    a button or cut by the crop, including the logo row.
 8. **Two or three options, never one,** each shown in a mock of his grid beside the last five posts.
 
+**Treatments (18 Nov 2026).** A cover's treatments (his cutout lifted off a treated background, fine grain) come by
+rule from `config/ve/treatments.json`, never chosen per cover: `docs/ve/TREATMENTS.md`.
+
 ## What changes in the drawer if approved
 
 - `receipt.py` defaults flip: no proof tag, quiet series label, headline first, logos only from a `named` list in the

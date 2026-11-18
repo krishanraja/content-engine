@@ -1,0 +1,175 @@
+{
+  "$doc": "docs/ve/TREATMENTS.md",
+  "version": 1,
+  "why": "Krish, 2026-11-17 (learning upgrade-the-edit-style, 17 Oct): \"have a bank of styles that we can draw from ... The background of the person has also been treated when he's talking so it doesn't look too amateur.\" Krish, 2026-11-18: \"I don't want 300 different choices in the UI so figure out how.\" Treatments are applied by rule from what each beat or still is for. Nobody picks one: Krish's only visible choice stays the look (his Pick a style press), which sets their strength through style.energy.",
+  "source": {
+    "name": "EffectCraft",
+    "url": "https://github.com/storytold/effectcraft",
+    "commit": "67942cda7b0821eb83234f78196df6c43ceb0abd",
+    "read_on": "2026-11-18",
+    "licence": "MIT OR Apache-2.0",
+    "use": "reference for effect names, parameters and defaults; behaviour is rebuilt in the renderer, no Rust is vendored (docs/ve/sources/effectcraft.md)"
+  },
+  "limits": {
+    "max_treatments_per_beat": 2,
+    "max_strength": 1.5,
+    "never_on_face": ["ec.channel.shiftchannels", "ec.generate.cclightsweep"]
+  },
+  "strength_by_energy": { "calm": 0.6, "medium": 1.0, "high": 1.3 },
+  "primitives": {
+    "subject-matte": {
+      "effectcraft": "ec.matte.rotobrush",
+      "what": "a per-frame matte of Krish on his take (SAM 2.1 Tiny in EffectCraft; ve's model is the card's choice), refined at the edge",
+      "built": false,
+      "card": "ve-treat-1-subject-lift"
+    },
+    "matte-choke": {
+      "effectcraft": "ec.matte.mattechoker",
+      "what": "tightens or softens the matte's edge so hair and hands do not smear (F53)",
+      "built": false,
+      "card": "ve-treat-1-subject-lift"
+    },
+    "exposure": {
+      "effectcraft": "ec.color.exposure",
+      "what": "darkens the background plate behind the matte",
+      "built": false,
+      "card": "ve-treat-1-subject-lift"
+    },
+    "gaussian-blur": {
+      "effectcraft": "ec.blur.gaussian",
+      "what": "softens the background plate behind the matte",
+      "built": false,
+      "card": "ve-treat-1-subject-lift"
+    },
+    "rim-light": {
+      "effectcraft": "ec.stylize.glow",
+      "what": "a soft glow from the matte's edge outwards, in brand mint, behind him",
+      "effectcraft_defaults": { "threshold": 60, "radius": 10, "intensity": 1.0 },
+      "built": false,
+      "card": "ve-treat-1-subject-lift"
+    },
+    "grain": {
+      "effectcraft": "ec.noise.addgrain",
+      "what": "fine seeded film grain, the same seed for a still and its render frame",
+      "built": false,
+      "card": "ve-treat-2-still-treatments"
+    },
+    "glow": {
+      "effectcraft": "ec.stylize.glow",
+      "what": "a glow on bright type or a number, colour channels, composite on top",
+      "effectcraft_defaults": { "threshold": 60, "radius": 10, "intensity": 1.0 },
+      "built": false,
+      "card": "ve-treat-2-still-treatments"
+    },
+    "duotone": {
+      "effectcraft": "ec.color.tritone",
+      "what": "maps a photo to the brand ink and cream (shadows to ink_deep, highlights to cream)",
+      "effectcraft_defaults": { "highlights": [1.0, 1.0, 1.0], "midtones": [0.5, 0.4, 0.3], "shadows": [0.0, 0.0, 0.0], "blend": 0 },
+      "built": false,
+      "card": "ve-treat-2-still-treatments"
+    },
+    "highlight-sweep": {
+      "effectcraft": "ec.generate.cclightsweep",
+      "what": "one band of light that crosses a proof line or receipt once",
+      "built": false,
+      "card": "ve-treat-2-still-treatments"
+    },
+    "channel-split": {
+      "effectcraft": "ec.channel.shiftchannels",
+      "what": "a short red and cyan split on graphics only, a few frames on a hit",
+      "built": false,
+      "card": "ve-treat-3-motion-treatments"
+    },
+    "vignette": {
+      "effectcraft": "ec.stylize.ccvignette",
+      "what": "a soft edge darkening that pulls the eye to the centre",
+      "built": false,
+      "card": "ve-treat-3-motion-treatments"
+    }
+  },
+  "treatments": {
+    "subject-lift": {
+      "for": "Krish on his take, or his cutout on a face-led cover",
+      "recipe": [
+        { "primitive": "subject-matte" },
+        { "primitive": "matte-choke", "params": { "choke": 1, "softness": 2 } },
+        { "primitive": "exposure", "params": { "background_stops": -0.6 } },
+        { "primitive": "gaussian-blur", "params": { "background_px": 6 } },
+        { "primitive": "rim-light", "params": { "radius": 18, "intensity": 0.5, "colour": "mint" } }
+      ]
+    },
+    "hook-hit": {
+      "for": "the hook's key word landing",
+      "recipe": [
+        { "primitive": "channel-split", "params": { "px": 6, "frames": 4 } },
+        { "primitive": "glow", "params": { "radius": 14, "intensity": 0.6 } }
+      ]
+    },
+    "number-glow": {
+      "for": "a beat whose device shows a number or a chart",
+      "recipe": [{ "primitive": "glow", "params": { "radius": 20, "intensity": 0.8 } }]
+    },
+    "receipt-paper": {
+      "for": "a beat whose device shows a receipt, document or proof line",
+      "recipe": [
+        { "primitive": "grain", "params": { "amount": 0.08, "size": 1.2 } },
+        { "primitive": "highlight-sweep", "params": { "width_pct": 12, "intensity": 0.35, "frames": 18 } }
+      ]
+    },
+    "pivot-split": {
+      "for": "the turn in the story",
+      "recipe": [{ "primitive": "channel-split", "params": { "px": 4, "frames": 3 } }]
+    },
+    "payoff-glow": {
+      "for": "the payoff beat",
+      "recipe": [
+        { "primitive": "glow", "params": { "radius": 24, "intensity": 0.5 } },
+        { "primitive": "vignette", "params": { "amount": 0.25 } }
+      ]
+    },
+    "still-grain": {
+      "for": "every still's ground, so flat colour never reads as a template",
+      "recipe": [{ "primitive": "grain", "params": { "amount": 0.05, "size": 1.0 } }]
+    },
+    "still-duotone": {
+      "for": "a photograph on a carousel slide or Notes image",
+      "recipe": [{ "primitive": "duotone", "params": { "shadows": "ink_deep", "highlights": "cream", "blend": 0 } }]
+    },
+    "still-glow": {
+      "for": "the one number or key word on a still",
+      "recipe": [{ "primitive": "glow", "params": { "radius": 16, "intensity": 0.6 } }]
+    },
+    "still-sweep": {
+      "for": "a receipt or proof line on a still, frozen mid-sweep",
+      "recipe": [{ "primitive": "highlight-sweep", "params": { "width_pct": 14, "intensity": 0.3, "at": 0.4 } }]
+    }
+  },
+  "rules": {
+    "video": {
+      "by_role": {
+        "hook": ["hook-hit"],
+        "anchor": [],
+        "bridge": [],
+        "pivot": ["pivot-split"],
+        "payoff": ["payoff-glow"],
+        "call": []
+      },
+      "when_face_full": ["subject-lift"],
+      "by_device_kind": {
+        "number": ["number-glow"],
+        "receipt": ["receipt-paper"]
+      },
+      "order": "subject-lift first, then device, then role; capped at limits.max_treatments_per_beat"
+    },
+    "stills": {
+      "cover": ["subject-lift", "still-grain"],
+      "carousel": ["still-grain", "still-duotone", "still-glow"],
+      "notes_image": ["still-grain", "still-duotone"],
+      "meme": []
+    },
+    "device_kinds": {
+      "number": ["kinetic_stat", "stat_strip", "quota_chart", "leaderboard", "ladder_stage", "slot_machine"],
+      "receipt": ["receipt_print", "evidence_card", "record_card", "passport_page", "quote_card", "pull_quote", "thread_card", "stamp"]
+    }
+  }
+}

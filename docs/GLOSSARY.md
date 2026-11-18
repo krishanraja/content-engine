@@ -173,6 +173,12 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 
 ## Looks, captions and the tall frame
 
+- **Treatment.** A fixed recipe of effects (rebuilt from EffectCraft's catalogue) that the engine applies by rule
+  from what a beat or still is for, at a strength the look sets; never chosen one by one and never shown as a menu.
+  The bank is `config/ve/treatments.json`; the rules and the cards that draw them are in `docs/ve/TREATMENTS.md`.
+- **Subject lift.** The treatment that cuts Krish out of his take or cover photo and treats the background behind
+  him (darker, softer, a mint rim light). Card `ve-treat-1-subject-lift`.
+
 - **Motion style.** One look a piece's motion is drawn in, from the motion layer of `config/style-references.json`
   (`style.motion` in the spec). A style the renderer can express is a motion profile
   (`apps/renderer/src/engine/kit/motion-profiles.json`); one that needs its own drawing is `needs_device` until a
