@@ -3,6 +3,7 @@ folder followed its node_modules junction and emptied the main checkout's node_m
 import os
 import subprocess
 import sys
+from unittest.mock import patch
 import tempfile
 import unittest
 from pathlib import Path
@@ -93,6 +94,18 @@ class VisualCardsTakeTheOneRoute(unittest.TestCase):
         deck = _json.loads((ROOT / self.DECK).read_text(encoding='utf-8'))
         for card in deck['cards']:
             self.assertNotIn(card['headline'], text)
+
+    def test_a_carousel_card_names_the_body_face_and_the_one_he_rejected(self):
+        # Krish, 2026-11-18: "this font is crappy, i have given this feedback before". The deck check is patched: this
+        # test is about the card's type rule, not the deck's words.
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        import carousel_check
+        with patch.object(carousel_check, 'problems', return_value=[]), tempfile.TemporaryDirectory() as tmp:
+            text = self.card(tmp).read_text(encoding='utf-8')
+        self.assertIn('## Type (Ruling, Krish, 2026-11-18)', text)
+        self.assertIn('Body sentences: Anton, uppercase', text)
+        self.assertIn('Never Archivo Black and never Archivo at weight 800 or heavier', text)
+        self.assertLessEqual(len(text.encode('utf-8')), 6144)
 
     def test_no_references_no_card(self):
         with tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:

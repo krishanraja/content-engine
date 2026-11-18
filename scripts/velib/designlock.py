@@ -18,6 +18,10 @@ WIDE_CANVAS = {'w': 1920, 'h': 1080}
 WIDE_CAPTION = {'x': 260, 'y': 773, 'w': 1400, 'h': 187}
 GATES = ['design_lock', 'composition_qc', 'keyframe_match', 'mechanical_qc',
          'critic_verdict', 'packet', 'krish_final_hash']
+# A rules-only lock (Krish, 2026-11-18: "why a visual pass plus obvious rules arent a better option than measuring it against
+# one frame of an old video"): the format keeps its beats, zones and thresholds, and its cuts are held to those rules, the
+# Critic's visual pass and his approval of the exact file. No key frame is stored and none is matched.
+RULES_ONLY = 'rules_only'
 
 
 def _path(path=None) -> Path:
@@ -100,6 +104,8 @@ def validate(lock, root=None) -> list[str]:
     for fmt, settings in formats.items():
         if settings.get('aspect', '9:16') == '16:9' and (not fmt.endswith(WIDE) or settings.get('canvas') != WIDE_CANVAS):
             out.append(f'formats.{fmt}: a 16:9 entry is named <format>{WIDE} and its canvas is 1920x1080')
+        if settings.get('match', RULES_ONLY) != RULES_ONLY:
+            out.append(f'formats.{fmt}.match must be {RULES_ONLY} or absent')
         beats = settings.get('beats')
         if (not isinstance(beats, list) or not beats or
                 any(not isinstance(b, str) or not b for b in beats) or len(set(beats)) != len(beats)):
@@ -126,6 +132,8 @@ def frozen(lock, fmt, root=None) -> tuple[bool, list[str]]:
     if settings is None:
         return False, [f'unknown format {fmt}']
     beats = settings.get('beats', [])
+    if settings.get('match') == RULES_ONLY:
+        return (True, []) if beats else (False, [f'{fmt}: a rules-only lock still names its beats'])
     frames = settings.get('keyframes', {})
     reasons = []
     if not beats or not isinstance(frames, dict) or set(frames) != set(beats):
@@ -170,6 +178,8 @@ def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None, ap
     if fmt not in lock['formats'] and fmt not in drafts:
         raise ValueError(f'unknown format {fmt}')
     settings = lock['formats'][fmt] if fmt in lock['formats'] else _promoted(drafts[fmt])
+    if settings.get('match') == RULES_ONLY:
+        raise ValueError(f'{fmt} is a rules-only lock: it keeps no key frames and none is frozen')
     beats = settings['beats']
     if set(mapping) != set(beats):
         raise ValueError(f'mapping must cover every beat of {fmt} exactly: {", ".join(beats)}')
@@ -268,6 +278,43 @@ def retire(fmt: str, *, words: str, on: str, by: str = 'Krish', lock_path=None, 
     lock['status'] = 'frozen' if all(frozen(lock, name, root)[0] for name in lock['formats']) else 'direction_approved'
     path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
     return entry
+
+
+def picture_match(lock: dict, fmt: str) -> bool:
+    """Whether a cut in this format is matched against stored key frames: false for a rules-only lock and an unknown format."""
+    return fmt in lock.get('formats', {}) and lock['formats'][fmt].get('match') != RULES_ONLY
+
+
+def rules_only(fmt: str, *, words: str, on: str, by: str = 'Krish', lock_path=None, today=None) -> dict:
+    """Krish drops the picture-matching for a format (his words, recorded): the draft becomes a lock with no key frames. Its
+    beats, zones and thresholds stay the lock's rules; a cut is held to them, the Critic's visual pass and his approval of the
+    exact file. Only a draft converts, and `retire` or the draft's retirement record stays on the entry."""
+    if by != 'Krish':
+        raise ValueError('only Krish drops the picture-matching for a format')
+    if not str(words or '').strip():
+        raise ValueError('rules-only records his words: pass them with --words')
+    path = _path(lock_path).resolve()
+    root = path.parents[2] if path.parent.name == 've' and path.parent.parent.name == 'config' else path.parent
+    lock = load(path)
+    drafts = lock.get('drafts', {})
+    if fmt not in drafts or fmt in lock['formats']:
+        raise ValueError(f'{fmt} is not a draft to convert')
+    if fmt.endswith(WIDE):
+        raise ValueError('a wide draft keeps its own Gate 2: rules-only is for the 9:16 lock')
+    settings = _promoted(drafts[fmt])
+    settings['match'] = RULES_ONLY
+    settings['rules_only'] = {'by': by, 'on': on, 'words': words.strip()}
+    lock['formats'][fmt] = settings
+    del drafts[fmt]
+    if not drafts:
+        lock.pop('drafts', None)
+    for module in settings.get('modules', []):
+        if module in lock['formats']:
+            lock['formats'][module]['role'] = 'module'
+    settings['frozen_on'] = (today or date.today()).isoformat() if not isinstance(today, str) else today
+    lock['status'] = 'frozen' if all(frozen(lock, name, root)[0] for name in lock['formats']) else 'direction_approved'
+    path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
+    return settings
 
 
 def lock_key(fmt: str, aspect: str) -> str:
