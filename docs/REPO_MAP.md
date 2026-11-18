@@ -2870,6 +2870,10 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `const STAGE_STATES`
 - `type StageState = typeof STAGE_STATES[number]`
 - `interface ViewStage`
+- `const LATE_DAYS`
+- `function missedOn(date: string, today: string): boolean`
+- `function lateOn(date: string, today: string): boolean`
+- `function lateLine(label: string, today: string): string`
 - `function postedStage(input: { date: string today: string approvedAt: string | null approvedLabel: string growth: ViewGr…`
 - `function ideaStage(outcome: { label: string; at: string | null } | null | undefined, status: string, samePost?: string …`
 - `function truthProblems(days: Array<{ day: string; date: string; label: string; who: string; next: string; options: Arra…`
