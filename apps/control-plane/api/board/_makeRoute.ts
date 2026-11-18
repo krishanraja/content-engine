@@ -42,7 +42,7 @@ const STILL = `Make it in this Claude session, with the Codex plugin building it
   + 'The route is content-engine docs/CAROUSEL-STANDARD.md, "How a carousel is made". '
   + '1. Write the words, the story and the creative direction yourself. A carousel\'s deck comes first, as carousel-deck/1, '
   + 'and passes python3 scripts/carousel_check.py DECK.json: five whys, the wider trend with an outside source, every card '
-  + 'after the cover one full plain sentence of 8 to 20 words a stranger can follow, at most 10 cards, ending on the palette\'s close: the takeaway, then "Subscribe free (makeyourmindup.ai)". '
+  + 'after the cover one full plain sentence of 8 to 20 words a stranger can follow, at most 10 cards, ending on the palette\'s close: the takeaway, then "Follow for more" with the Make Your Mind Up wordmark centred under it. '
   + '2. Write one Codex card for the pictures with python3 scripts/ve.py card (kind carousel, meme or notes_image, with the '
   + 'day and the inspiration cards Krish ticked), held to config/brand-palette.json, and send it to Codex through the '
   + 'plugin: ve dispatch, or, for a card in growth-makeyourmindup, its codex/queue/ on your claude/ branch, which the Codex '
