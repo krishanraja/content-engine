@@ -17,10 +17,10 @@ import carousel_check  # noqa: E402
 
 REDRAWN = json.loads((ROOT / 'docs/plans/2026-11-09-week/git-carousel/deck.json').read_text(encoding='utf-8'))
 # The 13 Nov deck ended on "Follow for more". From 14 Nov the last card is the palette's close (Ruling, Krish,
-# 2026-11-14: the carousel ends on the palette's close, the takeaway then "Subscribe free (makeyourmindup.ai)"), so the
+# 2026-11-18: the carousel ends on the takeaway, then "Follow for more" with the wordmark centred under it), so the
 # reference deck is held to it with that one card's foot changed and its story untouched.
 REDRAWN['cards'][-1]['line'] = "That's your new traffic jam. Fix it before AI floods it."
-REDRAWN['cards'][-1]['cta'] = 'Subscribe free (makeyourmindup.ai)'
+REDRAWN['cards'][-1]['cta'] = 'Follow for more'
 # The worked example (synthetic words in the shape he asked for on 15 Nov; the facts are the Git deck's own five whys).
 FOLLOWABLE = json.loads(json.dumps(REDRAWN))
 FOLLOWABLE['cards'] = [
@@ -42,7 +42,7 @@ FOLLOWABLE['cards'] = [
     {'headline': 'Find the steps where AI work waits for a person to say yes.',
      'line': 'That is where your new traffic jam will form.', 'picture': 'a map with one red bottleneck'},
     {'headline': 'Check work by how risky it is, never out of habit.', 'line': 'Not every piece needs the same check.',
-     'cta': 'Subscribe free (makeyourmindup.ai)', 'picture': 'the wordmark small bottom right'}]
+     'cta': 'Follow for more', 'picture': 'the wordmark centred under it'}]
 FOLLOWABLE['arc'] = {'what': 1, 'happened': [1, 2], 'why': 3, 'so_what': [5, 6, 7], 'do': [8, 9]}
 AS_SENT = {'schema': 'carousel-deck/1', 'cards': [
     {'headline': "Its AI wrote so much code, Git couldn't keep up", 'line': "Git is the tool almost every programmer uses to save and share code.", 'picture': 'the cover scene'},
@@ -101,20 +101,21 @@ class TenSecondSwipe(unittest.TestCase):
         deck['cards'] = deck['cards'] + [{'headline': 'One more.', 'picture': 'x'}] * 2
         found = ' | '.join(carousel_check.problems(deck))
         self.assertIn('at most 10', found)
-        self.assertIn('Subscribe free (makeyourmindup.ai)', found)
+        self.assertIn('"Follow for more" with the wordmark', found)
 
-    def test_the_old_follow_for_more_close_fails(self):
+    def test_the_subscribe_close_is_retired(self):
+        # Krish, 2026-11-18: "Follow for more" over the centred wordmark, never "an amateur call to action".
         deck = json.loads(json.dumps(FOLLOWABLE))
-        deck['cards'][-1]['line'] = "That's your new traffic jam. Follow for more."
-        deck['cards'][-1].pop('cta')
-        found = ' | '.join(carousel_check.problems(deck))
-        self.assertIn('Subscribe free (makeyourmindup.ai)', found)
         deck['cards'][-1]['cta'] = 'Subscribe free (makeyourmindup.ai)'
-        self.assertIn('not "Follow for more"', ' | '.join(carousel_check.problems(deck)))
+        found = ' | '.join(carousel_check.problems(deck))
+        self.assertIn('"Follow for more" with the wordmark', found)
+        self.assertIn('not "Subscribe free"', found)
+        deck['cards'][-1]['cta'] = 'Follow for more'
+        self.assertEqual(carousel_check.problems(deck), [])
 
     def test_the_close_carries_the_takeaway(self):
         deck = json.loads(json.dumps(FOLLOWABLE))
-        deck['cards'][-1] = {'cta': 'Subscribe free (makeyourmindup.ai)', 'picture': 'the wordmark'}
+        deck['cards'][-1] = {'cta': 'Follow for more', 'picture': 'the wordmark'}
         self.assertIn('takeaway', ' | '.join(carousel_check.problems(deck)))
 
     def test_saturday_good_news_keeps_its_fixed_close(self):
