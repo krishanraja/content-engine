@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-17
+as_of: 2026-11-18
 head: e7b785b
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,28 +30,25 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-17)
+## Where it is right now (as of 2026-11-18)
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-17","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- New skill hannah-fry (.agents/skills/hannah-fry), built from Hannah Fry's Short "Could Alzheimer's start in our nose?" (Krish's upload, read with content-watcher: 201 words a minute, 94% talking, pauses only after reveals and jokes). It covers her shape with timed quotes (claim first, the known version moved aside, the one thing to know as pictures, a ladder of evidence with a refrain, the claim back bigger, delight), where it meets his house rules, a six-line plan before writing, and a separate reader on her eight moves. Wired into make-piece's Scripts step as 3c; it never holds his Approve scripts press (F49). Calibrated: her transcript passes; the 20 Nov 90-second script fails moves 2 and 3. (2026-11-18)
 - The logo appears on a cut only on the animated title frame and the close card, wide and tall alike, for every piece published from Mon 23 Nov (config/brand-palette.json logo_rule). ve's wide cut drops its mark tile and stage header logo from that date (compile bodyLogo false), and ve qc then proves the mark absent; pieces of the week of 16 Nov render as signed. (2026-11-17)
 - Each generated beat in the production plan carries its higgsfield-generator recipe (model, prompt, the still it starts from, length, estimated credits), and the Claude production prompt uses the skills as their own guide says: stills before video on the right model, motion from the approved still on Seedance 2.5, reframe for a clip at the wrong shape, cost before generation, no Soul ID, presets or Higgsfield audio, and the Virality Predictor as a signal on the reviewed short. (2026-11-17)
-- Krish approved the cover palette; the carousel and meme skills guarantee each format's floor with one named experiment above it; the cover-art skill sets covers by channel (Receipt skins on brand accounts, face-led on his own, both on YouTube) and rotates face-led covers between his real cutout with the piece's figure and a generated headshot with a generated scene; the home pass now also publishes his All other photos (never DO-NOT-USE) as likeness references. (2026-11-17)
-- The Claude production prompt puts his face in a generated scene only from a likeness approved in krish-clone's registry (krish-avatar-heygen today), judged with clone likeness, and hands the covers to thumbnail-designer with the face-led cover cards once they are on main. (2026-11-17)
-- The Sunday ideas run reads up to 30 trending TikTok meme templates through Apify once a week (about $0.09 a run, Apify's own $0.50 charge cap above it), in a workflow step of its own before the Claude step, and the roaster's gather reads them back in; without the APIFY_TOKEN repository secret the step warns and the lane stays on its free sources. (2026-11-17)
 - **StyleStill covers: 47 of 48 passed a separate review and are filed and recorded for the board's style pickers** (`config/ve/style-samples.json`). Eight came from Codex's second pass, 24 from its third, and 15 of the 16 held back from its fourth, after the reviewer's five named faults were fixed (`82360c9b`: line-boil passes too thick to read as three lines, receipt and living-ui labels ink on ink, the data story's chart now the sourced monthly sales indexed 100 to 107, flip-hinge sampled with its key word lit). slot-roll stays held: its uneven word gap is in the caption theme itself (`c631e0ac`). (2026-11-16)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
 - 2026-11-17 Ruling (Krish, 2026-11-17): the logo only on the final animated close card and the title frame that animates as he introduces the title, "so we can have focuson the hook in the opening seconds".
-- 2026-11-17 Ruling (Krish, 2026-11-17): "run Apify weekly in the Sunday ideas run".
-Older lines: `docs/history/2026-11-17-NOW-moved-28.md` (it names every earlier move) and `LOG.md`.
+Older lines: `docs/history/2026-11-18-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-17): Build the animated title frame into ve (the AI music piece's full-frame title with the stacked logo underneath) so it can appear on ve cuts; until then a ve cut shows the logo on its close alone.
+- Next (2026-11-18): Run the teaching check on the next piece's scripts and show Krish its verdict beside them.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
@@ -59,7 +56,7 @@ Older lines: `docs/history/2026-11-17-NOW-moved-28.md` (it names every earlier m
 - 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms). Monday's lock signed 10 Nov: its long cut runs a few minutes over 5 and the article longer, to carry the midterm data-centre backlash. Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
 - Waiting on Krish (checked 2026-11-12, 14:00 UTC): his Approve on Thu 12's `beststicker` on the live board (the Home Depot rethink he signed off in a session, filed in 3 Posts and carrying Tue 17's `auditrule`; the live view reads "Idea: waiting on your Approve"), and an answer on `frenemies` (Tue 17) and `ownref` (Thu 19), which have no outcome in `idea_outcomes`; a sound-effect set (`config/sfx-approved.json` approves none); golden frames (all 10 slots of `config/ve/golden-frames.json` empty, at least 5 wanted); Gate 2 on face-with-proof at 16:9 (`config/ve/design-lock.json`) (each still needs its review card on his Publish Board, with samples he can see and hear; not built yet). The music levels are no longer waiting: he approved them as they are on 12 Nov. `docs/STATE.md`, "Waiting on Krish".
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-17): holds.
+- North Star check (2026-11-18): holds.
 
 ## Read next
 
