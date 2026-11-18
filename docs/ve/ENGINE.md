@@ -163,7 +163,11 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
   in silver tinted glass, support words in a cascade, layout states rotating); the other 13 are house rebuilds. Every
   style takes ve's caption pages and timing, the house faces and tokens, and stays in the safe area. Not yet proved on
   his take: prove a style on one before a cut ships with it, by setting `brand.caption_theme` in the spec and running
-  `ve proof` (the hardest beat on his real take, through the one render path) for his Approve proof press.
+  `ve proof` (the hardest beat on his real take, through the one render path) for his Approve proof press. Every
+  caption style keeps three rules (Krish, 2026-11-18; `INGREDIENTS.md`, "The caption rules"): a new word never appears
+  somewhere else, the previous word or phrase stays a little longer, and nothing jolts. `ve lint` refuses a style that
+  moves its word on a word-mode cut (`captions.steady`, measured in `config/ve/caption-steady.json`), and a proof of a
+  caption is watched frame by frame at 30 fps on his take, never judged from stills.
 - **Motion styles from the lab.** A piece's `style.motion` names one style in the bank (`config/style-references.json`,
   motion layer). `ladder` (The Ladder: one lit 3D object carries every number) and `living-screen` (The Living Screen:
   a working interface the camera reads for the viewer) joined on 11 Nov, liked by Krish, and are `needs_device`: since 14 Nov 2026 `ve lint` refuses a spec
