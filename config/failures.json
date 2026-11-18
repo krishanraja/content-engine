@@ -2789,6 +2789,47 @@
       }
     },
     {
+      "id": "head-cut-off-and-visual-squeezed",
+      "on": "2026-11-18",
+      "status": "open",
+      "mode": "obvious-rule-left-to-a-reference",
+      "guard_level": "lint_refuse",
+      "krish": "\"Dont cut the top of my head off\" should not really need a reference image, should it? This session literally just did that [a link to this session] which I find insane that you wouldnt know not to do that. Then, of a proof video, wed18-proof-hook-video.mp4: But this treatment is not good. Can't cut my head off and also ruin the visual above",
+      "what": "A Wed 18 Nov proof video in the SPLIT layout cut the top of his head off and drew its picture in a thin strip above him. The first render of the replacement key frames did the same to his head (a face band cropped from the top of the take), and the tests Codex wrote asserted that crop.",
+      "symptom": "His head cropped by the camera band, and a 16:9 visual shrunk to a sliver.",
+      "cause": "The engine checked only that no caption sat on his face (qc_faces.off_face). Nothing checked that his whole head was in the picture: the camera crop is a hand-set value per beat that defaults to the bottom of the take (SPLIT_POSTER_POSITIONS, 50% 88%). The proof box is 960 x 400 (the seam at y 760 less 360), 2.4 to 1, so a 16:9 visual cannot be drawn in it. A rule he calls obvious was left to a card sentence and to key frames of an old video.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check measured the head against the band edge: only caption-over-face existed."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "No rule said the proof box must hold a 16:9 visual; the seam and the box were whatever the old frames had."
+        }
+      ],
+      "surface": "18 Nov: plate.head_in_band measures the head (crown to chin) on every SPLIT take beat at three samples and fails the cut with the pixels it is cut by (qc_faces.head_in_band; counted; starting values uncalibrated; not_run without a face detector on the machine that runs QC). Still open: the proof box is 960 x 400 until Krish approves the new key frames at Gate 2 and the seam moves; the rule that it holds a 16:9 visual lands with that change. This entry closes when both stand.",
+      "guards": [
+        {
+          "file": "scripts/velib/qc_faces.py",
+          "contains": "def head_in_band",
+          "how": "a cut whose head is cropped by the band fails with the pixels"
+        },
+        {
+          "file": "tests/ve_qc_faces_test.py",
+          "contains": "class HeadInBand",
+          "how": "crown, chin, a moving head, no face and no detector"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video"
+        ],
+        "line": "A cut never crops his head and never squeezes the picture above him; both are measured rules, never left to a reference image."
+      }
+    },
+    {
       "id": "scripts-regressed-below-ai-music",
       "on": "2026-11-17",
       "status": "guarded",
