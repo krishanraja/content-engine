@@ -443,3 +443,17 @@ describe('the production prompt makes the board true before the session stops', 
     expect(brief).toMatch(/never call the piece done on the strength of the Drive upload alone/)
   })
 })
+
+// Krish, 2026-11-18: "make sure that the Monday, Wednesday, and Friday posts have a clear owner for who designs the cover art and
+// thumbnails [...] it should not require a manual ask anywhere".
+describe('the production prompt makes covers and thumbnails the session\'s own job, and proves them', () => {
+  it('says content-engine owns them, Growth posts and Krish picks, and ends with the manifest draft that refuses a missing cover', () => {
+    const brief = productionBrief({ pieceId: TUE, title: 'T', takes: TAKES, decisions: ['A'], research: ['R'], scripts: {}, offday: false })
+    expect(brief).toContain('Covers and thumbnails are yours, made in this session without being asked')
+    expect(brief).toContain('Growth only posts what he approved')
+    expect(brief).toContain('thumbnails of every cut')
+    expect(brief).toContain('a cover for every channel this piece posts on')
+    expect(brief).toContain('piece_manifest.py draft SPEC.json')
+    expect(brief).toContain('it refuses a video channel with no designed cover')
+  })
+})
