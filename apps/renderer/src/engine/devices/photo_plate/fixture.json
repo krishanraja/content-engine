@@ -1,0 +1,29 @@
+{
+  "objects": [
+    {
+      "obj": "test-photo",
+      "device": "photo_plate",
+      "meaning": "The contact area in the test photo",
+      "params": {
+        "image": { "src": "test-photo.jpg", "pixelWidth": 1024, "pixelHeight": 1536 },
+        "focus": { "x": 0.6, "y": 0.5 },
+        "scrim": 0.25,
+        "regions": {
+          "contact": { "x": 0.47, "y": 0.41, "w": 0.32, "h": 0.28 },
+          "corner": { "x": 0, "y": 0, "w": 0.12, "h": 0.15 }
+        },
+        "source": "IIHS · small overlap test"
+      },
+      "fromFrame": 0,
+      "toFrame": 120
+    }
+  ],
+  "events": [
+    { "id": "plate-in", "obj": "test-photo", "verb": "enter", "toState": "wipe", "atFrame": 10 },
+    { "id": "ring", "obj": "test-photo", "verb": "mark", "toState": "contact", "atFrame": 30 },
+    { "id": "aim-contact", "obj": "test-photo", "verb": "move", "toState": "contact", "atFrame": 46 },
+    { "id": "aim-corner", "obj": "test-photo", "verb": "move", "toState": "corner", "atFrame": 63 },
+    { "id": "ring-clear", "obj": "test-photo", "verb": "mark", "toState": "none", "atFrame": 75 },
+    { "id": "plate-out", "obj": "test-photo", "verb": "exit", "toState": "wipe", "atFrame": 90 }
+  ]
+}

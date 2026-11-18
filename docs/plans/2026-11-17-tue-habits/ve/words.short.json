@@ -1,0 +1,1676 @@
+[
+{
+"w": 0,
+"word": "Firing",
+"onset_s": 0.0,
+"end_s": 0.43
+},
+{
+"w": 1,
+"word": "your",
+"onset_s": 0.43,
+"end_s": 0.68
+},
+{
+"w": 2,
+"word": "AI",
+"onset_s": 0.68,
+"end_s": 0.98
+},
+{
+"w": 3,
+"word": "is",
+"onset_s": 0.98,
+"end_s": 1.37
+},
+{
+"w": 4,
+"word": "going",
+"onset_s": 1.37,
+"end_s": 1.5
+},
+{
+"w": 5,
+"word": "to",
+"onset_s": 1.5,
+"end_s": 1.58
+},
+{
+"w": 6,
+"word": "be",
+"onset_s": 1.58,
+"end_s": 1.71
+},
+{
+"w": 7,
+"word": "harder",
+"onset_s": 1.71,
+"end_s": 1.92
+},
+{
+"w": 8,
+"word": "than",
+"onset_s": 1.92,
+"end_s": 2.1
+},
+{
+"w": 9,
+"word": "firing",
+"onset_s": 2.1,
+"end_s": 2.43
+},
+{
+"w": 10,
+"word": "your",
+"onset_s": 2.43,
+"end_s": 2.63
+},
+{
+"w": 11,
+"word": "people.",
+"onset_s": 2.63,
+"end_s": 3.0
+},
+{
+"w": 12,
+"word": "So",
+"onset_s": 3.37,
+"end_s": 3.38
+},
+{
+"w": 13,
+"word": "when",
+"onset_s": 3.38,
+"end_s": 3.79
+},
+{
+"w": 14,
+"word": "AI",
+"onset_s": 3.79,
+"end_s": 4.04
+},
+{
+"w": 15,
+"word": "screws",
+"onset_s": 4.04,
+"end_s": 4.35
+},
+{
+"w": 16,
+"word": "up",
+"onset_s": 4.35,
+"end_s": 4.56
+},
+{
+"w": 17,
+"word": "a",
+"onset_s": 4.56,
+"end_s": 4.66
+},
+{
+"w": 18,
+"word": "job",
+"onset_s": 4.66,
+"end_s": 4.88
+},
+{
+"w": 19,
+"word": "who's",
+"onset_s": 4.93,
+"end_s": 5.18
+},
+{
+"w": 20,
+"word": "going",
+"onset_s": 5.18,
+"end_s": 5.27
+},
+{
+"w": 21,
+"word": "to",
+"onset_s": 5.27,
+"end_s": 5.4
+},
+{
+"w": 22,
+"word": "get",
+"onset_s": 5.4,
+"end_s": 5.53
+},
+{
+"w": 23,
+"word": "the",
+"onset_s": 5.53,
+"end_s": 5.67
+},
+{
+"w": 24,
+"word": "boot?",
+"onset_s": 5.67,
+"end_s": 5.96
+},
+{
+"w": 25,
+"word": "Probably",
+"onset_s": 6.54,
+"end_s": 6.71
+},
+{
+"w": 26,
+"word": "you.",
+"onset_s": 6.71,
+"end_s": 7.1
+},
+{
+"w": 27,
+"word": "And",
+"onset_s": 7.45,
+"end_s": 7.5
+},
+{
+"w": 28,
+"word": "honestly",
+"onset_s": 7.5,
+"end_s": 8.06
+},
+{
+"w": 29,
+"word": "in",
+"onset_s": 8.08,
+"end_s": 8.23
+},
+{
+"w": 30,
+"word": "some",
+"onset_s": 8.23,
+"end_s": 8.42
+},
+{
+"w": 31,
+"word": "ways",
+"onset_s": 8.42,
+"end_s": 8.74
+},
+{
+"w": 32,
+"word": "that's",
+"onset_s": 8.84,
+"end_s": 9.31
+},
+{
+"w": 33,
+"word": "fair",
+"onset_s": 9.31,
+"end_s": 9.5
+},
+{
+"w": 34,
+"word": "because",
+"onset_s": 9.5,
+"end_s": 9.8
+},
+{
+"w": 35,
+"word": "I",
+"onset_s": 9.81,
+"end_s": 10.37
+},
+{
+"w": 36,
+"word": "hear",
+"onset_s": 10.37,
+"end_s": 10.58
+},
+{
+"w": 37,
+"word": "loads",
+"onset_s": 10.58,
+"end_s": 10.86
+},
+{
+"w": 38,
+"word": "of",
+"onset_s": 10.86,
+"end_s": 11.05
+},
+{
+"w": 39,
+"word": "people",
+"onset_s": 11.05,
+"end_s": 11.27
+},
+{
+"w": 40,
+"word": "just",
+"onset_s": 11.27,
+"end_s": 11.49
+},
+{
+"w": 41,
+"word": "blaming",
+"onset_s": 11.49,
+"end_s": 11.92
+},
+{
+"w": 42,
+"word": "AI",
+"onset_s": 11.92,
+"end_s": 12.26
+},
+{
+"w": 43,
+"word": "for",
+"onset_s": 12.26,
+"end_s": 12.56
+},
+{
+"w": 44,
+"word": "being",
+"onset_s": 12.56,
+"end_s": 13.14
+},
+{
+"w": 45,
+"word": "rubbish",
+"onset_s": 13.14,
+"end_s": 13.43
+},
+{
+"w": 46,
+"word": "right",
+"onset_s": 13.43,
+"end_s": 13.71
+},
+{
+"w": 47,
+"word": "now.",
+"onset_s": 13.71,
+"end_s": 14.06
+},
+{
+"w": 48,
+"word": "They",
+"onset_s": 14.41,
+"end_s": 14.52
+},
+{
+"w": 49,
+"word": "just",
+"onset_s": 14.52,
+"end_s": 14.7
+},
+{
+"w": 50,
+"word": "shrug",
+"onset_s": 14.71,
+"end_s": 14.99
+},
+{
+"w": 51,
+"word": "and",
+"onset_s": 14.99,
+"end_s": 15.24
+},
+{
+"w": 52,
+"word": "say",
+"onset_s": 15.24,
+"end_s": 15.5
+},
+{
+"w": 53,
+"word": "well",
+"onset_s": 15.52,
+"end_s": 15.76
+},
+{
+"w": 54,
+"word": "AI",
+"onset_s": 15.85,
+"end_s": 16.13
+},
+{
+"w": 55,
+"word": "isn't",
+"onset_s": 16.13,
+"end_s": 16.37
+},
+{
+"w": 56,
+"word": "very",
+"onset_s": 16.37,
+"end_s": 16.56
+},
+{
+"w": 57,
+"word": "good",
+"onset_s": 16.56,
+"end_s": 16.74
+},
+{
+"w": 58,
+"word": "is",
+"onset_s": 16.75,
+"end_s": 16.86
+},
+{
+"w": 59,
+"word": "it?",
+"onset_s": 16.86,
+"end_s": 17.22
+},
+{
+"w": 60,
+"word": "But",
+"onset_s": 17.6,
+"end_s": 17.65
+},
+{
+"w": 61,
+"word": "that's",
+"onset_s": 17.65,
+"end_s": 18.1
+},
+{
+"w": 62,
+"word": "basically",
+"onset_s": 18.1,
+"end_s": 18.72
+},
+{
+"w": 63,
+"word": "someone",
+"onset_s": 18.72,
+"end_s": 19.08
+},
+{
+"w": 64,
+"word": "blaming",
+"onset_s": 19.08,
+"end_s": 19.31
+},
+{
+"w": 65,
+"word": "their",
+"onset_s": 19.31,
+"end_s": 19.61
+},
+{
+"w": 66,
+"word": "own",
+"onset_s": 19.61,
+"end_s": 19.84
+},
+{
+"w": 67,
+"word": "tools",
+"onset_s": 19.84,
+"end_s": 20.17
+},
+{
+"w": 68,
+"word": "for",
+"onset_s": 20.17,
+"end_s": 20.36
+},
+{
+"w": 69,
+"word": "their",
+"onset_s": 20.36,
+"end_s": 20.47
+},
+{
+"w": 70,
+"word": "work.",
+"onset_s": 20.47,
+"end_s": 20.78
+},
+{
+"w": 71,
+"word": "And",
+"onset_s": 21.03,
+"end_s": 21.13
+},
+{
+"w": 72,
+"word": "that",
+"onset_s": 21.13,
+"end_s": 21.35
+},
+{
+"w": 73,
+"word": "has",
+"onset_s": 21.35,
+"end_s": 21.62
+},
+{
+"w": 74,
+"word": "never",
+"onset_s": 21.62,
+"end_s": 21.91
+},
+{
+"w": 75,
+"word": "gone",
+"onset_s": 21.91,
+"end_s": 22.1
+},
+{
+"w": 76,
+"word": "down",
+"onset_s": 22.1,
+"end_s": 22.25
+},
+{
+"w": 77,
+"word": "well.",
+"onset_s": 22.25,
+"end_s": 22.52
+},
+{
+"w": 78,
+"word": "AI",
+"onset_s": 22.83,
+"end_s": 22.97
+},
+{
+"w": 79,
+"word": "slop",
+"onset_s": 22.97,
+"end_s": 23.24
+},
+{
+"w": 80,
+"word": "is",
+"onset_s": 23.26,
+"end_s": 23.5
+},
+{
+"w": 81,
+"word": "just",
+"onset_s": 23.5,
+"end_s": 23.84
+},
+{
+"w": 82,
+"word": "human",
+"onset_s": 23.84,
+"end_s": 24.23
+},
+{
+"w": 83,
+"word": "slop",
+"onset_s": 24.23,
+"end_s": 24.56
+},
+{
+"w": 84,
+"word": "with",
+"onset_s": 24.56,
+"end_s": 24.76
+},
+{
+"w": 85,
+"word": "no",
+"onset_s": 24.76,
+"end_s": 25.07
+},
+{
+"w": 86,
+"word": "accountability.",
+"onset_s": 25.07,
+"end_s": 25.56
+},
+{
+"w": 87,
+"word": "Think",
+"onset_s": 25.95,
+"end_s": 26.03
+},
+{
+"w": 88,
+"word": "about",
+"onset_s": 26.03,
+"end_s": 26.22
+},
+{
+"w": 89,
+"word": "it,",
+"onset_s": 26.22,
+"end_s": 26.36
+},
+{
+"w": 90,
+"word": "when",
+"onset_s": 26.41,
+"end_s": 26.47
+},
+{
+"w": 91,
+"word": "a",
+"onset_s": 26.47,
+"end_s": 26.61
+},
+{
+"w": 92,
+"word": "car",
+"onset_s": 26.61,
+"end_s": 26.8
+},
+{
+"w": 93,
+"word": "crashes",
+"onset_s": 26.8,
+"end_s": 27.16
+},
+{
+"w": 94,
+"word": "we",
+"onset_s": 27.28,
+"end_s": 27.6
+},
+{
+"w": 95,
+"word": "don't",
+"onset_s": 27.6,
+"end_s": 27.76
+},
+{
+"w": 96,
+"word": "put",
+"onset_s": 27.76,
+"end_s": 27.95
+},
+{
+"w": 97,
+"word": "the",
+"onset_s": 27.95,
+"end_s": 28.07
+},
+{
+"w": 98,
+"word": "car",
+"onset_s": 28.07,
+"end_s": 28.23
+},
+{
+"w": 99,
+"word": "on",
+"onset_s": 28.23,
+"end_s": 28.38
+},
+{
+"w": 100,
+"word": "trial.",
+"onset_s": 28.38,
+"end_s": 28.63
+},
+{
+"w": 101,
+"word": "We",
+"onset_s": 28.63,
+"end_s": 29.19
+},
+{
+"w": 102,
+"word": "look",
+"onset_s": 29.19,
+"end_s": 29.36
+},
+{
+"w": 103,
+"word": "at",
+"onset_s": 29.36,
+"end_s": 29.52
+},
+{
+"w": 104,
+"word": "whoever",
+"onset_s": 29.52,
+"end_s": 29.7
+},
+{
+"w": 105,
+"word": "was",
+"onset_s": 29.7,
+"end_s": 29.93
+},
+{
+"w": 106,
+"word": "driving.",
+"onset_s": 29.93,
+"end_s": 30.3
+},
+{
+"w": 107,
+"word": "AI",
+"onset_s": 30.75,
+"end_s": 30.76
+},
+{
+"w": 108,
+"word": "is",
+"onset_s": 30.77,
+"end_s": 31.03
+},
+{
+"w": 109,
+"word": "the",
+"onset_s": 31.03,
+"end_s": 31.16
+},
+{
+"w": 110,
+"word": "car",
+"onset_s": 31.16,
+"end_s": 31.38
+},
+{
+"w": 111,
+"word": "and",
+"onset_s": 31.38,
+"end_s": 31.67
+},
+{
+"w": 112,
+"word": "you're",
+"onset_s": 31.67,
+"end_s": 31.91
+},
+{
+"w": 113,
+"word": "the",
+"onset_s": 31.91,
+"end_s": 32.03
+},
+{
+"w": 114,
+"word": "driver.",
+"onset_s": 32.03,
+"end_s": 32.36
+},
+{
+"w": 115,
+"word": "So",
+"onset_s": 32.83,
+"end_s": 32.89
+},
+{
+"w": 116,
+"word": "the",
+"onset_s": 32.89,
+"end_s": 33.27
+},
+{
+"w": 117,
+"word": "old",
+"onset_s": 33.27,
+"end_s": 33.42
+},
+{
+"w": 118,
+"word": "AI",
+"onset_s": 33.42,
+"end_s": 33.81
+},
+{
+"w": 119,
+"word": "did",
+"onset_s": 33.81,
+"end_s": 34.05
+},
+{
+"w": 120,
+"word": "it",
+"onset_s": 34.05,
+"end_s": 34.36
+},
+{
+"w": 121,
+"word": "excuse",
+"onset_s": 34.36,
+"end_s": 34.88
+},
+{
+"w": 122,
+"word": "is",
+"onset_s": 34.88,
+"end_s": 35.23
+},
+{
+"w": 123,
+"word": "never",
+"onset_s": 35.23,
+"end_s": 35.43
+},
+{
+"w": 124,
+"word": "going",
+"onset_s": 35.43,
+"end_s": 35.58
+},
+{
+"w": 125,
+"word": "to",
+"onset_s": 35.58,
+"end_s": 35.72
+},
+{
+"w": 126,
+"word": "save",
+"onset_s": 35.77,
+"end_s": 35.84
+},
+{
+"w": 127,
+"word": "you",
+"onset_s": 35.84,
+"end_s": 36.08
+},
+{
+"w": 128,
+"word": "and",
+"onset_s": 36.19,
+"end_s": 36.39
+},
+{
+"w": 129,
+"word": "bosses",
+"onset_s": 36.39,
+"end_s": 36.69
+},
+{
+"w": 130,
+"word": "already",
+"onset_s": 36.69,
+"end_s": 37.3
+},
+{
+"w": 131,
+"word": "get",
+"onset_s": 37.3,
+"end_s": 37.53
+},
+{
+"w": 132,
+"word": "it.",
+"onset_s": 37.53,
+"end_s": 37.8
+},
+{
+"w": 133,
+"word": "IBM",
+"onset_s": 38.27,
+"end_s": 38.61
+},
+{
+"w": 134,
+"word": "asked",
+"onset_s": 38.61,
+"end_s": 39.21
+},
+{
+"w": 135,
+"word": "HR",
+"onset_s": 39.21,
+"end_s": 39.62
+},
+{
+"w": 136,
+"word": "chiefs",
+"onset_s": 39.62,
+"end_s": 39.87
+},
+{
+"w": 137,
+"word": "which",
+"onset_s": 39.87,
+"end_s": 40.4
+},
+{
+"w": 138,
+"word": "skill",
+"onset_s": 40.4,
+"end_s": 40.84
+},
+{
+"w": 139,
+"word": "matters",
+"onset_s": 40.84,
+"end_s": 41.14
+},
+{
+"w": 140,
+"word": "the",
+"onset_s": 41.14,
+"end_s": 41.32
+},
+{
+"w": 141,
+"word": "most",
+"onset_s": 41.32,
+"end_s": 41.51
+},
+{
+"w": 142,
+"word": "right",
+"onset_s": 41.51,
+"end_s": 41.71
+},
+{
+"w": 143,
+"word": "now",
+"onset_s": 41.71,
+"end_s": 42.0
+},
+{
+"w": 144,
+"word": "and",
+"onset_s": 42.0,
+"end_s": 42.33
+},
+{
+"w": 145,
+"word": "71%",
+"onset_s": 42.33,
+"end_s": 43.27
+},
+{
+"w": 146,
+"word": "said",
+"onset_s": 43.27,
+"end_s": 43.75
+},
+{
+"w": 147,
+"word": "the",
+"onset_s": 43.75,
+"end_s": 43.89
+},
+{
+"w": 148,
+"word": "same",
+"onset_s": 43.89,
+"end_s": 44.07
+},
+{
+"w": 149,
+"word": "thing.",
+"onset_s": 44.07,
+"end_s": 44.42
+},
+{
+"w": 150,
+"word": "Accountability.",
+"onset_s": 44.51,
+"end_s": 45.18
+},
+{
+"w": 151,
+"word": "Check",
+"onset_s": 45.53,
+"end_s": 45.75
+},
+{
+"w": 152,
+"word": "the",
+"onset_s": 45.75,
+"end_s": 45.95
+},
+{
+"w": 153,
+"word": "AI's",
+"onset_s": 45.95,
+"end_s": 46.23
+},
+{
+"w": 154,
+"word": "work",
+"onset_s": 46.23,
+"end_s": 46.43
+},
+{
+"w": 155,
+"word": "and",
+"onset_s": 46.43,
+"end_s": 46.89
+},
+{
+"w": 156,
+"word": "overrule",
+"onset_s": 46.89,
+"end_s": 47.38
+},
+{
+"w": 157,
+"word": "it",
+"onset_s": 47.4,
+"end_s": 47.56
+},
+{
+"w": 158,
+"word": "when",
+"onset_s": 47.56,
+"end_s": 47.7
+},
+{
+"w": 159,
+"word": "it's",
+"onset_s": 47.7,
+"end_s": 47.91
+},
+{
+"w": 160,
+"word": "wrong.",
+"onset_s": 47.91,
+"end_s": 48.14
+},
+{
+"w": 161,
+"word": "Then",
+"onset_s": 48.29,
+"end_s": 48.52
+},
+{
+"w": 162,
+"word": "they",
+"onset_s": 48.52,
+"end_s": 48.82
+},
+{
+"w": 163,
+"word": "asked",
+"onset_s": 48.82,
+"end_s": 49.01
+},
+{
+"w": 164,
+"word": "the",
+"onset_s": 49.01,
+"end_s": 49.2
+},
+{
+"w": 165,
+"word": "staff",
+"onset_s": 49.2,
+"end_s": 49.44
+},
+{
+"w": 166,
+"word": "and",
+"onset_s": 49.44,
+"end_s": 49.94
+},
+{
+"w": 167,
+"word": "only",
+"onset_s": 49.94,
+"end_s": 50.44
+},
+{
+"w": 168,
+"word": "29%",
+"onset_s": 50.98,
+"end_s": 51.64
+},
+{
+"w": 169,
+"word": "even",
+"onset_s": 51.65,
+"end_s": 51.9
+},
+{
+"w": 170,
+"word": "ranked",
+"onset_s": 51.9,
+"end_s": 52.37
+},
+{
+"w": 171,
+"word": "judgment",
+"onset_s": 52.37,
+"end_s": 52.79
+},
+{
+"w": 172,
+"word": "as",
+"onset_s": 52.79,
+"end_s": 53.02
+},
+{
+"w": 173,
+"word": "important.",
+"onset_s": 53.02,
+"end_s": 53.42
+},
+{
+"w": 174,
+"word": "So",
+"onset_s": 53.73,
+"end_s": 53.89
+},
+{
+"w": 175,
+"word": "here's",
+"onset_s": 53.89,
+"end_s": 54.4
+},
+{
+"w": 176,
+"word": "what",
+"onset_s": 54.4,
+"end_s": 54.5
+},
+{
+"w": 177,
+"word": "I",
+"onset_s": 54.5,
+"end_s": 54.62
+},
+{
+"w": 178,
+"word": "reckon.",
+"onset_s": 54.62,
+"end_s": 54.73
+},
+{
+"w": 179,
+"word": "The",
+"onset_s": 54.73,
+"end_s": 55.2
+},
+{
+"w": 180,
+"word": "only",
+"onset_s": 55.2,
+"end_s": 55.38
+},
+{
+"w": 181,
+"word": "way",
+"onset_s": 55.38,
+"end_s": 55.61
+},
+{
+"w": 182,
+"word": "AI",
+"onset_s": 55.61,
+"end_s": 55.85
+},
+{
+"w": 183,
+"word": "doesn't",
+"onset_s": 55.85,
+"end_s": 56.16
+},
+{
+"w": 184,
+"word": "replace",
+"onset_s": 56.18,
+"end_s": 56.46
+},
+{
+"w": 185,
+"word": "you",
+"onset_s": 56.46,
+"end_s": 56.73
+},
+{
+"w": 186,
+"word": "is",
+"onset_s": 56.73,
+"end_s": 56.99
+},
+{
+"w": 187,
+"word": "if",
+"onset_s": 56.99,
+"end_s": 57.12
+},
+{
+"w": 188,
+"word": "you",
+"onset_s": 57.12,
+"end_s": 57.29
+},
+{
+"w": 189,
+"word": "own",
+"onset_s": 57.29,
+"end_s": 57.46
+},
+{
+"w": 190,
+"word": "its",
+"onset_s": 57.46,
+"end_s": 57.64
+},
+{
+"w": 191,
+"word": "mistakes",
+"onset_s": 57.64,
+"end_s": 58.03
+},
+{
+"w": 192,
+"word": "like",
+"onset_s": 58.03,
+"end_s": 58.37
+},
+{
+"w": 193,
+"word": "they're",
+"onset_s": 58.37,
+"end_s": 58.7
+},
+{
+"w": 194,
+"word": "yours,",
+"onset_s": 58.82,
+"end_s": 58.98
+},
+{
+"w": 195,
+"word": "because",
+"onset_s": 59.39,
+"end_s": 59.71
+},
+{
+"w": 196,
+"word": "they",
+"onset_s": 59.71,
+"end_s": 59.91
+},
+{
+"w": 197,
+"word": "are.",
+"onset_s": 59.91,
+"end_s": 60.18
+},
+{
+"w": 198,
+"word": "Now,",
+"onset_s": 60.4,
+"end_s": 60.56
+},
+{
+"w": 199,
+"word": "three",
+"onset_s": 60.96,
+"end_s": 61.1
+},
+{
+"w": 200,
+"word": "habits",
+"onset_s": 61.1,
+"end_s": 61.36
+},
+{
+"w": 201,
+"word": "that",
+"onset_s": 61.36,
+"end_s": 61.56
+},
+{
+"w": 202,
+"word": "are",
+"onset_s": 61.56,
+"end_s": 61.64
+},
+{
+"w": 203,
+"word": "getting",
+"onset_s": 61.64,
+"end_s": 61.8
+},
+{
+"w": 204,
+"word": "people",
+"onset_s": 61.8,
+"end_s": 62.1
+},
+{
+"w": 205,
+"word": "fired.",
+"onset_s": 62.1,
+"end_s": 62.52
+},
+{
+"w": 206,
+"word": "One,",
+"onset_s": 62.81,
+"end_s": 62.98
+},
+{
+"w": 207,
+"word": "waiting",
+"onset_s": 63.23,
+"end_s": 63.45
+},
+{
+"w": 208,
+"word": "to",
+"onset_s": 63.45,
+"end_s": 63.64
+},
+{
+"w": 209,
+"word": "be",
+"onset_s": 63.64,
+"end_s": 63.76
+},
+{
+"w": 210,
+"word": "told",
+"onset_s": 63.76,
+"end_s": 63.94
+},
+{
+"w": 211,
+"word": "what",
+"onset_s": 63.94,
+"end_s": 64.13
+},
+{
+"w": 212,
+"word": "to",
+"onset_s": 64.13,
+"end_s": 64.27
+},
+{
+"w": 213,
+"word": "do",
+"onset_s": 64.27,
+"end_s": 64.5
+},
+{
+"w": 214,
+"word": "when",
+"onset_s": 64.5,
+"end_s": 65.04
+},
+{
+"w": 215,
+"word": "the",
+"onset_s": 65.04,
+"end_s": 65.27
+},
+{
+"w": 216,
+"word": "AI",
+"onset_s": 65.27,
+"end_s": 65.45
+},
+{
+"w": 217,
+"word": "never",
+"onset_s": 65.45,
+"end_s": 65.64
+},
+{
+"w": 218,
+"word": "waits.",
+"onset_s": 65.64,
+"end_s": 65.98
+},
+{
+"w": 219,
+"word": "Two,",
+"onset_s": 66.16,
+"end_s": 66.5
+},
+{
+"w": 220,
+"word": "forwarding",
+"onset_s": 66.66,
+"end_s": 66.99
+},
+{
+"w": 221,
+"word": "AI",
+"onset_s": 66.99,
+"end_s": 67.32
+},
+{
+"w": 222,
+"word": "work",
+"onset_s": 67.32,
+"end_s": 67.54
+},
+{
+"w": 223,
+"word": "you",
+"onset_s": 67.54,
+"end_s": 68.01
+},
+{
+"w": 224,
+"word": "never",
+"onset_s": 68.01,
+"end_s": 68.21
+},
+{
+"w": 225,
+"word": "bothered",
+"onset_s": 68.21,
+"end_s": 68.4
+},
+{
+"w": 226,
+"word": "to",
+"onset_s": 68.4,
+"end_s": 68.62
+},
+{
+"w": 227,
+"word": "read",
+"onset_s": 68.62,
+"end_s": 68.79
+},
+{
+"w": 228,
+"word": "because",
+"onset_s": 68.79,
+"end_s": 69.22
+},
+{
+"w": 229,
+"word": "your",
+"onset_s": 69.22,
+"end_s": 69.55
+},
+{
+"w": 230,
+"word": "name's",
+"onset_s": 69.55,
+"end_s": 69.8
+},
+{
+"w": 231,
+"word": "on",
+"onset_s": 69.8,
+"end_s": 69.9
+},
+{
+"w": 232,
+"word": "it",
+"onset_s": 69.9,
+"end_s": 70.01
+},
+{
+"w": 233,
+"word": "now.",
+"onset_s": 70.01,
+"end_s": 70.36
+},
+{
+"w": 234,
+"word": "Three,",
+"onset_s": 70.93,
+"end_s": 71.32
+},
+{
+"w": 235,
+"word": "telling",
+"onset_s": 71.66,
+"end_s": 71.73
+},
+{
+"w": 236,
+"word": "your",
+"onset_s": 71.73,
+"end_s": 71.89
+},
+{
+"w": 237,
+"word": "boss",
+"onset_s": 71.89,
+"end_s": 72.09
+},
+{
+"w": 238,
+"word": "the",
+"onset_s": 72.09,
+"end_s": 72.41
+},
+{
+"w": 239,
+"word": "computer",
+"onset_s": 72.41,
+"end_s": 72.73
+},
+{
+"w": 240,
+"word": "did",
+"onset_s": 72.73,
+"end_s": 72.92
+},
+{
+"w": 241,
+"word": "it,",
+"onset_s": 72.92,
+"end_s": 73.3
+},
+{
+"w": 242,
+"word": "which",
+"onset_s": 73.39,
+"end_s": 73.61
+},
+{
+"w": 243,
+"word": "is",
+"onset_s": 73.61,
+"end_s": 73.76
+},
+{
+"w": 244,
+"word": "basically",
+"onset_s": 73.76,
+"end_s": 74.14
+},
+{
+"w": 245,
+"word": "writing",
+"onset_s": 74.14,
+"end_s": 74.56
+},
+{
+"w": 246,
+"word": "your",
+"onset_s": 74.56,
+"end_s": 74.88
+},
+{
+"w": 247,
+"word": "own",
+"onset_s": 74.88,
+"end_s": 75.05
+},
+{
+"w": 248,
+"word": "resignation",
+"onset_s": 75.05,
+"end_s": 75.46
+},
+{
+"w": 249,
+"word": "letter.",
+"onset_s": 75.46,
+"end_s": 75.8
+},
+{
+"w": 250,
+"word": "So",
+"onset_s": 76.26,
+"end_s": 76.37
+},
+{
+"w": 251,
+"word": "tomorrow,",
+"onset_s": 76.37,
+"end_s": 76.72
+},
+{
+"w": 252,
+"word": "read",
+"onset_s": 77.12,
+"end_s": 77.25
+},
+{
+"w": 253,
+"word": "every",
+"onset_s": 77.25,
+"end_s": 77.57
+},
+{
+"w": 254,
+"word": "line",
+"onset_s": 77.57,
+"end_s": 77.75
+},
+{
+"w": 255,
+"word": "before",
+"onset_s": 77.75,
+"end_s": 78.03
+},
+{
+"w": 256,
+"word": "you",
+"onset_s": 78.03,
+"end_s": 78.17
+},
+{
+"w": 257,
+"word": "hit",
+"onset_s": 78.17,
+"end_s": 78.31
+},
+{
+"w": 258,
+"word": "send",
+"onset_s": 78.31,
+"end_s": 78.52
+},
+{
+"w": 259,
+"word": "and",
+"onset_s": 78.52,
+"end_s": 78.93
+},
+{
+"w": 260,
+"word": "ask,",
+"onset_s": 78.93,
+"end_s": 79.22
+},
+{
+"w": 261,
+"word": "would",
+"onset_s": 79.49,
+"end_s": 79.55
+},
+{
+"w": 262,
+"word": "I",
+"onset_s": 79.55,
+"end_s": 79.78
+},
+{
+"w": 263,
+"word": "bet",
+"onset_s": 79.78,
+"end_s": 80.06
+},
+{
+"w": 264,
+"word": "my",
+"onset_s": 80.06,
+"end_s": 80.27
+},
+{
+"w": 265,
+"word": "job",
+"onset_s": 80.27,
+"end_s": 80.49
+},
+{
+"w": 266,
+"word": "on",
+"onset_s": 80.49,
+"end_s": 80.64
+},
+{
+"w": 267,
+"word": "this?",
+"onset_s": 80.64,
+"end_s": 80.92
+},
+{
+"w": 268,
+"word": "Because",
+"onset_s": 81.11,
+"end_s": 81.34
+},
+{
+"w": 269,
+"word": "you",
+"onset_s": 81.34,
+"end_s": 81.46
+},
+{
+"w": 270,
+"word": "already",
+"onset_s": 81.46,
+"end_s": 81.6
+},
+{
+"w": 271,
+"word": "are.",
+"onset_s": 81.6,
+"end_s": 81.88
+},
+{
+"w": 272,
+"word": "The",
+"onset_s": 82.04,
+"end_s": 82.16
+},
+{
+"w": 273,
+"word": "full",
+"onset_s": 82.16,
+"end_s": 82.34
+},
+{
+"w": 274,
+"word": "story",
+"onset_s": 82.34,
+"end_s": 82.64
+},
+{
+"w": 275,
+"word": "is",
+"onset_s": 82.64,
+"end_s": 82.91
+},
+{
+"w": 276,
+"word": "free",
+"onset_s": 82.91,
+"end_s": 83.11
+},
+{
+"w": 277,
+"word": "at",
+"onset_s": 83.11,
+"end_s": 83.26
+},
+{
+"w": 278,
+"word": "makeyourmindup.ai",
+"onset_s": 83.26,
+"end_s": 84.38
+}
+]
