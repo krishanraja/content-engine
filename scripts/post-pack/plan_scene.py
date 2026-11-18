@@ -32,6 +32,10 @@ captions I chose [...] it always gives me the same 3 crappy mock ups of just me 
                               and a generation spends credits only with his yes): the plate says so, and the production
                               session shows the real still before anything moves (Krish, 2026-11-18, step 6 of the prompt).
 
+    --made-still FILE         a generated beat whose still was really made (a generation within the credits he approved,
+                              priced first, never made by this script): the made still fills the scene at its own shape and
+                              the caption style he picked goes over it, labelled as generated in the notes
+
 A style this file does not draw (a look, or a caption style with no layout here) is said on the scene (`--note`) and
 printed, never passed off as drawn.
 """
@@ -227,10 +231,19 @@ def plate(base, kind, text, maker=None, series='off'):
 
 
 def scene_for(still, caption, mark=None, series='off', placement='lower', face='anton', size=96, captions=None, kind='face',
-              stage=None, strike=None, plate_text=None, maker=None, prev=None, motion=None):
+              stage=None, strike=None, plate_text=None, maker=None, prev=None, motion=None, made=False):
     """One scene as the beat is: what the picture is, then the caption style he picked over it. Returns (image, notes), the
     notes naming every style that was asked for and is not drawn here."""
     notes = []
+    if made:
+        # A really made still (never drawn here): it fills the scene, with his caption style over it.
+        img = cover(still)
+        notes.append('the picture is a generated still, made for this plan')
+        if caption:
+            img = art_directed(img, caption, mark, prev) if captions == 'art-directed' else scene_caption(img, caption, mark, series, placement, face, size)
+        if captions and captions not in ('art-directed', 'house'):
+            notes.append(f'caption style {captions} is not drawn here: the house caption is shown')
+        return img, notes
     if kind == 'motion' and stage:
         img = slam(cover(still), stage, strike, series)
         if motion and motion not in DRAWN_MOTION:
@@ -276,6 +289,7 @@ def main(argv=None):
     p.add_argument('--strike', help='a word of the statement drawn struck through')
     p.add_argument('--plate', help='a beat that is not his face: what the picture is, in words')
     p.add_argument('--maker', help='who makes that picture (for the plate)')
+    p.add_argument('--made-still', action='store_true', help='--image is a really generated still for this beat: fill the scene with it')
     p.add_argument('--prev', help='the caption before this one (art-directed shows it dimmed above)')
     p.add_argument('--out')
     p.add_argument('--notes-out', help='write the styles asked for and not drawn here to this JSON file')
@@ -305,6 +319,8 @@ def main(argv=None):
         assert n3 and 'karaoke' in n3[0]
         _, n4 = scene_for(still, 'x', kind='motion', stage='A statement', motion='mystery-style')
         assert n4 and 'mystery-style' in n4[0]
+        mk, n5 = scene_for(still, 'x is on the shelf', 'shelf', 'mind_the_gap', captions='art-directed', kind='generated', made=True)
+        assert n5 and 'generated still' in n5[0] and mk.tobytes() != art.tobytes()
         print('plan_scene self-test: ok')
         return 0
     if not a.out or not (a.frame or a.image):
@@ -324,7 +340,7 @@ def main(argv=None):
         else:
             path = Path(a.image)
         img, notes = scene_for(Image.open(path), a.caption, a.mark, a.series, a.placement, a.face, a.size, a.captions, a.kind,
-                               a.stage, a.strike, a.plate, a.maker, a.prev, a.motion)
+                               a.stage, a.strike, a.plate, a.maker, a.prev, a.motion, a.made_still)
     for n in notes:
         print(f'plan_scene: {n}', file=sys.stderr)
     if a.notes_out:
