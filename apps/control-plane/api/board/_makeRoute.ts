@@ -13,17 +13,25 @@
 //   motion   an off-day voiceover short or a meme video: the ve route (docs/ve/ENGINE.md, docs/ve/RUNBOOK.md); the
 //            session writes the script and the signed spec, Codex builds the devices and plates from cards, ve renders,
 //            and a separate reviewer watches and listens before it is called ready.
+//   reskin   a meme template (an existing clip he picked on the ideas board): NOT a carousel and not a fresh video. The
+//            session downloads that exact clip, reskins it to docs/MEME-STANDARD.md, sets his caption and puts the
+//            wordmark small at the bottom right (Krish, 2026-11-18: "It tries to produce a carousel, when we actually
+//            want to make a meme - download that exact video, reskin it, put our caption, and the wordmark in the
+//            bottom right corner").
 //
 // tests/control-plane/make-route.test.ts holds every prompt and every document that tells a session how one is made to
 // these words, and refuses the retired routes by name.
 
-export type MakeRoute = 'still' | 'motion'
+export type MakeRoute = 'still' | 'motion' | 'reskin'
 
 /** Which route makes an off-day post, from its board kind (OFFDAY_KINDS) and the format its plan wrote. Null for a post
  *  neither route makes (a short cut from a past master, by word range). Pure. */
-export function makeRoute(kind: string | null | undefined, format: string | null | undefined): MakeRoute | null {
+export function makeRoute(kind: string | null | undefined, format: string | null | undefined, template = false): MakeRoute | null {
   const f = String(format ?? '').toLowerCase()
   const k = String(kind ?? '').toLowerCase()
+  // A meme that carries a template clip is that clip reskinned, whatever format its plan wrote ("Meme, 1 image" sent it to
+  // the carousel route on 18 Nov).
+  if (k === 'meme' && template) return 'reskin'
   if (k === 'voiceover' || /voice ?over|voice-over/.test(f)) return 'motion'
   if ((k === 'meme' || /\bmeme/.test(f)) && /\bvideo\b/.test(f)) return 'motion'
   if (k === 'supporting' || k === 'good_news' || k === 'meme') return 'still'
@@ -59,7 +67,17 @@ const MOTION = `Make it in a Claude session in krishanraja/content-engine on the
   + 'comes from where it comes from today. '
   + `File it in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. ${NEVER_HEADLESS}`
 
+const RESKIN = 'This is a MEME made from an existing video, not a carousel and not a fresh video: no carousel deck, no carousel_check.py, no Codex card of kind carousel. '
+  + `Make it in a Claude session in krishanraja/content-engine on the ve route. ${ROUTE_RULING} Read docs/MEME-STANDARD.md and the meme skill (.agents/skills/meme/SKILL.md) first, then python3 scripts/floor.py --format meme. `
+  + '1. Download that exact clip (its clip link below; its page is the fallback if the link fails), keep the original file, its sha256 and its length on the piece, and use nothing else: never a re-shoot, a look-alike, a generated stand-in or a different clip. '
+  + '2. Reskin it on the ve route to the standard: the original clip at its full frame, never cropped at the sides, on the house ground; his caption in the house type on a clean solid caption band above it, at most two lines, never first person (always "When you realize..." or "POV: you realize..."); '
+  + 'the makeyourmindup wordmark small at the bottom right, just under the clip and right-aligned to the clip\'s right edge, never over the clip or in the band, from the house brand files only; a small credit line naming the original; no subchannel colour, no other branding. '
+  + 'His caption is his note on this post (below, and in "Your notes for Claude"): set exactly his words, verbatim where he put them in quotation marks. If there is no caption yet, ask him for it once and do nothing else until you have it; the caption ideas on the board are only ideas. '
+  + '3. Make both shapes, each laid out for itself: 9:16 (meme_tall, centred: python3 scripts/layout_centre.py FILE) and 4:5. Keep the clip\'s own sound, no music bed, loudness at the house target; every word and mark clear of each channel\'s buttons (config/channel-safe-zones.json). '
+  + '4. A separate reviewer who did not make it watches it with sound at full size and phone size before it is called ready. File each cut only with a passing social_clip receipt that names the clip it reskins (scripts/quick-edit/quality.py, with full_frame, caption_band and credit_line). '
+  + `5. File the cuts in the post's 3 Posts folder, then write the board record and read the board back before you stop (the close-the-loop rule below). Krish approves; Growth posts it through its approved route. ${NEVER_HEADLESS}`
+
 /** The route, in the words a prompt carries. */
 export function routeLine(route: MakeRoute): string {
-  return route === 'still' ? STILL : MOTION
+  return route === 'still' ? STILL : route === 'reskin' ? RESKIN : MOTION
 }

@@ -147,3 +147,38 @@ describe('the one route for carousels, memes, Notes images and off-day voiceover
     expect(findings('AGENTS.md', '<!-- krish-canon:start x -->\n`docs/CAROUSEL_ENGINE_STATE.md`\n<!-- krish-canon:end -->')).toEqual([])
   })
 })
+
+// Krish, 2026-11-18: "the meme Claude production prompt [...] tries to produce a carousel, when we actually want to make a
+// meme - download that exact video, reskin it, put our caption, and the wordmark in the bottom right corner."
+describe('a meme template is reskinned, never made as a carousel', () => {
+  const template = {
+    title: 'AI translator', clip: { url: 'https://v.redd.it/abc/DASH_720.mp4', page: 'https://www.reddit.com/r/memes/comments/abc/x/', poster: null, seconds: 12 },
+    found: { place: 'reddit' as const, label: 'r/memes, top of the week', url: null }, credit: 'u/someone', what_happens: 'A man talks to a machine.',
+    why_it_works: '', mechanism: [], moment: null, date: null,
+  }
+  it('routes a meme that carries a template clip to the reskin route, whatever its format says', () => {
+    expect(makeRoute('meme', 'Meme, 1 image, 4:5', true)).toBe('reskin')
+    expect(makeRoute('meme', 'Meme video, 9:16', true)).toBe('reskin')
+    // A meme with no template is made as before.
+    expect(makeRoute('meme', 'Meme, 1 image, 4:5', false)).toBe('still')
+    expect(makeRoute('meme', 'Meme video, 9:16')).toBe('motion')
+    // Only a meme: a template on another kind changes nothing.
+    expect(makeRoute('supporting', 'Level-up move, carousel, 4 cards, 4:5', true)).toBe('still')
+  })
+
+  it('the prompt says download that exact clip, reskin it, his caption and the wordmark bottom right, and asks for no carousel', () => {
+    const base = { day: 'sat' as const, date: '2026-11-21', title: 'AI translator meme', line: 'Approved by you.', piece_id: null, key: 'off-sat-x', kind_label: 'Meme' }
+    const a = itemPrompt('2026-11-16', base, 'post', 'reskin', null, null, null, offdayHead('reskin', template, '"When you realize your translator is also a lawyer"'))
+    if (a.kind !== 'prompt') throw new Error('not a prompt')
+    for (const words of ['not a carousel', 'Download that exact clip', template.clip.url, template.clip.page, 'full frame, never cropped at the sides', 'wordmark small at the bottom right',
+      'right-aligned to the clip', 'When you realize your translator is also a lawyer', 'docs/MEME-STANDARD.md', 'social_clip receipt', 'Keep the board current as you work']) {
+      expect(a.prompt).toContain(words)
+    }
+    expect(a.prompt).not.toContain('carousel-deck/1')
+    expect(a.prompt).not.toContain('scripts/carousel_check.py DECK.json')
+    expect(a.prompt).not.toContain('docs/CAROUSEL-STANDARD.md, "How a carousel is made"')
+    expect(findings('prompt', a.prompt)).toEqual([])
+    // No caption yet: it is asked for once, never invented.
+    expect(offdayHead('reskin', template, null)).toContain('He has not written a caption yet: ask him once.')
+  })
+})
