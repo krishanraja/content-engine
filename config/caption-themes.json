@@ -1,5 +1,5 @@
 {
-  "_about": "The caption styles ve can draw, in plain words, for the publish board's Captions choice (view contract 1.4.0, day.path.style.captions; docs/PUBLISH_BOARDS.md). One entry per name in apps/renderer/src/engine/captions/names.ts CAPTION_THEMES, in that order (apps/renderer/src/engine/captions.test.ts checks). The drawing lives in apps/renderer/src/engine/captions/themes.tsx and chrome/ArtDirectedCaption.tsx; this file only names and describes it. Every style keeps the house rules: only the house faces (Anton, Archivo, Fraunces, Plex Mono), only the brand colours, each word on screen at the frame it is said, at most one marked word per page, and every word inside the platform safe area. recommended_why marks the style the board recommends, with Krish's reason in his own words.",
+  "_about": "The caption styles ve can draw, in plain words, for the publish board's Captions choice (view contract 1.4.0, day.path.style.captions; docs/PUBLISH_BOARDS.md). One entry per name in apps/renderer/src/engine/captions/names.ts CAPTION_THEMES, in that order (apps/renderer/src/engine/captions.test.ts checks). The drawing lives in apps/renderer/src/engine/captions/themes.tsx and chrome/ArtDirectedCaption.tsx; this file only names and describes it. Every style keeps the house rules: only the house faces (Anton, Archivo, Fraunces, Plex Mono), only the brand colours, each word on screen at the frame it is said, at most one marked word per page, and every word inside the platform safe area. recommended_why marks the style the board recommends, with Krish's reason in his own words. The three caption rules (Krish, 2026-11-18: \"We can't have each new word appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer.\"): a new word never appears somewhere else, the previous word or phrase stays a little longer, and nothing jolts. Which styles keep them on one-word pages is measured in config/ve/caption-steady.json.",
   "pop": {
     "name": "Pop",
     "line": "Bold capitals land word by word, and the word being said wears the series colour.",
@@ -118,14 +118,15 @@
   },
   "art-directed": {
     "name": "Art-directed phrases",
-    "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+    "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, always in the same corner, with the last phrase staying above it, dimmed, and a faint echo of an emphasised word behind.",
     "rules": [
       "Cream with a soft shadow, and no box, pill, underline or colour",
-      "Words pop in over 0.12 s as he says them",
+      "Every phrase is laid out whole and hangs left aligned from one fixed corner, so a word lands where the last one did and never switches sides",
       "The key word at 168 px, the rest at 92 px",
-      "Phrases alternate left and right inside the safe area"
+      "The phrase before stays above, smaller and dimmed, for 0.6 s after the next begins, then fades",
+      "Words fade up over 0.1 s with no scale and no overshoot; the echo is for an emphasised word or a phrase, and only fades"
     ],
-    "recommended_why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\"."
+    "recommended_why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\". Rebuilt on 18 Nov 2026 after: \"They are really jolty, and each word moving from left to right is really hard to look at and stressful.\""
   },
   "cinematic": {
     "name": "Cinematic",

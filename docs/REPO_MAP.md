@@ -4949,7 +4949,12 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 ### `apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx`
 
 - `const ART_REGION`
-- `function keyIndex(page: EngineRenderProps['captions'][number]): number`
+- `const ART`
+- `function keyIndex(page: Page): number`
+- `function echoIndex(page: Page): number | null`
+- `type ArtRow = { words: number[]; size: number }`
+- `function artLayout(page: Page, aspect: EngineRenderProps['aspect']): { rows: ArtRow[]; key: number; height: number }`
+- `function cutHeight(captions: readonly Page[], aspect: EngineRenderProps['aspect']): number`
 - `function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/CallCard.tsx`
@@ -7624,6 +7629,10 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 
 - `interface YoutubeUploadInput`
 - `async function uploadPrivateYoutubeVideo(input: YoutubeUploadInput): Promise<unknown>`
+
+### `scripts/audit-caption-steady.ts`
+
+Measure every caption style against the caption rules on one-word pages, in real Chromium, and write the table
 
 ### `scripts/check-control-plane.ts`
 
