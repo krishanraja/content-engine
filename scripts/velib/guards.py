@@ -253,10 +253,35 @@ def annotation_lints(spec: dict) -> list[str]:
             for p in qc_onscreen.annotation_problems(spec.get('objects') or [], beats)]
 
 
+def one_object_problems(spec: dict) -> list[str]:
+    """`idea.one_object` (Krish, 2026-11-18, the Tue 17 habits short): the idea's content, not only that it exists. Binds a whole
+    cut of a piece published from config one_object.from, so no past piece is judged by it."""
+    rules = config()['one_object']
+    whole = any(not c.get('excerpt', False) for c in (spec.get('cuts') or {}).values())
+    if not whole or str(spec.get('publish_day') or '') < rules['from']:
+        return []
+    from . import ideaguard  # noqa: PLC0415
+    return ideaguard.one_object_problems(spec, rules)
+
+
+def pre_critic_bound(spec: dict) -> bool:
+    whole = any(not c.get('excerpt', False) for c in (spec.get('cuts') or {}).values())
+    return whole and str(spec.get('publish_day') or '') >= config()['pre_critic']['from']
+
+
+def pre_critic_lints(spec: dict, spec_path) -> list[str]:
+    """`critic.pre`: the Critic's two questions were asked of this spec before anything was made, and the answer stands."""
+    if not pre_critic_bound(spec):
+        return []
+    from . import precritic  # noqa: PLC0415
+    ok, why = precritic.state(spec, spec_path)
+    return [] if ok else [f'critic.pre {why}']
+
+
 def spec_lints(spec: dict) -> list[str]:
     """The spec-level guards, for ve lint."""
     from .sfx import style_problems  # noqa: PLC0415
-    return (idea_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
+    return (idea_problems(spec) + one_object_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
             + annotation_lints(spec) + style_problems(spec))
 
 

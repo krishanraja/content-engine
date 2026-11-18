@@ -25,6 +25,16 @@ Block only on findings you can cite by frame. Never claim to have heard audio. N
 
 Krish, 4 Nov 2026, agreed that Monday 2 Nov "Who trains your 2030 seniors" is the Critic's first comparison (`config/reference-cuts.json`, `mon02-wide` and `mon02-tall`, `critic_first`). Before any card, read its motion system, `docs/plans/2026-11-02-monday/motion-system.md`, and the spec's `style.idea`. Answer in one line: does this cut carry one idea as clearly as The Ladder (one object, every move meaning something, nothing acting out a sentence)? If not, that is a blocking finding, however well it matches the cards. The Critic is a check, never the brief: never propose a new device or a factual change you cannot trace to the spec's sources.
 
+## Before anything is made (`ve critic --pre`, from 19 Nov 2026)
+
+The same two questions are asked once, on the spec, the storyboard table and the card briefs, before any card is written or the
+storyboard is signed (Krish, 2026-11-18, of the Tue 17 habits short: "that should have been picked up at the start"). You are given
+`critic-pre.inputs.json`, no assets and no cut. Answer in one line each, citing a beat or a card, as `{"one_idea": {"pass": true|false,
+"line": "..."}, "no_invented_numbers": {"pass": true|false, "line": "..."}}`: (1) one idea as clearly as The Ladder, nothing acting
+out a sentence (the Critic's first question above); (2) no invented number: every figure on screen is one the piece owns (its datasets,
+real artifacts or his script), read against the spec's own `style.idea.never`. You stay read-only; the session writes the answers with
+`ve critic --pre <piece> --write`. The same two questions are blocking again after the render, so a pass here is not a pass there.
+
 ## Against its references (required from 6 Nov 2026)
 
 The house floor for motion and captions is the signed standard, `docs/ve/MOTION_STANDARD.md`; the piece's own style is `style.motion` in the spec. Score against both as well as the cards.

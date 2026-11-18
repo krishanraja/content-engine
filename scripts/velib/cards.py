@@ -13,6 +13,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from . import ideaguard
 from .common import ROOT, card_worktree, load_json, native_path, write_json
 
 MODEL = 'gpt-6.1-sol'   # measured cheapest per allowance point (27.0M tokens per 1%); pin, never inherit astra/high
@@ -210,7 +211,48 @@ def visual_sections(fields: dict) -> str:
     return out
 
 
+def never_section(spec: dict) -> str:
+    """The piece's own never-list (style.idea.never), in the card Codex reads: a card was carrying the motion style's Never and
+    nothing of the spec's, so a card could ask for what the spec forbids (Tue 17: "no invented numbers" against a card
+    that asked for "Q3 revenue grew 40%")."""
+    never = [str(n).strip() for n in ((spec.get('style') or {}).get('idea') or {}).get('never') or [] if str(n).strip()]
+    if not never:
+        return ''
+    return "\n## Never (this piece's own list, style.idea.never in its spec; it binds this card too)\n" + '\n'.join(f'- {n}' for n in never) + '\n'
+
+
+def _piece_spec(fields: dict) -> tuple[dict, Path, str] | None:
+    """The spec a card names (fields['spec']), read before _piece_motion pops it: (spec, its file, its path as written)."""
+    spec_path = fields.get('spec')
+    if not spec_path:
+        return None
+    file = ROOT / spec_path if not Path(spec_path).is_absolute() else Path(spec_path)
+    return load_json(file), file, str(spec_path)
+
+
+def _piece_gates(fields: dict, named: tuple[dict, Path, str], path: Path) -> None:
+    """A card for a piece is refused until the Critic's two questions have been asked of the spec (critic.pre), and while its
+    quoted on-screen words carry a number the piece does not own (numbers.invented)."""
+    from . import guards, precritic  # noqa: PLC0415
+    spec, file, _ = named
+    if guards.pre_critic_bound(spec):
+        ok, why = precritic.state(spec, file)
+        if not ok:
+            sys.exit(f've card: {path.name}: {why}')
+    problems = ideaguard.card_problems(fields, spec, file.parent, _supplied(fields))
+    if problems:
+        sys.exit(f've card: {path.name} refused:\n  ' + '\n  '.join(problems))
+
+
+def _supplied(fields: dict) -> list[str]:
+    raw = fields.get('numbers_supplied') or []
+    return [x.strip() for x in raw.split(',') if x.strip()] if isinstance(raw, str) else [str(x) for x in raw]
+
+
 def write_card(path: Path, **fields) -> Path:
+    named = _piece_spec(fields)
+    if named:
+        _piece_gates(fields, named, path)
     _piece_motion(fields)
     _require_design_lock(fields)
     visual = visual_sections(fields) if fields.get('kind') in VISUAL_KINDS else ''
@@ -233,6 +275,12 @@ def write_card(path: Path, **fields) -> Path:
                             + '\n## Acceptance', 1)
     if visual:
         text = text.replace('\n## Acceptance', visual + '\n## Acceptance', 1)
+    if named:
+        # The card names its spec (verify-card and the pre-critic read it back) and carries the spec's never-list.
+        text = text.replace('\nkind:', f'\nspec: {named[2]}\nkind:', 1)
+        if _supplied(fields):
+            text = text.replace('\nkind:', f'\nnumbers_supplied: {", ".join(_supplied(fields))}\nkind:', 1)
+        text = text.replace('\n## Acceptance', never_section(named[0]) + '\n## Acceptance', 1)
     if len(text.encode('utf-8')) > 6144:
         sys.exit(f've card: {path.name} is {len(text.encode())} bytes; a card is 6 KB or less')
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -659,7 +707,77 @@ def dry_run(card_path: Path, visible: bool = False, piece: str | None = None) ->
     return codex_route.describe(*plan(options, codex_env(visible)))
 
 
-def verify(card_path: Path, cwd: Path) -> list[str]:
+IMAGE_SUFFIXES = {'.png', '.jpg', '.jpeg', '.webp'}
+VIDEO_SUFFIXES = {'.mp4', '.mov', '.webm', '.m4v'}
+SCREEN_FRAMES = (0.05, 0.3, 0.55, 0.8, 0.97)   # where in a produced clip the numbers are read
+
+
+def _video_frames(path: Path, tmp: Path) -> list[tuple[str, Path]]:
+    """A few frames of a produced clip: (label, png)."""
+    try:
+        seconds = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(path)],
+                                       capture_output=True, text=True, check=True).stdout.strip())
+    except (OSError, ValueError, subprocess.CalledProcessError):
+        return []
+    out = []
+    for i, at in enumerate(SCREEN_FRAMES):
+        png = tmp / f'{path.stem}-{i}.png'
+        done = subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{seconds * at:.3f}', '-i', str(path), '-frames:v', '1', str(png)],
+                              capture_output=True)
+        if done.returncode == 0 and png.is_file():
+            out.append((f'{path.name} at {seconds * at:.1f} s', png))
+    return out
+
+
+def read_screens(files: list[Path], read=None, frames_of=None) -> tuple[list[tuple[str, str]], str | None]:
+    """The words OCR reads off each produced screen or still: ([(where, text)], None), or ([], why) when OCR is not on this
+    machine. Never a silent pass: the caller says not_run."""
+    import tempfile  # noqa: PLC0415
+    if read is None:
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        import channel_safe  # noqa: PLC0415
+        read = channel_safe.tesseract_words
+    frames_of = frames_of or _video_frames
+    found: list[tuple[str, str]] = []
+    with tempfile.TemporaryDirectory() as tmp:
+        for file in files:
+            targets = [(file.name, file)] if file.suffix.lower() in IMAGE_SUFFIXES else frames_of(file, Path(tmp))
+            for where, png in targets:
+                try:
+                    words = read(png)
+                except OSError as error:
+                    return [], str(error)
+                found.append((where, ' '.join(w for w, conf, _ in words if conf >= 40)))
+    return found, None
+
+
+def screen_numbers(meta: dict, cwd: Path, changed: list[str], notes: list[str] | None, read=None, frames_of=None) -> list[str]:
+    """verify-card's numbers check: when the card's spec says no invented numbers, every screen or still Codex produced is read
+    for figures the piece does not own (numbers.invented). OCR absent: a not_run note, never a pass."""
+    if not meta.get('spec'):
+        return []
+    spec_file = ROOT / meta['spec'] if not Path(meta['spec']).is_absolute() else Path(meta['spec'])
+    spec = load_json(spec_file)
+    if not ideaguard.forbids_invented_numbers(spec):
+        return []
+    made = []
+    for line in changed:
+        rel = line[3:].strip().strip('"').replace('\\', '/')
+        file = Path(cwd) / rel
+        if file.is_file() and file.suffix.lower() in IMAGE_SUFFIXES | VIDEO_SUFFIXES:
+            made.append(file)
+    if not made:
+        return []
+    texts, why = read_screens(made, read, frames_of)
+    if why:
+        if notes is not None:
+            notes.append(f'not_run: the numbers on {len(made)} produced screen(s) were NOT read ({why}); look at each one for a figure the spec does not own')
+        return []
+    supplied = [x.strip() for x in str(meta.get('numbers_supplied') or '').split(',') if x.strip()]
+    return ideaguard.screen_problems(texts, spec, spec_file.parent, supplied)
+
+
+def verify(card_path: Path, cwd: Path, notes: list[str] | None = None, read=None, frames_of=None) -> list[str]:
     """Re-run the card's acceptance outside the sandbox and check the diff stayed inside write_allow."""
     meta = parse_card(card_path)
     allowed = [p.strip().strip('\'"') for p in meta.get('write_allow', '').strip('[]').split(',') if p.strip()]
@@ -677,5 +795,6 @@ def verify(card_path: Path, cwd: Path) -> list[str]:
         if result.returncode != 0:
             tail = (result.stdout + result.stderr).strip().splitlines()[-6:]
             problems.append(f'acceptance failed ({result.returncode}): {cmd}\n    ' + '\n    '.join(tail))
+    problems += screen_numbers(meta, cwd, changed, notes, read, frames_of)
     problems += limit_problems(meta, card_usage(meta.get('card', ''), meta.get('cwd') or str(cwd)))
     return problems

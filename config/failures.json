@@ -1899,12 +1899,12 @@
       "symptom": "Tacky visuals: many unrelated devices, none carrying the argument.",
       "cause": "Nothing asked for the idea before the storyboard. The signed storyboard listed devices per beat, never one object, what its moves mean or what the piece never does, and it was never reopened during production.",
       "status": "guarded",
-      "surface": "No idea, no production: from 9 Nov ve lint refuses a spec without style.idea (the one object, what each move means, a never-list and the real artifact shown as itself).",
+      "surface": "No idea, no production: from 9 Nov ve lint refuses a spec without style.idea (the one object, what each move means, a never-list and the real artifact shown as itself). That checked only that an idea EXISTS, and the same failure came back on Tue 17 Nov (13 generated pictures acting out his line, invented numbers against the spec's own never-list). From 19 Nov it also checks the idea's CONTENT (idea.one_object: no move that acts out the line, no different generated picture on almost every beat unless one carrier persists), the Critic's two questions are asked of the spec before any card or the storyboard (critic.pre, ve critic --pre), and the spec's never-list reaches every Codex card (ve card) and is read off what Codex made (ve verify-card).",
       "guards": [
         {
           "file": "scripts/velib/guards.py",
           "contains": "def idea_problems(",
-          "how": "ve lint (and so ve proof and ve render) refuses a whole cut from 9 Nov whose spec names no visual idea",
+          "how": "ve lint (and so ve proof and ve render) refuses a whole cut from 9 Nov whose spec names no visual idea; from 19 Nov idea.one_object and critic.pre read its content (tests/ve_idea_numbers_guards_test.py)",
           "test": "python3 tests/ve_thursday_guards_test.py"
         }
       ],
