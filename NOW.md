@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-18","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The standards check-in stopped on 18 Nov because the new floor retired 61 operating holds that config/floor-groups.json still named. The run now takes retired standards out of the grouping, lists them under retired, and groups their successors as new; against the new floor it builds 14 groups of 158 standards and the grouping is whole. (2026-11-18)
 - The production plan run and the post-production prompt consult divergent-thinker (provoke on the beats that carry a piece, score on its own first choice, record what it used) and the humour engine for suggestions only; the session and Krish decide, quality first. This holds for every piece. (2026-11-18)
 - The work building video and its stills are filed in Drive under mind/make > 00_Brand-Assets > 03_Social-and-Ads; Krish's goal for them is a series of LinkedIn posts scheduled in Buffer, with this video in one of them (lab/universe/PLAN.md, "Where this is going"). (2026-11-18)
 - The work building version 3 is rendered and sent to Krish: five or six workers per floor in named rooms, the roof as the decision deck, and the AI brain as a double-height basement run by a proactive chief of staff with its librarian, archives, auditor, analyst, trend spotter, inspiration house, taste and standards, and learnings. (2026-11-18)
@@ -50,7 +51,7 @@ Older lines: `docs/history/2026-11-18-NOW-moved-11.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): read the re-run data-centres plan on the card and confirm its beats carry levers, makers and the fetch list.
+- Next (2026-11-18): Re-run the standards check-in once this merges, so the week's groups reach his pinned page.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
