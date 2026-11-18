@@ -274,8 +274,8 @@ class CompileTest(unittest.TestCase):
         def pages(text, gap=10):
             rows = [{'w': i, 'text': t, 'atFrame': i * gap} for i, t in enumerate(text.split())]
             return [' '.join(r['text'] for r in g) for g in _caption_groups(rows)]
-        got = pages('Amazon for your groceries, Google for your emails, it can get a bit dangerous.')
-        self.assertIn('Amazon for your groceries,', got)
+        got = pages('Netflix for your evenings, Google for your emails, it can get a bit dangerous.')
+        self.assertIn('Netflix for your evenings,', got)
         self.assertIn('Google for your emails,', got)
         got = pages('I didn\'t even write this myself. I just put one prompt into my AI tool')
         self.assertFalse([p for p in got if 'myself.' in p and not p.endswith('myself.')], got)

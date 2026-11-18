@@ -25,9 +25,9 @@ CHAR_WIDTH = 0.62  # an Archivo bold glyph is about this share of the font size 
 def word_geometry(aspect: str, layout: str | None = None, plate=None) -> dict:
     source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'chrome' / 'WordCaption.tsx').read_text(encoding='utf-8')
     row = re.search(r'\b' + ('tall' if aspect == '9:16' else 'wide') + r': \{([^}]*)\}', source).group(1)
-    seam_source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
-    seam = re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', seam_source).group(1)
-    row = row.replace('FWP_SPLIT_SEAM_Y', seam)
+    seam_source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')
+    seam = re.search(r'export const SPLIT_SEAM_Y = (\d+)', seam_source).group(1)
+    row = row.replace('SPLIT_SEAM_Y', seam)
     geometry = {}
     for key, expression in re.findall(r'(\w+): ([^,]+)', row):
         factors = expression.strip().split('*')
@@ -46,8 +46,8 @@ def caption_box(page: dict, style: str, aspect: str, region, *, layout=None, pla
     if style == 'word':
         # qc.py already marks sampled SPLIT pages with their own region.
         if layout is None and page.get('region') is not None:
-            source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
-            zone = re.search(r'export const FWP_SPLIT_CAPTION_ZONE = \{([^}]*)\}', source).group(1)
+            source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'splitGeometry.ts').read_text(encoding='utf-8')
+            zone = re.search(r'export const SPLIT_CAPTION_ZONE = \{([^}]*)\}', source).group(1)
             split_region = tuple(int(n) for n in re.findall(r': (\d+)', zone))
             region_box = page['region']
             if isinstance(region_box, dict):

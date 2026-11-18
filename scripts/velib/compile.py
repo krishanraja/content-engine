@@ -318,7 +318,7 @@ def _page_cost(rows: list[dict], start: int, n: int) -> int:
     if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in _WEAK_ENDS:
         cost += 4   # it ends mid-phrase on a small word
     if any(_PAUSE.search(r['text']) for r in page[:-1]):
-        cost += 3   # a clause break inside the page ("Amazon for your groceries, Google")
+        cost += 3   # a clause break inside the page ("Netflix for your evenings, Google")
     if not _held(rows, start + n):
         cost += 5   # its last word flips away before it can be read
     if not _PAUSE.search(page[-1]['text']) and start + n < len(rows):
