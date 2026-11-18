@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../../_auth.js'
-import { type Making, makingSteps, mergeMaking, parseMakingPatch } from '../../_making.js'
+import { type Making, makingSteps, mergeMaking, parseMakingPatch, postFolderProblems, boundPostFolder } from '../../_making.js'
 import { thumbnailOptionsProblems } from '../../_thumbOptions.js'
 import { askChecksForPiece } from '../../_controlCenter.js'
 import { MediaQualityError, qualifyMedia, readMediaRef } from '../../_mediaQuality.js'
@@ -20,7 +20,13 @@ import { mediaQualityEnforced, mediaQualityRollout } from '../../../../../packag
 //          channels: {substack: {url}, youtube: null, ...}, session: {url, by},
 //          teleprompter: {folder_id, folder_name, cuts: {long|short: {script_id, title, script_sha256,
 //            sent_at, error, failed_at}}},
-//          thumbnail_options: {set_sha256, options, grid_mock, verdict?} or {set_sha256, verdict | pick} }
+//          thumbnail_options: {set_sha256, options, grid_mock, verdict?} or {set_sha256, verdict | pick},
+//          post_folder: {folder} }   binds the piece's post folder when nothing bound it yet; the answer's
+//                                    making.post_folder is the one to use either way
+//
+// A pack under another folder than the one the piece is bound to (meta.making.post_folder, bound by the first pack or
+// by a file Krish dropped on the production plan; api/_postFolder.ts) is refused: 409 post_folder_bound with `folder`,
+// the bound name, so one piece is never spread across two folders in 3 Posts.
 //
 // thumbnail_options is the thumbnail-designer's set (scripts/post-pack/making.py thumbnails): a verdict or a pick
 // whose files' sha256s are not the set's on the record is refused (409 thumbnail_options_unbound).
@@ -98,6 +104,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // A thumbnail verdict or pick is kept only on the set it names, with that set's exact files (_thumbOptions.ts).
   const unbound = thumbnailOptionsProblems(prev?.thumbnail_options, patch.thumbnail_options)
   if (unbound.length) return res.status(409).json({ ok: false, error: 'thumbnail_options_unbound', problems: unbound })
+  // One piece, one post folder (_making.ts boundPostFolder): a pack under any other folder is refused, never a second folder.
+  const spread = postFolderProblems(prev, patch)
+  if (spread.length) return res.status(409).json({ ok: false, error: 'post_folder_bound', folder: boundPostFolder(prev), problems: spread })
 
   try {
     const cache = new Map()

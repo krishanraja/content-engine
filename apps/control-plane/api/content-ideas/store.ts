@@ -1,6 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
-import { StoreError, addText, archive, confirmFile, listing, parseScope, readMaterial, uploadUrl, writerOf, type StoreDb } from '../_pieceStore.js'
+import { StoreError, addText, archive, confirmFile, fileType, listing, parseScope, readMaterial, uploadUrl, writerOf, type StoreDb } from '../_pieceStore.js'
+import type { FolderDb } from '../_postFolder.js'
+/** _postFolder.ts GOT_ROLE, written here so this route loads the library (and its database client) only when a file of
+ *  his arrives; tests/control-plane/post-folder.test.ts holds the two equal. */
+export const GOT_ROLE = 'krish_got'
 import { driveFileIdOf, isResearchLink, type LinkReader } from '../_researchLink.js'
 import { DECISIONS_RULE } from '../board/_decisions.js'
 
@@ -20,6 +24,15 @@ import { DECISIONS_RULE } from '../board/_decisions.js'
 //   POST /api/content-ideas/store?op=upload-url  { piece_id | week+day, name, sha256, bytes }   then PUT the bytes, then:
 //   POST /api/content-ideas/store?op=confirm     { the same, title?, kind?, role?, note?, session_id?, material_key? }
 //   POST /api/content-ideas/store?op=archive     { id, reason? }   archived, never deleted
+//
+// A file Krish got himself for a piece (role krish_got: the production plan's "What you get yourself", dropped on the
+// board, or filed by any session) is also filed into his Drive (api/_postFolder.ts; Krish, 2026-11-18: "when I drop
+// stuff in there, it needs to be filed properly in my Drive in the right place"). Its confirm takes `beats` (the plan's
+// beat ids it is for) and `for` (what the plan asked for); the piece's post folder is bound if nothing bound it yet,
+// the material's key names its beats (got:<beats>:<sha256 16>), and the same bytes become a library row at
+// `3 Posts/<folder>/3 Video/Your materials/<BEATS> - <name>`, which the library sync on his home computer writes into
+// Drive. The answer's `drive` says { state: filed | already, path, folder }, or { state: held | later, why } (the
+// material is on the piece either way; the same drop again files what is still missing).
 //
 // Nothing here deletes, sends, posts or spends.
 //
@@ -103,6 +116,7 @@ export function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: Library
         return res.status(201).json(text ? { ...linked, research_text: text } : linked)
       }
       if (op === 'upload-url') return res.status(200).json(await uploadUrl(db, body))
+      if (op === 'confirm' && body.role === GOT_ROLE) return res.status(201).json(await withCopy(await confirmGot(db, body, bearer, by)))
       if (op === 'confirm') return res.status(201).json(await withCopy(await confirmFile(db, body, bearer, by)))
       if (op === 'archive') return res.status(200).json(await archive(db, String(body.id || ''), by, typeof body.reason === 'string' ? body.reason.slice(0, 500) : null))
       return res.status(400).json({ ok: false, error: 'unknown_op', ops: ['text', 'link', 'upload-url', 'confirm', 'archive'] })
@@ -112,6 +126,39 @@ export function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: Library
       return res.status(503).json({ ok: false, error: 'board_store_unavailable' })
     }
   }
+}
+
+/** A file Krish got himself, filed on its piece and into the piece's folder in his Drive (the header says how). */
+export async function confirmGot(db: StoreDb, body: Record<string, unknown>, bearer: boolean, by: string, now = new Date(), fetcher?: Parameters<typeof confirmFile>[4]): Promise<Record<string, unknown>> {
+  const { PostFolderError, beatsOf, bindPostFolder, fileToPostFolder, gotKey, MATERIALS_FOLDER, MATERIALS_SECTION } = await import('../_postFolder.js')
+  const pieceId = typeof body.piece_id === 'string' ? body.piece_id.toLowerCase() : ''
+  if (!pieceId) throw new StoreError(400, 'got_needs_a_piece')
+  const sha = typeof body.sha256 === 'string' ? body.sha256.toLowerCase() : ''
+  const beats = beatsOf(body.beats)
+  const asked = typeof body.for === 'string' ? body.for.replace(/\s+/g, ' ').trim().slice(0, 300) : ''
+  const { ext, contentType } = await fileType(body.name)
+  // The folder first, so his note says where it is in Drive. A piece with no day yet holds the file on the piece alone.
+  let folder: string | null = null; let held: string | null = null
+  try { folder = (await bindPostFolder(db as unknown as FolderDb, pieceId, by, now)).folder }
+  catch (e) { if (e instanceof PostFolderError && e.message === 'piece_not_found') throw new StoreError(404, 'piece_not_found'); held = e instanceof Error ? e.message : 'not_bound' }
+  const note = `Krish got this himself for ${beats.length ? `beat ${beats.join(', ')}` : 'the production plan'}${asked ? `: ${asked}` : ''}.`
+    + (folder ? ` In his Drive: 3 Posts/${folder}/${MATERIALS_SECTION}/${MATERIALS_FOLDER}.` : '')
+  const filed = await confirmFile(db, { ...body, role: GOT_ROLE, material_key: /^[a-f0-9]{64}$/.test(sha) ? gotKey(beats, sha) : undefined, note: note.slice(0, 2000) }, bearer, by, fetcher)
+  const md5 = typeof filed.md5 === 'string' ? filed.md5 : ''
+  if (!folder) return { ...filed, drive: { state: 'held', why: held } }
+  const subject = folder.split(' - ').slice(1).join(' - ')
+  const purpose = `Krish's own, for ${beats.length ? beats.map(b => b.toUpperCase()).join(' ') : 'the production plan'} of ${subject}`.slice(0, 200)
+  try {
+    const f = await fileToPostFolder(db as unknown as FolderDb, { folder, name: typeof body.name === 'string' ? body.name : 'file', beats, ext, contentType,
+      sha256: sha, md5, bytes: Number(body.bytes), purpose, sentBy: sentByOf(by), now })
+    return { ...filed, drive: { state: f.state, path: f.path, folder } }
+  } catch (e) { return { ...filed, drive: { state: 'later', folder, why: e instanceof Error ? e.message : 'not_filed' } } }
+}
+
+/** The library's sender name (content_library_files.sent_by: a letter, then letters, digits and underscores). */
+export const sentByOf = (by: string): string => {
+  const s = by.replace(/[^A-Za-z0-9_]+/g, '_').replace(/^[^A-Za-z]+/, '').slice(0, 40)
+  return s || 'Krish'
 }
 
 export default createStoreHandler(

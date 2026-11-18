@@ -324,8 +324,20 @@ there, reads it back and replies "Done" with the link (`config/failures.json` F2
 
 ## Post folders are bound to their pieces (W3.5)
 
-A post's folder in `3 Posts` is bound to its piece: the piece's making record holds it (`pack.folder`). Its name freezes
-at the first send (`pack.sent_at`): `send.py` refuses the same piece under any other folder name. A canary, test,
+A post's folder in `3 Posts` is bound to its piece: the piece's making record holds it (`post_folder`, and `pack.folder`
+on a record from before 18 Nov). Krish, 2026-11-18: "every resource along the way for a single piece needs to be bound
+to the piece in a bullet proof way". The first writer that needs the folder binds it, and every later writer uses it:
+the pack (`build.py`), ve file and a file he drops on the production plan each call the making route with
+`post_folder: {folder}` first (`making.py bind_post_folder`; the engine's `_postFolder.ts bindPostFolder` for a drop,
+which names it as `library.py post_folder` does, from the piece's date, day, series and working title), and the answer
+is the bound folder, which wins over the name their own subject gives. A pack under any other folder is refused
+(`post_folder_bound`), so a piece is never spread across two folders. Its name freezes at the first send
+(`pack.sent_at`): `send.py` refuses the same piece under any other folder name.
+
+His own files for a piece (the production plan's "What you get yourself": photos, screenshots, short videos, PDFs,
+text) go in its `3 Video/Your materials`, named with the beats they are for first (`S8 L9 - IMG_0412.jpg`), through the
+asset library like every file in `3 Posts`; the same bytes are a material on the piece (role `krish_got`), so the
+production session reads them by id and finds them in Drive. A canary, test,
 smoke-test, dry-run or fixture post is refused by the library's path rule (`path_test_folder`), and a rendered video
 inside a post goes only in `3 Video` (`path_render_outside_video`), in `scripts/post-pack/library.py` and the engine's
 routes alike. `python3 scripts/post-pack/post_binding.py report --records R --files F` flags any piece spread across
