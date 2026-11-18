@@ -10,8 +10,8 @@
     69.533,
     71.867
   ],
-  "sha256": "acd053ca06bef47e98cb6907e043a8f92930c615fc7ac1cbb68aedc71ccc27f2",
-  "spec_sha256": "8ec455361d209aa40b56ef5724b43d9f0ac0179eb8e3f7d68f72c17edcf86cae",
+  "sha256": "06b0c109afb35731580928881bbec1475ab165209f584e550d596315a6004e24",
+  "spec_sha256": "6f09b37511c8d4a003c0ea6d706d6079c51ed6effa7263f8dc2ed3056acf58c2",
   "structure": {
     "format": "face-with-proof",
     "aspect": "9:16",
@@ -58,10 +58,6 @@
         "credit_meter"
       ],
       [
-        "piqua",
-        "evidence_card"
-      ],
-      [
         "recall_stat",
         "kinetic_stat"
       ],
@@ -81,7 +77,7 @@
     "beats": [
       [
         "hook",
-        "SPLIT",
+        "P1",
         [
           "ddn",
           "recalled"
@@ -95,15 +91,13 @@
         ]
       ],
       [
-        "face",
-        "SPLIT",
-        [
-          "ddn"
-        ]
+        "sacked",
+        "STAGE",
+        []
       ],
       [
-        "questions",
-        "SPLIT",
+        "face",
+        "P6",
         [
           "field41",
           "stat41"
@@ -126,14 +120,12 @@
       ],
       [
         "piqua",
-        "SPLIT",
-        [
-          "piqua"
-        ]
+        "STAGE",
+        []
       ],
       [
         "bill",
-        "STAGE",
+        "P1",
         [
           "block"
         ]
@@ -155,7 +147,7 @@
       ],
       [
         "sack",
-        "SPLIT",
+        "P3",
         [
           "recall_stat"
         ]
@@ -163,9 +155,7 @@
       [
         "built",
         "STAGE",
-        [
-          "block"
-        ]
+        []
       ],
       [
         "meta_says",
@@ -176,7 +166,7 @@
       ],
       [
         "party_line",
-        "SPLIT",
+        "P1",
         [
           "meta_line"
         ]
@@ -191,12 +181,12 @@
       ],
       [
         "call",
-        "SPLIT",
+        "P1",
         []
       ],
       [
         "deals",
-        "P6",
+        "P1",
         [
           "hf_deal"
         ]
@@ -224,7 +214,7 @@
       ],
       [
         "carry_on",
-        "STAGE",
+        "P1",
         [
           "block"
         ]
@@ -237,12 +227,7 @@
     ]
   },
   "style_module": "eating-jobs-ladder",
-  "props_sha256": "13f7ac4ebd808af10444a7b5996a3d66be78ffc2a4e1c39a10e262fb4a418ae1",
-  "qc": {
-    "measured_pass": null,
-    "complete": false,
-    "error": "Cue dc-0 has no unique beat slot"
-  },
+  "props_sha256": "c98bda64f7cc465984f0af266a70129da95c4db3fbffe0b213e6708bcb86b53e",
   "type": [
     [
       "data",
