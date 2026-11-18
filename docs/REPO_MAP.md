@@ -6082,6 +6082,13 @@ JSON-value transport: escape values only; keys retain their original spelling.
 - `function fromAsciiProps<T>(value: T): T`
 - `function lagSamples(rendered: Float32Array, stem: Float32Array, maxLag: number): number`
 
+### `apps/renderer/src/engine/treatments/SubjectLift.tsx`
+
+- `type FramePlate`
+- `type SubjectLiftProps`
+- `function subjectLiftParameters(strength: number)`
+- `function SubjectLift({ take, matte, frame, width, height, strength, tokens, id }: SubjectLiftProps): ReactElement<SVGPr…`
+
 ### `apps/renderer/src/evidence-label.ts`
 
 - `type EvidenceLabelInput`
