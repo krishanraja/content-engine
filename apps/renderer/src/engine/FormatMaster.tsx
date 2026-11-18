@@ -87,7 +87,7 @@ function cameraView(profile: MotionProfile | undefined, beat: EngineBeat, slots:
 function Backdrop({ src, tokens }: { src: string; tokens: EngineRenderProps['tokens'] }) {
   return <AbsoluteFill data-backdrop>
     <Img src={src} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
-    <AbsoluteFill style={{ background: `linear-gradient(180deg, transparent 45%, color-mix(in srgb, ${tokens.ink} 72%, transparent) 100%)` }} />
+    <AbsoluteFill style={{ background: `linear-gradient(180deg, color-mix(in srgb, ${tokens.ink} 38%, transparent) 0%, transparent 42%, color-mix(in srgb, ${tokens.ink} 72%, transparent) 100%)` }} />
   </AbsoluteFill>
 }
 

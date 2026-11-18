@@ -4115,13 +4115,13 @@
         "kind": "data centre",
         "label": "PIQUA, OHIO",
         "logo": "Meta",
-        "tag": "Power bill",
+        "tag": "Your share",
         "targets": [
           {
-            "label": "Your power bill"
+            "label": "Power bill"
           },
           {
-            "label": "Your AI plan"
+            "label": "AI plan"
           }
         ],
         "copies": {
@@ -4218,7 +4218,7 @@
       "params": {},
       "dataset": {
         "unit": "%",
-        "denominator": 100,
+        "denominator": null,
         "producerLabel": "Miami County Board of Elections, unofficial, via Dayton Daily News",
         "rows": [
           {
@@ -4238,7 +4238,7 @@
       "params": {},
       "dataset": {
         "unit": "%",
-        "denominator": 100,
+        "denominator": null,
         "producerLabel": "Miami County Board of Elections, unofficial, via Dayton Daily News",
         "rows": [
           {
