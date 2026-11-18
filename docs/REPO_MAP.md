@@ -6178,6 +6178,8 @@ Spot inks, paper and shadow. All still colour values live here, including device
 - `const SplitKeyFrameSchema`
 - `type SplitKeyFrameProps = z.infer<typeof SplitKeyFrameSchema>`
 - `const REFERENCES`
+- `function captionTokens(value: string): string[]`
+- `const STAGE_TEXT`
 - `const SPLIT_ASSETS`
 - `function SplitKeyFrame(input: SplitKeyFrameProps)`
 

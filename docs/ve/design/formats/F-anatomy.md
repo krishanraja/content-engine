@@ -1,13 +1,14 @@
-# FACE WITH PROOF: anatomy (9:16 lock retired 18 Nov 2026, a draft awaiting a new Gate 2; 16:9 draft awaiting Gate 2)
+# FACE WITH PROOF: anatomy (9:16 key frames retired 18 Nov 2026, now a rules-only lock; 16:9 draft awaiting Gate 2)
 
 Status: written as a draft on 29 Oct 2026 for the W2.7 shadow run. The 9:16 lock was frozen on 3 Nov 2026 (Krish
 approved one still per beat, the round 3 stills: "Looks good to me.") and **retired on 18 Nov 2026**: Krish deleted its
 four key frames for good ("DELETE THOSE FRAMES FOREVER. you need to rebuild everywhere it was to be 10X better using
-those two new references"; `ve lock retire`). The format is a draft again (`config/ve/design-lock.json`,
-`drafts.face-with-proof`): the retirement and the hash of every deleted frame are recorded on it, and `ve lock freeze`
-refuses any of those pictures. Until he approves one new still per beat, a face-with-proof spec is read as legacy:
-`ve lint` notes it, key-frame match does not apply, each cut waits for his approval of the exact file, and the Critic is
-the design gate. The 16:9 entry, `face-with-proof@16:9`, is likewise a draft awaiting its own Gate 2.
+those two new references"; `ve lock retire`); the hash of every deleted frame stays recorded and `ve lock freeze` refuses
+any of those pictures. The same day he asked "why a visual pass plus obvious rules arent a better option than measuring it
+against one frame of an old video" and agreed to drop the picture-matching: `ve lock rules-only` made it a **rules-only lock**
+(`config/ve/design-lock.json`, `formats.face-with-proof`, `match: rules_only`, his words on it). It keeps its four beats and the
+lock's zones and thresholds as rules, stores and matches no key frame, and a cut is held to those rules (including
+`plate.head_in_band`), the Critic's visual pass and his approval of the exact file. The 16:9 entry, `face-with-proof@16:9`, is unchanged: a draft awaiting its own Gate 2, so a wide cut stays on the legacy path.
 
 Source: `config/ve/formats/face-with-proof.json` (proven on the Monday 19 Oct camera cuts he accepted) and
 `docs/ve/design/TEMPLATE.md`. He on camera carries the argument; the proof arrives beside or over him on the words
@@ -30,7 +31,7 @@ Extra beats (more hooks, stats, the dated call) are allowed between them and are
 - `two-passports`: its five beats likewise, held to its frozen stills.
 
 Since the 3 Nov freeze both are `role: module` (they keep working as their own formats, and stay frozen on their own
-key frames while their base waits for Gate 2).
+key frames; their base is a rules-only lock).
 
 ## Canvases
 
@@ -64,6 +65,6 @@ What the retired frames did, set against what those two do:
 | Dead space | a blank cream stage beside small devices | `used_frame` 0.81 (AI music), the panel changing every 0.27 s (Character.AI) |
 
 The brief for the pictures is the Codex card `docs/ve/cards/fwp-rebuild/ve-fwp-rebuild-1.md`; Claude renders its
-stills, a separate reader judges them, and Krish presses Gate 2. When he approves, one commit sets `SPLIT_SEAM_Y`,
+stills, a separate reader judges them, and Krish picks in a session: the stills are the design he approves, not a yardstick. When he approves, one commit sets `SPLIT_SEAM_Y`,
 `SPLIT_CAPTION_ZONE` and the stage boxes in `apps/renderer/src/engine/layouts/` (QC reads them from
-`splitGeometry.ts`), then `ve lock freeze face-with-proof --from <his approved stills>` hashes them.
+`splitGeometry.ts`); nothing is frozen, because a rules-only lock stores no picture.

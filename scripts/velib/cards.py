@@ -132,6 +132,12 @@ VISUAL_KINDS = ('carousel', 'meme', 'notes_image', 'cover')
 # photos (from scripts/post-pack/photos.py), and is held to the palette's thumbnail_wide and cover_tall formats and the
 # cover standard (docs/production/COVER-STANDARD.md).
 FACE_CHANNELS = ('tiktok', 'x', 'linkedin', 'threads', 'substack-notes', 'youtube')
+# A carousel's body sentences (Krish, 2026-11-18, of the shipped ChatGPT ads carousel: "this font is crappy, i have given this
+# feedback before"; he approved the same deck set in Anton, uppercase, with "go"). "Type only from the brand tokens" let
+# Archivo at its heaviest through, since Archivo is a brand token, so the card names the face outright.
+CAROUSEL_BODY_TYPE = ('Body sentences: Anton, uppercase, the same face as the cover and the close, the card\'s key figure or '
+                      'phrase in mint, an IBM Plex Mono kicker above. Never Archivo Black and never Archivo at weight 800 or '
+                      'heavier on a card.\n')
 
 
 def visual_sections(fields: dict) -> str:
@@ -199,7 +205,8 @@ def visual_sections(fields: dict) -> str:
         out += (f'\n## Deck ({len(cards)} cards; the words are fixed and passed scripts/carousel_check.py)\n'
                 + ''.join(f'- card {n}: {"cover" if n == 1 else "last card" if n == len(cards) else roles.get(n, "body")}'
                           f', one picture of its point\n' for n in range(1, len(cards) + 1))
-                + 'Template every card with placeholders; the session fills in the deck\'s words when it renders.\n')
+                + 'Template every card with placeholders; the session fills in the deck\'s words when it renders.\n'
+                + '\n## Type (Ruling, Krish, 2026-11-18)\n' + CAROUSEL_BODY_TYPE)
     return out
 
 
