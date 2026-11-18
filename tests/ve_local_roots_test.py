@@ -139,7 +139,9 @@ class EveryReaderResolvesFromConfig(unittest.TestCase):
             self.assertEqual(got.returncode, 0, got.stdout + got.stderr)
             meta = cards.parse_card(card)
             self.assertTrue(meta['cwd'].startswith(temp))
-            self.assertTrue(meta['cwd'].endswith('content-engine\\ve-card\\w-1'))
+            # The card names its worktree in this machine's own form, the form dispatch compares (18 Nov 2026).
+            tail = 'content-engine\\ve-card\\w-1' if sys.platform == 'win32' else 'content-engine/ve-card/w-1'
+            self.assertTrue(meta['cwd'].endswith(tail), meta['cwd'])
 
     def test_ensure_worktree_refuses_a_typed_path_and_makes_nothing(self):
         with tempfile.TemporaryDirectory() as temp, mock.patch.dict(os.environ, {'MINDMAKE_LOCAL_WORKTREES': temp}), \
