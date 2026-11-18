@@ -126,6 +126,16 @@ export const EngineRenderPropsSchema = z.object({
    *  the centre of the frame, or the upper strip. Every place is inside every channel's safe area (captions/kit.ts). */
   captionPlacement: z.enum(['lower', 'centre', 'upper']).optional(),
   title: z.string().min(1).optional(),
+  /** The episode title moment (spec title_moment; Krish, 2026-11-17: "seamlessly flowing out of the captions and back
+   *  in to them again"): the words he says as the title, each on its spoken frame. The captions leave these words out,
+   *  and the renderer draws them as the title (title/TitleMoment.tsx) until his next word. */
+  titleMoment: z.object({
+    fromFrame: z.number().int().nonnegative(),
+    toFrame: z.number().int().positive(),
+    /** 'fade' when the captions take his next words while the finished title still holds. */
+    release: z.enum(['captions', 'fade']).optional(),
+    words: z.array(z.object({ text: z.string().min(1), atFrame: z.number().int().nonnegative() }).strict()).min(1),
+  }).strict().optional(),
   beats: z.array(EngineBeatSchema).min(1),
   objects: z.array(EngineObjectSchema),
   events: z.array(EngineEventSchema),
