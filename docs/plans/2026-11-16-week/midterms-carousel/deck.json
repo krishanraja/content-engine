@@ -1,0 +1,103 @@
+{
+ "schema": "carousel-deck/1",
+ "title": "After the midterms, AI has to find somewhere else to live (Thu 19 Nov off day, option fortytoone, approved by Krish 17 Nov)",
+ "experiment": "One running stadium scoreboard (the infographic style Krish saved for this idea) carries the whole deck: the cover is the scoreboard lit at night reading VOTERS 40, DATA CENTRES 1, and each body card adds the next sourced line to the same board; meant to make the swipe read as one story and every number land as a score.",
+ "five_whys": [
+  {
+   "q": "Why does the midterm result matter for AI?",
+   "a": "On 3 November, voters chose to limit new data centres in 40 of 41 local votes across 10 states (Ballotpedia, 6 Nov 2026)."
+  },
+  {
+   "q": "Why did voters turn data centres away?",
+   "a": "Many fear a giant data centre pushes up their power bill: of Americans whose bills rose, 43% call data centres a major reason (Pew, May 2026)."
+  },
+  {
+   "q": "Why does that change where AI gets built?",
+   "a": "Builders need sites towns will accept, so they bring their own power, use smaller sites beside spare power, or shrink AI onto your own devices."
+  },
+  {
+   "q": "Why is that a trend and not one election?",
+   "a": "Cleanview counted 59 planned US data centres with their own power plants by mid-2026, and OpenAI promised on 5 Nov to pay the full power cost of campuses it runs."
+  },
+  {
+   "q": "Why should a business leader care?",
+   "a": "Where your AI supplier builds decides its cost, its delays and whether it keeps its promises, so ask where its new computing is being built."
+  }
+ ],
+ "arc": {
+  "what": 1,
+  "happened": [
+   1,
+   2
+  ],
+  "why": 3,
+  "so_what": [
+   4
+  ],
+  "do": [
+   5
+  ]
+ },
+ "explains": {
+  "data centre": "a giant warehouse of computers that runs AI (card 1)"
+ },
+ "cards": [
+  {
+   "headline": "Voters turned away AI's data centres. Where does AI live now?",
+   "line": "A data centre is the giant warehouse of computers that runs AI.",
+   "picture": "Full-bleed night scene drawn in code: a stadium scoreboard glowing over an empty small-town field, the board reading VOTERS 40, DATA CENTRES 1 in big lamp digits; the headline sits below the board"
+  },
+  {
+   "headline": "Voters backed limits on new data centres in 40 out of 41 local votes, after rows over power bills.",
+   "line": "3 November, 10 states, counted by Ballotpedia.",
+   "picture": "Sourced chart on the scoreboard: a grid of 41 ballot squares, 40 lit in coral marked LIMIT and 1 plain, with 10 STATES and 3 NOV on the board's side panels"
+  },
+  {
+   "headline": "Voters fear a giant data centre will push up their own power bill.",
+   "line": "Of Americans whose bills rose, 43% call data centres a major reason.",
+   "picture": "Sourced chart on the scoreboard: one bar filled to 43% beside an electricity-bill icon, labelled 'say data centres are a major reason their bill rose'",
+   "source": "Pew Research Center, May 2026"
+  },
+  {
+   "headline": "To dodge the fights, builders now bring their own power plants, and some AI runs on phones instead.",
+   "line": "One tracker counts 59 planned US data centres with their own power plants; others spread out into small sites.",
+   "picture": "Sourced chart on the scoreboard in three panels: 59 (planned US data centres with their own power plant), a row of small sites beside a solar field, and a phone with a chip glowing inside it",
+   "source": "Cleanview, behind-the-meter data centres report, mid-2026; OpenAI national community compact, 5 Nov 2026"
+  },
+  {
+   "headline": "Ask the company selling you AI where its new computing gets built, and who pays for power.",
+   "line": "Where it is built decides its cost, its delays and its promises.",
+   "picture": "The scoreboard's last line turned into a two-question checklist: WHERE IS IT BUILT? WHO PAYS FOR POWER? each with a tick box"
+  },
+  {
+   "headline": "Where AI gets built now decides what AI costs you and where it runs.",
+   "picture": "The scoreboard dimmed after the game, its final line reading WHERE IT'S BUILT = WHAT IT COSTS",
+   "cta": "Subscribe free (makeyourmindup.ai)"
+  }
+ ],
+ "read_back": [
+  {
+   "reader": "Fresh reader G (claude -p, Haiku, headlines only, once, 18 Nov)",
+   "answers": {
+    "what": "Local voters are pushing back against new AI data centres.",
+    "happened": "Voters rejected or limited new data centres in 40 of 41 local votes, after arguments over power bills.",
+    "why": "People worry a huge data centre nearby will raise their electricity bills.",
+    "so_what": "AI's physical buildout is now a local political fight, and that can shape what AI costs and where it runs.",
+    "do": "Ask AI providers where their new computing is built and who pays for the power."
+   },
+   "stalls": ""
+  },
+  {
+   "reader": "Fresh reader H (claude -p, Sonnet, headlines only, once, 18 Nov)",
+   "answers": {
+    "what": "AI data centres and where they're getting built, now that locals are pushing back.",
+    "happened": "Voters in 40 of 41 local votes backed limits on new data centres after fights over power bills.",
+    "why": "People worry a huge data centre nearby will make their own electricity bill go up.",
+    "so_what": "Where AI gets built affects what AI costs me and where it actually runs.",
+    "do": "Ask any company selling me AI where its new computing gets built and who pays for the power."
+   },
+   "stalls": "Card 4: it's unclear how builders bringing their own power plants and AI running on phones fit together, and card 1's 'where does AI live now?' isn't answered until card 4."
+  }
+ ],
+ "read_rounds": "Four rounds of two fresh readers each (8 readers); stalls fixed between rounds on cards 1, 4, 5 and 6. The last pair is recorded."
+}
