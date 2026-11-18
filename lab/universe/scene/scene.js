@@ -8,14 +8,18 @@ window.kitName = kitName
 const W = 1080, H = 1350
 const C = { ink: '#0C1512', cream: '#F4EFE4', mint: '#7EF0C0', butter: '#FFD84D', lilac: '#B7A6FF', coral: '#FF6A4D',
   slab: '#CBBFA7', wallIn: '#F2ECDF', wallOut: '#BDB29B', glass: '#2A3A33', skin: '#E9C6A2', claude: '#D97757' }
+// Prop colours handed to the figurine kit; the kit has none of its own.
+const PALETTE = { ink: C.ink, cream: C.cream, mint: C.mint, butter: C.butter, lilac: C.lilac, coral: C.coral, wood: '#A88E6C', metal: '#9AA3A0', paper: '#FBF8F1', glow: '#FFE9A8' }
 const LOGO = { claude: 'claude-symbol.png', openai: 'openai.jpg', github: 'github.jpg', vercel: 'vercel.png', supabase: 'supabase.jpg',
   elevenlabs: 'elevenlabs.jpg', runway: 'runway.jpg', buffer: 'buffer.jpg', gmail: 'gmail.jpg', canva: 'canva.jpg' }
 const TOOL = { openai: '#E8E8E8', github: '#2B3137', vercel: '#1B1B1B', supabase: '#3ECF8E', elevenlabs: '#D9D4CC', runway: '#5B5BD6',
   buffer: '#B0EC9C', gmail: '#EA4335', canva: '#7D2AE8' }
 
+// Each label's figurine in the version 4 kit (figurines/roles.json).
+const JOB = {"Librarian": "librarian", "File archive": "file-archive", "Content archive": "content-archive", "Inspiration house": "inspiration-house", "Taste + standards": "taste-standards", "Auditor": "auditor", "Analyst": "analyst", "Trend spotter": "trend-spotter", "Learnings": "learnings", "Chief of staff": "chief-of-staff", "Coder": "coder", "Reviewer": "reviewer", "Deployer": "deployer", "Tester": "tester", "Fixer": "fixer", "Account researcher": "account-researcher", "Call prep": "call-prep", "CRM updater": "crm-updater", "Notetaker": "notetaker", "Outbound drafts": "outbound-drafts", "Follow-up": "follow-up", "Scheduler": "scheduler", "Poster": "poster", "Results reader": "results-reader", "Replier": "replier", "Amplifier": "amplifier", "Video editor": "video-editor", "Voice + music": "voice-music", "Motion designer": "motion-designer", "Cover designer": "cover-designer", "Carousels": "carousels", "Builder": "builder", "Researcher": "researcher", "Fact checker": "fact-checker", "Scriptwriter": "scriptwriter", "Voice checker": "voice-checker", "Clarity coach": "clarity-coach", "Link reader": "link-reader", "Inspiration scout": "inspiration-scout", "AI search probe": "search-probe", "Divergent thinker": "divergent-thinker", "Idea ranker": "idea-ranker", "Trend radar": "trend-radar", "Vision": "vision", "Judgement": "judgement", "You, the CEO": "ceo", "Taste": "taste", "Standards": "standards"}
 // The work, bottom to top (Krish, 18 Nov 2026: richer, closer to the source post; no venture names).
 // Each figurine: role, personality (the kit's action), and either a tool's mark on its head or Claude's on its legs.
-const L_ = (role, p, mark, extra = {}) => ({ role, p, ...(mark === 'legs' ? { legs: true } : mark === 'human' ? { human: true } : { head: mark }), ...extra })
+const L_ = (role, p, mark, extra = {}) => ({ role, job: JOB[role], p, ...(mark === 'legs' ? { legs: true } : mark === 'human' ? { human: true } : { head: mark }), ...extra })
 const LEVELS = [
   { key: 'brain', name: 'The AI brain', brain: true, fh: 2.05, rooms: ['Archives', 'Chief of staff', 'Analysis'], cast: [
     L_('Librarian', 'filer', 'supabase'), L_('File archive', 'filer', 'legs'), L_('Content archive', 'pageflip', 'legs'),
@@ -60,7 +64,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserv
 renderer.setPixelRatio(window.devicePixelRatio || 1); renderer.setSize(W, H); renderer.outputColorSpace = THREE.SRGBColorSpace
 document.body.insertBefore(renderer.domElement, document.getElementById('labels'))
 const scene = new THREE.Scene()
-const BW = 7.2, BD = 2.6, FH = 1.36, SLAB = 0.14, FIG = 1.12
+const BW = 7.2, BD = 2.6, FH = 1.36, SLAB = 0.14, FIG = 1.3
 const SCALE = 81
 const CX = 348, CY = 1262
 const camera = new THREE.OrthographicCamera(-CX / SCALE, (W - CX) / SCALE, CY / SCALE, -(H - CY) / SCALE, 0.1, 200)
@@ -156,14 +160,14 @@ const cabin = new THREE.Group(); building.add(cabin); box(0.56, 0.06, 0.56, mat(
 
 // ---------------------------------------------------------------- figurines
 const figures = cast.map((c, k) => {
-  const spec = { personality: c.p, seed: k * 0.61, head: c.human ? 'human' : 'bot', skin: C.skin, accent: C.ink,
+  const spec = { role: c.job, personality: c.p, palette: PALETTE, seed: k * 0.61, head: c.human ? 'human' : 'bot', skin: C.skin, accent: C.ink,
     body: c.human ? C.mint : c.chief ? C.mint : c.head ? TOOL[c.head] : C.claude, headLogo: c.head ? textures[c.head] : null, legLogo: c.legs ? textures.claude : null }
   const f = kit.makeFigurine(THREE, spec)
   const holder = new THREE.Group(); holder.add(f.group); holder.position.set(c.x, SLAB, c.z); holder.rotation.y = -0.2
   c.level.g.add(holder)
   return { ...c, f, holder, size: c.chief ? 1.75 : FIG }
 })
-const courier = kit.makeFigurine(THREE, { personality: 'courier', seed: 2, head: 'bot', skin: C.skin, accent: C.ink, body: C.claude, headLogo: null, legLogo: textures.claude })
+const courier = kit.makeFigurine(THREE, { role: 'courier', personality: 'courier', palette: PALETTE, seed: 2, head: 'bot', skin: C.skin, accent: C.ink, body: C.claude, headLogo: null, legLogo: textures.claude })
 courier.group.position.set(0, 0.06, 0); courier.group.scale.setScalar(1.15); cabin.add(courier.group); cabin.rotation.y = -0.3
 
 // ---------------------------------------------------------------- HTML: labels, panel, stars
@@ -202,7 +206,8 @@ const BRAIN_ON = 0.15, FLOOR0 = 0.55, STEP = 0.27
 const landAt = (i) => (i === 0 ? FLOOR0 : FLOOR0 + 0.25 + i * STEP)
 
 window.setTime = (t) => {
-  const night = smooth(7, 9, t)
+  const night = shot ? 0 : smooth(7, 9, t)
+  if (shot) aimShot(t)
   document.documentElement.style.setProperty('--n', night)
   document.getElementById('tday').style.opacity = clamp(1 - night * 2.4)
   document.getElementById('tnight').style.opacity = clamp(night * 2.4 - 1.4)
@@ -230,9 +235,51 @@ window.setTime = (t) => {
   cabin.position.set(shaftX, stops[fl] + (stops[fl + 1] - stops[fl]) * smooth(0.45, 1, fr) + SLAB, 0.2); courier.update(t)
   renderer.render(scene, camera)
   const labelsOn = smooth(2.9, 3.4, t)
-  levels.forEach((L, i) => { const [x, y] = project(new THREE.Vector3(-BW / 2 + 0.12, L.g.position.y + (L.roof ? 1.3 : L.fh - 0.06), BD / 2)); Object.assign(signs[i].style, { left: x + 'px', top: y + 'px', opacity: labelsOn, transform: 'translate(0, 4px)' }) })
-  figures.forEach((fg, j) => { const v = new THREE.Vector3(); fg.holder.getWorldPosition(v); v.y = fg.level.g.position.y + SLAB; v.z = BD / 2 - 0.05; const [x, y] = project(v); const lane = fg.chief ? 0 : fg.row === 0 ? -22 : 0; let top = y + lane - 22; if (fg.level.brain && fg.row === 0) { const h = new THREE.Vector3(); fg.holder.getWorldPosition(h); h.y += 0.74 * fg.size; top = project(h)[1] - 20 - (fg.level.cast.indexOf(fg.level.cast.find((c) => c.role === fg.role)) % 2) * 22 } Object.assign(tags[j].style, { left: x + 'px', top: top + 'px', opacity: labelsOn, transform: 'translate(-50%, 0)' }) })
+  levels.forEach((L, i) => { const [x, y] = project(new THREE.Vector3(-BW / 2 + 0.12, L.g.position.y + (L.roof ? 1.3 : L.fh - 0.06), BD / 2)); Object.assign(signs[i].style, { left: (shot ? Math.max(16, x) : x) + 'px', top: y + 'px', opacity: labelsOn, transform: `translate(0, ${4 * zoom}px) scale(${zoom})` }) })
+  figures.forEach((fg, j) => { const v = new THREE.Vector3(); fg.holder.getWorldPosition(v); v.y = fg.level.g.position.y + SLAB; v.z = BD / 2 - 0.05; const [x, y] = project(v); const lane = (fg.chief ? 0 : fg.row === 0 ? -22 : 0) * zoom; let top = y + lane - 22 * zoom; if (fg.level.brain && fg.row === 0) { const h = new THREE.Vector3(); fg.holder.getWorldPosition(h); h.y += 0.74 * fg.size; top = project(h)[1] - (20 + (fg.level.cast.indexOf(fg.level.cast.find((c) => c.role === fg.role)) % 2) * 22) * zoom } Object.assign(tags[j].style, { left: x + 'px', top: top + 'px', opacity: labelsOn, transform: `translate(-50%, 0) scale(${zoom})` }) })
   cards.forEach((c, i) => { const k = smooth(2.5 + i * 0.12, 2.9 + i * 0.12, t); c.style.opacity = k; c.style.transform = `translateX(${(1 - k) * 40}px)` })
+}
+// ---------------------------------------------------------------- close-ups (lab/universe/PLAN.md, "Floor close-ups")
+// A close-up is a slow push in on one or two floors of the finished building, in daylight, with only those floors'
+// cards. It crops the master framing (setViewOffset), so the building, the cast and the labels are the master's own.
+const SHOTS = {
+  roof: { keys: ['roof'], pill: 'the decision deck', cards: [0], at: 0.42 },
+  'watch-write': { keys: ['watch', 'write'], pill: 'watch + write', cards: [1, 2] },
+  'share-sell': { keys: ['share', 'sell'], pill: 'share + sell', cards: [4, 5] },
+}
+const FLOORS_TOP = 250, FLOORS_BOTTOM = 1000 // where the floors sit in the frame, between the title and the cards
+let shot = null, zoom = 1, shotRects = null
+function shotBounds(keys) {
+  camera.clearViewOffset(); camera.updateProjectionMatrix()
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity
+  let xr = -Infinity // the right-hand room's outer wall: where the walk ends
+  for (const L of levels.filter((l) => keys.includes(l.key))) {
+    const lo = L.y0 - (L.roof ? 0.25 : 0), hi = L.y0 + (L.roof ? 1.55 : L.fh)
+    for (const x of [-BW / 2, BW / 2 + 0.95]) for (const y of [lo, hi]) for (const z of [-BD / 2, BD / 2]) {
+      const [px, py] = project(new THREE.Vector3(x, y, z)); x0 = Math.min(x0, px); x1 = Math.max(x1, px); y0 = Math.min(y0, py); y1 = Math.max(y1, py)
+    }
+    for (const y of [lo, hi]) xr = Math.max(xr, project(new THREE.Vector3(BW / 2 + 0.3, y, BD / 2))[0])
+  }
+  // Up to three times the master's size: tall enough for the floors to fit between the title and the cards, and no wider.
+  const w = Math.min(W, Math.max(W * 0.34, ((y1 - y0) / ((FLOORS_BOTTOM - FLOORS_TOP) / H)) * (W / H))), cy = (y0 + y1) / 2
+  // The camera walks the floor from its left room to its right room (and the lift), easing in a little as it goes.
+  return { start: { w: Math.min(W, w * 1.18), cx: x0 + w * 0.56, cy }, end: { w, cx: Math.min(x1, xr + w * 0.12) - w * 0.5, cy }, at: shot.at || (FLOORS_TOP + FLOORS_BOTTOM) / 2 / H }
+}
+function aimShot(t) {
+  const k = smooth(0, 4.7, t - SHOT_T0), r = {}
+  for (const q of ['w', 'cx', 'cy']) r[q] = shotRects.start[q] + (shotRects.end[q] - shotRects.start[q]) * k
+  const h = r.w * H / W, x = r.cx - r.w / 2, y = r.cy - h * shotRects.at
+  camera.setViewOffset(W, H, x, y, r.w, h); camera.updateProjectionMatrix(); zoom = W / r.w
+}
+const SHOT_T0 = 3.4 // the building is up and labelled; a close-up's own time starts here
+window.SHOT_T0 = SHOT_T0
+window.setShot = (name) => {
+  shot = SHOTS[name]; if (!shot) throw new Error('no shot ' + name)
+  shotRects = null; shotRects = shotBounds(shot.keys)
+  document.body.classList.add('shot')
+  document.querySelector('#tday .pill').textContent = shot.pill
+  cards.forEach((c, i) => (c.style.display = shot.cards.includes(i) ? '' : 'none'))
+  window.setTime(SHOT_T0)
 }
 window.setTime(0)
 await document.fonts.ready
