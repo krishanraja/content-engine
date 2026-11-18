@@ -1859,6 +1859,13 @@
   {
    "gate": "exception",
    "by": "Krish",
+   "said": "Yes, render it (the caption pager follows QC phrase rules; the slam clear of the like rail)",
+   "on": "2026-11-18",
+   "artifact_hash": "08e34373f28dd7c57e7ac861b7d3405f835a169b50a620fd8970cd8fd5e91273"
+  },
+  {
+   "gate": "exception",
+   "by": "Krish",
    "said": "Yes, waive it here (the layout-variety rule, for this short only: every beat full-frame)",
    "on": "2026-11-18",
    "artifact_hash": "e460e8aacabb57d3c08ab3f36cb3059f20a0ab20779374cb029f84c595c5cabe"
