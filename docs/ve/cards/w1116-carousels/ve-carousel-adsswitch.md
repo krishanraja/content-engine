@@ -5,7 +5,7 @@ model: gpt-6.1-sol
 effort: medium
 max_minutes: 40
 max_calls: 40
-cwd: /root\dev\makeyourmindup\.worktrees\content-engine\ve-card\ve-carousel-adsswitch
+cwd: /root/dev/makeyourmindup/.worktrees/content-engine/ve-card/ve-carousel-adsswitch
 write_allow: [.scratch/carousels/adsswitch/*]
 read: config/ve/brand-tokens.json, config/brand-palette.json, docs/CAROUSEL-STANDARD.md, docs/plans/2026-11-16-week/ads-carousel/deck.json
 never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, raw hex colours, useCurrentFrame outside apps/renderer/src/engine/clock.ts, edits outside write_allow
