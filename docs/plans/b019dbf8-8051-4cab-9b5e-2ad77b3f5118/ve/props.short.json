@@ -36,6 +36,7 @@
       "pixelHeight": 740
     }
   },
+  "bodyLogo": false,
   "segments": [
     {
       "src": "/home/user/content-engine/.scratch/b019/assets/conformed.short.mp4",

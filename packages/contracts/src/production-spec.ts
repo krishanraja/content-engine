@@ -255,6 +255,10 @@ export const ProductionSpecV2Schema = z.object({
     caption_theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
       'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']).optional(),
     title: z.string().min(3).max(48).optional(),
+    // The logo rule (config/brand-palette.json logo_rule: no logo in a cut's body, only on the title frame and the close)
+    // applied to a piece ahead of the rule's date, on Krish's word for that piece (Tue 17, 18 Nov 2026: "we have a strict
+    // NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME").
+    body_logo: z.literal(false).optional(),
     reference: z.string().min(1).optional(),
     // Required by ve lint for every piece publishing after 5 Nov 2026: at least one card for look, one for motion
     // and one for the caption build (scripts/velib/lint.py, reference_lints).
