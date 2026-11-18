@@ -30,7 +30,11 @@ account type matches; ask him once if it fits neither.
 - **Face-led:** two variants, alternating by ISO week so both are tried (Krish, 2026-11-17: "agreed on trying both and
   rotating"). Odd weeks **real**, even weeks **generated**; a piece can name the other in its brief.
   - **Real:** his cutout headshot plus the piece's own figure or proof (its `2 Covers and images` folder in the
-    library), the figure once, as a crisp card, at most 4 degrees of tilt, partly behind his shoulder.
+    library), the figure once, as a crisp card, at most 4 degrees of tilt, cropped to the one proof that reads at
+    phone size (its title and its number) and set in its own space: under the headline on the left in wide, between
+    the wordmark and his head in tall. Neither covers the other: no part of the figure behind his head or over his
+    face (Krish, 2026-11-18: "The screenshots hide behind my head a little bit too much here."). Text inside the
+    figure stays clear of the channel rails too (`scripts/channel_safe.py`).
   - **Generated:** a generated headshot of him as a full-bleed photo panel (wide: the right 45%; tall: the lower half),
     the piece's generated scene filling the rest behind the headline under a flat near-black overlay of about 70%.
 
