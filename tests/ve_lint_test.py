@@ -342,6 +342,41 @@ class WordCaptionsByDefault(unittest.TestCase):
         self.assertNotIn('captions.word_default', codes_for(word))
 
 
+class CaptionsStayPut(unittest.TestCase):
+    """Krish, 2026-11-18, of the Tue 17 short in art-directed: "We can't have each new word appear somewhere else on the
+    screen, and we need the previous word to stick around for a tiny bit longer." A word-mode cut (one word a page)
+    never takes a style measured to move its new word between pages (config/ve/caption-steady.json)."""
+
+    def word_cut(self, theme, day='2026-11-18', captions='word'):
+        def build(s):
+            dated(s, [GEORGIA, JACK])
+            s.update(format='face-with-proof', publish_day=day)
+            s['brand'].update(captions=captions)
+            s.setdefault('style', {})['captions'] = {'theme': theme, 'reason': 'test', 'placement': 'lower'}
+        return mutate(build)
+
+    def test_a_style_that_moves_its_word_is_refused_on_a_one_word_cut(self):
+        for theme in ('cinematic', 'stair-flash', 'anchor-quote'):
+            self.assertIn('captions.steady', codes_for(self.word_cut(theme)), theme)
+
+    def test_the_styles_that_stay_put_pass_including_the_rebuilt_art_directed(self):
+        for theme in ('art-directed', 'podcast', 'karaoke', 'pop'):
+            self.assertNotIn('captions.steady', codes_for(self.word_cut(theme)), theme)
+
+    def test_pieces_before_the_rule_and_phrase_cuts_are_not_refused(self):
+        self.assertNotIn('captions.steady', codes_for(self.word_cut('cinematic', day='2026-11-17')))
+        self.assertNotIn('captions.steady', codes_for(self.word_cut('cinematic', captions='house')))
+
+    def test_every_style_is_measured_and_the_word_is_krishs(self):
+        import json
+        measured = json.loads((Path(__file__).resolve().parents[1] / 'config' / 've' / 'caption-steady.json').read_text())['styles']
+        names = json.loads((Path(__file__).resolve().parents[1] / 'config' / 'caption-themes.json').read_text())
+        self.assertEqual(sorted(measured), sorted(k for k in names if not k.startswith('_')))
+        self.assertTrue(measured['art-directed']['previous_word_kept'] and not measured['art-directed']['anchor_moves'])
+        found = [p for p in lint_lines(self.word_cut('cinematic')) if p.startswith('captions.steady')][0]
+        self.assertIn("We can't have each new word appear somewhere else on the screen", found)
+
+
 class StampsNeverCarryTheHero(unittest.TestCase):
     def test_a_stamp_hero_is_refused(self):
         spec = mutate(lambda s: s['signature']['hero'].update(device='stamp'))

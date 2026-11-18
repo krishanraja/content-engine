@@ -2,16 +2,16 @@
   "schema": "ve-proof/1",
   "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
   "cut": "short",
-  "beat": "payoff",
+  "beat": "face",
   "rule": "named in the spec (proof.beat)",
-  "start": 66.7,
-  "end": 74.7,
+  "start": 7.567,
+  "end": 15.567,
   "beat_s": [
-    69.533,
-    71.867
+    10.067,
+    13.033
   ],
-  "sha256": "acd053ca06bef47e98cb6907e043a8f92930c615fc7ac1cbb68aedc71ccc27f2",
-  "spec_sha256": "8ec455361d209aa40b56ef5724b43d9f0ac0179eb8e3f7d68f72c17edcf86cae",
+  "sha256": "0909e65a3e7cc17b0f6c8ab15ee5e9a0d73e70a0716165197f2368438d8a1f57",
+  "spec_sha256": "bef463a4cb9f5b617c676f3de9ccbcdf467edf98c42b109201964bb95159eb0f",
   "structure": {
     "format": "face-with-proof",
     "aspect": "9:16",
@@ -58,10 +58,6 @@
         "credit_meter"
       ],
       [
-        "piqua",
-        "evidence_card"
-      ],
-      [
         "recall_stat",
         "kinetic_stat"
       ],
@@ -72,16 +68,12 @@
       [
         "small_print",
         "evidence_card"
-      ],
-      [
-        "stat41",
-        "kinetic_stat"
       ]
     ],
     "beats": [
       [
         "hook",
-        "SPLIT",
+        "P1",
         [
           "ddn",
           "recalled"
@@ -95,19 +87,21 @@
         ]
       ],
       [
+        "sacked",
+        "STAGE",
+        []
+      ],
+      [
         "face",
-        "SPLIT",
+        "P1",
         [
-          "ddn"
+          "field41"
         ]
       ],
       [
-        "questions",
-        "SPLIT",
-        [
-          "field41",
-          "stat41"
-        ]
+        "title",
+        "P1",
+        []
       ],
       [
         "meta",
@@ -126,14 +120,12 @@
       ],
       [
         "piqua",
-        "SPLIT",
-        [
-          "piqua"
-        ]
+        "STAGE",
+        []
       ],
       [
         "bill",
-        "STAGE",
+        "P1",
         [
           "block"
         ]
@@ -155,7 +147,7 @@
       ],
       [
         "sack",
-        "SPLIT",
+        "P3",
         [
           "recall_stat"
         ]
@@ -163,9 +155,7 @@
       [
         "built",
         "STAGE",
-        [
-          "block"
-        ]
+        []
       ],
       [
         "meta_says",
@@ -176,7 +166,7 @@
       ],
       [
         "party_line",
-        "SPLIT",
+        "P1",
         [
           "meta_line"
         ]
@@ -191,12 +181,12 @@
       ],
       [
         "call",
-        "SPLIT",
+        "P1",
         []
       ],
       [
         "deals",
-        "P6",
+        "P1",
         [
           "hf_deal"
         ]
@@ -224,7 +214,7 @@
       ],
       [
         "carry_on",
-        "STAGE",
+        "P1",
         [
           "block"
         ]
@@ -237,12 +227,7 @@
     ]
   },
   "style_module": "eating-jobs-ladder",
-  "props_sha256": "13f7ac4ebd808af10444a7b5996a3d66be78ffc2a4e1c39a10e262fb4a418ae1",
-  "qc": {
-    "measured_pass": null,
-    "complete": false,
-    "error": "Cue dc-0 has no unique beat slot"
-  },
+  "props_sha256": "bfcbb40b7bd648ec003ea9e4bc74c8d0043064472e4380c25b4a34f327219f11",
   "type": [
     [
       "data",
