@@ -62,6 +62,16 @@ inside the picture ("bouncers in the form of the blood-brain barrier"), and the 
 same breath ("to give you your sense of smell"). "Plaques" she never defines. She ties it to the thing everyone knows
 ("the plaques that you see in Alzheimer's") and lets it work as a label.
 
+**Her vocabulary is spoken, not written.** Krish, 2026-11-18: "It's also the vocabulary she uses, as opposed to even
+your latest hospital care script, which used words like \"dearer\" [heard as \"dearest\"], which I would never say in
+a million years." In her 515 words, the words around the six science terms are the ones people use out loud: "a
+bunch of mice", "really heavy-duty bouncers", "stuff that is theorised", "kind of sniffed up", "a sort of bacterial
+cousin", "like a fortress, right?", "way, way, way before we thought", "decades, decades, decades later". There is no
+written-English word anywhere, nothing like "whilst", "thus", "dearer", "obtain" or "numerous". Copy that register and
+not her British words. The test for each word is whether Krish himself says it. His own takes are the evidence:
+`config/script-floor/*.said.txt` and the `spoken-line` entries in `config/golden-examples.json`. A word that appears
+in neither, and that a person would rarely say aloud, is rewritten in the plainest word he does say.
+
 **Her verbs are physical.** Squirted, sniffed up, squished, dangle, embedded. Each is something the listener can
 picture. The nouns are the same: a bunch of mice, stray dogs, flecks of metal, exhausts.
 
