@@ -854,6 +854,16 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
     Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
     held, still counts. A `send` written by anyone else is still refused.
 
+- **1.29.0 (18 Nov 2026)** added to a piece's production `plan`: **`fetch`**, what Krish gets himself (`{ beat, what,
+  why }`), and on each beat's picture and options **`lever`** (impact, hilarity, absurdity, exaggeration, beauty,
+  clarity), **`maker`** (codex, generated, real, you), **`why`** (why it is a 100/10) and **`basis`** (script or
+  research, with `basis_ref`). Krish, 2026-11-18: "suggest how the production prompt should make these visuals 100/10
+  [...] visuals can come from my script or from the backing research too". The same day, **My takes are in the Inbox**
+  matches a take by every name the board shows for each piece of the week (`boardNames`), not only its stored idea, and
+  refuses (`takes_unclear`) when the Inbox holds more than one recording and no name says which is this piece's: it had
+  put the build-or-buy and skeletons takes on the data-centres piece. The post-production prompt carries each take's
+  Drive link and has the session show him mocks as it goes.
+
 - **1.28.0 (18 Nov 2026)** made the experiment an **optional press, never a pick**, and added **`experiment_idea`** on a
   piece's style: his own words on what to experiment with and how. The press has no `choose`, so the board never counts
   it among the look, motion and captions. Off, it is **Add an experiment (optional)**, which asks for his idea

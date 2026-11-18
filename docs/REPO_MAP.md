@@ -2741,10 +2741,14 @@ One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Rul
 The production plan he opens, reviews and changes before the one production session (view contract 1.25.0; Krish,
 
 - `const PICTURE_KINDS: Readonly<Record<string, string>>`
+- `const LEVERS: Readonly<Record<string, string>>`
+- `const MAKERS: Readonly<Record<string, string>>`
+- `const BASES: Readonly<Record<string, string>>`
 - `const SHORT_CAP_SECONDS`
 - `const PLAN_ROLE`
 - `const SCENE_ROLE`
 - `interface PlanOption`
+- `interface PlanFetch`
 - `interface PlanBeat`
 - `interface PlanScene`
 - `interface PlanEdit`
@@ -2932,7 +2936,10 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `interface InboxTake`
 - `interface TakesIn`
 - `function takesInOf(meta: unknown): TakesIn | null`
-- `function newTakes(files: Array<{ id: string; name?: string; mimeType?: string; size?: string; md5Checksum?: string; sha…`
+- `function newTakes(files: InboxFile[], since: string | null, claimed: ReadonlySet<string>, own: readonly string[] = [], …`
+- `function pickTakes(files: InboxFile[], since: string | null, claimed: ReadonlySet<string>, own: readonly string[] = [],…`
+- `function boardNames(view: unknown): Map<string, string[]>`
+- `function unclearLine(groups: string[]): string`
 - `function takesPress(pieceId: string, item: string | null = null): Body`
 - `function takesLine(t: TakesIn): string`
 - `interface BriefInputs`
