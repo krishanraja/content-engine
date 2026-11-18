@@ -3144,6 +3144,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function kindLabel(kind: OffdayKind, supports: string | null): string`
 - `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
 - `function offdayHead(route: MakeRoute | null, template: ViewTemplate | null = null, caption: string | null = null): stri…`
+- `function captionOf(o: ViewOption, raw: Body | null | undefined): string | null`
 - `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
 - `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
