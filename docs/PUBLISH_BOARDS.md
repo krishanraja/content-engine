@@ -1280,6 +1280,28 @@ old board page's Approve for publish bound its sha256; the live board's view car
 - **Held by:** `tests/control-plane/board-manifest.test.ts` (the bind, the seal through piece_manifest.py itself, the
   refusal on a changed hash) and `tests/control-plane/board-view-contract.test.ts`.
 
+## The Publish step on a finished post (week model, 18 Nov 2026)
+
+Krish, 2026-11-18: "when a piece is complete [...] Everything's there, ready to publish, with a button that just says
+'Publish.' Which would then schedule in Buffer directly, ideally, or produce a prompt that I could do it in a session";
+"we need to ensure all the assets are visible in the board including the covers, thumbnails, captions etc". Before this a
+post made and filed in its Drive folder stopped at "Made: its files are made and filed" with only the Claude production
+prompt, and no session could move it on.
+
+- **The card.** A made, unscheduled, not missed off-day post whose files are in its post folder (the view's `posts[].assets`)
+  leads with one button, **Publish**, and carries `assets` on the model item: every file by kind (cut, carousel with each
+  slide, image, cover, thumbnail, caption or note), its folder and its Drive link, so he sees each one beside the button.
+- **The prompt (the fallback, built).** Publish opens a prompt that lists every file and says: check each from its link,
+  schedule one post per listed channel through the Buffer connector with each caption verbatim and its files attached, never
+  a different file, never publish now, read each back from Buffer, and report on the board. His pressing it is his approval
+  for exactly that list, so this one prompt's wall allows scheduling that post and nothing else (`WALLS_SCHEDULE`); every
+  other prompt keeps "never post or publish anything". Control Centre reads Buffer every 15 minutes (done-check
+  `buffer_sent`) and moves the card to Scheduled by itself.
+- **Not built yet.** Scheduling from the button itself, with no session: Control Centre's Buffer key can write, but its
+  code is held to reads by a ruling and `tests/api/bufferSent.test.ts`, and a bound approval for a post with no manifest
+  does not exist yet. Held for Krish's go on both.
+- **Held by:** `tests/control-plane/board-week-model.test.ts`.
+
 ## The proof on any piece, and Approve for publish on an off-day piece (contract 1.31.0)
 
 Krish, 2026-11-18, on Tue 17's habits voiceover: "nothing has changed on the board - this seems like a system UI workflow

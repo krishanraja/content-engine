@@ -1,0 +1,3 @@
+Status: a made off-day post whose files are in its Drive folder now leads with a Publish button and lists every file (cut, slides, covers, thumbnails, captions) on the card; Publish opens a prompt that schedules exactly that list in Buffer through his connector and reports back, and Control Centre's 15-minute Buffer read moves the card to Scheduled. Scheduling from the button itself is not built.
+Next: Krish's go to let Control Centre schedule in Buffer (its Buffer key can write; its code and tests are read-only by ruling) and a bound approval for a post with no manifest; then Control Centre draws `assets` on the card.
+North Star check (2026-11-18): holds.
