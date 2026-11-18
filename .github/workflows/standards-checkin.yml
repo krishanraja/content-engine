@@ -63,6 +63,10 @@ jobs:
             git fetch -q origin floor/rejections
             if [ -n "$(git rev-list origin/main..origin/floor/rejections)" ]; then
               git switch -q --detach origin/floor/rejections
+              # The floor branch's data, main's code: the branch was cut when the floor was proposed and may predate a
+              # fix to the check-in (18 Nov: it ran the old standards_checkin.py and stopped on retired standards).
+              # Only config/floor-groups.json is committed below, so main's scripts never ride on the grouping PR.
+              git checkout -q origin/main -- scripts/
               echo "from=floor/rejections" >> "$GITHUB_OUTPUT"
               exit 0
             fi
