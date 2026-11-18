@@ -36,7 +36,9 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
    `over_cap` is true even 1.25x is not enough: keep it in the plan as it is, and name in the plan's beats which lines
    would come out, for him to choose; never claim it fits.
 3. Plan the picture for every beat on the edited timings: what the words say, then the one picture that makes it land
-   faster (AGENTS.md rule 6). The kinds: `face` (him on camera; video takes only), `logo` (official files only),
+   faster (AGENTS.md rule 6). The kinds: `face` (him on camera; video takes only), `logo` (the official mark of a company he names, from official files; never
+   the house logo, which appears only on the animated title frame and the close card, `config/brand-palette.json`
+   `logo_rule`),
    `real_image` (a real photo or footage of what he names, from its source), `screenshot` (the real page or product he
    names), `social_post` (a real viral post that relates to his words, with its link), `motion` (a ve device or a Codex
    plate in his picked motion style), `generated` (a scene made with the higgsfield-generator skills,
