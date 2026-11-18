@@ -27,9 +27,10 @@ model run or a template engine.
   words he put in quotation marks are set verbatim (`references/offdays.md`, "His presses").
 - **The caption speaks to the viewer, never as "me".** Never first person: always "When you realize..." or
   "POV: you realize..." (Krish, 2026-11-18: "Never first person, always 'When you realize...' or 'POV: you realize...'").
-- **The mark and the credit.** The makeyourmindup wordmark small and right-aligned at the bottom of the frame, on the
-  house ground, never over the clip and never in the caption band (Krish, 2026-11-18: "the wordmark always goes right
-  aligned at the bottom on memes"); on the tall shape, the bottom right of the area clear of the apps' buttons. The mark comes from the house brand files only (the
+- **The mark and the credit.** The makeyourmindup wordmark small, just under the clip and right-aligned to the video's own right
+  edge, on the house ground, never over the clip and never in the caption band (Krish, 2026-11-18: "the wordmark always
+  goes right aligned at the bottom on memes", then "right aligned to the video"). On the tall shape the clip keeps to the
+  caption band's column, clear of the apps' action rail, so the mark under it is too. The mark comes from the house brand files only (the
   Tuesday meme rule in `docs/CAROUSEL-STANDARD.md`), and a small credit line naming the original ("Original: ..."),
   inside the safe area.
 - **Two shapes.** 9:16 (the palette's `meme_tall`, centred as "The tall meme is centred" says, `scripts/layout_centre.py`)
