@@ -7,7 +7,7 @@ import palette from '../../../../../../config/brand-palette.json'
 
 export const SplitKeyFrameSchema = z.object({
   variant: z.enum(['slam', 'receipt']), beat: z.enum(['hook', 'face', 'proof', 'close']),
-  plateSrc: z.string().min(1), series: z.enum(['under.the.hood', 'follow.the.money', 'mind.the.gap']), caption: z.string().max(32).optional(),
+  plateSrc: z.string().min(1), plateY: z.number().min(0).max(100).optional(), series: z.enum(['under.the.hood', 'follow.the.money', 'mind.the.gap']), caption: z.string().max(32).optional(),
 })
 export type SplitKeyFrameProps = z.infer<typeof SplitKeyFrameSchema>
 export const REFERENCES = {
@@ -32,7 +32,7 @@ export const SPLIT_ASSETS = {
   google: 'split/google-symbol.svg', disney: 'split/disney-wordmark.svg',
 }
 export function SplitKeyFrame(input: SplitKeyFrameProps) {
-  const {variant, beat, plateSrc, series, caption} = SplitKeyFrameSchema.parse(input)
+  const {variant, beat, plateSrc, plateY, series, caption} = SplitKeyFrameSchema.parse(input)
   if (caption && forbidden.test(caption)) throw new Error('Caption violates the card contract')
   const full = beat === 'hook' || beat === 'close'
   const seam = variant === 'slam' ? 1236 : 1000
@@ -82,7 +82,7 @@ export function SplitKeyFrame(input: SplitKeyFrameProps) {
       {variant==='slam' && beat==='proof' && <Img data-proof-object="official-charts" src={staticFile(SPLIT_ASSETS.chart)} style={{position:'absolute',left:80,top:510,width:780,height:530,objectFit:'contain',transform:'rotate(3deg)'}}/>}
     </div>
     {!full && <div data-band="hard-edge" style={{position:'absolute',left:0,top:seam,width:1080,height:1920-seam,overflow:'hidden',border:0,borderRadius:0}}>
-      <Img src={plateSrc} style={{width:1080,height:'100%',objectFit:'cover',objectPosition:'center top'}}/>
+      <Img src={plateSrc} style={{width:1080,height:'100%',objectFit:'cover',objectPosition:plateY === undefined ? 'center top' : `50% ${plateY}%`}}/>
     </div>}
     <header data-header style={{position:'absolute',left:72,top:79,width:888,height:56,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
       <Img data-logo src={staticFile(SPLIT_ASSETS.logo)} style={{width:260,height:56,objectFit:'contain'}}/>
