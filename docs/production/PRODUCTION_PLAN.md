@@ -89,8 +89,12 @@ And: "it should also leverage the https://github.com/krishanraja/higgsfield-gene
    - On camera: `--frame TAKE --at SECONDS --captions ID`.
    - Motion design: `--kind motion --stage "<the statement on screen>" [--strike WORD] --motion ID --captions ID` (the slam).
    - A generated, real, screenshot, social-post or logo beat: `--kind <kind> --plate "<what the picture is>" --maker "<who makes it>"`.
-     Nothing is generated for a mock (a generation spends credits only with his yes): the plate says what it is and that the
-     production session shows the real still before anything moves.
+     A run that has no image generator, or no credits placed for it, makes the plate: it says what the picture is and that the
+     production session shows the real still before anything moves. Where the run can generate and the credits are approved
+     (Krish, 2026-11-18: "yes to the credits"), make the one still for each generated beat it mocks, never more than three in all: a
+     still on gpt_image_2_6 at 9:16, priced first (`higgsfield generate cost`, about 0.25 credits an image), then draw the
+     scene with `--image STILL --made-still --kind generated --captions ID`, which fills the scene with the made still and puts his
+     caption style over it. Record each job's id on the piece. The picture is never faked, and never his face.
    A style the script does not draw is printed on stderr and written by `--notes-out FILE`: put that note in the scene's `style`
    text so the card says "not drawn here", never as if it were drawn. File each: `python3 scripts/post-pack/board_session.py PIECE add scene-b3.png --role plan_scene --title
    "Scene b3: ..."`, and keep the material id it prints.
