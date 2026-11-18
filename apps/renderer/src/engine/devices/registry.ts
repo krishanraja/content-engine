@@ -1,4 +1,6 @@
 import { Device as ScenePlate } from './scene_plate'
+import { Device as FacilityBlock } from './facility_block'
+import { Device as CreditMeter } from './credit_meter'
 import { Device as ToyObject } from './toy_object'
 import { Device as FlatMechanism } from './flat_mechanism'
 import { Device as MorphStage } from './morph_stage'
@@ -6,6 +8,7 @@ import { Device as PixelStage } from './pixel_stage'
 import { Device as IsoWorld } from './iso_world'
 import { Device as InkWash } from './ink_wash'
 import { Device as FilmFrame } from './film_frame'
+import { Device as PhotoPlate } from './photo_plate'
 import { Device as CursorPath } from './cursor_path'
 import { Device as CharacterLayer } from '../character'
 import { Device as AnswerStream } from './answer_stream'
@@ -54,6 +57,8 @@ import { Device as ReceiptPrint } from './receipt_print'
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
   scene_plate: ScenePlate,
+  facility_block: FacilityBlock,
+  credit_meter: CreditMeter,
   toy_object: ToyObject,
   flat_mechanism: FlatMechanism,
   morph_stage: MorphStage,
@@ -61,6 +66,7 @@ export const DEVICES: DeviceRegistry = {
   iso_world: IsoWorld,
   ink_wash: InkWash,
   film_frame: FilmFrame,
+  photo_plate: PhotoPlate,
   cursor_path: CursorPath,
   character_layer: CharacterLayer,
   answer_stream: AnswerStream,

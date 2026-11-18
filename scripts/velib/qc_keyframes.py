@@ -73,11 +73,11 @@ def compare(rendered, golden_path, lock) -> dict:
 def _applicability(lock, fmt):
     if fmt not in lock['formats']:
         return {'applies': False, 'note': 'legacy format'}
+    if not designlock.picture_match(lock, fmt):
+        return {'applies': False, 'note': 'rules-only lock: no key frames; the rules, the Critic and his approval are the design gate'}
     frozen, reasons = designlock.frozen(lock, fmt)
     if not frozen:
         return {'applies': False, 'note': 'not frozen: ' + '; '.join(reasons)}
-    if lock['formats'][fmt].get('keyframes_withdrawn') and not lock['formats'][fmt].get('keyframes'):
-        return {'applies': False, 'note': 'key frames withdrawn by Krish (design-lock keyframes_withdrawn): the Critic is the design gate'}
     return None
 
 

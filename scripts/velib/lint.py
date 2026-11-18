@@ -215,6 +215,28 @@ def motion_not_drawable(spec: dict) -> list[str]:
     return []
 
 
+STEADY_FROM = '2026-11-18'   # the caption rules bind from the day Krish gave them; an earlier piece is not refused mid-piece (F33)
+
+
+def caption_steady_problems(spec: dict) -> list[str]:
+    """captions.steady: a word-mode cut (one word a page, brand.captions "word") never takes a caption style whose new word
+    lands somewhere else from page to page. Krish, 2026-11-18, of the Tue 17 short in art-directed: "They are really
+    jolty, and each word moving from left to right is really hard to look at and stressful. We can't have each new word
+    appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer." The styles
+    that do it are measured in real Chromium (scripts/audit-caption-steady.ts, config/ve/caption-steady.json)."""
+    day = spec.get('publish_day')
+    if not day or day < STEADY_FROM or (spec.get('brand') or {}).get('captions') != 'word':
+        return []
+    chosen = ((spec.get('style') or {}).get('captions') or {}).get('theme') or (spec.get('brand') or {}).get('caption_theme')
+    measured = (load_json(CONFIG / 'caption-steady.json').get('styles') or {}).get(chosen)
+    if not measured or not measured.get('anchor_moves'):
+        return []
+    return [f'captions.steady style.captions.theme: {chosen} puts each new word somewhere else on the screen on a one-word page '
+            f'(its anchor strays {max(measured.get("x_anchor_spread_px") or 0, measured.get("y_anchor_spread_px") or 0)} px between words, '
+            'config/ve/caption-steady.json). Krish, 2026-11-18: "We can\'t have each new word appear somewhere else on the screen"; '
+            'pick a style whose words land in one place']
+
+
 def motion_lints(spec: dict) -> list[str]:
     """The premium motion standard (docs/ve/MOTION_STANDARD.md) where a spec alone can show it."""
     out = []
@@ -226,6 +248,7 @@ def motion_lints(spec: dict) -> list[str]:
     if spec['format'] == 'face-with-proof' and spec['brand'].get('captions') != 'word' and not (day and day < REFERENCE_FROM):
         out.append('captions.word_default brand.captions: face-with-proof uses the word caption build, one word at a time '
                    'off the face (signed by Krish, 3 Nov 2026, docs/ve/MOTION_STANDARD.md)')
+    out.extend(caption_steady_problems(spec))
     out.extend(f'motion.required {problem}' for problem in motion_style_problems(spec))
     out.extend(motion_not_drawable(spec))
     from . import palettes  # noqa: PLC0415
@@ -624,7 +647,8 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         whole = not cut.get('excerpt')
         if whole and roles.count('payoff') != 1:
             out.append(f'story.one_payoff {where}: exactly one payoff beat (found {roles.count("payoff")})')
-        if whole and spec['brand']['series'] == 'mind.the.gap' and 'call' not in roles:
+        from . import guards  # noqa: PLC0415
+        if whole and spec['brand']['series'] == 'mind.the.gap' and 'call' not in roles and not guards.off_day(spec):
             out.append(f'story.call {where}: mind.the.gap ends on a call beat carrying the dated call')
         run_role, run_len = None, 0
         for index, role in enumerate(roles):

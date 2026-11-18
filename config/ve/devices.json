@@ -1,6 +1,8 @@
 {
   "devices": {
     "scene_plate": {"verbs": ["enter", "move", "exit"]},
+    "facility_block": {"verbs": ["enter", "fill", "connect", "add", "stamp", "carry", "move", "multiply", "grey", "grow", "thin", "exit"]},
+    "credit_meter": {"verbs": ["enter", "fill", "add", "mark", "count_to", "drop", "exit"]},
     "toy_object": {"verbs": ["enter", "count_to", "add", "move", "highlight", "exit"]},
     "morph_stage": { "verbs": ["enter", "move", "highlight", "exit"] },
     "flat_mechanism": {"verbs": ["enter", "add", "move", "fill", "highlight", "count_to", "exit"]},
@@ -8,6 +10,7 @@
     "iso_world": {"verbs": ["enter", "add", "fill", "carry", "move", "highlight", "exit"]},
     "ink_wash": { "verbs": ["enter", "draw", "fill", "highlight", "exit"] },
     "film_frame": {"verbs": ["enter", "move", "mark", "highlight", "exit"]},
+    "photo_plate": {"verbs": ["enter", "move", "mark", "exit"]},
     "cursor_path": {"verbs": ["enter", "move", "pick", "type", "send", "exit"]},
     "character_layer": { "verbs": ["enter", "exit"] },
     "answer_stream": { "verbs": ["enter", "type", "mark", "light", "exit"] },

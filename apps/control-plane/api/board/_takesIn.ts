@@ -230,5 +230,12 @@ export function productionBrief(b: BriefInputs): string {
     + '8. The covers: follow the cover-art skill (.agents/skills/cover-art/SKILL.md), which gives each channel its cover by his channel strategy '
     + '(the face-free Receipt from thumbnail-designer on the brand accounts, a face-led cover in the week\'s variant on his own, both on YouTube as its '
     + 'A/B pair; the face-led cards are docs/ve/cards/w-face-covers), a separate critic judging them and his pick in his own words. File the cuts, covers '
-    + 'and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n\n'
+    + 'and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n'
+    + '9. Make the board true before you stop (Krish, 2026-11-18: "when a piece is produced, the session has to be told to file things properly to the drive and then never really bothers to update the board - this is unacceptable"). '
+    + 'Putting a file in Drive does not move his card: the card reads the piece\'s making record, so write it for each cut as you finish it: '
+    + `python3 scripts/post-pack/making.py ${b.pieceId} video long|short NAME PATH --url <the file's Drive link> --thumb PATH --thumb-file <the local thumbnail>`
+    + ` (and making.py ${b.pieceId} drive-link long|short <Drive link> for each cut's link), and file each cover on the piece. Then read the board back, `
+    + `with get_piece_board (or board_session.py ${b.pieceId} show and making.py ${b.pieceId} show): the card must now say the cuts are made and filed, with their files in the post folder. `
+    + 'If it still shows the old stage, find which record is missing and write it; never call the piece done on the strength of the Drive upload alone. '
+    + 'Report done only with the stage the board now shows and where each file is, and report blocked, naming the record, if you cannot write one.\n\n'
 }

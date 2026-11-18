@@ -396,7 +396,12 @@ in his Drive (`3 Posts`: the Git post, the homework post, and "AI fixing what we
   person or real screen fits.
 - **Body-card type is designed, not default** (Krish, 2026-11-18: "the font and look are substandard"): a small
   IBM Plex Mono kicker in mint naming the card's step (WHAT IT IS, WHAT HAPPENED, WHY, THE BIGGER PICTURE, WHAT TO DO),
-  a short mint rule under it, then the sentence in Archivo Black, large and tight, with its key figure or phrase in mint.
+  a short mint rule under it, then the sentence in Anton, uppercase, the same face as the cover and the close, with its key
+  figure or phrase in mint. **Never Archivo Black, and never Archivo at weight 800 or heavier, for a body sentence** (Krish,
+  2026-11-18, of the shipped ChatGPT ads carousel: "this font is crappy, i have given this feedback before"; he saw the
+  deck set in Anton about a minute later and said "go"). The 18 November rewrite above answered "the font and look are
+  substandard" by redesigning the card and kept that face, which was not what he objected to. The carousel Codex card
+  states this face outright (`CAROUSEL_BODY_TYPE`, scripts/velib/cards.py).
 - **The body cards, as the Erdős deck's.** Every card after the cover is image-led: its own real or photoreal picture
   of that card's point in the same dark, lit look, with the card's one sentence set large below it. The deck reads as
   one feature, never as slides of icons, grids or flat diagrams.
@@ -444,7 +449,7 @@ completely for publishing next week" and "make sure all future carousels never n
   in the house tones: ink shadows and house light. Only a carousel that carries a series piece takes that piece's
   colour as the light (below). A real photo is used instead only when its rights are clear. Record the generation's
   job id, model, prompt and reference photos beside the deck (the record `cover_scene.py` checks).
-- Cards 2 onwards stay the house look: ink ground, Anton headlines, Archivo body, Plex Mono labels, real logos from
+- Cards 2 onwards stay the house look: ink ground, Anton headlines and body sentences (never Archivo Black), Plex Mono labels, real logos from
   Brandfetch, the house mark small in the bottom corner. A logo that is dark on the dark ground is shown in white
   (monochrome) or on a light tile; never invisible.
 - Before showing him a deck, look at card 1 at phone size beside the last approved covers (the week of 9 November's

@@ -1,0 +1,555 @@
+{
+  "pieceId": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+  "cutId": "short",
+  "format": "face-with-proof",
+  "aspect": "9:16",
+  "fps": 30,
+  "durationFrames": 240,
+  "tokens": {
+    "ink": "#0C1512",
+    "inkDeep": "#070D0B",
+    "inkSoft": "#16221D",
+    "cream": "#F4EFE4",
+    "mint": "#7EF0C0",
+    "channel": "#7EF0C0"
+  },
+  "series": {
+    "label": "off.day",
+    "day": "Tuesday",
+    "promise": "makeyourmindup.ai",
+    "site": "makeyourmindup.ai"
+  },
+  "brand": {
+    "mark": {
+      "src": "/home/user/content-engine/.scratch/b019/assets/src/assets/brand/makeyourmindup/makeyourmindup-mark.png",
+      "pixelWidth": 831,
+      "pixelHeight": 740
+    },
+    "logo": {
+      "src": "/home/user/content-engine/.scratch/b019/assets/src/assets/brand/makeyourmindup/makeyourmindup-horizontal.png",
+      "pixelWidth": 1200,
+      "pixelHeight": 141
+    },
+    "stacked": {
+      "src": "/home/user/content-engine/.scratch/b019/assets/src/assets/brand/makeyourmindup/makeyourmindup-stacked.png",
+      "pixelWidth": 2415,
+      "pixelHeight": 740
+    }
+  },
+  "segments": [
+    {
+      "src": "/home/user/content-engine/.scratch/b019/assets/conformed.short.mp4",
+      "trimBeforeFrames": 329,
+      "fromFrame": 0,
+      "durationFrames": 240
+    }
+  ],
+  "audio": {
+    "stem": {
+      "src": "/home/user/content-engine/.scratch/b019/assets/audio.short.wav",
+      "trimBeforeFrames": 329
+    },
+    "sfx": []
+  },
+  "captions": [
+    {
+      "fromFrame": 0,
+      "toFrame": 5,
+      "words": [
+        {
+          "text": "happened",
+          "atFrame": 0
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 5,
+      "toFrame": 10,
+      "words": [
+        {
+          "text": "to",
+          "atFrame": 5
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 10,
+      "toFrame": 21,
+      "words": [
+        {
+          "text": "AI",
+          "atFrame": 10
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 21,
+      "toFrame": 24,
+      "words": [
+        {
+          "text": "with",
+          "atFrame": 21
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 24,
+      "toFrame": 26,
+      "words": [
+        {
+          "text": "the",
+          "atFrame": 24
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 26,
+      "toFrame": 38,
+      "words": [
+        {
+          "text": "midterms",
+          "atFrame": 26
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 38,
+      "toFrame": 40,
+      "words": [
+        {
+          "text": "in",
+          "atFrame": 38
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 40,
+      "toFrame": 51,
+      "words": [
+        {
+          "text": "America",
+          "atFrame": 40
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 51,
+      "toFrame": 62,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 51
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 156,
+      "toFrame": 160,
+      "words": [
+        {
+          "text": "Let's",
+          "atFrame": 156
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 160,
+      "toFrame": 167,
+      "words": [
+        {
+          "text": "find",
+          "atFrame": 160
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 167,
+      "toFrame": 177,
+      "words": [
+        {
+          "text": "out.",
+          "atFrame": 167
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 177,
+      "toFrame": 185,
+      "words": [
+        {
+          "text": "Meta",
+          "atFrame": 177
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 185,
+      "toFrame": 196,
+      "words": [
+        {
+          "text": "wanted",
+          "atFrame": 185
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 196,
+      "toFrame": 201,
+      "words": [
+        {
+          "text": "a",
+          "atFrame": 196
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 201,
+      "toFrame": 211,
+      "words": [
+        {
+          "text": "giant",
+          "atFrame": 201
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 211,
+      "toFrame": 219,
+      "words": [
+        {
+          "text": "data",
+          "atFrame": 211
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 219,
+      "toFrame": 234,
+      "words": [
+        {
+          "text": "centre",
+          "atFrame": 219
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 234,
+      "toFrame": 237,
+      "words": [
+        {
+          "text": "for",
+          "atFrame": 234
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 237,
+      "toFrame": 240,
+      "words": [
+        {
+          "text": "more",
+          "atFrame": 237
+        }
+      ],
+      "swipeIndex": null
+    }
+  ],
+  "captionStyle": "word",
+  "captionTheme": "podcast",
+  "captionPlacement": "lower",
+  "titleMoment": {
+    "fromFrame": 391,
+    "toFrame": 506,
+    "release": "fade",
+    "words": [
+      {
+        "text": "Where",
+        "atFrame": 391
+      },
+      {
+        "text": "does",
+        "atFrame": 397
+      },
+      {
+        "text": "AI",
+        "atFrame": 406
+      },
+      {
+        "text": "get",
+        "atFrame": 414
+      },
+      {
+        "text": "built",
+        "atFrame": 420
+      },
+      {
+        "text": "when",
+        "atFrame": 426
+      },
+      {
+        "text": "the",
+        "atFrame": 442
+      },
+      {
+        "text": "residents",
+        "atFrame": 444
+      },
+      {
+        "text": "of",
+        "atFrame": 457
+      },
+      {
+        "text": "towns",
+        "atFrame": 460
+      },
+      {
+        "text": "say",
+        "atFrame": 470
+      },
+      {
+        "text": "no?",
+        "atFrame": 475
+      }
+    ]
+  },
+  "beats": [
+    {
+      "id": "face",
+      "role": "anchor",
+      "layout": "P1",
+      "fromFrame": 0,
+      "toFrame": 62,
+      "uses": [
+        "field41"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": true,
+      "plate": {
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/wyso-lead.jpg"
+      },
+      "keyFrame": 44
+    },
+    {
+      "id": "title",
+      "role": "anchor",
+      "layout": "P1",
+      "fromFrame": 62,
+      "toFrame": 177,
+      "uses": [],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
+      },
+      "keyFrame": 154
+    },
+    {
+      "id": "meta",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 177,
+      "toFrame": 240,
+      "uses": [
+        "block",
+        "meta_logo"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
+      },
+      "keyFrame": 239
+    }
+  ],
+  "objects": [
+    {
+      "obj": "block",
+      "device": "facility_block",
+      "meaning": "Meta's data centre in Piqua, the one object the whole cut changes",
+      "fromFrame": 0,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "kind": "data centre",
+        "label": "PIQUA, OHIO",
+        "logo": "Meta",
+        "tag": "Your share",
+        "targets": [
+          {
+            "label": "Power bill"
+          },
+          {
+            "label": "AI plan"
+          }
+        ],
+        "copies": {
+          "count": 41,
+          "kept": 1
+        },
+        "skyline": {
+          "lights": 24
+        }
+      }
+    },
+    {
+      "obj": "field41",
+      "device": "unit_field",
+      "meaning": "the 41 local data-centre votes on 3 Nov; 40 went against the data centre",
+      "fromFrame": 0,
+      "toFrame": 62,
+      "variants": {},
+      "params": {
+        "initialRow": "initial",
+        "columns": 9,
+        "mark": "block"
+      },
+      "dataset": {
+        "unit": "local votes",
+        "denominator": 41,
+        "producerLabel": "Ballotpedia, 3 Nov 2026",
+        "rows": [
+          {
+            "label": "initial",
+            "value": 41
+          },
+          {
+            "label": "against",
+            "value": 40
+          },
+          {
+            "label": "limits won",
+            "value": 40
+          }
+        ]
+      }
+    },
+    {
+      "obj": "meta_logo",
+      "device": "logo_card",
+      "meaning": "Meta, the company behind the Piqua data centre",
+      "fromFrame": 177,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "logos": [
+          {
+            "id": "Meta"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "dc-0",
+      "obj": "block",
+      "verb": "enter",
+      "toState": "pin",
+      "atFrame": 0
+    },
+    {
+      "id": "dc-1",
+      "obj": "block",
+      "verb": "fill",
+      "toState": "racks",
+      "atFrame": 0
+    },
+    {
+      "id": "face-0",
+      "obj": "field41",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 0
+    },
+    {
+      "id": "face-1",
+      "obj": "field41",
+      "verb": "grey",
+      "toState": "against",
+      "atFrame": 26
+    },
+    {
+      "id": "meta-0",
+      "obj": "meta_logo",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 177
+    }
+  ],
+  "call": {
+    "statement": "AI tool renewals cost more as the AI firms pay for their own power",
+    "due": "2027-06-30",
+    "confidencePercent": 75
+  },
+  "motion": {
+    "style": "eating-jobs-ladder",
+    "profile": {
+      "entrance": {
+        "kind": "rise",
+        "frames": 7,
+        "easing": "enter",
+        "distancePx": 56,
+        "overshootPct": 2,
+        "spinDeg": -8,
+        "tiltDeg": -1.5
+      },
+      "stagger": {
+        "frames": 3,
+        "unit": "word"
+      },
+      "exitFrames": 10,
+      "onTwos": false,
+      "camera": {
+        "kind": "push",
+        "scaleTo": 1.04,
+        "dimOthers": false,
+        "easing": "hero"
+      },
+      "transition": "crossfade",
+      "transitionFrames": 10,
+      "typeReveal": {
+        "kind": "roll"
+      },
+      "ground": {
+        "kind": "dark",
+        "sweepFrames": 0,
+        "texture": "vignette",
+        "cards": "keep"
+      },
+      "driftPct": 1.5,
+      "countFrames": 27,
+      "note": "From Krish's eating-its-own-jobs cut (Mon 2 Nov, Who trains your 2030 seniors, mon02-tall, sha256 2cdff09a), measured 13 Nov: 3.91 events a second, 20 cuts a minute. One through-line object carries the piece; numbers roll onto it on the enter curve, a slow push holds every panel, every change is a 10-frame crossfade on its word and nothing holds still. The ladder object itself and the butter tray over his chest need devices (through_line card, docs/ve/cards/through-line/) and draw as the house devices until built."
+    }
+  },
+  "layout": {
+    "mode": "band"
+  }
+}

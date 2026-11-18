@@ -124,10 +124,8 @@ class DesignLockTest(unittest.TestCase):
             self.freeze(mapping)
         lock = self.freeze(mapping, force=True)
         self.assertTrue(designlock.frozen(lock, FMT, self.root)[0])
-        # The lock reads frozen only once every format is: two-passports, then face-with-proof (frozen 3 Nov 2026).
-        # A format whose key frames Krish withdrew (keyframes_withdrawn, 18 Nov 2026) already reads frozen.
-        for other in [name for name in self.lock['formats'] if name != FMT
-                      and not self.lock['formats'][name].get('keyframes_withdrawn')]:
+        # The lock reads frozen only once every format in it is frozen (face-with-proof left it on 18 Nov 2026: retire).
+        for other in [name for name in self.lock['formats'] if name != FMT and designlock.picture_match(self.lock, name)]:
             self.assertEqual(lock['status'], 'direction_approved')
             lock = designlock.freeze(other, self.src, self.images(other), lock_path=self.path)
         self.assertEqual(lock['status'], 'frozen')
@@ -140,6 +138,110 @@ class DesignLockTest(unittest.TestCase):
         self.assertIn('missing keyframe', ' '.join(designlock.frozen(lock, FMT, self.root)[1]))
         frames['extra'] = dict(entry)
         self.assertIn('one entry per beat', ' '.join(designlock.frozen(lock, FMT, self.root)[1]))
+
+    def test_retire_deletes_the_frames_and_bars_them_for_good(self):
+        mapping = self.images()
+        lock = self.freeze(mapping)
+        goldens = [designlock.golden_path(lock, FMT, beat, self.root) for beat in lock['formats'][FMT]['keyframes']]
+        self.assertTrue(all(g.is_file() for g in goldens))
+        old = {beat: dict(e) for beat, e in lock['formats'][FMT]['keyframes'].items()}
+        words = 'DELETE THOSE FRAMES FOREVER'
+        entry = designlock.retire(FMT, words=words, on='2026-11-18', lock_path=self.path, today=date(2026, 11, 18))
+        lock = designlock.load(self.path)
+        # The golden files are gone, the folder with them, and the format is a draft awaiting a new Gate 2.
+        self.assertFalse(any(g.exists() for g in goldens))
+        self.assertFalse((self.root / self.lock['formats'][FMT]['frames_dir']).exists())
+        self.assertNotIn(FMT, lock['formats'])
+        self.assertEqual(lock['drafts'][FMT], entry)
+        self.assertEqual(entry['status'], 'awaiting Gate 2')
+        self.assertEqual(entry['drafted'], '2026-11-18')
+        self.assertEqual(entry['keyframe_slots'], {beat: None for beat in self.lock['formats'][FMT]['beats']})
+        self.assertNotIn('keyframes', entry)
+        self.assertNotIn('frozen_on', entry)
+        self.assertEqual(entry['retired']['words'], words)
+        self.assertEqual(entry['retired']['was_frozen_on'], '2026-10-28')
+        self.assertEqual({b: v['sha256'] for b, v in entry['retired']['keyframes'].items()},
+                         {b: e['sha256'] for b, e in old.items()})
+        self.assertEqual(len(entry['retired']['files_removed']), len(goldens))
+        self.assertFalse(designlock.frozen(lock, FMT, self.root)[0], 'no longer a lock')
+        # The same pictures cannot be frozen again, by the still or by the golden cut from it.
+        with self.assertRaisesRegex(ValueError, 'deleted for good'):
+            designlock.freeze(FMT, self.src, mapping, lock_path=self.path)
+        self.assertNotIn(FMT, designlock.load(self.path)['formats'])
+        # New pictures freeze it, and the retirement stays on the lock as the record.
+        fresh = {}
+        for i, (beat, filename) in enumerate(mapping.items()):
+            fresh[beat] = f'new-{i}.png'
+            Image.new('RGB', (1080, 1920), (200, 10 + i, 90)).save(self.src / fresh[beat])
+        frozen = designlock.freeze(FMT, self.src, fresh, lock_path=self.path, today=date(2026, 11, 19))
+        self.assertTrue(designlock.frozen(frozen, FMT, self.root)[0])
+        self.assertEqual(frozen['formats'][FMT]['retired']['words'], words)
+        self.assertNotIn(FMT, frozen.get('drafts', {}))
+
+    def test_no_retired_frame_is_back_in_the_tree(self):
+        # "Forever": the real lock remembers every picture Krish had deleted (config/ve/design-lock.json, retired), and no
+        # image file anywhere under fixtures/ or docs/ may carry one of those hashes.
+        lock = designlock.load()
+        barred = set()
+        for entry in list(lock['formats'].values()) + list(lock.get('drafts', {}).values()):
+            barred |= designlock.retired_hashes(entry)
+        self.assertTrue(barred, 'the Thu 5 Nov key frames stay recorded as retired')
+        found = []
+        for base in ('fixtures', 'docs'):
+            for path in (ROOT / base).rglob('*'):
+                if path.suffix.lower() in ('.jpg', '.jpeg', '.png', '.webp') and path.is_file() and sha256_file(path) in barred:
+                    found.append(path.relative_to(ROOT).as_posix())
+        self.assertEqual(found, [], 'a retired key frame is back in the repository')
+
+    def test_rules_only_drops_the_picture_match_and_keeps_the_rules(self):
+        # Krish, 2026-11-18: "why a visual pass plus obvious rules arent a better option than measuring it against one
+        # frame of an old video" and "i agree with your recommendations".
+        from velib import qc_keyframes
+        self.freeze(self.images())
+        designlock.retire(FMT, words='delete them', on='2026-11-18', lock_path=self.path, today=date(2026, 11, 18))
+        words = 'a visual pass plus obvious rules'
+        entry = designlock.rules_only(FMT, words=words, on='2026-11-18', lock_path=self.path, today='2026-11-18')
+        lock = designlock.load(self.path)
+        self.assertIn(FMT, lock['formats'])
+        self.assertNotIn(FMT, lock.get('drafts', {}))
+        self.assertEqual(entry['rules_only'], {'by': 'Krish', 'on': '2026-11-18', 'words': words})
+        self.assertEqual(designlock.frozen(lock, FMT, self.root), (True, []), 'it needs no key frame to read as a lock')
+        self.assertFalse(designlock.picture_match(lock, FMT))
+        self.assertTrue(designlock.picture_match(lock, next(n for n in lock['formats'] if n != FMT)))
+        self.assertIn('retired', lock['formats'][FMT], 'the retirement stays on the entry')
+        self.assertEqual(designlock.validate(lock, self.root), [])
+        # QC reads it as no picture match, whatever the cut's beats are.
+        report = qc_keyframes.keyframe_checks('cut.mp4', {'beats': []}, lock, FMT)
+        self.assertFalse(report['applies'])
+        self.assertIn('rules-only', report['note'])
+        # No picture is ever frozen for it.
+        with self.assertRaisesRegex(ValueError, 'rules-only'):
+            designlock.freeze(FMT, self.src, self.images(), lock_path=self.path, force=True)
+
+    def test_rules_only_refusals(self):
+        self.freeze(self.images())
+        designlock.retire(FMT, words='x', on='2026-11-18', lock_path=self.path, today=date(2026, 11, 18))
+        before = self.path.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'only Krish'):
+            designlock.rules_only(FMT, words='x', on='2026-11-18', by='Claude', lock_path=self.path)
+        with self.assertRaisesRegex(ValueError, 'his words'):
+            designlock.rules_only(FMT, words=' ', on='2026-11-18', lock_path=self.path)
+        with self.assertRaisesRegex(ValueError, 'not a draft'):
+            designlock.rules_only('two-passports', words='x', on='2026-11-18', lock_path=self.path)
+        self.assertEqual(self.path.read_bytes(), before)
+
+    def test_retire_refusals(self):
+        self.freeze()
+        before = self.path.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'only Krish'):
+            designlock.retire(FMT, words='x', on='2026-11-18', by='Claude', lock_path=self.path)
+        with self.assertRaisesRegex(ValueError, 'his words'):
+            designlock.retire(FMT, words='  ', on='2026-11-18', lock_path=self.path)
+        with self.assertRaisesRegex(ValueError, 'not a lock'):
+            designlock.retire('no-such-format', words='x', on='2026-11-18', lock_path=self.path)
+        self.assertEqual(self.path.read_bytes(), before)
+        self.assertTrue(all(designlock.golden_path(designlock.load(self.path), FMT, b, self.root).is_file()
+                            for b in self.lock['formats'][FMT]['beats']))
 
     def fields(self):
         return dict(card_id='test', kind='device', cwd=str(self.root), write_allow='[]', read='',

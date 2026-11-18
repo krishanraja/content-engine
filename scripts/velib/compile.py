@@ -318,7 +318,7 @@ def _page_cost(rows: list[dict], start: int, n: int) -> int:
     if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in _WEAK_ENDS:
         cost += 4   # it ends mid-phrase on a small word
     if any(_PAUSE.search(r['text']) for r in page[:-1]):
-        cost += 3   # a clause break inside the page ("Amazon for your groceries, Google")
+        cost += 3   # a clause break inside the page ("Netflix for your evenings, Google")
     if not _held(rows, start + n):
         cost += 5   # its last word flips away before it can be read
     if not _PAUSE.search(page[-1]['text']) and start + n < len(rows):
@@ -355,6 +355,70 @@ def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list
         groups.append(rows[start:start + size])
         start += size
     return groups
+
+
+# A generated picture reaches a cut only as a picture plate, never as evidence (Ruling, Krish, 2026-11-18: "use codex
+# for all asset production, generation, sourcing"; the production prompt of 18 Nov asks for generated stills on the
+# comic beats). The first slice of Phase 2: a generated still or clip may fill a photo_plate, once it names the tool
+# that made it, the job that made it (the Codex thread or the generation id) and its sha256, and Claude has checked it
+# (`ve codex receipt`). Every other device still refuses it, and a beat's own plate still waits for the full pipeline.
+# scene_plate (18 Nov 2026, Wed 18): a full-frame generated scene or clip that draws no words, so it is never evidence.
+GENERATED_PLATE_DEVICES = frozenset({'photo_plate', 'scene_plate'})
+
+
+def generated_plate_problem(asset: dict, device: str) -> str:
+    """Why a generated asset may not be drawn by this device, '' when it may."""
+    if device not in GENERATED_PLATE_DEVICES:
+        return 'the generated assets pipeline arrives in Phase 2 (a generated picture fills a photo_plate only)'
+    missing = [key for key in ('tool', 'job_id', 'sha256') if not asset.get(key)]
+    if missing:
+        return f'a generated plate names its {", ".join(missing)} before it is drawn'
+    return ''
+
+
+def title_moment_props(spec: dict, cut_id: str, rows: list[dict], duration: int) -> dict | None:
+    """The episode title moment on this cut's clock (title_moment.spans; Krish, 2026-11-15 and 2026-11-17: the line he
+    says becomes the title, "seamlessly flowing out of the captions and back in to them again"; 2026-11-18, Tue 17:
+    "should be seamlessly made the title with epic hero title treatment as I am saying that line"). Each word keeps the
+    frame its sound starts; the moment ends where his next word starts, when the captions take over again."""
+    span = ((spec.get('title_moment') or {}).get('spans') or {}).get(cut_id)
+    if not span:
+        return None
+    said = [row for row in rows if span['from_w'] <= row['w'] <= span['to_w']]
+    if len(said) != span['to_w'] - span['from_w'] + 1:
+        raise ValueError(f'title_moment.spans.{cut_id}: words {span["from_w"]}-{span["to_w"]} are not all in the cut')
+    # The finished title holds until the beat that carries it ends (Tue 17: "Let's find out" follows "no?" by a third of a
+    # second, so a title that left on his next word was never seen whole); the captions take his next words meanwhile.
+    holder = next((b for b in spec['cuts'][cut_id].get('beats', []) if b['span']['from_w'] <= span['to_w'] <= b['span']['to_w']), None)
+    end_w = holder['span']['to_w'] if holder else span['to_w']
+    after = next((row['atFrame'] for row in rows if row['w'] > end_w), duration)
+    resumes = next((row['atFrame'] for row in rows if row['w'] > span['to_w']), duration)
+    return {'fromFrame': said[0]['atFrame'], 'toFrame': after, 'span': (span['from_w'], span['to_w']),
+            'release': 'fade' if resumes < after else 'captions',
+            'words': [{'text': row['text'][:1].upper() + row['text'][1:] if i == 0 else row['text'], 'atFrame': row['atFrame']}
+                      for i, row in enumerate(said)]}
+
+
+def backdrop(spec: dict, beat: dict, assets_dir) -> dict:
+    """The one real picture under a beat's graphics (Krish, 2026-11-18: "making actual use of the full screen when it
+    isn't my face"): a photo, a screenshot or a scene from the spec's assets, its staged bytes checked against the
+    sha256 the spec declares. A generated scene may sit here, never as evidence: it names the tool and job that made it and its sha256."""
+    aid = beat['backdrop'].removeprefix('asset:')
+    asset = next((a for a in spec.get('assets', []) if a['id'] == aid), None)
+    if asset is None:
+        raise ValueError(f'beat {beat["id"]}: backdrop asset {aid} is not in the spec')
+    if asset['kind'] not in ('photo', 'screenshot', 'illustration', 'broll', 'document'):
+        raise ValueError(f'beat {beat["id"]}: a backdrop is a picture, not a {asset["kind"]}')
+    if asset.get('origin') == 'generated':
+        missing = [key for key in ('tool', 'job_id', 'sha256') if not asset.get(key)]
+        if missing:
+            raise ValueError(f'beat {beat["id"]}: generated backdrop {aid} names its {", ".join(missing)} before it is drawn')
+    src = source(asset['path'], assets_dir)
+    if not Path(src).is_file():
+        raise ValueError(f'beat {beat["id"]}: backdrop {aid} is not staged at {asset["path"]}')
+    if asset.get('sha256') and sha256_file(Path(src)) != asset['sha256']:
+        raise ValueError(f'beat {beat["id"]}: backdrop {aid} does not match its declared sha256')
+    return {'src': src}
 
 
 def _params(params: dict, source) -> dict:
@@ -454,7 +518,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
                       **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
-                      **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {})})
+                      **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {}),
+                      **({'backdrop': backdrop(spec, beat, assets_dir)} if beat.get('backdrop') else {})})
         # The v2 spec reserves extensible metadata in style; beat-level keyFrame
         # is not yet in its strict schema. Always emit an explicit engine frame.
         fraction = spec.get('style', {}).get('keyFrames', {}).get(beat['id'], 0.8)
@@ -490,13 +555,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     datasets = {dataset['id']: dataset for dataset in spec.get('datasets', [])}
     objects = []
     used = {name for beat in selected for name in beat.get('uses', [])}
-    generated_assets = [asset for asset in spec.get('assets', []) if asset.get('origin') == 'generated']
-    generated = {ref for asset in generated_assets for ref in (asset['id'], 'asset:' + asset['id'], asset['path'])}
-    # Phase 2, first step (18 Nov 2026, Wed 18 build-or-buy): a generated picture reaches the frame only inside the
-    # scene_plate device, which draws no words, so it is never evidence and never carries a label (Krish, 28 Oct 2026:
-    # "No one cares that things are AI-generated"). Its asset names the tool and the job that made it; every other
-    # device still refuses it (a generated picture never stands in for a real place, record or test).
-    by_ref = {ref: asset for asset in generated_assets for ref in (asset['id'], 'asset:' + asset['id'], asset['path'])}
+    generated = {ref: asset for asset in spec.get('assets', []) if asset.get('origin') == 'generated'
+                 for ref in (asset['id'], 'asset:' + asset['id'], asset['path'])}
 
     def check_generated(node, device):
         if isinstance(node, dict):
@@ -506,18 +566,14 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             for value in node:
                 check_generated(value, device)
         elif isinstance(node, str) and node.replace('\\', '/').removeprefix('./') in generated:
-            asset = by_ref[node.replace('\\', '/').removeprefix('./')]
-            if device != 'scene_plate':
-                raise ValueError(f'generated asset {node}: a generated picture is placed only by scene_plate, never as '
-                                 f'evidence (device {device})')
-            if asset.get('kind') not in ('illustration', 'broll') or not asset.get('tool') or not asset.get('job_id'):
-                raise ValueError(f'generated asset {asset["id"]}: a scene plate is an illustration or broll naming its '
-                                 'tool and job_id (its provenance stays in the spec)')
+            problem = generated_plate_problem(generated[node.replace('\\', '/').removeprefix('./')], device)
+            if problem:
+                raise ValueError(f'generated asset {node}: {problem}')
 
     for obj in spec.get('objects', []):
         if obj['obj'] not in used:
             continue
-        check_generated(obj.get('params', {}), obj.get('device'))
+        check_generated(obj.get('params', {}), obj.get('device', ''))
         persist = obj['persist']
         if persist['from_beat'] not in by_beat or persist['to_beat'] not in by_beat:
             raise ValueError(f'object {obj["obj"]} references a persist beat missing from cut {cut_id}')
@@ -545,8 +601,11 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # the word build applies to the house caption only (18 Nov 2026, Wed 18, his rack-focus pick of 17 Nov).
     picked_theme = (((spec.get('style') or {}).get('captions') or {}).get('theme'))
     word_mode = spec['brand'].get('captions') == 'word' and not picked_theme
-    groups = [[row] for row in rows] if word_mode else \
-        [g for part in _zone_runs(rows, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
+    moment = title_moment_props(spec, cut_id, rows, duration)
+    # The captions step aside for the title's words, so they appear once (docs/ve/INGREDIENTS.md, the episode title moment).
+    spoken = [row for row in rows if not (moment and moment['span'][0] <= row['w'] <= moment['span'][1])]
+    groups = [[row] for row in spoken] if word_mode else \
+        [g for part in _zone_runs(spoken, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
     captions = []
     for index, group in enumerate(groups):
         hits = [i for i, word in enumerate(group) if word['w'] in emphasis]
@@ -556,6 +615,11 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                          'toFrame': groups[index + 1][0]['atFrame'] if index + 1 < len(groups) else duration,
                          'words': [{'text': word['text'], 'atFrame': word['atFrame']} for word in group],
                          'swipeIndex': hits[0] if hits else None})
+    if moment:
+        # The page before the title gives way to it as he starts the line; the title flows back into the next page.
+        for page in captions:
+            if page['fromFrame'] < moment['fromFrame'] < page['toFrame']:
+                page['toFrame'] = moment['fromFrame']
     assets = {asset['id']: asset for asset in spec.get('assets', [])}
     if edl is not None:
         take = resolve_source(edl['conformed']['picture'])
@@ -599,6 +663,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
         **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
+        **({'titleMoment': {k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}} if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
     if sting:

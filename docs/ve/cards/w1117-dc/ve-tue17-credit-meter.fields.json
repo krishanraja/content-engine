@@ -1,0 +1,31 @@
+{
+ "path": "docs/ve/cards/w1117-dc/ve-tue17-credit-meter.md",
+ "card_id": "ve-tue17-credit-meter",
+ "kind": "device",
+ "spec": "docs/plans/2026-11-17-tuesday/ve/spec.json",
+ "title": "credit_meter: a bonus that fills month one and drains after it",
+ "goal": "Krish's own words for Tue 17 Nov's piece (b019dbf8), typed on its production plan: \"A really clear visual about being enticed to upgrade with free credits, but the small print actually reducing your overall monthly limits to the tool\". Build the library device `credit_meter`: one tall tank of credits that fills its box, so a viewer sees in two seconds that a bonus fills month one and is gone after it.\n\n`params`: `plan` and `bonus` (each {label at most 3 words, row: a dataset row label}), `days` (the bonus life in days, 1..90), `src` (optional: a real screenshot crop of the small print, relative to the assets folder, shown as itself, never retyped), `source` (its outlet and date). The numbers come only from the object's dataset (value and producer_label), shown with thousands grouped and a space before a word unit (\"2,400 credits\").\n\nVerbs and meanings (each lands in 0.6 s or less; the tank never rests: a slow liquid shimmer between events):\n- `enter`: the empty tank rises into place with its scale.\n- `fill` (toState the plan row): the plan's credits pour in and settle at their level; the number counts up in whole steps.\n- `add` (toState the bonus row): a bright bonus layer pours in on top in the series colour; the total counts up.\n- `mark`: the real small-print crop slides in pinned to the bonus layer, its key line ringed in mint.\n- `count_to` (toState a day number): a day counter beside the tank ticks from day 1 to that day.\n- `drop` (toState the plan row): at the end of the bonus life the bonus layer drains away, leaving the plan level; the total counts down.\n- `exit`.\n\nHis floor (floor.py --format motion): every state change moves the object, never an arrival that sits, a crossfade or an arrow; brand tokens with light, depth and texture (a glass tank, liquid with a meniscus), never icons, clipart or emoji; on-screen words only the labels, the day counter and the dataset's numbers. No caption box. Fill the box: tall from y 280 to y 1050 and x 60 to 860; wide, the whole slot.\n\n## Tests (`device.test.ts`, stills from `fixture.json`)\n- after `add` the drawn level is higher than after `fill`; after `drop` it equals the plan level again\n- the shown number is the dataset value with thousands grouped, never a decimal mid-count of whole numbers\n- `src` is drawn as an image, never as text; the same frame twice renders identical markup; tall and wide render",
+ "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Register `credit_meter` in `devices/registry.ts` and `config/ve/devices.json` with exactly enter, fill, add, mark, count_to, drop, exit; update `verbs.test.ts`. Draw in SVG from the frame alone; texture seeded by the frame number. Read numbers as kinetic_stat and through_line read their dataset. Reuse packages/moves. Add no motion profile.",
+ "acceptance": "npx vitest run apps/renderer/src/engine/devices/credit_meter\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+ "write_allow": [
+  "apps/renderer/src/engine/devices/credit_meter/**",
+  "apps/renderer/src/engine/devices/registry.ts",
+  "apps/renderer/src/engine/devices/verbs.test.ts",
+  "config/ve/devices.json"
+ ],
+ "read": [
+  "apps/renderer/src/engine/devices/CONTRACT.md",
+  "apps/renderer/src/engine/devices/kinetic_stat/**",
+  "apps/renderer/src/engine/devices/through_line/**",
+  "apps/renderer/src/engine/devices/evidence_card/**",
+  "packages/moves/**",
+  "apps/renderer/src/engine/clock.ts",
+  "apps/renderer/src/engine/props.ts",
+  "apps/renderer/src/engine/kit/**",
+  "config/ve/devices.json",
+  "config/channel-safe-zones.json",
+  "docs/ve/MOTION_STANDARD.md"
+ ],
+ "max_minutes": 90,
+ "max_calls": 80
+}

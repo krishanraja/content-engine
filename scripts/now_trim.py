@@ -26,7 +26,14 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from check_workbench import NOW_LIMIT  # noqa: E402
 
 TARGET = NOW_LIMIT - 600  # room for the next few notes, so main is not trimmed on every merge
-SECTIONS = ("## What changed recently", "## Where it is right now")  # trimmed in this order
+NEXT = "## What is next and what is waiting on Krish"
+SECTIONS = ("## What changed recently", "## Where it is right now", NEXT)  # trimmed in this order
+# In "What is next" only a dated, finished line moves, and never a standing one: the North Star line the closeout check reads,
+# and the two standing rulings kept there. (2026-11-18: main sat at 14,568 bytes with no line above allowed to move, and every
+# pull request's verify failed at check:workbench until the oldest of these were moved by hand.)
+STANDING = re.compile(r"^- (North Star check|Krish declined|House close)")
+DATED = re.compile(r"\((\d{4}-\d{2}-\d{2})")
+NEXT_MIN_AGE_DAYS = 3
 OLDER = re.compile(r"^Older lines: ")
 POINTER = re.compile(r"`docs/history/[^`]+\.md`")
 
@@ -39,7 +46,19 @@ def _section_span(lines: list[str], heading: str) -> tuple[int, int] | None:
     return start, end
 
 
-def _oldest_bullet(lines: list[str]) -> tuple[str, int] | None:
+def _movable_next(line: str, today: str) -> bool:
+    """A line of "What is next" that may move: dated at least NEXT_MIN_AGE_DAYS before today and not a standing line."""
+    m = DATED.search(line)
+    if not m or STANDING.match(line):
+        return False
+    try:
+        age = (dt.date.fromisoformat(today) - dt.date.fromisoformat(m.group(1))).days
+    except ValueError:
+        return False
+    return age >= NEXT_MIN_AGE_DAYS
+
+
+def _oldest_bullet(lines: list[str], today: str = "") -> tuple[str, int] | None:
     for heading in SECTIONS:
         span = _section_span(lines, heading)
         if not span:
@@ -47,8 +66,11 @@ def _oldest_bullet(lines: list[str]) -> tuple[str, int] | None:
         bullets = [i for i in range(span[0] + 1, span[1]) if lines[i].startswith("- ")]
         # Never the newest line of a section, and never a bold standing line.
         for i in reversed(bullets[1:]):
-            if not lines[i].startswith("- **"):
-                return heading, i
+            if lines[i].startswith("- **"):
+                continue
+            if heading == NEXT and not _movable_next(lines[i], today):
+                continue
+            return heading, i
     return None
 
 
@@ -61,7 +83,7 @@ def trim(text: str, today: str, existing: set[str]) -> tuple[str, str | None, st
     if size() <= NOW_LIMIT:
         return text, None, ""
     while size() > TARGET:
-        found = _oldest_bullet(lines)
+        found = _oldest_bullet(lines, today)
         if not found:
             break
         heading, i = found

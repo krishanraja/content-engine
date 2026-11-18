@@ -1,7 +1,7 @@
 import { isStaging } from './kit/staging'
 import React from 'react'
 import { HOUSE } from '../house/geometry'
-import { FWP_SPLIT_CAPTION_ZONE } from './mocks/face-with-proof'
+import { SPLIT_CAPTION_ZONE } from './layouts/splitGeometry'
 import { Grain } from '../house/components'
 import { CallCard } from './chrome/CallCard'
 import { EndingBand } from './chrome/EndingBand'
@@ -78,9 +78,9 @@ export function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; 
   const caption = CaptionTrack({ props, frame })
   if (!caption) return null
   const height = Number(caption.props.style.height) - HOUSE.caption.paddingTop - HOUSE.caption.paddingBottom + 20
-  if (height > FWP_SPLIT_CAPTION_ZONE.height) throw new Error('ve: SPLIT caption exceeds frozen zone; repaginate')
+  if (height > SPLIT_CAPTION_ZONE.height) throw new Error('ve: SPLIT caption exceeds frozen zone; repaginate')
   return React.cloneElement(caption, { style: {
-    ...caption.props.style, ...FWP_SPLIT_CAPTION_ZONE, height,
+    ...caption.props.style, ...SPLIT_CAPTION_ZONE, height,
     padding: `10px ${HOUSE.caption.paddingX}px`,
   } })
 }

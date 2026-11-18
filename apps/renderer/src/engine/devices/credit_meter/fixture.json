@@ -1,0 +1,12 @@
+{
+  "objects": [{"obj":"credits","device":"credit_meter","meaning":"A temporary bonus drains","fromFrame":0,"toFrame":240,"dataset":{"unit":"credits","denominator":null,"producerLabel":"Fixture plan audit","rows":[{"label":"plan","value":2400},{"label":"bonus","value":3600}]},"params":{"plan":{"label":"Monthly plan","row":"plan"},"bonus":{"label":"Free bonus","row":"bonus"},"days":30,"src":"small-print.png","source":{"outlet":"Fixture","date":"2026-11-17"}}}],
+  "events":[
+    {"id":"in","obj":"credits","verb":"enter","toState":"visible","atFrame":1},
+    {"id":"fill","obj":"credits","verb":"fill","toState":"plan","atFrame":20},
+    {"id":"add","obj":"credits","verb":"add","toState":"bonus","atFrame":50},
+    {"id":"mark","obj":"credits","verb":"mark","toState":"print","atFrame":80},
+    {"id":"days","obj":"credits","verb":"count_to","toState":"30","atFrame":110},
+    {"id":"drop","obj":"credits","verb":"drop","toState":"plan","atFrame":150},
+    {"id":"out","obj":"credits","verb":"exit","toState":"gone","atFrame":210}
+  ]
+}

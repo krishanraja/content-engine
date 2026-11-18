@@ -244,13 +244,25 @@ def tile(track: np.ndarray, total: int, crossfade_s: float = CROSSFADE_S,
         k += 1
 
 
-def level_ride(samples: np.ndarray, max_db: float = LEVEL_MAX_DB) -> np.ndarray:
-    """Per-sample gain (linear) that holds the music's own short-term level near its median: RMS per 0.5 s, smoothed
-    over 1.5 s, the difference clamped to max_db either way. Keyed by the music, never by the voice."""
+def level_ride(samples: np.ndarray, max_db: float = LEVEL_MAX_DB, loudness: list | None = None) -> np.ndarray:
+    """Per-sample gain (linear) that holds the music's own short-term level near its median: its level per 0.5 s,
+    smoothed over 1.5 s, the difference clamped to max_db either way. Keyed by the music, never by the voice.
+
+    With `loudness` (ffmpeg's momentary meter, [(t, LUFS)] at 100 ms, as ebur128 gives it) the level is the loudness the
+    bed-shape QC hears, not RMS: a build in the track that adds brightness reads louder K-weighted with the same RMS, and
+    on Tue 17's long cut Aspire's builds swung the bed 4.3 LU every 40 to 50 s under a flat RMS ride (18 Nov 2026)."""
     size = int(SR * LEVEL_WINDOW_S)
     count = max(1, len(samples) // size)
     mono = samples[:count * size].mean(axis=1).reshape(count, size)
     db = 10 * np.log10(np.maximum((mono ** 2).mean(axis=1), 1e-12))
+    if loudness:
+        # The 400 ms momentary window ending at t is centred at t - 0.2; average its energy into each 0.5 s window.
+        energy, hits = np.zeros(count), np.zeros(count)
+        for t, m in loudness:
+            k = int((t - 0.2) // LEVEL_WINDOW_S)
+            if 0 <= k < count and m > -120.0:
+                energy[k] += 10 ** (m / 10); hits[k] += 1
+        db = np.where(hits > 0, 10 * np.log10(np.maximum(energy / np.maximum(hits, 1), 1e-12)), db)
     loud = db > db.max() - 40
     ref = float(np.median(db[loud])) if loud.any() else 0.0
     taps = max(1, int(LEVEL_SMOOTH_S / LEVEL_WINDOW_S))
@@ -374,7 +386,12 @@ def _episode_bed(tmp_bed: str, out: str, *, duration_s: float, gain_db: float, e
     track = _decode_stereo(tmp_bed)
     n = int(round(duration_s * SR))
     bed, centres = tile(track, n, stops=stops, restart_from_s=restart_from_s)
-    bed *= level_ride(bed)[:, None]
+    # Ride by the loudness the bed-shape QC meters (EBU R128 momentary), not by RMS.
+    tiled = str(Path(out).with_suffix('.tiled.wav'))
+    _write_stereo(bed, tiled)
+    loudness = ebur128(tiled)['M']
+    Path(tiled).unlink(missing_ok=True)
+    bed *= level_ride(bed, loudness=loudness)[:, None]
     bed *= (10 ** ((gain_db + envelope_db[:n]) / 20))[:, None]
     _write_stereo(bed, out)
     return centres

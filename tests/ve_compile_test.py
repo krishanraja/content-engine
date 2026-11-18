@@ -274,8 +274,8 @@ class CompileTest(unittest.TestCase):
         def pages(text, gap=10):
             rows = [{'w': i, 'text': t, 'atFrame': i * gap} for i, t in enumerate(text.split())]
             return [' '.join(r['text'] for r in g) for g in _caption_groups(rows)]
-        got = pages('Amazon for your groceries, Google for your emails, it can get a bit dangerous.')
-        self.assertIn('Amazon for your groceries,', got)
+        got = pages('Netflix for your evenings, Google for your emails, it can get a bit dangerous.')
+        self.assertIn('Netflix for your evenings,', got)
         self.assertIn('Google for your emails,', got)
         got = pages('I didn\'t even write this myself. I just put one prompt into my AI tool')
         self.assertFalse([p for p in got if 'myself.' in p and not p.endswith('myself.')], got)
@@ -378,38 +378,17 @@ class CompileTest(unittest.TestCase):
         spec['assets'].append({'id': 'generated', 'path': 'picture.png', 'origin': 'generated'})
         for ref in ('picture.png', 'generated', 'asset:generated'):
             spec['objects'][0]['params']['extra'] = {'nested': [ref]}
-            with self.assertRaisesRegex(ValueError, 'placed only by scene_plate, never as evidence'):
+            with self.assertRaisesRegex(ValueError, 'generated assets pipeline arrives in Phase 2'):
                 compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
 
-    def test_a_generated_picture_reaches_only_scene_plate_with_its_provenance(self):
-        # Phase 2, first step (18 Nov 2026): scene_plate draws no words, so a generated picture there is never evidence.
-        spec = load_json(FIXTURE / 'spec.json')
-        spec['assets'].append({'id': 'croc', 'kind': 'illustration', 'path': 'croc.png', 'origin': 'generated',
-                               'tool': 'codex:image_gen'})
-        obj = spec['objects'][0]
-        obj['device'] = 'scene_plate'
-        obj['params'] = {'shots': [{'src': 'croc.png', 'width': 1024, 'height': 1536}]}
-        real_load = load_json
-        verbs = sorted({e['verb'] for c in spec['cuts'].values() for b in c['beats'] for e in b.get('events', [])})
-
-        def read(path):  # scene_plate is a library device; any verb the fixture uses stands in for its own
-            data = real_load(path)
-            if Path(path).name == 'devices.json':
-                data = copy.deepcopy(data)
-                data['devices']['scene_plate'] = {'verbs': verbs}
-            return data
-        with patch.object(ve_compile, 'load_json', side_effect=read):
-            with self.assertRaisesRegex(ValueError, 'naming its tool and job_id'):
-                compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
-            spec['assets'][-1]['job_id'] = 'thread-1'
-            spec['assets'][-1]['kind'] = 'screenshot'
-            with self.assertRaisesRegex(ValueError, 'illustration or broll'):
-                compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
-            spec['assets'][-1]['kind'] = 'illustration'
-            try:
-                compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
-            except ValueError as error:
-                self.assertNotIn('generated', str(error))
+    def test_generated_plate_needs_photo_plate_and_its_record(self):
+        from velib.compile import generated_plate_problem
+        asset = {'id': 'gen', 'path': 'gen/still.png', 'origin': 'generated', 'kind': 'illustration',
+                 'tool': 'codex.image_generation', 'job_id': 'thread-1', 'sha256': 'a' * 64}
+        self.assertEqual(generated_plate_problem(asset, 'photo_plate'), '')
+        self.assertIn('Phase 2', generated_plate_problem(asset, 'evidence_card'))
+        self.assertIn('job_id', generated_plate_problem(dict(asset, job_id=None), 'photo_plate'))
+        self.assertEqual(generated_plate_problem(asset, 'scene_plate'), '')
 
     def test_sfx_kit_present_and_absent(self):
         spec = load_json(FIXTURE / 'spec.json')

@@ -95,6 +95,35 @@
 | Palette | `style.palette` | `tokens` (and `brandTokens`) | `scripts/velib/palettes.py`, `config/ve/style-palettes.json`, every device through its tokens | A style may bring its own colours (Ruling, Krish, 2026-11-16: "A style may bring in its own colours and theming as long as it doesn't end up looking like a clown's apron"). Six to start: `riso-pop`, `arcade`, `kraft-paper`, `phosphor`, `keynote-gold`, `blueprint`. Each fills the five colour roles the devices read, so a style's rules (two inks, mint for the answer) read in its colours; his brand marks (mark tile, series pill, call card, ending) keep the house colours. `ve lint` refuses an unknown palette or one that breaks contrast. None named: the house colours |
 | Ground and entrance details | in the motion style (`kit/motion-profiles.json`) | `motion` | `kit/beatMotion.ts`, `kit/reveal.ts` | grounds `lit`, `vignette`, `hatched` beside `none`, `halftone`, `paper`; entrances may add `blurPx` (blur-in), `spinDeg` (a turn while entering) and `tiltDeg` (a resting tilt) |
 
+## The caption rules (Krish, 2026-11-18)
+
+Krish, 18 Nov 2026, of the Tue 17 data-centres short, whose pages are one word each (face-with-proof, `brand.captions: "word"`)
+and whose style was art-directed: "I have some issues with the subtitles. They are really jolty, and each word moving from
+left to right is really hard to look at and stressful. We can't have each new word appear somewhere else on the screen,
+and we need the previous word to stick around for a tiny bit longer. I think you're going to need to get creative here or
+use a different caption set because this one feels really stressful." Shown the same 8 seconds in `podcast` and `karaoke`:
+"the first one is better" (`podcast`: each word lands in one fixed place and the previous word stays above it, smaller).
+They hold for every caption style (`config/failures.json`, F57):
+
+1. **A new word never appears somewhere else.** A page's words keep one anchor: no side-to-side alternation between pages,
+   no word landing at a different place from the one before it.
+2. **The previous word or phrase stays a little longer**: an overlap or a dimmed hold of a few hundred ms, never a cut the
+   moment the next word starts.
+3. **Nothing jolts**: no hard position jump, no scale pop or overshoot, no flash or blank between words.
+
+`art-directed` was rebuilt to them (`chrome/ArtDirectedCaption.tsx`; its tests are in `captions.test.ts`): every page is laid out
+whole and hangs left aligned from one fixed point, the previous page sits above it dimmed for 0.6 s, words fade up 10 px over
+0.1 s, and the echo is for an emphasised word or a phrase and only fades. On his take (`ve proof`, the sack window, 8 s), the old
+build moved the word's left edge 23 times by 60 px or more and drew a blank frame at 27 page starts; the new one moves it 0 times
+and has none.
+
+**Measured on one-word pages, every style** (`npx tsx scripts/audit-caption-steady.ts`, real Chromium, written to
+`config/ve/caption-steady.json`): rule 1 fails for `cinematic` (its layout state rotates every page), `stair-flash` (it swaps sides)
+and `anchor-quote` (its hero lands 125 px lower than its running caption), so `ve lint` refuses them as `captions.steady` on a
+word-mode cut from 18 Nov. Rule 2 is kept only by `podcast` and `art-directed`; every other style cuts the word before the instant
+the next lands. That is a known gap, listed in the same file as `previous_word_kept: false`, not yet a refusal: a new style, or a
+change to one, is measured again before it is offered.
+
 ## All 27 caption styles
 
 Choose one with `style.captions.theme`. The words below are what the publish board shows (`config/caption-themes.json`).
@@ -114,7 +143,7 @@ Choose one with `style.captions.theme`. The words below are what the publish boa
 | `gaming-stream` | Terminal | Plex Mono on a deep-ink tag, each word typing itself out as he says it. |
 | `simple-one-word` | One word | Only the word being said, in Archivo Black capitals fitted to the width of the caption band. |
 | `podcast` | Two-line scroll | The line being said brightens word by word, and the line before it slides up and away. |
-| `art-directed` | Art-directed phrases | Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind. |
+| `art-directed` | Art-directed phrases | Each caption is one phrase in Anton capitals, its key word alone on its own row, always in the same corner, with the last phrase staying above it, dimmed, and a faint echo of an emphasised word behind. |
 | `cinematic` | Cinematic | Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass. |
 | `slam` | Slam | Every word slams in as it is said, and the words already said stack above it, smaller. |
 | `georgia-build` | Georgia build | Small mixed-case words at chest height, one to three at a time, where the typeface shows the stress: Fraunces for small words, Archivo ExtraBold for content, a size up for numbers and names, and Fraunces italic for the key word. Each chunk builds and then cuts hard to the next. |
@@ -303,8 +332,14 @@ the production suite knows that this is the moment to make it feel like the titl
   is recorded (`packages/contracts/src/production-spec.ts`). `ve lint` (`title.moment`) refuses a series piece
   publishing from 16 Nov 2026 without it, a line that does not carry the title, and a span past the first three beats.
 - The renderer shows the title as its own animated title over that span and the captions step aside for those words,
-  so the words appear once (the words_add amendment, 15 Nov). Not built yet: the renderer does not read
-  `title_moment` today, so until it does the session lays the title over that span by hand and keeps captions off it.
+  so the words appear once (the words_add amendment, 15 Nov). Built 18 Nov 2026 (Krish, Tue 17: "should be seamlessly
+  made the title with epic hero title treatment as I am saying that line"): compile turns `spans.<cut>` into
+  `props.titleMoment` (each word on its spoken frame) and leaves those words out of the caption pages; the renderer
+  draws `apps/renderer/src/engine/title/TitleMoment.tsx` (Codex card `ve-tue17-title-moment`): each word lifts out of
+  the caption line into a hero lockup in the panel above his face (the whole frame on a full-screen beat), lands with a
+  settle, a light sweep and a brief glow, and holds until the beat that carries it ends. It flows back into the caption
+  line when it hands straight to them; where the captions already took his next words while it held, it fades where it
+  stands (`release: fade`).
 - The title question itself is the spec's `title_line` (one string, the question his intro speaks; `making.py scripts`
   records the same line as `script_check.title_line`, and `ve lint` `title.line` refuses a `title_line` the script never
   says). The title animation is keyed to `title_line`: it flows out of the captions as he says it and back into them

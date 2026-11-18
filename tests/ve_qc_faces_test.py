@@ -2,6 +2,7 @@
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 
@@ -50,7 +51,7 @@ class OffFace(unittest.TestCase):
         self.assertTrue(run([split], (390, 1250, 300, 380), style='house', region=(72, 1180, 900, 217))['pass'])
 
     def test_word_split_region_uses_the_seam_and_clears_the_lower_face(self):
-        split = {**page('split'), 'region': (60, 670, 800, 180)}  # FWP_SPLIT_CAPTION_ZONE, on the seam
+        split = {**page('split'), 'region': (60, 670, 800, 180)}  # SPLIT_CAPTION_ZONE, on the seam
         g = qc_faces.word_geometry('9:16', 'SPLIT')
         self.assertEqual(g['centerY'], 760)
         self.assertEqual(qc_faces.caption_box(split, 'word', '9:16', None)[1],
@@ -88,3 +89,98 @@ class OffFace(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+SEAM = 760
+
+
+def beat(layout='SPLIT', source='take', start=0, end=90, name='face'):
+    return {'id': name, 'layout': layout, 'plate': {'source': source}, 'fromFrame': start, 'toFrame': end}
+
+
+def head(beats, faces, detector=True, aspect='9:16'):
+    """faces: one box, or a list of boxes (one per sample, in order), or None for no face in the frame."""
+    seq = iter(faces if isinstance(faces, list) and faces and isinstance(faces[0], list) else [faces] * 99)
+    det = (lambda _rgb: next(seq) if isinstance(faces, list) and faces and isinstance(faces[0], list)
+           else ([faces] if faces else [])) if detector else None
+    with patch.object(qc_faces, 'default_detector', lambda: None):
+        return qc_faces.head_in_band('cut.mp4', beats, seam=SEAM, aspect=aspect, detector=det, grab=lambda _f: BLANK)
+
+
+class HeadInBand(unittest.TestCase):
+    """Krish, 2026-11-18, of a video that cut the top of his head off: "should not really need a reference image"."""
+
+    def test_a_whole_head_inside_the_band_passes(self):
+        # Face box 300 x 380 at y 900: the crown (900 - 0.35 * 380 = 767) is under the seam, the chin (900 + 410) above 1920.
+        report = head([beat()], (390, 900, 300, 380))
+        self.assertTrue(report['pass'], report)
+        self.assertEqual(report['value']['count'], 0)
+
+    def test_a_crown_above_the_seam_fails_and_says_by_how_much(self):
+        report = head([beat()], (390, 700, 300, 380))   # crown 567: 193 px up into the stage
+        self.assertFalse(report['pass'])
+        cut = report['value']['cut'][0]
+        self.assertEqual((cut['edge'], cut['by_px'], cut['band_top'], cut['beat']), ('crown', 193, SEAM, 'face'))
+
+    def test_a_chin_off_the_bottom_of_the_frame_fails(self):
+        report = head([beat()], (390, 1700, 300, 380))   # chin 1700 + 410 = 2110
+        self.assertFalse(report['pass'])
+        self.assertEqual({c['edge'] for c in report['value']['cut']}, {'chin'})
+
+    def test_a_head_that_moves_up_late_in_the_beat_is_caught(self):
+        fits, rises = [(390, 900, 300, 380)], [(390, 650, 300, 380)]
+        report = head([beat()], [fits, fits, rises])    # the third sample
+        self.assertFalse(report['pass'])
+        self.assertEqual(report['value']['count'], 1)
+
+    def test_a_cut_head_names_the_crop_that_would_fit(self):
+        # The Wed 18 failure: the take cropped at 88% put his crown 193 px up in the stage. The report says where to put it.
+        cropped = {**beat(), 'plate': {'source': 'take', 'crop': '50% 88%'}}
+        report = head([cropped], (390, 700, 300, 380))
+        self.assertFalse(report['pass'])
+        fix = report['value']['suggest_crop']['face']
+        self.assertRegex(fix, r'^50% \d+%$')
+        # Moving the take as suggested clears the crown and keeps the chin: the shift is (88 - p)% of the 760 row overflow.
+        shift = (88 - int(fix.split()[1].rstrip('%'))) / 100 * SEAM
+        crown, chin = 700 - 0.35 * 380 + shift, 700 + 1.08 * 380 + shift
+        self.assertGreaterEqual(crown, SEAM - 8)
+        self.assertLessEqual(chin, 1920)
+
+    def test_a_head_too_big_for_the_band_says_no_crop_fits(self):
+        report = head([beat()], (390, 200, 300, 1100))   # a face 1100 rows tall: crown to chin cannot fit 1160
+        self.assertFalse(report['pass'])
+        self.assertEqual(report['value']['suggest_crop']['face'], 'none fits')
+
+    def test_the_renderers_default_crop_keeps_both_portrait_takes_whole(self):
+        # Measured on the Wed 18 Build-or-buy short and the AI music short (1080 x 1920), 18 Nov 2026: face box top and
+        # height at each sample. With the renderer's default crop (read from splitGeometry.ts) no sample is cut.
+        from velib.qc_faces import crop_position
+        position = crop_position(None)
+        self.assertEqual(position, 16.0)
+        offset = position / 100 * SEAM
+        takes = {'wed18': [(434, 698), (441, 715), (489, 606), (456, 691), (532, 693), (539, 655)],
+                 'ai_music': [(260, 348), (298, 362), (334, 353), (321, 356), (312, 361), (299, 352)]}
+        for name, faces in takes.items():
+            for y, h in faces:
+                with self.subTest(take=name, y=y):
+                    crown, chin = y - 0.35 * h - offset + SEAM, y + 1.08 * h - offset + SEAM
+                    self.assertGreaterEqual(crown, SEAM)
+                    self.assertLessEqual(chin, 1920)
+
+    def test_a_beat_where_no_face_is_found_fails(self):
+        report = head([beat()], None)                   # the crop may have cut the face out entirely
+        self.assertFalse(report['pass'])
+        self.assertEqual(report['value']['no_face_in_beat'], ['face'])
+
+    def test_the_largest_face_is_his(self):
+        report = head([beat()], [[(40, 100, 60, 70), (390, 900, 300, 380)]] * 3)   # a face in a photo on a wall
+        self.assertTrue(report['pass'], report)
+
+    def test_without_a_detector_it_is_not_run_never_a_pass(self):
+        report = head([beat()], (390, 900, 300, 380), detector=False)
+        self.assertEqual((report['status'], report['pass']), ('not_run', None))
+
+    def test_only_split_take_beats_in_a_tall_cut_are_measured(self):
+        for beats, aspect in (([beat('STAGE')], '9:16'), ([beat(source='none')], '9:16'), ([beat()], '16:9'), ([], '9:16')):
+            with self.subTest(beats=beats, aspect=aspect):
+                self.assertEqual(head(beats, (390, 100, 300, 380), aspect=aspect)['status'], 'not applicable')

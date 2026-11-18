@@ -1,7 +1,7 @@
 import React from 'react'
 import { HOUSE_FONTS } from '../../house/geometry'
 import { textWidth } from '../../house/metrics'
-import { FWP_SPLIT_SEAM_Y } from '../mocks/face-with-proof'
+import { SPLIT_SEAM_Y } from '../layouts/splitGeometry'
 import { WORD_CAPTION } from './WordCaption'
 import { SAFE_TALL, SAFE_WIDE } from '../kit/focus'
 import type { EngineBeat, EngineRenderProps } from '../props'
@@ -63,7 +63,7 @@ export function leadBox(card: LeadCard, beat: EngineBeat | undefined, aspect: '9
   const height = size * LEAD.lineHeight + 2 * LEAD.padY
   // On a SPLIT beat the card sits on the seam as the house word does (MOTION_STANDARD: "the word sits on the seam
   // there"), never reaching further below it than the house word caption does, so it stays off his face.
-  const bottom = split ? FWP_SPLIT_SEAM_Y + (tall ? WORD_CAPTION.tall.size : WORD_CAPTION.wide.size) * 0.6
+  const bottom = split ? SPLIT_SEAM_Y + (tall ? WORD_CAPTION.tall.size : WORD_CAPTION.wide.size) * 0.6
     : tall ? Math.min(SAFE_TALL.bottom, LEAD.tallFaceTop + height + 8) : SAFE_WIDE.bottom - 40
   return { left: left + (room - width) / 2, top: bottom - height, width, height, size }
 }

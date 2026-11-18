@@ -1280,6 +1280,52 @@ old board page's Approve for publish bound its sha256; the live board's view car
 - **Held by:** `tests/control-plane/board-manifest.test.ts` (the bind, the seal through piece_manifest.py itself, the
   refusal on a changed hash) and `tests/control-plane/board-view-contract.test.ts`.
 
+## The Publish step on a finished post (week model, 18 Nov 2026)
+
+Krish, 2026-11-18: "when a piece is complete [...] Everything's there, ready to publish, with a button that just says
+'Publish.' Which would then schedule in Buffer directly, ideally, or produce a prompt that I could do it in a session";
+"we need to ensure all the assets are visible in the board including the covers, thumbnails, captions etc". Before this a
+post made and filed in its Drive folder stopped at "Made: its files are made and filed" with only the Claude production
+prompt, and no session could move it on.
+
+- **The card.** A made, unscheduled, not missed off-day post whose files are in its post folder (the view's `posts[].assets`)
+  leads with one button, **Publish**, and carries `assets` on the model item: every file by kind (cut, carousel with each
+  slide, image, cover, thumbnail, caption or note), its folder and its Drive link, so he sees each one beside the button.
+- **The prompt (the fallback, built).** Publish opens a prompt that lists every file and says: check each from its link,
+  schedule one post per listed channel through the Buffer connector with each caption verbatim and its files attached, never
+  a different file, never publish now, read each back from Buffer, and report on the board. His pressing it is his approval
+  for exactly that list, so this one prompt's wall allows scheduling that post and nothing else (`WALLS_SCHEDULE`); every
+  other prompt keeps "never post or publish anything". Control Centre reads Buffer every 15 minutes (done-check
+  `buffer_sent`) and moves the card to Scheduled by itself.
+- **Not built yet.** Scheduling from the button itself, with no session: Control Centre's Buffer key can write, but its
+  code is held to reads by a ruling and `tests/api/bufferSent.test.ts`, and a bound approval for a post with no manifest
+  does not exist yet. Held for Krish's go on both.
+- **Held by:** `tests/control-plane/board-week-model.test.ts`.
+
+## The proof on any piece, and Approve for publish on an off-day piece (contract 1.31.0)
+
+Krish, 2026-11-18, on Tue 17's habits voiceover: "nothing has changed on the board - this seems like a system UI workflow
+failure"; "the board needs to update to a new state - the final state for me to press approve or make any comments /
+feedback, and copy the final prompt back in to that same session"; "once the final assets, covers, thumbnails are produced
+and filed in drive, that then replaces the mocks/proofs stage, which might be a final board state - at which point I can
+press Publish". The produce session filed its proof on the piece and the board had no press for it: `<day>-proof` was a
+Monday, Wednesday and Friday name, and an off-day piece he records had no Approve for publish.
+
+- **The proof press, any piece, any day:** `PUT /api/board/<Monday>/picks/<day>-proof-<the piece id's first 8 hex>`
+  (`PROOF_ID`), kind `approve_proof`, the same body (`gateBody`: the clip's sha256, approve, or reject with his words) and
+  the same write as `<day>-proof`: `meta.making.gates.proof`, which `ve proof` and `ve render` read
+  (`scripts/velib/gates.py`). One document a piece, so two pieces on one day never write over each other's answer.
+  Control Centre's card builds it once the proof is on the piece (role `proof`) and shows every asset with it.
+- **Each material's sha256** is in the view (`days[].materials[].sha256`, a stored file's, null for a link or a text),
+  so a press binds to exactly the file he saw.
+- **Approve for publish on an off-day piece he records:** the day's draft manifest is read for every day's piece, not only
+  the series days, and `picks/<tue|thu|sat>-publish` (`OFFDAY_PUBLISH_ID`) takes the series body (`approve_publish`, bound
+  to the manifest's sha256; `checkPublishBind`). Once the piece's final files and their draft manifest are in its post
+  folder, the off-day card's next step is that press, as his decision (`postItemBase`): it replaces the mocks and the
+  proof. Its seal (`piece_manifest.py seal`) is what Growth's go-live schedules in Buffer; content-engine never calls Buffer.
+- **Held by:** `tests/control-plane/board-offday-proof-publish.test.ts`, `board-view-contract.test.ts` and
+  `board-week-model.test.ts`.
+
 ## His answer on each cut (contract 1.6.0)
 
 The approved mock M5 gives every cut in the Cuts tab its own Yes, Not this, Change it and Add a note. Change it and Add
