@@ -121,17 +121,18 @@ def _clip(tokens):
     return ' '.join(tokens[:EXAMPLE_WORDS]) + (' ...' if len(tokens) > EXAMPLE_WORDS else '')
 
 
-def delta(script_text, take_doc):
-    """The counts, rates and short examples of what moved between script and take. Pure.
+def compare_tokens(script_raw, take_raw):
+    """What moved between two token lists (words_gate's, contractions kept), every change: the counts, at most
+    EXAMPLES short examples of each kind, and every swap in full as (script words, said words). Pure.
 
     Both sides are compared with contractions written out, so "it is" said as "it's" lines up as the same
     words; a contraction on one side against full words on the other is then counted as contracted or
     expanded, once per contraction."""
-    script_raw, take_raw, seconds = _tokens(script_text, take_doc)
     script, take = _expand(script_raw), _expand(take_raw)
     a, b = [w for w, _ in script], [w for w, _ in take]
     counts = {'swapped': 0, 'cut': 0, 'added': 0, 'contracted': 0, 'expanded': 0}
     examples = {k: [] for k in counts}
+    swaps = []
     matcher = difflib.SequenceMatcher(a=a, b=b, autojunk=False)
     seen = {'contracted': set(), 'expanded': set()}
     for op, i1, i2, j1, j2 in matcher.get_opcodes():
@@ -152,16 +153,28 @@ def delta(script_text, take_doc):
             continue  # a name the transcriber split ("open ai" for "openai") is the same words, not a change
         kind, n = {'delete': ('cut', i2 - i1), 'insert': ('added', j2 - j1)}.get(op, ('swapped', max(i2 - i1, j2 - j1)))
         counts[kind] += n
+        if op == 'replace':
+            swaps.append((a[i1:i2], b[j1:j2]))
         if len(examples[kind]) < EXAMPLES:
             examples[kind].append({'script': _clip(a[i1:i2]), 'said': _clip(b[j1:j2])})
+    kept = sum(m.size for m in matcher.get_matching_blocks())
+    return {'words_script': len(a), 'words_said': len(b), 'kept': kept, 'counts': counts,
+            'examples': {k: v for k, v in examples.items() if v}, 'swaps': swaps}
+
+
+def delta(script_text, take_doc):
+    """The counts, rates and short examples of what moved between script and take. Pure (compare_tokens)."""
+    script_raw, take_raw, seconds = _tokens(script_text, take_doc)
+    got = compare_tokens(script_raw, take_raw)
+    counts = got['counts']
     changed = sum(counts.values())
     minutes = round(seconds / 60, 2) if seconds else None
     return {
-        'words_script': len(a), 'words_said': len(b), 'kept': sum(m.size for m in matcher.get_matching_blocks()),
+        'words_script': got['words_script'], 'words_said': got['words_said'], 'kept': got['kept'],
         'minutes': minutes, **counts, 'changes': changed,
         'changes_per_minute': round(changed / minutes, 1) if minutes else None,
-        'changes_per_100_words': round(100 * changed / len(a), 1) if a else None,
-        'examples': {k: v for k, v in examples.items() if v},
+        'changes_per_100_words': round(100 * changed / got['words_script'], 1) if got['words_script'] else None,
+        'examples': got['examples'],
     }
 
 

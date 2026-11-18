@@ -1291,6 +1291,13 @@ The making record: where one piece is on its way from the workroom to
 - `const SPOKEN_KINDS`
 - `interface MakingSpokenExample`
 - `type MakingSpokenDelta`
+- `const AUDIT_TEXTS`
+- `const AUDIT_PAIRS`
+- `const AUDIT_COUNTS`
+- `interface MakingAuditText`
+- `interface MakingAuditSwap`
+- `type MakingAuditPair`
+- `interface MakingScriptAudit`
 - `interface Making`
 - `const PREFLIGHT_CHECKS`
 - `interface MakingPreflight`
@@ -1301,6 +1308,7 @@ The making record: where one piece is on its way from the workroom to
 - `type MakingPatch`
 - `const SCRIPT_SHA256`
 - `const TELEPROMPTER_ID`
+- `function parseScriptAudit(cut: string, v: unknown, now: string): { entry?: MakingScriptAudit; problem?: string }`
 - `function parseMakingPatch(body: unknown, now: string): { patch: MakingPatch; problems: string[] }`
 - `function makingStamp(prev: Pick<Making, 'updated_at'> | null | undefined, now: string): string`
 - `function mergeMaking(prev: Making | null | undefined, patch: MakingPatch, by: string, now: string): Making`
@@ -3610,6 +3618,7 @@ What the compiler looks for, as pure functions.
 - `function handRewriteProposals(rows: EditRow[]): Proposal[]`
 - `function repeatedEditClassProposals(rows: EditRow[], now: number = Date.now()): Proposal[]`
 - `const MAX_EVIDENCE`
+- `function evidenceIds(ids: string[]): string[]`
 - `function toProposalRow(p: Proposal, batch: string): { ok: true; row: Record<string, unknown> } | { ok: false; reason: s…`
 - `interface SpokenExample`
 - `interface SpokenDelta`
