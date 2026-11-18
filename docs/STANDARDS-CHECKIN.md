@@ -16,6 +16,11 @@ exception to "No Claude artifact, ever". On 15 Nov he decided the 23 new floor g
 
 ## What a week's payload holds
 
+- **Retired standards.** A standard the Rejections engine retired (a newer one supersedes it) leaves the grouping:
+  the run takes it out of its group or the operating holds, lists it under `retired`, and groups its successor as new
+  (`retired_from_grouping` in the counts). On 18 Nov the floor retired 61 operating holds and the run stopped until
+  this was added.
+
 - **New groups.** Every standard on `config/rejection-floor.json` that `config/floor-groups.json` does not place. One
   that shares its theme with at least two members of a group he decided becomes that group's evolution
   (`<parent>_e<yymmdd>`, titled "(evolution, week of ...)", starting from the parent's decided words); the rest form new
