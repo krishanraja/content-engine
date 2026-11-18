@@ -1,3 +1,0 @@
-Status: A piece that moves to another day after its post folder is bound now has its folder follow it, series pieces included: the folder in 3 Posts is renamed by its ID to the new date and day, files still waiting for the library sync move to the new path, then the binding updates. The making route does it on every read and write of a moved piece and the research library's hourly sweep catches the rest; when Drive cannot be read or both names exist, writers stop (post_folder_held) and nothing is filed.
-Next: watch the next research-library sweep's post_folders count in its run answer, then confirm a moved piece's folder shows its new date in 3 Posts.
-North Star check (2026-11-18): holds.
