@@ -7722,3 +7722,5 @@ Rotate the active runner receipt-signing credential without losing the
 
 - `const SECRET_PATTERNS: readonly RegExp[]`
 - `function containsCommittedSecret(body: string): boolean`
+
+stale line
