@@ -8,3 +8,9 @@ Same short, same look as your first set (.scratch/ve/habits/gen/manifest.json an
 4. b17-boxes. Line: "Now, three habits that are getting people fired." Picture: three empty office desks in a row, each with a packed cardboard box of belongings (a plant, a mug) sitting on it, chairs pushed back.
 
 Reply with the manifest path and your pick per slot with one line why. Claude checks every file; your report is not proof.
+Two more stills, same set, same look and rules as your gen2 set (.scratch/ve/habits/gen2/manifest.json: deadpan documentary photo, ordinary unrecognisable people, muted true colour, slight grain, the action in the middle 60%, nothing important in the top 15% or bottom 25%, NEVER any readable text, letters, numbers, logos or signage). Krish, 18 Nov 2026, on the IBM page beat: "I hope we spend no longer on a visual as dull as a report than this clip", so these two replace report pages. Two candidates each, .scratch/ve/habits/gen2/<slot>-a.png and -b.png, add them to the manifest and remake contact.jpg with all files.
+
+1. b11-boss. Line: "And bosses already get this." Picture: a manager in a glass-walled office, sleeves rolled up, red pen in hand, going through a printed AI report line by line and circling a mistake, sceptical, unhurried (no readable writing on the page).
+2. b14-stampers. Line: "Then they asked the staff, and only 29% even ranked judgment as important." Picture: a long open-plan desk of office workers all rubber-stamping papers without looking at them, eyes on their phones, a production line of approvals; deadpan, slightly absurd.
+
+Reply with your pick per slot and why.

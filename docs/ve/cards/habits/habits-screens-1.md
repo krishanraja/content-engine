@@ -30,3 +30,8 @@ Claude rendered your screens in the cut. The captions are cream Anton phrases dr
 2. b20-resign: move the chat so its last line (the "You" signature) ends above y 1060 at every frame; the dark ground below.
 
 Same acceptance as before; reply with the three paths and sha256s.
+Krish, 18 Nov 2026, watching the IBM screen in the cut: "Looks good ... Also could have some sort of nice moving texture on the black background?" Add one shared moving texture to the ink ground of five screens: b3-posts, b11-ibm, b13-overrule, b19-forward and b20-resign. Change nothing else in them: same content, same timings, same lengths, same placement. (b14-ibm29 is dropped from the cut; leave it.)
+
+The texture, the same in all five so they read as one set: the house grid of the picked motion style (lab/styles/swiss-kinetic/STYLE.md: twelve columns and a 60 px baseline) drawn as hairlines in cream at about 5% opacity for the columns and 3% for the baseline, drifting slowly upward (about 12 px a second, seamless), with a fine animated film grain over the ground at the house grain level (config/ve/brand-tokens.json finish.grain_opacity), deterministic per frame (a seeded noise, never Math.random), behind everything, never over the content cards, the page or the words. Classy and calm: no glow, no gradient, no colour other than the ink and those cream lines. The caption band y 1080 to 1340 must stay dark: its mean luma under 30 and no pixel above 45 on every frame (measure it and say the numbers).
+
+Same acceptance as before (1080x1920, 30/1, h264, the same lengths, no audio, contact sheets). Reply with the five paths, sha256s and the caption-band numbers.
