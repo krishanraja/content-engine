@@ -9,7 +9,8 @@
 //   made       its files are made: Growth's record says made, or its post folder in Drive holds them, or its cuts exist
 //   scheduled  Growth has it scheduled on a channel, with when
 //   live       out on a channel, with each post's link (Growth's record, his It's live, or the piece's own record)
-//   missed     its day has passed and it is not marked live
+//   missed     its day passed more than a day ago and it is not marked live (the day after its own, it is Late: on its
+//              own stage and next step, its line saying so; missedOn, lateOn)
 //
 // "back in Ideas for Later" is the sixth: an item in that state is not on a day, so it is drawn in GET /api/board/later
 // and never here. A past day that is not out is never "with Growth" or "ready" without saying it was missed (buildView;
@@ -30,6 +31,20 @@ export interface ViewStage {
 }
 
 const list = (xs: string[]) => [...new Set(xs)].join(', ')
+
+/** How many days after its own an item not out is Late, still on its next step, before it is Missed (Ruling, Krish,
+ *  2026-11-18: an item not posted on its day goes back to its step, My takes are in the Inbox, and is marked late for a
+ *  maximum of one day; Missed had blocked him from moving forward with anything). */
+export const LATE_DAYS = 1
+const back = (d: string, n: number) => { const t = new Date(`${d}T00:00:00Z`); t.setUTCDate(t.getUTCDate() - n); return t.toISOString().slice(0, 10) }
+/** Its day passed more than LATE_DAYS ago: Missed. */
+export function missedOn(date: string, today: string): boolean { return date < back(today, LATE_DAYS) }
+/** Its day passed, within LATE_DAYS: Late, its next step still open. */
+export function lateOn(date: string, today: string): boolean { return date < today && !missedOn(date, today) }
+/** The line a Late item or day leads with. */
+export function lateLine(label: string, today: string): string {
+  return `Late: ${label} passed. It stays on its next step until the end of ${dayLabel(today)}, then it is marked missed.`
+}
 
 /** What an approved item has reached, from the records it carries. Pure. */
 export function postedStage(input: {
@@ -54,7 +69,7 @@ export function postedStage(input: {
   // A post scheduled to go out after its day is not missed: it says when it goes (Fri 13 Nov's "Your AI thinks it's the
   // best" was scheduled in Buffer for Tue 17; only his Move to… changes its day on the board).
   const ahead = scheduled.filter(s => s.due_at.slice(0, 10) >= input.today)
-  if (input.date < input.today && !ahead.length) {
+  if (missedOn(input.date, input.today) && !ahead.length) {
     return { state: 'missed', label: `Missed: ${dayLabel(input.date)} passed and it is not marked live`, at: null, links: [] }
   }
   if (scheduled.length) {
@@ -94,10 +109,10 @@ export function truthProblems(days: Array<{ day: string; date: string; label: st
       }
     }
     for (const p of d.pieces) if (!p.stage || !(STAGE_STATES as readonly string[]).includes(p.stage.state)) out.push(`${d.day} piece ${p.id}: no stage`)
-    if (d.date < today && d.who !== 'done') {
+    if (missedOn(d.date, today) && d.who !== 'done') {
       if (d.who === 'growth') out.push(`${d.day}: a past day shown as with Growth`)
       if (!/^Missed/.test(d.next)) out.push(`${d.day}: a past day not out does not say it was missed`)
-    }
+    } else if (lateOn(d.date, today) && d.who !== 'done' && !/^Late/.test(d.next)) out.push(`${d.day}: a late day not out does not say it is late`)
   }
   return out
 }
