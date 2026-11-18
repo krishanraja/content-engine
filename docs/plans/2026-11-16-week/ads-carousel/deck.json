@@ -1,0 +1,113 @@
+{
+  "schema": "carousel-deck/1",
+  "title": "Free ChatGPT has ads now. Here is what switching them off costs you. (off day, approved by Krish 17 Nov)",
+  "aim": "utility",
+  "experiment": "The house look at its fullest: a photoreal scene of each card's own point on every card (the felt robot with a 0 price tag on the cover, a fork signposted PAY and STAY FREE on the close), so the swipe reads as one magazine feature.",
+  "five_whys": [
+    {
+      "q": "Why does a free ChatGPT user care?",
+      "a": "Free ChatGPT now shows sponsored cards under some answers in the countries where OpenAI runs ads."
+    },
+    {
+      "q": "Why are there ads at all?",
+      "a": "Most people use the free plan, and running it costs OpenAI a fortune, so ads pay for it."
+    },
+    {
+      "q": "Why don't people switch them off?",
+      "a": "The off switch is buried in settings and nobody has said what it costs you."
+    },
+    {
+      "q": "Why is the trade-off wider than ChatGPT?",
+      "a": "Free AI is following free search and social media: you pay with attention unless you pay with money or features."
+    },
+    {
+      "q": "Why should a business person act this week?",
+      "a": "Staff on free plans see ads beside work answers; a team should choose its plan on purpose, not by default."
+    }
+  ],
+  "arc": {
+    "what": 1,
+    "happened": [
+      2
+    ],
+    "why": 3,
+    "so_what": [
+      4,
+      5
+    ],
+    "do": [
+      6,
+      7
+    ]
+  },
+  "explains": {
+    "temporary chat": "a chat ChatGPT forgets as soon as you close it (card 5)"
+  },
+  "cards": [
+    {
+      "headline": "Free ChatGPT has ads now. Here are three ways round them.",
+      "picture": "A phone showing a ChatGPT answer with a Sponsored card tucked under it; the house felt robot holding a price tag that reads £0; ChatGPT logo",
+      "line": "Paid Plus and Pro plans show no ads."
+    },
+    {
+      "headline": "Free ChatGPT now shows a sponsored card under some answers in the countries where ads run.",
+      "line": "Paid Plus and Pro users see no ads at all.",
+      "picture": "A real-looking answer screen with the Sponsored label circled, ChatGPT logo"
+    },
+    {
+      "headline": "OpenAI added ads because most people use the free plan, which costs a fortune to run.",
+      "line": "Ads pay for the free answers.",
+      "picture": "A free plan ticket with a meter running behind it"
+    },
+    {
+      "headline": "Free AI is turning into free search and social media, paid for by the ads you see.",
+      "line": "You pay with ads, money or fewer features.",
+      "picture": "Three doors: attention, money, features",
+      "source": "Krish's research doc 'When the Assistant Becomes the Ad' (5 Nov 2026): the average US user already yields about $1,000 a year to Meta, Google and Amazon; ChatGPT ads at a ~$1B run-rate (31 Aug 2026)"
+    },
+    {
+      "headline": "A temporary chat in ChatGPT shows no ads, but forgets the whole conversation when you close it.",
+      "line": "Good for one-off questions.",
+      "picture": "The trade-off scale: no ads on one side, no memory on the other"
+    },
+    {
+      "headline": "The ads switch in ChatGPT's settings removes ads, but then the free plan allows fewer messages and no images.",
+      "line": "Settings, Ads controls, Change plan to go ad-free.",
+      "picture": "The trade-off scale: no ads against fewer messages and a crossed-out image tool, the settings path shown as three taps"
+    },
+    {
+      "headline": "Paying for ChatGPT Plus removes the ads, and staying free means living with ads, forgotten chats or fewer messages.",
+      "picture": "The trade-off scale balanced, the house robot shrugging",
+      "cta": "Subscribe free (makeyourmindup.ai)"
+    }
+  ],
+  "read_back": [
+    {
+      "reader": "fresh reader A (Sonnet, headlines only, once)",
+      "answers": {
+        "what": "A carousel about how free ChatGPT now shows ads and how to get around them.",
+        "happened": "Free ChatGPT now shows a sponsored card under some answers in countries where ads run.",
+        "why": "OpenAI added ads because most people use the free plan, which is very expensive to run.",
+        "so_what": "Free AI is turning into free search or social media, where the ads you see pay for it.",
+        "do": "Pick a workaround: temporary chat, the settings switch, or pay for Plus, knowing each has a tradeoff."
+      },
+      "stalls": "none"
+    },
+    {
+      "reader": "fresh reader B (Haiku, headlines only, once)",
+      "answers": {
+        "what": "Free ChatGPT now carries ads, and this carousel lists three ways to work around them.",
+        "happened": "Some answers in free ChatGPT now show a sponsored card, in the countries where ads run.",
+        "why": "OpenAI added ads because most people use the free plan, which costs a lot to run.",
+        "so_what": "If you use the free plan, you will either see ads, pay for Plus, or accept forgotten chats or fewer messages.",
+        "do": "Choose one route: use a temporary chat, use the settings switch if you accept its limits, or pay for Plus to remove the ads."
+      },
+      "stalls": "Card 6 did not say which switch; fixed to 'the ads switch in ChatGPT's settings'."
+    }
+  ],
+  "facts_open": [
+    "How the free plan's ads switch works and what it removes (search summaries of OpenAI's 'Ads in ChatGPT' help page; help.openai.com sits behind a bot check here): fact gate",
+    "Temporary chats show no ads: same source, fact gate",
+    "Card 3's 'costs a fortune to run' is an inference: fact gate or soften"
+  ]
+}
