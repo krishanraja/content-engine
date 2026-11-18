@@ -7,7 +7,7 @@ max_minutes: 120
 max_calls: 150
 cwd: /root\dev\makeyourmindup\.worktrees\content-engine\ve-card\ve-universe-figurines-3
 write_allow: [lab/universe/figurines/index.js]
-read: lab/universe/PLAN.md, lab/universe/figurines/roles.json, lab/universe/figurines/check-roles.mjs, lab/universe/figurines/index.js, docs/ve/cards/universe/ve-universe-figurines.md, docs/ve/cards/universe/ve-universe-figurines-2.md, lab/universe/scene/scene.js
+read: lab/universe/PLAN.md, lab/universe/figurines/roles.json, lab/universe/figurines/check.mjs, lab/universe/figurines/index.js, docs/ve/cards/universe/ve-universe-figurines.md, docs/ve/cards/universe/ve-universe-figurines-2.md, lab/universe/scene/scene.js
 never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, raw hex colours, useCurrentFrame outside apps/renderer/src/engine/clock.ts, edits outside write_allow
 ---
 
@@ -36,10 +36,10 @@ The contract, version 4 (replaces the personality contract in lab/universe/PLAN.
 The scene (lab/universe/scene/scene.js, Claude's) will pass spec.role and spec.palette; you do not edit it. Read lab/universe/PLAN.md for the whole piece and Krish's words, and the two earlier cards for what he already approved. Report: each role in one line with the gag you chose, and anything in roles.json you changed and why.
 
 ## Contract
-Version 4 above; lab/universe/figurines/roles.json lists the jobs. The check is lab/universe/figurines/check-roles.mjs, written by Claude; do not edit it or roles.json.
+Version 4 above; lab/universe/figurines/roles.json lists the jobs. The check is lab/universe/figurines/check.mjs, written by Claude; do not edit it or roles.json.
 
 ## Acceptance (every command must exit 0 inside your sandbox)
-node lab/universe/figurines/check-roles.mjs
+node lab/universe/figurines/check.mjs
 
 ## Return
 Your final message is only JSON matching config/ve/task-result.schema.json:
