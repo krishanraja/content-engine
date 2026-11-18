@@ -233,8 +233,7 @@
       "fromFrame": 106,
       "toFrame": 134,
       "uses": [
-        "screen-ibm",
-        "accountable"
+        "screen-accountable"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -307,7 +306,7 @@
       "device": "photo_plate",
       "meaning": "IBM's own release, the 71% clause highlighted as he says it",
       "fromFrame": 0,
-      "toFrame": 134,
+      "toFrame": 106,
       "variants": {},
       "params": {
         "video": {
@@ -317,6 +316,24 @@
           "trimBeforeFrames": 45
         },
         "push": 0
+      }
+    },
+    {
+      "obj": "screen-accountable",
+      "device": "photo_plate",
+      "meaning": "IBM's clause knocked back as ACCOUNTABILITY slams in: the one skill 71% named",
+      "fromFrame": 106,
+      "toFrame": 134,
+      "variants": {},
+      "params": {
+        "video": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b13a-accountable.mp4",
+          "pixelWidth": 1080,
+          "pixelHeight": 1920,
+          "trimBeforeFrames": 0
+        },
+        "push": 0,
+        "generated": true
       }
     },
     {
@@ -336,28 +353,6 @@
         "push": 0,
         "generated": true
       }
-    },
-    {
-      "obj": "accountable",
-      "device": "stamp",
-      "meaning": "the one skill 71% of HR chiefs named, slammed down as he says it (his note of 18 Nov: \"Accountability should be way more epic\")",
-      "fromFrame": 106,
-      "toFrame": 134,
-      "variants": {},
-      "params": {
-        "kind": "outline",
-        "paint": "mint",
-        "size": "hero",
-        "top": "71% OF HR CHIEFS SAID",
-        "main": "ACCOUNTABILITY",
-        "tiltDeg": -4,
-        "at": {
-          "x": 60,
-          "y": 560,
-          "w": 960,
-          "h": 420
-        }
-      }
     }
   ],
   "events": [
@@ -370,9 +365,9 @@
     },
     {
       "id": "b13a-0",
-      "obj": "accountable",
-      "verb": "stamp",
-      "toState": "signed",
+      "obj": "screen-accountable",
+      "verb": "enter",
+      "toState": "visible",
       "atFrame": 106
     },
     {

@@ -10,17 +10,13 @@
     44.667,
     45.6
   ],
-  "sha256": "e6134a120578020b32e3f26616241639ac43fc61a1683eb2fbbba584de493028",
-  "spec_sha256": "ca66cecf2ae273faa4ff4d9be0fbdcc679234a83e45ff3105f57e882ad903640",
+  "sha256": "c933779a6f0727545e16a0c648d25802cc643269db8efac397b8d439b4c82b79",
+  "spec_sha256": "b2a7d300291d96b86c858cd7bd607c8845aea5c0be077f0f9d8de4ad82d02cba",
   "structure": {
     "format": "voice-led-pictures",
     "aspect": "9:16",
     "motion": "swiss-kinetic-type",
     "objects": [
-      [
-        "accountable",
-        "stamp"
-      ],
       [
         "allin",
         "stamp"
@@ -91,6 +87,10 @@
       ],
       [
         "plate-b8",
+        "photo_plate"
+      ],
+      [
+        "screen-accountable",
         "photo_plate"
       ],
       [
@@ -215,8 +215,7 @@
         "b13a",
         "STAGE",
         [
-          "accountable",
-          "screen-ibm"
+          "screen-accountable"
         ]
       ],
       [
@@ -315,7 +314,7 @@
     ]
   },
   "style_module": "swiss-kinetic-type",
-  "props_sha256": "96a4081d51b08cd94540bd312e6ceb7a500d5985925766fd4c0842808f09e6d9",
+  "props_sha256": "30df604f4291cc601fe3e7ac5d5b6750283b31c4da141a23d11c804fe066a6b7",
   "type": [
     [
       "data",
