@@ -25,7 +25,7 @@ hand.
 | Line | His exact words. Short, said aloud and written to make-piece's script rules |
 | Blocking | Where he is, where he moves, and what his hands do, in plain verbs: "walk to the bench", "pick up the bag", "hold it to your chest", "crouch beside it" |
 | Camera | Locked, slow push, or follow. The framing: full body, waist up or close |
-| Becomes | What the edit shows in its place, on which word |
+| Becomes | What the edit shows in its place, on which word, and the trigger in the take (`wild.md`, "The craft") |
 | Watch for | The one thing that ruins the take: a hand hiding the prop, walking out of frame, a fast turn |
 
 **Takes**
