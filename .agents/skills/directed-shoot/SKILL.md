@@ -18,9 +18,9 @@ style pick, never runs `ve lab`, and adds nothing to the style bank.
 
 ## How it starts
 
-His tick, **Add an experiment**, beside the look, motion and captions on every piece (Krish, 2026-11-18: "Make it
-available as a feature in all"), saved as `meta.style.experiment`; the production prompt then names this skill. It
-runs alongside his picks, never in their place. He can also just ask.
+His optional tick, **Add an experiment**, on every piece, apart from his three picks, with his idea in his words
+(`meta.style.experiment_idea`), quoted in the production prompt. First flesh it out, draw 3 to 5 free mock
+frames and ask him: go, change it, or call it. Nothing else runs before his go.
 
 ## The steps
 

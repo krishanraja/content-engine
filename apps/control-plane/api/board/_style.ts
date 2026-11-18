@@ -75,6 +75,8 @@ export interface DayStyle {
   motion: StyleLayer; captions: StyleLayer; treatment: StyleLayer
   /** Contract 1.27.0: the experiment he ticked for this piece beside his picks (EXPERIMENTS), or null. */
   experiment?: string | null
+  /** Contract 1.28.0: his own words on what to experiment with and how, saved with the tick, or null. */
+  experiment_idea?: string | null
 }
 
 /** The experiments he can tick on any piece beside the look, motion and captions (Krish, 2026-11-18: "add a checkbox on
@@ -180,11 +182,12 @@ export function undrawableMotion(styles: unknown): Set<string> {
 }
 
 /** His style on the piece (meta.style), read safely. */
-export function styleOf(meta: unknown): { motion: string | null; captions: string | null; experiment: string | null; rejected: Record<RejectLayerKey, string[]>; at: string | null } {
+export function styleOf(meta: unknown): { motion: string | null; captions: string | null; experiment: string | null; experiment_idea: string | null; rejected: Record<RejectLayerKey, string[]>; at: string | null } {
   const s = isObj(meta) && isObj(meta.style) ? meta.style : {}
   const rejected = isObj(s.rejected) ? s.rejected : {}
   return { motion: typeof s.motion === 'string' ? s.motion : null, captions: typeof s.captions === 'string' ? s.captions : null,
     experiment: typeof s.experiment === 'string' && EXPERIMENT_IDS.has(s.experiment) ? s.experiment : null,
+    experiment_idea: typeof s.experiment === 'string' && EXPERIMENT_IDS.has(s.experiment) && typeof s.experiment_idea === 'string' && s.experiment_idea.trim() ? s.experiment_idea : null,
     rejected: { motion: strings(rejected.motion), captions: strings(rejected.captions), treatment: strings(rejected.treatment) }, at: typeof s.at === 'string' ? s.at : null }
 }
 
@@ -330,7 +333,7 @@ export function dayStyle(i: StyleInputs): DayStyle {
     }),
     picked: look ? String(look.production) : null, picked_by: look ? 'Krish' : null, picked_at: look && typeof look.at === 'string' ? look.at : null,
   }
-  return { motion, captions, treatment, experiment: mine.experiment }
+  return { motion, captions, treatment, experiment: mine.experiment, experiment_idea: mine.experiment_idea }
 }
 
 export class StyleError extends Error { constructor(public status: number, message: string) { super(message) } }
@@ -338,8 +341,10 @@ export interface StylePick {
   motion?: string; captions?: string; reject?: { layer: RejectLayerKey; id: string }
   /** His tick: an experiment id, or null to untick it (EXPERIMENTS). */
   experiment?: string | null
+  /** His words on what to experiment with and how; required with a tick (1.28.0). */
+  experiment_idea?: string | null
 }
-export interface SavedStyle { motion: string | null; captions: string | null; experiment: string | null; rejected: Record<RejectLayerKey, string[]>; by: 'Krish'; at: string }
+export interface SavedStyle { motion: string | null; captions: string | null; experiment: string | null; experiment_idea: string | null; rejected: Record<RejectLayerKey, string[]>; by: 'Krish'; at: string }
 
 /** A look's id, as the style bank names its formats. */
 const LOOK_ID = /^[a-z0-9][a-z0-9_.-]{0,79}$/
@@ -381,6 +386,12 @@ export function stylePick(body: Body, motionIds: Set<string> | null, undrawable:
     const ids = Array.isArray(v) ? v : v === null || v === '' ? [] : [v]
     if (ids.length > 1 || !ids.every(id => typeof id === 'string' && EXPERIMENT_IDS.has(id))) throw new StyleError(400, 'unknown_experiment')
     out.experiment = ids.length ? String(ids[0]) : null
+    // A tick carries his idea in his own words (Krish, 2026-11-18: "If I were to tick the tick box, I'd need to supply
+    // more long-form input as to what I think we should experiment with and how"); unticking clears it.
+    const idea = typeof body.experiment_idea === 'string' ? body.experiment_idea.trim() : ''
+    if (out.experiment && !idea) throw new StyleError(400, 'experiment_idea_required')
+    if (idea.length > 6000) throw new StyleError(400, 'experiment_idea_too_long')
+    out.experiment_idea = out.experiment ? idea : null
   }
   if (!out.motion && !out.captions && !out.reject && out.experiment === undefined) throw new StyleError(400, 'nothing_to_record')
   return out
@@ -401,7 +412,8 @@ export function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle {
   if (pick.captions) { captions = pick.captions; rejected.captions = rejected.captions.filter(x => x !== pick.captions) }
   // A pick of motion or captions keeps the experiment he ticked; only his tick changes it.
   const experiment = pick.experiment !== undefined ? pick.experiment : now.experiment
-  return { motion, captions, experiment, rejected, by: 'Krish', at }
+  const experiment_idea = pick.experiment !== undefined ? (pick.experiment_idea ?? null) : now.experiment_idea
+  return { motion, captions, experiment, experiment_idea, rejected, by: 'Krish', at }
 }
 
 /** Record his press on the piece (meta.style), guarded on the row's updated_at so a write in between is kept. */

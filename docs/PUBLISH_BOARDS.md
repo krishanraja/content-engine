@@ -848,6 +848,18 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
     Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
     held, still counts. A `send` written by anyone else is still refused.
 
+- **1.28.0 (18 Nov 2026)** made the experiment an **optional press, never a pick**, and added **`experiment_idea`** on a
+  piece's style: his own words on what to experiment with and how. The press has no `choose`, so the board never counts
+  it among the look, motion and captions. Off, it is **Add an experiment (optional)**, which asks for his idea
+  (`words.path` `experiment_idea`, required). On, it is **Change the experiment** (its `goes` quotes his idea) and
+  **Remove the experiment** (`experiment: []`). A tick with no idea is refused (400 `experiment_idea_required`). The
+  production prompt carries his idea verbatim and has the session flesh it out, draw 3 to 5 mock frames at no cost and
+  ask him to go, change it, or call it, before any shot script or paid still.
+  - Krish, 2026-11-18: "It should be an optional tick box, separate to the three things I need to pick as mandatory.
+    If I were to tick the tick box, I'd need to supply more long-form input as to what I think we should experiment
+    with and how and then when I go to copy the Claude production prompt the production prompt would need to contain a
+    more fleshed-out version of my idea and produce some mocks inside the claude session for me to decide whether or
+    not I like the experimentalist angle or whether to just call it"
 - **1.27.0 (18 Nov 2026)** added **`experiment`** on a piece's style (`path.style.experiment`, `meta.style.experiment`):
   the experiment Krish ticked beside his look, motion and captions, or null. Every piece's picks carry one more press,
   **Add an experiment**: a tick-box (`choose.multi`, not required) over `EXPERIMENTS` in `_style.ts` (today
@@ -1165,7 +1177,7 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   in between is kept, never overwritten (409 `piece_busy` when they never stop); the `content_ideas` trigger bumps the
   week's `board_signal`. "Not this" on the picked style takes the pick away; a later Yes takes a style back off the
   "Not this" list. It never edits a `creative-direction.json`.
-- **The experiment tick** (1.27.0): `{ piece_id, experiment: ['directed-shoot'] }` on the same route sets `meta.style.experiment`, and `[]` clears it; the production session runs that skill beside his picks.
+- **The experiment** (1.27.0, optional since 1.28.0): `{ piece_id, experiment: ['directed-shoot'], experiment_idea: '<his words>' }` on the same route sets `meta.style.experiment` and `meta.style.experiment_idea`, and `{ experiment: [] }` clears both; it is never one of the three picks, and the production session fleshes out his idea and shows him mocks before anything is made.
 - **Who reads it:** make-piece and ve read `meta.style` as the default for a new spec's `style.motion.module` and
   `brand.caption_theme` (`docs/ve/RUNBOOK.md`, S1), and a signed spec stays his.
 - **Held by:** `tests/control-plane/board-style.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
