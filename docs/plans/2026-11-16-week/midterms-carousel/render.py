@@ -76,12 +76,14 @@ def mark(canvas):
 
 def render(index, card):
     canvas = Image.new('RGB',(W,H),INK)
-    scene(canvas,index,740 if index==1 else 760 if index==6 else 920,160 if index==1 else 130)
+    scene(canvas,index,740 if index==1 else 760 if index==6 else 740,160 if index==1 else 130)
     draw = ImageDraw.Draw(canvas)
     if index == 1:
         first, turn = card['headline'].split('. ',1)
         f = font(112,display=True)
-        lines = rows((first+'.').upper(),f,CREAM,112*.95) + rows(turn.upper(),f,MINT,112*.95)
+        # set by hand: no orphan words (Krish's headline, 18 Nov)
+        assert (first+'.').upper()=="VOTERS TURNED AWAY AI'S DATA CENTRES." and turn.upper()=="WHERE COULD AI LIVE NOW?"
+        lines = rows("VOTERS TURNED AWAY",f,CREAM,112*.95) + rows("AI'S DATA CENTRES.",f,CREAM,112*.95) + rows("WHERE COULD AI",f,MINT,112*.95) + rows("LIVE NOW?",f,MINT,112*.95)
         lines[-1] = (*lines[-1][:3],lines[-1][3]+20)
         lines += rows(card['line'],font(40,'SemiBold'),CREAM,46)
         # Fixed words require four display lines plus two subline lines.
@@ -95,6 +97,12 @@ def render(index, card):
         lines += rows(card['cta'],font(44,'SemiBold'),MINT,51)
         y = (790+1240-height(lines))/2
     else:
+        import sys; sys.path.insert(0,str(OUT)); from body_a import body_a
+        K={2:('WHAT HAPPENED','40 out of 41'),3:('WHY','their own power bill'),4:('THE BIGGER PICTURE','their own power plants'),5:('WHAT TO DO','who pays for power')}
+        body_a(canvas,FONTS,K[index][0],card['headline'],K[index][1],CREAM,MINT,top=750,bottom=1230)
+        mark(canvas)
+        canvas.save(OUT / f'card-{index}.png')
+        return
         lines = rows(card['headline'],font(64,'Bold'),CREAM,64*1.15)
         assert len(lines) <= 5
         lines[-1] = (*lines[-1][:3],lines[-1][3]+28)

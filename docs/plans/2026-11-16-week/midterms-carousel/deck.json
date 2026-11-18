@@ -1,7 +1,7 @@
 {
   "schema": "carousel-deck/1",
   "title": "After the midterms, AI has to find somewhere else to live (Thu 19 Nov off day, option fortytoone, approved by Krish 17 Nov)",
-  "experiment": "The house look at its fullest: a photoreal scene of each card's own point on every card (the foggy small-town scoreboard reading VOTERS 40, DATA CENTERS 1 on the cover, the town and the campus joined by one road on the close).",
+  "experiment": "Sensational covers and designed body type: the cover is an estate agent showing a tiny suburban house to a three-storey server rack while neighbours protest; each body card has a mono kicker, a mint rule and Archivo Black with the key figure in mint.",
   "five_whys": [
     {
       "q": "Why does the midterm result matter for AI?",
@@ -43,7 +43,7 @@
   },
   "cards": [
     {
-      "headline": "Voters turned away AI's data centres. Where does AI live now?",
+      "headline": "Voters turned away AI's data centres. Where could AI live now?",
       "line": "A data centre is the giant warehouse of computers that runs AI.",
       "picture": "Full-bleed night scene drawn in code: a stadium scoreboard glowing over an empty small-town field, the board reading VOTERS 40, DATA CENTRES 1 in big lamp digits; the headline sits below the board"
     },
