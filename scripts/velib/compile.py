@@ -46,6 +46,8 @@ def _render_tokens(t: dict, channel: str) -> dict:
 def _body_logo(spec: dict, aspect: str, off: bool) -> bool:
     """Whether the palette lets this cut's body carry a logo (scripts/brand_palette.py body_logo). An undated spec
     keeps the house dress it always had."""
+    if (spec.get('brand') or {}).get('body_logo') is False:
+        return False  # the logo rule, applied to this piece ahead of its date on Krish's word
     if not spec.get('publish_day'):
         return True
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
