@@ -303,6 +303,7 @@ he ticks: `references/inspiration-piece.md`.
    `.agents/skills/plan-week/references/lookalike.md`. Each option is one clear theme or one
    clear story, for utility, interest or humour, with a humorous angle; nothing that went
    out comes back under any words (a fresh reader checks; `board_feed.py gate`). The sheet is a source too.
+   divergent-thinker: `.agents/skills/plan-week/references/divergent.md`.
 2. Flesh out what Krish dropped in first: an idea of his is never ranked below
    an equal one of the engine's.
 3. For each publishing day, find at least four real options. Prefer existing
@@ -350,7 +351,7 @@ he ticks: `references/inspiration-piece.md`.
    a specific, surprising, checked fact, never a category. At least one idea
    a day comes from his own words or his Inspiration House when either has
    anything that fits, and one is a wildcard the engine would not usually
-   offer. Then hand the whole ideas.json to a separate reader (the
+   offer (`divergent.py wildcard`, `references/divergent.md`). Then hand the whole ideas.json to a separate reader (the
    `reviewer` subagent, no access to your reasoning) to try to kill each
    idea against this bar and the 19 Oct triage lessons below; replace every
    idea it kills before the board is built, and say in your reply how many

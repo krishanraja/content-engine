@@ -11,6 +11,8 @@ funny or striking, and whether it makes the piece's point land.
 The few lines that stay are in SKILL.md, "What stays". They are about spend, the law and his channel's name, never
 about how far an idea can go.
 
+The most ambitious version first: for sparks past the obvious, `provoke --temperament wild --lane shoots`, or `diverge` on his yes to the spend (`docs/DIVERGENT.md`).
+
 ## The craft: every transformation needs a trigger in the take
 
 A model does its best work when the take gives it a clear moment to change on and a body that already moves the right
