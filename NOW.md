@@ -41,18 +41,13 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 ## What changed recently
 
 - 2026-11-18 apps/renderer/src/engine/stills/split/ (Codex round 2), apps/renderer/scripts/ve-keyframes.mjs (round 1, on main), scripts/velib/qc_faces.py plate.head_in_band (on main).
-Older lines: `docs/history/2026-11-18-NOW-moved-21.md` (it names every earlier move) and `LOG.md`.
+Older lines: `docs/history/2026-11-18-NOW-moved-22.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
 - Next (2026-11-18): once round 3 is built, render the receipt set (apps/renderer/scripts/ve-keyframes.mjs), measure it with ve comp (needs tesseract) and plate.head_in_band, and put it to Krish; on his word that the receipt set is approved, in one commit set SPLIT_SEAM_Y and SPLIT_CAPTION_ZONE in apps/renderer/src/engine/layouts/splitGeometry.ts to its numbers, make the proof box hold a 16:9 visual, and close head-cut-off-and-visual-squeezed. The layout change needs his word; nothing is frozen.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
-- Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
-- Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
-- Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative (`creative.json`, `signed: null` on 12 Nov); the pickup for "delete" was recorded on 9 Nov.
-- 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms). Monday's lock signed 10 Nov: its long cut runs a few minutes over 5 and the article longer, to carry the midterm data-centre backlash. Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
-- Waiting on Krish (checked 2026-11-12, 14:00 UTC): his Approve on Thu 12's `beststicker` on the live board (the Home Depot rethink he signed off in a session, filed in 3 Posts and carrying Tue 17's `auditrule`; the live view reads "Idea: waiting on your Approve"), and an answer on `frenemies` (Tue 17) and `ownref` (Thu 19), which have no outcome in `idea_outcomes`; a sound-effect set (`config/sfx-approved.json` approves none); golden frames (all 10 slots of `config/ve/golden-frames.json` empty, at least 5 wanted); Gate 2 on face-with-proof at 16:9 (`config/ve/design-lock.json`) (each still needs its review card on his Publish Board, with samples he can see and hear; not built yet). The music levels are no longer waiting: he approved them as they are on 12 Nov. `docs/STATE.md`, "Waiting on Krish".
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-18): holds.
 
