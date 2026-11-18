@@ -17,6 +17,15 @@ export const ART_REGION = {
 const clamp = (x: number) => Math.max(0, Math.min(1, x))
 const outBack = (x: number) => { const c = 1.70158, k = clamp(x) - 1; return 1 + (c + 1) * k * k * k + c * k * k }
 
+/** Anton capitals run at most about 0.52 em a letter (W and M widest), so the key word is set at 168 px unless that
+ *  would be wider than the caption region, and then as large as fits: "ACCOUNTABILITY" at 168 px is about 1,100 px
+ *  and ran off the left edge of the 9:16 frame (habits short, 18 Nov 2026; F56, no text cut at a frame's edge). */
+export const ANTON_EM_PER_LETTER = 0.52
+export function keyFontSize(text: string, width: number): number {
+  const letters = Math.max(1, text.replace(/[,.]$/, '').length)
+  return Math.min(168, Math.floor(width / (letters * ANTON_EM_PER_LETTER)))
+}
+
 export function keyIndex(page: EngineRenderProps['captions'][number]): number {
   if (page.swipeIndex !== null && page.swipeIndex !== undefined) return page.swipeIndex
   let best = 0
@@ -29,10 +38,11 @@ export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps;
   const page = props.captions[index]
   if (!page) return null
   const fps = props.fps, t = frame / fps, key = keyIndex(page), side = index % 2 === 0 ? 'left' : 'right'
+  const width = ART_REGION[props.aspect].width
   const word = (text: string, at: number, big: boolean, i: number) => {
     const p = outBack((t - at / fps) / 0.12)
     return <span key={i} style={{
-      fontFamily: HOUSE_FONTS.display, fontSize: big ? 168 : 92, lineHeight: 0.96, letterSpacing: '0.5px', textTransform: 'uppercase',
+      fontFamily: HOUSE_FONTS.display, fontSize: big ? keyFontSize(text, width) : Math.min(92, keyFontSize(text, width)), lineHeight: 0.96, letterSpacing: '0.5px', textTransform: 'uppercase',
       color: props.tokens.cream, textShadow: '0 6px 24px rgba(0,0,0,.45)', display: 'inline-block',
       transform: `translateY(${(1 - p) * 30}px) scale(${0.85 + 0.15 * p})`, opacity: clamp(p * 2),
     }}>{text.replace(/[,.]$/, '')}</span>

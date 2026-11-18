@@ -4,7 +4,7 @@ import { CAPTION_THEMES } from './captions/names'
 import { THEMES } from './captions/themes'
 import { REGIONS, hero, heroScore, key } from './captions/kit'
 import { ThemedCaption } from './chrome/ThemedCaption'
-import { ART_REGION, ArtDirectedCaption, keyIndex } from './chrome/ArtDirectedCaption'
+import { ART_REGION, ANTON_EM_PER_LETTER, ArtDirectedCaption, keyFontSize, keyIndex } from './chrome/ArtDirectedCaption'
 import { BrandFrame } from './BrandFrame'
 import { exitProgress } from './captions/draw'
 import { EngineRenderPropsSchema } from './props'
@@ -134,6 +134,18 @@ describe('the caption styles (Krish, 2026-11-11)', () => {
     expect(html).toContain('"fontSize":168'); expect(html).toContain('"fontSize":92')
     expect([...html.matchAll(/"color":"([^"]+)"/g)].map((m) => m[1]).every((c) => c === props.tokens.cream)).toBe(true)
     expect(keyIndex(props.captions[0]!)).toBe(3)
+  })
+
+  it('art-directed: a key word too long for 168 px is set as large as fits its region (habits short, 18 Nov)', () => {
+    const w = ART_REGION['9:16'].width
+    expect(keyFontSize('branches.', w)).toBe(168)
+    const big = keyFontSize('Accountability.', w)
+    expect(big).toBeLessThan(168)
+    expect(big * 'ACCOUNTABILITY'.length * ANTON_EM_PER_LETTER).toBeLessThanOrEqual(w)
+    const base = EngineRenderPropsSchema.parse(fixture)
+    const props = { ...base, captionTheme: 'art-directed' as const, captions: [page(['Slop', 'with', 'no', 'accountability.']), ...base.captions.slice(1)] }
+    const html = render(ArtDirectedCaption({ props, frame: 40 }))
+    expect(html).not.toContain('"fontSize":168'); expect(html).toContain(`"fontSize":${big}`)
   })
 
   it('refuses a style name the engine does not have', () => {
