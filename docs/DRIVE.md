@@ -305,7 +305,8 @@ there, reads it back and replies "Done" with the link (`config/failures.json` F2
   the n8n "Google Drive account" login and only adds files; it never deletes or
   overwrites.
 - Public copy never carries a Drive path (`NOW.md`, `never_publish`).
-- Four automatic writers are allowed, each by Krish's word. The research library's mirror (above; Ruling, Krish,
+- Five automatic writers are allowed, each by Krish's word (the fifth, 18 Nov: a moved piece's post folder is renamed to
+  its new date and day, by its ID, under "Post folders are bound to their pieces" below). The research library's mirror (above; Ruling, Krish,
   2026-11-11), which adds folders, files and index rows inside `6 Research library` only, and removes a later index row
   for a material already listed. The library sync
   (AGENTS.md), which writes the makeyourmindup library and, since
@@ -336,11 +337,19 @@ piece's date, day, series and the subject his approved scripts' Teleprompter fol
 cannot read the binding stops and files nothing, never a guessed folder. The making route refuses a pack under any other
 folder (`post_folder_bound`), a binding the library would refuse (a test or canary title, a day that is not the date's,
 a series that is not live), and a patch naming two folders. The name is now fixed from the first binding, not the first
-send: a corrected headline is packed under the bound name. When the piece moves to another day, the binding follows it
-(`_making.ts currentFolder`: the same date and day rename as Move to…'s `followDrive` gives the folder in Drive, by its
-ID), so the next file goes into the renamed folder, never a second one under the old date. A series piece moved after
-its folder exists has no Drive rename (Move to… is for off-day items), so its folder keeps the old date until Krish
-renames it.
+send: a corrected headline is packed under the bound name.
+
+When a piece moves to another day after its folder is bound, the folder follows it (`_postFolder.ts followBinding`;
+Krish, 2026-11-18: "close the gap"), for a series piece as for an off-day post: the folder directly in 3 Posts with the
+bound name is renamed, by its ID, to the new date and day (the rename Move to…'s `followDrive` gives an off-day post's
+folder), every file still waiting for the library sync moves to the new path (a file already written stays as history),
+and then the binding takes the new name. It runs before anything is filed: the making route runs it on every read and
+write of a moved piece (`GET /api/content-ideas/<piece>/making`), so `build.py`, ve file, `produce_day.py`, `send.py` and
+a drop all get the followed folder; and the research library's hourly sweep runs it for a move nothing files after
+(`followMovedPieces`, the answer's `post_folders`). It renames only that one folder; it never deletes, moves or merges
+anything. When it cannot see Drive, or both names are already in 3 Posts, it holds: the making route answers
+`post_folder_held` with why, every writer stops and files nothing, a drop stays on the piece, and the next run tries
+again.
 
 His own files for a piece (the production plan's "What you get yourself": photos, screenshots, short videos, PDFs,
 text) go in its `3 Video/Your materials`, named with the beats they are for first (`S8 L9 - IMG_0412.jpg`), through the
