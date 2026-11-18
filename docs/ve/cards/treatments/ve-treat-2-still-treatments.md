@@ -1,0 +1,36 @@
+---
+card: ve-treat-2-still-treatments
+kind: code
+model: gpt-6.1-sol
+effort: medium
+max_minutes: 45
+max_calls: 45
+cwd: /root/dev/makeyourmindup/.worktrees/content-engine/ve-card/ve-treat-2-still-treatments
+write_allow: [scripts/velib/still_treatments.py, tests/ve_still_treatments_test.py, config/ve/treatments.json, tests/ve_treatments_test.py]
+read: docs/ve/TREATMENTS.md, config/ve/treatments.json, scripts/velib/treatments.py, docs/ve/sources/effectcraft.md, config/ve/brand-tokens.json, config/brand-palette.json, apps/renderer/src/engine/devices/CONTRACT.md, docs/CAROUSEL-STANDARD.md, docs/production/COVER-STANDARD.md, scripts/channel_safe.py
+never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, raw hex colours, useCurrentFrame outside apps/renderer/src/engine/clock.ts, edits outside write_allow
+---
+
+# Still treatments: grain, glow, duotone and highlight sweep, one module for every still
+
+## Goal
+Krish, 2026-11-18: "I don't want 300 different choices in the UI so figure out how. We can use this to empower the entire engine." Build the four still treatments in config/ve/treatments.json (still-grain, still-glow, still-duotone, still-sweep) as one Python module every still maker calls, so a cover, a carousel slide and a Notes image get the same look from the same code. EffectCraft (MIT/Apache, commit 67942cd) is the reference for Add Grain, Glow, Tritone and Light Sweep; their parameters are written out in docs/ve/sources/effectcraft.md (the card has no network); rebuild them with Pillow and numpy, both already dependencies.
+
+1. scripts/velib/still_treatments.py: apply(image, kind, *, face, photo, number, receipt, energy, regions) takes the plan from velib.treatments.plan_still and applies each drawable treatment in order. regions names where the photo, the number and the receipt line sit; a treatment with no region for it is skipped. Grain is seeded from the image's own content hash, so the same input gives the same bytes. Duotone maps shadows to ink_deep and highlights to cream from config/ve/brand-tokens.json, only inside the photo region. Glow and sweep touch only their region.
+2. A CLI: python3 scripts/velib/still_treatments.py <in.png> <out.png> --kind carousel [--photo x,y,w,h] [--number x,y,w,h] [--receipt x,y,w,h] [--energy E].
+3. Set grain, glow, duotone and highlight-sweep to built: true in config/ve/treatments.json only when the acceptance passes.
+
+Never: treat words outside a named region; change a still's size; use a colour outside the brand tokens.
+
+## Contract
+Pure function of the input pixels and arguments; same input, same output bytes. Colours only from config/ve/brand-tokens.json. Text stays legible: the copy lint and channel_safe.py results on a treated still match the untreated one.
+
+## Acceptance (every command must exit 0 inside your sandbox)
+python3 tests/ve_treatments_test.py
+python3 tests/ve_still_treatments_test.py
+python3 scripts/velib/treatments.py check
+
+## Return
+Your final message is only JSON matching config/ve/task-result.schema.json:
+{"card": "ve-treat-2-still-treatments", "files_changed": [...], "commands": [{"cmd": "...", "exit_code": 0}], "open_questions": [...]}
+Stop after two failed attempts at the same acceptance command and report the failure in open_questions.
