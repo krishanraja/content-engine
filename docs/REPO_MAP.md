@@ -1310,6 +1310,8 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingGates`
 - `type MakingPatch`
 - `function boundPostFolder(m: Partial<Making> | null | undefined): string | null`
+- `function currentFolder(making: Partial<Making> | null | undefined, scheduledFor: unknown): string | null`
+- `function redatedFolder(name: string, date: string): string | null`
 - `function postFolderProblems(prev: Partial<Making> | null | undefined, patch: MakingPatch): string[]`
 - `const SCRIPT_SHA256`
 - `const TELEPROMPTER_ID`
@@ -1545,6 +1547,7 @@ Read-only client for the CTRL shared headlines pool (portfolio hive mind).
 
 ### `apps/control-plane/api/_postFolder.ts`
 
+- `export { currentFolder, redatedFolder } from './_making.js'`
 - `const MATERIALS_SECTION`
 - `const MATERIALS_FOLDER`
 - `const GOT_ROLE`
@@ -1554,9 +1557,11 @@ Read-only client for the CTRL shared headlines pool (portfolio hive mind).
 - `function shorten(subject: string, budget: number): string`
 - `function subchannelName(value: unknown): string`
 - `function postFolderName(p: { date: string; subject: string; subchannel?: string | null; launch?: boolean; day?: string …`
+- `function subjectOf(row: { idea?: unknown; meta?: unknown }): string`
 - `function folderForPiece(row: { scheduled_for?: unknown; lane_slot?: unknown; idea?: unknown; meta?: unknown }): string`
+- `function libraryFolderOk(folder: string): boolean`
 - `interface FolderDb`
-- `async function bindPostFolder(db: FolderDb, pieceId: string, by: string, now = new Date(), tries = 6): Promise<{ folder…`
+- `async function bindPostFolder(db: FolderDb, pieceId: string, by: string, tries = 6): Promise<{ folder: string; bound: '…`
 - `const BEAT`
 - `function beatsOf(value: unknown): string[]`
 - `function gotKey(beats: string[], sha256: string): string`
@@ -3007,6 +3012,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `type Action`
 - `type PromptAction`
 - `interface SavedNote`
+- `const VISUAL_POINT_LINE`
 - `const EARLIER_NOTES`
 - `const SAVED_NOTES_MAX`
 - `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }): SavedNote[]`
@@ -3430,7 +3436,7 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 - `type LibraryCopy`
 - `type DecisionsReader`
 - `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy, readLink?: () => Promise<LinkReader | nu…`
-- `async function confirmGot(db: StoreDb, body: Record<string, unknown>, bearer: boolean, by: string, now = new Date(), fe…`
+- `async function confirmGot(db: StoreDb, body: Record<string, unknown>, bearer: boolean, by: string, fetcher?: Parameters…`
 - `const sentByOf = (by: string): string =>`
 - `export default createStoreHandler( async () => (await import('../_supabase.`
 

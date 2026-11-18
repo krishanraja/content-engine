@@ -1339,28 +1339,38 @@ def cmd_lab(args) -> int:
         return 1
 
 
-def _bound_post_folder(spec, subject, when, dry_run):
-    """The post folder the piece is bound to (making.py bind_post_folder): bound now to the one --subject names when
-    nothing bound it yet (never on a dry run, which only reads), else the one already bound, which wins. None when the
-    piece has no uuid or the engine cannot be reached (said in one line)."""
+def _bound_post_folder(spec):
+    """The post folder the piece is bound to now (making.py post_folder_of), or None before anything bound one. A piece
+    whose binding cannot be read stops the filing: never a folder named from a guess (Krish, 2026-11-18: "bound to the
+    piece in a bullet proof way")."""
     import re
     sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
-    import library  # noqa: PLC0415
     import making  # noqa: PLC0415
     piece = str(spec.get('piece_id') or '').lower()
     if not re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', piece):
         return None
     try:
-        if dry_run or not subject or not when:
-            return making.bound_post_folder(making.record_of(piece))
-        named = library.post_folder(when, subject, spec['brand']['series'])
-        bound = making.bind_post_folder(piece, named)
-    except (making.MakingError, library.LibraryError, OSError, ValueError, KeyError) as error:
-        print(f've file: the piece\'s post folder could not be read from the engine ({error})', file=sys.stderr)
-        return None
-    if bound != named:
-        print(f've file: this piece is bound to the post folder "{bound}"; filing there')
-    return bound
+        return making.post_folder_of(piece)
+    except making.MakingError as error:
+        raise ValueError(f'the piece\'s post folder could not be read from the engine ({error}); nothing was filed') from error
+
+
+def _bind_after_filing(spec, folder):
+    """Binds the folder ve just filed into, when nothing bound one before (a writer binds only after its filing
+    succeeded); says so loudly when another writer bound a different one in between."""
+    import re
+    sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+    import making  # noqa: PLC0415
+    piece = str(spec.get('piece_id') or '').lower()
+    if not re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', piece):
+        return
+    try:
+        bound = making.bind_post_folder(piece, folder)
+    except making.MakingError as error:
+        print(f've file: filed, but the post folder could not be bound on the piece ({error}); run ve file again to bind it', file=sys.stderr)
+        return
+    if bound != folder:
+        print(f've file: another writer bound this piece to "{bound}" while this filed into "{folder}": tell Krish', file=sys.stderr)
 
 
 def cmd_file(args) -> int:
@@ -1368,11 +1378,15 @@ def cmd_file(args) -> int:
     try:
         _spec_file, spec, directory = _ve_dir(args.piece)
         cuts = args.cut or list(spec['cuts'])
-        bound = _bound_post_folder(spec, args.subject, args.date or spec.get('publish_day'), args.dry_run)
+        bound = _bound_post_folder(spec)
         if not args.subject and not bound:
             raise ValueError('--subject is required: the topic the post folder is named by (the piece is bound to no folder yet)')
+        if bound and args.subject:
+            print(f've file: this piece is bound to the post folder "{bound}"; filing there')
         result = filing.file(spec, directory, cuts, subject=args.subject, when=args.date, archive_at=args.archive,
                              library_at=args.library, dry_run=args.dry_run, bound=bound)
+        if not bound and not result.get('dry_run'):
+            _bind_after_filing(spec, result['post_folder'])
         if result.get('dry_run'):
             print(f"ve file (dry run): post folder {result['post_folder']}; archive folder {result['archive_folder']}")
             for item in result['files']:

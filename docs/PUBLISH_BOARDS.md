@@ -866,11 +866,14 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   (`apps/control-plane/api/_postFolder.ts`; `docs/DRIVE.md`, "Post folders are bound to their pieces"). `drive.state` is
   `in_drive` once the sync wrote it, `filing` while it waits, `not_filed` when no row holds it (the same drop again files
   it). The production prompt names each file by its material id and says where they are in Drive (`gotBrief`). The same
-  day a ready plan's prompt asks him the one question only he can answer before he copies it (`notes.ask`,
-  `VISUAL_POINTS_ASK`): any point he wants made visually that the script does not make strongly enough (Krish,
-  2026-11-18: "for example I talk about seeing a lot of upgrade offers which are hiding different pricing models - and I
-  dont mention clearly enough what a grandfathered pricing model is, and that you can stay on it if you like"); his
-  answer rides the prompt under `VISUAL_POINTS_HEADING`, which gives each point a picture of its own.
+  day a ready plan carries **`ask`**, the one question only he can answer before he copies its prompt
+  (`{ question, heading, save }`, `VISUAL_POINTS_ASK`): any point he wants made visually that the script does not make
+  strongly enough (Krish, 2026-11-18: "for example I talk about seeing a lot of upgrade offers which are hiding
+  different pricing models - and I dont mention clearly enough what a grandfathered pricing model is, and that you can
+  stay on it if you like"). His answer rides the copied prompt under `VISUAL_POINTS_HEADING`, which gives each point a
+  picture of its own, and is saved as his notes exactly as he typed them, marked `frame: visual_points` (the comments
+  contract takes no other frame), so later prompts carry it among his earlier notes with `VISUAL_POINT_LINE` before it.
+  The card's own notes question stays general.
 
 - **1.29.0 (18 Nov 2026)** added to a piece's production `plan`: **`fetch`**, what Krish gets himself (`{ beat, what,
   why }`), and on each beat's picture and options **`lever`** (impact, hilarity, absurdity, exaggeration, beauty,

@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto'
 import { wordsBody, asWritten, wordsDocId, takenBackAt } from './_contracts.js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
-import { makingSteps } from '../_making.js'
+import { currentFolder, makingSteps } from '../_making.js'
 import { yesByDay } from './_yes.js'
 import { readRuns, ENGINE_REPO, type JobName, type RunInfo } from './_run.js'
 import { readSignOffPresses, readSignOffSources, signOffsView, type SignOffsView } from './_signOffs.js'
@@ -84,9 +84,11 @@ export type PromptAction = {
 /** Contract 1.19.0: a note of his already saved on the item, newest first, whole (Krish, 2026-11-17: "when I add feedback
  *  in to the control center UI, it obviously loads in to the prompt that comes here, but when i reopen the piece at a later
  *  date it seems to have vanished"). The box stays empty for new words; these show beside it. */
-export interface SavedNote { at: string; text: string }
+export interface SavedNote { at: string; text: string; frame?: 'visual_points' }
 
 /** The heading his earlier notes go under in a Claude prompt. */
+/** How a saved answer to the production plan's question reads among his earlier notes, so its framing is never lost. */
+export const VISUAL_POINT_LINE = '(A point to make visually, with a picture of its own that makes it plain on screen.)'
 export const EARLIER_NOTES = "Krish's earlier notes on this piece, newest first (each is also on file on the piece, kind note). They still stand unless newer words of his say otherwise:"
 
 /** The most saved notes one prompt carries, and the most of each note's words (the press keeps 2,000). */
@@ -100,7 +102,9 @@ export function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?:
   if (!piece && !item) return []
   return (rows || []).filter(c => isObj(c.body) && c.body.use === 'claude_notes' && c.updated_by === 'Krish' && typeof c.body.text === 'string' && c.body.text.trim()
     && (piece ? String(c.body.piece_id || '').toLowerCase() === piece : c.body.item === item))
-    .map(c => ({ at: String(c.body.at || c.updated_at || ''), text: String(c.body.text).trim().slice(0, SAVED_NOTE_CHARS) }))
+    .map(c => ({ at: String(c.body.at || c.updated_at || ''), text: String(c.body.text).trim().slice(0, SAVED_NOTE_CHARS),
+      // His answer to the production plan's question (_weekModel.ts VISUAL_POINTS_ASK) keeps its framing on later prompts.
+      ...(c.body.frame === 'visual_points' ? { frame: 'visual_points' as const } : {}) }))
     .sort((a, b) => b.at.localeCompare(a.at))
     .filter((n, i, all) => all.findIndex(x => x.text === n.text) === i)
     .slice(0, SAVED_NOTES_MAX)
@@ -116,7 +120,7 @@ export function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): 
     // The Claude session starts with nothing to assume: his earlier notes are in its prompt too (the research prompt
     // carries them in its own words).
     if (a.tool !== 'perplexity' && a.notes.saved.length && !a.prompt.includes(EARLIER_NOTES))
-      a.prompt = `${a.prompt}\n\n${EARLIER_NOTES}\n${a.notes.saved.map(n => `- ${n.at ? `${n.at.slice(0, 16).replace('T', ' ')} UTC: ` : ''}${n.text}`).join('\n')}`
+      a.prompt = `${a.prompt}\n\n${EARLIER_NOTES}\n${a.notes.saved.map(n => `- ${n.at ? `${n.at.slice(0, 16).replace('T', ' ')} UTC: ` : ''}${n.frame === 'visual_points' ? `${VISUAL_POINT_LINE} ` : ''}${n.text}`).join('\n')}`
   }
   for (const d of model.days) for (const it of d.items) { fill(it.next); for (const o of it.others) fill(o) }
   return model
@@ -342,7 +346,8 @@ export interface ViewInputs {
  *  into it (pack.folder): the bound ones first, then by name. Null when Drive could not be read. */
 export function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost[] | null {
   if (!Array.isArray(posts)) return null
-  const packOf = (p: Body) => { const m = isObj(p.meta) && isObj(p.meta.making) && isObj(p.meta.making.pack) ? p.meta.making.pack : null; return m && typeof m.folder === 'string' ? m.folder.trim() : '' }
+  // The folder each piece is bound to now (its binding, else its pack's folder, its date put right after a move).
+  const packOf = (p: Body) => currentFolder(isObj(p.meta) && isObj(p.meta.making) ? p.meta.making as never : null, p.scheduled_for) ?? ''
   return posts.filter(p => p.date === date).map(p => {
     const option = options.find(o => o.post === p.id)?.id ?? null
     const piece = pieces.find(x => packOf(x) === p.name)
@@ -1183,13 +1188,12 @@ export async function readProductionPlans(db: SupabaseClient, overlay: Overlay |
   const ids = Object.keys(out)
   if (!ids.length) return out
   const { GOT_ROLE, beatsOfKey } = await import('../_postFolder.js')
-  const { boundPostFolder } = await import('../_making.js')
   const gotMats = (overlay.materials || []).filter(isObj).filter(m => m.role === GOT_ROLE && ids.includes(String(m.scope)) && m.storage === 'bucket')
   const drive = await readGotInDrive(db, [...new Set(gotMats.map(m => String(m.sha256 || '')).filter(x => /^[a-f0-9]{64}$/.test(x)))])
   for (const id of ids) {
     const piece = pieces.find(p => String(p.id).toLowerCase() === id)
     const meta = piece && isObj(piece.meta) ? piece.meta : {}
-    const folder = boundPostFolder(isObj(meta.making) ? meta.making as never : null)
+    const folder = currentFolder(isObj(meta.making) ? meta.making as never : null, piece?.scheduled_for)
     out[id] = { ...out[id], folder, got: gotMats.filter(m => m.scope === id).sort((a, b) => String(a.at || '').localeCompare(String(b.at || ''))).map(m => {
       const sha = String(m.sha256 || '')
       const rows = (drive.get(sha) ?? []).filter(r => !folder || r.path.startsWith(`3 Posts/${folder}/`))

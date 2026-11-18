@@ -129,7 +129,7 @@ export function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: Library
 }
 
 /** A file Krish got himself, filed on its piece and into the piece's folder in his Drive (the header says how). */
-export async function confirmGot(db: StoreDb, body: Record<string, unknown>, bearer: boolean, by: string, now = new Date(), fetcher?: Parameters<typeof confirmFile>[4]): Promise<Record<string, unknown>> {
+export async function confirmGot(db: StoreDb, body: Record<string, unknown>, bearer: boolean, by: string, fetcher?: Parameters<typeof confirmFile>[4]): Promise<Record<string, unknown>> {
   const { PostFolderError, beatsOf, bindPostFolder, fileToPostFolder, gotKey, MATERIALS_FOLDER, MATERIALS_SECTION } = await import('../_postFolder.js')
   const pieceId = typeof body.piece_id === 'string' ? body.piece_id.toLowerCase() : ''
   if (!pieceId) throw new StoreError(400, 'got_needs_a_piece')
@@ -137,20 +137,21 @@ export async function confirmGot(db: StoreDb, body: Record<string, unknown>, bea
   const beats = beatsOf(body.beats)
   const asked = typeof body.for === 'string' ? body.for.replace(/\s+/g, ' ').trim().slice(0, 300) : ''
   const { ext, contentType } = await fileType(body.name)
-  // The folder first, so his note says where it is in Drive. A piece with no day yet holds the file on the piece alone.
-  let folder: string | null = null; let held: string | null = null
-  try { folder = (await bindPostFolder(db as unknown as FolderDb, pieceId, by, now)).folder }
-  catch (e) { if (e instanceof PostFolderError && e.message === 'piece_not_found') throw new StoreError(404, 'piece_not_found'); held = e instanceof Error ? e.message : 'not_bound' }
-  const note = `Krish got this himself for ${beats.length ? `beat ${beats.join(', ')}` : 'the production plan'}${asked ? `: ${asked}` : ''}.`
-    + (folder ? ` In his Drive: 3 Posts/${folder}/${MATERIALS_SECTION}/${MATERIALS_FOLDER}.` : '')
-  const filed = await confirmFile(db, { ...body, role: GOT_ROLE, material_key: /^[a-f0-9]{64}$/.test(sha) ? gotKey(beats, sha) : undefined, note: note.slice(0, 2000) }, bearer, by, fetcher)
+  // Who put it there, said plainly: his own drop, or a session filing something he gave it.
+  const who = bearer ? `${by} filed this for Krish` : 'Krish got this himself'
+  const note = `${who} for ${beats.length ? `beat ${beats.join(', ')}` : 'the production plan'}${asked ? `: ${asked}` : ''}. `
+    + `In his Drive it goes in the piece's post folder, ${MATERIALS_SECTION}/${MATERIALS_FOLDER}.`
+  // The bytes are read back and checked first; only a file that is on the piece binds a folder or reaches Drive.
+  const filed = await confirmFile(db, { ...body, role: GOT_ROLE, material_key: /^[a-f0-9]{64}$/.test(sha) ? gotKey(beats, sha) : undefined, note }, bearer, by, fetcher)
   const md5 = typeof filed.md5 === 'string' ? filed.md5 : ''
-  if (!folder) return { ...filed, drive: { state: 'held', why: held } }
+  let folder: string
+  try { folder = (await bindPostFolder(db as unknown as FolderDb, pieceId, by)).folder }
+  catch (e) { return { ...filed, drive: { state: 'held', why: e instanceof PostFolderError ? e.message : 'not_bound' } } }
   const subject = folder.split(' - ').slice(1).join(' - ')
   const purpose = `Krish's own, for ${beats.length ? beats.map(b => b.toUpperCase()).join(' ') : 'the production plan'} of ${subject}`.slice(0, 200)
   try {
     const f = await fileToPostFolder(db as unknown as FolderDb, { folder, name: typeof body.name === 'string' ? body.name : 'file', beats, ext, contentType,
-      sha256: sha, md5, bytes: Number(body.bytes), purpose, sentBy: sentByOf(by), now })
+      sha256: sha, md5, bytes: Number(body.bytes), purpose, sentBy: sentByOf(by) })
     return { ...filed, drive: { state: f.state, path: f.path, folder } }
   } catch (e) { return { ...filed, drive: { state: 'later', folder, why: e instanceof Error ? e.message : 'not_filed' } } }
 }

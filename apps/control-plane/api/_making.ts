@@ -258,9 +258,31 @@ export function boundPostFolder(m: Partial<Making> | null | undefined): string |
   return packed || null
 }
 
+/** The folder the piece is bound to as it stands now: its binding (or its pack's folder), with its date and day put
+ *  right when the piece has moved to another day since it was bound. A move renames the post's folder in Drive the same
+ *  way, by its ID (board/_offdayItems.ts followDrive, postFolderName), so the binding follows the folder, never leaving
+ *  a second folder under the old name. Null when nothing bound one. Pure. */
+export function currentFolder(making: Partial<Making> | null | undefined, scheduledFor: unknown): string | null {
+  const bound = boundPostFolder(making)
+  if (!bound) return null
+  const date = typeof scheduledFor === 'string' ? scheduledFor.slice(0, 10) : ''
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || bound.startsWith(date)) return bound
+  return redatedFolder(bound, date) ?? bound
+}
+
+/** A post folder's name with its date and day put right (board/_offdayItems.ts postFolderName: the same rule, written
+ *  here too so this pure file loads none of the board), or null when its name does not start with a date. */
+export function redatedFolder(name: string, date: string): string | null {
+  const m = /^(\d{4}-\d{2}-\d{2})(?:[ _-](Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b)?/.exec(name)
+  if (!m) return null
+  return `${date} ${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(`${date}T00:00:00Z`).getUTCDay()]}${name.slice(m[0].length)}`
+}
+
 /** A pack that names another folder than the one the piece is bound to: refused, so one piece is never spread across
  *  two folders (W3.5, post_binding.py). Empty when the patch carries no pack or names the bound folder. */
 export function postFolderProblems(prev: Partial<Making> | null | undefined, patch: MakingPatch): string[] {
+  // One patch naming two folders (a pack and a binding that differ) is never half kept.
+  if (patch.pack && patch.post_folder && patch.pack.folder !== patch.post_folder.folder) return [`the patch names two post folders, "${patch.post_folder.folder}" and the pack's "${patch.pack.folder}": send one`]
   const bound = boundPostFolder(prev)
   if (!patch.pack || !bound || patch.pack.folder === bound) return []
   return [`this piece is bound to the post folder "${bound}": make the pack under it (scripts/post-pack/build.py and ve file use it by themselves); the pack named "${patch.pack.folder}"`]

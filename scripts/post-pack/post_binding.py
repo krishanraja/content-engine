@@ -33,18 +33,26 @@ class BindingError(Exception):
 
 
 def bound_folder(record):
-    pack = ((record or {}).get('pack') or {}) if isinstance(record, dict) else {}
-    return pack.get('folder') or None, pack.get('sent_at') or None
+    """(the folder the piece is bound to: its post_folder, else its pack's folder; when its pack was first sent)."""
+    record = record if isinstance(record, dict) else {}
+    pack = record.get('pack') or {}
+    bound = (record.get('post_folder') or {}).get('folder') if isinstance(record.get('post_folder'), dict) else None
+    return bound or pack.get('folder') or None, pack.get('sent_at') or None
 
 
-def frozen_problem(record, folder):
-    """Why this piece may not be sent under this folder name, or None. Its name freezes at the first send."""
+def frozen_problem(record, folder, now_folder=None):
+    """Why this piece may not be sent under this folder name, or None. Since 18 Nov 2026 the name is bound when the first
+    writer needs it (the pack, ve file, a file Krish drops), not at the first send (Krish, 2026-11-18: "every resource
+    along the way for a single piece needs to be bound to the piece in a bullet proof way"). `now_folder` is the engine's
+    own answer (making.py post_folder_of: the binding with its date put right after a move), which wins when given."""
     if library.TEST_SUBJECT.search(str(folder).split(' - ', 1)[-1]):
         return f'"{folder}" is a canary or test post: it never goes into the real library'
     held, sent_at = bound_folder(record)
-    if sent_at and held and held != folder:
-        return (f'this piece was first sent as "{held}" on {sent_at[:10]}; its folder name is frozen. '
-                f'Build the pack under that name, never as "{folder}"')
+    held = now_folder or held
+    if held and held != folder:
+        when = f' (first sent {sent_at[:10]})' if sent_at else ''
+        return (f'this piece is bound to the post folder "{held}"{when}. '
+                f'Build the pack under that name (build.py does by itself), never as "{folder}"')
     return None
 
 
@@ -99,8 +107,11 @@ def self_test():
     check = lambda name, ok: bad.append(name) if not ok else None
     sent = {'pack': {'folder': '2026-10-26 Mon follow.the.money - Who walks away', 'sent_at': '2026-10-27T09:00:00Z'}}
     check('the folder it was first sent as may be sent again', frozen_problem(sent, '2026-10-26 Mon follow.the.money - Who walks away') is None)
-    check('a new name after the first send is refused', 'frozen' in (frozen_problem(sent, '2026-10-26 Mon follow.the.money - Who walks away now') or ''))
-    check('before the first send a name may change', frozen_problem({'pack': {'folder': 'x'}}, '2026-10-26 Mon follow.the.money - Y') is None)
+    check('a new name after the first send is refused', 'bound to the post folder' in (frozen_problem(sent, '2026-10-26 Mon follow.the.money - Who walks away now') or ''))
+    check('a bound folder holds before the first send too', 'bound to the post folder "x"' in (frozen_problem({'pack': {'folder': 'x'}}, '2026-10-26 Mon follow.the.money - Y') or ''))
+    check('the binding wins over the pack folder', 'bound to the post folder "B"' in (frozen_problem({'post_folder': {'folder': 'B'}, 'pack': {'folder': 'A'}}, 'A') or ''))
+    check('the engine\'s re-dated answer wins', frozen_problem({'post_folder': {'folder': '2026-11-17 Tue off.day - X'}}, '2026-11-19 Thu off.day - X', '2026-11-19 Thu off.day - X') is None)
+    check('nothing bound, any name', frozen_problem({}, '2026-10-26 Mon follow.the.money - Y') is None)
     check('a canary folder is refused', 'canary' in (frozen_problem({}, '2026-10-26 Mon follow.the.money - Canary run') or ''))
     check('the library refuses a test post and a render outside 3 Video',
           library.refusal('3 Posts/2026-10-05 Mon follow.the.money - Test pack/READ ME.txt') == 'path_test_folder'
