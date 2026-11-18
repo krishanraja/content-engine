@@ -144,3 +144,52 @@ def off_face(video: str, pages: list, *, style: str = 'house', aspect: str = '9:
                             'face': list(hits[0])})
     return {'value': {'pages': len(pages), 'on_face': on_face[:12], 'count': len(on_face)}, 'target': target,
             'pass': not on_face}
+
+
+# ---------------------------------------------------------------- his whole head inside the camera band
+# Krish, 18 Nov 2026, of a proof video that cut the top of his head off under a squeezed picture: "'Don't cut the top of
+# my head off' should not really need a reference image". It is a rule, measured: on a SPLIT take beat his face sits in
+# the camera band below the seam, and the head from crown to chin must lie inside that band, never under the stage or
+# off the bottom of the frame. A frontal face box starts near the brow, so the crown stands CROWN of its height above
+# it and the chin CHIN of its height below its bottom edge (uncalibrated starting values, like the face flags).
+CROWN = 0.35
+CHIN = 0.08
+HEAD_SAMPLES = (0.25, 0.5, 0.75)   # shares of a beat: a head that moves is caught where it moves
+
+
+def head_in_band(video: str, beats: list, *, seam: int, aspect: str = '9:16', fps: float = 30, detector=None,
+                 grab=None) -> dict:
+    target = 'his whole head, crown to chin, inside the camera band of every SPLIT take beat'
+    eligible = [b for b in beats or [] if b.get('layout') == 'SPLIT' and (b.get('plate') or {}).get('source') == 'take']
+    if aspect != '9:16' or not eligible:
+        return {'value': None, 'target': target, 'pass': None, 'status': 'not applicable'}
+    detector = detector or default_detector()
+    if detector is None:
+        return {'value': None, 'target': target, 'pass': None, 'status': 'not_run',
+                'reason': 'no face detector in this Python (opencv-python or mediapipe)'}
+    grab = grab or (lambda frame: frame_at(video, frame, fps, (1080, 1920)))
+    height = 1920
+    cut, no_face, samples = [], [], 0
+    for beat in eligible:
+        span = beat['toFrame'] - beat['fromFrame']
+        seen = 0
+        for share in HEAD_SAMPLES:
+            frame = beat['fromFrame'] + int(span * share)
+            samples += 1
+            faces = detector(grab(frame))
+            if not faces:
+                continue
+            seen += 1
+            x, y, w, h = max(faces, key=lambda f: f[2] * f[3])
+            crown, chin = y - CROWN * h, y + (1 + CHIN) * h
+            at = round(frame / fps, 2)
+            if crown < seam:
+                cut.append({'beat': beat.get('id'), 'at_s': at, 'edge': 'crown', 'by_px': round(seam - crown),
+                            'band_top': seam})
+            if chin > height:
+                cut.append({'beat': beat.get('id'), 'at_s': at, 'edge': 'chin', 'by_px': round(chin - height)})
+        if not seen:
+            no_face.append(beat.get('id'))
+    return {'value': {'beats': len(eligible), 'samples': samples, 'cut': cut[:12], 'count': len(cut),
+                      'no_face_in_beat': no_face},
+            'target': target, 'pass': not cut and not no_face}
