@@ -81,13 +81,13 @@
     "kind": "data centre",
     "label": "PIQUA, OHIO",
     "logo": "Meta",
-    "tag": "Power bill",
+    "tag": "Your share",
     "targets": [
      {
-      "label": "Your power bill"
+      "label": "Power bill"
      },
      {
-      "label": "Your AI plan"
+      "label": "AI plan"
      }
     ],
     "copies": {
@@ -1264,7 +1264,7 @@
   {
    "id": "piqua-ban",
    "unit": "%",
-   "denominator": 100,
+   "denominator": null,
    "rows": [
     {
      "label": "for the ban",
@@ -1278,7 +1278,7 @@
   {
    "id": "piqua-recall",
    "unit": "%",
-   "denominator": 100,
+   "denominator": null,
    "rows": [
     {
      "label": "to recall the mayor",

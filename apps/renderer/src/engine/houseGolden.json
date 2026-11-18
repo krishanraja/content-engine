@@ -13,7 +13,7 @@
   "cursor_path 9:16": "613d25aeaa0534638a5a1e45039e80e2e3eb7239fcc39b8cb3f8521811866a6a",
   "cursor_path 16:9": "613d25aeaa0534638a5a1e45039e80e2e3eb7239fcc39b8cb3f8521811866a6a",
   "evidence_card 9:16": "e3935d902637d47cb87fdf301772ccc4e982874c753136d7300c222ae34df657",
-  "facility_block 9:16": "8e010620a173492bc26d2ac3427adb2e35abb6db5c6e3e03c80fb082ec16b290",
+  "facility_block 9:16": "497c9799b95ee8cdbb9bfa54273443a2c6a2715f69c1ef729758d72270a8d76f",
   "film_frame 9:16": "b1db42052f1071abb08146660480240283edb9c6ba4d2645a164c2808ad168f3",
   "flat_mechanism 9:16": "5ceba122f5b71971d5b9eb38419c9b666fdf3513a3e9778b3b47523d7de4dd06",
   "flat_mechanism 16:9": "c5aada25637ed6788d79a7a66ed0c793812b7fa2f9a09db584a78d2e2cc7d0fe",
@@ -68,6 +68,6 @@
  "compositions": {
   "fixtures/ve/engine-core/props.json": "857202a611269e5f662a6e3514ac8339b45edee64371d3b8dc04da15575a7281",
   "docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json": "0e5e933b27de7142736e3d575cb7186f5a9572363e61639027d04853d3465db4",
-  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.short.json": "2fcc174bc358fe1e3248c5fd8c887b46a5b9d9573e8346378021841310b28fae"
+  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.short.json": "a2e8f618f7e2dcf79504f84aa2f00fd64f2e3df203549f8c1741ddf2b41f3961"
  }
 }
