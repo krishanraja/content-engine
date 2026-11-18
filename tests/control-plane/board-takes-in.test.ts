@@ -3,9 +3,9 @@ import { createHash } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler'
-import { TAKES_OP, TAKES_SLACK_MS, newTakes, productionBrief, takesInOf, takesPress } from '../../apps/control-plane/api/board/_takesIn'
+import { TAKES_OP, TAKES_SLACK_MS, boardNames, newTakes, pickTakes, productionBrief, takesInOf, takesPress } from '../../apps/control-plane/api/board/_takesIn'
 import { approval } from './_approvals'
-import { parsePlan, swapsOf } from '../../apps/control-plane/api/board/_productionPlan'
+import { parsePlan, planBrief, swapsOf } from '../../apps/control-plane/api/board/_productionPlan'
 import { validBody } from '../../apps/control-plane/api/board/_contracts'
 
 // Krish, 2026-11-17: "whenever I press approve script, the new board state should be waiting for me to confirm the videos
@@ -332,5 +332,84 @@ describe('POST /api/board/<Monday>/takes-in', () => {
     expect(await press({ inbox: { ok: false, reason: 'not shared', fix: 'share it' } })).toMatchObject({ status: 503, out: { error: 'inbox_unreadable', fix: 'share it' } })
     const held = await press({ others: [{ id: 'other', meta: { takes_in: { confirmed_at: 'x', files: [{ name: 'openai long.mp4', drive_id: 'drv1' }, { name: 'openai short.mp4', drive_id: 'drv2' }] } } }] })
     expect(held).toMatchObject({ status: 409, out: { error: 'no_new_takes' } })
+  })
+})
+
+describe('every take tags to its own piece (Krish, 2026-11-18: "everything needs to tag to the right piece")', () => {
+  // The Inbox on 18 Nov: three pieces' takes, long and short of each.
+  const at = (n: number) => `2026-11-18T09:0${n}:00Z`
+  const INBOX18 = ['data-centers-and-midterms-short.mp4', 'data-centers-and-midterms-long.mp4', 'ai-finding-your-skeletons-short.mp4',
+    'ai-finding-your-skeletons-long.mp4', 'Build-or-buy-short.mp4', 'Build-or-buy-long.mp4'].map((name, n) => ({ id: `d${n}`, name, mimeType: 'video/mp4', size: '10', modifiedTime: at(n) }))
+  const OWN = ['Where does AI get built when towns say no?', '90-second cut script, Tue 17']
+  // What the stored rows said: the other pieces' first ideas, never their board titles.
+  const STORED = ['The labs writing everyone\'s code still run Salesforce', 'Axiom rebuilt a 15,000-page proof in 24 days with an agent swarm']
+  const BOARD = ['Build or buy your tools in an AI world?', 'Will your AI auditor find your missing money, or the skeletons in your closet?']
+
+  it('with only the stored titles, it takes nothing and says why, never all three pieces\' takes', () => {
+    const got = pickTakes(INBOX18, '2026-11-17T16:20:00Z', new Set(), OWN, STORED)
+    expect(got.named).toBe(false)
+    expect(got.groups).toHaveLength(3)
+  })
+
+  it('with the titles the board shows, it takes only the data-centres long and short', () => {
+    const got = pickTakes(INBOX18, '2026-11-17T16:20:00Z', new Set(), OWN, [...STORED, ...BOARD])
+    expect(got.files.map(f => f.name)).toEqual(['data-centers-and-midterms-short.mp4', 'data-centers-and-midterms-long.mp4'])
+    expect(got.groups).toHaveLength(1)
+  })
+
+  it('reads every name the board shows, by piece id and item key', () => {
+    const names = boardNames({ days: [{ piece_id: 'aa', title: 'Day title', pieces: [{ id: 'bb', title: 'Placed piece' }] }],
+      model: { days: [{ items: [{ key: 'piece:aa', piece_id: 'aa', title: 'Card title' }, { key: 'off-tue-x', piece_id: null, title: 'An off-day post' }] }] } })
+    expect(names.get('aa')).toEqual(['Day title', 'Card title'])
+    expect(names.get('bb')).toEqual(['Placed piece'])
+    expect(names.get('off-tue-x')).toEqual(['An off-day post'])
+  })
+})
+
+describe('the plan says how each picture becomes a 100/10, and what Krish gets himself (contract 1.29.0; Krish, 2026-11-18)', () => {
+  const plan = {
+    version: 1, piece_id: TUE, made_at: '2026-11-18T12:00:00Z', takes: ['data-centers-and-midterms-short.mp4'],
+    edit: { raw_seconds: 80, restarts: [], silences_cut: 2, kept_seconds: 78, cap_seconds: 90, speed: 1, final_seconds: 78 },
+    style: { look: 'face-with-proof', motion: 'one-object', captions: 'art-directed' },
+    beats: [
+      { id: 'b1', from: 0, to: 4, words: 'Then on 3 November, towns in 10 states held 41 votes', picture: { id: 'map', kind: 'motion', what: '41 pins dropping on a US map, 40 turning red',
+        lever: 'impact', maker: 'codex', why: 'Forty of forty-one going red at once is the whole story in a second', basis: 'research', basis_ref: 'Tue 17 data centres: fact research' },
+        options: [{ id: 'bill', kind: 'real_image', what: 'His own electricity bill', lever: 'clarity', maker: 'you', basis: 'script', why: 'A real bill beats any chart' },
+          { id: 'odd', kind: 'motion', what: 'x', lever: 'vibes', maker: 'someone' }] },
+    ],
+    scenes: [], humour: [],
+    fetch: [{ beat: 'b1', what: 'A photo of your own electricity bill', why: 'A real bill beats any chart' }, { beat: 'nope', what: 'dropped', why: '' }],
+  }
+  const text = JSON.stringify(plan)
+  const sha = createHash('sha256').update(text).digest('hex')
+
+  it('keeps the lever, the maker, the why and the basis, drops values it does not know, and keeps only fetches on its beats', () => {
+    const p = parsePlan(text, TUE, sha)!
+    expect(p.beats[0].picture).toMatchObject({ lever: 'impact', maker: 'codex', basis: 'research', basis_ref: 'Tue 17 data centres: fact research' })
+    expect(p.beats[0].options.find(o => o.id === 'odd')).toMatchObject({ lever: null, maker: null })
+    expect(p.fetch).toEqual([{ beat: 'b1', what: 'A photo of your own electricity bill', why: 'A real bill beats any chart' }])
+  })
+
+  it('the production prompt carries them, and asks for his fetches up front', () => {
+    const brief = planBrief(parsePlan(text, TUE, sha)!, {})
+    expect(brief).toMatch(/pushed to impact; codex builds it; from the research \(Tue 17 data centres: fact research\)/)
+    expect(brief).toMatch(/why it is a 100\/10: Forty of forty-one/)
+    expect(brief).toMatch(/What Krish gets himself .*b1: A photo of your own electricity bill/)
+  })
+
+  it('a plan from before 1.29.0 still reads, with nothing to fetch', () => {
+    const { fetch: _f, ...old } = plan
+    const t = JSON.stringify({ ...old, beats: [{ ...plan.beats[0], picture: { id: 'face', kind: 'face', what: 'Him to camera' }, options: [] }] })
+    const p = parsePlan(t, TUE, createHash('sha256').update(t).digest('hex'))!
+    expect(p.fetch).toEqual([])
+    expect(planBrief(p, {})).not.toMatch(/What Krish gets himself|why it is a 100/)
+  })
+
+  it('the post-production prompt carries each take\'s Drive link and shows him mocks along the way', () => {
+    const brief = productionBrief({ pieceId: TUE, title: 'Where does AI get built when towns say no?', offday: false, decisions: [], research: [], scripts: {},
+      takes: { confirmed_at: '2026-11-18T11:00:00Z', by: 'Krish', since: null, files: [{ name: 'data-centers-and-midterms-short.mp4', drive_id: 'abc123', bytes: 10, sha256: null, md5: null, modified: '' }] } })
+    expect(brief).toContain('data-centers-and-midterms-short.mp4: https://drive.google.com/file/d/abc123/view')
+    expect(brief).toMatch(/Show him mocks along the way/)
+    expect(brief).toMatch(/from the research on the piece/)
   })
 })
