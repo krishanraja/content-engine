@@ -354,9 +354,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   // words out. It lands in the panel above his face on a staged beat, else across the frame.
   const titleLayer = props.titleMoment && frame >= props.titleMoment.fromFrame && frame < props.titleMoment.toFrame ? (
     <AbsoluteFill key="title-moment" data-title-moment>
-      <TitleMoment words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame} {...(props.titleMoment.release ? { release: props.titleMoment.release } : {})}
+      <TitleMoment {...(props.titleMoment.card ? { card: true } : {})} words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame} {...(props.titleMoment.release ? { release: props.titleMoment.release } : {})}
         frame={frame} aspect={props.aspect} width={width} height={height}
-        stage={stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height }}
+        stage={stagedNow ? stagedNow.panel : props.titleMoment.card ? titleSafe(props.aspect, width, height) : { left: 0, top: 0, width, height }}
         captionBox={band(props)} tokens={props.tokens as unknown as Record<string, string>} />
       {titleWordmark(props, frame, stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height })}
     </AbsoluteFill>) : null
@@ -400,4 +400,11 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )
+}
+
+/** Where the title card lands on an unstaged beat: the lower band the captions leave for it, inside every channel's safe
+ *  column, so his face stays clear (Krish, 18 Nov 2026: "having naked captions over my face looks stupid"). */
+export function titleSafe(aspect: string, width: number, height: number) {
+  return aspect === '9:16' ? { left: 60, top: 880, width: 800, height: 430 }
+    : { left: Math.round(width * 0.1), top: Math.round(height * 0.56), width: Math.round(width * 0.8), height: Math.round(height * 0.36) }
 }

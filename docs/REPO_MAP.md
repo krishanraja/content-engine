@@ -4830,6 +4830,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `interface BrandFrameProps`
 - `function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement`
 - `function onFullPlate(props: EngineRenderProps, beat: EngineBeat): boolean`
+- `const TAKE_HALO`
 - `const CAPTION_HALO`
 - `function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
 
@@ -4837,6 +4838,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
+- `function titleSafe(aspect: string, width: number, height: number)`
 
 ### `apps/renderer/src/engine/VeCut.tsx`
 

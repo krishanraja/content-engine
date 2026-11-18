@@ -161,6 +161,14 @@ def window_props(props: dict, start: int, end: int) -> dict:
     if not captions:
         raise ValueError('the proof window holds no caption page')
     out['captions'] = captions
+    # The episode title moment is on the cut's clock like everything else: shifted into the window, or gone when the
+    # window misses it (Wed 18, 18 Nov 2026: a proof of the title beat left it at frame 627 of a 240-frame window, unseen).
+    moment = props.get('titleMoment')
+    if moment and overlaps(moment['fromFrame'], moment['toFrame']):
+        out['titleMoment'] = dict(moment, fromFrame=shift(moment['fromFrame']), toFrame=shift(moment['toFrame']),
+                                  words=[dict(w, atFrame=shift(w['atFrame'])) for w in moment.get('words') or []])
+    else:
+        out.pop('titleMoment', None)
     out['segments'] = [dict(s, trimBeforeFrames=int(s.get('trimBeforeFrames', 0)) + max(0, start - int(s['fromFrame'])),
                             fromFrame=shift(s['fromFrame']),
                             durationFrames=min(int(s['fromFrame']) + int(s['durationFrames']), end) - max(int(s['fromFrame']), start))

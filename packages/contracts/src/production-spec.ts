@@ -318,6 +318,8 @@ export const ProductionSpecV2Schema = z.object({
     title: z.string().min(3).max(80),
     line: z.string().min(8).max(240),
     spans: z.record(SlugSchema, VeSpanSchema).optional(),
+    /** The title lands on a card that slams in over the caption band, never bare over his face (Krish, 18 Nov 2026). */
+    card: z.boolean().optional(),
   }).strict().optional(),
 }).strict().superRefine((spec, c) => {
   if (spec.brand.series === 'mind.the.gap' && !spec.call && !veOffDay(spec)) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { CAPTION_HALO, onFullPlate } from './BrandFrame'
+import { CAPTION_HALO, TAKE_HALO, onFullPlate } from './BrandFrame'
 import type { EngineBeat, EngineRenderProps } from './props'
 
 // The caption halo goes only where a busy photograph fills the frame behind the words (Wed 18, 18 Nov 2026): a full
@@ -27,5 +27,7 @@ describe('the caption halo over a full scene plate', () => {
   it('hugs the letters: drop shadows only, no box and no floor', () => {
     expect(CAPTION_HALO).toMatch(/^drop-shadow\(/)
     expect(CAPTION_HALO).not.toMatch(/gradient|background/)
+    expect(TAKE_HALO).toMatch(/^drop-shadow\(/)
+    expect(TAKE_HALO).not.toMatch(/gradient|background/)
   })
 })

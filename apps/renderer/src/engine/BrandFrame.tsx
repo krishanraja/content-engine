@@ -48,8 +48,8 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={house} frame={frame} />
       : call ? <CallCard props={house} frame={frame} />
-        : props.captionTheme ? (onFullPlate(props, beat)
-          ? <div data-caption-halo style={{ position: 'absolute', inset: 0, filter: CAPTION_HALO }}><ThemedCaption props={props} theme={props.captionTheme} frame={frame} /></div>
+        : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus'
+          ? <div data-caption-halo style={{ position: 'absolute', inset: 0, filter: onFullPlate(props, beat) ? CAPTION_HALO : TAKE_HALO }}><ThemedCaption props={props} theme={props.captionTheme} frame={frame} /></div>
           : <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />)
         : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />
         : props.captionStyle === 'word' ? <WordCaption props={props} frame={frame} />
@@ -71,6 +71,9 @@ export function onFullPlate(props: EngineRenderProps, beat: EngineBeat): boolean
  *  which left the rack-focus words unreadable on the Wed 18 crocodile plate (ve qc captions.ocr and captions.render,
  *  18 Nov 2026). It hugs the glyphs and darkens nothing else, so the picture behind (the crocodile's eye) keeps its light,
  *  where a floor under the band would have dimmed it. */
+/** The same letter-hugging halo, lighter, over his take: the rack-focus words failed the caption read over his light
+ *  wall (Wed 18, 18 Nov 2026). It darkens only the letters' edges, never his face. */
+export const TAKE_HALO = 'drop-shadow(0 0 2px rgba(0,0,0,0.9)) drop-shadow(0 0 6px rgba(0,0,0,0.55))'
 export const CAPTION_HALO = 'drop-shadow(0 0 2px rgba(0,0,0,0.95)) drop-shadow(0 0 3px rgba(0,0,0,0.9)) drop-shadow(0 2px 14px rgba(0,0,0,0.7))'
 
 /** Reuse caption timing, word layout and swipe; apply the frozen split frame's compact padding. */

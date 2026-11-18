@@ -122,6 +122,18 @@ class HardestBeat(unittest.TestCase):
         self.assertFalse(out['audio']['sfx'], 'a hit outside the window is not in it')
         self.assertTrue(out['captions'])
 
+    def test_a_window_shifts_the_title_moment_onto_its_own_clock(self):
+        # Wed 18, 18 Nov 2026: the title beat's proof left the title at its cut frame, past the window's end, unseen.
+        props = props_for(FIXTURE)
+        start, end = proof.window(props, 'b5-every')
+        props['titleMoment'] = {'fromFrame': start + 10, 'toFrame': start + 40, 'release': 'fade',
+                                'words': [{'text': 'Build', 'atFrame': start + 10}, {'text': 'or', 'atFrame': start + 20}]}
+        out = proof.window_props(props, start, end)
+        self.assertEqual((out['titleMoment']['fromFrame'], out['titleMoment']['toFrame']), (10, 40))
+        self.assertEqual([w['atFrame'] for w in out['titleMoment']['words']], [10, 20])
+        props['titleMoment'] = dict(props['titleMoment'], fromFrame=end + 5, toFrame=end + 30)
+        self.assertNotIn('titleMoment', proof.window_props(props, start, end), 'a title outside the window is not in it')
+
     def test_a_window_of_a_stinged_cut_has_no_sting_and_its_stem_skips_it(self):
         # The wide whole cut opens on the 56-frame intro sting (Krish, 2026-11-05: "I think it should go at the start
         # of the longer wide videos 100%,"), and ve premix lays his voice after it. A window is never a whole cut: it

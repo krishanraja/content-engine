@@ -41,6 +41,14 @@
       "said": "Approve the merged engine and both proofs",
       "on": "2026-11-18",
       "artifact_hash": "3a1184398fbfe0df720c36881a9dbc93cbeda5e8fec2ba6f1f939528a17c8da8"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "said": "Approve engine fdb1b867",
+      "on": "2026-11-18",
+      "artifact_hash": "fdb1b867246820a58e9ca73bda0ffbea3c600a8aeb6accda3a41fe0aa152d857"
     }
   ]
 }

@@ -135,7 +135,13 @@
     "src": "shots/salesforce-screen.png",
     "outlet": "Salesforce",
     "date": "Sales Cloud",
-    "sourceAspectRatio": 1.3474
+    "sourceAspectRatio": 1.3474,
+    "crop": {
+     "x": 0.22,
+     "y": 0.18,
+     "w": 0.33,
+     "h": 0.37
+    }
    }
   },
   {
@@ -151,7 +157,13 @@
     "src": "shots/workday-screen.png",
     "outlet": "Workday",
     "date": "Absence Management",
-    "sourceAspectRatio": 1.3474
+    "sourceAspectRatio": 1.3474,
+    "crop": {
+     "x": 0.475,
+     "y": 0.34,
+     "w": 0.2,
+     "h": 0.39
+    }
    }
   },
   {
@@ -600,13 +612,6 @@
        "obj": "gone_logos",
        "verb": "enter",
        "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 55,
-       "obj": "gone_logos",
-       "verb": "exit",
-       "to_state": "gone",
        "silent": true
       }
      ],
@@ -1139,8 +1144,8 @@
   },
   "energy": "high",
   "layout": {
-   "mode": "stage",
-   "reason": "the piece shows his take, with the proof staged beside or over it"
+   "mode": "house",
+   "reason": "his whole head full frame on his lines and every picture full frame (Krish, 18 Nov 2026: \"Can't cut my head off and also ruin the visual above\"); the stage staging shrank him into a window"
   },
   "look": "kinetic-movement",
   "idea": {
@@ -1190,6 +1195,7 @@
     "from_w": 72,
     "to_w": 80
    }
-  }
+  },
+  "card": true
  }
 }

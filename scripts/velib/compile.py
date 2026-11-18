@@ -671,7 +671,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
         **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
-        **({'titleMoment': {k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}} if moment else {}),
+        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')},
+                            **({'card': True} if (spec.get('title_moment') or {}).get('card') else {})}} if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
     if sting:
