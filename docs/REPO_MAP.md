@@ -4829,6 +4829,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
+- `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
 
 ### `apps/renderer/src/engine/VeCut.tsx`
@@ -5176,6 +5177,8 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/facility_block/index.tsx`
 
+- `interface Rect`
+- `function facilityLayout(box: DeviceProps['box'], aspect: DeviceProps['aspect'], s: ReturnType<typeof facilityState>, p:…`
 - `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/facility_block/schema.ts`
@@ -6185,6 +6188,11 @@ JSON-value transport: escape values only; keys retain their original spelling.
 - `function toAsciiProps<T>(value: T): T`
 - `function fromAsciiProps<T>(value: T): T`
 - `function lagSamples(rendered: Float32Array, stem: Float32Array, maxLag: number): number`
+
+### `apps/renderer/src/engine/treatments/Grade.tsx`
+
+- `type GradeProps`
+- `function GradedBackdrop({ src, focus, tokens, frame, width, height }: GradeProps): JSX.Element`
 
 ### `apps/renderer/src/engine/treatments/SubjectLift.tsx`
 
