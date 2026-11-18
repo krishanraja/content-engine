@@ -196,9 +196,9 @@ describe('his press on a style', () => {
 
   it('keeps what he said before: a Not this takes the pick away, a pick takes a style off the Not this list', () => {
     const before = { look: { production: 'face-with-proof' }, style: { motion: 'ladder', captions: 'pop', rejected: { motion: ['swiss'], captions: [] } } }
-    expect(nextStyle(before, { reject: { layer: 'motion', id: 'ladder' } }, 'T')).toEqual({ motion: null, captions: 'pop', experiment: null, rejected: { motion: ['swiss', 'ladder'], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
-    expect(nextStyle(before, { motion: 'swiss' }, 'T')).toEqual({ motion: 'swiss', captions: 'pop', experiment: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
-    expect(nextStyle({}, { captions: 'cinematic' }, 'T')).toEqual({ motion: null, captions: 'cinematic', experiment: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
+    expect(nextStyle(before, { reject: { layer: 'motion', id: 'ladder' } }, 'T')).toEqual({ motion: null, captions: 'pop', experiment: null, experiment_idea: null, rejected: { motion: ['swiss', 'ladder'], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
+    expect(nextStyle(before, { motion: 'swiss' }, 'T')).toEqual({ motion: 'swiss', captions: 'pop', experiment: null, experiment_idea: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
+    expect(nextStyle({}, { captions: 'cinematic' }, 'T')).toEqual({ motion: null, captions: 'cinematic', experiment: null, experiment_idea: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
     expect(nextStyle(before, { reject: { layer: 'treatment', id: 'face-with-proof' } }, 'T').rejected.treatment).toEqual(['face-with-proof'])
   })
 })
@@ -246,25 +246,31 @@ describe('his experiment tick (contract 1.27.0)', () => {
     for (const e of EXPERIMENTS) expect(readFileSync(`.agents/skills/${e.id}/SKILL.md`, 'utf8')).toContain(`name: ${e.id}`)
   })
 
-  it('takes the tick-box values: ticked, unticked, and refuses an unknown or a second one', () => {
-    expect(pick({ piece_id: PIECE, experiment: ['directed-shoot'] })).toEqual({ experiment: 'directed-shoot' })
-    expect(pick({ piece_id: PIECE, experiment: 'directed-shoot' })).toEqual({ experiment: 'directed-shoot' })
-    expect(pick({ piece_id: PIECE, experiment: [] })).toEqual({ experiment: null })
-    expect(pick({ piece_id: PIECE, experiment: ['moon-landing'] })).toEqual([400, 'unknown_experiment'])
-    expect(pick({ piece_id: PIECE, experiment: ['directed-shoot', 'directed-shoot'] })).toEqual([400, 'unknown_experiment'])
+  const IDEA = 'Turn me into Sam Altman for one line, then back, while I explain who owns the model.'
+  it('takes the tick with his idea in his words, unticks, and refuses a tick with no idea, an unknown or a second one (1.28.0)', () => {
+    expect(pick({ piece_id: PIECE, experiment: ['directed-shoot'], experiment_idea: IDEA })).toEqual({ experiment: 'directed-shoot', experiment_idea: IDEA })
+    expect(pick({ piece_id: PIECE, experiment: 'directed-shoot', experiment_idea: `  ${IDEA}  ` })).toEqual({ experiment: 'directed-shoot', experiment_idea: IDEA })
+    expect(pick({ piece_id: PIECE, experiment: ['directed-shoot'] })).toEqual([400, 'experiment_idea_required'])
+    expect(pick({ piece_id: PIECE, experiment: ['directed-shoot'], experiment_idea: '   ' })).toEqual([400, 'experiment_idea_required'])
+    expect(pick({ piece_id: PIECE, experiment: ['directed-shoot'], experiment_idea: 'x'.repeat(6001) })).toEqual([400, 'experiment_idea_too_long'])
+    expect(pick({ piece_id: PIECE, experiment: [] })).toEqual({ experiment: null, experiment_idea: null })
+    expect(pick({ piece_id: PIECE, experiment: ['moon-landing'], experiment_idea: IDEA })).toEqual([400, 'unknown_experiment'])
+    expect(pick({ piece_id: PIECE, experiment: ['directed-shoot', 'directed-shoot'], experiment_idea: IDEA })).toEqual([400, 'unknown_experiment'])
   })
 
-  it('keeps the tick through his other picks, and only his tick changes it', () => {
-    const on = nextStyle({}, { experiment: 'directed-shoot' }, 'T')
-    expect(on.experiment).toBe('directed-shoot')
-    expect(nextStyle({ style: on }, { motion: 'swiss' }, 'U').experiment).toBe('directed-shoot')
+  it('keeps the tick and his idea through his other picks; only his tick changes them', () => {
+    const on = nextStyle({}, { experiment: 'directed-shoot', experiment_idea: IDEA }, 'T')
+    expect([on.experiment, on.experiment_idea]).toEqual(['directed-shoot', IDEA])
+    expect(nextStyle({ style: on }, { motion: 'swiss' }, 'U').experiment_idea).toBe(IDEA)
     expect(nextStyle({ style: on }, { captions: 'pop' }, 'U').experiment).toBe('directed-shoot')
-    expect(nextStyle({ style: on }, { experiment: null }, 'U').experiment).toBeNull()
+    const off = nextStyle({ style: on }, { experiment: null, experiment_idea: null }, 'U')
+    expect([off.experiment, off.experiment_idea]).toEqual([null, null])
   })
 
-  it('shows on the piece, and an unknown id on the record reads as none', () => {
-    expect(dayStyle(inputs({ meta: { style: { experiment: 'directed-shoot' } } })).experiment).toBe('directed-shoot')
-    expect(dayStyle(inputs({ meta: { style: { experiment: 'moon-landing' } } })).experiment).toBeNull()
+  it('shows on the piece with his idea, and an unknown id on the record reads as none', () => {
+    const s = dayStyle(inputs({ meta: { style: { experiment: 'directed-shoot', experiment_idea: IDEA } } }))
+    expect([s.experiment, s.experiment_idea]).toEqual(['directed-shoot', IDEA])
+    expect(dayStyle(inputs({ meta: { style: { experiment: 'moon-landing', experiment_idea: IDEA } } })).experiment_idea).toBeNull()
     expect(dayStyle(inputs()).experiment).toBeNull()
   })
 })
@@ -273,7 +279,7 @@ describe('the write', () => {
   it('writes meta.style beside meta.look, and keeps a write that lands in between', async () => {
     const { db, state } = fakeDb(ROW, 1)
     const saved = await saveStyle(db as never, PIECE, { motion: 'ladder' }, new Date('2026-11-16T09:30:00Z'))
-    expect(saved).toEqual({ motion: 'ladder', captions: null, experiment: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: '2026-11-16T09:30:00.000Z' })
+    expect(saved).toEqual({ motion: 'ladder', captions: null, experiment: null, experiment_idea: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: '2026-11-16T09:30:00.000Z' })
     expect(state.conflicts).toBe(1)
     expect(state.writes).toBe(1)
     expect(state.row.meta.style).toEqual(saved)
