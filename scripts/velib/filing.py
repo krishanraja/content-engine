@@ -60,8 +60,10 @@ def library_root(given=None) -> Path:
     return roots[0].parent
 
 
-def plan(spec: dict, cuts: list[str], *, subject: str, when: str | None = None) -> dict:
-    """What would be written where, checked before anything is: shapes, names, the post folder and its path rule."""
+def plan(spec: dict, cuts: list[str], *, subject: str | None, when: str | None = None, bound: str | None = None) -> dict:
+    """What would be written where, checked before anything is: shapes, names, the post folder and its path rule.
+    `bound` is the post folder the piece is bound to (making.py bind_post_folder): it wins over the one the subject
+    names, so one piece is never spread across two folders, and with it the subject may be left out."""
     when = when or spec.get('publish_day')
     if not when:
         raise ValueError('filing needs the publish date: --date, or publish_day in the spec')
@@ -71,8 +73,16 @@ def plan(spec: dict, cuts: list[str], *, subject: str, when: str | None = None) 
         if shape in shapes:
             raise ValueError(f'cuts {shapes[shape]} and {cut} are both {shape}: one video per shape')
         shapes[shape] = cut
+    if bound:
+        if not library.is_post_folder(bound) or bound[:10] != when:
+            raise ValueError(f'this piece is bound to the post folder "{bound}", which is not a post folder for {when}: tell Krish, never make a second folder')
+        post = bound
+        subject = subject or bound.split(' - ', 1)[1]
+    else:
+        if not subject:
+            raise ValueError('a subject is needed to name the post folder (or the piece must be bound to one)')
+        post = library.post_folder(when, subject, spec['brand']['series'])
     planned = archive.plan(subject, list(shapes), when)
-    post = library.post_folder(when, subject, spec['brand']['series'])
     files = []
     for item in planned['videos']:
         relative = f'{library.POSTS}/{post}/{library.VIDEO}/{item["file"]}'
@@ -83,10 +93,11 @@ def plan(spec: dict, cuts: list[str], *, subject: str, when: str | None = None) 
     return {'date': when, 'subject': subject, 'post_folder': post, 'archive_folder': planned['folder'], 'files': files}
 
 
-def file(spec: dict, directory: Path, cuts: list[str], *, subject: str, when: str | None = None,
-         archive_at=None, library_at=None, dry_run: bool = False, today: str | None = None) -> dict:
+def file(spec: dict, directory: Path, cuts: list[str], *, subject: str | None, when: str | None = None,
+         archive_at=None, library_at=None, dry_run: bool = False, today: str | None = None, bound: str | None = None) -> dict:
     directory = Path(directory)
-    planned = plan(spec, cuts, subject=subject, when=when)
+    planned = plan(spec, cuts, subject=subject, when=when, bound=bound)
+    subject = planned['subject']
     videos, blocked = {}, []
     for item in planned['files']:
         reasons, video, digest = readiness(spec, item['cut'], directory)

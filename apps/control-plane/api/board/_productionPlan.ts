@@ -63,6 +63,15 @@ export interface PlanOption { id: string; kind: string; what: string; source: st
   lever?: string | null; maker?: string | null; why?: string | null; basis?: string | null; basis_ref?: string | null }
 /** Something only Krish can get, asked for before the session needs it: on which beat, what, and why it beats the rest. */
 export interface PlanFetch { beat: string; what: string; why: string }
+/** A file Krish got himself and dropped on the plan (contract 1.30.0; Krish, 2026-11-18: "when I drop stuff in there, it
+ *  needs to be filed properly in my Drive in the right place"): the material on the piece (role krish_got), the beats it
+ *  is for (from its key, _postFolder.ts gotKey), and where it is in his Drive: `in_drive` once the library sync wrote
+ *  it, `filing` while it waits for the sync, `not_filed` when no library row holds it (the piece had no folder, or the
+ *  filing failed: the same drop again files it). Read beside the plan (_view.ts readProductionPlans), never inside it. */
+export interface PlanGot {
+  id: string; title: string; kind: string; content_type: string | null; beats: string[]; at: string | null
+  drive: { state: 'in_drive' | 'filing' | 'not_filed'; path: string | null }
+}
 export interface PlanBeat { id: string; from: number; to: number; words: string; picture: PlanOption; options: PlanOption[]; humour: { mechanism: string; gag: string } | null }
 export interface PlanScene { beat: string; still: string; caption: string; style: string }
 export interface PlanEdit { raw_seconds: number; restarts: Array<{ at: number; said: string }>; silences_cut: number; kept_seconds: number; cap_seconds: number | null; speed: number; final_seconds: number
@@ -79,6 +88,10 @@ export interface ProductionPlan {
   humour: Array<{ words: string; mechanism: string; gag: string; beat: string | null }>
   /** The sha256 of the material's text, which his swaps bind. */
   sha256: string
+  /** 1.30.0, read beside the plan, never part of its text or its sha256: the files he got himself for it, and the folder
+   *  in 3 Posts the piece is bound to (_making.ts boundPostFolder), or null before anything bound one. */
+  got?: PlanGot[]
+  folder?: string | null
 }
 
 function option(v: unknown): PlanOption | null {
@@ -220,7 +233,10 @@ export function planView(plan: ProductionPlan | null, ctx: { picks: Array<{ doc_
   })
   return {
     status: 'ready', line: `Your production plan is ready: ${editLine(plan.edit)}${plan.edit_long ? ` The long cut: ${editLine(plan.edit_long).replace(/^Your take/, 'its take')}` : ''} Open it, swap anything that does not work, then copy the Claude production prompt.`,
-    made_at: plan.made_at, edit: plan.edit, edit_long: plan.edit_long, style: plan.style, humour: plan.humour, fetch: plan.fetch,
+    made_at: plan.made_at, edit: plan.edit, edit_long: plan.edit_long, style: plan.style, humour: plan.humour,
+    // 1.30.0: each fetch with the files he dropped for its beat, and every file he dropped, tagged or not.
+    fetch: plan.fetch.map(f => ({ ...f, got: (plan.got ?? []).filter(g => g.beats.includes(f.beat.toLowerCase())) })),
+    got: plan.got ?? [], folder: plan.folder ?? null,
     scenes: plan.scenes.map(s => {
       const b = beats.find(x => x.id === s.beat)!
       return { beat: s.beat, src: `/api/content-ideas/store?op=read&id=${s.still}`, caption: s.caption, style: s.style, words: b.words, picture: b.picture }
@@ -249,6 +265,20 @@ export function planBrief(plan: ProductionPlan, swaps: Record<string, string>): 
     + 'beat, cut and caption from that transcript (learning speedup-without-glitches), never by scaling these times.\n'
     + `Styles: look ${plan.style.look ?? 'as picked'}, motion ${plan.style.motion ?? 'as picked'}, captions ${plan.style.captions ?? 'as picked'}.\n`
     + (plan.fetch.length ? `What Krish gets himself (use his, never a stand-in; if one is not on the piece yet, ask him for it once and build the rest): ${plan.fetch.map(f => `${f.beat}: ${f.what}`).join('; ')}.\n` : '')
+    + gotBrief(plan)
     + `The beats:\n${beats}\n`
     + (plan.scenes.length ? `The scenes he saw mocked (match them): ${plan.scenes.map(s => `${s.beat} (${s.style})`).join(', ')}.\n` : '')
+}
+
+/** The files he dropped, as the production session reads them: each by its material id (read it whole with
+ *  read_piece_material) and the beats it is for, and the folder in his Drive where they are. Empty when there are none. */
+export function gotBrief(plan: Pick<ProductionPlan, 'got' | 'folder' | 'fetch'>): string {
+  const got = plan.got ?? []
+  if (!got.length) return ''
+  const line = (g: PlanGot) => `${g.beats.length ? g.beats.join(', ') : 'any beat'}: "${g.title}" (material ${g.id}, ${g.kind})`
+  const missing = plan.fetch.filter(f => !got.some(g => g.beats.includes(f.beat.toLowerCase())))
+  return `What Krish got himself is on the piece (role krish_got; use each on its beat, never a stand-in): ${got.map(line).join('; ')}.`
+    + (plan.folder ? ` They are in his Drive too, in 3 Posts/${plan.folder}/3 Video/Your materials; file what you make from them into that same post folder.` : '')
+    + (missing.length ? ` Still to get: ${missing.map(f => f.beat).join(', ')}; ask him once, then build the rest.` : '')
+    + '\n'
 }

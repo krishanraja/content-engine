@@ -142,3 +142,19 @@ and sustain for him, as a signal and never a gate.
 
 Ids are lower case letters, digits, `-` and `_`. Kinds are the eight above; levers, makers and bases the ones in step 3. A beat's `options` never repeat its
 `picture`. At most three scenes, each on a beat of the plan, each still a material filed on this piece.
+
+## His files and his visual points (contract 1.30.0)
+
+Krish, 2026-11-18: "Can we add a drag and drop/upload functionality where I can put multiple files?", then "when I drop
+stuff in there, it needs to be filed properly in my Drive in the right place". On the plan he drops files on a "What you
+get yourself" line (for that beat), anywhere on the plan (for the plan as a whole), or presses Add. Each is filed on the
+piece (role `krish_got`, its beats in its key) and into `3 Posts/<the piece's bound folder>/3 Video/Your materials`
+(`apps/control-plane/api/_postFolder.ts`; `docs/DRIVE.md`, "Post folders are bound to their pieces"). The plan shows each
+file and where it is in Drive (`got`), and the production prompt names each by material id (`gotBrief`): use his, never
+a stand-in, and file what is made from them into the same post folder.
+
+Before he copies the prompt, a ready plan asks him: any point he wants made visually that the script does not make
+strongly enough (`VISUAL_POINTS_ASK`; Krish, 2026-11-18: "would be good if I can be asked if there were any points I
+want made visually that did not get made as strongly as I'd have liked in the script"). His answer rides the prompt
+under `VISUAL_POINTS_HEADING`: each point gets a picture of its own on the beat where he says it, and the done report
+says which beat carries each.

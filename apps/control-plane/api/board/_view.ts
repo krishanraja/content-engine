@@ -28,7 +28,7 @@ import { carriedItems, channelWord, dayLabel, dayOptions, liveOn, readItems, rea
 import { ideaStage, lateLine, lateOn, postedStage, truthProblems } from './_stage.js'
 import { modelProblems, offdayHead, offdayKind, recentOutOf, weekModel, type ModelInputs, type WeekModel } from './_weekModel.js'
 import { makeRoute } from './_makeRoute.js'
-import { PLAN_ROLE, parsePlan, type ProductionPlan } from './_productionPlan.js'
+import { PLAN_ROLE, parsePlan, type PlanGot, type ProductionPlan } from './_productionPlan.js'
 import { scheduledOf } from './_posted.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -1164,7 +1164,7 @@ export async function readFiledScripts(db: SupabaseClient, overlay: Overlay | nu
 
 /** Each piece's production plan (_productionPlan.ts): the newest text material with role production_plan on the piece,
  *  parsed and bound to its sha256. A plan that cannot be read or parsed is left off, never guessed. */
-export async function readProductionPlans(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string, ProductionPlan>> {
+export async function readProductionPlans(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[], pieces: Body[] = []): Promise<Record<string, ProductionPlan>> {
   const out: Record<string, ProductionPlan> = {}
   if (!overlay) return out
   const mats = (overlay.materials || []).filter(isObj).filter(m => m.role === PLAN_ROLE && m.storage === 'text')
@@ -1178,6 +1178,43 @@ export async function readProductionPlans(db: SupabaseClient, overlay: Overlay |
       const plan = text ? parsePlan(text, id, createHash('sha256').update(text).digest('hex')) : null
       if (plan) out[id] = plan
     } catch { /* left off */ }
+  }
+  // 1.30.0: beside each plan, the files he got himself for it and the piece's bound post folder (_postFolder.ts).
+  const ids = Object.keys(out)
+  if (!ids.length) return out
+  const { GOT_ROLE, beatsOfKey } = await import('../_postFolder.js')
+  const { boundPostFolder } = await import('../_making.js')
+  const gotMats = (overlay.materials || []).filter(isObj).filter(m => m.role === GOT_ROLE && ids.includes(String(m.scope)) && m.storage === 'bucket')
+  const drive = await readGotInDrive(db, [...new Set(gotMats.map(m => String(m.sha256 || '')).filter(x => /^[a-f0-9]{64}$/.test(x)))])
+  for (const id of ids) {
+    const piece = pieces.find(p => String(p.id).toLowerCase() === id)
+    const meta = piece && isObj(piece.meta) ? piece.meta : {}
+    const folder = boundPostFolder(isObj(meta.making) ? meta.making as never : null)
+    out[id] = { ...out[id], folder, got: gotMats.filter(m => m.scope === id).sort((a, b) => String(a.at || '').localeCompare(String(b.at || ''))).map(m => {
+      const sha = String(m.sha256 || '')
+      const rows = (drive.get(sha) ?? []).filter(r => !folder || r.path.startsWith(`3 Posts/${folder}/`))
+      const written = rows.find(r => r.written)
+      const state: PlanGot['drive']['state'] = drive === UNREAD ? 'filing' : written ? 'in_drive' : rows.length ? 'filing' : 'not_filed'
+      return { id: String(m.id), title: String(m.title || 'file'), kind: String(m.kind || 'file'), content_type: typeof m.content_type === 'string' ? m.content_type : null,
+        beats: beatsOfKey(m.key) ?? [], at: typeof m.at === 'string' ? m.at : null, drive: { state, path: (written ?? rows[0])?.path ?? null } }
+    }) }
+  }
+  return out
+}
+
+const UNREAD = new Map<string, Array<{ path: string; written: boolean }>>()
+/** Where each of his files is in the asset library's folder for his own files: written into Drive by the library sync,
+ *  or waiting for it. A library that cannot be read answers UNREAD, so no file is called missing on a failed read. */
+async function readGotInDrive(db: SupabaseClient, shas: string[]): Promise<Map<string, Array<{ path: string; written: boolean }>>> {
+  if (!shas.length) return new Map()
+  const r = await db.from('content_library_files').select('path,sha256,state,written').in('sha256', shas)
+    .like('path', '3 Posts/%/3 Video/Your materials/%').eq('state', 'ready')
+  if (r.error || !Array.isArray(r.data)) return UNREAD
+  const out = new Map<string, Array<{ path: string; written: boolean }>>()
+  for (const row of r.data as Array<{ path: string; sha256: string; written: unknown }>) {
+    const list = out.get(row.sha256) ?? []
+    list.push({ path: row.path, written: isObj(row.written) && Object.keys(row.written).length > 0 })
+    out.set(row.sha256, list)
   }
   return out
 }
@@ -1256,7 +1293,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // scripts the moment they are filed (F47). A script that cannot be read is left off, never guessed.
   const scripts = await readFiledScripts(db, overlay, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
   // Each piece's production plan, made after his takes are in (_productionPlan.ts, contract 1.25.0).
-  const productionPlans = await readProductionPlans(db, overlay, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
+  const productionPlans = await readProductionPlans(db, overlay, (pieces as Body[]).map(p => String(p.id).toLowerCase()), pieces as Body[])
   // Each piece's draft manifest (1.8.0), whose sha256 his Approve for publish binds.
   const drafts = await readDrafts(db, (pieces as Body[]).filter(p => SERIES_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
   // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held. Beside

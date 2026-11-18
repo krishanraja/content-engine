@@ -1339,15 +1339,40 @@ def cmd_lab(args) -> int:
         return 1
 
 
+def _bound_post_folder(spec, subject, when, dry_run):
+    """The post folder the piece is bound to (making.py bind_post_folder): bound now to the one --subject names when
+    nothing bound it yet (never on a dry run, which only reads), else the one already bound, which wins. None when the
+    piece has no uuid or the engine cannot be reached (said in one line)."""
+    import re
+    sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+    import library  # noqa: PLC0415
+    import making  # noqa: PLC0415
+    piece = str(spec.get('piece_id') or '').lower()
+    if not re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', piece):
+        return None
+    try:
+        if dry_run or not subject or not when:
+            return making.bound_post_folder(making.record_of(piece))
+        named = library.post_folder(when, subject, spec['brand']['series'])
+        bound = making.bind_post_folder(piece, named)
+    except (making.MakingError, library.LibraryError, OSError, ValueError, KeyError) as error:
+        print(f've file: the piece\'s post folder could not be read from the engine ({error})', file=sys.stderr)
+        return None
+    if bound != named:
+        print(f've file: this piece is bound to the post folder "{bound}"; filing there')
+    return bound
+
+
 def cmd_file(args) -> int:
     from velib import filing
     try:
         _spec_file, spec, directory = _ve_dir(args.piece)
-        if not args.subject:
-            raise ValueError('--subject is required: the topic the post folder is named by')
         cuts = args.cut or list(spec['cuts'])
+        bound = _bound_post_folder(spec, args.subject, args.date or spec.get('publish_day'), args.dry_run)
+        if not args.subject and not bound:
+            raise ValueError('--subject is required: the topic the post folder is named by (the piece is bound to no folder yet)')
         result = filing.file(spec, directory, cuts, subject=args.subject, when=args.date, archive_at=args.archive,
-                             library_at=args.library, dry_run=args.dry_run)
+                             library_at=args.library, dry_run=args.dry_run, bound=bound)
         if result.get('dry_run'):
             print(f"ve file (dry run): post folder {result['post_folder']}; archive folder {result['archive_folder']}")
             for item in result['files']:

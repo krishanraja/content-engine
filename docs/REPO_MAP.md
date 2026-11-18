@@ -1278,6 +1278,8 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingReadBack`
 - `interface MakingLink`
 - `interface MakingPack`
+- `const POST_FOLDER_NAME`
+- `interface MakingPostFolder`
 - `interface MakingRecording`
 - `interface MakingThumbnail`
 - `interface MakingVideoAsset`
@@ -1307,6 +1309,8 @@ The making record: where one piece is on its way from the workroom to
 - `type MakingStyleVerdict`
 - `interface MakingGates`
 - `type MakingPatch`
+- `function boundPostFolder(m: Partial<Making> | null | undefined): string | null`
+- `function postFolderProblems(prev: Partial<Making> | null | undefined, patch: MakingPatch): string[]`
 - `const SCRIPT_SHA256`
 - `const TELEPROMPTER_ID`
 - `function parseScriptAudit(cut: string, v: unknown, now: string): { entry?: MakingScriptAudit; problem?: string }`
@@ -2749,6 +2753,7 @@ The production plan he opens, reviews and changes before the one production sess
 - `const SCENE_ROLE`
 - `interface PlanOption`
 - `interface PlanFetch`
+- `interface PlanGot`
 - `interface PlanBeat`
 - `interface PlanScene`
 - `interface PlanEdit`
@@ -2765,6 +2770,7 @@ The production plan he opens, reviews and changes before the one production sess
 - `function planRunOf(takesIn: unknown): PlanRun | null`
 - `function planView(plan: ProductionPlan | null, ctx: { picks: Array<{ doc_id: string; body: unknown; revision?: number; …`
 - `function planBrief(plan: ProductionPlan, swaps: Record<string, string>): string`
+- `function gotBrief(plan: Pick<ProductionPlan, 'got' | 'folder' | 'fetch'>): string`
 
 ### `apps/control-plane/api/board/_prompts.ts`
 
@@ -3020,7 +3026,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function mergeWeekPlan(base: unknown, main: unknown, week: unknown): unknown`
 - `async function readPieceDecisions(db: SupabaseClient, pieceId: string, env: Record<string, string | undefined> = proces…`
 - `async function readFiledScripts(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<string…`
-- `async function readProductionPlans(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[]): Promise<Record<str…`
+- `async function readProductionPlans(db: SupabaseClient, overlay: Overlay | null, pieceIds: string[], pieces: Body[] = []…`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
 - `async function readWeekIdeas(week: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
 - `function growthLiveLine(posts: GrowthPost[]): string`
@@ -3077,6 +3083,8 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `const GOOD_NEWS_STORIES`
 - `const CLAUDE_LABEL`
 - `const NOTES_HEADING`
+- `const VISUAL_POINTS_ASK`
+- `const VISUAL_POINTS_HEADING`
 - `interface ModelStep`
 - `interface ModelSource`
 - `interface ModelStory`
@@ -3395,10 +3403,13 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 ### `apps/control-plane/api/content-ideas/store.ts`
 
+- `const GOT_ROLE`
 - `const config`
 - `type LibraryCopy`
 - `type DecisionsReader`
 - `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy, readLink?: () => Promise<LinkReader | nu…`
+- `async function confirmGot(db: StoreDb, body: Record<string, unknown>, bearer: boolean, by: string, now = new Date(), fe…`
+- `const sentByOf = (by: string): string =>`
 - `export default createStoreHandler( async () => (await import('../_supabase.`
 
 ### `apps/control-plane/api/content-ideas/synthesize.ts`

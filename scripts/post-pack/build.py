@@ -190,6 +190,13 @@ def plan(post, base):
         raise PackError('the post file must hold one JSON object')
     folder = library.post_folder(post.get('date'), post.get('subject'), post.get('subchannel'),
                                  bool(post.get('launch')), post.get('day'))
+    # The folder the piece is bound to wins (main reads it from the engine first): one piece, one folder in 3 Posts.
+    bound = post.get('post_folder')
+    if bound and bound != folder:
+        if not library.is_post_folder(bound) or bound[:10] != folder[:10]:
+            raise PackError(f'this piece is bound to the post folder "{bound}", which is not a post folder for {folder[:10]}: '
+                            'tell Krish, never make a second folder')
+        folder = bound
     subject = folder.split(' - ', 1)[1]
     # Its series, passed to the story gate; the series line itself is retired (house rule SERIES_OPENER, 2026-10-21).
     series = None if post.get('launch') else library.subchannel_name(post.get('subchannel')).replace('.', '_')
@@ -621,13 +628,35 @@ def read_me(post, folder, planned, made):
     return '\n'.join(lines) + '\n'
 
 
-def build(post_path, out=DEFAULT_OUT, replace=False, today=None):
-    """Builds the pack folder. Returns {'folder', 'path', 'files'}."""
+def bound_folder_for(post_path):
+    """The post folder the post's piece is bound to, bound now to the one this post names when nothing bound it yet
+    (making.py bind_post_folder), or None for a post with no piece or when the engine cannot be reached (said in one
+    line; the pack is then named from its own subject, as before)."""
+    piece_id = making.piece_id_of(post_path)
+    if not piece_id:
+        return None
+    try:
+        post = json.loads(Path(post_path).read_text(encoding='utf-8-sig'))
+        named = library.post_folder(post.get('date'), post.get('subject'), post.get('subchannel'), bool(post.get('launch')), post.get('day'))
+        bound = making.bind_post_folder(piece_id, named)
+    except (OSError, ValueError, LibraryError, making.MakingError) as error:
+        print(f'post-pack: the piece\'s post folder could not be read from the engine ({error}); naming it from the subject', file=sys.stderr)
+        return None
+    if bound != named:
+        print(f'post-pack: this piece is bound to the post folder "{bound}"; packing under it')
+    return bound
+
+
+def build(post_path, out=DEFAULT_OUT, replace=False, today=None, bound=None):
+    """Builds the pack folder. Returns {'folder', 'path', 'files'}. `bound` is the post folder the piece is bound to
+    (bound_folder_for), which wins over the name the subject gives."""
     post_path = Path(post_path)
     try:
         post = json.loads(post_path.read_text(encoding='utf-8-sig'))
     except (OSError, json.JSONDecodeError) as error:
         raise PackError(f'{post_path} could not be read as JSON ({error})')
+    if bound and isinstance(post, dict):
+        post = {**post, 'post_folder': bound}
     links = post.get('links') if isinstance(post, dict) else None
     if links is not None and (not isinstance(links, dict) or any(
             not isinstance(url, str) or not re.fullmatch(r'https://\S+', url) for url in links.values())):
@@ -833,6 +862,12 @@ def self_test():
             return build(work / 'variant.json', tmp / 'other')
 
         refused('a day that does not match', lambda: variant(day='Wed'), 'its day is Mon, not Wed')
+        # One piece, one folder (Krish, 2026-11-18): the folder the piece is bound to wins over the subject's name, and a
+        # bound folder for another date is refused, never a second folder.
+        bound_name = post['date'] + ' Mon follow.the.money - Bound by his drop'
+        check('a bound post folder wins over the subject', build(work / 'post.json', tmp / 'bound', bound=bound_name)['folder'], bound_name)
+        refused('a bound folder for another date', lambda: build(work / 'post.json', tmp / 'bound2', bound='2026-10-07 Wed under.the.hood - Elsewhere'),
+                'never make a second folder')
         refused('an unknown kind', lambda: variant(files=[{'kind': 'tiktok-dance', 'file': 'card.png'}]), 'not a kind this tool knows')
         refused('a file with no purpose', lambda: variant(files=[{'category': 'social', 'file': 'card.png'}]), 'say what the file is for')
         refused('a file that is missing', lambda: variant(files=[{'kind': 'cover', 'file': 'nope.png'}]), 'is not a file')
@@ -938,8 +973,9 @@ def main():
         return
     if not a.post:
         ap.error('give the post file, or --self-test')
+    bound = bound_folder_for(a.post)
     try:
-        result = build(a.post, a.out or DEFAULT_OUT, a.replace)
+        result = build(a.post, a.out or DEFAULT_OUT, a.replace, bound=bound)
     except (PackError, LibraryError) as error:
         sys.exit(f'post-pack: {error}')
     print(f'Packed {len(result["files"])} files into {result["path"]}')

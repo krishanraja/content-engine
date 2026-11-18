@@ -416,24 +416,27 @@ export async function confirmFile(db: StoreDb, body: Body, bearer: boolean, by: 
   if (link.error || !link.data?.signedUrl) throw new StoreError(409, 'file_not_uploaded')
   const response = await fetcher(link.data.signedUrl, { signal: AbortSignal.timeout(120_000), redirect: 'error' })
   if (!response.ok || !response.body) throw new StoreError(409, 'file_not_uploaded')
-  const hash = createHash('sha256'); let n = 0
+  // The MD5 beside the sha256, read in the same pass: the asset library keeps both for a file it files into his Drive
+  // (_postFolder.ts fileToPostFolder), so the bytes are read once.
+  const hash = createHash('sha256'); const md5 = createHash('md5'); let n = 0
   const reader = response.body.getReader()
   try {
     for (;;) {
       const { value, done } = await reader.read(); if (done) break
       n += value.byteLength
       if (n > f.bytes) throw new StoreError(409, 'file_size_mismatch')
-      hash.update(value)
+      hash.update(value); md5.update(value)
     }
   } finally { await reader.cancel().catch(() => undefined) }
   if (n !== f.bytes) throw new StoreError(409, 'file_size_mismatch')
   if (hash.digest('hex') !== f.sha) throw new StoreError(409, 'file_hash_mismatch')
   const kind = (MATERIAL_KINDS as readonly string[]).includes(String(body.kind)) ? base.kind : kindOfFile(f.contentType, f.name)
-  return put(db, {
+  const stored = await put(db, {
     ...base.scope, material_key: base.material_key, ...(base.base_version !== null ? { base_version: base.base_version } : {}),
     storage: 'bucket', sha256: f.sha, bytes: f.bytes, object_key: f.objectKey, content_type: f.contentType, kind, role: base.role,
     title: base.title || f.name, note: base.note, source: sourceOf(bearer, body), source_ref: str(body.source_ref, 500), added_by: by, session_id: base.session_id,
   })
+  return { ...stored, md5: md5.digest('hex') }
 }
 
 export async function archive(db: StoreDb, id: string, by: string, reason: string | null): Promise<Body> {

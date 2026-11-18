@@ -854,6 +854,24 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
     Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
     held, still counts. A `send` written by anyone else is still refused.
 
+- **1.30.0 (18 Nov 2026)** added to a piece's production `plan`: **`got`**, every file Krish got himself and dropped on
+  the plan (`{ id, title, kind, content_type, beats, at, drive: { state, path } }`), **`folder`**, the piece's one post
+  folder in `3 Posts` (or null before anything bound one), and on each `fetch` its own **`got`**. Krish, 2026-11-18:
+  "Can we add a drag and drop/upload functionality where I can put multiple files? image, small videos and maybe some
+  text/pdf files etc", then "when I drop stuff in there, it needs to be filed properly in my Drive in the right place, so
+  its easily accessible later on. every resource along the way for a single piece needs to be bound to the piece in a
+  bullet proof way". A file filed on a piece with role `krish_got` (the board's drop, or any session) is a material on
+  the piece keyed by its beats (`got:<beats>:<sha256 16>`), and the same bytes become a library row at
+  `3 Posts/<folder>/3 Video/Your materials/<BEATS> - <name>`, which the library sync writes into his Drive
+  (`apps/control-plane/api/_postFolder.ts`; `docs/DRIVE.md`, "Post folders are bound to their pieces"). `drive.state` is
+  `in_drive` once the sync wrote it, `filing` while it waits, `not_filed` when no row holds it (the same drop again files
+  it). The production prompt names each file by its material id and says where they are in Drive (`gotBrief`). The same
+  day a ready plan's prompt asks him the one question only he can answer before he copies it (`notes.ask`,
+  `VISUAL_POINTS_ASK`): any point he wants made visually that the script does not make strongly enough (Krish,
+  2026-11-18: "for example I talk about seeing a lot of upgrade offers which are hiding different pricing models - and I
+  dont mention clearly enough what a grandfathered pricing model is, and that you can stay on it if you like"); his
+  answer rides the prompt under `VISUAL_POINTS_HEADING`, which gives each point a picture of its own.
+
 - **1.29.0 (18 Nov 2026)** added to a piece's production `plan`: **`fetch`**, what Krish gets himself (`{ beat, what,
   why }`), and on each beat's picture and options **`lever`** (impact, hilarity, absurdity, exaggeration, beauty,
   clarity), **`maker`** (codex, generated, real, you), **`why`** (why it is a 100/10) and **`basis`** (script or

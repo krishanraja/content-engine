@@ -6,6 +6,7 @@ import { createBoardHandler } from '../../apps/control-plane/api/board/_handler'
 import { TAKES_OP, TAKES_SLACK_MS, boardNames, newTakes, pickTakes, productionBrief, takesInOf, takesPress } from '../../apps/control-plane/api/board/_takesIn'
 import { approval } from './_approvals'
 import { parsePlan, planBrief, swapsOf } from '../../apps/control-plane/api/board/_productionPlan'
+import { VISUAL_POINTS_ASK, VISUAL_POINTS_HEADING } from '../../apps/control-plane/api/board/_weekModel'
 import { validBody } from '../../apps/control-plane/api/board/_contracts'
 
 // Krish, 2026-11-17: "whenever I press approve script, the new board state should be waiting for me to confirm the videos
@@ -105,6 +106,19 @@ describe('the production plan on the card (contract 1.25.0; Krish, 2026-11-17: "
       expect(prompt).toContain(s)
     expect(prompt).toContain('A real social post: The viral post about the power bill (source: https://example.org/post)   [Krish swapped this in]')
     expect((it.plan as Body).beats[0]).toMatchObject({ swapped: true, picture: { id: 'post' } })
+  })
+
+  it('a ready plan asks him which points to make visually before he copies the prompt (Krish, 2026-11-18)', () => {
+    const it = card(withPlan())
+    const notes = (it.next as Body).notes as Body
+    expect(notes.ask).toBe(VISUAL_POINTS_ASK)
+    expect(notes.heading).toBe(VISUAL_POINTS_HEADING)
+    expect(notes.heading).toMatch(/a picture of its own/)
+    // His answer is saved on the board as his notes, the same press as every prompt's notes.
+    expect(notes.save).toMatchObject({ kind: 'press', body: { use: 'claude_notes', piece_id: TUE } })
+    // Before the plan is ready the prompt keeps the general notes question.
+    const making = card(inputs({ ...PICKED, takes_in: { ...TAKES, plan_run: { sent: true, at: '2026-11-17T11:00:00Z', reason: null } } }))
+    expect(((making.next as Body).notes as Body).ask).not.toBe(VISUAL_POINTS_ASK)
   })
 
   it('never claims a cut fits when even 1.25x leaves it over the limit', () => {

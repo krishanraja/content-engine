@@ -76,6 +76,10 @@ export interface MakingToneFloor { script_sha256: string; reference_sha256: stri
 export interface MakingReadBack { script_sha256: string; at: string; by: string; readers: string[]; found: 'nothing lost' | 'approved by Krish'; krish_words?: string; readers_skipped?: true }
 export interface MakingLink { url: string; at: string }
 export interface MakingPack { folder: string; packed_at: string; files: number; sent_at?: string; headline?: string }
+/** A post folder's name as library.py post_folder makes it: the date, the day and the series (or Launch), then the subject. */
+export const POST_FOLDER_NAME = /^\d{4}-\d{2}-\d{2} (?:(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun) [a-z.]+|Launch) - \S/
+/** The post folder a piece is bound to, when and by whom (Making.post_folder). */
+export interface MakingPostFolder { folder: string; bound_at: string; by: string }
 /** A recording's path is the engine's copy, `recordings/<sha256>.<ext>`
  *  (scripts/post-pack/recording_match.py writes it so), which says exactly
  *  which take it was and lets the next match skip it. `script_sha256` is the
@@ -175,6 +179,11 @@ export interface Making {
   visual_gate?: MakingCheck
   script_check?: MakingScriptCheck
   pack?: MakingPack
+  /** The piece's one folder in `3 Posts` (docs/DRIVE.md, "Post folders are bound to their pieces"; Krish, 2026-11-18:
+   *  "every resource along the way for a single piece needs to be bound to the piece in a bullet proof way"). Bound
+   *  once, by the first writer that needs it (the pack, or a file he drops on the production plan, _postFolder.ts), and
+   *  never moved: every later pack must name it (postFolderProblems). Written only by the server. */
+  post_folder?: MakingPostFolder
   recordings?: MakingRecording[]
   video_assets?: MakingVideoAsset[]
   channels?: Partial<Record<MakingChannel, MakingChannelPost>>
@@ -238,6 +247,24 @@ export interface MakingGates {
 }
 
 export type MakingPatch = Partial<Omit<Making, 'updated_at' | 'by' | 'started_at' | 'descript' | 'thumbnail_options'>> & { thumbnail_options?: ThumbnailOptionsPatch }
+
+/** The folder in `3 Posts` the piece is bound to: its binding, else the folder its pack was made in (a record from before
+ *  the binding was kept), else null. Every writer into the piece's post folder reads this one rule. */
+export function boundPostFolder(m: Partial<Making> | null | undefined): string | null {
+  if (!m || typeof m !== 'object') return null
+  const bound = isObj(m.post_folder) && typeof m.post_folder.folder === 'string' ? m.post_folder.folder.trim() : ''
+  if (bound) return bound
+  const packed = isObj(m.pack) && typeof m.pack.folder === 'string' ? m.pack.folder.trim() : ''
+  return packed || null
+}
+
+/** A pack that names another folder than the one the piece is bound to: refused, so one piece is never spread across
+ *  two folders (W3.5, post_binding.py). Empty when the patch carries no pack or names the bound folder. */
+export function postFolderProblems(prev: Partial<Making> | null | undefined, patch: MakingPatch): string[] {
+  const bound = boundPostFolder(prev)
+  if (!patch.pack || !bound || patch.pack.folder === bound) return []
+  return [`this piece is bound to the post folder "${bound}": make the pack under it (scripts/post-pack/build.py and ve file use it by themselves); the pack named "${patch.pack.folder}"`]
+}
 
 const MAX_PROBLEMS = 40
 const MAX_LIST = 40
@@ -486,6 +513,14 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
       check.title_line = Object.fromEntries(entries.map(([c, r]: [string, any]) => [c, { title: r.title, script_sha256: r.script_sha256 }])) as Partial<Record<MakingCut, MakingTitleLine>>
     }
     patch[key] = check
+  }
+  // A writer about to file into the piece's post folder binds it, or learns the one it is already bound to: the answer's
+  // making.post_folder is the folder to use (mergeMaking never moves a binding). build.py and ve file call it first.
+  if (body.post_folder !== undefined) {
+    const v = body.post_folder
+    const folder = isObj(v) ? str(v.folder, 100) : null
+    if (!folder || !POST_FOLDER_NAME.test(folder) || /[<>:"/\\|?*\u0000-\u001f]/.test(folder) || /[ .]$/.test(folder)) problems.push('post_folder needs {folder}: a post folder name like "2026-11-17 Tue off.day - Data centres"')
+    else patch.post_folder = { folder, bound_at: now, by: str(body.by, 60) || 'Claude Code' }
   }
   if (body.pack !== undefined) {
     const v = body.pack
@@ -748,6 +783,14 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
   const next: Making = { ...base, started_at: started, updated_at: stamp, by }
   for (const key of ['workroom', 'publish_manager', 'visual_gate', 'script_check', 'pack', 'session'] as const) {
     if (patch[key] !== undefined) (next as any)[key] = patch[key]
+  }
+  // The post folder binds once and never moves: the server's own binding (a file he dropped), else the first pack's.
+  if (!boundPostFolder(base)) {
+    if (patch.post_folder && patch.post_folder.folder) next.post_folder = { folder: patch.post_folder.folder, bound_at: patch.post_folder.bound_at || stamp, by: patch.post_folder.by || by }
+    else if (patch.pack?.folder) next.post_folder = { folder: patch.pack.folder, bound_at: stamp, by }
+  } else if (!isObj(base.post_folder) && base.pack?.folder) {
+    // A record from before the binding was kept: its pack's folder becomes the binding on its next write.
+    next.post_folder = { folder: base.pack.folder, bound_at: base.pack.packed_at || stamp, by: base.by || by }
   }
   for (const key of ['recordings', 'video_assets'] as const) {
     if (!patch[key]) continue

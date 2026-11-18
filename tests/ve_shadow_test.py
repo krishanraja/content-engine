@@ -215,6 +215,19 @@ class FileTest(unittest.TestCase):
         planned = filing.plan(spec, ['proof-tall'], subject='No spending no sending', when='2026-11-05')
         self.assertEqual(planned['post_folder'], '2026-11-05 Thu off.day - No spending no sending')
 
+    def test_a_bound_post_folder_wins_over_the_subject(self):
+        # One piece, one folder (Krish, 2026-11-18: "every resource along the way for a single piece needs to be bound to
+        # the piece in a bullet proof way"): the folder his dropped files bound is the one ve files into.
+        bound = '2026-11-06 Fri mind.the.gap - Where does AI get built'
+        planned = filing.plan(self.spec, ['proof-tall'], subject='Two passports', when='2026-11-06', bound=bound)
+        self.assertEqual(planned['post_folder'], bound)
+        self.assertTrue(all(f['library'].startswith(f'3 Posts/{bound}/3 Video/') for f in planned['files']))
+        self.assertEqual(filing.plan(self.spec, ['proof-tall'], subject=None, when='2026-11-06', bound=bound)['post_folder'], bound)
+        with self.assertRaisesRegex(ValueError, 'never make a second folder'):
+            filing.plan(self.spec, ['proof-tall'], subject='Two passports', when='2026-11-06', bound='2026-11-05 Thu off.day - Elsewhere')
+        with self.assertRaisesRegex(ValueError, 'a subject is needed'):
+            filing.plan(self.spec, ['proof-tall'], subject=None, when='2026-11-06')
+
     def test_no_record_is_not_delivered(self):
         self.assertEqual(filing.delivered(None, self.library, 'proof-tall'), (False, 'not filed: run ve file'))
 
