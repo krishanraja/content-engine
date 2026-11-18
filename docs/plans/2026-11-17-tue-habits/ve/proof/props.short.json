@@ -1,0 +1,512 @@
+{
+  "pieceId": "701a2c55-7400-4dc8-99cb-d6001147ae16",
+  "cutId": "short",
+  "format": "voice-led-pictures",
+  "aspect": "9:16",
+  "fps": 30,
+  "durationFrames": 240,
+  "tokens": {
+    "ink": "#0C1512",
+    "inkDeep": "#070D0B",
+    "inkSoft": "#16221D",
+    "cream": "#F4EFE4",
+    "mint": "#7EF0C0",
+    "channel": "#7EF0C0"
+  },
+  "series": {
+    "label": "off.day",
+    "day": "Tuesday",
+    "promise": "makeyourmindup.ai",
+    "site": "makeyourmindup.ai"
+  },
+  "brand": {
+    "mark": {
+      "src": "/home/user/content-engine/.scratch/ve/habits/assets/src/assets/brand/makeyourmindup/makeyourmindup-mark.png",
+      "pixelWidth": 831,
+      "pixelHeight": 740
+    },
+    "logo": {
+      "src": "/home/user/content-engine/.scratch/ve/habits/assets/src/assets/brand/makeyourmindup/makeyourmindup-horizontal.png",
+      "pixelWidth": 1200,
+      "pixelHeight": 141
+    },
+    "stacked": {
+      "src": "/home/user/content-engine/.scratch/ve/habits/assets/src/assets/brand/makeyourmindup/makeyourmindup-stacked.png",
+      "pixelWidth": 2415,
+      "pixelHeight": 740
+    }
+  },
+  "segments": [],
+  "audio": {
+    "stem": {
+      "src": "/home/user/content-engine/.scratch/ve/habits/assets/audio.short.wav",
+      "trimBeforeFrames": 834
+    },
+    "sfx": []
+  },
+  "captions": [
+    {
+      "fromFrame": 0,
+      "toFrame": 4,
+      "words": [
+        {
+          "text": "we",
+          "atFrame": 0
+        },
+        {
+          "text": "don't",
+          "atFrame": 0
+        },
+        {
+          "text": "put",
+          "atFrame": 0
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 4,
+      "toFrame": 25,
+      "words": [
+        {
+          "text": "the",
+          "atFrame": 4
+        },
+        {
+          "text": "car",
+          "atFrame": 8
+        },
+        {
+          "text": "on",
+          "atFrame": 13
+        },
+        {
+          "text": "trial.",
+          "atFrame": 17
+        }
+      ],
+      "swipeIndex": 3
+    },
+    {
+      "fromFrame": 25,
+      "toFrame": 57,
+      "words": [
+        {
+          "text": "We",
+          "atFrame": 25
+        },
+        {
+          "text": "look",
+          "atFrame": 42
+        },
+        {
+          "text": "at",
+          "atFrame": 47
+        },
+        {
+          "text": "whoever",
+          "atFrame": 52
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 57,
+      "toFrame": 88,
+      "words": [
+        {
+          "text": "was",
+          "atFrame": 57
+        },
+        {
+          "text": "driving.",
+          "atFrame": 64
+        }
+      ],
+      "swipeIndex": 1
+    },
+    {
+      "fromFrame": 88,
+      "toFrame": 107,
+      "words": [
+        {
+          "text": "AI",
+          "atFrame": 88
+        },
+        {
+          "text": "is",
+          "atFrame": 89
+        },
+        {
+          "text": "the",
+          "atFrame": 97
+        },
+        {
+          "text": "car",
+          "atFrame": 101
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 107,
+      "toFrame": 151,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 107
+        },
+        {
+          "text": "you're",
+          "atFrame": 116
+        },
+        {
+          "text": "the",
+          "atFrame": 123
+        },
+        {
+          "text": "driver.",
+          "atFrame": 127
+        }
+      ],
+      "swipeIndex": 3
+    },
+    {
+      "fromFrame": 151,
+      "toFrame": 187,
+      "words": [
+        {
+          "text": "So",
+          "atFrame": 151
+        },
+        {
+          "text": "the",
+          "atFrame": 153
+        },
+        {
+          "text": "old",
+          "atFrame": 164
+        },
+        {
+          "text": "AI",
+          "atFrame": 169
+        },
+        {
+          "text": "did",
+          "atFrame": 180
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 187,
+      "toFrame": 229,
+      "words": [
+        {
+          "text": "it",
+          "atFrame": 187
+        },
+        {
+          "text": "excuse",
+          "atFrame": 197
+        },
+        {
+          "text": "is",
+          "atFrame": 212
+        },
+        {
+          "text": "never",
+          "atFrame": 223
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 229,
+      "toFrame": 240,
+      "words": [
+        {
+          "text": "going",
+          "atFrame": 229
+        },
+        {
+          "text": "to",
+          "atFrame": 233
+        },
+        {
+          "text": "save",
+          "atFrame": 239
+        },
+        {
+          "text": "you",
+          "atFrame": 240
+        },
+        {
+          "text": "and",
+          "atFrame": 240
+        }
+      ],
+      "swipeIndex": null
+    }
+  ],
+  "captionStyle": "house",
+  "captionTheme": "art-directed",
+  "beats": [
+    {
+      "id": "b8",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 0,
+      "toFrame": 25,
+      "uses": [
+        "plate-b8"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": true,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 17
+    },
+    {
+      "id": "b9",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 25,
+      "toFrame": 88,
+      "uses": [
+        "driver"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 75
+    },
+    {
+      "id": "b10a",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 88,
+      "toFrame": 151,
+      "uses": [
+        "plate-b10a"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 138
+    },
+    {
+      "id": "b10b",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 151,
+      "toFrame": 240,
+      "uses": [
+        "plate-b10a",
+        "excuse"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 232
+    }
+  ],
+  "objects": [
+    {
+      "obj": "plate-b8",
+      "device": "photo_plate",
+      "meaning": "the generated picture on b8",
+      "fromFrame": 0,
+      "toFrame": 25,
+      "variants": {},
+      "params": {
+        "image": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b8-car-on-trial.png",
+          "pixelWidth": 1024,
+          "pixelHeight": 1536
+        },
+        "push": 0.06,
+        "generated": true,
+        "regions": {
+          "judge": {
+            "x": 0.56,
+            "y": 0.16,
+            "w": 0.34,
+            "h": 0.18
+          }
+        }
+      }
+    },
+    {
+      "obj": "plate-b10a",
+      "device": "photo_plate",
+      "meaning": "the generated picture on b10a",
+      "fromFrame": 88,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "image": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b10-outrun.png",
+          "pixelWidth": 1024,
+          "pixelHeight": 1819
+        },
+        "push": 0.06,
+        "generated": true,
+        "regions": {
+          "runner": {
+            "x": 0.02,
+            "y": 0.3,
+            "w": 0.62,
+            "h": 0.42
+          }
+        }
+      }
+    },
+    {
+      "obj": "excuse",
+      "device": "slam_word",
+      "meaning": "the old excuse taped off and declared void",
+      "fromFrame": 151,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "word": "VOID",
+        "tapeText": "THE AI DID IT"
+      }
+    },
+    {
+      "obj": "driver",
+      "device": "photo_plate",
+      "meaning": "the real driver seat in a real IIHS crash, ringed on driving",
+      "fromFrame": 25,
+      "toFrame": 88,
+      "variants": {},
+      "params": {
+        "video": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/source/b9-driver-cam.mp4",
+          "pixelWidth": 1920,
+          "pixelHeight": 1080,
+          "trimBeforeFrames": 30
+        },
+        "push": 0.04,
+        "focus": {
+          "x": 0.35,
+          "y": 0.5
+        },
+        "source": "IIHS · small overlap front test",
+        "regions": {
+          "driver": {
+            "x": 0.24,
+            "y": 0.08,
+            "w": 0.2,
+            "h": 0.5
+          }
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "b8-0",
+      "obj": "plate-b8",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 0
+    },
+    {
+      "id": "b8-1",
+      "obj": "plate-b8",
+      "verb": "move",
+      "toState": "judge",
+      "atFrame": 8
+    },
+    {
+      "id": "b9-0",
+      "obj": "driver",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 25
+    },
+    {
+      "id": "b9-1",
+      "obj": "driver",
+      "verb": "mark",
+      "toState": "driver",
+      "atFrame": 64
+    },
+    {
+      "id": "b10a-0",
+      "obj": "plate-b10a",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 88
+    },
+    {
+      "id": "b10a-1",
+      "obj": "plate-b10a",
+      "verb": "move",
+      "toState": "runner",
+      "atFrame": 116
+    },
+    {
+      "id": "b10b-0",
+      "obj": "excuse",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 169
+    }
+  ],
+  "motion": {
+    "style": "swiss-kinetic-type",
+    "profile": {
+      "entrance": {
+        "kind": "slide",
+        "frames": 5,
+        "easing": "enter",
+        "distancePx": 48,
+        "overshootPct": 3
+      },
+      "stagger": {
+        "frames": 3,
+        "unit": "word"
+      },
+      "exitFrames": 5,
+      "onTwos": false,
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
+      "transition": "cut",
+      "typeReveal": {
+        "kind": "word"
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
+      "driftPct": 1,
+      "countFrames": 18,
+      "type": {
+        "font": "house",
+        "hero": true
+      },
+      "note": "type is the picture: the beat's key phrase (its text device's words, else the clause he is saying) set in Anton at the largest size the channel safe area takes, words sliding in on the six-column grid with the house enter bezier, stagger 3 frames; mint only as the fill behind the answer word; never scaled past 105%"
+    }
+  },
+  "ingredients": {
+    "energy": "high",
+    "transition": "cut",
+    "camera": "none",
+    "hits": false
+  }
+}
