@@ -170,7 +170,11 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         // incoming one for the transition's frames. With no style every beat still cuts. A leading handover keeps it
         // LEAD_AFTER frames more, its clock still running so its exit carries on while the next beat arrives over it.
         const leadOut = leading && beat.transitionOut !== 'carry' && keepsOutgoing(profile, beat, next, true)
-        const overlap = leadOut ? LEAD_AFTER : profile && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
+        // A full-screen picture and a beat that shows his face never dissolve into each other: half of each is his face
+        // as a ghost through the picture (Krish, 2026-11-18, yes to cutting them clean). They cut; same kinds still dissolve.
+        const fullScreen = (b: EngineBeat) => b.layout === 'STAGE' && b.plate?.source === 'none'
+        const kindChange = !!next && !!props.layout && fullScreen(beat) !== fullScreen(next)
+        const overlap = leadOut ? LEAD_AFTER : profile && !kindChange && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
         const outgoing = frame >= beat.toFrame && frame < beat.toFrame + overlap
         if ((frame < beat.fromFrame || frame >= beat.toFrame) && !outgoing) return null
         const now = outgoing && !leadOut ? beat.toFrame - 1 : frame
@@ -191,7 +195,10 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const view = profile || focusOn ? cameraView(profile, beat, slots, objects, props, shown, focusOn) : undefined
         const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region, focusOn ? FOCUS_SCALE : undefined)
           : view?.focusable ? focusMotion(view, now, beat, FOCUS_SCALE, width, layerHeight) : undefined
-        const fade = (motion?.fade ?? 1) * (outgoing && !leadOut ? 1 - progress(frame - beat.toFrame, overlap, (t) => t) : 1)
+        // Between two full-screen pictures the outgoing one stays solid under the incoming one's fade, so nothing under
+        // both (his take) shows through the dissolve.
+        const underFullScreen = outgoing && !!next && fullScreen(beat) && fullScreen(next)
+        const fade = (motion?.fade ?? 1) * (outgoing && !leadOut && !underFullScreen ? 1 - progress(frame - beat.toFrame, overlap, (t) => t) : 1)
         // The beat's own move in a leading handover: arriving over the one before, and leaving, dimming to dark.
         const lead = leading ? leadMoveAt(ingredients!, beat, !!prev && prev.transitionOut !== 'carry', leadOut, frame, width, height) : undefined
         const sweep = profile && (beat.layout === 'STAGE' || beat.layout === 'SPLIT') ? sweepStyle(profile, props.tokens, beat, now) : null
