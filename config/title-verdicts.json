@@ -92,6 +92,24 @@
  ],
  "verdicts": [
   {
+   "title": "71% of HR chiefs want you overruling AI",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "Names who (HR chiefs, IBM's study), the surprising number and what they want of the viewer; no stand-in pronoun",
+   "krish": "71% of HR chiefs want you overruling AI (his pick of two checked options, Claude Code session, 18 Nov 2026)",
+   "on": "2026-11-18",
+   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16"
+  },
+  {
+   "title": "71% of HR chiefs want you overruling AI",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "Names who (HR chiefs, IBM's study), the surprising number and what they want of the viewer; no stand-in pronoun",
+   "krish": "71% of HR chiefs want you overruling AI (his pick of two checked options, Claude Code session, 18 Nov 2026)",
+   "on": "2026-11-18",
+   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16"
+  },
+  {
    "title": "They Faked AI Use",
    "surface": "cover",
    "verdict": "rejected",
