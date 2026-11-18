@@ -4,3 +4,4 @@
 {"ts": "2026-11-18T15:57:50.929357Z", "kind": "preflight", "amount": 0, "note": "skill", "receipt": {"check": "skill", "version_or_hash": "604027cf1196b9f2", "at": "2026-11-18T15:57:50.929357Z", "by": "Claude Code", "name": "ve"}}
 {"ts": "2026-11-18T15:57:50.929413Z", "kind": "preflight", "amount": 0, "note": "taste", "receipt": {"check": "taste", "version_or_hash": "0", "at": "2026-11-18T15:57:50.929413Z", "by": "Claude Code"}}
 {"ts": "2026-11-18T19:52:14.189111Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "ccf4e930e6e6e3b9", "at": "2026-11-18T19:52:14.189111Z", "by": "Claude Code"}}
+{"ts": "2026-11-18T22:09:38.137667Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "f45a5c576e5f671d", "at": "2026-11-18T22:09:38.137667Z", "by": "Claude Code"}}

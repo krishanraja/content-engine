@@ -294,6 +294,15 @@ class CompileTest(unittest.TestCase):
         for page, after in zip(props['captions'], props['captions'][1:]):
             self.assertEqual(page['toFrame'], after['fromFrame'])
 
+    def test_a_picked_caption_style_keeps_phrase_pages(self):
+        # Krish, 2026-11-13: "the captions should be decoupled from the animation styles"; rack-focus picked 17 Nov.
+        spec = load_json(FIXTURE / 'spec.json')
+        spec['brand'] = {**spec['brand'], 'captions': 'word'}
+        spec.setdefault('style', {})['captions'] = {'theme': 'rack-focus', 'placement': 'lower', 'reason': 'picked'}
+        props = compile_cut(spec, next(iter(spec['cuts'])), timed_words(), FIXTURE)
+        self.assertEqual(props['captionStyle'], 'house')
+        self.assertGreater(max(len(page['words']) for page in props['captions']), 1)
+
     def test_the_hook_is_the_intro(self):
         # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns
         # frame 0 even when the first word comes later; no story card or logo sting is compiled ahead of it, and the
@@ -379,6 +388,7 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(generated_plate_problem(asset, 'photo_plate'), '')
         self.assertIn('Phase 2', generated_plate_problem(asset, 'evidence_card'))
         self.assertIn('job_id', generated_plate_problem(dict(asset, job_id=None), 'photo_plate'))
+        self.assertEqual(generated_plate_problem(asset, 'scene_plate'), '')
 
     def test_sfx_kit_present_and_absent(self):
         spec = load_json(FIXTURE / 'spec.json')
