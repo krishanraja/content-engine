@@ -2,15 +2,15 @@
   "schema": "ve-proof/1",
   "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
   "cut": "short",
-  "beat": "power",
+  "beat": "title",
   "rule": "named in the spec (proof.beat)",
-  "start": 48.933,
-  "end": 56.933,
+  "start": 10.967,
+  "end": 18.967,
   "beat_s": [
-    50.233,
-    55.6
+    13.033,
+    16.867
   ],
-  "sha256": "5c60d2cbda0a2b8f88ccc58a7445c421ce50c63d8e363b30704a12257b35556a",
+  "sha256": "fd51343422a01fe8fc8ccafa5b66257da51eaa1899be09ef7b54f16b22d70571",
   "spec_sha256": "e0e7a3881102bf678d2b96c52c815d738a57ad37a3238c618aecd4b7fb064ce0",
   "structure": {
     "format": "face-with-proof",
@@ -217,7 +217,7 @@
     ]
   },
   "style_module": "eating-jobs-ladder",
-  "props_sha256": "1408bd4b10d996c4b8bc882de279c3521a1501f8ac63556e6c1197f64a32d75f",
+  "props_sha256": "dd829f7e6de6b2a2896fc1385408a5ab8037d681183b0ff0b38cb0c63f4aaaba",
   "qc": {
     "measured_pass": null,
     "complete": false,
@@ -244,5 +244,39 @@
       "structure",
       "caption on the light stage"
     ]
-  ]
+  ],
+  "engine_sha256": "e97863db1ad378749b7e2f665ad87aaed41f197c94e9f8aeb6c3bf573ba726b0",
+  "assets_sha256": {
+    "bg-city-dusk": "107539f8d1b4c68f2d05ba9c1e2bc002109c35e1235b0cc166cfeab76cbeae2c",
+    "bg-data-hall": "3730051bf5718d3577cfad4dc96c53bd8bd1abb0d20497ebed4630e065ea424c",
+    "bg-polling": "aac356ea0e5e482adfed416d67a671de86818696b76f6f16e801ff52d1b17d5c",
+    "bg-pylons": "df1bf828f3ef509082fa3c27222962813c53ebac28e5d1eb14f6b7790a611601",
+    "ddn-headline": "747439fd15b47d77da609f71da27096a4bcf5a414c51318f8b9da0d9f6992727",
+    "ddn-lead": "215bcbe5a998a19b621ce4f1a82db36c5ea3486cebce225bf622ddb243194fdd",
+    "el-creator-deal": "fc0d51c196f8d92d5485ca74b83dede5d9f7f455956f6d636372371685a4aeae",
+    "el-first-year": "a410e40a9e8a1473e19057984288e3ac45da75205524bf5bb9f9b91ab522ff88",
+    "el-plans": "2fb634b6e0c404bb1fd06172d99f7075eb67548fecfd34ffdaaaaea7bffbe1eb",
+    "hf-bonus-expires": "44b870c56e9fcd7fbae4d21e7069aaccb866cb0a451503af521de60f4a202664",
+    "hf-plans": "cf4a4a758eaa17e8e8053381fe7a61e3e8692fa9c7f1132430e3fd638ff4cacc",
+    "hf-team-credits": "ad9a0186fa4f36bb8b222666b1f85b740fe2a989a3fb72185e1b6148737ebe9b",
+    "hf-ultra-deal": "9e325df57fcf769ca73965a7cd1d2ef3aae8fffd1284bec98e7074330cac36d3",
+    "piqua-north-main": "b01af9c091b281a720ea1f3005e6833c50b922f3d1ac752d3d89ab547d731f5e",
+    "scene-ban-sign": "8e1b10c25f4afbed9eb6117f49f97775fbe387173c750b607159b4d6efc32828",
+    "scene-ban-sign-l": "e47816f667ada47471950088f7e96299ff7d53f757646ae4c732f4d07ef0e013",
+    "scene-boardroom": "aed24faee31ecebd12d7dca048581d82bb21453bc4ceda19dba0cd7620f871a4",
+    "scene-cow": "d69922249b2498e0742da085c2b283ddc8503d2968a57683f65a8e9cab275227",
+    "scene-fly": "69589922ba6f080ffa22b2a7877e96c8de0d1f874a9ece6b8de179218b16c9aa",
+    "scene-garden": "b30700e8df11dc5a6163cb7e9a3d50ae2baf101a60674808a3a820958c0defcf",
+    "scene-nameplate": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222",
+    "wyso-lead": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
+  },
+  "made_at": "2026-11-19T12:17:43Z",
+  "frames": {
+    "pass": null,
+    "status": "not_run",
+    "reason": "the props could not be read for frames: Cue dc-0 has no unique beat slot",
+    "problems": [],
+    "frames": 0
+  },
+  "sendable": false
 }

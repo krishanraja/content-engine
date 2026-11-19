@@ -1,0 +1,355 @@
+{
+  "schema": "ve-proof/1",
+  "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+  "cut": "long",
+  "beat": "l17",
+  "rule": "named in the spec (proof.beat)",
+  "start": 162.267,
+  "end": 175.9,
+  "beat_s": [
+    162.267,
+    175.9
+  ],
+  "sha256": "29606f2e70f3fb2afa1a93515036997863a304f044834148d0567561c95662cb",
+  "spec_sha256": "1d37cef9ee691358a1dbf9ef27f8aa9457aaacb0c24eb3a77ad2f42854e7d424",
+  "structure": {
+    "format": "face-with-proof",
+    "aspect": "16:9",
+    "motion": "eating-jobs-ladder",
+    "objects": [
+      [
+        "ban_stat_l",
+        "kinetic_stat"
+      ],
+      [
+        "block_l",
+        "facility_block"
+      ],
+      [
+        "ddn_l",
+        "evidence_card"
+      ],
+      [
+        "field41_l",
+        "unit_field"
+      ],
+      [
+        "gallup_dc",
+        "stat_strip"
+      ],
+      [
+        "gallup_nuke",
+        "stat_strip"
+      ],
+      [
+        "hf_deal_l",
+        "evidence_card"
+      ],
+      [
+        "meta_line_l",
+        "evidence_card"
+      ],
+      [
+        "meter_l",
+        "credit_meter"
+      ],
+      [
+        "recall_stat_l",
+        "kinetic_stat"
+      ],
+      [
+        "recalled_l",
+        "stamp"
+      ],
+      [
+        "small_print_l",
+        "evidence_card"
+      ]
+    ],
+    "beats": [
+      [
+        "hook",
+        "P1",
+        [
+          "ddn_l",
+          "recalled_l"
+        ]
+      ],
+      [
+        "l2",
+        "STAGE",
+        [
+          "block_l"
+        ]
+      ],
+      [
+        "l3",
+        "P1",
+        []
+      ],
+      [
+        "l4",
+        "STAGE",
+        [
+          "gallup_dc",
+          "gallup_nuke"
+        ]
+      ],
+      [
+        "l5",
+        "P1",
+        []
+      ],
+      [
+        "face",
+        "P1",
+        []
+      ],
+      [
+        "l7",
+        "STAGE",
+        [
+          "block_l"
+        ]
+      ],
+      [
+        "l8",
+        "STAGE",
+        [
+          "block_l"
+        ]
+      ],
+      [
+        "l9",
+        "P1",
+        [
+          "block_l"
+        ]
+      ],
+      [
+        "proof",
+        "P6",
+        [
+          "ban_stat_l",
+          "block_l"
+        ]
+      ],
+      [
+        "l11",
+        "P3",
+        [
+          "recall_stat_l"
+        ]
+      ],
+      [
+        "l12",
+        "P1",
+        [
+          "field41_l"
+        ]
+      ],
+      [
+        "l13",
+        "STAGE",
+        []
+      ],
+      [
+        "l14",
+        "STAGE",
+        [
+          "meta_line_l"
+        ]
+      ],
+      [
+        "l15",
+        "P1",
+        []
+      ],
+      [
+        "l16",
+        "P1",
+        []
+      ],
+      [
+        "l17",
+        "STAGE",
+        [
+          "block_l"
+        ]
+      ],
+      [
+        "l18",
+        "STAGE",
+        []
+      ],
+      [
+        "l19",
+        "P1",
+        []
+      ],
+      [
+        "l20",
+        "STAGE",
+        []
+      ],
+      [
+        "l20b",
+        "P1",
+        [
+          "block_l"
+        ]
+      ],
+      [
+        "l21",
+        "P1",
+        []
+      ],
+      [
+        "l22",
+        "STAGE",
+        []
+      ],
+      [
+        "l23",
+        "P1",
+        [
+          "block_l"
+        ]
+      ],
+      [
+        "l24",
+        "P1",
+        [
+          "block_l"
+        ]
+      ],
+      [
+        "l25",
+        "STAGE",
+        [
+          "block_l"
+        ]
+      ],
+      [
+        "l26a",
+        "P6",
+        [
+          "hf_deal_l"
+        ]
+      ],
+      [
+        "l26b",
+        "STAGE",
+        [
+          "small_print_l"
+        ]
+      ],
+      [
+        "l26c",
+        "STAGE",
+        [
+          "meter_l"
+        ]
+      ],
+      [
+        "l27",
+        "STAGE",
+        []
+      ],
+      [
+        "l28",
+        "P1",
+        [
+          "block_l"
+        ]
+      ],
+      [
+        "close",
+        "STAGE",
+        []
+      ]
+    ]
+  },
+  "style_module": "eating-jobs-ladder",
+  "props_sha256": "8260b1baec552e8672c5d26d1f2150a63cd174855c4b55271c4a17373e7c506c",
+  "qc": {
+    "measured_pass": false,
+    "complete": false,
+    "failing": [
+      "audio.bed_continuity",
+      "captions.ocr",
+      "captions.render"
+    ]
+  },
+  "type": [
+    [
+      "data",
+      "card"
+    ],
+    [
+      "display",
+      "card"
+    ],
+    [
+      "structure",
+      "caption"
+    ],
+    [
+      "structure",
+      "caption on the light stage"
+    ]
+  ],
+  "engine_sha256": "e97863db1ad378749b7e2f665ad87aaed41f197c94e9f8aeb6c3bf573ba726b0",
+  "assets_sha256": {
+    "bg-city-dusk": "107539f8d1b4c68f2d05ba9c1e2bc002109c35e1235b0cc166cfeab76cbeae2c",
+    "bg-data-hall": "3730051bf5718d3577cfad4dc96c53bd8bd1abb0d20497ebed4630e065ea424c",
+    "bg-polling": "aac356ea0e5e482adfed416d67a671de86818696b76f6f16e801ff52d1b17d5c",
+    "bg-pylons": "df1bf828f3ef509082fa3c27222962813c53ebac28e5d1eb14f6b7790a611601",
+    "ddn-headline": "747439fd15b47d77da609f71da27096a4bcf5a414c51318f8b9da0d9f6992727",
+    "ddn-lead": "215bcbe5a998a19b621ce4f1a82db36c5ea3486cebce225bf622ddb243194fdd",
+    "el-creator-deal": "fc0d51c196f8d92d5485ca74b83dede5d9f7f455956f6d636372371685a4aeae",
+    "el-first-year": "a410e40a9e8a1473e19057984288e3ac45da75205524bf5bb9f9b91ab522ff88",
+    "el-plans": "2fb634b6e0c404bb1fd06172d99f7075eb67548fecfd34ffdaaaaea7bffbe1eb",
+    "hf-bonus-expires": "44b870c56e9fcd7fbae4d21e7069aaccb866cb0a451503af521de60f4a202664",
+    "hf-plans": "cf4a4a758eaa17e8e8053381fe7a61e3e8692fa9c7f1132430e3fd638ff4cacc",
+    "hf-team-credits": "ad9a0186fa4f36bb8b222666b1f85b740fe2a989a3fb72185e1b6148737ebe9b",
+    "hf-ultra-deal": "9e325df57fcf769ca73965a7cd1d2ef3aae8fffd1284bec98e7074330cac36d3",
+    "piqua-north-main": "b01af9c091b281a720ea1f3005e6833c50b922f3d1ac752d3d89ab547d731f5e",
+    "scene-ban-sign": "8e1b10c25f4afbed9eb6117f49f97775fbe387173c750b607159b4d6efc32828",
+    "scene-ban-sign-l": "e47816f667ada47471950088f7e96299ff7d53f757646ae4c732f4d07ef0e013",
+    "scene-boardroom": "aed24faee31ecebd12d7dca048581d82bb21453bc4ceda19dba0cd7620f871a4",
+    "scene-cow": "d69922249b2498e0742da085c2b283ddc8503d2968a57683f65a8e9cab275227",
+    "scene-fly": "69589922ba6f080ffa22b2a7877e96c8de0d1f874a9ece6b8de179218b16c9aa",
+    "scene-garden": "b30700e8df11dc5a6163cb7e9a3d50ae2baf101a60674808a3a820958c0defcf",
+    "scene-nameplate": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222",
+    "wyso-lead": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
+  },
+  "made_at": "2026-11-19T12:14:38Z",
+  "frames": {
+    "pass": true,
+    "status": "ok",
+    "problems": [],
+    "frames": 42
+  },
+  "compare": {
+    "against": "5833a4a76dd7042cce2da70bc8c38615887772a572789be3e4b79dbb1b588af3",
+    "reasons": [
+      "the approved proof recorded no engine hash, so what changed since cannot be told",
+      "the approved proof recorded no asset hashes"
+    ],
+    "compared": null,
+    "sheet": "compare.long.png",
+    "sha256": "f8e8fcae3802eff097305f6d1861aa6a2f8cf61cf748549c6909d8d0cbf55949",
+    "seconds": [
+      0.85,
+      2.56,
+      4.26,
+      5.96,
+      7.67,
+      9.37,
+      11.08,
+      12.78
+    ]
+  },
+  "sendable": false
+}

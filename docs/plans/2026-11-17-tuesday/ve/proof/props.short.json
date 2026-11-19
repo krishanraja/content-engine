@@ -442,61 +442,6 @@
   "captionStyle": "word",
   "captionTheme": "podcast",
   "captionPlacement": "lower",
-  "titleMoment": {
-    "fromFrame": 391,
-    "toFrame": 506,
-    "release": "captions",
-    "words": [
-      {
-        "text": "Where",
-        "atFrame": 391
-      },
-      {
-        "text": "does",
-        "atFrame": 397
-      },
-      {
-        "text": "AI",
-        "atFrame": 406
-      },
-      {
-        "text": "get",
-        "atFrame": 414
-      },
-      {
-        "text": "built",
-        "atFrame": 420
-      },
-      {
-        "text": "when",
-        "atFrame": 426
-      },
-      {
-        "text": "the",
-        "atFrame": 442
-      },
-      {
-        "text": "residents",
-        "atFrame": 444
-      },
-      {
-        "text": "of",
-        "atFrame": 457
-      },
-      {
-        "text": "towns",
-        "atFrame": 460
-      },
-      {
-        "text": "say",
-        "atFrame": 470
-      },
-      {
-        "text": "no?",
-        "atFrame": 475
-      }
-    ]
-  },
   "beats": [
     {
       "id": "party_line",

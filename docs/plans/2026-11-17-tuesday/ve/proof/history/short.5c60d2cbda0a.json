@@ -1,0 +1,248 @@
+{
+  "schema": "ve-proof/1",
+  "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+  "cut": "short",
+  "beat": "power",
+  "rule": "named in the spec (proof.beat)",
+  "start": 48.933,
+  "end": 56.933,
+  "beat_s": [
+    50.233,
+    55.6
+  ],
+  "sha256": "5c60d2cbda0a2b8f88ccc58a7445c421ce50c63d8e363b30704a12257b35556a",
+  "spec_sha256": "e0e7a3881102bf678d2b96c52c815d738a57ad37a3238c618aecd4b7fb064ce0",
+  "structure": {
+    "format": "face-with-proof",
+    "aspect": "9:16",
+    "motion": "eating-jobs-ladder",
+    "objects": [
+      [
+        "ban_stat",
+        "kinetic_stat"
+      ],
+      [
+        "block",
+        "facility_block"
+      ],
+      [
+        "ddn",
+        "evidence_card"
+      ],
+      [
+        "el_deal",
+        "evidence_card"
+      ],
+      [
+        "field41",
+        "unit_field"
+      ],
+      [
+        "hf_deal",
+        "evidence_card"
+      ],
+      [
+        "meta_line",
+        "evidence_card"
+      ],
+      [
+        "meter",
+        "credit_meter"
+      ],
+      [
+        "recall_stat",
+        "kinetic_stat"
+      ],
+      [
+        "recalled",
+        "stamp"
+      ],
+      [
+        "small_print",
+        "evidence_card"
+      ]
+    ],
+    "beats": [
+      [
+        "hook",
+        "P1",
+        [
+          "ddn",
+          "recalled"
+        ]
+      ],
+      [
+        "dc",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "sacked",
+        "STAGE",
+        []
+      ],
+      [
+        "face",
+        "P1",
+        [
+          "field41"
+        ]
+      ],
+      [
+        "title",
+        "P1",
+        []
+      ],
+      [
+        "meta",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "city",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "piqua",
+        "STAGE",
+        []
+      ],
+      [
+        "bill",
+        "P1",
+        [
+          "block"
+        ]
+      ],
+      [
+        "vote",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "proof",
+        "P6",
+        [
+          "ban_stat",
+          "block"
+        ]
+      ],
+      [
+        "sack",
+        "P3",
+        [
+          "recall_stat"
+        ]
+      ],
+      [
+        "built",
+        "STAGE",
+        []
+      ],
+      [
+        "meta_says",
+        "STAGE",
+        [
+          "meta_line"
+        ]
+      ],
+      [
+        "party_line",
+        "P1",
+        [
+          "meta_line"
+        ]
+      ],
+      [
+        "power",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "call",
+        "P1",
+        []
+      ],
+      [
+        "deals",
+        "P1",
+        [
+          "hf_deal"
+        ]
+      ],
+      [
+        "small_print",
+        "STAGE",
+        [
+          "small_print"
+        ]
+      ],
+      [
+        "payoff",
+        "STAGE",
+        [
+          "meter"
+        ]
+      ],
+      [
+        "three",
+        "P6",
+        [
+          "el_deal"
+        ]
+      ],
+      [
+        "carry_on",
+        "P1",
+        [
+          "block"
+        ]
+      ],
+      [
+        "close",
+        "STAGE",
+        []
+      ]
+    ]
+  },
+  "style_module": "eating-jobs-ladder",
+  "props_sha256": "1408bd4b10d996c4b8bc882de279c3521a1501f8ac63556e6c1197f64a32d75f",
+  "qc": {
+    "measured_pass": null,
+    "complete": false,
+    "error": "Cue dc-0 has no unique beat slot"
+  },
+  "type": [
+    [
+      "data",
+      "card"
+    ],
+    [
+      "dek",
+      "loud caption word"
+    ],
+    [
+      "display",
+      "card"
+    ],
+    [
+      "structure",
+      "caption"
+    ],
+    [
+      "structure",
+      "caption on the light stage"
+    ]
+  ]
+}
