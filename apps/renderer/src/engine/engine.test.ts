@@ -188,8 +188,11 @@ describe('BrandFrame call and ending routing', () => {
     const normal = { ...beat, role: 'anchor' as const }
     expect(elements(BrandFrame({ props, beat: normal, frame: 89 })).some((node) => node.type === CaptionTrack)).toBe(true)
     expect(elements(BrandFrame({ props, beat: normal, frame: 90 })).some((node) => node.type === EndingBand)).toBe(true)
+    // No call written (Ruling, Krish, 2026-11-19: scrap the prediction format): the call beat draws captions, no card.
     delete props.call
-    expect(() => BrandFrame({ props, beat, frame: 30 })).toThrow('ve: call beat without props.call')
+    const plain = elements(BrandFrame({ props, beat, frame: 30 }))
+    expect(plain.some((node) => node.type === CallCard)).toBe(false)
+    expect(plain.some((node) => node.type === CaptionTrack)).toBe(true)
   })
 })
 

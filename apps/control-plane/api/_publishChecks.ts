@@ -156,6 +156,7 @@ const WEDNESDAY_RETROSPECTIVE_EXCEPTION = {
 // a prediction section or a stated confidence is checked as any other, and no
 // other check is waived.
 const NO_PREDICTION_PIECES: Readonly<Record<string, string>> = {
+  'c00cd4e0-e1bb-4c60-b36f-cea92897e38c': 'Exempt by Krish on 19 November 2026 ("I hate this prediction format. I think we just scrap it."): the AI auditor piece closes on his own invoices and who reads his list first, and makes no prediction.',
   '9a0c97af-f0d6-4d12-a7ce-773c622d4b67': 'Exempt by Krish on 26 October 2026 ("I think this one doesnt need a prediction"): this piece closes on his own story, a question and a word to juniors, and makes no prediction.',
   'b63d2507-dbb4-449d-bce4-f21e859ee2ad': 'Exempt by Krish on 26 October 2026 ("lets give weds the same treatment as friday"): this piece closes on his own first job, a question and a word to IT, and makes no prediction.',
 }

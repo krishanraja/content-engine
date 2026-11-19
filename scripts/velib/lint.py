@@ -648,8 +648,10 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         if whole and roles.count('payoff') != 1:
             out.append(f'story.one_payoff {where}: exactly one payoff beat (found {roles.count("payoff")})')
         from . import guards  # noqa: PLC0415
-        if whole and spec['brand']['series'] == 'mind.the.gap' and 'call' not in roles and not guards.off_day(spec):
-            out.append(f'story.call {where}: mind.the.gap ends on a call beat carrying the dated call')
+        # A dated call is optional (Ruling, Krish, 2026-11-19: "I hate this prediction format. I think we just scrap it."); a
+        # call the spec does write still needs the beat that shows it.
+        if whole and spec.get('call') and 'call' not in roles and not guards.off_day(spec):
+            out.append(f'story.call {where}: the spec writes a dated call, so a call beat carries it')
         run_role, run_len = None, 0
         for index, role in enumerate(roles):
             run_len = run_len + 1 if role == run_role else 1

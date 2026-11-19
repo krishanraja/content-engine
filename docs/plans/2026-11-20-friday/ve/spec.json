@@ -31,11 +31,6 @@
    }
   ]
  },
- "call": {
-  "statement": "By the end of 2027, a customer will win back money from a big UK or US firm with a chatbot-found billing error that makes national news.",
-  "due": "2027-12-31",
-  "confidence_percent": 75
- },
  "signature": {
   "hero": {
    "device": "scene_plate",
@@ -2392,7 +2387,7 @@
      "role": "call",
      "span": {
       "from_w": 816,
-      "to_w": 822
+      "to_w": 821
      },
      "viewer_task": "land_payoff",
      "point": "The full story is at makeyourmindup.ai",

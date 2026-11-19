@@ -34,8 +34,8 @@
     },
     {
       "id": "INV-DATED-CALL",
-      "rule": "mind.the.gap ends in a dated call",
-      "enforced_by": "schema superRefine on brand.series"
+      "rule": "A dated call is optional (Ruling, Krish, 2026-11-19: scrap the prediction format); a call the spec writes is shown on a call beat",
+      "enforced_by": "lint story.call; renderer CallCard only with props.call"
     },
     {
       "id": "INV-NUMBERS-NAMED",

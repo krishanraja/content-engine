@@ -325,7 +325,7 @@ export const ProductionSpecV2Schema = z.object({
     card: z.boolean().optional(),
   }).strict().optional(),
 }).strict().superRefine((spec, c) => {
-  if (spec.brand.series === 'mind.the.gap' && !spec.call && !veOffDay(spec)) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })
+  // No series needs a dated call any more (Ruling (Krish, 2026-11-19): 'I hate this prediction format. I think we just scrap it.'): a piece may carry one, and none must.
   if (spec.brand.intro_sting !== undefined && spec.brand.intro_sting !== VE_NO_STING && spec.brand.intro_sting !== VE_NO_STING_BEFORE) {
     c.addIssue({ code: 'custom', path: ['brand', 'intro_sting'], message: `nothing goes before the hook (Ruling, Krish, 2026-11-12: "${VE_NOTHING_BEFORE_HOOK}"): brand.intro_sting is "${VE_NO_STING}", or unset` })
   }

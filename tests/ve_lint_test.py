@@ -58,8 +58,11 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_F07_coral_family_hex_used_as_a_failure_colour(self):
         self.assertRefused(mutate(lambda s: s['cuts']['proof-tall']['beats'][2]['events'][0].update(to_state='fail cells in #ff9b85')), 'brand.no_hex')
 
-    def test_IR48_mind_the_gap_without_a_dated_call(self):
-        self.assertRefused(mutate(lambda s: s.pop('call')), 'SCHEMA')
+    def test_mind_the_gap_needs_no_dated_call(self):
+        # Ruling (Krish, 2026-11-19): "I hate this prediction format. I think we just scrap it."
+        codes = codes_for(mutate(lambda s: s.pop('call')))
+        self.assertNotIn('SCHEMA', codes)
+        self.assertNotIn('story.call', codes)
 
     def test_IR48_whole_cut_without_a_call_beat(self):
         self.assertRefused(mutate(whole_tall), 'story.call')
@@ -71,11 +74,11 @@ class FridayFailuresAreRefused(unittest.TestCase):
             s['publish_day'] = '2026-11-17'
         self.assertNotIn('SCHEMA', codes_for(mutate(off_day)))
 
-    def test_friday_mind_the_gap_still_needs_its_call(self):
+    def test_friday_mind_the_gap_needs_no_call_either(self):
         def friday(s):
             s.pop('call')
             s['publish_day'] = '2026-11-20'
-        self.assertRefused(mutate(friday), 'SCHEMA')
+        self.assertNotIn('SCHEMA', codes_for(mutate(friday)))
 
     def test_R46_generated_picture_used_as_evidence(self):
         asset = {'id': 'fake-shot', 'kind': 'screenshot', 'origin': 'generated', 'path': 'x.png', 'sha256': '0' * 64,
