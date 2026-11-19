@@ -2,6 +2,14 @@ import { HERO, MOTION, progress, stateAt } from '../../clock'
 import type { EngineEvent, EngineObject } from '../../props'
 import { ParamsSchema } from './schema'
 
+/** A figure as a reader takes it in (Wed 18 critic, 19 Nov 2026: "395312" with no $ and no comma): thousands grouped
+ *  from 10,000 up, and a dollar sign when the dataset's unit is in US dollars. A fraction keeps its denominator. */
+export function kineticText(n: number, unit: string, denominator: number | null): string {
+  if (denominator !== null) return `${n}/${denominator}`
+  const grouped = Math.abs(n) >= 10000 ? n.toLocaleString('en-US') : String(n)
+  return /^USD\b/.test(unit) ? `$${grouped}` : grouped
+}
+
 export function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number) {
   const params = ParamsSchema.parse(object.params)
   const dataset = object.dataset
@@ -40,11 +48,11 @@ export function kineticState(object: EngineObject, events: readonly EngineEvent[
     }
     value = sample(frame)
   }
-  const format = (n: number) => dataset.denominator === null ? String(n) : `${n}/${dataset.denominator}`
+  const format = (n: number) => kineticText(n, dataset.unit, dataset.denominator)
   return {
     visible: frame >= object.fromFrame && frame < object.toFrame && visibility?.verb === 'enter',
     value, target: row.value, unit: dataset.unit, denominator: dataset.denominator, producerLabel: dataset.producerLabel,
-    text: dataset.denominator === null ? String(value) : `${value}/${dataset.denominator}`,
+    text: format(value),
     ghostText: ghostValue === null ? null : format(ghostValue),
   }
 }
