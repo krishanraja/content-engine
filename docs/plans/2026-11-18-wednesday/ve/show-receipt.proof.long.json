@@ -3,11 +3,11 @@
   "piece": "2026-11-18-wednesday",
   "cut": "long",
   "label": "proof.long",
-  "cut_sha256": "204e4bff25d731c167a916aa1a8ffaf29f355f0ab8f6dddbabf53f8e533e6ee1",
-  "engine_sha256": "e74f8c6665fe4ee898dbd32e42e8eef8a73f2b029275645ca68c2e7f71fdad4b",
-  "evaluated_at": "2026-11-19T10:21:49.822534+00:00",
+  "cut_sha256": "018eec710b80da6dd9398812544aaeac5a3c9252a37b6e6d8c582c91a719ad48",
+  "engine_sha256": "116b43506facbc82498496c17f64d00ffe4f2bfd72ce234b1ff0be75ac9d477e",
+  "evaluated_at": "2026-11-19T12:46:23.973541+00:00",
   "qc": {
-    "sha256": "183ccda50c4a89b1292ba024e65e78a1436102bd747c818c325d9da7ab7f0252",
+    "sha256": "4518ce6d01621c0acbf510634a3efc1e631f1770d61882eb1e523bbf0d7fd4b5",
     "measured_pass": false,
     "complete": false
   },
@@ -93,8 +93,7 @@
   "watched": null,
   "engine_pinned": true,
   "missing": [
-    "qc is for a different file than this cut: run `ve qc` on it",
-    "ve qc FAILS on this file: captions.ocr, motion.cue_sync, audio.bed_continuity, captions.render, plate.head_in_band, channel.safe_zones",
+    "ve qc FAILS on this file: motion.cue_sync, audio.bed_continuity, captions.render, plate.head_in_band, channel.safe_zones, music.beats",
     "ve qc is incomplete (some checks did not run)",
     "no Critic verdict for this file (verdict.proof.long.json): a reviewer who did not make it records one",
     "one_picture_per_beat: not attested (A graphic and a photo never both carry the same point: one picture per beat.)",

@@ -23,3 +23,4 @@
 {"ts": "2026-11-19T10:20:37.754820Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "20240fea60bca2cf", "at": "2026-11-19T10:20:37.754820Z", "by": "Claude Code"}}
 {"ts": "2026-11-19T12:18:47.170722Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "20240fea60bca2cf", "at": "2026-11-19T12:18:47.170722Z", "by": "Claude Code"}}
 {"ts": "2026-11-19T12:28:04.587282Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "20240fea60bca2cf", "at": "2026-11-19T12:28:04.587282Z", "by": "Claude Code"}}
+{"ts": "2026-11-19T12:44:10.244167Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "20240fea60bca2cf", "at": "2026-11-19T12:44:10.244167Z", "by": "Claude Code"}}
