@@ -57,3 +57,42 @@ it('uses mint for answer blocks and preserves channel paint by default', () => {
 
   }
 })
+
+it('lands a worn hero stamp on its cue and holds it until the usual exit', () => {
+  const hero = { ...object, params: {
+    kind: 'outline', size: 'hero', paint: 'mint', main: 'void', top: 'the ai did it', tiltDeg: -6,
+    at: { x: 140, y: 640, w: 800, h: 380 },
+  } }
+  const state = (frame: number) => stampState(hero, events, frame)
+  const draw = (frame: number, stamp = hero, cues = events) => renderToStaticMarkup(React.createElement(Device, {
+    ...overlayTestProps, object: stamp, events: cues, frame,
+  }))
+  expect(draw(9)).toBe('')
+  expect(state(10)).toMatchObject({ scale: 1.35, opacity: 0 })
+  expect(state(11).opacity).toBeGreaterThan(0)
+  expect(state(11).opacity).toBeLessThan(1)
+  expect(state(13).scale).toBeLessThan(1)
+  expect(state(14)).toMatchObject({ scale: 1, opacity: 1 })
+  const settled = draw(14)
+  expect(draw(99)).toBe(settled)
+  expect(state(103).opacity).toBe(1 - at(103).exit)
+  expect(draw(106)).toBe('')
+  expect(settled).toContain('rotate(-6deg) scale(1)')
+  expect(settled).toContain('12px solid aquamarine')
+  expect(settled).toContain('2px solid aquamarine')
+  expect(settled).toContain('mask-repeat:no-repeat')
+  const texture = (markup: string) => decodeURIComponent(markup.match(/data:image\/svg\+xml,([^&]+)&quot;/)?.[1] ?? '')
+  const mask = texture(settled)
+  expect(mask.includes('stroke-opacity="0.85"')).toBe(true)
+  expect(mask.includes('<feGaussianBlur')).toBe(true)
+  expect(texture(draw(11)) === mask).toBe(true)
+  const otherId = 'another-stamp'
+  expect(texture(draw(14, { ...hero, obj: otherId }, events.map(event => ({ ...event, obj: otherId })))) === mask).toBe(false)
+  expect(settled).toContain('font-weight:900')
+  expect(settled).toContain('MYMU Archivo')
+  expect(settled).toContain('IBM Plex Mono')
+  expect(settled).toContain('font-size:44px;font-weight:700;letter-spacing:0.12em">THE AI DID IT<')
+  expect(settled).toContain('gap:20px')
+  expect(settled).toContain('>VOID<')
+  expect(settled).not.toMatch(/ivory|text-shadow|text-stroke|Anton|Fraunces/)
+})

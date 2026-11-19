@@ -92,6 +92,60 @@
  ],
  "verdicts": [
   {
+   "title": "HR chiefs want humans overruling AI at work",
+   "surface": "tall_cover",
+   "verdict": "rejected",
+   "why": "8 words: over the cover standard's 7",
+   "krish": "Krish, 2026-11-18: picked the 6-word cut instead",
+   "on": "2026-11-18",
+   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16"
+  },
+  {
+   "title": "HR chiefs want humans overruling AI",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "the 8-word line broke the 7-word cap; 'at work' dropped, the scene shows it",
+   "krish": "Krish, 2026-11-18: picked 'HR chiefs want humans overruling AI' for the cover",
+   "on": "2026-11-18",
+   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16"
+  },
+  {
+   "title": "71% of HR chiefs want AI to be over ruled by their human staff at work",
+   "surface": "title",
+   "verdict": "picked",
+   "why": "his own title for the post",
+   "krish": "Krish, 2026-11-18: I think the title should be \"71% of HR chiefs want AI to be over ruled by their human staff at work\"",
+   "on": "2026-11-18",
+   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16"
+  },
+  {
+   "title": "71% of HR chiefs want you overruling AI",
+   "surface": "tall_cover",
+   "verdict": "rejected",
+   "why": "8 words: over the cover standard's 7-word limit; the same line folded to 7 was picked instead",
+   "krish": "71% of HR chiefs want AI overruled (his replacement pick, 18 Nov 2026)",
+   "on": "2026-11-18",
+   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16"
+  },
+  {
+   "title": "71% of HR chiefs want AI overruled",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "Seven words: who (HR chiefs in IBM's study), the surprising number, and what they want done to AI",
+   "krish": "71% of HR chiefs want AI overruled (his pick, Claude Code session, 18 Nov 2026, after his 8-word first pick ran over the cover standard's 7)",
+   "on": "2026-11-18",
+   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16"
+  },
+  {
+   "title": "71% of HR chiefs want you overruling AI",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "Names who (HR chiefs, IBM's study), the surprising number and what they want of the viewer; no stand-in pronoun",
+   "krish": "71% of HR chiefs want you overruling AI (his pick of two checked options, Claude Code session, 18 Nov 2026)",
+   "on": "2026-11-18",
+   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16"
+  },
+  {
    "title": "They Faked AI Use",
    "surface": "cover",
    "verdict": "rejected",
