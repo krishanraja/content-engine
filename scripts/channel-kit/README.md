@@ -125,7 +125,7 @@ Monday, follow.the.money: who gets paid when AI gets bought.
 Wednesday, under.the.hood: what's real, and what's theatre.
 Friday, mind.the.gap: what's coming, before it's obvious.
 
-Every piece ends with a prediction and a date. We keep score in public, misses included. Then you make your mind up.
+Then you make your mind up.
 
 From Krish Raja. Read every piece free at makeyourmindup.ai
 ```
