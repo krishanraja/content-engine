@@ -86,7 +86,39 @@ def _fill(image, caption):
     return round(float(mask[eligible].mean() * 100), 2)
 
 
-def measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None) -> dict:
+def photo_rule() -> dict:
+    """config/ve/qc-ocr.json photo_word: what a word found on a generated picture must prove to count."""
+    return load_json(CONFIG / 'qc-ocr.json')['photo_word']
+
+
+def photo_word(word, rule=None) -> bool:
+    """A word found on a generated picture counts only with strong evidence (19 Nov 2026: "JUI" at conf 75 and "a»"
+    on photographs failed the habits short); its texture is not type."""
+    rule = rule or photo_rule()
+    return float(word['conf']) >= rule['min_conf'] and sum(c.isalnum() for c in word['text']) >= rule['min_alnum']
+
+
+def generated_picture_at(props, frame) -> bool:
+    """Whether a generated still (a photo_plate drawn from an image, not a video) fills the frame here."""
+    for obj in props.get('objects', []):
+        params = obj.get('params') or {}
+        if (obj.get('device') == 'photo_plate' and params.get('image') and not params.get('video')
+                and obj.get('fromFrame', 0) <= frame < obj.get('toFrame', 0)):
+            return True
+    return False
+
+
+def drawn_boxes(props, frame) -> list:
+    """The boxes the engine draws type in over a picture at this frame (a stamp's or a card's `at`): a word there is type."""
+    out = []
+    for obj in props.get('objects', []):
+        at = (obj.get('params') or {}).get('at')
+        if obj.get('device') != 'photo_plate' and isinstance(at, dict) and obj.get('fromFrame', 0) <= frame < obj.get('toFrame', 0):
+            out.append((at['x'], at['y'], at['w'], at['h']))
+    return out
+
+
+def measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None, photo=False, drawn=()) -> dict:
     if not isinstance(image, Image.Image):
         with Image.open(image) as source:
             image = source.convert('RGB')
@@ -98,6 +130,10 @@ def measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None) -> di
     candidates = [word for word in raw if float(word['conf']) >= 60
              and any(c.isalnum() for c in word['text'])
              and not any(_inside(word['x'] + word['w'] / 2, word['y'] + word['h'] / 2, box) for box in exempt)]
+    if photo:
+        rule = photo_rule()
+        candidates = [word for word in candidates if photo_word(word, rule)
+                      or any(_inside(word['x'] + word['w'] / 2, word['y'] + word['h'] / 2, box) for box in drawn)]
     allowed = {'caption'} if caption_words is None else set(caption_words)
     minimum = math.floor(0.62 * limits['min_text_px'])
     small, caption, platform, edges = [], [], [], []
@@ -184,7 +220,8 @@ def composition_checks(video, props, lock) -> dict:
                 # Below the seam is his take: a fingertip or the print on his top read as "4" (Thursday 5 Nov) is
                 # picture, not type. The caption zone inside it is still checked; the ending band is never exempt.
                 exempt += [(0, split_seam(), 1080, y - split_seam()), (0, y + h, 1080, 1920 - (y + h))]
-        rows[beat['id']] = measure(image, beat_lock, caption_words=allowed, exempt=exempt)
+        rows[beat['id']] = measure(image, beat_lock, caption_words=allowed, exempt=exempt, photo=generated_picture_at(props, at),
+                                   drawn=drawn_boxes(props, at))
         rows[beat['id']]['frame'] = at
     ending = props.get('ending')
     if ending and ending.get('fromFrame', props.get('durationFrames', 0)) < props.get('durationFrames', 0):

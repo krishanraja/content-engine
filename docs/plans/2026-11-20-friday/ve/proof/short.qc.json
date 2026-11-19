@@ -1,0 +1,748 @@
+{
+  "file": "docs/plans/2026-11-20-friday/ve/proof/short.mp4",
+  "sha256": "7ec1cc380afd3ef2c2223988d33678b0e3b10f4fccc46f9f79f0e4fab484538a",
+  "duration_s": 8.0,
+  "format": "face-with-proof",
+  "checks": {
+    "loudness.integrated": {
+      "value": -13.5,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.5,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 1.0,
+      "target": ">= 0.5",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 0,
+      "target": "<= 4 s",
+      "pass": true,
+      "runs": []
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.94989
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.978393
+        },
+        {
+          "segment": 2,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.982542
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": true,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 23,
+          "text": "PRIGING -—-\nOUT",
+          "agreement": 0.19999999999999996,
+          "variant": "highlight",
+          "pass": false
+        },
+        {
+          "page": 1,
+          "frame": 63,
+          "text": "CHAIBUT =\nBEAT) THEM",
+          "agreement": 0.4,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 2,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": false,
+      "status": "incomplete"
+    },
+    "brand.no_mark": {
+      "value": [
+        {
+          "beat": "face",
+          "frame": 34,
+          "score": -0.050706809536179384,
+          "pass": true
+        },
+        {
+          "beat": "question",
+          "frame": 119,
+          "score": 0.12902481938683527,
+          "pass": true
+        },
+        {
+          "beat": "skeletons",
+          "frame": 205,
+          "score": 0.2754143905640184,
+          "pass": true
+        }
+      ],
+      "target": "no mark on the vertical cut: mark NCC < 0.8 at every beat midpoint",
+      "pass": true,
+      "status": "measured"
+    },
+    "motion.cue_sync": {
+      "value": [
+        {
+          "event": "question-0",
+          "atFrame": 69,
+          "peak_frame": 69,
+          "lag_frames": 0,
+          "peak_difference": 72.82328796386719,
+          "event_difference": 72.82328796386719,
+          "threshold": 5.173687934875488,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "skeletons-0",
+          "atFrame": 171,
+          "peak_frame": 172,
+          "lag_frames": 1,
+          "peak_difference": 49.59706115722656,
+          "event_difference": 49.59706115722656,
+          "threshold": 19.427727699279785,
+          "gradual": false,
+          "pass": true
+        }
+      ],
+      "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
+      "pass": true,
+      "status": "measured"
+    },
+    "audio.bed": {
+      "value": [
+        {
+          "check": "bed present",
+          "value": true,
+          "pass": true
+        },
+        {
+          "check": "under speech",
+          "value": -15.16,
+          "target": "-21.0 to -12.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "true peak",
+          "value": -1.7,
+          "target": "<= -1.0 dBTP",
+          "pass": true
+        },
+        {
+          "check": "a steady bed",
+          "value": "episode_bed",
+          "target": "episode_bed or continuous",
+          "pass": true
+        },
+        {
+          "check": "bed level in the master",
+          "value": -31.0,
+          "target": "-31.0 ±1.5 LUFS short-term median",
+          "pass": true
+        },
+        {
+          "check": "bed holds one level",
+          "value": 0.6,
+          "target": "<= 4.0 LU short-term p95-p5 outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never swells or sags",
+          "value": 0.1,
+          "target": "<= 3.0 LU from the median, held 1.0 s, outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never drops out",
+          "value": [],
+          "target": "no 0.25 s 15 dB under its own running level (50 ms windows)",
+          "pass": true
+        },
+        {
+          "check": "the one bed shape",
+          "value": {
+            "open_over_bed_lu": 15.3,
+            "bed_spread_lu": 0.2,
+            "direction_changes": 1,
+            "end_over_bed_lu": 13.5
+          },
+          "target": "config/music-bed.json qc (re-run the premix when missing)",
+          "pass": true
+        }
+      ],
+      "target": "bed present, under speech in range, true peak, (ducked) breathing in pauses, (episode) one steady level with no drop-outs",
+      "pass": true,
+      "status": "measured"
+    },
+    "audio.bed_continuity": {
+      "value": [],
+      "target": "no 0.25 s under -49.0 dBFS (50 ms RMS) across the excerpt",
+      "pass": true,
+      "status": "measured"
+    },
+    "opening": {
+      "value": {
+        "opening": "hook",
+        "cut_frames": 240,
+        "file_frames": 240,
+        "lead_frames": 0,
+        "whole_cut": false,
+        "clips_compared": []
+      },
+      "target": "no sting: the cut's own frame 0 is the file's first, and 240 frames in all",
+      "pass": true,
+      "status": "measured",
+      "calibration": "placeholder: measured on one real render, 5 Nov 2026 (velib/qc_opening.py)"
+    },
+    "words.lost": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "joins.in_gaps": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.clock": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.render": {
+      "value": {
+        "machine": "scripts/cutgates/captions.py",
+        "version": "captions/1",
+        "part": "renderer",
+        "region": [
+          48,
+          1078,
+          824,
+          241
+        ],
+        "window_frames": 3,
+        "min_score": 0.98,
+        "pixel_change_status": "placeholder, to be measured on Monday 26",
+        "pages": [
+          {
+            "page": 0,
+            "fromFrame": 0,
+            "text": "teams to sort pricing out",
+            "change_frame": 2,
+            "frame": 17,
+            "read": "PRIGING —\nOUT",
+            "score": 0.2,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"PRIGING —\nOUT\" near frame 17, not \"teams to sort pricing out\" (score 0.2, needs an exact match and 0.98)"
+          },
+          {
+            "page": 1,
+            "fromFrame": 29,
+            "text": "and a chatbot beat them.",
+            "change_frame": 28,
+            "frame": 56,
+            "read": "GHATBUT\nBEAT THEM",
+            "score": 0.4,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 1 reads \"GHATBUT\nBEAT THEM\" near frame 56, not \"and a chatbot beat them.\" (score 0.4, needs an exact match and 0.98)"
+          },
+          {
+            "page": 2,
+            "fromFrame": 69,
+            "text": "So A man's brother-in-law",
+            "change_frame": 68,
+            "frame": null,
+            "read": null,
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 2 reads \"\" near frame 69, not \"So A man's brother-in-law\" (score 0.0, needs an exact match and 0.98)"
+          }
+        ],
+        "failed": [
+          {
+            "page": 0,
+            "fromFrame": 0,
+            "text": "teams to sort pricing out",
+            "change_frame": 2,
+            "frame": 17,
+            "read": "PRIGING —\nOUT",
+            "score": 0.2,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"PRIGING —\nOUT\" near frame 17, not \"teams to sort pricing out\" (score 0.2, needs an exact match and 0.98)"
+          },
+          {
+            "page": 1,
+            "fromFrame": 29,
+            "text": "and a chatbot beat them.",
+            "change_frame": 28,
+            "frame": 56,
+            "read": "GHATBUT\nBEAT THEM",
+            "score": 0.4,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 1 reads \"GHATBUT\nBEAT THEM\" near frame 56, not \"and a chatbot beat them.\" (score 0.4, needs an exact match and 0.98)"
+          },
+          {
+            "page": 2,
+            "fromFrame": 69,
+            "text": "So A man's brother-in-law",
+            "change_frame": 68,
+            "frame": null,
+            "read": null,
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 2 reads \"\" near frame 69, not \"So A man's brother-in-law\" (score 0.0, needs an exact match and 0.98)"
+          }
+        ],
+        "changes_found": 27,
+        "status": "fail",
+        "reason": "3 of 3 caption page(s) are not drawn as the props say near their start"
+      },
+      "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
+      "pass": false,
+      "status": "measured",
+      "agreement": null,
+      "summary": "3 of 3 caption page(s) are not drawn as the props say near their start: caption page 0 reads \"PRIGING —\nOUT\" near frame 17, not \"teams to sort pricing out\" (score 0.2, needs an exact match and 0.98); caption page 1 reads \"GHATBUT\nBEAT THEM\" near frame 56, not \"and a chatbot beat them.\" (score 0.4, needs an exact match and 0.98); caption page 2 reads \"\" near frame 69, not \"So A man's brother-in-law\" (score 0.0, needs an exact match and 0.98)"
+    },
+    "captions.off_face": {
+      "value": {
+        "pages": 3,
+        "on_face": [],
+        "count": 0
+      },
+      "target": "no caption page overlaps the face box (+10%)",
+      "pass": true
+    },
+    "plate.head_in_band": {
+      "value": null,
+      "target": "his whole head inside the camera band",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "channel.safe_zones": {
+      "value": {
+        "under_buttons": [],
+        "count": 0
+      },
+      "target": "no caption, title or device box under a channel button (config/channel-safe-zones.json)",
+      "pass": true
+    },
+    "ground.not_bare": {
+      "value": [
+        {
+          "edge_frame": 69,
+          "barest_frame": 69,
+          "stage_std": 28.42,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 171,
+          "barest_frame": 168,
+          "stage_std": 49.16,
+          "floor": 3.0,
+          "pass": true
+        }
+      ],
+      "target": "every frame within 3 of a beat edge has stage spread > 3.0 grey levels",
+      "pass": true,
+      "status": "advisory",
+      "shadow": true
+    },
+    "music.beats": {
+      "value": {
+        "tempo_bpm": 107.9,
+        "confidence": 5.09,
+        "grid": true,
+        "bars": 39,
+        "drops_s": [
+          83.92
+        ],
+        "onsets_per_s": 4.29,
+        "handovers": 2,
+        "handovers_on_a_beat": 0
+      },
+      "target": "measured only: nothing snaps to the beat; his words are the clock",
+      "pass": null,
+      "status": "advisory",
+      "shadow": true
+    },
+    "picture.as_shot": {
+      "value": {
+        "face": {
+          "L": 2.21,
+          "a": 0.42,
+          "b": 0.55
+        }
+      },
+      "moved": [],
+      "target": "his take as shot: the lower quarter within L 5.0, a 4.0, b 4.0 of the rows of the conformed take it shows (median L*a*b*)",
+      "pass": null,
+      "status": "advisory"
+    },
+    "keyframe_match": {
+      "value": null,
+      "target": "approved golden keyframes",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "composition": {
+      "value": {
+        "face": {
+          "pass": false,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "UT",
+                  "conf": 96.360832,
+                  "x": 118,
+                  "y": 1236,
+                  "w": 77,
+                  "h": 80
+                }
+              ]
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [
+            "caption_zone contains 'UT', the limit is 0 unlisted words."
+          ],
+          "frame": 20
+        },
+        "question": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 99.62
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 151
+        },
+        "skeletons": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 239
+        }
+      },
+      "target": "design lock composition thresholds",
+      "pass": false,
+      "status": "measured"
+    },
+    "annotation.target": {
+      "value": [],
+      "target": "every mark names its words and is not drawn over a moving surface",
+      "pass": true
+    },
+    "captions.phrase_breaks": {
+      "value": [],
+      "target": "no caption page ends mid-phrase",
+      "pass": true
+    },
+    "captions.repeat_title": {
+      "value": [],
+      "target": "no caption page repeats the headline on screen",
+      "pass": true
+    },
+    "annotation.on_target": {
+      "value": [],
+      "target": "every mark lands on its words on the rendered frame",
+      "pass": true
+    },
+    "evidence.readable": {
+      "value": [],
+      "target": "evidence words at least 40 px tall on 9:16",
+      "pass": true
+    },
+    "beats.one_carrier": {
+      "value": [],
+      "target": "one picture a beat; a graphic never repeats the picture's point",
+      "pass": true
+    },
+    "figures.shown": {
+      "value": [],
+      "target": "a figure is never dimmed or blurred and fills its slot",
+      "pass": true
+    },
+    "transition.ghost_cut": {
+      "value": [],
+      "target": "a face beat and a full-screen beat meet on a cut",
+      "pass": true
+    },
+    "brand.render_current": {
+      "value": [],
+      "target": "the render knew the logo rule",
+      "pass": true
+    },
+    "text.no_off_day_props": {
+      "value": [],
+      "target": "\"off.day\" is in no drawn text",
+      "pass": true
+    },
+    "title.moment": {
+      "value": [],
+      "target": "one title card from his spoken line, captions empty while it holds",
+      "pass": true
+    },
+    "takes.restarts": {
+      "value": null,
+      "target": "no unlisted false start left in the cut",
+      "pass": null,
+      "status": "not_run",
+      "reason": "no words heard on the render (--transcribe or --heard)"
+    },
+    "motion.first_seconds": {
+      "value": [],
+      "target": "something moves in the first seconds",
+      "pass": true
+    },
+    "backdrop.not_flat_black": {
+      "value": [],
+      "target": "no graphics beat on flat black after a picture",
+      "pass": true
+    },
+    "text.no_off_day_frames": {
+      "value": [],
+      "target": "\"off.day\" is on no sampled frame",
+      "pass": true
+    },
+    "title.stage_width": {
+      "value": [
+        {
+          "frame": 169,
+          "why": "the title spans 50% of the frame width, under 60%: it lands as a hero title at full stage width"
+        }
+      ],
+      "target": "the title holds at full stage width",
+      "pass": false
+    },
+    "transition.no_ghost_frames": {
+      "value": [],
+      "target": "no frame holds two faces where a face beat meets a full-screen beat",
+      "pass": true
+    },
+    "head.whole_in_frame": {
+      "value": [],
+      "target": "his whole head in frame on his lines; on 16:9 his take bottom right",
+      "pass": true
+    },
+    "picture.smeared": {
+      "value": [],
+      "target": "no picture smeared into stripes (scripts/frame_smear.py)",
+      "pass": true,
+      "status": "advisory",
+      "note": "binds pieces published from 2026-11-24 (config/ve/onscreen-checks.json picture)"
+    }
+  },
+  "keyframes": {
+    "applies": false,
+    "note": "rules-only lock: no key frames; the rules, the Critic and his approval are the design gate"
+  },
+  "composition": {
+    "applies": true,
+    "pass": false,
+    "beats": {
+      "face": {
+        "pass": false,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": false,
+            "value": [
+              {
+                "text": "UT",
+                "conf": 96.360832,
+                "x": 118,
+                "y": 1236,
+                "w": 77,
+                "h": 80
+              }
+            ]
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [
+          "caption_zone contains 'UT', the limit is 0 unlisted words."
+        ],
+        "frame": 20
+      },
+      "question": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 99.62
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 151
+      },
+      "skeletons": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 239
+      }
+    }
+  },
+  "measured_pass": false,
+  "complete": false
+}

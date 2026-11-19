@@ -243,9 +243,12 @@ graphics-only beat in a staged piece becomes a full-frame takeover that fills as
 | `band` | Character.ai | ink panel y 0 to 1000 with a 10 px series-colour hairline; his take as a band y 1000 to 1920 | x 60 to 860, y 280 to 960, clear of the captions |
 | `stage` | AI music | ink stage y 0 to 1236 with rounded bottom corners on a cream band; his take in a rounded, cream-edged window (x 600, y 980, 420 by 700) crossing the stage edge | x 60 to 860, y 280 to 956 |
 | `tray` | eating its own jobs | his take full frame; a cream tray with a hard ink drop rises from bottom left (9 frames, a slight overshoot) | the tray, x 60 to 660, y 900 to 1500, over his chest; captions go upper |
+| `pillar` | a vertical take on a 16:9 cut (Krish, 19 Nov 2026: "Pillar: whole take on the right") | not staged: a pillar piece's tall cut draws exactly as `fill` | as `fill` |
 
 16:9 has its own geometry: band is a side panel with his take on the right, stage a wide stage with his window bottom
-right, and tray a lower-left tray.
+right, tray a lower-left tray, and pillar draws a vertical take whole as a 608 px full-height panel on the right with
+a series-colour hairline and the ink graphics panel on the left (x 96 to 1256). A vertical take on a 16:9 cut must use it
+(`config/ve/piece-guards.json` take_orientation); a WINDOW or SPLIT beat keeps its own lock and is still refused there.
 
 - Each staged beat's devices get the staging's region and may grow into it (`isRegion`); several devices share it top
   to bottom.
@@ -340,6 +343,21 @@ the production suite knows that this is the moment to make it feel like the titl
   settle, a light sweep and a brief glow, and holds until the beat that carries it ends. It flows back into the caption
   line when it hands straight to them; where the captions already took his next words while it held, it fades where it
   stands (`release: fade`).
+- Rebuilt 19 Nov 2026 as one full-frame lockup (Ruling, Krish, 2026-11-19: "I expect the title card to enter as I am
+  talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually
+  was a good build for the title card", of Wed 11's "AI MUSIC or HUMAN MUSIC?"; `config/failures.json`
+  `title-card-split-logo-and-squeezed`). Wed 18's title sat in his 608 px panel or an 800 x 420 box (about 70 px type)
+  with the wordmark a separate layer that came and went on its own. Now the title takes the whole frame, over his face
+  panel on a wide cut and over the band on a short: an ink ground with bars moving behind, two angled bands that slam in
+  from opposite sides as he says each part (a hatched ink band in cream, then a mint band in ink), the connector word
+  ("or", "vs", "and") in mint between them, a light sweep once the last word lands, and the stacked wordmark
+  (`props.brand.stacked`, from `config/brand-palette.json`) centred underneath as part of the same picture, on the
+  lockup's own opacity. A title with no connector splits into two bands of equal width; one word is one band; a long
+  band takes a second line before its type shrinks. Each word still lands on the frame he says it, and the captions stay
+  away while it holds. ve qc measures it on the settled title frame (`title.lockup`, `title.lockup_frame`: type size,
+  centring, full width, the wordmark inside and only while the title holds; numbers in `config/ve/frame-checks.json`
+  `title_lockup`), and every proof renders the title frame and is not sendable until someone has looked at it at full
+  size (`ve proof --title-looked`).
 - The title question itself is the spec's `title_line` (one string, the question his intro speaks; `making.py scripts`
   records the same line as `script_check.title_line`, and `ve lint` `title.line` refuses a `title_line` the script never
   says). The title animation is keyed to `title_line`: it flows out of the captions as he says it and back into them

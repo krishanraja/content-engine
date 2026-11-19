@@ -648,8 +648,13 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         if whole and roles.count('payoff') != 1:
             out.append(f'story.one_payoff {where}: exactly one payoff beat (found {roles.count("payoff")})')
         from . import guards  # noqa: PLC0415
-        if whole and spec['brand']['series'] == 'mind.the.gap' and 'call' not in roles and not guards.off_day(spec):
-            out.append(f'story.call {where}: mind.the.gap ends on a call beat carrying the dated call')
+        # No cut needs a dated call (Ruling, Krish, 2026-11-19: "If I want to predict something in a particular piece
+        # I will"; and earlier that day: "I hate this prediction format. I think we just scrap it."). spec.call is set only when he asked for a prediction on the piece; then a whole cut ends on its call
+        # beat, and a call beat never stands without one.
+        if whole and spec.get('call') and 'call' not in roles and not guards.off_day(spec):
+            out.append(f'story.call {where}: Krish asked for a prediction on this piece: end on a call beat carrying spec.call')
+        if 'call' in roles and not spec.get('call'):
+            out.append(f'story.call {where}: a call beat with no spec.call; a cut carries a prediction only when Krish asked for one on the piece')
         run_role, run_len = None, 0
         for index, role in enumerate(roles):
             run_len = run_len + 1 if role == run_role else 1
@@ -788,6 +793,8 @@ def lint(spec_path: Path) -> tuple[dict | None, list[str]]:
     from .verdict import ve_dir  # noqa: PLC0415
     guards.set_bind_day(showgate.effective_day(spec, ve_dir(spec_path)))
     try:
-        return spec, crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
+        from . import piece_guards  # noqa: PLC0415
+        return spec, (crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
+                      + piece_guards.lints(spec, guards.bind_day(spec), Path(spec_path).parent))
     finally:
         guards.set_bind_day(None)

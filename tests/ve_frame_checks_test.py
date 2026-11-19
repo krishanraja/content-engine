@@ -258,6 +258,62 @@ class Head(unittest.TestCase):
         self.assertEqual((found['cut'], found['outside'], found['no_face']), ([], [], []))
 
 
+class TitleLockup(unittest.TestCase):
+    """Krish, 19 Nov 2026: Wed 18's title came out squeezed into his panel with the wordmark a separate layer; Wed 11's
+    "AI MUSIC or HUMAN MUSIC?" lockup is the build. Each read below is a made-up tesseract result on a 1080 x 1920 frame."""
+    MOMENT = {'fromFrame': 60, 'toFrame': 160, 'release': 'captions', 'card': True, 'lockup': True,
+              'words': [{'text': 'AI', 'atFrame': 60}, {'text': 'music', 'atFrame': 66}, {'text': 'or', 'atFrame': 72},
+                        {'text': 'human', 'atFrame': 78}, {'text': 'music?', 'atFrame': 84}]}
+    # The good build: two bands of 140 px capitals across the frame, the wordmark centred under them.
+    GOOD = [('AI', 90.0, (90, 560, 260, 140)), ('MUSIC', 90.0, (400, 560, 590, 140)), ('HUMAN', 90.0, (80, 900, 470, 120)),
+            ('MUSIC?', 90.0, (580, 900, 420, 120)), ('MAKE', 80.0, (420, 1540, 120, 50)), ('YOUR', 80.0, (550, 1540, 110, 50))]
+
+    def run_with(self, reads: dict, moment=None, aspect='9:16'):
+        import velib.qc_onscreen as qo
+        original = qo.frame_png
+        qo.frame_png = lambda path, frame, out: Path(out) / f'{frame}.png'
+        try:
+            read = lambda png: reads.get(int(Path(png).stem), [])
+            return F.title_lockup_frame_problems('x.mp4', props(title='AI music or human music', titleMoment=moment or self.MOMENT), 30, aspect, read)
+        finally:
+            qo.frame_png = original
+
+    def hold(self):
+        return 84 + F.config()['title_lockup']['settle_frames']
+
+    def test_the_good_lockup_passes(self):
+        self.assertEqual(self.run_with({self.hold(): self.GOOD}), [])
+
+    def test_squeezed_type_fails(self):
+        small = [(t, c, (x, y, w, 50)) for t, c, (x, y, w, h) in self.GOOD[:4]] + self.GOOD[4:]
+        self.assertTrue(any('squeezed' in p['why'] for p in self.run_with({self.hold(): small})))
+
+    def test_an_off_centre_or_panel_title_fails(self):
+        # Wed 18's wide cut: the title inside his 608 px panel on the right.
+        panel = [(t, c, (1320 + i * 140, 300, 130, 90)) for i, (t, c, _) in enumerate(self.GOOD[:4])] + \
+                [('MAKE', 80.0, (1700, 800, 100, 40))]
+        found = self.run_with({self.hold(): panel}, aspect='16:9')
+        self.assertTrue(any('off centre' in p['why'] for p in found))
+        self.assertTrue(any('confined to a panel' in p['why'] for p in found))
+
+    def test_a_wordmark_outside_the_lockup_fails(self):
+        corner = self.GOOD[:4] + [('MAKE', 80.0, (880, 1700, 120, 50))]
+        self.assertTrue(any('wordmark is not read inside' in p['why'] for p in self.run_with({self.hold(): corner})))
+        self.assertTrue(any('wordmark is not read inside' in p['why'] for p in self.run_with({self.hold(): self.GOOD[:4]})))
+
+    def test_a_wordmark_that_comes_or_goes_on_its_own_fails(self):
+        edge = F.config()['title_lockup']['edge_frames']
+        after = self.run_with({self.hold(): self.GOOD, 160 + edge: [('MAKE', 80.0, (420, 1540, 120, 50))]})
+        self.assertTrue(any('after the title leaves' in p['why'] for p in after))
+        before = self.run_with({self.hold(): self.GOOD, 60 - edge: [('YOUR', 80.0, (420, 1540, 120, 50))]})
+        self.assertTrue(any('before the title arrives' in p['why'] for p in before))
+
+    def test_props_from_before_the_lockup_fail(self):
+        self.assertEqual(F.title_lockup_problems(props(titleMoment=self.MOMENT)), [])
+        old = {k: v for k, v in self.MOMENT.items() if k != 'lockup'}
+        self.assertTrue(F.title_lockup_problems(props(titleMoment=old)))
+
+
 class Rows(unittest.TestCase):
     def test_a_piece_before_binds_from_is_advisory_and_after_is_counted(self):
         bad = props(ingredients={'transition': 'crossfade'})

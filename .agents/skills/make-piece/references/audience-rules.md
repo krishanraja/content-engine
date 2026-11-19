@@ -20,7 +20,7 @@ before the pack.
 - **The short cut is one story, 60 to 90 seconds** (TWO_CUTS, SHORT_CUT, ONE_STORY_SHORT): 160 to 210 script words,
   about the length of his AI music short, a little less (Ruling, Krish, 2026-11-17: "75 word script is insanely short.
   the AI music short is about the right amount of words, maybe just less"). The hook, the one story told with room to
-  be fun, the call, then the last line ("The full story is free at makeyourmindup.ai."). A second story or example
+  be fun, the answer, then the last line ("The full story is free at makeyourmindup.ai."). A second story or example
   goes to the long cut or the article; the long cut may bring other examples in when each is coherently explained as
   further evidence or a counterpoint ("the one story rule is only really for the 90 second video"). Both cuts are
   always fun to make and to watch. `story_check.py --cut short`
@@ -48,8 +48,8 @@ before the pack.
   reader who is not yet a subscriber, and one right after the three actions of "3 things you can do tomorrow", as the
   last paragraph of that section. Each says what the reader gets and links the subscribe page in
   `vendor/makeyourmindup/subscribe-route.json` (`https://home.makeyourmindup.ai/subscribe`), for example: "Three pieces
-  a week on what AI changes in your business, each ending on a dated call. Subscribe free." Never promise a public
-  scorecard of every call until makeyourmindup.ai shows a live one: today it shows an example board. The publish check
+  a week on what AI changes in your business. Subscribe free." Never promise predictions, calls or a scorecard of
+  them: no piece needs a prediction (Ruling, Krish, 2026-11-19), and makeyourmindup.ai shows only an example board. The publish check
   ARTICLE_SUBSCRIBE_ASK reads both (not blocking until Krish has seen pieces carry it).
 - **The subtitle says the stake** (FOR_THE_LEADER): what the piece changes for a business.
 

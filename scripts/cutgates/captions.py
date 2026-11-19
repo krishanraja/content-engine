@@ -211,6 +211,16 @@ class TesseractReader:
         return {'text': best['text'], 'score': float(best['agreement'])}
 
 
+def _in_order():
+    """velib.qc_captions.in_order, the one in-order judge of an art-directed page (never a second copy)."""
+    import sys
+    scripts = str(settings.ROOT / 'scripts')
+    if scripts not in sys.path:
+        sys.path.append(scripts)
+    from velib.qc_captions import in_order
+    return in_order
+
+
 def _fold(text):
     return [t.translate(_CONFUSABLE) for t in tokens(text)]
 
@@ -226,6 +236,10 @@ def read_frames(page, change, win):
     # A page whose last word lands after its start (word by word, or a swiped emphasis word that slides in over a few
     # frames) is read from that landing on; reading inside the start window caught "no" before its highlighted
     # "spending," had arrived (Thursday 5 Nov). Reading stops at the first exact match.
+    if page.get('art') and full is not None:
+        # An art-directed page (qc_captions.art_view) is read once its last word has risen and settled, never mid-entry.
+        first = min(full + int(page['art'].get('settle', 0)), end - 1)
+        return range(first, min(first + REVEALED_READ_FRAMES, end - 1) + 1)
     if full is not None and (full > start + win or page.get('swipeIndex') is not None and full > start):
         return range(full, min(full + REVEALED_READ_FRAMES, end - 1) + 1)
     return range(max(change, start - win), min(start + win, end - 1) + 1)
@@ -274,7 +288,12 @@ def renderer_truth(video, pages, region, *, ocr=None, window: int | None = None,
         for frame in read_frames(page, change, win):
             seen = reader(frame, want)
             exact = _fold(seen['text']) == _fold(want) or ''.join(_fold(seen['text'])) == ''.join(_fold(want))
-            cand = {'frame': frame, 'read': seen['text'], 'score': round(float(seen['score']), 4), 'exact': exact}
+            score = float(seen['score'])
+            if page.get('art'):
+                # Judged by its words in order; only the echo and ghost words the renderer draws there are forgiven.
+                judged = _in_order()(tokens(want), tokens(seen['text']), page['art'].get('extras') or [])
+                exact, score = judged['exact'], judged['score']
+            cand = {'frame': frame, 'read': seen['text'], 'score': round(score, 4), 'exact': exact}
             if best is None or (cand['exact'], cand['score']) > (best['exact'], best['score']):
                 best = cand
             if exact and cand['score'] >= least:

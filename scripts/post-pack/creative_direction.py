@@ -62,7 +62,7 @@ ACCEPTANCE = [
 SERIES_PICTURE = {
     'follow.the.money': 'The money map and the receipt: flows between parties, width is the amount.',
     'under.the.hood': 'Real or theatre: the shipped thing, apart, every part stamped.',
-    'mind.the.gap': 'Threads on a time axis that bend and meet, ending in a dated call.',
+    'mind.the.gap': 'Threads on a time axis that bend and meet, ending where they meet.',
 }
 LEAD_PICTURES = ('series_picture', 'story_object')
 # brand.intro_sting: always this sentence. Nothing goes before the hook on any cut (Ruling, Krish, 2026-11-12: "Nothing

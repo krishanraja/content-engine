@@ -74,6 +74,11 @@ class Mirror(unittest.TestCase):
         self.assertEqual((a['key_size'], a['support_size'], a['line_height'], a['gap'], a['row_gap']),
                          (int(m.group(1)), int(m.group(2)), float(m.group(4)), int(m.group(5)), int(m.group(6))))
         self.assertIn(f"anton: {{ upper: {a['char_em']}", KIT_TS)
+        # The entry, ghost and echo numbers the caption read uses (qc_captions.art_view, 19 Nov 2026).
+        self.assertIn(f"enterSeconds: {a['enter_seconds']}, enterRisePx: {a['enter_rise_px']},", ART_TSX)
+        self.assertRegex(ART_TSX, rf"ghostGap: {a['ghost_gap']}\b")
+        self.assertIn(f"top: props.aspect === '9:16' ? {a['echo']['9:16']['top']} : {a['echo']['16:9']['top']}", ART_TSX)
+        self.assertIn(f"fontSize: {a['echo']['9:16']['size']}, lineHeight: 1", ART_TSX)
 
     def test_theme_regions_are_the_renderers(self):
         kit = (ROOT / 'apps/renderer/src/engine/captions/kit.ts').read_text(encoding='utf-8')
@@ -214,6 +219,21 @@ class WholeFile(unittest.TestCase):
         result = pf.check_frames('x.mp4', props_with([{'fromFrame': 0, 'toFrame': 30, 'words': [{'text': 'a', 'atFrame': 0}]}]), grab=broken)
         self.assertEqual((result['pass'], result['status']), (None, 'not_run'))
         self.assertIn('not sendable', pf.refusal_lines(result)[0])
+
+    def test_a_page_starting_on_the_files_last_frame_is_not_sampled(self):
+        # Fri 20 Nov: a 240-frame proof ended exactly where the next caption page starts; reading frame 240 read nothing.
+        props = props_with([{'fromFrame': 90, 'toFrame': 150, 'words': [{'text': 'which', 'atFrame': 90}, {'text': 'habits', 'atFrame': 100}], 'swipeIndex': 1}])
+        end = props['durationFrames']
+        props['captions'] = props['captions'] + [{'fromFrame': end, 'toFrame': end + 30, 'words': [{'text': 'next', 'atFrame': end}, {'text': 'page', 'atFrame': end + 5}], 'swipeIndex': 1}]
+        asked = []
+        def grab(path, f, fps, size):
+            asked.append(f)
+            if f >= end:
+                raise ValueError('cannot reshape array of size 0')
+            return screen_frame(content_bottom=900, below='ui', cream_box=(70, 1100, 800, 200))
+        result = pf.check_frames('x.mp4', props, grab=grab)
+        self.assertEqual(result['status'], 'ok', result)
+        self.assertTrue(all(f < end for f in asked))
 
 
 def real_clip(path, colour, seconds=10):

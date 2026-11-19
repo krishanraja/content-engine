@@ -21,6 +21,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -190,6 +191,51 @@ def window_props(props: dict, start: int, end: int) -> dict:
     return out
 
 
+# The title frame is always in what Krish approves (Ruling, Krish, 2026-11-19): Wed 18's proofs covered the hook, the title
+# came at 0:34 and 0:21, and a long render went ahead on "as long as the title card frame in each is strong" with nobody
+# having looked at the title. A proof whose window misses the title renders the title as a second clip beside it.
+TITLE_PAD_S = 2
+TITLE_WORDS = re.compile(r'\btitles?\b', re.I)
+
+
+def title_window(props: dict) -> tuple[int, int] | None:
+    """[start, end) frames around the title moment, padded so captions on each side are in it; None with no title."""
+    moment = props.get('titleMoment')
+    if not moment:
+        return None
+    fps = props.get('fps', FPS)
+    limit = content_end(props)
+    start = max(0, int(moment['fromFrame']) - TITLE_PAD_S * fps)
+    end = min(limit, int(moment['toFrame']) + TITLE_PAD_S * fps)
+    at = int((props.get('sting') or {}).get('atFrame') or 0)
+    if at and start < at < end:
+        start, end = (at, end) if int(moment['fromFrame']) >= at else (start, at)
+    return (start, end) if end > start else None
+
+
+def title_clip_path(directory: Path, cut: str) -> Path:
+    return Path(directory) / 'proof' / f'{cut}.title.mp4'
+
+
+def record_title_looked(directory: Path, cut: str, text: str, now: str) -> dict:
+    """Record that the title frame was looked at, at full size, and what was found. Refused with no title in the proof, or
+    with too few words to say what was looked at."""
+    path = record_path(directory, cut)
+    if not path.is_file():
+        raise ValueError(f'no proof record for {cut}: run ve proof first')
+    record = load_json(path)
+    title = record.get('title')
+    if not title:
+        raise ValueError('this proof records no title frame: run ve proof again (it renders the title with the proof)')
+    if len(str(text).split()) < 12:
+        raise ValueError('say what you saw on the title frame at full size, in at least 12 words (type size, centring, '
+                         'the wordmark inside the lockup, the words timed to his)')
+    title['looked'] = {'text': str(text).strip()[:1000], 'at': now}
+    record['sendable'] = not sendable_problems(record)
+    write_json(path, record)
+    return record
+
+
 def structure(spec: dict, cut: str) -> dict:
     """What a proof stands for: the style, the devices and each beat's id, uses and layout. Words and spans are not in it."""
     beats = spec['cuts'][cut]['beats']
@@ -285,6 +331,19 @@ def make(spec: dict, cut: str, directory: Path, props: dict, render_fn, qc_fn=No
               'sha256': sha256_file(clip), 'spec_sha256': structural_hash(spec, cut), 'structure': structure(spec, cut),
               'style_module': motion.get('module') if isinstance(motion, dict) else None,
               'props_sha256': sha256_file(props_out)}
+    titled = title_window(props)
+    if titled is not None:
+        fps_ = props.get('fps', FPS)
+        if start <= int(props['titleMoment']['fromFrame']) and int(props['titleMoment']['toFrame']) <= end:
+            record['title'] = {'in_main': True, 'start': round(titled[0] / fps_, 3), 'end': round(titled[1] / fps_, 3)}
+        else:
+            title_props = write_json(folder / f'props.{cut}.title.json', window_props(props, *titled))
+            title_clip = title_clip_path(directory, cut)
+            render_fn(title_props, title_clip)
+            if not title_clip.is_file() or title_clip.stat().st_size == 0:
+                raise ValueError(f'the title proof render wrote nothing at {title_clip}')
+            record['title'] = {'in_main': False, 'clip': title_clip.name, 'sha256': sha256_file(title_clip),
+                               'start': round(titled[0] / fps_, 3), 'end': round(titled[1] / fps_, 3)}
     if qc_fn is not None:
         try:
             report = qc_fn(clip, props_out)
@@ -316,8 +375,21 @@ def problems(spec: dict, cut: str, directory: Path, gates: dict, props: dict | N
         now = beat_seconds(props, record['beat'])
         if now is None or any(abs(a - b) >= NUDGE_S for a, b in zip(now, record['beat_s'])):
             out.append(f"beat {record['beat']} moved by {NUDGE_S} s or more since the proof: {run}")
+    if props is not None and props.get('titleMoment') and not record.get('title'):
+        out.append(f'the proof never shows the title frame, so his approval cannot cover it: {run}')
+    title = record.get('title') or {}
+    if title.get('clip'):
+        title_clip = title_clip_path(directory, cut)
+        if not title_clip.is_file() or sha256_file(title_clip) != title.get('sha256'):
+            out.append(f"proof/{title['clip']} is not the title clip proof/{cut}.json records: {run}")
     from .gates import for_hash
     press = for_hash(gates, 'proof', record.get('sha256'), cut)
+    # An approval on a condition about the title ("as long as the title card frame in each is strong", Wed 18) is met
+    # only when the title frame was looked at, at full size, and what was seen recorded (ve proof --title-looked).
+    if press is not None and press.get('verdict') == 'approve' and TITLE_WORDS.search(str(press.get('words') or '')) \
+            and not (title.get('looked') or {}).get('text'):
+        out.append(f"Krish's approval names the title (\"{press['words']}\"), and nobody has recorded looking at the title frame at "
+                   f'full size: open it, then ve proof <spec> --cut {cut} --title-looked "what you saw"')
     if press is None:
         out.append(f"Krish has not approved proof/{cut}.mp4 (sha256 {str(record.get('sha256'))[:12]}): he presses Approve proof "
                    f"on the board's day tab for {piece}")
@@ -452,6 +524,11 @@ def sendable_problems(record: dict) -> list[str]:
         out.append(f"the frame guards did not run ({frames.get('reason')}): run ve proof again where the frames can be read")
     for problem in (frames.get('problems') or [])[:5]:
         out.append(f"the rendered frames fail: {problem.get('says')}")
+    title = record.get('title')
+    if title and not (title.get('looked') or {}).get('text'):
+        where = f"proof/{title['clip']}" if title.get('clip') else f"the title in proof/{record.get('cut')}.mp4"
+        out.append(f"nobody has looked at the title frame: open {where} at full size, then record it with "
+                   f've proof <spec> --cut <cut> --title-looked "what you saw"')
     compare = record.get('compare')
     if compare and not compare.get('sheet'):
         out.append(f"the comparison sheet could not be made ({compare.get('error')}): run ve proof again where the frames can be read")

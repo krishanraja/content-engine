@@ -206,7 +206,23 @@
    "why": "his title for the Wed 18 video",
    "krish": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?",
    "on": "2026-11-19",
-   "piece": "db9f9f6a-1092-49be-8024-f335e060305a"
+   "piece": "db9f9f6a-1092-49be-8024-f335e060305a",
+  "title": "AI finds the skeletons in your closet",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "Krish typed his own line when offered four options for the thumbnail and cover words, 19 Nov 2026, in the Fri 20 production session",
+   "krish": "AI finds the skeletons in your closet",
+   "on": "2026-11-19",
+   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c"
+  },
+  {
+   "title": "AI finds the skeletons in your closet",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "Krish typed his own line when offered four options for the thumbnail and cover words, 19 Nov 2026, in the Fri 20 production session",
+   "krish": "AI finds the skeletons in your closet",
+   "on": "2026-11-19",
+   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c"
   },
   {
    "title": "They Faked AI Use",

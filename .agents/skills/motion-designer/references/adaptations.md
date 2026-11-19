@@ -29,7 +29,7 @@ beat's `role`:
 | `bridge` | carries the thought to the next anchor | a lighter beat that ends on a cue into the next |
 | `pivot` | the turn | one designed move: a zoom out, a carry into a new frame |
 | `payoff` | the answer, exactly once (`story.one_payoff`) | the one big moment; mint on the result |
-| `call` | the one thing to do (mind.the.gap: the dated call) | calm; the call reads and holds |
+| `call` | only when Krish asked for a prediction on the piece (`spec.call`); no piece needs one (Ruling, Krish, 2026-11-19) | calm; the call reads and holds |
 
 Anchors and bridges alternate (`story.alternation`). The close comes from `config/brand-palette.json` (the tall cut's one
 statement beat of at most 2 s, the wide cut's statement card) and the engine draws it. The plan never adds a close, an
@@ -50,7 +50,7 @@ the music: the bed sits under him (MUSIC_BED) and never sets when a picture move
 | Small UI in big empty space | A device on a graphic beat spans 80 to 90% of the width (MOTION_STANDARD rule 1); the frame outside the captions is at least 80% filled (design lock `fill_min_pct`). |
 | A sound on every hit | One sound, on the big moment only (THE_BAR ruling 11; `ve lint` `sound.one_moment`); nothing plays before Krish approves it by ear. |
 | Music not from the licensed ledger | Only an approved track in `config/music-library.json` (MUSIC_BED). |
-| Lockups (a logo or title lockup reveal) | The brand book places the marks and the engine draws them; no mark over a tall cut's animated content (MOTION_STANDARD rule 3); one opening, one close (floor 7). |
+| Lockups (a logo or title lockup reveal) | The brand book places the marks and the engine draws them; no mark over a tall cut's animated content (MOTION_STANDARD rule 3); one opening, one close (floor 7). The one title lockup is the engine's own (title/TitleMoment.tsx: one full frame, the wordmark inside it; Ruling, Krish, 2026-11-19); a plan never adds another. |
 | Sparkles | An AI cliché (MOTION_STANDARD.md, "The brand may evolve, never into an AI cliché"). |
 | Shimmer loaders | A loop with no cue (F05; `ve qc` `motion.periodicity`), and an AI cliché. |
 | Recreated interfaces | Show the real thing (F32: `ve lint` refuses a device that re-types a real artifact's words); real logos and pages, never redrawn (floor 6). |

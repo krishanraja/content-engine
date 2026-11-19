@@ -269,6 +269,18 @@ jobs:
             Tuesday and Thursday as kind meme with a template. board_feed.py gate refuses a Saturday option that is not
             a sheet carousel (saturday) and a week whose templates are not whole (template).
 
+            Saturday is only good-news carousels (Ruling, Krish, 2026-11-19: "Sat should just be good news carousels -
+            5 great things AI is doing for people (ideally things that make people smarter or better or happier or more
+            successful)."): at least three, each five great things AI is doing for people, each story saying who it
+            helps and how (helps: {"who", "how"}, how one of smarter, better, happier, more successful). A carousel may
+            mix topics ("Can mix if no1 is implemented properly"). No two options led by one theme or carrying one
+            story, no lead a Saturday carried in the four weeks before, no medicine-led carousel while the last four
+            Saturdays already carried two medical stories, and at most one medical story in any other carousel. Health
+            stories dominate search results for "AI good news", so search each area on its own (learning, work and
+            small business, money, climate and energy, science, accessibility and everyday life, culture, public
+            services) and pick the five best outside medicine. No meme, explainer or one-story carousel on Saturday.
+            board_feed.py gate refuses the rest (goodnews).
+
             Days to make again: ${{ steps.guard.outputs.days || 'none, this run fills the whole board' }}. When days are
             named, make again only the options nobody answered (open in sources.json option_status) on those days of
             that week, and leave every other option exactly as it is, byte for byte and in its place: approved,

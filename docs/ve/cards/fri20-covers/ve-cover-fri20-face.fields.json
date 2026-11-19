@@ -1,0 +1,27 @@
+{
+ "path": "docs/ve/cards/fri20-covers/ve-cover-fri20-face.md",
+ "card_id": "ve-cover-fri20-face",
+ "kind": "cover",
+ "channel": "tiktok",
+ "date": "2026-11-20",
+ "references": [
+  "krish-chat-2026-11-17-rio-meets (the Rio Meets 'I LOVE CRISTIANO!' thumbnail Krish sent: cutout faces large, the headline huge on a deep colour)"
+ ],
+ "photos": [
+  ".scratch/covers/photos/natural.png",
+  ".scratch/covers/photos/denim.png",
+  ".scratch/covers/photos/glasses.png"
+ ],
+ "title": "Fri 20 Nov face-led covers: three options, wide and tall (week 47, the real variant)",
+ "goal": "Face-led covers for Friday 20 Nov's mind.the.gap piece, for his own accounts (TikTok, X, LinkedIn, Threads, Substack Notes) and the face arm of the YouTube test. The headline is his own pick, exactly: \"AI finds the skeletons in your closet\" (Krish, 19 Nov 2026). Week 47 is odd, so this is the real variant (.agents/skills/cover-art/SKILL.md, The two rotations): his cutout headshot plus the piece's own proof, assets/plates/fri20-auditor/proof-tomshw-headline.png (the real Tom's Hardware headline, 29 Oct 2025: a family used Claude to cut a $195,000 hospital bill to $33,000), placed once as a crisp card, at most 4 degrees of tilt, under the headline on the left in wide and between the wordmark and his head in tall; neither covers the other, nothing behind his head or over his face (Krish, 2026-11-18: \"The screenshots hide behind my head a little bit too much here.\"). His shoulders are never cut off on the colour. Three options, one per cutout (natural, denim, glasses), each wide 1280x720 and tall 1080x1920. Write a small Python renderer (Pillow) at .scratch/covers/fri20/draw.py that makes all six files, then run it.",
+ "contract": "Outputs: .scratch/covers/fri20/out/option-{1,2,3}-wide.png (1280x720) and option-{1,2,3}-tall.png (1080x1920). Colours and fonts only from the Brand sections below and config/ve/brand-tokens.json; fonts from the repository's font files named there, never a system font. At most three parts besides the headline: the face, the proof card, the wordmark (the official file only). No badges, arrows, glow or emoji. His name never appears. The tall cover keeps the headline, face and proof inside the 3:4 grid crop and clear of the caption zone (config/channel-safe-zones.json). Never edit, recolour or redraw the photos or the proof: scale, crop and position only.",
+ "acceptance": "python3 .scratch/covers/fri20/draw.py\npython3 -c \"from PIL import Image; import sys; [sys.exit(1) for n in (1,2,3) for s,w,h in (('wide',1280,720),('tall',1080,1920)) if Image.open(f'.scratch/covers/fri20/out/option-{n}-{s}.png').size!=(w,h)]\"\npython3 scripts/channel_safe.py --shape cover_tall .scratch/covers/fri20/out/option-1-tall.png\npython3 scripts/channel_safe.py --shape cover_tall .scratch/covers/fri20/out/option-2-tall.png\npython3 scripts/channel_safe.py --shape cover_tall .scratch/covers/fri20/out/option-3-tall.png",
+ "write_allow": [
+  ".scratch/covers/fri20/draw.py",
+  ".scratch/covers/fri20/out/*"
+ ],
+ "read": "config/ve/brand-tokens.json, config/brand-palette.json, config/channel-safe-zones.json, docs/production/COVER-STANDARD.md, .agents/skills/cover-art/SKILL.md, assets/plates/fri20-auditor/proof-tomshw-headline.png, .scratch/covers/photos/*",
+ "max_minutes": 30,
+ "max_calls": 30,
+ "cwd": "/root/dev/makeyourmindup/.worktrees/content-engine/ve-card/ve-cover-fri20-face"
+}

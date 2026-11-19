@@ -4033,6 +4033,301 @@
           "test": "python3 tests/ve_show_gate_test.py"
         }
       ]
+    },
+    {
+      "id": "qc-rows-failed-a-fine-cut",
+      "on": "2026-11-19",
+      "krish": "\"fix the ve qc rows that fail cuts which are actually fine, so a cut in the art-directed caption style can pass the library's filing gate\" (19 Nov 2026, of the Tue 17 / Thu 19 habits voiceover short, piece 701a2c55; he ruled that one cut filed straight to Drive)",
+      "what": "Every gating row of the habits short passed and words.lost was clean, but captions.ocr and captions.render scored 0 to 0.75 on most pages, captions.clock failed 17 of 67 pages against an unmeasured 2-frame tolerance, and composition read photo texture as words, so measured_pass was false, ve status said NOT READY and send.py refused the video.",
+      "symptom": "A fine art-directed cut is NOT READY and the library refuses it.",
+      "cause": "The art-directed stack hangs above the house caption box by the cut's tallest page (cutHeight), so the read box cut its upper rows off; the read took the middle of the window and the strict judge counted the key word's faint echo and the previous page's ghost as stray words; the clock tolerance is a placeholder; tesseract read generated pictures' texture as words.",
+      "status": "guarded",
+      "guard_level": "gate",
+      "guards": [
+        {
+          "file": "scripts/velib/qc_captions.py",
+          "contains": "def art_view(",
+          "how": "an art page is read in its measured stack, once settled, and judged by its words in order; only the echo and ghost the renderer draws there are forgiven, and the 0.98 bar is unchanged",
+          "test": "python3 tests/ve_qc_false_fails_test.py"
+        },
+        {
+          "file": "scripts/cutgates/captions.py",
+          "contains": "def _in_order(",
+          "how": "captions.render reads an art page from its settle frame and judges it with the same in-order judge"
+        },
+        {
+          "file": "scripts/velib/qc_gates.py",
+          "contains": "keep the row advisory until it is measured",
+          "how": "captions.clock is shown, not counted, while config/gates.json says its tolerance is a placeholder"
+        },
+        {
+          "file": "config/ve/qc-ocr.json",
+          "contains": "\"photo_word\"",
+          "how": "a word OCR finds on a generated picture counts only at conf 90 or more and four letters or more; screen recordings, footage and type the engine draws keep the house rule"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "When a qc row fails a cut that looks right, measure what a viewer sees (where the renderer draws it, when it has settled, what else it draws there); never lower a bar to pass."
+      }
+    },
+    {
+      "id": "build-or-buy-components-carried-faults",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint (every ve piece), title_check (thumbnail and cover words)",
+      "krish": "Krish, 19 Nov 2026, in this session, of the Build or buy piece's failure report: \"here are the specific failures encountered in the Build or Buy piece that we need to surgically ensure all the components that went in to building that specific piece address next time they are used\"",
+      "what": "The Build or buy piece (Wed 18 Nov 2026, piece db9f9f6a) shipped proofs with: a vertical long take on 16:9 layouts that cut his head; logos invisible (a dark mark on the dark stage) or out of proportion; the site address wider than the short's caption line, then split so .ai dropped; a tall WINDOW under the app buttons, added to make up the layout count; full-page headline screenshots too small to read; about 85 s of talking head and pulsing logos; thumbnail words (\"BUILD IT? CRAZY.\") that passed the title rule.",
+      "symptom": "Each fault reached him in a proof; he found them, not a check.",
+      "cause": "No component carried these as rules: nothing read the take's orientation, logo contrast, a caption word's width before compile, a window against the channel zones, a bare talking-head stretch, or an all-capitals title's names against the piece.",
+      "guards": [
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def take_orientation(",
+          "how": "ve lint piece.take_orientation: a 16:9 cut's take names its frame, and a vertical take may not use a horizontal take layout",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def logos(",
+          "how": "ve lint piece.logos: two or more logos, or a dark mark, sit on equal tiles",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def tall_windows(",
+          "how": "ve lint piece.tall_windows: the tall WINDOW box (held to the renderer) never overlaps a channel's buttons or caption",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def caption_words(",
+          "how": "ve lint piece.caption_words: every word fits one caption line, measured by the compile's own measure, and the site address is never split",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def talking_head(",
+          "how": "ve lint piece.talking_head: no bare talking-head beat over 12 s and no more than 20% of a cut bare or pulsing logos",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "HYPE = re.compile(",
+          "how": "a shouted verdict (crazy, insane...) fails, and an all-capitals title counts only the piece's own names",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Before a storyboard: the take's orientation matches the cut's layouts, logos sit on tiles, every caption word fits one line, no window under the app buttons, no long bare talking head, and thumbnail words pass title_check with the piece as --source."
+      }
+    },
+    {
+      "id": "saturday-good-news-not-good-news",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "guard_level": "gate",
+      "surface": "ideas board, Saturday",
+      "krish": "\"We also need to significantly improve the good news suggestions. These are still all just one idea, mostly, and they're not good news carousels. Some of them are memes that are sneaking through, and the only actual uplifting carousel is about AI in hospital again, which is all we post about. We should find good news that's not medical stuff.\" (19 Nov 2026, Control Centre ideas board, Sat 28) Then, answering content-engine#923 the same day: \"Sat should just be good news carousels - 5 great things AI is doing for people (ideally things that make people smarter or better or happier or more successful).\" and \"Can mix if no1 is implemented properly.\"",
+      "what": "Sat 28 Nov's ideas were one hospital good-news carousel, a plain carousel, an explainer and two memes.",
+      "symptom": "Saturday offered memes and one-story carousels, and its only good news was medical again.",
+      "cause": "The Saturday rule bound from the 30 Nov board and allowed explainer and supporting carousels; nothing held the good news's topic to anything but five stories meeting, and health dominates search results, so the topic kept landing on medicine. The cap on medical stories waited for his yes.",
+      "guards": [
+        {
+          "file": "scripts/post-pack/idea_checks.py",
+          "contains": "def goodnews_findings(",
+          "how": "the Sunday run's gate (code goodnews): Saturday is good-news carousels only, at least three, each five great things AI is doing for people, each story saying who it helps and how (smarter, better, happier, more successful); a carousel may mix topics; no two options led by one theme or carrying one story, no lead of the four Saturdays before, no medicine-led carousel after two medical stories in a month, at most one medical story in any other carousel",
+          "test": "python3 tests/good_news_test.py"
+        },
+        {
+          "file": "config/good-news.json",
+          "contains": "\"medical_recent_max\"",
+          "how": "every topic, keyword and limit as rows"
+        },
+        {
+          "file": "apps/control-plane/api/board/_goodNews.ts",
+          "contains": "export function saturdayHold(",
+          "how": "the ideas board holds a Saturday option that is not a good-news carousel, with the reason",
+          "test": "npx vitest run tests/control-plane/board-ideas-system.test.ts"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Saturday: only good-news carousels, three or more, each five great things AI is doing for people (who it helps and how), mixed topics allowed, never medicine-led after a month of medical stories."
+      }
+    },
+    {
+      "id": "ideas-board-repeats-work-and-drops-templates",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "guard_level": "lint_refuse",
+      "surface": "ideas board, every week",
+      "krish": "\"every week's ideas board should include the meme templates feature as well, with no suggestions approved duplicated. right now I seem to get pieces I am already working on show up as suggestions for following weeks (that is happening on all days, not just memes)\" (19 Nov 2026, Control Centre ideas board)",
+      "what": "The week of 23 Nov's ideas board had no meme templates tab (only 16 Nov's had one), and pieces already approved and in production showed again as ideas on later weeks.",
+      "symptom": "A later week's ideas board offers what he is already making, and the meme templates come and go by week.",
+      "cause": "The repeat check skipped an idea that shared a key with what an earlier board put out (it treated it as itself), read pieces only from before the week and off-day items only up to the week's end, so work dated later was invisible; the templates lane bound from the 30 Nov board and nothing carried last week's open templates. Guarded in the board's view (it never shows such an idea); the Sunday run's own repeat gate (idea_checks repeat_findings) reads only the last three boards' posts, so work dated on a later week is caught by the board, not the run.",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "Already in work:",
+          "how": "an idea that is a piece or post approved or in work, on an earlier board or dated later, leaves the board, said in its repeats line",
+          "test": "npx vitest run tests/control-plane/board-ideas-system.test.ts"
+        },
+        {
+          "file": "apps/control-plane/api/board/_carryTemplates.ts",
+          "contains": "export function carryTemplates(",
+          "how": "last week's unanswered meme templates are carried onto this week's Tuesday and Thursday",
+          "test": "npx vitest run tests/control-plane/board-ideas-system.test.ts"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Never offer an idea that is already approved or in work on any week; every week's ideas board carries the meme templates."
+      }
+    },
+    {
+      "id": "captions-unhaloed-under-his-chin",
+      "on": "2026-11-19",
+      "krish": "\"Halo + frame me higher\" (19 Nov 2026, Fri 20 production session, asked about the face beats of the AI-auditor short's proof: art-directed captions unhaloed on his light wall and starting 12 px under his chin)",
+      "what": "The Fri 20 Nov short's proof (piece c00cd4e0) drew art-directed captions white on his light wall with no halo, since the take halo was given only to rack-focus, and his take framed his chin at y 1066 against a caption band starting at 1095, which cannot sit lower because Instagram's caption zone begins at y 1320; ve qc failed captions.off_face.",
+      "symptom": "On a face beat of a tall cut the captions are hard to read on his wall and sit tight under his chin.",
+      "cause": "The halo was keyed to one caption theme, not to the picture behind the words; the full-frame take was drawn as shot, so a low-framed take put his chin on the caption band.",
+      "status": "guarded",
+      "guard_level": "gate",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/BrandFrame.tsx",
+          "contains": "export function overTake(",
+          "how": "every caption style drawn over his take wears the take halo",
+          "test": "npx vitest run apps/renderer/src/engine/faceLift.test.ts"
+        },
+        {
+          "file": "apps/renderer/src/engine/FormatMaster.tsx",
+          "contains": "export const FACE_LIFT = 1.1",
+          "how": "his full-frame take on a tall cut is framed 1.1x from its bottom edge (face about 85 px higher), easing out into the window",
+          "test": "npx vitest run apps/renderer/src/engine/faceLift.test.ts"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "short_video"
+        ],
+        "line": "On a tall cut his face beats keep his chin clear of the caption band and every caption over his take wears the halo; ve qc captions.off_face measures it."
+      }
+    },
+    {
+      "id": "article-figure-typed-mark-and-word-cards",
+      "on": "2026-11-19",
+      "krish": "these dont look visually good enough and they have the wrong brand mark. Are these to go inside, in line, in the Substack article? If so, we don't even need the brand mark. (19 Nov 2026, the Fri 20 production session, of the piece's Substack figures)",
+      "what": "The Fri 20 article figures (piece c00cd4e0) reached Krish with a typed 'makeyourmindup' mark top right, as cards of words that restated the article, and after the redraw still said things the article never did: 'September 2024', 'BILLED TWICE', a timeline start date and a subtitle that did not fit one of its cases (reader test 2).",
+      "symptom": "An inline Substack figure carries a typed wordmark the post does not need, is a card of words instead of a picture, or states a number, date or claim the article does not.",
+      "cause": "scripts/pages/figure.css offered a .mark class and render_figure.mjs treated a mark as part of every figure, so each new figure built from the last piece's HTML carried one; the brand palette's check runs only on video cuts; nothing asked for a picture form; and the figure's words were checked against the article only by the reader test, after the figures were drawn and sent.",
+      "guards": [
+        {
+          "file": "scripts/pages/figure_check.py",
+          "contains": "def mark_problems(",
+          "how": "an inline figure with a mark element, an image named for a mark, or the typed words is refused; a share card's mark must be the palette's own image by its sha256",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "scripts/pages/figure_check.py",
+          "contains": "def form_problems(",
+          "how": "a figure with no <meta name=\"figure-form\"> (source-page, scale, timeline, ledger, map, comparison) or more than max_running_words of running text outside its labels is refused",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "scripts/pages/figure_check.py",
+          "contains": "def article_problems(",
+          "how": "every number, date, quoted phrase and mid-sentence name on the figure must be in the article, and a stamp's words must stand together there; the Fri 20 figures are the failing fixture",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "scripts/pages/render_figure.mjs",
+          "contains": "figure_check.py",
+          "how": "the renderer runs the three checks before it draws anything and draws no refused figure",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "config/article-figures.json",
+          "contains": "\"max_running_words\"",
+          "how": "the forms, the word limit, the mark names and the article-match rules, one place"
+        }
+      ],
+      "guard_level": "lint_refuse",
+      "status": "guarded",
+      "surface": "article figures (Substack)",
+      "watch": {
+        "formats": [
+          "article"
+        ],
+        "line": "An inline article figure carries no mark, names one picture form, and says nothing the article doesn't: render_figure.mjs refuses it otherwise."
+      }
+    },
+    {
+      "id": "title-card-split-logo-and-squeezed",
+      "on": "2026-11-19",
+      "krish": "give me a title card failure report, as I expect the title card to enter as I am talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually was a good build for the title card.",
+      "what": "Wed 18 (\"Build or buy your tools in an AI world?\"): the timing worked, but the title was squeezed into his 608 px panel on the wide cut and an 800 x 420 box on the short (about 70 px type), and the wordmark was a separate layer that faded in 6 frames after his last word and out on its own, looking like a stray bug bottom right. Nothing was centred or composed as one picture. The good build, Wed 11's \"AI MUSIC or HUMAN MUSIC?\" (one full frame, two angled bands slamming in from opposite sides, a mint connector word, motion behind and a light sweep, the logo centred underneath as part of the unit), lived in a one-piece script and was lost when per-piece scripts were banned. No check looked at the title, and neither proof reached it (the title came at 0:34 and 0:21), yet his condition \"as long as the title card frame in each is strong\" was called met without the title frame being looked at.",
+      "status": "guarded",
+      "mode": "title-not-a-hero",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "handoff_loss",
+          "evidence": "docs/plans/2026-11-11-wednesday/short-composite/brand_frames.py title_full held the craft; the engine's title component (apps/renderer/src/engine/title/TitleMoment.tsx) was built without it."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "ve qc measured captions, evidence cards and blank frames; no row measured title type size, centring or whether the wordmark sat inside the title, and no proof had to include the title frame."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "No failure, floor rule or ruling said the title is one full-frame lockup with the logo inside it."
+        }
+      ],
+      "surface": "the episode title moment, every ve cut",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/title/TitleMoment.tsx",
+          "contains": "export function lockupGeometry",
+          "how": "the title draws one full-frame lockup with the stacked wordmark inside it and on the lockup's own opacity",
+          "test": "npx vitest run apps/renderer/src/engine/title"
+        },
+        {
+          "file": "scripts/velib/qc_frames.py",
+          "contains": "def title_lockup_frame_problems",
+          "how": "ve qc reads the settled title frame: type size, centring, full width, the wordmark inside the lockup and only while it holds",
+          "test": "python3 tests/ve_frame_checks_test.py"
+        },
+        {
+          "file": "tests/ve_frame_checks_test.py",
+          "contains": "class TitleLockup",
+          "how": "each refusal fails on a bad frame and the good lockup passes"
+        },
+        {
+          "file": "scripts/velib/proof.py",
+          "contains": "def record_title_looked",
+          "how": "every proof renders the title frame, is not sendable until someone has looked at it, and an approval naming the title is met only once that look is recorded",
+          "test": "python3 tests/ve_proof_test.py"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "long_video",
+          "short_video"
+        ],
+        "line": "The title is one full-frame lockup, the wordmark inside it; every proof shows it."
+      }
     }
   ]
 }

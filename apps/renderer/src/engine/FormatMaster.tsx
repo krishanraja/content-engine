@@ -11,13 +11,7 @@ import { headlineState } from './devices/headline/state'
 import { DEVICES } from './devices/registry'
 import { FOCUS, PEN } from './devices/focus'
 import type { Box } from './devices/types'
-import { PORTRAIT_WIDE, slotsFor, splitCameraBox, splitPlatePosition, windowCameraBox, windowCameraState } from './layouts'
-
-// The wide window is a rounded rectangle, not a circle: a 210 px radius on a 340 px box cut off the top of his head
-// (Krish, 19 Nov 2026: "The circle in the bottom right corner is also cutting off the top of my head.").
-export const WIDE_WINDOW_RADIUS = 36
-// The wide WINDOW graphics start under the series tag (top 40 to 72), so no tile runs into it (Wed 18, 19 Nov 2026).
-export const WIDE_WINDOW_TOP = 100
+import { slotsFor, splitCameraBox, splitPlatePosition, windowCameraState } from './layouts'
 import { setActiveCanvas } from './kit/lock'
 import { resolveMotion, type MotionProfile } from './kit/motionProfiles'
 import { beatMotion, focusMotion, groundTexture, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
@@ -25,14 +19,13 @@ import { focusRoom, placed } from './kit/focus'
 import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
 import { FOCUS_SCALE, LEAD_AFTER, TRANSITION_FRAMES, cameraAt, cameraStyle, flashAt, hitFrames, leadMoveAt, leadStyle, leads } from './kit/ingredients'
-import { regionSlots, markRegion } from './kit/layout'
+import { regionSlots } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
 import { EngineAudio } from './audio'
 import { GradedBackdrop } from './treatments/Grade'
 import { band } from './captions/kit'
 import { TitleMoment } from './title/TitleMoment'
-import { TitleLockup } from './title/TitleLockup'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
 
 // Placement belongs to the composition, never to a strict device schema.
@@ -108,25 +101,6 @@ export function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, fr
   return from + (to - from) * eased
 }
 
-/** The title frame carries the wordmark (config/brand-palette.json logo_rule: the logo only on the title frame and the
- *  close; Krish, 2026-11-18: "ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME"): it fades in under the
- *  finished title and leaves with it. */
-function titleWordmark(props: EngineRenderProps, frame: number, stage: { left: number; top: number; width: number; height: number }) {
-  const moment = props.titleMoment
-  if (!moment) return null
-  const landed = Math.max(...moment.words.map((w) => w.atFrame)) + 6
-  const fadeIn = Math.min(1, Math.max(0, (frame - landed) / 8)), fadeOut = Math.min(1, Math.max(0, (moment.toFrame - frame) / 10))
-  const opacity = Math.min(fadeIn, fadeOut)
-  if (opacity <= 0) return null
-  const logo = props.brand.logo
-  // Tall: centred under the title. Wide: on the panel's right, clear of the caption that returns on its left.
-  const wide = props.aspect === '16:9'
-  const w = Math.min(stage.width * (wide ? 0.5 : 0.56), 640), h = w * logo.pixelHeight / logo.pixelWidth
-  const left = wide ? stage.left + stage.width * 0.95 - w : stage.left + (stage.width - w) / 2
-  return <Img data-title-wordmark src={logo.src} style={{ position: 'absolute', left,
-    top: stage.top + stage.height - h - stage.height * 0.07, width: w, height: h, opacity }} />
-}
-
 function Backdrop({ src, tokens, focus, frame, width, height }: { src: string; tokens: EngineRenderProps['tokens']; focus: number; frame: number; width: number; height: number }) {
   return <AbsoluteFill data-backdrop data-backdrop-focus={focus.toFixed(3)}>
     <GradedBackdrop src={src} focus={focus} tokens={tokens as unknown as Record<string, string>} frame={frame} width={width} height={height} />
@@ -143,8 +117,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const split = activeBeat?.layout === 'SPLIT'
   const camera = split ? splitCameraBox(props.aspect) : undefined
   const hasWindow = props.beats.some(beat => beat.layout === 'WINDOW')
-  const portraitWide = props.takePortrait === true && props.aspect === '16:9'
-  const faceState = hasWindow ? windowCameraState(props.beats, props.aspect, frame, portraitWide) : undefined
+  const faceState = hasWindow ? windowCameraState(props.beats, props.aspect, frame) : undefined
   setActiveCanvas(width, height)
   // The motion style he picked (props.motion), or the house motion when there is none: every device reads it.
   const ingredients = props.ingredients
@@ -163,25 +136,15 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const focusOn = !!ingredients?.focus && profile?.camera.kind !== 'zoomToFocus'
   // A staging (kit/staging.ts) places his take and a graphics panel on every beat that shows him; a piece with a
   // WINDOW beat keeps the window's own moves.
-  const staging = !hasWindow && isStaging(props.layout?.mode)
+  const staging = !hasWindow && isStaging(props.layout?.mode, props.aspect)
     ? stagingGeometry(props.layout!.mode as 'band', props.aspect, props.captionPlacement, !!props.captionTheme) : undefined
   const stagedNow = staging && activeBeat && staged(activeBeat) ? staging : undefined
   const stagedTake = stagedNow ? { ...boxStyle(stagedNow.take), borderRadius: stagedNow.take.radius,
     ...(stagedNow.take.border ? { border: `6px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `14px 14px 0 ${props.tokens.inkDeep}` } : {}) } : undefined
 
-  // Behind his centred panel on a face beat, his own take blurred to fill the frame, so the sides are never bare.
-  const takeFill = portraitWide ? props.segments.map((segment, index) => (
-        <Sequence key={`fill-${index}`} from={segment.fromFrame} durationInFrames={segment.durationFrames}>
-          <AbsoluteFill style={{ overflow: 'hidden', opacity: 1 - (faceState?.windowed ?? 0) * (faceState?.scale ?? 1) }}>
-            <OffthreadVideo src={segment.src} trimBefore={segment.trimBeforeFrames} muted
-              style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(40px) brightness(0.55)', transform: 'scale(1.1)' }} />
-          </AbsoluteFill>
-        </Sequence>
-      )) : []
-
   const take = props.segments.map((segment, index) => (
         <Sequence key={`segment-${index}`} from={segment.fromFrame} durationInFrames={segment.durationFrames}>
-          <AbsoluteFill style={{ overflow: 'hidden', ...(faceState?.box ?? camera ?? stagedTake ?? {}), ...(faceState ? { borderRadius: (props.aspect === '16:9' ? WIDE_WINDOW_RADIUS : 210) * faceState.windowed, border: `${6 * faceState.windowed}px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `${10 * faceState.windowed}px ${10 * faceState.windowed}px 0 ${props.tokens.inkDeep}`, transform: `scale(${faceState.scale})`, transformOrigin: 'center center' } : {}) }}>
+          <AbsoluteFill style={{ overflow: 'hidden', ...(faceState?.box ?? camera ?? stagedTake ?? {}), ...(faceState ? { borderRadius: 210 * faceState.windowed, border: `${6 * faceState.windowed}px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `${10 * faceState.windowed}px ${10 * faceState.windowed}px 0 ${props.tokens.inkDeep}`, transform: `scale(${faceState.scale})`, transformOrigin: 'center center' } : {}) }}>
             <OffthreadVideo
               src={segment.src}
               trimBefore={segment.trimBeforeFrames}
@@ -191,6 +154,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
                 ...(split ? { objectPosition: splitPlatePosition(activeBeat?.plate?.crop) } : segment.crop && (!faceState || faceState.windowed === 0) ? {
                   transformOrigin: 'center center',
                   transform: `translate(${segment.crop.x}px, ${segment.crop.y}px) scale(${segment.crop.scale})`,
+                } : faceLift(props.aspect, faceState?.windowed ?? 0) > 1 ? {
+                  transformOrigin: 'center bottom',
+                  transform: `scale(${faceLift(props.aspect, faceState?.windowed ?? 0)})`,
                 } : {}),
               }}
             />
@@ -222,12 +188,8 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const slots = (stagedBeat ? regionSlots(stagedBeat.region, beat.uses.length) : undefined)
           ?? (graphicsOnly ? layoutSlots(props.layout, props.aspect, props.captionPlacement, !!props.captionTheme, beat.uses.length) : undefined)
           ?? slotsFor(beat.layout, props.aspect, beat.uses.length)
-        // On the wide cut the graphics stop above his window, so nothing runs under his face (Krish, 19 Nov 2026: a logo
-        // tile sat under the bottom-right circle).
-        // A portrait take's window frees one large region left of it, for every device the beat uses (Wed 18, 19 Nov).
-        if (beat.layout === 'WINDOW' && portraitWide) slots.forEach((_, i) => { slots[i] = markRegion({ ...PORTRAIT_WIDE.slot }) })
-        else if (beat.layout === 'WINDOW' && slots.length)
-          slots[0] = props.aspect === '16:9' ? { left: 0, top: WIDE_WINDOW_TOP, width, height: windowCameraBox('16:9').top - 24 - WIDE_WINDOW_TOP } : { left: 0, top: 0, width, height }
+        if (beat.layout === 'WINDOW' && slots.length)
+          slots[0] = { left: 0, top: 0, width, height }
         // A style on twos steps its graphics; the take and captions stay on every frame.
         const at = profile?.onTwos ? onTwos(now, beat.fromFrame) : now
         // What a leaving beat shows never runs past its own end: its objects hold their last frame (one that lives on
@@ -235,7 +197,13 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const shown = outgoing ? Math.min(at, beat.toFrame - 1) : at
         const layerHeight = beat.layout === 'SPLIT' ? splitCameraBox(props.aspect).top : height
         const view = profile || focusOn ? cameraView(profile, beat, slots, objects, props, shown, focusOn) : undefined
-        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region, focusOn ? FOCUS_SCALE : undefined)
+        // The push keeps a graphics-only beat's layout region inside the frame, as it does a staged beat's: a full-width
+        // proof card pushed 1.2x from the frame's centre lost its left edge (Fri 20 Nov short, ai-music-slam, 19 Nov 2026).
+        const layoutRegion = graphicsOnly && props.layout && props.layout.mode !== 'house' && slots.length ? {
+          left: Math.min(...slots.map(b => b.left)), top: Math.min(...slots.map(b => b.top)),
+          width: Math.max(...slots.map(b => b.left + b.width)) - Math.min(...slots.map(b => b.left)),
+          height: Math.max(...slots.map(b => b.top + b.height)) - Math.min(...slots.map(b => b.top)) } : undefined
+        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region ?? layoutRegion, focusOn ? FOCUS_SCALE : undefined)
           : view?.focusable ? focusMotion(view, now, beat, FOCUS_SCALE, width, layerHeight) : undefined
         // Between two full-screen pictures the outgoing one stays solid under the incoming one's fade, so nothing under
         // both (his take) shows through the dissolve.
@@ -372,19 +340,14 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
           <BrandFrame props={props} beat={beat} frame={frame} />
         </AbsoluteFill>
       )))
-  // The episode title moment (props.titleMoment): the line he says becomes the title over the captions, which leave its
-  // words out. It lands in the panel above his face on a staged beat, else across the frame.
+  // The episode title moment (props.titleMoment): the line he says becomes ONE full-frame lockup with the stacked wordmark
+  // inside it, over his face panel on a wide cut and over the band on a short (Ruling, Krish, 2026-11-19; title/TitleMoment.tsx).
+  // The wordmark is the lockup's own, from config/brand-palette.json through props.brand: it never comes or goes on its own.
   const titleLayer = props.titleMoment && frame >= props.titleMoment.fromFrame && frame < props.titleMoment.toFrame ? (
     <AbsoluteFill key="title-moment" data-title-moment>
-      {props.titleMoment.card ? null : <TitleMoment words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame} {...(props.titleMoment.release ? { release: props.titleMoment.release } : {})}
-        frame={frame} aspect={props.aspect} width={width} height={height}
-        stage={stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height }}
-        captionBox={band(props)} tokens={props.tokens as unknown as Record<string, string>} />}
-      {props.titleMoment.card
-        // The one full-frame title lockup, the stacked logo inside it (config/brand-palette.json logo_rule.title_frame).
-        ? <TitleLockup words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame}
-            frame={frame} width={width} height={height} tokens={props.tokens as unknown as Record<string, string>} stacked={props.brand.stacked} />
-        : titleWordmark(props, frame, stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height })}
+      <TitleMoment words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame}
+        frame={frame} aspect={props.aspect} width={width} height={height} tokens={props.tokens as unknown as Record<string, string>}
+        wordmark={props.brand.stacked} Image={Img} />
     </AbsoluteFill>) : null
   // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.
   const stagingGround = stagedNow && !stagedNow.rises ? (
@@ -404,7 +367,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   // A graphics-only STAGE beat with no staging draws its backdrop across the whole frame, under its graphics, so a proof sits
   // on its own page and the frame is never bare ink (Krish, 2026-11-18: "making actual use of the full screen when it isn't
   // my face"; Wed 18's full-frame proof beats filled 11 to 32% of the frame). With no backdrop the tree is unchanged.
-  const fullBackdrop = !stagedNow && !isStaging(props.layout?.mode) && activeBeat?.backdrop && ((activeBeat.layout === 'STAGE' && activeBeat.plate?.source === 'none') || (portraitWide && activeBeat.layout === 'WINDOW')) ? (
+  const fullBackdrop = !stagedNow && !isStaging(props.layout?.mode, props.aspect) && activeBeat?.backdrop && activeBeat.layout === 'STAGE' && activeBeat.plate?.source === 'none' ? (
     <AbsoluteFill key="full-backdrop" data-backdrop-full>
       <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={width} height={height} />
     </AbsoluteFill>) : null
@@ -412,7 +375,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   if (!ingredients) return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       {stagingGround ? picture : !hasWindow && take}
-      {fullBackdrop ? [...takeFill, fullBackdrop, ...beatLayers] : [...takeFill, ...beatLayers]}
+      {fullBackdrop ? [fullBackdrop, ...beatLayers] : beatLayers}
       {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers, ...(titleLayer ? [titleLayer] : [])]}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
@@ -426,7 +389,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       <AbsoluteFill data-ingredient-camera style={cameraStyle(cameraAt(ingredients, props.beats, hits, frame, width, height), width, height)}>
         {stagingGround ? picture : !hasWindow && take}
-        {fullBackdrop ? [...takeFill, fullBackdrop, ...beatLayers] : [...takeFill, ...beatLayers]}
+        {fullBackdrop ? [fullBackdrop, ...beatLayers] : beatLayers}
       </AbsoluteFill>
       {flash > 0 ? <AbsoluteFill data-flash style={{ backgroundColor: props.tokens.cream, opacity: flash }} /> : null}
       {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers, ...(titleLayer ? [titleLayer] : [])]}
@@ -435,3 +398,13 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   )
 }
 
+/** His full-frame take on a tall cut is framed FACE_LIFT from its bottom edge, so his face sits about 85 px higher and
+ *  clears the caption band under his chin (Ruling, Krish, 2026-11-19: "Halo + frame me higher"; Fri 20 Nov: the take
+ *  framed his chin 12 px above the art-directed captions, which cannot go lower than Instagram's caption zone). The lift
+ *  eases out as the take shrinks into its window, so a face beat and a window beat meet without a jump. */
+export const FACE_LIFT = 1.1
+export function faceLift(aspect: string, windowed: number): number {
+  if (aspect !== '9:16') return 1
+  const w = Math.min(1, Math.max(0, windowed))
+  return 1 + (FACE_LIFT - 1) * (1 - w)
+}

@@ -246,7 +246,10 @@ def check_frames(path: str, props: dict, *, grab=None, fps: float | None = None,
     fps = fps or props.get('fps', 30)
     beats = inputs['beats']
     # caption pages on the file's clock, with their own geometry from the props (the same pages ve qc reads)
-    pages = inputs['pages']
+    # A page that starts at or after the file's last frame is never on screen in it (a proof window can end exactly where
+    # the next page starts: Fri 20 Nov's proof, 240 frames, sampled a page at frame 240 and read nothing).
+    end = props.get('durationFrames')
+    pages = [pg for pg in inputs['pages'] if not isinstance(end, int) or _page_frame(pg) < end]
     plain, over = [], []
     try:
         gray_frames = []

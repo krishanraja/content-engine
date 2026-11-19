@@ -1,0 +1,238 @@
+{
+  "schema": "ve-proof/1",
+  "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+  "cut": "short",
+  "beat": "question",
+  "rule": "named in the spec (proof.beat)",
+  "start": 16.533,
+  "end": 24.533,
+  "beat_s": [
+    16.967,
+    24.1
+  ],
+  "sha256": "0ad2a0ee1b305ecc69fb98a7c89cac03e33f24f18e2a829a34cc3bac7b653fdd",
+  "spec_sha256": "888403b9a989ffbae4f303dc5156dc099fce0568e29937fc64d38aec0cc033eb",
+  "structure": {
+    "format": "face-with-proof",
+    "aspect": "9:16",
+    "motion": "ai-music-slam",
+    "objects": [
+      [
+        "chip_billed",
+        "query_chip"
+      ],
+      [
+        "chip_caveat",
+        "query_chip"
+      ],
+      [
+        "chip_given",
+        "query_chip"
+      ],
+      [
+        "chip_hours",
+        "query_chip"
+      ],
+      [
+        "chip_last",
+        "query_chip"
+      ],
+      [
+        "chip_next",
+        "query_chip"
+      ],
+      [
+        "closet",
+        "scene_plate"
+      ],
+      [
+        "closet2",
+        "scene_plate"
+      ],
+      [
+        "invoices",
+        "scene_plate"
+      ],
+      [
+        "k_after",
+        "kinetic_stat"
+      ],
+      [
+        "k_billed",
+        "kinetic_stat"
+      ],
+      [
+        "sofa",
+        "scene_plate"
+      ],
+      [
+        "steak",
+        "scene_plate"
+      ],
+      [
+        "strike",
+        "scribble"
+      ],
+      [
+        "th_head",
+        "evidence_card"
+      ],
+      [
+        "th_lede",
+        "evidence_card"
+      ]
+    ],
+    "beats": [
+      [
+        "hook",
+        "WINDOW",
+        [
+          "chip_hours",
+          "k_billed",
+          "strike"
+        ]
+      ],
+      [
+        "face",
+        "F1",
+        []
+      ],
+      [
+        "question",
+        "STAGE",
+        [
+          "closet",
+          "sofa"
+        ]
+      ],
+      [
+        "proof",
+        "STAGE",
+        [
+          "th_head"
+        ]
+      ],
+      [
+        "lines",
+        "STAGE",
+        [
+          "th_lede"
+        ]
+      ],
+      [
+        "code",
+        "WINDOW",
+        [
+          "chip_billed",
+          "chip_given"
+        ]
+      ],
+      [
+        "steak",
+        "STAGE",
+        [
+          "steak"
+        ]
+      ],
+      [
+        "fell",
+        "STAGE",
+        [
+          "chip_caveat",
+          "k_after"
+        ]
+      ],
+      [
+        "love",
+        "F1",
+        []
+      ],
+      [
+        "hindsight",
+        "WINDOW",
+        [
+          "chip_last",
+          "chip_next"
+        ]
+      ],
+      [
+        "whose",
+        "F1",
+        []
+      ],
+      [
+        "closet",
+        "STAGE",
+        [
+          "closet2"
+        ]
+      ],
+      [
+        "yours",
+        "F1",
+        []
+      ],
+      [
+        "act",
+        "STAGE",
+        [
+          "invoices"
+        ]
+      ],
+      [
+        "close",
+        "F1",
+        []
+      ]
+    ]
+  },
+  "style_module": "ai-music-slam",
+  "props_sha256": "98fbd6bfb2abd1ee99a7f172c8d67e1195547ca04daa5a3fa6ab1c87148cee06",
+  "qc": {
+    "measured_pass": false,
+    "complete": false,
+    "failing": [
+      "audio.bed",
+      "audio.bed_continuity",
+      "beats.one_carrier",
+      "composition"
+    ]
+  },
+  "type": [
+    [
+      "data",
+      "card"
+    ],
+    [
+      "display",
+      "card"
+    ],
+    [
+      "structure",
+      "caption"
+    ]
+  ],
+  "engine_sha256": "fb86c48cb5277eeaa04425fd9e87cdff5b76d6314255ea91ab285a371a609a97",
+  "assets_sha256": {
+    "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
+    "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
+    "b4-sofa-money-916": "70925eebe73d3091240c2d21f8f24cc4937089288bf5f6b886471c2887be8e91",
+    "b8-steak-sandwich-916": "e52fe36f8689265de819718e02dde06aabfa8bbe9e8c6709a4cf26f803ed974a",
+    "harvard-krafton": "bfc65217229236171fec3bd8ae3c74e545644a757bd0d6fd4572a079566c2fad",
+    "long-invoices-169": "9593884f0b16a2f1db4efdfe0509a906cc6c2f2ad4c89bb9e788ea1c8847feec",
+    "long-master": "7afaed9a75286aacb86737eae6b247dd9c5227b47871b9cc58ff57af91c310ca",
+    "long-sofa-money-169": "1212452354fc877ce8cdec2411c6db71b6e3684ffd2dae5c313bfef43d5f60cf",
+    "nbc-dana": "04bd5985213216d4627231eaa4575689cdb6ec5cbf949c9af8bd3ba40efaeb94",
+    "short-master": "baf5f1d2a3e8d010b72ac8a73e60b7d5d412f90f4b3445c96899bf352794d98f",
+    "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
+    "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
+  },
+  "made_at": "2026-11-19T10:49:21Z",
+  "frames": {
+    "pass": true,
+    "status": "ok",
+    "problems": [],
+    "frames": 11
+  },
+  "sendable": true
+}

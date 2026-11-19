@@ -338,27 +338,38 @@ def _page_cost(rows: list[dict], start: int, n: int) -> int:
     return cost
 
 
-def _portrait(src) -> bool:
-    import subprocess
-    path = str(src).removeprefix('file://')
+# Caption themes that draw a page's one word alone shrunk to the width of their region (ArtDirectedCaption's key word,
+# fit() down to 72 px). Under one of these a word wider than the house line (the site address on a 9:16 cut, 775 px
+# against 716) is its own page, never split and never dropped (config/ve/piece-guards.json caption_words).
+FITS_LONE_WORD_THEMES = ('art-directed',)
+
+
+def _too_wide(row: dict, aspect: str, emphasis=()) -> bool:
     try:
-        out = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height',
-                              '-of', 'csv=p=0', path], capture_output=True, text=True, timeout=30).stdout.strip().split(',')
-        return int(out[1]) > int(out[0])
-    except (ValueError, IndexError, OSError, subprocess.SubprocessError):
-        return False
-
-
-def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list[list[dict]]:
-    """Fit 2-5 words per page, choosing the breaks that read best over the whole run, never stranding an orphan."""
-    size, available = (54, 1316) if aspect == '16:9' else (68, 816)
-    for row in rows:
         caption_line_count([row], aspect, emphasis)
+    except ValueError:
+        return True
+    return False
+
+
+def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=(), lone_fits: bool = False) -> list[list[dict]]:
+    """Fit 2-5 words per page, choosing the breaks that read best over the whole run, never stranding an orphan.
+    With lone_fits (a theme in FITS_LONE_WORD_THEMES) a word too wide for one line is a page on its own."""
+    size, available = (54, 1316) if aspect == '16:9' else (68, 816)
+    wide = {row['w'] for row in rows if lone_fits and _too_wide(row, aspect, emphasis)}
+    for row in rows:
+        if row['w'] not in wide:
+            caption_line_count([row], aspect, emphasis)
     # best[start] = (cost, page length) for the rest of the run from start; the run's end costs nothing.
     best = {len(rows): (0, 0)}
     for start in range(len(rows) - 1, -1, -1):
+        if rows[start]['w'] in wide:
+            if start + 1 in best:
+                best[start] = (best[start + 1][0], 1)
+            continue
         options = [(_page_cost(rows, start, n) + best[start + n][0], n) for n in range(2, min(5, len(rows) - start) + 1)
                    if start + n in best
+                   and not any(r['w'] in wide for r in rows[start:start + n])
                    and sum(r['w'] in emphasis for r in rows[start:start + n]) <= 1
                    and caption_line_count(rows[start:start + n], aspect, emphasis) <= 2]
         if options:
@@ -413,20 +424,10 @@ def title_moment_props(spec: dict, cut_id: str, rows: list[dict], duration: int)
     holder = next((b for b in spec['cuts'][cut_id].get('beats', []) if b['span']['from_w'] <= span['to_w'] <= b['span']['to_w']), None)
     end_w = holder['span']['to_w'] if holder else span['to_w']
     after = next((row['atFrame'] for row in rows if row['w'] > end_w), duration)
-    card = bool((spec.get('title_moment') or {}).get('card'))
-    if card:
-        # The full-frame lockup covers him, so it holds 2.5 s past his last title word, never the rest of the beat
-        # (config/brand-palette.json logo_rule.title_frame: the one full-frame title in the pause after he says it).
-        after = min(after, said[-1]['atFrame'] + 75)
-    words = [{'text': row['text'][:1].upper() + row['text'][1:] if i == 0 else row['text'], 'atFrame': row['atFrame']}
-             for i, row in enumerate(said)]
-    title = (spec.get('title_moment') or {}).get('title') or ''
-    if card and title.rstrip().endswith('?'):
-        # The lockup reads as the piece's title, a question, even where he said it as a statement ("world." -> "WORLD?").
-        words[-1]['text'] = words[-1]['text'].rstrip('.,!?;:') + '?'
     return {'fromFrame': said[0]['atFrame'], 'toFrame': after, 'span': (span['from_w'], span['to_w']),
-            'release': 'fade' if card else 'captions',  # the captions stay away while it holds, so it always flows back into them
-            'words': words}
+            'release': 'captions',  # the captions stay away while it holds, so it always flows back into them
+            'words': [{'text': row['text'][:1].upper() + row['text'][1:] if i == 0 else row['text'], 'atFrame': row['atFrame']}
+                      for i, row in enumerate(said)]}
 
 
 def backdrop(spec: dict, beat: dict, assets_dir) -> dict:
@@ -638,7 +639,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     spoken = [row for row in rows if not (moment and (moment['span'][0] <= row['w'] <= moment['span'][1]
                                                       or moment['fromFrame'] <= row['atFrame'] < moment['toFrame']))]
     groups = [[row] for row in spoken] if word_mode else \
-        [g for part in _zone_runs(spoken, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
+        [g for part in _zone_runs(spoken, beats) for g in _caption_groups(part, cut['aspect'], emphasis, picked_theme in FITS_LONE_WORD_THEMES)]
     captions = []
     for index, group in enumerate(groups):
         hits = [i for i, word in enumerate(group) if word['w'] in emphasis]
@@ -698,14 +699,12 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
         **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
-        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')},
-                            **({'card': True} if (spec.get('title_moment') or {}).get('card') else {})}} if moment else {}),
+        # The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19); 'lockup' tells ve qc
+        # the cut was rendered after the lockup replaced the panel card and the separate wordmark.
+        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}, 'card': True, 'lockup': True}}
+           if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
-    # A 9:16 take on a 16:9 cut lays out as his panel and a tall window (layouts PORTRAIT_WIDE; Krish, 2026-11-19: "go wide
-    # layout"), measured from the take's own pixels, never assumed.
-    if cut['aspect'] == '16:9' and props['segments'] and _portrait(props['segments'][0]['src']):
-        props['takePortrait'] = True
     if sting:
         # After the hook, never in front of it (config/brand-palette.json long_cut sting after_hook): every frame in the
         # props stays on the cut's own clock, and the render plays the sting from this one (VeCut.tsx).
@@ -793,7 +792,7 @@ TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfa
 CAMERAS = ('none', 'drift', 'phased', 'punch')
 # The handovers whose exit can lead their entrance (style.transitions.lead, 15 Nov 2026): the ones that travel.
 LEAD_TRANSITIONS = ('whip', 'push', 'zoom-through', 'punch')
-LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray')
+LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar')
 
 
 def caption_props(spec: dict) -> dict:

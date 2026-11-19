@@ -1660,6 +1660,9 @@ The mechanical checks a piece must pass before it can be approved or
 - `function articleSubscribeAsks(body: string): { ok: boolean; detail: string }`
 - `function articleFormat(body: string): string[]`
 - `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?…`
+- `const PREDICTION_CHECKS: readonly string[]`
+- `const NO_PREDICTION_NEEDED`
+- `function predictionWanted(meta: unknown): boolean`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 
 ### `apps/control-plane/api/_publishWatch.ts`
@@ -2313,6 +2316,12 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function dayDocuments(ticks: Body[], docs: Body[], from: Day, to: Day, fromWeek: string): Doc[]`
 - `async function carryDay(db: SupabaseClient, toWeek: string, raw: unknown): Promise<{ status: number; body: Body }>`
 
+### `apps/control-plane/api/board/_carryTemplates.ts`
+
+Every week's ideas board carries the meme templates (Ruling, Krish, 2026-11-19: "every week's ideas board should include
+
+- `function carryTemplates(ideas: Body | null, lastWeek: string, lastIdeas: Body | null, lastQueue: Array<{ doc_id: string…`
+
 ### `apps/control-plane/api/board/_contracts.ts`
 
 - `const collections`
@@ -2388,6 +2397,14 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `type Manifest`
 - `function fileSpec(week: string, v: unknown, html = false): v is BoardFile`
 - `function validManifest(week: string, v: unknown): v is Manifest`
+
+### `apps/control-plane/api/board/_corpus.ts`
+
+The corpus a piece's narrative is built from (Ruling, Krish, 2026-11-19: "at this stage of every piece, I need to be ab…
+
+- `interface CorpusItem`
+- `function corpusOf(materials: Array<{ id?: unknown; title?: unknown; kind?: unknown; role?: unknown }>): CorpusItem[]`
+- `function corpusLines(corpus: CorpusItem[]): string`
 
 ### `apps/control-plane/api/board/_cuts.ts`
 
@@ -2494,6 +2511,14 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `const HELD_CHANGED`
 - `function gatePieces(week: string, pieces: Body[], approvals: Approval[] | null, ideas: Body | null)`
 - `function cutSoWhat(v: unknown): string`
+
+### `apps/control-plane/api/board/_goodNews.ts`
+
+Saturday is good-news carousels only (Krish, 2026-11-19, of Sat 28's ideas board: "These are still all just one idea,
+
+- `const GOOD_NEWS_FROM: string`
+- `function isGoodNews(o: Body): boolean`
+- `function saturdayHold(week: string, day: string, o: Body, approved: boolean): string | null`
 
 ### `apps/control-plane/api/board/_growthPlacement.ts`
 
@@ -3043,10 +3068,15 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `type Action`
 - `type PromptAction`
 - `interface SavedNote`
+- `type NoteFor = 'claude' | 'perplexity' | 'both'`
+- `const noteFor = (v: unknown): NoteFor =>`
+- `const SAVED_NOTES_SHOWN`
+- `const noteItemKey = (k: unknown): string | null =>`
 - `const VISUAL_POINT_LINE`
 - `const EARLIER_NOTES`
 - `const SAVED_NOTES_MAX`
-- `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }): SavedNote[]`
+- `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }, tool: 'claude' | '…`
+- `async function crossWeekNotes(db: SupabaseClient, week: string, pieceIds: string[], itemKeys: string[]): Promise<ViewIn…`
 - `function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): WeekModel`
 - `interface DayView`
 - `interface ViewPost`
@@ -4855,12 +4885,14 @@ Run a Vercel serverless handler locally against the real environment.
 - `const CAPTION_HALO`
 - `const TAKE_HALO`
 - `function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
+- `function overTake(beat: { plate?: { source?: string | undefined } | undefined } | undefined): boolean`
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
 - `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
-- `function titleSafe(aspect: string, width: number, height: number)`
+- `const FACE_LIFT`
+- `function faceLift(aspect: string, windowed: number): number`
 
 ### `apps/renderer/src/engine/VeCut.tsx`
 
@@ -5017,6 +5049,7 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `const ENDING_SETTLED_S`
 - `const ENDING_TIMING_TALL`
 - `const ENDING_SETTLED_TALL_S`
+- `const SHAPE`
 - `function statementLines(aspect: EngineRenderProps['aspect'], tagline: string = ENDING_TAGLINE): string[]`
 - `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
@@ -6135,8 +6168,9 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 
 - `const STAGINGS`
 - `type Staging = typeof STAGINGS[number]`
-- `const isStaging = (mode: string | undefined): mode is Staging =>`
+- `const isStaging = (mode: string | undefined, aspect?: string): mode is Staging =>`
 - `interface StagingGeometry`
+- `const PILLAR_TAKE_WIDTH`
 - `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry`
 - `function staged(beat: { layout: string; plate?: { source: string } | undefined }): boolean`
 - `function trayRise(frame: number, from: number): { scale: number; ty: number; opacity: number }`
@@ -6243,8 +6277,13 @@ Spot inks, paper and shadow. All still colour values live here, including device
 
 - `type TitleWord = { text: string; atFrame: number }`
 - `type Box = { left: number; top: number; width: number; height: number }`
+- `type TitleImage = { src: string; pixelWidth: number; pixelHeight: number }`
 - `type TitleMomentProps`
-- `function titleLayout(words: TitleWord[], stage: Box, aspect: TitleMomentProps['aspect'])`
+- `function lockupParts(words: TitleWord[]): { a: number[]; connector: number | null; b: number[] }`
+- `type LockupBand`
+- `type LockupGeometry`
+- `function lockupGeometry(words: TitleWord[], width: number, height: number, aspect: TitleMomentProps['aspect'], wordmark…`
+- `function lockupOpacity(frame: number, fromFrame: number, toFrame: number): number`
 - `function TitleMoment(props: TitleMomentProps): JSX.Element | null`
 
 ### `apps/renderer/src/engine/transport.ts`

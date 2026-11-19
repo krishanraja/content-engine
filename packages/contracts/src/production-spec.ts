@@ -160,6 +160,9 @@ export const VeAssetSchema = z.object({
   credits: z.number().nonnegative().optional(),
   // A note for the record only: ve never draws it and no check requires it (no ILLUSTRATION tag, Krish, 28 Oct 2026).
   label: z.string().min(2).optional(),
+  // A recording's frame in pixels, so a 16:9 cut knows a vertical take before any layout is chosen (config/ve/piece-guards.json
+  // take_orientation reads it; Build or buy, 18 Nov: a vertical take on 16:9 layouts cut the top of his head).
+  frame: z.object({ width: z.number().int().positive(), height: z.number().int().positive() }).strict().optional(),
 }).strict().superRefine((v, c) => {
   if (v.origin === 'generated') {
     if (!['illustration', 'broll', 'sfx', 'music', 'voice'].includes(v.kind)) c.addIssue({ code: 'custom', path: ['kind'], message: 'generated media is illustration, broll, sfx, music or his approved clone voice, never evidence' })
@@ -235,7 +238,7 @@ export const VeCharacterSchema = z.object({
 
 // The day each series publishes on (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap; the
 // house channels in config/studio.json). A piece published on any other day is an off-day piece: it wears no series
-// promise and carries no dated call card, so the series call rule below does not reach it (velib/guards.off_day).
+// promise and carries no dated call card (velib/guards.off_day). Since 19 November no day needs one (Ruling, Krish, 2026-11-19).
 const VE_SERIES_WEEKDAY: Record<string, number> = { 'follow.the.money': 1, 'under.the.hood': 3, 'mind.the.gap': 5 }
 
 export function veOffDay(spec: { publish_day?: string | undefined, brand: { series: string } }): boolean {
@@ -305,7 +308,7 @@ export const ProductionSpecV2Schema = z.object({
     sound: z.object({ handover: z.string().min(1).optional(), hit: z.string().min(1).optional(),
       gainDb: z.number().finite().max(0).optional(), reason: z.string().min(1) }).strict().optional(),
     // How a graphics-only beat uses the frame (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the use of the screen space is terrible").
-    layout: z.object({ mode: z.enum(['house', 'fill', 'stack', 'band', 'stage', 'tray']), reason: z.string().min(1) }).strict().optional(),
+    layout: z.object({ mode: z.enum(['house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar']), reason: z.string().min(1) }).strict().optional(),
   }).catchall(z.unknown()).optional(),
   max_face_share: z.number().min(0).max(1).optional(),
   character: VeCharacterSchema.optional(),
@@ -327,7 +330,8 @@ export const ProductionSpecV2Schema = z.object({
     card: z.boolean().optional(),
   }).strict().optional(),
 }).strict().superRefine((spec, c) => {
-  if (spec.brand.series === 'mind.the.gap' && !spec.call && !veOffDay(spec)) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })
+  // No cut needs a dated call (Ruling, Krish, 2026-11-19: "If I want to predict something in a particular piece I will"):
+  // spec.call is set only when Krish asked for a prediction on the piece, and then a whole cut ends on its call beat (lint story.call).
   if (spec.brand.intro_sting !== undefined && spec.brand.intro_sting !== VE_NO_STING && spec.brand.intro_sting !== VE_NO_STING_BEFORE) {
     c.addIssue({ code: 'custom', path: ['brand', 'intro_sting'], message: `nothing goes before the hook (Ruling, Krish, 2026-11-12: "${VE_NOTHING_BEFORE_HOOK}"): brand.intro_sting is "${VE_NO_STING}", or unset` })
   }

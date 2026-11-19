@@ -113,6 +113,8 @@ describe('each mode draws only from its own profile', () => {
     // line-boil keeps its cards cream on the ink ground; type set straight on the ground still inverts.
     expect(tokensFor('typing_bubble', tokens, MOTION_PROFILES['line-boil'])).toBe(tokens)
     expect(tokensFor('headline', tokens, MOTION_PROFILES['line-boil']).ink).toBe(tokens.cream)
+    // A counter draws in cream: on a dark ground it keeps its colours, never ink on ink (Fri 20 Nov, 19 Nov 2026).
+    expect(tokensFor('kinetic_stat', tokens, MOTION_PROFILES['ai-music-slam'])).toBe(tokens)
     expect(tokensFor('typing_bubble', tokens, undefined)).toBe(tokens)
   })
 

@@ -134,7 +134,7 @@ def episode_rows(sidecar: Path, report: dict) -> list:
     ]
 
 
-def continuity(render: str, stem: str, sidecar: str | None = None) -> dict:
+def continuity(render: str, stem: str, sidecar: str | None = None, excerpt_s: float | None = None) -> dict:
     """Drop-outs on the render itself, on 50 ms windows: from the first word (from the first frame on a cut that opens on
     the intro sting) to the start of the final fade the mix
     never falls under the bed's floor (bed_lufs - RENDER_FLOOR_BELOW_DB, in dBFS RMS) for 0.25 s. Speech only adds to
@@ -157,6 +157,15 @@ def continuity(render: str, stem: str, sidecar: str | None = None) -> dict:
         reason = ''
     length = len(mono) / 48000
     duration = float(data.get('duration_s') or 0)
+    if excerpt_s:
+        # A proof excerpt (ve proof) plays a window of the premixed stem: it runs as long as its own window, and the bed
+        # holds under the whole window (Fri 20 Nov: an 8 s proof was failed for not running as long as the 87 s cut).
+        if not len(mono) or abs(length - excerpt_s) > 1 / 30 + 0.05:
+            return {'value': {'render_s': round(length, 3), 'excerpt_s': round(excerpt_s, 3)}, 'target': 'a render as long as its excerpt',
+                    'pass': False, 'status': 'measured', 'reason': reason or 'the render has no audio or the wrong length'}
+        holes = gaps(mono, start_s=0.25, end_s=max(0.25, length - 0.25), floor_dbfs=floor)
+        return {'value': holes, 'target': f'no 0.25 s under {floor} dBFS (50 ms RMS) across the excerpt',
+                'pass': not holes, 'status': 'measured'}
     if not len(mono) or (duration and abs(length - duration) > 1 / 30 + 0.05):
         return {'value': {'render_s': round(length, 3), 'cut_s': duration}, 'target': 'a render as long as the cut',
                 'pass': False, 'status': 'measured', 'reason': reason or 'the render has no audio or the wrong length'}

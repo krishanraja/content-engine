@@ -64,6 +64,13 @@
       "source": "tue17-8,wed18-5"
     },
     {
+      "id": "title_full_frame_lockup",
+      "text": "The title is one full-frame lockup, centred, type filling the frame, the wordmark inside it and on screen only while the title is; the title frame was looked at at full size.",
+      "krish": "I expect the title card to enter as I am talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually was a good build for the title card.",
+      "auto_rows": ["title.lockup", "title.lockup_frame"],
+      "source": "wed18-title-report"
+    },
+    {
       "id": "key_figure_fills_frame",
       "text": "The figure a beat exists to show fills the frame.",
       "krish": "The key figure (41) was too small.",
@@ -156,6 +163,20 @@
       "krish": "render in Codex",
       "auto_rows": [],
       "source": "tue17-process"
+    },
+    {
+      "id": "every_beat_serves_his_idea",
+      "text": "Every beat serves the idea he picked (style.idea.object); a request for more (\"15/10\") is answered with more of that idea, never spectacle beside it.",
+      "krish": "(as the Build or buy session reported his words) a dull, important topic needs 15/10 visuals",
+      "auto_rows": [],
+      "source": "build-or-buy-8"
+    },
+    {
+      "id": "no_bare_talking_head",
+      "text": "No long stretch of his face with nothing on screen, and no logos that only appear and pulse standing in for a picture (ve lint piece.talking_head).",
+      "krish": "(as the Build or buy session reported his words) a dull, important topic needs 15/10 visuals",
+      "auto_rows": [],
+      "source": "build-or-buy-9"
     }
   ]
 }
