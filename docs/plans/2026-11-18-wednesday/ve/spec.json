@@ -86,10 +86,10 @@
     "date": "17 Sep 2024",
     "sourceAspectRatio": 4.3689,
     "crop": {
-     "x": 0.08,
-     "y": 0.27,
-     "w": 0.56,
-     "h": 0.2
+     "x": 0.0878,
+     "y": 0.2864,
+     "w": 0.5444,
+     "h": 0.2039
     }
    }
   },
@@ -108,10 +108,10 @@
     "date": "13 Sep 2024",
     "sourceAspectRatio": 1.9302,
     "crop": {
-     "x": 0.14,
-     "y": 0.59,
-     "w": 0.74,
-     "h": 0.22
+     "x": 0.5173,
+     "y": 0.6643,
+     "w": 0.3902,
+     "h": 0.0786
     }
    }
   },
@@ -150,10 +150,10 @@
     "date": "Sep 2024",
     "sourceAspectRatio": 1.5134,
     "crop": {
-     "x": 0.29,
-     "y": 0.39,
-     "w": 0.3,
-     "h": 0.1
+     "x": 0.3067,
+     "y": 0.4086,
+     "w": 0.1125,
+     "h": 0.0242
     }
    }
   },
@@ -172,10 +172,10 @@
     "date": "3 Mar 2025",
     "sourceAspectRatio": 1.4354,
     "crop": {
-     "x": 0.02,
-     "y": 0.39,
-     "w": 0.85,
-     "h": 0.15
+     "x": 0.0217,
+     "y": 0.4055,
+     "w": 0.6825,
+     "h": 0.0598
     }
    }
   },
@@ -206,10 +206,10 @@
     "date": "7 Mar 2025",
     "sourceAspectRatio": 2.381,
     "crop": {
-     "x": 0.02,
-     "y": 0.25,
-     "w": 0.6,
-     "h": 0.5
+     "x": 0.022,
+     "y": 0.4583,
+     "w": 0.616,
+     "h": 0.1286
     }
    }
   },
@@ -284,10 +284,10 @@
     "date": "11 Dec 2024",
     "sourceAspectRatio": 3.3557,
     "crop": {
-     "x": 0.15,
-     "y": 0.2,
-     "w": 0.66,
-     "h": 0.38
+     "x": 0.1565,
+     "y": 0.1711,
+     "w": 0.6485,
+     "h": 0.1678
     }
    }
   },
@@ -909,6 +909,30 @@
    }
   },
   {
+   "obj": "h_claim",
+   "device": "query_chip",
+   "meaning": "the claim the terminal checks",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {
+    "text": "CHECK: DOES THE MAKER OF CLAUDE BUILD ITS OWN TOOLS?"
+   }
+  },
+  {
+   "obj": "m_claim",
+   "device": "query_chip",
+   "meaning": "the terminal checks who runs its tools",
+   "persist": {
+    "from_beat": "marks",
+    "to_beat": "marks"
+   },
+   "params": {
+    "text": "CHECK: WHO RUNS ANTHROPIC'S CUSTOMERS, SERVICE AND PAYROLL?"
+   }
+  },
+  {
    "obj": "m_sf",
    "device": "evidence_card",
    "meaning": "Anthropic runs its customers and deals on Salesforce",
@@ -946,9 +970,9 @@
     "sourceAspectRatio": 5.4054,
     "crop": {
      "x": 0.0,
-     "y": 0.0,
-     "w": 0.78,
-     "h": 0.75
+     "y": 0.22,
+     "w": 0.76,
+     "h": 0.36
     }
    }
   },
@@ -2240,11 +2264,33 @@
       "source": "take"
      },
      "uses": [
+      "h_claim",
       "m_fin"
      ],
      "events": [
       {
        "at_w": 0,
+       "obj": "h_claim",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 4,
+       "obj": "h_claim",
+       "verb": "highlight",
+       "to_state": "CLAUDE",
+       "silent": true
+      },
+      {
+       "at_w": 7,
+       "obj": "h_claim",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 7,
        "obj": "m_fin",
        "verb": "enter",
        "to_state": "visible",
@@ -2253,7 +2299,6 @@
      ],
      "transition_out": "cut",
      "face": "window",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
      "backdrop": "asset:hl-fin-anthropic"
     },
     {
@@ -2270,13 +2315,35 @@
       "source": "take"
      },
      "uses": [
+      "m_claim",
       "m_sf",
       "m_wd",
       "m_wd2"
      ],
      "events": [
       {
-       "at_w": 14,
+       "at_w": 11,
+       "obj": "m_claim",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 15,
+       "obj": "m_claim",
+       "verb": "highlight",
+       "to_state": "CUSTOMERS",
+       "silent": true
+      },
+      {
+       "at_w": 19,
+       "obj": "m_claim",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 19,
        "obj": "m_sf",
        "verb": "enter",
        "to_state": "visible",

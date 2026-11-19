@@ -245,6 +245,20 @@ def _texts(value) -> list[str]:
     return []
 
 
+def _shown_frame(props: dict, beat: dict, name: str) -> int:
+    """The middle of the span this object is on screen inside its beat: its enter to its exit (or the beat's end). A beat
+    that shows three cards one after another was read only at its own middle, where the first two had already gone, and
+    reported them unreadable (Wed 18 short, 19 Nov 2026)."""
+    start, end = beat['fromFrame'], beat['toFrame']
+    mine = sorted((e for e in props.get('events') or [] if e.get('obj') == name and start <= e.get('atFrame', -1) < end),
+                  key=lambda e: e['atFrame'])
+    enter = next((e['atFrame'] for e in mine if e.get('verb') == 'enter'), None)
+    if enter is None:
+        return int(beat.get('keyFrame', (start + end) // 2))
+    leave = next((e['atFrame'] for e in mine if e.get('verb') == 'exit' and e['atFrame'] > enter), end)
+    return (enter + 12 + leave) // 2 if leave - enter > 24 else (enter + leave) // 2
+
+
 def readable(path: str, props: dict, read=None, rules: dict | None = None, lead: int = 0) -> list[dict]:
     """Evidence whose own words are too small, or not read at all, on the 9:16 frame at each beat's key frame."""
     rules = rules or config()
@@ -261,9 +275,15 @@ def readable(path: str, props: dict, read=None, rules: dict | None = None, lead:
                 if not obj or obj.get('device') not in ev['devices']:
                     continue
                 want = {t for text in _texts(obj.get('params') or {}) for t in tokens(text) if len(t) >= ev['min_token_chars']}
+                # The card's source line (outlet and date) is house chrome drawn small by design; the words a viewer must
+                # read are the page's own, so the footer's words never stand for the evidence (Wed 18 short, 19 Nov 2026:
+                # every card read as 18 to 23 px from its source line while its headline was large).
+                params = obj.get('params') or {}
+                footer = {t for k in ('outlet', 'date') for t in tokens(str(params.get(k) or ''))}
+                want = (want - footer) or want
                 if not want:
                     continue
-                frame = int(beat.get('keyFrame', (beat['fromFrame'] + beat['toFrame']) // 2)) + lead
+                frame = _shown_frame(props, beat, name) + lead
                 hits = [w for w in read(frame_png(path, frame, Path(temp)))
                         if w[1] >= MIN_CONF and set(tokens(w[0])) & want]
                 if not hits:
