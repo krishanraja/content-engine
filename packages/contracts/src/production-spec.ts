@@ -189,6 +189,8 @@ export const VeApprovalSchema = z.object({
   by: z.literal('Krish'),
   said: z.string().min(2),
   on: DateSchema,
+  // The exact time he gave it, when known: the render guard counts renders from his press, not midnight of its day.
+  at: z.string().datetime({ offset: true }).optional(),
   artifact_hash: Sha256V1Schema,
 }).strict()
 
