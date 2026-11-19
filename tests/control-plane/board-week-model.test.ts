@@ -188,6 +188,23 @@ describe('the week model (contract 1.12.0)', () => {
     }
   })
 
+  // Krish, 2026-11-19: "once I've pressed it, I can trust that the assets all remain in there even though it shows up as scheduled."
+  it('a post keeps listing every file it was made from once it is scheduled, and once it is live', () => {
+    const base = thisWeek()
+    const row = (posts: unknown[]) => ({ item: `engine:${WEEK}:gitbroke`, source: 'engine', origin_week: WEEK, option_id: 'gitbroke', option: {}, state: 'approved', week: WEEK, day: 'thu', date: '2026-11-12',
+      doc: null, piece_id: null, drive_folder: null, posts, followed: {}, version: 1, placed_by: 'Krish', placed_at: '2026-11-11T10:00:00.000Z' })
+    const sched = [{ state: 'scheduled', channel: 'instagram', due_at: '2026-12-30T17:00:00.000Z', url: null, at: '2026-11-11T12:00:00.000Z', buffer_post_id: 'abc123' }]
+    const live = [{ ...sched[0], state: 'live', url: 'https://www.instagram.com/p/x/', at: '2026-11-12T17:00:00.000Z' }]
+    const before = dayOf(buildView(base), 'thu').items.find(i => i.key === 'off-thu-gitbroke')!
+    expect(before.assets?.[0].slides.length).toBe(5)
+    for (const posts of [sched, live]) {
+      const v2 = buildView({ ...base, items: [...(base.items || []), row(posts) as never] })
+      const it = dayOf(v2, 'thu').items.find(i => i.key === 'off-thu-gitbroke')!
+      expect(it.stage.key).toBe(posts === sched ? 'scheduled' : 'live')
+      expect(it.assets?.[0].slides.length).toBe(5)
+    }
+  })
+
   it('the frozen fixture of this week is what the builder makes now', () => {
     // UPDATE_VIEW_FIXTURE=1 writes it again, as board-view-contract.test.ts does for its own fixture.
     if (process.env.UPDATE_VIEW_FIXTURE) writeFileSync(FIXTURE, `${JSON.stringify({ ok: true, ...v }, null, 1)}\n`)

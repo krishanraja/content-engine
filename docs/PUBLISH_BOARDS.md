@@ -1255,6 +1255,14 @@ link the assets in Google Drive as well as see them if I am to approve them".
   cannot be read), the same way as a cut: copied once, then a short signed link (302).
 - **Held by:** `tests/control-plane/board-drive.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
 
+## The live check on a sent post (Krish, 2026-11-19)
+
+Krish: "There need to be automatic checks done on the live posts to verify that everything posted correctly, because a lot of the times thumbnails and covers don't go correctly (or carousels are supposed to have audio tracks and do not)... Once the post is verified live, the board needs to self-update live. Again that should be all completely autonomous."
+
+Control Center's 15-minute Buffer sweep (`api/_doneChecks.ts`, `buffer_sent`) already moves a card to Live when Buffer shows the post sent. Since 19 Nov it also reads each sent post again as Buffer holds it and checks it (`api/_liveVerify.ts`, a pure function, `tests/api/liveVerify.test.ts`): sent with no error, its public link, its caption, every file with an address, every picture's alt text, a video's cover frame (`thumbnailOffset`, on every service that shows one), a carousel's card count, and a carousel's audio track (a video, or Instagram's music sticker; a meme keeps its own sound and is not asked for one). The verdict rides the post entry as `verify {at, ok, passed, failed[]}` and is accepted only from the done-check client (`growthPost`, `_offdayItems.ts`); Growth's own record cannot claim one. The card's live line says "Checked live: every post matches how it was made", or "It did not all go out right: Instagram: a carousel went out with no audio track...". A post Buffer could not be read for says nothing and is never shown as checked. The card moves by itself, with no press and no session.
+
+Not checked yet, because Buffer cannot show it: the pixels a platform rendered and an audio stream inside a video file. A check this layer cannot make is left out, never reported as passed.
+
 ## Approve for publish, bound to the manifest (contract 1.8.0)
 
 Growth posts only what Krish approved (docs/GROWTH-HANDOFF.md, "The piece manifest"). A piece's draft manifest
