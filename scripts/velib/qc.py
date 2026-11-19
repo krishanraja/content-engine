@@ -169,6 +169,16 @@ def _renderer_layouts() -> dict:
     return result
 
 
+def theme_band(aspect: str, placement: str) -> tuple[int, int, int, int]:
+    """A caption theme's band, read from the renderer's own table (apps/renderer/src/engine/captions/kit.ts REGIONS)."""
+    source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'captions' / 'kit.ts').read_text(encoding='utf-8')
+    block = re.search(rf"'{re.escape(aspect)}': \{{([^\n]*(?:\n[^']*)?)", source)
+    box = re.search(rf"{placement}: \{{ left: (\d+), top: (\d+), width: (\d+), height: (\d+) \}}", block.group(1) if block else '')
+    if not box:
+        raise ValueError(f'no {placement} caption band for {aspect} in captions/kit.ts')
+    return tuple(int(n) for n in box.groups())
+
+
 def caption_pages_shown(props: dict) -> list:
     """Caption pages the renderer draws at the frame OCR samples. The dated call card replaces the captions for the
     whole call beat (CaptionTrack returns null there), so a page sampled inside it is not on screen."""
@@ -306,17 +316,26 @@ def inputs_from_props(props: dict) -> dict:
         beat = next((b for b in beats if b['fromFrame'] <= page['fromFrame'] < b['toFrame']), {})
         if beat.get('layout') == 'SPLIT' and style != 'word':
             page['region'] = split_caption
-        x, y, w, h = qc_faces.caption_box(page, style, aspect, region, layout=beat.get('layout'),
-                                         plate=(beat.get('plate') or {}).get('source'))
+        if props.get('captionTheme'):
+            # A caption theme draws inside its own band (captions/kit.ts REGIONS), not the word caption's centred box:
+            # measure that band, the box the renderer draws in (Tue 17, 18 Nov 2026: the podcast theme was modelled as
+            # a centred word 982 px wide while it drew 640 px from the left edge).
+            x, y, w, h = theme_band(aspect, props.get('captionPlacement') or 'lower')
+        else:
+            x, y, w, h = qc_faces.caption_box(page, style, aspect, region, layout=beat.get('layout'),
+                                             plate=(beat.get('plate') or {}).get('source'))
         width, height = (1080, 1920) if aspect == '9:16' else (1920, 1080)
-        left, top = max(0, x - 12), max(0, y - 12)
-        page['region'] = (left, top, min(width, x + w + 12) - left, min(height, y + h + 12) - top)
+        # A theme band is already the outermost extent its text can reach, so it is measured as it stands; a drawn
+        # caption box keeps 12 px of room for the text's own bounds.
+        pad = 0 if props.get('captionTheme') else 12
+        left, top = max(0, x - pad), max(0, y - pad)
+        page['region'] = (left, top, min(width, x + w + pad) - left, min(height, y + h + pad) - top)
         pages.append(page)
     # The plate's frame under file frame F of a beat is F - the beat's shift + the segment's trim.
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
                 body_logo=props.get('bodyLogo') is not False,
-                edl=edl, joins=joins, caption_style=props.get('captionStyle') or 'house',
+                edl=edl, joins=joins, caption_style='house' if props.get('captionTheme') else (props.get('captionStyle') or 'house'),  # a theme draws in its own band, each page's region
                 plate_video=(props.get('segments') or [{}])[0].get('src') if len(props.get('segments') or []) == 1 else None,
                 plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)),
                 opening=opening_view(props))
