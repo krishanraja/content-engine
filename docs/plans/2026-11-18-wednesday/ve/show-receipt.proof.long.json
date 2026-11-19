@@ -3,11 +3,11 @@
   "piece": "2026-11-18-wednesday",
   "cut": "long",
   "label": "proof.long",
-  "cut_sha256": "018eec710b80da6dd9398812544aaeac5a3c9252a37b6e6d8c582c91a719ad48",
+  "cut_sha256": "8d77cfd90464c73a080a5aecafeb57e2b12160e254d94eb38ad406ae5df55899",
   "engine_sha256": "116b43506facbc82498496c17f64d00ffe4f2bfd72ce234b1ff0be75ac9d477e",
-  "evaluated_at": "2026-11-19T12:46:23.973541+00:00",
+  "evaluated_at": "2026-11-19T12:50:17.226216+00:00",
   "qc": {
-    "sha256": "4518ce6d01621c0acbf510634a3efc1e631f1770d61882eb1e523bbf0d7fd4b5",
+    "sha256": "ab90a58e4c7fb85ca7d903d179b50c915feb5befe7e346cfa7079478c143c2cc",
     "measured_pass": false,
     "complete": false
   },

@@ -3364,14 +3364,12 @@
    "reason": "Krish picked it on the board on 17 Nov"
   },
   "transitions": {
-   "kind": "punch",
-   "lead": true,
-   "reason": "the look he picked, Everything moves: fast phrase cuts that punch in"
+   "kind": "cut",
+   "reason": "clean cuts: the punch blurred his face on every hand-off and the critic flagged it (19 Nov); the camera keeps Everything moves"
   },
   "camera": {
    "move": "phased",
-   "hits": true,
-   "reason": "Everything moves: the camera never rests and the events kick it"
+   "reason": "Everything moves: the camera never rests; no kick on events, which pushed the check line off the frame edge (critic, 19 Nov)"
   },
   "energy": "high",
   "layout": {
