@@ -2244,6 +2244,13 @@
    "said": "approve the engine change",
    "on": "2026-11-19",
    "artifact_hash": "19068095bead0550dda46460c225f181f46e8072ed39b38af827e10a56cb0aba"
+  },
+  {
+   "gate": "exception",
+   "by": "Krish",
+   "said": "Don't bring me back another proof. Just fix this shit, and then approve both previews and move on.",
+   "on": "2026-11-19",
+   "artifact_hash": "38d86e22a8415765f0cc2c12b2129de7a1738b37084ad6856910b816e1637b19"
   }
  ],
  "style": {
