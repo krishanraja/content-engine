@@ -3541,6 +3541,42 @@
         ],
         "line": "Before any proof or cut is sent, open full-size frames at every beat change beside the last approved version and walk his standing notes; ve proof refuses a plain dark band or a caption over bright content, and a changed engine or asset needs --compared."
       }
+    },
+    {
+      "id": "off-day-tag-on-a-post",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "guard_level": "lint_refuse",
+      "surface": "all posts",
+      "krish": "\"off.day is NEVER to be used ever as a tag\" (18 Nov 2026, Tue 17 production); \"ensure there are NEVER any off day tags that exist anywhere, I should never see that on any post ever\" (19 Nov 2026).",
+      "what": "The internal name for Tuesday, Thursday and Saturday posts (off.day) was drawn on screen as a series pill and appeared in file and label text, so it could reach a post.",
+      "symptom": "A viewer sees the words off.day (or off day) on a video, a card, a cover, a caption or a title.",
+      "cause": "off.day is a real label in the series data and the folder names. Only the renderer's exact string match hid it from the pill; nothing refused it in copy, cards, covers or captions, and the match missed other spellings.",
+      "guards": [
+        {
+          "file": "config/copy-lint.json",
+          "contains": "\"id\": \"off_day_tag\"",
+          "how": "copy lint pattern off_day_tag on every public surface (channel copy, carousel text, video on-screen words, titles, article metadata): every spelling as a tag is refused, ordinary sentences pass",
+          "test": "python3 -m pytest -q tests/copy_lint_test.py"
+        },
+        {
+          "file": "apps/renderer/src/engine/chrome/offDay.ts",
+          "contains": "export const isOffDayLabel",
+          "how": "the renderer draws no tag for any spelling of the label (ChannelPill and StageHeader both ask isOffDayLabel)",
+          "test": "npx vitest run apps/renderer/src/engine/chrome/offDay.test.ts"
+        },
+        {
+          "file": "config/ve/frame-checks.json",
+          "contains": "off.day",
+          "how": "ve lint and ve qc refuse the string in a cut's spec text and on its rendered frames (text.no_off_day)"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Never write off.day, off-day or Off day as a tag, label, hashtag, eyebrow, cover word or caption word on anything that can reach a post. It is an internal name."
+      }
     }
   ]
 }

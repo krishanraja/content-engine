@@ -1,3 +1,4 @@
+import { isOffDayLabel } from './offDay'
 import { HouseLogo } from '../../house/components'
 import { HOUSE_FONTS } from '../../house/geometry'
 import type { EngineRenderProps } from '../props'
@@ -24,7 +25,7 @@ export function StageHeader({ props }: { props: EngineRenderProps }) {
       <HouseLogo image={props.brand.logo} width={LOGO_AT.width} />
     </div>}
     {/* An off day wears no tag (Ruling, Krish, 2026-11-18: "off.day is NEVER to be used ever as a tag"). */}
-    {props.series.label === 'off.day' ? null : <div style={{
+    {isOffDayLabel(props.series.label) ? null : <div style={{
       position: 'absolute', ...PILL_AT, boxSizing: 'border-box', display: 'grid', placeItems: 'center',
       borderRadius: PILL_AT.height / 2, background: tokens.section, color: tokens.ink,
       fontFamily: HOUSE_FONTS.data, fontWeight: 500, fontSize: 30, lineHeight: 1,

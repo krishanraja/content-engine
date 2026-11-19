@@ -5046,6 +5046,12 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 
 - `function lightStage(props: Pick<EngineRenderProps, 'format'> & Partial<Pick<EngineRenderProps, 'motion'>>): boolean`
 
+### `apps/renderer/src/engine/chrome/offDay.ts`
+
+An off day wears no tag, however its label is spelled (Ruling, Krish, 2026-11-18: "off.day is NEVER to be used ever as a
+
+- `const isOffDayLabel = (label: string | null | undefined): boolean =>`
+
 ### `apps/renderer/src/engine/chrome/tokens.ts`
 
 - `function houseTokens(tokens: EngineTokens): HouseTokens`
