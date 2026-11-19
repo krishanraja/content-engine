@@ -123,50 +123,6 @@
    }
   },
   {
-   "obj": "sf_screen",
-   "device": "evidence_card",
-   "meaning": "Salesforce's own picture of its customer record screen: what sales teams track every customer in",
-   "persist": {
-    "from_beat": "products",
-    "to_beat": "products"
-   },
-   "params": {
-    "kind": "screenshot",
-    "src": "shots/salesforce-screen.png",
-    "outlet": "Salesforce",
-    "date": "Sales Cloud",
-    "sourceAspectRatio": 1.3474,
-    "crop": {
-     "x": 0.22,
-     "y": 0.18,
-     "w": 0.33,
-     "h": 0.37
-    }
-   }
-  },
-  {
-   "obj": "wd_screen",
-   "device": "evidence_card",
-   "meaning": "Workday's own picture of its time-off request screen: the software that runs pay and holidays",
-   "persist": {
-    "from_beat": "products",
-    "to_beat": "products"
-   },
-   "params": {
-    "kind": "screenshot",
-    "src": "shots/workday-screen.png",
-    "outlet": "Workday",
-    "date": "Absence Management",
-    "sourceAspectRatio": 1.3474,
-    "crop": {
-     "x": 0.475,
-     "y": 0.34,
-     "w": 0.2,
-     "h": 0.39
-    }
-   }
-  },
-  {
    "obj": "saas_dead",
    "device": "evidence_card",
    "meaning": "a real public post, \"SaaS is Dead.\", citing Klarna ripping out Salesforce and Workday",
@@ -376,6 +332,62 @@
     "full": true,
     "grade": "none"
    }
+  },
+  {
+   "obj": "sf_mark",
+   "device": "logo_card",
+   "meaning": "Salesforce, the software sales teams use to track every customer",
+   "persist": {
+    "from_beat": "products",
+    "to_beat": "products"
+   },
+   "params": {
+    "logos": [
+     {
+      "id": "Salesforce"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "sf_does",
+   "device": "query_chip",
+   "meaning": "what Salesforce does, in his words",
+   "persist": {
+    "from_beat": "products",
+    "to_beat": "products"
+   },
+   "params": {
+    "text": "TRACKS EVERY CUSTOMER"
+   }
+  },
+  {
+   "obj": "wd_mark",
+   "device": "logo_card",
+   "meaning": "Workday, the software that runs pay and holidays",
+   "persist": {
+    "from_beat": "products",
+    "to_beat": "products"
+   },
+   "params": {
+    "logos": [
+     {
+      "id": "Workday"
+     }
+    ]
+   }
+  },
+  {
+   "obj": "wd_does",
+   "device": "query_chip",
+   "meaning": "what Workday does, in his words",
+   "persist": {
+    "from_beat": "products",
+    "to_beat": "products"
+   },
+   "params": {
+    "text": "RUNS YOUR PAY AND HOLIDAYS"
+   }
   }
  ],
  "assets": [
@@ -437,26 +449,6 @@
    "source_url": "https://www.itpro.com/technology/artificial-intelligence/how-is-he-doing-this-marc-benioff-questions-klarna-ceo-s-scrapping-of-workday-salesforce-in-saas-consolidation-drive",
    "licence": "screenshot of the public page as published by IT Pro, shown as itself for commentary",
    "credit": "IT Pro"
-  },
-  {
-   "id": "salesforce-screen",
-   "kind": "screenshot",
-   "origin": "capture",
-   "path": "shots/salesforce-screen.png",
-   "sha256": "b932d0bc600c5399c6e5269cb65688f9cdcf39e9ba7d395c6e06afe5b819982c",
-   "source_url": "https://wp.sfdcdigital.com/en-us/wp-content/uploads/sites/4/2024/09/products-features-sales-cloud-account-and-opportunity-management.jpg?w=1024",
-   "licence": "screenshot of the public page as published by Salesforce, shown as itself for commentary",
-   "credit": "Salesforce"
-  },
-  {
-   "id": "workday-screen",
-   "kind": "screenshot",
-   "origin": "capture",
-   "path": "shots/workday-screen.png",
-   "sha256": "59349243f94c505029c5a0fdff006809411ac23854391c497eee213e944032ae",
-   "source_url": "https://workday.scene7.com/is/image/workday/prod-workforce-management-product-feature-4-custom-label-1x1-desktop-1?fmt=webp-alpha",
-   "licence": "screenshot of the public page as published by Workday, shown as itself for commentary",
-   "credit": "Workday"
   },
   {
    "id": "linkedin-saas-dead",
@@ -651,43 +643,52 @@
       "source": "none"
      },
      "uses": [
-      "sf_screen",
-      "wd_screen"
+      "sf_mark",
+      "sf_does",
+      "wd_mark",
+      "wd_does"
      ],
      "events": [
       {
        "at_w": 84,
-       "obj": "sf_screen",
+       "obj": "sf_mark",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
        "at_w": 91,
-       "obj": "sf_screen",
-       "verb": "mark",
-       "to_state": "record",
+       "obj": "sf_does",
+       "verb": "enter",
+       "to_state": "visible",
        "silent": true
       },
       {
        "at_w": 99,
-       "obj": "sf_screen",
+       "obj": "sf_mark",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 99,
+       "obj": "sf_does",
        "verb": "exit",
        "to_state": "gone",
        "silent": true
       },
       {
        "at_w": 100,
-       "obj": "wd_screen",
+       "obj": "wd_mark",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 107,
-       "obj": "wd_screen",
-       "verb": "mark",
-       "to_state": "request",
+       "at_w": 104,
+       "obj": "wd_does",
+       "verb": "enter",
+       "to_state": "visible",
        "silent": true
       }
      ],
@@ -849,7 +850,7 @@
        "at_w": 169,
        "obj": "deel_in",
        "verb": "highlight",
-       "to_state": "Deel",
+       "to_state": "0",
        "silent": true
       }
      ],
@@ -1036,7 +1037,7 @@
        "at_w": 252,
        "obj": "slack",
        "verb": "highlight",
-       "to_state": "Slack",
+       "to_state": "0",
        "silent": true
       },
       {
@@ -1086,7 +1087,7 @@
        "at_w": 269,
        "obj": "sf_back",
        "verb": "highlight",
-       "to_state": "Salesforce",
+       "to_state": "0",
        "silent": true
       }
      ],
@@ -1095,7 +1096,7 @@
     },
     {
      "id": "close",
-     "role": "call",
+     "role": "bridge",
      "span": {
       "from_w": 273,
       "to_w": 327
@@ -1109,12 +1110,21 @@
      "uses": [],
      "events": [],
      "transition_out": "cut",
-     "face": "full"
+     "face": "full",
+     "override_reason": "his close to camera, his whole head in frame with his captions (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\"); no dated call on an under.the.hood piece"
     }
    ]
   }
  },
- "approvals": [],
+ "approvals": [
+  {
+   "gate": "proof",
+   "by": "Krish",
+   "on": "2026-11-18",
+   "artifact_hash": "cf3c1e13b699ef0792b15bce6d9fe023b13e9b1b036910996ef0510293cb7077",
+   "said": "Approve the merged engine and both proofs"
+  }
+ ],
  "budget": {
   "tokens_cap": 12600000,
   "credits": {
@@ -1144,8 +1154,8 @@
   },
   "energy": "high",
   "layout": {
-   "mode": "house",
-   "reason": "his whole head full frame on his lines and every picture full frame (Krish, 18 Nov 2026: \"Can't cut my head off and also ruin the visual above\"); the stage staging shrank him into a window"
+   "mode": "fill",
+   "reason": "every proof, headline and chip sits centred in the safe region the captions leave, clear of every app bar; his whole head full frame on his lines and every picture full frame (Krish, 18 Nov 2026: \"Can't cut my head off and also ruin the visual above\"); the stage staging shrank him into a window"
   },
   "look": "kinetic-movement",
   "idea": {

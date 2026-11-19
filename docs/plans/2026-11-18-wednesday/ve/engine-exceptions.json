@@ -57,6 +57,22 @@
       "said": "Approve engine ac725e9",
       "on": "2026-11-18",
       "artifact_hash": "ac725e9078f545461e84ab061a28ba754d83c25006c1b5e996e736259741b60d"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "on": "2026-11-18",
+      "artifact_hash": "094756f2f5b334977694bd8aa367e81a9a24b19b3717a2ce34246364df9a9104",
+      "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "on": "2026-11-18",
+      "artifact_hash": "04822336113486599141283318db989ba3ccc1cd0ce6abfb33ccc41a88fcbba8",
+      "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
     }
   ]
 }

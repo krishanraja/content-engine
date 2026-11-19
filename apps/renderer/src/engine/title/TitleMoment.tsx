@@ -108,7 +108,8 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
       if (frame < w.atFrame) return null
       const progress = unit((frame - w.atFrame) / 8)
       const lift = 1 - (1 - progress) ** 3
-      const origin = origins[p.index]!
+      // On a card each word lands in place on the card, never flying up across his face from the caption band.
+      const origin = props.card ? { x: p.x, y: p.y - offsetY + p.size * 0.35 } : origins[p.index]!
       const targetX = stage.left + stage.width / 2 + (p.x - stage.left - stage.width / 2) * settle * push
       const targetY = stage.top + stage.height / 2 + (p.y - stage.top - stage.height / 2) * settle * push
       const home = props.release === 'fade' ? 0 : returnEase
@@ -131,7 +132,8 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
       if (frame < w.atFrame) return null
       const progress = unit((frame - w.atFrame) / 8)
       const lift = 1 - (1 - progress) ** 3
-      const origin = origins[p.index]!
+      // On a card each word lands in place on the card, never flying up across his face from the caption band.
+      const origin = props.card ? { x: p.x, y: p.y - offsetY + p.size * 0.35 } : origins[p.index]!
       const targetX = stage.left + stage.width / 2 + (p.x - stage.left - stage.width / 2) * settle * push
       const targetY = stage.top + stage.height / 2 + (p.y - stage.top - stage.height / 2) * settle * push
       const home = props.release === 'fade' ? 0 : returnEase
