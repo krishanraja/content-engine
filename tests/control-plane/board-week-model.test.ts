@@ -1,3 +1,4 @@
+import { bufferUrl } from '../../apps/control-plane/api/board/_growthPlacement.js'
 import { describe, expect, it } from 'vitest'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { approval } from './_approvals'
@@ -145,9 +146,14 @@ describe('the week model (contract 1.12.0)', () => {
     expect(made.next?.label).toBe('Publish')
     expect(made.assets?.length).toBeGreaterThan(0)
     const prompt = (made.next as { prompt: string }).prompt
-    for (const a of made.assets!) for (const f of a.slides) expect(prompt).toContain(f.url)
+    for (const a of made.assets!) for (const f of a.slides) expect(prompt).toContain(bufferUrl(f.url))
     expect(prompt).toContain('schedule this one approved, finished post in Buffer')
-    expect(prompt).toContain('never schedule anything else')
+    expect(prompt).toContain('never schedule a different file')
+    // Growth knows the channels, the time and the voice, so nothing is asked of him (Krish, 2026-11-19).
+    expect(prompt).toContain('nothing here is a question for him')
+    expect(prompt).toContain('Growth\'s four daily slots, 08:30, 12:30, 17:30, 20:30')
+    expect(prompt).toContain('https://drive.google.com/uc?export=download&id=')
+    expect(prompt).toContain('"there is no public link" is not a blocker')
     // The standard wall (never post or publish anything) is replaced, not contradicted.
     expect(prompt).not.toContain('Never post or publish anything, and never put an idea')
     expect(prompt).toContain('Keep the board current as you work')

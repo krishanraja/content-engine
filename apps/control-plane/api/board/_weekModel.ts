@@ -1,5 +1,6 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
+import { bufferUrl, channelWords, placementFor } from './_growthPlacement.js'
 import { asWritten, backDocId, takenBackAt, wordsBody, wordsDocId } from './_contracts.js'
 import { spokenTitle, type FiledScript, type PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
@@ -828,14 +829,27 @@ function madeAssets(d: DayView, option: string): ModelAsset[] {
 const ASSET_KIND_WORD: Record<string, string> = { cut: 'cut', video: 'video', meme: 'meme', carousel: 'carousel', image: 'image', cover: 'cover', figure: 'figure', thumbnail: 'thumbnail', note: 'caption or note' }
 /** The Publish prompt of a made post (Krish, 2026-11-18: "when a piece is complete [...] a button that just says Publish [...] schedule in Buffer directly, ideally, or produce a prompt that I could do it in a session"). */
 function publishLines(files: ModelAsset[]): string {
-  return files.map((f, i) => `${i + 1}. ${ASSET_KIND_WORD[f.kind] ?? f.kind}: ${f.name}${f.folder ? ` (${f.folder})` : ''} ${f.url}${f.slides.length ? ` [${f.slides.length} slides: ${f.slides.map(x => x.url).join(' ')}]` : ''}`).join('\n')
+  return files.map((f, i) => `${i + 1}. ${ASSET_KIND_WORD[f.kind] ?? f.kind}: ${f.name}${f.folder ? ` (${f.folder})` : ''} ${bufferUrl(f.url)}${f.slides.length ? ` [${f.slides.length} slides: ${f.slides.map(x => bufferUrl(x.url)).join(' ')}]` : ''}`).join('\n')
 }
-const PUBLISH_HEAD = 'This is the Publish step: schedule this one approved, finished post in Buffer, nothing else. Krish pressing this prompt is his approval to schedule exactly the files and words listed '
-  + 'below on its own channels. 1. Open every file below from its Drive link and check it is the finished one: the right images in order, the covers and thumbnails, and each caption. If a file is missing, wrong or '
-  + 'unreadable, stop and report blocked naming it; never schedule a different file or reword a caption. 2. Schedule through the Buffer connector (the Make Your Mind Up channels only, never Heartside\'s): one scheduled '
-  + 'post per channel the post is for, each with its own caption verbatim and its own files attached, due at the post\'s day and the channel\'s usual time (ask him once if the time is not on the board). Never publish '
-  + 'now, and never post a channel the board does not list. 3. Read each scheduled post back from Buffer and check its text and every attachment match the files below. 4. Report on the board with the Buffer post ids; '
-  + 'Control Centre also reads Buffer every 15 minutes and moves the card to Scheduled by itself. If you cannot schedule it, say exactly why on the board as blocked; never leave the card as it was.\n\n'
+/** The Publish prompt's head: everything a session needs to schedule the post with no question to Krish. The channels and
+ *  the four daily slots are Growth's (vendor/makeyourmindup/mix.json); the captions are written here, in Growth's account
+ *  voices (Krish, 2026-11-19: he has never chosen channels, times or captions: Growth knows them). */
+function publishHead(kind: string, dateWord: string): string {
+  const p = placementFor(kind)
+  const channels = p ? `${channelWords(p)} (${p.channels.map(c => `${c.name}: ${c.format}`).join('; ')})` : 'the channels of the Make Your Mind Up lane this kind of post belongs to in growth-makeyourmindup mix.json'
+  const times = p ? p.times.join(', ') : '08:30, 12:30, 17:30, 20:30'
+  return 'This is the Publish step: schedule this one approved, finished post in Buffer, nothing else. Krish pressing this prompt is his approval to schedule exactly the files listed below. '
+    + 'He has never chosen the channels, the time or the captions: Growth already knows them, so nothing here is a question for him, and a missing channel list, time or caption is never a reason to stop. '
+    + `1. Channels: ${channels}: Growth's own placement for this kind of post, Make Your Mind Up's channels only (never Heartside's, fulltime.fm's, yourdoghasnotes' or Krish's LinkedIn). Confirm each with get_account and list_channels. `
+    + 'A channel that is not connected, or whose route Growth holds (Buffer TikTok short video is held: social/guides/buffer.md), is skipped and named in your report; it never stops the other channels. '
+    + `2. Time: Growth's four daily slots, ${times}, New York time, on the card's day (${dateWord}). For each channel read its scheduled posts for that day from Buffer and take the first slot not taken that is more than 90 minutes away; if none is left, the next day's first. Set dueAt in New York time with its UTC offset. `
+    + '3. Captions: write each channel\'s own caption yourself now, from the card\'s idea, claim and files only. Instagram and YouTube speak as the publication; X and TikTok are personal: sincere, warm and humble, first person allowed, Krish\'s name never in the text (growth-makeyourmindup docs/ACCOUNT-VOICE.md). '
+    + 'No em dashes, no hashtags, no emojis, no links, never ask for a share, like or follow; check each personal caption with check_voice and every caption with the copy lint (config/copy-lint.json). File all of them on the piece with add_piece_material before you schedule. '
+    + '4. Files: Buffer fetches each file from an https address. The addresses below are Drive download addresses (https://drive.google.com/uc?export=download&id=...), the same form Buffer took for the 18 Nov explainer\'s eight images; use them exactly. '
+    + 'Drive\'s share pages are for people, so "there is no public link" is not a blocker. Open each file from its address and check it is the finished one first (the right images in order, the covers and thumbnails); if a file is missing, wrong or unreadable, stop and report blocked naming it; never schedule a different file. A video goes as a video asset, with its designed cover\'s frame as thumbnailOffset. '
+    + '5. Schedule through the Buffer connector: one scheduled post per channel, each with its own caption and its own files attached. Never publish now, and never post a channel outside the list above. '
+    + '6. Read each scheduled post back from Buffer and check its text and every attachment match. 7. Report on the board with the Buffer post ids; Control Centre also reads Buffer every 15 minutes and moves the card to Scheduled by itself. If you cannot schedule it, say exactly why on the board as blocked; never leave the card as it was.\n\n'
+}
 function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const raw = rawOption(m, d.day, o.id)
   const { kind, supports } = offdayKind({ ...(raw || {}), format: raw?.format ?? o.format })
@@ -889,9 +903,9 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   // A made post with its final files filed: the Publish step, with every file listed (the cut, slides, covers, thumbnails, captions).
   const files = made && !missed && !scheduled ? filed : []
   if (files.length) {
-    const lineMade = `${where}. Its ${files.length} file${files.length === 1 ? ' is' : 's are'} made and filed. Check each one, then publish: it is scheduled in Buffer exactly as listed.`.replace(/\.\./g, '.')
+    const lineMade = `${where}. Its ${files.length} file${files.length === 1 ? ' is' : 's are'} made and filed. Check each one, then publish: it goes to ${(() => { const pl = placementFor(kind); return pl ? channelWords(pl) : 'its channels' })()} in Growth's next free slot, exactly as listed.`.replace(/\.\./g, '.')
     const prompt = itemPrompt(m.week, { ...base, line: lineMade }, 'publish', null, null, own ? m.decisions?.[own] ?? null : null, own,
-      `${PUBLISH_HEAD}The post: "${base.title}" (${base.kind_label}, ${DAY_WORD[d.day]} ${d.date}, item ${o.doc_id}).\nThe files:\n${publishLines(files)}\n\n`, true)
+      `${publishHead(kind, `${DAY_WORD[d.day]} ${d.date}`)}The post: "${base.title}" (${base.kind_label}, ${DAY_WORD[d.day]} ${d.date}, item ${o.doc_id}).\nThe files:\n${publishLines(files)}\n\n`, true)
     return { ...base, line: lineMade, assets: files, next: { ...prompt, label: PUBLISH_LABEL } as ModelAction, decision: false }
   }
   // A post he records himself, its script approved: the next session assumes the take is in the Video Engine Inbox and
