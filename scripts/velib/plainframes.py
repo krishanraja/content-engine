@@ -153,6 +153,23 @@ def art_box(pages: list[dict], page: dict, aspect: str, rules: dict | None = Non
     return region['left'], round(foot - hang), region['width'], round(max(own, 1))
 
 
+def art_row_boxes(pages: list[dict], page: dict, aspect: str, rules: dict | None = None) -> list[tuple[int, int, int, int]]:
+    """Each drawn row of an art-directed page as x, y, w, h: rows are left-set and ragged, so a short row beside his chin is
+    not the zone's full width (Fri 20 Nov: 29 pages read as on his face by the zone's width, none on it by eye)."""
+    rules = rules or config()
+    a = rules['caption_over_content']['art_directed']
+    x, y, _, _ = art_box(pages, page, aspect, rules)
+    texts = [_clean(w.get('text') or w.get('word') or '') for w in page.get('words', [])]
+    lay = art_layout([w.get('text') or w.get('word') or '' for w in page.get('words', [])], page.get('swipeIndex'), aspect, rules)
+    out, top = [], float(y)
+    for indices, size in lay['rows']:
+        width = sum(len(texts[i]) * size * a['char_em'] for i in indices) + a['gap'] * max(0, len(indices) - 1)
+        height = size * a['line_height']
+        out.append((x, round(top), round(width), round(height)))
+        top += height + a['row_gap']
+    return out
+
+
 def caption_box_drawn(props: dict, pages: list[dict], page: dict, rules: dict | None = None) -> tuple[int, int, int, int]:
     """The region a caption page is drawn in: the measured art-directed stack, else the theme's region for its placement."""
     rules = rules or config()

@@ -324,6 +324,8 @@ def inputs_from_props(props: dict) -> dict:
             view = qc_captions_art.art_view(props['captions'], props['captions'].index(original), aspect, props.get('fps', 30))
             page['region'], page['art'] = view['region'], {'extras': view['extras'], 'settle': view['settle']}
             page['drawn'] = view['drawn']  # the stack as drawn; region is the padded OCR read box
+            from . import plainframes as _pf  # noqa: PLC0415
+            page['drawn_rows'] = _pf.art_row_boxes(props['captions'], original, aspect)
         pages.append(page)
     # The plate's frame under file frame F of a beat is F - the beat's shift + the segment's trim.
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,

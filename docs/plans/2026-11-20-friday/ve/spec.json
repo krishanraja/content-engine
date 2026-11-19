@@ -57,11 +57,11 @@
     "group": true,
     "hero": true,
     "place": {
-     "left": 135,
-     "top": 270,
+     "left": 54,
+     "top": 190,
      "width": 1080,
      "height": 480,
-     "scale": 0.75
+     "scale": 0.9
     }
    }
   },
@@ -86,11 +86,11 @@
      130
     ],
     "place": {
-     "left": 135,
-     "top": 270,
+     "left": 54,
+     "top": 190,
      "width": 1080,
      "height": 480,
-     "scale": 0.75
+     "scale": 0.9
     }
    }
   },
@@ -194,7 +194,6 @@
     "to_beat": "fell"
    },
    "params": {
-    "ghost": true,
     "prefix": "$",
     "group": true
    }
@@ -524,7 +523,6 @@
     "to_beat": "hook"
    },
    "params": {
-    "ghost": true,
     "prefix": "$",
     "group": true
    }
@@ -661,7 +659,6 @@
     "to_beat": "l_fell"
    },
    "params": {
-    "ghost": true,
     "prefix": "$",
     "group": true
    }

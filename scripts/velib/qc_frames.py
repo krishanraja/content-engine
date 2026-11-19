@@ -157,6 +157,11 @@ def figure_problems(props: dict, rules: dict | None = None) -> list[dict]:
             if not obj or obj.get('device') not in rule['devices'] or index >= len(slots):
                 continue
             x, y, w, h = slots[index]
+            place = (obj.get('params') or {}).get('place')
+            if isinstance(place, dict) and place.get('width') and place.get('height'):
+                # A placed object is drawn in its own band, not the layout's slot (Fri 20 Nov: the hook figure's band).
+                k = float(place.get('scale') or 1)
+                w, h = float(place['width']) * k, float(place['height']) * k
             share = w * h / (width * height)
             if share < rule['min_slot_area_share']:
                 out.append({'obj': name, 'beat': beat.get('id'), 'why': f"its slot is {share:.0%} of the frame, under {rule['min_slot_area_share']:.0%}: "

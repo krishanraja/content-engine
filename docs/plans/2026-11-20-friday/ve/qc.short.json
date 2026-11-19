@@ -1,0 +1,5968 @@
+{
+  "file": ".cache/fri20/out/short.mp4",
+  "sha256": "5a2ff03306a5641edf4ecc3dc45e738a153e89fc507a76373a1ce8d95a702c25",
+  "duration_s": 87.13,
+  "format": "face-with-proof",
+  "checks": {
+    "loudness.integrated": {
+      "value": -14.0,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.5,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 0.977,
+      "target": ">= 0.5",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 1,
+      "target": "<= 4 s",
+      "pass": true,
+      "runs": [
+        [
+          31,
+          1
+        ],
+        [
+          86,
+          1
+        ]
+      ]
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999987
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999985
+        },
+        {
+          "segment": 2,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        },
+        {
+          "segment": 3,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999981
+        },
+        {
+          "segment": 4,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999982
+        },
+        {
+          "segment": 5,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999986
+        },
+        {
+          "segment": 6,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999984
+        },
+        {
+          "segment": 7,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 8,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999976
+        },
+        {
+          "segment": 9,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999991
+        },
+        {
+          "segment": 10,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999976
+        },
+        {
+          "segment": 11,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999996
+        },
+        {
+          "segment": 12,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999997
+        },
+        {
+          "segment": 13,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999991
+        },
+        {
+          "segment": 14,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999982
+        },
+        {
+          "segment": 15,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999993
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": true,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 39,
+          "text": "|\nSOME ~ ~\nGOOD NEWS",
+          "agreement": 0.75,
+          "variant": "highlight",
+          "pass": false
+        },
+        {
+          "page": 1,
+          "frame": 71,
+          "text": "FROM\nAl",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 2,
+          "frame": 120,
+          "text": "IT JUST\nHELPED\nA FAMILY",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 3,
+          "frame": 228,
+          "text": "CUT A\n$199,000\nHOSPITAL BILL",
+          "agreement": 0.7143,
+          "variant": "cream_half",
+          "pass": false
+        },
+        {
+          "page": 4,
+          "frame": 258,
+          "text": "T0 A Aad\nFRACTION’\nOF THAT",
+          "agreement": 0.5714,
+          "variant": "normalised_2x",
+          "pass": false
+        },
+        {
+          "page": 5,
+          "frame": 311,
+          "text": "$0 ‘a\nIMAGINE?\nWHAT IT'S",
+          "agreement": 0.8,
+          "variant": "normalised",
+          "pass": false
+        },
+        {
+          "page": 6,
+          "frame": 332,
+          "text": "FINDING IN\nEVERYONE'S",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 7,
+          "frame": 364,
+          "text": "ARCHIVES\nRIGHT NOW —",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 8,
+          "frame": 405,
+          "text": "HOSPITALS —\nPAY WHOLE",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 9,
+          "frame": 460,
+          "text": "TEAMS TO SORT :\nPRICING ~~\nOUT /",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 10,
+          "frame": 500,
+          "text": "AND A\nCHATBOT\nBEAT THEM",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 11,
+          "frame": 740,
+          "text": "A MAN'S\nBROTHER-IN-LAW",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 12,
+          "frame": 773,
+          "text": "DIED OF A HEART\nATTACK",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 13,
+          "frame": 812,
+          "text": "WITH NO\nHEALTH\nCOVER",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 14,
+          "frame": 845,
+          "text": "SO THE\nFAMILY\nOWED",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 15,
+          "frame": 902,
+          "text": "ALL THAT MONEY\n195K",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 16,
+          "frame": 1014,
+          "text": "SO HE\nGAVE",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 17,
+          "frame": 1034,
+          "text": "CLAUDE\nTHE BILL",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 18,
+          "frame": 1062,
+          "text": "LINE BY\nLINE",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 19,
+          "frame": 1109,
+          "text": "CLAUDE\nFOUND CARE BILLED",
+          "agreement": 1.0,
+          "variant": "normalised_2x",
+          "pass": true
+        },
+        {
+          "page": 20,
+          "frame": 1144,
+          "text": "UNDER A MUCH MORE._\nEXPENSIVE",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 21,
+          "frame": 1187,
+          "text": "CODE\nTHAN THE CARE HIS",
+          "agreement": 1.0,
+          "variant": "raw_2x",
+          "pass": true
+        },
+        {
+          "page": 22,
+          "frame": 1223,
+          "text": "BROTHER-IN-LAW’-\nACTUALLY GOT -;——",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 23,
+          "frame": 1269,
+          "text": "THAT'S LIKE-= = =.\nCHARGING —",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 24,
+          "frame": 1304,
+          "text": "FOR A\nSTEAK\nWHEN oe",
+          "agreement": 0.8,
+          "variant": "cream_half",
+          "pass": false
+        },
+        {
+          "page": 25,
+          "frame": 1333,
+          "text": "YOU GET SERVED A\nSANDWICH:.s",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 26,
+          "frame": 1389,
+          "text": "HE SENT THE\nHOSPITAL",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 27,
+          "frame": 1419,
+          "text": "THAT\nLIST AND THE BILL",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 28,
+          "frame": 1448,
+          "text": "FELL\nBY A LOT",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 29,
+          "frame": 1474,
+          "text": "AND \\\nTHIS ~~\nIS THE BIT",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 30,
+          "frame": 1482,
+          "text": "LOVE —” _",
+          "agreement": 0.5,
+          "variant": "highlight",
+          "pass": false
+        },
+        {
+          "page": 31,
+          "frame": 1521,
+          "text": "AN OLD BIL\nCAN'T\nARGUE",
+          "agreement": 0.7143,
+          "variant": "cream_half",
+          "pass": false
+        },
+        {
+          "page": 32,
+          "frame": 1547,
+          "text": "BACK AND THE\nRULES",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 33,
+          "frame": 1571,
+          "text": "ARE )\nWRITTEN —\nDOWN /",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 34,
+          "frame": 1635,
+          "text": "SO Al ~ &\nREADS> =\nEVERY LINE",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 35,
+          "frame": 1679,
+          "text": "NEVER NEEDS\nCOFFEE",
+          "agreement": 0.75,
+          "variant": "cream_half",
+          "pass": false
+        },
+        {
+          "page": 36,
+          "frame": 1751,
+          "text": "ASK IT\n\na\nABOUT =\nNEXT",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 37,
+          "frame": 1767,
+          "text": "YEAR\nAND IT'S",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 38,
+          "frame": 1788,
+          "text": "DEFINITELY\nGUESSING",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 39,
+          "frame": 1831,
+          "text": "BUT ASK\nABOUT\nLAST YEAR",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 40,
+          "frame": 1849,
+          "text": "AND IT'S |\nANALYSING",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 41,
+          "frame": 1937,
+          "text": "BUT IN THIS\nINSTANCE",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 42,
+          "frame": 1984,
+          "text": "WHOSE a\n:\n\nMISTAKE *\nDID CLAUDE FIND?",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 43,
+          "frame": 2034,
+          "text": "IT WAS ACTUALLY THE \\\nHOSPITAL'S-",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 44,
+          "frame": 2115,
+          "text": "i en ae\n\nANDI eS\n\nRECKON (*\n\\\\\n\nCLAUDE”",
+          "agreement": 0.375,
+          "variant": "highlight",
+          "pass": false
+        },
+        {
+          "page": 45,
+          "frame": 2153,
+          "text": "IN THIS. NCE\nINSTANCE =~\nDIDN'T CARE — © ~",
+          "agreement": 0.8571,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 46,
+          "frame": 2188,
+          "text": "WHOSE -:-- *\nCLOSET.\nIT WAS OPENING",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 47,
+          "frame": 2213,
+          "text": "AND IT\nWON'T\nCARE",
+          "agreement": 1.0,
+          "variant": "cream_half",
+          "pass": true
+        },
+        {
+          "page": 48,
+          "frame": 2250,
+          "text": "WHEN IT OPENS*~>“™\nYOURS a\nEITHER",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 49,
+          "frame": 2273,
+          "text": "THS A\nWEEK “7",
+          "agreement": 0.3333,
+          "variant": "cream_half",
+          "pass": false
+        },
+        {
+          "page": 50,
+          "frame": 2305,
+          "text": "GONNA Site\nGIVE MY Al See",
+          "agreement": 0.5,
+          "variant": "normalised",
+          "pass": false
+        },
+        {
+          "page": 51,
+          "frame": 2351,
+          "text": "LAST YEAR'S\". /\nINVOICES: «-\nCAUSE i.",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 52,
+          "frame": 2385,
+          "text": "WANNA - 7\nBE THE FIRST <7",
+          "agreement": 0.8,
+          "variant": "cream_half",
+          "pass": false
+        },
+        {
+          "page": 53,
+          "frame": 2422,
+          "text": "ONE TO FIND THE 4,\nSKELETONS!",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 54,
+          "frame": 2444,
+          "text": "IN MY on | Jf\nCLOSET: -~-y",
+          "agreement": 0.6,
+          "variant": "highlight",
+          "pass": false
+        },
+        {
+          "page": 55,
+          "frame": 2475,
+          "text": "THE FULL i\nSTORY",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 56,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 57,
+          "frame": 2508,
+          "text": "MAKEYOURMINDUP.AI",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": false,
+      "status": "incomplete"
+    },
+    "brand.no_mark": {
+      "value": [
+        {
+          "beat": "hook",
+          "frame": 130,
+          "score": 0.14594875253271566,
+          "pass": true
+        },
+        {
+          "beat": "face",
+          "frame": 385,
+          "score": 0.09361472409664026,
+          "pass": true
+        },
+        {
+          "beat": "question",
+          "frame": 559,
+          "score": 0.4056032281893016,
+          "pass": true
+        },
+        {
+          "beat": "skeletons",
+          "frame": 666,
+          "score": 0.1745622012413788,
+          "pass": true
+        },
+        {
+          "beat": "proof",
+          "frame": 856,
+          "score": 0.33880559023185486,
+          "pass": true
+        },
+        {
+          "beat": "lines",
+          "frame": 1031,
+          "score": 0.3370992956285103,
+          "pass": true
+        },
+        {
+          "beat": "code",
+          "frame": 1154,
+          "score": 0.09845309418291134,
+          "pass": true
+        },
+        {
+          "beat": "steak",
+          "frame": 1299,
+          "score": 0.31360985558662263,
+          "pass": true
+        },
+        {
+          "beat": "fell",
+          "frame": 1408,
+          "score": 0.3353196518452192,
+          "pass": true
+        },
+        {
+          "beat": "love",
+          "frame": 1584,
+          "score": 0.09792495377412591,
+          "pass": true
+        },
+        {
+          "beat": "hindsight",
+          "frame": 1806,
+          "score": 0.09071223237782694,
+          "pass": true
+        },
+        {
+          "beat": "whose",
+          "frame": 2005,
+          "score": 0.1071582464077095,
+          "pass": true
+        },
+        {
+          "beat": "closet",
+          "frame": 2151,
+          "score": 0.18092664706325515,
+          "pass": true
+        },
+        {
+          "beat": "yours",
+          "frame": 2227,
+          "score": 0.1443483826057481,
+          "pass": true
+        },
+        {
+          "beat": "act",
+          "frame": 2361,
+          "score": 0.20664776184193476,
+          "pass": true
+        },
+        {
+          "beat": "close",
+          "frame": 2537,
+          "score": 0.36257595579294766,
+          "pass": true
+        }
+      ],
+      "target": "no mark on the vertical cut: mark NCC < 0.8 at every beat midpoint",
+      "pass": true,
+      "status": "measured"
+    },
+    "motion.cue_sync": {
+      "value": [
+        {
+          "event": "hook-0",
+          "atFrame": 0,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 8.869556427001953,
+          "event_difference": 8.869556427001953,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "hook-1",
+          "atFrame": 19,
+          "peak_frame": 19,
+          "lag_frames": 0,
+          "peak_difference": 12.466414451599121,
+          "event_difference": 12.466414451599121,
+          "threshold": 4.852364659309387,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "hook-2",
+          "atFrame": 240,
+          "peak_frame": 240,
+          "lag_frames": 0,
+          "peak_difference": 39.37946701049805,
+          "event_difference": 39.37946701049805,
+          "threshold": 3.924768805503845,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "face-0",
+          "atFrame": 340,
+          "peak_frame": 339,
+          "lag_frames": -1,
+          "peak_difference": 30.76814079284668,
+          "event_difference": 30.76814079284668,
+          "threshold": 9.929979085922241,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "face-1",
+          "atFrame": 401,
+          "peak_frame": 406,
+          "lag_frames": 5,
+          "peak_difference": 33.70395278930664,
+          "event_difference": 6.057378768920898,
+          "threshold": 7.001941680908203,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "face-2",
+          "atFrame": 407,
+          "peak_frame": 407,
+          "lag_frames": 0,
+          "peak_difference": 35.443397521972656,
+          "event_difference": 35.443397521972656,
+          "threshold": 6.6703126430511475,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "face-3",
+          "atFrame": 473,
+          "peak_frame": 473,
+          "lag_frames": 0,
+          "peak_difference": 31.28123664855957,
+          "event_difference": 31.28123664855957,
+          "threshold": 7.900837182998657,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "face-4",
+          "atFrame": 476,
+          "peak_frame": 473,
+          "lag_frames": -3,
+          "peak_difference": 14.816139221191406,
+          "event_difference": 10.983175277709961,
+          "threshold": 13.50459623336792,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "question-0",
+          "atFrame": 509,
+          "peak_frame": 509,
+          "lag_frames": 0,
+          "peak_difference": 71.1456298828125,
+          "event_difference": 71.1456298828125,
+          "threshold": 9.013984680175781,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "skeletons-0",
+          "atFrame": 611,
+          "peak_frame": 612,
+          "lag_frames": 1,
+          "peak_difference": 25.884475708007812,
+          "event_difference": 25.884475708007812,
+          "threshold": 4.69068717956543,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-0",
+          "atFrame": 723,
+          "peak_frame": 723,
+          "lag_frames": 0,
+          "peak_difference": 44.83657455444336,
+          "event_difference": 44.83657455444336,
+          "threshold": 19.590200901031494,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "code-0",
+          "atFrame": 1105,
+          "peak_frame": 1105,
+          "lag_frames": 0,
+          "peak_difference": 7.312718391418457,
+          "event_difference": 7.312718391418457,
+          "threshold": 6.456054210662842,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "code-1",
+          "atFrame": 1136,
+          "peak_frame": 1135,
+          "lag_frames": -1,
+          "peak_difference": 10.875866889953613,
+          "event_difference": 10.875866889953613,
+          "threshold": 9.911421775817871,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "code-2",
+          "atFrame": 1140,
+          "peak_frame": 1140,
+          "lag_frames": 0,
+          "peak_difference": 30.63911247253418,
+          "event_difference": 30.63911247253418,
+          "threshold": 13.02627182006836,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "code-3",
+          "atFrame": 1183,
+          "peak_frame": 1183,
+          "lag_frames": 0,
+          "peak_difference": 27.056962966918945,
+          "event_difference": 27.056962966918945,
+          "threshold": 5.369503140449524,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "code-4",
+          "atFrame": 1189,
+          "peak_frame": 1189,
+          "lag_frames": 0,
+          "peak_difference": 20.50494956970215,
+          "event_difference": 20.50494956970215,
+          "threshold": 13.695271968841553,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "steak-0",
+          "atFrame": 1237,
+          "peak_frame": 1237,
+          "lag_frames": 0,
+          "peak_difference": 84.55546569824219,
+          "event_difference": 84.55546569824219,
+          "threshold": 10.965856790542603,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "fell-0",
+          "atFrame": 1362,
+          "peak_frame": 1362,
+          "lag_frames": 0,
+          "peak_difference": 57.28759002685547,
+          "event_difference": 57.28759002685547,
+          "threshold": 8.430448293685913,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "fell-1",
+          "atFrame": 1362,
+          "peak_frame": 1362,
+          "lag_frames": 0,
+          "peak_difference": 57.28759002685547,
+          "event_difference": 57.28759002685547,
+          "threshold": 8.430448293685913,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "fell-2",
+          "atFrame": 1424,
+          "peak_frame": 1424,
+          "lag_frames": 0,
+          "peak_difference": 14.339364051818848,
+          "event_difference": 14.339364051818848,
+          "threshold": 0.5312499850988388,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "fell-3",
+          "atFrame": 1439,
+          "peak_frame": 1439,
+          "lag_frames": 0,
+          "peak_difference": 27.05000877380371,
+          "event_difference": 27.05000877380371,
+          "threshold": 21.40083074569702,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "love-0",
+          "atFrame": 1517,
+          "peak_frame": 1517,
+          "lag_frames": 0,
+          "peak_difference": 6.620034694671631,
+          "event_difference": 6.620034694671631,
+          "threshold": 5.464098572731018,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "love-1",
+          "atFrame": 1554,
+          "peak_frame": 1553,
+          "lag_frames": -1,
+          "peak_difference": 26.90237808227539,
+          "event_difference": 26.90237808227539,
+          "threshold": 8.679569721221924,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "love-2",
+          "atFrame": 1557,
+          "peak_frame": 1558,
+          "lag_frames": 1,
+          "peak_difference": 30.116718292236328,
+          "event_difference": 30.116718292236328,
+          "threshold": 8.87895941734314,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "love-3",
+          "atFrame": 1618,
+          "peak_frame": 1618,
+          "lag_frames": 0,
+          "peak_difference": 29.397092819213867,
+          "event_difference": 29.397092819213867,
+          "threshold": 4.82024073600769,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "love-4",
+          "atFrame": 1625,
+          "peak_frame": 1625,
+          "lag_frames": 0,
+          "peak_difference": 15.256925582885742,
+          "event_difference": 15.256925582885742,
+          "threshold": 15.467479705810547,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "hindsight-0",
+          "atFrame": 1784,
+          "peak_frame": 1784,
+          "lag_frames": 0,
+          "peak_difference": 8.908689498901367,
+          "event_difference": 8.908689498901367,
+          "threshold": 6.2680442333221436,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "hindsight-1",
+          "atFrame": 1840,
+          "peak_frame": 1836,
+          "lag_frames": -4,
+          "peak_difference": 17.86024284362793,
+          "event_difference": 14.835651397705078,
+          "threshold": 11.729167699813843,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "hindsight-2",
+          "atFrame": 1845,
+          "peak_frame": 1845,
+          "lag_frames": 0,
+          "peak_difference": 34.10624694824219,
+          "event_difference": 34.10624694824219,
+          "threshold": 6.710831165313721,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "whose-0",
+          "atFrame": 1954,
+          "peak_frame": 1954,
+          "lag_frames": 0,
+          "peak_difference": 5.823467254638672,
+          "event_difference": 5.823467254638672,
+          "threshold": 6.9595420360565186,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "whose-1",
+          "atFrame": 2027,
+          "peak_frame": 2027,
+          "lag_frames": 0,
+          "peak_difference": 8.371254920959473,
+          "event_difference": 8.371254920959473,
+          "threshold": 17.65874433517456,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "whose-2",
+          "atFrame": 2030,
+          "peak_frame": 2027,
+          "lag_frames": -3,
+          "peak_difference": 29.698862075805664,
+          "event_difference": 27.57138442993164,
+          "threshold": 6.032597064971924,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "closet-0",
+          "atFrame": 2111,
+          "peak_frame": 2111,
+          "lag_frames": 0,
+          "peak_difference": 79.83814239501953,
+          "event_difference": 79.83814239501953,
+          "threshold": 10.041151285171509,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "act-0",
+          "atFrame": 2263,
+          "peak_frame": 2263,
+          "lag_frames": 0,
+          "peak_difference": 75.36649322509766,
+          "event_difference": 75.36649322509766,
+          "threshold": 10.182721138000488,
+          "gradual": false,
+          "pass": true
+        }
+      ],
+      "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
+      "pass": false,
+      "status": "measured"
+    },
+    "audio.bed": {
+      "value": [
+        {
+          "check": "bed present",
+          "value": true,
+          "pass": true
+        },
+        {
+          "check": "under speech",
+          "value": -15.16,
+          "target": "-21.0 to -12.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "true peak",
+          "value": -1.7,
+          "target": "<= -1.0 dBTP",
+          "pass": true
+        },
+        {
+          "check": "a steady bed",
+          "value": "episode_bed",
+          "target": "episode_bed or continuous",
+          "pass": true
+        },
+        {
+          "check": "bed level in the master",
+          "value": -31.0,
+          "target": "-31.0 ±1.5 LUFS short-term median",
+          "pass": true
+        },
+        {
+          "check": "bed holds one level",
+          "value": 0.6,
+          "target": "<= 4.0 LU short-term p95-p5 outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never swells or sags",
+          "value": 0.1,
+          "target": "<= 3.0 LU from the median, held 1.0 s, outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never drops out",
+          "value": [],
+          "target": "no 0.25 s 15 dB under its own running level (50 ms windows)",
+          "pass": true
+        },
+        {
+          "check": "the one bed shape",
+          "value": {
+            "open_over_bed_lu": 15.3,
+            "bed_spread_lu": 0.2,
+            "direction_changes": 1,
+            "end_over_bed_lu": 13.5
+          },
+          "target": "config/music-bed.json qc (re-run the premix when missing)",
+          "pass": true
+        }
+      ],
+      "target": "bed present, under speech in range, true peak, (ducked) breathing in pauses, (episode) one steady level with no drop-outs",
+      "pass": true,
+      "status": "measured"
+    },
+    "audio.bed_continuity": {
+      "value": [],
+      "target": "no 0.25 s under -49.0 dBFS (50 ms RMS) from 3.0 to 85.6 s",
+      "pass": true,
+      "status": "measured"
+    },
+    "opening": {
+      "value": {
+        "opening": "hook",
+        "cut_frames": 2614,
+        "file_frames": 2614,
+        "lead_frames": 0,
+        "whole_cut": true,
+        "clips_compared": []
+      },
+      "target": "no sting: the cut's own frame 0 is the file's first, and 2614 frames in all",
+      "pass": true,
+      "status": "measured",
+      "calibration": "placeholder: measured on one real render, 5 Nov 2026 (velib/qc_opening.py)"
+    },
+    "words.lost": {
+      "value": {
+        "machine": "scripts/quick-edit/words_gate.py",
+        "version": "words-gate/4",
+        "status": "fail",
+        "lost": [
+          {
+            "word": "auditor",
+            "token": "auditor",
+            "take_index": 48,
+            "take_s": 18.621,
+            "take_e": 18.941,
+            "final_between_s": [
+              18.53,
+              18.95
+            ],
+            "context": "... So will your AI [auditor] find missing money or ...",
+            "final_heard_there": "order to",
+            "message": "\"auditor\" is lost: said at 0:18.62 in the take, not heard in the final cut between 0:18.53 and 0:18.95 (the final has \"order to\" there): ... So will your AI [auditor] find missing money or ..."
+          },
+          {
+            "word": "195K.",
+            "token": "195k",
+            "take_index": 81,
+            "take_s": 29.922,
+            "take_e": 29.942,
+            "final_between_s": [
+              28.71,
+              30.57
+            ],
+            "context": "... owed all that money, [195K.] So he gave Claude ...",
+            "final_heard_there": "$195 ,000. $195",
+            "message": "\"195K.\" is lost: said at 0:29.92 in the take, not heard in the final cut between 0:28.71 and 0:30.57 (the final has \"$195 ,000. $195\" there): ... owed all that money, [195K.] So he gave Claude ..."
+          },
+          {
+            "word": "cause",
+            "token": "cause",
+            "take_index": 225,
+            "take_s": 78.245,
+            "take_e": 78.405,
+            "final_between_s": [
+              78.15,
+              78.33
+            ],
+            "context": "... AI last year's invoices [cause] I wanna be the ...",
+            "final_heard_there": "because",
+            "message": "\"cause\" is lost: said at 1:18.25 in the take, not heard in the final cut between 1:18.15 and 1:18.33 (the final has \"because\" there): ... AI last year's invoices [cause] I wanna be the ..."
+          }
+        ],
+        "unapproved_removals": [],
+        "function_word_differences": [
+          {
+            "word": "whose",
+            "token": "whose",
+            "take_index": 182,
+            "take_s": 64.844,
+            "take_e": 65.084,
+            "final_between_s": [
+              64.75,
+              65.07
+            ],
+            "context": "... But in this instance, [whose] mistake did Claude find? ...",
+            "final_heard_there": "who's"
+          }
+        ],
+        "adlib_losses": [],
+        "heard_differently": [
+          {
+            "word": "hospital's.",
+            "heard": "hospitals.",
+            "take_s": 67.664,
+            "near_homophone": true
+          }
+        ],
+        "cleared_by_krish": [],
+        "added_in_final": [
+          {
+            "word": "order",
+            "final_s": 18.53
+          },
+          {
+            "word": "to",
+            "final_s": 18.75
+          },
+          {
+            "word": "see.",
+            "final_s": 23.09
+          },
+          {
+            "word": "$195",
+            "final_s": 29.41
+          },
+          {
+            "word": ",000.",
+            "final_s": 29.49
+          },
+          {
+            "word": "$195",
+            "final_s": 29.41
+          },
+          {
+            "word": "who's",
+            "final_s": 64.87
+          },
+          {
+            "word": "because",
+            "final_s": 78.15
+          }
+        ],
+        "approved_removals": [],
+        "unmeasured": [],
+        "calibration": {
+          "status": "uncalibrated",
+          "note": "OPEN until calibrated on real cuts (plan W3 3a): Monday 26 Oct's accepted long and short must pass; Wednesday 21 Oct's published long cut and Friday's 90-second cut from the 17 Oct words file must fail. A clipped tail the transcriber still hears whole is caught by joins-in-gaps (scripts/cutgates/gaps.py). The harness is scripts/cutgates/calibrate.py on config/gate-calibration.json."
+        },
+        "counts": {
+          "script_words": 253,
+          "take_words": 253,
+          "final_words": 257,
+          "removed_by_edl": 0,
+          "compared": 253,
+          "take_tokens_not_in_script": 0,
+          "script_content_words_not_said_in_take": 0,
+          "lost": 3,
+          "unapproved_removals": 0,
+          "cleared_by_krish": 0,
+          "unmeasured": 0,
+          "near_homophones": 1,
+          "function_word_differences": 1,
+          "adlib_losses": 0
+        },
+        "reason": "3 content word(s) of the signed script he said in the take are missing from the final cut",
+        "aligners": [
+          "faster-whisper"
+        ],
+        "agreement": "single aligner",
+        "per_aligner": {
+          "faster-whisper": {
+            "status": "fail",
+            "lost": [
+              "auditor",
+              "195K.",
+              "cause"
+            ],
+            "reason": "3 content word(s) of the signed script he said in the take are missing from the final cut"
+          }
+        },
+        "heard_by_one_aligner": []
+      },
+      "target": "no content word of the signed script lost on every aligner's pass",
+      "pass": false,
+      "status": "measured",
+      "agreement": "single aligner",
+      "summary": "3 content word(s) of the signed script he said in the take are missing from the final cut: \"auditor\" is lost: said at 0:18.62 in the take, not heard in the final cut between 0:18.53 and 0:18.95 (the final has \"order to\" there): ... So will your AI [auditor] find missing money or ...; \"195K.\" is lost: said at 0:29.92 in the take, not heard in the final cut between 0:28.71 and 0:30.57 (the final has \"$195 ,000. $195\" there): ... owed all that money, [195K.] So he gave Claude ...; \"cause\" is lost: said at 1:18.25 in the take, not heard in the final cut between 1:18.15 and 1:18.33 (the final has \"because\" there): ... AI last year's invoices [cause] I wanna be the ..."
+    },
+    "joins.in_gaps": {
+      "value": {
+        "machine": "scripts/cutgates/gaps.py",
+        "version": "joins-in-gaps/1",
+        "rule": {
+          "min_gap_ms": 80.0,
+          "clearance_ms": 30.0
+        },
+        "aligners": [
+          "faster-whisper"
+        ],
+        "agreement": "single aligner",
+        "joins": [],
+        "failed": [],
+        "status": "pass"
+      },
+      "target": "every join in an agreed gap >= 80 ms, 30 ms clear each side",
+      "pass": true,
+      "status": "measured",
+      "agreement": "single aligner",
+      "summary": "every join is in an agreed gap (single aligner)"
+    },
+    "captions.clock": {
+      "value": {
+        "machine": "scripts/cutgates/captions.py",
+        "version": "captions/1",
+        "part": "clock",
+        "drawn_by": "faster-whisper",
+        "heard_by": "faster-whisper",
+        "independent": false,
+        "agreement": "single aligner: the finished audio heard again by faster-whisper, the aligner that drew the captions",
+        "tolerance_frames": 2,
+        "tolerance_status": "placeholder, to be measured on Monday 26",
+        "pages": [
+          {
+            "page": 0,
+            "fromFrame": 19,
+            "text": "So some good news",
+            "heard_word": "So",
+            "heard_s": 0.27,
+            "heard_frame": 8,
+            "delta_frames": 11,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 0 (\"So some good news\") starts at frame 19, 11 frames late on \"So\" as faster-whisper heard it at 0.270 s (tolerance 2)"
+          },
+          {
+            "page": 1,
+            "fromFrame": 61,
+            "text": "from AI.",
+            "heard_word": "from",
+            "heard_s": 1.49,
+            "heard_frame": 45,
+            "delta_frames": 16,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 1 (\"from AI.\") starts at frame 61, 16 frames late on \"from\" as faster-whisper heard it at 1.490 s (tolerance 2)"
+          },
+          {
+            "page": 2,
+            "fromFrame": 88,
+            "text": "It just helped a family",
+            "heard_word": "It",
+            "heard_s": 2.85,
+            "heard_frame": 86,
+            "delta_frames": 2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 3,
+            "fromFrame": 128,
+            "text": "cut a $195,000 hospital bill",
+            "heard_word": "cut",
+            "heard_s": 4.13,
+            "heard_frame": 124,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 3 (\"cut a $195,000 hospital bill\") starts at frame 128, 4 frames late on \"cut\" as faster-whisper heard it at 4.130 s (tolerance 2)"
+          },
+          {
+            "page": 4,
+            "fromFrame": 231,
+            "text": "to a fraction of that.",
+            "heard_word": "to",
+            "heard_s": 7.57,
+            "heard_frame": 227,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 4 (\"to a fraction of that.\") starts at frame 231, 4 frames late on \"to\" as faster-whisper heard it at 7.570 s (tolerance 2)"
+          },
+          {
+            "page": 5,
+            "fromFrame": 262,
+            "text": "So imagine what it's",
+            "heard_word": "So",
+            "heard_s": 8.81,
+            "heard_frame": 264,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 6,
+            "fromFrame": 313,
+            "text": "finding in everyone's",
+            "heard_word": "finding",
+            "heard_s": 10.41,
+            "heard_frame": 312,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 7,
+            "fromFrame": 340,
+            "text": "archives right now.",
+            "heard_word": "archives",
+            "heard_s": 11.31,
+            "heard_frame": 339,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 8,
+            "fromFrame": 373,
+            "text": "Hospitals pay whole",
+            "heard_word": "Hospitals",
+            "heard_s": 12.53,
+            "heard_frame": 376,
+            "delta_frames": -3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 8 (\"Hospitals pay whole\") starts at frame 373, 3 frames early on \"Hospitals\" as faster-whisper heard it at 12.530 s (tolerance 2)"
+          },
+          {
+            "page": 9,
+            "fromFrame": 407,
+            "text": "teams to sort pricing out",
+            "heard_word": "teams",
+            "heard_s": 13.49,
+            "heard_frame": 405,
+            "delta_frames": 2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 10,
+            "fromFrame": 469,
+            "text": "and a chatbot beat them.",
+            "heard_word": "and",
+            "heard_s": 15.33,
+            "heard_frame": 460,
+            "delta_frames": 9,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 10 (\"and a chatbot beat them.\") starts at frame 469, 9 frames late on \"and\" as faster-whisper heard it at 15.330 s (tolerance 2)"
+          },
+          {
+            "page": 11,
+            "fromFrame": 723,
+            "text": "A man's brother-in-law",
+            "heard_word": "a",
+            "heard_s": 24.07,
+            "heard_frame": 722,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 12,
+            "fromFrame": 752,
+            "text": "died of a heart attack",
+            "heard_word": "died",
+            "heard_s": 25.01,
+            "heard_frame": 750,
+            "delta_frames": 2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 13,
+            "fromFrame": 779,
+            "text": "with no health cover.",
+            "heard_word": "with",
+            "heard_s": 25.85,
+            "heard_frame": 776,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 13 (\"with no health cover.\") starts at frame 779, 3 frames late on \"with\" as faster-whisper heard it at 25.850 s (tolerance 2)"
+          },
+          {
+            "page": 14,
+            "fromFrame": 817,
+            "text": "So the family owed",
+            "heard_word": "So",
+            "heard_s": 27.09,
+            "heard_frame": 813,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 14 (\"So the family owed\") starts at frame 817, 4 frames late on \"So\" as faster-whisper heard it at 27.090 s (tolerance 2)"
+          },
+          {
+            "page": 15,
+            "fromFrame": 847,
+            "text": "all that money, 195K.",
+            "heard_word": "all",
+            "heard_s": 28.13,
+            "heard_frame": 844,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 15 (\"all that money, 195K.\") starts at frame 847, 3 frames late on \"all\" as faster-whisper heard it at 28.130 s (tolerance 2)"
+          },
+          {
+            "page": 16,
+            "fromFrame": 991,
+            "text": "So he gave",
+            "heard_word": "So",
+            "heard_s": 30.57,
+            "heard_frame": 917,
+            "delta_frames": 74,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 16 (\"So he gave\") starts at frame 991, 74 frames late on \"So\" as faster-whisper heard it at 30.570 s (tolerance 2)"
+          },
+          {
+            "page": 17,
+            "fromFrame": 1018,
+            "text": "Claude the bill",
+            "heard_word": "Claude",
+            "heard_s": 33.81,
+            "heard_frame": 1014,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 17 (\"Claude the bill\") starts at frame 1018, 4 frames late on \"Claude\" as faster-whisper heard it at 33.810 s (tolerance 2)"
+          },
+          {
+            "page": 18,
+            "fromFrame": 1045,
+            "text": "line by line.",
+            "heard_word": "line",
+            "heard_s": 34.55,
+            "heard_frame": 1036,
+            "delta_frames": 9,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 18 (\"line by line.\") starts at frame 1045, 9 frames late on \"line\" as faster-whisper heard it at 34.550 s (tolerance 2)"
+          },
+          {
+            "page": 19,
+            "fromFrame": 1073,
+            "text": "Claude found care billed",
+            "heard_word": "Claude",
+            "heard_s": 35.89,
+            "heard_frame": 1077,
+            "delta_frames": -4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 19 (\"Claude found care billed\") starts at frame 1073, 4 frames early on \"Claude\" as faster-whisper heard it at 35.890 s (tolerance 2)"
+          },
+          {
+            "page": 20,
+            "fromFrame": 1116,
+            "text": "under a much more expensive",
+            "heard_word": "under",
+            "heard_s": 37.01,
+            "heard_frame": 1110,
+            "delta_frames": 6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 20 (\"under a much more expensive\") starts at frame 1116, 6 frames late on \"under\" as faster-whisper heard it at 37.010 s (tolerance 2)"
+          },
+          {
+            "page": 21,
+            "fromFrame": 1155,
+            "text": "code than the care his",
+            "heard_word": "code",
+            "heard_s": 38.35,
+            "heard_frame": 1150,
+            "delta_frames": 5,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 21 (\"code than the care his\") starts at frame 1155, 5 frames late on \"code\" as faster-whisper heard it at 38.350 s (tolerance 2)"
+          },
+          {
+            "page": 22,
+            "fromFrame": 1189,
+            "text": "brother-in-law actually got.",
+            "heard_word": "brother",
+            "heard_s": 39.57,
+            "heard_frame": 1187,
+            "delta_frames": 2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 23,
+            "fromFrame": 1237,
+            "text": "That's like charging",
+            "heard_word": "That's",
+            "heard_s": 41.21,
+            "heard_frame": 1236,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 24,
+            "fromFrame": 1277,
+            "text": "for a steak when",
+            "heard_word": "for",
+            "heard_s": 42.41,
+            "heard_frame": 1272,
+            "delta_frames": 5,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 24 (\"for a steak when\") starts at frame 1277, 5 frames late on \"for\" as faster-whisper heard it at 42.410 s (tolerance 2)"
+          },
+          {
+            "page": 25,
+            "fromFrame": 1310,
+            "text": "you get served a sandwich.",
+            "heard_word": "you",
+            "heard_s": 43.47,
+            "heard_frame": 1304,
+            "delta_frames": 6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 25 (\"you get served a sandwich.\") starts at frame 1310, 6 frames late on \"you\" as faster-whisper heard it at 43.470 s (tolerance 2)"
+          },
+          {
+            "page": 26,
+            "fromFrame": 1362,
+            "text": "He sent the hospital",
+            "heard_word": "He",
+            "heard_s": 45.29,
+            "heard_frame": 1359,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 26 (\"He sent the hospital\") starts at frame 1362, 3 frames late on \"He\" as faster-whisper heard it at 45.290 s (tolerance 2)"
+          },
+          {
+            "page": 27,
+            "fromFrame": 1396,
+            "text": "that list and the bill",
+            "heard_word": "that",
+            "heard_s": 46.41,
+            "heard_frame": 1392,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 27 (\"that list and the bill\") starts at frame 1396, 4 frames late on \"that\" as faster-whisper heard it at 46.410 s (tolerance 2)"
+          },
+          {
+            "page": 28,
+            "fromFrame": 1424,
+            "text": "fell by a lot.",
+            "heard_word": "fell",
+            "heard_s": 47.33,
+            "heard_frame": 1420,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 28 (\"fell by a lot.\") starts at frame 1424, 4 frames late on \"fell\" as faster-whisper heard it at 47.330 s (tolerance 2)"
+          },
+          {
+            "page": 29,
+            "fromFrame": 1456,
+            "text": "And this is the bit",
+            "heard_word": "And",
+            "heard_s": 48.55,
+            "heard_frame": 1456,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 30,
+            "fromFrame": 1477,
+            "text": "I love.",
+            "heard_word": "I",
+            "heard_s": 49.11,
+            "heard_frame": 1473,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 30 (\"I love.\") starts at frame 1477, 4 frames late on \"I\" as faster-whisper heard it at 49.110 s (tolerance 2)"
+          },
+          {
+            "page": 31,
+            "fromFrame": 1487,
+            "text": "An old bill can't argue",
+            "heard_word": "An",
+            "heard_s": 49.57,
+            "heard_frame": 1487,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 32,
+            "fromFrame": 1525,
+            "text": "back and the rules",
+            "heard_word": "back",
+            "heard_s": 50.75,
+            "heard_frame": 1522,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 32 (\"back and the rules\") starts at frame 1525, 3 frames late on \"back\" as faster-whisper heard it at 50.750 s (tolerance 2)"
+          },
+          {
+            "page": 33,
+            "fromFrame": 1554,
+            "text": "are written down.",
+            "heard_word": "are",
+            "heard_s": 51.67,
+            "heard_frame": 1550,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 33 (\"are written down.\") starts at frame 1554, 4 frames late on \"are\" as faster-whisper heard it at 51.670 s (tolerance 2)"
+          },
+          {
+            "page": 34,
+            "fromFrame": 1597,
+            "text": "So AI reads every line,",
+            "heard_word": "So",
+            "heard_s": 53.23,
+            "heard_frame": 1597,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 35,
+            "fromFrame": 1662,
+            "text": "never needs a coffee.",
+            "heard_word": "never",
+            "heard_s": 55.21,
+            "heard_frame": 1656,
+            "delta_frames": 6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 35 (\"never needs a coffee.\") starts at frame 1662, 6 frames late on \"never\" as faster-whisper heard it at 55.210 s (tolerance 2)"
+          },
+          {
+            "page": 36,
+            "fromFrame": 1714,
+            "text": "Ask it about next",
+            "heard_word": "Ask",
+            "heard_s": 57.09,
+            "heard_frame": 1713,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 37,
+            "fromFrame": 1755,
+            "text": "year and it's",
+            "heard_word": "year",
+            "heard_s": 58.41,
+            "heard_frame": 1752,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 37 (\"year and it's\") starts at frame 1755, 3 frames late on \"year\" as faster-whisper heard it at 58.410 s (tolerance 2)"
+          },
+          {
+            "page": 38,
+            "fromFrame": 1772,
+            "text": "definitely guessing,",
+            "heard_word": "definitely",
+            "heard_s": 58.97,
+            "heard_frame": 1769,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 38 (\"definitely guessing,\") starts at frame 1772, 3 frames late on \"definitely\" as faster-whisper heard it at 58.970 s (tolerance 2)"
+          },
+          {
+            "page": 39,
+            "fromFrame": 1798,
+            "text": "but ask about last year",
+            "heard_word": "but",
+            "heard_s": 59.91,
+            "heard_frame": 1797,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 40,
+            "fromFrame": 1837,
+            "text": "and it's analysing.",
+            "heard_word": "and",
+            "heard_s": 61.07,
+            "heard_frame": 1832,
+            "delta_frames": 5,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 40 (\"and it's analysing.\") starts at frame 1837, 5 frames late on \"and\" as faster-whisper heard it at 61.070 s (tolerance 2)"
+          },
+          {
+            "page": 41,
+            "fromFrame": 1900,
+            "text": "But in this instance,",
+            "heard_word": "But",
+            "heard_s": 63.23,
+            "heard_frame": 1897,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 41 (\"But in this instance,\") starts at frame 1900, 3 frames late on \"But\" as faster-whisper heard it at 63.230 s (tolerance 2)"
+          },
+          {
+            "page": 42,
+            "fromFrame": 1945,
+            "text": "whose mistake did Claude find?",
+            "heard_word": "who's",
+            "heard_s": 64.87,
+            "heard_frame": 1946,
+            "delta_frames": -1,
+            "matched_exactly": false,
+            "status": "pass"
+          },
+          {
+            "page": 43,
+            "fromFrame": 2014,
+            "text": "It was actually the hospital's.",
+            "heard_word": "It",
+            "heard_s": 67.01,
+            "heard_frame": 2010,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 43 (\"It was actually the hospital's.\") starts at frame 2014, 4 frames late on \"It\" as faster-whisper heard it at 67.010 s (tolerance 2)"
+          },
+          {
+            "page": 44,
+            "fromFrame": 2055,
+            "text": "And I reckon Claude",
+            "heard_word": "And",
+            "heard_s": 68.57,
+            "heard_frame": 2057,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 45,
+            "fromFrame": 2122,
+            "text": "in this instance didn't care",
+            "heard_word": "in",
+            "heard_s": 70.59,
+            "heard_frame": 2118,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 45 (\"in this instance didn't care\") starts at frame 2122, 4 frames late on \"in\" as faster-whisper heard it at 70.590 s (tolerance 2)"
+          },
+          {
+            "page": 46,
+            "fromFrame": 2157,
+            "text": "whose closet it was opening",
+            "heard_word": "whose",
+            "heard_s": 71.81,
+            "heard_frame": 2154,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 46 (\"whose closet it was opening\") starts at frame 2157, 3 frames late on \"whose\" as faster-whisper heard it at 71.810 s (tolerance 2)"
+          },
+          {
+            "page": 47,
+            "fromFrame": 2193,
+            "text": "and it won't care",
+            "heard_word": "and",
+            "heard_s": 73.03,
+            "heard_frame": 2191,
+            "delta_frames": 2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 48,
+            "fromFrame": 2220,
+            "text": "when it opens yours either.",
+            "heard_word": "when",
+            "heard_s": 73.83,
+            "heard_frame": 2215,
+            "delta_frames": 5,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 48 (\"when it opens yours either.\") starts at frame 2220, 5 frames late on \"when\" as faster-whisper heard it at 73.830 s (tolerance 2)"
+          },
+          {
+            "page": 49,
+            "fromFrame": 2263,
+            "text": "This week,",
+            "heard_word": "This",
+            "heard_s": 75.41,
+            "heard_frame": 2262,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 50,
+            "fromFrame": 2278,
+            "text": "I'm gonna give my AI",
+            "heard_word": "I'm",
+            "heard_s": 75.87,
+            "heard_frame": 2276,
+            "delta_frames": 2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 51,
+            "fromFrame": 2317,
+            "text": "last year's invoices cause",
+            "heard_word": "last",
+            "heard_s": 76.95,
+            "heard_frame": 2308,
+            "delta_frames": 9,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 51 (\"last year's invoices cause\") starts at frame 2317, 9 frames late on \"last\" as faster-whisper heard it at 76.950 s (tolerance 2)"
+          },
+          {
+            "page": 52,
+            "fromFrame": 2356,
+            "text": "I wanna be the first",
+            "heard_word": "I",
+            "heard_s": 78.33,
+            "heard_frame": 2350,
+            "delta_frames": 6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 52 (\"I wanna be the first\") starts at frame 2356, 6 frames late on \"I\" as faster-whisper heard it at 78.330 s (tolerance 2)"
+          },
+          {
+            "page": 53,
+            "fromFrame": 2391,
+            "text": "one to find the skeletons",
+            "heard_word": "one",
+            "heard_s": 79.57,
+            "heard_frame": 2387,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 53 (\"one to find the skeletons\") starts at frame 2391, 4 frames late on \"one\" as faster-whisper heard it at 79.570 s (tolerance 2)"
+          },
+          {
+            "page": 54,
+            "fromFrame": 2432,
+            "text": "in my closet.",
+            "heard_word": "in",
+            "heard_s": 80.87,
+            "heard_frame": 2426,
+            "delta_frames": 6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 54 (\"in my closet.\") starts at frame 2432, 6 frames late on \"in\" as faster-whisper heard it at 80.870 s (tolerance 2)"
+          },
+          {
+            "page": 55,
+            "fromFrame": 2461,
+            "text": "The full story",
+            "heard_word": "The",
+            "heard_s": 82.01,
+            "heard_frame": 2460,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 56,
+            "fromFrame": 2490,
+            "text": "is free at",
+            "heard_word": "is",
+            "heard_s": 82.67,
+            "heard_frame": 2480,
+            "delta_frames": 10,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 56 (\"is free at\") starts at frame 2490, 10 frames late on \"is\" as faster-whisper heard it at 82.670 s (tolerance 2)"
+          },
+          {
+            "page": 57,
+            "fromFrame": 2504,
+            "text": "makeyourmindup.ai",
+            "heard_word": "makeyourmindup",
+            "heard_s": 83.47,
+            "heard_frame": 2504,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          }
+        ],
+        "failed": [
+          {
+            "page": 0,
+            "fromFrame": 19,
+            "text": "So some good news",
+            "heard_word": "So",
+            "heard_s": 0.27,
+            "heard_frame": 8,
+            "delta_frames": 11,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 0 (\"So some good news\") starts at frame 19, 11 frames late on \"So\" as faster-whisper heard it at 0.270 s (tolerance 2)"
+          },
+          {
+            "page": 1,
+            "fromFrame": 61,
+            "text": "from AI.",
+            "heard_word": "from",
+            "heard_s": 1.49,
+            "heard_frame": 45,
+            "delta_frames": 16,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 1 (\"from AI.\") starts at frame 61, 16 frames late on \"from\" as faster-whisper heard it at 1.490 s (tolerance 2)"
+          },
+          {
+            "page": 3,
+            "fromFrame": 128,
+            "text": "cut a $195,000 hospital bill",
+            "heard_word": "cut",
+            "heard_s": 4.13,
+            "heard_frame": 124,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 3 (\"cut a $195,000 hospital bill\") starts at frame 128, 4 frames late on \"cut\" as faster-whisper heard it at 4.130 s (tolerance 2)"
+          },
+          {
+            "page": 4,
+            "fromFrame": 231,
+            "text": "to a fraction of that.",
+            "heard_word": "to",
+            "heard_s": 7.57,
+            "heard_frame": 227,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 4 (\"to a fraction of that.\") starts at frame 231, 4 frames late on \"to\" as faster-whisper heard it at 7.570 s (tolerance 2)"
+          },
+          {
+            "page": 8,
+            "fromFrame": 373,
+            "text": "Hospitals pay whole",
+            "heard_word": "Hospitals",
+            "heard_s": 12.53,
+            "heard_frame": 376,
+            "delta_frames": -3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 8 (\"Hospitals pay whole\") starts at frame 373, 3 frames early on \"Hospitals\" as faster-whisper heard it at 12.530 s (tolerance 2)"
+          },
+          {
+            "page": 10,
+            "fromFrame": 469,
+            "text": "and a chatbot beat them.",
+            "heard_word": "and",
+            "heard_s": 15.33,
+            "heard_frame": 460,
+            "delta_frames": 9,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 10 (\"and a chatbot beat them.\") starts at frame 469, 9 frames late on \"and\" as faster-whisper heard it at 15.330 s (tolerance 2)"
+          },
+          {
+            "page": 13,
+            "fromFrame": 779,
+            "text": "with no health cover.",
+            "heard_word": "with",
+            "heard_s": 25.85,
+            "heard_frame": 776,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 13 (\"with no health cover.\") starts at frame 779, 3 frames late on \"with\" as faster-whisper heard it at 25.850 s (tolerance 2)"
+          },
+          {
+            "page": 14,
+            "fromFrame": 817,
+            "text": "So the family owed",
+            "heard_word": "So",
+            "heard_s": 27.09,
+            "heard_frame": 813,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 14 (\"So the family owed\") starts at frame 817, 4 frames late on \"So\" as faster-whisper heard it at 27.090 s (tolerance 2)"
+          },
+          {
+            "page": 15,
+            "fromFrame": 847,
+            "text": "all that money, 195K.",
+            "heard_word": "all",
+            "heard_s": 28.13,
+            "heard_frame": 844,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 15 (\"all that money, 195K.\") starts at frame 847, 3 frames late on \"all\" as faster-whisper heard it at 28.130 s (tolerance 2)"
+          },
+          {
+            "page": 16,
+            "fromFrame": 991,
+            "text": "So he gave",
+            "heard_word": "So",
+            "heard_s": 30.57,
+            "heard_frame": 917,
+            "delta_frames": 74,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 16 (\"So he gave\") starts at frame 991, 74 frames late on \"So\" as faster-whisper heard it at 30.570 s (tolerance 2)"
+          },
+          {
+            "page": 17,
+            "fromFrame": 1018,
+            "text": "Claude the bill",
+            "heard_word": "Claude",
+            "heard_s": 33.81,
+            "heard_frame": 1014,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 17 (\"Claude the bill\") starts at frame 1018, 4 frames late on \"Claude\" as faster-whisper heard it at 33.810 s (tolerance 2)"
+          },
+          {
+            "page": 18,
+            "fromFrame": 1045,
+            "text": "line by line.",
+            "heard_word": "line",
+            "heard_s": 34.55,
+            "heard_frame": 1036,
+            "delta_frames": 9,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 18 (\"line by line.\") starts at frame 1045, 9 frames late on \"line\" as faster-whisper heard it at 34.550 s (tolerance 2)"
+          },
+          {
+            "page": 19,
+            "fromFrame": 1073,
+            "text": "Claude found care billed",
+            "heard_word": "Claude",
+            "heard_s": 35.89,
+            "heard_frame": 1077,
+            "delta_frames": -4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 19 (\"Claude found care billed\") starts at frame 1073, 4 frames early on \"Claude\" as faster-whisper heard it at 35.890 s (tolerance 2)"
+          },
+          {
+            "page": 20,
+            "fromFrame": 1116,
+            "text": "under a much more expensive",
+            "heard_word": "under",
+            "heard_s": 37.01,
+            "heard_frame": 1110,
+            "delta_frames": 6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 20 (\"under a much more expensive\") starts at frame 1116, 6 frames late on \"under\" as faster-whisper heard it at 37.010 s (tolerance 2)"
+          },
+          {
+            "page": 21,
+            "fromFrame": 1155,
+            "text": "code than the care his",
+            "heard_word": "code",
+            "heard_s": 38.35,
+            "heard_frame": 1150,
+            "delta_frames": 5,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 21 (\"code than the care his\") starts at frame 1155, 5 frames late on \"code\" as faster-whisper heard it at 38.350 s (tolerance 2)"
+          },
+          {
+            "page": 24,
+            "fromFrame": 1277,
+            "text": "for a steak when",
+            "heard_word": "for",
+            "heard_s": 42.41,
+            "heard_frame": 1272,
+            "delta_frames": 5,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 24 (\"for a steak when\") starts at frame 1277, 5 frames late on \"for\" as faster-whisper heard it at 42.410 s (tolerance 2)"
+          },
+          {
+            "page": 25,
+            "fromFrame": 1310,
+            "text": "you get served a sandwich.",
+            "heard_word": "you",
+            "heard_s": 43.47,
+            "heard_frame": 1304,
+            "delta_frames": 6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 25 (\"you get served a sandwich.\") starts at frame 1310, 6 frames late on \"you\" as faster-whisper heard it at 43.470 s (tolerance 2)"
+          },
+          {
+            "page": 26,
+            "fromFrame": 1362,
+            "text": "He sent the hospital",
+            "heard_word": "He",
+            "heard_s": 45.29,
+            "heard_frame": 1359,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 26 (\"He sent the hospital\") starts at frame 1362, 3 frames late on \"He\" as faster-whisper heard it at 45.290 s (tolerance 2)"
+          },
+          {
+            "page": 27,
+            "fromFrame": 1396,
+            "text": "that list and the bill",
+            "heard_word": "that",
+            "heard_s": 46.41,
+            "heard_frame": 1392,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 27 (\"that list and the bill\") starts at frame 1396, 4 frames late on \"that\" as faster-whisper heard it at 46.410 s (tolerance 2)"
+          },
+          {
+            "page": 28,
+            "fromFrame": 1424,
+            "text": "fell by a lot.",
+            "heard_word": "fell",
+            "heard_s": 47.33,
+            "heard_frame": 1420,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 28 (\"fell by a lot.\") starts at frame 1424, 4 frames late on \"fell\" as faster-whisper heard it at 47.330 s (tolerance 2)"
+          },
+          {
+            "page": 30,
+            "fromFrame": 1477,
+            "text": "I love.",
+            "heard_word": "I",
+            "heard_s": 49.11,
+            "heard_frame": 1473,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 30 (\"I love.\") starts at frame 1477, 4 frames late on \"I\" as faster-whisper heard it at 49.110 s (tolerance 2)"
+          },
+          {
+            "page": 32,
+            "fromFrame": 1525,
+            "text": "back and the rules",
+            "heard_word": "back",
+            "heard_s": 50.75,
+            "heard_frame": 1522,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 32 (\"back and the rules\") starts at frame 1525, 3 frames late on \"back\" as faster-whisper heard it at 50.750 s (tolerance 2)"
+          },
+          {
+            "page": 33,
+            "fromFrame": 1554,
+            "text": "are written down.",
+            "heard_word": "are",
+            "heard_s": 51.67,
+            "heard_frame": 1550,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 33 (\"are written down.\") starts at frame 1554, 4 frames late on \"are\" as faster-whisper heard it at 51.670 s (tolerance 2)"
+          },
+          {
+            "page": 35,
+            "fromFrame": 1662,
+            "text": "never needs a coffee.",
+            "heard_word": "never",
+            "heard_s": 55.21,
+            "heard_frame": 1656,
+            "delta_frames": 6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 35 (\"never needs a coffee.\") starts at frame 1662, 6 frames late on \"never\" as faster-whisper heard it at 55.210 s (tolerance 2)"
+          },
+          {
+            "page": 37,
+            "fromFrame": 1755,
+            "text": "year and it's",
+            "heard_word": "year",
+            "heard_s": 58.41,
+            "heard_frame": 1752,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 37 (\"year and it's\") starts at frame 1755, 3 frames late on \"year\" as faster-whisper heard it at 58.410 s (tolerance 2)"
+          },
+          {
+            "page": 38,
+            "fromFrame": 1772,
+            "text": "definitely guessing,",
+            "heard_word": "definitely",
+            "heard_s": 58.97,
+            "heard_frame": 1769,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 38 (\"definitely guessing,\") starts at frame 1772, 3 frames late on \"definitely\" as faster-whisper heard it at 58.970 s (tolerance 2)"
+          },
+          {
+            "page": 40,
+            "fromFrame": 1837,
+            "text": "and it's analysing.",
+            "heard_word": "and",
+            "heard_s": 61.07,
+            "heard_frame": 1832,
+            "delta_frames": 5,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 40 (\"and it's analysing.\") starts at frame 1837, 5 frames late on \"and\" as faster-whisper heard it at 61.070 s (tolerance 2)"
+          },
+          {
+            "page": 41,
+            "fromFrame": 1900,
+            "text": "But in this instance,",
+            "heard_word": "But",
+            "heard_s": 63.23,
+            "heard_frame": 1897,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 41 (\"But in this instance,\") starts at frame 1900, 3 frames late on \"But\" as faster-whisper heard it at 63.230 s (tolerance 2)"
+          },
+          {
+            "page": 43,
+            "fromFrame": 2014,
+            "text": "It was actually the hospital's.",
+            "heard_word": "It",
+            "heard_s": 67.01,
+            "heard_frame": 2010,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 43 (\"It was actually the hospital's.\") starts at frame 2014, 4 frames late on \"It\" as faster-whisper heard it at 67.010 s (tolerance 2)"
+          },
+          {
+            "page": 45,
+            "fromFrame": 2122,
+            "text": "in this instance didn't care",
+            "heard_word": "in",
+            "heard_s": 70.59,
+            "heard_frame": 2118,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 45 (\"in this instance didn't care\") starts at frame 2122, 4 frames late on \"in\" as faster-whisper heard it at 70.590 s (tolerance 2)"
+          },
+          {
+            "page": 46,
+            "fromFrame": 2157,
+            "text": "whose closet it was opening",
+            "heard_word": "whose",
+            "heard_s": 71.81,
+            "heard_frame": 2154,
+            "delta_frames": 3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 46 (\"whose closet it was opening\") starts at frame 2157, 3 frames late on \"whose\" as faster-whisper heard it at 71.810 s (tolerance 2)"
+          },
+          {
+            "page": 48,
+            "fromFrame": 2220,
+            "text": "when it opens yours either.",
+            "heard_word": "when",
+            "heard_s": 73.83,
+            "heard_frame": 2215,
+            "delta_frames": 5,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 48 (\"when it opens yours either.\") starts at frame 2220, 5 frames late on \"when\" as faster-whisper heard it at 73.830 s (tolerance 2)"
+          },
+          {
+            "page": 51,
+            "fromFrame": 2317,
+            "text": "last year's invoices cause",
+            "heard_word": "last",
+            "heard_s": 76.95,
+            "heard_frame": 2308,
+            "delta_frames": 9,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 51 (\"last year's invoices cause\") starts at frame 2317, 9 frames late on \"last\" as faster-whisper heard it at 76.950 s (tolerance 2)"
+          },
+          {
+            "page": 52,
+            "fromFrame": 2356,
+            "text": "I wanna be the first",
+            "heard_word": "I",
+            "heard_s": 78.33,
+            "heard_frame": 2350,
+            "delta_frames": 6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 52 (\"I wanna be the first\") starts at frame 2356, 6 frames late on \"I\" as faster-whisper heard it at 78.330 s (tolerance 2)"
+          },
+          {
+            "page": 53,
+            "fromFrame": 2391,
+            "text": "one to find the skeletons",
+            "heard_word": "one",
+            "heard_s": 79.57,
+            "heard_frame": 2387,
+            "delta_frames": 4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 53 (\"one to find the skeletons\") starts at frame 2391, 4 frames late on \"one\" as faster-whisper heard it at 79.570 s (tolerance 2)"
+          },
+          {
+            "page": 54,
+            "fromFrame": 2432,
+            "text": "in my closet.",
+            "heard_word": "in",
+            "heard_s": 80.87,
+            "heard_frame": 2426,
+            "delta_frames": 6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 54 (\"in my closet.\") starts at frame 2432, 6 frames late on \"in\" as faster-whisper heard it at 80.870 s (tolerance 2)"
+          },
+          {
+            "page": 56,
+            "fromFrame": 2490,
+            "text": "is free at",
+            "heard_word": "is",
+            "heard_s": 82.67,
+            "heard_frame": 2480,
+            "delta_frames": 10,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 56 (\"is free at\") starts at frame 2490, 10 frames late on \"is\" as faster-whisper heard it at 82.670 s (tolerance 2)"
+          }
+        ],
+        "located_fraction": 1.0,
+        "status": "fail",
+        "reason": "37 of 58 caption page(s) start off the heard clock by more than 2 frames"
+      },
+      "target": "each page's first frame within 2 frames of its first word as heard",
+      "pass": false,
+      "status": "advisory",
+      "agreement": "single aligner: the finished audio heard again by faster-whisper, the aligner that drew the captions",
+      "summary": "37 of 58 caption page(s) start off the heard clock by more than 2 frames: caption page 0 (\"So some good news\") starts at frame 19, 11 frames late on \"So\" as faster-whisper heard it at 0.270 s (tolerance 2); caption page 1 (\"from AI.\") starts at frame 61, 16 frames late on \"from\" as faster-whisper heard it at 1.490 s (tolerance 2); caption page 3 (\"cut a $195,000 hospital bill\") starts at frame 128, 4 frames late on \"cut\" as faster-whisper heard it at 4.130 s (tolerance 2); caption page 4 (\"to a fraction of that.\") starts at frame 231, 4 frames late on \"to\" as faster-whisper heard it at 7.570 s (tolerance 2) (and 33 more)",
+      "shadow": true,
+      "note": "tolerance not measured yet (config/gates.json captions.clock_tolerance_status): shown, not counted"
+    },
+    "captions.render": {
+      "value": {
+        "machine": "scripts/cutgates/captions.py",
+        "version": "captions/1",
+        "part": "renderer",
+        "region": [
+          58,
+          974,
+          824,
+          358
+        ],
+        "window_frames": 3,
+        "min_score": 0.98,
+        "pixel_change_status": "placeholder, to be measured on Monday 26",
+        "pages": [
+          {
+            "page": 0,
+            "fromFrame": 19,
+            "text": "So some good news",
+            "change_frame": 19,
+            "frame": 44,
+            "read": "SO\nSOME’ - ~\nGOOD NEWS",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 1,
+            "fromFrame": 88,
+            "text": "It just helped a family",
+            "change_frame": 87,
+            "frame": 120,
+            "read": "IT JUST\nHELPED\nA FAMILY",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 2,
+            "fromFrame": 128,
+            "text": "cut a $195,000 hospital bill",
+            "change_frame": 127,
+            "frame": 228,
+            "read": "CUT A\n$199,000\nHOSPITAL BILL",
+            "score": 0.7143,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 2 reads \"CUT A\n$199,000\nHOSPITAL BILL\" near frame 228, not \"cut a $195,000 hospital bill\" (score 0.7143, needs an exact match and 0.98)"
+          },
+          {
+            "page": 3,
+            "fromFrame": 231,
+            "text": "to a fraction of that.",
+            "change_frame": 230,
+            "frame": 258,
+            "read": "TOA y\nFRACTION —\nOF THAT",
+            "score": 0.4286,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 3 reads \"TOA y\nFRACTION —\nOF THAT\" near frame 258, not \"to a fraction of that.\" (score 0.4286, needs an exact match and 0.98)"
+          },
+          {
+            "page": 4,
+            "fromFrame": 262,
+            "text": "So imagine what it's",
+            "change_frame": 261,
+            "frame": 311,
+            "read": "$0 ‘a\nIMAGINE?\nWHAT IT'S",
+            "score": 0.6,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 4 reads \"$0 ‘a\nIMAGINE?\nWHAT IT'S\" near frame 311, not \"So imagine what it's\" (score 0.6, needs an exact match and 0.98)"
+          },
+          {
+            "page": 5,
+            "fromFrame": 407,
+            "text": "teams to sort pricing out",
+            "change_frame": 406,
+            "frame": 460,
+            "read": "TEAMS TO SORT :\nPRICING ~~\nOUT /",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 6,
+            "fromFrame": 469,
+            "text": "and a chatbot beat them.",
+            "change_frame": 468,
+            "frame": 500,
+            "read": "AND A\nCHATBOT\nBEAT THEM",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 7,
+            "fromFrame": 779,
+            "text": "with no health cover.",
+            "change_frame": 778,
+            "frame": 812,
+            "read": "WITH NO\nHEALTH\nCOVER",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 8,
+            "fromFrame": 817,
+            "text": "So the family owed",
+            "change_frame": 816,
+            "frame": 845,
+            "read": "SO THE\nFAMILY\nOWED",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 9,
+            "fromFrame": 1277,
+            "text": "for a steak when",
+            "change_frame": 1276,
+            "frame": 1305,
+            "read": "FOR A\nSTEAK\nWHEN",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 10,
+            "fromFrame": 1456,
+            "text": "And this is the bit",
+            "change_frame": 1455,
+            "frame": 1474,
+            "read": "AND \\\nTHIS ~~\nIS THE BIT",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 11,
+            "fromFrame": 1487,
+            "text": "An old bill can't argue",
+            "change_frame": 1486,
+            "frame": 1523,
+            "read": "AN OLD BILL \\\nCANT ~ -\nARGUE /",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 12,
+            "fromFrame": 1554,
+            "text": "are written down.",
+            "change_frame": 1553,
+            "frame": 1571,
+            "read": "ARE )\nWRITTEN —\nDOWN /",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 13,
+            "fromFrame": 1597,
+            "text": "So AI reads every line,",
+            "change_frame": 1596,
+            "frame": 1635,
+            "read": "SO Al ~ &\nREADS> =\nEVERY LINE",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 14,
+            "fromFrame": 1714,
+            "text": "Ask it about next",
+            "change_frame": 1713,
+            "frame": 1751,
+            "read": "ASK IT\n\na\nABOUT =\nNEXT",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 15,
+            "fromFrame": 1798,
+            "text": "but ask about last year",
+            "change_frame": 1797,
+            "frame": 1833,
+            "read": "BUT ASK] \\™\nABOUT\nLAST YEAR",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 16,
+            "fromFrame": 1945,
+            "text": "whose mistake did Claude find?",
+            "change_frame": 1943,
+            "frame": 1985,
+            "read": "WHOSE ,\nMISTAKE —\nDID CLAUDE FIND?",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 17,
+            "fromFrame": 2055,
+            "text": "And I reckon Claude",
+            "change_frame": 2054,
+            "frame": 2120,
+            "read": "AND  i  =\n\nRECKON (=\n&F /\n\nCLAUDE@—- — - ~",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 17 reads \"AND  i  =\n\nRECKON (=\n&F /\n\nCLAUDE@—- — - ~\" near frame 2120, not \"And I reckon Claude\" (score 0.8, needs an exact match and 0.98)"
+          },
+          {
+            "page": 18,
+            "fromFrame": 2122,
+            "text": "in this instance didn't care",
+            "change_frame": 2121,
+            "frame": 2153,
+            "read": "IN THIS. NCE\nINSTANCE =~\nDIDN'T CARE — © ~",
+            "score": 0.8333,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 18 reads \"IN THIS. NCE\nINSTANCE =~\nDIDN'T CARE — © ~\" near frame 2153, not \"in this instance didn't care\" (score 0.8333, needs an exact match and 0.98)"
+          },
+          {
+            "page": 19,
+            "fromFrame": 2157,
+            "text": "whose closet it was opening",
+            "change_frame": 2156,
+            "frame": 2188,
+            "read": "WHOSE -:-- *\nCLOSET.\nIT WAS OPENING",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 20,
+            "fromFrame": 2193,
+            "text": "and it won't care",
+            "change_frame": 2192,
+            "frame": 2213,
+            "read": "AND IT\nWON'T\nCARE",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 21,
+            "fromFrame": 2220,
+            "text": "when it opens yours either.",
+            "change_frame": 2219,
+            "frame": 2251,
+            "read": "WHEN IT OPENS>—\nYOURS =\nEITHER",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 22,
+            "fromFrame": 2278,
+            "text": "I'm gonna give my AI",
+            "change_frame": 2277,
+            "frame": 2309,
+            "read": "GONNA +9\nGIVE MY Al",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 22 reads \"GONNA +9\nGIVE MY Al\" near frame 2309, not \"I'm gonna give my AI\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 23,
+            "fromFrame": 2317,
+            "text": "last year's invoices cause",
+            "change_frame": 2316,
+            "frame": 2351,
+            "read": "LAST YEAR'S\". /\nINVOICES: «-\nCAUSE i.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 24,
+            "fromFrame": 2356,
+            "text": "I wanna be the first",
+            "change_frame": 2355,
+            "frame": 2389,
+            "read": "WANNA\nc\nBE THE FIRST,",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 24 reads \"WANNA\nc\nBE THE FIRST,\" near frame 2389, not \"I wanna be the first\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 25,
+            "fromFrame": 2490,
+            "text": "is free at",
+            "change_frame": 2489,
+            "frame": 2503,
+            "read": "",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 25 reads \"\" near frame 2503, not \"is free at\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 61,
+            "text": "from AI.",
+            "change_frame": 60,
+            "frame": 71,
+            "read": "FROM\nAl",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 1,
+            "fromFrame": 313,
+            "text": "finding in everyone's",
+            "change_frame": 312,
+            "frame": 332,
+            "read": "FINDING IN\nEVERYONE'S",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 2,
+            "fromFrame": 340,
+            "text": "archives right now.",
+            "change_frame": 339,
+            "frame": 364,
+            "read": "ARCHIVES\nRIGHT NOW —",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 3,
+            "fromFrame": 373,
+            "text": "Hospitals pay whole",
+            "change_frame": 372,
+            "frame": 405,
+            "read": "HOSPITALS —\nPAY WHOLE",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 4,
+            "fromFrame": 752,
+            "text": "died of a heart attack",
+            "change_frame": 751,
+            "frame": 773,
+            "read": "DIED OF A HEART\nATTACK",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 5,
+            "fromFrame": 847,
+            "text": "all that money, 195K.",
+            "change_frame": 846,
+            "frame": 902,
+            "read": "ALL THAT MONEY\n195K",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 6,
+            "fromFrame": 991,
+            "text": "So he gave",
+            "change_frame": 990,
+            "frame": 1014,
+            "read": "SO HE\nGAVE",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 7,
+            "fromFrame": 1018,
+            "text": "Claude the bill",
+            "change_frame": 1017,
+            "frame": 1034,
+            "read": "CLAUDE\nTHE BILL",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 8,
+            "fromFrame": 1045,
+            "text": "line by line.",
+            "change_frame": 1044,
+            "frame": 1062,
+            "read": "LINE BY\nLINE",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 9,
+            "fromFrame": 1073,
+            "text": "Claude found care billed",
+            "change_frame": 1072,
+            "frame": 1109,
+            "read": "CLAUDE\nFOUND CARE BILLED",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 10,
+            "fromFrame": 1116,
+            "text": "under a much more expensive",
+            "change_frame": 1115,
+            "frame": 1144,
+            "read": "UNDER A MUCH MORE._\nEXPENSIVE",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 11,
+            "fromFrame": 1155,
+            "text": "code than the care his",
+            "change_frame": 1154,
+            "frame": 1187,
+            "read": "CODE\nTHAN THE CARE HIS",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 12,
+            "fromFrame": 1237,
+            "text": "That's like charging",
+            "change_frame": 1236,
+            "frame": 1269,
+            "read": "THAT'S LIKE-= = =.\nCHARGING —",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 13,
+            "fromFrame": 1310,
+            "text": "you get served a sandwich.",
+            "change_frame": 1309,
+            "frame": 1334,
+            "read": "YOU GET SERVED A\nSANDWICH",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 14,
+            "fromFrame": 1362,
+            "text": "He sent the hospital",
+            "change_frame": 1361,
+            "frame": 1389,
+            "read": "HE SENT THE\nHOSPITAL",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 15,
+            "fromFrame": 1396,
+            "text": "that list and the bill",
+            "change_frame": 1395,
+            "frame": 1419,
+            "read": "THAT\nLIST AND THE BILL",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 16,
+            "fromFrame": 1424,
+            "text": "fell by a lot.",
+            "change_frame": 1423,
+            "frame": 1448,
+            "read": "FELL\nBY A LOT",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 17,
+            "fromFrame": 1477,
+            "text": "I love.",
+            "change_frame": 1476,
+            "frame": 1484,
+            "read": "LOVE” —",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 17 reads \"LOVE” —\" near frame 1484, not \"I love.\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 18,
+            "fromFrame": 1525,
+            "text": "back and the rules",
+            "change_frame": 1524,
+            "frame": 1550,
+            "read": "BACK AND THE’ <a\nRULES",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 18 reads \"BACK AND THE’ <a\nRULES\" near frame 1550, not \"back and the rules\" (score 0.8, needs an exact match and 0.98)"
+          },
+          {
+            "page": 19,
+            "fromFrame": 1662,
+            "text": "never needs a coffee.",
+            "change_frame": 1661,
+            "frame": 1680,
+            "read": "NEVER NEEDS A).\nCOFFEE” =",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 20,
+            "fromFrame": 1755,
+            "text": "year and it's",
+            "change_frame": 1754,
+            "frame": 1767,
+            "read": "YEAR\nAND IT'S",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 21,
+            "fromFrame": 1772,
+            "text": "definitely guessing,",
+            "change_frame": 1771,
+            "frame": 1788,
+            "read": "DEFINITELY\nGUESSING",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 22,
+            "fromFrame": 1837,
+            "text": "and it's analysing.",
+            "change_frame": 1836,
+            "frame": 1849,
+            "read": "AND IT'S |\nANALYSING",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 23,
+            "fromFrame": 1900,
+            "text": "But in this instance,",
+            "change_frame": 1899,
+            "frame": 1938,
+            "read": "BUT IN THIS “=\nINSTANCE?",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 24,
+            "fromFrame": 2014,
+            "text": "It was actually the hospital's.",
+            "change_frame": 2013,
+            "frame": 2035,
+            "read": "IT WAS ACTUALLY THE \\\nHOSPITAL'S-",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 25,
+            "fromFrame": 2263,
+            "text": "This week,",
+            "change_frame": 2262,
+            "frame": 2276,
+            "read": "THIS a Jf 4\nWEEK: 9",
+            "score": 0.3333,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 25 reads \"THIS a Jf 4\nWEEK: 9\" near frame 2276, not \"This week,\" (score 0.3333, needs an exact match and 0.98)"
+          },
+          {
+            "page": 26,
+            "fromFrame": 2391,
+            "text": "one to find the skeletons",
+            "change_frame": 2390,
+            "frame": 2422,
+            "read": "ONE TO FIND THE 4,\nSKELETONS!",
+            "score": 0.8333,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 26 reads \"ONE TO FIND THE 4,\nSKELETONS!\" near frame 2422, not \"one to find the skeletons\" (score 0.8333, needs an exact match and 0.98)"
+          },
+          {
+            "page": 27,
+            "fromFrame": 2432,
+            "text": "in my closet.",
+            "change_frame": 2431,
+            "frame": 2444,
+            "read": "IN MY on | Jf\nCLOSET: -~-y",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 27 reads \"IN MY on | Jf\nCLOSET: -~-y\" near frame 2444, not \"in my closet.\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 28,
+            "fromFrame": 2461,
+            "text": "The full story",
+            "change_frame": 2460,
+            "frame": 2476,
+            "read": "THE FULL -\nSTORY: —",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 723,
+            "text": "A man's brother-in-law",
+            "status": "fail",
+            "message": "caption page 0 (\"A man's brother-in-law\"): no change in the caption zone within 3 frames of its start, frame 723"
+          },
+          {
+            "page": 1,
+            "fromFrame": 1189,
+            "text": "brother-in-law actually got.",
+            "change_frame": 1188,
+            "frame": 1223,
+            "read": "BROTHER-IN-LAW’-\nACTUALLY GOT -;——",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 2504,
+            "text": "makeyourmindup.ai",
+            "change_frame": 2503,
+            "frame": 2508,
+            "read": "MAKEYOURMINDUP.AI",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          }
+        ],
+        "failed": [
+          {
+            "page": 2,
+            "fromFrame": 128,
+            "text": "cut a $195,000 hospital bill",
+            "change_frame": 127,
+            "frame": 228,
+            "read": "CUT A\n$199,000\nHOSPITAL BILL",
+            "score": 0.7143,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 2 reads \"CUT A\n$199,000\nHOSPITAL BILL\" near frame 228, not \"cut a $195,000 hospital bill\" (score 0.7143, needs an exact match and 0.98)"
+          },
+          {
+            "page": 3,
+            "fromFrame": 231,
+            "text": "to a fraction of that.",
+            "change_frame": 230,
+            "frame": 258,
+            "read": "TOA y\nFRACTION —\nOF THAT",
+            "score": 0.4286,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 3 reads \"TOA y\nFRACTION —\nOF THAT\" near frame 258, not \"to a fraction of that.\" (score 0.4286, needs an exact match and 0.98)"
+          },
+          {
+            "page": 4,
+            "fromFrame": 262,
+            "text": "So imagine what it's",
+            "change_frame": 261,
+            "frame": 311,
+            "read": "$0 ‘a\nIMAGINE?\nWHAT IT'S",
+            "score": 0.6,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 4 reads \"$0 ‘a\nIMAGINE?\nWHAT IT'S\" near frame 311, not \"So imagine what it's\" (score 0.6, needs an exact match and 0.98)"
+          },
+          {
+            "page": 17,
+            "fromFrame": 2055,
+            "text": "And I reckon Claude",
+            "change_frame": 2054,
+            "frame": 2120,
+            "read": "AND  i  =\n\nRECKON (=\n&F /\n\nCLAUDE@—- — - ~",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 17 reads \"AND  i  =\n\nRECKON (=\n&F /\n\nCLAUDE@—- — - ~\" near frame 2120, not \"And I reckon Claude\" (score 0.8, needs an exact match and 0.98)"
+          },
+          {
+            "page": 18,
+            "fromFrame": 2122,
+            "text": "in this instance didn't care",
+            "change_frame": 2121,
+            "frame": 2153,
+            "read": "IN THIS. NCE\nINSTANCE =~\nDIDN'T CARE — © ~",
+            "score": 0.8333,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 18 reads \"IN THIS. NCE\nINSTANCE =~\nDIDN'T CARE — © ~\" near frame 2153, not \"in this instance didn't care\" (score 0.8333, needs an exact match and 0.98)"
+          },
+          {
+            "page": 22,
+            "fromFrame": 2278,
+            "text": "I'm gonna give my AI",
+            "change_frame": 2277,
+            "frame": 2309,
+            "read": "GONNA +9\nGIVE MY Al",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 22 reads \"GONNA +9\nGIVE MY Al\" near frame 2309, not \"I'm gonna give my AI\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 24,
+            "fromFrame": 2356,
+            "text": "I wanna be the first",
+            "change_frame": 2355,
+            "frame": 2389,
+            "read": "WANNA\nc\nBE THE FIRST,",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 24 reads \"WANNA\nc\nBE THE FIRST,\" near frame 2389, not \"I wanna be the first\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 25,
+            "fromFrame": 2490,
+            "text": "is free at",
+            "change_frame": 2489,
+            "frame": 2503,
+            "read": "",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 25 reads \"\" near frame 2503, not \"is free at\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 17,
+            "fromFrame": 1477,
+            "text": "I love.",
+            "change_frame": 1476,
+            "frame": 1484,
+            "read": "LOVE” —",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 17 reads \"LOVE” —\" near frame 1484, not \"I love.\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 18,
+            "fromFrame": 1525,
+            "text": "back and the rules",
+            "change_frame": 1524,
+            "frame": 1550,
+            "read": "BACK AND THE’ <a\nRULES",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 18 reads \"BACK AND THE’ <a\nRULES\" near frame 1550, not \"back and the rules\" (score 0.8, needs an exact match and 0.98)"
+          },
+          {
+            "page": 25,
+            "fromFrame": 2263,
+            "text": "This week,",
+            "change_frame": 2262,
+            "frame": 2276,
+            "read": "THIS a Jf 4\nWEEK: 9",
+            "score": 0.3333,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 25 reads \"THIS a Jf 4\nWEEK: 9\" near frame 2276, not \"This week,\" (score 0.3333, needs an exact match and 0.98)"
+          },
+          {
+            "page": 26,
+            "fromFrame": 2391,
+            "text": "one to find the skeletons",
+            "change_frame": 2390,
+            "frame": 2422,
+            "read": "ONE TO FIND THE 4,\nSKELETONS!",
+            "score": 0.8333,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 26 reads \"ONE TO FIND THE 4,\nSKELETONS!\" near frame 2422, not \"one to find the skeletons\" (score 0.8333, needs an exact match and 0.98)"
+          },
+          {
+            "page": 27,
+            "fromFrame": 2432,
+            "text": "in my closet.",
+            "change_frame": 2431,
+            "frame": 2444,
+            "read": "IN MY on | Jf\nCLOSET: -~-y",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 27 reads \"IN MY on | Jf\nCLOSET: -~-y\" near frame 2444, not \"in my closet.\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 723,
+            "text": "A man's brother-in-law",
+            "status": "fail",
+            "message": "caption page 0 (\"A man's brother-in-law\"): no change in the caption zone within 3 frames of its start, frame 723"
+          }
+        ],
+        "changes_found": 165,
+        "status": "fail",
+        "reason": "8 of 26 caption page(s) are not drawn as the props say near their start",
+        "pass": false,
+        "regions": [
+          [
+            58,
+            974,
+            824,
+            358
+          ],
+          [
+            58,
+            974,
+            824,
+            266
+          ],
+          [
+            58,
+            974,
+            824,
+            220
+          ],
+          [
+            58,
+            974,
+            824,
+            107
+          ]
+        ]
+      },
+      "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
+      "pass": false,
+      "status": "measured",
+      "agreement": null,
+      "summary": "8 of 26 caption page(s) are not drawn as the props say near their start: caption page 2 reads \"CUT A\n$199,000\nHOSPITAL BILL\" near frame 228, not \"cut a $195,000 hospital bill\" (score 0.7143, needs an exact match and 0.98); caption page 3 reads \"TOA y\nFRACTION —\nOF THAT\" near frame 258, not \"to a fraction of that.\" (score 0.4286, needs an exact match and 0.98); caption page 4 reads \"$0 ‘a\nIMAGINE?\nWHAT IT'S\" near frame 311, not \"So imagine what it's\" (score 0.6, needs an exact match and 0.98); caption page 17 reads \"AND  i  =\n\nRECKON (=\n&F /\n\nCLAUDE@—- — - ~\" near frame 2120, not \"And I reckon Claude\" (score 0.8, needs an exact match and 0.98) (and 10 more)"
+    },
+    "captions.off_face": {
+      "value": {
+        "pages": 58,
+        "on_face": [
+          {
+            "at_s": 2.6,
+            "text": "from AI.",
+            "caption": [
+              58,
+              974,
+              824,
+              266
+            ],
+            "face": [
+              464,
+              647,
+              308,
+              308
+            ]
+          },
+          {
+            "at_s": 4.07,
+            "text": "It just helped a family",
+            "caption": [
+              58,
+              974,
+              824,
+              358
+            ],
+            "face": [
+              447,
+              622,
+              329,
+              329
+            ]
+          },
+          {
+            "at_s": 8.6,
+            "text": "to a fraction of that.",
+            "caption": [
+              58,
+              974,
+              824,
+              358
+            ],
+            "face": [
+              497,
+              552,
+              391,
+              391
+            ]
+          },
+          {
+            "at_s": 10.33,
+            "text": "So imagine what it's",
+            "caption": [
+              58,
+              974,
+              824,
+              358
+            ],
+            "face": [
+              443,
+              671,
+              332,
+              332
+            ]
+          },
+          {
+            "at_s": 11.13,
+            "text": "finding in everyone's",
+            "caption": [
+              58,
+              974,
+              824,
+              266
+            ],
+            "face": [
+              502,
+              628,
+              357,
+              357
+            ]
+          },
+          {
+            "at_s": 12.23,
+            "text": "archives right now.",
+            "caption": [
+              58,
+              974,
+              824,
+              266
+            ],
+            "face": [
+              480,
+              582,
+              402,
+              402
+            ]
+          },
+          {
+            "at_s": 13.47,
+            "text": "Hospitals pay whole",
+            "caption": [
+              58,
+              974,
+              824,
+              266
+            ],
+            "face": [
+              486,
+              592,
+              380,
+              380
+            ]
+          },
+          {
+            "at_s": 37.03,
+            "text": "Claude found care billed",
+            "caption": [
+              58,
+              974,
+              824,
+              266
+            ],
+            "face": [
+              470,
+              621,
+              362,
+              362
+            ]
+          },
+          {
+            "at_s": 38.27,
+            "text": "under a much more expensive",
+            "caption": [
+              58,
+              974,
+              824,
+              266
+            ],
+            "face": [
+              406,
+              683,
+              349,
+              349
+            ]
+          },
+          {
+            "at_s": 39.53,
+            "text": "code than the care his",
+            "caption": [
+              58,
+              974,
+              824,
+              266
+            ],
+            "face": [
+              432,
+              669,
+              348,
+              348
+            ]
+          },
+          {
+            "at_s": 40.93,
+            "text": "brother-in-law actually got.",
+            "caption": [
+              58,
+              974,
+              824,
+              220
+            ],
+            "face": [
+              471,
+              535,
+              407,
+              407
+            ]
+          },
+          {
+            "at_s": 49.13,
+            "text": "And this is the bit",
+            "caption": [
+              58,
+              974,
+              824,
+              358
+            ],
+            "face": [
+              539,
+              657,
+              327,
+              327
+            ]
+          }
+        ],
+        "count": 29
+      },
+      "target": "no caption page overlaps the face box (+10%)",
+      "pass": false
+    },
+    "plate.head_in_band": {
+      "value": null,
+      "target": "his whole head inside the camera band",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "channel.safe_zones": {
+      "value": {
+        "under_buttons": [],
+        "count": 0
+      },
+      "target": "no caption, title or device box under a channel button (config/channel-safe-zones.json)",
+      "pass": true
+    },
+    "beats.handover_in_gaps": {
+      "value": {
+        "machine": "scripts/cutgates/gaps.py",
+        "version": "joins-in-gaps/1",
+        "rule": {
+          "min_gap_ms": 150.0,
+          "clearance_ms": 0.0
+        },
+        "aligners": [
+          "faster-whisper"
+        ],
+        "agreement": "single aligner",
+        "joins": [
+          {
+            "at_s": 8.733,
+            "at": "0:08.733",
+            "before": {
+              "word": "that.",
+              "s": 8.49,
+              "e": 8.65,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "So",
+              "s": 8.81,
+              "e": 8.85,
+              "heard_by": "faster-whisper"
+            },
+            "gap_ms": 160.0,
+            "clearance_before_ms": 83.3,
+            "clearance_after_ms": 76.7,
+            "status": "pass"
+          },
+          {
+            "at_s": 16.967,
+            "at": "0:16.967",
+            "before": {
+              "word": "them.",
+              "s": 16.47,
+              "e": 16.69,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "So",
+              "s": 17.11,
+              "e": 17.15,
+              "heard_by": "faster-whisper"
+            },
+            "gap_ms": 420.0,
+            "clearance_before_ms": 276.7,
+            "clearance_after_ms": 143.3,
+            "status": "pass"
+          },
+          {
+            "at_s": 20.367,
+            "at": "0:20.367",
+            "before": {
+              "word": "or",
+              "s": 19.79,
+              "e": 20.15,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "it",
+              "s": 20.49,
+              "e": 20.67,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:20.367 sits inside \"will\" (20.150 to 20.490 s, heard by faster-whisper): after \"or\" (ends 20.150 s, faster-whisper), before \"it\" (starts 20.490 s, faster-whisper)"
+          },
+          {
+            "at_s": 24.1,
+            "at": "0:24.100",
+            "before": {
+              "word": "See",
+              "s": 24.07,
+              "e": 24.07,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "man's",
+              "s": 24.19,
+              "e": 24.51,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:24.100 sits inside \"a\" (24.070 to 24.190 s, heard by faster-whisper): after \"See\" (ends 24.070 s, faster-whisper), before \"man's\" (starts 24.190 s, faster-whisper)"
+          },
+          {
+            "at_s": 33.033,
+            "at": "0:33.033",
+            "before": {
+              "word": "he",
+              "s": 30.69,
+              "e": 31.51,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "Claude",
+              "s": 33.81,
+              "e": 34.13,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:33.033 sits inside \"gave\" (31.510 to 33.810 s, heard by faster-whisper): after \"he\" (ends 31.510 s, faster-whisper), before \"Claude\" (starts 33.810 s, faster-whisper)"
+          },
+          {
+            "at_s": 35.767,
+            "at": "0:35.767",
+            "before": {
+              "word": "line.",
+              "s": 35.19,
+              "e": 35.51,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "Claude",
+              "s": 35.89,
+              "e": 35.97,
+              "heard_by": "faster-whisper"
+            },
+            "gap_ms": 380.0,
+            "clearance_before_ms": 256.7,
+            "clearance_after_ms": 123.3,
+            "status": "pass"
+          },
+          {
+            "at_s": 41.233,
+            "at": "0:41.233",
+            "before": {
+              "word": "got.",
+              "s": 40.49,
+              "e": 40.83,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "like",
+              "s": 41.39,
+              "e": 41.53,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:41.233 sits inside \"That's\" (41.210 to 41.390 s, heard by faster-whisper): after \"got.\" (ends 40.830 s, faster-whisper), before \"like\" (starts 41.390 s, faster-whisper)"
+          },
+          {
+            "at_s": 45.4,
+            "at": "0:45.400",
+            "before": {
+              "word": "sandwich.",
+              "s": 44.31,
+              "e": 44.61,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "sent",
+              "s": 45.51,
+              "e": 45.75,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:45.400 sits inside \"He\" (45.290 to 45.510 s, heard by faster-whisper): after \"sandwich.\" (ends 44.610 s, faster-whisper), before \"sent\" (starts 45.510 s, faster-whisper)"
+          },
+          {
+            "at_s": 48.533,
+            "at": "0:48.533",
+            "before": {
+              "word": "lot.",
+              "s": 48.09,
+              "e": 48.31,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "And",
+              "s": 48.55,
+              "e": 48.63,
+              "heard_by": "faster-whisper"
+            },
+            "gap_ms": 240.0,
+            "clearance_before_ms": 223.3,
+            "clearance_after_ms": 16.7,
+            "status": "pass"
+          },
+          {
+            "at_s": 57.133,
+            "at": "0:57.133",
+            "before": {
+              "word": "coffee.",
+              "s": 55.85,
+              "e": 56.07,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "it",
+              "s": 57.31,
+              "e": 57.45,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:57.133 sits inside \"Ask\" (57.090 to 57.310 s, heard by faster-whisper): after \"coffee.\" (ends 56.070 s, faster-whisper), before \"it\" (starts 57.310 s, faster-whisper)"
+          },
+          {
+            "at_s": 63.333,
+            "at": "1:03.333",
+            "before": {
+              "word": "analyzing.",
+              "s": 61.47,
+              "e": 61.77,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "in",
+              "s": 63.71,
+              "e": 64.19,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:03.333 sits inside \"But\" (63.230 to 63.710 s, heard by faster-whisper): after \"analyzing.\" (ends 61.770 s, faster-whisper), before \"in\" (starts 63.710 s, faster-whisper)"
+          },
+          {
+            "at_s": 70.367,
+            "at": "1:10.367",
+            "before": {
+              "word": "reckon",
+              "s": 68.89,
+              "e": 69.19,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "in",
+              "s": 70.59,
+              "e": 70.79,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:10.367 sits inside \"Claude\" (69.190 to 70.590 s, heard by faster-whisper): after \"reckon\" (ends 69.190 s, faster-whisper), before \"in\" (starts 70.590 s, faster-whisper)"
+          },
+          {
+            "at_s": 73.1,
+            "at": "1:13.100",
+            "before": {
+              "word": "opening",
+              "s": 72.73,
+              "e": 73.03,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "it",
+              "s": 73.15,
+              "e": 73.25,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:13.100 sits inside \"and\" (73.030 to 73.150 s, heard by faster-whisper): after \"opening\" (ends 73.030 s, faster-whisper), before \"it\" (starts 73.150 s, faster-whisper)"
+          },
+          {
+            "at_s": 75.433,
+            "at": "1:15.433",
+            "before": {
+              "word": "either.",
+              "s": 74.71,
+              "e": 75.05,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "week,",
+              "s": 75.57,
+              "e": 75.79,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:15.433 sits inside \"This\" (75.410 to 75.570 s, heard by faster-whisper): after \"either.\" (ends 75.050 s, faster-whisper), before \"week,\" (starts 75.570 s, faster-whisper)"
+          },
+          {
+            "at_s": 82.033,
+            "at": "1:22.033",
+            "before": {
+              "word": "closet.",
+              "s": 81.31,
+              "e": 81.59,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "full",
+              "s": 82.15,
+              "e": 82.29,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:22.033 sits inside \"The\" (82.010 to 82.150 s, heard by faster-whisper): after \"closet.\" (ends 81.590 s, faster-whisper), before \"full\" (starts 82.150 s, faster-whisper)"
+          }
+        ],
+        "failed": [
+          {
+            "at_s": 20.367,
+            "at": "0:20.367",
+            "before": {
+              "word": "or",
+              "s": 19.79,
+              "e": 20.15,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "it",
+              "s": 20.49,
+              "e": 20.67,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:20.367 sits inside \"will\" (20.150 to 20.490 s, heard by faster-whisper): after \"or\" (ends 20.150 s, faster-whisper), before \"it\" (starts 20.490 s, faster-whisper)"
+          },
+          {
+            "at_s": 24.1,
+            "at": "0:24.100",
+            "before": {
+              "word": "See",
+              "s": 24.07,
+              "e": 24.07,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "man's",
+              "s": 24.19,
+              "e": 24.51,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:24.100 sits inside \"a\" (24.070 to 24.190 s, heard by faster-whisper): after \"See\" (ends 24.070 s, faster-whisper), before \"man's\" (starts 24.190 s, faster-whisper)"
+          },
+          {
+            "at_s": 33.033,
+            "at": "0:33.033",
+            "before": {
+              "word": "he",
+              "s": 30.69,
+              "e": 31.51,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "Claude",
+              "s": 33.81,
+              "e": 34.13,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:33.033 sits inside \"gave\" (31.510 to 33.810 s, heard by faster-whisper): after \"he\" (ends 31.510 s, faster-whisper), before \"Claude\" (starts 33.810 s, faster-whisper)"
+          },
+          {
+            "at_s": 41.233,
+            "at": "0:41.233",
+            "before": {
+              "word": "got.",
+              "s": 40.49,
+              "e": 40.83,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "like",
+              "s": 41.39,
+              "e": 41.53,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:41.233 sits inside \"That's\" (41.210 to 41.390 s, heard by faster-whisper): after \"got.\" (ends 40.830 s, faster-whisper), before \"like\" (starts 41.390 s, faster-whisper)"
+          },
+          {
+            "at_s": 45.4,
+            "at": "0:45.400",
+            "before": {
+              "word": "sandwich.",
+              "s": 44.31,
+              "e": 44.61,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "sent",
+              "s": 45.51,
+              "e": 45.75,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:45.400 sits inside \"He\" (45.290 to 45.510 s, heard by faster-whisper): after \"sandwich.\" (ends 44.610 s, faster-whisper), before \"sent\" (starts 45.510 s, faster-whisper)"
+          },
+          {
+            "at_s": 57.133,
+            "at": "0:57.133",
+            "before": {
+              "word": "coffee.",
+              "s": 55.85,
+              "e": 56.07,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "it",
+              "s": 57.31,
+              "e": 57.45,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:57.133 sits inside \"Ask\" (57.090 to 57.310 s, heard by faster-whisper): after \"coffee.\" (ends 56.070 s, faster-whisper), before \"it\" (starts 57.310 s, faster-whisper)"
+          },
+          {
+            "at_s": 63.333,
+            "at": "1:03.333",
+            "before": {
+              "word": "analyzing.",
+              "s": 61.47,
+              "e": 61.77,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "in",
+              "s": 63.71,
+              "e": 64.19,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:03.333 sits inside \"But\" (63.230 to 63.710 s, heard by faster-whisper): after \"analyzing.\" (ends 61.770 s, faster-whisper), before \"in\" (starts 63.710 s, faster-whisper)"
+          },
+          {
+            "at_s": 70.367,
+            "at": "1:10.367",
+            "before": {
+              "word": "reckon",
+              "s": 68.89,
+              "e": 69.19,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "in",
+              "s": 70.59,
+              "e": 70.79,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:10.367 sits inside \"Claude\" (69.190 to 70.590 s, heard by faster-whisper): after \"reckon\" (ends 69.190 s, faster-whisper), before \"in\" (starts 70.590 s, faster-whisper)"
+          },
+          {
+            "at_s": 73.1,
+            "at": "1:13.100",
+            "before": {
+              "word": "opening",
+              "s": 72.73,
+              "e": 73.03,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "it",
+              "s": 73.15,
+              "e": 73.25,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:13.100 sits inside \"and\" (73.030 to 73.150 s, heard by faster-whisper): after \"opening\" (ends 73.030 s, faster-whisper), before \"it\" (starts 73.150 s, faster-whisper)"
+          },
+          {
+            "at_s": 75.433,
+            "at": "1:15.433",
+            "before": {
+              "word": "either.",
+              "s": 74.71,
+              "e": 75.05,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "week,",
+              "s": 75.57,
+              "e": 75.79,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:15.433 sits inside \"This\" (75.410 to 75.570 s, heard by faster-whisper): after \"either.\" (ends 75.050 s, faster-whisper), before \"week,\" (starts 75.570 s, faster-whisper)"
+          },
+          {
+            "at_s": 82.033,
+            "at": "1:22.033",
+            "before": {
+              "word": "closet.",
+              "s": 81.31,
+              "e": 81.59,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "full",
+              "s": 82.15,
+              "e": 82.29,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:22.033 sits inside \"The\" (82.010 to 82.150 s, heard by faster-whisper): after \"closet.\" (ends 81.590 s, faster-whisper), before \"full\" (starts 82.150 s, faster-whisper)"
+          }
+        ],
+        "status": "fail",
+        "reason": "11 of 15 join(s) are not in a clear gap (single aligner, faster-whisper)"
+      },
+      "target": "every beat handover in an agreed gap >= 150 ms",
+      "pass": false,
+      "status": "advisory",
+      "agreement": "single aligner",
+      "summary": "11 of 15 join(s) are not in a clear gap (single aligner, faster-whisper): join at 0:20.367 sits inside \"will\" (20.150 to 20.490 s, heard by faster-whisper): after \"or\" (ends 20.150 s, faster-whisper), before \"it\" (starts 20.490 s, faster-whisper); join at 0:24.100 sits inside \"a\" (24.070 to 24.190 s, heard by faster-whisper): after \"See\" (ends 24.070 s, faster-whisper), before \"man's\" (starts 24.190 s, faster-whisper); join at 0:33.033 sits inside \"gave\" (31.510 to 33.810 s, heard by faster-whisper): after \"he\" (ends 31.510 s, faster-whisper), before \"Claude\" (starts 33.810 s, faster-whisper); join at 0:41.233 sits inside \"That's\" (41.210 to 41.390 s, heard by faster-whisper): after \"got.\" (ends 40.830 s, faster-whisper), before \"like\" (starts 41.390 s, faster-whisper); join at 0:45.400 sits inside \"He\" (45.290 to 45.510 s, heard by faster-whisper): after \"sandwich.\" (ends 44.610 s, faster-whisper), before \"sent\" (starts 45.510 s, faster-whisper); join at 0:57.133 sits inside \"Ask\" (57.090 to 57.310 s, heard by faster-whisper): after \"coffee.\" (ends 56.070 s, faster-whisper), before \"it\" (starts 57.310 s, faster-whisper) (and 5 more)",
+      "shadow": true
+    },
+    "ground.not_bare": {
+      "value": [
+        {
+          "edge_frame": 262,
+          "barest_frame": 264,
+          "stage_std": 54.99,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 509,
+          "barest_frame": 509,
+          "stage_std": 51.48,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 611,
+          "barest_frame": 608,
+          "stage_std": 61.37,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 723,
+          "barest_frame": 723,
+          "stage_std": 40.89,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 991,
+          "barest_frame": 994,
+          "stage_std": 57.24,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1073,
+          "barest_frame": 1076,
+          "stage_std": 59.95,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1237,
+          "barest_frame": 1237,
+          "stage_std": 47.64,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1362,
+          "barest_frame": 1365,
+          "stage_std": 26.17,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1456,
+          "barest_frame": 1455,
+          "stage_std": 23.33,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1714,
+          "barest_frame": 1717,
+          "stage_std": 53.8,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1900,
+          "barest_frame": 1903,
+          "stage_std": 54.35,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 2111,
+          "barest_frame": 2113,
+          "stage_std": 53.06,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 2193,
+          "barest_frame": 2192,
+          "stage_std": 50.89,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 2263,
+          "barest_frame": 2263,
+          "stage_std": 51.49,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 2461,
+          "barest_frame": 2464,
+          "stage_std": 52.7,
+          "floor": 3.0,
+          "pass": true
+        }
+      ],
+      "target": "every frame within 3 of a beat edge has stage spread > 3.0 grey levels",
+      "pass": true,
+      "status": "advisory",
+      "shadow": true
+    },
+    "music.beats": {
+      "value": {
+        "tempo_bpm": 107.9,
+        "confidence": 5.09,
+        "grid": true,
+        "bars": 39,
+        "drops_s": [
+          83.92
+        ],
+        "onsets_per_s": 4.29,
+        "handovers": 15,
+        "handovers_on_a_beat": 1
+      },
+      "target": "measured only: nothing snaps to the beat; his words are the clock",
+      "pass": null,
+      "status": "advisory",
+      "shadow": true
+    },
+    "picture.as_shot": {
+      "value": {
+        "hook": {
+          "L": 2.07,
+          "a": 0.84,
+          "b": 0.6
+        },
+        "face": {
+          "L": 1.16,
+          "a": 0.67,
+          "b": 0.64
+        },
+        "code": {
+          "L": 1.16,
+          "a": 0.39,
+          "b": 0.7
+        },
+        "love": {
+          "L": 1.2,
+          "a": 0.73,
+          "b": 1.11
+        },
+        "hindsight": {
+          "L": 2.04,
+          "a": 0.58,
+          "b": 0.85
+        },
+        "whose": {
+          "L": 1.03,
+          "a": 0.53,
+          "b": 0.96
+        },
+        "yours": {
+          "L": 0.99,
+          "a": 0.48,
+          "b": 0.88
+        },
+        "close": {
+          "L": 1.03,
+          "a": 0.24,
+          "b": 0.71
+        }
+      },
+      "moved": [],
+      "target": "his take as shot: the lower quarter within L 5.0, a 4.0, b 4.0 of the rows of the conformed take it shows (median L*a*b*)",
+      "pass": null,
+      "status": "advisory"
+    },
+    "keyframe_match": {
+      "value": null,
+      "target": "approved golden keyframes",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "composition": {
+      "value": {
+        "hook": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 210
+        },
+        "face": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 460
+        },
+        "question": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 99.9
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 591
+        },
+        "skeletons": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 99.92
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 701
+        },
+        "proof": {
+          "pass": false,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "uses",
+                  "conf": 95.719177,
+                  "x": 336,
+                  "y": 472,
+                  "w": 74,
+                  "h": 13
+                },
+                {
+                  "text": "cut",
+                  "conf": 95.786499,
+                  "x": 653,
+                  "y": 469,
+                  "w": 52,
+                  "h": 16
+                },
+                {
+                  "text": "bill",
+                  "conf": 94.839645,
+                  "x": 216,
+                  "y": 495,
+                  "w": 47,
+                  "h": 17
+                },
+                {
+                  "text": "from",
+                  "conf": 94.839645,
+                  "x": 275,
+                  "y": 495,
+                  "w": 81,
+                  "h": 17
+                },
+                {
+                  "text": "violations",
+                  "conf": 96.272293,
+                  "x": 66,
+                  "y": 578,
+                  "w": 165,
+                  "h": 17
+                },
+                {
+                  "text": "Mark",
+                  "conf": 92.593361,
+                  "x": 169,
+                  "y": 615,
+                  "w": 37,
+                  "h": 9
+                },
+                {
+                  "text": "the",
+                  "conf": 96.734581,
+                  "x": 113,
+                  "y": 642,
+                  "w": 26,
+                  "h": 12
+                },
+                {
+                  "text": "fir",
+                  "conf": 96.031776,
+                  "x": 157,
+                  "y": 642,
+                  "w": 17,
+                  "h": 12
+                },
+                {
+                  "text": "tir",
+                  "conf": 96.644081,
+                  "x": 323,
+                  "y": 644,
+                  "w": 18,
+                  "h": 10
+                },
+                {
+                  "text": "institution",
+                  "conf": 95.552917,
+                  "x": 513,
+                  "y": 644,
+                  "w": 110,
+                  "h": 11
+                },
+                {
+                  "text": "properly",
+                  "conf": 96.66716,
+                  "x": 664,
+                  "y": 642,
+                  "w": 94,
+                  "h": 16
+                },
+                {
+                  "text": "break",
+                  "conf": 96.551376,
+                  "x": 767,
+                  "y": 642,
+                  "w": 58,
+                  "h": 13
+                },
+                {
+                  "text": "dov",
+                  "conf": 91.615364,
+                  "x": 67,
+                  "y": 665,
+                  "w": 33,
+                  "h": 12
+                },
+                {
+                  "text": "all",
+                  "conf": 96.10424,
+                  "x": 141,
+                  "y": 665,
+                  "w": 18,
+                  "h": 12
+                }
+              ]
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "Tom's",
+                  "conf": 95.800758,
+                  "x": 51,
+                  "y": 733,
+                  "w": 80,
+                  "h": 21
+                }
+              ]
+            }
+          },
+          "findings": [
+            "small_text 'uses' is 13 px high, the limit is at least 18 px.",
+            "small_text 'cut' is 16 px high, the limit is at least 18 px.",
+            "small_text 'bill' is 17 px high, the limit is at least 18 px.",
+            "small_text 'from' is 17 px high, the limit is at least 18 px.",
+            "small_text 'violations' is 17 px high, the limit is at least 18 px.",
+            "small_text 'Mark' is 9 px high, the limit is at least 18 px.",
+            "small_text 'the' is 12 px high, the limit is at least 18 px.",
+            "small_text 'fir' is 12 px high, the limit is at least 18 px.",
+            "small_text 'tir' is 10 px high, the limit is at least 18 px.",
+            "small_text 'institution' is 11 px high, the limit is at least 18 px.",
+            "small_text 'properly' is 16 px high, the limit is at least 18 px.",
+            "small_text 'break' is 13 px high, the limit is at least 18 px.",
+            "small_text 'dov' is 12 px high, the limit is at least 18 px.",
+            "small_text 'all' is 12 px high, the limit is at least 18 px.",
+            "edges \"Tom's\" starts at (51, 733), the limits are 24 px from each edge and x at least 60 px."
+          ],
+          "frame": 937
+        },
+        "lines": {
+          "pass": false,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "uses",
+                  "conf": 95.619972,
+                  "x": 337,
+                  "y": 469,
+                  "w": 74,
+                  "h": 13
+                },
+                {
+                  "text": "cut",
+                  "conf": 95.803909,
+                  "x": 654,
+                  "y": 467,
+                  "w": 51,
+                  "h": 15
+                },
+                {
+                  "text": "Claude",
+                  "conf": 96.248474,
+                  "x": 268,
+                  "y": 520,
+                  "w": 114,
+                  "h": 17
+                },
+                {
+                  "text": "Mark",
+                  "conf": 96.845009,
+                  "x": 169,
+                  "y": 612,
+                  "w": 37,
+                  "h": 9
+                },
+                {
+                  "text": "Tyson",
+                  "conf": 95.979027,
+                  "x": 215,
+                  "y": 613,
+                  "w": 47,
+                  "h": 10
+                },
+                {
+                  "text": "But",
+                  "conf": 96.905891,
+                  "x": 69,
+                  "y": 640,
+                  "w": 36,
+                  "h": 12
+                },
+                {
+                  "text": "tti",
+                  "conf": 80.023636,
+                  "x": 315,
+                  "y": 641,
+                  "w": 20,
+                  "h": 11
+                },
+                {
+                  "text": "institution",
+                  "conf": 94.687424,
+                  "x": 513,
+                  "y": 641,
+                  "w": 111,
+                  "h": 11
+                },
+                {
+                  "text": "down",
+                  "conf": 96.269241,
+                  "x": 68,
+                  "y": 662,
+                  "w": 60,
+                  "h": 13
+                },
+                {
+                  "text": "ite",
+                  "conf": 87.833061,
+                  "x": 214,
+                  "y": 664,
+                  "w": 16,
+                  "h": 10
+                },
+                {
+                  "text": "bill",
+                  "conf": 95.748894,
+                  "x": 364,
+                  "y": 662,
+                  "w": 28,
+                  "h": 13
+                }
+              ]
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "Tom's",
+                  "conf": 95.803757,
+                  "x": 51,
+                  "y": 730,
+                  "w": 80,
+                  "h": 21
+                }
+              ]
+            }
+          },
+          "findings": [
+            "small_text 'uses' is 13 px high, the limit is at least 18 px.",
+            "small_text 'cut' is 15 px high, the limit is at least 18 px.",
+            "small_text 'Claude' is 17 px high, the limit is at least 18 px.",
+            "small_text 'Mark' is 9 px high, the limit is at least 18 px.",
+            "small_text 'Tyson' is 10 px high, the limit is at least 18 px.",
+            "small_text 'But' is 12 px high, the limit is at least 18 px.",
+            "small_text 'tti' is 11 px high, the limit is at least 18 px.",
+            "small_text 'institution' is 11 px high, the limit is at least 18 px.",
+            "small_text 'down' is 13 px high, the limit is at least 18 px.",
+            "small_text 'ite' is 10 px high, the limit is at least 18 px.",
+            "small_text 'bill' is 13 px high, the limit is at least 18 px.",
+            "edges \"Tom's\" starts at (51, 730), the limits are 24 px from each edge and x at least 60 px."
+          ],
+          "frame": 1057
+        },
+        "code": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1204
+        },
+        "steak": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 92.08
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1337
+        },
+        "fell": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1437
+        },
+        "love": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1662
+        },
+        "hindsight": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1863
+        },
+        "whose": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 99.99
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 2069
+        },
+        "closet": {
+          "pass": false,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "CLOSE",
+                  "conf": 96.968224,
+                  "x": 55,
+                  "y": 1072,
+                  "w": 389,
+                  "h": 147
+                }
+              ]
+            }
+          },
+          "findings": [
+            "edges 'CLOSE' starts at (55, 1072), the limits are 24 px from each edge and x at least 60 px."
+          ],
+          "frame": 2177
+        },
+        "yours": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 2249
+        },
+        "act": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 2421
+        },
+        "close": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 2535
+        },
+        "ending": {
+          "pass": false,
+          "checks": {
+            "small_text": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "MONDAYS",
+                  "conf": 96.622131,
+                  "x": 121,
+                  "y": 1005,
+                  "w": 110,
+                  "h": 17
+                },
+                {
+                  "text": "WEDNESDAYS",
+                  "conf": 96.957489,
+                  "x": 284,
+                  "y": 1005,
+                  "w": 159,
+                  "h": 17
+                },
+                {
+                  "text": "FRIDAYS",
+                  "conf": 96.08754,
+                  "x": 498,
+                  "y": 1005,
+                  "w": 108,
+                  "h": 17
+                }
+              ]
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [
+            "small_text 'MONDAYS' is 17 px high, the limit is at least 18 px.",
+            "small_text 'WEDNESDAYS' is 17 px high, the limit is at least 18 px.",
+            "small_text 'FRIDAYS' is 17 px high, the limit is at least 18 px."
+          ],
+          "frame": 2584
+        }
+      },
+      "target": "design lock composition thresholds",
+      "pass": false,
+      "status": "measured"
+    },
+    "annotation.target": {
+      "value": [],
+      "target": "every mark names its words and is not drawn over a moving surface",
+      "pass": true
+    },
+    "captions.phrase_breaks": {
+      "value": [
+        {
+          "fromFrame": 128,
+          "page": "cut a $195,000 hospital bill",
+          "next": "to a fraction of that.",
+          "why": "the next page opens on \"to\""
+        },
+        {
+          "fromFrame": 1155,
+          "page": "code than the care his",
+          "next": "brother-in-law actually got.",
+          "why": "ends on \"his\""
+        },
+        {
+          "fromFrame": 2490,
+          "page": "is free at",
+          "next": "makeyourmindup.ai",
+          "why": "ends on \"at\""
+        }
+      ],
+      "target": "no caption page ends mid-phrase",
+      "pass": false
+    },
+    "captions.repeat_title": {
+      "value": [],
+      "target": "no caption page repeats the headline on screen",
+      "pass": true
+    },
+    "annotation.on_target": {
+      "value": [
+        {
+          "obj": "strike",
+          "frame": 252,
+          "ok": false,
+          "why": "its words were not read on the frame (1 of 3)"
+        }
+      ],
+      "target": "every mark lands on its words on the rendered frame",
+      "pass": false
+    },
+    "evidence.readable": {
+      "value": [
+        {
+          "obj": "th_head",
+          "beat": "proof",
+          "frame": 937,
+          "word_px": 21,
+          "why": "its words are 21 px tall on the 1080x1920 frame, under 40"
+        },
+        {
+          "obj": "th_head",
+          "beat": "lines",
+          "frame": 1057,
+          "word_px": 21,
+          "why": "its words are 21 px tall on the 1080x1920 frame, under 40"
+        }
+      ],
+      "target": "evidence words at least 40 px tall on 9:16",
+      "pass": false
+    },
+    "beats.one_carrier": {
+      "value": [],
+      "target": "one picture a beat; a graphic never repeats the picture's point",
+      "pass": true
+    },
+    "figures.shown": {
+      "value": [
+        {
+          "obj": "k_after",
+          "why": "ghost=True: a figure is never dimmed or blurred"
+        },
+        {
+          "obj": "k_billed",
+          "beat": "hook",
+          "why": "its slot is 7% of the frame, under 20%: the figure a beat exists to show fills the frame"
+        }
+      ],
+      "target": "a figure is never dimmed or blurred and fills its slot",
+      "pass": false
+    },
+    "transition.ghost_cut": {
+      "value": [],
+      "target": "a face beat and a full-screen beat meet on a cut",
+      "pass": true
+    },
+    "brand.render_current": {
+      "value": [],
+      "target": "the render knew the logo rule",
+      "pass": true
+    },
+    "text.no_off_day_props": {
+      "value": [],
+      "target": "\"off.day\" is in no drawn text",
+      "pass": true
+    },
+    "title.moment": {
+      "value": [],
+      "target": "one title card from his spoken line, captions empty while it holds",
+      "pass": true
+    },
+    "title.lockup": {
+      "value": [],
+      "target": "the title rendered as one full-frame lockup with the wordmark inside it",
+      "pass": true
+    },
+    "takes.restarts": {
+      "value": [],
+      "target": "no unlisted false start left in the cut",
+      "pass": true
+    },
+    "motion.first_seconds": {
+      "value": [],
+      "target": "something moves in the first seconds",
+      "pass": true
+    },
+    "backdrop.not_flat_black": {
+      "value": [],
+      "target": "no graphics beat on flat black after a picture",
+      "pass": true
+    },
+    "text.no_off_day_frames": {
+      "value": [],
+      "target": "\"off.day\" is on no sampled frame",
+      "pass": true
+    },
+    "title.stage_width": {
+      "value": [],
+      "target": "the title holds at full stage width",
+      "pass": true
+    },
+    "title.lockup_frame": {
+      "value": [],
+      "target": "the title is one centred full-frame lockup, big type, the wordmark inside it and timed with it",
+      "pass": true
+    },
+    "transition.no_ghost_frames": {
+      "value": [],
+      "target": "no frame holds two faces where a face beat meets a full-screen beat",
+      "pass": true
+    },
+    "head.whole_in_frame": {
+      "value": [],
+      "target": "his whole head in frame on his lines; on 16:9 his take bottom right",
+      "pass": true
+    },
+    "picture.smeared": {
+      "value": [],
+      "target": "no picture smeared into stripes (scripts/frame_smear.py)",
+      "pass": true,
+      "status": "advisory",
+      "note": "binds pieces published from 2026-11-24 (config/ve/onscreen-checks.json picture)"
+    }
+  },
+  "keyframes": {
+    "applies": false,
+    "note": "rules-only lock: no key frames; the rules, the Critic and his approval are the design gate"
+  },
+  "composition": {
+    "applies": true,
+    "pass": false,
+    "beats": {
+      "hook": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 210
+      },
+      "face": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 460
+      },
+      "question": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 99.9
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 591
+      },
+      "skeletons": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 99.92
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 701
+      },
+      "proof": {
+        "pass": false,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": false,
+            "value": [
+              {
+                "text": "uses",
+                "conf": 95.719177,
+                "x": 336,
+                "y": 472,
+                "w": 74,
+                "h": 13
+              },
+              {
+                "text": "cut",
+                "conf": 95.786499,
+                "x": 653,
+                "y": 469,
+                "w": 52,
+                "h": 16
+              },
+              {
+                "text": "bill",
+                "conf": 94.839645,
+                "x": 216,
+                "y": 495,
+                "w": 47,
+                "h": 17
+              },
+              {
+                "text": "from",
+                "conf": 94.839645,
+                "x": 275,
+                "y": 495,
+                "w": 81,
+                "h": 17
+              },
+              {
+                "text": "violations",
+                "conf": 96.272293,
+                "x": 66,
+                "y": 578,
+                "w": 165,
+                "h": 17
+              },
+              {
+                "text": "Mark",
+                "conf": 92.593361,
+                "x": 169,
+                "y": 615,
+                "w": 37,
+                "h": 9
+              },
+              {
+                "text": "the",
+                "conf": 96.734581,
+                "x": 113,
+                "y": 642,
+                "w": 26,
+                "h": 12
+              },
+              {
+                "text": "fir",
+                "conf": 96.031776,
+                "x": 157,
+                "y": 642,
+                "w": 17,
+                "h": 12
+              },
+              {
+                "text": "tir",
+                "conf": 96.644081,
+                "x": 323,
+                "y": 644,
+                "w": 18,
+                "h": 10
+              },
+              {
+                "text": "institution",
+                "conf": 95.552917,
+                "x": 513,
+                "y": 644,
+                "w": 110,
+                "h": 11
+              },
+              {
+                "text": "properly",
+                "conf": 96.66716,
+                "x": 664,
+                "y": 642,
+                "w": 94,
+                "h": 16
+              },
+              {
+                "text": "break",
+                "conf": 96.551376,
+                "x": 767,
+                "y": 642,
+                "w": 58,
+                "h": 13
+              },
+              {
+                "text": "dov",
+                "conf": 91.615364,
+                "x": 67,
+                "y": 665,
+                "w": 33,
+                "h": 12
+              },
+              {
+                "text": "all",
+                "conf": 96.10424,
+                "x": 141,
+                "y": 665,
+                "w": 18,
+                "h": 12
+              }
+            ]
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": false,
+            "value": [
+              {
+                "text": "Tom's",
+                "conf": 95.800758,
+                "x": 51,
+                "y": 733,
+                "w": 80,
+                "h": 21
+              }
+            ]
+          }
+        },
+        "findings": [
+          "small_text 'uses' is 13 px high, the limit is at least 18 px.",
+          "small_text 'cut' is 16 px high, the limit is at least 18 px.",
+          "small_text 'bill' is 17 px high, the limit is at least 18 px.",
+          "small_text 'from' is 17 px high, the limit is at least 18 px.",
+          "small_text 'violations' is 17 px high, the limit is at least 18 px.",
+          "small_text 'Mark' is 9 px high, the limit is at least 18 px.",
+          "small_text 'the' is 12 px high, the limit is at least 18 px.",
+          "small_text 'fir' is 12 px high, the limit is at least 18 px.",
+          "small_text 'tir' is 10 px high, the limit is at least 18 px.",
+          "small_text 'institution' is 11 px high, the limit is at least 18 px.",
+          "small_text 'properly' is 16 px high, the limit is at least 18 px.",
+          "small_text 'break' is 13 px high, the limit is at least 18 px.",
+          "small_text 'dov' is 12 px high, the limit is at least 18 px.",
+          "small_text 'all' is 12 px high, the limit is at least 18 px.",
+          "edges \"Tom's\" starts at (51, 733), the limits are 24 px from each edge and x at least 60 px."
+        ],
+        "frame": 937
+      },
+      "lines": {
+        "pass": false,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": false,
+            "value": [
+              {
+                "text": "uses",
+                "conf": 95.619972,
+                "x": 337,
+                "y": 469,
+                "w": 74,
+                "h": 13
+              },
+              {
+                "text": "cut",
+                "conf": 95.803909,
+                "x": 654,
+                "y": 467,
+                "w": 51,
+                "h": 15
+              },
+              {
+                "text": "Claude",
+                "conf": 96.248474,
+                "x": 268,
+                "y": 520,
+                "w": 114,
+                "h": 17
+              },
+              {
+                "text": "Mark",
+                "conf": 96.845009,
+                "x": 169,
+                "y": 612,
+                "w": 37,
+                "h": 9
+              },
+              {
+                "text": "Tyson",
+                "conf": 95.979027,
+                "x": 215,
+                "y": 613,
+                "w": 47,
+                "h": 10
+              },
+              {
+                "text": "But",
+                "conf": 96.905891,
+                "x": 69,
+                "y": 640,
+                "w": 36,
+                "h": 12
+              },
+              {
+                "text": "tti",
+                "conf": 80.023636,
+                "x": 315,
+                "y": 641,
+                "w": 20,
+                "h": 11
+              },
+              {
+                "text": "institution",
+                "conf": 94.687424,
+                "x": 513,
+                "y": 641,
+                "w": 111,
+                "h": 11
+              },
+              {
+                "text": "down",
+                "conf": 96.269241,
+                "x": 68,
+                "y": 662,
+                "w": 60,
+                "h": 13
+              },
+              {
+                "text": "ite",
+                "conf": 87.833061,
+                "x": 214,
+                "y": 664,
+                "w": 16,
+                "h": 10
+              },
+              {
+                "text": "bill",
+                "conf": 95.748894,
+                "x": 364,
+                "y": 662,
+                "w": 28,
+                "h": 13
+              }
+            ]
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": false,
+            "value": [
+              {
+                "text": "Tom's",
+                "conf": 95.803757,
+                "x": 51,
+                "y": 730,
+                "w": 80,
+                "h": 21
+              }
+            ]
+          }
+        },
+        "findings": [
+          "small_text 'uses' is 13 px high, the limit is at least 18 px.",
+          "small_text 'cut' is 15 px high, the limit is at least 18 px.",
+          "small_text 'Claude' is 17 px high, the limit is at least 18 px.",
+          "small_text 'Mark' is 9 px high, the limit is at least 18 px.",
+          "small_text 'Tyson' is 10 px high, the limit is at least 18 px.",
+          "small_text 'But' is 12 px high, the limit is at least 18 px.",
+          "small_text 'tti' is 11 px high, the limit is at least 18 px.",
+          "small_text 'institution' is 11 px high, the limit is at least 18 px.",
+          "small_text 'down' is 13 px high, the limit is at least 18 px.",
+          "small_text 'ite' is 10 px high, the limit is at least 18 px.",
+          "small_text 'bill' is 13 px high, the limit is at least 18 px.",
+          "edges \"Tom's\" starts at (51, 730), the limits are 24 px from each edge and x at least 60 px."
+        ],
+        "frame": 1057
+      },
+      "code": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1204
+      },
+      "steak": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 92.08
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1337
+      },
+      "fell": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1437
+      },
+      "love": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1662
+      },
+      "hindsight": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1863
+      },
+      "whose": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 99.99
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 2069
+      },
+      "closet": {
+        "pass": false,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": false,
+            "value": [
+              {
+                "text": "CLOSE",
+                "conf": 96.968224,
+                "x": 55,
+                "y": 1072,
+                "w": 389,
+                "h": 147
+              }
+            ]
+          }
+        },
+        "findings": [
+          "edges 'CLOSE' starts at (55, 1072), the limits are 24 px from each edge and x at least 60 px."
+        ],
+        "frame": 2177
+      },
+      "yours": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 2249
+      },
+      "act": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 2421
+      },
+      "close": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 2535
+      },
+      "ending": {
+        "pass": false,
+        "checks": {
+          "small_text": {
+            "pass": false,
+            "value": [
+              {
+                "text": "MONDAYS",
+                "conf": 96.622131,
+                "x": 121,
+                "y": 1005,
+                "w": 110,
+                "h": 17
+              },
+              {
+                "text": "WEDNESDAYS",
+                "conf": 96.957489,
+                "x": 284,
+                "y": 1005,
+                "w": 159,
+                "h": 17
+              },
+              {
+                "text": "FRIDAYS",
+                "conf": 96.08754,
+                "x": 498,
+                "y": 1005,
+                "w": 108,
+                "h": 17
+              }
+            ]
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [
+          "small_text 'MONDAYS' is 17 px high, the limit is at least 18 px.",
+          "small_text 'WEDNESDAYS' is 17 px high, the limit is at least 18 px.",
+          "small_text 'FRIDAYS' is 17 px high, the limit is at least 18 px."
+        ],
+        "frame": 2584
+      }
+    }
+  },
+  "measured_pass": false,
+  "complete": false
+}

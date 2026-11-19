@@ -138,7 +138,9 @@ def off_face(video: str, pages: list, *, style: str = 'house', aspect: str = '9:
         box = caption_box(page, style, aspect, region, layout=beat.get('layout'),
                           plate=(beat.get('plate') or {}).get('source'))
         faces = detector(grab(frame))
-        hits = [f for f in faces if overlap(box, grown(f))]
+        # An art-directed page is measured row by row as drawn (qc.inputs_from_props drawn_rows), never by the zone's width.
+        rows = page.get('drawn_rows') or [box]
+        hits = [f for f in faces if any(overlap(tuple(r), grown(f)) for r in rows)]
         if hits:
             on_face.append({'at_s': round(frame / fps, 2), 'text': page_text(page)[:40], 'caption': list(box),
                             'face': list(hits[0])})

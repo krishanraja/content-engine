@@ -308,6 +308,8 @@ def _held(rows: list[dict], end: int) -> bool:
 _WEAK_ENDS = {'a', 'an', 'the', 'to', 'of', 'in', 'on', 'for', 'and', 'but', 'or', 'so', 'my', 'your', 'our', 'their',
               'its', 'it', 'i', 'you', 'we', 'they', 'is', 'are', 'was', 'be', 'once', 'that', 'this', 'no', 'not',
               'with', 'at', 'by', 'as', 'if', 'how', 'just', 'can', 'will'}
+# The same words qc's captions.phrase_breaks fails a page on (config/ve/onscreen-checks.json): compile and qc agree.
+_WEAK_ENDS |= set(json.loads((Path(__file__).resolve().parents[2] / 'config/ve/onscreen-checks.json').read_text())['captions']['weak_ends'])
 _END = re.compile(r'[.!?]["\x27)\u2019\u201d]*$')
 # The words the on-screen phrase check (config/ve/onscreen-checks.json, captions.opens_phrase) refuses at the start of a
 # page that follows a page with no closing punctuation (Wed 18, 19 Nov 2026: six pages broke there).
@@ -323,10 +325,10 @@ def _page_cost(rows: list[dict], start: int, n: int) -> int:
     if any(_END.search(r['text']) for r in page[:-1]):
         cost += 6   # a page runs past the end of a sentence ("myself. I just put")
     if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in _WEAK_ENDS:
-        cost += 12  # it ends mid-phrase on a small word: break anywhere else that reads
+        cost += 40  # it ends mid-phrase on a small word: break anywhere else that reads (qc captions.phrase_breaks fails it)
     if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and \
             re.sub(r'[^a-z\']', '', rows[start + n]['text'].lower()) in _OPENS_PHRASE:
-        cost += 12  # the next page opens on an article or possessive, the half of a phrase ("can't | your pay")
+        cost += 40  # the next page opens on an article or possessive, the half of a phrase ("can't | your pay")
     if any(_PAUSE.search(r['text']) for r in page[:-1]):
         cost += 3   # a clause break inside the page ("Netflix for your evenings, Google")
     if not _held(rows, start + n):
