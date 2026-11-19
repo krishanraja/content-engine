@@ -97,6 +97,14 @@
       "on": "2026-11-18",
       "artifact_hash": "e6956dd1843f22ecb0e504ad910684bf41c1db2222e879746d79d8e5629c0fc6",
       "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "on": "2026-11-18",
+      "artifact_hash": "a0e5f55e426ce8ece7578aa9ebb696d1736c9bcf51357fd69e11d64a804cefad",
+      "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
     }
   ]
 }
