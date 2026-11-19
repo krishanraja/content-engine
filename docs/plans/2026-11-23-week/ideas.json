@@ -1185,24 +1185,24 @@
       },
       {
         "id": "teenhomework",
-        "format": "Explainer carousel, 5 cards, 4:5",
+        "format": "Explainer carousel, 7 cards, 4:5",
         "source_tag": "trade_press",
         "source": {
           "label": "RAND, Higher-income parents more likely to use AI, encourage teens to do the same (12 Nov 2026)",
           "url": "https://www.rand.org/news/press/2026/11/higher-income-parents-more-likely-to-use-ai-encourage.html"
         },
-        "hook": "Whether your teen uses AI for homework depends a lot on you.",
-        "copy": "An explainer on RAND's new survey of about 1,000 parents and 1,800 teens: richer families use AI more, their parents encourage it more, and teens copy what they think their parents want. Five cards on what that means at your kitchen table.",
+        "hook": "$75,000 for an AI school day. The cheaper lesson is at your kitchen table.",
+        "copy": "One carousel on AI and children that joins Monday's AI school story to RAND's new survey of parents and teens: what $75,000 a year buys and what it delivered, then why the biggest pull on a teen's AI homework is what they think you want. It ends on the questions to ask before you pay and the one talk to have at home.",
         "pitch": {
-          "see": "A cover of a teen doing homework with a parent's shadow over the laptop, then one card per finding and a last card on the one conversation to have.",
-          "lands": "Every parent wonders about AI and homework; this says the biggest influence is at home.",
-          "why_now": "RAND, 12 Nov 2026.",
-          "share": "Teens who think their parents back AI use it twice as often."
+          "see": "A cover of a school report card printed like a till receipt, lying on a kitchen table beside two mugs; then the fee, the promise and the result, then two cards from RAND's survey, and a close of the questions to ask and the talk to have.",
+          "lands": "Every parent wonders what AI does for their child's learning; the expensive answer is a school, and the one that moves the numbers most is at home.",
+          "why_now": "Fortune on the AI school, 14 Nov 2026; RAND's survey of parents and teens, 12 Nov 2026.",
+          "share": "Teens who feel encouraged use AI for homework at more than twice the rate of those who feel discouraged."
         },
         "shape": "story",
-        "dive": "Teens follow what they think their parents want: 81% use AI for homework when they feel encouraged, 38% when they feel discouraged.",
+        "dive": "Two prices of AI in a child's learning: $75,000 a year for a school that promised twice the learning and saw 42% hit it, against the free pull at home, where 81% of encouraged teens use AI for homework and 38% of discouraged ones do.",
         "aim": "utility",
-        "funny": "The most powerful AI policy in your teen's life is the face you pull when they mention ChatGPT.",
+        "funny": "The $75,000 report card arrived printed on the back of the invoice, and the free one is the face you pull when they mention ChatGPT.",
         "lookalike": {
           "pattern": "work-reality-check",
           "beats": "https://www.instagram.com/therundownai/p/DfiNa2JkRhx/",
@@ -1210,23 +1210,31 @@
         },
         "cards": [
           {
-            "words": "Whether your teen uses AI for homework depends a lot on you.",
-            "picture": "A teen at a laptop with a parent's shadow over it"
+            "words": "$75,000 for an AI school day. The cheaper lesson is at your kitchen table.",
+            "picture": "A school report card printed as a till receipt, lying on a kitchen table beside two mugs"
           },
           {
-            "words": "57% of teens in families earning $150,000 or more use it, against 43% under $50,000",
+            "words": "The fee: up to $75,000 a year, for two hours of lessons a day",
+            "picture": "A clock with only two hours shaded"
+          },
+          {
+            "words": "The promise: twice the learning. The result: 42% hit it in both maths and reading",
+            "picture": "A rocket drawn on an exercise book beside a bar of 42 filled squares out of 100"
+          },
+          {
+            "words": "At home, money shows too: 57% of teens in families earning $150,000 or more use AI for homework, against 43% under $50,000",
             "picture": "Two stacks of books, one taller"
           },
           {
-            "words": "Their parents: 84% against 63%",
-            "picture": "Two parents with phones, one lit up"
-          },
-          {
-            "words": "Teens who feel encouraged: 81% use it. Discouraged: 38%",
+            "words": "What tips it most is you: 81% of teens who feel encouraged use it, against 38% who feel discouraged",
             "picture": "A thumbs up and a thumbs down over two laptops"
           },
           {
-            "words": "The one talk to have: what it is for (checking and ideas) and what it is not (doing it for you)",
+            "words": "Before you pay for any AI promise: what is the measure, who checks it, when, and what if it misses?",
+            "picture": "Four boxes on a checklist"
+          },
+          {
+            "words": "The one talk to have: what AI is for (checking and ideas) and what it is not (doing it for you)",
             "picture": "A kitchen table with two mugs"
           }
         ],
@@ -1271,6 +1279,26 @@
             "A parent watches over a teen using AI for homework, then the findings and one talk to have with them."
           ],
           "against": 49
+        },
+        "supports": "mon",
+        "ties_to": "Mon: follow.the.money; combined with Tuesday's $75,000 AI school carousel",
+        "sources": [
+          {
+            "label": "RAND, 12 Nov 2026",
+            "url": "https://www.rand.org/news/press/2026/11/higher-income-parents-more-likely-to-use-ai-encourage.html",
+            "date": "2026-11-12",
+            "what": "Survey of about 1,000 parents and 1,800 teens: 57% of teens in families earning $150,000 or more use AI for homework against 43% under $50,000; parents 84% against 63%; 81% of teens who feel encouraged use it against 38% who feel discouraged."
+          },
+          {
+            "label": "Fortune, 14 Nov 2026",
+            "url": "https://fortune.com/2026/11/14/alpha-school-ai-students-tuition-learning-goals",
+            "date": "2026-11-14",
+            "what": "Alpha School charges up to $75,000 a year for two hours of AI-led lessons a day, promises twice the learning, and 42% hit that goal in both maths and reading."
+          }
+        ],
+        "revised": {
+          "side": "idea",
+          "words": "This needs to go in to Tuesday 24 but combine it with the carousel that is already on there"
         }
       },
       {
