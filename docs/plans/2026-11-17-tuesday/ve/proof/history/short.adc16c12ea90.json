@@ -277,13 +277,33 @@
     "scene-nameplate": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222",
     "wyso-lead": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
   },
-  "made_at": "2026-11-19T14:41:00Z",
+  "made_at": "2026-11-19T14:45:24Z",
   "frames": {
-    "pass": null,
-    "status": "not_run",
-    "reason": "a frame could not be read: cannot reshape array of size 0 into shape (1920,1080,3)",
-    "problems": [],
-    "frames": 0
+    "pass": false,
+    "status": "ok",
+    "problems": [
+      {
+        "check": "plain_dark",
+        "beat": "title",
+        "frame": 79,
+        "band": [
+          871,
+          1000
+        ],
+        "says": "beat title, frame 79: a plain dark band, rows 871 to 1000 (129 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "title",
+        "frame": 125,
+        "band": [
+          871,
+          1000
+        ],
+        "says": "beat title, frame 125: a plain dark band, rows 871 to 1000 (129 px), no detail"
+      }
+    ],
+    "frames": 26
   },
   "sendable": false
 }
