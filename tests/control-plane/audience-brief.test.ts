@@ -137,10 +137,11 @@ describe('all nine are recorded in the learnings register, each citing the brief
   const register = JSON.parse(readFileSync('config/learnings.json', 'utf8'))
   const nine = register.learnings.filter((l: { brief?: { material?: string } }) => l.brief?.material === 'cbb90470-7d90-4f54-8d98-cf6ec704b5f2')
 
-  test('nine entries, numbered 1 to 9, the first six encoded and the last three open', () => {
+  // Change 7, the public scorecard, is withdrawn with the prediction format (Rulings, Krish, 2026-11-17 and 2026-11-18).
+  test('nine entries, numbered 1 to 9, the first six encoded, the scorecard withdrawn and the last two open', () => {
     assert.deepEqual(nine.map((l: { brief: { change: number } }) => l.brief.change), [1, 2, 3, 4, 5, 6, 7, 8, 9])
     assert.deepEqual(nine.map((l: { status: string }) => l.status),
-      ['encoded', 'encoded', 'encoded', 'encoded', 'encoded', 'encoded', 'open', 'open', 'open'])
+      ['encoded', 'encoded', 'encoded', 'encoded', 'encoded', 'encoded', 'withdrawn', 'open', 'open'])
     for (const l of nine) {
       assert.match(l.brief.path, /growth-makeyourmindup docs\/briefs\/2026-11-16-content-engine-what-the-audience-tells-us\.md/)
       assert.ok(['floor', 'house_rule', 'skill', 'test', 'not_adopted_here'].some(k => (l.brief.becomes || []).includes(k)), l.id)

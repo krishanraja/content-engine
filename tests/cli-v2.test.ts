@@ -94,13 +94,14 @@ describe('V2 CLI', () => {
     expect(at('await archiveSubjectV2(manifest, packageArtifact.payload.packages)')).toBeLessThan(copy)
   })
 
-  it('checks the call wherever a review or treatment manifest is taken in', async () => {
-    // styleframes create, animatic create and treatment register all read
-    // their manifest through loadReviewManifest; the call gate is its last step.
+  it('reads every review or treatment manifest through one loader, with no call gate', async () => {
+    // styleframes create, animatic create and treatment register all read their manifest through
+    // loadReviewManifest. Its call gate went with the prediction format (Rulings, Krish, 2026-11-17
+    // and 2026-11-18): readiness is still validated, and nothing checks a call.
     const source = await readFile('packages/cli/src/v2.ts', 'utf8')
     const body = source.slice(source.indexOf('async function loadReviewManifest('), source.indexOf('function exactAssetHashes('))
-    expect(body.indexOf('await boundRenderCallIssuesV2(manifest)')).toBeGreaterThan(body.indexOf('validateV2RenderReadiness(manifest'))
-    expect(body.indexOf('await boundRenderCallIssuesV2(manifest)')).toBeLessThan(body.indexOf('return { manifest, manifestHash }'))
+    expect(body.indexOf('validateV2RenderReadiness(manifest')).toBeGreaterThan(-1)
+    expect(source).not.toMatch(/boundRenderCallIssuesV2|render-call/)
     expect(source.match(/loadReviewManifest\(job, /g)).toHaveLength(3)
   })
 
