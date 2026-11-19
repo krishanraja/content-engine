@@ -168,7 +168,11 @@ describe('the migration matches the code', () => {
     expect(bucket![3]).toBe('false')
     expect(Number(bucket![4])).toBe(524288000)
     expect(raised).toContain(`set file_size_limit = ${LIBRARY_MAX_BYTES} where id = '${LIBRARY_BUCKET}'`)
-    const types = [...bucket![5]!.matchAll(/'([^']+)'/g)].map((m) => m[1]).sort()
+    // The newest migration that sets the bucket's types holds exactly the code's list.
+    const office = readFileSync('supabase/migrations/20261119140000_library_office_documents.sql', 'utf8')
+    const latest = /set allowed_mime_types = array\[([\s\S]*?)\]\s*where id = 'content-library'/.exec(office)
+    expect(latest).not.toBeNull()
+    const types = [...latest![1]!.matchAll(/'([^']+)'/g)].map((m) => m[1]).sort()
     expect(types).toEqual(libraryMimeTypes())
     expect(migration).toMatch(/on conflict \(id\) do update set\s+public = false,/)
     expect(migration).toContain('bytes bigint not null check (bytes between 1 and 524288000)')

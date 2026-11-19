@@ -62,7 +62,11 @@
     "wav": "audio/wav",
     "srt": "application/x-subrip",
     "vtt": "text/vtt",
-    "zip": "application/zip"
+    "zip": "application/zip",
+    "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "doc": "application/msword",
+    "pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
   },
   "paths": [
     {
@@ -573,7 +577,7 @@
         },
         {
           "why": "a type the library does not take",
-          "path": "Posts/F01/notes.docx",
+          "path": "Posts/F01/setup.exe",
           "refused": "path_type_not_allowed"
         },
         {
