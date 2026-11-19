@@ -20,3 +20,4 @@
 {"ts": "2026-11-19T08:53:41.963349Z", "kind": "preflight", "amount": 0, "note": "floor", "receipt": {"check": "floor", "version_or_hash": "70740fd89c622a5a", "at": "2026-11-19T08:53:41.963349Z", "by": "Claude Code", "format": "thumbnail"}}
 {"ts": "2026-11-19T08:53:43.151657Z", "kind": "preflight", "amount": 0, "note": "skill", "receipt": {"check": "skill", "version_or_hash": "31e93d5161486857", "at": "2026-11-19T08:53:43.151657Z", "by": "Claude Code", "name": "thumbnail-designer"}}
 {"ts": "2026-11-19T09:19:02.049501Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "86805e7b153f4d70", "at": "2026-11-19T09:19:02.049501Z", "by": "Claude Code"}}
+{"ts": "2026-11-19T10:20:37.754820Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "20240fea60bca2cf", "at": "2026-11-19T10:20:37.754820Z", "by": "Claude Code"}}

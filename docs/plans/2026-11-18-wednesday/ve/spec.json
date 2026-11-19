@@ -397,19 +397,6 @@
    }
   },
   {
-   "obj": "l_crazy",
-   "device": "slam_word",
-   "meaning": "his own verdict lands on his first breath: the AI maker buying its tools is crazy",
-   "persist": {
-    "from_beat": "hook",
-    "to_beat": "hook"
-   },
-   "params": {
-    "word": "CRAZY",
-    "tapeText": "THE AI MAKER BUYS ITS TOOLS"
-   }
-  },
-  {
    "obj": "l_croc",
    "device": "scene_plate",
    "meaning": "the in-house developer as a crocodile hunter, creeping up on a crocodile under the office desk",
@@ -626,6 +613,23 @@
      "w": 0.62,
      "h": 0.55
     }
+   }
+  },
+  {
+   "obj": "l_deel",
+   "device": "logo_card",
+   "meaning": "what replaced Workday at Klarna: Deel, another rented app",
+   "persist": {
+    "from_beat": "swap",
+    "to_beat": "swap"
+   },
+   "params": {
+    "logos": [
+     {
+      "id": "Deel"
+     }
+    ],
+    "fit": true
    }
   },
   {
@@ -905,89 +909,75 @@
    }
   },
   {
-   "obj": "s_checkout",
-   "device": "scene_plate",
-   "meaning": "the AI lab at the checkout, paying for other companies' tools",
+   "obj": "h_q",
+   "device": "query_chip",
+   "meaning": "the question the piece checks",
    "persist": {
-    "from_beat": "marks",
-    "to_beat": "marks"
+    "from_beat": "hook",
+    "to_beat": "hook"
    },
    "params": {
-    "shots": [
-     {
-      "src": "plates/checkout.mp4",
-      "kind": "video",
-      "width": 1920,
-      "height": 1080
-     },
-     {
-      "src": "plates/new/checkout-end.png",
-      "width": 1920,
-      "height": 1080,
-      "focus": {
-       "x": 0.3,
-       "y": 0.45
-      }
-     }
-    ],
-    "camera": "push",
-    "full": true,
-    "grade": "none"
+    "text": "FACT CHECK: DOES THE MAKER OF CLAUDE BUILD ITS OWN TOOLS?"
    }
   },
   {
-   "obj": "st_everyone",
-   "device": "stamp",
-   "meaning": "everyone else builds their software with Claude",
+   "obj": "m_sf",
+   "device": "evidence_card",
+   "meaning": "Anthropic runs its customers and deals on Salesforce",
    "persist": {
     "from_beat": "marks",
     "to_beat": "marks"
    },
    "params": {
-    "kind": "block",
-    "paint": "mint",
-    "main": "EVERYONE BUILDS ON CLAUDE",
-    "tiltDeg": -3,
-    "at": {
-     "x": 140,
-     "y": 120,
-     "w": 980,
-     "h": 130
-    }
+    "kind": "screenshot",
+    "src": "shots/sf-preferred-crm.png",
+    "outlet": "Anthropic job advert",
+    "date": "2026",
+    "sourceAspectRatio": 3.6364
    }
   },
   {
-   "obj": "st_shops",
-   "device": "slam_word",
-   "meaning": "and yet it shops outside",
+   "obj": "m_fin",
+   "device": "evidence_card",
+   "meaning": "Anthropic chose Fin for its help desk",
    "persist": {
     "from_beat": "marks",
     "to_beat": "marks"
    },
    "params": {
-    "word": "SHOPPING",
-    "tapeText": "IT COULD BUILD IT ITSELF"
+    "kind": "screenshot",
+    "src": "shots/hl-fin-anthropic.png",
+    "outlet": "Fin",
+    "date": "2026",
+    "sourceAspectRatio": 5.4054
    }
   },
   {
-   "obj": "st_could",
-   "device": "stamp",
-   "meaning": "even though it could build them",
+   "obj": "m_wd",
+   "device": "evidence_card",
+   "meaning": "Anthropic runs finance and people on Workday",
    "persist": {
     "from_beat": "marks",
     "to_beat": "marks"
    },
    "params": {
-    "kind": "outline",
-    "paint": "mint",
-    "main": "COULD BUILD IT",
-    "tiltDeg": -5,
-    "at": {
-     "x": 560,
-     "y": 330,
-     "w": 780,
-     "h": 150
-    }
+    "kind": "screenshot",
+    "src": "shots/hl-workday-anthropic.png",
+    "outlet": "Workday",
+    "date": "13 Oct 2026",
+    "sourceAspectRatio": 4.5082
+   }
+  },
+  {
+   "obj": "m_verdict",
+   "device": "query_chip",
+   "meaning": "the verdict: it buys, though it could build",
+   "persist": {
+    "from_beat": "marks",
+    "to_beat": "marks"
+   },
+   "params": {
+    "text": "VERDICT: EVERYONE BUILDS ON CLAUDE. ANTHROPIC STILL BUYS."
    }
   },
   {
@@ -1010,127 +1000,6 @@
     "camera": "push",
     "full": true,
     "grade": "none"
-   }
-  },
-  {
-   "obj": "st_10x",
-   "device": "slam_word",
-   "meaning": "the bill went up ten times",
-   "persist": {
-    "from_beat": "balloon",
-    "to_beat": "balloon"
-   },
-   "params": {
-    "word": "TENFOLD",
-    "tapeText": "THE BILL WENT UP"
-   }
-  },
-  {
-   "obj": "st_lit",
-   "device": "stamp",
-   "meaning": "literally ten times",
-   "persist": {
-    "from_beat": "balloon",
-    "to_beat": "balloon"
-   },
-   "params": {
-    "kind": "block",
-    "paint": "channel",
-    "main": "LITERALLY 10x",
-    "tiltDeg": 4,
-    "at": {
-     "x": 560,
-     "y": 780,
-     "w": 800,
-     "h": 150
-    }
-   }
-  },
-  {
-   "obj": "s_magic",
-   "device": "scene_plate",
-   "meaning": "building suddenly feels like a magic trick",
-   "persist": {
-    "from_beat": "vibe",
-    "to_beat": "vibe"
-   },
-   "params": {
-    "shots": [
-     {
-      "src": "plates/magic.mp4",
-      "kind": "video",
-      "width": 1920,
-      "height": 1080
-     }
-    ],
-    "camera": "push",
-    "full": true,
-    "grade": "none"
-   }
-  },
-  {
-   "obj": "s_dig",
-   "device": "scene_plate",
-   "meaning": "digging into the companies that did it",
-   "persist": {
-    "from_beat": "digging",
-    "to_beat": "digging"
-   },
-   "params": {
-    "shots": [
-     {
-      "src": "plates/digging.mp4",
-      "kind": "video",
-      "width": 1920,
-      "height": 1080
-     }
-    ],
-    "camera": "push",
-    "full": true,
-    "grade": "none"
-   }
-  },
-  {
-   "obj": "s_swap",
-   "device": "scene_plate",
-   "meaning": "one rented app wheeled out, another wheeled in",
-   "persist": {
-    "from_beat": "swapclip",
-    "to_beat": "swapclip"
-   },
-   "params": {
-    "shots": [
-     {
-      "src": "plates/swap.mp4",
-      "kind": "video",
-      "width": 1920,
-      "height": 1080
-     }
-    ],
-    "camera": "push",
-    "full": true,
-    "grade": "none"
-   }
-  },
-  {
-   "obj": "st_subbed",
-   "device": "stamp",
-   "meaning": "it is just subbed out",
-   "persist": {
-    "from_beat": "swap",
-    "to_beat": "swap"
-   },
-   "params": {
-    "kind": "block",
-    "paint": "mint",
-    "main": "SUBBED OUT",
-    "tiltDeg": -4,
-    "at": {
-     "x": 300,
-     "y": 120,
-     "w": 700,
-     "h": 140
-    }
    }
   },
   {
@@ -1165,82 +1034,6 @@
    }
   },
   {
-   "obj": "st_cancel",
-   "device": "slam_word",
-   "meaning": "they cancelled their Salesforce subscription",
-   "persist": {
-    "from_beat": "curative",
-    "to_beat": "curative"
-   },
-   "params": {
-    "word": "CANCELLED",
-    "tapeText": "A SALESFORCE CONTRACT"
-   }
-  },
-  {
-   "obj": "st_own",
-   "device": "stamp",
-   "meaning": "because they managed to build their own",
-   "persist": {
-    "from_beat": "curative",
-    "to_beat": "curative"
-   },
-   "params": {
-    "kind": "block",
-    "paint": "mint",
-    "main": "BUILT OUR OWN",
-    "tiltDeg": -4,
-    "at": {
-     "x": 200,
-     "y": 760,
-     "w": 760,
-     "h": 140
-    }
-   }
-  },
-  {
-   "obj": "st_wow",
-   "device": "stamp",
-   "meaning": "wow, brilliant",
-   "persist": {
-    "from_beat": "upkeep_cur",
-    "to_beat": "upkeep_cur"
-   },
-   "params": {
-    "kind": "block",
-    "paint": "channel",
-    "main": "WOW, BRILLIANT.",
-    "tiltDeg": 5,
-    "at": {
-     "x": 600,
-     "y": 380,
-     "w": 700,
-     "h": 140
-    }
-   }
-  },
-  {
-   "obj": "st_2m",
-   "device": "stamp",
-   "meaning": "they built their own in two months",
-   "persist": {
-    "from_beat": "upkeep_cur",
-    "to_beat": "upkeep_cur"
-   },
-   "params": {
-    "kind": "block",
-    "paint": "mint",
-    "main": "BUILT IN 2 MONTHS",
-    "tiltDeg": -3,
-    "at": {
-     "x": 200,
-     "y": 120,
-     "w": 820,
-     "h": 130
-    }
-   }
-  },
-  {
    "obj": "s_spark",
    "device": "scene_plate",
    "meaning": "the homemade system sparking: keeping it running is not easy",
@@ -1264,41 +1057,6 @@
        "x": 0.45,
        "y": 0.45
       }
-     }
-    ],
-    "camera": "push",
-    "full": true,
-    "grade": "none"
-   }
-  },
-  {
-   "obj": "st_easy",
-   "device": "slam_word",
-   "meaning": "keeping it running, not so easy",
-   "persist": {
-    "from_beat": "sparks",
-    "to_beat": "sparks"
-   },
-   "params": {
-    "word": "OOPS",
-    "tapeText": "KEEPING IT RUNNING"
-   }
-  },
-  {
-   "obj": "s_bills",
-   "device": "scene_plate",
-   "meaning": "owning the tool is the expensive part: the bill keeps unrolling",
-   "persist": {
-    "from_beat": "miss",
-    "to_beat": "miss"
-   },
-   "params": {
-    "shots": [
-     {
-      "src": "plates/bills.mp4",
-      "kind": "video",
-      "width": 1920,
-      "height": 1080
      }
     ],
     "camera": "push",
@@ -1348,92 +1106,6 @@
     "camera": "push",
     "full": true,
     "grade": "none"
-   }
-  },
-  {
-   "obj": "s_loop",
-   "device": "scene_plate",
-   "meaning": "the AI maker pays for a bot that runs on its own AI",
-   "persist": {
-    "from_beat": "loop",
-    "to_beat": "loop"
-   },
-   "params": {
-    "shots": [
-     {
-      "src": "plates/ouroboros.mp4",
-      "kind": "video",
-      "width": 1920,
-      "height": 1080
-     }
-    ],
-    "camera": "push",
-    "full": true,
-    "grade": "none"
-   }
-  },
-  {
-   "obj": "s_shop",
-   "device": "scene_plate",
-   "meaning": "build the part that makes you different, buy the boring plumbing",
-   "persist": {
-    "from_beat": "buildbuy",
-    "to_beat": "buildbuy"
-   },
-   "params": {
-    "shots": [
-     {
-      "src": "plates/workshop.mp4",
-      "kind": "video",
-      "width": 1920,
-      "height": 1080
-     }
-    ],
-    "camera": "push",
-    "full": true,
-    "grade": "none"
-   }
-  },
-  {
-   "obj": "st_build",
-   "device": "stamp",
-   "meaning": "build what makes us different",
-   "persist": {
-    "from_beat": "buildbuy",
-    "to_beat": "buildbuy"
-   },
-   "params": {
-    "kind": "block",
-    "paint": "mint",
-    "main": "BUILD WHAT MAKES YOU DIFFERENT",
-    "tiltDeg": -3,
-    "at": {
-     "x": 120,
-     "y": 120,
-     "w": 1100,
-     "h": 130
-    }
-   }
-  },
-  {
-   "obj": "st_buy",
-   "device": "stamp",
-   "meaning": "buy the boring plumbing",
-   "persist": {
-    "from_beat": "buildbuy",
-    "to_beat": "buildbuy"
-   },
-   "params": {
-    "kind": "block",
-    "paint": "channel",
-    "main": "BUY THE BORING PLUMBING",
-    "tiltDeg": 3,
-    "at": {
-     "x": 700,
-     "y": 820,
-     "w": 1000,
-     "h": 130
-    }
    }
   }
  ],
@@ -2545,28 +2217,28 @@
       "from_w": 0,
       "to_w": 10
      },
-     "viewer_task": "locate_story",
-     "point": "The AI maker buying its own tools is crazy",
+     "viewer_task": "verify_evidence",
+     "point": "Does the maker of Claude build its own tools?",
      "layout": "WINDOW",
      "plate": {
       "source": "take"
      },
      "uses": [
-      "l_crazy"
+      "h_q"
      ],
      "events": [
       {
        "at_w": 0,
-       "obj": "l_crazy",
+       "obj": "h_q",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
        "at_w": 10,
-       "obj": "l_crazy",
-       "verb": "exit",
-       "to_state": "dim",
+       "obj": "h_q",
+       "verb": "highlight",
+       "to_state": "CLAUDE",
        "silent": true
       }
      ],
@@ -2575,69 +2247,90 @@
     },
     {
      "id": "marks",
-     "role": "bridge",
+     "role": "anchor",
      "span": {
       "from_w": 11,
       "to_w": 53
      },
-     "viewer_task": "feel_stakes",
-     "point": "Anthropic, which everyone builds with, pays other companies for its tools",
-     "layout": "STAGE",
+     "viewer_task": "verify_evidence",
+     "point": "Anthropic pays Salesforce, Fin and Workday for its tools, though it could build them",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
-      "s_checkout",
-      "st_everyone",
-      "st_shops",
-      "st_could"
+      "m_sf",
+      "m_fin",
+      "m_wd",
+      "m_verdict"
      ],
      "events": [
       {
-       "at_w": 11,
-       "obj": "s_checkout",
+       "at_w": 14,
+       "obj": "m_sf",
        "verb": "enter",
-       "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 30,
-       "obj": "s_checkout",
-       "verb": "move",
-       "to_state": "1",
-       "silent": true
-      },
-      {
-       "at_w": 35,
-       "obj": "st_everyone",
-       "verb": "stamp",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 43,
-       "obj": "st_everyone",
+       "at_w": 20,
+       "obj": "m_sf",
        "verb": "exit",
        "to_state": "gone",
        "silent": true
       },
       {
-       "at_w": 45,
-       "obj": "st_shops",
+       "at_w": 21,
+       "obj": "m_fin",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 52,
-       "obj": "st_could",
-       "verb": "stamp",
+       "at_w": 27,
+       "obj": "m_fin",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 28,
+       "obj": "m_wd",
+       "verb": "enter",
        "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 34,
+       "obj": "m_wd",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 35,
+       "obj": "m_verdict",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 45,
+       "obj": "m_verdict",
+       "verb": "highlight",
+       "to_state": "BUYS.",
+       "silent": true
+      },
+      {
+       "at_w": 52,
+       "obj": "m_verdict",
+       "verb": "highlight",
+       "to_state": "CLAUDE.",
        "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "window"
     },
     {
      "id": "croc",
@@ -2757,9 +2450,7 @@
       "source": "none"
      },
      "uses": [
-      "s_balloon",
-      "st_10x",
-      "st_lit"
+      "s_balloon"
      ],
      "events": [
       {
@@ -2768,24 +2459,11 @@
        "verb": "enter",
        "to_state": "0",
        "silent": true
-      },
-      {
-       "at_w": 143,
-       "obj": "st_10x",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 146,
-       "obj": "st_lit",
-       "verb": "stamp",
-       "to_state": "visible",
-       "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "override_reason": "a comic scene moves the whole beat on his words (Krish, 19 Nov 2026: \"when the topic is dull but important, the visuals need to be 15/10 in terms of captivating\")"
     },
     {
      "id": "vibe",
@@ -2794,27 +2472,17 @@
       "from_w": 156,
       "to_w": 186
      },
-     "viewer_task": "feel_stakes",
+     "viewer_task": "connect_with_speaker",
      "point": "Building suddenly feels free: vibe coding",
-     "layout": "STAGE",
+     "layout": "F1",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
-     "uses": [
-      "s_magic"
-     ],
-     "events": [
-      {
-       "at_w": 156,
-       "obj": "s_magic",
-       "verb": "enter",
-       "to_state": "0",
-       "silent": true
-      }
-     ],
+     "uses": [],
+     "events": [],
      "transition_out": "cut",
-     "face": "off",
-     "override_reason": "a comic scene moves the whole beat on his words (Krish, 19 Nov 2026: \"when the topic is dull but important, the visuals need to be 15/10 in terms of captivating\")"
+     "face": "full",
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
     },
     {
      "id": "typed",
@@ -2942,27 +2610,17 @@
       "from_w": 270,
       "to_w": 300
      },
-     "viewer_task": "feel_stakes",
+     "viewer_task": "connect_with_speaker",
      "point": "So we went digging into the companies that did it",
-     "layout": "STAGE",
+     "layout": "F1",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
-     "uses": [
-      "s_dig"
-     ],
-     "events": [
-      {
-       "at_w": 270,
-       "obj": "s_dig",
-       "verb": "enter",
-       "to_state": "0",
-       "silent": true
-      }
-     ],
+     "uses": [],
+     "events": [],
      "transition_out": "cut",
-     "face": "off",
-     "override_reason": "a comic scene moves the whole beat on his words (Krish, 19 Nov 2026: \"when the topic is dull but important, the visuals need to be 15/10 in terms of captivating\")"
+     "face": "full",
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
     },
     {
      "id": "headlines",
@@ -3073,39 +2731,10 @@
      "face": "window"
     },
     {
-     "id": "swapclip",
-     "role": "pivot",
-     "span": {
-      "from_w": 360,
-      "to_w": 375
-     },
-     "viewer_task": "feel_stakes",
-     "point": "Workday went out and another rented app for paying staff came in",
-     "layout": "STAGE",
-     "plate": {
-      "source": "none"
-     },
-     "uses": [
-      "s_swap"
-     ],
-     "events": [
-      {
-       "at_w": 360,
-       "obj": "s_swap",
-       "verb": "enter",
-       "to_state": "0",
-       "silent": true
-      }
-     ],
-     "transition_out": "cut",
-     "face": "off",
-     "override_reason": "a comic scene moves the whole beat on his words (Krish, 19 Nov 2026: \"when the topic is dull but important, the visuals need to be 15/10 in terms of captivating\")"
-    },
-    {
      "id": "swap",
      "role": "pivot",
      "span": {
-      "from_w": 376,
+      "from_w": 360,
       "to_w": 406
      },
      "viewer_task": "understand_mechanism",
@@ -3115,21 +2744,35 @@
       "source": "take"
      },
      "uses": [
-      "l_cx",
-      "st_subbed"
+      "l_deel",
+      "l_cx"
      ],
      "events": [
       {
-       "at_w": 376,
-       "obj": "l_cx",
+       "at_w": 366,
+       "obj": "l_deel",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 405,
-       "obj": "st_subbed",
-       "verb": "stamp",
+       "at_w": 371,
+       "obj": "l_deel",
+       "verb": "highlight",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 375,
+       "obj": "l_deel",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 376,
+       "obj": "l_cx",
+       "verb": "enter",
        "to_state": "visible",
        "silent": true
       }
@@ -3152,9 +2795,7 @@
       "source": "none"
      },
      "uses": [
-      "s_shred",
-      "st_cancel",
-      "st_own"
+      "s_shred"
      ],
      "events": [
       {
@@ -3165,29 +2806,16 @@
        "silent": true
       },
       {
-       "at_w": 427,
-       "obj": "st_cancel",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
        "at_w": 431,
        "obj": "s_shred",
        "verb": "move",
        "to_state": "1",
        "silent": true
-      },
-      {
-       "at_w": 435,
-       "obj": "st_own",
-       "verb": "stamp",
-       "to_state": "visible",
-       "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "override_reason": "a comic scene moves the whole beat on his words (Krish, 19 Nov 2026: \"when the topic is dull but important, the visuals need to be 15/10 in terms of captivating\")"
     },
     {
      "id": "upkeep_cur",
@@ -3203,29 +2831,13 @@
       "source": "take"
      },
      "uses": [
-      "l_cur_600",
-      "st_2m",
-      "st_wow"
+      "l_cur_600"
      ],
      "events": [
       {
        "at_w": 438,
        "obj": "l_cur_600",
        "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 453,
-       "obj": "st_2m",
-       "verb": "stamp",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 455,
-       "obj": "st_wow",
-       "verb": "stamp",
        "to_state": "visible",
        "silent": true
       }
@@ -3236,7 +2848,7 @@
     },
     {
      "id": "sparks",
-     "role": "bridge",
+     "role": "anchor",
      "span": {
       "from_w": 457,
       "to_w": 472
@@ -3248,8 +2860,7 @@
       "source": "none"
      },
      "uses": [
-      "s_spark",
-      "st_easy"
+      "s_spark"
      ],
      "events": [
       {
@@ -3265,46 +2876,30 @@
        "verb": "move",
        "to_state": "1",
        "silent": true
-      },
-      {
-       "at_w": 469,
-       "obj": "st_easy",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      }
-     ],
-     "transition_out": "cut",
-     "face": "off"
-    },
-    {
-     "id": "miss",
-     "role": "anchor",
-     "span": {
-      "from_w": 473,
-      "to_w": 493
-     },
-     "viewer_task": "feel_stakes",
-     "point": "Writing the tool is cheap; owning it is the expensive part",
-     "layout": "STAGE",
-     "plate": {
-      "source": "none"
-     },
-     "uses": [
-      "s_bills"
-     ],
-     "events": [
-      {
-       "at_w": 473,
-       "obj": "s_bills",
-       "verb": "enter",
-       "to_state": "0",
-       "silent": true
       }
      ],
      "transition_out": "cut",
      "face": "off",
      "override_reason": "a comic scene moves the whole beat on his words (Krish, 19 Nov 2026: \"when the topic is dull but important, the visuals need to be 15/10 in terms of captivating\")"
+    },
+    {
+     "id": "miss",
+     "role": "bridge",
+     "span": {
+      "from_w": 473,
+      "to_w": 493
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Writing the tool is cheap; owning it is the expensive part",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
     },
     {
      "id": "puppy",
@@ -3580,7 +3175,7 @@
      "role": "payoff",
      "span": {
       "from_w": 733,
-      "to_w": 741
+      "to_w": 759
      },
      "viewer_task": "land_payoff",
      "point": "Fin runs on Claude: the AI maker pays for a bot on its own AI",
@@ -3603,35 +3198,6 @@
      "transition_out": "cut",
      "face": "window",
      "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
-    },
-    {
-     "id": "loop",
-     "role": "bridge",
-     "span": {
-      "from_w": 742,
-      "to_w": 759
-     },
-     "viewer_task": "feel_stakes",
-     "point": "The people who make the AI pay for a bot that runs on their own AI",
-     "layout": "STAGE",
-     "plate": {
-      "source": "none"
-     },
-     "uses": [
-      "s_loop"
-     ],
-     "events": [
-      {
-       "at_w": 742,
-       "obj": "s_loop",
-       "verb": "enter",
-       "to_state": "0",
-       "silent": true
-      }
-     ],
-     "transition_out": "cut",
-     "face": "off",
-     "override_reason": "a comic scene moves the whole beat on his words (Krish, 19 Nov 2026: \"when the topic is dull but important, the visuals need to be 15/10 in terms of captivating\")"
     },
     {
      "id": "focus",
@@ -3689,54 +3255,10 @@
      "override_reason": "a moving clip carries this beat; more device events would only pulse it (Krish, 18 Nov 2026: \"The crocodile scene just keeps pulsing as a still.\")"
     },
     {
-     "id": "buildbuy",
-     "role": "bridge",
-     "span": {
-      "from_w": 823,
-      "to_w": 845
-     },
-     "viewer_task": "feel_stakes",
-     "point": "Build what makes you different; buy the boring plumbing",
-     "layout": "STAGE",
-     "plate": {
-      "source": "none"
-     },
-     "uses": [
-      "s_shop",
-      "st_build",
-      "st_buy"
-     ],
-     "events": [
-      {
-       "at_w": 823,
-       "obj": "s_shop",
-       "verb": "enter",
-       "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 830,
-       "obj": "st_build",
-       "verb": "stamp",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 836,
-       "obj": "st_buy",
-       "verb": "stamp",
-       "to_state": "visible",
-       "silent": true
-      }
-     ],
-     "transition_out": "cut",
-     "face": "off"
-    },
-    {
      "id": "close",
      "role": "bridge",
      "span": {
-      "from_w": 846,
+      "from_w": 823,
       "to_w": 872
      },
      "viewer_task": "connect_with_speaker",

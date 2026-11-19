@@ -129,6 +129,14 @@
       "on": "2026-11-19",
       "artifact_hash": "4c042fbc455d0ab9a7f39c4bc9ac430a5031a088bf307a1e2c68bc2151aaece4",
       "said": "use labs and I sign off the four numbers, go Engine 4c042fbc"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "on": "2026-11-19",
+      "artifact_hash": "e74f8c6665fe4ee898dbd32e42e8eef8a73f2b029275645ca68c2e7f71fdad4b",
+      "said": "go engine e74f8c66"
     }
   ]
 }
