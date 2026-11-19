@@ -1,158 +1,166 @@
 {
-  "schema": "ve-engine-exceptions/1",
-  "about": "Krish's approvals of engine changes for this piece: the caption halo (BrandFrame.tsx), then the softer rack-focus defocus (said words blur 1 px and fade to 80%, from 3.5 px and 55%). velib/guards.py reads them beside the spec's approvals; scope engine waives nothing else. Each binds one engine hash; if the engine changes again before this piece renders, he is asked again.",
-  "approvals": [
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "said": "Approve halo",
-      "on": "2026-11-18",
-      "artifact_hash": "5cf6e6c8d55d536c89ac39dbdd1e7b10c7c3aa2f8c42859c00cf33811c9f738d"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "said": "soften, and get this to completion now",
-      "on": "2026-11-18",
-      "artifact_hash": "a2d1c7e35b628f68499e92d9579eb33caec41afbeba31f6519bcbce3a0b5bff8"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "said": "Approve denser halo and the proof",
-      "on": "2026-11-18",
-      "artifact_hash": "bc72335d4196d1561d4a4e76779bea868873a68371001864b918b8708ff9add6"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "said": "approve the lift",
-      "on": "2026-11-18",
-      "artifact_hash": "1b895a827a69a894d36533ab6be0e98771ba80a88dc3b9671eb23900abfc47c3"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "said": "Approve the merged engine and both proofs",
-      "on": "2026-11-18",
-      "artifact_hash": "3a1184398fbfe0df720c36881a9dbc93cbeda5e8fec2ba6f1f939528a17c8da8"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "said": "Approve engine fdb1b867",
-      "on": "2026-11-18",
-      "artifact_hash": "fdb1b867246820a58e9ca73bda0ffbea3c600a8aeb6accda3a41fe0aa152d857"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "said": "Approve engine ac725e9",
-      "on": "2026-11-18",
-      "artifact_hash": "ac725e9078f545461e84ab061a28ba754d83c25006c1b5e996e736259741b60d"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-18",
-      "artifact_hash": "094756f2f5b334977694bd8aa367e81a9a24b19b3717a2ce34246364df9a9104",
-      "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-18",
-      "artifact_hash": "04822336113486599141283318db989ba3ccc1cd0ce6abfb33ccc41a88fcbba8",
-      "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-18",
-      "artifact_hash": "20075f880b1a273854fa2b493a32acb2fb00876b39756504be736c16a099ddf9",
-      "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-18",
-      "artifact_hash": "f4b92cbe9d0726368c1f9a72f50d07208761819c0b1171d350dc832e6998d244",
-      "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-18",
-      "artifact_hash": "e6956dd1843f22ecb0e504ad910684bf41c1db2222e879746d79d8e5629c0fc6",
-      "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-18",
-      "artifact_hash": "a0e5f55e426ce8ece7578aa9ebb696d1736c9bcf51357fd69e11d64a804cefad",
-      "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-19",
-      "artifact_hash": "19e5124d1881ddc2abf3275ec3ad1ff32cc32c825589aa19e6cf045ace18d1bb",
-      "said": "go engine 19e5124d, go both proofs, go the third fact-gate run"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-19",
-      "artifact_hash": "38fdec84134a235bee73b990c373f26e0f4c079ff55208997eebf118c13d7f3f",
-      "said": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-19",
-      "artifact_hash": "4c042fbc455d0ab9a7f39c4bc9ac430a5031a088bf307a1e2c68bc2151aaece4",
-      "said": "use labs and I sign off the four numbers, go Engine 4c042fbc"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-19",
-      "artifact_hash": "e74f8c6665fe4ee898dbd32e42e8eef8a73f2b029275645ca68c2e7f71fdad4b",
-      "said": "go engine e74f8c66"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-19",
-      "artifact_hash": "43e5300e660bd46f5edaa6d56aa22b179c08a0b62d99cf81c4894aef7aba1d23",
-      "said": "go engine 43e5300e"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "on": "2026-11-19",
-      "artifact_hash": "116b43506facbc82498496c17f64d00ffe4f2bfd72ce234b1ff0be75ac9d477e",
-      "said": "go engine 116b4350"
-    }
-  ]
+ "schema": "ve-engine-exceptions/1",
+ "about": "Krish's approvals of engine changes for this piece: the caption halo (BrandFrame.tsx), then the softer rack-focus defocus (said words blur 1 px and fade to 80%, from 3.5 px and 55%). velib/guards.py reads them beside the spec's approvals; scope engine waives nothing else. Each binds one engine hash; if the engine changes again before this piece renders, he is asked again.",
+ "approvals": [
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "Approve halo",
+   "on": "2026-11-18",
+   "artifact_hash": "5cf6e6c8d55d536c89ac39dbdd1e7b10c7c3aa2f8c42859c00cf33811c9f738d"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "soften, and get this to completion now",
+   "on": "2026-11-18",
+   "artifact_hash": "a2d1c7e35b628f68499e92d9579eb33caec41afbeba31f6519bcbce3a0b5bff8"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "Approve denser halo and the proof",
+   "on": "2026-11-18",
+   "artifact_hash": "bc72335d4196d1561d4a4e76779bea868873a68371001864b918b8708ff9add6"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "approve the lift",
+   "on": "2026-11-18",
+   "artifact_hash": "1b895a827a69a894d36533ab6be0e98771ba80a88dc3b9671eb23900abfc47c3"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "Approve the merged engine and both proofs",
+   "on": "2026-11-18",
+   "artifact_hash": "3a1184398fbfe0df720c36881a9dbc93cbeda5e8fec2ba6f1f939528a17c8da8"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "Approve engine fdb1b867",
+   "on": "2026-11-18",
+   "artifact_hash": "fdb1b867246820a58e9ca73bda0ffbea3c600a8aeb6accda3a41fe0aa152d857"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "Approve engine ac725e9",
+   "on": "2026-11-18",
+   "artifact_hash": "ac725e9078f545461e84ab061a28ba754d83c25006c1b5e996e736259741b60d"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-18",
+   "artifact_hash": "094756f2f5b334977694bd8aa367e81a9a24b19b3717a2ce34246364df9a9104",
+   "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-18",
+   "artifact_hash": "04822336113486599141283318db989ba3ccc1cd0ce6abfb33ccc41a88fcbba8",
+   "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-18",
+   "artifact_hash": "20075f880b1a273854fa2b493a32acb2fb00876b39756504be736c16a099ddf9",
+   "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-18",
+   "artifact_hash": "f4b92cbe9d0726368c1f9a72f50d07208761819c0b1171d350dc832e6998d244",
+   "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-18",
+   "artifact_hash": "e6956dd1843f22ecb0e504ad910684bf41c1db2222e879746d79d8e5629c0fc6",
+   "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-18",
+   "artifact_hash": "a0e5f55e426ce8ece7578aa9ebb696d1736c9bcf51357fd69e11d64a804cefad",
+   "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-19",
+   "artifact_hash": "19e5124d1881ddc2abf3275ec3ad1ff32cc32c825589aa19e6cf045ace18d1bb",
+   "said": "go engine 19e5124d, go both proofs, go the third fact-gate run"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-19",
+   "artifact_hash": "38fdec84134a235bee73b990c373f26e0f4c079ff55208997eebf118c13d7f3f",
+   "said": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-19",
+   "artifact_hash": "4c042fbc455d0ab9a7f39c4bc9ac430a5031a088bf307a1e2c68bc2151aaece4",
+   "said": "use labs and I sign off the four numbers, go Engine 4c042fbc"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-19",
+   "artifact_hash": "e74f8c6665fe4ee898dbd32e42e8eef8a73f2b029275645ca68c2e7f71fdad4b",
+   "said": "go engine e74f8c66"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-19",
+   "artifact_hash": "43e5300e660bd46f5edaa6d56aa22b179c08a0b62d99cf81c4894aef7aba1d23",
+   "said": "go engine 43e5300e"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-19",
+   "artifact_hash": "116b43506facbc82498496c17f64d00ffe4f2bfd72ce234b1ff0be75ac9d477e",
+   "said": "go engine 116b4350"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "on": "2026-11-19",
+   "artifact_hash": "6876ffb1d60c2d230d58f84e2210ba215e6db98035871bfb2bde97b5ce363a14",
+   "said": "go engine 6876ffb1"
+  }
+ ]
 }
