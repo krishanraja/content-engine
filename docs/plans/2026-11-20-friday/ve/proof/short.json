@@ -10,7 +10,7 @@
     16.967,
     20.367
   ],
-  "sha256": "c05c6e09f0359204cf29a37643a59c3d9ee0952950a308de9b62ad36a401b8c9",
+  "sha256": "52eb73487a16dc6d65db0e9a68d905110f0b44f91668da84d71d3657cd5eb973",
   "spec_sha256": "abe42dc14dcbe4631f7162e2c3caa5517f428140307d25fe9e2696242ec9cafb",
   "structure": {
     "format": "face-with-proof",
@@ -236,7 +236,7 @@
   "title": {
     "in_main": false,
     "clip": "short.title.mp4",
-    "sha256": "2d8b0f68533582e35bfa5ac15f2aef9e091f2830dc4d03f06a9519b3ae2998e7",
+    "sha256": "3d950c5e9766dbcd958ca86f077efc4091f460d0d33c57fe6d0de7bae2a8db06",
     "start": 15.933,
     "end": 26.1
   },
@@ -244,7 +244,8 @@
     "measured_pass": false,
     "complete": false,
     "failing": [
-      "captions.off_face",
+      "captions.ocr",
+      "captions.render",
       "motion.cue_sync"
     ]
   },
@@ -262,7 +263,7 @@
       "caption"
     ]
   ],
-  "engine_sha256": "f0482cf380dc156e46a09e83c007c47830383649ae8c5c59961021a23cc4cb52",
+  "engine_sha256": "199c7aaed062623c4478ce4fe14e3b5c450d2b933f5bf72959590eae715e2497",
   "assets_sha256": {
     "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
     "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
@@ -277,7 +278,7 @@
     "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
     "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
   },
-  "made_at": "2026-11-19T18:51:13Z",
+  "made_at": "2026-11-19T19:09:31Z",
   "frames": {
     "pass": true,
     "status": "ok",

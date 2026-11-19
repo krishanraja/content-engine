@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-11-20-friday/ve/proof/short.mp4",
-  "sha256": "c05c6e09f0359204cf29a37643a59c3d9ee0952950a308de9b62ad36a401b8c9",
+  "sha256": "52eb73487a16dc6d65db0e9a68d905110f0b44f91668da84d71d3657cd5eb973",
   "duration_s": 8.0,
   "format": "face-with-proof",
   "checks": {
@@ -73,22 +73,22 @@
         {
           "page": 0,
           "frame": 20,
-          "text": "TEAMS TO SORT :\nPRICING ~—\nOUT /",
-          "agreement": 1.0,
-          "variant": "highlight",
-          "pass": true
+          "text": "TEAMS TO SORT\nPRICING",
+          "agreement": 0.8,
+          "variant": "cream_half",
+          "pass": false
         },
         {
           "page": 1,
           "frame": 60,
-          "text": "AND A y _\nCHATBOT\nBEAT THEM",
+          "text": "AND A\nCHATBOT\nBEAT THEM",
           "agreement": 1.0,
-          "variant": "highlight",
+          "variant": "cream_half",
           "pass": true
         }
       ],
       "target": "token agreement >= 0.98 on every page",
-      "pass": true,
+      "pass": false,
       "status": "measured"
     },
     "brand.no_mark": {
@@ -96,7 +96,7 @@
         {
           "beat": "face",
           "frame": 34,
-          "score": 0.15550738942794273,
+          "score": 0.152107989045141,
           "pass": true
         },
         {
@@ -108,7 +108,7 @@
         {
           "beat": "skeletons",
           "frame": 205,
-          "score": 0.1791238950326916,
+          "score": 0.17727504085999943,
           "pass": true
         }
       ],
@@ -123,8 +123,8 @@
           "atFrame": 0,
           "peak_frame": 1,
           "lag_frames": 1,
-          "peak_difference": 12.337018013000488,
-          "event_difference": 12.337018013000488,
+          "peak_difference": 12.301831245422363,
+          "event_difference": 12.301831245422363,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -134,8 +134,8 @@
           "atFrame": 0,
           "peak_frame": 1,
           "lag_frames": 1,
-          "peak_difference": 12.337018013000488,
-          "event_difference": 12.337018013000488,
+          "peak_difference": 12.301831245422363,
+          "event_difference": 12.301831245422363,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -143,10 +143,10 @@
         {
           "event": "face-2",
           "atFrame": 0,
-          "peak_frame": 2,
-          "lag_frames": 2,
-          "peak_difference": 19.164356231689453,
-          "event_difference": 19.164356231689453,
+          "peak_frame": 3,
+          "lag_frames": 3,
+          "peak_difference": 19.122915267944336,
+          "event_difference": 18.90610694885254,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -156,9 +156,9 @@
           "atFrame": 33,
           "peak_frame": 36,
           "lag_frames": 3,
-          "peak_difference": 31.760513305664062,
-          "event_difference": 30.849512100219727,
-          "threshold": 13.214531421661377,
+          "peak_difference": 32.12203598022461,
+          "event_difference": 32.002342224121094,
+          "threshold": 14.08588171005249,
           "gradual": false,
           "pass": true
         },
@@ -167,9 +167,9 @@
           "atFrame": 36,
           "peak_frame": 33,
           "lag_frames": -3,
-          "peak_difference": 15.670050621032715,
-          "event_difference": 11.074969291687012,
-          "threshold": 14.413427352905273,
+          "peak_difference": 14.772560119628906,
+          "event_difference": 10.353296279907227,
+          "threshold": 13.924567222595215,
           "gradual": false,
           "pass": false
         },
@@ -178,9 +178,9 @@
           "atFrame": 69,
           "peak_frame": 69,
           "lag_frames": 0,
-          "peak_difference": 71.51006317138672,
-          "event_difference": 71.51006317138672,
-          "threshold": 8.751277685165405,
+          "peak_difference": 71.10057067871094,
+          "event_difference": 71.10057067871094,
+          "threshold": 8.846811532974243,
           "gradual": false,
           "pass": true
         },
@@ -189,8 +189,8 @@
           "atFrame": 171,
           "peak_frame": 172,
           "lag_frames": 1,
-          "peak_difference": 26.019716262817383,
-          "event_difference": 26.019716262817383,
+          "peak_difference": 26.02297019958496,
+          "event_difference": 26.02297019958496,
           "threshold": 6.292910814285278,
           "gradual": false,
           "pass": true
@@ -323,59 +323,57 @@
             "fromFrame": 0,
             "text": "teams to sort pricing out",
             "change_frame": 1,
-            "frame": 20,
-            "read": "TEAMS TO SORT :\nPRICING ~—\nOUT /",
-            "score": 1.0,
-            "exact": true,
-            "status": "pass"
+            "frame": 22,
+            "read": "TEAMS TO SORT =~\nPRICING ~",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"TEAMS TO SORT =~\nPRICING ~\" near frame 22, not \"teams to sort pricing out\" (score 0.8, needs an exact match and 0.98)"
           },
           {
             "page": 1,
             "fromFrame": 29,
             "text": "and a chatbot beat them.",
             "change_frame": 28,
-            "frame": 61,
+            "frame": 60,
             "read": "AND A\nCHATBOT\nBEAT THEM",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           }
         ],
-        "failed": [],
+        "failed": [
+          {
+            "page": 0,
+            "fromFrame": 0,
+            "text": "teams to sort pricing out",
+            "change_frame": 1,
+            "frame": 22,
+            "read": "TEAMS TO SORT =~\nPRICING ~",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"TEAMS TO SORT =~\nPRICING ~\" near frame 22, not \"teams to sort pricing out\" (score 0.8, needs an exact match and 0.98)"
+          }
+        ],
         "changes_found": 8,
-        "status": "pass"
+        "status": "fail",
+        "reason": "1 of 2 caption page(s) are not drawn as the props say near their start"
       },
       "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
-      "pass": true,
+      "pass": false,
       "status": "measured",
       "agreement": null,
-      "summary": "every caption page reads as the props say"
+      "summary": "1 of 2 caption page(s) are not drawn as the props say near their start: caption page 0 reads \"TEAMS TO SORT =~\nPRICING ~\" near frame 22, not \"teams to sort pricing out\" (score 0.8, needs an exact match and 0.98)"
     },
     "captions.off_face": {
       "value": {
         "pages": 2,
-        "on_face": [
-          {
-            "at_s": 0.77,
-            "text": "teams to sort pricing out",
-            "caption": [
-              58,
-              974,
-              824,
-              358
-            ],
-            "face": [
-              479,
-              550,
-              390,
-              390
-            ]
-          }
-        ],
-        "count": 1
+        "on_face": [],
+        "count": 0
       },
       "target": "no caption page overlaps the face box (+10%)",
-      "pass": false
+      "pass": true
     },
     "plate.head_in_band": {
       "value": null,
@@ -396,7 +394,7 @@
         {
           "edge_frame": 69,
           "barest_frame": 69,
-          "stage_std": 51.5,
+          "stage_std": 51.51,
           "floor": 3.0,
           "pass": true
         },
@@ -434,7 +432,7 @@
     "picture.as_shot": {
       "value": {
         "face": {
-          "L": 7.77,
+          "L": 7.55,
           "a": 0.45,
           "b": 0.57
         }
