@@ -415,7 +415,8 @@
      {
       "id": "Workday"
      }
-    ]
+    ],
+    "tiles": true
    }
   },
   {
