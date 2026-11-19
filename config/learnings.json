@@ -2840,6 +2840,41 @@
           "how": "engine and rules pinned at Sign storyboard, never a hash to approve"
         }
       ]
+    },
+    {
+      "id": "recipes-rated-before-use",
+      "on": "2026-11-19",
+      "krish": "the card generates over my face, the captions are awful, and the generated animations are tacky and not art directed well within the space at all",
+      "why": "The generated animations and the free caption picks were not art directed within the space. The default staging and caption combination was never rated by him, and a session picked styles piece by piece.",
+      "means": "Ruling (Krish, 2026-11-19): recipes plus one named experiment slot proven before Sign storyboard. A recipe in config/ve/recipes/ carries his rating (rated, null until he rates it); from pieces frozen at ve expect on or after 23 Nov 2026, ve lint refuses a style that is not a recipe he rated 9 or more unless the spec names its one experiment (style.experiment), and captions and generated assets come only from the recipe.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/floor.py",
+          "contains": "def recipe_lints(",
+          "how": "ve lint refuses an unrated recipe, a caption style or a generated asset outside it, from 23 Nov 2026"
+        },
+        {
+          "file": "config/ve/recipes/data-story.json",
+          "contains": "\"rated\": null",
+          "how": "the recipe's rating field, null until Krish rates it"
+        }
+      ]
+    },
+    {
+      "id": "floor-not-target",
+      "on": "2026-11-19",
+      "krish": "they are so poor that I can't even bring myself to publish them. I refuse to. They're just the worst. Visually, motion, post-production, and everything is a zero out of ten. I'm going to need you to make sure that this can never happen again.",
+      "why": "THE_BAR says rates are not the bar, so ve pace only flagged; a cut below every one of his references was still filed.",
+      "means": "The bottom of his own references is a floor; rates above it are never a target. ve pace stays a description; the floor lives in readiness (scripts/velib/floor.py).",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "docs/ve/INGREDIENTS.md",
+          "contains": "The bottom of his own references is a floor, and rates above it are never a target",
+          "how": "THE_BAR wording for the pace floor"
+        }
+      ]
     }
   ]
 }

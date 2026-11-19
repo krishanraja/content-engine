@@ -312,8 +312,13 @@ It places each number among two sets in `config/ve/pace-references.json`:
   `python3 scripts/quick-edit/references.py fetch`);
 - his three cuts above (`house`).
 
-A number below every one of them prints BELOW EVERY REFERENCE. It flags and never refuses, because THE_BAR says rates
-are not the bar.
+A number below every one of them prints BELOW EVERY REFERENCE. `ve pace` itself only describes, because THE_BAR says
+rates are not the bar. **The bottom of his own references is a floor, and rates above it are never a target** (Krish,
+2026-11-19: "make sure that this can never happen again", of a long that measured 2.21 events a second and 5% of the
+frame active, below every reference on both). The floor lives in readiness, not in `ve pace`: a cut with any measure
+below every reference is held, so `ve status` never says READY for it and prints one line ("held: below the floor
+..."), and `ve file` refuses it (`scripts/velib/floor.py`). A held cut is re-rendered once on a proven recipe, never
+patched beat by beat; if it is still held, Krish gets one line and nothing is filed.
 
 | Measured on 13 Nov 2026 | Events a second | Longest gap | Frame used |
 |---|---|---|---|

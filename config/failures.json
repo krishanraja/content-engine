@@ -4408,6 +4408,84 @@
           "test": "python3 tests/ve_idea_numbers_guards_test.py"
         }
       ]
+    },
+    {
+      "id": "cut-zero-out-of-ten",
+      "on": "2026-11-19",
+      "krish": "they are so poor that I can't even bring myself to publish them. I refuse to. They're just the worst. Visually, motion, post-production, and everything is a zero out of ten. I'm going to need you to make sure that this can never happen again.",
+      "what": "The week's ve cuts reached him well below his own references. The rejected long measured, with ve pace, 2.21 events a second against his references' 2.87 to 4.6 and 5% of the frame active against 10% to 100%: BELOW EVERY REFERENCE on both. The picture was his vertical take in a pillar on the right, about two thirds of the frame a blurred dark backdrop with nothing on it, one-word grey captions in a corner and two flat mint stat bars.",
+      "symptom": "A cut slower and emptier than every cut he keeps was filed and shown to him.",
+      "cause": "ve pace was written to flag and never refuse (THE_BAR), so nothing held a cut below every reference; and nothing asked that the panel beside his take on a staged cut carry anything.",
+      "status": "guarded",
+      "mode": "cut-below-his-references",
+      "guard_level": "gate",
+      "surface": "ve status, ve file and ve lint on every ve cut",
+      "watch": {
+        "formats": [
+          "long_video",
+          "short_video"
+        ],
+        "line": "No cut with any ve pace measure below every reference he keeps, and no staged panel beside his take empty or only a backdrop for more than 1.5 s; a held cut is rebuilt once on a proven recipe, never patched."
+      },
+      "guards": [
+        {
+          "file": "scripts/velib/packet.py",
+          "contains": "floor.pace_problems(video, digest",
+          "how": "readiness holds a cut with any ve pace measure below every reference, so ve status never says READY and ve file refuses it",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/ve.py",
+          "contains": "print(floor.held_line(cut, state['floor']))",
+          "how": "ve status prints one held line for Krish, never a list of patches",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/floor.py",
+          "contains": "def dead_panel_lints(",
+          "how": "ve lint refuses a staged cut whose panel beside his take holds nothing or only a backdrop for more than 1.5 s",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        }
+      ]
+    },
+    {
+      "id": "card-drawn-over-his-face",
+      "on": "2026-11-19",
+      "krish": "the card generates over my face, the captions are awful, and the generated animations are tacky and not art directed well within the space at all",
+      "what": "On the Wed short a card was drawn over his face and the captions sat badly; the face check ran only after render and failed open where no detector ran.",
+      "symptom": "Graphics and captions over his face reached him.",
+      "cause": "Nothing before render knew where his face was: ve faces kept no face box, and compile placed devices and captions without one.",
+      "status": "guarded",
+      "mode": "graphic-over-face",
+      "guard_level": "lint_refuse",
+      "surface": "ve faces, ve compile, ve lint and ve expect on every ve cut that shows his take",
+      "watch": {
+        "formats": [
+          "long_video",
+          "short_video"
+        ],
+        "line": "Run ve faces on every take before compile: compile writes the face keep-out and refuses a caption, staged device region or backdrop panel on it."
+      },
+      "guards": [
+        {
+          "file": "scripts/velib/faceflags.py",
+          "contains": "def landmark_box(",
+          "how": "ve faces keeps the face's box at every sample",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "keepout.apply(props, spec, cut_id",
+          "how": "compile writes faceKeepOut per beat and refuses a caption, device region or panel that meets it",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/keepout.py",
+          "contains": "def missing_lints(",
+          "how": "a take with no face track is named by ve expect and refused by ve lint from 23 Nov 2026",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        }
+      ]
     }
   ]
 }

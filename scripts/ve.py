@@ -833,6 +833,12 @@ def cmd_status(args) -> int:
     for cut in spec['cuts']:
         state = packet.readiness(spec, cut, directory)
         mechanical, design, final = state['mechanical'], state['design'], state['final']
+        if state.get('floor'):
+            # Held means rebuild, never patch (Krish, 2026-11-19): one line, never a list of fixes.
+            from velib import floor
+            print(floor.held_line(cut, state['floor']))
+            ready = False
+            continue
         print(f'{cut}:')
         print('  mechanical: ' + ('INVALID (' + '; '.join(mechanical) + ')' if mechanical else 'VALID'))
         print('  design: ' + ('NOT APPROVED (' + '; '.join(design) + ')' if design else 'APPROVED'))
@@ -1010,7 +1016,7 @@ def cmd_faces(args) -> int:
             return 1
         found = faceflags.flags(scanned)
         out = write_json(faceflags.faces_path(directory, args.take), {'take': args.take, 'media_sha256': record['media']['sha256'],
-                                                                      **found})
+                                                                      **found, 'boxes': faceflags.boxes(scanned)})
         counts = {kind: sum(1 for w in found['windows'] if w['kind'] == kind) for kind in faceflags.KINDS}
         print(f"ve faces: {found['with_face']} of {found['samples']} samples see his face; "
               + ', '.join(f'{n} {kind.replace("_", " ")}' for kind, n in counts.items()) + ' window(s); advisory, uncalibrated')
@@ -1750,7 +1756,13 @@ def cmd_compile(args) -> int:
     report = {}
     from velib import takes, verdict
     frame_source, take_frame = takes.cut_frame(spec, args.cut, verdict.ve_dir(Path(args.spec)))
-    props = compile_cut(spec, args.cut, words, args.assets_dir, report=report, edl=edl, take_frame=take_frame)
+    from velib import keepout
+    ve = verdict.ve_dir(Path(args.spec))
+    faces = {take: found for take in (sorted(edl['takes']) if edl is not None else [spec['cuts'][args.cut]['take']])
+             if (found := keepout.track(ve, take)) is not None}
+    props = compile_cut(spec, args.cut, words, args.assets_dir, report=report, edl=edl, take_frame=take_frame, faces=faces)
+    if not faces:
+        print('ve compile: no face track for this cut\'s take: nothing was kept off his face (run ve faces)')
     report['take_frame'] = {'source': frame_source, **(take_frame or {})}
     # The piece id is a directory name, never an arbitrary output path.
     piece = spec['piece_id']

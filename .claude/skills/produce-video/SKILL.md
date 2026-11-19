@@ -274,7 +274,8 @@ advisory row until calibrated; and every gate below still holding. It
 builds no publish board: it records each cut and each held cut with its
 reason on the piece, which the live board shows, never Claude on a timer
 (Krish, 2026-10-29: "I want zero Claude routines").
-No one is in its chat.
+No one is in its chat. A held cut is rebuilt once on a proven recipe, never
+patched; still held: one line, nothing filed.
 
 ## 1. Preflight: which tool, which machine
 

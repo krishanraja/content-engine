@@ -465,7 +465,7 @@ def _params(params: dict, source) -> dict:
 
 
 def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Path, *, report: dict | None = None,
-                edl: dict | None = None, take_frame: dict | None = None) -> dict:
+                edl: dict | None = None, take_frame: dict | None = None, faces: dict | None = None) -> dict:
     """Return EngineRenderProps without writing files or changing the spec.
 
     With an EDL from ve conform (already through its F09 lint), the source edits are applied: the words are the
@@ -782,6 +782,14 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     if spec.get('character') and cut_id in spec['character'].get('cuts', []):
         from .character_track import compile_track
         props['character'] = compile_track(spec, cut_id, rows, props, assets_dir)
+    # Nothing is drawn over his face (Krish, 2026-11-19: "the card generates over my face"): the face keep-out per beat from
+    # the take's face track (faces: take -> its boxes, velib/keepout.py), and a refusal of anything compile places on it.
+    from . import keepout  # noqa: PLC0415
+    face_problems, face_report = keepout.apply(props, spec, cut_id, edl=edl, tracks=faces, take_frame=take_frame)
+    if report is not None:
+        report['face_keepout'] = face_report
+    if face_problems:
+        raise ValueError('; '.join(face_problems))
     return props
 
 
