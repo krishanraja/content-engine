@@ -10,3 +10,5 @@
 {"ts": "2026-11-18T23:02:52.330627Z", "kind": "preflight", "amount": 0, "note": "floor", "receipt": {"check": "floor", "version_or_hash": "70740fd89c622a5a", "at": "2026-11-18T23:02:52.330627Z", "by": "Claude Code", "format": "long_video"}}
 {"ts": "2026-11-19T17:47:40.491026Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "d79de172dbc8605c", "at": "2026-11-19T17:47:40.491026Z", "by": "Claude Code"}}
 {"ts": "2026-11-19T17:47:40.574886Z", "kind": "preflight", "amount": 0, "note": "floor", "receipt": {"check": "floor", "version_or_hash": "46b8d9014ac69ece", "at": "2026-11-19T17:47:40.574886Z", "by": "Claude Code", "format": "short_video"}}
+{"ts": "2026-11-19T18:14:46.137373Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "d79de172dbc8605c", "at": "2026-11-19T18:14:46.137373Z", "by": "Claude Code"}}
+{"ts": "2026-11-19T18:14:46.207099Z", "kind": "preflight", "amount": 0, "note": "floor", "receipt": {"check": "floor", "version_or_hash": "46b8d9014ac69ece", "at": "2026-11-19T18:14:46.207099Z", "by": "Claude Code", "format": "short_video"}}
