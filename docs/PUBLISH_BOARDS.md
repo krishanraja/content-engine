@@ -1255,6 +1255,10 @@ link the assets in Google Drive as well as see them if I am to approve them".
   cannot be read), the same way as a cut: copied once, then a short signed link (302).
 - **Held by:** `tests/control-plane/board-drive.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
 
+## Approve proof needs a show receipt (Krish, 2026-11-19)
+
+His Approve proof (`picks/<day>-proof`, `picks/<day>-proof-<8 hex>`, kind `approve_proof`) is refused with `409 proof_not_shown` unless the piece carries a material with role `show_receipt` whose text is `ve show-check`'s receipt for that exact clip (`cut_sha256` = the press's `sha256`, `ok: true`, nothing missing): qc passed on the file, the separate Critic's verdict, every row of `config/ve/pre-show-checklist.json`, and a recorded full-size watch and listen (`docs/ve/ENGINE.md`, "The show gate"). A Reject is never refused. Config: `config/ve/show-gate.json` `board` (mode, `enforce_from_week`). Held by `tests/control-plane/board-show-gate.test.ts`.
+
 ## Approve for publish, bound to the manifest (contract 1.8.0)
 
 Growth posts only what Krish approved (docs/GROWTH-HANDOFF.md, "The piece manifest"). A piece's draft manifest

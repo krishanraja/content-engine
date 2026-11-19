@@ -20,3 +20,5 @@ description: "Run a piece through ve, the spec-driven video engine. Use when Kri
    **Codex route: never ask Krish how to reach Codex. Claude starts Codex only through scripts/codex_thread.mjs** (Ruling, Krish, 2026-11-15). Follow `references/codex-route.md` (`ve dispatch` picks the route: here, or the lane to his PC).
    Carousels, memes, Notes images and off-day voiceover shorts are made in a Claude session with the Codex plugin (Ruling, Krish, 2026-11-13): `.agents/skills/ve/references/pictures.md`.
 8. Batch questions/end at gates. Never publish/send/schedule. Recipes and realism/credit rulings follow config/ve/tools.json.
+
+Show gate: nothing goes to Krish until `ve show-check` passes (docs/ve/ENGINE.md).

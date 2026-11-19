@@ -1,0 +1,27 @@
+{
+  "_about": "The show gate (Krish, 2026-11-19: \"Krish was the quality check. Cuts reached him before anyone had watched them.\"). A proof or a render is shown to Krish only with a show receipt bound to that exact file's sha256: ve qc passed on it, the separate Critic's verdict on it, the pre-show checklist answered, and a recorded full-size watch and listen against the script. scripts/velib/showgate.py builds and reads it; `ve show-check <piece> --cut X` says what is missing; the board's Approve proof press refuses a proof with no receipt (apps/control-plane/api/board/_showGate.ts). Nothing here is about one piece: a new rule is a row in config/ve/pre-show-checklist.json, never code.",
+  "enforce_from": "2026-11-20",
+  "enforce_from_why": "A piece published before this date is already in production or approved; the gate does not change it mid-piece (config/failures.json F33). Set it earlier to bring pieces in flight under the gate; that is Krish's call.",
+  "board": {
+    "mode": "enforce",
+    "enforce_from_week": "2026-11-16",
+    "_why": "The board's Approve proof refuses a proof with no receipt for its sha256. mode off turns the refusal off without touching ve. enforce_from_week is the Monday of the first week it binds; a proof of an earlier week is never refused."
+  },
+  "bind_unshown": {
+    "enabled": false,
+    "_why": "When true, a cut not yet shown to Krish (no show receipt for any cut of the piece, no approved proof) meets every rule that exists when it is shown, whatever its publish_day, instead of only the rules whose binds_from is on or before its publish_day. Off by default: turning it on changes the rules a piece in flight is held to, which is Krish's call (F33)."
+  },
+  "qc": {
+    "require_complete": true,
+    "_why": "ve qc must have measured every check (no not_run rows) on this exact file."
+  },
+  "watch": {
+    "min_frames": 12,
+    "min_listen_fraction": 0.9,
+    "_why": "A watch is recorded by a reviewer who is not ve and did not write the spec: frames looked at at full size (at least min_frames, covering every beat), the whole audio heard (at least min_listen_fraction of the duration) and compared to the script. The Critic's verdict already requires every beat viewed; this adds the audio and the script."
+  },
+  "defects": {
+    "file": "defects.json",
+    "_why": "The count of faults Krish found himself, per piece, written by `ve defect add` from his words (the board's comment or a rejection). The target is zero; scripts/velib/showgate.py defect_count reads it."
+  }
+}
