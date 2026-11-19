@@ -259,6 +259,19 @@ week, then is retired by his word. The count is kept in `docs/ve/STATUS.md` ("Ph
 with its piece, shape, file SHA-256 and the evidence for all five; nothing counts a cut by itself today, so the session
 that files a series cut on ve updates it.
 
+## The show gate: nothing reaches Krish before anyone has watched it (19 Nov 2026)
+
+Krish, 2026-11-19, of the Tue 17 and Wed 18 pieces, which each reached him with a dozen faults he caught himself: "Krish was the quality check." A proof or a render is shown to him only with a **show receipt** (`show-receipt.<label>.json` in the piece's ve folder) bound to that exact file's sha256. `scripts/velib/showgate.py` builds it; the rules are rows in config, never code, so it holds for any piece:
+
+- **qc**: `ve qc` measured every check on this file and they pass (qc.<label>.json bound to the same sha256, complete).
+- **critic**: the separate Critic's verdict on this file (`verdict.<label>.json`): bound to the sha256, no blocking finding, and for a whole cut every beat viewed.
+- **checklist**: every row of `config/ve/pre-show-checklist.json` (one row per thing he has had to say more than once about a cut: his words, the failure it came from) answered for this file. A row is answered by the `ve qc` rows it names when every one ran and passed; with none named, or one that did not run, the reviewer attests it in one line citing a frame or a time; a named qc row that FAILED fails the row whatever is attested. `ve critic --pre` shows the reviewer the whole list before anything is made.
+- **watched**: a recorded full-size watch and listen: `ve show-record <piece> --cut X [--proof] --by NAME --frames 1.2,5,... --heard-s N --script --attest file.json` (a reviewer who is not ve; at least `watch.min_frames` frames, at least `watch.min_listen_fraction` of the audio heard, the script open beside it).
+
+`ve show-check <piece> --cut X [--proof]` prints what is missing and writes the receipt. `ve proof` writes the pending receipt and says what is missing; `ve file` refuses a whole cut with no complete receipt; and the board's **Approve proof** press is refused (409 `proof_not_shown`, `apps/control-plane/api/board/_showGate.ts`) until a receipt for the clip's sha256 is filed on the piece (`board_session.py <piece> add <receipt> --role show_receipt`). His Reject is never refused.
+
+Held to a piece published from `config/ve/show-gate.json` `enforce_from` (2026-11-20) and to board weeks from `board.enforce_from_week`, so a piece in production is not changed mid-piece (config/failures.json F33); an earlier date is Krish's call. `bind_unshown` (on since 2026-11-19, Krish: "yes to all 3") makes a cut that has not yet been shown meet every rule that exists on the day it is shown rather than only the rules whose `binds_from` its publish day reaches (`guards.bind_day`). **The engine stays pinned**: `engine.json` records the engine files' hash and the commit it was written at; a merge that touches no engine file (`config/ve/production-guards.json` engine.paths) changes nothing, and for one that does, `ve pin <piece>` prints the `git worktree` that keeps rendering on exactly the engine he approved. `ve defect <piece> add --words "<his words>" --where <where>` counts the faults he found himself (target zero). **Red first**: `scripts/check_ruling_linked.py` (in `npm run verify`) refuses a commit body or now-note with a video-production `Ruling (Krish, ...)` line that names no `Failure: <id>` or `Learning: <id>` line for an entry in config/failures.json or config/learnings.json (`Red-first: not needed, <reason>` is the one escape).
+
 ## Rules
 
 - Captions always on (schema); colour roles only, never hex.

@@ -23,6 +23,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
 from datetime import date, datetime, timezone
 from pathlib import Path
 
@@ -35,6 +36,21 @@ ROLE = re.compile(r'HOUSE_FONTS\.([a-z]+)')
 
 def config() -> dict:
     return load_json(CONFIG / 'production-guards.json')
+
+
+_BIND_DAY: list[str | None] = [None]
+
+
+def set_bind_day(day: str | None) -> None:
+    """The day the rules bind as of for the checks that follow (showgate.effective_day): None means the piece's own publish_day."""
+    _BIND_DAY[0] = day
+
+
+def bind_day(spec: dict) -> str:
+    """The day a rule's binds_from is compared with: the piece's publish_day, or, for a cut not yet shown to Krish when
+    config/ve/show-gate.json bind_unshown is on, the day it is shown (showgate.binds)."""
+    own = str(spec.get('publish_day') or '')
+    return max(own, _BIND_DAY[0]) if _BIND_DAY[0] else own
 
 
 def motion_from() -> str:
@@ -246,7 +262,7 @@ def annotation_lints(spec: dict) -> list[str]:
     AT STAKE underline; velib/qc_onscreen.py, config/ve/onscreen-checks.json). Binds pieces from its binds_from, so a
     piece already in production is not refused mid-piece (F33)."""
     from . import qc_onscreen  # noqa: PLC0415
-    if not qc_onscreen.bound(spec.get('publish_day')):
+    if not qc_onscreen.bound(bind_day(spec)):
         return []
     beats = [b for cut in (spec.get('cuts') or {}).values() for b in cut.get('beats') or []]
     return [f"annotation.target {p['obj']}{' (beat ' + p['beat'] + ')' if p.get('beat') else ''}: {p['why']}"
@@ -258,7 +274,7 @@ def one_object_problems(spec: dict) -> list[str]:
     cut of a piece published from config one_object.from, so no past piece is judged by it."""
     rules = config()['one_object']
     whole = any(not c.get('excerpt', False) for c in (spec.get('cuts') or {}).values())
-    if not whole or str(spec.get('publish_day') or '') < rules['from']:
+    if not whole or bind_day(spec) < rules['from']:
         return []
     from . import ideaguard  # noqa: PLC0415
     return ideaguard.one_object_problems(spec, rules)
@@ -266,7 +282,7 @@ def one_object_problems(spec: dict) -> list[str]:
 
 def pre_critic_bound(spec: dict) -> bool:
     whole = any(not c.get('excerpt', False) for c in (spec.get('cuts') or {}).values())
-    return whole and str(spec.get('publish_day') or '') >= config()['pre_critic']['from']
+    return whole and bind_day(spec) >= config()['pre_critic']['from']
 
 
 def pre_critic_lints(spec: dict, spec_path) -> list[str]:
@@ -311,10 +327,19 @@ def lock_path(directory: Path) -> Path:
     return Path(directory) / 'engine.json'
 
 
+def head_commit() -> str | None:
+    """The commit the engine files were read at, or None outside a git checkout."""
+    try:
+        out = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], capture_output=True, text=True, timeout=10)
+        return out.stdout.strip() or None if out.returncode == 0 else None
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
 def freeze(directory: Path, now: str | None = None) -> dict:
     """Record the engine as it is when the storyboard sheet is written (ve expect): what his Sign storyboard sees."""
     files = engine_files()
-    record = {'schema': 've-engine/1', 'sha256': engine_sha(files), 'at': now or _now(), 'files': files}
+    record = {'schema': 've-engine/1', 'sha256': engine_sha(files), 'at': now or _now(), 'files': files, 'commit': head_commit()}
     write_json(lock_path(directory), record)
     return record
 
@@ -335,7 +360,7 @@ def engine_problems(spec: dict, cut: str, directory: Path) -> list[str]:
     old = lock.get('files') or {}
     changed = sorted(n for n in set(old) | set(files) if old.get(n) != files.get(n))
     shown_files = ', '.join(changed[:5]) + (f' and {len(changed) - 5} more' if len(changed) > 5 else '')
-    return [f'the engine changed since the storyboard was signed ({shown_files}): render on the engine he signed for, or '
+    return [f'the engine changed since the storyboard was signed ({shown_files}): render on the engine he signed for (ve pin shows how to keep it, a git worktree at the recorded commit), or '
             f'Krish approves the change (an exception approval bound to engine sha256 {now})']
 
 
