@@ -1,0 +1,2500 @@
+{
+ "schema_version": 2,
+ "piece_id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+ "publish_day": "2026-11-20",
+ "format": "face-with-proof",
+ "theme": "makeyourmindup-video-v1",
+ "brand": {
+  "series": "mind.the.gap",
+  "captions": "word",
+  "caption_theme": "art-directed",
+  "title": "Your AI auditor: missing money or skeletons?",
+  "references": [
+   {
+    "id": "8ca0bd3d-454d-48fd-a2d1-98d0e5469779",
+    "card": "instagram_DfkCOCLt7KZ",
+    "for": [
+     "look",
+     "captions"
+    ],
+    "drive_id": "1BfTNeNwSERAvHvtWSmEP9tONOP2jQqrq",
+    "takeaway": "His words on the card: \"Really well-animated and strong speaker production as well as K12 Newmalden. The captions are very unique and well-designed, like an art director would do them.\""
+   },
+   {
+    "id": "501c4fd1-4aa1-4cdd-b716-03e70c89c283",
+    "card": "instagram_DdCY4cJAQZk",
+    "for": [
+     "motion"
+    ],
+    "drive_id": "1pofv2sX1N0QptLEygxcx0YGYMOD1gjeB",
+    "takeaway": "His words on the card: \"I love the infographic style.\""
+   }
+  ]
+ },
+ "call": {
+  "statement": "By the end of 2027, a customer will win back money from a big UK or US firm with a chatbot-found billing error that makes national news.",
+  "due": "2027-12-31",
+  "confidence_percent": 75
+ },
+ "signature": {
+  "hero": {
+   "device": "scene_plate",
+   "status": "proven"
+  },
+  "opening_break": "$195,000 slams in above him on his first number and is struck through on 'fraction'",
+  "finish_pack": "house_grain",
+  "sound_palette": "house-v1 (no kit exists yet: the music bed carries the cut; docs/ve/STATUS.md, \"No sound effects kit\")",
+  "variants": {}
+ },
+ "objects": [
+  {
+   "obj": "k_billed",
+   "device": "kinetic_stat",
+   "dataset": "bill-billed",
+   "meaning": "the bill as the hospital first sent it: $195,000 (his account, Tom's Hardware)",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {}
+  },
+  {
+   "obj": "strike",
+   "device": "scribble",
+   "meaning": "the six figures struck through on 'fraction'",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {
+    "colour": "mint",
+    "seed": "fri20",
+    "shape": "strike",
+    "target": {
+     "x": 140,
+     "y": 420,
+     "w": 800,
+     "h": 220
+    }
+   }
+  },
+  {
+   "obj": "sofa",
+   "device": "scene_plate",
+   "meaning": "the missing money: a fistful of cash and old receipts pulled out from the back of the sofa (Krish, 19 Nov: \"money back down the back of couches\")",
+   "persist": {
+    "from_beat": "question",
+    "to_beat": "question"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/b4-sofa-money-916.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
+     }
+    ],
+    "camera": "push",
+    "full": true,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "closet",
+   "device": "scene_plate",
+   "meaning": "the skeletons in your closet: a cupboard bursts open and a skeleton tumbles out with the old files (the clip starts at 2.1 s, once a box printed with a year has turned away, and holds its last frame: no year the piece does not own) (Krish, 19 Nov: \"skeletons coming out of closets\")",
+   "persist": {
+    "from_beat": "skeletons",
+    "to_beat": "skeletons"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/b4-closet-skeleton-916-from2s1.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
+     }
+    ],
+    "camera": "push",
+    "full": true,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "th_head",
+   "device": "evidence_card",
+   "meaning": "the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000",
+   "persist": {
+    "from_beat": "proof",
+    "to_beat": "proof"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/tomshw.png",
+    "outlet": "Tom's Hardware",
+    "date": "29 Oct 2025",
+    "sourceAspectRatio": 2.2939,
+    "crop": {
+     "x": 0.13,
+     "y": 0.51,
+     "w": 0.5,
+     "h": 0.31
+    }
+   }
+  },
+  {
+   "obj": "th_lede",
+   "device": "evidence_card",
+   "meaning": "the article's own line: the first step is getting the hospital to break down every item on the bill",
+   "persist": {
+    "from_beat": "lines",
+    "to_beat": "lines"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/tomshw.png",
+    "outlet": "Tom's Hardware",
+    "date": "29 Oct 2025",
+    "sourceAspectRatio": 7.4854,
+    "crop": {
+     "x": 0.13,
+     "y": 0.755,
+     "w": 0.5,
+     "h": 0.095
+    }
+   }
+  },
+  {
+   "obj": "chip_hours",
+   "device": "query_chip",
+   "meaning": "whose number this is: the family's own account, as Tom's Hardware reported it",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {
+    "text": "THE FAMILY'S ACCOUNT \u00b7 TOM'S HARDWARE"
+   }
+  },
+  {
+   "obj": "chip_next",
+   "device": "query_chip",
+   "meaning": "next year: there is no page to check a guess against",
+   "persist": {
+    "from_beat": "hindsight",
+    "to_beat": "hindsight"
+   },
+   "params": {
+    "text": "NEXT YEAR \u00b7 NO PAGE TO CHECK"
+   }
+  },
+  {
+   "obj": "chip_last",
+   "device": "query_chip",
+   "meaning": "last year: every line and every rule is already on file",
+   "persist": {
+    "from_beat": "hindsight",
+    "to_beat": "hindsight"
+   },
+   "params": {
+    "text": "LAST YEAR \u00b7 EVERY LINE ON FILE"
+   }
+  },
+  {
+   "obj": "chip_billed",
+   "device": "query_chip",
+   "meaning": "what the bill charged for: a dearer billing code",
+   "persist": {
+    "from_beat": "code",
+    "to_beat": "code"
+   },
+   "params": {
+    "text": "CODE BILLED: THE DEARER ONE"
+   }
+  },
+  {
+   "obj": "chip_given",
+   "device": "query_chip",
+   "meaning": "what he actually got: cheaper care",
+   "persist": {
+    "from_beat": "code",
+    "to_beat": "code"
+   },
+   "params": {
+    "text": "CARE GIVEN: LESS"
+   }
+  },
+  {
+   "obj": "steak",
+   "device": "scene_plate",
+   "meaning": "the gap between what was billed and what was given, as one picture: the cloche lifts on a sad sandwich while the bill on the tray says STEAK",
+   "persist": {
+    "from_beat": "steak",
+    "to_beat": "steak"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/b8-steak-sandwich-916.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
+     }
+    ],
+    "camera": "push",
+    "full": true,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "k_after",
+   "device": "kinetic_stat",
+   "dataset": "bill-after",
+   "meaning": "where the bill landed: about $33,000 (his account, Tom's Hardware)",
+   "persist": {
+    "from_beat": "fell",
+    "to_beat": "fell"
+   },
+   "params": {}
+  },
+  {
+   "obj": "chip_caveat",
+   "device": "query_chip",
+   "meaning": "the caveat kept on screen: his account, the hospital has not confirmed",
+   "persist": {
+    "from_beat": "fell",
+    "to_beat": "fell"
+   },
+   "params": {
+    "text": "HIS ACCOUNT \u00b7 HOSPITAL HASN'T CONFIRMED"
+   }
+  },
+  {
+   "obj": "closet2",
+   "device": "scene_plate",
+   "meaning": "the callback: the same cupboard, now yours, opening on 'whose closet it was opening'",
+   "persist": {
+    "from_beat": "closet",
+    "to_beat": "closet"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/b4-closet-skeleton-916-from2s1.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
+     }
+    ],
+    "camera": "push",
+    "full": true,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "invoices",
+   "device": "scene_plate",
+   "meaning": "his close, generated at his word (\"generate it\", 19 Nov): last year's invoices poured into the AI, red flags popping, a skeleton hand waving from the folder",
+   "persist": {
+    "from_beat": "act",
+    "to_beat": "act"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/b14-invoices-916.png",
+      "width": 1520,
+      "height": 2688
+     }
+    ],
+    "camera": "push",
+    "full": true,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "l_k",
+   "device": "kinetic_stat",
+   "dataset": "bill-after",
+   "meaning": "the bill the family was sent, counting down to where it landed (his account, Tom's Hardware)",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {}
+  },
+  {
+   "obj": "l_src",
+   "device": "query_chip",
+   "meaning": "whose numbers these are: the family's account as Tom's Hardware reported it",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {
+    "text": "THE FAMILY'S ACCOUNT \u00b7 TOM'S HARDWARE"
+   }
+  },
+  {
+   "obj": "l_sofa",
+   "device": "scene_plate",
+   "meaning": "the missing money: cash and old receipts pulled from the back of the office sofa (Krish, 19 Nov: \"money back down the back of couches\")",
+   "persist": {
+    "from_beat": "l_question",
+    "to_beat": "l_question"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/long-sofa-money-169.mp4",
+      "kind": "video",
+      "width": 1920,
+      "height": 1080
+     }
+    ],
+    "camera": "push",
+    "full": true,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "l_closet",
+   "device": "scene_plate",
+   "meaning": "the skeletons in your closet: the cupboard spills its old files and a skeleton (the tall clip framed on the wide stage; the wide clip prints a year nothing owns)",
+   "persist": {
+    "from_beat": "l_skeletons",
+    "to_beat": "l_skeletons"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/b4-closet-skeleton-916-from2s1.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
+     }
+    ],
+    "camera": "push",
+    "full": false,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "l_head",
+   "device": "evidence_card",
+   "meaning": "the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000",
+   "persist": {
+    "from_beat": "proof",
+    "to_beat": "proof"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/tomshw.png",
+    "outlet": "Tom's Hardware",
+    "date": "29 Oct 2025",
+    "sourceAspectRatio": 2.2939,
+    "crop": {
+     "x": 0.13,
+     "y": 0.51,
+     "w": 0.5,
+     "h": 0.31
+    }
+   }
+  },
+  {
+   "obj": "l_lede",
+   "device": "evidence_card",
+   "meaning": "the article's line: the first step is getting the hospital to break down every item on the bill",
+   "persist": {
+    "from_beat": "l_code",
+    "to_beat": "l_code"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/tomshw.png",
+    "outlet": "Tom's Hardware",
+    "date": "29 Oct 2025",
+    "sourceAspectRatio": 7.4854,
+    "crop": {
+     "x": 0.13,
+     "y": 0.755,
+     "w": 0.5,
+     "h": 0.095
+    }
+   }
+  },
+  {
+   "obj": "l_michelin",
+   "device": "scene_plate",
+   "meaning": "the gap between what was billed and what was served: the cloche lifts on a sad sandwich while the bill reads STEAK (the short's clip, framed on the wide stage; the wide tasting-menu clip printed a garbled row of zeros nothing owns)",
+   "persist": {
+    "from_beat": "l_michelin",
+    "to_beat": "l_michelin"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/b8-steak-sandwich-916.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
+     }
+    ],
+    "camera": "push",
+    "full": false,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "l_after",
+   "device": "kinetic_stat",
+   "dataset": "bill-after",
+   "meaning": "where the bill landed: about $33,000 (his account)",
+   "persist": {
+    "from_beat": "l_fell",
+    "to_beat": "l_fell"
+   },
+   "params": {}
+  },
+  {
+   "obj": "l_caveat",
+   "device": "query_chip",
+   "meaning": "the caveat on screen: his account, the hospital has not confirmed",
+   "persist": {
+    "from_beat": "l_fell",
+    "to_beat": "l_fell"
+   },
+   "params": {
+    "text": "HIS ACCOUNT \u00b7 HOSPITAL HASN'T CONFIRMED"
+   }
+  },
+  {
+   "obj": "l_tenant",
+   "device": "evidence_card",
+   "meaning": "the headline: tenant uses ChatGPT to uncover crucial evidence and win legal battle against greedy landlord",
+   "persist": {
+    "from_beat": "l_tenant",
+    "to_beat": "l_tenant"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/upworthy-tenant.png",
+    "outlet": "Upworthy Scoop",
+    "date": "14 Dec 2024",
+    "sourceAspectRatio": 3.1492,
+    "crop": {
+     "x": 0.03,
+     "y": 0.1,
+     "w": 0.62,
+     "h": 0.28
+    }
+   }
+  },
+  {
+   "obj": "l_next",
+   "device": "query_chip",
+   "meaning": "next year: there is no page to check a guess against",
+   "persist": {
+    "from_beat": "l_hindsight",
+    "to_beat": "l_hindsight"
+   },
+   "params": {
+    "text": "NEXT YEAR \u00b7 NO PAGE TO CHECK"
+   }
+  },
+  {
+   "obj": "l_last",
+   "device": "query_chip",
+   "meaning": "last year: every line and every rule is already on file",
+   "persist": {
+    "from_beat": "l_hindsight",
+    "to_beat": "l_hindsight"
+   },
+   "params": {
+    "text": "LAST YEAR \u00b7 EVERY LINE ON FILE"
+   }
+  },
+  {
+   "obj": "l_cust",
+   "device": "query_chip",
+   "meaning": "the twist: your customers run the same audit on you",
+   "persist": {
+    "from_beat": "l_twist",
+    "to_beat": "l_twist"
+   },
+   "params": {
+    "text": "YOUR INVOICES \u00b7 THEIR CHATBOT"
+   }
+  },
+  {
+   "obj": "l_closet2",
+   "device": "scene_plate",
+   "meaning": "the callback: the same cupboard, now opening on 'whose closet it was opening'",
+   "persist": {
+    "from_beat": "l_closet",
+    "to_beat": "l_closet"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/b4-closet-skeleton-916-from2s1.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
+     }
+    ],
+    "camera": "push",
+    "full": false,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "l_dana",
+   "device": "evidence_card",
+   "meaning": "the headline: a prestigious cancer institute is correcting dozens of papers and retracting others after a blogger cried foul",
+   "persist": {
+    "from_beat": "l_dana",
+    "to_beat": "l_dana"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/nbc-dana.png",
+    "outlet": "NBC News",
+    "date": "Jan 2024",
+    "sourceAspectRatio": 3.603,
+    "crop": {
+     "x": 0.19,
+     "y": 0.49,
+     "w": 0.76,
+     "h": 0.3
+    }
+   }
+  },
+  {
+   "obj": "l_krafton",
+   "device": "evidence_card",
+   "meaning": "the Harvard Law forum on Fortis Advisors v. Krafton: the court quoted at length from the AI chats the buyer's CEO had about taking control of the studio",
+   "persist": {
+    "from_beat": "l_krafton",
+    "to_beat": "l_krafton"
+   },
+   "params": {
+    "kind": "screenshot",
+    "src": "shots/harvard-krafton.png",
+    "outlet": "Harvard Law School Forum on Corporate Governance",
+    "date": "20 Apr 2026",
+    "sourceAspectRatio": 2.7329,
+    "crop": {
+     "x": 0.15,
+     "y": 0.415,
+     "w": 0.49,
+     "h": 0.255
+    }
+   }
+  },
+  {
+   "obj": "l_sofa2",
+   "device": "scene_plate",
+   "meaning": "money, found",
+   "persist": {
+    "from_beat": "l_money",
+    "to_beat": "l_money"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/long-sofa-money-169.mp4",
+      "kind": "video",
+      "width": 1920,
+      "height": 1080
+     }
+    ],
+    "camera": "push",
+    "full": true,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "l_closet3",
+   "device": "scene_plate",
+   "meaning": "skeletons, found",
+   "persist": {
+    "from_beat": "l_both",
+    "to_beat": "l_both"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/b4-closet-skeleton-916-from2s1.mp4",
+      "kind": "video",
+      "width": 1080,
+      "height": 1920
+     }
+    ],
+    "camera": "push",
+    "full": false,
+    "grade": "none"
+   }
+  },
+  {
+   "obj": "l_invoices",
+   "device": "scene_plate",
+   "meaning": "his close, generated at his word (\"generate it\", 19 Nov): last year's invoices poured into the AI, a skeleton hand at the back of the folder",
+   "persist": {
+    "from_beat": "l_act",
+    "to_beat": "l_act"
+   },
+   "params": {
+    "shots": [
+     {
+      "src": "plates/long-invoices-169.png",
+      "width": 2688,
+      "height": 1520
+     }
+    ],
+    "camera": "push",
+    "full": true,
+    "grade": "none"
+   }
+  }
+ ],
+ "assets": [
+  {
+   "id": "short-master",
+   "kind": "recording",
+   "origin": "capture",
+   "path": "short.master.mov",
+   "sha256": "baf5f1d2a3e8d010b72ac8a73e60b7d5d412f90f4b3445c96899bf352794d98f",
+   "licence": "Krish's own recording, 18 Nov 2026 (ai-finding-your-skeletons-short.mp4, sha256 0be73bbd), two restarts and long pauses cut, 1.0x, 85.1 s"
+  },
+  {
+   "id": "b4-sofa-money-916",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "plates/b4-sofa-money-916.mp4",
+   "sha256": "70925eebe73d3091240c2d21f8f24cc4937089288bf5f6b886471c2887be8e91",
+   "job_id": "0b2f8990-7656-48ab-b2aa-06c03a11a026",
+   "tool": "higgsfield:gpt_image_2_6 then seedance_2_5",
+   "licence": "generated for this piece; Krish approved up to 710 credits, 19 Nov (\"Up to 710, 1080p (Recommended)\"); jobs in ve/generations.json"
+  },
+  {
+   "id": "b4-closet-skeleton-916-from2s1",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "plates/b4-closet-skeleton-916-from2s1.mp4",
+   "sha256": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
+   "job_id": "99452888-ab66-4e5d-9bc1-3008d51b9b32",
+   "tool": "higgsfield:gpt_image_2_6 then seedance_2_5",
+   "licence": "generated for this piece; Krish approved up to 710 credits, 19 Nov (\"Up to 710, 1080p (Recommended)\"); jobs in ve/generations.json"
+  },
+  {
+   "id": "b8-steak-sandwich-916",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "plates/b8-steak-sandwich-916.mp4",
+   "sha256": "e52fe36f8689265de819718e02dde06aabfa8bbe9e8c6709a4cf26f803ed974a",
+   "job_id": "07df126a-e2dc-4f42-8d70-5c98c7c0e191",
+   "tool": "higgsfield:gpt_image_2_6 then seedance_2_5",
+   "licence": "generated for this piece; Krish approved up to 710 credits, 19 Nov (\"Up to 710, 1080p (Recommended)\"); jobs in ve/generations.json"
+  },
+  {
+   "id": "b14-invoices-916",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "plates/b14-invoices-916.png",
+   "sha256": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
+   "job_id": "3a4a9127-f810-4de3-a133-6213d9cc9b8d",
+   "tool": "higgsfield:gpt_image_2_6 then seedance_2_5",
+   "licence": "generated for this piece; Krish approved up to 710 credits, 19 Nov (\"Up to 710, 1080p (Recommended)\"); jobs in ve/generations.json"
+  },
+  {
+   "id": "tomshw",
+   "kind": "screenshot",
+   "origin": "source",
+   "path": "shots/tomshw.png",
+   "sha256": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
+   "licence": "screenshot of Tom's Hardware, 29 Oct 2025, https://www.tomshardware.com/tech-industry/artificial-intelligence/grieving-family-uses-ai-chatbot-to-cut-hospital-bill-from-usd195-000-to-usd33-000-family-says-claude-highlighted-duplicative-charges-improper-coding-and-other-violations, captured 19 Nov 2026"
+  },
+  {
+   "id": "long-master",
+   "kind": "recording",
+   "origin": "capture",
+   "path": "long.master.mov",
+   "sha256": "7afaed9a75286aacb86737eae6b247dd9c5227b47871b9cc58ff57af91c310ca",
+   "licence": "Krish's own recording, 18 Nov 2026 (ai-finding-your-skeletons-long.mp4, sha256 b1428797), restarts and long pauses cut from the reviewed plan's keep spans, joins in measured quiet, 1.0x, 4:25"
+  },
+  {
+   "id": "long-sofa-money-169",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "plates/long-sofa-money-169.mp4",
+   "sha256": "1212452354fc877ce8cdec2411c6db71b6e3684ffd2dae5c313bfef43d5f60cf",
+   "job_id": "9b08ad6d-8f60-4b73-a76d-5c24c79cfe5e",
+   "tool": "higgsfield:gpt_image_2_6 then seedance_2_5",
+   "licence": "generated for this piece; Krish approved up to 710 credits, 19 Nov (\"Up to 710, 1080p (Recommended)\"); jobs in ve/generations.json"
+  },
+  {
+   "id": "long-invoices-169",
+   "kind": "broll",
+   "origin": "generated",
+   "path": "plates/long-invoices-169.png",
+   "sha256": "9593884f0b16a2f1db4efdfe0509a906cc6c2f2ad4c89bb9e788ea1c8847feec",
+   "job_id": "d58bddce-7ff3-4dcf-8651-637f10f0ee15",
+   "tool": "higgsfield:gpt_image_2_6 then seedance_2_5",
+   "licence": "generated for this piece; Krish approved up to 710 credits, 19 Nov (\"Up to 710, 1080p (Recommended)\"); jobs in ve/generations.json"
+  },
+  {
+   "id": "upworthy-tenant",
+   "kind": "screenshot",
+   "origin": "source",
+   "path": "shots/upworthy-tenant.png",
+   "sha256": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31",
+   "licence": "screenshot of the real page, 14 Dec 2024, https://scoop.upworthy.com/tenant-uses-chat-gpt-to-uncover-crucial-evidence-and-win-legal-battle-against-greedy-landlord, captured 19 Nov 2026"
+  },
+  {
+   "id": "nbc-dana",
+   "kind": "screenshot",
+   "origin": "source",
+   "path": "shots/nbc-dana.png",
+   "sha256": "04bd5985213216d4627231eaa4575689cdb6ec5cbf949c9af8bd3ba40efaeb94",
+   "licence": "screenshot of the real page, Jan 2024, https://www.nbcnews.com/science/science-news/allegations-research-misconduct-roil-dana-farber-cancer-institute-rcna135521, captured 19 Nov 2026"
+  },
+  {
+   "id": "harvard-krafton",
+   "kind": "screenshot",
+   "origin": "source",
+   "path": "shots/harvard-krafton.png",
+   "sha256": "bfc65217229236171fec3bd8ae3c74e545644a757bd0d6fd4572a079566c2fad",
+   "licence": "screenshot of the real page, 20 Apr 2026, https://corpgov.law.harvard.edu/2026/04/20/how-a-buyers-ai-conversations-sank-its-earnout-avoidance-strategy/, captured 19 Nov 2026"
+  }
+ ],
+ "datasets": [
+  {
+   "id": "bill-billed",
+   "unit": "USD, the hospital's first bill",
+   "denominator": null,
+   "rows": [
+    {
+     "label": "billed",
+     "value": 195000
+    }
+   ],
+   "producer_label": "Tom's Hardware, 29 Oct 2025 (the family's account)",
+   "source_url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/grieving-family-uses-ai-chatbot-to-cut-hospital-bill-from-usd195-000-to-usd33-000-family-says-claude-highlighted-duplicative-charges-improper-coding-and-other-violations",
+   "retrieved_at": "2026-11-19"
+  },
+  {
+   "id": "bill-after",
+   "unit": "USD, after the itemised review",
+   "denominator": null,
+   "rows": [
+    {
+     "label": "billed",
+     "value": 195000
+    },
+    {
+     "label": "after",
+     "value": 33000
+    }
+   ],
+   "producer_label": "Tom's Hardware, 29 Oct 2025 (the family's account)",
+   "source_url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/grieving-family-uses-ai-chatbot-to-cut-hospital-bill-from-usd195-000-to-usd33-000-family-says-claude-highlighted-duplicative-charges-improper-coding-and-other-violations",
+   "retrieved_at": "2026-11-19"
+  }
+ ],
+ "audio": {
+  "master": "take",
+  "bed": {
+   "ledger_id": "make-up-your-mind-instrumental",
+   "mode": "episode_bed",
+   "under_vo_lu": -20
+  },
+  "sfx_kit": "house-v1",
+  "targets": {
+   "lufs": -14,
+   "tp": -1
+  }
+ },
+ "cuts": {
+  "short": {
+   "aspect": "9:16",
+   "take": "short-master",
+   "max_s": 89,
+   "excerpt": false,
+   "edit": {
+    "remove": [],
+    "speed": 1
+   },
+   "captions": {
+    "region": "default",
+    "emphasis": [
+     13,
+     18,
+     51,
+     56,
+     81,
+     99,
+     113,
+     119,
+     129,
+     148,
+     169,
+     177,
+     202,
+     213,
+     235
+    ]
+   },
+   "beats": [
+    {
+     "id": "hook",
+     "role": "hook",
+     "span": {
+      "from_w": 0,
+      "to_w": 20
+     },
+     "viewer_task": "locate_story",
+     "point": "AI just cut a family's six-figure hospital bill to a fraction",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "k_billed",
+      "chip_hours",
+      "strike"
+     ],
+     "events": [
+      {
+       "at_w": 0,
+       "obj": "k_billed",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 14,
+       "obj": "chip_hours",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 18,
+       "obj": "strike",
+       "verb": "draw",
+       "to_state": "strike",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "face",
+     "role": "bridge",
+     "span": {
+      "from_w": 21,
+      "to_w": 43
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Imagine what it is finding in everyone's old paperwork, when whole hospital teams missed it",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "question",
+     "role": "pivot",
+     "span": {
+      "from_w": 44,
+      "to_w": 52
+     },
+     "viewer_task": "locate_story",
+     "point": "Will your AI auditor find the missing money?",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "sofa"
+     ],
+     "events": [
+      {
+       "at_w": 44,
+       "obj": "sofa",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "skeletons",
+     "role": "pivot",
+     "span": {
+      "from_w": 53,
+      "to_w": 61
+     },
+     "viewer_task": "feel_stakes",
+     "point": "Or will it find the skeletons in your closet?",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "closet"
+     ],
+     "events": [
+      {
+       "at_w": 53,
+       "obj": "closet",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "proof",
+     "role": "anchor",
+     "span": {
+      "from_w": 62,
+      "to_w": 81
+     },
+     "viewer_task": "verify_evidence",
+     "point": "A real family owed the whole bill after a death with no health cover",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "th_head"
+     ],
+     "events": [
+      {
+       "at_w": 62,
+       "obj": "th_head",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 69,
+       "obj": "th_head",
+       "verb": "mark",
+       "to_state": "attack",
+       "silent": true
+      },
+      {
+       "at_w": 80,
+       "obj": "th_head",
+       "verb": "mark",
+       "to_state": "195",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "backdrop": "asset:tomshw"
+    },
+    {
+     "id": "lines",
+     "role": "bridge",
+     "span": {
+      "from_w": 82,
+      "to_w": 90
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "He asked for the bill line by line and gave it to Claude",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "th_lede"
+     ],
+     "events": [
+      {
+       "at_w": 82,
+       "obj": "th_lede",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 88,
+       "obj": "th_lede",
+       "verb": "mark",
+       "to_state": "line by line",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "backdrop": "asset:tomshw"
+    },
+    {
+     "id": "code",
+     "role": "anchor",
+     "span": {
+      "from_w": 91,
+      "to_w": 107
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "Care was billed under a dearer code than the care he got",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "chip_billed",
+      "chip_given"
+     ],
+     "events": [
+      {
+       "at_w": 91,
+       "obj": "chip_billed",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 99,
+       "obj": "chip_billed",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 103,
+       "obj": "chip_given",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "steak",
+     "role": "bridge",
+     "span": {
+      "from_w": 108,
+      "to_w": 119
+     },
+     "viewer_task": "feel_stakes",
+     "point": "Charged for a steak, served a sandwich",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "steak"
+     ],
+     "events": [
+      {
+       "at_w": 108,
+       "obj": "steak",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "fell",
+     "role": "anchor",
+     "span": {
+      "from_w": 120,
+      "to_w": 132
+     },
+     "viewer_task": "verify_evidence",
+     "point": "He sent the list and the bill fell to about a sixth",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "k_after",
+      "chip_caveat"
+     ],
+     "events": [
+      {
+       "at_w": 120,
+       "obj": "k_after",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 129,
+       "obj": "k_after",
+       "verb": "count_to",
+       "to_state": "after",
+       "silent": true
+      },
+      {
+       "at_w": 131,
+       "obj": "chip_caveat",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "backdrop": "asset:tomshw"
+    },
+    {
+     "id": "love",
+     "role": "bridge",
+     "span": {
+      "from_w": 133,
+      "to_w": 160
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "An old bill can't argue back, the rules are written down, and AI reads every line without a break",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "hindsight",
+     "role": "anchor",
+     "span": {
+      "from_w": 161,
+      "to_w": 177
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "About next year AI is guessing; about last year it is reading",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "chip_next",
+      "chip_last"
+     ],
+     "events": [
+      {
+       "at_w": 161,
+       "obj": "chip_next",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 169,
+       "obj": "chip_next",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 171,
+       "obj": "chip_last",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 177,
+       "obj": "chip_last",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "whose",
+     "role": "bridge",
+     "span": {
+      "from_w": 178,
+      "to_w": 194
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Whose mistake did Claude find? The hospital's",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "closet",
+     "role": "pivot",
+     "span": {
+      "from_w": 195,
+      "to_w": 205
+     },
+     "viewer_task": "feel_stakes",
+     "point": "It didn't care whose closet it was opening",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "closet2"
+     ],
+     "events": [
+      {
+       "at_w": 195,
+       "obj": "closet2",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "yours",
+     "role": "payoff",
+     "span": {
+      "from_w": 206,
+      "to_w": 214
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "And it won't care when it opens yours",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "act",
+     "role": "call",
+     "span": {
+      "from_w": 215,
+      "to_w": 238
+     },
+     "viewer_task": "land_payoff",
+     "point": "This week he hands his own AI last year's invoices, to find his skeletons first",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "invoices"
+     ],
+     "events": [
+      {
+       "at_w": 215,
+       "obj": "invoices",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "close",
+     "role": "call",
+     "span": {
+      "from_w": 239,
+      "to_w": 246
+     },
+     "viewer_task": "land_payoff",
+     "point": "The full story is free at makeyourmindup.ai",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    }
+   ]
+  },
+  "long": {
+   "aspect": "16:9",
+   "take": "long-master",
+   "max_s": 330,
+   "excerpt": false,
+   "edit": {
+    "remove": [],
+    "speed": 1
+   },
+   "bed": {
+    "ledger_id": "make-up-your-mind-instrumental",
+    "reason": "a 4:25 cut: the house's long bed holds the one bed shape at this length"
+   },
+   "captions": {
+    "region": "default",
+    "emphasis": [
+     15,
+     18,
+     85,
+     90,
+     189,
+     201,
+     230,
+     247,
+     311,
+     318,
+     413,
+     429,
+     437,
+     448,
+     521,
+     563,
+     575,
+     616,
+     659,
+     713,
+     743,
+     746,
+     812
+    ]
+   },
+   "beats": [
+    {
+     "id": "hook",
+     "role": "hook",
+     "span": {
+      "from_w": 0,
+      "to_w": 19
+     },
+     "viewer_task": "locate_story",
+     "point": "AI just cut a family's six-figure hospital bill to a fraction",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "l_k",
+      "l_src"
+     ],
+     "events": [
+      {
+       "at_w": 0,
+       "obj": "l_src",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 15,
+       "obj": "l_k",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 18,
+       "obj": "l_k",
+       "verb": "count_to",
+       "to_state": "after",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "face",
+     "role": "bridge",
+     "span": {
+      "from_w": 20,
+      "to_w": 78
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Imagine what it finds in your last year of paperwork, when whole hospital teams missed it",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "l_question",
+     "role": "pivot",
+     "span": {
+      "from_w": 79,
+      "to_w": 88
+     },
+     "viewer_task": "locate_story",
+     "point": "Will your AI auditor find the missing money?",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "l_sofa"
+     ],
+     "events": [
+      {
+       "at_w": 79,
+       "obj": "l_sofa",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "l_skeletons",
+     "role": "pivot",
+     "span": {
+      "from_w": 89,
+      "to_w": 96
+     },
+     "viewer_task": "feel_stakes",
+     "point": "Or will it find the skeletons in your closet?",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "l_closet"
+     ],
+     "events": [
+      {
+       "at_w": 89,
+       "obj": "l_closet",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "proof",
+     "role": "anchor",
+     "span": {
+      "from_w": 97,
+      "to_w": 136
+     },
+     "viewer_task": "verify_evidence",
+     "point": "A real family owed the whole bill after a death with no health cover",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "l_head"
+     ],
+     "events": [
+      {
+       "at_w": 97,
+       "obj": "l_head",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 107,
+       "obj": "l_head",
+       "verb": "mark",
+       "to_state": "w107",
+       "silent": true
+      },
+      {
+       "at_w": 114,
+       "obj": "l_head",
+       "verb": "mark",
+       "to_state": "w114",
+       "silent": true
+      },
+      {
+       "at_w": 121,
+       "obj": "l_head",
+       "verb": "mark",
+       "to_state": "w121",
+       "silent": true
+      },
+      {
+       "at_w": 128,
+       "obj": "l_head",
+       "verb": "mark",
+       "to_state": "w128",
+       "silent": true
+      },
+      {
+       "at_w": 133,
+       "obj": "l_head",
+       "verb": "mark",
+       "to_state": "w133",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "l_bitmiss",
+     "role": "bridge",
+     "span": {
+      "from_w": 137,
+      "to_w": 169
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "He didn't argue with the total; he asked for every line",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "l_code",
+     "role": "anchor",
+     "span": {
+      "from_w": 170,
+      "to_w": 208
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "Every service has a code and a price: one procedure twice, care billed under a dearer code",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "l_lede"
+     ],
+     "events": [
+      {
+       "at_w": 170,
+       "obj": "l_lede",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 177,
+       "obj": "l_lede",
+       "verb": "mark",
+       "to_state": "w177",
+       "silent": true
+      },
+      {
+       "at_w": 184,
+       "obj": "l_lede",
+       "verb": "mark",
+       "to_state": "w184",
+       "silent": true
+      },
+      {
+       "at_w": 190,
+       "obj": "l_lede",
+       "verb": "mark",
+       "to_state": "w190",
+       "silent": true
+      },
+      {
+       "at_w": 196,
+       "obj": "l_lede",
+       "verb": "mark",
+       "to_state": "w196",
+       "silent": true
+      },
+      {
+       "at_w": 201,
+       "obj": "l_lede",
+       "verb": "mark",
+       "to_state": "w201",
+       "silent": true
+      },
+      {
+       "at_w": 206,
+       "obj": "l_lede",
+       "verb": "mark",
+       "to_state": "w206",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "l_michelin",
+     "role": "bridge",
+     "span": {
+      "from_w": 209,
+      "to_w": 230
+     },
+     "viewer_task": "feel_stakes",
+     "point": "Billed for the tasting menu, served the burger",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "l_michelin"
+     ],
+     "events": [
+      {
+       "at_w": 209,
+       "obj": "l_michelin",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "l_fell",
+     "role": "anchor",
+     "span": {
+      "from_w": 231,
+      "to_w": 272
+     },
+     "viewer_task": "verify_evidence",
+     "point": "He sent the list and the bill fell to about a sixth; the hospital has said nothing",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "l_after",
+      "l_caveat"
+     ],
+     "events": [
+      {
+       "at_w": 231,
+       "obj": "l_after",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 244,
+       "obj": "l_after",
+       "verb": "count_to",
+       "to_state": "after",
+       "silent": true
+      },
+      {
+       "at_w": 250,
+       "obj": "l_caveat",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 256,
+       "obj": "l_caveat",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 261,
+       "obj": "l_caveat",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 269,
+       "obj": "l_caveat",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "l_tenant",
+     "role": "anchor",
+     "span": {
+      "from_w": 273,
+      "to_w": 318
+     },
+     "viewer_task": "verify_evidence",
+     "point": "A tenant pasted his lease into ChatGPT, found the deposit cap and won",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "l_tenant"
+     ],
+     "events": [
+      {
+       "at_w": 273,
+       "obj": "l_tenant",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 282,
+       "obj": "l_tenant",
+       "verb": "mark",
+       "to_state": "w282",
+       "silent": true
+      },
+      {
+       "at_w": 289,
+       "obj": "l_tenant",
+       "verb": "mark",
+       "to_state": "w289",
+       "silent": true
+      },
+      {
+       "at_w": 297,
+       "obj": "l_tenant",
+       "verb": "mark",
+       "to_state": "w297",
+       "silent": true
+      },
+      {
+       "at_w": 302,
+       "obj": "l_tenant",
+       "verb": "mark",
+       "to_state": "w302",
+       "silent": true
+      },
+      {
+       "at_w": 306,
+       "obj": "l_tenant",
+       "verb": "mark",
+       "to_state": "w306",
+       "silent": true
+      },
+      {
+       "at_w": 313,
+       "obj": "l_tenant",
+       "verb": "mark",
+       "to_state": "w313",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "l_paperwork",
+     "role": "bridge",
+     "span": {
+      "from_w": 319,
+      "to_w": 354
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Never pick a paperwork fight with someone who has a chatbot and a free evening",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "l_love",
+     "role": "bridge",
+     "span": {
+      "from_w": 355,
+      "to_w": 401
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "An old bill cannot argue back and its rules are written down",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "l_hindsight",
+     "role": "anchor",
+     "span": {
+      "from_w": 402,
+      "to_w": 448
+     },
+     "viewer_task": "understand_mechanism",
+     "point": "About next year AI is guessing; about last year it is reading",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "l_next",
+      "l_last"
+     ],
+     "events": [
+      {
+       "at_w": 402,
+       "obj": "l_next",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 413,
+       "obj": "l_next",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 420,
+       "obj": "l_last",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 429,
+       "obj": "l_last",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 436,
+       "obj": "l_next",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 441,
+       "obj": "l_last",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 447,
+       "obj": "l_last",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "l_lead",
+     "role": "bridge",
+     "span": {
+      "from_w": 449,
+      "to_w": 506
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Every flag is a lead a person checks; your contracts and price lists are your rules",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "l_twist",
+     "role": "pivot",
+     "span": {
+      "from_w": 507,
+      "to_w": 538
+     },
+     "viewer_task": "feel_stakes",
+     "point": "To your customers, you are the hospital",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "l_cust"
+     ],
+     "events": [
+      {
+       "at_w": 507,
+       "obj": "l_cust",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 516,
+       "obj": "l_cust",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 523,
+       "obj": "l_cust",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 528,
+       "obj": "l_cust",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 532,
+       "obj": "l_cust",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "l_whose",
+     "role": "bridge",
+     "span": {
+      "from_w": 539,
+      "to_w": 557
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "Whose mistake did Claude find? The hospital's",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "l_closet",
+     "role": "pivot",
+     "span": {
+      "from_w": 558,
+      "to_w": 566
+     },
+     "viewer_task": "feel_stakes",
+     "point": "It didn't care whose closet it was opening",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "l_closet2"
+     ],
+     "events": [
+      {
+       "at_w": 558,
+       "obj": "l_closet2",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "l_yours",
+     "role": "payoff",
+     "span": {
+      "from_w": 567,
+      "to_w": 576
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "And it won't care when it opens yours",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "l_dana",
+     "role": "anchor",
+     "span": {
+      "from_w": 577,
+      "to_w": 654
+     },
+     "viewer_task": "verify_evidence",
+     "point": "Software found faked pictures in a cancer centre's old papers, from outside the building",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "l_dana"
+     ],
+     "events": [
+      {
+       "at_w": 577,
+       "obj": "l_dana",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 584,
+       "obj": "l_dana",
+       "verb": "mark",
+       "to_state": "w584",
+       "silent": true
+      },
+      {
+       "at_w": 593,
+       "obj": "l_dana",
+       "verb": "mark",
+       "to_state": "w593",
+       "silent": true
+      },
+      {
+       "at_w": 601,
+       "obj": "l_dana",
+       "verb": "mark",
+       "to_state": "w601",
+       "silent": true
+      },
+      {
+       "at_w": 609,
+       "obj": "l_dana",
+       "verb": "mark",
+       "to_state": "w609",
+       "silent": true
+      },
+      {
+       "at_w": 615,
+       "obj": "l_dana",
+       "verb": "mark",
+       "to_state": "w615",
+       "silent": true
+      },
+      {
+       "at_w": 620,
+       "obj": "l_dana",
+       "verb": "mark",
+       "to_state": "w620",
+       "silent": true
+      },
+      {
+       "at_w": 628,
+       "obj": "l_dana",
+       "verb": "mark",
+       "to_state": "w628",
+       "silent": true
+      },
+      {
+       "at_w": 636,
+       "obj": "l_dana",
+       "verb": "mark",
+       "to_state": "w636",
+       "silent": true
+      },
+      {
+       "at_w": 645,
+       "obj": "l_dana",
+       "verb": "mark",
+       "to_state": "w645",
+       "silent": true
+      },
+      {
+       "at_w": 650,
+       "obj": "l_dana",
+       "verb": "mark",
+       "to_state": "w650",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "l_krafton",
+     "role": "anchor",
+     "span": {
+      "from_w": 655,
+      "to_w": 739
+     },
+     "viewer_task": "verify_evidence",
+     "point": "A boss asked ChatGPT how to dodge a bonus, and the judge quoted the chats",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "l_krafton"
+     ],
+     "events": [
+      {
+       "at_w": 655,
+       "obj": "l_krafton",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 665,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w665",
+       "silent": true
+      },
+      {
+       "at_w": 672,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w672",
+       "silent": true
+      },
+      {
+       "at_w": 679,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w679",
+       "silent": true
+      },
+      {
+       "at_w": 686,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w686",
+       "silent": true
+      },
+      {
+       "at_w": 690,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w690",
+       "silent": true
+      },
+      {
+       "at_w": 698,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w698",
+       "silent": true
+      },
+      {
+       "at_w": 704,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w704",
+       "silent": true
+      },
+      {
+       "at_w": 712,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w712",
+       "silent": true
+      },
+      {
+       "at_w": 719,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w719",
+       "silent": true
+      },
+      {
+       "at_w": 727,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w727",
+       "silent": true
+      },
+      {
+       "at_w": 732,
+       "obj": "l_krafton",
+       "verb": "mark",
+       "to_state": "w732",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "l_money",
+     "role": "bridge",
+     "span": {
+      "from_w": 740,
+      "to_w": 742
+     },
+     "viewer_task": "feel_stakes",
+     "point": "Money, found down the back of the sofa",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "l_sofa2"
+     ],
+     "events": [
+      {
+       "at_w": 740,
+       "obj": "l_sofa2",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "l_both",
+     "role": "pivot",
+     "span": {
+      "from_w": 743,
+      "to_w": 746
+     },
+     "viewer_task": "feel_stakes",
+     "point": "or skeletons: it finds both",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "l_closet3"
+     ],
+     "events": [
+      {
+       "at_w": 743,
+       "obj": "l_closet3",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "l_listfirst",
+     "role": "bridge",
+     "span": {
+      "from_w": 747,
+      "to_w": 775
+     },
+     "viewer_task": "connect_with_speaker",
+     "point": "The real question is who reads that list first",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    },
+    {
+     "id": "l_act",
+     "role": "call",
+     "span": {
+      "from_w": 776,
+      "to_w": 815
+     },
+     "viewer_task": "land_payoff",
+     "point": "This week he puts his own last year's invoices through the AI, to find his skeletons first",
+     "layout": "STAGE",
+     "plate": {
+      "source": "none"
+     },
+     "uses": [
+      "l_invoices"
+     ],
+     "events": [
+      {
+       "at_w": 776,
+       "obj": "l_invoices",
+       "verb": "enter",
+       "to_state": "0",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut",
+     "face": "off",
+     "override_reason": "a moving clip carries this beat; more device events would only pulse it"
+    },
+    {
+     "id": "close",
+     "role": "call",
+     "span": {
+      "from_w": 816,
+      "to_w": 822
+     },
+     "viewer_task": "land_payoff",
+     "point": "The full story is at makeyourmindup.ai",
+     "layout": "F1",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [],
+     "events": [],
+     "transition_out": "cut",
+     "face": "full",
+     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+    }
+   ]
+  }
+ },
+ "approvals": [],
+ "budget": {
+  "tokens_cap": 12600000,
+  "credits": {
+   "higgsfield": 710,
+   "runway": 0
+  }
+ },
+ "style": {
+  "motion": {
+   "module": "ai-music-slam",
+   "reason": "Krish picked it on the board, 17 Nov 2026 18:58 UTC"
+  },
+  "captions": {
+   "theme": "art-directed",
+   "placement": "lower",
+   "reason": "Krish picked it on the board, 17 Nov 2026 18:58 UTC"
+  },
+  "transitions": {
+   "kind": "whip",
+   "reason": "ai-music-slam's own rule: scenes hand over with a horizontal blur whip"
+  },
+  "camera": {
+   "move": "phased",
+   "hits": true,
+   "reason": "ai-music-slam: the camera pushes through every scene and breathes on long holds"
+  },
+  "energy": "high",
+  "layout": {
+   "mode": "fill",
+   "reason": "as on Wed 18 (face-with-proof): every proof slams in centred in the safe region the captions leave, over its own page, and his whole head is full frame on his lines (Krish, 18 Nov 2026: \"Can't cut my head off and also ruin the visual above\"); the split stage left a plain ink band above the proof that ve proof refuses (F58)"
+  },
+  "look": "face-with-proof (picked by Krish, 17 Nov 2026 18:58 UTC)",
+  "idea": {
+   "object": "the auditor going through the past: every old page it opens turns up either money (cash down the back of the sofa) or a skeleton (out of the cupboard)",
+   "moves": [
+    {
+     "move": "a real page or number slams onto the stage on the word that names it",
+     "means": "the past is written down, so it can be checked"
+    },
+    {
+     "move": "the big number is struck through and counts down",
+     "means": "what the audit found, in the family's own account"
+    },
+    {
+     "move": "cash comes out of the sofa",
+     "means": "the missing money an audit finds"
+    },
+    {
+     "move": "a skeleton tumbles out of the cupboard",
+     "means": "what else it finds, and it does not care whose cupboard it is"
+    }
+   ],
+   "never": [
+    "a re-typed headline standing in for the real page",
+    "a generated picture standing in for a real record",
+    "a joke aimed at the family, the viewer or a named person",
+    "no gag on the death",
+    "his name on screen",
+    "invented numbers: every figure on screen is either the family's account as Tom's Hardware reported it or a figure printed on a named real page shown as itself"
+   ],
+   "real_artifacts": [
+    {
+     "asset": "tomshw",
+     "text": "Grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000"
+    }
+   ]
+  },
+  "proof": {
+   "beat": "question"
+  }
+ },
+ "title_line": "Will your AI auditor find missing money or will it find skeletons in your closet?",
+ "title_moment": {
+  "title": "Your AI auditor: missing money or skeletons?",
+  "line": "Will your AI auditor find missing money or will it find skeletons in your closet?",
+  "spans": {
+   "short": {
+    "from_w": 45,
+    "to_w": 59
+   },
+   "long": {
+    "from_w": 79,
+    "to_w": 93
+   }
+  },
+  "card": true
+ }
+}

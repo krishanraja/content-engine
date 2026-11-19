@@ -68,8 +68,8 @@
  },
  "compositions": {
   "fixtures/ve/engine-core/props.json": "857202a611269e5f662a6e3514ac8339b45edee64371d3b8dc04da15575a7281",
-  "docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json": "3b1dd45e65359a87f480fc62fa46aa1c834475f850aa002a5c38ef53695afffa",
-  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.long.json": "04b1220a6eb57efbd86d06355cfc025367a671e8b8bbe39d6df03303fe31fd64",
-  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.short.json": "3c3e98c17571b0783c585aaebb90687ddbfbf178cb0310cc0009275065ce3945"
+  "docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json": "ef7a708da722803865342091ae722323938000dbec80b2e215dd537ba0eb96df",
+  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.long.json": "b3c05418ebba03924076070c1674a60b197d762d5d0c644b4400bf56c1a966b5",
+  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.short.json": "35032c3b0b204b66a701c8dcfd4631776bb84247042aec54ea957ca6467c4195"
  }
 }

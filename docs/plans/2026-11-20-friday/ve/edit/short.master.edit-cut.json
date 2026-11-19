@@ -1,0 +1,169 @@
+{
+ "take": ".cache/recordings/ai-finding-your-skeletons-short.mp4",
+ "take_fps": 48.0,
+ "size": [
+  1080,
+  1920
+ ],
+ "speech_db": -23.7,
+ "quiet_ceiling_db": -41.7,
+ "segments": [
+  {
+   "in_s": 1.2916667,
+   "out_s": 3.9375
+  },
+  {
+   "in_s": 4.3958333,
+   "out_s": 18.625
+  },
+  {
+   "in_s": 18.9791667,
+   "out_s": 25.5208333
+  },
+  {
+   "in_s": 27.875,
+   "out_s": 40.0625
+  },
+  {
+   "in_s": 56.5625,
+   "out_s": 66.1875
+  },
+  {
+   "in_s": 66.6666667,
+   "out_s": 69.8541667
+  },
+  {
+   "in_s": 77.5208333,
+   "out_s": 104.3333333
+  },
+  {
+   "in_s": 105.5,
+   "out_s": 112.0625
+  },
+  {
+   "in_s": 112.6041667,
+   "out_s": 115.9375
+  }
+ ],
+ "joins": [
+  {
+   "cut_out_s": 3.9375,
+   "cut_in_s": 4.3958,
+   "gap": [
+    3.82,
+    4.48
+   ],
+   "loudest_db": -56.0,
+   "removed_s": 0.458,
+   "pause_heard_s": 0.423
+  },
+  {
+   "cut_out_s": 18.625,
+   "cut_in_s": 18.9792,
+   "gap": [
+    18.54,
+    19.062
+   ],
+   "loudest_db": -44.7,
+   "removed_s": 0.354,
+   "pause_heard_s": 1.226
+  },
+  {
+   "cut_out_s": 25.5208,
+   "cut_in_s": 27.875,
+   "gap": [
+    25.44,
+    27.96
+   ],
+   "loudest_db": -60.5,
+   "removed_s": 2.354,
+   "pause_heard_s": 0.687
+  },
+  {
+   "cut_out_s": 40.0625,
+   "cut_in_s": 56.5625,
+   "gap": [
+    39.985,
+    56.707
+   ],
+   "loudest_db": -45.7,
+   "removed_s": 16.5,
+   "pause_heard_s": 0.262,
+   "restart_removed": "two unfinished tries at 'Claude found care billed', his third and full attempt kept"
+  },
+  {
+   "cut_out_s": 66.1875,
+   "cut_in_s": 66.6667,
+   "gap": [
+    65.728,
+    66.76
+   ],
+   "loudest_db": -45.1,
+   "removed_s": 0.479,
+   "pause_heard_s": 0.661
+  },
+  {
+   "cut_out_s": 69.8542,
+   "cut_in_s": 77.5208,
+   "gap": [
+    69.829,
+    77.65
+   ],
+   "loudest_db": -45.6,
+   "removed_s": 7.667,
+   "pause_heard_s": 1.064,
+   "restart_removed": "'and this is the bit I love / an old bill can't argue' said twice, the later full reading kept; cut at 69.85 sits in 75 ms measured at -43 to -59 dB (speech -17.5 dB)"
+  },
+  {
+   "cut_out_s": 104.3333,
+   "cut_in_s": 105.5,
+   "gap": [
+    104.233,
+    105.6
+   ],
+   "loudest_db": -42.4,
+   "removed_s": 1.167,
+   "pause_heard_s": 0.333
+  },
+  {
+   "cut_out_s": 112.0625,
+   "cut_in_s": 112.6042,
+   "gap": [
+    111.974,
+    112.7
+   ],
+   "loudest_db": -52.9,
+   "removed_s": 0.542,
+   "pause_heard_s": 0.378
+  }
+ ],
+ "kept_whole": [
+  {
+   "at": 33.18,
+   "why": "no quiet run long enough to shorten (0.00 s quiet): plays through"
+  },
+  {
+   "at": 85.24,
+   "why": "the two clocks do not both see a gap here: plays through"
+  }
+ ],
+ "removed": [
+  {
+   "from_s": 40.05,
+   "to_s": 56.65,
+   "why": "two unfinished tries at 'Claude found care billed', his third and full attempt kept"
+  },
+  {
+   "from_s": 69.85,
+   "to_s": 77.62,
+   "why": "'and this is the bit I love / an old bill can't argue' said twice, the later full reading kept; cut at 69.85 sits in 75 ms measured at -43 to -59 dB (speech -17.5 dB)"
+  }
+ ],
+ "first_word_s": 1.92,
+ "last_word_s": 117.175,
+ "speed": 1.0,
+ "speed_said": null,
+ "fps_out": 30,
+ "kept_s": 85.125,
+ "final_s": 85.125
+}

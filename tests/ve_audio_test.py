@@ -230,6 +230,15 @@ class EpisodeBedTest(unittest.TestCase):
         subprocess.run([ffmpeg(), '-v', 'error', '-y', '-i', str(self.out), '-t', '50', str(short)], check=True)
         self.assertFalse(qc_audio.continuity(str(short), str(self.out))['pass'])
 
+    def test_a_proof_excerpt_is_measured_as_its_own_window(self):
+        # Fri 20 Nov: an 8 s proof was failed for not running as long as the whole cut.
+        clip = self.root / 'excerpt.wav'
+        subprocess.run([ffmpeg(), '-v', 'error', '-y', '-ss', '20', '-i', str(self.out), '-t', '8', str(clip)], check=True)
+        self.assertFalse(qc_audio.continuity(str(clip), str(self.out))['pass'], 'as a whole cut it is too short')
+        row = qc_audio.continuity(str(clip), str(self.out), excerpt_s=8.0)
+        self.assertTrue(row['pass'], row)
+        self.assertFalse(qc_audio.continuity(str(clip), str(self.out), excerpt_s=12.0)['pass'], 'the wrong window length fails')
+
     def test_dialogue_shorter_than_the_cut_is_padded_and_the_bed_runs_to_the_end(self):
         voice, out = self.root / 'voice40.wav', self.root / 'audio.pad.wav'
         make(voice, "anoisesrc=d=40:c=pink:a=0.5,volume='if(between(t,0.6,39)*lt(mod(t-0.6,6),4),1,0)':eval=frame", 40)

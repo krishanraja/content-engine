@@ -220,6 +220,21 @@ class WholeFile(unittest.TestCase):
         self.assertEqual((result['pass'], result['status']), (None, 'not_run'))
         self.assertIn('not sendable', pf.refusal_lines(result)[0])
 
+    def test_a_page_starting_on_the_files_last_frame_is_not_sampled(self):
+        # Fri 20 Nov: a 240-frame proof ended exactly where the next caption page starts; reading frame 240 read nothing.
+        props = props_with([{'fromFrame': 90, 'toFrame': 150, 'words': [{'text': 'which', 'atFrame': 90}, {'text': 'habits', 'atFrame': 100}], 'swipeIndex': 1}])
+        end = props['durationFrames']
+        props['captions'] = props['captions'] + [{'fromFrame': end, 'toFrame': end + 30, 'words': [{'text': 'next', 'atFrame': end}, {'text': 'page', 'atFrame': end + 5}], 'swipeIndex': 1}]
+        asked = []
+        def grab(path, f, fps, size):
+            asked.append(f)
+            if f >= end:
+                raise ValueError('cannot reshape array of size 0')
+            return screen_frame(content_bottom=900, below='ui', cream_box=(70, 1100, 800, 200))
+        result = pf.check_frames('x.mp4', props, grab=grab)
+        self.assertEqual(result['status'], 'ok', result)
+        self.assertTrue(all(f < end for f in asked))
+
 
 def real_clip(path, colour, seconds=10):
     subprocess.run([ffmpeg(), '-y', '-v', 'error', '-f', 'lavfi', '-i', f'color=c={colour}:s=1080x1920:d={seconds}:r=30', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', str(path)], check=True)

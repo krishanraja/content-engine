@@ -4196,6 +4196,36 @@
       }
     },
     {
+      "id": "captions-unhaloed-under-his-chin",
+      "on": "2026-11-19",
+      "krish": "\"Halo + frame me higher\" (19 Nov 2026, Fri 20 production session, asked about the face beats of the AI-auditor short's proof: art-directed captions unhaloed on his light wall and starting 12 px under his chin)",
+      "what": "The Fri 20 Nov short's proof (piece c00cd4e0) drew art-directed captions white on his light wall with no halo, since the take halo was given only to rack-focus, and his take framed his chin at y 1066 against a caption band starting at 1095, which cannot sit lower because Instagram's caption zone begins at y 1320; ve qc failed captions.off_face.",
+      "symptom": "On a face beat of a tall cut the captions are hard to read on his wall and sit tight under his chin.",
+      "cause": "The halo was keyed to one caption theme, not to the picture behind the words; the full-frame take was drawn as shot, so a low-framed take put his chin on the caption band.",
+      "status": "guarded",
+      "guard_level": "gate",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/BrandFrame.tsx",
+          "contains": "export function overTake(",
+          "how": "every caption style drawn over his take wears the take halo",
+          "test": "npx vitest run apps/renderer/src/engine/faceLift.test.ts"
+        },
+        {
+          "file": "apps/renderer/src/engine/FormatMaster.tsx",
+          "contains": "export const FACE_LIFT = 1.1",
+          "how": "his full-frame take on a tall cut is framed 1.1x from its bottom edge (face about 85 px higher), easing out into the window",
+          "test": "npx vitest run apps/renderer/src/engine/faceLift.test.ts"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "short_video"
+        ],
+        "line": "On a tall cut his face beats keep his chin clear of the caption band and every caption over his take wears the halo; ve qc captions.off_face measures it."
+      }
+    },
+    {
       "id": "article-figure-typed-mark-and-word-cards",
       "on": "2026-11-19",
       "krish": "these dont look visually good enough and they have the wrong brand mark. Are these to go inside, in line, in the Substack article? If so, we don't even need the brand mark. (19 Nov 2026, the Fri 20 production session, of the piece's Substack figures)",

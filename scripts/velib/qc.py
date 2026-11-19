@@ -355,6 +355,14 @@ def picture_smeared(path: str, publish_day: str | None = None) -> dict:
     return row
 
 
+def _excerpt_s(props: dict | None, fps: float) -> float | None:
+    """A proof excerpt's own length in seconds (its stem starts part-way into the premix), else None (a whole cut)."""
+    stem = ((props or {}).get('audio') or {}).get('stem') or {}
+    if int(stem.get('trimBeforeFrames') or 0) > 0 and (props or {}).get('durationFrames'):
+        return int(props['durationFrames']) / float((props or {}).get('fps') or fps)
+    return None
+
+
 def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            dialogue_master: str | None = None, edl=None, joins=None, pages=None, region=None,
            mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None,
@@ -410,7 +418,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
          lambda: qc_sync.av_xcorr(path, dialogue_master, edl)),
         ('joins.decoder', joins is not None, lambda: qc_joins.decoder(path, joins)),
         ('audio.bed', dialogue_master is not None, lambda: qc_audio.bed(dialogue_master)),
-        ('audio.bed_continuity', dialogue_master is not None, lambda: qc_audio.continuity(path, dialogue_master)),
+        ('audio.bed_continuity', dialogue_master is not None, lambda: qc_audio.continuity(path, dialogue_master, excerpt_s=_excerpt_s(frame_props, fps))),
         ('captions.ocr', pages is not None and region is not None, lambda: qc_captions.ocr(path, pages, region)),
         # The wide cut wears the mark tile; the vertical cut must not (Ruling, Krish, 2026-11-11). From the logo rule's
         # date (props bodyLogo false; Ruling, Krish, 2026-11-17: the logo only on the title frame and the close) the

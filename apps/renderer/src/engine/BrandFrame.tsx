@@ -48,7 +48,7 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={house} frame={frame} />
       : call ? <CallCard props={house} frame={frame} />
-        : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus'
+        : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus' || overTake(beat)
           ? <div data-caption-halo style={{ position: 'absolute', inset: 0, filter: onFullPlate(props, beat) ? CAPTION_HALO : TAKE_HALO }}><ThemedCaption props={props} theme={props.captionTheme} frame={frame} /></div>
           : <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />)
         : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />
@@ -86,4 +86,10 @@ export function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; 
     ...caption.props.style, ...SPLIT_CAPTION_ZONE, height,
     padding: `10px ${HOUSE.caption.paddingX}px`,
   } })
+}
+
+/** Any caption style drawn over his take wears the take halo, not only rack-focus (Ruling, Krish, 2026-11-19: "Halo + frame
+ *  me higher"; his 18 Nov "Approve halo"): art-directed words sat white on his light wall, unreadable. */
+export function overTake(beat: { plate?: { source?: string | undefined } | undefined } | undefined): boolean {
+  return beat?.plate?.source === 'take'
 }

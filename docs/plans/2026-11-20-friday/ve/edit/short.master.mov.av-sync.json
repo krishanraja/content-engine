@@ -1,0 +1,123 @@
+{
+  "schema": "av-sync/1",
+  "status": "pass",
+  "pass": true,
+  "tolerance_ms": 45.0,
+  "coverage": 1.0,
+  "worst_drift_ms": 4.8,
+  "rule": "every measured span |sound lag - picture lag| <= 45 ms, both matched at r >= 0.5; measured spans cover >= 80% of the cut; frames timed by count, never by seeking",
+  "spans": [
+    {
+      "span": 0,
+      "out_s": 0.0,
+      "src_s": 1.292,
+      "dur_s": 2.646,
+      "status": "pass",
+      "sound_lag_ms": -1.1,
+      "sound_corr": 0.995,
+      "picture_lag_ms": -1.4,
+      "picture_corr": 0.98,
+      "drift_ms": 0.3
+    },
+    {
+      "span": 1,
+      "out_s": 2.646,
+      "src_s": 4.396,
+      "dur_s": 14.229,
+      "status": "pass",
+      "sound_lag_ms": -0.0,
+      "sound_corr": 1.0,
+      "picture_lag_ms": 2.3,
+      "picture_corr": 0.956,
+      "drift_ms": -2.3
+    },
+    {
+      "span": 2,
+      "out_s": 16.875,
+      "src_s": 18.979,
+      "dur_s": 6.542,
+      "status": "pass",
+      "sound_lag_ms": -3.4,
+      "sound_corr": 0.982,
+      "picture_lag_ms": -4.0,
+      "picture_corr": 0.939,
+      "drift_ms": 0.6
+    },
+    {
+      "span": 3,
+      "out_s": 23.417,
+      "src_s": 27.875,
+      "dur_s": 12.188,
+      "status": "pass",
+      "sound_lag_ms": 1.5,
+      "sound_corr": 0.992,
+      "picture_lag_ms": 2.0,
+      "picture_corr": 0.967,
+      "drift_ms": -0.5
+    },
+    {
+      "span": 4,
+      "out_s": 35.604,
+      "src_s": 56.562,
+      "dur_s": 9.625,
+      "status": "pass",
+      "sound_lag_ms": 1.5,
+      "sound_corr": 0.99,
+      "picture_lag_ms": 2.8,
+      "picture_corr": 0.957,
+      "drift_ms": -1.3
+    },
+    {
+      "span": 5,
+      "out_s": 45.229,
+      "src_s": 66.667,
+      "dur_s": 3.188,
+      "status": "pass",
+      "sound_lag_ms": 2.1,
+      "sound_corr": 0.981,
+      "picture_lag_ms": -2.4,
+      "picture_corr": 0.95,
+      "drift_ms": 4.4
+    },
+    {
+      "span": 6,
+      "out_s": 48.417,
+      "src_s": 77.521,
+      "dur_s": 26.812,
+      "status": "pass",
+      "sound_lag_ms": -4.1,
+      "sound_corr": 0.976,
+      "picture_lag_ms": -2.3,
+      "picture_corr": 0.959,
+      "drift_ms": -1.9
+    },
+    {
+      "span": 7,
+      "out_s": 75.229,
+      "src_s": 105.5,
+      "dur_s": 6.562,
+      "status": "pass",
+      "sound_lag_ms": -0.7,
+      "sound_corr": 0.996,
+      "picture_lag_ms": -0.6,
+      "picture_corr": 0.954,
+      "drift_ms": -0.1
+    },
+    {
+      "span": 8,
+      "out_s": 81.792,
+      "src_s": 112.604,
+      "dur_s": 3.333,
+      "status": "pass",
+      "sound_lag_ms": -2.7,
+      "sound_corr": 0.982,
+      "picture_lag_ms": 2.1,
+      "picture_corr": 0.966,
+      "drift_ms": -4.8
+    }
+  ],
+  "video": "short.master.mov",
+  "video_sha256": "baf5f1d2a3e8d010b72ac8a73e60b7d5d412f90f4b3445c96899bf352794d98f",
+  "take": "ai-finding-your-skeletons-short.mp4",
+  "take_sha256": "0be73bbd1d57f9e489321c08ba6c503e52970a2a725f317f5a2cc43e9002a584"
+}
