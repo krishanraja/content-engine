@@ -1,14 +1,14 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { BrandThemeV1Schema, PENDING_BRAND_SOURCE_COMMIT, ProductionBriefV1Schema, RenderManifestV2Schema, SourceVisualAnalysisV1Schema, TreatmentRegistryV1Schema, VisualNarrativePlanV1Schema, type BrandThemeV1, type ProductionBriefV1, type RenderManifestV2, type SourceVisualAnalysisV1 } from '@mindmake/contracts'
-import { boundRenderCallIssuesV2, brandGeometryContextIssues, brandLayerCollisionIssues, brandThemeRefusal, importProductionBrief, materializeProductionBriefJob, officialWordmarkUrl, publicationLegibilityReport, completeStageV2, createJobV2, hashValue, loadExactBrandGeometryContextV2, loadPinnedRenderRegistryV2, loudnormSecondPassFilterV2, manifestToV2RenderProps, renderCallFromBriefV2, renderCallIssuesV2, renderStoryV2, renderV2CacheKey, renderV2Styleframes, resolveBrandPlacementForShot, resolveBrandTimeline, validateV2RenderReadiness, type BrandGeometryContextV2 } from '@mindmake/core'
+import { BrandThemeV1Schema, PENDING_BRAND_SOURCE_COMMIT, RenderManifestV2Schema, SourceVisualAnalysisV1Schema, TreatmentRegistryV1Schema, VisualNarrativePlanV1Schema, type BrandThemeV1, type RenderManifestV2, type SourceVisualAnalysisV1 } from '@mindmake/contracts'
+import { brandGeometryContextIssues, brandLayerCollisionIssues, brandThemeRefusal, officialWordmarkUrl, publicationLegibilityReport, completeStageV2, createJobV2, hashValue, loadExactBrandGeometryContextV2, loadPinnedRenderRegistryV2, loudnormSecondPassFilterV2, manifestToV2RenderProps, renderV2CacheKey, resolveBrandPlacementForShot, resolveBrandTimeline, validateV2RenderReadiness, type BrandGeometryContextV2 } from '@mindmake/core'
 import studioConfig from '../config/studio.json'
 import { assetLabelModel, brandLockupRenderModel, publicationLockupRenderModel } from '../apps/renderer/src/v2/MindmakeStory'
-import { houseBandModel, houseCallModel, houseCaptionHidden, houseCaptionModel, houseMarkModel, houseStickerModel } from '../apps/renderer/src/v2/HouseShort'
-import { houseCallFrame, houseSwipeIndex } from '../apps/renderer/src/house/geometry'
+import { houseBandModel, houseCaptionHidden, houseCaptionModel, houseMarkModel, houseStickerModel } from '../apps/renderer/src/v2/HouseShort'
+import { houseSwipeIndex } from '../apps/renderer/src/house/geometry'
 import { cameraCropAt, defaultLayerBounds, deterministicUnit, primaryAttentionLayerId, sourceStartForShot, transitionOpacity } from '../apps/renderer/src/v2/timeline'
 import type { V2RuntimeShot } from '../apps/renderer/src/v2/props'
 
@@ -709,7 +709,8 @@ describe('V2 brand lockup protection', () => {
 // Short opens straight on its claim. Krish rejected the first look on
 // 2026-09-28 and approved the house style mock the same day ("yes,
 // approved"): the mark on an ink tile, captions on an ink block, the
-// channel sticker, the call card and the ending band.
+// channel sticker and the ending band. The mock's call card is retired
+// (Rulings, Krish, 2026-11-17 and 2026-11-18).
 function publicationBrandFixture() {
   const registry = TreatmentRegistryV1Schema.parse(studioConfig)
   const candidate = registry.brand_themes.find((theme) => theme.theme_id === 'makeyourmindup-video-v1')
@@ -758,7 +759,7 @@ function liveTwoShotManifest(lateMs = 2_000, series: RenderManifestV2['series'] 
     series,
     duration_ms: end,
     shot_directives: [{ ...shot, layers: shot.layers.map((layer) => layer.kind === 'source' ? { ...layer, protected: false } : layer) }, late],
-    captions: [...base.captions, { start_ms: 2_000, end_ms: end, text: 'Our call.', emphasis: ['call'] }],
+    captions: [...base.captions, { start_ms: 2_000, end_ms: end, text: 'Here\'s why.', emphasis: ['why'] }],
     caption_provenance: { ...base.caption_provenance, source_token_count: 9, caption_token_count: 9 },
     audio_plan: { ...base.audio_plan, dialogue_edits: [{ ...base.audio_plan.dialogue_edits[0]!, output_end_ms: end, source_end_ms: base.audio_plan.dialogue_edits[0]!.source_start_ms + end }] },
     branding: { mode: 'series', theme_id: theme.theme_id, theme_version: theme.version, theme_hash: hashValue(theme), wordmark_hashes: [publication?.mark.sha256 ?? HASH_A, publication?.logo.sha256 ?? HASH_B, ...(publication?.stacked ? [publication.stacked.sha256] : [])] },
@@ -795,7 +796,7 @@ describe('makeyourmindup house style', () => {
     expect(candidate.publication?.house_style?.channels).toEqual({
       follow_the_money: { day: 'Mondays', sticker: 'Bring a calculator', promise: 'No added sermons', question: 'Where does the money move, and who ends up better or worse off?' },
       under_the_hood: { day: 'Wednesdays', sticker: 'Screwdriver included', promise: 'Free from jargon', question: 'What actually goes together in a shipped thing, and why did this one work?' },
-      mind_the_gap: { day: 'Fridays', sticker: 'The headliner', promise: 'Every call scored in public', question: 'What is the pattern, and what does it mean is coming?' },
+      mind_the_gap: { day: 'Fridays', sticker: 'The headliner', promise: 'What\'s coming, before it\'s obvious', question: 'What is the pattern, and what does it mean is coming?' },
     })
     const report = publicationLegibilityReport(candidate)
     expect(report.failures).toEqual([])
@@ -824,7 +825,7 @@ describe('makeyourmindup house style', () => {
     const props = houseProps(live)
     const house = props.branding.publication?.house
     expect(props.branding.typography).toEqual({ structure: 'Archivo', claim: 'Anton', body: 'Archivo', data: 'IBM Plex Mono' })
-    expect(house).toMatchObject({ tokens: { ink: '#0C1512', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' }, day: 'Fridays', promise: 'Every call scored in public', site: 'makeyourmindup.ai', tile: { size: 136, markWidth: 96, shadowPx: 10 }, band: { topPx: 1060, heightPx: 408, logoWidth: 520 } })
+    expect(house).toMatchObject({ tokens: { ink: '#0C1512', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' }, day: 'Fridays', promise: 'What\'s coming, before it\'s obvious', site: 'makeyourmindup.ai', tile: { size: 136, markWidth: 96, shadowPx: 10 }, band: { topPx: 1060, heightPx: 408, logoWidth: 520 } })
     const opening = props.shots.find((shot) => shot.shotId === 'shot-main')!.brandCues!
     const ending = props.shots.find((shot) => shot.shotId === 'shot-late')!.brandCues!
     expect(opening.every((cue) => cue.mode === 'mindmake_only')).toBe(true)
@@ -836,7 +837,7 @@ describe('makeyourmindup house style', () => {
     expect(houseMarkModel(props.branding, ending[0])).toBeNull()
     const band = houseBandModel(props.branding, ending[0], props.safeZones, 3_000)
     expect(band).toMatchObject({ top: 1060, insets: { left: 72, right: 72 }, logoWidth: 520, day: 'Fridays', site: 'makeyourmindup.ai', pill: { label: 'mind.the.gap', background: '#FF6A4D', color: '#0C1512' }, background: '#0C1512' })
-    expect(band!.ticker.items.slice(0, 4)).toEqual(['Every call scored in public', '*', 'Fridays', '*'])
+    expect(band!.ticker.items.slice(0, 4)).toEqual(['What\'s coming, before it\'s obvious', '*', 'Fridays', '*'])
     // Still until the band has arrived, then the ticker moves (and only it).
     expect(houseBandModel(props.branding, ending[0], props.safeZones, 2_200)!.ticker.offsetPx).toBe(0)
     expect(houseBandModel(props.branding, ending[0], props.safeZones, 3_900)!.ticker.offsetPx).toBeGreaterThan(0)
@@ -877,32 +878,21 @@ describe('makeyourmindup house style', () => {
     expect(faceTopRight.branding.publication?.house?.sticker).toBeUndefined()
   })
 
-  it('draws the call card on the beat the manifest names, in place of the caption', () => {
-    const call = { beat_id: 'beat-main', statement: STATEMENT, due: '2027-09-30', confidence_percent: 75 }
-    const live = liveTwoShotManifest(2_000, 'mind_the_gap', publicationBrandFixture().theme, { call })
-    const props = houseProps(live)
-    expect(props.branding.publication?.house?.call).toEqual({ startMs: 0, endMs: 2_000, kicker: 'The call', headline: 'Our call.', statement: STATEMENT, due: '2027-09-30', confidencePercent: 75 })
-    const model = houseCallModel(props.branding, props.safeZones, 1_000)
-    expect(model).toMatchObject({ left: 72, top: 930, width: 924, kicker: 'The call', headline: 'Our call.', swipeIndex: 2, due: 'Due 2027-09-30', sure: '75% sure' })
-    expect(houseCallFrame(STATEMENT, { topPx: 100, rightPx: 70, bottomPx: 300, leftPx: 70 }).lines).toBe(5)
-    expect(houseCaptionHidden(props.branding, cueAt(props, 1_000), props.safeZones, 1_000)).toBe(true)
-    expect(houseCallModel(props.branding, props.safeZones, 2_500)).toBeNull()
-    // Without a call in the manifest there is no card.
-    expect(houseProps(liveTwoShotManifest()).branding.publication?.house?.call).toBeUndefined()
-    // A call must name a beat a shot carries.
-    expect(() => liveTwoShotManifest(2_000, 'mind_the_gap', publicationBrandFixture().theme, { call: { ...call, beat_id: 'beat-missing' } })).toThrow(/the call names a beat no shot carries/)
-  })
-
-  it('refuses a call card that would cover the face or run into the platform safe zone', () => {
-    const { theme } = publicationBrandFixture()
+  it('draws no call card: the copy is gone, and a manifest made before the ruling may carry a call nothing reads', () => {
+    // Ruling (Krish, 2026-11-17): "I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and
+    // gimmicky. I don't really have the clout such that my opinion can hold up in official scores." Ruling (Krish,
+    // 2026-11-18): "get rid of that - i have abandoned the prediction format, it feels lame".
+    const { candidate, theme } = publicationBrandFixture()
+    expect(Object.keys(candidate.publication!.house_style!.copy)).toEqual(['site', 'question_kicker'])
     const call = { beat_id: 'beat-main', statement: STATEMENT, due: '2027-09-30', confidence_percent: 75 }
     const live = liveTwoShotManifest(2_000, 'mind_the_gap', theme, { call })
-    const lowFace = clearFaceAnalysis(live, { x: 0.45, y: 0.49, width: 0.1, height: 0.04 })
-    expect(resolveBrandTimeline(live, theme, brandGeometryFor(live, lowFace)).issues.join('; ')).toMatch(/the call card on beat beat-main would cover krish-track:face/)
-    const longCall = liveTwoShotManifest(2_000, 'mind_the_gap', theme, { call: { ...call, statement: `${STATEMENT} ${STATEMENT}` } })
-    expect(resolveBrandTimeline(longCall, theme, brandGeometryFor(longCall, clearFaceAnalysis(longCall))).issues.join('; ')).toMatch(/runs into the youtube_shorts safe zone at the foot of the frame/)
-    const onEnding = liveTwoShotManifest(2_000, 'mind_the_gap', theme, { call: { ...call, beat_id: 'beat-late' } })
-    expect(resolveBrandTimeline(onEnding, theme, brandGeometryFor(onEnding, clearFaceAnalysis(onEnding))).issues.join('; ')).toMatch(/would share the screen with the ending band/)
+    const props = houseProps(live)
+    expect(props.branding.publication?.house).not.toHaveProperty('call')
+    expect(houseCaptionHidden(props.branding, cueAt(props, 1_000), props.safeZones, 1_000)).toBe(false)
+    expect(resolveBrandTimeline(live, theme, brandGeometryFor(live, clearFaceAnalysis(live))).issues).toEqual([])
+    // A call naming a beat no shot carries is no longer checked: nothing reads it.
+    expect(() => liveTwoShotManifest(2_000, 'mind_the_gap', theme, { call: { ...call, beat_id: 'beat-missing' } })).not.toThrow()
+    expect(JSON.stringify(props)).not.toMatch(/Our call|% sure|confidencePercent/)
   })
 
   it('lets the band sit over the torso and keeps it clear of the face', () => {
@@ -971,131 +961,13 @@ describe('retired series render exactly as before', () => {
   })
 })
 
-// The call card shows the piece's dated prediction, so it must be the call
-// Krish approved, to the character: a wrong date or percentage on screen is a
-// factual error in public. The Studio reads it from the approved text of the
-// job's production brief (readPieceCall) and refuses a house style render for
-// a live subchannel whose manifest has no call or a different one.
-const EDITION_TEXT = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
-const REVISION = 'e'.repeat(64)
-
-function briefFor(series: ProductionBriefV1['series'], approvedText: string = EDITION_TEXT, briefId = `brief_call_${series}`): ProductionBriefV1 {
-  return ProductionBriefV1Schema.parse({
-    schema_version: 1,
-    brief_id: briefId,
-    content_idea_id: '904658db-4df2-4537-a0ed-ebe93e081db7',
-    content_revision_hash: REVISION,
-    series,
-    production_kinds: ['video'],
-    source_mode: 'short_native',
-    content: {
-      title: 'Who picks your AI?',
-      thesis: 'The software that picks the brain for you is becoming the default, and the money follows it.',
-      approved_text: approvedText,
-      audience: 'Leaders who buy AI for their businesses.',
-      intended_payoff: 'Know who will be choosing the brain behind your AI, and when to check.',
-    },
-    claims: [],
-    visual_opportunities: [],
-    hard_gates: { truth: 'passed', rights: 'passed', confidentiality: 'passed', meaning: 'passed', naming: 'passed' },
-    editorial_approval: { approved_by: 'Krish', approved_at: '2026-09-28T12:00:00.000Z', approval_revision_hash: REVISION },
-  })
-}
-
-const APPROVED_CALL = { beat_id: 'beat-main', statement: STATEMENT, due: '2027-09-30', confidence_percent: 75 }
-
-describe('the call on screen is the call Krish approved', () => {
-  it('reads the call from the brief, ready for the manifest, and refuses a text without one', () => {
-    expect(renderCallFromBriefV2(briefFor('mind_the_gap'), 'beat-main')).toEqual(APPROVED_CALL)
-    const unset = briefFor('mind_the_gap', EDITION_TEXT.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]'))
-    expect(() => renderCallFromBriefV2(unset, 'beat-main')).toThrow(/production brief brief_call_mind_the_gap has no call the Studio can read in its approved text: The prediction has no confidence yet/)
-  })
-
-  it('passes a call that matches the approved text exactly', () => {
-    const { theme } = publicationBrandFixture()
-    const live = liveTwoShotManifest(2_000, 'mind_the_gap', theme, { call: APPROVED_CALL })
-    expect(renderCallIssuesV2(live, theme, briefFor('mind_the_gap'))).toEqual([])
-  })
-
-  it('refuses a drifted date, a drifted percentage and a drifted statement', () => {
-    const { theme } = publicationBrandFixture()
-    const brief = briefFor('mind_the_gap')
-    const issues = (call: Partial<typeof APPROVED_CALL>) => renderCallIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme, { call: { ...APPROVED_CALL, ...call } }), theme, brief)
-    expect(issues({ due: '2027-09-29' })).toEqual([
-      'the call\'s due date is 2027-09-29, and production brief brief_call_mind_the_gap\'s approved text says 2027-09-30',
-      'print the exact call with studio v2 call --job job-render-v2 --beat beat-main',
-    ])
-    expect(issues({ confidence_percent: 80 })[0]).toBe('the call says 80% sure, and production brief brief_call_mind_the_gap\'s approved text says 75%')
-    // One character: the full stop.
-    expect(issues({ statement: STATEMENT.slice(0, -1) })[0]).toBe(`the call's statement differs from production brief brief_call_mind_the_gap's approved text, which says: ${JSON.stringify(STATEMENT)}`)
-    expect(issues({ statement: STATEMENT.replace('30 September 2027', '30 September 2028'), due: '2028-09-30' })).toHaveLength(3)
-  })
-
-  it('refuses a house style render with no call, and names what to add', () => {
-    const { theme } = publicationBrandFixture()
-    const [issue, ...rest] = renderCallIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme), theme, briefFor('mind_the_gap'))
-    expect(rest).toEqual([])
-    expect(issue).toMatch(/^the render manifest has no call\. A makeyourmindup Short ends on the piece's call: add "call": /)
-    expect(issue).toContain(JSON.stringify({ beat_id: '<the beat that carries it>', statement: STATEMENT, due: '2027-09-30', confidence_percent: 75 }))
-    expect(issue).toContain('studio v2 call --job job-render-v2 --beat <beat_id>')
-    // A brief whose approved text has no readable call cannot render at all.
-    const unset = briefFor('mind_the_gap', EDITION_TEXT.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]'))
-    expect(renderCallIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme, { call: APPROVED_CALL }), theme, unset)).toEqual([
-      'production brief brief_call_mind_the_gap has no call the Studio can read in its approved text: The prediction has no confidence yet. Krish sets how sure we are, as a percentage. A Short in the house style ends on its call, so it cannot render until the approved text states one.',
-    ])
-  })
-
-  it('leaves the retired series, unbranded renders, other themes and briefless jobs exactly as they were', () => {
-    const { theme } = publicationBrandFixture()
-    const drifted = { ...APPROVED_CALL, due: '2027-09-29' }
-    // A retired series, drawn in the house style theme (which refuses it on
-    // its own) or its own, with no call or a drifted one.
-    for (const call of [undefined, drifted]) {
-      const extra = call ? { call } : {}
-      expect(renderCallIssuesV2(liveTwoShotManifest(2_000, 'built_with_ai', theme, extra), theme, briefFor('built_with_ai'))).toEqual([])
-      const retired = brandableManifest(RenderManifestV2Schema.parse({ ...manifest(), ...extra }))
-      expect(renderCallIssuesV2(retired, officialBrandFixture().theme, briefFor('built_with_ai'))).toEqual([])
-      const unbranded = RenderManifestV2Schema.parse({ ...liveTwoShotManifest(2_000, 'mind_the_gap', theme, extra), branding: { mode: 'none', wordmark_hashes: [] } })
-      expect(renderCallIssuesV2(unbranded, theme, briefFor('mind_the_gap'))).toEqual([])
-      // No production brief bound to the job: nothing to check against.
-      expect(renderCallIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme, extra), theme, undefined)).toEqual([])
+// The call gate is retired with the call card (Rulings, Krish, 2026-11-17 and 2026-11-18): no render or
+// styleframe is refused for a missing or different call, and nothing reads a call from a production brief.
+describe('no render waits on a call', () => {
+  it('has no call gate in the Studio', () => {
+    expect(existsSync('packages/core/src/render-call.ts')).toBe(false)
+    for (const file of ['packages/core/src/render-v2.ts', 'packages/cli/src/v2.ts', 'packages/core/src/index.ts']) {
+      expect(readFileSync(file, 'utf8')).not.toMatch(/call gate|RenderCallIssues|renderCallFromBrief|readPieceCall/)
     }
-    // A live subchannel under a theme with no house style draws no call card.
-    const { house_style: _omitted, ...noHouse } = theme.publication!
-    const older = { ...theme, publication: noHouse } as BrandThemeV1
-    expect(renderCallIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', older), older, briefFor('mind_the_gap'))).toEqual([])
   })
-
-  it('refuses at the render and the styleframes from the job\'s own brief, before any media work', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'mindmake-render-call-'))
-    const priorRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
-    process.env.MINDMAKE_RUNTIME_ROOT = join(root, 'runtime')
-    try {
-      const configPath = join(process.cwd(), 'config', 'studio.json')
-      const imported = await importProductionBrief(briefFor('mind_the_gap'))
-      const { job } = await materializeProductionBriefJob({ imported, configPath, skillPaths: [] })
-      const { theme } = publicationBrandFixture()
-      const forJob = (extra: Partial<RenderManifestV2> = {}) => RenderManifestV2Schema.parse({ ...liveTwoShotManifest(2_000, 'mind_the_gap', theme, extra), job_id: job.job_id })
-      // The job pins the committed theme: a candidate, with the house style.
-      expect(await boundRenderCallIssuesV2(forJob({ call: APPROVED_CALL }))).toEqual([])
-      expect((await boundRenderCallIssuesV2(forJob()))[0]).toMatch(/^the render manifest has no call/)
-      expect((await boundRenderCallIssuesV2(forJob({ call: { ...APPROVED_CALL, confidence_percent: 70 } })))[0]).toMatch(/says 70% sure, and production brief brief_call_mind_the_gap's approved text says 75%/)
-      await expect(renderStoryV2(process.cwd(), forJob())).rejects.toThrow(/^hard block: the call gate failed: the render manifest has no call/)
-      await expect(renderStoryV2(process.cwd(), forJob({ call: { ...APPROVED_CALL, due: '2027-09-29' } }), { profile: 'preview' })).rejects.toThrow(/^hard block: the call gate failed: the call's due date is 2027-09-29/)
-      await expect(renderV2Styleframes(process.cwd(), forJob(), [0, 1_000, 3_000])).rejects.toThrow(/^hard block: the call gate failed: the render manifest has no call/)
-
-      // A retired series job from its own brief reads nothing and passes.
-      const retiredImport = await importProductionBrief(briefFor('built_with_ai'))
-      const { job: retiredJob } = await materializeProductionBriefJob({ imported: retiredImport, configPath, skillPaths: [] })
-      const retired = RenderManifestV2Schema.parse({ ...brandableManifest(), job_id: retiredJob.job_id, call: { ...APPROVED_CALL, due: '2027-09-29' } })
-      expect(await boundRenderCallIssuesV2(retired)).toEqual([])
-      // A live job made without a production brief has nothing to check against.
-      const briefless = await createJobV2({ series: 'mind_the_gap', mode: 'short_native', presenterName: 'Krish', configPath, skillPaths: [] })
-      expect(await boundRenderCallIssuesV2(RenderManifestV2Schema.parse({ ...forJob(), job_id: briefless.job_id }))).toEqual([])
-    } finally {
-      if (priorRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT
-      else process.env.MINDMAKE_RUNTIME_ROOT = priorRuntimeRoot
-      await rm(root, { recursive: true, force: true })
-    }
-  }, 30_000)
 })

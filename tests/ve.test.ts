@@ -22,9 +22,35 @@ describe('ve', () => {
     expect(ProductionSpecV2Schema.safeParse(spec).success).toBe(false)
   })
 
-  it('mind.the.gap cannot ship without its dated call', () => {
-    const spec = fixture(); delete spec.call
-    expect(ProductionSpecV2Schema.safeParse(spec).success).toBe(false)
+  // The dated call is retired. Ruling (Krish, 2026-11-17): "I don't do dated-and-scored make-your-mind-up pieces because
+  // it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official
+  // scores." Ruling (Krish, 2026-11-18): "get rid of that - i have abandoned the prediction format, it feels lame".
+  it('mind.the.gap ships with no dated call on any day, and a spec written with one still parses', () => {
+    expect(fixture().call).toBeUndefined()
+    for (const day of ['2026-10-23', '2026-11-17', '2026-11-20']) {
+      const spec = fixture(); spec.publish_day = day
+      const parsed = ProductionSpecV2Schema.safeParse(spec)
+      expect(parsed.success, `${day}: ${JSON.stringify(parsed.error?.issues)}`).toBe(true)
+    }
+    const old = fixture(); old.call = { statement: 'One more country will fund its own national AI model.', due: '2026-12-31', confidence_percent: 90 }
+    expect(ProductionSpecV2Schema.safeParse(old).success).toBe(true)
+  })
+
+  it('a mind.the.gap spec with no call lints clean and compiles with no props.call', () => {
+    const script = [
+      'import json, sys, tempfile', 'from pathlib import Path', "sys.path.insert(0, 'scripts')",
+      'from velib.lint import lint', 'from velib.compile import compile_cut',
+      "spec = json.loads(Path('fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))",
+      "assert spec['brand']['series'] == 'mind.the.gap' and 'call' not in spec",
+      'with tempfile.TemporaryDirectory() as temp:',
+      "    path = Path(temp) / 'spec.json'; path.write_text(json.dumps(spec), encoding='utf-8')",
+      '    _, problems = lint(path)',
+      "print(json.dumps({'problems': problems}))",
+    ].join('\n')
+    const result = py(['-c', script])
+    expect(result.status, result.stderr).toBe(0)
+    expect(JSON.parse(result.stdout.trim().split('\n').at(-1)!).problems).toEqual([])
+    expect(readFileSync(join(ROOT, 'scripts/velib/compile.py'), 'utf8')).not.toMatch(/props\['call'\]\s*=/)
   })
 
   it('generated media can never be evidence', () => {

@@ -1,9 +1,15 @@
 # Signals: the outside sources, from a session or a runner
 
 Two stdlib-only Python tools a session or a runner machine can run. The
-engine itself reads the same sources from `apps/control-plane/api/_signals.ts`
-on a timer (the `signals_news` and `signals_odds` crons) and serves the
-scoreboard from `/api/calls`; `docs/CONTENT_ENGINE.md` has those routes.
+engine itself reads the news sources from `apps/control-plane/api/_signals.ts`
+on a timer (the `signals_news` cron); `docs/CONTENT_ENGINE.md` has those
+routes. The scoreboard is retired: the `signals_odds` cron and the
+`call-market` pin are gone and `/api/calls` answers with no calls, because no
+piece makes a dated prediction any more (Ruling, Krish, 2026-11-17: "I don't
+do dated-and-scored make-your-mind-up pieces because it felt quite tacky and
+gimmicky. I don't really have the clout such that my opinion can hold up in
+official scores."; Ruling, Krish, 2026-11-18: "get rid of that - i have
+abandoned the prediction format, it feels lame").
 
 ## collect.py: the readers
 
@@ -28,11 +34,11 @@ cleanly without: **exa** (`EXA_API_KEY`), **brave** (`BRAVE_API_KEY`), **x**
 
 What each is for:
 
-- **odds / kalshi**: what traders pay for an outcome, 0 to 1. The engine makes
-  a dated Call on every piece; pin the Call to a market with
-  `POST /api/content-ideas/:id/call-market {source, key}` and the scoreboard
-  shows both, tracked to the due date. `--search` is a rough finder (it can
-  return sports markets); a real Call is pinned by slug or ticker.
+- **odds / kalshi**: what traders pay for an outcome, 0 to 1: research, read
+  as the market's view and credited to it. Nothing pins a market to a piece
+  any more, and no piece sets our own confidence beside it. `--search` is a
+  rough finder (it can return sports markets); read a market by slug or
+  ticker.
 - **news**: the headlines GDELT saw for a subject, with a count per day
   worked out from their dates and the number of distinct outlets. That is the
   velocity behind the news-wall picture. GDELT allows one request every five

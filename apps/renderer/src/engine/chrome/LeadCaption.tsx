@@ -69,8 +69,9 @@ export function leadBox(card: LeadCard, beat: EngineBeat | undefined, aspect: '9
 }
 
 export function LeadCaption({ props, frame, perCard }: { props: EngineRenderProps; frame: number; perCard: number }) {
-  if ((props.ending && frame >= props.ending.fromFrame)
-    || props.beats.some((beat) => beat.role === 'call' && frame >= beat.fromFrame && frame < beat.toFrame)) return null
+  // Captions run through every beat, a retired 'call' beat included (the call card is gone: Rulings, Krish,
+  // 2026-11-17 and 2026-11-18); they stop only at the ending band.
+  if (props.ending && frame >= props.ending.fromFrame) return null
   const card = leadCards(props.captions, props.beats, perCard).find(c => c.from <= frame && frame < c.to)
   if (!card) return null
   const beat = props.beats.find(b => b.fromFrame <= frame && frame < b.toFrame)

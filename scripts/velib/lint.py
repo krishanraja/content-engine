@@ -93,9 +93,10 @@ def no_name_pattern() -> re.Pattern:
 
 
 def public_strings(spec: dict):
-    """The spec's words that reach the screen: device params (never a src, id or path), each dataset's producer
-    label, unit and row labels, and the dated call. Records such as signed.by, licence and take_edits.why name
-    him by right and are never read."""
+    """The spec's words that reach the screen: device params (never a src, id or path) and each dataset's producer
+    label, unit and row labels. Records such as signed.by, licence and take_edits.why name him by right and are never
+    read. A spec's retired `call` never reaches the screen (Rulings, Krish, 2026-11-17 and 2026-11-18), so it is not
+    read either."""
     for index, obj in enumerate(spec.get('objects', [])):
         for path, text in _strings(obj.get('params', {}), f'objects.{index}.params'):
             if path.rsplit('.', 1)[-1] not in NOT_PUBLIC:
@@ -107,9 +108,6 @@ def public_strings(spec: dict):
         for row, entry in enumerate(dataset.get('rows', [])):
             if isinstance(entry.get('label'), str):
                 yield f'datasets.{index}.rows.{row}.label', entry['label']
-    statement = (spec.get('call') or {}).get('statement')
-    if isinstance(statement, str):
-        yield 'call.statement', statement
 
 
 def pending_devices_error(format_id: str, fmt: dict | None = None) -> str | None:
@@ -647,9 +645,11 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         whole = not cut.get('excerpt')
         if whole and roles.count('payoff') != 1:
             out.append(f'story.one_payoff {where}: exactly one payoff beat (found {roles.count("payoff")})')
-        from . import guards  # noqa: PLC0415
-        if whole and spec['brand']['series'] == 'mind.the.gap' and 'call' not in roles and not guards.off_day(spec):
-            out.append(f'story.call {where}: mind.the.gap ends on a call beat carrying the dated call')
+        # No cut ends on a dated call any more (the call beat and its card are retired). Ruling (Krish, 2026-11-17):
+        # "I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really
+        # have the clout such that my opinion can hold up in official scores." Ruling (Krish, 2026-11-18): "get rid of
+        # that - i have abandoned the prediction format, it feels lame". A mind.the.gap cut names the pattern and where
+        # it leads in its payoff; nothing here asks for a call.
         run_role, run_len = None, 0
         for index, role in enumerate(roles):
             run_len = run_len + 1 if role == run_role else 1
@@ -672,6 +672,8 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
                 if not devices & DATA_DEVICES:
                     out.append(f'creative.decision_engine {at}: the point carries a number, so a data device shows it (kinetic_stat, bar_compare, test_grid, record_card) or give override_reason')
             needed = max(1, math.ceil(words / (WORDS_PER_SECOND * 3)))
+            # A beat with the retired 'call' role (a spec written before 18 Nov 2026) keeps its old exemption, so that
+            # spec still lints; no new spec is asked for one.
             if beat['role'] not in ('call',) and len(beat['events']) < needed and not beat.get('override_reason'):
                 out.append(f'motion.event_cadence {at}: {words} words need at least {needed} events (one every 3 s), found {len(beat["events"])}')
             for j, event in enumerate(beat['events']):

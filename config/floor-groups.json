@@ -1,5 +1,5 @@
 {
-  "_about": "The rejection floor's 215 standards grouped into 20 for Krish's approval (Krish, 2026-11-04: \"group the 215 floor standards for my approval\"). Each group is one decision: approve, reword or reject; its members take the decision. 'operating' holds the standards about how sessions work with him: they are reconciled against AGENTS.md and the failure loop, never put to him as taste. scripts/floor_group.py checks every standard sits in exactly one group. On 15 Nov the rebuilt floor (356 standards) brought new ones (Krish, 2026-11-15, yes to sorting the new draft standards into proposed groups and putting them to him): they sit only in new groups, each a proposal he decides, or in operating; the 20 approved groups are unchanged, and a group that adds to an approved one names it in its title.",
+  "_about": "The rejection floor's 215 standards grouped into 20 for Krish's approval (Krish, 2026-11-04: \"group the 215 floor standards for my approval\"). Each group is one decision: approve, reword or reject; its members take the decision. 'operating' holds the standards about how sessions work with him: they are reconciled against AGENTS.md and the failure loop, never put to him as taste. scripts/floor_group.py checks every standard sits in exactly one group. On 15 Nov the rebuilt floor (356 standards) brought new ones (Krish, 2026-11-15, yes to sorting the new draft standards into proposed groups and putting them to him): they sit only in new groups, each a proposal he decides, or in operating; the 20 approved groups are unchanged, and a group that adds to an approved one names it in its title. On 18 Nov the two prediction groups, bold_predictions and predictions_committed, were reworded as withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18: the dated-prediction format is abandoned); their members stay grouped, as the record of what he rejected.",
   "groups": [
     {
       "key": "real_logos",
@@ -306,9 +306,9 @@
     },
     {
       "key": "bold_predictions",
-      "title": "Bold, checkable predictions",
-      "never_beneath": "A prediction names real companies, commits to a clear near-term call that is not already happening, and only appears where that day's close format calls for one; no doomsaying opener.",
-      "check": "Named entities; dated and checkable; not already true; matches the agreed close.",
+      "title": "Bold, checkable predictions (withdrawn): the agreed close, no doomsaying opener",
+      "never_beneath": "Withdrawn with the prediction format: no piece makes a dated prediction, gives a confidence or names a date to be marked on. Ruling (Krish, 2026-11-17): \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\" Ruling (Krish, 2026-11-18): \"get rid of that - i have abandoned the prediction format, it feels lame\". What stays: each day's piece closes on the close agreed for it, and no piece opens on doomsaying.",
+      "check": "No dated prediction, confidence percentage or date to mark it by; the close is the one agreed for the day; no doomsaying opener.",
       "members": [
         "s9c6d02148a",
         "s1949b94c5f",
@@ -589,9 +589,9 @@
     },
     {
       "key": "predictions_committed",
-      "title": "Committed predictions and fairly chosen examples (adds to Bold, checkable predictions)",
-      "never_beneath": "A prediction commits to a bold, near-term call with a deliberately set confidence, never a hedged coin flip far in the future; and examples stay neutral, with Chinese flags or DeepSeek imagery only where the example is a Chinese AI.",
-      "check": "Find the prediction's date and confidence: within a year and deliberately set; scan the examples for China-specific imagery that is not about a Chinese AI.",
+      "title": "Committed predictions (withdrawn) and fairly chosen examples",
+      "never_beneath": "The prediction half is withdrawn with the prediction format (Ruling, Krish, 2026-11-17: \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\" Ruling, Krish, 2026-11-18: \"get rid of that - i have abandoned the prediction format, it feels lame\"): no piece makes one. What stays: examples stay neutral, with Chinese flags or DeepSeek imagery only where the example is a Chinese AI.",
+      "check": "Scan the examples for China-specific imagery that is not about a Chinese AI; confirm the piece gives no dated prediction or confidence.",
       "members": [
         "sedf0fc1d56",
         "s70ba0b553c"

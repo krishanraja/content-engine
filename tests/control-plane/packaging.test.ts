@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import {
   characters, DESCRIPTION_MAX, failures, FEED_CUT, firstSentence, HOOK_MAX, lintAnswer, lintPackage, lintSubstack,
-  MAX_HASHTAGS, PACKAGING_RULES, packagingCorrection, packagingRequest, packagingRulesBlock, predictionDate, READ_LINE,
+  MAX_HASHTAGS, PACKAGING_RULES, packagingCorrection, packagingRequest, packagingRulesBlock, READ_LINE,
   readAnswer, RULE_GROUPS, ruleText, SUBTITLE_AIM, SUBTITLE_LINE, TITLE_AIM, TITLE_MAX, watchLabel, WORKED_EXAMPLE as EX,
 } from '../../apps/control-plane/api/_packaging.js'
 import { HOUSE_RULES, houseRulesBlock, rulesFor } from '../../apps/control-plane/api/_houseRules.js'
@@ -108,11 +108,12 @@ describe('the title and description, checked the way the chat reasoned', () => {
     const l = lint({ description: DESCRIPTION.replace(READ_LINE, '') })
     assert.equal(l.passed, false)
     assert.deepEqual(rulesBroken(l), ['READ_LINE'])
-    // Krish's opening paragraph on its own: the line and the call are missing.
+    // Krish's opening paragraph on its own: the line is missing. Since 2026-11-18 nothing asks for the piece's
+    // prediction (Rulings, Krish, 2026-11-17 and 2026-11-18; house rule NO_DATED_PREDICTION).
     const bare = lint({ description: EX.opening })
     assert.deepEqual(rulesBroken(bare), ['READ_LINE'])
-    assert.deepEqual(rulesBroken(bare, 'warn'), ['PREDICTION'])
-    assert.match(bare.problems.find(p => p.rule === 'PREDICTION')!.detail, /by 30 June 2027/)
+    assert.deepEqual(rulesBroken(bare, 'warn'), [])
+    assert.ok(!PACKAGING_RULES.some(r => r.id === 'PREDICTION'))
   })
 
   test('the house\'s own constructions fail: "Not X, Y", a robot, a banned phrase, an exclamation mark, American spelling', () => {
@@ -385,10 +386,6 @@ describe('the writer\'s answer, and its one correction', () => {
     assert.match(packagingRequest({ idea: null, thesis: null, source: PIECE_1, thumbnailText: null, watch: null, hint: null }), /No thumbnail text was given/)
   })
 
-  test('the piece\'s prediction date is read by the shared call reader', () => {
-    assert.equal(predictionDate(PIECE_1), '30 June 2027')
-    assert.equal(predictionDate('No call here.'), null)
-  })
 })
 
 describe('the rules are written down once, and every writer reads the ruling', () => {

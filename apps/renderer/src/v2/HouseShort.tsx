@@ -1,16 +1,20 @@
 import React from 'react'
 import { useCurrentFrame, useVideoConfig } from 'remotion'
 import { Grain, HouseLogo, MarkTile, MonoLabel, SectionPill, Sticker, SwipedText, TickerStar, type HouseImage, type HouseTokens } from '../house/components'
-import { HOUSE, HOUSE_FONTS, HOUSE_TICKER_RULE, houseBandInsets, houseCallFrame, houseCaptionFrame, houseDueLine, houseLastWordIndex, houseShortStickerFrame, houseSwipeIndex, houseTickerOffset, type HouseSafeZones } from '../house/geometry'
+import { HOUSE, HOUSE_FONTS, HOUSE_TICKER_RULE, houseBandInsets, houseCaptionFrame, houseShortStickerFrame, houseSwipeIndex, houseTickerOffset, type HouseSafeZones } from '../house/geometry'
 import type { V2RenderProps, V2RuntimeShot } from './props'
 
 // A Short in the makeyourmindup house style (the mock Krish approved on
 // 2026-09-28): the mark on its ink tile on every beat, captions on an ink
 // block with the channel colour's hard shadow and one mint swipe, the channel
-// sticker on the second beat, the call card on the beat that carries the
-// call, and the ending band once, at the end. Things arrive with a short
-// slide, drop or slap; only the ticker keeps moving. Every motion is a pure
-// function of the frame.
+// sticker on the second beat, and the ending band once, at the end. Things
+// arrive with a short slide, drop or slap; only the ticker keeps moving. Every
+// motion is a pure function of the frame. The call card that once sat on the
+// beat carrying the piece's dated call is retired. Ruling (Krish, 2026-11-17):
+// "I don't do dated-and-scored make-your-mind-up pieces because it felt quite
+// tacky and gimmicky. I don't really have the clout such that my opinion can
+// hold up in official scores." Ruling (Krish, 2026-11-18): "get rid of that -
+// i have abandoned the prediction format, it feels lame".
 
 type RuntimeBranding = V2RenderProps['branding']
 type RuntimeHouse = NonNullable<NonNullable<RuntimeBranding['publication']>['house']>
@@ -21,7 +25,6 @@ export const HOUSE_MOTION = {
   markFrames: 8,
   captionFrames: 6,
   stickerFrames: 6,
-  callFrames: 9,
   bandFrames: 10,
 } as const
 
@@ -109,32 +112,10 @@ export function houseStickerModel(branding: RuntimeBranding, safeZones: V2Render
   return { text: sticker.text, right: frame.right, top: frame.top, rotateDegrees: frame.rotateDegrees, background: house.tokens.section, startMs: sticker.startMs }
 }
 
-/** The call card, only on the beat that carries the call. */
-export function houseCallModel(branding: RuntimeBranding, safeZones: V2RenderProps['safeZones'], atMs: number) {
-  const house = houseOf(branding)
-  const call = house?.call
-  if (!house || !call || atMs < call.startMs || atMs >= call.endMs) return null
-  const frame = houseCallFrame(call.statement, toSafe(safeZones))
-  const due = houseDueLine(call.due, call.confidencePercent)
-  return {
-    left: frame.left,
-    top: frame.top,
-    width: frame.width,
-    kicker: call.kicker,
-    headline: call.headline,
-    swipeIndex: houseLastWordIndex(call.headline),
-    statement: call.statement,
-    due: due.due,
-    sure: due.sure,
-    startMs: call.startMs,
-  }
-}
-
-/** The band and the call card each take the caption's place while they are
- *  up, as in the mock: frames 3 and 4 carry no caption. */
+/** The band takes the caption's place while it is up, as in the mock. */
 export function houseCaptionHidden(branding: RuntimeBranding, cue: RuntimeBrandCue | undefined, safeZones: V2RenderProps['safeZones'], atMs: number): boolean {
   if (!houseOf(branding)) return false
-  return Boolean(houseBandModel(branding, cue, safeZones, atMs) || houseCallModel(branding, safeZones, atMs))
+  return Boolean(houseBandModel(branding, cue, safeZones, atMs))
 }
 
 const frameOf = (ms: number, fps: number) => Math.round(ms / 1000 * fps)
@@ -196,45 +177,6 @@ export function HouseSticker({ branding, safeZones, atMs }: { branding: RuntimeB
   const scale = 1 + (1 - arrival) * 0.3
   const rotate = model.rotateDegrees - (1 - arrival) * 6
   return <Sticker text={model.text} background={model.background} tokens={houseTokens(house)} style={{ zIndex: 910, right: model.right, top: model.top, transform: `rotate(${rotate}deg) scale(${scale})`, opacity: Math.min(1, arrival * 2) }} />
-}
-
-export function HouseCall({ branding, safeZones, atMs }: { branding: RuntimeBranding; safeZones: V2RenderProps['safeZones']; atMs: number }) {
-  const { fps } = useVideoConfig()
-  const model = houseCallModel(branding, safeZones, atMs)
-  const house = houseOf(branding)
-  if (!model || !house) return null
-  const tokens = houseTokens(house)
-  const c = HOUSE.call
-  const arrival = houseArrival(frameOf(atMs - model.startMs, fps), HOUSE_MOTION.callFrames)
-  return (
-    <div style={{
-      position: 'absolute',
-      zIndex: 905,
-      left: model.left,
-      top: model.top,
-      width: model.width,
-      boxSizing: 'border-box',
-      background: tokens.cream,
-      color: tokens.ink,
-      border: `${c.border}px solid ${tokens.ink}`,
-      boxShadow: `${c.shadow}px ${c.shadow}px 0 ${tokens.ink}`,
-      padding: `${c.paddingTop}px ${c.paddingX}px ${c.paddingBottom}px`,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: c.gap,
-      transform: `translateY(${(arrival - 1) * 60}px)`,
-      opacity: Math.min(1, arrival * 1.5),
-    }}>
-      <span style={{ fontFamily: HOUSE_FONTS.data, fontWeight: 600, fontSize: c.kickerSize, letterSpacing: `${c.kickerLetterSpacingEm}em`, textTransform: 'uppercase' }}>{model.kicker}</span>
-      <h2 style={{ margin: 0, fontFamily: HOUSE_FONTS.display, fontWeight: 400, textTransform: 'uppercase', fontSize: c.headlineSize, lineHeight: c.headlineLineHeight, letterSpacing: `${c.headlineLetterSpacingEm}em` }}>
-        <SwipedText text={model.headline} swipeIndex={model.swipeIndex} tokens={tokens} display />
-      </h2>
-      <p style={{ margin: 0, fontFamily: HOUSE_FONTS.structure, fontWeight: c.statementWeight, fontSize: c.statementSize, lineHeight: c.statementLineHeight, letterSpacing: `${c.statementLetterSpacingEm}em` }}>{model.statement}</p>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: `${c.dueRule}px solid ${tokens.ink}`, paddingTop: c.duePaddingTop, fontFamily: HOUSE_FONTS.data, fontWeight: 600, fontSize: c.dueSize, letterSpacing: `${c.dueLetterSpacingEm}em`, textTransform: 'uppercase' }}>
-        <span>{model.due}</span><span>{model.sure}</span>
-      </div>
-    </div>
-  )
 }
 
 export function HouseBand({ branding, cue, safeZones, atMs, resolve }: { branding: RuntimeBranding; cue: RuntimeBrandCue | undefined; safeZones: V2RenderProps['safeZones']; atMs: number; resolve: (file: string) => string }) {

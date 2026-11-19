@@ -33,9 +33,10 @@
       "enforced_by": "schema VeAssetSchema; lint provenance.*"
     },
     {
-      "id": "INV-DATED-CALL",
-      "rule": "mind.the.gap ends in a dated call",
-      "enforced_by": "schema superRefine on brand.series"
+      "id": "INV-NO-DATED-CALL",
+      "rule": "No cut shows a dated prediction: no call card, no due date, no confidence. It replaces INV-DATED-CALL (mind.the.gap ends in a dated call), retired on 2026-11-18; a mind.the.gap cut names the pattern and where it leads",
+      "enforced_by": "compile never writes props.call and ignores a spec's retired call; the renderer has no call card (CallCard removed, BrandFrame draws a retired call beat like any beat); lint asks for no call beat; tests/ve.test.ts and apps/renderer/src/engine/engine.test.ts",
+      "ruling": "Krish 2026-11-17: \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\" Krish 2026-11-18: \"get rid of that - i have abandoned the prediction format, it feels lame\""
     },
     {
       "id": "INV-NUMBERS-NAMED",

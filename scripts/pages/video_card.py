@@ -50,8 +50,8 @@ with logo paths relative to the JSON file, and each CARD one of:
              {"text": "Now they'll pay to be picked.", "tone": "answer"}],
    "note": "An assistant gives you one answer, not a list"}
    (a card with "chapter" is a chapter divider: centred lines at 104px. Any other statement takes the one header
-   with its "title", the other lines under it, and an optional "meter": {"value": 85, "tone": "answer"|"dim"}
-   drawn as a 0 to 100 bar.)
+   with its "title" and the other lines under it. The "how sure, out of 100" meter is retired with the prediction
+   format: a card that carries "meter" is refused (Rulings, Krish, 2026-11-17 and 2026-11-18).)
   {"file": "panels.png", "kind": "panels", "kicker": ..., "title": ..., "subject": {"logos": [...], "text": "..."},
    "panels": [{"title": "Cost per task, US dollars, lower is cheaper", "max": 6.5, "dim": false,
                "rows": [{"name": "Low effort", "value": 0.55, "label": "$0.55", "hi": false}, ...],
@@ -155,13 +155,8 @@ body.chapter .k { white-space: normal; }
 .logos { display: flex; align-items: center; gap: 40px; }
 body.chapter .logos img { height: 56px; width: auto; max-width: 360px; object-fit: contain; }
 
-/* a call: its lines under the header, and a 0 to 100 meter */
+/* a statement: its lines under the header */
 .say { font: 400 88px/1.02 'Anton', sans-serif; text-transform: uppercase; text-wrap: balance; }
-.meter { display: flex; flex-direction: column; gap: 10px; }
-.meter .track { height: 34px; background: var(--ink-soft); border: 2px solid var(--line); position: relative; }
-.meter .track i { position: absolute; inset: 0 auto 0 0; background: var(--bar); }
-.meter.answer .track i { background: var(--mint); }
-.meter .ends { display: flex; justify-content: space-between; font: 500 22px/1 'IBM Plex Mono', monospace; color: var(--muted); }
 .callnote { font: 500 30px/1.35 'Archivo', sans-serif; color: var(--cream); text-wrap: pretty; }
 
 /* bars */
@@ -399,6 +394,14 @@ def shot_stacks(card):
     return [[{k: card[k] for k in ('image', 'crop', 'mark', 'marks') if k in card}]]
 
 
+# The confidence meter ("how sure, out of 100") drew a dated call's percentage. Retired with the prediction format:
+# Ruling (Krish, 2026-11-17): "I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and
+# gimmicky. I don't really have the clout such that my opinion can hold up in official scores." Ruling (Krish,
+# 2026-11-18): "get rid of that - i have abandoned the prediction format, it feels lame".
+METER_RETIRED = ('the "meter" (how sure, out of 100) is retired with the prediction format (Rulings, Krish, 2026-11-17 '
+                 'and 2026-11-18: "get rid of that - i have abandoned the prediction format, it feels lame"): take it out')
+
+
 def check_spec(spec):
     series = spec.get('series')
     if series not in TERRITORY:
@@ -416,6 +419,8 @@ def check_spec(spec):
                  '"we\'ve not made any use of business logos as we\'re supposed to")')
         if card.get('kind') not in KINDS:
             fail(f'{name}: kind must be one of {", ".join(KINDS)}')
+        if 'meter' in card:
+            fail(f'{name}: {METER_RETIRED}')
         if card['kind'] == 'evidence':
             rows = card.get('evidence')
             if not isinstance(rows, list) or not 1 <= len(rows) <= 3 or not all(
@@ -871,14 +876,9 @@ def body_of(card, base):
         out.append(timeline_body(card))
     elif kind == 'dots':
         out.append(dots_body(card))
-    else:  # a statement that is not a chapter divider: the lines after the heading, then a meter
+    else:  # a statement that is not a chapter divider: the lines after the heading
         for l in card.get('lines', [])[1:]:
             out.append(f'<div class="say" style="color:{TONES.get(l.get("tone", "plain"), TONES["plain"])}">{e(l["text"])}</div>')
-        if card.get('meter'):
-            m = card['meter']
-            v = max(0, min(100, float(m['value'])))
-            out.append(f'<div class="meter {e(m.get("tone", "dim"))}"><div class="track"><i style="width:{v:.1f}%"></i></div>'
-                       f'<div class="ends"><span>0</span><span>{e(m.get("label", "how sure, out of 100"))}</span><span>100</span></div></div>')
         if card.get('callnote'):
             out.append(f'<div class="callnote">{e(card["callnote"])}</div>')
     out.append(foot(card))
@@ -1152,12 +1152,17 @@ def self_test():
         chapter = {'file': 'ch.png', 'kind': 'statement', 'kicker': 'Chapter 2 of 8', 'chapter': 'Why?', 'logos': ['aa.svg'],
                    'lines': [{'text': 'Why?'}]}
         check('a chapter divider keeps its centred template', '<body class="chapter">' in page(chapter, tmp, accent))
-        call = {'file': 'call.png', 'kind': 'statement', 'kicker': 'OUR CALL', 'title': 'By mid-2027, X', 'logos': ['aa.svg'],
-                'lines': [{'text': 'By mid-2027, X'}, {'text': 'About 85%', 'tone': 'answer'}], 'meter': {'value': 85, 'tone': 'answer'}}
-        doc = page(call, tmp, accent)
+        said = {'file': 'said.png', 'kind': 'statement', 'kicker': 'WHERE IT LEADS', 'title': 'Shops pay to be picked', 'logos': ['aa.svg'],
+                'lines': [{'text': 'Shops pay to be picked'}, {'text': 'Then the list goes', 'tone': 'answer'}]}
+        doc = page(said, tmp, accent)
         check('any other statement takes the one header, logos on the kicker line', '<div class="hd">' in doc and 'alt="aa"' in doc.split('<h1>')[0])
-        check('a call draws its meter', 'width:85.0%' in doc)
-        for kind_card in (cols, bars, shot, call):
+        check('a statement draws no confidence meter', 'class="meter' not in doc and 'how sure' not in doc)
+        try:
+            check_spec({'series': next(iter(TERRITORY)), 'cards': [dict(said, meter={'value': 85})]})
+            check('a card with a meter is refused (the prediction format is retired)', False)
+        except SystemExit as stop:
+            check('a card with a meter is refused (the prediction format is retired)', 'prediction format' in str(stop))
+        for kind_card in (cols, bars, shot, said):
             doc = page(kind_card, tmp, accent)
             check(f'{kind_card["kind"]}: the heading is one size, Anton 72px, under the kicker', doc.count('<h1>') == 1 and 'font: 400 72px/1.0' in doc)
         check('statement lines and source lines are balanced, so no word sits alone on a line',

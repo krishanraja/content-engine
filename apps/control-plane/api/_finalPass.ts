@@ -440,7 +440,9 @@ export function buildFinalPassSystem(args: {
       .filter(s => !(rubric.mandateGovernsClose && CLOSE_ABSOLUTE.test(s)))
       .map(s => `- ${s}`).join('\n'),
     rubric.mandateGovernsClose
-      ? 'THE CLOSE is whatever the MANDATE above asks for. Judge the ending against the mandate, not against a house rule.'
+      // Except a dated prediction: a mandate written before 2026-11-18 may still ask for one (THE CALL), and the
+      // format is abandoned (Rulings, Krish, 2026-11-17 and 2026-11-18; house rule NO_DATED_PREDICTION).
+      ? 'THE CLOSE is whatever the MANDATE above asks for, except a dated prediction: where the mandate still asks for a prediction, a date to check it by or a confidence, NO_DATED_PREDICTION wins and the piece makes none. Judge the ending against the mandate, not against any other house rule.'
       : '',
     '',
     voice ? `VOICE REFERENCE (how Krish writes):\n${voice}` : '',

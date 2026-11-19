@@ -43,6 +43,7 @@ export const EngineObjectSchema = z.object({
 
 export const EngineBeatSchema = z.object({
   id: z.string().min(1),
+  // 'call' is retired: kept so props compiled before 18 Nov 2026 parse; such a beat is drawn like any other.
   role: z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call']),
   layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW']),
   face: z.enum(['full', 'window', 'off']).optional(),
@@ -142,6 +143,8 @@ export const EngineRenderPropsSchema = z.object({
   beats: z.array(EngineBeatSchema).min(1),
   objects: z.array(EngineObjectSchema),
   events: z.array(EngineEventSchema),
+  // Retired (Rulings, Krish, 2026-11-17 and 2026-11-18: the dated prediction format is abandoned). compile never writes
+  // it and nothing draws it; kept optional only so props compiled before then still parse.
   call: z.object({ statement: z.string(), due: z.string(), confidencePercent: z.number().int() }).strict().optional(),
   // The house close (chrome/EndingBand.tsx, docs/production/CLOSING.md). `ticker` is kept for old props and drawn by nothing.
   ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true),

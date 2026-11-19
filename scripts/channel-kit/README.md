@@ -59,7 +59,7 @@ link lands on".
 | `profile-avatar-mark-1080.png` | The plain mark on ink. The fallback; on no profile now. |
 | `facebook-cover-1640x856.png` | The Facebook Page cover. |
 | `x-header-1500x500.png` | The header on Krish's own X account. |
-| `instagram-highlight-start-here.png`, `-follow-the-money`, `-under-the-hood`, `-mind-the-gap`, `-scored` | The five Instagram highlight covers: START, MON, WED, FRI and SCORED on a disc. They go up once a full week of pieces is out (Krish, 2026-10-12). |
+| `instagram-highlight-start-here.png`, `-follow-the-money`, `-under-the-hood`, `-mind-the-gap` | The four Instagram highlight covers: START, MON, WED and FRI on a disc. They go up once a full week of pieces is out (Krish, 2026-10-12). The SCORED highlight is no longer made: no piece makes a dated prediction to score (Rulings, Krish, 2026-11-17 and 2026-11-18); take it down from the profile if it is up. |
 | `profiles-sheet.jpg` | Every file at the size and crop each platform shows. Look at this before uploading. |
 
 What it checks, and it stops with an error if any check fails:
@@ -115,8 +115,15 @@ saying which file goes where; keep that file in step.
 
 ## The description, as it stands
 
-The copy Krish was given on 2026-10-05, which `description.txt` reproduces
-from `channel.json`:
+The copy Krish was given on 2026-10-05, as changed on 2026-11-18, which
+`description.txt` reproduces from `channel.json`. The prediction line ("Every piece
+ends with a prediction and a date. We keep score in public, misses included.") went
+when he abandoned the format (Ruling, Krish, 2026-11-17: "I don't do
+dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky.
+I don't really have the clout such that my opinion can hold up in official
+scores."; Ruling, Krish, 2026-11-18: "get rid of that - i have abandoned the
+prediction format, it feels lame"), and "From Krish Raja." went because the
+publication is the byline (Ruling, Krish, 2026-10-28):
 
 ```
 Short videos from makeyourmindup, a free publication on how AI really works, in plain words.
@@ -125,9 +132,9 @@ Monday, follow.the.money: who gets paid when AI gets bought.
 Wednesday, under.the.hood: what's real, and what's theatre.
 Friday, mind.the.gap: what's coming, before it's obvious.
 
-Every piece ends with a prediction and a date. We keep score in public, misses included. Then you make your mind up.
+Every number names its source. Then you make your mind up.
 
-From Krish Raja. Read every piece free at makeyourmindup.ai
+Read every piece free at makeyourmindup.ai
 ```
 
 If you change `channel.json`, update this copy too, so the README and the

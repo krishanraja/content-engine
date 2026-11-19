@@ -3,7 +3,6 @@ import React from 'react'
 import { HOUSE } from '../house/geometry'
 import { SPLIT_CAPTION_ZONE } from './layouts/splitGeometry'
 import { Grain } from '../house/components'
-import { CallCard } from './chrome/CallCard'
 import { EndingBand } from './chrome/EndingBand'
 import { CaptionTrack } from './chrome/CaptionTrack'
 import { ChannelPill } from './chrome/ChannelPill'
@@ -23,8 +22,10 @@ import type { EngineBeat, EngineRenderProps } from './props'
 export interface BrandFrameProps { props: EngineRenderProps; beat: EngineBeat; frame: number }
 
 export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement {
-  const call = beat.role === 'call'
-  if (call && !props.call) throw new Error('ve: call beat without props.call')
+  // A beat whose role is 'call' (a spec written before the call card was retired) is drawn like any other beat: its
+  // captions, never a card. Ruling (Krish, 2026-11-17): "I don't do dated-and-scored make-your-mind-up pieces because
+  // it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official
+  // scores." Ruling (Krish, 2026-11-18): "get rid of that - i have abandoned the prediction format, it feels lame".
   const ending = !!props.ending && frame >= props.ending.fromFrame
   // vertical-captions: lead captions replace the house captions for that style only.
   const lead = resolveMotion(props.motion)?.captions
@@ -45,10 +46,9 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     </>}
     {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);
         graphics own the top of SPLIT and of a STAGE beat with no plate. */}
-    {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
+    {props.captionStyle === 'word' && !isStaging(props.layout?.mode) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={house} frame={frame} />
-      : call ? <CallCard props={house} frame={frame} />
-        : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus' || overTake(beat)
+      : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus' || overTake(beat)
           ? <div data-caption-halo style={{ position: 'absolute', inset: 0, filter: onFullPlate(props, beat) ? CAPTION_HALO : TAKE_HALO }}><ThemedCaption props={props} theme={props.captionTheme} frame={frame} /></div>
           : <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />)
         : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />

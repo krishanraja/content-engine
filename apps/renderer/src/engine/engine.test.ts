@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { z } from 'zod'
 import { createElement, isValidElement, type ReactElement, type ReactNode } from 'react'
 import { Audio, Composition, OffthreadVideo, Sequence } from 'remotion'
@@ -11,7 +13,6 @@ import { EngineAudio } from './audio'
 import { HOUSE_MOTION, MOTION, useEngineFrame } from './clock'
 import { DEVICES } from './devices/registry'
 import { chromeZone } from './geometry'
-import { CallCard } from './chrome/CallCard'
 import { EndingBand } from './chrome/EndingBand'
 import { CaptionTrack } from './chrome/CaptionTrack'
 import { ChannelPill } from './chrome/ChannelPill'
@@ -171,25 +172,35 @@ describe('ve composition', () => {
   })
 })
 
-describe('BrandFrame call and ending routing', () => {
-  it.each(['9:16', '16:9'] as const)('routes cards and suppresses captions in %s', (aspect) => {
+describe('BrandFrame ending routing; the call card is retired', () => {
+  // Ruling (Krish, 2026-11-17): "I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and
+  // gimmicky. I don't really have the clout such that my opinion can hold up in official scores." Ruling (Krish,
+  // 2026-11-18): "get rid of that - i have abandoned the prediction format, it feels lame".
+  it.each(['9:16', '16:9'] as const)('draws a retired call beat like any beat, captions and no card, in %s', (aspect) => {
     const props = EngineRenderPropsSchema.parse(fixture)
     props.aspect = aspect
     const beat = { ...props.beats[0]!, role: 'call' as const, fromFrame: 0, toFrame: 120 }
     props.beats = [beat]
-    props.call = { statement: 'A checked call.', due: '2026-12-31', confidencePercent: 90 }
     props.ending = { fromFrame: 90, url: 'makeyourmindup.ai', ticker: true }
-    for (const [frame, card] of [[30, CallCard], [90, EndingBand], [100, EndingBand]] as const) {
-      const nodes = elements(BrandFrame({ props, beat, frame }))
-      expect(nodes.filter((node) => node.type === card)).toHaveLength(1)
-      expect(nodes.filter((node) => node.type === CaptionTrack)).toHaveLength(0)
-      expect(CaptionTrack({ props, frame })).toBeNull()
+    // Props compiled before the ruling may still carry a call: nothing draws it.
+    props.call = { statement: 'A checked call.', due: '2026-12-31', confidencePercent: 90 }
+    for (const withCall of [true, false]) {
+      if (!withCall) delete props.call
+      const before = elements(BrandFrame({ props, beat, frame: 30 }))
+      expect(before.some((node) => node.type === CaptionTrack)).toBe(true)
+      expect(before.some((node) => node.type === EndingBand)).toBe(false)
+      for (const frame of [90, 100]) {
+        const nodes = elements(BrandFrame({ props, beat, frame }))
+        expect(nodes.filter((node) => node.type === EndingBand)).toHaveLength(1)
+        expect(nodes.filter((node) => node.type === CaptionTrack)).toHaveLength(0)
+        expect(CaptionTrack({ props, frame })).toBeNull()
+      }
     }
-    const normal = { ...beat, role: 'anchor' as const }
-    expect(elements(BrandFrame({ props, beat: normal, frame: 89 })).some((node) => node.type === CaptionTrack)).toBe(true)
-    expect(elements(BrandFrame({ props, beat: normal, frame: 90 })).some((node) => node.type === EndingBand)).toBe(true)
-    delete props.call
-    expect(() => BrandFrame({ props, beat, frame: 30 })).toThrow('ve: call beat without props.call')
+  })
+
+  it('has no call card anywhere in the renderer', () => {
+    expect(existsSync(join(__dirname, 'chrome', 'CallCard.tsx'))).toBe(false)
+    expect(readFileSync(join(__dirname, 'BrandFrame.tsx'), 'utf8')).not.toMatch(/CallCard|props\.call\b/)
   })
 })
 

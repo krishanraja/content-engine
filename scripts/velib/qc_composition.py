@@ -188,15 +188,6 @@ def _footage_boxes(props, frame):
     return boxes
 
 
-def call_card_tokens(props, beat) -> set:
-    """The dated call card is engine chrome that takes the caption zone for the whole call beat, as captions do."""
-    call = props.get('call')
-    if not call or beat.get('role') != 'call':
-        return set()
-    text = f"The call Our call. {call['statement']} {call['due']} {call['confidencePercent']}% sure due"
-    return set(qc_captions._tokens(text))
-
-
 def composition_checks(video, props, lock) -> dict:
     if props.get('aspect') == '16:9':
         return {'applies': False, 'note': 'the design lock is 9:16 only'}
@@ -209,7 +200,6 @@ def composition_checks(video, props, lock) -> dict:
                    if page['fromFrame'] <= at < page['toFrame']
                    for word in page['words']
                    for token in qc_captions._tokens(word['text'] if isinstance(word, dict) else str(word))}
-        allowed |= call_card_tokens(props, beat)
         beat_lock, exempt = lock, _footage_boxes(props, at)
         if beat.get('layout') == 'SPLIT':
             # A SPLIT beat's caption sits in the frozen split zone; the house zone there is his face and hands.

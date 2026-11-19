@@ -170,17 +170,10 @@ def _renderer_layouts() -> dict:
 
 
 def caption_pages_shown(props: dict) -> list:
-    """Caption pages the renderer draws at the frame OCR samples. The dated call card replaces the captions for the
-    whole call beat (CaptionTrack returns null there), so a page sampled inside it is not on screen."""
-    calls = [(b['fromFrame'], b['toFrame']) for b in props['beats'] if b.get('role') == 'call'] if props.get('call') else []
-
-    def sampled(page):  # the same frame qc_captions.ocr reads
-        first, last = page['fromFrame'], page['toFrame']
-        revealed = max(first, max((int(w['atFrame']) for w in page['words']), default=first) + 2)
-        return (revealed + last - 1) // 2
-
-    return [page for page in props['captions']
-            if not any(start <= sampled(page) < end for start, end in calls)]
+    """Caption pages the renderer draws at the frame OCR samples: every page. The dated call card that once replaced
+    the captions for a call beat is retired (Rulings, Krish, 2026-11-17 and 2026-11-18), so captions run through every
+    beat, a retired 'call' beat included, and only the ending band takes their place (its pages end before it)."""
+    return list(props['captions'])
 
 
 def lead_frames(props: dict | None) -> int:

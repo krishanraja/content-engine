@@ -5,11 +5,11 @@ powerful that it can do literally anything". Four of the most additive sources
 need no key and no account, so they live here as one stdlib-only module a
 session or a cron can run now:
 
-- odds: what prediction markets (Polymarket, Kalshi) say about a question.
-  The engine makes a dated Call with a confidence on every piece; this reads
-  what traders are paying for the same outcome, so the scoreboard can show our
-  call beside the market's, and track both to the due date. Nobody else in
-  this lane does it.
+- odds: what prediction markets (Polymarket, Kalshi) say about a question,
+  read as research and credited to the market. It no longer feeds a
+  scoreboard: no piece makes a dated call of its own (Rulings, Krish,
+  2026-11-17 and 2026-11-18: "get rid of that - i have abandoned the
+  prediction format, it feels lame").
 - news: how fast a subject is moving, from GDELT's index of the world's news.
   Article counts per day over a window give the "velocity" the news-wall
   picture needs, and the latest headlines with outlet and time.

@@ -5,8 +5,7 @@
     "role",
     "span",
     "viewer_task",
-    "point",
-    "call"
+    "point"
   ],
   "lints": [
     "story.hook_event",

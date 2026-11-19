@@ -1,4 +1,4 @@
-import { textWidth, wrapWords } from './metrics'
+import { textWidth } from './metrics'
 
 /** The makeyourmindup house style as the Studio draws it: the CSS of the mock
  *  Krish approved on 2026-09-28 ("yes, approved", in answer to "approve the
@@ -53,8 +53,6 @@ export const HOUSE = {
   // .sticker
   sticker: { size: 34, letterSpacingEm: 0.14, weight: 600, paddingY: 16, paddingX: 34, border: 4, shadow: 7, lineHeight: 1.3 },
   shortSticker: { right: 84, top: 190, rotateDegrees: -6 },
-  // .call
-  call: { left: 72, right: 84, top: 930, border: 4, shadow: 16, paddingTop: 36, paddingX: 44, paddingBottom: 34, gap: 20, kickerSize: 26, kickerLetterSpacingEm: 0.16, headlineSize: 124, headlineLineHeight: 0.88, headlineLetterSpacingEm: 0.005, statementSize: 40, statementLineHeight: 1.18, statementLetterSpacingEm: -0.01, statementWeight: 700, dueSize: 28, dueLetterSpacingEm: 0.12, dueRule: 3, duePaddingTop: 20 },
   // .band, .marq, .mast, .side
   band: { tickerHeight: 104, tickerRule: 2, tickerPaddingLeft: 40, tickerGap: 30, tickerSize: 64, tickerLetterSpacingEm: 0.01, starSize: 46, mastPaddingTop: 62, mastPaddingX: 72, mastPaddingBottom: 70, mastGap: 30, sideGap: 18, logoWidth: 520, secondsPerLoop: 38 },
   // .pill and .mono
@@ -122,22 +120,6 @@ export function houseCaptionFrame(safe: HouseSafeZones, bounds?: { x: number; y:
   return { left, top: HOUSE.caption.top, width: HOUSE.width - left - Math.max(HOUSE.caption.right, safe.rightPx) }
 }
 
-/** The call card: left 72, right 84, top 930, inside the safe zone; its
- *  height follows the statement's lines. `box` includes its hard shadow. */
-export function houseCallFrame(statement: string, safe: HouseSafeZones) {
-  const c = HOUSE.call
-  const left = Math.max(c.left, safe.leftPx)
-  const right = Math.max(c.right, safe.rightPx)
-  const width = HOUSE.width - left - right
-  const textWidthPx = width - c.border * 2 - c.paddingX * 2
-  const lines = wrapWords('archivo700', statement, c.statementSize, textWidthPx, c.statementLetterSpacingEm).length
-  const kicker = c.kickerSize * 1.3
-  const headline = c.headlineSize * c.headlineLineHeight
-  const due = c.dueRule + c.duePaddingTop + c.dueSize * 1.3
-  const height = c.border * 2 + c.paddingTop + c.paddingBottom + kicker + headline + lines * c.statementSize * c.statementLineHeight + due + c.gap * 3
-  return { left, right, top: c.top, width, height, lines, box: { left, top: c.top, width: width + c.shadow, height: height + c.shadow } }
-}
-
 /** The ending band's side insets: the mock's 72, or the safe zone if wider. */
 export function houseBandInsets(safe: HouseSafeZones): { left: number; right: number } {
   return { left: Math.max(HOUSE.band.mastPaddingX, safe.leftPx), right: Math.max(HOUSE.band.mastPaddingX, safe.rightPx) }
@@ -165,17 +147,4 @@ export function houseSwipeIndex(text: string, emphasis: readonly string[]): numb
   const wanted = new Set(emphasis.map((word) => word.replace(/[^a-z0-9]/gi, '').toLowerCase()).filter(Boolean))
   if (!wanted.size) return -1
   return text.split(/(\s+)/).findIndex((part) => !/^\s*$/.test(part) && wanted.has(part.replace(/[^a-z0-9]/gi, '').toLowerCase()))
-}
-
-/** A headline's last word takes the swipe (the call's "Our call."). Returns
- *  the index into `text.split(/(\s+)/)`, or -1 for an empty headline. */
-export function houseLastWordIndex(text: string): number {
-  const parts = text.split(/(\s+)/)
-  for (let index = parts.length - 1; index >= 0; index -= 1) if (!/^\s*$/.test(parts[index]!)) return index
-  return -1
-}
-
-/** Due 2027-09-30 and 75% sure, as the card sets them. */
-export function houseDueLine(due: string, confidencePercent: number): { due: string; sure: string } {
-  return { due: `Due ${due}`, sure: `${confidencePercent}% sure` }
 }

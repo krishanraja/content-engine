@@ -81,7 +81,9 @@ export function buildComposePrompt(arc: ComposableArc) {
     '  Address whoever owns revenue or position, not whoever owns risk or exposure.',
     '  It must not be satisfiable by writing a policy, a charter or a document. If someone could comply by producing paperwork, it is the wrong opening.',
     '',
-    'where_this_goes — a claim about the future that could turn out wrong, with a date or a threshold in it. "This will continue" and "adoption will grow" are not claims, they are continuation. Write something you could be shown to be wrong about.',
+    // Until 2026-11-18 this asked for "a date or a threshold" a reader could check later: a dated call.
+    // Rulings (Krish, 2026-11-17 and 2026-11-18): the prediction format is abandoned (NO_DATED_PREDICTION).
+    'where_this_goes — where the pattern leads, in plain words, with no date to check it by and no confidence. "This will continue" and "adoption will grow" are not claims, they are continuation. Say what changes next and for whom.',
     '',
     'reader_decision — a DECISION the reader already faces, whose inputs this changes. Phrase it as a choice: "whether to ... or ...". Never an instruction, so never "Reprice your ..." or "Build your ...".',
     '',
@@ -152,7 +154,7 @@ export function buildRepairPrompt(card: ComposedCard, failures: LintFailure[]) {
     `  Words banned from headline, the_opening, where_this_goes and reader_decision: ${TECHNICAL_JARGON.join(', ')}. Allowed in what_changed only.`,
     '  No em dash or en dash anywhere. Use a comma or a full stop.',
     '  what_changed is 2 to 4 sentences. why_now is 1 or 2. the_opening is 1 to 3.',
-    '  where_this_goes must carry a date or a threshold and must not say the trend continues.',
+    '  where_this_goes says where the pattern leads, never a dated prediction, and must not say the trend continues.',
     '  reader_decision names a choice the reader already faces ("whether to ... or ..."), never an instruction.',
     '',
     'Return the complete corrected card as JSON, same shape, all six fields plus format. No commentary.',

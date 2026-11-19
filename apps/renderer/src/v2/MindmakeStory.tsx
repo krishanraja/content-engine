@@ -20,7 +20,7 @@ import type { V2RenderProps, V2RuntimeLayer, V2RuntimeShot } from './props'
 import { cameraCropAt, defaultLayerBounds, deterministicUnit, primaryAttentionLayerId, sourceStartForShot, transitionOpacity } from './timeline'
 import { HouseFontsGate } from '../house/components'
 import { HOUSE_FONTS, HOUSE_PRESENTER_SHADE } from '../house/geometry'
-import { HouseBand, HouseCall, HouseCaption, HouseMark, HouseSticker, houseCaptionHidden } from './HouseShort'
+import { HouseBand, HouseCaption, HouseMark, HouseSticker, houseCaptionHidden } from './HouseShort'
 
 const WIDTH = 1080
 const HEIGHT = 1920
@@ -514,7 +514,6 @@ export function MindmakeStoryV2(props: V2RenderProps) {
       {house ? (
         <>
           <HouseSticker branding={props.branding} safeZones={props.safeZones} atMs={atMs} />
-          <HouseCall branding={props.branding} safeZones={props.safeZones} atMs={atMs} />
           <HouseBand branding={props.branding} cue={brandCue} safeZones={props.safeZones} atMs={atMs} resolve={staticFile} />
         </>
       ) : null}

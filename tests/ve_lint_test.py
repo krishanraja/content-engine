@@ -58,24 +58,26 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_F07_coral_family_hex_used_as_a_failure_colour(self):
         self.assertRefused(mutate(lambda s: s['cuts']['proof-tall']['beats'][2]['events'][0].update(to_state='fail cells in #ff9b85')), 'brand.no_hex')
 
-    def test_IR48_mind_the_gap_without_a_dated_call(self):
-        self.assertRefused(mutate(lambda s: s.pop('call')), 'SCHEMA')
+    # The dated call is retired. Ruling (Krish, 2026-11-17): "I don't do dated-and-scored make-your-mind-up pieces
+    # because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in
+    # official scores." Ruling (Krish, 2026-11-18): "get rid of that - i have abandoned the prediction format, it feels
+    # lame". IR48 (a mind.the.gap cut without its dated call) is no longer a failure.
+    def test_mind_the_gap_needs_no_call_on_any_day(self):
+        self.assertNotIn('call', FIXTURE)
+        for day in ('2026-10-23', '2026-11-17', '2026-11-20'):
+            def dated(s, day=day):
+                s['publish_day'] = day
+            self.assertNotIn('SCHEMA', codes_for(mutate(dated)), day)
 
-    def test_IR48_whole_cut_without_a_call_beat(self):
-        self.assertRefused(mutate(whole_tall), 'story.call')
+    def test_a_whole_cut_needs_no_call_beat(self):
+        self.assertFalse(any(code.startswith('story.call') for code in codes_for(mutate(whole_tall))))
 
-    def test_off_day_mind_the_gap_needs_no_call(self):
-        # A mind.the.gap piece published on a Tuesday is an off day: no series promise, no dated call card (18 Nov 2026).
-        def off_day(s):
-            s.pop('call')
-            s['publish_day'] = '2026-11-17'
-        self.assertNotIn('SCHEMA', codes_for(mutate(off_day)))
-
-    def test_friday_mind_the_gap_still_needs_its_call(self):
-        def friday(s):
-            s.pop('call')
-            s['publish_day'] = '2026-11-20'
-        self.assertRefused(mutate(friday), 'SCHEMA')
+    def test_a_spec_written_before_the_ruling_still_lints_and_its_call_is_never_public(self):
+        def old(s):
+            s['call'] = {'statement': 'Krish thinks one more country will fund its own model.', 'due': '2026-12-31',
+                         'confidence_percent': 90}
+        found = lint_lines(mutate(old))
+        self.assertFalse([p for p in found if p.startswith('SCHEMA') or 'call.statement' in p], found)
 
     def test_R46_generated_picture_used_as_evidence(self):
         asset = {'id': 'fake-shot', 'kind': 'screenshot', 'origin': 'generated', 'path': 'x.png', 'sha256': '0' * 64,
@@ -231,7 +233,6 @@ class NoNameOnScreen(unittest.TestCase):
         self.assertNamed(lambda s: s['objects'][1]['params'].update(text='KRISH’S CONFIDENCE'), 'objects.1.params.text')
         self.assertNamed(lambda s: s['objects'][0]['params']['cols'][0].update(label='@TheRealKrisho'), 'objects.0.params.cols.0.label')
         self.assertNamed(lambda s: s['objects'][2]['params'].update(outlet='krishraja.com'), 'objects.2.params.outlet')
-        self.assertNamed(lambda s: s['call'].update(statement='Krish thinks one more country will fund its own model.'), 'call.statement')
 
     def test_records_files_ids_and_other_names_pass(self):
         def records(s):

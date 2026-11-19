@@ -190,7 +190,14 @@ export function effectiveBlocking(meta: Record<string, any>): CheckedClaim[] {
 }
 export const PASSING: ReadonlySet<ClaimVerdict> = new Set(['verified', 'verified_on_file', 'verified_web'])
 
-/** Krish's confidence in the piece's own prediction is his judgement, never a
+/** Dormant since 2026-11-18: no piece makes a dated prediction or states a
+ *  confidence any more (Rulings, Krish, 2026-11-17 and 2026-11-18; house rule
+ *  NO_DATED_PREDICTION), so for a new piece nothing below changes a byte. It
+ *  stays because every fact check stored before then was hashed through it:
+ *  taking it out would put each of those passes out of date. Nothing here asks
+ *  for a confidence.
+ *
+ *  Krish's confidence in the piece's own prediction was his judgement, never a
  *  checked fact, so setting it must not put a passed check out of date (he set
  *  piece 2's to 75% on 2026-09-26 and it would otherwise have cost a full
  *  re-check; his ruling that day: a confidence no longer forces a fact
@@ -199,8 +206,9 @@ export const PASSING: ReadonlySet<ClaimVerdict> = new Set(['verified', 'verified
  *  way, so every check stored before 2026-09-28 still matches its text. The
  *  placeholder is read in both spellings, the old one and UNSET. */
 const CONFIDENCE_LINE = /^([ \t]*How sure we are:)[ \t]*(?:\d{1,3}%\.?|\[(?:Krish )?to set\])[ \t]*$/gim
-/** Where Krish's confidence goes until he sets it. The writers put it in a
- *  first draft (api/_selfCheck.ts, guardConfidence). Until 2026-10-29 it was
+/** Where Krish's confidence went until he set it. The writers put it in a
+ *  first draft until 2026-11-18 (api/_selfCheck.ts, guardConfidence, retired
+ *  with the prediction format); nothing writes it now. Until 2026-10-29 it was
  *  "[Krish to set]", which named him in the draft (Krish, 2026-10-28:
  *  "Remember, no content refers to Krish, ever."; house rule NO_NAME). */
 export const UNSET = '[to set]'

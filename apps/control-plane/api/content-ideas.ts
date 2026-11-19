@@ -471,9 +471,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!gate.ok) return res.status(409).json({ ok: false, reason: 'fact_gate', error: gate.reason })
       // Krish's house rules that a machine can check (api/_publishChecks.ts):
       // before approval or publication, every blocking check must pass. Review
-      // is where he reads a piece, so a missing confidence does not block it.
+      // is where he reads a piece, so a failing check does not block it.
       if (updates.state === 'approved' || updates.state === 'published') {
-        const checks = publishChecks(effective, gate, new Date(), id)
+        const checks = publishChecks(effective, gate)
         const status = publishStatus(checks)
         if (!status.ok) return res.status(409).json({ ok: false, reason: 'publish_gate', error: status.reason, checks: status.failing })
       }

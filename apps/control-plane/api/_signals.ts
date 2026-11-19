@@ -1,6 +1,6 @@
 // Signals: the free public sources and the keyed readers the engine reads on
 // a timer or on demand. Pure fetchers with no database access, so the crons
-// in api/signals/*, the scoreboard routes and a test can all call them.
+// in api/signals/* and a test can call them.
 //
 // Krish, 2026-10-09: "Prepare and harden the entire engine as though all of
 // this exists permanently and can be used thoughtfully, ingeniously, and
@@ -9,10 +9,15 @@
 //
 // What lives here, and why each one is additive (docs/ENGINE_100X.md):
 //
-// - Prediction markets (Polymarket, Kalshi; keyless). Every piece ends on a
-//   dated Call with a confidence. These read what traders pay for the same
-//   outcome, so the scoreboard shows our call beside the market's and tracks
-//   both to the due date. Nobody else in this lane does it.
+// - Prediction markets (Polymarket, Kalshi; keyless): what traders pay for an
+//   outcome, read as a public signal like any other. Until 2026-11-18 they
+//   were pinned to each piece's dated Call for a public scoreboard; that
+//   format is abandoned (Rulings, Krish, 2026-11-17: "I don't do
+//   dated-and-scored make-your-mind-up pieces because it felt quite tacky and
+//   gimmicky. I don't really have the clout such that my opinion can hold up
+//   in official scores."; 2026-11-18: "get rid of that - i have abandoned the
+//   prediction format, it feels lame"), so the pin (call-market), the daily
+//   odds cron (signals_odds) and the record they kept are gone.
 // - GDELT (keyless). The world's news by subject and hour: how fast a story is
 //   moving, and the headlines behind the news-wall picture. GDELT allows one
 //   request every five seconds per IP and answers a burst with a plain-text
@@ -160,34 +165,6 @@ export async function marketOdds(source: MarketSource, key: string): Promise<Mar
   if (source === 'polymarket') return polymarketBySlug(key)
   if (source === 'kalshi') return kalshiByTicker(key)
   return null
-}
-
-/** The record a piece keeps beside its Call, in content_ideas.meta.call_market. */
-export interface CallMarketRecord {
-  source: MarketSource
-  key: string
-  question: string | null
-  url: string | null
-  probability: number | null
-  read_at: string
-  set_at: string
-  /** At most ninety daily readings, oldest first. */
-  history: Array<{ at: string; p: number | null }>
-}
-
-export function nextCallMarket(prev: Partial<CallMarketRecord> | null | undefined, odds: MarketOdds, now = new Date()): CallMarketRecord {
-  const at = now.toISOString()
-  const history = [...(Array.isArray(prev?.history) ? prev!.history : []), { at, p: odds.probability }].slice(-90)
-  return {
-    source: odds.source,
-    key: odds.key,
-    question: odds.question,
-    url: odds.url,
-    probability: odds.probability,
-    read_at: at,
-    set_at: prev?.set_at || at,
-    history,
-  }
 }
 
 // ── GDELT: news velocity ─────────────────────────────────────────────────

@@ -25,7 +25,7 @@
 //
 // Pure: no database, no network, no route code. The checks are the engine's
 // own (the publish checks, the "Not X, Y" reader, the banned-phrase list, the
-// verbatim-number check, the call reader); nothing here keeps a copy of them.
+// verbatim-number check); nothing here keeps a copy of them.
 
 import { sanitizeVoice } from './_content.js'
 import { HOUSE_RULES } from './_houseRules.js'
@@ -33,9 +33,6 @@ import { BANNED_PHRASES, notXYConstructions } from './_judges/deterministic.js'
 import { unsupportedNumbers } from './_numbers.js'
 import { americanSpellings, emDashes, exclamationMarks } from './_publishChecks.js'
 import { titleNorm } from './_text.js'
-// The one reader of a piece's call, shared with the publish checks and the
-// Studio. Imported by its relative path, as they do.
-import { callDateMentions, callSectionOf } from '../../../packages/contracts/src/call.js'
 
 // ── The rules, as data ──────────────────────────────────────────────────────
 
@@ -118,8 +115,8 @@ export const PACKAGING_RULES: readonly PackagingRule[] = Object.freeze([
     text: `It opens with the hook: one sentence, well inside the first ${HOOK_MAX} characters, because YouTube shows only that much before "more".` },
   { id: 'BODY', field: 'description', checked: 'writer',
     text: 'Then two or three plain sentences: who is involved, what happened, and what it means for the viewer. When the video\'s length is given, this first paragraph ends with it, as Krish writes it: "... and where you could get stung. | 2 minute watch".' },
-  { id: 'PREDICTION', field: 'description', checked: 'code',
-    text: 'Then the piece\'s dated prediction, when it has one, with the date and the words the piece gives it.' },
+  // PREDICTION (the piece's dated prediction, then the read line) retired on 2026-11-18 with the format (Rulings,
+  // Krish, 2026-11-17 and 2026-11-18; house rule NO_DATED_PREDICTION): a description never carries one.
   { id: 'READ_LINE', field: 'description', checked: 'code',
     text: `Then, on a line of its own: "${READ_LINE}".` },
   { id: 'HASHTAGS', field: 'description', checked: 'code',
@@ -226,8 +223,7 @@ export interface PackageLint {
 
 export interface PackageContext {
   thumbnailText?: string | null
-  /** The piece the video is made from, and the article on Substack. Its
-   *  prediction is read from here. */
+  /** The piece the video is made from, and the article on Substack. */
   source: string
   /** Other text a number may come from: the filed sources, the video's length. */
   grounding?: string
@@ -294,15 +290,6 @@ export function repeatsThumbnail(title: string, thumbnail: string | null | undef
   const theirs = words(th)
   if (mine.size >= 3 && [...mine].filter(w => theirs.has(w)).length / mine.size >= 0.75) return 'mostly'
   return null
-}
-
-/** The date of the piece's prediction as the piece writes it ("30 June
- *  2027"), or null when it makes none. */
-export function predictionDate(source: string): string | null {
-  const section = callSectionOf(String(source ?? ''))
-  if (!section) return null
-  const first = callDateMentions(section)[0]
-  return first ? first.text.replace(/^(?:by|on|before)\s+/i, '') : null
 }
 
 /** How a problem names its field. YouTube's two keep the plain names they
@@ -390,10 +377,6 @@ export function lintPackage(input: PackageContext & { title: string; description
   const hook = firstSentence(description)
   if (characters(hook) > HOOK_MAX) add('HOOK', 'warn', `The opening sentence is ${characters(hook)} characters. YouTube shows about ${HOOK_MAX} before "more", so the hook would be cut off.`)
   problems.push(...voiceProblems('description', description, input))
-  const due = predictionDate(input.source)
-  if (due && !description.toLowerCase().includes(due.toLowerCase())) {
-    add('PREDICTION', 'warn', `The piece predicts what will happen by ${due}, and the description does not give that prediction.`)
-  }
   const readLine = new RegExp(escape(READ_LINE), 'i')
   if (!lines.some(l => readLine.test(l))) add('READ_LINE', 'fail', `The description has no "${READ_LINE}" line.`)
   const tags = description.match(/(?:^|\s)#[\p{L}\p{N}_]+/gu) || []

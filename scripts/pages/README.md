@@ -24,7 +24,7 @@ or it writes neither (the rule in `editions/README.md`).
 
 | File | What it is |
 |---|---|
-| `page.html` | The piece in the makeyourmindup look, in its subchannel's colour: masthead, headline, deck and byline (makeyourmindup, the date and the minutes: no author and no face, house rule NO_NAME), the body with its source links and images, opinion labelled ("Our read:"), the choices as cards, the dated call with how sure we are, the sources and the subscribe band. One file: the fonts and images are inside it. |
+| `page.html` | The piece in the makeyourmindup look, in its subchannel's colour: masthead, headline, deck and byline (makeyourmindup, the date and the minutes: no author and no face, house rule NO_NAME), the body with its source links and images, opinion labelled ("Our read:"), the choices as cards, the sources and the subscribe band (no call band: the prediction format is retired, Rulings, Krish, 2026-11-17 and 2026-11-18). One file: the fonts and images are inside it. |
 | `substack.html` | The same words in one column, ready for Substack. Copy buttons for the title, the subtitle and the post. The post is headings, paragraphs, lists, quotes, links and images, nothing else, because Substack's editor drops layout and crashes on pasted side-by-side blocks. The images are inside the copy, in place, so they paste with the words. |
 | `phone-images.png` | Every image in the post at the width a phone shows it (358 pixels). Look at it before publishing: a word you cannot read there, a reader on a phone cannot read either. |
 | `cover-1200x630.png` | With `--cover`: the cover to upload in Substack's post settings, at the 1200 x 630 (1.91:1) its upload box asks for. |
@@ -108,8 +108,8 @@ One JSON file. Paths are relative to the file (or to `--assets DIR`).
 | `figures` | The piece's images: `{"after": "words in the body", "image": "img/1.png", "alt": "what it shows", "caption": "optional"}`. Each goes after the paragraph that holds its `after` words. `alt` is required. |
 | `pull_quotes` | `{"after": "...", "quote": "...", "cite": "who said it"}`. The quote must be words from the body, exactly. |
 | `sources` | `{"id": ["Title, date", "https://..."]}` (or `{"title", "url"}`). Listed at the end in the order they are first linked; any never linked come last, and the build mentions them. |
-| `links` | `[["exact words in the body", "source id"], ...]`. Each phrase is linked where it first appears, in reading order. Headings and the prediction are never linked. |
-| `call_heading` | The body heading that starts the prediction, if it is not `OUR PREDICTION`, `OUR CALL`, `THE CALL` or `PREDICTION`. |
+| `links` | `[["exact words in the body", "source id"], ...]`. Each phrase is linked where it first appears, in reading order. Headings are never linked. |
+| `call_heading` | Retired, not read: no piece makes a dated prediction, so no section is set apart as a call (Rulings, Krish, 2026-11-17 and 2026-11-18). |
 | `opinion_labels` | More labels to mark as opinion, beside the built-in "Our read:", "Our read, in plain English:", "Our bet:", "Our guess:", "Our view:" and "Here's our guess, and it is a guess:". |
 | `endnote` | The line under the sources. Defaults to the fact-check line. |
 
@@ -118,12 +118,15 @@ What the tool reads from the body itself:
 - `##` and `###` headings, paragraphs, `-` and `1.` lists, `>` quotes,
   `**bold**`, `*italic*` and `[links](url)`.
 - A run of paragraphs that start "Guess one.", "Guess two." (or Future,
-  Scenario, Option, Outcome) becomes a row of cards. If the next paragraph
-  says "Our bet: guess two", that card is the one marked.
-- The section under the prediction heading becomes the call: "By 30 June
-  2027, ..." is the claim and its due date, "How sure we are: 70%." is the
-  meter, and "Winners: ...", "Losers: ..." or "First sign: ..." are rows. The
-  Substack copy keeps that section word for word.
+  Scenario, Option, Outcome) becomes a row of cards. None is marked as our
+  bet.
+- There is no call band, confidence meter or due date. The prediction format
+  is abandoned (Ruling, Krish, 2026-11-17: "I don't do dated-and-scored
+  make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't
+  really have the clout such that my opinion can hold up in official scores.";
+  Ruling, Krish, 2026-11-18: "get rid of that - i have abandoned the prediction
+  format, it feels lame"), so every section, whatever its heading, is drawn as
+  body text, and the article ends on "3 things you can do tomorrow".
 
 ## What Substack does to your artwork
 
