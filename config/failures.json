@@ -3433,6 +3433,44 @@
         ],
         "line": "A caption style keeps three rules: a new word never appears somewhere else, the previous word or phrase stays a little longer, and nothing jolts. Watch the proof frame by frame on his take, not in stills; ve lint refuses a style that moves its word on a one-word cut."
       }
+    },
+    {
+      "id": "tue17-wed18-krish-carried-the-frame-qa",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "mode": "rule-written-nothing-measured-on-the-render",
+      "guard_level": "lint_refuse",
+      "krish": "\"considering that's the first few seconds of the video, it's not much of a hook. It looks quite dull for the first 3 seconds.\" and \"Can't cut my head off and also ruin the visual above.\" and \"my head needs to be in the bottom right\" (Wed 18); \"two concurrent visual styles trying to say the same thing over one another? why?\", \"off.day is NEVER to be used ever as a tag\" and \"NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME\" (Tue 17)",
+      "what": "On the Tue 17 and Wed 18 videos Krish caught twelve and six faults himself (two styles on one beat, graphics on flat black after a photo, a ghost of his face in dissolves, icons in the body, off.day drawn as a tag, a stray caption under the held title, a title that was not his spoken line or a card, a key figure too small, a false start left in, a dull first 3 seconds, a cropped head, his take not bottom right). Most had a rule written; no ve qc row measured it on the render, so a cut reached him with the fault.",
+      "symptom": "The cut reaches Krish carrying a fault he has already named; he is the quality check.",
+      "cause": "Rules lived in prompts and learnings; qc rows existed only for some (captions off the face, head in the camera band on SPLIT, brand.no_mark, bed shape) and only for some aspects or dates.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No row read one carrier a beat, figure treatment, face-beat transitions, flat-black backdrops, off.day text, the title card and its hold, restarts, first-seconds motion, or a 16:9 face position; qc_onscreen rows ran on 9:16 only."
+        }
+      ],
+      "surface": "velib/qc_frames.py reads config/ve/frame-checks.json (every number, with his words) as ve qc rows on every aspect, counted for a piece published from binds_from (2026-11-17) and advisory before it; a row that cannot read its render, its words or a face detector is not_run, never a pass. Spec lints for ve lint: title_moment.card, kept_restarts, off.day in the spec's words. Already existing and unchanged: captions.off_face (qc_faces), brand.no_mark, the R128 bed shape (qc_audio, music-bed.json), the licence gate (music.py check exempts an approved track). Open and not built: semantic duplication between a picture and a graphic is only caught by shared words and two pictures at once (the Critic reads the rest); the Aspire 'bed 15% under the house level' is not a number in the ledger, so it is not asserted; every threshold in frame-checks.json is a first value for Krish to confirm.",
+      "guards": [
+        {
+          "file": "scripts/velib/qc_frames.py",
+          "contains": "def rows(",
+          "how": "ve qc rows for the Tue 17 and Wed 18 faults on any aspect: one carrier, figures, ghost cuts and frames, flat-black backdrops, the render knowing the logo rule, off.day, the title card, restarts, first-seconds motion, head in frame and bottom right",
+          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+        },
+        {
+          "file": "config/ve/frame-checks.json",
+          "contains": "HOW TO ADD A ROW",
+          "how": "every threshold and the words it enforces, and the four steps to add a row for the next fault",
+          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+        },
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "qc_frames.lints(spec)",
+          "how": "ve lint refuses a title_moment with no card, a kept restart with no reason, and off.day in the spec's words, for a piece published from binds_from",
+          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+        }
+      ]
     }
   ]
 }

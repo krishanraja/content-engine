@@ -196,6 +196,20 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
   `GET /api/publish/catalogue` serves them to the site (which takes each article's cover from Substack itself). Nothing in ve publishes; a session never edits the site's
   copy of a video by hand.
 
+## Frame checks from the Tue 17 and Wed 18 lists (19 Nov 2026)
+
+Krish found twelve faults on Tue 17 and six on Wed 18 himself, most with a rule already written. `scripts/velib/qc_frames.py`
+reads `config/ve/frame-checks.json` (each block quotes his words, and holds every number) and adds these `ve qc` rows on any
+aspect: `beats.one_carrier`, `figures.shown`, `transition.ghost_cut` and `transition.no_ghost_frames`, `backdrop.not_flat_black`,
+`brand.render_current`, `text.no_off_day_props` and `text.no_off_day_frames`, `title.moment` and `title.stage_width`,
+`takes.restarts`, `motion.first_seconds`, `head.whole_in_frame` (his whole head, and bottom right on 16:9). `ve lint` adds
+`title.card` (title_moment.card), `takes.restarts` (a kept restart names `at_s` and `why`: `cuts.<id>.kept_restarts`) and
+`text.no_off_day`. `ve qc --spec SPEC.json` supplies the publish day and the kept restarts. A piece published from `binds_from`
+is counted; before it the rows are advisory (F33). A row that cannot read its render, its words or a face detector is `not_run`,
+never a pass. Already measured before and unchanged: `captions.off_face`, `plate.head_in_band` (9:16 SPLIT), `brand.no_mark`,
+the R128 bed shape. To add a row for the next fault: the header of the config file (a block with his words, one pure function in
+`qc_frames.py`, a good and a bad case in `tests/ve_frame_checks_test.py`, a `config/failures.json` entry naming that test).
+
 ## Hand-built composites
 
 A one-off composite (Ruling, Krish, 2026-11-10: "One-off composite") is built outside ve, so none of ve's gates see

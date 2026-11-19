@@ -386,7 +386,7 @@ class QCContracts(unittest.TestCase):
         self.assertEqual(set(run_qc.call_args.kwargs),
                          {'pages', 'beats', 'aspect', 'events', 'slots', 'region', 'mark_png', 'dialogue_master', 'edl', 'joins',
                           'heard', 'script', 'take_words', 'caption_style', 'plate_video', 'plate_offset', 'opening',
-                          'body_logo'})
+                          'body_logo', 'frame_props'})
         mocks['opening'].assert_called_once_with('cut.mp4', qc.opening_view(props))
         report = write.call_args.args[1]
         self.assertTrue(report['complete'], report)
