@@ -1,7 +1,7 @@
 {
   "schema": "ve-engine/1",
-  "sha256": "c97a96e41f09ce8044fb26f602a1e705cb8a0cb661a07d8122cc6eac34fb993d",
-  "at": "2026-11-19T07:08:18Z",
+  "sha256": "cdbada5b2e1988273cb2e63d8287a6d7dd9f30213c6b86e1bf25a98c19f27aec",
+  "at": "2026-11-19T08:42:26Z",
   "files": {
     "apps/renderer/src/Root.tsx": "96b88ae058476abe1883ab9d5fa7adeed4e7b5143ff22140f78dbb0d68031722",
     "apps/renderer/src/Short.tsx": "ccda63263e5bf4d3d2cf8a16923064f970deb57e1da0cdc398389f0379800aff",
@@ -18,7 +18,7 @@
     "apps/renderer/src/border-control/proof-entry.tsx": "16b48df73c95bc399e0aa5a2843ecf3d01285e478255d473c66d01d0ce101113",
     "apps/renderer/src/border-control/short-entry.tsx": "0399f8b5ed923fa30a0d4faa5acc26e074ca92e8f246d284730d6da7b21ccd6f",
     "apps/renderer/src/engine/BrandFrame.tsx": "32cd0c32794f3b3b697140d2355d57c433bb42e687b4acd1e754ec74954b6124",
-    "apps/renderer/src/engine/FormatMaster.tsx": "d00721b0eb020efb9898ec268f4edcfbd22054d3f51b79cfb693f1e7828d43b0",
+    "apps/renderer/src/engine/FormatMaster.tsx": "cd8a0e95619f25d818fcf3e741327dba1006df0c028cf1a95e0085bd5fbf42e2",
     "apps/renderer/src/engine/VeCut.tsx": "5635e51bc0a21fe2a9b654ae7459c126d5fa408f47f150120479de82fabd6e39",
     "apps/renderer/src/engine/audio.tsx": "2f8f87297ab3f21c189b8b50082def2f8e37d78a9fa91cee5affc89b69e2fd0b",
     "apps/renderer/src/engine/captions/draw.tsx": "a1a1d64be94cfd76135466865288e1f47f752bb5f952718608ee4cb98a45f1f2",

@@ -3644,8 +3644,7 @@
       "fromFrame": 506,
       "toFrame": 619,
       "uses": [
-        "block",
-        "meta_logo"
+        "block"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -3832,8 +3831,7 @@
       "fromFrame": 1507,
       "toFrame": 1668,
       "uses": [
-        "block",
-        "ai_logos"
+        "block"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -4021,7 +4019,6 @@
       "params": {
         "kind": "data centre",
         "label": "PIQUA, OHIO",
-        "logo": "Meta",
         "tag": "Your share",
         "targets": [
           {
@@ -4068,21 +4065,6 @@
           {
             "label": "limits won",
             "value": 40
-          }
-        ]
-      }
-    },
-    {
-      "obj": "meta_logo",
-      "device": "logo_card",
-      "meaning": "Meta, the company behind the Piqua data centre",
-      "fromFrame": 506,
-      "toFrame": 619,
-      "variants": {},
-      "params": {
-        "logos": [
-          {
-            "id": "Meta"
           }
         ]
       }
@@ -4139,28 +4121,6 @@
         "quote": "work with local officials to determine the future of our investment in Piqua",
         "outlet": "Meta, to The Washington Post",
         "date": "Nov 2026"
-      }
-    },
-    {
-      "obj": "ai_logos",
-      "device": "logo_card",
-      "meaning": "the AI companies that now have to find their own power",
-      "fromFrame": 1507,
-      "toFrame": 1668,
-      "variants": {},
-      "params": {
-        "logos": [
-          {
-            "id": "OpenAI"
-          },
-          {
-            "id": "Meta"
-          },
-          {
-            "id": "Oracle"
-          }
-        ],
-        "tiles": true
       }
     },
     {
@@ -4293,17 +4253,10 @@
     },
     {
       "id": "meta-0",
-      "obj": "meta_logo",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 506
-    },
-    {
-      "id": "meta-1",
-      "obj": "meta_logo",
-      "verb": "highlight",
-      "toState": "0",
-      "atFrame": 600
+      "obj": "block",
+      "verb": "grow",
+      "toState": "giant",
+      "atFrame": 530
     },
     {
       "id": "city-0",
@@ -4383,35 +4336,14 @@
       "atFrame": 1352
     },
     {
-      "id": "party_line-0",
-      "obj": "meta_line",
-      "verb": "stamp",
-      "toState": "struck",
-      "atFrame": 1419
-    },
-    {
       "id": "power-0",
-      "obj": "ai_logos",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 1550
-    },
-    {
-      "id": "power-1",
-      "obj": "ai_logos",
-      "verb": "exit",
-      "toState": "visible",
-      "atFrame": 1568
-    },
-    {
-      "id": "power-2",
       "obj": "block",
       "verb": "carry",
       "toState": "walk",
       "atFrame": 1577
     },
     {
-      "id": "power-3",
+      "id": "power-1",
       "obj": "block",
       "verb": "move",
       "toState": "target:1",
