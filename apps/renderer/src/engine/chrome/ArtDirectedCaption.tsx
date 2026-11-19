@@ -117,7 +117,8 @@ export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps;
   }
 
   // The previous page, on the line above this one, for holdSeconds from the moment this page begins.
-  const ghostAlpha = prev ? clamp((age + 2 / fps) / 0.08) * clamp((ART.holdSeconds - age) / ART.ghostFadeSeconds) : 0
+  // Never over his face either: the faded previous line crossed his chin on the face beats (Fri 20 Nov critic).
+  const ghostAlpha = prev && !faceAt(props, frame) ? clamp((age + 2 / fps) / 0.08) * clamp((ART.holdSeconds - age) / ART.ghostFadeSeconds) : 0
 
   // The echo: this page's, fading in as its word is said, and the last page's fading out under it. Opacity only.
   const echo = (pg: Page, alpha: number) => {

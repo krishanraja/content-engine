@@ -14,13 +14,13 @@ INV="plates/b14-invoices-916.mp4" if _o.path.exists(".cache/fri20/assets/plates/
 INVW,INVH=(720,1280) if INV.endswith("mp4") else (1520,2688)
 TH=("shots/tomshw.png","Tom's Hardware","29 Oct 2025")
 objects=[
- {"obj":"k_billed","device":"kinetic_stat","dataset":"bill-billed","meaning":"the bill as the hospital first sent it: $195,000 (his account, Tom's Hardware)","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"panel":True}},
+ {"obj":"k_billed","device":"kinetic_stat","dataset":"bill-billed","meaning":"the bill as the hospital first sent it: $195,000 (his account, Tom's Hardware)","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"panel":True,"prefix":"$","group":True,"hero":True}},
  {"obj":"strike","device":"scribble","meaning":"a hand-drawn line through \"$195,000\" as he says \"fraction\"","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"colour":"mint","seed":"fri20","shape":"underline","from":[200,340],"to":[690,330]}},
  plate("sofa","plates/b4-sofa-money-916.mp4","the missing money: a fistful of cash and old receipts pulled out from the back of the sofa (Krish, 19 Nov: \"money back down the back of couches\")",1080,1920,"question"),
  plate("closet","plates/b4-closet-skeleton-916-from2s1.mp4","the skeletons in your closet: a cupboard bursts open and a skeleton tumbles out with the old files (the clip starts at 2.1 s, once a box printed with a year has turned away, and holds its last frame: no year the piece does not own) (Krish, 19 Nov: \"skeletons coming out of closets\")",1080,1920,"skeletons"),
  card("th_head",*TH,(0.13,0.51,0.5,0.32),"the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000","proof"),
  plate("steak","plates/b8-steak-sandwich-916.mp4","the gap between what was billed and what was given, as one picture: the cloche lifts on a sad sandwich while the bill on the tray says STEAK",1080,1920,"steak"),
- {"obj":"k_after","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill counting down from $195,000 to where it landed, about $33,000, on \"fell\" (his account, Tom's Hardware)","persist":{"from_beat":"fell","to_beat":"fell"},"params":{"ghost":True}},
+ {"obj":"k_after","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill counting down from $195,000 to where it landed, about $33,000, on \"fell\" (his account, Tom's Hardware)","persist":{"from_beat":"fell","to_beat":"fell"},"params":{"ghost":True,"prefix":"$","group":True}},
  {"obj":"chip_caveat","device":"query_chip","meaning":"the caveat kept on screen: his account, the hospital has not confirmed","persist":{"from_beat":"fell","to_beat":"fell"},"params":{"text":"HIS ACCOUNT · HOSPITAL HASN'T CONFIRMED"}},
  plate("closet2","plates/b4-closet-skeleton-916-from2s1.mp4","the callback: the same cupboard, now yours, opening on 'whose closet it was opening'",1080,1920,"closet"),
  plate("invoices",INV,"his close, generated at his word (\"generate it\", 19 Nov): last year's invoices poured into the AI, red flags popping, a skeleton hand waving from the folder",INVW,INVH,"act"),

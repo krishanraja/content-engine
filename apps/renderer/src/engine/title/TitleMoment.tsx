@@ -76,13 +76,16 @@ export function lockupGeometry(words: TitleWord[], width: number, height: number
   const tall = aspect === '9:16'
   const parts = lockupParts(words)
   const bandWidth = width * 0.92
+  // The type fills 0.82 of a tall card, not 0.88: it ends inside the platforms' right-hand button line at x 960 while the
+  // card still fills the frame (Fri 20 Nov: 'AUDITOR' to 977, 'SKELETONS' to 990).
+  const measure = tall ? 0.82 : 0.88
   const base = tall ? width * 0.17 : height * 0.18
   const gap = (size: number) => size * 0.22
   const lineWidth = (indices: number[], size: number) =>
     indices.reduce((s, i) => s + textWidth('anton', upper(words[i]!.text), size), 0) + gap(size) * Math.max(0, indices.length - 1)
   // One line, or two balanced lines when that gives bigger type (never more than two: it is a title, not a paragraph).
   const shape = (indices: number[], scale: number) => {
-    const fit = (lines: number[][]) => Math.min(base * scale, ...lines.map(l => 100 * bandWidth * 0.88 / Math.max(1, lineWidth(l, 100))))
+    const fit = (lines: number[][]) => Math.min(base * scale, ...lines.map(l => 100 * bandWidth * measure / Math.max(1, lineWidth(l, 100))))
     let best = { lines: [indices], size: fit([indices]) }
     for (let cut = 1; cut < indices.length; cut++) {
       const lines = [indices.slice(0, cut), indices.slice(cut)]
@@ -192,9 +195,20 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
     {words[c.index]!.text}</span> : null
   // The light sweep crosses both bands once the last word lands.
   const sweep = frame >= last ? mix(-30, 130, (frame - last) / 27) : -60
+  // The wordmark rides tight under the cards drawn so far: under the first card while the second has not come, easing down
+  // as the second lands, so the lockup never shows an empty gap above it (Fri 20 Nov critic: 370 px while it built).
+  let markShift = 0
+  if (geo.wordmark && geo.bands.length > 1) {
+    const b0 = geo.bands[0]!, lift0 = b0.width / 2 * Math.sin(3 * Math.PI / 180)
+    const firstTop = Math.min(b0.cy + b0.height / 2 + lift0 + height * 0.025, height * 0.97 - geo.wordmark.height)
+    const second = Math.min(...geo.bands[1]!.indices.map(i => words[i]!.atFrame))
+    const landed = frame < second ? 0 : ease((frame - second) / 9)
+    markShift = (firstTop - geo.wordmark.top) * (1 - landed)
+  }
+  const markTop = geo.wordmark ? geo.wordmark.top + markShift : 0
   const mark = geo.wordmark && props.wordmark
     ? <Image key="wordmark" data-title-wordmark="" src={props.wordmark.src}
-      style={{ position: 'absolute', left: geo.wordmark.left, top: geo.wordmark.top, width: geo.wordmark.width, height: geo.wordmark.height }} />
+      style={{ position: 'absolute', left: geo.wordmark.left, top: markTop, width: geo.wordmark.width, height: geo.wordmark.height }} />
     : null
   return <div data-title-moment="" data-title-lockup="" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity }}>
     <div data-title-ground="" style={{ position: 'absolute', inset: 0, background: `color-mix(in srgb, ${ink} ${Math.round(TITLE_SCRIM * 100)}%, transparent)` }} />
@@ -203,7 +217,7 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
     <div data-title-sweep="" style={{ position: 'absolute', inset: 0,
       background: `linear-gradient(115deg, transparent ${sweep - 6}%, rgba(255,255,255,0.28) ${sweep}%, transparent ${sweep + 6}%)` }} />
     {geo.wordmark && props.wordmark ? <div key="wordmark-ground" data-title-wordmark-ground="" style={{ position: 'absolute',
-      left: geo.wordmark.left - 28, top: geo.wordmark.top - 20, width: geo.wordmark.width + 56, height: geo.wordmark.height + 40,
+      left: geo.wordmark.left - 28, top: markTop - 20, width: geo.wordmark.width + 56, height: geo.wordmark.height + 40,
       borderRadius: 24, background: `color-mix(in srgb, ${ink} 82%, transparent)` }} /> : null}
     {mark}
   </div>

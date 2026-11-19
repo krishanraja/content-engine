@@ -53,6 +53,9 @@
    },
    "params": {
     "panel": true,
+    "prefix": "$",
+    "group": true,
+    "hero": true,
     "place": {
      "left": 135,
      "top": 380,
@@ -189,7 +192,9 @@
     "to_beat": "fell"
    },
    "params": {
-    "ghost": true
+    "ghost": true,
+    "prefix": "$",
+    "group": true
    }
   },
   {
