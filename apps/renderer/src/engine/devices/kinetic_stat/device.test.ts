@@ -22,6 +22,16 @@ describe('optional count-down ghost', () => {
   const timeline = [...events, down]
   const state = (frame: number) => kineticState(ghostObject, timeline, frame)
 
+  it('carry counts down from the shown value and draws no ghost (Fri 20 Nov: it snapped to 0 and climbed)', () => {
+    const carried = { ...ghostObject, params: { carry: true } }
+    for (const f of [82, 86, 90]) {
+      const v = kineticState(carried, timeline, f).value
+      expect(v).toBeGreaterThanOrEqual(24)
+      expect(v).toBeLessThanOrEqual(72)
+      expect(kineticState(carried, timeline, f).ghostText).toBeNull()
+    }
+    expect(kineticState(carried, timeline, 120)).toMatchObject({ value: 24, ghostText: null })
+  })
   it('accepts only an optional boolean', () => {
     expect(ParamsSchema.parse({})).toEqual({})
     expect(ParamsSchema.parse({ ghost: false })).toEqual({ ghost: false })

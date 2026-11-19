@@ -1,30 +1,30 @@
 {
   "schema": "ve-pre-critic/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-  "spec_sha256": "ed2aafc0dd6b4574f6522f0e3916955cebba8cf6e59199f7eb18a6011965b6ab",
+  "spec_sha256": "32a9ad885e7223d5b2830a953152015372ac9d00f583c97ec7fcf7345a6bfaba",
   "cards": [],
   "reviewer": "reviewer subagent afe4d5bf6eef0d4e6",
-  "reviewed_at": "2026-11-19T19:48:29.601311+00:00",
+  "reviewed_at": "2026-11-19T21:34:03.958183+00:00",
   "answers": {
     "one_idea": {
       "pass": true,
-      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts, and in the short the money now comes out on 'missing money' (sofa, hold 2.3 s, play at 19.28 s = w50) and the skeleton falls just before 'skeletons' (closet, hold 0.6 s, play at 20.96 s, word at 21.30 s), so the idea's two moves land on his words. The long cut's l_sofa still plays from 'Will', 2.0 s before 'missing'."
+      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts. With carry (state.ts: each count_to starts from the value on screen, no ghost drawn), k_after, l_after and l_k count down from $195,000 to $33,000 on 'fell' and '33', as the idea's move says. The hook line goes through $195,000, the slam words land on his words, the real pages are held still, and the sofa and closet plates come on 'missing money' and 'skeletons'."
     },
     "no_invented_numbers": {
       "pass": true,
-      "line": "No invented figure. The held first frame of the closet clip is after the turn that hides the year-printed box, so no year the piece does not own is on screen. All four counters show only bill-billed and bill-after (195,000 and 33,000). No slam word or tape has a digit, and the figures on th_head, l_lede and l_krafton are printed on their own pages."
+      "line": "No invented figure. All four counters show only the bill-billed and bill-after rows (195,000 and 33,000) as money in USD with their source line. Under carry the in-between values are motion between the two owned figures, and no ghost figure is drawn. No slam word or tape has a digit, and the figures on th_head, l_lede and l_krafton are printed on their own pages."
     }
   },
   "findings": [
     {
-      "severity": "fix",
-      "area": "long l_question l_sofa",
-      "text": "l_sofa has no hold_s and plays 2.0 s before missing; measure the 16:9 clip and add a hold before the long render."
+      "severity": "note",
+      "area": "kinetic_stat carry (engine)",
+      "text": "A carry test now holds the count-down with no ghost (device.test.ts)."
     },
     {
       "severity": "note",
-      "area": "short skeletons closet",
-      "text": "Check on the next render that the fall reads on skeletons, not before."
+      "area": "long l_question l_sofa",
+      "text": "l_sofa has no hold_s and plays 2.0 s before missing; fix before the long proof."
     }
   ],
   "mechanical": [],
