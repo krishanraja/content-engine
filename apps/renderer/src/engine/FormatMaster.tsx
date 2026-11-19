@@ -201,7 +201,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const leadOut = leading && beat.transitionOut !== 'carry' && keepsOutgoing(profile, beat, next, true)
         // A full-screen picture and a beat that shows his face never dissolve into each other: half of each is his face
         // as a ghost through the picture (Krish, 2026-11-18, yes to cutting them clean). They cut; same kinds still dissolve.
-        const fullScreen = (b: EngineBeat) => b.layout === 'STAGE' && b.plate?.source === 'none'
+        // A stage beat over a graded backdrop shows no face either, take underneath or not (19 Nov: the take under
+        // the block beat dissolved his face through it).
+        const fullScreen = (b: EngineBeat) => b.layout === 'STAGE' && (b.plate?.source === 'none' || !!b.backdrop)
         const kindChange = !!next && !!props.layout && fullScreen(beat) !== fullScreen(next)
         const overlap = leadOut ? LEAD_AFTER : profile && !kindChange && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
         const outgoing = frame >= beat.toFrame && frame < beat.toFrame + overlap

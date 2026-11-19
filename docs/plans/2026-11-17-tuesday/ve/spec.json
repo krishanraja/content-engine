@@ -81,7 +81,6 @@
    "params": {
     "kind": "data centre",
     "label": "PIQUA, OHIO",
-    "logo": "Meta",
     "tag": "Your share",
     "targets": [
      {
@@ -114,22 +113,6 @@
     "mark": "block"
    },
    "dataset": "ballotpedia-41"
-  },
-  {
-   "obj": "meta_logo",
-   "device": "logo_card",
-   "meaning": "Meta, the company behind the Piqua data centre",
-   "persist": {
-    "from_beat": "meta",
-    "to_beat": "meta"
-   },
-   "params": {
-    "logos": [
-     {
-      "id": "Meta"
-     }
-    ]
-   }
   },
   {
    "obj": "piqua",
@@ -182,29 +165,6 @@
     "quote": "work with local officials to determine the future of our investment in Piqua",
     "outlet": "Meta, to The Washington Post",
     "date": "Nov 2026"
-   }
-  },
-  {
-   "obj": "ai_logos",
-   "device": "logo_card",
-   "meaning": "the AI companies that now have to find their own power",
-   "persist": {
-    "from_beat": "power",
-    "to_beat": "power"
-   },
-   "params": {
-    "logos": [
-     {
-      "id": "OpenAI"
-     },
-     {
-      "id": "Meta"
-     },
-     {
-      "id": "Oracle"
-     }
-    ],
-    "tiles": true
    }
   },
   {
@@ -329,7 +289,6 @@
    "params": {
     "kind": "data centre",
     "label": "PIQUA, OHIO",
-    "logo": "Meta",
     "tag": "Your share",
     "targets": [
      {
@@ -372,22 +331,6 @@
    "params": {
     "label": "oppose a nuclear plant",
     "numeral": "53%"
-   }
-  },
-  {
-   "obj": "meta_logo_l",
-   "device": "logo_card",
-   "meaning": "Meta, the company behind the Piqua data centre",
-   "persist": {
-    "from_beat": "l7",
-    "to_beat": "l7"
-   },
-   "params": {
-    "logos": [
-     {
-      "id": "Meta"
-     }
-    ]
    }
   },
   {
@@ -440,70 +383,6 @@
     "quote": "work with local officials to determine the future of our investment in Piqua",
     "outlet": "Meta, to The Washington Post",
     "date": "Nov 2026"
-   }
-  },
-  {
-   "obj": "openai_logo_l",
-   "device": "logo_card",
-   "meaning": "OpenAI, whose promise to pay its own way came after the vote",
-   "persist": {
-    "from_beat": "l15",
-    "to_beat": "l15"
-   },
-   "params": {
-    "logos": [
-     {
-      "id": "OpenAI"
-     }
-    ]
-   }
-  },
-  {
-   "obj": "oracle_logo_l",
-   "device": "logo_card",
-   "meaning": "Oracle, building gas plants for its own data centres",
-   "persist": {
-    "from_beat": "l17",
-    "to_beat": "l17"
-   },
-   "params": {
-    "logos": [
-     {
-      "id": "Oracle"
-     }
-    ]
-   }
-  },
-  {
-   "obj": "soluna_logo_l",
-   "device": "logo_card",
-   "meaning": "Soluna, the small energy firm building data centres beside wind farms",
-   "persist": {
-    "from_beat": "l19",
-    "to_beat": "l19"
-   },
-   "params": {
-    "logos": [
-     {
-      "id": "Soluna"
-     }
-    ]
-   }
-  },
-  {
-   "obj": "apple_logo_l",
-   "device": "logo_card",
-   "meaning": "Apple, putting more AI on the phone instead",
-   "persist": {
-    "from_beat": "l21",
-    "to_beat": "l21"
-   },
-   "params": {
-    "logos": [
-     {
-      "id": "Apple"
-     }
-    ]
    }
   },
   {
@@ -962,24 +841,18 @@
       "source": "none"
      },
      "uses": [
-      "block",
-      "meta_logo"
+      "block"
      ],
      "events": [
       {
-       "at_w": 64,
-       "obj": "meta_logo",
-       "verb": "enter",
-       "to_state": "visible"
-      },
-      {
-       "at_w": 76,
-       "obj": "meta_logo",
-       "verb": "highlight",
-       "to_state": "0"
+       "at_w": 67,
+       "obj": "block",
+       "verb": "grow",
+       "to_state": "giant"
       }
      ],
-     "backdrop": "asset:bg-data-hall"
+     "backdrop": "asset:bg-data-hall",
+     "override_reason": "Krish, 18 Nov: no icons; the company mark that was this beat's moment is gone and the block carries it"
     },
     {
      "id": "city",
@@ -1222,14 +1095,7 @@
      "uses": [
       "meta_line"
      ],
-     "events": [
-      {
-       "at_w": 185,
-       "obj": "meta_line",
-       "verb": "stamp",
-       "to_state": "struck"
-      }
-     ],
+     "events": [],
      "override_reason": "his sarcasm on his face is the beat; the quote card is struck once above him",
      "backdrop": "asset:scene-ban-sign"
     },
@@ -1247,22 +1113,9 @@
       "source": "none"
      },
      "uses": [
-      "block",
-      "ai_logos"
+      "block"
      ],
      "events": [
-      {
-       "at_w": 206,
-       "obj": "ai_logos",
-       "verb": "enter",
-       "to_state": "visible"
-      },
-      {
-       "at_w": 208,
-       "obj": "ai_logos",
-       "verb": "exit",
-       "to_state": "visible"
-      },
       {
        "at_w": 210,
        "obj": "block",
@@ -1276,7 +1129,8 @@
        "to_state": "target:1"
       }
      ],
-     "backdrop": "asset:bg-pylons"
+     "backdrop": "asset:bg-pylons",
+     "override_reason": "Krish, 18 Nov: no icons; the company mark that was this beat's moment is gone and the block carries it"
     },
     {
      "id": "call",
@@ -1669,23 +1523,9 @@
       "source": "none"
      },
      "uses": [
-      "block_l",
-      "meta_logo_l"
+      "block_l"
      ],
-     "events": [
-      {
-       "at_w": 169,
-       "obj": "meta_logo_l",
-       "verb": "enter",
-       "to_state": "visible"
-      },
-      {
-       "at_w": 198,
-       "obj": "meta_logo_l",
-       "verb": "highlight",
-       "to_state": "0"
-      }
-     ],
+     "events": [],
      "override_reason": "the mark lands on Meta and lights on yes",
      "backdrop": "asset:bg-data-hall"
     },
@@ -1911,12 +1751,6 @@
        "obj": "meta_line_l",
        "verb": "fill",
        "to_state": "visible"
-      },
-      {
-       "at_w": 463,
-       "obj": "meta_line_l",
-       "verb": "stamp",
-       "to_state": "struck"
       }
      ],
      "override_reason": "the real quote holds whole so it can be read, then is struck once",
@@ -1935,17 +1769,8 @@
      "plate": {
       "source": "none"
      },
-     "uses": [
-      "openai_logo_l"
-     ],
-     "events": [
-      {
-       "at_w": 481,
-       "obj": "openai_logo_l",
-       "verb": "enter",
-       "to_state": "visible"
-      }
-     ],
+     "uses": [],
+     "events": [],
      "override_reason": "the mark lands on the name and holds while he reads the promise",
      "backdrop": "asset:bg-pylons"
     },
@@ -1982,16 +1807,9 @@
       "source": "none"
      },
      "uses": [
-      "block_l",
-      "oracle_logo_l"
+      "block_l"
      ],
      "events": [
-      {
-       "at_w": 541,
-       "obj": "oracle_logo_l",
-       "verb": "enter",
-       "to_state": "visible"
-      },
       {
        "at_w": 562,
        "obj": "block_l",
@@ -2033,17 +1851,8 @@
      "plate": {
       "source": "none"
      },
-     "uses": [
-      "soluna_logo_l"
-     ],
-     "events": [
-      {
-       "at_w": 604,
-       "obj": "soluna_logo_l",
-       "verb": "enter",
-       "to_state": "visible"
-      }
-     ],
+     "uses": [],
+     "events": [],
      "override_reason": "the mark lands on the name; the field holds the picture",
      "backdrop": "asset:scene-cow"
     },
@@ -2106,17 +1915,8 @@
      "plate": {
       "source": "none"
      },
-     "uses": [
-      "apple_logo_l"
-     ],
-     "events": [
-      {
-       "at_w": 712,
-       "obj": "apple_logo_l",
-       "verb": "enter",
-       "to_state": "visible"
-      }
-     ],
+     "uses": [],
+     "events": [],
      "override_reason": "the mark lands on the name and holds while he explains",
      "backdrop": "asset:bg-city-dusk"
     },
