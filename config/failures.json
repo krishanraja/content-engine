@@ -4033,6 +4033,61 @@
           "test": "python3 tests/ve_show_gate_test.py"
         }
       ]
+    },
+    {
+      "id": "build-or-buy-components-carried-faults",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint (every ve piece), title_check (thumbnail and cover words)",
+      "krish": "Krish, 19 Nov 2026, in this session, of the Build or buy piece's failure report: \"here are the specific failures encountered in the Build or Buy piece that we need to surgically ensure all the components that went in to building that specific piece address next time they are used\"",
+      "what": "The Build or buy piece (Wed 18 Nov 2026, piece db9f9f6a) shipped proofs with: a vertical long take on 16:9 layouts that cut his head; logos invisible (a dark mark on the dark stage) or out of proportion; the site address wider than the short's caption line, then split so .ai dropped; a tall WINDOW under the app buttons, added to make up the layout count; full-page headline screenshots too small to read; about 85 s of talking head and pulsing logos; thumbnail words (\"BUILD IT? CRAZY.\") that passed the title rule.",
+      "symptom": "Each fault reached him in a proof; he found them, not a check.",
+      "cause": "No component carried these as rules: nothing read the take's orientation, logo contrast, a caption word's width before compile, a window against the channel zones, a bare talking-head stretch, or an all-capitals title's names against the piece.",
+      "guards": [
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def take_orientation(",
+          "how": "ve lint piece.take_orientation: a 16:9 cut's take names its frame, and a vertical take may not use a horizontal take layout",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def logos(",
+          "how": "ve lint piece.logos: two or more logos, or a dark mark, sit on equal tiles",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def tall_windows(",
+          "how": "ve lint piece.tall_windows: the tall WINDOW box (held to the renderer) never overlaps a channel's buttons or caption",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def caption_words(",
+          "how": "ve lint piece.caption_words: every word fits one caption line, measured by the compile's own measure, and the site address is never split",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def talking_head(",
+          "how": "ve lint piece.talking_head: no bare talking-head beat over 12 s and no more than 20% of a cut bare or pulsing logos",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "HYPE = re.compile(",
+          "how": "a shouted verdict (crazy, insane...) fails, and an all-capitals title counts only the piece's own names",
+          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Before a storyboard: the take's orientation matches the cut's layouts, logos sit on tiles, every caption word fits one line, no window under the app buttons, no long bare talking head, and thumbnail words pass title_check with the piece as --source."
+      }
     }
   ]
 }
