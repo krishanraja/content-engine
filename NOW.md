@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-18
+as_of: 2026-11-19
 head: b0ca88d
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,10 +30,11 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-18)
+## Where it is right now (as of 2026-11-19)
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":4,"current_as_of":"2026-11-18","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (2 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 33% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 4, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- A production or Publish session on a piece with no schedule date of its own (an off-day meme or carousel the board placed) could not report to the board: every report was refused as piece_not_scheduled, so the card never moved and the Publish prompt looped. Every board prompt now names the week and day beside the piece id, which the report call needs. (2026-11-19)
 - the Critic's two blocking questions are now asked while the spec and cards are written, not after the render. `ve critic --pre <piece>` (verdict.pre.json, bound to the spec's hash) is required by `ve card` and `ve lint` (critic.pre) for a piece published from 19 Nov; `ve lint` idea.one_object reads the idea's content (a move that acts out the line; more than 4 different generated pictures with no persisting carrier); `ve card` writes the spec's never-list into every card and refuses a quoted on-screen figure the piece does not own (numbers.invented); `ve verify-card` reads the numbers off what Codex made (not_run when tesseract is absent). The thresholds (4 pictures, 60% carrier, the acts-out phrases) are in config/ve/production-guards.json and are Krish's to change. (2026-11-18)
 - covers and thumbnails have one stated owner, content-engine's production session (cover-art, thumbnail-designer, a separate critic), with Krish picking and Growth only posting and verifying; the one post-production prompt now says so and ends with `piece_manifest.py draft`, which refuses a video channel with no designed cover, so no manual ask is needed anywhere. docs/production/COVER-STANDARD.md has the owner table. (2026-11-18)
 - a post's Drive folder now follows its day whenever a Growth or Buffer-sweep report touches the placed item (renamed by its ID to the item's date and day, recorded in `followed`), not only at the press that moves it; the board also reads the item's own drive_folder as the option's folder. The Thu 19 post's Tue 17 folder will be renamed on the next report (within 15 minutes of the deploy). (2026-11-18)
@@ -48,6 +49,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-19 apps/control-plane/api/board/_writeBack.ts, tests/control-plane/board-sessions.test.ts, regenerated week and view fixtures.
 - 2026-11-18 the Tue 17 habits short reached production with 13 generated pictures acting out his line and invented figures against its own never-list; the F31 guard only checked that an idea existed.
 - 2026-11-18 the renderer draws the episode title moment; beats take a graded backdrop; the bed is ridden by EBU R128 loudness, not RMS; off.day is never a tag; figures are never dimmed behind a focus.
 Older lines: `docs/history/2026-11-18-NOW-moved-29.md` (it names every earlier move) and `LOG.md`.
@@ -55,10 +57,10 @@ Older lines: `docs/history/2026-11-18-NOW-moved-29.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-18): run `ve critic --pre` on the next off-day piece's spec before Sign storyboard, and have Krish set the thresholds.
+- Next (2026-11-19): Krish presses Publish again on the Cat counting cash meme (Thu 19) once the new prompt is live; the session still needs his channels, time and captions, and Buffer scheduling itself stays with Growth's route.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-18): holds.
+- North Star check (2026-11-19): holds.
 
 ## Read next
 
