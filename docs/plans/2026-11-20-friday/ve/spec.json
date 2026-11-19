@@ -522,7 +522,9 @@
     "to_beat": "hook"
    },
    "params": {
-    "ghost": true
+    "ghost": true,
+    "prefix": "$",
+    "group": true
    }
   },
   {
@@ -657,7 +659,9 @@
     "to_beat": "l_fell"
    },
    "params": {
-    "ghost": true
+    "ghost": true,
+    "prefix": "$",
+    "group": true
    }
   },
   {

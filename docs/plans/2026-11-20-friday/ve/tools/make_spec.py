@@ -187,14 +187,14 @@ def evs(obj, ats, first='enter'):
     return out
 UP=("shots/upworthy-tenant.png","Upworthy Scoop","14 Dec 2024"); NBC=("shots/nbc-dana.png","NBC News","Jan 2024"); HLS=("shots/harvard-krafton.png","Harvard Law School Forum on Corporate Governance","20 Apr 2026")
 lobj=[
- {"obj":"l_k","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill the family was sent, counting down to where it landed (his account, Tom's Hardware)","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"ghost":True}},
+ {"obj":"l_k","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill the family was sent, counting down to where it landed (his account, Tom's Hardware)","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"ghost":True,"prefix":"$","group":True}},
  {"obj":"l_src","device":"query_chip","meaning":"whose numbers these are: the family's account as Tom's Hardware reported it","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"text":"THE FAMILY'S ACCOUNT · TOM'S HARDWARE"}},
  plate("l_sofa","plates/long-sofa-money-169.mp4","the missing money: cash and old receipts pulled from the back of the office sofa (Krish, 19 Nov: \"money back down the back of couches\")",1920,1080,"l_question"),
  plate("l_closet","plates/b4-closet-skeleton-916-from2s1.mp4","the skeletons in your closet: the cupboard spills its old files and a skeleton (the tall clip framed on the wide stage; the wide clip prints a year nothing owns)",1080,1920,"l_skeletons"),
  card("l_head",*TH,(0.13,0.51,0.5,0.32),"the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000","proof"),
  card("l_lede",*TH,(0.13,0.51,0.5,0.21),"the headline as he explains it: Claude highlighted duplicative charges and improper coding","l_code"),
  plate("l_michelin","plates/b8-steak-sandwich-916.mp4","the gap between what was billed and what was served: the cloche lifts on a sad sandwich while the bill reads STEAK (the short's clip, framed on the wide stage; the wide tasting-menu clip printed a garbled row of zeros nothing owns)",1080,1920,"l_michelin"),
- {"obj":"l_after","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill counting down from $195,000 to where it landed, about $33,000, on \"fell\" (his account)","persist":{"from_beat":"l_fell","to_beat":"l_fell"},"params":{"ghost":True}},
+ {"obj":"l_after","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill counting down from $195,000 to where it landed, about $33,000, on \"fell\" (his account)","persist":{"from_beat":"l_fell","to_beat":"l_fell"},"params":{"ghost":True,"prefix":"$","group":True}},
  {"obj":"l_caveat","device":"query_chip","meaning":"the caveat on screen: his account, the hospital has not confirmed","persist":{"from_beat":"l_fell","to_beat":"l_fell"},"params":{"text":"HIS ACCOUNT · HOSPITAL HASN'T CONFIRMED"}},
  card("l_tenant",*UP,(0.03,0.1,0.62,0.28),"the headline: tenant uses ChatGPT to uncover crucial evidence and win legal battle against greedy landlord","l_tenant"),
  {"obj":"l_next","device":"query_chip","meaning":"next year: there is no page to check a guess against","persist":{"from_beat":"l_hindsight","to_beat":"l_hindsight"},"params":{"text":"NEXT YEAR · NO PAGE TO CHECK"}},
