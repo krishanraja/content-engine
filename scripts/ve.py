@@ -322,7 +322,14 @@ def cmd_qc(args) -> int:
         inputs['joins'] = [to_file_s(join['at_s'], props) for join in load_json(args.edl).get('joins', [])]
     if props is not None and props.get('aspect') == '9:16':
         inputs['composition_props'] = props
+    if props is not None:
+        inputs['frame_props'] = props   # the frame checks read every aspect (velib/qc_frames.py)
     inputs.update(_gate_inputs(args))
+    if getattr(args, 'spec', None):
+        # The spec supplies the publish day and the restarts he kept on purpose (cuts.<id>.kept_restarts).
+        spec_doc = load_json(args.spec)
+        inputs.setdefault('publish_day', spec_doc.get('publish_day'))
+        inputs['kept_restarts'] = ((spec_doc.get('cuts') or {}).get((props or {}).get('cutId')) or {}).get('kept_restarts') or []
     if getattr(args, 'publish_day', None):
         inputs['publish_day'] = args.publish_day
     report = run_qc(args.cut, args.format, **inputs)
@@ -1975,6 +1982,8 @@ def cmd_proof(args, render_fn=None) -> int:
             inputs = inputs_from_props(window)
             if window.get('aspect') == '9:16':
                 inputs['composition_props'] = window
+            inputs['frame_props'] = window
+            inputs['kept_restarts'] = (spec['cuts'].get(window.get('cutId')) or {}).get('kept_restarts') or []
             report = run_qc(str(clip), spec['format'], publish_day=spec.get('publish_day'), **inputs)
             write_json(Path(clip).with_suffix('.qc.json'), report)
             return report
@@ -2109,6 +2118,7 @@ def main() -> int:
     p = sub.add_parser('lint'); p.add_argument('spec'); p.set_defaults(fn=cmd_lint)
     p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.add_argument('--props')
     p.add_argument('--publish-day', help="the piece's publish day (YYYY-MM-DD): the on-screen checks bind from config/ve/onscreen-checks.json binds_from")
+    p.add_argument('--spec', help="the piece's spec: its publish day and the restarts it keeps on purpose (cuts.<id>.kept_restarts) for takes.restarts")
     p.add_argument('--script', help='the signed script, for words.lost')
     p.add_argument('--take-words', help="the take's words json, for words.lost")
     p.add_argument('--heard', action='append', metavar='ALIGNER=WORDS.json', help="an aligner's words for this render (repeatable)")
