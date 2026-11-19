@@ -3456,19 +3456,19 @@
           "file": "scripts/velib/qc_frames.py",
           "contains": "def rows(",
           "how": "ve qc rows for the Tue 17 and Wed 18 faults on any aspect: one carrier, figures, ghost cuts and frames, flat-black backdrops, the render knowing the logo rule, off.day, the title card, restarts, first-seconds motion, head in frame and bottom right",
-          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+          "test": "python3 tests/ve_frame_checks_test.py"
         },
         {
           "file": "config/ve/frame-checks.json",
           "contains": "HOW TO ADD A ROW",
           "how": "every threshold and the words it enforces, and the four steps to add a row for the next fault",
-          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+          "test": "python3 tests/ve_frame_checks_test.py"
         },
         {
           "file": "scripts/velib/guards.py",
           "contains": "qc_frames.lints(spec)",
           "how": "ve lint refuses a title_moment with no card, a kept restart with no reason, and off.day in the spec's words, for a piece published from binds_from",
-          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+          "test": "python3 tests/ve_frame_checks_test.py"
         }
       ]
     },
@@ -3498,25 +3498,25 @@
           "file": "scripts/velib/plainframes.py",
           "contains": "def plain_dark_problems(",
           "how": "a run of rows taller than 120 px, near-black with no detail, fails the proof and the render, naming beat, frame and band",
-          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py -k PlainDark"
+          "test": "python3 tests/ve_plain_frames_test.py -k PlainDark"
         },
         {
           "file": "scripts/velib/plainframes.py",
           "contains": "def caption_over_content_problems(",
           "how": "a caption's drawn box (the art-directed stack, as the renderer measures it) over bright content fails, naming page and frame; a scrim clears it",
-          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py -k CaptionOverContent"
+          "test": "python3 tests/ve_plain_frames_test.py -k CaptionOverContent"
         },
         {
           "file": "scripts/velib/proof.py",
           "contains": "def sendable_problems(",
           "how": "a proof is not sendable while its frames fail or a changed engine or asset has not been compared with the approved proof; ve render waits too",
-          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py -k CompareWithApproved"
+          "test": "python3 tests/ve_plain_frames_test.py -k CompareWithApproved"
         },
         {
           "file": "scripts/ve.py",
           "contains": "NOT SENDABLE to Krish",
           "how": "ve proof exits 1 and prints why; ve render records nothing for a whole cut whose frames fail",
-          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py"
+          "test": "python3 tests/ve_plain_frames_test.py"
         },
         {
           "file": "config/ve/plain-frames.json",
@@ -3557,7 +3557,7 @@
           "file": "config/copy-lint.json",
           "contains": "\"id\": \"off_day_tag\"",
           "how": "copy lint pattern off_day_tag on every public surface (channel copy, carousel text, video on-screen words, titles, article metadata): every spelling as a tag is refused, ordinary sentences pass",
-          "test": "python3 -m pytest -q tests/copy_lint_test.py"
+          "test": "python3 tests/copy_lint_test.py"
         },
         {
           "file": "apps/renderer/src/engine/chrome/offDay.ts",
@@ -4088,37 +4088,37 @@
           "file": "scripts/velib/piece_guards.py",
           "contains": "def take_orientation(",
           "how": "ve lint piece.take_orientation: a 16:9 cut's take names its frame, and a vertical take may not use a horizontal take layout",
-          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+          "test": "python3 tests/ve_piece_guards_test.py"
         },
         {
           "file": "scripts/velib/piece_guards.py",
           "contains": "def logos(",
           "how": "ve lint piece.logos: two or more logos, or a dark mark, sit on equal tiles",
-          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+          "test": "python3 tests/ve_piece_guards_test.py"
         },
         {
           "file": "scripts/velib/piece_guards.py",
           "contains": "def tall_windows(",
           "how": "ve lint piece.tall_windows: the tall WINDOW box (held to the renderer) never overlaps a channel's buttons or caption",
-          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+          "test": "python3 tests/ve_piece_guards_test.py"
         },
         {
           "file": "scripts/velib/piece_guards.py",
           "contains": "def caption_words(",
           "how": "ve lint piece.caption_words: every word fits one caption line, measured by the compile's own measure, and the site address is never split",
-          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+          "test": "python3 tests/ve_piece_guards_test.py"
         },
         {
           "file": "scripts/velib/piece_guards.py",
           "contains": "def talking_head(",
           "how": "ve lint piece.talking_head: no bare talking-head beat over 12 s and no more than 20% of a cut bare or pulsing logos",
-          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+          "test": "python3 tests/ve_piece_guards_test.py"
         },
         {
           "file": "scripts/post-pack/title_check.py",
           "contains": "HYPE = re.compile(",
           "how": "a shouted verdict (crazy, insane...) fails, and an all-capitals title counts only the piece's own names",
-          "test": "python3 -m pytest -q tests/ve_piece_guards_test.py"
+          "test": "python3 tests/ve_piece_guards_test.py"
         }
       ],
       "watch": {

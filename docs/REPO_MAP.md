@@ -2893,6 +2893,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `async function dispatchJob(job: JobName, input: Record<string, unknown>, env: Record<string, string | undefined> = proc…`
 - `type RunState = 'queued' | 'running' | 'done' | 'failed' | 'cancelled'`
 - `interface RunInfo`
+- `const RUNS_TTL_MS`
 - `async function readRuns(env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as F…`
 
 ### `apps/control-plane/api/board/_seriesMoves.ts`
@@ -3126,6 +3127,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 ### `apps/control-plane/api/board/_viewContract.ts`
 
 - `const VIEW_CONTRACT_VERSION`
+- `function stableJson(value: unknown): string`
 - `function viewEtag(view: Record<string, unknown>): string`
 - `function notModified(ifNoneMatch: string | string[] | undefined, etag: string): boolean`
 

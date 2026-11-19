@@ -4,7 +4,7 @@ Ruling (Krish, 2026-11-19): every component that built a piece carries its failu
 cannot repeat them. Each test reads the piece's own spec (Wed 18 Nov 2026, piece db9f9f6a; records only, no media) and
 fails on what went wrong there, then passes once the fault is fixed.
 
-    python3 -m pytest -q tests/ve_piece_guards_test.py
+    python3 tests/ve_piece_guards_test.py
 """
 import copy
 import json

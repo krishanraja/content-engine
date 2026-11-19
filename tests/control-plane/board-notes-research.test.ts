@@ -284,6 +284,14 @@ describe('notes for the Perplexity or the Claude prompt, never lost (contract 1.
     // Read in the week the piece moved to, the note is its own again.
     expect(savedNotesFor(got, { piece_id: FRI }, 'claude').map(n => n.text)).toEqual(['Saved on Tue 17'])
   })
+  it('a client that cannot build the cross-week read gives no notes, never an error', async () => {
+    const { crossWeekNotes } = await import('../../apps/control-plane/api/board/_view')
+    // A client with no neq, as the integration shim was before 1.33.0's read reached it: building the query throws.
+    const q: any = { select: () => q, eq: () => q, in: () => q, like: () => q, limit: () => q, then: (ok: (r: unknown) => unknown) => Promise.resolve({ data: [], error: null }).then(ok) }
+    await expect(crossWeekNotes({ from: () => q } as never, '2026-11-23', [FRI], ['off-thu-x'])).resolves.toEqual([])
+    const boom = { from: () => { throw new Error('no table') } } as never
+    await expect(crossWeekNotes(boom, '2026-11-23', [FRI], ['off-thu-x'])).resolves.toEqual([])
+  })
 })
 
 describe('every card keeps a notes box at every stage, and every save is a new note (contract 1.33.0)', () => {
