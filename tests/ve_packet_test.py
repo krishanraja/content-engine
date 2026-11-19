@@ -63,8 +63,8 @@ class PacketTest(unittest.TestCase):
         self.enterContext(patch.object(designlock, 'frozen', side_effect=lambda lock, fmt: original_frozen(lock, fmt, self.root)))
         self.enterContext(patch.object(ve, 'spec_path_for', return_value=self.spec_file))
         self.enterContext(patch('velib.lint.lint', side_effect=lambda path:(self.spec, [])))
-        # These tests read the other gates; the pace floor has its own (tests/ve_quality_floor_test.py).
-        self.enterContext(patch.object(floor, 'pace_problems', return_value=[]))
+        # These tests read the other gates; the floor (pace and judge) has its own (tests/ve_quality_floor_test.py).
+        self.enterContext(patch.object(floor, 'held_problems', return_value=[]))
 
     def save_qc(self):
         write_json(self.directory / 'qc.short.json', self.qc)

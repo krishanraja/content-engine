@@ -4430,8 +4430,8 @@
       "guards": [
         {
           "file": "scripts/velib/packet.py",
-          "contains": "floor.pace_problems(video, digest",
-          "how": "readiness holds a cut with any ve pace measure below every reference, so ve status never says READY and ve file refuses it",
+          "contains": "floor.held_problems(video, digest",
+          "how": "readiness holds a cut with any ve pace measure below every reference, or a blind judge score below 8, so ve status never says READY and ve file refuses it",
           "test": "python3 tests/ve_quality_floor_test.py"
         },
         {
@@ -4443,7 +4443,13 @@
         {
           "file": "scripts/velib/floor.py",
           "contains": "def dead_panel_lints(",
-          "how": "ve lint refuses a staged cut whose panel beside his take holds nothing or only a backdrop for more than 1.5 s",
+          "how": "ve lint refuses a staged cut whose panel beside his take holds nothing or only a backdrop for more than 1.5 s, for pieces frozen at ve expect from 23 Nov 2026 (a new rule binds from the next piece)",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/judge.py",
+          "contains": "def problems(",
+          "how": "the blind judge: the cut scored out of 10 beside his references without being told which clip is which, bound to the cut's sha256; below 8 is held, and from 23 Nov 2026 no score is held",
           "test": "python3 tests/ve_quality_floor_test.py"
         }
       ]

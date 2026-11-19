@@ -26,7 +26,7 @@ from unittest.mock import patch
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
-from velib import faceflags, filing, floor, keepout, packet  # noqa: E402
+from velib import faceflags, filing, floor, judge, keepout, packet  # noqa: E402
 from velib.common import write_json  # noqa: E402
 
 REFS = json.loads((ROOT / 'config' / 've' / 'pace-references.json').read_text(encoding='utf-8'))
@@ -84,7 +84,7 @@ class PaceFloorTest(unittest.TestCase):
         with patch.object(packet, 'mechanical', return_value=([], {}, self.video, 'f' * 64)), \
                 patch.object(packet, 'design', return_value=[]), \
                 patch('velib.codex_minimum.problems', return_value=[]), \
-                patch.object(floor, 'pace_problems', return_value=held):
+                patch.object(floor, 'held_problems', return_value=held):
             return packet.readiness({'cuts': {'long': {}}}, 'long', self.dir), filing.readiness({'cuts': {'long': {}}}, 'long', self.dir)
 
     def test_readiness_and_filing_hold_a_cut_below_the_floor(self):
@@ -145,6 +145,16 @@ class DeadPanelTest(unittest.TestCase):
     def test_a_device_entering_late_is_refused(self):
         spec = staged_spec([beat('face', 0, 20, uses=['stat'], events=[{'at_w': 10, 'obj': 'stat', 'verb': 'enter'}])])
         self.assertIn('about 3.8 s', floor.dead_panel_lints(spec)[0])
+
+    def test_ve_lint_asks_it_only_of_pieces_frozen_from_the_date(self):
+        spec = staged_spec([beat('face', 0, 12)])
+        directory = Path(tempfile.mkdtemp())
+        write_json(directory / 'engine.json', {'at': '2026-11-19T09:00:00Z'})
+        with patch.object(floor, 'recipe_lints', return_value=[]), patch.object(keepout, 'missing_lints', return_value=[]), \
+                patch('velib.verdict.ve_dir', return_value=directory):
+            self.assertEqual(floor.lints(spec, directory / 'spec.json'), [], 'a piece in production is never blocked by it')
+            write_json(directory / 'engine.json', {'at': '2026-11-23T09:00:00Z'})
+            self.assertTrue(floor.lints(spec, directory / 'spec.json'))
 
     def test_an_unstaged_cut_and_a_tall_pillar_are_not_asked(self):
         self.assertEqual(floor.dead_panel_lints(staged_spec([beat('face', 0, 12)], mode='fill')), [])
@@ -227,6 +237,64 @@ class FaceKeepOutTest(unittest.TestCase):
         self.assertEqual(faceflags.landmark_box(points), [0.4, 0.2, 0.2, 0.25])
         scanned = {'samples': [{'t': 0.0, 'face': True, 'box': [0.4, 0.2, 0.2, 0.25]}, {'t': 0.2, 'face': False}]}
         self.assertEqual(faceflags.boxes(scanned), [{'t': 0.0, 'box': [0.4, 0.2, 0.2, 0.25]}])
+
+
+def fake_sheets(_video, frames, motion):
+    frames.write_bytes(b'frames')
+    motion.write_bytes(b'motion')
+
+
+class JudgeTest(unittest.TestCase):
+    def setUp(self):
+        self.dir = Path(tempfile.mkdtemp())
+        self.refs = Path(tempfile.mkdtemp())
+        for name in ('igexport-DCHp2RLIxMt.mp4', 'instagram_DeypYeWN5hL.mp4', 'mon02-tall.mp4'):
+            (self.refs / name).write_bytes(b'ref')
+        self.video = self.dir / 'short.mp4'
+        self.video.write_bytes(b'cut')
+        self.made = judge.assemble(self.dir, 'short', self.video, 'a' * 64, refs_dir=self.refs, sheet_fn=fake_sheets)
+        self.key = json.loads(judge.key_path(self.dir, 'short').read_text())['key']
+        self.mine = next(k for k, v in self.key.items() if v == judge.CUT_LABEL)
+
+    def scores(self, cut_score, ref=9):
+        return {k: (cut_score if k == self.mine else ref) for k in self.key}
+
+    def test_the_packet_is_blind_and_names_what_is_missing(self):
+        packet = json.loads(self.made['packet'].read_text())
+        self.assertEqual(len(packet['letters']), 4)
+        self.assertNotIn(judge.CUT_LABEL, json.dumps(packet), 'the judge is never told which clip is the cut')
+        self.assertNotIn('igexport', json.dumps(packet))
+        self.assertIn('stamp-duty-is-stupid-ytshorts.savetube.vip.mp4', self.made['missing'])
+        self.assertIn('wed11-tall', self.made['missing'])
+        self.assertTrue((judge.packet_dir(self.dir, 'short') / f'{self.mine}.motion.jpg').is_file())
+
+    def test_a_low_score_holds_the_cut_and_a_high_one_passes(self):
+        judge.record(self.dir, 'short', 'a' * 64, self.scores(3), by='ve-critic')
+        self.assertIn('scored it 3/10', judge.problems(self.dir, 'short', 'a' * 64, bind=False)[0])
+        judge.record(self.dir, 'short', 'a' * 64, self.scores(8.5), by='ve-critic')
+        self.assertEqual(judge.problems(self.dir, 'short', 'a' * 64, bind=True), [])
+
+    def test_no_record_holds_only_from_the_date_and_a_new_file_needs_a_new_score(self):
+        self.assertEqual(judge.problems(self.dir, 'short', 'a' * 64, bind=False), [])
+        self.assertIn('no blind judge score', judge.problems(self.dir, 'short', 'a' * 64, bind=True)[0])
+        judge.record(self.dir, 'short', 'a' * 64, self.scores(9), by='ve-critic')
+        self.assertTrue(judge.problems(self.dir, 'short', 'b' * 64, bind=True), 'the score is bound to the file it judged')
+
+    def test_record_refuses_the_maker_a_missing_score_and_another_file(self):
+        with self.assertRaises(ValueError):
+            judge.record(self.dir, 'short', 'a' * 64, self.scores(9), by='ve')
+        partial = self.scores(9)
+        partial.pop(self.mine)
+        with self.assertRaises(ValueError):
+            judge.record(self.dir, 'short', 'a' * 64, partial, by='ve-critic')
+        with self.assertRaises(ValueError):
+            judge.record(self.dir, 'short', 'c' * 64, self.scores(9), by='ve-critic')
+
+    def test_readiness_holds_on_the_judge(self):
+        judge.record(self.dir, 'short', 'a' * 64, self.scores(2), by='ve-critic')
+        with patch.object(floor, 'pace_problems', return_value=[]):
+            found = floor.held_problems(self.video, 'a' * 64, self.dir, 'short', today='2026-11-20')
+        self.assertIn('blind judge scored it 2/10', found[0])
 
 
 class RecipeTest(unittest.TestCase):

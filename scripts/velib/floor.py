@@ -76,6 +76,13 @@ def pace_problems(video, digest: str | None, directory: Path, cut: str, *, table
     return ['below the floor: ' + ', '.join(parts) + ' is below every reference he keeps']
 
 
+def held_problems(video, digest: str | None, directory: Path, cut: str, *, today: str | None = None) -> list[str]:
+    """Everything the floor holds a cut on, for readiness: the pace floor, then the blind judge (velib/judge.py)."""
+    from . import judge  # noqa: PLC0415
+    return (pace_problems(video, digest, directory, cut)
+            + judge.problems(Path(directory), cut, digest, bind=binds(Path(directory), today)))
+
+
 def held_line(cut: str, floor: list[str]) -> str:
     """The one line Krish sees for a held cut: never a list of patches (Krish, 2026-11-19)."""
     why = '; '.join(r.removeprefix('below the floor: ') for r in floor)
@@ -234,5 +241,8 @@ def lints(spec: dict, spec_path: Path | None = None, *, today: str | None = None
     from .verdict import ve_dir  # noqa: PLC0415
     from . import keepout  # noqa: PLC0415
     directory = ve_dir(spec_path) if spec_path else None
-    return (dead_panel_lints(spec, directory) + recipe_lints(spec, directory, today=today)
-            + keepout.missing_lints(spec, directory, today=today))
+    # The dead panel binds from RECIPE_FROM too (Ruling, Krish, 2026-11-19: rules and the engine freeze at Sign storyboard; a
+    # new rule or fix binds from the next piece), so it never blocks a proof or render of a piece already in production. The
+    # pace floor and the judge are not lints: they only hold a cut from being filed or shown, and ask nothing mid-production.
+    dead = dead_panel_lints(spec, directory) if binds(directory, today) else []
+    return dead + recipe_lints(spec, directory, today=today) + keepout.missing_lints(spec, directory, today=today)

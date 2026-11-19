@@ -34,6 +34,7 @@
   python scripts/ve.py sfx approve --id <id> --words "<his words>" --on <date> --audition <ve>/sfx-audition.json | sfx stage --assets-dir <dir>
   python scripts/ve.py brief <piece> [--cut <cut>]   one brief per plate, with card fields; never dispatches
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
+  python scripts/ve.py judge <piece> --cut <cut> [--record scores.json --by ve-critic]   the blind judge's packet, then its score
   python scripts/ve.py lock draft|check|show|freeze|retire|rules-only  design locks (only Krish's Gate 2 freezes one; retire deletes a lock's key frames for good on his words; rules-only drops the picture-matching on his words)
   python scripts/ve.py golden show|check|fill        interim golden frames he names
   python scripts/ve.py signoff check|stills|gate2|add|apply   the three sign-offs as review cards on his board
@@ -446,6 +447,37 @@ def cmd_pace(args) -> int:
         return 0
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
         print(f've pace: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_judge(args) -> int:
+    """The blind overall judge (velib/judge.py): assemble the cut beside his references under letters, or record the scores
+    the ve-critic agent gave them. The model call is the session's; this only assembles, records and is enforced by ve status."""
+    from velib import judge, verdict
+    from velib.common import sha256_file
+    try:
+        _spec_file, spec, directory = _ve_dir(args.piece)
+        if args.cut not in spec['cuts']:
+            raise ValueError(f'no cut {args.cut} in the spec')
+        video = verdict.video_path(verdict.read(directory / f'qc.{args.cut}.json'), directory)
+        if not video.is_file():
+            raise ValueError(f'no rendered cut for {args.cut} (its qc.{args.cut}.json names {video})')
+        digest = sha256_file(video)
+        if args.record:
+            given = load_json(args.record)
+            value = judge.record(directory, args.cut, digest, given.get('scores') or {}, by=args.by, notes=given.get('notes'))
+            held = value['score'] < judge.PASS
+            print(f"ve judge: {args.cut} scored {value['score']}/10 beside {value['references_scored']} reference clips"
+                  + (f' (held: below {judge.PASS})' if held else ''))
+            return 1 if held else 0
+        made = judge.assemble(directory, args.cut, video, digest, refs_dir=Path(args.refs_dir) if args.refs_dir else None)
+        print(f"ve judge: blind packet {made['packet']} ({len(made['letters'])} clips, letters only)")
+        if made['missing']:
+            print(f"ve judge: not on disk, so not in the packet: {', '.join(made['missing'])}")
+        print('ve judge: hand the packet folder to the ve-critic agent ("The blind judge"), then record its scores with --record')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've judge: {error}', file=sys.stderr)
         return 1
 
 
@@ -2370,6 +2402,11 @@ def main() -> int:
     p.add_argument('video', nargs='?'); p.add_argument('--out'); p.add_argument('--seconds', type=float)
     p.add_argument('--refs', action='store_true'); p.add_argument('--dir', default=str(ROOT / '.cache' / 'references'))
     p.set_defaults(fn=cmd_pace)
+    p = sub.add_parser('judge', help='the blind overall judge: the cut beside his references under letters, then its score')
+    p.add_argument('piece'); p.add_argument('--cut', required=True); p.add_argument('--refs-dir')
+    p.add_argument('--record', help='the judge JSON: {"scores": {letter: 0-10}, "notes": {...}}')
+    p.add_argument('--by', default='ve-critic')
+    p.set_defaults(fn=cmd_judge)
     p = sub.add_parser('beats', help='tempo, bars, drops and a confidence for a music bed; measured, never snapped to')
     p.add_argument('audio', nargs='?'); p.add_argument('--out')
     p.add_argument('--grid', nargs='?', const='', help='a ledger track id (or --all) read from MINDMAKE_MUSIC_ROOT')
