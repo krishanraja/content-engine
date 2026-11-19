@@ -8,8 +8,8 @@
     "_why": "The board's Approve proof refuses a proof with no receipt for its sha256. mode off turns the refusal off without touching ve. enforce_from_week is the Monday of the first week it binds; a proof of an earlier week is never refused."
   },
   "bind_unshown": {
-    "enabled": false,
-    "_why": "When true, a cut not yet shown to Krish (no show receipt for any cut of the piece, no approved proof) meets every rule that exists when it is shown, whatever its publish_day, instead of only the rules whose binds_from is on or before its publish_day. Off by default: turning it on changes the rules a piece in flight is held to, which is Krish's call (F33)."
+    "enabled": true,
+    "_why": "When true, a cut not yet shown to Krish (no show receipt for any cut of the piece, no approved proof) meets every rule that exists when it is shown, whatever its publish_day, instead of only the rules whose binds_from is on or before its publish_day. On since 2026-11-19 (Krish: \"yes to all 3\"): it changes the rules a cut not yet shown is held to, and nothing already shown or approved (F33). Set enabled false to go back."
   },
   "qc": {
     "require_complete": true,

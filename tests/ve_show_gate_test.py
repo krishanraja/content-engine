@@ -138,16 +138,24 @@ class Receipt(unittest.TestCase):
 
 
 class Binding(unittest.TestCase):
-    def test_by_publish_day_as_before(self):
-        self.assertTrue(showgate.binds({'publish_day': '2026-11-20'}, '2026-11-19'))
-        self.assertFalse(showgate.binds({'publish_day': '2026-11-17'}, '2026-11-19', Path('.')))
+    def test_by_publish_day_as_before_when_the_flag_is_off(self):
+        cfg = showgate.config()
+        off = {**cfg, 'bind_unshown': {**cfg['bind_unshown'], 'enabled': False}}
+        with patch.object(showgate, 'config', return_value=off):
+            self.assertTrue(showgate.binds({'publish_day': '2026-11-20'}, '2026-11-19'))
+            self.assertFalse(showgate.binds({'publish_day': '2026-11-17'}, '2026-11-19', Path('.')))
+
+    def test_the_flag_is_on_by_krishs_yes_of_19_nov(self):
+        self.assertTrue(showgate.config()['bind_unshown']['enabled'])
 
     def test_an_unshown_piece_binds_at_render_time_only_when_the_flag_is_on(self):
         with tempfile.TemporaryDirectory() as tmp:
             cfg = showgate.config()
             on = {**cfg, 'bind_unshown': {**cfg['bind_unshown'], 'enabled': True}}
+            off = {**cfg, 'bind_unshown': {**cfg['bind_unshown'], 'enabled': False}}
             old = {'publish_day': '2026-11-17'}
-            self.assertFalse(showgate.binds(old, '2026-11-19', Path(tmp)))
+            with patch.object(showgate, 'config', return_value=off):
+                self.assertFalse(showgate.binds(old, '2026-11-19', Path(tmp)))
             with patch.object(showgate, 'config', return_value=on):
                 self.assertTrue(showgate.binds(old, '2026-11-19', Path(tmp)))
                 self.assertIsNotNone(showgate.effective_day(old, Path(tmp)))
