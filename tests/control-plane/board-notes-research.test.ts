@@ -285,3 +285,35 @@ describe('notes for the Perplexity or the Claude prompt, never lost (contract 1.
     expect(savedNotesFor(got, { piece_id: FRI }, 'claude').map(n => n.text)).toEqual(['Saved on Tue 17'])
   })
 })
+
+describe('every card keeps a notes box at every stage, and every save is a new note (contract 1.33.0)', () => {
+  // Krish, 2026-11-19, on "$75,000 for an AI school day. Here is the receipt." at Made: "Should be able to save notes in
+  // this step too"; then "Should be able to save multiple notes in all instances as I always have random iterative ideas".
+  const KEY = 'off-thu-schoolday'
+  const post = (stage: string, next: Body | null = null): Body => ({ key: KEY, type: 'post', day: 'thu', title: '$75,000 for an AI school day. Here is the receipt.', piece_id: null, stage: { key: stage, label: stage }, next, others: [] })
+  const saved = (text: string, at: string, item = KEY, forWhat = 'both') => ({ doc_id: `desk-thu-notes-${at}`, updated_by: 'Krish', updated_at: at,
+    body: { use: 'claude_notes', text, at, item, anchor: 'desk:thu:notes', thread_id: 't', for: forWhat } })
+  it('a post at Made and at Scheduled carries the notes press, and a saved note stays listed', () => {
+    for (const stage of ['made', 'scheduled', 'live']) {
+      const it0 = post(stage)
+      withSavedNotes({ days: [{ items: [it0] }] } as never, [saved('Say the receipt number first', '2026-11-19T10:00:00Z')] as never)
+      expect(it0.notes.save.body).toMatchObject({ use: 'claude_notes', item: KEY })
+      expect(it0.notes.save.id).toMatch(/\{t\}$/)
+      expect(it0.notes.saved.map((n: Body) => n.text)).toEqual(['Say the receipt number first'])
+    }
+  })
+  it('three saves are three notes, newest first, and all three reach the prompt they were meant for', () => {
+    const rows = [saved('One', '2026-11-19T10:00:00Z', KEY, 'claude'), saved('Two', '2026-11-19T11:00:00Z', KEY, 'claude'), saved('Three', '2026-11-19T12:00:00Z', KEY, 'both')] as never
+    const save = { kind: 'press', label: 'Your notes for Claude', body: { use: 'claude_notes', item: KEY } }
+    const claude: Body = { kind: 'prompt', label: 'Publish', tool: 'claude', prompt: 'P', notes: { ask: 'a', heading: 'h', save } }
+    const it0 = post('made', claude)
+    withSavedNotes({ days: [{ items: [it0] }] } as never, rows)
+    expect(it0.notes.saved.map((n: Body) => n.text)).toEqual(['Three', 'Two', 'One'])
+    for (const w of ['One', 'Two', 'Three']) expect(claude.prompt).toContain(w)
+  })
+  it('a post moved to another day keeps the notes saved on its old day', () => {
+    const it0 = post('approved')
+    withSavedNotes({ days: [{ items: [it0] }] } as never, [saved('Saved while it was on Tuesday', '2026-11-18T09:00:00Z', 'off-tue-schoolday')] as never)
+    expect(it0.notes.saved.map((n: Body) => n.text)).toEqual(['Saved while it was on Tuesday'])
+  })
+})

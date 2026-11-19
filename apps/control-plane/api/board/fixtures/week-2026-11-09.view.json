@@ -8394,7 +8394,33 @@
       "others": [],
       "line": "Live on Substack, YouTube",
       "next": null,
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-mon-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:mon:notes",
+         "use": "claude_notes",
+         "title": "When an AI app millions of people loved goes bust, who walks away with the money?",
+         "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      }
     ],
     "decisions": 0,
@@ -8476,7 +8502,33 @@
       "others": [],
       "line": "Live on Instagram, LinkedIn",
       "next": null,
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-tue-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:tue:notes",
+         "use": "claude_notes",
+         "title": "Character.AI went bust. Here is who got what.",
+         "item": "off-tue-shell"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      },
      {
       "key": "off-tue-mcpskin",
@@ -8632,7 +8684,33 @@
        ],
        "done": "Recorded as live. The day is done, and Growth learns from the post."
       },
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-tue-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:tue:notes",
+         "use": "claude_notes",
+         "title": "What MCP actually does, in 40 seconds.",
+         "item": "off-tue-mcpskin"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      },
      {
       "key": "off-tue-homework",
@@ -8788,7 +8866,33 @@
        ],
        "done": "Recorded as live. The day is done, and Growth learns from the post."
       },
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-tue-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:tue:notes",
+         "use": "claude_notes",
+         "title": "One AI does the homework, another marks it.",
+         "item": "off-tue-homework"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      }
     ],
     "decisions": 0,
@@ -9049,7 +9153,33 @@
       "others": [],
       "line": "Live on Substack, YouTube",
       "next": null,
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-wed-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:wed:notes",
+         "use": "claude_notes",
+         "title": "AI is already inside the songs people have on repeat, hidden in the credits.",
+         "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      }
     ],
     "decisions": 0,
@@ -9233,7 +9363,33 @@
         "saved": []
        }
       },
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Your notes for Claude",
+        "collection": "comments",
+        "id": "desk-thu-publish-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:thu:publish",
+         "use": "claude_notes",
+         "title": "Anthropic's AI wrote so much code Git could not keep up.",
+         "item": "off-thu-gitbroke"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your notes for Claude",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, and in the prompt."
+       },
+       "saved": []
+      }
      },
      {
       "key": "off-thu-agentnotsetup",
@@ -9539,7 +9695,33 @@
         "saved": []
        }
       },
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Your notes for Claude",
+        "collection": "comments",
+        "id": "desk-thu-publish-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:thu:publish",
+         "use": "claude_notes",
+         "title": "POV: your AI agent using your computer without being set up properly by you",
+         "item": "off-thu-agentnotsetup"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your notes for Claude",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, and in the prompt."
+       },
+       "saved": []
+      }
      }
     ],
     "decisions": 0,
@@ -9907,7 +10089,33 @@
        ],
        "done": "Recorded as live. The day is done, and Growth learns from the post."
       },
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-fri-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:fri:notes",
+         "use": "claude_notes",
+         "title": "Meta staff were ranked by AI use. They gamed it.",
+         "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      }
     ],
     "decisions": 0,
@@ -10052,6 +10260,32 @@
         "fill": "off-sat-oldproof"
        },
        "runs_on": "GitHub · saturday-goodnews.yml"
+      },
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-sat-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:sat:notes",
+         "use": "claude_notes",
+         "title": "AI found a mistake in a maths proof from 1986, its makers say.",
+         "item": "off-sat-oldproof"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
       }
      }
     ],

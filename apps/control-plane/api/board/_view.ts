@@ -96,6 +96,9 @@ export const noteFor = (v: unknown): NoteFor => (v === 'claude' || v === 'perple
  *  (Krish, 2026-11-19: "save that note to this board, and it never disappears ever again"). The prompt itself carries the
  *  newest SAVED_NOTES_MAX. */
 export const SAVED_NOTES_SHOWN = 100
+/** An off-day post's notes key without its day (off-thu-x and off-tue-x are the same post moved), so a note saved on one
+ *  day stays its own after Move to... (Krish, 2026-11-19: "it never disappears ever again"). */
+export const noteItemKey = (k: unknown): string | null => (typeof k === 'string' && k ? k.replace(/^off-(mon|tue|wed|thu|fri|sat|sun)-/, 'off-') : null)
 
 /** The heading his earlier notes go under in a Claude prompt. */
 /** How a saved answer to the production plan's question reads among his earlier notes, so its framing is never lost. */
@@ -109,10 +112,10 @@ const SAVED_NOTE_CHARS = 2000
 /** His saved notes for one item (its piece, or an off-day post's key), newest first: the claude_notes comments he left. */
 export function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }, tool: 'claude' | 'perplexity' | null = null): SavedNote[] {
   const piece = typeof target.piece_id === 'string' ? target.piece_id.toLowerCase() : null
-  const item = !piece && typeof target.item === 'string' ? target.item : null
+  const item = !piece ? noteItemKey(target.item) : null
   if (!piece && !item) return []
   return (rows || []).filter(c => isObj(c.body) && c.body.use === 'claude_notes' && c.updated_by === 'Krish' && typeof c.body.text === 'string' && c.body.text.trim()
-    && (piece ? String(c.body.piece_id || '').toLowerCase() === piece : c.body.item === item)
+    && (piece ? String(c.body.piece_id || '').toLowerCase() === piece : noteItemKey(c.body.item) === item)
     && (!tool || noteFor(c.body.for) === 'both' || noteFor(c.body.for) === tool))
     .map(c => ({ at: String(c.body.at || c.updated_at || ''), text: String(c.body.text).trim().slice(0, SAVED_NOTE_CHARS),
       ...(c.body.for === 'claude' || c.body.for === 'perplexity' || c.body.for === 'both' ? { for: c.body.for as NoteFor } : {}),
@@ -132,7 +135,11 @@ export async function crossWeekNotes(db: SupabaseClient, week: string, pieceIds:
   const base = () => db.from('board_documents').select('doc_id,body,updated_by,updated_at,week').eq('collection', 'comments').neq('week', week)
     .eq('body->>use', 'claude_notes')
   if (ids.length) reads.push(base().in('body->>piece_id', ids).limit(500).then(r => (r.error ? [] : r.data || []), () => []))
-  if (keys.length) reads.push(base().in('body->>item', keys).limit(500).then(r => (r.error ? [] : r.data || []), () => []))
+  // A post's notes key carries its day (off-thu-x); one moved keeps its option id, so it is matched without the day.
+  for (const k of keys.slice(0, 40)) {
+    const id = noteItemKey(k)?.replace(/^off-/, '')
+    if (id && /^[A-Za-z0-9_-]{1,120}$/.test(id)) reads.push(base().like('body->>item', `off-%-${id}`).limit(200).then(r => (r.error ? [] : r.data || []), () => []))
+  }
   const rows = (await Promise.all(reads)).flat() as Array<Body & { week?: string }>
   const seen = new Set<string>()
   return rows.filter(r => { const k = `${r.week}/${r.doc_id}`; if (seen.has(k)) return false; seen.add(k); return true })
@@ -151,7 +158,16 @@ export function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): 
     if (a.tool !== 'perplexity' && a.notes.saved.length && !a.prompt.includes(EARLIER_NOTES))
       a.prompt = `${a.prompt}\n\n${EARLIER_NOTES}\n${a.notes.saved.slice(0, SAVED_NOTES_MAX).map(n => `- ${n.at ? `${n.at.slice(0, 16).replace('T', ' ')} UTC: ` : ''}${n.frame === 'visual_points' ? `${VISUAL_POINT_LINE} ` : ''}${n.text}`).join('\n')}`
   }
-  for (const d of model.days) for (const it of d.items) { fill(it.next); for (const o of it.others) fill(o) }
+  for (const d of model.days) for (const it of d.items) {
+    fill(it.next); for (const o of it.others) fill(o)
+    // Every card, at every stage, keeps his notes box and every note he saved on it (contract 1.33.0): the save press of
+    // its prompts, or the same press made for it when it carries no prompt (a post that is scheduled or live).
+    const own = [it.next, ...it.others].map(a => (a && a.kind === 'prompt' ? (a.notes?.save as PressAction | undefined) : undefined)).find(Boolean)
+    const save: PressAction = own ?? { ...thoughtPress(it.day, 'notes'), label: 'Save your note', done: 'Saved on the board, with the piece for good.',
+      body: { ...thoughtPress(it.day, 'notes').body, use: 'claude_notes', title: it.title.slice(0, 300), ...(it.piece_id ? { piece_id: it.piece_id } : { item: it.key }) },
+      words: { path: 'text', ask: 'Your note', required: true } }
+    it.notes = { save, saved: savedNotesFor(rows, save.body) }
+  }
   return model
 }
 export interface DayView {
@@ -1383,7 +1399,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   }
   // His notes on this week's pieces and posts saved in any week, so a note follows its piece across a move to another week
   // and is never dropped by the week's own 200 comments (Krish, 2026-11-19: "it never disappears ever again").
-  const noteRows = await crossWeekNotes(db, week, (pieces as Body[]).map(p => String(p.id || '')), (items ?? []).map(x => x.item))
+  const noteRows = await crossWeekNotes(db, week, (pieces as Body[]).map(p => String(p.id || '')), (items ?? []).map(x => (x.day ? `off-${x.day}-${x.option_id}` : '')))
   let ideas: Body | null = null
   try { ideas = ideasText ? JSON.parse(ideasText) : null } catch { ideas = null }
   let north: { current: number; target: number; measured?: number } | null = null

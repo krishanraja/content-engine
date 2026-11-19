@@ -3037,6 +3037,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `type NoteFor = 'claude' | 'perplexity' | 'both'`
 - `const noteFor = (v: unknown): NoteFor =>`
 - `const SAVED_NOTES_SHOWN`
+- `const noteItemKey = (k: unknown): string | null =>`
 - `const VISUAL_POINT_LINE`
 - `const EARLIER_NOTES`
 - `const SAVED_NOTES_MAX`
