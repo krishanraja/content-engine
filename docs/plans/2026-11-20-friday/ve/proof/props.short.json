@@ -82,7 +82,7 @@
     },
     {
       "fromFrame": 29,
-      "toFrame": 69,
+      "toFrame": 50,
       "words": [
         {
           "text": "and",
@@ -95,7 +95,14 @@
         {
           "text": "chatbot",
           "atFrame": 36
-        },
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 50,
+      "toFrame": 98,
+      "words": [
         {
           "text": "beat",
           "atFrame": 50
@@ -103,29 +110,10 @@
         {
           "text": "them.",
           "atFrame": 56
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 69,
-      "toFrame": 98,
-      "words": [
+        },
         {
           "text": "So",
           "atFrame": 69
-        },
-        {
-          "text": "A",
-          "atFrame": 240
-        },
-        {
-          "text": "man's",
-          "atFrame": 240
-        },
-        {
-          "text": "brother-in-law",
-          "atFrame": 240
         }
       ],
       "swipeIndex": null
@@ -208,7 +196,7 @@
     {
       "id": "face",
       "role": "bridge",
-      "layout": "SPLIT",
+      "layout": "F1",
       "fromFrame": 0,
       "toFrame": 69,
       "uses": [
@@ -216,13 +204,11 @@
         "s_face_slam1",
         "s_face_slam2"
       ],
+      "face": "full",
       "transitionOut": "cut",
       "sectionBeat": true,
       "plate": {
         "source": "take"
-      },
-      "backdrop": {
-        "src": "/home/user/content-engine/.cache/fri20/assets/shots/tomshw.png"
       },
       "keyFrame": 20
     },
@@ -313,7 +299,14 @@
       "variants": {},
       "params": {
         "word": "ARCHIVES",
-        "tapeText": "EVERYONE'S, RIGHT NOW"
+        "tapeText": "EVERYONE'S, RIGHT NOW",
+        "place": {
+          "left": 135,
+          "top": 260,
+          "width": 1080,
+          "height": 480,
+          "scale": 0.75
+        }
       }
     },
     {
@@ -325,7 +318,14 @@
       "variants": {},
       "params": {
         "word": "TEAMS",
-        "tapeText": "HOSPITALS PAY WHOLE TEAMS"
+        "tapeText": "HOSPITALS PAY WHOLE TEAMS",
+        "place": {
+          "left": 135,
+          "top": 260,
+          "width": 1080,
+          "height": 480,
+          "scale": 0.75
+        }
       }
     },
     {
@@ -337,7 +337,14 @@
       "variants": {},
       "params": {
         "word": "CHATBOT",
-        "tapeText": "A CHATBOT BEAT THEM"
+        "tapeText": "A CHATBOT BEAT THEM",
+        "place": {
+          "left": 135,
+          "top": 260,
+          "width": 1080,
+          "height": 480,
+          "scale": 0.75
+        }
       }
     }
   ],
