@@ -56,6 +56,10 @@ def page_lines(page: dict, wide: bool) -> int:
     from .compile import caption_line_count
     rows = [{'text': w['text'] if isinstance(w, dict) else str(w), 'w': i} for i, w in enumerate(page['words'])]
     swipe = page.get('swipeIndex')
+    # A page of one word is one line in every style: the renderer shrinks a lone word to fit rather than wrap it (Tue 17,
+    # 19 Nov 2026: the short's closing "makeyourmindup.ai." errored this row at the house size).
+    if len(rows) == 1:
+        return 1
     return caption_line_count(rows, '16:9' if wide else '9:16', {swipe} if swipe is not None else ())
 
 
