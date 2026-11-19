@@ -139,41 +139,71 @@ class Receipt(unittest.TestCase):
 
 
 class Binding(unittest.TestCase):
-    def test_by_publish_day_as_before_when_the_flag_is_off(self):
-        cfg = showgate.config()
-        off = {**cfg, 'bind_unshown': {**cfg['bind_unshown'], 'enabled': False}}
-        with patch.object(showgate, 'config', return_value=off):
-            self.assertTrue(showgate.binds({'publish_day': '2026-11-20'}, '2026-11-19'))
-            self.assertFalse(showgate.binds({'publish_day': '2026-11-17'}, '2026-11-19', Path('.')))
+    """Ruling (Krish, 2026-11-19): rules and the engine freeze at Sign storyboard; a new rule binds from the next piece;
+    bind_unshown goes."""
 
-    def test_the_flag_is_on_by_krishs_yes_of_19_nov(self):
-        self.assertTrue(showgate.config()['bind_unshown']['enabled'])
-
-    def test_an_unshown_piece_binds_at_render_time_only_when_the_flag_is_on(self):
+    def test_by_publish_day_as_always(self):
         with tempfile.TemporaryDirectory() as tmp:
-            cfg = showgate.config()
-            on = {**cfg, 'bind_unshown': {**cfg['bind_unshown'], 'enabled': True}}
-            off = {**cfg, 'bind_unshown': {**cfg['bind_unshown'], 'enabled': False}}
-            old = {'publish_day': '2026-11-17'}
-            with patch.object(showgate, 'config', return_value=off):
-                self.assertFalse(showgate.binds(old, '2026-11-19', Path(tmp)))
-            with patch.object(showgate, 'config', return_value=on):
-                self.assertTrue(showgate.binds(old, '2026-11-19', Path(tmp)))
-                self.assertIsNotNone(showgate.effective_day(old, Path(tmp)))
-                (Path(tmp) / 'show-receipt.long.json').write_text('{}')   # already shown to him: never changed mid-piece (F33)
-                self.assertFalse(showgate.binds(old, '2026-11-19', Path(tmp)))
-                self.assertIsNone(showgate.effective_day(old, Path(tmp)))
+            self.assertTrue(showgate.binds({'publish_day': '2026-11-20'}, '2026-11-19', Path(tmp)))
+            self.assertFalse(showgate.binds({'publish_day': '2026-11-17'}, '2026-11-19', Path(tmp)))
+            self.assertIsNone(showgate.effective_day({'publish_day': '2026-11-17'}, Path(tmp)))
 
-    def test_the_guards_read_the_bind_day(self):
-        spec = {'publish_day': '2026-11-17', 'cuts': {'long': {'aspect': '16:9'}}}
-        self.assertEqual(guards.bind_day(spec), '2026-11-17')
-        guards.set_bind_day('2026-11-25')
-        try:
+    def test_bind_unshown_is_retired(self):
+        self.assertFalse(showgate.config()['bind_unshown']['enabled'])
+        with tempfile.TemporaryDirectory() as tmp:
+            # a piece never shown to him is no longer held to a rule dated after its publish day
+            self.assertFalse(showgate.binds({'publish_day': '2026-11-17'}, '2026-11-19', Path(tmp)))
+
+    def test_a_future_dated_rule_that_existed_at_the_freeze_still_binds_by_publish_day(self):
+        # The freeze is the pin, not a date: a rule already in the frozen files with binds_from 24 Nov holds a piece frozen
+        # on 22 Nov and published on 25 Nov, exactly as before.
+        spec = {'publish_day': '2026-11-25', 'cuts': {'long': {'aspect': '16:9'}}}
+        with tempfile.TemporaryDirectory() as tmp:
+            guards.freeze(Path(tmp), now='2026-11-22T10:00:00Z')
+            self.assertTrue(showgate.binds(spec, '2026-11-24', Path(tmp)))
             self.assertEqual(guards.bind_day(spec), '2026-11-25')
-            self.assertTrue(guards.pre_critic_bound(spec))
-        finally:
-            guards.set_bind_day(None)
-        self.assertFalse(guards.pre_critic_bound(spec))
+
+    def test_a_rule_landing_after_the_freeze_moves_the_piece_onto_its_pin(self):
+        # Ruling (Krish, 2026-11-19): a new rule binds from the next piece. A rule file changed on main after ve expect
+        # sends this piece's proof and render to the commit pinned there, lint included.
+        spec = {'publish_day': '2026-11-25', 'cuts': {'long': {'aspect': '16:9'}}}
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch.object(guards, 'head_commit', return_value='abc123'):
+                lock = guards.freeze(Path(tmp))
+            self.assertEqual(guards.engine_route(spec, Path(tmp))['route'], 'here')
+            moved = {**lock['rules']['files'], 'config/ve/piece-guards.json': '0' * 64}
+            with patch.object(guards, 'rules_files', return_value=moved):
+                route = guards.engine_route(spec, Path(tmp), golden=lambda _sha: True)
+                self.assertEqual(route['route'], 'pin')
+                self.assertEqual(route['commit'], 'abc123')
+                self.assertEqual(route['rules_sha256'], lock['rules']['sha256'])
+                self.assertIn('config/ve/piece-guards.json', route['changed'])
+
+    def test_a_piece_frozen_before_rules_were_recorded_is_never_moved_by_them(self):
+        spec = {'publish_day': '2026-11-20', 'cuts': {'long': {'aspect': '16:9'}}}
+        with tempfile.TemporaryDirectory() as tmp:
+            lock = guards.freeze(Path(tmp))
+            lock.pop('rules')
+            guards.lock_path(Path(tmp)).write_text(json.dumps(lock))
+            self.assertEqual(guards.rules_changed(Path(tmp)), [])
+            self.assertEqual(guards.engine_route(spec, Path(tmp))['route'], 'here')
+
+    def test_records_written_during_a_piece_are_not_rules(self):
+        names = set(guards.rules_files())
+        for name in ('config/ve/sign-offs.json', 'config/ve/style-samples.json', 'config/ve/lab.json'):
+            self.assertNotIn(name, names)
+
+    def test_the_freeze_records_the_rules_and_says_what_changed_since(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            lock = guards.freeze(Path(tmp))
+            names = set(lock['rules']['files'])
+            for name in ('scripts/velib/lint.py', 'scripts/velib/piece_guards.py', 'config/ve/show-gate.json',
+                         'config/ve/plain-frames.json', 'config/brand-palette.json'):
+                self.assertIn(name, names)
+            self.assertEqual(guards.rules_changed(Path(tmp)), [])
+            moved = {**lock['rules']['files'], 'config/ve/piece-guards.json': '0' * 64}
+            with patch.object(guards, 'rules_files', return_value=moved):
+                self.assertEqual(guards.rules_changed(Path(tmp)), ['config/ve/piece-guards.json'])
 
 
 class EnginePin(unittest.TestCase):
@@ -187,8 +217,9 @@ class EnginePin(unittest.TestCase):
             with patch.object(guards, 'engine_files', return_value=dict(files)):
                 self.assertEqual(guards.engine_problems(spec, 'long', Path(tmp)), [])        # nothing in the engine moved
             with patch.object(guards, 'engine_files', return_value={**files, 'scripts/velib/compile.py': 'c' * 64}):
-                out = guards.engine_problems(spec, 'long', Path(tmp))
-                self.assertTrue(out and 've pin' in out[0])                                   # an engine file moved: told how to keep it
+                out = guards.engine_problems(spec, 'long', Path(tmp), golden=lambda _sha: True)
+                self.assertTrue(out and 'pinned at ve expect' in out[0], out)                 # it runs on its pin
+                self.assertNotIn('approv', out[0])                                            # never a question for Krish
 
     def test_freeze_records_the_commit(self):
         with tempfile.TemporaryDirectory() as tmp:

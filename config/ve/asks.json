@@ -1,0 +1,58 @@
+{
+  "_doc": "The only moments a production session may ask Krish anything. Everything between his Sign storyboard press (with the scripts) and the final review is decided by the session, recorded on the piece and carried on: anything he might want to change lands as one line on the final review (`python3 scripts/post-pack/making.py PIECE final-review KEY \"LINE\"`, the making record's for_final_review). scripts/validate-skills.py reads this file and refuses a production skill that tells a session to wait for an approval mid-production outside its Allowed asks section.",
+  "rulings": [
+    "Ruling (Krish, 2026-11-19): no approvals during production. Between Sign storyboard and the final review the engine never stops to wait for him. \"We need to eliminate the 4 million approvals like this that I'm required to make. It basically means I have to sit there for 7 hours waiting for the next stupid fucking approval to give and the engine refuses to move on even though it's just going to lead to more errors anyway.\"",
+    "Ruling (Krish, 2026-11-19): rules and the engine freeze at Sign storyboard; a new rule or fix binds from the next piece.",
+    "Ruling (Krish, 2026-11-19): filing to his own post folder needs no approval; his one final Approve press on the board, bound to the file shas, gates publishing only.",
+    "Ruling (Krish, 2026-11-19): spend inside one credit ceiling signed at the lock needs no further ask."
+  ],
+  "allowed": [
+    {
+      "id": "lock",
+      "when": "the Sunday room, before any script is written",
+      "what": "Sign the narrative lock: the recipe picked from the proven list and one credit ceiling for the whole piece."
+    },
+    {
+      "id": "scripts_and_storyboard",
+      "when": "before he records",
+      "what": "Approve the scripts and the storyboard as one press (Sign storyboard). Rules and the engine freeze here."
+    },
+    {
+      "id": "final",
+      "when": "once both cuts and the article are made and filed, with the thumbnail and cover options drawn and on the piece (an option is filed only once he picks it here)",
+      "what": "One screen: both cuts and the article, every default the session chose (each line of for_final_review, changeable in one press), the critic's notes, and his Approve bound to the file shas."
+    },
+    {
+      "id": "publish",
+      "when": "after the final Approve",
+      "what": "He publishes. Nothing in production publishes, posts or schedules."
+    }
+  ],
+  "spend": {
+    "signed_at": "lock",
+    "rule": "The credit ceiling signed at the lock covers every generation, music, sound and Codex dispatch for the piece. Inside it the session spends with no ask; at the ceiling the spend is refused, recorded as a final-review line, and the piece carries on without it."
+  },
+  "between": {
+    "from": "scripts_and_storyboard",
+    "to": "final",
+    "rule": "Decide, record, carry on. Never a board question, an item on his list, a typed approval or a wait. A choice he might change (title, thumbnail, cover, speed, music, voice, an unsure take, a plan swap, a critic's opinion) is one line on the final review; a deterministic failure is fixed or logged as an engine bug, never asked."
+  },
+  "skills": ["make-piece", "ve", "produce-video", "motion-designer", "thumbnail-designer"],
+  "allowed_section": "Allowed asks",
+  "refused_phrases": [
+    "wait(?:s|ing)? (?:for|on) (?:his|krish'?s?) (?:yes|approval|answer|press|pick|verdict|go-ahead|sign-off)",
+    "ask (?:him|krish) to approve the engine",
+    "approve (?:the )?engine",
+    "(?-i:final approve)",
+    "stop (?:and|/) ?ask",
+    "bring (?:him|krish) the (?:one )?question",
+    "ask krish for his verdict",
+    "ask (?:him|krish) once",
+    "put (?:one|a) board item asking krish",
+    "(?:goes|go|is put|comes) back to (?:him|krish) before (?:work|anything|production) (?:continues|goes on|carries on)",
+    "(?:paid|spend)[^.]{0,80}only on (?:his|krish'?s?) words",
+    "until (?:he|krish) approves",
+    "(?:his|krish'?s?) open question",
+    "get (?:his|krish'?s?) yes"
+  ]
+}

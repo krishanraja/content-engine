@@ -57,7 +57,7 @@ def video_probe(media: str | Path) -> dict | None:
     if not exe:
         return None
     info = subprocess.run([exe, '-v', 'error', '-select_streams', 'v:0', '-show_entries',
-                           'stream=avg_frame_rate,r_frame_rate,pix_fmt,color_transfer,color_primaries,bits_per_raw_sample:'
+                           'stream=width,height,avg_frame_rate,r_frame_rate,pix_fmt,color_transfer,color_primaries,bits_per_raw_sample:'
                            'stream_tags=rotate:stream_side_data=rotation', '-of', 'json', str(media)],
                           capture_output=True, text=True, errors='replace')
     streams = (json.loads(info.stdout or '{}').get('streams') or []) if info.returncode == 0 else []
@@ -99,7 +99,54 @@ def video_probe(media: str | Path) -> dict | None:
             'lay_offset_s': round(offset, 6), 'jitter_p95_ms': jitter,
             'max_offset_ms': round(worst, 2) if worst is not None else None, 'rotation': rotation, 'transfer': transfer, 'hdr': HDR_TRANSFERS.get(transfer or ''),
             'primaries': stream.get('color_primaries') or None, 'pix_fmt': pix or None,
-            'bit_depth': int(depth) if str(depth or '').isdigit() else None}
+            'bit_depth': int(depth) if str(depth or '').isdigit() else None,
+            'width': int(stream['width']) if str(stream.get('width', '')).isdigit() else None,
+            'height': int(stream['height']) if str(stream.get('height', '')).isdigit() else None}
+
+
+def frame_of(picture: dict | None) -> dict | None:
+    """The take's frame as it plays, {width, height} in pixels: the coded size turned by its rotation, so a phone's
+    portrait take stored landscape with a 90 degree tag reads as vertical. None when the picture has no size. Measured at
+    ingest and never typed (Wed 18 and Fri 20 Nov 2026: a vertical long take on a 16:9 cut, typed by hand or not at all,
+    cost about ten hours each time)."""
+    if not picture or not picture.get('width') or not picture.get('height'):
+        return None
+    width, height = int(picture['width']), int(picture['height'])
+    if abs(int(picture.get('rotation') or 0)) % 180 == 90:
+        width, height = height, width
+    return {'width': width, 'height': height}
+
+
+def measured_frame(ve_dir: Path, take: str) -> tuple[bool, dict | None]:
+    """(ingested, frame): whether a take record exists for this take id, and the frame ingest measured on it."""
+    try:
+        path = take_path(ve_dir, take)
+    except ValueError:
+        return False, None
+    if not path.is_file():
+        return False, None
+    media = load_json(path).get('media') or {}
+    frame = media.get('frame') or frame_of(media.get('video'))
+    return True, frame if isinstance(frame, dict) else None
+
+
+def cut_frame(spec: dict, cut_id: str, ve_dir: Path | None) -> tuple[str, dict | None]:
+    """Where a cut's take frame comes from and what it is: ('typed', frame) from an older spec's asset, ('measured',
+    frame) from the take record ve ingest wrote, ('unmeasured', None) when ingest ran and found no picture size, and
+    ('not_ingested', None) before ingest. A typed frame still works so older specs keep compiling."""
+    cut = (spec.get('cuts') or {}).get(cut_id) or {}
+    take = cut.get('take')
+    items = spec.get('assets') or []
+    asset = next((a for a in (items if isinstance(items, list) else items.values())
+                  if isinstance(a, dict) and a.get('id') == take), None) or {}
+    if isinstance(asset.get('frame'), dict):
+        return 'typed', asset['frame']
+    if ve_dir is None or not take:
+        return 'not_ingested', None
+    ingested, frame = measured_frame(Path(ve_dir), str(take))
+    if frame:
+        return 'measured', frame
+    return ('unmeasured' if ingested else 'not_ingested'), None
 
 
 def normalise(raw) -> list[dict]:
@@ -247,7 +294,8 @@ def ingest(ve_dir: Path, piece: str, take: str, media: str | Path, *, clock_a=No
     record = {
         'schema': SCHEMA, 'piece': piece, 'take': take,
         'media': {'path': str(media.resolve()), 'sha256': sha256_file(media), 'duration_s': round(float(duration_s), 4),
-                  **({'video': picture} if picture else {})},
+                  **({'video': picture} if picture else {}),
+                  **({'frame': frame_of(picture)} if frame_of(picture) else {})},
         'aligners': clocks,
         'ingested_on': today or date.today().isoformat(),
     }

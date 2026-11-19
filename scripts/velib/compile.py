@@ -16,7 +16,7 @@ from pathlib import Path, PureWindowsPath
 
 from .common import ROOT, load_json, sha256_file
 from .lint import pending_devices_error
-from . import palettes
+from . import palettes, takes
 
 FPS = 30
 ENDING_FRAMES = 180  # the house close: 6 s, settled by 2.75 s then held (docs/production/CLOSING.md)
@@ -465,11 +465,13 @@ def _params(params: dict, source) -> dict:
 
 
 def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Path, *, report: dict | None = None,
-                edl: dict | None = None) -> dict:
+                edl: dict | None = None, take_frame: dict | None = None) -> dict:
     """Return EngineRenderProps without writing files or changing the spec.
 
     With an EDL from ve conform (already through its F09 lint), the source edits are applied: the words are the
-    conformed clock and the picture is the conformed take, rendered from the same graph as the dialogue."""
+    conformed clock and the picture is the conformed take, rendered from the same graph as the dialogue.
+    take_frame is the take's frame as ve ingest measured it (velib.takes.cut_frame); a typed asset frame is the
+    fallback, so an older spec still compiles."""
     pending_error = pending_devices_error(spec['format'])
     if pending_error:
         raise ValueError(pending_error)
@@ -769,7 +771,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         props['ingredients'] = ingredients
     if 'sound' in (spec.get('style') or {}):
         props['audio']['sfx'] = sound_props(spec, props, assets_dir)
-    layout = ((spec.get('style') or {}).get('layout') or {}).get('mode')
+    layout = ((spec.get('style') or {}).get('layout') or {}).get('mode') or default_layout(spec, cut_id, take_frame)
     if layout and layout != 'house':
         if layout not in LAYOUTS:
             raise ValueError(f"style.layout.mode {layout} is not one of {', '.join(LAYOUTS)}")
@@ -793,6 +795,21 @@ CAMERAS = ('none', 'drift', 'phased', 'punch')
 # The handovers whose exit can lead their entrance (style.transitions.lead, 15 Nov 2026): the ones that travel.
 LEAD_TRANSITIONS = ('whip', 'push', 'zoom-through', 'punch')
 LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar')
+WIDE_ASPECTS = ('16:9',)
+
+
+def default_layout(spec: dict, cut_id: str, take_frame: dict | None = None) -> str | None:
+    """The staging when the spec names none: pillar for a wide cut over a vertical take (kit/staging.ts draws the take
+    whole at full height), so a vertical long take never lands on 16:9 layouts that cut off his head (Wed 18 and Fri 20
+    Nov 2026; Krish, 19 Nov: "Pillar: whole take on the right"). The frame is the one ve ingest measured; when none is
+    given, takes.cut_frame reads an older spec's typed asset frame (one rule, one place). None otherwise: the house staging."""
+    cut = (spec.get('cuts') or {}).get(cut_id) or {}
+    if cut.get('aspect') not in WIDE_ASPECTS:
+        return None
+    frame = take_frame if take_frame is not None else takes.cut_frame(spec, cut_id, None)[1]
+    if isinstance(frame, dict) and frame.get('width') and frame.get('height') and frame['height'] > frame['width']:
+        return 'pillar'
+    return None
 
 
 def caption_props(spec: dict) -> dict:

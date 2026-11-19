@@ -9,8 +9,8 @@ refs` (docs/ve/RUNBOOK.md S7). Its two blocking questions were knowable from the
   Q2  Is any number on screen invented (a figure the piece does not own: its datasets, real artifacts or his script)?
 
 `inputs` writes what the reviewer reads: the spec digest, the storyboard table and the card briefs (no asset exists yet), with
-the mechanical checks already run. `write` records the reviewer's answers as verdict.pre.json, bound to the spec's hash and to
-the card briefs it read. The critic stays read-only (.claude/agents/ve-critic.md); the session writes the file from its words,
+the mechanical checks already run. `write` records the reviewer's answers as verdict.pre.json, bound to the spec's
+structure (spec_sha: the idea and each cut's beats, devices and style) and to the card briefs it read. The critic stays read-only (.claude/agents/ve-critic.md); the session writes the file from its words,
 as it does for `ve verdict write`. `state` says whether a spec has a passing, current verdict: `ve card` and `ve lint` read it.
 """
 from __future__ import annotations
@@ -33,9 +33,37 @@ def ve_dir(spec_path: Path) -> Path:
     return path if path.name == 've' else path / 've'
 
 
+def _words(value):
+    """Every string in a value, never its bare numbers (an object's push, size or region is layout, not a figure)."""
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for v in value.values():
+            yield from _words(v)
+    elif isinstance(value, list):
+        for v in value:
+            yield from _words(v)
+
+
+def figures(spec: dict) -> list[str]:
+    """The figures Q2 judged: every number in the datasets (their values and labels, not the source link or the date it
+    was read) and every number written in an object's words. A figure added or changed after the review makes it stale."""
+    texts = [t for d in spec.get('datasets') or [] for key, v in d.items() if key not in ('source_url', 'retrieved_at')
+             for t in ideaguard._strings(v)]
+    texts += [t for o in spec.get('objects') or [] for t in _words(o)]
+    return sorted({ideaguard.norm(n) for t in texts for n in ideaguard.numbers_in(t)})
+
+
 def spec_sha(spec: dict) -> str:
-    """The spec as the reviewer read it: everything but its approvals, which Krish's presses add afterwards."""
-    return gates.canonical_sha({k: v for k, v in spec.items() if k != 'approvals'})
+    """What the reviewer judged: the one idea (style.idea), each cut's structure, the style, the devices and every
+    beat's id, layout and uses (proof.structural_hash, the hash a proof is bound to), and the figures it can show (Q2).
+    Bound to the whole spec, every audio target, crop or counter edit made the verdict stale: 61 `ve critic --pre` runs
+    on one piece (Fri 20 Nov). Krish's approvals are not in it either."""
+    from .proof import structural_hash  # noqa: PLC0415
+    cuts = spec.get('cuts') or {}
+    return gates.canonical_sha({'idea': (spec.get('style') or {}).get('idea'),
+                                'cuts': {cut: structural_hash(spec, cut) for cut in sorted(cuts)},
+                                'figures': figures(spec)})
 
 
 def piece_cards(spec_path: Path, cards_root: Path | None = None) -> list[Path]:
@@ -115,7 +143,9 @@ def state(spec: dict, spec_path: Path) -> tuple[bool, str]:
         return False, f'{VERDICT} cannot be read'
     if v.get('schema') != SCHEMA:
         return False, f'{VERDICT} is not {SCHEMA}'
-    if v.get('spec_sha256') != spec_sha(spec):
+    # A verdict written before 19 Nov is bound to the whole spec; it still stands while that whole spec is unchanged.
+    legacy = gates.canonical_sha({k: x for k, x in spec.items() if k != 'approvals'})
+    if v.get('spec_sha256') not in (spec_sha(spec), legacy):
         return False, f'{VERDICT} is stale: the spec changed after it was reviewed; ask the two questions again'
     for card in v.get('cards') or []:
         file = ROOT / card['path']

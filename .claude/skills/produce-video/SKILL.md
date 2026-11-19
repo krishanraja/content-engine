@@ -8,6 +8,9 @@ model: sonnet
 
 > Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
 
+## Allowed asks
+
+This skill runs after Sign storyboard, so it never asks Krish before the final review (`config/ve/asks.json`; Ruling, Krish, 2026-11-19: no approvals during production): never wait for his yes, never ask him to approve the engine, never ask for a typed "final approve", no board question. Decide, record `making.py <piece> final-review KEY "LINE"`, carry on. Spend inside the lock's credit ceiling needs no ask; filing needs no approval; rules freeze at Sign storyboard. In full: `.agents/skills/ve/references/allowed-asks.md`. It wins over any older line below.
 
 ## Fallback limits (audit, 3 Nov 2026)
 
@@ -15,7 +18,7 @@ This route is the fallback until ve passes Phase 3 (AGENTS.md, Video production)
 ve. It builds Archivo house captions only (no word caption build, which the signed motion standard makes the default
 for face-with-proof), has no upright Fraunces, never reads `style.motion`, has no reference gate (F26) and only warns on
 channel safe zones (`receipt['channel_safe']`). So before cutting a piece here that the signed standard
-(`docs/ve/MOTION_STANDARD.md`) covers, tell Krish in one line which of these it will miss, and open the inspiration
+(`docs/ve/MOTION_STANDARD.md`) covers, record which of these it will miss as one final-review line, and open the inspiration
 board's cards for it anyway; never call such a cut ready to the standard. Filing is the same on both routes: the post's
 `3 Posts` folder, `off.day` on Tue, Thu and Sat.
 
@@ -205,21 +208,18 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
    do. A file over 2 GiB is skipped by the lane, so that one is produced
    on a home computer, straight from H:. This is the one way a take comes
    back.
-4. From 1 November, his Titles press on the day's tab is to start the
-   night's cuts (the Sunday-night run, below). The press does not start it
-   yet (today it records his titles only), so until it does, and for a
-   re-cut or a take outside that run, he tells Claude Code "I've recorded"
-   or "I've dropped the video".
+4. From 19 November no Titles press stands in front of the cuts: the
+   session picks the titles itself (2b) and they reach him at the final
+   review. Until the drop starts the run by itself, and for a re-cut or a
+   take outside that run, he tells Claude Code "I've recorded" or "I've
+   dropped the video".
 
 A take reaches the engine within about ten minutes, from whichever home
 computer is on, and the same lane then places it on its piece and cut by
 itself, stamped with the script it was read from (step 2). He never has to
-give a file name or a piece id. He is asked only when the matcher is unsure,
-in a session's reply to him (the lane holds one board item per take for a
-session, never on his list), and for approvals that are his alone (a music
-track, the story outro's design and a sound under a piece's big moment; the
-mix levels are approved, 12 Nov 2026, and nothing goes before the hook, so no
-opening is asked about).
+give a file name or a piece id, and is never asked mid-production: an
+unsure match, the music track (from the ledger) and any sound (from the
+approved set) are the session's, each a final-review line.
 
 **Descript was retired on 12 October.** That morning his takes were to be
 recorded in Descript; the same afternoon Krish ruled "Descript is
@@ -261,12 +261,10 @@ on the record.
 
 ## The Sunday-night run (from 1 November)
 
-His Titles press on the recording Sunday (about 15:30; Krish, 2026-10-28:
-"Sunday evening press") is to start this skill for the week in a fresh
-session. The press cannot fire it yet (it records his titles only), so he
-starts it by telling Claude Code "I've recorded". Nothing starts it at a fixed time, and 21:30 is only the
-deadline for a surface he has not picked, which then takes its top-ranked
-option, never recorded as his pick. Read
+His recording on Sunday starts this skill for the week in a fresh session;
+until the drop starts it by itself, he starts it by telling Claude Code
+"I've recorded". Nothing starts it at a fixed time, and nothing waits on a
+Titles press (2b). Read
 `.agents/skills/produce-video/references/sunday-night.md` before the first
 cut: it holds the run in full. Its gates: the floor first; his signed
 storyboard for the cut's exact words, or the cut is held; the words gate
@@ -376,16 +374,14 @@ yet, and prints one line per file:
   songs.mp4"): a file named after a cut's script title on a waiting piece
   is that piece and cut, unless its words are surely another piece's or its
   length surely the other cut's.
-- `unsure`: ask Krish, using the line it printed. Never guess. When he names
-  it in words, record it by hand with the command below. A take recorded
-  after the piece's record began but before its own cut's words last
-  changed is unsure too, "recorded before the script last changed": it may
-  be a take of the older words, so Krish says whether to use it or record
-  that cut again. Each cut has its own time, so a change to the long script
-  never makes a short take look old. With `--board` each unsure take is one
-  board item held in progress for a session (never on his list: you ask him
-  in your reply), asked once, and never reopened once he or a session
-  closed it. Control Center's done-check sweep closes it once the take is
+- `unsure`: the session decides, never asks: match the take by its words
+  and length, record it with the command below and as a final-review line
+  (`take_<cut>`). A take "recorded before the script last changed" is used
+  only where its words match the current script (`narration_diff.py`);
+  otherwise that cut is held with the reason. Each cut has its own time.
+  With `--board` each unsure take is one board item held in
+  progress for a session (never on his list), worked once, and never
+  reopened once he or a session closed it. Control Center's done-check sweep closes it once the take is
   on a piece; the lane notes one no waiting piece can be (the sweep then
   lets it go), and the sweep lets one no session touches go after a week.
 - `left alone`: an older take of the same cut, or a take that arrived
@@ -435,8 +431,9 @@ on the piece: `python scripts/post-pack/making.py PIECE_ID session LINK`.
   record it with `making.py ... recorded ... --krish-words "Krish, DATE: his
   words"`, which stamps the current words and keeps his).
 - **Video assets already done** means the cuts exist. A new take of a cut
-  that is already produced is never a remake by itself: put one board item
-  asking Krish, and remake only on his words.
+  that is already produced is never a remake by itself: keep the produced
+  cut, record the new take as a final-review line, and remake only on his
+  words there.
 - **His answers on the cuts.** `show` prints every Yes or Not this he pressed
   on a rendered cut on the board's Cuts tab (`meta.cut_verdicts`), in his
   words. A Not this is his words to remake that cut: read them before you
@@ -489,21 +486,17 @@ after reading a script out loud than I do creating a script."
   dividers in one channel style, never pasted from the transcript:
   CHANNEL_HEADINGS), every line judged by whether it tells the piece's
   story (STORY_FIRST: `title_check.py lessons --plan docs/plans/<plan>`
-  prints it), put to him in one
+  prints it), chosen in one
   round (`make-piece`, "Titles, headlines and headings"). Claude Code runs it;
-  Codex leaves one board item for the next Claude Code session. Nothing with
-  those words on it (a title card, a thumbnail, a card heading) is drawn before
-  he picks; `title_check.py verdict --picked` refuses a packaging pick while
-  the piece has no take on the record.
-- **His sign-off first, then punch through without him** (SIGN_OFF_FIRST;
-  Krish, 2026-10-17: "do you not want to get sign off on headings and titles first so you can punch through to 100% without me?").
-  The round is the first thing done once a take is on the record, before any
-  render, capture, drawing or copy that waits on it, and it is one sheet with
-  every decision that is his for the piece: the lines above, the headings and
-  dividers, the intro stand-off, any script or speed choice for a cut still to
-  record. Never queue it behind a slow machine step. Once he answers, finish
-  to publish-ready without coming back to him, except for a send, publish,
-  spend or delete.
+  Codex leaves one board item for the next Claude Code session. Each surface
+  takes its top-ranked option, never as his pick, as a final-review line; `title_check.py
+  verdict --picked` refuses a packaging pick while the piece has no take on
+  the record.
+- **Decide first, then punch through without him** (SIGN_OFF_FIRST; no
+  approvals during production, 19 Nov). The round comes first once a take is
+  on the record, before anything that uses it; never behind a slow machine
+  step. Finish to publish-ready, filing included, without coming back to
+  him; only publishing waits, on his final Approve.
 
 ## 3. Build the kit, once per cut
 
@@ -558,8 +551,8 @@ carries a `"strap"`.
     this cut's own shape ("under the 39 px a viewer can read" in the tall
     cut, 21 px in the wide one): draw a version of that picture for video,
     with fewer and bigger words, and give its folder with `--files`; or take
-    the cue out by hand and ask Krish.
-  Only when Krish has said in words that this cut goes without those
+    the cue out by hand and record it as a final-review line, never a question.
+  Only when Krish has already said in words that this cut goes without those
   pictures, or with a small panel, pass his words: `--allow-missing "Krish,
   YYYY-MM-DD: his exact words"` or `--allow-small "Krish, YYYY-MM-DD: his
   exact words"`. They must start with "Krish"; anything else is refused, and
@@ -584,17 +577,18 @@ of its way, and record where: `making.py PIECE_ID clips long CARD_ID --at-s
 SECONDS --end-s SECONDS --audio on`. Leaving one out of a cut, or playing it
 silent, takes his words (`--omit` or `--audio off`, with `--krish-words
 "Krish, YYYY-MM-DD: ..."`). Step 9 warns on a cut that has not placed each
-one; say so in the report and to Krish, never call that cut done quietly.
+one; say so in the report and as a final-review line, never call that cut done quietly.
 No renderer plays an outside clip with its own sound yet (every embedded
 video is muted, and ve's compile refuses outside plates until Phase 2): when
-a piece has one, tell Krish before the render, never after.
+a piece has one, record it as a final-review line before the render, and carry on.
 
 **First, the style recipe** (`docs/STYLE_REFERENCES.md`). If
 `config/style-references.json` has a recipe for this piece, plan the cut
 with its editing, camerawork and graphics modules, always on top of the
 base (Krish's house rules win). Say in the report which modules were used,
 and set this cut's pace (cuts a minute, median shot) beside the pace of the
-references they came from. Then ask Krish for his verdict on each one.
+references they came from. Then record the modules and their pace as one
+final-review line; his verdict on each comes at the final review, never before.
 
 **The opening: one per cut** (house rule `HOOK_IS_THE_INTRO`). Ruling (Krish,
 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for
@@ -682,8 +676,9 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
   used only once he approves it by ear (`config/sfx-approved.json`, empty
   today). make.py refuses any `sfx` row in a config that is not in that
   approved set. His Epidemic Sound plan covers sound effects (Krish,
-  2026-10-29); downloading a candidate still waits on his yes, and nothing
-  is spent without it.
+  2026-10-29); a candidate is downloaded only for an audition, inside the
+  credit ceiling, never in the middle of a piece: a cut in production adds
+  no unapproved sound and records the gap as a final-review line.
 
 **A long episode** (a 15-minute feature Krish called, house rule FEATURE, or a deep cut already recorded under the retired DEEP_CUT) is made to
 `docs/production/one-shot-episode-corpus.md`, the standard Krish gave on 16
@@ -732,9 +727,10 @@ produced as an asset every time" (house rule THUMBNAIL_EVERY_SIZE): wide
 Receipt (house rule THE_RECEIPT, Krish, 2026-11-02: "inviolable"), never his
 face or a frame from a take. Read `.agents/skills/thumbnail-designer/SKILL.md`
 and follow it whole: two or three options from a brief (the cover standard,
-point 8), each checked, judged by a separate critic, shown to Krish in a mock
-of his grid and filed only once he picks: his Pick on the board (view contract
-1.16.0) or his words in a session, either recorded on the piece. Its
+point 8), each checked, judged by a separate critic, put on his final review
+in a mock of his grid (never a question mid-production), and filed only once
+he picks there: his Pick on the board (view contract 1.16.0) or his words in
+a session, either recorded on the piece. The cuts never wait for it. Its
 `references/drawing.md` holds the drawing rules this step held (the browser,
 the real logos as SVG, a plan with no `logos/` folder). Until his pick is on
 the record no thumbnail is filed, posted or recorded: leave `--tall-thumb`,
@@ -770,10 +766,10 @@ report these numbers back in plain words:
   points and its caption file come only from that new transcript, and the
   finished file's own transcript must hold every word of the script in order
   (Krish, 2026-10-24: "last time Codex glitched a bunch of words on the
-  speedup and also misaligned the captions"). Still over: tell Krish both
-  numbers before it goes anywhere. When only `total_seconds` is
+  speedup and also misaligned the captions"). Still over: record both
+  numbers as a final-review line and carry on. When only `total_seconds` is
   over 90 (his speech is inside it), say both numbers in your report; it is
-  not a stop, and it is his open question in `WORKBENCH.md`.
+  not a stop: record both as a final-review line.
 - Every other line in `warnings`, said as it is.
 
 Then look, with your own eyes, at every `preview-SHAPE-NN.jpg` (the first
@@ -797,7 +793,8 @@ folder in the archive (Drive, `Video Engine > Archive`:
 thumbnail beside its video and `where-to-post.txt`; it never overwrites.
 Leave out `--tall-thumb` and `--wide-thumb` only when step 5 could not draw
 them. Home computers only. If the `Archive` folder does not exist it stops:
-ask Krish to create it in Drive.
+report it `blocked` once with a final-review line naming the missing folder,
+and carry on with every step that does not need it.
 
 ## 8. Into the post's library folder
 

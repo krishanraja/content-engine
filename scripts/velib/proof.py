@@ -426,7 +426,8 @@ def stamp(spec: dict) -> dict:
     """The engine (guards.engine_sha) and the assets (id to sha256) this proof was made on."""
     from . import guards  # noqa: PLC0415
     assets = {str(a.get('id')): a.get('sha256') for a in spec.get('assets') or [] if isinstance(a, dict) and a.get('id')}
-    return {'engine_sha256': guards.engine_sha(), 'assets_sha256': dict(sorted(assets.items()))}
+    # engine_commit lets ve render go back to this exact engine by itself (guards.render_route).
+    return {'engine_sha256': guards.engine_sha(), 'engine_commit': guards.head_commit(), 'assets_sha256': dict(sorted(assets.items()))}
 
 
 def history_dir(directory: Path) -> Path:

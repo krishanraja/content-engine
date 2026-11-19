@@ -1,6 +1,6 @@
 ---
 name: motion-designer
-description: "Write a ve piece's per-beat motion plan into its spec before Krish's Sign storyboard press: the one visual idea, the motion style he picked or is offered, the transitions, camera, energy and layout, and for every beat its point, layout, events on the words that name them and how it hands over, with any per-scene note in the storyboard document. Use when the ve skill's step 6 points here, or when a ve piece's beats need planning or re-planning before he signs the storyboard. Not for picking the style for him (his Pick a style press), rendering, the proof, the Critic's review, thumbnails, carousels or the cartoon character's drawings."
+description: "Write a ve piece's per-beat motion plan into its spec before Krish's Sign storyboard press: the one visual idea, the motion style he picked or is offered, the transitions, camera, energy and layout, and for every beat its point, layout, events on the words that name them and how it hands over, with any per-scene note in the storyboard document. Use when the ve skill's step 6 points here, or when a ve piece's beats need planning or re-planning before he signs the storyboard. Not for picking the style for him (his lock's recipe), rendering, the proof, the Critic's review, thumbnails, carousels or the cartoon character's drawings."
 model: opus
 ---
 
@@ -14,7 +14,7 @@ scene file. A note the spec has no field for goes in the storyboard document (`<
 The plan answers to the house, never the other way round:
 
 - **The signed motion standard** (`docs/ve/MOTION_STANDARD.md`) is the floor every cut holds.
-- **His style pick.** `style.motion.module` is the one he picked from `ve styles` (or the proposal before he records);
+- **His style pick.** `style.motion.module` is his lock's recipe, never put to him again after he records;
   never a style in `meta.style.rejected`. Its profile in `apps/renderer/src/engine/kit/motion-profiles.json` (read it,
   never edit it) sets how things enter. This skill plans inside it.
 - **House rules.** HOOK_IS_THE_INTRO: every cut opens on its hook, nothing before it, one close.
@@ -84,14 +84,17 @@ beat's point.
 The plan is judged moving, at speed, never from stills (F04, F38): at `ve styles` and `ve proof` (the ve skill)
 watch each clip at full size and at speed, then frame by frame around each move and cut in the Critic's strips
 (`ve refs`). When the proof shows a beat that does not land, change the spec here and lint again: at most two fix
-loops, then bring Krish the one question. `ve pace` only flags; it is never a target.
+loops, then record the gap for the final review. `ve pace` only flags; it is never a target.
+
+## Allowed asks
+
+None after Sign storyboard (Ruling, Krish, 2026-11-19): `.agents/skills/ve/references/allowed-asks.md`.
 
 ## Refused, whatever a reference shows
 
-Each with the house rule it breaks, in `.agents/skills/motion-designer/references/adaptations.md`: a white stage;
-violet or coral as an accent; a font outside `config/ve/fonts.json`; small UI in big empty space; a sound on every hit;
-music not from the licensed ledger; lockups; sparkles; shimmer loaders; recreated UIs; invented numbers; per-video
-scenes or scaffolds; any pace target.
+All of `.agents/skills/motion-designer/references/adaptations.md`: a white stage, violet or coral accents, an outside font,
+small UI, a sound on every hit, unlicensed music, lockups,
+sparkles, shimmer loaders, recreated UIs, invented numbers, per-video scenes, any pace target.
 
 ## Walls
 

@@ -82,11 +82,28 @@ def sampled_frame(page: dict) -> int:
 
 
 def frame_at(video: str, frame: int, fps: float, size: tuple[int, int]) -> np.ndarray:
+    """The frame at `frame`, scaled to size. A seek at or just past the clip's last frame (durationFrames - 1 rounds to
+    a time the decoder has no frame for) reads nothing, which became not_run and held the show gate on Tue 17 Nov; such a
+    seek is clamped inside the clip and the clip's own last frame is read. A frame well past the end is still an error."""
     w, h = size
+    need = w * h * 3
     raw = subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-ss', f'{frame / fps:.3f}', '-i', video,
                           '-frames:v', '1', '-vf', f'scale={w}:{h}', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'],
                          capture_output=True, check=True).stdout
-    return np.frombuffer(raw, np.uint8).reshape(h, w, 3)
+    if len(raw) < need:
+        from .qc import duration_s  # noqa: PLC0415 (qc imports this module)
+        length = duration_s(video)
+        if length <= 0 or frame > length * fps + 1:
+            raise ValueError(f'frame {frame} is past the end of {video} ({length:.3f} s at {fps} fps)')
+        # the last second, decoded in order: its final full frame is the clip's last frame
+        tail = subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-sseof', '-1', '-i', video,
+                               '-vf', f'scale={w}:{h}', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'],
+                              capture_output=True, check=True).stdout
+        if len(tail) < need:
+            raise ValueError(f'no frame could be read from the end of {video}')
+        whole = len(tail) // need * need
+        raw = tail[whole - need:whole]
+    return np.frombuffer(raw[:need], np.uint8).reshape(h, w, 3)
 
 
 def default_detector():

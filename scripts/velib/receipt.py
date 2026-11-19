@@ -9,7 +9,8 @@ with what makes it; nothing is copied from a session's word, and nothing here is
   sync, motion not_applicable only when the cut's own props hold no picture segments (quality.voiceover_problems)
   loudness     ve qc's loudness rows on these bytes
   visuals      the independent Critic's verdict on these bytes (ve verdict), not blocking
-  full_review  Krish's final approval in the signed spec, bound to these bytes
+  full_review  Krish's final approval in the signed spec, bound to these bytes, recorded when he gave it; filing never
+               waits on it (Ruling, Krish, 2026-11-19: his Approve for publish gates publishing only)
   words        words_gate on the cut, with the rulings file as its EDL
   opening      opening_gate.py on these bytes, from the frame after the intro sting on a cut that opens on it (the
                receipt's `opening` says which frame the cut's own opening starts on)

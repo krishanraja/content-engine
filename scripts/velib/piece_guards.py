@@ -33,25 +33,33 @@ def _seconds(beat: dict) -> float:
     return max(0.0, (span.get('to_w', 0) - span.get('from_w', 0)) / WORDS_PER_SECOND)
 
 
-def take_orientation(spec: dict, rule: dict) -> list[str]:
-    """A 16:9 cut on a vertical take must use a layout built for a vertical source; the take says its frame."""
+def take_orientation(spec: dict, rule: dict, spec_dir: Path | None = None) -> list[str]:
+    """A 16:9 cut on a vertical take must use a layout built for a vertical source. The frame is measured by ve ingest
+    and read from the take record (velib.takes.cut_frame); an older spec's typed asset frame still counts. Before ingest
+    there is nothing to measure, so nothing is refused; once ingest has run, a take it could not size is refused.
+    With no staging chosen, compile stages a vertical take on 16:9 as pillar, so this check reads it the same way."""
+    from .takes import cut_frame  # noqa: PLC0415
+    from .verdict import ve_dir  # noqa: PLC0415
     out = []
-    assets = _assets(spec)
+    directory = ve_dir(Path(spec_dir) / 'spec.json') if spec_dir is not None else None
     for cid, cut in (spec.get('cuts') or {}).items():
         if cut.get('aspect') not in rule['wide_aspects']:
             continue
-        take = assets.get(cut.get('take')) or {}
-        frame = take.get('frame') or {}
-        w, h = frame.get('width'), frame.get('height')
+        source, frame = cut_frame(spec, cid, directory)
+        if source == 'not_ingested':
+            continue
+        w, h = (frame or {}).get('width'), (frame or {}).get('height')
         if not (isinstance(w, (int, float)) and isinstance(h, (int, float))):
-            out.append(f'piece.take_orientation cuts.{cid}: its take {cut.get("take")!r} names no frame {{width, height}}; '
-                       'a 16:9 cut must know whether its take is vertical before any layout is chosen (Build or buy, 18 Nov: '
-                       'a vertical take on 16:9 layouts cut the top of his head)')
+            out.append(f'piece.take_orientation cuts.{cid}: ve ingest ran on its take {cut.get("take")!r} and measured no '
+                       'frame {width, height}; a 16:9 cut must know whether its take is vertical before any layout is chosen '
+                       '(ingest the real video file again: ffprobe reads its size and rotation; Build or buy, 18 Nov: a '
+                       'vertical take on 16:9 layouts cut the top of his head)')
             continue
         if h <= w:
             continue
-        # A staging built for a vertical take (kit/staging.ts pillar) draws every staged beat's take whole.
-        staging = (((spec.get('style') or {}).get('layout') or {}).get('mode'))
+        # A staging built for a vertical take (kit/staging.ts pillar) draws every staged beat's take whole; with none
+        # chosen, compile.default_layout picks pillar for a vertical take on 16:9.
+        staging = (((spec.get('style') or {}).get('layout') or {}).get('mode')) or 'pillar'
         vertical_staging = staging in rule.get('vertical_source_stagings', [])
         for beat in cut.get('beats') or []:
             if vertical_staging and beat.get('layout') not in ('WINDOW', 'SPLIT'):
@@ -211,6 +219,6 @@ def lints(spec: dict, bind_day: str | None = None, spec_dir: Path | None = None)
         return []
     out = []
     for key, check in CHECKS.items():
-        out += check(spec, cfg[key])
+        out += check(spec, cfg[key], spec_dir) if key == 'take_orientation' else check(spec, cfg[key])
     out += caption_words(spec, cfg['caption_words'], spec_dir)
     return out

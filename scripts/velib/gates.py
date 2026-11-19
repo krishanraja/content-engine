@@ -45,7 +45,8 @@ def from_approvals(spec: dict) -> dict:
     for a in spec.get('approvals') or []:
         if not isinstance(a, dict) or a.get('by') != 'Krish' or a.get('gate') not in ('proof', 'final'):
             continue
-        row = {'by': 'Krish', 'at': a.get('on'), 'sha256': a.get('artifact_hash'), 'words': a.get('said'), 'source': 'spec'}
+        # `at` is the moment he pressed (production-spec VeApprovalSchema); an older approval carries only its date `on`.
+        row = {'by': 'Krish', 'at': a.get('at') or a.get('on'), 'sha256': a.get('artifact_hash'), 'words': a.get('said'), 'source': 'spec'}
         if a['gate'] == 'proof':
             row['verdict'] = 'approve'
         out.setdefault(a['gate'], []).append(row)

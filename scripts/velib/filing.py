@@ -8,8 +8,10 @@ It uses the routes the quick-edit and post-pack tools already use, never a copy 
   The post's `3 Posts` folder is the one home for everything ready to post (Ruling, Krish, 2026-11-03: "everything
   ready for post goes in the posts folder, not the growth folder"); a cut is done only when its copy there reads back.
 Both are local folders that Google Drive for desktop syncs on a home computer, so filing never calls a Drive API,
-never shares and never publishes. A cut is filed only when `ve status` would call it READY: QC bound to its hash, a
-Critic verdict and Krish's final approval of that exact file. Nothing is overwritten.
+never shares and never publishes. A cut is filed as soon as the machine checks pass: QC bound to its hash and a Critic
+verdict. Filing to his own post folder needs no approval from Krish (Ruling, Krish, 2026-11-19): it is not publishing,
+so he reviews files already in Drive, and his one Approve for publish press on the board, bound to the file shas
+(post-pack/piece_manifest.py seal), gates publishing only. Nothing is overwritten.
 """
 from __future__ import annotations
 
@@ -38,16 +40,17 @@ def delivered(record: dict | None, root: Path | None, cut: str) -> tuple[bool, s
     if not target.is_file():
         return False, f"missing from Drive: {item['library']}"
     if sha256_file(target) != item['sha256']:
-        return False, f"{item['library']} is not the approved file"
+        return False, f"{item['library']} is not the file that was filed"
     return True, item.get('library_url') or item['library']
 
 
 def readiness(spec: dict, cut: str, directory: Path) -> tuple[list[str], str | None, str | None]:
-    """(reasons it is not ready, the QC-bound video, its sha256): the same reasons `ve status` prints."""
+    """(reasons it may not be filed, the QC-bound video, its sha256): the machine checks `ve status` prints. Krish's
+    final approval (state['final']) is left out on purpose: it gates publishing, never filing (Ruling, Krish,
+    2026-11-19)."""
     from . import packet  # noqa: PLC0415
     state = packet.readiness(spec, cut, directory)
-    return (state['mechanical'] + state['design'] + state['final'] + state.get('codex', []), state['video'],
-            state['digest'])
+    return (state['mechanical'] + state['design'] + state.get('codex', []), state['video'], state['digest'])
 
 
 def library_root(given=None) -> Path:
@@ -118,10 +121,10 @@ def file(spec: dict, directory: Path, cuts: list[str], *, subject: str | None, w
     root = library_root(library_at)
     if not Path(root).is_dir():
         raise ValueError(f'the library folder {root} does not exist: check the path, and that Google Drive is running')
-    # Re-hash right before copying: what is filed is exactly the file Krish approved.
+    # Re-hash right before copying: what is filed is exactly the file QC and the Critic passed.
     for cut, (video, digest) in videos.items():
         if sha256_file(video) != digest:
-            raise ValueError(f'{cut}: {video} changed after its approval')
+            raise ValueError(f'{cut}: {video} changed after its checks')
     sidecar = Path(root) / library.POSTS / planned['post_folder'] / library.VIDEO / f've-{spec["piece_id"]}.json'
     for target in [sidecar] + [Path(root) / item['library'] for item in planned['files']]:
         if target.exists():
@@ -136,7 +139,7 @@ def file(spec: dict, directory: Path, cuts: list[str], *, subject: str | None, w
         target = Path(root) / item['library']
         archive.copy_new(video, target)
         if sha256_file(target) != digest:
-            raise ValueError(f'{target}: the copy does not match the approved file')
+            raise ValueError(f'{target}: the copy does not match the checked file')
         record['files'].append({'cut': item['cut'], 'shape': item['shape'], 'sha256': digest,
                                 'library': item['library'],
                                 'archive': str(Path(archived['path']) / next(f['file'] for f in archived['files']

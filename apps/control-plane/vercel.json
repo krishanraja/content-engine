@@ -155,6 +155,9 @@
     },
     "api/library/recordings/drive-inbox.ts": {
       "maxDuration": 600
+    },
+    "api/library/drive-review.ts": {
+      "maxDuration": 600
     }
   },
   "rewrites": [

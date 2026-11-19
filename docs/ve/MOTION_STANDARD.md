@@ -1,7 +1,9 @@
 # The premium motion standard
 
 Status: Signed by Krish, 3 Nov 2026 ("I signed the motion standards"), with the word caption build as the default for
-face-with-proof (ve lint `captions.word_default`). The house standard from that day.
+face-with-proof where no caption style is picked (a picked style draws its own phrase pages, so since 19 Nov 2026 the
+lint `captions.word_default` asks for word captions only where no style is picked; before that it refused a build
+compile never draws). The house standard from that day.
 
 Krish, 3 Nov 2026: "This video is a literal 1/10", "No, its the georgia subtitles build, and the motion and graphics of
 the other one", "The graphics in your previous car are honestly fucking embarrassing. I'm not publishing that."

@@ -772,3 +772,31 @@ describe('the choices under test on the making record', () => {
     expect(next.production_choices).toEqual({ lead_picture: 'story_object', opening: 'story_card', at: '2026-11-02T03:00:00Z' })
   })
 })
+
+describe('the lines for the final review on the making record', () => {
+  // Ruling (Krish, 2026-11-19): no approvals during production. What the session chose lands as one line each on the
+  // final review (config/ve/asks.json), where he changes any of it in one press.
+  it('keeps one line per choice, the newer replacing the older, and refuses a line that is not one line', () => {
+    const first = parseMakingPatch({ for_final_review: [{ key: 'thumbnail', line: 'Thumbnail: option B, the critic\'s best' }, { key: 'title', line: 'YouTube title: Who pays for AI songs' }] }, '2026-11-19T10:00:00Z')
+    expect(first.problems).toEqual([])
+    const prev = mergeMaking(null, first.patch, 'Claude Code', '2026-11-19T10:00:00Z')
+    const again = parseMakingPatch({ for_final_review: { key: 'thumbnail', line: 'Thumbnail: option A after the repair round' } }, '2026-11-19T11:00:00Z')
+    const next = mergeMaking(prev, again.patch, 'Claude Code', '2026-11-19T11:00:00Z')
+    expect(next.for_final_review?.map(l => [l.key, l.line])).toEqual([
+      ['title', 'YouTube title: Who pays for AI songs'],
+      ['thumbnail', 'Thumbnail: option A after the repair round'],
+    ])
+    expect(parseMakingPatch({ for_final_review: [{ key: 'Thumb nail', line: 'x' }] }, '2026-11-19T11:00:00Z').problems[0]).toMatch(/key/)
+    const twoLines = parseMakingPatch({ for_final_review: [{ key: 'title', line: 'one\ntwo' }] }, '2026-11-19T11:00:00Z')
+    expect(twoLines.problems[0]).toMatch(/one line/)
+    expect(twoLines.patch.for_final_review).toBeUndefined()
+  })
+
+  it('the making route keeps the lines and the steps do not move', async () => {
+    const before = (await call('GET')).body.steps
+    const out = await call('POST', { for_final_review: [{ key: 'speed', line: 'Short cut at 1.05x, the recipe default' }] })
+    expect(out.status).toBe(200)
+    expect(out.body.making.for_final_review).toMatchObject([{ key: 'speed', line: 'Short cut at 1.05x, the recipe default' }])
+    expect(out.body.steps).toEqual(before)
+  })
+})

@@ -437,8 +437,10 @@ class CompileTest(unittest.TestCase):
                 patch('velib.compile.Path.is_file', return_value=False), redirect_stdout(io.StringIO()):
             self.assertEqual(ve.cmd_compile(args), 0)
         report = writes['compile.proof-tall.json']
-        self.assertEqual(set(report), {'lint', 'sfx_missing', 'opening', 'props_sha256'})
+        self.assertEqual(set(report), {'lint', 'sfx_missing', 'opening', 'props_sha256', 'take_frame'})
         self.assertEqual(report['lint'], 'clean')
+        # Where the take frame came from: measured by ve ingest, typed on an older spec, or not ingested yet.
+        self.assertEqual(report['take_frame'], {'source': 'not_ingested'})
         # The opening under test is recorded per cut (Krish, 29 Oct 2026: "we need to test and learn").
         self.assertEqual(report['opening'], 'hook')
         self.assertEqual(report['props_sha256'], 'digest')

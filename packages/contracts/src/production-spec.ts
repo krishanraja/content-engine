@@ -161,7 +161,10 @@ export const VeAssetSchema = z.object({
   // A note for the record only: ve never draws it and no check requires it (no ILLUSTRATION tag, Krish, 28 Oct 2026).
   label: z.string().min(2).optional(),
   // A recording's frame in pixels, so a 16:9 cut knows a vertical take before any layout is chosen (config/ve/piece-guards.json
-  // take_orientation reads it; Build or buy, 18 Nov: a vertical take on 16:9 layouts cut the top of his head).
+  // take_orientation reads it; Build or buy, 18 Nov: a vertical take on 16:9 layouts cut the top of his head). Never typed
+  // on a new piece: ve ingest measures the take's size and rotation with ffprobe and writes it on the take record
+  // (media.frame), which lint and compile read (scripts/velib/takes.py cut_frame). A typed frame here is kept only so an
+  // older spec still compiles; with no layout named, compile stages a vertical take on 16:9 as pillar.
   frame: z.object({ width: z.number().int().positive(), height: z.number().int().positive() }).strict().optional(),
 }).strict().superRefine((v, c) => {
   if (v.origin === 'generated') {
@@ -192,6 +195,11 @@ export const VeApprovalSchema = z.object({
   by: z.literal('Krish'),
   said: z.string().min(2),
   on: DateSchema,
+  // The moment he pressed, as a full timestamp: a date alone is read as midnight, so a press later that day would not
+  // count against renders made earlier the same day (scripts/velib/guards.py last_press). Older records keep `on` only.
+  at: z.string().datetime({ offset: true }).optional(),
+  // `engine-follows-main`: his standing yes for this piece to take the engine on main as it moves (guards.follows_main).
+  scope: z.enum(['engine', 'engine-follows-main']).optional(),
   artifact_hash: Sha256V1Schema,
 }).strict()
 

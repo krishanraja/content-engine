@@ -46,6 +46,7 @@ describe('the engine gates', () => {
     ['the technical watch-outs: each in shape, listed per maker with what stops it, and the 6 to 8 Nov failures registered (Krish, 2026-11-17)', ['tests/failure_watch_test.py']],
     ['the calibrated cut gates: words on every aligner, joins in gaps, captions clock and renderer truth, receipts, the joins reel (W2.4)', ['tests/cutgates_test.py']],
     ['Claude model routing preserves strict skill validation', ['tests/validate_skills_test.py']],
+    ['no approvals during production: the four allowed asks, skills that wait mid-production refused, final-review lines recorded (Krish, 2026-11-19)', ['tests/no_ask_guard_test.py']],
     ['the chat backstop keeps only his flagged, scrubbed lines, locally, once each (W3.3)', ['tests/taste_backstop_test.py']],
     ['the Codex token ledger: calls, tokens, child agents and the weekly limit, never words', ['tests/session_token_audit_codex_test.py']],
     ['one music bed shape in both engines, nothing keyed to his voice, and no cut filed without its bed receipt (F40, Krish 2026-11-04)', ['tests/music_bed_test.py']],

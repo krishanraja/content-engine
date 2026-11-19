@@ -4,6 +4,7 @@ Krish, 4 Nov 2026: "Okay, this is shit. I'm going to kill this completely. The v
 all over the place typographically." Each test refuses the bad case Thursday showed and passes a good one shaped like
 Monday 2 Nov ("The Ladder", docs/plans/2026-11-02-monday/motion-system.md). The renderer is mocked: no frame is drawn."""
 import copy
+import io
 import json
 import os
 import sys
@@ -18,6 +19,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
 sys.path.insert(0, str(ROOT / 'tests'))
 os.environ['VE_GATES_OFFLINE'] = '1'
+os.environ['VE_GOLDEN'] = 'off'  # the house golden test is never run from here; a test passes its own answer
 
 import ve  # noqa: E402
 from velib import guards, lint as ve_lint, proof  # noqa: E402
@@ -208,19 +210,23 @@ class Held(unittest.TestCase):
 
 
 class EngineFreeze(Held):
-    def test_the_signed_engine_renders_and_a_changed_one_is_refused_until_he_approves_it(self):
+    """Ruling (Krish, 2026-11-19): no approvals during production. A piece proofs and renders on the engine pinned at ve
+    expect by itself; nothing asks him to approve an engine hash."""
+
+    def test_the_signed_engine_renders_and_a_changed_one_runs_on_the_pin_with_no_approval_asked(self):
         self.assertEqual(self.refused(), [])
-        files = dict(guards.engine_files(), **{'apps/renderer/src/engine/chrome/WordCaption.tsx': '0' * 64})
+        files = dict(guards.engine_files(), **{'scripts/velib/compile.py': '0' * 64})
         with mock.patch.object(guards, 'engine_files', return_value=files):
             reasons = self.refused()
-            self.assertTrue(any('engine changed' in r and 'WordCaption.tsx' in r for r in reasons), reasons)
-            yes = copy.deepcopy(self.approved)
+            self.assertTrue(any('engine changed' in r and 'compile.py' in r and 'pinned at ve expect' in r for r in reasons), reasons)
+            self.assertFalse(any('approv' in r for r in reasons if 'engine' in r), reasons)
+            yes = copy.deepcopy(self.approved)   # an engine approval he already gave is still honoured
             yes['approvals'].append({'gate': 'exception', 'by': 'Krish', 'said': 'take the new caption build',
                                      'on': '2026-11-12', 'artifact_hash': guards.engine_sha(files)})
             self.assertEqual(self.refused(yes), [])
 
     def test_an_engine_approval_in_the_piece_folder_binds_and_waives_nothing_else(self):
-        files = dict(guards.engine_files(), **{'apps/renderer/src/engine/chrome/EndingBand.tsx': '2' * 64})
+        files = dict(guards.engine_files(), **{'scripts/velib/audio.py': '2' * 64})
         approval = {'gate': 'exception', 'scope': 'engine', 'by': 'Krish', 'said': 'approve the engine change for Wednesday',
                     'on': '2026-11-10', 'artifact_hash': guards.engine_sha(files)}
         with mock.patch.object(guards, 'engine_files', return_value=files):
@@ -231,23 +237,125 @@ class EngineFreeze(Held):
         spec['approvals'] = [approval]
         self.assertIsNone(guards.last_press(spec, {}), 'an engine approval is not a press on a cut')
 
+    def test_a_standing_engine_follows_main_yes_takes_main_with_no_hash(self):
+        files = dict(guards.engine_files(), **{'scripts/velib/compile.py': '3' * 64})
+        standing = {'gate': 'exception', 'scope': guards.FOLLOWS_MAIN, 'by': 'Krish', 'said': 'just fix it', 'on': '2026-11-19'}
+        with mock.patch.object(guards, 'engine_files', return_value=files):
+            (self.dir / guards.ENGINE_EXCEPTIONS).write_text(json.dumps({'approvals': [standing]}), encoding='utf-8')
+            self.assertEqual(guards.engine_route(self.approved, self.dir)['route'], 'here')
+            self.assertEqual(self.refused(), [])
+        spec = copy.deepcopy(self.spec)
+        spec['approvals'] = [standing]
+        self.assertIsNone(guards.last_press(spec, {}), 'a standing engine yes is not a press on a cut')
+
+    def test_a_renderer_fix_follows_main_only_when_the_house_golden_test_passes(self):
+        renderer = dict(guards.engine_files(), **{'apps/renderer/src/engine/chrome/WordCaption.tsx': '4' * 64})
+        with mock.patch.object(guards, 'engine_files', return_value=renderer):
+            self.assertEqual(guards.engine_route(self.approved, self.dir, golden=lambda _sha: True)['route'], 'here')
+            self.assertEqual(guards.engine_route(self.approved, self.dir, golden=lambda _sha: False)['route'], 'pin')
+            self.assertEqual(guards.engine_problems(self.approved, CUT, self.dir, golden=lambda _sha: True), [])
+        python = dict(guards.engine_files(), **{'scripts/velib/compile.py': '5' * 64})
+        with mock.patch.object(guards, 'engine_files', return_value=python):
+            # the golden test draws the renderer only: a change outside it stays on the pin whatever the test says
+            self.assertEqual(guards.engine_route(self.approved, self.dir, golden=lambda _sha: True)['route'], 'pin')
+
+    def test_a_change_that_rewrites_the_golden_frames_never_follows_main_by_the_golden_test(self):
+        # A renderer change that regenerates houseGolden.json passes the test by construction: it proves nothing.
+        for name in ('apps/renderer/src/engine/houseGolden.json', 'apps/renderer/src/engine/houseGolden.test.ts'):
+            moved = dict(guards.engine_files(), **{'apps/renderer/src/engine/chrome/WordCaption.tsx': '7' * 64, name: '8' * 64})
+            with mock.patch.object(guards, 'engine_files', return_value=moved):
+                self.assertEqual(guards.engine_route(self.approved, self.dir, golden=lambda _sha: True)['route'], 'pin', name)
+
+    def test_a_rule_change_keeps_a_golden_passing_renderer_fix_on_the_pin(self):
+        renderer = dict(guards.engine_files(), **{'apps/renderer/src/engine/chrome/WordCaption.tsx': '9' * 64})
+        with mock.patch.object(guards, 'engine_files', return_value=renderer), \
+                mock.patch.object(guards, 'rules_changed', return_value=['scripts/velib/lint.py']):
+            route = guards.engine_route(self.approved, self.dir, golden=lambda _sha: True)
+        self.assertEqual(route['route'], 'pin')
+        self.assertIn('scripts/velib/lint.py', route['changed'])
+
+    def test_ve_proof_and_ve_render_go_to_the_pin_before_main_lint_can_refuse(self):
+        # main's lint is a rule the frozen piece is not held to: it must never run before the pin is taken.
+        (self.dir / f'props.{CUT}.json').write_text(json.dumps(self.props), encoding='utf-8')
+        lock = json.loads(guards.lock_path(self.dir).read_text(encoding='utf-8'))
+        lock['commit'] = 'abc123'
+        guards.lock_path(self.dir).write_text(json.dumps(lock), encoding='utf-8')
+        moved = {**lock['rules']['files'], 'scripts/velib/lint.py': '0' * 64}
+        args = types.SimpleNamespace(spec=str(self.spec_file), cut=CUT, beat=None, props=None, assets_dir=None,
+                                     scale=1.0, no_qc=True)
+        with mock.patch.object(guards, 'rules_files', return_value=moved), \
+                mock.patch.object(ve_lint, 'lint', side_effect=AssertionError('main lint ran on a frozen piece')), \
+                mock.patch.object(guards, 'pin_checkout', return_value=Path('/pins/abc')), \
+                mock.patch.object(ve, '_exec_pinned', return_value=0) as run, \
+                mock.patch.object(ve, '_ARGV', ['proof', str(self.spec_file)]), mock.patch('sys.stdout'):
+            self.assertEqual(ve.cmd_proof(args, render_fn=fake_render()), 0)
+            self.assertEqual(run.call_count, 1)
+            render_args = types.SimpleNamespace(spec=str(self.spec_file), props=str(self.dir / f'props.{CUT}.json'),
+                                                out=str(self.dir / 'cut.mp4'), assets_dir=None, scale=1.0)
+            self.assertEqual(ve.cmd_render(render_args), 0)
+            self.assertEqual(run.call_count, 2)
+
     def test_no_engine_record_refuses_and_ve_expect_writes_it(self):
         guards.lock_path(self.dir).unlink()
         self.assertTrue(any('run ve expect' in r for r in self.refused()))
         args = types.SimpleNamespace(spec=str(self.spec_file))
-        with mock.patch('sys.stdout'):
+        with mock.patch.object(ve_lint, 'lint', return_value=(self.spec, [])), mock.patch('sys.stdout'):
             self.assertEqual(ve.cmd_expect(args), 0)
-        self.assertTrue(guards.lock_path(self.dir).is_file())
+        lock = json.loads(guards.lock_path(self.dir).read_text(encoding='utf-8'))
+        self.assertTrue(lock['rules']['sha256'] and 'scripts/velib/lint.py' in lock['rules']['files'])
         self.assertEqual(self.refused(), [])
 
-    def test_ve_proof_is_refused_on_a_changed_engine(self):
+    def pinned_run(self, fn, args):
+        """Run a ve command as ve main would, with a renderer file changed on main, and the pinned checkout faked."""
+        files = dict(guards.engine_files(), **{'apps/renderer/src/engine/chrome/WordCaption.tsx': '6' * 64})
+        out = io.StringIO()
+        with mock.patch.object(guards, 'engine_files', return_value=files), \
+                mock.patch.object(guards, 'golden_passes', return_value=False), \
+                mock.patch.object(ve_lint, 'lint', return_value=(self.spec, [])), \
+                mock.patch.object(guards, 'pin_checkout', return_value=Path('/pins/abc')) as checkout, \
+                mock.patch.object(ve, '_exec_pinned', return_value=0) as run, \
+                mock.patch.object(ve, '_ARGV', [fn.__name__.replace('cmd_', ''), str(self.spec_file)]), \
+                mock.patch('sys.stdout', out):
+            code = fn(args)
+        return code, checkout, run, out.getvalue()
+
+    def test_ve_proof_runs_on_the_pin_when_main_moves_and_asks_nothing(self):
         (self.dir / f'props.{CUT}.json').write_text(json.dumps(self.props), encoding='utf-8')
         args = types.SimpleNamespace(spec=str(self.spec_file), cut=CUT, beat=None, props=None, assets_dir=None,
                                      scale=1.0, no_qc=True)
-        files = dict(guards.engine_files(), **{'scripts/velib/compile.py': '1' * 64})
-        with mock.patch.object(guards, 'engine_files', return_value=files), \
-                mock.patch.object(ve_lint, 'lint', return_value=(self.spec, [])), mock.patch('sys.stdout'):
-            self.assertEqual(ve.cmd_proof(args, render_fn=fake_render()), 1)
+        lock = json.loads(guards.lock_path(self.dir).read_text(encoding='utf-8'))
+        lock['commit'] = 'abc123'
+        guards.lock_path(self.dir).write_text(json.dumps(lock), encoding='utf-8')
+        code, checkout, run, said = self.pinned_run(lambda a: ve.cmd_proof(a, render_fn=fake_render()), args)
+        self.assertEqual(code, 0)
+        checkout.assert_called_once_with('abc123', lock['sha256'], lock['rules']['sha256'])
+        self.assertEqual(run.call_args[0][0], Path('/pins/abc'))
+        self.assertIn(str(self.spec_file.resolve()), run.call_args[0][1])
+        self.assertIn('pinned engine', said)
+        self.assertNotIn('approv', said)
+
+    def test_ve_render_runs_on_the_engine_of_the_approved_proof(self):
+        record = json.loads(proof.record_path(self.dir, CUT).read_text(encoding='utf-8'))
+        record.update({'engine_sha256': 'f' * 64, 'engine_commit': 'def456'})
+        proof.record_path(self.dir, CUT).write_text(json.dumps(record), encoding='utf-8')
+        reasons = self.refused()
+        engine = [r for r in reasons if 'engine' in r]
+        self.assertTrue(engine and 'def456' in engine[0] and 'approved proof was drawn on' in engine[0], reasons)
+        self.assertNotIn('approve the', engine[0])
+        props_file = self.dir / f'props.{CUT}.json'
+        props_file.write_text(json.dumps(self.props), encoding='utf-8')
+        args = types.SimpleNamespace(spec=str(self.spec_file), props=str(props_file), out=str(self.dir / 'cut.mp4'),
+                                     assets_dir=None, scale=1.0)
+        with mock.patch('velib.render.check_asset_hashes'):
+            code, checkout, run, said = self.pinned_run(ve.cmd_render, args)
+        self.assertEqual(code, 0)
+        lock = json.loads(guards.lock_path(self.dir).read_text(encoding='utf-8'))
+        checkout.assert_called_once_with('def456', 'f' * 64, lock['rules']['sha256'])
+        self.assertNotIn('approv', said)
+        record['engine_sha256'] = guards.engine_sha()   # the engine here is the proof's: it renders here
+        proof.record_path(self.dir, CUT).write_text(json.dumps(record), encoding='utf-8')
+        self.assertEqual(guards.render_route(self.approved, CUT, self.dir)['route'], 'here')
+        self.assertEqual(self.refused(), [])
 
 
 class TwoLoops(Held):
@@ -264,6 +372,25 @@ class TwoLoops(Held):
         for at in ('2026-11-11T09:00:00Z', '2026-11-11T10:00:00Z'):
             guards.record_render(self.dir, CUT, self.dir / 'cut.mp4', 'a' * 64, now=at)
         self.assertEqual(self.refused(), [], 'his 12 Nov press came after both renders')
+
+    def test_a_press_later_the_same_day_counts_from_its_hour(self):
+        # Render at 09:00, he presses at 15:00 the same day: the two renders after his press are allowed (Wed 18).
+        guards.record_render(self.dir, CUT, self.dir / 'cut.mp4', 'a' * 64, now='2026-11-13T09:00:00Z')
+        guards.record_render(self.dir, CUT, self.dir / 'cut.mp4', 'a' * 64, now='2026-11-13T10:00:00Z')
+        spec = copy.deepcopy(self.approved)
+        spec['approvals'].append({'gate': 'final', 'by': 'Krish', 'said': 'go again', 'on': '2026-11-13',
+                                  'at': '2026-11-13T15:00:00Z', 'artifact_hash': 'b' * 64})
+        for at in ('2026-11-13T15:30:00Z', '2026-11-13T16:00:00Z'):
+            self.assertEqual(guards.loop_problems(spec, CUT, self.dir, {}), [], at)
+            guards.record_render(self.dir, CUT, self.dir / 'cut.mp4', 'a' * 64, now=at)
+        self.assertTrue(guards.loop_problems(spec, CUT, self.dir, {}), 'a third render after his press still waits')
+
+    def test_an_old_date_only_press_is_read_as_midnight_as_before(self):
+        guards.record_render(self.dir, CUT, self.dir / 'cut.mp4', 'a' * 64, now='2026-11-13T09:00:00Z')
+        guards.record_render(self.dir, CUT, self.dir / 'cut.mp4', 'a' * 64, now='2026-11-13T10:00:00Z')
+        spec = copy.deepcopy(self.approved)
+        spec['approvals'].append({'gate': 'final', 'by': 'Krish', 'said': 'go again', 'on': '2026-11-13', 'artifact_hash': 'b' * 64})
+        self.assertTrue(guards.loop_problems(spec, CUT, self.dir, {}))
 
 
 class OneTypeSystem(Held):

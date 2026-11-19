@@ -45,14 +45,9 @@ class WireHTests(unittest.TestCase):
         cls.props = compile_cut(cls.spec, 'proof-tall', cls.words, ROOT)
 
     def test_lints_without_legacy_note(self):
-        # The fixture is a piece of 23 Oct: it lints clean under the rules of its own publish day. bind_unshown (on since
-        # 19 Nov) would hold a never-shown piece to today's rules, which is right for a live piece and wrong for a
-        # historical fixture, so this test pins it to its own day.
-        from velib import showgate
-        cfg = showgate.config()
-        own_day = {**cfg, 'bind_unshown': {**cfg['bind_unshown'], 'enabled': False}}
-        with mock.patch.object(showgate, 'config', return_value=own_day):
-            spec, findings = lint(FIXTURE / 'spec.json')
+        # The fixture is a piece of 23 Oct: it lints clean under the rules of its own publish day (bind_unshown is gone;
+        # rules freeze at Sign storyboard, Ruling, Krish, 2026-11-19).
+        spec, findings = lint(FIXTURE / 'spec.json')
         self.assertIsNotNone(spec)
         self.assertEqual(findings, [])
         self.assertEqual(spec['format'], 'hand-held-screen')

@@ -2815,6 +2815,31 @@
           "how": "the test that holds every card builder to the shared rules"
         }
       ]
+    },
+    {
+      "id": "no-approvals-mid-production",
+      "on": "2026-11-19",
+      "krish": "We need to eliminate the 4 million approvals like this that I'm required to make. It basically means I have to sit there for 7 hours waiting for the next stupid fucking approval to give and the engine refuses to move on even though it's just going to lead to more errors anyway.",
+      "why": "This week's three videos asked him for about 30 typed approvals between them: engine hashes, waivers, proofs and \"final approve <sha>\" before a cut could even be filed. Each one stopped the engine while he was away, and none made the cut better.",
+      "means": "Between Sign storyboard and the final review the engine never waits for him. The only asks are lock, scripts and storyboard, final and publish (config/ve/asks.json). The engine and rules are pinned at Sign storyboard, so no hash is ever put to him; filing to his post folder needs no approval; anything he might change lands as one line on the final review.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/ve/asks.json",
+          "contains": "The only moments a production session may ask Krish anything",
+          "how": "the four allowed asks"
+        },
+        {
+          "file": "scripts/validate-skills.py",
+          "contains": "def no_ask_problems(",
+          "how": "refuses a production skill that waits for an approval mid-production"
+        },
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "rules_changed",
+          "how": "engine and rules pinned at Sign storyboard, never a hash to approve"
+        }
+      ]
     }
   ]
 }

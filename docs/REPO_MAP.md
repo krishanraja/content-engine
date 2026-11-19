@@ -147,6 +147,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/learning/script-audit`
 - `/api/learning/spoken-rules`
 - `/api/library/confirm`
+- `/api/library/drive-review`
 - `/api/library/file`
 - `/api/library/find`
 - `/api/library/pending`
@@ -1302,6 +1303,7 @@ The making record: where one piece is on its way from the workroom to
 - `type MakingAuditPair`
 - `interface MakingScriptAudit`
 - `interface Making`
+- `interface MakingFinalReviewLine`
 - `const PREFLIGHT_CHECKS`
 - `interface MakingPreflight`
 - `function preflightKey(p: Pick<MakingPreflight, 'check' | 'format' | 'name'>): string`
@@ -3942,6 +3944,14 @@ Takes place themselves (Wave 2, W2.3): once the Inbox job has copied a take
 
 ### `apps/control-plane/api/library/confirm.ts`
 
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/library/drive-review.ts`
+
+- `const REVIEW_TYPES: Record<string, string>`
+- `interface DriveMeta`
+- `type ReviewPlan`
+- `function planDriveReview(fileId: unknown, meta: DriveMeta | null, allowedTypes: readonly string[]): ReviewPlan`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/library/file.ts`
