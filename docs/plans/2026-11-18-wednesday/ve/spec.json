@@ -921,9 +921,9 @@
       "height": 1080
      },
      {
-      "src": "plates/new/checkout.png",
-      "width": 1344,
-      "height": 752,
+      "src": "plates/new/checkout-end.png",
+      "width": 1920,
+      "height": 1080,
       "focus": {
        "x": 0.3,
        "y": 0.45
@@ -958,23 +958,15 @@
   },
   {
    "obj": "st_shops",
-   "device": "stamp",
+   "device": "slam_word",
    "meaning": "and yet it shops outside",
    "persist": {
     "from_beat": "marks",
     "to_beat": "marks"
    },
    "params": {
-    "kind": "block",
-    "paint": "channel",
-    "main": "SHOPS OUTSIDE",
-    "tiltDeg": 4,
-    "at": {
-     "x": 1020,
-     "y": 560,
-     "w": 720,
-     "h": 140
-    }
+    "word": "SHOPPING",
+    "tapeText": "IT COULD BUILD IT ITSELF"
    }
   },
   {
@@ -1022,23 +1014,15 @@
   },
   {
    "obj": "st_10x",
-   "device": "stamp",
+   "device": "slam_word",
    "meaning": "the bill went up ten times",
    "persist": {
     "from_beat": "balloon",
     "to_beat": "balloon"
    },
    "params": {
-    "kind": "block",
-    "paint": "mint",
-    "main": "10x",
-    "tiltDeg": -6,
-    "at": {
-     "x": 760,
-     "y": 520,
-     "w": 400,
-     "h": 200
-    }
+    "word": "TENFOLD",
+    "tapeText": "THE BILL WENT UP"
    }
   },
   {
@@ -1166,9 +1150,9 @@
       "height": 1080
      },
      {
-      "src": "plates/new/shredder.png",
-      "width": 1344,
-      "height": 752,
+      "src": "plates/new/shredder-end.png",
+      "width": 1920,
+      "height": 1080,
       "focus": {
        "x": 0.4,
        "y": 0.4
@@ -1182,23 +1166,15 @@
   },
   {
    "obj": "st_cancel",
-   "device": "stamp",
+   "device": "slam_word",
    "meaning": "they cancelled their Salesforce subscription",
    "persist": {
     "from_beat": "curative",
     "to_beat": "curative"
    },
    "params": {
-    "kind": "block",
-    "paint": "channel",
-    "main": "CANCELLED",
-    "tiltDeg": 5,
-    "at": {
-     "x": 1080,
-     "y": 160,
-     "w": 680,
-     "h": 150
-    }
+    "word": "CANCELLED",
+    "tapeText": "A SALESFORCE CONTRACT"
    }
   },
   {
@@ -1281,9 +1257,9 @@
       "height": 1080
      },
      {
-      "src": "plates/new/sparking.png",
-      "width": 1344,
-      "height": 752,
+      "src": "plates/new/sparking-end.png",
+      "width": 1920,
+      "height": 1080,
       "focus": {
        "x": 0.45,
        "y": 0.45
@@ -1297,23 +1273,15 @@
   },
   {
    "obj": "st_easy",
-   "device": "stamp",
+   "device": "slam_word",
    "meaning": "keeping it running, not so easy",
    "persist": {
     "from_beat": "sparks",
     "to_beat": "sparks"
    },
    "params": {
-    "kind": "block",
-    "paint": "channel",
-    "main": "NOT SO EASY",
-    "tiltDeg": 4,
-    "at": {
-     "x": 1000,
-     "y": 640,
-     "w": 720,
-     "h": 150
-    }
+    "word": "OOPS",
+    "tapeText": "KEEPING IT RUNNING"
    }
   },
   {
@@ -1585,8 +1553,8 @@
    "id": "checkout-still",
    "kind": "illustration",
    "origin": "generated",
-   "path": "plates/new/checkout.png",
-   "sha256": "7e18df7d1c11325a89c4a9eb126c3307ea04e54c125b8abb7ad139d29309ffba",
+   "path": "plates/new/checkout-end.png",
+   "sha256": "184779be2c6e74ae60a9340046266e96554c88ea16e9552d4087f6d04e553088",
    "tool": "higgsfield:gpt_image_2_6",
    "job_id": "66a9b359-2e37-4652-b31c-c4879a3e1bfe",
    "licence": "generated for this piece (Krish approved, 19 Nov: \"go stills and clips\")"
@@ -1606,8 +1574,8 @@
    "id": "shredder-still",
    "kind": "illustration",
    "origin": "generated",
-   "path": "plates/new/shredder.png",
-   "sha256": "e29c523dace47af9176a4677052707f5f0269f0cdbee2036baf3ca0c48e92df5",
+   "path": "plates/new/shredder-end.png",
+   "sha256": "018be873ce42b881722cffbf8041213bee8d8933fcff44f34a4b615a85a68af6",
    "tool": "higgsfield:gpt_image_2_6",
    "job_id": "1a20ef8b-663f-4fe7-b7b4-252e748b9828",
    "licence": "generated for this piece (Krish approved, 19 Nov: \"go stills and clips\")"
@@ -1627,8 +1595,8 @@
    "id": "sparking-still",
    "kind": "illustration",
    "origin": "generated",
-   "path": "plates/new/sparking.png",
-   "sha256": "00eb476df95ff678522fb3fba4e5fed9dabf4b275f79e383d2b0e5e5cf165d19",
+   "path": "plates/new/sparking-end.png",
+   "sha256": "cd52abedd879022721ef9a3c140495edd1baba3238fca37dfa7de1e05c9929b7",
    "tool": "higgsfield:gpt_image_2_6",
    "job_id": "af669634-5d7a-43e7-8470-3feb4494fe8a",
    "licence": "generated for this piece (Krish approved, 19 Nov: \"go stills and clips\")"
@@ -2656,7 +2624,7 @@
       {
        "at_w": 45,
        "obj": "st_shops",
-       "verb": "stamp",
+       "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
@@ -2804,7 +2772,7 @@
       {
        "at_w": 143,
        "obj": "st_10x",
-       "verb": "stamp",
+       "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
@@ -3199,7 +3167,7 @@
       {
        "at_w": 427,
        "obj": "st_cancel",
-       "verb": "stamp",
+       "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
@@ -3301,7 +3269,7 @@
       {
        "at_w": 469,
        "obj": "st_easy",
-       "verb": "stamp",
+       "verb": "enter",
        "to_state": "visible",
        "silent": true
       }
