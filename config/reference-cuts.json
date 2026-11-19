@@ -483,6 +483,18 @@
         "quote": "I think it should go at the start of the longer wide videos 100%,",
         "production": "superseded on 12 Nov 2026 (Ruling, Krish: \"Nothing before the hook, ever. Remove the sting exception for good.\"): every cut, wide or tall, opens straight on its hook, nothing in front of it. From 5 to 12 Nov it read: the wide long cut of a weekly series piece opens on that series' house sting, then the hook; the tall short cut opens on the hook (ruling 8); one calm close, held long enough to read.",
         "changed": "Under test, the opening: the default is now sting_wide_hook_tall, with hook_is_intro for an off-day piece, recorded per piece as production_choices.opening, and the opening choice cites this ruling. House rule HOOK_IS_THE_INTRO and config/intro-sting.json carry it; his approval of the clips is recorded there in his words, and until it is the wide cut opens on its hook and its report says why. Asked the same day whether each series' sting may keep flashing the other series' colours, he picked \"Keep it as I saw it\": the one written exception to the series-colour rule. The sting followed straight by his face is one opening (never 7); a story card or a title card between them would be two. Changed again on 12 Nov 2026: \"Nothing before the hook, ever. Remove the sting exception for good.\" The sting is retired for good (config/intro-sting.json), and the opening is hook_is_intro, the only option."
+      },
+      {
+        "n": 14,
+        "on": "2026-11-19",
+        "topic": "The title card",
+        "status": "ruled",
+        "layer": "aim",
+        "answer": "give me a title card failure report, as I expect the title card to enter as I am talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually was a good build for the title card.",
+        "question": "Wed 18's title came out squeezed into his 608 px panel on the wide cut and an 800 x 420 box on the short (about 70 px type), with the wordmark a separate layer that faded in 6 frames after his last word and out on its own, and no proof showed it. He sent Wed 11's \"AI MUSIC or HUMAN MUSIC?\" title as the build to keep. What is the title card?",
+        "quote": "I expect the title card to enter as I am talking, and the title of the piece is woven in to my script at the start.",
+        "production": "the title is ONE full-frame lockup, centred and composed as one picture, with the stacked wordmark inside it (from config/brand-palette.json, never typed): Wed 11's build, two angled bands slamming in from opposite sides as he says each part, the connector word in mint, bars moving behind and a light sweep, type that fills the frame. It enters as he says the title and leaves whole; the wordmark never comes or goes on its own. Every proof he approves shows the title frame at full size.",
+        "changed": "The renderer's title moment is one lockup over the whole frame and the separate wordmark layer is gone (apps/renderer/src/engine/title/TitleMoment.tsx); ve qc rows title.lockup and title.lockup_frame measure it; every proof renders the title frame and is not sendable until someone has looked at it (velib/proof.py); config/failures.json title-card-split-logo-and-squeezed."
       }
     ]
   },

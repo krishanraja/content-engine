@@ -340,6 +340,21 @@ the production suite knows that this is the moment to make it feel like the titl
   settle, a light sweep and a brief glow, and holds until the beat that carries it ends. It flows back into the caption
   line when it hands straight to them; where the captions already took his next words while it held, it fades where it
   stands (`release: fade`).
+- Rebuilt 19 Nov 2026 as one full-frame lockup (Ruling, Krish, 2026-11-19: "I expect the title card to enter as I am
+  talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually
+  was a good build for the title card", of Wed 11's "AI MUSIC or HUMAN MUSIC?"; `config/failures.json`
+  `title-card-split-logo-and-squeezed`). Wed 18's title sat in his 608 px panel or an 800 x 420 box (about 70 px type)
+  with the wordmark a separate layer that came and went on its own. Now the title takes the whole frame, over his face
+  panel on a wide cut and over the band on a short: an ink ground with bars moving behind, two angled bands that slam in
+  from opposite sides as he says each part (a hatched ink band in cream, then a mint band in ink), the connector word
+  ("or", "vs", "and") in mint between them, a light sweep once the last word lands, and the stacked wordmark
+  (`props.brand.stacked`, from `config/brand-palette.json`) centred underneath as part of the same picture, on the
+  lockup's own opacity. A title with no connector splits into two bands of equal width; one word is one band; a long
+  band takes a second line before its type shrinks. Each word still lands on the frame he says it, and the captions stay
+  away while it holds. ve qc measures it on the settled title frame (`title.lockup`, `title.lockup_frame`: type size,
+  centring, full width, the wordmark inside and only while the title holds; numbers in `config/ve/frame-checks.json`
+  `title_lockup`), and every proof renders the title frame and is not sendable until someone has looked at it at full
+  size (`ve proof --title-looked`).
 - The title question itself is the spec's `title_line` (one string, the question his intro speaks; `making.py scripts`
   records the same line as `script_check.title_line`, and `ve lint` `title.line` refuses a `title_line` the script never
   says). The title animation is keyed to `title_line`: it flows out of the captions as he says it and back into them

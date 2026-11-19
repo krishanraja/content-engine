@@ -55,7 +55,8 @@ class Checklist(unittest.TestCase):
             self.assertTrue(i['krish'].strip() and i['text'].strip() and i['source'], i['id'])
 
     def test_a_named_qc_row_exists_in_qc(self):
-        qc = (ROOT / 'scripts/velib/qc.py').read_text(encoding='utf-8') + (ROOT / 'scripts/velib/qc_faces.py').read_text(encoding='utf-8')
+        # qc_frames.rows is merged into every qc report (velib/qc.py run_qc), so its rows answer checklist rows too.
+        qc = ''.join((ROOT / f'scripts/velib/{name}.py').read_text(encoding='utf-8') for name in ('qc', 'qc_faces', 'qc_frames'))
         for i in showgate.checklist()['items']:
             for row in i['auto_rows']:
                 self.assertIn(row, qc, f'{i["id"]} names qc row {row}, which no qc file draws')

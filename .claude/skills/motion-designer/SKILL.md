@@ -62,6 +62,11 @@ Follow the method's rules 1 to 7 (`method.md`, read in "Before anything"): the s
 signed floor, the outgoing beat gone before the incoming, a cursor on his words, every box at its final size from the
 first frame, one mint accent, one idea per frame, density from small events, never more scenes.
 
+The beat that carries the title moment draws no title device of its own: the engine draws the title as one full-frame
+lockup with the wordmark inside it, over the whole frame while he says it (Ruling, Krish, 2026-11-19; Wed 11's "AI MUSIC
+or HUMAN MUSIC?" is the build; docs/ve/INGREDIENTS.md). Plan the beat's own picture for before and after it, never a
+title card in a panel or a band, and never a separate logo beside it.
+
 When the beat that is hardest to make move is not the one the proof rule would pick (most distinct devices), name it in
 `style.proof.beat` and say why in the storyboard document.
 

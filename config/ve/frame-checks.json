@@ -98,6 +98,26 @@
     "min_width_share": 0.6,
     "require_card": true
   },
+  "title_lockup": {
+    "enforces": "\"I expect the title card to enter as I am talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually was a good build for the title card\" (Krish, 19 Nov 2026, of Wed 11's \"AI MUSIC or HUMAN MUSIC?\" after Wed 18's title came out squeezed into his panel with the wordmark as a separate layer): the title is ONE full-frame lockup, centred, with the wordmark inside it, entering and leaving with it.",
+    "min_cap_height_share": {
+      "9:16": 0.04,
+      "16:9": 0.065
+    },
+    "min_cap_height_why": "Measured on the frame by tesseract, whose box for a capital word is its cap height, about 0.73 of Anton's font size. Wed 11's good build set 184 px type on a 1920 px tall frame (cap height about 7% of the frame) and 194 px on a 1080 px wide one (about 13%); Wed 18's failed card set about 70 px on 1920 (about 2.7%). The floors sit between: 4% tall (about 105 px type) and 6.5% wide (about 96 px type), so a squeezed card fails and a two-line long title still passes.",
+    "max_centre_offset_share": 0.06,
+    "min_width_share": 0.7,
+    "min_width_why": "A lockup's bands span 92% of the frame; read words fill most of a band. A title confined to his 608 px panel on a 1920 px wide cut spans at most 32%, and to Wed 18's 800 px box on a tall cut at most 74% of 1080 at full stretch but far less in practice; 70% refuses both.",
+    "wordmark_tokens": [
+      "make",
+      "your",
+      "mind",
+      "up",
+      "makeyourmindup"
+    ],
+    "settle_frames": 12,
+    "edge_frames": 2
+  },
   "restarts": {
     "enforces": "\"A false start left in his take\" (Krish, Tue 17): every restart is cut; one kept on purpose is listed in the spec (cuts.<id>.kept_restarts: [{at_s, why}]).",
     "min_words": 2,

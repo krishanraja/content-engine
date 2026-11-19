@@ -137,6 +137,9 @@ export const EngineRenderPropsSchema = z.object({
     release: z.enum(['captions', 'fade']).optional(),
     /** The title lands on a card that slams in over the caption band (spec title_moment.card; Krish, 18 Nov 2026). */
     card: z.boolean().optional(),
+    /** The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19): compile always says so,
+     *  so ve qc can refuse a cut rendered before the lockup. */
+    lockup: z.literal(true).optional(),
     words: z.array(z.object({ text: z.string().min(1), atFrame: z.number().int().nonnegative() }).strict()).min(1),
   }).strict().optional(),
   beats: z.array(EngineBeatSchema).min(1),
