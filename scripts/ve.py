@@ -322,7 +322,14 @@ def cmd_qc(args) -> int:
         inputs['joins'] = [to_file_s(join['at_s'], props) for join in load_json(args.edl).get('joins', [])]
     if props is not None and props.get('aspect') == '9:16':
         inputs['composition_props'] = props
+    if props is not None:
+        inputs['frame_props'] = props   # the frame checks read every aspect (velib/qc_frames.py)
     inputs.update(_gate_inputs(args))
+    if getattr(args, 'spec', None):
+        # The spec supplies the publish day and the restarts he kept on purpose (cuts.<id>.kept_restarts).
+        spec_doc = load_json(args.spec)
+        inputs.setdefault('publish_day', spec_doc.get('publish_day'))
+        inputs['kept_restarts'] = ((spec_doc.get('cuts') or {}).get((props or {}).get('cutId')) or {}).get('kept_restarts') or []
     if getattr(args, 'publish_day', None):
         inputs['publish_day'] = args.publish_day
     report = run_qc(args.cut, args.format, **inputs)
@@ -663,11 +670,44 @@ def cmd_lane(args) -> int:
 
 def cmd_verify_card(args) -> int:
     from velib.cards import verify
-    problems = verify(Path(args.card), Path(args.cwd))
+    notes: list[str] = []
+    problems = verify(Path(args.card), Path(args.cwd), notes)
     for problem in problems:
         print(problem)
-    print('ve verify-card: ' + ('passes; now render its golden stills and look at them' if not problems else f'{len(problems)} problem(s)'))
+    for note in notes:
+        print(f've verify-card: {note}')
+    print('ve verify-card: ' + ('passes' + ('; the on-screen numbers were NOT checked (see not_run above)' if notes else '')
+                                + '; now render its golden stills and look at them' if not problems else f'{len(problems)} problem(s)'))
     return 1 if problems else 0
+
+
+def cmd_critic(args) -> int:
+    """`ve critic --pre <piece>`: the Critic's two questions, asked of the spec, the storyboard and the card briefs before anything is
+    made (velib/precritic.py). Without --write it writes the reviewer's inputs; with --write it records the answers."""
+    from velib import guards, ideaguard, precritic
+    if not args.pre:
+        sys.exit('ve critic: only --pre is built; the cut review is `ve verdict write`')
+    spec_file = spec_path_for(args.piece)
+    spec = load_json(spec_file)
+    mechanical = guards.idea_problems(spec) + [p for p in ideaguard.one_object_problems(spec, guards.config()['one_object'])]
+    if not args.write:
+        out = precritic.inputs(spec, spec_file, mechanical)
+        print(f've critic --pre: wrote {out}; a reviewer who did not write the spec answers its two questions, then '
+              f've critic --pre {args.piece} --write --reviewer NAME --answers answers.json [--findings findings.json]')
+        for line in mechanical:
+            print(f'  mechanical: {line}')
+        return 0
+    if not args.reviewer or not args.answers:
+        sys.exit('ve critic --pre --write: --reviewer NAME and --answers FILE ({"one_idea": {"pass": bool, "line": "..."}, "no_invented_numbers": {...}})')
+    try:
+        path = precritic.write(spec, spec_file, args.reviewer, load_json(args.answers),
+                               load_json(args.findings) if args.findings else [], mechanical)
+    except (OSError, ValueError) as error:
+        print(f've critic --pre: {error}')
+        return 1
+    ok, why = precritic.state(spec, spec_file)
+    print(f've critic --pre: wrote {path}; {"passes" if ok else "BLOCKS: " + why}')
+    return 0 if ok else 1
 
 
 def cmd_verdict(args) -> int:
@@ -1390,6 +1430,16 @@ def cmd_file(args) -> int:
     try:
         _spec_file, spec, directory = _ve_dir(args.piece)
         cuts = args.cut or list(spec['cuts'])
+        from velib import showgate
+        for cut_id in cuts:
+            if spec['cuts'].get(cut_id, {}).get('excerpt'):
+                continue
+            ok, missing = showgate.state(spec, cut_id, directory)
+            if not ok:
+                print(f've file: refused: cut {cut_id} has no complete show receipt (docs/ve/ENGINE.md, "The show gate"):', file=sys.stderr)
+                for line in missing[:8]:
+                    print(f'  missing: {line}', file=sys.stderr)
+                return 1
         bound = _bound_post_folder(spec)
         if not args.subject and not bound:
             raise ValueError('--subject is required: the topic the post folder is named by (the piece is bound to no folder yet)')
@@ -1758,6 +1808,9 @@ def cmd_premix(args) -> int:
         if args.cut not in spec['cuts']:
             raise ValueError(f'{args.cut} is not a cut in the spec')
         bed = spec['audio']['bed']
+        # A cut may name its own bed (cuts.<cut>.bed) when the piece's bed cannot hold its length to the one shape.
+        if (spec['cuts'][args.cut].get('bed') or {}).get('ledger_id'):
+            bed = {**bed, 'ledger_id': spec['cuts'][args.cut]['bed']['ledger_id']}
         ledger = load_json(MUSIC_LEDGER)
         track = next((t for t in ledger['tracks'] if t['id'] == bed['ledger_id'] and t.get('status') == 'approved'), None)
         if track is None:
@@ -1890,9 +1943,16 @@ def cmd_render(args) -> int:
         print('\n'.join(f'  - {reason}' for reason in opening))
         return 1
     render(args.props, args.out, args.scale)
-    from velib import guards
+    from velib import guards, plainframes
     from velib.common import sha256_file
     cut = props.get('cutId')
+    if cut in spec['cuts'] and not spec['cuts'][cut].get('excerpt') and Path(args.out).is_file():
+        # F58: the rendered frames of a whole cut are read before it is recorded, never sent on a contact strip.
+        seen = plainframes.check_frames(args.out, props)
+        if seen.get('pass') is not True:
+            print('ve render: the render is not recorded, its frames fail the v10 guards (plain dark areas, captions over content):')
+            print('\n'.join(f'  - {line}' for line in plainframes.refusal_lines(seen)))
+            return 1
     if cut in spec['cuts'] and not spec['cuts'][cut].get('excerpt') and Path(args.out).is_file():
         rows = guards.record_render(verdict.ve_dir(Path(args.spec)), cut, Path(args.out), sha256_file(args.out))
         print(f've render: full render {len(rows)} of {cut} recorded (two per press from Krish, then he sees it)')
@@ -1907,6 +1967,84 @@ def _props_for(spec_file, cut, given):
     return path
 
 
+def _show_target(args):
+    """The file the gate is about: a whole cut (default) or the proof excerpt of it (--proof)."""
+    from velib import proof
+    spec_file, spec, directory = _ve_dir(args.piece)
+    if args.cut not in spec['cuts']:
+        raise ValueError(f'{args.cut} is not a cut in the spec')
+    if args.proof:
+        return spec, directory, proof.clip_path(directory, args.cut), f'proof.{args.cut}'
+    return spec, directory, Path(args.clip) if args.clip else None, args.cut
+
+
+def cmd_show_check(args) -> int:
+    """`ve show-check <piece> --cut X [--proof]`: may this file be shown to Krish? Prints what is missing and writes the receipt."""
+    from velib import showgate
+    try:
+        spec, directory, clip, label = _show_target(args)
+        value = showgate.write(spec, args.cut, directory, clip, label)
+        print(f"ve show-check: {label} {(value.get('cut_sha256') or '')[:12]} " + ('OK: receipt written, it may be shown to Krish' if value['ok'] else 'NOT READY'))
+        for line in value['missing']:
+            print(f'  missing: {line}')
+        if not showgate.enforced(spec):
+            print(f"ve show-check: this piece's publish_day is before {showgate.config()['enforce_from']}, so the board does not refuse it (config/ve/show-gate.json); the check is still honest")
+        return 0 if value['ok'] else 1
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've show-check: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_show_record(args) -> int:
+    """`ve show-record <piece> --cut X --by NAME --frames 1,2.. --heard-s N --script --attest file.json`: record the full-size watch and listen."""
+    from velib import showgate
+    try:
+        spec, directory, clip, label = _show_target(args)
+        frames = [float(x) for x in args.frames.split(',') if x.strip()]
+        attest = load_json(args.attest) if args.attest else {}
+        path = showgate.record(spec, args.cut, directory, args.by, frames, float(args.heard_s), bool(args.script), attest, clip, label)
+        print(f've show-record: {path}; now `ve show-check {args.piece} --cut {args.cut}' + (' --proof' if args.proof else '') + '`')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've show-record: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_defect(args) -> int:
+    """`ve defect <piece> add --words "..." --where "..."` / `ve defect <piece> count`: faults Krish found himself (the target is zero)."""
+    from velib import showgate
+    try:
+        _spec_file, _spec, directory = _ve_dir(args.piece)
+        if args.action == 'add':
+            showgate.defect_add(directory, args.words or '', args.where or 'unspecified', args.row)
+        print(f've defect: {showgate.defect_count(directory)} found by Krish on this piece')
+        return 0
+    except (OSError, ValueError) as error:
+        print(f've defect: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_pin(args) -> int:
+    """`ve pin <piece>`: record the commit the engine was frozen at and say how to keep rendering on it."""
+    from velib import guards
+    try:
+        _spec_file, _spec, directory = _ve_dir(args.piece)
+        lock = guards.lock_path(directory)
+        if not lock.is_file():
+            raise ValueError('no engine record: run ve expect first')
+        record = load_json(lock)
+        commit = guards.head_commit()
+        record['commit'] = record.get('commit') or commit
+        write_json(lock, record)
+        print(f've pin: engine {record["sha256"][:12]} frozen at commit {record["commit"]}')
+        print('  a merge that touches no engine file changes nothing; to render on exactly this engine whatever main does:')
+        print(f'  git worktree add ../ve-{args.piece[:8]} {record["commit"]} && cd ../ve-{args.piece[:8]}')
+        return 0
+    except (OSError, ValueError, KeyError) as error:
+        print(f've pin: {error}', file=sys.stderr)
+        return 1
+
+
 def cmd_proof(args, render_fn=None) -> int:
     """Render only the cut's hardest beat from his real take, through the one render path, and record its hash."""
     from velib import proof, verdict
@@ -1919,6 +2057,11 @@ def cmd_proof(args, render_fn=None) -> int:
             return 1
         if args.cut not in spec['cuts']:
             raise ValueError(f'{args.cut} is not a cut in the spec')
+        if getattr(args, 'compared', None):
+            from velib import guards as _guards
+            proof.record_compared(verdict.ve_dir(Path(args.spec)), args.cut, args.compared, _guards._now())
+            print(f've proof: recorded what you compared for {args.cut}; the proof is sendable once its frames pass')
+            return 0
         if args.assets_dir:
             check_asset_hashes(spec, args.assets_dir)
         chosen = json.loads(json.dumps(spec))
@@ -1939,16 +2082,41 @@ def cmd_proof(args, render_fn=None) -> int:
             inputs = inputs_from_props(window)
             if window.get('aspect') == '9:16':
                 inputs['composition_props'] = window
-            report = run_qc(str(clip), spec['format'], publish_day=spec.get('publish_day'), **inputs)
+            inputs['frame_props'] = window
+            inputs['kept_restarts'] = (spec['cuts'].get(window.get('cutId')) or {}).get('kept_restarts') or []
+            from velib import showgate as _sg
+            report = run_qc(str(clip), spec['format'], publish_day=max(str(spec.get('publish_day') or ''), _sg.effective_day(spec, directory) or ''), **inputs)
             write_json(Path(clip).with_suffix('.qc.json'), report)
             return report
 
         render_fn = render_fn or (lambda p, out: render(p, out, args.scale))
+        # F58: the proof he last approved is kept, and the new one is put beside it when the engine or an asset changed.
+        from velib import gates as _gates, plainframes
+        proof.archive_previous(directory, args.cut)
+        found = _gates.load(directory, spec)
+        base_record, base_clip = proof.approved_baseline(directory, args.cut, found['gates'] if found.get('source') == 'record' else None)
         record = proof.make(chosen, args.cut, directory, props, render_fn, None if args.no_qc else qc_fn)
         # --beat chooses what is proved, never what the proof stands for: the hash is over the spec as written.
         record['spec_sha256'] = proof.structural_hash(spec, args.cut)
         record['structure'] = proof.structure(spec, args.cut)
         record['type'] = guards.type_treatments(props)  # listed for his Approve proof press, never refused by count
+        record.update(proof.stamp(spec))
+        record['made_at'] = guards._now()
+        folder = proof.record_path(directory, args.cut).parent
+        record['frames'] = plainframes.check_frames(str(proof.clip_path(directory, args.cut)), load_json(folder / f'props.{args.cut}.json'))
+        if base_record is not None:
+            reasons = proof.changed_since(base_record, spec)
+            if reasons:
+                compare = {'against': base_record.get('sha256'), 'reasons': reasons, 'compared': None}
+                try:
+                    compare.update(proof.compare_sheet(base_clip, proof.clip_path(directory, args.cut), folder / f'compare.{args.cut}.png',
+                                                       float(base_record['end']) - float(base_record['start']),
+                                                       float(record['end']) - float(record['start'])))
+                except (OSError, ValueError, subprocess.CalledProcessError, ImportError) as error:
+                    compare.update({'sheet': None, 'error': str(error)[:200]})
+                record['compare'] = compare
+        held_back = proof.sendable_problems(record)
+        record['sendable'] = not held_back
         write_json(proof.record_path(directory, args.cut), record)
         print(f"ve proof: beat {record['beat']} ({record['rule']}), {record['start']} to {record['end']} s")
         if 'qc' in record:
@@ -1960,6 +2128,21 @@ def cmd_proof(args, render_fn=None) -> int:
             print(f've proof: voiced by his approved clone ({tool}, {asset}, sha256 {str(sha)[:12]}), not his recording; '
                   'his Approve proof is his yes to this voice too, and a voice generated again needs it again')
         print(f"{record['sha256']}  {proof.clip_path(directory, args.cut)}")
+        if held_back:
+            print('ve proof: NOT SENDABLE to Krish (a proof visibly worse than the one he approved never reaches him; F58):')
+            print('\n'.join(f'  - {reason}' for reason in held_back))
+            return 1
+        from velib import showgate
+        pending = showgate.write(spec, args.cut, directory, proof.clip_path(directory, args.cut), f'proof.{args.cut}')
+        if pending['ok']:
+            print('ve proof: the show receipt is complete; file it on the piece so the board will take his Approve proof:')
+            print(f'  python3 scripts/post-pack/board_session.py {spec["piece_id"]} add {showgate.receipt_path(directory, "proof." + args.cut)} --role show_receipt --kind note --title "Show receipt for the proof of {args.cut}"')
+        else:
+            print('ve proof: NOT yet shown-ready (nothing goes to Krish until it is): ve show-check lists what is missing:')
+            for line in pending['missing'][:8]:
+                print(f'  missing: {line}')
+            print(f'next: record the watch (ve show-record {spec["piece_id"]} --cut {args.cut} --proof ...), then ve show-check {spec["piece_id"]} --cut {args.cut} --proof; only then does Krish press Approve proof')
+            return 0
         print('next: Krish presses Approve proof (or Reject, with his words) on the board; ve render waits for it')
         return 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
@@ -2073,6 +2256,7 @@ def main() -> int:
     p = sub.add_parser('lint'); p.add_argument('spec'); p.set_defaults(fn=cmd_lint)
     p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.add_argument('--props')
     p.add_argument('--publish-day', help="the piece's publish day (YYYY-MM-DD): the on-screen checks bind from config/ve/onscreen-checks.json binds_from")
+    p.add_argument('--spec', help="the piece's spec: its publish day and the restarts it keeps on purpose (cuts.<id>.kept_restarts) for takes.restarts")
     p.add_argument('--script', help='the signed script, for words.lost')
     p.add_argument('--take-words', help="the take's words json, for words.lost")
     p.add_argument('--heard', action='append', metavar='ALIGNER=WORDS.json', help="an aligner's words for this render (repeatable)")
@@ -2165,6 +2349,14 @@ def main() -> int:
     p = sub.add_parser('init', help="offer the board's top card per role into brand.references, marked offered")
     p.add_argument('piece'); p.add_argument('--format', help='prefer cards of this clip format (facets.format)')
     p.set_defaults(fn=cmd_init)
+    p = sub.add_parser('critic', help="the Critic's two questions (one idea beside The Ladder; no invented numbers) before anything is made")
+    p.add_argument('piece')
+    p.add_argument('--pre', action='store_true')
+    p.add_argument('--write', action='store_true')
+    p.add_argument('--reviewer')
+    p.add_argument('--answers')
+    p.add_argument('--findings')
+    p.set_defaults(fn=cmd_critic)
     p = sub.add_parser('refs', help="put the cut's frames beside each inspiration-board reference for the Critic")
     p.add_argument('piece'); p.add_argument('cut'); p.set_defaults(fn=cmd_refs)
     p = sub.add_parser('packet', help='assemble measured and judged cuts for approval')
@@ -2187,10 +2379,28 @@ def main() -> int:
     p.add_argument('props'); p.add_argument('out'); p.add_argument('--scale', type=float, default=1.0)
     p.add_argument('--spec', required=True); p.add_argument('--assets-dir', required=True)
     p.set_defaults(fn=cmd_render)
+    for name, fn, helptext in (('show-check', cmd_show_check, 'may this file be shown to Krish? lists what is missing, writes the show receipt'),
+                               ('show-record', cmd_show_record, "record the full-size watch and listen and the checklist answers for this file")):
+        p = sub.add_parser(name, help=helptext)
+        p.add_argument('piece'); p.add_argument('--cut', required=True)
+        p.add_argument('--proof', action='store_true', help="the proof excerpt of the cut, not the whole cut")
+        p.add_argument('--clip', help='the rendered file (default: the file ve qc measured)')
+        if name == 'show-record':
+            p.add_argument('--by', required=True); p.add_argument('--frames', required=True, help='comma-separated seconds viewed at full size')
+            p.add_argument('--heard-s', required=True, help='seconds of audio heard against the script'); p.add_argument('--script', action='store_true', help='the script was open beside it')
+            p.add_argument('--attest', help='JSON {row_id: {"pass": true, "line": "one line citing a frame or time"}} for the checklist rows ve qc does not answer')
+        p.set_defaults(fn=fn)
+    p = sub.add_parser('defect', help='faults Krish found himself on a piece (target zero)')
+    p.add_argument('piece'); p.add_argument('action', choices=('add', 'count'))
+    p.add_argument('--words'); p.add_argument('--where'); p.add_argument('--row', help='the checklist row it should have been caught by')
+    p.set_defaults(fn=cmd_defect)
+    p = sub.add_parser('pin', help='record the commit the engine was frozen at, and how to keep rendering on it')
+    p.add_argument('piece'); p.set_defaults(fn=cmd_pin)
     p = sub.add_parser('proof', help="render only the cut's hardest beat from his take; a whole cut waits for his approval of it")
     p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--beat', help='prove this beat instead')
     p.add_argument('--props', help='default <ve dir>/props.<cut>.json'); p.add_argument('--assets-dir')
     p.add_argument('--scale', type=float, default=1.0); p.add_argument('--no-qc', action='store_true')
+    p.add_argument('--compared', metavar='WORDS', help="record what you compared (every beat change at full size, beside the proof he approved and his standing notes); renders nothing")
     p.set_defaults(fn=cmd_proof)
     p = sub.add_parser('styles', help='render the proof window once per shortlisted motion style, for his pick')
     p.add_argument('spec'); p.add_argument('--cut'); p.add_argument('--top', type=int, default=3)

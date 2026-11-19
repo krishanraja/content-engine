@@ -196,6 +196,28 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
   `GET /api/publish/catalogue` serves them to the site (which takes each article's cover from Substack itself). Nothing in ve publishes; a session never edits the site's
   copy of a video by hand.
 
+## Frame checks from the Tue 17 and Wed 18 lists (19 Nov 2026)
+
+Krish found twelve faults on Tue 17 and six on Wed 18 himself, most with a rule already written. `scripts/velib/qc_frames.py`
+reads `config/ve/frame-checks.json` (each block quotes his words, and holds every number) and adds these `ve qc` rows on any
+aspect: `beats.one_carrier`, `figures.shown`, `transition.ghost_cut` and `transition.no_ghost_frames`, `backdrop.not_flat_black`,
+`brand.render_current`, `text.no_off_day_props` and `text.no_off_day_frames`, `title.moment` and `title.stage_width`,
+`takes.restarts`, `motion.first_seconds`, `head.whole_in_frame` (his whole head, and bottom right on 16:9). `ve lint` adds
+`title.card` (title_moment.card), `takes.restarts` (a kept restart names `at_s` and `why`: `cuts.<id>.kept_restarts`) and
+`text.no_off_day`. `ve qc --spec SPEC.json` supplies the publish day and the kept restarts. A piece published from `binds_from`
+is counted; before it the rows are advisory (F33). A row that cannot read its render, its words or a face detector is `not_run`,
+never a pass. Already measured before and unchanged: `captions.off_face`, `plate.head_in_band` (9:16 SPLIT), `brand.no_mark`,
+the R128 bed shape. To add a row for the next fault: the header of the config file (a block with his words, one pure function in
+`qc_frames.py`, a good and a bad case in `tests/ve_frame_checks_test.py`, a `config/failures.json` entry naming that test).
+
+## QC rows that measure what a viewer sees (19 Nov 2026)
+
+Krish, of the habits short that passed every gating row and was still NOT READY: "fix the ve qc rows that fail cuts which are actually fine, so a cut in the art-directed caption style can pass the library's filing gate". No bar was lowered.
+- **captions.ocr and captions.render, art-directed.** The stack hangs above the house caption box by the cut's tallest page (`cutHeight`), so each art page is read in its own measured stack (`qc_captions.art_view`, the geometry `scripts/velib/plainframes.py` mirrors from `ArtDirectedCaption.tsx`), once its last word has landed and settled (`enterSeconds` plus one frame), and judged by its words in order (`qc_captions.in_order`). The only words forgiven are the ones the renderer draws there: this page's echo, and the previous page's echo and ghost. A missing, swapped or stray word still fails; the 0.98 bar is unchanged.
+- **captions.clock.** While `config/gates.json` says its tolerance is a placeholder, the row is measured and shown, never counted (advisory); it counts once the tolerance is measured.
+- **composition on generated pictures.** A word OCR finds on a `photo_plate` drawn from a still counts only at confidence 90 or more and four letters or more (`config/ve/qc-ocr.json`). Screen recordings, footage and type the engine draws over a picture keep the house rule.
+- **Not changed.** The close card's "Subscribe free" line measures 17 px against the house's 18 px floor; whether the card or the floor moves is Krish's call, so the row still fails.
+
 ## Hand-built composites
 
 A one-off composite (Ruling, Krish, 2026-11-10: "One-off composite") is built outside ve, so none of ve's gates see
@@ -244,6 +266,19 @@ If any cut fails, the count goes back to zero. Once ve passes, quick-edit stays 
 week, then is retired by his word. The count is kept in `docs/ve/STATUS.md` ("Phase 3 count"), each counted cut named
 with its piece, shape, file SHA-256 and the evidence for all five; nothing counts a cut by itself today, so the session
 that files a series cut on ve updates it.
+
+## The show gate: nothing reaches Krish before anyone has watched it (19 Nov 2026)
+
+Krish, 2026-11-19, of the Tue 17 and Wed 18 pieces, which each reached him with a dozen faults he caught himself: "Krish was the quality check." A proof or a render is shown to him only with a **show receipt** (`show-receipt.<label>.json` in the piece's ve folder) bound to that exact file's sha256. `scripts/velib/showgate.py` builds it; the rules are rows in config, never code, so it holds for any piece:
+
+- **qc**: `ve qc` measured every check on this file and they pass (qc.<label>.json bound to the same sha256, complete).
+- **critic**: the separate Critic's verdict on this file (`verdict.<label>.json`): bound to the sha256, no blocking finding, and for a whole cut every beat viewed.
+- **checklist**: every row of `config/ve/pre-show-checklist.json` (one row per thing he has had to say more than once about a cut: his words, the failure it came from) answered for this file. A row is answered by the `ve qc` rows it names when every one ran and passed; with none named, or one that did not run, the reviewer attests it in one line citing a frame or a time; a named qc row that FAILED fails the row whatever is attested. `ve critic --pre` shows the reviewer the whole list before anything is made.
+- **watched**: a recorded full-size watch and listen: `ve show-record <piece> --cut X [--proof] --by NAME --frames 1.2,5,... --heard-s N --script --attest file.json` (a reviewer who is not ve; at least `watch.min_frames` frames, at least `watch.min_listen_fraction` of the audio heard, the script open beside it).
+
+`ve show-check <piece> --cut X [--proof]` prints what is missing and writes the receipt. `ve proof` writes the pending receipt and says what is missing; `ve file` refuses a whole cut with no complete receipt; and the board's **Approve proof** press is refused (409 `proof_not_shown`, `apps/control-plane/api/board/_showGate.ts`) until a receipt for the clip's sha256 is filed on the piece (`board_session.py <piece> add <receipt> --role show_receipt`). His Reject is never refused.
+
+Held to a piece published from `config/ve/show-gate.json` `enforce_from` (2026-11-20) and to board weeks from `board.enforce_from_week`, so a piece in production is not changed mid-piece (config/failures.json F33); an earlier date is Krish's call. `bind_unshown` (on since 2026-11-19, Krish: "yes to all 3") makes a cut that has not yet been shown meet every rule that exists on the day it is shown rather than only the rules whose `binds_from` its publish day reaches (`guards.bind_day`). **The engine stays pinned**: `engine.json` records the engine files' hash and the commit it was written at; a merge that touches no engine file (`config/ve/production-guards.json` engine.paths) changes nothing, and for one that does, `ve pin <piece>` prints the `git worktree` that keeps rendering on exactly the engine he approved. `ve defect <piece> add --words "<his words>" --where <where>` counts the faults he found himself (target zero). **Red first**: `scripts/check_ruling_linked.py` (in `npm run verify`) refuses a commit body or now-note with a video-production `Ruling (Krish, ...)` line that names no `Failure: <id>` or `Learning: <id>` line for an entry in config/failures.json or config/learnings.json (`Red-first: not needed, <reason>` is the one escape).
 
 ## Rules
 

@@ -227,7 +227,8 @@ export function productionBrief(b: BriefInputs): string {
     + 'Show each in this session as you go, and file each on the piece (board_session.py PIECE add FILE --role plan_scene, with the beat in its title) so it '
     + 'shows on his card. Keep working while he looks; whatever he changes, change before the full render.\n'
     + '7. ve renders the cut; ve qc and ve refs run; a separate reviewer watches and listens at full size against the approved words before it is called ready.\n'
-    + '8. The covers: follow the cover-art skill (.agents/skills/cover-art/SKILL.md), which gives each channel its cover by his channel strategy '
+    + '8. Covers and thumbnails are yours, made in this session without being asked (Krish, 2026-11-18: "a clear owner [...] it should not require a manual ask anywhere"): content-engine designs them, Growth only posts what he approved and checks it went out with the right cover, and Krish only picks. '
+    + 'Make the wide and tall thumbnails of every cut (the thumbnail-designer skill) and a cover for every channel this piece posts on. The covers: follow the cover-art skill (.agents/skills/cover-art/SKILL.md), which gives each channel its cover by his channel strategy '
     + '(the face-free Receipt from thumbnail-designer on the brand accounts, a face-led cover in the week\'s variant on his own, both on YouTube as its '
     + 'A/B pair; the face-led cards are docs/ve/cards/w-face-covers), a separate critic judging them and his pick in his own words. File the cuts, covers '
     + 'and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n'
@@ -237,5 +238,6 @@ export function productionBrief(b: BriefInputs): string {
     + ` (and making.py ${b.pieceId} drive-link long|short <Drive link> for each cut's link), and file each cover on the piece. Then read the board back, `
     + `with get_piece_board (or board_session.py ${b.pieceId} show and making.py ${b.pieceId} show): the card must now say the cuts are made and filed, with their files in the post folder. `
     + 'If it still shows the old stage, find which record is missing and write it; never call the piece done on the strength of the Drive upload alone. '
+    + 'Prove the covers before you stop: run python3 scripts/post-pack/piece_manifest.py draft SPEC.json --out "0 Publish/manifest.draft.json" (SPEC.json is written from the piece\'s record and its library folder, as that script\'s header says): it refuses a video channel with no designed cover, so a refusal means a cover is missing; make it and run it again. His Approve for publish exists only once that draft does. '
     + 'Report done only with the stage the board now shows and where each file is, and report blocked, naming the record, if you cannot write one.\n\n'
 }

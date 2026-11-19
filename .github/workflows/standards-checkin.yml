@@ -20,6 +20,13 @@ name: Standards check-in weekly
 on:
   schedule:
     - cron: '0 7 * * 0'
+  # And whenever the floor changes, not only on Sunday (Krish, 2026-11-19: "make sure you're never just fixing one day's
+  # piece. It's system fixes."). On 19 Nov the floor pull request (#911) was merged while it waited for Sunday's grouping,
+  # and every pull request in the repository went red on check:floor-groups. Now a new floor on its branch, or on main,
+  # is grouped at once, as proposals for his answer, by this same code; a second run in a week is already handled.
+  push:
+    branches: [floor/rejections, main]
+    paths: [config/rejection-floor.json]
   workflow_dispatch:
     inputs:
       dry_run:
@@ -86,7 +93,7 @@ jobs:
           EVENT: ${{ github.event_name }}
           DRY: ${{ inputs.dry_run }}
         run: |
-          if [ "$EVENT" = "schedule" ] || [ "$DRY" = "false" ]; then echo "apply=true" >> "$GITHUB_OUTPUT"; else echo "apply=false" >> "$GITHUB_OUTPUT"; fi
+          if [ "$EVENT" = "schedule" ] || [ "$EVENT" = "push" ] || [ "$DRY" = "false" ]; then echo "apply=true" >> "$GITHUB_OUTPUT"; else echo "apply=false" >> "$GITHUB_OUTPUT"; fi
           echo "today=$(date -u +%F)" >> "$GITHUB_OUTPUT"
 
       - name: Build the week's check-in
@@ -103,21 +110,37 @@ jobs:
             python3 scripts/standards_checkin.py --week-of "$TODAY"
           fi
 
+      # Opened with CHECKIN_PR_TOKEN, a token limited to this repository (Ruling, Krish, 2026-11-18: "token"). A pull
+      # request opened with GitHub's own token starts no CI until a person presses "Approve and run", so auto-merge.yml
+      # never saw it: on 18 Nov the grouping sat open until Krish approved it. With this token its CI runs and
+      # auto-merge.yml merges it on green, like every other pull request. Without the secret it falls back to GitHub's
+      # own token and says so, and the pull request then waits for his "Approve and run" as before.
       - name: Open the grouping pull request (it merges itself on green CI)
         if: steps.mode.outputs.apply == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.CHECKIN_PR_TOKEN || github.token }}
+          HAS_PR_TOKEN: ${{ secrets.CHECKIN_PR_TOKEN != '' }}
           TODAY: ${{ steps.mode.outputs.today }}
           RUN_ID: ${{ github.run_id }}
           REPO: ${{ github.repository }}
           FROM: ${{ steps.base.outputs.from }}
         run: |
           git diff --quiet -- config/floor-groups.json && { echo "No new standards to group this week."; exit 0; }
+          [ "$HAS_PR_TOKEN" = "true" ] || echo "::warning::No CHECKIN_PR_TOKEN secret: the grouping pull request will wait for Krish's Approve and run (docs/STANDARDS-CHECKIN.md)."
           branch="floor/checkin-$TODAY-$RUN_ID"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch -c "$branch"
-          git add config/floor-groups.json
+          # The closeout note CI's closeout check asks for (18 Nov: the grouping pull request failed it). Counts only.
+          mkdir -p now-notes
+          groups=$(python3 -c "import json;print(len(json.load(open('config/floor-groups.json'))['groups']))")
+          note="now-notes/$TODAY-standards-checkin-$RUN_ID.md"
+          {
+            echo "Status: The standards check-in of $TODAY grouped the new floor standards; config/floor-groups.json holds $groups groups, each new one seeded as a proposal for Krish on the pinned check-in page."
+            echo "Next: Krish answers the new items on the standards check-in page."
+            echo "North Star check ($TODAY): holds."
+          } > "$note"
+          git add config/floor-groups.json "$note"
           git commit -q -m "Group the week's new floor standards for the standards check-in ($TODAY)" \
             -m "Written by .github/workflows/standards-checkin.yml from $FROM, code only: each new standard proposed into a group, seeded as a proposal for his answer on the check-in. Nothing is decided here." \
             -m 'Ruling (Krish, 2026-11-15): the weekly standards check-in is one pinned claude.ai artifact refreshed weekly, an exception to "No Claude artifact, ever".'
@@ -125,4 +148,3 @@ jobs:
           git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$branch"
           gh pr create -R "$REPO" --head "$branch" --base main --title "Standards check-in: group the new floor standards ($TODAY)" \
             --body "The week's new floor standards, each proposed into a group (config/floor-groups.json) and seeded as a proposal for Krish's answer on the standards check-in. Started from $FROM. It merges itself on green CI (auto-merge.yml)."
-          gh workflow run ci.yml -R "$REPO" --ref "$branch"

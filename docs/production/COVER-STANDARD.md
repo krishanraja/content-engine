@@ -101,3 +101,14 @@ It runs four weeks, then Krish decides from the numbers. This narrows THE_RECEIP
 brand accounts. The photos come only from his cutouts (`scripts/post-pack/photos.py fetch`, published from
 Video Engine > Krish Clone - Assets > Photos by the home computers), and Codex draws the options from a `ve card` of
 kind `cover` (`scripts/velib/cards.py`), checked with `scripts/channel_safe.py` and judged by the thumbnail-critic.
+
+## Who makes them (Ruling, Krish, 28 Oct 2026; restated 18 Nov 2026: "a clear owner [...] it should not require a manual ask anywhere")
+
+| Job | Owner | How it happens without being asked |
+|---|---|---|
+| Design every cut's wide and tall thumbnails and every channel's cover (Mon, Wed, Fri pieces and any video) | **content-engine**: the production session (`cover-art`, `thumbnail-designer`, a separate critic) | Step 8 of the one post-production prompt (`_takesIn.ts`); a cut is Produced only with its thumbnails on the record (`makingSteps`), and `piece_manifest.py draft` refuses a video channel with no cover, so the Approve for publish press never appears without them |
+| Pick among the options | **Krish**, in his own words, on the board | The only human step |
+| Post them, hold a post whose cover is missing, and check it went out with the right cover | **Growth** (growth-makeyourmindup) | Reads the sealed manifest; designs none |
+| A derived carousel's cover (card 1) | **Growth**, in its own carousel route (`docs/CAROUSEL-STANDARD.md`) | Part of making the carousel |
+
+Growth's own record says the same (growth-makeyourmindup `docs/ENGINE-BOUNDARY.md`, `docs/OPERATING_MODEL.md` step 6).

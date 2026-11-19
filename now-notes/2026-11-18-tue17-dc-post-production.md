@@ -1,4 +1,0 @@
-Status: Tue 17 data-centres piece (b019dbf8): both cuts specced, conformed, mixed (Aspire 15% under the house bed) and rendering in full on the engine Krish approved on 18 Nov: one picture per beat in one shared grade with a focus rack, no face ghost in a dissolve, no logo or off.day tag in the body, the wordmark on the title frame and the close card, the episode title built from his own line. Short 85 s; long 5 min 19 s (two restarts kept as said where no quiet allowed a cut, flagged to Krish).
-Next: QC both renders, run the separate Critic, then covers and filing for Krish's final yes.
-Changed: the renderer draws the episode title moment; beats take a graded backdrop; the bed is ridden by EBU R128 loudness, not RMS; off.day is never a tag; figures are never dimmed behind a focus.
-North Star check (2026-11-18): holds.

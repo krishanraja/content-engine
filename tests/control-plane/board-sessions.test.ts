@@ -224,3 +224,11 @@ describe('the store, through its own code', () => {
     expect(status).toBe(401)
   })
 })
+
+describe('a piece with no schedule date still reports (Krish, 2026-11-19)', () => {
+  it('names the week and day beside the piece id, so board_scope_of can place a piece placed by the board', async () => {
+    const { writeBack } = await import('../../apps/control-plane/api/board/_writeBack.js')
+    const text = writeBack({ pieceId: '11111111-2222-3333-4444-555555555555', week: '2026-11-16', day: 'thu', step: 'publish', schedule: true })
+    expect(text).toContain('piece_id 11111111-2222-3333-4444-555555555555, week 2026-11-16 and day thu')
+  })
+})

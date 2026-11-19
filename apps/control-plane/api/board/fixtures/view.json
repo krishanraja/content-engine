@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.31.0",
+ "contract_version": "1.33.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -9378,7 +9378,33 @@
        ],
        "done": "Approved for publish: exactly these 2 files and their words. Growth posts them; nothing else."
       },
-      "decision": true
+      "decision": true,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-mon-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:mon:notes",
+         "use": "claude_notes",
+         "title": "Piece 8287. It says one thing.",
+         "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      },
      {
       "key": "piece:5b726fc3-ac63-4607-9293-3257b4ecc75c",
@@ -9967,7 +9993,33 @@
         "saved": []
        }
       },
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Your notes for Claude",
+        "collection": "comments",
+        "id": "desk-mon-look-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:mon:look",
+         "use": "claude_notes",
+         "title": "Piece 5b72. It says one thing.",
+         "piece_id": "5b726fc3-ac63-4607-9293-3257b4ecc75c"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your notes for Claude",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, and in the prompt."
+       },
+       "saved": []
+      }
      }
     ],
     "decisions": 1,
@@ -10580,7 +10632,33 @@
        },
        "done": "Picked. It is the look for this piece."
       },
-      "decision": true
+      "decision": true,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Your notes for Claude",
+        "collection": "comments",
+        "id": "desk-wed-look-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:wed:look",
+         "use": "claude_notes",
+         "title": "Piece db9f. It says one thing.",
+         "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your notes for Claude",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, and in the prompt."
+       },
+       "saved": []
+      }
      }
     ],
     "decisions": 1,
@@ -10832,7 +10910,33 @@
       "others": [],
       "line": "Scheduled on Instagram for Wed 18 Nov, 12:30.",
       "next": null,
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-thu-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:thu:notes",
+         "use": "claude_notes",
+         "title": "The AI intern asks for a raise.",
+         "item": "off-thu-aiintern"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      }
     ],
     "decisions": 0,
@@ -11112,7 +11216,33 @@
        "stamp": [],
        "done": "Picked. A session files it with the cuts."
       },
-      "decision": true
+      "decision": true,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-fri-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:fri:notes",
+         "use": "claude_notes",
+         "title": "Piece b019. It says one thing.",
+         "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      }
     ],
     "decisions": 1,
@@ -11651,7 +11781,33 @@
         "saved": []
        }
       },
-      "decision": false
+      "decision": false,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Your notes for Claude",
+        "collection": "comments",
+        "id": "desk-sat-post-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:sat:post",
+         "use": "claude_notes",
+         "title": "Option goodnews",
+         "item": "off-sat-goodnews"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your notes for Claude",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, and in the prompt."
+       },
+       "saved": []
+      }
      }
     ],
     "decisions": 0,

@@ -63,5 +63,31 @@
     "status": "approved",
     "why": "Krish, 2026-11-04: \"Yes, give off days their own music and look - Rotate.\" An off-day piece (published on a day that is not its series' day) beds on a track the music ledger marks for off days (config/music-library.json \"for\": \"off-day\", rotated across pieces), wears no series sting, and compile draws it in the house mint, never the series colour or promise.",
     "off_day_for": "off-day"
+  },
+  "one_object": {
+    "_why": "Krish, 2026-11-18, of the Tue 17 habits short: \"how you are able to get all this way through to production and point out those two things - thats ridiculous - we will let it slide for today but that should have been picked up at the start\". The Critic's first question (one idea beside The Ladder) is now read for its content while the spec is written. THE THRESHOLDS ARE KRISH'S TO CHANGE: they are the first proposal, from the habits spec (13 different generated pictures, a move that meant \"his line taken literally\").",
+    "from": "2026-11-19",
+    "max_generated_pictures": 4,
+    "carrier_share": 0.6,
+    "picture_kinds": [
+      "illustration",
+      "broll"
+    ],
+    "acts_out": [
+      "taken literally",
+      "\\bthe (?:line|sentence)\\b",
+      "\\bhis (?:line|sentence|words)\\b",
+      "word that names",
+      "\\bacts? out\\b",
+      "\\bacting out\\b",
+      "repeats? (?:the|what)"
+    ]
+  },
+  "numbers": {
+    "_why": "A card whose spec's never-list says no invented numbers may not ask Codex for a figure the piece does not own, and what Codex makes is read for figures (ve verify-card, OCR). Tue 17: the card asked for \"Q3 revenue grew 40%\" and Codex wrote \"Renewals held steady at 94%\"."
+  },
+  "pre_critic": {
+    "_why": "The Critic's two questions (one idea beside The Ladder; no invented numbers) are asked of the spec, the storyboard table and the card briefs BEFORE any card is written or the storyboard is signed, not after the render. verdict.pre.json, by a reviewer who did not write the spec, bound to the spec's hash.",
+    "from": "2026-11-19"
   }
 }

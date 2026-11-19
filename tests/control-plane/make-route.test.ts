@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { NEVER_HEADLESS, ROUTE_RULING, makeRoute, routeLine } from '../../apps/control-plane/api/board/_makeRoute'
-import { OFFDAY_KINDS, itemPrompt, offdayHead } from '../../apps/control-plane/api/board/_weekModel'
+import { OFFDAY_KINDS, captionOf, itemPrompt, offdayHead } from '../../apps/control-plane/api/board/_weekModel'
 
 // The one route for a carousel, a meme, a Notes image and an off-day voiceover short (Rulings, Krish, 2026-11-13: "all
 // the carousels should now be done in Claude, but using the Codex plug in as per the other usual workflows"; "memes and
@@ -180,5 +180,27 @@ describe('a meme template is reskinned, never made as a carousel', () => {
     expect(findings('prompt', a.prompt)).toEqual([])
     // No caption yet: it is asked for once, never invented.
     expect(offdayHead('reskin', template, null)).toContain('He has not written a caption yet: ask him once.')
+  })
+})
+
+// Krish, 2026-11-18: "the meme template prompt does not pull through if I choose my own caption instead of selecting one of the
+// choices? not sure if it pulls that through either". Both routes fill one box and arrive as the words on his Approve press.
+describe('a meme template prompt carries his caption however he gave it', () => {
+  const opt = (over: Record<string, unknown>) => ({ id: 'x', doc_id: 'off-sat-x', status: 'approved', said: null, outcome: null, ...over }) as unknown as Parameters<typeof captionOf>[0]
+  it('takes the words on his Approve press, typed or tapped from an idea, the same way', () => {
+    const typed = 'POV: Anthropic counting what you paid it to summarize an email.'
+    expect(captionOf(opt({ outcome: { id: 'approved', label: 'Approved', at: null, words: typed } }), null)).toBe(typed)
+    // The caption ideas are only ideas: one he did not choose is never his caption.
+    expect(captionOf(opt({ caption_ideas: ['When you realize it is a meme'], outcome: { id: 'approved', label: 'Approved', at: null, words: null } }), null)).toBeNull()
+    expect(captionOf(opt({ said: typed }), null)).toBe(typed)
+  })
+  it('falls back to his words on the option, then a note on its record, and never a session\'s unpressed words', () => {
+    expect(captionOf(opt({ said: 'Said in a session, not pressed here: a caption' }), { note: 'POV: from the record' })).toBe('POV: from the record')
+    expect(captionOf(opt({}), null)).toBeNull()
+  })
+  it('puts his caption in the prompt exactly, and asks for it once when there is none', () => {
+    const t = { title: 'T', clip: { url: 'https://v.redd.it/a.mp4', page: 'https://www.reddit.com/r/memes/c/a/', poster: null, seconds: 9 }, found: { place: 'reddit' as const, label: 'r/memes', url: null }, credit: '', what_happens: '', why_it_works: '', mechanism: [], moment: null, date: null }
+    expect(offdayHead('reskin', t, 'POV: Anthropic counting what you paid it to summarize an email.')).toContain('set exactly these): POV: Anthropic counting what you paid it to summarize an email.')
+    expect(offdayHead('reskin', t, null)).toContain('He has not written a caption yet: ask him once.')
   })
 })

@@ -1,3 +1,4 @@
+import { bufferUrl } from '../../apps/control-plane/api/board/_growthPlacement.js'
 import { describe, expect, it } from 'vitest'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { approval } from './_approvals'
@@ -127,7 +128,7 @@ describe('the week model (contract 1.12.0)', () => {
   const v = buildView(thisWeek())
 
   it('keeps the contract and every rule of the view and the model', () => {
-    expect(v.contract_version).toBe('1.31.0')
+    expect(v.contract_version).toBe('1.33.0')
     expect(validate(SCHEMA, JSON.parse(JSON.stringify({ ok: true, ...v })), SCHEMA, '$', { open: true })).toEqual([])
     expect(viewProblems(v)).toEqual([])
     expect(modelProblems(v.model!, v.days)).toEqual([])
@@ -145,9 +146,14 @@ describe('the week model (contract 1.12.0)', () => {
     expect(made.next?.label).toBe('Publish')
     expect(made.assets?.length).toBeGreaterThan(0)
     const prompt = (made.next as { prompt: string }).prompt
-    for (const a of made.assets!) for (const f of a.slides) expect(prompt).toContain(f.url)
+    for (const a of made.assets!) for (const f of a.slides) expect(prompt).toContain(bufferUrl(f.url))
     expect(prompt).toContain('schedule this one approved, finished post in Buffer')
-    expect(prompt).toContain('never schedule anything else')
+    expect(prompt).toContain('never schedule a different file')
+    // Growth knows the channels, the time and the voice, so nothing is asked of him (Krish, 2026-11-19).
+    expect(prompt).toContain('nothing here is a question for him')
+    expect(prompt).toContain('Growth\'s four daily slots, 08:30, 12:30, 17:30, 20:30')
+    expect(prompt).toContain('https://drive.google.com/uc?export=download&id=')
+    expect(prompt).toContain('"there is no public link" is not a blocker')
     // The standard wall (never post or publish anything) is replaced, not contradicted.
     expect(prompt).not.toContain('Never post or publish anything, and never put an idea')
     expect(prompt).toContain('Keep the board current as you work')
@@ -158,6 +164,99 @@ describe('the week model (contract 1.12.0)', () => {
       if (it.assets?.length) continue
       if (it.next?.kind === 'prompt') expect(it.next.label).toBe(CLAUDE_LABEL)
     }
+  })
+
+  // Krish, 2026-11-18: a post scheduled for Fri 20 showed no files, "at no point did I ever see the covers, thumbnails etc". Its
+  // folder was dated Tue 17 (the day it was first made for) and its card sat on Thu 19, so the day's folders never held it.
+  it('a post moved to another day still shows the files in its folder, dated for the day it left', () => {
+    const base = thisWeek()
+    const moved = { ...base, drive_posts: (base.drive_posts || []).map(p => (p.name.includes('Git could not keep up')
+      ? { ...p, name: '2026-11-17 Tue off.day - Git could not keep up', date: '2026-11-17' } : p)) }
+    const v2 = buildView(moved)
+    const item = dayOf(v2, 'thu').items.find(i => i.key === 'off-thu-gitbroke')!
+    expect(item.assets?.length).toBeGreaterThan(0)
+    expect(item.assets![0].slides.length).toBe(5)
+    // Two options one folder title could name: neither is bound (never a guess).
+    const twin = { ...base, drive_posts: [...(base.drive_posts || []), { id: '1TwinFolder0000000000000001', name: '2026-11-17 Tue off.day - AI', url: 'https://drive.google.com/drive/folders/1TwinFolder0000000000000001', date: '2026-11-17', assets: [] }] }
+    for (const o of dayOf(buildView(twin), 'thu').items) expect(o.assets?.every(a => a.name !== 'x')).toBe(true)
+  })
+
+  it('the files stay on the card once it is scheduled or live, without a Publish button', () => {
+    const v2 = buildView(thisWeek())
+    for (const day of v2.model!.days) for (const it of day.items) {
+      if (it.type === 'post' && (it.stage.key === 'scheduled' || it.stage.key === 'live') && it.assets) expect(it.next?.label).not.toBe('Publish')
+    }
+  })
+
+  // Krish, 2026-11-19: "once I've pressed it, I can trust that the assets all remain in there even though it shows up as scheduled."
+  it('a post keeps listing every file it was made from once it is scheduled, and once it is live', () => {
+    const base = thisWeek()
+    const row = (posts: unknown[]) => ({ item: `engine:${WEEK}:gitbroke`, source: 'engine', origin_week: WEEK, option_id: 'gitbroke', option: {}, state: 'approved', week: WEEK, day: 'thu', date: '2026-11-12',
+      doc: null, piece_id: null, drive_folder: null, posts, followed: {}, version: 1, placed_by: 'Krish', placed_at: '2026-11-11T10:00:00.000Z' })
+    const sched = [{ state: 'scheduled', channel: 'instagram', due_at: '2026-12-30T17:00:00.000Z', url: null, at: '2026-11-11T12:00:00.000Z', buffer_post_id: 'abc123' }]
+    const live = [{ ...sched[0], state: 'live', url: 'https://www.instagram.com/p/x/', at: '2026-11-12T17:00:00.000Z' }]
+    const before = dayOf(buildView(base), 'thu').items.find(i => i.key === 'off-thu-gitbroke')!
+    expect(before.assets?.[0].slides.length).toBe(5)
+    for (const posts of [sched, live]) {
+      const v2 = buildView({ ...base, items: [...(base.items || []), row(posts) as never] })
+      const it = dayOf(v2, 'thu').items.find(i => i.key === 'off-thu-gitbroke')!
+      expect(it.stage.key).toBe(posts === sched ? 'scheduled' : 'live')
+      expect(it.assets?.[0].slides.length).toBe(5)
+    }
+  })
+
+  // Krish, 2026-11-19: piece 701a2c55 (Tue 17's habits voiceover) was still in production on Wed 18 and Thu 19. Once its day passed the
+  // card read Missed, its Approve proof press vanished and there was no Move to… ("I don't see this on the board anywhere").
+  describe('a day that passed with its piece still being made is never Missed', () => {
+    const AFTER = new Date('2026-11-20T15:00:00Z')
+    const proofFile = (n: number, sha = 'a'.repeat(64)) => ({ id: `p${n}`, kind: 'video', title: `Proof v${n}: the caption line fits the frame`, role: 'proof', version: n, piece_id: FRI, scope: FRI,
+      at: '2026-11-19T10:00:00Z', content_type: 'video/mp4', sha256: sha, bytes: 1000, added_by: 'claude' })
+    const friOf = (v: ReturnType<typeof buildView>) => dayOf(v, 'fri').items.find(i => i.piece_id === FRI)!
+    it('nothing in production: a passed day still reads Missed, with no Move beside a step it has not got', () => {
+      const it0 = friOf(buildView({ ...thisWeek(), now: AFTER }))
+      expect(it0.missed).toBe(true)
+      expect(it0.passed).toBeUndefined()
+      expect(it0.line).toMatch(/^Missed:/)
+    })
+    it('a proof filed and not answered keeps the card on its real step, says its day passed, and keeps its Move to…', () => {
+      const v2 = buildView({ ...thisWeek(), now: AFTER, overlay: { sessions: [], materials: [proofFile(9)] } })
+      const it1 = friOf(v2)
+      expect(it1.missed).toBe(false)
+      expect(it1.passed).toBe(true)
+      expect(it1.line).toMatch(/Its day, .*, has passed and it is still being made: Proof v9.* is waiting on your Approve proof/)
+      expect(it1.line).not.toMatch(/^Missed/)
+      expect(it1.move?.label).toBe('Move to…')
+      // The day does not read Missed either while the piece is being made.
+      expect(dayOf(v2, 'fri').line).not.toMatch(/^Missed/)
+    })
+    it('his answer to that exact proof ends it: the piece is then as it was, Missed unless something else is in production', () => {
+      const answered = thisWeek()
+      answered.pieces = answered.pieces.map(p => (String(p.id).toLowerCase() === FRI
+        ? { ...p, meta: { ...((p.meta as Body) || {}), making: { ...(((p.meta as Body) || {}).making as Body || {}), gates: { proof: { by: 'Krish', at: '2026-11-19T11:00:00Z', sha256: 'a'.repeat(64), verdict: 'approve' } } } } } : p))
+      expect(friOf(buildView({ ...answered, now: AFTER, overlay: { sessions: [], materials: [proofFile(9)] } })).missed).toBe(true)
+      // A newer proof is a new question.
+      expect(friOf(buildView({ ...answered, now: AFTER, overlay: { sessions: [], materials: [proofFile(9), proofFile(10, 'b'.repeat(64))] } })).passed).toBe(true)
+    })
+    it('an off-day post he records (Tue 17\'s habits voiceover) is held the same way, and with nothing in production it is Missed', async () => {
+      const { offdayPieceId } = await import('../../apps/control-plane/api/board/_offdayPiece.js')
+      const id = offdayPieceId(WEEK, 'off-thu-gitbroke', null)
+      const base = thisWeek()
+      const row = { item: `engine:${WEEK}:gitbroke`, source: 'engine', origin_week: WEEK, option_id: 'gitbroke', option: {}, state: 'approved', week: WEEK, day: 'thu', date: '2026-11-12',
+        doc: null, piece_id: null, drive_folder: null, posts: [], followed: {}, version: 1, placed_by: 'Krish', placed_at: '2026-11-11T10:00:00.000Z' }
+      const withPiece = { ...base, items: [...(base.items || []), row as never], pieces: [...base.pieces, { id, idea: 'Git could not keep up', state: 'drafting', scheduled_for: '2026-11-12', meta: {} } as never] }
+      const postOf = (v: ReturnType<typeof buildView>) => dayOf(v, 'thu').items.find(x => x.key === 'off-thu-gitbroke')!
+      expect(postOf(buildView({ ...withPiece, now: AFTER })).missed).toBe(true)
+      const held = postOf(buildView({ ...withPiece, now: AFTER, overlay: { sessions: [], materials: [{ ...proofFile(9), piece_id: id, scope: id }] } }))
+      expect(held.missed).toBe(false)
+      expect(held.passed).toBe(true)
+      expect(held.line).toMatch(/^Its day, .*, has passed and it is still being made: Proof v9/)
+      expect(held.move?.label).toBe('Move to…')
+    })
+    it('a production session working on it counts, a finished one does not', () => {
+      const session = (state: string) => ({ session_id: 'prod-abcd', scope: FRI, by: 'claude', state, step: 'produce', doing: 'cutting', started_at: '2026-11-19T09:00:00Z', last_at: '2026-11-20T14:00:00Z' })
+      expect(friOf(buildView({ ...thisWeek(), now: AFTER, overlay: { sessions: [session('working')], materials: [] } })).passed).toBe(true)
+      expect(friOf(buildView({ ...thisWeek(), now: AFTER, overlay: { sessions: [session('done')], materials: [] } })).missed).toBe(true)
+    })
   })
 
   it('the frozen fixture of this week is what the builder makes now', () => {

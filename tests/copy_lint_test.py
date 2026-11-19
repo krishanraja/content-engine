@@ -203,5 +203,23 @@ class Cli(unittest.TestCase):
             self.assertEqual(run(*[str(ROOT / p) for p in APPROVED]).returncode, 0)
 
 
+class OffDayTag(unittest.TestCase):
+    """Krish, 2026-11-18 and 19: "off.day is NEVER to be used ever as a tag"; "ensure there are NEVER any off day tags that
+    exist anywhere, I should never see that on any post ever"."""
+
+    def hits(self, text, where='channel_copy'):
+        return [h for h in copy_lint.copy_lint(text, where) if (h if isinstance(h, str) else h.get('id')) == 'off_day_tag' or 'off_day_tag' in str(h)]
+
+    def test_every_spelling_as_a_tag_is_refused_on_every_public_surface(self):
+        for where in ('channel_copy', 'carousel_text', 'video_onscreen', 'titles', 'article_metadata'):
+            for text in ('Off.day: three habits', '#offday', 'OFF-DAY', 'Off day', '[Off day] AI tips', 'Free ChatGPT has ads\noff.day'):
+                self.assertTrue(self.hits(text, where), (where, text))
+
+    def test_ordinary_sentences_pass(self):
+        for text in ('What I do on an off day is rest', 'Thursday, my day off', 'kick off day one', 'We switched it off daily'):
+            self.assertFalse(self.hits(text), text)
+
+
+
 if __name__ == '__main__':
     unittest.main()

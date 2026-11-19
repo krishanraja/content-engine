@@ -1,0 +1,60 @@
+{
+  "objects": [
+    {
+      "obj": "scene",
+      "device": "scene_plate",
+      "meaning": "Comic scene",
+      "fromFrame": 0,
+      "toFrame": 150,
+      "params": {
+        "shots": [
+          {
+            "src": "assets/scene.jpg",
+            "width": 1920,
+            "height": 1080
+          },
+          {
+            "src": "assets/scene-two.jpg",
+            "width": 1080,
+            "height": 1920
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "enter",
+      "obj": "scene",
+      "verb": "enter",
+      "toState": "0",
+      "atFrame": 10
+    },
+    {
+      "id": "move",
+      "obj": "scene",
+      "verb": "move",
+      "toState": "1",
+      "atFrame": 80
+    },
+    {
+      "id": "exit",
+      "obj": "scene",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 140
+    }
+  ],
+  "stills": [
+    9,
+    10,
+    11,
+    13,
+    50,
+    79,
+    80,
+    81,
+    120,
+    140
+  ]
+}

@@ -326,13 +326,18 @@ def inputs_from_props(props: dict) -> dict:
     from . import qc_faces
     pages = []
     style = props.get('captionStyle') or 'house'
+    from . import qc_captions as qc_captions_art, plainframes as _pf
+    art_theme = props.get('captionTheme') == _pf.config()['caption_over_content']['art_directed']['theme'] and style != 'word'
     for original in caption_pages_shown(props):
         page = dict(_moved(original, props, 'fromFrame', 'toFrame'),
                     words=[_moved(w, props, 'atFrame') for w in original.get('words') or []])
         beat = next((b for b in beats if b['fromFrame'] <= page['fromFrame'] < b['toFrame']), {})
         if beat.get('layout') == 'SPLIT' and style != 'word':
             page['region'] = split_caption
-        if props.get('captionTheme'):
+            page['split'] = True
+        if props.get('captionTheme') and style != 'word':
+            page['themed'] = True
+        if props.get('captionTheme') and not art_theme:
             # A caption theme draws inside its own band (captions/kit.ts REGIONS), not the word caption's centred box:
             # measure that band, the box the renderer draws in (Tue 17, 18 Nov 2026: the podcast theme was modelled as
             # a centred word 982 px wide while it drew 640 px from the left edge).
@@ -340,20 +345,24 @@ def inputs_from_props(props: dict) -> dict:
             # Its text is drawn from the band's left edge: as wide as the page's words at the theme's largest size
             # (88 px), measured with the renderer's own advance widths (house/metrics.ts), never wider than the band.
             w = min(w, int(archivo700_width(qc_faces.page_text(page), 88)) + 8)
+            pad = 0  # a theme band is already the outermost extent its text can reach
         else:
             x, y, w, h = qc_faces.caption_box(page, style, aspect, region, layout=beat.get('layout'),
                                              plate=(beat.get('plate') or {}).get('source'))
+            pad = 12
         width, height = (1080, 1920) if aspect == '9:16' else (1920, 1080)
-        # A theme band is already the outermost extent its text can reach, so it is measured as it stands; a drawn
-        # caption box keeps 12 px of room for the text's own bounds.
-        pad = 0 if props.get('captionTheme') else 12
         left, top = max(0, x - pad), max(0, y - pad)
         page['region'] = (left, top, min(width, x + w + pad) - left, min(height, y + h + pad) - top)
+        if art_theme and not page.get('split'):
+            # The art-directed stack hangs above the house box by the cut's tallest page: read it where it is drawn, once
+            # settled, judged in order (qc_captions.art_view, in_order; 19 Nov 2026, the habits short).
+            view = qc_captions_art.art_view(props['captions'], props['captions'].index(original), aspect, props.get('fps', 30))
+            page['region'], page['art'] = view['region'], {'extras': view['extras'], 'settle': view['settle']}
         pages.append(page)
     # The plate's frame under file frame F of a beat is F - the beat's shift + the segment's trim.
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
-                body_logo=props.get('bodyLogo') is not False,
+                body_logo=props.get('bodyLogo') is True,
                 edl=edl, joins=joins, caption_style='house' if props.get('captionTheme') else (props.get('captionStyle') or 'house'),  # a theme draws in its own band, each page's region
                 plate_video=(props.get('segments') or [{}])[0].get('src') if len(props.get('segments') or []) == 1 else None,
                 plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)),
@@ -391,11 +400,12 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            caption_style: str = 'house', face_detector=None, plate_video: str | None = None,
            plate_offset: int = 0, opening: dict | None = None, publish_day: str | None = None,
            body_logo: bool = True,
-           onscreen_reader=None) -> dict:
+           onscreen_reader=None, frame_props: dict | None = None, kept_restarts: list | None = None) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
-    move = motion(frame_diffs(path))
+    diffs = frame_diffs(path)
+    move = motion(diffs)
     silences = long_silences(path)
     checks = {
         'loudness.integrated': {'value': loud['integrated_lufs'], 'target': f"{targets['lufs']} ±1",
@@ -552,6 +562,14 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         from . import qc_onscreen
         checks.update(qc_onscreen.rows(path, composition_props, publish_day, read=onscreen_reader,
                                        lead=opening_lead(composition_props)))
+    # The Tue 17 and Wed 18 failure lists as rows (velib/qc_frames.py, config/ve/frame-checks.json): one carrier a beat, figures
+    # shown, no ghost of his face, no flat-black graphics, the render knew the logo rule, "off.day" drawn nowhere, the title a
+    # card from his spoken line, no false start left in, motion in the first seconds, his whole head in frame. Any aspect.
+    if frame_props and frame_props.get('beats'):
+        from . import qc_frames
+        checks.update(qc_frames.rows(path, frame_props, publish_day, beats=beats, aspect=aspect, fps=fps, diffs=diffs,
+                                     heard=heard, kept_restarts=kept_restarts, face_detector=face_detector,
+                                     read=onscreen_reader, lead=opening_lead(frame_props)))
     # A picture smeared into stripes (8 Nov, the proactive-AI opening's plate): every cut, advisory before its own date.
     checks['picture.smeared'] = picture_smeared(path, publish_day)
     # A tall meme is centred on the screen (Ruling, Krish, 2026-11-15: tall memes are centred; scripts/layout_centre.py,

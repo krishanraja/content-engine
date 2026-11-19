@@ -45,8 +45,8 @@ First read what his inspiration says: `.agents/skills/motion-designer/references
 
 Set each with its `reason` in one plain line (`.agents/skills/motion-designer/references/plan-template.md`):
 
-- `style.idea`: the one object, what each move means, the never-list, and the real artifact shown as itself (`ve lint`
-  `idea.*`). Every beat below serves this idea.
+- `style.idea`: the one object, what each move means, the never-list, the real artifact shown as itself; every beat serves it.
+  Before Sign storyboard: `.agents/skills/motion-designer/references/pre-critic.md` (`ve critic --pre`).
 - `style.motion`: his pick, or before he records the proposal from
   `python3 scripts/post-pack/creative_direction.py motion --points ... --format ...`.
 - `style.transitions`, `style.camera`, `style.energy`, `style.layout`: chosen apart from the motion style, for this

@@ -104,6 +104,9 @@ export const VeCutSchema = z.object({
   captions: z.object({ region: z.string().min(1).default('default'), emphasis: z.array(WordSchema).default([]) }).strict(),
   beats: z.array(VeBeatSchema).min(1),
   music: VeCutMusicSchema.optional(),
+  /** A cut's own music bed when the piece's bed cannot hold this cut's length to the one bed shape (Wed 18, 18 Nov 2026:
+   *  Mind Bender, 3:20, looped under a 4:55 long cut and lost its loud open). Same ledger rules as audio.bed. */
+  bed: z.object({ ledger_id: z.string().min(1), reason: z.string().min(12) }).strict().optional(),
 }).strict()
 
 export const VeDatasetSchema = z.object({
@@ -318,6 +321,8 @@ export const ProductionSpecV2Schema = z.object({
     title: z.string().min(3).max(80),
     line: z.string().min(8).max(240),
     spans: z.record(SlugSchema, VeSpanSchema).optional(),
+    /** The title lands on a card that slams in over the caption band, never bare over his face (Krish, 18 Nov 2026). */
+    card: z.boolean().optional(),
   }).strict().optional(),
 }).strict().superRefine((spec, c) => {
   if (spec.brand.series === 'mind.the.gap' && !spec.call && !veOffDay(spec)) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })

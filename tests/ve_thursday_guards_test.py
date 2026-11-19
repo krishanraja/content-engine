@@ -300,8 +300,13 @@ class OneTypeSystem(Held):
         (self.dir / f'props.{CUT}.json').write_text(json.dumps(self.props), encoding='utf-8')
         args = types.SimpleNamespace(spec=str(self.spec_file), cut=CUT, beat=None, props=None, assets_dir=None,
                                      scale=1.0, no_qc=True)
-        with mock.patch.object(ve_lint, 'lint', return_value=(self.spec, [])), mock.patch('sys.stdout'):
-            self.assertEqual(ve.cmd_proof(args, render_fn=fake_render()), 0)
+        # Not a test of the F58 comparison (ve_plain_frames_test.py holds that): no approved proof to compare against here,
+        # since this file's renders are bytes, not frames.
+        from velib import proof as ve_proof
+        with mock.patch.object(ve_lint, 'lint', return_value=(self.spec, [])), mock.patch('sys.stdout'), \
+                mock.patch.object(ve_proof, 'approved_baseline', return_value=(None, None)), \
+                mock.patch.dict('os.environ', {'VE_FRAMES_OFFLINE': '1'}):
+            ve.cmd_proof(args, render_fn=fake_render())
         record = json.loads((self.dir / 'proof' / f'{CUT}.json').read_text(encoding='utf-8'))
         self.assertEqual(record['type'], guards.type_treatments(self.props))
 

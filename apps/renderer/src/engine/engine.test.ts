@@ -196,8 +196,8 @@ describe('BrandFrame call and ending routing', () => {
 describe('the hook is the intro', () => {
   // Under test (Krish, 29 Oct 2026: "Let's go with number one for now."): the first frame is the hook in the brand's
   // dress, the logo and the series tag in its corners from the start, with no story card or logo sting before it.
-  it.each(aspects)('opens on the hook at frame 0 in %s: the wide cut with its logo and series tag, the tall one with neither', (aspect) => {
-    const props = EngineRenderPropsSchema.parse(fixture)
+  it.each(aspects)('opens on the hook at frame 0 in %s: the wide cut (a piece the palette still lets, bodyLogo true) with its logo and series tag, the tall one with neither', (aspect) => {
+    const props = EngineRenderPropsSchema.parse({ ...fixture, bodyLogo: true })
     props.aspect = aspect
     expect(props.beats[0]).toMatchObject({ fromFrame: 0, sectionBeat: true })
     vi.mocked(useEngineFrame).mockReturnValueOnce(0)
@@ -239,8 +239,20 @@ describe('the logo only on the title frame and the close (Ruling, Krish, 2026-11
     }
   })
 
-  it('without bodyLogo the wide cut keeps its house dress, so older pieces render as signed', () => {
+  it('without bodyLogo the wide cut draws no icon either: the default is no logo, so a spec that forgets the flag cannot draw one', () => {
+    // Krish, 2026-11-18: "we have a strict NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME [...] how
+    // does this keep creeping through randomly". The tile was drawn on every wide cut unless bodyLogo was false.
     const props = { ...EngineRenderPropsSchema.parse(fixture), aspect: '16:9' as const }
+    expect(props.bodyLogo).toBeUndefined()
+    for (const layout of ['STAGE', 'P1', 'P3', 'P6', 'F3'] as const) {
+      const beat = { ...props.beats[0]!, layout }
+      expect(elements(BrandFrame({ props, beat, frame: 0 })).filter((node) => node.type === MarkTile)).toHaveLength(0)
+    }
+    expect(elements(StageHeader({ props })).some((node) => (node.props as { image?: unknown }).image === props.brand.logo)).toBe(false)
+  })
+
+  it('only a piece the palette still lets (bodyLogo true) wears the old dress', () => {
+    const props = { ...EngineRenderPropsSchema.parse({ ...fixture, bodyLogo: true }), aspect: '16:9' as const }
     const beat = { ...props.beats[0]!, layout: 'P1' as const }
     expect(elements(BrandFrame({ props, beat, frame: 0 })).filter((node) => node.type === MarkTile)).toHaveLength(1)
     expect(elements(StageHeader({ props })).some((node) => (node.props as { image?: unknown }).image === props.brand.logo)).toBe(true)
@@ -273,7 +285,7 @@ describe('face-with-proof wears one brand treatment', () => {
   // Krish, 2026-11-03: "The branding is wrong". Its STAGE graphics sit on the light wash of its SPLIT stage, with the
   // same mark tile and pill; the held title shows over a STAGE beat on the take, never over one with no plate.
   it('draws the mark tile, never the ink header, on a face-with-proof STAGE beat on the wide cut', () => {
-    const props = { ...EngineRenderPropsSchema.parse(fixture), format: 'face-with-proof' as const, aspect: '16:9' as const }
+    const props = { ...EngineRenderPropsSchema.parse({ ...fixture, bodyLogo: true }), format: 'face-with-proof' as const, aspect: '16:9' as const }
     const graphics = { ...props.beats[0]!, layout: 'STAGE' as const, plate: { source: 'none' as const } }
     const nodes = elements(BrandFrame({ props, beat: graphics, frame: 0 }))
     expect(nodes.filter((node) => node.type === MarkTile)).toHaveLength(1)

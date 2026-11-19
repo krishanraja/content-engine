@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
 os.environ['VE_GATES_OFFLINE'] = '1'  # never reach the engine from a test; the record is exercised with a stand-in call
+os.environ['VE_FRAMES_OFFLINE'] = '1'  # this file's renders are bytes, not frames: the frame guards have their own file (ve_plain_frames_test.py)
 
 import creative_direction  # noqa: E402
 import ve  # noqa: E402
@@ -121,6 +122,18 @@ class HardestBeat(unittest.TestCase):
         self.assertTrue(all(e['atFrame'] >= 0 for e in out['events']))
         self.assertFalse(out['audio']['sfx'], 'a hit outside the window is not in it')
         self.assertTrue(out['captions'])
+
+    def test_a_window_shifts_the_title_moment_onto_its_own_clock(self):
+        # Wed 18, 18 Nov 2026: the title beat's proof left the title at its cut frame, past the window's end, unseen.
+        props = props_for(FIXTURE)
+        start, end = proof.window(props, 'b5-every')
+        props['titleMoment'] = {'fromFrame': start + 10, 'toFrame': start + 40, 'release': 'fade',
+                                'words': [{'text': 'Build', 'atFrame': start + 10}, {'text': 'or', 'atFrame': start + 20}]}
+        out = proof.window_props(props, start, end)
+        self.assertEqual((out['titleMoment']['fromFrame'], out['titleMoment']['toFrame']), (10, 40))
+        self.assertEqual([w['atFrame'] for w in out['titleMoment']['words']], [10, 20])
+        props['titleMoment'] = dict(props['titleMoment'], fromFrame=end + 5, toFrame=end + 30)
+        self.assertNotIn('titleMoment', proof.window_props(props, start, end), 'a title outside the window is not in it')
 
     def test_a_window_of_a_stinged_cut_has_no_sting_and_its_stem_skips_it(self):
         # The wide whole cut opens on the 56-frame intro sting (Krish, 2026-11-05: "I think it should go at the start

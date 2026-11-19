@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { LOCK_DAYS, buildView, lockOf, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { readFileSync } from 'node:fs'
 import { dayLine } from '../../apps/control-plane/api/board/_weekModel'
-import { reportPosts, type OffdayItem } from '../../apps/control-plane/api/board/_offdayItems'
+import { followDrive, reportPosts, type DriveRenamer, type OffdayItem } from '../../apps/control-plane/api/board/_offdayItems'
 import { writeBack } from '../../apps/control-plane/api/board/_writeBack'
 import { approval } from './_approvals'
 
@@ -30,6 +30,26 @@ const oldproof = { id: 'oldproof', format: 'Uplifting explainer carousel, 4 card
 const row = (o: Body, week: string, day: string, date: string, over: Partial<OffdayItem> = {}): OffdayItem => ({ item: `engine:${week}:${o.id}`, source: 'engine',
   origin_week: week, option_id: o.id, option: o, state: 'approved', week: W09, day, date, doc: `queue/off-${day}-${o.id}`, piece_id: null, drive_folder: null,
   posts: [], followed: {}, version: 1, placed_by: 'Krish', placed_at: '2026-11-10T18:17:48Z', ...over })
+
+function db(rows: OffdayItem[]) {
+  const writes: Array<{ item: string; posts: unknown[]; followed?: Body; drive_folder?: string }> = []
+  const q = (filter: (r: OffdayItem) => boolean) => {
+    const chain: any = {
+      eq: (k: string, val: unknown) => q(r => filter(r) && (r as any)[k] === val),
+      in: (k: string, vals: unknown[]) => q(r => filter(r) && vals.includes((r as any)[k])),
+      or: () => chain, order: () => chain, limit: () => chain,
+      then: (res: any) => res({ data: rows.filter(filter), error: null }),
+    }
+    return chain
+  }
+  return {
+    writes,
+    from: () => ({
+      select: () => q(() => true),
+      update: (v: { posts: unknown[]; followed?: Body; drive_folder?: string }) => ({ eq: (_k: string, item: string) => { writes.push({ item, ...v }); return Promise.resolve({ error: null }) } }),
+    }),
+  } as any
+}
 
 function weekOf(now: string, items: OffdayItem[], plan: Body, extra: Partial<ViewInputs> = {}): ViewInputs {
   const approvals = items.filter(r => r.state === 'approved' && r.week === W09 && r.day)
@@ -159,25 +179,6 @@ describe('every copied prompt for a piece says where his typed approval goes', (
 })
 
 describe('the done-check\'s report of a Buffer send (POST offday-posts, client done_check)', () => {
-  function db(rows: OffdayItem[]) {
-    const writes: Array<{ item: string; posts: unknown[] }> = []
-    const q = (filter: (r: OffdayItem) => boolean) => {
-      const chain: any = {
-        eq: (k: string, val: unknown) => q(r => filter(r) && (r as any)[k] === val),
-        in: (k: string, vals: unknown[]) => q(r => filter(r) && vals.includes((r as any)[k])),
-        or: () => chain, order: () => chain, limit: () => chain,
-        then: (res: any) => res({ data: rows.filter(filter), error: null }),
-      }
-      return chain
-    }
-    return {
-      writes,
-      from: () => ({
-        select: () => q(() => true),
-        update: (v: { posts: unknown[] }) => ({ eq: (_k: string, item: string) => { writes.push({ item, posts: v.posts }); return Promise.resolve({ error: null }) } }),
-      }),
-    } as any
-  }
   const shell = row({ id: 'shell', hook: 'Character.AI went bust. Here is who got what.' }, W09, 'tue', '2026-11-10')
   it('records each send as the check\'s, with its Buffer id as the proof when Buffer gives no public link', async () => {
     const d = db([shell])
@@ -214,6 +215,40 @@ describe('the done-check\'s report of a Buffer send (POST offday-posts, client d
     // Growth's own report still needs the link, as before.
     const g = await reportPosts(db([shell]), W09, { posts: [{ item: shell.item, state: 'live', channel: 'x', at: '2026-11-10T18:06:00Z', buffer_post_id: 'b6' }] })
     expect(g.body).toMatchObject({ unknown: 1 })
+  })
+})
+
+// Krish, 2026-11-18: "Can we also have the drive folder names changed when a piece is moved day?" The Thu 19 post was moved at 21:25 UTC
+// and Growth bound its folder, dated Tue 17, at 21:31: the rename ran only at the press that moves, so it never ran.
+describe('a post\'s folder follows its day when a report binds or touches it, not only when it is moved', () => {
+  const POSTS = '17KdbFrZXKmGXkCaMpmntRD9rrAhnWkcT'
+  const ads = row({ id: 'adsswitch', hook: 'Free ChatGPT has ads now' }, W09, 'thu', '2026-11-19', { drive_folder: 'FOLDERAAAAAAAAAAAAAA' })
+  function renamer(name: string) {
+    const renames: Array<[string, string]> = []
+    const drive: DriveRenamer = {
+      folder: async id => ({ id, name, parents: [POSTS], trashed: false }),
+      rename: async (id, to) => { renames.push([id, to]); name = to },
+    }
+    return { drive, renames }
+  }
+  it('renames the bound folder to the item\'s day and records it, once', async () => {
+    const { drive, renames } = renamer('2026-11-17 Tue off.day - Free ChatGPT has ads now')
+    const d = db([ads])
+    const r = await reportPosts(d, W09, { posts: [{ item: ads.item, state: 'scheduled', channel: 'instagram', due_at: '2026-11-20T12:00:00Z', buffer_post_id: 'b1' }] }, new Date('2026-11-18T22:51:00Z'), drive)
+    expect(r.body).toMatchObject({ ok: true, items: 1 })
+    expect(renames).toEqual([['FOLDERAAAAAAAAAAAAAA', '2026-11-19 Thu off.day - Free ChatGPT has ads now']])
+    expect(d.writes[0].followed).toMatchObject({ drive: 'renamed', at: '2026-11-18T22:51:00.000Z' })
+    // Already named for its day: nothing renamed, nothing written down.
+    const again = db([ads])
+    await reportPosts(again, W09, { posts: [{ item: ads.item, state: 'scheduled', channel: 'instagram', due_at: '2026-11-20T12:00:00Z', buffer_post_id: 'b2' }] }, new Date('2026-11-18T23:00:00Z'), renamer('2026-11-19 Thu off.day - Free ChatGPT has ads now').drive)
+    expect(again.writes[0].followed).toBeUndefined()
+  })
+  it('never renames what is not in 3 Posts, an item with no day, or when Drive cannot be signed in to', async () => {
+    const elsewhere: DriveRenamer = { folder: async id => ({ id, name: '2026-11-17 Tue off.day - X', parents: ['somewhere'], trashed: false }), rename: async () => { throw new Error('must not rename') } }
+    expect(await followDrive(elsewhere, 'F', '2026-11-19')).toBe('outside_posts')
+    const d = db([ads])
+    await reportPosts(d, W09, { posts: [{ item: ads.item, state: 'scheduled', channel: 'instagram', due_at: '2026-11-20T12:00:00Z', buffer_post_id: 'b3' }] }, new Date('2026-11-18T23:00:00Z'), null)
+    expect(d.writes[0].followed).toBeUndefined()
   })
 })
 
@@ -443,5 +478,21 @@ describe('his "Signed." is one press on the piece whose lock is written and not 
     // A lock changed after his words is not signed by them.
     const changed = { ...inputs([doc]), locks: { tue: `${lockText(TUE, 'tue')}\nOne more line.` } } as ViewInputs
     expect(model(buildView(changed), 'tue').items[0].next).toMatchObject({ label: 'Sign the lock' })
+  })
+})
+
+describe('the live check on a sent post (Krish, 2026-11-19)', () => {
+  it('a verdict from the check is kept; a problem is said on the card; no verdict says nothing', async () => {
+    const { growthPost } = await import('../../apps/control-plane/api/board/_offdayItems.js')
+    const { growthLiveLine } = await import('../../apps/control-plane/api/board/_view.js')
+    const sent = { state: 'live', channel: 'instagram', url: 'https://www.instagram.com/p/x/', at: '2026-11-19T17:00:00.000Z', buffer_post_id: 'abc123' }
+    const bad = growthPost({ ...sent, verify: { at: '2026-11-19T17:20:00.000Z', ok: false, passed: 4, failed: ['a carousel went out with no audio track: only pictures, no video and no music'] } }, 'buffer_sent')!
+    const good = growthPost({ ...sent, verify: { at: '2026-11-19T17:20:00.000Z', ok: true, passed: 6, failed: [] } }, 'buffer_sent')!
+    const none = growthPost(sent, 'buffer_sent')!
+    expect(growthLiveLine([bad])).toMatch(/did not all go out right: Instagram: a carousel went out with no audio track/)
+    expect(growthLiveLine([good])).toMatch(/Checked live: every post matches how it was made/)
+    expect(growthLiveLine([none])).not.toMatch(/Checked/)
+    // Only a check may report a verdict: Growth's own record cannot claim one.
+    expect(growthPost({ ...sent, verify: { at: '2026-11-19T17:20:00.000Z', ok: true, passed: 6, failed: [] } })!.verify).toBeUndefined()
   })
 })

@@ -45,6 +45,7 @@
   "quote_card 9:16": "db5cb49082af6520be14711cd20287ee7fa3d57558754f041ff87d7833ea8561",
   "receipt_print 9:16": "b1fe017985cec79fbde7510f735bdfc9a3edaf242e29d04f1ffc990370acd5f4",
   "record_card 9:16": "25b805d89549dc9a2472322a89b1875e04ad34c1d3e80e146043c22ef511bc4b",
+  "scene_plate 9:16": "d688e8740ea1e2b06817518bc5a331d2f7b3bf1c5ee4b231deb828bbd205e4dd",
   "scribble 9:16": "49c4e9603c1cbc0ea5da157e4251cc0d03d992807d0d6992d0dce43be10e9d14",
   "slam_word 9:16": "aa97dc161793ac18c9beb045fda4fd1abb63a065f9e841d4fa897b3f617ccc26",
   "slot_machine 9:16": "d00e14014950e402ba8f788b0ac0abe688ebcea7c7e10167b8896a9eac52053d",
@@ -68,7 +69,7 @@
  "compositions": {
   "fixtures/ve/engine-core/props.json": "857202a611269e5f662a6e3514ac8339b45edee64371d3b8dc04da15575a7281",
   "docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json": "0e5e933b27de7142736e3d575cb7186f5a9572363e61639027d04853d3465db4",
-  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.long.json": "9c6724c6047a4b7113df4ea623d197f75194d3578b6bca3df74aa198c4bcad34",
-  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.short.json": "58daec49ec60a42155f492a704c2810cfb58b93a71fb22babcdba94098b56d99"
+  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.long.json": "64575ca37ff2770e015dd606e9a63558e58ed8913cb79362798432b91f7d81e7",
+  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.short.json": "d23e03f880e1d7e28176eb8f5235ed55030661d6a634413a811b89769c4d09a7"
  }
 }

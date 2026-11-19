@@ -16,6 +16,13 @@ export const MARK_BOUNDS: Record<string, { canvas: [number, number, number, numb
   'oracle-logo.svg': { canvas: [0, 0, 461.6, 60], drawn: [0, 0, 461.6, 60] },
   'soluna-logo.svg': { canvas: [0, 0, 324.213, 61.136], drawn: [0, 0, 324.213, 61.136] },
   'apple-logo.svg': { canvas: [0, 0, 41.5, 51], drawn: [0, 0, 41.5, 51] },
+  // Wed 18 build-or-buy (getBBox in Chromium, 18 Nov 2026): Slack's canvas pads the symbol on every side.
+  'salesforce-logo.svg': { canvas: [0, 0, 273, 191], drawn: [0, 0.5, 272.164, 190.5] },
+  'workday-logo.svg': { canvas: [0, 0, 4230, 2000], drawn: [0, 0.04, 4165.513, 2000] },
+  'deel-logo.svg': { canvas: [0, 0, 78, 27], drawn: [0, 0, 77.998, 26.411] },
+  'slack-symbol.svg': { canvas: [0, 0, 270, 270], drawn: [73.6, 73.6, 122.8, 122.8] },
+  'klarna-logo.svg': { canvas: [0, 0, 91, 22], drawn: [0, 0, 90.68, 22] },
+  'fin-logo.svg': { canvas: [0, 0, 65, 40], drawn: [0.632, 2.906, 63.735, 34.248] },
 }
 
 export function Mark({ id, size }: { id: string; size: number }) {

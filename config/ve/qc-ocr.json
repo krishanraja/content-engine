@@ -1,0 +1,8 @@
+{
+  "_about": "How much a word OCR finds on a generated picture must prove before composition counts it (scripts/velib/qc_composition.py photo_word). Krish, 2026-11-19, of the habits short: tesseract read photo texture as words (\"JUI\" at y 1099, conf 75, on the b14 stampers picture; \"a»\" at x 931, conf 93, on the b17 boxes picture) and failed the cut on caption_zone and platform_zone. A generated picture (a photo_plate drawn from a still image) carries no text the engine drew, so a word found on it counts only with strong evidence. Screen recordings and footage (a photo_plate from a video) and every other beat keep the house rule unchanged.",
+  "photo_word": {
+    "min_conf": 90,
+    "min_alnum": 4,
+    "why": "Real words on a picture read at 92 to 97 conf and four letters or more in every frame measured on 19 Nov; the misreads were a 3-letter word at 75 and a 1-letter glyph at 93. One stray glyph or short low-confidence read is texture, not type."
+  }
+}

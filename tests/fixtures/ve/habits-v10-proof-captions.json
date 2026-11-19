@@ -1,0 +1,168 @@
+{
+ "_about": "From krishanraja/content-engine branch claude/brave-wright-yxkxqq, docs/plans/2026-11-17-tue-habits/ve/proof/props.short.json at dfbc187 (Proof v10 of the habits short, 19 Nov 2026): only what the caption geometry reads. No frames are kept (media is never committed).",
+ "aspect": "9:16",
+ "captionTheme": "art-directed",
+ "captions": [
+  {
+   "fromFrame": 0,
+   "toFrame": 16,
+   "swipeIndex": null,
+   "words": [
+    {
+     "text": "skill",
+     "atFrame": 0
+    },
+    {
+     "text": "matters",
+     "atFrame": 0
+    },
+    {
+     "text": "the",
+     "atFrame": 0
+    },
+    {
+     "text": "most",
+     "atFrame": 3
+    },
+    {
+     "text": "right",
+     "atFrame": 9
+    }
+   ]
+  },
+  {
+   "fromFrame": 16,
+   "toFrame": 66,
+   "swipeIndex": 2,
+   "words": [
+    {
+     "text": "now",
+     "atFrame": 16
+    },
+    {
+     "text": "and",
+     "atFrame": 28
+    },
+    {
+     "text": "71%",
+     "atFrame": 35
+    }
+   ]
+  },
+  {
+   "fromFrame": 66,
+   "toFrame": 106,
+   "swipeIndex": null,
+   "words": [
+    {
+     "text": "said",
+     "atFrame": 66
+    },
+    {
+     "text": "the",
+     "atFrame": 80
+    },
+    {
+     "text": "same",
+     "atFrame": 84
+    },
+    {
+     "text": "thing.",
+     "atFrame": 90
+    }
+   ]
+  },
+  {
+   "fromFrame": 106,
+   "toFrame": 156,
+   "swipeIndex": null,
+   "words": [
+    {
+     "text": "Accountability.",
+     "atFrame": 106
+    },
+    {
+     "text": "Check",
+     "atFrame": 134
+    },
+    {
+     "text": "the",
+     "atFrame": 139
+    },
+    {
+     "text": "AI's",
+     "atFrame": 146
+    }
+   ]
+  },
+  {
+   "fromFrame": 156,
+   "toFrame": 196,
+   "swipeIndex": 2,
+   "words": [
+    {
+     "text": "work",
+     "atFrame": 156
+    },
+    {
+     "text": "and",
+     "atFrame": 162
+    },
+    {
+     "text": "overrule",
+     "atFrame": 177
+    }
+   ]
+  },
+  {
+   "fromFrame": 196,
+   "toFrame": 222,
+   "swipeIndex": null,
+   "words": [
+    {
+     "text": "it",
+     "atFrame": 196
+    },
+    {
+     "text": "when",
+     "atFrame": 200
+    },
+    {
+     "text": "it's",
+     "atFrame": 204
+    },
+    {
+     "text": "wrong.",
+     "atFrame": 212
+    }
+   ]
+  },
+  {
+   "fromFrame": 222,
+   "toFrame": 240,
+   "swipeIndex": null,
+   "words": [
+    {
+     "text": "Then",
+     "atFrame": 222
+    },
+    {
+     "text": "they",
+     "atFrame": 228
+    },
+    {
+     "text": "asked",
+     "atFrame": 238
+    },
+    {
+     "text": "the",
+     "atFrame": 240
+    },
+    {
+     "text": "staff",
+     "atFrame": 240
+    }
+   ]
+  }
+ ]
+}

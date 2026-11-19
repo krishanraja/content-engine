@@ -57,6 +57,9 @@ export interface GrowthPost {
   /** A post a check saw rather than Growth's own record (client done_check; ADR-036): `buffer_sent` is Buffer's record of
    *  the send, with its Buffer post id as the proof. Absent on Growth's own posts. */
   check?: string
+  /** The live check's verdict on a send (Control Center api/_liveVerify.ts, Krish, 2026-11-19): what Buffer holds for the post
+   *  after it went out, checked against how it was made. Only a check reports it; absent when Buffer could not be read. */
+  verify?: { at: string; ok: boolean; passed: number; failed: string[] }
 }
 /** One row of offday_items: the one place an off-day item's day lives. */
 export interface OffdayItem {
@@ -86,12 +89,19 @@ const isoOf = (v: unknown) => (typeof v === 'string' && Number.isFinite(Date.par
 /** One entry of Growth's posting record, or null when it is not one. */
 /** The checks that may report a post (client done_check): Buffer's record of a send. */
 export const POST_CHECKS = ['buffer_sent'] as const
+function verifyOf(v: Body): { verify?: NonNullable<GrowthPost['verify']> } {
+  const at = isoOf(v.at)
+  if (!at || typeof v.ok !== 'boolean' || !Number.isInteger(v.passed) || !Array.isArray(v.failed)) return {}
+  const failed = (v.failed as unknown[]).filter((x): x is string => typeof x === 'string').map(x => x.slice(0, 160)).slice(0, 6)
+  if (v.ok === false && !failed.length) return {}
+  return { verify: { at, ok: v.ok, passed: Number(v.passed), failed } }
+}
 export function growthPost(v: unknown, check: string | null = null): GrowthPost | null {
   if (!isObj(v) || !(POST_STATES as readonly unknown[]).includes(v.state)) return null
   const channel = typeof v.channel === 'string' && /^[a-z][a-z0-9-]{0,30}$/.test(v.channel) ? v.channel : null
   const post: GrowthPost = { state: v.state as PostState, channel, due_at: isoOf(v.due_at), url: httpsUrl(v.url), at: isoOf(v.at) || '',
     buffer_post_id: typeof v.buffer_post_id === 'string' && /^[A-Za-z0-9_-]{1,80}$/.test(v.buffer_post_id) ? v.buffer_post_id : null,
-    ...(check ? { check } : {}) }
+    ...(check ? { check } : {}), ...(check && isObj(v.verify) ? verifyOf(v.verify) : {}) }
   if (post.state === 'scheduled' && (!channel || !post.due_at)) return null
   // Live only with the channel and the post's own link: Growth's record of a post it made go out. A check that saw the
   // send in Buffer may have no public link (Buffer gives none for some channels): its Buffer post id is the proof.
@@ -680,7 +690,7 @@ export async function offerGrowth(db: SupabaseClient, week: string, body: unknow
  *  buffer_post_id, drive?}]}. Each entry is merged into the item's record: one made, and per channel its latest
  *  scheduled or live post (a live post is never taken back by a later scheduled one; cancelled takes a scheduled one
  *  off). Live needs the channel and the post's own link. Growth never reports a post it did not post. */
-export async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date()): Promise<MoveResult> {
+export async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date(), drive: DriveRenamer | null = null): Promise<MoveResult> {
   if (!isObj(body) || !Array.isArray(body.posts) || body.posts.length > 200) return { status: 400, body: { ok: false, error: 'invalid_posts' } }
   // A piece's own scheduled posts (a series day's, or an off-day piece's) are kept on its day's boxes (_posted.ts
   // recordScheduled), so the board says when it goes out.
@@ -725,8 +735,18 @@ export async function reportPosts(db: SupabaseClient, week: string, body: unknow
     if (folder && !row.drive_folder) cur.drive = folder
     next.set(row.item, cur)
   }
-  for (const [item, { posts, drive }] of next) {
-    const w = await db.from('offday_items').update({ posts: posts.slice(-40), ...(drive ? { drive_folder: drive } : {}) }).eq('item', item)
+  for (const [item, { row, posts, drive: bound }] of next) {
+    // The post's folder follows its day here too, not only at the press that moves it (Krish, 2026-11-18: the Thu 19 post moved at
+    // 21:25 UTC and Growth bound its folder, dated Tue 17, at 21:31, so nothing ever renamed it): whenever a report touches a placed
+    // item whose folder is bound, the folder's name is put right by its ID (followDrive: never a move or a deletion), and only a
+    // rename or a failure is written down.
+    const folder = bound ?? row.drive_folder
+    let followed: Body | null = null
+    if (drive && folder && row.date && row.state === 'approved') {
+      const result = await followDrive(drive, folder, row.date)
+      if (result === 'renamed' || result === 'failed') followed = { ...row.followed, drive: result, at: now.toISOString() }
+    }
+    const w = await db.from('offday_items').update({ posts: posts.slice(-40), ...(bound ? { drive_folder: bound } : {}), ...(followed ? { followed } : {}) }).eq('item', item)
     if (w.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   }
   return { status: 200, body: { ok: true, items: next.size, unknown, ...(check ? { check, already: kept } : {}), ...(pieces ? { pieces } : {}) } }

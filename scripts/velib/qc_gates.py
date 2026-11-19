@@ -86,8 +86,16 @@ def captions_clock(pages, heard: dict, drawn_by: str, fps: float = 30) -> dict:
     aligners, captions, _, settings, _ = _cutgates()
     by, independent = aligners.independent_of(drawn_by, heard)
     result = captions.clock_truth(pages, heard[by], fps=fps, drew=drawn_by, heard_by=by, independent=independent)
-    return _gate_row(result, f"each page's first frame within {result['tolerance_frames']} frames of its first word as heard",
-                     captions.summary)
+    row = _gate_row(result, f"each page's first frame within {result['tolerance_frames']} frames of its first word as heard",
+                    captions.summary)
+    # The tolerance is a placeholder until measured (config/gates.json captions.clock_tolerance_status). A placeholder
+    # never fails a cut: the row is measured and shown, and counts once the tolerance is measured (Krish, 2026-11-19:
+    # "either measure the tolerance as its comment says or keep the row advisory until it is measured"; the habits short
+    # failed on 17 of 67 pages at 3 to 8 frames against the unmeasured 2).
+    if row.get('status') == 'measured' and 'placeholder' in str(result.get('tolerance_status') or '').lower():
+        row.update(status='advisory', shadow=True,
+                   note='tolerance not measured yet (config/gates.json captions.clock_tolerance_status): shown, not counted')
+    return row
 
 
 def captions_render(path: str, pages, region, ocr=None) -> dict:
@@ -100,10 +108,12 @@ def captions_render(path: str, pages, region, ocr=None) -> dict:
         groups.setdefault(tuple(page.get('region', region)), []).append(page)
     if len(groups) <= 1:
         result = captions.renderer_truth(path, pages, tuple(next(iter(groups), region)), ocr=ocr,
-                                         compact=any('region' in p for p in pages))
+                                         compact=any(p.get('split') for p in pages))
     else:
-        # A page with its own region is a SPLIT page: read its compact box only (cutgates TesseractReader).
-        parts = [captions.renderer_truth(path, group, zone, ocr=ocr, compact=any('region' in p for p in group))
+        # A SPLIT page reads its compact box only (cutgates TesseractReader). qc.py gives every page a region since the
+        # caption box became per page, so the region alone no longer marks a split page: the compact crop read the
+        # Wed 18 full-frame captions as noise (18 Nov 2026). qc.py marks split pages with split: True.
+        parts = [captions.renderer_truth(path, group, zone, ocr=ocr, compact=any(p.get('split') for p in group))
                  for zone, group in groups.items()]
         result = dict(parts[0])
         result['pages'] = [row for part in parts for row in part.get('pages', [])]

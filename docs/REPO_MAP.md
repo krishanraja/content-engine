@@ -2495,6 +2495,18 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `function gatePieces(week: string, pieces: Body[], approvals: Approval[] | null, ideas: Body | null)`
 - `function cutSoWhat(v: unknown): string`
 
+### `apps/control-plane/api/board/_growthPlacement.ts`
+
+Where a finished off-day post goes and when, as Growth already knows it (Krish, 2026-11-19: "I've never decided the
+
+- `type PlacementKind`
+- `const CHANNEL_NAME: Record<string, string>`
+- `interface Placement`
+- `function placementFor(kind: string): Placement | null`
+- `function channelWords(p: Placement): string`
+- `function driveId(url: string): string | null`
+- `function bufferUrl(url: string): string`
+
 ### `apps/control-plane/api/board/_handler.ts`
 
 - `function boardPolicy(storeUrl?: string)`
@@ -2663,7 +2675,7 @@ How an off-day post is made, said once for every prompt the board copies out (th
 - `interface OfferItem`
 - `function growthItems(week: string, body: unknown, plan: Body | null): { items?: OfferItem[]; problem?: string; left: Ar…`
 - `async function offerGrowth(db: SupabaseClient, week: string, body: unknown, plan: Body | null): Promise<MoveResult>`
-- `async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date()): Promise<MoveResult>`
+- `async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date(), drive: DriveRenamer…`
 - `function itemsForGrowth(items: OffdayItem[], week: string)`
 - `async function syncApprove(db: SupabaseClient, week: string, docId: string, body: Body, ideas: (w: string) => Promise<B…`
 - `async function twinItem(db: SupabaseClient, option: Body, own: string, week: string): Promise<OffdayItem | null | undef…`
@@ -2876,6 +2888,15 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `async function replacePick(db: SupabaseClient, week: string, req: ReplaceRequest, deps: SeriesDeps): Promise<MoveResult>`
 - `export type { MoveDay }`
 
+### `apps/control-plane/api/board/_showGate.ts`
+
+- `const RECEIPT_SCHEMA`
+- `const RECEIPT_ROLE`
+- `class ShowGateError`
+- `function receiptCovers(text: string, sha: string): boolean`
+- `function gateApplies(body: Body, week: string, cfg = showGate.board): boolean`
+- `async function checkProofShown(db: SupabaseClient, body: Body, week: string): Promise<void>`
+
 ### `apps/control-plane/api/board/_signOffs.ts`
 
 - `const SIGN_OFF_OP`
@@ -3022,10 +3043,15 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `type Action`
 - `type PromptAction`
 - `interface SavedNote`
+- `type NoteFor = 'claude' | 'perplexity' | 'both'`
+- `const noteFor = (v: unknown): NoteFor =>`
+- `const SAVED_NOTES_SHOWN`
+- `const noteItemKey = (k: unknown): string | null =>`
 - `const VISUAL_POINT_LINE`
 - `const EARLIER_NOTES`
 - `const SAVED_NOTES_MAX`
-- `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }): SavedNote[]`
+- `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }, tool: 'claude' | '…`
+- `async function crossWeekNotes(db: SupabaseClient, week: string, pieceIds: string[], itemKeys: string[]): Promise<ViewIn…`
 - `function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): WeekModel`
 - `interface DayView`
 - `interface ViewPost`
@@ -3144,8 +3170,10 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function kindLabel(kind: OffdayKind, supports: string | null): string`
 - `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
 - `function offdayHead(route: MakeRoute | null, template: ViewTemplate | null = null, caption: string | null = null): stri…`
+- `function captionOf(o: ViewOption, raw: Body | null | undefined): string | null`
 - `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function stillBeingMade(m: Pick<ModelInputs, 'work' | 'pieces'>, pieceIds: Array<string | null | undefined>, scopes: st…`
 - `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
 - `function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead`
 - `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
@@ -4828,6 +4856,9 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `interface BrandFrameProps`
 - `function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement`
+- `function onFullPlate(props: EngineRenderProps, beat: EngineBeat): boolean`
+- `const CAPTION_HALO`
+- `const TAKE_HALO`
 - `function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
@@ -4835,6 +4866,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
 - `function backdropPush(beat: EngineBeat, frame: number): number`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
+- `function titleSafe(aspect: string, width: number, height: number)`
 
 ### `apps/renderer/src/engine/VeCut.tsx`
 
@@ -5029,6 +5061,12 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 ### `apps/renderer/src/engine/chrome/lightStage.ts`
 
 - `function lightStage(props: Pick<EngineRenderProps, 'format'> & Partial<Pick<EngineRenderProps, 'motion'>>): boolean`
+
+### `apps/renderer/src/engine/chrome/offDay.ts`
+
+An off day wears no tag, however its label is spelled (Ruling, Krish, 2026-11-18: "off.day is NEVER to be used ever as a
+
+- `const isOffDayLabel = (label: string | null | undefined): boolean =>`
 
 ### `apps/renderer/src/engine/chrome/tokens.ts`
 
@@ -5581,6 +5619,22 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 ### `apps/renderer/src/engine/devices/registry.ts`
 
 - `const DEVICES: DeviceRegistry`
+
+### `apps/renderer/src/engine/devices/scene_plate/index.tsx`
+
+- `export { coverRect } from './state'`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/scene_plate/schema.ts`
+
+- `const ShotSchema`
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/scene_plate/state.ts`
+
+- `function coverRect(shot: { width: number; height: number; focus?: { x: number; y: number } }, boxW: number, boxH: numbe…`
+- `function sceneState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `function cameraPose(camera: string, p: number, frame: number, w: number, h: number, focus: { x: number; y: number })`
 
 ### `apps/renderer/src/engine/devices/scribble/index.tsx`
 
