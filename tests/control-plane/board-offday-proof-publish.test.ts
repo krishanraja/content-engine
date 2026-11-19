@@ -46,3 +46,20 @@ describe('Approve for publish on an off-day piece he records', () => {
     expect(validBody('picks', 'tue-storyboard', { day: 'tue', kind: 'sign_storyboard', piece_id: PIECE, sha256: SHA, approved: true })).toBe(false)
   })
 })
+
+describe('a piece still being made is never Missed (contract 1.32.0)', () => {
+  const work = (materials: unknown[], sessions: unknown[] = []) => ({ work: { [PIECE]: { sessions, materials } } as never, pieces: [{ id: PIECE, meta: {} }] as never })
+  const file = { title: 'Proof v9: the caption line at 61.8 s fits the frame', role: 'proof', kind: 'video', version: 9, at: '2026-11-19T10:00:00Z', sha256: SHA }
+  it('holds while the newest proof has no answer from him, and lets go once he answers that exact file', async () => {
+    const { stillBeingMade } = await import('../../apps/control-plane/api/board/_weekModel.js')
+    expect(stillBeingMade(work([file]), [PIECE], [PIECE])?.why).toBe('proof')
+    const answered = { ...work([file]), pieces: [{ id: PIECE, meta: { making: { gates: { proof: { by: 'Krish', at: 'x', sha256: SHA, verdict: 'approve' } } } } }] as never }
+    expect(stillBeingMade(answered, [PIECE], [PIECE])).toBeNull()
+  })
+  it('holds for a session working on it and for final files waiting on Approve for publish, never for nothing', async () => {
+    const { stillBeingMade } = await import('../../apps/control-plane/api/board/_weekModel.js')
+    expect(stillBeingMade(work([], [{ by: 'claude', state: 'working', step: 'produce', doing: 'cutting', last_at: 'x' }]), [PIECE], [PIECE])?.why).toBe('session')
+    expect(stillBeingMade(work([]), [PIECE], [PIECE], true)?.why).toBe('final')
+    expect(stillBeingMade(work([]), [PIECE], [PIECE])).toBeNull()
+  })
+})

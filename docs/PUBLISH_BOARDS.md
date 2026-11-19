@@ -1337,6 +1337,14 @@ Monday, Wednesday and Friday name, and an off-day piece he records had no Approv
 - **Held by:** `tests/control-plane/board-offday-proof-publish.test.ts`, `board-view-contract.test.ts` and
   `board-week-model.test.ts`.
 
+## A day that passed while its piece is still being made (contract 1.32.0)
+
+Krish, 2026-11-19, on Tue 17's habits voiceover (piece 701a2c55): "I don't see this on the board anywhere." Its proof v9 was filed and a production session waited on his Approve proof, but once Tue 17 passed the card read Missed, the proof press vanished and there was no Move to….
+
+- **The rule (`stillBeingMade`, `_weekModel.ts`):** a piece is never Missed while it is still being made: a proof filed on it whose gate (`meta.making.gates.proof`) he has not answered for that exact file (the newest proof's sha256; a newer proof is a new question); or a production session working on it (`working` or `blocked`); or its final files filed with their Approve for publish not pressed. Missed stays for a finished or due piece never marked live. It applies to a series day's piece (`pieceItem`), a piece placed on another day (`placedPieceItem`) and an off-day post he records (`postItemBase`).
+- **The shape:** such an item has `missed: false` and `passed: true` (`modelItem.passed`, since 1.32.0). Its line says "Its day, <day>, has passed and it is still being made: <why>", its next step is the real one, and its `move` stays so Move to… is offered beside the step (Control Centre draws a Move to… button in the card's footer).
+- **Held by:** `tests/control-plane/board-week-model.test.ts` (a passed day with a proof waiting, with a session working, with his answer to that exact proof, an off-day post he records, and nothing in production still reading Missed) and `tests/control-plane/board-offday-proof-publish.test.ts`.
+
 ## His answer on each cut (contract 1.6.0)
 
 The approved mock M5 gives every cut in the Cuts tab its own Yes, Not this, Change it and Add a note. Change it and Add
