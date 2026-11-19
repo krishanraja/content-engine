@@ -1,7 +1,7 @@
 {
  "schema_version": 2,
  "piece_id": "701a2c55-7400-4dc8-99cb-d6001147ae16",
- "publish_day": "2026-11-17",
+ "publish_day": "2026-11-19",
  "format": "voice-led-pictures",
  "theme": "makeyourmindup-video-v1",
  "brand": {
@@ -1845,9 +1845,9 @@
   {
    "gate": "proof",
    "by": "Krish",
-   "said": "Approve proof (his board press on proof v8, gates.proof 2026-11-18T21:09:53Z)",
-   "on": "2026-11-18",
-   "artifact_hash": "c933779a6f0727545e16a0c648d25802cc643269db8efac397b8d439b4c82b79"
+   "said": "Approve proof (his board press on proof v9, gates.proof 2026-11-19T07:50:07Z)",
+   "on": "2026-11-19",
+   "artifact_hash": "811518aed6177089720094b4b4b5987a03d4b0d399ab1c7a283c0a48ca85b8ac"
   },
   {
    "gate": "exception",
