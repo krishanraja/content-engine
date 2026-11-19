@@ -2888,6 +2888,15 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `async function replacePick(db: SupabaseClient, week: string, req: ReplaceRequest, deps: SeriesDeps): Promise<MoveResult>`
 - `export type { MoveDay }`
 
+### `apps/control-plane/api/board/_showGate.ts`
+
+- `const RECEIPT_SCHEMA`
+- `const RECEIPT_ROLE`
+- `class ShowGateError`
+- `function receiptCovers(text: string, sha: string): boolean`
+- `function gateApplies(body: Body, week: string, cfg = showGate.board): boolean`
+- `async function checkProofShown(db: SupabaseClient, body: Body, week: string): Promise<void>`
+
 ### `apps/control-plane/api/board/_signOffs.ts`
 
 - `const SIGN_OFF_OP`

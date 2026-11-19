@@ -784,5 +784,10 @@ def lint(spec_path: Path) -> tuple[dict | None, list[str]]:
     spec, problems = schema(spec_path)
     if spec is None:
         return None, problems
-    from . import guards  # noqa: PLC0415
-    return spec, crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
+    from . import guards, showgate  # noqa: PLC0415
+    from .verdict import ve_dir  # noqa: PLC0415
+    guards.set_bind_day(showgate.effective_day(spec, ve_dir(spec_path)))
+    try:
+        return spec, crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
+    finally:
+        guards.set_bind_day(None)
