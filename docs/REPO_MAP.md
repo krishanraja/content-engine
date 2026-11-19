@@ -1660,6 +1660,9 @@ The mechanical checks a piece must pass before it can be approved or
 - `function articleSubscribeAsks(body: string): { ok: boolean; detail: string }`
 - `function articleFormat(body: string): string[]`
 - `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?…`
+- `const PREDICTION_CHECKS: readonly string[]`
+- `const NO_PREDICTION_NEEDED`
+- `function predictionWanted(meta: unknown): boolean`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 
 ### `apps/control-plane/api/_publishWatch.ts`
