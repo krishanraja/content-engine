@@ -11,7 +11,11 @@ import { headlineState } from './devices/headline/state'
 import { DEVICES } from './devices/registry'
 import { FOCUS, PEN } from './devices/focus'
 import type { Box } from './devices/types'
-import { slotsFor, splitCameraBox, splitPlatePosition, windowCameraState } from './layouts'
+import { slotsFor, splitCameraBox, splitPlatePosition, windowCameraBox, windowCameraState } from './layouts'
+
+// The wide window is a rounded rectangle, not a circle: a 210 px radius on a 340 px box cut off the top of his head
+// (Krish, 19 Nov 2026: "The circle in the bottom right corner is also cutting off the top of my head.").
+export const WIDE_WINDOW_RADIUS = 36
 import { setActiveCanvas } from './kit/lock'
 import { resolveMotion, type MotionProfile } from './kit/motionProfiles'
 import { beatMotion, focusMotion, groundTexture, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
@@ -163,7 +167,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
 
   const take = props.segments.map((segment, index) => (
         <Sequence key={`segment-${index}`} from={segment.fromFrame} durationInFrames={segment.durationFrames}>
-          <AbsoluteFill style={{ overflow: 'hidden', ...(faceState?.box ?? camera ?? stagedTake ?? {}), ...(faceState ? { borderRadius: 210 * faceState.windowed, border: `${6 * faceState.windowed}px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `${10 * faceState.windowed}px ${10 * faceState.windowed}px 0 ${props.tokens.inkDeep}`, transform: `scale(${faceState.scale})`, transformOrigin: 'center center' } : {}) }}>
+          <AbsoluteFill style={{ overflow: 'hidden', ...(faceState?.box ?? camera ?? stagedTake ?? {}), ...(faceState ? { borderRadius: (props.aspect === '16:9' ? WIDE_WINDOW_RADIUS : 210) * faceState.windowed, border: `${6 * faceState.windowed}px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `${10 * faceState.windowed}px ${10 * faceState.windowed}px 0 ${props.tokens.inkDeep}`, transform: `scale(${faceState.scale})`, transformOrigin: 'center center' } : {}) }}>
             <OffthreadVideo
               src={segment.src}
               trimBefore={segment.trimBeforeFrames}
@@ -204,8 +208,10 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const slots = (stagedBeat ? regionSlots(stagedBeat.region, beat.uses.length) : undefined)
           ?? (graphicsOnly ? layoutSlots(props.layout, props.aspect, props.captionPlacement, !!props.captionTheme, beat.uses.length) : undefined)
           ?? slotsFor(beat.layout, props.aspect, beat.uses.length)
+        // On the wide cut the graphics stop above his window, so nothing runs under his face (Krish, 19 Nov 2026: a logo
+        // tile sat under the bottom-right circle).
         if (beat.layout === 'WINDOW' && slots.length)
-          slots[0] = { left: 0, top: 0, width, height }
+          slots[0] = props.aspect === '16:9' ? { left: 0, top: 0, width, height: windowCameraBox('16:9').top - 24 } : { left: 0, top: 0, width, height }
         // A style on twos steps its graphics; the take and captions stay on every frame.
         const at = profile?.onTwos ? onTwos(now, beat.fromFrame) : now
         // What a leaving beat shows never runs past its own end: its objects hold their last frame (one that lives on
