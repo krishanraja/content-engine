@@ -144,7 +144,8 @@ does that with him and writes one narrative lock per piece,
 
 6. **The board is where the piece is worked, from the first draft.** File the
    outline, the article and each script on the piece as each changes
-   (`board_session.py <uuid> add`), so the live board's day shows them and he
+   (`board_session.py <uuid> add`; the article `--role article`, each script
+   `--role script`), so the live board's day shows them and he
    reads and comments there (`docs/PUBLISH_BOARDS.md`). A workroom holds the
    decisions beside it; it never replaces the day's tab (Krish, 2026-10-19:
    "Why have you stopped working in [the board] even though this is the
