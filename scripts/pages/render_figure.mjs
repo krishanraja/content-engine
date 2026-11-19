@@ -10,24 +10,41 @@
 //
 // The page sets its width on html/body; its height is its content's (figure.css flows), or a fixed one it sets. Exit 1 when a page draws anything outside its
 // frame (a word clipped or overflowing), so a cut-off figure never reaches the article.
+//
+// Before it draws anything, every figure passes scripts/pages/figure_check.py (Krish, 2026-11-19: "these dont look visually
+// good enough and they have the wrong brand mark. Are these to go inside, in line, in the Substack article? If so, we don't
+// even need the brand mark."): no mark on an inline figure, one picture form named and no card of words, and nothing drawn
+// that the article does not say (config/article-figures.json; config/failures.json article-figure-typed-mark-and-word-cards).
+// A refused figure is never drawn.
 import { createRequire } from 'node:module'
 import { resolve } from 'node:path'
 import { mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { pathToFileURL, fileURLToPath } from 'node:url'
+import { spawnSync } from 'node:child_process'
 
-// Playwright is installed globally on the cloud machines and per checkout at home: require finds either.
-const { chromium } = createRequire(import.meta.url)('playwright')
 const args = process.argv.slice(2)
 if (args.length < 2 || args.length % 2) {
   console.error('usage: render_figure.mjs <figure.html> <out.png> [...]')
   process.exit(2)
 }
-const browser = await chromium.launch()
+// The three checks first, on every figure, so a refused one is never drawn (and never reaches anyone).
+const checker = resolve(dirname(fileURLToPath(import.meta.url)), 'figure_check.py')
 let bad = 0
+const pairs = []
+for (let i = 0; i < args.length; i += 2) {
+  const r = spawnSync(process.env.PYTHON || 'python3', [checker, args[i]], { encoding: 'utf-8' })
+  if (r.status !== 0) { bad++; process.stderr.write(r.stderr || r.stdout || `render_figure: ${args[i]} could not be checked\n`); continue }
+  pairs.push([args[i], args[i + 1]])
+}
+if (!pairs.length) process.exit(1)
+// Playwright is installed globally on the cloud machines and per checkout at home: require finds either. Loaded only once
+// a figure has passed its checks, so a refusal never needs a browser.
+const { chromium } = createRequire(import.meta.url)('playwright')
+const browser = await chromium.launch()
 try {
-  for (let i = 0; i < args.length; i += 2) {
-    const [src, out] = [resolve(args[i]), resolve(args[i + 1])]
+  for (const [figure, png] of pairs) {
+    const [src, out] = [resolve(figure), resolve(png)]
     const page = await browser.newPage({ deviceScaleFactor: 2 })  // sharp on high-density screens, as the pack figures were
     await page.goto(pathToFileURL(src).href)
     await page.evaluate(() => document.fonts.ready)
@@ -53,8 +70,8 @@ try {
           if (r.height && r.bottom > b.bottom + 1) { out.push(`${el.className || el.tagName}: runs past its ${box.className.split(' ')[0]}`); break }
         }
       }
-      // The wordmark never touches the headline or any words.
-      const mark = document.querySelector('.mark')
+      // A share card's mark (the palette's own image, figure_check.py) never touches the headline or any words.
+      const mark = document.querySelector('img[src*="wordmark"], img[src*="masthead"]')
       if (mark) {
         const m = mark.getBoundingClientRect()
         for (const el of document.querySelectorAll('h1, .sub')) {
@@ -70,8 +87,8 @@ try {
     mkdirSync(dirname(out), { recursive: true })
     await page.screenshot({ path: out, clip: { x: 0, y: 0, width: size.w, height: size.h } })
     await page.close()
-    if (spill.length) { bad++; console.error(`render_figure: ${args[i]} draws past its frame: ${spill.join('; ')}`) }
-    else console.log(`render_figure: ${args[i]} -> ${args[i + 1]} (${size.w}x${size.h})`)
+    if (spill.length) { bad++; console.error(`render_figure: ${figure} draws past its frame: ${spill.join('; ')}`) }
+    else console.log(`render_figure: ${figure} -> ${png} (${size.w}x${size.h})`)
   }
 } finally {
   await browser.close()

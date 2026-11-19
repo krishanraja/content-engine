@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="figure-form" content="timeline">
+<meta name="figure-article" content="article.md">
+<!-- Fri 20 Nov: the past holds still, so AI can read it again (Google Security Blog, Nov 2024; UCLA Health, JNCI, May 2025). In-line Substack figure: no wordmark. -->
+<link rel="stylesheet" href="../../../../scripts/pages/figure.css">
+<style>
+.tl{position:relative;margin:34px 0 8px}
+.lane{position:relative;margin-bottom:34px}
+.lane .name{font:800 26px/1.15 Archivo;margin-bottom:12px}
+.track{position:relative;height:16px;background:#1d2a24;border-radius:8px}
+.span{position:absolute;top:0;height:16px;border-radius:8px;background:repeating-linear-gradient(90deg,#FFD84D 0 18px,#c9ad3e 18px 22px)}
+.hit{position:absolute;top:-12px;width:40px;height:40px;border-radius:50%;background:#7EF0C0;box-shadow:0 0 0 8px rgba(126,240,192,.18)}
+.note{margin-top:22px;font:600 18px/1.3 Archivo;color:#7EF0C0;text-align:right}
+.axis{display:flex;justify-content:space-between;font:500 15px Plex;color:#a9b4ae;letter-spacing:1px;border-top:1px solid #2b3832;padding-top:10px}
+.key{display:flex;gap:26px;margin-top:22px;font:600 18px Archivo;color:#cfd6d2}
+.sw{display:inline-block;width:26px;height:12px;border-radius:6px;margin-right:10px;vertical-align:middle}
+</style>
+<div class="wrap">
+ <h1>The past holds still</h1>
+ <p class="sub">Old records don't change, and the rules they should have followed are written down. So AI can read them again, every line, and find what people missed.</p>
+ <div class="tl">
+  <div class="lane"><div class="name">A flaw in OpenSSL, software that protects much of the internet</div>
+   <div class="track"><div class="span" style="left:0;width:91%"></div><div class="hit" style="left:calc(91% - 20px)"></div></div>
+   <div class="note">Found by AI-written tests, September 2024</div></div>
+  <div class="lane"><div class="name">Some breast cancers visible on routine scans, missed at the time</div>
+   <div class="track"><div class="span" style="left:62%;width:30%"></div><div class="hit" style="left:calc(96% - 20px)"></div></div>
+   <div class="note">Flagged by AI on the old scans, published May 2025</div></div>
+  <div class="axis"><span>About two decades ago</span><span>Today</span></div>
+ </div>
+ <div class="key"><span><i class="sw" style="background:#FFD84D"></i>In the record, unnoticed</span><span><i class="sw" style="background:#7EF0C0;border-radius:50%;width:14px;height:14px"></i>AI rereads it and flags it</span></div>
+ <div class="src">Google's security team, on its blog, November 2024 ("likely been present for two decades") · UCLA Health, Journal of the National Cancer Institute, May 2025</div>
+</div>
