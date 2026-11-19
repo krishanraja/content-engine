@@ -2230,6 +2230,13 @@
    "said": "approve the engine change",
    "on": "2026-11-19",
    "artifact_hash": "805c356a7730398c2f366de8813e8f84c8de8f82495b167da1de7f5a27112774"
+  },
+  {
+   "gate": "exception",
+   "by": "Krish",
+   "said": "approve the engine change",
+   "on": "2026-11-19",
+   "artifact_hash": "b42e014885cf52f39777935eb2d789a6aa5fa189a46ecae4b176795029d1f857"
   }
  ],
  "style": {
