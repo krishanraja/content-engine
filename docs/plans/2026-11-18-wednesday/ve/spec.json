@@ -1235,6 +1235,26 @@
    "source_url": "https://fin.ai/customers/anthropic",
    "licence": "screenshot of the public page as published by Intercom, shown as itself for commentary",
    "credit": "Intercom"
+  },
+  {
+   "id": "salesforce-screen",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "shots/salesforce-screen.png",
+   "sha256": "b932d0bc600c5399c6e5269cb65688f9cdcf39e9ba7d395c6e06afe5b819982c",
+   "source_url": "https://wp.sfdcdigital.com/en-us/wp-content/uploads/sites/4/2024/09/products-features-sales-cloud-account-and-opportunity-management.jpg?w=1024",
+   "licence": "screenshot of the public page as published by Salesforce, shown as itself for commentary",
+   "credit": "Salesforce"
+  },
+  {
+   "id": "workday-screen",
+   "kind": "screenshot",
+   "origin": "capture",
+   "path": "shots/workday-screen.png",
+   "sha256": "59349243f94c505029c5a0fdff006809411ac23854391c497eee213e944032ae",
+   "source_url": "https://workday.scene7.com/is/image/workday/prod-workforce-management-product-feature-4-custom-label-1x1-desktop-1?fmt=webp-alpha",
+   "licence": "screenshot of the public page as published by Workday, shown as itself for commentary",
+   "credit": "Workday"
   }
  ],
  "datasets": [
@@ -1384,7 +1404,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "backdrop": "asset:hl-fullstackhr"
     },
     {
      "id": "face",
@@ -1467,7 +1488,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "backdrop": "asset:salesforce-screen"
     },
     {
      "id": "fortune",
@@ -1515,7 +1537,8 @@
      ],
      "transition_out": "cut",
      "face": "off",
-     "override_reason": "one real page held whole and still so it can be read: a mark on an evidence card swaps its screenshot for text, and the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read: a mark on an evidence card swaps its screenshot for text, and the page itself is the proof",
+     "backdrop": "asset:linkedin-saas-dead"
     },
     {
      "id": "proof",
@@ -1573,7 +1596,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "backdrop": "asset:x-klarnaseb"
     },
     {
      "id": "deel",
@@ -1623,7 +1647,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "backdrop": "asset:hl-cxtoday"
     },
     {
      "id": "meeting",
@@ -1707,7 +1732,8 @@
      ],
      "transition_out": "cut",
      "face": "off",
-     "override_reason": "one real page held whole and still so it can be read: a mark on an evidence card swaps its screenshot for text, and the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read: a mark on an evidence card swaps its screenshot for text, and the page itself is the proof",
+     "backdrop": "asset:hl-cxtoday"
     },
     {
      "id": "worth",
@@ -1749,7 +1775,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "backdrop": "asset:hl-cxtoday"
     },
     {
      "id": "upkeep",
@@ -1852,7 +1879,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "backdrop": "asset:salesforce-screen"
     },
     {
      "id": "close",
@@ -1947,7 +1975,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "backdrop": "asset:hl-workday-anthropic"
     },
     {
      "id": "croc",
@@ -2087,7 +2116,8 @@
      ],
      "transition_out": "cut",
      "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:hl-ars"
     },
     {
      "id": "vibe",
@@ -2169,7 +2199,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "backdrop": "asset:salesforce-screen"
     },
     {
      "id": "magic",
@@ -2403,7 +2434,8 @@
      ],
      "transition_out": "cut",
      "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:hl-cxtoday"
     },
     {
      "id": "curative",
@@ -2432,7 +2464,8 @@
      ],
      "transition_out": "cut",
      "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:hl-curative-bi"
     },
     {
      "id": "upkeep_cur",
@@ -2461,7 +2494,8 @@
      ],
      "transition_out": "cut",
      "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:hl-curative-bi"
     },
     {
      "id": "miss",
@@ -2560,7 +2594,8 @@
      ],
      "transition_out": "cut",
      "face": "off",
-     "override_reason": "two numbers count up once and hold so a viewer can read both; any more events would only make them jump"
+     "override_reason": "two numbers count up once and hold so a viewer can read both; any more events would only make them jump",
+     "backdrop": "asset:workday-screen"
     },
     {
      "id": "upkeep",
@@ -2685,7 +2720,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "backdrop": "asset:hl-workday-anthropic"
     },
     {
      "id": "fin",
@@ -2729,7 +2765,8 @@
      ],
      "transition_out": "cut",
      "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:hl-fin-anthropic"
     },
     {
      "id": "detail",
@@ -2758,7 +2795,8 @@
      ],
      "transition_out": "cut",
      "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:fin-claude"
     },
     {
      "id": "focus",
