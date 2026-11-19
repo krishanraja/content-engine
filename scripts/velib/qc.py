@@ -306,7 +306,9 @@ def inputs_from_props(props: dict) -> dict:
         page = dict(_moved(original, props, 'fromFrame', 'toFrame'),
                     words=[_moved(w, props, 'atFrame') for w in original.get('words') or []])
         beat = next((b for b in beats if b['fromFrame'] <= page['fromFrame'] < b['toFrame']), {})
-        if beat.get('layout') == 'SPLIT' and style != 'word':
+        # An art-directed caption draws in its own region on every layout (ArtDirectedCaption.tsx has no SPLIT branch), so
+        # it is never read in the SPLIT zone, where a slam word's tape sits (Fri 20 Nov, 19 Nov 2026).
+        if beat.get('layout') == 'SPLIT' and style != 'word' and not art_theme:
             page['region'] = split_caption
             page['split'] = True
         if props.get('captionTheme') and style != 'word':

@@ -18,6 +18,15 @@
       "on": "2026-11-19",
       "artifact_hash": "4dc902065df02b41c03e481e398a0a95adafb2afebdb79ed9082124749ca5e69",
       "covers": "the house title card over the piece's own picture (no music bars); a SPLIT panel draws its beat's backdrop, so no plain black panel (his rule of 19 Nov: 'I don't want a plain black screen anywhere')"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "said": "Approve",
+      "on": "2026-11-19",
+      "artifact_hash": "43eda608586ebe4a51b336ecd939fa560397c0b2bcc9e6041a874053c2f48f93",
+      "asked": "one more change to the title card: a soft dark panel behind the MAKE YOUR MIND/UP wordmark so it stays readable over the moving pictures"
     }
   ]
 }

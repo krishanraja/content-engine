@@ -1,0 +1,316 @@
+{
+  "schema": "ve-proof/1",
+  "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+  "cut": "short",
+  "beat": "question",
+  "rule": "named in the spec (proof.beat)",
+  "start": 14.667,
+  "end": 22.667,
+  "beat_s": [
+    16.967,
+    20.367
+  ],
+  "sha256": "9f87358a4e31f1876fc0443f461f9ef20c2b25c5d41b91910f24bfa7ef012fea",
+  "spec_sha256": "3745cd5f48c8e63caa04d61c8c1f96e5701e813374e584d220d7877fdd271255",
+  "structure": {
+    "format": "face-with-proof",
+    "aspect": "9:16",
+    "motion": "ai-music-slam",
+    "objects": [
+      [
+        "chip_caveat",
+        "query_chip"
+      ],
+      [
+        "closet",
+        "scene_plate"
+      ],
+      [
+        "closet2",
+        "scene_plate"
+      ],
+      [
+        "invoices",
+        "scene_plate"
+      ],
+      [
+        "k_after",
+        "kinetic_stat"
+      ],
+      [
+        "k_billed",
+        "kinetic_stat"
+      ],
+      [
+        "s_code_slam0",
+        "slam_word"
+      ],
+      [
+        "s_code_slam1",
+        "slam_word"
+      ],
+      [
+        "s_code_slam2",
+        "slam_word"
+      ],
+      [
+        "s_face_slam0",
+        "slam_word"
+      ],
+      [
+        "s_face_slam1",
+        "slam_word"
+      ],
+      [
+        "s_face_slam2",
+        "slam_word"
+      ],
+      [
+        "s_hindsight_slam0",
+        "slam_word"
+      ],
+      [
+        "s_hindsight_slam1",
+        "slam_word"
+      ],
+      [
+        "s_love_slam0",
+        "slam_word"
+      ],
+      [
+        "s_love_slam1",
+        "slam_word"
+      ],
+      [
+        "s_love_slam2",
+        "slam_word"
+      ],
+      [
+        "s_whose_slam0",
+        "slam_word"
+      ],
+      [
+        "s_whose_slam1",
+        "slam_word"
+      ],
+      [
+        "sofa",
+        "scene_plate"
+      ],
+      [
+        "steak",
+        "scene_plate"
+      ],
+      [
+        "strike",
+        "scribble"
+      ],
+      [
+        "th_head",
+        "evidence_card"
+      ]
+    ],
+    "beats": [
+      [
+        "hook",
+        "SPLIT",
+        [
+          "k_billed",
+          "strike"
+        ]
+      ],
+      [
+        "face",
+        "SPLIT",
+        [
+          "s_face_slam0",
+          "s_face_slam1",
+          "s_face_slam2"
+        ]
+      ],
+      [
+        "question",
+        "STAGE",
+        [
+          "sofa"
+        ]
+      ],
+      [
+        "skeletons",
+        "STAGE",
+        [
+          "closet"
+        ]
+      ],
+      [
+        "proof",
+        "STAGE",
+        [
+          "th_head"
+        ]
+      ],
+      [
+        "lines",
+        "STAGE",
+        [
+          "th_head"
+        ]
+      ],
+      [
+        "code",
+        "SPLIT",
+        [
+          "s_code_slam0",
+          "s_code_slam1",
+          "s_code_slam2"
+        ]
+      ],
+      [
+        "steak",
+        "STAGE",
+        [
+          "steak"
+        ]
+      ],
+      [
+        "fell",
+        "STAGE",
+        [
+          "chip_caveat",
+          "k_after"
+        ]
+      ],
+      [
+        "love",
+        "SPLIT",
+        [
+          "s_love_slam0",
+          "s_love_slam1",
+          "s_love_slam2"
+        ]
+      ],
+      [
+        "hindsight",
+        "SPLIT",
+        [
+          "s_hindsight_slam0",
+          "s_hindsight_slam1"
+        ]
+      ],
+      [
+        "whose",
+        "SPLIT",
+        [
+          "s_whose_slam0",
+          "s_whose_slam1"
+        ]
+      ],
+      [
+        "closet",
+        "STAGE",
+        [
+          "closet2"
+        ]
+      ],
+      [
+        "yours",
+        "F1",
+        []
+      ],
+      [
+        "act",
+        "STAGE",
+        [
+          "invoices"
+        ]
+      ],
+      [
+        "close",
+        "F1",
+        []
+      ]
+    ]
+  },
+  "style_module": "ai-music-slam",
+  "props_sha256": "e9f68a191231d0ec2a4c02c42a8ccb2451b6a10b1f19a2e46ea44581e471d4f5",
+  "title": {
+    "in_main": false,
+    "clip": "short.title.mp4",
+    "sha256": "f26c768a5a8c6ce7055bd148f2396bbd418fe218da345fbe72b66f52c6c90366",
+    "start": 15.933,
+    "end": 26.1,
+    "looked": {
+      "text": "Opened proof/short.title.mp4 frame by frame at 1.5 fps, full size. The title lockup builds word by word over the piece's own plates through the new see-through scrim: 'WILL YOUR AI AUDITOR FIND MISSING MONEY' over the sofa with cash pulled from it, then 'or WILL IT FIND SKELETONS IN YOUR CLOSET?' over the cupboard and skeleton. Every word legible on its band, the stacked wordmark centred beneath, no caption during the hold, no plain dark area, no music bars.",
+      "at": "2026-11-19T15:29:37Z"
+    }
+  },
+  "qc": {
+    "measured_pass": false,
+    "complete": false,
+    "failing": [
+      "captions.ocr",
+      "captions.render",
+      "channel.safe_zones",
+      "composition"
+    ]
+  },
+  "type": [
+    [
+      "data",
+      "card"
+    ],
+    [
+      "display",
+      "card"
+    ],
+    [
+      "structure",
+      "caption"
+    ]
+  ],
+  "engine_sha256": "4dc902065df02b41c03e481e398a0a95adafb2afebdb79ed9082124749ca5e69",
+  "assets_sha256": {
+    "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
+    "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
+    "b4-sofa-money-916": "70925eebe73d3091240c2d21f8f24cc4937089288bf5f6b886471c2887be8e91",
+    "b8-steak-sandwich-916": "e52fe36f8689265de819718e02dde06aabfa8bbe9e8c6709a4cf26f803ed974a",
+    "harvard-krafton": "bfc65217229236171fec3bd8ae3c74e545644a757bd0d6fd4572a079566c2fad",
+    "long-invoices-169": "9593884f0b16a2f1db4efdfe0509a906cc6c2f2ad4c89bb9e788ea1c8847feec",
+    "long-master": "7afaed9a75286aacb86737eae6b247dd9c5227b47871b9cc58ff57af91c310ca",
+    "long-sofa-money-169": "1212452354fc877ce8cdec2411c6db71b6e3684ffd2dae5c313bfef43d5f60cf",
+    "nbc-dana": "04bd5985213216d4627231eaa4575689cdb6ec5cbf949c9af8bd3ba40efaeb94",
+    "short-master": "baf5f1d2a3e8d010b72ac8a73e60b7d5d412f90f4b3445c96899bf352794d98f",
+    "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
+    "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
+  },
+  "made_at": "2026-11-19T15:29:11Z",
+  "frames": {
+    "pass": true,
+    "status": "ok",
+    "problems": [],
+    "frames": 12
+  },
+  "compare": {
+    "against": "f3c90df489078957bce3668ef7052b5af53c62852abfdb057311ca3648b8eddd",
+    "reasons": [
+      "the engine changed since the proof he approved"
+    ],
+    "compared": {
+      "text": "Opened every frame of proof/compare.short.png at full size, old proof above new, against his standing notes for this piece (19 Nov: halo and frame me higher; skeletons out of closets and money down the back of couches at the right moments; no plain black screen anywhere; the title card fills the frame with the piece's own visual, no AI-music bars). 0.5 and 1.5 s: TEAMS and CHATBOT slam words identical, now over the blurred bill page instead of flat ink; his face framed high with the haloed captions under his chin, unchanged. 2.5 s: the sofa plate, unchanged. 3.5 to 5.5 s: the title over the sofa plate through the scrim in place of the ink ground and music bars; bands and wordmark identical and legible. 6.5 and 7.5 s: the second band over the closet and skeleton plate. Nothing worse; the two changes are the ones he asked for.",
+      "at": "2026-11-19T15:29:45Z"
+    },
+    "sheet": "compare.short.png",
+    "sha256": "27fcd61ad12de668cfdd14650e1866c2d843bce9b611b476c2c5c5587ff77704",
+    "seconds": [
+      0.5,
+      1.5,
+      2.5,
+      3.5,
+      4.5,
+      5.5,
+      6.5,
+      7.5
+    ]
+  },
+  "sendable": true
+}

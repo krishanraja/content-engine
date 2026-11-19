@@ -10,7 +10,7 @@
     16.967,
     20.367
   ],
-  "sha256": "9f87358a4e31f1876fc0443f461f9ef20c2b25c5d41b91910f24bfa7ef012fea",
+  "sha256": "aeb5e759aa1de97e28829a8f0dd106663b44dc90e2a7c1957ba90c26edb1d60f",
   "spec_sha256": "3745cd5f48c8e63caa04d61c8c1f96e5701e813374e584d220d7877fdd271255",
   "structure": {
     "format": "face-with-proof",
@@ -236,13 +236,9 @@
   "title": {
     "in_main": false,
     "clip": "short.title.mp4",
-    "sha256": "f26c768a5a8c6ce7055bd148f2396bbd418fe218da345fbe72b66f52c6c90366",
+    "sha256": "cdb29b7b46e36cc9631652b4e0766159175a4e2c80cdb5a5766c5d712e62ab2b",
     "start": 15.933,
-    "end": 26.1,
-    "looked": {
-      "text": "Opened proof/short.title.mp4 frame by frame at 1.5 fps, full size. The title lockup builds word by word over the piece's own plates through the new see-through scrim: 'WILL YOUR AI AUDITOR FIND MISSING MONEY' over the sofa with cash pulled from it, then 'or WILL IT FIND SKELETONS IN YOUR CLOSET?' over the cupboard and skeleton. Every word legible on its band, the stacked wordmark centred beneath, no caption during the hold, no plain dark area, no music bars.",
-      "at": "2026-11-19T15:29:37Z"
-    }
+    "end": 26.1
   },
   "qc": {
     "measured_pass": false,
@@ -250,8 +246,8 @@
     "failing": [
       "captions.ocr",
       "captions.render",
-      "channel.safe_zones",
-      "composition"
+      "composition",
+      "title.lockup_frame"
     ]
   },
   "type": [
@@ -268,7 +264,7 @@
       "caption"
     ]
   ],
-  "engine_sha256": "4dc902065df02b41c03e481e398a0a95adafb2afebdb79ed9082124749ca5e69",
+  "engine_sha256": "43eda608586ebe4a51b336ecd939fa560397c0b2bcc9e6041a874053c2f48f93",
   "assets_sha256": {
     "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
     "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
@@ -283,7 +279,7 @@
     "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
     "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
   },
-  "made_at": "2026-11-19T15:29:11Z",
+  "made_at": "2026-11-19T16:35:29Z",
   "frames": {
     "pass": true,
     "status": "ok",
@@ -291,16 +287,13 @@
     "frames": 12
   },
   "compare": {
-    "against": "f3c90df489078957bce3668ef7052b5af53c62852abfdb057311ca3648b8eddd",
+    "against": "9f87358a4e31f1876fc0443f461f9ef20c2b25c5d41b91910f24bfa7ef012fea",
     "reasons": [
       "the engine changed since the proof he approved"
     ],
-    "compared": {
-      "text": "Opened every frame of proof/compare.short.png at full size, old proof above new, against his standing notes for this piece (19 Nov: halo and frame me higher; skeletons out of closets and money down the back of couches at the right moments; no plain black screen anywhere; the title card fills the frame with the piece's own visual, no AI-music bars). 0.5 and 1.5 s: TEAMS and CHATBOT slam words identical, now over the blurred bill page instead of flat ink; his face framed high with the haloed captions under his chin, unchanged. 2.5 s: the sofa plate, unchanged. 3.5 to 5.5 s: the title over the sofa plate through the scrim in place of the ink ground and music bars; bands and wordmark identical and legible. 6.5 and 7.5 s: the second band over the closet and skeleton plate. Nothing worse; the two changes are the ones he asked for.",
-      "at": "2026-11-19T15:29:45Z"
-    },
+    "compared": null,
     "sheet": "compare.short.png",
-    "sha256": "27fcd61ad12de668cfdd14650e1866c2d843bce9b611b476c2c5c5587ff77704",
+    "sha256": "2e4525631e4e9a1126cf4403d1397ab38c7adcf33c5d447eca2df5ae4626792f",
     "seconds": [
       0.5,
       1.5,
@@ -312,5 +305,5 @@
       7.5
     ]
   },
-  "sendable": true
+  "sendable": false
 }

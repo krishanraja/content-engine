@@ -11,6 +11,7 @@ import { textWidth } from '../../house/metrics'
  *  (docs/plans/2026-11-11-wednesday/short-composite/brand_frames.py title_full) into the engine:
  *   - the whole frame: the piece's own picture under an ink scrim. Whatever the beats under the title show (a plate, a page, his
  *     face) keeps playing beneath it, so the card always matches its piece and never leaves a plain dark band (Ruling, Krish,
+ *     The wordmark keeps a soft ink panel of its own, so it reads over any picture.
  *     2026-11-19: "yes change for all moving forward - but bear in mind that the audio waveform visual behind it was made for
  *     a piece about AI music specifically. In the future, the engine needs to find its own visual that matches the piece.");
  *   - two angled bands that slam in from opposite sides as he says them: a hatched ink band in cream, then a mint band in ink;
@@ -200,6 +201,9 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
     {connector}
     <div data-title-sweep="" style={{ position: 'absolute', inset: 0,
       background: `linear-gradient(115deg, transparent ${sweep - 6}%, rgba(255,255,255,0.28) ${sweep}%, transparent ${sweep + 6}%)` }} />
+    {geo.wordmark && props.wordmark ? <div key="wordmark-ground" data-title-wordmark-ground="" style={{ position: 'absolute',
+      left: geo.wordmark.left - 28, top: geo.wordmark.top - 20, width: geo.wordmark.width + 56, height: geo.wordmark.height + 40,
+      borderRadius: 24, background: `color-mix(in srgb, ${ink} 82%, transparent)` }} /> : null}
     {mark}
   </div>
 }

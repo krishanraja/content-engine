@@ -3,7 +3,7 @@
   "engine": "ve",
   "machine": "scripts/ve.py qc",
   "video": "short.mp4",
-  "video_sha256": "9f87358a4e31f1876fc0443f461f9ef20c2b25c5d41b91910f24bfa7ef012fea",
+  "video_sha256": "aeb5e759aa1de97e28829a8f0dd106663b44dc90e2a7c1957ba90c26edb1d60f",
   "bed_shape": {
     "pass": true,
     "problems": [],

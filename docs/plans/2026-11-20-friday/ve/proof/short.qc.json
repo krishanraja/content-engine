@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-11-20-friday/ve/proof/short.mp4",
-  "sha256": "9f87358a4e31f1876fc0443f461f9ef20c2b25c5d41b91910f24bfa7ef012fea",
+  "sha256": "aeb5e759aa1de97e28829a8f0dd106663b44dc90e2a7c1957ba90c26edb1d60f",
   "duration_s": 8.0,
   "format": "face-with-proof",
   "checks": {
@@ -72,19 +72,19 @@
       "value": [
         {
           "page": 0,
-          "frame": 23,
-          "text": "pee WHOL",
-          "agreement": 0.0,
+          "frame": 20,
+          "text": "TEAMS TO SORT\nPRICING",
+          "agreement": 0.8,
           "variant": "raw",
           "pass": false
         },
         {
           "page": 1,
-          "frame": 63,
-          "text": "(a FEE",
-          "agreement": 0.19999999999999996,
-          "variant": "raw",
-          "pass": false
+          "frame": 60,
+          "text": "AND A\nCHATBOT\nBEAT THEM",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
         },
         {
           "page": 2,
@@ -109,13 +109,13 @@
         {
           "beat": "question",
           "frame": 119,
-          "score": 0.33275581681222466,
+          "score": 0.33297258813389347,
           "pass": true
         },
         {
           "beat": "skeletons",
           "frame": 205,
-          "score": 0.1798210907961433,
+          "score": 0.1785026035289041,
           "pass": true
         }
       ],
@@ -196,9 +196,9 @@
           "atFrame": 171,
           "peak_frame": 172,
           "lag_frames": 1,
-          "peak_difference": 24.366987228393555,
-          "event_difference": 24.366987228393555,
-          "threshold": 6.312271356582642,
+          "peak_difference": 23.662248611450195,
+          "event_difference": 23.662248611450195,
+          "threshold": 5.961575388908386,
           "gradual": false,
           "pass": true
         }
@@ -293,10 +293,3031 @@
       "calibration": "placeholder: measured on one real render, 5 Nov 2026 (velib/qc_opening.py)"
     },
     "words.lost": {
-      "value": null,
-      "target": "see config/gates.json",
-      "pass": null,
-      "status": "not_run"
+      "value": {
+        "machine": "scripts/quick-edit/words_gate.py",
+        "version": "words-gate/4",
+        "status": "fail",
+        "lost": [
+          {
+            "word": "auditor",
+            "token": "auditor",
+            "take_index": 48,
+            "take_s": 18.621,
+            "take_e": 18.941,
+            "final_between_s": [
+              3.84,
+              4.28
+            ],
+            "context": "... So will your AI [auditor] find missing money or ...",
+            "final_heard_there": "order to",
+            "message": "\"auditor\" is lost: said at 0:18.62 in the take, not heard in the final cut between 0:03.84 and 0:04.28 (the final has \"order to\" there): ... So will your AI [auditor] find missing money or ..."
+          },
+          {
+            "word": "Let's",
+            "token": "let",
+            "take_index": 60,
+            "take_s": 22.881,
+            "take_e": 23.041,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... skeletons in your closet? [Let's] see. A man's brother-in-law ...",
+            "message": "\"Let's\" is lost: said at 0:22.88 in the take, not heard in the final cut between 0:07.62 and the end: ... skeletons in your closet? [Let's] see. A man's brother-in-law ..."
+          },
+          {
+            "word": "see.",
+            "token": "see",
+            "take_index": 61,
+            "take_s": 23.121,
+            "take_e": 23.261,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... in your closet? Let's [see.] A man's brother-in-law died ...",
+            "message": "\"see.\" is lost: said at 0:23.12 in the take, not heard in the final cut between 0:07.62 and the end: ... in your closet? Let's [see.] A man's brother-in-law died ..."
+          },
+          {
+            "word": "man's",
+            "token": "man",
+            "take_index": 63,
+            "take_s": 24.161,
+            "take_e": 24.481,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... closet? Let's see. A [man's] brother-in-law died of a ...",
+            "message": "\"man's\" is lost: said at 0:24.16 in the take, not heard in the final cut between 0:07.62 and the end: ... closet? Let's see. A [man's] brother-in-law died of a ..."
+          },
+          {
+            "word": "brother-in-law",
+            "token": "brother",
+            "take_index": 64,
+            "take_s": 24.541,
+            "take_e": 25.021,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... Let's see. A man's [brother-in-law] died of a heart ...",
+            "message": "\"brother-in-law\" is lost: said at 0:24.54 in the take, not heard in the final cut between 0:07.62 and the end: ... Let's see. A man's [brother-in-law] died of a heart ..."
+          },
+          {
+            "word": "died",
+            "token": "died",
+            "take_index": 65,
+            "take_s": 25.061,
+            "take_e": 25.261,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... see. A man's brother-in-law [died] of a heart attack ...",
+            "message": "\"died\" is lost: said at 0:25.06 in the take, not heard in the final cut between 0:07.62 and the end: ... see. A man's brother-in-law [died] of a heart attack ..."
+          },
+          {
+            "word": "heart",
+            "token": "heart",
+            "take_index": 68,
+            "take_s": 25.421,
+            "take_e": 25.602,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... brother-in-law died of a [heart] attack with no health ...",
+            "message": "\"heart\" is lost: said at 0:25.42 in the take, not heard in the final cut between 0:07.62 and the end: ... brother-in-law died of a [heart] attack with no health ..."
+          },
+          {
+            "word": "attack",
+            "token": "attack",
+            "take_index": 69,
+            "take_s": 25.622,
+            "take_e": 25.902,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... died of a heart [attack] with no health cover. ...",
+            "message": "\"attack\" is lost: said at 0:25.62 in the take, not heard in the final cut between 0:07.62 and the end: ... died of a heart [attack] with no health cover. ..."
+          },
+          {
+            "word": "no",
+            "token": "no",
+            "take_index": 71,
+            "take_s": 26.382,
+            "take_e": 26.442,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... a heart attack with [no] health cover. So the ...",
+            "message": "\"no\" is lost: said at 0:26.38 in the take, not heard in the final cut between 0:07.62 and the end: ... a heart attack with [no] health cover. So the ..."
+          },
+          {
+            "word": "health",
+            "token": "health",
+            "take_index": 72,
+            "take_s": 26.602,
+            "take_e": 26.862,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... heart attack with no [health] cover. So the family ...",
+            "message": "\"health\" is lost: said at 0:26.60 in the take, not heard in the final cut between 0:07.62 and the end: ... heart attack with no [health] cover. So the family ..."
+          },
+          {
+            "word": "cover.",
+            "token": "cover",
+            "take_index": 73,
+            "take_s": 26.922,
+            "take_e": 27.122,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... attack with no health [cover.] So the family owed ...",
+            "message": "\"cover.\" is lost: said at 0:26.92 in the take, not heard in the final cut between 0:07.62 and the end: ... attack with no health [cover.] So the family owed ..."
+          },
+          {
+            "word": "family",
+            "token": "family",
+            "take_index": 76,
+            "take_s": 27.502,
+            "take_e": 27.862,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... health cover. So the [family] owed all that money, ...",
+            "message": "\"family\" is lost: said at 0:27.50 in the take, not heard in the final cut between 0:07.62 and the end: ... health cover. So the [family] owed all that money, ..."
+          },
+          {
+            "word": "owed",
+            "token": "owed",
+            "take_index": 77,
+            "take_s": 28.022,
+            "take_e": 28.182,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... cover. So the family [owed] all that money, 195K. ...",
+            "message": "\"owed\" is lost: said at 0:28.02 in the take, not heard in the final cut between 0:07.62 and the end: ... cover. So the family [owed] all that money, 195K. ..."
+          },
+          {
+            "word": "all",
+            "token": "all",
+            "take_index": 78,
+            "take_s": 28.222,
+            "take_e": 28.302,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... So the family owed [all] that money, 195K. So ...",
+            "message": "\"all\" is lost: said at 0:28.22 in the take, not heard in the final cut between 0:07.62 and the end: ... So the family owed [all] that money, 195K. So ..."
+          },
+          {
+            "word": "money,",
+            "token": "money",
+            "take_index": 80,
+            "take_s": 28.522,
+            "take_e": 28.702,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... family owed all that [money,] 195K. So he gave ...",
+            "message": "\"money,\" is lost: said at 0:28.52 in the take, not heard in the final cut between 0:07.62 and the end: ... family owed all that [money,] 195K. So he gave ..."
+          },
+          {
+            "word": "195K.",
+            "token": "195k",
+            "take_index": 81,
+            "take_s": 29.922,
+            "take_e": 29.942,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... owed all that money, [195K.] So he gave Claude ...",
+            "message": "\"195K.\" is lost: said at 0:29.92 in the take, not heard in the final cut between 0:07.62 and the end: ... owed all that money, [195K.] So he gave Claude ..."
+          },
+          {
+            "word": "gave",
+            "token": "gave",
+            "take_index": 84,
+            "take_s": 33.682,
+            "take_e": 33.882,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... money, 195K. So he [gave] Claude the bill line ...",
+            "message": "\"gave\" is lost: said at 0:33.68 in the take, not heard in the final cut between 0:07.62 and the end: ... money, 195K. So he [gave] Claude the bill line ..."
+          },
+          {
+            "word": "Claude",
+            "token": "claude",
+            "take_index": 85,
+            "take_s": 33.942,
+            "take_e": 34.222,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... 195K. So he gave [Claude] the bill line by ...",
+            "message": "\"Claude\" is lost: said at 0:33.94 in the take, not heard in the final cut between 0:07.62 and the end: ... 195K. So he gave [Claude] the bill line by ..."
+          },
+          {
+            "word": "bill",
+            "token": "bill",
+            "take_index": 87,
+            "take_s": 34.322,
+            "take_e": 34.502,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... he gave Claude the [bill] line by line. Claude ...",
+            "message": "\"bill\" is lost: said at 0:34.32 in the take, not heard in the final cut between 0:07.62 and the end: ... he gave Claude the [bill] line by line. Claude ..."
+          },
+          {
+            "word": "line",
+            "token": "line",
+            "take_index": 88,
+            "take_s": 34.822,
+            "take_e": 35.062,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... gave Claude the bill [line] by line. Claude found ...",
+            "message": "\"line\" is lost: said at 0:34.82 in the take, not heard in the final cut between 0:07.62 and the end: ... gave Claude the bill [line] by line. Claude found ..."
+          },
+          {
+            "word": "line.",
+            "token": "line",
+            "take_index": 90,
+            "take_s": 35.262,
+            "take_e": 35.502,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... the bill line by [line.] Claude found care billed ...",
+            "message": "\"line.\" is lost: said at 0:35.26 in the take, not heard in the final cut between 0:07.62 and the end: ... the bill line by [line.] Claude found care billed ..."
+          },
+          {
+            "word": "Claude",
+            "token": "claude",
+            "take_index": 91,
+            "take_s": 35.762,
+            "take_e": 36.062,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... bill line by line. [Claude] found care billed under ...",
+            "message": "\"Claude\" is lost: said at 0:35.76 in the take, not heard in the final cut between 0:07.62 and the end: ... bill line by line. [Claude] found care billed under ..."
+          },
+          {
+            "word": "found",
+            "token": "found",
+            "take_index": 92,
+            "take_s": 36.102,
+            "take_e": 36.402,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... line by line. Claude [found] care billed under a ...",
+            "message": "\"found\" is lost: said at 0:36.10 in the take, not heard in the final cut between 0:07.62 and the end: ... line by line. Claude [found] care billed under a ..."
+          },
+          {
+            "word": "care",
+            "token": "care",
+            "take_index": 93,
+            "take_s": 36.482,
+            "take_e": 36.762,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... by line. Claude found [care] billed under a much ...",
+            "message": "\"care\" is lost: said at 0:36.48 in the take, not heard in the final cut between 0:07.62 and the end: ... by line. Claude found [care] billed under a much ..."
+          },
+          {
+            "word": "billed",
+            "token": "biled",
+            "take_index": 94,
+            "take_s": 36.822,
+            "take_e": 37.082,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... line. Claude found care [billed] under a much more ...",
+            "message": "\"billed\" is lost: said at 0:36.82 in the take, not heard in the final cut between 0:07.62 and the end: ... line. Claude found care [billed] under a much more ..."
+          },
+          {
+            "word": "much",
+            "token": "much",
+            "take_index": 97,
+            "take_s": 37.562,
+            "take_e": 37.802,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... care billed under a [much] more expensive code than ...",
+            "message": "\"much\" is lost: said at 0:37.56 in the take, not heard in the final cut between 0:07.62 and the end: ... care billed under a [much] more expensive code than ..."
+          },
+          {
+            "word": "more",
+            "token": "more",
+            "take_index": 98,
+            "take_s": 37.862,
+            "take_e": 37.982,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... billed under a much [more] expensive code than the ...",
+            "message": "\"more\" is lost: said at 0:37.86 in the take, not heard in the final cut between 0:07.62 and the end: ... billed under a much [more] expensive code than the ..."
+          },
+          {
+            "word": "expensive",
+            "token": "expensive",
+            "take_index": 99,
+            "take_s": 38.002,
+            "take_e": 38.482,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... under a much more [expensive] code than the care ...",
+            "message": "\"expensive\" is lost: said at 0:38.00 in the take, not heard in the final cut between 0:07.62 and the end: ... under a much more [expensive] code than the care ..."
+          },
+          {
+            "word": "code",
+            "token": "code",
+            "take_index": 100,
+            "take_s": 38.502,
+            "take_e": 38.842,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... a much more expensive [code] than the care his ...",
+            "message": "\"code\" is lost: said at 0:38.50 in the take, not heard in the final cut between 0:07.62 and the end: ... a much more expensive [code] than the care his ..."
+          },
+          {
+            "word": "care",
+            "token": "care",
+            "take_index": 103,
+            "take_s": 39.162,
+            "take_e": 39.402,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... expensive code than the [care] his brother-in-law actually got. ...",
+            "message": "\"care\" is lost: said at 0:39.16 in the take, not heard in the final cut between 0:07.62 and the end: ... expensive code than the [care] his brother-in-law actually got. ..."
+          },
+          {
+            "word": "brother-in-law",
+            "token": "brother",
+            "take_index": 105,
+            "take_s": 39.622,
+            "take_e": 40.082,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... than the care his [brother-in-law] actually got. That's like ...",
+            "message": "\"brother-in-law\" is lost: said at 0:39.62 in the take, not heard in the final cut between 0:07.62 and the end: ... than the care his [brother-in-law] actually got. That's like ..."
+          },
+          {
+            "word": "actually",
+            "token": "actually",
+            "take_index": 106,
+            "take_s": 40.242,
+            "take_e": 40.582,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... the care his brother-in-law [actually] got. That's like charging ...",
+            "message": "\"actually\" is lost: said at 0:40.24 in the take, not heard in the final cut between 0:07.62 and the end: ... the care his brother-in-law [actually] got. That's like charging ..."
+          },
+          {
+            "word": "got.",
+            "token": "got",
+            "take_index": 107,
+            "take_s": 40.642,
+            "take_e": 40.842,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... care his brother-in-law actually [got.] That's like charging for ...",
+            "message": "\"got.\" is lost: said at 0:40.64 in the take, not heard in the final cut between 0:07.62 and the end: ... care his brother-in-law actually [got.] That's like charging for ..."
+          },
+          {
+            "word": "charging",
+            "token": "charging",
+            "take_index": 110,
+            "take_s": 42.182,
+            "take_e": 42.542,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... actually got. That's like [charging] for a steak when ...",
+            "message": "\"charging\" is lost: said at 0:42.18 in the take, not heard in the final cut between 0:07.62 and the end: ... actually got. That's like [charging] for a steak when ..."
+          },
+          {
+            "word": "steak",
+            "token": "steak",
+            "take_index": 113,
+            "take_s": 42.903,
+            "take_e": 43.243,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... like charging for a [steak] when you get served ...",
+            "message": "\"steak\" is lost: said at 0:42.90 in the take, not heard in the final cut between 0:07.62 and the end: ... like charging for a [steak] when you get served ..."
+          },
+          {
+            "word": "get",
+            "token": "get",
+            "take_index": 116,
+            "take_s": 43.803,
+            "take_e": 43.923,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... a steak when you [get] served a sandwich. He ...",
+            "message": "\"get\" is lost: said at 0:43.80 in the take, not heard in the final cut between 0:07.62 and the end: ... a steak when you [get] served a sandwich. He ..."
+          },
+          {
+            "word": "served",
+            "token": "served",
+            "take_index": 117,
+            "take_s": 43.983,
+            "take_e": 44.223,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... steak when you get [served] a sandwich. He sent ...",
+            "message": "\"served\" is lost: said at 0:43.98 in the take, not heard in the final cut between 0:07.62 and the end: ... steak when you get [served] a sandwich. He sent ..."
+          },
+          {
+            "word": "sandwich.",
+            "token": "sandwich",
+            "take_index": 119,
+            "take_s": 44.303,
+            "take_e": 44.743,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... you get served a [sandwich.] He sent the hospital ...",
+            "message": "\"sandwich.\" is lost: said at 0:44.30 in the take, not heard in the final cut between 0:07.62 and the end: ... you get served a [sandwich.] He sent the hospital ..."
+          },
+          {
+            "word": "sent",
+            "token": "sent",
+            "take_index": 121,
+            "take_s": 45.603,
+            "take_e": 45.803,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... served a sandwich. He [sent] the hospital that list ...",
+            "message": "\"sent\" is lost: said at 0:45.60 in the take, not heard in the final cut between 0:07.62 and the end: ... served a sandwich. He [sent] the hospital that list ..."
+          },
+          {
+            "word": "hospital",
+            "token": "hospital",
+            "take_index": 123,
+            "take_s": 46.163,
+            "take_e": 46.503,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... sandwich. He sent the [hospital] that list and the ...",
+            "message": "\"hospital\" is lost: said at 0:46.16 in the take, not heard in the final cut between 0:07.62 and the end: ... sandwich. He sent the [hospital] that list and the ..."
+          },
+          {
+            "word": "list",
+            "token": "list",
+            "take_index": 125,
+            "take_s": 46.743,
+            "take_e": 46.963,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... sent the hospital that [list] and the bill fell ...",
+            "message": "\"list\" is lost: said at 0:46.74 in the take, not heard in the final cut between 0:07.62 and the end: ... sent the hospital that [list] and the bill fell ..."
+          },
+          {
+            "word": "bill",
+            "token": "bill",
+            "take_index": 128,
+            "take_s": 47.183,
+            "take_e": 47.323,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... that list and the [bill] fell by a lot. ...",
+            "message": "\"bill\" is lost: said at 0:47.18 in the take, not heard in the final cut between 0:07.62 and the end: ... that list and the [bill] fell by a lot. ..."
+          },
+          {
+            "word": "fell",
+            "token": "fell",
+            "take_index": 129,
+            "take_s": 47.463,
+            "take_e": 47.683,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... list and the bill [fell] by a lot. And ...",
+            "message": "\"fell\" is lost: said at 0:47.46 in the take, not heard in the final cut between 0:07.62 and the end: ... list and the bill [fell] by a lot. And ..."
+          },
+          {
+            "word": "lot.",
+            "token": "lot",
+            "take_index": 132,
+            "take_s": 48.123,
+            "take_e": 48.363,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... bill fell by a [lot.] And this is the ...",
+            "message": "\"lot.\" is lost: said at 0:48.12 in the take, not heard in the final cut between 0:07.62 and the end: ... bill fell by a [lot.] And this is the ..."
+          },
+          {
+            "word": "bit",
+            "token": "bit",
+            "take_index": 137,
+            "take_s": 49.003,
+            "take_e": 49.123,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... And this is the [bit] I love. An old ...",
+            "message": "\"bit\" is lost: said at 0:49.00 in the take, not heard in the final cut between 0:07.62 and the end: ... And this is the [bit] I love. An old ..."
+          },
+          {
+            "word": "love.",
+            "token": "love",
+            "take_index": 139,
+            "take_s": 49.283,
+            "take_e": 49.503,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... is the bit I [love.] An old bill can't ...",
+            "message": "\"love.\" is lost: said at 0:49.28 in the take, not heard in the final cut between 0:07.62 and the end: ... is the bit I [love.] An old bill can't ..."
+          },
+          {
+            "word": "old",
+            "token": "old",
+            "take_index": 141,
+            "take_s": 49.683,
+            "take_e": 49.843,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... bit I love. An [old] bill can't argue back ...",
+            "message": "\"old\" is lost: said at 0:49.68 in the take, not heard in the final cut between 0:07.62 and the end: ... bit I love. An [old] bill can't argue back ..."
+          },
+          {
+            "word": "bill",
+            "token": "bill",
+            "take_index": 142,
+            "take_s": 49.923,
+            "take_e": 50.083,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... I love. An old [bill] can't argue back and ...",
+            "message": "\"bill\" is lost: said at 0:49.92 in the take, not heard in the final cut between 0:07.62 and the end: ... I love. An old [bill] can't argue back and ..."
+          },
+          {
+            "word": "can't",
+            "token": "can't",
+            "take_index": 143,
+            "take_s": 50.343,
+            "take_e": 50.563,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... love. An old bill [can't] argue back and the ...",
+            "message": "\"can't\" is lost: said at 0:50.34 in the take, not heard in the final cut between 0:07.62 and the end: ... love. An old bill [can't] argue back and the ..."
+          },
+          {
+            "word": "argue",
+            "token": "argue",
+            "take_index": 144,
+            "take_s": 50.583,
+            "take_e": 50.843,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... An old bill can't [argue] back and the rules ...",
+            "message": "\"argue\" is lost: said at 0:50.58 in the take, not heard in the final cut between 0:07.62 and the end: ... An old bill can't [argue] back and the rules ..."
+          },
+          {
+            "word": "back",
+            "token": "back",
+            "take_index": 145,
+            "take_s": 50.843,
+            "take_e": 51.083,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... old bill can't argue [back] and the rules are ...",
+            "message": "\"back\" is lost: said at 0:50.84 in the take, not heard in the final cut between 0:07.62 and the end: ... old bill can't argue [back] and the rules are ..."
+          },
+          {
+            "word": "rules",
+            "token": "rules",
+            "take_index": 148,
+            "take_s": 51.423,
+            "take_e": 51.703,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... argue back and the [rules] are written down. So ...",
+            "message": "\"rules\" is lost: said at 0:51.42 in the take, not heard in the final cut between 0:07.62 and the end: ... argue back and the [rules] are written down. So ..."
+          },
+          {
+            "word": "written",
+            "token": "written",
+            "take_index": 150,
+            "take_s": 51.903,
+            "take_e": 52.163,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... and the rules are [written] down. So AI reads ...",
+            "message": "\"written\" is lost: said at 0:51.90 in the take, not heard in the final cut between 0:07.62 and the end: ... and the rules are [written] down. So AI reads ..."
+          },
+          {
+            "word": "AI",
+            "token": "ai",
+            "take_index": 153,
+            "take_s": 53.623,
+            "take_e": 53.843,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... are written down. So [AI] reads every line, never ...",
+            "message": "\"AI\" is lost: said at 0:53.62 in the take, not heard in the final cut between 0:07.62 and the end: ... are written down. So [AI] reads every line, never ..."
+          },
+          {
+            "word": "reads",
+            "token": "reads",
+            "take_index": 154,
+            "take_s": 53.923,
+            "take_e": 54.143,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... written down. So AI [reads] every line, never needs ...",
+            "message": "\"reads\" is lost: said at 0:53.92 in the take, not heard in the final cut between 0:07.62 and the end: ... written down. So AI [reads] every line, never needs ..."
+          },
+          {
+            "word": "every",
+            "token": "every",
+            "take_index": 155,
+            "take_s": 54.163,
+            "take_e": 54.303,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... down. So AI reads [every] line, never needs a ...",
+            "message": "\"every\" is lost: said at 0:54.16 in the take, not heard in the final cut between 0:07.62 and the end: ... down. So AI reads [every] line, never needs a ..."
+          },
+          {
+            "word": "line,",
+            "token": "line",
+            "take_index": 156,
+            "take_s": 54.363,
+            "take_e": 54.603,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... So AI reads every [line,] never needs a coffee. ...",
+            "message": "\"line,\" is lost: said at 0:54.36 in the take, not heard in the final cut between 0:07.62 and the end: ... So AI reads every [line,] never needs a coffee. ..."
+          },
+          {
+            "word": "never",
+            "token": "never",
+            "take_index": 157,
+            "take_s": 55.403,
+            "take_e": 55.563,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... AI reads every line, [never] needs a coffee. Ask ...",
+            "message": "\"never\" is lost: said at 0:55.40 in the take, not heard in the final cut between 0:07.62 and the end: ... AI reads every line, [never] needs a coffee. Ask ..."
+          },
+          {
+            "word": "needs",
+            "token": "needs",
+            "take_index": 158,
+            "take_s": 55.583,
+            "take_e": 55.763,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... reads every line, never [needs] a coffee. Ask it ...",
+            "message": "\"needs\" is lost: said at 0:55.58 in the take, not heard in the final cut between 0:07.62 and the end: ... reads every line, never [needs] a coffee. Ask it ..."
+          },
+          {
+            "word": "coffee.",
+            "token": "coffee",
+            "take_index": 160,
+            "take_s": 55.843,
+            "take_e": 57.143,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... line, never needs a [coffee.] Ask it about next ...",
+            "message": "\"coffee.\" is lost: said at 0:55.84 in the take, not heard in the final cut between 0:07.62 and the end: ... line, never needs a [coffee.] Ask it about next ..."
+          },
+          {
+            "word": "Ask",
+            "token": "ask",
+            "take_index": 161,
+            "take_s": 57.143,
+            "take_e": 57.363,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... never needs a coffee. [Ask] it about next year ...",
+            "message": "\"Ask\" is lost: said at 0:57.14 in the take, not heard in the final cut between 0:07.62 and the end: ... never needs a coffee. [Ask] it about next year ..."
+          },
+          {
+            "word": "next",
+            "token": "next",
+            "take_index": 164,
+            "take_s": 58.223,
+            "take_e": 58.463,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... coffee. Ask it about [next] year and it's definitely ...",
+            "message": "\"next\" is lost: said at 0:58.22 in the take, not heard in the final cut between 0:07.62 and the end: ... coffee. Ask it about [next] year and it's definitely ..."
+          },
+          {
+            "word": "year",
+            "token": "year",
+            "take_index": 165,
+            "take_s": 58.503,
+            "take_e": 58.643,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... Ask it about next [year] and it's definitely guessing, ...",
+            "message": "\"year\" is lost: said at 0:58.50 in the take, not heard in the final cut between 0:07.62 and the end: ... Ask it about next [year] and it's definitely guessing, ..."
+          },
+          {
+            "word": "definitely",
+            "token": "definitely",
+            "take_index": 168,
+            "take_s": 59.083,
+            "take_e": 59.423,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... next year and it's [definitely] guessing, but ask about ...",
+            "message": "\"definitely\" is lost: said at 0:59.08 in the take, not heard in the final cut between 0:07.62 and the end: ... next year and it's [definitely] guessing, but ask about ..."
+          },
+          {
+            "word": "guessing,",
+            "token": "guessing",
+            "take_index": 169,
+            "take_s": 59.483,
+            "take_e": 59.864,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... year and it's definitely [guessing,] but ask about last ...",
+            "message": "\"guessing,\" is lost: said at 0:59.48 in the take, not heard in the final cut between 0:07.62 and the end: ... year and it's definitely [guessing,] but ask about last ..."
+          },
+          {
+            "word": "ask",
+            "token": "ask",
+            "take_index": 171,
+            "take_s": 60.104,
+            "take_e": 60.264,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... it's definitely guessing, but [ask] about last year and ...",
+            "message": "\"ask\" is lost: said at 1:00.10 in the take, not heard in the final cut between 0:07.62 and the end: ... it's definitely guessing, but [ask] about last year and ..."
+          },
+          {
+            "word": "last",
+            "token": "last",
+            "take_index": 173,
+            "take_s": 60.584,
+            "take_e": 60.864,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... guessing, but ask about [last] year and it's analysing. ...",
+            "message": "\"last\" is lost: said at 1:00.58 in the take, not heard in the final cut between 0:07.62 and the end: ... guessing, but ask about [last] year and it's analysing. ..."
+          },
+          {
+            "word": "year",
+            "token": "year",
+            "take_index": 174,
+            "take_s": 60.904,
+            "take_e": 61.084,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... but ask about last [year] and it's analysing. But ...",
+            "message": "\"year\" is lost: said at 1:00.90 in the take, not heard in the final cut between 0:07.62 and the end: ... but ask about last [year] and it's analysing. But ..."
+          },
+          {
+            "word": "analysing.",
+            "token": "analyzing",
+            "take_index": 177,
+            "take_s": 61.484,
+            "take_e": 62.004,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... last year and it's [analysing.] But in this instance, ...",
+            "message": "\"analysing.\" is lost: said at 1:01.48 in the take, not heard in the final cut between 0:07.62 and the end: ... last year and it's [analysing.] But in this instance, ..."
+          },
+          {
+            "word": "instance,",
+            "token": "instance",
+            "take_index": 181,
+            "take_s": 64.424,
+            "take_e": 64.804,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... analysing. But in this [instance,] whose mistake did Claude ...",
+            "message": "\"instance,\" is lost: said at 1:04.42 in the take, not heard in the final cut between 0:07.62 and the end: ... analysing. But in this [instance,] whose mistake did Claude ..."
+          },
+          {
+            "word": "mistake",
+            "token": "mistake",
+            "take_index": 183,
+            "take_s": 65.124,
+            "take_e": 65.504,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... in this instance, whose [mistake] did Claude find? It ...",
+            "message": "\"mistake\" is lost: said at 1:05.12 in the take, not heard in the final cut between 0:07.62 and the end: ... in this instance, whose [mistake] did Claude find? It ..."
+          },
+          {
+            "word": "Claude",
+            "token": "claude",
+            "take_index": 185,
+            "take_s": 65.704,
+            "take_e": 65.964,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... instance, whose mistake did [Claude] find? It was actually ...",
+            "message": "\"Claude\" is lost: said at 1:05.70 in the take, not heard in the final cut between 0:07.62 and the end: ... instance, whose mistake did [Claude] find? It was actually ..."
+          },
+          {
+            "word": "find?",
+            "token": "find",
+            "take_index": 186,
+            "take_s": 66.004,
+            "take_e": 66.324,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... whose mistake did Claude [find?] It was actually the ...",
+            "message": "\"find?\" is lost: said at 1:06.00 in the take, not heard in the final cut between 0:07.62 and the end: ... whose mistake did Claude [find?] It was actually the ..."
+          },
+          {
+            "word": "actually",
+            "token": "actually",
+            "take_index": 189,
+            "take_s": 67.304,
+            "take_e": 67.544,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... Claude find? It was [actually] the hospital's. And I ...",
+            "message": "\"actually\" is lost: said at 1:07.30 in the take, not heard in the final cut between 0:07.62 and the end: ... Claude find? It was [actually] the hospital's. And I ..."
+          },
+          {
+            "word": "hospital's.",
+            "token": "hospital",
+            "take_index": 191,
+            "take_s": 67.664,
+            "take_e": 68.264,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... It was actually the [hospital's.] And I reckon Claude ...",
+            "message": "\"hospital's.\" is lost: said at 1:07.66 in the take, not heard in the final cut between 0:07.62 and the end: ... It was actually the [hospital's.] And I reckon Claude ..."
+          },
+          {
+            "word": "reckon",
+            "token": "reckon",
+            "take_index": 194,
+            "take_s": 68.944,
+            "take_e": 69.224,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... the hospital's. And I [reckon] Claude in this instance ...",
+            "message": "\"reckon\" is lost: said at 1:08.94 in the take, not heard in the final cut between 0:07.62 and the end: ... the hospital's. And I [reckon] Claude in this instance ..."
+          },
+          {
+            "word": "Claude",
+            "token": "claude",
+            "take_index": 195,
+            "take_s": 70.364,
+            "take_e": 70.664,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... hospital's. And I reckon [Claude] in this instance didn't ...",
+            "message": "\"Claude\" is lost: said at 1:10.36 in the take, not heard in the final cut between 0:07.62 and the end: ... hospital's. And I reckon [Claude] in this instance didn't ..."
+          },
+          {
+            "word": "instance",
+            "token": "instance",
+            "take_index": 198,
+            "take_s": 71.004,
+            "take_e": 71.364,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... reckon Claude in this [instance] didn't care whose closet ...",
+            "message": "\"instance\" is lost: said at 1:11.00 in the take, not heard in the final cut between 0:07.62 and the end: ... reckon Claude in this [instance] didn't care whose closet ..."
+          },
+          {
+            "word": "didn't",
+            "token": "didn't",
+            "take_index": 199,
+            "take_s": 71.384,
+            "take_e": 71.604,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... Claude in this instance [didn't] care whose closet it ...",
+            "message": "\"didn't\" is lost: said at 1:11.38 in the take, not heard in the final cut between 0:07.62 and the end: ... Claude in this instance [didn't] care whose closet it ..."
+          },
+          {
+            "word": "care",
+            "token": "care",
+            "take_index": 200,
+            "take_s": 71.644,
+            "take_e": 71.844,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... in this instance didn't [care] whose closet it was ...",
+            "message": "\"care\" is lost: said at 1:11.64 in the take, not heard in the final cut between 0:07.62 and the end: ... in this instance didn't [care] whose closet it was ..."
+          },
+          {
+            "word": "closet",
+            "token": "closet",
+            "take_index": 202,
+            "take_s": 72.124,
+            "take_e": 72.484,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... instance didn't care whose [closet] it was opening and ...",
+            "message": "\"closet\" is lost: said at 1:12.12 in the take, not heard in the final cut between 0:07.62 and the end: ... instance didn't care whose [closet] it was opening and ..."
+          },
+          {
+            "word": "opening",
+            "token": "opening",
+            "take_index": 205,
+            "take_s": 72.804,
+            "take_e": 73.084,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... whose closet it was [opening] and it won't care ...",
+            "message": "\"opening\" is lost: said at 1:12.80 in the take, not heard in the final cut between 0:07.62 and the end: ... whose closet it was [opening] and it won't care ..."
+          },
+          {
+            "word": "won't",
+            "token": "won't",
+            "take_index": 208,
+            "take_s": 73.264,
+            "take_e": 73.504,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... was opening and it [won't] care when it opens ...",
+            "message": "\"won't\" is lost: said at 1:13.26 in the take, not heard in the final cut between 0:07.62 and the end: ... was opening and it [won't] care when it opens ..."
+          },
+          {
+            "word": "care",
+            "token": "care",
+            "take_index": 209,
+            "take_s": 73.624,
+            "take_e": 73.884,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... opening and it won't [care] when it opens yours ...",
+            "message": "\"care\" is lost: said at 1:13.62 in the take, not heard in the final cut between 0:07.62 and the end: ... opening and it won't [care] when it opens yours ..."
+          },
+          {
+            "word": "opens",
+            "token": "opens",
+            "take_index": 212,
+            "take_s": 74.204,
+            "take_e": 74.524,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... won't care when it [opens] yours either. This week, ...",
+            "message": "\"opens\" is lost: said at 1:14.20 in the take, not heard in the final cut between 0:07.62 and the end: ... won't care when it [opens] yours either. This week, ..."
+          },
+          {
+            "word": "either.",
+            "token": "either",
+            "take_index": 214,
+            "take_s": 74.864,
+            "take_e": 75.104,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... when it opens yours [either.] This week, I'm gonna ...",
+            "message": "\"either.\" is lost: said at 1:14.86 in the take, not heard in the final cut between 0:07.62 and the end: ... when it opens yours [either.] This week, I'm gonna ..."
+          },
+          {
+            "word": "week,",
+            "token": "week",
+            "take_index": 216,
+            "take_s": 75.624,
+            "take_e": 75.824,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... opens yours either. This [week,] I'm gonna give my ...",
+            "message": "\"week,\" is lost: said at 1:15.62 in the take, not heard in the final cut between 0:07.62 and the end: ... opens yours either. This [week,] I'm gonna give my ..."
+          },
+          {
+            "word": "gonna",
+            "token": "gonna",
+            "take_index": 218,
+            "take_s": 76.004,
+            "take_e": 76.164,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... either. This week, I'm [gonna] give my AI last ...",
+            "message": "\"gonna\" is lost: said at 1:16.00 in the take, not heard in the final cut between 0:07.62 and the end: ... either. This week, I'm [gonna] give my AI last ..."
+          },
+          {
+            "word": "give",
+            "token": "give",
+            "take_index": 219,
+            "take_s": 76.224,
+            "take_e": 76.404,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... This week, I'm gonna [give] my AI last year's ...",
+            "message": "\"give\" is lost: said at 1:16.22 in the take, not heard in the final cut between 0:07.62 and the end: ... This week, I'm gonna [give] my AI last year's ..."
+          },
+          {
+            "word": "AI",
+            "token": "ai",
+            "take_index": 221,
+            "take_s": 76.685,
+            "take_e": 76.985,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... I'm gonna give my [AI] last year's invoices cause ...",
+            "message": "\"AI\" is lost: said at 1:16.69 in the take, not heard in the final cut between 0:07.62 and the end: ... I'm gonna give my [AI] last year's invoices cause ..."
+          },
+          {
+            "word": "last",
+            "token": "last",
+            "take_index": 222,
+            "take_s": 77.225,
+            "take_e": 77.485,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... gonna give my AI [last] year's invoices cause I ...",
+            "message": "\"last\" is lost: said at 1:17.22 in the take, not heard in the final cut between 0:07.62 and the end: ... gonna give my AI [last] year's invoices cause I ..."
+          },
+          {
+            "word": "year's",
+            "token": "year",
+            "take_index": 223,
+            "take_s": 77.525,
+            "take_e": 77.705,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... give my AI last [year's] invoices cause I wanna ...",
+            "message": "\"year's\" is lost: said at 1:17.53 in the take, not heard in the final cut between 0:07.62 and the end: ... give my AI last [year's] invoices cause I wanna ..."
+          },
+          {
+            "word": "invoices",
+            "token": "invoices",
+            "take_index": 224,
+            "take_s": 77.745,
+            "take_e": 78.205,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... my AI last year's [invoices] cause I wanna be ...",
+            "message": "\"invoices\" is lost: said at 1:17.75 in the take, not heard in the final cut between 0:07.62 and the end: ... my AI last year's [invoices] cause I wanna be ..."
+          },
+          {
+            "word": "cause",
+            "token": "cause",
+            "take_index": 225,
+            "take_s": 78.245,
+            "take_e": 78.405,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... AI last year's invoices [cause] I wanna be the ...",
+            "message": "\"cause\" is lost: said at 1:18.25 in the take, not heard in the final cut between 0:07.62 and the end: ... AI last year's invoices [cause] I wanna be the ..."
+          },
+          {
+            "word": "wanna",
+            "token": "wanna",
+            "take_index": 227,
+            "take_s": 78.585,
+            "take_e": 78.765,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... year's invoices cause I [wanna] be the first one ...",
+            "message": "\"wanna\" is lost: said at 1:18.58 in the take, not heard in the final cut between 0:07.62 and the end: ... year's invoices cause I [wanna] be the first one ..."
+          },
+          {
+            "word": "first",
+            "token": "1st",
+            "take_index": 230,
+            "take_s": 79.365,
+            "take_e": 79.625,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... I wanna be the [first] one to find the ...",
+            "message": "\"first\" is lost: said at 1:19.36 in the take, not heard in the final cut between 0:07.62 and the end: ... I wanna be the [first] one to find the ..."
+          },
+          {
+            "word": "one",
+            "token": "1",
+            "take_index": 231,
+            "take_s": 79.705,
+            "take_e": 79.825,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... wanna be the first [one] to find the skeletons ...",
+            "message": "\"one\" is lost: said at 1:19.70 in the take, not heard in the final cut between 0:07.62 and the end: ... wanna be the first [one] to find the skeletons ..."
+          },
+          {
+            "word": "find",
+            "token": "find",
+            "take_index": 233,
+            "take_s": 79.985,
+            "take_e": 80.325,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... the first one to [find] the skeletons in my ...",
+            "message": "\"find\" is lost: said at 1:19.98 in the take, not heard in the final cut between 0:07.62 and the end: ... the first one to [find] the skeletons in my ..."
+          },
+          {
+            "word": "skeletons",
+            "token": "skeletons",
+            "take_index": 235,
+            "take_s": 80.605,
+            "take_e": 81.045,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... one to find the [skeletons] in my closet. The ...",
+            "message": "\"skeletons\" is lost: said at 1:20.61 in the take, not heard in the final cut between 0:07.62 and the end: ... one to find the [skeletons] in my closet. The ..."
+          },
+          {
+            "word": "closet.",
+            "token": "closet",
+            "take_index": 238,
+            "take_s": 81.325,
+            "take_e": 81.665,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... the skeletons in my [closet.] The full story is ...",
+            "message": "\"closet.\" is lost: said at 1:21.33 in the take, not heard in the final cut between 0:07.62 and the end: ... the skeletons in my [closet.] The full story is ..."
+          },
+          {
+            "word": "full",
+            "token": "full",
+            "take_index": 240,
+            "take_s": 82.145,
+            "take_e": 82.305,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... in my closet. The [full] story is free at ...",
+            "message": "\"full\" is lost: said at 1:22.14 in the take, not heard in the final cut between 0:07.62 and the end: ... in my closet. The [full] story is free at ..."
+          },
+          {
+            "word": "story",
+            "token": "story",
+            "take_index": 241,
+            "take_s": 82.365,
+            "take_e": 82.645,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... my closet. The full [story] is free at makeyourmindup.ai ...",
+            "message": "\"story\" is lost: said at 1:22.36 in the take, not heard in the final cut between 0:07.62 and the end: ... my closet. The full [story] is free at makeyourmindup.ai ..."
+          },
+          {
+            "word": "free",
+            "token": "free",
+            "take_index": 243,
+            "take_s": 83.165,
+            "take_e": 83.325,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... The full story is [free] at makeyourmindup.ai ...",
+            "message": "\"free\" is lost: said at 1:23.17 in the take, not heard in the final cut between 0:07.62 and the end: ... The full story is [free] at makeyourmindup.ai ..."
+          },
+          {
+            "word": "makeyourmindup.ai",
+            "token": "makeyourmindup",
+            "take_index": 245,
+            "take_s": 83.465,
+            "take_e": 84.725,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... story is free at [makeyourmindup.ai] ...",
+            "message": "\"makeyourmindup.ai\" is lost: said at 1:23.47 in the take, not heard in the final cut between 0:07.62 and the end: ... story is free at [makeyourmindup.ai] ..."
+          }
+        ],
+        "unapproved_removals": [],
+        "function_word_differences": [
+          {
+            "word": "So",
+            "token": "so",
+            "take_index": 0,
+            "take_s": 0.62,
+            "take_e": 0.7,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... [So] some good news from ..."
+          },
+          {
+            "word": "from",
+            "token": "from",
+            "take_index": 4,
+            "take_s": 2.02,
+            "take_e": 2.16,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... So some good news [from] AI. It just helped ..."
+          },
+          {
+            "word": "It",
+            "token": "it",
+            "take_index": 6,
+            "take_s": 2.94,
+            "take_e": 3.02,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... good news from AI. [It] just helped a family ..."
+          },
+          {
+            "word": "just",
+            "token": "just",
+            "take_index": 7,
+            "take_s": 3.4,
+            "take_e": 3.56,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... news from AI. It [just] helped a family cut ..."
+          },
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 9,
+            "take_s": 3.82,
+            "take_e": 3.84,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... AI. It just helped [a] family cut a $195,000 ..."
+          },
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 12,
+            "take_s": 4.68,
+            "take_e": 4.7,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... helped a family cut [a] $195,000 hospital bill to ..."
+          },
+          {
+            "word": "to",
+            "token": "to",
+            "take_index": 16,
+            "take_s": 7.7,
+            "take_e": 7.76,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... a $195,000 hospital bill [to] a fraction of that. ..."
+          },
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 17,
+            "take_s": 7.82,
+            "take_e": 7.84,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... $195,000 hospital bill to [a] fraction of that. So ..."
+          },
+          {
+            "word": "of",
+            "token": "of",
+            "take_index": 19,
+            "take_s": 8.38,
+            "take_e": 8.44,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... bill to a fraction [of] that. So imagine what ..."
+          },
+          {
+            "word": "that.",
+            "token": "that",
+            "take_index": 20,
+            "take_s": 8.48,
+            "take_e": 8.641,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... to a fraction of [that.] So imagine what it's ..."
+          },
+          {
+            "word": "So",
+            "token": "so",
+            "take_index": 21,
+            "take_s": 8.721,
+            "take_e": 8.781,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... a fraction of that. [So] imagine what it's finding ..."
+          },
+          {
+            "word": "what",
+            "token": "what",
+            "take_index": 23,
+            "take_s": 9.981,
+            "take_e": 10.141,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... of that. So imagine [what] it's finding in everyone's ..."
+          },
+          {
+            "word": "it's",
+            "token": "it",
+            "take_index": 24,
+            "take_s": 10.241,
+            "take_e": 10.361,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... that. So imagine what [it's] finding in everyone's archives ..."
+          },
+          {
+            "word": "in",
+            "token": "in",
+            "take_index": 26,
+            "take_s": 10.841,
+            "take_e": 10.901,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... imagine what it's finding [in] everyone's archives right now. ..."
+          },
+          {
+            "word": "to",
+            "token": "to",
+            "take_index": 35,
+            "take_s": 14.101,
+            "take_e": 14.201,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... Hospitals pay whole teams [to] sort pricing out and ..."
+          },
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 40,
+            "take_s": 15.761,
+            "take_e": 15.781,
+            "final_between_s": [
+              1.06,
+              1.14
+            ],
+            "context": "... sort pricing out and [a] chatbot beat them. So ...",
+            "final_heard_there": "I"
+          },
+          {
+            "word": "A",
+            "token": "a",
+            "take_index": 62,
+            "take_s": 24.101,
+            "take_e": 24.121,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... your closet? Let's see. [A] man's brother-in-law died of ..."
+          },
+          {
+            "word": "brother-in-law",
+            "token": "in",
+            "take_index": 64,
+            "take_s": 24.541,
+            "take_e": 25.021,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... Let's see. A man's [brother-in-law] died of a heart ..."
+          },
+          {
+            "word": "of",
+            "token": "of",
+            "take_index": 66,
+            "take_s": 25.281,
+            "take_e": 25.321,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... A man's brother-in-law died [of] a heart attack with ..."
+          },
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 67,
+            "take_s": 25.341,
+            "take_e": 25.361,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... man's brother-in-law died of [a] heart attack with no ..."
+          },
+          {
+            "word": "with",
+            "token": "with",
+            "take_index": 70,
+            "take_s": 25.982,
+            "take_e": 26.162,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... of a heart attack [with] no health cover. So ..."
+          },
+          {
+            "word": "So",
+            "token": "so",
+            "take_index": 74,
+            "take_s": 27.242,
+            "take_e": 27.322,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... with no health cover. [So] the family owed all ..."
+          },
+          {
+            "word": "the",
+            "token": "the",
+            "take_index": 75,
+            "take_s": 27.382,
+            "take_e": 27.442,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... no health cover. So [the] family owed all that ..."
+          },
+          {
+            "word": "that",
+            "token": "that",
+            "take_index": 79,
+            "take_s": 28.302,
+            "take_e": 28.462,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... the family owed all [that] money, 195K. So he ..."
+          },
+          {
+            "word": "So",
+            "token": "so",
+            "take_index": 82,
+            "take_s": 33.042,
+            "take_e": 33.122,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... all that money, 195K. [So] he gave Claude the ..."
+          },
+          {
+            "word": "he",
+            "token": "he",
+            "take_index": 83,
+            "take_s": 33.502,
+            "take_e": 33.582,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... that money, 195K. So [he] gave Claude the bill ..."
+          },
+          {
+            "word": "the",
+            "token": "the",
+            "take_index": 86,
+            "take_s": 34.222,
+            "take_e": 34.282,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... So he gave Claude [the] bill line by line. ..."
+          },
+          {
+            "word": "by",
+            "token": "by",
+            "take_index": 89,
+            "take_s": 35.082,
+            "take_e": 35.202,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... Claude the bill line [by] line. Claude found care ..."
+          },
+          {
+            "word": "under",
+            "token": "under",
+            "take_index": 95,
+            "take_s": 37.202,
+            "take_e": 37.362,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... Claude found care billed [under] a much more expensive ..."
+          },
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 96,
+            "take_s": 37.382,
+            "take_e": 37.402,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... found care billed under [a] much more expensive code ..."
+          },
+          {
+            "word": "than",
+            "token": "than",
+            "take_index": 101,
+            "take_s": 38.902,
+            "take_e": 39.022,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... much more expensive code [than] the care his brother-in-law ..."
+          },
+          {
+            "word": "the",
+            "token": "the",
+            "take_index": 102,
+            "take_s": 39.042,
+            "take_e": 39.102,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... more expensive code than [the] care his brother-in-law actually ..."
+          },
+          {
+            "word": "his",
+            "token": "his",
+            "take_index": 104,
+            "take_s": 39.442,
+            "take_e": 39.562,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... code than the care [his] brother-in-law actually got. That's ..."
+          },
+          {
+            "word": "brother-in-law",
+            "token": "in",
+            "take_index": 105,
+            "take_s": 39.622,
+            "take_e": 40.082,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... than the care his [brother-in-law] actually got. That's like ..."
+          },
+          {
+            "word": "That's",
+            "token": "that",
+            "take_index": 108,
+            "take_s": 41.242,
+            "take_e": 41.362,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... his brother-in-law actually got. [That's] like charging for a ..."
+          },
+          {
+            "word": "like",
+            "token": "like",
+            "take_index": 109,
+            "take_s": 41.402,
+            "take_e": 41.562,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... brother-in-law actually got. That's [like] charging for a steak ..."
+          },
+          {
+            "word": "for",
+            "token": "for",
+            "take_index": 111,
+            "take_s": 42.583,
+            "take_e": 42.663,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... got. That's like charging [for] a steak when you ..."
+          },
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 112,
+            "take_s": 42.703,
+            "take_e": 42.723,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... That's like charging for [a] steak when you get ..."
+          },
+          {
+            "word": "when",
+            "token": "when",
+            "take_index": 114,
+            "take_s": 43.323,
+            "take_e": 43.483,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... charging for a steak [when] you get served a ..."
+          },
+          {
+            "word": "you",
+            "token": "you",
+            "take_index": 115,
+            "take_s": 43.683,
+            "take_e": 43.783,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... for a steak when [you] get served a sandwich. ..."
+          },
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 118,
+            "take_s": 44.243,
+            "take_e": 44.263,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... when you get served [a] sandwich. He sent the ..."
+          },
+          {
+            "word": "He",
+            "token": "he",
+            "take_index": 120,
+            "take_s": 45.403,
+            "take_e": 45.463,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... get served a sandwich. [He] sent the hospital that ..."
+          },
+          {
+            "word": "the",
+            "token": "the",
+            "take_index": 122,
+            "take_s": 46.043,
+            "take_e": 46.123,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... a sandwich. He sent [the] hospital that list and ..."
+          },
+          {
+            "word": "that",
+            "token": "that",
+            "take_index": 124,
+            "take_s": 46.543,
+            "take_e": 46.663,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... He sent the hospital [that] list and the bill ..."
+          },
+          {
+            "word": "and",
+            "token": "and",
+            "take_index": 126,
+            "take_s": 47.003,
+            "take_e": 47.083,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... the hospital that list [and] the bill fell by ..."
+          },
+          {
+            "word": "the",
+            "token": "the",
+            "take_index": 127,
+            "take_s": 47.083,
+            "take_e": 47.143,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... hospital that list and [the] bill fell by a ..."
+          },
+          {
+            "word": "by",
+            "token": "by",
+            "take_index": 130,
+            "take_s": 47.803,
+            "take_e": 47.943,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... and the bill fell [by] a lot. And this ..."
+          },
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 131,
+            "take_s": 47.983,
+            "take_e": 48.003,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... the bill fell by [a] lot. And this is ..."
+          },
+          {
+            "word": "And",
+            "token": "and",
+            "take_index": 133,
+            "take_s": 48.543,
+            "take_e": 48.643,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... fell by a lot. [And] this is the bit ..."
+          },
+          {
+            "word": "this",
+            "token": "this",
+            "take_index": 134,
+            "take_s": 48.643,
+            "take_e": 48.763,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... by a lot. And [this] is the bit I ..."
+          },
+          {
+            "word": "is",
+            "token": "is",
+            "take_index": 135,
+            "take_s": 48.803,
+            "take_e": 48.883,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... a lot. And this [is] the bit I love. ..."
+          },
+          {
+            "word": "the",
+            "token": "the",
+            "take_index": 136,
+            "take_s": 48.923,
+            "take_e": 48.983,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... lot. And this is [the] bit I love. An ..."
+          },
+          {
+            "word": "I",
+            "token": "i",
+            "take_index": 138,
+            "take_s": 49.223,
+            "take_e": 49.243,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... this is the bit [I] love. An old bill ..."
+          },
+          {
+            "word": "An",
+            "token": "an",
+            "take_index": 140,
+            "take_s": 49.563,
+            "take_e": 49.623,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... the bit I love. [An] old bill can't argue ..."
+          },
+          {
+            "word": "and",
+            "token": "and",
+            "take_index": 146,
+            "take_s": 51.203,
+            "take_e": 51.283,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... bill can't argue back [and] the rules are written ..."
+          },
+          {
+            "word": "the",
+            "token": "the",
+            "take_index": 147,
+            "take_s": 51.283,
+            "take_e": 51.343,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... can't argue back and [the] rules are written down. ..."
+          },
+          {
+            "word": "are",
+            "token": "are",
+            "take_index": 149,
+            "take_s": 51.803,
+            "take_e": 51.903,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... back and the rules [are] written down. So AI ..."
+          },
+          {
+            "word": "down.",
+            "token": "down",
+            "take_index": 151,
+            "take_s": 52.223,
+            "take_e": 52.463,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... the rules are written [down.] So AI reads every ..."
+          },
+          {
+            "word": "So",
+            "token": "so",
+            "take_index": 152,
+            "take_s": 53.243,
+            "take_e": 53.323,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... rules are written down. [So] AI reads every line, ..."
+          },
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 159,
+            "take_s": 55.783,
+            "take_e": 55.803,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... every line, never needs [a] coffee. Ask it about ..."
+          },
+          {
+            "word": "it",
+            "token": "it",
+            "take_index": 162,
+            "take_s": 57.383,
+            "take_e": 57.423,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... needs a coffee. Ask [it] about next year and ..."
+          },
+          {
+            "word": "about",
+            "token": "about",
+            "take_index": 163,
+            "take_s": 57.463,
+            "take_e": 57.763,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... a coffee. Ask it [about] next year and it's ..."
+          },
+          {
+            "word": "and",
+            "token": "and",
+            "take_index": 166,
+            "take_s": 58.683,
+            "take_e": 58.763,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... it about next year [and] it's definitely guessing, but ..."
+          },
+          {
+            "word": "it's",
+            "token": "it",
+            "take_index": 167,
+            "take_s": 58.783,
+            "take_e": 58.903,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... about next year and [it's] definitely guessing, but ask ..."
+          },
+          {
+            "word": "but",
+            "token": "but",
+            "take_index": 170,
+            "take_s": 59.924,
+            "take_e": 60.024,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... and it's definitely guessing, [but] ask about last year ..."
+          },
+          {
+            "word": "about",
+            "token": "about",
+            "take_index": 172,
+            "take_s": 60.304,
+            "take_e": 60.524,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... definitely guessing, but ask [about] last year and it's ..."
+          },
+          {
+            "word": "and",
+            "token": "and",
+            "take_index": 175,
+            "take_s": 61.224,
+            "take_e": 61.324,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... ask about last year [and] it's analysing. But in ..."
+          },
+          {
+            "word": "it's",
+            "token": "it",
+            "take_index": 176,
+            "take_s": 61.344,
+            "take_e": 61.444,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... about last year and [it's] analysing. But in this ..."
+          },
+          {
+            "word": "But",
+            "token": "but",
+            "take_index": 178,
+            "take_s": 63.324,
+            "take_e": 63.484,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... year and it's analysing. [But] in this instance, whose ..."
+          },
+          {
+            "word": "in",
+            "token": "in",
+            "take_index": 179,
+            "take_s": 64.124,
+            "take_e": 64.184,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... and it's analysing. But [in] this instance, whose mistake ..."
+          },
+          {
+            "word": "this",
+            "token": "this",
+            "take_index": 180,
+            "take_s": 64.204,
+            "take_e": 64.364,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... it's analysing. But in [this] instance, whose mistake did ..."
+          },
+          {
+            "word": "whose",
+            "token": "whose",
+            "take_index": 182,
+            "take_s": 64.844,
+            "take_e": 65.084,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... But in this instance, [whose] mistake did Claude find? ..."
+          },
+          {
+            "word": "did",
+            "token": "did",
+            "take_index": 184,
+            "take_s": 65.524,
+            "take_e": 65.644,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... this instance, whose mistake [did] Claude find? It was ..."
+          },
+          {
+            "word": "It",
+            "token": "it",
+            "take_index": 187,
+            "take_s": 67.124,
+            "take_e": 67.184,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... mistake did Claude find? [It] was actually the hospital's. ..."
+          },
+          {
+            "word": "was",
+            "token": "was",
+            "take_index": 188,
+            "take_s": 67.184,
+            "take_e": 67.264,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... did Claude find? It [was] actually the hospital's. And ..."
+          },
+          {
+            "word": "the",
+            "token": "the",
+            "take_index": 190,
+            "take_s": 67.564,
+            "take_e": 67.644,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... find? It was actually [the] hospital's. And I reckon ..."
+          },
+          {
+            "word": "And",
+            "token": "and",
+            "take_index": 192,
+            "take_s": 68.484,
+            "take_e": 68.624,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... was actually the hospital's. [And] I reckon Claude in ..."
+          },
+          {
+            "word": "I",
+            "token": "i",
+            "take_index": 193,
+            "take_s": 68.864,
+            "take_e": 68.884,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... actually the hospital's. And [I] reckon Claude in this ..."
+          },
+          {
+            "word": "in",
+            "token": "in",
+            "take_index": 196,
+            "take_s": 70.724,
+            "take_e": 70.764,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... And I reckon Claude [in] this instance didn't care ..."
+          },
+          {
+            "word": "this",
+            "token": "this",
+            "take_index": 197,
+            "take_s": 70.804,
+            "take_e": 70.944,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... I reckon Claude in [this] instance didn't care whose ..."
+          },
+          {
+            "word": "whose",
+            "token": "whose",
+            "take_index": 201,
+            "take_s": 71.884,
+            "take_e": 72.064,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... this instance didn't care [whose] closet it was opening ..."
+          },
+          {
+            "word": "it",
+            "token": "it",
+            "take_index": 203,
+            "take_s": 72.544,
+            "take_e": 72.624,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... didn't care whose closet [it] was opening and it ..."
+          },
+          {
+            "word": "was",
+            "token": "was",
+            "take_index": 204,
+            "take_s": 72.644,
+            "take_e": 72.744,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... care whose closet it [was] opening and it won't ..."
+          },
+          {
+            "word": "and",
+            "token": "and",
+            "take_index": 206,
+            "take_s": 73.084,
+            "take_e": 73.144,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... closet it was opening [and] it won't care when ..."
+          },
+          {
+            "word": "it",
+            "token": "it",
+            "take_index": 207,
+            "take_s": 73.164,
+            "take_e": 73.224,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... it was opening and [it] won't care when it ..."
+          },
+          {
+            "word": "when",
+            "token": "when",
+            "take_index": 210,
+            "take_s": 73.984,
+            "take_e": 74.104,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... and it won't care [when] it opens yours either. ..."
+          },
+          {
+            "word": "it",
+            "token": "it",
+            "take_index": 211,
+            "take_s": 74.144,
+            "take_e": 74.184,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... it won't care when [it] opens yours either. This ..."
+          },
+          {
+            "word": "yours",
+            "token": "yours",
+            "take_index": 213,
+            "take_s": 74.564,
+            "take_e": 74.784,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... care when it opens [yours] either. This week, I'm ..."
+          },
+          {
+            "word": "This",
+            "token": "this",
+            "take_index": 215,
+            "take_s": 75.444,
+            "take_e": 75.564,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... it opens yours either. [This] week, I'm gonna give ..."
+          },
+          {
+            "word": "I'm",
+            "token": "i'm",
+            "take_index": 217,
+            "take_s": 75.924,
+            "take_e": 75.984,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... yours either. This week, [I'm] gonna give my AI ..."
+          },
+          {
+            "word": "my",
+            "token": "my",
+            "take_index": 220,
+            "take_s": 76.444,
+            "take_e": 76.584,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... week, I'm gonna give [my] AI last year's invoices ..."
+          },
+          {
+            "word": "I",
+            "token": "i",
+            "take_index": 226,
+            "take_s": 78.545,
+            "take_e": 78.565,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... last year's invoices cause [I] wanna be the first ..."
+          },
+          {
+            "word": "be",
+            "token": "be",
+            "take_index": 228,
+            "take_s": 78.805,
+            "take_e": 78.885,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... invoices cause I wanna [be] the first one to ..."
+          },
+          {
+            "word": "the",
+            "token": "the",
+            "take_index": 229,
+            "take_s": 79.245,
+            "take_e": 79.325,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... cause I wanna be [the] first one to find ..."
+          },
+          {
+            "word": "to",
+            "token": "to",
+            "take_index": 232,
+            "take_s": 79.845,
+            "take_e": 79.905,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... be the first one [to] find the skeletons in ..."
+          },
+          {
+            "word": "the",
+            "token": "the",
+            "take_index": 234,
+            "take_s": 80.505,
+            "take_e": 80.565,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... first one to find [the] skeletons in my closet. ..."
+          },
+          {
+            "word": "in",
+            "token": "in",
+            "take_index": 236,
+            "take_s": 81.065,
+            "take_e": 81.125,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... to find the skeletons [in] my closet. The full ..."
+          },
+          {
+            "word": "my",
+            "token": "my",
+            "take_index": 237,
+            "take_s": 81.165,
+            "take_e": 81.285,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... find the skeletons in [my] closet. The full story ..."
+          },
+          {
+            "word": "The",
+            "token": "the",
+            "take_index": 239,
+            "take_s": 82.045,
+            "take_e": 82.105,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... skeletons in my closet. [The] full story is free ..."
+          },
+          {
+            "word": "is",
+            "token": "is",
+            "take_index": 242,
+            "take_s": 82.985,
+            "take_e": 83.085,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... closet. The full story [is] free at makeyourmindup.ai ..."
+          },
+          {
+            "word": "at",
+            "token": "at",
+            "take_index": 244,
+            "take_s": 83.365,
+            "take_e": 83.425,
+            "final_between_s": [
+              7.62,
+              null
+            ],
+            "context": "... full story is free [at] makeyourmindup.ai ..."
+          }
+        ],
+        "adlib_losses": [],
+        "heard_differently": [],
+        "cleared_by_krish": [],
+        "added_in_final": [
+          {
+            "word": "I",
+            "final_s": 1.06
+          },
+          {
+            "word": "order",
+            "final_s": 3.84
+          },
+          {
+            "word": "to",
+            "final_s": 4.08
+          }
+        ],
+        "approved_removals": [],
+        "unmeasured": [
+          {
+            "word": "some",
+            "token": "some",
+            "take_index": 1,
+            "take_s": 0.8,
+            "take_e": 0.96,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... So [some] good news from AI. ...",
+            "message": "\"some\" is unmeasured: said at 0:00.80 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... So [some] good news from AI. ..."
+          },
+          {
+            "word": "good",
+            "token": "good",
+            "take_index": 2,
+            "take_s": 1.0,
+            "take_e": 1.14,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... So some [good] news from AI. It ...",
+            "message": "\"good\" is unmeasured: said at 0:01.00 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... So some [good] news from AI. It ..."
+          },
+          {
+            "word": "news",
+            "token": "news",
+            "take_index": 3,
+            "take_s": 1.18,
+            "take_e": 1.48,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... So some good [news] from AI. It just ...",
+            "message": "\"news\" is unmeasured: said at 0:01.18 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... So some good [news] from AI. It just ..."
+          },
+          {
+            "word": "AI.",
+            "token": "ai",
+            "take_index": 5,
+            "take_s": 2.22,
+            "take_e": 2.5,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... some good news from [AI.] It just helped a ...",
+            "message": "\"AI.\" is unmeasured: said at 0:02.22 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... some good news from [AI.] It just helped a ..."
+          },
+          {
+            "word": "helped",
+            "token": "helped",
+            "take_index": 8,
+            "take_s": 3.6,
+            "take_e": 3.8,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... from AI. It just [helped] a family cut a ...",
+            "message": "\"helped\" is unmeasured: said at 0:03.60 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... from AI. It just [helped] a family cut a ..."
+          },
+          {
+            "word": "family",
+            "token": "family",
+            "take_index": 10,
+            "take_s": 3.88,
+            "take_e": 4.16,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... It just helped a [family] cut a $195,000 hospital ...",
+            "message": "\"family\" is unmeasured: said at 0:03.88 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... It just helped a [family] cut a $195,000 hospital ..."
+          },
+          {
+            "word": "cut",
+            "token": "cut",
+            "take_index": 11,
+            "take_s": 4.26,
+            "take_e": 4.5,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... just helped a family [cut] a $195,000 hospital bill ...",
+            "message": "\"cut\" is unmeasured: said at 0:04.26 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... just helped a family [cut] a $195,000 hospital bill ..."
+          },
+          {
+            "word": "$195,000",
+            "token": "195",
+            "take_index": 13,
+            "take_s": 6.92,
+            "take_e": 6.94,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... a family cut a [$195,000] hospital bill to a ...",
+            "message": "\"$195,000\" is unmeasured: said at 0:06.92 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... a family cut a [$195,000] hospital bill to a ..."
+          },
+          {
+            "word": "hospital",
+            "token": "hospital",
+            "take_index": 14,
+            "take_s": 7.02,
+            "take_e": 7.42,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... family cut a $195,000 [hospital] bill to a fraction ...",
+            "message": "\"hospital\" is unmeasured: said at 0:07.02 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... family cut a $195,000 [hospital] bill to a fraction ..."
+          },
+          {
+            "word": "bill",
+            "token": "bill",
+            "take_index": 15,
+            "take_s": 7.46,
+            "take_e": 7.62,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... cut a $195,000 hospital [bill] to a fraction of ...",
+            "message": "\"bill\" is unmeasured: said at 0:07.46 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... cut a $195,000 hospital [bill] to a fraction of ..."
+          },
+          {
+            "word": "fraction",
+            "token": "fraction",
+            "take_index": 18,
+            "take_s": 8.0,
+            "take_e": 8.36,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... hospital bill to a [fraction] of that. So imagine ...",
+            "message": "\"fraction\" is unmeasured: said at 0:08.00 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... hospital bill to a [fraction] of that. So imagine ..."
+          },
+          {
+            "word": "imagine",
+            "token": "imagine",
+            "take_index": 22,
+            "take_s": 8.861,
+            "take_e": 9.301,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... fraction of that. So [imagine] what it's finding in ...",
+            "message": "\"imagine\" is unmeasured: said at 0:08.86 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... fraction of that. So [imagine] what it's finding in ..."
+          },
+          {
+            "word": "finding",
+            "token": "finding",
+            "take_index": 25,
+            "take_s": 10.441,
+            "take_e": 10.821,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... So imagine what it's [finding] in everyone's archives right ...",
+            "message": "\"finding\" is unmeasured: said at 0:10.44 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... So imagine what it's [finding] in everyone's archives right ..."
+          },
+          {
+            "word": "everyone's",
+            "token": "everyone",
+            "take_index": 27,
+            "take_s": 10.941,
+            "take_e": 11.261,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... what it's finding in [everyone's] archives right now. Hospitals ...",
+            "message": "\"everyone's\" is unmeasured: said at 0:10.94 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... what it's finding in [everyone's] archives right now. Hospitals ..."
+          },
+          {
+            "word": "archives",
+            "token": "archives",
+            "take_index": 28,
+            "take_s": 11.321,
+            "take_e": 11.741,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... it's finding in everyone's [archives] right now. Hospitals pay ...",
+            "message": "\"archives\" is unmeasured: said at 0:11.32 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... it's finding in everyone's [archives] right now. Hospitals pay ..."
+          },
+          {
+            "word": "right",
+            "token": "right",
+            "take_index": 29,
+            "take_s": 11.781,
+            "take_e": 11.961,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... finding in everyone's archives [right] now. Hospitals pay whole ...",
+            "message": "\"right\" is unmeasured: said at 0:11.78 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... finding in everyone's archives [right] now. Hospitals pay whole ..."
+          },
+          {
+            "word": "now.",
+            "token": "now",
+            "take_index": 30,
+            "take_s": 12.001,
+            "take_e": 12.121,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... in everyone's archives right [now.] Hospitals pay whole teams ...",
+            "message": "\"now.\" is unmeasured: said at 0:12.00 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... in everyone's archives right [now.] Hospitals pay whole teams ..."
+          },
+          {
+            "word": "Hospitals",
+            "token": "hospitals",
+            "take_index": 31,
+            "take_s": 12.421,
+            "take_e": 12.961,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... everyone's archives right now. [Hospitals] pay whole teams to ...",
+            "message": "\"Hospitals\" is unmeasured: said at 0:12.42 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... everyone's archives right now. [Hospitals] pay whole teams to ..."
+          },
+          {
+            "word": "pay",
+            "token": "pay",
+            "take_index": 32,
+            "take_s": 13.081,
+            "take_e": 13.281,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... archives right now. Hospitals [pay] whole teams to sort ...",
+            "message": "\"pay\" is unmeasured: said at 0:13.08 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... archives right now. Hospitals [pay] whole teams to sort ..."
+          },
+          {
+            "word": "whole",
+            "token": "whole",
+            "take_index": 33,
+            "take_s": 13.381,
+            "take_e": 13.541,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... right now. Hospitals pay [whole] teams to sort pricing ...",
+            "message": "\"whole\" is unmeasured: said at 0:13.38 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... right now. Hospitals pay [whole] teams to sort pricing ..."
+          },
+          {
+            "word": "teams",
+            "token": "teams",
+            "take_index": 34,
+            "take_s": 13.581,
+            "take_e": 13.921,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... now. Hospitals pay whole [teams] to sort pricing out ...",
+            "message": "\"teams\" is unmeasured: said at 0:13.58 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... now. Hospitals pay whole [teams] to sort pricing out ..."
+          },
+          {
+            "word": "sort",
+            "token": "sort",
+            "take_index": 36,
+            "take_s": 14.541,
+            "take_e": 14.741,
+            "final_between_s": [
+              0.0,
+              0.0
+            ],
+            "context": "... pay whole teams to [sort] pricing out and a ...",
+            "message": "\"sort\" is unmeasured: said at 0:14.54 in the take; the final's words either side of it touch at 0:00.00, so the transcriber had no room to hear it (the joins gate checks for a chop there): ... pay whole teams to [sort] pricing out and a ..."
+          }
+        ],
+        "calibration": {
+          "status": "uncalibrated",
+          "note": "OPEN until calibrated on real cuts (plan W3 3a): Monday 26 Oct's accepted long and short must pass; Wednesday 21 Oct's published long cut and Friday's 90-second cut from the 17 Oct words file must fail. A clipped tail the transcriber still hears whole is caught by joins-in-gaps (scripts/cutgates/gaps.py). The harness is scripts/cutgates/calibrate.py on config/gate-calibration.json."
+        },
+        "counts": {
+          "script_words": 253,
+          "take_words": 253,
+          "final_words": 24,
+          "removed_by_edl": 0,
+          "compared": 253,
+          "take_tokens_not_in_script": 0,
+          "script_content_words_not_said_in_take": 0,
+          "lost": 104,
+          "unapproved_removals": 0,
+          "cleared_by_krish": 0,
+          "unmeasured": 22,
+          "near_homophones": 0,
+          "function_word_differences": 101,
+          "adlib_losses": 0
+        },
+        "reason": "104 content word(s) of the signed script he said in the take are missing from the final cut",
+        "aligners": [
+          "faster-whisper"
+        ],
+        "agreement": "single aligner",
+        "per_aligner": {
+          "faster-whisper": {
+            "status": "fail",
+            "lost": [
+              "auditor",
+              "Let's",
+              "see.",
+              "man's",
+              "brother-in-law",
+              "died",
+              "heart",
+              "attack",
+              "no",
+              "health",
+              "cover.",
+              "family",
+              "owed",
+              "all",
+              "money,",
+              "195K.",
+              "gave",
+              "Claude",
+              "bill",
+              "line",
+              "line.",
+              "Claude",
+              "found",
+              "care",
+              "billed",
+              "much",
+              "more",
+              "expensive",
+              "code",
+              "care",
+              "brother-in-law",
+              "actually",
+              "got.",
+              "charging",
+              "steak",
+              "get",
+              "served",
+              "sandwich.",
+              "sent",
+              "hospital",
+              "list",
+              "bill",
+              "fell",
+              "lot.",
+              "bit",
+              "love.",
+              "old",
+              "bill",
+              "can't",
+              "argue",
+              "back",
+              "rules",
+              "written",
+              "AI",
+              "reads",
+              "every",
+              "line,",
+              "never",
+              "needs",
+              "coffee.",
+              "Ask",
+              "next",
+              "year",
+              "definitely",
+              "guessing,",
+              "ask",
+              "last",
+              "year",
+              "analysing.",
+              "instance,",
+              "mistake",
+              "Claude",
+              "find?",
+              "actually",
+              "hospital's.",
+              "reckon",
+              "Claude",
+              "instance",
+              "didn't",
+              "care",
+              "closet",
+              "opening",
+              "won't",
+              "care",
+              "opens",
+              "either.",
+              "week,",
+              "gonna",
+              "give",
+              "AI",
+              "last",
+              "year's",
+              "invoices",
+              "cause",
+              "wanna",
+              "first",
+              "one",
+              "find",
+              "skeletons",
+              "closet.",
+              "full",
+              "story",
+              "free",
+              "makeyourmindup.ai"
+            ],
+            "reason": "104 content word(s) of the signed script he said in the take are missing from the final cut"
+          }
+        },
+        "heard_by_one_aligner": []
+      },
+      "target": "no content word of the signed script lost on every aligner's pass",
+      "pass": false,
+      "status": "measured",
+      "agreement": "single aligner",
+      "summary": "104 content word(s) of the signed script he said in the take are missing from the final cut: \"auditor\" is lost: said at 0:18.62 in the take, not heard in the final cut between 0:03.84 and 0:04.28 (the final has \"order to\" there): ... So will your AI [auditor] find missing money or ...; \"Let's\" is lost: said at 0:22.88 in the take, not heard in the final cut between 0:07.62 and the end: ... skeletons in your closet? [Let's] see. A man's brother-in-law ...; \"see.\" is lost: said at 0:23.12 in the take, not heard in the final cut between 0:07.62 and the end: ... in your closet? Let's [see.] A man's brother-in-law died ...; \"man's\" is lost: said at 0:24.16 in the take, not heard in the final cut between 0:07.62 and the end: ... closet? Let's see. A [man's] brother-in-law died of a ...; \"brother-in-law\" is lost: said at 0:24.54 in the take, not heard in the final cut between 0:07.62 and the end: ... Let's see. A man's [brother-in-law] died of a heart ...; \"died\" is lost: said at 0:25.06 in the take, not heard in the final cut between 0:07.62 and the end: ... see. A man's brother-in-law [died] of a heart attack ... (and 98 more)"
     },
     "joins.in_gaps": {
       "value": {
@@ -408,10 +3429,10 @@
         "version": "captions/1",
         "part": "renderer",
         "region": [
-          48,
-          658,
+          58,
+          974,
           824,
-          204
+          358
         ],
         "window_frames": 3,
         "min_score": 0.98,
@@ -421,20 +3442,24 @@
             "page": 0,
             "fromFrame": 0,
             "text": "teams to sort pricing out",
-            "change_frame": 1,
-            "frame": 27,
-            "read": "tO!",
-            "score": 0.2,
+            "change_frame": 2,
+            "frame": 20,
+            "read": "TEAMS TO SORT\nPRICING",
+            "score": 0.8,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"tO!\" near frame 27, not \"teams to sort pricing out\" (score 0.2, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"TEAMS TO SORT\nPRICING\" near frame 20, not \"teams to sort pricing out\" (score 0.8, needs an exact match and 0.98)"
           },
           {
             "page": 1,
             "fromFrame": 29,
             "text": "and a chatbot beat them.",
-            "status": "fail",
-            "message": "caption page 1 (\"and a chatbot beat them.\"): no change in the caption zone within 3 frames of its start, frame 29"
+            "change_frame": 28,
+            "frame": 60,
+            "read": "AND A\nCHATBOT\nBEAT THEM",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 0,
@@ -442,11 +3467,11 @@
             "text": "So A man's brother-in-law",
             "change_frame": 68,
             "frame": 97,
-            "read": "3so.0U°ltéi“‘étw™S SS\na vy ~ an.’ \\",
-            "score": 0.0667,
+            "read": "}) en\nS As \\ - a",
+            "score": 0.1111,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"3so.0U°ltéi“‘étw™S SS\na vy ~ an.’ \\\" near frame 97, not \"So A man's brother-in-law\" (score 0.0667, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"}) en\nS As \\ - a\" near frame 97, not \"So A man's brother-in-law\" (score 0.1111, needs an exact match and 0.98)"
           }
         ],
         "failed": [
@@ -454,20 +3479,13 @@
             "page": 0,
             "fromFrame": 0,
             "text": "teams to sort pricing out",
-            "change_frame": 1,
-            "frame": 27,
-            "read": "tO!",
-            "score": 0.2,
+            "change_frame": 2,
+            "frame": 20,
+            "read": "TEAMS TO SORT\nPRICING",
+            "score": 0.8,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"tO!\" near frame 27, not \"teams to sort pricing out\" (score 0.2, needs an exact match and 0.98)"
-          },
-          {
-            "page": 1,
-            "fromFrame": 29,
-            "text": "and a chatbot beat them.",
-            "status": "fail",
-            "message": "caption page 1 (\"and a chatbot beat them.\"): no change in the caption zone within 3 frames of its start, frame 29"
+            "message": "caption page 0 reads \"TEAMS TO SORT\nPRICING\" near frame 20, not \"teams to sort pricing out\" (score 0.8, needs an exact match and 0.98)"
           },
           {
             "page": 0,
@@ -475,23 +3493,23 @@
             "text": "So A man's brother-in-law",
             "change_frame": 68,
             "frame": 97,
-            "read": "3so.0U°ltéi“‘étw™S SS\na vy ~ an.’ \\",
-            "score": 0.0667,
+            "read": "}) en\nS As \\ - a",
+            "score": 0.1111,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"3so.0U°ltéi“‘étw™S SS\na vy ~ an.’ \\\" near frame 97, not \"So A man's brother-in-law\" (score 0.0667, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"}) en\nS As \\ - a\" near frame 97, not \"So A man's brother-in-law\" (score 0.1111, needs an exact match and 0.98)"
           }
         ],
-        "changes_found": 9,
+        "changes_found": 10,
         "status": "fail",
-        "reason": "2 of 2 caption page(s) are not drawn as the props say near their start",
+        "reason": "1 of 2 caption page(s) are not drawn as the props say near their start",
         "pass": false,
         "regions": [
           [
-            48,
-            658,
+            58,
+            974,
             824,
-            204
+            358
           ],
           [
             58,
@@ -505,7 +3523,7 @@
       "pass": false,
       "status": "measured",
       "agreement": null,
-      "summary": "2 of 2 caption page(s) are not drawn as the props say near their start: caption page 0 reads \"tO!\" near frame 27, not \"teams to sort pricing out\" (score 0.2, needs an exact match and 0.98); caption page 1 (\"and a chatbot beat them.\"): no change in the caption zone within 3 frames of its start, frame 29; caption page 0 reads \"3so.0U°ltéi“‘étw™S SS\na vy ~ an.’ \\\" near frame 97, not \"So A man's brother-in-law\" (score 0.0667, needs an exact match and 0.98)"
+      "summary": "1 of 2 caption page(s) are not drawn as the props say near their start: caption page 0 reads \"TEAMS TO SORT\nPRICING\" near frame 20, not \"teams to sort pricing out\" (score 0.8, needs an exact match and 0.98); caption page 0 reads \"}) en\nS As \\ - a\" near frame 97, not \"So A man's brother-in-law\" (score 0.1111, needs an exact match and 0.98)"
     },
     "captions.off_face": {
       "value": {
@@ -724,7 +3742,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 99.39
+              "value": 99.34
             },
             "small_text": {
               "pass": true,
@@ -739,7 +3757,7 @@
               "value": [
                 {
                   "text": "AUDITOR",
-                  "conf": 95.794975,
+                  "conf": 95.217041,
                   "x": 648,
                   "y": 541,
                   "w": 329,
@@ -758,7 +3776,7 @@
           "frame": 151
         },
         "skeletons": {
-          "pass": true,
+          "pass": false,
           "checks": {
             "fill_pct": {
               "pass": true,
@@ -769,8 +3787,17 @@
               "value": []
             },
             "caption_zone": {
-              "pass": true,
-              "value": []
+              "pass": false,
+              "value": [
+                {
+                  "text": "x",
+                  "conf": 91.143608,
+                  "x": 528,
+                  "y": 1190,
+                  "w": 14,
+                  "h": 16
+                }
+              ]
             },
             "platform_zone": {
               "pass": true,
@@ -781,7 +3808,9 @@
               "value": []
             }
           },
-          "findings": [],
+          "findings": [
+            "caption_zone contains 'x', the limit is 0 unlisted words."
+          ],
           "frame": 239
         }
       },
@@ -875,11 +3904,14 @@
       "pass": true
     },
     "title.lockup_frame": {
-      "value": null,
+      "value": [
+        {
+          "frame": 229,
+          "why": "the wordmark is not read inside the title lockup, centred under the title (it is read elsewhere on the frame)"
+        }
+      ],
       "target": "the title is one centred full-frame lockup, big type, the wordmark inside it and timed with it",
-      "pass": null,
-      "status": "not_run",
-      "reason": "frame 242 is past the end of short.mp4"
+      "pass": false
     },
     "transition.no_ghost_frames": {
       "value": [],
@@ -950,7 +3982,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 99.39
+            "value": 99.34
           },
           "small_text": {
             "pass": true,
@@ -965,7 +3997,7 @@
             "value": [
               {
                 "text": "AUDITOR",
-                "conf": 95.794975,
+                "conf": 95.217041,
                 "x": 648,
                 "y": 541,
                 "w": 329,
@@ -984,7 +4016,7 @@
         "frame": 151
       },
       "skeletons": {
-        "pass": true,
+        "pass": false,
         "checks": {
           "fill_pct": {
             "pass": true,
@@ -995,8 +4027,17 @@
             "value": []
           },
           "caption_zone": {
-            "pass": true,
-            "value": []
+            "pass": false,
+            "value": [
+              {
+                "text": "x",
+                "conf": 91.143608,
+                "x": 528,
+                "y": 1190,
+                "w": 14,
+                "h": 16
+              }
+            ]
           },
           "platform_zone": {
             "pass": true,
@@ -1007,7 +4048,9 @@
             "value": []
           }
         },
-        "findings": [],
+        "findings": [
+          "caption_zone contains 'x', the limit is 0 unlisted words."
+        ],
         "frame": 239
       }
     }

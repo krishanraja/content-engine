@@ -432,6 +432,17 @@ def title_lockup_frame_problems(path: str, props: dict, fps: float, aspect: str,
     start, end = int(moment['fromFrame']), int(moment['toFrame'])
     last = max(int(w['atFrame']) for w in moment.get('words') or [{'atFrame': start}])
     hold = min(last + rule['settle_frames'], end - 11) if end - 11 > last else last
+    frames = None
+    # A proof excerpt can end a few frames before the settle point (Fri 20 Nov: 242 of 240): once every word has landed
+    # inside the file, its last frame is a settled title frame.
+    try:
+        import subprocess  # noqa: PLC0415
+        frames = int(round(float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(path)],
+                                                capture_output=True, text=True, check=True).stdout.strip()) * fps)) - lead
+        if hold >= frames and frames - 1 > last + 3:
+            hold = frames - 1
+    except (OSError, ValueError, subprocess.SubprocessError):
+        pass
     mark_words = set(rule['wordmark_tokens'])
     title_words = set(tokens(' '.join(w['text'] for w in moment.get('words') or []))) - mark_words
 
@@ -466,6 +477,8 @@ def title_lockup_frame_problems(path: str, props: dict, fps: float, aspect: str,
         out.append({'frame': at, 'why': 'the wordmark is not read inside the title lockup, centred under the title'
                                         + (' (it is read elsewhere on the frame)' if mark else '')})
     for frame, when in ((start - rule['edge_frames'], 'before the title arrives'), (end + rule['edge_frames'], 'after the title leaves')):
+        if frames is not None and not 0 <= frame < frames:
+            continue  # a look outside a proof excerpt: nothing there to read
         if frame < 0:
             continue
         if any(set(tokens(w[0])) & mark_words and not set(tokens(w[0])) & title_words for w in words_at(frame)):

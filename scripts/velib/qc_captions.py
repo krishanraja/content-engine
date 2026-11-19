@@ -155,6 +155,12 @@ def _highlight(pixels):
     return np.where(np.where(inside, grey < 110, grey > 200), 0, 255).astype('uint8')
 
 
+def _cream_half(pixels):
+    """The caption's cream type as black on white, at half size, with a 30 px white margin."""
+    ink = np.where(pixels > 215, 0, 255).astype('uint8')[::2, ::2]
+    return np.pad(ink, 30, constant_values=255)
+
+
 def _read_candidates(executable, pixels, expected, judge=None):
     normalised = _normalise(pixels)
     highlight = _highlight(pixels)
@@ -163,7 +169,10 @@ def _read_candidates(executable, pixels, expected, judge=None):
     for variant, image in (('raw', pixels), ('normalised', normalised),
                            ('raw_2x', pixels.repeat(2, axis=0).repeat(2, axis=1)),
                            ('normalised_2x', normalised.repeat(2, axis=0).repeat(2, axis=1)),
-                           ('highlight', highlight)):
+                           ('highlight', highlight),
+                           # Tesseract misses very large display glyphs (the art-directed 92 to 168 px Anton: a lone
+                           # "OUT" read as "ww", Fri 20 Nov): the cream type alone, at half size, with a margin.
+                           ('cream_half', _cream_half(pixels))):
         seen = _recognise(executable, image)
         # A lone pipe is the heavy sans capital I read as a bar; it counts as the word I only where I is expected.
         if 'i' in expected:
