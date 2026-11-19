@@ -39,7 +39,7 @@ beats=[
  dict(id="lines",role="bridge",span={"from_w":82,"to_w":90},viewer_task="understand_mechanism",point="He asked for the bill line by line and gave it to Claude",layout="STAGE",plate={"source":"none"},uses=["th_head"],events=[],transition_out="cut",face="off",backdrop="asset:tomshw"),
  dict(id="code",role="anchor",span={"from_w":91,"to_w":107},viewer_task="understand_mechanism",point="Care was billed under a dearer code than the care he got",layout="WINDOW",plate={"source":"take"},uses=["chip_billed","chip_given"],events=[ev(91,"chip_billed","enter"),ev(99,"chip_billed","highlight"),ev(103,"chip_given","enter")],transition_out="cut",face="window"),
  dict(id="steak",role="bridge",span={"from_w":108,"to_w":119},viewer_task="feel_stakes",point="Charged for a steak, served a sandwich",layout="STAGE",plate={"source":"none"},uses=["steak"],events=[ev(108,"steak","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
- dict(id="fell",role="anchor",span={"from_w":120,"to_w":132},viewer_task="verify_evidence",point="He sent the list and the bill fell to about a sixth",layout="STAGE",plate={"source":"none"},uses=["k_after","chip_caveat"],events=[ev(120,"k_after","enter"),ev(120,"k_after","count_to","billed"),ev(129,"k_after","count_to","after"),ev(131,"chip_caveat","enter")],transition_out="cut",face="off",backdrop="asset:tomshw"),
+ dict(id="fell",role="anchor",span={"from_w":120,"to_w":132},viewer_task="verify_evidence",point="He sent the list and the bill fell to about a sixth",layout="P1",plate={"source":"none"},uses=["k_after","chip_caveat"],events=[ev(120,"k_after","enter"),ev(120,"k_after","count_to","billed"),ev(129,"k_after","count_to","after"),ev(131,"chip_caveat","enter")],transition_out="cut",face="off",backdrop="asset:tomshw"),
  dict(id="love",role="bridge",span={"from_w":133,"to_w":160},viewer_task="connect_with_speaker",point="An old bill can't argue back, the rules are written down, and AI reads every line without a break",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
  dict(id="hindsight",role="anchor",span={"from_w":161,"to_w":177},viewer_task="understand_mechanism",point="About next year AI is guessing; about last year it is reading",layout="WINDOW",plate={"source":"take"},uses=["chip_next","chip_last"],events=[ev(161,"chip_next","enter"),ev(169,"chip_next","highlight"),ev(171,"chip_last","enter"),ev(177,"chip_last","highlight")],transition_out="cut",face="window"),
  dict(id="whose",role="bridge",span={"from_w":178,"to_w":194},viewer_task="connect_with_speaker",point="Whose mistake did Claude find? The hospital's",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
@@ -165,6 +165,14 @@ slamify('short', beats, 'whose', [("mistake", "MISTAKE", "WHOSE MISTAKE?"), ("ho
 no_marks_on_pages('short', beats)
 for _b in beats:  # the bill's own page behind every SPLIT panel, never plain ink (Krish, 19 Nov)
     if _b['layout'] == 'SPLIT': _b['backdrop'] = 'asset:tomshw'
+# Full face, slam band above his head (Krish's Critic, 19 Nov): his face stays high with the captions under his chin.
+BAND = {"left": 135, "top": 260, "width": 1080, "height": 480, "scale": 0.75}
+for _b in beats:
+    if _b['layout'] == 'SPLIT':
+        _b['layout'] = 'F1'; _b['face'] = 'full'; _b.pop('backdrop', None)
+        for _u in _b['uses']:
+            next(o for o in objects if o['obj'] == _u)['params']['place'] = dict(BAND)
+next(o for o in objects if o['obj'] == 'strike')['params'].update({"from": [230, 250], "to": [850, 245]})
 next(o for o in objects if o['obj'] == 'th_head')['persist']['to_beat'] = 'lines'  # the same page held: its last line is his 'line by line'
 json.dump(spec,open(P+'spec.json','w'),indent=1); print('wrote', len(beats),'beats', len(objects),'objects')
 

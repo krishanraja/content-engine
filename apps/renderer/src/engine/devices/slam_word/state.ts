@@ -4,7 +4,8 @@ import { ParamsSchema } from './schema'
 
 // Producer: ve-gap-slam-word-1 / Character.ai study. The slam is an explicit
 // three-frame exception to normal entrances; exits use the style's 8-frame dissolve.
-export const SLAM = { landingFrames: 3, fadeFrames: 8, endOpacity: 0.3, burstFrames: 24, slips: 24 } as const
+// endOpacity 0: an exited slam leaves the frame whole; a 30% residue sat behind the next word ("TEAMSS", Fri 20 Nov).
+export const SLAM = { landingFrames: 3, fadeFrames: 8, endOpacity: 0, burstFrames: 24, slips: 24 } as const
 const linear = (t: number) => t
 
 /** Local seeded PRNG; only the persistent object id supplies entropy. */

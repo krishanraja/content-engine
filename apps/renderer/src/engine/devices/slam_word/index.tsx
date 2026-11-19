@@ -18,9 +18,11 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const fontSize = Math.min(aspect === '9:16' ? 180 : 220, (w - 96) / textWidth('anton', word, 1))
   if (fontSize < 40) throw new Error('slam_word copy cannot fit at the 40px floor')
   const body = <div data-device="slam_word" style={{ position: 'absolute', left: 0, top: 0, width: w, height: h,
-    overflow: 'hidden', opacity: s.opacity, isolation: 'isolate' }}>
+    // Clipped top and bottom only: the tapes run off both edges of the frame, never stopping mid-word inside it (Fri 20
+    // Nov: "WHOLE TEA" ended at x 920 on a tall cut).
+    clipPath: 'inset(0px -4000px)', opacity: s.opacity, isolation: 'isolate' }}>
     {[-1, 1].map(direction => <div key={direction} data-caution-tape={direction} style={{ position: 'absolute',
-      left: -w * 0.15, top: h * (direction === -1 ? 0.26 : 0.63), width: w * 1.3, height: 64,
+      left: -w * 1.5, top: h * (direction === -1 ? 0.26 : 0.63), width: w * 4, height: 64,
       overflow: 'hidden', background: tokens.channel, color: tokens.ink,
       transform: `rotate(${direction * 7}deg)`, fontFamily: HOUSE_FONTS.data, fontSize: 40, lineHeight: '64px' }}>
       <div data-tape-drift={direction * s.tapeDrift} style={{ display: 'flex', width: 'max-content',

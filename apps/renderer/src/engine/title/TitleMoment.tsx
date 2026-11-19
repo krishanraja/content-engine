@@ -123,7 +123,8 @@ export function lockupGeometry(words: TitleWord[], width: number, height: number
   const markWidth = width * (tall ? 0.42 : 0.2)
   const mark = wordmark ? { width: markWidth, height: markWidth * wordmark.pixelHeight / wordmark.pixelWidth } : null
   const below = bands.at(-1)!.cy + bands.at(-1)!.height / 2 + bandWidth / 2 * Math.sin(3 * Math.PI / 180)
-  const markTop = mark ? Math.min(Math.max(below + height * 0.04, height * (tall ? 0.78 : 0.8)), height * 0.97 - mark.height) : 0
+  // Tight under the bands: one lockup, never a separate pill 300 px below it (Fri 20 Nov critic).
+  const markTop = mark ? Math.min(below + height * 0.025, height * 0.97 - mark.height) : 0
   const placedMark = mark ? { left: (width - mark.width) / 2, top: markTop, ...mark } : null
   // The lockup's box: the bands (rotated by at most 3 degrees, so their corners lift by half a band's sine) and the wordmark.
   const lift = (b: LockupBand) => b.width / 2 * Math.sin(3 * Math.PI / 180)

@@ -51,7 +51,15 @@
     "from_beat": "hook",
     "to_beat": "hook"
    },
-   "params": {}
+   "params": {
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
+   }
   },
   {
    "obj": "strike",
@@ -66,13 +74,20 @@
     "seed": "fri20",
     "shape": "underline",
     "from": [
-     200,
-     340
+     230,
+     250
     ],
     "to": [
-     690,
-     330
-    ]
+     850,
+     245
+    ],
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -241,7 +256,14 @@
    },
    "params": {
     "word": "ARCHIVES",
-    "tapeText": "EVERYONE'S, RIGHT NOW"
+    "tapeText": "EVERYONE'S, RIGHT NOW",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -254,7 +276,14 @@
    },
    "params": {
     "word": "TEAMS",
-    "tapeText": "HOSPITALS PAY WHOLE TEAMS"
+    "tapeText": "HOSPITALS PAY WHOLE TEAMS",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -267,7 +296,14 @@
    },
    "params": {
     "word": "CHATBOT",
-    "tapeText": "A CHATBOT BEAT THEM"
+    "tapeText": "A CHATBOT BEAT THEM",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -280,7 +316,14 @@
    },
    "params": {
     "word": "ARGUE",
-    "tapeText": "AN OLD BILL CAN'T ARGUE BACK"
+    "tapeText": "AN OLD BILL CAN'T ARGUE BACK",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -293,7 +336,14 @@
    },
    "params": {
     "word": "WRITTEN",
-    "tapeText": "THE RULES ARE WRITTEN DOWN"
+    "tapeText": "THE RULES ARE WRITTEN DOWN",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -306,7 +356,14 @@
    },
    "params": {
     "word": "EVERY",
-    "tapeText": "AI READS EVERY LINE"
+    "tapeText": "AI READS EVERY LINE",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -319,7 +376,14 @@
    },
    "params": {
     "word": "BILLED",
-    "tapeText": "CARE BILLED UNDER"
+    "tapeText": "CARE BILLED UNDER",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -332,7 +396,14 @@
    },
    "params": {
     "word": "EXPENSIVE",
-    "tapeText": "A MUCH MORE EXPENSIVE CODE"
+    "tapeText": "A MUCH MORE EXPENSIVE CODE",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -345,7 +416,14 @@
    },
    "params": {
     "word": "BROTHER-IN-LAW",
-    "tapeText": "THAN THE CARE HIS BROTHER-IN-LAW ACTUALLY GOT"
+    "tapeText": "THAN THE CARE HIS BROTHER-IN-LAW ACTUALLY GOT",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -358,7 +436,14 @@
    },
    "params": {
     "word": "GUESSING",
-    "tapeText": "NEXT YEAR: IT'S GUESSING"
+    "tapeText": "NEXT YEAR: IT'S GUESSING",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -371,7 +456,14 @@
    },
    "params": {
     "word": "ANALYSING",
-    "tapeText": "LAST YEAR: IT'S ANALYSING"
+    "tapeText": "LAST YEAR: IT'S ANALYSING",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -384,7 +476,14 @@
    },
    "params": {
     "word": "MISTAKE",
-    "tapeText": "WHOSE MISTAKE?"
+    "tapeText": "WHOSE MISTAKE?",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -397,7 +496,14 @@
    },
    "params": {
     "word": "HOSPITAL'S",
-    "tapeText": "IT WAS THE HOSPITAL'S"
+    "tapeText": "IT WAS THE HOSPITAL'S",
+    "place": {
+     "left": 135,
+     "top": 260,
+     "width": 1080,
+     "height": 480,
+     "scale": 0.75
+    }
    }
   },
   {
@@ -1231,7 +1337,7 @@
      },
      "viewer_task": "locate_story",
      "point": "AI just cut a family's six-figure hospital bill to a fraction",
-     "layout": "SPLIT",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1263,7 +1369,7 @@
       }
      ],
      "transition_out": "cut",
-     "backdrop": "asset:tomshw"
+     "face": "full"
     },
     {
      "id": "face",
@@ -1274,7 +1380,7 @@
      },
      "viewer_task": "connect_with_speaker",
      "point": "Imagine what it is finding in everyone's old paperwork, when whole hospital teams missed it",
-     "layout": "SPLIT",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1321,7 +1427,7 @@
       }
      ],
      "transition_out": "cut",
-     "backdrop": "asset:tomshw"
+     "face": "full"
     },
     {
      "id": "question",
@@ -1442,7 +1548,7 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "Care was billed under a dearer code than the care he got",
-     "layout": "SPLIT",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1489,7 +1595,7 @@
       }
      ],
      "transition_out": "cut",
-     "backdrop": "asset:tomshw"
+     "face": "full"
     },
     {
      "id": "steak",
@@ -1529,7 +1635,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "He sent the list and the bill fell to about a sixth",
-     "layout": "STAGE",
+     "layout": "P1",
      "plate": {
       "source": "none"
      },
@@ -1580,7 +1686,7 @@
      },
      "viewer_task": "connect_with_speaker",
      "point": "An old bill can't argue back, the rules are written down, and AI reads every line without a break",
-     "layout": "SPLIT",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1627,7 +1733,7 @@
       }
      ],
      "transition_out": "cut",
-     "backdrop": "asset:tomshw"
+     "face": "full"
     },
     {
      "id": "hindsight",
@@ -1638,7 +1744,7 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "About next year AI is guessing; about last year it is reading",
-     "layout": "SPLIT",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1670,7 +1776,7 @@
       }
      ],
      "transition_out": "cut",
-     "backdrop": "asset:tomshw"
+     "face": "full"
     },
     {
      "id": "whose",
@@ -1681,7 +1787,7 @@
      },
      "viewer_task": "connect_with_speaker",
      "point": "Whose mistake did Claude find? The hospital's",
-     "layout": "SPLIT",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1713,7 +1819,7 @@
       }
      ],
      "transition_out": "cut",
-     "backdrop": "asset:tomshw"
+     "face": "full"
     },
     {
      "id": "closet",

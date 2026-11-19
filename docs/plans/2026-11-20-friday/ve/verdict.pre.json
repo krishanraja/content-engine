@@ -1,35 +1,35 @@
 {
   "schema": "ve-pre-critic/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-  "spec_sha256": "2661f85579a79ed4bf0b002b71c9e36b5c80e3bb3cc78f1ba3d1343dac62556a",
+  "spec_sha256": "d011052a8d1d496ce0a45d72fe421a79b0db316895f5ad16d68eb1328d3494d2",
   "cards": [],
-  "reviewer": "reviewer-subagent-opus",
-  "reviewed_at": "2026-11-19T15:25:07.256147+00:00",
+  "reviewer": "reviewer subagent afe4d5bf6eef0d4e6",
+  "reviewed_at": "2026-11-19T17:00:30.628396+00:00",
   "answers": {
     "one_idea": {
       "pass": true,
-      "line": "Yes. The Tom's Hardware bill page behind the six SPLIT beats is the old page the auditor is reading, blurred as ground (focus 1 on every beat with a device), so the slam words and the counter stay the only figure and it adds no second idea. The page is sharp only inside th_head on proof and lines. The see-through title scrim now sits over the sofa and closet plates, which are the idea's own money and skeleton."
+      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts. On the short's six F1 beats the slam words are his own words on the words he says, in one band above his head over his full take, so his face carries the line and adds no second picture. fell (P1) shows the bill counting down from 195,000 to 33,000 on 'fell' over the blurred bill page, with the caveat kept. Real pages stay held still; the sofa and closet plates still carry money and skeleton."
     },
     "no_invented_numbers": {
       "pass": true,
-      "line": "No invented figure. The backdrop is the piece's own real page (asset tomshw, sha256 bdd1e519...); at the renderer's focus-1 blur (18 px on a 1080 panel) its headline figures cannot be read, and they are the piece's own $195,000 and $33,000 anyway. The counters show only the bill-billed and bill-after rows; no slam word or tape has a digit; l_krafton's '258 days' is printed on its own page."
+      "line": "No invented figure. k_billed and k_after show only the bill-billed and bill-after rows (195,000 and 33,000) with their producer line 'Tom's Hardware, 29 Oct 2025 (the family's account)'. The ghost waits for a finished count, and chip_caveat stays on fell. No slam word or tape has a digit. The fell backdrop is the piece's own page, blurred unreadable at focus 1. The figures on th_head, l_lede and l_krafton are printed on their own pages."
     }
   },
   "findings": [
     {
       "severity": "note",
-      "area": "short SPLIT backdrops",
-      "text": "The blurred page's top edge is the Tom's Hardware header (a red band, the site logo as a red smudge). Check a frame against the wordmark rule; if it reads as a logo, frame the backdrop lower."
+      "area": "short hook, face, code, love, hindsight, whose (F1)",
+      "text": "The slam band (frame rows 260-620) must clear his head on his full-frame take, with captions under his chin; check a frame of each of the six beats after render."
     },
     {
       "severity": "note",
-      "area": "one backdrop for nine beats",
-      "text": "The same bill page is behind nine beats of the short: consistent with one page under audit, static from hook to whose. Krish's choice."
+      "area": "short hook strike",
+      "text": "The underline maps to about (307,447)-(772,444); check it crosses the digits on the first F1 hook frame after w18."
     },
     {
       "severity": "note",
-      "area": "title card scrim",
-      "text": "Check on a render that the title reads over the moving sofa and closet plates and no caption shows during the hold."
+      "area": "engine changes (not in spec)",
+      "text": "Slam exit to zero, tapes off both edges, the title lockup and no caption page spanning the title: check after render, including the 2.5 s frame on the sofa plate."
     }
   ],
   "mechanical": [],

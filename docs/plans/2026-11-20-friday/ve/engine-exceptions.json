@@ -1,32 +1,41 @@
 {
-  "schema": "ve-engine-exceptions/1",
-  "about": "Krish's approval of the engine change for the Fri 20 Nov piece (c00cd4e0): the pillar staging for his vertical long take, kinetic_stat kept cream on a dark ground, no mark over a real page, the push camera keeping a graphics-only region in frame, the optional dated call. velib/guards.py reads it beside the spec's approvals; scope engine waives nothing else. If the engine changes again before this piece renders, the hash no longer matches and he is asked again.",
-  "approvals": [
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "said": "Approve the engine change (Recommended)",
-      "on": "2026-11-19",
-      "artifact_hash": "527e43892bd91e9a802a8ede125f7c6cad8723f3e73ea6be52b921655181629f"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "said": "yes change for all moving forward - but bear in mind that the audio waveform visual behind it was made for a piece about AI music specifically. In the future, the engine needs to find its own visual that matches the piece.",
-      "on": "2026-11-19",
-      "artifact_hash": "4dc902065df02b41c03e481e398a0a95adafb2afebdb79ed9082124749ca5e69",
-      "covers": "the house title card over the piece's own picture (no music bars); a SPLIT panel draws its beat's backdrop, so no plain black panel (his rule of 19 Nov: 'I don't want a plain black screen anywhere')"
-    },
-    {
-      "gate": "exception",
-      "scope": "engine",
-      "by": "Krish",
-      "said": "Approve",
-      "on": "2026-11-19",
-      "artifact_hash": "43eda608586ebe4a51b336ecd939fa560397c0b2bcc9e6041a874053c2f48f93",
-      "asked": "one more change to the title card: a soft dark panel behind the MAKE YOUR MIND/UP wordmark so it stays readable over the moving pictures"
-    }
-  ]
+ "schema": "ve-engine-exceptions/1",
+ "about": "Krish's approval of the engine change for the Fri 20 Nov piece (c00cd4e0): the pillar staging for his vertical long take, kinetic_stat kept cream on a dark ground, no mark over a real page, the push camera keeping a graphics-only region in frame, the optional dated call. velib/guards.py reads it beside the spec's approvals; scope engine waives nothing else. If the engine changes again before this piece renders, the hash no longer matches and he is asked again.",
+ "approvals": [
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "Approve the engine change (Recommended)",
+   "on": "2026-11-19",
+   "artifact_hash": "527e43892bd91e9a802a8ede125f7c6cad8723f3e73ea6be52b921655181629f"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "yes change for all moving forward - but bear in mind that the audio waveform visual behind it was made for a piece about AI music specifically. In the future, the engine needs to find its own visual that matches the piece.",
+   "on": "2026-11-19",
+   "artifact_hash": "4dc902065df02b41c03e481e398a0a95adafb2afebdb79ed9082124749ca5e69",
+   "covers": "the house title card over the piece's own picture (no music bars); a SPLIT panel draws its beat's backdrop, so no plain black panel (his rule of 19 Nov: 'I don't want a plain black screen anywhere')"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "Approve",
+   "on": "2026-11-19",
+   "artifact_hash": "43eda608586ebe4a51b336ecd939fa560397c0b2bcc9e6041a874053c2f48f93",
+   "asked": "one more change to the title card: a soft dark panel behind the MAKE YOUR MIND/UP wordmark so it stays readable over the moving pictures"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "fix all five, this is absolute madness",
+   "on": "2026-11-19",
+   "artifact_hash": "be0781a6c74a84c440414028cde64b57d8142c8a901875f9a0022023e7246506",
+   "covers": "the post-render Critic's five fixes he ordered: a slam word fades fully on exit (no 'TEAMSS' residue); the slam tapes run off both frame edges; the title wordmark sits tight under the bands as one lockup; a caption page never spans the title moment; an object may be placed on any layout and a plate-none beat draws its backdrop, so the slam band sits above his head on a full-face beat"
+  }
+ ]
 }

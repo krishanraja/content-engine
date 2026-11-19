@@ -356,8 +356,8 @@ describe('SPLIT object placement', () => {
     expect(device.props.object).toBe(props.objects[0])
     expect(device.props.box).toEqual(slotsFor('SPLIT', '9:16')[0])
   })
-  it('refuses placement on P1 naming the object', () => {
-    expect(() => FormatMaster(placedProps('P1'))).toThrow('ve: place on non-SPLIT object slab')
+  it('places an object on P1 too (Fri 20 Nov: a band above his head on a full-face beat)', () => {
+    expect(() => FormatMaster(placedProps('P1'))).not.toThrow()
   })
 })
 

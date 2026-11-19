@@ -238,7 +238,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
             </> : sweep && <AbsoluteFill style={sweep} />)
         // A SPLIT panel draws its beat's backdrop too, so the panel above his take is the piece's own page, never plain ink
         // (Krish, 2026-11-19: "I don't want a plain black screen anywhere"; Fri 20 Nov, the slam beats' empty top band).
-        const backdropEl = (graphicsOnly || beat.layout === 'SPLIT') && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} /> : undefined
+        const backdropEl = (graphicsOnly || beat.layout === 'SPLIT' || beat.plate?.source === 'none') && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} /> : undefined
         const layer = (
           <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
             {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts); a backdrop joins it only
@@ -254,8 +254,8 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
               const Device = Object.hasOwn(DEVICES, object.device) ? DEVICES[object.device] : undefined
               if (!Device) throw new Error(`ve: no device ${object.device}`)
               const { place, ...params } = object.params
-              if (Object.hasOwn(object.params, 'place') && beat.layout !== 'SPLIT')
-                throw new Error(`ve: place on non-SPLIT object ${id}`)
+              // A placed object sits where its place says on any layout (Fri 20 Nov: a slam word in the band above his
+              // head on a full-face beat, so his face stays high with the captions under his chin).
               const placement = Object.hasOwn(object.params, 'place')
                 ? PlaceSchema.parse(place) : undefined
               const deviceObject = placement ? { ...object, params } : object

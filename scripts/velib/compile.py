@@ -638,8 +638,13 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # the held title); the title flows back into the caption line as the next caption starts.
     spoken = [row for row in rows if not (moment and (moment['span'][0] <= row['w'] <= moment['span'][1]
                                                       or moment['fromFrame'] <= row['atFrame'] < moment['toFrame']))]
+    # No caption page spans the title: the words before it and after it page apart, so a page never joins two sentences
+    # across the title or leaves a lone word hanging before it (Fri 20 Nov: "SO" alone, then "A man's brother-in-law").
+    sides = [spoken] if not moment else [[r for r in spoken if r['atFrame'] < moment['fromFrame']],
+                                          [r for r in spoken if r['atFrame'] >= moment['fromFrame']]]
     groups = [[row] for row in spoken] if word_mode else \
-        [g for part in _zone_runs(spoken, beats) for g in _caption_groups(part, cut['aspect'], emphasis, picked_theme in FITS_LONE_WORD_THEMES)]
+        [g for side in sides if side for part in _zone_runs(side, beats)
+         for g in _caption_groups(part, cut['aspect'], emphasis, picked_theme in FITS_LONE_WORD_THEMES)]
     captions = []
     for index, group in enumerate(groups):
         hits = [i for i, word in enumerate(group) if word['w'] in emphasis]

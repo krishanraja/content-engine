@@ -50,11 +50,11 @@ describe('slam_word', () => {
     expect(html).toContain(`data-tape-drift="${-at(40).tapeDrift}"`)
     expect(still(40)).not.toBe(still(20))
   })
-  it('fades the entire device to 30% and holds it until the cut', () => {
+  it('fades the entire device out on exit, leaving nothing behind the next word', () => {
     expect(at(80).opacity).toBe(1)
-    expect(at(84).opacity).toBeCloseTo(0.65)
-    expect(at(88)).toMatchObject({ opacity: 0.3, visible: true })
-    expect(still(99)).toContain('opacity:0.3')
+    expect(at(84).opacity).toBeCloseTo(0.5)
+    expect(at(88)).toMatchObject({ opacity: 0, visible: true })
+    expect(still(99)).toContain('opacity:0')
     expect(still(100)).toBe('')
   })
   it('ignores other objects, event order and render order; a new enter resets the fade', () => {
