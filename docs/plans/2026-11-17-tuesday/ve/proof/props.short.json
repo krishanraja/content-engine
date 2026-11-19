@@ -477,7 +477,8 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-pylons-1.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-pylons-1.png",
+        "zoom": 1.6
       },
       "keyFrame": 168
     },
