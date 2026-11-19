@@ -15,8 +15,9 @@ picture the social profiles carry. Writes into OUTDIR (default:
       inside the part both a computer and a phone show.
   x-header-1500x500.png             the header on Krish's own X account. The
       bottom-left corner stays clear for his profile picture.
-  instagram-highlight-<name>.png    five highlight covers (Start here, one per
-      day, Scored), 1080 x 1920 with the disc Instagram crops to.
+  instagram-highlight-<name>.png    four highlight covers (Start here and one per
+      day), 1080 x 1920 with the disc Instagram crops to. The Scored highlight
+      is retired: no scored calls (Ruling, Krish, 2026-11-17).
   profiles-sheet.jpg                every file at the size and crop each
       platform shows. Look at this before uploading.
 
@@ -132,7 +133,6 @@ def highlights(hs):
     t = hs['tokens']
     out = [('start-here', 'START', t['mint'], 190)]
     out += [(c['name'].replace('.', '-'), c['short'].upper(), c['accent'], 260) for c in hs['channels']]
-    out.append(('scored', 'SCORED', t['cream'], 170))
     return out
 
 

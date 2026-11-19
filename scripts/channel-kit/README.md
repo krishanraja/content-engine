@@ -59,7 +59,7 @@ link lands on".
 | `profile-avatar-mark-1080.png` | The plain mark on ink. The fallback; on no profile now. |
 | `facebook-cover-1640x856.png` | The Facebook Page cover. |
 | `x-header-1500x500.png` | The header on Krish's own X account. |
-| `instagram-highlight-start-here.png`, `-follow-the-money`, `-under-the-hood`, `-mind-the-gap`, `-scored` | The five Instagram highlight covers: START, MON, WED, FRI and SCORED on a disc. They go up once a full week of pieces is out (Krish, 2026-10-12). |
+| `instagram-highlight-start-here.png`, `-follow-the-money`, `-under-the-hood`, `-mind-the-gap` | The four Instagram highlight covers: START, MON, WED and FRI on a disc. They go up once a full week of pieces is out (Krish, 2026-10-12). The SCORED highlight is retired: no scored calls (Ruling, Krish, 2026-11-17). |
 | `profiles-sheet.jpg` | Every file at the size and crop each platform shows. Look at this before uploading. |
 
 What it checks, and it stops with an error if any check fails:
