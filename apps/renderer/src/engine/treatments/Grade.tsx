@@ -1,9 +1,9 @@
 import type { JSX } from 'react'
 
-export type GradeProps = { src: string; focus: number; tokens: Record<string, string>; frame: number; width: number; height: number }
+export type GradeProps = { src: string; focus: number; tokens: Record<string, string>; frame: number; width: number; height: number; zoom?: number }
 
 /** One photograph, racked into a quiet stage. Timing belongs to the caller. */
-export function GradedBackdrop({ src, focus, tokens, frame, width, height }: GradeProps): JSX.Element {
+export function GradedBackdrop({ src, focus, tokens, frame, width, height, zoom = 1 }: GradeProps): JSX.Element {
   if (![focus, frame, width, height].every(Number.isFinite) || width <= 0 || height <= 0) throw new Error('Invalid grade dimensions or clock')
   for (const key of ['ink', 'inkDeep', 'inkSoft', 'cream', 'mint']) {
     if (!tokens[key]) throw new Error(`Missing grade token: ${key}`)
@@ -14,7 +14,7 @@ export function GradedBackdrop({ src, focus, tokens, frame, width, height }: Gra
   const pad = blur * 4 + width * 0.02
   // Content-derived IDs keep SSR repeatable and separate concurrently mounted grades.
   let hash = 2166136261
-  for (const c of JSON.stringify([src, focus, tokens, frame, width, height])) hash = Math.imul(hash ^ c.charCodeAt(0), 16777619)
+  for (const c of JSON.stringify([src, focus, tokens, frame, width, height, zoom])) hash = Math.imul(hash ^ c.charCodeAt(0), 16777619)
   const id = `grade-${hash >>> 0}`
   const rect = { width, height }
   return <svg {...rect} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block', overflow: 'hidden', isolation: 'isolate' }} aria-hidden="true">
@@ -59,9 +59,13 @@ export function GradedBackdrop({ src, focus, tokens, frame, width, height }: Gra
       </filter>
     </defs>
     <rect {...rect} fill={tokens.ink} />
-    <image href={src} x={-pad} y={-pad} width={width + pad * 2} height={height + pad * 2} preserveAspectRatio="xMidYMid slice" filter={`url(#${id}-near)`} />
-    <g mask={`url(#${id}-soft)`}>
-      <image href={src} x={-pad} y={-pad} width={width + pad * 2} height={height + pad * 2} preserveAspectRatio="xMidYMid slice" filter={`url(#${id}-photo)`} />
+    {/* zoom (compile measures it, 1 to 1.6) scales the photo from its top edge, so a tall frame's bottom lands on lit
+        ground instead of a photo's black foreground (Tue 17, 19 Nov 2026). */}
+    <g transform={zoom > 1 ? `translate(${width / 2} 0) scale(${zoom}) translate(${-width / 2} 0)` : undefined}>
+      <image href={src} x={-pad} y={-pad} width={width + pad * 2} height={height + pad * 2} preserveAspectRatio="xMidYMid slice" filter={`url(#${id}-near)`} />
+      <g mask={`url(#${id}-soft)`}>
+        <image href={src} x={-pad} y={-pad} width={width + pad * 2} height={height + pad * 2} preserveAspectRatio="xMidYMid slice" filter={`url(#${id}-photo)`} />
+      </g>
     </g>
     <rect {...rect} fill={`url(#${id}-tone)`} />
     {/* A 90% ink veil bounds even a white source, keeping cream drawings above 7:1 with house tokens. */}

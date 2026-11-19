@@ -127,12 +127,18 @@ export function backdropPush(beat: EngineBeat, frame: number): number {
   return 1 + 0.06 * t
 }
 
-function Backdrop({ src, tokens, focus, frame, width, height, push = 1 }: { src: string; tokens: EngineRenderProps['tokens']; focus: number; frame: number; width: number; height: number; push?: number }) {
+function Backdrop({ src, tokens, focus, frame, width, height, push = 1, zoom = 1 }: { src: string; tokens: EngineRenderProps['tokens']; focus: number; frame: number; width: number; height: number; push?: number; zoom?: number }) {
+  // The scrim seats the captions: on a tall frame they sit at about 52 to 69% of the height, so it holds there and
+  // eases off below, where nothing is drawn (Tue 17, 19 Nov 2026: 72% ink to the bottom edge read as a plain slab).
+  const tall = height > width
+  const scrim = tall
+    ? `linear-gradient(180deg, color-mix(in srgb, ${tokens.ink} 38%, transparent) 0%, transparent 38%, color-mix(in srgb, ${tokens.ink} 72%, transparent) 50%, color-mix(in srgb, ${tokens.ink} 72%, transparent) 70%, color-mix(in srgb, ${tokens.ink} 22%, transparent) 84%, color-mix(in srgb, ${tokens.ink} 22%, transparent) 100%)`
+    : `linear-gradient(180deg, color-mix(in srgb, ${tokens.ink} 38%, transparent) 0%, transparent 42%, color-mix(in srgb, ${tokens.ink} 72%, transparent) 100%)`
   return <AbsoluteFill data-backdrop data-backdrop-focus={focus.toFixed(3)}>
     <AbsoluteFill style={{ transform: `scale(${push.toFixed(5)})`, transformOrigin: '50% 45%' }}>
-      <GradedBackdrop src={src} focus={focus} tokens={tokens as unknown as Record<string, string>} frame={frame} width={width} height={height} />
+      <GradedBackdrop src={src} focus={focus} tokens={tokens as unknown as Record<string, string>} frame={frame} width={width} height={height} zoom={zoom} />
     </AbsoluteFill>
-    <AbsoluteFill style={{ background: `linear-gradient(180deg, color-mix(in srgb, ${tokens.ink} 38%, transparent) 0%, transparent 42%, color-mix(in srgb, ${tokens.ink} 72%, transparent) 100%)` }} />
+    <AbsoluteFill style={{ background: scrim }} />
   </AbsoluteFill>
 }
 
@@ -259,7 +265,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
                 tokens={props.tokens} sinceFrames={sinceBeat} boil={profile.boil} />}
               {torn && <TornFilter id={beat.id} tokens={props.tokens} />}
             </> : sweep && <AbsoluteFill style={sweep} />)
-        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} push={backdropPush(beat, at)} /> : undefined
+        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} push={backdropPush(beat, at)} zoom={beat.backdrop.zoom} /> : undefined
         const layer = (
           <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
             {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts); a backdrop joins it only

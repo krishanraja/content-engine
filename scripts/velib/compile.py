@@ -432,6 +432,35 @@ def backdrop(spec: dict, beat: dict, assets_dir) -> dict:
     return {'src': src}
 
 
+def _framed(drawn: dict, beat: dict, aspect: str) -> dict:
+    """A tall cut's graphics-only beat frames its photo so the bottom reads (ground_zoom); every other beat keeps it whole."""
+    if aspect != '9:16' or beat.get('layout') != 'STAGE':
+        return drawn
+    zoom = ground_zoom(drawn['src'])
+    return {**drawn, 'zoom': zoom} if zoom > 1 else drawn
+
+
+def ground_zoom(src: str) -> float:
+    """How far a tall graphics-only beat scales its photo from the top edge (1 to 1.6) so the frame's bottom lands on
+    rows that read under the grade: a photo whose lower part is black foreground otherwise leaves a plain dark slab under
+    the graphics (Tue 17, 19 Nov 2026; config/ve/plain-frames.json). A row reads when it is bright or textured."""
+    import numpy as np  # noqa: PLC0415
+    from PIL import Image  # noqa: PLC0415
+    gray = np.asarray(Image.open(src).convert('L'), dtype=float)
+    h = gray.shape[0]
+    window = max(1, h // 50)
+    mean = np.convolve(gray.mean(axis=1), np.ones(window) / window, mode='same')
+    detail = np.convolve(gray.std(axis=1), np.ones(window) / window, mode='same')
+    reads = (mean >= 45) | (detail >= 18)
+    rows = np.flatnonzero(reads)
+    if not len(rows):
+        return 1.0
+    lowest = (rows[-1] + 1) / h
+    if lowest >= 0.95:
+        return 1.0
+    return round(min(1.6, max(1.0, 1 / max(lowest, 1e-6))), 3)
+
+
 def _params(params: dict, source) -> dict:
     """Copy device params, resolving media paths (src, rows[].logoSrc) against the assets folder."""
     def visit(value):
@@ -530,7 +559,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                       **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
                       **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {}),
-                      **({'backdrop': backdrop(spec, beat, assets_dir)} if beat.get('backdrop') else {})})
+                      **({'backdrop': _framed(backdrop(spec, beat, assets_dir), beat, cut['aspect'])} if beat.get('backdrop') else {})})
         # The v2 spec reserves extensible metadata in style; beat-level keyFrame
         # is not yet in its strict schema. Always emit an explicit engine frame.
         fraction = spec.get('style', {}).get('keyFrames', {}).get(beat['id'], 0.8)
