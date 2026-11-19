@@ -55,7 +55,7 @@
     "panel": true,
     "place": {
      "left": 135,
-     "top": 230,
+     "top": 380,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -76,15 +76,15 @@
     "shape": "underline",
     "from": [
      230,
-     250
+     63
     ],
     "to": [
      850,
-     245
+     58
     ],
     "place": {
      "left": 135,
-     "top": 230,
+     "top": 380,
      "width": 1080,
      "height": 480,
      "scale": 0.75

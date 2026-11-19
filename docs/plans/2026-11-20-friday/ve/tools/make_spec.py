@@ -172,7 +172,11 @@ for _b in beats:
         _b['layout'] = 'F1'; _b['face'] = 'full'; _b.pop('backdrop', None)
         for _u in _b['uses']:
             next(o for o in objects if o['obj'] == _u)['params']['place'] = dict(BAND)
-next(o for o in objects if o['obj'] == 'strike')['params'].update({"from": [230, 250], "to": [850, 245]})
+next(o for o in objects if o['obj'] == 'strike')['params'].update({"from": [230, 63], "to": [850, 58]})
+# The hook's counter and its strike sit lower in the band, clear of the frame's top edge and still above his head
+# (Fri 20 Nov proof: the panel rode up to the top edge); the strike runs through the digits, not the source line.
+for _o in ('k_billed', 'strike'):
+    next(o for o in objects if o['obj'] == _o)['params']['place'] = dict(BAND, top=BAND['top'] + 150)
 next(o for o in objects if o['obj'] == 'th_head')['persist']['to_beat'] = 'lines'  # the same page held: its last line is his 'line by line'
 json.dump(spec,open(P+'spec.json','w'),indent=1); print('wrote', len(beats),'beats', len(objects),'objects')
 

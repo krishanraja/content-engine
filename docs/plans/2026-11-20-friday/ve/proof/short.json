@@ -2,15 +2,15 @@
   "schema": "ve-proof/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
   "cut": "short",
-  "beat": "whose",
+  "beat": "question",
   "rule": "named in the spec (proof.beat)",
-  "start": 62.867,
-  "end": 70.867,
+  "start": 14.667,
+  "end": 22.667,
   "beat_s": [
-    63.333,
-    70.367
+    16.967,
+    20.367
   ],
-  "sha256": "8de3ef3dc058798ef6b30df28157189bc65a9a97d1d3f8d575a68424b6dd1fa1",
+  "sha256": "2243a97890266919f3a74e79d3248d8bad0d00548c8133acfcbcda68152546ce",
   "spec_sha256": "abe42dc14dcbe4631f7162e2c3caa5517f428140307d25fe9e2696242ec9cafb",
   "structure": {
     "format": "face-with-proof",
@@ -232,7 +232,7 @@
     ]
   },
   "style_module": "ai-music-slam",
-  "props_sha256": "e75bbfd0fdff63029fc7005e495d76ec05c000b73f325962907ebf6ee2d2681d",
+  "props_sha256": "5ee7096431d41c8a7ba74ca9c88150d5f4aad0d5e6870287a8ed712dc5f98d47",
   "title": {
     "in_main": false,
     "clip": "short.title.mp4",
@@ -244,10 +244,9 @@
     "measured_pass": false,
     "complete": false,
     "failing": [
-      "captions.ocr",
-      "captions.off_face",
-      "captions.render",
-      "motion.cue_sync"
+      "composition",
+      "motion.cue_sync",
+      "title.lockup_frame"
     ]
   },
   "type": [
@@ -264,7 +263,7 @@
       "caption"
     ]
   ],
-  "engine_sha256": "7857ce0e5c4cf6f097f33e9ba4f1de0b8db7836a96c6fd9387e187a7be872bde",
+  "engine_sha256": "34a5dd88653c9f3948a5812077ead0ada0a771fdb5542976c8b605a6549ad10e",
   "assets_sha256": {
     "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
     "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
@@ -279,12 +278,12 @@
     "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
     "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
   },
-  "made_at": "2026-11-19T18:11:32Z",
+  "made_at": "2026-11-19T18:25:39Z",
   "frames": {
     "pass": true,
     "status": "ok",
     "problems": [],
-    "frames": 14
+    "frames": 11
   },
   "sendable": false
 }

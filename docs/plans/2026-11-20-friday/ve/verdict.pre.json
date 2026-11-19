@@ -1,30 +1,25 @@
 {
   "schema": "ve-pre-critic/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-  "spec_sha256": "ce65a7ed30ced91461a19c51a09c126dbc8d7ef9296d7fb7a13c6dbc7916839a",
+  "spec_sha256": "d094fd01f49bb0c6e7389b224038012e01a08371df35f6ffa02df02ae7c589a6",
   "cards": [],
   "reviewer": "reviewer subagent afe4d5bf6eef0d4e6",
-  "reviewed_at": "2026-11-19T18:01:33.426884+00:00",
+  "reviewed_at": "2026-11-19T18:19:25.749472+00:00",
   "answers": {
     "one_idea": {
       "pass": true,
-      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts. The six F1 beats keep his own slam words on the words he says, in one band above his head; moving it 30 px up changes position only. fell (P1) still counts the bill down from 195,000 to 33,000 on 'fell' with the caveat kept. Real pages stay held still, and the sofa and closet plates still carry money and skeleton."
+      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts. In the hook, the line on 'fraction' now goes through the $195,000 instead of under its source line, so the move means 'cut' as the idea says. The panel sits lower (top 380) with his head clear. The other five F1 slam beats, fell's count down, the real pages held still and the sofa and closet plates are unchanged."
     },
     "no_invented_numbers": {
       "pass": true,
-      "line": "No invented figure. k_billed and k_after show only the bill-billed and bill-after rows (195,000 and 33,000) with their producer line 'Tom's Hardware, 29 Oct 2025 (the family's account)', and chip_caveat stays on fell. No slam word or tape has a digit. The figures on th_head, l_lede and l_krafton are printed on their own pages. The placement change touches no figure."
+      "line": "No invented figure. k_billed and k_after show only the bill-billed and bill-after rows (195,000 and 33,000), and k_billed's panel keeps its producer line ('Tom's Hardware, 29 Oct 2025 (the family's account)') readable. No slam word or tape has a digit. The figures on th_head, l_lede and l_krafton are printed on their own pages. Moving the line changes no figure."
     }
   },
   "findings": [
     {
       "severity": "note",
-      "area": "short F1 band (top 230) and FACE_LIFT 1.16",
-      "text": "On a fresh render, check a frame of each F1 beat: his whole head below the band, captions under his chin, not on his face."
-    },
-    {
-      "severity": "note",
       "area": "short hook strike",
-      "text": "The underline maps to about (307,417)-(772,414); check it crosses the digits."
+      "text": "On the next render check a frame after w18: the line crosses the digits of 195000, does not clip the producer line, and his head is clear of the panel at top 380."
     }
   ],
   "mechanical": [],
