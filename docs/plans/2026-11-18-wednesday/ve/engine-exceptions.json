@@ -121,6 +121,14 @@
       "on": "2026-11-19",
       "artifact_hash": "38fdec84134a235bee73b990c373f26e0f4c079ff55208997eebf118c13d7f3f",
       "said": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "on": "2026-11-19",
+      "artifact_hash": "4c042fbc455d0ab9a7f39c4bc9ac430a5031a088bf307a1e2c68bc2151aaece4",
+      "said": "use labs and I sign off the four numbers, go Engine 4c042fbc"
     }
   ]
 }

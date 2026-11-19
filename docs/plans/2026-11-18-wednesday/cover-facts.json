@@ -46,8 +46,8 @@
  },
  "thumbs": {
   "headline": [
-   "BUILD IT?",
-   "CRAZY."
+   "EVEN AI LABS USE SAAS TOOLS.",
+   "WHY?"
   ],
   "rows": [
    {
@@ -78,33 +78,38 @@
  "thumb_options": [
   {
    "id": "a",
-   "note": "the headline and Anthropic's name together, proof beside the words",
+   "note": "the page with Anthropic's name, beside the words; logos above",
    "proof_width": "58%",
-   "logos_under": true
-  },
-  {
-   "id": "b",
-   "note": "proof first, the page leads and the words answer it",
-   "proof_first": true,
-   "proof_width": "50%",
-   "logos_under": true
-  },
-  {
-   "id": "c",
-   "note": "the headline line alone, cropped tight so it reads at grid size",
    "proof": {
     "page": {
      "url": "https://fin.ai/customers/anthropic",
      "height": 900,
      "crop": [
-      0.17,
-      0.29,
-      0.77,
-      0.38
+      0.16,
+      0.28,
+      0.83,
+      0.42
      ]
     }
    },
-   "proof_width": "44%",
+   "logos_under": true
+  },
+  {
+   "id": "b",
+   "note": "the headline and its byline (who chose Fin), page held narrower so the words dominate",
+   "proof_width": "50%",
+   "proof": {
+    "page": {
+     "url": "https://fin.ai/customers/anthropic",
+     "height": 900,
+     "crop": [
+      0.16,
+      0.29,
+      0.83,
+      0.43
+     ]
+    }
+   },
    "logos_under": true
   }
  ],

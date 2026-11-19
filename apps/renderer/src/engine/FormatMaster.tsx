@@ -16,6 +16,8 @@ import { slotsFor, splitCameraBox, splitPlatePosition, windowCameraBox, windowCa
 // The wide window is a rounded rectangle, not a circle: a 210 px radius on a 340 px box cut off the top of his head
 // (Krish, 19 Nov 2026: "The circle in the bottom right corner is also cutting off the top of my head.").
 export const WIDE_WINDOW_RADIUS = 36
+// The wide WINDOW graphics start under the series tag (top 40 to 72), so no tile runs into it (Wed 18, 19 Nov 2026).
+export const WIDE_WINDOW_TOP = 100
 import { setActiveCanvas } from './kit/lock'
 import { resolveMotion, type MotionProfile } from './kit/motionProfiles'
 import { beatMotion, focusMotion, groundTexture, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
@@ -211,7 +213,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         // On the wide cut the graphics stop above his window, so nothing runs under his face (Krish, 19 Nov 2026: a logo
         // tile sat under the bottom-right circle).
         if (beat.layout === 'WINDOW' && slots.length)
-          slots[0] = props.aspect === '16:9' ? { left: 0, top: 0, width, height: windowCameraBox('16:9').top - 24 } : { left: 0, top: 0, width, height }
+          slots[0] = props.aspect === '16:9' ? { left: 0, top: WIDE_WINDOW_TOP, width, height: windowCameraBox('16:9').top - 24 - WIDE_WINDOW_TOP } : { left: 0, top: 0, width, height }
         // A style on twos steps its graphics; the take and captions stay on every frame.
         const at = profile?.onTwos ? onTwos(now, beat.fromFrame) : now
         // What a leaving beat shows never runs past its own end: its objects hold their last frame (one that lives on
