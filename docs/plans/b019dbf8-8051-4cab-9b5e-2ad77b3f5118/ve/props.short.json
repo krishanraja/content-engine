@@ -3582,7 +3582,7 @@
       },
       "backdrop": {
         "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png",
-        "zoom": 1.324
+        "zoom": 1.05
       },
       "keyFrame": 237
     },
@@ -3655,7 +3655,7 @@
       },
       "backdrop": {
         "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png",
-        "zoom": 1.324
+        "zoom": 1.05
       },
       "keyFrame": 596
     },
@@ -3674,8 +3674,7 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png",
-        "zoom": 1.6
+        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/piqua-north-main.jpg"
       },
       "keyFrame": 693
     },
@@ -3731,7 +3730,7 @@
       },
       "backdrop": {
         "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-polling-1.png",
-        "zoom": 1.293
+        "zoom": 1.15
       },
       "keyFrame": 894
     },
@@ -3900,7 +3899,8 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png",
+        "zoom": 1.6
       },
       "keyFrame": 2063
     },
@@ -3919,7 +3919,8 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/krish/higgsfield-offer.png",
+        "zoom": 1.6
       },
       "keyFrame": 2142
     },

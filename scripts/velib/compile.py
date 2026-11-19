@@ -432,33 +432,46 @@ def backdrop(spec: dict, beat: dict, assets_dir) -> dict:
     return {'src': src}
 
 
-def _framed(drawn: dict, beat: dict, aspect: str) -> dict:
+def _framed(drawn: dict, beat: dict, aspect: str, spec: dict | None = None) -> dict:
     """A tall cut's graphics-only beat frames its photo so the bottom reads (ground_zoom); every other beat keeps it whole."""
     if aspect != '9:16' or beat.get('layout') != 'STAGE':
         return drawn
-    zoom = ground_zoom(drawn['src'])
+    from .qc import theme_band  # noqa: PLC0415
+    style = (spec or {}).get('style') or {}
+    placement = (style.get('captions') or {}).get('placement') or 'lower'
+    _, top, _, height = theme_band(aspect, placement, staged=(style.get('layout') or {}).get('mode') == 'band')
+    zoom = ground_zoom(drawn['src'], (top, top + height))
     return {**drawn, 'zoom': zoom} if zoom > 1 else drawn
 
 
-def ground_zoom(src: str) -> float:
-    """How far a tall graphics-only beat scales its photo from the top edge (1 to 1.6) so the frame's bottom lands on
-    rows that read under the grade: a photo whose lower part is black foreground otherwise leaves a plain dark slab under
-    the graphics (Tue 17, 19 Nov 2026; config/ve/plain-frames.json). A row reads when it is bright or textured."""
+def ground_zoom(src: str, captions: tuple[int, int] = (990, 1320)) -> float:
+    """How far a tall graphics-only beat scales its photo from the top edge (1 to 1.8) so the frame's bottom carries no
+    plain dark band under the grade: a photo whose lower part is black foreground otherwise leaves a slab under the
+    graphics (Tue 17, 19 Nov 2026; config/ve/plain-frames.json). The smallest zoom whose graded bottom zone (below the
+    channel-safe line, y 1320 of 1920) has no plain row, by the guard's own numbers; 1.8 when none clears it.
+    The grade is mirrored from treatments/Grade.tsx (even veil 0.45, the near copy) and FormatMaster's tall scrim."""
     import numpy as np  # noqa: PLC0415
-    from PIL import Image  # noqa: PLC0415
-    gray = np.asarray(Image.open(src).convert('L'), dtype=float)
-    h = gray.shape[0]
-    window = max(1, h // 50)
-    mean = np.convolve(gray.mean(axis=1), np.ones(window) / window, mode='same')
-    detail = np.convolve(gray.std(axis=1), np.ones(window) / window, mode='same')
-    reads = (mean >= 45) | (detail >= 18)
-    rows = np.flatnonzero(reads)
-    if not len(rows):
-        return 1.0
-    lowest = (rows[-1] + 1) / h
-    if lowest >= 0.95:
-        return 1.0
-    return float(round(min(1.6, max(1.0, 1 / max(lowest, 1e-6))), 3))
+    from PIL import Image, ImageFilter  # noqa: PLC0415
+    rules = load_json(ROOT / 'config' / 've' / 'plain-frames.json')['plain_dark']
+    ink = 18.0  # the house ink #0C1512 as luma
+    photo = Image.open(src).convert('L')
+    cover = max(1080 / photo.width, 1920 / photo.height)  # the renderer's slice: cover the frame, centred
+    photo = photo.resize((round(photo.width * cover), round(photo.height * cover)))
+    left, top = (photo.width - 1080) // 2, (photo.height - 1920) // 2
+    base = photo.crop((left, top, left + 1080, top + 1920)).filter(ImageFilter.GaussianBlur(18 * 0.15))
+    rows = np.arange(1920) / 1920
+    # FormatMaster tallScrim: dark behind the caption band, easing to nothing below it.
+    hold, end = max(0.39, (captions[0] - 100) / 1920), min(0.97, (captions[1] + 24) / 1920)
+    scrim = np.interp(rows, [0, .38, hold, end, min(0.99, end + 160 / 1920), 1], [.38, 0, .72, .72, .15, 0])[:, None]
+    for step in range(17):
+        zoom = round(1 + step * 0.05, 2)
+        im = base.resize((round(1080 * zoom), round(1920 * zoom)))
+        x0 = (im.size[0] - 1080) // 2
+        graded = np.asarray(im.crop((x0, 0, x0 + 1080, 1920)), dtype=float) * 0.55 + ink * 0.45
+        bottom = (graded * (1 - scrim) + ink * scrim)[1320:]
+        if not ((bottom.mean(axis=1) < rules['row_luma_max']) & (bottom.std(axis=1) < rules['row_detail_max'])).any():
+            return zoom
+    return 1.8
 
 
 def _params(params: dict, source) -> dict:
@@ -559,7 +572,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                       **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
                       **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {}),
-                      **({'backdrop': _framed(backdrop(spec, beat, assets_dir), beat, cut['aspect'])} if beat.get('backdrop') else {})})
+                      **({'backdrop': _framed(backdrop(spec, beat, assets_dir), beat, cut['aspect'], spec)} if beat.get('backdrop') else {})})
         # The v2 spec reserves extensible metadata in style; beat-level keyFrame
         # is not yet in its strict schema. Always emit an explicit engine frame.
         fraction = spec.get('style', {}).get('keyFrames', {}).get(beat['id'], 0.8)

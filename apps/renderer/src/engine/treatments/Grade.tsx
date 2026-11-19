@@ -59,7 +59,7 @@ export function GradedBackdrop({ src, focus, tokens, frame, width, height, zoom 
       </filter>
     </defs>
     <rect {...rect} fill={tokens.ink} />
-    {/* zoom (compile measures it, 1 to 1.6) scales the photo from its top edge, so a tall frame's bottom lands on lit
+    {/* zoom (compile measures it, 1 to 1.8) scales the photo from its top edge, so a tall frame's bottom lands on lit
         ground instead of a photo's black foreground (Tue 17, 19 Nov 2026). */}
     <g transform={zoom > 1 ? `translate(${width / 2} 0) scale(${zoom}) translate(${-width / 2} 0)` : undefined}>
       <image href={src} x={-pad} y={-pad} width={width + pad * 2} height={height + pad * 2} preserveAspectRatio="xMidYMid slice" filter={`url(#${id}-near)`} />

@@ -26,10 +26,12 @@ def photo(lit_to: float) -> str:
 
 class BackdropGround(unittest.TestCase):
     def test_a_black_foreground_is_framed_out(self):
-        self.assertAlmostEqual(ground_zoom(photo(0.7)), 1 / 0.7, delta=0.02)
+        zoom = ground_zoom(photo(0.7))
+        self.assertGreater(zoom, 1.0)
+        self.assertLess(zoom, 1.8)
 
-    def test_the_zoom_never_passes_1_6(self):
-        self.assertEqual(ground_zoom(photo(0.4)), 1.6)
+    def test_the_zoom_never_passes_1_8(self):
+        self.assertEqual(ground_zoom(photo(0.4)), 1.8)
 
     def test_a_photo_lit_to_its_bottom_stays_whole(self):
         self.assertEqual(ground_zoom(photo(1.0)), 1.0)

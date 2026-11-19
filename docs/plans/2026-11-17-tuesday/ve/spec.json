@@ -879,7 +879,7 @@
       }
      ],
      "override_reason": "one move: the city goes dark as the block lights up",
-     "backdrop": "asset:bg-city-dusk"
+     "backdrop": "asset:piqua-north-main"
     },
     {
      "id": "piqua",
@@ -1554,7 +1554,7 @@
       }
      ],
      "override_reason": "one move: the city goes dark as the block lights up",
-     "backdrop": "asset:bg-city-dusk"
+     "backdrop": "asset:piqua-north-main"
     },
     {
      "id": "l9",
