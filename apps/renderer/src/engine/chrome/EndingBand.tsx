@@ -110,6 +110,22 @@ export function endingBandModel(props: EngineRenderProps, frame: number) {
 const rise = (p: number): React.CSSProperties => ({ opacity: p, transform: `translateY(${(1 - p) * 34}px)` })
 
 /** Full-frame ink with the statement; nothing of the last beat shows through. */
+function closeBars(width: number, height: number, k: number, mint: string): React.ReactElement[] {
+  // An equaliser growing in from the top and bottom edges, framing the card's words without crossing them.
+  const count = width > height ? 70 : 46, w = width / count
+  return Array.from({ length: count }, (_, i) => {
+    const a = Math.abs(Math.sin(i * 0.61 + 1.3 + k / 30 * 3)), b = Math.abs(Math.sin(i * 0.43 + 0.4 + k / 30 * 2.3))
+    const top = height * (0.14 + 0.14 * a), bottom = height * (0.14 + 0.3 * b)
+    const bar = (key: string, y: number, h: number) => <div key={key} style={{ position: 'absolute', left: i * w + w * 0.3, width: w * 0.4,
+      top: y, height: h, borderRadius: w * 0.2, background: mint, opacity: 0.2 }} />
+    // and a quieter pulse through the middle, behind the words, so the gaps between the card's lines carry motion too.
+    const mid = height * (0.3 + 0.25 * Math.abs(Math.sin(i * 0.29 + k / 30 * 1.7)))
+    return <React.Fragment key={`close-bar-${i}`}>{bar('t', -w, top + w)}{bar('b', height - bottom, bottom + w)}
+      <div style={{ position: 'absolute', left: i * w + w * 0.3, width: w * 0.4, top: height / 2 - mid / 2, height: mid, borderRadius: w * 0.2,
+        background: mint, opacity: 0.1 }} /></React.Fragment>
+  })
+}
+
 export function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null {
   const model = endingBandModel(props, frame)
   if (!model || !props.ending) return null
@@ -140,6 +156,9 @@ export function EndingBand({ props, frame }: { props: EngineRenderProps; frame: 
   )
   return (
     <div style={{ position: 'absolute', zIndex: 920, left: 0, top: 0, width: model.width, height: model.height, background: tokens.ink, color: tokens.cream, pointerEvents: 'none' }}>
+      {/* Bars pulse behind the close, as behind the title lockup, so no part of it is a plain black band (config/failures.json
+          F58, Krish, 2026-11-19: "I already told you I don't want a plain black screen anywhere"). */}
+      {closeBars(model.width, model.height, frame - props.ending.fromFrame, tokens.mint)}
       <div style={{ position: 'absolute', ...model.contentBox, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         <div style={rise(model.logo)}><HouseLogo image={props.brand.stacked} width={model.logoWidth} /></div>
         <div style={{ fontFamily: HOUSE_FONTS.display, textTransform: 'uppercase', fontSize: model.statementPx, lineHeight: 0.9, letterSpacing: '0.005em' }}>

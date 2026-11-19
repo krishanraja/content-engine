@@ -50,6 +50,9 @@ export function lockupParts(words: TitleWord[]): { a: number[]; connector: numbe
   const connectors = words.map((w, i) => i).filter(i => i > 0 && i < n - 1 && CONNECTOR.test(words[i]!.text.replace(/[^a-z.&]/gi, '')))
   if (connectors.length) {
     const c = connectors.reduce((best, i) => Math.abs(i - middle) < Math.abs(best - middle) ? i : best)
+    // One word before the connector and a long run after it ("Build or buy your tools in an AI world?") makes a lone
+    // BUILD over a crowded band: the question's core goes on band one instead (BUILD OR BUY), the connector inline in mint.
+    if (c === 1 && n - c - 1 >= 4) return { a: [0, 1, 2], connector: null, b: words.slice(3).map((_, i) => 3 + i) }
     return { a: words.slice(0, c).map((_, i) => i), connector: c, b: words.slice(c + 1).map((_, i) => c + 1 + i) }
   }
   const widths = words.map(w => textWidth('anton', upper(w.text), 100))
@@ -180,7 +183,7 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
       {band.words.map(w => frame < words[w.index]!.atFrame ? null
         : <span key={w.index} data-title-word={w.index} data-title-row={bi} style={{ position: 'absolute', left: w.x - (band.cx - band.width / 2),
           top: w.y, fontFamily: HOUSE_FONTS.display, fontWeight: 400, fontSize: band.size, lineHeight: 1.15,
-          whiteSpace: 'pre', color: fill.color, textTransform: 'uppercase',
+          whiteSpace: 'pre', color: bi === 0 && CONNECTOR.test(words[w.index]!.text.replace(/[^a-z.&]/gi, '')) ? mint : fill.color, textTransform: 'uppercase',
           opacity: ease((frame - words[w.index]!.atFrame + 1) / 3) }}>{words[w.index]!.text}</span>)}
     </div>
   })
@@ -197,7 +200,9 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
       style={{ position: 'absolute', left: geo.wordmark.left, top: geo.wordmark.top, width: geo.wordmark.width, height: geo.wordmark.height }} />
     : null
   return <div data-title-moment="" data-title-lockup="" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity }}>
-    <div data-title-ground="" style={{ position: 'absolute', inset: 0, background: ink }} />
+    {/* The ground lets his take show through at a fifth, so no part of the frame is a plain black band (config/failures.json
+        F58: "I already told you I don't want a plain black screen anywhere"). */}
+    <div data-title-ground="" style={{ position: 'absolute', inset: 0, background: ink, opacity: 0.8 }} />
     {bars}
     {bandsDrawn}
     {connector}
