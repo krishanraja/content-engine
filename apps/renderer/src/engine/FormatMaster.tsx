@@ -375,11 +375,11 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   // words out. It lands in the panel above his face on a staged beat, else across the frame.
   const titleLayer = props.titleMoment && frame >= props.titleMoment.fromFrame && frame < props.titleMoment.toFrame ? (
     <AbsoluteFill key="title-moment" data-title-moment>
-      <TitleMoment {...(props.titleMoment.card ? { card: true } : {})} words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame} {...(props.titleMoment.release ? { release: props.titleMoment.release } : {})}
+      <TitleMoment {...(props.titleMoment.card ? { card: true, logo: props.brand.logo } : {})} words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame} {...(props.titleMoment.release ? { release: props.titleMoment.release } : {})}
         frame={frame} aspect={props.aspect} width={width} height={height}
         stage={stagedNow ? stagedNow.panel : props.titleMoment.card ? titleSafe(props.aspect, width, height) : { left: 0, top: 0, width, height }}
         captionBox={band(props)} tokens={props.tokens as unknown as Record<string, string>} />
-      {titleWordmark(props, frame, stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height })}
+      {props.titleMoment.card ? null : titleWordmark(props, frame, stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height })}
     </AbsoluteFill>) : null
   // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.
   const stagingGround = stagedNow && !stagedNow.rises ? (
@@ -434,6 +434,6 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
  *  his hair, so his eyes and mouth stay clear (Krish, 18 Nov 2026: "having naked captions over my face looks stupid";
  *  in the lower band the card covered his mouth). */
 export function titleSafe(aspect: string, width: number, height: number) {
-  return aspect === '9:16' ? { left: 60, top: 220, width: 800, height: 330 }
+  return aspect === '9:16' ? { left: 60, top: 200, width: 800, height: 420 }
     : { left: Math.round(width * 0.1), top: Math.round(height * 0.06), width: Math.round(width * 0.8), height: Math.round(height * 0.3) }
 }

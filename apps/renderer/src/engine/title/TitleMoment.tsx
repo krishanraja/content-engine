@@ -1,5 +1,5 @@
 import React, { type JSX } from 'react'
-import { interpolate, spring } from 'remotion'
+import { Img, interpolate, spring } from 'remotion'
 import { HOUSE_FONTS } from '../../house/geometry'
 import { textWidth } from '../../house/metrics'
 
@@ -7,6 +7,10 @@ export type TitleWord = { text: string; atFrame: number }
 export type Box = { left: number; top: number; width: number; height: number }
 export type TitleMomentProps = {
   card?: boolean
+  /** On a card, the wordmark rides in the card's last row, under the title and aligned to its words, and slams in with it
+   *  (Krish, 19 Nov 2026: "It should animate in and all be one feature, aligned properly. not a wordmark temporarily in
+   *  the bottom right, disconnected from the title."). */
+  logo?: { src: string; pixelWidth: number; pixelHeight: number }
   words: TitleWord[]; fromFrame: number; toFrame: number; frame: number
   aspect: '9:16' | '16:9'; width: number; height: number
   stage: Box; captionBox: Box; tokens: Record<string, string>
@@ -96,14 +100,21 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
   // title captions a card that slams or slides in I think. having naked captions over my face looks stupid").
   const pad = Math.max(...layout.map(p => p.size)) * 0.32
   const left = Math.min(...layout.map(p => p.x)) - pad, top = Math.min(...layout.map(p => p.y)) - pad * 0.6
-  const right = Math.max(...layout.map(p => p.x + p.width)) + pad, bottom = Math.max(...layout.map(p => p.y + p.size * 1.15)) + pad * 0.6
+  const right = Math.max(...layout.map(p => p.x + p.width)) + pad
+  const logoH = props.card && props.logo ? Math.max(...layout.map(p => p.size)) * 0.62 : 0
+  const textBottom = Math.max(...layout.map(p => p.y + p.size * 1.15))
+  const bottom = textBottom + pad * 0.6 + (logoH ? logoH + pad * 0.5 : 0)
   const slam = spring({ frame: Math.max(0, frame - fromFrame), fps: 30, config: { damping: 13, stiffness: 320, mass: 0.6 } })
   const cardIn = unit((frame - fromFrame) / 3)
   return <div data-title-moment="" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
     {props.card ? [<div key="card" data-title-card="" style={{ position: 'absolute', left, top, width: right - left, height: bottom - top,
       background: ink, borderRadius: pad * 0.6, borderLeft: `${Math.max(8, pad * 0.22)}px solid ${brand}`,
       boxShadow: `0 ${pad * 0.4}px ${pad * 1.4}px rgba(0,0,0,0.45)`, opacity: cardIn * (1 - returnEase),
-      transformOrigin: '50% 60%', transform: `scale(${mix(1.28, 1, slam).toFixed(4)}) rotate(${mix(-3, 0, slam).toFixed(3)}deg)` }} />, ...(layout.map(p => {
+      transformOrigin: '50% 60%', transform: `scale(${mix(1.28, 1, slam).toFixed(4)}) rotate(${mix(-3, 0, slam).toFixed(3)}deg)` }} />,
+      ...(logoH && props.logo ? [<Img key="card-logo" data-title-wordmark="" src={props.logo.src} style={{ position: 'absolute',
+        left: left + pad, top: textBottom + pad * 0.35, height: logoH, width: logoH * props.logo.pixelWidth / props.logo.pixelHeight,
+        opacity: cardIn * (1 - returnEase), transformOrigin: `${50}% ${-120}%`,
+        transform: `scale(${mix(1.28, 1, slam).toFixed(4)}) rotate(${mix(-3, 0, slam).toFixed(3)}deg)` }} />] : []), ...(layout.map(p => {
       const w = words[p.index]!
       if (frame < w.atFrame) return null
       const progress = unit((frame - w.atFrame) / 8)
