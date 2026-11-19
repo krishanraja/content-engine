@@ -281,6 +281,10 @@ def inputs_from_props(props: dict) -> dict:
         # An exit on a beat's exclusive end measures the departing object's box.
         if not active and event.get('verb') == 'exit':
             active = [b for b in beats if b['toFrame'] == at and event['obj'] in b['uses']]
+        # A proof window carries the states an object reached before it onto frame 0 (velib.proof, "earlier events land
+        # on frame 0"): when the object first shows in a later beat of the window, that cue is state, not a drawn moment.
+        if not active and at == 0 and any(event['obj'] in b['uses'] for b in beats):
+            continue
         if len(active) != 1:
             raise ValueError(f"Cue {event.get('id', event['obj'])} has no unique beat slot")
         beat = active[0]
