@@ -99,6 +99,15 @@
    "on": "2026-11-19",
    "artifact_hash": "4defec77cfa9e8b3c012dfa5d78e490e52c47b413bf1202ea7dc49a399c4ee65",
    "covers": "the ghost-word finding, completed: the art-directed caption's echo word is never drawn behind a beat that draws a card, page or picture; the title wordmark moves as 'or' arrives; a mid-count figure carries no label or source until it lands"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "fix all five, this is absolute madness",
+   "on": "2026-11-19",
+   "artifact_hash": "2b93dac645cf88a4c8e826109120582f31e48c5d120dce0cf0f466287d3960c0",
+   "covers": "the title-lockup finding, completed: the wordmark rests tight under the first card, then under 'or', then under the second card as each lands, never floating over an empty gap"
   }
  ]
 }

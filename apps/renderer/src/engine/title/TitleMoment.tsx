@@ -199,13 +199,19 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
   // as the second lands, so the lockup never shows an empty gap above it (Fri 20 Nov critic: 370 px while it built).
   let markShift = 0
   if (geo.wordmark && geo.bands.length > 1) {
-    const b0 = geo.bands[0]!, lift0 = b0.width / 2 * Math.sin(3 * Math.PI / 180)
-    const firstTop = Math.min(b0.cy + b0.height / 2 + lift0 + height * 0.025, height * 0.97 - geo.wordmark.height)
-    // It moves as the connector ('or') arrives, before it, so the connector never lands under the wordmark (Fri 20 Nov).
-    const second = Math.min(...geo.bands[1]!.indices.map(i => words[i]!.atFrame),
-      geo.connector ? words[geo.connector.index]!.atFrame - 3 : Infinity)
-    const landed = frame < second ? 0 : ease((frame - second) / 9)
-    markShift = (firstTop - geo.wordmark.top) * (1 - landed)
+    // Three resting places, always tight under what is drawn: under the first card; under the connector ('or') once it
+    // arrives; then its own place under the second card as that lands (Fri 20 Nov critic: it floated under 'or' alone).
+    const b0 = geo.bands[0]!, lift0 = b0.width / 2 * Math.sin(3 * Math.PI / 180), cap = height * 0.97 - geo.wordmark.height
+    const firstTop = Math.min(b0.cy + b0.height / 2 + lift0 + height * 0.025, cap)
+    const c = geo.connector
+    const connectorTop = c ? Math.min(c.cy + c.size * 0.6 + height * 0.02, cap) : firstTop
+    const at = (i: number) => words[i]!.atFrame
+    const second = Math.min(...geo.bands[1]!.indices.map(at))
+    const cAt = c ? at(c.index) : second
+    const toConnector = frame < cAt ? 0 : ease((frame - cAt) / 6)
+    const toFinal = frame < second ? 0 : ease((frame - second) / 9)
+    const resting = firstTop + (connectorTop - firstTop) * toConnector
+    markShift = (resting - geo.wordmark.top) * (1 - toFinal)
   }
   const markTop = geo.wordmark ? geo.wordmark.top + markShift : 0
   const mark = geo.wordmark && props.wordmark
