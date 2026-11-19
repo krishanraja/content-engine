@@ -419,6 +419,18 @@
    }
   },
   {
+   "obj": "l_maker",
+   "device": "query_chip",
+   "meaning": "the twist up front: the company that makes the AI pays others for its tools",
+   "persist": {
+    "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {
+    "text": "THE MAKER OF CLAUDE PAYS FOR ITS TOOLS"
+   }
+  },
+  {
    "obj": "l_croc",
    "device": "scene_plate",
    "meaning": "the in-house developer as a crocodile hunter, creeping up on a crocodile under the office desk",
@@ -1935,39 +1947,61 @@
       "source": "take"
      },
      "uses": [
+      "l_maker",
       "l_marks"
      ],
      "events": [
       {
        "at_w": 0,
+       "obj": "l_maker",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 7,
+       "obj": "l_maker",
+       "verb": "highlight",
+       "to_state": "CLAUDE",
+       "silent": true
+      },
+      {
+       "at_w": 11,
+       "obj": "l_maker",
+       "verb": "highlight",
+       "to_state": "PAYS",
+       "silent": true
+      },
+      {
+       "at_w": 15,
+       "obj": "l_maker",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 16,
        "obj": "l_marks",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 10,
+       "at_w": 17,
        "obj": "l_marks",
        "verb": "highlight",
        "to_state": "0",
        "silent": true
       },
       {
-       "at_w": 19,
-       "obj": "l_marks",
-       "verb": "highlight",
-       "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 21,
+       "at_w": 20,
        "obj": "l_marks",
        "verb": "highlight",
        "to_state": "1",
        "silent": true
       },
       {
-       "at_w": 29,
+       "at_w": 28,
        "obj": "l_marks",
        "verb": "highlight",
        "to_state": "2",
