@@ -52,4 +52,11 @@ describe('TitleMoment', () => {
     expect(moved(at(draw({ frame: 125 })), at(draw({ frame: 119 })))).toBeGreaterThan(40)
     expect(draw({ frame: 125, release: 'fade' })).toContain('opacity:0.5')
   })
+
+  it('grows its card line by line as the words land, never an empty panel waiting for them (Tue 17, 19 Nov)', () => {
+    const height = (frame: number) => Number(draw({ card: true, frame }).match(/data-title-card="" style="[^"]*height:([\d.]+)px/)?.[1])
+    const first = height(12), last = height(words.at(-1)!.atFrame + 20)
+    expect(first).toBeGreaterThan(0)
+    expect(last).toBeGreaterThan(first * 1.5)
+  })
 })

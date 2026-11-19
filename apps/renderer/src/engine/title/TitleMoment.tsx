@@ -96,7 +96,15 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
   // title captions a card that slams or slides in I think. having naked captions over my face looks stupid").
   const pad = Math.max(...layout.map(p => p.size)) * 0.32
   const left = Math.min(...layout.map(p => p.x)) - pad, top = Math.min(...layout.map(p => p.y)) - pad * 0.6
-  const right = Math.max(...layout.map(p => p.x + p.width)) + pad, bottom = Math.max(...layout.map(p => p.y + p.size * 1.15)) + pad * 0.6
+  // The card grows line by line as the words land, so it is never an empty dark panel waiting for them (Tue 17,
+  // 19 Nov 2026: its empty lower part read as a plain dark band, config/ve/plain-frames.json).
+  const lands = layout.map(p => ({ at: words[p.index]!.atFrame, bottom: p.y + p.size * 1.15 })).sort((a, b) => a.at - b.at)
+  let reach = lands.length ? lands[0]!.bottom : 0
+  for (const land of lands) {
+    if (frame < land.at) break
+    if (land.bottom > reach) reach += (land.bottom - reach) * (1 - (1 - unit((frame - land.at) / 5)) ** 3)
+  }
+  const right = Math.max(...layout.map(p => p.x + p.width)) + pad, bottom = (props.card ? reach : Math.max(...layout.map(p => p.y + p.size * 1.15))) + pad * 0.6
   const slam = spring({ frame: Math.max(0, frame - fromFrame), fps: 30, config: { damping: 13, stiffness: 320, mass: 0.6 } })
   const cardIn = unit((frame - fromFrame) / 3)
   return <div data-title-moment="" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>

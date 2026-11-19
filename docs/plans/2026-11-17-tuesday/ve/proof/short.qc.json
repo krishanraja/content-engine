@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-11-17-tuesday/ve/proof/short.mp4",
-  "sha256": "28520ff52a25e676b9cff5f3f14f07934ff8596f64475cfda43d1b4215f0b42f",
+  "sha256": "adc16c12ea900c190d519c86a51703d9e40a65535894d1791905a65f23bdc4b7",
   "duration_s": 8.0,
   "format": "face-with-proof",
   "checks": {
@@ -137,7 +137,7 @@
           "frame": 57,
           "text": "and",
           "agreement": 1.0,
-          "variant": "highlight",
+          "variant": "raw_2x",
           "pass": true
         },
         {
@@ -159,7 +159,7 @@
         {
           "page": 11,
           "frame": 199,
-          "text": "We\n»",
+          "text": "We\nCes |",
           "agreement": 0.0,
           "variant": "raw",
           "pass": false
@@ -167,10 +167,10 @@
         {
           "page": 12,
           "frame": 206,
-          "text": "siant",
-          "agreement": 0.0,
-          "variant": "raw",
-          "pass": false
+          "text": "giant",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
         },
         {
           "page": 13,
@@ -220,13 +220,13 @@
         {
           "beat": "title",
           "frame": 119,
-          "score": 0.2759456415661696,
+          "score": 0.27600744501632296,
           "pass": true
         },
         {
           "beat": "meta",
           "frame": 208,
-          "score": 0.46984870127237616,
+          "score": 0.4724335348337567,
           "pass": true
         }
       ],
@@ -274,9 +274,9 @@
           "atFrame": 26,
           "peak_frame": 27,
           "lag_frames": 1,
-          "peak_difference": 6.444486141204834,
-          "event_difference": 6.444486141204834,
-          "threshold": 3.8900610208511353,
+          "peak_difference": 6.465015888214111,
+          "event_difference": 6.465015888214111,
+          "threshold": 3.883138418197632,
           "gradual": false,
           "pass": true
         },
@@ -285,9 +285,9 @@
           "atFrame": 201,
           "peak_frame": 202,
           "lag_frames": 1,
-          "peak_difference": 3.9561824798583984,
-          "event_difference": 3.9561824798583984,
-          "threshold": 2.2295225858688354,
+          "peak_difference": 3.942448377609253,
+          "event_difference": 3.942448377609253,
+          "threshold": 2.2324957251548767,
           "gradual": false,
           "pass": true
         }
@@ -466,11 +466,10 @@
             "text": "the",
             "change_frame": 25,
             "frame": 25,
-            "read": "thes",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 0 reads \"thes\" near frame 25, not \"the\" (score 0.0, needs an exact match and 0.98)"
+            "read": "the)",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 0,
@@ -478,11 +477,11 @@
             "text": "midterms",
             "change_frame": 27,
             "frame": 27,
-            "read": "they\n—",
+            "read": "they\nee ee,",
             "score": 0.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"they\n—\" near frame 27, not \"midterms\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"they\nee ee,\" near frame 27, not \"midterms\" (score 0.0, needs an exact match and 0.98)"
           },
           {
             "page": 0,
@@ -512,12 +511,12 @@
             "fromFrame": 51,
             "text": "and",
             "change_frame": 50,
-            "frame": 50,
-            "read": "ier",
-            "score": 0.0,
+            "frame": 54,
+            "read": "Americ\na\nand)",
+            "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"ier\" near frame 50, not \"and\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"Americ\na\nand)\" near frame 54, not \"and\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
@@ -534,8 +533,13 @@
             "page": 0,
             "fromFrame": 185,
             "text": "wanted",
+            "change_frame": 186,
+            "frame": 188,
+            "read": "Meta\nwanted",
+            "score": 0.5,
+            "exact": false,
             "status": "fail",
-            "message": "caption page 0 (\"wanted\"): no change in the caption zone within 3 frames of its start, frame 185"
+            "message": "caption page 0 reads \"Meta\nwanted\" near frame 188, not \"wanted\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
@@ -636,27 +640,15 @@
           },
           {
             "page": 0,
-            "fromFrame": 24,
-            "text": "the",
-            "change_frame": 25,
-            "frame": 25,
-            "read": "thes",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 0 reads \"thes\" near frame 25, not \"the\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 0,
             "fromFrame": 26,
             "text": "midterms",
             "change_frame": 27,
             "frame": 27,
-            "read": "they\n—",
+            "read": "they\nee ee,",
             "score": 0.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"they\n—\" near frame 27, not \"midterms\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"they\nee ee,\" near frame 27, not \"midterms\" (score 0.0, needs an exact match and 0.98)"
           },
           {
             "page": 0,
@@ -675,19 +667,24 @@
             "fromFrame": 51,
             "text": "and",
             "change_frame": 50,
-            "frame": 50,
-            "read": "ier",
-            "score": 0.0,
+            "frame": 54,
+            "read": "Americ\na\nand)",
+            "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"ier\" near frame 50, not \"and\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"Americ\na\nand)\" near frame 54, not \"and\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
             "fromFrame": 185,
             "text": "wanted",
+            "change_frame": 186,
+            "frame": 188,
+            "read": "Meta\nwanted",
+            "score": 0.5,
+            "exact": false,
             "status": "fail",
-            "message": "caption page 0 (\"wanted\"): no change in the caption zone within 3 frames of its start, frame 185"
+            "message": "caption page 0 reads \"Meta\nwanted\" near frame 188, not \"wanted\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
@@ -750,7 +747,7 @@
             "message": "caption page 0 reads \"for\" near frame 238, not \"more\" (score 0.0, needs an exact match and 0.98)"
           }
         ],
-        "changes_found": 23,
+        "changes_found": 25,
         "status": "fail",
         "reason": "1 of 1 caption page(s) are not drawn as the props say near their start",
         "pass": false,
@@ -863,7 +860,7 @@
       "pass": false,
       "status": "measured",
       "agreement": null,
-      "summary": "1 of 1 caption page(s) are not drawn as the props say near their start: caption page 0 reads \"lp auaiacingaecl\" near frame 2, not \"happened\" (score 0.0, needs an exact match and 0.98); caption page 0 reads \"pap\nTO\" near frame 8, not \"to\" (score 0.5, needs an exact match and 0.98); caption page 0 reads \"thes\" near frame 25, not \"the\" (score 0.0, needs an exact match and 0.98); caption page 0 reads \"they\n—\" near frame 27, not \"midterms\" (score 0.0, needs an exact match and 0.98) (and 8 more)"
+      "summary": "1 of 1 caption page(s) are not drawn as the props say near their start: caption page 0 reads \"lp auaiacingaecl\" near frame 2, not \"happened\" (score 0.0, needs an exact match and 0.98); caption page 0 reads \"pap\nTO\" near frame 8, not \"to\" (score 0.5, needs an exact match and 0.98); caption page 0 reads \"they\nee ee,\" near frame 27, not \"midterms\" (score 0.0, needs an exact match and 0.98); caption page 0 reads \"\" near frame 39, not \"America\" (score 0.0, needs an exact match and 0.98) (and 7 more)"
     },
     "captions.off_face": {
       "value": {
@@ -895,10 +892,10 @@
               160
             ],
             "face": [
-              449,
-              1169,
-              361,
-              361
+              445,
+              1171,
+              369,
+              369
             ]
           },
           {
@@ -911,10 +908,10 @@
               160
             ],
             "face": [
-              436,
-              1128,
-              408,
-              408
+              442,
+              1126,
+              397,
+              397
             ]
           }
         ],
@@ -941,15 +938,15 @@
       "value": [
         {
           "edge_frame": 62,
-          "barest_frame": 61,
-          "stage_std": 69.61,
+          "barest_frame": 62,
+          "stage_std": 68.75,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 177,
-          "barest_frame": 180,
-          "stage_std": 32.98,
+          "barest_frame": 179,
+          "stage_std": 35.37,
           "floor": 3.0,
           "pass": true
         }
@@ -985,8 +982,8 @@
           "b": 4.05
         },
         "title": {
-          "L": 47.65,
-          "a": 1.19,
+          "L": 47.67,
+          "a": 1.2,
           "b": 3.85
         }
       },
@@ -1053,7 +1050,7 @@
               "value": [
                 {
                   "text": "OF",
-                  "conf": 96.964996,
+                  "conf": 96.965416,
                   "x": 886,
                   "y": 519,
                   "w": 123,
@@ -1061,7 +1058,7 @@
                 },
                 {
                   "text": "NO?",
-                  "conf": 96.311241,
+                  "conf": 96.133827,
                   "x": 757,
                   "y": 655,
                   "w": 257,
@@ -1085,7 +1082,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 89.87
+              "value": 89.89
             },
             "small_text": {
               "pass": true,
@@ -1326,7 +1323,7 @@
             "value": [
               {
                 "text": "OF",
-                "conf": 96.964996,
+                "conf": 96.965416,
                 "x": 886,
                 "y": 519,
                 "w": 123,
@@ -1334,7 +1331,7 @@
               },
               {
                 "text": "NO?",
-                "conf": 96.311241,
+                "conf": 96.133827,
                 "x": 757,
                 "y": 655,
                 "w": 257,
@@ -1358,7 +1355,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 89.87
+            "value": 89.89
           },
           "small_text": {
             "pass": true,

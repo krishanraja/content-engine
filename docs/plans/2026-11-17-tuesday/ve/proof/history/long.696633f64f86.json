@@ -302,7 +302,7 @@
       "caption on the light stage"
     ]
   ],
-  "engine_sha256": "805c356a7730398c2f366de8813e8f84c8de8f82495b167da1de7f5a27112774",
+  "engine_sha256": "b42e014885cf52f39777935eb2d789a6aa5fa189a46ecae4b176795029d1f857",
   "assets_sha256": {
     "bg-city-dusk": "107539f8d1b4c68f2d05ba9c1e2bc002109c35e1235b0cc166cfeab76cbeae2c",
     "bg-data-hall": "3730051bf5718d3577cfad4dc96c53bd8bd1abb0d20497ebed4630e065ea424c",
@@ -327,12 +327,31 @@
     "scene-nameplate": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222",
     "wyso-lead": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
   },
-  "made_at": "2026-11-19T13:38:22Z",
+  "made_at": "2026-11-19T14:28:22Z",
   "frames": {
     "pass": true,
     "status": "ok",
     "problems": [],
     "frames": 25
   },
-  "sendable": true
+  "compare": {
+    "against": "fa492d5db28497c59a00c35058a88d7ba93018749926fe72ce71d56642f3f2b3",
+    "reasons": [
+      "the engine changed since the proof he approved"
+    ],
+    "compared": null,
+    "sheet": "compare.long.png",
+    "sha256": "d8988073205851db9ccd8af662e6cf721070e3bf8f0daed87307a4b49dbbb5b4",
+    "seconds": [
+      0.75,
+      2.26,
+      3.77,
+      5.28,
+      6.79,
+      8.3,
+      9.8,
+      11.31
+    ]
+  },
+  "sendable": false
 }

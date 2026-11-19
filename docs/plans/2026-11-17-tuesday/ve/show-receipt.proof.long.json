@@ -3,11 +3,11 @@
   "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
   "cut": "long",
   "label": "proof.long",
-  "cut_sha256": "fa492d5db28497c59a00c35058a88d7ba93018749926fe72ce71d56642f3f2b3",
-  "engine_sha256": "805c356a7730398c2f366de8813e8f84c8de8f82495b167da1de7f5a27112774",
-  "evaluated_at": "2026-11-19T13:46:48.800173+00:00",
+  "cut_sha256": "0eaf2fb0c4cd1cfbaa7ae574437a0d0199461bc6268043b4b6f33df89cf83b8f",
+  "engine_sha256": "b42e014885cf52f39777935eb2d789a6aa5fa189a46ecae4b176795029d1f857",
+  "evaluated_at": "2026-11-19T14:36:53.742498+00:00",
   "qc": {
-    "sha256": "a920814a142630533040b676ee220dfac66e7c2c8dda17430015386d0f652206",
+    "sha256": "99beb8f48c09459494444d4aa173a0be26577d244b197425f43c883b0353cc4f",
     "measured_pass": false,
     "complete": false
   },

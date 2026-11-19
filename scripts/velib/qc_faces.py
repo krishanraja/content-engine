@@ -11,6 +11,7 @@ the Python's detector; the check reports not_run (never pass) on a machine that 
 """
 from __future__ import annotations
 
+import math
 import re
 import subprocess
 
@@ -83,7 +84,10 @@ def sampled_frame(page: dict) -> int:
 
 def frame_at(video: str, frame: int, fps: float, size: tuple[int, int]) -> np.ndarray:
     w, h = size
-    raw = subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-ss', f'{frame / fps:.3f}', '-i', video,
+    # The seek is rounded down to the millisecond: rounded to nearest, the last frame of a 30 fps file (239 of 240,
+    # 7.9667 s) became 7.967 s, past its start, and ffmpeg returned nothing (Tue 17, 19 Nov 2026).
+    at = math.floor(frame / fps * 1000) / 1000
+    raw = subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-ss', f'{at:.3f}', '-i', video,
                           '-frames:v', '1', '-vf', f'scale={w}:{h}', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'],
                          capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.uint8).reshape(h, w, 3)
