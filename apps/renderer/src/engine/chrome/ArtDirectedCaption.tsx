@@ -84,6 +84,12 @@ export function cutHeight(captions: readonly Page[], aspect: EngineRenderProps['
   return known[aspect]!
 }
 
+/** True when the beat at this frame shows his take with his face on screen. */
+export function faceAt(props: EngineRenderProps, frame: number): boolean {
+  const beat = props.beats.find((b) => frame >= b.fromFrame && frame < b.toFrame)
+  return Boolean(beat && beat.plate?.source === 'take' && beat.face !== 'off')
+}
+
 const SHADOW = '0 6px 24px rgba(0,0,0,.45)'
 
 export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null {
@@ -112,6 +118,9 @@ export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps;
 
   // The echo: this page's, fading in as its word is said, and the last page's fading out under it. Opacity only.
   const echo = (pg: Page, alpha: number) => {
+    // Never across his face: on a beat that shows his take the echo would sit over it as a grey ghost word
+    // (Fri 20 Nov, "CHATBOT" and "THEM" over his face; captions_off_his_face).
+    if (faceAt(props, pg.fromFrame) || faceAt(props, frame)) return null
     const at = echoIndex(pg)
     if (at === null || alpha <= 0.001) return null
     return <div key={pg.fromFrame} data-caption-echo style={{ position: 'absolute', left: -60, right: -60, top: props.aspect === '9:16' ? 700 : 300,

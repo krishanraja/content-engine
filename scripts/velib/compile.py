@@ -638,6 +638,15 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # the held title); the title flows back into the caption line as the next caption starts.
     spoken = [row for row in rows if not (moment and (moment['span'][0] <= row['w'] <= moment['span'][1]
                                                       or moment['fromFrame'] <= row['atFrame'] < moment['toFrame']))]
+    if moment:
+        # The title's own sentence steps aside whole: a lead-in he says just before it ("So" of "So will your AI auditor
+        # find...") is part of the title's line, never a lone word paged onto the sentence before (Fri 20 Nov: "BEAT
+        # THEM / SO"). At most two words after the last sentence end before the title.
+        before = [r for r in spoken if r['atFrame'] < moment['fromFrame']]
+        ends = [i for i, r in enumerate(before) if _END.search(r['text'])]
+        lead = before[ends[-1] + 1:] if ends else []
+        if 0 < len(lead) <= 2:
+            spoken = [r for r in spoken if r not in lead]
     # No caption page spans the title: the words before it and after it page apart, so a page never joins two sentences
     # across the title or leaves a lone word hanging before it (Fri 20 Nov: "SO" alone, then "A man's brother-in-law").
     sides = [spoken] if not moment else [[r for r in spoken if r['atFrame'] < moment['fromFrame']],

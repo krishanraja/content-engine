@@ -36,6 +36,15 @@
    "on": "2026-11-19",
    "artifact_hash": "be0781a6c74a84c440414028cde64b57d8142c8a901875f9a0022023e7246506",
    "covers": "the post-render Critic's five fixes he ordered: a slam word fades fully on exit (no 'TEAMSS' residue); the slam tapes run off both frame edges; the title wordmark sits tight under the bands as one lockup; a caption page never spans the title moment; an object may be placed on any layout and a plate-none beat draws its backdrop, so the slam band sits above his head on a full-face beat"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "fix all five, this is absolute madness",
+   "on": "2026-11-19",
+   "artifact_hash": "2a7cb58c512491db53817ac4fa14ebeab6b92aef5cce020489b6b8dd7fb45bd8",
+   "covers": "the same five fixes, completed: the art-directed caption's faint echo word is never drawn over a beat that shows his face (the grey ghost word the Critic flagged, seen as 'CHATBOT' and 'THEM' over his face on the proof)"
   }
  ]
 }
