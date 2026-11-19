@@ -1948,7 +1948,7 @@ def cmd_render(args) -> int:
     cut = props.get('cutId')
     if cut in spec['cuts'] and not spec['cuts'][cut].get('excerpt') and Path(args.out).is_file():
         # F58: the rendered frames of a whole cut are read before it is recorded, never sent on a contact strip.
-        seen = plainframes.check_frames(args.out, props)
+        seen = plainframes.check_frames(args.out, props, shadow_ok_beats=plainframes.shadow_ok_beats(verdict.ve_dir(Path(args.spec)), cut))
         if seen.get('pass') is not True:
             print('ve render: the render is not recorded, its frames fail the v10 guards (plain dark areas, captions over content):')
             print('\n'.join(f'  - {line}' for line in plainframes.refusal_lines(seen)))

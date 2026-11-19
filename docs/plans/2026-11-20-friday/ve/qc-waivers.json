@@ -46,6 +46,19 @@
       "rows": [
         "words.lost"
       ]
+    },
+    {
+      "by": "Krish",
+      "said": "Keep shadow only",
+      "asked": "On the Fri 20 Nov short's steak beat (41 to 45 s), the captions 'FOR A STEAK WHEN' and 'YOU GET SERVED A SANDWICH' sit over the white bill in the photo. They read by their dark shadow, but the guard wants a scrim on bright pictures. What do you want?",
+      "on": "2026-11-19",
+      "cut": "short",
+      "beats": [
+        "steak"
+      ],
+      "rows": [
+        "frames.caption_over_content"
+      ]
     }
   ]
 }

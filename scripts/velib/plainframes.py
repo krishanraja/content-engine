@@ -229,7 +229,8 @@ def caption_over_content_problems(items: list[dict], rules: dict | None = None) 
 # ---------------------------------------------------------------- the rendered file
 
 
-def check_frames(path: str, props: dict, *, grab=None, fps: float | None = None, rules: dict | None = None) -> dict:
+def check_frames(path: str, props: dict, *, grab=None, fps: float | None = None, rules: dict | None = None,
+                 shadow_ok_beats: frozenset = frozenset()) -> dict:
     """Run both frame checks on a rendered file. `props` is the compiled props the file was rendered from (the proof's
     window props for a proof). grab(path, frame, fps, (w, h)) -> rgb H x W x 3 (default: ffmpeg). Returns
     {'pass': bool|None, 'problems': [...], 'frames': n, 'status': 'ok' | 'not_run', 'reason'?}."""
@@ -253,7 +254,12 @@ def check_frames(path: str, props: dict, *, grab=None, fps: float | None = None,
     plain, over = [], []
     try:
         gray_frames = []
+        # The palette's close is the one place flat ink is allowed (Ruling, Krish, 2026-11-19: "This palette close is fine"):
+        # frames inside the ending band are not read for plain dark areas.
+        close_from = (props.get('ending') or {}).get('fromFrame')
         for beat_id, frame in sample_frames(beats, pages, rules):
+            if isinstance(close_from, int) and frame >= close_from:
+                continue
             rgb = grab(path, frame, fps, size)
             gray_frames.append((beat_id, frame, (0.299 * rgb[..., 0] + 0.587 * rgb[..., 1] + 0.114 * rgb[..., 2]).astype(np.float32)))
         plain = plain_dark_problems(gray_frames, rules)
@@ -269,6 +275,8 @@ def check_frames(path: str, props: dict, *, grab=None, fps: float | None = None,
         over = caption_over_content_problems(items, rules)
     except (OSError, ValueError, RuntimeError) as error:
         return {'pass': None, 'status': 'not_run', 'reason': f'a frame could not be read: {error}'[:200], 'problems': [], 'frames': 0}
+    # A beat Krish ruled reads by the caption's own shadow over a bright picture (qc-waivers.json, frames.caption_over_content).
+    over = [p for p in over if p.get('beat') not in shadow_ok_beats]
     problems = plain + over
     return {'pass': not problems, 'status': 'ok', 'problems': problems, 'frames': len(gray_frames) + len(pages)}
 
@@ -277,6 +285,20 @@ def _page_frame(page: dict) -> int:
     first, last = int(page['fromFrame']), int(page['toFrame'])
     revealed = max(first, max((int(w['atFrame']) for w in page.get('words', [])), default=first) + 2)
     return (revealed + last - 1) // 2
+
+
+def shadow_ok_beats(directory, cut: str) -> frozenset:
+    """Beats of this cut whose captions Krish ruled read by their shadow alone over a bright picture: his waiver of the
+    row frames.caption_over_content in the piece's qc-waivers.json, named by beat (Fri 20 Nov steak: "Keep shadow only")."""
+    import json  # noqa: PLC0415
+    from pathlib import Path  # noqa: PLC0415
+    path = Path(directory) / 'qc-waivers.json'
+    try:
+        waivers = json.loads(path.read_text(encoding='utf-8')).get('waivers', [])
+    except (OSError, ValueError):
+        return frozenset()
+    return frozenset(b for w in waivers if w.get('by') == 'Krish' and 'frames.caption_over_content' in (w.get('rows') or [])
+                     and w.get('cut') == cut for b in (w.get('beats') or []))
 
 
 def refusal_lines(result: dict) -> list[str]:
