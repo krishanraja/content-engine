@@ -23,8 +23,9 @@ import type { EngineBeat, EngineRenderProps } from './props'
 export interface BrandFrameProps { props: EngineRenderProps; beat: EngineBeat; frame: number }
 
 export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement {
-  const call = beat.role === 'call'
-  if (call && !props.call) throw new Error('ve: call beat without props.call')
+  // The dated call card only when the piece writes a call; with none the call beat is a closing beat like any other
+  // (Ruling, Krish, 2026-11-19: "I hate this prediction format. I think we just scrap it.").
+  const call = beat.role === 'call' && !!props.call
   const ending = !!props.ending && frame >= props.ending.fromFrame
   // vertical-captions: lead captions replace the house captions for that style only.
   const lead = resolveMotion(props.motion)?.captions

@@ -22,9 +22,9 @@ describe('ve', () => {
     expect(ProductionSpecV2Schema.safeParse(spec).success).toBe(false)
   })
 
-  it('mind.the.gap cannot ship without its dated call', () => {
+  it('mind.the.gap ships without a dated call (Ruling, Krish, 2026-11-19: "I hate this prediction format. I think we just scrap it.")', () => {
     const spec = fixture(); delete spec.call
-    expect(ProductionSpecV2Schema.safeParse(spec).success).toBe(false)
+    expect(ProductionSpecV2Schema.safeParse(spec).success).toBe(true)
   })
 
   it('generated media can never be evidence', () => {

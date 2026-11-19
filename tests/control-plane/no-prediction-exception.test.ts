@@ -5,6 +5,7 @@ import { publishChecks } from '../../apps/control-plane/api/_publishChecks.js'
 
 const wednesday = 'b63d2507-dbb4-449d-bce4-f21e859ee2ad'
 const friday = '9a0c97af-f0d6-4d12-a7ce-773c622d4b67'
+const auditor = 'c00cd4e0-e1bb-4c60-b36f-cea92897e38c'
 const body = readFileSync('docs/plans/2026-10-28-draft-body.md', 'utf8').replace(/\r\n/g, '\n')
 const ids = new Set(['CALL', 'CALL_HORIZON', 'CLEAR_STANCE'])
 const facts = { ok: true, reason: null }
@@ -21,6 +22,14 @@ describe('Krish-approved no-prediction pieces (26 October 2026)', () => {
         assert.match(c.detail, /Exempt by Krish on 26 October 2026/)
       }
       assert.equal(publishChecks(body, { ok: false, reason: 'Unresolved claims' }, undefined, piece).find(c => c.id === 'FACTS')?.ok, false)
+    }
+  })
+  test('the AI auditor piece of 20 November is exempt by his 19 November word', () => {
+    const waived = publishChecks(body, facts, undefined, auditor).filter(c => ids.has(c.id))
+    assert.equal(waived.length, 3)
+    for (const c of waived) {
+      assert.equal(c.ok, true)
+      assert.match(c.detail, /Exempt by Krish on 19 November 2026/)
     }
   })
   test('does not carry to another piece or an unnamed one', () => {
