@@ -595,7 +595,6 @@
      "trimBeforeFrames": 30
     },
     "push": 0.03,
-    "source": "IIHS · small overlap front test",
     "regions": {
      "impact": {
       "x": 0.34,
@@ -626,7 +625,6 @@
      "x": 0.35,
      "y": 0.5
     },
-    "source": "IIHS · small overlap front test",
     "regions": {
      "driver": {
       "x": 0.24,
@@ -875,7 +873,7 @@
    "kind": "recording",
    "origin": "capture",
    "path": "screens/b3-posts.mp4",
-   "sha256": "45996c0f9e1eae869220168c934369fa9bb787e98466825c43293e243677bb7f",
+   "sha256": "efc4444ed99eebead88f808f1f236741f861b7679f2b6387228645852bfdf238",
    "licence": "the publisher's own published page or post, recorded from its own page, credited",
    "credit": "Bluesky posts, links in the spec",
    "source_url": "https://bsky.app"
@@ -885,7 +883,7 @@
    "kind": "recording",
    "origin": "capture",
    "path": "screens/b11-ibm.mp4",
-   "sha256": "e2455855ca4c11cd8c3624ca031185d62fc453f3e18142b81f3fd7a1164a34ba",
+   "sha256": "9c37c89ad0c07fa462db8edeaa15186e45c7ab78328671e37179fadf6f1b84ef",
    "licence": "the publisher's own published page or post, recorded from its own page, credited",
    "credit": "IBM Newsroom, 21 Sep 2026",
    "source_url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities"
@@ -895,7 +893,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b13a-accountable.mp4",
-   "sha256": "86a79a2df8bc308c9c260d5b9c96bd648bf39de651eebf030b2e7f0404a12035",
+   "sha256": "804ce79fad398d14f0ab874265c6c65c3fa037cb772d9079d330503734957fbd",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
@@ -906,7 +904,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b13-overrule.mp4",
-   "sha256": "990608961392d31de56ecb35cfbe1cbdd8c07d2fefa1ed6177b3a9a85884b9c6",
+   "sha256": "84b3e49c09acfa60f5bb35153758d1de6c9e1df6b2957004689e76a0ddd3f168",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
@@ -917,7 +915,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b19-forward.mp4",
-   "sha256": "84dfb44df3ac90cf464231f83364d913059332155326c360df55163248473371",
+   "sha256": "70b78d7c9b928614e2392c7e67f45e840ed21883a25d495fa70442ee928f4268",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
@@ -928,7 +926,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b20-resign.mp4",
-   "sha256": "5108b29ee86d83c57a9fc7cedfe2eefae6da193e012b7de10de61ff457c727c3",
+   "sha256": "61ad9f98601cadd562728a0055bd665aa5b26270c5edaab76c94987317b559f6",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
@@ -939,7 +937,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "capture/b22-screen.mp4",
-   "sha256": "f918482a72f03538588de750a85e7a83b50cff6eb335df6cd2b22a04a76b6b0d",
+   "sha256": "c0f4ffdf7f56f9299e472ea4886432a72230e8667584762266d2cd271befbe71",
    "licence": "built by Codex from a code-made email draft and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1efa5-ff4d-7cf2-bc11-eca9de2b3be3",
