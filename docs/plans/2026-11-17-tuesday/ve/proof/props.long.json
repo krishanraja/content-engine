@@ -4,7 +4,7 @@
   "format": "face-with-proof",
   "aspect": "16:9",
   "fps": 30,
-  "durationFrames": 409,
+  "durationFrames": 362,
   "tokens": {
     "ink": "#0C1512",
     "inkDeep": "#070D0B",
@@ -40,22 +40,22 @@
   "segments": [
     {
       "src": "/home/user/content-engine/.scratch/b019/assets/conformed.long.mp4",
-      "trimBeforeFrames": 4868,
+      "trimBeforeFrames": 904,
       "fromFrame": 0,
-      "durationFrames": 409
+      "durationFrames": 362
     }
   ],
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.scratch/b019/assets/audio.long.wav",
-      "trimBeforeFrames": 4868
+      "trimBeforeFrames": 904
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 16,
+      "toFrame": 10,
       "words": [
         {
           "text": "So",
@@ -65,144 +65,221 @@
       "swipeIndex": null
     },
     {
-      "fromFrame": 16,
-      "toFrame": 26,
+      "fromFrame": 10,
+      "toFrame": 15,
       "words": [
         {
-          "text": "what",
-          "atFrame": 16
+          "text": "if",
+          "atFrame": 10
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 26,
-      "toFrame": 35,
+      "fromFrame": 15,
+      "toFrame": 25,
       "words": [
         {
-          "text": "is",
-          "atFrame": 26
+          "text": "you",
+          "atFrame": 15
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 35,
+      "fromFrame": 25,
+      "toFrame": 41,
+      "words": [
+        {
+          "text": "pay",
+          "atFrame": 25
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 41,
+      "toFrame": 46,
+      "words": [
+        {
+          "text": "for",
+          "atFrame": 41
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 46,
       "toFrame": 53,
       "words": [
         {
-          "text": "everyone",
-          "atFrame": 35
+          "text": "AI",
+          "atFrame": 46
         }
       ],
       "swipeIndex": null
     },
     {
       "fromFrame": 53,
-      "toFrame": 65,
+      "toFrame": 56,
       "words": [
         {
-          "text": "building",
+          "text": "at",
           "atFrame": 53
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 65,
-      "toFrame": 83,
+      "fromFrame": 56,
+      "toFrame": 73,
       "words": [
         {
-          "text": "AI",
-          "atFrame": 65
+          "text": "work",
+          "atFrame": 56
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 83,
-      "toFrame": 90,
+      "fromFrame": 73,
+      "toFrame": 76,
       "words": [
         {
-          "text": "doing",
-          "atFrame": 83
+          "text": "or",
+          "atFrame": 73
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 90,
-      "toFrame": 97,
+      "fromFrame": 76,
+      "toFrame": 79,
       "words": [
         {
-          "text": "about",
-          "atFrame": 90
+          "text": "at",
+          "atFrame": 76
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 97,
-      "toFrame": 114,
+      "fromFrame": 79,
+      "toFrame": 92,
       "words": [
         {
-          "text": "this?",
-          "atFrame": 97
+          "text": "home,",
+          "atFrame": 79
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 114,
-      "toFrame": 138,
+      "fromFrame": 92,
+      "toFrame": 96,
       "words": [
         {
-          "text": "Oracle,",
-          "atFrame": 114
+          "text": "could",
+          "atFrame": 92
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 138,
-      "toFrame": 145,
+      "fromFrame": 96,
+      "toFrame": 100,
       "words": [
         {
-          "text": "big",
-          "atFrame": 138
+          "text": "the",
+          "atFrame": 96
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 145,
-      "toFrame": 159,
+      "fromFrame": 100,
+      "toFrame": 113,
       "words": [
         {
-          "text": "software",
-          "atFrame": 145
+          "text": "midterm",
+          "atFrame": 100
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 159,
-      "toFrame": 169,
+      "fromFrame": 113,
+      "toFrame": 124,
       "words": [
         {
-          "text": "giant,",
-          "atFrame": 159
+          "text": "results",
+          "atFrame": 113
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 169,
+      "fromFrame": 124,
+      "toFrame": 127,
+      "words": [
+        {
+          "text": "in",
+          "atFrame": 124
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 127,
+      "toFrame": 139,
+      "words": [
+        {
+          "text": "America",
+          "atFrame": 127
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 139,
+      "toFrame": 151,
+      "words": [
+        {
+          "text": "push",
+          "atFrame": 139
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 151,
+      "toFrame": 156,
+      "words": [
+        {
+          "text": "your",
+          "atFrame": 151
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 156,
+      "toFrame": 163,
+      "words": [
+        {
+          "text": "bill",
+          "atFrame": 156
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 163,
       "toFrame": 174,
       "words": [
         {
-          "text": "they",
-          "atFrame": 169
+          "text": "up?",
+          "atFrame": 163
         }
       ],
       "swipeIndex": null
@@ -212,272 +289,8 @@
       "toFrame": 187,
       "words": [
         {
-          "text": "decided",
+          "text": "And",
           "atFrame": 174
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 187,
-      "toFrame": 191,
-      "words": [
-        {
-          "text": "to",
-          "atFrame": 187
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 191,
-      "toFrame": 199,
-      "words": [
-        {
-          "text": "skip",
-          "atFrame": 191
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 199,
-      "toFrame": 204,
-      "words": [
-        {
-          "text": "the",
-          "atFrame": 199
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 204,
-      "toFrame": 213,
-      "words": [
-        {
-          "text": "town's",
-          "atFrame": 204
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 213,
-      "toFrame": 229,
-      "words": [
-        {
-          "text": "electricity",
-          "atFrame": 213
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 229,
-      "toFrame": 243,
-      "words": [
-        {
-          "text": "altogether",
-          "atFrame": 229
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 243,
-      "toFrame": 246,
-      "words": [
-        {
-          "text": "and",
-          "atFrame": 243
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 246,
-      "toFrame": 252,
-      "words": [
-        {
-          "text": "it",
-          "atFrame": 246
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 252,
-      "toFrame": 260,
-      "words": [
-        {
-          "text": "signed",
-          "atFrame": 252
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 260,
-      "toFrame": 265,
-      "words": [
-        {
-          "text": "up",
-          "atFrame": 260
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 265,
-      "toFrame": 269,
-      "words": [
-        {
-          "text": "for",
-          "atFrame": 265
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 269,
-      "toFrame": 273,
-      "words": [
-        {
-          "text": "a",
-          "atFrame": 269
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 273,
-      "toFrame": 285,
-      "words": [
-        {
-          "text": "whole",
-          "atFrame": 273
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 285,
-      "toFrame": 301,
-      "words": [
-        {
-          "text": "fleet",
-          "atFrame": 285
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 301,
-      "toFrame": 324,
-      "words": [
-        {
-          "text": "of",
-          "atFrame": 301
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 324,
-      "toFrame": 330,
-      "words": [
-        {
-          "text": "gas",
-          "atFrame": 324
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 330,
-      "toFrame": 337,
-      "words": [
-        {
-          "text": "power",
-          "atFrame": 330
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 337,
-      "toFrame": 360,
-      "words": [
-        {
-          "text": "plants",
-          "atFrame": 337
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 360,
-      "toFrame": 363,
-      "words": [
-        {
-          "text": "to",
-          "atFrame": 360
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 363,
-      "toFrame": 371,
-      "words": [
-        {
-          "text": "power",
-          "atFrame": 363
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 371,
-      "toFrame": 375,
-      "words": [
-        {
-          "text": "its",
-          "atFrame": 371
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 375,
-      "toFrame": 381,
-      "words": [
-        {
-          "text": "own",
-          "atFrame": 375
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 381,
-      "toFrame": 389,
-      "words": [
-        {
-          "text": "data",
-          "atFrame": 381
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 389,
-      "toFrame": 409,
-      "words": [
-        {
-          "text": "centres.",
-          "atFrame": 389
         }
       ],
       "swipeIndex": null
@@ -486,25 +299,96 @@
   "captionStyle": "word",
   "captionTheme": "podcast",
   "captionPlacement": "lower",
+  "titleMoment": {
+    "fromFrame": 187,
+    "toFrame": 362,
+    "release": "captions",
+    "words": [
+      {
+        "text": "Where",
+        "atFrame": 187
+      },
+      {
+        "text": "does",
+        "atFrame": 196
+      },
+      {
+        "text": "AI",
+        "atFrame": 204
+      },
+      {
+        "text": "get",
+        "atFrame": 212
+      },
+      {
+        "text": "built",
+        "atFrame": 218
+      },
+      {
+        "text": "when",
+        "atFrame": 227
+      },
+      {
+        "text": "the",
+        "atFrame": 244
+      },
+      {
+        "text": "town's",
+        "atFrame": 247
+      },
+      {
+        "text": "residents",
+        "atFrame": 270
+      },
+      {
+        "text": "say",
+        "atFrame": 283
+      },
+      {
+        "text": "no",
+        "atFrame": 289
+      },
+      {
+        "text": "to",
+        "atFrame": 298
+      },
+      {
+        "text": "the",
+        "atFrame": 301
+      },
+      {
+        "text": "big",
+        "atFrame": 303
+      },
+      {
+        "text": "data",
+        "atFrame": 308
+      },
+      {
+        "text": "centres?",
+        "atFrame": 316
+      }
+    ],
+    "card": true
+  },
   "beats": [
     {
-      "id": "l17",
+      "id": "l5",
       "role": "anchor",
-      "layout": "STAGE",
+      "layout": "P1",
       "fromFrame": 0,
-      "toFrame": 409,
-      "uses": [
-        "block_l"
-      ],
+      "toFrame": 362,
+      "uses": [],
       "transitionOut": "cut",
       "sectionBeat": true,
       "plate": {
-        "source": "none"
+        "source": "take",
+        "crop": "50% 38%"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-pylons-1.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
       },
-      "keyFrame": 327
+      "keyFrame": 290
     }
   ],
   "objects": [
@@ -513,7 +397,7 @@
       "device": "facility_block",
       "meaning": "Meta's data centre in Piqua, the one object the whole cut changes",
       "fromFrame": 0,
-      "toFrame": 409,
+      "toFrame": 362,
       "variants": {},
       "params": {
         "kind": "data centre",
@@ -551,48 +435,6 @@
       "verb": "fill",
       "toState": "racks",
       "atFrame": 0
-    },
-    {
-      "id": "l8-0",
-      "obj": "block_l",
-      "verb": "connect",
-      "toState": "city",
-      "atFrame": 0
-    },
-    {
-      "id": "l9-0",
-      "obj": "block_l",
-      "verb": "move",
-      "toState": "target:0",
-      "atFrame": 0
-    },
-    {
-      "id": "l9-1",
-      "obj": "block_l",
-      "verb": "add",
-      "toState": "pylons",
-      "atFrame": 0
-    },
-    {
-      "id": "proof-1",
-      "obj": "block_l",
-      "verb": "stamp",
-      "toState": "ban",
-      "atFrame": 0
-    },
-    {
-      "id": "proof-3",
-      "obj": "block_l",
-      "verb": "add",
-      "toState": "ballot",
-      "atFrame": 0
-    },
-    {
-      "id": "l17-0",
-      "obj": "block_l",
-      "verb": "carry",
-      "toState": "walk",
-      "atFrame": 324
     }
   ],
   "call": {
