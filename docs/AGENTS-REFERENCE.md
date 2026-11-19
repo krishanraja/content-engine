@@ -380,7 +380,7 @@ understand what is a no-no and what kind of stuff cannot be produced").
 `config/rejection-floor.json` holds every rejection he gave, with his words,
 and the standards read from them, by maker: `short_video`, `long_video`,
 `captions`, `motion`, `card`, `intro_outro`, `audio`, `cover`, `thumbnail`,
-`title`, `carousel`, `article`, `script`, `prediction`, `site`, `board`,
+`title`, `carousel`, `article`, `script`, `prediction` (retired on 2026-11-18 with the format; its floor is only the record of what he rejected), `site`, `board`,
 `session` and `pipeline`. Before the brief, run `python3 scripts/floor.py
 --format <maker>` for each maker you are; before delivery, check the finished
 file against it. A standard is approved or reworded by Krish, or a draft the

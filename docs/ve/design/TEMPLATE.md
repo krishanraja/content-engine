@@ -8,7 +8,7 @@
 Approved by Krish on 28 Oct 2026 ("Approve direction"): format **H, the hand-held screen**, is the base; **P, two passports**, is the reusable module for any piece about where an AI lives. From 3 Nov to 18 Nov 2026 face-with-proof was the base lock and H and P its modules; Krish retired its key frames on 18 Nov and dropped the picture-matching, so it is a rules-only lock (`docs/ve/design/formats/F-anatomy.md`). The machine-readable lock is `config/ve/design-lock.json`; the gates read it, not this page. Per-format detail (zone tables, slots, camera, prompts) is in `docs/ve/design/formats/`. Why this exists: the first Gate 2 proofs passed every mechanical check and were rejected on design (F19 in `config/failures.json`).
 
 ## The format in one paragraph
-One real hand holds one real phone on a real-world plate. The camera never cuts: it pushes, rolls and re-frames. Each beat has one big statement (Anton), one human line (Fraunces italic), one object that carries the evidence, and **one hand-drawn scribble** pointing at the single most important thing in that beat. The engine adds captions, the logo and the dated call. Nothing sits still, and nothing is a table.
+One real hand holds one real phone on a real-world plate. The camera never cuts: it pushes, rolls and re-frames. Each beat has one big statement (Anton), one human line (Fraunces italic), one object that carries the evidence, and **one hand-drawn scribble** pointing at the single most important thing in that beat. The engine adds captions and the logo (the dated call it once added is retired, 2026-11-18). Nothing sits still, and nothing is a table.
 
 ## Canvas and zones (px, 1080x1920)
 | Zone | x | y | w | h | Rule |

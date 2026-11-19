@@ -471,7 +471,7 @@ def f5():
     sc = scribble_svg([scribble_loop(cx, cy, U, V, seed=9, sq=3.4, start=0.4)], color='var(--mint)')
 
     # the result as three threads on a time axis (the mind.the.gap device), no box:
-    #   threads start apart, bend and meet at the dated call; a planted flag = flagged; a parted thread = the answer was deleted
+    #   threads start apart, bend and meet where the pattern leads (a dated call until 2026-11-18); a planted flag = flagged; a parted thread = the answer was deleted
     S1, S2, KX, KY, AXY = 410, 660, 892, 436, 240          # station poles, dated knot, time-axis y
     ROWS = [('Claude', 336, True, '2/2'), ('ChatGPT', 436, True, '2/2'), ('DeepSeek', 536, False, '1/2')]
     CR, INK = '#F4EFE4', '#0C1512'
@@ -484,7 +484,7 @@ def f5():
             pts.append((x, y if pinned else y + rng.uniform(-amp, amp)))
         return pts
     def converge(seed, y):
-        """from the second station, bend toward the knot (the three threads meet at the dated call)"""
+        """from the second station, bend toward the knot (the three threads meet where the pattern leads)"""
         rng = random.Random(seed)
         d = KY - y
         return [(S2 + 64, y + rng.uniform(-3, 3)), (S2 + 140, y + d * 0.20 + rng.uniform(-3, 3)),
@@ -501,7 +501,7 @@ def f5():
             ths.append(_smooth(left)); ths.append(_smooth(right + converge(n + 31, y)))
             ring_pt = (S1, y)
     svg = [f'<svg class="scr" width="1080" height="1920" viewBox="0 0 1080 1920" aria-hidden="true">']
-    # time axis, with a tick at each station and at the dated call
+    # time axis, with a tick at each station and at the knot
     svg.append(f'<path d="M72 {AXY} L944 {AXY} M930 {AXY-13} L946 {AXY} L930 {AXY+13}" fill="none" stroke="{CR}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>')
     for tx in (S1, S2, KX):
         svg.append(f'<path d="M{tx} {AXY-12} L{tx} {AXY+12}" stroke="{CR}" stroke-width="3" stroke-linecap="round" opacity=".7"/>')
@@ -515,7 +515,7 @@ def f5():
     ex0, ex1 = S1 - 50, S1 + 52
     svg.append(f'<path d="M{ex0} {ry+1} l-4 -12 M{ex0} {ry+1} l7 13 M{ex1} {ry-1} l4 -12 M{ex1} {ry-1} l-7 13" stroke="{CR}" stroke-width="3" stroke-linecap="round"/>')
     svg.append(f'<circle cx="{rx}" cy="{ry}" r="16" fill="{INK}" stroke="{CR}" stroke-width="4"/>')
-    # the knot: the dated call, with a short stub down to the sticker
+    # the knot (drawn as the dated call until 2026-11-18), with a short stub down to the sticker
     svg.append(f'<path d="M{KX} {KY} L{KX} 620" stroke="{INK}" stroke-width="12" stroke-linecap="round"/>')
     svg.append(f'<path d="M{KX} {KY} L{KX} 620" stroke="{CR}" stroke-width="5" stroke-linecap="round"/>')
     svg.append(f'<circle cx="{KX}" cy="{KY}" r="15" fill="{INK}" stroke="{CR}" stroke-width="4"/>')

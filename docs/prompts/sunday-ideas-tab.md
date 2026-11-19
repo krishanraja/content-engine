@@ -55,8 +55,8 @@ stale or failing, and any source Krish named that has no route yet (for example 
 `content_creators`). Ask him before adding a new source or anything that spends.
 
 **3. Ideas are checked before they reach him.** Each idea is new to the publication (not a repeat of the last eight
-weeks), fits its day's mandate, has at least one primary source, and makes a call that can be checked on a date
-(house rule SHARP_PREDICTION). Titles stay out: titles are signed off after he records.
+weeks), fits its day's mandate, has at least one primary source, and makes no dated prediction (house rule NO_DATED_PREDICTION;
+Rulings, Krish, 2026-11-17 and 2026-11-18). Titles stay out: titles are signed off after he records.
 
 **4. Build and publish.** Make next week's board (the Monday after today) with the Ideas tab first, verify it
 (`week_board.py --verify`), and publish the same built file to every link in `config/boards.json` under that week,

@@ -8,7 +8,7 @@ import {
   type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, countRun, factLedgerCoverage, rerunCeiling, settle, settledLeftovers, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, FACT_GATE_VERSION,
 } from '../../apps/control-plane/api/_factGate.js'
 import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
-import { readPieceCall } from '../../packages/contracts/src/call.js'
+import { callSectionOf } from '../../packages/contracts/src/call.js'
 
 // The fact gate (Krish, 2026-09-25). The cases below are the real ones: the
 // engine's first draft of piece 2 turned Cisco's "$900 million annually" into
@@ -332,7 +332,9 @@ describe('Krish\'s confidence under either label', () => {
   const verified = (): CheckedClaim => checked('verified')
 
   test('changing or setting the number on the call\'s "Confidence:" keeps a passed check', () => {
-    assert.deepEqual(readPieceCall(PIECE_1), { ok: true, call: { statement: 'By 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings.', due: '2027-06-30', confidence_percent: 70 } })
+    // A record from before 2026-11-18, when a piece still ended on a dated call: the dormant reader still finds it, so
+    // a stored check keeps matching its text (house rule NO_DATED_PREDICTION; no piece writes one now).
+    assert.ok(callSectionOf(PIECE_1)?.includes('By 30 June 2027, Amazon opens an authorised route'))
     assert.equal(bodyHash(at('65%')), bodyHash(PIECE_1))
     assert.equal(bodyHash(at('[Krish to set]')), bodyHash(PIECE_1))
     assert.equal(bodyHash(at('[to set]')), bodyHash(PIECE_1))
@@ -342,7 +344,7 @@ describe('Krish\'s confidence under either label', () => {
 
   test('"How sure we are:" inside the call\'s paragraph is exempt the same way', () => {
     const call = 'It shipped late in 2026, and the price held.\n\n**Our prediction.** By 1 March 2028, the price halves. How sure we are: 80%'
-    assert.equal(readPieceCall(call).ok, true)
+    assert.ok(callSectionOf(call)?.includes('How sure we are: 80%'))
     assert.equal(bodyHash(call.replace('80%', '85%')), bodyHash(call))
   })
 

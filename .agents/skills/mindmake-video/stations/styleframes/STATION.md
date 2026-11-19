@@ -10,13 +10,13 @@ status: active
 Make visual hierarchy and composition decidable before motion. Own representative frames, not the final timeline.
 
 ## Inputs
-Use the visual plan, exact approved assets, source analysis, captions, brand theme and platform safe zones. For a Short in the makeyourmindup house style on a live subchannel, also the piece's call from the job's approved production brief, as `studio v2 call --job <job> --beat <beat_id>` prints it.
+Use the visual plan, exact approved assets, source analysis, captions, brand theme and platform safe zones. No manifest carries a call: the call card is retired (Rulings, Krish, 2026-11-17 and 2026-11-18: no dated prediction is made, scored or drawn).
 
 ## Outputs
 Produce phone-size review frames bound to the current plan and assets.
 
 ## Quality gates
-Hard-block face collisions, unreadable proof, truncated text, unsafe captions, fake wordmarks and asset substitution. Hard-block a house style manifest for a live subchannel with no call, or with a call that differs from the approved text by a character. Soft-block flat hierarchy, generic layout and weak series character.
+Hard-block face collisions, unreadable proof, truncated text, unsafe captions, fake wordmarks and asset substitution. Soft-block flat hierarchy, generic layout and weak series character.
 
 ## Failure and fallback
 Return to visual planning or asset selection with the precise collision or hierarchy failure.

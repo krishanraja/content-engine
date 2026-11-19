@@ -1,5 +1,7 @@
 # TWO PASSPORTS · motion notes (mind.the.gap module, 1080x1920, 30 fps, about 20 s)
 
+> Retired on 2026-11-18: the dated call (Ruling, Krish, 2026-11-18: "get rid of that - i have abandoned the prediction format, it feels lame"). The THE CALL label (f60 to f70) reads WHERE IT LEADS on a new cut, and the dated-call sticker (f70 to f75) is not drawn: no DUE date and no SURE percentage.
+
 > Motion for every cut in this format is held to [the signed motion standard](../../MOTION_STANDARD.md); each piece's own style comes from the bank (`config/style-references.json`, `motion` layer, `style.motion` in the spec) and works inside the frame these notes set.
 
 ## Governing idea
@@ -14,7 +16,7 @@ One table, one camera, two passports. Every AI holds two: where its company was 
 | F2 born | 114 to 234 | passport 1 stamped |
 | F3 lives | 234 to 354 | passport 2 (sample, blank) |
 | F4 gap | 354 to 486 | threads bend and meet |
-| F5 verdict | 486 to 600 | dated call and sample result |
+| F5 verdict | 486 to 600 | sample result (the dated call is retired, 2026-11-18) |
 
 Frame numbers below are local to the beat (f0 = first frame of the beat). Each beat's last 6 to 18 frames are the hand-off into the next.
 

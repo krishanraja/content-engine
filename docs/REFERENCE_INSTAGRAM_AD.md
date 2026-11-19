@@ -87,7 +87,11 @@ rejects "all-caps word-by-word captions" and "empty comment CTAs":
 | 6, comment prompt | A one-word comment prompt is close to the empty comment prompt he rejected. The Studio's pattern check (`packages/core/src/editorial.ts`) looks for phrases like "comment below" and would miss this wording, so only his ruling settles it. | End on the full face delivering the piece's dated prediction, with the date and confidence on screen: the brand's "Every piece makes a call. We keep score." |
 
 Both defaults are confirmed (Krish, 2026-09-26): captions in sentence case
-with at most one loud word, and the close on the dated prediction.
+with at most one loud word, and the close on the dated prediction. The second
+is retired: no piece closes on a dated prediction since 2026-11-18 (Ruling,
+Krish, 2026-11-18: "get rid of that - i have abandoned the prediction format,
+it feels lame"); a video closes on the one thing he would do, then where the
+full story is (house rules NO_DATED_PREDICTION and SCRIPT_CLOSE).
 
 ## What changes if he confirms
 

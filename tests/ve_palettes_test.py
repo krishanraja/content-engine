@@ -52,7 +52,7 @@ class SpecTest(unittest.TestCase):
         props = compile_cut(styled, cut_id, timed_words(), FIXTURE)
         riso = palettes.load()['riso-pop']['colours']
         self.assertEqual((props['tokens']['ink'], props['tokens']['mint']), (riso['ink'], riso['mint']))
-        self.assertEqual(props['brandTokens'], house['tokens'], 'the mark tile, pill, call card and ending keep the house colours')
+        self.assertEqual(props['brandTokens'], house['tokens'], 'the mark tile, pill and ending keep the house colours')
         self.assertEqual(props['tokens']['channel'], house['tokens']['channel'])
 
 

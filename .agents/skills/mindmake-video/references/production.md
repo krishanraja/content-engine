@@ -36,9 +36,9 @@ A replaced take invalidates only media-dependent descendants. CI rejects drift b
 
 Never substitute chat agreement for the recorded approval.
 
-## The call on a Short
+## No call on a Short
 
-A Short in the makeyourmindup house style for a live subchannel shows the piece's call (its dated prediction and how sure we are) on a card, on the beat its render manifest names. The call comes only from the approved text of the job's production brief: run `studio v2 call --job <job> --beat <beat_id>` and paste its `call` into every manifest for the job, from the styleframes review manifest to the treatment manifests. The Studio refuses a manifest without it, or with a statement, date or percentage that differs from the approved text, at `styleframes create`, `animatic create`, `treatment register` and every render. The retired series and unbranded renders carry no call card.
+A Short carries no call card: no dated prediction, no confidence and no due date, in any style or series. Ruling (Krish, 2026-11-17): "I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores." Ruling (Krish, 2026-11-18): "get rid of that - i have abandoned the prediction format, it feels lame". The `studio v2 call` command and the render gate that compared a manifest's call with the approved text are gone; a manifest made before then may still carry a `call`, and nothing reads or draws it.
 
 ## Shared output contract
 

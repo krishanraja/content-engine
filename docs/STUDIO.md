@@ -62,9 +62,10 @@ treatment presets and visual devices approved for a retired id serve its
 successor, and a list naming both retired ids serves all three; every old job
 matches exactly what it matched before. follow.the.money and under.the.hood
 take their predecessors' formats; mind.the.gap has The Fork (Krish,
-2026-09-26: "The Fork is good"): then, now, the fork, our call, the order its
-timeline draws the story in. A Fork carousel must end on the call, with the
-prediction's date and how sure we are (the Studio's check, `theForkIssues`,
+2026-09-26: "The Fork is good"): then, now, the fork, where it leads, the
+order its timeline draws the story in, with no dated call since 2026-11-18
+(house rule NO_DATED_PREDICTION). A Fork carousel once had to end on the
+call (the Studio's check, `theForkIssues`,
 went with the Studio's carousel code on 13 Nov 2026; `docs/CAROUSEL-STANDARD.md`,
 "How a carousel is made", is the route now). A piece on a
 live subchannel gets a brief in its own name; a piece on a retired slot keeps
@@ -147,12 +148,12 @@ What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
   (the first emphasis word; sentence case, at most one loud word, Krish,
   2026-09-26). The channel's sticker, tilted -6 degrees, on the second beat,
   left out wherever it would cover the face, a directed layer or the tile.
-  The call card on the beat the manifest names (below). The ending band in
+  No call card (retired on 2026-11-18, below). The ending band in
   place of the old ending plate, for the same two seconds at the end: a
   ticker with the channel's promise and day (the only thing that keeps
   moving, about one cycle every 38 seconds), the stacked logo on ink, the
-  day, the section pill and makeyourmindup.ai. The band and the call card
-  each take the caption's place while they are up, as in the mock. Things
+  day, the section pill and makeyourmindup.ai. The band takes the caption's
+  place while it is up, as in the mock. Things
   arrive with a short slide, drop or slap, every motion a pure function of
   the frame. The band may sit over the torso, as in the mock, and must
   clear the face.
@@ -184,35 +185,13 @@ What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
 - Control Center's video plate (`VideoBrandLockup`) still shows the version 1
   look; it needs its own change there.
 
-The call. Nothing upstream marked which beat of a Short carries the piece's
-call (The Fork marks only a carousel's last slide), so a render manifest
-names it: `call: { beat_id, statement, due, confidence_percent }`
-(`RenderCallV1Schema`, `packages/contracts/src/v2.ts`). The card renders
-only in the house style; a call that would cover the face, run into the
-platform's lower safe zone or share the screen with the ending band stops
-the render with the reason.
-
-Where the call comes from. A wrong date or percentage on the card is a
-factual error in public, so the call comes from the approved text of the
-production brief bound to the job, read by one parser, `readPieceCall`
-(`packages/contracts/src/call.ts`), which the control plane's publish checks
-share. It reads the section under `## OUR
-PREDICTION`, `## THE CALL` or `## PREDICTION`, or a paragraph that opens
-`**The Call.**` or `**Our prediction**`: the one paragraph with a date to
-check it by ("by 30 September 2027", or `2027-09-30`), and how sure we are
-("How sure we are: 75%" or "Confidence: 70%"). It refuses, with the reason,
-whenever any of the three is missing or open to doubt (two dates, two
-percentages, a date that is not on the calendar, a percentage only in square
-brackets). `studio v2 call --job <job> --beat <beat_id>` prints the call
-ready to paste into the manifest as `"call"`. A house style render for a
-live subchannel whose job has a production brief refuses without a call, and
-refuses a call whose statement, date or percentage differs from the approved
-text by a single character (`packages/core/src/render-call.ts`). The check
-runs where a review or treatment manifest is taken in (`styleframes create`,
-`animatic create`, `treatment register`) and again before every render, so
-it covers styleframes, animatics, previews, masters and magic-edit previews.
-The retired series, unbranded renders and a job with no production brief are
-left exactly as they were.
+The call, retired on 2026-11-18. A Short once showed the piece's dated call
+on a card, read from the approved text by `readPieceCall` and checked against
+the render manifest's `call` before every render (`packages/core/src/render-call.ts`,
+`studio v2 call`). The format is abandoned (Ruling, Krish, 2026-11-17: "I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores."; Ruling, Krish, 2026-11-18: "get rid of that - i have abandoned the prediction format, it feels lame"), so the card, the
+command, the render gate and the whole-call reader are gone. A manifest made
+before then may still carry `call` (`RenderCallV1Schema`, kept only so it
+parses); nothing reads or draws it.
 
 How it is built: `makeyourmindup-video-v1` version 2 in `config/studio.json`,
 status `candidate`, no approval. Its `typography` is the house set (Anton,
@@ -220,8 +199,8 @@ Archivo, Fraunces, IBM Plex Mono) and its `publication` lockup
 (`BrandPublicationLockupV1Schema`) now carries the stacked logo, an ending
 `publication_band` identity, the tile's shadow and a `house_style` block
 (`BrandHouseStyleV1Schema`: the tokens, each channel's day, sticker, promise
-and standing question from makeyourmindup.ai, and the fixed lines around the
-call). A job pinned under version 1 still parses and hashes as it did. The
+and standing question from makeyourmindup.ai; the fixed lines around the
+call are retired, kept optional only so a pinned theme still parses). A job pinned under version 1 still parses and hashes as it did. The
 mark, the horizontal logo and the stacked logo
 (`makeyourmindup-stacked.png`, 2415 x 740, sha256 `5a0e8a08...29a4fc`) are
 pinned by sha256 in control-center, `src/assets/brand/makeyourmindup/`,

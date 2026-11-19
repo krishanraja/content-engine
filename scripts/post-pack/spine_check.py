@@ -13,7 +13,7 @@ An outline (docs/plans/<date>-outline.md) from SPINE_FROM on holds:
     Spine: <the one question the piece answers>?
     Answer: <its one-line answer>
     1. <SECTION HEADING> | proves: <the part of the answer it proves>
-    ... (at most MAX_SECTIONS, the prediction included)
+    ... (at most MAX_SECTIONS; no dated prediction section since 2026-11-18, house rule NO_DATED_PREDICTION)
     Approved by Krish: <his words>, <date>
 
 and the draft's "## " headings are exactly those sections, in that order. A
@@ -119,9 +119,9 @@ def self_test():
     good = ('Spine: Who decides which AI answers you?\nAnswer: The app does, and soon you will not see it.\n'
             '1. THE MENU IS ALREADY GOING | proves: the choice is being taken away\n'
             '2. WHOEVER PICKS, PRICES | proves: the picker sets what your money buys\n'
-            '3. MY PREDICTION | proves: when the menu disappears\nApproved by Krish: "yes", 2026-10-20\n')
-    body = 'Opening.\n\n## THE MENU IS ALREADY GOING\nx\n\n## WHOEVER PICKS, PRICES\ny\n\n## MY PREDICTION\nz\n'
-    added = body.replace('## MY PREDICTION', '## WHY SIRI, OF ALL THINGS?\nw\n\n## MY PREDICTION')
+            '3. WHERE IT LEADS | proves: the menu disappears\nApproved by Krish: "yes", 2026-10-20\n')
+    body = 'Opening.\n\n## THE MENU IS ALREADY GOING\nx\n\n## WHOEVER PICKS, PRICES\ny\n\n## WHERE IT LEADS\nz\n'
+    added = body.replace('## WHERE IT LEADS', '## WHY SIRI, OF ALL THINGS?\nw\n\n## WHERE IT LEADS')
     checks = [
         ('a full outline passes', outline_problems(good), []),
         ('no spine is refused', any('no spine' in p for p in outline_problems(good.replace('Spine: Who decides which AI answers you?\n', ''))), True),
