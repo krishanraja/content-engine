@@ -18,7 +18,7 @@ import { REGIONS } from '../captions/kit'
  *    over his chest, with a hard ink drop. His face is left clear, so the captions go in the upper strip.
  *  - `pillar` (a vertical take on a 16:9 cut; Krish, 19 Nov 2026, picked "Pillar: whole take on the right"): his
  *    1080x1920 take whole and uncropped as a full-height 608 px panel on the right of the wide frame, a series-colour
- *    hairline, the ink graphics panel on the left. On 9:16 his take stays full frame, as F1 draws it.
+ *    hairline, the ink graphics panel on the left. A tall cut is not staged by it at all and draws exactly as `fill`.
  *
  *  A SPLIT or WINDOW beat keeps its own lock, and a graphics-only beat stays a full-frame takeover (the `fill` region).
  *  Pure: geometry is a function of the props alone, and every box handed to devices is a layout region they may grow
@@ -26,7 +26,10 @@ import { REGIONS } from '../captions/kit'
 
 export const STAGINGS = ['band', 'stage', 'tray', 'pillar'] as const
 export type Staging = typeof STAGINGS[number]
-export const isStaging = (mode: string | undefined): mode is Staging => (STAGINGS as readonly string[]).includes(mode ?? '')
+/** Whether a layout mode stages his take on a cut of this aspect. The pillar is for a vertical take on a wide cut only:
+ *  on 9:16 the take is already the frame's shape, so a pillar piece's tall cut draws exactly as under `fill`. */
+export const isStaging = (mode: string | undefined, aspect?: string): mode is Staging =>
+  (STAGINGS as readonly string[]).includes(mode ?? '') && !(mode === 'pillar' && aspect === '9:16')
 
 type Aspect = '9:16' | '16:9'
 type Placement = 'lower' | 'centre' | 'upper' | undefined
@@ -64,6 +67,7 @@ export const PILLAR_TAKE_WIDTH = Math.round(1080 * 9 / 16)
 
 export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry {
   if (aspect === '9:16') {
+    // The pillar never stages a tall cut (isStaging); if asked, it is the full-frame take of F1.
     if (mode === 'pillar') {
       return { take: { left: 0, top: 0, width: 1080, height: 1920, radius: 0, border: false },
         panel: { left: 0, top: 0, width: 1080, height: 0, radius: '0' },

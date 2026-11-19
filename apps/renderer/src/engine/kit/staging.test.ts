@@ -62,8 +62,9 @@ describe('the pillar staging (Krish, 19 Nov 2026: "Pillar: whole take on the rig
     expect(g.panel.left + g.panel.width).toBe(g.take.left)
     expect(g.region.left + g.region.width).toBeLessThanOrEqual(g.take.left)
   })
-  it('leaves his take full frame on a tall cut', () => {
-    const g = stagingGeometry('pillar', '9:16', 'lower', true)
-    expect(g.take).toMatchObject({ left: 0, top: 0, width: 1080, height: 1920 })
+  it('never stages a tall cut: a pillar piece\'s 9:16 cut draws exactly as fill', () => {
+    expect(isStaging('pillar', '9:16')).toBe(false)
+    expect(isStaging('pillar', '16:9')).toBe(true)
+    expect(isStaging('band', '9:16')).toBe(true)
   })
 })

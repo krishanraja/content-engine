@@ -15,18 +15,13 @@ INVW,INVH=(720,1280) if INV.endswith("mp4") else (1520,2688)
 TH=("shots/tomshw.png","Tom's Hardware","29 Oct 2025")
 objects=[
  {"obj":"k_billed","device":"kinetic_stat","dataset":"bill-billed","meaning":"the bill as the hospital first sent it: $195,000 (his account, Tom's Hardware)","persist":{"from_beat":"hook","to_beat":"hook"},"params":{}},
- {"obj":"strike","device":"scribble","meaning":"the six figures struck through on 'fraction'","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"colour":"mint","seed":"fri20","shape":"strike","target":{"x":140,"y":420,"w":800,"h":220}}},
+ {"obj":"strike","device":"scribble","meaning":"a hand-drawn line through \"$195,000\" as he says \"fraction\"","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"colour":"mint","seed":"fri20","shape":"underline","from":[200,340],"to":[690,330]}},
  plate("sofa","plates/b4-sofa-money-916.mp4","the missing money: a fistful of cash and old receipts pulled out from the back of the sofa (Krish, 19 Nov: \"money back down the back of couches\")",1080,1920,"question"),
  plate("closet","plates/b4-closet-skeleton-916-from2s1.mp4","the skeletons in your closet: a cupboard bursts open and a skeleton tumbles out with the old files (the clip starts at 2.1 s, once a box printed with a year has turned away, and holds its last frame: no year the piece does not own) (Krish, 19 Nov: \"skeletons coming out of closets\")",1080,1920,"skeletons"),
  card("th_head",*TH,(0.13,0.51,0.5,0.31),"the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000","proof"),
  card("th_lede",*TH,(0.13,0.755,0.5,0.095),"the article's own line: the first step is getting the hospital to break down every item on the bill","lines"),
- {"obj":"chip_hours","device":"query_chip","meaning":"whose number this is: the family's own account, as Tom's Hardware reported it","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"text":"THE FAMILY'S ACCOUNT · TOM'S HARDWARE"}},
- {"obj":"chip_next","device":"query_chip","meaning":"next year: there is no page to check a guess against","persist":{"from_beat":"hindsight","to_beat":"hindsight"},"params":{"text":"NEXT YEAR · NO PAGE TO CHECK"}},
- {"obj":"chip_last","device":"query_chip","meaning":"last year: every line and every rule is already on file","persist":{"from_beat":"hindsight","to_beat":"hindsight"},"params":{"text":"LAST YEAR · EVERY LINE ON FILE"}},
- {"obj":"chip_billed","device":"query_chip","meaning":"what the bill charged for: a dearer billing code","persist":{"from_beat":"code","to_beat":"code"},"params":{"text":"CODE BILLED: THE DEARER ONE"}},
- {"obj":"chip_given","device":"query_chip","meaning":"what he actually got: cheaper care","persist":{"from_beat":"code","to_beat":"code"},"params":{"text":"CARE GIVEN: LESS"}},
  plate("steak","plates/b8-steak-sandwich-916.mp4","the gap between what was billed and what was given, as one picture: the cloche lifts on a sad sandwich while the bill on the tray says STEAK",1080,1920,"steak"),
- {"obj":"k_after","device":"kinetic_stat","dataset":"bill-after","meaning":"where the bill landed: about $33,000 (his account, Tom's Hardware)","persist":{"from_beat":"fell","to_beat":"fell"},"params":{}},
+ {"obj":"k_after","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill counting down from $195,000 to where it landed, about $33,000, on \"fell\" (his account, Tom's Hardware)","persist":{"from_beat":"fell","to_beat":"fell"},"params":{"ghost":True}},
  {"obj":"chip_caveat","device":"query_chip","meaning":"the caveat kept on screen: his account, the hospital has not confirmed","persist":{"from_beat":"fell","to_beat":"fell"},"params":{"text":"HIS ACCOUNT · HOSPITAL HASN'T CONFIRMED"}},
  plate("closet2","plates/b4-closet-skeleton-916-from2s1.mp4","the callback: the same cupboard, now yours, opening on 'whose closet it was opening'",1080,1920,"closet"),
  plate("invoices",INV,"his close, generated at his word (\"generate it\", 19 Nov): last year's invoices poured into the AI, red flags popping, a skeleton hand waving from the folder",INVW,INVH,"act"),
@@ -37,7 +32,7 @@ for o in objects:
 CLIP="a moving clip carries this beat; more device events would only pulse it"
 FACE="his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
 beats=[
- dict(id="hook",role="hook",span={"from_w":0,"to_w":20},viewer_task="locate_story",point="AI just cut a family's six-figure hospital bill to a fraction",layout="WINDOW",plate={"source":"take"},uses=["k_billed","chip_hours","strike"],events=[ev(0,"k_billed","enter"),ev(14,"chip_hours","enter"),ev(18,"strike","draw","strike")],transition_out="cut",face="window"),
+ dict(id="hook",role="hook",span={"from_w":0,"to_w":20},viewer_task="locate_story",point="AI just cut a family's six-figure hospital bill to a fraction",layout="WINDOW",plate={"source":"take"},uses=["k_billed","strike"],events=[ev(0,"k_billed","enter"),ev(0,"k_billed","count_to","billed"),ev(18,"strike","draw","strike")],transition_out="cut",face="window"),
  dict(id="face",role="bridge",span={"from_w":21,"to_w":43},viewer_task="connect_with_speaker",point="Imagine what it is finding in everyone's old paperwork, when whole hospital teams missed it",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
  dict(id="question",role="pivot",span={"from_w":44,"to_w":52},viewer_task="locate_story",point="Will your AI auditor find the missing money?",layout="STAGE",plate={"source":"none"},uses=["sofa"],events=[ev(44,"sofa","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
  dict(id="skeletons",role="pivot",span={"from_w":53,"to_w":61},viewer_task="feel_stakes",point="Or will it find the skeletons in your closet?",layout="STAGE",plate={"source":"none"},uses=["closet"],events=[ev(53,"closet","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
@@ -45,14 +40,14 @@ beats=[
  dict(id="lines",role="bridge",span={"from_w":82,"to_w":90},viewer_task="understand_mechanism",point="He asked for the bill line by line and gave it to Claude",layout="STAGE",plate={"source":"none"},uses=["th_lede"],events=[ev(82,"th_lede","enter"),ev(88,"th_lede","mark","line by line")],transition_out="cut",face="off",backdrop="asset:tomshw"),
  dict(id="code",role="anchor",span={"from_w":91,"to_w":107},viewer_task="understand_mechanism",point="Care was billed under a dearer code than the care he got",layout="WINDOW",plate={"source":"take"},uses=["chip_billed","chip_given"],events=[ev(91,"chip_billed","enter"),ev(99,"chip_billed","highlight"),ev(103,"chip_given","enter")],transition_out="cut",face="window"),
  dict(id="steak",role="bridge",span={"from_w":108,"to_w":119},viewer_task="feel_stakes",point="Charged for a steak, served a sandwich",layout="STAGE",plate={"source":"none"},uses=["steak"],events=[ev(108,"steak","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
- dict(id="fell",role="anchor",span={"from_w":120,"to_w":132},viewer_task="verify_evidence",point="He sent the list and the bill fell to about a sixth",layout="STAGE",plate={"source":"none"},uses=["k_after","chip_caveat"],events=[ev(120,"k_after","enter"),ev(129,"k_after","count_to","after"),ev(131,"chip_caveat","enter")],transition_out="cut",face="off",backdrop="asset:tomshw"),
+ dict(id="fell",role="anchor",span={"from_w":120,"to_w":132},viewer_task="verify_evidence",point="He sent the list and the bill fell to about a sixth",layout="STAGE",plate={"source":"none"},uses=["k_after","chip_caveat"],events=[ev(120,"k_after","enter"),ev(120,"k_after","count_to","billed"),ev(129,"k_after","count_to","after"),ev(131,"chip_caveat","enter")],transition_out="cut",face="off",backdrop="asset:tomshw"),
  dict(id="love",role="bridge",span={"from_w":133,"to_w":160},viewer_task="connect_with_speaker",point="An old bill can't argue back, the rules are written down, and AI reads every line without a break",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
  dict(id="hindsight",role="anchor",span={"from_w":161,"to_w":177},viewer_task="understand_mechanism",point="About next year AI is guessing; about last year it is reading",layout="WINDOW",plate={"source":"take"},uses=["chip_next","chip_last"],events=[ev(161,"chip_next","enter"),ev(169,"chip_next","highlight"),ev(171,"chip_last","enter"),ev(177,"chip_last","highlight")],transition_out="cut",face="window"),
  dict(id="whose",role="bridge",span={"from_w":178,"to_w":194},viewer_task="connect_with_speaker",point="Whose mistake did Claude find? The hospital's",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
  dict(id="closet",role="pivot",span={"from_w":195,"to_w":205},viewer_task="feel_stakes",point="It didn't care whose closet it was opening",layout="STAGE",plate={"source":"none"},uses=["closet2"],events=[ev(195,"closet2","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
  dict(id="yours",role="payoff",span={"from_w":206,"to_w":214},viewer_task="connect_with_speaker",point="And it won't care when it opens yours",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
- dict(id="act",role="call",span={"from_w":215,"to_w":238},viewer_task="land_payoff",point="This week he hands his own AI last year's invoices, to find his skeletons first",layout="STAGE",plate={"source":"none"},uses=["invoices"],events=[ev(215,"invoices","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
- dict(id="close",role="call",span={"from_w":239,"to_w":245},viewer_task="land_payoff",point="The full story is free at makeyourmindup.ai",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
+ dict(id="act",role="anchor",span={"from_w":215,"to_w":238},viewer_task="land_payoff",point="This week he hands his own AI last year's invoices, to find his skeletons first",layout="STAGE",plate={"source":"none"},uses=["invoices"],events=[ev(215,"invoices","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
+ dict(id="close",role="bridge",span={"from_w":239,"to_w":245},viewer_task="land_payoff",point="The full story is free at makeyourmindup.ai",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
 ]
 assets=[{"id":"short-master","kind":"recording","origin":"capture","path":"short.master.mov","frame":{"width":1080,"height":1920},"sha256":sha(A+'short.master.mov'),"licence":"Krish's own recording, 18 Nov 2026 (ai-finding-your-skeletons-short.mp4, sha256 0be73bbd), two restarts and long pauses cut, 1.0x, 85.1 s"}]
 gen=json.load(open(P+'generations.json'))
@@ -129,14 +124,46 @@ def chipify(cut, beats, bid, chips, layout, prefix):
         if not own: continue
         b['events'].append(ev(w, own[0], 'highlight')); taken.add(w); k += 1
     b['events'].sort(key=lambda e: e['at_w'])
+def slamify(cut, beats, bid, slams, prefix):
+    """His key words slammed one at a time over the SPLIT panel (motion ai-music-slam), each with his phrase on the tape."""
+    W = json.load(open(P + f'words.{cut}.json'))
+    b = next(x for x in beats if x['id'] == bid)
+    lo, hi = b['span']['from_w'], b['span']['to_w']
+    b['layout'] = 'SPLIT'; b['plate'] = {"source": "take"}; b.pop('face', None); b.pop('override_reason', None)
+    b['uses'], b['events'] = [], []
+    at, marks = lo, []
+    for n, (said, word, tape) in enumerate(slams):
+        at = next(i for i in range(at, hi + 1) if _norm(W[i]['word']) == _norm(said))
+        obj = f"{prefix}_{bid}_slam{n}"
+        objects.append({"obj": obj, "device": "slam_word", "meaning": f"his own word slammed as he says it: {word.lower()} ({tape.lower()})",
+                        "persist": {"from_beat": bid, "to_beat": bid}, "params": {"word": word, "tapeText": tape}})
+        b['uses'].append(obj); marks.append((at, obj))
+    for i, (at, obj) in enumerate(marks):
+        b['events'].append(ev(at, obj, 'enter'))
+        if i + 1 < len(marks):
+            b['events'].append(ev(marks[i + 1][0] - 1, obj, 'exit'))
+    b['events'].sort(key=lambda e: e['at_w'])
+def no_marks_on_pages(cut, beats):
+    """A 'mark' on an evidence card swaps the screenshot for replacement text (evidence_card/state.ts), so a real page
+    is never marked: it is held still to be read, and a beat left short of events says why."""
+    import math as _m
+    cards = {o['obj'] for o in objects if o['device'] == 'evidence_card' and (o['params'] or {}).get('kind') in ('screenshot', 'document')}
+    for b in beats:
+        b['events'] = [e for e in b['events'] if not (e['verb'] == 'mark' and e['obj'] in cards)]
+        need = _m.ceil((b['span']['to_w'] - b['span']['from_w'] + 1) / (2.6 * 3))
+        if len(b['events']) < need and not b.get('override_reason') and set(b['uses']) & cards:
+            b['override_reason'] = "a real page held still to be read: a mark would replace the screenshot with text (evidence_card)"
 def tosplit(beats, bid):
     b = next(x for x in beats if x['id'] == bid)
     b['layout'] = 'SPLIT'; b['plate'] = {"source": "take"}; b.pop('face', None)
 
 for _b in ('hook', 'code', 'hindsight'): tosplit(beats, _b)
-chipify('short', beats, 'face', [("archives", "EVERYONE'S ARCHIVES, RIGHT NOW"), ("Hospitals", "WHOLE TEAMS TO SORT PRICING"), ("chatbot", "A CHATBOT BEAT THEM")], 'SPLIT', 's')
-chipify('short', beats, 'love', [("old", "AN OLD BILL CAN'T ARGUE BACK"), ("rules", "THE RULES ARE WRITTEN DOWN"), ("every", "AI READS EVERY LINE")], 'SPLIT', 's')
-chipify('short', beats, 'whose', [("whose", "WHOSE MISTAKE?"), ("hospital's", "THE HOSPITAL'S")], 'SPLIT', 's')
+slamify('short', beats, 'face', [("archives", "ARCHIVES", "EVERYONE'S, RIGHT NOW"), ("teams", "TEAMS", "HOSPITALS PAY WHOLE TEAMS"), ("chatbot", "CHATBOT", "A CHATBOT BEAT THEM")], 's')
+slamify('short', beats, 'love', [("argue", "ARGUE", "AN OLD BILL CAN'T ARGUE BACK"), ("written", "WRITTEN", "THE RULES ARE WRITTEN DOWN"), ("every", "EVERY", "AI READS EVERY LINE")], 's')
+slamify('short', beats, 'code', [("billed", "BILLED", "CARE BILLED UNDER"), ("expensive", "EXPENSIVE", "A MUCH MORE EXPENSIVE CODE"), ("brother-in-law", "BROTHER-IN-LAW", "THAN THE CARE HIS BROTHER-IN-LAW ACTUALLY GOT")], 's')
+slamify('short', beats, 'hindsight', [("guessing,", "GUESSING", "NEXT YEAR: IT'S GUESSING"), ("analysing.", "ANALYSING", "LAST YEAR: IT'S ANALYSING")], 's')
+slamify('short', beats, 'whose', [("mistake", "MISTAKE", "WHOSE MISTAKE?"), ("hospital's.", "HOSPITAL'S", "IT WAS THE HOSPITAL'S")], 's')
+no_marks_on_pages('short', beats)
 json.dump(spec,open(P+'spec.json','w'),indent=1); print('wrote', len(beats),'beats', len(objects),'objects')
 
 # ---------------- the long cut (16:9) ----------------
@@ -146,14 +173,14 @@ def evs(obj, ats, first='enter'):
     return out
 UP=("shots/upworthy-tenant.png","Upworthy Scoop","14 Dec 2024"); NBC=("shots/nbc-dana.png","NBC News","Jan 2024"); HLS=("shots/harvard-krafton.png","Harvard Law School Forum on Corporate Governance","20 Apr 2026")
 lobj=[
- {"obj":"l_k","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill the family was sent, counting down to where it landed (his account, Tom's Hardware)","persist":{"from_beat":"hook","to_beat":"hook"},"params":{}},
+ {"obj":"l_k","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill the family was sent, counting down to where it landed (his account, Tom's Hardware)","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"ghost":True}},
  {"obj":"l_src","device":"query_chip","meaning":"whose numbers these are: the family's account as Tom's Hardware reported it","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"text":"THE FAMILY'S ACCOUNT · TOM'S HARDWARE"}},
  plate("l_sofa","plates/long-sofa-money-169.mp4","the missing money: cash and old receipts pulled from the back of the office sofa (Krish, 19 Nov: \"money back down the back of couches\")",1920,1080,"l_question"),
  plate("l_closet","plates/b4-closet-skeleton-916-from2s1.mp4","the skeletons in your closet: the cupboard spills its old files and a skeleton (the tall clip framed on the wide stage; the wide clip prints a year nothing owns)",1080,1920,"l_skeletons"),
  card("l_head",*TH,(0.13,0.51,0.5,0.31),"the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000","proof"),
  card("l_lede",*TH,(0.13,0.755,0.5,0.095),"the article's line: the first step is getting the hospital to break down every item on the bill","l_code"),
  plate("l_michelin","plates/b8-steak-sandwich-916.mp4","the gap between what was billed and what was served: the cloche lifts on a sad sandwich while the bill reads STEAK (the short's clip, framed on the wide stage; the wide tasting-menu clip printed a garbled row of zeros nothing owns)",1080,1920,"l_michelin"),
- {"obj":"l_after","device":"kinetic_stat","dataset":"bill-after","meaning":"where the bill landed: about $33,000 (his account)","persist":{"from_beat":"l_fell","to_beat":"l_fell"},"params":{}},
+ {"obj":"l_after","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill counting down from $195,000 to where it landed, about $33,000, on \"fell\" (his account)","persist":{"from_beat":"l_fell","to_beat":"l_fell"},"params":{"ghost":True}},
  {"obj":"l_caveat","device":"query_chip","meaning":"the caveat on screen: his account, the hospital has not confirmed","persist":{"from_beat":"l_fell","to_beat":"l_fell"},"params":{"text":"HIS ACCOUNT · HOSPITAL HASN'T CONFIRMED"}},
  card("l_tenant",*UP,(0.03,0.1,0.62,0.28),"the headline: tenant uses ChatGPT to uncover crucial evidence and win legal battle against greedy landlord","l_tenant"),
  {"obj":"l_next","device":"query_chip","meaning":"next year: there is no page to check a guess against","persist":{"from_beat":"l_hindsight","to_beat":"l_hindsight"},"params":{"text":"NEXT YEAR · NO PAGE TO CHECK"}},
@@ -173,7 +200,7 @@ for o in lobj:
         if sh['width']<sh['height']: o['params']['full']=False
 objects.extend(lobj)
 L=[
- dict(id="hook",role="hook",span={"from_w":0,"to_w":19},viewer_task="locate_story",point="AI just cut a family's six-figure hospital bill to a fraction",layout="WINDOW",plate={"source":"take"},uses=["l_k","l_src"],events=[ev(0,"l_src","enter"),ev(15,"l_k","enter"),ev(18,"l_k","count_to","after")],transition_out="cut",face="window"),
+ dict(id="hook",role="hook",span={"from_w":0,"to_w":19},viewer_task="locate_story",point="AI just cut a family's six-figure hospital bill to a fraction",layout="WINDOW",plate={"source":"take"},uses=["l_k","l_src"],events=[ev(0,"l_src","enter"),ev(15,"l_k","enter"),ev(15,"l_k","count_to","billed"),ev(18,"l_k","count_to","after")],transition_out="cut",face="window"),
  dict(id="face",role="bridge",span={"from_w":20,"to_w":78},viewer_task="connect_with_speaker",point="Imagine what it finds in your last year of paperwork, when whole hospital teams missed it",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
  dict(id="l_question",role="pivot",span={"from_w":79,"to_w":88},viewer_task="locate_story",point="Will your AI auditor find the missing money?",layout="STAGE",plate={"source":"none"},uses=["l_sofa"],events=[ev(79,"l_sofa","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
  dict(id="l_skeletons",role="pivot",span={"from_w":89,"to_w":96},viewer_task="feel_stakes",point="Or will it find the skeletons in your closet?",layout="STAGE",plate={"source":"none"},uses=["l_closet"],events=[ev(89,"l_closet","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
@@ -181,7 +208,7 @@ L=[
  dict(id="l_bitmiss",role="bridge",span={"from_w":137,"to_w":169},viewer_task="connect_with_speaker",point="He didn't argue with the total; he asked for every line",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
  dict(id="l_code",role="anchor",span={"from_w":170,"to_w":208},viewer_task="understand_mechanism",point="Every service has a code and a price: one procedure twice, care billed under a dearer code",layout="WINDOW",plate={"source":"take"},uses=["l_lede"],events=evs("l_lede",[170,177,184,190,196,201,206]),transition_out="cut",face="window"),
  dict(id="l_michelin",role="bridge",span={"from_w":209,"to_w":230},viewer_task="feel_stakes",point="Billed for the tasting menu, served the burger",layout="STAGE",plate={"source":"none"},uses=["l_michelin"],events=[ev(209,"l_michelin","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
- dict(id="l_fell",role="anchor",span={"from_w":231,"to_w":272},viewer_task="verify_evidence",point="He sent the list and the bill fell to about a sixth; the hospital has said nothing",layout="WINDOW",plate={"source":"take"},uses=["l_after","l_caveat"],events=[ev(231,"l_after","enter"),ev(244,"l_after","count_to","after"),ev(250,"l_caveat","enter"),ev(256,"l_caveat","highlight"),ev(261,"l_caveat","highlight"),ev(269,"l_caveat","highlight")],transition_out="cut",face="window"),
+ dict(id="l_fell",role="anchor",span={"from_w":231,"to_w":272},viewer_task="verify_evidence",point="He sent the list and the bill fell to about a sixth; the hospital has said nothing",layout="WINDOW",plate={"source":"take"},uses=["l_after","l_caveat"],events=[ev(231,"l_after","enter"),ev(231,"l_after","count_to","billed"),ev(244,"l_after","count_to","after"),ev(250,"l_caveat","enter"),ev(256,"l_caveat","highlight"),ev(261,"l_caveat","highlight"),ev(269,"l_caveat","highlight")],transition_out="cut",face="window"),
  dict(id="l_tenant",role="anchor",span={"from_w":273,"to_w":318},viewer_task="verify_evidence",point="A tenant pasted his lease into ChatGPT, found the deposit cap and won",layout="WINDOW",plate={"source":"take"},uses=["l_tenant"],events=evs("l_tenant",[273,282,289,297,302,306,313]),transition_out="cut",face="window"),
  dict(id="l_paperwork",role="bridge",span={"from_w":319,"to_w":354},viewer_task="connect_with_speaker",point="Never pick a paperwork fight with someone who has a chatbot and a free evening",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
  dict(id="l_love",role="bridge",span={"from_w":355,"to_w":401},viewer_task="connect_with_speaker",point="An old bill cannot argue back and its rules are written down",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
@@ -196,8 +223,8 @@ L=[
  dict(id="l_money",role="bridge",span={"from_w":740,"to_w":742},viewer_task="feel_stakes",point="Money, found down the back of the sofa",layout="STAGE",plate={"source":"none"},uses=["l_sofa2"],events=[ev(740,"l_sofa2","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
  dict(id="l_both",role="pivot",span={"from_w":743,"to_w":746},viewer_task="feel_stakes",point="or skeletons: it finds both",layout="STAGE",plate={"source":"none"},uses=["l_closet3"],events=[ev(743,"l_closet3","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
  dict(id="l_listfirst",role="bridge",span={"from_w":747,"to_w":775},viewer_task="connect_with_speaker",point="The real question is who reads that list first",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
- dict(id="l_act",role="call",span={"from_w":776,"to_w":815},viewer_task="land_payoff",point="This week he puts his own last year's invoices through the AI, to find his skeletons first",layout="STAGE",plate={"source":"none"},uses=["l_invoices"],events=[ev(776,"l_invoices","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
- dict(id="close",role="call",span={"from_w":816,"to_w":821},viewer_task="land_payoff",point="The full story is at makeyourmindup.ai",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
+ dict(id="l_act",role="anchor",span={"from_w":776,"to_w":815},viewer_task="land_payoff",point="This week he puts his own last year's invoices through the AI, to find his skeletons first",layout="STAGE",plate={"source":"none"},uses=["l_invoices"],events=[ev(776,"l_invoices","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
+ dict(id="close",role="bridge",span={"from_w":816,"to_w":821},viewer_task="land_payoff",point="The full story is at makeyourmindup.ai",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
 ]
 assets.append({"id":"long-master","kind":"recording","origin":"capture","path":"long.master.mov","frame":{"width":1080,"height":1920},"sha256":sha(A+'long.master.mov'),"licence":"Krish's own recording, 18 Nov 2026 (ai-finding-your-skeletons-long.mp4, sha256 b1428797), restarts and long pauses cut from the reviewed plan's keep spans, joins in measured quiet, 1.0x, 4:25"})
 for aid,src,job in [("long-sofa-money-169","plates/long-sofa-money-169.mp4","9b08ad6d-8f60-4b73-a76d-5c24c79cfe5e"),("long-invoices-169","plates/long-invoices-169.png","d58bddce-7ff3-4dcf-8651-637f10f0ee15")]:
@@ -213,8 +240,28 @@ chipify('long', L, 'l_bitmiss', [("argue", "HE DIDN'T ARGUE THE TOTAL"), ("line"
 chipify('long', L, 'l_paperwork', [("paperwork", "NEVER PICK A PAPERWORK FIGHT"), ("chatbot", "WITH SOMEONE WHO HAS A CHATBOT"), ("why", "SO WHY ARE CHATBOTS SO GOOD AT THIS?")], 'WINDOW', 'l')
 chipify('long', L, 'l_love', [("argue", "AN OLD BILL CANNOT ARGUE BACK"), ("rules", "THE RULES ARE WRITTEN DOWN"), ("every", "EVERY LINE, AGAINST THOSE RULES"), ("coffee.", "NO COFFEE BREAK")], 'WINDOW', 'l')
 chipify('long', L, 'l_lead', [("lead.", "EVERY FLAG IS A LEAD"), ("person", "A PERSON CHECKS IT"), ("contracts", "YOUR RULES: CONTRACTS AND PRICE LISTS"), ("invoices,", "GIVE AI LAST YEAR'S INVOICES"), ("things", "THINGS THAT DON'T MAKE FULL SENSE")], 'WINDOW', 'l')
+chipify('long', L, 'l_hindsight', [("terrible", "A TERRIBLE FORTUNE TELLER, A REALLY GOOD AUDITOR")], 'WINDOW', 'l')
 chipify('long', L, 'l_listfirst', [("first?", "WHO READS THAT LIST FIRST?"), ("carpet", "BRUSHED UNDER THE CARPET"), ("customer", "YOUR CUSTOMER MAY FIND IT FIRST")], 'WINDOW', 'l')
 for _b in L:
     if _b['layout'] == 'WINDOW':
         _b['layout'] = 'F1'; _b['face'] = 'full'
+def own_word_pulses(cut, beats):
+    W = json.load(open(P + f'words.{cut}.json'))
+    chips = {o['obj']: {_norm(t) for t in o['params']['text'].replace('·', ' ').split() if len(_norm(t)) > 3}
+             for o in objects if o['device'] == 'query_chip'}
+    for b in beats:
+        lo, hi = b['span']['from_w'], b['span']['to_w']
+        enters = {e['obj']: e['at_w'] for e in b['events'] if e['verb'] == 'enter'}
+        taken = {e['at_w'] for e in b['events'] if e['verb'] != 'highlight'}
+        kept = []
+        for e in b['events']:
+            if e['verb'] != 'highlight' or e['obj'] not in chips or _norm(W[e['at_w']]['word']) in chips[e['obj']]:
+                kept.append(e); continue
+            spots = [i for i in range(enters.get(e['obj'], lo) + 1, hi + 1)
+                     if _norm(W[i]['word']) in chips[e['obj']] and i not in taken]
+            if spots:
+                at = min(spots, key=lambda i: abs(i - e['at_w'])); taken.add(at); kept.append({**e, 'at_w': at})
+        b['events'] = sorted(kept, key=lambda e: e['at_w'])
+own_word_pulses('long', L)
+no_marks_on_pages('long', L)
 json.dump(spec,open(P+'spec.json','w'),indent=1); print('long', len(L),'beats; objects', len(objects))

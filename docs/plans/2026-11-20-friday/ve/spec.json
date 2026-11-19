@@ -56,7 +56,7 @@
   {
    "obj": "strike",
    "device": "scribble",
-   "meaning": "the six figures struck through on 'fraction'",
+   "meaning": "a hand-drawn line through \"$195,000\" as he says \"fraction\"",
    "persist": {
     "from_beat": "hook",
     "to_beat": "hook"
@@ -64,13 +64,15 @@
    "params": {
     "colour": "mint",
     "seed": "fri20",
-    "shape": "strike",
-    "target": {
-     "x": 140,
-     "y": 420,
-     "w": 800,
-     "h": 220
-    }
+    "shape": "underline",
+    "from": [
+     200,
+     340
+    ],
+    "to": [
+     690,
+     330
+    ]
    }
   },
   {
@@ -162,66 +164,6 @@
    }
   },
   {
-   "obj": "chip_hours",
-   "device": "query_chip",
-   "meaning": "whose number this is: the family's own account, as Tom's Hardware reported it",
-   "persist": {
-    "from_beat": "hook",
-    "to_beat": "hook"
-   },
-   "params": {
-    "text": "THE FAMILY'S ACCOUNT \u00b7 TOM'S HARDWARE"
-   }
-  },
-  {
-   "obj": "chip_next",
-   "device": "query_chip",
-   "meaning": "next year: there is no page to check a guess against",
-   "persist": {
-    "from_beat": "hindsight",
-    "to_beat": "hindsight"
-   },
-   "params": {
-    "text": "NEXT YEAR \u00b7 NO PAGE TO CHECK"
-   }
-  },
-  {
-   "obj": "chip_last",
-   "device": "query_chip",
-   "meaning": "last year: every line and every rule is already on file",
-   "persist": {
-    "from_beat": "hindsight",
-    "to_beat": "hindsight"
-   },
-   "params": {
-    "text": "LAST YEAR \u00b7 EVERY LINE ON FILE"
-   }
-  },
-  {
-   "obj": "chip_billed",
-   "device": "query_chip",
-   "meaning": "what the bill charged for: a dearer billing code",
-   "persist": {
-    "from_beat": "code",
-    "to_beat": "code"
-   },
-   "params": {
-    "text": "CODE BILLED: THE DEARER ONE"
-   }
-  },
-  {
-   "obj": "chip_given",
-   "device": "query_chip",
-   "meaning": "what he actually got: cheaper care",
-   "persist": {
-    "from_beat": "code",
-    "to_beat": "code"
-   },
-   "params": {
-    "text": "CARE GIVEN: LESS"
-   }
-  },
-  {
    "obj": "steak",
    "device": "scene_plate",
    "meaning": "the gap between what was billed and what was given, as one picture: the cloche lifts on a sad sandwich while the bill on the tray says STEAK",
@@ -247,12 +189,14 @@
    "obj": "k_after",
    "device": "kinetic_stat",
    "dataset": "bill-after",
-   "meaning": "where the bill landed: about $33,000 (his account, Tom's Hardware)",
+   "meaning": "the bill counting down from $195,000 to where it landed, about $33,000, on \"fell\" (his account, Tom's Hardware)",
    "persist": {
     "from_beat": "fell",
     "to_beat": "fell"
    },
-   "params": {}
+   "params": {
+    "ghost": true
+   }
   },
   {
    "obj": "chip_caveat",
@@ -310,99 +254,172 @@
    }
   },
   {
-   "obj": "s_face_0",
-   "device": "query_chip",
-   "meaning": "his own words on screen: everyone's archives, right now",
+   "obj": "s_face_slam0",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: archives (everyone's, right now)",
    "persist": {
     "from_beat": "face",
     "to_beat": "face"
    },
    "params": {
-    "text": "EVERYONE'S ARCHIVES, RIGHT NOW"
+    "word": "ARCHIVES",
+    "tapeText": "EVERYONE'S, RIGHT NOW"
    }
   },
   {
-   "obj": "s_face_1",
-   "device": "query_chip",
-   "meaning": "his own words on screen: whole teams to sort pricing",
+   "obj": "s_face_slam1",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: teams (hospitals pay whole teams)",
    "persist": {
     "from_beat": "face",
     "to_beat": "face"
    },
    "params": {
-    "text": "WHOLE TEAMS TO SORT PRICING"
+    "word": "TEAMS",
+    "tapeText": "HOSPITALS PAY WHOLE TEAMS"
    }
   },
   {
-   "obj": "s_face_2",
-   "device": "query_chip",
-   "meaning": "his own words on screen: a chatbot beat them",
+   "obj": "s_face_slam2",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: chatbot (a chatbot beat them)",
    "persist": {
     "from_beat": "face",
     "to_beat": "face"
    },
    "params": {
-    "text": "A CHATBOT BEAT THEM"
+    "word": "CHATBOT",
+    "tapeText": "A CHATBOT BEAT THEM"
    }
   },
   {
-   "obj": "s_love_0",
-   "device": "query_chip",
-   "meaning": "his own words on screen: an old bill can't argue back",
+   "obj": "s_love_slam0",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: argue (an old bill can't argue back)",
    "persist": {
     "from_beat": "love",
     "to_beat": "love"
    },
    "params": {
-    "text": "AN OLD BILL CAN'T ARGUE BACK"
+    "word": "ARGUE",
+    "tapeText": "AN OLD BILL CAN'T ARGUE BACK"
    }
   },
   {
-   "obj": "s_love_1",
-   "device": "query_chip",
-   "meaning": "his own words on screen: the rules are written down",
+   "obj": "s_love_slam1",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: written (the rules are written down)",
    "persist": {
     "from_beat": "love",
     "to_beat": "love"
    },
    "params": {
-    "text": "THE RULES ARE WRITTEN DOWN"
+    "word": "WRITTEN",
+    "tapeText": "THE RULES ARE WRITTEN DOWN"
    }
   },
   {
-   "obj": "s_love_2",
-   "device": "query_chip",
-   "meaning": "his own words on screen: ai reads every line",
+   "obj": "s_love_slam2",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: every (ai reads every line)",
    "persist": {
     "from_beat": "love",
     "to_beat": "love"
    },
    "params": {
-    "text": "AI READS EVERY LINE"
+    "word": "EVERY",
+    "tapeText": "AI READS EVERY LINE"
    }
   },
   {
-   "obj": "s_whose_0",
-   "device": "query_chip",
-   "meaning": "his own words on screen: whose mistake?",
+   "obj": "s_code_slam0",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: billed (care billed under)",
+   "persist": {
+    "from_beat": "code",
+    "to_beat": "code"
+   },
+   "params": {
+    "word": "BILLED",
+    "tapeText": "CARE BILLED UNDER"
+   }
+  },
+  {
+   "obj": "s_code_slam1",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: expensive (a much more expensive code)",
+   "persist": {
+    "from_beat": "code",
+    "to_beat": "code"
+   },
+   "params": {
+    "word": "EXPENSIVE",
+    "tapeText": "A MUCH MORE EXPENSIVE CODE"
+   }
+  },
+  {
+   "obj": "s_code_slam2",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: brother-in-law (than the care his brother-in-law actually got)",
+   "persist": {
+    "from_beat": "code",
+    "to_beat": "code"
+   },
+   "params": {
+    "word": "BROTHER-IN-LAW",
+    "tapeText": "THAN THE CARE HIS BROTHER-IN-LAW ACTUALLY GOT"
+   }
+  },
+  {
+   "obj": "s_hindsight_slam0",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: guessing (next year: it's guessing)",
+   "persist": {
+    "from_beat": "hindsight",
+    "to_beat": "hindsight"
+   },
+   "params": {
+    "word": "GUESSING",
+    "tapeText": "NEXT YEAR: IT'S GUESSING"
+   }
+  },
+  {
+   "obj": "s_hindsight_slam1",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: analysing (last year: it's analysing)",
+   "persist": {
+    "from_beat": "hindsight",
+    "to_beat": "hindsight"
+   },
+   "params": {
+    "word": "ANALYSING",
+    "tapeText": "LAST YEAR: IT'S ANALYSING"
+   }
+  },
+  {
+   "obj": "s_whose_slam0",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: mistake (whose mistake?)",
    "persist": {
     "from_beat": "whose",
     "to_beat": "whose"
    },
    "params": {
-    "text": "WHOSE MISTAKE?"
+    "word": "MISTAKE",
+    "tapeText": "WHOSE MISTAKE?"
    }
   },
   {
-   "obj": "s_whose_1",
-   "device": "query_chip",
-   "meaning": "his own words on screen: the hospital's",
+   "obj": "s_whose_slam1",
+   "device": "slam_word",
+   "meaning": "his own word slammed as he says it: hospital's (it was the hospital's)",
    "persist": {
     "from_beat": "whose",
     "to_beat": "whose"
    },
    "params": {
-    "text": "THE HOSPITAL'S"
+    "word": "HOSPITAL'S",
+    "tapeText": "IT WAS THE HOSPITAL'S"
    }
   },
   {
@@ -414,7 +431,9 @@
     "from_beat": "hook",
     "to_beat": "hook"
    },
-   "params": {}
+   "params": {
+    "ghost": true
+   }
   },
   {
    "obj": "l_src",
@@ -542,12 +561,14 @@
    "obj": "l_after",
    "device": "kinetic_stat",
    "dataset": "bill-after",
-   "meaning": "where the bill landed: about $33,000 (his account)",
+   "meaning": "the bill counting down from $195,000 to where it landed, about $33,000, on \"fell\" (his account)",
    "persist": {
     "from_beat": "l_fell",
     "to_beat": "l_fell"
    },
-   "params": {}
+   "params": {
+    "ghost": true
+   }
   },
   {
    "obj": "l_caveat",
@@ -979,6 +1000,18 @@
    }
   },
   {
+   "obj": "l_l_hindsight_0",
+   "device": "query_chip",
+   "meaning": "his own words on screen: a terrible fortune teller, a really good auditor",
+   "persist": {
+    "from_beat": "l_hindsight",
+    "to_beat": "l_hindsight"
+   },
+   "params": {
+    "text": "A TERRIBLE FORTUNE TELLER, A REALLY GOOD AUDITOR"
+   }
+  },
+  {
    "obj": "l_l_listfirst_0",
    "device": "query_chip",
    "meaning": "his own words on screen: who reads that list first?",
@@ -1226,7 +1259,6 @@
      },
      "uses": [
       "k_billed",
-      "chip_hours",
       "strike"
      ],
      "events": [
@@ -1238,10 +1270,10 @@
        "silent": true
       },
       {
-       "at_w": 14,
-       "obj": "chip_hours",
-       "verb": "enter",
-       "to_state": "visible",
+       "at_w": 0,
+       "obj": "k_billed",
+       "verb": "count_to",
+       "to_state": "billed",
        "silent": true
       },
       {
@@ -1268,28 +1300,42 @@
       "source": "take"
      },
      "uses": [
-      "s_face_0",
-      "s_face_1",
-      "s_face_2"
+      "s_face_slam0",
+      "s_face_slam1",
+      "s_face_slam2"
      ],
      "events": [
       {
        "at_w": 28,
-       "obj": "s_face_0",
+       "obj": "s_face_slam0",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 31,
-       "obj": "s_face_1",
+       "at_w": 33,
+       "obj": "s_face_slam0",
+       "verb": "exit",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 34,
+       "obj": "s_face_slam1",
        "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 40,
+       "obj": "s_face_slam1",
+       "verb": "exit",
        "to_state": "visible",
        "silent": true
       },
       {
        "at_w": 41,
-       "obj": "s_face_2",
+       "obj": "s_face_slam2",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
@@ -1378,25 +1424,12 @@
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 69,
-       "obj": "th_head",
-       "verb": "mark",
-       "to_state": "attack",
-       "silent": true
-      },
-      {
-       "at_w": 80,
-       "obj": "th_head",
-       "verb": "mark",
-       "to_state": "195",
-       "silent": true
       }
      ],
      "transition_out": "cut",
      "face": "off",
-     "backdrop": "asset:tomshw"
+     "backdrop": "asset:tomshw",
+     "override_reason": "a real page held still to be read: a mark would replace the screenshot with text (evidence_card)"
     },
     {
      "id": "lines",
@@ -1421,18 +1454,12 @@
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 88,
-       "obj": "th_lede",
-       "verb": "mark",
-       "to_state": "line by line",
-       "silent": true
       }
      ],
      "transition_out": "cut",
      "face": "off",
-     "backdrop": "asset:tomshw"
+     "backdrop": "asset:tomshw",
+     "override_reason": "a real page held still to be read: a mark would replace the screenshot with text (evidence_card)"
     },
     {
      "id": "code",
@@ -1448,27 +1475,42 @@
       "source": "take"
      },
      "uses": [
-      "chip_billed",
-      "chip_given"
+      "s_code_slam0",
+      "s_code_slam1",
+      "s_code_slam2"
      ],
      "events": [
       {
-       "at_w": 91,
-       "obj": "chip_billed",
+       "at_w": 94,
+       "obj": "s_code_slam0",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 99,
-       "obj": "chip_billed",
-       "verb": "highlight",
+       "at_w": 98,
+       "obj": "s_code_slam0",
+       "verb": "exit",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 103,
-       "obj": "chip_given",
+       "at_w": 99,
+       "obj": "s_code_slam1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 104,
+       "obj": "s_code_slam1",
+       "verb": "exit",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 105,
+       "obj": "s_code_slam2",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
@@ -1531,6 +1573,13 @@
        "silent": true
       },
       {
+       "at_w": 120,
+       "obj": "k_after",
+       "verb": "count_to",
+       "to_state": "billed",
+       "silent": true
+      },
+      {
        "at_w": 129,
        "obj": "k_after",
        "verb": "count_to",
@@ -1563,35 +1612,42 @@
       "source": "take"
      },
      "uses": [
-      "s_love_0",
-      "s_love_1",
-      "s_love_2"
+      "s_love_slam0",
+      "s_love_slam1",
+      "s_love_slam2"
      ],
      "events": [
       {
-       "at_w": 141,
-       "obj": "s_love_0",
+       "at_w": 144,
+       "obj": "s_love_slam0",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 142,
-       "obj": "s_love_0",
-       "verb": "highlight",
+       "at_w": 149,
+       "obj": "s_love_slam0",
+       "verb": "exit",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 148,
-       "obj": "s_love_1",
+       "at_w": 150,
+       "obj": "s_love_slam1",
        "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 154,
+       "obj": "s_love_slam1",
+       "verb": "exit",
        "to_state": "visible",
        "silent": true
       },
       {
        "at_w": 155,
-       "obj": "s_love_2",
+       "obj": "s_love_slam2",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
@@ -1613,35 +1669,28 @@
       "source": "take"
      },
      "uses": [
-      "chip_next",
-      "chip_last"
+      "s_hindsight_slam0",
+      "s_hindsight_slam1"
      ],
      "events": [
       {
-       "at_w": 161,
-       "obj": "chip_next",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
        "at_w": 169,
-       "obj": "chip_next",
-       "verb": "highlight",
+       "obj": "s_hindsight_slam0",
+       "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 171,
-       "obj": "chip_last",
-       "verb": "enter",
+       "at_w": 176,
+       "obj": "s_hindsight_slam0",
+       "verb": "exit",
        "to_state": "visible",
        "silent": true
       },
       {
        "at_w": 177,
-       "obj": "chip_last",
-       "verb": "highlight",
+       "obj": "s_hindsight_slam1",
+       "verb": "enter",
        "to_state": "visible",
        "silent": true
       }
@@ -1662,27 +1711,27 @@
       "source": "take"
      },
      "uses": [
-      "s_whose_0",
-      "s_whose_1"
+      "s_whose_slam0",
+      "s_whose_slam1"
      ],
      "events": [
       {
-       "at_w": 182,
-       "obj": "s_whose_0",
+       "at_w": 183,
+       "obj": "s_whose_slam0",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 183,
-       "obj": "s_whose_0",
-       "verb": "highlight",
+       "at_w": 190,
+       "obj": "s_whose_slam0",
+       "verb": "exit",
        "to_state": "visible",
        "silent": true
       },
       {
        "at_w": 191,
-       "obj": "s_whose_1",
+       "obj": "s_whose_slam1",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
@@ -1740,7 +1789,7 @@
     },
     {
      "id": "act",
-     "role": "call",
+     "role": "anchor",
      "span": {
       "from_w": 215,
       "to_w": 238
@@ -1769,7 +1818,7 @@
     },
     {
      "id": "close",
-     "role": "call",
+     "role": "bridge",
      "span": {
       "from_w": 239,
       "to_w": 245
@@ -1860,6 +1909,13 @@
        "obj": "l_k",
        "verb": "enter",
        "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 15,
+       "obj": "l_k",
+       "verb": "count_to",
+       "to_state": "billed",
        "silent": true
       },
       {
@@ -2034,45 +2090,11 @@
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 107,
-       "obj": "l_head",
-       "verb": "mark",
-       "to_state": "w107",
-       "silent": true
-      },
-      {
-       "at_w": 114,
-       "obj": "l_head",
-       "verb": "mark",
-       "to_state": "w114",
-       "silent": true
-      },
-      {
-       "at_w": 121,
-       "obj": "l_head",
-       "verb": "mark",
-       "to_state": "w121",
-       "silent": true
-      },
-      {
-       "at_w": 128,
-       "obj": "l_head",
-       "verb": "mark",
-       "to_state": "w128",
-       "silent": true
-      },
-      {
-       "at_w": 133,
-       "obj": "l_head",
-       "verb": "mark",
-       "to_state": "w133",
-       "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "full"
+     "face": "full",
+     "override_reason": "a real page held still to be read: a mark would replace the screenshot with text (evidence_card)"
     },
     {
      "id": "l_bitmiss",
@@ -2155,52 +2177,11 @@
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 177,
-       "obj": "l_lede",
-       "verb": "mark",
-       "to_state": "w177",
-       "silent": true
-      },
-      {
-       "at_w": 184,
-       "obj": "l_lede",
-       "verb": "mark",
-       "to_state": "w184",
-       "silent": true
-      },
-      {
-       "at_w": 190,
-       "obj": "l_lede",
-       "verb": "mark",
-       "to_state": "w190",
-       "silent": true
-      },
-      {
-       "at_w": 196,
-       "obj": "l_lede",
-       "verb": "mark",
-       "to_state": "w196",
-       "silent": true
-      },
-      {
-       "at_w": 201,
-       "obj": "l_lede",
-       "verb": "mark",
-       "to_state": "w201",
-       "silent": true
-      },
-      {
-       "at_w": 206,
-       "obj": "l_lede",
-       "verb": "mark",
-       "to_state": "w206",
-       "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "full"
+     "face": "full",
+     "override_reason": "a real page held still to be read: a mark would replace the screenshot with text (evidence_card)"
     },
     {
      "id": "l_michelin",
@@ -2257,6 +2238,13 @@
        "silent": true
       },
       {
+       "at_w": 231,
+       "obj": "l_after",
+       "verb": "count_to",
+       "to_state": "billed",
+       "silent": true
+      },
+      {
        "at_w": 244,
        "obj": "l_after",
        "verb": "count_to",
@@ -2271,21 +2259,14 @@
        "silent": true
       },
       {
-       "at_w": 256,
+       "at_w": 254,
        "obj": "l_caveat",
        "verb": "highlight",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 261,
-       "obj": "l_caveat",
-       "verb": "highlight",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 269,
+       "at_w": 262,
        "obj": "l_caveat",
        "verb": "highlight",
        "to_state": "visible",
@@ -2318,52 +2299,11 @@
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 282,
-       "obj": "l_tenant",
-       "verb": "mark",
-       "to_state": "w282",
-       "silent": true
-      },
-      {
-       "at_w": 289,
-       "obj": "l_tenant",
-       "verb": "mark",
-       "to_state": "w289",
-       "silent": true
-      },
-      {
-       "at_w": 297,
-       "obj": "l_tenant",
-       "verb": "mark",
-       "to_state": "w297",
-       "silent": true
-      },
-      {
-       "at_w": 302,
-       "obj": "l_tenant",
-       "verb": "mark",
-       "to_state": "w302",
-       "silent": true
-      },
-      {
-       "at_w": 306,
-       "obj": "l_tenant",
-       "verb": "mark",
-       "to_state": "w306",
-       "silent": true
-      },
-      {
-       "at_w": 313,
-       "obj": "l_tenant",
-       "verb": "mark",
-       "to_state": "w313",
-       "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "full"
+     "face": "full",
+     "override_reason": "a real page held still to be read: a mark would replace the screenshot with text (evidence_card)"
     },
     {
      "id": "l_paperwork",
@@ -2511,7 +2451,8 @@
      },
      "uses": [
       "l_next",
-      "l_last"
+      "l_last",
+      "l_l_hindsight_0"
      ],
      "events": [
       {
@@ -2522,7 +2463,14 @@
        "silent": true
       },
       {
-       "at_w": 413,
+       "at_w": 408,
+       "obj": "l_next",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 409,
        "obj": "l_next",
        "verb": "highlight",
        "to_state": "visible",
@@ -2536,7 +2484,14 @@
        "silent": true
       },
       {
-       "at_w": 429,
+       "at_w": 426,
+       "obj": "l_last",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 427,
        "obj": "l_last",
        "verb": "highlight",
        "to_state": "visible",
@@ -2544,22 +2499,8 @@
       },
       {
        "at_w": 436,
-       "obj": "l_next",
-       "verb": "highlight",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 441,
-       "obj": "l_last",
-       "verb": "highlight",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 447,
-       "obj": "l_last",
-       "verb": "highlight",
+       "obj": "l_l_hindsight_0",
+       "verb": "enter",
        "to_state": "visible",
        "silent": true
       }
@@ -2673,28 +2614,28 @@
        "silent": true
       },
       {
-       "at_w": 516,
+       "at_w": 517,
        "obj": "l_cust",
        "verb": "highlight",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 523,
+       "at_w": 526,
        "obj": "l_cust",
        "verb": "highlight",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 528,
+       "at_w": 527,
        "obj": "l_cust",
        "verb": "highlight",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 532,
+       "at_w": 530,
        "obj": "l_cust",
        "verb": "highlight",
        "to_state": "visible",
@@ -2794,80 +2735,11 @@
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 584,
-       "obj": "l_dana",
-       "verb": "mark",
-       "to_state": "w584",
-       "silent": true
-      },
-      {
-       "at_w": 593,
-       "obj": "l_dana",
-       "verb": "mark",
-       "to_state": "w593",
-       "silent": true
-      },
-      {
-       "at_w": 601,
-       "obj": "l_dana",
-       "verb": "mark",
-       "to_state": "w601",
-       "silent": true
-      },
-      {
-       "at_w": 609,
-       "obj": "l_dana",
-       "verb": "mark",
-       "to_state": "w609",
-       "silent": true
-      },
-      {
-       "at_w": 615,
-       "obj": "l_dana",
-       "verb": "mark",
-       "to_state": "w615",
-       "silent": true
-      },
-      {
-       "at_w": 620,
-       "obj": "l_dana",
-       "verb": "mark",
-       "to_state": "w620",
-       "silent": true
-      },
-      {
-       "at_w": 628,
-       "obj": "l_dana",
-       "verb": "mark",
-       "to_state": "w628",
-       "silent": true
-      },
-      {
-       "at_w": 636,
-       "obj": "l_dana",
-       "verb": "mark",
-       "to_state": "w636",
-       "silent": true
-      },
-      {
-       "at_w": 645,
-       "obj": "l_dana",
-       "verb": "mark",
-       "to_state": "w645",
-       "silent": true
-      },
-      {
-       "at_w": 650,
-       "obj": "l_dana",
-       "verb": "mark",
-       "to_state": "w650",
-       "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "full"
+     "face": "full",
+     "override_reason": "a real page held still to be read: a mark would replace the screenshot with text (evidence_card)"
     },
     {
      "id": "l_krafton",
@@ -2892,87 +2764,11 @@
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 665,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w665",
-       "silent": true
-      },
-      {
-       "at_w": 672,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w672",
-       "silent": true
-      },
-      {
-       "at_w": 679,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w679",
-       "silent": true
-      },
-      {
-       "at_w": 686,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w686",
-       "silent": true
-      },
-      {
-       "at_w": 690,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w690",
-       "silent": true
-      },
-      {
-       "at_w": 698,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w698",
-       "silent": true
-      },
-      {
-       "at_w": 704,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w704",
-       "silent": true
-      },
-      {
-       "at_w": 712,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w712",
-       "silent": true
-      },
-      {
-       "at_w": 719,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w719",
-       "silent": true
-      },
-      {
-       "at_w": 727,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w727",
-       "silent": true
-      },
-      {
-       "at_w": 732,
-       "obj": "l_krafton",
-       "verb": "mark",
-       "to_state": "w732",
-       "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "full"
+     "face": "full",
+     "override_reason": "a real page held still to be read: a mark would replace the screenshot with text (evidence_card)"
     },
     {
      "id": "l_money",
@@ -3085,7 +2881,7 @@
     },
     {
      "id": "l_act",
-     "role": "call",
+     "role": "anchor",
      "span": {
       "from_w": 776,
       "to_w": 815
@@ -3114,7 +2910,7 @@
     },
     {
      "id": "close",
-     "role": "call",
+     "role": "bridge",
      "span": {
       "from_w": 816,
       "to_w": 821

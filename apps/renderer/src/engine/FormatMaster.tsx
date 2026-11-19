@@ -136,7 +136,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const focusOn = !!ingredients?.focus && profile?.camera.kind !== 'zoomToFocus'
   // A staging (kit/staging.ts) places his take and a graphics panel on every beat that shows him; a piece with a
   // WINDOW beat keeps the window's own moves.
-  const staging = !hasWindow && isStaging(props.layout?.mode)
+  const staging = !hasWindow && isStaging(props.layout?.mode, props.aspect)
     ? stagingGeometry(props.layout!.mode as 'band', props.aspect, props.captionPlacement, !!props.captionTheme) : undefined
   const stagedNow = staging && activeBeat && staged(activeBeat) ? staging : undefined
   const stagedTake = stagedNow ? { ...boxStyle(stagedNow.take), borderRadius: stagedNow.take.radius,
@@ -361,7 +361,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   // A graphics-only STAGE beat with no staging draws its backdrop across the whole frame, under its graphics, so a proof sits
   // on its own page and the frame is never bare ink (Krish, 2026-11-18: "making actual use of the full screen when it isn't
   // my face"; Wed 18's full-frame proof beats filled 11 to 32% of the frame). With no backdrop the tree is unchanged.
-  const fullBackdrop = !stagedNow && !isStaging(props.layout?.mode) && activeBeat?.backdrop && activeBeat.layout === 'STAGE' && activeBeat.plate?.source === 'none' ? (
+  const fullBackdrop = !stagedNow && !isStaging(props.layout?.mode, props.aspect) && activeBeat?.backdrop && activeBeat.layout === 'STAGE' && activeBeat.plate?.source === 'none' ? (
     <AbsoluteFill key="full-backdrop" data-backdrop-full>
       <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={width} height={height} />
     </AbsoluteFill>) : null

@@ -1,7 +1,7 @@
 {
   "schema": "ve-pre-critic-inputs/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-  "spec_sha256": "6751cc90800574f84ed203304ea477c780dd9b66f210296c83c5fbc25327b5a3",
+  "spec_sha256": "5797a35092ce2cd96bf59cfd3aedb1c53e70daee1e2e0849d4aa531cdaccbd62",
   "question_1": "Does this piece carry one idea as clearly as The Ladder (Mon 2 Nov): one object, every move meaning something, nothing acting out a sentence? (.claude/agents/ve-critic.md, \"First, beside his favourite\")",
   "question_2": "Is any number on screen invented: a figure the piece does not own (its datasets, real artifacts or his script)? The spec's own never-list is the rule.",
   "style_idea": {
@@ -48,7 +48,6 @@
       "plate": "take",
       "uses": [
         "k_billed",
-        "chip_hours",
         "strike"
       ]
     },
@@ -59,9 +58,9 @@
       "point": "Imagine what it is finding in everyone's old paperwork, when whole hospital teams missed it",
       "plate": "take",
       "uses": [
-        "s_face_0",
-        "s_face_1",
-        "s_face_2"
+        "s_face_slam0",
+        "s_face_slam1",
+        "s_face_slam2"
       ]
     },
     {
@@ -111,8 +110,9 @@
       "point": "Care was billed under a dearer code than the care he got",
       "plate": "take",
       "uses": [
-        "chip_billed",
-        "chip_given"
+        "s_code_slam0",
+        "s_code_slam1",
+        "s_code_slam2"
       ]
     },
     {
@@ -143,9 +143,9 @@
       "point": "An old bill can't argue back, the rules are written down, and AI reads every line without a break",
       "plate": "take",
       "uses": [
-        "s_love_0",
-        "s_love_1",
-        "s_love_2"
+        "s_love_slam0",
+        "s_love_slam1",
+        "s_love_slam2"
       ]
     },
     {
@@ -155,8 +155,8 @@
       "point": "About next year AI is guessing; about last year it is reading",
       "plate": "take",
       "uses": [
-        "chip_next",
-        "chip_last"
+        "s_hindsight_slam0",
+        "s_hindsight_slam1"
       ]
     },
     {
@@ -166,8 +166,8 @@
       "point": "Whose mistake did Claude find? The hospital's",
       "plate": "take",
       "uses": [
-        "s_whose_0",
-        "s_whose_1"
+        "s_whose_slam0",
+        "s_whose_slam1"
       ]
     },
     {
@@ -191,7 +191,7 @@
     {
       "cut": "short",
       "beat": "act",
-      "role": "call",
+      "role": "anchor",
       "point": "This week he hands his own AI last year's invoices, to find his skeletons first",
       "plate": "none",
       "uses": [
@@ -201,7 +201,7 @@
     {
       "cut": "short",
       "beat": "close",
-      "role": "call",
+      "role": "bridge",
       "point": "The full story is free at makeyourmindup.ai",
       "plate": "take",
       "uses": []
@@ -346,7 +346,8 @@
       "plate": "take",
       "uses": [
         "l_next",
-        "l_last"
+        "l_last",
+        "l_l_hindsight_0"
       ]
     },
     {
@@ -454,7 +455,7 @@
     {
       "cut": "long",
       "beat": "l_act",
-      "role": "call",
+      "role": "anchor",
       "point": "This week he puts his own last year's invoices through the AI, to find his skeletons first",
       "plate": "none",
       "uses": [
@@ -464,7 +465,7 @@
     {
       "cut": "long",
       "beat": "close",
-      "role": "call",
+      "role": "bridge",
       "point": "The full story is at makeyourmindup.ai",
       "plate": "take",
       "uses": []
@@ -512,6 +513,11 @@
       "id": "title_from_his_spoken_line",
       "text": "The episode title is built from his spoken line, timed to his words, at full stage width, as a card that slams or slides in over his hair, never bare words over his face.",
       "krish": "make the title captions a card that slams or slides in I think. having naked captions over my face looks stupid."
+    },
+    {
+      "id": "title_full_frame_lockup",
+      "text": "The title is one full-frame lockup, centred, type filling the frame, the wordmark inside it and on screen only while the title is; the title frame was looked at at full size.",
+      "krish": "I expect the title card to enter as I am talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually was a good build for the title card."
     },
     {
       "id": "key_figure_fills_frame",
