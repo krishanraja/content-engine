@@ -55,7 +55,7 @@
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 31,
+      "toFrame": 60,
       "words": [
         {
           "text": "and",
@@ -81,13 +81,9 @@
       "swipeIndex": null
     },
     {
-      "fromFrame": 31,
-      "toFrame": 60,
+      "fromFrame": 245,
+      "toFrame": 274,
       "words": [
-        {
-          "text": "So",
-          "atFrame": 31
-        },
         {
           "text": "A",
           "atFrame": 245
@@ -231,7 +227,7 @@
     {
       "id": "face",
       "role": "bridge",
-      "layout": "SPLIT",
+      "layout": "F1",
       "fromFrame": 0,
       "toFrame": 31,
       "uses": [
@@ -239,13 +235,11 @@
         "s_face_slam1",
         "s_face_slam2"
       ],
+      "face": "full",
       "transitionOut": "cut",
       "sectionBeat": true,
       "plate": {
         "source": "take"
-      },
-      "backdrop": {
-        "src": "/home/user/content-engine/.cache/fri20/assets/shots/tomshw.png"
       },
       "keyFrame": 0
     },
@@ -377,7 +371,14 @@
       "variants": {},
       "params": {
         "word": "ARCHIVES",
-        "tapeText": "EVERYONE'S, RIGHT NOW"
+        "tapeText": "EVERYONE'S, RIGHT NOW",
+        "place": {
+          "left": 135,
+          "top": 260,
+          "width": 1080,
+          "height": 480,
+          "scale": 0.75
+        }
       }
     },
     {
@@ -389,7 +390,14 @@
       "variants": {},
       "params": {
         "word": "TEAMS",
-        "tapeText": "HOSPITALS PAY WHOLE TEAMS"
+        "tapeText": "HOSPITALS PAY WHOLE TEAMS",
+        "place": {
+          "left": 135,
+          "top": 260,
+          "width": 1080,
+          "height": 480,
+          "scale": 0.75
+        }
       }
     },
     {
@@ -401,7 +409,14 @@
       "variants": {},
       "params": {
         "word": "CHATBOT",
-        "tapeText": "A CHATBOT BEAT THEM"
+        "tapeText": "A CHATBOT BEAT THEM",
+        "place": {
+          "left": 135,
+          "top": 260,
+          "width": 1080,
+          "height": 480,
+          "scale": 0.75
+        }
       }
     }
   ],

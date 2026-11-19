@@ -10,8 +10,8 @@
     16.967,
     20.367
   ],
-  "sha256": "aeb5e759aa1de97e28829a8f0dd106663b44dc90e2a7c1957ba90c26edb1d60f",
-  "spec_sha256": "3745cd5f48c8e63caa04d61c8c1f96e5701e813374e584d220d7877fdd271255",
+  "sha256": "821130ccea46d206e4144aa71fe7ca90afe92d379bf1e4dcad53cea02cf58b13",
+  "spec_sha256": "abe42dc14dcbe4631f7162e2c3caa5517f428140307d25fe9e2696242ec9cafb",
   "structure": {
     "format": "face-with-proof",
     "aspect": "9:16",
@@ -113,7 +113,7 @@
     "beats": [
       [
         "hook",
-        "SPLIT",
+        "F1",
         [
           "k_billed",
           "strike"
@@ -121,7 +121,7 @@
       ],
       [
         "face",
-        "SPLIT",
+        "F1",
         [
           "s_face_slam0",
           "s_face_slam1",
@@ -158,7 +158,7 @@
       ],
       [
         "code",
-        "SPLIT",
+        "F1",
         [
           "s_code_slam0",
           "s_code_slam1",
@@ -174,7 +174,7 @@
       ],
       [
         "fell",
-        "STAGE",
+        "P1",
         [
           "chip_caveat",
           "k_after"
@@ -182,7 +182,7 @@
       ],
       [
         "love",
-        "SPLIT",
+        "F1",
         [
           "s_love_slam0",
           "s_love_slam1",
@@ -191,7 +191,7 @@
       ],
       [
         "hindsight",
-        "SPLIT",
+        "F1",
         [
           "s_hindsight_slam0",
           "s_hindsight_slam1"
@@ -199,7 +199,7 @@
       ],
       [
         "whose",
-        "SPLIT",
+        "F1",
         [
           "s_whose_slam0",
           "s_whose_slam1"
@@ -232,11 +232,11 @@
     ]
   },
   "style_module": "ai-music-slam",
-  "props_sha256": "e9f68a191231d0ec2a4c02c42a8ccb2451b6a10b1f19a2e46ea44581e471d4f5",
+  "props_sha256": "b24ae2781816e466fab486287e950334026112432d21ba44892ec03936ad8c8c",
   "title": {
     "in_main": false,
     "clip": "short.title.mp4",
-    "sha256": "cdb29b7b46e36cc9631652b4e0766159175a4e2c80cdb5a5766c5d712e62ab2b",
+    "sha256": "e3d1b224039329b228689ab84b51e1f77c5a548342351eefee3cae3aeae46c14",
     "start": 15.933,
     "end": 26.1
   },
@@ -245,6 +245,7 @@
     "complete": false,
     "failing": [
       "captions.ocr",
+      "captions.off_face",
       "captions.render",
       "composition",
       "title.lockup_frame"
@@ -264,7 +265,7 @@
       "caption"
     ]
   ],
-  "engine_sha256": "43eda608586ebe4a51b336ecd939fa560397c0b2bcc9e6041a874053c2f48f93",
+  "engine_sha256": "be0781a6c74a84c440414028cde64b57d8142c8a901875f9a0022023e7246506",
   "assets_sha256": {
     "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
     "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
@@ -279,7 +280,7 @@
     "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
     "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
   },
-  "made_at": "2026-11-19T16:35:29Z",
+  "made_at": "2026-11-19T17:09:51Z",
   "frames": {
     "pass": true,
     "status": "ok",
@@ -287,13 +288,13 @@
     "frames": 12
   },
   "compare": {
-    "against": "9f87358a4e31f1876fc0443f461f9ef20c2b25c5d41b91910f24bfa7ef012fea",
+    "against": "aeb5e759aa1de97e28829a8f0dd106663b44dc90e2a7c1957ba90c26edb1d60f",
     "reasons": [
       "the engine changed since the proof he approved"
     ],
     "compared": null,
     "sheet": "compare.short.png",
-    "sha256": "2e4525631e4e9a1126cf4403d1397ab38c7adcf33c5d447eca2df5ae4626792f",
+    "sha256": "951871559bf1638327906eec5aba43295b0d85447e0218c191f234ab3a5f0c95",
     "seconds": [
       0.5,
       1.5,

@@ -4,7 +4,7 @@
   "format": "face-with-proof",
   "aspect": "9:16",
   "fps": 30,
-  "durationFrames": 240,
+  "durationFrames": 247,
   "tokens": {
     "ink": "#0C1512",
     "inkDeep": "#070D0B",
@@ -40,80 +40,149 @@
   "segments": [
     {
       "src": "/home/user/content-engine/.cache/fri20/assets/short.master.mov",
-      "trimBeforeFrames": 440,
+      "trimBeforeFrames": 262,
       "fromFrame": 0,
-      "durationFrames": 240
+      "durationFrames": 247
     }
   ],
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.cache/fri20/assets/audio.short.wav",
-      "trimBeforeFrames": 440
+      "trimBeforeFrames": 262
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 29,
+      "toFrame": 51,
+      "words": [
+        {
+          "text": "So",
+          "atFrame": 0
+        },
+        {
+          "text": "imagine",
+          "atFrame": 4
+        },
+        {
+          "text": "what",
+          "atFrame": 37
+        },
+        {
+          "text": "it's",
+          "atFrame": 45
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 51,
+      "toFrame": 78,
+      "words": [
+        {
+          "text": "finding",
+          "atFrame": 51
+        },
+        {
+          "text": "in",
+          "atFrame": 63
+        },
+        {
+          "text": "everyone's",
+          "atFrame": 66
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 78,
+      "toFrame": 111,
+      "words": [
+        {
+          "text": "archives",
+          "atFrame": 78
+        },
+        {
+          "text": "right",
+          "atFrame": 91
+        },
+        {
+          "text": "now.",
+          "atFrame": 98
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 111,
+      "toFrame": 145,
+      "words": [
+        {
+          "text": "Hospitals",
+          "atFrame": 111
+        },
+        {
+          "text": "pay",
+          "atFrame": 130
+        },
+        {
+          "text": "whole",
+          "atFrame": 139
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 145,
+      "toFrame": 207,
       "words": [
         {
           "text": "teams",
-          "atFrame": 0
+          "atFrame": 145
         },
         {
           "text": "to",
-          "atFrame": 0
+          "atFrame": 161
         },
         {
           "text": "sort",
-          "atFrame": 0
+          "atFrame": 174
         },
         {
           "text": "pricing",
-          "atFrame": 3
+          "atFrame": 181
         },
         {
           "text": "out",
-          "atFrame": 16
+          "atFrame": 194
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 29,
-      "toFrame": 50,
+      "fromFrame": 207,
+      "toFrame": 247,
       "words": [
         {
           "text": "and",
-          "atFrame": 29
+          "atFrame": 207
         },
         {
           "text": "a",
-          "atFrame": 33
+          "atFrame": 211
         },
         {
           "text": "chatbot",
-          "atFrame": 36
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 50,
-      "toFrame": 98,
-      "words": [
+          "atFrame": 214
+        },
         {
           "text": "beat",
-          "atFrame": 50
+          "atFrame": 228
         },
         {
           "text": "them.",
-          "atFrame": 56
-        },
-        {
-          "text": "So",
-          "atFrame": 69
+          "atFrame": 234
         }
       ],
       "swipeIndex": null
@@ -123,82 +192,13 @@
   "captionTheme": "art-directed",
   "captionPlacement": "lower",
   "title": "Your AI auditor: missing money or skeletons?",
-  "titleMoment": {
-    "fromFrame": 98,
-    "toFrame": 240,
-    "release": "captions",
-    "words": [
-      {
-        "text": "Will",
-        "atFrame": 98
-      },
-      {
-        "text": "your",
-        "atFrame": 102
-      },
-      {
-        "text": "AI",
-        "atFrame": 110
-      },
-      {
-        "text": "auditor",
-        "atFrame": 119
-      },
-      {
-        "text": "find",
-        "atFrame": 130
-      },
-      {
-        "text": "missing",
-        "atFrame": 138
-      },
-      {
-        "text": "money",
-        "atFrame": 149
-      },
-      {
-        "text": "or",
-        "atFrame": 160
-      },
-      {
-        "text": "will",
-        "atFrame": 171
-      },
-      {
-        "text": "it",
-        "atFrame": 177
-      },
-      {
-        "text": "find",
-        "atFrame": 182
-      },
-      {
-        "text": "skeletons",
-        "atFrame": 199
-      },
-      {
-        "text": "in",
-        "atFrame": 216
-      },
-      {
-        "text": "your",
-        "atFrame": 218
-      },
-      {
-        "text": "closet?",
-        "atFrame": 222
-      }
-    ],
-    "card": true,
-    "lockup": true
-  },
   "beats": [
     {
       "id": "face",
       "role": "bridge",
       "layout": "F1",
       "fromFrame": 0,
-      "toFrame": 69,
+      "toFrame": 247,
       "uses": [
         "s_face_slam0",
         "s_face_slam1",
@@ -210,92 +210,16 @@
       "plate": {
         "source": "take"
       },
-      "keyFrame": 20
-    },
-    {
-      "id": "question",
-      "role": "pivot",
-      "layout": "STAGE",
-      "fromFrame": 69,
-      "toFrame": 171,
-      "uses": [
-        "sofa"
-      ],
-      "face": "off",
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "none"
-      },
-      "keyFrame": 151
-    },
-    {
-      "id": "skeletons",
-      "role": "pivot",
-      "layout": "STAGE",
-      "fromFrame": 171,
-      "toFrame": 240,
-      "uses": [
-        "closet"
-      ],
-      "face": "off",
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "none"
-      },
-      "keyFrame": 239
+      "keyFrame": 198
     }
   ],
   "objects": [
-    {
-      "obj": "sofa",
-      "device": "scene_plate",
-      "meaning": "the missing money: a fistful of cash and old receipts pulled out from the back of the sofa (Krish, 19 Nov: \"money back down the back of couches\")",
-      "fromFrame": 69,
-      "toFrame": 171,
-      "variants": {},
-      "params": {
-        "shots": [
-          {
-            "src": "/home/user/content-engine/.cache/fri20/assets/plates/b4-sofa-money-916.mp4",
-            "kind": "video",
-            "width": 1080,
-            "height": 1920
-          }
-        ],
-        "camera": "push",
-        "full": true,
-        "grade": "none"
-      }
-    },
-    {
-      "obj": "closet",
-      "device": "scene_plate",
-      "meaning": "the skeletons in your closet: a cupboard bursts open and a skeleton tumbles out with the old files (the clip starts at 2.1 s, once a box printed with a year has turned away, and holds its last frame: no year the piece does not own) (Krish, 19 Nov: \"skeletons coming out of closets\")",
-      "fromFrame": 171,
-      "toFrame": 240,
-      "variants": {},
-      "params": {
-        "shots": [
-          {
-            "src": "/home/user/content-engine/.cache/fri20/assets/plates/b4-closet-skeleton-916-from2s1.mp4",
-            "kind": "video",
-            "width": 1080,
-            "height": 1920
-          }
-        ],
-        "camera": "push",
-        "full": true,
-        "grade": "none"
-      }
-    },
     {
       "obj": "s_face_slam0",
       "device": "slam_word",
       "meaning": "his own word slammed as he says it: archives (everyone's, right now)",
       "fromFrame": 0,
-      "toFrame": 69,
+      "toFrame": 247,
       "variants": {},
       "params": {
         "word": "ARCHIVES",
@@ -314,7 +238,7 @@
       "device": "slam_word",
       "meaning": "his own word slammed as he says it: teams (hospitals pay whole teams)",
       "fromFrame": 0,
-      "toFrame": 69,
+      "toFrame": 247,
       "variants": {},
       "params": {
         "word": "TEAMS",
@@ -333,7 +257,7 @@
       "device": "slam_word",
       "meaning": "his own word slammed as he says it: chatbot (a chatbot beat them)",
       "fromFrame": 0,
-      "toFrame": 69,
+      "toFrame": 247,
       "variants": {},
       "params": {
         "word": "CHATBOT",
@@ -354,49 +278,35 @@
       "obj": "s_face_slam0",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 0
+      "atFrame": 78
     },
     {
       "id": "face-1",
       "obj": "s_face_slam0",
       "verb": "exit",
       "toState": "visible",
-      "atFrame": 0
+      "atFrame": 139
     },
     {
       "id": "face-2",
       "obj": "s_face_slam1",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 0
+      "atFrame": 145
     },
     {
       "id": "face-3",
       "obj": "s_face_slam1",
       "verb": "exit",
       "toState": "visible",
-      "atFrame": 33
+      "atFrame": 211
     },
     {
       "id": "face-4",
       "obj": "s_face_slam2",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 36
-    },
-    {
-      "id": "question-0",
-      "obj": "sofa",
-      "verb": "enter",
-      "toState": "0",
-      "atFrame": 69
-    },
-    {
-      "id": "skeletons-0",
-      "obj": "closet",
-      "verb": "enter",
-      "toState": "0",
-      "atFrame": 171
+      "atFrame": 214
     }
   ],
   "motion": {
