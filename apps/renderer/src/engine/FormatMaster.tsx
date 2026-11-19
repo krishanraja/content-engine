@@ -399,7 +399,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   // A graphics-only STAGE beat with no staging draws its backdrop across the whole frame, under its graphics, so a proof sits
   // on its own page and the frame is never bare ink (Krish, 2026-11-18: "making actual use of the full screen when it isn't
   // my face"; Wed 18's full-frame proof beats filled 11 to 32% of the frame). With no backdrop the tree is unchanged.
-  const fullBackdrop = !stagedNow && !isStaging(props.layout?.mode) && activeBeat?.backdrop && activeBeat.layout === 'STAGE' && activeBeat.plate?.source === 'none' ? (
+  const fullBackdrop = !stagedNow && !isStaging(props.layout?.mode) && activeBeat?.backdrop && ((activeBeat.layout === 'STAGE' && activeBeat.plate?.source === 'none') || (portraitWide && activeBeat.layout === 'WINDOW')) ? (
     <AbsoluteFill key="full-backdrop" data-backdrop-full>
       <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={width} height={height} />
     </AbsoluteFill>) : null

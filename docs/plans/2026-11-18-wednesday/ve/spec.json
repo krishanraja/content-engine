@@ -2253,7 +2253,8 @@
      ],
      "transition_out": "cut",
      "face": "window",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:hl-fin-anthropic"
     },
     {
      "id": "marks",
@@ -2312,7 +2313,8 @@
      ],
      "transition_out": "cut",
      "face": "window",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:hl-workday-anthropic"
     },
     {
      "id": "croc",
@@ -2416,7 +2418,8 @@
      ],
      "transition_out": "cut",
      "face": "window",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:hl-ars"
     },
     {
      "id": "balloon",
@@ -2527,7 +2530,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "window",
+     "backdrop": "asset:salesforce-screen"
     },
     {
      "id": "magic",
@@ -2667,7 +2671,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "window",
+     "backdrop": "asset:hl-fullstackhr"
     },
     {
      "id": "proof",
@@ -2710,7 +2715,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "window",
+     "backdrop": "asset:x-klarnaseb"
     },
     {
      "id": "swap",
@@ -2761,7 +2767,8 @@
      ],
      "transition_out": "cut",
      "face": "window",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:hl-cxtoday"
     },
     {
      "id": "curative",
@@ -2826,7 +2833,8 @@
      ],
      "transition_out": "cut",
      "face": "window",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:curative-600k"
     },
     {
      "id": "sparks",
@@ -2961,7 +2969,8 @@
      ],
      "transition_out": "cut",
      "face": "window",
-     "override_reason": "two numbers count up once and hold so a viewer can read both; any more events would only make them jump"
+     "override_reason": "two numbers count up once and hold so a viewer can read both; any more events would only make them jump",
+     "backdrop": "asset:workday-screen"
     },
     {
      "id": "upkeep",
@@ -3106,7 +3115,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "window",
+     "backdrop": "asset:hl-workday-anthropic"
     },
     {
      "id": "fin",
@@ -3150,7 +3160,8 @@
      ],
      "transition_out": "cut",
      "face": "window",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:hl-fin-anthropic"
     },
     {
      "id": "detail",
@@ -3179,7 +3190,8 @@
      ],
      "transition_out": "cut",
      "face": "window",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
+     "backdrop": "asset:fin-claude"
     },
     {
      "id": "focus",
