@@ -277,7 +277,7 @@ def close_problems(beats, close=None):
                      'in his own first person (house rule SCRIPT_CLOSE)')
     tail, orders = close_orders(beats, close)
     if not tail:
-        found.append('it has no close before the last line: after the call, one short beat saying the one thing Krish would do, '
+        found.append('it has no close before the last line: after the answer, one short beat saying the one thing Krish would do, '
                      'in his own first person (house rule SCRIPT_CLOSE, Krish, 2026-10-31)')
     else:
         if len(tail) > rules['close_most_sentences'] or len(orders) > rules['close_most_orders']:

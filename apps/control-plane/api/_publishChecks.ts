@@ -335,7 +335,7 @@ export function articleFormat(body: string): string[] {
 
 /** Every mechanical check a piece must pass before it can be approved or
  *  published. `factGate` is the fact gate's own verdict for this exact text. */
-export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?: string): Check[] {
+export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?: string, opts: { predictionWanted?: boolean } = {}): Check[] {
   const text = String(body || '')
   const checks: Check[] = []
   checks.push({ id: 'FACTS', name: 'Every fact checked twice', blocking: true, ok: factGate.ok, detail: factGate.ok ? 'This exact version passed the fact check.' : (factGate.reason || 'The facts have not passed yet.') })
@@ -423,7 +423,35 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
       }
     }
   }
+  // Ruling (Krish, 2026-11-19): "remove all traces that require predictions in every article, I am starting to really
+  // hate the prediction format, it's baseless, lame and has no value, and the predictions are dull and vanilla. If I
+  // want to predict something in a particular piece I will". No piece needs a prediction. The three checks hold only a
+  // piece that carries one: one he asked for on that piece (meta.prediction, predictionWanted) or a body that has a
+  // prediction section or a stated confidence, which is then held to the same standard as before.
+  if (!opts.predictionWanted && callSectionOf(text) === null && labelledConfidences(text).length === 0) {
+    for (const check of checks) {
+      if (PREDICTION_CHECKS.includes(check.id) && !check.ok) {
+        check.ok = true
+        check.detail = NO_PREDICTION_NEEDED
+      }
+    }
+  }
   return checks
+}
+
+/** The three checks that hold a prediction, when a piece carries one. */
+export const PREDICTION_CHECKS: readonly string[] = ['CALL', 'CALL_HORIZON', 'CLEAR_STANCE']
+
+export const NO_PREDICTION_NEEDED = 'No prediction, and none is needed: a piece carries one only when Krish asks for it on that piece (Ruling, Krish, 2026-11-19).'
+
+/** Whether Krish asked for a prediction on this piece: meta.prediction, written
+ *  only from his own words on that piece ({ wanted: true, said, on }). Nothing
+ *  else turns it on, and no default does (Ruling, Krish, 2026-11-19). */
+export function predictionWanted(meta: unknown): boolean {
+  if (!meta || typeof meta !== 'object') return false
+  const p = (meta as Record<string, unknown>).prediction
+  return !!p && typeof p === 'object' && (p as Record<string, unknown>).wanted === true
+    && typeof (p as Record<string, unknown>).said === 'string' && String((p as Record<string, unknown>).said).trim().length > 0
 }
 
 /** Whether the blocking checks all pass, and the reason when they do not. */

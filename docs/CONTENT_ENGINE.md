@@ -349,8 +349,9 @@ on trial, and the stages that enforce it. Writers read them through
 `VOICE_GUARDRAILS` (the joke pass included), the drafter and rewriter add the
 rules scoped to their subchannel, both judge gates put the rules for their
 gate in every judge's context, and the final pass builds its absolutes from
-them. House rules win over a mandate where they disagree, so every piece
-ends with a dated prediction. They also require every sentence to have one
+them. House rules win over a mandate where they disagree. No piece needs a
+prediction: one is made only when Krish asks for it on that piece
+(`meta.prediction`; Ruling, Krish, 2026-11-19). They also require every sentence to have one
 clear reading, and ask unfamiliar mechanisms to use a factual historical
 parallel, familiar analogy or clearly signposted comic exaggeration when that
 makes the idea easier to grasp. Every visual must make one critical point
@@ -370,8 +371,10 @@ stage.
 **Before approval** (`api/_publishChecks.ts`). `approved` and `published`
 also need the checks a machine can make: the fact gate, no "Not X, Y", no em
 dashes, no exclamation marks outside quotes, British spelling outside quotes
-and names, a reading age of 13 at most (12 to 13 warns), and a prediction with
-a date and a percentage. The prediction is read by the same reader the
+and names, a reading age of 13 at most (12 to 13 warns), and, only for a piece
+that carries a prediction (one Krish asked for, `meta.prediction`, or a body with
+a prediction section), a prediction with a date and a percentage; a piece with
+none needs none (Ruling, Krish, 2026-11-19). The prediction is read by the same reader the
 Studio uses to put the call on a Short (`packages/contracts/src/call.ts`), so
 a piece passes only with a call a Short can show word for word: one dated
 paragraph, a real date, and one labelled whole percentage.

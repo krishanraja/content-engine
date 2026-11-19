@@ -233,7 +233,7 @@ export const VeCharacterSchema = z.object({
 
 // The day each series publishes on (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap; the
 // house channels in config/studio.json). A piece published on any other day is an off-day piece: it wears no series
-// promise and carries no dated call card, so the series call rule below does not reach it (velib/guards.off_day).
+// promise and carries no dated call card (velib/guards.off_day). Since 19 November no day needs one (Ruling, Krish, 2026-11-19).
 const VE_SERIES_WEEKDAY: Record<string, number> = { 'follow.the.money': 1, 'under.the.hood': 3, 'mind.the.gap': 5 }
 
 export function veOffDay(spec: { publish_day?: string | undefined, brand: { series: string } }): boolean {
@@ -325,7 +325,8 @@ export const ProductionSpecV2Schema = z.object({
     card: z.boolean().optional(),
   }).strict().optional(),
 }).strict().superRefine((spec, c) => {
-  // No series needs a dated call any more (Ruling (Krish, 2026-11-19): 'I hate this prediction format. I think we just scrap it.'): a piece may carry one, and none must.
+  // No cut needs a dated call (Ruling, Krish, 2026-11-19: "If I want to predict something in a particular piece I will"):
+  // spec.call is set only when Krish asked for a prediction on the piece, and then a whole cut ends on its call beat (lint story.call).
   if (spec.brand.intro_sting !== undefined && spec.brand.intro_sting !== VE_NO_STING && spec.brand.intro_sting !== VE_NO_STING_BEFORE) {
     c.addIssue({ code: 'custom', path: ['brand', 'intro_sting'], message: `nothing goes before the hook (Ruling, Krish, 2026-11-12: "${VE_NOTHING_BEFORE_HOOK}"): brand.intro_sting is "${VE_NO_STING}", or unset` })
   }

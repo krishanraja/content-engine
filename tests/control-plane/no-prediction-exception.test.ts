@@ -32,9 +32,13 @@ describe('Krish-approved no-prediction pieces (26 October 2026)', () => {
       assert.match(c.detail, /Exempt by Krish on 19 November 2026/)
     }
   })
-  test('does not carry to another piece or an unnamed one', () => {
+  test('another piece needs no prediction either since 19 November, and one Krish asked a prediction of still needs it', () => {
+    // Ruling (Krish, 2026-11-19): no piece needs a prediction; the exemption no longer carries the decision.
     for (const id of [undefined, 'another-piece', 'd7a20885-7001-4661-b444-9d7ca1043416']) {
-      assert.equal(publishChecks(body, facts, undefined, id).filter(c => ids.has(c.id) && !c.ok).length, 3)
+      const checks = publishChecks(body, facts, undefined, id).filter(c => ids.has(c.id))
+      assert.equal(checks.filter(c => !c.ok).length, 0)
+      for (const c of checks) assert.doesNotMatch(c.detail, /Exempt by Krish/)
+      assert.equal(publishChecks(body, facts, undefined, id, { predictionWanted: true }).filter(c => ids.has(c.id) && !c.ok).length, 3)
     }
   })
   test('a body that makes a prediction is checked as any other', () => {
