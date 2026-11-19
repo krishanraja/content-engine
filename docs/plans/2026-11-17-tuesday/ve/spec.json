@@ -1445,10 +1445,11 @@
       "to_w": 107
      },
      "viewer_task": "verify_evidence",
-     "layout": "STAGE",
+     "layout": "P1",
      "point": "Gallup's two numbers side by side: more Americans oppose a data centre nearby than a nuclear plant",
      "plate": {
-      "source": "none"
+      "source": "take",
+      "crop": "50% 38%"
      },
      "uses": [
       "gallup_dc",
@@ -1468,7 +1469,7 @@
        "to_state": "visible"
       }
      ],
-     "override_reason": "each figure lands on the word that names it",
+     "override_reason": "each figure lands on the word that names it, and both hold together for the comparison",
      "backdrop": "asset:bg-data-hall"
     },
     {
@@ -2003,18 +2004,9 @@
      "plate": {
       "source": "none"
      },
-     "uses": [
-      "block_l"
-     ],
-     "events": [
-      {
-       "at_w": 883,
-       "obj": "block_l",
-       "verb": "move",
-       "to_state": "target:1"
-      }
-     ],
-     "override_reason": "one move: the tag lands on the AI plan as he says renewal",
+     "uses": [],
+     "events": [],
+     "override_reason": "the dated call is the beat: his line is the call card's own words, and nothing else draws over it",
      "backdrop": "asset:bg-pylons"
     },
     {
