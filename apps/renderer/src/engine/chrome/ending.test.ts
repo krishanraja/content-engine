@@ -135,3 +135,11 @@ describe('the close uses what compile passes', () => {
     expect(markup).not.toContain(base.series.promise)
   })
 })
+
+describe('the close card clears the small-text floor (Krish, 2026-11-19)', () => {
+  it('SUBSCRIBE FREE is 26 px on both shapes: 24 px read 17 px tall, under the 18 px floor', async () => {
+    const { SHAPE } = await import('./EndingBand')
+    // ve qc measured 17 px of glyph height at 24 px (0.71 of the size); the floor is 18 px.
+    for (const shape of Object.values(SHAPE)) expect(Math.floor(shape.kick * 17 / 24)).toBeGreaterThanOrEqual(18)
+  })
+})
