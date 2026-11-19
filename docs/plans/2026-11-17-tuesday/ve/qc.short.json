@@ -1,6 +1,6 @@
 {
   "file": ".scratch/b019/render/short.mp4",
-  "sha256": "ea9f8c6d2b45c5d8d3d91e4e3e69218852164ecd5903236cb6ed370d74e801a2",
+  "sha256": "6aff788db8db3669bd8c901b896d9d05c8121817df351d8f8409ad2b78b65c92",
   "duration_s": 85.3,
   "format": "face-with-proof",
   "checks": {
@@ -20,25 +20,25 @@
       "pass": true
     },
     "motion.change_density": {
-      "value": 0.882,
+      "value": 0.929,
       "target": ">= 0.5",
       "pass": true
     },
     "motion.longest_still": {
-      "value": 5,
+      "value": 1,
       "target": "<= 4 s",
-      "pass": false,
+      "pass": true,
       "runs": [
-        [
-          39,
-          5
-        ],
         [
           7,
           1
         ],
         [
           18,
+          1
+        ],
+        [
+          42,
           1
         ],
         [
@@ -2548,139 +2548,139 @@
         {
           "beat": "hook",
           "frame": 73,
-          "score": 0.12012723414683162,
+          "score": 0.18702759348420062,
           "pass": true
         },
         {
           "beat": "dc",
           "frame": 203,
-          "score": 0.41313070778710653,
+          "score": 0.46933821483738675,
           "pass": true
         },
         {
           "beat": "sacked",
           "frame": 280,
-          "score": 0.0605416095422336,
+          "score": 0.05495440363015097,
           "pass": true
         },
         {
           "beat": "face",
           "frame": 346,
-          "score": 0.44247109801786044,
+          "score": 0.2565753252596286,
           "pass": true
         },
         {
           "beat": "title",
           "frame": 448,
-          "score": 0.26691556176825615,
+          "score": 0.2689838456992548,
           "pass": true
         },
         {
           "beat": "meta",
           "frame": 562,
-          "score": 0.425672505807582,
+          "score": 0.4610543529735131,
           "pass": true
         },
         {
           "beat": "city",
           "frame": 664,
-          "score": 0.3211085965456661,
+          "score": 0.3068919630308464,
           "pass": true
         },
         {
           "beat": "piqua",
           "frame": 733,
-          "score": 0.29360503349628997,
+          "score": 0.2933856128700415,
           "pass": true
         },
         {
           "beat": "bill",
           "frame": 806,
-          "score": 0.26839008414544163,
+          "score": 0.29504839366229024,
           "pass": true
         },
         {
           "beat": "vote",
           "frame": 880,
-          "score": 0.3639429984414806,
+          "score": 0.3416016796695856,
           "pass": true
         },
         {
           "beat": "proof",
           "frame": 950,
-          "score": 0.5833603646773214,
+          "score": 0.5864505947864607,
           "pass": true
         },
         {
           "beat": "sack",
           "frame": 1076,
-          "score": 0.4444335824181947,
+          "score": 0.2568805245952325,
           "pass": true
         },
         {
           "beat": "built",
           "frame": 1241,
-          "score": 0.5061621167159374,
+          "score": 0.42703758769142797,
           "pass": true
         },
         {
           "beat": "meta_says",
           "frame": 1357,
-          "score": 0.2552130922621813,
+          "score": 0.08311188817723425,
           "pass": true
         },
         {
           "beat": "party_line",
           "frame": 1446,
-          "score": 0.31824159769551014,
+          "score": 0.37943871729712164,
           "pass": true
         },
         {
           "beat": "power",
           "frame": 1587,
-          "score": 0.011548552188934946,
+          "score": 0.0025870016387857654,
           "pass": true
         },
         {
           "beat": "call",
           "frame": 1751,
-          "score": 0.39760780518445477,
+          "score": 0.4189710268782919,
           "pass": true
         },
         {
           "beat": "deals",
           "frame": 1902,
-          "score": 0.3353956158485363,
+          "score": 0.31192747318775876,
           "pass": true
         },
         {
           "beat": "small_print",
           "frame": 2027,
-          "score": 0.266204650062536,
+          "score": 0.32258404588822076,
           "pass": true
         },
         {
           "beat": "payoff",
           "frame": 2120,
-          "score": 0.21933962327233827,
+          "score": 0.29154200336977903,
           "pass": true
         },
         {
           "beat": "three",
           "frame": 2210,
-          "score": 0.31294642978421716,
+          "score": 0.3132187345202019,
           "pass": true
         },
         {
           "beat": "carry_on",
           "frame": 2342,
-          "score": 0.31462738586493727,
+          "score": 0.33424651431171915,
           "pass": true
         },
         {
           "beat": "close",
           "frame": 2489,
-          "score": 0.29479978072255897,
+          "score": 0.2912669774091155,
           "pass": true
         }
       ],
@@ -2695,8 +2695,8 @@
           "atFrame": 0,
           "peak_frame": 1,
           "lag_frames": 1,
-          "peak_difference": 1.8021354675292969,
-          "event_difference": 1.8021354675292969,
+          "peak_difference": 1.841707468032837,
+          "event_difference": 1.841707468032837,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -2706,9 +2706,9 @@
           "atFrame": 55,
           "peak_frame": 49,
           "lag_frames": -6,
-          "peak_difference": 0.664527952671051,
-          "event_difference": 0.6309009194374084,
-          "threshold": 2.020387351512909,
+          "peak_difference": 0.6849068999290466,
+          "event_difference": 0.6410738229751587,
+          "threshold": 2.122913897037506,
           "gradual": false,
           "pass": false
         },
@@ -2717,9 +2717,9 @@
           "atFrame": 147,
           "peak_frame": 147,
           "lag_frames": 0,
-          "peak_difference": 87.84821319580078,
-          "event_difference": 87.84821319580078,
-          "threshold": 3.7144893407821655,
+          "peak_difference": 87.79488372802734,
+          "event_difference": 87.79488372802734,
+          "threshold": 3.8039900064468384,
           "gradual": false,
           "pass": true
         },
@@ -2728,9 +2728,9 @@
           "atFrame": 194,
           "peak_frame": 198,
           "lag_frames": 4,
-          "peak_difference": 2.4400675296783447,
-          "event_difference": 1.7799185514450073,
-          "threshold": 0.4809548556804657,
+          "peak_difference": 2.4467413425445557,
+          "event_difference": 1.7917370796203613,
+          "threshold": 0.5377011001110077,
           "gradual": false,
           "pass": true
         },
@@ -2739,9 +2739,9 @@
           "atFrame": 302,
           "peak_frame": 302,
           "lag_frames": 0,
-          "peak_difference": 42.35670471191406,
-          "event_difference": 42.35670471191406,
-          "threshold": 0.33612093329429626,
+          "peak_difference": 42.399620056152344,
+          "event_difference": 42.399620056152344,
+          "threshold": 4.184286832809448,
           "gradual": false,
           "pass": true
         },
@@ -2750,9 +2750,9 @@
           "atFrame": 355,
           "peak_frame": 356,
           "lag_frames": 1,
-          "peak_difference": 6.853546142578125,
-          "event_difference": 6.853546142578125,
-          "threshold": 1.721773087978363,
+          "peak_difference": 6.837980270385742,
+          "event_difference": 6.837980270385742,
+          "threshold": 1.885971486568451,
           "gradual": false,
           "pass": true
         },
@@ -2761,9 +2761,9 @@
           "atFrame": 506,
           "peak_frame": 506,
           "lag_frames": 0,
-          "peak_difference": 86.42041778564453,
-          "event_difference": 86.42041778564453,
-          "threshold": 13.765627384185791,
+          "peak_difference": 86.40756225585938,
+          "event_difference": 86.40756225585938,
+          "threshold": 14.342100620269775,
           "gradual": false,
           "pass": true
         },
@@ -2772,9 +2772,9 @@
           "atFrame": 600,
           "peak_frame": 599,
           "lag_frames": -1,
-          "peak_difference": 0.845299482345581,
-          "event_difference": 0.845299482345581,
-          "threshold": 0.7492650300264359,
+          "peak_difference": 0.8655464053153992,
+          "event_difference": 0.8655464053153992,
+          "threshold": 0.8262167572975159,
           "gradual": false,
           "pass": true
         },
@@ -2783,9 +2783,9 @@
           "atFrame": 647,
           "peak_frame": 648,
           "lag_frames": 1,
-          "peak_difference": 2.590951919555664,
-          "event_difference": 2.590951919555664,
-          "threshold": 1.1026547849178314,
+          "peak_difference": 2.5882585048675537,
+          "event_difference": 2.5882585048675537,
+          "threshold": 1.25127312541008,
           "gradual": false,
           "pass": true
         },
@@ -2794,9 +2794,9 @@
           "atFrame": 800,
           "peak_frame": 801,
           "lag_frames": 1,
-          "peak_difference": 5.068933486938477,
-          "event_difference": 5.068933486938477,
-          "threshold": 1.0460666120052338,
+          "peak_difference": 5.088201999664307,
+          "event_difference": 5.088201999664307,
+          "threshold": 1.1090624928474426,
           "gradual": false,
           "pass": true
         },
@@ -2805,9 +2805,9 @@
           "atFrame": 830,
           "peak_frame": 831,
           "lag_frames": 1,
-          "peak_difference": 5.052142143249512,
-          "event_difference": 5.052142143249512,
-          "threshold": 0.27879754453897476,
+          "peak_difference": 5.0887885093688965,
+          "event_difference": 5.0887885093688965,
+          "threshold": 0.34607335925102234,
           "gradual": false,
           "pass": true
         },
@@ -2816,9 +2816,9 @@
           "atFrame": 881,
           "peak_frame": 877,
           "lag_frames": -4,
-          "peak_difference": 1.4407185316085815,
-          "event_difference": 1.337668776512146,
-          "threshold": 3.264181137084961,
+          "peak_difference": 1.4886525869369507,
+          "event_difference": 1.4257744550704956,
+          "threshold": 3.4518953561782837,
           "gradual": false,
           "pass": false
         },
@@ -2827,9 +2827,9 @@
           "atFrame": 912,
           "peak_frame": 912,
           "lag_frames": 0,
-          "peak_difference": 1.6114730834960938,
-          "event_difference": 1.6114730834960938,
-          "threshold": 2.602836012840271,
+          "peak_difference": 1.7079659700393677,
+          "event_difference": 1.7079659700393677,
+          "threshold": 2.8223941326141357,
           "gradual": false,
           "pass": false
         },
@@ -2838,9 +2838,9 @@
           "atFrame": 953,
           "peak_frame": 954,
           "lag_frames": 1,
-          "peak_difference": 1.9867912530899048,
-          "event_difference": 1.9867912530899048,
-          "threshold": 0.8889130353927612,
+          "peak_difference": 2.0303871631622314,
+          "event_difference": 2.0303871631622314,
+          "threshold": 1.0340556800365448,
           "gradual": false,
           "pass": true
         },
@@ -2849,9 +2849,9 @@
           "atFrame": 978,
           "peak_frame": 979,
           "lag_frames": 1,
-          "peak_difference": 1.4472309350967407,
-          "event_difference": 1.4472309350967407,
-          "threshold": 0.23934658616781235,
+          "peak_difference": 1.5733166933059692,
+          "event_difference": 1.5733166933059692,
+          "threshold": 0.32785559445619583,
           "gradual": false,
           "pass": true
         },
@@ -2860,9 +2860,9 @@
           "atFrame": 1010,
           "peak_frame": 1005,
           "lag_frames": -5,
-          "peak_difference": 3.1570487022399902,
-          "event_difference": 3.1523494720458984,
-          "threshold": 9.357256650924683,
+          "peak_difference": 3.1609065532684326,
+          "event_difference": 3.155817985534668,
+          "threshold": 9.387256622314453,
           "gradual": false,
           "pass": false
         },
@@ -2871,31 +2871,31 @@
           "atFrame": 1059,
           "peak_frame": 1060,
           "lag_frames": 1,
-          "peak_difference": 0.2983449101448059,
-          "event_difference": 0.2983449101448059,
-          "threshold": 0.05883101932704449,
+          "peak_difference": 0.30970293283462524,
+          "event_difference": 0.30970293283462524,
+          "threshold": 0.3113078624010086,
           "gradual": false,
-          "pass": true
+          "pass": false
         },
         {
           "event": "meta_says-0",
           "atFrame": 1328,
           "peak_frame": 1334,
           "lag_frames": 6,
-          "peak_difference": 4.537782192230225,
-          "event_difference": 2.081002712249756,
-          "threshold": 1.6154817938804626,
+          "peak_difference": 4.565528392791748,
+          "event_difference": 2.1521451473236084,
+          "threshold": 3.14280366897583,
           "gradual": false,
-          "pass": true
+          "pass": false
         },
         {
           "event": "meta_says-1",
           "atFrame": 1352,
           "peak_frame": 1352,
           "lag_frames": 0,
-          "peak_difference": 11.251627922058105,
-          "event_difference": 11.251627922058105,
-          "threshold": 1.788640022277832,
+          "peak_difference": 11.330582618713379,
+          "event_difference": 11.330582618713379,
+          "threshold": 2.1230598092079163,
           "gradual": false,
           "pass": true
         },
@@ -2904,9 +2904,9 @@
           "atFrame": 1419,
           "peak_frame": 1420,
           "lag_frames": 1,
-          "peak_difference": 8.367304801940918,
-          "event_difference": 8.367304801940918,
-          "threshold": 2.5315897464752197,
+          "peak_difference": 8.390058517456055,
+          "event_difference": 8.390058517456055,
+          "threshold": 2.643444299697876,
           "gradual": false,
           "pass": true
         },
@@ -2915,9 +2915,9 @@
           "atFrame": 1550,
           "peak_frame": 1556,
           "lag_frames": 6,
-          "peak_difference": 1.4436410665512085,
-          "event_difference": 0.8432368636131287,
-          "threshold": 1.4928081929683685,
+          "peak_difference": 1.4654055833816528,
+          "event_difference": 0.8340036869049072,
+          "threshold": 1.6584447026252747,
           "gradual": false,
           "pass": false
         },
@@ -2926,9 +2926,9 @@
           "atFrame": 1568,
           "peak_frame": 1572,
           "lag_frames": 4,
-          "peak_difference": 4.7613372802734375,
-          "event_difference": 2.4545481204986572,
-          "threshold": 3.6507046222686768,
+          "peak_difference": 4.76451301574707,
+          "event_difference": 2.517228126525879,
+          "threshold": 3.863193154335022,
           "gradual": false,
           "pass": false
         },
@@ -2937,9 +2937,9 @@
           "atFrame": 1577,
           "peak_frame": 1578,
           "lag_frames": 1,
-          "peak_difference": 7.516287326812744,
-          "event_difference": 7.516287326812744,
-          "threshold": 4.571935772895813,
+          "peak_difference": 7.507997989654541,
+          "event_difference": 7.507997989654541,
+          "threshold": 4.5988065004348755,
           "gradual": false,
           "pass": true
         },
@@ -2948,9 +2948,9 @@
           "atFrame": 1649,
           "peak_frame": 1650,
           "lag_frames": 1,
-          "peak_difference": 2.126321315765381,
-          "event_difference": 2.126321315765381,
-          "threshold": 0.2978573441505432,
+          "peak_difference": 2.1221089363098145,
+          "event_difference": 2.1221089363098145,
+          "threshold": 0.5864886939525604,
           "gradual": false,
           "pass": true
         },
@@ -2959,9 +2959,9 @@
           "atFrame": 1911,
           "peak_frame": 1913,
           "lag_frames": 2,
-          "peak_difference": 43.77885437011719,
-          "event_difference": 43.77885437011719,
-          "threshold": 0.20497962087392807,
+          "peak_difference": 43.727699279785156,
+          "event_difference": 43.727699279785156,
+          "threshold": 0.28563858568668365,
           "gradual": false,
           "pass": true
         },
@@ -2970,9 +2970,9 @@
           "atFrame": 1970,
           "peak_frame": 1970,
           "lag_frames": 0,
-          "peak_difference": 78.6053237915039,
-          "event_difference": 78.6053237915039,
-          "threshold": 2.9981467723846436,
+          "peak_difference": 78.65886688232422,
+          "event_difference": 78.65886688232422,
+          "threshold": 3.053033709526062,
           "gradual": false,
           "pass": true
         },
@@ -2981,9 +2981,9 @@
           "atFrame": 2086,
           "peak_frame": 2090,
           "lag_frames": 4,
-          "peak_difference": 2.870114326477051,
-          "event_difference": 1.6634726524353027,
-          "threshold": 0.8017505407333374,
+          "peak_difference": 3.07888126373291,
+          "event_difference": 1.9080517292022705,
+          "threshold": 0.9094921946525574,
           "gradual": false,
           "pass": true
         },
@@ -2992,9 +2992,9 @@
           "atFrame": 2089,
           "peak_frame": 2095,
           "lag_frames": 6,
-          "peak_difference": 3.3652560710906982,
-          "event_difference": 2.870114326477051,
-          "threshold": 0.2075260430574417,
+          "peak_difference": 3.5058960914611816,
+          "event_difference": 3.07888126373291,
+          "threshold": 0.2683362364768982,
           "gradual": false,
           "pass": true
         },
@@ -3003,20 +3003,20 @@
           "atFrame": 2110,
           "peak_frame": 2111,
           "lag_frames": 1,
-          "peak_difference": 2.2852745056152344,
-          "event_difference": 2.2852745056152344,
-          "threshold": 2.686516284942627,
+          "peak_difference": 2.30940580368042,
+          "event_difference": 2.30940580368042,
+          "threshold": 2.76673024892807,
           "gradual": false,
           "pass": false
         },
         {
           "event": "payoff-3",
           "atFrame": 2119,
-          "peak_frame": 2113,
-          "lag_frames": -6,
-          "peak_difference": 1.9228708744049072,
-          "event_difference": 1.176760196685791,
-          "threshold": 3.530280590057373,
+          "peak_frame": 2114,
+          "lag_frames": -5,
+          "peak_difference": 1.9783107042312622,
+          "event_difference": 1.2662066221237183,
+          "threshold": 3.798619866371155,
           "gradual": false,
           "pass": false
         },
@@ -3025,9 +3025,9 @@
           "atFrame": 2131,
           "peak_frame": 2137,
           "lag_frames": 6,
-          "peak_difference": 1.5311391353607178,
-          "event_difference": 0.5301538109779358,
-          "threshold": 2.556996524333954,
+          "peak_difference": 1.5354537963867188,
+          "event_difference": 0.5372873544692993,
+          "threshold": 2.6260995268821716,
           "gradual": false,
           "pass": false
         },
@@ -3036,9 +3036,9 @@
           "atFrame": 2136,
           "peak_frame": 2138,
           "lag_frames": 2,
-          "peak_difference": 2.104279041290283,
-          "event_difference": 2.104279041290283,
-          "threshold": 2.0732263326644897,
+          "peak_difference": 2.1138479709625244,
+          "event_difference": 2.1138479709625244,
+          "threshold": 2.086727499961853,
           "gradual": false,
           "pass": true
         },
@@ -3047,9 +3047,9 @@
           "atFrame": 2166,
           "peak_frame": 2167,
           "lag_frames": 1,
-          "peak_difference": 44.93460464477539,
-          "event_difference": 44.93460464477539,
-          "threshold": 0.20488451421260834,
+          "peak_difference": 44.9255256652832,
+          "event_difference": 44.9255256652832,
+          "threshold": 0.2702445611357689,
           "gradual": false,
           "pass": true
         },
@@ -3058,9 +3058,9 @@
           "atFrame": 2390,
           "peak_frame": 2391,
           "lag_frames": 1,
-          "peak_difference": 24.31218719482422,
-          "event_difference": 24.31218719482422,
-          "threshold": 0.1795312464237213,
+          "peak_difference": 24.30369758605957,
+          "event_difference": 24.30369758605957,
+          "threshold": 0.2092798948287964,
           "gradual": false,
           "pass": true
         }
@@ -3155,22 +3155,3752 @@
       "calibration": "placeholder: measured on one real render, 5 Nov 2026 (velib/qc_opening.py)"
     },
     "words.lost": {
-      "value": null,
-      "target": "see config/gates.json",
-      "pass": null,
-      "status": "not_run"
+      "value": {
+        "machine": "scripts/quick-edit/words_gate.py",
+        "version": "words-gate/4",
+        "status": "pass",
+        "lost": [],
+        "unapproved_removals": [],
+        "function_word_differences": [],
+        "adlib_losses": [],
+        "heard_differently": [],
+        "cleared_by_krish": [],
+        "added_in_final": [],
+        "approved_removals": [],
+        "unmeasured": [],
+        "calibration": {
+          "status": "uncalibrated",
+          "note": "OPEN until calibrated on real cuts (plan W3 3a): Monday 26 Oct's accepted long and short must pass; Wednesday 21 Oct's published long cut and Friday's 90-second cut from the 17 Oct words file must fail. A clipped tail the transcriber still hears whole is caught by joins-in-gaps (scripts/cutgates/gaps.py). The harness is scripts/cutgates/calibrate.py on config/gate-calibration.json."
+        },
+        "counts": {
+          "script_words": 1311,
+          "take_words": 329,
+          "final_words": 329,
+          "removed_by_edl": 0,
+          "compared": 329,
+          "take_tokens_not_in_script": 0,
+          "script_content_words_not_said_in_take": 326,
+          "lost": 0,
+          "unapproved_removals": 0,
+          "cleared_by_krish": 0,
+          "unmeasured": 0,
+          "near_homophones": 0,
+          "function_word_differences": 0,
+          "adlib_losses": 0,
+          "heard_by_one_aligner": 0
+        },
+        "aligners": [
+          "mms",
+          "w2v"
+        ],
+        "agreement": "2 aligners",
+        "per_aligner": {
+          "mms": {
+            "status": "pass",
+            "lost": []
+          },
+          "w2v": {
+            "status": "pass",
+            "lost": []
+          }
+        },
+        "heard_by_one_aligner": [],
+        "not_compared": []
+      },
+      "target": "no content word of the signed script lost on every aligner's pass",
+      "pass": true,
+      "status": "measured",
+      "agreement": "2 aligners",
+      "summary": "no content word lost"
     },
     "joins.in_gaps": {
-      "value": null,
-      "target": "see config/gates.json",
-      "pass": null,
-      "status": "not_run"
+      "value": {
+        "machine": "scripts/cutgates/gaps.py",
+        "version": "joins-in-gaps/1",
+        "rule": {
+          "min_gap_ms": 80.0,
+          "clearance_ms": 30.0
+        },
+        "aligners": [
+          "mms",
+          "w2v"
+        ],
+        "agreement": "2 aligners",
+        "joins": [
+          {
+            "at_s": 4.78,
+            "at": "0:04.780",
+            "before": {
+              "word": "Meta.",
+              "s": 4.442,
+              "e": 4.682,
+              "heard_by": "w2v"
+            },
+            "after": {
+              "word": "Data",
+              "s": 4.882,
+              "e": 5.062,
+              "heard_by": "mms"
+            },
+            "gap_ms": 200.0,
+            "clearance_before_ms": 98.2,
+            "clearance_after_ms": 101.8,
+            "status": "pass"
+          },
+          {
+            "at_s": 8.57,
+            "at": "0:08.570",
+            "before": {
+              "word": "nowadays,",
+              "s": 8.123,
+              "e": 8.524,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "so",
+              "s": 8.664,
+              "e": 8.724,
+              "heard_by": "mms"
+            },
+            "gap_ms": 140.0,
+            "clearance_before_ms": 46.2,
+            "clearance_after_ms": 93.8,
+            "status": "pass"
+          },
+          {
+            "at_s": 10.31,
+            "at": "0:10.310",
+            "before": {
+              "word": "So",
+              "s": 10.044,
+              "e": 10.164,
+              "heard_by": "w2v"
+            },
+            "after": {
+              "word": "what",
+              "s": 10.404,
+              "e": 10.524,
+              "heard_by": "mms"
+            },
+            "gap_ms": 240.0,
+            "clearance_before_ms": 145.9,
+            "clearance_after_ms": 94.1,
+            "status": "pass"
+          },
+          {
+            "at_s": 16.05,
+            "at": "0:16.050",
+            "before": {
+              "word": "no?",
+              "s": 15.847,
+              "e": 15.927,
+              "heard_by": "w2v"
+            },
+            "after": {
+              "word": "Let's",
+              "s": 16.147,
+              "e": 16.307,
+              "heard_by": "w2v"
+            },
+            "gap_ms": 220.0,
+            "clearance_before_ms": 123.4,
+            "clearance_after_ms": 96.6,
+            "status": "pass"
+          },
+          {
+            "at_s": 16.762,
+            "at": "0:16.762",
+            "before": {
+              "word": "out.",
+              "s": 16.547,
+              "e": 16.687,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "Meta",
+              "s": 16.867,
+              "e": 17.087,
+              "heard_by": "mms"
+            },
+            "gap_ms": 180.0,
+            "clearance_before_ms": 75.0,
+            "clearance_after_ms": 105.0,
+            "status": "pass"
+          },
+          {
+            "at_s": 19.408,
+            "at": "0:19.408",
+            "before": {
+              "word": "AI",
+              "s": 19.068,
+              "e": 19.308,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "and",
+              "s": 19.528,
+              "e": 19.608,
+              "heard_by": "mms"
+            },
+            "gap_ms": 220.0,
+            "clearance_before_ms": 100.3,
+            "clearance_after_ms": 119.7,
+            "status": "pass"
+          },
+          {
+            "at_s": 20.532,
+            "at": "0:20.532",
+            "before": {
+              "word": "yes.",
+              "s": 20.188,
+              "e": 20.469,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "A",
+              "s": 20.629,
+              "e": 20.649,
+              "heard_by": "mms"
+            },
+            "gap_ms": 160.0,
+            "clearance_before_ms": 63.2,
+            "clearance_after_ms": 96.8,
+            "status": "pass"
+          },
+          {
+            "at_s": 26.27,
+            "at": "0:26.270",
+            "before": {
+              "word": "bill",
+              "s": 26.055,
+              "e": 26.195,
+              "heard_by": "w2v"
+            },
+            "after": {
+              "word": "to",
+              "s": 26.355,
+              "e": 26.435,
+              "heard_by": "mms"
+            },
+            "gap_ms": 160.0,
+            "clearance_before_ms": 75.2,
+            "clearance_after_ms": 84.8,
+            "status": "pass"
+          },
+          {
+            "at_s": 28.486,
+            "at": "0:28.486",
+            "before": {
+              "word": "right?",
+              "s": 28.218,
+              "e": 28.418,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "So",
+              "s": 28.598,
+              "e": 28.638,
+              "heard_by": "mms"
+            },
+            "gap_ms": 180.0,
+            "clearance_before_ms": 68.0,
+            "clearance_after_ms": 112.0,
+            "status": "pass"
+          },
+          {
+            "at_s": 33.15,
+            "at": "0:33.150",
+            "before": {
+              "word": "one.",
+              "s": 32.964,
+              "e": 33.084,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "Should",
+              "s": 33.264,
+              "e": 33.424,
+              "heard_by": "w2v"
+            },
+            "gap_ms": 180.0,
+            "clearance_before_ms": 65.6,
+            "clearance_after_ms": 114.4,
+            "status": "pass"
+          },
+          {
+            "at_s": 38.36,
+            "at": "0:38.360",
+            "before": {
+              "word": "landslide.",
+              "s": 37.79,
+              "e": 38.27,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "But",
+              "s": 38.45,
+              "e": 38.57,
+              "heard_by": "mms"
+            },
+            "gap_ms": 180.0,
+            "clearance_before_ms": 90.3,
+            "clearance_after_ms": 89.7,
+            "status": "pass"
+          },
+          {
+            "at_s": 44.15,
+            "at": "0:44.150",
+            "before": {
+              "word": "them.",
+              "s": 43.936,
+              "e": 44.056,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "Meta",
+              "s": 44.276,
+              "e": 44.476,
+              "heard_by": "mms"
+            },
+            "gap_ms": 220.0,
+            "clearance_before_ms": 94.4,
+            "clearance_after_ms": 125.6,
+            "status": "pass"
+          },
+          {
+            "at_s": 50.114,
+            "at": "0:50.114",
+            "before": {
+              "word": "lot.",
+              "s": 49.862,
+              "e": 50.022,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "So",
+              "s": 50.222,
+              "e": 50.282,
+              "heard_by": "w2v"
+            },
+            "gap_ms": 200.0,
+            "clearance_before_ms": 92.0,
+            "clearance_after_ms": 108.0,
+            "status": "pass"
+          },
+          {
+            "at_s": 54.479,
+            "at": "0:54.479",
+            "before": {
+              "word": "else.",
+              "s": 54.086,
+              "e": 54.386,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "and",
+              "s": 54.586,
+              "e": 54.666,
+              "heard_by": "w2v"
+            },
+            "gap_ms": 200.0,
+            "clearance_before_ms": 93.3,
+            "clearance_after_ms": 106.7,
+            "status": "pass"
+          },
+          {
+            "at_s": 55.438,
+            "at": "0:55.438",
+            "before": {
+              "word": "it.",
+              "s": 55.287,
+              "e": 55.367,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "And",
+              "s": 55.547,
+              "e": 55.627,
+              "heard_by": "mms"
+            },
+            "gap_ms": 180.0,
+            "clearance_before_ms": 71.0,
+            "clearance_after_ms": 109.0,
+            "status": "pass"
+          },
+          {
+            "at_s": 61.04,
+            "at": "1:01.040",
+            "before": {
+              "word": "subscriptions.",
+              "s": 60.391,
+              "e": 60.952,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "So",
+              "s": 61.152,
+              "e": 61.232,
+              "heard_by": "mms"
+            },
+            "gap_ms": 200.0,
+            "clearance_before_ms": 87.7,
+            "clearance_after_ms": 112.3,
+            "status": "pass"
+          },
+          {
+            "at_s": 69.389,
+            "at": "1:09.389",
+            "before": {
+              "word": "terms",
+              "s": 68.998,
+              "e": 69.298,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "on",
+              "s": 69.498,
+              "e": 69.578,
+              "heard_by": "mms"
+            },
+            "gap_ms": 200.0,
+            "clearance_before_ms": 91.3,
+            "clearance_after_ms": 108.7,
+            "status": "pass"
+          },
+          {
+            "at_s": 80.571,
+            "at": "1:20.571",
+            "before": {
+              "word": "another.",
+              "s": 80.268,
+              "e": 80.488,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "The",
+              "s": 80.668,
+              "e": 80.728,
+              "heard_by": "mms"
+            },
+            "gap_ms": 180.0,
+            "clearance_before_ms": 83.1,
+            "clearance_after_ms": 96.9,
+            "status": "pass"
+          }
+        ],
+        "failed": [],
+        "status": "pass"
+      },
+      "target": "every join in an agreed gap >= 80 ms, 30 ms clear each side",
+      "pass": true,
+      "status": "measured",
+      "agreement": "2 aligners",
+      "summary": "every join is in an agreed gap (2 aligners)"
     },
     "captions.clock": {
-      "value": null,
-      "target": "see config/gates.json",
-      "pass": null,
-      "status": "not_run"
+      "value": {
+        "machine": "scripts/cutgates/captions.py",
+        "version": "captions/1",
+        "part": "clock",
+        "drawn_by": "mms",
+        "heard_by": "w2v",
+        "independent": true,
+        "agreement": "heard by the aligner that did not draw the captions",
+        "tolerance_frames": 2,
+        "tolerance_status": "placeholder, to be measured on Monday 26",
+        "pages": [
+          {
+            "page": 0,
+            "fromFrame": 3,
+            "text": "A",
+            "heard_word": "A",
+            "heard_s": 0.12,
+            "heard_frame": 4,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 1,
+            "fromFrame": 5,
+            "text": "tiny",
+            "heard_word": "tiny",
+            "heard_s": 0.22,
+            "heard_frame": 7,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 2,
+            "fromFrame": 17,
+            "text": "town",
+            "heard_word": "town",
+            "heard_s": 0.6,
+            "heard_frame": 18,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 3,
+            "fromFrame": 26,
+            "text": "in",
+            "heard_word": "in",
+            "heard_s": 0.9,
+            "heard_frame": 27,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 4,
+            "fromFrame": 30,
+            "text": "Ohio",
+            "heard_word": "Ohio",
+            "heard_s": 1.04,
+            "heard_frame": 31,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 5,
+            "fromFrame": 44,
+            "text": "just",
+            "heard_word": "just",
+            "heard_s": 1.461,
+            "heard_frame": 44,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 6,
+            "fromFrame": 55,
+            "text": "fired",
+            "heard_word": "fired",
+            "heard_s": 1.841,
+            "heard_frame": 55,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 7,
+            "fromFrame": 63,
+            "text": "its",
+            "heard_word": "its",
+            "heard_s": 2.121,
+            "heard_frame": 64,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 8,
+            "fromFrame": 67,
+            "text": "mayor",
+            "heard_word": "mayor",
+            "heard_s": 2.241,
+            "heard_frame": 67,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 9,
+            "fromFrame": 80,
+            "text": "because",
+            "heard_word": "because",
+            "heard_s": 2.661,
+            "heard_frame": 80,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 10,
+            "fromFrame": 89,
+            "text": "he",
+            "heard_word": "he",
+            "heard_s": 2.961,
+            "heard_frame": 89,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 11,
+            "fromFrame": 94,
+            "text": "greenlit",
+            "heard_word": "greenlit",
+            "heard_s": 3.141,
+            "heard_frame": 94,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 12,
+            "fromFrame": 107,
+            "text": "a",
+            "heard_word": "a",
+            "heard_s": 3.582,
+            "heard_frame": 107,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 13,
+            "fromFrame": 110,
+            "text": "data",
+            "heard_word": "data",
+            "heard_s": 3.682,
+            "heard_frame": 110,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 14,
+            "fromFrame": 118,
+            "text": "centre",
+            "heard_word": "centre",
+            "heard_s": 3.942,
+            "heard_frame": 118,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 15,
+            "fromFrame": 127,
+            "text": "for",
+            "heard_word": "for",
+            "heard_s": 4.242,
+            "heard_frame": 127,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 16,
+            "fromFrame": 133,
+            "text": "Meta.",
+            "heard_word": "Meta.",
+            "heard_s": 4.442,
+            "heard_frame": 133,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 17,
+            "fromFrame": 147,
+            "text": "Data",
+            "heard_word": "Data",
+            "heard_s": 4.882,
+            "heard_frame": 146,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 18,
+            "fromFrame": 152,
+            "text": "centres",
+            "heard_word": "centres",
+            "heard_s": 5.102,
+            "heard_frame": 153,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 19,
+            "fromFrame": 158,
+            "text": "are",
+            "heard_word": "are",
+            "heard_s": 5.302,
+            "heard_frame": 159,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 20,
+            "fromFrame": 161,
+            "text": "big",
+            "heard_word": "big",
+            "heard_s": 5.382,
+            "heard_frame": 161,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 21,
+            "fromFrame": 165,
+            "text": "buildings",
+            "heard_word": "buildings",
+            "heard_s": 5.502,
+            "heard_frame": 165,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 22,
+            "fromFrame": 188,
+            "text": "full",
+            "heard_word": "full",
+            "heard_s": 6.263,
+            "heard_frame": 188,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 23,
+            "fromFrame": 192,
+            "text": "of",
+            "heard_word": "of",
+            "heard_s": 6.403,
+            "heard_frame": 192,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 24,
+            "fromFrame": 194,
+            "text": "computers",
+            "heard_word": "computers",
+            "heard_s": 6.463,
+            "heard_frame": 194,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 25,
+            "fromFrame": 204,
+            "text": "that",
+            "heard_word": "that",
+            "heard_s": 6.823,
+            "heard_frame": 205,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 26,
+            "fromFrame": 215,
+            "text": "mainly",
+            "heard_word": "mainly",
+            "heard_s": 7.163,
+            "heard_frame": 215,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 27,
+            "fromFrame": 222,
+            "text": "just",
+            "heard_word": "just",
+            "heard_s": 7.443,
+            "heard_frame": 223,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 28,
+            "fromFrame": 229,
+            "text": "run",
+            "heard_word": "run",
+            "heard_s": 7.643,
+            "heard_frame": 229,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 29,
+            "fromFrame": 234,
+            "text": "AI",
+            "heard_word": "AI",
+            "heard_s": 7.823,
+            "heard_frame": 235,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 30,
+            "fromFrame": 244,
+            "text": "nowadays,",
+            "heard_word": "nowadays,",
+            "heard_s": 8.143,
+            "heard_frame": 244,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 31,
+            "fromFrame": 260,
+            "text": "so",
+            "heard_word": "so",
+            "heard_s": 8.664,
+            "heard_frame": 260,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 32,
+            "fromFrame": 264,
+            "text": "it's",
+            "heard_word": "it's",
+            "heard_s": 8.804,
+            "heard_frame": 264,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 33,
+            "fromFrame": 267,
+            "text": "sacked",
+            "heard_word": "sacked",
+            "heard_s": 8.904,
+            "heard_frame": 267,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 34,
+            "fromFrame": 275,
+            "text": "over",
+            "heard_word": "over",
+            "heard_s": 9.184,
+            "heard_frame": 276,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 35,
+            "fromFrame": 281,
+            "text": "a",
+            "heard_word": "a",
+            "heard_s": 9.404,
+            "heard_frame": 282,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 36,
+            "fromFrame": 284,
+            "text": "building.",
+            "heard_word": "building.",
+            "heard_s": 9.464,
+            "heard_frame": 284,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 37,
+            "fromFrame": 302,
+            "text": "So",
+            "heard_word": "So",
+            "heard_s": 10.044,
+            "heard_frame": 301,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 38,
+            "fromFrame": 312,
+            "text": "what",
+            "heard_word": "what",
+            "heard_s": 10.424,
+            "heard_frame": 313,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 39,
+            "fromFrame": 318,
+            "text": "just",
+            "heard_word": "just",
+            "heard_s": 10.604,
+            "heard_frame": 318,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 40,
+            "fromFrame": 324,
+            "text": "happened",
+            "heard_word": "happened",
+            "heard_s": 10.805,
+            "heard_frame": 324,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 41,
+            "fromFrame": 334,
+            "text": "to",
+            "heard_word": "to",
+            "heard_s": 11.145,
+            "heard_frame": 334,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 42,
+            "fromFrame": 339,
+            "text": "AI",
+            "heard_word": "AI",
+            "heard_s": 11.305,
+            "heard_frame": 339,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 43,
+            "fromFrame": 350,
+            "text": "with",
+            "heard_word": "with",
+            "heard_s": 11.665,
+            "heard_frame": 350,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 44,
+            "fromFrame": 353,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 11.785,
+            "heard_frame": 354,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 45,
+            "fromFrame": 355,
+            "text": "midterms",
+            "heard_word": "midterms",
+            "heard_s": 11.865,
+            "heard_frame": 356,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 46,
+            "fromFrame": 367,
+            "text": "in",
+            "heard_word": "in",
+            "heard_s": 12.245,
+            "heard_frame": 367,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 47,
+            "fromFrame": 369,
+            "text": "America",
+            "heard_word": "America",
+            "heard_s": 12.325,
+            "heard_frame": 370,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 48,
+            "fromFrame": 380,
+            "text": "and",
+            "heard_word": "and",
+            "heard_s": 12.685,
+            "heard_frame": 381,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 49,
+            "fromFrame": 506,
+            "text": "Meta",
+            "heard_word": "Meta",
+            "heard_s": 16.887,
+            "heard_frame": 507,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 50,
+            "fromFrame": 514,
+            "text": "wanted",
+            "heard_word": "wanted",
+            "heard_s": 17.167,
+            "heard_frame": 515,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 51,
+            "fromFrame": 525,
+            "text": "a",
+            "heard_word": "a",
+            "heard_s": 17.527,
+            "heard_frame": 526,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 52,
+            "fromFrame": 530,
+            "text": "giant",
+            "heard_word": "giant",
+            "heard_s": 17.707,
+            "heard_frame": 531,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 53,
+            "fromFrame": 540,
+            "text": "data",
+            "heard_word": "data",
+            "heard_s": 18.008,
+            "heard_frame": 540,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 54,
+            "fromFrame": 548,
+            "text": "centre",
+            "heard_word": "centre",
+            "heard_s": 18.288,
+            "heard_frame": 549,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 55,
+            "fromFrame": 563,
+            "text": "for",
+            "heard_word": "for",
+            "heard_s": 18.748,
+            "heard_frame": 562,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 56,
+            "fromFrame": 566,
+            "text": "more",
+            "heard_word": "more",
+            "heard_s": 18.868,
+            "heard_frame": 566,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 57,
+            "fromFrame": 572,
+            "text": "AI",
+            "heard_word": "AI",
+            "heard_s": 19.088,
+            "heard_frame": 573,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 58,
+            "fromFrame": 585,
+            "text": "and",
+            "heard_word": "and",
+            "heard_s": 19.528,
+            "heard_frame": 586,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 59,
+            "fromFrame": 588,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 19.628,
+            "heard_frame": 589,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 60,
+            "fromFrame": 591,
+            "text": "mayor",
+            "heard_word": "mayor",
+            "heard_s": 19.728,
+            "heard_frame": 592,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 61,
+            "fromFrame": 600,
+            "text": "said",
+            "heard_word": "said",
+            "heard_s": 20.008,
+            "heard_frame": 600,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 62,
+            "fromFrame": 605,
+            "text": "yes.",
+            "heard_word": "yes.",
+            "heard_s": 20.168,
+            "heard_frame": 605,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 63,
+            "fromFrame": 619,
+            "text": "A",
+            "heard_word": "A",
+            "heard_s": 20.649,
+            "heard_frame": 619,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 64,
+            "fromFrame": 621,
+            "text": "data",
+            "heard_word": "data",
+            "heard_s": 20.729,
+            "heard_frame": 622,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 65,
+            "fromFrame": 626,
+            "text": "centre",
+            "heard_word": "centre",
+            "heard_s": 20.909,
+            "heard_frame": 627,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 66,
+            "fromFrame": 647,
+            "text": "uses",
+            "heard_word": "uses",
+            "heard_s": 21.589,
+            "heard_frame": 648,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 67,
+            "fromFrame": 658,
+            "text": "as",
+            "heard_word": "as",
+            "heard_s": 21.97,
+            "heard_frame": 659,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 68,
+            "fromFrame": 663,
+            "text": "much",
+            "heard_word": "much",
+            "heard_s": 22.11,
+            "heard_frame": 663,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 69,
+            "fromFrame": 670,
+            "text": "electricity",
+            "heard_word": "electricity",
+            "heard_s": 22.33,
+            "heard_frame": 670,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 70,
+            "fromFrame": 686,
+            "text": "as",
+            "heard_word": "as",
+            "heard_s": 22.891,
+            "heard_frame": 687,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 71,
+            "fromFrame": 689,
+            "text": "a",
+            "heard_word": "a",
+            "heard_s": 23.011,
+            "heard_frame": 690,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 72,
+            "fromFrame": 692,
+            "text": "small",
+            "heard_word": "small",
+            "heard_s": 23.091,
+            "heard_frame": 693,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 73,
+            "fromFrame": 701,
+            "text": "city.",
+            "heard_word": "city.",
+            "heard_s": 23.372,
+            "heard_frame": 701,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 74,
+            "fromFrame": 711,
+            "text": "Picture",
+            "heard_word": "Picture",
+            "heard_s": 23.712,
+            "heard_frame": 711,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 75,
+            "fromFrame": 719,
+            "text": "living",
+            "heard_word": "living",
+            "heard_s": 23.952,
+            "heard_frame": 719,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 76,
+            "fromFrame": 729,
+            "text": "in",
+            "heard_word": "in",
+            "heard_s": 24.293,
+            "heard_frame": 729,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 77,
+            "fromFrame": 732,
+            "text": "Piqua,",
+            "heard_word": "Piqua,",
+            "heard_s": 24.413,
+            "heard_frame": 732,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 78,
+            "fromFrame": 739,
+            "text": "this",
+            "heard_word": "this",
+            "heard_s": 24.673,
+            "heard_frame": 740,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 79,
+            "fromFrame": 744,
+            "text": "little",
+            "heard_word": "little",
+            "heard_s": 24.813,
+            "heard_frame": 744,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 80,
+            "fromFrame": 749,
+            "text": "town,",
+            "heard_word": "town,",
+            "heard_s": 24.994,
+            "heard_frame": 750,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 81,
+            "fromFrame": 756,
+            "text": "and",
+            "heard_word": "and",
+            "heard_s": 25.214,
+            "heard_frame": 756,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 82,
+            "fromFrame": 762,
+            "text": "opening",
+            "heard_word": "opening",
+            "heard_s": 25.454,
+            "heard_frame": 764,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 83,
+            "fromFrame": 771,
+            "text": "your",
+            "heard_word": "your",
+            "heard_s": 25.715,
+            "heard_frame": 771,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 84,
+            "fromFrame": 774,
+            "text": "power",
+            "heard_word": "power",
+            "heard_s": 25.835,
+            "heard_frame": 775,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 85,
+            "fromFrame": 781,
+            "text": "bill",
+            "heard_word": "bill",
+            "heard_s": 26.055,
+            "heard_frame": 782,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 86,
+            "fromFrame": 791,
+            "text": "to",
+            "heard_word": "to",
+            "heard_s": 26.375,
+            "heard_frame": 791,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 87,
+            "fromFrame": 795,
+            "text": "find",
+            "heard_word": "find",
+            "heard_s": 26.496,
+            "heard_frame": 795,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 88,
+            "fromFrame": 800,
+            "text": "you're",
+            "heard_word": "you're",
+            "heard_s": 26.676,
+            "heard_frame": 800,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 89,
+            "fromFrame": 804,
+            "text": "chipping",
+            "heard_word": "chipping",
+            "heard_s": 26.816,
+            "heard_frame": 804,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 90,
+            "fromFrame": 811,
+            "text": "in",
+            "heard_word": "in",
+            "heard_s": 27.076,
+            "heard_frame": 812,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 91,
+            "fromFrame": 817,
+            "text": "for",
+            "heard_word": "for",
+            "heard_s": 27.236,
+            "heard_frame": 817,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 92,
+            "fromFrame": 827,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 27.597,
+            "heard_frame": 828,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 93,
+            "fromFrame": 830,
+            "text": "new",
+            "heard_word": "new",
+            "heard_s": 27.697,
+            "heard_frame": 831,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 94,
+            "fromFrame": 833,
+            "text": "power",
+            "heard_word": "power",
+            "heard_s": 27.797,
+            "heard_frame": 834,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 95,
+            "fromFrame": 839,
+            "text": "lines,",
+            "heard_word": "lines,",
+            "heard_s": 27.977,
+            "heard_frame": 839,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 96,
+            "fromFrame": 846,
+            "text": "right?",
+            "heard_word": "right?",
+            "heard_s": 28.218,
+            "heard_frame": 847,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 97,
+            "fromFrame": 858,
+            "text": "So",
+            "heard_word": "So",
+            "heard_s": 28.598,
+            "heard_frame": 858,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 98,
+            "fromFrame": 861,
+            "text": "then",
+            "heard_word": "then",
+            "heard_s": 28.698,
+            "heard_frame": 861,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 99,
+            "fromFrame": 865,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 28.838,
+            "heard_frame": 865,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 100,
+            "fromFrame": 867,
+            "text": "residents",
+            "heard_word": "residents",
+            "heard_s": 28.939,
+            "heard_frame": 868,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 101,
+            "fromFrame": 878,
+            "text": "of",
+            "heard_word": "of",
+            "heard_s": 29.299,
+            "heard_frame": 879,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 102,
+            "fromFrame": 881,
+            "text": "Piqua",
+            "heard_word": "Piqua",
+            "heard_s": 29.379,
+            "heard_frame": 881,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 103,
+            "fromFrame": 887,
+            "text": "voted.",
+            "heard_word": "voted.",
+            "heard_s": 29.599,
+            "heard_frame": 888,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 104,
+            "fromFrame": 903,
+            "text": "Should",
+            "heard_word": "Should",
+            "heard_s": 30.1,
+            "heard_frame": 903,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 105,
+            "fromFrame": 907,
+            "text": "we",
+            "heard_word": "we",
+            "heard_s": 30.24,
+            "heard_frame": 907,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 106,
+            "fromFrame": 912,
+            "text": "ban",
+            "heard_word": "ban",
+            "heard_s": 30.4,
+            "heard_frame": 912,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 107,
+            "fromFrame": 922,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 30.741,
+            "heard_frame": 922,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 108,
+            "fromFrame": 924,
+            "text": "big",
+            "heard_word": "big",
+            "heard_s": 30.821,
+            "heard_frame": 925,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 109,
+            "fromFrame": 928,
+            "text": "data",
+            "heard_word": "data",
+            "heard_s": 30.961,
+            "heard_frame": 929,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 110,
+            "fromFrame": 934,
+            "text": "centres?",
+            "heard_word": "centres?",
+            "heard_s": 31.181,
+            "heard_frame": 935,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 111,
+            "fromFrame": 953,
+            "text": "Yes.",
+            "heard_word": "Yes.",
+            "heard_s": 31.762,
+            "heard_frame": 953,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 112,
+            "fromFrame": 971,
+            "text": "And",
+            "heard_word": "And",
+            "heard_s": 32.303,
+            "heard_frame": 969,
+            "delta_frames": 2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 113,
+            "fromFrame": 972,
+            "text": "that",
+            "heard_word": "that",
+            "heard_s": 32.403,
+            "heard_frame": 972,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 114,
+            "fromFrame": 974,
+            "text": "was",
+            "heard_word": "was",
+            "heard_s": 32.503,
+            "heard_frame": 975,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 115,
+            "fromFrame": 978,
+            "text": "two",
+            "heard_word": "two",
+            "heard_s": 32.623,
+            "heard_frame": 979,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 116,
+            "fromFrame": 983,
+            "text": "to",
+            "heard_word": "to",
+            "heard_s": 32.803,
+            "heard_frame": 984,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 117,
+            "fromFrame": 988,
+            "text": "one.",
+            "heard_word": "one.",
+            "heard_s": 32.964,
+            "heard_frame": 989,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 118,
+            "fromFrame": 998,
+            "text": "Should",
+            "heard_word": "Should",
+            "heard_s": 33.264,
+            "heard_frame": 998,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 119,
+            "fromFrame": 1002,
+            "text": "we",
+            "heard_word": "we",
+            "heard_s": 33.464,
+            "heard_frame": 1004,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 120,
+            "fromFrame": 1010,
+            "text": "sack",
+            "heard_word": "sack",
+            "heard_s": 33.685,
+            "heard_frame": 1011,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 121,
+            "fromFrame": 1018,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 33.965,
+            "heard_frame": 1019,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 122,
+            "fromFrame": 1021,
+            "text": "mayor?",
+            "heard_word": "mayor?",
+            "heard_s": 34.065,
+            "heard_frame": 1022,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 123,
+            "fromFrame": 1036,
+            "text": "That",
+            "heard_word": "That",
+            "heard_s": 34.506,
+            "heard_frame": 1035,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 124,
+            "fromFrame": 1038,
+            "text": "was",
+            "heard_word": "was",
+            "heard_s": 34.626,
+            "heard_frame": 1039,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 125,
+            "fromFrame": 1041,
+            "text": "even",
+            "heard_word": "even",
+            "heard_s": 34.746,
+            "heard_frame": 1042,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 126,
+            "fromFrame": 1048,
+            "text": "more,",
+            "heard_word": "more,",
+            "heard_s": 34.966,
+            "heard_frame": 1049,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 127,
+            "fromFrame": 1059,
+            "text": "70%",
+            "heard_word": "70%",
+            "heard_s": 35.307,
+            "heard_frame": 1059,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 128,
+            "fromFrame": 1077,
+            "text": "of",
+            "heard_word": "of",
+            "heard_s": 35.927,
+            "heard_frame": 1078,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 129,
+            "fromFrame": 1078,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 35.988,
+            "heard_frame": 1080,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 130,
+            "fromFrame": 1080,
+            "text": "residents.",
+            "heard_word": "residents.",
+            "heard_s": 36.068,
+            "heard_frame": 1082,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 131,
+            "fromFrame": 1092,
+            "text": "The",
+            "heard_word": "The",
+            "heard_s": 36.728,
+            "heard_frame": 1102,
+            "delta_frames": -10,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 131 (\"The\") starts at frame 1092, 10 frames early on \"The\" as w2v heard it at 36.728 s (tolerance 2)"
+          },
+          {
+            "page": 132,
+            "fromFrame": 1134,
+            "text": "landslide.",
+            "heard_word": "landslide.",
+            "heard_s": 37.81,
+            "heard_frame": 1134,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 133,
+            "fromFrame": 1155,
+            "text": "But",
+            "heard_word": "But",
+            "heard_s": 38.45,
+            "heard_frame": 1154,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 134,
+            "fromFrame": 1159,
+            "text": "Meta's",
+            "heard_word": "Meta's",
+            "heard_s": 38.651,
+            "heard_frame": 1160,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 135,
+            "fromFrame": 1168,
+            "text": "data",
+            "heard_word": "data",
+            "heard_s": 38.931,
+            "heard_frame": 1168,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 136,
+            "fromFrame": 1175,
+            "text": "centre",
+            "heard_word": "centre",
+            "heard_s": 39.171,
+            "heard_frame": 1175,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 137,
+            "fromFrame": 1182,
+            "text": "was",
+            "heard_word": "was",
+            "heard_s": 39.471,
+            "heard_frame": 1184,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 138,
+            "fromFrame": 1189,
+            "text": "already",
+            "heard_word": "already",
+            "heard_s": 39.632,
+            "heard_frame": 1189,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 139,
+            "fromFrame": 1197,
+            "text": "being",
+            "heard_word": "being",
+            "heard_s": 39.932,
+            "heard_frame": 1198,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 140,
+            "fromFrame": 1204,
+            "text": "built.",
+            "heard_word": "built.",
+            "heard_s": 40.132,
+            "heard_frame": 1204,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 141,
+            "fromFrame": 1215,
+            "text": "So",
+            "heard_word": "So",
+            "heard_s": 40.492,
+            "heard_frame": 1215,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 142,
+            "fromFrame": 1226,
+            "text": "Piqua",
+            "heard_word": "Piqua",
+            "heard_s": 40.873,
+            "heard_frame": 1226,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 143,
+            "fromFrame": 1234,
+            "text": "now",
+            "heard_word": "now",
+            "heard_s": 41.133,
+            "heard_frame": 1234,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 144,
+            "fromFrame": 1239,
+            "text": "has",
+            "heard_word": "has",
+            "heard_s": 41.333,
+            "heard_frame": 1240,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 145,
+            "fromFrame": 1244,
+            "text": "a",
+            "heard_word": "a",
+            "heard_s": 41.473,
+            "heard_frame": 1244,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 146,
+            "fromFrame": 1246,
+            "text": "data",
+            "heard_word": "data",
+            "heard_s": 41.533,
+            "heard_frame": 1246,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 147,
+            "fromFrame": 1253,
+            "text": "centre",
+            "heard_word": "centre",
+            "heard_s": 41.774,
+            "heard_frame": 1253,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 148,
+            "fromFrame": 1260,
+            "text": "going",
+            "heard_word": "going",
+            "heard_s": 42.014,
+            "heard_frame": 1260,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 149,
+            "fromFrame": 1265,
+            "text": "up",
+            "heard_word": "up",
+            "heard_s": 42.214,
+            "heard_frame": 1266,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 150,
+            "fromFrame": 1270,
+            "text": "in",
+            "heard_word": "in",
+            "heard_s": 42.374,
+            "heard_frame": 1271,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 151,
+            "fromFrame": 1274,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 42.454,
+            "heard_frame": 1274,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 152,
+            "fromFrame": 1277,
+            "text": "town",
+            "heard_word": "town",
+            "heard_s": 42.574,
+            "heard_frame": 1277,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 153,
+            "fromFrame": 1295,
+            "text": "that",
+            "heard_word": "that",
+            "heard_s": 43.175,
+            "heard_frame": 1295,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 154,
+            "fromFrame": 1303,
+            "text": "just",
+            "heard_word": "just",
+            "heard_s": 43.435,
+            "heard_frame": 1303,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 155,
+            "fromFrame": 1311,
+            "text": "banned",
+            "heard_word": "banned",
+            "heard_s": 43.736,
+            "heard_frame": 1312,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 156,
+            "fromFrame": 1318,
+            "text": "them.",
+            "heard_word": "them.",
+            "heard_s": 43.956,
+            "heard_frame": 1319,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 157,
+            "fromFrame": 1328,
+            "text": "Meta",
+            "heard_word": "Meta",
+            "heard_s": 44.296,
+            "heard_frame": 1329,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 158,
+            "fromFrame": 1337,
+            "text": "says",
+            "heard_word": "says",
+            "heard_s": 44.576,
+            "heard_frame": 1337,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 159,
+            "fromFrame": 1346,
+            "text": "it",
+            "heard_word": "it",
+            "heard_s": 44.877,
+            "heard_frame": 1346,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 160,
+            "fromFrame": 1352,
+            "text": "will",
+            "heard_word": "will",
+            "heard_s": 45.057,
+            "heard_frame": 1352,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 161,
+            "fromFrame": 1357,
+            "text": "work",
+            "heard_word": "work",
+            "heard_s": 45.257,
+            "heard_frame": 1358,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 162,
+            "fromFrame": 1364,
+            "text": "with",
+            "heard_word": "with",
+            "heard_s": 45.477,
+            "heard_frame": 1364,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 163,
+            "fromFrame": 1368,
+            "text": "local",
+            "heard_word": "local",
+            "heard_s": 45.637,
+            "heard_frame": 1369,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 164,
+            "fromFrame": 1376,
+            "text": "officials",
+            "heard_word": "officials",
+            "heard_s": 45.878,
+            "heard_frame": 1376,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 165,
+            "fromFrame": 1387,
+            "text": "which",
+            "heard_word": "which",
+            "heard_s": 46.258,
+            "heard_frame": 1388,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 166,
+            "fromFrame": 1393,
+            "text": "is",
+            "heard_word": "is",
+            "heard_s": 46.458,
+            "heard_frame": 1394,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 167,
+            "fromFrame": 1408,
+            "text": "kind",
+            "heard_word": "kind",
+            "heard_s": 46.919,
+            "heard_frame": 1408,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 168,
+            "fromFrame": 1413,
+            "text": "of",
+            "heard_word": "of",
+            "heard_s": 47.099,
+            "heard_frame": 1413,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 169,
+            "fromFrame": 1415,
+            "text": "their",
+            "heard_word": "their",
+            "heard_s": 47.159,
+            "heard_frame": 1415,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 170,
+            "fromFrame": 1419,
+            "text": "party",
+            "heard_word": "party",
+            "heard_s": 47.319,
+            "heard_frame": 1420,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 171,
+            "fromFrame": 1427,
+            "text": "line",
+            "heard_word": "line",
+            "heard_s": 47.579,
+            "heard_frame": 1427,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 172,
+            "fromFrame": 1432,
+            "text": "every",
+            "heard_word": "every",
+            "heard_s": 47.76,
+            "heard_frame": 1433,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 173,
+            "fromFrame": 1437,
+            "text": "time",
+            "heard_word": "time",
+            "heard_s": 47.92,
+            "heard_frame": 1438,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 174,
+            "fromFrame": 1442,
+            "text": "they",
+            "heard_word": "they",
+            "heard_s": 48.08,
+            "heard_frame": 1442,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 175,
+            "fromFrame": 1448,
+            "text": "do",
+            "heard_word": "do",
+            "heard_s": 48.28,
+            "heard_frame": 1448,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 176,
+            "fromFrame": 1452,
+            "text": "something",
+            "heard_word": "something",
+            "heard_s": 48.42,
+            "heard_frame": 1453,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 177,
+            "fromFrame": 1459,
+            "text": "which",
+            "heard_word": "which",
+            "heard_s": 48.64,
+            "heard_frame": 1459,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 178,
+            "fromFrame": 1464,
+            "text": "everyone",
+            "heard_word": "everyone",
+            "heard_s": 48.841,
+            "heard_frame": 1465,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 179,
+            "fromFrame": 1471,
+            "text": "hates,",
+            "heard_word": "hates,",
+            "heard_s": 49.061,
+            "heard_frame": 1472,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 180,
+            "fromFrame": 1481,
+            "text": "which",
+            "heard_word": "which",
+            "heard_s": 49.361,
+            "heard_frame": 1481,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 181,
+            "fromFrame": 1486,
+            "text": "is",
+            "heard_word": "is",
+            "heard_s": 49.561,
+            "heard_frame": 1487,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 182,
+            "fromFrame": 1494,
+            "text": "a",
+            "heard_word": "a",
+            "heard_s": 49.822,
+            "heard_frame": 1495,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 183,
+            "fromFrame": 1496,
+            "text": "lot.",
+            "heard_word": "lot.",
+            "heard_s": 49.882,
+            "heard_frame": 1496,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 184,
+            "fromFrame": 1507,
+            "text": "So",
+            "heard_word": "So",
+            "heard_s": 50.222,
+            "heard_frame": 1507,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 185,
+            "fromFrame": 1509,
+            "text": "when",
+            "heard_word": "when",
+            "heard_s": 50.322,
+            "heard_frame": 1510,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 186,
+            "fromFrame": 1514,
+            "text": "small",
+            "heard_word": "small",
+            "heard_s": 50.482,
+            "heard_frame": 1514,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 187,
+            "fromFrame": 1520,
+            "text": "towns",
+            "heard_word": "towns",
+            "heard_s": 50.703,
+            "heard_frame": 1521,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 188,
+            "fromFrame": 1528,
+            "text": "say",
+            "heard_word": "say",
+            "heard_s": 50.943,
+            "heard_frame": 1528,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 189,
+            "fromFrame": 1532,
+            "text": "no,",
+            "heard_word": "no,",
+            "heard_s": 51.103,
+            "heard_frame": 1533,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 190,
+            "fromFrame": 1541,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 51.383,
+            "heard_frame": 1541,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 191,
+            "fromFrame": 1550,
+            "text": "AI",
+            "heard_word": "AI",
+            "heard_s": 51.683,
+            "heard_frame": 1550,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 192,
+            "fromFrame": 1557,
+            "text": "companies",
+            "heard_word": "companies",
+            "heard_s": 51.944,
+            "heard_frame": 1558,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 193,
+            "fromFrame": 1568,
+            "text": "have",
+            "heard_word": "have",
+            "heard_s": 52.324,
+            "heard_frame": 1570,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 194,
+            "fromFrame": 1573,
+            "text": "to",
+            "heard_word": "to",
+            "heard_s": 52.484,
+            "heard_frame": 1575,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 195,
+            "fromFrame": 1577,
+            "text": "find",
+            "heard_word": "find",
+            "heard_s": 52.604,
+            "heard_frame": 1578,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 196,
+            "fromFrame": 1590,
+            "text": "that",
+            "heard_word": "that",
+            "heard_s": 53.025,
+            "heard_frame": 1591,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 197,
+            "fromFrame": 1597,
+            "text": "power",
+            "heard_word": "power",
+            "heard_s": 53.285,
+            "heard_frame": 1599,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 198,
+            "fromFrame": 1607,
+            "text": "somewhere",
+            "heard_word": "somewhere",
+            "heard_s": 53.585,
+            "heard_frame": 1608,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 199,
+            "fromFrame": 1622,
+            "text": "else.",
+            "heard_word": "else.",
+            "heard_s": 54.106,
+            "heard_frame": 1623,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 200,
+            "fromFrame": 1638,
+            "text": "and",
+            "heard_word": "and",
+            "heard_s": 54.586,
+            "heard_frame": 1638,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 201,
+            "fromFrame": 1640,
+            "text": "they",
+            "heard_word": "they",
+            "heard_s": 54.686,
+            "heard_frame": 1641,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 202,
+            "fromFrame": 1643,
+            "text": "have",
+            "heard_word": "have",
+            "heard_s": 54.807,
+            "heard_frame": 1644,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 203,
+            "fromFrame": 1646,
+            "text": "to",
+            "heard_word": "to",
+            "heard_s": 54.907,
+            "heard_frame": 1647,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 204,
+            "fromFrame": 1649,
+            "text": "pay",
+            "heard_word": "pay",
+            "heard_s": 55.007,
+            "heard_frame": 1650,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 205,
+            "fromFrame": 1654,
+            "text": "for",
+            "heard_word": "for",
+            "heard_s": 55.147,
+            "heard_frame": 1654,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 206,
+            "fromFrame": 1658,
+            "text": "it.",
+            "heard_word": "it.",
+            "heard_s": 55.307,
+            "heard_frame": 1659,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 207,
+            "fromFrame": 1835,
+            "text": "So",
+            "heard_word": "So",
+            "heard_s": 61.152,
+            "heard_frame": 1835,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 208,
+            "fromFrame": 1847,
+            "text": "now",
+            "heard_word": "now",
+            "heard_s": 61.572,
+            "heard_frame": 1847,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 209,
+            "fromFrame": 1866,
+            "text": "when",
+            "heard_word": "when",
+            "heard_s": 62.213,
+            "heard_frame": 1866,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 210,
+            "fromFrame": 1876,
+            "text": "we",
+            "heard_word": "we",
+            "heard_s": 62.533,
+            "heard_frame": 1876,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 211,
+            "fromFrame": 1882,
+            "text": "renew",
+            "heard_word": "renew",
+            "heard_s": 62.733,
+            "heard_frame": 1882,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 212,
+            "fromFrame": 1890,
+            "text": "an",
+            "heard_word": "an",
+            "heard_s": 63.033,
+            "heard_frame": 1891,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 213,
+            "fromFrame": 1893,
+            "text": "AI",
+            "heard_word": "AI",
+            "heard_s": 63.113,
+            "heard_frame": 1893,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 214,
+            "fromFrame": 1900,
+            "text": "tool",
+            "heard_word": "tool",
+            "heard_s": 63.314,
+            "heard_frame": 1899,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 215,
+            "fromFrame": 1907,
+            "text": "we",
+            "heard_word": "we",
+            "heard_s": 63.554,
+            "heard_frame": 1907,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 216,
+            "fromFrame": 1911,
+            "text": "might",
+            "heard_word": "might",
+            "heard_s": 63.714,
+            "heard_frame": 1911,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 217,
+            "fromFrame": 1917,
+            "text": "see",
+            "heard_word": "see",
+            "heard_s": 63.914,
+            "heard_frame": 1917,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 218,
+            "fromFrame": 1922,
+            "text": "special",
+            "heard_word": "special",
+            "heard_s": 64.094,
+            "heard_frame": 1923,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 219,
+            "fromFrame": 1932,
+            "text": "deals",
+            "heard_word": "deals",
+            "heard_s": 64.414,
+            "heard_frame": 1932,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 220,
+            "fromFrame": 1940,
+            "text": "to",
+            "heard_word": "to",
+            "heard_s": 64.695,
+            "heard_frame": 1941,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 221,
+            "fromFrame": 1943,
+            "text": "change",
+            "heard_word": "change",
+            "heard_s": 64.795,
+            "heard_frame": 1944,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 222,
+            "fromFrame": 1951,
+            "text": "over",
+            "heard_word": "over",
+            "heard_s": 65.035,
+            "heard_frame": 1951,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 223,
+            "fromFrame": 1955,
+            "text": "to",
+            "heard_word": "to",
+            "heard_s": 65.195,
+            "heard_frame": 1956,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 224,
+            "fromFrame": 1958,
+            "text": "new",
+            "heard_word": "new",
+            "heard_s": 65.295,
+            "heard_frame": 1959,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 225,
+            "fromFrame": 1962,
+            "text": "plans",
+            "heard_word": "plans",
+            "heard_s": 65.415,
+            "heard_frame": 1962,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 226,
+            "fromFrame": 1970,
+            "text": "when",
+            "heard_word": "when",
+            "heard_s": 65.655,
+            "heard_frame": 1970,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 227,
+            "fromFrame": 1975,
+            "text": "secretly",
+            "heard_word": "secretly",
+            "heard_s": 65.836,
+            "heard_frame": 1975,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 228,
+            "fromFrame": 2003,
+            "text": "they",
+            "heard_word": "they",
+            "heard_s": 66.696,
+            "heard_frame": 2001,
+            "delta_frames": 2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 229,
+            "fromFrame": 2006,
+            "text": "charge",
+            "heard_word": "charge",
+            "heard_s": 66.876,
+            "heard_frame": 2006,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 230,
+            "fromFrame": 2014,
+            "text": "you",
+            "heard_word": "you",
+            "heard_s": 67.137,
+            "heard_frame": 2014,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 231,
+            "fromFrame": 2018,
+            "text": "more",
+            "heard_word": "more",
+            "heard_s": 67.277,
+            "heard_frame": 2018,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 232,
+            "fromFrame": 2026,
+            "text": "than",
+            "heard_word": "than",
+            "heard_s": 67.517,
+            "heard_frame": 2026,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 233,
+            "fromFrame": 2029,
+            "text": "you'd",
+            "heard_word": "you'd",
+            "heard_s": 67.617,
+            "heard_frame": 2029,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 234,
+            "fromFrame": 2033,
+            "text": "pay",
+            "heard_word": "pay",
+            "heard_s": 67.777,
+            "heard_frame": 2033,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 235,
+            "fromFrame": 2038,
+            "text": "if",
+            "heard_word": "if",
+            "heard_s": 67.937,
+            "heard_frame": 2038,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 236,
+            "fromFrame": 2041,
+            "text": "you'd",
+            "heard_word": "you'd",
+            "heard_s": 68.077,
+            "heard_frame": 2042,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 237,
+            "fromFrame": 2049,
+            "text": "stuck",
+            "heard_word": "stuck",
+            "heard_s": 68.338,
+            "heard_frame": 2050,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 238,
+            "fromFrame": 2057,
+            "text": "to",
+            "heard_word": "to",
+            "heard_s": 68.578,
+            "heard_frame": 2057,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 239,
+            "fromFrame": 2059,
+            "text": "your",
+            "heard_word": "your",
+            "heard_s": 68.638,
+            "heard_frame": 2059,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 240,
+            "fromFrame": 2062,
+            "text": "current",
+            "heard_word": "current",
+            "heard_s": 68.758,
+            "heard_frame": 2063,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 241,
+            "fromFrame": 2070,
+            "text": "terms",
+            "heard_word": "terms",
+            "heard_s": 69.018,
+            "heard_frame": 2071,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 242,
+            "fromFrame": 2086,
+            "text": "on",
+            "heard_word": "on",
+            "heard_s": 69.518,
+            "heard_frame": 2086,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 243,
+            "fromFrame": 2089,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 69.639,
+            "heard_frame": 2089,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 244,
+            "fromFrame": 2092,
+            "text": "premise",
+            "heard_word": "premise",
+            "heard_s": 69.739,
+            "heard_frame": 2092,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 245,
+            "fromFrame": 2100,
+            "text": "of",
+            "heard_word": "of",
+            "heard_s": 70.019,
+            "heard_frame": 2101,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 246,
+            "fromFrame": 2110,
+            "text": "bonus",
+            "heard_word": "bonus",
+            "heard_s": 70.339,
+            "heard_frame": 2110,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 247,
+            "fromFrame": 2119,
+            "text": "credits",
+            "heard_word": "credits",
+            "heard_s": 70.659,
+            "heard_frame": 2120,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 248,
+            "fromFrame": 2129,
+            "text": "and",
+            "heard_word": "and",
+            "heard_s": 70.96,
+            "heard_frame": 2129,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 249,
+            "fromFrame": 2131,
+            "text": "things",
+            "heard_word": "things",
+            "heard_s": 71.06,
+            "heard_frame": 2132,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 250,
+            "fromFrame": 2136,
+            "text": "like",
+            "heard_word": "like",
+            "heard_s": 71.24,
+            "heard_frame": 2137,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 251,
+            "fromFrame": 2142,
+            "text": "that.",
+            "heard_word": "that.",
+            "heard_s": 71.4,
+            "heard_frame": 2142,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 252,
+            "fromFrame": 2156,
+            "text": "I've",
+            "heard_word": "I've",
+            "heard_s": 71.84,
+            "heard_frame": 2155,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 253,
+            "fromFrame": 2159,
+            "text": "seen",
+            "heard_word": "seen",
+            "heard_s": 71.98,
+            "heard_frame": 2159,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 254,
+            "fromFrame": 2166,
+            "text": "this",
+            "heard_word": "this",
+            "heard_s": 72.221,
+            "heard_frame": 2167,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 255,
+            "fromFrame": 2170,
+            "text": "happen",
+            "heard_word": "happen",
+            "heard_s": 72.361,
+            "heard_frame": 2171,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 256,
+            "fromFrame": 2190,
+            "text": "three",
+            "heard_word": "three",
+            "heard_s": 72.961,
+            "heard_frame": 2189,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 257,
+            "fromFrame": 2194,
+            "text": "times",
+            "heard_word": "times",
+            "heard_s": 73.161,
+            "heard_frame": 2195,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 258,
+            "fromFrame": 2205,
+            "text": "in",
+            "heard_word": "in",
+            "heard_s": 73.522,
+            "heard_frame": 2206,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 259,
+            "fromFrame": 2207,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 73.582,
+            "heard_frame": 2207,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 260,
+            "fromFrame": 2210,
+            "text": "last",
+            "heard_word": "last",
+            "heard_s": 73.682,
+            "heard_frame": 2210,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 261,
+            "fromFrame": 2217,
+            "text": "week",
+            "heard_word": "week",
+            "heard_s": 73.902,
+            "heard_frame": 2217,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 262,
+            "fromFrame": 2222,
+            "text": "with",
+            "heard_word": "with",
+            "heard_s": 74.082,
+            "heard_frame": 2222,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 263,
+            "fromFrame": 2226,
+            "text": "businesses",
+            "heard_word": "businesses",
+            "heard_s": 74.202,
+            "heard_frame": 2226,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 264,
+            "fromFrame": 2248,
+            "text": "with",
+            "heard_word": "with",
+            "heard_s": 74.883,
+            "heard_frame": 2246,
+            "delta_frames": 2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 265,
+            "fromFrame": 2250,
+            "text": "AI",
+            "heard_word": "AI",
+            "heard_s": 75.023,
+            "heard_frame": 2251,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 266,
+            "fromFrame": 2256,
+            "text": "tools.",
+            "heard_word": "tools.",
+            "heard_s": 75.223,
+            "heard_frame": 2257,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 267,
+            "fromFrame": 2265,
+            "text": "And",
+            "heard_word": "And",
+            "heard_s": 75.503,
+            "heard_frame": 2265,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 268,
+            "fromFrame": 2268,
+            "text": "it",
+            "heard_word": "it",
+            "heard_s": 75.604,
+            "heard_frame": 2268,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 269,
+            "fromFrame": 2269,
+            "text": "will",
+            "heard_word": "will",
+            "heard_s": 75.664,
+            "heard_frame": 2270,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 270,
+            "fromFrame": 2272,
+            "text": "continue",
+            "heard_word": "continue",
+            "heard_s": 75.784,
+            "heard_frame": 2274,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 271,
+            "fromFrame": 2281,
+            "text": "because",
+            "heard_word": "because",
+            "heard_s": 76.064,
+            "heard_frame": 2282,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 272,
+            "fromFrame": 2293,
+            "text": "if",
+            "heard_word": "if",
+            "heard_s": 76.424,
+            "heard_frame": 2293,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 273,
+            "fromFrame": 2296,
+            "text": "it's",
+            "heard_word": "it's",
+            "heard_s": 76.564,
+            "heard_frame": 2297,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 274,
+            "fromFrame": 2312,
+            "text": "a",
+            "heard_word": "a",
+            "heard_s": 77.065,
+            "heard_frame": 2312,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 275,
+            "fromFrame": 2313,
+            "text": "little",
+            "heard_word": "little",
+            "heard_s": 77.125,
+            "heard_frame": 2314,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 276,
+            "fromFrame": 2319,
+            "text": "town",
+            "heard_word": "town",
+            "heard_s": 77.325,
+            "heard_frame": 2320,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 277,
+            "fromFrame": 2325,
+            "text": "like",
+            "heard_word": "like",
+            "heard_s": 77.505,
+            "heard_frame": 2325,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 278,
+            "fromFrame": 2329,
+            "text": "Piqua,",
+            "heard_word": "Piqua,",
+            "heard_s": 77.665,
+            "heard_frame": 2330,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 279,
+            "fromFrame": 2338,
+            "text": "the",
+            "heard_word": "the",
+            "heard_s": 77.966,
+            "heard_frame": 2339,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 280,
+            "fromFrame": 2345,
+            "text": "fight",
+            "heard_word": "fight",
+            "heard_s": 78.186,
+            "heard_frame": 2346,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 281,
+            "fromFrame": 2355,
+            "text": "ends",
+            "heard_word": "ends",
+            "heard_s": 78.506,
+            "heard_frame": 2355,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 282,
+            "fromFrame": 2361,
+            "text": "up",
+            "heard_word": "up",
+            "heard_s": 78.726,
+            "heard_frame": 2362,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 283,
+            "fromFrame": 2377,
+            "text": "on",
+            "heard_word": "on",
+            "heard_s": 79.227,
+            "heard_frame": 2377,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 284,
+            "fromFrame": 2384,
+            "text": "my",
+            "heard_word": "my",
+            "heard_s": 79.487,
+            "heard_frame": 2385,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 285,
+            "fromFrame": 2390,
+            "text": "bill",
+            "heard_word": "bill",
+            "heard_s": 79.667,
+            "heard_frame": 2390,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 286,
+            "fromFrame": 2396,
+            "text": "in",
+            "heard_word": "in",
+            "heard_s": 79.907,
+            "heard_frame": 2397,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 287,
+            "fromFrame": 2400,
+            "text": "one",
+            "heard_word": "one",
+            "heard_s": 80.007,
+            "heard_frame": 2400,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 288,
+            "fromFrame": 2403,
+            "text": "way",
+            "heard_word": "way",
+            "heard_s": 80.107,
+            "heard_frame": 2403,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 289,
+            "fromFrame": 2406,
+            "text": "or",
+            "heard_word": "or",
+            "heard_s": 80.208,
+            "heard_frame": 2406,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 290,
+            "fromFrame": 2408,
+            "text": "another.",
+            "heard_word": "another.",
+            "heard_s": 80.288,
+            "heard_frame": 2409,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 291,
+            "fromFrame": 2420,
+            "text": "The",
+            "heard_word": "The",
+            "heard_s": 80.668,
+            "heard_frame": 2420,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 292,
+            "fromFrame": 2426,
+            "text": "full",
+            "heard_word": "full",
+            "heard_s": 80.868,
+            "heard_frame": 2426,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 293,
+            "fromFrame": 2434,
+            "text": "story",
+            "heard_word": "story",
+            "heard_s": 81.148,
+            "heard_frame": 2434,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 294,
+            "fromFrame": 2446,
+            "text": "is",
+            "heard_word": "is",
+            "heard_s": 81.569,
+            "heard_frame": 2447,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 295,
+            "fromFrame": 2451,
+            "text": "at",
+            "heard_word": "at",
+            "heard_s": 81.709,
+            "heard_frame": 2451,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 296,
+            "fromFrame": 2454,
+            "text": "makeyourmindup.ai.",
+            "heard_word": "makeyourmindup.ai.",
+            "heard_s": 81.809,
+            "heard_frame": 2454,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          }
+        ],
+        "failed": [
+          {
+            "page": 131,
+            "fromFrame": 1092,
+            "text": "The",
+            "heard_word": "The",
+            "heard_s": 36.728,
+            "heard_frame": 1102,
+            "delta_frames": -10,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 131 (\"The\") starts at frame 1092, 10 frames early on \"The\" as w2v heard it at 36.728 s (tolerance 2)"
+          }
+        ],
+        "located_fraction": 1.0,
+        "status": "fail",
+        "reason": "1 of 297 caption page(s) start off the heard clock by more than 2 frames"
+      },
+      "target": "each page's first frame within 2 frames of its first word as heard",
+      "pass": false,
+      "status": "measured",
+      "agreement": "heard by the aligner that did not draw the captions",
+      "summary": "1 of 297 caption page(s) start off the heard clock by more than 2 frames: caption page 131 (\"The\") starts at frame 1092, 10 frames early on \"The\" as w2v heard it at 36.728 s (tolerance 2)"
     },
     "captions.render": {
       "value": null,
@@ -3194,45 +6924,814 @@
     },
     "channel.safe_zones": {
       "value": {
-        "under_buttons": [
-          {
-            "what": "caption 'makeyourmindup.ai.'",
-            "box": [
-              49,
-              1197,
-              982,
-              105
-            ],
-            "channel": "instagram_reels",
-            "zone": "action rail (like, comment, share, save)"
-          },
-          {
-            "what": "caption 'makeyourmindup.ai.'",
-            "box": [
-              49,
-              1197,
-              982,
-              105
-            ],
-            "channel": "tiktok",
-            "zone": "action rail"
-          },
-          {
-            "what": "caption 'makeyourmindup.ai.'",
-            "box": [
-              49,
-              1197,
-              982,
-              105
-            ],
-            "channel": "youtube_shorts",
-            "zone": "action rail"
-          }
-        ],
-        "count": 3
+        "under_buttons": [],
+        "count": 0
       },
       "target": "no caption, title or device box under a channel button (config/channel-safe-zones.json)",
-      "pass": false
+      "pass": true
+    },
+    "beats.handover_in_gaps": {
+      "value": {
+        "machine": "scripts/cutgates/gaps.py",
+        "version": "joins-in-gaps/1",
+        "rule": {
+          "min_gap_ms": 150.0,
+          "clearance_ms": 0.0
+        },
+        "aligners": [
+          "mms",
+          "w2v"
+        ],
+        "agreement": "2 aligners",
+        "joins": [
+          {
+            "at_s": 4.9,
+            "at": "0:04.900",
+            "before": {
+              "word": "Meta.",
+              "s": 4.442,
+              "e": 4.682,
+              "heard_by": "w2v"
+            },
+            "after": {
+              "word": "centres",
+              "s": 5.082,
+              "e": 5.262,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:04.900 sits inside \"Data\" (4.882 to 5.062 s, heard by mms): after \"Meta.\" (ends 4.682 s, w2v), before \"centres\" (starts 5.082 s, mms)"
+          },
+          {
+            "at_s": 8.667,
+            "at": "0:08.667",
+            "before": {
+              "word": "nowadays,",
+              "s": 8.123,
+              "e": 8.524,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "it's",
+              "s": 8.724,
+              "e": 8.864,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:08.667 sits inside \"so\" (8.664 to 8.724 s, heard by mms): after \"nowadays,\" (ends 8.524 s, mms), before \"it's\" (starts 8.724 s, mms)"
+          },
+          {
+            "at_s": 10.067,
+            "at": "0:10.067",
+            "before": {
+              "word": "building.",
+              "s": 9.464,
+              "e": 9.764,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "what",
+              "s": 10.404,
+              "e": 10.524,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:10.067 sits inside \"So\" (10.044 to 10.144 s, heard by mms): after \"building.\" (ends 9.764 s, mms), before \"what\" (starts 10.404 s, mms)"
+          },
+          {
+            "at_s": 13.033,
+            "at": "0:13.033",
+            "before": {
+              "word": "and",
+              "s": 12.685,
+              "e": 12.825,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "where",
+              "s": 13.045,
+              "e": 13.206,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:13.033 sits inside \"where\" (13.025 to 13.206 s, heard by w2v): after \"and\" (ends 12.825 s, mms), before \"where\" (starts 13.045 s, mms)"
+          },
+          {
+            "at_s": 16.867,
+            "at": "0:16.867",
+            "before": {
+              "word": "out.",
+              "s": 16.547,
+              "e": 16.687,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "Meta",
+              "s": 16.867,
+              "e": 17.087,
+              "heard_by": "mms"
+            },
+            "gap_ms": 180.0,
+            "clearance_before_ms": 179.7,
+            "clearance_after_ms": 0.3,
+            "status": "pass"
+          },
+          {
+            "at_s": 20.633,
+            "at": "0:20.633",
+            "before": {
+              "word": "yes.",
+              "s": 20.188,
+              "e": 20.469,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "A",
+              "s": 20.649,
+              "e": 20.669,
+              "heard_by": "w2v"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:20.633 sits inside \"A\" (20.629 to 20.649 s, heard by mms): after \"yes.\" (ends 20.469 s, mms), before \"A\" (starts 20.649 s, w2v)"
+          },
+          {
+            "at_s": 23.7,
+            "at": "0:23.700",
+            "before": {
+              "word": "city.",
+              "s": 23.372,
+              "e": 23.612,
+              "heard_by": "w2v"
+            },
+            "after": {
+              "word": "Picture",
+              "s": 23.712,
+              "e": 23.932,
+              "heard_by": "w2v"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:23.700 sits inside \"Picture\" (23.692 to 23.952 s, heard by mms): after \"city.\" (ends 23.612 s, w2v), before \"Picture\" (starts 23.712 s, w2v)"
+          },
+          {
+            "at_s": 25.2,
+            "at": "0:25.200",
+            "before": {
+              "word": "town,",
+              "s": 24.974,
+              "e": 25.194,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "and",
+              "s": 25.214,
+              "e": 25.294,
+              "heard_by": "mms"
+            },
+            "gap_ms": 20.0,
+            "clearance_before_ms": 6.0,
+            "clearance_after_ms": 14.0,
+            "status": "fail",
+            "message": "join at 0:25.200: the gap is 20 ms, under 150 ms: after \"town,\" (ends 25.194 s, mms), before \"and\" (starts 25.214 s, mms)"
+          },
+          {
+            "at_s": 28.6,
+            "at": "0:28.600",
+            "before": {
+              "word": "right?",
+              "s": 28.218,
+              "e": 28.418,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "then",
+              "s": 28.678,
+              "e": 28.798,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:28.600 sits inside \"So\" (28.598 to 28.638 s, heard by mms): after \"right?\" (ends 28.418 s, mms), before \"then\" (starts 28.678 s, mms)"
+          },
+          {
+            "at_s": 30.1,
+            "at": "0:30.100",
+            "before": {
+              "word": "voted.",
+              "s": 29.599,
+              "e": 29.88,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "Should",
+              "s": 30.1,
+              "e": 30.22,
+              "heard_by": "mms"
+            },
+            "gap_ms": 220.0,
+            "clearance_before_ms": 220.0,
+            "clearance_after_ms": 0.0,
+            "status": "pass"
+          },
+          {
+            "at_s": 33.267,
+            "at": "0:33.267",
+            "before": {
+              "word": "one.",
+              "s": 32.964,
+              "e": 33.084,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "Should",
+              "s": 33.284,
+              "e": 33.424,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:33.267 sits inside \"Should\" (33.264 to 33.424 s, heard by w2v): after \"one.\" (ends 33.084 s, mms), before \"Should\" (starts 33.284 s, mms)"
+          },
+          {
+            "at_s": 38.5,
+            "at": "0:38.500",
+            "before": {
+              "word": "landslide.",
+              "s": 37.79,
+              "e": 38.27,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "Meta's",
+              "s": 38.631,
+              "e": 38.891,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:38.500 sits inside \"But\" (38.450 to 38.570 s, heard by mms): after \"landslide.\" (ends 38.270 s, mms), before \"Meta's\" (starts 38.631 s, mms)"
+          },
+          {
+            "at_s": 44.267,
+            "at": "0:44.267",
+            "before": {
+              "word": "them.",
+              "s": 43.936,
+              "e": 44.056,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "Meta",
+              "s": 44.276,
+              "e": 44.476,
+              "heard_by": "mms"
+            },
+            "gap_ms": 220.0,
+            "clearance_before_ms": 210.7,
+            "clearance_after_ms": 9.3,
+            "status": "pass"
+          },
+          {
+            "at_s": 46.233,
+            "at": "0:46.233",
+            "before": {
+              "word": "officials",
+              "s": 45.858,
+              "e": 46.218,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "which",
+              "s": 46.258,
+              "e": 46.398,
+              "heard_by": "mms"
+            },
+            "gap_ms": 40.0,
+            "clearance_before_ms": 15.3,
+            "clearance_after_ms": 24.7,
+            "status": "fail",
+            "message": "join at 0:46.233: the gap is 40 ms, under 150 ms: after \"officials\" (ends 46.218 s, mms), before \"which\" (starts 46.258 s, mms)"
+          },
+          {
+            "at_s": 50.233,
+            "at": "0:50.233",
+            "before": {
+              "word": "lot.",
+              "s": 49.862,
+              "e": 50.022,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "So",
+              "s": 50.242,
+              "e": 50.282,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:50.233 sits inside \"So\" (50.222 to 50.282 s, heard by w2v): after \"lot.\" (ends 50.022 s, mms), before \"So\" (starts 50.242 s, mms)"
+          },
+          {
+            "at_s": 55.6,
+            "at": "0:55.600",
+            "before": {
+              "word": "it.",
+              "s": 55.287,
+              "e": 55.367,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "I",
+              "s": 55.647,
+              "e": 55.667,
+              "heard_by": "w2v"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:55.600 sits inside \"And\" (55.547 to 55.627 s, heard by mms): after \"it.\" (ends 55.367 s, mms), before \"I\" (starts 55.647 s, w2v)"
+          },
+          {
+            "at_s": 61.167,
+            "at": "1:01.167",
+            "before": {
+              "word": "subscriptions.",
+              "s": 60.391,
+              "e": 60.952,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "now",
+              "s": 61.572,
+              "e": 61.792,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:01.167 sits inside \"So\" (61.152 to 61.232 s, heard by mms): after \"subscriptions.\" (ends 60.952 s, mms), before \"now\" (starts 61.572 s, mms)"
+          },
+          {
+            "at_s": 65.667,
+            "at": "1:05.667",
+            "before": {
+              "word": "plans",
+              "s": 65.395,
+              "e": 65.655,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "secretly",
+              "s": 65.836,
+              "e": 66.256,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:05.667 sits inside \"when\" (65.655 to 65.776 s, heard by mms): after \"plans\" (ends 65.655 s, mms), before \"secretly\" (starts 65.836 s, mms)"
+          },
+          {
+            "at_s": 69.533,
+            "at": "1:09.533",
+            "before": {
+              "word": "terms",
+              "s": 68.998,
+              "e": 69.298,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "the",
+              "s": 69.639,
+              "e": 69.699,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:09.533 sits inside \"on\" (69.498 to 69.578 s, heard by mms): after \"terms\" (ends 69.298 s, mms), before \"the\" (starts 69.639 s, mms)"
+          },
+          {
+            "at_s": 71.867,
+            "at": "1:11.867",
+            "before": {
+              "word": "that.",
+              "s": 71.4,
+              "e": 71.56,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "seen",
+              "s": 71.98,
+              "e": 72.14,
+              "heard_by": "w2v"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:11.867 sits inside \"I've\" (71.860 to 71.960 s, heard by mms): after \"that.\" (ends 71.560 s, mms), before \"seen\" (starts 71.980 s, w2v)"
+          },
+          {
+            "at_s": 75.5,
+            "at": "1:15.500",
+            "before": {
+              "word": "tools.",
+              "s": 75.223,
+              "e": 75.423,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "And",
+              "s": 75.503,
+              "e": 75.584,
+              "heard_by": "mms"
+            },
+            "gap_ms": 80.0,
+            "clearance_before_ms": 77.0,
+            "clearance_after_ms": 3.0,
+            "status": "fail",
+            "message": "join at 1:15.500: the gap is 80 ms, under 150 ms: after \"tools.\" (ends 75.423 s, mms), before \"And\" (starts 75.503 s, mms)"
+          },
+          {
+            "at_s": 80.667,
+            "at": "1:20.667",
+            "before": {
+              "word": "another.",
+              "s": 80.268,
+              "e": 80.488,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "The",
+              "s": 80.668,
+              "e": 80.728,
+              "heard_by": "mms"
+            },
+            "gap_ms": 180.0,
+            "clearance_before_ms": 178.7,
+            "clearance_after_ms": 1.3,
+            "status": "pass"
+          }
+        ],
+        "failed": [
+          {
+            "at_s": 4.9,
+            "at": "0:04.900",
+            "before": {
+              "word": "Meta.",
+              "s": 4.442,
+              "e": 4.682,
+              "heard_by": "w2v"
+            },
+            "after": {
+              "word": "centres",
+              "s": 5.082,
+              "e": 5.262,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:04.900 sits inside \"Data\" (4.882 to 5.062 s, heard by mms): after \"Meta.\" (ends 4.682 s, w2v), before \"centres\" (starts 5.082 s, mms)"
+          },
+          {
+            "at_s": 8.667,
+            "at": "0:08.667",
+            "before": {
+              "word": "nowadays,",
+              "s": 8.123,
+              "e": 8.524,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "it's",
+              "s": 8.724,
+              "e": 8.864,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:08.667 sits inside \"so\" (8.664 to 8.724 s, heard by mms): after \"nowadays,\" (ends 8.524 s, mms), before \"it's\" (starts 8.724 s, mms)"
+          },
+          {
+            "at_s": 10.067,
+            "at": "0:10.067",
+            "before": {
+              "word": "building.",
+              "s": 9.464,
+              "e": 9.764,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "what",
+              "s": 10.404,
+              "e": 10.524,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:10.067 sits inside \"So\" (10.044 to 10.144 s, heard by mms): after \"building.\" (ends 9.764 s, mms), before \"what\" (starts 10.404 s, mms)"
+          },
+          {
+            "at_s": 13.033,
+            "at": "0:13.033",
+            "before": {
+              "word": "and",
+              "s": 12.685,
+              "e": 12.825,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "where",
+              "s": 13.045,
+              "e": 13.206,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:13.033 sits inside \"where\" (13.025 to 13.206 s, heard by w2v): after \"and\" (ends 12.825 s, mms), before \"where\" (starts 13.045 s, mms)"
+          },
+          {
+            "at_s": 20.633,
+            "at": "0:20.633",
+            "before": {
+              "word": "yes.",
+              "s": 20.188,
+              "e": 20.469,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "A",
+              "s": 20.649,
+              "e": 20.669,
+              "heard_by": "w2v"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:20.633 sits inside \"A\" (20.629 to 20.649 s, heard by mms): after \"yes.\" (ends 20.469 s, mms), before \"A\" (starts 20.649 s, w2v)"
+          },
+          {
+            "at_s": 23.7,
+            "at": "0:23.700",
+            "before": {
+              "word": "city.",
+              "s": 23.372,
+              "e": 23.612,
+              "heard_by": "w2v"
+            },
+            "after": {
+              "word": "Picture",
+              "s": 23.712,
+              "e": 23.932,
+              "heard_by": "w2v"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:23.700 sits inside \"Picture\" (23.692 to 23.952 s, heard by mms): after \"city.\" (ends 23.612 s, w2v), before \"Picture\" (starts 23.712 s, w2v)"
+          },
+          {
+            "at_s": 25.2,
+            "at": "0:25.200",
+            "before": {
+              "word": "town,",
+              "s": 24.974,
+              "e": 25.194,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "and",
+              "s": 25.214,
+              "e": 25.294,
+              "heard_by": "mms"
+            },
+            "gap_ms": 20.0,
+            "clearance_before_ms": 6.0,
+            "clearance_after_ms": 14.0,
+            "status": "fail",
+            "message": "join at 0:25.200: the gap is 20 ms, under 150 ms: after \"town,\" (ends 25.194 s, mms), before \"and\" (starts 25.214 s, mms)"
+          },
+          {
+            "at_s": 28.6,
+            "at": "0:28.600",
+            "before": {
+              "word": "right?",
+              "s": 28.218,
+              "e": 28.418,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "then",
+              "s": 28.678,
+              "e": 28.798,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:28.600 sits inside \"So\" (28.598 to 28.638 s, heard by mms): after \"right?\" (ends 28.418 s, mms), before \"then\" (starts 28.678 s, mms)"
+          },
+          {
+            "at_s": 33.267,
+            "at": "0:33.267",
+            "before": {
+              "word": "one.",
+              "s": 32.964,
+              "e": 33.084,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "Should",
+              "s": 33.284,
+              "e": 33.424,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:33.267 sits inside \"Should\" (33.264 to 33.424 s, heard by w2v): after \"one.\" (ends 33.084 s, mms), before \"Should\" (starts 33.284 s, mms)"
+          },
+          {
+            "at_s": 38.5,
+            "at": "0:38.500",
+            "before": {
+              "word": "landslide.",
+              "s": 37.79,
+              "e": 38.27,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "Meta's",
+              "s": 38.631,
+              "e": 38.891,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:38.500 sits inside \"But\" (38.450 to 38.570 s, heard by mms): after \"landslide.\" (ends 38.270 s, mms), before \"Meta's\" (starts 38.631 s, mms)"
+          },
+          {
+            "at_s": 46.233,
+            "at": "0:46.233",
+            "before": {
+              "word": "officials",
+              "s": 45.858,
+              "e": 46.218,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "which",
+              "s": 46.258,
+              "e": 46.398,
+              "heard_by": "mms"
+            },
+            "gap_ms": 40.0,
+            "clearance_before_ms": 15.3,
+            "clearance_after_ms": 24.7,
+            "status": "fail",
+            "message": "join at 0:46.233: the gap is 40 ms, under 150 ms: after \"officials\" (ends 46.218 s, mms), before \"which\" (starts 46.258 s, mms)"
+          },
+          {
+            "at_s": 50.233,
+            "at": "0:50.233",
+            "before": {
+              "word": "lot.",
+              "s": 49.862,
+              "e": 50.022,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "So",
+              "s": 50.242,
+              "e": 50.282,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:50.233 sits inside \"So\" (50.222 to 50.282 s, heard by w2v): after \"lot.\" (ends 50.022 s, mms), before \"So\" (starts 50.242 s, mms)"
+          },
+          {
+            "at_s": 55.6,
+            "at": "0:55.600",
+            "before": {
+              "word": "it.",
+              "s": 55.287,
+              "e": 55.367,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "I",
+              "s": 55.647,
+              "e": 55.667,
+              "heard_by": "w2v"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:55.600 sits inside \"And\" (55.547 to 55.627 s, heard by mms): after \"it.\" (ends 55.367 s, mms), before \"I\" (starts 55.647 s, w2v)"
+          },
+          {
+            "at_s": 61.167,
+            "at": "1:01.167",
+            "before": {
+              "word": "subscriptions.",
+              "s": 60.391,
+              "e": 60.952,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "now",
+              "s": 61.572,
+              "e": 61.792,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:01.167 sits inside \"So\" (61.152 to 61.232 s, heard by mms): after \"subscriptions.\" (ends 60.952 s, mms), before \"now\" (starts 61.572 s, mms)"
+          },
+          {
+            "at_s": 65.667,
+            "at": "1:05.667",
+            "before": {
+              "word": "plans",
+              "s": 65.395,
+              "e": 65.655,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "secretly",
+              "s": 65.836,
+              "e": 66.256,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:05.667 sits inside \"when\" (65.655 to 65.776 s, heard by mms): after \"plans\" (ends 65.655 s, mms), before \"secretly\" (starts 65.836 s, mms)"
+          },
+          {
+            "at_s": 69.533,
+            "at": "1:09.533",
+            "before": {
+              "word": "terms",
+              "s": 68.998,
+              "e": 69.298,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "the",
+              "s": 69.639,
+              "e": 69.699,
+              "heard_by": "mms"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:09.533 sits inside \"on\" (69.498 to 69.578 s, heard by mms): after \"terms\" (ends 69.298 s, mms), before \"the\" (starts 69.639 s, mms)"
+          },
+          {
+            "at_s": 71.867,
+            "at": "1:11.867",
+            "before": {
+              "word": "that.",
+              "s": 71.4,
+              "e": 71.56,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "seen",
+              "s": 71.98,
+              "e": 72.14,
+              "heard_by": "w2v"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 1:11.867 sits inside \"I've\" (71.860 to 71.960 s, heard by mms): after \"that.\" (ends 71.560 s, mms), before \"seen\" (starts 71.980 s, w2v)"
+          },
+          {
+            "at_s": 75.5,
+            "at": "1:15.500",
+            "before": {
+              "word": "tools.",
+              "s": 75.223,
+              "e": 75.423,
+              "heard_by": "mms"
+            },
+            "after": {
+              "word": "And",
+              "s": 75.503,
+              "e": 75.584,
+              "heard_by": "mms"
+            },
+            "gap_ms": 80.0,
+            "clearance_before_ms": 77.0,
+            "clearance_after_ms": 3.0,
+            "status": "fail",
+            "message": "join at 1:15.500: the gap is 80 ms, under 150 ms: after \"tools.\" (ends 75.423 s, mms), before \"And\" (starts 75.503 s, mms)"
+          }
+        ],
+        "status": "fail",
+        "reason": "18 of 22 join(s) are not in a clear gap (the gap mms, w2v all agree on)"
+      },
+      "target": "every beat handover in an agreed gap >= 150 ms",
+      "pass": false,
+      "status": "advisory",
+      "agreement": "2 aligners",
+      "summary": "18 of 22 join(s) are not in a clear gap (the gap mms, w2v all agree on): join at 0:04.900 sits inside \"Data\" (4.882 to 5.062 s, heard by mms): after \"Meta.\" (ends 4.682 s, w2v), before \"centres\" (starts 5.082 s, mms); join at 0:08.667 sits inside \"so\" (8.664 to 8.724 s, heard by mms): after \"nowadays,\" (ends 8.524 s, mms), before \"it's\" (starts 8.724 s, mms); join at 0:10.067 sits inside \"So\" (10.044 to 10.144 s, heard by mms): after \"building.\" (ends 9.764 s, mms), before \"what\" (starts 10.404 s, mms); join at 0:13.033 sits inside \"where\" (13.025 to 13.206 s, heard by w2v): after \"and\" (ends 12.825 s, mms), before \"where\" (starts 13.045 s, mms); join at 0:20.633 sits inside \"A\" (20.629 to 20.649 s, heard by mms): after \"yes.\" (ends 20.469 s, mms), before \"A\" (starts 20.649 s, w2v); join at 0:23.700 sits inside \"Picture\" (23.692 to 23.952 s, heard by mms): after \"city.\" (ends 23.612 s, w2v), before \"Picture\" (starts 23.712 s, w2v) (and 12 more)",
+      "shadow": true
     },
     "ground.not_bare": {
       "value": [
@@ -3246,70 +7745,70 @@
         {
           "edge_frame": 260,
           "barest_frame": 263,
-          "stage_std": 25.23,
+          "stage_std": 25.22,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 302,
           "barest_frame": 301,
-          "stage_std": 37.17,
+          "stage_std": 36.88,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 391,
           "barest_frame": 390,
-          "stage_std": 69.86,
+          "stage_std": 69.69,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 506,
           "barest_frame": 509,
-          "stage_std": 30.34,
+          "stage_std": 30.35,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 619,
           "barest_frame": 622,
-          "stage_std": 39.56,
+          "stage_std": 39.5,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 711,
           "barest_frame": 714,
-          "stage_std": 29.58,
+          "stage_std": 29.48,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 756,
           "barest_frame": 755,
-          "stage_std": 37.31,
+          "stage_std": 36.86,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 858,
           "barest_frame": 861,
-          "stage_std": 32.66,
+          "stage_std": 32.63,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 903,
           "barest_frame": 902,
-          "stage_std": 37.31,
+          "stage_std": 37.25,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 998,
           "barest_frame": 997,
-          "stage_std": 61.79,
+          "stage_std": 61.53,
           "floor": 3.0,
           "pass": true
         },
@@ -3323,14 +7822,14 @@
         {
           "edge_frame": 1328,
           "barest_frame": 1330,
-          "stage_std": 41.83,
+          "stage_std": 40.95,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 1387,
           "barest_frame": 1390,
-          "stage_std": 60.66,
+          "stage_std": 60.65,
           "floor": 3.0,
           "pass": true
         },
@@ -3344,14 +7843,14 @@
         {
           "edge_frame": 1668,
           "barest_frame": 1667,
-          "stage_std": 40.03,
+          "stage_std": 39.84,
           "floor": 3.0,
           "pass": true
         },
         {
           "edge_frame": 1835,
           "barest_frame": 1838,
-          "stage_std": 67.56,
+          "stage_std": 67.55,
           "floor": 3.0,
           "pass": true
         },
@@ -3365,7 +7864,7 @@
         {
           "edge_frame": 2086,
           "barest_frame": 2089,
-          "stage_std": 44.97,
+          "stage_std": 44.84,
           "floor": 3.0,
           "pass": true
         },
@@ -3379,7 +7878,7 @@
         {
           "edge_frame": 2265,
           "barest_frame": 2268,
-          "stage_std": 59.96,
+          "stage_std": 59.95,
           "floor": 3.0,
           "pass": true
         },
@@ -3428,7 +7927,7 @@
         },
         "title": {
           "L": 51.41,
-          "a": 1.28,
+          "a": 1.23,
           "b": 4.46
         },
         "bill": {
@@ -3439,7 +7938,7 @@
         "proof": {
           "L": 50.98,
           "a": 0.78,
-          "b": 3.55
+          "b": 3.62
         },
         "sack": {
           "L": 49.54,
@@ -3448,7 +7947,7 @@
         },
         "party_line": {
           "L": 50.97,
-          "a": 0.3,
+          "a": 0.31,
           "b": 3.19
         },
         "call": {
@@ -3458,7 +7957,7 @@
         },
         "deals": {
           "L": 52.09,
-          "a": 0.78,
+          "a": 0.77,
           "b": 3.45
         },
         "three": {
