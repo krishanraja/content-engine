@@ -11690,8 +11690,7 @@
       "fromFrame": 1451,
       "toFrame": 1884,
       "uses": [
-        "block_l",
-        "meta_logo_l"
+        "block_l"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -11845,9 +11844,7 @@
       "layout": "STAGE",
       "fromFrame": 4201,
       "toFrame": 4624,
-      "uses": [
-        "openai_logo_l"
-      ],
+      "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
@@ -11883,8 +11880,7 @@
       "fromFrame": 4868,
       "toFrame": 5277,
       "uses": [
-        "block_l",
-        "oracle_logo_l"
+        "block_l"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -11919,9 +11915,7 @@
       "layout": "STAGE",
       "fromFrame": 5547,
       "toFrame": 5897,
-      "uses": [
-        "soluna_logo_l"
-      ],
+      "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
@@ -11975,9 +11969,7 @@
       "layout": "STAGE",
       "fromFrame": 6615,
       "toFrame": 6981,
-      "uses": [
-        "apple_logo_l"
-      ],
+      "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
@@ -12223,7 +12215,6 @@
       "params": {
         "kind": "data centre",
         "label": "PIQUA, OHIO",
-        "logo": "Meta",
         "tag": "Your share",
         "targets": [
           {
@@ -12264,21 +12255,6 @@
       "params": {
         "label": "oppose a nuclear plant",
         "numeral": "53%"
-      }
-    },
-    {
-      "obj": "meta_logo_l",
-      "device": "logo_card",
-      "meaning": "Meta, the company behind the Piqua data centre",
-      "fromFrame": 1451,
-      "toFrame": 1884,
-      "variants": {},
-      "params": {
-        "logos": [
-          {
-            "id": "Meta"
-          }
-        ]
       }
     },
     {
@@ -12365,66 +12341,6 @@
         "quote": "work with local officials to determine the future of our investment in Piqua",
         "outlet": "Meta, to The Washington Post",
         "date": "Nov 2026"
-      }
-    },
-    {
-      "obj": "openai_logo_l",
-      "device": "logo_card",
-      "meaning": "OpenAI, whose promise to pay its own way came after the vote",
-      "fromFrame": 4201,
-      "toFrame": 4624,
-      "variants": {},
-      "params": {
-        "logos": [
-          {
-            "id": "OpenAI"
-          }
-        ]
-      }
-    },
-    {
-      "obj": "oracle_logo_l",
-      "device": "logo_card",
-      "meaning": "Oracle, building gas plants for its own data centres",
-      "fromFrame": 4868,
-      "toFrame": 5277,
-      "variants": {},
-      "params": {
-        "logos": [
-          {
-            "id": "Oracle"
-          }
-        ]
-      }
-    },
-    {
-      "obj": "soluna_logo_l",
-      "device": "logo_card",
-      "meaning": "Soluna, the small energy firm building data centres beside wind farms",
-      "fromFrame": 5547,
-      "toFrame": 5897,
-      "variants": {},
-      "params": {
-        "logos": [
-          {
-            "id": "Soluna"
-          }
-        ]
-      }
-    },
-    {
-      "obj": "apple_logo_l",
-      "device": "logo_card",
-      "meaning": "Apple, putting more AI on the phone instead",
-      "fromFrame": 6615,
-      "toFrame": 6981,
-      "variants": {},
-      "params": {
-        "logos": [
-          {
-            "id": "Apple"
-          }
-        ]
       }
     },
     {
@@ -12541,20 +12457,6 @@
       "atFrame": 838
     },
     {
-      "id": "l7-0",
-      "obj": "meta_logo_l",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 1547
-    },
-    {
-      "id": "l7-1",
-      "obj": "meta_logo_l",
-      "verb": "highlight",
-      "toState": "0",
-      "atFrame": 1839
-    },
-    {
       "id": "l8-0",
       "obj": "block_l",
       "verb": "connect",
@@ -12646,39 +12548,11 @@
       "atFrame": 3972
     },
     {
-      "id": "l14-2",
-      "obj": "meta_line_l",
-      "verb": "stamp",
-      "toState": "struck",
-      "atFrame": 4180
-    },
-    {
-      "id": "l15-0",
-      "obj": "openai_logo_l",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 4362
-    },
-    {
       "id": "l17-0",
-      "obj": "oracle_logo_l",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 4982
-    },
-    {
-      "id": "l17-1",
       "obj": "block_l",
       "verb": "carry",
       "toState": "walk",
       "atFrame": 5192
-    },
-    {
-      "id": "l19-0",
-      "obj": "soluna_logo_l",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 5618
     },
     {
       "id": "l20b-0",
@@ -12686,13 +12560,6 @@
       "verb": "grow",
       "toState": "giant",
       "atFrame": 6421
-    },
-    {
-      "id": "l21-0",
-      "obj": "apple_logo_l",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 6628
     },
     {
       "id": "l24-0",
