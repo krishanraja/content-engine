@@ -62,7 +62,9 @@ ACCEPTANCE = [
 SERIES_PICTURE = {
     'follow.the.money': 'The money map and the receipt: flows between parties, width is the amount.',
     'under.the.hood': 'Real or theatre: the shipped thing, apart, every part stamped.',
-    'mind.the.gap': 'Threads on a time axis that bend and meet, ending in a dated call.',
+    # Until 2026-11-18 the threads ended in a dated call; the prediction format is abandoned (Rulings, Krish, 2026-11-17
+    # and 2026-11-18; house rule NO_DATED_PREDICTION).
+    'mind.the.gap': 'Threads on a time axis that bend and meet where the pattern leads, with no date and no confidence.',
 }
 LEAD_PICTURES = ('series_picture', 'story_object')
 # brand.intro_sting: always this sentence. Nothing goes before the hook on any cut (Ruling, Krish, 2026-11-12: "Nothing

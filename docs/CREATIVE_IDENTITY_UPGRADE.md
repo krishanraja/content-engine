@@ -13,11 +13,16 @@ claims tables. Version 2 is kept verbatim at
 **Where it stands (checked 16 November 2026).** This is the plan of 25
 September, and the pack itself was never built: no `SignaturePackV1` or
 `SignatureInputsV1` exists in the code. What shipped took other shapes. The
-Call (P6) is the piece's dated prediction, read by
-`packages/contracts/src/call.ts` and held by the publish checks; its
-scoreboard feed is `GET /api/calls` (`apps/control-plane/api/calls.ts`), a
-JSON feed for makeyourmindup.ai with Krish's ruling in `meta.call_verdict`,
-in place of the CSV over `investigation_claims` that P6 planned. Video is
+Call (P6) shipped as the piece's dated prediction, held by the publish checks,
+with a scoreboard feed, `GET /api/calls`, and was retired on 18 November 2026
+with the whole format (Ruling, Krish, 2026-11-17: "I don't do dated-and-scored
+make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't
+really have the clout such that my opinion can hold up in official scores.";
+Ruling, Krish, 2026-11-18: "get rid of that - i have abandoned the prediction
+format, it feels lame"): no piece makes a call, nothing checks, scores or
+draws one, the feed answers with no calls, and every mention of the Call, its
+check and its scoreboard below is the record of the plan, never a
+requirement (house rule NO_DATED_PREDICTION). Video is
 made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`), with
 quick-edit as the fallback until ve passes Phase 3, and licensed music comes
 from the ledger in `config/music-library.json`. Growth has made the derived

@@ -1,5 +1,7 @@
 # TWO PASSPORTS · anatomy of the template (mind.the.gap module, 1080 x 1920)
 
+> Retired on 2026-11-18: the dated call (Ruling, Krish, 2026-11-18: "get rid of that - i have abandoned the prediction format, it feels lame"). On a new cut `END_LABEL` reads WHERE IT LEADS and the F5 dated-call sticker (`CALL_DATE`, `CALL_CONFIDENCE`) is left out; the slots below stay as the record of the 23 Oct design.
+
 > **Channel limits, 11 Nov 2026.** Where this page gives a platform limit of x 960 or y 1640, a lower line at y 1516 or
 > a marquee at y 1736, it predates Krish's ruling ("stay within the boundaries of all the social platforms"). Words now
 > keep to `docs/ve/MOTION_STANDARD.md`, Channels: x 60 to 860 below y 520, y 270 to 1320, the caption zone x 60 to 860,

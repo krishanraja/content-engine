@@ -9,6 +9,16 @@ This is the ambition doc. `docs/TOOL_BANK.md` is the ledger that tracks what
 has actually been tried and kept; this one says where we are trying to get to.
 Read them together: ideas here, evidence there.
 
+Retired on 2026-11-18: the dated Call and its scoreboard. No piece makes a
+dated prediction, so nothing pins a market to one, tracks odds to a due date
+or keeps score (Ruling, Krish, 2026-11-17: "I don't do dated-and-scored
+make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't
+really have the clout such that my opinion can hold up in official scores.";
+Ruling, Krish, 2026-11-18: "get rid of that - i have abandoned the prediction
+format, it feels lame"). The call-market route and the `signals_odds` cron are
+deleted and `GET /api/calls` answers with no calls; the lines below that
+describe them are kept as the record of the plan, marked retired.
+
 ## What 100x actually means here
 
 100x better content at the same cadence of three pieces a week, with no more
@@ -26,8 +36,7 @@ pieces, measured four ways:
    piece starts ahead of the last.
 
 The real multiplier is the **combinations** (last
-section): odds plus a scoreboard, a scrape plus a judge, a transcript plus a
-story check. One tool is 2x. The right chain is 100x.
+section): a scrape plus a judge, a transcript plus a story check. One tool is 2x. The right chain is 100x.
 
 ## The pipeline, tool by tool
 
@@ -38,9 +47,9 @@ only a reader; connector means reached through an MCP connector in a session.
 ### Find: better raw material than anyone else has
 
 - **Prediction markets** (Polymarket, Kalshi; keyless, live). Read the market's
-  odds on any question we have an opinion on. This is the signature move: every
-  piece makes a dated Call with a confidence; show the market's number beside
-  ours and track both to the due date. Nobody in this lane does it.
+  odds as a public signal, the crowd's number on a question, credited to the
+  market. Retired 2026-11-18: the dated Call it was shown beside and tracked
+  against.
 - **GDELT** (keyless, live). The whole world's news by subject and hour. Gives
   the velocity behind a story (is this one article or a pile-on) and the raw
   material for the news-wall picture.
@@ -150,17 +159,15 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 - **Mux / Cloudflare Stream** (keyed, to build): self-host the videos on
   makeyourmindup.ai with view analytics for the newsstand.
 - **n8n** (connector): the publish checklist as a workflow that fires when a
-  post is marked published (pack sent, library written, scoreboard set to "Not
-  due yet", LinkedIn ready).
+  post is marked published (pack sent, library written, LinkedIn ready).
 
 ### Learn: every piece starts ahead of the last
 
 - **Our own results** (YouTube Data API, Plausible/PostHog, Substack public
   stats via Apify): what readers did, weekly, into the ledger, so the judges
   are graded against reality and not only against Krish's taste.
-- **The Call versus the market** (Polymarket/Kalshi): track our dated calls and
-  the market's odds to the due date; the scoreboard becomes a record of who was
-  right, us or the crowd.
+- **The Call versus the market**: retired 2026-11-18 with the dated Call; no
+  piece makes a prediction to score.
 - **The tool bank** (`docs/TOOL_BANK.md`): every post records what each tool
   added, and a status moves only on evidence.
 
@@ -168,10 +175,8 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 
 A single tool is a feature. These chains are the publication:
 
-1. **The scoreboard that keeps score.** Market odds (keyless) + each Call's
-   stored slug + the scoreboard on makeyourmindup.ai: our dated prediction
-   beside the crowd's, both tracked to the day they resolve. No other AI
-   publication puts its own calls on a live betting line.
+1. **The scoreboard that keeps score.** Retired 2026-11-18 (Ruling, Krish, 2026-11-18: "get rid of that - i have abandoned the prediction format, it feels lame"):
+   no dated prediction, so nothing to put beside a betting line or score.
 2. **The pile-on, proven.** GDELT velocity + Firecrawl on each outlet + a
    generated news-wall picture: the story's own spread becomes the evidence
    that it matters, in one image and one video beat.
@@ -196,12 +201,9 @@ skip the rest. The bank learns; this plan is the menu.
 
 ## What is live right now (2026-10-09, end of day)
 
-- **The scoreboard that keeps score, built.** `POST /api/content-ideas/:id/call-market`
-  pins a Polymarket slug or Kalshi ticker to a piece's Call (read once, so a
-  wrong one is refused); the `signals_odds` cron reads every pinned market
-  daily into `meta.call_market.history`; `GET /api/calls` serves every
-  published piece's Call, our confidence, `not_due_yet` or `due`, Krish's
-  verdict when made, and the market's odds. Keyless. The cover site reads it.
+- **The scoreboard that keeps score, built, then retired on 2026-11-18.** The
+  call-market pin and the `signals_odds` cron are deleted, and `GET /api/calls`
+  answers with no calls, so the cover site shows no Call, confidence or verdict.
 - **The pile-on, proven, built.** The `signals_news` cron sweeps GDELT and
   Hacker News for every piece in review, approved or published in the last
   thirty days, records each headline in `trend_observations`, and turns the
@@ -223,8 +225,7 @@ skip the rest. The bank learns; this plan is the menu.
 - **Connectors live in a session:** Firecrawl, GitHub, Apify, ElevenLabs, and
   the creative tools (Higgsfield, Runway, HeyGen, Canva, 21st Dev, Riverside,
   Brandfetch, Wispr Flow).
-- **Next, by value:** draw the news-wall picture from the sweep's rows; pin
-  Friday's Call to a market and watch the scoreboard fill; wire Brave and Exa
+- **Next, by value:** draw the news-wall picture from the sweep's rows; wire Brave and Exa
   as a second independent verdict inside the fact gate (today they feed its
   research and stand in as the checker only when Perplexity has no key); the Reddit chorus through Apify; the personality pass on Friday's
   script.

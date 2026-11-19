@@ -103,7 +103,7 @@ Camera: k 1.95 to 1.55, roll -104.5 to -8 degrees. Key frame: k 1.55, rot -8.0.
 
 Scribble: a mint loop that hugs the bubble, drawn after the stamp so the stamp names the verdict and the loop names the evidence.
 
-End: the thread ends on the dated call; the next element (end card) takes the marker's loop as its entry wipe.
+End: the thread ends where the pattern leads, never on a dated call (retired 2026-11-18); the next element (end card) takes the marker's loop as its entry wipe.
 
 ## Audio (suggested, not part of the deliverable)
 

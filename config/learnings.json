@@ -682,23 +682,23 @@
       "on": "2026-10-19",
       "krish": "I changed the prediction to 95% by the end of this year, 2026 ... I'm done with sitting on the fence and putting predictions a year away: 55%. There's no point in that. Given how this article reads it's pretty obvious someone's going to shift their price again in the next month.",
       "why": "House rule SHARP_PREDICTION told writers to avoid the obvious outcome and give a bolder call a lower number, so calls drifted to long shots a year out at 15 to 55%, which read as fence-sitting and help no reader decide anything.",
-      "means": "Every prediction is what we believe happens next, due within about three months (92 days) and backed at 80% or more. Both are blocking publish checks.",
-      "status": "encoded",
+      "means": "Withdrawn on 2026-11-18 with the prediction format. Ruling (Krish, 2026-11-17): \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\" Ruling (Krish, 2026-11-18): \"get rid of that - i have abandoned the prediction format, it feels lame\". No piece makes a prediction, so there is no horizon and no confidence bar to hold it to. Until then every prediction was due within about three months (92 days) and backed at 80% or more, both blocking publish checks (CALL_HORIZON, CLEAR_STANCE); the entry stays only as the record of what he said on 2026-10-19.",
+      "status": "withdrawn",
       "encoded": [
         {
-          "file": "apps/control-plane/api/_publishChecks.ts",
-          "contains": "export const CALL_HORIZON_DAYS = 92",
-          "how": "CALL_HORIZON blocks a call due more than 92 days out or already past"
-        },
-        {
-          "file": "apps/control-plane/api/_publishChecks.ts",
-          "contains": "export const CLEAR_STANCE_AT = 80",
-          "how": "CLEAR_STANCE now blocks below 80%"
-        },
-        {
           "file": "apps/control-plane/api/_houseRules.ts",
-          "contains": "A near-term prediction we back, that a reader can check",
-          "how": "house rule SHARP_PREDICTION, read by the writers"
+          "contains": "id: 'NO_DATED_PREDICTION'",
+          "how": "the house rule that replaced CALL, CLEAR_STANCE and SHARP_PREDICTION: no piece makes a dated prediction, read by every writer, both judges and the final pass"
+        },
+        {
+          "file": "apps/control-plane/api/_publishChecks.ts",
+          "contains": "No prediction is asked for (retired 2026-11-18)",
+          "how": "the publish checks CALL, CALL_HORIZON and CLEAR_STANCE and their exception tables are gone"
+        },
+        {
+          "file": "tests/control-plane/no-dated-prediction.test.ts",
+          "contains": "no house rule asks for a prediction",
+          "how": "a piece with no prediction passes every publish check, and no house rule asks for one"
         }
       ]
     },
@@ -931,7 +931,7 @@
       "on": "2026-10-21",
       "krish": "we need to cut that opening line from every content piece moving forward and just launch straight in to \"I put GrokBot and Muse head to head\" etc. Also trim the closing to \"the full deep dive is at makeyourmindup.ai.\" right after a \"Here's what I'd do with this info if I were you\" closing line. That needs to be the format moving forward for all scripts.",
       "why": "The series line and the sign-off with his name delayed the hook and the ending asked for too much; he wants the script to start on what he did and end on what the listener can do, with one line to the full piece.",
-      "means": "No script carries a series line or \"I'm Krish\". After the call it closes on the one thing he would do, in his first person (house rule SCRIPT_CLOSE since 2026-10-31, which retired the \"Here's what I'd do with this info if I were you\" lead-in), and its last sentence is the one SCRIPT_CLOSE_LINE holds, with nothing after it. Since 2026-11-14 that line is \"The full story is free at makeyourmindup.ai.\", because the one he set here failed the voice check (learning voice-check-wins-the-close). This replaces the 2026-10-12 series line for every series and both cuts.",
+      "means": "No script carries a series line or \"I'm Krish\". After the answer it closes on the one thing he would do, in his first person (house rule SCRIPT_CLOSE since 2026-10-31, which retired the \"Here's what I'd do with this info if I were you\" lead-in), and its last sentence is the one SCRIPT_CLOSE_LINE holds, with nothing after it. Since 2026-11-14 that line is \"The full story is free at makeyourmindup.ai.\", because the one he set here failed the voice check (learning voice-check-wins-the-close). This replaces the 2026-10-12 series line for every series and both cuts.",
       "status": "encoded",
       "encoded": [
         {
@@ -2457,7 +2457,7 @@
       "on": "2026-11-16",
       "krish": "apply 1 to 6 from the next piece you make this week",
       "why": "The longest Instagram holds were 14 to 45 seconds; the 1:20 TikTok and the 5:02 YouTube cut lost nearly everyone. The session disagreed with the ceiling, once: the brief's own best Instagram videos averaged 44.6 s and 39.7 s of watch, longer than 35, so a 35-second cut sits below what the best pieces held. Applied as he said; the ceiling is one number (SHORT_CUT.most_s) for him to move.",
-      "means": "The short cut runs 20 to 35 seconds as he says it, 45 to 75 script words, one idea: hook, the idea, the call, the last line. A second idea goes to the long cut or the article. Long cuts belong to YouTube search and the Substack post, never the feeds. It replaced the 90-second cut (160 to 195 words) from the pieces published 16 Nov. Krish moved it on 17 Nov to 60 to 90 seconds, 160 to 210 words (short-cut-ai-music-length).",
+      "means": "The short cut runs 20 to 35 seconds as he says it, 45 to 75 script words, one idea: hook, the idea, the answer, the last line. A second idea goes to the long cut or the article. Long cuts belong to YouTube search and the Substack post, never the feeds. It replaced the 90-second cut (160 to 195 words) from the pieces published 16 Nov. Krish moved it on 17 Nov to 60 to 90 seconds, 160 to 210 words (short-cut-ai-music-length).",
       "status": "encoded",
       "brief": {
         "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
@@ -2658,7 +2658,7 @@
       "on": "2026-11-16",
       "krish": "apply 1 to 6 from the next piece you make this week",
       "why": "The newest article asked for the subscription only in the navigation, the sidebar and after the sources and comments at the very end. New organic subscribers were 1 and 0 in the weeks of 2 and 9 Nov.",
-      "means": "Every article asks twice inside its body: a plain paragraph before the first heading, for a reader who is not yet a subscriber, and one right after the three actions of \"3 things you can do tomorrow\". Each says what the reader gets (\"Three pieces a week on what AI changes in your business, each ending on a dated call\") and links the subscribe page. It never promises a public scorecard until makeyourmindup.ai shows a live one: the brief's suggested words (\"every call dated and scored, misses included\") are not true on the site yet. The publish check reads both, not blocking until Krish has seen pieces carry it.",
+      "means": "Every article asks twice inside its body: a plain paragraph before the first heading, for a reader who is not yet a subscriber, and one right after the three actions of \"3 things you can do tomorrow\". Each says what the reader gets (\"Three pieces a week on what AI changes in your business, each ending on three things you can do tomorrow\") and links the subscribe page. It never promises a call or a public scorecard: the brief's suggested words (\"every call dated and scored, misses included\") were never true on the site, and since 2026-11-18 the prediction format is abandoned (NO_DATED_PREDICTION). The publish check reads both, not blocking until Krish has seen pieces carry it.",
       "status": "encoded",
       "brief": {
         "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
@@ -2697,8 +2697,8 @@
       "on": "2026-11-16",
       "krish": "Record each of its nine changes through your learning route. Relayed by the brief, 16 Nov: \"some of it is about my content itself ... you need to ensure my content-engine understands what needs to be improved from a content production POV.\"",
       "why": "\"Every call dated and scored in public\" is the publication's most distinctive promise, but makeyourmindup.ai shows an \"Example board\". A live board gives a leader a reason to come back and to subscribe.",
-      "means": "Not content-engine's to build: the scorecard page belongs to the makeyourmindup site's repository. Content-engine already holds its side: every article carries a dated call with a confidence (publish checks CALL, CALL_HORIZON and CLEAR_STANCE block without one), and from 16 Nov its subscribe asks never promise the scorecard until it is live (ARTICLE_SUBSCRIBE_ASK). Open until the site shows a live board; then the asks may name it.",
-      "status": "open",
+      "means": "Withdrawn on 2026-11-18: there is no scorecard to build or promise, here or on the site. Ruling (Krish, 2026-11-17): \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\" Ruling (Krish, 2026-11-18): \"get rid of that - i have abandoned the prediction format, it feels lame\". Content-engine's side is undone with it: no article carries a dated call (the publish checks CALL, CALL_HORIZON and CLEAR_STANCE are gone), the subscribe asks never promise a call or a scorecard (ARTICLE_SUBSCRIBE_ASK), and GET /api/calls, the feed the site's board read, answers with no calls.",
+      "status": "withdrawn",
       "brief": {
         "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
         "material_sha256": "f0aed19ad9875e58b5935f8214f40eb14a5ebc4db70c8a7a752692a93e2f482f",
@@ -2711,7 +2711,23 @@
         "evidence": "makeyourmindup.ai as a stranger sees it, 16 Nov",
         "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
       },
-      "encoded": []
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'NO_DATED_PREDICTION'",
+          "how": "the house rule that replaced CALL, CLEAR_STANCE and SHARP_PREDICTION: no piece makes a dated prediction, read by every writer, both judges and the final pass"
+        },
+        {
+          "file": "apps/control-plane/api/calls.ts",
+          "contains": "export const CALLS_RETIRED",
+          "how": "the scoreboard feed is dormant: it answers with no calls and says why"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "never a prediction, a call or a public scorecard",
+          "how": "house rule ARTICLE_SUBSCRIBE_ASK"
+        }
+      ]
     },
     {
       "id": "audience-grid-covers",
@@ -2733,6 +2749,51 @@
         "status_of_evidence": "observed audience numbers (Buffer, TikTok Promote, YouTube Studio, Meta, Substack, 5 Oct to 14 Nov), never proof that one choice caused one outcome"
       },
       "encoded": []
+    },
+    {
+      "id": "no-dated-predictions",
+      "on": "2026-11-18",
+      "krish": "I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores. (2026-11-17.) Then: \"get rid of that - i have abandoned the prediction format, it feels lame\" (2026-11-18). Before both, 2026-10-26: \"I am kind of bored of making predictions\".",
+      "why": "On 26 Oct he said he was bored of making predictions, and the engine answered with per-piece exceptions while every other piece stayed blocked without a dated call, so the format he had tired of kept being demanded. He finds dated, scored calls tacky and gimmicky, and says his opinion lacks the clout to stand up to official scores.",
+      "means": "No piece makes a dated prediction: no prediction section, no date to check, no confidence percentage, no stance backed by a number, no call card, no scoreboard and no promise to keep score. Every article closes on \"3 things you can do tomorrow\"; mind.the.gap names the pattern and says where it leads, with no date and no verdict to mark later. No check blocks a piece for having no prediction, no writer, judge or score asks for or rewards one, and a mandate that still asks is overruled by the house rule. A ruling that retires a format removes the rule, never adds exceptions to it.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'NO_DATED_PREDICTION'",
+          "how": "the house rule that replaced CALL, CLEAR_STANCE and SHARP_PREDICTION: no piece makes a dated prediction, read by every writer, both judges and the final pass"
+        },
+        {
+          "file": "apps/control-plane/api/_publishChecks.ts",
+          "contains": "No prediction is asked for (retired 2026-11-18)",
+          "how": "the publish checks CALL, CALL_HORIZON and CLEAR_STANCE and their exception tables are gone"
+        },
+        {
+          "file": "tests/control-plane/no-dated-prediction.test.ts",
+          "contains": "no house rule asks for a prediction",
+          "how": "a piece with no prediction passes every publish check, and no house rule asks for one"
+        },
+        {
+          "file": "apps/control-plane/api/content-ideas/[id]/draft.ts",
+          "contains": "no piece makes a dated prediction, whatever the mandate says",
+          "how": "the drafter's mandate line"
+        },
+        {
+          "file": "apps/control-plane/api/_revisePrompt.ts",
+          "contains": "no piece makes a dated prediction, whatever the mandate says",
+          "how": "the rewriter's mandate line"
+        },
+        {
+          "file": "apps/control-plane/api/_finalPass.ts",
+          "contains": "NO_DATED_PREDICTION wins and the piece makes none",
+          "how": "the final pass over a subchannel's mandate"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "Never props.call",
+          "how": "ve compile draws no call card"
+        }
+      ]
     },
     {
       "id": "audience-forwardable-line",

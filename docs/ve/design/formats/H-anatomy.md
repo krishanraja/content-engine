@@ -128,7 +128,7 @@ Nothing in the produced layer is under 30 px. The only smaller text anywhere is 
 9. No frame carries an ILLUSTRATION tag or a provenance sticker, although every frame stands on generated plates (Krish, 28 Oct 2026: "Yes remove those."). F4 shows the recording as real footage with the label SCREEN RECORDING · DEEPSEEK · 23 OCT 2026.
 10. Voice: British spelling, no em dashes, no exclamation marks, no sermons. The marquee uses the brand's own lines.
 11. One focal point per frame: F1 the country slot, F2 the two 2/2 numerals, F3 the missing flag, F4 the forced-labour clause in the real answer, F5 the refusal bubble.
-12. The 3 x 2 result is never a table. F2 and F3 show it as planted flags and numerals on cards. F5 shows it as three threads on a time axis (the mind.the.gap device) with flags planted, one thread parted at Xinjiang, a stamp and a dated call.
+12. The 3 x 2 result is never a table. F2 and F3 show it as planted flags and numerals on cards. F5 shows it as three threads on a time axis (the mind.the.gap device) with flags planted, one thread parted at Xinjiang and a stamp. Retired on 2026-11-18: the dated call (Ruling, Krish, 2026-11-18: "get rid of that - i have abandoned the prediction format, it feels lame"). A new cut ends the threads where the pattern leads, with no date or confidence.
 
 ## 8. Build gotchas (learned the hard way)
 

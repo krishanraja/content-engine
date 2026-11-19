@@ -277,7 +277,7 @@ def close_problems(beats, close=None):
                      'in his own first person (house rule SCRIPT_CLOSE)')
     tail, orders = close_orders(beats, close)
     if not tail:
-        found.append('it has no close before the last line: after the call, one short beat saying the one thing Krish would do, '
+        found.append('it has no close before the last line: after the answer, one short beat saying the one thing Krish would do, '
                      'in his own first person (house rule SCRIPT_CLOSE, Krish, 2026-10-31)')
     else:
         if len(tail) > rules['close_most_sentences'] or len(orders) > rules['close_most_orders']:
@@ -871,7 +871,7 @@ def spoken_habit_warnings(beats):
         share = sum(1 for x in sents if words_of(x)[0].lower() in JOINERS) / len(sents)
         if share < JOINER_SHARE:
             found.append(f'only {share:.0%} of its sentences open with So, And, But, Now or See; he opens about one in three that way '
-                         'in every take (So before a result or the prediction, "Now," before a new step or a question): say the link in '
+                         'in every take (So before a result or a verdict, "Now," before a new step or a question): say the link in '
                          'the opening word (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
     if len(sents) >= 12:
         lengths = [len(words_of(x)) for x in sents]
@@ -888,14 +888,15 @@ def spoken_habit_warnings(beats):
                          '(house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
     for x in sents:
         if BARE_PREDICTION.match(x):
-            found.append(f'"{x.strip()}" stands alone; he never says a prediction label on its own: run it into the claim, "So my '
-                         'prediction is that..." (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+            found.append(f'"{x.strip()}" stands alone; he never says a label on its own: run his view into the claim, "So I '
+                         'reckon...", and never as a dated prediction (house rules SCRIPT_AS_HE_TALKS and NO_DATED_PREDICTION; a '
+                         'warning, not a refusal)')
             break
     text = ' '.join(beats)
     day = DAY_DEADLINE.search(text)
     if day:
-        found.append(f'"{day.group(0)}" is a day number; he says a deadline as a period ("by the end of December 2027"): keep the '
-                     'exact day in the article and the prediction record (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+        found.append(f'"{day.group(0)}" is a day number; he says a date as a period ("by the end of December 2027"): keep the '
+                     'exact day in the article (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
     for rx, say in HIS_WORDS:
         if rx.search(text):
             found.append(f'write his words: {say} (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
@@ -1192,7 +1193,7 @@ So how do you lose your biggest supplier and keep growing? Let's take it apart.
 
 One claim doesn't stand up. On a podcast, the founder was asked if Higgsfield pays for advertising. "We don't do paid," he said. ''' + ' '.join(['More words that fill the middle of the script.'] * 20) + '''
 
-So here's our call. We're eighty-five per cent sure, and we'll mark it right or wrong on the day.
+So here's the answer. The billion is real, and it comes with small print.
 
 If I ran an AI firm, I'd do one thing. I'd show everyone how I count my sales.
 
@@ -1314,7 +1315,7 @@ def self_test():
     check('a script that opens few sentences with a joiner is warned; one written his way is not',
           (any('So, And, But, Now or See' in w for w in spoken_habit_warnings([flat])),
            any('So, And, But, Now or See' in w for w in spoken_habit_warnings([talky]))), (True, False))
-    check('a bare "My prediction:" and a day-number deadline are warned',
+    check('a bare "My prediction:" and a day-number date are warned',
           (any('stands alone' in w for w in spoken_habit_warnings(['My prediction:', 'By 31 December 2027, it ships.'])),
            any('day number' in w for w in spoken_habit_warnings(['By 31 December 2027, it ships.']))), (True, True))
     flowing = ' '.join(['So the price went up last year, and most firms never noticed it on the bill.'] * 12)
@@ -1324,12 +1325,12 @@ def self_test():
            any('sounds robotic' in w for w in spoken_habit_warnings([flowing]))), (True, False))
     check('"nobody" is warned towards his "no one"', any('"no one"' in w for w in spoken_habit_warnings([talky])), True)
     check('a long script that says "my bet" passes the voice check',
-          warns(GOOD.replace("So here's our call.", "So here's my bet.")), [])
+          warns(GOOD.replace("So here's the answer.", "So here's my bet.")), [])
     check('a short hook needs no opinion', warnings(short), [])
     # House rule NO_AI_DISCLOSURE_LINE: the line Krish cut from Monday's and Friday's scripts on 2026-10-12.
-    said_ai = warnings(GOOD.replace("So here's our call.", "My bet: yes. Yes, I made this with Claude's help. So here's our call."))
+    said_ai = warnings(GOOD.replace("So here's the answer.", "My bet: yes. Yes, I made this with Claude's help. So here's the answer."))
     check('a line saying it was made with Claude is a warning naming his rule, never a refusal',
-          ([w for w in said_ai if 'NO_AI_DISCLOSURE_LINE' in w] != [], problems(GOOD.replace("So here's our call.", "I made this with Claude's help. So here's our call."))
+          ([w for w in said_ai if 'NO_AI_DISCLOSURE_LINE' in w] != [], problems(GOOD.replace("So here's the answer.", "I made this with Claude's help. So here's the answer."))
            == problems(GOOD)), (True, True))
     check('a song made with an app, or "it", is not that line', [bool(AI_LINE.search(x)) for x in (
         'I made a song with Suno in ten minutes.', 'I made it with AI in ten minutes.', 'A fan made this with AI.')], [False, False, False])

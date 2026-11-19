@@ -29,7 +29,7 @@ beat's `role`:
 | `bridge` | carries the thought to the next anchor | a lighter beat that ends on a cue into the next |
 | `pivot` | the turn | one designed move: a zoom out, a carry into a new frame |
 | `payoff` | the answer, exactly once (`story.one_payoff`) | the one big moment; mint on the result |
-| `call` | the one thing to do (mind.the.gap: the dated call) | calm; the call reads and holds |
+| `call` | retired with the dated call card (Rulings, Krish, 2026-11-17 and 2026-11-18): an older spec's `call` beat is an ordinary closing beat; plan it as the `payoff` that answers the question | calm; the captions read and hold |
 
 Anchors and bridges alternate (`story.alternation`). The close comes from `config/brand-palette.json` (the tall cut's one
 statement beat of at most 2 s, the wide cut's statement card) and the engine draws it. The plan never adds a close, an

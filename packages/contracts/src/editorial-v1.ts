@@ -8,7 +8,8 @@ export const MONEY_OF_AI_FORMATS_V1 = ['money_trace', 'artifact', 'verdict', 'co
 export const BUILT_WITH_AI_FORMATS_V1 = ['builder_conversation', 'build_itself', 'third_why', 'first_version'] as const
 /** mind.the.gap's format (Krish, 2026-09-26: "The Fork is good"). It tells
  *  the story in the order the channel's timeline draws it: then, now, the
- *  fork, our call. */
+ *  fork, where it leads (no dated call since 2026-11-18: Rulings, Krish,
+ *  2026-11-17 and 2026-11-18). */
 export const MIND_THE_GAP_FORMATS_V1 = ['the_fork'] as const
 /** Every format a runner could parse before The Fork. A runner that does not
  *  declare the formats it understands is only handed briefs in these. */

@@ -32,7 +32,7 @@
   "approval_gate": null,
   "hard_gates": [
     "Spoken wording must preserve truth, claim boundaries, confidentiality and canonical names.",
-    "Short-native scripts pass the story check (walk log F75): open on the one question the script answers, end by answering it, then the call, then a spoken outro once a script runs a minute or more; never read a heading or stamp aloud; carry no line still marked NOT YET FACT-CHECKED."
+    "Short-native scripts pass the story check (walk log F75): open on the one question the script answers, end by answering it (never a dated prediction), then a spoken outro once a script runs a minute or more; never read a heading or stamp aloud; carry no line still marked NOT YET FACT-CHECKED."
   ],
   "soft_gates": [
     "The opening, mechanism, payoff and ending should be specific and speakable.",

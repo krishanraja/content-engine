@@ -116,13 +116,11 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/content-ideas/archive-stale` (cron) | archives idle ideas | none |
 | `/api/shifts/detect` (cron), `/api/shifts/[id]` | proposes shifts over a 21-day corpus through a deterministic gate; Krish's rulings on them | Sonnet [`shifts-*`] |
 | `/api/signals/news` (cron) | news velocity for the pieces in play: what GDELT saw about each subject in two days and what Hacker News said, every headline to `trend_observations` (origin `gdelt` or `hn`, story key the piece's id, `gathered_not_selected`); a subject that doubles in a day turns the board's "News velocity" signal to warn (`api/_signals.ts`, docs/ENGINE_100X.md) | none, keyless |
-| `/api/signals/odds` (cron) | the market's odds on every Call with a market pinned: reads Polymarket or Kalshi once a day and appends the reading to `meta.call_market.history` | none, keyless |
-| `/api/content-ideas/[id]/call-market` | pin a prediction market (Polymarket slug or Kalshi ticker) to a piece's dated Call, read once to refuse a wrong one; GET reads it, `{clear: true}` unpins | none, keyless |
 | `/api/content-ideas/[id]/making` | where the piece is between the workroom and every channel (`meta.making`: workroom and publish page links, visual gate, script check, pack, recordings, video assets, channels posted, the session making it); GET reads it with the steps, POST merges a patch. Written by Claude Code sessions (`scripts/post-pack/making.py`) and by Krish's cookie when he ticks a channel off; read by Control Center over its realtime subscription on `content_ideas`, and by its done-check sweep for each piece's steps. After a write lands it asks that sweep to look at the piece's open board items (`POST /api/done-checks {keys}` with the access cookie, `_controlCenter.ts`; the write waits up to 3 s for it before it answers); it closes none itself | none, keyless |
 | `/api/week/options` | the week's options (Krish, 2026-10-11: one Sunday decision for Monday, Wednesday and Friday). GET `?week_start=<Monday>` hands a session each series' mandate, the options written for that week, what is in flight, the judges' best and the ideas Krish dropped in; POST `{week_start, series, options:[{id, rank, pitch, why_now, recommended}]}` writes `meta.week_option` on each row and clears it from rows the day no longer offers. Read live by Control Center's week page. Picks nothing | none, keyless |
 | `/api/publish/watch` | hourly: marks a piece published from the publication's public archive (the Substack archive) and records its YouTube video and Short from the @makeyourmind-up channel feed, matched to the piece by address, then title, then day (and ticks Substack on its making record, when it has one), asks the done-check sweep to look at its board items, and holds a fresh post that matches no piece as one `post_matched` question for a session (`_publishWatch.ts`). It closes no board item: Control Center's done-check sweep does (step 4) | none, keyless |
 | `/api/publish/catalogue` | public, read-only: every published piece with its article, its YouTube video and its Short, from the making record; makeyourmindup.ai reads it and takes each cover from Substack | none |
-| `/api/calls` | public, read-only: every published piece's Call, our confidence, `not_due_yet` or `due`, Krish's verdict when he has made it, and the pinned market's odds; the scoreboard on makeyourmindup.ai reads it | none |
+| `/api/calls` | retired on 2026-11-18 with the prediction format: it answers `{ ok, retired, calls: [] }`, so a page that still reads it shows an empty board and a plain reason, never a call, a confidence or a verdict | none |
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
 | `/api/idea-queue` | the one idea queue: `GET` reads it (and the oldest two untriaged as the A/B pair); `POST` queues an idea, triages it (story, angle, cute, curious with his reason, drop; only `decided_by: 'Krish'`) or takes it out. Rows are `content_ideas` with `queued_at` and `protected_at`; no purge, expiry, bury or stale sweep touches them | none |
@@ -237,30 +235,19 @@ of its 409 `changed_during_draft`) and of revise's `done`:
     { "rule": "R7", "found": "Reads at about age 13.5. Above 13 cannot be approved: ..." }
   ],
   "retried": true,                      // a second call ran and answered
-  "note": "The second try broke as many rules as the first, so this is the first answer.",
-  "confidence_restored": true           // Krish's confidence had to be put back (below)
+  "note": "The second try broke as many rules as the first, so this is the first answer."
 }                                       // note: only when a retry was wanted and the first answer kept
 ```
 
-**The writer never sets Krish's confidence** (since 2026-09-30, walk log
-F43). How sure we are is his judgement (his ruling, 2026-09-26: "I'd rather
-take a clearer stance than sit on the fence all the time and say 60%", and
-he sets the number). After the model and any retry, in code
-(`guardConfidence`, `api/_selfCheck.ts`): a first draft says
-`How sure we are: [to set]`, whatever the model wrote; a rewrite keeps
-the source text's confidence exactly, label and number ("How sure we are:
-70%." stays that, "Confidence: 70%." stays that, and the placeholder stays
-the placeholder, the old `[Krish to set]` written as `[to set]` because it
-named him, house rule NO_NAME; the fact gate's hash reads both the same, so a
-passed check holds); a rewrite of a text with no confidence gets the placeholder
-in place of any number the model wrote. A confidence the model dropped is put
-back at the end of the call (a paragraph of its own under a heading, the last
-sentence of a bold-label paragraph); with no call at all there is nowhere to
-put it, and CALL says so. It is found by the shared call reader
-(`labelledConfidences`, `callSectionOf`) as the fact gate finds it: "How sure
-we are:" anywhere, "Confidence:" inside the call only, so a labelled number
-elsewhere ("Consumer confidence: 62% in August") is left as written.
-`self_check.confidence_restored` is true whenever it changed the text.
+**No confidence is put in or held** (since 2026-11-18). From 2026-09-30 (walk
+log F43) `guardConfidence` put "How sure we are: [to set]" into every first
+draft and held a rewrite to its source's confidence. The prediction format is
+abandoned (Ruling, Krish, 2026-11-17: "I don't do dated-and-scored
+make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't
+really have the clout such that my opinion can hold up in official scores.";
+Ruling, Krish, 2026-11-18: "get rid of that - i have abandoned the prediction
+format, it feels lame"), so the guard is gone and `self_check` no longer
+carries `confidence_restored`: a writer's words go back as written.
 
 **A rewrite in place** (since 2026-09-30, walk log F44). Given a `selection`,
 revise hands the model the whole draft and the passage, then puts the answer
@@ -332,9 +319,11 @@ Krish asked for it on 2026-09-25, after the engine's first draft of a piece
 rescaled Cisco's $900 million a year to "close to a million dollars".
 
 Two things may change without a new check: the dashes, and the number of
-Krish's confidence in the call (his ruling, 2026-09-26: a confidence no longer
-forces a fact re-check). Since 2026-09-28 (walk log F41) the confidence is
-found by the same reader CALL and the Studio use
+Krish's confidence in an old piece's call (his ruling, 2026-09-26: a confidence
+no longer forces a fact re-check). Dormant since 2026-11-18: no piece writes a
+call or a confidence any more (house rule NO_DATED_PREDICTION), and the reader
+stays only so every check stored before then still matches its text. Since 2026-09-28 (walk log F41) the confidence is
+found by the dormant reader in
 (`packages/contracts/src/call.ts`), under either label: a line of its own,
 "How sure we are: 75%.", anywhere in the piece, as before, and any number
 after "How sure we are:" or "Confidence:" inside the call, so piece 1's
@@ -349,8 +338,9 @@ on trial, and the stages that enforce it. Writers read them through
 `VOICE_GUARDRAILS` (the joke pass included), the drafter and rewriter add the
 rules scoped to their subchannel, both judge gates put the rules for their
 gate in every judge's context, and the final pass builds its absolutes from
-them. House rules win over a mandate where they disagree, so every piece
-ends with a dated prediction. They also require every sentence to have one
+them. House rules win over a mandate where they disagree, so no piece makes a
+dated prediction even where a mandate written before 2026-11-18 still asks
+for one (`NO_DATED_PREDICTION`; Rulings, Krish, 2026-11-17 and 2026-11-18). They also require every sentence to have one
 clear reading, and ask unfamiliar mechanisms to use a factual historical
 parallel, familiar analogy or clearly signposted comic exaggeration when that
 makes the idea easier to grasp. Every visual must make one critical point
@@ -370,14 +360,12 @@ stage.
 **Before approval** (`api/_publishChecks.ts`). `approved` and `published`
 also need the checks a machine can make: the fact gate, no "Not X, Y", no em
 dashes, no exclamation marks outside quotes, British spelling outside quotes
-and names, a reading age of 13 at most (12 to 13 warns), and a prediction with
-a date and a percentage. The prediction is read by the same reader the
-Studio uses to put the call on a Short (`packages/contracts/src/call.ts`), so
-a piece passes only with a call a Short can show word for word: one dated
-paragraph, a real date, and one labelled whole percentage.
-`CLEAR_STANCE`, a warning, reads the confidence written as "How sure we are:
-75%" or "Confidence: 70%", and is green only on a number it has read, at 70%
-or more (walk log F35). Anything else is a 409 `publish_gate` naming what is
+and names, and a reading age of 13 at most (12 to 13 warns). Nothing asks
+for a prediction: the checks `CALL`, `CALL_HORIZON` and `CLEAR_STANCE` and
+their per-piece exception tables were removed on 2026-11-18 with the format
+(`NO_DATED_PREDICTION`), and a piece is never held for having no date, no
+confidence or no stance (`tests/control-plane/no-dated-prediction.test.ts`).
+Anything else is a 409 `publish_gate` naming what is
 left. `GET /fact-check` returns the whole
 checklist, whether the piece is `ready`, and its receipts.
 
@@ -433,7 +421,7 @@ companies in the story, puts them in a plain conflict or change, leaves one
 question the video answers, adds to the thumbnail text instead of repeating
 it, and fits in 60 characters (YouTube stops at 100). The description opens
 with a hook that fits in about 150 characters, then two or three plain
-sentences, then the piece's dated prediction as the piece gives it, then
+sentences, then
 "Read the full piece free at makeyourmindup.ai", then at most three
 hashtags, or none.
 
@@ -473,8 +461,7 @@ each problem in plain words, and the answer that fails less is kept, the
 first on a tie; it never asks a third time. A Substack title over 100 fails,
 and so does an answer with no Substack title or subtitle: its YouTube fields
 are kept, and the one retry asks for what is missing. A `warn` (a title over
-60 characters, a title that names nobody, a description without the piece's
-prediction, a subtitle whose first sentence runs past about 60 characters or
+60 characters, a title that names nobody, a subtitle whose first sentence runs past about 60 characters or
 that runs past 150 in all) is for the person reading. A conflict, an open
 question, being true beyond the numbers, a Substack title that tells the
 same story as the YouTube one, and a first sentence that makes sense alone
@@ -649,7 +636,6 @@ rows in the last seven days.
 | Thu 21:00 | `investigations` | `/api/investigations/run` |
 | Fri 17:30 | `shifts_detect` | `/api/shifts/detect` |
 | daily 06:30 | `signals_news` | `/api/signals/news` |
-| daily 06:45 | `signals_odds` | `/api/signals/odds` |
 | Fri 17:50 | `arcs_surface` | `/api/arcs/surface` |
 | Fri 18:00 | `briefs_assemble` | `/api/briefs/assemble` |
 | Sat 05:00 | `build_signals` | `/api/discover-build-signals` |
