@@ -1930,9 +1930,9 @@
      },
      "viewer_task": "locate_story",
      "point": "Anthropic, which makes Claude, pays other companies for its tools",
-     "layout": "STAGE",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "l_marks"
@@ -1975,8 +1975,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off",
-     "backdrop": "asset:hl-workday-anthropic"
+     "face": "window"
     },
     {
      "id": "croc",
@@ -2083,9 +2082,9 @@
      },
      "viewer_task": "verify_evidence",
      "point": "One company said its VMware bill went up ten times",
-     "layout": "STAGE",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "l_ars",
@@ -2115,9 +2114,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
-     "backdrop": "asset:hl-ars"
+     "face": "window",
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
     },
     {
      "id": "vibe",
@@ -2147,9 +2145,9 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "You type what you want and the AI writes it",
-     "layout": "STAGE",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "l_prompt"
@@ -2199,8 +2197,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off",
-     "backdrop": "asset:salesforce-screen"
+     "face": "window"
     },
     {
      "id": "magic",
@@ -2394,9 +2391,9 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "They swapped rented software for different rented software",
-     "layout": "STAGE",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "l_deel",
@@ -2433,9 +2430,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
-     "backdrop": "asset:hl-cxtoday"
+     "face": "window",
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
     },
     {
      "id": "curative",
@@ -2446,9 +2442,9 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Curative cancelled a $600,000 Salesforce contract after building its own",
-     "layout": "STAGE",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "l_cur_hl"
@@ -2463,9 +2459,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
-     "backdrop": "asset:hl-curative-bi"
+     "face": "window",
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
     },
     {
      "id": "upkeep_cur",
@@ -2476,9 +2471,9 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Built in two months, but keeping it running is not so easy",
-     "layout": "STAGE",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "l_cur_600"
@@ -2493,9 +2488,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
-     "backdrop": "asset:hl-curative-bi"
+     "face": "window",
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
     },
     {
      "id": "miss",
@@ -2554,9 +2548,9 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Our sums: building a help desk costs about six times buying one",
-     "layout": "STAGE",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "l_build",
@@ -2593,9 +2587,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off",
-     "override_reason": "two numbers count up once and hold so a viewer can read both; any more events would only make them jump",
-     "backdrop": "asset:workday-screen"
+     "face": "window",
+     "override_reason": "two numbers count up once and hold so a viewer can read both; any more events would only make them jump"
     },
     {
      "id": "upkeep",
@@ -2673,9 +2666,9 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Anthropic runs its finance and people on Workday and its customers on Salesforce",
-     "layout": "STAGE",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "l_wd_hl",
@@ -2720,8 +2713,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off",
-     "backdrop": "asset:hl-workday-anthropic"
+     "face": "window"
     },
     {
      "id": "fin",
@@ -2732,9 +2724,9 @@
      },
      "viewer_task": "verify_evidence",
      "point": "For its help desk Anthropic bought Fin, live in under a week",
-     "layout": "STAGE",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "l_fin_hl",
@@ -2764,9 +2756,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
-     "backdrop": "asset:hl-fin-anthropic"
+     "face": "window",
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
     },
     {
      "id": "detail",
@@ -2777,9 +2768,9 @@
      },
      "viewer_task": "land_payoff",
      "point": "Fin runs on Claude: the AI maker pays for a bot on its own AI",
-     "layout": "STAGE",
+     "layout": "WINDOW",
      "plate": {
-      "source": "none"
+      "source": "take"
      },
      "uses": [
       "l_fin_claude"
@@ -2794,9 +2785,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off",
-     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof",
-     "backdrop": "asset:fin-claude"
+     "face": "window",
+     "override_reason": "one real page held whole and still so it can be read; the page itself is the proof"
     },
     {
      "id": "focus",
