@@ -101,25 +101,6 @@ export function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, fr
   return from + (to - from) * eased
 }
 
-/** The title frame carries the wordmark (config/brand-palette.json logo_rule: the logo only on the title frame and the
- *  close; Krish, 2026-11-18: "ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME"): it fades in under the
- *  finished title and leaves with it. */
-function titleWordmark(props: EngineRenderProps, frame: number, stage: { left: number; top: number; width: number; height: number }) {
-  const moment = props.titleMoment
-  if (!moment) return null
-  const landed = Math.max(...moment.words.map((w) => w.atFrame)) + 6
-  const fadeIn = Math.min(1, Math.max(0, (frame - landed) / 8)), fadeOut = Math.min(1, Math.max(0, (moment.toFrame - frame) / 10))
-  const opacity = Math.min(fadeIn, fadeOut)
-  if (opacity <= 0) return null
-  const logo = props.brand.logo
-  // Tall: centred under the title. Wide: on the panel's right, clear of the caption that returns on its left.
-  const wide = props.aspect === '16:9'
-  const w = Math.min(stage.width * (wide ? 0.5 : 0.56), 640), h = w * logo.pixelHeight / logo.pixelWidth
-  const left = wide ? stage.left + stage.width * 0.95 - w : stage.left + (stage.width - w) / 2
-  return <Img data-title-wordmark src={logo.src} style={{ position: 'absolute', left,
-    top: stage.top + stage.height - h - stage.height * 0.07, width: w, height: h, opacity }} />
-}
-
 function Backdrop({ src, tokens, focus, frame, width, height }: { src: string; tokens: EngineRenderProps['tokens']; focus: number; frame: number; width: number; height: number }) {
   return <AbsoluteFill data-backdrop data-backdrop-focus={focus.toFixed(3)}>
     <GradedBackdrop src={src} focus={focus} tokens={tokens as unknown as Record<string, string>} frame={frame} width={width} height={height} />
@@ -353,15 +334,14 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
           <BrandFrame props={props} beat={beat} frame={frame} />
         </AbsoluteFill>
       )))
-  // The episode title moment (props.titleMoment): the line he says becomes the title over the captions, which leave its
-  // words out. It lands in the panel above his face on a staged beat, else across the frame.
+  // The episode title moment (props.titleMoment): the line he says becomes ONE full-frame lockup with the stacked wordmark
+  // inside it, over his face panel on a wide cut and over the band on a short (Ruling, Krish, 2026-11-19; title/TitleMoment.tsx).
+  // The wordmark is the lockup's own, from config/brand-palette.json through props.brand: it never comes or goes on its own.
   const titleLayer = props.titleMoment && frame >= props.titleMoment.fromFrame && frame < props.titleMoment.toFrame ? (
     <AbsoluteFill key="title-moment" data-title-moment>
-      <TitleMoment {...(props.titleMoment.card ? { card: true } : {})} words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame} {...(props.titleMoment.release ? { release: props.titleMoment.release } : {})}
-        frame={frame} aspect={props.aspect} width={width} height={height}
-        stage={stagedNow ? stagedNow.panel : props.titleMoment.card ? titleSafe(props.aspect, width, height) : { left: 0, top: 0, width, height }}
-        captionBox={band(props)} tokens={props.tokens as unknown as Record<string, string>} />
-      {titleWordmark(props, frame, stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height })}
+      <TitleMoment words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame}
+        frame={frame} aspect={props.aspect} width={width} height={height} tokens={props.tokens as unknown as Record<string, string>}
+        wordmark={props.brand.stacked} Image={Img} />
     </AbsoluteFill>) : null
   // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.
   const stagingGround = stagedNow && !stagedNow.rises ? (
@@ -410,14 +390,6 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )
-}
-
-/** Where the title card lands on an unstaged beat: the top of the safe column, under every channel's top bar and over
- *  his hair, so his eyes and mouth stay clear (Krish, 18 Nov 2026: "having naked captions over my face looks stupid";
- *  in the lower band the card covered his mouth). */
-export function titleSafe(aspect: string, width: number, height: number) {
-  return aspect === '9:16' ? { left: 60, top: 220, width: 800, height: 330 }
-    : { left: Math.round(width * 0.1), top: Math.round(height * 0.06), width: Math.round(width * 0.8), height: Math.round(height * 0.3) }
 }
 
 /** His full-frame take on a tall cut is framed FACE_LIFT from its bottom edge, so his face sits about 85 px higher and

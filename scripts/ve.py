@@ -2057,6 +2057,11 @@ def cmd_proof(args, render_fn=None) -> int:
             return 1
         if args.cut not in spec['cuts']:
             raise ValueError(f'{args.cut} is not a cut in the spec')
+        if getattr(args, 'title_looked', None):
+            from velib import guards as _guards
+            proof.record_title_looked(verdict.ve_dir(Path(args.spec)), args.cut, args.title_looked, _guards._now())
+            print(f've proof: recorded what you saw on the title frame for {args.cut}')
+            return 0
         if getattr(args, 'compared', None):
             from velib import guards as _guards
             proof.record_compared(verdict.ve_dir(Path(args.spec)), args.cut, args.compared, _guards._now())
@@ -2400,6 +2405,7 @@ def main() -> int:
     p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--beat', help='prove this beat instead')
     p.add_argument('--props', help='default <ve dir>/props.<cut>.json'); p.add_argument('--assets-dir')
     p.add_argument('--scale', type=float, default=1.0); p.add_argument('--no-qc', action='store_true')
+    p.add_argument('--title-looked', metavar='WORDS', help="record what you saw on the proof's title frame at full size (Ruling, Krish, 2026-11-19); renders nothing")
     p.add_argument('--compared', metavar='WORDS', help="record what you compared (every beat change at full size, beside the proof he approved and his standing notes); renders nothing")
     p.set_defaults(fn=cmd_proof)
     p = sub.add_parser('styles', help='render the proof window once per shortlisted motion style, for his pick')

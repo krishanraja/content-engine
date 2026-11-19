@@ -4272,6 +4272,62 @@
         ],
         "line": "An inline article figure carries no mark, names one picture form, and says nothing the article doesn't: render_figure.mjs refuses it otherwise."
       }
+    },
+    {
+      "id": "title-card-split-logo-and-squeezed",
+      "on": "2026-11-19",
+      "krish": "give me a title card failure report, as I expect the title card to enter as I am talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually was a good build for the title card.",
+      "what": "Wed 18 (\"Build or buy your tools in an AI world?\"): the timing worked, but the title was squeezed into his 608 px panel on the wide cut and an 800 x 420 box on the short (about 70 px type), and the wordmark was a separate layer that faded in 6 frames after his last word and out on its own, looking like a stray bug bottom right. Nothing was centred or composed as one picture. The good build, Wed 11's \"AI MUSIC or HUMAN MUSIC?\" (one full frame, two angled bands slamming in from opposite sides, a mint connector word, motion behind and a light sweep, the logo centred underneath as part of the unit), lived in a one-piece script and was lost when per-piece scripts were banned. No check looked at the title, and neither proof reached it (the title came at 0:34 and 0:21), yet his condition \"as long as the title card frame in each is strong\" was called met without the title frame being looked at.",
+      "status": "guarded",
+      "mode": "title-not-a-hero",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "handoff_loss",
+          "evidence": "docs/plans/2026-11-11-wednesday/short-composite/brand_frames.py title_full held the craft; the engine's title component (apps/renderer/src/engine/title/TitleMoment.tsx) was built without it."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "ve qc measured captions, evidence cards and blank frames; no row measured title type size, centring or whether the wordmark sat inside the title, and no proof had to include the title frame."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "No failure, floor rule or ruling said the title is one full-frame lockup with the logo inside it."
+        }
+      ],
+      "surface": "the episode title moment, every ve cut",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/title/TitleMoment.tsx",
+          "contains": "export function lockupGeometry",
+          "how": "the title draws one full-frame lockup with the stacked wordmark inside it and on the lockup's own opacity",
+          "test": "npx vitest run apps/renderer/src/engine/title"
+        },
+        {
+          "file": "scripts/velib/qc_frames.py",
+          "contains": "def title_lockup_frame_problems",
+          "how": "ve qc reads the settled title frame: type size, centring, full width, the wordmark inside the lockup and only while it holds",
+          "test": "python3 tests/ve_frame_checks_test.py"
+        },
+        {
+          "file": "tests/ve_frame_checks_test.py",
+          "contains": "class TitleLockup",
+          "how": "each refusal fails on a bad frame and the good lockup passes"
+        },
+        {
+          "file": "scripts/velib/proof.py",
+          "contains": "def record_title_looked",
+          "how": "every proof renders the title frame, is not sendable until someone has looked at it, and an approval naming the title is met only once that look is recorded",
+          "test": "python3 tests/ve_proof_test.py"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "long_video",
+          "short_video"
+        ],
+        "line": "The title is one full-frame lockup, the wordmark inside it; every proof shows it."
+      }
     }
   ]
 }

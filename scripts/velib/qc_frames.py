@@ -404,6 +404,75 @@ def title_width_problems(path: str, props: dict, fps: float, aspect: str, read=N
     return []
 
 
+def title_lockup_problems(props: dict, rules: dict | None = None) -> list[dict]:
+    """The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19). Compile says so on the
+    props; a cut whose props do not was rendered with the old panel card and its separate, free-floating wordmark."""
+    moment = props.get('titleMoment')
+    if not moment or moment.get('lockup') is True:
+        return []
+    return [{'why': 'the title was rendered as a card in a panel or band with a separate wordmark, not one full-frame lockup '
+                    'with the wordmark inside it: compile and render the cut again'}]
+
+
+def title_lockup_frame_problems(path: str, props: dict, fps: float, aspect: str, read=None, rules: dict | None = None,
+                                lead: int = 0) -> list[dict]:
+    """Read the title lockup on the rendered frames: its type size, that it is centred, that it spans the frame and not a
+    panel, that the wordmark sits inside it, and that the wordmark comes and goes with it."""
+    rule = (rules or config())['title_lockup']
+    moment = props.get('titleMoment')
+    if not moment:
+        return []
+    if read is None:
+        import sys  # noqa: PLC0415
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        import channel_safe  # noqa: PLC0415
+        read = channel_safe.tesseract_words
+    from . import qc_onscreen  # noqa: PLC0415
+    width, height = (1080, 1920) if aspect == '9:16' else (1920, 1080)
+    start, end = int(moment['fromFrame']), int(moment['toFrame'])
+    last = max(int(w['atFrame']) for w in moment.get('words') or [{'atFrame': start}])
+    hold = min(last + rule['settle_frames'], end - 11) if end - 11 > last else last
+    mark_words = set(rule['wordmark_tokens'])
+    title_words = set(tokens(' '.join(w['text'] for w in moment.get('words') or []))) - mark_words
+
+    def words_at(frame: int):
+        with tempfile.TemporaryDirectory() as temp:
+            return [w for w in read(qc_onscreen.frame_png(path, frame + lead, Path(temp))) if w[1] >= 60]
+
+    seen = words_at(hold)
+    title = [w for w in seen if set(tokens(w[0])) & title_words]
+    mark = [w for w in seen if set(tokens(w[0])) & mark_words and not set(tokens(w[0])) & title_words]
+    at = hold + lead
+    if not title:
+        return [{'frame': at, 'why': 'none of the title words can be read on the settled title frame'}]
+    out = []
+    caps = sorted(w[2][3] for w in title)
+    cap = caps[len(caps) // 2] / height
+    floor = rule['min_cap_height_share'][aspect]
+    if cap < floor:
+        out.append({'frame': at, 'why': f'the title type stands {cap:.1%} of the frame height, under {floor:.1%}: it is squeezed, '
+                                        'not a full-frame lockup'})
+    left, right = min(w[2][0] for w in title), max(w[2][0] + w[2][2] for w in title)
+    off = abs((left + right) / 2 - width / 2) / width
+    if off > rule['max_centre_offset_share']:
+        out.append({'frame': at, 'why': f'the title sits {off:.0%} of the frame off centre: the lockup is centred'})
+    if (right - left) / width < rule['min_width_share']:
+        out.append({'frame': at, 'why': f"the title spans {(right - left) / width:.0%} of the frame width, under "
+                                        f"{rule['min_width_share']:.0%}: it is confined to a panel or band, not the whole frame"})
+    top = min(w[2][1] for w in title)
+    inside = [w for w in mark if w[2][1] > top and w[2][0] >= left - width * 0.05 and w[2][0] + w[2][2] <= right + width * 0.05
+              and abs(w[2][0] + w[2][2] / 2 - width / 2) / width <= rule['max_centre_offset_share'] * 2]
+    if not inside:
+        out.append({'frame': at, 'why': 'the wordmark is not read inside the title lockup, centred under the title'
+                                        + (' (it is read elsewhere on the frame)' if mark else '')})
+    for frame, when in ((start - rule['edge_frames'], 'before the title arrives'), (end + rule['edge_frames'], 'after the title leaves')):
+        if frame < 0:
+            continue
+        if any(set(tokens(w[0])) & mark_words and not set(tokens(w[0])) & title_words for w in words_at(frame)):
+            out.append({'frame': frame + lead, 'why': f'the wordmark is on screen {when}: it enters and leaves with the title, never on its own'})
+    return out
+
+
 def head_problems(path: str, beats: list[dict], fps: float, aspect: str, detector, grab=None, rules: dict | None = None) -> dict:
     """His whole head in frame on every beat that shows him, and on a 16:9 cut his take in the bottom right."""
     rule = (rules or config())['head']
@@ -448,6 +517,7 @@ SPEC_ROWS = {
     'brand.render_current': ('the render knew the logo rule', lambda p, r, d: render_current_problems(p, d)),
     'text.no_off_day_props': ('"off.day" is in no drawn text', lambda p, r, d: off_day_text_problems(p, r)),
     'title.moment': ('one title card from his spoken line, captions empty while it holds', lambda p, r, d: title_problems(p, r)),
+    'title.lockup': ('the title rendered as one full-frame lockup with the wordmark inside it', lambda p, r, d: title_lockup_problems(p, r)),
 }
 
 
@@ -479,6 +549,8 @@ def rows(path: str | None, props: dict, publish_day: str | None = None, *, beats
               lambda: off_day_frame_problems(path, props, fps, read, rules, lead))
     frame_row('title.stage_width', 'the title holds at full stage width', True,
               lambda: title_width_problems(path, props, fps, aspect, read, rules, lead))
+    frame_row('title.lockup_frame', 'the title is one centred full-frame lockup, big type, the wordmark inside it and timed with it', True,
+              lambda: title_lockup_frame_problems(path, props, fps, aspect, read, rules, lead))
     detector = face_detector
     if detector is None and any(face_visible(b) for b in beats):
         from . import qc_faces  # noqa: PLC0415

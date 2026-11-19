@@ -699,8 +699,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
         **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
-        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')},
-                            **({'card': True} if (spec.get('title_moment') or {}).get('card') else {})}} if moment else {}),
+        # The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19); 'lockup' tells ve qc
+        # the cut was rendered after the lockup replaced the panel card and the separate wordmark.
+        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}, 'card': True, 'lockup': True}}
+           if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
     if sting:

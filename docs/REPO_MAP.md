@@ -4891,7 +4891,6 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
-- `function titleSafe(aspect: string, width: number, height: number)`
 - `const FACE_LIFT`
 - `function faceLift(aspect: string, windowed: number): number`
 
@@ -6278,8 +6277,13 @@ Spot inks, paper and shadow. All still colour values live here, including device
 
 - `type TitleWord = { text: string; atFrame: number }`
 - `type Box = { left: number; top: number; width: number; height: number }`
+- `type TitleImage = { src: string; pixelWidth: number; pixelHeight: number }`
 - `type TitleMomentProps`
-- `function titleLayout(words: TitleWord[], stage: Box, aspect: TitleMomentProps['aspect'])`
+- `function lockupParts(words: TitleWord[]): { a: number[]; connector: number | null; b: number[] }`
+- `type LockupBand`
+- `type LockupGeometry`
+- `function lockupGeometry(words: TitleWord[], width: number, height: number, aspect: TitleMomentProps['aspect'], wordmark…`
+- `function lockupOpacity(frame: number, fromFrame: number, toFrame: number): number`
 - `function TitleMoment(props: TitleMomentProps): JSX.Element | null`
 
 ### `apps/renderer/src/engine/transport.ts`
