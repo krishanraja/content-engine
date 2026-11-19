@@ -244,6 +244,9 @@
       "plate": {
         "source": "take"
       },
+      "backdrop": {
+        "src": "/home/user/content-engine/.cache/fri20/assets/shots/tomshw.png"
+      },
       "keyFrame": 0
     },
     {

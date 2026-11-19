@@ -1,0 +1,27 @@
+{
+  "schema": "bed-shape-receipt/1",
+  "engine": "ve",
+  "machine": "scripts/ve.py qc",
+  "video": "short.mp4",
+  "video_sha256": "9f87358a4e31f1876fc0443f461f9ef20c2b25c5d41b91910f24bfa7ef012fea",
+  "bed_shape": {
+    "pass": true,
+    "problems": [],
+    "turns": {
+      "open_end": 1.5,
+      "bed_from": 3.0,
+      "bed_to": 84.725,
+      "close_full": 85.725,
+      "fade_from": 86.1333,
+      "total": 87.1333
+    },
+    "bed_median_lufs": -31.0,
+    "bed_spread_lu": 0.2,
+    "direction_changes": 1,
+    "open_over_bed_lu": 15.3,
+    "end_over_bed_lu": 13.5,
+    "lifts_left_out": [],
+    "config": "config/music-bed.json"
+  },
+  "premix": "audio.short.bed.json"
+}

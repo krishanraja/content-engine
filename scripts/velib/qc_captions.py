@@ -291,7 +291,7 @@ def art_view(all_pages: list, index: int, aspect: str, fps: float, cfg: dict | N
     if index > 0:
         extras |= {t for w in all_pages[index - 1].get('words') or [] for t in _tokens(_art_text(w))}
     settle = int(math.ceil(float(a['enter_seconds']) * float(fps))) + 1
-    return {'region': region, 'extras': sorted(fold(t) for t in extras), 'settle': settle}
+    return {'region': region, 'drawn': (x, y, w, h), 'extras': sorted(fold(t) for t in extras), 'settle': settle}
 
 
 def in_order(expected, actual, extras=()) -> dict:

@@ -236,7 +236,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
                 tokens={props.tokens} sinceFrames={sinceBeat} boil={profile.boil} />}
               {torn && <TornFilter id={beat.id} tokens={props.tokens} />}
             </> : sweep && <AbsoluteFill style={sweep} />)
-        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} /> : undefined
+        // A SPLIT panel draws its beat's backdrop too, so the panel above his take is the piece's own page, never plain ink
+        // (Krish, 2026-11-19: "I don't want a plain black screen anywhere"; Fri 20 Nov, the slam beats' empty top band).
+        const backdropEl = (graphicsOnly || beat.layout === 'SPLIT') && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} /> : undefined
         const layer = (
           <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
             {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts); a backdrop joins it only

@@ -12,11 +12,23 @@ from __future__ import annotations
 from . import settings
 
 
+def _audio(path):
+    """The file's sound as 16 kHz mono float32 samples, decoded by ffmpeg. faster-whisper's own decoder calls av.open with
+    an argument older PyAV builds refuse ("unexpected keyword argument 'metadata_errors'", the cloud machines, 19 Nov
+    2026), so it is handed samples, which every version takes and which hear the same audio."""
+    import subprocess
+
+    import numpy as np
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(path), '-map', '0:a:0', '-ac', '1', '-ar', '16000', '-f', 'f32le', 'pipe:1'],
+                         capture_output=True, check=True).stdout
+    return np.frombuffer(raw, dtype=np.float32).copy()
+
+
 def faster_whisper(path, model='small.en') -> dict:
     """faster-whisper on a finished file, as make.py hears it (beam 5, VAD, word timings)."""
     from faster_whisper import WhisperModel  # installed on the home computers, never in CI
     segs, info = WhisperModel(model, device='cpu', compute_type='int8', cpu_threads=4).transcribe(
-        str(path), word_timestamps=True, vad_filter=True, beam_size=5)
+        _audio(path), word_timestamps=True, vad_filter=True, beam_size=5)
     words = [{'w': w.word, 's': round(w.start, 3), 'e': round(w.end, 3)} for seg in segs for w in seg.words]
     return {'aligner': settings.FIRST, 'model': model, 'duration': info.duration, 'words': words}
 

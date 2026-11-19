@@ -1,1 +1,5 @@
-[{"severity": "note", "area": "l_krafton", "text": "The declared sourceAspectRatio 10.8889 is the crop by fraction; the pixel crop measures 10.9043 (rounding). The '258 days.' crop choice is Krish's."}]
+[
+ {"severity": "note", "area": "short SPLIT backdrops", "text": "The blurred page's top edge is the Tom's Hardware header (a red band, the site logo as a red smudge). Check a frame against the wordmark rule; if it reads as a logo, frame the backdrop lower."},
+ {"severity": "note", "area": "one backdrop for nine beats", "text": "The same bill page is behind nine beats of the short: consistent with one page under audit, static from hook to whose. Krish's choice."},
+ {"severity": "note", "area": "title card scrim", "text": "Check on a render that the title reads over the moving sofa and closet plates and no caption shows during the hold."}
+]

@@ -163,6 +163,8 @@ slamify('short', beats, 'code', [("billed", "BILLED", "CARE BILLED UNDER"), ("ex
 slamify('short', beats, 'hindsight', [("guessing,", "GUESSING", "NEXT YEAR: IT'S GUESSING"), ("analysing.", "ANALYSING", "LAST YEAR: IT'S ANALYSING")], 's')
 slamify('short', beats, 'whose', [("mistake", "MISTAKE", "WHOSE MISTAKE?"), ("hospital's.", "HOSPITAL'S", "IT WAS THE HOSPITAL'S")], 's')
 no_marks_on_pages('short', beats)
+for _b in beats:  # the bill's own page behind every SPLIT panel, never plain ink (Krish, 19 Nov)
+    if _b['layout'] == 'SPLIT': _b['backdrop'] = 'asset:tomshw'
 next(o for o in objects if o['obj'] == 'th_head')['persist']['to_beat'] = 'lines'  # the same page held: its last line is his 'line by line'
 json.dump(spec,open(P+'spec.json','w'),indent=1); print('wrote', len(beats),'beats', len(objects),'objects')
 

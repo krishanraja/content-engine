@@ -9,6 +9,15 @@
       "said": "Approve the engine change (Recommended)",
       "on": "2026-11-19",
       "artifact_hash": "527e43892bd91e9a802a8ede125f7c6cad8723f3e73ea6be52b921655181629f"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "said": "yes change for all moving forward - but bear in mind that the audio waveform visual behind it was made for a piece about AI music specifically. In the future, the engine needs to find its own visual that matches the piece.",
+      "on": "2026-11-19",
+      "artifact_hash": "4dc902065df02b41c03e481e398a0a95adafb2afebdb79ed9082124749ca5e69",
+      "covers": "the house title card over the piece's own picture (no music bars); a SPLIT panel draws its beat's backdrop, so no plain black panel (his rule of 19 Nov: 'I don't want a plain black screen anywhere')"
     }
   ]
 }

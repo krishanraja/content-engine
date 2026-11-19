@@ -23,7 +23,10 @@ def drawn_boxes(pages, beats, aspect, region, style, layouts=None) -> list:
     from . import qc_faces
     boxes = []
     for page in pages or []:
-        boxes.append((f"caption '{qc_faces.page_text(page)[:24]}'", qc_faces.caption_box(page, style, aspect, region)))
+        # An art-directed page is judged by the stack as drawn, never by its padded OCR read box (Fri 20 Nov: the read box
+        # reached x 882, two pixels into Instagram's rail, round a stack drawn inside x 870).
+        drawn = page.get('drawn')
+        boxes.append((f"caption '{qc_faces.page_text(page)[:24]}'", tuple(int(v) for v in drawn) if drawn else qc_faces.caption_box(page, style, aspect, region)))
     if style == 'word':
         g = qc_faces.word_geometry(aspect)
         boxes.append(('held title', (80, g['titleTop'], g['width'] - 160, int(g['titleSize'] * 2.4))))

@@ -1262,7 +1262,8 @@
        "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "backdrop": "asset:tomshw"
     },
     {
      "id": "face",
@@ -1319,7 +1320,8 @@
        "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "backdrop": "asset:tomshw"
     },
     {
      "id": "question",
@@ -1486,7 +1488,8 @@
        "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "backdrop": "asset:tomshw"
     },
     {
      "id": "steak",
@@ -1623,7 +1626,8 @@
        "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "backdrop": "asset:tomshw"
     },
     {
      "id": "hindsight",
@@ -1665,7 +1669,8 @@
        "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "backdrop": "asset:tomshw"
     },
     {
      "id": "whose",
@@ -1707,7 +1712,8 @@
        "silent": true
       }
      ],
-     "transition_out": "cut"
+     "transition_out": "cut",
+     "backdrop": "asset:tomshw"
     },
     {
      "id": "closet",

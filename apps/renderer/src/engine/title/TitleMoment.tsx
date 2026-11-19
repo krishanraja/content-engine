@@ -9,7 +9,10 @@ import { textWidth } from '../../house/metrics'
  *  squeezed into his 608 px panel or a top band (about 70 px type) with the wordmark as a separate layer that came and went
  *  on its own (config/failures.json title-card-split-logo-and-squeezed). Wed 11's craft, taken from its one-piece script
  *  (docs/plans/2026-11-11-wednesday/short-composite/brand_frames.py title_full) into the engine:
- *   - the whole frame: an ink ground with bars pulsing behind, over his face panel on the wide cut and over the band on the short;
+ *   - the whole frame: the piece's own picture under an ink scrim. Whatever the beats under the title show (a plate, a page, his
+ *     face) keeps playing beneath it, so the card always matches its piece and never leaves a plain dark band (Ruling, Krish,
+ *     2026-11-19: "yes change for all moving forward - but bear in mind that the audio waveform visual behind it was made for
+ *     a piece about AI music specifically. In the future, the engine needs to find its own visual that matches the piece.");
  *   - two angled bands that slam in from opposite sides as he says them: a hatched ink band in cream, then a mint band in ink;
  *   - the connector word ("or", "vs", "and") in mint between them;
  *   - a light sweep across both once the last word lands;
@@ -138,6 +141,9 @@ export function lockupOpacity(frame: number, fromFrame: number, toFrame: number)
   return Math.min(fadeIn, 1 - unit((frame - (toFrame - out)) / out))
 }
 
+/** How much ink lies over the piece's own picture under the title: the bands stay legible and the picture still reads. */
+export const TITLE_SCRIM = 0.62
+
 /** Cut-clock only; deliberately no Remotion context, clocks, random values or persistent state. */
 export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
   const { words, frame, fromFrame, toFrame, width, height, tokens } = props
@@ -150,19 +156,11 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
   const mint = tokens.mint ?? tokens.brand ?? cream
   const last = Math.max(...words.map(w => w.atFrame))
   const k = frame - fromFrame
-  const beat = 0.5 + 0.5 * Math.cos(k / 30 * 2 * Math.PI * 2.1)
   const push = 1 + 0.03 * unit(k / Math.max(1, toFrame - fromFrame))
   const shake = (1 - ease(k / 10)) * 14
   const Image = props.Image ?? 'img'
-  // Bars pulse behind the lockup: the motion under it, never a still card.
-  const barCount = props.aspect === '9:16' ? 46 : 70
-  const bars = Array.from({ length: barCount }, (_, i) => {
-    const v = 0.2 + 0.8 * Math.abs(Math.sin(i * 0.61 + 1.3 + k / 30 * 7) * Math.sin(i * 0.19 + k / 30 * 2.9 + 1.3))
-    const h = height * 0.84 * v * (0.6 + 0.4 * beat) / 2
-    const w = width / barCount
-    return <div key={`bar-${i}`} style={{ position: 'absolute', left: i * w + w * 0.25, width: w * 0.5, top: height * 0.5 - h, height: h * 2,
-      borderRadius: w * 0.25, background: mint, opacity: 0.22 }} />
-  })
+  // The motion under the lockup is the piece's own: the beat beneath plays on through the scrim (TITLE_SCRIM). The pulsing
+  // music bars were Wed 11's AI-music picture and are gone from the house card.
   const bandFill = (index: number) => index === 0
     ? { background: `repeating-linear-gradient(45deg, ${ink} 0px, ${ink} 14px, ${inkSoft} 14px, ${inkSoft} 22px)`, color: cream }
     : { background: mint, color: ink }
@@ -197,8 +195,7 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
       style={{ position: 'absolute', left: geo.wordmark.left, top: geo.wordmark.top, width: geo.wordmark.width, height: geo.wordmark.height }} />
     : null
   return <div data-title-moment="" data-title-lockup="" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity }}>
-    <div data-title-ground="" style={{ position: 'absolute', inset: 0, background: ink }} />
-    {bars}
+    <div data-title-ground="" style={{ position: 'absolute', inset: 0, background: `color-mix(in srgb, ${ink} ${Math.round(TITLE_SCRIM * 100)}%, transparent)` }} />
     {bandsDrawn}
     {connector}
     <div data-title-sweep="" style={{ position: 'absolute', inset: 0,

@@ -1,25 +1,35 @@
 {
   "schema": "ve-pre-critic/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-  "spec_sha256": "b19ead8bc76d19293822a272cb9a8fc532e0f0a00b67311aeae0f9fe62a432f6",
+  "spec_sha256": "2661f85579a79ed4bf0b002b71c9e36b5c80e3bb3cc78f1ba3d1343dac62556a",
   "cards": [],
   "reviewer": "reviewer-subagent-opus",
-  "reviewed_at": "2026-11-19T14:44:10.605696+00:00",
+  "reviewed_at": "2026-11-19T15:25:07.256147+00:00",
   "answers": {
     "one_idea": {
       "pass": true,
-      "line": "Yes. Each real page is one readable page held still. Short proof and lines share the headline card, whose standfirst ('break down all the items on the bill') is what he means by 'line by line'. l_code shows the headline naming 'duplicative charges, improper coding', which is what he explains. l_krafton shows the court quoting the CEO's AI chats. No card adds a second idea."
+      "line": "Yes. The Tom's Hardware bill page behind the six SPLIT beats is the old page the auditor is reading, blurred as ground (focus 1 on every beat with a device), so the slam words and the counter stay the only figure and it adds no second idea. The page is sharp only inside th_head on proof and lines. The see-through title scrim now sits over the sofa and closet plates, which are the idea's own money and skeleton."
     },
     "no_invented_numbers": {
       "pass": true,
-      "line": "No invented figure. th_head, l_head and l_lede show $195,000 and $33,000 printed on the Tom's Hardware page itself. l_krafton shows '258 days', printed on the Harvard Law forum page shown as itself, which the never-list allows. The counters show only the bill-billed and bill-after rows. No slam word or tape has a digit."
+      "line": "No invented figure. The backdrop is the piece's own real page (asset tomshw, sha256 bdd1e519...); at the renderer's focus-1 blur (18 px on a 1080 panel) its headline figures cannot be read, and they are the piece's own $195,000 and $33,000 anyway. The counters show only the bill-billed and bill-after rows; no slam word or tape has a digit; l_krafton's '258 days' is printed on its own page."
     }
   },
   "findings": [
     {
       "severity": "note",
-      "area": "l_krafton",
-      "text": "The declared sourceAspectRatio 10.8889 is the crop by fraction; the pixel crop measures 10.9043 (rounding). The '258 days.' crop choice is Krish's."
+      "area": "short SPLIT backdrops",
+      "text": "The blurred page's top edge is the Tom's Hardware header (a red band, the site logo as a red smudge). Check a frame against the wordmark rule; if it reads as a logo, frame the backdrop lower."
+    },
+    {
+      "severity": "note",
+      "area": "one backdrop for nine beats",
+      "text": "The same bill page is behind nine beats of the short: consistent with one page under audit, static from hook to whose. Krish's choice."
+    },
+    {
+      "severity": "note",
+      "area": "title card scrim",
+      "text": "Check on a render that the title reads over the moving sofa and closet plates and no caption shows during the hold."
     }
   ],
   "mechanical": [],

@@ -89,3 +89,12 @@ describe('the title lockup', () => {
       .toBe(draw({ aspect: '16:9', width: 1920, height: 1080 }))
   })
 })
+
+describe('the title card shows the piece, never a fixed picture (Krish, 19 Nov 2026)', () => {
+  it('draws no music bars and lays a see-through ink scrim over the beat beneath', () => {
+    const html = draw()
+    expect(html).not.toMatch(/key="bar-|border-radius:[0-9.]+px;background:aquamarine;opacity:0.22/)
+    expect(html).toContain('color-mix(in srgb, black 62%, transparent)')
+    expect(html).not.toMatch(/data-title-ground="" style="position:absolute;inset:0;background:black"/)
+  })
+})
