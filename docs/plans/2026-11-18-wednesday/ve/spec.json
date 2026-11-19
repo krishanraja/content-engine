@@ -119,7 +119,8 @@
      {
       "id": "Workday"
      }
-    ]
+    ],
+    "fit": true
    }
   },
   {
@@ -195,7 +196,8 @@
      {
       "id": "Workday"
      }
-    ]
+    ],
+    "fit": true
    }
   },
   {
@@ -211,7 +213,8 @@
      {
       "id": "Deel"
      }
-    ]
+    ],
+    "fit": true
    }
   },
   {
@@ -277,19 +280,8 @@
      {
       "id": "Slack"
      }
-    ]
-   }
-  },
-  {
-   "obj": "owner",
-   "device": "query_chip",
-   "meaning": "the terminal traces who owns Slack: Salesforce completed the deal in July 2021",
-   "persist": {
-    "from_beat": "slack",
-    "to_beat": "owner"
-   },
-   "params": {
-    "text": "OWNER OF SLACK SINCE JULY 2021"
+    ],
+    "fit": true
    }
   },
   {
@@ -305,7 +297,8 @@
      {
       "id": "Salesforce"
      }
-    ]
+    ],
+    "fit": true
    }
   },
   {
@@ -346,19 +339,8 @@
      {
       "id": "Salesforce"
      }
-    ]
-   }
-  },
-  {
-   "obj": "sf_does",
-   "device": "query_chip",
-   "meaning": "what Salesforce does, in his words",
-   "persist": {
-    "from_beat": "products",
-    "to_beat": "products"
-   },
-   "params": {
-    "text": "TRACKS EVERY CUSTOMER"
+    ],
+    "fit": true
    }
   },
   {
@@ -374,19 +356,8 @@
      {
       "id": "Workday"
      }
-    ]
-   }
-  },
-  {
-   "obj": "wd_does",
-   "device": "query_chip",
-   "meaning": "what Workday does, in his words",
-   "persist": {
-    "from_beat": "products",
-    "to_beat": "products"
-   },
-   "params": {
-    "text": "RUNS YOUR PAY AND HOLIDAYS"
+    ],
+    "fit": true
    }
   }
  ],
@@ -644,9 +615,7 @@
      },
      "uses": [
       "sf_mark",
-      "sf_does",
-      "wd_mark",
-      "wd_does"
+      "wd_mark"
      ],
      "events": [
       {
@@ -658,21 +627,14 @@
       },
       {
        "at_w": 91,
-       "obj": "sf_does",
-       "verb": "enter",
-       "to_state": "visible",
+       "obj": "sf_mark",
+       "verb": "highlight",
+       "to_state": "0",
        "silent": true
       },
       {
        "at_w": 99,
        "obj": "sf_mark",
-       "verb": "exit",
-       "to_state": "gone",
-       "silent": true
-      },
-      {
-       "at_w": 99,
-       "obj": "sf_does",
        "verb": "exit",
        "to_state": "gone",
        "silent": true
@@ -685,10 +647,17 @@
        "silent": true
       },
       {
-       "at_w": 104,
-       "obj": "wd_does",
-       "verb": "enter",
-       "to_state": "visible",
+       "at_w": 107,
+       "obj": "wd_mark",
+       "verb": "highlight",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 109,
+       "obj": "wd_mark",
+       "verb": "highlight",
+       "to_state": "0",
        "silent": true
       }
      ],
@@ -737,17 +706,11 @@
        "verb": "enter",
        "to_state": "visible",
        "silent": true
-      },
-      {
-       "at_w": 125,
-       "obj": "saas_dead",
-       "verb": "mark",
-       "to_state": "post",
-       "silent": true
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "override_reason": "one real page held whole and still so it can be read: a mark on an evidence card swaps its screenshot for text, and the page itself is the proof"
     },
     {
      "id": "proof",
@@ -776,6 +739,13 @@
        "silent": true
       },
       {
+       "at_w": 137,
+       "obj": "check",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
        "at_w": 138,
        "obj": "x_post",
        "verb": "enter",
@@ -794,13 +764,6 @@
        "obj": "hl_diginomica",
        "verb": "enter",
        "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 148,
-       "obj": "hl_diginomica",
-       "verb": "mark",
-       "to_state": "headline",
        "silent": true
       }
      ],
@@ -930,13 +893,6 @@
        "silent": true
       },
       {
-       "at_w": 205,
-       "obj": "hl_cxtoday",
-       "verb": "mark",
-       "to_state": "headline",
-       "silent": true
-      },
-      {
        "at_w": 209,
        "obj": "hl_cxtoday",
        "verb": "exit",
@@ -945,7 +901,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "override_reason": "one real page held whole and still so it can be read: a mark on an evidence card swaps its screenshot for text, and the page itself is the proof"
     },
     {
      "id": "worth",
@@ -1022,8 +979,7 @@
       "source": "take"
      },
      "uses": [
-      "slack",
-      "owner"
+      "slack"
      ],
      "events": [
       {
@@ -1042,9 +998,9 @@
       },
       {
        "at_w": 258,
-       "obj": "owner",
-       "verb": "enter",
-       "to_state": "visible",
+       "obj": "slack",
+       "verb": "highlight",
+       "to_state": "0",
        "silent": true
       }
      ],
@@ -1065,7 +1021,6 @@
       "source": "none"
      },
      "uses": [
-      "owner",
       "sf_back"
      ],
      "events": [
@@ -1078,9 +1033,9 @@
       },
       {
        "at_w": 263,
-       "obj": "owner",
+       "obj": "sf_back",
        "verb": "highlight",
-       "to_state": "OWNER",
+       "to_state": "0",
        "silent": true
       },
       {

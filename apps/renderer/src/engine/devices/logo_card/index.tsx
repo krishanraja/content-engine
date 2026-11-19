@@ -47,7 +47,11 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   if (params.tiles) {
     const rows = Math.ceil(params.logos.length / 3)
     // Preserve the proof's 1080-wide stage proportions; constrain short slots too.
-    const unit = Math.min(box.width / 1080, box.height / (rows * 240 + (rows - 1) * 60))
+    // With fit, one or two logos size to their own columns, never to a row of three (Wed 18, 18 Nov 2026: one mark alone drew as a
+    // 180 px tile in an 800 px region), and stay under 1.5x so a mark never outgrows the frame's other words.
+    const cols = Math.min(3, params.logos.length)
+    const unit = !params.fit || params.logos.length >= 3 ? Math.min(box.width / 1080, box.height / (rows * 240 + (rows - 1) * 60))
+      : Math.min(1.5, box.width / (cols * 240 + (cols - 1) * 60 + 120), box.height / (240 + (params.label ? 140 : 0)))
     const side = 240 * unit
     const gap = 60 * unit
     const height = rows * side + (rows - 1) * gap
