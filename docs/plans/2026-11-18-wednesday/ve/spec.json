@@ -87,9 +87,9 @@
     "sourceAspectRatio": 4.3689,
     "crop": {
      "x": 0.08,
-     "y": 0.22,
-     "w": 0.58,
-     "h": 0.45
+     "y": 0.27,
+     "w": 0.56,
+     "h": 0.2
     }
    }
   },
@@ -109,9 +109,9 @@
     "sourceAspectRatio": 1.9302,
     "crop": {
      "x": 0.14,
-     "y": 0.56,
-     "w": 0.78,
-     "h": 0.27
+     "y": 0.59,
+     "w": 0.74,
+     "h": 0.22
     }
    }
   },
@@ -150,10 +150,10 @@
     "date": "Sep 2024",
     "sourceAspectRatio": 1.5134,
     "crop": {
-     "x": 0.27,
-     "y": 0.27,
-     "w": 0.5,
-     "h": 0.3
+     "x": 0.29,
+     "y": 0.39,
+     "w": 0.3,
+     "h": 0.1
     }
    }
   },
@@ -173,9 +173,9 @@
     "sourceAspectRatio": 1.4354,
     "crop": {
      "x": 0.02,
-     "y": 0.17,
-     "w": 0.9,
-     "h": 0.52
+     "y": 0.39,
+     "w": 0.85,
+     "h": 0.15
     }
    }
   },
@@ -207,9 +207,9 @@
     "sourceAspectRatio": 2.381,
     "crop": {
      "x": 0.02,
-     "y": 0.24,
-     "w": 0.62,
-     "h": 0.55
+     "y": 0.25,
+     "w": 0.6,
+     "h": 0.5
     }
    }
   },
@@ -285,9 +285,9 @@
     "sourceAspectRatio": 3.3557,
     "crop": {
      "x": 0.15,
-     "y": 0.14,
-     "w": 0.68,
-     "h": 0.52
+     "y": 0.2,
+     "w": 0.66,
+     "h": 0.38
     }
    }
   },
@@ -1820,9 +1820,9 @@
      },
      "viewer_task": "locate_story",
      "point": "Klarna still uses Slack, so who owns Slack?",
-     "layout": "WINDOW",
+     "layout": "P1",
      "plate": {
-      "source": "take"
+      "source": "none"
      },
      "uses": [
       "slack"
@@ -1851,7 +1851,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "off"
     },
     {
      "id": "owner",
@@ -1901,7 +1901,7 @@
      "role": "bridge",
      "span": {
       "from_w": 273,
-      "to_w": 327
+      "to_w": 328
      },
      "viewer_task": "land_payoff",
      "point": "Build the bit that makes you different and rent the rest",
