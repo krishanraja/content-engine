@@ -317,3 +317,16 @@ class OneTypeSystem(Held):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class PressTime(unittest.TestCase):
+    """Wed 18, 19 Nov: his 13:06 proof approval was stored by date only and read as midnight, so two renders made that
+    morning, before his press, were counted against it and the cut was refused."""
+
+    def test_an_approvals_exact_time_wins_over_its_date(self):
+        spec = {'approvals': [{'gate': 'proof', 'by': 'Krish', 'on': '2026-11-19', 'at': '2026-11-19T13:06:00Z'}]}
+        self.assertEqual(guards.last_press(spec, {}).isoformat(), '2026-11-19T13:06:00+00:00')
+
+    def test_a_date_alone_still_reads_as_that_day(self):
+        spec = {'approvals': [{'gate': 'proof', 'by': 'Krish', 'on': '2026-11-19'}]}
+        self.assertEqual(guards.last_press(spec, {}).isoformat(), '2026-11-19T00:00:00+00:00')

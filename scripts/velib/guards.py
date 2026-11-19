@@ -400,7 +400,9 @@ def last_press(spec: dict, gates: dict) -> datetime | None:
     """The latest press of any gate by Krish, on the record or in the spec's approvals."""
     times = [_when(row.get('at')) for rows in (gates or {}).values() for row in (rows if isinstance(rows, list) else [rows])
              if isinstance(row, dict) and row.get('by') == 'Krish']
-    times += [_when(a.get('on')) for a in spec.get('approvals') or [] if isinstance(a, dict) and a.get('by') == 'Krish'
+    # An approval's exact time when it carries one ('at'): a date alone reads as midnight and counts the renders made
+    # before his press that day against it (Wed 18, 19 Nov: two morning renders refused the cut after his 13:06 approval).
+    times += [_when(a.get('at') or a.get('on')) for a in spec.get('approvals') or [] if isinstance(a, dict) and a.get('by') == 'Krish'
               and not engine_only(a)]
     times = [t for t in times if t is not None]
     return max(times) if times else None
