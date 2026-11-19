@@ -1,5 +1,6 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
+import { corpusLines, corpusOf, type CorpusItem } from './_corpus.js'
 import { bufferUrl, channelWords, placementFor } from './_growthPlacement.js'
 import { asWritten, backDocId, takenBackAt, wordsBody, wordsDocId } from './_contracts.js'
 import { spokenTitle, type FiledScript, type PieceDecisions } from './_decisions.js'
@@ -460,13 +461,17 @@ function reskinHead(raw: Body | null | undefined, o: ViewOption): string | null 
 
 /** What the prompt says to do with the story, by where the piece is (Ruling, Krish, 2026-11-16: "Even though this piece is
  *  locked, I should be able to tweak the narrative slightly in it by opening a session with Claude"). */
-export interface StoryState { approved: boolean; path?: string | null }
+export interface StoryState { approved: boolean; path?: string | null
+  /** Until his lock is signed: the research on file, the corpus the narrative is built from (_corpus.ts). */
+  corpus?: CorpusItem[] | null }
 function storyLines(story: StoryState | null | undefined): string {
   if (!story) return ''
+  const corpus = story.corpus && !story.approved ? corpusLines(story.corpus) : ''
+  if (corpus && !story.path) return corpus
   const file = story.path ? `The story is ${story.path}.` : 'The story is its narrative file in this week\'s docs/plans folder (narrative-lock-<day>.md, found by its piece_id line).'
   return story.approved
     ? `${file} Krish has approved it. If his notes below change the story (a new angle is a rewrite, not a patch), write the changed story into the same file and take his approval line off its end (a story changed under his approval is not the story he approved: making.py refuses it), so the board asks him to approve the new story. Otherwise take the next step.\n\n`
-    : `${file} Krish has not approved it yet. If his notes below ask for a change or a different angle, rewrite it to them, then tell him it is ready to approve on the board. If something in it is still open, settle it with him first.\n\n`
+    : `${file} Krish has not approved it yet. If his notes below ask for a change or a different angle, rewrite it to them, then tell him it is ready to approve on the board. If something in it is still open, settle it with him first.\n\n${corpus}`
 }
 
 /** The one Claude prompt for an item: what it is, where it stands, how it is made and how to report back to the board.
@@ -566,7 +571,10 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const picks = recorded || missed ? [] : lookPresses(d.piece_id, d.path?.style)
   // After his approval of the story the prompt stays beside the picks, so he can still change the story (Ruling, Krish,
   // 2026-11-16).
-  const story = (approved: boolean, path: string | null = null): StoryState => ({ approved, path })
+  // Until his lock is signed, every prompt for the piece names the research on file as the corpus (Krish, 2026-11-19).
+  const corpus = isDone('story') ? null : pieceCorpus(m, [d.piece_id, dayScope(m.week, d.day)], [...(d.materials || []), ...(d.path?.materials || [])])
+  const story = (approved: boolean, path: string | null = null): StoryState => ({ approved, path, corpus })
+  const unsigned: StoryState | null = corpus ? { approved: false, corpus } : null
   if (d.path?.current === 'look' && picks.length) {
     return { ...base, line, next: picks[0] as Action, decision: true,
       others: [itemPrompt(m.week, { ...base, line }, 'look', null, story(true), m.decisions?.[d.piece_id] ?? null) as unknown as PressAction, ...picks.slice(1)] }
@@ -603,10 +611,10 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   if (produce) return { ...base, line: produce.line, next: produce.next, decision: produce.decision, others: [...produce.others, ...(link ? [link as unknown as PressAction] : []), ...picks], ...(produce.plan ? { plan: produce.plan } : {}) }
   const lead = d.actions[0]
   if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) {
-    const tweak = recorded || missed ? [] : [itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction]
+    const tweak = recorded || missed ? [] : [itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, isDone('story') ? story(true) : unsigned, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction]
     return { ...base, line, next: lead, decision: false, others: [...tweak, ...picks] }
   }
-  const signedStory = isDone('story') && !recorded ? story(true) : null
+  const signedStory = isDone('story') && !recorded ? story(true) : unsigned
   return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, signedStory, m.decisions?.[d.piece_id] ?? null), decision: false, others: picks }
 }
 
@@ -676,7 +684,7 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
     const signLine = `Approved for ${d.label}. Read the narrative lock and sign it, or say what to change.`
     return { ...base, read: { ...base.read, sources: [lockSource(toSign.path), ...base.read.sources] }, line: signLine,
       next: signPress(m.week, p.id, toSign) as Action, decision: true,
-      others: [itemPrompt(m.week, { ...base, line: signLine }, 'story', null, { approved: false, path: toSign.path }, decided) as unknown as PressAction, ...picks] }
+      others: [itemPrompt(m.week, { ...base, line: signLine }, 'story', null, { approved: false, path: toSign.path, corpus: pieceCorpus(m, [p.id]) }, decided) as unknown as PressAction, ...picks] }
   }
   // Signed and its look not picked: his production pick leads, as on a series day (Tue 17's piece is still a piece).
   const lookPress = picks.find(a => a.op === 'look')
@@ -703,7 +711,7 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const stage = !out && !missed && scriptsOk ? productionStage(m, { pieceId: p.id, title: p.title, item: null, style: m.placedStyles?.[p.id], offday: false,
     read: base.read, decided, reportAs: null, base }) : null
   if (stage) return { ...base, line: stage.line, next: stage.next, decision: stage.decision, others: [...stage.others, ...picks], ...(stage.plan ? { plan: stage.plan } : {}) }
-  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, step, null, branded && !out && !missed ? { approved: true } : null, decided), decision: false, others: picks }
+  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, step, null, branded && !out && !missed ? { approved: true } : !out && !missed ? { approved: false, corpus: pieceCorpus(m, [p.id]) } : null, decided), decision: false, others: picks }
 }
 
 /** The one rule every card that carries a piece obeys (Ruling, Krish, 2026-11-17: board feedback is done to every day,
@@ -734,6 +742,11 @@ export function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: 
   const last = work.flatMap(w => w.sessions).filter(x => x.doing).sort((a, b) => b.last_at.localeCompare(a.last_at))[0]
   const said = read.said ?? (last ? cut(`${last.by}, ${last.last_at.slice(0, 16).replace('T', ' ')} UTC (${last.state}${last.step ? `, ${last.step}` : ''}): ${last.doing}`, 1200) : null)
   return { ...read, research, said }
+}
+/** The research on file for a piece across its scopes: the corpus its narrative is built from (_corpus.ts). */
+function pieceCorpus(m: Pick<ModelInputs, 'work'>, scopes: string[], extra: Array<{ id?: unknown; title?: unknown; kind?: unknown; role?: unknown }> = []): CorpusItem[] {
+  const work = scopes.flatMap(s => m.work?.[s]?.materials ?? [])
+  return corpusOf([...work, ...extra] as Array<{ id?: unknown; title?: unknown; kind?: unknown; role?: unknown }>)
 }
 /** The day's own scope for the work on file. */
 const dayScope = (week: string, day: string) => `day:${week}/${day}`
@@ -1259,7 +1272,11 @@ export function hookNorm(v: unknown): string | null {
  *  already chose), dated from 14 days before it to the end of its own week; never itself (an item carried into this week
  *  is matched by its key). Retelling is the same primary source, the same hook (never for the weekly good news, whose
  *  hook is the same every week by design), or two or more named sources in common. The line says which. */
-export function repeatOf(own: { keys: string[]; week: string; date: string; url: string | null; hook: string | null; recurring?: boolean; cites?: { urls: string[]; parts: string[] } }, recent: RecentOut[]): ModelRepeatOf | null {
+/** `idea`: the thing asking is an idea on the ideas board, never an item drawn on its day. An idea that IS something already
+ *  approved or in work on another day or week (its piece, its post's item) is never offered again, whenever that is
+ *  dated (Ruling, Krish, 2026-11-19: "no suggestions approved duplicated. right now I seem to get pieces I am already
+ *  working on show up as suggestions for following weeks"); what went out counts within the 14 days, as before. */
+export function repeatOf(own: { keys: string[]; week: string; date: string; url: string | null; hook: string | null; recurring?: boolean; cites?: { urls: string[]; parts: string[] }; idea?: boolean }, recent: RecentOut[]): ModelRepeatOf | null {
   const why = (r: RecentOut): string | null => {
     if (own.url && (r.url === own.url || (r.cites?.urls || []).includes(own.url))) return 'Same source as'
     if (r.url && (own.cites?.urls || []).includes(r.url)) return 'Same source as'
@@ -1269,8 +1286,13 @@ export function repeatOf(own: { keys: string[]; week: string; date: string; url:
     return shared >= 2 ? `Shares ${shared} sources with` : null
   }
   const end = shiftDays(own.week, 6)
-  const hits = recent.filter(r => !r.keys.some(k => own.keys.includes(k)) && r.week < own.week && daysBetween(own.date, r.date) <= 14 && r.date <= end)
-    .map(r => ({ r, how: why(r) })).filter((x): x is { r: RecentOut; how: string } => Boolean(x.how))
+  const same = (r: RecentOut) => r.keys.some(k => own.keys.includes(k))
+  const inWork = (r: RecentOut) => r.stage !== 'live'
+  const hits = recent.filter(r => {
+    if (same(r)) return Boolean(own.idea) && inWork(r) && (r.week < own.week || r.date < own.week || r.date > end)
+    if (own.idea && inWork(r)) return r.week < own.week || r.date > end
+    return r.week < own.week && daysBetween(own.date, r.date) <= 14 && r.date <= end
+  }).map(r => ({ r, how: same(r) ? 'Already in work:' : why(r) })).filter((x): x is { r: RecentOut; how: string } => Boolean(x.how))
     .sort((a, b) => ['live', 'scheduled', 'approved'].indexOf(a.r.stage) - ['live', 'scheduled', 'approved'].indexOf(b.r.stage) || b.r.date.localeCompare(a.r.date))
   const hit = hits[0]
   if (!hit) return null
@@ -1289,7 +1311,10 @@ export function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'p
   const out: RecentOut[] = []
   for (const it of items || []) {
     const board = it.origin_week || it.week || ''
-    if (it.state !== 'approved' || !it.date || it.date < from || it.date > to || !board || board >= m.week) continue
+    // In work on any later day counts too (Ruling, Krish, 2026-11-19): an approved item dated after this week, or one
+    // this week's board offered that now sits on another week.
+    const later = Boolean(it.date) && it.date! > to
+    if (it.state !== 'approved' || !it.date || it.date < from || !board || (board >= m.week && !later)) continue
     const stage: RecentOut['stage'] = it.posts.some(p => p.state === 'live') ? 'live' : it.posts.some(p => p.state === 'scheduled') ? 'scheduled' : 'approved'
     const raw = isObj(it.option) && Object.keys(it.option).length ? it.option : rawOption(m as ModelInputs, it.day || '', it.option_id)
     out.push({ keys: [it.item, ...(it.doc ? [`${board}:${it.doc}`] : [])], kind: 'post', title: cut(raw?.hook ?? raw?.title ?? raw?.copy ?? it.option_id, 200),
@@ -1298,7 +1323,8 @@ export function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'p
   }
   for (const r of pastPieces) {
     const date = str(r.scheduled_for)?.slice(0, 10)
-    if (!date || date < from || date >= m.week || r.buried_at) continue
+    // Pieces before the week, and pieces in work for a later week (never this week's own: they are drawn on their day).
+    if (!date || date < from || (date >= m.week && date <= to) || r.buried_at) continue
     const at = new Date(`${date}T00:00:00Z`)
     const day = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][at.getUTCDay()]
     out.push({ keys: [`piece:${String(r.id).toLowerCase()}`], kind: 'piece', title: cut(r.idea ?? r.thesis, 200),
@@ -1333,7 +1359,7 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
         const idea = ideaOf(m, d, o, why)
         const raw = rawOption(m, d.day, o.id)
         const rep = repeatOf({ keys: [`${m.week}:${o.doc_id}`, ...(o.item?.key ? [o.item.key] : []), ...(idea.piece_id ? [`piece:${idea.piece_id}`] : [])], week: m.week, date: d.date,
-          url: primaryUrl(raw, o.source), hook: hookNorm(raw?.hook ?? o.title), recurring: idea.kind === 'good_news', cites: citesOf(raw) }, m.recentOut || [])
+          url: primaryUrl(raw, o.source), hook: hookNorm(raw?.hook ?? o.title), recurring: idea.kind === 'good_news', cites: citesOf(raw), idea: true }, m.recentOut || [])
         if (rep) ideaRepeats.set(o.doc_id, rep)
         ideas.push(idea)
       }

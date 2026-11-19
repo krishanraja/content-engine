@@ -1,0 +1,538 @@
+{
+  "schema": "ve-pre-critic-inputs/1",
+  "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+  "spec_sha256": "c059f70f8992656ca9864688bb315df5222948ee9aa5864a6b62341c652506a0",
+  "question_1": "Does this piece carry one idea as clearly as The Ladder (Mon 2 Nov): one object, every move meaning something, nothing acting out a sentence? (.claude/agents/ve-critic.md, \"First, beside his favourite\")",
+  "question_2": "Is any number on screen invented: a figure the piece does not own (its datasets, real artifacts or his script)? The spec's own never-list is the rule.",
+  "style_idea": {
+    "object": "the auditor going through the past: every old page it opens turns up either money (cash down the back of the sofa) or a skeleton (out of the cupboard)",
+    "moves": [
+      {
+        "move": "a real page or number slams onto the stage on the word that names it",
+        "means": "the past is written down, so it can be checked"
+      },
+      {
+        "move": "the big number is struck through and counts down",
+        "means": "what the audit found, in the family's own account"
+      },
+      {
+        "move": "cash comes out of the sofa",
+        "means": "the missing money an audit finds"
+      },
+      {
+        "move": "a skeleton tumbles out of the cupboard",
+        "means": "what else it finds, and it does not care whose cupboard it is"
+      }
+    ],
+    "never": [
+      "a re-typed headline standing in for the real page",
+      "a generated picture standing in for a real record",
+      "a joke aimed at the family, the viewer or a named person",
+      "no gag on the death",
+      "his name on screen",
+      "invented numbers: every figure on screen is either the family's account as Tom's Hardware reported it or a figure printed on a named real page shown as itself"
+    ],
+    "real_artifacts": [
+      {
+        "asset": "tomshw",
+        "text": "Grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000"
+      }
+    ]
+  },
+  "storyboard": [
+    {
+      "cut": "short",
+      "beat": "hook",
+      "role": "hook",
+      "point": "AI just cut a family's six-figure hospital bill to a fraction",
+      "plate": "take",
+      "uses": [
+        "k_billed",
+        "chip_hours",
+        "strike"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "face",
+      "role": "bridge",
+      "point": "Imagine what it is finding in everyone's old paperwork, when whole hospital teams missed it",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "short",
+      "beat": "question",
+      "role": "pivot",
+      "point": "Will your AI auditor find the missing money?",
+      "plate": "none",
+      "uses": [
+        "sofa"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "skeletons",
+      "role": "pivot",
+      "point": "Or will it find the skeletons in your closet?",
+      "plate": "none",
+      "uses": [
+        "closet"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "proof",
+      "role": "anchor",
+      "point": "A real family owed the whole bill after a death with no health cover",
+      "plate": "none",
+      "uses": [
+        "th_head"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "lines",
+      "role": "bridge",
+      "point": "He asked for the bill line by line and gave it to Claude",
+      "plate": "none",
+      "uses": [
+        "th_lede"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "code",
+      "role": "anchor",
+      "point": "Care was billed under a dearer code than the care he got",
+      "plate": "take",
+      "uses": [
+        "chip_billed",
+        "chip_given"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "steak",
+      "role": "bridge",
+      "point": "Charged for a steak, served a sandwich",
+      "plate": "none",
+      "uses": [
+        "steak"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "fell",
+      "role": "anchor",
+      "point": "He sent the list and the bill fell to about a sixth",
+      "plate": "none",
+      "uses": [
+        "k_after",
+        "chip_caveat"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "love",
+      "role": "bridge",
+      "point": "An old bill can't argue back, the rules are written down, and AI reads every line without a break",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "short",
+      "beat": "hindsight",
+      "role": "anchor",
+      "point": "About next year AI is guessing; about last year it is reading",
+      "plate": "take",
+      "uses": [
+        "chip_next",
+        "chip_last"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "whose",
+      "role": "bridge",
+      "point": "Whose mistake did Claude find? The hospital's",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "short",
+      "beat": "closet",
+      "role": "pivot",
+      "point": "It didn't care whose closet it was opening",
+      "plate": "none",
+      "uses": [
+        "closet2"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "yours",
+      "role": "payoff",
+      "point": "And it won't care when it opens yours",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "short",
+      "beat": "act",
+      "role": "call",
+      "point": "This week he hands his own AI last year's invoices, to find his skeletons first",
+      "plate": "none",
+      "uses": [
+        "invoices"
+      ]
+    },
+    {
+      "cut": "short",
+      "beat": "close",
+      "role": "call",
+      "point": "The full story is free at makeyourmindup.ai",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "long",
+      "beat": "hook",
+      "role": "hook",
+      "point": "AI just cut a family's six-figure hospital bill to a fraction",
+      "plate": "take",
+      "uses": [
+        "l_k",
+        "l_src"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "face",
+      "role": "bridge",
+      "point": "Imagine what it finds in your last year of paperwork, when whole hospital teams missed it",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "long",
+      "beat": "l_question",
+      "role": "pivot",
+      "point": "Will your AI auditor find the missing money?",
+      "plate": "none",
+      "uses": [
+        "l_sofa"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_skeletons",
+      "role": "pivot",
+      "point": "Or will it find the skeletons in your closet?",
+      "plate": "none",
+      "uses": [
+        "l_closet"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "proof",
+      "role": "anchor",
+      "point": "A real family owed the whole bill after a death with no health cover",
+      "plate": "take",
+      "uses": [
+        "l_head"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_bitmiss",
+      "role": "bridge",
+      "point": "He didn't argue with the total; he asked for every line",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "long",
+      "beat": "l_code",
+      "role": "anchor",
+      "point": "Every service has a code and a price: one procedure twice, care billed under a dearer code",
+      "plate": "take",
+      "uses": [
+        "l_lede"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_michelin",
+      "role": "bridge",
+      "point": "Billed for the tasting menu, served the burger",
+      "plate": "none",
+      "uses": [
+        "l_michelin"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_fell",
+      "role": "anchor",
+      "point": "He sent the list and the bill fell to about a sixth; the hospital has said nothing",
+      "plate": "take",
+      "uses": [
+        "l_after",
+        "l_caveat"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_tenant",
+      "role": "anchor",
+      "point": "A tenant pasted his lease into ChatGPT, found the deposit cap and won",
+      "plate": "take",
+      "uses": [
+        "l_tenant"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_paperwork",
+      "role": "bridge",
+      "point": "Never pick a paperwork fight with someone who has a chatbot and a free evening",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "long",
+      "beat": "l_love",
+      "role": "bridge",
+      "point": "An old bill cannot argue back and its rules are written down",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "long",
+      "beat": "l_hindsight",
+      "role": "anchor",
+      "point": "About next year AI is guessing; about last year it is reading",
+      "plate": "take",
+      "uses": [
+        "l_next",
+        "l_last"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_lead",
+      "role": "bridge",
+      "point": "Every flag is a lead a person checks; your contracts and price lists are your rules",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "long",
+      "beat": "l_twist",
+      "role": "pivot",
+      "point": "To your customers, you are the hospital",
+      "plate": "take",
+      "uses": [
+        "l_cust"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_whose",
+      "role": "bridge",
+      "point": "Whose mistake did Claude find? The hospital's",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "long",
+      "beat": "l_closet",
+      "role": "pivot",
+      "point": "It didn't care whose closet it was opening",
+      "plate": "none",
+      "uses": [
+        "l_closet2"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_yours",
+      "role": "payoff",
+      "point": "And it won't care when it opens yours",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "long",
+      "beat": "l_dana",
+      "role": "anchor",
+      "point": "Software found faked pictures in a cancer centre's old papers, from outside the building",
+      "plate": "take",
+      "uses": [
+        "l_dana"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_krafton",
+      "role": "anchor",
+      "point": "A boss asked ChatGPT how to dodge a bonus, and the judge quoted the chats",
+      "plate": "take",
+      "uses": [
+        "l_krafton"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_money",
+      "role": "bridge",
+      "point": "Money, found down the back of the sofa",
+      "plate": "none",
+      "uses": [
+        "l_sofa2"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_both",
+      "role": "pivot",
+      "point": "or skeletons: it finds both",
+      "plate": "none",
+      "uses": [
+        "l_closet3"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "l_listfirst",
+      "role": "bridge",
+      "point": "The real question is who reads that list first",
+      "plate": "take",
+      "uses": []
+    },
+    {
+      "cut": "long",
+      "beat": "l_act",
+      "role": "call",
+      "point": "This week he puts his own last year's invoices through the AI, to find his skeletons first",
+      "plate": "none",
+      "uses": [
+        "l_invoices"
+      ]
+    },
+    {
+      "cut": "long",
+      "beat": "close",
+      "role": "call",
+      "point": "The full story is at makeyourmindup.ai",
+      "plate": "take",
+      "uses": []
+    }
+  ],
+  "cards": [],
+  "mechanical_already_run": [],
+  "pre_show_checklist": [
+    {
+      "id": "one_picture_per_beat",
+      "text": "A graphic and a photo never both carry the same point: one picture per beat.",
+      "krish": "two concurrent visual styles trying to say the same thing over one another? why?"
+    },
+    {
+      "id": "graded_backdrop_not_black",
+      "text": "A graphics beat sits on a graded, focus-racked backdrop, never flat black after a photograph; figures are never dimmed or blurred.",
+      "krish": "Motion graphics on a flat black background, straight after a full-frame photograph."
+    },
+    {
+      "id": "no_ghost_in_dissolves",
+      "text": "A change between a full-screen beat and a face beat is a clean cut; never a cross-dissolve over his face.",
+      "krish": "A ghost of his face in dissolves."
+    },
+    {
+      "id": "wordmark_only_title_and_close",
+      "text": "The wordmark appears only on the title frame and the closing card: no icons or company logos anywhere else unless he asks.",
+      "krish": "NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME"
+    },
+    {
+      "id": "no_offday_tag_on_screen",
+      "text": "off.day is never drawn as a pill, header or label, in any cut.",
+      "krish": "off.day is NEVER to be used ever as a tag"
+    },
+    {
+      "id": "captions_off_in_title_hold",
+      "text": "Captions stay off for the whole title moment: check every frame of the title hold for caption text.",
+      "krish": "A stray caption word (find) under the held episode title"
+    },
+    {
+      "id": "captions_off_his_face",
+      "text": "On face beats captions sit in the staged band below his face; no caption page over his face.",
+      "krish": "Captions over his head."
+    },
+    {
+      "id": "title_from_his_spoken_line",
+      "text": "The episode title is built from his spoken line, timed to his words, at full stage width, as a card that slams or slides in over his hair, never bare words over his face.",
+      "krish": "make the title captions a card that slams or slides in I think. having naked captions over my face looks stupid."
+    },
+    {
+      "id": "key_figure_fills_frame",
+      "text": "The figure a beat exists to show fills the frame.",
+      "krish": "The key figure (41) was too small."
+    },
+    {
+      "id": "music_level_and_loudness",
+      "text": "The bed sits 15% under the house level and is ridden by EBU R128 loudness, never RMS; the bed level does not swing.",
+      "krish": "The music was too loud, and the bed level swung."
+    },
+    {
+      "id": "approved_track_passes",
+      "text": "A track in config/music-library.json that he approved plays with no certificate check blocking it.",
+      "krish": "Aspire is \"100% licensed\""
+    },
+    {
+      "id": "no_false_starts_left",
+      "text": "Every restart and dead silence is cut where a quiet gap allows; any kept is named with its timestamp.",
+      "krish": "A false start left in his take."
+    },
+    {
+      "id": "opening_moves_in_3s",
+      "text": "Something lands on his first word (a line slamming in, a clip in motion, a punch-in); the joke or twist is visible before 3 seconds; never a static card that waits.",
+      "krish": "considering that's the first few seconds of the video, it's not much of a hook. It looks quite dull for the first 3 seconds."
+    },
+    {
+      "id": "head_whole_never_cropped",
+      "text": "His whole head is in frame on his lines; no split frame crops his head or ruins the picture above it.",
+      "krish": "Can't cut my head off and also ruin the visual above."
+    },
+    {
+      "id": "head_bottom_right_on_wide",
+      "text": "On every 16:9 proof beat his take sits in the bottom-right window, opposite the left-set captions, unless a full-frame clip fills the frame.",
+      "krish": "my head needs to be in the bottom right ... if the subtitles are going to be not centralised, then something needs to be in the bottom right."
+    },
+    {
+      "id": "captions_readable_halo_no_break",
+      "text": "Words over a busy picture or his take get the approved halo; a page never breaks mid-phrase and the web address stays on one caption.",
+      "krish": "Approve halo"
+    },
+    {
+      "id": "funny_and_made_by_codex",
+      "text": "The piece is funny and tongue-in-cheek; plates, devices and art direction come from Codex cards; every visual makes a point land faster.",
+      "krish": "This piece needs to be hilarious and tongue-in-cheek ... use codex for all asset production, generation, sourcing."
+    },
+    {
+      "id": "known_faults_fixed_not_caveated",
+      "text": "Every known fault is fixed before he sees the file; none is listed as a caveat.",
+      "krish": "If you know that things need fixing, just fucking fix them"
+    },
+    {
+      "id": "fixes_batched_checked_shown_once",
+      "text": "Fixes are batched and checked here; the cut is shown to him once, not once per round.",
+      "krish": "Each round of fixes went to him as a new render instead of being checked first"
+    },
+    {
+      "id": "route_missing_said_first",
+      "text": "When he asks for a route the engine does not have, say so in one line with the closest real route before doing anything.",
+      "krish": "render in Codex"
+    }
+  ]
+}

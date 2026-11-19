@@ -53,4 +53,9 @@ describe('shared photograph and drawn-stage grade', () => {
     expect(svg).toMatch(/<mask[^>]*>/)
     expect(svg.match(/<image /g)?.length).toBe(2)
   })
+
+  it('scales the photo from its top edge by the zoom compile measured, and not at all without one (Tue 17, 19 Nov)', () => {
+    expect(markup({ focus: 1 })).not.toContain('scale(')
+    expect(markup({ focus: 1, zoom: 1.6 })).toContain('translate(540 0) scale(1.6) translate(-540 0)')
+  })
 })

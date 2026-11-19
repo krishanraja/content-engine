@@ -3581,7 +3581,8 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png",
+        "zoom": 1.324
       },
       "keyFrame": 237
     },
@@ -3653,7 +3654,8 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png",
+        "zoom": 1.324
       },
       "keyFrame": 596
     },
@@ -3672,7 +3674,8 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png",
+        "zoom": 1.6
       },
       "keyFrame": 693
     },
@@ -3727,7 +3730,8 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-polling-1.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-polling-1.png",
+        "zoom": 1.293
       },
       "keyFrame": 894
     },
@@ -3840,7 +3844,8 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-pylons-1.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-pylons-1.png",
+        "zoom": 1.6
       },
       "keyFrame": 1636
     },

@@ -458,7 +458,7 @@ def ground_zoom(src: str) -> float:
     lowest = (rows[-1] + 1) / h
     if lowest >= 0.95:
         return 1.0
-    return round(min(1.6, max(1.0, 1 / max(lowest, 1e-6))), 3)
+    return float(round(min(1.6, max(1.0, 1 / max(lowest, 1e-6))), 3))
 
 
 def _params(params: dict, source) -> dict:

@@ -2,15 +2,15 @@
   "schema": "ve-proof/1",
   "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
   "cut": "short",
-  "beat": "title",
+  "beat": "power",
   "rule": "named in the spec (proof.beat)",
-  "start": 10.967,
-  "end": 18.967,
+  "start": 48.933,
+  "end": 56.933,
   "beat_s": [
-    13.033,
-    16.867
+    50.233,
+    55.6
   ],
-  "sha256": "607461ac427d66bb451bf5f78ec8e166fc092412ee2fad6c4c1dbef8e250794f",
+  "sha256": "546bd471bf3fc3e2ae807072d0b2fec09efc2d7ad73e539a2841a621d3c1858c",
   "spec_sha256": "e0e7a3881102bf678d2b96c52c815d738a57ad37a3238c618aecd4b7fb064ce0",
   "structure": {
     "format": "face-with-proof",
@@ -217,7 +217,7 @@
     ]
   },
   "style_module": "eating-jobs-ladder",
-  "props_sha256": "dd829f7e6de6b2a2896fc1385408a5ab8037d681183b0ff0b38cb0c63f4aaaba",
+  "props_sha256": "eca42c9286318ec7239097454cbcfa27ffc154091329f3702eef2139a72c0f62",
   "qc": {
     "measured_pass": false,
     "complete": false,
@@ -227,7 +227,7 @@
       "captions.phrase_breaks",
       "captions.render",
       "composition",
-      "title.moment"
+      "evidence.readable"
     ]
   },
   "type": [
@@ -252,7 +252,7 @@
       "caption on the light stage"
     ]
   ],
-  "engine_sha256": "e97863db1ad378749b7e2f665ad87aaed41f197c94e9f8aeb6c3bf573ba726b0",
+  "engine_sha256": "816f8389ac6f9180c949f0ce155e12df133d68430afb2ae2d5aa7ce1185f7bc6",
   "assets_sha256": {
     "bg-city-dusk": "107539f8d1b4c68f2d05ba9c1e2bc002109c35e1235b0cc166cfeab76cbeae2c",
     "bg-data-hall": "3730051bf5718d3577cfad4dc96c53bd8bd1abb0d20497ebed4630e065ea424c",
@@ -277,13 +277,62 @@
     "scene-nameplate": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222",
     "wyso-lead": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
   },
-  "made_at": "2026-11-19T12:34:54Z",
+  "made_at": "2026-11-19T12:49:25Z",
   "frames": {
-    "pass": null,
-    "status": "not_run",
-    "reason": "a frame could not be read: cannot reshape array of size 0 into shape (1920,1080,3)",
-    "problems": [],
-    "frames": 0
+    "pass": false,
+    "status": "ok",
+    "problems": [
+      {
+        "check": "plain_dark",
+        "beat": "power",
+        "frame": 63,
+        "band": [
+          1405,
+          1920
+        ],
+        "says": "beat power, frame 63: a plain dark band, rows 1405 to 1920 (515 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "power",
+        "frame": 127,
+        "band": [
+          1416,
+          1920
+        ],
+        "says": "beat power, frame 127: a plain dark band, rows 1416 to 1920 (504 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "power",
+        "frame": 183,
+        "band": [
+          1424,
+          1920
+        ],
+        "says": "beat power, frame 183: a plain dark band, rows 1424 to 1920 (496 px), no detail"
+      }
+    ],
+    "frames": 38
+  },
+  "compare": {
+    "against": "607461ac427d66bb451bf5f78ec8e166fc092412ee2fad6c4c1dbef8e250794f",
+    "reasons": [
+      "the engine changed since the proof he approved"
+    ],
+    "compared": null,
+    "sheet": "compare.short.png",
+    "sha256": "7e2f2a7c88fcd611c4203c83d65eca800d67fe8737ddbcbc668c9e1da3ddb963",
+    "seconds": [
+      0.5,
+      1.5,
+      2.5,
+      3.5,
+      4.5,
+      5.5,
+      6.5,
+      7.5
+    ]
   },
   "sendable": false
 }

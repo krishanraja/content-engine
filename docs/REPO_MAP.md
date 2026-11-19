@@ -2313,6 +2313,12 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function dayDocuments(ticks: Body[], docs: Body[], from: Day, to: Day, fromWeek: string): Doc[]`
 - `async function carryDay(db: SupabaseClient, toWeek: string, raw: unknown): Promise<{ status: number; body: Body }>`
 
+### `apps/control-plane/api/board/_carryTemplates.ts`
+
+Every week's ideas board carries the meme templates (Ruling, Krish, 2026-11-19: "every week's ideas board should include
+
+- `function carryTemplates(ideas: Body | null, lastWeek: string, lastIdeas: Body | null, lastQueue: Array<{ doc_id: string…`
+
 ### `apps/control-plane/api/board/_contracts.ts`
 
 - `const collections`
@@ -2388,6 +2394,14 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `type Manifest`
 - `function fileSpec(week: string, v: unknown, html = false): v is BoardFile`
 - `function validManifest(week: string, v: unknown): v is Manifest`
+
+### `apps/control-plane/api/board/_corpus.ts`
+
+The corpus a piece's narrative is built from (Ruling, Krish, 2026-11-19: "at this stage of every piece, I need to be ab…
+
+- `interface CorpusItem`
+- `function corpusOf(materials: Array<{ id?: unknown; title?: unknown; kind?: unknown; role?: unknown }>): CorpusItem[]`
+- `function corpusLines(corpus: CorpusItem[]): string`
 
 ### `apps/control-plane/api/board/_cuts.ts`
 
@@ -2494,6 +2508,14 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `const HELD_CHANGED`
 - `function gatePieces(week: string, pieces: Body[], approvals: Approval[] | null, ideas: Body | null)`
 - `function cutSoWhat(v: unknown): string`
+
+### `apps/control-plane/api/board/_goodNews.ts`
+
+Saturday is good-news carousels only (Krish, 2026-11-19, of Sat 28's ideas board: "These are still all just one idea,
+
+- `const GOOD_NEWS_FROM: string`
+- `function isGoodNews(o: Body): boolean`
+- `function saturdayHold(week: string, day: string, o: Body, approved: boolean): string | null`
 
 ### `apps/control-plane/api/board/_growthPlacement.ts`
 
@@ -4860,6 +4882,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `const CAPTION_HALO`
 - `const TAKE_HALO`
 - `function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
+- `function overTake(beat: { plate?: { source?: string | undefined } | undefined } | undefined): boolean`
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
@@ -4867,6 +4890,8 @@ Run a Vercel serverless handler locally against the real environment.
 - `function backdropPush(beat: EngineBeat, frame: number): number`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
 - `function titleSafe(aspect: string, width: number, height: number)`
+- `const FACE_LIFT`
+- `function faceLift(aspect: string, windowed: number): number`
 
 ### `apps/renderer/src/engine/VeCut.tsx`
 
@@ -5024,6 +5049,7 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `const ENDING_SETTLED_S`
 - `const ENDING_TIMING_TALL`
 - `const ENDING_SETTLED_TALL_S`
+- `const SHAPE`
 - `function statementLines(aspect: EngineRenderProps['aspect'], tagline: string = ENDING_TAGLINE): string[]`
 - `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
 - `function endingBandModel(props: EngineRenderProps, frame: number)`

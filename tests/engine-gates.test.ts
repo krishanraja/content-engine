@@ -31,6 +31,7 @@ describe('the engine gates', () => {
     ['a post folder is bound to its piece, frozen at the first send, and a spread piece is reported (W3.5)', ['scripts/post-pack/post_binding.py', 'self-test']],
     ['the rejection floor reader (AGENTS.md rule 20)', ['scripts/floor.py', '--self-test']],
     ['the rejection floor file, when it is there, is whole', ['scripts/floor.py', '--check']],
+    ['Saturday is good-news carousels of varied, non-medical-led good news; memes, explainers and repeats never reach it (Krish, 2026-11-19)', ['tests/good_news_test.py']],
     ['the bar: the reference cuts Krish named, their page, and floor.py printing them first for every video maker', ['tests/floor_bar_test.py']],
     ['the floor blocks on his eight nevers alone, and a test reject shows for short_video (W2.10)', ['tests/floor_blocking_test.py']],
     ['the one-sitting floor sort is a proposal: patterns to him, one-offs as dated examples (W2.10)', ['scripts/floor_sort.py', '--self-test']],

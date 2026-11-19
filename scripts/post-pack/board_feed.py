@@ -752,7 +752,25 @@ def wave1(ideas, sources, plans=None, p6=None):
         found += idea_checks.saturday_findings(ideas, week, flows, feed_urls, carousel_urls)
     if week >= idea_checks.TEMPLATE_FROM:
         found += idea_checks.template_findings(ideas, week, earlier_template_pages(week, plans))
+    # Saturday is good-news carousels, each on its own topic, none a topic of the Saturdays before (Krish, 2026-11-19:
+    # "We should find good news that's not medical stuff"; config/good-news.json).
+    if week >= idea_checks.GOOD_NEWS_FROM:
+        found += idea_checks.goodnews_findings(ideas, week, idea_checks.goodnews_history(sources, earlier_ideas(week, plans)))
     return found
+
+
+def earlier_ideas(week, plans=None):
+    """[(Monday, ideas.json)] of the config/good-news.json repeat_weeks boards before the week, those on file."""
+    folder = Path(plans or ROOT / 'docs' / 'plans')
+    start = date.fromisoformat(week)
+    out = []
+    for back in range(1, idea_checks.GOOD_NEWS['repeat_weeks'] + 1):
+        monday_ = (start - timedelta(days=7 * back)).isoformat()
+        try:
+            out.append((monday_, json.loads((folder / f'{monday_}-week' / 'ideas.json').read_text(encoding='utf-8'))))
+        except (OSError, ValueError):
+            continue
+    return out
 
 
 def saturday_inputs(week, plans=None):

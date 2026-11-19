@@ -1,11 +1,11 @@
 {
   "file": "docs/plans/2026-11-17-tuesday/ve/proof/short.mp4",
-  "sha256": "607461ac427d66bb451bf5f78ec8e166fc092412ee2fad6c4c1dbef8e250794f",
+  "sha256": "546bd471bf3fc3e2ae807072d0b2fec09efc2d7ad73e539a2841a621d3c1858c",
   "duration_s": 8.0,
   "format": "face-with-proof",
   "checks": {
     "loudness.integrated": {
-      "value": -13.1,
+      "value": -14.0,
       "target": "-14 ±1",
       "pass": true
     },
@@ -20,15 +20,20 @@
       "pass": true
     },
     "motion.change_density": {
-      "value": 1.0,
+      "value": 0.857,
       "target": ">= 0.5",
       "pass": true
     },
     "motion.longest_still": {
-      "value": 0,
+      "value": 1,
       "target": "<= 4 s",
       "pass": true,
-      "runs": []
+      "runs": [
+        [
+          2,
+          1
+        ]
+      ]
     },
     "motion.periodicity": {
       "value": null,
@@ -41,19 +46,19 @@
           "segment": 0,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.976321
+          "correlation": 0.972999
         },
         {
           "segment": 1,
-          "lag_ms": -10,
+          "lag_ms": 0,
           "pass": true,
-          "correlation": 0.969834
+          "correlation": 0.968075
         },
         {
           "segment": 2,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.968249
+          "correlation": 0.970408
         }
       ],
       "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
@@ -72,35 +77,35 @@
       "value": [
         {
           "page": 0,
-          "frame": 3,
-          "text": "ar-ValaY-lal-‘a|",
-          "agreement": 0.0,
+          "frame": 2,
+          "text": "everyone",
+          "agreement": 1.0,
           "variant": "raw",
-          "pass": false
+          "pass": true
         },
         {
           "page": 1,
           "frame": 8,
-          "text": "hap\nTO)",
-          "agreement": 0.5,
-          "variant": "raw_2x",
-          "pass": false
-        },
-        {
-          "page": 2,
-          "frame": 16,
-          "text": "Al",
+          "text": "hates",
           "agreement": 1.0,
           "variant": "highlight",
           "pass": true
         },
         {
-          "page": 3,
-          "frame": 23,
-          "text": "with",
-          "agreement": 1.0,
+          "page": 2,
+          "frame": 16,
+          "text": "hates\nViielleda'",
+          "agreement": 0.0,
           "variant": "raw",
-          "pass": true
+          "pass": false
+        },
+        {
+          "page": 3,
+          "frame": 22,
+          "text": "whi\nis",
+          "agreement": 0.5,
+          "variant": "raw",
+          "pass": false
         },
         {
           "page": 4,
@@ -111,10 +116,10 @@
         },
         {
           "page": 5,
-          "frame": 32,
-          "text": "midterms",
+          "frame": 34,
+          "text": "lot",
           "agreement": 1.0,
-          "variant": "highlight",
+          "variant": "raw",
           "pass": true
         },
         {
@@ -126,83 +131,178 @@
         },
         {
           "page": 7,
-          "frame": 46,
-          "text": "America",
-          "agreement": 1.0,
-          "variant": "highlight",
-          "pass": true
+          "frame": 44,
+          "text": "So\nwvihan",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
         },
         {
           "page": 8,
-          "frame": 57,
-          "text": "and",
-          "agreement": 1.0,
-          "variant": "highlight",
-          "pass": true
+          "frame": 49,
+          "text": "when\nemail",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
         },
         {
           "page": 9,
-          "frame": 181,
-          "text": "Meta",
+          "frame": 56,
+          "text": "towns",
           "agreement": 1.0,
-          "variant": "raw",
+          "variant": "highlight",
           "pass": true
         },
         {
           "page": 10,
-          "frame": 191,
-          "text": "wanted",
+          "frame": 62,
+          "text": "towns\nfava iw i",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 11,
+          "frame": 69,
+          "text": "no",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 12,
+          "frame": 78,
+          "text": "the",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
         },
         {
-          "page": 11,
-          "frame": 199,
-          "text": "We\n»",
-          "agreement": 0.0,
-          "variant": "raw",
-          "pass": false
-        },
-        {
-          "page": 12,
-          "frame": 206,
-          "text": "siant",
-          "agreement": 0.0,
-          "variant": "raw",
-          "pass": false
-        },
-        {
           "page": 13,
-          "frame": 215,
-          "text": "giant\ndata",
+          "frame": 86,
+          "text": "the\nAl",
           "agreement": 0.5,
           "variant": "raw",
           "pass": false
         },
         {
           "page": 14,
-          "frame": 227,
-          "text": "centre",
+          "frame": 95,
+          "text": "companies",
           "agreement": 1.0,
-          "variant": "raw",
+          "variant": "highlight",
           "pass": true
         },
         {
           "page": 15,
-          "frame": 236,
-          "text": "for",
+          "frame": 103,
+          "text": "compani\nhava",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 16,
+          "frame": 107,
+          "text": "hav\nMe am,",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 17,
+          "frame": 116,
+          "text": "find",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 18,
+          "frame": 126,
+          "text": "that.",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 19,
+          "frame": 134,
+          "text": "power",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 20,
+          "frame": 147,
+          "text": "somewhere",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
         },
         {
-          "page": 16,
-          "frame": 239,
-          "text": "for\nama e™ FR",
+          "page": 21,
+          "frame": 162,
+          "text": "else",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 22,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 23,
+          "frame": 174,
+          "text": "they",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 24,
+          "frame": 177,
+          "text": "have",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 25,
+          "frame": 180,
+          "text": "to",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 26,
+          "frame": 184,
+          "text": "to\n‘are kVA",
           "agreement": 0.0,
           "variant": "raw",
           "pass": false
+        },
+        {
+          "page": 27,
+          "frame": 188,
+          "text": "pay\n:",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 28,
+          "frame": 195,
+          "text": "it",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
         }
       ],
       "target": "token agreement >= 0.98 on every page",
@@ -212,21 +312,21 @@
     "brand.no_mark": {
       "value": [
         {
-          "beat": "face",
-          "frame": 30,
-          "score": 0.26228608434058104,
+          "beat": "party_line",
+          "frame": 19,
+          "score": 0.3822907113431404,
           "pass": true
         },
         {
-          "beat": "title",
+          "beat": "power",
           "frame": 119,
-          "score": 0.2758154708382443,
+          "score": -0.001891034901461267,
           "pass": true
         },
         {
-          "beat": "meta",
-          "frame": 208,
-          "score": 0.46144339119385924,
+          "beat": "call",
+          "frame": 219,
+          "score": 0.4222244452765336,
           "pass": true
         }
       ],
@@ -239,10 +339,10 @@
         {
           "event": "dc-0",
           "atFrame": 0,
-          "peak_frame": 4,
-          "lag_frames": 4,
-          "peak_difference": 3.0164520740509033,
-          "event_difference": 2.4333598613739014,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 2.5098798274993896,
+          "event_difference": 2.5098798274993896,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -250,44 +350,121 @@
         {
           "event": "dc-1",
           "atFrame": 0,
-          "peak_frame": 4,
-          "lag_frames": 4,
-          "peak_difference": 3.0164520740509033,
-          "event_difference": 2.4333598613739014,
-          "threshold": 1e-06,
-          "gradual": false,
-          "pass": true
-        },
-        {
-          "event": "face-0",
-          "atFrame": 0,
           "peak_frame": 1,
           "lag_frames": 1,
-          "peak_difference": 3.4814810752868652,
-          "event_difference": 3.4814810752868652,
+          "peak_difference": 2.5098798274993896,
+          "event_difference": 2.5098798274993896,
           "threshold": 1e-06,
-          "gradual": false,
-          "pass": true
-        },
-        {
-          "event": "face-1",
-          "atFrame": 26,
-          "peak_frame": 27,
-          "lag_frames": 1,
-          "peak_difference": 6.462479591369629,
-          "event_difference": 6.462479591369629,
-          "threshold": 3.8570380210876465,
           "gradual": false,
           "pass": true
         },
         {
           "event": "meta-0",
-          "atFrame": 201,
-          "peak_frame": 202,
+          "atFrame": 0,
+          "peak_frame": 1,
           "lag_frames": 1,
-          "peak_difference": 3.9209721088409424,
-          "event_difference": 3.9209721088409424,
-          "threshold": 2.1813846230506897,
+          "peak_difference": 2.5098798274993896,
+          "event_difference": 2.5098798274993896,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "city-0",
+          "atFrame": 0,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 2.5098798274993896,
+          "event_difference": 2.5098798274993896,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "bill-0",
+          "atFrame": 0,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 2.5098798274993896,
+          "event_difference": 2.5098798274993896,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "bill-1",
+          "atFrame": 0,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 2.5098798274993896,
+          "event_difference": 2.5098798274993896,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "vote-0",
+          "atFrame": 0,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 2.5098798274993896,
+          "event_difference": 2.5098798274993896,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-1",
+          "atFrame": 0,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 2.5098798274993896,
+          "event_difference": 2.5098798274993896,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "meta_says-0",
+          "atFrame": 0,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 5.494082927703857,
+          "event_difference": 5.494082927703857,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "meta_says-1",
+          "atFrame": 0,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 5.494082927703857,
+          "event_difference": 5.494082927703857,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "power-0",
+          "atFrame": 109,
+          "peak_frame": 110,
+          "lag_frames": 1,
+          "peak_difference": 4.48861837387085,
+          "event_difference": 4.48861837387085,
+          "threshold": 1.589056670665741,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "power-1",
+          "atFrame": 181,
+          "peak_frame": 182,
+          "lag_frames": 1,
+          "peak_difference": 2.5626018047332764,
+          "event_difference": 2.5626018047332764,
+          "threshold": 0.702261283993721,
           "gradual": false,
           "pass": true
         }
@@ -411,7 +588,7 @@
         "region": [
           70,
           1010,
-          428,
+          398,
           160
         ],
         "window_frames": 3,
@@ -421,176 +598,310 @@
           {
             "page": 0,
             "fromFrame": 0,
-            "text": "happened",
-            "change_frame": 3,
-            "frame": 3,
-            "read": "hannoened",
-            "score": 0.0,
-            "exact": false,
+            "text": "everyone",
             "status": "fail",
-            "message": "caption page 0 reads \"hannoened\" near frame 3, not \"happened\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 (\"everyone\"): no change in the caption zone within 3 frames of its start, frame 0"
           },
           {
             "page": 0,
-            "fromFrame": 5,
-            "text": "to",
-            "change_frame": 6,
-            "frame": 8,
-            "read": "hap\nTO",
+            "fromFrame": 3,
+            "text": "hates,",
+            "change_frame": 5,
+            "frame": 6,
+            "read": "everyone\nhates",
             "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"hap\nTO\" near frame 8, not \"to\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"everyone\nhates\" near frame 6, not \"hates,\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
-            "fromFrame": 10,
-            "text": "AI",
+            "fromFrame": 13,
+            "text": "which",
             "change_frame": 12,
-            "frame": 12,
-            "read": "to\nAl",
+            "frame": 16,
+            "read": "hates\nwhich",
             "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"to\nAl\" near frame 12, not \"AI\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"hates\nwhich\" near frame 16, not \"which\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
-            "fromFrame": 21,
-            "text": "with",
-            "change_frame": 20,
-            "frame": 23,
-            "read": "with",
-            "score": 1.0,
-            "exact": true,
-            "status": "pass"
-          },
-          {
-            "page": 0,
-            "fromFrame": 24,
-            "text": "the",
+            "fromFrame": 18,
+            "text": "is",
+            "change_frame": 19,
+            "frame": 21,
+            "read": "whi\nis",
+            "score": 0.5,
+            "exact": false,
             "status": "fail",
-            "message": "caption page 0 (\"the\"): no change in the caption zone within 3 frames of its start, frame 24"
+            "message": "caption page 0 reads \"whi\nis\" near frame 21, not \"is\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
             "fromFrame": 26,
-            "text": "midterms",
-            "change_frame": 29,
-            "frame": 29,
-            "read": "the\nmidterms",
-            "score": 0.5,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 0 reads \"the\nmidterms\" near frame 29, not \"midterms\" (score 0.5, needs an exact match and 0.98)"
-          },
-          {
-            "page": 0,
-            "fromFrame": 38,
-            "text": "in",
-            "change_frame": 37,
-            "frame": 39,
-            "read": "in",
-            "score": 1.0,
-            "exact": true,
-            "status": "pass"
-          },
-          {
-            "page": 0,
-            "fromFrame": 40,
-            "text": "America",
-            "change_frame": 37,
-            "frame": 43,
-            "read": "in\nAmerica",
-            "score": 0.5,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 0 reads \"in\nAmerica\" near frame 43, not \"America\" (score 0.5, needs an exact match and 0.98)"
-          },
-          {
-            "page": 0,
-            "fromFrame": 51,
-            "text": "and",
-            "change_frame": 50,
-            "frame": 53,
-            "read": "Americ\nand",
-            "score": 0.5,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 0 reads \"Americ\nand\" near frame 53, not \"and\" (score 0.5, needs an exact match and 0.98)"
-          },
-          {
-            "page": 0,
-            "fromFrame": 177,
-            "text": "Meta",
-            "change_frame": 177,
-            "frame": 180,
-            "read": "Meta",
-            "score": 1.0,
-            "exact": true,
-            "status": "pass"
-          },
-          {
-            "page": 0,
-            "fromFrame": 185,
-            "text": "wanted",
-            "status": "fail",
-            "message": "caption page 0 (\"wanted\"): no change in the caption zone within 3 frames of its start, frame 185"
-          },
-          {
-            "page": 0,
-            "fromFrame": 196,
             "text": "a",
-            "change_frame": 195,
-            "frame": 199,
-            "read": "We\na",
-            "score": 0.5,
-            "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"We\na\" near frame 199, not \"a\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 (\"a\"): no change in the caption zone within 3 frames of its start, frame 26"
           },
           {
             "page": 0,
-            "fromFrame": 201,
-            "text": "giant",
-            "change_frame": 203,
-            "frame": 203,
-            "read": "a\nPoft-Vatt",
+            "fromFrame": 28,
+            "text": "lot.",
+            "change_frame": 25,
+            "frame": 31,
+            "read": "a\nlot",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"a\nlot\" near frame 31, not \"lot.\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 1,
+            "fromFrame": 73,
+            "text": "the",
+            "change_frame": 74,
+            "frame": 76,
+            "read": "the",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 39,
+            "text": "So",
+            "change_frame": 38,
+            "frame": 40,
+            "read": "So",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 41,
+            "text": "when",
+            "change_frame": 38,
+            "frame": 44,
+            "read": "So\nwhen",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"So\nwhen\" near frame 44, not \"when\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 46,
+            "text": "small",
+            "status": "fail",
+            "message": "caption page 0 (\"small\"): no change in the caption zone within 3 frames of its start, frame 46"
+          },
+          {
+            "page": 0,
+            "fromFrame": 52,
+            "text": "towns",
+            "change_frame": 53,
+            "frame": 55,
+            "read": "small\nTOWNS",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"small\nTOWNS\" near frame 55, not \"towns\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 60,
+            "text": "say",
+            "change_frame": 61,
+            "frame": 63,
+            "read": "say",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 64,
+            "text": "no,",
+            "change_frame": 65,
+            "frame": 67,
+            "read": "say\nno",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"say\nno\" near frame 67, not \"no,\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 82,
+            "text": "AI",
+            "change_frame": 83,
+            "frame": 84,
+            "read": "the\nAl",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"the\nAl\" near frame 84, not \"AI\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 89,
+            "text": "companies",
+            "change_frame": 88,
+            "frame": 92,
+            "read": "Al\ncompanies",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"Al\ncompanies\" near frame 92, not \"companies\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 100,
+            "text": "have",
+            "change_frame": 99,
+            "frame": 103,
+            "read": "compani\nhave",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"compani\nhave\" near frame 103, not \"have\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 1,
+            "fromFrame": 175,
+            "text": "have",
+            "change_frame": 176,
+            "frame": 177,
+            "read": "have",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 105,
+            "text": "to",
+            "change_frame": 106,
+            "frame": 108,
+            "read": "to",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 1,
+            "fromFrame": 178,
+            "text": "to",
+            "change_frame": 179,
+            "frame": 180,
+            "read": "to",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 109,
+            "text": "find",
+            "change_frame": 110,
+            "frame": 111,
+            "read": "ie)\nfind",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"ie)\nfind\" near frame 111, not \"find\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 122,
+            "text": "that",
+            "change_frame": 121,
+            "frame": 125,
+            "read": "find\nthat",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"find\nthat\" near frame 125, not \"that\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 129,
+            "text": "power",
+            "change_frame": 130,
+            "frame": 132,
+            "read": "that\npower",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"that\npower\" near frame 132, not \"power\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 139,
+            "text": "somewhere",
+            "change_frame": 138,
+            "frame": 138,
+            "read": "power",
             "score": 0.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"a\nPoft-Vatt\" near frame 203, not \"giant\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"power\" near frame 138, not \"somewhere\" (score 0.0, needs an exact match and 0.98)"
           },
           {
             "page": 0,
-            "fromFrame": 211,
-            "text": "data",
-            "change_frame": 210,
-            "frame": 214,
-            "read": "giant\ndata",
+            "fromFrame": 154,
+            "text": "else.",
+            "change_frame": 153,
+            "frame": 157,
+            "read": "somewh\nelse",
             "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"giant\ndata\" near frame 214, not \"data\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"somewh\nelse\" near frame 157, not \"else.\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
-            "fromFrame": 219,
-            "text": "centre",
-            "change_frame": 220,
-            "frame": 222,
-            "read": "data\ncentre",
-            "score": 0.5,
+            "fromFrame": 170,
+            "text": "and",
+            "change_frame": 169,
+            "frame": 171,
+            "read": "and",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 172,
+            "text": "they",
+            "change_frame": 173,
+            "frame": 174,
+            "read": "they",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 181,
+            "text": "pay",
+            "change_frame": 179,
+            "frame": 179,
+            "read": "have",
+            "score": 0.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"data\ncentre\" near frame 222, not \"centre\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"have\" near frame 179, not \"pay\" (score 0.0, needs an exact match and 0.98)"
           },
           {
             "page": 0,
-            "fromFrame": 234,
+            "fromFrame": 186,
             "text": "for",
-            "change_frame": 233,
-            "frame": 236,
+            "change_frame": 187,
+            "frame": 189,
             "read": "for",
             "score": 1.0,
             "exact": true,
@@ -598,166 +909,245 @@
           },
           {
             "page": 0,
-            "fromFrame": 237,
-            "text": "more",
-            "change_frame": 238,
-            "frame": 238,
-            "read": "for",
-            "score": 0.0,
+            "fromFrame": 190,
+            "text": "it.",
+            "change_frame": 191,
+            "frame": 192,
+            "read": "for\nit",
+            "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"for\" near frame 238, not \"more\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"for\nit\" near frame 192, not \"it.\" (score 0.5, needs an exact match and 0.98)"
           }
         ],
         "failed": [
           {
             "page": 0,
             "fromFrame": 0,
-            "text": "happened",
-            "change_frame": 3,
-            "frame": 3,
-            "read": "hannoened",
-            "score": 0.0,
-            "exact": false,
+            "text": "everyone",
             "status": "fail",
-            "message": "caption page 0 reads \"hannoened\" near frame 3, not \"happened\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 (\"everyone\"): no change in the caption zone within 3 frames of its start, frame 0"
           },
           {
             "page": 0,
-            "fromFrame": 5,
-            "text": "to",
-            "change_frame": 6,
-            "frame": 8,
-            "read": "hap\nTO",
+            "fromFrame": 3,
+            "text": "hates,",
+            "change_frame": 5,
+            "frame": 6,
+            "read": "everyone\nhates",
             "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"hap\nTO\" near frame 8, not \"to\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"everyone\nhates\" near frame 6, not \"hates,\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
-            "fromFrame": 10,
-            "text": "AI",
+            "fromFrame": 13,
+            "text": "which",
             "change_frame": 12,
-            "frame": 12,
-            "read": "to\nAl",
+            "frame": 16,
+            "read": "hates\nwhich",
             "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"to\nAl\" near frame 12, not \"AI\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"hates\nwhich\" near frame 16, not \"which\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
-            "fromFrame": 24,
-            "text": "the",
+            "fromFrame": 18,
+            "text": "is",
+            "change_frame": 19,
+            "frame": 21,
+            "read": "whi\nis",
+            "score": 0.5,
+            "exact": false,
             "status": "fail",
-            "message": "caption page 0 (\"the\"): no change in the caption zone within 3 frames of its start, frame 24"
+            "message": "caption page 0 reads \"whi\nis\" near frame 21, not \"is\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
             "fromFrame": 26,
-            "text": "midterms",
-            "change_frame": 29,
-            "frame": 29,
-            "read": "the\nmidterms",
-            "score": 0.5,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 0 reads \"the\nmidterms\" near frame 29, not \"midterms\" (score 0.5, needs an exact match and 0.98)"
-          },
-          {
-            "page": 0,
-            "fromFrame": 40,
-            "text": "America",
-            "change_frame": 37,
-            "frame": 43,
-            "read": "in\nAmerica",
-            "score": 0.5,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 0 reads \"in\nAmerica\" near frame 43, not \"America\" (score 0.5, needs an exact match and 0.98)"
-          },
-          {
-            "page": 0,
-            "fromFrame": 51,
-            "text": "and",
-            "change_frame": 50,
-            "frame": 53,
-            "read": "Americ\nand",
-            "score": 0.5,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 0 reads \"Americ\nand\" near frame 53, not \"and\" (score 0.5, needs an exact match and 0.98)"
-          },
-          {
-            "page": 0,
-            "fromFrame": 185,
-            "text": "wanted",
-            "status": "fail",
-            "message": "caption page 0 (\"wanted\"): no change in the caption zone within 3 frames of its start, frame 185"
-          },
-          {
-            "page": 0,
-            "fromFrame": 196,
             "text": "a",
-            "change_frame": 195,
-            "frame": 199,
-            "read": "We\na",
-            "score": 0.5,
-            "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"We\na\" near frame 199, not \"a\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 (\"a\"): no change in the caption zone within 3 frames of its start, frame 26"
           },
           {
             "page": 0,
-            "fromFrame": 201,
-            "text": "giant",
-            "change_frame": 203,
-            "frame": 203,
-            "read": "a\nPoft-Vatt",
+            "fromFrame": 28,
+            "text": "lot.",
+            "change_frame": 25,
+            "frame": 31,
+            "read": "a\nlot",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"a\nlot\" near frame 31, not \"lot.\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 41,
+            "text": "when",
+            "change_frame": 38,
+            "frame": 44,
+            "read": "So\nwhen",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"So\nwhen\" near frame 44, not \"when\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 46,
+            "text": "small",
+            "status": "fail",
+            "message": "caption page 0 (\"small\"): no change in the caption zone within 3 frames of its start, frame 46"
+          },
+          {
+            "page": 0,
+            "fromFrame": 52,
+            "text": "towns",
+            "change_frame": 53,
+            "frame": 55,
+            "read": "small\nTOWNS",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"small\nTOWNS\" near frame 55, not \"towns\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 64,
+            "text": "no,",
+            "change_frame": 65,
+            "frame": 67,
+            "read": "say\nno",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"say\nno\" near frame 67, not \"no,\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 82,
+            "text": "AI",
+            "change_frame": 83,
+            "frame": 84,
+            "read": "the\nAl",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"the\nAl\" near frame 84, not \"AI\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 89,
+            "text": "companies",
+            "change_frame": 88,
+            "frame": 92,
+            "read": "Al\ncompanies",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"Al\ncompanies\" near frame 92, not \"companies\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 100,
+            "text": "have",
+            "change_frame": 99,
+            "frame": 103,
+            "read": "compani\nhave",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"compani\nhave\" near frame 103, not \"have\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 109,
+            "text": "find",
+            "change_frame": 110,
+            "frame": 111,
+            "read": "ie)\nfind",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"ie)\nfind\" near frame 111, not \"find\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 122,
+            "text": "that",
+            "change_frame": 121,
+            "frame": 125,
+            "read": "find\nthat",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"find\nthat\" near frame 125, not \"that\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 129,
+            "text": "power",
+            "change_frame": 130,
+            "frame": 132,
+            "read": "that\npower",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"that\npower\" near frame 132, not \"power\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 139,
+            "text": "somewhere",
+            "change_frame": 138,
+            "frame": 138,
+            "read": "power",
             "score": 0.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"a\nPoft-Vatt\" near frame 203, not \"giant\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"power\" near frame 138, not \"somewhere\" (score 0.0, needs an exact match and 0.98)"
           },
           {
             "page": 0,
-            "fromFrame": 211,
-            "text": "data",
-            "change_frame": 210,
-            "frame": 214,
-            "read": "giant\ndata",
+            "fromFrame": 154,
+            "text": "else.",
+            "change_frame": 153,
+            "frame": 157,
+            "read": "somewh\nelse",
             "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"giant\ndata\" near frame 214, not \"data\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"somewh\nelse\" near frame 157, not \"else.\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
-            "fromFrame": 219,
-            "text": "centre",
-            "change_frame": 220,
-            "frame": 222,
-            "read": "data\ncentre",
-            "score": 0.5,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 0 reads \"data\ncentre\" near frame 222, not \"centre\" (score 0.5, needs an exact match and 0.98)"
-          },
-          {
-            "page": 0,
-            "fromFrame": 237,
-            "text": "more",
-            "change_frame": 238,
-            "frame": 238,
-            "read": "for",
+            "fromFrame": 181,
+            "text": "pay",
+            "change_frame": 179,
+            "frame": 179,
+            "read": "have",
             "score": 0.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"for\" near frame 238, not \"more\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"have\" near frame 179, not \"pay\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 190,
+            "text": "it.",
+            "change_frame": 191,
+            "frame": 192,
+            "read": "for\nit",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"for\nit\" near frame 192, not \"it.\" (score 0.5, needs an exact match and 0.98)"
           }
         ],
-        "changes_found": 17,
+        "changes_found": 27,
         "status": "fail",
         "reason": "1 of 1 caption page(s) are not drawn as the props say near their start",
         "pass": false,
@@ -765,67 +1155,25 @@
           [
             70,
             1010,
-            428,
+            398,
             160
           ],
           [
             70,
             1010,
-            92,
+            269,
             160
           ],
           [
             70,
             1010,
-            98,
+            258,
             160
           ],
           [
             70,
             1010,
-            184,
-            160
-          ],
-          [
-            70,
-            1010,
-            142,
-            160
-          ],
-          [
-            70,
-            1010,
-            405,
-            160
-          ],
-          [
-            70,
-            1010,
-            84,
-            160
-          ],
-          [
-            70,
-            1010,
-            359,
-            160
-          ],
-          [
-            70,
-            1010,
-            165,
-            160
-          ],
-          [
-            70,
-            1010,
-            217,
-            160
-          ],
-          [
-            70,
-            1010,
-            317,
+            80,
             160
           ],
           [
@@ -837,19 +1185,115 @@
           [
             70,
             1010,
-            219,
+            142,
             160
           ],
           [
             70,
             1010,
-            193,
+            121,
             160
           ],
           [
             70,
             1010,
-            277,
+            235,
+            160
+          ],
+          [
+            70,
+            1010,
+            233,
+            160
+          ],
+          [
+            70,
+            1010,
+            264,
+            160
+          ],
+          [
+            70,
+            1010,
+            156,
+            160
+          ],
+          [
+            70,
+            1010,
+            141,
+            160
+          ],
+          [
+            70,
+            1010,
+            98,
+            160
+          ],
+          [
+            70,
+            1010,
+            472,
+            160
+          ],
+          [
+            70,
+            1010,
+            211,
+            160
+          ],
+          [
+            70,
+            1010,
+            92,
+            160
+          ],
+          [
+            70,
+            1010,
+            166,
+            160
+          ],
+          [
+            70,
+            1010,
+            172,
+            160
+          ],
+          [
+            70,
+            1010,
+            270,
+            160
+          ],
+          [
+            70,
+            1010,
+            500,
+            160
+          ],
+          [
+            70,
+            1010,
+            210,
+            160
+          ],
+          [
+            70,
+            1010,
+            165,
+            160
+          ],
+          [
+            70,
+            1010,
+            190,
+            160
+          ],
+          [
+            70,
+            1010,
+            160,
             160
           ],
           [
@@ -861,7 +1305,7 @@
           [
             70,
             1010,
-            225,
+            88,
             160
           ]
         ]
@@ -870,11 +1314,11 @@
       "pass": false,
       "status": "measured",
       "agreement": null,
-      "summary": "1 of 1 caption page(s) are not drawn as the props say near their start: caption page 0 reads \"hannoened\" near frame 3, not \"happened\" (score 0.0, needs an exact match and 0.98); caption page 0 reads \"hap\nTO\" near frame 8, not \"to\" (score 0.5, needs an exact match and 0.98); caption page 0 reads \"to\nAl\" near frame 12, not \"AI\" (score 0.5, needs an exact match and 0.98); caption page 0 (\"the\"): no change in the caption zone within 3 frames of its start, frame 24 (and 9 more)"
+      "summary": "1 of 1 caption page(s) are not drawn as the props say near their start: caption page 0 (\"everyone\"): no change in the caption zone within 3 frames of its start, frame 0; caption page 0 reads \"everyone\nhates\" near frame 6, not \"hates,\" (score 0.5, needs an exact match and 0.98); caption page 0 reads \"hates\nwhich\" near frame 16, not \"which\" (score 0.5, needs an exact match and 0.98); caption page 0 reads \"whi\nis\" near frame 21, not \"is\" (score 0.5, needs an exact match and 0.98) (and 16 more)"
     },
     "captions.off_face": {
       "value": {
-        "pages": 17,
+        "pages": 29,
         "on_face": [],
         "count": 0
       },
@@ -898,16 +1342,16 @@
     "ground.not_bare": {
       "value": [
         {
-          "edge_frame": 62,
-          "barest_frame": 62,
-          "stage_std": 69.32,
+          "edge_frame": 39,
+          "barest_frame": 42,
+          "stage_std": 33.67,
           "floor": 3.0,
           "pass": true
         },
         {
-          "edge_frame": 177,
-          "barest_frame": 180,
-          "stage_std": 29.88,
+          "edge_frame": 200,
+          "barest_frame": 199,
+          "stage_std": 43.23,
           "floor": 3.0,
           "pass": true
         }
@@ -928,7 +1372,7 @@
         ],
         "onsets_per_s": 2.72,
         "handovers": 2,
-        "handovers_on_a_beat": 2
+        "handovers_on_a_beat": 0
       },
       "target": "measured only: nothing snaps to the beat; his words are the clock",
       "pass": null,
@@ -937,20 +1381,20 @@
     },
     "picture.as_shot": {
       "value": {
-        "face": {
-          "L": 51.1,
-          "a": 1.06,
-          "b": 4.11
+        "party_line": {
+          "L": 50.13,
+          "a": 0.48,
+          "b": 3.87
         },
-        "title": {
-          "L": 51.41,
-          "a": 1.23,
-          "b": 4.46
+        "call": {
+          "L": 50.79,
+          "a": 0.23,
+          "b": 3.07
         }
       },
       "moved": [
-        "face",
-        "title"
+        "party_line",
+        "call"
       ],
       "target": "his take as shot: the lower quarter within L 5.0, a 4.0, b 4.0 of the rows of the conformed take it shows (median L*a*b*)",
       "pass": null,
@@ -964,12 +1408,12 @@
     },
     "composition": {
       "value": {
-        "face": {
+        "party_line": {
           "pass": true,
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 94.67
+              "value": 100.0
             },
             "small_text": {
               "pass": true,
@@ -989,70 +1433,14 @@
             }
           },
           "findings": [],
-          "frame": 44
+          "frame": 15
         },
-        "title": {
-          "pass": false,
-          "checks": {
-            "fill_pct": {
-              "pass": true,
-              "value": 99.2
-            },
-            "small_text": {
-              "pass": true,
-              "value": []
-            },
-            "caption_zone": {
-              "pass": true,
-              "value": []
-            },
-            "platform_zone": {
-              "pass": false,
-              "value": [
-                {
-                  "text": "WHEN",
-                  "conf": 96.468445,
-                  "x": 692,
-                  "y": 356,
-                  "w": 301,
-                  "h": 126
-                },
-                {
-                  "text": "OF",
-                  "conf": 96.965034,
-                  "x": 886,
-                  "y": 519,
-                  "w": 123,
-                  "h": 127
-                },
-                {
-                  "text": "NO?",
-                  "conf": 96.163445,
-                  "x": 757,
-                  "y": 655,
-                  "w": 257,
-                  "h": 159
-                }
-              ]
-            },
-            "edges": {
-              "pass": true,
-              "value": []
-            }
-          },
-          "findings": [
-            "platform_zone 'WHEN' ends at (993, 482), the limits are (960, 1640) outside the marquee.",
-            "platform_zone 'OF' ends at (1009, 646), the limits are (960, 1640) outside the marquee.",
-            "platform_zone 'NO?' ends at (1014, 814), the limits are (960, 1640) outside the marquee."
-          ],
-          "frame": 154
-        },
-        "meta": {
+        "power": {
           "pass": false,
           "checks": {
             "fill_pct": {
               "pass": false,
-              "value": 73.3
+              "value": 65.36
             },
             "small_text": {
               "pass": true,
@@ -1072,8 +1460,35 @@
             }
           },
           "findings": [
-            "fill 73.3% outside the caption zone, the lock needs 80%."
+            "fill 65.36% outside the caption zone, the lock needs 80%."
           ],
+          "frame": 168
+        },
+        "call": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 99.11
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
           "frame": 239
         }
       },
@@ -1089,58 +1504,82 @@
     "captions.phrase_breaks": {
       "value": [
         {
-          "fromFrame": 0,
-          "page": "happened",
+          "fromFrame": 18,
+          "page": "is",
+          "next": "a",
+          "why": "ends on \"is\""
+        },
+        {
+          "fromFrame": 26,
+          "page": "a",
+          "next": "lot.",
+          "why": "ends on \"a\""
+        },
+        {
+          "fromFrame": 39,
+          "page": "So",
+          "next": "when",
+          "why": "ends on \"so\""
+        },
+        {
+          "fromFrame": 73,
+          "page": "the",
+          "next": "AI",
+          "why": "ends on \"the\""
+        },
+        {
+          "fromFrame": 100,
+          "page": "have",
           "next": "to",
           "why": "the next page opens on \"to\""
         },
         {
-          "fromFrame": 5,
+          "fromFrame": 105,
           "page": "to",
-          "next": "AI",
+          "next": "find",
           "why": "ends on \"to\""
         },
         {
-          "fromFrame": 21,
-          "page": "with",
-          "next": "the",
-          "why": "ends on \"with\""
+          "fromFrame": 122,
+          "page": "that",
+          "next": "power",
+          "why": "ends on \"that\""
         },
         {
-          "fromFrame": 24,
-          "page": "the",
-          "next": "midterms",
-          "why": "ends on \"the\""
-        },
-        {
-          "fromFrame": 38,
-          "page": "in",
-          "next": "America",
-          "why": "ends on \"in\""
-        },
-        {
-          "fromFrame": 51,
+          "fromFrame": 170,
           "page": "and",
-          "next": "Meta",
+          "next": "they",
           "why": "ends on \"and\""
         },
         {
-          "fromFrame": 185,
-          "page": "wanted",
-          "next": "a",
-          "why": "the next page opens on \"a\""
+          "fromFrame": 175,
+          "page": "have",
+          "next": "to",
+          "why": "the next page opens on \"to\""
         },
         {
-          "fromFrame": 196,
-          "page": "a",
-          "next": "giant",
-          "why": "ends on \"a\""
+          "fromFrame": 178,
+          "page": "to",
+          "next": "pay",
+          "why": "ends on \"to\""
         },
         {
-          "fromFrame": 234,
+          "fromFrame": 186,
           "page": "for",
-          "next": "more",
+          "next": "it.",
           "why": "ends on \"for\""
+        },
+        {
+          "fromFrame": 200,
+          "page": "And",
+          "next": "I",
+          "why": "ends on \"and\""
+        },
+        {
+          "fromFrame": 225,
+          "page": "that",
+          "next": "cost",
+          "why": "ends on \"that\""
         }
       ],
       "target": "no caption page ends mid-phrase",
@@ -1157,9 +1596,17 @@
       "pass": true
     },
     "evidence.readable": {
-      "value": [],
+      "value": [
+        {
+          "obj": "meta_line",
+          "beat": "party_line",
+          "frame": 15,
+          "word_px": 25,
+          "why": "its words are 25 px tall on the 1080x1920 frame, under 40"
+        }
+      ],
       "target": "evidence words at least 40 px tall on 9:16",
-      "pass": true
+      "pass": false
     },
     "beats.one_carrier": {
       "value": [],
@@ -1187,13 +1634,9 @@
       "pass": true
     },
     "title.moment": {
-      "value": [
-        {
-          "why": "the title is not built from his spoken line: 0 of its 1 words are in the words he says"
-        }
-      ],
+      "value": [],
       "target": "one title card from his spoken line, captions empty while it holds",
-      "pass": false
+      "pass": true
     },
     "takes.restarts": {
       "value": null,
@@ -1248,12 +1691,12 @@
     "applies": true,
     "pass": false,
     "beats": {
-      "face": {
+      "party_line": {
         "pass": true,
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 94.67
+            "value": 100.0
           },
           "small_text": {
             "pass": true,
@@ -1273,70 +1716,14 @@
           }
         },
         "findings": [],
-        "frame": 44
+        "frame": 15
       },
-      "title": {
-        "pass": false,
-        "checks": {
-          "fill_pct": {
-            "pass": true,
-            "value": 99.2
-          },
-          "small_text": {
-            "pass": true,
-            "value": []
-          },
-          "caption_zone": {
-            "pass": true,
-            "value": []
-          },
-          "platform_zone": {
-            "pass": false,
-            "value": [
-              {
-                "text": "WHEN",
-                "conf": 96.468445,
-                "x": 692,
-                "y": 356,
-                "w": 301,
-                "h": 126
-              },
-              {
-                "text": "OF",
-                "conf": 96.965034,
-                "x": 886,
-                "y": 519,
-                "w": 123,
-                "h": 127
-              },
-              {
-                "text": "NO?",
-                "conf": 96.163445,
-                "x": 757,
-                "y": 655,
-                "w": 257,
-                "h": 159
-              }
-            ]
-          },
-          "edges": {
-            "pass": true,
-            "value": []
-          }
-        },
-        "findings": [
-          "platform_zone 'WHEN' ends at (993, 482), the limits are (960, 1640) outside the marquee.",
-          "platform_zone 'OF' ends at (1009, 646), the limits are (960, 1640) outside the marquee.",
-          "platform_zone 'NO?' ends at (1014, 814), the limits are (960, 1640) outside the marquee."
-        ],
-        "frame": 154
-      },
-      "meta": {
+      "power": {
         "pass": false,
         "checks": {
           "fill_pct": {
             "pass": false,
-            "value": 73.3
+            "value": 65.36
           },
           "small_text": {
             "pass": true,
@@ -1356,8 +1743,35 @@
           }
         },
         "findings": [
-          "fill 73.3% outside the caption zone, the lock needs 80%."
+          "fill 65.36% outside the caption zone, the lock needs 80%."
         ],
+        "frame": 168
+      },
+      "call": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 99.11
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
         "frame": 239
       }
     }

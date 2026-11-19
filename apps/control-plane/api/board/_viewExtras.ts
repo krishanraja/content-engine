@@ -1,3 +1,4 @@
+import { saturdayHold } from './_goodNews.js'
 import { POSTED_CHANNELS, dayDate, type PostedDay } from './_posted.js'
 import { offdaySides } from './_offdaySides.js'
 import { yesByDay } from './_yes.js'
@@ -438,7 +439,8 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     const verdictOf = (v: Body | null) => (v && typeof v.verdict === 'string' ? v.verdict : null)
     const iv = verdictOf(idea), dv = verdictOf(direction)
     const pressed = iv && iv !== 'approve' ? OUTCOME_OF_VERDICT[iv] : undefined
-    const held = changed ? 'Its words changed after you approved it, so your approval does not cover the new words.'
+    const satHold = saturdayHold(i.week, day, o as Body, Boolean(approval))
+    const held = satHold ? satHold : changed ? 'Its words changed after you approved it, so your approval does not cover the new words.'
       : !approval && decided ? 'Words from a session say it was decided, but you have not pressed Approve on it here, so it is not on the publish board.'
         : !approval && iv === 'approve' ? 'Your approval of it could not be read just now, so it is not shown as approved.' : undefined
     const status = approval ? 'approved' : held ? 'held' : s.revised && !verdictOf(s.revised.side === 'direction' ? direction : idea) ? 'revised'

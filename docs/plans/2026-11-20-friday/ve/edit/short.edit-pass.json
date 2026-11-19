@@ -1,0 +1,69 @@
+{
+ "raw_seconds": 114.0,
+ "restarts": [
+  {
+   "at": 40.3,
+   "said": "Claude found care billed under a really expensive code more than the one his brother-in-law"
+  },
+  {
+   "at": 48.2,
+   "said": "Claude found care billed under an expensive code when the brother-in-law got"
+  },
+  {
+   "at": 71.16,
+   "said": "An old bill can't argue back and the rules are written / an old bill can't argue / and this is the bit I love"
+  }
+ ],
+ "silences_cut": 9,
+ "kept_seconds": 84.08,
+ "cap_seconds": 90,
+ "speed": 1.0,
+ "final_seconds": 84.08,
+ "over_cap": false,
+ "keep": [
+  [
+   1.42,
+   3.74
+  ],
+  [
+   4.5,
+   18.52
+  ],
+  [
+   19.2,
+   25.42
+  ],
+  [
+   27.98,
+   33.18
+  ],
+  [
+   33.96,
+   40.3
+  ],
+  [
+   56.5,
+   65.62
+  ],
+  [
+   66.78,
+   71.16
+  ],
+  [
+   78.54,
+   85.24
+  ],
+  [
+   85.88,
+   104.2
+  ],
+  [
+   105.62,
+   111.88
+  ],
+  [
+   112.72,
+   115.42
+  ]
+ ]
+}

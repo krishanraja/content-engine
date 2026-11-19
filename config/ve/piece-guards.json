@@ -1,0 +1,109 @@
+{
+  "_about": "Guards carried forward from the Build or buy piece (Wed 18 Nov 2026, piece db9f9f6a) so every component that built it refuses the same fault on any later piece (Ruling, Krish, 2026-11-19: every component that built a piece carries its failures forward as guards, so the next piece cannot repeat them). Read by scripts/velib/piece_guards.py from `ve lint`. A new fault is a row here, never code. Each row binds a piece whose bind day (guards.bind_day: its publish day, or the day a not-yet-shown cut is shown) is on or after binds_from.",
+  "binds_from": "2026-11-20",
+  "take_orientation": {
+    "why": "The long take was filmed vertically (1080x1920) and every 16:9 layout assumes a horizontal take: talking-head beats blew it up to forehead and chin and the window shapes cut the top of his head. Found after four versions on a broken frame.",
+    "enforces": "Krish, 18 Nov 2026: \"Can't cut my head off and also ruin the visual above.\"",
+    "wide_aspects": [
+      "16:9"
+    ],
+    "take_layouts": [
+      "F1",
+      "F2",
+      "WINDOW",
+      "SPLIT"
+    ],
+    "vertical_source_layouts": []
+  },
+  "logos": {
+    "why": "Fin's mark is black on a black stage and vanished; Salesforce's cloud sat bulky beside two wordmarks. Fixed on the piece with equal white tiles (logo_card params.tiles).",
+    "enforces": "the build-or-buy failure report of 19 Nov 2026, item 2",
+    "device": "logo_card",
+    "dark_marks": [
+      "Fin",
+      "Intercom",
+      "X",
+      "OpenAI",
+      "Notion",
+      "Uber",
+      "Apple",
+      "Vercel",
+      "GitHub"
+    ],
+    "tiles_from_count": 2
+  },
+  "tall_windows": {
+    "why": "The short's Slack card sat under the app buttons. It was the short's only portrait window, added just to make up its third layout type.",
+    "enforces": "the build-or-buy failure report of 19 Nov 2026, item 4; config/channel-safe-zones.json",
+    "aspect": "9:16",
+    "layouts": [
+      "WINDOW"
+    ],
+    "window_box": [
+      48,
+      1250,
+      330,
+      420
+    ],
+    "window_box_source": "apps/renderer/src/engine/layouts/index.ts (the tall WINDOW box, { left: 48, top: 1250, width: 330, height: 420 }); tests/ve_piece_guards_test.py holds this row to it",
+    "zones": "config/channel-safe-zones.json channels.*.zones"
+  },
+  "screenshot_crop": {
+    "why": "Full-page headline screenshots put their words at 19 to 24 px against the 40 px evidence floor (config/ve/onscreen-checks.json evidence.min_word_px); the FullStack HR page still failed.",
+    "enforces": "floor group real_evidence: shown means read",
+    "devices": [
+      "evidence_card"
+    ],
+    "kinds": [
+      "screenshot"
+    ],
+    "note": "Whether the cropped words read at 40 px is measured on the render by ve qc (config/ve/onscreen-checks.json evidence.min_word_px), and the show gate refuses a cut whose qc did not pass; this row only makes sure a crop was chosen before anything renders."
+  },
+  "idea_lock": {
+    "why": "He picked a terminal that checks each headline against what happened; asked for 15/10, the session went for spectacle unrelated to AI instead of more of his idea.",
+    "enforces": "style.idea is his picked idea; more means more of that idea",
+    "field": "style.idea.object"
+  },
+  "talking_head": {
+    "why": "About 85 seconds of talking head with nothing on screen, and logos that only pulsed, on a dull, important topic he had said needs 15/10 visuals.",
+    "enforces": "Krish, at the start of the Wed 18 piece: a dull, important topic needs 15/10 visuals",
+    "close_roles": [
+      "close"
+    ],
+    "max_bare_beat_s": 12,
+    "max_bare_share": 0.2,
+    "thin_devices": [
+      "logo_card"
+    ],
+    "thin_verbs": [
+      "enter",
+      "highlight",
+      "exit"
+    ]
+  },
+  "caption_words": {
+    "why": "He says the web address as two words. Joined, \"makeyourmindup.ai\" measured 775 px against the short's 716 px caption line and the short stopped compiling; split again, \".ai\" fell past the last beat.",
+    "enforces": "the build-or-buy failure report of 19 Nov 2026, item 3: a word is never dropped to make a caption fit",
+    "site_address": "makeyourmindup.ai",
+    "spoken_parts": [
+      [
+        "makeyourmindup",
+        "dot",
+        "ai"
+      ],
+      [
+        "makeyourmindup",
+        ".ai"
+      ],
+      [
+        "make",
+        "your",
+        "mind",
+        "up",
+        "dot",
+        "ai"
+      ]
+    ],
+    "fix": "a shorter caption size for that cut, or the address shown on the close card while the caption carries the words around it; never a split or a dropped word"
+  }
+}

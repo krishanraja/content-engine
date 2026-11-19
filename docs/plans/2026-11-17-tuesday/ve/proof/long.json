@@ -2,15 +2,15 @@
   "schema": "ve-proof/1",
   "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
   "cut": "long",
-  "beat": "l5",
+  "beat": "l15",
   "rule": "named in the spec (proof.beat)",
-  "start": 30.133,
-  "end": 42.2,
+  "start": 140.033,
+  "end": 154.133,
   "beat_s": [
-    30.133,
-    42.2
+    140.033,
+    154.133
   ],
-  "sha256": "12cd91369dbbf6e624b1ed01933682f47082d6cb4feb3001bcc32b3802e60256",
+  "sha256": "d14e1263d2a395f082179ee292516d067b2fb67f351075a6f84bbc08519cb14b",
   "spec_sha256": "1d37cef9ee691358a1dbf9ef27f8aa9457aaacb0c24eb3a77ad2f42854e7d424",
   "structure": {
     "format": "face-with-proof",
@@ -271,11 +271,17 @@
     ]
   },
   "style_module": "eating-jobs-ladder",
-  "props_sha256": "ebb0f0b10df4761c9fcc00b70a9efafa3b500af804ddcafd82495124c7680e19",
+  "props_sha256": "7d245ff639b63046eff83508bd64287d41202a7e1eebf2c3420fa6da0b266131",
   "qc": {
-    "measured_pass": null,
+    "measured_pass": false,
     "complete": false,
-    "error": "Cue l2-0 has no unique beat slot"
+    "failing": [
+      "audio.bed_continuity",
+      "captions.ocr",
+      "captions.render",
+      "head.whole_in_frame",
+      "motion.cue_sync"
+    ]
   },
   "type": [
     [
@@ -295,7 +301,7 @@
       "caption on the light stage"
     ]
   ],
-  "engine_sha256": "e97863db1ad378749b7e2f665ad87aaed41f197c94e9f8aeb6c3bf573ba726b0",
+  "engine_sha256": "e29f132c45a7014b8e4cb7279ce1849d1efc7ee0a34e52b17be889ccd744897c",
   "assets_sha256": {
     "bg-city-dusk": "107539f8d1b4c68f2d05ba9c1e2bc002109c35e1235b0cc166cfeab76cbeae2c",
     "bg-data-hall": "3730051bf5718d3577cfad4dc96c53bd8bd1abb0d20497ebed4630e065ea424c",
@@ -320,13 +326,31 @@
     "scene-nameplate": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222",
     "wyso-lead": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
   },
-  "made_at": "2026-11-19T12:32:22Z",
+  "made_at": "2026-11-19T12:59:59Z",
   "frames": {
-    "pass": null,
-    "status": "not_run",
-    "reason": "the props could not be read for frames: Cue l2-0 has no unique beat slot",
+    "pass": true,
+    "status": "ok",
     "problems": [],
-    "frames": 0
+    "frames": 42
+  },
+  "compare": {
+    "against": "12cd91369dbbf6e624b1ed01933682f47082d6cb4feb3001bcc32b3802e60256",
+    "reasons": [
+      "the engine changed since the proof he approved"
+    ],
+    "compared": null,
+    "sheet": "compare.long.png",
+    "sha256": "55f99ccdb593b8dd2c7ab13ade4d2b018104ce26b0a4a0dc5c9ff75282e8e070",
+    "seconds": [
+      0.75,
+      2.26,
+      3.77,
+      5.28,
+      6.79,
+      8.3,
+      9.8,
+      11.31
+    ]
   },
   "sendable": false
 }

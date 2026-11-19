@@ -48,11 +48,14 @@ export const ENDING_TIMING_TALL = {
 } as const
 export const ENDING_SETTLED_TALL_S = ENDING_TIMING_TALL.underline.start + ENDING_TIMING_TALL.underline.dur
 
-const SHAPE = {
+/** The close card's sizes. The SUBSCRIBE FREE line is 26 px on both (Ruling, Krish, 2026-11-19: "Yes on raising subscribe free"):
+ *  at 24 px it read 17 px tall, under ve qc's small-text floor of 18 px, so every whole cut failed composition small_text on
+ *  its own close. */
+export const SHAPE = {
   // Tall: every word inside the tall core box x 120 to 820, y 330 to 1180 (config/brand-palette.json safe.tall_core,
   // docs/production/SOCIAL-BEST-PRACTICES-2026.md section 3.5). Wide: a 160 x 120 margin.
-  '9:16': { box: { left: 120, top: 330, width: 700, height: 850 }, logo: 420, statement: 176, days: 24, kick: 24, url: 46, gap: 30 },
-  '16:9': { box: { left: 160, top: 120, width: 1600, height: 840 }, logo: 520, statement: 190, days: 26, kick: 24, url: 44, gap: 0 },
+  '9:16': { box: { left: 120, top: 330, width: 700, height: 850 }, logo: 420, statement: 176, days: 24, kick: 26, url: 46, gap: 30 },
+  '16:9': { box: { left: 160, top: 120, width: 1600, height: 840 }, logo: 520, statement: 190, days: 26, kick: 26, url: 44, gap: 0 },
 } as const
 
 /** The tagline as the card sets it: the last word alone on the last line; the rest two words a line on the tall card,

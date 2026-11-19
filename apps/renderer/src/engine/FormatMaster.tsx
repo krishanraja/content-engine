@@ -188,6 +188,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
                 ...(split ? { objectPosition: splitPlatePosition(activeBeat?.plate?.crop) } : segment.crop && (!faceState || faceState.windowed === 0) ? {
                   transformOrigin: 'center center',
                   transform: `translate(${segment.crop.x}px, ${segment.crop.y}px) scale(${segment.crop.scale})`,
+                } : faceLift(props.aspect, faceState?.windowed ?? 0) > 1 ? {
+                  transformOrigin: 'center bottom',
+                  transform: `scale(${faceLift(props.aspect, faceState?.windowed ?? 0)})`,
                 } : {}),
               }}
             />
@@ -265,7 +268,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
                 tokens={props.tokens} sinceFrames={sinceBeat} boil={profile.boil} />}
               {torn && <TornFilter id={beat.id} tokens={props.tokens} />}
             </> : sweep && <AbsoluteFill style={sweep} />)
-        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} push={backdropPush(beat, at)} zoom={beat.backdrop.zoom} /> : undefined
+        const backdropEl = graphicsOnly && beat.backdrop ? <Backdrop src={beat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, beat, at)} frame={at} width={width} height={layerHeight} push={backdropPush(beat, at)} zoom={beat.backdrop.zoom ?? 1} /> : undefined
         const layer = (
           <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
             {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts); a backdrop joins it only
@@ -436,4 +439,15 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
 export function titleSafe(aspect: string, width: number, height: number) {
   return aspect === '9:16' ? { left: 60, top: 220, width: 800, height: 330 }
     : { left: Math.round(width * 0.1), top: Math.round(height * 0.06), width: Math.round(width * 0.8), height: Math.round(height * 0.3) }
+}
+
+/** His full-frame take on a tall cut is framed FACE_LIFT from its bottom edge, so his face sits about 85 px higher and
+ *  clears the caption band under his chin (Ruling, Krish, 2026-11-19: "Halo + frame me higher"; Fri 20 Nov: the take
+ *  framed his chin 12 px above the art-directed captions, which cannot go lower than Instagram's caption zone). The lift
+ *  eases out as the take shrinks into its window, so a face beat and a window beat meet without a jump. */
+export const FACE_LIFT = 1.1
+export function faceLift(aspect: string, windowed: number): number {
+  if (aspect !== '9:16') return 1
+  const w = Math.min(1, Math.max(0, windowed))
+  return 1 + (FACE_LIFT - 1) * (1 - w)
 }
