@@ -6168,7 +6168,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 
 - `const STAGINGS`
 - `type Staging = typeof STAGINGS[number]`
-- `const isStaging = (mode: string | undefined): mode is Staging =>`
+- `const isStaging = (mode: string | undefined, aspect?: string): mode is Staging =>`
 - `interface StagingGeometry`
 - `const PILLAR_TAKE_WIDTH`
 - `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry`

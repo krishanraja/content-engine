@@ -136,7 +136,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const focusOn = !!ingredients?.focus && profile?.camera.kind !== 'zoomToFocus'
   // A staging (kit/staging.ts) places his take and a graphics panel on every beat that shows him; a piece with a
   // WINDOW beat keeps the window's own moves.
-  const staging = !hasWindow && isStaging(props.layout?.mode)
+  const staging = !hasWindow && isStaging(props.layout?.mode, props.aspect)
     ? stagingGeometry(props.layout!.mode as 'band', props.aspect, props.captionPlacement, !!props.captionTheme) : undefined
   const stagedNow = staging && activeBeat && staged(activeBeat) ? staging : undefined
   const stagedTake = stagedNow ? { ...boxStyle(stagedNow.take), borderRadius: stagedNow.take.radius,
@@ -197,7 +197,13 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const shown = outgoing ? Math.min(at, beat.toFrame - 1) : at
         const layerHeight = beat.layout === 'SPLIT' ? splitCameraBox(props.aspect).top : height
         const view = profile || focusOn ? cameraView(profile, beat, slots, objects, props, shown, focusOn) : undefined
-        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region, focusOn ? FOCUS_SCALE : undefined)
+        // The push keeps a graphics-only beat's layout region inside the frame, as it does a staged beat's: a full-width
+        // proof card pushed 1.2x from the frame's centre lost its left edge (Fri 20 Nov short, ai-music-slam, 19 Nov 2026).
+        const layoutRegion = graphicsOnly && props.layout && props.layout.mode !== 'house' && slots.length ? {
+          left: Math.min(...slots.map(b => b.left)), top: Math.min(...slots.map(b => b.top)),
+          width: Math.max(...slots.map(b => b.left + b.width)) - Math.min(...slots.map(b => b.left)),
+          height: Math.max(...slots.map(b => b.top + b.height)) - Math.min(...slots.map(b => b.top)) } : undefined
+        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region ?? layoutRegion, focusOn ? FOCUS_SCALE : undefined)
           : view?.focusable ? focusMotion(view, now, beat, FOCUS_SCALE, width, layerHeight) : undefined
         // Between two full-screen pictures the outgoing one stays solid under the incoming one's fade, so nothing under
         // both (his take) shows through the dissolve.
@@ -361,7 +367,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   // A graphics-only STAGE beat with no staging draws its backdrop across the whole frame, under its graphics, so a proof sits
   // on its own page and the frame is never bare ink (Krish, 2026-11-18: "making actual use of the full screen when it isn't
   // my face"; Wed 18's full-frame proof beats filled 11 to 32% of the frame). With no backdrop the tree is unchanged.
-  const fullBackdrop = !stagedNow && !isStaging(props.layout?.mode) && activeBeat?.backdrop && activeBeat.layout === 'STAGE' && activeBeat.plate?.source === 'none' ? (
+  const fullBackdrop = !stagedNow && !isStaging(props.layout?.mode, props.aspect) && activeBeat?.backdrop && activeBeat.layout === 'STAGE' && activeBeat.plate?.source === 'none' ? (
     <AbsoluteFill key="full-backdrop" data-backdrop-full>
       <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={width} height={height} />
     </AbsoluteFill>) : null

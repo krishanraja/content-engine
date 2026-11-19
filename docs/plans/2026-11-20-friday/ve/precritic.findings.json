@@ -1,5 +1,4 @@
 [
- {"severity": "fix", "area": "older chip highlights", "text": "l_caveat, l_cust, l_next and l_last pulse on words not in their own text (l_fell w256, w261, w269; l_twist w516, w523, w528, w532; l_hindsight w436, w441, w447). l_caveat at w256 and w261 falls on his own caveat. Move each pulse onto the chip's own word, or drop it."},
- {"severity": "note", "area": "l_l_lead_4, l_l_listfirst_1", "text": "Added for event cadence: l_lead holds five chips and l_listfirst three. Density of text on his face beats is Krish's call."},
- {"severity": "note", "area": "checklist head_bottom_right_on_wide", "text": "The checklist still describes a bottom-right window on 16:9; the pillar (Krish, 19 Nov) replaces it for the long cut. The post-render critic judges the pillar."}
+ {"severity": "note", "area": "short hook strike", "text": "Check on a rendered frame that the underline (200,340) to (690,330) crosses the digits of $195,000."},
+ {"severity": "note", "area": "kinetic_stat", "text": "Check on a rendered frame that the counter is cream on the dark ground after the renderer fix."}
 ]

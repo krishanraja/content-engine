@@ -46,7 +46,7 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     </>}
     {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);
         graphics own the top of SPLIT and of a STAGE beat with no plate. */}
-    {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
+    {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode, props.aspect) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={house} frame={frame} />
       : call ? <CallCard props={house} frame={frame} />
         : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus' || overTake(beat)

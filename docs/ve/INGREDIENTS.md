@@ -243,7 +243,7 @@ graphics-only beat in a staged piece becomes a full-frame takeover that fills as
 | `band` | Character.ai | ink panel y 0 to 1000 with a 10 px series-colour hairline; his take as a band y 1000 to 1920 | x 60 to 860, y 280 to 960, clear of the captions |
 | `stage` | AI music | ink stage y 0 to 1236 with rounded bottom corners on a cream band; his take in a rounded, cream-edged window (x 600, y 980, 420 by 700) crossing the stage edge | x 60 to 860, y 280 to 956 |
 | `tray` | eating its own jobs | his take full frame; a cream tray with a hard ink drop rises from bottom left (9 frames, a slight overshoot) | the tray, x 60 to 660, y 900 to 1500, over his chest; captions go upper |
-| `pillar` | a vertical take on a 16:9 cut (Krish, 19 Nov 2026: "Pillar: whole take on the right") | his take full frame, as F1 | x 60 to 860, y 280 to 840, clear of the captions |
+| `pillar` | a vertical take on a 16:9 cut (Krish, 19 Nov 2026: "Pillar: whole take on the right") | not staged: a pillar piece's tall cut draws exactly as `fill` | as `fill` |
 
 16:9 has its own geometry: band is a side panel with his take on the right, stage a wide stage with his window bottom
 right, tray a lower-left tray, and pillar draws a vertical take whole as a 608 px full-height panel on the right with
