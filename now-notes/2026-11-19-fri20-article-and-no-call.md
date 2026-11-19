@@ -1,4 +1,0 @@
-Status: The Fri 20 Nov piece (c00cd4e0) has its article on the piece: 1,391 words, reading age 12, four inline figures with no brand mark. Nine verbatim sources are filed and one paid fact check ran ($0.99). The dated call is optional in ve and waived for this piece by Krish's word. Both cuts now fail main's new piece guards (talking head over 20%, the short's hindsight window, the short's site address), so no proof has gone to Krish.
-Next: Rework both cuts' face beats with pictures to pass piece.talking_head, move the short's hindsight beat out of WINDOW, fix the 9:16 caption fit for makeyourmindup.ai in the engine, then a fresh pre-critic and the short proof.
-Changed: ve schema, lint and renderer take a piece with no dated call; this piece is exempt from CALL, CALL_HORIZON and CLEAR_STANCE.
-North Star check (2026-11-19): holds.
