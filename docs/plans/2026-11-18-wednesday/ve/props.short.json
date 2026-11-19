@@ -1,0 +1,2912 @@
+{
+  "pieceId": "2026-11-18-wednesday",
+  "cutId": "short",
+  "format": "face-with-proof",
+  "aspect": "9:16",
+  "fps": 30,
+  "durationFrames": 2664,
+  "tokens": {
+    "ink": "#0C1512",
+    "inkDeep": "#070D0B",
+    "inkSoft": "#16221D",
+    "cream": "#F4EFE4",
+    "mint": "#7EF0C0",
+    "channel": "#B7A6FF"
+  },
+  "series": {
+    "label": "under.the.hood",
+    "day": "Wednesdays",
+    "promise": "Free from jargon",
+    "site": "makeyourmindup.ai"
+  },
+  "brand": {
+    "mark": {
+      "src": "/home/user/content-engine/.cache/ve-wed18/assets/src/assets/brand/makeyourmindup/makeyourmindup-mark.png",
+      "pixelWidth": 831,
+      "pixelHeight": 740
+    },
+    "logo": {
+      "src": "/home/user/content-engine/.cache/ve-wed18/assets/src/assets/brand/makeyourmindup/makeyourmindup-horizontal.png",
+      "pixelWidth": 1200,
+      "pixelHeight": 141
+    },
+    "stacked": {
+      "src": "/home/user/content-engine/.cache/ve-wed18/assets/src/assets/brand/makeyourmindup/makeyourmindup-stacked.png",
+      "pixelWidth": 2415,
+      "pixelHeight": 740
+    }
+  },
+  "bodyLogo": false,
+  "segments": [
+    {
+      "src": "/home/user/content-engine/.cache/ve-wed18/assets/short.master.mov",
+      "trimBeforeFrames": 0,
+      "fromFrame": 0,
+      "durationFrames": 2604
+    }
+  ],
+  "audio": {
+    "stem": {
+      "src": "/home/user/content-engine/.cache/ve-wed18/assets/audio.short.wav",
+      "trimBeforeFrames": 0
+    },
+    "sfx": []
+  },
+  "captions": [
+    {
+      "fromFrame": 4,
+      "toFrame": 38,
+      "words": [
+        {
+          "text": "Has",
+          "atFrame": 4
+        },
+        {
+          "text": "the",
+          "atFrame": 11
+        },
+        {
+          "text": "software",
+          "atFrame": 17
+        },
+        {
+          "text": "developer",
+          "atFrame": 27
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 38,
+      "toFrame": 87,
+      "words": [
+        {
+          "text": "in",
+          "atFrame": 38
+        },
+        {
+          "text": "your",
+          "atFrame": 42
+        },
+        {
+          "text": "business",
+          "atFrame": 47
+        },
+        {
+          "text": "suddenly",
+          "atFrame": 68
+        },
+        {
+          "text": "turned",
+          "atFrame": 79
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 87,
+      "toFrame": 121,
+      "words": [
+        {
+          "text": "into",
+          "atFrame": 87
+        },
+        {
+          "text": "a",
+          "atFrame": 95
+        },
+        {
+          "text": "crocodile",
+          "atFrame": 98
+        },
+        {
+          "text": "hunter",
+          "atFrame": 110
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 121,
+      "toFrame": 158,
+      "words": [
+        {
+          "text": "after",
+          "atFrame": 121
+        },
+        {
+          "text": "learning",
+          "atFrame": 128
+        },
+        {
+          "text": "AI?",
+          "atFrame": 143
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 158,
+      "toFrame": 186,
+      "words": [
+        {
+          "text": "Well,",
+          "atFrame": 158
+        },
+        {
+          "text": "it's",
+          "atFrame": 174
+        },
+        {
+          "text": "happening",
+          "atFrame": 178
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 186,
+      "toFrame": 208,
+      "words": [
+        {
+          "text": "in",
+          "atFrame": 186
+        },
+        {
+          "text": "all",
+          "atFrame": 188
+        },
+        {
+          "text": "businesses",
+          "atFrame": 191
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 208,
+      "toFrame": 238,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 208
+        },
+        {
+          "text": "the",
+          "atFrame": 217
+        },
+        {
+          "text": "results",
+          "atFrame": 220
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 238,
+      "toFrame": 248,
+      "words": [
+        {
+          "text": "are",
+          "atFrame": 238
+        },
+        {
+          "text": "a",
+          "atFrame": 241
+        },
+        {
+          "text": "mad",
+          "atFrame": 242
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 248,
+      "toFrame": 276,
+      "words": [
+        {
+          "text": "bag",
+          "atFrame": 248
+        },
+        {
+          "text": "of",
+          "atFrame": 256
+        },
+        {
+          "text": "cats.",
+          "atFrame": 258
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 276,
+      "toFrame": 315,
+      "words": [
+        {
+          "text": "Klarna,",
+          "atFrame": 276
+        },
+        {
+          "text": "the",
+          "atFrame": 290
+        },
+        {
+          "text": "buy",
+          "atFrame": 298
+        },
+        {
+          "text": "now",
+          "atFrame": 304
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 315,
+      "toFrame": 352,
+      "words": [
+        {
+          "text": "pay",
+          "atFrame": 315
+        },
+        {
+          "text": "later",
+          "atFrame": 320
+        },
+        {
+          "text": "app,",
+          "atFrame": 328
+        },
+        {
+          "text": "made",
+          "atFrame": 331
+        },
+        {
+          "text": "headlines",
+          "atFrame": 337
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 352,
+      "toFrame": 386,
+      "words": [
+        {
+          "text": "for",
+          "atFrame": 352
+        },
+        {
+          "text": "switching",
+          "atFrame": 356
+        },
+        {
+          "text": "off",
+          "atFrame": 366
+        },
+        {
+          "text": "Salesforce",
+          "atFrame": 370
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 386,
+      "toFrame": 424,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 386
+        },
+        {
+          "text": "Workday",
+          "atFrame": 392
+        },
+        {
+          "text": "and",
+          "atFrame": 406
+        },
+        {
+          "text": "replacing",
+          "atFrame": 410
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 424,
+      "toFrame": 455,
+      "words": [
+        {
+          "text": "them",
+          "atFrame": 424
+        },
+        {
+          "text": "with",
+          "atFrame": 434
+        },
+        {
+          "text": "AI.",
+          "atFrame": 438
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 455,
+      "toFrame": 481,
+      "words": [
+        {
+          "text": "Two",
+          "atFrame": 455
+        },
+        {
+          "text": "huge",
+          "atFrame": 463
+        },
+        {
+          "text": "software",
+          "atFrame": 472
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 481,
+      "toFrame": 510,
+      "words": [
+        {
+          "text": "bills,",
+          "atFrame": 481
+        },
+        {
+          "text": "gone.",
+          "atFrame": 498
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 510,
+      "toFrame": 535,
+      "words": [
+        {
+          "text": "Just",
+          "atFrame": 510
+        },
+        {
+          "text": "like",
+          "atFrame": 514
+        },
+        {
+          "text": "that.",
+          "atFrame": 518
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 535,
+      "toFrame": 556,
+      "words": [
+        {
+          "text": "Your",
+          "atFrame": 535
+        },
+        {
+          "text": "boss",
+          "atFrame": 539
+        },
+        {
+          "text": "probably",
+          "atFrame": 550
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 556,
+      "toFrame": 575,
+      "words": [
+        {
+          "text": "read",
+          "atFrame": 556
+        },
+        {
+          "text": "about",
+          "atFrame": 560
+        },
+        {
+          "text": "it.",
+          "atFrame": 567
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 575,
+      "toFrame": 621,
+      "words": [
+        {
+          "text": "So",
+          "atFrame": 575
+        },
+        {
+          "text": "what's",
+          "atFrame": 588
+        },
+        {
+          "text": "the",
+          "atFrame": 594
+        },
+        {
+          "text": "question",
+          "atFrame": 597
+        },
+        {
+          "text": "here?",
+          "atFrame": 607
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 621,
+      "toFrame": 627,
+      "words": [
+        {
+          "text": "Do",
+          "atFrame": 621
+        },
+        {
+          "text": "you",
+          "atFrame": 624
+        },
+        {
+          "text": "Salesforce",
+          "atFrame": 712
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 729,
+      "toFrame": 773,
+      "words": [
+        {
+          "text": "is",
+          "atFrame": 729
+        },
+        {
+          "text": "software",
+          "atFrame": 741
+        },
+        {
+          "text": "sales",
+          "atFrame": 751
+        },
+        {
+          "text": "teams",
+          "atFrame": 759
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 773,
+      "toFrame": 819,
+      "words": [
+        {
+          "text": "use",
+          "atFrame": 773
+        },
+        {
+          "text": "to",
+          "atFrame": 778
+        },
+        {
+          "text": "track",
+          "atFrame": 781
+        },
+        {
+          "text": "every",
+          "atFrame": 790
+        },
+        {
+          "text": "customer,",
+          "atFrame": 796
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 819,
+      "toFrame": 865,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 819
+        },
+        {
+          "text": "all",
+          "atFrame": 837
+        },
+        {
+          "text": "sales",
+          "atFrame": 840
+        },
+        {
+          "text": "teams",
+          "atFrame": 847
+        },
+        {
+          "text": "hate.",
+          "atFrame": 853
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 865,
+      "toFrame": 894,
+      "words": [
+        {
+          "text": "And",
+          "atFrame": 865
+        },
+        {
+          "text": "Workday",
+          "atFrame": 870
+        },
+        {
+          "text": "is",
+          "atFrame": 885
+        },
+        {
+          "text": "the",
+          "atFrame": 888
+        },
+        {
+          "text": "one",
+          "atFrame": 891
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 894,
+      "toFrame": 915,
+      "words": [
+        {
+          "text": "that",
+          "atFrame": 894
+        },
+        {
+          "text": "runs",
+          "atFrame": 897
+        },
+        {
+          "text": "your",
+          "atFrame": 903
+        },
+        {
+          "text": "pay",
+          "atFrame": 907
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 915,
+      "toFrame": 944,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 915
+        },
+        {
+          "text": "your",
+          "atFrame": 918
+        },
+        {
+          "text": "holidays.",
+          "atFrame": 921
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 944,
+      "toFrame": 955,
+      "words": [
+        {
+          "text": "Both",
+          "atFrame": 944
+        },
+        {
+          "text": "of",
+          "atFrame": 950
+        },
+        {
+          "text": "them",
+          "atFrame": 952
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 955,
+      "toFrame": 989,
+      "words": [
+        {
+          "text": "cost",
+          "atFrame": 955
+        },
+        {
+          "text": "an",
+          "atFrame": 963
+        },
+        {
+          "text": "absolute",
+          "atFrame": 966
+        },
+        {
+          "text": "fortune.",
+          "atFrame": 977
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 989,
+      "toFrame": 1017,
+      "words": [
+        {
+          "text": "So",
+          "atFrame": 989
+        },
+        {
+          "text": "the",
+          "atFrame": 996
+        },
+        {
+          "text": "internet",
+          "atFrame": 999
+        },
+        {
+          "text": "went",
+          "atFrame": 1006
+        },
+        {
+          "text": "wild",
+          "atFrame": 1010
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1017,
+      "toFrame": 1055,
+      "words": [
+        {
+          "text": "because",
+          "atFrame": 1017
+        },
+        {
+          "text": "of",
+          "atFrame": 1029
+        },
+        {
+          "text": "course",
+          "atFrame": 1032
+        },
+        {
+          "text": "AI",
+          "atFrame": 1045
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1055,
+      "toFrame": 1102,
+      "words": [
+        {
+          "text": "had",
+          "atFrame": 1055
+        },
+        {
+          "text": "killed",
+          "atFrame": 1059
+        },
+        {
+          "text": "software.",
+          "atFrame": 1073
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1102,
+      "toFrame": 1129,
+      "words": [
+        {
+          "text": "So",
+          "atFrame": 1102
+        },
+        {
+          "text": "I",
+          "atFrame": 1111
+        },
+        {
+          "text": "went",
+          "atFrame": 1112
+        },
+        {
+          "text": "digging",
+          "atFrame": 1119
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1129,
+      "toFrame": 1150,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 1129
+        },
+        {
+          "text": "it",
+          "atFrame": 1132
+        },
+        {
+          "text": "turns",
+          "atFrame": 1136
+        },
+        {
+          "text": "out",
+          "atFrame": 1144
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1150,
+      "toFrame": 1183,
+      "words": [
+        {
+          "text": "Klarna's",
+          "atFrame": 1150
+        },
+        {
+          "text": "boss",
+          "atFrame": 1160
+        },
+        {
+          "text": "later",
+          "atFrame": 1172
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1183,
+      "toFrame": 1207,
+      "words": [
+        {
+          "text": "went",
+          "atFrame": 1183
+        },
+        {
+          "text": "online",
+          "atFrame": 1188
+        },
+        {
+          "text": "and",
+          "atFrame": 1195
+        },
+        {
+          "text": "said",
+          "atFrame": 1199
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1207,
+      "toFrame": 1239,
+      "words": [
+        {
+          "text": "that",
+          "atFrame": 1207
+        },
+        {
+          "text": "they",
+          "atFrame": 1212
+        },
+        {
+          "text": "did",
+          "atFrame": 1215
+        },
+        {
+          "text": "not",
+          "atFrame": 1221
+        },
+        {
+          "text": "replace",
+          "atFrame": 1226
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1239,
+      "toFrame": 1270,
+      "words": [
+        {
+          "text": "that",
+          "atFrame": 1239
+        },
+        {
+          "text": "software",
+          "atFrame": 1244
+        },
+        {
+          "text": "with",
+          "atFrame": 1255
+        },
+        {
+          "text": "AI.",
+          "atFrame": 1258
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1270,
+      "toFrame": 1316,
+      "words": [
+        {
+          "text": "So",
+          "atFrame": 1270
+        },
+        {
+          "text": "what",
+          "atFrame": 1275
+        },
+        {
+          "text": "did",
+          "atFrame": 1281
+        },
+        {
+          "text": "replace",
+          "atFrame": 1286
+        },
+        {
+          "text": "Workday?",
+          "atFrame": 1296
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1316,
+      "toFrame": 1356,
+      "words": [
+        {
+          "text": "Another",
+          "atFrame": 1316
+        },
+        {
+          "text": "app",
+          "atFrame": 1331
+        },
+        {
+          "text": "actually",
+          "atFrame": 1337
+        },
+        {
+          "text": "replaced",
+          "atFrame": 1346
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1356,
+      "toFrame": 1386,
+      "words": [
+        {
+          "text": "it",
+          "atFrame": 1356
+        },
+        {
+          "text": "for",
+          "atFrame": 1358
+        },
+        {
+          "text": "paying",
+          "atFrame": 1362
+        },
+        {
+          "text": "staff,",
+          "atFrame": 1369
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1386,
+      "toFrame": 1421,
+      "words": [
+        {
+          "text": "which",
+          "atFrame": 1386
+        },
+        {
+          "text": "they",
+          "atFrame": 1400
+        },
+        {
+          "text": "also",
+          "atFrame": 1403
+        },
+        {
+          "text": "rent.",
+          "atFrame": 1410
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1421,
+      "toFrame": 1466,
+      "words": [
+        {
+          "text": "So",
+          "atFrame": 1421
+        },
+        {
+          "text": "picture",
+          "atFrame": 1433
+        },
+        {
+          "text": "that",
+          "atFrame": 1440
+        },
+        {
+          "text": "meeting.",
+          "atFrame": 1445
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1466,
+      "toFrame": 1488,
+      "words": [
+        {
+          "text": "Great",
+          "atFrame": 1466
+        },
+        {
+          "text": "news,",
+          "atFrame": 1473
+        },
+        {
+          "text": "everyone.",
+          "atFrame": 1478
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1488,
+      "toFrame": 1515,
+      "words": [
+        {
+          "text": "We've",
+          "atFrame": 1488
+        },
+        {
+          "text": "switched",
+          "atFrame": 1493
+        },
+        {
+          "text": "off",
+          "atFrame": 1502
+        },
+        {
+          "text": "Workday",
+          "atFrame": 1505
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1515,
+      "toFrame": 1550,
+      "words": [
+        {
+          "text": "payrolls",
+          "atFrame": 1515
+        },
+        {
+          "text": "now",
+          "atFrame": 1536
+        },
+        {
+          "text": "on",
+          "atFrame": 1540
+        },
+        {
+          "text": "another",
+          "atFrame": 1542
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1550,
+      "toFrame": 1588,
+      "words": [
+        {
+          "text": "app,",
+          "atFrame": 1550
+        },
+        {
+          "text": "which",
+          "atFrame": 1553
+        },
+        {
+          "text": "we",
+          "atFrame": 1562
+        },
+        {
+          "text": "also",
+          "atFrame": 1565
+        },
+        {
+          "text": "rent.",
+          "atFrame": 1571
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1588,
+      "toFrame": 1619,
+      "words": [
+        {
+          "text": "And",
+          "atFrame": 1588
+        },
+        {
+          "text": "Salesforce,",
+          "atFrame": 1591
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1619,
+      "toFrame": 1652,
+      "words": [
+        {
+          "text": "our",
+          "atFrame": 1619
+        },
+        {
+          "text": "engineers",
+          "atFrame": 1622
+        },
+        {
+          "text": "built",
+          "atFrame": 1632
+        },
+        {
+          "text": "our",
+          "atFrame": 1644
+        },
+        {
+          "text": "own",
+          "atFrame": 1648
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1652,
+      "toFrame": 1674,
+      "words": [
+        {
+          "text": "home",
+          "atFrame": 1652
+        },
+        {
+          "text": "for",
+          "atFrame": 1656
+        },
+        {
+          "text": "all",
+          "atFrame": 1660
+        },
+        {
+          "text": "our",
+          "atFrame": 1663
+        },
+        {
+          "text": "customer",
+          "atFrame": 1665
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1674,
+      "toFrame": 1704,
+      "words": [
+        {
+          "text": "data",
+          "atFrame": 1674
+        },
+        {
+          "text": "with",
+          "atFrame": 1683
+        },
+        {
+          "text": "more",
+          "atFrame": 1689
+        },
+        {
+          "text": "rented",
+          "atFrame": 1695
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1704,
+      "toFrame": 1727,
+      "words": [
+        {
+          "text": "apps",
+          "atFrame": 1704
+        },
+        {
+          "text": "on",
+          "atFrame": 1712
+        },
+        {
+          "text": "top.",
+          "atFrame": 1715
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1727,
+      "toFrame": 1755,
+      "words": [
+        {
+          "text": "Getting",
+          "atFrame": 1727
+        },
+        {
+          "text": "all",
+          "atFrame": 1741
+        },
+        {
+          "text": "our",
+          "atFrame": 1745
+        },
+        {
+          "text": "data",
+          "atFrame": 1748
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1755,
+      "toFrame": 1770,
+      "words": [
+        {
+          "text": "in",
+          "atFrame": 1755
+        },
+        {
+          "text": "one",
+          "atFrame": 1759
+        },
+        {
+          "text": "place",
+          "atFrame": 1763
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1770,
+      "toFrame": 1793,
+      "words": [
+        {
+          "text": "was",
+          "atFrame": 1770
+        },
+        {
+          "text": "the",
+          "atFrame": 1776
+        },
+        {
+          "text": "whole",
+          "atFrame": 1779
+        },
+        {
+          "text": "point.",
+          "atFrame": 1784
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1793,
+      "toFrame": 1805,
+      "words": [
+        {
+          "text": "So",
+          "atFrame": 1793
+        },
+        {
+          "text": "that",
+          "atFrame": 1796
+        },
+        {
+          "text": "bit",
+          "atFrame": 1801
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1805,
+      "toFrame": 1823,
+      "words": [
+        {
+          "text": "was",
+          "atFrame": 1805
+        },
+        {
+          "text": "worth",
+          "atFrame": 1808
+        },
+        {
+          "text": "building.",
+          "atFrame": 1814
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1823,
+      "toFrame": 1850,
+      "words": [
+        {
+          "text": "And",
+          "atFrame": 1823
+        },
+        {
+          "text": "now",
+          "atFrame": 1827
+        },
+        {
+          "text": "we're",
+          "atFrame": 1847
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1850,
+      "toFrame": 1864,
+      "words": [
+        {
+          "text": "going",
+          "atFrame": 1850
+        },
+        {
+          "text": "to",
+          "atFrame": 1853
+        },
+        {
+          "text": "have",
+          "atFrame": 1855
+        },
+        {
+          "text": "to",
+          "atFrame": 1857
+        },
+        {
+          "text": "look",
+          "atFrame": 1859
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1864,
+      "toFrame": 1915,
+      "words": [
+        {
+          "text": "after",
+          "atFrame": 1864
+        },
+        {
+          "text": "all",
+          "atFrame": 1870
+        },
+        {
+          "text": "of",
+          "atFrame": 1873
+        },
+        {
+          "text": "this.",
+          "atFrame": 1875
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1915,
+      "toFrame": 1934,
+      "words": [
+        {
+          "text": "And",
+          "atFrame": 1915
+        },
+        {
+          "text": "then",
+          "atFrame": 1917
+        },
+        {
+          "text": "my",
+          "atFrame": 1920
+        },
+        {
+          "text": "favorite",
+          "atFrame": 1923
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1934,
+      "toFrame": 1950,
+      "words": [
+        {
+          "text": "detail",
+          "atFrame": 1934
+        },
+        {
+          "text": "about",
+          "atFrame": 1943
+        },
+        {
+          "text": "all",
+          "atFrame": 1948
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1950,
+      "toFrame": 1988,
+      "words": [
+        {
+          "text": "this",
+          "atFrame": 1950
+        },
+        {
+          "text": "is",
+          "atFrame": 1956
+        },
+        {
+          "text": "that",
+          "atFrame": 1961
+        },
+        {
+          "text": "Klarna",
+          "atFrame": 1978
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1988,
+      "toFrame": 2017,
+      "words": [
+        {
+          "text": "still",
+          "atFrame": 1988
+        },
+        {
+          "text": "uses",
+          "atFrame": 1994
+        },
+        {
+          "text": "Slack,",
+          "atFrame": 2004
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2017,
+      "toFrame": 2034,
+      "words": [
+        {
+          "text": "the",
+          "atFrame": 2017
+        },
+        {
+          "text": "office",
+          "atFrame": 2020
+        },
+        {
+          "text": "chat",
+          "atFrame": 2027
+        },
+        {
+          "text": "app,",
+          "atFrame": 2030
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2034,
+      "toFrame": 2075,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 2034
+        },
+        {
+          "text": "who",
+          "atFrame": 2038
+        },
+        {
+          "text": "owns",
+          "atFrame": 2044
+        },
+        {
+          "text": "Slack?",
+          "atFrame": 2054
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2075,
+      "toFrame": 2129,
+      "words": [
+        {
+          "text": "Salesforce.",
+          "atFrame": 2075
+        },
+        {
+          "text": "So",
+          "atFrame": 2094
+        },
+        {
+          "text": "Klarna",
+          "atFrame": 2106
+        },
+        {
+          "text": "never",
+          "atFrame": 2114
+        },
+        {
+          "text": "even",
+          "atFrame": 2120
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2129,
+      "toFrame": 2160,
+      "words": [
+        {
+          "text": "got",
+          "atFrame": 2129
+        },
+        {
+          "text": "away",
+          "atFrame": 2133
+        },
+        {
+          "text": "from",
+          "atFrame": 2138
+        },
+        {
+          "text": "Salesforce",
+          "atFrame": 2146
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2160,
+      "toFrame": 2189,
+      "words": [
+        {
+          "text": "in",
+          "atFrame": 2160
+        },
+        {
+          "text": "the",
+          "atFrame": 2163
+        },
+        {
+          "text": "end.",
+          "atFrame": 2166
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2189,
+      "toFrame": 2211,
+      "words": [
+        {
+          "text": "It's",
+          "atFrame": 2189
+        },
+        {
+          "text": "one",
+          "atFrame": 2195
+        },
+        {
+          "text": "example",
+          "atFrame": 2198
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2211,
+      "toFrame": 2258,
+      "words": [
+        {
+          "text": "here",
+          "atFrame": 2211
+        },
+        {
+          "text": "to",
+          "atFrame": 2218
+        },
+        {
+          "text": "figure",
+          "atFrame": 2239
+        },
+        {
+          "text": "out",
+          "atFrame": 2246
+        },
+        {
+          "text": "whether",
+          "atFrame": 2252
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2258,
+      "toFrame": 2276,
+      "words": [
+        {
+          "text": "you",
+          "atFrame": 2258
+        },
+        {
+          "text": "want",
+          "atFrame": 2260
+        },
+        {
+          "text": "to",
+          "atFrame": 2265
+        },
+        {
+          "text": "build",
+          "atFrame": 2267
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2276,
+      "toFrame": 2320,
+      "words": [
+        {
+          "text": "or",
+          "atFrame": 2276
+        },
+        {
+          "text": "buy",
+          "atFrame": 2279
+        },
+        {
+          "text": "or",
+          "atFrame": 2288
+        },
+        {
+          "text": "switch.",
+          "atFrame": 2292
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2320,
+      "toFrame": 2340,
+      "words": [
+        {
+          "text": "In",
+          "atFrame": 2320
+        },
+        {
+          "text": "this",
+          "atFrame": 2323
+        },
+        {
+          "text": "scenario,",
+          "atFrame": 2327
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2340,
+      "toFrame": 2372,
+      "words": [
+        {
+          "text": "I",
+          "atFrame": 2340
+        },
+        {
+          "text": "reckon",
+          "atFrame": 2342
+        },
+        {
+          "text": "Klarna",
+          "atFrame": 2351
+        },
+        {
+          "text": "actually",
+          "atFrame": 2363
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2372,
+      "toFrame": 2393,
+      "words": [
+        {
+          "text": "did",
+          "atFrame": 2372
+        },
+        {
+          "text": "get",
+          "atFrame": 2377
+        },
+        {
+          "text": "it",
+          "atFrame": 2381
+        },
+        {
+          "text": "right.",
+          "atFrame": 2384
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2393,
+      "toFrame": 2425,
+      "words": [
+        {
+          "text": "Build",
+          "atFrame": 2393
+        },
+        {
+          "text": "the",
+          "atFrame": 2402
+        },
+        {
+          "text": "bit",
+          "atFrame": 2406
+        },
+        {
+          "text": "that",
+          "atFrame": 2411
+        },
+        {
+          "text": "makes",
+          "atFrame": 2416
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2425,
+      "toFrame": 2440,
+      "words": [
+        {
+          "text": "you",
+          "atFrame": 2425
+        },
+        {
+          "text": "different",
+          "atFrame": 2430
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2440,
+      "toFrame": 2471,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 2440
+        },
+        {
+          "text": "rent",
+          "atFrame": 2444
+        },
+        {
+          "text": "the",
+          "atFrame": 2449
+        },
+        {
+          "text": "rest.",
+          "atFrame": 2453
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2471,
+      "toFrame": 2482,
+      "words": [
+        {
+          "text": "That's",
+          "atFrame": 2471
+        },
+        {
+          "text": "what",
+          "atFrame": 2476
+        },
+        {
+          "text": "I'm",
+          "atFrame": 2480
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2482,
+      "toFrame": 2496,
+      "words": [
+        {
+          "text": "going",
+          "atFrame": 2482
+        },
+        {
+          "text": "to",
+          "atFrame": 2486
+        },
+        {
+          "text": "do.",
+          "atFrame": 2488
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2496,
+      "toFrame": 2538,
+      "words": [
+        {
+          "text": "The",
+          "atFrame": 2496
+        },
+        {
+          "text": "full",
+          "atFrame": 2500
+        },
+        {
+          "text": "five",
+          "atFrame": 2507
+        },
+        {
+          "text": "minute",
+          "atFrame": 2517
+        },
+        {
+          "text": "video",
+          "atFrame": 2523
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2538,
+      "toFrame": 2561,
+      "words": [
+        {
+          "text": "is",
+          "atFrame": 2538
+        },
+        {
+          "text": "on",
+          "atFrame": 2542
+        },
+        {
+          "text": "my",
+          "atFrame": 2544
+        },
+        {
+          "text": "channel",
+          "atFrame": 2548
+        },
+        {
+          "text": "at:",
+          "atFrame": 2558
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2561,
+      "toFrame": 2604,
+      "words": [
+        {
+          "text": "makeyourmindup",
+          "atFrame": 2561
+        },
+        {
+          "text": ".ai",
+          "atFrame": 2585
+        }
+      ],
+      "swipeIndex": null
+    }
+  ],
+  "captionStyle": "house",
+  "captionTheme": "rack-focus",
+  "captionPlacement": "lower",
+  "title": "Build or buy your tools in an AI world?",
+  "titleMoment": {
+    "fromFrame": 627,
+    "toFrame": 712,
+    "release": "captions",
+    "words": [
+      {
+        "text": "Build",
+        "atFrame": 627
+      },
+      {
+        "text": "or",
+        "atFrame": 642
+      },
+      {
+        "text": "buy",
+        "atFrame": 646
+      },
+      {
+        "text": "your",
+        "atFrame": 653
+      },
+      {
+        "text": "tools",
+        "atFrame": 657
+      },
+      {
+        "text": "in",
+        "atFrame": 668
+      },
+      {
+        "text": "an",
+        "atFrame": 671
+      },
+      {
+        "text": "AI",
+        "atFrame": 673
+      },
+      {
+        "text": "world?",
+        "atFrame": 681
+      }
+    ],
+    "card": true,
+    "lockup": true
+  },
+  "beats": [
+    {
+      "id": "hook",
+      "role": "hook",
+      "layout": "STAGE",
+      "fromFrame": 0,
+      "toFrame": 276,
+      "uses": [
+        "croc_s",
+        "croc_stare"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": true,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 221
+    },
+    {
+      "id": "headlines",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 276,
+      "toFrame": 535,
+      "uses": [
+        "hl_fullstack",
+        "hl_itpro",
+        "gone_logos"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/hl-fullstackhr.png"
+      },
+      "keyFrame": 483
+    },
+    {
+      "id": "face",
+      "role": "bridge",
+      "layout": "F1",
+      "fromFrame": 535,
+      "toFrame": 712,
+      "uses": [],
+      "face": "full",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "keyFrame": 677
+    },
+    {
+      "id": "products",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 712,
+      "toFrame": 944,
+      "uses": [
+        "sf_mark",
+        "wd_mark"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/salesforce-screen.png"
+      },
+      "keyFrame": 898
+    },
+    {
+      "id": "fortune",
+      "role": "bridge",
+      "layout": "F1",
+      "fromFrame": 944,
+      "toFrame": 989,
+      "uses": [],
+      "face": "full",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "keyFrame": 980
+    },
+    {
+      "id": "wild",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 989,
+      "toFrame": 1102,
+      "uses": [
+        "saas_dead"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/linkedin-saas-dead.png"
+      },
+      "keyFrame": 1079
+    },
+    {
+      "id": "proof",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 1102,
+      "toFrame": 1270,
+      "uses": [
+        "x_post",
+        "check",
+        "hl_diginomica"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/x-klarnaseb.png"
+      },
+      "keyFrame": 1236
+    },
+    {
+      "id": "deel",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 1270,
+      "toFrame": 1421,
+      "uses": [
+        "wd_out",
+        "deel_in"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/hl-cxtoday.png"
+      },
+      "keyFrame": 1391
+    },
+    {
+      "id": "meeting",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 1421,
+      "toFrame": 1488,
+      "uses": [
+        "confetti"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 1475
+    },
+    {
+      "id": "punchline",
+      "role": "bridge",
+      "layout": "F1",
+      "fromFrame": 1488,
+      "toFrame": 1588,
+      "uses": [],
+      "face": "full",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "keyFrame": 1568
+    },
+    {
+      "id": "rented",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 1588,
+      "toFrame": 1727,
+      "uses": [
+        "hl_cxtoday"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/hl-cxtoday.png"
+      },
+      "keyFrame": 1699
+    },
+    {
+      "id": "worth",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 1727,
+      "toFrame": 1823,
+      "uses": [
+        "built"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/hl-cxtoday.png"
+      },
+      "keyFrame": 1804
+    },
+    {
+      "id": "upkeep",
+      "role": "bridge",
+      "layout": "P1",
+      "fromFrame": 1823,
+      "toFrame": 1915,
+      "uses": [],
+      "face": "full",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "keyFrame": 1897
+    },
+    {
+      "id": "slack",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 1915,
+      "toFrame": 2075,
+      "uses": [
+        "slack"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/sf-preferred-crm.png"
+      },
+      "keyFrame": 2043
+    },
+    {
+      "id": "owner",
+      "role": "payoff",
+      "layout": "STAGE",
+      "fromFrame": 2075,
+      "toFrame": 2189,
+      "uses": [
+        "sf_back"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/salesforce-screen.png"
+      },
+      "keyFrame": 2166
+    },
+    {
+      "id": "close",
+      "role": "bridge",
+      "layout": "F1",
+      "fromFrame": 2189,
+      "toFrame": 2664,
+      "uses": [],
+      "face": "full",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "keyFrame": 2521
+    }
+  ],
+  "objects": [
+    {
+      "obj": "croc_s",
+      "device": "scene_plate",
+      "meaning": "the in-house developer as a crocodile hunter: a nerd in a lanyard creeping up on a crocodile asleep under the office coffee machine (his own words, played straight)",
+      "fromFrame": 0,
+      "toFrame": 276,
+      "variants": {},
+      "params": {
+        "shots": [
+          {
+            "src": "/home/user/content-engine/.cache/ve-wed18/assets/plates/croc-hook-video.mp4",
+            "kind": "video",
+            "width": 1080,
+            "height": 1920
+          }
+        ],
+        "camera": "still",
+        "full": true,
+        "grade": "none"
+      }
+    },
+    {
+      "obj": "hl_fullstack",
+      "device": "evidence_card",
+      "meaning": "the headline \"Klarna ditches Workday for AI.\" as published",
+      "fromFrame": 276,
+      "toFrame": 535,
+      "variants": {},
+      "params": {
+        "kind": "screenshot",
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/hl-fullstackhr.png",
+        "outlet": "FullStack HR",
+        "date": "17 Sep 2024",
+        "sourceAspectRatio": 4.3689,
+        "crop": {
+          "x": 0.0878,
+          "y": 0.2864,
+          "w": 0.5444,
+          "h": 0.2039
+        }
+      }
+    },
+    {
+      "obj": "hl_itpro",
+      "device": "evidence_card",
+      "meaning": "the headline \"Marc Benioff questions Klarna CEO's move to scrap Workday, Salesforce\" as published",
+      "fromFrame": 276,
+      "toFrame": 535,
+      "variants": {},
+      "params": {
+        "kind": "screenshot",
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/hl-itpro.png",
+        "outlet": "IT Pro",
+        "date": "13 Sep 2024",
+        "sourceAspectRatio": 1.9302,
+        "crop": {
+          "x": 0.5173,
+          "y": 0.6643,
+          "w": 0.3902,
+          "h": 0.0786
+        }
+      }
+    },
+    {
+      "obj": "gone_logos",
+      "device": "logo_card",
+      "meaning": "the two software bills Klarna said it switched off: Salesforce and Workday",
+      "fromFrame": 276,
+      "toFrame": 535,
+      "variants": {},
+      "params": {
+        "logos": [
+          {
+            "id": "Salesforce"
+          },
+          {
+            "id": "Workday"
+          }
+        ],
+        "fit": true
+      }
+    },
+    {
+      "obj": "saas_dead",
+      "device": "evidence_card",
+      "meaning": "a real public post, \"SaaS is Dead.\", citing Klarna ripping out Salesforce and Workday",
+      "fromFrame": 989,
+      "toFrame": 1102,
+      "variants": {},
+      "params": {
+        "kind": "screenshot",
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/linkedin-saas-dead.png",
+        "outlet": "LinkedIn",
+        "date": "Sep 2024",
+        "sourceAspectRatio": 1.5134,
+        "crop": {
+          "x": 0.3067,
+          "y": 0.4086,
+          "w": 0.1125,
+          "h": 0.0242
+        }
+      }
+    },
+    {
+      "obj": "x_post",
+      "device": "evidence_card",
+      "meaning": "Klarna's CEO Sebastian Siemiatkowski's own post: \"No, I don't think it is the end of Salesforce\"",
+      "fromFrame": 1102,
+      "toFrame": 1270,
+      "variants": {},
+      "params": {
+        "kind": "screenshot",
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/x-klarnaseb.png",
+        "outlet": "X, @klarnaseb",
+        "date": "3 Mar 2025",
+        "sourceAspectRatio": 1.4354,
+        "crop": {
+          "x": 0.0217,
+          "y": 0.4055,
+          "w": 0.6825,
+          "h": 0.0598
+        }
+      }
+    },
+    {
+      "obj": "check",
+      "device": "query_chip",
+      "meaning": "the terminal checks the headline against what the CEO wrote",
+      "fromFrame": 1102,
+      "toFrame": 1270,
+      "variants": {},
+      "params": {
+        "text": "FACT CHECK · @KLARNASEB"
+      }
+    },
+    {
+      "obj": "hl_diginomica",
+      "device": "evidence_card",
+      "meaning": "the headline \"no, we didn't replace SaaS with an LLM, admits CEO Sebastian Siemiatkowski\"",
+      "fromFrame": 1102,
+      "toFrame": 1270,
+      "variants": {},
+      "params": {
+        "kind": "screenshot",
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/hl-diginomica.png",
+        "outlet": "diginomica",
+        "date": "7 Mar 2025",
+        "sourceAspectRatio": 2.381,
+        "crop": {
+          "x": 0.022,
+          "y": 0.4583,
+          "w": 0.616,
+          "h": 0.1286
+        }
+      }
+    },
+    {
+      "obj": "wd_out",
+      "device": "logo_card",
+      "meaning": "the HR software Klarna stopped renting: Workday",
+      "fromFrame": 1270,
+      "toFrame": 1421,
+      "variants": {},
+      "params": {
+        "logos": [
+          {
+            "id": "Workday"
+          }
+        ],
+        "fit": true
+      }
+    },
+    {
+      "obj": "deel_in",
+      "device": "logo_card",
+      "meaning": "what replaced it: Deel, another rented app (CX Today, 11 Dec 2024)",
+      "fromFrame": 1270,
+      "toFrame": 1421,
+      "variants": {},
+      "params": {
+        "logos": [
+          {
+            "id": "Deel"
+          }
+        ],
+        "fit": true
+      }
+    },
+    {
+      "obj": "confetti",
+      "device": "scene_plate",
+      "meaning": "an all-hands celebrating switching one rented app for another: confetti and a big red lever (his own scene, played straight)",
+      "fromFrame": 1421,
+      "toFrame": 1488,
+      "variants": {},
+      "params": {
+        "shots": [
+          {
+            "src": "/home/user/content-engine/.cache/ve-wed18/assets/plates/confetti-layer.mp4",
+            "kind": "video",
+            "width": 1080,
+            "height": 1920
+          }
+        ],
+        "camera": "still",
+        "full": true,
+        "grade": "none"
+      }
+    },
+    {
+      "obj": "hl_cxtoday",
+      "device": "evidence_card",
+      "meaning": "the headline \"Klarna Didn't Replace Salesforce & Workday with AI; It Replaced Them with Alternative SaaS Apps\"",
+      "fromFrame": 1588,
+      "toFrame": 1727,
+      "variants": {},
+      "params": {
+        "kind": "screenshot",
+        "src": "/home/user/content-engine/.cache/ve-wed18/assets/shots/hl-cxtoday.png",
+        "outlet": "CX Today",
+        "date": "11 Dec 2024",
+        "sourceAspectRatio": 3.3557,
+        "crop": {
+          "x": 0.1565,
+          "y": 0.1711,
+          "w": 0.6485,
+          "h": 0.1678
+        }
+      }
+    },
+    {
+      "obj": "built",
+      "device": "query_chip",
+      "meaning": "the one part Klarna did build: its own data layer (CEO, 4 Mar 2025)",
+      "fromFrame": 1727,
+      "toFrame": 1823,
+      "variants": {},
+      "params": {
+        "text": "BUILT IN-HOUSE: ONE HOME FOR ALL CUSTOMER DATA"
+      }
+    },
+    {
+      "obj": "slack",
+      "device": "logo_card",
+      "meaning": "the chat app Klarna still uses: Slack",
+      "fromFrame": 1915,
+      "toFrame": 2075,
+      "variants": {},
+      "params": {
+        "logos": [
+          {
+            "id": "Slack"
+          }
+        ],
+        "fit": true
+      }
+    },
+    {
+      "obj": "sf_back",
+      "device": "logo_card",
+      "meaning": "the twist: Salesforce, the software Klarna left, owns the chat app it kept",
+      "fromFrame": 2075,
+      "toFrame": 2189,
+      "variants": {},
+      "params": {
+        "logos": [
+          {
+            "id": "Salesforce"
+          }
+        ],
+        "fit": true
+      }
+    },
+    {
+      "obj": "croc_stare",
+      "device": "scene_plate",
+      "meaning": "the stand-off: the crocodile awake and staring at the frozen developer (the hook clip's last frame, held)",
+      "fromFrame": 0,
+      "toFrame": 276,
+      "variants": {},
+      "params": {
+        "shots": [
+          {
+            "src": "/home/user/content-engine/.cache/ve-wed18/assets/plates/croc-stare-up.png",
+            "width": 1080,
+            "height": 1920,
+            "focus": {
+              "x": 0.5,
+              "y": 0.3
+            }
+          }
+        ],
+        "camera": "push",
+        "full": true,
+        "grade": "none"
+      }
+    },
+    {
+      "obj": "sf_mark",
+      "device": "logo_card",
+      "meaning": "Salesforce, the software sales teams use to track every customer",
+      "fromFrame": 712,
+      "toFrame": 944,
+      "variants": {},
+      "params": {
+        "logos": [
+          {
+            "id": "Salesforce"
+          }
+        ],
+        "fit": true
+      }
+    },
+    {
+      "obj": "wd_mark",
+      "device": "logo_card",
+      "meaning": "Workday, the software that runs pay and holidays",
+      "fromFrame": 712,
+      "toFrame": 944,
+      "variants": {},
+      "params": {
+        "logos": [
+          {
+            "id": "Workday"
+          }
+        ],
+        "fit": true
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "hook-0",
+      "obj": "croc_s",
+      "verb": "enter",
+      "toState": "0",
+      "atFrame": 0
+    },
+    {
+      "id": "hook-1",
+      "obj": "croc_stare",
+      "verb": "enter",
+      "toState": "0",
+      "atFrame": 158
+    },
+    {
+      "id": "headlines-0",
+      "obj": "hl_fullstack",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 276
+    },
+    {
+      "id": "headlines-1",
+      "obj": "hl_fullstack",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 331
+    },
+    {
+      "id": "headlines-2",
+      "obj": "hl_itpro",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 337
+    },
+    {
+      "id": "headlines-3",
+      "obj": "hl_itpro",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 438
+    },
+    {
+      "id": "headlines-4",
+      "obj": "gone_logos",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 455
+    },
+    {
+      "id": "products-0",
+      "obj": "sf_mark",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 712
+    },
+    {
+      "id": "products-1",
+      "obj": "sf_mark",
+      "verb": "highlight",
+      "toState": "0",
+      "atFrame": 781
+    },
+    {
+      "id": "products-2",
+      "obj": "sf_mark",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 865
+    },
+    {
+      "id": "products-3",
+      "obj": "wd_mark",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 870
+    },
+    {
+      "id": "products-4",
+      "obj": "wd_mark",
+      "verb": "highlight",
+      "toState": "0",
+      "atFrame": 907
+    },
+    {
+      "id": "products-5",
+      "obj": "wd_mark",
+      "verb": "highlight",
+      "toState": "0",
+      "atFrame": 918
+    },
+    {
+      "id": "wild-0",
+      "obj": "saas_dead",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 989
+    },
+    {
+      "id": "proof-0",
+      "obj": "check",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1102
+    },
+    {
+      "id": "proof-1",
+      "obj": "check",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 1144
+    },
+    {
+      "id": "proof-2",
+      "obj": "x_post",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1150
+    },
+    {
+      "id": "proof-3",
+      "obj": "x_post",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 1199
+    },
+    {
+      "id": "proof-4",
+      "obj": "hl_diginomica",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1207
+    },
+    {
+      "id": "deel-0",
+      "obj": "wd_out",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1286
+    },
+    {
+      "id": "deel-1",
+      "obj": "wd_out",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 1316
+    },
+    {
+      "id": "deel-2",
+      "obj": "deel_in",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1331
+    },
+    {
+      "id": "deel-3",
+      "obj": "deel_in",
+      "verb": "highlight",
+      "toState": "0",
+      "atFrame": 1403
+    },
+    {
+      "id": "meeting-0",
+      "obj": "confetti",
+      "verb": "enter",
+      "toState": "0",
+      "atFrame": 1421
+    },
+    {
+      "id": "rented-0",
+      "obj": "hl_cxtoday",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1588
+    },
+    {
+      "id": "rented-1",
+      "obj": "hl_cxtoday",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 1715
+    },
+    {
+      "id": "worth-0",
+      "obj": "built",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1727
+    },
+    {
+      "id": "worth-1",
+      "obj": "built",
+      "verb": "highlight",
+      "toState": "BUILT",
+      "atFrame": 1779
+    },
+    {
+      "id": "worth-2",
+      "obj": "built",
+      "verb": "highlight",
+      "toState": "BUILT",
+      "atFrame": 1808
+    },
+    {
+      "id": "slack-0",
+      "obj": "slack",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1978
+    },
+    {
+      "id": "slack-1",
+      "obj": "slack",
+      "verb": "highlight",
+      "toState": "0",
+      "atFrame": 2004
+    },
+    {
+      "id": "slack-2",
+      "obj": "slack",
+      "verb": "highlight",
+      "toState": "0",
+      "atFrame": 2038
+    },
+    {
+      "id": "owner-0",
+      "obj": "sf_back",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 2075
+    },
+    {
+      "id": "owner-1",
+      "obj": "sf_back",
+      "verb": "highlight",
+      "toState": "0",
+      "atFrame": 2106
+    },
+    {
+      "id": "owner-2",
+      "obj": "sf_back",
+      "verb": "highlight",
+      "toState": "0",
+      "atFrame": 2146
+    }
+  ],
+  "ending": {
+    "fromFrame": 2604,
+    "url": "makeyourmindup.ai",
+    "tagline": "Built to help you decide.",
+    "cta": "Subscribe free",
+    "days": [
+      {
+        "day": "Mondays",
+        "colour": "#FFD84D"
+      },
+      {
+        "day": "Wednesdays",
+        "colour": "#B7A6FF"
+      },
+      {
+        "day": "Fridays",
+        "colour": "#FF6A4D"
+      }
+    ]
+  },
+  "motion": {
+    "style": "hud-terminal",
+    "profile": {
+      "entrance": {
+        "kind": "slap",
+        "frames": 4,
+        "easing": "enter",
+        "distancePx": 40,
+        "overshootPct": 4
+      },
+      "stagger": {
+        "frames": 2,
+        "unit": "char"
+      },
+      "exitFrames": 4,
+      "onTwos": false,
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
+      "transition": "cut",
+      "typeReveal": {
+        "kind": "typewriter",
+        "cps": 32
+      },
+      "ground": {
+        "kind": "dark",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
+      "driftPct": 0.5,
+      "countFrames": 24,
+      "overlays": [
+        "brackets",
+        "scanLines"
+      ],
+      "type": {
+        "font": "data",
+        "hero": false
+      },
+      "note": "IBM Plex Mono on ink_deep, text cards inverted (cream type, mint for the result); text types at a readable 32 characters a second; mint brackets lock onto the typed line with the slap token; faint static scan lines on the ground only, never noise over the proof; rolling numbers settle on the real figure and hold"
+    }
+  },
+  "ingredients": {
+    "energy": "high",
+    "transition": "cut",
+    "camera": "phased",
+    "hits": false
+  },
+  "layout": {
+    "mode": "pillar"
+  }
+}

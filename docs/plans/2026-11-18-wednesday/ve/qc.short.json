@@ -1,0 +1,4092 @@
+{
+  "file": ".cache/ve-wed18/filing/3 Video/Build or buy your AI - short 9x16 v2.mp4",
+  "sha256": "1849930abcc084f8da0e6290ea4f04a7ae35539fb2157f8a1b202dbc708e66ae",
+  "duration_s": 88.8,
+  "format": "face-with-proof",
+  "checks": {
+    "loudness.integrated": {
+      "value": -14.2,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.6,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 0.943,
+      "target": ">= 0.5",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 1,
+      "target": "<= 4 s",
+      "pass": true,
+      "runs": [
+        [
+          8,
+          1
+        ],
+        [
+          13,
+          1
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          24,
+          1
+        ],
+        [
+          68,
+          1
+        ]
+      ]
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999999
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999998
+        },
+        {
+          "segment": 2,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999996
+        },
+        {
+          "segment": 3,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999997
+        },
+        {
+          "segment": 4,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999999
+        },
+        {
+          "segment": 5,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999998
+        },
+        {
+          "segment": 6,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999998
+        },
+        {
+          "segment": 7,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999996
+        },
+        {
+          "segment": 8,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999999
+        },
+        {
+          "segment": 9,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999994
+        },
+        {
+          "segment": 10,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999998
+        },
+        {
+          "segment": 11,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999998
+        },
+        {
+          "segment": 12,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999997
+        },
+        {
+          "segment": 13,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999999
+        },
+        {
+          "segment": 14,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999999
+        },
+        {
+          "segment": 15,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999998
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": true,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 33,
+          "text": "‘Has the software\n‘developer",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 1,
+          "frame": 83,
+          "text": "in your. business\nsuddenly turned ~",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 2,
+          "frame": 116,
+          "text": "into a crocodile —\nhunter",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 3,
+          "frame": 151,
+          "text": "afterlearning\nAl?",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        },
+        {
+          "page": 4,
+          "frame": 182,
+          "text": "Well it's\nhappening",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 5,
+          "frame": 200,
+          "text": "in.all\nbusinesses",
+          "agreement": 1.0,
+          "variant": "raw_2x",
+          "pass": true
+        },
+        {
+          "page": 6,
+          "frame": 229,
+          "text": "and the results",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 7,
+          "frame": 245,
+          "text": "are a mad",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 8,
+          "frame": 267,
+          "text": "bag of cats",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 9,
+          "frame": 310,
+          "text": "Klarna the buy\nnow",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 10,
+          "frame": 345,
+          "text": "pay later app\nmade headlines",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 11,
+          "frame": 378,
+          "text": "for switching\noff Salesforce",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 12,
+          "frame": 417,
+          "text": "and Workday and\nreplacing",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 13,
+          "frame": 447,
+          "text": "them with Al",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 14,
+          "frame": 477,
+          "text": "Two huge\nsoftware",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 15,
+          "frame": 504,
+          "text": "bills gone",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 16,
+          "frame": 527,
+          "text": "Just like that",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 17,
+          "frame": 553,
+          "text": "YOUIZDOSS = a»\nprobably ,",
+          "agreement": 0.33333333333333337,
+          "variant": "normalised",
+          "pass": false
+        },
+        {
+          "page": 18,
+          "frame": 571,
+          "text": "codon\nread about it",
+          "agreement": 0.75,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 19,
+          "frame": 614,
+          "text": "SO Whats the 5\nquestion here?",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 20,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 21,
+          "frame": 766,
+          "text": "Is software\nsales teams",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 22,
+          "frame": 808,
+          "text": "use to track\nevery Customer",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 23,
+          "frame": 859,
+          "text": "and all sales\nteams hate",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 24,
+          "frame": 893,
+          "text": "—",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 25,
+          "frame": 911,
+          "text": "that runs your\npay",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 26,
+          "frame": 933,
+          "text": "and your\nholidays",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 27,
+          "frame": 954,
+          "text": "=",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 28,
+          "frame": 983,
+          "text": "cost an absolute\nfortune fam.",
+          "agreement": 0.8,
+          "variant": "normalised",
+          "pass": false
+        },
+        {
+          "page": 29,
+          "frame": 1014,
+          "text": "So the internet\nwent wild",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 30,
+          "frame": 1050,
+          "text": "because of\ncourse Al",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 31,
+          "frame": 1088,
+          "text": "had killed\nsoftware",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 32,
+          "frame": 1124,
+          "text": "So  i  went digging",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 33,
+          "frame": 1147,
+          "text": "and it turns out",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 34,
+          "frame": 1178,
+          "text": "Klarna's boss\nlater",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 35,
+          "frame": 1203,
+          "text": "went online and\nsaid",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 36,
+          "frame": 1233,
+          "text": "NOT replace",
+          "agreement": 0.4,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 37,
+          "frame": 1264,
+          "text": "that software\nwith Al",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 38,
+          "frame": 1306,
+          "text": "So what did\nreplace Workday?",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 39,
+          "frame": 1351,
+          "text": "actually .\nreplaced",
+          "agreement": 0.5,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 40,
+          "frame": 1378,
+          "text": "it for paying\nStaff",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 41,
+          "frame": 1416,
+          "text": "which they also\nrent",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 42,
+          "frame": 1456,
+          "text": "So picturesth ay\nmeeting ol a",
+          "agreement": 0.4,
+          "variant": "raw_2x",
+          "pass": false
+        },
+        {
+          "page": 43,
+          "frame": 1483,
+          "text": "¥ a i ‘\n\n'G feat news \\ |\neveryone} *\na . ‘ a fn",
+          "agreement": 0.5,
+          "variant": "normalised_2x",
+          "pass": false
+        },
+        {
+          "page": 44,
+          "frame": 1510,
+          "text": "\\We've}s 1! itched y\nOff Workday gx",
+          "agreement": 0.6666666666666667,
+          "variant": "normalised",
+          "pass": false
+        },
+        {
+          "page": 45,
+          "frame": 1546,
+          "text": "payrolls now on ™\n‘another ggg,",
+          "agreement": 0.8,
+          "variant": "normalised",
+          "pass": false
+        },
+        {
+          "page": 46,
+          "frame": 1580,
+          "text": "app which we also\nrent” Qi",
+          "agreement": 0.8333333333333334,
+          "variant": "normalised",
+          "pass": false
+        },
+        {
+          "page": 47,
+          "frame": 1605,
+          "text": "And Salesforce",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 48,
+          "frame": 1650,
+          "text": "our engineers\nbuilt our Own",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 49,
+          "frame": 1670,
+          "text": "home for all our\ncustomer",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 50,
+          "frame": 1700,
+          "text": "data with more\nrented",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 51,
+          "frame": 1721,
+          "text": "apps on top",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 52,
+          "frame": 1752,
+          "text": "Getting all our\ndata",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 53,
+          "frame": 1767,
+          "text": "in one place",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 54,
+          "frame": 1789,
+          "text": "was the whole\npoint",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 55,
+          "frame": 1803,
+          "text": "So that bit",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 56,
+          "frame": 1819,
+          "text": "was worth\nbuilding",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 57,
+          "frame": 1849,
+          "text": "nd\n—_ o\niA\nfe 4",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 58,
+          "frame": 1862,
+          "text": "going to have to \\\nlook” Qa",
+          "agreement": 0.8333333333333334,
+          "variant": "normalised",
+          "pass": false
+        },
+        {
+          "page": 59,
+          "frame": 1895,
+          "text": "afterall of this 7%",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 60,
+          "frame": 1929,
+          "text": "And then my\nfavorite",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 61,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 62,
+          "frame": 1983,
+          "text": "this is that\nKlarna",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 63,
+          "frame": 2011,
+          "text": "still uses Slack",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 64,
+          "frame": 2032,
+          "text": "the office chat\napp",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 65,
+          "frame": 2065,
+          "text": "and who owns\nSlack?",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 66,
+          "frame": 2125,
+          "text": "Klarna NEVEN\neven",
+          "agreement": 0.4,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 67,
+          "frame": 2153,
+          "text": "got away from\nSalesforce",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 68,
+          "frame": 2178,
+          "text": "in the end",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 69,
+          "frame": 2205,
+          "text": "It's’one example -",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 70,
+          "frame": 2255,
+          "text": "here to figure 4\nout whether",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 71,
+          "frame": 2272,
+          "text": "you want to build",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 72,
+          "frame": 2306,
+          "text": "or buy or switch",
+          "agreement": 1.0,
+          "variant": "raw_2x",
+          "pass": true
+        },
+        {
+          "page": 73,
+          "frame": 2334,
+          "text": "a“ .\n(i fits scenario",
+          "agreement": 0.33333333333333337,
+          "variant": "highlight",
+          "pass": false
+        },
+        {
+          "page": 74,
+          "frame": 2368,
+          "text": " i  reckon Klarna ~“\nactually ii",
+          "agreement": 0.8,
+          "variant": "normalised",
+          "pass": false
+        },
+        {
+          "page": 75,
+          "frame": 2389,
+          "text": "cuca ue\ndid get it right",
+          "agreement": 0.6666666666666667,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 76,
+          "frame": 2421,
+          "text": "Build the bit “\nthat makes",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 77,
+          "frame": 2435,
+          "text": "you different",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 78,
+          "frame": 2462,
+          "text": "and rent the rest",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 79,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 80,
+          "frame": 2492,
+          "text": "pol A site .\nsoing’ to do i",
+          "agreement": 0.4,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 81,
+          "frame": 2531,
+          "text": "The fullfive\nminute video",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 82,
+          "frame": 2560,
+          "text": "",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 83,
+          "frame": 2595,
+          "text": "makeyourmindup\nal 7 '",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": false,
+      "status": "incomplete"
+    },
+    "brand.no_mark": {
+      "value": [
+        {
+          "beat": "hook",
+          "frame": 137,
+          "score": 0.21795343504857642,
+          "pass": true
+        },
+        {
+          "beat": "headlines",
+          "frame": 405,
+          "score": 0.3320019444175479,
+          "pass": true
+        },
+        {
+          "beat": "face",
+          "frame": 623,
+          "score": 0.3298225964389237,
+          "pass": true
+        },
+        {
+          "beat": "products",
+          "frame": 827,
+          "score": 0.3491530382441575,
+          "pass": true
+        },
+        {
+          "beat": "fortune",
+          "frame": 966,
+          "score": 0.37350913599076924,
+          "pass": true
+        },
+        {
+          "beat": "wild",
+          "frame": 1045,
+          "score": 0.33919904764914116,
+          "pass": true
+        },
+        {
+          "beat": "proof",
+          "frame": 1185,
+          "score": 0.3717078235476175,
+          "pass": true
+        },
+        {
+          "beat": "deel",
+          "frame": 1345,
+          "score": 0.31414368834942835,
+          "pass": true
+        },
+        {
+          "beat": "meeting",
+          "frame": 1454,
+          "score": 0.34279728018023287,
+          "pass": true
+        },
+        {
+          "beat": "punchline",
+          "frame": 1537,
+          "score": 0.4037616165817072,
+          "pass": true
+        },
+        {
+          "beat": "rented",
+          "frame": 1657,
+          "score": 0.32105480570689593,
+          "pass": true
+        },
+        {
+          "beat": "worth",
+          "frame": 1774,
+          "score": 0.3315951884687664,
+          "pass": true
+        },
+        {
+          "beat": "upkeep",
+          "frame": 1868,
+          "score": 0.3821668543844434,
+          "pass": true
+        },
+        {
+          "beat": "slack",
+          "frame": 1994,
+          "score": 0.3076486058452641,
+          "pass": true
+        },
+        {
+          "beat": "owner",
+          "frame": 2131,
+          "score": 0.34715485785072747,
+          "pass": true
+        },
+        {
+          "beat": "close",
+          "frame": 2426,
+          "score": 0.36387064569800703,
+          "pass": true
+        }
+      ],
+      "target": "no mark on the vertical cut: mark NCC < 0.8 at every beat midpoint",
+      "pass": true,
+      "status": "measured"
+    },
+    "motion.cue_sync": {
+      "value": [
+        {
+          "event": "hook-0",
+          "atFrame": 0,
+          "peak_frame": 5,
+          "lag_frames": 5,
+          "peak_difference": 5.355355739593506,
+          "event_difference": 4.279073238372803,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "hook-1",
+          "atFrame": 158,
+          "peak_frame": 158,
+          "lag_frames": 0,
+          "peak_difference": 32.03493118286133,
+          "event_difference": 32.03493118286133,
+          "threshold": 6.084577560424805,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "headlines-0",
+          "atFrame": 276,
+          "peak_frame": 276,
+          "lag_frames": 0,
+          "peak_difference": 38.291481018066406,
+          "event_difference": 38.291481018066406,
+          "threshold": 0.5185170918703079,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "headlines-1",
+          "atFrame": 331,
+          "peak_frame": 331,
+          "lag_frames": 0,
+          "peak_difference": 6.897401332855225,
+          "event_difference": 6.897401332855225,
+          "threshold": 1.0607624351978302,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "headlines-2",
+          "atFrame": 337,
+          "peak_frame": 331,
+          "lag_frames": -6,
+          "peak_difference": 6.897401332855225,
+          "event_difference": 5.4574503898620605,
+          "threshold": 1.3720645308494568,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "headlines-3",
+          "atFrame": 438,
+          "peak_frame": 438,
+          "lag_frames": 0,
+          "peak_difference": 7.652881145477295,
+          "event_difference": 7.652881145477295,
+          "threshold": 0.7883883118629456,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "headlines-4",
+          "atFrame": 455,
+          "peak_frame": 459,
+          "lag_frames": 4,
+          "peak_difference": 4.146554946899414,
+          "event_difference": 2.3216371536254883,
+          "threshold": 0.20240306854248047,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "products-0",
+          "atFrame": 712,
+          "peak_frame": 712,
+          "lag_frames": 0,
+          "peak_difference": 38.45616912841797,
+          "event_difference": 38.45616912841797,
+          "threshold": 24.492945671081543,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "products-1",
+          "atFrame": 781,
+          "peak_frame": 782,
+          "lag_frames": 1,
+          "peak_difference": 1.793837308883667,
+          "event_difference": 1.793837308883667,
+          "threshold": 0.25582176446914673,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "products-2",
+          "atFrame": 865,
+          "peak_frame": 868,
+          "lag_frames": 3,
+          "peak_difference": 7.756824970245361,
+          "event_difference": 6.896718502044678,
+          "threshold": 0.3953819274902344,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "products-3",
+          "atFrame": 870,
+          "peak_frame": 868,
+          "lag_frames": -2,
+          "peak_difference": 7.756824970245361,
+          "event_difference": 7.756824970245361,
+          "threshold": 0.792622983455658,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "products-4",
+          "atFrame": 907,
+          "peak_frame": 908,
+          "lag_frames": 1,
+          "peak_difference": 1.7721151113510132,
+          "event_difference": 1.7721151113510132,
+          "threshold": 1.1173148453235626,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "products-5",
+          "atFrame": 918,
+          "peak_frame": 918,
+          "lag_frames": 0,
+          "peak_difference": 2.205455780029297,
+          "event_difference": 2.205455780029297,
+          "threshold": 1.0435850322246552,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "wild-0",
+          "atFrame": 989,
+          "peak_frame": 989,
+          "lag_frames": 0,
+          "peak_difference": 45.387855529785156,
+          "event_difference": 45.387855529785156,
+          "threshold": 13.684590339660645,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-0",
+          "atFrame": 1102,
+          "peak_frame": 1102,
+          "lag_frames": 0,
+          "peak_difference": 16.360841751098633,
+          "event_difference": 16.360841751098633,
+          "threshold": 0.2502039894461632,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-1",
+          "atFrame": 1144,
+          "peak_frame": 1148,
+          "lag_frames": 4,
+          "peak_difference": 2.7048254013061523,
+          "event_difference": 1.022400140762329,
+          "threshold": 0.7669603228569031,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-2",
+          "atFrame": 1150,
+          "peak_frame": 1151,
+          "lag_frames": 1,
+          "peak_difference": 5.108011245727539,
+          "event_difference": 5.108011245727539,
+          "threshold": 1.2632465064525604,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-3",
+          "atFrame": 1199,
+          "peak_frame": 1199,
+          "lag_frames": 0,
+          "peak_difference": 7.336029529571533,
+          "event_difference": 7.336029529571533,
+          "threshold": 1.2524175345897675,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-4",
+          "atFrame": 1207,
+          "peak_frame": 1208,
+          "lag_frames": 1,
+          "peak_difference": 5.8080525398254395,
+          "event_difference": 5.8080525398254395,
+          "threshold": 1.04323348402977,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "deel-0",
+          "atFrame": 1286,
+          "peak_frame": 1288,
+          "lag_frames": 2,
+          "peak_difference": 3.8021483421325684,
+          "event_difference": 3.8021483421325684,
+          "threshold": 0.7140465974807739,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "deel-1",
+          "atFrame": 1316,
+          "peak_frame": 1319,
+          "lag_frames": 3,
+          "peak_difference": 8.888216018676758,
+          "event_difference": 6.241336822509766,
+          "threshold": 0.1946672424674034,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "deel-2",
+          "atFrame": 1331,
+          "peak_frame": 1333,
+          "lag_frames": 2,
+          "peak_difference": 3.8628597259521484,
+          "event_difference": 3.8628597259521484,
+          "threshold": 0.8476359844207764,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "deel-3",
+          "atFrame": 1403,
+          "peak_frame": 1404,
+          "lag_frames": 1,
+          "peak_difference": 2.0408575534820557,
+          "event_difference": 2.0408575534820557,
+          "threshold": 0.29591289907693863,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "meeting-0",
+          "atFrame": 1421,
+          "peak_frame": 1421,
+          "lag_frames": 0,
+          "peak_difference": 78.14585876464844,
+          "event_difference": 78.14585876464844,
+          "threshold": 0.2307913675904274,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "rented-0",
+          "atFrame": 1588,
+          "peak_frame": 1588,
+          "lag_frames": 0,
+          "peak_difference": 50.86042404174805,
+          "event_difference": 50.86042404174805,
+          "threshold": 10.901066064834595,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "rented-1",
+          "atFrame": 1715,
+          "peak_frame": 1715,
+          "lag_frames": 0,
+          "peak_difference": 7.122557163238525,
+          "event_difference": 7.122557163238525,
+          "threshold": 0.6334432661533356,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "worth-0",
+          "atFrame": 1727,
+          "peak_frame": 1727,
+          "lag_frames": 0,
+          "peak_difference": 4.404082298278809,
+          "event_difference": 4.404082298278809,
+          "threshold": 0.48808881640434265,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "worth-1",
+          "atFrame": 1779,
+          "peak_frame": 1780,
+          "lag_frames": 1,
+          "peak_difference": 1.4631823301315308,
+          "event_difference": 1.4631823301315308,
+          "threshold": 1.2699074149131775,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "worth-2",
+          "atFrame": 1808,
+          "peak_frame": 1809,
+          "lag_frames": 1,
+          "peak_difference": 1.4821141958236694,
+          "event_difference": 1.4821141958236694,
+          "threshold": 1.3713107407093048,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "slack-0",
+          "atFrame": 1978,
+          "peak_frame": 1980,
+          "lag_frames": 2,
+          "peak_difference": 3.179656744003296,
+          "event_difference": 3.179656744003296,
+          "threshold": 0.4454614967107773,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "slack-1",
+          "atFrame": 2004,
+          "peak_frame": 2005,
+          "lag_frames": 1,
+          "peak_difference": 1.666487693786621,
+          "event_difference": 1.666487693786621,
+          "threshold": 0.4784577637910843,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "slack-2",
+          "atFrame": 2038,
+          "peak_frame": 2033,
+          "lag_frames": -5,
+          "peak_difference": 2.2655632495880127,
+          "event_difference": 1.8481954336166382,
+          "threshold": 1.0719560086727142,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "owner-0",
+          "atFrame": 2075,
+          "peak_frame": 2075,
+          "lag_frames": 0,
+          "peak_difference": 16.580324172973633,
+          "event_difference": 16.580324172973633,
+          "threshold": 0.20841000974178314,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "owner-1",
+          "atFrame": 2106,
+          "peak_frame": 2107,
+          "lag_frames": 1,
+          "peak_difference": 1.7150795459747314,
+          "event_difference": 1.7150795459747314,
+          "threshold": 0.2741449624300003,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "owner-2",
+          "atFrame": 2146,
+          "peak_frame": 2147,
+          "lag_frames": 1,
+          "peak_difference": 2.0125043392181396,
+          "event_difference": 2.0125043392181396,
+          "threshold": 0.8348987102508545,
+          "gradual": false,
+          "pass": true
+        }
+      ],
+      "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
+      "pass": true,
+      "status": "measured"
+    },
+    "audio.bed": {
+      "value": [
+        {
+          "check": "bed present",
+          "value": true,
+          "pass": true
+        },
+        {
+          "check": "under speech",
+          "value": -16.58,
+          "target": "-21.0 to -12.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "true peak",
+          "value": -1.69,
+          "target": "<= -1.0 dBTP",
+          "pass": true
+        },
+        {
+          "check": "a steady bed",
+          "value": "episode_bed",
+          "target": "episode_bed or continuous",
+          "pass": true
+        },
+        {
+          "check": "bed level in the master",
+          "value": -31.4,
+          "target": "-31 ±1.5 LUFS short-term median",
+          "pass": true
+        },
+        {
+          "check": "bed holds one level",
+          "value": 2.6,
+          "target": "<= 4.0 LU short-term p95-p5 outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never swells or sags",
+          "value": 3.4,
+          "target": "<= 3.0 LU from the median, held 1.0 s, outside lifts",
+          "pass": false
+        },
+        {
+          "check": "bed never drops out",
+          "value": [],
+          "target": "no 0.25 s 15 dB under its own running level (50 ms windows)",
+          "pass": true
+        },
+        {
+          "check": "the one bed shape",
+          "value": {
+            "open_over_bed_lu": 6.1,
+            "bed_spread_lu": 1.9,
+            "direction_changes": 1,
+            "end_over_bed_lu": 14.5
+          },
+          "target": "config/music-bed.json qc (re-run the premix when missing)",
+          "pass": true
+        }
+      ],
+      "target": "bed present, under speech in range, true peak, (ducked) breathing in pauses, (episode) one steady level with no drop-outs",
+      "pass": false,
+      "status": "measured"
+    },
+    "audio.bed_continuity": {
+      "value": [],
+      "target": "no 0.25 s under -49.0 dBFS (50 ms RMS) from 3.0 to 87.3 s",
+      "pass": true,
+      "status": "measured"
+    },
+    "opening": {
+      "value": {
+        "opening": "hook",
+        "cut_frames": 2664,
+        "file_frames": 2664,
+        "lead_frames": 0,
+        "whole_cut": true,
+        "clips_compared": []
+      },
+      "target": "no sting: the cut's own frame 0 is the file's first, and 2664 frames in all",
+      "pass": true,
+      "status": "measured",
+      "calibration": "placeholder: measured on one real render, 5 Nov 2026 (velib/qc_opening.py)"
+    },
+    "words.lost": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "joins.in_gaps": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.clock": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.render": {
+      "value": {
+        "machine": "scripts/cutgates/captions.py",
+        "version": "captions/1",
+        "part": "renderer",
+        "region": [
+          48,
+          1078,
+          824,
+          241
+        ],
+        "window_frames": 3,
+        "min_score": 0.98,
+        "pixel_change_status": "placeholder, to be measured on Monday 26",
+        "pages": [
+          {
+            "page": 0,
+            "fromFrame": 4,
+            "text": "Has the software developer",
+            "change_frame": 5,
+            "frame": 31,
+            "read": "‘Has the software\ndeveloper",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 1,
+            "fromFrame": 38,
+            "text": "in your business suddenly turned",
+            "change_frame": 37,
+            "frame": 81,
+            "read": "in your business —\n‘suddenly turned |",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 2,
+            "fromFrame": 87,
+            "text": "into a crocodile hunter",
+            "change_frame": 86,
+            "frame": 112,
+            "read": "into a crocodile\nhunter",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 3,
+            "fromFrame": 121,
+            "text": "after learning AI?",
+            "change_frame": 122,
+            "frame": 148,
+            "read": "afterlearning\nAl?",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 4,
+            "fromFrame": 158,
+            "text": "Well, it's happening",
+            "change_frame": 157,
+            "frame": 180,
+            "read": "Well it's\nhappening",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 5,
+            "fromFrame": 186,
+            "text": "in all businesses",
+            "change_frame": 185,
+            "frame": 194,
+            "read": "in all\nbusinesses",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 6,
+            "fromFrame": 208,
+            "text": "and the results",
+            "change_frame": 207,
+            "frame": 222,
+            "read": "and the results®",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 7,
+            "fromFrame": 238,
+            "text": "are a mad",
+            "change_frame": 237,
+            "frame": 245,
+            "read": "are a mad",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 8,
+            "fromFrame": 248,
+            "text": "bag of cats.",
+            "change_frame": 247,
+            "frame": 261,
+            "read": "bag of cats",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 9,
+            "fromFrame": 276,
+            "text": "Klarna, the buy now",
+            "change_frame": 275,
+            "frame": 306,
+            "read": "Klarna the buy\nnow",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 10,
+            "fromFrame": 315,
+            "text": "pay later app, made headlines",
+            "change_frame": 314,
+            "frame": 339,
+            "read": "pay later app\nmade headlines",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 11,
+            "fromFrame": 352,
+            "text": "for switching off Salesforce",
+            "change_frame": 351,
+            "frame": 372,
+            "read": "for switching\noff Salesforce",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 12,
+            "fromFrame": 386,
+            "text": "and Workday and replacing",
+            "change_frame": 385,
+            "frame": 412,
+            "read": "and Workday and\nreplacing",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 13,
+            "fromFrame": 424,
+            "text": "them with AI.",
+            "change_frame": 423,
+            "frame": 440,
+            "read": "them with Al",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 14,
+            "fromFrame": 455,
+            "text": "Two huge software",
+            "change_frame": 454,
+            "frame": 474,
+            "read": "Two huge\nsoftware",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 15,
+            "fromFrame": 481,
+            "text": "bills, gone.",
+            "change_frame": 480,
+            "frame": 500,
+            "read": "bills gone",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 16,
+            "fromFrame": 510,
+            "text": "Just like that.",
+            "change_frame": 509,
+            "frame": 520,
+            "read": "Just like that",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 17,
+            "fromFrame": 535,
+            "text": "Your boss probably",
+            "change_frame": 534,
+            "frame": 554,
+            "read": "Your, boss. m4\nprobably",
+            "score": 0.75,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 17 reads \"Your, boss. m4\nprobably\" near frame 554, not \"Your boss probably\" (score 0.75, needs an exact match and 0.98)"
+          },
+          {
+            "page": 18,
+            "fromFrame": 556,
+            "text": "read about it.",
+            "change_frame": 555,
+            "frame": 569,
+            "read": "read about it.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 19,
+            "fromFrame": 575,
+            "text": "So what's the question here?",
+            "change_frame": 574,
+            "frame": 609,
+            "read": "So what's the -\nquestion here?",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 20,
+            "fromFrame": 621,
+            "text": "Do you Salesforce",
+            "change_frame": 620,
+            "frame": null,
+            "read": null,
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 20 reads \"\" near frame 621, not \"Do you Salesforce\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 21,
+            "fromFrame": 729,
+            "text": "is software sales teams",
+            "status": "fail",
+            "message": "caption page 21 (\"is software sales teams\"): no change in the caption zone within 3 frames of its start, frame 729"
+          },
+          {
+            "page": 22,
+            "fromFrame": 773,
+            "text": "use to track every customer,",
+            "change_frame": 772,
+            "frame": 798,
+            "read": "use to track\nevery customer",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 23,
+            "fromFrame": 819,
+            "text": "and all sales teams hate.",
+            "change_frame": 818,
+            "frame": 855,
+            "read": "and all sales\nteams hate",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 24,
+            "fromFrame": 865,
+            "text": "And Workday is the one",
+            "change_frame": 864,
+            "frame": 891,
+            "read": "And Workday is\nthe",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 24 reads \"And Workday is\nthe\" near frame 891, not \"And Workday is the one\" (score 0.8, needs an exact match and 0.98)"
+          },
+          {
+            "page": 25,
+            "fromFrame": 894,
+            "text": "that runs your pay",
+            "change_frame": 893,
+            "frame": 909,
+            "read": "that runs your\npay",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 26,
+            "fromFrame": 915,
+            "text": "and your holidays.",
+            "change_frame": 914,
+            "frame": 923,
+            "read": "and your\nholidays",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 27,
+            "fromFrame": 944,
+            "text": "Both of them",
+            "change_frame": 943,
+            "frame": 952,
+            "read": "Both of s",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 27 reads \"Both of s\" near frame 952, not \"Both of them\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 28,
+            "fromFrame": 955,
+            "text": "cost an absolute fortune.",
+            "change_frame": 956,
+            "frame": 979,
+            "read": "cost*an absolute\nfortune Rite",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 28 reads \"cost*an absolute\nfortune Rite\" near frame 979, not \"cost an absolute fortune.\" (score 0.8, needs an exact match and 0.98)"
+          },
+          {
+            "page": 29,
+            "fromFrame": 989,
+            "text": "So the internet went wild",
+            "change_frame": 988,
+            "frame": 1012,
+            "read": "So the internet\nwent wild",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 30,
+            "fromFrame": 1017,
+            "text": "because of course AI",
+            "change_frame": 1016,
+            "frame": 1047,
+            "read": "because of\ncourse Al",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 31,
+            "fromFrame": 1055,
+            "text": "had killed software.",
+            "change_frame": 1054,
+            "frame": 1075,
+            "read": "had killed\nsoftware",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 32,
+            "fromFrame": 1102,
+            "text": "So I went digging",
+            "change_frame": 1101,
+            "frame": 1121,
+            "read": "So  i  went digging",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 33,
+            "fromFrame": 1129,
+            "text": "and it turns out",
+            "change_frame": 1128,
+            "frame": 1146,
+            "read": "and it turns out",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 34,
+            "fromFrame": 1150,
+            "text": "Klarna's boss later",
+            "change_frame": 1149,
+            "frame": 1174,
+            "read": "Klarna's boss\nlater",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 35,
+            "fromFrame": 1183,
+            "text": "went online and said",
+            "change_frame": 1182,
+            "frame": 1201,
+            "read": "went online and\nSaid",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 36,
+            "fromFrame": 1207,
+            "text": "that they did not replace",
+            "change_frame": 1206,
+            "frame": 1228,
+            "read": "NOT replace",
+            "score": 0.4,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 36 reads \"NOT replace\" near frame 1228, not \"that they did not replace\" (score 0.4, needs an exact match and 0.98)"
+          },
+          {
+            "page": 37,
+            "fromFrame": 1239,
+            "text": "that software with AI.",
+            "change_frame": 1238,
+            "frame": 1260,
+            "read": "that software\nwith Al",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 38,
+            "fromFrame": 1270,
+            "text": "So what did replace Workday?",
+            "change_frame": 1269,
+            "frame": 1298,
+            "read": "So what did\nreplace Workday?",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 39,
+            "fromFrame": 1316,
+            "text": "Another app actually replaced",
+            "change_frame": 1315,
+            "frame": 1348,
+            "read": "actually .\nreplaced",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 39 reads \"actually .\nreplaced\" near frame 1348, not \"Another app actually replaced\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 40,
+            "fromFrame": 1356,
+            "text": "it for paying staff,",
+            "change_frame": 1355,
+            "frame": 1371,
+            "read": "it for paying\nStaff",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 41,
+            "fromFrame": 1386,
+            "text": "which they also rent.",
+            "change_frame": 1385,
+            "frame": 1412,
+            "read": "which they also\nrent",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 42,
+            "fromFrame": 1421,
+            "text": "So picture that meeting.",
+            "change_frame": 1420,
+            "frame": 1450,
+            "read": "So pictu regraty\nmeeting r. =",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 42 reads \"So pictu regraty\nmeeting r. =\" near frame 1450, not \"So picture that meeting.\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 43,
+            "fromFrame": 1466,
+            "text": "Great news, everyone.",
+            "change_frame": 1465,
+            "frame": 1480,
+            "read": "\"Great news | |\neveryone f *\n, 6 a.",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 43 reads \"\"Great news | |\neveryone f *\n, 6 a.\" near frame 1480, not \"Great news, everyone.\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 44,
+            "fromFrame": 1488,
+            "text": "We've switched off Workday",
+            "change_frame": 1487,
+            "frame": 1511,
+            "read": "We've: switched —\noff Workday",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 45,
+            "fromFrame": 1515,
+            "text": "payrolls now on another",
+            "change_frame": 1514,
+            "frame": 1544,
+            "read": "payrolls now on q\nanother —",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 45 reads \"payrolls now on q\nanother —\" near frame 1544, not \"payrolls now on another\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 46,
+            "fromFrame": 1550,
+            "text": "app, which we also rent.",
+            "change_frame": 1549,
+            "frame": 1579,
+            "read": "app Which we also\nrent” i ©",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 46 reads \"app Which we also\nrent” i ©\" near frame 1579, not \"app, which we also rent.\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 47,
+            "fromFrame": 1588,
+            "text": "And Salesforce,",
+            "change_frame": 1587,
+            "frame": 1590,
+            "read": "And",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 47 reads \"And\" near frame 1590, not \"And Salesforce,\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 48,
+            "fromFrame": 1619,
+            "text": "our engineers built our own",
+            "change_frame": 1618,
+            "frame": 1650,
+            "read": "our engineers\nbuilt our Own",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 49,
+            "fromFrame": 1652,
+            "text": "home for all our customer",
+            "change_frame": 1651,
+            "frame": 1667,
+            "read": "home for all our\ncustomer",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 50,
+            "fromFrame": 1674,
+            "text": "data with more rented",
+            "change_frame": 1673,
+            "frame": 1697,
+            "read": "data with more\nrented",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 51,
+            "fromFrame": 1704,
+            "text": "apps on top.",
+            "change_frame": 1703,
+            "frame": 1717,
+            "read": "apps on top",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 52,
+            "fromFrame": 1727,
+            "text": "Getting all our data",
+            "change_frame": 1726,
+            "frame": 1750,
+            "read": "Getting all our\ndata",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 53,
+            "fromFrame": 1755,
+            "text": "in one place",
+            "change_frame": 1754,
+            "frame": 1765,
+            "read": "in one place",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 54,
+            "fromFrame": 1770,
+            "text": "was the whole point.",
+            "change_frame": 1769,
+            "frame": 1786,
+            "read": "was the whole\npoint",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 55,
+            "fromFrame": 1793,
+            "text": "So that bit",
+            "change_frame": 1792,
+            "frame": 1803,
+            "read": "So that bit",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 56,
+            "fromFrame": 1805,
+            "text": "was worth building.",
+            "change_frame": 1804,
+            "frame": 1816,
+            "read": "was worth\nbuilding",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 57,
+            "fromFrame": 1823,
+            "text": "And now we're",
+            "change_frame": 1822,
+            "frame": 1847,
+            "read": "And now}",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 57 reads \"And now}\" near frame 1847, not \"And now we're\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 58,
+            "fromFrame": 1850,
+            "text": "going to have to look",
+            "change_frame": 1851,
+            "frame": 1861,
+            "read": "going to have to \\\nlook” Qa",
+            "score": 0.8333,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 58 reads \"going to have to \\\nlook” Qa\" near frame 1861, not \"going to have to look\" (score 0.8333, needs an exact match and 0.98)"
+          },
+          {
+            "page": 59,
+            "fromFrame": 1864,
+            "text": "after all of this.",
+            "change_frame": 1863,
+            "frame": 1877,
+            "read": "afterall of this",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 60,
+            "fromFrame": 1915,
+            "text": "And then my favorite",
+            "change_frame": 1912,
+            "frame": 1925,
+            "read": "And then my\nfavorite",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 61,
+            "fromFrame": 1934,
+            "text": "detail about all",
+            "change_frame": 1933,
+            "frame": 1948,
+            "read": "detail about",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 61 reads \"detail about\" near frame 1948, not \"detail about all\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 62,
+            "fromFrame": 1950,
+            "text": "this is that Klarna",
+            "change_frame": 1949,
+            "frame": 1980,
+            "read": "this is that\nKlarna",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 63,
+            "fromFrame": 1988,
+            "text": "still uses Slack,",
+            "change_frame": 1987,
+            "frame": 2006,
+            "read": "still uses Slack",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 64,
+            "fromFrame": 2017,
+            "text": "the office chat app,",
+            "change_frame": 2016,
+            "frame": 2032,
+            "read": "the office chat\napp",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 65,
+            "fromFrame": 2034,
+            "text": "and who owns Slack?",
+            "change_frame": 2033,
+            "frame": 2056,
+            "read": "and who owns\nSlack?",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 66,
+            "fromFrame": 2075,
+            "text": "Salesforce. So Klarna never even",
+            "change_frame": 2074,
+            "frame": 2123,
+            "read": "Kiarna NEVER\neven",
+            "score": 0.6,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 66 reads \"Kiarna NEVER\neven\" near frame 2123, not \"Salesforce. So Klarna never even\" (score 0.6, needs an exact match and 0.98)"
+          },
+          {
+            "page": 67,
+            "fromFrame": 2129,
+            "text": "got away from Salesforce",
+            "change_frame": 2128,
+            "frame": 2148,
+            "read": "got away from\nSalesforce",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 68,
+            "fromFrame": 2160,
+            "text": "in the end.",
+            "change_frame": 2159,
+            "frame": 2168,
+            "read": "intheend",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 69,
+            "fromFrame": 2189,
+            "text": "It's one example",
+            "change_frame": 2188,
+            "frame": 2200,
+            "read": "% ,\nIt's'one example",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 70,
+            "fromFrame": 2211,
+            "text": "here to figure out whether",
+            "change_frame": 2210,
+            "frame": 2254,
+            "read": "here to figure — 4\nout whether",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 70 reads \"here to figure — 4\nout whether\" near frame 2254, not \"here to figure out whether\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 71,
+            "fromFrame": 2258,
+            "text": "you want to build",
+            "change_frame": 2257,
+            "frame": 2269,
+            "read": "you want to build",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 72,
+            "fromFrame": 2276,
+            "text": "or buy or switch.",
+            "change_frame": 2275,
+            "frame": 2295,
+            "read": "or buy or switch",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 73,
+            "fromFrame": 2320,
+            "text": "In this scenario,",
+            "change_frame": 2319,
+            "frame": 2332,
+            "read": "In this scenario",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 74,
+            "fromFrame": 2340,
+            "text": "I reckon Klarna actually",
+            "change_frame": 2339,
+            "frame": 2367,
+            "read": "lreckon Klarna y\nactually ,",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 74 reads \"lreckon Klarna y\nactually ,\" near frame 2367, not \"I reckon Klarna actually\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 75,
+            "fromFrame": 2372,
+            "text": "did get it right.",
+            "change_frame": 2371,
+            "frame": 2387,
+            "read": "did getit right",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 76,
+            "fromFrame": 2393,
+            "text": "Build the bit that makes",
+            "change_frame": 2394,
+            "frame": 2418,
+            "read": "Build the bit\nthat makes",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 77,
+            "fromFrame": 2425,
+            "text": "you different",
+            "change_frame": 2424,
+            "frame": 2432,
+            "read": "you different",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 78,
+            "fromFrame": 2440,
+            "text": "and rent the rest.",
+            "change_frame": 2439,
+            "frame": 2455,
+            "read": "and rent the rest\n_—",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 79,
+            "fromFrame": 2471,
+            "text": "That's what I'm",
+            "change_frame": 2470,
+            "frame": 2480,
+            "read": "Pes\nThat's what ~—",
+            "score": 0.4,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 79 reads \"Pes\nThat's what ~—\" near frame 2480, not \"That's what I'm\" (score 0.4, needs an exact match and 0.98)"
+          },
+          {
+            "page": 80,
+            "fromFrame": 2482,
+            "text": "going to do.",
+            "change_frame": 2481,
+            "frame": 2488,
+            "read": "going to j",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 80 reads \"going to j\" near frame 2488, not \"going to do.\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 81,
+            "fromFrame": 2496,
+            "text": "The full five minute video",
+            "change_frame": 2495,
+            "frame": 2527,
+            "read": "The full five\nminute video |",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 82,
+            "fromFrame": 2538,
+            "text": "is on my channel at:",
+            "change_frame": 2537,
+            "frame": 2558,
+            "read": "fis7on7“my channel %\na |",
+            "score": 0.4,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 82 reads \"fis7on7“my channel %\na |\" near frame 2558, not \"is on my channel at:\" (score 0.4, needs an exact match and 0.98)"
+          },
+          {
+            "page": 83,
+            "fromFrame": 2561,
+            "text": "makeyourmindup .ai",
+            "change_frame": 2562,
+            "frame": 2591,
+            "read": "makeyourmindup *\nal ~ \"",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          }
+        ],
+        "failed": [
+          {
+            "page": 17,
+            "fromFrame": 535,
+            "text": "Your boss probably",
+            "change_frame": 534,
+            "frame": 554,
+            "read": "Your, boss. m4\nprobably",
+            "score": 0.75,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 17 reads \"Your, boss. m4\nprobably\" near frame 554, not \"Your boss probably\" (score 0.75, needs an exact match and 0.98)"
+          },
+          {
+            "page": 20,
+            "fromFrame": 621,
+            "text": "Do you Salesforce",
+            "change_frame": 620,
+            "frame": null,
+            "read": null,
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 20 reads \"\" near frame 621, not \"Do you Salesforce\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 21,
+            "fromFrame": 729,
+            "text": "is software sales teams",
+            "status": "fail",
+            "message": "caption page 21 (\"is software sales teams\"): no change in the caption zone within 3 frames of its start, frame 729"
+          },
+          {
+            "page": 24,
+            "fromFrame": 865,
+            "text": "And Workday is the one",
+            "change_frame": 864,
+            "frame": 891,
+            "read": "And Workday is\nthe",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 24 reads \"And Workday is\nthe\" near frame 891, not \"And Workday is the one\" (score 0.8, needs an exact match and 0.98)"
+          },
+          {
+            "page": 27,
+            "fromFrame": 944,
+            "text": "Both of them",
+            "change_frame": 943,
+            "frame": 952,
+            "read": "Both of s",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 27 reads \"Both of s\" near frame 952, not \"Both of them\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 28,
+            "fromFrame": 955,
+            "text": "cost an absolute fortune.",
+            "change_frame": 956,
+            "frame": 979,
+            "read": "cost*an absolute\nfortune Rite",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 28 reads \"cost*an absolute\nfortune Rite\" near frame 979, not \"cost an absolute fortune.\" (score 0.8, needs an exact match and 0.98)"
+          },
+          {
+            "page": 36,
+            "fromFrame": 1207,
+            "text": "that they did not replace",
+            "change_frame": 1206,
+            "frame": 1228,
+            "read": "NOT replace",
+            "score": 0.4,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 36 reads \"NOT replace\" near frame 1228, not \"that they did not replace\" (score 0.4, needs an exact match and 0.98)"
+          },
+          {
+            "page": 39,
+            "fromFrame": 1316,
+            "text": "Another app actually replaced",
+            "change_frame": 1315,
+            "frame": 1348,
+            "read": "actually .\nreplaced",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 39 reads \"actually .\nreplaced\" near frame 1348, not \"Another app actually replaced\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 42,
+            "fromFrame": 1421,
+            "text": "So picture that meeting.",
+            "change_frame": 1420,
+            "frame": 1450,
+            "read": "So pictu regraty\nmeeting r. =",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 42 reads \"So pictu regraty\nmeeting r. =\" near frame 1450, not \"So picture that meeting.\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 43,
+            "fromFrame": 1466,
+            "text": "Great news, everyone.",
+            "change_frame": 1465,
+            "frame": 1480,
+            "read": "\"Great news | |\neveryone f *\n, 6 a.",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 43 reads \"\"Great news | |\neveryone f *\n, 6 a.\" near frame 1480, not \"Great news, everyone.\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 45,
+            "fromFrame": 1515,
+            "text": "payrolls now on another",
+            "change_frame": 1514,
+            "frame": 1544,
+            "read": "payrolls now on q\nanother —",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 45 reads \"payrolls now on q\nanother —\" near frame 1544, not \"payrolls now on another\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 46,
+            "fromFrame": 1550,
+            "text": "app, which we also rent.",
+            "change_frame": 1549,
+            "frame": 1579,
+            "read": "app Which we also\nrent” i ©",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 46 reads \"app Which we also\nrent” i ©\" near frame 1579, not \"app, which we also rent.\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 47,
+            "fromFrame": 1588,
+            "text": "And Salesforce,",
+            "change_frame": 1587,
+            "frame": 1590,
+            "read": "And",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 47 reads \"And\" near frame 1590, not \"And Salesforce,\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 57,
+            "fromFrame": 1823,
+            "text": "And now we're",
+            "change_frame": 1822,
+            "frame": 1847,
+            "read": "And now}",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 57 reads \"And now}\" near frame 1847, not \"And now we're\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 58,
+            "fromFrame": 1850,
+            "text": "going to have to look",
+            "change_frame": 1851,
+            "frame": 1861,
+            "read": "going to have to \\\nlook” Qa",
+            "score": 0.8333,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 58 reads \"going to have to \\\nlook” Qa\" near frame 1861, not \"going to have to look\" (score 0.8333, needs an exact match and 0.98)"
+          },
+          {
+            "page": 61,
+            "fromFrame": 1934,
+            "text": "detail about all",
+            "change_frame": 1933,
+            "frame": 1948,
+            "read": "detail about",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 61 reads \"detail about\" near frame 1948, not \"detail about all\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 66,
+            "fromFrame": 2075,
+            "text": "Salesforce. So Klarna never even",
+            "change_frame": 2074,
+            "frame": 2123,
+            "read": "Kiarna NEVER\neven",
+            "score": 0.6,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 66 reads \"Kiarna NEVER\neven\" near frame 2123, not \"Salesforce. So Klarna never even\" (score 0.6, needs an exact match and 0.98)"
+          },
+          {
+            "page": 70,
+            "fromFrame": 2211,
+            "text": "here to figure out whether",
+            "change_frame": 2210,
+            "frame": 2254,
+            "read": "here to figure — 4\nout whether",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 70 reads \"here to figure — 4\nout whether\" near frame 2254, not \"here to figure out whether\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 74,
+            "fromFrame": 2340,
+            "text": "I reckon Klarna actually",
+            "change_frame": 2339,
+            "frame": 2367,
+            "read": "lreckon Klarna y\nactually ,",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 74 reads \"lreckon Klarna y\nactually ,\" near frame 2367, not \"I reckon Klarna actually\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 79,
+            "fromFrame": 2471,
+            "text": "That's what I'm",
+            "change_frame": 2470,
+            "frame": 2480,
+            "read": "Pes\nThat's what ~—",
+            "score": 0.4,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 79 reads \"Pes\nThat's what ~—\" near frame 2480, not \"That's what I'm\" (score 0.4, needs an exact match and 0.98)"
+          },
+          {
+            "page": 80,
+            "fromFrame": 2482,
+            "text": "going to do.",
+            "change_frame": 2481,
+            "frame": 2488,
+            "read": "going to j",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 80 reads \"going to j\" near frame 2488, not \"going to do.\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 82,
+            "fromFrame": 2538,
+            "text": "is on my channel at:",
+            "change_frame": 2537,
+            "frame": 2558,
+            "read": "fis7on7“my channel %\na |",
+            "score": 0.4,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 82 reads \"fis7on7“my channel %\na |\" near frame 2558, not \"is on my channel at:\" (score 0.4, needs an exact match and 0.98)"
+          }
+        ],
+        "changes_found": 222,
+        "status": "fail",
+        "reason": "22 of 84 caption page(s) are not drawn as the props say near their start"
+      },
+      "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
+      "pass": false,
+      "status": "measured",
+      "agreement": null,
+      "summary": "22 of 84 caption page(s) are not drawn as the props say near their start: caption page 17 reads \"Your, boss. m4\nprobably\" near frame 554, not \"Your boss probably\" (score 0.75, needs an exact match and 0.98); caption page 20 reads \"\" near frame 621, not \"Do you Salesforce\" (score 0.0, needs an exact match and 0.98); caption page 21 (\"is software sales teams\"): no change in the caption zone within 3 frames of its start, frame 729; caption page 24 reads \"And Workday is\nthe\" near frame 891, not \"And Workday is the one\" (score 0.8, needs an exact match and 0.98) (and 18 more)"
+    },
+    "captions.off_face": {
+      "value": null,
+      "target": "no caption page overlaps the face box (+10%)",
+      "pass": null,
+      "status": "not_run",
+      "reason": "no face detector in this Python (opencv-python or mediapipe)"
+    },
+    "plate.head_in_band": {
+      "value": null,
+      "target": "his whole head inside the camera band",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "channel.safe_zones": {
+      "value": {
+        "under_buttons": [],
+        "count": 0
+      },
+      "target": "no caption, title or device box under a channel button (config/channel-safe-zones.json)",
+      "pass": true
+    },
+    "ground.not_bare": {
+      "value": [
+        {
+          "edge_frame": 276,
+          "barest_frame": 276,
+          "stage_std": 19.38,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 535,
+          "barest_frame": 535,
+          "stage_std": 47.6,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 712,
+          "barest_frame": 712,
+          "stage_std": 17.61,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 944,
+          "barest_frame": 945,
+          "stage_std": 42.14,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 989,
+          "barest_frame": 989,
+          "stage_std": 19.73,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1102,
+          "barest_frame": 1102,
+          "stage_std": 20.35,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1270,
+          "barest_frame": 1270,
+          "stage_std": 23.27,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1421,
+          "barest_frame": 1420,
+          "stage_std": 57.85,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1488,
+          "barest_frame": 1489,
+          "stage_std": 48.31,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1588,
+          "barest_frame": 1588,
+          "stage_std": 23.27,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1727,
+          "barest_frame": 1727,
+          "stage_std": 23.28,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1823,
+          "barest_frame": 1822,
+          "stage_std": 27.55,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 1915,
+          "barest_frame": 1915,
+          "stage_std": 19.13,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 2075,
+          "barest_frame": 2075,
+          "stage_std": 17.67,
+          "floor": 3.0,
+          "pass": true
+        },
+        {
+          "edge_frame": 2189,
+          "barest_frame": 2189,
+          "stage_std": 47.14,
+          "floor": 3.0,
+          "pass": true
+        }
+      ],
+      "target": "every frame within 3 of a beat edge has stage spread > 3.0 grey levels",
+      "pass": true,
+      "status": "advisory",
+      "shadow": true
+    },
+    "music.beats": {
+      "value": {
+        "tempo_bpm": 120.1,
+        "confidence": 7.4,
+        "grid": true,
+        "bars": 45,
+        "drops_s": [
+          85.976
+        ],
+        "onsets_per_s": 2.73,
+        "handovers": 15,
+        "handovers_on_a_beat": 4
+      },
+      "target": "measured only: nothing snaps to the beat; his words are the clock",
+      "pass": null,
+      "status": "advisory",
+      "shadow": true
+    },
+    "picture.as_shot": {
+      "value": {
+        "face": {
+          "L": 17.48,
+          "a": 6.1,
+          "b": 6.36
+        },
+        "fortune": {
+          "L": 2.49,
+          "a": 0.27,
+          "b": 0.82
+        },
+        "punchline": {
+          "L": 2.45,
+          "a": 0.19,
+          "b": 0.63
+        },
+        "upkeep": {
+          "L": 2.74,
+          "a": 0.6,
+          "b": 0.83
+        },
+        "close": {
+          "L": 3.1,
+          "a": 0.18,
+          "b": 0.79
+        }
+      },
+      "moved": [
+        "face"
+      ],
+      "target": "his take as shot: the lower quarter within L 5.0, a 4.0, b 4.0 of the rows of the conformed take it shows (median L*a*b*)",
+      "pass": null,
+      "status": "advisory"
+    },
+    "keyframe_match": {
+      "value": null,
+      "target": "approved golden keyframes",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "composition": {
+      "value": {
+        "hook": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 99.58
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 221
+        },
+        "headlines": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 483
+        },
+        "face": {
+          "pass": false,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 96.85
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "BUY",
+                  "conf": 95.716606,
+                  "x": 732,
+                  "y": 548,
+                  "w": 246,
+                  "h": 170
+                }
+              ]
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [
+            "platform_zone 'BUY' ends at (978, 718), the limits are (960, 1640) outside the marquee."
+          ],
+          "frame": 677
+        },
+        "products": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 898
+        },
+        "fortune": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 980
+        },
+        "wild": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1079
+        },
+        "proof": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1236
+        },
+        "deel": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1391
+        },
+        "meeting": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 99.66
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1475
+        },
+        "punchline": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1568
+        },
+        "rented": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1699
+        },
+        "worth": {
+          "pass": false,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "SaaS",
+                  "conf": 86.196976,
+                  "x": 238,
+                  "y": 971,
+                  "w": 842,
+                  "h": 248
+                }
+              ]
+            },
+            "edges": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "SaaS",
+                  "conf": 86.196976,
+                  "x": 238,
+                  "y": 971,
+                  "w": 842,
+                  "h": 248
+                }
+              ]
+            }
+          },
+          "findings": [
+            "platform_zone 'SaaS' ends at (1080, 1219), the limits are (960, 1640) outside the marquee.",
+            "edges 'SaaS' starts at (238, 971), the limits are 24 px from each edge and x at least 60 px."
+          ],
+          "frame": 1804
+        },
+        "upkeep": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1897
+        },
+        "slack": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 2043
+        },
+        "owner": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 2166
+        },
+        "close": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 2521
+        },
+        "ending": {
+          "pass": false,
+          "checks": {
+            "small_text": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "MONDAYS",
+                  "conf": 96.289604,
+                  "x": 121,
+                  "y": 1005,
+                  "w": 110,
+                  "h": 17
+                },
+                {
+                  "text": "WEDNESDAYS",
+                  "conf": 96.992058,
+                  "x": 284,
+                  "y": 1005,
+                  "w": 159,
+                  "h": 17
+                },
+                {
+                  "text": "FRIDAYS",
+                  "conf": 95.789322,
+                  "x": 498,
+                  "y": 1005,
+                  "w": 108,
+                  "h": 17
+                }
+              ]
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [
+            "small_text 'MONDAYS' is 17 px high, the limit is at least 18 px.",
+            "small_text 'WEDNESDAYS' is 17 px high, the limit is at least 18 px.",
+            "small_text 'FRIDAYS' is 17 px high, the limit is at least 18 px."
+          ],
+          "frame": 2634
+        }
+      },
+      "target": "design lock composition thresholds",
+      "pass": false,
+      "status": "measured"
+    },
+    "annotation.target": {
+      "value": [],
+      "target": "every mark names its words and is not drawn over a moving surface",
+      "pass": true
+    },
+    "captions.phrase_breaks": {
+      "value": [],
+      "target": "no caption page ends mid-phrase",
+      "pass": true
+    },
+    "captions.repeat_title": {
+      "value": [],
+      "target": "no caption page repeats the headline on screen",
+      "pass": true
+    },
+    "annotation.on_target": {
+      "value": [],
+      "target": "every mark lands on its words on the rendered frame",
+      "pass": true
+    },
+    "evidence.readable": {
+      "value": [
+        {
+          "obj": "hl_fullstack",
+          "beat": "headlines",
+          "frame": 309,
+          "word_px": 20,
+          "why": "its words are 20 px tall on the 1080x1920 frame, under 40"
+        },
+        {
+          "obj": "hl_itpro",
+          "beat": "headlines",
+          "frame": 393,
+          "word_px": 20,
+          "why": "its words are 20 px tall on the 1080x1920 frame, under 40"
+        },
+        {
+          "obj": "saas_dead",
+          "beat": "wild",
+          "frame": 1051,
+          "word_px": 24,
+          "why": "its words are 24 px tall on the 1080x1920 frame, under 40"
+        },
+        {
+          "obj": "x_post",
+          "beat": "proof",
+          "frame": 1180,
+          "word_px": 20,
+          "why": "its words are 20 px tall on the 1080x1920 frame, under 40"
+        },
+        {
+          "obj": "hl_diginomica",
+          "beat": "proof",
+          "frame": 1244,
+          "word_px": 20,
+          "why": "its words are 20 px tall on the 1080x1920 frame, under 40"
+        },
+        {
+          "obj": "hl_cxtoday",
+          "beat": "rented",
+          "frame": 1657,
+          "word_px": 20,
+          "why": "its words are 20 px tall on the 1080x1920 frame, under 40"
+        }
+      ],
+      "target": "evidence words at least 40 px tall on 9:16",
+      "pass": false
+    },
+    "beats.one_carrier": {
+      "value": [
+        {
+          "beat": "hook",
+          "why": "2 pictures carry the beat at once (croc_s, croc_stare): one picture a beat"
+        }
+      ],
+      "target": "one picture a beat; a graphic never repeats the picture's point",
+      "pass": false
+    },
+    "figures.shown": {
+      "value": [],
+      "target": "a figure is never dimmed or blurred and fills its slot",
+      "pass": true
+    },
+    "transition.ghost_cut": {
+      "value": [],
+      "target": "a face beat and a full-screen beat meet on a cut",
+      "pass": true
+    },
+    "brand.render_current": {
+      "value": [],
+      "target": "the render knew the logo rule",
+      "pass": true
+    },
+    "text.no_off_day_props": {
+      "value": [],
+      "target": "\"off.day\" is in no drawn text",
+      "pass": true
+    },
+    "title.moment": {
+      "value": [],
+      "target": "one title card from his spoken line, captions empty while it holds",
+      "pass": true
+    },
+    "title.lockup": {
+      "value": [],
+      "target": "the title rendered as one full-frame lockup with the wordmark inside it",
+      "pass": true
+    },
+    "takes.restarts": {
+      "value": null,
+      "target": "no unlisted false start left in the cut",
+      "pass": null,
+      "status": "not_run",
+      "reason": "no words heard on the render (--transcribe or --heard)"
+    },
+    "motion.first_seconds": {
+      "value": [],
+      "target": "something moves in the first seconds",
+      "pass": true
+    },
+    "backdrop.not_flat_black": {
+      "value": [],
+      "target": "no graphics beat on flat black after a picture",
+      "pass": true
+    },
+    "text.no_off_day_frames": {
+      "value": [],
+      "target": "\"off.day\" is on no sampled frame",
+      "pass": true
+    },
+    "title.stage_width": {
+      "value": [],
+      "target": "the title holds at full stage width",
+      "pass": true
+    },
+    "title.lockup_frame": {
+      "value": [
+        {
+          "frame": 693,
+          "why": "the wordmark is not read inside the title lockup, centred under the title (it is read elsewhere on the frame)"
+        }
+      ],
+      "target": "the title is one centred full-frame lockup, big type, the wordmark inside it and timed with it",
+      "pass": false
+    },
+    "transition.no_ghost_frames": {
+      "value": null,
+      "target": "no frame holds two faces where a face beat meets a full-screen beat",
+      "pass": null,
+      "status": "not_run",
+      "reason": "no face detector in this Python (opencv-python or mediapipe)"
+    },
+    "head.whole_in_frame": {
+      "value": null,
+      "target": "his whole head in frame on his lines; on 16:9 his take bottom right",
+      "pass": null,
+      "status": "not_run",
+      "reason": "no face detector in this Python (opencv-python or mediapipe)"
+    },
+    "picture.smeared": {
+      "value": [
+        {
+          "from_s": 86.75,
+          "to_s": 88.75,
+          "bands": [
+            {
+              "stripes": "vertical",
+              "from": 0.0,
+              "to": 0.177
+            },
+            {
+              "stripes": "vertical",
+              "from": 0.279,
+              "to": 0.998
+            }
+          ]
+        }
+      ],
+      "target": "no picture smeared into stripes (scripts/frame_smear.py)",
+      "pass": false,
+      "status": "advisory",
+      "note": "binds pieces published from 2026-11-24 (config/ve/onscreen-checks.json picture)"
+    }
+  },
+  "keyframes": {
+    "applies": false,
+    "note": "rules-only lock: no key frames; the rules, the Critic and his approval are the design gate"
+  },
+  "composition": {
+    "applies": true,
+    "pass": false,
+    "beats": {
+      "hook": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 99.58
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 221
+      },
+      "headlines": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 483
+      },
+      "face": {
+        "pass": false,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 96.85
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": false,
+            "value": [
+              {
+                "text": "BUY",
+                "conf": 95.716606,
+                "x": 732,
+                "y": 548,
+                "w": 246,
+                "h": 170
+              }
+            ]
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [
+          "platform_zone 'BUY' ends at (978, 718), the limits are (960, 1640) outside the marquee."
+        ],
+        "frame": 677
+      },
+      "products": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 898
+      },
+      "fortune": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 980
+      },
+      "wild": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1079
+      },
+      "proof": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1236
+      },
+      "deel": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1391
+      },
+      "meeting": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 99.66
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1475
+      },
+      "punchline": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1568
+      },
+      "rented": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1699
+      },
+      "worth": {
+        "pass": false,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": false,
+            "value": [
+              {
+                "text": "SaaS",
+                "conf": 86.196976,
+                "x": 238,
+                "y": 971,
+                "w": 842,
+                "h": 248
+              }
+            ]
+          },
+          "edges": {
+            "pass": false,
+            "value": [
+              {
+                "text": "SaaS",
+                "conf": 86.196976,
+                "x": 238,
+                "y": 971,
+                "w": 842,
+                "h": 248
+              }
+            ]
+          }
+        },
+        "findings": [
+          "platform_zone 'SaaS' ends at (1080, 1219), the limits are (960, 1640) outside the marquee.",
+          "edges 'SaaS' starts at (238, 971), the limits are 24 px from each edge and x at least 60 px."
+        ],
+        "frame": 1804
+      },
+      "upkeep": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1897
+      },
+      "slack": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 2043
+      },
+      "owner": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 2166
+      },
+      "close": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 2521
+      },
+      "ending": {
+        "pass": false,
+        "checks": {
+          "small_text": {
+            "pass": false,
+            "value": [
+              {
+                "text": "MONDAYS",
+                "conf": 96.289604,
+                "x": 121,
+                "y": 1005,
+                "w": 110,
+                "h": 17
+              },
+              {
+                "text": "WEDNESDAYS",
+                "conf": 96.992058,
+                "x": 284,
+                "y": 1005,
+                "w": 159,
+                "h": 17
+              },
+              {
+                "text": "FRIDAYS",
+                "conf": 95.789322,
+                "x": 498,
+                "y": 1005,
+                "w": 108,
+                "h": 17
+              }
+            ]
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [
+          "small_text 'MONDAYS' is 17 px high, the limit is at least 18 px.",
+          "small_text 'WEDNESDAYS' is 17 px high, the limit is at least 18 px.",
+          "small_text 'FRIDAYS' is 17 px high, the limit is at least 18 px."
+        ],
+        "frame": 2634
+      }
+    }
+  },
+  "measured_pass": false,
+  "complete": false
+}

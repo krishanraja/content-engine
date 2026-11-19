@@ -3367,6 +3367,13 @@
    "artifact_hash": "b4671e150e0f1feba898ff9b2a7af8dee9fdb8ac2f97dd1cc2a08b6e8d37420c",
    "said": "Approve Both proofs. As long as the title card frame in each is strong",
    "at": "2026-11-19T13:06:00Z"
+  },
+  {
+   "gate": "final",
+   "by": "Krish",
+   "said": "final approve short 1849930a",
+   "on": "2026-11-19",
+   "artifact_hash": "1849930abcc084f8da0e6290ea4f04a7ae35539fb2157f8a1b202dbc708e66ae"
   }
  ],
  "budget": {
