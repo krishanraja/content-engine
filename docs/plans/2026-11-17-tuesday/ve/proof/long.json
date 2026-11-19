@@ -2,16 +2,16 @@
   "schema": "ve-proof/1",
   "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
   "cut": "long",
-  "beat": "l5",
+  "beat": "l4",
   "rule": "named in the spec (proof.beat)",
-  "start": 30.133,
-  "end": 42.2,
+  "start": 21.067,
+  "end": 30.133,
   "beat_s": [
-    30.133,
-    42.2
+    21.067,
+    30.133
   ],
-  "sha256": "2ee863a3b67fed310e1c9f2278ae0d7b72873763d6b3d52a843cbb362358a696",
-  "spec_sha256": "1d37cef9ee691358a1dbf9ef27f8aa9457aaacb0c24eb3a77ad2f42854e7d424",
+  "sha256": "59df3a1fac31b6c46bb8204836a27327aab3d15de7b8d75c0530c5c1f75999d6",
+  "spec_sha256": "b8ea7878d5d56dca182e53818dae849e789ef18574872431dc35003d26fac533",
   "structure": {
     "format": "face-with-proof",
     "aspect": "16:9",
@@ -89,7 +89,7 @@
       ],
       [
         "l4",
-        "STAGE",
+        "P1",
         [
           "gallup_dc",
           "gallup_nuke"
@@ -226,9 +226,7 @@
       [
         "l25",
         "STAGE",
-        [
-          "block_l"
-        ]
+        []
       ],
       [
         "l26a",
@@ -271,17 +269,17 @@
     ]
   },
   "style_module": "eating-jobs-ladder",
-  "props_sha256": "ebb0f0b10df4761c9fcc00b70a9efafa3b500af804ddcafd82495124c7680e19",
+  "props_sha256": "17e109fb966d670cb8e8ab3c1bb93317a96a46c6bc6fc9b7d2c648aa5d186f94",
   "qc": {
     "measured_pass": false,
     "complete": false,
     "failing": [
       "captions.ocr",
       "captions.render",
+      "figures.shown",
       "head.whole_in_frame",
       "motion.cue_sync",
-      "title.moment",
-      "title.stage_width"
+      "sync.av_xcorr"
     ]
   },
   "type": [
@@ -327,34 +325,12 @@
     "scene-nameplate": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222",
     "wyso-lead": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
   },
-  "made_at": "2026-11-19T15:46:11Z",
+  "made_at": "2026-11-19T21:37:12Z",
   "frames": {
     "pass": true,
     "status": "ok",
     "problems": [],
-    "frames": 25
-  },
-  "compare": {
-    "against": "fa3501b57e557dee864050fb2d714feb77d3fbf9e87def6dd6a313d24a717403",
-    "reasons": [
-      "the engine changed since the proof he approved"
-    ],
-    "compared": {
-      "text": "Opened proof/compare.long.png at full size beside his standing notes (no icons, no face ghost, wordmark only on title and close and aligned with the title, no off.day tag, no captions under the held title). Against the proof he approved, only the title changed: the card grows line by line and the wordmark now starts on the title's left edge directly under its last line. No logo, no ghost, no empty card, captions back on his line after the title.",
-      "at": "2026-11-19T15:46:58Z"
-    },
-    "sheet": "compare.long.png",
-    "sha256": "ec2a0eb046ae08282b6b0dcf65d6f0e78fe862be98d2b45b4f2c379e8ad94c57",
-    "seconds": [
-      0.75,
-      2.26,
-      3.77,
-      5.28,
-      6.79,
-      8.3,
-      9.8,
-      11.31
-    ]
+    "frames": 39
   },
   "sendable": true
 }
