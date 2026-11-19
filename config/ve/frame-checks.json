@@ -1,0 +1,129 @@
+{
+  "_about": "Frame and spec checks from the Tue 17 and Wed 18 Nov 2026 failure lists (docs/learning/2026-11-19-frame-checks.md; scripts/velib/qc_frames.py). Each block is one check: its numbers, and the words Krish said that it enforces. Every number here is a first value taken from those two pieces and is Krish's to change; no code holds a threshold. A check reads props and, where it says so, the rendered frames; a frame check that cannot read its frames (no tesseract, no face detector) reports not_run and is never a pass. HOW TO ADD A ROW FOR THE NEXT FAULT: (1) add a block here with 'enforces' (his exact words), 'binds_from' if it differs, and its numbers; (2) write one pure function in qc_frames.py that returns a list of problems and add it to SPEC_ROWS (props only) or FRAME_ROWS (needs the render); (3) add a good case and a bad case to tests/ve_frame_checks_test.py; (4) add its failure to config/failures.json naming the test as its guard. Never add a threshold in code.",
+  "binds_from": "2026-11-17",
+  "binds_from_why": "The Tue 17 piece is the earliest one in production that met these faults, and neither it nor Wed 18 has shipped. A piece published before this date is measured and shown advisory, never counted (config/failures.json F33).",
+  "one_carrier": {
+    "enforces": "\"two concurrent visual styles trying to say the same thing over one another? why?\" (Krish, Tue 17): one picture per beat; a graphic and a photo never both carry the same point.",
+    "picture_devices": [
+      "photo_plate",
+      "scene_plate",
+      "film_frame",
+      "video_wall",
+      "wall_screen"
+    ],
+    "neutral_devices": [
+      "scribble",
+      "sticker",
+      "stamp",
+      "mint_ring",
+      "through_line",
+      "cursor_path",
+      "slam_word",
+      "headline",
+      "marquee"
+    ],
+    "same_point_share": 0.5,
+    "min_tokens": 2,
+    "max_pictures_per_beat": 1
+  },
+  "backdrop": {
+    "enforces": "\"Motion graphics on a flat black background, straight after a full-frame photograph\" (Krish, Tue 17): a graphics beat sits on a graded backdrop, never on black.",
+    "flat_luma_max": 22,
+    "flat_std_max": 10,
+    "sample_share": 0.5,
+    "sample_size": [
+      96,
+      54
+    ]
+  },
+  "figures": {
+    "enforces": "Tue 17 items 2 and 9: a figure (kinetic_stat, stat_strip) is never dimmed or blurred, and the figure a beat exists to show fills the frame.",
+    "devices": [
+      "kinetic_stat",
+      "stat_strip"
+    ],
+    "forbid_params": {
+      "ghost": true,
+      "blur": "any",
+      "dim": "any",
+      "opacity": "below_1",
+      "focusRack": "any"
+    },
+    "min_slot_area_share": 0.2,
+    "min_strip_width_share": 0.6
+  },
+  "ghost_face": {
+    "enforces": "\"A ghost of his face in dissolves\" (Krish, Tue 17): a change between a full-screen beat and a face beat is a clean cut.",
+    "dissolving_transitions": [
+      "crossfade"
+    ],
+    "faces_max": 1,
+    "frames_each_side": 2
+  },
+  "render_current": {
+    "enforces": "\"NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME\" (Krish, 18 Nov): a cut whose props do not say bodyLogo, or say true when the palette says false, was rendered before the rule and is refused."
+  },
+  "off_day_text": {
+    "enforces": "\"off.day is NEVER to be used ever as a tag\" (Krish, 18 Nov): the string is drawn nowhere, in any cut.",
+    "banned": [
+      "off.day"
+    ],
+    "skip_keys": [
+      "series",
+      "src",
+      "logoSrc",
+      "pieceId",
+      "cutId",
+      "format",
+      "theme",
+      "obj",
+      "id"
+    ],
+    "ocr_every_s": 2,
+    "ocr_max_frames": 60,
+    "min_conf": 60
+  },
+  "title": {
+    "enforces": "Tue 17 items 6 and 8 and Wed 18 item 5: captions are empty for the whole title hold; the title is built from his spoken line and timed to his words; it arrives as a card (title_moment.card), never bare words over his face, at full stage width.",
+    "title_words_share": 0.7,
+    "ignore_words": [
+      "the",
+      "a",
+      "an",
+      "of",
+      "to",
+      "and",
+      "is"
+    ],
+    "min_width_share": 0.6,
+    "require_card": true
+  },
+  "restarts": {
+    "enforces": "\"A false start left in his take\" (Krish, Tue 17): every restart is cut; one kept on purpose is listed in the spec (cuts.<id>.kept_restarts: [{at_s, why}]).",
+    "min_words": 2,
+    "max_gap_s": 3.0,
+    "kept_tolerance_s": 1.0,
+    "max_words": 8
+  },
+  "first_seconds": {
+    "enforces": "\"considering that's the first few seconds of the video, it's not much of a hook. It looks quite dull for the first 3 seconds.\" (Krish, Wed 18): something moves from his first word.",
+    "window_s": 3,
+    "min_moving_seconds": 2,
+    "change_threshold": 1.0
+  },
+  "head": {
+    "enforces": "\"Can't cut my head off\" and \"my head needs to be in the bottom right\" (Krish, Wed 18): on his lines his whole head is in frame, and on a 16:9 cut his take sits bottom right unless a full-frame clip fills the frame.",
+    "crown": 0.35,
+    "chin": 0.08,
+    "edge_margin_px": 4,
+    "samples": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "wide_quadrant": {
+      "x_min": 0.5,
+      "y_min": 0.5
+    }
+  }
+}

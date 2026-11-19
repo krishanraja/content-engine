@@ -8,6 +8,7 @@ import { carryDay } from './_carry.js'
 import { branchSha, readView, readWeekIdeas } from './_view.js'
 import { signMedia } from './_media.js'
 import { ManifestBindError, checkPublishBind } from './_manifest.js'
+import { ShowGateError, checkProofShown } from './_showGate.js'
 import { DRIVE_ID, boardDrive, filesOfPosts } from './_drivePosts.js'
 import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
@@ -667,6 +668,10 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         // His Approve for publish binds the piece's manifest as it stands now (1.8.0, _manifest.ts).
         if (collection === 'picks' && /-publish$/.test(id)) {
           try { await checkPublishBind(db, incoming) } catch (e) { if (e instanceof ManifestBindError) throw new BoardError(e.status, e.message); throw e }
+        }
+        // His Approve proof is refused until the proof carries its show receipt (_showGate.ts, config/ve/show-gate.json).
+        if (collection === 'picks' && /-proof(-[0-9a-f]{8})?$/.test(id)) {
+          try { await checkProofShown(db, incoming, week) } catch (e) { if (e instanceof ShowGateError) throw new BoardError(e.status, e.message); throw e }
         }
         const body = await preparePress(collection, id, incoming)
         const result = await db.rpc('board_save', { p_week: week, p_collection: collection, p_id: id, p_body: body, p_revision: req.body.revision, p_actor: who })

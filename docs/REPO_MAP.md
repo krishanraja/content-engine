@@ -2495,6 +2495,18 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `function gatePieces(week: string, pieces: Body[], approvals: Approval[] | null, ideas: Body | null)`
 - `function cutSoWhat(v: unknown): string`
 
+### `apps/control-plane/api/board/_growthPlacement.ts`
+
+Where a finished off-day post goes and when, as Growth already knows it (Krish, 2026-11-19: "I've never decided the
+
+- `type PlacementKind`
+- `const CHANNEL_NAME: Record<string, string>`
+- `interface Placement`
+- `function placementFor(kind: string): Placement | null`
+- `function channelWords(p: Placement): string`
+- `function driveId(url: string): string | null`
+- `function bufferUrl(url: string): string`
+
 ### `apps/control-plane/api/board/_handler.ts`
 
 - `function boardPolicy(storeUrl?: string)`
@@ -2876,6 +2888,15 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `async function replacePick(db: SupabaseClient, week: string, req: ReplaceRequest, deps: SeriesDeps): Promise<MoveResult>`
 - `export type { MoveDay }`
 
+### `apps/control-plane/api/board/_showGate.ts`
+
+- `const RECEIPT_SCHEMA`
+- `const RECEIPT_ROLE`
+- `class ShowGateError`
+- `function receiptCovers(text: string, sha: string): boolean`
+- `function gateApplies(body: Body, week: string, cfg = showGate.board): boolean`
+- `async function checkProofShown(db: SupabaseClient, body: Body, week: string): Promise<void>`
+
 ### `apps/control-plane/api/board/_signOffs.ts`
 
 - `const SIGN_OFF_OP`
@@ -3147,6 +3168,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function captionOf(o: ViewOption, raw: Body | null | undefined): string | null`
 - `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function stillBeingMade(m: Pick<ModelInputs, 'work' | 'pieces'>, pieceIds: Array<string | null | undefined>, scopes: st…`
 - `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
 - `function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead`
 - `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
@@ -5032,6 +5054,12 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 ### `apps/renderer/src/engine/chrome/lightStage.ts`
 
 - `function lightStage(props: Pick<EngineRenderProps, 'format'> & Partial<Pick<EngineRenderProps, 'motion'>>): boolean`
+
+### `apps/renderer/src/engine/chrome/offDay.ts`
+
+An off day wears no tag, however its label is spelled (Ruling, Krish, 2026-11-18: "off.day is NEVER to be used ever as a
+
+- `const isOffDayLabel = (label: string | null | undefined): boolean =>`
 
 ### `apps/renderer/src/engine/chrome/tokens.ts`
 

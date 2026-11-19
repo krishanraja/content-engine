@@ -700,6 +700,44 @@
      "applies_to": "channel_copy"
     }
    ]
+  },
+  "off_day_tag": {
+   "hit": [
+    {
+     "text": "Off.day: three habits that cost you",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "#offday",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "OFF DAY",
+     "applies_to": "carousel_text"
+    },
+    {
+     "text": "[Off day] free ChatGPT has ads",
+     "applies_to": "titles"
+    },
+    {
+     "text": "off-day",
+     "applies_to": "video_onscreen"
+    }
+   ],
+   "pass": [
+    {
+     "text": "What I do on an off day is rest.",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "Kick off day one with a plain question.",
+     "applies_to": "carousel_text"
+    },
+    {
+     "text": "Thursday, my day off.",
+     "applies_to": "titles"
+    }
+   ]
   }
  }
 }

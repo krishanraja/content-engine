@@ -3433,6 +3433,606 @@
         ],
         "line": "A caption style keeps three rules: a new word never appears somewhere else, the previous word or phrase stays a little longer, and nothing jolts. Watch the proof frame by frame on his take, not in stills; ve lint refuses a style that moves its word on a one-word cut."
       }
+    },
+    {
+      "id": "tue17-wed18-krish-carried-the-frame-qa",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "mode": "rule-written-nothing-measured-on-the-render",
+      "guard_level": "lint_refuse",
+      "krish": "\"considering that's the first few seconds of the video, it's not much of a hook. It looks quite dull for the first 3 seconds.\" and \"Can't cut my head off and also ruin the visual above.\" and \"my head needs to be in the bottom right\" (Wed 18); \"two concurrent visual styles trying to say the same thing over one another? why?\", \"off.day is NEVER to be used ever as a tag\" and \"NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME\" (Tue 17)",
+      "what": "On the Tue 17 and Wed 18 videos Krish caught twelve and six faults himself (two styles on one beat, graphics on flat black after a photo, a ghost of his face in dissolves, icons in the body, off.day drawn as a tag, a stray caption under the held title, a title that was not his spoken line or a card, a key figure too small, a false start left in, a dull first 3 seconds, a cropped head, his take not bottom right). Most had a rule written; no ve qc row measured it on the render, so a cut reached him with the fault.",
+      "symptom": "The cut reaches Krish carrying a fault he has already named; he is the quality check.",
+      "cause": "Rules lived in prompts and learnings; qc rows existed only for some (captions off the face, head in the camera band on SPLIT, brand.no_mark, bed shape) and only for some aspects or dates.",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No row read one carrier a beat, figure treatment, face-beat transitions, flat-black backdrops, off.day text, the title card and its hold, restarts, first-seconds motion, or a 16:9 face position; qc_onscreen rows ran on 9:16 only."
+        }
+      ],
+      "surface": "velib/qc_frames.py reads config/ve/frame-checks.json (every number, with his words) as ve qc rows on every aspect, counted for a piece published from binds_from (2026-11-17) and advisory before it; a row that cannot read its render, its words or a face detector is not_run, never a pass. Spec lints for ve lint: title_moment.card, kept_restarts, off.day in the spec's words. Already existing and unchanged: captions.off_face (qc_faces), brand.no_mark, the R128 bed shape (qc_audio, music-bed.json), the licence gate (music.py check exempts an approved track). Open and not built: semantic duplication between a picture and a graphic is only caught by shared words and two pictures at once (the Critic reads the rest); the Aspire 'bed 15% under the house level' is not a number in the ledger, so it is not asserted; every threshold in frame-checks.json is a first value for Krish to confirm.",
+      "guards": [
+        {
+          "file": "scripts/velib/qc_frames.py",
+          "contains": "def rows(",
+          "how": "ve qc rows for the Tue 17 and Wed 18 faults on any aspect: one carrier, figures, ghost cuts and frames, flat-black backdrops, the render knowing the logo rule, off.day, the title card, restarts, first-seconds motion, head in frame and bottom right",
+          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+        },
+        {
+          "file": "config/ve/frame-checks.json",
+          "contains": "HOW TO ADD A ROW",
+          "how": "every threshold and the words it enforces, and the four steps to add a row for the next fault",
+          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+        },
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "qc_frames.lints(spec)",
+          "how": "ve lint refuses a title_moment with no card, a kept restart with no reason, and off.day in the spec's words, for a piece published from binds_from",
+          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+        }
+      ]
+    },
+    {
+      "id": "F58-proof-sent-worse-than-approved",
+      "on": "2026-11-19",
+      "krish": "It has seriously regressed. The subtitles are now in the wrong place and there's loads of black space underneath. I already told you I don't want a plain black screen anywhere. (19 Nov 2026, the habits-short production session, of Proof v10) Then: Why the fuck are you allowed to just make things much worse and not even bother looking at screenshots like this, knowing that it's clearly fucked up? (same session, same day)",
+      "what": "Proof v10 of the habits voiceover short (piece 701a2c55-7400-4dc8-99cb-d6001147ae16, branch claude/brave-wright-yxkxqq) went to Krish with two visible faults. The art-directed caption stack, from main's new caption engine, hung up to about y 986 and sat over the bottom of a white screen recording (IBM's page). And every screen beat left y 1340 to 1920 as near-bare ink, though he had already said he wants no plain black screen. The producing session made a contact strip, saw the overlap, judged it minor and sent it. It never opened a full-size frame or checked the frame against his standing notes. QC had measured those screens at 24 to 54% fill and the ve-critic had flagged it, and the session passed it on as non-blocking.",
+      "symptom": "A proof or cut that is visibly worse than the version he approved reaches him: captions over the content behind them, and a plain dark band where a picture should be.",
+      "cause": "A proof or cut is sent without full-size frames of every beat being compared side by side with the last version he approved and checked against his standing notes for the piece, and an engine change is carried into an approved cut without that comparison. Nothing stopped it: ve qc measured an art-directed caption against the house box (y 1090 to 1307), never the stack the renderer draws, which hangs higher on a tall page; no check read the rendered frame for a plain dark band; QC's low-fill reading and the critic's flag were non-blocking; and nothing recorded whether the new proof had been put beside the approved one.",
+      "status": "guarded",
+      "mode": "proof-sent-visibly-worse-than-approved",
+      "guard_level": "lint_refuse",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "ve qc read the caption against the house box and the screens' fill as a measure, never the rendered frame: no check refused a plain dark band taller than 120 px, and none measured the art-directed stack's own box (it hangs from the foot of the region by the tallest page of the cut, up to y 974 on v10's real captions) against the content behind it."
+        },
+        {
+          "cause": "standard_not_read",
+          "evidence": "The session judged the overlap minor from a contact strip and never opened a full-size frame or walked his standing notes (no plain black screen anywhere); nothing made it compare the new proof with the one he approved after the engine changed under it (F33)."
+        }
+      ],
+      "surface": "ve proof and ve render read the RENDERED frames (config/ve/plain-frames.json, scripts/velib/plainframes.py) and refuse: (a) any run of rows taller than 120 px (at 1920 high) that is near-black with almost no detail; (b) a caption's drawn box, the art-directed stack as the renderer measures it or else the theme's region, over bright content unless the beat carries a scrim. (c) When the engine or a screen asset changed since the proof he last approved, ve proof keeps that proof (proof/history), writes proof/compare.<cut>.png (his approved proof above the new one, the same moments) and the proof is not sendable, nor does ve render pass, until the session records what it compared with `ve proof <spec> --cut <cut> --compared \"...\"`. A proof whose frames could not be read is not sendable either. Every number is a setting; nothing is specific to one piece. The ve skill and docs/ve/RUNBOOK.md add one step before any proof or cut is sent: open full-size frames at every beat change, beside the last approved version, and walk his standing notes for the piece.",
+      "guards": [
+        {
+          "file": "scripts/velib/plainframes.py",
+          "contains": "def plain_dark_problems(",
+          "how": "a run of rows taller than 120 px, near-black with no detail, fails the proof and the render, naming beat, frame and band",
+          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py -k PlainDark"
+        },
+        {
+          "file": "scripts/velib/plainframes.py",
+          "contains": "def caption_over_content_problems(",
+          "how": "a caption's drawn box (the art-directed stack, as the renderer measures it) over bright content fails, naming page and frame; a scrim clears it",
+          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py -k CaptionOverContent"
+        },
+        {
+          "file": "scripts/velib/proof.py",
+          "contains": "def sendable_problems(",
+          "how": "a proof is not sendable while its frames fail or a changed engine or asset has not been compared with the approved proof; ve render waits too",
+          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py -k CompareWithApproved"
+        },
+        {
+          "file": "scripts/ve.py",
+          "contains": "NOT SENDABLE to Krish",
+          "how": "ve proof exits 1 and prints why; ve render records nothing for a whole cut whose frames fail",
+          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py"
+        },
+        {
+          "file": "config/ve/plain-frames.json",
+          "contains": "\"plain_dark\"",
+          "how": "the thresholds as settings, usable on any video"
+        },
+        {
+          "file": ".agents/skills/ve/SKILL.md",
+          "contains": "full-size frames at every beat change",
+          "how": "the step before any proof or cut is sent: frames beside the last approved version, his standing notes walked"
+        }
+      ],
+      "related": [
+        "F57-captions-jolt-between-words",
+        "F33-engine-changed-mid-piece",
+        "F16-krish-carried-qa",
+        "F54-known-fault-rendered-with-caveat"
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Before any proof or cut is sent, open full-size frames at every beat change beside the last approved version and walk his standing notes; ve proof refuses a plain dark band or a caption over bright content, and a changed engine or asset needs --compared."
+      }
+    },
+    {
+      "id": "off-day-tag-on-a-post",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "guard_level": "lint_refuse",
+      "surface": "all posts",
+      "krish": "\"off.day is NEVER to be used ever as a tag\" (18 Nov 2026, Tue 17 production); \"ensure there are NEVER any off day tags that exist anywhere, I should never see that on any post ever\" (19 Nov 2026).",
+      "what": "The internal name for Tuesday, Thursday and Saturday posts (off.day) was drawn on screen as a series pill and appeared in file and label text, so it could reach a post.",
+      "symptom": "A viewer sees the words off.day (or off day) on a video, a card, a cover, a caption or a title.",
+      "cause": "off.day is a real label in the series data and the folder names. Only the renderer's exact string match hid it from the pill; nothing refused it in copy, cards, covers or captions, and the match missed other spellings.",
+      "guards": [
+        {
+          "file": "config/copy-lint.json",
+          "contains": "\"id\": \"off_day_tag\"",
+          "how": "copy lint pattern off_day_tag on every public surface (channel copy, carousel text, video on-screen words, titles, article metadata): every spelling as a tag is refused, ordinary sentences pass",
+          "test": "python3 -m pytest -q tests/copy_lint_test.py"
+        },
+        {
+          "file": "apps/renderer/src/engine/chrome/offDay.ts",
+          "contains": "export const isOffDayLabel",
+          "how": "the renderer draws no tag for any spelling of the label (ChannelPill and StageHeader both ask isOffDayLabel)",
+          "test": "npx vitest run apps/renderer/src/engine/chrome/offDay.test.ts"
+        },
+        {
+          "file": "config/ve/frame-checks.json",
+          "contains": "off.day",
+          "how": "ve lint and ve qc refuse the string in a cut's spec text and on its rendered frames (text.no_off_day)"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Never write off.day, off-day or Off day as a tag, label, hashtag, eyebrow, cover word or caption word on anything that can reach a post. It is an internal name."
+      }
+    },
+    {
+      "id": "cuts-shown-before-checked",
+      "on": "2026-11-19",
+      "krish": "You need to stop making me approve and just fix this until it's done.",
+      "what": "On the Tue 17 and Wed 18 pieces cuts and proofs reached Krish with a dozen faults each that he caught himself (the root of F16, F19, F34, F54): ve qc, the separate Critic and a full-size watch against the script were steps a session was told to do, never conditions of showing him the file.",
+      "status": "guarded",
+      "mode": "qa-carried-by-krish",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "Nothing bound 'shown to Krish' to qc passing, the Critic's verdict and a recorded watch on the exact file; the board's Approve proof press accepted any clip's hash."
+        }
+      ],
+      "surface": "19 Nov: the show gate. `ve proof` writes a show receipt beside the proof and `ve show-check <piece> --cut X [--proof]` says what is missing (qc passed and complete on this sha256, the Critic's verdict on it, every row of config/ve/pre-show-checklist.json answered, a recorded full-size watch and listen by a reviewer who is not ve). `ve file` refuses a cut with no complete receipt, and the board's Approve proof is refused with 409 proof_not_shown until a receipt for the clip's sha256 is filed on the piece (role show_receipt). Held to pieces published from config/ve/show-gate.json enforce_from (2026-11-20) so a piece in production is not changed mid-piece (F33); the board's week binding is board.enforce_from_week. Not built here: the frame-level measurements that would answer checklist rows without a person.",
+      "guards": [
+        {
+          "file": "scripts/velib/showgate.py",
+          "contains": "def evaluate",
+          "how": "builds the receipt and lists what is missing"
+        },
+        {
+          "file": "scripts/ve.py",
+          "contains": "def cmd_show_check",
+          "how": "ve show-check; ve proof prints it as the next step; ve file refuses without it"
+        },
+        {
+          "file": "apps/control-plane/api/board/_showGate.ts",
+          "contains": "proof_not_shown",
+          "how": "the board refuses Approve proof with no receipt for that clip"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_nothing_recorded_is_not_ready_and_says_what_is_missing",
+          "how": "a clip with no verdict, no watch and no attestation is not ready and the refusal names each gap",
+          "test": "python3 tests/ve_show_gate_test.py"
+        },
+        {
+          "file": "tests/control-plane/board-show-gate.test.ts",
+          "contains": "refuses an approve with no receipt for that clip",
+          "how": "the press is refused with 409; a reject is never refused",
+          "test": "npx vitest run tests/control-plane/board-show-gate.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "tue17-one-picture-per-beat",
+      "on": "2026-11-19",
+      "krish": "two concurrent visual styles trying to say the same thing over one another? why?",
+      "what": "On the Tue 17 short a graphic and a photograph both carried the same point at once, two visual styles saying the same thing.",
+      "status": "guarded",
+      "mode": "two-styles-one-point",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"one_picture_per_beat\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"one_picture_per_beat\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "tue17-flat-black-after-photo",
+      "on": "2026-11-19",
+      "krish": "Motion graphics on a flat black background, straight after a full-frame photograph.",
+      "what": "Tue 17: motion graphics sat on a flat black background straight after a full-frame photograph; figures were dimmed.",
+      "status": "guarded",
+      "mode": "ungraded-backdrop",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"graded_backdrop_not_black\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"graded_backdrop_not_black\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "tue17-ghost-face-in-dissolves",
+      "on": "2026-11-19",
+      "krish": "A ghost of his face in dissolves.",
+      "what": "Tue 17: a cross-dissolve between a full-screen beat and a face beat left a ghost of his face.",
+      "status": "guarded",
+      "mode": "dissolve-over-face",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"no_ghost_in_dissolves\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"no_ghost_in_dissolves\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "tue17-icons-in-the-body",
+      "on": "2026-11-19",
+      "krish": "NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME",
+      "what": "Tue 17 long cut: icons and logos in the body again, after runs meant to remove them.",
+      "status": "guarded",
+      "mode": "icons-creep-back",
+      "guard_level": "lint_refuse",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"wordmark_only_title_and_close\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"wordmark_only_title_and_close\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        },
+        {
+          "file": "scripts/velib/qc.py",
+          "contains": "brand.no_mark",
+          "how": "a cut that draws a mark tile in the body fails qc"
+        }
+      ]
+    },
+    {
+      "id": "tue17-offday-tag-on-screen",
+      "on": "2026-11-19",
+      "krish": "off.day is NEVER to be used ever as a tag",
+      "what": "Tue 17: the off.day tag was drawn on screen.",
+      "status": "guarded",
+      "mode": "internal-label-on-screen",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"no_offday_tag_on_screen\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"no_offday_tag_on_screen\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "tue17-stray-caption-in-title-hold",
+      "on": "2026-11-19",
+      "krish": "A stray caption word (find) under the held episode title",
+      "what": "Tue 17: a stray caption word (still-01252) sat under the held episode title.",
+      "status": "guarded",
+      "mode": "caption-in-title-hold",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"captions_off_in_title_hold\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"captions_off_in_title_hold\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "tue17-title-not-from-his-line",
+      "on": "2026-11-19",
+      "krish": "make the title captions a card that slams or slides in I think. having naked captions over my face looks stupid.",
+      "what": "Tue 17 and Wed 18: the title was not built from his spoken line as an epic card; naked captions sat over his face.",
+      "status": "guarded",
+      "mode": "title-not-a-hero",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"title_from_his_spoken_line\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"title_from_his_spoken_line\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "tue17-approved-track-blocked",
+      "on": "2026-11-19",
+      "krish": "Aspire is \"100% licensed\"",
+      "what": "Tue 17: a licensed track he had approved was blocked by a certificate gate. The gate's location in the ve code is not yet found; this entry guards only that the show gate asks the reviewer to confirm an approved track plays.",
+      "status": "guarded",
+      "mode": "approved-track-blocked",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"approved_track_passes\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"approved_track_passes\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "tue17-false-start-left-in",
+      "on": "2026-11-19",
+      "krish": "A false start left in his take.",
+      "what": "Tue 17: a false start was left in his take.",
+      "status": "guarded",
+      "mode": "false-start-kept",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"no_false_starts_left\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"no_false_starts_left\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "wed18-head-bottom-right-on-wide",
+      "on": "2026-11-19",
+      "krish": "my head needs to be in the bottom right ... if the subtitles are going to be not centralised, then something needs to be in the bottom right.",
+      "what": "Wed 18: on the 16:9 proof beats his take was not in the bottom-right window opposite the left-set captions.",
+      "status": "guarded",
+      "mode": "wide-layout-head-misplaced",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"head_bottom_right_on_wide\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"head_bottom_right_on_wide\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "wed18-captions-halo-and-page-breaks",
+      "on": "2026-11-19",
+      "krish": "Approve halo",
+      "what": "Wed 18: words over a busy picture lacked the approved halo; pages broke mid-phrase.",
+      "status": "guarded",
+      "mode": "caption-legibility",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"captions_readable_halo_no_break\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"captions_readable_halo_no_break\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "wed18-not-funny-not-codex",
+      "on": "2026-11-19",
+      "krish": "This piece needs to be hilarious and tongue-in-cheek ... use codex for all asset production, generation, sourcing.",
+      "what": "Wed 18: the piece was not made hilarious and tongue-in-cheek, and plates and devices did not all come from Codex cards.",
+      "status": "guarded",
+      "mode": "tone-and-codex-route",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"funny_and_made_by_codex\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"funny_and_made_by_codex\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "process-fixes-shown-one-round-at-a-time",
+      "on": "2026-11-19",
+      "krish": "Each round of fixes went to him as a new render instead of being checked first",
+      "what": "Tue 17 and Wed 18: each round of fixes went to him as a new render instead of being batched and checked first.",
+      "status": "guarded",
+      "mode": "rounds-shown-unchecked",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"fixes_batched_checked_shown_once\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"fixes_batched_checked_shown_once\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "process-missing-route-not-said",
+      "on": "2026-11-19",
+      "krish": "render in Codex",
+      "what": "Tue 17: asked for a route the engine does not have (render in Codex), the session did not say so in one line first.",
+      "status": "guarded",
+      "mode": "missing-route-unsaid",
+      "guard_level": "checklist",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check was asked of the file before it reached him: ve qc passed and the cut was shown, with the reviewer's watch never recorded (the show gate, F-root 'cuts-shown-before-checked')."
+        }
+      ],
+      "surface": "19 Nov: a row of config/ve/pre-show-checklist.json (\"route_missing_said_first\"). The show gate refuses to show a proof or a cut until every row is answered for that exact file: by the ve qc rows the row names when they ran and passed, otherwise by the reviewer's one-line attestation citing a frame or time. This is a checklist-level guard (a person attests it); a frame-level measurement that answers the row by itself is a separate, later upgrade and is not claimed here.",
+      "guards": [
+        {
+          "file": "config/ve/pre-show-checklist.json",
+          "contains": "\"id\": \"route_missing_said_first\"",
+          "how": "the show gate asks for this row on the exact file before Krish is shown it"
+        },
+        {
+          "file": "tests/ve_show_gate_test.py",
+          "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
+          "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
+          "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
     }
   ]
 }

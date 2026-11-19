@@ -1390,7 +1390,14 @@ export function growthLiveLine(posts: GrowthPost[]): string {
   const channels = [...new Set(sorted.map(p => channelWord(p.channel)))]
   const last = sorted[sorted.length - 1]
   const who = sorted.length && sorted.every(p => p.check === 'buffer_sent') ? 'Buffer shows it sent' : 'Growth posted it'
-  return `Live on ${channels.join(', ')}. ${who}${last?.at ? `, ${approvedWhen(last.at)}` : ''}`
+  const live = `Live on ${channels.join(', ')}. ${who}${last?.at ? `, ${approvedWhen(last.at)}` : ''}`
+  // The live check (Krish, 2026-11-19): what each send was checked for, and what went out wrong, said plainly. A post Buffer
+  // could not be read for says nothing: never "checked".
+  const checked = sorted.filter(p => p.verify)
+  const wrong = checked.flatMap(p => (p.verify!.ok ? [] : p.verify!.failed.map(f => `${channelWord(p.channel)}: ${f}`)))
+  if (wrong.length) return `${live}. It did not all go out right: ${wrong.join('; ')}`
+  if (checked.length && checked.length === sorted.length) return `${live}. Checked live: every post matches how it was made`
+  return live
 }
 
 /** What Growth posted on a day for its off-day items, from its own record: one line per channel, with the post's link. */

@@ -231,6 +231,19 @@
         "titles",
         "article_metadata"
       ]
+    },
+    {
+      "id": "off_day_tag",
+      "regex": "(?<![A-Za-z])off[._-]?day(?![A-Za-z])|(?:^|[\\[(#@|>:•·]|\\n)[ \\t]*off[ \\t]day[ \\t]*(?:[\\])|:·•\\n]|$)",
+      "flags": "im",
+      "reason": "The tag off.day, off-day or Off day is never on a post: not as a pill, a header, a label, a hashtag, a caption word, a card eyebrow, a cover word or a title (Ruling, Krish, 2026-11-18 and 19: \"off.day is NEVER to be used ever as a tag\"; \"ensure there are NEVER any off day tags that exist anywhere, I should never see that on any post ever\"). It is an internal name for Tuesday, Thursday and Saturday; the post says what it is about.",
+      "applies_to": [
+        "channel_copy",
+        "carousel_text",
+        "video_onscreen",
+        "titles",
+        "article_metadata"
+      ]
     }
   ]
 }
