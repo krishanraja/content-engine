@@ -3043,10 +3043,15 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `type Action`
 - `type PromptAction`
 - `interface SavedNote`
+- `type NoteFor = 'claude' | 'perplexity' | 'both'`
+- `const noteFor = (v: unknown): NoteFor =>`
+- `const SAVED_NOTES_SHOWN`
+- `const noteItemKey = (k: unknown): string | null =>`
 - `const VISUAL_POINT_LINE`
 - `const EARLIER_NOTES`
 - `const SAVED_NOTES_MAX`
-- `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }): SavedNote[]`
+- `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }, tool: 'claude' | '…`
+- `async function crossWeekNotes(db: SupabaseClient, week: string, pieceIds: string[], itemKeys: string[]): Promise<ViewIn…`
 - `function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): WeekModel`
 - `interface DayView`
 - `interface ViewPost`

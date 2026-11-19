@@ -1755,3 +1755,13 @@ or if anything a session reads first sends anyone to `content.krishraja.com/boar
 
 What was retired and where it lived: `docs/history/2026-11-13-old-boards-retired.md`. This page as it stood before,
 with every section on the old pages: `docs/history/2026-11-13-PUBLISH_BOARDS-before-retirement.md`.
+
+
+## His notes at any stage, for the Perplexity or the Claude prompt, never lost (contract 1.33.0)
+
+Krish, 19 Nov: "I should also be able to add notes at this point that either load into the Perplexity prompt or the Claude production prompt. It's at this point I'm likely to want to push the idea further. I should be able to save that note to this board, and it never disappears ever again."
+
+- **Which prompt:** the notes save press (`use: claude_notes`) may carry `for`: `claude`, `perplexity` or `both`. The Claude production prompt carries the notes for `claude` or `both`; the Perplexity research prompt the notes for `perplexity` or `both` (`savedNotesFor(rows, target, tool)` in `_view.ts`). A note with no `for` (saved before 1.33.0) feeds both.
+- **Never lost:** each prompt's `notes.saved` lists every note he saved on the item that feeds it, up to 100 (`SAVED_NOTES_SHOWN`), each with its `for`; the prompt text carries the newest 10. Notes are kept by the piece (or an off-day post's item key), and the view reads them from every week (`crossWeekNotes`), so a note follows its piece through Move to… into another week and is never dropped by the week's own 200 comments. Each note is also filed on the piece as a material (role `krish_notes`).
+- **Every card, every stage, many notes:** each model item carries `notes {save, saved}` (`modelItem.notes`): the save press of its prompts, or the same `claude_notes` press made for it when it carries no prompt (a post that is scheduled or live), and every note he saved on it, newest first. Each save is a new comment document (its id ends `{t}`), so nothing is overwritten (Krish, 2026-11-19: "Should be able to save notes in this step too"; "Should be able to save multiple notes in all instances"). A post's notes key carries its day (`off-thu-x`), so the key is matched without it (`noteItemKey`) and a post keeps its notes when moved to another day.
+- **Held by:** `tests/control-plane/board-notes-research.test.ts`.
