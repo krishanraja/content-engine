@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { CAPTION_THEMES } from './captions/names'
 import { THEMES } from './captions/themes'
-import { REGIONS, hero, heroScore, key } from './captions/kit'
+import { REGIONS, hero, heroScore, key, textWidth } from './captions/kit'
 import { ThemedCaption } from './chrome/ThemedCaption'
 import { ART_REGION, ArtDirectedCaption, artLayout, cutHeight, keyIndex } from './chrome/ArtDirectedCaption'
 import { BrandFrame } from './BrandFrame'
@@ -266,3 +266,14 @@ describe('the caption styles (Krish, 2026-11-11)', () => {
 })
 
 function clean(i: number, words: string[]) { return words[i] }
+
+describe('a word wider than the house line on an art-directed cut', () => {
+  it('the site address alone on its page fits the 9:16 region (compile FITS_LONE_WORD_THEMES)', () => {
+    const page = { fromFrame: 0, toFrame: 30, words: [{ text: 'makeyourmindup.ai', atFrame: 0 }] } as unknown as Parameters<typeof artLayout>[0]
+    const layout = artLayout(page, '9:16')
+    expect(layout.rows).toHaveLength(1)
+    const size = layout.rows[0]!.size
+    expect(size).toBeGreaterThanOrEqual(72)
+    expect(textWidth('makeyourmindup.ai', size, 'anton', true)).toBeLessThanOrEqual(ART_REGION['9:16'].width)
+  })
+})

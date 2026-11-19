@@ -50,7 +50,7 @@ class IngredientsTest(unittest.TestCase):
                 ingredient_props({'style': {'transitions': {'kind': kind, 'lead': True, 'reason': 'x'}}})
 
     def test_the_layout_modes_are_the_renderers(self):
-        self.assertEqual(LAYOUTS, ('house', 'fill', 'stack', 'band', 'stage', 'tray'))
+        self.assertEqual(LAYOUTS, ('house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar'))
 
     def test_no_sound_preserves_serialized_props_with_other_style_ingredients(self):
         fixture = ROOT / 'fixtures/ve/my-test-19s'

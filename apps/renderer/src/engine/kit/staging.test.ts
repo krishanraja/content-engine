@@ -52,3 +52,18 @@ describe('stagings (kit/staging.ts)', () => {
     expect(trayRise(40, 0)).toEqual({ scale: 1, ty: 0, opacity: 1 })
   })
 })
+
+describe('the pillar staging (Krish, 19 Nov 2026: "Pillar: whole take on the right")', () => {
+  it('draws a vertical take whole at the wide frame\'s full height, the panel beside it, nothing overlapping', () => {
+    const g = stagingGeometry('pillar', '16:9', 'lower', true)
+    expect(g.take.height).toBe(1080)
+    expect(Math.abs(g.take.width / g.take.height - 1080 / 1920)).toBeLessThan(0.002)
+    expect(g.take.left + g.take.width).toBe(1920)
+    expect(g.panel.left + g.panel.width).toBe(g.take.left)
+    expect(g.region.left + g.region.width).toBeLessThanOrEqual(g.take.left)
+  })
+  it('leaves his take full frame on a tall cut', () => {
+    const g = stagingGeometry('pillar', '9:16', 'lower', true)
+    expect(g.take).toMatchObject({ left: 0, top: 0, width: 1080, height: 1920 })
+  })
+})

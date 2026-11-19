@@ -1,0 +1,4 @@
+Status: Both Fri 20 Nov cuts pass ve lint under main's new piece guards, and the pre-show review passes on this spec. The short's face beats are SPLIT with chips of his own words; the long cut uses the new pillar staging (his vertical take whole on the right of 16:9, Krish's pick), with chips on its face beats. The site address is one word in both cuts, and an art-directed cut gives an over-wide word a caption page of its own.
+Next: Compile both cuts, render the short proof, check it at full size, run ve qc and the separate Critic, then the show receipt for Krish's Approve proof.
+Changed: ve gains the pillar staging and a recording's frame on assets; compile pages an over-wide word alone under art-directed captions; the take_orientation guard accepts the pillar.
+North Star check (2026-11-19): holds.

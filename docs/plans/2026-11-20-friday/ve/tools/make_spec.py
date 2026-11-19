@@ -52,9 +52,9 @@ beats=[
  dict(id="closet",role="pivot",span={"from_w":195,"to_w":205},viewer_task="feel_stakes",point="It didn't care whose closet it was opening",layout="STAGE",plate={"source":"none"},uses=["closet2"],events=[ev(195,"closet2","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
  dict(id="yours",role="payoff",span={"from_w":206,"to_w":214},viewer_task="connect_with_speaker",point="And it won't care when it opens yours",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
  dict(id="act",role="call",span={"from_w":215,"to_w":238},viewer_task="land_payoff",point="This week he hands his own AI last year's invoices, to find his skeletons first",layout="STAGE",plate={"source":"none"},uses=["invoices"],events=[ev(215,"invoices","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
- dict(id="close",role="call",span={"from_w":239,"to_w":246},viewer_task="land_payoff",point="The full story is free at makeyourmindup.ai",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
+ dict(id="close",role="call",span={"from_w":239,"to_w":245},viewer_task="land_payoff",point="The full story is free at makeyourmindup.ai",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
 ]
-assets=[{"id":"short-master","kind":"recording","origin":"capture","path":"short.master.mov","sha256":sha(A+'short.master.mov'),"licence":"Krish's own recording, 18 Nov 2026 (ai-finding-your-skeletons-short.mp4, sha256 0be73bbd), two restarts and long pauses cut, 1.0x, 85.1 s"}]
+assets=[{"id":"short-master","kind":"recording","origin":"capture","path":"short.master.mov","frame":{"width":1080,"height":1920},"sha256":sha(A+'short.master.mov'),"licence":"Krish's own recording, 18 Nov 2026 (ai-finding-your-skeletons-short.mp4, sha256 0be73bbd), two restarts and long pauses cut, 1.0x, 85.1 s"}]
 gen=json.load(open(P+'generations.json'))
 jobs={c['beat']:c['job'] for c in gen['clips']}
 for o in objects:
@@ -82,7 +82,7 @@ spec={"schema_version":2,"piece_id":"c00cd4e0-e1bb-4c60-b36f-cea92897e38c","publ
    "transitions":{"kind":"whip","reason":"ai-music-slam's own rule: scenes hand over with a horizontal blur whip"},
    "camera":{"move":"phased","hits":True,"reason":"ai-music-slam: the camera pushes through every scene and breathes on long holds"},
    "energy":"high",
-   "layout":{"mode":"fill","reason":"as on Wed 18 (face-with-proof): every proof slams in centred in the safe region the captions leave, over its own page, and his whole head is full frame on his lines (Krish, 18 Nov 2026: \"Can't cut my head off and also ruin the visual above\"); the split stage left a plain ink band above the proof that ve proof refuses (F58)"},
+   "layout":{"mode":"pillar","reason":"his long take is vertical (1080x1920) on a 16:9 cut: the pillar draws it whole as a full-height panel on the right with the graphics on the left (Krish, 19 Nov 2026, picked \"Pillar: whole take on the right\"); on the tall cut his take stays full frame, and every graphics-only beat still fills the safe region as under fill"},
    "look":"face-with-proof (picked by Krish, 17 Nov 2026 18:58 UTC)",
    "idea":{"object":"the auditor going through the past: every old page it opens turns up either money (cash down the back of the sofa) or a skeleton (out of the cupboard)",
      "moves":[{"move":"a real page or number slams onto the stage on the word that names it","means":"the past is written down, so it can be checked"},
@@ -94,6 +94,49 @@ spec={"schema_version":2,"piece_id":"c00cd4e0-e1bb-4c60-b36f-cea92897e38c","publ
    "proof":{"beat":"question"}},
  "title_line":TLINE,
  "title_moment":{"title":"Your AI auditor: missing money or skeletons?","line":TLINE,"spans":{"short":{"from_w":45,"to_w":59}},"card":True}}
+
+# Pictures on every face beat (piece guard talking_head, 19 Nov) and no WINDOW on the tall cut (tall_windows): chips
+# of his own words carry the face beats; the short's take moves to SPLIT, the long's to the window it already uses.
+import re as _re
+def _norm(w): return _re.sub(r"[^a-z0-9']", '', w.lower().replace('\u2019', "'"))
+def chipify(cut, beats, bid, chips, layout, prefix):
+    W = json.load(open(P + f'words.{cut}.json'))
+    b = next(x for x in beats if x['id'] == bid)
+    lo, hi = b['span']['from_w'], b['span']['to_w']
+    b['layout'] = layout; b['plate'] = {"source": "take"}
+    if layout == 'SPLIT': b.pop('face', None)
+    else: b['face'] = 'window'
+    b.pop('override_reason', None)
+    at = lo
+    for n, (word, text) in enumerate(chips):
+        at = next(i for i in range(at, hi + 1) if _norm(W[i]['word']) == _norm(word))
+        obj = f"{prefix}_{bid}_{n}"
+        objects.append({"obj": obj, "device": "query_chip", "meaning": f"his own words on screen: {text.lower()}",
+                        "persist": {"from_beat": bid, "to_beat": bid}, "params": {"text": text}})
+        b['uses'].append(obj); b['events'].append(ev(at, obj, 'enter'))
+    import math as _m
+    need = _m.ceil((hi - lo + 1) / (2.6 * 3))
+    taken = {e['at_w'] for e in b['events']}
+    chips_here = [u for u in b['uses'] if u.startswith(prefix + '_' + bid + '_')]
+    k = 0
+    for w in range(lo, hi + 1):
+        if len(b['events']) >= need: break
+        if w in taken: continue
+        first = {e['obj']: e['at_w'] for e in b['events']}
+        said = _norm(W[w]['word'])
+        own = [c for c in chips_here if first.get(c, hi + 1) < w and len(said) > 3
+               and said in {_norm(t) for t in next(o for o in objects if o['obj'] == c)['params']['text'].split()}]
+        if not own: continue
+        b['events'].append(ev(w, own[0], 'highlight')); taken.add(w); k += 1
+    b['events'].sort(key=lambda e: e['at_w'])
+def tosplit(beats, bid):
+    b = next(x for x in beats if x['id'] == bid)
+    b['layout'] = 'SPLIT'; b['plate'] = {"source": "take"}; b.pop('face', None)
+
+for _b in ('hook', 'code', 'hindsight'): tosplit(beats, _b)
+chipify('short', beats, 'face', [("archives", "EVERYONE'S ARCHIVES, RIGHT NOW"), ("Hospitals", "WHOLE TEAMS TO SORT PRICING"), ("chatbot", "A CHATBOT BEAT THEM")], 'SPLIT', 's')
+chipify('short', beats, 'love', [("old", "AN OLD BILL CAN'T ARGUE BACK"), ("rules", "THE RULES ARE WRITTEN DOWN"), ("every", "AI READS EVERY LINE")], 'SPLIT', 's')
+chipify('short', beats, 'whose', [("whose", "WHOSE MISTAKE?"), ("hospital's", "THE HOSPITAL'S")], 'SPLIT', 's')
 json.dump(spec,open(P+'spec.json','w'),indent=1); print('wrote', len(beats),'beats', len(objects),'objects')
 
 # ---------------- the long cut (16:9) ----------------
@@ -156,7 +199,7 @@ L=[
  dict(id="l_act",role="call",span={"from_w":776,"to_w":815},viewer_task="land_payoff",point="This week he puts his own last year's invoices through the AI, to find his skeletons first",layout="STAGE",plate={"source":"none"},uses=["l_invoices"],events=[ev(776,"l_invoices","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
  dict(id="close",role="call",span={"from_w":816,"to_w":821},viewer_task="land_payoff",point="The full story is at makeyourmindup.ai",layout="F1",plate={"source":"take"},uses=[],events=[],transition_out="cut",face="full",override_reason=FACE),
 ]
-assets.append({"id":"long-master","kind":"recording","origin":"capture","path":"long.master.mov","sha256":sha(A+'long.master.mov'),"licence":"Krish's own recording, 18 Nov 2026 (ai-finding-your-skeletons-long.mp4, sha256 b1428797), restarts and long pauses cut from the reviewed plan's keep spans, joins in measured quiet, 1.0x, 4:25"})
+assets.append({"id":"long-master","kind":"recording","origin":"capture","path":"long.master.mov","frame":{"width":1080,"height":1920},"sha256":sha(A+'long.master.mov'),"licence":"Krish's own recording, 18 Nov 2026 (ai-finding-your-skeletons-long.mp4, sha256 b1428797), restarts and long pauses cut from the reviewed plan's keep spans, joins in measured quiet, 1.0x, 4:25"})
 for aid,src,job in [("long-sofa-money-169","plates/long-sofa-money-169.mp4","9b08ad6d-8f60-4b73-a76d-5c24c79cfe5e"),("long-invoices-169","plates/long-invoices-169.png","d58bddce-7ff3-4dcf-8651-637f10f0ee15")]:
     assets.append({"id":aid,"kind":"broll","origin":"generated","path":src,"sha256":sha(A+src),"job_id":job,"tool":"higgsfield:gpt_image_2_6 then seedance_2_5","licence":"generated for this piece; Krish approved up to 710 credits, 19 Nov (\"Up to 710, 1080p (Recommended)\"); jobs in ve/generations.json"})
 for aid,src,url,when in [("upworthy-tenant","shots/upworthy-tenant.png","https://scoop.upworthy.com/tenant-uses-chat-gpt-to-uncover-crucial-evidence-and-win-legal-battle-against-greedy-landlord","14 Dec 2024"),("nbc-dana","shots/nbc-dana.png","https://www.nbcnews.com/science/science-news/allegations-research-misconduct-roil-dana-farber-cancer-institute-rcna135521","Jan 2024"),("harvard-krafton","shots/harvard-krafton.png","https://corpgov.law.harvard.edu/2026/04/20/how-a-buyers-ai-conversations-sank-its-earnout-avoidance-strategy/","20 Apr 2026")]:
@@ -164,4 +207,14 @@ for aid,src,url,when in [("upworthy-tenant","shots/upworthy-tenant.png","https:/
 spec['objects']=objects; spec['assets']=assets
 spec['cuts']['long']={"aspect":"16:9","take":"long-master","max_s":330,"excerpt":False,"edit":{"remove":[],"speed":1},"bed":{"ledger_id":"make-up-your-mind-instrumental","reason":"a 4:25 cut: the house's long bed holds the one bed shape at this length"},"captions":{"region":"default","emphasis":[15,18,85,90,189,201,230,247,311,318,413,429,437,448,521,563,575,616,659,713,743,746,812]},"beats":L}
 spec['title_moment']['spans']['long']={"from_w":79,"to_w":93}
+
+chipify('long', L, 'face', [("subscriptions", "LAST YEAR'S SUBSCRIPTIONS AND INVOICES"), ("Hospitals", "WHOLE TEAMS TO GET BILLS RIGHT"), ("chatbot", "A CHATBOT FOUND WHAT THEY MISSED"), ("folder", "YOUR FINANCE LEAD'S UNREAD FOLDER")], 'WINDOW', 'l')
+chipify('long', L, 'l_bitmiss', [("argue", "HE DIDN'T ARGUE THE TOTAL"), ("line", "HE ASKED FOR IT LINE BY LINE"), ("Claude.", "THEN GAVE THE LOT TO CLAUDE")], 'WINDOW', 'l')
+chipify('long', L, 'l_paperwork', [("paperwork", "NEVER PICK A PAPERWORK FIGHT"), ("chatbot", "WITH SOMEONE WHO HAS A CHATBOT"), ("why", "SO WHY ARE CHATBOTS SO GOOD AT THIS?")], 'WINDOW', 'l')
+chipify('long', L, 'l_love', [("argue", "AN OLD BILL CANNOT ARGUE BACK"), ("rules", "THE RULES ARE WRITTEN DOWN"), ("every", "EVERY LINE, AGAINST THOSE RULES"), ("coffee.", "NO COFFEE BREAK")], 'WINDOW', 'l')
+chipify('long', L, 'l_lead', [("lead.", "EVERY FLAG IS A LEAD"), ("person", "A PERSON CHECKS IT"), ("contracts", "YOUR RULES: CONTRACTS AND PRICE LISTS"), ("invoices,", "GIVE AI LAST YEAR'S INVOICES"), ("things", "THINGS THAT DON'T MAKE FULL SENSE")], 'WINDOW', 'l')
+chipify('long', L, 'l_listfirst', [("first?", "WHO READS THAT LIST FIRST?"), ("carpet", "BRUSHED UNDER THE CARPET"), ("customer", "YOUR CUSTOMER MAY FIND IT FIRST")], 'WINDOW', 'l')
+for _b in L:
+    if _b['layout'] == 'WINDOW':
+        _b['layout'] = 'F1'; _b['face'] = 'full'
 json.dump(spec,open(P+'spec.json','w'),indent=1); print('long', len(L),'beats; objects', len(objects))

@@ -160,6 +160,9 @@ export const VeAssetSchema = z.object({
   credits: z.number().nonnegative().optional(),
   // A note for the record only: ve never draws it and no check requires it (no ILLUSTRATION tag, Krish, 28 Oct 2026).
   label: z.string().min(2).optional(),
+  // A recording's frame in pixels, so a 16:9 cut knows a vertical take before any layout is chosen (config/ve/piece-guards.json
+  // take_orientation reads it; Build or buy, 18 Nov: a vertical take on 16:9 layouts cut the top of his head).
+  frame: z.object({ width: z.number().int().positive(), height: z.number().int().positive() }).strict().optional(),
 }).strict().superRefine((v, c) => {
   if (v.origin === 'generated') {
     if (!['illustration', 'broll', 'sfx', 'music', 'voice'].includes(v.kind)) c.addIssue({ code: 'custom', path: ['kind'], message: 'generated media is illustration, broll, sfx, music or his approved clone voice, never evidence' })
@@ -303,7 +306,7 @@ export const ProductionSpecV2Schema = z.object({
     sound: z.object({ handover: z.string().min(1).optional(), hit: z.string().min(1).optional(),
       gainDb: z.number().finite().max(0).optional(), reason: z.string().min(1) }).strict().optional(),
     // How a graphics-only beat uses the frame (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the use of the screen space is terrible").
-    layout: z.object({ mode: z.enum(['house', 'fill', 'stack', 'band', 'stage', 'tray']), reason: z.string().min(1) }).strict().optional(),
+    layout: z.object({ mode: z.enum(['house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar']), reason: z.string().min(1) }).strict().optional(),
   }).catchall(z.unknown()).optional(),
   max_face_share: z.number().min(0).max(1).optional(),
   character: VeCharacterSchema.optional(),

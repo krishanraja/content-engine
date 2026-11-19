@@ -16,12 +16,15 @@ import { REGIONS } from '../captions/kit'
  *    rounded window bottom right that crosses the stage edge.
  *  - `tray` (eating its own jobs): his take stays full frame and the graphics rise in a cream tray from bottom left
  *    over his chest, with a hard ink drop. His face is left clear, so the captions go in the upper strip.
+ *  - `pillar` (a vertical take on a 16:9 cut; Krish, 19 Nov 2026, picked "Pillar: whole take on the right"): his
+ *    1080x1920 take whole and uncropped as a full-height 608 px panel on the right of the wide frame, a series-colour
+ *    hairline, the ink graphics panel on the left. On 9:16 his take stays full frame, as F1 draws it.
  *
  *  A SPLIT or WINDOW beat keeps its own lock, and a graphics-only beat stays a full-frame takeover (the `fill` region).
  *  Pure: geometry is a function of the props alone, and every box handed to devices is a layout region they may grow
  *  into (`kit/layout.ts`, `isRegion`). */
 
-export const STAGINGS = ['band', 'stage', 'tray'] as const
+export const STAGINGS = ['band', 'stage', 'tray', 'pillar'] as const
 export type Staging = typeof STAGINGS[number]
 export const isStaging = (mode: string | undefined): mode is Staging => (STAGINGS as readonly string[]).includes(mode ?? '')
 
@@ -56,8 +59,16 @@ function clearOfCaptions(region: Box, aspect: Aspect, placement: Placement, them
   return above >= below ? { ...region, height: Math.max(0, above) } : { ...region, top: bBottom, height: Math.max(0, below) }
 }
 
+/** The pillar's take box on a wide cut: a 9:16 take at the frame's full height, so nothing of it is cropped. */
+export const PILLAR_TAKE_WIDTH = Math.round(1080 * 9 / 16)
+
 export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry {
   if (aspect === '9:16') {
+    if (mode === 'pillar') {
+      return { take: { left: 0, top: 0, width: 1080, height: 1920, radius: 0, border: false },
+        panel: { left: 0, top: 0, width: 1080, height: 0, radius: '0' },
+        region: clearOfCaptions({ left: 60, top: 280, width: 800, height: 560 }, aspect, placement, themed), rises: false }
+    }
     if (mode === 'band') {
       const seam = 1000
       return { take: { left: 0, top: seam, width: 1080, height: 1920 - seam, radius: 0, border: false },
@@ -74,6 +85,12 @@ export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placem
     const r = clearOfCaptions({ left: 60, top: 900, width: 600, height: 600 }, aspect, placement, themed)
     return { take: { left: 0, top: 0, width: 1080, height: 1920, radius: 0, border: false },
       panel: { ...r, radius: '28px' }, region: { left: r.left + GAP, top: r.top + GAP, width: r.width - 2 * GAP, height: r.height - 2 * GAP }, rises: true }
+  }
+  if (mode === 'pillar') {
+    const seam = 1920 - PILLAR_TAKE_WIDTH
+    return { take: { left: seam, top: 0, width: PILLAR_TAKE_WIDTH, height: 1080, radius: 0, border: false },
+      panel: { left: 0, top: 0, width: seam, height: 1080, radius: '0' }, hairline: { left: seam - 10, top: 0, width: 10, height: 1080 },
+      region: clearOfCaptions({ left: 96, top: 140, width: seam - 96 - 60, height: 800 }, aspect, placement, themed), rises: false }
   }
   if (mode === 'band') {
     const seam = 1152
