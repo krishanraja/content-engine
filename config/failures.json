@@ -3584,7 +3584,7 @@
       "status": "guarded",
       "guard_level": "gate",
       "surface": "ideas board, Saturday",
-      "krish": "\"We also need to significantly improve the good news suggestions. These are still all just one idea, mostly, and they're not good news carousels. Some of them are memes that are sneaking through, and the only actual uplifting carousel is about AI in hospital again, which is all we post about. We should find good news that's not medical stuff.\" (19 Nov 2026, Control Centre ideas board, Sat 28)",
+      "krish": "\"We also need to significantly improve the good news suggestions. These are still all just one idea, mostly, and they're not good news carousels. Some of them are memes that are sneaking through, and the only actual uplifting carousel is about AI in hospital again, which is all we post about. We should find good news that's not medical stuff.\" (19 Nov 2026, Control Centre ideas board, Sat 28) Then, answering content-engine#923 the same day: \"Sat should just be good news carousels - 5 great things AI is doing for people (ideally things that make people smarter or better or happier or more successful).\" and \"Can mix if no1 is implemented properly.\"",
       "what": "Sat 28 Nov's ideas were one hospital good-news carousel, a plain carousel, an explainer and two memes.",
       "symptom": "Saturday offered memes and one-story carousels, and its only good news was medical again.",
       "cause": "The Saturday rule bound from the 30 Nov board and allowed explainer and supporting carousels; nothing held the good news's topic to anything but five stories meeting, and health dominates search results, so the topic kept landing on medicine. The cap on medical stories waited for his yes.",
@@ -3592,7 +3592,7 @@
         {
           "file": "scripts/post-pack/idea_checks.py",
           "contains": "def goodnews_findings(",
-          "how": "the Sunday run's gate (code goodnews): Saturday is good-news carousels only, at least three, each its own topic, no topic of the four Saturdays before, no medical topic after two medical stories in a month, at most one medical story in a carousel on another topic",
+          "how": "the Sunday run's gate (code goodnews): Saturday is good-news carousels only, at least three, each five great things AI is doing for people, each story saying who it helps and how (smarter, better, happier, more successful); a carousel may mix topics; no two options led by one theme or carrying one story, no lead of the four Saturdays before, no medicine-led carousel after two medical stories in a month, at most one medical story in any other carousel",
           "test": "python3 tests/good_news_test.py"
         },
         {
@@ -3611,7 +3611,7 @@
         "formats": [
           "all"
         ],
-        "line": "Saturday: only good-news carousels, three or more, each its own topic outside the last four Saturdays', never medicine-led after a month of medical stories."
+        "line": "Saturday: only good-news carousels, three or more, each five great things AI is doing for people (who it helps and how), mixed topics allowed, never medicine-led after a month of medical stories."
       }
     },
     {

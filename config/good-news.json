@@ -1,11 +1,21 @@
 {
-  "_about": "Saturday's good news, as rows (Krish, 2026-11-19, of Sat 28's ideas board: \"We also need to significantly improve the good news suggestions. These are still all just one idea, mostly, and they're not good news carousels. Some of them are memes that are sneaking through, and the only actual uplifting carousel is about AI in hospital again, which is all we post about. We should find good news that's not medical stuff.\"). Read by scripts/post-pack/idea_checks.py goodnews_findings (the Sunday run's gate, code goodnews) and apps/control-plane/api/board/_goodNews.ts (the ideas board holds a Saturday option that is not a good-news carousel, with the reason). A new kind of good news, a limit or a keyword is a row here, never code.",
+  "_about": "Saturday's good news, as rows (Krish, 2026-11-19, of Sat 28's ideas board: \"We also need to significantly improve the good news suggestions. These are still all just one idea, mostly, and they're not good news carousels. Some of them are memes that are sneaking through, and the only actual uplifting carousel is about AI in hospital again, which is all we post about. We should find good news that's not medical stuff.\"). Then (Krish, 2026-11-19, answering the questions on content-engine#923): \"Sat should just be good news carousels - 5 great things AI is doing for people (ideally things that make people smarter or better or happier or more successful).\" and \"Can mix if no1 is implemented properly.\" So a carousel may mix topics; its lead theme, when three or more of its stories share one, is what repeats and medical limits read. Read by scripts/post-pack/idea_checks.py goodnews_findings (the Sunday run's gate, code goodnews) and apps/control-plane/api/board/_goodNews.ts (the ideas board holds a Saturday option that is not a good-news carousel, with the reason). A new kind of good news, a limit or a keyword is a row here, never code.",
   "from": "2026-11-23",
   "saturday_kinds": [
     "good_news"
   ],
   "min_options": 3,
   "stories": 5,
+  "bar": {
+    "words": "five great things AI is doing for people, ideally making them smarter, better, happier or more successful",
+    "helps": [
+      "smarter",
+      "better",
+      "happier",
+      "more successful"
+    ]
+  },
+  "lead_stories": 3,
   "repeat_weeks": 4,
   "medical": [
     "health"

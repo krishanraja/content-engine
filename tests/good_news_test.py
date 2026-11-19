@@ -1,4 +1,6 @@
-"""Saturday is good-news carousels of varied, non-medical-led good news (Krish, 2026-11-19, of Sat 28's ideas board: "We
+"""Saturday is good-news carousels of varied, non-medical-led good news. Krish, 2026-11-19, answering content-engine#923:
+"Sat should just be good news carousels - 5 great things AI is doing for people (ideally things that make people smarter
+or better or happier or more successful)." and "Can mix if no1 is implemented properly." Before that (19 Nov, of Sat 28's ideas board): "We
 also need to significantly improve the good news suggestions. These are still all just one idea, mostly, and they're
 not good news carousels. Some of them are memes that are sneaking through, and the only actual uplifting carousel is
 about AI in hospital again, which is all we post about. We should find good news that's not medical stuff.").
@@ -20,14 +22,17 @@ HISTORY = [{'week': '2026-11-09', 'kind': 'science', 'medical': 0}, {'week': '20
            {'week': '2026-11-09', 'kind': 'climate', 'medical': 1}, {'week': '2026-11-09', 'kind': None, 'medical': 2}]
 
 
-def story(kind, n):
-    return {'headline': f'H{n}', 'what': 'w', 'why': 'y', 'kind': kind, 'date': '2026-11-20',
+def story(kind, n, how='smarter'):
+    return {'headline': f'H{n}', 'what': 'w', 'why': 'y', 'kind': kind, 'date': '2026-11-20', 'helps': {'who': 'teachers in rural schools', 'how': how},
             'source': {'label': 'L', 'url': f'https://example.org/{kind}/{n}'}, 'media': {'kind': 'photo', 'url': 'https://example.org/p.jpg'}}
 
 
 def carousel(id_, topic_kind, topic, kinds=None):
-    return {'id': id_, 'kind': 'good_news', 'format': 'Good news carousel, 7 cards, 4:5', 'topic': topic, 'topic_kind': topic_kind,
-            'hook': topic, 'stories': [story(k, n) for n, k in enumerate(kinds or [topic_kind] * 5)]}
+    o = {'id': id_, 'kind': 'good_news', 'format': 'Good news carousel, 7 cards, 4:5', 'topic': topic,
+         'hook': topic, 'stories': [story(k, f'{id_}{n}') for n, k in enumerate(kinds or [topic_kind] * 5)]}
+    if topic_kind:
+        o['topic_kind'] = topic_kind
+    return o
 
 
 class SatTwentyEight(unittest.TestCase):
@@ -42,7 +47,7 @@ class SatTwentyEight(unittest.TestCase):
         self.assertTrue(any('has 1 good-news carousel' in x for x in self.lines))
 
     def test_the_hospital_carousel_is_refused_after_a_month_of_medical_stories(self):
-        self.assertTrue(any(x.startswith('goodnews: off-sat-goodnews is a medical topic') for x in self.lines), self.lines)
+        self.assertTrue(any(x.startswith('goodnews: off-sat-goodnews is led by medicine') for x in self.lines), self.lines)
 
     def test_every_finding_fails_the_run(self):
         self.assertIn('goodnews', ic.GATE_CODES)
@@ -60,10 +65,10 @@ class FixedSaturday(unittest.TestCase):
     def test_two_on_one_topic_and_a_topic_from_last_week_are_refused(self):
         same = json.loads(json.dumps(self.GOOD))
         same['offdays']['sat'][1] = carousel('music', 'creative', 'Musicians finding new fans with AI')
-        self.assertTrue(any('same topic' in f['line'] for f in ic.goodnews_findings(same, WEEK, HISTORY)))
+        self.assertTrue(any('same theme' in f['line'] for f in ic.goodnews_findings(same, WEEK, HISTORY)))
         again = json.loads(json.dumps(self.GOOD))
         again['offdays']['sat'][2] = carousel('access', 'people', 'AI helping people speak and sign')
-        self.assertTrue(any('the topic Saturday carried in the week of 2026-11-16' in f['line'] for f in ic.goodnews_findings(again, WEEK, HISTORY)))
+        self.assertTrue(any('the lead of the Saturday in the week of 2026-11-16' in f['line'] for f in ic.goodnews_findings(again, WEEK, HISTORY)))
 
     def test_a_carousel_on_another_topic_carries_at_most_one_medical_story(self):
         heavy = json.loads(json.dumps(self.GOOD))
@@ -76,6 +81,25 @@ class FixedSaturday(unittest.TestCase):
         self.assertTrue(any('holds 1 story' in f['line'] for f in ic.goodnews_findings(short, WEEK, HISTORY)))
         short['offdays']['sat'][0]['stories_to_find'] = True
         self.assertEqual(ic.goodnews_findings(short, WEEK, HISTORY), [])
+
+    def test_a_mixed_five_good_things_carousel_passes_and_with_two_medical_stories_fails(self):
+        mixed = json.loads(json.dumps(self.GOOD))
+        mixed['offdays']['sat'][0] = carousel('fivethings', None, 'Five great things AI did for people this week',
+                                              ['learning', 'climate', 'business', 'creative', 'health'])
+        self.assertEqual(ic.goodnews_findings(mixed, WEEK, HISTORY), [])
+        mixed['offdays']['sat'][0] = carousel('fivethings', None, 'Five great things AI did for people this week',
+                                              ['learning', 'health', 'business', 'creative', 'health'])
+        self.assertTrue(any('carries 2 medical stories' in f['line'] for f in ic.goodnews_findings(mixed, WEEK, HISTORY)))
+
+    def test_each_story_says_who_it_helps_and_how(self):
+        bad = json.loads(json.dumps(self.GOOD))
+        bad['offdays']['sat'][0]['stories'][2]['helps'] = {'who': 'people', 'how': 'richer'}
+        self.assertTrue(any('story 3 says who it helps and how' in f['line'] for f in ic.goodnews_findings(bad, WEEK, HISTORY)))
+
+    def test_two_options_never_carry_the_same_story(self):
+        twin = json.loads(json.dumps(self.GOOD))
+        twin['offdays']['sat'][1]['stories'][0]['source'] = dict(twin['offdays']['sat'][0]['stories'][0]['source'])
+        self.assertTrue(any('repeats a story' in f['line'] for f in ic.goodnews_findings(twin, WEEK, HISTORY)))
 
     def test_earlier_boards_keep_the_shape_they_were_made_in(self):
         self.assertEqual(ic.goodnews_findings(SAT_28, '2026-11-16', HISTORY), [])

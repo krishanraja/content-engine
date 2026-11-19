@@ -295,22 +295,28 @@ From the 30 Nov board (earlier boards keep their shape):
 His words, of Sat 28's ideas board (one hospital good news, a plain carousel, an explainer and two memes): "We also need
 to significantly improve the good news suggestions. These are still all just one idea, mostly, and they're not good news
 carousels. Some of them are memes that are sneaking through, and the only actual uplifting carousel is about AI in
-hospital again, which is all we post about. We should find good news that's not medical stuff."
+hospital again, which is all we post about. We should find good news that's not medical stuff." And his answers the same
+day: "Sat should just be good news carousels - 5 great things AI is doing for people (ideally things that make people
+smarter or better or happier or more successful)." and "Can mix if no1 is implemented properly."
 
 From the 23 Nov board, every rule a row in `config/good-news.json`:
 
-- Saturday offers only good-news carousels (`kind` `good_news`, or the weekly series): at least three, each five
-  good-news stories on its own topic, its topic named in `topic_kind` (one of the config's topics). No meme, explainer
-  or one-story carousel on Saturday; the ideas board holds one that slips through, with the reason (`_goodNews.ts`).
-- No two Saturday options on one topic, and no topic a Saturday carried in the four weeks before.
-- No medical topic while the last four Saturdays already carried two medical stories; a carousel on another topic
-  carries at most one medical story. Health stories dominate search results for "AI good news", so search each topic
-  on its own and choose where five strong stories meet outside medicine.
+- Saturday offers only good-news carousels (`kind` `good_news`, or the weekly series): at least three, each five great
+  things AI is doing for people. Each story says who it helps and how: `"helps": {"who": "<the people>", "how":
+  "smarter" | "better" | "happier" | "more successful"}`. No meme, explainer or one-story carousel on Saturday; the
+  ideas board holds one that slips through, with the reason (`_goodNews.ts`).
+- A carousel may mix topics. This supersedes the one-topic rule of 13 Nov ("The Saturday carousel is supposed to be five
+  good news stories on that same topic"). Where three or more of its stories share a theme (or its `topic_kind` says
+  so), that theme leads it.
+- No two Saturday options led by one theme or carrying one story; no lead a Saturday carried in the four weeks before.
+- No medicine-led carousel while the last four Saturdays carried two medical stories; any other carousel carries at most
+  one medical story. Health stories dominate search results for "AI good news", so search each area on its own and pick
+  the five best outside medicine.
 - A carousel short of five stories says `stories_to_find: true`, the board's "Find the other N stories".
 
-`board_feed.py gate` fails the run on any of these (code `goodnews`, `idea_checks.goodnews_findings`). This replaces the
-17 Nov rule's explainer and supporting carousels on Saturday; each good-news carousel but the weekly series still names
-the sheet carousel it is modelled on.
+`board_feed.py gate` fails the run on any of these (code `goodnews`, `idea_checks.goodnews_findings`). Explainer and
+supporting carousels no longer go on Saturday (his ruling of 19 Nov over the 17 Nov rule); each good-news carousel but
+the weekly series still names the sheet carousel it is modelled on.
 
 ## The meme templates lane (Ruling, Krish, 17 November 2026)
 
@@ -359,10 +365,11 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
    "card", "date": "YYYY-MM-DD"}]`. Good news is a real AI story that helped ordinary people (health, science, safety,
    access, work made better), or a business that succeeded with AI, with the number that shows it (revenue,
    customers, hours saved, people hired): he speaks to business leaders, and a success story may be the best of all.
-   Then choose the topic where five strong candidates meet (Ruling, Krish, 2026-11-13: "The Saturday carousel is
-   supposed to be five good news stories on that same topic"; for example "Small firms AI made money for this month",
-   "AI in the clinic this week"), write it on the option as `"topic": "<a few plain words>"`, and make the option's
-   hook say it. Never choose the topic first and hunt for five: that is how 16 Nov found four. Each story is
+   Then choose the five great things AI did for people this week (Ruling, Krish, 2026-11-19: "5 great things AI is
+   doing for people (ideally things that make people smarter or better or happier or more successful)"; "Can mix if
+   no1 is implemented properly", which supersedes the 13 Nov one-topic rule): they may share a topic or mix, write
+   what joins them on the option as `"topic": "<a few plain words>"`, and make the option's hook say it. Never choose
+   a topic first and hunt for five: that is how 16 Nov found four. Each story is
    published in the seven days up to `stories_due` (today), or the thirty for one found in his sheet (step 0), none
    already run (`sources.json` `recent_offdays` urls). A Reddit thread, a video or a post is where a story was found
    (`found`), never its source. Five is the post: four or fewer is not a good-news post yet, and the board says so
@@ -378,7 +385,7 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
 3. Each story has its own picture: a photo or clip of the thing itself from the source or the organisation (`media`,
    https), never a stock image.
 4. Write them into that week's `docs/plans/<Monday>-week/ideas.json`, on the good-news option only, as
-   `"stories": [{"headline", "what", "why", "kind", "date": "YYYY-MM-DD", "source": {"label", "url"}, "media": {"kind":
+   `"stories": [{"headline", "what", "why", "kind", "helps": {"who", "how"}, "date": "YYYY-MM-DD", "source": {"label", "url"}, "media": {"kind":
    "photo" or "clip", "url"}}]`, five of them, in plain English a 12-year-old follows, and set `stories_due` to today.
 5. `python3 scripts/post-pack/copy_lint.py --applies-to carousel_text` on the words, then
    `python3 scripts/post-pack/board_feed.py gather <Monday>` and `cover <Monday>`: it refuses a story dated outside

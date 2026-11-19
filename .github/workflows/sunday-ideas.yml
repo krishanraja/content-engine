@@ -269,17 +269,17 @@ jobs:
             Tuesday and Thursday as kind meme with a template. board_feed.py gate refuses a Saturday option that is not
             a sheet carousel (saturday) and a week whose templates are not whole (template).
 
-            Saturday is good-news carousels only (Krish, 2026-11-19: "These are still all just one idea, mostly, and
-            they're not good news carousels. Some of them are memes that are sneaking through, and the only actual
-            uplifting carousel is about AI in hospital again, which is all we post about. We should find good news
-            that's not medical stuff."): at least three good-news carousels on Saturday, each five good-news stories on
-            its own topic, each topic named in topic_kind (config/good-news.json topics), no two on one topic, none on
-            a topic a Saturday carried in the four weeks before, and no medical topic while the last four Saturdays
-            already carried two medical stories. Health stories dominate search results for "AI good news", so search
-            each topic on its own (climate and energy, science, learning, accessibility and everyday life, small
-            business and work, money, culture, public services) and choose where five strong stories meet outside
-            medicine. No meme, explainer or one-story carousel on Saturday. board_feed.py gate refuses the rest
-            (goodnews).
+            Saturday is only good-news carousels (Ruling, Krish, 2026-11-19: "Sat should just be good news carousels -
+            5 great things AI is doing for people (ideally things that make people smarter or better or happier or more
+            successful)."): at least three, each five great things AI is doing for people, each story saying who it
+            helps and how (helps: {"who", "how"}, how one of smarter, better, happier, more successful). A carousel may
+            mix topics ("Can mix if no1 is implemented properly"). No two options led by one theme or carrying one
+            story, no lead a Saturday carried in the four weeks before, no medicine-led carousel while the last four
+            Saturdays already carried two medical stories, and at most one medical story in any other carousel. Health
+            stories dominate search results for "AI good news", so search each area on its own (learning, work and
+            small business, money, climate and energy, science, accessibility and everyday life, culture, public
+            services) and pick the five best outside medicine. No meme, explainer or one-story carousel on Saturday.
+            board_feed.py gate refuses the rest (goodnews).
 
             Days to make again: ${{ steps.guard.outputs.days || 'none, this run fills the whole board' }}. When days are
             named, make again only the options nobody answered (open in sources.json option_status) on those days of

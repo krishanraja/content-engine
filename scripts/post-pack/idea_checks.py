@@ -1495,8 +1495,9 @@ def topic_kind_of(text):
 
 
 def option_topic_kind(o):
-    """An option's topic kind: its own topic_kind, else read from its topic, hook and title, else its stories' most
-    common kind."""
+    """An option's lead theme: its own topic_kind, else read from its topic, hook and title, else the kind three or more
+    of its stories share (lead_stories). None for a mixed carousel with no lead, which Krish allows (2026-11-19: "Can
+    mix if no1 is implemented properly")."""
     kinds = {r['kind'] for r in GOOD_NEWS['topics']}
     own = o.get('topic_kind')
     if own in kinds:
@@ -1508,15 +1509,26 @@ def option_topic_kind(o):
     for st in o.get('stories') or []:
         if isinstance(st, dict) and st.get('kind') in kinds:
             counts[st['kind']] = counts.get(st['kind'], 0) + 1
-    return max(sorted(counts), key=counts.get) if counts else None
+    lead = max(sorted(counts), key=counts.get) if counts else None
+    return lead if lead and counts[lead] >= GOOD_NEWS['lead_stories'] else None
+
+
+def helps_ok(st):
+    """A story says who it helps and how, against the bar: smarter, better, happier or more successful."""
+    h = st.get('helps') if isinstance(st.get('helps'), dict) else {}
+    return len(str(h.get('who') or '').strip()) >= 3 and str(h.get('how') or '').strip().lower() in GOOD_NEWS['bar']['helps']
 
 
 def goodnews_findings(ideas, week, history=None):
-    """From GOOD_NEWS_FROM: Saturday offers only good-news carousels (no meme, explainer or one-story carousel), at least
-    min_options of them, each on its own topic, none on a topic a Saturday carried in the repeat_weeks before (a medical
-    topic included), each with its five stories (or marked stories_to_find, the board's "Find the other N stories"),
-    each story with its kind and source, and at most medical_stories_max medical stories in a carousel whose topic is
-    not medical. history: [{"week", "kind"}] of the Saturdays before."""
+    """From GOOD_NEWS_FROM, Saturday is only good-news carousels (Ruling, Krish, 2026-11-19: "Sat should just be good
+    news carousels - 5 great things AI is doing for people (ideally things that make people smarter or better or happier
+    or more successful)."): at least min_options of them, none a meme, explainer or one-story carousel; each its five
+    stories (or stories_to_find), each story with its kind, its https source and who it helps and how (helps: {who, how},
+    how one of the bar's words). A carousel may mix topics ("Can mix if no1 is implemented properly"); where one leads
+    (lead_stories of its stories, or its topic says so), no two options share it, it is not a lead of the repeat_weeks
+    Saturdays before, and a medical lead is refused while those Saturdays carried medical_recent_max medical stories. A
+    carousel that medicine does not lead carries at most medical_stories_max medical stories. history: [{"week",
+    "kind", "medical"}] of the Saturdays before."""
     if str(week) < GOOD_NEWS_FROM:
         return []
     cfg = GOOD_NEWS
@@ -1527,7 +1539,7 @@ def goodnews_findings(ideas, week, history=None):
     def say(ref, line):
         out.append({'code': 'goodnews', 'ref': ref, 'line': f'goodnews: {ref} {line}'})
 
-    from datetime import date as _d, timedelta as _t
+    from datetime import date as _d
     start = _d.fromisoformat(str(week))
     recent, medical_recent = {}, 0
     for h in history or []:
@@ -1544,40 +1556,45 @@ def goodnews_findings(ideas, week, history=None):
     for o in sat:
         ref = f'off-sat-{o.get("id")}'
         if not is_good_news(o):
-            say(ref, f'is "{o.get("format") or "a post with no format"}"; Saturday offers only good-news carousels (five '
-                     'good-news stories on one topic). A meme belongs in the meme templates lane, an explainer on Tuesday or Thursday')
+            say(ref, f'is "{o.get("format") or "a post with no format"}"; Saturday offers only good-news carousels ({cfg["bar"]["words"]}). '
+                     'A meme belongs in the meme templates lane, an explainer on Tuesday or Thursday')
             continue
         good.append(o)
     # A board with no Saturday at all is the breadth check's (OFFDAY_BREADTH); one with a Saturday offers enough good news.
     if 'sat' in offdays and len(good) < cfg['min_options']:
-        say('sat', f'has {len(good)} good-news carousel{"s" if len(good) != 1 else ""}; Saturday offers at least {cfg["min_options"]}, each on its own topic')
-    seen = {}
+        say('sat', f'has {len(good)} good-news carousel{"s" if len(good) != 1 else ""}; Saturday offers at least {cfg["min_options"]}, each a different five')
+    seen, seen_sources = {}, {}
     for o in good:
         ref = f'off-sat-{o.get("id")}'
-        kind = option_topic_kind(o)
-        if not kind:
-            say(ref, 'says no topic kind (topic_kind, one of ' + ', '.join(labels) + ')')
-        else:
-            if kind in seen:
-                say(ref, f'is on the same topic ({labels.get(kind, kind)}) as off-sat-{seen[kind]}; each Saturday option is its own topic')
-            seen.setdefault(kind, o.get('id'))
-            if kind in cfg['medical'] and medical_recent >= cfg['medical_recent_max'] and kind not in recent:
-                say(ref, f'is a medical topic, and the Saturdays of the last {cfg["repeat_weeks"]} weeks already carried '
-                         f'{medical_recent} medical stories; find good news outside medicine. {cfg["why_medical_wins"]}')
-            if kind in recent:
-                say(ref, f'is on {labels.get(kind, kind)}, the topic Saturday carried in the week of {recent[kind]}; no topic comes back '
-                         f'within {cfg["repeat_weeks"]} weeks. {cfg["why_medical_wins"] if kind in cfg["medical"] else ""}'.rstrip())
+        lead = option_topic_kind(o)
         stories = [st for st in o.get('stories') or [] if isinstance(st, dict)]
+        if lead:
+            if lead in seen:
+                say(ref, f'is led by the same theme ({labels.get(lead, lead)}) as off-sat-{seen[lead]}; each Saturday option is a different five')
+            seen.setdefault(lead, o.get('id'))
+            if lead in cfg['medical'] and medical_recent >= cfg['medical_recent_max'] and lead not in recent:
+                say(ref, f'is led by medicine, and the Saturdays of the last {cfg["repeat_weeks"]} weeks already carried '
+                         f'{medical_recent} medical stories; find good news outside medicine. {cfg["why_medical_wins"]}')
+            if lead in recent:
+                say(ref, f'is led by {labels.get(lead, lead)}, the lead of the Saturday in the week of {recent[lead]}; no lead comes back '
+                         f'within {cfg["repeat_weeks"]} weeks. {cfg["why_medical_wins"] if lead in cfg["medical"] else ""}'.rstrip())
+        for st in stories:
+            url = str(((st.get('source') or {}) if isinstance(st.get('source'), dict) else {}).get('url') or '')
+            if url and url in seen_sources and seen_sources[url] != o.get('id'):
+                say(ref, f'repeats a story off-sat-{seen_sources[url]} carries ({url}); each Saturday option is a different five')
+            seen_sources.setdefault(url, o.get('id'))
         if len(stories) < cfg['stories'] and not o.get('stories_to_find'):
-            say(ref, f'holds {len(stories)} stor{"y" if len(stories) == 1 else "ies"}; a good-news carousel is {cfg["stories"]} stories on its topic '
+            say(ref, f'holds {len(stories)} stor{"y" if len(stories) == 1 else "ies"}; a good-news carousel is {cfg["stories"]} great things AI is doing for people '
                      '(or stories_to_find: true, for the board\'s "Find the other N stories")')
         for i, st in enumerate(stories, 1):
             if st.get('kind') not in GOOD_NEWS_KINDS or not str(((st.get('source') or {}) if isinstance(st.get('source'), dict) else {}).get('url') or '').startswith('https://'):
                 say(ref, f'story {i} needs its kind and its https source')
-        if kind not in cfg['medical']:
+            if not helps_ok(st):
+                say(ref, f'story {i} says who it helps and how (helps: {{"who", "how"}}, how one of: {", ".join(cfg["bar"]["helps"])})')
+        if lead not in cfg['medical']:
             med = sum(1 for st in stories if st.get('kind') in cfg['medical'])
             if med > cfg['medical_stories_max']:
-                say(ref, f'carries {med} medical stories; a carousel on another topic carries at most {cfg["medical_stories_max"]}')
+                say(ref, f'carries {med} medical stories; a carousel medicine does not lead carries at most {cfg["medical_stories_max"]}')
     return out
 
 
