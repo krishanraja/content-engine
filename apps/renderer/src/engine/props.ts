@@ -116,6 +116,8 @@ export const EngineRenderPropsSchema = z.object({
    *  round, so every spec that forgot the flag drew the icon. */
   bodyLogo: z.boolean().optional(),
   segments: z.array(EngineSegmentSchema).default([]),
+  /** The take is 9:16 on a 16:9 cut (compile measures it): his panel and window take the portrait geometry. */
+  takePortrait: z.literal(true).optional(),
   audio: EngineAudioSchema,
   captions: z.array(EngineCaptionPageSchema).min(1),
   /** 'house' pages in the ink box; 'word' shows one word at a time, off the face, under a held title. */

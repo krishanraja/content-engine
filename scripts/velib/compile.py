@@ -338,6 +338,17 @@ def _page_cost(rows: list[dict], start: int, n: int) -> int:
     return cost
 
 
+def _portrait(src) -> bool:
+    import subprocess
+    path = str(src).removeprefix('file://')
+    try:
+        out = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height',
+                              '-of', 'csv=p=0', path], capture_output=True, text=True, timeout=30).stdout.strip().split(',')
+        return int(out[1]) > int(out[0])
+    except (ValueError, IndexError, OSError, subprocess.SubprocessError):
+        return False
+
+
 def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list[list[dict]]:
     """Fit 2-5 words per page, choosing the breaks that read best over the whole run, never stranding an orphan."""
     size, available = (54, 1316) if aspect == '16:9' else (68, 816)
@@ -681,6 +692,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                             **({'card': True} if (spec.get('title_moment') or {}).get('card') else {})}} if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
+    # A 9:16 take on a 16:9 cut lays out as his panel and a tall window (layouts PORTRAIT_WIDE; Krish, 2026-11-19: "go wide
+    # layout"), measured from the take's own pixels, never assumed.
+    if cut['aspect'] == '16:9' and props['segments'] and _portrait(props['segments'][0]['src']):
+        props['takePortrait'] = True
     if sting:
         # After the hook, never in front of it (config/brand-palette.json long_cut sting after_hook): every frame in the
         # props stays on the cut's own clock, and the render plays the sting from this one (VeCut.tsx).

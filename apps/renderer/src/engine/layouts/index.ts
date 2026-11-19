@@ -106,9 +106,19 @@ export function windowCameraBox(aspect: Aspect): Box {
     : { left: 48, top: 1250, width: 330, height: 420 }
 }
 
-export function windowCameraState(beats: readonly EngineBeat[], aspect: Aspect, frame: number): { box: Box; scale: number; windowed: number } {
-  const full = { left: 0, top: 0, width: aspect === '16:9' ? 1920 : 1080, height: aspect === '16:9' ? 1080 : 1920 }
-  const small = windowCameraBox(aspect)
+/** A vertical take on a wide cut (Wed 18, 19 Nov 2026: a 9:16 take filled 16:9 and cropped him to forehead and chin;
+ *  Krish: "go wide layout"). His full-height panel, centred, on his face beats; a tall window bottom right on graphic beats,
+ *  his whole head in it; the graphics in the large region left of it. */
+export const PORTRAIT_WIDE = {
+  panel: { left: 656, top: 0, width: 608, height: 1080 },
+  window: { left: 1340, top: 330, width: 540, height: 700 },
+  slot: { left: 40, top: 100, width: 1280, height: 780 },
+} as const
+
+export function windowCameraState(beats: readonly EngineBeat[], aspect: Aspect, frame: number, portrait = false): { box: Box; scale: number; windowed: number } {
+  const wide = aspect === '16:9' && portrait
+  const full = wide ? { ...PORTRAIT_WIDE.panel } : { left: 0, top: 0, width: aspect === '16:9' ? 1920 : 1080, height: aspect === '16:9' ? 1080 : 1920 }
+  const small = wide ? { ...PORTRAIT_WIDE.window } : windowCameraBox(aspect)
   let state = { box: full, scale: 1, windowed: 0 }
   for (const [index, beat] of beats.entries()) {
     if (frame < beat.fromFrame) break

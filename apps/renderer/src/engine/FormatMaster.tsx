@@ -11,7 +11,7 @@ import { headlineState } from './devices/headline/state'
 import { DEVICES } from './devices/registry'
 import { FOCUS, PEN } from './devices/focus'
 import type { Box } from './devices/types'
-import { slotsFor, splitCameraBox, splitPlatePosition, windowCameraBox, windowCameraState } from './layouts'
+import { PORTRAIT_WIDE, slotsFor, splitCameraBox, splitPlatePosition, windowCameraBox, windowCameraState } from './layouts'
 
 // The wide window is a rounded rectangle, not a circle: a 210 px radius on a 340 px box cut off the top of his head
 // (Krish, 19 Nov 2026: "The circle in the bottom right corner is also cutting off the top of my head.").
@@ -25,7 +25,7 @@ import { focusRoom, placed } from './kit/focus'
 import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
 import { FOCUS_SCALE, LEAD_AFTER, TRANSITION_FRAMES, cameraAt, cameraStyle, flashAt, hitFrames, leadMoveAt, leadStyle, leads } from './kit/ingredients'
-import { regionSlots } from './kit/layout'
+import { regionSlots, markRegion } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
 import { EngineAudio } from './audio'
@@ -142,7 +142,8 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const split = activeBeat?.layout === 'SPLIT'
   const camera = split ? splitCameraBox(props.aspect) : undefined
   const hasWindow = props.beats.some(beat => beat.layout === 'WINDOW')
-  const faceState = hasWindow ? windowCameraState(props.beats, props.aspect, frame) : undefined
+  const portraitWide = props.takePortrait === true && props.aspect === '16:9'
+  const faceState = hasWindow ? windowCameraState(props.beats, props.aspect, frame, portraitWide) : undefined
   setActiveCanvas(width, height)
   // The motion style he picked (props.motion), or the house motion when there is none: every device reads it.
   const ingredients = props.ingredients
@@ -166,6 +167,16 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const stagedNow = staging && activeBeat && staged(activeBeat) ? staging : undefined
   const stagedTake = stagedNow ? { ...boxStyle(stagedNow.take), borderRadius: stagedNow.take.radius,
     ...(stagedNow.take.border ? { border: `6px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `14px 14px 0 ${props.tokens.inkDeep}` } : {}) } : undefined
+
+  // Behind his centred panel on a face beat, his own take blurred to fill the frame, so the sides are never bare.
+  const takeFill = portraitWide ? props.segments.map((segment, index) => (
+        <Sequence key={`fill-${index}`} from={segment.fromFrame} durationInFrames={segment.durationFrames}>
+          <AbsoluteFill style={{ overflow: 'hidden', opacity: 1 - (faceState?.windowed ?? 0) * (faceState?.scale ?? 1) }}>
+            <OffthreadVideo src={segment.src} trimBefore={segment.trimBeforeFrames} muted
+              style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(40px) brightness(0.55)', transform: 'scale(1.1)' }} />
+          </AbsoluteFill>
+        </Sequence>
+      )) : []
 
   const take = props.segments.map((segment, index) => (
         <Sequence key={`segment-${index}`} from={segment.fromFrame} durationInFrames={segment.durationFrames}>
@@ -212,7 +223,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
           ?? slotsFor(beat.layout, props.aspect, beat.uses.length)
         // On the wide cut the graphics stop above his window, so nothing runs under his face (Krish, 19 Nov 2026: a logo
         // tile sat under the bottom-right circle).
-        if (beat.layout === 'WINDOW' && slots.length)
+        // A portrait take's window frees one large region left of it, for every device the beat uses (Wed 18, 19 Nov).
+        if (beat.layout === 'WINDOW' && portraitWide) slots.forEach((_, i) => { slots[i] = markRegion({ ...PORTRAIT_WIDE.slot }) })
+        else if (beat.layout === 'WINDOW' && slots.length)
           slots[0] = props.aspect === '16:9' ? { left: 0, top: WIDE_WINDOW_TOP, width, height: windowCameraBox('16:9').top - 24 - WIDE_WINDOW_TOP } : { left: 0, top: 0, width, height }
         // A style on twos steps its graphics; the take and captions stay on every frame.
         const at = profile?.onTwos ? onTwos(now, beat.fromFrame) : now
@@ -394,7 +407,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   if (!ingredients) return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       {stagingGround ? picture : !hasWindow && take}
-      {fullBackdrop ? [fullBackdrop, ...beatLayers] : beatLayers}
+      {fullBackdrop ? [...takeFill, fullBackdrop, ...beatLayers] : [...takeFill, ...beatLayers]}
       {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers, ...(titleLayer ? [titleLayer] : [])]}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
@@ -408,7 +421,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       <AbsoluteFill data-ingredient-camera style={cameraStyle(cameraAt(ingredients, props.beats, hits, frame, width, height), width, height)}>
         {stagingGround ? picture : !hasWindow && take}
-        {fullBackdrop ? [fullBackdrop, ...beatLayers] : beatLayers}
+        {fullBackdrop ? [...takeFill, fullBackdrop, ...beatLayers] : [...takeFill, ...beatLayers]}
       </AbsoluteFill>
       {flash > 0 ? <AbsoluteFill data-flash style={{ backgroundColor: props.tokens.cream, opacity: flash }} /> : null}
       {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers, ...(titleLayer ? [titleLayer] : [])]}
