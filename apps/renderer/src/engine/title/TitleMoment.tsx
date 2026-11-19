@@ -166,6 +166,15 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
     return <div key={`bar-${i}`} style={{ position: 'absolute', left: i * w + w * 0.25, width: w * 0.5, top: height * 0.5 - h, height: h * 2,
       borderRadius: w * 0.25, background: mint, opacity: 0.22 }} />
   })
+  // Short bars at the top and bottom edges too, so no edge of the frame is a plain dark band behind the lockup
+  // (config/failures.json F58; Wed 18's long, 19 Nov 2026: a 98 px strip under the title over his dark shirt).
+  const edgeBars = Array.from({ length: barCount }, (_, i) => {
+    const w = width / barCount, e = height * (0.05 + 0.06 * Math.abs(Math.sin(i * 0.43 + k / 30 * 3)))
+    return [<div key={`edge-t-${i}`} style={{ position: 'absolute', left: i * w + w * 0.25, width: w * 0.5, top: -w, height: e + w,
+      borderRadius: w * 0.25, background: mint, opacity: 0.22 }} />,
+      <div key={`edge-b-${i}`} style={{ position: 'absolute', left: i * w + w * 0.25, width: w * 0.5, top: height - e, height: e + w,
+      borderRadius: w * 0.25, background: mint, opacity: 0.22 }} />]
+  }).flat()
   const bandFill = (index: number) => index === 0
     ? { background: `repeating-linear-gradient(45deg, ${ink} 0px, ${ink} 14px, ${inkSoft} 14px, ${inkSoft} 22px)`, color: cream }
     : { background: mint, color: ink }
@@ -204,6 +213,7 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
         F58: "I already told you I don't want a plain black screen anywhere"). */}
     <div data-title-ground="" style={{ position: 'absolute', inset: 0, background: ink, opacity: 0.8 }} />
     {bars}
+    {edgeBars}
     {bandsDrawn}
     {connector}
     <div data-title-sweep="" style={{ position: 'absolute', inset: 0,

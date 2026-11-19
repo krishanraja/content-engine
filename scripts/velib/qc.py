@@ -259,7 +259,16 @@ def inputs_from_props(props: dict) -> dict:
             raise ValueError(f"Cue {event.get('id', event['obj'])} has no unique beat slot")
         beat = active[0]
         slot_index = 0 if beat['layout'] in ('STAGE', 'SPLIT', 'WINDOW') else beat['uses'].index(event['obj'])
-        box = layouts[aspect][beat['layout']][slot_index]
+        staged_pillar = ((props.get('layout') or {}).get('mode') == 'pillar' and aspect == '16:9'
+                         and beat['layout'] not in ('SPLIT', 'WINDOW')
+                         and not (beat['layout'] == 'STAGE' and (beat.get('plate') or {}).get('source') == 'none'))
+        if staged_pillar:
+            # The pillar draws a staged beat's graphics in the panel left of his take (kit/staging.ts: the take is
+            # PILLAR_TAKE_WIDTH wide on the right, the region 96 px in, from 140 px down, 800 px tall, 60 px clear of it).
+            seam = 1920 - round(1080 * 9 / 16)
+            box = {'left': 96, 'top': 140, 'width': seam - 96 - 60, 'height': 800}
+        else:
+            box = layouts[aspect][beat['layout']][slot_index]
         params = (objects.get(event['obj']) or {}).get('params', {}) if beat['layout'] == 'SPLIT' else {}
         place = params.get('place')
         if not place and (objects.get(event['obj']) or {}).get('device') == 'scribble':
