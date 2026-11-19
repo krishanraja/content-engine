@@ -15,7 +15,7 @@
   },
   "series": {
     "label": "off.day",
-    "day": "Tuesday",
+    "day": "Thursday",
     "promise": "makeyourmindup.ai",
     "site": "makeyourmindup.ai"
   },
@@ -2419,7 +2419,7 @@
           "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b11-ibm.mp4",
           "pixelWidth": 1080,
           "pixelHeight": 1920,
-          "trimBeforeFrames": 45
+          "trimBeforeFrames": 63
         },
         "push": 0
       }
