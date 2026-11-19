@@ -1,0 +1,122 @@
+{
+  "schema": "ve-show-receipt/1",
+  "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+  "cut": "long",
+  "label": "proof.long",
+  "cut_sha256": "df69f3a96e4f6bba9e137fb08984105e560f3980f5bc6935b7d3a9eb7091ad0c",
+  "engine_sha256": "e97863db1ad378749b7e2f665ad87aaed41f197c94e9f8aeb6c3bf573ba726b0",
+  "evaluated_at": "2026-11-19T12:29:33.721403+00:00",
+  "qc": {
+    "sha256": "71775cd7ee464870c3710c1c1d716286a6c492f37072d3fd64b8bfe92cf740c5",
+    "measured_pass": false,
+    "complete": false
+  },
+  "critic": {
+    "ok": false
+  },
+  "checklist": {
+    "one_picture_per_beat": {
+      "status": "missing"
+    },
+    "graded_backdrop_not_black": {
+      "status": "auto",
+      "rows": [
+        "ground.not_bare"
+      ]
+    },
+    "no_ghost_in_dissolves": {
+      "status": "missing"
+    },
+    "wordmark_only_title_and_close": {
+      "status": "auto",
+      "rows": [
+        "brand.no_mark"
+      ]
+    },
+    "no_offday_tag_on_screen": {
+      "status": "missing"
+    },
+    "captions_off_in_title_hold": {
+      "status": "missing"
+    },
+    "captions_off_his_face": {
+      "status": "auto",
+      "rows": [
+        "captions.off_face"
+      ]
+    },
+    "title_from_his_spoken_line": {
+      "status": "missing"
+    },
+    "key_figure_fills_frame": {
+      "status": "missing"
+    },
+    "music_level_and_loudness": {
+      "status": "failed",
+      "rows": [
+        "audio.bed",
+        "audio.bed_continuity",
+        "loudness.integrated"
+      ]
+    },
+    "approved_track_passes": {
+      "status": "missing"
+    },
+    "no_false_starts_left": {
+      "status": "missing"
+    },
+    "opening_moves_in_3s": {
+      "status": "missing"
+    },
+    "head_whole_never_cropped": {
+      "status": "failed",
+      "rows": [
+        "plate.head_in_band"
+      ]
+    },
+    "head_bottom_right_on_wide": {
+      "status": "missing"
+    },
+    "captions_readable_halo_no_break": {
+      "status": "missing"
+    },
+    "funny_and_made_by_codex": {
+      "status": "missing"
+    },
+    "known_faults_fixed_not_caveated": {
+      "status": "missing"
+    },
+    "fixes_batched_checked_shown_once": {
+      "status": "missing"
+    },
+    "route_missing_said_first": {
+      "status": "missing"
+    }
+  },
+  "watched": null,
+  "engine_pinned": true,
+  "missing": [
+    "ve qc FAILS on this file: captions.ocr, motion.cue_sync, audio.bed_continuity, captions.render, plate.head_in_band, channel.safe_zones",
+    "ve qc is incomplete (some checks did not run)",
+    "no Critic verdict for this file (verdict.proof.long.json): a reviewer who did not make it records one",
+    "one_picture_per_beat: not attested (A graphic and a photo never both carry the same point: one picture per beat.)",
+    "no_ghost_in_dissolves: not attested (A change between a full-screen beat and a face beat is a clean cut; never a cross-dissolve over his face.)",
+    "no_offday_tag_on_screen: not attested (off.day is never drawn as a pill, header or label, in any cut.)",
+    "captions_off_in_title_hold: not attested (Captions stay off for the whole title moment: check every frame of the title hold for caption text.)",
+    "title_from_his_spoken_line: not attested (The episode title is built from his spoken line, timed to his words, at full stage width, as a card that slams or slides in over his hair, never bare words over his face.)",
+    "key_figure_fills_frame: not attested (The figure a beat exists to show fills the frame.)",
+    "music_level_and_loudness: ve qc fails audio.bed_continuity",
+    "approved_track_passes: not attested (A track in config/music-library.json that he approved plays with no certificate check blocking it.)",
+    "no_false_starts_left: not attested (Every restart and dead silence is cut where a quiet gap allows; any kept is named with its timestamp.)",
+    "opening_moves_in_3s: not attested (Something lands on his first word (a line slamming in, a clip in motion, a punch-in); the joke or twist is visible before 3 seconds; never a static card that waits.)",
+    "head_whole_never_cropped: ve qc fails plate.head_in_band",
+    "head_bottom_right_on_wide: not attested (On every 16:9 proof beat his take sits in the bottom-right window, opposite the left-set captions, unless a full-frame clip fills the frame.)",
+    "captions_readable_halo_no_break: not attested (Words over a busy picture or his take get the approved halo; a page never breaks mid-phrase and the web address stays on one caption.)",
+    "funny_and_made_by_codex: not attested (The piece is funny and tongue-in-cheek; plates, devices and art direction come from Codex cards; every visual makes a point land faster.)",
+    "known_faults_fixed_not_caveated: not attested (Every known fault is fixed before he sees the file; none is listed as a caveat.)",
+    "fixes_batched_checked_shown_once: not attested (Fixes are batched and checked here; the cut is shown to him once, not once per round.)",
+    "route_missing_said_first: not attested (When he asks for a route the engine does not have, say so in one line with the closest real route before doing anything.)",
+    "no recorded watch for this file: watch it at full size and hear it against the script, then `ve show-record`"
+  ],
+  "ok": false
+}

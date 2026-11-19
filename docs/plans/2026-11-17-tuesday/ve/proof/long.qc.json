@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-11-17-tuesday/ve/proof/long.mp4",
-  "sha256": "29606f2e70f3fb2afa1a93515036997863a304f044834148d0567561c95662cb",
+  "sha256": "df69f3a96e4f6bba9e137fb08984105e560f3980f5bc6935b7d3a9eb7091ad0c",
   "duration_s": 13.65,
   "format": "face-with-proof",
   "checks": {
@@ -370,7 +370,7 @@
         {
           "page": 37,
           "frame": 385,
-          "text": "own\n2 a oo",
+          "text": "own\na oe",
           "agreement": 0.0,
           "variant": "raw",
           "pass": false
@@ -378,7 +378,7 @@
         {
           "page": 38,
           "frame": 399,
-          "text": "data\nrrwptitnvrr",
+          "text": "data\nrnrapwmtitvrar",
           "agreement": 0.0,
           "variant": "raw",
           "pass": false

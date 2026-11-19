@@ -44,4 +44,13 @@ describe('shared photograph and drawn-stage grade', () => {
     expect(markup({ focus: 1 })).toContain(`fill="${tokens.ink}" opacity="0.45"`)
     expect((luminance(cream) + 0.05) / (luminance(ceiling) + 0.05)).toBeGreaterThanOrEqual(4.5)
   })
+
+  it('falls off in focus toward the bottom, so the ground under the graphics reads and is never a plain slab (Tue 17, 19 Nov)', () => {
+    const svg = markup({ focus: 1 })
+    const radii = [...svg.matchAll(/stdDeviation="([\d.]+)"/g)].map((m) => Number(m[1]))
+    expect(radii).toContain(18)
+    expect(Math.min(...radii.filter((r) => r > 0))).toBeLessThanOrEqual(18 * 0.15 + 1e-9)
+    expect(svg).toMatch(/<mask[^>]*>/)
+    expect(svg.match(/<image /g)?.length).toBe(2)
+  })
 })

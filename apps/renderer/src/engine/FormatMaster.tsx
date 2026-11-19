@@ -198,13 +198,15 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         // A crossfade (or a carry) keeps the outgoing beat mounted, held on its last frame, fading out under the
         // incoming one for the transition's frames. With no style every beat still cuts. A leading handover keeps it
         // LEAD_AFTER frames more, its clock still running so its exit carries on while the next beat arrives over it.
-        const leadOut = leading && beat.transitionOut !== 'carry' && keepsOutgoing(profile, beat, next, true)
         // A full-screen picture and a beat that shows his face never dissolve into each other: half of each is his face
         // as a ghost through the picture (Krish, 2026-11-18, yes to cutting them clean). They cut; same kinds still dissolve.
         // A stage beat over a graded backdrop shows no face either, take underneath or not (19 Nov: the take under
         // the block beat dissolved his face through it).
         const fullScreen = (b: EngineBeat) => b.layout === 'STAGE' && (b.plate?.source === 'none' || !!b.backdrop)
         const kindChange = !!next && !!props.layout && fullScreen(beat) !== fullScreen(next)
+        // A leading handover never crosses that line either: kept on for LEAD_AFTER frames, his face showed through the
+        // block as it arrived (Tue 17, 19 Nov 2026, the power beat's proof).
+        const leadOut = leading && !kindChange && beat.transitionOut !== 'carry' && keepsOutgoing(profile, beat, next, true)
         const overlap = leadOut ? LEAD_AFTER : profile && !kindChange && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
         const outgoing = frame >= beat.toFrame && frame < beat.toFrame + overlap
         if ((frame < beat.fromFrame || frame >= beat.toFrame) && !outgoing) return null

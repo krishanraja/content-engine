@@ -23,6 +23,19 @@ export function GradedBackdrop({ src, focus, tokens, frame, width, height }: Gra
         <feColorMatrix type="saturate" values={String(0.94 - 0.3 * f)} />
         <feGaussianBlur stdDeviation={blur} />
       </filter>
+      {/* Focus falls off toward the bottom: behind the graphics the photo is racked soft, under them it reads again,
+          so the bottom of a tall frame is ground, never a plain dark slab (Tue 17, 19 Nov 2026; config/ve/plain-frames.json). */}
+      <filter id={`${id}-near`} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
+        <feColorMatrix type="saturate" values={String(0.94 - 0.2 * f)} />
+        <feGaussianBlur stdDeviation={blur * 0.15} />
+      </filter>
+      <linearGradient id={`${id}-fall`} x2="0" y2="1">
+        <stop offset="0.55" stopColor={tokens.cream} stopOpacity={1} />
+        <stop offset="0.82" stopColor={tokens.cream} stopOpacity={0} />
+      </linearGradient>
+      <mask id={`${id}-soft`} maskUnits="userSpaceOnUse" x={0} y={0} width={width} height={height}>
+        <rect {...rect} fill={`url(#${id}-fall)`} />
+      </mask>
       <linearGradient id={`${id}-tone`} x2="0" y2="1">
         <stop stopColor={tokens.cream} stopOpacity={0.06} />
         <stop offset="0.48" stopColor={tokens.mint} stopOpacity={0.025} />
@@ -31,7 +44,7 @@ export function GradedBackdrop({ src, focus, tokens, frame, width, height }: Gra
       <linearGradient id={`${id}-depth`} x2="0" y2="1">
         <stop stopColor={tokens.cream} stopOpacity={0.025 * f} />
         <stop offset="0.55" stopColor={tokens.inkSoft} stopOpacity={0.04 * f} />
-        <stop offset="1" stopColor={tokens.inkDeep} stopOpacity={0.3 * f} />
+        <stop offset="1" stopColor={tokens.inkDeep} stopOpacity={0.14 * f} />
       </linearGradient>
       <radialGradient id={`${id}-vignette`} r="0.72">
         <stop offset="0.25" stopColor={tokens.inkDeep} stopOpacity={0} />
@@ -46,7 +59,10 @@ export function GradedBackdrop({ src, focus, tokens, frame, width, height }: Gra
       </filter>
     </defs>
     <rect {...rect} fill={tokens.ink} />
-    <image href={src} x={-pad} y={-pad} width={width + pad * 2} height={height + pad * 2} preserveAspectRatio="xMidYMid slice" filter={`url(#${id}-photo)`} />
+    <image href={src} x={-pad} y={-pad} width={width + pad * 2} height={height + pad * 2} preserveAspectRatio="xMidYMid slice" filter={`url(#${id}-near)`} />
+    <g mask={`url(#${id}-soft)`}>
+      <image href={src} x={-pad} y={-pad} width={width + pad * 2} height={height + pad * 2} preserveAspectRatio="xMidYMid slice" filter={`url(#${id}-photo)`} />
+    </g>
     <rect {...rect} fill={`url(#${id}-tone)`} />
     {/* A 90% ink veil bounds even a white source, keeping cream drawings above 7:1 with house tokens. */}
     <rect {...rect} fill={tokens.ink} opacity={0.45 * f} />

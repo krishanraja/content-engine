@@ -2,15 +2,15 @@
   "schema": "ve-proof/1",
   "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
   "cut": "long",
-  "beat": "l15",
+  "beat": "l5",
   "rule": "named in the spec (proof.beat)",
-  "start": 140.033,
-  "end": 154.133,
+  "start": 30.133,
+  "end": 42.2,
   "beat_s": [
-    140.033,
-    154.133
+    30.133,
+    42.2
   ],
-  "sha256": "1752f26de07594745d97850fb74c158b6bf639d6e4f2c1bcb1849c1c60d76da4",
+  "sha256": "12cd91369dbbf6e624b1ed01933682f47082d6cb4feb3001bcc32b3802e60256",
   "spec_sha256": "1d37cef9ee691358a1dbf9ef27f8aa9457aaacb0c24eb3a77ad2f42854e7d424",
   "structure": {
     "format": "face-with-proof",
@@ -271,7 +271,7 @@
     ]
   },
   "style_module": "eating-jobs-ladder",
-  "props_sha256": "7d245ff639b63046eff83508bd64287d41202a7e1eebf2c3420fa6da0b266131",
+  "props_sha256": "ebb0f0b10df4761c9fcc00b70a9efafa3b500af804ddcafd82495124c7680e19",
   "qc": {
     "measured_pass": null,
     "complete": false,
@@ -320,7 +320,7 @@
     "scene-nameplate": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222",
     "wyso-lead": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
   },
-  "made_at": "2026-11-19T12:16:30Z",
+  "made_at": "2026-11-19T12:32:22Z",
   "frames": {
     "pass": null,
     "status": "not_run",
