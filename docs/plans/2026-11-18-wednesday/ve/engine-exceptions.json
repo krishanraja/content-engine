@@ -145,6 +145,14 @@
       "on": "2026-11-19",
       "artifact_hash": "43e5300e660bd46f5edaa6d56aa22b179c08a0b62d99cf81c4894aef7aba1d23",
       "said": "go engine 43e5300e"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "on": "2026-11-19",
+      "artifact_hash": "116b43506facbc82498496c17f64d00ffe4f2bfd72ce234b1ff0be75ac9d477e",
+      "said": "go engine 116b4350"
     }
   ]
 }
