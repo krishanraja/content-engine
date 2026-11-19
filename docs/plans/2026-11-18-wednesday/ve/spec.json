@@ -2116,7 +2116,7 @@
      },
      "viewer_task": "connect_with_speaker",
      "point": "And now they have to look after all of it",
-     "layout": "F1",
+     "layout": "P1",
      "plate": {
       "source": "take"
      },
@@ -2135,7 +2135,7 @@
      },
      "viewer_task": "locate_story",
      "point": "Klarna still uses Slack, so who owns Slack?",
-     "layout": "P1",
+     "layout": "STAGE",
      "plate": {
       "source": "none"
      },
@@ -2166,7 +2166,8 @@
       }
      ],
      "transition_out": "cut",
-     "face": "off"
+     "face": "off",
+     "backdrop": "asset:sf-preferred-crm"
     },
     {
      "id": "owner",
