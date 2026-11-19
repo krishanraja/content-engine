@@ -40,7 +40,7 @@
   "segments": [
     {
       "src": "/home/user/content-engine/.scratch/b019/assets/conformed.short.mp4",
-      "trimBeforeFrames": 329,
+      "trimBeforeFrames": 1468,
       "fromFrame": 0,
       "durationFrames": 240
     }
@@ -48,183 +48,381 @@
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.scratch/b019/assets/audio.short.wav",
-      "trimBeforeFrames": 329
+      "trimBeforeFrames": 1468
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 5,
+      "toFrame": 3,
       "words": [
         {
-          "text": "happened",
+          "text": "everyone",
           "atFrame": 0
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 5,
-      "toFrame": 10,
+      "fromFrame": 3,
+      "toFrame": 13,
       "words": [
         {
-          "text": "to",
-          "atFrame": 5
+          "text": "hates,",
+          "atFrame": 3
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 10,
-      "toFrame": 21,
+      "fromFrame": 13,
+      "toFrame": 18,
       "words": [
         {
-          "text": "AI",
-          "atFrame": 10
+          "text": "which",
+          "atFrame": 13
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 21,
-      "toFrame": 24,
-      "words": [
-        {
-          "text": "with",
-          "atFrame": 21
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 24,
+      "fromFrame": 18,
       "toFrame": 26,
       "words": [
         {
-          "text": "the",
-          "atFrame": 24
+          "text": "is",
+          "atFrame": 18
         }
       ],
       "swipeIndex": null
     },
     {
       "fromFrame": 26,
-      "toFrame": 38,
+      "toFrame": 28,
       "words": [
         {
-          "text": "midterms",
+          "text": "a",
           "atFrame": 26
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 38,
-      "toFrame": 40,
+      "fromFrame": 28,
+      "toFrame": 39,
       "words": [
         {
-          "text": "in",
-          "atFrame": 38
+          "text": "lot.",
+          "atFrame": 28
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 40,
-      "toFrame": 51,
+      "fromFrame": 39,
+      "toFrame": 41,
       "words": [
         {
-          "text": "America",
-          "atFrame": 40
+          "text": "So",
+          "atFrame": 39
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 51,
-      "toFrame": 62,
+      "fromFrame": 41,
+      "toFrame": 46,
+      "words": [
+        {
+          "text": "when",
+          "atFrame": 41
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 46,
+      "toFrame": 52,
+      "words": [
+        {
+          "text": "small",
+          "atFrame": 46
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 52,
+      "toFrame": 60,
+      "words": [
+        {
+          "text": "towns",
+          "atFrame": 52
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 60,
+      "toFrame": 64,
+      "words": [
+        {
+          "text": "say",
+          "atFrame": 60
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 64,
+      "toFrame": 73,
+      "words": [
+        {
+          "text": "no,",
+          "atFrame": 64
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 73,
+      "toFrame": 82,
+      "words": [
+        {
+          "text": "the",
+          "atFrame": 73
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 82,
+      "toFrame": 89,
+      "words": [
+        {
+          "text": "AI",
+          "atFrame": 82
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 89,
+      "toFrame": 100,
+      "words": [
+        {
+          "text": "companies",
+          "atFrame": 89
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 100,
+      "toFrame": 105,
+      "words": [
+        {
+          "text": "have",
+          "atFrame": 100
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 105,
+      "toFrame": 109,
+      "words": [
+        {
+          "text": "to",
+          "atFrame": 105
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 109,
+      "toFrame": 122,
+      "words": [
+        {
+          "text": "find",
+          "atFrame": 109
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 122,
+      "toFrame": 129,
+      "words": [
+        {
+          "text": "that",
+          "atFrame": 122
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 129,
+      "toFrame": 139,
+      "words": [
+        {
+          "text": "power",
+          "atFrame": 129
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 139,
+      "toFrame": 154,
+      "words": [
+        {
+          "text": "somewhere",
+          "atFrame": 139
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 154,
+      "toFrame": 170,
+      "words": [
+        {
+          "text": "else.",
+          "atFrame": 154
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 170,
+      "toFrame": 172,
       "words": [
         {
           "text": "and",
-          "atFrame": 51
+          "atFrame": 170
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 177,
-      "toFrame": 185,
+      "fromFrame": 172,
+      "toFrame": 175,
       "words": [
         {
-          "text": "Meta",
-          "atFrame": 177
+          "text": "they",
+          "atFrame": 172
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 185,
-      "toFrame": 196,
+      "fromFrame": 175,
+      "toFrame": 178,
       "words": [
         {
-          "text": "wanted",
-          "atFrame": 185
+          "text": "have",
+          "atFrame": 175
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 196,
-      "toFrame": 201,
+      "fromFrame": 178,
+      "toFrame": 181,
       "words": [
         {
-          "text": "a",
-          "atFrame": 196
+          "text": "to",
+          "atFrame": 178
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 201,
-      "toFrame": 211,
+      "fromFrame": 181,
+      "toFrame": 186,
       "words": [
         {
-          "text": "giant",
-          "atFrame": 201
+          "text": "pay",
+          "atFrame": 181
         }
       ],
-      "swipeIndex": null
+      "swipeIndex": 0
     },
     {
-      "fromFrame": 211,
-      "toFrame": 219,
-      "words": [
-        {
-          "text": "data",
-          "atFrame": 211
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 219,
-      "toFrame": 234,
-      "words": [
-        {
-          "text": "centre",
-          "atFrame": 219
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 234,
-      "toFrame": 237,
+      "fromFrame": 186,
+      "toFrame": 190,
       "words": [
         {
           "text": "for",
-          "atFrame": 234
+          "atFrame": 186
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 190,
+      "toFrame": 200,
+      "words": [
+        {
+          "text": "it.",
+          "atFrame": 190
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 200,
+      "toFrame": 202,
+      "words": [
+        {
+          "text": "And",
+          "atFrame": 200
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 202,
+      "toFrame": 204,
+      "words": [
+        {
+          "text": "I",
+          "atFrame": 202
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 204,
+      "toFrame": 225,
+      "words": [
+        {
+          "text": "reckon",
+          "atFrame": 204
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 225,
+      "toFrame": 228,
+      "words": [
+        {
+          "text": "that",
+          "atFrame": 225
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 228,
+      "toFrame": 237,
+      "words": [
+        {
+          "text": "cost",
+          "atFrame": 228
         }
       ],
       "swipeIndex": null
@@ -234,7 +432,7 @@
       "toFrame": 240,
       "words": [
         {
-          "text": "more",
+          "text": "lands",
           "atFrame": 237
         }
       ],
@@ -244,71 +442,15 @@
   "captionStyle": "word",
   "captionTheme": "podcast",
   "captionPlacement": "lower",
-  "titleMoment": {
-    "fromFrame": 62,
-    "toFrame": 177,
-    "release": "captions",
-    "words": [
-      {
-        "text": "Where",
-        "atFrame": 62
-      },
-      {
-        "text": "does",
-        "atFrame": 68
-      },
-      {
-        "text": "AI",
-        "atFrame": 77
-      },
-      {
-        "text": "get",
-        "atFrame": 85
-      },
-      {
-        "text": "built",
-        "atFrame": 91
-      },
-      {
-        "text": "when",
-        "atFrame": 97
-      },
-      {
-        "text": "the",
-        "atFrame": 113
-      },
-      {
-        "text": "residents",
-        "atFrame": 115
-      },
-      {
-        "text": "of",
-        "atFrame": 128
-      },
-      {
-        "text": "towns",
-        "atFrame": 131
-      },
-      {
-        "text": "say",
-        "atFrame": 141
-      },
-      {
-        "text": "no?",
-        "atFrame": 146
-      }
-    ],
-    "card": true
-  },
   "beats": [
     {
-      "id": "face",
-      "role": "anchor",
+      "id": "party_line",
+      "role": "bridge",
       "layout": "P1",
       "fromFrame": 0,
-      "toFrame": 62,
+      "toFrame": 39,
       "uses": [
-        "field41"
+        "meta_line"
       ],
       "transitionOut": "cut",
       "sectionBeat": true,
@@ -316,33 +458,16 @@
         "source": "take"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/evidence/wyso-lead.jpg"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/s13-ban-sign-1.png"
       },
-      "keyFrame": 44
+      "keyFrame": 15
     },
     {
-      "id": "title",
+      "id": "power",
       "role": "anchor",
-      "layout": "P1",
-      "fromFrame": 62,
-      "toFrame": 177,
-      "uses": [],
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "take"
-      },
-      "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
-      },
-      "keyFrame": 154
-    },
-    {
-      "id": "meta",
-      "role": "bridge",
       "layout": "STAGE",
-      "fromFrame": 177,
-      "toFrame": 240,
+      "fromFrame": 39,
+      "toFrame": 200,
       "uses": [
         "block"
       ],
@@ -352,7 +477,24 @@
         "source": "none"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-pylons-1.png"
+      },
+      "keyFrame": 168
+    },
+    {
+      "id": "call",
+      "role": "call",
+      "layout": "P1",
+      "fromFrame": 200,
+      "toFrame": 240,
+      "uses": [],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "backdrop": {
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
       },
       "keyFrame": 239
     }
@@ -387,35 +529,17 @@
       }
     },
     {
-      "obj": "field41",
-      "device": "unit_field",
-      "meaning": "the 41 local data-centre votes on 3 Nov; 40 went against the data centre",
+      "obj": "meta_line",
+      "device": "evidence_card",
+      "meaning": "Meta's real line to The Washington Post",
       "fromFrame": 0,
-      "toFrame": 62,
+      "toFrame": 39,
       "variants": {},
       "params": {
-        "initialRow": "initial",
-        "columns": 9,
-        "mark": "block"
-      },
-      "dataset": {
-        "unit": "local votes",
-        "denominator": 41,
-        "producerLabel": "Ballotpedia, 3 Nov 2026",
-        "rows": [
-          {
-            "label": "initial",
-            "value": 41
-          },
-          {
-            "label": "against",
-            "value": 40
-          },
-          {
-            "label": "limits won",
-            "value": 40
-          }
-        ]
+        "kind": "quote",
+        "quote": "work with local officials to determine the future of our investment in Piqua",
+        "outlet": "Meta, to The Washington Post",
+        "date": "Nov 2026"
       }
     }
   ],
@@ -435,25 +559,74 @@
       "atFrame": 0
     },
     {
-      "id": "face-0",
-      "obj": "field41",
+      "id": "meta-0",
+      "obj": "block",
+      "verb": "grow",
+      "toState": "giant",
+      "atFrame": 0
+    },
+    {
+      "id": "city-0",
+      "obj": "block",
+      "verb": "connect",
+      "toState": "city",
+      "atFrame": 0
+    },
+    {
+      "id": "bill-0",
+      "obj": "block",
+      "verb": "move",
+      "toState": "target:0",
+      "atFrame": 0
+    },
+    {
+      "id": "bill-1",
+      "obj": "block",
+      "verb": "add",
+      "toState": "pylons",
+      "atFrame": 0
+    },
+    {
+      "id": "vote-0",
+      "obj": "block",
+      "verb": "add",
+      "toState": "ballot",
+      "atFrame": 0
+    },
+    {
+      "id": "proof-1",
+      "obj": "block",
+      "verb": "stamp",
+      "toState": "ban",
+      "atFrame": 0
+    },
+    {
+      "id": "meta_says-0",
+      "obj": "meta_line",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 0
     },
     {
-      "id": "face-1",
-      "obj": "field41",
-      "verb": "grey",
-      "toState": "against",
-      "atFrame": 26
+      "id": "meta_says-1",
+      "obj": "meta_line",
+      "verb": "fill",
+      "toState": "visible",
+      "atFrame": 0
     },
     {
-      "id": "meta-0",
+      "id": "power-0",
       "obj": "block",
-      "verb": "grow",
-      "toState": "giant",
-      "atFrame": 201
+      "verb": "carry",
+      "toState": "walk",
+      "atFrame": 109
+    },
+    {
+      "id": "power-1",
+      "obj": "block",
+      "verb": "move",
+      "toState": "target:1",
+      "atFrame": 181
     }
   ],
   "call": {
