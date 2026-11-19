@@ -1933,9 +1933,16 @@ def cmd_render(args) -> int:
         print('\n'.join(f'  - {reason}' for reason in opening))
         return 1
     render(args.props, args.out, args.scale)
-    from velib import guards
+    from velib import guards, plainframes
     from velib.common import sha256_file
     cut = props.get('cutId')
+    if cut in spec['cuts'] and not spec['cuts'][cut].get('excerpt') and Path(args.out).is_file():
+        # F58: the rendered frames of a whole cut are read before it is recorded, never sent on a contact strip.
+        seen = plainframes.check_frames(args.out, props)
+        if seen.get('pass') is not True:
+            print('ve render: the render is not recorded, its frames fail the v10 guards (plain dark areas, captions over content):')
+            print('\n'.join(f'  - {line}' for line in plainframes.refusal_lines(seen)))
+            return 1
     if cut in spec['cuts'] and not spec['cuts'][cut].get('excerpt') and Path(args.out).is_file():
         rows = guards.record_render(verdict.ve_dir(Path(args.spec)), cut, Path(args.out), sha256_file(args.out))
         print(f've render: full render {len(rows)} of {cut} recorded (two per press from Krish, then he sees it)')
@@ -1962,6 +1969,11 @@ def cmd_proof(args, render_fn=None) -> int:
             return 1
         if args.cut not in spec['cuts']:
             raise ValueError(f'{args.cut} is not a cut in the spec')
+        if getattr(args, 'compared', None):
+            from velib import guards as _guards
+            proof.record_compared(verdict.ve_dir(Path(args.spec)), args.cut, args.compared, _guards._now())
+            print(f've proof: recorded what you compared for {args.cut}; the proof is sendable once its frames pass')
+            return 0
         if args.assets_dir:
             check_asset_hashes(spec, args.assets_dir)
         chosen = json.loads(json.dumps(spec))
@@ -1989,11 +2001,33 @@ def cmd_proof(args, render_fn=None) -> int:
             return report
 
         render_fn = render_fn or (lambda p, out: render(p, out, args.scale))
+        # F58: the proof he last approved is kept, and the new one is put beside it when the engine or an asset changed.
+        from velib import gates as _gates, plainframes
+        proof.archive_previous(directory, args.cut)
+        found = _gates.load(directory, spec)
+        base_record, base_clip = proof.approved_baseline(directory, args.cut, found['gates'] if found.get('source') == 'record' else None)
         record = proof.make(chosen, args.cut, directory, props, render_fn, None if args.no_qc else qc_fn)
         # --beat chooses what is proved, never what the proof stands for: the hash is over the spec as written.
         record['spec_sha256'] = proof.structural_hash(spec, args.cut)
         record['structure'] = proof.structure(spec, args.cut)
         record['type'] = guards.type_treatments(props)  # listed for his Approve proof press, never refused by count
+        record.update(proof.stamp(spec))
+        record['made_at'] = guards._now()
+        folder = proof.record_path(directory, args.cut).parent
+        record['frames'] = plainframes.check_frames(str(proof.clip_path(directory, args.cut)), load_json(folder / f'props.{args.cut}.json'))
+        if base_record is not None:
+            reasons = proof.changed_since(base_record, spec)
+            if reasons:
+                compare = {'against': base_record.get('sha256'), 'reasons': reasons, 'compared': None}
+                try:
+                    compare.update(proof.compare_sheet(base_clip, proof.clip_path(directory, args.cut), folder / f'compare.{args.cut}.png',
+                                                       float(base_record['end']) - float(base_record['start']),
+                                                       float(record['end']) - float(record['start'])))
+                except (OSError, ValueError, subprocess.CalledProcessError, ImportError) as error:
+                    compare.update({'sheet': None, 'error': str(error)[:200]})
+                record['compare'] = compare
+        held_back = proof.sendable_problems(record)
+        record['sendable'] = not held_back
         write_json(proof.record_path(directory, args.cut), record)
         print(f"ve proof: beat {record['beat']} ({record['rule']}), {record['start']} to {record['end']} s")
         if 'qc' in record:
@@ -2005,6 +2039,10 @@ def cmd_proof(args, render_fn=None) -> int:
             print(f've proof: voiced by his approved clone ({tool}, {asset}, sha256 {str(sha)[:12]}), not his recording; '
                   'his Approve proof is his yes to this voice too, and a voice generated again needs it again')
         print(f"{record['sha256']}  {proof.clip_path(directory, args.cut)}")
+        if held_back:
+            print('ve proof: NOT SENDABLE to Krish (a proof visibly worse than the one he approved never reaches him; F58):')
+            print('\n'.join(f'  - {reason}' for reason in held_back))
+            return 1
         print('next: Krish presses Approve proof (or Reject, with his words) on the board; ve render waits for it')
         return 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
@@ -2245,6 +2283,7 @@ def main() -> int:
     p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--beat', help='prove this beat instead')
     p.add_argument('--props', help='default <ve dir>/props.<cut>.json'); p.add_argument('--assets-dir')
     p.add_argument('--scale', type=float, default=1.0); p.add_argument('--no-qc', action='store_true')
+    p.add_argument('--compared', metavar='WORDS', help="record what you compared (every beat change at full size, beside the proof he approved and his standing notes); renders nothing")
     p.set_defaults(fn=cmd_proof)
     p = sub.add_parser('styles', help='render the proof window once per shortlisted motion style, for his pick')
     p.add_argument('spec'); p.add_argument('--cut'); p.add_argument('--top', type=int, default=3)

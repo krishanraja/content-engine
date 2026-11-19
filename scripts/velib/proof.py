@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -305,6 +306,7 @@ def problems(spec: dict, cut: str, directory: Path, gates: dict, props: dict | N
     record = load_json(path)
     clip = clip_path(directory, cut)
     out = []
+    out.extend(sendable_problems(record))
     if clip.is_file() and sha256_file(clip) != record.get('sha256'):
         out.append(f'proof/{cut}.mp4 is not the file proof/{cut}.json records: {run}')
     if record.get('spec_sha256') != structural_hash(spec, cut):
@@ -337,3 +339,148 @@ def summary(spec: dict, cut: str, directory: Path, gates: dict) -> str:
     if not reasons:
         return f"{cut}: proof of beat {record['beat']} approved by Krish{since}"
     return f"{cut}: proof of beat {record['beat']} not approved ({reasons[0].split(':')[0]}){since}"
+
+
+# ---------------------------------------------------------------- what changed since the proof he last approved (F58)
+# Krish, 2026-11-19, of Proof v10: "It has seriously regressed. The subtitles are now in the wrong place and there's loads
+# of black space underneath." The engine's new caption engine and a screen asset had changed since the proof he approved,
+# and the session sent the new one without putting it beside the old. Here the engine's and the assets' hashes are
+# recorded on every proof; when either differs from the approved proof's, `ve proof` writes a sheet of the same moments
+# (his approved proof above the new) and the proof is not sendable until the session records what it compared
+# (`ve proof --compared "..."`). Comparing is the session's job; this makes skipping it impossible.
+
+
+def stamp(spec: dict) -> dict:
+    """The engine (guards.engine_sha) and the assets (id to sha256) this proof was made on."""
+    from . import guards  # noqa: PLC0415
+    assets = {str(a.get('id')): a.get('sha256') for a in spec.get('assets') or [] if isinstance(a, dict) and a.get('id')}
+    return {'engine_sha256': guards.engine_sha(), 'assets_sha256': dict(sorted(assets.items()))}
+
+
+def history_dir(directory: Path) -> Path:
+    return Path(directory) / 'proof' / 'history'
+
+
+def archive_previous(directory: Path, cut: str) -> Path | None:
+    """Keep the proof about to be replaced (record and clip), by its hash, so the one he approved is never lost."""
+    import shutil  # noqa: PLC0415
+    path, clip = record_path(directory, cut), clip_path(directory, cut)
+    if not path.is_file() or not clip.is_file():
+        return None
+    record = load_json(path)
+    key = str(record.get('sha256') or sha256_file(clip))[:12]
+    folder = history_dir(directory)
+    folder.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(clip, folder / f'{cut}.{key}.mp4')
+    shutil.copy2(path, folder / f'{cut}.{key}.json')
+    return folder / f'{cut}.{key}.mp4'
+
+
+def approved_baseline(directory: Path, cut: str, gates: dict | None):
+    """(record, clip) of the newest earlier proof of this cut he approved (a press bound to its sha256), or (None, None), read
+    from proof/history (archive_previous keeps each proof there before a new one replaces it). With no gates read (offline),
+    the newest earlier proof stands as the baseline: comparing is then asked, never skipped."""
+    from .gates import for_hash  # noqa: PLC0415
+    rows = []
+    for rec_file in sorted(history_dir(directory).glob(f'{cut}.*.json')) if history_dir(directory).is_dir() else []:
+        record = load_json(rec_file)
+        clip = rec_file.with_suffix('.mp4')
+        if clip.is_file():
+            rows.append((record, clip))
+    rows.sort(key=lambda row: row[1].stat().st_mtime)
+    for record, clip in reversed(rows):
+        if gates is None:
+            return record, clip
+        press = for_hash(gates, 'proof', record.get('sha256'), cut)
+        if press is not None and press.get('verdict') == 'approve':
+            return record, clip
+    return None, None
+
+
+def changed_since(old: dict, spec: dict) -> list[str]:
+    """Why the new proof must be compared to the approved one: the engine or an asset differs from the one it was approved on.
+    A proof made before these hashes were recorded cannot say, so that is asked too."""
+    now = stamp(spec)
+    out = []
+    if not old.get('engine_sha256'):
+        out.append('the approved proof recorded no engine hash, so what changed since cannot be told')
+    elif old['engine_sha256'] != now['engine_sha256']:
+        out.append('the engine changed since the proof he approved')
+    before = old.get('assets_sha256')
+    if before is None:
+        out.append('the approved proof recorded no asset hashes')
+    else:
+        names = sorted(n for n in set(before) | set(now['assets_sha256']) if before.get(n) != now['assets_sha256'].get(n))
+        if names:
+            out.append(f"an asset changed since the proof he approved ({', '.join(names[:4])}{' and more' if len(names) > 4 else ''})")
+    return out
+
+
+def compare_sheet(old_clip: Path, new_clip: Path, out: Path, old_s: float, new_s: float, rules: dict | None = None) -> dict:
+    """A sheet of the same moments: the approved proof's frames in the top row, the new proof's below, each at the same
+    seconds into its clip. Returns {sheet, sha256, seconds}."""
+    import numpy as np  # noqa: PLC0415
+    from PIL import Image, ImageDraw  # noqa: PLC0415
+    from .plainframes import config as plain_config  # noqa: PLC0415
+    from .qc_faces import frame_at  # noqa: PLC0415
+    spec = (rules or plain_config())['compare']
+    n, tw = spec['frames'], spec['thumb_width']
+    span = max(0.2, min(old_s, new_s))
+    seconds = [round(span * (i + 0.5) / n, 2) for i in range(n)]
+    th = round(tw * 16 / 9)
+    sheet = Image.new('RGB', (tw * n, th * 2 + 40), (20, 20, 20))
+    draw = ImageDraw.Draw(sheet)
+    for row, (clip, label) in enumerate(((old_clip, 'APPROVED'), (new_clip, 'NEW'))):
+        y = row * (th + 20) + 20 * row
+        draw.text((6, y + 2), label, fill=(255, 255, 255))
+        for i, t in enumerate(seconds):
+            frame = frame_at(str(clip), round(t * 30), 30, (tw, th))
+            sheet.paste(Image.fromarray(np.asarray(frame, dtype=np.uint8)), (i * tw, y + 16))
+            draw.text((i * tw + 4, y + 18), f'{t}s', fill=(255, 255, 0))
+    out = Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    sheet.save(out)
+    return {'sheet': out.name, 'sha256': sha256_file(out), 'seconds': seconds}
+
+
+def sendable_problems(record: dict) -> list[str]:
+    """Why this proof must not be sent to Krish yet, or []: its rendered frames fail a guard, or it has not been compared
+    with the proof he approved."""
+    out = []
+    frames = record.get('frames') or {}
+    if frames.get('status') == 'not_run' and os.environ.get('VE_FRAMES_OFFLINE') != '1':  # the offline switch is for tests, like VE_GATES_OFFLINE
+        out.append(f"the frame guards did not run ({frames.get('reason')}): run ve proof again where the frames can be read")
+    for problem in (frames.get('problems') or [])[:5]:
+        out.append(f"the rendered frames fail: {problem.get('says')}")
+    compare = record.get('compare')
+    if compare and not compare.get('sheet'):
+        out.append(f"the comparison sheet could not be made ({compare.get('error')}): run ve proof again where the frames can be read")
+    elif compare and not compare.get('compared'):
+        out.append(f"it has not been compared with the proof he approved ({'; '.join(compare.get('reasons') or [])}): open every frame of "
+                   f"proof/{compare.get('sheet')} at full size beside his standing notes for the piece, then record it with "
+                   f've proof <spec> --cut <cut> --compared "what you looked at and found"')
+    return out
+
+
+def record_compared(directory: Path, cut: str, text: str, now: str, rules: dict | None = None) -> dict:
+    """Record what the session compared. Refused when nothing needs comparing, when the sheet is gone or not the one
+    recorded, or when the words are too few to say what was looked at."""
+    from .plainframes import config as plain_config  # noqa: PLC0415
+    spec = (rules or plain_config())['compare']
+    path = record_path(directory, cut)
+    if not path.is_file():
+        raise ValueError(f'no proof record for {cut}: run ve proof first')
+    record = load_json(path)
+    compare = record.get('compare')
+    if not compare:
+        raise ValueError('nothing to compare: this proof has no approved proof to be compared with')
+    sheet = path.parent / compare['sheet']
+    if not sheet.is_file() or sha256_file(sheet) != compare.get('sha256'):
+        raise ValueError(f"the comparison sheet proof/{compare['sheet']} is missing or is not the one recorded: run ve proof again")
+    if len(str(text).split()) < spec['min_words']:
+        raise ValueError(f"say what you looked at and found, in at least {spec['min_words']} words (every beat change, at full size, "
+                         "beside his standing notes)")
+    compare['compared'] = {'text': str(text).strip()[:1000], 'at': now}
+    record['sendable'] = not sendable_problems(record)
+    write_json(path, record)
+    return record
