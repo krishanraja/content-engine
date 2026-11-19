@@ -104,6 +104,9 @@ export const VeCutSchema = z.object({
   captions: z.object({ region: z.string().min(1).default('default'), emphasis: z.array(WordSchema).default([]) }).strict(),
   beats: z.array(VeBeatSchema).min(1),
   music: VeCutMusicSchema.optional(),
+  /** A cut's own music bed when the piece's bed cannot hold this cut's length to the one bed shape (Wed 18, 18 Nov 2026:
+   *  Mind Bender, 3:20, looped under a 4:55 long cut and lost its loud open). Same ledger rules as audio.bed. */
+  bed: z.object({ ledger_id: z.string().min(1), reason: z.string().min(12) }).strict().optional(),
 }).strict()
 
 export const VeDatasetSchema = z.object({

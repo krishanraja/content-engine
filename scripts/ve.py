@@ -1791,6 +1791,9 @@ def cmd_premix(args) -> int:
         if args.cut not in spec['cuts']:
             raise ValueError(f'{args.cut} is not a cut in the spec')
         bed = spec['audio']['bed']
+        # A cut may name its own bed (cuts.<cut>.bed) when the piece's bed cannot hold its length to the one shape.
+        if (spec['cuts'][args.cut].get('bed') or {}).get('ledger_id'):
+            bed = {**bed, 'ledger_id': spec['cuts'][args.cut]['bed']['ledger_id']}
         ledger = load_json(MUSIC_LEDGER)
         track = next((t for t in ledger['tracks'] if t['id'] == bed['ledger_id'] and t.get('status') == 'approved'), None)
         if track is None:
