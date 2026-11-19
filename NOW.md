@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
 as_of: 2026-11-19
-head: b0ca88d
+head: 6bbfa12
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -45,11 +45,11 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - no cut draws an icon in its body unless its props say bodyLogo true. The palette's logo rule starts on Mon 16 Nov (it was 23 Nov, with an icon-tile carve-out for the week of 16 Nov), an undated spec carries none, the renderer's default is no logo, and ve qc proves the mark absent on every cut without the flag. (2026-11-18)
 - The weekly standards check-in opens its grouping pull request with CHECKIN_PR_TOKEN and writes its own closeout note, so the pull request runs CI and merges itself; without the secret it warns and waits for Krish's Approve and run as before. (2026-11-18)
 - **StyleStill covers: 47 of 48 passed a separate review and are filed and recorded for the board's style pickers** (`config/ve/style-samples.json`). Eight came from Codex's second pass, 24 from its third, and 15 of the 16 held back from its fourth, after the reviewer's five named faults were fixed (`82360c9b`: line-boil passes too thick to read as three lines, receipt and living-ui labels ink on ink, the data story's chart now the sourced monthly sales indexed 100 to 107, flip-hinge sampled with its key word lit). slot-roll stays held: its uneven word gap is in the caption theme itself (`c631e0ac`). (2026-11-16)
-- **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
+- **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3**, at 0 of 3 counted cuts (`docs/ve/STATUS.md`, "Phase 3 count", last moved 2026-11-18). Procedure: `docs/ve/ENGINE.md` and `docs/ve/RUNBOOK.md`; `ve render` refuses a whole cut until he presses Approve proof. (2026-11-19)
 
 ## What changed recently
 
-- 2026-11-19 apps/control-plane/api/board/_writeBack.ts, tests/control-plane/board-sessions.test.ts, regenerated week and view fixtures.
+- 2026-11-19 a board prompt gave only the piece id, so a piece with no schedule date of its own was refused as piece_not_scheduled and its Publish prompt looped; every prompt now names the week and day (`25ee9d2c`).
 - 2026-11-18 the Tue 17 habits short reached production with 13 generated pictures acting out his line and invented figures against its own never-list; the F31 guard only checked that an idea existed.
 - 2026-11-18 the renderer draws the episode title moment; beats take a graded backdrop; the bed is ridden by EBU R128 loudness, not RMS; off.day is never a tag; figures are never dimmed behind a focus.
 Older lines: `docs/history/2026-11-18-NOW-moved-29.md` (it names every earlier move) and `LOG.md`.
