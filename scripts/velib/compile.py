@@ -413,10 +413,20 @@ def title_moment_props(spec: dict, cut_id: str, rows: list[dict], duration: int)
     holder = next((b for b in spec['cuts'][cut_id].get('beats', []) if b['span']['from_w'] <= span['to_w'] <= b['span']['to_w']), None)
     end_w = holder['span']['to_w'] if holder else span['to_w']
     after = next((row['atFrame'] for row in rows if row['w'] > end_w), duration)
+    card = bool((spec.get('title_moment') or {}).get('card'))
+    if card:
+        # The full-frame lockup covers him, so it holds 2.5 s past his last title word, never the rest of the beat
+        # (config/brand-palette.json logo_rule.title_frame: the one full-frame title in the pause after he says it).
+        after = min(after, said[-1]['atFrame'] + 75)
+    words = [{'text': row['text'][:1].upper() + row['text'][1:] if i == 0 else row['text'], 'atFrame': row['atFrame']}
+             for i, row in enumerate(said)]
+    title = (spec.get('title_moment') or {}).get('title') or ''
+    if card and title.rstrip().endswith('?'):
+        # The lockup reads as the piece's title, a question, even where he said it as a statement ("world." -> "WORLD?").
+        words[-1]['text'] = words[-1]['text'].rstrip('.,!?;:') + '?'
     return {'fromFrame': said[0]['atFrame'], 'toFrame': after, 'span': (span['from_w'], span['to_w']),
-            'release': 'captions',  # the captions stay away while it holds, so it always flows back into them
-            'words': [{'text': row['text'][:1].upper() + row['text'][1:] if i == 0 else row['text'], 'atFrame': row['atFrame']}
-                      for i, row in enumerate(said)]}
+            'release': 'fade' if card else 'captions',  # the captions stay away while it holds, so it always flows back into them
+            'words': words}
 
 
 def backdrop(spec: dict, beat: dict, assets_dir) -> dict:
