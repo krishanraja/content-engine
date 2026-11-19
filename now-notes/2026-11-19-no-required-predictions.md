@@ -1,0 +1,3 @@
+Status: No article, script or cut needs a prediction any more (Ruling, Krish, 2026-11-19). The publish checks CALL, CALL_HORIZON and CLEAR_STANCE pass a piece that carries none; house rules CALL, CLEAR_STANCE and SHARP_PREDICTION reach no writer or judge; scripts end on the answer and the close; ve no longer requires a call on mind.the.gap. A piece carries one only when Krish asks on that piece (meta.prediction { wanted, said, on }, or spec.call in a ve spec he signs), and then it is held to the old standard.
+Next: Krish to rule on the brand copy that still promises calls (config/studio.json mind_the_gap promise "Every call scored in public", scripts/channel-kit/channel.json bio) and on the makeyourmindup site's scorecard.
+North Star check (2026-11-19): holds.

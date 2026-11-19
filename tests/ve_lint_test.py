@@ -58,11 +58,23 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_F07_coral_family_hex_used_as_a_failure_colour(self):
         self.assertRefused(mutate(lambda s: s['cuts']['proof-tall']['beats'][2]['events'][0].update(to_state='fail cells in #ff9b85')), 'brand.no_hex')
 
-    def test_IR48_mind_the_gap_without_a_dated_call(self):
-        self.assertRefused(mutate(lambda s: s.pop('call')), 'SCHEMA')
+    def test_IR48_mind_the_gap_needs_no_dated_call(self):
+        # Ruling (Krish, 2026-11-19): no piece needs a prediction; a cut carries one only when he asked for it.
+        def no_call(s):
+            s.pop('call')
+            whole_tall(s)
+        found = codes_for(mutate(no_call))
+        self.assertNotIn('SCHEMA', found)
+        self.assertNotIn('story.call', found)
 
-    def test_IR48_whole_cut_without_a_call_beat(self):
+    def test_IR48_whole_cut_with_his_call_but_no_call_beat(self):
         self.assertRefused(mutate(whole_tall), 'story.call')
+
+    def test_a_call_beat_with_no_call_is_refused(self):
+        def stray(s):
+            s.pop('call')
+            s['cuts']['proof-tall']['beats'][3]['role'] = 'call'
+        self.assertRefused(mutate(stray), 'story.call')
 
     def test_off_day_mind_the_gap_needs_no_call(self):
         # A mind.the.gap piece published on a Tuesday is an off day: no series promise, no dated call card (18 Nov 2026).
@@ -71,11 +83,12 @@ class FridayFailuresAreRefused(unittest.TestCase):
             s['publish_day'] = '2026-11-17'
         self.assertNotIn('SCHEMA', codes_for(mutate(off_day)))
 
-    def test_friday_mind_the_gap_still_needs_its_call(self):
+    def test_friday_mind_the_gap_needs_no_call_either(self):
+        # Ruling (Krish, 2026-11-19): no day needs a prediction.
         def friday(s):
             s.pop('call')
             s['publish_day'] = '2026-11-20'
-        self.assertRefused(mutate(friday), 'SCHEMA')
+        self.assertNotIn('SCHEMA', codes_for(mutate(friday)))
 
     def test_R46_generated_picture_used_as_evidence(self):
         asset = {'id': 'fake-shot', 'kind': 'screenshot', 'origin': 'generated', 'path': 'x.png', 'sha256': '0' * 64,

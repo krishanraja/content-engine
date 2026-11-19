@@ -57,7 +57,9 @@ describe('every ruling carries his words and reaches a stage', () => {
   })
   test('every publish-check rule has a mechanical check', () => {
     const ids = new Set(publishChecks(PASSED, factsOk).map(c => c.id))
-    for (const r of rulesFor('publish_check')) assert.ok(ids.has(r.id), r.id)
+    // SHARP_PREDICTION reaches no writer since 19 November (Ruling, Krish, 2026-11-19); CALL_HORIZON and CLEAR_STANCE hold it.
+    const ENFORCED_AS: Record<string, string> = { SHARP_PREDICTION: 'CALL_HORIZON' }
+    for (const r of rulesFor('publish_check')) assert.ok(ids.has(ENFORCED_AS[r.id] ?? r.id), r.id)
   })
   test('both judge gates read the rules for their gate, with the subchannel', async () => {
     process.env.SUPABASE_URL ||= 'http://127.0.0.1:9'
@@ -370,7 +372,7 @@ describe('the checks before approval, on real text', () => {
   })
   test('the PATCH to approved or published asks the checks', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8')
-    assert.match(src, /if \(updates\.state === 'approved' \|\| updates\.state === 'published'\) \{\s*\n\s*const checks = publishChecks\(effective, gate, new Date\(\), id\)/)
+    assert.match(src, /if \(updates\.state === 'approved' \|\| updates\.state === 'published'\) \{\s*\n\s*const checks = publishChecks\(effective, gate, new Date\(\), id, \{ predictionWanted: predictionWanted\(jsonRecord\(current\.meta\)\) \}\)/)
     assert.match(src, /reason: 'publish_gate'/)
   })
 })

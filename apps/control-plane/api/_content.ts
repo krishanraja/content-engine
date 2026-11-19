@@ -878,7 +878,7 @@ export const VOICE_GUARDRAILS = [
   'No AI tells: no "hook line, gap, explanation" opening, no "here\'s the thing", no "the truth is", no "let\'s dive in", no "delve", no "unpack", no "deep dive".',
   'No synthetic enthusiasm ("excited", "thrilled"). No "leverage" (except "leverage audit"). No "utilise", "seamless", "empower", "journey", "landscape", "robust", "synergy".',
   'Active voice only. Dropped subject pronouns where natural ("Been thinking", not "I\'ve been thinking").',
-  // Krish's rulings (R2, R4, R6, R7, the facts, the prediction, no sermons,
+  // Krish's rulings (R2, R4, R6, R7, the facts, no sermons,
   // no exclamation marks...) come from one registry, api/_houseRules.ts, so a
   // new ruling reaches every writer without editing five prompts.
   houseRulesBlock('write'),

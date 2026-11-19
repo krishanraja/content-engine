@@ -74,7 +74,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
     shape: [
       'Hook: the first sentence names the piece\'s one concrete thing (a product, a deal, a number or a person) and makes it surprising; the second says what it changes for a business, in a leader\'s terms (ONE_CONCRETE_THING, FOR_THE_LEADER), then the one question.',
       'One story, told in order with room to be fun to say and to watch: its scene, its twist, its one number (ONE_STORY_SHORT). No second story, example or company: it goes to the long cut or the article.',
-      'The call answers the question in one sentence, then the last line, where the full story is free at makeyourmindup.ai, nothing else (STORY_OUTRO). The beat of what Krish would do is one sentence at most, or left out.',
+      'The answer to the question in one sentence, then the last line, where the full story is free at makeyourmindup.ai, nothing else (STORY_OUTRO). The beat of what Krish would do is one sentence at most, or left out.',
     ].join(' '),
   },
   {
@@ -84,7 +84,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
       'Each beat makes ONE point and carries its own evidence. A beat that restates the one above it is cut.',
       'Beats escalate: the third should be the one that would not have been believed at the start.',
       'Mark the beats explicitly so the edit has cut points.',
-      'The verdict answers the hook\'s question, then makes the call. It is a hard forward-looking read and never a recap of the three beats. The close follows it (STORY_OUTRO).',
+      'The verdict answers the hook\'s question. It is a hard read of what it means and never a recap of the three beats; no prediction unless Krish asked for one on this piece (Ruling, Krish, 2026-11-19). The close follows it (STORY_OUTRO).',
     ].join(' '),
   },
   {
@@ -123,7 +123,7 @@ export function videoFormat(id?: string | null): VideoFormat | null {
 // approved the same evening, as the script writer reads it. The house rules
 // FOR_THE_EAR and STORY_ARC carry it to every other stage, and
 // scripts/post-pack/story_check.py refuses to pack a script that fails it.
-export const STORY_OUTRO = 'STORY_OUTRO (house rule SCRIPT_CLOSE, Rulings, Krish 2026-10-31 and 2026-11-14): a script of a minute or more closes in two parts, after the call. First one short beat, at most three sentences, saying the one thing Krish himself would do with this, in his own first person ("If I ran a team, I\'d do one thing this week. I\'d write down who my experts will be in five years."). Never a list of orders for the viewer, never "you should", "make sure" or "decide now", and never the retired line "Here\'s what I\'d do with this info if I were you" (Krish, 2026-10-31: the last paragraph "sounds a bit bossy and preachy"). Then the final sentence of the script, exactly "' + SCRIPT_CLOSE_LINE + '" with nothing after it: no sign-off, no "I\'m Krish", no question for the comments, no ask to like or subscribe. That is the only call to action a script makes.'
+export const STORY_OUTRO = 'STORY_OUTRO (house rule SCRIPT_CLOSE, Rulings, Krish 2026-10-31 and 2026-11-14): a script of a minute or more closes in two parts, after the answer. First one short beat, at most three sentences, saying the one thing Krish himself would do with this, in his own first person ("If I ran a team, I\'d do one thing this week. I\'d write down who my experts will be in five years."). Never a list of orders for the viewer, never "you should", "make sure" or "decide now", and never the retired line "Here\'s what I\'d do with this info if I were you" (Krish, 2026-10-31: the last paragraph "sounds a bit bossy and preachy"). Then the final sentence of the script, exactly "' + SCRIPT_CLOSE_LINE + '" with nothing after it: no sign-off, no "I\'m Krish", no question for the comments, no ask to like or subscribe. That is the only call to action a script makes.'
 
 /** How a script opens (house rule SERIES_OPENER, retired series line, Krish 2026-10-21). */
 export const SCRIPT_OPENING = 'THE OPENING (SERIES_OPENER, Krish 2026-10-21): the first beat\'s "say" starts straight on the hook, the most provocative true thing in the piece, such as what you did, for example "I put X and Y head to head" (X and Y being the things in THIS piece). No series line, no greeting, no "I\'m Krish", anywhere in the script, and nothing in front of the hook (no "Hey guys", welcome or "in this video"). The hook is the first sentence and would stop someone scrolling in under one second: the biggest mistake, the result, an unexpected fact or the middle of the story, always leaving the one question the script answers, which follows at once (HOOK_AND_CTA, LISTENING, Krish 2026-11-05). The topic\'s keyword, the words people would search for it, is said in that first sentence. Krish\'s personal line (what he has been doing with the thing, why it matters, that he wants to break it down: PERSONAL_INTRO) comes second or third, one short sentence. Somewhere one line makes the viewer think of a specific person who needs it, named by their situation, never an ask to share.'
@@ -134,7 +134,7 @@ export const SCRIPT_STORY = [
   '2. Every beat sets that question up or answers it, and follows from the beat before. A beat that could be moved anywhere is a list item: cut it or connect it.',
   '3. Every claim is set up before it is judged: say what was claimed and why it matters before calling it real or theatre.',
   '4. Every takeaway follows from a beat already told. Name the beat it comes from in your head; if there is none, cut the takeaway.',
-  '5. The ending answers the opening question, then the call, then the close (STORY_OUTRO). Never end on the number.',
+  '5. The ending answers the opening question, then the close (STORY_OUTRO); no prediction unless Krish asked for one on this piece (Ruling, Krish, 2026-11-19). Never end on the number.',
   '6. It sounds like Krish, with opinion (VOICE_ON_CAMERA): at least three of a dry self-deprecating line, a sarcastic line at the hype, an exaggeration obvious by its size, an analogy a twelve-year-old gets, and an opinion said as opinion ("my bet", "I think"). No joke inside a checked fact. Put a second option for each joke in "notes", never inside "say", so Krish can swap or cut.',
   'And it must make sense out loud: say what the thing is before taking it apart, explain each number as it is said, and never speak an article heading or a label the listener has not heard explained.',
   STORY_OUTRO,
