@@ -2209,6 +2209,13 @@
    "said": "Yes and approve but render in codex",
    "on": "2026-11-19",
    "artifact_hash": "b92e82b3d825970f09ac59b25976551a362027095b067bcfc2c77dbbe18f19cf"
+  },
+  {
+   "gate": "exception",
+   "by": "Krish",
+   "said": "approve the engine change",
+   "on": "2026-11-19",
+   "artifact_hash": "e97863db1ad378749b7e2f665ad87aaed41f197c94e9f8aeb6c3bf573ba726b0"
   }
  ],
  "style": {
