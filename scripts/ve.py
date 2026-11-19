@@ -839,7 +839,10 @@ def cmd_status(args) -> int:
         codex = state.get('codex', [])
         if codex:
             print('  codex: ' + '; '.join(codex))
-        reasons = mechanical + design + final + codex
+        # His final approval gates publishing only, never filing (Ruling, Krish, 2026-11-19): shown, not held.
+        print('  publish: ' + ('APPROVED' if not final else
+                               'awaits his Approve for publish on the board (' + '; '.join(final) + ')'))
+        reasons = mechanical + design + codex
         print(f"{cut}: {'READY' if not reasons else 'NOT READY (' + '; '.join(reasons) + ')'}")
         # Done means in the post's 3 Posts folder, read back from the library, never from the receipt alone
         # (Ruling, Krish, 2026-11-03: "everything ready for post goes in the posts folder, not the growth folder").
@@ -907,8 +910,11 @@ def cmd_ingest(args) -> int:
                             aligner_a=args.aligner_a, aligner_b=args.aligner_b,
                             script_text=Path(args.teleprompter).read_text(encoding='utf-8-sig') if args.teleprompter else None)
         record = takes.load_take(directory, args.take)
+        frame = record['media'].get('frame')
+        size = f"{frame['width']}x{frame['height']} measured" if frame else 'no picture size measured'
         print(f"ve ingest: {args.take} ({record['media']['duration_s']} s; {len(record['aligners']['a']['words'])} words from "
-              f"{record['aligners']['a']['name']}, {len(record['aligners']['b']['words'])} from {record['aligners']['b']['name']}) -> {path}")
+              f"{record['aligners']['a']['name']}, {len(record['aligners']['b']['words'])} from {record['aligners']['b']['name']}; "
+              f"frame {size}) -> {path}")
         _script_audit(directory, spec, args.take, path)
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
@@ -1742,7 +1748,10 @@ def cmd_compile(args) -> int:
     if isinstance(words, dict):
         words = words['words']
     report = {}
-    props = compile_cut(spec, args.cut, words, args.assets_dir, report=report, edl=edl)
+    from velib import takes, verdict
+    frame_source, take_frame = takes.cut_frame(spec, args.cut, verdict.ve_dir(Path(args.spec)))
+    props = compile_cut(spec, args.cut, words, args.assets_dir, report=report, edl=edl, take_frame=take_frame)
+    report['take_frame'] = {'source': frame_source, **(take_frame or {})}
     # The piece id is a directory name, never an arbitrary output path.
     piece = spec['piece_id']
     if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]*', piece):
@@ -1894,9 +1903,9 @@ def render_refusal(spec, spec_file, props, call=None) -> list[str]:
     directory = verdict.ve_dir(Path(spec_file))
     found = gates.load(directory, spec, call)
     reasons = proof.problems(spec, cut, directory, found['gates'], props)
-    # The Thursday 5 Nov guards (docs/learning/2026-11-04-thursday-killed.md): the engine he signed for, two full
-    # renders per press, one type system.
-    reasons += guards.engine_problems(spec, cut, directory) + guards.loop_problems(spec, cut, directory, found['gates'])
+    # The Thursday 5 Nov guards (docs/learning/2026-11-04-thursday-killed.md): the engine of the proof he approved, two
+    # full renders per press, one type system. The one engine gate is here: ve proof runs on the pinned engine by itself.
+    reasons += guards.render_engine_problems(spec, cut, directory) + guards.loop_problems(spec, cut, directory, found['gates'])
     reasons += guards.type_problems(spec, props)
     if reasons and found['source'] != 'record':
         reasons.append(f"the piece's making record was {found['source']}; only the spec's approvals were read")
@@ -1904,6 +1913,16 @@ def render_refusal(spec, spec_file, props, call=None) -> list[str]:
 
 
 def cmd_render(args) -> int:
+    try:
+        # Before lint: a frozen piece is held to the rules and the engine it froze with, so when either moved on main the
+        # whole command runs on its pinned commit, lint included (Ruling, Krish, 2026-11-19). A whole cut renders on the
+        # engine its approved proof was drawn on; no engine hash is ever put to Krish.
+        pinned = _pin_first(args.spec, 've render', getattr(args, 'props', None))
+    except ValueError as error:
+        print(f've render: {error}', file=sys.stderr)
+        return 1
+    if pinned is not None:
+        return pinned
     from velib.lint import lint
     spec, problems = lint(Path(args.spec))
     if problems or spec is None:
@@ -2024,8 +2043,52 @@ def cmd_defect(args) -> int:
         return 1
 
 
+_ARGV: list[str] | None = None  # this run's own arguments (main sets it), so a pinned run can repeat them
+
+
+def _exec_pinned(checkout: Path, argv: list[str]) -> int:
+    """Run ve with these arguments from the pinned checkout's own scripts, in this same folder (the piece's files stay
+    where they are; only the engine and the rules are the frozen ones)."""
+    env = {**os.environ, 'VE_PINNED': '1'}
+    return subprocess.run([sys.executable, str(checkout / 'scripts' / 've.py'), *argv], env=env).returncode
+
+
+def _run_pinned(route: dict, label: str) -> int | None:
+    """When the engine here is not the one this piece runs on (guards.engine_route, render_route), run this same command
+    on the pinned commit and return its exit code; None means run here. Nothing is asked of Krish: the piece stays on the
+    engine frozen at Sign storyboard (Ruling, Krish, 2026-11-19). Raises ValueError when the pin cannot be made."""
+    from velib import guards
+    if route.get('route') != 'pin' or os.environ.get('VE_PINNED') == '1' or not route.get('commit') or _ARGV is None:
+        return None
+    checkout = guards.pin_checkout(route['commit'], route['sha256'], route.get('rules_sha256'))
+    argv = [str(Path(a).resolve()) if not a.startswith('-') and Path(a).exists() else a for a in _ARGV]
+    print(f"{label}: the engine moved on main since this piece froze; running on its pinned engine {route['sha256'][:12]} "
+          f"(commit {route['commit'][:12]}, {checkout})")
+    return _exec_pinned(checkout, argv)
+
+
+def _pin_first(spec_path, label: str, props_path=None) -> int | None:
+    """Decide from the raw spec (no lint: lint is a rule, and a frozen piece's rules are its pinned commit's) whether this
+    command runs here or on the pinned commit, and run it there if so. None means run here. A piece with no engine record
+    (not frozen yet) reads nothing here, so lint still refuses before anything is read (test_lint_refuses_before_read_or_write)."""
+    from velib import guards, verdict
+    directory = verdict.ve_dir(Path(spec_path))
+    if os.environ.get('VE_PINNED') == '1' or not guards.lock_path(directory).is_file():
+        return None
+    try:
+        raw = load_json(Path(spec_path))
+        cut = load_json(Path(props_path)).get('cutId') if props_path else None
+    except (OSError, ValueError, AttributeError):
+        return None
+    if not isinstance(raw, dict):
+        return None
+    route = guards.render_route(raw, cut, directory) if cut else guards.engine_route(raw, directory)
+    return _run_pinned(route, label)
+
+
 def cmd_pin(args) -> int:
-    """`ve pin <piece>`: record the commit the engine was frozen at and say how to keep rendering on it."""
+    """`ve pin <piece>`: make (or show) the checkout of the commit the engine was frozen at. ve proof and ve render use it
+    by themselves whenever the engine here has moved; this only makes it ahead of time."""
     from velib import guards
     try:
         _spec_file, _spec, directory = _ve_dir(args.piece)
@@ -2033,12 +2096,11 @@ def cmd_pin(args) -> int:
         if not lock.is_file():
             raise ValueError('no engine record: run ve expect first')
         record = load_json(lock)
-        commit = guards.head_commit()
-        record['commit'] = record.get('commit') or commit
-        write_json(lock, record)
-        print(f've pin: engine {record["sha256"][:12]} frozen at commit {record["commit"]}')
-        print('  a merge that touches no engine file changes nothing; to render on exactly this engine whatever main does:')
-        print(f'  git worktree add ../ve-{args.piece[:8]} {record["commit"]} && cd ../ve-{args.piece[:8]}')
+        if not record.get('commit'):
+            raise ValueError('ve expect recorded no commit for this engine: run ve expect again from a git checkout')
+        checkout = guards.pin_checkout(record['commit'], record['sha256'], (record.get('rules') or {}).get('sha256'))
+        print(f've pin: engine {record["sha256"][:12]} frozen at commit {record["commit"]}, checked out at {checkout}')
+        print('  ve proof and ve render run there by themselves whenever the engine here differs; nothing to approve')
         return 0
     except (OSError, ValueError, KeyError) as error:
         print(f've pin: {error}', file=sys.stderr)
@@ -2051,6 +2113,12 @@ def cmd_proof(args, render_fn=None) -> int:
     from velib.lint import lint
     from velib.render import check_asset_hashes, render
     try:
+        # Before lint: the proof runs on the engine and the rules frozen at Sign storyboard, here or on its pinned commit by
+        # itself, lint included. The one engine gate is at render (render_refusal), and nothing asks Krish to approve an
+        # engine hash (Ruling, Krish, 2026-11-19).
+        pinned = _pin_first(args.spec, 've proof')
+        if pinned is not None:
+            return pinned
         spec, problems = lint(Path(args.spec))
         if problems or spec is None:
             print('\n'.join(problems[:20]) or 'the spec does not pass its schema')
@@ -2075,7 +2143,7 @@ def cmd_proof(args, render_fn=None) -> int:
         directory = verdict.ve_dir(Path(args.spec))
         props = load_json(_props_for(args.spec, args.cut, args.props))
         from velib import guards
-        held = guards.engine_problems(spec, args.cut, directory) + guards.type_problems(spec, props)
+        held = guards.type_problems(spec, props)
         if held:
             print('ve proof: refused (the Thursday guards, docs/learning/2026-11-04-thursday-killed.md):')
             print('\n'.join(f'  - {reason}' for reason in held))
@@ -2218,9 +2286,12 @@ def cmd_expect(args) -> int:
     path = expect.write(spec, directory)
     print(path.read_text(encoding='utf-8').rstrip())
     print(f've expect: {path}')
-    # The storyboard sheet freezes the engine: ve proof and ve render refuse a whole cut drawn on a different one.
+    # The storyboard sheet freezes the engine and the rules (Ruling, Krish, 2026-11-19): proof and render run on this
+    # commit by themselves, and a rule dated after today binds the next piece.
     lock = guards.freeze(directory)
-    print(f"ve expect: engine {lock['sha256'][:12]} recorded ({len(lock['files'])} files); a change needs Krish's yes")
+    print(f"ve expect: engine {lock['sha256'][:12]} and rules {lock['rules']['sha256'][:12]} frozen at commit "
+          f"{lock.get('commit') or 'none'} ({len(lock['files'])} engine files, {len(lock['rules']['files'])} rule files); "
+          'proof and render run on it by themselves, nothing to approve')
     return 0
 
 
@@ -2399,7 +2470,7 @@ def main() -> int:
     p.add_argument('piece'); p.add_argument('action', choices=('add', 'count'))
     p.add_argument('--words'); p.add_argument('--where'); p.add_argument('--row', help='the checklist row it should have been caught by')
     p.set_defaults(fn=cmd_defect)
-    p = sub.add_parser('pin', help='record the commit the engine was frozen at, and how to keep rendering on it')
+    p = sub.add_parser('pin', help='check out the commit the engine was frozen at (ve proof and ve render use it by themselves)')
     p.add_argument('piece'); p.set_defaults(fn=cmd_pin)
     p = sub.add_parser('proof', help="render only the cut's hardest beat from his take; a whole cut waits for his approval of it")
     p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--beat', help='prove this beat instead')
@@ -2573,6 +2644,8 @@ def main() -> int:
     p.set_defaults(fn=cmd_signoff)
     p = sub.add_parser('stills'); p.add_argument('rest', nargs='*'); p.set_defaults(fn=not_yet('stills'))
     args = parser.parse_args()
+    global _ARGV
+    _ARGV = list(sys.argv[1:])
     return args.fn(args)
 
 

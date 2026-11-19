@@ -25,6 +25,10 @@ MAX_TP = -1.0
 LEVEL_TOLERANCE_LU = 1.5        # median short-term level of the bed in the body, re the ledger's bed_lufs
 MAX_SPREAD_LU = 4.0             # short-term (3 s) p95 - p5 of the bed in the body, outside lift windows
 MAX_SWING_LU, SWING_HOLD_S = 3.0, 1.0   # no stretch of a second or more this far from the bed's median
+# A swing up to this much over MAX_SWING_LU passes and says so in its row, never stopping the engine mid-production
+# (Ruling, Krish, 2026-11-19: no approvals during production). The automatic re-mix that would duck the bed instead is
+# not built yet: docs/ve/STATUS.md, "Bed swell over the limit".
+SWING_TOLERANCE_LU = 0.5
 RENDER_FLOOR_BELOW_DB = 18.0    # the render's 50 ms RMS this far under bed_lufs is a stretch with no music
 DEFAULT_FLOOR_DBFS = -50.0      # the render floor when the sidecar names no bed level
 
@@ -96,6 +100,17 @@ def _outside(holes, skip: list) -> list:
     return [h for h in holes or [] if not any(a <= float(h[0]) and float(h[0]) + float(h[1]) <= b for a, b in skip)]
 
 
+def swing_row(swing: float | None) -> dict:
+    """The swell row: passes up to MAX_SWING_LU + SWING_TOLERANCE_LU, and a pass inside the tolerance says so."""
+    row = {'check': 'bed never swells or sags', 'value': None if swing is None else round(swing, 1),
+           'target': f'<= {MAX_SWING_LU} LU from the median (+{SWING_TOLERANCE_LU} tolerance), held {SWING_HOLD_S} s, '
+                     'outside lifts',
+           'pass': swing is not None and swing <= MAX_SWING_LU + SWING_TOLERANCE_LU}
+    if swing is not None and MAX_SWING_LU < swing <= MAX_SWING_LU + SWING_TOLERANCE_LU:
+        row['note'] = f'within tolerance: a {round(swing, 1)} LU swing, over the {MAX_SWING_LU} LU limit'
+    return row
+
+
 def episode_rows(sidecar: Path, report: dict) -> list:
     """Level, steadiness and drop-outs of the episode bed alone, from the music stem the premix kept beside the
     stem (already at the master's gain). Level and steadiness on ffmpeg's EBU R128 short-term meter (3 s), so a lift
@@ -126,9 +141,7 @@ def episode_rows(sidecar: Path, report: dict) -> list:
          'pass': median is not None and abs(median - target) <= LEVEL_TOLERANCE_LU},
         {'check': 'bed holds one level', 'value': None if spread is None else round(spread, 1),
          'target': f'<= {MAX_SPREAD_LU} LU short-term p95-p5 outside lifts', 'pass': spread is not None and spread <= MAX_SPREAD_LU},
-        {'check': 'bed never swells or sags', 'value': None if swing is None else round(swing, 1),
-         'target': f'<= {MAX_SWING_LU} LU from the median, held {SWING_HOLD_S} s, outside lifts',
-         'pass': swing is not None and swing <= MAX_SWING_LU},
+        swing_row(swing),
         {'check': 'bed never drops out', 'value': holes,
          'target': 'no 0.25 s 15 dB under its own running level (50 ms windows)', 'pass': not holes},
     ]

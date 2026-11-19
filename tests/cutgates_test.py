@@ -302,7 +302,8 @@ class ReceiptTests(Stand):
         with patch('visual_clarity.delivery_problems', return_value=[]), patch('media_standard.enforced', return_value=False):
             problems = quality.delivery_problems(case['video'], path)
         self.assertIn('sync is missing: the lip-sync measure (sync_check.py) on these bytes', problems)
-        self.assertIn('full_review is missing', problems)
+        # Ruling (Krish, 2026-11-19): filing needs no approval from him; his Approve for publish gates publishing only.
+        self.assertFalse([p for p in problems if p.startswith('full_review')], problems)
 
     def test_no_render_writes_a_placeholder_status_any_more(self):
         for name in ('scripts/quick-edit/make.py', 'scripts/quick-edit/motion_compose.py'):

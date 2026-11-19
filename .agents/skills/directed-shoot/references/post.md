@@ -61,7 +61,7 @@ A render that fails is made again or its beat is cut. It is never shipped with a
   `ve codex receipt`).
 - **A separate reader watches it whole, at full size, with sound,** and checks two things: every claim is undone on
   screen on the word that undoes it, and his words stay in sync in both panels.
-- **His Approve cut press** on those bytes. Then it is filed like any cut, and he publishes.
+- **Filed like any cut** once the reader passes it, with no approval asked of him; his Approve for publish on the board, bound to the file shas, gates publishing only (Ruling, Krish, 2026-11-19).
 
 ## What to log for the experiment
 

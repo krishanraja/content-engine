@@ -256,7 +256,12 @@ def check_frames(path: str, props: dict, *, grab=None, fps: float | None = None,
         for beat_id, frame in sample_frames(beats, pages, rules):
             rgb = grab(path, frame, fps, size)
             gray_frames.append((beat_id, frame, (0.299 * rgb[..., 0] + 0.587 * rgb[..., 1] + 0.114 * rgb[..., 2]).astype(np.float32)))
-        plain = plain_dark_problems(gray_frames, rules)
+        # The brand palette's own close (closes.statement_beat / statement_card, drawn by EndingBand from
+        # props.ending.fromFrame) is a flat ink card by design: config/brand-palette.json is the only source of a close,
+        # so a frame inside it is never a plain dark band (Fri 20 Nov: the guard refused the palette's own close card).
+        close_from = (props.get('ending') or {}).get('fromFrame')
+        judged = [item for item in gray_frames if not (isinstance(close_from, int) and item[1] >= close_from)]
+        plain = plain_dark_problems(judged, rules)
         ink = hex_rgb((props.get('tokens') or {}).get('cream'))
         items = []
         for i, page in enumerate(pages):

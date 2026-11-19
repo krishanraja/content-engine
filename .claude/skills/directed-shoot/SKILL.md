@@ -38,7 +38,7 @@ frames and ask him: go, change it, or call it. Nothing else runs before his go.
    - Stills first, priced, then his yes before any credits are spent.
    - The motion renders.
    - A hand-built composite on the forced clocks, with its receipts.
-   - A separate reader, then his Approve cut press.
+   - A separate reader, then filing; Approve gates publish only.
 6. **Log the experiment** in the piece's `experiment.md`: the hypothesis, what was measured, what changed on the day,
    which renders failed, and the cost.
 

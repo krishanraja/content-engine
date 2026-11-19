@@ -223,11 +223,16 @@ def caption_steady_problems(spec: dict) -> list[str]:
     lands somewhere else from page to page. Krish, 2026-11-18, of the Tue 17 short in art-directed: "They are really
     jolty, and each word moving from left to right is really hard to look at and stressful. We can't have each new word
     appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer." The styles
-    that do it are measured in real Chromium (scripts/audit-caption-steady.ts, config/ve/caption-steady.json)."""
+    that do it are measured in real Chromium (scripts/audit-caption-steady.ts, config/ve/caption-steady.json).
+
+    Only a cut with no picked caption style is measured: a picked style (style.captions.theme) turns word mode off in
+    compile (word_mode), so its one-word pages are never drawn and measuring them refused a layout nobody sees."""
     day = spec.get('publish_day')
     if not day or day < STEADY_FROM or (spec.get('brand') or {}).get('captions') != 'word':
         return []
-    chosen = ((spec.get('style') or {}).get('captions') or {}).get('theme') or (spec.get('brand') or {}).get('caption_theme')
+    if ((spec.get('style') or {}).get('captions') or {}).get('theme'):
+        return []
+    chosen = (spec.get('brand') or {}).get('caption_theme')
     measured = (load_json(CONFIG / 'caption-steady.json').get('styles') or {}).get(chosen)
     if not measured or not measured.get('anchor_moves'):
         return []
@@ -244,10 +249,17 @@ def motion_lints(spec: dict) -> list[str]:
     if spec['signature']['hero']['device'] == 'stamp':
         out.append('motion.stamp_not_hero signature.hero.device: the stamp draws fixed 30 px mono text; it labels, it is '
                    'never the hero (docs/ve/MOTION_STANDARD.md)')
+    # No captions.word_default: it forced brand.captions "word" on face-with-proof while compile turns word mode off the
+    # moment a caption style is picked (compile.py, word_mode), so it refused specs for a build that is never drawn.
     day = spec.get('publish_day')
-    if spec['format'] == 'face-with-proof' and spec['brand'].get('captions') != 'word' and not (day and day < REFERENCE_FROM):
-        out.append('captions.word_default brand.captions: face-with-proof uses the word caption build, one word at a time '
-                   'off the face (signed by Krish, 3 Nov 2026, docs/ve/MOTION_STANDARD.md)')
+    picked = ((spec.get('style') or {}).get('captions') or {}).get('theme')
+    if (spec['format'] == 'face-with-proof' and spec['brand'].get('captions') != 'word' and not picked
+            and not (day and day < REFERENCE_FROM)):
+        # A picked caption style draws its own phrase pages (compile turns word mode off), so the rule asks only of a cut
+        # with none: there the word build is the signed default.
+        out.append('captions.word_default brand.captions: face-with-proof with no caption style picked uses the word caption '
+                   'build, one word at a time off the face (signed by Krish, 3 Nov 2026, docs/ve/MOTION_STANDARD.md); '
+                   'set brand.captions "word" or pick a style (style.captions.theme)')
     out.extend(caption_steady_problems(spec))
     out.extend(f'motion.required {problem}' for problem in motion_style_problems(spec))
     out.extend(motion_not_drawable(spec))

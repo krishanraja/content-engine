@@ -37,7 +37,9 @@ class TakeOrientation(unittest.TestCase):
     def test_a_vertical_take_on_16_9_layouts_is_refused_and_a_wide_take_passes(self):
         s = spec()
         take = next(a for a in s['assets'] if a['id'] == 'long-master')
-        self.assertTrue(pg.take_orientation(s, CFG['take_orientation']), 'a take with no frame is refused')
+        # Before ingest a take has no measured frame and nothing is refused; tests/ve_take_frame_test.py covers the
+        # refusal once ingest has run. A typed frame (an older spec) is still read.
+        self.assertEqual(pg.take_orientation(s, CFG['take_orientation']), [])
         take['frame'] = {'width': 1080, 'height': 1920}
         bad = pg.take_orientation(s, CFG['take_orientation'])
         self.assertTrue(any('vertical (1080x1920)' in p for p in bad))

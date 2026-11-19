@@ -249,6 +249,9 @@ graphics-only beat in a staged piece becomes a full-frame takeover that fills as
 right, tray a lower-left tray, and pillar draws a vertical take whole as a 608 px full-height panel on the right with
 a series-colour hairline and the ink graphics panel on the left (x 96 to 1256). A vertical take on a 16:9 cut must use it
 (`config/ve/piece-guards.json` take_orientation); a WINDOW or SPLIT beat keeps its own lock and is still refused there.
+The take's frame is never typed: `ve ingest` measures its size and rotation with ffprobe and writes it on the take record
+(`media.frame`), and with no `style.layout.mode` named, compile stages a 16:9 cut over a vertical take as `pillar` by
+itself. Lint refuses a 16:9 cut only once ingest has run and found no frame; an older spec's typed asset frame still works.
 
 - Each staged beat's devices get the staging's region and may grow into it (`isRegion`); several devices share it top
   to bottom.

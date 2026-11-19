@@ -718,8 +718,8 @@
         },
         {
           "file": "scripts/quick-edit/quality.py",
-          "contains": "required = ('heard','sync','loudness','visuals','full_review')",
-          "how": "Exact video bytes must pass all five checks before delivery; proxy images cannot replace full review."
+          "contains": "required = ('heard','sync','loudness','visuals')",
+          "how": "Exact video bytes must pass heard, sync, loudness and visuals (the independent Critic watching and hearing these bytes) before delivery; proxy images cannot replace them. Krish's own full review gates publishing only (Ruling, Krish, 2026-11-19)."
         },
         {
           "file": "scripts/post-pack/send.py",
@@ -747,7 +747,7 @@
         },
         {
           "file": "scripts/quick-edit/quality.py",
-          "contains": "required = ('heard','sync','loudness','visuals','full_review')",
+          "contains": "required = ('heard','sync','loudness','visuals')",
           "how": "Delivery binds sync acceptance to exact video bytes."
         }
       ]
@@ -1976,12 +1976,12 @@
       "symptom": "Every render was on a different engine; nothing approved earlier still held.",
       "cause": "Nothing recorded which engine a storyboard was signed on, so nothing could notice it moving.",
       "status": "guarded",
-      "surface": "Freeze the engine during a piece: ve expect records the engine at storyboard; ve proof and ve render refuse a whole cut drawn on a changed one unless Krish approves the change.",
+      "surface": "Freeze the engine and the rules during a piece: ve expect records both at Sign storyboard; ve proof and ve render run on the pinned commit by themselves, before lint, whenever the engine or a rule file moved; a fix follows main only under his standing engine-follows-main yes or a renderer-only change that leaves the golden frames untouched and passes the house golden test, and nothing asks him to approve an engine hash (Ruling, Krish, 2026-11-19).",
       "guards": [
         {
           "file": "scripts/velib/guards.py",
           "contains": "def engine_problems(",
-          "how": "sha256 of the renderer source, compile.py and the ve brand, device and font configs, recorded at ve expect; a mismatch refuses ve proof and ve render from 9 Nov unless an exception approval binds the new hash",
+          "how": "sha256 of the renderer source, compile.py and the ve brand, device and font configs, recorded at ve expect with its commit; on a mismatch ve proof and ve render run on that commit (engine_route, pin_checkout), and a whole cut renders only on the engine of its approved proof (render_engine_problems)",
           "test": "python3 tests/ve_thursday_guards_test.py"
         }
       ],
@@ -2002,7 +2002,7 @@
           "short_video",
           "long_video"
         ],
-        "line": "Freeze the engine for the piece: ve expect records it, and any engine change before the cut renders needs his exception approval on the new hash."
+        "line": "Freeze the engine and the rules for the piece at Sign storyboard: proof and render run on the pinned commit by themselves; never ask him to approve an engine hash."
       }
     },
     {
@@ -4328,6 +4328,86 @@
         ],
         "line": "The title is one full-frame lockup, the wordmark inside it; every proof shows it."
       }
+    },
+    {
+      "id": "title-wordmark-not-aligned-with-title",
+      "on": "2026-11-19",
+      "krish": "As I think I've told you 400,000 times, the word mark needs to be aligned with the title. (the Tue 17 production session, piece b019dbf8, \"Where does AI get built when towns say no?\")",
+      "what": "Tue 17's title frame reached Krish with the wordmark out of line with the title: it did not sit centred under the title as one unit, so the title and the mark read as two separate things. He had asked for this before, and nothing recorded it as a failure, so the next cut could repeat it.",
+      "status": "guarded",
+      "mode": "title-not-a-hero",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "No failure entry named the wordmark's alignment with the title, so his repeated correction lived only in chat."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "Before the title lockup check, ve qc never read where the wordmark sat against the title on the settled title frame."
+        }
+      ],
+      "surface": "the episode title moment, every ve cut",
+      "related": [
+        "title-card-split-logo-and-squeezed"
+      ],
+      "guards": [
+        {
+          "file": "scripts/velib/qc_frames.py",
+          "contains": "centred under the title",
+          "how": "ve qc reads the settled title frame and refuses a wordmark that is not inside the title's own columns and centred under it",
+          "test": "python3 tests/ve_frame_checks_test.py"
+        },
+        {
+          "file": "tests/ve_frame_checks_test.py",
+          "contains": "def test_a_wordmark_outside_the_lockup_fails",
+          "how": "a wordmark read away from the title fails; the good lockup passes"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "long_video",
+          "short_video"
+        ],
+        "line": "The wordmark sits centred under the title, inside the one lockup."
+      }
+    },
+    {
+      "id": "checks-refused-the-engines-own-output",
+      "on": "2026-11-19",
+      "krish": "We need to eliminate the 4 million approvals like this that I'm required to make. It basically means I have to sit there for 7 hours waiting for the next stupid fucking approval to give and the engine refuses to move on even though it's just going to lead to more errors anyway.",
+      "what": "On Fri 20 and Tue 17 the engine's own checks refused what the engine itself had drawn: the plain-frame guard refused the brand palette's own close card, a frame grab at the clip's last frame read nothing and held the show gate as not_run, captions.word_default refused face-with-proof cuts whose picked caption style compile draws as phrase pages, and the pre-critic verdict, bound to the whole spec, went stale on every audio target, crop or counter edit (61 ve critic --pre runs on one piece). Each refusal stopped production and waited on a re-run or on Krish.",
+      "symptom": "Production stalled for hours on checks that disagreed with what compile draws, and every stall waited on a new run or a press.",
+      "cause": "Each check was written apart from the code that draws the cut, so nothing proved it passed the engine's own good output.",
+      "status": "guarded",
+      "mode": "check-disagrees-with-compile",
+      "guard_level": "lint_refuse",
+      "surface": "ve qc, ve lint and ve critic --pre on every ve cut",
+      "guards": [
+        {
+          "file": "scripts/velib/plainframes.py",
+          "contains": "close_from = (props.get('ending') or {}).get('fromFrame')",
+          "how": "no frame at or after the palette close (props.ending.fromFrame) is judged a plain dark band",
+          "test": "python3 tests/ve_plain_frames_test.py"
+        },
+        {
+          "file": "scripts/velib/qc_faces.py",
+          "contains": "the clip's own last frame is read",
+          "how": "a seek at the clip's last frame reads that frame; a frame well past the end is an error"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "face-with-proof with no caption style picked",
+          "how": "captions.word_default asks for word captions only where no caption style is picked, as compile draws",
+          "test": "python3 tests/ve_lint_test.py"
+        },
+        {
+          "file": "scripts/velib/precritic.py",
+          "contains": "'figures': figures(spec)",
+          "how": "the pre-critic verdict is bound to the idea, each cut's structure and the figures it judged, never the whole spec",
+          "test": "python3 tests/ve_idea_numbers_guards_test.py"
+        }
+      ]
     }
   ]
 }

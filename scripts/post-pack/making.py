@@ -358,6 +358,7 @@ def show(piece_id, call=None):
     lines.extend(tone_floor_lines(record))
     lines.extend(teleprompter_lines(record))
     lines.extend(cut_verdict_lines(data.get('cut_verdicts')))
+    lines.extend(final_review_lines(record))
     chosen = record.get('production_choices') if isinstance(record.get('production_choices'), dict) else {}
     used = ', '.join(f'{k} {v}' for k, v in chosen.items() if k != 'at')
     if used:
@@ -544,6 +545,30 @@ def choices_patch(direction=None, opening=None, lead_picture=None, big_moment_so
             raise MakingError(f'{key} {value!r} is not one of its options in config/reference-cuts.json under_test '
                               f'({", ".join(options)})')
     return {'production_choices': chosen}
+
+
+FINAL_REVIEW_KEY = re.compile(r'^[a-z][a-z0-9_]{0,39}$')
+MAX_FINAL_REVIEW_LINE = 300  # the engine's limit on a final-review line (_making.ts)
+
+
+def final_review_patch(key, line):
+    """One line for the final review (config/ve/asks.json; Ruling, Krish, 2026-11-19: no approvals during production):
+    what the session chose between Sign storyboard and the final review (`key`: thumbnail, title, speed, music...),
+    recorded so he can change it there in one press. The session decides, records this and carries on; it never waits.
+    A newer line on the same key replaces the older on the record."""
+    key = (key or '').strip()
+    words = ' '.join(str(line or '').split())
+    if not FINAL_REVIEW_KEY.match(key):
+        raise MakingError(f'the choice is one key, such as thumbnail or title (lower case, digits and underscores), not "{key}"')
+    if not words or len(words) > MAX_FINAL_REVIEW_LINE:
+        raise MakingError(f'the line says what was chosen, in one line of at most {MAX_FINAL_REVIEW_LINE} characters')
+    return {'for_final_review': [{'key': key, 'line': words}]}
+
+
+def final_review_lines(record):
+    """The final review's lines on the record, one per choice, for show."""
+    held = (record or {}).get('for_final_review')
+    return [f'for the final review: {l.get("line")}' for l in held if isinstance(l, dict)] if isinstance(held, list) else []
 
 
 def visual_gate_patch(post_path):
@@ -2950,7 +2975,7 @@ def main(argv=None, call=None):
     ap = argparse.ArgumentParser(description="Record where a piece is, for Control Center's board.")
     ap.add_argument('piece_id', nargs='?')
     ap.add_argument('what', nargs='?', choices=['show', 'workroom', 'publish-manager', 'visual-gate', 'scripts', 'pack', 'recorded', 'video', 'posted', 'session',
-                                                     'read-back', 'tone-floor', 'teleprompter', 'drive-link', 'narrative', 'choices', 'clips', 'thumbnails'])
+                                                     'read-back', 'tone-floor', 'teleprompter', 'drive-link', 'narrative', 'choices', 'clips', 'thumbnails', 'final-review'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--by', help=f'who is writing: Codex, Claude Code (default: {BY_ENV}, else {CODEX_BY} inside Codex, else {DEFAULT_BY})')
     ap.add_argument('--sent', action='store_true', help='with pack: the pack was sent to the library')
@@ -3031,6 +3056,10 @@ def main(argv=None, call=None):
                 patch = clip_use_patch(a.args[1], 'show_with_sound' if a.args[0] == 'sound' else 'reference', a.krish_words)
             else:
                 patch = clip_patch(a.args[0], a.args[1], a.at_s, a.end_s, a.audio, a.omit, a.krish_words)
+        elif a.what == 'final-review':
+            if len(a.args) != 2:
+                ap.error('give the choice and its line: final-review thumbnail "Thumbnail: option B, the critic\'s best"')
+            patch = final_review_patch(a.args[0], a.args[1])
         elif a.what == 'choices':
             patch = choices_patch(a.args[0] if a.args else None, a.opening, a.lead_picture, a.big_moment_sound)
         elif a.what == 'scripts':

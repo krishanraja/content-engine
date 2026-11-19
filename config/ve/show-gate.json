@@ -8,8 +8,8 @@
     "_why": "The board's Approve proof refuses a proof with no receipt for its sha256. mode off turns the refusal off without touching ve. enforce_from_week is the Monday of the first week it binds; a proof of an earlier week is never refused."
   },
   "bind_unshown": {
-    "enabled": true,
-    "_why": "When true, a cut not yet shown to Krish (no show receipt for any cut of the piece, no approved proof) meets every rule that exists when it is shown, whatever its publish_day, instead of only the rules whose binds_from is on or before its publish_day. On since 2026-11-19 (Krish: \"yes to all 3\"): it changes the rules a cut not yet shown is held to, and nothing already shown or approved (F33). Set enabled false to go back."
+    "enabled": false,
+    "_why": "Retired 2026-11-19. Ruling (Krish, 2026-11-19): rules and the engine freeze at Sign storyboard; a new rule or fix binds from the next piece; bind_unshown goes. A rule now binds a piece only when its binds_from is on or before the day the piece froze (ve expect, engine.json at; scripts/velib/showgate.py binds). No code reads this flag; it stays false so nothing reads it as on."
   },
   "qc": {
     "require_complete": true,

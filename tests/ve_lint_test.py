@@ -345,27 +345,47 @@ class ReferencesAreRequired(unittest.TestCase):
         self.assertNotIn('reference.required', codes_for(spec))
 
 
-class WordCaptionsByDefault(unittest.TestCase):
-    """Signed by Krish, 3 Nov 2026: word captions are the face-with-proof default."""
+class NoDeadCaptionLint(unittest.TestCase):
+    """captions.word_default asks only where no caption style is picked: compile turns word mode off the moment a style
+    is picked, so the old rule refused a build that is never drawn (Ruling, Krish, 2026-11-19: no approvals during
+    production; a lint that disagrees with compile only stops the engine). With no style picked, word captions stay the
+    signed default (3 Nov 2026)."""
 
-    def test_face_with_proof_in_house_captions_is_refused_and_word_passes(self):
-        house = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(format='face-with-proof'), s['brand'].update(captions='house')))
-        word = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(format='face-with-proof'), s['brand'].update(captions='word')))
-        self.assertIn('captions.word_default', codes_for(house))
-        self.assertNotIn('captions.word_default', codes_for(word))
+    def test_face_with_proof_with_no_style_still_needs_word_captions(self):
+        def build(s):
+            dated(s, [GEORGIA, JACK])
+            s.update(format='face-with-proof', publish_day='2026-11-20')
+            s['brand'].update(captions='house')
+            (s.get('style') or {}).pop('captions', None)
+        self.assertIn('captions.word_default', codes_for(mutate(build)))
+
+    def test_face_with_proof_with_a_picked_style_lints_clean(self):
+        def build(s):
+            dated(s, [GEORGIA, JACK])
+            s.update(format='face-with-proof', publish_day='2026-11-20')
+            s['brand'].update(captions='house')
+            s.setdefault('style', {})['captions'] = {'theme': 'cinematic', 'reason': 'test', 'placement': 'lower'}
+        spec = mutate(build)
+        codes = codes_for(spec)
+        self.assertNotIn('captions.word_default', codes)
+        self.assertFalse([c for c in codes if c.startswith('captions.')], codes)
+        # and a picked style on a word-mode cut is not measured either: compile draws phrase pages for it
+        spec['brand']['captions'] = 'word'
+        self.assertFalse([c for c in codes_for(spec) if c.startswith('captions.')])
 
 
 class CaptionsStayPut(unittest.TestCase):
     """Krish, 2026-11-18, of the Tue 17 short in art-directed: "We can't have each new word appear somewhere else on the
-    screen, and we need the previous word to stick around for a tiny bit longer." A word-mode cut (one word a page)
-    never takes a style measured to move its new word between pages (config/ve/caption-steady.json)."""
+    screen, and we need the previous word to stick around for a tiny bit longer." A word-mode cut (one word a page, no
+    picked caption style, so compile draws one word a page) never takes a caption theme measured to move its new word
+    between pages (config/ve/caption-steady.json)."""
 
     def word_cut(self, theme, day='2026-11-18', captions='word'):
         def build(s):
             dated(s, [GEORGIA, JACK])
             s.update(format='face-with-proof', publish_day=day)
-            s['brand'].update(captions=captions)
-            s.setdefault('style', {})['captions'] = {'theme': theme, 'reason': 'test', 'placement': 'lower'}
+            s['brand'].update(captions=captions, caption_theme=theme)
+            (s.get('style') or {}).pop('captions', None)
         return mutate(build)
 
     def test_a_style_that_moves_its_word_is_refused_on_a_one_word_cut(self):
@@ -379,6 +399,11 @@ class CaptionsStayPut(unittest.TestCase):
     def test_pieces_before_the_rule_and_phrase_cuts_are_not_refused(self):
         self.assertNotIn('captions.steady', codes_for(self.word_cut('cinematic', day='2026-11-17')))
         self.assertNotIn('captions.steady', codes_for(self.word_cut('cinematic', captions='house')))
+
+    def test_a_picked_style_is_never_measured_on_one_word_pages(self):
+        spec = self.word_cut('art-directed')
+        spec.setdefault('style', {})['captions'] = {'theme': 'cinematic', 'reason': 'test', 'placement': 'lower'}
+        self.assertNotIn('captions.steady', codes_for(spec))
 
     def test_every_style_is_measured_and_the_word_is_krishs(self):
         import json

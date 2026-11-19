@@ -11,6 +11,7 @@
     "min_band_px": 120,
     "row_luma_max": 25,
     "row_detail_max": 10,
+    "exempt": "The brand palette's own close (config/brand-palette.json closes, drawn by EndingBand from props.ending.fromFrame) is a flat ink card by design; no frame at or after ending.fromFrame is judged plain.",
     "why": "A run of rows taller than 120 px (at 1920 high; scaled to the frame) whose mean luma is under 25 and whose row detail (the standard deviation along the row) is under 10 is a plain dark band: ink, black, or ink with a faint texture. Rows carrying a caption or a figure have detail and break the run."
   },
   "caption_over_content": {

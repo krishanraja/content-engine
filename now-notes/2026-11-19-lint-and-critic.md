@@ -1,0 +1,4 @@
+Status: Four checks that stopped the engine on its own output are fixed: the plain-frame guard no longer refuses the brand palette's own close card, a frame grab at the clip's last frame reads it instead of reporting not_run, captions.word_default asks for word captions only where no caption style is picked and captions.steady measures only those cuts, and the pre-critic verdict is bound to the idea, the beats and the figures it judged, so an audio target, crop or counter edit no longer makes it stale. The title wordmark alignment failure is on the register.
+Next: Land the freeze at Sign storyboard (bind_unshown off, plain-frames given a binds_from) so a rule that lands mid-piece binds from the next piece.
+Changed: precritic.spec_sha now hashes style.idea, proof.structural_hash per cut and the figures in the datasets and object words; a verdict written on the old whole-spec hash still stands while that spec is unchanged.
+North Star check (2026-11-19): holds.
