@@ -2,9 +2,9 @@
   "schema": "ve-verdict/1",
   "piece": "2026-11-18-wednesday",
   "cut": "long",
-  "sha256": "29e7cc7c8a009caa62399028e28f6fe7c7fac77f309f361b2eb41d86f84eecee",
+  "sha256": "73d09109eb35158c9fecaba66499f978a1a83a61fd216bdbb0163820011a034d",
   "reviewer": "ve-critic (subagent, did not make the cut)",
-  "reviewed_at": "2026-11-19T12:59:08.038777+00:00",
+  "reviewed_at": "2026-11-19T13:03:15.737256+00:00",
   "lens_sha256": "6967b939fc12c52d2216ca482801c6e16d407a568b38a31aa5a5ace0d30b6a16",
   "frames_viewed": [
     {
@@ -165,6 +165,12 @@
     }
   ],
   "findings": [
+    {
+      "severity": "fix",
+      "area": "evidence",
+      "frame_s": 7.6,
+      "text": "Q5: the source line now reads 'Salesforce announcement \u00b7 26 Aug 2026', correcting the label; the card is one highlighted line without the announcement's own headline."
+    },
     {
       "severity": "fix",
       "area": "motion",
