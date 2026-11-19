@@ -1027,7 +1027,7 @@
        "to_state": "to recall the mayor"
       }
      ],
-     "backdrop": "asset:wyso-lead"
+     "backdrop": "asset:ddn-lead"
     },
     {
      "id": "built",
@@ -1669,7 +1669,7 @@
       }
      ],
      "override_reason": "the figure counts to his number and holds through his joke",
-     "backdrop": "asset:wyso-lead"
+     "backdrop": "asset:ddn-lead"
     },
     {
      "id": "l12",
