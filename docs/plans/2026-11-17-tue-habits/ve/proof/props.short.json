@@ -15,7 +15,7 @@
   },
   "series": {
     "label": "off.day",
-    "day": "Tuesday",
+    "day": "Thursday",
     "promise": "makeyourmindup.ai",
     "site": "makeyourmindup.ai"
   },
@@ -36,245 +36,237 @@
       "pixelHeight": 740
     }
   },
+  "bodyLogo": false,
   "segments": [],
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.scratch/ve/habits/assets/audio.short.wav",
-      "trimBeforeFrames": 1708
+      "trimBeforeFrames": 1234
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 40,
+      "toFrame": 16,
       "words": [
         {
-          "text": "own",
+          "text": "skill",
           "atFrame": 0
         },
         {
-          "text": "its",
+          "text": "matters",
           "atFrame": 0
         },
         {
-          "text": "mistakes",
-          "atFrame": 2
+          "text": "the",
+          "atFrame": 0
         },
         {
-          "text": "like",
-          "atFrame": 14
+          "text": "most",
+          "atFrame": 3
         },
         {
-          "text": "they're",
-          "atFrame": 26
+          "text": "right",
+          "atFrame": 9
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 16,
+      "toFrame": 66,
+      "words": [
+        {
+          "text": "now",
+          "atFrame": 16
+        },
+        {
+          "text": "and",
+          "atFrame": 28
+        },
+        {
+          "text": "71%",
+          "atFrame": 35
         }
       ],
       "swipeIndex": 2
     },
     {
-      "fromFrame": 40,
-      "toFrame": 91,
+      "fromFrame": 66,
+      "toFrame": 106,
       "words": [
         {
-          "text": "yours.",
-          "atFrame": 40
-        },
-        {
-          "text": "Because",
-          "atFrame": 45
-        },
-        {
-          "text": "they",
+          "text": "said",
           "atFrame": 66
         },
         {
-          "text": "are.",
-          "atFrame": 74
+          "text": "the",
+          "atFrame": 80
         },
         {
-          "text": "Now,",
-          "atFrame": 77
+          "text": "same",
+          "atFrame": 84
+        },
+        {
+          "text": "thing.",
+          "atFrame": 90
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 91,
-      "toFrame": 119,
+      "fromFrame": 106,
+      "toFrame": 156,
       "words": [
         {
-          "text": "three",
-          "atFrame": 91
+          "text": "Accountability.",
+          "atFrame": 106
         },
         {
-          "text": "habits",
-          "atFrame": 110
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 119,
-      "toFrame": 162,
-      "words": [
-        {
-          "text": "that",
-          "atFrame": 119
-        },
-        {
-          "text": "are",
-          "atFrame": 125
-        },
-        {
-          "text": "getting",
-          "atFrame": 128
-        },
-        {
-          "text": "people",
-          "atFrame": 133
-        },
-        {
-          "text": "fired.",
-          "atFrame": 144
-        }
-      ],
-      "swipeIndex": 4
-    },
-    {
-      "fromFrame": 162,
-      "toFrame": 198,
-      "words": [
-        {
-          "text": "One,",
-          "atFrame": 162
-        },
-        {
-          "text": "waiting",
-          "atFrame": 168
-        },
-        {
-          "text": "to",
-          "atFrame": 180
-        },
-        {
-          "text": "be",
-          "atFrame": 187
-        },
-        {
-          "text": "told",
-          "atFrame": 191
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 198,
-      "toFrame": 218,
-      "words": [
-        {
-          "text": "what",
-          "atFrame": 198
-        },
-        {
-          "text": "to",
-          "atFrame": 204
-        },
-        {
-          "text": "do",
-          "atFrame": 208
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 218,
-      "toFrame": 240,
-      "words": [
-        {
-          "text": "when",
-          "atFrame": 218
+          "text": "Check",
+          "atFrame": 134
         },
         {
           "text": "the",
-          "atFrame": 234
+          "atFrame": 139
         },
         {
-          "text": "AI",
+          "text": "AI's",
+          "atFrame": 146
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 156,
+      "toFrame": 196,
+      "words": [
+        {
+          "text": "work",
+          "atFrame": 156
+        },
+        {
+          "text": "and",
+          "atFrame": 162
+        },
+        {
+          "text": "overrule",
+          "atFrame": 177
+        }
+      ],
+      "swipeIndex": 2
+    },
+    {
+      "fromFrame": 196,
+      "toFrame": 222,
+      "words": [
+        {
+          "text": "it",
+          "atFrame": 196
+        },
+        {
+          "text": "when",
+          "atFrame": 200
+        },
+        {
+          "text": "it's",
+          "atFrame": 204
+        },
+        {
+          "text": "wrong.",
+          "atFrame": 212
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 222,
+      "toFrame": 240,
+      "words": [
+        {
+          "text": "Then",
+          "atFrame": 222
+        },
+        {
+          "text": "they",
+          "atFrame": 228
+        },
+        {
+          "text": "asked",
+          "atFrame": 238
+        },
+        {
+          "text": "the",
           "atFrame": 240
         },
         {
-          "text": "never",
-          "atFrame": 240
-        },
-        {
-          "text": "waits.",
+          "text": "staff",
           "atFrame": 240
         }
       ],
-      "swipeIndex": 3
+      "swipeIndex": null
     }
   ],
   "captionStyle": "house",
   "captionTheme": "art-directed",
   "beats": [
     {
-      "id": "b15",
-      "role": "payoff",
+      "id": "b12",
+      "role": "anchor",
       "layout": "STAGE",
       "fromFrame": 0,
-      "toFrame": 45,
+      "toFrame": 106,
       "uses": [
-        "plate-b15"
+        "screen-ibm"
       ],
       "transitionOut": "cut",
       "sectionBeat": true,
       "plate": {
         "source": "none"
       },
-      "keyFrame": 19
+      "keyFrame": 66
     },
     {
-      "id": "b16",
+      "id": "b13a",
       "role": "pivot",
       "layout": "STAGE",
-      "fromFrame": 45,
-      "toFrame": 77,
+      "fromFrame": 106,
+      "toFrame": 134,
       "uses": [
-        "plate-b15",
-        "yours"
+        "screen-accountable"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
         "source": "none"
       },
-      "keyFrame": 71
+      "keyFrame": 128
     },
     {
-      "id": "b17",
+      "id": "b13",
       "role": "bridge",
       "layout": "STAGE",
-      "fromFrame": 77,
-      "toFrame": 162,
+      "fromFrame": 134,
+      "toFrame": 222,
       "uses": [
-        "plate-b17"
+        "screen-overrule"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
         "source": "none"
       },
-      "keyFrame": 145
+      "keyFrame": 204
     },
     {
-      "id": "b18",
+      "id": "b14",
       "role": "anchor",
       "layout": "STAGE",
-      "fromFrame": 162,
+      "fromFrame": 222,
       "toFrame": 240,
       "uses": [
-        "plate-b18"
+        "plate-b14"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -286,171 +278,112 @@
   ],
   "objects": [
     {
-      "obj": "plate-b18",
+      "obj": "plate-b14",
       "device": "photo_plate",
-      "meaning": "the generated picture on b18",
-      "fromFrame": 162,
+      "meaning": "the generated picture on b14",
+      "fromFrame": 222,
       "toFrame": 240,
       "variants": {},
       "params": {
         "image": {
-          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b18-cobwebs.png",
-          "pixelWidth": 1024,
-          "pixelHeight": 1819
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b14-stampers.png",
+          "pixelWidth": 941,
+          "pixelHeight": 1672
         },
         "push": 0.06,
         "generated": true,
         "regions": {
-          "phone": {
-            "x": 0.3,
-            "y": 0.46,
-            "w": 0.36,
-            "h": 0.18
-          },
-          "screen": {
-            "x": 0.68,
-            "y": 0.28,
-            "w": 0.31,
-            "h": 0.34
+          "stamps": {
+            "x": 0.25,
+            "y": 0.4,
+            "w": 0.7,
+            "h": 0.35
           }
         }
       }
     },
     {
-      "obj": "plate-b15",
+      "obj": "screen-ibm",
       "device": "photo_plate",
-      "meaning": "the generated picture on b15",
+      "meaning": "IBM's own release, the 71% clause highlighted as he says it",
       "fromFrame": 0,
-      "toFrame": 77,
+      "toFrame": 106,
       "variants": {},
       "params": {
-        "image": {
-          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b15-signing.png",
-          "pixelWidth": 941,
-          "pixelHeight": 1672
+        "video": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b11-ibm.mp4",
+          "pixelWidth": 1080,
+          "pixelHeight": 1920,
+          "trimBeforeFrames": 45
         },
-        "push": 0.06,
-        "generated": true,
-        "regions": {
-          "pen": {
-            "x": 0.35,
-            "y": 0.25,
-            "w": 0.35,
-            "h": 0.25
-          },
-          "stack": {
-            "x": 0.4,
-            "y": 0.3,
-            "w": 0.55,
-            "h": 0.45
-          }
-        }
+        "push": 0
       }
     },
     {
-      "obj": "plate-b17",
+      "obj": "screen-accountable",
       "device": "photo_plate",
-      "meaning": "the generated picture on b17",
-      "fromFrame": 77,
-      "toFrame": 162,
+      "meaning": "IBM's clause knocked back as ACCOUNTABILITY slams in: the one skill 71% named",
+      "fromFrame": 106,
+      "toFrame": 134,
       "variants": {},
       "params": {
-        "image": {
-          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b17-boxes.png",
-          "pixelWidth": 941,
-          "pixelHeight": 1672
+        "video": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b13a-accountable.mp4",
+          "pixelWidth": 1080,
+          "pixelHeight": 1920,
+          "trimBeforeFrames": 0
         },
-        "push": 0.06,
-        "generated": true,
-        "regions": {
-          "boxes": {
-            "x": 0.15,
-            "y": 0.25,
-            "w": 0.75,
-            "h": 0.3
-          }
-        }
+        "push": 0,
+        "generated": true
       }
     },
     {
-      "obj": "yours",
-      "device": "stamp",
-      "meaning": "every AI mistake signed off as yours",
-      "fromFrame": 45,
-      "toFrame": 77,
+      "obj": "screen-overrule",
+      "device": "photo_plate",
+      "meaning": "an AI's wrong figure struck out and overruled",
+      "fromFrame": 134,
+      "toFrame": 222,
       "variants": {},
       "params": {
-        "kind": "outline",
-        "paint": "mint",
-        "size": "hero",
-        "top": "SIGNED OFF BY",
-        "main": "YOU",
-        "tiltDeg": 5,
-        "at": {
-          "x": 140,
-          "y": 600,
-          "w": 800,
-          "h": 380
-        }
+        "video": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b13-overrule.mp4",
+          "pixelWidth": 1080,
+          "pixelHeight": 1920,
+          "trimBeforeFrames": 0
+        },
+        "push": 0,
+        "generated": true
       }
     }
   ],
   "events": [
     {
-      "id": "b15-0",
-      "obj": "plate-b15",
+      "id": "b12-0",
+      "obj": "screen-ibm",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 0
     },
     {
-      "id": "b15-1",
-      "obj": "plate-b15",
-      "verb": "move",
-      "toState": "pen",
-      "atFrame": 0
-    },
-    {
-      "id": "b15-2",
-      "obj": "plate-b15",
-      "verb": "move",
-      "toState": "stack",
-      "atFrame": 2
-    },
-    {
-      "id": "b16-0",
-      "obj": "yours",
-      "verb": "stamp",
-      "toState": "signed",
-      "atFrame": 66
-    },
-    {
-      "id": "b17-0",
-      "obj": "plate-b17",
+      "id": "b13a-0",
+      "obj": "screen-accountable",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 77
+      "atFrame": 106
     },
     {
-      "id": "b17-1",
-      "obj": "plate-b17",
-      "verb": "move",
-      "toState": "boxes",
-      "atFrame": 128
-    },
-    {
-      "id": "b18-0",
-      "obj": "plate-b18",
+      "id": "b13-0",
+      "obj": "screen-overrule",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 162
+      "atFrame": 134
     },
     {
-      "id": "b18-1",
-      "obj": "plate-b18",
-      "verb": "move",
-      "toState": "phone",
-      "atFrame": 198
+      "id": "b14-0",
+      "obj": "plate-b14",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 222
     }
   ],
   "motion": {

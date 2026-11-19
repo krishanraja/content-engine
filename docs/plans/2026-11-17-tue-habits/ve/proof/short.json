@@ -2,15 +2,15 @@
   "schema": "ve-proof/1",
   "piece": "701a2c55-7400-4dc8-99cb-d6001147ae16",
   "cut": "short",
-  "beat": "b17",
+  "beat": "b13a",
   "rule": "named in the spec (proof.beat)",
-  "start": 56.933,
-  "end": 64.933,
+  "start": 41.133,
+  "end": 49.133,
   "beat_s": [
-    59.5,
-    62.333
+    44.667,
+    45.6
   ],
-  "sha256": "811518aed6177089720094b4b4b5987a03d4b0d399ab1c7a283c0a48ca85b8ac",
+  "sha256": "59e58afc803bbf252e3e710f7c636db433e83bdad6c79fb9d2d79cfa1057f318",
   "spec_sha256": "b2a7d300291d96b86c858cd7bd607c8845aea5c0be077f0f9d8de4ad82d02cba",
   "structure": {
     "format": "voice-led-pictures",
@@ -314,7 +314,7 @@
     ]
   },
   "style_module": "swiss-kinetic-type",
-  "props_sha256": "f2f2c2cdefc2dad7091b16cc2d00bc20fccb5cd9d62fdc9a3c96a3dba42b3929",
+  "props_sha256": "33d168699aa61f7a658215088cd8e74f3ff7df4f43e181f3a5b6a05fa23ed537",
   "type": [
     [
       "data",
