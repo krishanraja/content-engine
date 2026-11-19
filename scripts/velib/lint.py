@@ -649,7 +649,7 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             out.append(f'story.one_payoff {where}: exactly one payoff beat (found {roles.count("payoff")})')
         from . import guards  # noqa: PLC0415
         # No cut needs a dated call (Ruling, Krish, 2026-11-19: "If I want to predict something in a particular piece
-        # I will"). spec.call is set only when he asked for a prediction on the piece; then a whole cut ends on its call
+        # I will"; and earlier that day: "I hate this prediction format. I think we just scrap it."). spec.call is set only when he asked for a prediction on the piece; then a whole cut ends on its call
         # beat, and a call beat never stands without one.
         if whole and spec.get('call') and 'call' not in roles and not guards.off_day(spec):
             out.append(f'story.call {where}: Krish asked for a prediction on this piece: end on a call beat carrying spec.call')
