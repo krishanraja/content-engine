@@ -4194,6 +4194,54 @@
         ],
         "line": "Never offer an idea that is already approved or in work on any week; every week's ideas board carries the meme templates."
       }
+    },
+    {
+      "id": "article-figure-typed-mark-and-word-cards",
+      "on": "2026-11-19",
+      "krish": "these dont look visually good enough and they have the wrong brand mark. Are these to go inside, in line, in the Substack article? If so, we don't even need the brand mark. (19 Nov 2026, the Fri 20 production session, of the piece's Substack figures)",
+      "what": "The Fri 20 article figures (piece c00cd4e0) reached Krish with a typed 'makeyourmindup' mark top right, as cards of words that restated the article, and after the redraw still said things the article never did: 'September 2024', 'BILLED TWICE', a timeline start date and a subtitle that did not fit one of its cases (reader test 2).",
+      "symptom": "An inline Substack figure carries a typed wordmark the post does not need, is a card of words instead of a picture, or states a number, date or claim the article does not.",
+      "cause": "scripts/pages/figure.css offered a .mark class and render_figure.mjs treated a mark as part of every figure, so each new figure built from the last piece's HTML carried one; the brand palette's check runs only on video cuts; nothing asked for a picture form; and the figure's words were checked against the article only by the reader test, after the figures were drawn and sent.",
+      "guards": [
+        {
+          "file": "scripts/pages/figure_check.py",
+          "contains": "def mark_problems(",
+          "how": "an inline figure with a mark element, an image named for a mark, or the typed words is refused; a share card's mark must be the palette's own image by its sha256",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "scripts/pages/figure_check.py",
+          "contains": "def form_problems(",
+          "how": "a figure with no <meta name=\"figure-form\"> (source-page, scale, timeline, ledger, map, comparison) or more than max_running_words of running text outside its labels is refused",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "scripts/pages/figure_check.py",
+          "contains": "def article_problems(",
+          "how": "every number, date, quoted phrase and mid-sentence name on the figure must be in the article, and a stamp's words must stand together there; the Fri 20 figures are the failing fixture",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "scripts/pages/render_figure.mjs",
+          "contains": "figure_check.py",
+          "how": "the renderer runs the three checks before it draws anything and draws no refused figure",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "config/article-figures.json",
+          "contains": "\"max_running_words\"",
+          "how": "the forms, the word limit, the mark names and the article-match rules, one place"
+        }
+      ],
+      "guard_level": "lint_refuse",
+      "status": "guarded",
+      "surface": "article figures (Substack)",
+      "watch": {
+        "formats": [
+          "article"
+        ],
+        "line": "An inline article figure carries no mark, names one picture form, and says nothing the article doesn't: render_figure.mjs refuses it otherwise."
+      }
     }
   ]
 }
