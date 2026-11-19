@@ -355,6 +355,15 @@ def make(spec: dict, cut: str, directory: Path, props: dict, render_fn, qc_fn=No
     return record
 
 
+def _standing_reproof(spec: dict, record: dict) -> bool:
+    """A newer proof of a piece he has already approved a proof of needs no new press once the session recorded what it
+    compared (Ruling, Krish, 2026-11-19; config/ve/production-guards.json standing_approval.reproof)."""
+    from .guards import standing  # noqa: PLC0415
+    approved = any(isinstance(a, dict) and a.get('gate') == 'proof' and a.get('by') == 'Krish' for a in spec.get('approvals') or [])
+    compared = ((record.get('compare') or {}).get('compared') or {}).get('text')
+    return standing('reproof') and approved and bool(compared)
+
+
 def problems(spec: dict, cut: str, directory: Path, gates: dict, props: dict | None = None) -> list[str]:
     """[] when an approved proof stands for this cut as the spec is now; otherwise each reason, with what to do."""
     piece = spec.get('piece_id', '<piece>')
@@ -390,6 +399,8 @@ def problems(spec: dict, cut: str, directory: Path, gates: dict, props: dict | N
             and not (title.get('looked') or {}).get('text'):
         out.append(f"Krish's approval names the title (\"{press['words']}\"), and nobody has recorded looking at the title frame at "
                    f'full size: open it, then ve proof <spec> --cut {cut} --title-looked "what you saw"')
+    if press is None and _standing_reproof(spec, record):
+        press = {'verdict': 'approve', 'words': ''}
     if press is None:
         out.append(f"Krish has not approved proof/{cut}.mp4 (sha256 {str(record.get('sha256'))[:12]}): he presses Approve proof "
                    f"on the board's day tab for {piece}")

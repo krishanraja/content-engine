@@ -208,6 +208,14 @@ class Held(unittest.TestCase):
 
 
 class EngineFreeze(Held):
+    # The freeze itself, with Krish's standing approval of engine changes (2026-11-19) switched off; StandingApproval
+    # covers it switched on.
+    def setUp(self):
+        super().setUp()
+        patcher = mock.patch.object(guards, 'standing', return_value=False)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def test_the_signed_engine_renders_and_a_changed_one_is_refused_until_he_approves_it(self):
         self.assertEqual(self.refused(), [])
         files = dict(guards.engine_files(), **{'apps/renderer/src/engine/chrome/WordCaption.tsx': '0' * 64})
@@ -330,3 +338,19 @@ class PressTime(unittest.TestCase):
     def test_a_date_alone_still_reads_as_that_day(self):
         spec = {'approvals': [{'gate': 'proof', 'by': 'Krish', 'on': '2026-11-19'}]}
         self.assertEqual(guards.last_press(spec, {}).isoformat(), '2026-11-19T00:00:00+00:00')
+
+
+class StandingApproval(unittest.TestCase):
+    """Ruling (Krish, 2026-11-19): stop asking him to approve engine changes and re-proofs inside a piece."""
+
+    def test_the_standing_approval_is_on(self):
+        self.assertTrue(guards.standing('engine_changes'))
+        self.assertTrue(guards.standing('reproof'))
+        self.assertFalse(guards.standing('publish'))
+
+    def test_a_reproof_needs_his_earlier_approval_and_a_recorded_comparison(self):
+        approved = {'approvals': [{'gate': 'proof', 'by': 'Krish', 'on': '2026-11-19', 'said': 'ok', 'artifact_hash': 'a' * 64}]}
+        compared = {'compare': {'compared': {'text': 'every beat change at full size, title strong'}}}
+        self.assertTrue(proof._standing_reproof(approved, compared))
+        self.assertFalse(proof._standing_reproof(approved, {}))
+        self.assertFalse(proof._standing_reproof({'approvals': []}, compared))

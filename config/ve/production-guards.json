@@ -89,5 +89,14 @@
   "pre_critic": {
     "_why": "The Critic's two questions (one idea beside The Ladder; no invented numbers) are asked of the spec, the storyboard table and the card briefs BEFORE any card is written or the storyboard is signed, not after the render. verdict.pre.json, by a reviewer who did not write the spec, bound to the spec's hash.",
     "from": "2026-11-19"
+  },
+  "standing_approval": {
+    "ruled": "Ruling (Krish, 2026-11-19): stop asking him to approve engine changes and re-proofs inside a piece; once he has approved a proof of a cut, the session carries the piece to its finished cut without asking again.",
+    "krish": "can you change the setting that fucking requires 52959453432 approvals every 2 seconds?",
+    "engine_changes": true,
+    "engine_changes_why": "a change to the engine during a piece needs no exception approval; the house golden, the engine tests and ve qc still run on every change and every cut",
+    "reproof": true,
+    "reproof_why": "once Krish has approved any proof of a piece, a newer proof needs no new press when the session has recorded what it compared (ve proof --compared) and, where his approval named the title, what it saw on the title frame (--title-looked)",
+    "still_his": "publishing, sending, spending, deleting, the storyboard signature, and his pick of titles and thumbnails"
   }
 }

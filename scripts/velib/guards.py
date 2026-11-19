@@ -80,6 +80,12 @@ def _exception(spec: dict, sha: str, directory: Path | None = None) -> dict | No
 ENGINE_EXCEPTIONS = 'engine-exceptions.json'
 
 
+def standing(key: str) -> bool:
+    """Krish's standing approval (config/ve/production-guards.json standing_approval; Ruling, Krish, 2026-11-19: stop
+    asking him to approve engine changes and re-proofs inside a piece)."""
+    return (config().get('standing_approval') or {}).get(key) is True
+
+
 def engine_only(approval: dict) -> bool:
     """An exception that approves an engine change and nothing else: it never waives a lint check or counts as a press
     on a cut."""
@@ -355,7 +361,7 @@ def engine_problems(spec: dict, cut: str, directory: Path) -> list[str]:
     lock = load_json(path)
     files = engine_files()
     now = engine_sha(files)
-    if now == lock.get('sha256') or _exception(spec, now, directory):
+    if now == lock.get('sha256') or _exception(spec, now, directory) or standing('engine_changes'):
         return []
     old = lock.get('files') or {}
     changed = sorted(n for n in set(old) | set(files) if old.get(n) != files.get(n))
