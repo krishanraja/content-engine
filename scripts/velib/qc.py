@@ -321,6 +321,9 @@ def inputs_from_props(props: dict) -> dict:
             # measure that band, the box the renderer draws in (Tue 17, 18 Nov 2026: the podcast theme was modelled as
             # a centred word 982 px wide while it drew 640 px from the left edge).
             x, y, w, h = theme_band(aspect, props.get('captionPlacement') or 'lower')
+            # Its text is drawn from the band's left edge: as wide as the page's words at the theme's largest size
+            # (88 px, qc_faces.CHAR_WIDTH a character), never wider than the band.
+            w = min(w, int(len(qc_faces.page_text(page)) * 88 * qc_faces.CHAR_WIDTH) + 24)
         else:
             x, y, w, h = qc_faces.caption_box(page, style, aspect, region, layout=beat.get('layout'),
                                              plate=(beat.get('plate') or {}).get('source'))
