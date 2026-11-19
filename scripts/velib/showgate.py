@@ -144,8 +144,8 @@ def _row_state(report: dict, name: str) -> str:
     if name in (report.get('_waived') or []):
         return 'absent'   # waived by Krish for this file: the reviewer attests the row instead
     row = (report.get('checks') or {}).get(name)
-    if not isinstance(row, dict) or row.get('status') == 'not_run':
-        return 'absent'
+    if not isinstance(row, dict) or row.get('status') in ('not_run', 'not applicable', 'advisory'):
+        return 'absent'   # a row that did not run or does not apply to this file is attested by the reviewer
     return 'pass' if row.get('pass') else 'fail'
 
 

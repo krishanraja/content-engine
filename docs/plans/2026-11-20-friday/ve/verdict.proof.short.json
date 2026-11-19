@@ -2,9 +2,9 @@
  "schema": "ve-verdict/1",
  "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
  "cut": "short",
- "sha256": "2f212643926415522f0d92bea5bc12b02ee1e9f347211e26b99706aeb3847f7a",
+ "sha256": "98caa8e32976b46a4defb6ec24ab0bd20541656a85c3110c457925e82c50be4f",
  "reviewer": "ve-critic subagent, a separate reader that did not make the cut",
- "reviewed_at": "2026-11-19T19:43:38.596956+00:00",
+ "reviewed_at": "2026-11-19T20:00:57.672852+00:00",
  "lens_sha256": "6967b939fc12c52d2216ca482801c6e16d407a568b38a31aa5a5ace0d30b6a16",
  "frames_viewed": [
   {
@@ -23,10 +23,10 @@
    "at_s": 4.5
   },
   {
-   "at_s": 5.0
+   "at_s": 4.8
   },
   {
-   "at_s": 5.3
+   "at_s": 5.1
   },
   {
    "at_s": 5.5
@@ -41,6 +41,9 @@
    "at_s": 6.5
   },
   {
+   "at_s": 7.0
+  },
+  {
    "at_s": 7.5
   }
  ],
@@ -48,56 +51,50 @@
   {
    "severity": "fix",
    "area": "motion",
-   "frame_s": 5.7,
-   "text": "f_5.7: the left half is flat near-black for one frame (5.70 s, measured frame by frame: dark share 0.88 on that frame only, 0.25 on its neighbours) at the leading edge of the horizontal blur whip from the sofa to the skeleton office. Lead the wipe with the incoming plate."
-  },
-  {
-   "severity": "fix",
-   "area": "evidence",
-   "frame_s": 1.0,
-   "text": "Hook counter lands on $195,000 by 'news from', before he says the figure; land the count on his '$195,000'."
-  },
-  {
-   "severity": "fix",
-   "area": "copy",
-   "frame_s": 0.5,
-   "text": "Captions fade in grey: 'OUT' (f_0.5) and 'FROM' (hook_2.0) are pale for their first frames; QC's reader fails page 0 (captions.ocr, captions.render)."
+   "frame_s": 3.5,
+   "text": "Sofa plate holds still about 2 s (f_2.5 to 4.5) with a coin in mid-air before the coins tumble on 'missing money' (f_4.8). Krish saw it and ruled it ships (2026-11-19, 'Put it on the board')."
   },
   {
    "severity": "fix",
    "area": "motion",
-   "frame_s": 2.5,
-   "text": "Sofa cash plays from the start of its beat: pouring on 'and a chatbot beat them', settled by 'missing money'."
-  },
-  {
-   "severity": "fix",
-   "area": "motion",
-   "frame_s": 7.5,
-   "text": "Skeleton plays from the start of its beat: already on the floor before 'skeletons'; its skull sits behind the mint card and wordmark at f_7.5."
+   "frame_s": 6.0,
+   "text": "Closet plate shows the skeleton already down from f_6.0, before 'skeletons' (f_7.0); the skull sits behind the mint card and wordmark. Krish ruled it ships."
   },
   {
    "severity": "fix",
    "area": "evidence",
    "frame_s": 8.1,
-   "text": "hook_8.1: the frame, the $195,000 panel included, is motion-blurred as the strike lands on 'fraction'."
+   "text": "hook_8.1: the frame, the $195,000 panel included, blurs for about 0.1 s as the strike lands on 'fraction'; sharp at hook_8.5. Krish ruled it ships."
+  },
+  {
+   "severity": "fix",
+   "area": "copy",
+   "frame_s": 0.5,
+   "text": "QC fails captions.ocr and captions.render on page 0 (the reader cannot read 'OUT', which reads near-white to the eye); the page splits 'whole / teams'. Krish waived the rows for this file."
   },
   {
    "severity": "fix",
    "area": "motion",
    "frame_s": 1.5,
-   "text": "motion.cue_sync face-4: the caption page turns 3 frames before the CHATBOT slam (QC's numbers)."
+   "text": "motion.cue_sync face-4: the caption page turns 3 frames before the CHATBOT slam. Krish waived the row for this file."
+  },
+  {
+   "severity": "note",
+   "area": "other",
+   "frame_s": 0.5,
+   "text": "Hook counter lands at $195,000 by hook_2.0, before he says the figure, as the storyboard Krish signed opens it."
+  },
+  {
+   "severity": "note",
+   "area": "motion",
+   "frame_s": 5.7,
+   "text": "f_5.7: half the frame near-black on one frame only (5.70 s), the whip's leading edge; reads as the whip."
   },
   {
    "severity": "note",
    "area": "brand",
    "frame_s": 1.5,
-   "text": "A small mint and coral fleck shows through the middle of every slam word (the burst slips)."
-  },
-  {
-   "severity": "note",
-   "area": "composition",
-   "frame_s": 9.5,
-   "text": "title_9.5: the faded previous caption line sits above the next page on a graphics beat; the real-page card is left of centre and its standfirst and byline are under 30 px."
+   "text": "A small mint and coral fleck shows through every slam word (the burst slips); title_9.5 shows the faded previous caption line on a graphics beat; the real-page card is left of centre with a sub-30 px standfirst."
   }
  ],
  "blocking": false

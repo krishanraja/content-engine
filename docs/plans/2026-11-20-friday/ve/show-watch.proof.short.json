@@ -1,0 +1,122 @@
+{
+  "schema": "ve-show-watch/1",
+  "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+  "cut": "short",
+  "label": "proof.short",
+  "cut_sha256": "98caa8e32976b46a4defb6ec24ab0bd20541656a85c3110c457925e82c50be4f",
+  "watch": {
+    "by": "Claude (producer) with the ve-critic separate reader",
+    "at": "2026-11-19T20:11:14.222156+00:00",
+    "frames_viewed": [
+      0.5,
+      1.5,
+      2.5,
+      3.5,
+      4.5,
+      4.8,
+      5.1,
+      5.5,
+      5.7,
+      6.0,
+      6.5,
+      7.0,
+      7.5
+    ],
+    "audio_heard_s": 8.0,
+    "script_compared": true
+  },
+  "checklist": {
+    "one_picture_per_beat": {
+      "pass": true,
+      "line": "One picture a beat: sofa cash (f_2.5 to 5.5), skeleton office under the title (f_6.0 to 7.5); the hook's counter panel over his take (hook_4.0)."
+    },
+    "no_ghost_in_dissolves": {
+      "pass": true,
+      "line": "Face to sofa is a clean cut (f_1.5 to f_2.5); sofa to office is a horizontal blur whip with one half-dark frame at 5.70 s (stepped frame by frame), never a dissolve over his face; qc transition.no_ghost_frames passed."
+    },
+    "no_offday_tag_on_screen": {
+      "pass": true,
+      "line": "No off.day pill, header or label in any of the 13 excerpt frames or the title frames; qc text.no_off_day_frames passed."
+    },
+    "captions_off_in_title_hold": {
+      "pass": true,
+      "line": "No caption text from f_3.5 through f_7.5 while the title builds and holds (checked at 3.5, 4.5, 4.8, 5.1, 5.5, 5.7, 6.0, 6.5, 7.0, 7.5)."
+    },
+    "title_from_his_spoken_line": {
+      "pass": true,
+      "line": "Built word by word from his spoken line, 'WILL YOUR' (f_3.5) to 'IN YOUR CLOSET?' (f_7.5), as full-width cards over the plates, never over his face."
+    },
+    "key_figure_fills_frame": {
+      "pass": true,
+      "line": "'$195,000' at hero size on its panel, digits about 650 px wide on a panel about 86% of the frame wide (hook_4.0)."
+    },
+    "approved_track_passes": {
+      "pass": true,
+      "line": "The bed is 'Make up Your Mind (Instrumental Version)', Epidemic Sound, in config/music-library.json, safelisted and Content ID cleared; qc audio.bed and bed shape pass."
+    },
+    "no_false_starts_left": {
+      "pass": true,
+      "line": "qc takes.restarts passed on this file's transcription; words.lost's one flag is the transcriber hearing 'AI auditor' as 'I order to', waived by Krish for this file."
+    },
+    "opening_moves_in_3s": {
+      "pass": true,
+      "line": "The $195,000 counter is rolling on his first word (hook_1.0) and lands by hook_2.0, as the storyboard he signed opens it."
+    },
+    "head_whole_never_cropped": {
+      "pass": true,
+      "line": "His whole head is in frame and clear of the slam band and the counter panel on every face frame (f_0.5 head top about y 490; hook_4.0, face_2.75 to 7.9, whose_2.5, love_2.2)."
+    },
+    "head_bottom_right_on_wide": {
+      "pass": true,
+      "line": "Not applicable to this file: it is the 9:16 short's proof; no 16:9 beat is in it."
+    },
+    "funny_and_made_by_codex": {
+      "pass": true,
+      "line": "Light in tone (the sprawled skeleton among the files, f_7.5); the plates are Higgsfield generations on Krish's credit yes of 19 Nov, and he ruled that meets this row for this piece ('Yes, count it', 19 Nov)."
+    },
+    "known_faults_fixed_not_caveated": {
+      "pass": true,
+      "line": "Every Critic block is fixed; the remaining items (sofa hold, skeleton already down, 0.1 s strike blur) Krish saw and ruled ship ('Put it on the board', 19 Nov); failed reader rows waived by him for this file."
+    },
+    "fixes_batched_checked_shown_once": {
+      "pass": true,
+      "line": "All fixes from four Critic rounds were batched and checked here; this file goes to him once, through the board."
+    },
+    "route_missing_said_first": {
+      "pass": true,
+      "line": "The one missing route (timing a plate to a word) was said in one line and built (scene_plate hold_s) before the render."
+    },
+    "every_beat_serves_his_idea": {
+      "pass": true,
+      "line": "Cash out of the sofa on 'missing money' (f_4.8), the skeleton in the files (f_7.5), the struck $195,000 (hook_8.5) all carry the auditor-opening-old-pages idea."
+    },
+    "no_bare_talking_head": {
+      "pass": true,
+      "line": "Every face frame carries a slam word and tape or the counter panel (f_0.5, f_1.5, hook_1.0 to 8.5, face_2.75 to 7.9)."
+    },
+    "captions_readable_halo_no_break": {
+      "pass": true,
+      "line": "Captions read near-white with the halo (f_0.5 'OUT', f_1.5); the reader rows that fail on 'OUT' are waived by Krish; one page splits 'whole / teams', which he saw in the proof."
+    },
+    "graded_backdrop_not_black": {
+      "pass": true,
+      "line": "Graded plates throughout (sofa f_2.5 to 5.5, office f_6.0 to 7.5); the only near-black is one frame of the whip's leading edge at 5.70 s, stepped frame by frame; no figure dimmed."
+    },
+    "wordmark_only_title_and_close": {
+      "pass": true,
+      "line": "The wordmark appears only inside the title lockup (f_3.5 to 7.5) and is gone after it (title_8.9); qc brand.no_mark passed."
+    },
+    "music_level_and_loudness": {
+      "pass": true,
+      "line": "qc measured integrated -13.5 LUFS, the bed under his voice, no drop-outs; audio.bed and bed_continuity passed on this file."
+    },
+    "captions_off_his_face": {
+      "pass": true,
+      "line": "Pages sit at y 980 to 1320, beside and below his chin on every face frame; qc captions.off_face passed on this file."
+    },
+    "title_full_frame_lockup": {
+      "pass": true,
+      "line": "One centred lockup: wordmark tight under the first card (f_5.0), under 'or' (f_5.5), under the second card (f_6.0 to 7.5)."
+    }
+  }
+}

@@ -286,22 +286,182 @@
       "calibration": "placeholder: measured on one real render, 5 Nov 2026 (velib/qc_opening.py)"
     },
     "words.lost": {
-      "value": null,
-      "target": "see config/gates.json",
-      "pass": null,
-      "status": "not_run"
+      "value": {
+        "machine": "scripts/quick-edit/words_gate.py",
+        "version": "words-gate/4",
+        "status": "fail",
+        "lost": [
+          {
+            "word": "auditor",
+            "token": "auditor",
+            "take_index": 11,
+            "take_s": 3.954,
+            "take_e": 4.274,
+            "final_between_s": [
+              3.84,
+              4.28
+            ],
+            "context": "... So will your AI [auditor] find missing money or ...",
+            "final_heard_there": "order to",
+            "message": "\"auditor\" is lost: said at 0:03.95 in the take, not heard in the final cut between 0:03.84 and 0:04.28 (the final has \"order to\" there): ... So will your AI [auditor] find missing money or ..."
+          }
+        ],
+        "unapproved_removals": [],
+        "function_word_differences": [
+          {
+            "word": "a",
+            "token": "a",
+            "take_index": 3,
+            "take_s": 1.094,
+            "take_e": 1.114,
+            "final_between_s": [
+              1.06,
+              1.14
+            ],
+            "context": "... pricing out and [a] chatbot beat them. So ...",
+            "final_heard_there": "I"
+          }
+        ],
+        "adlib_losses": [],
+        "heard_differently": [],
+        "cleared_by_krish": [],
+        "added_in_final": [
+          {
+            "word": "I",
+            "final_s": 1.06
+          },
+          {
+            "word": "order",
+            "final_s": 3.84
+          },
+          {
+            "word": "to",
+            "final_s": 4.08
+          }
+        ],
+        "approved_removals": [],
+        "unmeasured": [],
+        "calibration": {
+          "status": "uncalibrated",
+          "note": "OPEN until calibrated on real cuts (plan W3 3a): Monday 26 Oct's accepted long and short must pass; Wednesday 21 Oct's published long cut and Friday's 90-second cut from the 17 Oct words file must fail. A clipped tail the transcriber still hears whole is caught by joins-in-gaps (scripts/cutgates/gaps.py). The harness is scripts/cutgates/calibrate.py on config/gate-calibration.json."
+        },
+        "counts": {
+          "script_words": 23,
+          "take_words": 23,
+          "final_words": 24,
+          "removed_by_edl": 0,
+          "compared": 23,
+          "take_tokens_not_in_script": 0,
+          "script_content_words_not_said_in_take": 0,
+          "lost": 1,
+          "unapproved_removals": 0,
+          "cleared_by_krish": 0,
+          "unmeasured": 0,
+          "near_homophones": 0,
+          "function_word_differences": 1,
+          "adlib_losses": 0
+        },
+        "reason": "1 content word(s) of the signed script he said in the take are missing from the final cut",
+        "aligners": [
+          "faster-whisper"
+        ],
+        "agreement": "single aligner",
+        "per_aligner": {
+          "faster-whisper": {
+            "status": "fail",
+            "lost": [
+              "auditor"
+            ],
+            "reason": "1 content word(s) of the signed script he said in the take are missing from the final cut"
+          }
+        },
+        "heard_by_one_aligner": []
+      },
+      "target": "no content word of the signed script lost on every aligner's pass",
+      "pass": false,
+      "status": "measured",
+      "agreement": "single aligner",
+      "summary": "1 content word(s) of the signed script he said in the take are missing from the final cut: \"auditor\" is lost: said at 0:03.95 in the take, not heard in the final cut between 0:03.84 and 0:04.28 (the final has \"order to\" there): ... So will your AI [auditor] find missing money or ..."
     },
     "joins.in_gaps": {
-      "value": null,
-      "target": "see config/gates.json",
-      "pass": null,
-      "status": "not_run"
+      "value": {
+        "machine": "scripts/cutgates/gaps.py",
+        "version": "joins-in-gaps/1",
+        "rule": {
+          "min_gap_ms": 80.0,
+          "clearance_ms": 30.0
+        },
+        "aligners": [
+          "faster-whisper"
+        ],
+        "agreement": "single aligner",
+        "joins": [],
+        "failed": [],
+        "status": "pass"
+      },
+      "target": "every join in an agreed gap >= 80 ms, 30 ms clear each side",
+      "pass": true,
+      "status": "measured",
+      "agreement": "single aligner",
+      "summary": "every join is in an agreed gap (single aligner)"
     },
     "captions.clock": {
-      "value": null,
-      "target": "see config/gates.json",
-      "pass": null,
-      "status": "not_run"
+      "value": {
+        "machine": "scripts/cutgates/captions.py",
+        "version": "captions/1",
+        "part": "clock",
+        "drawn_by": "faster-whisper",
+        "heard_by": "faster-whisper",
+        "independent": false,
+        "agreement": "single aligner: the finished audio heard again by faster-whisper, the aligner that drew the captions",
+        "tolerance_frames": 2,
+        "tolerance_status": "placeholder, to be measured on Monday 26",
+        "pages": [
+          {
+            "page": 0,
+            "fromFrame": 0,
+            "text": "teams to sort pricing out",
+            "status": "not_located",
+            "reason": "the first word of the page is not where the aligner heard the words around it"
+          },
+          {
+            "page": 1,
+            "fromFrame": 29,
+            "text": "and a chatbot beat them.",
+            "heard_word": "and",
+            "heard_s": 0.66,
+            "heard_frame": 20,
+            "delta_frames": 9,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 1 (\"and a chatbot beat them.\") starts at frame 29, 9 frames late on \"and\" as faster-whisper heard it at 0.660 s (tolerance 2)"
+          }
+        ],
+        "failed": [
+          {
+            "page": 1,
+            "fromFrame": 29,
+            "text": "and a chatbot beat them.",
+            "heard_word": "and",
+            "heard_s": 0.66,
+            "heard_frame": 20,
+            "delta_frames": 9,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 1 (\"and a chatbot beat them.\") starts at frame 29, 9 frames late on \"and\" as faster-whisper heard it at 0.660 s (tolerance 2)"
+          }
+        ],
+        "located_fraction": 0.5,
+        "status": "fail",
+        "reason": "1 of 2 caption page(s) start off the heard clock by more than 2 frames; only 1 of 2 caption pages could be placed on what faster-whisper heard (at least 80% must be): the captions say words the finished audio does not"
+      },
+      "target": "each page's first frame within 2 frames of its first word as heard",
+      "pass": false,
+      "status": "advisory",
+      "agreement": "single aligner: the finished audio heard again by faster-whisper, the aligner that drew the captions",
+      "summary": "1 of 2 caption page(s) start off the heard clock by more than 2 frames; only 1 of 2 caption pages could be placed on what faster-whisper heard (at least 80% must be): the captions say words the finished audio does not: caption page 1 (\"and a chatbot beat them.\") starts at frame 29, 9 frames late on \"and\" as faster-whisper heard it at 0.660 s (tolerance 2)",
+      "shadow": true,
+      "note": "tolerance not measured yet (config/gates.json captions.clock_tolerance_status): shown, not counted"
     },
     "captions.render": {
       "value": {
@@ -388,6 +548,90 @@
       },
       "target": "no caption, title or device box under a channel button (config/channel-safe-zones.json)",
       "pass": true
+    },
+    "beats.handover_in_gaps": {
+      "value": {
+        "machine": "scripts/cutgates/gaps.py",
+        "version": "joins-in-gaps/1",
+        "rule": {
+          "min_gap_ms": 150.0,
+          "clearance_ms": 0.0
+        },
+        "aligners": [
+          "faster-whisper"
+        ],
+        "agreement": "single aligner",
+        "joins": [
+          {
+            "at_s": 2.3,
+            "at": "0:02.300",
+            "before": {
+              "word": "them.",
+              "s": 1.8,
+              "e": 2.04,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "So",
+              "s": 2.44,
+              "e": 2.5,
+              "heard_by": "faster-whisper"
+            },
+            "gap_ms": 400.0,
+            "clearance_before_ms": 260.0,
+            "clearance_after_ms": 140.0,
+            "status": "pass"
+          },
+          {
+            "at_s": 5.7,
+            "at": "0:05.700",
+            "before": {
+              "word": "or",
+              "s": 5.12,
+              "e": 5.5,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "it",
+              "s": 5.82,
+              "e": 6.0,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:05.700 sits inside \"will\" (5.500 to 5.820 s, heard by faster-whisper): after \"or\" (ends 5.500 s, faster-whisper), before \"it\" (starts 5.820 s, faster-whisper)"
+          }
+        ],
+        "failed": [
+          {
+            "at_s": 5.7,
+            "at": "0:05.700",
+            "before": {
+              "word": "or",
+              "s": 5.12,
+              "e": 5.5,
+              "heard_by": "faster-whisper"
+            },
+            "after": {
+              "word": "it",
+              "s": 5.82,
+              "e": 6.0,
+              "heard_by": "faster-whisper"
+            },
+            "status": "fail",
+            "gap_ms": 0.0,
+            "message": "join at 0:05.700 sits inside \"will\" (5.500 to 5.820 s, heard by faster-whisper): after \"or\" (ends 5.500 s, faster-whisper), before \"it\" (starts 5.820 s, faster-whisper)"
+          }
+        ],
+        "status": "fail",
+        "reason": "1 of 2 join(s) are not in a clear gap (single aligner, faster-whisper)"
+      },
+      "target": "every beat handover in an agreed gap >= 150 ms",
+      "pass": false,
+      "status": "advisory",
+      "agreement": "single aligner",
+      "summary": "1 of 2 join(s) are not in a clear gap (single aligner, faster-whisper): join at 0:05.700 sits inside \"will\" (5.500 to 5.820 s, heard by faster-whisper): after \"or\" (ends 5.500 s, faster-whisper), before \"it\" (starts 5.820 s, faster-whisper)",
+      "shadow": true
     },
     "ground.not_bare": {
       "value": [
@@ -599,11 +843,9 @@
       "pass": true
     },
     "takes.restarts": {
-      "value": null,
+      "value": [],
       "target": "no unlisted false start left in the cut",
-      "pass": null,
-      "status": "not_run",
-      "reason": "no words heard on the render (--transcribe or --heard)"
+      "pass": true
     },
     "motion.first_seconds": {
       "value": [],
@@ -740,5 +982,5 @@
     }
   },
   "measured_pass": false,
-  "complete": false
+  "complete": true
 }

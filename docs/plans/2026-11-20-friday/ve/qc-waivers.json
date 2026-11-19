@@ -24,6 +24,28 @@
         "captions.render",
         "composition"
       ]
+    },
+    {
+      "by": "Krish",
+      "said": "Waive all three",
+      "asked": "On the Fri 20 Nov short proof I just sent, three quality checks still fail. Two are the text reader unable to read the caption word 'OUT', which reads fine to the eye. The third is a caption page turning 3 frames before the CHATBOT slam lands. Do you waive all three for this file?",
+      "on": "2026-11-19",
+      "sha256": "98caa8e32976b46a4defb6ec24ab0bd20541656a85c3110c457925e82c50be4f",
+      "rows": [
+        "captions.ocr",
+        "captions.render",
+        "motion.cue_sync"
+      ]
+    },
+    {
+      "by": "Krish",
+      "said": "Waive it",
+      "asked": "One more reader check on the same Fri 20 Nov short proof: the local transcriber hears your 'AI auditor' as 'I order to' under the title music, so 'words.lost' fails. The dialogue audio is byte for byte the same as every proof you've heard. Waive words.lost for this file too?",
+      "on": "2026-11-19",
+      "sha256": "98caa8e32976b46a4defb6ec24ab0bd20541656a85c3110c457925e82c50be4f",
+      "rows": [
+        "words.lost"
+      ]
     }
   ]
 }
