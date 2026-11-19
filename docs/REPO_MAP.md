@@ -2395,6 +2395,14 @@ Every week's ideas board carries the meme templates (Ruling, Krish, 2026-11-19: 
 - `function fileSpec(week: string, v: unknown, html = false): v is BoardFile`
 - `function validManifest(week: string, v: unknown): v is Manifest`
 
+### `apps/control-plane/api/board/_corpus.ts`
+
+The corpus a piece's narrative is built from (Ruling, Krish, 2026-11-19: "at this stage of every piece, I need to be ab…
+
+- `interface CorpusItem`
+- `function corpusOf(materials: Array<{ id?: unknown; title?: unknown; kind?: unknown; role?: unknown }>): CorpusItem[]`
+- `function corpusLines(corpus: CorpusItem[]): string`
+
 ### `apps/control-plane/api/board/_cuts.ts`
 
 - `const WORDS_MAX`

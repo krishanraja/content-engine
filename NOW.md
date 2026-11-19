@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-19","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (1 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Until a piece's lock is signed, its Claude prompt names every research item on file by id as the corpus the narrative is built from, traced with the 5 Whys and made fun to consume (_corpus.ts, the one place; Re-run the narrative copies the same prompt). Research filed on a piece already reaches Drive's 6 Research library by itself; a test now pins that images and PDFs filed as research go there too. (2026-11-19)
 - Fri 20 Nov (c00cd4e0, "AI finds the skeletons in your closet") in post-production. Both masters cut and in sync (short 85.1 s, long 4:25, worst drift 8 ms); both cuts specced and passed by a separate pre-Critic; 13 stills and 11 clips generated within Krish's 703.75 of 710 approved Higgsfield credits; takes and his thumbnail words on the record. Engine fixes from the first proof through the new show gate: frame guard off-by-one, proof excerpt measured as its own window, halo on every caption style over his take, his face framed 1.1x higher on tall cuts (his "Halo + frame me higher"), Wire H test pinned to its own day. Face-led cover card queued for Codex once main has it. (2026-11-19)
 - Saturday offers only good-news carousels, three or more, each five great things AI is doing for people with who each helps and how (smarter, better, happier, more successful), topics may mix, no lead theme of the last four Saturdays, never medicine-led after a month of medical stories (the Sunday run's gate, code goodnews, and the board holds a non-good-news Saturday option with the reason). Every week's ideas board carries the meme templates (last week's unanswered ones are carried), and an idea that is already approved or in work on any week leaves the board ("Already in work"). (2026-11-19)
 - The brand close card's SUBSCRIBE FREE line is 26 px on both shapes (was 24 px, which read 17 px tall, under ve qc's 18 px small-text floor), so a whole cut's own close no longer fails composition small_text. The house golden is redrawn for the three recorded cuts that end on it. (2026-11-19)
@@ -47,13 +48,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-19 apps/control-plane/api/board/_corpus.ts (new), _weekModel.ts, tests/control-plane/board-corpus.test.ts, docs/PUBLISH_BOARDS.md.
 - 2026-11-19 scripts/velib/plainframes.py, scripts/velib/qc.py, scripts/velib/qc_audio.py, apps/renderer/src/engine/FormatMaster.tsx, apps/renderer/src/engine/BrandFrame.tsx, tests, docs/plans/2026-11-20-friday/, docs/ve/cards/fri20-covers/, assets/plates/fri20-auditor/, config/title-verdicts.json
 Older lines: `docs/history/2026-11-19-NOW-moved-9.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-19): clear the short proof through ve show-check (QC, a separate Critic, the pre-show checklist, the recorded watch), file its show receipt on the piece for Krish's Approve proof; then render both cuts, show-check them, and file through the n8n Drive uploader with making.py records.
+- Next (2026-11-19): Krish drops a Perplexity answer and its files on a piece before its lock, copies the Claude prompt and sees the corpus listed.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-19): holds.
