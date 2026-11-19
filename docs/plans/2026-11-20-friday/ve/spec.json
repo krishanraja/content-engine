@@ -54,7 +54,7 @@
    "params": {
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -83,7 +83,7 @@
     ],
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -259,7 +259,7 @@
     "tapeText": "EVERYONE'S, RIGHT NOW",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -279,7 +279,7 @@
     "tapeText": "HOSPITALS PAY WHOLE TEAMS",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -299,7 +299,7 @@
     "tapeText": "A CHATBOT BEAT THEM",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -319,7 +319,7 @@
     "tapeText": "AN OLD BILL CAN'T ARGUE BACK",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -339,7 +339,7 @@
     "tapeText": "THE RULES ARE WRITTEN DOWN",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -359,7 +359,7 @@
     "tapeText": "AI READS EVERY LINE",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -379,7 +379,7 @@
     "tapeText": "CARE BILLED UNDER",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -399,7 +399,7 @@
     "tapeText": "A MUCH MORE EXPENSIVE CODE",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -419,7 +419,7 @@
     "tapeText": "THAN THE CARE HIS BROTHER-IN-LAW ACTUALLY GOT",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -439,7 +439,7 @@
     "tapeText": "NEXT YEAR: IT'S GUESSING",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -459,7 +459,7 @@
     "tapeText": "LAST YEAR: IT'S ANALYSING",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -479,7 +479,7 @@
     "tapeText": "WHOSE MISTAKE?",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -499,7 +499,7 @@
     "tapeText": "IT WAS THE HOSPITAL'S",
     "place": {
      "left": 135,
-     "top": 260,
+     "top": 230,
      "width": 1080,
      "height": 480,
      "scale": 0.75

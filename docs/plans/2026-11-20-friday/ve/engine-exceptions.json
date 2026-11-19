@@ -45,6 +45,24 @@
    "on": "2026-11-19",
    "artifact_hash": "2a7cb58c512491db53817ac4fa14ebeab6b92aef5cce020489b6b8dd7fb45bd8",
    "covers": "the same five fixes, completed: the art-directed caption's faint echo word is never drawn over a beat that shows his face (the grey ghost word the Critic flagged, seen as 'CHATBOT' and 'THEM' over his face on the proof)"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "fix all five, this is absolute madness",
+   "on": "2026-11-19",
+   "artifact_hash": "49a821687a78d172b8543dad8c7512e3a2f465247b15beeddbe209dfff06019c",
+   "covers": "the caption finding of the five, completed: the faded previous caption line never carries back across the title moment"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "fix all five, this is absolute madness",
+   "on": "2026-11-19",
+   "artifact_hash": "7857ce0e5c4cf6f097f33e9ba4f1de0b8db7836a96c6fd9387e187a7be872bde",
+   "covers": "the face-and-captions finding of the five, completed: his full-frame take is framed a little higher (FACE_LIFT 1.1 to 1.16, in the direction of his ruling 'Halo + frame me higher') so the captions clear his jaw when he leans in"
   }
  ]
 }

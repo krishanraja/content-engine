@@ -175,6 +175,22 @@ def measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None, photo
     return {'pass': all(check['pass'] for check in checks.values()), 'checks': checks, 'findings': findings}
 
 
+def _picture_boxes(props, beat, frame, caption_zone) -> list:
+    """Picture, not laid-out type: a live slam word's caution-tape band (its tapes run off both frame edges by design,
+    Fri 20 Nov), and on a beat that shows his take, the take below the caption zone (the print on his top read as
+    "Man" and "WHOLE" on the tapes, Fri 20 Nov). The caption zone itself is always still checked."""
+    boxes = []
+    for obj in props.get('objects', []):
+        place = (obj.get('params') or {}).get('place')
+        if obj.get('device') == 'slam_word' and isinstance(place, dict) and obj.get('fromFrame', 0) <= frame < obj.get('toFrame', 0):
+            top = int(place.get('top', 0))
+            boxes.append((0, max(0, top - 140), 1080, int(place.get('height', 480) * place.get('scale', 1)) + 280))
+    if (beat.get('plate') or {}).get('source') == 'take' and beat.get('face') != 'off':
+        bottom = caption_zone['y'] + caption_zone['h']
+        boxes.append((0, bottom, 1080, 1920 - bottom))
+    return boxes
+
+
 def _footage_boxes(props, frame):
     """Where the phone glass shows real footage at this frame: its text is evidence, never retyped or enlarged."""
     boxes = []
@@ -210,7 +226,7 @@ def composition_checks(video, props, lock) -> dict:
                    for word in page['words']
                    for token in qc_captions._tokens(word['text'] if isinstance(word, dict) else str(word))}
         allowed |= call_card_tokens(props, beat)
-        beat_lock, exempt = lock, _footage_boxes(props, at)
+        beat_lock, exempt = lock, _footage_boxes(props, at) + _picture_boxes(props, beat, at, lock['zones']['caption'])
         if beat.get('layout') == 'SPLIT':
             # A SPLIT beat's caption sits in the frozen split zone; the house zone there is his face and hands.
             from .qc import _split_geometry

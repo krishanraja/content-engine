@@ -1,35 +1,30 @@
 {
   "schema": "ve-pre-critic/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-  "spec_sha256": "d011052a8d1d496ce0a45d72fe421a79b0db316895f5ad16d68eb1328d3494d2",
+  "spec_sha256": "ce65a7ed30ced91461a19c51a09c126dbc8d7ef9296d7fb7a13c6dbc7916839a",
   "cards": [],
   "reviewer": "reviewer subagent afe4d5bf6eef0d4e6",
-  "reviewed_at": "2026-11-19T17:00:30.628396+00:00",
+  "reviewed_at": "2026-11-19T18:01:33.426884+00:00",
   "answers": {
     "one_idea": {
       "pass": true,
-      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts. On the short's six F1 beats the slam words are his own words on the words he says, in one band above his head over his full take, so his face carries the line and adds no second picture. fell (P1) shows the bill counting down from 195,000 to 33,000 on 'fell' over the blurred bill page, with the caveat kept. Real pages stay held still; the sofa and closet plates still carry money and skeleton."
+      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts. The six F1 beats keep his own slam words on the words he says, in one band above his head; moving it 30 px up changes position only. fell (P1) still counts the bill down from 195,000 to 33,000 on 'fell' with the caveat kept. Real pages stay held still, and the sofa and closet plates still carry money and skeleton."
     },
     "no_invented_numbers": {
       "pass": true,
-      "line": "No invented figure. k_billed and k_after show only the bill-billed and bill-after rows (195,000 and 33,000) with their producer line 'Tom's Hardware, 29 Oct 2025 (the family's account)'. The ghost waits for a finished count, and chip_caveat stays on fell. No slam word or tape has a digit. The fell backdrop is the piece's own page, blurred unreadable at focus 1. The figures on th_head, l_lede and l_krafton are printed on their own pages."
+      "line": "No invented figure. k_billed and k_after show only the bill-billed and bill-after rows (195,000 and 33,000) with their producer line 'Tom's Hardware, 29 Oct 2025 (the family's account)', and chip_caveat stays on fell. No slam word or tape has a digit. The figures on th_head, l_lede and l_krafton are printed on their own pages. The placement change touches no figure."
     }
   },
   "findings": [
     {
       "severity": "note",
-      "area": "short hook, face, code, love, hindsight, whose (F1)",
-      "text": "The slam band (frame rows 260-620) must clear his head on his full-frame take, with captions under his chin; check a frame of each of the six beats after render."
+      "area": "short F1 band (top 230) and FACE_LIFT 1.16",
+      "text": "On a fresh render, check a frame of each F1 beat: his whole head below the band, captions under his chin, not on his face."
     },
     {
       "severity": "note",
       "area": "short hook strike",
-      "text": "The underline maps to about (307,447)-(772,444); check it crosses the digits on the first F1 hook frame after w18."
-    },
-    {
-      "severity": "note",
-      "area": "engine changes (not in spec)",
-      "text": "Slam exit to zero, tapes off both edges, the title lockup and no caption page spanning the title: check after render, including the 2.5 s frame on the sofa plate."
+      "text": "The underline maps to about (307,417)-(772,414); check it crosses the digits."
     }
   ],
   "mechanical": [],

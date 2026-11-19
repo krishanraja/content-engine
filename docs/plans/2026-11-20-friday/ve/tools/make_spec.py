@@ -166,7 +166,7 @@ no_marks_on_pages('short', beats)
 for _b in beats:  # the bill's own page behind every SPLIT panel, never plain ink (Krish, 19 Nov)
     if _b['layout'] == 'SPLIT': _b['backdrop'] = 'asset:tomshw'
 # Full face, slam band above his head (Krish's Critic, 19 Nov): his face stays high with the captions under his chin.
-BAND = {"left": 135, "top": 260, "width": 1080, "height": 480, "scale": 0.75}
+BAND = {"left": 135, "top": 230, "width": 1080, "height": 480, "scale": 0.75}
 for _b in beats:
     if _b['layout'] == 'SPLIT':
         _b['layout'] = 'F1'; _b['face'] = 'full'; _b.pop('backdrop', None)

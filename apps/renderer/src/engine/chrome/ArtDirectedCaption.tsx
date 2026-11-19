@@ -99,7 +99,10 @@ export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps;
   const fps = props.fps, box = ART_REGION[props.aspect], cream = props.tokens.cream
   const layout = artLayout(page, props.aspect), hang = cutHeight(props.captions, props.aspect)
   const text = (i: number, pg: Page = page) => clean(pg.words[i]!.text).toUpperCase()
-  const prev = index > 0 ? props.captions[index - 1]! : null
+  // The page before only while it ran up to this one: a page cut short by the title moment never carries back across it
+  // (Fri 20 Nov: "AND A CHATBOT BEAT THEM" faded above "A MAN'S" after the title).
+  const before = index > 0 ? props.captions[index - 1]! : null
+  const prev = before && before.toFrame >= page.fromFrame ? before : null
   const age = since(frame, page.fromFrame, fps)
 
   const word = (i: number, size: number) => {
