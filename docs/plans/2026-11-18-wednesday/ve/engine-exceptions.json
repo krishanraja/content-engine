@@ -113,6 +113,14 @@
       "on": "2026-11-19",
       "artifact_hash": "19e5124d1881ddc2abf3275ec3ad1ff32cc32c825589aa19e6cf045ace18d1bb",
       "said": "go engine 19e5124d, go both proofs, go the third fact-gate run"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "on": "2026-11-19",
+      "artifact_hash": "38fdec84134a235bee73b990c373f26e0f4c079ff55208997eebf118c13d7f3f",
+      "said": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?"
     }
   ]
 }

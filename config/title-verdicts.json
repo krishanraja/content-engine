@@ -92,6 +92,69 @@
  ],
  "verdicts": [
   {
+   "title": "BUILD IT? CRAZY.",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "his pick of option 1 for the Wed 18 thumbnail",
+   "krish": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?",
+   "on": "2026-11-19",
+   "piece": "db9f9f6a-1092-49be-8024-f335e060305a"
+  },
+  {
+   "title": "BUILD IT? CRAZY.",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "his pick of option 1 for the Wed 18 thumbnail",
+   "krish": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?",
+   "on": "2026-11-19",
+   "piece": "db9f9f6a-1092-49be-8024-f335e060305a"
+  },
+  {
+   "title": "CRAZY.",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "his pick of option 1, BUILD IT? CRAZY., for the Wed 18 thumbnail",
+   "krish": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?",
+   "on": "2026-11-19",
+   "piece": "db9f9f6a-1092-49be-8024-f335e060305a"
+  },
+  {
+   "title": "CRAZY.",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "his pick of option 1, BUILD IT? CRAZY., for the Wed 18 thumbnail",
+   "krish": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?",
+   "on": "2026-11-19",
+   "piece": "db9f9f6a-1092-49be-8024-f335e060305a"
+  },
+  {
+   "title": "BUILD IT?",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "his pick of option 1, BUILD IT? CRAZY., for the Wed 18 thumbnail",
+   "krish": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?",
+   "on": "2026-11-19",
+   "piece": "db9f9f6a-1092-49be-8024-f335e060305a"
+  },
+  {
+   "title": "BUILD IT?",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "his pick of option 1, BUILD IT? CRAZY., for the Wed 18 thumbnail",
+   "krish": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?",
+   "on": "2026-11-19",
+   "piece": "db9f9f6a-1092-49be-8024-f335e060305a"
+  },
+  {
+   "title": "Build or Buy your AI?",
+   "surface": "any",
+   "verdict": "picked",
+   "why": "his title for the Wed 18 video",
+   "krish": "go engine 38fdec84, go fourth fact check, thumbnail 1. Title \"Build or Buy your AI?",
+   "on": "2026-11-19",
+   "piece": "db9f9f6a-1092-49be-8024-f335e060305a"
+  },
+  {
    "title": "They Faked AI Use",
    "surface": "cover",
    "verdict": "rejected",

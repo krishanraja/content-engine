@@ -1,0 +1,112 @@
+{
+ "subchannel": "under.the.hood",
+ "date": "2026-11-18",
+ "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+ "headline": [
+  "Build or Buy",
+  "your AI?"
+ ],
+ "video_title": "Build or Buy your AI?",
+ "sources": {
+  "s1": [
+   "Fin, customer story: Build vs buy: Why Anthropic chose Fin",
+   "https://fin.ai/customers/anthropic"
+  ]
+ },
+ "cover": {
+  "headline": [
+   "Build or Buy",
+   "your AI?"
+  ],
+  "proof": {
+   "page": {
+    "url": "https://fin.ai/customers/anthropic",
+    "height": 900,
+    "crop": [
+     0.16,
+     0.2,
+     0.83,
+     0.42
+    ]
+   },
+   "source": "s1",
+   "tag": "FIN CUSTOMER STORY",
+   "alt": "Fin's customer story headline: Build vs buy: Why Anthropic chose Fin"
+  },
+  "rows": [
+   {
+    "name": "Anthropic",
+    "logo": "logos/anthropic-cream.svg"
+   },
+   {
+    "name": "Fin",
+    "logo": "logos/fin-cream.svg"
+   }
+  ]
+ },
+ "thumbs": {
+  "headline": [
+   "BUILD IT?",
+   "CRAZY."
+  ],
+  "rows": [
+   {
+    "name": "Anthropic",
+    "logo": "logos/anthropic-cream.svg"
+   },
+   {
+    "name": "Fin",
+    "logo": "logos/fin-cream.svg"
+   }
+  ],
+  "proof": {
+   "page": {
+    "url": "https://fin.ai/customers/anthropic",
+    "height": 900,
+    "crop": [
+     0.16,
+     0.2,
+     0.83,
+     0.42
+    ]
+   },
+   "source": "s1",
+   "tag": "FIN CUSTOMER STORY",
+   "alt": "Fin's customer story headline: Build vs buy: Why Anthropic chose Fin"
+  }
+ },
+ "thumb_options": [
+  {
+   "id": "a",
+   "note": "the headline and Anthropic's name together, proof beside the words",
+   "proof_width": "58%",
+   "logos_under": true
+  },
+  {
+   "id": "b",
+   "note": "proof first, the page leads and the words answer it",
+   "proof_first": true,
+   "proof_width": "50%",
+   "logos_under": true
+  },
+  {
+   "id": "c",
+   "note": "the headline line alone, cropped tight so it reads at grid size",
+   "proof": {
+    "page": {
+     "url": "https://fin.ai/customers/anthropic",
+     "height": 900,
+     "crop": [
+      0.17,
+      0.29,
+      0.77,
+      0.38
+     ]
+    }
+   },
+   "proof_width": "44%",
+   "logos_under": true
+  }
+ ],
+ "video_length": "5:01"
+}
