@@ -480,3 +480,19 @@ describe('his "Signed." is one press on the piece whose lock is written and not 
     expect(model(buildView(changed), 'tue').items[0].next).toMatchObject({ label: 'Sign the lock' })
   })
 })
+
+describe('the live check on a sent post (Krish, 2026-11-19)', () => {
+  it('a verdict from the check is kept; a problem is said on the card; no verdict says nothing', async () => {
+    const { growthPost } = await import('../../apps/control-plane/api/board/_offdayItems.js')
+    const { growthLiveLine } = await import('../../apps/control-plane/api/board/_view.js')
+    const sent = { state: 'live', channel: 'instagram', url: 'https://www.instagram.com/p/x/', at: '2026-11-19T17:00:00.000Z', buffer_post_id: 'abc123' }
+    const bad = growthPost({ ...sent, verify: { at: '2026-11-19T17:20:00.000Z', ok: false, passed: 4, failed: ['a carousel went out with no audio track: only pictures, no video and no music'] } }, 'buffer_sent')!
+    const good = growthPost({ ...sent, verify: { at: '2026-11-19T17:20:00.000Z', ok: true, passed: 6, failed: [] } }, 'buffer_sent')!
+    const none = growthPost(sent, 'buffer_sent')!
+    expect(growthLiveLine([bad])).toMatch(/did not all go out right: Instagram: a carousel went out with no audio track/)
+    expect(growthLiveLine([good])).toMatch(/Checked live: every post matches how it was made/)
+    expect(growthLiveLine([none])).not.toMatch(/Checked/)
+    // Only a check may report a verdict: Growth's own record cannot claim one.
+    expect(growthPost({ ...sent, verify: { at: '2026-11-19T17:20:00.000Z', ok: true, passed: 6, failed: [] } })!.verify).toBeUndefined()
+  })
+})

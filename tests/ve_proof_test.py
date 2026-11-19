@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
 os.environ['VE_GATES_OFFLINE'] = '1'  # never reach the engine from a test; the record is exercised with a stand-in call
+os.environ['VE_FRAMES_OFFLINE'] = '1'  # this file's renders are bytes, not frames: the frame guards have their own file (ve_plain_frames_test.py)
 
 import creative_direction  # noqa: E402
 import ve  # noqa: E402

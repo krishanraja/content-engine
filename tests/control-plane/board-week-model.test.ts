@@ -1,3 +1,4 @@
+import { bufferUrl } from '../../apps/control-plane/api/board/_growthPlacement.js'
 import { describe, expect, it } from 'vitest'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { approval } from './_approvals'
@@ -145,9 +146,14 @@ describe('the week model (contract 1.12.0)', () => {
     expect(made.next?.label).toBe('Publish')
     expect(made.assets?.length).toBeGreaterThan(0)
     const prompt = (made.next as { prompt: string }).prompt
-    for (const a of made.assets!) for (const f of a.slides) expect(prompt).toContain(f.url)
+    for (const a of made.assets!) for (const f of a.slides) expect(prompt).toContain(bufferUrl(f.url))
     expect(prompt).toContain('schedule this one approved, finished post in Buffer')
-    expect(prompt).toContain('never schedule anything else')
+    expect(prompt).toContain('never schedule a different file')
+    // Growth knows the channels, the time and the voice, so nothing is asked of him (Krish, 2026-11-19).
+    expect(prompt).toContain('nothing here is a question for him')
+    expect(prompt).toContain('Growth\'s four daily slots, 08:30, 12:30, 17:30, 20:30')
+    expect(prompt).toContain('https://drive.google.com/uc?export=download&id=')
+    expect(prompt).toContain('"there is no public link" is not a blocker')
     // The standard wall (never post or publish anything) is replaced, not contradicted.
     expect(prompt).not.toContain('Never post or publish anything, and never put an idea')
     expect(prompt).toContain('Keep the board current as you work')
@@ -179,6 +185,23 @@ describe('the week model (contract 1.12.0)', () => {
     const v2 = buildView(thisWeek())
     for (const day of v2.model!.days) for (const it of day.items) {
       if (it.type === 'post' && (it.stage.key === 'scheduled' || it.stage.key === 'live') && it.assets) expect(it.next?.label).not.toBe('Publish')
+    }
+  })
+
+  // Krish, 2026-11-19: "once I've pressed it, I can trust that the assets all remain in there even though it shows up as scheduled."
+  it('a post keeps listing every file it was made from once it is scheduled, and once it is live', () => {
+    const base = thisWeek()
+    const row = (posts: unknown[]) => ({ item: `engine:${WEEK}:gitbroke`, source: 'engine', origin_week: WEEK, option_id: 'gitbroke', option: {}, state: 'approved', week: WEEK, day: 'thu', date: '2026-11-12',
+      doc: null, piece_id: null, drive_folder: null, posts, followed: {}, version: 1, placed_by: 'Krish', placed_at: '2026-11-11T10:00:00.000Z' })
+    const sched = [{ state: 'scheduled', channel: 'instagram', due_at: '2026-12-30T17:00:00.000Z', url: null, at: '2026-11-11T12:00:00.000Z', buffer_post_id: 'abc123' }]
+    const live = [{ ...sched[0], state: 'live', url: 'https://www.instagram.com/p/x/', at: '2026-11-12T17:00:00.000Z' }]
+    const before = dayOf(buildView(base), 'thu').items.find(i => i.key === 'off-thu-gitbroke')!
+    expect(before.assets?.[0].slides.length).toBe(5)
+    for (const posts of [sched, live]) {
+      const v2 = buildView({ ...base, items: [...(base.items || []), row(posts) as never] })
+      const it = dayOf(v2, 'thu').items.find(i => i.key === 'off-thu-gitbroke')!
+      expect(it.stage.key).toBe(posts === sched ? 'scheduled' : 'live')
+      expect(it.assets?.[0].slides.length).toBe(5)
     }
   })
 

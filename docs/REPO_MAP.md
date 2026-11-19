@@ -2495,6 +2495,18 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `function gatePieces(week: string, pieces: Body[], approvals: Approval[] | null, ideas: Body | null)`
 - `function cutSoWhat(v: unknown): string`
 
+### `apps/control-plane/api/board/_growthPlacement.ts`
+
+Where a finished off-day post goes and when, as Growth already knows it (Krish, 2026-11-19: "I've never decided the
+
+- `type PlacementKind`
+- `const CHANNEL_NAME: Record<string, string>`
+- `interface Placement`
+- `function placementFor(kind: string): Placement | null`
+- `function channelWords(p: Placement): string`
+- `function driveId(url: string): string | null`
+- `function bufferUrl(url: string): string`
+
 ### `apps/control-plane/api/board/_handler.ts`
 
 - `function boardPolicy(storeUrl?: string)`
@@ -5033,6 +5045,12 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 ### `apps/renderer/src/engine/chrome/lightStage.ts`
 
 - `function lightStage(props: Pick<EngineRenderProps, 'format'> & Partial<Pick<EngineRenderProps, 'motion'>>): boolean`
+
+### `apps/renderer/src/engine/chrome/offDay.ts`
+
+An off day wears no tag, however its label is spelled (Ruling, Krish, 2026-11-18: "off.day is NEVER to be used ever as a
+
+- `const isOffDayLabel = (label: string | null | undefined): boolean =>`
 
 ### `apps/renderer/src/engine/chrome/tokens.ts`
 

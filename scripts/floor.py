@@ -1081,9 +1081,26 @@ def main(argv=None):
         return 0
     if a.format:
         code = show_format(doc, a.format, a.approved_only, None if a.all else 40, bar=bar)
+        show_every_maker(a.format)
         record_read(a.format, a.piece, a.file)
         return code
     return summary(doc)
+
+
+def show_every_maker(fmt):
+    """The failures whose watch-out is for every maker (config/failures.json watch.formats "all"), what stops each, so a maker
+    reads them with its floor (F58: a proof or cut worse than the one he approved is never sent). Never stops a read."""
+    try:
+        import check_failures  # noqa: PLC0415
+        register = json.loads((ROOT / 'config' / 'failures.json').read_text(encoding='utf-8'))
+        rows = [f for f in register['failures'] if 'all' in ((f.get('watch') or {}).get('formats') or [])]
+        if rows:
+            # On stderr, like the preflight receipt: the floor's own text is held byte for byte by tests/floor_bar_test.py.
+            print('\nFor every maker, and what stops it (config/failures.json; python3 scripts/check_failures.py --watch %s):' % fmt, file=sys.stderr)
+            for f in rows:
+                print(para(f'{f["watch"]["line"]} [{f["id"]}, {f["on"]}] {check_failures.stopped_by(f)}', indent='  - ', then='    '), file=sys.stderr)
+    except Exception as error:  # noqa: BLE001 - the register never stops the floor being read
+        print(f'The failure register could not be read here ({error}).', file=sys.stderr)
 
 
 def record_read(fmt, piece=None, path=FLOOR):
