@@ -36,6 +36,22 @@
         "on": "2026-11-11",
         "from": "3 Posts/2026-11-16 Mon off.day - Proactive AI/3 Video/Proactive AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4"
       }
+    },
+    {
+      "video_sha256": "1849930abcc084f8da0e6290ea4f04a7ae35539fb2157f8a1b202dbc708e66ae",
+      "target": "3 Posts/2026-11-18 Wed under.the.hood - Build or buy your tools in an AI world/3 Video/Build or buy your AI - short 9x16 v2.mp4",
+      "piece": "Wed 18 Build or Buy your AI? short (docs/plans/2026-11-18-wednesday/ve)",
+      "asked": "Its ve receipts hold: the Critic blocks on small evidence headlines, the bed swells 3.4 LU against 3.0, and the lip-sync, motion, visual-clarity, joins and captions rows were never run on the cloud route. Switch out of Auto mode, then say 'file it'.",
+      "krish_words": "post the short video to Drive and to board; then: file it",
+      "where": "Claude Code session in krishanraja/content-engine (session_013nodCYEbtq39frC92VDDiu)",
+      "on": "2026-11-19",
+      "checks_run": {
+        "render_guards": "ve render passed its frame guards (no plain dark bands, captions clear of content)",
+        "heard": "faster-whisper on the cut against the script: every scripted word present",
+        "qc": "docs/plans/2026-11-18-wednesday/ve/qc.short.json (fails recorded there)",
+        "critic": "docs/plans/2026-11-18-wednesday/ve/verdict.short.json (blocking, recorded)",
+        "approval": "Krish: \"final approve short 1849930a\""
+      }
     }
   ]
 }

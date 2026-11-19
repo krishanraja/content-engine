@@ -1,0 +1,26 @@
+{
+ "schema": "av-sync-edl/1",
+ "note": "The final short draws short.master.mov frame for frame (props.short.json segments[0]); measured on the beats where his face fills the frame, the only pictures of him to match. The face beat at 17.83 s is measured to 20.83 s, before the title lockup covers him (frame 627).",
+ "spans": [
+  {
+   "out_s": 17.8333,
+   "src_s": 17.8333,
+   "dur_s": 3.0
+  },
+  {
+   "out_s": 49.6,
+   "src_s": 49.6,
+   "dur_s": 3.3333
+  },
+  {
+   "out_s": 60.7667,
+   "src_s": 60.7667,
+   "dur_s": 3.0667
+  },
+  {
+   "out_s": 72.9667,
+   "src_s": 72.9667,
+   "dur_s": 13.8333
+  }
+ ]
+}
