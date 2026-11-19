@@ -156,6 +156,20 @@
       "krish": "render in Codex",
       "auto_rows": [],
       "source": "tue17-process"
+    },
+    {
+      "id": "every_beat_serves_his_idea",
+      "text": "Every beat serves the idea he picked (style.idea.object); a request for more (\"15/10\") is answered with more of that idea, never spectacle beside it.",
+      "krish": "(as the Build or buy session reported his words) a dull, important topic needs 15/10 visuals",
+      "auto_rows": [],
+      "source": "build-or-buy-8"
+    },
+    {
+      "id": "no_bare_talking_head",
+      "text": "No long stretch of his face with nothing on screen, and no logos that only appear and pulse standing in for a picture (ve lint piece.talking_head).",
+      "krish": "(as the Build or buy session reported his words) a dull, important topic needs 15/10 visuals",
+      "auto_rows": [],
+      "source": "build-or-buy-9"
     }
   ]
 }

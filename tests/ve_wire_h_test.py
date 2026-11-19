@@ -9,6 +9,7 @@ import shutil
 from contextlib import contextmanager
 from uuid import uuid4
 import unittest
+from unittest import mock
 from unittest.mock import patch
 
 sys.dont_write_bytecode = True
@@ -44,7 +45,14 @@ class WireHTests(unittest.TestCase):
         cls.props = compile_cut(cls.spec, 'proof-tall', cls.words, ROOT)
 
     def test_lints_without_legacy_note(self):
-        spec, findings = lint(FIXTURE / 'spec.json')
+        # The fixture is a piece of 23 Oct: it lints clean under the rules of its own publish day. bind_unshown (on since
+        # 19 Nov) would hold a never-shown piece to today's rules, which is right for a live piece and wrong for a
+        # historical fixture, so this test pins it to its own day.
+        from velib import showgate
+        cfg = showgate.config()
+        own_day = {**cfg, 'bind_unshown': {**cfg['bind_unshown'], 'enabled': False}}
+        with mock.patch.object(showgate, 'config', return_value=own_day):
+            spec, findings = lint(FIXTURE / 'spec.json')
         self.assertIsNotNone(spec)
         self.assertEqual(findings, [])
         self.assertEqual(spec['format'], 'hand-held-screen')
