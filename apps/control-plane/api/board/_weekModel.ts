@@ -1,5 +1,6 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
+import { corpusLines, corpusOf, type CorpusItem } from './_corpus.js'
 import { bufferUrl, channelWords, placementFor } from './_growthPlacement.js'
 import { asWritten, backDocId, takenBackAt, wordsBody, wordsDocId } from './_contracts.js'
 import { spokenTitle, type FiledScript, type PieceDecisions } from './_decisions.js'
@@ -460,13 +461,17 @@ function reskinHead(raw: Body | null | undefined, o: ViewOption): string | null 
 
 /** What the prompt says to do with the story, by where the piece is (Ruling, Krish, 2026-11-16: "Even though this piece is
  *  locked, I should be able to tweak the narrative slightly in it by opening a session with Claude"). */
-export interface StoryState { approved: boolean; path?: string | null }
+export interface StoryState { approved: boolean; path?: string | null
+  /** Until his lock is signed: the research on file, the corpus the narrative is built from (_corpus.ts). */
+  corpus?: CorpusItem[] | null }
 function storyLines(story: StoryState | null | undefined): string {
   if (!story) return ''
+  const corpus = story.corpus && !story.approved ? corpusLines(story.corpus) : ''
+  if (corpus && !story.path) return corpus
   const file = story.path ? `The story is ${story.path}.` : 'The story is its narrative file in this week\'s docs/plans folder (narrative-lock-<day>.md, found by its piece_id line).'
   return story.approved
     ? `${file} Krish has approved it. If his notes below change the story (a new angle is a rewrite, not a patch), write the changed story into the same file and take his approval line off its end (a story changed under his approval is not the story he approved: making.py refuses it), so the board asks him to approve the new story. Otherwise take the next step.\n\n`
-    : `${file} Krish has not approved it yet. If his notes below ask for a change or a different angle, rewrite it to them, then tell him it is ready to approve on the board. If something in it is still open, settle it with him first.\n\n`
+    : `${file} Krish has not approved it yet. If his notes below ask for a change or a different angle, rewrite it to them, then tell him it is ready to approve on the board. If something in it is still open, settle it with him first.\n\n${corpus}`
 }
 
 /** The one Claude prompt for an item: what it is, where it stands, how it is made and how to report back to the board.
@@ -566,7 +571,10 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const picks = recorded || missed ? [] : lookPresses(d.piece_id, d.path?.style)
   // After his approval of the story the prompt stays beside the picks, so he can still change the story (Ruling, Krish,
   // 2026-11-16).
-  const story = (approved: boolean, path: string | null = null): StoryState => ({ approved, path })
+  // Until his lock is signed, every prompt for the piece names the research on file as the corpus (Krish, 2026-11-19).
+  const corpus = isDone('story') ? null : pieceCorpus(m, [d.piece_id, dayScope(m.week, d.day)], [...(d.materials || []), ...(d.path?.materials || [])])
+  const story = (approved: boolean, path: string | null = null): StoryState => ({ approved, path, corpus })
+  const unsigned: StoryState | null = corpus ? { approved: false, corpus } : null
   if (d.path?.current === 'look' && picks.length) {
     return { ...base, line, next: picks[0] as Action, decision: true,
       others: [itemPrompt(m.week, { ...base, line }, 'look', null, story(true), m.decisions?.[d.piece_id] ?? null) as unknown as PressAction, ...picks.slice(1)] }
@@ -603,10 +611,10 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   if (produce) return { ...base, line: produce.line, next: produce.next, decision: produce.decision, others: [...produce.others, ...(link ? [link as unknown as PressAction] : []), ...picks], ...(produce.plan ? { plan: produce.plan } : {}) }
   const lead = d.actions[0]
   if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) {
-    const tweak = recorded || missed ? [] : [itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, isDone('story') ? story(true) : null, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction]
+    const tweak = recorded || missed ? [] : [itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, isDone('story') ? story(true) : unsigned, m.decisions?.[d.piece_id] ?? null) as unknown as PressAction]
     return { ...base, line, next: lead, decision: false, others: [...tweak, ...picks] }
   }
-  const signedStory = isDone('story') && !recorded ? story(true) : null
+  const signedStory = isDone('story') && !recorded ? story(true) : unsigned
   return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, signedStory, m.decisions?.[d.piece_id] ?? null), decision: false, others: picks }
 }
 
@@ -676,7 +684,7 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
     const signLine = `Approved for ${d.label}. Read the narrative lock and sign it, or say what to change.`
     return { ...base, read: { ...base.read, sources: [lockSource(toSign.path), ...base.read.sources] }, line: signLine,
       next: signPress(m.week, p.id, toSign) as Action, decision: true,
-      others: [itemPrompt(m.week, { ...base, line: signLine }, 'story', null, { approved: false, path: toSign.path }, decided) as unknown as PressAction, ...picks] }
+      others: [itemPrompt(m.week, { ...base, line: signLine }, 'story', null, { approved: false, path: toSign.path, corpus: pieceCorpus(m, [p.id]) }, decided) as unknown as PressAction, ...picks] }
   }
   // Signed and its look not picked: his production pick leads, as on a series day (Tue 17's piece is still a piece).
   const lookPress = picks.find(a => a.op === 'look')
@@ -703,7 +711,7 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const stage = !out && !missed && scriptsOk ? productionStage(m, { pieceId: p.id, title: p.title, item: null, style: m.placedStyles?.[p.id], offday: false,
     read: base.read, decided, reportAs: null, base }) : null
   if (stage) return { ...base, line: stage.line, next: stage.next, decision: stage.decision, others: [...stage.others, ...picks], ...(stage.plan ? { plan: stage.plan } : {}) }
-  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, step, null, branded && !out && !missed ? { approved: true } : null, decided), decision: false, others: picks }
+  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, step, null, branded && !out && !missed ? { approved: true } : !out && !missed ? { approved: false, corpus: pieceCorpus(m, [p.id]) } : null, decided), decision: false, others: picks }
 }
 
 /** The one rule every card that carries a piece obeys (Ruling, Krish, 2026-11-17: board feedback is done to every day,
@@ -734,6 +742,11 @@ export function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: 
   const last = work.flatMap(w => w.sessions).filter(x => x.doing).sort((a, b) => b.last_at.localeCompare(a.last_at))[0]
   const said = read.said ?? (last ? cut(`${last.by}, ${last.last_at.slice(0, 16).replace('T', ' ')} UTC (${last.state}${last.step ? `, ${last.step}` : ''}): ${last.doing}`, 1200) : null)
   return { ...read, research, said }
+}
+/** The research on file for a piece across its scopes: the corpus its narrative is built from (_corpus.ts). */
+function pieceCorpus(m: Pick<ModelInputs, 'work'>, scopes: string[], extra: Array<{ id?: unknown; title?: unknown; kind?: unknown; role?: unknown }> = []): CorpusItem[] {
+  const work = scopes.flatMap(s => m.work?.[s]?.materials ?? [])
+  return corpusOf([...work, ...extra] as Array<{ id?: unknown; title?: unknown; kind?: unknown; role?: unknown }>)
 }
 /** The day's own scope for the work on file. */
 const dayScope = (week: string, day: string) => `day:${week}/${day}`
