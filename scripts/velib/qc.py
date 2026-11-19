@@ -180,9 +180,14 @@ def archivo700_width(text: str, size_px: float) -> float:
     return sum(table[index[c]] if c in index else 600 for c in text) * size_px / 1000
 
 
-def theme_band(aspect: str, placement: str) -> tuple[int, int, int, int]:
-    """A caption theme's band, read from the renderer's own table (apps/renderer/src/engine/captions/kit.ts REGIONS)."""
+def theme_band(aspect: str, placement: str, staged: bool = False) -> tuple[int, int, int, int]:
+    """A caption theme's band, read from the renderer's own table (apps/renderer/src/engine/captions/kit.ts REGIONS, and
+    STAGED_BAND for the lower band under band staging, as kit.ts band() chooses)."""
     source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'captions' / 'kit.ts').read_text(encoding='utf-8')
+    if staged and placement == 'lower':
+        table = re.search(r"export const STAGED_BAND[^=]*= \{([^}]*\}[^}]*\})", source).group(1)
+        box = re.search(rf"'{re.escape(aspect)}': \{{ left: (\d+), top: (\d+), width: (\d+), height: (\d+) \}}", table)
+        return tuple(int(n) for n in box.groups())
     block = re.search(rf"'{re.escape(aspect)}': \{{([^\n]*(?:\n[^']*)?)", source)
     box = re.search(rf"{placement}: \{{ left: (\d+), top: (\d+), width: (\d+), height: (\d+) \}}", block.group(1) if block else '')
     if not box:
@@ -331,7 +336,7 @@ def inputs_from_props(props: dict) -> dict:
             # A caption theme draws inside its own band (captions/kit.ts REGIONS), not the word caption's centred box:
             # measure that band, the box the renderer draws in (Tue 17, 18 Nov 2026: the podcast theme was modelled as
             # a centred word 982 px wide while it drew 640 px from the left edge).
-            x, y, w, h = theme_band(aspect, props.get('captionPlacement') or 'lower')
+            x, y, w, h = theme_band(aspect, props.get('captionPlacement') or 'lower', staged=(props.get('layout') or {}).get('mode') == 'band')
             # Its text is drawn from the band's left edge: as wide as the page's words at the theme's largest size
             # (88 px), measured with the renderer's own advance widths (house/metrics.ts), never wider than the band.
             w = min(w, int(archivo700_width(qc_faces.page_text(page), 88)) + 8)

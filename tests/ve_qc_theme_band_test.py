@@ -17,6 +17,11 @@ class ThemeBandTest(unittest.TestCase):
         self.assertEqual(qc.theme_band('9:16', 'lower'), (70, 990, 800, 330))
         self.assertEqual(qc.theme_band('16:9', 'lower'), (192, 760, 1536, 266))
 
+    def test_band_staging_has_its_own_caption_band(self):
+        # Above his head on a tall cut, inside the graphics panel on a wide one (kit.ts STAGED_BAND).
+        self.assertEqual(qc.theme_band('9:16', 'lower', staged=True), (70, 1010, 800, 160))
+        self.assertEqual(qc.theme_band('16:9', 'lower', staged=True), (96, 850, 980, 190))
+
     def test_the_tall_lower_band_clears_every_action_rail(self):
         import channel_safe
         self.assertEqual(channel_safe.box_violations([('band', qc.theme_band('9:16', 'lower'))], 'tall'), [])

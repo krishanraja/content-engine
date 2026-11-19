@@ -305,7 +305,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
               // STAGE shares the whole canvas; other layouts retain their slot clips.
               const clipPath = `inset(${box.top}px ${width - box.left - box.width}px ${height - box.top - box.height}px ${box.left}px${beat.layout === 'P6' && index === 1 ? ' round 40px' : ''})`
               const cutout = torn && TORN_DEVICES.includes(object.device)
-              const device = <Device object={deviceObject} events={props.events} box={box} tokens={tokensFor(object.device, props.tokens, profile)} aspect={props.aspect}
+              // On a photo backdrop there is no light tray under the device, so it keeps the house colours: the style's
+              // dark-ground inversion drew Tue 17's ban share and recall figure in ink on a dark photo.
+              const device = <Device object={deviceObject} events={props.events} box={box} tokens={beat.backdrop ? props.tokens : tokensFor(object.device, props.tokens, profile)} aspect={props.aspect}
                 frame={leadOut && outgoing ? Math.min(at, Math.max(object.toFrame, beat.toFrame) - 1) : at} />
               // paper-cutout: the piece leans a little on its own centre and is nudged by hand each step (on twos);
               // the torn edge and shadow are drawn round it afterwards, so the shadow falls straight down.

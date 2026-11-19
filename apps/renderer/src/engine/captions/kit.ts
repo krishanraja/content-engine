@@ -22,8 +22,18 @@ export const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box }> = 
 /** The band a caption style draws in: the piece's own placement (props.captionPlacement, spec style.captions.placement),
  *  else the lower band. The placement is the captions' own choice, never the motion style's. `centre` sits the words
  *  over the middle of the picture, clear of the right rail (x 870 at most) and above the bottom band. */
-export function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'>): Box {
+export function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'> & Partial<Pick<EngineRenderProps, 'layout'>>): Box {
+  if (props.layout?.mode === 'band' && (props.captionPlacement ?? 'lower') === 'lower') return STAGED_BAND[props.aspect]
   return REGIONS[props.aspect][props.captionPlacement ?? 'lower']
+}
+
+/** The band staging's own caption band (Tue 17, 19 Nov 2026: qc captions.off_face found the lower band over his
+ *  forehead, where band staging puts his head). Tall: the strip of wall between the panel's edge (y 1000) and the top
+ *  of his head, so no word reaches him and the panel's graphics keep their room. Wide: inside the graphics panel on the
+ *  left, never across his take on the right. */
+export const STAGED_BAND: Record<Aspect, Box> = {
+  '9:16': { left: 70, top: 1010, width: 800, height: 160 },
+  '16:9': { left: 96, top: 850, width: 980, height: 190 },
 }
 
 /** Type scale per aspect: the tall sizes are designed at 1080 wide, the wide ones a little smaller. */
