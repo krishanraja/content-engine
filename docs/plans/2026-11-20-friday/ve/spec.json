@@ -310,6 +310,102 @@
    }
   },
   {
+   "obj": "s_face_0",
+   "device": "query_chip",
+   "meaning": "his own words on screen: everyone's archives, right now",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "text": "EVERYONE'S ARCHIVES, RIGHT NOW"
+   }
+  },
+  {
+   "obj": "s_face_1",
+   "device": "query_chip",
+   "meaning": "his own words on screen: whole teams to sort pricing",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "text": "WHOLE TEAMS TO SORT PRICING"
+   }
+  },
+  {
+   "obj": "s_face_2",
+   "device": "query_chip",
+   "meaning": "his own words on screen: a chatbot beat them",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "text": "A CHATBOT BEAT THEM"
+   }
+  },
+  {
+   "obj": "s_love_0",
+   "device": "query_chip",
+   "meaning": "his own words on screen: an old bill can't argue back",
+   "persist": {
+    "from_beat": "love",
+    "to_beat": "love"
+   },
+   "params": {
+    "text": "AN OLD BILL CAN'T ARGUE BACK"
+   }
+  },
+  {
+   "obj": "s_love_1",
+   "device": "query_chip",
+   "meaning": "his own words on screen: the rules are written down",
+   "persist": {
+    "from_beat": "love",
+    "to_beat": "love"
+   },
+   "params": {
+    "text": "THE RULES ARE WRITTEN DOWN"
+   }
+  },
+  {
+   "obj": "s_love_2",
+   "device": "query_chip",
+   "meaning": "his own words on screen: ai reads every line",
+   "persist": {
+    "from_beat": "love",
+    "to_beat": "love"
+   },
+   "params": {
+    "text": "AI READS EVERY LINE"
+   }
+  },
+  {
+   "obj": "s_whose_0",
+   "device": "query_chip",
+   "meaning": "his own words on screen: whose mistake?",
+   "persist": {
+    "from_beat": "whose",
+    "to_beat": "whose"
+   },
+   "params": {
+    "text": "WHOSE MISTAKE?"
+   }
+  },
+  {
+   "obj": "s_whose_1",
+   "device": "query_chip",
+   "meaning": "his own words on screen: the hospital's",
+   "persist": {
+    "from_beat": "whose",
+    "to_beat": "whose"
+   },
+   "params": {
+    "text": "THE HOSPITAL'S"
+   }
+  },
+  {
    "obj": "l_k",
    "device": "kinetic_stat",
    "dataset": "bill-after",
@@ -653,6 +749,270 @@
     "full": true,
     "grade": "none"
    }
+  },
+  {
+   "obj": "l_face_0",
+   "device": "query_chip",
+   "meaning": "his own words on screen: last year's subscriptions and invoices",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "text": "LAST YEAR'S SUBSCRIPTIONS AND INVOICES"
+   }
+  },
+  {
+   "obj": "l_face_1",
+   "device": "query_chip",
+   "meaning": "his own words on screen: whole teams to get bills right",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "text": "WHOLE TEAMS TO GET BILLS RIGHT"
+   }
+  },
+  {
+   "obj": "l_face_2",
+   "device": "query_chip",
+   "meaning": "his own words on screen: a chatbot found what they missed",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "text": "A CHATBOT FOUND WHAT THEY MISSED"
+   }
+  },
+  {
+   "obj": "l_face_3",
+   "device": "query_chip",
+   "meaning": "his own words on screen: your finance lead's unread folder",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "text": "YOUR FINANCE LEAD'S UNREAD FOLDER"
+   }
+  },
+  {
+   "obj": "l_l_bitmiss_0",
+   "device": "query_chip",
+   "meaning": "his own words on screen: he didn't argue the total",
+   "persist": {
+    "from_beat": "l_bitmiss",
+    "to_beat": "l_bitmiss"
+   },
+   "params": {
+    "text": "HE DIDN'T ARGUE THE TOTAL"
+   }
+  },
+  {
+   "obj": "l_l_bitmiss_1",
+   "device": "query_chip",
+   "meaning": "his own words on screen: he asked for it line by line",
+   "persist": {
+    "from_beat": "l_bitmiss",
+    "to_beat": "l_bitmiss"
+   },
+   "params": {
+    "text": "HE ASKED FOR IT LINE BY LINE"
+   }
+  },
+  {
+   "obj": "l_l_bitmiss_2",
+   "device": "query_chip",
+   "meaning": "his own words on screen: then gave the lot to claude",
+   "persist": {
+    "from_beat": "l_bitmiss",
+    "to_beat": "l_bitmiss"
+   },
+   "params": {
+    "text": "THEN GAVE THE LOT TO CLAUDE"
+   }
+  },
+  {
+   "obj": "l_l_paperwork_0",
+   "device": "query_chip",
+   "meaning": "his own words on screen: never pick a paperwork fight",
+   "persist": {
+    "from_beat": "l_paperwork",
+    "to_beat": "l_paperwork"
+   },
+   "params": {
+    "text": "NEVER PICK A PAPERWORK FIGHT"
+   }
+  },
+  {
+   "obj": "l_l_paperwork_1",
+   "device": "query_chip",
+   "meaning": "his own words on screen: with someone who has a chatbot",
+   "persist": {
+    "from_beat": "l_paperwork",
+    "to_beat": "l_paperwork"
+   },
+   "params": {
+    "text": "WITH SOMEONE WHO HAS A CHATBOT"
+   }
+  },
+  {
+   "obj": "l_l_paperwork_2",
+   "device": "query_chip",
+   "meaning": "his own words on screen: so why are chatbots so good at this?",
+   "persist": {
+    "from_beat": "l_paperwork",
+    "to_beat": "l_paperwork"
+   },
+   "params": {
+    "text": "SO WHY ARE CHATBOTS SO GOOD AT THIS?"
+   }
+  },
+  {
+   "obj": "l_l_love_0",
+   "device": "query_chip",
+   "meaning": "his own words on screen: an old bill cannot argue back",
+   "persist": {
+    "from_beat": "l_love",
+    "to_beat": "l_love"
+   },
+   "params": {
+    "text": "AN OLD BILL CANNOT ARGUE BACK"
+   }
+  },
+  {
+   "obj": "l_l_love_1",
+   "device": "query_chip",
+   "meaning": "his own words on screen: the rules are written down",
+   "persist": {
+    "from_beat": "l_love",
+    "to_beat": "l_love"
+   },
+   "params": {
+    "text": "THE RULES ARE WRITTEN DOWN"
+   }
+  },
+  {
+   "obj": "l_l_love_2",
+   "device": "query_chip",
+   "meaning": "his own words on screen: every line, against those rules",
+   "persist": {
+    "from_beat": "l_love",
+    "to_beat": "l_love"
+   },
+   "params": {
+    "text": "EVERY LINE, AGAINST THOSE RULES"
+   }
+  },
+  {
+   "obj": "l_l_love_3",
+   "device": "query_chip",
+   "meaning": "his own words on screen: no coffee break",
+   "persist": {
+    "from_beat": "l_love",
+    "to_beat": "l_love"
+   },
+   "params": {
+    "text": "NO COFFEE BREAK"
+   }
+  },
+  {
+   "obj": "l_l_lead_0",
+   "device": "query_chip",
+   "meaning": "his own words on screen: every flag is a lead",
+   "persist": {
+    "from_beat": "l_lead",
+    "to_beat": "l_lead"
+   },
+   "params": {
+    "text": "EVERY FLAG IS A LEAD"
+   }
+  },
+  {
+   "obj": "l_l_lead_1",
+   "device": "query_chip",
+   "meaning": "his own words on screen: a person checks it",
+   "persist": {
+    "from_beat": "l_lead",
+    "to_beat": "l_lead"
+   },
+   "params": {
+    "text": "A PERSON CHECKS IT"
+   }
+  },
+  {
+   "obj": "l_l_lead_2",
+   "device": "query_chip",
+   "meaning": "his own words on screen: your rules: contracts and price lists",
+   "persist": {
+    "from_beat": "l_lead",
+    "to_beat": "l_lead"
+   },
+   "params": {
+    "text": "YOUR RULES: CONTRACTS AND PRICE LISTS"
+   }
+  },
+  {
+   "obj": "l_l_lead_3",
+   "device": "query_chip",
+   "meaning": "his own words on screen: give ai last year's invoices",
+   "persist": {
+    "from_beat": "l_lead",
+    "to_beat": "l_lead"
+   },
+   "params": {
+    "text": "GIVE AI LAST YEAR'S INVOICES"
+   }
+  },
+  {
+   "obj": "l_l_lead_4",
+   "device": "query_chip",
+   "meaning": "his own words on screen: things that don't make full sense",
+   "persist": {
+    "from_beat": "l_lead",
+    "to_beat": "l_lead"
+   },
+   "params": {
+    "text": "THINGS THAT DON'T MAKE FULL SENSE"
+   }
+  },
+  {
+   "obj": "l_l_listfirst_0",
+   "device": "query_chip",
+   "meaning": "his own words on screen: who reads that list first?",
+   "persist": {
+    "from_beat": "l_listfirst",
+    "to_beat": "l_listfirst"
+   },
+   "params": {
+    "text": "WHO READS THAT LIST FIRST?"
+   }
+  },
+  {
+   "obj": "l_l_listfirst_1",
+   "device": "query_chip",
+   "meaning": "his own words on screen: brushed under the carpet",
+   "persist": {
+    "from_beat": "l_listfirst",
+    "to_beat": "l_listfirst"
+   },
+   "params": {
+    "text": "BRUSHED UNDER THE CARPET"
+   }
+  },
+  {
+   "obj": "l_l_listfirst_2",
+   "device": "query_chip",
+   "meaning": "his own words on screen: your customer may find it first",
+   "persist": {
+    "from_beat": "l_listfirst",
+    "to_beat": "l_listfirst"
+   },
+   "params": {
+    "text": "YOUR CUSTOMER MAY FIND IT FIRST"
+   }
   }
  ],
  "assets": [
@@ -661,6 +1021,10 @@
    "kind": "recording",
    "origin": "capture",
    "path": "short.master.mov",
+   "frame": {
+    "width": 1080,
+    "height": 1920
+   },
    "sha256": "baf5f1d2a3e8d010b72ac8a73e60b7d5d412f90f4b3445c96899bf352794d98f",
    "licence": "Krish's own recording, 18 Nov 2026 (ai-finding-your-skeletons-short.mp4, sha256 0be73bbd), two restarts and long pauses cut, 1.0x, 85.1 s"
   },
@@ -717,6 +1081,10 @@
    "kind": "recording",
    "origin": "capture",
    "path": "long.master.mov",
+   "frame": {
+    "width": 1080,
+    "height": 1920
+   },
    "sha256": "7afaed9a75286aacb86737eae6b247dd9c5227b47871b9cc58ff57af91c310ca",
    "licence": "Krish's own recording, 18 Nov 2026 (ai-finding-your-skeletons-long.mp4, sha256 b1428797), restarts and long pauses cut from the reviewed plan's keep spans, joins in measured quiet, 1.0x, 4:25"
   },
@@ -852,7 +1220,7 @@
      },
      "viewer_task": "locate_story",
      "point": "AI just cut a family's six-figure hospital bill to a fraction",
-     "layout": "WINDOW",
+     "layout": "SPLIT",
      "plate": {
       "source": "take"
      },
@@ -884,8 +1252,7 @@
        "silent": true
       }
      ],
-     "transition_out": "cut",
-     "face": "window"
+     "transition_out": "cut"
     },
     {
      "id": "face",
@@ -896,15 +1263,39 @@
      },
      "viewer_task": "connect_with_speaker",
      "point": "Imagine what it is finding in everyone's old paperwork, when whole hospital teams missed it",
-     "layout": "F1",
+     "layout": "SPLIT",
      "plate": {
       "source": "take"
      },
-     "uses": [],
-     "events": [],
-     "transition_out": "cut",
-     "face": "full",
-     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "uses": [
+      "s_face_0",
+      "s_face_1",
+      "s_face_2"
+     ],
+     "events": [
+      {
+       "at_w": 28,
+       "obj": "s_face_0",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 31,
+       "obj": "s_face_1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 41,
+       "obj": "s_face_2",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut"
     },
     {
      "id": "question",
@@ -1052,7 +1443,7 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "Care was billed under a dearer code than the care he got",
-     "layout": "WINDOW",
+     "layout": "SPLIT",
      "plate": {
       "source": "take"
      },
@@ -1083,8 +1474,7 @@
        "silent": true
       }
      ],
-     "transition_out": "cut",
-     "face": "window"
+     "transition_out": "cut"
     },
     {
      "id": "steak",
@@ -1168,15 +1558,46 @@
      },
      "viewer_task": "connect_with_speaker",
      "point": "An old bill can't argue back, the rules are written down, and AI reads every line without a break",
-     "layout": "F1",
+     "layout": "SPLIT",
      "plate": {
       "source": "take"
      },
-     "uses": [],
-     "events": [],
-     "transition_out": "cut",
-     "face": "full",
-     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "uses": [
+      "s_love_0",
+      "s_love_1",
+      "s_love_2"
+     ],
+     "events": [
+      {
+       "at_w": 141,
+       "obj": "s_love_0",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 142,
+       "obj": "s_love_0",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 148,
+       "obj": "s_love_1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 155,
+       "obj": "s_love_2",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut"
     },
     {
      "id": "hindsight",
@@ -1187,7 +1608,7 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "About next year AI is guessing; about last year it is reading",
-     "layout": "WINDOW",
+     "layout": "SPLIT",
      "plate": {
       "source": "take"
      },
@@ -1225,8 +1646,7 @@
        "silent": true
       }
      ],
-     "transition_out": "cut",
-     "face": "window"
+     "transition_out": "cut"
     },
     {
      "id": "whose",
@@ -1237,15 +1657,38 @@
      },
      "viewer_task": "connect_with_speaker",
      "point": "Whose mistake did Claude find? The hospital's",
-     "layout": "F1",
+     "layout": "SPLIT",
      "plate": {
       "source": "take"
      },
-     "uses": [],
-     "events": [],
-     "transition_out": "cut",
-     "face": "full",
-     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "uses": [
+      "s_whose_0",
+      "s_whose_1"
+     ],
+     "events": [
+      {
+       "at_w": 182,
+       "obj": "s_whose_0",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 183,
+       "obj": "s_whose_0",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 191,
+       "obj": "s_whose_1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
+     "transition_out": "cut"
     },
     {
      "id": "closet",
@@ -1329,7 +1772,7 @@
      "role": "call",
      "span": {
       "from_w": 239,
-      "to_w": 246
+      "to_w": 245
      },
      "viewer_task": "land_payoff",
      "point": "The full story is free at makeyourmindup.ai",
@@ -1396,7 +1839,7 @@
      },
      "viewer_task": "locate_story",
      "point": "AI just cut a family's six-figure hospital bill to a fraction",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1428,7 +1871,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "full"
     },
     {
      "id": "face",
@@ -1443,11 +1886,72 @@
      "plate": {
       "source": "take"
      },
-     "uses": [],
-     "events": [],
+     "uses": [
+      "l_face_0",
+      "l_face_1",
+      "l_face_2",
+      "l_face_3"
+     ],
+     "events": [
+      {
+       "at_w": 28,
+       "obj": "l_face_0",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 30,
+       "obj": "l_face_0",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 34,
+       "obj": "l_face_0",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 36,
+       "obj": "l_face_1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 38,
+       "obj": "l_face_1",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 39,
+       "obj": "l_face_1",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 47,
+       "obj": "l_face_2",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 69,
+       "obj": "l_face_3",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
      "transition_out": "cut",
-     "face": "full",
-     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "face": "full"
     },
     {
      "id": "l_question",
@@ -1516,7 +2020,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "A real family owed the whole bill after a death with no health cover",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1568,7 +2072,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "full"
     },
     {
      "id": "l_bitmiss",
@@ -1583,11 +2087,50 @@
      "plate": {
       "source": "take"
      },
-     "uses": [],
-     "events": [],
+     "uses": [
+      "l_l_bitmiss_0",
+      "l_l_bitmiss_1",
+      "l_l_bitmiss_2"
+     ],
+     "events": [
+      {
+       "at_w": 146,
+       "obj": "l_l_bitmiss_0",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 149,
+       "obj": "l_l_bitmiss_0",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 157,
+       "obj": "l_l_bitmiss_1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 159,
+       "obj": "l_l_bitmiss_1",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 169,
+       "obj": "l_l_bitmiss_2",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
      "transition_out": "cut",
-     "face": "full",
-     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "face": "full"
     },
     {
      "id": "l_code",
@@ -1598,7 +2141,7 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "Every service has a code and a price: one procedure twice, care billed under a dearer code",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1657,7 +2200,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "full"
     },
     {
      "id": "l_michelin",
@@ -1697,7 +2240,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "He sent the list and the bill fell to about a sixth; the hospital has said nothing",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1750,7 +2293,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "full"
     },
     {
      "id": "l_tenant",
@@ -1761,7 +2304,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "A tenant pasted his lease into ChatGPT, found the deposit cap and won",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1820,7 +2363,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "full"
     },
     {
      "id": "l_paperwork",
@@ -1835,11 +2378,50 @@
      "plate": {
       "source": "take"
      },
-     "uses": [],
-     "events": [],
+     "uses": [
+      "l_l_paperwork_0",
+      "l_l_paperwork_1",
+      "l_l_paperwork_2"
+     ],
+     "events": [
+      {
+       "at_w": 323,
+       "obj": "l_l_paperwork_0",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 324,
+       "obj": "l_l_paperwork_0",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 330,
+       "obj": "l_l_paperwork_1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 348,
+       "obj": "l_l_paperwork_2",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 350,
+       "obj": "l_l_paperwork_2",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
      "transition_out": "cut",
-     "face": "full",
-     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "face": "full"
     },
     {
      "id": "l_love",
@@ -1854,11 +2436,65 @@
      "plate": {
       "source": "take"
      },
-     "uses": [],
-     "events": [],
+     "uses": [
+      "l_l_love_0",
+      "l_l_love_1",
+      "l_l_love_2",
+      "l_l_love_3"
+     ],
+     "events": [
+      {
+       "at_w": 369,
+       "obj": "l_l_love_0",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 370,
+       "obj": "l_l_love_0",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 378,
+       "obj": "l_l_love_1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 384,
+       "obj": "l_l_love_1",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 385,
+       "obj": "l_l_love_1",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 390,
+       "obj": "l_l_love_2",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 401,
+       "obj": "l_l_love_3",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
      "transition_out": "cut",
-     "face": "full",
-     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "face": "full"
     },
     {
      "id": "l_hindsight",
@@ -1869,7 +2505,7 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "About next year AI is guessing; about last year it is reading",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -1929,7 +2565,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "full"
     },
     {
      "id": "l_lead",
@@ -1944,11 +2580,73 @@
      "plate": {
       "source": "take"
      },
-     "uses": [],
-     "events": [],
+     "uses": [
+      "l_l_lead_0",
+      "l_l_lead_1",
+      "l_l_lead_2",
+      "l_l_lead_3",
+      "l_l_lead_4"
+     ],
+     "events": [
+      {
+       "at_w": 456,
+       "obj": "l_l_lead_0",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 459,
+       "obj": "l_l_lead_1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 482,
+       "obj": "l_l_lead_2",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 485,
+       "obj": "l_l_lead_2",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 486,
+       "obj": "l_l_lead_2",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 493,
+       "obj": "l_l_lead_3",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 496,
+       "obj": "l_l_lead_2",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 501,
+       "obj": "l_l_lead_4",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
      "transition_out": "cut",
-     "face": "full",
-     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "face": "full"
     },
     {
      "id": "l_twist",
@@ -1959,7 +2657,7 @@
      },
      "viewer_task": "feel_stakes",
      "point": "To your customers, you are the hospital",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2004,7 +2702,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "full"
     },
     {
      "id": "l_whose",
@@ -2082,7 +2780,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Software found faked pictures in a cancer centre's old papers, from outside the building",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2169,7 +2867,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "full"
     },
     {
      "id": "l_krafton",
@@ -2180,7 +2878,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "A boss asked ChatGPT how to dodge a bonus, and the judge quoted the chats",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2274,7 +2972,7 @@
       }
      ],
      "transition_out": "cut",
-     "face": "window"
+     "face": "full"
     },
     {
      "id": "l_money",
@@ -2347,11 +3045,43 @@
      "plate": {
       "source": "take"
      },
-     "uses": [],
-     "events": [],
+     "uses": [
+      "l_l_listfirst_0",
+      "l_l_listfirst_1",
+      "l_l_listfirst_2"
+     ],
+     "events": [
+      {
+       "at_w": 756,
+       "obj": "l_l_listfirst_0",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 764,
+       "obj": "l_l_listfirst_1",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 769,
+       "obj": "l_l_listfirst_2",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 771,
+       "obj": "l_l_listfirst_2",
+       "verb": "highlight",
+       "to_state": "visible",
+       "silent": true
+      }
+     ],
      "transition_out": "cut",
-     "face": "full",
-     "override_reason": "his line to camera: his face and the art-directed captions carry it (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "face": "full"
     },
     {
      "id": "l_act",
@@ -2433,8 +3163,8 @@
   },
   "energy": "high",
   "layout": {
-   "mode": "fill",
-   "reason": "as on Wed 18 (face-with-proof): every proof slams in centred in the safe region the captions leave, over its own page, and his whole head is full frame on his lines (Krish, 18 Nov 2026: \"Can't cut my head off and also ruin the visual above\"); the split stage left a plain ink band above the proof that ve proof refuses (F58)"
+   "mode": "pillar",
+   "reason": "his long take is vertical (1080x1920) on a 16:9 cut: the pillar draws it whole as a full-height panel on the right with the graphics on the left (Krish, 19 Nov 2026, picked \"Pillar: whole take on the right\"); on the tall cut his take stays full frame, and every graphics-only beat still fills the safe region as under fill"
   },
   "look": "face-with-proof (picked by Krish, 17 Nov 2026 18:58 UTC)",
   "idea": {

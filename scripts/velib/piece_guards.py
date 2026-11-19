@@ -50,7 +50,12 @@ def take_orientation(spec: dict, rule: dict) -> list[str]:
             continue
         if h <= w:
             continue
+        # A staging built for a vertical take (kit/staging.ts pillar) draws every staged beat's take whole.
+        staging = (((spec.get('style') or {}).get('layout') or {}).get('mode'))
+        vertical_staging = staging in rule.get('vertical_source_stagings', [])
         for beat in cut.get('beats') or []:
+            if vertical_staging and beat.get('layout') not in ('WINDOW', 'SPLIT'):
+                continue
             if beat.get('layout') in rule['take_layouts'] and beat.get('layout') not in rule['vertical_source_layouts']:
                 out.append(f'piece.take_orientation cuts.{cid}.{beat.get("id")}: layout {beat.get("layout")} assumes a '
                            f'horizontal take, and this take is vertical ({int(w)}x{int(h)}); use a layout built for a vertical '
@@ -169,7 +174,9 @@ def _words(spec_dir: Path | None, cid: str) -> list[str]:
 
 def caption_words(spec: dict, rule: dict, spec_dir: Path | None = None) -> list[str]:
     """Every word of a cut fits one caption line, and the site address is one word, never split or dropped."""
-    from .compile import caption_line_count  # noqa: PLC0415  (read only: the compile's own measure, so lint and compile agree)
+    from .compile import FITS_LONE_WORD_THEMES, caption_line_count  # noqa: PLC0415  (read only: the compile's own measure, so lint and compile agree)
+    theme = (((spec.get('style') or {}).get('captions') or {}).get('theme'))
+    lone_fits = theme in FITS_LONE_WORD_THEMES
     out = []
     address = rule['site_address'].lower()
     for cid, cut in (spec.get('cuts') or {}).items():
@@ -185,6 +192,8 @@ def caption_words(spec: dict, rule: dict, spec_dir: Path | None = None) -> list[
             try:
                 caption_line_count([{'text': w, 'w': i}], cut.get('aspect', '9:16'))
             except ValueError:
+                if lone_fits:
+                    continue  # the theme draws it as a page of its own, shrunk to its region (compile._caption_groups)
                 what = 'the site address' if w.lower().strip('.,') == address else repr(w)
                 out.append(f'piece.caption_words cuts.{cid}: {what} at word {i} is wider than one {cut.get("aspect")} caption line, '
                            f'so the cut cannot compile; fix: {rule["fix"]}')

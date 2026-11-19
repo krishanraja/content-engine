@@ -13,13 +13,13 @@ import { REGIONS } from '../captions/kit'
  *  - `fill`: each device on a graphics-only beat gets the free region (the channel-safe area the captions leave) and a
  *    device that fits itself grows to fill it, up to 3x, centred in it.
  *  - `stack`: the free region is shared top to bottom by the beat's devices, each filling its share.
- *  - `band`, `stage`, `tray`: stagings for the beats that show his take (kit/staging.ts); their graphics-only beats
+ *  - `band`, `stage`, `tray`, `pillar`: stagings for the beats that show his take (kit/staging.ts); their graphics-only beats
  *    fill as under `fill`.
  *
  *  Only boxes this module hands out may grow (`isRegion`), so chrome and every other user of `fit.ts` draw exactly as
  *  before. Pure: the regions are a function of the props alone. */
 
-export const LAYOUTS = ['house', 'fill', 'stack', 'band', 'stage', 'tray'] as const
+export const LAYOUTS = ['house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar'] as const
 export const EngineLayoutSchema = z.object({ mode: z.enum(LAYOUTS) }).strict()
 export type EngineLayout = z.infer<typeof EngineLayoutSchema>
 

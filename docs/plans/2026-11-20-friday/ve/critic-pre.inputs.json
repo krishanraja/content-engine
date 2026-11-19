@@ -1,7 +1,7 @@
 {
   "schema": "ve-pre-critic-inputs/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-  "spec_sha256": "c059f70f8992656ca9864688bb315df5222948ee9aa5864a6b62341c652506a0",
+  "spec_sha256": "6751cc90800574f84ed203304ea477c780dd9b66f210296c83c5fbc25327b5a3",
   "question_1": "Does this piece carry one idea as clearly as The Ladder (Mon 2 Nov): one object, every move meaning something, nothing acting out a sentence? (.claude/agents/ve-critic.md, \"First, beside his favourite\")",
   "question_2": "Is any number on screen invented: a figure the piece does not own (its datasets, real artifacts or his script)? The spec's own never-list is the rule.",
   "style_idea": {
@@ -58,7 +58,11 @@
       "role": "bridge",
       "point": "Imagine what it is finding in everyone's old paperwork, when whole hospital teams missed it",
       "plate": "take",
-      "uses": []
+      "uses": [
+        "s_face_0",
+        "s_face_1",
+        "s_face_2"
+      ]
     },
     {
       "cut": "short",
@@ -138,7 +142,11 @@
       "role": "bridge",
       "point": "An old bill can't argue back, the rules are written down, and AI reads every line without a break",
       "plate": "take",
-      "uses": []
+      "uses": [
+        "s_love_0",
+        "s_love_1",
+        "s_love_2"
+      ]
     },
     {
       "cut": "short",
@@ -157,7 +165,10 @@
       "role": "bridge",
       "point": "Whose mistake did Claude find? The hospital's",
       "plate": "take",
-      "uses": []
+      "uses": [
+        "s_whose_0",
+        "s_whose_1"
+      ]
     },
     {
       "cut": "short",
@@ -212,7 +223,12 @@
       "role": "bridge",
       "point": "Imagine what it finds in your last year of paperwork, when whole hospital teams missed it",
       "plate": "take",
-      "uses": []
+      "uses": [
+        "l_face_0",
+        "l_face_1",
+        "l_face_2",
+        "l_face_3"
+      ]
     },
     {
       "cut": "long",
@@ -250,7 +266,11 @@
       "role": "bridge",
       "point": "He didn't argue with the total; he asked for every line",
       "plate": "take",
-      "uses": []
+      "uses": [
+        "l_l_bitmiss_0",
+        "l_l_bitmiss_1",
+        "l_l_bitmiss_2"
+      ]
     },
     {
       "cut": "long",
@@ -299,7 +319,11 @@
       "role": "bridge",
       "point": "Never pick a paperwork fight with someone who has a chatbot and a free evening",
       "plate": "take",
-      "uses": []
+      "uses": [
+        "l_l_paperwork_0",
+        "l_l_paperwork_1",
+        "l_l_paperwork_2"
+      ]
     },
     {
       "cut": "long",
@@ -307,7 +331,12 @@
       "role": "bridge",
       "point": "An old bill cannot argue back and its rules are written down",
       "plate": "take",
-      "uses": []
+      "uses": [
+        "l_l_love_0",
+        "l_l_love_1",
+        "l_l_love_2",
+        "l_l_love_3"
+      ]
     },
     {
       "cut": "long",
@@ -326,7 +355,13 @@
       "role": "bridge",
       "point": "Every flag is a lead a person checks; your contracts and price lists are your rules",
       "plate": "take",
-      "uses": []
+      "uses": [
+        "l_l_lead_0",
+        "l_l_lead_1",
+        "l_l_lead_2",
+        "l_l_lead_3",
+        "l_l_lead_4"
+      ]
     },
     {
       "cut": "long",
@@ -410,7 +445,11 @@
       "role": "bridge",
       "point": "The real question is who reads that list first",
       "plate": "take",
-      "uses": []
+      "uses": [
+        "l_l_listfirst_0",
+        "l_l_listfirst_1",
+        "l_l_listfirst_2"
+      ]
     },
     {
       "cut": "long",
@@ -533,6 +572,16 @@
       "id": "route_missing_said_first",
       "text": "When he asks for a route the engine does not have, say so in one line with the closest real route before doing anything.",
       "krish": "render in Codex"
+    },
+    {
+      "id": "every_beat_serves_his_idea",
+      "text": "Every beat serves the idea he picked (style.idea.object); a request for more (\"15/10\") is answered with more of that idea, never spectacle beside it.",
+      "krish": "(as the Build or buy session reported his words) a dull, important topic needs 15/10 visuals"
+    },
+    {
+      "id": "no_bare_talking_head",
+      "text": "No long stretch of his face with nothing on screen, and no logos that only appear and pulse standing in for a picture (ve lint piece.talking_head).",
+      "krish": "(as the Build or buy session reported his words) a dull, important topic needs 15/10 visuals"
     }
   ]
 }

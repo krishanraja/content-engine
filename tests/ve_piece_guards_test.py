@@ -46,6 +46,19 @@ class TakeOrientation(unittest.TestCase):
         self.assertEqual(pg.take_orientation(s, CFG['take_orientation']), [])
 
 
+    def test_the_pillar_staging_carries_a_vertical_take_on_16_9_but_never_a_window(self):
+        # Krish, 19 Nov 2026: "Pillar: whole take on the right" (kit/staging.ts pillar draws the take whole).
+        s = spec()
+        take = next(a for a in s['assets'] if a['id'] == 'long-master')
+        take['frame'] = {'width': 1080, 'height': 1920}
+        s.setdefault('style', {})['layout'] = {'mode': 'pillar', 'reason': 'test'}
+        for b in s['cuts']['long']['beats']:
+            if b['layout'] == 'WINDOW':
+                b['layout'] = 'F1'
+        self.assertEqual(hits(pg.take_orientation(s, CFG['take_orientation']), 'take_orientation'), [])
+        s['cuts']['long']['beats'][0]['layout'] = 'WINDOW'
+        self.assertTrue(any('layout WINDOW' in p for p in pg.take_orientation(s, CFG['take_orientation'])))
+
 class Logos(unittest.TestCase):
     def test_mixed_or_dark_marks_need_equal_tiles(self):
         s = spec()
@@ -125,6 +138,19 @@ class CaptionWords(unittest.TestCase):
             for f in tmp.glob('*'):
                 f.unlink()
             tmp.rmdir()
+
+    def test_an_art_directed_cut_gives_the_address_a_page_of_its_own(self):
+        # ArtDirectedCaption shrinks a lone word to its region, so the address is one word on one page, never split.
+        s = spec()
+        s.setdefault('style', {})['captions'] = {'theme': 'art-directed', 'placement': 'lower', 'reason': 'test'}
+        self.assertFalse(any('cannot compile' in p for p in pg.caption_words(s, CFG['caption_words'], FIX)))
+        from velib import compile as ve_compile
+        rows = [{'text': t, 'w': i, 'atFrame': i * 10} for i, t in enumerate(['The', 'full', 'story', 'is', 'at', 'makeyourmindup.ai'])]
+        with self.assertRaises(ValueError):
+            ve_compile._caption_groups(rows, '9:16')
+        groups = ve_compile._caption_groups(rows, '9:16', (), True)
+        self.assertEqual([[r['text'] for r in g] for g in groups][-1], ['makeyourmindup.ai'])
+        self.assertEqual(sum(len(g) for g in groups), len(rows))
 
 
 class Binding(unittest.TestCase):
