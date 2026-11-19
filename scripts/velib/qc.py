@@ -169,6 +169,17 @@ def _renderer_layouts() -> dict:
     return result
 
 
+def archivo700_width(text: str, size_px: float) -> float:
+    """The width the renderer gives text in Archivo 700 (apps/renderer/src/house/metrics.ts textWidth: its own advance
+    table, kerning left out, which errs on the wide side; a character it does not know counts 600 units)."""
+    import ast  # noqa: PLC0415
+    source = (ROOT / 'apps' / 'renderer' / 'src' / 'house' / 'metrics.ts').read_text(encoding='utf-8')
+    chars = ast.literal_eval(re.search(r"const CHARACTERS = ('(?:[^'\\]|\\.)*')", source).group(1))
+    table = [int(n) for n in re.search(r"archivo700: \[([^\]]*)\]", source).group(1).split(',')]
+    index = {c: i for i, c in enumerate(chars)}
+    return sum(table[index[c]] if c in index else 600 for c in text) * size_px / 1000
+
+
 def theme_band(aspect: str, placement: str) -> tuple[int, int, int, int]:
     """A caption theme's band, read from the renderer's own table (apps/renderer/src/engine/captions/kit.ts REGIONS)."""
     source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'captions' / 'kit.ts').read_text(encoding='utf-8')
@@ -322,8 +333,8 @@ def inputs_from_props(props: dict) -> dict:
             # a centred word 982 px wide while it drew 640 px from the left edge).
             x, y, w, h = theme_band(aspect, props.get('captionPlacement') or 'lower')
             # Its text is drawn from the band's left edge: as wide as the page's words at the theme's largest size
-            # (88 px, qc_faces.CHAR_WIDTH a character), never wider than the band.
-            w = min(w, int(len(qc_faces.page_text(page)) * 88 * qc_faces.CHAR_WIDTH) + 24)
+            # (88 px), measured with the renderer's own advance widths (house/metrics.ts), never wider than the band.
+            w = min(w, int(archivo700_width(qc_faces.page_text(page), 88)) + 8)
         else:
             x, y, w, h = qc_faces.caption_box(page, style, aspect, region, layout=beat.get('layout'),
                                              plate=(beat.get('plate') or {}).get('source'))
