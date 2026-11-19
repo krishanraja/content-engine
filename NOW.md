@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-19","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (1 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- His board notes for the week of 23 Nov actioned: both File for later ideas (fri-5 vibe coding, wed-4 brain data) relayed to the idea queue for 30 Nov; his notes filed on each piece as krish_notes; 10 whys Perplexity prompts filed on the Wed, Fri and vibe coding pieces; Tuesday's combined AI school carousel widened to his chat note (8 cards, Department of Education fact checked) on the week branch. (2026-11-19)
 - Built the show gate and the executable failure ledger so a proof or cut cannot reach Krish before it is checked: a show receipt bound to the exact file (qc passed, the separate Critic's verdict, every row of the new config/ve/pre-show-checklist.json, a recorded full-size watch and listen), ve show-check and ve show-record, ve file refusing a cut with no receipt, and the board refusing Approve proof (409 proof_not_shown) without one; engine pin by recorded commit (ve pin), an opt-in bind-at-show-time flag, a red-first check that links video Rulings to failures.json or learnings.json, 15 failures.json entries, and a per-piece defects counter. Enforced from 2026-11-20 so pieces in production are not changed mid-piece. (2026-11-19)
 - The standards check-in of 2026-11-19 grouped the new floor standards; config/floor-groups.json holds 69 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-19)
 - The standards check-in groups new floor standards whenever the floor changes (its branch or main), not only on Sunday, so a floor change can no longer leave every pull request red on check:floor-groups. The 19 Nov floor's 216 new standards were grouped by a hand run of the same workflow, as proposals for Krish. (2026-11-19)
@@ -47,13 +48,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-19 docs/plans/2026-11-23-week/ideas.json (Tue teenhomework option).
 - 2026-11-19 scripts/velib/showgate.py, scripts/ve.py, scripts/velib/guards.py, scripts/velib/lint.py, scripts/velib/precritic.py, apps/control-plane/api/board/_showGate.ts, _handler.ts, config/ve/show-gate.json, config/ve/pre-show-checklist.json, config/failures.json, scripts/check_ruling_linked.py, tests/ve_show_gate_test.py, tests/control-plane/board-show-gate.test.ts, docs.
 Older lines: `docs/history/2026-11-19-NOW-moved-5.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-19): bind_unshown is on and the board refusal stands (Krish: "yes to all 3", 2026-11-19), with the enforcement dates unchanged so pieces already shown or approved are not held to new rules mid-piece; the frame-level qc rows that answer checklist rows without a person are the next pull request.
+- Next (2026-11-19): Krish runs the Wed and Fri Perplexity prompts and files the answers on each piece, then the narrative locks are written from them.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-19): holds.
