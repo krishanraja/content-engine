@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-16","week_target":12,"current":3,"current_as_of":"2026-11-19","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (1 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 12 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Four ve qc rows that failed fine cuts now measure what a viewer sees: art-directed captions are read in their measured stack once settled and judged in order (only the renderer's own echo and ghost forgiven, 0.98 unchanged), captions.clock is advisory while its tolerance is a placeholder, and photo texture on generated pictures no longer reads as words. The close card's "Subscribe free" (17 px against an 18 px floor) still fails and waits on Krish. (2026-11-19)
 - His notes on a piece can be saved for the Perplexity research prompt, the Claude production prompt or both (contract 1.33.0, the save press's `for`), and every note is kept: each prompt lists all of his notes that feed it (up to 100; the prompt text carries the newest ten), read from every week so a note follows its piece through a move. (2026-11-19)
 - His board notes for the week of 23 Nov actioned: both File for later ideas (fri-5 vibe coding, wed-4 brain data) relayed to the idea queue for 30 Nov; his notes filed on each piece as krish_notes; 10 whys Perplexity prompts filed on the Wed, Fri and vibe coding pieces; Tuesday's combined AI school carousel widened to his chat note (8 cards, Department of Education fact checked) on the week branch. (2026-11-19)
 - Built the show gate and the executable failure ledger so a proof or cut cannot reach Krish before it is checked: a show receipt bound to the exact file (qc passed, the separate Critic's verdict, every row of the new config/ve/pre-show-checklist.json, a recorded full-size watch and listen), ve show-check and ve show-record, ve file refusing a cut with no receipt, and the board refusing Approve proof (409 proof_not_shown) without one; engine pin by recorded commit (ve pin), an opt-in bind-at-show-time flag, a red-first check that links video Rulings to failures.json or learnings.json, 15 failures.json entries, and a per-piece defects counter. Enforced from 2026-11-20 so pieces in production are not changed mid-piece. (2026-11-19)
@@ -47,13 +48,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-19 scripts/velib/qc_captions.py, scripts/velib/qc.py, scripts/cutgates/captions.py, scripts/velib/qc_gates.py, scripts/velib/qc_composition.py, config/ve/qc-ocr.json, config/ve/plain-frames.json, config/failures.json, tests/ve_qc_false_fails_test.py, tests/ve_plain_frames_test.py, tests/fixtures/ve/habits-qc-false-fails.json, docs/ve/ENGINE.md.
 - 2026-11-19 apps/control-plane/api/board/_view.ts, _viewContract.ts, view.schema.json, docs/PUBLISH_BOARDS.md, tests/control-plane/board-notes-research.test.ts, board-week-model.test.ts, the view fixtures.
 Older lines: `docs/history/2026-11-19-NOW-moved-6.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-19): control-center reads `notes.saved[].for` and sends `for` with the save (control-center#981); once both are live, a note saved on Fri 20 at Production planned shows on its card for good. Also: every card carries `notes {save, saved}` at every stage, posts at Made, Scheduled and Live included; each save is a new note; a post's notes follow it to another day.
+- Next (2026-11-19): Krish decides whether the close card's "Subscribe free" line grows to the floor, or the floor changes for the brand's own close.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-19): holds.
