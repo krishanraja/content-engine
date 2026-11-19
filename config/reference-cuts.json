@@ -492,7 +492,7 @@
         "layer": "aim",
         "answer": "give me a title card failure report, as I expect the title card to enter as I am talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually was a good build for the title card.",
         "question": "Wed 18's title came out squeezed into his 608 px panel on the wide cut and an 800 x 420 box on the short (about 70 px type), with the wordmark a separate layer that faded in 6 frames after his last word and out on its own, and no proof showed it. He sent Wed 11's \"AI MUSIC or HUMAN MUSIC?\" title as the build to keep. What is the title card?",
-        "quote": "I expect the title card to enter as I am talking, and the title of the piece is woven in to my script at the start.",
+        "quote": "I expect the title card to enter as I am talking",
         "production": "the title is ONE full-frame lockup, centred and composed as one picture, with the stacked wordmark inside it (from config/brand-palette.json, never typed): Wed 11's build, two angled bands slamming in from opposite sides as he says each part, the connector word in mint, bars moving behind and a light sweep, type that fills the frame. It enters as he says the title and leaves whole; the wordmark never comes or goes on its own. Every proof he approves shows the title frame at full size.",
         "changed": "The renderer's title moment is one lockup over the whole frame and the separate wordmark layer is gone (apps/renderer/src/engine/title/TitleMoment.tsx); ve qc rows title.lockup and title.lockup_frame measure it; every proof renders the title frame and is not sendable until someone has looked at it (velib/proof.py); config/failures.json title-card-split-logo-and-squeezed."
       }
