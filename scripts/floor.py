@@ -718,12 +718,27 @@ def group_lines(doc, refs):
     return lines
 
 
+# A maker that is retired: it is still read, so the record of what he rejected stays readable, but nothing in it is a
+# requirement. Rulings (Krish, 2026-11-17 and 2026-11-18): "I don't do dated-and-scored make-your-mind-up pieces because it
+# felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores."; then
+# "get rid of that - i have abandoned the prediction format, it feels lame". config/floor-rulings.json withdraws each of
+# its standards that asked for a prediction.
+RETIRED_MAKERS = {
+    'prediction': ('RETIRED: no piece closes on a dated prediction any more (Rulings, Krish, 2026-11-17 and 2026-11-18: '
+                   '"get rid of that - i have abandoned the prediction format, it feels lame"). Nothing below asks for a '
+                   'prediction, a date or a confidence; it is the record of what he rejected. An article closes on '
+                   '"3 things you can do tomorrow"; mind.the.gap says where the pattern leads, with no date to mark it by.'),
+}
+
+
 def show_format(doc, fmt, approved_only, limit, bar=None):
     entry = doc['formats'].get(fmt)
     if entry is None:
         print(f'No floor for "{fmt}" yet. Makers: {", ".join(sorted(doc["formats"]))}.')
         return 1
     show_bar(bar, fmt)
+    if fmt in RETIRED_MAKERS:
+        print(RETIRED_MAKERS[fmt] + '\n')
     print(f'The rejection floor for {fmt}: {entry["maker"]}')
     print(f'Floor version {doc["version"][:12]}, as of {doc["as_of"]}. Never ship beneath it.\n')
     approved = by_weight(entry.get('approved', []), doc)

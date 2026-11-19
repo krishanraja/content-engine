@@ -25,14 +25,11 @@
 import { notXYConstructions } from './_judges/deterministic.js'
 import { americanSpellings, emDashes, exclamationMarks, publishChecks } from './_publishChecks.js'
 import { HOUSE_RULES } from './_houseRules.js'
-import { sentences, UNSET } from './_factGate.js'
+import { sentences } from './_factGate.js'
 import { classifyAnthropicFailure, describeFailure } from './_modelProvider.js'
-// The one reader of a piece's call, shared with the publish checks, the fact
-// gate and the Studio. Imported by its relative path, as they do.
-import { callSectionOf, labelledConfidences } from '../../../packages/contracts/src/call.js'
 
 /** The blocking checks a writer can meet on its own, by the ids the approval
- *  checklist uses. The fact gate and the call need the sources and Krish. */
+ *  checklist uses. The fact gate needs the sources. */
 export const SELF_CHECKED = ['R2', 'NO_EM_DASH', 'NO_EXCLAMATION', 'BRITISH_SPELLING', 'R7'] as const
 export type SelfCheckedRule = typeof SELF_CHECKED[number]
 
@@ -54,8 +51,6 @@ export interface SelfCheck {
   retried: boolean
   /** Why the first answer was kept, when a second call was wanted. */
   note?: string
-  /** Whether Krish's confidence had to be put back (guardConfidence). */
-  confidence_restored?: boolean
 }
 
 /** The retry gets the rest of the request's time, and runs only with this
@@ -97,15 +92,12 @@ export function blockingHits(text: string, opts: { readingAge: boolean }): SelfC
   return hits.filter((h, i) => hits.findIndex(g => g.rule === h.rule && g.found === h.found) === i)
 }
 
-/** The longest sentences, the ones a shorter reading age starts with. Never
- *  the call: on 2026-09-30 a retry handed piece 3's prediction as a long
- *  sentence rewrote it into a different prediction (walk log F49). The call is
- *  Krish's, and the draft brief fixes its wording. */
+/** The longest sentences, the ones a shorter reading age starts with. Until
+ *  2026-11-18 the piece's dated call was left out of them (walk log F49); no
+ *  piece makes one now (house rule NO_DATED_PREDICTION). */
 function longestSentences(text: string, n: number): string[] {
   const words = (s: string) => s.split(/\s+/).filter(Boolean).length
-  const call = callSectionOf(text)
-  const inCall = (s: string) => !!call && call.includes(s)
-  return sentences(text).filter(s => !inCall(s)).sort((a, b) => words(b) - words(a)).slice(0, n)
+  return sentences(text).sort((a, b) => words(b) - words(a)).slice(0, n)
 }
 
 /** The message the writer's second call gets: each hit, the rule it breaks
@@ -187,81 +179,13 @@ export async function selfCheck(opts: {
   return { text: second, chose: 'retry', self_check: { passed: secondHits.length === 0, remaining: secondHits, retried: true } }
 }
 
-// ── Krish's confidence ─────────────────────────────────────────────────────
+// ── No confidence to guard (retired 2026-11-18) ────────────────────────────
 //
-// How sure we are is Krish's judgement and his alone (his ruling,
-// 2026-09-26: "I'd rather take a clearer stance than sit on the fence all the
-// time and say 60%", and he sets the number). On 2026-09-30 piece 3's first
-// draft was told to end with "How sure we are: [Krish to set]" (now "[to set]",
-// house rule NO_NAME) and wrote
-// "How sure we are: 78%." on its own: an engine-invented number that could
-// have reached a reader as his stance (walk log F43). So after the model and
-// any retry, the confidence is put back in code.
-
-/** What a first draft says until Krish sets the number. */
-export const UNSET_CONFIDENCE = `How sure we are: ${UNSET}`
-/** The placeholder before 2026-10-29, which named him. A draft that still
- *  carries it is read as unset, and a rewrite writes UNSET in its place. */
-const OLD_UNSET = '[Krish to set]'
-
-interface ConfidenceMention { start: number; end: number; text: string }
-
-/** Every place a text states Krish's confidence, by the shared call reader:
- *  "How sure we are:" anywhere, and "Confidence:" inside the call only, as
- *  the fact gate reads them (a labelled number elsewhere, "Consumer
- *  confidence: 62% in August", is a fact about something else). Each with its
- *  number, or with the placeholder. */
-function confidenceMentions(text: string): ConfidenceMention[] {
-  const found: Array<{ start: number; end: number }> = []
-  const read = (offset: number, scope: string, label: 'how_sure_we_are' | 'confidence') => {
-    for (const m of labelledConfidences(scope)) {
-      if (m.label !== label) continue
-      const at = scope.indexOf(`${m.value}%`, m.index)
-      if (at >= 0) found.push({ start: offset + m.index, end: offset + at + m.value.length + 1 })
-    }
-    for (const placeholder of [UNSET, OLD_UNSET]) {
-      const unset = `${label === 'how_sure_we_are' ? 'How sure we are' : 'Confidence'}: ${placeholder}`
-      for (let at = scope.indexOf(unset); at >= 0; at = scope.indexOf(unset, at + 1)) found.push({ start: offset + at, end: offset + at + unset.length })
-    }
-  }
-  read(0, text, 'how_sure_we_are')
-  const section = callSectionOf(text)
-  const from = section && section.trim() ? text.indexOf(section) : -1
-  if (section && from >= 0) read(from, section, 'confidence')
-  return found.sort((a, b) => a.start - b.start).map(m => ({ ...m, text: text.slice(m.start, m.end) }))
-}
-
-// A confidence the writer dropped goes back at the end of the call: its own
-// paragraph under a heading, the paragraph's last sentence in the bold-label
-// form. With no call at all there is nowhere to put it, and the CALL check
-// says so.
-function putBack(text: string, line: string): string {
-  const section = callSectionOf(text)
-  if (section === null || !section.trim()) return text
-  const from = text.indexOf(section)
-  if (from < 0) return text
-  const end = from + section.trimEnd().length
-  return text.slice(0, end) + (section.trimStart().startsWith('**') ? ' ' : '\n\n') + line + text.slice(end)
-}
-
-/**
- * Krish's confidence, after a writer. A first draft (`source` null) says
- * "How sure we are: [to set]" whatever the model wrote. A rewrite keeps
- * the source's confidence exactly, label and number ("How sure we are: 70%",
- * "Confidence: 70%", or the placeholder, the old "[Krish to set]" written as
- * "[to set]"), and a rewrite of a source with none gets the placeholder in
- * place of any number it wrote. A confidence the model dropped is put back.
- * `restored` says whether anything changed. The fact gate's hash reads both
- * placeholders the same, so the swap keeps a passed check in force.
- */
-export function guardConfidence(text: string, source: string | null): { text: string; restored: boolean } {
-  const theirs = source === null ? [] : confidenceMentions(source)
-  const want = (theirs[0]?.text ?? UNSET_CONFIDENCE).replace(OLD_UNSET, UNSET)
-  const mine = confidenceMentions(text)
-  let out = text
-  for (const m of [...mine].reverse()) if (m.text !== want) out = out.slice(0, m.start) + want + out.slice(m.end)
-  if (!mine.length && (source === null || theirs.length)) {
-    out = putBack(out, want + (source !== null && source[theirs[0]!.end] === '.' ? '.' : ''))
-  }
-  return { text: out, restored: out !== text }
-}
+// guardConfidence put "How sure we are: [to set]" into every first draft and
+// held a rewrite to its source's confidence (walk log F43). Rulings (Krish,
+// 2026-11-17: "I don't do dated-and-scored make-your-mind-up pieces because it
+// felt quite tacky and gimmicky. I don't really have the clout such that my
+// opinion can hold up in official scores."; 2026-11-18: "get rid of that - i
+// have abandoned the prediction format, it feels lame"): no piece makes a
+// dated prediction (house rule NO_DATED_PREDICTION), so no writer is handed a
+// confidence to fill and none is put back.

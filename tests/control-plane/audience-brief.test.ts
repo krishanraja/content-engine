@@ -18,7 +18,7 @@ const rule = (id: string) => {
 
 const ARTICLE = `Disney is paying Character.AI to put its films inside a chatbot.
 
-Three pieces a week on what AI changes in your business, each ending on a dated call. Subscribe free.
+Three pieces a week on what AI changes in your business, each ending on three things you can do tomorrow. Subscribe free.
 
 ## What happened
 
@@ -30,7 +30,7 @@ Fans chat with the heroes, and Disney gets paid each time.
 - List the characters fans already talk to.
 - Price one chat against one survey reply.
 
-Three pieces a week on what AI changes in your business, each ending on a dated call. Subscribe free.
+Three pieces a week on what AI changes in your business, each ending on three things you can do tomorrow. Subscribe free.
 `
 
 describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from the next piece', () => {
@@ -68,8 +68,11 @@ describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from t
     }
   })
 
-  test('the subscribe ask promises no public scorecard before makeyourmindup.ai shows a live one (change 6, with 7 open)', () => {
-    assert.match(rule('ARTICLE_SUBSCRIBE_ASK').text, /public scorecard of every call is promised only once makeyourmindup\.ai shows a live one/)
+  test('the subscribe ask never promises a call or a public scorecard: change 7 is withdrawn with the prediction format (Rulings, Krish, 2026-11-17 and 2026-11-18)', () => {
+    const text = rule('ARTICLE_SUBSCRIBE_ASK').text
+    assert.match(text, /never a prediction, a call or a public scorecard/)
+    assert.doesNotMatch(text, /dated call|scorecard of every call/)
+    assert.match(text, /each ending on three things you can do tomorrow/)
   })
 
   test('an article that asks near the top and right after its three actions passes; each missing ask is named (change 6)', () => {

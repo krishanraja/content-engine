@@ -18,7 +18,8 @@ export const STUDIO_FORMATS_BY_SERIES: Record<StudioSeries, ReadonlyArray<{ valu
     { value: 'first_version', label: 'First Version' },
   ],
   // follow.the.money and under.the.hood inherit the formats of the series they
-  // replaced; mind.the.gap has The Fork: then, now, the fork, our call.
+  // replaced; mind.the.gap has The Fork: then, now, the fork, where it leads
+  // (no dated call since 2026-11-18; house rule NO_DATED_PREDICTION).
   follow_the_money: [
     { value: 'money_trace', label: 'Money Trace' },
     { value: 'artifact', label: 'The Artifact' },

@@ -3,7 +3,7 @@
 Everything here is read from a source that already exists, so nothing is
 copied into this folder that could drift:
 
-  * Colours, each subchannel's day, its sticker and the call's words come from
+  * Colours, each subchannel's day and its sticker come from
     the house style in `config/studio.json` (the same values the Studio renders
     with). When the schedule changes, that file changes, and every page,
     banner and pill follows.
@@ -136,7 +136,7 @@ def fail(msg):
 
 def house():
     """The publication's house style from config/studio.json: tokens, the copy
-    the call uses, and the three subchannels in the order of the week."""
+    the pages use, and the three subchannels in the order of the week."""
     cfg = json.loads((ROOT / 'config' / 'studio.json').read_text(encoding='utf-8'))
     themes = [t for t in cfg.get('brand_themes', []) if (t.get('publication') or {}).get('house_style')]
     if not themes:

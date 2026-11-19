@@ -27,7 +27,7 @@ const GOOD: Card = {
   what_changed: "Cisco's 350M-parameter model beats GPT-5.5 on security tasks at 172x lower cost. Microsoft swapped frontier models for its own MAI models inside Office and said cost was the reason. Bridgewater reported 84.7% accuracy from a tuned Qwen3 against roughly 50% from the frontier three.",
   why_now: 'Three buyers published cost comparisons in the same quarter, which had not happened before.',
   the_opening: 'There is a repricing window here for anyone selling per-seat AI features on frontier margins, and nobody has taken the cheap-and-good position in publishing yet.',
-  where_this_goes: 'By the end of 2027 the premium tier is a compliance and support product rather than a capability one, and the capability gap stops carrying the price.',
+  where_this_goes: 'The premium tier becomes a compliance and support product rather than a capability one, and the capability gap stops carrying the price.',
   reader_decision: 'Whether to keep pricing your AI features against frontier costs, or reprice now and take share while competitors are still paying the old rate.',
 }
 
@@ -75,10 +75,11 @@ const GOOD: Card = {
       .includes('continuation_not_claim')) {
     bad('a restatement of the current direction passes as a forward claim')
   }
-  // A forward claim nobody could ever check is not falsifiable.
-  if (!rules({ ...GOOD, where_this_goes: 'The market eventually reshapes around cheaper models.' })
-      .includes('not_falsifiable')) {
-    bad('a forward claim with no number and no timeframe is accepted')
+  // Where it leads, with no date to check it by, is a forward claim (Rulings,
+  // Krish, 2026-11-17 and 2026-11-18: the dated-prediction format is abandoned).
+  if (rules({ ...GOOD, where_this_goes: 'The market reshapes around cheaper models, and the dearest ones become a niche.' })
+      .some(r => r === 'not_falsifiable' || r === 'continuation_not_claim' || r === 'required')) {
+    bad('a forward claim with no date or number is refused, which asks for a dated call')
   }
   // "so what? ... I dont understand why it matters or who it matters to"
   if (!rules({ ...GOOD, reader_decision: '' }).includes('required')) {

@@ -44,15 +44,6 @@ const RuntimeHouseSchema = z.object({
   tile: z.object({ size: z.number().positive(), markWidth: z.number().positive(), shadowPx: z.number().nonnegative() }),
   band: z.object({ topPx: z.number().nonnegative(), heightPx: z.number().positive(), logoWidth: z.number().positive() }),
   sticker: z.object({ text: z.string().min(1), startMs: z.number().nonnegative(), endMs: z.number().positive() }).optional(),
-  call: z.object({
-    startMs: z.number().nonnegative(),
-    endMs: z.number().positive(),
-    kicker: z.string().min(1),
-    headline: z.string().min(1),
-    statement: z.string().min(1),
-    due: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    confidencePercent: z.number().int().min(1).max(99),
-  }).optional(),
 })
 
 const RuntimeBrandingSchema = z.object({
@@ -102,7 +93,8 @@ const RuntimeBrandingSchema = z.object({
     }),
     // The makeyourmindup house style (the mock Krish approved on
     // 2026-09-28): the mark on its ink tile, the captions, the channel
-    // sticker on the second beat, the call card and the ending band.
+    // sticker on the second beat and the ending band (the call card is
+    // retired: Rulings, Krish, 2026-11-17 and 2026-11-18).
     house: RuntimeHouseSchema.optional(),
   }).optional(),
 })

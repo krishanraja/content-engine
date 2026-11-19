@@ -1,5 +1,5 @@
 {
- "about": "Lines and pieces Krish has said are right, in his words. Every new draft is compared with them before he sees it (the golden-examples loop he approved on 2026-10-13: \"I need a system that improves, not regresses\"). Add one whenever he says something is good, or writes it himself.",
+ "about": "Lines and pieces Krish has said are right, in his words. Every new draft is compared with them before he sees it (the golden-examples loop he approved on 2026-10-13: \"I need a system that improves, not regresses\"). Add one whenever he says something is good, or writes it himself. Two spoken lines that made a dated prediction (\"So my prediction is that Universal and Sony make peace too.\" and \"By the end of December, 2027, I reckon one of them will announce a deal with Suno, if not both.\") were taken out on 18 Nov 2026, when the prediction format was abandoned (Rulings, Krish, 2026-11-17 and 2026-11-18: \"get rid of that - i have abandoned the prediction format, it feels lame\"); his take of them stays on record in docs/narration/week-of-12-oct.",
  "examples": [
   {
    "kind": "script-intro",
@@ -36,20 +36,6 @@
    "kind": "spoken-line",
    "text": "Now, is that half the cake or is it just breadcrumbs? No one's really saying.",
    "why": "A question given its verb, \"just\" to shrink the small side, \"no one\" for the script's \"nobody\".",
-   "said": "He said it on camera, reading from the script and changing it (mon-long in docs/narration/week-of-12-oct); Krish, 2026-10-17: \"Thats how script should be written in the future.\"",
-   "on": "2026-10-12"
-  },
-  {
-   "kind": "spoken-line",
-   "text": "So my prediction is that Universal and Sony make peace too.",
-   "why": "The prediction run straight into the claim, never a bare label.",
-   "said": "He said it on camera, reading from the script and changing it (mon-long in docs/narration/week-of-12-oct); Krish, 2026-10-17: \"Thats how script should be written in the future.\"",
-   "on": "2026-10-12"
-  },
-  {
-   "kind": "spoken-line",
-   "text": "By the end of December, 2027, I reckon one of them will announce a deal with Suno, if not both.",
-   "why": "The deadline said as a period, \"I reckon\", and a raise of his own (\"if not both\").",
    "said": "He said it on camera, reading from the script and changing it (mon-long in docs/narration/week-of-12-oct); Krish, 2026-10-17: \"Thats how script should be written in the future.\"",
    "on": "2026-10-12"
   },

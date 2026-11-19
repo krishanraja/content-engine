@@ -640,8 +640,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                              'duration_frames': edl.get('duration_frames'),
                              'picture_short_frames': max(0, duration - int(edl.get('duration_frames') or 0))}
     # Every whole cut closes on the ending band (one calm close, held long enough to read: config/ve/formats
-    # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro"), not only a
-    # cut that carries a dated call; the call card still needs a call.
+    # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro").
     if not cut.get('excerpt', False):
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site'], 'tagline': ENDING_TAGLINE, 'cta': ENDING_CTA,
                            'days': [{'day': house['channels'][c]['day'], 'colour': publication['channel_colors'][c]}
@@ -659,9 +658,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     if sting:
         # Never: sting_props gives no cut one (Ruling, Krish, 2026-11-12), and sting_problems refuses props that carry one.
         props['sting'] = sting
-    if spec.get('call'):
-        call = spec['call']
-        props['call'] = {'statement': call['statement'], 'due': call['due'], 'confidencePercent': call['confidence_percent']}
+    # Never props.call: the dated call card is retired, and a spec's own `call` (written before then) is never read.
+    # Ruling (Krish, 2026-11-17): "I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and
+    # gimmicky. I don't really have the clout such that my opinion can hold up in official scores." Ruling (Krish,
+    # 2026-11-18): "get rid of that - i have abandoned the prediction format, it feels lame".
     motion = motion_props(spec)
     if motion is not None:
         props['motion'] = motion

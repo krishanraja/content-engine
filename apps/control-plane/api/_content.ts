@@ -878,11 +878,16 @@ export const VOICE_GUARDRAILS = [
   'No AI tells: no "hook line, gap, explanation" opening, no "here\'s the thing", no "the truth is", no "let\'s dive in", no "delve", no "unpack", no "deep dive".',
   'No synthetic enthusiasm ("excited", "thrilled"). No "leverage" (except "leverage audit"). No "utilise", "seamless", "empower", "journey", "landscape", "robust", "synergy".',
   'Active voice only. Dropped subject pronouns where natural ("Been thinking", not "I\'ve been thinking").',
-  // Krish's rulings (R2, R4, R6, R7, the facts, the prediction, no sermons,
-  // no exclamation marks...) come from one registry, api/_houseRules.ts, so a
-  // new ruling reaches every writer without editing five prompts.
+  // Krish's rulings (R2, R4, R6, R7, the facts, no dated predictions, no
+  // sermons, no exclamation marks...) come from one registry,
+  // api/_houseRules.ts, so a new ruling reaches every writer without editing
+  // five prompts.
   houseRulesBlock('write'),
-  'End on a hard, forward-looking verdict — never a summary, rhetorical question, or CTA.',
+  // Until 2026-11-18 this asked for "a hard, forward-looking verdict", which
+  // pulled the publication's closes toward a prediction. Rulings (Krish,
+  // 2026-11-17 and 2026-11-18): the prediction format is abandoned
+  // (NO_DATED_PREDICTION); an article closes on its 3 things you can do tomorrow.
+  'End on a hard verdict, never a summary, a rhetorical question, a CTA or a dated prediction.',
   'Specific over general. Never invent numbers, outcomes, or quotes; flag gaps instead.',
 ].join('\n')
 

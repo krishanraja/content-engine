@@ -80,7 +80,9 @@ export const IDEA_JUDGES: Judge[] = [
       + 'A FORWARD-LOOKING CLAIM WITH NO SOURCE YET IS NOT A LOW SCORE. Krish, 2026-09-24: "In the absence of tons '
       + 'of evidence, we need to look at hypotheticals and sense-backed predictions." A labelled hypothesis that '
       + 'reasons from something real scores HIGH here. What scores low is an unlabelled one: a prediction dressed '
-      + 'as a finding. Do not score whether the claim is true, and do not demand a citation for the future.',
+      + 'as a finding. Do not score whether the claim is true, and do not demand a citation for the future. '
+      + 'A dated prediction (a date to check it by, a confidence percentage) earns nothing here: the format is '
+      + 'abandoned (house rule NO_DATED_PREDICTION; Krish, 2026-11-18: "i have abandoned the prediction format").',
     evidence: 'Name the load-bearing step, and say whether it is sourced, labelled as inference, or neither.',
   },
   {

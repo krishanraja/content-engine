@@ -469,8 +469,8 @@ const HouseChannelCopyV1Schema = z.object({
 
 /** The makeyourmindup house style (brand book v1.4), as Krish approved it in
  *  the Studio mock on 2026-09-28 ("yes, approved"). The renderer draws the
- *  mock's own geometry; this holds what a job must pin: the colours, the
- *  copy each channel carries and the fixed lines around the call. */
+ *  mock's own geometry; this holds what a job must pin: the colours and the
+ *  copy each channel carries. The fixed lines around the call are retired. */
 export const BrandHouseStyleV1Schema = z.object({
   tokens: z.object({
     ink: HexColourSchema,
@@ -486,11 +486,16 @@ export const BrandHouseStyleV1Schema = z.object({
   }).strict(),
   copy: z.object({
     site: z.literal('makeyourmindup.ai'),
-    call_kicker: z.string().min(3).max(40),
-    call_headline: z.string().min(3).max(40),
-    call_footnote: z.string().min(12).max(200),
+    // Retired on 18 Nov 2026 with the dated call card. Ruling (Krish, 2026-11-17): "I don't do dated-and-scored
+    // make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my
+    // opinion can hold up in official scores." Ruling (Krish, 2026-11-18): "get rid of that - i have abandoned the
+    // prediction format, it feels lame". The live theme no longer carries them and nothing reads them. Kept optional
+    // only so a theme a job pinned before then still parses and hashes as it did.
+    call_kicker: z.string().min(3).max(40).optional(),
+    call_headline: z.string().min(3).max(40).optional(),
+    call_footnote: z.string().min(12).max(200).optional(),
     question_kicker: z.string().min(3).max(40),
-    cover_call_sticker: z.string().min(3).max(40),
+    cover_call_sticker: z.string().min(3).max(40).optional(),
     // Retired on 15 Nov 2026 with the sticker thumbnail (a Short's cover is the Receipt, receiptCoverV2): the live
     // theme no longer carries it and nothing reads it. Kept optional only so a theme a job pinned before then still
     // parses and hashes as it did.

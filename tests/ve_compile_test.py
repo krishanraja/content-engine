@@ -214,10 +214,15 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(excerpt['beats'][-1]['toFrame'], base)
         self.assertTrue(all(o['toFrame'] == base + ENDING for o in whole['objects'] if o['toFrame'] > base - 1
                             and o['toFrame'] >= excerpt['beats'][-1]['fromFrame']))
-        # Every whole cut closes on the ending band, with or without a dated call (Krish, 2026-11-03: "We fucking
-        # have standards for intro, background audio and outro").
-        del spec['call']
-        self.assertEqual({k: compile_cut(spec, 'proof-tall', words, FIXTURE)['ending'][k] for k in ('fromFrame', 'url')}, {'fromFrame': base, 'url': whole['series']['site']})
+        # Every whole cut closes on the ending band (Krish, 2026-11-03: "We fucking have standards for intro,
+        # background audio and outro"), and none carries a dated call: the call card is retired (Rulings, Krish,
+        # 2026-11-17 and 2026-11-18), so a spec written before then keeps its `call` and compile never reads it.
+        self.assertNotIn('call', spec)
+        self.assertNotIn('call', whole)
+        spec['call'] = {'statement': 'One more country will fund its own national AI model.', 'due': '2026-12-31', 'confidence_percent': 90}
+        old = compile_cut(spec, 'proof-tall', words, FIXTURE)
+        self.assertNotIn('call', old)
+        self.assertEqual({k: old['ending'][k] for k in ('fromFrame', 'url')}, {'fromFrame': base, 'url': whole['series']['site']})
 
     def test_motion_style_passes_through(self):
         spec = load_json(FIXTURE / 'spec.json')

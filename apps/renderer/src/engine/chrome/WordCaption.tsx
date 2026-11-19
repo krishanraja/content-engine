@@ -20,8 +20,9 @@ export const WORD_CAPTION = {
 const SHADOW = '0 3px 14px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.6)'
 
 export function WordCaption({ props, frame }: { props: EngineRenderProps; frame: number }) {
-  if ((props.ending && frame >= props.ending.fromFrame)
-    || props.beats.some((beat) => beat.role === 'call' && frame >= beat.fromFrame && frame < beat.toFrame)) return null
+  // Captions run through every beat, a retired 'call' beat included (the call card is gone: Rulings, Krish,
+  // 2026-11-17 and 2026-11-18); they stop only at the ending band.
+  if (props.ending && frame >= props.ending.fromFrame) return null
   const page = captionPageAt(props.captions, frame)
   const word = page?.words[0]
   if (!page || !word || word.atFrame > frame) return null

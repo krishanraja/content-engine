@@ -12,7 +12,7 @@ import { UTILITY_MODEL } from '../../_models.js'
 import { loadSubchannel } from '../../_subchannels.js'
 import { subchannelRulesBlock } from '../../_houseRules.js'
 import { guardEngine } from '../../_auth.js'
-import { guardConfidence, selfCheck } from '../../_selfCheck.js'
+import { selfCheck } from '../../_selfCheck.js'
 
 // POST /api/content-ideas/:id/draft
 //   body: { instruction?: string }   Krish's direction for this draft, up to 1600 chars
@@ -52,9 +52,7 @@ import { guardConfidence, selfCheck } from '../../_selfCheck.js'
 // The publish gate's mechanical checks read the draft before it is written,
 // and one more call fixes what they find (api/_selfCheck.ts). Piece 3's first
 // draft, 2026-09-30, broke R2 three times and read at about age 13.5. The
-// response says what the saved draft still breaks, as `self_check`. The
-// draft's confidence is always "How sure we are: [to set]": the number
-// is Krish's, and that draft wrote 78% on its own.
+// response says what the saved draft still breaks, as `self_check`.
 
 const MAX_DRAFTS = 10
 // The time a request has for both calls: maxDuration (below), less 15
@@ -115,7 +113,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const [voice, corpus, taste] = await Promise.all([loadVoiceBlock(), loadCorpus(), loadTasteBlock(['voice', 'strategy'])])
   const system = [
     `You are drafting one piece for makeyourmindup, in the voice below, for the subchannel ${sub.label}. The article and its title, subtitle and description speak as the publication, "we", and never name or describe its maker (house rule NO_NAME).`,
-    `=== THE MANDATE FOR ${sub.label.toUpperCase()} ===\n${sub.mandate}\n\nThe mandate is the test this piece must pass. It governs the question the piece asks, its structure and how it closes. Where the voice notes below disagree with the mandate about structure or the close, the mandate wins. Krish's house rules win over both: every piece still ends with a dated prediction.`,
+    `=== THE MANDATE FOR ${sub.label.toUpperCase()} ===\n${sub.mandate}\n\nThe mandate is the test this piece must pass. It governs the question the piece asks, its structure and how it closes. Where the voice notes below disagree with the mandate about structure or the close, the mandate wins. Krish's house rules win over both: no piece makes a dated prediction, whatever the mandate says (NO_DATED_PREDICTION), and an article ends on its 3 things you can do tomorrow.`,
     subchannelRulesBlock('write', sub.slug),
     voice ? `=== VOICE ===\n${voice}` : '',
     taste ? `=== HOW KRISH LIKES IT (approved by him, form only) ===\n${taste}` : '',
@@ -175,11 +173,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     },
   })
   if (checked.chose === 'retry' && second.out) out = { ...out, ...second.out }
-  // How sure we are is Krish's to set. A first draft carries the placeholder,
-  // whatever either call wrote (walk log F43).
-  const confidence = guardConfidence(checked.text, null)
-  const body = confidence.text
-  const self_check = { ...checked.self_check, confidence_restored: confidence.restored }
+  // Until 2026-11-18 a first draft was given "How sure we are: [to set]" here
+  // (walk log F43); no piece makes a dated prediction now (NO_DATED_PREDICTION).
+  const body = checked.text
+  const self_check = checked.self_check
 
   const words = body.split(/\s+/).filter(Boolean).length
   const entry = {

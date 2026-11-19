@@ -1,5 +1,6 @@
-"""QC refinements found by the first whole-cut render (Friday two passports): confusable I/l, the caption box crop,
-the call card taking the caption zone, and no caption page expected while the call card replaces it."""
+"""QC refinements found by the first whole-cut render (Friday two passports): confusable I/l and the caption box crop.
+The call card those renders carried is retired (Rulings, Krish, 2026-11-17 and 2026-11-18): every caption page is
+expected on screen, a retired 'call' beat included, and no call card text is allowed in the caption zone."""
 from __future__ import annotations
 
 import sys
@@ -87,7 +88,7 @@ class CropTest(unittest.TestCase):
         self.assertEqual(qc_captions.page_lines(long, True), 2)
 
 
-class CallBeatTest(unittest.TestCase):
+class RetiredCallBeatTest(unittest.TestCase):
     props = {'beats': [{'id': 'a', 'role': 'anchor', 'fromFrame': 0, 'toFrame': 100},
                        {'id': 'call', 'role': 'call', 'fromFrame': 100, 'toFrame': 200}],
              'captions': [{'fromFrame': 80, 'toFrame': 110, 'words': []},
@@ -96,17 +97,11 @@ class CallBeatTest(unittest.TestCase):
                           {'fromFrame': 190, 'toFrame': 260, 'words': [{'text': 'x', 'atFrame': 195}]}],
              'call': {'statement': 'One more country will fund its own AI.', 'due': '2026-12-31', 'confidencePercent': 90}}
 
-    def test_pages_inside_the_call_beat_are_not_expected(self):
-        shown = qc.caption_pages_shown(self.props)
-        # a page is judged at the frame OCR samples; the one that starts in the card but is sampled after it is expected
-        self.assertEqual([page['fromFrame'] for page in shown], [80, 190])
-        without = {key: value for key, value in self.props.items() if key != 'call'}
-        self.assertEqual(len(qc.caption_pages_shown(without)), 4)
+    def test_every_page_is_expected_even_inside_a_retired_call_beat_with_an_old_call(self):
+        self.assertEqual([page['fromFrame'] for page in qc.caption_pages_shown(self.props)], [80, 100, 150, 190])
 
-    def test_call_card_text_is_allowed_in_the_caption_zone_of_the_call_beat_only(self):
-        tokens = qc_composition.call_card_tokens(self.props, self.props['beats'][1])
-        self.assertTrue({'our', 'call', 'country', '2026', '90', 'sure'} <= tokens)
-        self.assertEqual(qc_composition.call_card_tokens(self.props, self.props['beats'][0]), set())
+    def test_no_call_card_text_is_allowed_in_the_caption_zone(self):
+        self.assertFalse(hasattr(qc_composition, 'call_card_tokens'))
 
 
 if __name__ == '__main__':

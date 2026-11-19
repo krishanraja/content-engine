@@ -22,6 +22,8 @@ export const VE_NO_STING_BEFORE = 'none: this piece opens on its hook (an off da
 export const VE_NOTHING_BEFORE_HOOK = 'Nothing before the hook, ever. Remove the sting exception for good.'
 export const VeAspectSchema = z.enum(['9:16', '16:9'])
 export const VeLayoutSchema = z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW'])
+// 'call' is retired with the dated call card: kept only so a spec written before 18 Nov 2026 still parses, and such a
+// beat is an ordinary closing beat (its captions on screen, no card). No rule asks for one.
 export const VeRoleSchema = z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call'])
 // The same verbs as the renderer's EngineEventSchema (apps/renderer/src/engine/props.ts), so a spec can name every
 // verb a library device accepts (config/ve/devices.json); compile still refuses a verb its device does not list.
@@ -88,7 +90,7 @@ export const VeCutSchema = z.object({
   aspect: VeAspectSchema,
   take: z.string().min(1),
   max_s: z.number().positive(),
-  /** A proof excerpt (Gate 2) skips the whole-cut story rules: one payoff, the call beat, layout variety. */
+  /** A proof excerpt (Gate 2) skips the whole-cut story rules: one payoff, layout variety. */
   excerpt: z.boolean().default(false),
   edit: z.object({
     remove: z.array(z.object({ from_w: WordSchema, to_w: WordSchema, why: z.string().min(3) }).strict()).default([]),
@@ -183,6 +185,11 @@ export const VeApprovalSchema = z.object({
   artifact_hash: Sha256V1Schema,
 }).strict()
 
+// Retired: the dated call a mind.the.gap cut once ended on, drawn as a call card. Ruling (Krish, 2026-11-17): "I don't do dated-and-scored make-your-mind-up pieces because
+// it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores."
+// Ruling (Krish, 2026-11-18): "get rid of that - i have abandoned the prediction format, it feels lame".
+// Kept in the shape only so a spec written before then still parses; nothing requires, reads or draws it (compile never
+// writes props.call, and the renderer has no call card).
 export const VeCallSchema = z.object({
   statement: z.string().min(12),
   due: DateSchema,
@@ -222,17 +229,6 @@ export const VeCharacterSchema = z.object({
   cues: z.array(VeCharacterCueSchema).min(1),
 }).strict()
 
-// The day each series publishes on (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap; the
-// house channels in config/studio.json). A piece published on any other day is an off-day piece: it wears no series
-// promise and carries no dated call card, so the series call rule below does not reach it (velib/guards.off_day).
-const VE_SERIES_WEEKDAY: Record<string, number> = { 'follow.the.money': 1, 'under.the.hood': 3, 'mind.the.gap': 5 }
-
-export function veOffDay(spec: { publish_day?: string | undefined, brand: { series: string } }): boolean {
-  if (!spec.publish_day) return false
-  const weekday = new Date(`${spec.publish_day}T12:00:00Z`).getUTCDay()
-  return weekday !== VE_SERIES_WEEKDAY[spec.brand.series]
-}
-
 export const ProductionSpecV2Schema = z.object({
   schema_version: z.literal(2),
   piece_id: IdentifierV1Schema,
@@ -258,6 +254,7 @@ export const ProductionSpecV2Schema = z.object({
     // card where the sting was. Kept in the shape only so the refusal below can name it; any value is refused.
     opening_exception: z.unknown().optional(),
   }).strict(),
+  // Retired (VeCallSchema): parsed so an older spec still reads; never read.
   call: VeCallSchema.optional(),
   signature: VeSignatureSchema,
   datasets: z.array(VeDatasetSchema).default([]),
@@ -310,7 +307,6 @@ export const ProductionSpecV2Schema = z.object({
     spans: z.record(SlugSchema, VeSpanSchema).optional(),
   }).strict().optional(),
 }).strict().superRefine((spec, c) => {
-  if (spec.brand.series === 'mind.the.gap' && !spec.call && !veOffDay(spec)) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })
   if (spec.brand.intro_sting !== undefined && spec.brand.intro_sting !== VE_NO_STING && spec.brand.intro_sting !== VE_NO_STING_BEFORE) {
     c.addIssue({ code: 'custom', path: ['brand', 'intro_sting'], message: `nothing goes before the hook (Ruling, Krish, 2026-11-12: "${VE_NOTHING_BEFORE_HOOK}"): brand.intro_sting is "${VE_NO_STING}", or unset` })
   }

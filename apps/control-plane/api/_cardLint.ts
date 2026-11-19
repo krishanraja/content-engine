@@ -33,7 +33,7 @@ export interface Card {
   what_changed: string
   why_now: string
   the_opening: string
-  /** A falsifiable forward claim. Continuation of the current trend is not one. */
+  /** Where the pattern leads, in plain words, with no date to check it by. Continuation of the current trend is not one. */
   where_this_goes: string
   /** A decision the reader already owns, whose inputs this changes. Not an action. */
   reader_decision: string
@@ -131,8 +131,6 @@ const CONTINUATION = [
 ]
 
 /** Something a forward claim can be checked against later. */
-const FALSIFIABLE_MARK = /\d|\b(by|within|before|during)\s+(the\s+)?(20\d\d|next|this|end|first|second|third|fourth|q[1-4]|\d+\s*(month|year|quarter|week))/i
-
 /** Decision framing, as opposed to instruction. */
 const DECISION_MARK = /\b(whether|which|how much|how many|when to|who to|what to|trade[- ]off|choose|chooses|choice|decide|decides|decision|weigh|weighs|between)\b/i
 
@@ -256,10 +254,11 @@ export function lintCard(card: Card, ctx: LintContext = {}): LintFailure[] {
       add('where_this_goes', 'continuation_not_claim',
         `"${cont}" says the current direction continues, which is not a forward claim`)
     }
-    if (!FALSIFIABLE_MARK.test(wtg)) {
-      add('where_this_goes', 'not_falsifiable',
-        'no number and no timeframe, so nobody could ever say it was wrong')
-    }
+    // Until 2026-11-18 a forward claim also needed a number or a timeframe "so
+    // nobody could ever say it was wrong" (not_falsifiable): a dated call by
+    // another name. Rulings (Krish, 2026-11-17 and 2026-11-18): the prediction
+    // format is abandoned (house rule NO_DATED_PREDICTION), so where this goes
+    // is said in plain words, where the pattern leads, with no date to check.
   }
 
   // ── reader_decision ─────────────────────────────────────────────────────

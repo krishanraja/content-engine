@@ -112,13 +112,15 @@ export function scoreArc(arc: Arc, ctx: LintContext = {}): ArcScore {
   const named = /\d|\b[A-Z][a-zA-Z]{2,}\b/.test(rd.replace(/^(\w)/, m => m.toLowerCase()))
   const reader_consequence = clamp01(0.4 + (anchored ? 0.35 : 0) + (named ? 0.25 : 0))
 
-  // forward_claim: a falsifiable claim that is not continuation. The lint has
-  // already rejected continuation and unfalsifiable claims outright, so this
-  // grades how checkable what survives is.
+  // forward_claim: where the pattern leads, not continuation. The lint has
+  // already rejected continuation outright, so this grades how concrete what
+  // survives is. Until 2026-11-18 a date in it scored too, which rewarded a
+  // dated call; the prediction format is abandoned (Rulings, Krish, 2026-11-17
+  // and 2026-11-18; house rule NO_DATED_PREDICTION), so a date earns nothing.
   const wtg = arc.card.where_this_goes || ''
-  const hasDate = /\b20\d\d\b|\b(q[1-4]|within|by the end of)\b/i.test(wtg)
   const hasQuantity = /\d+\s*(%|percent|x|times|million|billion)/i.test(wtg)
-  const forward_claim = clamp01(0.4 + (hasDate ? 0.3 : 0) + (hasQuantity ? 0.3 : 0))
+  const namesWho = /\b[A-Z][a-zA-Z]{2,}\b/.test(wtg.replace(/^(\w)/, m => m.toLowerCase()))
+  const forward_claim = clamp01(0.4 + (namesWho ? 0.3 : 0) + (hasQuantity ? 0.3 : 0))
 
   // legibility: the gate is pass/fail and has already passed, so this rewards
   // claims that are short as well as clear. A 60-word sentence that happens to

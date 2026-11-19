@@ -8,11 +8,6 @@
   "series": "mind.the.gap",
   "captions": "house"
  },
- "call": {
-  "statement": "At least one more country's government will announce new public money for its own national AI model or a sovereign AI programme.",
-  "due": "2026-12-31",
-  "confidence_percent": 90
- },
  "signature": {
   "hero": {
    "device": "test_grid",

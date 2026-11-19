@@ -41,8 +41,9 @@ export function captionLines(page: CaptionPage, aspect: Aspect): number[][] {
 }
 
 export function CaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number }) {
-  if ((props.ending && frame >= props.ending.fromFrame)
-    || props.beats.some((beat) => beat.role === 'call' && frame >= beat.fromFrame && frame < beat.toFrame)) return null
+  // Captions run through every beat, a retired 'call' beat included (the call card is gone: Rulings, Krish,
+  // 2026-11-17 and 2026-11-18); they stop only at the ending band.
+  if (props.ending && frame >= props.ending.fromFrame) return null
   const page = captionPageAt(props.captions, frame)
   if (!page) return null
   const lines = captionLines(page, props.aspect)

@@ -1,5 +1,5 @@
 {
-  "about": "Krish's rulings on the wording of a rejection floor record, kept over every rebuild of config/rejection-floor.json. The Rejections engine (krishanraja/inspirationhouse) rebuilds that file from records that cannot be edited once written; scripts/floor_rulings.py applies each ruling below when any reader here loads the floor. A ruling replaces a field only while it still holds one of the wordings in replaces (or already the ruled one); any other wording is reported, never overwritten. Each entry carries the ruling line and his words. Changed only by a pull request that carries his ruling.",
+  "about": "Krish's rulings on the wording of a rejection floor record, kept over every rebuild of config/rejection-floor.json. The Rejections engine (krishanraja/inspirationhouse) rebuilds that file from records that cannot be edited once written; scripts/floor_rulings.py applies each ruling below when any reader here loads the floor. A ruling replaces a field only while it still holds one of the wordings in replaces (or already the ruled one); any other wording is reported, never overwritten. Each entry carries the ruling line and his words. Changed only by a pull request that carries his ruling. A ruling reaches a record, a standard or a maker by its id (records, standards, formats); a ruling line shared by many entries sits once under rulings and each entry names it with ruled_by.",
   "records": {
     "r0e552d8de3": {
       "field": "wanted_instead",
@@ -20,6 +20,184 @@
           "where": "relayed by the fleet integration session: how the ruling survives the engine's rebuild"
         }
       ]
+    },
+    "r621de3e411": {
+      "field": "wanted_instead",
+      "ruled": "No prediction, date or confidence: the prediction format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). This rejection stays only as the record of what he rejected.",
+      "replaces": [
+        "End on his full face delivering the piece's dated prediction, date and confidence on screen."
+      ],
+      "ruled_by": "prediction-format-abandoned"
+    },
+    "raf599df208": {
+      "field": "wanted_instead",
+      "ruled": "No prediction, date or confidence: the prediction format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). This rejection stays only as the record of what he rejected.",
+      "replaces": [
+        "75%, a clearer stance; he sets the number himself."
+      ],
+      "ruled_by": "prediction-format-abandoned"
+    },
+    "r4bfd68013f": {
+      "field": "wanted_instead",
+      "ruled": "No prediction, date or confidence: the prediction format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). This rejection stays only as the record of what he rejected.",
+      "replaces": [
+        "One checkable event on a date, not already happening, backed."
+      ],
+      "ruled_by": "prediction-format-abandoned"
+    },
+    "r8e82b95e43": {
+      "field": "wanted_instead",
+      "ruled": "No prediction, date or confidence: the prediction format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). This rejection stays only as the record of what he rejected.",
+      "replaces": [
+        "not stated (a clearer stance, not a percentage)"
+      ],
+      "ruled_by": "prediction-format-abandoned"
+    },
+    "r1f67ec1023": {
+      "field": "wanted_instead",
+      "ruled": "No prediction, date or confidence: the prediction format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). This rejection stays only as the record of what he rejected.",
+      "replaces": [
+        "A real bet (by 30 June 2027 thinking becomes the default for paying ChatGPT users) and one analogy kept whole."
+      ],
+      "ruled_by": "prediction-format-abandoned"
+    },
+    "r0296dca046": {
+      "field": "wanted_instead",
+      "ruled": "No prediction, date or confidence: the prediction format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). This rejection stays only as the record of what he rejected.",
+      "replaces": [
+        "a bold, near-term call (he recorded 95% by the end of 2026)"
+      ],
+      "ruled_by": "prediction-format-abandoned"
+    }
+  },
+  "rulings": {
+    "prediction-format-abandoned": {
+      "ruling": "Rulings (Krish, 2026-11-17 and 2026-11-18): the dated-prediction format is abandoned; no piece makes a dated prediction, gives a confidence or names a date to be marked on, and every floor standard, record and maker that asked for one is withdrawn, kept only as the record of what he rejected (his words: \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\"; then \"get rid of that - i have abandoned the prediction format, it feels lame\")",
+      "his_words": [
+        {
+          "said": "I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.",
+          "on": "2026-11-17",
+          "where": "chat, relayed to the content-engine session that removed the format (18 Nov)"
+        },
+        {
+          "said": "get rid of that - i have abandoned the prediction format, it feels lame",
+          "on": "2026-11-18",
+          "where": "chat, relayed to the content-engine session that removed the format (18 Nov)"
+        },
+        {
+          "said": "I am kind of bored of making predictions",
+          "on": "2026-10-26",
+          "where": "chat, of Friday's piece; the repository answered it with per-piece exceptions instead of removing the rule"
+        }
+      ]
+    }
+  },
+  "standards": {
+    "s9c6d02148a": {
+      "fields": {
+        "never_beneath": {
+          "ruled": "Withdrawn: no piece makes a dated prediction any more, so this asks for none. Ruling (Krish, 2026-11-17): \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\" Ruling (Krish, 2026-11-18): \"get rid of that - i have abandoned the prediction format, it feels lame\". It stays only as the record of what he rejected, never as a requirement.",
+          "replaces": [
+            "Never give a hedged, low-confidence prediction set far in the future; always commit to a bold, near-term call with a confidence level set deliberately."
+          ]
+        },
+        "check_before_delivery": {
+          "ruled": "Nothing to check for a prediction: the format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). Check only that the piece makes no dated prediction, gives no confidence percentage and names no date to mark it by.",
+          "replaces": [
+            "Check the prediction's confidence percentage and timeframe; flag anything under roughly 70 percent or dated more than a year out as a hedge."
+          ]
+        }
+      },
+      "ruled_by": "prediction-format-abandoned"
+    },
+    "sedf0fc1d56": {
+      "fields": {
+        "never_beneath": {
+          "ruled": "Withdrawn: no piece makes a dated prediction any more, so this asks for none. Ruling (Krish, 2026-11-17): \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\" Ruling (Krish, 2026-11-18): \"get rid of that - i have abandoned the prediction format, it feels lame\". It stays only as the record of what he rejected, never as a requirement.",
+          "replaces": [
+            "Never give a hedged, low-confidence prediction set far in the future; always commit to a bold, near-term call with a confidence level set deliberately."
+          ]
+        },
+        "check_before_delivery": {
+          "ruled": "Nothing to check for a prediction: the format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). Check only that the piece makes no dated prediction, gives no confidence percentage and names no date to mark it by.",
+          "replaces": [
+            "Find the prediction's date and confidence number; if the date sits more than a year out or the confidence reads like a coin-flip (around 50-60%), move the date nearer and raise or lower the confidence to a deliberate, committed number."
+          ]
+        }
+      },
+      "ruled_by": "prediction-format-abandoned"
+    },
+    "s1949b94c5f": {
+      "fields": {
+        "never_beneath": {
+          "ruled": "Withdrawn: no piece makes a dated prediction any more, so this asks for none. Ruling (Krish, 2026-11-17): \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\" Ruling (Krish, 2026-11-18): \"get rid of that - i have abandoned the prediction format, it feels lame\". It stays only as the record of what he rejected, never as a requirement.",
+          "replaces": [
+            "Never make a prediction about something that is already happening or already obvious in hindsight; it must be a checkable future event."
+          ]
+        },
+        "check_before_delivery": {
+          "ruled": "Nothing to check for a prediction: the format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). Check only that the piece makes no dated prediction, gives no confidence percentage and names no date to mark it by.",
+          "replaces": [
+            "Check the predicted event against news already published; if it is already happening or obviously true, replace it with one unresolved, checkable event on a date."
+          ]
+        }
+      },
+      "ruled_by": "prediction-format-abandoned"
+    },
+    "sa9f9134e89": {
+      "fields": {
+        "never_beneath": {
+          "ruled": "Withdrawn: no piece makes a dated prediction any more, so this asks for none. Ruling (Krish, 2026-11-17): \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\" Ruling (Krish, 2026-11-18): \"get rid of that - i have abandoned the prediction format, it feels lame\". It stays only as the record of what he rejected, never as a requirement.",
+          "replaces": [
+            "Always name the specific real companies or entities a prediction is about, never a generic category."
+          ]
+        },
+        "check_before_delivery": {
+          "ruled": "Nothing to check for a prediction: the format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). Check only that the piece makes no dated prediction, gives no confidence percentage and names no date to mark it by.",
+          "replaces": [
+            "Check the prediction text for named real companies or entities rather than a generic category; flag any 'a company' or 'a media company' phrasing."
+          ]
+        }
+      },
+      "ruled_by": "prediction-format-abandoned"
+    },
+    "s83075046d2": {
+      "fields": {
+        "never_beneath": {
+          "ruled": "Withdrawn: no piece makes a dated prediction any more, so this asks for none. Ruling (Krish, 2026-11-17): \"I don't do dated-and-scored make-your-mind-up pieces because it felt quite tacky and gimmicky. I don't really have the clout such that my opinion can hold up in official scores.\" Ruling (Krish, 2026-11-18): \"get rid of that - i have abandoned the prediction format, it feels lame\". It stays only as the record of what he rejected, never as a requirement.",
+          "replaces": [
+            "Never hedge a prediction with a vague percentage like 55%; always commit to a clear stance."
+          ]
+        },
+        "check_before_delivery": {
+          "ruled": "Nothing to check for a prediction: the format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18). Check only that the piece makes no dated prediction, gives no confidence percentage and names no date to mark it by.",
+          "replaces": [
+            "Scan the script for percentage-based predictions; replace any fence-sitting number with a definite claim."
+          ]
+        }
+      },
+      "ruled_by": "prediction-format-abandoned"
+    },
+    "s8183b5a9d6": {
+      "fields": {
+        "check_before_delivery": {
+          "ruled": "Before locking the script, search for current examples of anything it says is coming; if it is already happening, say it as what is happening now, or cut it. Never turn it into a dated prediction: the format is withdrawn (Rulings, Krish, 2026-11-17 and 2026-11-18).",
+          "replaces": [
+            "Before locking the script, search for current examples of the predicted behaviour already occurring; if found, cut or rewrite the prediction."
+          ]
+        }
+      },
+      "ruled_by": "prediction-format-abandoned"
+    }
+  },
+  "formats": {
+    "prediction": {
+      "field": "maker",
+      "ruled": "Retired with the prediction format (Rulings, Krish, 2026-11-17 and 2026-11-18): no piece closes on a prediction. Read only as the record of what he rejected.",
+      "replaces": [
+        "The prediction and the verdict a piece closes on"
+      ],
+      "ruled_by": "prediction-format-abandoned"
     }
   }
 }

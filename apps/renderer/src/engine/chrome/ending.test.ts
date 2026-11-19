@@ -7,22 +7,20 @@ vi.mock('remotion', async (importOriginal) => {
   const actual = await importOriginal<typeof import('remotion')>()
   return { ...actual, Img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => React.createElement('img', props) }
 })
-import { houseDueLine } from '../../house/geometry'
 import { EngineRenderPropsSchema, type EngineRenderProps } from '../props'
-import { CallCard, callCardLayout, callCardModel, ENDING_SAFE } from './CallCard'
 import { ENDING_DAYS, ENDING_SETTLED_S, ENDING_SETTLED_TALL_S, ENDING_TAGLINE, EndingBand, endingBandModel, statementLines } from './EndingBand'
 
 function fixture(aspect: EngineRenderProps['aspect']): EngineRenderProps {
   const image = { src: 'stacked.svg', pixelWidth: 1040, pixelHeight: 320 }
   return EngineRenderPropsSchema.parse({
-    pieceId: 'call-ending', cutId: 'short', format: 'face-with-proof', aspect, fps: 30, durationFrames: 2000,
+    pieceId: 'ending', cutId: 'short', format: 'face-with-proof', aspect, fps: 30, durationFrames: 2000,
     tokens: { ink: 'black', inkDeep: 'black', inkSoft: 'gray', cream: 'white', mint: 'aquamarine', channel: 'gold' },
     series: { label: 'follow.the.money', day: 'Monday', promise: 'Where the money moves', site: 'makeyourmindup.ai' },
     brand: { mark: image, logo: image, stacked: image },
     audio: { stem: { src: 'stem.wav', trimBeforeFrames: 0 } },
-    captions: [{ fromFrame: 0, toFrame: 2000, words: [{ text: 'Call', atFrame: 0 }], swipeIndex: null }],
-    beats: [{ id: 'call', role: 'call', layout: 'F1', fromFrame: 100, toFrame: 180, uses: [], transitionOut: 'cut' }],
-    objects: [], events: [], call: { statement: 'Teams will spend less on tools and more on checking the work.', due: '2027-09-30', confidencePercent: 75 },
+    captions: [{ fromFrame: 0, toFrame: 2000, words: [{ text: 'Close', atFrame: 0 }], swipeIndex: null }],
+    beats: [{ id: 'payoff', role: 'payoff', layout: 'F1', fromFrame: 100, toFrame: 180, uses: [], transitionOut: 'cut' }],
+    objects: [], events: [],
     ending: { fromFrame: 180, url: 'makeyourmindup.ai' },
   })
 }
@@ -68,30 +66,6 @@ describe('the statement close', () => {
 })
 
 describe.each(['9:16', '16:9'] as const)('%s chrome', (aspect) => {
-  it('keeps the call, its shadow and arrival inside the safe area', () => {
-    const props = fixture(aspect)
-    const safe = ENDING_SAFE[aspect]
-    const width = aspect === '9:16' ? 1080 : 1920
-    const height = aspect === '9:16' ? 1920 : 1080
-    for (const statement of [props.call!.statement, 'We expect costs to fall.', 'Teams will spend less on tools and more on checking the work before it reaches their customers next year.']) {
-      const layout = callCardLayout(aspect, statement)
-      expect(layout.box.left).toBeGreaterThanOrEqual(safe.leftPx)
-      expect(layout.box.top - 60).toBeGreaterThanOrEqual(safe.topPx)
-      expect(layout.box.left + layout.box.width).toBeLessThanOrEqual(width - safe.rightPx)
-      expect(layout.box.top + layout.box.height).toBeLessThanOrEqual(height - safe.bottomPx)
-      if (aspect === '16:9') {
-        expect(layout.width).toBe(1200)
-        expect(layout.left + layout.width / 2).toBe(960)
-      }
-    }
-    expect(callCardModel(props, 99)).toBeNull()
-    expect(callCardModel(props, 100)!.arrival).toBe(0)
-    expect(callCardModel(props, 105)!.arrival).toBe(1)
-    expect(callCardModel(props, 180)).toBeNull()
-    const { call: _call, ...withoutCall } = props
-    expect(callCardModel(withoutCall, 105)).toBeNull()
-  })
-
   it('covers the whole frame in ink and keeps every word inside the safe box', () => {
     const props = fixture(aspect)
     const model = endingBandModel(props, 300)!
@@ -105,20 +79,13 @@ describe.each(['9:16', '16:9'] as const)('%s chrome', (aspect) => {
     expect(model.logoWidth).toBe(aspect === '9:16' ? 420 : 520)
   })
 
-  it('renders the call data, stacked logo, day, promise, pill and URL', () => {
+  it('renders the stacked logo, days, pill and URL, and never a call (Rulings, Krish, 2026-11-17 and 2026-11-18)', () => {
     const props = fixture(aspect)
-    const call = renderToStaticMarkup(React.createElement(CallCard, { props, frame: 105 }))
-    expect(call).toContain('The call')
-    expect(call).toContain('Our ')
-    expect(call).toContain('call.')
-    expect(call).toContain(props.call!.statement)
-    const due = houseDueLine(props.call!.due, props.call!.confidencePercent)
-    expect(call).toContain(due.due)
-    expect(call).toContain(due.sure)
     const band = renderToStaticMarkup(React.createElement(EndingBand, { props, frame: 200 }))
     for (const text of [props.brand.stacked.src, 'Built to', 'help you', 'decide.', 'Subscribe free', props.ending!.url, 'MYMU Plex Mono', 'MYMU Anton',
       ...ENDING_DAYS.map((d) => d.day)]) expect(band).toContain(text)
     expect(band).not.toContain(props.series.promise)
+    for (const text of ['The call', 'Our call', '% sure', 'Due 20']) expect(band).not.toContain(text)
     expect(renderToStaticMarkup(React.createElement(EndingBand, { props, frame: 179 }))).toBe('')
   })
 })
