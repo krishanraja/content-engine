@@ -94,6 +94,17 @@ def prune(floor, groups):
         retired[m] = 'operating'
     if op:
         op['members'] = [m for m in op.get('members') or [] if m in ids]
+    # A group every member of which the floor retired holds nothing left to decide. It leaves the grouping and is listed,
+    # by key and title, in retired_groups, never dropped silently (19 Nov: bold_predictions_e261118 was emptied by the new
+    # floor and the check-in stopped with "no members", so every pull request stayed red on check:floor-groups). Its
+    # standards' successors are new ids on the floor and are proposed below like any new standard.
+    emptied = [g for g in groups.get('groups') or [] if not g.get('members')]
+    if emptied:
+        groups['groups'] = [g for g in groups.get('groups') or [] if g.get('members')]
+        kept = groups.setdefault('retired_groups', [])
+        known = {r.get('key') for r in kept}
+        kept += [{'key': g.get('key'), 'title': g.get('title'), 'why': 'every member was retired by a newer floor'}
+                 for g in emptied if g.get('key') not in known]
     return dict(sorted(retired.items()))
 
 
@@ -396,6 +407,11 @@ def self_test():
     db = {'covers': {'status': 'approved', 'amendment': 'His amended words.'}}
     new, evolves = propose(floor, groups, db, '2026-11-22')
     keys = [g['key'] for g in new]
+    # A group the floor emptied leaves the grouping, listed in retired_groups, and the rest stays whole.
+    g2 = {'groups': [{'key': 'gone_e1', 'title': 'Gone', 'never_beneath': 'x', 'check': 'y', 'members': ['sold']},
+                     {'key': 'kept', 'title': 'Kept', 'never_beneath': 'x', 'check': 'y', 'members': ['snew']}], 'operating': {'members': []}}
+    prune({'standards': {'snew': {}}}, g2)
+    emptied_ok = [g['key'] for g in g2['groups']] == ['kept'] and g2['retired_groups'][0]['key'] == 'gone_e1'
     ok = keys == ['covers_e261122', 'new_pace_261122'] and evolves == {'covers_e261122': 'covers'}
     ok = ok and new[0]['never_beneath'] == 'His amended words.' and new[0]['members'] == ['s0000000003']
     ok = ok and floor_group.check(floor, {'groups': groups['groups'] + new, 'operating': groups['operating']}) == []
@@ -424,6 +440,7 @@ def self_test():
                            'q2': {'text': 'engine note', 'attribution': 'observation'}},
             [{'piece': 'p', 'item': 'card 2', 'quote_ids': ['q1'], 'media_sha256': []}], {})
     ok = ok and len(w) == 1 and w[0]['content'] == [{'piece': 'p', 'item': 'card 2'}]
+    ok = ok and emptied_ok
     print('standards_checkin self-test: ' + ('ok' if ok else 'FAILED'))
     return 0 if ok else 1
 
