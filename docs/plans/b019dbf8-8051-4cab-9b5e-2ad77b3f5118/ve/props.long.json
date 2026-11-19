@@ -11631,7 +11631,7 @@
     {
       "id": "l4",
       "role": "anchor",
-      "layout": "STAGE",
+      "layout": "P1",
       "fromFrame": 632,
       "toFrame": 904,
       "uses": [
@@ -11641,7 +11641,8 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "none"
+        "source": "take",
+        "crop": "50% 38%"
       },
       "backdrop": {
         "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
@@ -12047,9 +12048,7 @@
       "layout": "STAGE",
       "fromFrame": 7793,
       "toFrame": 8056,
-      "uses": [
-        "block_l"
-      ],
+      "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
@@ -12571,13 +12570,6 @@
       "verb": "thin",
       "toState": "small",
       "atFrame": 7493
-    },
-    {
-      "id": "l25-0",
-      "obj": "block_l",
-      "verb": "move",
-      "toState": "target:1",
-      "atFrame": 8042
     },
     {
       "id": "l26a-0",

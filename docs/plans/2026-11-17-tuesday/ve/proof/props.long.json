@@ -4,7 +4,7 @@
   "format": "face-with-proof",
   "aspect": "16:9",
   "fps": 30,
-  "durationFrames": 362,
+  "durationFrames": 272,
   "tokens": {
     "ink": "#0C1512",
     "inkDeep": "#070D0B",
@@ -40,257 +40,411 @@
   "segments": [
     {
       "src": "/home/user/content-engine/.scratch/b019/assets/conformed.long.mp4",
-      "trimBeforeFrames": 904,
+      "trimBeforeFrames": 632,
       "fromFrame": 0,
-      "durationFrames": 362
+      "durationFrames": 272
     }
   ],
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.scratch/b019/assets/audio.long.wav",
-      "trimBeforeFrames": 904
+      "trimBeforeFrames": 632
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 10,
+      "toFrame": 7,
       "words": [
         {
-          "text": "So",
+          "text": "And",
           "atFrame": 0
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 10,
-      "toFrame": 15,
-      "words": [
-        {
-          "text": "if",
-          "atFrame": 10
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 15,
+      "fromFrame": 7,
       "toFrame": 25,
       "words": [
         {
-          "text": "you",
-          "atFrame": 15
+          "text": "Gallup,",
+          "atFrame": 7
         }
       ],
       "swipeIndex": null
     },
     {
       "fromFrame": 25,
-      "toFrame": 41,
+      "toFrame": 25,
       "words": [
         {
-          "text": "pay",
+          "text": "it's",
           "atFrame": 25
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 41,
-      "toFrame": 46,
+      "fromFrame": 25,
+      "toFrame": 26,
       "words": [
         {
-          "text": "for",
-          "atFrame": 41
+          "text": "a",
+          "atFrame": 25
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 46,
-      "toFrame": 53,
+      "fromFrame": 26,
+      "toFrame": 31,
       "words": [
         {
-          "text": "AI",
-          "atFrame": 46
+          "text": "big",
+          "atFrame": 26
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 53,
-      "toFrame": 56,
+      "fromFrame": 31,
+      "toFrame": 40,
       "words": [
         {
-          "text": "at",
-          "atFrame": 53
+          "text": "business",
+          "atFrame": 31
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 56,
-      "toFrame": 73,
+      "fromFrame": 40,
+      "toFrame": 44,
       "words": [
         {
-          "text": "work",
-          "atFrame": 56
+          "text": "that",
+          "atFrame": 40
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 73,
-      "toFrame": 76,
+      "fromFrame": 44,
+      "toFrame": 50,
       "words": [
         {
-          "text": "or",
-          "atFrame": 73
+          "text": "does",
+          "atFrame": 44
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 76,
-      "toFrame": 79,
+      "fromFrame": 50,
+      "toFrame": 65,
       "words": [
         {
-          "text": "at",
-          "atFrame": 76
+          "text": "surveys,",
+          "atFrame": 50
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 79,
-      "toFrame": 92,
+      "fromFrame": 65,
+      "toFrame": 77,
       "words": [
         {
-          "text": "home,",
-          "atFrame": 79
+          "text": "found",
+          "atFrame": 65
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 92,
-      "toFrame": 96,
+      "fromFrame": 77,
+      "toFrame": 91,
       "words": [
         {
-          "text": "could",
-          "atFrame": 92
+          "text": "people",
+          "atFrame": 77
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 96,
-      "toFrame": 100,
+      "fromFrame": 91,
+      "toFrame": 98,
       "words": [
         {
-          "text": "the",
-          "atFrame": 96
+          "text": "now",
+          "atFrame": 91
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 100,
-      "toFrame": 113,
+      "fromFrame": 98,
+      "toFrame": 121,
       "words": [
         {
-          "text": "midterm",
-          "atFrame": 100
+          "text": "object",
+          "atFrame": 98
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 113,
-      "toFrame": 124,
+      "fromFrame": 121,
+      "toFrame": 123,
       "words": [
         {
-          "text": "results",
-          "atFrame": 113
+          "text": "to",
+          "atFrame": 121
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 124,
-      "toFrame": 127,
+      "fromFrame": 123,
+      "toFrame": 130,
       "words": [
         {
-          "text": "in",
-          "atFrame": 124
+          "text": "having",
+          "atFrame": 123
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 127,
-      "toFrame": 139,
+      "fromFrame": 130,
+      "toFrame": 134,
       "words": [
         {
-          "text": "America",
-          "atFrame": 127
+          "text": "a",
+          "atFrame": 130
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 139,
-      "toFrame": 151,
+      "fromFrame": 134,
+      "toFrame": 143,
       "words": [
         {
-          "text": "push",
-          "atFrame": 139
+          "text": "data",
+          "atFrame": 134
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 151,
-      "toFrame": 156,
+      "fromFrame": 143,
+      "toFrame": 150,
       "words": [
         {
-          "text": "your",
-          "atFrame": 151
+          "text": "centre",
+          "atFrame": 143
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 156,
-      "toFrame": 163,
+      "fromFrame": 150,
+      "toFrame": 157,
       "words": [
         {
-          "text": "bill",
-          "atFrame": 156
+          "text": "next",
+          "atFrame": 150
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 163,
-      "toFrame": 174,
+      "fromFrame": 157,
+      "toFrame": 159,
       "words": [
         {
-          "text": "up?",
-          "atFrame": 163
+          "text": "to",
+          "atFrame": 157
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 174,
-      "toFrame": 187,
+      "fromFrame": 159,
+      "toFrame": 166,
       "words": [
         {
-          "text": "And",
-          "atFrame": 174
+          "text": "them",
+          "atFrame": 159
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 166,
+      "toFrame": 170,
+      "words": [
+        {
+          "text": "more",
+          "atFrame": 166
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 170,
+      "toFrame": 175,
+      "words": [
+        {
+          "text": "than",
+          "atFrame": 170
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 175,
+      "toFrame": 180,
+      "words": [
+        {
+          "text": "they",
+          "atFrame": 175
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 180,
+      "toFrame": 190,
+      "words": [
+        {
+          "text": "object",
+          "atFrame": 180
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 190,
+      "toFrame": 193,
+      "words": [
+        {
+          "text": "to",
+          "atFrame": 190
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 193,
+      "toFrame": 202,
+      "words": [
+        {
+          "text": "having",
+          "atFrame": 193
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 202,
+      "toFrame": 206,
+      "words": [
+        {
+          "text": "a",
+          "atFrame": 202
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 206,
+      "toFrame": 220,
+      "words": [
+        {
+          "text": "nuclear",
+          "atFrame": 206
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 220,
+      "toFrame": 227,
+      "words": [
+        {
+          "text": "power",
+          "atFrame": 220
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 227,
+      "toFrame": 235,
+      "words": [
+        {
+          "text": "plant",
+          "atFrame": 227
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 235,
+      "toFrame": 241,
+      "words": [
+        {
+          "text": "next",
+          "atFrame": 235
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 241,
+      "toFrame": 243,
+      "words": [
+        {
+          "text": "to",
+          "atFrame": 241
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 243,
+      "toFrame": 249,
+      "words": [
+        {
+          "text": "them.",
+          "atFrame": 243
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 249,
+      "toFrame": 254,
+      "words": [
+        {
+          "text": "That's",
+          "atFrame": 249
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 254,
+      "toFrame": 272,
+      "words": [
+        {
+          "text": "crazy.",
+          "atFrame": 254
         }
       ],
       "swipeIndex": null
@@ -299,86 +453,17 @@
   "captionStyle": "word",
   "captionTheme": "podcast",
   "captionPlacement": "lower",
-  "titleMoment": {
-    "fromFrame": 187,
-    "toFrame": 362,
-    "release": "captions",
-    "words": [
-      {
-        "text": "Where",
-        "atFrame": 187
-      },
-      {
-        "text": "does",
-        "atFrame": 196
-      },
-      {
-        "text": "AI",
-        "atFrame": 204
-      },
-      {
-        "text": "get",
-        "atFrame": 212
-      },
-      {
-        "text": "built",
-        "atFrame": 218
-      },
-      {
-        "text": "when",
-        "atFrame": 227
-      },
-      {
-        "text": "the",
-        "atFrame": 244
-      },
-      {
-        "text": "town's",
-        "atFrame": 247
-      },
-      {
-        "text": "residents",
-        "atFrame": 270
-      },
-      {
-        "text": "say",
-        "atFrame": 283
-      },
-      {
-        "text": "no",
-        "atFrame": 289
-      },
-      {
-        "text": "to",
-        "atFrame": 298
-      },
-      {
-        "text": "the",
-        "atFrame": 301
-      },
-      {
-        "text": "big",
-        "atFrame": 303
-      },
-      {
-        "text": "data",
-        "atFrame": 308
-      },
-      {
-        "text": "centres?",
-        "atFrame": 316
-      }
-    ],
-    "card": true
-  },
   "beats": [
     {
-      "id": "l5",
+      "id": "l4",
       "role": "anchor",
       "layout": "P1",
       "fromFrame": 0,
-      "toFrame": 362,
-      "uses": [],
+      "toFrame": 272,
+      "uses": [
+        "gallup_dc",
+        "gallup_nuke"
+      ],
       "transitionOut": "cut",
       "sectionBeat": true,
       "plate": {
@@ -386,9 +471,9 @@
         "crop": "50% 38%"
       },
       "backdrop": {
-        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
+        "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-data-hall-1.png"
       },
-      "keyFrame": 290
+      "keyFrame": 218
     }
   ],
   "objects": [
@@ -397,7 +482,7 @@
       "device": "facility_block",
       "meaning": "Meta's data centre in Piqua, the one object the whole cut changes",
       "fromFrame": 0,
-      "toFrame": 362,
+      "toFrame": 272,
       "variants": {},
       "params": {
         "kind": "data centre",
@@ -419,6 +504,30 @@
           "lights": 24
         }
       }
+    },
+    {
+      "obj": "gallup_dc",
+      "device": "stat_strip",
+      "meaning": "Gallup: the share of Americans who oppose an AI data centre in their area",
+      "fromFrame": 0,
+      "toFrame": 272,
+      "variants": {},
+      "params": {
+        "label": "oppose a data centre",
+        "numeral": "71%"
+      }
+    },
+    {
+      "obj": "gallup_nuke",
+      "device": "stat_strip",
+      "meaning": "Gallup: the share who oppose a nuclear plant in their area, in the same survey",
+      "fromFrame": 0,
+      "toFrame": 272,
+      "variants": {},
+      "params": {
+        "label": "oppose a nuclear plant",
+        "numeral": "53%"
+      }
     }
   ],
   "events": [
@@ -435,6 +544,20 @@
       "verb": "fill",
       "toState": "racks",
       "atFrame": 0
+    },
+    {
+      "id": "l4-0",
+      "obj": "gallup_dc",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 134
+    },
+    {
+      "id": "l4-1",
+      "obj": "gallup_nuke",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 206
     }
   ],
   "call": {
