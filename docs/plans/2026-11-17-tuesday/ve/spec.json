@@ -1764,14 +1764,15 @@
       "to_w": 503
      },
      "viewer_task": "understand_mechanism",
-     "layout": "STAGE",
+     "layout": "P1",
      "point": "The backlash reaches the biggest names: OpenAI, by its real mark, over the power lines",
      "plate": {
-      "source": "none"
+      "source": "take",
+      "crop": "50% 38%"
      },
      "uses": [],
      "events": [],
-     "override_reason": "the mark lands on the name and holds while he reads the promise",
+     "override_reason": "Krish, 18 Nov: no icons; the company mark was this beat, so it holds on his face as he names them",
      "backdrop": "asset:bg-pylons"
     },
     {
@@ -1846,14 +1847,15 @@
       "to_w": 634
      },
      "viewer_task": "understand_mechanism",
-     "layout": "STAGE",
+     "layout": "P1",
      "point": "Others head for the countryside: Soluna's real mark over the empty field",
      "plate": {
-      "source": "none"
+      "source": "take",
+      "crop": "50% 38%"
      },
      "uses": [],
      "events": [],
-     "override_reason": "the mark lands on the name; the field holds the picture",
+     "override_reason": "Krish, 18 Nov: no icons; the company mark was this beat, so it holds on his face as he names them",
      "backdrop": "asset:scene-cow"
     },
     {
@@ -1910,14 +1912,15 @@
       "to_w": 758
      },
      "viewer_task": "understand_mechanism",
-     "layout": "STAGE",
+     "layout": "P1",
      "point": "Apple goes the other way: its real mark, AI on the phone, no data centre and no vote",
      "plate": {
-      "source": "none"
+      "source": "take",
+      "crop": "50% 38%"
      },
      "uses": [],
      "events": [],
-     "override_reason": "the mark lands on the name and holds while he explains",
+     "override_reason": "Krish, 18 Nov: no icons; the company mark was this beat, so it holds on his face as he names them",
      "backdrop": "asset:bg-city-dusk"
     },
     {

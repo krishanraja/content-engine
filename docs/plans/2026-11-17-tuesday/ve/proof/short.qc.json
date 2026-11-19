@@ -1,0 +1,1813 @@
+{
+  "file": "docs/plans/2026-11-17-tuesday/ve/proof/short.mp4",
+  "sha256": "8a529cc3f8625754d8e4224d6ef3a57b95c23fe1a025e368e0fe124fa2f52d62",
+  "duration_s": 8.0,
+  "format": "face-with-proof",
+  "checks": {
+    "loudness.integrated": {
+      "value": -13.8,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.7,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 1.0,
+      "target": ">= 0.5",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 0,
+      "target": "<= 4 s",
+      "pass": true,
+      "runs": []
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999984
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999982
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": true,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 1,
+          "frame": 11,
+          "text": "A",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 2,
+          "frame": 22,
+          "text": "tiny",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 3,
+          "frame": 28,
+          "text": "tow",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 4,
+          "frame": 37,
+          "text": "In\nf~j = _",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 5,
+          "frame": 50,
+          "text": "Onio",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 6,
+          "frame": 59,
+          "text": "just",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 7,
+          "frame": 65,
+          "text": "fired",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 8,
+          "frame": 74,
+          "text": "Its",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 9,
+          "frame": 85,
+          "text": "mayor\n| \"",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 10,
+          "frame": 92,
+          "text": "beca",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 11,
+          "frame": 101,
+          "text": "ne\ni ag) by i.",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 12,
+          "frame": 109,
+          "text": "-",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 13,
+          "frame": 114,
+          "text": "a",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 14,
+          "frame": 123,
+          "text": "data",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 15,
+          "frame": 130,
+          "text": "centr",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 16,
+          "frame": 140,
+          "text": "ror\nmass.",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 17,
+          "frame": 150,
+          "text": "Meta",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 18,
+          "frame": 155,
+          "text": "Data",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 19,
+          "frame": 160,
+          "text": "ar",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 20,
+          "frame": 163,
+          "text": "are",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 21,
+          "frame": 177,
+          "text": "HE @g gs ££. _",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 22,
+          "frame": 190,
+          "text": "buildi",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 23,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 24,
+          "frame": 199,
+          "text": "——",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 25,
+          "frame": 210,
+          "text": "compu\ngH. . g",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 26,
+          "frame": 219,
+          "text": "that",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 27,
+          "frame": 226,
+          "text": "mainly",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 28,
+          "frame": 232,
+          "text": "just",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 29,
+          "frame": 237,
+          "text": "run",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": false,
+      "status": "incomplete"
+    },
+    "brand.no_mark": {
+      "value": [
+        {
+          "beat": "hook",
+          "frame": 73,
+          "score": 0.18702759348420062,
+          "pass": true
+        },
+        {
+          "beat": "dc",
+          "frame": 193,
+          "score": 0.4526828335389973,
+          "pass": true
+        }
+      ],
+      "target": "no mark on the vertical cut: mark NCC < 0.8 at every beat midpoint",
+      "pass": true,
+      "status": "measured"
+    },
+    "motion.cue_sync": {
+      "value": [
+        {
+          "event": "hook-0",
+          "atFrame": 0,
+          "peak_frame": 1,
+          "lag_frames": 1,
+          "peak_difference": 1.8417165279388428,
+          "event_difference": 1.8417165279388428,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "hook-1",
+          "atFrame": 55,
+          "peak_frame": 49,
+          "lag_frames": -6,
+          "peak_difference": 0.6849068999290466,
+          "event_difference": 0.6410738229751587,
+          "threshold": 2.122913897037506,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "dc-0",
+          "atFrame": 147,
+          "peak_frame": 147,
+          "lag_frames": 0,
+          "peak_difference": 87.79155731201172,
+          "event_difference": 87.79155731201172,
+          "threshold": 3.8760530948638916,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "dc-1",
+          "atFrame": 194,
+          "peak_frame": 198,
+          "lag_frames": 4,
+          "peak_difference": 2.4623866081237793,
+          "event_difference": 1.7947834730148315,
+          "threshold": 0.5405425429344177,
+          "gradual": false,
+          "pass": true
+        }
+      ],
+      "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
+      "pass": false,
+      "status": "measured"
+    },
+    "audio.bed": {
+      "value": [
+        {
+          "check": "bed present",
+          "value": true,
+          "pass": true
+        },
+        {
+          "check": "under speech",
+          "value": -16.27,
+          "target": "-21.0 to -12.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "true peak",
+          "value": -1.7,
+          "target": "<= -1.0 dBTP",
+          "pass": true
+        },
+        {
+          "check": "a steady bed",
+          "value": "episode_bed",
+          "target": "episode_bed or continuous",
+          "pass": true
+        },
+        {
+          "check": "bed level in the master",
+          "value": -32.4,
+          "target": "-32.41 ±1.5 LUFS short-term median",
+          "pass": true
+        },
+        {
+          "check": "bed holds one level",
+          "value": 0.3,
+          "target": "<= 4.0 LU short-term p95-p5 outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never swells or sags",
+          "value": 0.2,
+          "target": "<= 3.0 LU from the median, held 1.0 s, outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never drops out",
+          "value": [],
+          "target": "no 0.25 s 15 dB under its own running level (50 ms windows)",
+          "pass": true
+        },
+        {
+          "check": "the one bed shape",
+          "value": {
+            "open_over_bed_lu": 14.6,
+            "bed_spread_lu": 0.2,
+            "direction_changes": 1,
+            "end_over_bed_lu": 13.3
+          },
+          "target": "config/music-bed.json qc (re-run the premix when missing)",
+          "pass": true
+        }
+      ],
+      "target": "bed present, under speech in range, true peak, (ducked) breathing in pauses, (episode) one steady level with no drop-outs",
+      "pass": true,
+      "status": "measured"
+    },
+    "audio.bed_continuity": {
+      "value": {
+        "render_s": 8.0,
+        "cut_s": 85.3
+      },
+      "target": "a render as long as the cut",
+      "pass": false,
+      "status": "measured",
+      "reason": "the render has no audio or the wrong length"
+    },
+    "opening": {
+      "value": {
+        "opening": "hook",
+        "cut_frames": 240,
+        "file_frames": 240,
+        "lead_frames": 0,
+        "whole_cut": false,
+        "clips_compared": []
+      },
+      "target": "no sting: the cut's own frame 0 is the file's first, and 240 frames in all",
+      "pass": true,
+      "status": "measured",
+      "calibration": "placeholder: measured on one real render, 5 Nov 2026 (velib/qc_opening.py)"
+    },
+    "words.lost": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "joins.in_gaps": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.clock": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.render": {
+      "value": {
+        "machine": "scripts/cutgates/captions.py",
+        "version": "captions/1",
+        "part": "renderer",
+        "region": [
+          70,
+          1010,
+          71,
+          160
+        ],
+        "window_frames": 3,
+        "min_score": 0.98,
+        "pixel_change_status": "placeholder, to be measured on Monday 26",
+        "pages": [
+          {
+            "page": 0,
+            "fromFrame": 3,
+            "text": "A",
+            "status": "fail",
+            "message": "caption page 0 (\"A\"): no change in the caption zone within 3 frames of its start, frame 3"
+          },
+          {
+            "page": 0,
+            "fromFrame": 5,
+            "text": "tiny",
+            "change_frame": 8,
+            "frame": 8,
+            "read": "pAN\nTINY",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"pAN\nTINY\" near frame 8, not \"tiny\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 17,
+            "text": "town",
+            "change_frame": 16,
+            "frame": 20,
+            "read": "tiny\nTown",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"tiny\nTown\" near frame 20, not \"town\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 26,
+            "text": "in",
+            "change_frame": 27,
+            "frame": 29,
+            "read": "in",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 30,
+            "text": "Ohio",
+            "change_frame": 33,
+            "frame": 33,
+            "read": "in",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"in\" near frame 33, not \"Ohio\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 44,
+            "text": "just",
+            "change_frame": 43,
+            "frame": 43,
+            "read": "fain",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"fain\" near frame 43, not \"just\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 1,
+            "fromFrame": 222,
+            "text": "just",
+            "change_frame": 223,
+            "frame": 223,
+            "read": "mainly",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 1 reads \"mainly\" near frame 223, not \"just\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 55,
+            "text": "fired",
+            "change_frame": 54,
+            "frame": 58,
+            "read": "just\nfired",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"just\nfired\" near frame 58, not \"fired\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 63,
+            "text": "its",
+            "change_frame": 64,
+            "frame": 66,
+            "read": "its",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 67,
+            "text": "mayor",
+            "change_frame": 70,
+            "frame": 70,
+            "read": "its",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"its\" near frame 70, not \"mayor\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 80,
+            "text": "because",
+            "change_frame": 79,
+            "frame": 83,
+            "read": "mayor\nbecause",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"mayor\nbecause\" near frame 83, not \"because\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 89,
+            "text": "he",
+            "change_frame": 90,
+            "frame": 92,
+            "read": "beca\nhe",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"beca\nhe\" near frame 92, not \"he\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 94,
+            "text": "greenlit",
+            "change_frame": 97,
+            "frame": 97,
+            "read": "he",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"he\" near frame 97, not \"greenlit\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 107,
+            "text": "a",
+            "change_frame": 106,
+            "frame": 109,
+            "read": "a",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 110,
+            "text": "data",
+            "change_frame": 108,
+            "frame": 113,
+            "read": "a\ndata",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"a\ndata\" near frame 113, not \"data\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 118,
+            "text": "centre",
+            "change_frame": 117,
+            "frame": 121,
+            "read": "data\ncentre",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"data\ncentre\" near frame 121, not \"centre\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 127,
+            "text": "for",
+            "change_frame": 128,
+            "frame": 130,
+            "read": "centr\nfor",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"centr\nfor\" near frame 130, not \"for\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 133,
+            "text": "Meta.",
+            "change_frame": 130,
+            "frame": 136,
+            "read": "for\nMeta",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"for\nMeta\" near frame 136, not \"Meta.\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 147,
+            "text": "Data",
+            "change_frame": 146,
+            "frame": 150,
+            "read": "Meta\nData",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"Meta\nData\" near frame 150, not \"Data\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 152,
+            "text": "centres",
+            "status": "fail",
+            "message": "caption page 0 (\"centres\"): no change in the caption zone within 3 frames of its start, frame 152"
+          },
+          {
+            "page": 0,
+            "fromFrame": 158,
+            "text": "are",
+            "change_frame": 159,
+            "frame": 160,
+            "read": "are",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 161,
+            "text": "big",
+            "change_frame": 162,
+            "frame": 164,
+            "read": "big",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 165,
+            "text": "buildings",
+            "change_frame": 163,
+            "frame": 168,
+            "read": "big\nbuildings",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"big\nbuildings\" near frame 168, not \"buildings\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 188,
+            "text": "full",
+            "change_frame": 187,
+            "frame": 191,
+            "read": "full",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 192,
+            "text": "of",
+            "change_frame": 193,
+            "frame": 193,
+            "read": "of",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 194,
+            "text": "computers",
+            "change_frame": 196,
+            "frame": 197,
+            "read": "of\ncomputers",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"of\ncomputers\" near frame 197, not \"computers\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 204,
+            "text": "that",
+            "change_frame": 203,
+            "frame": 206,
+            "read": "eompu\nthat",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"eompu\nthat\" near frame 206, not \"that\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 215,
+            "text": "mainly",
+            "change_frame": 214,
+            "frame": 214,
+            "read": "that",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"that\" near frame 214, not \"mainly\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 229,
+            "text": "run",
+            "change_frame": 230,
+            "frame": 232,
+            "read": "just\nrun",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"just\nrun\" near frame 232, not \"run\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 234,
+            "text": "AI",
+            "change_frame": 235,
+            "frame": 236,
+            "read": "run\nAl",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"run\nAl\" near frame 236, not \"AI\" (score 0.5, needs an exact match and 0.98)"
+          }
+        ],
+        "failed": [
+          {
+            "page": 0,
+            "fromFrame": 3,
+            "text": "A",
+            "status": "fail",
+            "message": "caption page 0 (\"A\"): no change in the caption zone within 3 frames of its start, frame 3"
+          },
+          {
+            "page": 0,
+            "fromFrame": 5,
+            "text": "tiny",
+            "change_frame": 8,
+            "frame": 8,
+            "read": "pAN\nTINY",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"pAN\nTINY\" near frame 8, not \"tiny\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 17,
+            "text": "town",
+            "change_frame": 16,
+            "frame": 20,
+            "read": "tiny\nTown",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"tiny\nTown\" near frame 20, not \"town\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 30,
+            "text": "Ohio",
+            "change_frame": 33,
+            "frame": 33,
+            "read": "in",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"in\" near frame 33, not \"Ohio\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 44,
+            "text": "just",
+            "change_frame": 43,
+            "frame": 43,
+            "read": "fain",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"fain\" near frame 43, not \"just\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 1,
+            "fromFrame": 222,
+            "text": "just",
+            "change_frame": 223,
+            "frame": 223,
+            "read": "mainly",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 1 reads \"mainly\" near frame 223, not \"just\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 55,
+            "text": "fired",
+            "change_frame": 54,
+            "frame": 58,
+            "read": "just\nfired",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"just\nfired\" near frame 58, not \"fired\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 67,
+            "text": "mayor",
+            "change_frame": 70,
+            "frame": 70,
+            "read": "its",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"its\" near frame 70, not \"mayor\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 80,
+            "text": "because",
+            "change_frame": 79,
+            "frame": 83,
+            "read": "mayor\nbecause",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"mayor\nbecause\" near frame 83, not \"because\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 89,
+            "text": "he",
+            "change_frame": 90,
+            "frame": 92,
+            "read": "beca\nhe",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"beca\nhe\" near frame 92, not \"he\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 94,
+            "text": "greenlit",
+            "change_frame": 97,
+            "frame": 97,
+            "read": "he",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"he\" near frame 97, not \"greenlit\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 110,
+            "text": "data",
+            "change_frame": 108,
+            "frame": 113,
+            "read": "a\ndata",
+            "score": 1.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"a\ndata\" near frame 113, not \"data\" (score 1.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 118,
+            "text": "centre",
+            "change_frame": 117,
+            "frame": 121,
+            "read": "data\ncentre",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"data\ncentre\" near frame 121, not \"centre\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 127,
+            "text": "for",
+            "change_frame": 128,
+            "frame": 130,
+            "read": "centr\nfor",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"centr\nfor\" near frame 130, not \"for\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 133,
+            "text": "Meta.",
+            "change_frame": 130,
+            "frame": 136,
+            "read": "for\nMeta",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"for\nMeta\" near frame 136, not \"Meta.\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 147,
+            "text": "Data",
+            "change_frame": 146,
+            "frame": 150,
+            "read": "Meta\nData",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"Meta\nData\" near frame 150, not \"Data\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 152,
+            "text": "centres",
+            "status": "fail",
+            "message": "caption page 0 (\"centres\"): no change in the caption zone within 3 frames of its start, frame 152"
+          },
+          {
+            "page": 0,
+            "fromFrame": 165,
+            "text": "buildings",
+            "change_frame": 163,
+            "frame": 168,
+            "read": "big\nbuildings",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"big\nbuildings\" near frame 168, not \"buildings\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 194,
+            "text": "computers",
+            "change_frame": 196,
+            "frame": 197,
+            "read": "of\ncomputers",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"of\ncomputers\" near frame 197, not \"computers\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 204,
+            "text": "that",
+            "change_frame": 203,
+            "frame": 206,
+            "read": "eompu\nthat",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"eompu\nthat\" near frame 206, not \"that\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 215,
+            "text": "mainly",
+            "change_frame": 214,
+            "frame": 214,
+            "read": "that",
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"that\" near frame 214, not \"mainly\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 229,
+            "text": "run",
+            "change_frame": 230,
+            "frame": 232,
+            "read": "just\nrun",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"just\nrun\" near frame 232, not \"run\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 0,
+            "fromFrame": 234,
+            "text": "AI",
+            "change_frame": 235,
+            "frame": 236,
+            "read": "run\nAl",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 0 reads \"run\nAl\" near frame 236, not \"AI\" (score 0.5, needs an exact match and 0.98)"
+          }
+        ],
+        "changes_found": 36,
+        "status": "fail",
+        "reason": "1 of 1 caption page(s) are not drawn as the props say near their start",
+        "pass": false,
+        "regions": [
+          [
+            70,
+            1010,
+            71,
+            160
+          ],
+          [
+            70,
+            1010,
+            162,
+            160
+          ],
+          [
+            70,
+            1010,
+            215,
+            160
+          ],
+          [
+            70,
+            1010,
+            84,
+            160
+          ],
+          [
+            70,
+            1010,
+            208,
+            160
+          ],
+          [
+            70,
+            1010,
+            163,
+            160
+          ],
+          [
+            70,
+            1010,
+            198,
+            160
+          ],
+          [
+            70,
+            1010,
+            110,
+            160
+          ],
+          [
+            70,
+            1010,
+            272,
+            160
+          ],
+          [
+            70,
+            1010,
+            367,
+            160
+          ],
+          [
+            70,
+            1010,
+            112,
+            160
+          ],
+          [
+            70,
+            1010,
+            327,
+            160
+          ],
+          [
+            70,
+            1010,
+            59,
+            160
+          ],
+          [
+            70,
+            1010,
+            193,
+            160
+          ],
+          [
+            70,
+            1010,
+            277,
+            160
+          ],
+          [
+            70,
+            1010,
+            123,
+            160
+          ],
+          [
+            70,
+            1010,
+            244,
+            160
+          ],
+          [
+            70,
+            1010,
+            205,
+            160
+          ],
+          [
+            70,
+            1010,
+            326,
+            160
+          ],
+          [
+            70,
+            1010,
+            143,
+            160
+          ],
+          [
+            70,
+            1010,
+            138,
+            160
+          ],
+          [
+            70,
+            1010,
+            393,
+            160
+          ],
+          [
+            70,
+            1010,
+            136,
+            160
+          ],
+          [
+            70,
+            1010,
+            90,
+            160
+          ],
+          [
+            70,
+            1010,
+            461,
+            160
+          ],
+          [
+            70,
+            1010,
+            172,
+            160
+          ],
+          [
+            70,
+            1010,
+            285,
+            160
+          ],
+          [
+            70,
+            1010,
+            147,
+            160
+          ],
+          [
+            70,
+            1010,
+            98,
+            160
+          ]
+        ]
+      },
+      "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
+      "pass": false,
+      "status": "measured",
+      "agreement": null,
+      "summary": "1 of 1 caption page(s) are not drawn as the props say near their start: caption page 0 (\"A\"): no change in the caption zone within 3 frames of its start, frame 3; caption page 0 reads \"pAN\nTINY\" near frame 8, not \"tiny\" (score 0.5, needs an exact match and 0.98); caption page 0 reads \"tiny\nTown\" near frame 20, not \"town\" (score 0.5, needs an exact match and 0.98); caption page 0 reads \"in\" near frame 33, not \"Ohio\" (score 0.0, needs an exact match and 0.98) (and 19 more)"
+    },
+    "captions.off_face": {
+      "value": {
+        "pages": 30,
+        "on_face": [],
+        "count": 0
+      },
+      "target": "no caption page overlaps the face box (+10%)",
+      "pass": true
+    },
+    "plate.head_in_band": {
+      "value": null,
+      "target": "his whole head inside the camera band",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "channel.safe_zones": {
+      "value": {
+        "under_buttons": [],
+        "count": 0
+      },
+      "target": "no caption, title or device box under a channel button (config/channel-safe-zones.json)",
+      "pass": true
+    },
+    "ground.not_bare": {
+      "value": [
+        {
+          "edge_frame": 147,
+          "barest_frame": 150,
+          "stage_std": 29.76,
+          "floor": 3.0,
+          "pass": true
+        }
+      ],
+      "target": "every frame within 3 of a beat edge has stage spread > 3.0 grey levels",
+      "pass": true,
+      "status": "advisory",
+      "shadow": true
+    },
+    "music.beats": {
+      "value": {
+        "tempo_bpm": 139.9,
+        "confidence": 8.18,
+        "grid": true,
+        "bars": 50,
+        "drops_s": [
+          81.361
+        ],
+        "onsets_per_s": 2.72,
+        "handovers": 1,
+        "handovers_on_a_beat": 0
+      },
+      "target": "measured only: nothing snaps to the beat; his words are the clock",
+      "pass": null,
+      "status": "advisory",
+      "shadow": true
+    },
+    "picture.as_shot": {
+      "value": {
+        "hook": {
+          "L": 50.34,
+          "a": 1.09,
+          "b": 4.36
+        }
+      },
+      "moved": [
+        "hook"
+      ],
+      "target": "his take as shot: the lower quarter within L 5.0, a 4.0, b 4.0 of the rows of the conformed take it shows (median L*a*b*)",
+      "pass": null,
+      "status": "advisory"
+    },
+    "keyframe_match": {
+      "value": null,
+      "target": "approved golden keyframes",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "composition": {
+      "value": {
+        "hook": {
+          "pass": false,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 99.84
+            },
+            "small_text": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "Aimee",
+                  "conf": 96.647568,
+                  "x": 204,
+                  "y": 475,
+                  "w": 54,
+                  "h": 15
+                },
+                {
+                  "text": "Hancock",
+                  "conf": 85.627899,
+                  "x": 267,
+                  "y": 475,
+                  "w": 74,
+                  "h": 15
+                },
+                {
+                  "text": "Staff",
+                  "conf": 95.819313,
+                  "x": 361,
+                  "y": 475,
+                  "w": 42,
+                  "h": 15
+                },
+                {
+                  "text": "Writer",
+                  "conf": 95.819313,
+                  "x": 408,
+                  "y": 475,
+                  "w": 55,
+                  "h": 15
+                },
+                {
+                  "text": "Updated",
+                  "conf": 96.912567,
+                  "x": 313,
+                  "y": 505,
+                  "w": 73,
+                  "h": 17
+                },
+                {
+                  "text": "Nov",
+                  "conf": 96.140228,
+                  "x": 396,
+                  "y": 506,
+                  "w": 29,
+                  "h": 12
+                },
+                {
+                  "text": "Dayton",
+                  "conf": 96.179184,
+                  "x": 184,
+                  "y": 565,
+                  "w": 64,
+                  "h": 17
+                },
+                {
+                  "text": "News",
+                  "conf": 96.959023,
+                  "x": 331,
+                  "y": 565,
+                  "w": 42,
+                  "h": 13
+                },
+                {
+                  "text": "Nov",
+                  "conf": 95.981354,
+                  "x": 432,
+                  "y": 565,
+                  "w": 32,
+                  "h": 13
+                },
+                {
+                  "text": "2026",
+                  "conf": 96.741905,
+                  "x": 478,
+                  "y": 565,
+                  "w": 43,
+                  "h": 13
+                }
+              ]
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [
+            "small_text 'Aimee' is 15 px high, the limit is at least 18 px.",
+            "small_text 'Hancock' is 15 px high, the limit is at least 18 px.",
+            "small_text 'Staff' is 15 px high, the limit is at least 18 px.",
+            "small_text 'Writer' is 15 px high, the limit is at least 18 px.",
+            "small_text 'Updated' is 17 px high, the limit is at least 18 px.",
+            "small_text 'Nov' is 12 px high, the limit is at least 18 px.",
+            "small_text 'Dayton' is 17 px high, the limit is at least 18 px.",
+            "small_text 'News' is 13 px high, the limit is at least 18 px.",
+            "small_text 'Nov' is 13 px high, the limit is at least 18 px.",
+            "small_text '2026' is 13 px high, the limit is at least 18 px."
+          ],
+          "frame": 118
+        },
+        "dc": {
+          "pass": false,
+          "checks": {
+            "fill_pct": {
+              "pass": false,
+              "value": 73.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [
+            "fill 73% outside the caption zone, the lock needs 80%."
+          ],
+          "frame": 237
+        }
+      },
+      "target": "design lock composition thresholds",
+      "pass": false,
+      "status": "measured"
+    },
+    "annotation.target": {
+      "value": [],
+      "target": "every mark names its words and is not drawn over a moving surface",
+      "pass": true
+    },
+    "captions.phrase_breaks": {
+      "value": [
+        {
+          "fromFrame": 3,
+          "page": "A",
+          "next": "tiny",
+          "why": "ends on \"a\""
+        },
+        {
+          "fromFrame": 26,
+          "page": "in",
+          "next": "Ohio",
+          "why": "ends on \"in\""
+        },
+        {
+          "fromFrame": 44,
+          "page": "just",
+          "next": "fired",
+          "why": "ends on \"just\""
+        },
+        {
+          "fromFrame": 55,
+          "page": "fired",
+          "next": "its",
+          "why": "the next page opens on \"its\""
+        },
+        {
+          "fromFrame": 63,
+          "page": "its",
+          "next": "mayor",
+          "why": "ends on \"its\""
+        },
+        {
+          "fromFrame": 94,
+          "page": "greenlit",
+          "next": "a",
+          "why": "the next page opens on \"a\""
+        },
+        {
+          "fromFrame": 107,
+          "page": "a",
+          "next": "data",
+          "why": "ends on \"a\""
+        },
+        {
+          "fromFrame": 127,
+          "page": "for",
+          "next": "Meta.",
+          "why": "ends on \"for\""
+        },
+        {
+          "fromFrame": 158,
+          "page": "are",
+          "next": "big",
+          "why": "ends on \"are\""
+        },
+        {
+          "fromFrame": 188,
+          "page": "full",
+          "next": "of",
+          "why": "the next page opens on \"of\""
+        },
+        {
+          "fromFrame": 192,
+          "page": "of",
+          "next": "computers",
+          "why": "ends on \"of\""
+        },
+        {
+          "fromFrame": 204,
+          "page": "that",
+          "next": "mainly",
+          "why": "ends on \"that\""
+        },
+        {
+          "fromFrame": 222,
+          "page": "just",
+          "next": "run",
+          "why": "ends on \"just\""
+        }
+      ],
+      "target": "no caption page ends mid-phrase",
+      "pass": false
+    },
+    "captions.repeat_title": {
+      "value": [],
+      "target": "no caption page repeats the headline on screen",
+      "pass": true
+    },
+    "annotation.on_target": {
+      "value": [],
+      "target": "every mark lands on its words on the rendered frame",
+      "pass": true
+    },
+    "evidence.readable": {
+      "value": [
+        {
+          "obj": "ddn",
+          "beat": "hook",
+          "frame": 118,
+          "word_px": 13,
+          "why": "its words are 13 px tall on the 1080x1920 frame, under 40"
+        }
+      ],
+      "target": "evidence words at least 40 px tall on 9:16",
+      "pass": false
+    },
+    "picture.smeared": {
+      "value": [],
+      "target": "no picture smeared into stripes (scripts/frame_smear.py)",
+      "pass": true,
+      "status": "advisory",
+      "note": "binds pieces published from 2026-11-24 (config/ve/onscreen-checks.json picture)"
+    }
+  },
+  "keyframes": {
+    "applies": false,
+    "note": "rules-only lock: no key frames; the rules, the Critic and his approval are the design gate"
+  },
+  "composition": {
+    "applies": true,
+    "pass": false,
+    "beats": {
+      "hook": {
+        "pass": false,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 99.84
+          },
+          "small_text": {
+            "pass": false,
+            "value": [
+              {
+                "text": "Aimee",
+                "conf": 96.647568,
+                "x": 204,
+                "y": 475,
+                "w": 54,
+                "h": 15
+              },
+              {
+                "text": "Hancock",
+                "conf": 85.627899,
+                "x": 267,
+                "y": 475,
+                "w": 74,
+                "h": 15
+              },
+              {
+                "text": "Staff",
+                "conf": 95.819313,
+                "x": 361,
+                "y": 475,
+                "w": 42,
+                "h": 15
+              },
+              {
+                "text": "Writer",
+                "conf": 95.819313,
+                "x": 408,
+                "y": 475,
+                "w": 55,
+                "h": 15
+              },
+              {
+                "text": "Updated",
+                "conf": 96.912567,
+                "x": 313,
+                "y": 505,
+                "w": 73,
+                "h": 17
+              },
+              {
+                "text": "Nov",
+                "conf": 96.140228,
+                "x": 396,
+                "y": 506,
+                "w": 29,
+                "h": 12
+              },
+              {
+                "text": "Dayton",
+                "conf": 96.179184,
+                "x": 184,
+                "y": 565,
+                "w": 64,
+                "h": 17
+              },
+              {
+                "text": "News",
+                "conf": 96.959023,
+                "x": 331,
+                "y": 565,
+                "w": 42,
+                "h": 13
+              },
+              {
+                "text": "Nov",
+                "conf": 95.981354,
+                "x": 432,
+                "y": 565,
+                "w": 32,
+                "h": 13
+              },
+              {
+                "text": "2026",
+                "conf": 96.741905,
+                "x": 478,
+                "y": 565,
+                "w": 43,
+                "h": 13
+              }
+            ]
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [
+          "small_text 'Aimee' is 15 px high, the limit is at least 18 px.",
+          "small_text 'Hancock' is 15 px high, the limit is at least 18 px.",
+          "small_text 'Staff' is 15 px high, the limit is at least 18 px.",
+          "small_text 'Writer' is 15 px high, the limit is at least 18 px.",
+          "small_text 'Updated' is 17 px high, the limit is at least 18 px.",
+          "small_text 'Nov' is 12 px high, the limit is at least 18 px.",
+          "small_text 'Dayton' is 17 px high, the limit is at least 18 px.",
+          "small_text 'News' is 13 px high, the limit is at least 18 px.",
+          "small_text 'Nov' is 13 px high, the limit is at least 18 px.",
+          "small_text '2026' is 13 px high, the limit is at least 18 px."
+        ],
+        "frame": 118
+      },
+      "dc": {
+        "pass": false,
+        "checks": {
+          "fill_pct": {
+            "pass": false,
+            "value": 73.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [
+          "fill 73% outside the caption zone, the lock needs 80%."
+        ],
+        "frame": 237
+      }
+    }
+  },
+  "measured_pass": false,
+  "complete": false
+}

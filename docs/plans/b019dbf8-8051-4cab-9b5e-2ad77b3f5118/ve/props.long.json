@@ -11841,14 +11841,15 @@
     {
       "id": "l15",
       "role": "bridge",
-      "layout": "STAGE",
+      "layout": "P1",
       "fromFrame": 4201,
       "toFrame": 4624,
       "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "none"
+        "source": "take",
+        "crop": "50% 38%"
       },
       "backdrop": {
         "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-pylons-1.png"
@@ -11912,14 +11913,15 @@
     {
       "id": "l19",
       "role": "bridge",
-      "layout": "STAGE",
+      "layout": "P1",
       "fromFrame": 5547,
       "toFrame": 5897,
       "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "none"
+        "source": "take",
+        "crop": "50% 38%"
       },
       "backdrop": {
         "src": "/home/user/content-engine/.scratch/b019/assets/plates/l20-cow-2.png"
@@ -11966,14 +11968,15 @@
     {
       "id": "l21",
       "role": "bridge",
-      "layout": "STAGE",
+      "layout": "P1",
       "fromFrame": 6615,
       "toFrame": 6981,
       "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "none"
+        "source": "take",
+        "crop": "50% 38%"
       },
       "backdrop": {
         "src": "/home/user/content-engine/.scratch/b019/assets/plates/bg-city-dusk-1.png"
