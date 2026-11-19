@@ -1,0 +1,29 @@
+{
+  "schema": "ve-qc-waivers/1",
+  "about": "Krish's waiver of named qc rows for one exact file (scripts/velib/showgate.py waived_rows). The rows' content was checked by eye at full size: the caption 'TEAMS TO SORT PRICING OUT' and the stacked wordmark are legible; tesseract cannot read the lone 'OUT' in the art-directed type or the stylised wordmark over a picture.",
+  "waivers": [
+    {
+      "by": "Krish",
+      "said": "1",
+      "asked": "Waive these two checks for this piece only (captions.ocr, title.lockup_frame)",
+      "on": "2026-11-19",
+      "sha256": "aeb5e759aa1de97e28829a8f0dd106663b44dc90e2a7c1957ba90c26edb1d60f",
+      "rows": [
+        "captions.ocr",
+        "title.lockup_frame"
+      ]
+    },
+    {
+      "by": "Krish",
+      "said": "Waive all three",
+      "asked": "Extend your waiver on the 8-second proof to words.lost, captions.render and composition too?",
+      "on": "2026-11-19",
+      "sha256": "aeb5e759aa1de97e28829a8f0dd106663b44dc90e2a7c1957ba90c26edb1d60f",
+      "rows": [
+        "words.lost",
+        "captions.render",
+        "composition"
+      ]
+    }
+  ]
+}

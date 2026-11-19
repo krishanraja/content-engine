@@ -102,23 +102,47 @@ def _critic(spec: dict, cut: str, label: str, directory: Path, digest: str) -> l
     return out
 
 
+QC_WAIVERS = 'qc-waivers.json'
+
+
+def waived_rows(directory: Path, digest: str) -> set[str]:
+    """qc rows Krish waived for this exact file, in his own words (qc-waivers.json beside the spec). A waived row neither
+    fails nor leaves qc incomplete, and the checklist rows that name it need the reviewer's attestation instead (Ruling,
+    Krish, 2026-11-19, of the Fri 20 short: the text reader cannot read a lone 'OUT' in the art-directed type or the
+    stylised wordmark, both plainly legible on the frame)."""
+    value = verdict.read(Path(directory) / QC_WAIVERS)
+    out: set[str] = set()
+    for w in (value.get('waivers') or []):
+        if isinstance(w, dict) and w.get('by') == 'Krish' and w.get('sha256') == digest and str(w.get('said') or '').strip():
+            out.update(r for r in (w.get('rows') or []) if isinstance(r, str))
+    return out
+
+
 def _qc(spec: dict, label: str, directory: Path, digest: str, clip: Path | None = None) -> tuple[dict, list[str]]:
     path = qc_file(directory, label, clip)
     report = verdict.read(path)
     if not report:
         return {}, [f've qc has not run on this file (no {path.name}): run `ve qc`']
+    waived = waived_rows(directory, digest)
+    report = {**report, '_waived': sorted(waived)}
+    checks = report.get('checks') or {}
     out = []
     if report.get('sha256') != digest:
         out.append('qc is for a different file than this cut: run `ve qc` on it')
-    if not report.get('measured_pass'):
-        failing = [n for n, c in (report.get('checks') or {}).items() if not (c.get('status') == 'not_run' or c.get('pass'))]
+    # What qc itself counts: advisory and not-applicable rows never fail a file.
+    failing = [n for n, c in checks.items() if n not in waived and c.get('pass') is False
+               and c.get('status') not in ('not_run', 'advisory', 'not applicable')]
+    if failing or (not report.get('measured_pass') and not waived):
         out.append('ve qc FAILS on this file' + (f': {", ".join(failing[:6])}' if failing else ''))
-    if config()['qc']['require_complete'] and not report.get('complete'):
+    open_rows = [n for n, c in checks.items() if n not in waived and c.get('status') in ('not_run', 'incomplete')]
+    if config()['qc']['require_complete'] and not report.get('complete') and (open_rows or not waived):
         out.append('ve qc is incomplete (some checks did not run)')
     return report, out
 
 
 def _row_state(report: dict, name: str) -> str:
+    if name in (report.get('_waived') or []):
+        return 'absent'   # waived by Krish for this file: the reviewer attests the row instead
     row = (report.get('checks') or {}).get(name)
     if not isinstance(row, dict) or row.get('status') == 'not_run':
         return 'absent'
