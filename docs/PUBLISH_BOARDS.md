@@ -1465,6 +1465,8 @@ simultaneously and should have a rock-hard repository for everything it's drawin
 inspiration for that day or if I put a research corpus in as supporting material, that should never be lost again. Even
 if I ran four separate sessions on one piece of content, it would know where everything was."
 
+**Roles the piece sheet reads (19 Nov 2026).** Control Centre's piece sheet (control-center `src/surfaces/content/board/sheetSections.ts`) puts every filed thing in one section by its role, then its name: `article` and `written_edition` in Article, `script` in Scripts, `krish_notes` and `notes` in Notes, the narrative lock in Story, `production_plan`, `plan_scene`, `proof`, `ve_asset` and `krish_got` in Proofs & mocks, `cover`, `thumbnail` and `final` in Final assets, everything else in Research; the newest of each is kept and every superseded one moves to Archive, never deleted. So file the article with `--role article` (make-piece step 6): an article filed with no role is found only by its name (Krish, 2026-11-19: "I can't ever just see the Substack article draft anywhere, at any stage of the production flow").
+
 **What a copied prompt says.** Every Claude and Growth prompt on the view ends with one instruction
 (`apps/control-plane/api/board/_writeBack.ts`, `writeBack`; a Perplexity prompt does not, it is not a session). It names
 the piece (or the week and the day when there is no piece yet) and the step, and tells the session to: see what is on

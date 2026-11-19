@@ -74,6 +74,11 @@ class Mirror(unittest.TestCase):
         self.assertEqual((a['key_size'], a['support_size'], a['line_height'], a['gap'], a['row_gap']),
                          (int(m.group(1)), int(m.group(2)), float(m.group(4)), int(m.group(5)), int(m.group(6))))
         self.assertIn(f"anton: {{ upper: {a['char_em']}", KIT_TS)
+        # The entry, ghost and echo numbers the caption read uses (qc_captions.art_view, 19 Nov 2026).
+        self.assertIn(f"enterSeconds: {a['enter_seconds']}, enterRisePx: {a['enter_rise_px']},", ART_TSX)
+        self.assertRegex(ART_TSX, rf"ghostGap: {a['ghost_gap']}\b")
+        self.assertIn(f"top: props.aspect === '9:16' ? {a['echo']['9:16']['top']} : {a['echo']['16:9']['top']}", ART_TSX)
+        self.assertIn(f"fontSize: {a['echo']['9:16']['size']}, lineHeight: 1", ART_TSX)
 
     def test_theme_regions_are_the_renderers(self):
         kit = (ROOT / 'apps/renderer/src/engine/captions/kit.ts').read_text(encoding='utf-8')

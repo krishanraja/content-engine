@@ -4035,6 +4035,45 @@
       ]
     },
     {
+      "id": "qc-rows-failed-a-fine-cut",
+      "on": "2026-11-19",
+      "krish": "\"fix the ve qc rows that fail cuts which are actually fine, so a cut in the art-directed caption style can pass the library's filing gate\" (19 Nov 2026, of the Tue 17 / Thu 19 habits voiceover short, piece 701a2c55; he ruled that one cut filed straight to Drive)",
+      "what": "Every gating row of the habits short passed and words.lost was clean, but captions.ocr and captions.render scored 0 to 0.75 on most pages, captions.clock failed 17 of 67 pages against an unmeasured 2-frame tolerance, and composition read photo texture as words, so measured_pass was false, ve status said NOT READY and send.py refused the video.",
+      "symptom": "A fine art-directed cut is NOT READY and the library refuses it.",
+      "cause": "The art-directed stack hangs above the house caption box by the cut's tallest page (cutHeight), so the read box cut its upper rows off; the read took the middle of the window and the strict judge counted the key word's faint echo and the previous page's ghost as stray words; the clock tolerance is a placeholder; tesseract read generated pictures' texture as words.",
+      "status": "guarded",
+      "guard_level": "gate",
+      "guards": [
+        {
+          "file": "scripts/velib/qc_captions.py",
+          "contains": "def art_view(",
+          "how": "an art page is read in its measured stack, once settled, and judged by its words in order; only the echo and ghost the renderer draws there are forgiven, and the 0.98 bar is unchanged",
+          "test": "python3 tests/ve_qc_false_fails_test.py"
+        },
+        {
+          "file": "scripts/cutgates/captions.py",
+          "contains": "def _in_order(",
+          "how": "captions.render reads an art page from its settle frame and judges it with the same in-order judge"
+        },
+        {
+          "file": "scripts/velib/qc_gates.py",
+          "contains": "keep the row advisory until it is measured",
+          "how": "captions.clock is shown, not counted, while config/gates.json says its tolerance is a placeholder"
+        },
+        {
+          "file": "config/ve/qc-ocr.json",
+          "contains": "\"photo_word\"",
+          "how": "a word OCR finds on a generated picture counts only at conf 90 or more and four letters or more; screen recordings, footage and type the engine draws keep the house rule"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "When a qc row fails a cut that looks right, measure what a viewer sees (where the renderer draws it, when it has settled, what else it draws there); never lower a bar to pass."
+      }
+    },
+    {
       "id": "build-or-buy-components-carried-faults",
       "on": "2026-11-19",
       "status": "guarded",
