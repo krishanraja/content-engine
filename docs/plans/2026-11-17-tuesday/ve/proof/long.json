@@ -10,7 +10,7 @@
     30.133,
     42.2
   ],
-  "sha256": "fa3501b57e557dee864050fb2d714feb77d3fbf9e87def6dd6a313d24a717403",
+  "sha256": "2ee863a3b67fed310e1c9f2278ae0d7b72873763d6b3d52a843cbb362358a696",
   "spec_sha256": "1d37cef9ee691358a1dbf9ef27f8aa9457aaacb0c24eb3a77ad2f42854e7d424",
   "structure": {
     "format": "face-with-proof",
@@ -302,7 +302,7 @@
       "caption on the light stage"
     ]
   ],
-  "engine_sha256": "19068095bead0550dda46460c225f181f46e8072ed39b38af827e10a56cb0aba",
+  "engine_sha256": "38d86e22a8415765f0cc2c12b2129de7a1738b37084ad6856910b816e1637b19",
   "assets_sha256": {
     "bg-city-dusk": "107539f8d1b4c68f2d05ba9c1e2bc002109c35e1235b0cc166cfeab76cbeae2c",
     "bg-data-hall": "3730051bf5718d3577cfad4dc96c53bd8bd1abb0d20497ebed4630e065ea424c",
@@ -327,7 +327,7 @@
     "scene-nameplate": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222",
     "wyso-lead": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
   },
-  "made_at": "2026-11-19T15:22:05Z",
+  "made_at": "2026-11-19T15:46:11Z",
   "frames": {
     "pass": true,
     "status": "ok",
@@ -335,16 +335,16 @@
     "frames": 25
   },
   "compare": {
-    "against": "0eaf2fb0c4cd1cfbaa7ae574437a0d0199461bc6268043b4b6f33df89cf83b8f",
+    "against": "fa3501b57e557dee864050fb2d714feb77d3fbf9e87def6dd6a313d24a717403",
     "reasons": [
       "the engine changed since the proof he approved"
     ],
     "compared": {
-      "text": "Opened proof/compare.long.png at full size, all eight frames approved against new, beside his standing notes (no icons, no face ghost, wordmark only on title and close, no off.day tag, no captions under the held title). The approved proof is the l17 block beat and this one is the l5 title beat, so the frames show different moments: the comparison is of the house look, not the same picture. New: the dusk town in the left panel, his take on the right, the title card building line by line over the panel as he says it (one line at 6.79 s, the full line at 11.31 s) with the wordmark only at its end. No logo, no ghost, no empty card.",
-      "at": "2026-11-19T15:22:38Z"
+      "text": "Opened proof/compare.long.png at full size beside his standing notes (no icons, no face ghost, wordmark only on title and close and aligned with the title, no off.day tag, no captions under the held title). Against the proof he approved, only the title changed: the card grows line by line and the wordmark now starts on the title's left edge directly under its last line. No logo, no ghost, no empty card, captions back on his line after the title.",
+      "at": "2026-11-19T15:46:58Z"
     },
     "sheet": "compare.long.png",
-    "sha256": "c3ca1537667012c8da233de448562c0e2bf11e3dc93335f11c20dab865ab2940",
+    "sha256": "ec2a0eb046ae08282b6b0dcf65d6f0e78fe862be98d2b45b4f2c379e8ad94c57",
     "seconds": [
       0.75,
       2.26,

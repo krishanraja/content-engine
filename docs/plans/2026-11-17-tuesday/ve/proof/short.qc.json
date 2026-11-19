@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-11-17-tuesday/ve/proof/short.mp4",
-  "sha256": "f53852adb1ffce459f1f9fe947e41c1cd97634364dec365acf655ce0af31f563",
+  "sha256": "c4d3e7fdb2ebf05c07eb3ac78d1bb8eb84c5d2aa18ef83f26f97e1a22263b192",
   "duration_s": 8.0,
   "format": "face-with-proof",
   "checks": {
@@ -159,18 +159,18 @@
         {
           "page": 11,
           "frame": 199,
-          "text": "Wwe\na",
-          "agreement": 0.5,
-          "variant": "raw_2x",
+          "text": "We\n»",
+          "agreement": 0.0,
+          "variant": "raw",
           "pass": false
         },
         {
           "page": 12,
           "frame": 206,
-          "text": "siant",
-          "agreement": 0.0,
-          "variant": "raw",
-          "pass": false
+          "text": "giant",
+          "agreement": 1.0,
+          "variant": "highlight",
+          "pass": true
         },
         {
           "page": 13,
@@ -199,7 +199,7 @@
         {
           "page": 16,
           "frame": 239,
-          "text": "for\nanata t aa",
+          "text": "for\n\\aaltataa*",
           "agreement": 0.0,
           "variant": "raw",
           "pass": false
@@ -285,9 +285,9 @@
           "atFrame": 201,
           "peak_frame": 202,
           "lag_frames": 1,
-          "peak_difference": 3.9460184574127197,
-          "event_difference": 3.9460184574127197,
-          "threshold": 2.2434085607528687,
+          "peak_difference": 3.941340684890747,
+          "event_difference": 3.941340684890747,
+          "threshold": 2.2344691157341003,
           "gradual": false,
           "pass": true
         }
@@ -570,12 +570,12 @@
             "fromFrame": 211,
             "text": "data",
             "change_frame": 210,
-            "frame": 214,
+            "frame": 213,
             "read": "giant\ndata",
             "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"giant\ndata\" near frame 214, not \"data\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"giant\ndata\" near frame 213, not \"data\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
@@ -715,12 +715,12 @@
             "fromFrame": 211,
             "text": "data",
             "change_frame": 210,
-            "frame": 214,
+            "frame": 213,
             "read": "giant\ndata",
             "score": 0.5,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"giant\ndata\" near frame 214, not \"data\" (score 0.5, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"giant\ndata\" near frame 213, not \"data\" (score 0.5, needs an exact match and 0.98)"
           },
           {
             "page": 0,
@@ -966,7 +966,7 @@
           "b": 4.05
         },
         "title": {
-          "L": 47.6,
+          "L": 47.7,
           "a": 1.2,
           "b": 3.85
         }
@@ -1019,7 +1019,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 99.2
+              "value": 98.93
             },
             "small_text": {
               "pass": true,
@@ -1034,7 +1034,7 @@
               "value": [
                 {
                   "text": "OF",
-                  "conf": 96.969635,
+                  "conf": 96.971008,
                   "x": 886,
                   "y": 519,
                   "w": 123,
@@ -1042,7 +1042,7 @@
                 },
                 {
                   "text": "NO?",
-                  "conf": 96.343483,
+                  "conf": 96.250496,
                   "x": 757,
                   "y": 655,
                   "w": 257,
@@ -1066,7 +1066,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 89.78
+              "value": 89.71
             },
             "small_text": {
               "pass": true,
@@ -1292,7 +1292,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 99.2
+            "value": 98.93
           },
           "small_text": {
             "pass": true,
@@ -1307,7 +1307,7 @@
             "value": [
               {
                 "text": "OF",
-                "conf": 96.969635,
+                "conf": 96.971008,
                 "x": 886,
                 "y": 519,
                 "w": 123,
@@ -1315,7 +1315,7 @@
               },
               {
                 "text": "NO?",
-                "conf": 96.343483,
+                "conf": 96.250496,
                 "x": 757,
                 "y": 655,
                 "w": 257,
@@ -1339,7 +1339,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 89.78
+            "value": 89.71
           },
           "small_text": {
             "pass": true,
