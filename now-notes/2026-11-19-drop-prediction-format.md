@@ -1,0 +1,4 @@
+Status: The dated-prediction format is gone (Rulings, Krish, 2026-11-17 and 2026-11-18). No publish check asks for a prediction (CALL, CALL_HORIZON and CLEAR_STANCE and their exception tables removed), house rule NO_DATED_PREDICTION replaces CALL, CLEAR_STANCE and SHARP_PREDICTION and wins over any mandate, no writer, judge, score or card asks for or rewards one, the ve and Studio call card is retired, /api/calls answers with no calls, and the call-market pin and the signals_odds cron are deleted.
+Next: Krish approves applying supabase/migrations/20261206090000_mandates_drop_the_call.sql, which takes "THE CALL:" out of the three live mandates (the house rule already overrides it).
+Changed: house rules, publish checks, writers and judges, the Studio and ve call card, the channel description, the Scored highlight, the rejection floor's prediction standards (withdrawn by ruling), learnings, skills and current docs.
+North Star check (2026-11-19): holds.

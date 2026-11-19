@@ -95,7 +95,6 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/content-engine/ping`
 - `/api/content-engine/runs/replay`
 - `/api/content-ideas`
-- `/api/content-ideas/[id]/call-market`
 - `/api/content-ideas/[id]/challenge`
 - `/api/content-ideas/[id]/channel-cut`
 - `/api/content-ideas/[id]/chat`
@@ -170,7 +169,6 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/shifts/[id]/write`
 - `/api/shifts/detect`
 - `/api/signals/news`
-- `/api/signals/odds`
 - `/api/trends/entities`
 - `/api/trends/metrics`
 - `/api/triage/sweep`
@@ -226,9 +224,9 @@ From `.agents/skills/mindmake-video/stations/registry.json`; each station's inst
 | `claims` | v1 | active | Separate facts, inferences and judgments and bind consequential claims to evidence. | `packages/core/src/evidence.ts`, `packages/core/src/editorial.ts` |
 | `visual_plan` | v2 | active | Convert the approved argument into viewer-attention, camera, proof and fallback decisions. | `packages/core/src/visual-plan.ts`, `packages/core/src/art-director.ts` |
 | `assets` | v1 | active | Acquire and approve exact visual evidence, owned media and clearly labelled illustrations. | `packages/core/src/evidence.ts`, `packages/core/src/brand-assets.ts` |
-| `styleframes` | v1 | active | Show exact phone-size compositions before motion and full rendering consume production time. | `packages/core/src/visual-plan.ts`, `packages/core/src/virtual-camera.ts`, `packages/core/src/render-call.ts` |
+| `styleframes` | v1 | active | Show exact phone-size compositions before motion and full rendering consume production time. | `packages/core/src/visual-plan.ts`, `packages/core/src/virtual-camera.ts` |
 | `animatic` | v1 | active | Test the timed visual argument, reading load and attention flow before final treatment. | `packages/core/src/visual-plan.ts` |
-| `treatment` | v1 | active | Compile the approved story into deterministic platform render manifests and treatment rules. | `packages/core/src/treatment.ts`, `packages/core/src/render-lineage-v2.ts`, `packages/core/src/render-call.ts` |
+| `treatment` | v1 | active | Compile the approved story into deterministic platform render manifests and treatment rules. | `packages/core/src/treatment.ts`, `packages/core/src/render-lineage-v2.ts` |
 | `render` | v1 | active | Render only exact manifests into deterministic platform masters and measurable media outputs. | `packages/core/src/render-v2.ts`, `apps/renderer/src` |
 | `qa` | v1 | active | Independently test technical, editorial, brand, rights and lineage requirements on each master. | `packages/core/src/qa.ts` |
 | `package` | v1 | active | Bind approved masters, copy, covers, captions, ledgers and delivery settings into one artifact. | `packages/core/src/package.ts`, `packages/core/src/youtube.ts` |
@@ -1489,7 +1487,6 @@ The YouTube title and description for a piece's video, and the title and
 - `interface PackageContext`
 - `function namesIn(title: string, source: string): string[]`
 - `function repeatsThumbnail(title: string, thumbnail: string | null | undefined): 'same' | 'mostly' | null`
-- `function predictionDate(source: string): string | null`
 - `function lintTitle(input: PackageContext & { title: string }): PackageLint`
 - `function lintPackage(input: PackageContext & { title: string; description: string }): PackageLint`
 - `function lintSubstack(input: PackageContext & { substackTitle: string; substackSubtitle: string }): PackageLint`
@@ -1650,16 +1647,11 @@ The mechanical checks a piece must pass before it can be approved or
 - `function americanSpellings(body: string): Array<{ found: string; use: string }>`
 - `function emDashes(body: string): string[]`
 - `function exclamationMarks(body: string): string[]`
-- `const CLEAR_STANCE_AT`
-- `const CALL_HORIZON_DAYS`
-- `function callHorizon(body: string, now: Date = new Date(), pieceId?: string): { ok: boolean; detail: string } | null`
-- `function confidenceOf(body: string): number | null`
-- `function predictionCheck(body: string): { ok: boolean; detail: string }`
 - `function bareScores(body: string): Array<{ number: string; sentence: string }>`
 - `function threeThingsTomorrow(body: string): { ok: boolean; detail: string }`
 - `function articleSubscribeAsks(body: string): { ok: boolean; detail: string }`
 - `function articleFormat(body: string): string[]`
-- `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?…`
+- `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }): Check[]`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 
 ### `apps/control-plane/api/_publishWatch.ts`
@@ -1910,8 +1902,6 @@ The writer's self-check (walk log F42).
 - `function correctionFor(text: string, hits: SelfCheckHit[], answer: string): string`
 - `interface SelfChecked`
 - `async function selfCheck(opts: { /** The writer's first answer, cleaned (sanitizeVoice and the rest). */ first: string …`
-- `const UNSET_CONFIDENCE`
-- `function guardConfidence(text: string, source: string | null): { text: string; restored: boolean }`
 
 ### `apps/control-plane/api/_ships.ts`
 
@@ -1930,8 +1920,6 @@ Signals: the free public sources and the keyed readers the engine reads on
 - `function kalshiProbability(market: { yes_bid?: unknown; yes_ask?: unknown; last_price?: unknown }): number | null`
 - `async function kalshiByTicker(ticker: string): Promise<MarketOdds | null>`
 - `async function marketOdds(source: MarketSource, key: string): Promise<MarketOdds | null>`
-- `interface CallMarketRecord`
-- `function nextCallMarket(prev: Partial<CallMarketRecord> | null | undefined, odds: MarketOdds, now = new Date()): CallMa…`
 - `interface NewsArticle`
 - `function gdeltSeenToIso(seen: string): string`
 - `async function gdeltArticles(query: string, days = 2, max = 25): Promise<NewsArticle[]>`
@@ -3294,8 +3282,7 @@ One yes anywhere (Ruling, Krish, 2026-11-02): his answer for each day, read from
 
 ### `apps/control-plane/api/calls.ts`
 
-- `interface ScoreboardCall`
-- `function toScoreboardCall(row: { id: string; idea: string | null; lane_slot: string | null; body: string | null; publis…`
+- `const CALLS_RETIRED`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/claims/_notice.ts`
@@ -3368,10 +3355,6 @@ What this deployment needs before it can do its job.
 - `const ALLOWED_SOURCE`
 - `const SAID_REF`
 - `const PIECE_COLUMNS`
-- `default async function handler(req: VercelRequest, res: VercelResponse)`
-
-### `apps/control-plane/api/content-ideas/[id]/call-market.ts`
-
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/content-ideas/[id]/challenge.ts`
@@ -4069,10 +4052,6 @@ A copy of every row the Monday purge is about to hard-delete.
 ### `apps/control-plane/api/signals/news.ts`
 
 - `export default withContentRun('signals_news', handler)`
-
-### `apps/control-plane/api/signals/odds.ts`
-
-- `export default withContentRun('signals_odds', handler)`
 
 ### `apps/control-plane/api/trends/_entities.ts`
 
@@ -5017,14 +4996,6 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `function artLayout(page: Page, aspect: EngineRenderProps['aspect']): { rows: ArtRow[]; key: number; height: number }`
 - `function cutHeight(captions: readonly Page[], aspect: EngineRenderProps['aspect']): number`
 - `function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
-
-### `apps/renderer/src/engine/chrome/CallCard.tsx`
-
-- `interface CallCardProps`
-- `const ENDING_SAFE`
-- `function callCardLayout(aspect: EngineRenderProps['aspect'], statement: string)`
-- `function callCardModel(props: EngineRenderProps, frame: number)`
-- `function CallCard({ props, frame }: CallCardProps): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/CaptionTrack.tsx`
 
@@ -6335,13 +6306,10 @@ JSON-value transport: escape values only; keys retain their original spelling.
 - `function houseStickerSize(text: string, sizePx: number = HOUSE.sticker.size, paddingX: number = HOUSE.sticker.paddingX,…`
 - `function houseShortStickerFrame(text: string, safe: HouseSafeZones)`
 - `function houseCaptionFrame(safe: HouseSafeZones, bounds?: { x: number; y: number; width: number }): { left: number; top…`
-- `function houseCallFrame(statement: string, safe: HouseSafeZones)`
 - `function houseBandInsets(safe: HouseSafeZones): { left: number; right: number }`
 - `function houseTickerCycleWidth(promise: string, day: string): number`
 - `function houseTickerOffset(promise: string, day: string, msSinceArrival: number): number`
 - `function houseSwipeIndex(text: string, emphasis: readonly string[]): number`
-- `function houseLastWordIndex(text: string): number`
-- `function houseDueLine(due: string, confidencePercent: number): { due: string; sure: string }`
 
 ### `apps/renderer/src/house/metrics.ts`
 
@@ -6449,12 +6417,10 @@ Fitting type into a box, as a pure function of a width measurer, so the
 - `function houseBandModel(branding: RuntimeBranding, cue: RuntimeBrandCue | undefined, safeZones: V2RenderProps['safeZone…`
 - `function houseCaptionModel(branding: RuntimeBranding, cue: RuntimeCaption, safeZones: V2RenderProps['safeZones'], bound…`
 - `function houseStickerModel(branding: RuntimeBranding, safeZones: V2RenderProps['safeZones'], atMs: number)`
-- `function houseCallModel(branding: RuntimeBranding, safeZones: V2RenderProps['safeZones'], atMs: number)`
 - `function houseCaptionHidden(branding: RuntimeBranding, cue: RuntimeBrandCue | undefined, safeZones: V2RenderProps['safe…`
 - `function HouseMark({ branding, cue, resolve }: { branding: RuntimeBranding; cue: RuntimeBrandCue | undefined; resolve: …`
 - `function HouseCaption({ cue, branding, safeZones, bounds }: { cue: RuntimeCaption; branding: RuntimeBranding; safeZones…`
 - `function HouseSticker({ branding, safeZones, atMs }: { branding: RuntimeBranding; safeZones: V2RenderProps['safeZones']…`
-- `function HouseCall({ branding, safeZones, atMs }: { branding: RuntimeBranding; safeZones: V2RenderProps['safeZones']; a…`
 - `function HouseBand({ branding, cue, safeZones, atMs, resolve }: { branding: RuntimeBranding; cue: RuntimeBrandCue | und…`
 
 ### `apps/renderer/src/v2/MindmakeStory.tsx`
@@ -6535,19 +6501,11 @@ Fitting type into a box, as a pure function of a width measurer, so the
 
 ### `packages/contracts/src/call.ts`
 
-The piece's call: the dated prediction every makeyourmindup piece ends on
+The reader of a dated call in a piece's text, now dormant.
 
-- `const CALL_MISSING`
-- `interface PieceCallV1`
-- `type PieceCallReadingV1`
-- `interface CallDateMentionV1`
 - `interface CallConfidenceMentionV1`
 - `function callSectionOf(text: string): string | null`
-- `function callDateMentions(text: string): CallDateMentionV1[]`
 - `function labelledConfidences(text: string): CallConfidenceMentionV1[]`
-- `function withoutBrackets(text: string): string`
-- `function hasPercentage(text: string): boolean`
-- `function readPieceCall(approvedText: string): PieceCallReadingV1`
 
 ### `packages/contracts/src/confirmation-v1.ts`
 
@@ -6840,7 +6798,6 @@ Artifact-bound user confirmation references.
 - `const VeReferenceSchema`
 - `const VeCharacterCueSchema`
 - `const VeCharacterSchema`
-- `function veOffDay(spec: { publish_day?: string | undefined, brand: { series: string } }): boolean`
 - `const ProductionSpecV2Schema`
 - `type ProductionSpecV2 = z.infer<typeof ProductionSpecV2Schema>`
 - `type VeBeat = z.infer<typeof VeBeatSchema>`
@@ -7321,7 +7278,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `export * from './qa.js'`
 - `export * from './radar.js'`
 - `export * from './render.js'`
-- `export * from './render-call.js'`
 - `export * from './render-v2.js'`
 - `export * from './render-lineage-v2.js'`
 - `export * from './review-bindings.js'`
@@ -7534,13 +7490,6 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 - `async function loadRadarFeed(path: string): Promise<RadarFeedV1>`
 - `async function fetchRadarFeed(url: string, token: string): Promise<RadarFeedV1>`
 - `function sourceReferenceHash(value: string): string`
-
-### `packages/core/src/render-call.ts`
-
-- `function drawsHouseCallV2(manifest: RenderManifestV2, theme: BrandThemeV1 | undefined): boolean`
-- `function renderCallFromBriefV2(brief: ProductionBriefV1, beatId: string): RenderCallV1`
-- `function renderCallIssuesV2(manifest: RenderManifestV2, theme: BrandThemeV1 | undefined, brief: ProductionBriefV1 | und…`
-- `async function boundRenderCallIssuesV2(manifest: RenderManifestV2, registry?: TreatmentRegistryV1): Promise<string[]>`
 
 ### `packages/core/src/render-lineage-v2.ts`
 
