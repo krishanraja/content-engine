@@ -194,6 +194,7 @@
     "to_beat": "fell"
    },
    "params": {
+    "carry": true,
     "prefix": "$",
     "group": true
    }
@@ -523,6 +524,7 @@
     "to_beat": "hook"
    },
    "params": {
+    "carry": true,
     "prefix": "$",
     "group": true
    }
@@ -659,6 +661,7 @@
     "to_beat": "l_fell"
    },
    "params": {
+    "carry": true,
     "prefix": "$",
     "group": true
    }

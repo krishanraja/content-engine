@@ -17,8 +17,10 @@ export function kineticState(object: EngineObject, events: readonly EngineEvent[
   const places = Number.isInteger(row.value) ? 0 : Math.min(2, (String(row.value).split('.')[1] ?? '').length)
   let value = amount === 1 ? row.value : Math.round(row.value * amount * 10 ** places) / 10 ** places
   let ghostValue: number | null = null
-  if (params.ghost) {
-    // Replay authored counts, sampling the preceding animation at each new cue.
+  if (params.ghost || params.carry) {
+    // Replay authored counts, sampling the preceding animation at each new cue, so a later count starts from the value on
+    // screen. `carry` does that without the faded old figure, which the house figures rule forbids on a cut: $195,000
+    // counts DOWN to $33,000 (Fri 20 Nov: without ghost it snapped to 0 and climbed). `ghost` also draws the old figure.
     // This also preserves the actual displayed value when a count is interrupted.
     let from = 0
     let target = 0
@@ -36,7 +38,7 @@ export function kineticState(object: EngineObject, events: readonly EngineEvent[
       target = (dataset.rows.find(item => item.label === event.toState) ?? dataset.rows[0]!).value
       if (!Number.isFinite(target)) throw new Error('kinetic_stat requires finite values')
       cue = event
-      if (target < from && frame > event.atFrame) ghostValue = from
+      if (params.ghost && target < from && frame > event.atFrame) ghostValue = from
     }
     value = sample(frame)
   }

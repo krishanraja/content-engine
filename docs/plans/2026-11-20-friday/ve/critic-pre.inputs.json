@@ -1,7 +1,7 @@
 {
   "schema": "ve-pre-critic-inputs/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-  "spec_sha256": "c0c74a695ffc6bcfb211eb59c747adc0c3ebaad68c2fa4580abde68dbe5df0ca",
+  "spec_sha256": "32a9ad885e7223d5b2830a953152015372ac9d00f583c97ec7fcf7345a6bfaba",
   "question_1": "Does this piece carry one idea as clearly as The Ladder (Mon 2 Nov): one object, every move meaning something, nothing acting out a sentence? (.claude/agents/ve-critic.md, \"First, beside his favourite\")",
   "question_2": "Is any number on screen invented: a figure the piece does not own (its datasets, real artifacts or his script)? The spec's own never-list is the rule.",
   "style_idea": {
