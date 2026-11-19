@@ -81,6 +81,15 @@
    "on": "2026-11-19",
    "artifact_hash": "f0482cf380dc156e46a09e83c007c47830383649ae8c5c59961021a23cc4cb52",
    "covers": "the Critic's second-round findings on the same five fixes: no faded caption line over his face; the title wordmark rides under the cards drawn so far (no gap while it builds); tall title type ends inside the platforms' button line; kinetic_stat can show money ($, commas) at a hero size"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "fix all five, this is absolute madness",
+   "on": "2026-11-19",
+   "artifact_hash": "199c7aaed062623c4478ce4fe14e3b5c450d2b933f5bf72959590eae715e2497",
+   "covers": "the face-and-captions finding, completed: his full-frame take framed 2% higher again (FACE_LIFT 1.18) so the captions clear the face margin"
   }
  ]
 }

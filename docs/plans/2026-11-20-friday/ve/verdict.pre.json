@@ -1,25 +1,25 @@
 {
   "schema": "ve-pre-critic/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-  "spec_sha256": "026dfe097d4d3c9255f86fb2b66ef9dff5edbd2ca288cd57a0ddd3744732a6d0",
+  "spec_sha256": "afd4ba93a93d7d881a18a254fd7432a71900dec14728088f1766cdd5549dcb1d",
   "cards": [],
   "reviewer": "reviewer subagent afe4d5bf6eef0d4e6",
-  "reviewed_at": "2026-11-19T18:45:05.677075+00:00",
+  "reviewed_at": "2026-11-19T18:54:31.033948+00:00",
   "answers": {
     "one_idea": {
       "pass": true,
-      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts. The hook's $195,000 is the hero on its panel, clear of his head, and the line on 'fraction' now goes through the middle of the digits, so the move reads as the bill being cut. The F1 slam beats, the money counters, the real pages held still and the sofa and closet plates are unchanged."
+      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts. The hook's $195,000 panel moves up with his head and the line on 'fraction' keeps its place through the digits. The F1 slam beats, the money counters, the real pages held still and the sofa and closet plates are unchanged."
     },
     "no_invented_numbers": {
       "pass": true,
-      "line": "No invented figure. All four counters show only the bill-billed and bill-after rows (195,000 and 33,000) as money in the datasets' own unit (USD), with the source line 'Tom's Hardware, 29 Oct 2025 (the family's account)'. No slam word or tape has a digit, and the figures on th_head, l_lede and l_krafton are printed on their own pages. The placement change touches no figure."
+      "line": "No invented figure. All four counters show only the bill-billed and bill-after rows (195,000 and 33,000) as money in the datasets' own unit (USD), with their source line. No slam word or tape has a digit, and the figures on th_head, l_lede and l_krafton are printed on their own pages. The placement change touches no figure."
     }
   },
   "findings": [
     {
       "severity": "note",
-      "area": "short hook k_billed and strike",
-      "text": "On the next render check the panel at top 300 clears his head and the underline crosses the middle of $195,000."
+      "area": "short F1 beats and hook",
+      "text": "On the next render check one frame of each F1 beat: slam word and tapes clear of his head; hook panel clears his head and the underline crosses the middle of $195,000."
     }
   ],
   "mechanical": [],

@@ -4,7 +4,7 @@
   "format": "face-with-proof",
   "aspect": "9:16",
   "fps": 30,
-  "durationFrames": 240,
+  "durationFrames": 262,
   "tokens": {
     "ink": "#0C1512",
     "inkDeep": "#070D0B",
@@ -40,158 +40,153 @@
   "segments": [
     {
       "src": "/home/user/content-engine/.cache/fri20/assets/short.master.mov",
-      "trimBeforeFrames": 440,
+      "trimBeforeFrames": 0,
       "fromFrame": 0,
-      "durationFrames": 240
+      "durationFrames": 262
     }
   ],
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.cache/fri20/assets/audio.short.wav",
-      "trimBeforeFrames": 440
+      "trimBeforeFrames": 0
     },
     "sfx": []
   },
   "captions": [
     {
-      "fromFrame": 0,
-      "toFrame": 29,
+      "fromFrame": 19,
+      "toFrame": 61,
       "words": [
         {
-          "text": "teams",
-          "atFrame": 0
+          "text": "So",
+          "atFrame": 19
         },
         {
-          "text": "to",
-          "atFrame": 0
+          "text": "some",
+          "atFrame": 24
         },
         {
-          "text": "sort",
-          "atFrame": 0
+          "text": "good",
+          "atFrame": 30
         },
         {
-          "text": "pricing",
-          "atFrame": 3
-        },
-        {
-          "text": "out",
-          "atFrame": 16
+          "text": "news",
+          "atFrame": 35
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 29,
-      "toFrame": 98,
+      "fromFrame": 61,
+      "toFrame": 88,
       "words": [
         {
-          "text": "and",
-          "atFrame": 29
+          "text": "from",
+          "atFrame": 61
         },
         {
-          "text": "a",
-          "atFrame": 33
-        },
-        {
-          "text": "chatbot",
-          "atFrame": 36
-        },
-        {
-          "text": "beat",
-          "atFrame": 50
-        },
-        {
-          "text": "them.",
-          "atFrame": 56
+          "text": "AI.",
+          "atFrame": 67
         }
       ],
       "swipeIndex": null
+    },
+    {
+      "fromFrame": 88,
+      "toFrame": 128,
+      "words": [
+        {
+          "text": "It",
+          "atFrame": 88
+        },
+        {
+          "text": "just",
+          "atFrame": 102
+        },
+        {
+          "text": "helped",
+          "atFrame": 108
+        },
+        {
+          "text": "a",
+          "atFrame": 115
+        },
+        {
+          "text": "family",
+          "atFrame": 116
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 128,
+      "toFrame": 231,
+      "words": [
+        {
+          "text": "cut",
+          "atFrame": 128
+        },
+        {
+          "text": "a",
+          "atFrame": 140
+        },
+        {
+          "text": "$195,000",
+          "atFrame": 208
+        },
+        {
+          "text": "hospital",
+          "atFrame": 211
+        },
+        {
+          "text": "bill",
+          "atFrame": 224
+        }
+      ],
+      "swipeIndex": 2
+    },
+    {
+      "fromFrame": 231,
+      "toFrame": 262,
+      "words": [
+        {
+          "text": "to",
+          "atFrame": 231
+        },
+        {
+          "text": "a",
+          "atFrame": 235
+        },
+        {
+          "text": "fraction",
+          "atFrame": 240
+        },
+        {
+          "text": "of",
+          "atFrame": 251
+        },
+        {
+          "text": "that.",
+          "atFrame": 254
+        }
+      ],
+      "swipeIndex": 2
     }
   ],
   "captionStyle": "house",
   "captionTheme": "art-directed",
   "captionPlacement": "lower",
   "title": "Your AI auditor: missing money or skeletons?",
-  "titleMoment": {
-    "fromFrame": 98,
-    "toFrame": 240,
-    "release": "captions",
-    "words": [
-      {
-        "text": "Will",
-        "atFrame": 98
-      },
-      {
-        "text": "your",
-        "atFrame": 102
-      },
-      {
-        "text": "AI",
-        "atFrame": 110
-      },
-      {
-        "text": "auditor",
-        "atFrame": 119
-      },
-      {
-        "text": "find",
-        "atFrame": 130
-      },
-      {
-        "text": "missing",
-        "atFrame": 138
-      },
-      {
-        "text": "money",
-        "atFrame": 149
-      },
-      {
-        "text": "or",
-        "atFrame": 160
-      },
-      {
-        "text": "will",
-        "atFrame": 171
-      },
-      {
-        "text": "it",
-        "atFrame": 177
-      },
-      {
-        "text": "find",
-        "atFrame": 182
-      },
-      {
-        "text": "skeletons",
-        "atFrame": 199
-      },
-      {
-        "text": "in",
-        "atFrame": 216
-      },
-      {
-        "text": "your",
-        "atFrame": 218
-      },
-      {
-        "text": "closet?",
-        "atFrame": 222
-      }
-    ],
-    "card": true,
-    "lockup": true
-  },
   "beats": [
     {
-      "id": "face",
-      "role": "bridge",
+      "id": "hook",
+      "role": "hook",
       "layout": "F1",
       "fromFrame": 0,
-      "toFrame": 69,
+      "toFrame": 262,
       "uses": [
-        "s_face_slam0",
-        "s_face_slam1",
-        "s_face_slam2"
+        "k_billed",
+        "strike"
       ],
       "face": "full",
       "transitionOut": "cut",
@@ -199,137 +194,64 @@
       "plate": {
         "source": "take"
       },
-      "keyFrame": 20
-    },
-    {
-      "id": "question",
-      "role": "pivot",
-      "layout": "STAGE",
-      "fromFrame": 69,
-      "toFrame": 171,
-      "uses": [
-        "sofa"
-      ],
-      "face": "off",
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "none"
-      },
-      "keyFrame": 151
-    },
-    {
-      "id": "skeletons",
-      "role": "pivot",
-      "layout": "STAGE",
-      "fromFrame": 171,
-      "toFrame": 240,
-      "uses": [
-        "closet"
-      ],
-      "face": "off",
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "none"
-      },
-      "keyFrame": 239
+      "keyFrame": 210
     }
   ],
   "objects": [
     {
-      "obj": "sofa",
-      "device": "scene_plate",
-      "meaning": "the missing money: a fistful of cash and old receipts pulled out from the back of the sofa (Krish, 19 Nov: \"money back down the back of couches\")",
-      "fromFrame": 69,
-      "toFrame": 171,
-      "variants": {},
-      "params": {
-        "shots": [
-          {
-            "src": "/home/user/content-engine/.cache/fri20/assets/plates/b4-sofa-money-916.mp4",
-            "kind": "video",
-            "width": 1080,
-            "height": 1920
-          }
-        ],
-        "camera": "push",
-        "full": true,
-        "grade": "none"
-      }
-    },
-    {
-      "obj": "closet",
-      "device": "scene_plate",
-      "meaning": "the skeletons in your closet: a cupboard bursts open and a skeleton tumbles out with the old files (the clip starts at 2.1 s, once a box printed with a year has turned away, and holds its last frame: no year the piece does not own) (Krish, 19 Nov: \"skeletons coming out of closets\")",
-      "fromFrame": 171,
-      "toFrame": 240,
-      "variants": {},
-      "params": {
-        "shots": [
-          {
-            "src": "/home/user/content-engine/.cache/fri20/assets/plates/b4-closet-skeleton-916-from2s1.mp4",
-            "kind": "video",
-            "width": 1080,
-            "height": 1920
-          }
-        ],
-        "camera": "push",
-        "full": true,
-        "grade": "none"
-      }
-    },
-    {
-      "obj": "s_face_slam0",
-      "device": "slam_word",
-      "meaning": "his own word slammed as he says it: archives (everyone's, right now)",
+      "obj": "k_billed",
+      "device": "kinetic_stat",
+      "meaning": "the bill as the hospital first sent it: $195,000 (his account, Tom's Hardware)",
       "fromFrame": 0,
-      "toFrame": 69,
+      "toFrame": 262,
       "variants": {},
       "params": {
-        "word": "ARCHIVES",
-        "tapeText": "EVERYONE'S, RIGHT NOW",
+        "panel": true,
+        "prefix": "$",
+        "group": true,
+        "hero": true,
         "place": {
           "left": 135,
-          "top": 230,
+          "top": 270,
           "width": 1080,
           "height": 480,
           "scale": 0.75
         }
+      },
+      "dataset": {
+        "unit": "USD, the hospital's first bill",
+        "denominator": null,
+        "producerLabel": "Tom's Hardware, 29 Oct 2025 (the family's account)",
+        "rows": [
+          {
+            "label": "billed",
+            "value": 195000
+          }
+        ]
       }
     },
     {
-      "obj": "s_face_slam1",
-      "device": "slam_word",
-      "meaning": "his own word slammed as he says it: teams (hospitals pay whole teams)",
+      "obj": "strike",
+      "device": "scribble",
+      "meaning": "a hand-drawn line through \"$195,000\" as he says \"fraction\"",
       "fromFrame": 0,
-      "toFrame": 69,
+      "toFrame": 262,
       "variants": {},
       "params": {
-        "word": "TEAMS",
-        "tapeText": "HOSPITALS PAY WHOLE TEAMS",
+        "colour": "mint",
+        "seed": "fri20",
+        "shape": "underline",
+        "from": [
+          230,
+          135
+        ],
+        "to": [
+          850,
+          130
+        ],
         "place": {
           "left": 135,
-          "top": 230,
-          "width": 1080,
-          "height": 480,
-          "scale": 0.75
-        }
-      }
-    },
-    {
-      "obj": "s_face_slam2",
-      "device": "slam_word",
-      "meaning": "his own word slammed as he says it: chatbot (a chatbot beat them)",
-      "fromFrame": 0,
-      "toFrame": 69,
-      "variants": {},
-      "params": {
-        "word": "CHATBOT",
-        "tapeText": "A CHATBOT BEAT THEM",
-        "place": {
-          "left": 135,
-          "top": 230,
+          "top": 270,
           "width": 1080,
           "height": 480,
           "scale": 0.75
@@ -339,53 +261,25 @@
   ],
   "events": [
     {
-      "id": "face-0",
-      "obj": "s_face_slam0",
+      "id": "hook-0",
+      "obj": "k_billed",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 0
     },
     {
-      "id": "face-1",
-      "obj": "s_face_slam0",
-      "verb": "exit",
-      "toState": "visible",
-      "atFrame": 0
+      "id": "hook-1",
+      "obj": "k_billed",
+      "verb": "count_to",
+      "toState": "billed",
+      "atFrame": 19
     },
     {
-      "id": "face-2",
-      "obj": "s_face_slam1",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 0
-    },
-    {
-      "id": "face-3",
-      "obj": "s_face_slam1",
-      "verb": "exit",
-      "toState": "visible",
-      "atFrame": 33
-    },
-    {
-      "id": "face-4",
-      "obj": "s_face_slam2",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 36
-    },
-    {
-      "id": "question-0",
-      "obj": "sofa",
-      "verb": "enter",
-      "toState": "0",
-      "atFrame": 69
-    },
-    {
-      "id": "skeletons-0",
-      "obj": "closet",
-      "verb": "enter",
-      "toState": "0",
-      "atFrame": 171
+      "id": "hook-2",
+      "obj": "strike",
+      "verb": "draw",
+      "toState": "strike",
+      "atFrame": 240
     }
   ],
   "motion": {
