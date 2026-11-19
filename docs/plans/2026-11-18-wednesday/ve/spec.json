@@ -401,8 +401,8 @@
    "device": "logo_card",
    "meaning": "the three tools Anthropic pays for: Salesforce, Fin and Workday",
    "persist": {
-    "from_beat": "hook",
-    "to_beat": "hook"
+    "from_beat": "marks",
+    "to_beat": "marks"
    },
    "params": {
     "logos": [
@@ -419,15 +419,16 @@
    }
   },
   {
-   "obj": "l_maker",
-   "device": "query_chip",
-   "meaning": "the twist up front: the company that makes the AI pays others for its tools",
+   "obj": "l_crazy",
+   "device": "slam_word",
+   "meaning": "his own verdict lands on his first breath: the AI maker buying its tools is crazy",
    "persist": {
     "from_beat": "hook",
     "to_beat": "hook"
    },
    "params": {
-    "text": "THE MAKER OF CLAUDE PAYS FOR ITS TOOLS"
+    "word": "CRAZY",
+    "tapeText": "THE AI MAKER BUYS ITS TOOLS"
    }
   },
   {
@@ -1938,49 +1939,55 @@
      "role": "hook",
      "span": {
       "from_w": 0,
-      "to_w": 29
+      "to_w": 10
      },
      "viewer_task": "locate_story",
-     "point": "Anthropic, which makes Claude, pays other companies for its tools",
+     "point": "The AI maker buying its own tools is crazy",
      "layout": "WINDOW",
      "plate": {
       "source": "take"
      },
      "uses": [
-      "l_maker",
-      "l_marks"
+      "l_crazy"
      ],
      "events": [
       {
        "at_w": 0,
-       "obj": "l_maker",
+       "obj": "l_crazy",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 7,
-       "obj": "l_maker",
-       "verb": "highlight",
-       "to_state": "CLAUDE",
+       "at_w": 10,
+       "obj": "l_crazy",
+       "verb": "exit",
+       "to_state": "dim",
        "silent": true
-      },
+      }
+     ],
+     "transition_out": "cut",
+     "face": "window"
+    },
+    {
+     "id": "marks",
+     "role": "anchor",
+     "span": {
+      "from_w": 11,
+      "to_w": 53
+     },
+     "viewer_task": "locate_story",
+     "point": "Anthropic, which everyone builds with, pays other companies for its tools",
+     "layout": "WINDOW",
+     "plate": {
+      "source": "take"
+     },
+     "uses": [
+      "l_marks"
+     ],
+     "events": [
       {
        "at_w": 11,
-       "obj": "l_maker",
-       "verb": "highlight",
-       "to_state": "PAYS",
-       "silent": true
-      },
-      {
-       "at_w": 15,
-       "obj": "l_maker",
-       "verb": "exit",
-       "to_state": "gone",
-       "silent": true
-      },
-      {
-       "at_w": 16,
        "obj": "l_marks",
        "verb": "enter",
        "to_state": "visible",
@@ -2006,6 +2013,27 @@
        "verb": "highlight",
        "to_state": "2",
        "silent": true
+      },
+      {
+       "at_w": 37,
+       "obj": "l_marks",
+       "verb": "highlight",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 45,
+       "obj": "l_marks",
+       "verb": "highlight",
+       "to_state": "1",
+       "silent": true
+      },
+      {
+       "at_w": 52,
+       "obj": "l_marks",
+       "verb": "highlight",
+       "to_state": "2",
+       "silent": true
       }
      ],
      "transition_out": "cut",
@@ -2015,8 +2043,8 @@
      "id": "croc",
      "role": "anchor",
      "span": {
-      "from_w": 30,
-      "to_w": 84
+      "from_w": 54,
+      "to_w": 88
      },
      "viewer_task": "locate_story",
      "point": "Your in-house builder now feels like the Crocodile Hunter",
@@ -2029,30 +2057,9 @@
      ],
      "events": [
       {
-       "at_w": 30,
-       "obj": "l_croc",
-       "verb": "enter",
-       "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 37,
-       "obj": "l_croc",
-       "verb": "move",
-       "to_state": "1",
-       "silent": true
-      },
-      {
-       "at_w": 45,
-       "obj": "l_croc",
-       "verb": "move",
-       "to_state": "2",
-       "silent": true
-      },
-      {
        "at_w": 54,
        "obj": "l_croc",
-       "verb": "move",
+       "verb": "enter",
        "to_state": "0",
        "silent": true
       },
@@ -2092,7 +2099,7 @@
      "id": "face",
      "role": "bridge",
      "span": {
-      "from_w": 85,
+      "from_w": 89,
       "to_w": 118
      },
      "viewer_task": "connect_with_speaker",

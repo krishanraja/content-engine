@@ -105,6 +105,14 @@
       "on": "2026-11-18",
       "artifact_hash": "a0e5f55e426ce8ece7578aa9ebb696d1736c9bcf51357fd69e11d64a804cefad",
       "said": "You need to stop making me approve and just fix this until it's done. I refuse to say \"approve engine\" ever again. If you know that things need fixing, just fucking fix them"
+    },
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "on": "2026-11-19",
+      "artifact_hash": "19e5124d1881ddc2abf3275ec3ad1ff32cc32c825589aa19e6cf045ace18d1bb",
+      "said": "go engine 19e5124d, go both proofs, go the third fact-gate run"
     }
   ]
 }

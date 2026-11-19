@@ -18,7 +18,7 @@ Bills going up and building that feels like magic: no wonder the engineer in you
 
 We went digging into the companies that actually did it, and the stories shrink when you read past the headline.
 
-Start with Klarna, the buy now, pay later app. The headlines said Klarna had switched off Salesforce, the software sales teams use to track every customer, and Workday, the software that runs pay and holidays, and put AI in their place. FullStack HR's read "Klarna ditches Workday for AI." Then Klarna's chief executive, Sebastian Siemiatkowski, went online to correct it. "I don't think it is the end of Salesforce; might be the opposite," he wrote. "So no, we did not replace SaaS with an LLM." (SaaS is rented online software; an LLM is an AI model like Claude.)
+Start with Klarna, the shopping and payments app. Klarna stopped using Salesforce, the software sales teams use to track every customer, and Workday, the software that runs pay and holidays. FullStack HR's headline read "Klarna ditches Workday for AI." Klarna's chief executive, Sebastian Siemiatkowski, answered on X. "I don't think it is the end of Salesforce; might be the opposite," he wrote. "So no, we did not replace SaaS with an LLM." (SaaS is rented online software; an LLM is an AI model like Claude.)
 
 Klarna told CX Today on 11 December 2024 that it uses Deel, another app it rents, as its HR platform. For its customer records it pulled together other rented apps. It still uses Slack for chat, and Salesforce owns Slack. So Klarna mostly swapped rented software for different rented software, plus one important part it built itself.
 

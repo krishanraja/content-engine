@@ -309,6 +309,13 @@ def inputs_from_props(props: dict) -> dict:
             page['split'] = True
         if props.get('captionTheme') and style != 'word':
             page['themed'] = True
+            if props.get('captionTheme') == 'rack-focus' and aspect == '16:9' and beat.get('layout') != 'SPLIT':
+                # rack-focus sets its pages left and lifted 30 px (captions/styles/rack-focus.tsx), so on the wide cut
+                # they start left of the house box and drop below it: the Wed 18 long proof (19 Nov) drew them at
+                # x 190 to 1110, y 930 to 1000, and the house box (260, 773, 1400, 187) cut off the first letters and
+                # the descenders. Read the band they are drawn in, stopping short of the bottom-right face window
+                # (layouts windowCameraBox, x 1452).
+                page['region'] = (120, 860, 1320, 190)
         x, y, w, h = qc_faces.caption_box(page, style, aspect, region, layout=beat.get('layout'),
                                          plate=(beat.get('plate') or {}).get('source'))
         width, height = (1080, 1920) if aspect == '9:16' else (1920, 1080)
