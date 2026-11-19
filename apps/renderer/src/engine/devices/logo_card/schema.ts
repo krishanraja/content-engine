@@ -17,6 +17,8 @@ export const ParamsSchema = z.object({
     try { resolveLogo(id); return true } catch { return false }
   }, 'Logo needs an approved mark in config/logo-registry.json') }).strict()).min(1).max(6),
   tiles: z.literal(true).optional(),
+  /** One or two logos size their tiles to their own columns (Wed 18, 18 Nov 2026). */
+  fit: z.literal(true).optional(),
   label: z.string().min(1).max(100).optional(),
 }).strict().superRefine((params, ctx) => {
   if (!params.tiles && params.logos.length > 4) {

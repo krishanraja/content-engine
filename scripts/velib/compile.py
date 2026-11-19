@@ -309,6 +309,9 @@ _WEAK_ENDS = {'a', 'an', 'the', 'to', 'of', 'in', 'on', 'for', 'and', 'but', 'or
               'its', 'it', 'i', 'you', 'we', 'they', 'is', 'are', 'was', 'be', 'once', 'that', 'this', 'no', 'not',
               'with', 'at', 'by', 'as', 'if', 'how', 'just', 'can', 'will'}
 _END = re.compile(r'[.!?]["\x27)\u2019\u201d]*$')
+# The words the on-screen phrase check (config/ve/onscreen-checks.json, captions.opens_phrase) refuses at the start of a
+# page that follows a page with no closing punctuation (Wed 18, 19 Nov 2026: six pages broke there).
+_OPENS_PHRASE = {'a', 'an', 'the', 'of', 'to', 'my', 'your', 'our', 'their', 'his', 'her', 'its'}
 _PAUSE = re.compile(r'[,.!?;:]["\x27)\u2019\u201d]*$')
 
 
@@ -320,7 +323,10 @@ def _page_cost(rows: list[dict], start: int, n: int) -> int:
     if any(_END.search(r['text']) for r in page[:-1]):
         cost += 6   # a page runs past the end of a sentence ("myself. I just put")
     if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in _WEAK_ENDS:
-        cost += 4   # it ends mid-phrase on a small word
+        cost += 12  # it ends mid-phrase on a small word: break anywhere else that reads
+    if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and \
+            re.sub(r'[^a-z\']', '', rows[start + n]['text'].lower()) in _OPENS_PHRASE:
+        cost += 12  # the next page opens on an article or possessive, the half of a phrase ("can't | your pay")
     if any(_PAUSE.search(r['text']) for r in page[:-1]):
         cost += 3   # a clause break inside the page ("Netflix for your evenings, Google")
     if not _held(rows, start + n):
@@ -671,7 +677,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
         **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
-        **({'titleMoment': {k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}} if moment else {}),
+        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')},
+                            **({'card': True} if (spec.get('title_moment') or {}).get('card') else {})}} if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
     if sting:

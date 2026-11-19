@@ -22,6 +22,7 @@ export const MARK_BOUNDS: Record<string, { canvas: [number, number, number, numb
   'deel-logo.svg': { canvas: [0, 0, 78, 27], drawn: [0, 0, 77.998, 26.411] },
   'slack-symbol.svg': { canvas: [0, 0, 270, 270], drawn: [73.6, 73.6, 122.8, 122.8] },
   'klarna-logo.svg': { canvas: [0, 0, 91, 22], drawn: [0, 0, 90.68, 22] },
+  'fin-logo.svg': { canvas: [0, 0, 65, 40], drawn: [0.632, 2.906, 63.735, 34.248] },
 }
 
 export function Mark({ id, size }: { id: string; size: number }) {
