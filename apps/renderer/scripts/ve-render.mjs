@@ -239,7 +239,9 @@ async function main() {
         renderChunk: (start, end, file) => renderMedia({ ...common, outputLocation: file, codec: 'h264', crf: 18, scale,
           frameRange: [start, end], muted: true }) })
       const sound = path.join(temporary, 'sound.wav')
-      await renderMedia({ ...common, outputLocation: sound, codec: 'wav' })
+      // One tab for the sound pass: it plays the whole cut, and two tabs over a five-minute cut ran out of memory (Wed 18,
+      // 19 Nov 2026: the browser was killed after every chunk had rendered).
+      await renderMedia({ ...common, outputLocation: sound, codec: 'wav', concurrency: 1 })
       await joinChunks(files, raw, { audio: sound, temporary })
     } else {
       await renderMedia({ ...common, outputLocation: raw, codec: 'h264', crf: 18, scale })
