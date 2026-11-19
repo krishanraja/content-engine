@@ -1,0 +1,279 @@
+{
+  "schema": "ve-proof/1",
+  "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+  "cut": "short",
+  "beat": "question",
+  "rule": "named in the spec (proof.beat)",
+  "start": 16.533,
+  "end": 24.533,
+  "beat_s": [
+    16.967,
+    24.1
+  ],
+  "sha256": "e2b86308639c43b7ad6c9bb3f7bab0cd9a6d42172dac33aac94ccd3facceaebf",
+  "spec_sha256": "5a41aded8e40bacf87f96e22f415c9360ac3f793fef9e1141c0001851cf31b2c",
+  "structure": {
+    "format": "face-with-proof",
+    "aspect": "9:16",
+    "motion": "ai-music-slam",
+    "objects": [
+      [
+        "chip_billed",
+        "query_chip"
+      ],
+      [
+        "chip_caveat",
+        "query_chip"
+      ],
+      [
+        "chip_given",
+        "query_chip"
+      ],
+      [
+        "chip_hours",
+        "query_chip"
+      ],
+      [
+        "chip_last",
+        "query_chip"
+      ],
+      [
+        "chip_next",
+        "query_chip"
+      ],
+      [
+        "closet",
+        "scene_plate"
+      ],
+      [
+        "closet2",
+        "scene_plate"
+      ],
+      [
+        "invoices",
+        "scene_plate"
+      ],
+      [
+        "k_after",
+        "kinetic_stat"
+      ],
+      [
+        "k_billed",
+        "kinetic_stat"
+      ],
+      [
+        "sofa",
+        "scene_plate"
+      ],
+      [
+        "steak",
+        "scene_plate"
+      ],
+      [
+        "strike",
+        "scribble"
+      ],
+      [
+        "th_head",
+        "evidence_card"
+      ],
+      [
+        "th_lede",
+        "evidence_card"
+      ]
+    ],
+    "beats": [
+      [
+        "hook",
+        "SPLIT",
+        [
+          "chip_hours",
+          "k_billed",
+          "strike"
+        ]
+      ],
+      [
+        "face",
+        "F1",
+        []
+      ],
+      [
+        "question",
+        "STAGE",
+        [
+          "closet",
+          "sofa"
+        ]
+      ],
+      [
+        "proof",
+        "SPLIT",
+        [
+          "th_head"
+        ]
+      ],
+      [
+        "lines",
+        "SPLIT",
+        [
+          "th_lede"
+        ]
+      ],
+      [
+        "code",
+        "SPLIT",
+        [
+          "chip_billed",
+          "chip_given"
+        ]
+      ],
+      [
+        "steak",
+        "STAGE",
+        [
+          "steak"
+        ]
+      ],
+      [
+        "fell",
+        "SPLIT",
+        [
+          "chip_caveat",
+          "k_after"
+        ]
+      ],
+      [
+        "love",
+        "F1",
+        []
+      ],
+      [
+        "hindsight",
+        "SPLIT",
+        [
+          "chip_last",
+          "chip_next"
+        ]
+      ],
+      [
+        "whose",
+        "F1",
+        []
+      ],
+      [
+        "closet",
+        "STAGE",
+        [
+          "closet2"
+        ]
+      ],
+      [
+        "yours",
+        "F1",
+        []
+      ],
+      [
+        "act",
+        "STAGE",
+        [
+          "invoices"
+        ]
+      ],
+      [
+        "close",
+        "F1",
+        []
+      ]
+    ]
+  },
+  "style_module": "ai-music-slam",
+  "props_sha256": "b7af1db3944ea896526d714da6ea3ff689589bb26552ff820e5d36339aa7ba00",
+  "qc": {
+    "measured_pass": false,
+    "complete": false,
+    "failing": [
+      "audio.bed",
+      "audio.bed_continuity",
+      "beats.one_carrier",
+      "captions.phrase_breaks",
+      "composition"
+    ]
+  },
+  "type": [
+    [
+      "data",
+      "card"
+    ],
+    [
+      "display",
+      "card"
+    ],
+    [
+      "structure",
+      "caption"
+    ]
+  ],
+  "engine_sha256": "fb86c48cb5277eeaa04425fd9e87cdff5b76d6314255ea91ab285a371a609a97",
+  "assets_sha256": {
+    "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
+    "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
+    "b4-sofa-money-916": "70925eebe73d3091240c2d21f8f24cc4937089288bf5f6b886471c2887be8e91",
+    "b8-steak-sandwich-916": "e52fe36f8689265de819718e02dde06aabfa8bbe9e8c6709a4cf26f803ed974a",
+    "harvard-krafton": "bfc65217229236171fec3bd8ae3c74e545644a757bd0d6fd4572a079566c2fad",
+    "long-invoices-169": "9593884f0b16a2f1db4efdfe0509a906cc6c2f2ad4c89bb9e788ea1c8847feec",
+    "long-master": "7afaed9a75286aacb86737eae6b247dd9c5227b47871b9cc58ff57af91c310ca",
+    "long-sofa-money-169": "1212452354fc877ce8cdec2411c6db71b6e3684ffd2dae5c313bfef43d5f60cf",
+    "nbc-dana": "04bd5985213216d4627231eaa4575689cdb6ec5cbf949c9af8bd3ba40efaeb94",
+    "short-master": "baf5f1d2a3e8d010b72ac8a73e60b7d5d412f90f4b3445c96899bf352794d98f",
+    "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
+    "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
+  },
+  "made_at": "2026-11-19T10:44:14Z",
+  "frames": {
+    "pass": false,
+    "status": "ok",
+    "problems": [
+      {
+        "check": "plain_dark",
+        "beat": "proof",
+        "frame": 234,
+        "band": [
+          0,
+          252
+        ],
+        "says": "beat proof, frame 234: a plain dark band, rows 0 to 252 (252 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "proof",
+        "frame": 238,
+        "band": [
+          0,
+          241
+        ],
+        "says": "beat proof, frame 238: a plain dark band, rows 0 to 241 (241 px), no detail"
+      }
+    ],
+    "frames": 10
+  },
+  "compare": {
+    "against": "e2b86308639c43b7ad6c9bb3f7bab0cd9a6d42172dac33aac94ccd3facceaebf",
+    "reasons": [
+      "an asset changed since the proof he approved (harvard-krafton, long-invoices-169, long-master, long-sofa-money-169 and more)"
+    ],
+    "compared": null,
+    "sheet": "compare.short.png",
+    "sha256": "10603cb4bb1a4999ae84ab0dd8dcd4a1785136c346ec9b53ef9866e715cb08b8",
+    "seconds": [
+      0.5,
+      1.5,
+      2.5,
+      3.5,
+      4.5,
+      5.5,
+      6.5,
+      7.5
+    ]
+  },
+  "sendable": false
+}

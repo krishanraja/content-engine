@@ -1,0 +1,67 @@
+[
+ {
+  "severity": "note",
+  "area": "l_code",
+  "text": "Crop checked on shots/tomshw.png (sha256 bdd1e519..., matches the spec). th_lede and l_lede {x 0.13, y 0.755, w 0.5, h 0.095}, aspect 7.4854, equal to sourceAspectRatio, show only the standfirst (\"But the first step is getting the medical institution to properly break down all the items on the bill.\"): no tape photo and no clipped byline. th_head and l_head are the unchanged headline crop."
+ },
+ {
+  "severity": "note",
+  "area": "l_krafton",
+  "text": "Crop checked on shots/harvard-krafton.png (sha256 bfc65217..., matches the spec). {x 0.15, y 0.415, w 0.49, h 0.255}, aspect 2.732 against a declared 2.7329, shows the opinion's first paragraph whole: no sidebar, no logos, no X button. Every figure (March 16, 2026; $250 million; 258 days) is printed on the page. Two things to watch in the render. First, it is twelve lines of small justified text on the wide stage: the marks must carry the eye, and a viewer cannot read it all in the beat. Second, the page's own headline is no longer in the crop, so the card's outlet line is what names the source. The beat now also has the harvard-krafton backdrop, blurred at focus 1."
+ },
+ {
+  "severity": "note",
+  "area": "l_tenant",
+  "text": "Crop checked on shots/upworthy-tenant.png (sha256 3c6f19cb..., matches the spec). {x 0.03, y 0.1, w 0.62, h 0.28}, aspect 3.1488 against a declared 3.1492, shows the headline and the full standfirst (\"deducted over $600\"): no cut word, no byline, no Google button."
+ },
+ {
+  "severity": "note",
+  "area": "l_dana",
+  "text": "Crop unchanged and clean: headline and standfirst, no figure, no logo. The card date \"Jan 2024\" is not on the screenshot, so confirm it against the article. His \"1999\" (w615) is owned by his words, but the mark there points at a card that does not print it. The beat now also has the nbc-dana backdrop, blurred at focus 1."
+ },
+ {
+  "severity": "note",
+  "area": "l_michelin",
+  "text": "Now the short's steak clip b8-steak-sandwich-916.mp4 (sha256 e52fe36f..., matches the spec) on the wide stage (full: false). The bill reads STEAK and shows no price, and long-michelin-169.mp4 is gone from the spec. He says \"Michelin star restaurant meal ... served at McDonald's\" over a picture of steak and a sandwich. The picture now shows the same gap in different objects, so it no longer echoes his words, and no brand is shown. Whether the steak picture stays in either cut is still Krish's decision: keep it as the gold-moment picture, or let his face and captions carry the line."
+ },
+ {
+  "severity": "note",
+  "area": "l_question",
+  "text": "Generated plates in the spec are now six files: in each cut a sofa clip, an invoices still and the shared from2s1 closet clip, plus the shared steak clip. long-sofa-money-169 has no legible denomination. Both invoices pictures print \"INVOICES 2025\", which follows from his \"last year's invoices\". from2s1 has no year; check in the render that it holds its last frame and never loops. On short beat skeletons it runs from w53 to the next beat at w62, about 3.7 s, against the clip's 3.96 s. No plate shows an unowned figure."
+ },
+ {
+  "severity": "note",
+  "area": "code",
+  "text": "Short beat code: chip_billed \"CODE BILLED: THE DEARER ONE\" and chip_given \"CARE GIVEN: LESS\" restate w91-107 and add no source, number or changed word (visuals-add-not-repeat, an open learning). With the steak plate straight after, the gap is drawn twice. Krish's call."
+ },
+ {
+  "severity": "note",
+  "area": "question",
+  "text": "Short: only the skeleton half of the object recurs (skeletons, closet, and the skeleton hand on act). The sofa appears once, on question, and is not there on beat fell. The long cut pays it off with l_money then l_both. Krish's call whether the short needs it."
+ },
+ {
+  "severity": "note",
+  "area": "fell",
+  "text": "$33,000 is owned (dataset bill-after and the tomshw headline) and sits beside the caveat chip in both cuts. Some outlets report $37,000; the spec follows Tom's Hardware."
+ },
+ {
+  "severity": "note",
+  "area": "hook",
+  "text": "Backdrops on this revision: only the short's proof, lines and fell are STAGE over the tomshw page. Each uses a device, so backdropFocus keeps the page at focus 1, and in my PIL simulation (an approximation, not the renderer) no figure, date or logo on it is legible. Every other evidence, number or chip beat in both cuts is WINDOW with his take and no backdrop: short hook, code and hindsight; long hook, proof, l_code, l_fell, l_tenant, l_hindsight, l_twist, l_dana and l_krafton. So the upworthy-tenant, nbc-dana and harvard-krafton pages appear only as their sharp evidence crops, which I checked earlier. In the proof render, check card and caption contrast on the short's graded page."
+ },
+ {
+  "severity": "note",
+  "area": "hook",
+  "text": "My earlier hook note is answered: both hooks are WINDOW with his face and the number beside it, so the opening is on his face, as The Ladder sets it. Long beats with a dense card next to the bottom-right window, chiefly l_krafton's twelve-line paragraph, should be checked in the proof for card size against the window (pre_show_checklist key_figure_fills_frame). That is layout, not a figure."
+ },
+ {
+  "severity": "note",
+  "area": "skeletons",
+  "text": "The one_carrier split checks out on this revision. question (w44-52, sofa) is followed by skeletons (w53-61, closet); l_question (w79-88, l_sofa) by l_skeletons (w89-96, l_closet); and l_money (w740-742, l_sofa2) by l_both (w743-746, l_closet3). Each beat carries one picture that enters on its first word, every object's persist names its own new beat, and no word in either cut is left out of a beat or covered twice. Each picture now meets its own half of the line, money on \"missing money\" and the cupboard on \"skeletons\", which reads more clearly than before. One thing to see in the proof: the title moment (short w45-59, long w79-93) now spans the sofa-to-cupboard cut, so the title card holds over both pictures. It did before too, inside one beat. That is layout, not a figure, and no figure changed."
+ },
+ {
+  "severity": "note",
+  "area": "audio",
+  "text": "The bed change touches neither question. audio.bed.ledger_id is now make-up-your-mind-instrumental for both cuts, an entry in config/music-library.json (Epidemic Sound, licence_id epidemic-sound-safelist-2026-10-12). Nothing else changed: no beat, picture, crop, chip or dataset row. The bed's steadiness is ve qc's to measure, not mine."
+ }
+]

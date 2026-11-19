@@ -1,0 +1,340 @@
+{
+ "raw_seconds": 382.91,
+ "restarts": [
+  {
+   "at": 20.9,
+   "said": "Radiologists are already being outsmarted by the day and I reckon your Finance."
+  },
+  {
+   "at": 28.4,
+   "said": "Radiologists are already being outsmarted by the day and I reckon your finance lead has an invoice folder. No one's reopened since."
+  },
+  {
+   "at": 40.2,
+   "said": "Radiologists are being outsmarted by the day already and I reckon your finance lead has a folder in..."
+  },
+  {
+   "at": 76.02,
+   "said": "His brother-in-law's health cover had just run out two months before so the family basically owed"
+  },
+  {
+   "at": 163.11,
+   "said": "It says what it says, and the rules should have..."
+  },
+  {
+   "at": 167.19,
+   "said": "It says what it says, and the rules it should have followed are written down. So every AI..."
+  },
+  {
+   "at": 186.35,
+   "said": "Ask it about..."
+  },
+  {
+   "at": 215.19,
+   "said": "So if I were you I'd give AI last year's supplier invoices and the contracts behind them or if in your personal life your"
+  },
+  {
+   "at": 225.67,
+   "said": "So I would give AI last year's invoices subscriptions and contracts behind them and it will find a lot of glitches and a lot of"
+  },
+  {
+   "at": 247.07,
+   "said": "And if you're a business, here's the twist. To your customers, you are the hospital."
+  },
+  {
+   "at": 282.21,
+   "said": "He used software image."
+  },
+  {
+   "at": 291.95,
+   "said": "Some went back to 1999."
+  },
+  {
+   "at": 324.39,
+   "said": "It owed that studio as founders a huge bonus."
+  }
+ ],
+ "silences_cut": 41,
+ "kept_seconds": 272.34,
+ "cap_seconds": null,
+ "speed": 1.0,
+ "final_seconds": 272.34,
+ "over_cap": false,
+ "keep": [
+  [
+   0.0,
+   13.3
+  ],
+  [
+   14.28,
+   19.68
+  ],
+  [
+   44.96,
+   53.54
+  ],
+  [
+   54.52,
+   60.08
+  ],
+  [
+   61.44,
+   62.18
+  ],
+  [
+   64.28,
+   75.52
+  ],
+  [
+   80.84,
+   112.22
+  ],
+  [
+   113.18,
+   144.99
+  ],
+  [
+   145.99,
+   147.55
+  ],
+  [
+   148.71,
+   152.35
+  ],
+  [
+   153.17,
+   163.11
+  ],
+  [
+   175.51,
+   180.15
+  ],
+  [
+   180.85,
+   186.35
+  ],
+  [
+   189.75,
+   197.77
+  ],
+  [
+   199.37,
+   204.67
+  ],
+  [
+   205.75,
+   212.43
+  ],
+  [
+   213.15,
+   215.19
+  ],
+  [
+   235.95,
+   244.65
+  ],
+  [
+   254.63,
+   256.67
+  ],
+  [
+   257.49,
+   265.01
+  ],
+  [
+   266.65,
+   271.75
+  ],
+  [
+   272.41,
+   277.81
+  ],
+  [
+   278.53,
+   282.21
+  ],
+  [
+   285.13,
+   291.15
+  ],
+  [
+   294.71,
+   303.69
+  ],
+  [
+   304.41,
+   312.91
+  ],
+  [
+   313.65,
+   317.01
+  ],
+  [
+   318.11,
+   322.07
+  ],
+  [
+   333.17,
+   339.29
+  ],
+  [
+   340.09,
+   343.93
+  ],
+  [
+   344.89,
+   353.15
+  ],
+  [
+   353.99,
+   357.47
+  ],
+  [
+   358.17,
+   366.83
+  ],
+  [
+   367.77,
+   382.91
+  ]
+ ],
+ "keep_session": [
+  [
+   0.0,
+   13.3
+  ],
+  [
+   14.05,
+   19.68
+  ],
+  [
+   44.96,
+   53.54
+  ],
+  [
+   55.3,
+   60.08
+  ],
+  [
+   61.44,
+   62.18
+  ],
+  [
+   67.7,
+   75.75
+  ],
+  [
+   80.84,
+   112.22
+  ],
+  [
+   112.7,
+   144.99
+  ],
+  [
+   145.99,
+   147.55
+  ],
+  [
+   148.71,
+   152.35
+  ],
+  [
+   153.17,
+   163.11
+  ],
+  [
+   175.51,
+   180.15
+  ],
+  [
+   180.85,
+   186.35
+  ],
+  [
+   189.75,
+   198.15
+  ],
+  [
+   199.37,
+   204.67
+  ],
+  [
+   205.75,
+   212.43
+  ],
+  [
+   213.15,
+   215.66
+  ],
+  [
+   236.86,
+   244.65
+  ],
+  [
+   254.63,
+   257.3
+  ],
+  [
+   257.49,
+   265.01
+  ],
+  [
+   266.65,
+   271.95
+  ],
+  [
+   272.05,
+   277.81
+  ],
+  [
+   278.2,
+   282.1
+  ],
+  [
+   285.13,
+   291.15
+  ],
+  [
+   294.71,
+   303.69
+  ],
+  [
+   304.41,
+   312.91
+  ],
+  [
+   313.65,
+   317.01
+  ],
+  [
+   318.11,
+   322.07
+  ],
+  [
+   333.17,
+   339.29
+  ],
+  [
+   340.09,
+   343.93
+  ],
+  [
+   344.89,
+   353.15
+  ],
+  [
+   353.3,
+   357.47
+  ],
+  [
+   357.85,
+   366.83
+  ],
+  [
+   367.77,
+   382.91
+  ]
+ ],
+ "keep_session_note": "19 Nov produce session: 9 plan boundaries moved off words or onto quiet (Hospitals, will, this is horrible, analyzing, To your, Sholto, research./He, and two 'So' kept that are joined to the next word); and after hearing the cut: the first 'So here's how this happened. A man who got' restart out, 'price list.' and 'hospital's.' kept whole, 'Claude did not care' kept with its 'Claude'; 'list' and 'So' run together, so the join keeps that first 'So' and enters on 'I'd give' (quiet at -42 dB), dropping the second 'So'"
+}
