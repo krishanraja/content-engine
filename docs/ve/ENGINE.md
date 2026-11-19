@@ -210,6 +210,14 @@ never a pass. Already measured before and unchanged: `captions.off_face`, `plate
 the R128 bed shape. To add a row for the next fault: the header of the config file (a block with his words, one pure function in
 `qc_frames.py`, a good and a bad case in `tests/ve_frame_checks_test.py`, a `config/failures.json` entry naming that test).
 
+## QC rows that measure what a viewer sees (19 Nov 2026)
+
+Krish, of the habits short that passed every gating row and was still NOT READY: "fix the ve qc rows that fail cuts which are actually fine, so a cut in the art-directed caption style can pass the library's filing gate". No bar was lowered.
+- **captions.ocr and captions.render, art-directed.** The stack hangs above the house caption box by the cut's tallest page (`cutHeight`), so each art page is read in its own measured stack (`qc_captions.art_view`, the geometry `scripts/velib/plainframes.py` mirrors from `ArtDirectedCaption.tsx`), once its last word has landed and settled (`enterSeconds` plus one frame), and judged by its words in order (`qc_captions.in_order`). The only words forgiven are the ones the renderer draws there: this page's echo, and the previous page's echo and ghost. A missing, swapped or stray word still fails; the 0.98 bar is unchanged.
+- **captions.clock.** While `config/gates.json` says its tolerance is a placeholder, the row is measured and shown, never counted (advisory); it counts once the tolerance is measured.
+- **composition on generated pictures.** A word OCR finds on a `photo_plate` drawn from a still counts only at confidence 90 or more and four letters or more (`config/ve/qc-ocr.json`). Screen recordings, footage and type the engine draws over a picture keep the house rule.
+- **Not changed.** The close card's "Subscribe free" line measures 17 px against the house's 18 px floor; whether the card or the floor moves is Krish's call, so the row still fails.
+
 ## Hand-built composites
 
 A one-off composite (Ruling, Krish, 2026-11-10: "One-off composite") is built outside ve, so none of ve's gates see
