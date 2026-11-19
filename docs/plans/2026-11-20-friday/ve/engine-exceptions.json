@@ -108,6 +108,15 @@
    "on": "2026-11-19",
    "artifact_hash": "2b93dac645cf88a4c8e826109120582f31e48c5d120dce0cf0f466287d3960c0",
    "covers": "the title-lockup finding, completed: the wordmark rests tight under the first card, then under 'or', then under the second card as each lands, never floating over an empty gap"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "fix all five, this is absolute madness",
+   "on": "2026-11-19",
+   "artifact_hash": "cfcc1afcb874a54ae7acef3875ce8a36eb1a8433b5ff9787106a5a96fbad768c",
+   "covers": "the Critic's remaining findings on the same short: a scene plate's video waits on its first frame until its word (hold_s), so the money and the skeleton land 'at the right moments' as his standing note asks; art-directed caption words enter at 90% so none reads pale grey"
   }
  ]
 }

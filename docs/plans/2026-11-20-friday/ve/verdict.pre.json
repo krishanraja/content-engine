@@ -1,25 +1,30 @@
 {
   "schema": "ve-pre-critic/1",
   "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
-  "spec_sha256": "afd4ba93a93d7d881a18a254fd7432a71900dec14728088f1766cdd5549dcb1d",
+  "spec_sha256": "ed2aafc0dd6b4574f6522f0e3916955cebba8cf6e59199f7eb18a6011965b6ab",
   "cards": [],
   "reviewer": "reviewer subagent afe4d5bf6eef0d4e6",
-  "reviewed_at": "2026-11-19T18:54:31.033948+00:00",
+  "reviewed_at": "2026-11-19T19:48:29.601311+00:00",
   "answers": {
     "one_idea": {
       "pass": true,
-      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts. The hook's $195,000 panel moves up with his head and the line on 'fraction' keeps its place through the digits. The F1 slam beats, the money counters, the real pages held still and the sofa and closet plates are unchanged."
+      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts, and in the short the money now comes out on 'missing money' (sofa, hold 2.3 s, play at 19.28 s = w50) and the skeleton falls just before 'skeletons' (closet, hold 0.6 s, play at 20.96 s, word at 21.30 s), so the idea's two moves land on his words. The long cut's l_sofa still plays from 'Will', 2.0 s before 'missing'."
     },
     "no_invented_numbers": {
       "pass": true,
-      "line": "No invented figure. All four counters show only the bill-billed and bill-after rows (195,000 and 33,000) as money in the datasets' own unit (USD), with their source line. No slam word or tape has a digit, and the figures on th_head, l_lede and l_krafton are printed on their own pages. The placement change touches no figure."
+      "line": "No invented figure. The held first frame of the closet clip is after the turn that hides the year-printed box, so no year the piece does not own is on screen. All four counters show only bill-billed and bill-after (195,000 and 33,000). No slam word or tape has a digit, and the figures on th_head, l_lede and l_krafton are printed on their own pages."
     }
   },
   "findings": [
     {
+      "severity": "fix",
+      "area": "long l_question l_sofa",
+      "text": "l_sofa has no hold_s and plays 2.0 s before missing; measure the 16:9 clip and add a hold before the long render."
+    },
+    {
       "severity": "note",
-      "area": "short F1 beats and hook",
-      "text": "On the next render check one frame of each F1 beat: slam word and tapes clear of his head; hook panel clears his head and the underline crosses the middle of $195,000."
+      "area": "short skeletons closet",
+      "text": "Check on the next render that the fall reads on skeletons, not before."
     }
   ],
   "mechanical": [],

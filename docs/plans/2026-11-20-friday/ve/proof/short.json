@@ -10,7 +10,7 @@
     16.967,
     20.367
   ],
-  "sha256": "2f212643926415522f0d92bea5bc12b02ee1e9f347211e26b99706aeb3847f7a",
+  "sha256": "98caa8e32976b46a4defb6ec24ab0bd20541656a85c3110c457925e82c50be4f",
   "spec_sha256": "abe42dc14dcbe4631f7162e2c3caa5517f428140307d25fe9e2696242ec9cafb",
   "structure": {
     "format": "face-with-proof",
@@ -232,11 +232,11 @@
     ]
   },
   "style_module": "ai-music-slam",
-  "props_sha256": "5ee7096431d41c8a7ba74ca9c88150d5f4aad0d5e6870287a8ed712dc5f98d47",
+  "props_sha256": "43659e913ae8698bea16012ea56ef88c01b764a201ad644eb8dfc24fd83667c2",
   "title": {
     "in_main": false,
     "clip": "short.title.mp4",
-    "sha256": "8d51545562fc3e2f0dedd13788067b214924ee7fafe10b1e4c192bfbb76353e1",
+    "sha256": "c2cd95510ba768dac1c91702ca5ab4b76b7276a116491291df25ad17298709dd",
     "start": 15.933,
     "end": 26.1
   },
@@ -263,7 +263,7 @@
       "caption"
     ]
   ],
-  "engine_sha256": "2b93dac645cf88a4c8e826109120582f31e48c5d120dce0cf0f466287d3960c0",
+  "engine_sha256": "cfcc1afcb874a54ae7acef3875ce8a36eb1a8433b5ff9787106a5a96fbad768c",
   "assets_sha256": {
     "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
     "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
@@ -278,7 +278,7 @@
     "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
     "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
   },
-  "made_at": "2026-11-19T19:41:28Z",
+  "made_at": "2026-11-19T19:51:43Z",
   "frames": {
     "pass": true,
     "status": "ok",
@@ -286,13 +286,13 @@
     "frames": 11
   },
   "compare": {
-    "against": "9d02bc285f0650939bffd5725e34650bb72ec6d81ea3280556020a61fc5b85a7",
+    "against": "2f212643926415522f0d92bea5bc12b02ee1e9f347211e26b99706aeb3847f7a",
     "reasons": [
       "the engine changed since the proof he approved"
     ],
     "compared": null,
     "sheet": "compare.short.png",
-    "sha256": "e9988083e08cf62d65c60ce744312e4dca518eedd51c97bde43e7d0890e5fc1b",
+    "sha256": "279263e66558d1b45185eb6533d8412d1cf55056a7f811341f0f2bf19419855a",
     "seconds": [
       0.5,
       1.5,

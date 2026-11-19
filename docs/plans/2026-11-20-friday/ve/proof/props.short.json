@@ -250,7 +250,8 @@
             "src": "/home/user/content-engine/.cache/fri20/assets/plates/b4-sofa-money-916.mp4",
             "kind": "video",
             "width": 1080,
-            "height": 1920
+            "height": 1920,
+            "hold_s": 2.3
           }
         ],
         "camera": "push",
@@ -271,7 +272,8 @@
             "src": "/home/user/content-engine/.cache/fri20/assets/plates/b4-closet-skeleton-916-from2s1.mp4",
             "kind": "video",
             "width": 1080,
-            "height": 1920
+            "height": 1920,
+            "hold_s": 0.6
           }
         ],
         "camera": "push",
