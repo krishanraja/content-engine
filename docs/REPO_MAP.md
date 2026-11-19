@@ -3159,6 +3159,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function captionOf(o: ViewOption, raw: Body | null | undefined): string | null`
 - `interface StoryState`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function stillBeingMade(m: Pick<ModelInputs, 'work' | 'pieces'>, pieceIds: Array<string | null | undefined>, scopes: st…`
 - `function scriptsReady(m: Pick<ModelInputs, 'week' | 'scripts' | 'decisions' | 'picks'>, day: string, pieceId: string, t…`
 - `function withWork(read: ModelRead, m: Pick<ModelInputs, 'work'>, scopes: string[]): ModelRead`
 - `function scriptsPress(week: string, day: string, pieceId: string, title: string, filed: FiledScript[], picks: Array<{ d…`
@@ -4843,12 +4844,14 @@ Run a Vercel serverless handler locally against the real environment.
 - `function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement`
 - `function onFullPlate(props: EngineRenderProps, beat: EngineBeat): boolean`
 - `const CAPTION_HALO`
+- `const TAKE_HALO`
 - `function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
 - `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
+- `function titleSafe(aspect: string, width: number, height: number)`
 
 ### `apps/renderer/src/engine/VeCut.tsx`
 

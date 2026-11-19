@@ -354,9 +354,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   // words out. It lands in the panel above his face on a staged beat, else across the frame.
   const titleLayer = props.titleMoment && frame >= props.titleMoment.fromFrame && frame < props.titleMoment.toFrame ? (
     <AbsoluteFill key="title-moment" data-title-moment>
-      <TitleMoment words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame} {...(props.titleMoment.release ? { release: props.titleMoment.release } : {})}
+      <TitleMoment {...(props.titleMoment.card ? { card: true } : {})} words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame} {...(props.titleMoment.release ? { release: props.titleMoment.release } : {})}
         frame={frame} aspect={props.aspect} width={width} height={height}
-        stage={stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height }}
+        stage={stagedNow ? stagedNow.panel : props.titleMoment.card ? titleSafe(props.aspect, width, height) : { left: 0, top: 0, width, height }}
         captionBox={band(props)} tokens={props.tokens as unknown as Record<string, string>} />
       {titleWordmark(props, frame, stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height })}
     </AbsoluteFill>) : null
@@ -375,11 +375,18 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={stagedNow!.panel.width} height={stagedNow!.panel.height} /></div>
     </AbsoluteFill>) : undefined
   const picture = stagingGround ? [stagingGround, ...(panelBackdrop ? [panelBackdrop] : []), ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)
+  // A graphics-only STAGE beat with no staging draws its backdrop across the whole frame, under its graphics, so a proof sits
+  // on its own page and the frame is never bare ink (Krish, 2026-11-18: "making actual use of the full screen when it isn't
+  // my face"; Wed 18's full-frame proof beats filled 11 to 32% of the frame). With no backdrop the tree is unchanged.
+  const fullBackdrop = !stagedNow && !isStaging(props.layout?.mode) && activeBeat?.backdrop && activeBeat.layout === 'STAGE' && activeBeat.plate?.source === 'none' ? (
+    <AbsoluteFill key="full-backdrop" data-backdrop-full>
+      <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={width} height={height} />
+    </AbsoluteFill>) : null
   // With no ingredients the tree is exactly what it was before them (houseGolden.test.ts flattens it).
   if (!ingredients) return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       {stagingGround ? picture : !hasWindow && take}
-      {beatLayers}
+      {fullBackdrop ? [fullBackdrop, ...beatLayers] : beatLayers}
       {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers, ...(titleLayer ? [titleLayer] : [])]}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
@@ -393,11 +400,19 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       <AbsoluteFill data-ingredient-camera style={cameraStyle(cameraAt(ingredients, props.beats, hits, frame, width, height), width, height)}>
         {stagingGround ? picture : !hasWindow && take}
-        {beatLayers}
+        {fullBackdrop ? [fullBackdrop, ...beatLayers] : beatLayers}
       </AbsoluteFill>
       {flash > 0 ? <AbsoluteFill data-flash style={{ backgroundColor: props.tokens.cream, opacity: flash }} /> : null}
       {[...(props.character ? [<CharacterLayer key="character" track={props.character} frame={frame} />] : []), ...brandLayers, ...(titleLayer ? [titleLayer] : [])]}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )
+}
+
+/** Where the title card lands on an unstaged beat: the top of the safe column, under every channel's top bar and over
+ *  his hair, so his eyes and mouth stay clear (Krish, 18 Nov 2026: "having naked captions over my face looks stupid";
+ *  in the lower band the card covered his mouth). */
+export function titleSafe(aspect: string, width: number, height: number) {
+  return aspect === '9:16' ? { left: 60, top: 220, width: 800, height: 330 }
+    : { left: Math.round(width * 0.1), top: Math.round(height * 0.06), width: Math.round(width * 0.8), height: Math.round(height * 0.3) }
 }

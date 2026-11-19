@@ -281,7 +281,8 @@ def pre_critic_lints(spec: dict, spec_path) -> list[str]:
 def spec_lints(spec: dict) -> list[str]:
     """The spec-level guards, for ve lint."""
     from .sfx import style_problems  # noqa: PLC0415
-    return (idea_problems(spec) + one_object_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
+    from . import qc_frames  # noqa: PLC0415
+    return (qc_frames.lints(spec) + idea_problems(spec) + one_object_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
             + annotation_lints(spec) + style_problems(spec))
 
 

@@ -6,6 +6,7 @@ import { textWidth } from '../../house/metrics'
 export type TitleWord = { text: string; atFrame: number }
 export type Box = { left: number; top: number; width: number; height: number }
 export type TitleMomentProps = {
+  card?: boolean
   words: TitleWord[]; fromFrame: number; toFrame: number; frame: number
   aspect: '9:16' | '16:9'; width: number; height: number
   stage: Box; captionBox: Box; tokens: Record<string, string>
@@ -91,13 +92,48 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
   })
   const maxY = Math.max(...origins.map(o => o.y))
   const offsetY = captionBox.top + captionBox.height - captionSize * 1.1 - maxY
+  // The title lands on a card that slams in, never bare over his face (Krish, 18 Nov 2026: "you will need to make the
+  // title captions a card that slams or slides in I think. having naked captions over my face looks stupid").
+  const pad = Math.max(...layout.map(p => p.size)) * 0.32
+  const left = Math.min(...layout.map(p => p.x)) - pad, top = Math.min(...layout.map(p => p.y)) - pad * 0.6
+  const right = Math.max(...layout.map(p => p.x + p.width)) + pad, bottom = Math.max(...layout.map(p => p.y + p.size * 1.15)) + pad * 0.6
+  const slam = spring({ frame: Math.max(0, frame - fromFrame), fps: 30, config: { damping: 13, stiffness: 320, mass: 0.6 } })
+  const cardIn = unit((frame - fromFrame) / 3)
   return <div data-title-moment="" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-    {layout.map(p => {
+    {props.card ? [<div key="card" data-title-card="" style={{ position: 'absolute', left, top, width: right - left, height: bottom - top,
+      background: ink, borderRadius: pad * 0.6, borderLeft: `${Math.max(8, pad * 0.22)}px solid ${brand}`,
+      boxShadow: `0 ${pad * 0.4}px ${pad * 1.4}px rgba(0,0,0,0.45)`, opacity: cardIn * (1 - returnEase),
+      transformOrigin: '50% 60%', transform: `scale(${mix(1.28, 1, slam).toFixed(4)}) rotate(${mix(-3, 0, slam).toFixed(3)}deg)` }} />, ...(layout.map(p => {
       const w = words[p.index]!
       if (frame < w.atFrame) return null
       const progress = unit((frame - w.atFrame) / 8)
       const lift = 1 - (1 - progress) ** 3
-      const origin = origins[p.index]!
+      // On a card each word lands in place on the card, never flying up across his face from the caption band.
+      const origin = props.card ? { x: p.x, y: p.y - offsetY + p.size * 0.35 } : origins[p.index]!
+      const targetX = stage.left + stage.width / 2 + (p.x - stage.left - stage.width / 2) * settle * push
+      const targetY = stage.top + stage.height / 2 + (p.y - stage.top - stage.height / 2) * settle * push
+      const home = props.release === 'fade' ? 0 : returnEase
+      const x = mix(mix(origin.x, targetX, lift), origin.x, home)
+      const y = mix(mix(origin.y + offsetY, targetY, lift), origin.y + offsetY, home)
+      const size = mix(mix(captionSize, p.size * settle * push, lift), captionSize, home)
+      return <span key={p.index} data-title-word={p.index} data-title-row={p.row} style={{
+        position: 'absolute', left: x, top: y, fontFamily: HOUSE_FONTS.display, fontWeight: 400,
+        fontSize: size, lineHeight: 1.15, whiteSpace: 'pre', opacity: 1 - returnEase,
+        color: cream, textTransform: 'uppercase',
+        textShadow: `0 2px 3px ${ink}, 0 6px 18px ${ink}, 0 0 36px ${ink}`,
+        filter: bloom > 0 ? `drop-shadow(0 0 ${bloom * 10}px ${brand})` : undefined,
+        ...(landing >= 0 && landing < 9 ? {
+          // Transparent glyphs would show the ink text-shadow through them: the sweep keeps its separation as a filter.
+          textShadow: 'none', filter: `drop-shadow(0 4px 10px ${ink})${bloom > 0 ? ` drop-shadow(0 0 ${bloom * 10}px ${brand})` : ''}`,
+          color: 'transparent', backgroundImage: `linear-gradient(110deg, ${cream} ${sweep - 16}%, ${brand} ${sweep}%, ${cream} ${sweep + 16}%)`, backgroundClip: 'text', WebkitBackgroundClip: 'text' } : {}),
+      }}>{w.text}</span>
+    }))] : layout.map(p => {
+      const w = words[p.index]!
+      if (frame < w.atFrame) return null
+      const progress = unit((frame - w.atFrame) / 8)
+      const lift = 1 - (1 - progress) ** 3
+      // On a card each word lands in place on the card, never flying up across his face from the caption band.
+      const origin = props.card ? { x: p.x, y: p.y - offsetY + p.size * 0.35 } : origins[p.index]!
       const targetX = stage.left + stage.width / 2 + (p.x - stage.left - stage.width / 2) * settle * push
       const targetY = stage.top + stage.height / 2 + (p.y - stage.top - stage.height / 2) * settle * push
       const home = props.release === 'fade' ? 0 : returnEase
