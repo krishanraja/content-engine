@@ -1,0 +1,3 @@
+Status: The Fri 20 Nov short proof renders on the engine Krish approved for this piece (engine-exceptions.json, 19 Nov), and ve proof holds it as not sendable: the plain-frame check finds a dark band above the slam words on the SPLIT beats (rows 0 to about 330) and above and below the house title card on the title beat.
+Next: Fill the SPLIT panel above the slam words (a larger, lower slam word) and decide with Krish whether the house title card's bands change, then re-render the proof, record the title and compare looks, ve qc, the Critic and the show receipt.
+North Star check (2026-11-19): holds.

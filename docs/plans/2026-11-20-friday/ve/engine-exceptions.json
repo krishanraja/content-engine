@@ -1,0 +1,14 @@
+{
+  "schema": "ve-engine-exceptions/1",
+  "about": "Krish's approval of the engine change for the Fri 20 Nov piece (c00cd4e0): the pillar staging for his vertical long take, kinetic_stat kept cream on a dark ground, no mark over a real page, the push camera keeping a graphics-only region in frame, the optional dated call. velib/guards.py reads it beside the spec's approvals; scope engine waives nothing else. If the engine changes again before this piece renders, the hash no longer matches and he is asked again.",
+  "approvals": [
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "said": "Approve the engine change (Recommended)",
+      "on": "2026-11-19",
+      "artifact_hash": "527e43892bd91e9a802a8ede125f7c6cad8723f3e73ea6be52b921655181629f"
+    }
+  ]
+}

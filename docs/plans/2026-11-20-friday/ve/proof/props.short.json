@@ -16,7 +16,7 @@
   "series": {
     "label": "mind.the.gap",
     "day": "Fridays",
-    "promise": "Every call scored in public",
+    "promise": "What's coming, before it's obvious",
     "site": "makeyourmindup.ai"
   },
   "brand": {
@@ -201,17 +201,21 @@
         "atFrame": 222
       }
     ],
-    "card": true
+    "card": true,
+    "lockup": true
   },
   "beats": [
     {
       "id": "face",
       "role": "bridge",
-      "layout": "F1",
+      "layout": "SPLIT",
       "fromFrame": 0,
       "toFrame": 69,
-      "uses": [],
-      "face": "full",
+      "uses": [
+        "s_face_slam0",
+        "s_face_slam1",
+        "s_face_slam2"
+      ],
       "transitionOut": "cut",
       "sectionBeat": true,
       "plate": {
@@ -296,9 +300,80 @@
         "full": true,
         "grade": "none"
       }
+    },
+    {
+      "obj": "s_face_slam0",
+      "device": "slam_word",
+      "meaning": "his own word slammed as he says it: archives (everyone's, right now)",
+      "fromFrame": 0,
+      "toFrame": 69,
+      "variants": {},
+      "params": {
+        "word": "ARCHIVES",
+        "tapeText": "EVERYONE'S, RIGHT NOW"
+      }
+    },
+    {
+      "obj": "s_face_slam1",
+      "device": "slam_word",
+      "meaning": "his own word slammed as he says it: teams (hospitals pay whole teams)",
+      "fromFrame": 0,
+      "toFrame": 69,
+      "variants": {},
+      "params": {
+        "word": "TEAMS",
+        "tapeText": "HOSPITALS PAY WHOLE TEAMS"
+      }
+    },
+    {
+      "obj": "s_face_slam2",
+      "device": "slam_word",
+      "meaning": "his own word slammed as he says it: chatbot (a chatbot beat them)",
+      "fromFrame": 0,
+      "toFrame": 69,
+      "variants": {},
+      "params": {
+        "word": "CHATBOT",
+        "tapeText": "A CHATBOT BEAT THEM"
+      }
     }
   ],
   "events": [
+    {
+      "id": "face-0",
+      "obj": "s_face_slam0",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 0
+    },
+    {
+      "id": "face-1",
+      "obj": "s_face_slam0",
+      "verb": "exit",
+      "toState": "visible",
+      "atFrame": 0
+    },
+    {
+      "id": "face-2",
+      "obj": "s_face_slam1",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 0
+    },
+    {
+      "id": "face-3",
+      "obj": "s_face_slam1",
+      "verb": "exit",
+      "toState": "visible",
+      "atFrame": 33
+    },
+    {
+      "id": "face-4",
+      "obj": "s_face_slam2",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 36
+    },
     {
       "id": "question-0",
       "obj": "sofa",
@@ -314,11 +389,6 @@
       "atFrame": 171
     }
   ],
-  "call": {
-    "statement": "By the end of 2027, a customer will win back money from a big UK or US firm with a chatbot-found billing error that makes national news.",
-    "due": "2027-12-31",
-    "confidencePercent": 75
-  },
   "motion": {
     "style": "ai-music-slam",
     "profile": {
@@ -365,6 +435,6 @@
     "hits": true
   },
   "layout": {
-    "mode": "fill"
+    "mode": "pillar"
   }
 }

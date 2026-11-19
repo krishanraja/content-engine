@@ -10,35 +10,15 @@
     16.967,
     20.367
   ],
-  "sha256": "7ec1cc380afd3ef2c2223988d33678b0e3b10f4fccc46f9f79f0e4fab484538a",
-  "spec_sha256": "f586cc4944e852129c2663e61667b6c23fea8daed357e5d5c5b75c3b45bafa12",
+  "sha256": "f3c90df489078957bce3668ef7052b5af53c62852abfdb057311ca3648b8eddd",
+  "spec_sha256": "3745cd5f48c8e63caa04d61c8c1f96e5701e813374e584d220d7877fdd271255",
   "structure": {
     "format": "face-with-proof",
     "aspect": "9:16",
     "motion": "ai-music-slam",
     "objects": [
       [
-        "chip_billed",
-        "query_chip"
-      ],
-      [
         "chip_caveat",
-        "query_chip"
-      ],
-      [
-        "chip_given",
-        "query_chip"
-      ],
-      [
-        "chip_hours",
-        "query_chip"
-      ],
-      [
-        "chip_last",
-        "query_chip"
-      ],
-      [
-        "chip_next",
         "query_chip"
       ],
       [
@@ -62,6 +42,58 @@
         "kinetic_stat"
       ],
       [
+        "s_code_slam0",
+        "slam_word"
+      ],
+      [
+        "s_code_slam1",
+        "slam_word"
+      ],
+      [
+        "s_code_slam2",
+        "slam_word"
+      ],
+      [
+        "s_face_slam0",
+        "slam_word"
+      ],
+      [
+        "s_face_slam1",
+        "slam_word"
+      ],
+      [
+        "s_face_slam2",
+        "slam_word"
+      ],
+      [
+        "s_hindsight_slam0",
+        "slam_word"
+      ],
+      [
+        "s_hindsight_slam1",
+        "slam_word"
+      ],
+      [
+        "s_love_slam0",
+        "slam_word"
+      ],
+      [
+        "s_love_slam1",
+        "slam_word"
+      ],
+      [
+        "s_love_slam2",
+        "slam_word"
+      ],
+      [
+        "s_whose_slam0",
+        "slam_word"
+      ],
+      [
+        "s_whose_slam1",
+        "slam_word"
+      ],
+      [
         "sofa",
         "scene_plate"
       ],
@@ -76,26 +108,25 @@
       [
         "th_head",
         "evidence_card"
-      ],
-      [
-        "th_lede",
-        "evidence_card"
       ]
     ],
     "beats": [
       [
         "hook",
-        "WINDOW",
+        "SPLIT",
         [
-          "chip_hours",
           "k_billed",
           "strike"
         ]
       ],
       [
         "face",
-        "F1",
-        []
+        "SPLIT",
+        [
+          "s_face_slam0",
+          "s_face_slam1",
+          "s_face_slam2"
+        ]
       ],
       [
         "question",
@@ -122,15 +153,16 @@
         "lines",
         "STAGE",
         [
-          "th_lede"
+          "th_head"
         ]
       ],
       [
         "code",
-        "WINDOW",
+        "SPLIT",
         [
-          "chip_billed",
-          "chip_given"
+          "s_code_slam0",
+          "s_code_slam1",
+          "s_code_slam2"
         ]
       ],
       [
@@ -150,21 +182,28 @@
       ],
       [
         "love",
-        "F1",
-        []
+        "SPLIT",
+        [
+          "s_love_slam0",
+          "s_love_slam1",
+          "s_love_slam2"
+        ]
       ],
       [
         "hindsight",
-        "WINDOW",
+        "SPLIT",
         [
-          "chip_last",
-          "chip_next"
+          "s_hindsight_slam0",
+          "s_hindsight_slam1"
         ]
       ],
       [
         "whose",
-        "F1",
-        []
+        "SPLIT",
+        [
+          "s_whose_slam0",
+          "s_whose_slam1"
+        ]
       ],
       [
         "closet",
@@ -193,15 +232,23 @@
     ]
   },
   "style_module": "ai-music-slam",
-  "props_sha256": "2021cd3b52d06fe42211e4dea943880f2de77aa39da09a64780d14022cc59911",
+  "props_sha256": "e9d02765353aa781b14150474a5d8ae418f012f3783d8ef6272582f127fb9321",
+  "title": {
+    "in_main": false,
+    "clip": "short.title.mp4",
+    "sha256": "f3c4d0d5a28892ae12856e3244c01d8f58bf961b501ee1f6f5635d81de8992d8",
+    "start": 15.933,
+    "end": 26.1
+  },
   "qc": {
     "measured_pass": false,
     "complete": false,
     "failing": [
       "captions.ocr",
       "captions.render",
+      "channel.safe_zones",
       "composition",
-      "title.stage_width"
+      "picture.smeared"
     ]
   },
   "type": [
@@ -218,7 +265,7 @@
       "caption"
     ]
   ],
-  "engine_sha256": "add1304faa36900910d34ef7e8829c05a6e0886781a2c741ef8a911bc8764e6f",
+  "engine_sha256": "527e43892bd91e9a802a8ede125f7c6cad8723f3e73ea6be52b921655181629f",
   "assets_sha256": {
     "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
     "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
@@ -233,21 +280,122 @@
     "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
     "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
   },
-  "made_at": "2026-11-19T11:15:02Z",
+  "made_at": "2026-11-19T15:14:52Z",
   "frames": {
-    "pass": true,
+    "pass": false,
     "status": "ok",
-    "problems": [],
+    "problems": [
+      {
+        "check": "plain_dark",
+        "beat": "face",
+        "frame": 10,
+        "band": [
+          0,
+          328
+        ],
+        "says": "beat face, frame 10: a plain dark band, rows 0 to 328 (328 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "face",
+        "frame": 62,
+        "band": [
+          0,
+          302
+        ],
+        "says": "beat face, frame 62: a plain dark band, rows 0 to 302 (302 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "question",
+        "frame": 125,
+        "band": [
+          0,
+          312
+        ],
+        "says": "beat question, frame 125: a plain dark band, rows 0 to 312 (312 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "question",
+        "frame": 125,
+        "band": [
+          1637,
+          1920
+        ],
+        "says": "beat question, frame 125: a plain dark band, rows 1637 to 1920 (283 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "question",
+        "frame": 160,
+        "band": [
+          0,
+          487
+        ],
+        "says": "beat question, frame 160: a plain dark band, rows 0 to 487 (487 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "question",
+        "frame": 160,
+        "band": [
+          1637,
+          1920
+        ],
+        "says": "beat question, frame 160: a plain dark band, rows 1637 to 1920 (283 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "skeletons",
+        "frame": 181,
+        "band": [
+          0,
+          401
+        ],
+        "says": "beat skeletons, frame 181: a plain dark band, rows 0 to 401 (401 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "skeletons",
+        "frame": 181,
+        "band": [
+          1637,
+          1920
+        ],
+        "says": "beat skeletons, frame 181: a plain dark band, rows 1637 to 1920 (283 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "skeletons",
+        "frame": 208,
+        "band": [
+          0,
+          461
+        ],
+        "says": "beat skeletons, frame 208: a plain dark band, rows 0 to 461 (461 px), no detail"
+      },
+      {
+        "check": "plain_dark",
+        "beat": "skeletons",
+        "frame": 208,
+        "band": [
+          1637,
+          1920
+        ],
+        "says": "beat skeletons, frame 208: a plain dark band, rows 1637 to 1920 (283 px), no detail"
+      }
+    ],
     "frames": 12
   },
   "compare": {
-    "against": "1961924242a874a7b2a4b3328afe63ae070575b4ab3296819638cf95c2b17124",
+    "against": "7ec1cc380afd3ef2c2223988d33678b0e3b10f4fccc46f9f79f0e4fab484538a",
     "reasons": [
       "the engine changed since the proof he approved"
     ],
     "compared": null,
     "sheet": "compare.short.png",
-    "sha256": "ea6de3ed1cc3892bec838aa303f400dbbb6891780a51f8e5a76f9f94ce1ea4ab",
+    "sha256": "fbd3084b999f02fb2c3c9db90c3ba99bf6c13700442b71baaab1d5b87a105df3",
     "seconds": [
       0.5,
       1.5,

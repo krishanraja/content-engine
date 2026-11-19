@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-11-20-friday/ve/proof/short.mp4",
-  "sha256": "7ec1cc380afd3ef2c2223988d33678b0e3b10f4fccc46f9f79f0e4fab484538a",
+  "sha256": "f3c90df489078957bce3668ef7052b5af53c62852abfdb057311ca3648b8eddd",
   "duration_s": 8.0,
   "format": "face-with-proof",
   "checks": {
@@ -73,16 +73,16 @@
         {
           "page": 0,
           "frame": 23,
-          "text": "PRIGING -—-\nOUT",
-          "agreement": 0.19999999999999996,
-          "variant": "highlight",
+          "text": "pee WHOL",
+          "agreement": 0.0,
+          "variant": "raw",
           "pass": false
         },
         {
           "page": 1,
           "frame": 63,
-          "text": "CHAIBUT =\nBEAT) THEM",
-          "agreement": 0.4,
+          "text": "a iC EY",
+          "agreement": 0.19999999999999996,
           "variant": "raw",
           "pass": false
         },
@@ -103,19 +103,19 @@
         {
           "beat": "face",
           "frame": 34,
-          "score": -0.050706809536179384,
+          "score": 0.0,
           "pass": true
         },
         {
           "beat": "question",
           "frame": 119,
-          "score": 0.12902481938683527,
+          "score": 0.0,
           "pass": true
         },
         {
           "beat": "skeletons",
           "frame": 205,
-          "score": 0.2754143905640184,
+          "score": 0.0,
           "pass": true
         }
       ],
@@ -126,13 +126,68 @@
     "motion.cue_sync": {
       "value": [
         {
+          "event": "face-0",
+          "atFrame": 0,
+          "peak_frame": 2,
+          "lag_frames": 2,
+          "peak_difference": 38.70973205566406,
+          "event_difference": 38.70973205566406,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "face-1",
+          "atFrame": 0,
+          "peak_frame": 2,
+          "lag_frames": 2,
+          "peak_difference": 38.70973205566406,
+          "event_difference": 38.70973205566406,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "face-2",
+          "atFrame": 0,
+          "peak_frame": 2,
+          "lag_frames": 2,
+          "peak_difference": 38.70973205566406,
+          "event_difference": 38.70973205566406,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "face-3",
+          "atFrame": 33,
+          "peak_frame": 36,
+          "lag_frames": 3,
+          "peak_difference": 110.65398406982422,
+          "event_difference": 64.67729949951172,
+          "threshold": 15.978308200836182,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "face-4",
+          "atFrame": 36,
+          "peak_frame": 36,
+          "lag_frames": 0,
+          "peak_difference": 110.65398406982422,
+          "event_difference": 110.65398406982422,
+          "threshold": 15.978308200836182,
+          "gradual": false,
+          "pass": true
+        },
+        {
           "event": "question-0",
           "atFrame": 69,
           "peak_frame": 69,
           "lag_frames": 0,
-          "peak_difference": 72.82328796386719,
-          "event_difference": 72.82328796386719,
-          "threshold": 5.173687934875488,
+          "peak_difference": 80.29131317138672,
+          "event_difference": 80.29131317138672,
+          "threshold": 5.778618335723877,
           "gradual": false,
           "pass": true
         },
@@ -141,9 +196,9 @@
           "atFrame": 171,
           "peak_frame": 172,
           "lag_frames": 1,
-          "peak_difference": 49.59706115722656,
-          "event_difference": 49.59706115722656,
-          "threshold": 19.427727699279785,
+          "peak_difference": 10.144548416137695,
+          "event_difference": 10.144548416137695,
+          "threshold": 3.31728458404541,
           "gradual": false,
           "pass": true
         }
@@ -262,9 +317,9 @@
         "part": "renderer",
         "region": [
           48,
-          1078,
+          658,
           824,
-          241
+          204
         ],
         "window_frames": 3,
         "min_score": 0.98,
@@ -274,37 +329,32 @@
             "page": 0,
             "fromFrame": 0,
             "text": "teams to sort pricing out",
-            "change_frame": 2,
-            "frame": 17,
-            "read": "PRIGING —\nOUT",
-            "score": 0.2,
+            "change_frame": 1,
+            "frame": 16,
+            "read": "",
+            "score": 0.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"PRIGING —\nOUT\" near frame 17, not \"teams to sort pricing out\" (score 0.2, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"\" near frame 16, not \"teams to sort pricing out\" (score 0.0, needs an exact match and 0.98)"
           },
           {
             "page": 1,
             "fromFrame": 29,
             "text": "and a chatbot beat them.",
-            "change_frame": 28,
-            "frame": 56,
-            "read": "GHATBUT\nBEAT THEM",
-            "score": 0.4,
-            "exact": false,
             "status": "fail",
-            "message": "caption page 1 reads \"GHATBUT\nBEAT THEM\" near frame 56, not \"and a chatbot beat them.\" (score 0.4, needs an exact match and 0.98)"
+            "message": "caption page 1 (\"and a chatbot beat them.\"): no change in the caption zone within 3 frames of its start, frame 29"
           },
           {
-            "page": 2,
+            "page": 0,
             "fromFrame": 69,
             "text": "So A man's brother-in-law",
             "change_frame": 68,
-            "frame": null,
-            "read": null,
+            "frame": 97,
+            "read": "uv) >\n\\",
             "score": 0.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 2 reads \"\" near frame 69, not \"So A man's brother-in-law\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"uv) >\n\\\" near frame 97, not \"So A man's brother-in-law\" (score 0.0, needs an exact match and 0.98)"
           }
         ],
         "failed": [
@@ -312,48 +362,58 @@
             "page": 0,
             "fromFrame": 0,
             "text": "teams to sort pricing out",
-            "change_frame": 2,
-            "frame": 17,
-            "read": "PRIGING —\nOUT",
-            "score": 0.2,
+            "change_frame": 1,
+            "frame": 16,
+            "read": "",
+            "score": 0.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 0 reads \"PRIGING —\nOUT\" near frame 17, not \"teams to sort pricing out\" (score 0.2, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"\" near frame 16, not \"teams to sort pricing out\" (score 0.0, needs an exact match and 0.98)"
           },
           {
             "page": 1,
             "fromFrame": 29,
             "text": "and a chatbot beat them.",
-            "change_frame": 28,
-            "frame": 56,
-            "read": "GHATBUT\nBEAT THEM",
-            "score": 0.4,
-            "exact": false,
             "status": "fail",
-            "message": "caption page 1 reads \"GHATBUT\nBEAT THEM\" near frame 56, not \"and a chatbot beat them.\" (score 0.4, needs an exact match and 0.98)"
+            "message": "caption page 1 (\"and a chatbot beat them.\"): no change in the caption zone within 3 frames of its start, frame 29"
           },
           {
-            "page": 2,
+            "page": 0,
             "fromFrame": 69,
             "text": "So A man's brother-in-law",
             "change_frame": 68,
-            "frame": null,
-            "read": null,
+            "frame": 97,
+            "read": "uv) >\n\\",
             "score": 0.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 2 reads \"\" near frame 69, not \"So A man's brother-in-law\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 0 reads \"uv) >\n\\\" near frame 97, not \"So A man's brother-in-law\" (score 0.0, needs an exact match and 0.98)"
           }
         ],
-        "changes_found": 27,
+        "changes_found": 8,
         "status": "fail",
-        "reason": "3 of 3 caption page(s) are not drawn as the props say near their start"
+        "reason": "2 of 2 caption page(s) are not drawn as the props say near their start",
+        "pass": false,
+        "regions": [
+          [
+            48,
+            658,
+            824,
+            204
+          ],
+          [
+            58,
+            974,
+            824,
+            220
+          ]
+        ]
       },
       "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
       "pass": false,
       "status": "measured",
       "agreement": null,
-      "summary": "3 of 3 caption page(s) are not drawn as the props say near their start: caption page 0 reads \"PRIGING —\nOUT\" near frame 17, not \"teams to sort pricing out\" (score 0.2, needs an exact match and 0.98); caption page 1 reads \"GHATBUT\nBEAT THEM\" near frame 56, not \"and a chatbot beat them.\" (score 0.4, needs an exact match and 0.98); caption page 2 reads \"\" near frame 69, not \"So A man's brother-in-law\" (score 0.0, needs an exact match and 0.98)"
+      "summary": "2 of 2 caption page(s) are not drawn as the props say near their start: caption page 0 reads \"\" near frame 16, not \"teams to sort pricing out\" (score 0.0, needs an exact match and 0.98); caption page 1 (\"and a chatbot beat them.\"): no change in the caption zone within 3 frames of its start, frame 29; caption page 0 reads \"uv) >\n\\\" near frame 97, not \"So A man's brother-in-law\" (score 0.0, needs an exact match and 0.98)"
     },
     "captions.off_face": {
       "value": {
@@ -365,18 +425,36 @@
       "pass": true
     },
     "plate.head_in_band": {
-      "value": null,
-      "target": "his whole head inside the camera band",
-      "pass": null,
-      "status": "not applicable"
+      "value": {
+        "beats": 1,
+        "samples": 3,
+        "cut": [],
+        "count": 0,
+        "no_face_in_beat": [],
+        "suggest_crop": {}
+      },
+      "target": "his whole head, crown to chin, inside the camera band of every SPLIT take beat",
+      "pass": true
     },
     "channel.safe_zones": {
       "value": {
-        "under_buttons": [],
-        "count": 0
+        "under_buttons": [
+          {
+            "what": "caption 'So A man's brother-in-la'",
+            "box": [
+              58,
+              974,
+              824,
+              220
+            ],
+            "channel": "instagram_reels",
+            "zone": "action rail (like, comment, share, save)"
+          }
+        ],
+        "count": 1
       },
       "target": "no caption, title or device box under a channel button (config/channel-safe-zones.json)",
-      "pass": true
+      "pass": false
     },
     "ground.not_bare": {
       "value": [
@@ -389,8 +467,8 @@
         },
         {
           "edge_frame": 171,
-          "barest_frame": 168,
-          "stage_std": 49.16,
+          "barest_frame": 169,
+          "stage_std": 60.62,
           "floor": 3.0,
           "pass": true
         }
@@ -421,9 +499,9 @@
     "picture.as_shot": {
       "value": {
         "face": {
-          "L": 2.21,
-          "a": 0.42,
-          "b": 0.55
+          "L": 3.05,
+          "a": 0.53,
+          "b": 0.51
         }
       },
       "moved": [],
@@ -444,28 +522,66 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 100.0
+              "value": 80.41
             },
             "small_text": {
               "pass": true,
               "value": []
             },
             "caption_zone": {
-              "pass": false,
-              "value": [
-                {
-                  "text": "UT",
-                  "conf": 96.360832,
-                  "x": 118,
-                  "y": 1236,
-                  "w": 77,
-                  "h": 80
-                }
-              ]
+              "pass": true,
+              "value": []
             },
             "platform_zone": {
               "pass": true,
               "value": []
+            },
+            "edges": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "VHOLE",
+                  "conf": 87.348557,
+                  "x": 0,
+                  "y": 564,
+                  "w": 127,
+                  "h": 47
+                }
+              ]
+            }
+          },
+          "findings": [
+            "edges 'VHOLE' starts at (0, 564), the limits are 24 px from each edge and x at least 60 px."
+          ],
+          "frame": 20
+        },
+        "question": {
+          "pass": false,
+          "checks": {
+            "fill_pct": {
+              "pass": false,
+              "value": 59.92
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "AUDITOR",
+                  "conf": 94.960327,
+                  "x": 648,
+                  "y": 541,
+                  "w": 329,
+                  "h": 111
+                }
+              ]
             },
             "edges": {
               "pass": true,
@@ -473,35 +589,9 @@
             }
           },
           "findings": [
-            "caption_zone contains 'UT', the limit is 0 unlisted words."
+            "fill 59.92% outside the caption zone, the lock needs 80%.",
+            "platform_zone 'AUDITOR' ends at (977, 652), the limits are (960, 1640) outside the marquee."
           ],
-          "frame": 20
-        },
-        "question": {
-          "pass": true,
-          "checks": {
-            "fill_pct": {
-              "pass": true,
-              "value": 99.62
-            },
-            "small_text": {
-              "pass": true,
-              "value": []
-            },
-            "caption_zone": {
-              "pass": true,
-              "value": []
-            },
-            "platform_zone": {
-              "pass": true,
-              "value": []
-            },
-            "edges": {
-              "pass": true,
-              "value": []
-            }
-          },
-          "findings": [],
           "frame": 151
         },
         "skeletons": {
@@ -591,6 +681,11 @@
       "target": "one title card from his spoken line, captions empty while it holds",
       "pass": true
     },
+    "title.lockup": {
+      "value": [],
+      "target": "the title rendered as one full-frame lockup with the wordmark inside it",
+      "pass": true
+    },
     "takes.restarts": {
       "value": null,
       "target": "no unlisted false start left in the cut",
@@ -614,14 +709,16 @@
       "pass": true
     },
     "title.stage_width": {
-      "value": [
-        {
-          "frame": 169,
-          "why": "the title spans 50% of the frame width, under 60%: it lands as a hero title at full stage width"
-        }
-      ],
+      "value": [],
       "target": "the title holds at full stage width",
-      "pass": false
+      "pass": true
+    },
+    "title.lockup_frame": {
+      "value": null,
+      "target": "the title is one centred full-frame lockup, big type, the wordmark inside it and timed with it",
+      "pass": null,
+      "status": "not_run",
+      "reason": "frame 242 is past the end of short.mp4"
     },
     "transition.no_ghost_frames": {
       "value": [],
@@ -634,9 +731,21 @@
       "pass": true
     },
     "picture.smeared": {
-      "value": [],
+      "value": [
+        {
+          "from_s": 3.25,
+          "to_s": 5.75,
+          "bands": [
+            {
+              "stripes": "vertical",
+              "from": 0.431,
+              "to": 0.679
+            }
+          ]
+        }
+      ],
       "target": "no picture smeared into stripes (scripts/frame_smear.py)",
-      "pass": true,
+      "pass": false,
       "status": "advisory",
       "note": "binds pieces published from 2026-11-24 (config/ve/onscreen-checks.json picture)"
     }
@@ -654,28 +763,66 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 100.0
+            "value": 80.41
           },
           "small_text": {
             "pass": true,
             "value": []
           },
           "caption_zone": {
-            "pass": false,
-            "value": [
-              {
-                "text": "UT",
-                "conf": 96.360832,
-                "x": 118,
-                "y": 1236,
-                "w": 77,
-                "h": 80
-              }
-            ]
+            "pass": true,
+            "value": []
           },
           "platform_zone": {
             "pass": true,
             "value": []
+          },
+          "edges": {
+            "pass": false,
+            "value": [
+              {
+                "text": "VHOLE",
+                "conf": 87.348557,
+                "x": 0,
+                "y": 564,
+                "w": 127,
+                "h": 47
+              }
+            ]
+          }
+        },
+        "findings": [
+          "edges 'VHOLE' starts at (0, 564), the limits are 24 px from each edge and x at least 60 px."
+        ],
+        "frame": 20
+      },
+      "question": {
+        "pass": false,
+        "checks": {
+          "fill_pct": {
+            "pass": false,
+            "value": 59.92
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": false,
+            "value": [
+              {
+                "text": "AUDITOR",
+                "conf": 94.960327,
+                "x": 648,
+                "y": 541,
+                "w": 329,
+                "h": 111
+              }
+            ]
           },
           "edges": {
             "pass": true,
@@ -683,35 +830,9 @@
           }
         },
         "findings": [
-          "caption_zone contains 'UT', the limit is 0 unlisted words."
+          "fill 59.92% outside the caption zone, the lock needs 80%.",
+          "platform_zone 'AUDITOR' ends at (977, 652), the limits are (960, 1640) outside the marquee."
         ],
-        "frame": 20
-      },
-      "question": {
-        "pass": true,
-        "checks": {
-          "fill_pct": {
-            "pass": true,
-            "value": 99.62
-          },
-          "small_text": {
-            "pass": true,
-            "value": []
-          },
-          "caption_zone": {
-            "pass": true,
-            "value": []
-          },
-          "platform_zone": {
-            "pass": true,
-            "value": []
-          },
-          "edges": {
-            "pass": true,
-            "value": []
-          }
-        },
-        "findings": [],
         "frame": 151
       },
       "skeletons": {
