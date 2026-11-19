@@ -11,6 +11,11 @@
       "at": "2026-11-19T09:17:24Z",
       "file": "short-v4.mp4",
       "sha256": "3ac57f7a6d6b1a3da36b2fad95808396af0394d389347f041231cd2fb7502bff"
+    },
+    {
+      "at": "2026-11-19T16:02:28Z",
+      "file": "short-final.mp4",
+      "sha256": "14847fc57ebbc56172403530ea793b6c8acaff7d6cba4edf1b27465c2c7836fa"
     }
   ]
 }
