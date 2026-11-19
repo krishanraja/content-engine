@@ -1,0 +1,218 @@
+{
+  "schema": "ve-verdict/1",
+  "piece": "2026-11-18-wednesday",
+  "cut": "long",
+  "sha256": "29e7cc7c8a009caa62399028e28f6fe7c7fac77f309f361b2eb41d86f84eecee",
+  "reviewer": "ve-critic (subagent, did not make the cut)",
+  "reviewed_at": "2026-11-19T12:59:08.038777+00:00",
+  "lens_sha256": "6967b939fc12c52d2216ca482801c6e16d407a568b38a31aa5a5ace0d30b6a16",
+  "frames_viewed": [
+    {
+      "at_s": 0.0
+    },
+    {
+      "at_s": 0.5
+    },
+    {
+      "at_s": 1.0
+    },
+    {
+      "at_s": 1.5
+    },
+    {
+      "at_s": 1.8
+    },
+    {
+      "at_s": 1.833
+    },
+    {
+      "at_s": 1.867
+    },
+    {
+      "at_s": 1.9
+    },
+    {
+      "at_s": 1.933
+    },
+    {
+      "at_s": 1.967
+    },
+    {
+      "at_s": 2.0
+    },
+    {
+      "at_s": 2.033
+    },
+    {
+      "at_s": 2.067
+    },
+    {
+      "at_s": 2.1
+    },
+    {
+      "at_s": 2.133
+    },
+    {
+      "at_s": 2.167
+    },
+    {
+      "at_s": 2.2
+    },
+    {
+      "at_s": 2.233
+    },
+    {
+      "at_s": 2.267
+    },
+    {
+      "at_s": 2.3
+    },
+    {
+      "at_s": 2.333
+    },
+    {
+      "at_s": 2.367
+    },
+    {
+      "at_s": 2.5
+    },
+    {
+      "at_s": 3.0
+    },
+    {
+      "at_s": 3.5
+    },
+    {
+      "at_s": 3.6
+    },
+    {
+      "at_s": 3.633
+    },
+    {
+      "at_s": 3.667
+    },
+    {
+      "at_s": 3.7
+    },
+    {
+      "at_s": 3.733
+    },
+    {
+      "at_s": 3.767
+    },
+    {
+      "at_s": 3.8
+    },
+    {
+      "at_s": 3.833
+    },
+    {
+      "at_s": 3.867
+    },
+    {
+      "at_s": 3.9
+    },
+    {
+      "at_s": 3.933
+    },
+    {
+      "at_s": 3.967
+    },
+    {
+      "at_s": 4.0
+    },
+    {
+      "at_s": 4.033
+    },
+    {
+      "at_s": 4.067
+    },
+    {
+      "at_s": 4.1
+    },
+    {
+      "at_s": 4.133
+    },
+    {
+      "at_s": 4.167
+    },
+    {
+      "at_s": 4.5
+    },
+    {
+      "at_s": 5.0
+    },
+    {
+      "at_s": 5.5
+    },
+    {
+      "at_s": 5.6
+    },
+    {
+      "at_s": 6.0
+    },
+    {
+      "at_s": 6.5
+    },
+    {
+      "at_s": 7.0
+    },
+    {
+      "at_s": 7.5
+    },
+    {
+      "at_s": 7.6
+    }
+  ],
+  "findings": [
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 3.867,
+      "text": "Q10 (advisory): one blank stage frame at the hook-to-marks cut: at 3.867 s no Fin card and no check pill; the empty pill arrives at 3.90 s."
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 1.0,
+      "text": "Q2 / Q9: the lock-on brackets frame the whole pill; no highlight on CLAUDE visible at 1.0 s; the hook's line is pre-typed at 0.0 s."
+    },
+    {
+      "severity": "fix",
+      "area": "evidence",
+      "frame_s": 7.6,
+      "text": "Q5: the Salesforce card is one highlighted line with no page context."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 5.6,
+      "text": "Q8: the pill is whole; its left bracket's arm touches x=0 at 5.6 s and 6.0 s."
+    },
+    {
+      "severity": "note",
+      "area": "motion",
+      "frame_s": 1.9,
+      "text": "Q10: fixed: both hand-offs are clean cuts with his face sharp; nothing pushed off the left edge."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 3.0,
+      "text": "Q8: engine-level follow-ups: source lines about 24 px at 1920; proof cards flush at x=0."
+    },
+    {
+      "severity": "note",
+      "area": "brand",
+      "frame_s": 5.0,
+      "text": "Q3: the under.the.hood chip is on the hook and missing from marks."
+    },
+    {
+      "severity": "note",
+      "area": "motion",
+      "frame_s": 1.933,
+      "text": "Q-idea: passes. The terminal asks and the real page answers on its word."
+    }
+  ],
+  "blocking": false
+}

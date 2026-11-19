@@ -3,11 +3,11 @@
   "piece": "2026-11-18-wednesday",
   "cut": "long",
   "label": "proof.long",
-  "cut_sha256": "8d77cfd90464c73a080a5aecafeb57e2b12160e254d94eb38ad406ae5df55899",
+  "cut_sha256": "73d09109eb35158c9fecaba66499f978a1a83a61fd216bdbb0163820011a034d",
   "engine_sha256": "116b43506facbc82498496c17f64d00ffe4f2bfd72ce234b1ff0be75ac9d477e",
-  "evaluated_at": "2026-11-19T12:50:17.226216+00:00",
+  "evaluated_at": "2026-11-19T13:02:19.991193+00:00",
   "qc": {
-    "sha256": "ab90a58e4c7fb85ca7d903d179b50c915feb5befe7e346cfa7079478c143c2cc",
+    "sha256": "f6b4c5f6db73ac450a36eedac8971cfb4f3c0b3dbec2bd9607604ef659ea3452",
     "measured_pass": false,
     "complete": false
   },
@@ -95,7 +95,7 @@
   "missing": [
     "ve qc FAILS on this file: motion.cue_sync, audio.bed_continuity, captions.render, plate.head_in_band, channel.safe_zones, music.beats",
     "ve qc is incomplete (some checks did not run)",
-    "no Critic verdict for this file (verdict.proof.long.json): a reviewer who did not make it records one",
+    "the Critic verdict is for a different file",
     "one_picture_per_beat: not attested (A graphic and a photo never both carry the same point: one picture per beat.)",
     "no_ghost_in_dissolves: not attested (A change between a full-screen beat and a face beat is a clean cut; never a cross-dissolve over his face.)",
     "no_offday_tag_on_screen: not attested (off.day is never drawn as a pill, header or label, in any cut.)",

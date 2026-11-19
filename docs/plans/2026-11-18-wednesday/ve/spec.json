@@ -935,7 +935,7 @@
   {
    "obj": "m_sf",
    "device": "evidence_card",
-   "meaning": "Anthropic runs its customers and deals on Salesforce",
+   "meaning": "Salesforce says it is Anthropic's preferred CRM",
    "persist": {
     "from_beat": "marks",
     "to_beat": "marks"
@@ -943,8 +943,8 @@
    "params": {
     "kind": "screenshot",
     "src": "shots/sf-preferred-crm.png",
-    "outlet": "Anthropic job advert",
-    "date": "2026",
+    "outlet": "Salesforce announcement",
+    "date": "26 Aug 2026",
     "sourceAspectRatio": 3.6364,
     "crop": {
      "x": 0.035,
@@ -1583,7 +1583,7 @@
      "value": 3
     }
    ],
-   "producer_label": "Anthropic job adverts · Fin · Workday, 13 Oct 2026",
+   "producer_label": "Salesforce, 26 Aug 2026 · Fin · Workday, 13 Oct 2026",
    "source_url": "https://fin.ai/customers/anthropic",
    "retrieved_at": "2026-11-19"
   },
@@ -3369,6 +3369,7 @@
   },
   "camera": {
    "move": "phased",
+   "hits": false,
    "reason": "Everything moves: the camera never rests; no kick on events, which pushed the check line off the frame edge (critic, 19 Nov)"
   },
   "energy": "high",
