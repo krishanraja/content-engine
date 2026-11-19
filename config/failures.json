@@ -4224,6 +4224,31 @@
         ],
         "line": "On a tall cut his face beats keep his chin clear of the caption band and every caption over his take wears the halo; ve qc captions.off_face measures it."
       }
+    },
+    {
+      "id": "title-wordmark-not-aligned-with-title",
+      "on": "2026-11-19",
+      "krish": "\"As I think I've told you 400,000 times, the word mark needs to be aligned with the title.\" (19 Nov 2026, Tue 17 piece b019dbf8, on the long cut's title proof)",
+      "what": "The episode title's wordmark was placed against the panel, centred on a tall cut and pushed to the panel's right on a wide one, so it hung apart from the title card it signs off.",
+      "symptom": "The MAKE YOUR MIND/UP wordmark under the title does not line up with the title's text.",
+      "cause": "titleWordmark measured the panel, not the title; nothing read the title's own layout.",
+      "status": "guarded",
+      "guard_level": "gate",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/FormatMaster.tsx",
+          "contains": "export function titleWordmarkBox(",
+          "how": "the wordmark's left edge is the title's left edge (titleLayout), just under its last line, on both aspects",
+          "test": "npx vitest run apps/renderer/src/engine/titleWordmark.test.ts"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "short_video",
+          "long_video"
+        ],
+        "line": "The title's wordmark starts on the title's left edge, directly under its last line."
+      }
     }
   ]
 }
