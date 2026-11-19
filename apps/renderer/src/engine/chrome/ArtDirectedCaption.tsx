@@ -33,7 +33,7 @@ export const ART_REGION = {
 export const ART = {
   keySize: 168, supportSize: 92, ghostSize: 52, lineHeight: 0.96, gap: 22, rowGap: 4, ghostGap: 10,
   /** Rise and fade of a word as it is said. Short, eased out, no scale and no overshoot. */
-  enterSeconds: 0.1, enterRisePx: 10, enterFrom: 0.7,
+  enterSeconds: 0.1, enterRisePx: 10, enterFrom: 0.9,
   /** The previous page stays this long after the new page begins (its last 0.2 s is the fade). */
   holdSeconds: 0.6, ghostFadeSeconds: 0.2, ghostOpacity: 0.5,
   echoOpacity: 0.07, echoFadeSeconds: 0.3,

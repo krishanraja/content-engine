@@ -177,6 +177,10 @@ next(o for o in objects if o['obj'] == 'strike')['params'].update({"from": [230,
 # (Fri 20 Nov proof: the panel rode up to the top edge); the strike runs through the digits, not the source line.
 for _o in ('k_billed', 'strike'):
     next(o for o in objects if o['obj'] == _o)['params']['place'] = dict(BAND, top=BAND['top'] + 40)
+# The cash comes out of the sofa on 'missing money' and the skeleton falls on 'skeletons', not at the beat's start
+# (Krish, 19 Nov: "money back down the back of couches"; the Critic, 19 Nov: both played early).
+next(o for o in objects if o['obj'] == 'sofa')['params']['shots'][0]['hold_s'] = 2.3
+next(o for o in objects if o['obj'] == 'closet')['params']['shots'][0]['hold_s'] = 0.6
 next(o for o in objects if o['obj'] == 'th_head')['persist']['to_beat'] = 'lines'  # the same page held: its last line is his 'line by line'
 json.dump(spec,open(P+'spec.json','w'),indent=1); print('wrote', len(beats),'beats', len(objects),'objects')
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Img, OffthreadVideo, Sequence } from 'remotion'
+import { Freeze, Img, OffthreadVideo, Sequence } from 'remotion'
 import { FPS } from '../../clock'
 import type { DeviceProps } from '../types'
 import { cameraPose, coverRect, sceneState } from './state'
@@ -21,7 +21,13 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   return <div data-device="scene_plate" data-shot={s.index} style={{ position: 'absolute', ...area, overflow: 'hidden', background: tokens.inkDeep }}>
     <div data-camera="" style={{ position: 'absolute', inset: 0, transformOrigin: '0 0', transform: `translate(${tx}px, ${ty}px) scale(${pose.scale})` }}>
       <div style={{ position: 'absolute', inset: 0, transform: `rotate(${pose.rotation}deg)` }}>
-        {shot.kind === 'image' ? <Img src={shot.src} style={style} /> : <Sequence key={`${s.index}-${s.start}`} from={s.start} layout="none"><OffthreadVideo src={shot.src} muted trimBefore={Math.round(shot.from_s * FPS)} style={style} /></Sequence>}
+        {shot.kind === 'image' ? <Img src={shot.src} style={style} /> : (() => {
+          const trim = Math.round(shot.from_s * FPS), hold = Math.round(shot.hold_s * FPS)
+          const video = <OffthreadVideo src={shot.src} muted trimBefore={trim} style={style} />
+          return hold > 0 && frame < s.start + hold
+            ? <Freeze key={`${s.index}-${s.start}-held`} frame={0}>{video}</Freeze>
+            : <Sequence key={`${s.index}-${s.start}`} from={s.start + hold} layout="none">{video}</Sequence>
+        })()}
       </div>
     </div>
     <svg width={w} height={h} style={{ position: 'absolute', inset: 0 }}>
