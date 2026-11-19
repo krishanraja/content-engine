@@ -1,0 +1,307 @@
+{
+  "schema": "ve-proof/1",
+  "piece": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+  "cut": "short",
+  "beat": "power",
+  "rule": "named in the spec (proof.beat)",
+  "start": 48.933,
+  "end": 56.933,
+  "beat_s": [
+    50.233,
+    55.6
+  ],
+  "sha256": "9b0e1b40adb09241965a6fa34736c9ea4d6f1b7b9c9317a79363ec960dbadf42",
+  "spec_sha256": "e0e7a3881102bf678d2b96c52c815d738a57ad37a3238c618aecd4b7fb064ce0",
+  "structure": {
+    "format": "face-with-proof",
+    "aspect": "9:16",
+    "motion": "eating-jobs-ladder",
+    "objects": [
+      [
+        "ban_stat",
+        "kinetic_stat"
+      ],
+      [
+        "block",
+        "facility_block"
+      ],
+      [
+        "ddn",
+        "evidence_card"
+      ],
+      [
+        "el_deal",
+        "evidence_card"
+      ],
+      [
+        "field41",
+        "unit_field"
+      ],
+      [
+        "hf_deal",
+        "evidence_card"
+      ],
+      [
+        "meta_line",
+        "evidence_card"
+      ],
+      [
+        "meter",
+        "credit_meter"
+      ],
+      [
+        "recall_stat",
+        "kinetic_stat"
+      ],
+      [
+        "recalled",
+        "stamp"
+      ],
+      [
+        "small_print",
+        "evidence_card"
+      ]
+    ],
+    "beats": [
+      [
+        "hook",
+        "P1",
+        [
+          "ddn",
+          "recalled"
+        ]
+      ],
+      [
+        "dc",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "sacked",
+        "STAGE",
+        []
+      ],
+      [
+        "face",
+        "P1",
+        [
+          "field41"
+        ]
+      ],
+      [
+        "title",
+        "P1",
+        []
+      ],
+      [
+        "meta",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "city",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "piqua",
+        "STAGE",
+        []
+      ],
+      [
+        "bill",
+        "P1",
+        [
+          "block"
+        ]
+      ],
+      [
+        "vote",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "proof",
+        "P6",
+        [
+          "ban_stat",
+          "block"
+        ]
+      ],
+      [
+        "sack",
+        "P3",
+        [
+          "recall_stat"
+        ]
+      ],
+      [
+        "built",
+        "STAGE",
+        []
+      ],
+      [
+        "meta_says",
+        "STAGE",
+        [
+          "meta_line"
+        ]
+      ],
+      [
+        "party_line",
+        "P1",
+        [
+          "meta_line"
+        ]
+      ],
+      [
+        "power",
+        "STAGE",
+        [
+          "block"
+        ]
+      ],
+      [
+        "call",
+        "P1",
+        []
+      ],
+      [
+        "deals",
+        "P1",
+        [
+          "hf_deal"
+        ]
+      ],
+      [
+        "small_print",
+        "STAGE",
+        [
+          "small_print"
+        ]
+      ],
+      [
+        "payoff",
+        "STAGE",
+        [
+          "meter"
+        ]
+      ],
+      [
+        "three",
+        "P6",
+        [
+          "el_deal"
+        ]
+      ],
+      [
+        "carry_on",
+        "P1",
+        [
+          "block"
+        ]
+      ],
+      [
+        "close",
+        "STAGE",
+        []
+      ]
+    ]
+  },
+  "style_module": "eating-jobs-ladder",
+  "props_sha256": "0160d876a92abcfe567e5d1536640163c92a29d41a6308f5a812b89e0a68eca2",
+  "qc": {
+    "measured_pass": false,
+    "complete": false,
+    "failing": [
+      "captions.ocr",
+      "captions.off_face",
+      "captions.phrase_breaks",
+      "captions.render",
+      "evidence.readable",
+      "head.whole_in_frame"
+    ]
+  },
+  "type": [
+    [
+      "data",
+      "card"
+    ],
+    [
+      "dek",
+      "loud caption word"
+    ],
+    [
+      "display",
+      "card"
+    ],
+    [
+      "structure",
+      "caption"
+    ],
+    [
+      "structure",
+      "caption on the light stage"
+    ]
+  ],
+  "engine_sha256": "805c356a7730398c2f366de8813e8f84c8de8f82495b167da1de7f5a27112774",
+  "assets_sha256": {
+    "bg-city-dusk": "107539f8d1b4c68f2d05ba9c1e2bc002109c35e1235b0cc166cfeab76cbeae2c",
+    "bg-data-hall": "3730051bf5718d3577cfad4dc96c53bd8bd1abb0d20497ebed4630e065ea424c",
+    "bg-polling": "aac356ea0e5e482adfed416d67a671de86818696b76f6f16e801ff52d1b17d5c",
+    "bg-pylons": "df1bf828f3ef509082fa3c27222962813c53ebac28e5d1eb14f6b7790a611601",
+    "ddn-headline": "747439fd15b47d77da609f71da27096a4bcf5a414c51318f8b9da0d9f6992727",
+    "ddn-lead": "215bcbe5a998a19b621ce4f1a82db36c5ea3486cebce225bf622ddb243194fdd",
+    "el-creator-deal": "fc0d51c196f8d92d5485ca74b83dede5d9f7f455956f6d636372371685a4aeae",
+    "el-first-year": "a410e40a9e8a1473e19057984288e3ac45da75205524bf5bb9f9b91ab522ff88",
+    "el-plans": "2fb634b6e0c404bb1fd06172d99f7075eb67548fecfd34ffdaaaaea7bffbe1eb",
+    "hf-bonus-expires": "44b870c56e9fcd7fbae4d21e7069aaccb866cb0a451503af521de60f4a202664",
+    "hf-plans": "cf4a4a758eaa17e8e8053381fe7a61e3e8692fa9c7f1132430e3fd638ff4cacc",
+    "hf-team-credits": "ad9a0186fa4f36bb8b222666b1f85b740fe2a989a3fb72185e1b6148737ebe9b",
+    "hf-ultra-deal": "9e325df57fcf769ca73965a7cd1d2ef3aae8fffd1284bec98e7074330cac36d3",
+    "piqua-north-main": "b01af9c091b281a720ea1f3005e6833c50b922f3d1ac752d3d89ab547d731f5e",
+    "scene-ban-sign": "8e1b10c25f4afbed9eb6117f49f97775fbe387173c750b607159b4d6efc32828",
+    "scene-ban-sign-l": "e47816f667ada47471950088f7e96299ff7d53f757646ae4c732f4d07ef0e013",
+    "scene-boardroom": "aed24faee31ecebd12d7dca048581d82bb21453bc4ceda19dba0cd7620f871a4",
+    "scene-cow": "d69922249b2498e0742da085c2b283ddc8503d2968a57683f65a8e9cab275227",
+    "scene-fly": "69589922ba6f080ffa22b2a7877e96c8de0d1f874a9ece6b8de179218b16c9aa",
+    "scene-garden": "b30700e8df11dc5a6163cb7e9a3d50ae2baf101a60674808a3a820958c0defcf",
+    "scene-nameplate": "3c9a1ac2089bfab6659addb44ef42d8295f5c87bc05b3a0b9823263d47b76222",
+    "wyso-lead": "46cce36f4ef62310a8404d9b87423fa781f1499e58a899b58c137d2ba74edc8c"
+  },
+  "made_at": "2026-11-19T13:25:40Z",
+  "frames": {
+    "pass": true,
+    "status": "ok",
+    "problems": [],
+    "frames": 38
+  },
+  "compare": {
+    "against": "546bd471bf3fc3e2ae807072d0b2fec09efc2d7ad73e539a2841a621d3c1858c",
+    "reasons": [
+      "the engine changed since the proof he approved"
+    ],
+    "compared": null,
+    "sheet": "compare.short.png",
+    "sha256": "99ec9d52efebc41e43e0cf09c3b8bd5e854f504ce9ad8e983c4e04d299fd96f1",
+    "seconds": [
+      0.5,
+      1.5,
+      2.5,
+      3.5,
+      4.5,
+      5.5,
+      6.5,
+      7.5
+    ]
+  },
+  "sendable": false
+}

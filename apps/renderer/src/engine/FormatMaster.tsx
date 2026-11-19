@@ -222,8 +222,11 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const kindChange = !!next && !!props.layout && fullScreen(beat) !== fullScreen(next)
         // A leading handover never crosses that line either: kept on for LEAD_AFTER frames, his face showed through the
         // block as it arrived (Tue 17, 19 Nov 2026, the power beat's proof).
-        const leadOut = leading && !kindChange && beat.transitionOut !== 'carry' && keepsOutgoing(profile, beat, next, true)
-        const overlap = leadOut ? LEAD_AFTER : profile && !kindChange && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
+        // The episode title arrives on a clean frame: the beat it opens over cuts, never dissolving under the card
+        // (Tue 17, 19 Nov 2026: the 41 votes showed through the title's first frames).
+        const titleOver = !!next && !!props.titleMoment && Math.abs(props.titleMoment.fromFrame - beat.toFrame) <= 1
+        const leadOut = leading && !kindChange && !titleOver && beat.transitionOut !== 'carry' && keepsOutgoing(profile, beat, next, true)
+        const overlap = leadOut ? LEAD_AFTER : profile && !kindChange && !titleOver && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
         const outgoing = frame >= beat.toFrame && frame < beat.toFrame + overlap
         if ((frame < beat.fromFrame || frame >= beat.toFrame) && !outgoing) return null
         const now = outgoing && !leadOut ? beat.toFrame - 1 : frame
@@ -242,14 +245,16 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const shown = outgoing ? Math.min(at, beat.toFrame - 1) : at
         const layerHeight = beat.layout === 'SPLIT' ? splitCameraBox(props.aspect).top : height
         const view = profile || focusOn ? cameraView(profile, beat, slots, objects, props, shown, focusOn) : undefined
-        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region, focusOn ? FOCUS_SCALE : undefined)
+        const arrivesAcross = (!!prev && !!props.layout && fullScreen(prev) !== fullScreen(beat))
+          || (!!prev && !!props.titleMoment && Math.abs(props.titleMoment.fromFrame - beat.fromFrame) <= 1)
+        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region, focusOn ? FOCUS_SCALE : undefined, arrivesAcross)
           : view?.focusable ? focusMotion(view, now, beat, FOCUS_SCALE, width, layerHeight) : undefined
         // Between two full-screen pictures the outgoing one stays solid under the incoming one's fade, so nothing under
         // both (his take) shows through the dissolve.
         const underFullScreen = outgoing && !!next && fullScreen(beat) && fullScreen(next)
         const fade = (motion?.fade ?? 1) * (outgoing && !leadOut && !underFullScreen ? 1 - progress(frame - beat.toFrame, overlap, (t) => t) : 1)
         // The beat's own move in a leading handover: arriving over the one before, and leaving, dimming to dark.
-        const lead = leading ? leadMoveAt(ingredients!, beat, !!prev && prev.transitionOut !== 'carry', leadOut, frame, width, height) : undefined
+        const lead = leading ? leadMoveAt(ingredients!, beat, !!prev && prev.transitionOut !== 'carry' && !arrivesAcross, leadOut, frame, width, height) : undefined
         const sweep = profile && (beat.layout === 'STAGE' || beat.layout === 'SPLIT') ? sweepStyle(profile, props.tokens, beat, now) : null
         const ground = beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: profile ? splitGroundColour(profile, props.tokens) : props.tokens.cream, overflow: 'hidden' as const }
           // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,

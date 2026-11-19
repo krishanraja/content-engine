@@ -68,7 +68,7 @@ export function focusMotion(view: CameraView, frame: number, beat: EngineBeat, s
  *  no other device on the layer dims. A style that already zooms to the focus keeps its own zoom. */
 export function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number,
   view: CameraView, width: number, height: number, region?: { left: number; top: number; width: number; height: number },
-  focusScale?: number): BeatMotion {
+  focusScale?: number, cleanArrival = false): BeatMotion {
   const beat = beats[index]!
   const prev = index > 0 ? beats[index - 1] : undefined
   const t = frame - beat.fromFrame
@@ -79,7 +79,9 @@ export function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[],
   let fade = 1
   // Arriving. The opening beat is already landed (clock.stateAt pre-rolls opening entrances); carry means the
   // previous beat's objects continue, so nothing arrives. 'cut' leaves the choice to the style.
-  if (prev && prev.transitionOut !== 'carry') {
+  // cleanArrival: the beat before sits across the face/picture line (FormatMaster), so this one cuts in whole and
+  // nothing of his take shows through it (Tue 17, 19 Nov 2026).
+  if (prev && prev.transitionOut !== 'carry' && !cleanArrival) {
     if (prev.transitionOut === 'cut_on_curve' || profile.transition === 'cut_on_curve') {
       const e = entranceStyle(progress(t, MOTION.enterFrames, ENTER))
       if (e.transform) transforms.push(e.transform)
