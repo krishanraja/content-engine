@@ -41,8 +41,11 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
       fontFamily: HOUSE_FONTS.data, fontSize: l.sizes[0]! * l.scale,
       lineHeight: 1.2, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>{shown(state.ghostText)}</div>}
     {[{ rect: l.number, text: shown(state.text), font: HOUSE_FONTS.display },
+      // A mid-count value is never labelled as the figure or sourced: the label and source wait for the count to land
+      // (Fri 20 Nov critic: '$192,884' under 'the hospital's first bill').
+      ...(state.value === state.target || state.ghostText !== null ? [
       { rect: l.unit, text: state.unit, font: HOUSE_FONTS.data },
-      { rect: l.producer, text: state.producerLabel, font: HOUSE_FONTS.data }].map((row, i) =>
+      { rect: l.producer, text: state.producerLabel, font: HOUSE_FONTS.data }] : [])].map((row, i) =>
       <div key={i} style={{ position: 'absolute', ...row.rect, fontFamily: row.font, fontSize: l.sizes[i]! * l.scale,
         lineHeight: i === 0 ? 1.2 : 1.3, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>{row.text}</div>)}
   </div>

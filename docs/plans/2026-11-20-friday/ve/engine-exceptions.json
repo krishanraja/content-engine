@@ -90,6 +90,15 @@
    "on": "2026-11-19",
    "artifact_hash": "199c7aaed062623c4478ce4fe14e3b5c450d2b933f5bf72959590eae715e2497",
    "covers": "the face-and-captions finding, completed: his full-frame take framed 2% higher again (FACE_LIFT 1.18) so the captions clear the face margin"
+  },
+  {
+   "gate": "exception",
+   "scope": "engine",
+   "by": "Krish",
+   "said": "fix all five, this is absolute madness",
+   "on": "2026-11-19",
+   "artifact_hash": "4defec77cfa9e8b3c012dfa5d78e490e52c47b413bf1202ea7dc49a399c4ee65",
+   "covers": "the ghost-word finding, completed: the art-directed caption's echo word is never drawn behind a beat that draws a card, page or picture; the title wordmark moves as 'or' arrives; a mid-count figure carries no label or source until it lands"
   }
  ]
 }

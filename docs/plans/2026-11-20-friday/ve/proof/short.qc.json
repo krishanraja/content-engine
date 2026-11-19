@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-11-20-friday/ve/proof/short.mp4",
-  "sha256": "52eb73487a16dc6d65db0e9a68d905110f0b44f91668da84d71d3657cd5eb973",
+  "sha256": "9d02bc285f0650939bffd5725e34650bb72ec6d81ea3280556020a61fc5b85a7",
   "duration_s": 8.0,
   "format": "face-with-proof",
   "checks": {
@@ -108,7 +108,7 @@
         {
           "beat": "skeletons",
           "frame": 205,
-          "score": 0.17727504085999943,
+          "score": 0.1751590454286402,
           "pass": true
         }
       ],
@@ -189,9 +189,9 @@
           "atFrame": 171,
           "peak_frame": 172,
           "lag_frames": 1,
-          "peak_difference": 26.02297019958496,
-          "event_difference": 26.02297019958496,
-          "threshold": 6.292910814285278,
+          "peak_difference": 23.790000915527344,
+          "event_difference": 23.790000915527344,
+          "threshold": 9.21241307258606,
           "gradual": false,
           "pass": true
         }
@@ -356,7 +356,7 @@
             "message": "caption page 0 reads \"TEAMS TO SORT =~\nPRICING ~\" near frame 22, not \"teams to sort pricing out\" (score 0.8, needs an exact match and 0.98)"
           }
         ],
-        "changes_found": 8,
+        "changes_found": 9,
         "status": "fail",
         "reason": "1 of 2 caption page(s) are not drawn as the props say near their start"
       },
@@ -401,7 +401,7 @@
         {
           "edge_frame": 171,
           "barest_frame": 168,
-          "stage_std": 61.92,
+          "stage_std": 61.89,
           "floor": 3.0,
           "pass": true
         }
@@ -484,7 +484,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 99.39
+              "value": 99.4
             },
             "small_text": {
               "pass": true,
@@ -688,7 +688,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 99.39
+            "value": 99.4
           },
           "small_text": {
             "pass": true,

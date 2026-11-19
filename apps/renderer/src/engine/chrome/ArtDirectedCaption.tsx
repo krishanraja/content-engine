@@ -90,6 +90,12 @@ export function faceAt(props: EngineRenderProps, frame: number): boolean {
   return Boolean(beat && beat.plate?.source === 'take' && beat.face !== 'off')
 }
 
+/** True when the beat at this frame draws an object of its own (a card, a page, a plate). */
+export function drawsAt(props: EngineRenderProps, frame: number): boolean {
+  const beat = props.beats.find((b) => frame >= b.fromFrame && frame < b.toFrame)
+  return Boolean(beat && (beat.uses ?? []).length > 0)
+}
+
 const SHADOW = '0 6px 24px rgba(0,0,0,.45)'
 
 export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null {
@@ -122,6 +128,9 @@ export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps;
 
   // The echo: this page's, fading in as its word is said, and the last page's fading out under it. Opacity only.
   const echo = (pg: Page, alpha: number) => {
+    // Never behind anything a beat draws (a card, a real page, a picture): two separate Critics read it there as a ghost
+    // word competing with the page ("BROTHE..." behind the news card, Fri 20 Nov).
+    if (drawsAt(props, pg.fromFrame) || drawsAt(props, frame)) return null
     // Never across his face: on a beat that shows his take the echo would sit over it as a grey ghost word
     // (Fri 20 Nov, "CHATBOT" and "THEM" over his face; captions_off_his_face).
     if (faceAt(props, pg.fromFrame) || faceAt(props, frame)) return null

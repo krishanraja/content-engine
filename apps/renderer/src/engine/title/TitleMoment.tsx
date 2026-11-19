@@ -201,7 +201,9 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
   if (geo.wordmark && geo.bands.length > 1) {
     const b0 = geo.bands[0]!, lift0 = b0.width / 2 * Math.sin(3 * Math.PI / 180)
     const firstTop = Math.min(b0.cy + b0.height / 2 + lift0 + height * 0.025, height * 0.97 - geo.wordmark.height)
-    const second = Math.min(...geo.bands[1]!.indices.map(i => words[i]!.atFrame))
+    // It moves as the connector ('or') arrives, before it, so the connector never lands under the wordmark (Fri 20 Nov).
+    const second = Math.min(...geo.bands[1]!.indices.map(i => words[i]!.atFrame),
+      geo.connector ? words[geo.connector.index]!.atFrame - 3 : Infinity)
     const landed = frame < second ? 0 : ease((frame - second) / 9)
     markShift = (firstTop - geo.wordmark.top) * (1 - landed)
   }
