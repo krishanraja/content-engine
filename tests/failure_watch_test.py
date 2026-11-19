@@ -40,6 +40,15 @@ class WatchShape(unittest.TestCase):
                                                           'test': 'python3 scripts/ve.py lint <spec>'}])]}
         self.assertTrue(any('placeholder' in p for p in check_failures.check_loop_fields(bad)))
 
+    def test_a_guard_test_that_needs_pytest_is_refused(self):
+        # CI installs requirements-ci.txt only, which has no pytest (Full verify, issue #758).
+        bad = {'failures': [entry('pytest', guards=[{'file': 'x', 'contains': 'x', 'how': 'x',
+                                                     'test': 'python3 -m pytest -q tests/copy_lint_test.py'}])]}
+        self.assertTrue(any('needs pytest' in p for p in check_failures.check_loop_fields(bad)))
+        ok = {'failures': [entry('script', guards=[{'file': 'x', 'contains': 'x', 'how': 'x',
+                                                    'test': 'python3 tests/copy_lint_test.py -k Tag'}])]}
+        self.assertFalse(any('needs pytest' in p for p in check_failures.check_loop_fields(ok)))
+
 
 class WatchList(unittest.TestCase):
     def test_only_the_makers_asked_open_first_with_what_stops_each(self):

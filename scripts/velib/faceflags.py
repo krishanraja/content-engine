@@ -83,6 +83,19 @@ def reading(shapes: dict, matrix) -> dict:
             'yaw': yaw, 'pitch': pitch}
 
 
+def landmark_box(landmarks) -> list[float]:
+    """The face's box on the take, [x, y, w, h] as shares of the frame, from the landmarks' extent: the face keep-out
+    compile writes per beat (velib/keepout.py; Krish, 2026-11-19: "the card generates over my face")."""
+    xs = [min(1.0, max(0.0, float(p.x))) for p in landmarks]
+    ys = [min(1.0, max(0.0, float(p.y))) for p in landmarks]
+    return [round(min(xs), 4), round(min(ys), 4), round(max(xs) - min(xs), 4), round(max(ys) - min(ys), 4)]
+
+
+def boxes(scanned: dict) -> list[dict]:
+    """The face box at each sample that saw his face: what the face keep-out reads (velib/keepout.py)."""
+    return [{'t': s['t'], 'box': s['box']} for s in scanned.get('samples', []) if s.get('face') and s.get('box')]
+
+
 def scan(media: str | Path, every_s: float = EVERY_S) -> dict:
     """Read the take: one sample every `every_s` seconds. Needs mediapipe."""
     import mediapipe as mp  # noqa: PLC0415
@@ -99,7 +112,8 @@ def scan(media: str | Path, every_s: float = EVERY_S) -> dict:
                 samples.append({'t': at_s, 'face': False})
                 continue
             shapes = {c.category_name: c.score for c in found.face_blendshapes[0]}
-            samples.append({'t': at_s, **reading(shapes, found.facial_transformation_matrixes[0])})
+            samples.append({'t': at_s, **reading(shapes, found.facial_transformation_matrixes[0]),
+                            'box': landmark_box(found.face_landmarks[0]) if found.face_landmarks else None})
     return {'schema': SCHEMA, 'every_s': every_s, 'samples': samples}
 
 

@@ -21,7 +21,7 @@ function files(dir: string, keep: (path: string) => boolean, deep = true): strin
   const walk = (at: string) => {
     for (const name of readdirSync(at)) {
       const path = join(at, name)
-      if (statSync(path).isDirectory()) { if (deep && name !== 'node_modules' && name !== 'dist') walk(path) }
+      if (statSync(path).isDirectory()) { if (deep && name !== 'node_modules' && name !== 'dist' && name !== 'worktrees') walk(path) }
       else if (keep(path)) out.push(relative(ROOT, path).replace(/\\/g, '/'))
     }
   }

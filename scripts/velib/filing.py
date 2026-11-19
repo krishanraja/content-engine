@@ -50,7 +50,8 @@ def readiness(spec: dict, cut: str, directory: Path) -> tuple[list[str], str | N
     2026-11-19)."""
     from . import packet  # noqa: PLC0415
     state = packet.readiness(spec, cut, directory)
-    return (state['mechanical'] + state['design'] + state.get('codex', []), state['video'], state['digest'])
+    return (state['mechanical'] + state['design'] + state.get('codex', []) + state.get('floor', []), state['video'],
+            state['digest'])
 
 
 def library_root(given=None) -> Path:

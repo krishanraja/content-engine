@@ -133,13 +133,17 @@ export async function crossWeekNotes(db: SupabaseClient, week: string, pieceIds:
   const ids = [...new Set(pieceIds.filter(x => /^[0-9a-f-]{36}$/i.test(x)).map(x => x.toLowerCase()))]
   const keys = [...new Set(itemKeys.filter(Boolean))]
   const reads: Array<PromiseLike<unknown[]>> = []
+  // Building a read can throw too (a client without one of these filters); that read gives none, as promised above.
+  const read = (build: () => PromiseLike<{ error: unknown; data: unknown[] | null }>): void => {
+    try { reads.push(build().then(r => (r.error ? [] : r.data || []), () => [])) } catch { /* none */ }
+  }
   const base = () => db.from('board_documents').select('doc_id,body,updated_by,updated_at,week').eq('collection', 'comments').neq('week', week)
     .eq('body->>use', 'claude_notes')
-  if (ids.length) reads.push(base().in('body->>piece_id', ids).limit(500).then(r => (r.error ? [] : r.data || []), () => []))
+  if (ids.length) read(() => base().in('body->>piece_id', ids).limit(500))
   // A post's notes key carries its day (off-thu-x); one moved keeps its option id, so it is matched without the day.
   for (const k of keys.slice(0, 40)) {
     const id = noteItemKey(k)?.replace(/^off-/, '')
-    if (id && /^[A-Za-z0-9_-]{1,120}$/.test(id)) reads.push(base().like('body->>item', `off-%-${id}`).limit(200).then(r => (r.error ? [] : r.data || []), () => []))
+    if (id && /^[A-Za-z0-9_-]{1,120}$/.test(id)) read(() => base().like('body->>item', `off-%-${id}`).limit(200))
   }
   const rows = (await Promise.all(reads)).flat() as Array<Body & { week?: string }>
   const seen = new Set<string>()

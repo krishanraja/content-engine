@@ -49,6 +49,14 @@ for (const m of ['20261019120743_publish_board_web', '20261125093000_board_sessi
 
 // ── a Supabase-shaped client over the real database (only what these routes and the view use) ───────────────────────
 const qi = (c: string) => `"${c.replace(/"/g, '')}"`
+// A filter column, as PostgREST reads it: a plain column, or a JSON path (body->>use, meta->offday_link->>week).
+const qc = (c: string) => {
+  const parts = c.split(/(->>?)/)
+  if (parts.length === 1) return qi(c)
+  let sql = qi(parts[0])
+  for (let i = 1; i < parts.length; i += 2) sql += `${parts[i]}'${parts[i + 1].replace(/'/g, "''")}'`
+  return sql
+}
 function from(table: string) {
   const st: { op: string; cols: string; where: string[]; params: unknown[]; order: string[]; limit: number | null; values: Record<string, unknown> | null; single: '' | 'maybe' | 'one'; returning: string | null } =
     { op: 'select', cols: '*', where: [], params: [], order: [], limit: null, values: null, single: '', returning: null }
@@ -56,15 +64,16 @@ function from(table: string) {
   const b: any = {
     select(cols = '*') { if (st.op === 'select') st.cols = cols; else st.returning = cols; return b },
     update(v: Record<string, unknown>) { st.op = 'update'; st.values = v; return b },
-    eq(c: string, v: unknown) { add(n => `${qi(c)} = ${n}`, v); return b },
-    gte(c: string, v: unknown) { add(n => `${qi(c)} >= ${n}`, v); return b },
-    lte(c: string, v: unknown) { add(n => `${qi(c)} <= ${n}`, v); return b },
-    lt(c: string, v: unknown) { add(n => `${qi(c)} < ${n}`, v); return b },
-    gt(c: string, v: unknown) { add(n => `${qi(c)} > ${n}`, v); return b },
-    in(c: string, v: unknown[]) { add(n => `${qi(c)} = any(${n})`, v); return b },
-    like(c: string, v: unknown) { add(n => `${qi(c)} like ${n}`, v); return b },
-    is(c: string, v: null) { st.where.push(`${qi(c)} is ${v === null ? 'null' : String(v)}`); return b },
-    not(c: string, op: string, v: null) { if (op === 'is') st.where.push(`${qi(c)} is not ${v === null ? 'null' : String(v)}`); return b },
+    eq(c: string, v: unknown) { add(n => `${qc(c)} = ${n}`, v); return b },
+    neq(c: string, v: unknown) { add(n => `${qc(c)} <> ${n}`, v); return b },
+    gte(c: string, v: unknown) { add(n => `${qc(c)} >= ${n}`, v); return b },
+    lte(c: string, v: unknown) { add(n => `${qc(c)} <= ${n}`, v); return b },
+    lt(c: string, v: unknown) { add(n => `${qc(c)} < ${n}`, v); return b },
+    gt(c: string, v: unknown) { add(n => `${qc(c)} > ${n}`, v); return b },
+    in(c: string, v: unknown[]) { add(n => `${qc(c)} = any(${n})`, v); return b },
+    like(c: string, v: unknown) { add(n => `${qc(c)} like ${n}`, v); return b },
+    is(c: string, v: null) { st.where.push(`${qc(c)} is ${v === null ? 'null' : String(v)}`); return b },
+    not(c: string, op: string, v: null) { if (op === 'is') st.where.push(`${qc(c)} is not ${v === null ? 'null' : String(v)}`); return b },
     or() { return b },
     order(c: string, o: { ascending?: boolean } = {}) { st.order.push(`${qi(c)} ${o.ascending === false ? 'desc' : 'asc'}`); return b },
     limit(n: number) { st.limit = n; return b },

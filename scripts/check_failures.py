@@ -90,6 +90,10 @@ def check_loop_fields(register):
         for g in f.get('guards') or []:
             if re.search(r'<[^>]*>', str(g.get('test') or '')):
                 broken.append(f'{fid}: its test "{g["test"]}" has a placeholder; name a command that runs as written')
+            # CI installs requirements-ci.txt only, which has no pytest: a guard run through it fails there every time
+            # (Full verify, issue #758). The tests are unittest files; run them as scripts (python3 tests/x_test.py -k Name).
+            if re.search(r'-m\s+pytest\b', str(g.get('test') or '')):
+                broken.append(f'{fid}: its test "{g["test"]}" needs pytest, which CI does not install; run the file itself')
     return broken
 
 

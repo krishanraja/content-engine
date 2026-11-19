@@ -18,7 +18,7 @@ sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 import ve
-from velib import designlock, packet, verdict
+from velib import designlock, floor, packet, verdict
 from velib.common import sha256_file, write_json
 from PIL import Image
 
@@ -63,6 +63,8 @@ class PacketTest(unittest.TestCase):
         self.enterContext(patch.object(designlock, 'frozen', side_effect=lambda lock, fmt: original_frozen(lock, fmt, self.root)))
         self.enterContext(patch.object(ve, 'spec_path_for', return_value=self.spec_file))
         self.enterContext(patch('velib.lint.lint', side_effect=lambda path:(self.spec, [])))
+        # These tests read the other gates; the floor (pace and judge) has its own (tests/ve_quality_floor_test.py).
+        self.enterContext(patch.object(floor, 'held_problems', return_value=[]))
 
     def save_qc(self):
         write_json(self.directory / 'qc.short.json', self.qc)

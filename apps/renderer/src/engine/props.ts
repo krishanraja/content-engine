@@ -48,6 +48,9 @@ export const EngineBeatSchema = z.object({
   face: z.enum(['full', 'window', 'off']).optional(),
   plate: z.object({ source: z.string().min(1), crop: z.string().min(1).optional() }).strict().optional(),
   backdrop: z.object({ src: z.string().min(1) }).strict().optional(),
+  /** The box his face takes in the frame on this beat, from the take's face track (compile, velib/keepout.py; Krish,
+   *  2026-11-19: "the card generates over my face"). Nothing is drawn over it. */
+  faceKeepOut: z.object({ left: z.number(), top: z.number(), width: z.number(), height: z.number() }).strict().optional(),
   fromFrame: Frame,
   toFrame: Frame,
   uses: z.array(z.string()),

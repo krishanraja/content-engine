@@ -13,10 +13,18 @@ import { createHash } from 'node:crypto'
 
 export const VIEW_CONTRACT_VERSION = '1.33.0'
 
-/** The view's entity tag: what it says, never when it was read, so a read that finds nothing new answers 304. */
+/** JSON with every object's keys sorted, so the same content always serialises the same (arrays keep their order). */
+export function stableJson(value: unknown): string {
+  return JSON.stringify(value, (_k, v: unknown) => (v && typeof v === 'object' && !Array.isArray(v)
+    ? Object.fromEntries(Object.keys(v as Record<string, unknown>).sort().map(k => [k, (v as Record<string, unknown>)[k]]))
+    : v))
+}
+
+/** The view's entity tag: what it says, never when it was read or the order its keys were filled in, so a read that
+ *  finds nothing new answers 304. */
 export function viewEtag(view: Record<string, unknown>): string {
   const { as_of: _asOf, ok: _ok, ...rest } = view
-  return `"v${VIEW_CONTRACT_VERSION.split('.')[0]}-${createHash('sha256').update(JSON.stringify(rest)).digest('hex').slice(0, 32)}"`
+  return `"v${VIEW_CONTRACT_VERSION.split('.')[0]}-${createHash('sha256').update(stableJson(rest)).digest('hex').slice(0, 32)}"`
 }
 
 /** Whether a request's If-None-Match names this tag (a list, or a weak form, counts). */

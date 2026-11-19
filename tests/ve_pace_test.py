@@ -92,7 +92,7 @@ class BesideReferences(unittest.TestCase):
             line = pace.beside_references(Path(tmp) / 'cut.mp4', self.table(tmp), measure_fn=slow)
             self.assertTrue(line.startswith('pace: events/s 0.2 (1.0 .. 2.0 .. 3.0)'), line)
             self.assertIn('below every reference on events/s, longest gap s', line)
-            self.assertIn('never a gate', line)
+            self.assertIn('never a target', line)
 
     def test_a_cut_it_cannot_measure_says_why_and_never_raises(self):
         with tempfile.TemporaryDirectory() as tmp:

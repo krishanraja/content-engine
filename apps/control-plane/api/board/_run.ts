@@ -86,7 +86,7 @@ export async function dispatchJob(job: JobName, input: Record<string, unknown>, 
       method: 'POST', headers: { ...headers(t), 'Content-Type': 'application/json' },
       body: JSON.stringify({ event_type: job, client_payload: payload }),
     })
-    if (r.status === 204) return { sent: true, job, workflow: JOBS[job].workflow, at: now().toISOString() }
+    if (r.status === 204) { runsCache = new WeakMap(); return { sent: true, job, workflow: JOBS[job].workflow, at: now().toISOString() } }
     const text = await r.text().catch(() => '')
     return { sent: false, job, reason: 'failed', error: `github ${r.status}: ${text.slice(0, 120)}` }
   } catch (e: unknown) {
@@ -97,24 +97,42 @@ export async function dispatchJob(job: JobName, input: Record<string, unknown>, 
 export type RunState = 'queued' | 'running' | 'done' | 'failed' | 'cancelled'
 export interface RunInfo { job: JobName; workflow: string; state: RunState; started_at: string; updated_at: string; url: string; event: string }
 
+/** How long one read of the runs is reused: the board polls every 15 s, so each poll does not ask GitHub again for every
+ *  workflow. A job the board sends empties it, so a press shows its run on the next read. */
+export const RUNS_TTL_MS = 10_000
+let runsCache = new WeakMap<object, Map<string, { at: number; runs: Promise<Partial<Record<JobName, RunInfo>>> }>>()
+
 /** The latest run of each job's workflow, newest first, from GitHub's public API. A read that fails gives no runs. */
 export async function readRuns(env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as Fetcher,
-  jobs: JobName[] = Object.keys(JOBS) as JobName[]): Promise<Partial<Record<JobName, RunInfo>>> {
-  const out: Partial<Record<JobName, RunInfo>> = {}
+  jobs: JobName[] = Object.keys(JOBS) as JobName[], now = () => Date.now()): Promise<Partial<Record<JobName, RunInfo>>> {
+  const key = `${repoOf(env)}|${token(env) ? 't' : ''}|${jobs.join(',')}`
+  let byKey = runsCache.get(fetcher)
+  if (!byKey) runsCache.set(fetcher, byKey = new Map())
+  const hit = byKey.get(key)
+  if (hit && now() - hit.at < RUNS_TTL_MS) return hit.runs
+  const runs = readRunsNow(env, fetcher, jobs)
+  byKey.set(key, { at: now(), runs })
+  return runs
+}
+
+async function readRunsNow(env: Record<string, string | undefined>, fetcher: Fetcher, jobs: JobName[]): Promise<Partial<Record<JobName, RunInfo>>> {
   const t = token(env)
-  await Promise.all(jobs.map(async job => {
+  const found = await Promise.all(jobs.map(async (job): Promise<RunInfo | null> => {
     try {
       const r = await fetcher(`https://api.github.com/repos/${repoOf(env)}/actions/workflows/${JOBS[job].workflow}/runs?per_page=1`, { method: 'GET', headers: headers(t) })
-      if (r.status !== 200) return
+      if (r.status !== 200) return null
       const data = JSON.parse(await r.text()) as { workflow_runs?: Array<Record<string, unknown>> }
       const run = data.workflow_runs?.[0]
-      if (!run) return
+      if (!run) return null
       const status = String(run.status), conclusion = String(run.conclusion)
       const state: RunState = status !== 'completed' ? (status === 'in_progress' ? 'running' : 'queued')
         : conclusion === 'success' ? 'done' : conclusion === 'cancelled' || conclusion === 'skipped' ? 'cancelled' : 'failed'
-      out[job] = { job, workflow: JOBS[job].workflow, state, started_at: String(run.run_started_at || run.created_at),
+      return { job, workflow: JOBS[job].workflow, state, started_at: String(run.run_started_at || run.created_at),
         updated_at: String(run.updated_at), url: String(run.html_url), event: String(run.event) }
-    } catch { /* a run that cannot be read is left out; the board says it does not know */ }
+    } catch { return null /* a run that cannot be read is left out; the board says it does not know */ }
   }))
+  // Filled in the jobs' own order, never the order GitHub answered in, so the view (and its ETag) does not churn.
+  const out: Partial<Record<JobName, RunInfo>> = {}
+  jobs.forEach((job, i) => { const run = found[i]; if (run) out[job] = run })
   return out
 }
