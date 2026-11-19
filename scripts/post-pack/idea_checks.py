@@ -22,6 +22,8 @@ Live adapters build both from sources.json and ideas.json; the history fixture s
 names and short hashes, never his words.
 """
 import hashlib
+import json
+from pathlib import Path
 import re
 from datetime import date
 
@@ -811,12 +813,12 @@ def considered_findings(ideas):
     return out
 
 
-GOOD_NEWS_KINDS = ('health', 'lab', 'science', 'work', 'money', 'learning', 'climate', 'creative', 'people', 'safety', 'other')
+GOOD_NEWS_KINDS = ('business', 'health', 'lab', 'science', 'work', 'money', 'learning', 'climate', 'creative', 'people', 'safety', 'other')
 
 
 def goodnews_mix_findings(ideas):
     """Item 12: each Saturday good-news story says what kind of good it is (kind, one of GOOD_NEWS_KINDS), so the board
-    shows the week's mix. The cap on health and lab stories waits for his yes; the mix is shown, never capped here."""
+    shows the week's mix. The cap on medical stories is goodnews_findings' (Krish, 2026-11-19; config/good-news.json)."""
     week = str((ideas or {}).get('week_start') or '')
     if week < SHAPE_FROM:
         return []
@@ -1458,6 +1460,146 @@ def breadth_findings(ideas, week):
 COPY_RUN = 7
 
 
+# Saturday's good news (Krish, 2026-11-19, of Sat 28's ideas board: "These are still all just one idea, mostly, and
+# they're not good news carousels. Some of them are memes that are sneaking through, and the only actual uplifting
+# carousel is about AI in hospital again, which is all we post about. We should find good news that's not medical
+# stuff."). Every rule reads config/good-news.json, so a new topic, limit or keyword is a row there.
+
+def good_news_config():
+    return json.loads((Path(__file__).resolve().parents[2] / 'config' / 'good-news.json').read_text(encoding='utf-8'))
+
+
+GOOD_NEWS = good_news_config()
+GOOD_NEWS_FROM = GOOD_NEWS['from']
+
+
+def is_good_news(o):
+    """A Saturday option that is a good-news carousel: kind good_news, the weekly series, or a format that says so."""
+    if not isinstance(o, dict):
+        return False
+    if saturday_kind(o) == 'good_news':
+        return True
+    fmt = str(o.get('format') or '').lower()
+    return bool(re.search(r'uplifting|good[- ]news', fmt)) and 'meme' not in fmt
+
+
+def topic_kind_of(text):
+    """The good-news topic a text is about, by the keywords in config/good-news.json (most hits wins), or None."""
+    t = ' ' + re.sub(r'[^a-z0-9 ]+', ' ', str(text or '').lower()) + ' '
+    best, n = None, 0
+    for row in GOOD_NEWS['topics']:
+        hits = sum(t.count(f' {k} ') for k in row.get('keywords') or [])
+        if hits > n:
+            best, n = row['kind'], hits
+    return best
+
+
+def option_topic_kind(o):
+    """An option's topic kind: its own topic_kind, else read from its topic, hook and title, else its stories' most
+    common kind."""
+    kinds = {r['kind'] for r in GOOD_NEWS['topics']}
+    own = o.get('topic_kind')
+    if own in kinds:
+        return own
+    found = topic_kind_of(' '.join(str(o.get(f) or '') for f in ('topic', 'hook', 'title')))
+    if found:
+        return found
+    counts = {}
+    for st in o.get('stories') or []:
+        if isinstance(st, dict) and st.get('kind') in kinds:
+            counts[st['kind']] = counts.get(st['kind'], 0) + 1
+    return max(sorted(counts), key=counts.get) if counts else None
+
+
+def goodnews_findings(ideas, week, history=None):
+    """From GOOD_NEWS_FROM: Saturday offers only good-news carousels (no meme, explainer or one-story carousel), at least
+    min_options of them, each on its own topic, none on a topic a Saturday carried in the repeat_weeks before (a medical
+    topic included), each with its five stories (or marked stories_to_find, the board's "Find the other N stories"),
+    each story with its kind and source, and at most medical_stories_max medical stories in a carousel whose topic is
+    not medical. history: [{"week", "kind"}] of the Saturdays before."""
+    if str(week) < GOOD_NEWS_FROM:
+        return []
+    cfg = GOOD_NEWS
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    sat = [o for o in offdays.get('sat') or [] if isinstance(o, dict) and not is_template(o)]
+    out = []
+
+    def say(ref, line):
+        out.append({'code': 'goodnews', 'ref': ref, 'line': f'goodnews: {ref} {line}'})
+
+    from datetime import date as _d, timedelta as _t
+    start = _d.fromisoformat(str(week))
+    recent, medical_recent = {}, 0
+    for h in history or []:
+        try:
+            back = (start - _d.fromisoformat(str(h.get('week')))).days
+        except ValueError:
+            continue
+        if 0 < back <= 7 * cfg['repeat_weeks']:
+            if h.get('kind'):
+                recent.setdefault(h['kind'], str(h.get('week')))
+            medical_recent += int(h.get('medical') or 0)
+    labels = {r['kind']: r['label'] for r in cfg['topics']}
+    good = []
+    for o in sat:
+        ref = f'off-sat-{o.get("id")}'
+        if not is_good_news(o):
+            say(ref, f'is "{o.get("format") or "a post with no format"}"; Saturday offers only good-news carousels (five '
+                     'good-news stories on one topic). A meme belongs in the meme templates lane, an explainer on Tuesday or Thursday')
+            continue
+        good.append(o)
+    # A board with no Saturday at all is the breadth check's (OFFDAY_BREADTH); one with a Saturday offers enough good news.
+    if 'sat' in offdays and len(good) < cfg['min_options']:
+        say('sat', f'has {len(good)} good-news carousel{"s" if len(good) != 1 else ""}; Saturday offers at least {cfg["min_options"]}, each on its own topic')
+    seen = {}
+    for o in good:
+        ref = f'off-sat-{o.get("id")}'
+        kind = option_topic_kind(o)
+        if not kind:
+            say(ref, 'says no topic kind (topic_kind, one of ' + ', '.join(labels) + ')')
+        else:
+            if kind in seen:
+                say(ref, f'is on the same topic ({labels.get(kind, kind)}) as off-sat-{seen[kind]}; each Saturday option is its own topic')
+            seen.setdefault(kind, o.get('id'))
+            if kind in cfg['medical'] and medical_recent >= cfg['medical_recent_max'] and kind not in recent:
+                say(ref, f'is a medical topic, and the Saturdays of the last {cfg["repeat_weeks"]} weeks already carried '
+                         f'{medical_recent} medical stories; find good news outside medicine. {cfg["why_medical_wins"]}')
+            if kind in recent:
+                say(ref, f'is on {labels.get(kind, kind)}, the topic Saturday carried in the week of {recent[kind]}; no topic comes back '
+                         f'within {cfg["repeat_weeks"]} weeks. {cfg["why_medical_wins"] if kind in cfg["medical"] else ""}'.rstrip())
+        stories = [st for st in o.get('stories') or [] if isinstance(st, dict)]
+        if len(stories) < cfg['stories'] and not o.get('stories_to_find'):
+            say(ref, f'holds {len(stories)} stor{"y" if len(stories) == 1 else "ies"}; a good-news carousel is {cfg["stories"]} stories on its topic '
+                     '(or stories_to_find: true, for the board\'s "Find the other N stories")')
+        for i, st in enumerate(stories, 1):
+            if st.get('kind') not in GOOD_NEWS_KINDS or not str(((st.get('source') or {}) if isinstance(st.get('source'), dict) else {}).get('url') or '').startswith('https://'):
+                say(ref, f'story {i} needs its kind and its https source')
+        if kind not in cfg['medical']:
+            med = sum(1 for st in stories if st.get('kind') in cfg['medical'])
+            if med > cfg['medical_stories_max']:
+                say(ref, f'carries {med} medical stories; a carousel on another topic carries at most {cfg["medical_stories_max"]}')
+    return out
+
+
+def goodnews_history(sources, earlier_ideas):
+    """[{"week", "kind"}]: the topics of the Saturdays before, from what went out or is on its way (sources.json
+    recent_posts on a Saturday) and the weekly good news each earlier board planned (its ideas.json)."""
+    out = []
+    for p in (sources or {}).get('recent_posts') or []:
+        if isinstance(p, dict) and p.get('day') == 'sat':
+            kind = topic_kind_of(' '.join(str(p.get(f) or '') for f in ('title', 'words')))
+            if kind:
+                out.append({'week': p.get('week'), 'kind': kind, 'medical': 1 if kind in GOOD_NEWS['medical'] else 0})
+    for week, data in earlier_ideas or []:
+        for o in ((data or {}).get('offdays') or {}).get('sat') or []:
+            if isinstance(o, dict) and (o.get('weekly') == 'good_news' or is_good_news(o)):
+                kind = option_topic_kind(o)
+                med = sum(1 for st in o.get('stories') or [] if isinstance(st, dict) and st.get('kind') in GOOD_NEWS['medical'])
+                out.append({'week': week, 'kind': kind if o.get('weekly') == 'good_news' else None, 'medical': med})
+    return out
+
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # Saturday is carousels modelled on his sheet, and memes have their own lane (Krish, 2026-11-17, looking at Sat 21 Nov's
 # board: "I feel like we are very much missing the point of the Saturday suggestions. Each suggestion should be a
@@ -1465,7 +1607,7 @@ COPY_RUN = 7
 # keep the shape they were made in, as SHAPE_FROM does.
 
 SATURDAY_FROM = '2026-11-30'
-SATURDAY_KINDS = ('good_news', 'explainer', 'supporting')
+SATURDAY_KINDS = ('good_news',)  # Krish, 2026-11-19: Saturday is good-news carousels only (config/good-news.json saturday_kinds)
 SATURDAY_CARDS = (4, 10)  # a Saturday carousel's cards: at least four, at most ten (Buffer posts ten images at most)
 
 
@@ -1507,7 +1649,7 @@ def saturday_findings(ideas, week, flows=None, feed_urls=None, carousel_urls=Non
                      'memes have their own lane on Tuesday and Thursday, and no voiceover or recorded option goes on Saturday')
             continue
         look = o.get('lookalike') if isinstance(o.get('lookalike'), dict) else {}
-        weekly = kind == 'good_news' or bool(o.get('weekly'))
+        weekly = bool(o.get('weekly'))  # the weekly series; every other good-news carousel names its sheet carousel
         if not weekly:
             beats = canon_url(look.get('beats'))
             if not beats or not str(look.get('beats')).startswith('https://'):
@@ -1733,7 +1875,7 @@ def copied_run(ours, theirs, n=COPY_RUN):
 # from the 23 Nov board an option without its shape, aim, humour and lookalike, and from the 30 Nov board a Saturday
 # option that is not a sheet carousel followed card for card, or a meme template that is not whole (Krish, 2026-11-17).
 # The rest of cover stays the run's to fix before it stops, as before.
-GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template')
+GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template', 'goodnews')
 # What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
 # subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
 NOTE_CODES = ('warned', 'his_tick', 'his_repeat')

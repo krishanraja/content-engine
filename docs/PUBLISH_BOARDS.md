@@ -1751,3 +1751,10 @@ or if anything a session reads first sends anyone to `content.krishraja.com/boar
 
 What was retired and where it lived: `docs/history/2026-11-13-old-boards-retired.md`. This page as it stood before,
 with every section on the old pages: `docs/history/2026-11-13-PUBLISH_BOARDS-before-retirement.md`.
+
+
+## Every week's ideas board: Saturday's good news, the meme templates, and nothing already in work (Krish, 19 Nov 2026)
+
+- **Saturday is good-news carousels only** (Krish: "We should find good news that's not medical stuff"): the Sunday run's gate refuses a Saturday option that is not a good-news carousel, one whose topic repeats another option's or a Saturday of the four weeks before, a medical topic after a month of medical stories, and a carousel on another topic with more than one medical story (`config/good-news.json`, `idea_checks.goodnews_findings`, code `goodnews`). The board holds one that slips through, with the reason (`apps/control-plane/api/board/_goodNews.ts`); his approval is never held.
+- **Every week carries the meme templates** (Krish: "every week's ideas board should include the meme templates feature as well"): a template he has not answered on last week's board is carried onto this week's Tuesday and Thursday, marked `carried_from`, until he answers it; one he answered, one approved into an item and one this week already offers by its clip's page is never carried (`_carryTemplates.ts`). From 30 Nov the Sunday run writes 6 to 10 of its own each week (`TEMPLATE_FROM`).
+- **Nothing approved or in work is offered again** (Krish: "no suggestions approved duplicated. right now I seem to get pieces I am already working on show up as suggestions for following weeks"): an idea that is a piece or post already approved, in production or scheduled, on any earlier board or dated on any later week, leaves the ideas board, said once in its repeats line ("Already in work: ..."), matched by its piece id, its item, its source or its hook, never a title alone (`repeatOf`, `recentOutOf` in `_weekModel.ts`; the view reads pieces in work up to nine weeks ahead). What went out still counts within its 14 days.

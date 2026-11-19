@@ -1,3 +1,4 @@
+import { carryTemplates } from './_carryTemplates.js'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
 import { wordsBody, asWritten, wordsDocId, takenBackAt } from './_contracts.js'
@@ -1335,9 +1336,10 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   const signOffs = Promise.all([readSignOffSources(fetcher, mainSha), readSignOffPresses(db).catch(() => null)])
     .then(([s, p]) => signOffsView(s.manifest, p ?? [], s.configs)).catch(() => null)
   const [approvals, items, allItems, recentPieces, ...beside] = await Promise.all([readApprovals(db, week), readItems(db, week), readItemsIn(db, ['offered', 'approved', 'later']),
-    // The series pieces of the 14 days before the week, with their source, so an idea that retells one leaves the board.
+    // The series pieces of the 14 days before the week and those in work for the weeks after it, with their source, so an
+    // idea that retells one, or is one, leaves the board (Ruling, Krish, 2026-11-19).
     db.from('content_ideas').select('id, idea, thesis, scheduled_for, state, buried_at, source_url, canonical_url')
-      .gte('scheduled_for', shiftYmd(week, -14)).lt('scheduled_for', week).in('state', ['drafting', 'review', 'approved', 'published'])
+      .gte('scheduled_for', shiftYmd(week, -14)).lt('scheduled_for', shiftYmd(week, 63)).in('state', ['drafting', 'review', 'approved', 'published'])
       .then(r => (r.error ? [] : r.data || []), () => []),
     ...[-7, 7].map(n => readWeekIdeas(shiftYmd(week, n), env, fetcher).catch(() => null))])
   let formats: ViewInputs['formats'] = { script: [], production: [] }
@@ -1356,6 +1358,14 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   }
   let ideas: Body | null = null
   try { ideas = ideasText ? JSON.parse(ideasText) : null } catch { ideas = null }
+  // Last week's meme templates he has not answered stay on offer this week (Ruling, Krish, 2026-11-19; _carryTemplates.ts).
+  {
+    const last = shiftYmd(week, -7)
+    const lastQueue = await db.from('board_documents').select('doc_id,body').eq('week', last).eq('collection', 'queue')
+      .then(r => (r.error ? [] : (r.data || []) as Array<{ doc_id: string; body: unknown }>), () => [])
+    const approvedIds = new Set(((allItems || []) as Array<{ option_id?: string; state?: string }>).filter(x => x.state === 'approved').map(x => String(x.option_id)))
+    ideas = carryTemplates(ideas, last, (beside[0] ?? null) as Body | null, lastQueue, approvedIds)
+  }
   let north: { current: number; target: number; measured?: number } | null = null
   const m = nowText ? /<!-- north-star-state (\{.*?\}) -->/.exec(nowText) : null
   try { if (m) { const s = JSON.parse(m[1]); north = { current: Number(s.current), target: Number(s.week_target) } } } catch { north = null }

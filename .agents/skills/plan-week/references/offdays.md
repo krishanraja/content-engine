@@ -290,6 +290,28 @@ From the 30 Nov board (earlier boards keep their shape):
 `board_feed.py gate` fails the run on a Saturday option that breaks this (code `saturday`,
 `idea_checks.saturday_findings`).
 
+## Saturday is good-news carousels of varied good news (Ruling, Krish, 19 November 2026)
+
+His words, of Sat 28's ideas board (one hospital good news, a plain carousel, an explainer and two memes): "We also need
+to significantly improve the good news suggestions. These are still all just one idea, mostly, and they're not good news
+carousels. Some of them are memes that are sneaking through, and the only actual uplifting carousel is about AI in
+hospital again, which is all we post about. We should find good news that's not medical stuff."
+
+From the 23 Nov board, every rule a row in `config/good-news.json`:
+
+- Saturday offers only good-news carousels (`kind` `good_news`, or the weekly series): at least three, each five
+  good-news stories on its own topic, its topic named in `topic_kind` (one of the config's topics). No meme, explainer
+  or one-story carousel on Saturday; the ideas board holds one that slips through, with the reason (`_goodNews.ts`).
+- No two Saturday options on one topic, and no topic a Saturday carried in the four weeks before.
+- No medical topic while the last four Saturdays already carried two medical stories; a carousel on another topic
+  carries at most one medical story. Health stories dominate search results for "AI good news", so search each topic
+  on its own and choose where five strong stories meet outside medicine.
+- A carousel short of five stories says `stories_to_find: true`, the board's "Find the other N stories".
+
+`board_feed.py gate` fails the run on any of these (code `goodnews`, `idea_checks.goodnews_findings`). This replaces the
+17 Nov rule's explainer and supporting carousels on Saturday; each good-news carousel but the weekly series still names
+the sheet carousel it is modelled on.
+
 ## The meme templates lane (Ruling, Krish, 17 November 2026)
 
 His words: "why can we not create a pipeline of existing meme videos that could be good to reskin, and show me those
@@ -346,8 +368,9 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
    (`found`), never its source. Five is the post: four or fewer is not a good-news post yet, and the board says so
    plainly on Saturday ("1 of 5 stories found"). Tag each story with its `kind`, one of `business`, `health`, `lab`, `science`, `work`,
    `money`, `learning`, `climate`, `creative`, `people`, `safety` or `other`; the board shows the week's mix on the option
-   ("The mix: 2 health, 1 work, ..."), so he sees it before he presses. A cap on health and lab stories waits for his
-   yes; until then the mix is shown, never capped. Prefer a primary source: the organisation's own page, the paper, the official
+   ("The mix: 2 health, 1 work, ..."), so he sees it before he presses. Since 19 Nov a carousel on another topic carries at most one health story,
+   and Saturday leads on medicine only when the last four Saturdays carried fewer than two medical stories
+   (`config/good-news.json`). Prefer a primary source: the organisation's own page, the paper, the official
    announcement, a company's own results or case study; a press story only names where it read it, and a founder's own
    post about their own company is that company's own words, said as theirs.
 2. Check each against its primary source the same day: the headline, the number and the date must be on that page.
