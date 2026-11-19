@@ -80,6 +80,11 @@ export const LIBRARY_CONTENT_TYPES: Readonly<Record<string, string>> = Object.fr
   cjs: 'text/javascript',
   mjs: 'text/javascript',
   pdf: 'application/pdf',
+  // Word, PowerPoint and Excel, for research filed on a piece (Krish, 2026-11-19: "I need to be able to file Docx files, PDFs, MD files in every piece!").
+  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  doc: 'application/msword',
+  pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   png: 'image/png',
   jpg: 'image/jpeg',
   jpeg: 'image/jpeg',
