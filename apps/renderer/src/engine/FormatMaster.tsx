@@ -25,7 +25,7 @@ import { layoutSlots } from './kit/layout'
 import { EngineAudio } from './audio'
 import { GradedBackdrop } from './treatments/Grade'
 import { band } from './captions/kit'
-import { TitleMoment } from './title/TitleMoment'
+import { TitleMoment, titleLayout } from './title/TitleMoment'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
 
 // Placement belongs to the composition, never to a strict device schema.
@@ -112,12 +112,23 @@ function titleWordmark(props: EngineRenderProps, frame: number, stage: { left: n
   const opacity = Math.min(fadeIn, fadeOut)
   if (opacity <= 0) return null
   const logo = props.brand.logo
-  // Tall: centred under the title. Wide: on the panel's right, clear of the caption that returns on its left.
-  const wide = props.aspect === '16:9'
-  const w = Math.min(stage.width * (wide ? 0.5 : 0.56), 640), h = w * logo.pixelHeight / logo.pixelWidth
-  const left = wide ? stage.left + stage.width * 0.95 - w : stage.left + (stage.width - w) / 2
-  return <Img data-title-wordmark src={logo.src} style={{ position: 'absolute', left,
-    top: stage.top + stage.height - h - stage.height * 0.07, width: w, height: h, opacity }} />
+  // Aligned with the title: its left edge on the title's left edge, just under the last line (Krish, 19 Nov 2026: "the
+  // word mark needs to be aligned with the title"), never centred or pushed right on its own.
+  const box = titleWordmarkBox(moment.words, stage, props.aspect, !!moment.card, logo.pixelHeight / logo.pixelWidth)
+  if (!box) return null
+  return <Img data-title-wordmark src={logo.src} style={{ position: 'absolute', ...box, opacity }} />
+}
+
+/** Where the title's wordmark sits: its left edge on the title's left edge, just under the last line. */
+export function titleWordmarkBox(words: { text: string; atFrame: number }[], stage: { left: number; top: number; width: number; height: number },
+  aspect: EngineRenderProps['aspect'], card: boolean, ratio: number) {
+  const placed = titleLayout(words, stage, aspect)
+  if (!placed.length) return null
+  const size = Math.max(...placed.map((p) => p.size))
+  const textLeft = Math.min(...placed.map((p) => p.x)), textRight = Math.max(...placed.map((p) => p.x + p.width))
+  const below = Math.max(...placed.map((p) => p.y + p.size * 1.15)) + size * 0.32 * (card ? 1.6 : 0.6)
+  const width = Math.min((textRight - textLeft) * 0.62, 640), height = width * ratio
+  return { left: textLeft, top: Math.min(below, stage.top + stage.height - height), width, height }
 }
 
 /** A slow push holds every picture (the motion style's own rule: "a slow push holds every panel; nothing holds still"):
@@ -394,7 +405,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         frame={frame} aspect={props.aspect} width={width} height={height}
         stage={stagedNow ? stagedNow.panel : props.titleMoment.card ? titleSafe(props.aspect, width, height) : { left: 0, top: 0, width, height }}
         captionBox={band(props)} tokens={props.tokens as unknown as Record<string, string>} />
-      {titleWordmark(props, frame, stagedNow ? stagedNow.panel : { left: 0, top: 0, width, height })}
+      {titleWordmark(props, frame, stagedNow ? stagedNow.panel : props.titleMoment.card ? titleSafe(props.aspect, width, height) : { left: 0, top: 0, width, height })}
     </AbsoluteFill>) : null
   // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.
   const stagingGround = stagedNow && !stagedNow.rises ? (
