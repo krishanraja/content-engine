@@ -3542,7 +3542,8 @@
         "text": "no?",
         "atFrame": 475
       }
-    ]
+    ],
+    "card": true
   },
   "beats": [
     {

@@ -69,7 +69,7 @@
  "compositions": {
   "fixtures/ve/engine-core/props.json": "857202a611269e5f662a6e3514ac8339b45edee64371d3b8dc04da15575a7281",
   "docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json": "0e5e933b27de7142736e3d575cb7186f5a9572363e61639027d04853d3465db4",
-  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.long.json": "64575ca37ff2770e015dd606e9a63558e58ed8913cb79362798432b91f7d81e7",
-  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.short.json": "d23e03f880e1d7e28176eb8f5235ed55030661d6a634413a811b89769c4d09a7"
+  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.long.json": "31e440aa6c4aec1dcb44b6cd9fe5b6ea4bfefe3c22939e50ecb2c147d260533d",
+  "docs/plans/b019dbf8-8051-4cab-9b5e-2ad77b3f5118/ve/props.short.json": "21d9e4b9c5340d9704ff8b9fe10728cf6806028fd5829e3f21b8b9d9919175b5"
  }
 }

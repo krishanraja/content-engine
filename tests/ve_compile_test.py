@@ -303,6 +303,15 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(props['captionStyle'], 'house')
         self.assertGreater(max(len(page['words']) for page in props['captions']), 1)
 
+    def test_a_word_by_word_theme_keeps_the_word_build(self):
+        # Krish, 18 Nov 2026 (Tue 17, podcast): "each new word in one place, the previous word stays a little longer".
+        spec = load_json(FIXTURE / 'spec.json')
+        spec['brand'] = {**spec['brand'], 'captions': 'word'}
+        spec.setdefault('style', {})['captions'] = {'theme': 'podcast', 'placement': 'lower', 'reason': 'picked'}
+        props = compile_cut(spec, next(iter(spec['cuts'])), timed_words(), FIXTURE)
+        self.assertEqual(props['captionStyle'], 'word')
+        self.assertEqual({len(page['words']) for page in props['captions']}, {1})
+
     def test_the_hook_is_the_intro(self):
         # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns
         # frame 0 even when the first word comes later; no story card or logo sting is compiled ahead of it, and the

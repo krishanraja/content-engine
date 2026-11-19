@@ -311,6 +311,8 @@ _WEAK_ENDS = {'a', 'an', 'the', 'to', 'of', 'in', 'on', 'for', 'and', 'but', 'or
 _END = re.compile(r'[.!?]["\x27)\u2019\u201d]*$')
 # The words the on-screen phrase check (config/ve/onscreen-checks.json, captions.opens_phrase) refuses at the start of a
 # page that follows a page with no closing punctuation (Wed 18, 19 Nov 2026: six pages broke there).
+# Caption themes that draw ve's phrase pages themselves (rack-focus racks focus along the phrase; Wed 18, 18 Nov 2026).
+PHRASE_THEMES = frozenset({'rack-focus'})
 _OPENS_PHRASE = {'a', 'an', 'the', 'of', 'to', 'my', 'your', 'our', 'their', 'his', 'her', 'its'}
 _PAUSE = re.compile(r'[,.!?;:]["\x27)\u2019\u201d]*$')
 
@@ -608,8 +610,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # A picked caption style (style.captions; Krish, 2026-11-13: "the captions should be decoupled from the animation
     # styles") draws ve's phrase pages itself: one word a page would undo it (rack-focus racks focus along the phrase), so
     # the word build applies to the house caption only (18 Nov 2026, Wed 18, his rack-focus pick of 17 Nov).
+    # Only a theme that draws along a phrase turns the word build off; a theme he approved word by word keeps it (Tue 17,
+    # podcast: "each new word in one place, the previous word stays a little longer", Krish, 18 Nov 2026).
     picked_theme = (((spec.get('style') or {}).get('captions') or {}).get('theme'))
-    word_mode = spec['brand'].get('captions') == 'word' and not picked_theme
+    word_mode = spec['brand'].get('captions') == 'word' and picked_theme not in PHRASE_THEMES
     moment = title_moment_props(spec, cut_id, rows, duration)
     # The captions step aside for the title's words, so they appear once (docs/ve/INGREDIENTS.md, the episode title moment).
     # They stay away while the title holds too, so no lone caption word sits under it (Tue 17, 18 Nov: "find" under
