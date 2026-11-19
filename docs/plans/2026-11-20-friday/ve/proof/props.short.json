@@ -226,7 +226,7 @@
         "tapeText": "EVERYONE'S, RIGHT NOW",
         "place": {
           "left": 135,
-          "top": 260,
+          "top": 230,
           "width": 1080,
           "height": 480,
           "scale": 0.75
@@ -245,7 +245,7 @@
         "tapeText": "HOSPITALS PAY WHOLE TEAMS",
         "place": {
           "left": 135,
-          "top": 260,
+          "top": 230,
           "width": 1080,
           "height": 480,
           "scale": 0.75
@@ -264,7 +264,7 @@
         "tapeText": "A CHATBOT BEAT THEM",
         "place": {
           "left": 135,
-          "top": 260,
+          "top": 230,
           "width": 1080,
           "height": 480,
           "scale": 0.75

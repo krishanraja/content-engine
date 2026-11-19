@@ -1,0 +1,311 @@
+{
+  "schema": "ve-proof/1",
+  "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+  "cut": "short",
+  "beat": "face",
+  "rule": "named in the spec (proof.beat)",
+  "start": 8.733,
+  "end": 16.967,
+  "beat_s": [
+    8.733,
+    16.967
+  ],
+  "sha256": "6db979dd3a78493a234ff8551749365664eb33828c4e84a4faf658f7dbca7388",
+  "spec_sha256": "abe42dc14dcbe4631f7162e2c3caa5517f428140307d25fe9e2696242ec9cafb",
+  "structure": {
+    "format": "face-with-proof",
+    "aspect": "9:16",
+    "motion": "ai-music-slam",
+    "objects": [
+      [
+        "chip_caveat",
+        "query_chip"
+      ],
+      [
+        "closet",
+        "scene_plate"
+      ],
+      [
+        "closet2",
+        "scene_plate"
+      ],
+      [
+        "invoices",
+        "scene_plate"
+      ],
+      [
+        "k_after",
+        "kinetic_stat"
+      ],
+      [
+        "k_billed",
+        "kinetic_stat"
+      ],
+      [
+        "s_code_slam0",
+        "slam_word"
+      ],
+      [
+        "s_code_slam1",
+        "slam_word"
+      ],
+      [
+        "s_code_slam2",
+        "slam_word"
+      ],
+      [
+        "s_face_slam0",
+        "slam_word"
+      ],
+      [
+        "s_face_slam1",
+        "slam_word"
+      ],
+      [
+        "s_face_slam2",
+        "slam_word"
+      ],
+      [
+        "s_hindsight_slam0",
+        "slam_word"
+      ],
+      [
+        "s_hindsight_slam1",
+        "slam_word"
+      ],
+      [
+        "s_love_slam0",
+        "slam_word"
+      ],
+      [
+        "s_love_slam1",
+        "slam_word"
+      ],
+      [
+        "s_love_slam2",
+        "slam_word"
+      ],
+      [
+        "s_whose_slam0",
+        "slam_word"
+      ],
+      [
+        "s_whose_slam1",
+        "slam_word"
+      ],
+      [
+        "sofa",
+        "scene_plate"
+      ],
+      [
+        "steak",
+        "scene_plate"
+      ],
+      [
+        "strike",
+        "scribble"
+      ],
+      [
+        "th_head",
+        "evidence_card"
+      ]
+    ],
+    "beats": [
+      [
+        "hook",
+        "F1",
+        [
+          "k_billed",
+          "strike"
+        ]
+      ],
+      [
+        "face",
+        "F1",
+        [
+          "s_face_slam0",
+          "s_face_slam1",
+          "s_face_slam2"
+        ]
+      ],
+      [
+        "question",
+        "STAGE",
+        [
+          "sofa"
+        ]
+      ],
+      [
+        "skeletons",
+        "STAGE",
+        [
+          "closet"
+        ]
+      ],
+      [
+        "proof",
+        "STAGE",
+        [
+          "th_head"
+        ]
+      ],
+      [
+        "lines",
+        "STAGE",
+        [
+          "th_head"
+        ]
+      ],
+      [
+        "code",
+        "F1",
+        [
+          "s_code_slam0",
+          "s_code_slam1",
+          "s_code_slam2"
+        ]
+      ],
+      [
+        "steak",
+        "STAGE",
+        [
+          "steak"
+        ]
+      ],
+      [
+        "fell",
+        "P1",
+        [
+          "chip_caveat",
+          "k_after"
+        ]
+      ],
+      [
+        "love",
+        "F1",
+        [
+          "s_love_slam0",
+          "s_love_slam1",
+          "s_love_slam2"
+        ]
+      ],
+      [
+        "hindsight",
+        "F1",
+        [
+          "s_hindsight_slam0",
+          "s_hindsight_slam1"
+        ]
+      ],
+      [
+        "whose",
+        "F1",
+        [
+          "s_whose_slam0",
+          "s_whose_slam1"
+        ]
+      ],
+      [
+        "closet",
+        "STAGE",
+        [
+          "closet2"
+        ]
+      ],
+      [
+        "yours",
+        "F1",
+        []
+      ],
+      [
+        "act",
+        "STAGE",
+        [
+          "invoices"
+        ]
+      ],
+      [
+        "close",
+        "F1",
+        []
+      ]
+    ]
+  },
+  "style_module": "ai-music-slam",
+  "props_sha256": "220a394f82841b984b80f9756cf31eb5fbe954ee03db9ebcc25fbcef5ebecb9f",
+  "title": {
+    "in_main": false,
+    "clip": "short.title.mp4",
+    "sha256": "a36d3f0a415c2b91fc8fc4416d5eacb4b4a8f18faf7910860c879b6d6d0d91c7",
+    "start": 15.933,
+    "end": 26.1
+  },
+  "qc": {
+    "measured_pass": false,
+    "complete": false,
+    "failing": [
+      "captions.ocr",
+      "captions.off_face",
+      "captions.render",
+      "composition",
+      "loudness.integrated",
+      "motion.cue_sync"
+    ]
+  },
+  "type": [
+    [
+      "data",
+      "card"
+    ],
+    [
+      "display",
+      "card"
+    ],
+    [
+      "structure",
+      "caption"
+    ]
+  ],
+  "engine_sha256": "2a7cb58c512491db53817ac4fa14ebeab6b92aef5cce020489b6b8dd7fb45bd8",
+  "assets_sha256": {
+    "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
+    "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
+    "b4-sofa-money-916": "70925eebe73d3091240c2d21f8f24cc4937089288bf5f6b886471c2887be8e91",
+    "b8-steak-sandwich-916": "e52fe36f8689265de819718e02dde06aabfa8bbe9e8c6709a4cf26f803ed974a",
+    "harvard-krafton": "bfc65217229236171fec3bd8ae3c74e545644a757bd0d6fd4572a079566c2fad",
+    "long-invoices-169": "9593884f0b16a2f1db4efdfe0509a906cc6c2f2ad4c89bb9e788ea1c8847feec",
+    "long-master": "7afaed9a75286aacb86737eae6b247dd9c5227b47871b9cc58ff57af91c310ca",
+    "long-sofa-money-169": "1212452354fc877ce8cdec2411c6db71b6e3684ffd2dae5c313bfef43d5f60cf",
+    "nbc-dana": "04bd5985213216d4627231eaa4575689cdb6ec5cbf949c9af8bd3ba40efaeb94",
+    "short-master": "baf5f1d2a3e8d010b72ac8a73e60b7d5d412f90f4b3445c96899bf352794d98f",
+    "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
+    "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
+  },
+  "made_at": "2026-11-19T17:42:06Z",
+  "frames": {
+    "pass": true,
+    "status": "ok",
+    "problems": [],
+    "frames": 9
+  },
+  "compare": {
+    "against": "821130ccea46d206e4144aa71fe7ca90afe92d379bf1e4dcad53cea02cf58b13",
+    "reasons": [
+      "the engine changed since the proof he approved"
+    ],
+    "compared": null,
+    "sheet": "compare.short.png",
+    "sha256": "b1f2dd9e41c7aa94c99ee5ef8f6e8c43513f72f8be8da8cb2ed53e3cc7b9c243",
+    "seconds": [
+      0.5,
+      1.5,
+      2.5,
+      3.5,
+      4.5,
+      5.5,
+      6.5,
+      7.5
+    ]
+  },
+  "sendable": false
+}

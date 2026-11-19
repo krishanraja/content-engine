@@ -10,7 +10,7 @@
     16.967,
     20.367
   ],
-  "sha256": "821130ccea46d206e4144aa71fe7ca90afe92d379bf1e4dcad53cea02cf58b13",
+  "sha256": "1eb20e7c6cde6f2609449fc6886c4df1b3c845b26abb8ef15cd852c874ea7fe5",
   "spec_sha256": "abe42dc14dcbe4631f7162e2c3caa5517f428140307d25fe9e2696242ec9cafb",
   "structure": {
     "format": "face-with-proof",
@@ -232,13 +232,17 @@
     ]
   },
   "style_module": "ai-music-slam",
-  "props_sha256": "b24ae2781816e466fab486287e950334026112432d21ba44892ec03936ad8c8c",
+  "props_sha256": "35585f663729609c7cef6dd469470a8518feb2a85e63814a0834a2a80fb19f37",
   "title": {
     "in_main": false,
     "clip": "short.title.mp4",
-    "sha256": "e3d1b224039329b228689ab84b51e1f77c5a548342351eefee3cae3aeae46c14",
+    "sha256": "a0d2a4b25e10bfece48c41b6e0f0d00a2aa637587ee8b84de4b0734d83f62638",
     "start": 15.933,
-    "end": 26.1
+    "end": 26.1,
+    "looked": {
+      "text": "Full size, frames at 1.9, 3.5, 6.0, 8.4 and 8.8 s of short.title.mp4: the lockup WILL YOUR AI AUDITOR FIND MISSING MONEY / or / WILL IT FIND SKELETONS IN YOUR CLOSET? builds word by word over the sofa then closet plates, the MAKE YOUR MIND/UP wordmark sits tight under the bands on its soft ink panel; the page before reads AND A CHATBOT BEAT THEM with no lone SO; after the title A MAN'S / BROTHER-IN-LAW starts clean with no faded line carried across",
+      "at": "2026-11-19T17:57:02Z"
+    }
   },
   "qc": {
     "measured_pass": false,
@@ -246,8 +250,8 @@
     "failing": [
       "captions.ocr",
       "captions.off_face",
-      "captions.render",
       "composition",
+      "motion.cue_sync",
       "title.lockup_frame"
     ]
   },
@@ -265,7 +269,7 @@
       "caption"
     ]
   ],
-  "engine_sha256": "be0781a6c74a84c440414028cde64b57d8142c8a901875f9a0022023e7246506",
+  "engine_sha256": "49a821687a78d172b8543dad8c7512e3a2f465247b15beeddbe209dfff06019c",
   "assets_sha256": {
     "b14-invoices-916": "03aac0767c379ba6508b16fcc1b45d804c59dd43e65e0c2f1d94fc5e9a1744a1",
     "b4-closet-skeleton-916-from2s1": "d1fff74c5764f5e6657c80684f11d50fbc8047b5b0cafa944f2b9d925ed26b05",
@@ -280,21 +284,21 @@
     "tomshw": "bdd1e51966a698292462655aab557a3c8ffbf7ae4cac3ed0b0dbd0d347c550e6",
     "upworthy-tenant": "3c6f19cbd353e7c111e34041c6da42c5465684ec2794f026c25b437fb4c6bf31"
   },
-  "made_at": "2026-11-19T17:09:51Z",
+  "made_at": "2026-11-19T17:56:37Z",
   "frames": {
     "pass": true,
     "status": "ok",
     "problems": [],
-    "frames": 12
+    "frames": 11
   },
   "compare": {
-    "against": "aeb5e759aa1de97e28829a8f0dd106663b44dc90e2a7c1957ba90c26edb1d60f",
+    "against": "1eb20e7c6cde6f2609449fc6886c4df1b3c845b26abb8ef15cd852c874ea7fe5",
     "reasons": [
       "the engine changed since the proof he approved"
     ],
     "compared": null,
     "sheet": "compare.short.png",
-    "sha256": "951871559bf1638327906eec5aba43295b0d85447e0218c191f234ab3a5f0c95",
+    "sha256": "7d2d14822559f317aa315a78076eaf3e5672a780368edf35cf6274d733d41b39",
     "seconds": [
       0.5,
       1.5,
