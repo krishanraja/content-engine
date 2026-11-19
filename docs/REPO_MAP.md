@@ -4874,12 +4874,15 @@ Run a Vercel serverless handler locally against the real environment.
 - `const CAPTION_HALO`
 - `const TAKE_HALO`
 - `function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
+- `function overTake(beat: { plate?: { source?: string | undefined } | undefined } | undefined): boolean`
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
 - `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
 - `function titleSafe(aspect: string, width: number, height: number)`
+- `const FACE_LIFT`
+- `function faceLift(aspect: string, windowed: number): number`
 
 ### `apps/renderer/src/engine/VeCut.tsx`
 
