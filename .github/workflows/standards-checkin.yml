@@ -20,6 +20,13 @@ name: Standards check-in weekly
 on:
   schedule:
     - cron: '0 7 * * 0'
+  # And whenever the floor changes, not only on Sunday (Krish, 2026-11-19: "make sure you're never just fixing one day's
+  # piece. It's system fixes."). On 19 Nov the floor pull request (#911) was merged while it waited for Sunday's grouping,
+  # and every pull request in the repository went red on check:floor-groups. Now a new floor on its branch, or on main,
+  # is grouped at once, as proposals for his answer, by this same code; a second run in a week is already handled.
+  push:
+    branches: [floor/rejections, main]
+    paths: [config/rejection-floor.json]
   workflow_dispatch:
     inputs:
       dry_run:
@@ -86,7 +93,7 @@ jobs:
           EVENT: ${{ github.event_name }}
           DRY: ${{ inputs.dry_run }}
         run: |
-          if [ "$EVENT" = "schedule" ] || [ "$DRY" = "false" ]; then echo "apply=true" >> "$GITHUB_OUTPUT"; else echo "apply=false" >> "$GITHUB_OUTPUT"; fi
+          if [ "$EVENT" = "schedule" ] || [ "$EVENT" = "push" ] || [ "$DRY" = "false" ]; then echo "apply=true" >> "$GITHUB_OUTPUT"; else echo "apply=false" >> "$GITHUB_OUTPUT"; fi
           echo "today=$(date -u +%F)" >> "$GITHUB_OUTPUT"
 
       - name: Build the week's check-in

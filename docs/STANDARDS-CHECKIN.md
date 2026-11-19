@@ -53,3 +53,8 @@ python3 scripts/standards_checkin.py --self-test
 ```
 
 Both need `SUPABASE_ACCESS_TOKEN` and `SUPABASE_PROJECT_REF` in the environment (repository secrets for the job).
+
+
+## Grouped whenever the floor changes (19 Nov 2026)
+
+The check-in workflow also runs on every push that changes `config/rejection-floor.json`, on the floor's own branch (`floor/rejections`) or on main, not only on Sunday. On 19 Nov the floor pull request (#911) was merged while it waited for Sunday's grouping, and every pull request went red on `check:floor-groups`. Now new standards are proposed into groups at once, by the same code, as proposals for his answer; nothing is decided by the run. A second run in a week was already handled (it keeps the week's unanswered groups on the page).
