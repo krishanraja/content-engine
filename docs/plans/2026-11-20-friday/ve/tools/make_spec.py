@@ -18,8 +18,7 @@ objects=[
  {"obj":"strike","device":"scribble","meaning":"a hand-drawn line through \"$195,000\" as he says \"fraction\"","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"colour":"mint","seed":"fri20","shape":"underline","from":[200,340],"to":[690,330]}},
  plate("sofa","plates/b4-sofa-money-916.mp4","the missing money: a fistful of cash and old receipts pulled out from the back of the sofa (Krish, 19 Nov: \"money back down the back of couches\")",1080,1920,"question"),
  plate("closet","plates/b4-closet-skeleton-916-from2s1.mp4","the skeletons in your closet: a cupboard bursts open and a skeleton tumbles out with the old files (the clip starts at 2.1 s, once a box printed with a year has turned away, and holds its last frame: no year the piece does not own) (Krish, 19 Nov: \"skeletons coming out of closets\")",1080,1920,"skeletons"),
- card("th_head",*TH,(0.13,0.51,0.5,0.31),"the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000","proof"),
- card("th_lede",*TH,(0.13,0.755,0.5,0.095),"the article's own line: the first step is getting the hospital to break down every item on the bill","lines"),
+ card("th_head",*TH,(0.13,0.51,0.5,0.32),"the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000","proof"),
  plate("steak","plates/b8-steak-sandwich-916.mp4","the gap between what was billed and what was given, as one picture: the cloche lifts on a sad sandwich while the bill on the tray says STEAK",1080,1920,"steak"),
  {"obj":"k_after","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill counting down from $195,000 to where it landed, about $33,000, on \"fell\" (his account, Tom's Hardware)","persist":{"from_beat":"fell","to_beat":"fell"},"params":{"ghost":True}},
  {"obj":"chip_caveat","device":"query_chip","meaning":"the caveat kept on screen: his account, the hospital has not confirmed","persist":{"from_beat":"fell","to_beat":"fell"},"params":{"text":"HIS ACCOUNT · HOSPITAL HASN'T CONFIRMED"}},
@@ -37,7 +36,7 @@ beats=[
  dict(id="question",role="pivot",span={"from_w":44,"to_w":52},viewer_task="locate_story",point="Will your AI auditor find the missing money?",layout="STAGE",plate={"source":"none"},uses=["sofa"],events=[ev(44,"sofa","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
  dict(id="skeletons",role="pivot",span={"from_w":53,"to_w":61},viewer_task="feel_stakes",point="Or will it find the skeletons in your closet?",layout="STAGE",plate={"source":"none"},uses=["closet"],events=[ev(53,"closet","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
  dict(id="proof",role="anchor",span={"from_w":62,"to_w":81},viewer_task="verify_evidence",point="A real family owed the whole bill after a death with no health cover",layout="STAGE",plate={"source":"none"},uses=["th_head"],events=[ev(62,"th_head","enter"),ev(69,"th_head","mark","attack"),ev(80,"th_head","mark","195")],transition_out="cut",face="off",backdrop="asset:tomshw"),
- dict(id="lines",role="bridge",span={"from_w":82,"to_w":90},viewer_task="understand_mechanism",point="He asked for the bill line by line and gave it to Claude",layout="STAGE",plate={"source":"none"},uses=["th_lede"],events=[ev(82,"th_lede","enter"),ev(88,"th_lede","mark","line by line")],transition_out="cut",face="off",backdrop="asset:tomshw"),
+ dict(id="lines",role="bridge",span={"from_w":82,"to_w":90},viewer_task="understand_mechanism",point="He asked for the bill line by line and gave it to Claude",layout="STAGE",plate={"source":"none"},uses=["th_head"],events=[],transition_out="cut",face="off",backdrop="asset:tomshw"),
  dict(id="code",role="anchor",span={"from_w":91,"to_w":107},viewer_task="understand_mechanism",point="Care was billed under a dearer code than the care he got",layout="WINDOW",plate={"source":"take"},uses=["chip_billed","chip_given"],events=[ev(91,"chip_billed","enter"),ev(99,"chip_billed","highlight"),ev(103,"chip_given","enter")],transition_out="cut",face="window"),
  dict(id="steak",role="bridge",span={"from_w":108,"to_w":119},viewer_task="feel_stakes",point="Charged for a steak, served a sandwich",layout="STAGE",plate={"source":"none"},uses=["steak"],events=[ev(108,"steak","enter","0")],transition_out="cut",face="off",override_reason=CLIP),
  dict(id="fell",role="anchor",span={"from_w":120,"to_w":132},viewer_task="verify_evidence",point="He sent the list and the bill fell to about a sixth",layout="STAGE",plate={"source":"none"},uses=["k_after","chip_caveat"],events=[ev(120,"k_after","enter"),ev(120,"k_after","count_to","billed"),ev(129,"k_after","count_to","after"),ev(131,"chip_caveat","enter")],transition_out="cut",face="off",backdrop="asset:tomshw"),
@@ -164,6 +163,7 @@ slamify('short', beats, 'code', [("billed", "BILLED", "CARE BILLED UNDER"), ("ex
 slamify('short', beats, 'hindsight', [("guessing,", "GUESSING", "NEXT YEAR: IT'S GUESSING"), ("analysing.", "ANALYSING", "LAST YEAR: IT'S ANALYSING")], 's')
 slamify('short', beats, 'whose', [("mistake", "MISTAKE", "WHOSE MISTAKE?"), ("hospital's.", "HOSPITAL'S", "IT WAS THE HOSPITAL'S")], 's')
 no_marks_on_pages('short', beats)
+next(o for o in objects if o['obj'] == 'th_head')['persist']['to_beat'] = 'lines'  # the same page held: its last line is his 'line by line'
 json.dump(spec,open(P+'spec.json','w'),indent=1); print('wrote', len(beats),'beats', len(objects),'objects')
 
 # ---------------- the long cut (16:9) ----------------
@@ -177,8 +177,8 @@ lobj=[
  {"obj":"l_src","device":"query_chip","meaning":"whose numbers these are: the family's account as Tom's Hardware reported it","persist":{"from_beat":"hook","to_beat":"hook"},"params":{"text":"THE FAMILY'S ACCOUNT · TOM'S HARDWARE"}},
  plate("l_sofa","plates/long-sofa-money-169.mp4","the missing money: cash and old receipts pulled from the back of the office sofa (Krish, 19 Nov: \"money back down the back of couches\")",1920,1080,"l_question"),
  plate("l_closet","plates/b4-closet-skeleton-916-from2s1.mp4","the skeletons in your closet: the cupboard spills its old files and a skeleton (the tall clip framed on the wide stage; the wide clip prints a year nothing owns)",1080,1920,"l_skeletons"),
- card("l_head",*TH,(0.13,0.51,0.5,0.31),"the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000","proof"),
- card("l_lede",*TH,(0.13,0.755,0.5,0.095),"the article's line: the first step is getting the hospital to break down every item on the bill","l_code"),
+ card("l_head",*TH,(0.13,0.51,0.5,0.32),"the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000","proof"),
+ card("l_lede",*TH,(0.13,0.51,0.5,0.21),"the headline as he explains it: Claude highlighted duplicative charges and improper coding","l_code"),
  plate("l_michelin","plates/b8-steak-sandwich-916.mp4","the gap between what was billed and what was served: the cloche lifts on a sad sandwich while the bill reads STEAK (the short's clip, framed on the wide stage; the wide tasting-menu clip printed a garbled row of zeros nothing owns)",1080,1920,"l_michelin"),
  {"obj":"l_after","device":"kinetic_stat","dataset":"bill-after","meaning":"the bill counting down from $195,000 to where it landed, about $33,000, on \"fell\" (his account)","persist":{"from_beat":"l_fell","to_beat":"l_fell"},"params":{"ghost":True}},
  {"obj":"l_caveat","device":"query_chip","meaning":"the caveat on screen: his account, the hospital has not confirmed","persist":{"from_beat":"l_fell","to_beat":"l_fell"},"params":{"text":"HIS ACCOUNT · HOSPITAL HASN'T CONFIRMED"}},
@@ -188,7 +188,7 @@ lobj=[
  {"obj":"l_cust","device":"query_chip","meaning":"the twist: your customers run the same audit on you","persist":{"from_beat":"l_twist","to_beat":"l_twist"},"params":{"text":"YOUR INVOICES · THEIR CHATBOT"}},
  plate("l_closet2","plates/b4-closet-skeleton-916-from2s1.mp4","the callback: the same cupboard, now opening on 'whose closet it was opening'",1080,1920,"l_closet"),
  card("l_dana",*NBC,(0.19,0.49,0.76,0.3),"the headline: a prestigious cancer institute is correcting dozens of papers and retracting others after a blogger cried foul","l_dana"),
- card("l_krafton",*HLS,(0.15,0.415,0.49,0.255),"the Harvard Law forum on Fortis Advisors v. Krafton: the court quoted at length from the AI chats the buyer's CEO had about taking control of the studio","l_krafton"),
+ card("l_krafton",*HLS,(0.15,0.6075,0.49,0.064),"the Harvard Law forum on Fortis Advisors v. Krafton: the court quoted at length from the AI chats the buyer's CEO had about taking control of the studio","l_krafton"),
  plate("l_sofa2","plates/long-sofa-money-169.mp4","money, found",1920,1080,"l_money"),
  plate("l_closet3","plates/b4-closet-skeleton-916-from2s1.mp4","skeletons, found",1080,1920,"l_both"),
  plate("l_invoices","plates/long-invoices-169.png","his close, generated at his word (\"generate it\", 19 Nov): last year's invoices poured into the AI, a skeleton hand at the back of the folder",2688,1520,"l_act"),

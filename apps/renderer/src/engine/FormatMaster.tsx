@@ -197,7 +197,13 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const shown = outgoing ? Math.min(at, beat.toFrame - 1) : at
         const layerHeight = beat.layout === 'SPLIT' ? splitCameraBox(props.aspect).top : height
         const view = profile || focusOn ? cameraView(profile, beat, slots, objects, props, shown, focusOn) : undefined
-        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region, focusOn ? FOCUS_SCALE : undefined)
+        // The push keeps a graphics-only beat's layout region inside the frame, as it does a staged beat's: a full-width
+        // proof card pushed 1.2x from the frame's centre lost its left edge (Fri 20 Nov short, ai-music-slam, 19 Nov 2026).
+        const layoutRegion = graphicsOnly && props.layout && props.layout.mode !== 'house' && slots.length ? {
+          left: Math.min(...slots.map(b => b.left)), top: Math.min(...slots.map(b => b.top)),
+          width: Math.max(...slots.map(b => b.left + b.width)) - Math.min(...slots.map(b => b.left)),
+          height: Math.max(...slots.map(b => b.top + b.height)) - Math.min(...slots.map(b => b.top)) } : undefined
+        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight, stagedBeat?.region ?? layoutRegion, focusOn ? FOCUS_SCALE : undefined)
           : view?.focusable ? focusMotion(view, now, beat, FOCUS_SCALE, width, layerHeight) : undefined
         // Between two full-screen pictures the outgoing one stays solid under the incoming one's fade, so nothing under
         // both (his take) shows through the dissolve.

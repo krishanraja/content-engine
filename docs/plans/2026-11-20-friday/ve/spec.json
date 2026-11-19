@@ -125,28 +125,6 @@
    "meaning": "the headline: grieving family uses AI chatbot to cut hospital bill from $195,000 to $33,000",
    "persist": {
     "from_beat": "proof",
-    "to_beat": "proof"
-   },
-   "params": {
-    "kind": "screenshot",
-    "src": "shots/tomshw.png",
-    "outlet": "Tom's Hardware",
-    "date": "29 Oct 2025",
-    "sourceAspectRatio": 2.2939,
-    "crop": {
-     "x": 0.13,
-     "y": 0.51,
-     "w": 0.5,
-     "h": 0.31
-    }
-   }
-  },
-  {
-   "obj": "th_lede",
-   "device": "evidence_card",
-   "meaning": "the article's own line: the first step is getting the hospital to break down every item on the bill",
-   "persist": {
-    "from_beat": "lines",
     "to_beat": "lines"
    },
    "params": {
@@ -154,12 +132,12 @@
     "src": "shots/tomshw.png",
     "outlet": "Tom's Hardware",
     "date": "29 Oct 2025",
-    "sourceAspectRatio": 7.4854,
+    "sourceAspectRatio": 2.2222,
     "crop": {
      "x": 0.13,
-     "y": 0.755,
+     "y": 0.51,
      "w": 0.5,
-     "h": 0.095
+     "h": 0.32
     }
    }
   },
@@ -504,19 +482,19 @@
     "src": "shots/tomshw.png",
     "outlet": "Tom's Hardware",
     "date": "29 Oct 2025",
-    "sourceAspectRatio": 2.2939,
+    "sourceAspectRatio": 2.2222,
     "crop": {
      "x": 0.13,
      "y": 0.51,
      "w": 0.5,
-     "h": 0.31
+     "h": 0.32
     }
    }
   },
   {
    "obj": "l_lede",
    "device": "evidence_card",
-   "meaning": "the article's line: the first step is getting the hospital to break down every item on the bill",
+   "meaning": "the headline as he explains it: Claude highlighted duplicative charges and improper coding",
    "persist": {
     "from_beat": "l_code",
     "to_beat": "l_code"
@@ -526,12 +504,12 @@
     "src": "shots/tomshw.png",
     "outlet": "Tom's Hardware",
     "date": "29 Oct 2025",
-    "sourceAspectRatio": 7.4854,
+    "sourceAspectRatio": 3.3862,
     "crop": {
      "x": 0.13,
-     "y": 0.755,
+     "y": 0.51,
      "w": 0.5,
-     "h": 0.095
+     "h": 0.21
     }
    }
   },
@@ -697,12 +675,12 @@
     "src": "shots/harvard-krafton.png",
     "outlet": "Harvard Law School Forum on Corporate Governance",
     "date": "20 Apr 2026",
-    "sourceAspectRatio": 2.7329,
+    "sourceAspectRatio": 10.8889,
     "crop": {
      "x": 0.15,
-     "y": 0.415,
+     "y": 0.6075,
      "w": 0.49,
-     "h": 0.255
+     "h": 0.064
     }
    }
   },
@@ -1445,17 +1423,9 @@
       "source": "none"
      },
      "uses": [
-      "th_lede"
+      "th_head"
      ],
-     "events": [
-      {
-       "at_w": 82,
-       "obj": "th_lede",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      }
-     ],
+     "events": [],
      "transition_out": "cut",
      "face": "off",
      "backdrop": "asset:tomshw",
