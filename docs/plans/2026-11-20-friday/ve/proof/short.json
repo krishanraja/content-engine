@@ -238,7 +238,11 @@
     "clip": "short.title.mp4",
     "sha256": "c2cd95510ba768dac1c91702ca5ab4b76b7276a116491291df25ad17298709dd",
     "start": 15.933,
-    "end": 26.1
+    "end": 26.1,
+    "looked": {
+      "text": "Full size on proof 98caa8e3 (short.title.mp4) at 3.6, 4.6, 5.3, 5.6, 6.6, 7.6, 8.9 and 9.5 s: WILL YOUR AI AUDITOR FIND MISSING MONEY / or / WILL IT FIND SKELETONS IN YOUR CLOSET? builds word by word over the sofa then office plates as one centred lockup; the wordmark rests under the first card, then under 'or', then under the second card; type inside x 960; after the title A MAN'S / BROTHER-IN-LAW starts clean with no echo word behind the news card",
+      "at": "2026-11-19T20:32:04Z"
+    }
   },
   "qc": {
     "measured_pass": false,
@@ -290,7 +294,10 @@
     "reasons": [
       "the engine changed since the proof he approved"
     ],
-    "compared": null,
+    "compared": {
+      "text": "All frames of compare.short.png at full size against his standing notes: face beats keep his head clear of the slam band with captions under his chin, no ghost word; sofa coins tumble on 'missing money'; the title is one lockup with the wordmark tight under what is drawn; no plain black (one whip frame at 5.70 s)",
+      "at": "2026-11-19T20:32:15Z"
+    },
     "sheet": "compare.short.png",
     "sha256": "279263e66558d1b45185eb6533d8412d1cf55056a7f811341f0f2bf19419855a",
     "seconds": [
@@ -304,5 +311,5 @@
       7.5
     ]
   },
-  "sendable": false
+  "sendable": true
 }
