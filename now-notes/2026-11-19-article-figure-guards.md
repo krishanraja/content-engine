@@ -1,4 +1,0 @@
-Status: Article figures are guarded. An inline Substack figure carries no mark, names one picture form (source-page, scale, timeline, ledger, map, comparison) with at most 40 words of running text, and says nothing the article does not; scripts/pages/render_figure.mjs runs scripts/pages/figure_check.py first and draws no refused figure. The 25 old figure pages under docs/plans lost their typed mark; make-piece's Reader test row now orders the work (draw, the three checks, the reader test, then Krish).
-Next: The Fri 20 piece's figures pass figure_check.py against its article before Krish sees them again (add the two meta lines to each page).
-Changed: config/article-figures.json, scripts/pages/figure_check.py, scripts/pages/figure.css, scripts/pages/render_figure.mjs, tests/article_figure_test.py, config/failures.json (article-figure-typed-mark-and-word-cards), make-piece skill, docs/CREATIVE_DIRECTION.md.
-North Star check (2026-11-19): holds.
