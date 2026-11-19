@@ -1,0 +1,175 @@
+{
+  "_about": "The pre-show checklist (config/ve/show-gate.json): one row per thing Krish has had to say more than once about a cut, from his Wed 18 and Tue 17 corrections. Read by `ve critic --pre` (shown to the reviewer before anything is made) and by the show gate (scripts/velib/showgate.py), which needs every row answered for the exact file it shows him. A row names `auto_rows`, the `ve qc` rows that answer it when every one ran and passed; with no row, or a row that did not run, the reviewer attests the row in one line citing a frame or a time. A row whose qc row FAILED is a failure whatever is attested. Add a rule as a row here and in config/failures.json: it then applies to every future piece. Nothing here is a new taste rule: each row carries his words.",
+  "items": [
+    {
+      "id": "one_picture_per_beat",
+      "text": "A graphic and a photo never both carry the same point: one picture per beat.",
+      "krish": "two concurrent visual styles trying to say the same thing over one another? why?",
+      "auto_rows": [],
+      "source": "tue17-1"
+    },
+    {
+      "id": "graded_backdrop_not_black",
+      "text": "A graphics beat sits on a graded, focus-racked backdrop, never flat black after a photograph; figures are never dimmed or blurred.",
+      "krish": "Motion graphics on a flat black background, straight after a full-frame photograph.",
+      "auto_rows": [
+        "ground.not_bare"
+      ],
+      "source": "tue17-2"
+    },
+    {
+      "id": "no_ghost_in_dissolves",
+      "text": "A change between a full-screen beat and a face beat is a clean cut; never a cross-dissolve over his face.",
+      "krish": "A ghost of his face in dissolves.",
+      "auto_rows": [],
+      "source": "tue17-3"
+    },
+    {
+      "id": "wordmark_only_title_and_close",
+      "text": "The wordmark appears only on the title frame and the closing card: no icons or company logos anywhere else unless he asks.",
+      "krish": "NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME",
+      "auto_rows": [
+        "brand.no_mark"
+      ],
+      "source": "tue17-4"
+    },
+    {
+      "id": "no_offday_tag_on_screen",
+      "text": "off.day is never drawn as a pill, header or label, in any cut.",
+      "krish": "off.day is NEVER to be used ever as a tag",
+      "auto_rows": [],
+      "source": "tue17-5"
+    },
+    {
+      "id": "captions_off_in_title_hold",
+      "text": "Captions stay off for the whole title moment: check every frame of the title hold for caption text.",
+      "krish": "A stray caption word (find) under the held episode title",
+      "auto_rows": [],
+      "source": "tue17-6"
+    },
+    {
+      "id": "captions_off_his_face",
+      "text": "On face beats captions sit in the staged band below his face; no caption page over his face.",
+      "krish": "Captions over his head.",
+      "auto_rows": [
+        "captions.off_face"
+      ],
+      "source": "tue17-7"
+    },
+    {
+      "id": "title_from_his_spoken_line",
+      "text": "The episode title is built from his spoken line, timed to his words, at full stage width, as a card that slams or slides in over his hair, never bare words over his face.",
+      "krish": "make the title captions a card that slams or slides in I think. having naked captions over my face looks stupid.",
+      "auto_rows": [],
+      "source": "tue17-8,wed18-5"
+    },
+    {
+      "id": "key_figure_fills_frame",
+      "text": "The figure a beat exists to show fills the frame.",
+      "krish": "The key figure (41) was too small.",
+      "auto_rows": [],
+      "source": "tue17-9"
+    },
+    {
+      "id": "music_level_and_loudness",
+      "text": "The bed sits 15% under the house level and is ridden by EBU R128 loudness, never RMS; the bed level does not swing.",
+      "krish": "The music was too loud, and the bed level swung.",
+      "auto_rows": [
+        "audio.bed",
+        "audio.bed_continuity",
+        "loudness.integrated"
+      ],
+      "source": "tue17-10"
+    },
+    {
+      "id": "approved_track_passes",
+      "text": "A track in config/music-library.json that he approved plays with no certificate check blocking it.",
+      "krish": "Aspire is \"100% licensed\"",
+      "auto_rows": [],
+      "source": "tue17-11"
+    },
+    {
+      "id": "no_false_starts_left",
+      "text": "Every restart and dead silence is cut where a quiet gap allows; any kept is named with its timestamp.",
+      "krish": "A false start left in his take.",
+      "auto_rows": [
+        "words.lost"
+      ],
+      "source": "tue17-12"
+    },
+    {
+      "id": "opening_moves_in_3s",
+      "text": "Something lands on his first word (a line slamming in, a clip in motion, a punch-in); the joke or twist is visible before 3 seconds; never a static card that waits.",
+      "krish": "considering that's the first few seconds of the video, it's not much of a hook. It looks quite dull for the first 3 seconds.",
+      "auto_rows": [],
+      "source": "wed18-2"
+    },
+    {
+      "id": "head_whole_never_cropped",
+      "text": "His whole head is in frame on his lines; no split frame crops his head or ruins the picture above it.",
+      "krish": "Can't cut my head off and also ruin the visual above.",
+      "auto_rows": [
+        "plate.head_in_band"
+      ],
+      "source": "wed18-3"
+    },
+    {
+      "id": "head_bottom_right_on_wide",
+      "text": "On every 16:9 proof beat his take sits in the bottom-right window, opposite the left-set captions, unless a full-frame clip fills the frame.",
+      "krish": "my head needs to be in the bottom right ... if the subtitles are going to be not centralised, then something needs to be in the bottom right.",
+      "auto_rows": [],
+      "source": "wed18-4"
+    },
+    {
+      "id": "captions_readable_halo_no_break",
+      "text": "Words over a busy picture or his take get the approved halo; a page never breaks mid-phrase and the web address stays on one caption.",
+      "krish": "Approve halo",
+      "auto_rows": [
+        "captions.clock"
+      ],
+      "source": "wed18-6"
+    },
+    {
+      "id": "funny_and_made_by_codex",
+      "text": "The piece is funny and tongue-in-cheek; plates, devices and art direction come from Codex cards; every visual makes a point land faster.",
+      "krish": "This piece needs to be hilarious and tongue-in-cheek ... use codex for all asset production, generation, sourcing.",
+      "auto_rows": [],
+      "source": "wed18-7"
+    },
+    {
+      "id": "known_faults_fixed_not_caveated",
+      "text": "Every known fault is fixed before he sees the file; none is listed as a caveat.",
+      "krish": "If you know that things need fixing, just fucking fix them",
+      "auto_rows": [],
+      "source": "wed18-1"
+    },
+    {
+      "id": "fixes_batched_checked_shown_once",
+      "text": "Fixes are batched and checked here; the cut is shown to him once, not once per round.",
+      "krish": "Each round of fixes went to him as a new render instead of being checked first",
+      "auto_rows": [],
+      "source": "tue17-process"
+    },
+    {
+      "id": "route_missing_said_first",
+      "text": "When he asks for a route the engine does not have, say so in one line with the closest real route before doing anything.",
+      "krish": "render in Codex",
+      "auto_rows": [],
+      "source": "tue17-process"
+    },
+    {
+      "id": "every_beat_serves_his_idea",
+      "text": "Every beat serves the idea he picked (style.idea.object); a request for more (\"15/10\") is answered with more of that idea, never spectacle beside it.",
+      "krish": "(as the Build or buy session reported his words) a dull, important topic needs 15/10 visuals",
+      "auto_rows": [],
+      "source": "build-or-buy-8"
+    },
+    {
+      "id": "no_bare_talking_head",
+      "text": "No long stretch of his face with nothing on screen, and no logos that only appear and pulse standing in for a picture (ve lint piece.talking_head).",
+      "krish": "(as the Build or buy session reported his words) a dull, important topic needs 15/10 visuals",
+      "auto_rows": [],
+      "source": "build-or-buy-9"
+    }
+  ]
+}

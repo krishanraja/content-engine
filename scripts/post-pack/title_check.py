@@ -68,6 +68,9 @@ STRAWMAN = [
 ]
 STOCK = re.compile(r"\b(explained|everything you need to know|here'?s why|here is why|the truth about|you won'?t believe|what you need to "
                    r"know|game[- ]changer|a closer look|deep dive|the future of|all you need|why it matters|let'?s talk about)\b", re.I)
+# A shouted verdict in place of a fact (Build or buy, 18 Nov 2026: "BUILD IT? CRAZY." was offered as thumbnail words, and the
+# CRAZY treatment was among what reached him; a word that grades instead of naming who did what never earns the click).
+HYPE = re.compile(r"\b(crazy|insane|mind[- ]?blowing|shocking|unbelievable|wild|epic|madness|bonkers)\b", re.I)
 NUMBER = re.compile(r"\d")
 # A number in words ("a million new ChatGPT users in one hour", "every four weeks") earns a line only beside a name:
 # "Three kinds of AI" is still a bare taxonomy.
@@ -167,11 +170,19 @@ def problems(title, source=None):
     m = STOCK.search(t)
     if m:
         out.append(f'"{m.group(0)}" is a stock headline phrase')
+    m = HYPE.search(t)
+    if m:
+        out.append(f'"{m.group(0)}" grades instead of saying who did what: a shouted verdict is not a reason to read')
     vague = vague_subject(t)
     if vague:
         out.append(f'"{vague}" stands in for a name: say who did it (Krish, 2026-11-15: "Words like \'they\' are not welcome in '
                    'these types of titles")')
     names = names_in(t)
+    # All capitals (thumbnail and cover words): a capital no longer marks a name, so only a name the piece itself uses
+    # counts ("BUILD IT? CRAZY." read BUILD as a name and passed, Build or buy, 18 Nov 2026).
+    if source and not re.search(r'[a-z]', t):
+        known = piece_names(source)
+        names = {n for n in names if n.lower() in known}
     earned = (NUMBER.search(t) or (names and (VERB_HINT.search(t) or NUMBER_WORD.search(t))) or len(names) >= 2
               or (STAKE.search(t) and VERB_HINT.search(t)))
     if not earned:

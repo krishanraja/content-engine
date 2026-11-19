@@ -1185,24 +1185,24 @@
       },
       {
         "id": "teenhomework",
-        "format": "Explainer carousel, 5 cards, 4:5",
+        "format": "Explainer carousel, 8 cards, 4:5",
         "source_tag": "trade_press",
         "source": {
           "label": "RAND, Higher-income parents more likely to use AI, encourage teens to do the same (12 Nov 2026)",
           "url": "https://www.rand.org/news/press/2026/11/higher-income-parents-more-likely-to-use-ai-encourage.html"
         },
-        "hook": "Whether your teen uses AI for homework depends a lot on you.",
-        "copy": "An explainer on RAND's new survey of about 1,000 parents and 1,800 teens: richer families use AI more, their parents encourage it more, and teens copy what they think their parents want. Five cards on what that means at your kitchen table.",
+        "hook": "$75,000 for an AI school day. What is AI really doing to school?",
+        "copy": "One carousel on what AI is actually doing to education, from Monday's $75,000 AI school to the rumour that American schools are finished: what is true about the Department of Education, what the AI school promised and delivered, what the evidence says AI does for learning, and what decides a teen's AI homework at home. It ends on our call for where school is heading and the one talk to have.",
         "pitch": {
-          "see": "A cover of a teen doing homework with a parent's shadow over the laptop, then one card per finding and a last card on the one conversation to have.",
-          "lands": "Every parent wonders about AI and homework; this says the biggest influence is at home.",
-          "why_now": "RAND, 12 Nov 2026.",
-          "share": "Teens who think their parents back AI use it twice as often."
+          "see": "A cover of a school report card printed like a till receipt; then the rumour about the Department of Education beside what is true; the AI school's fee, promise and result; what the evidence says; RAND's finding at home; our call on where school is heading; and the one talk to have.",
+          "lands": "Parents keep hearing that AI has broken school; this sorts the true from the scary in eight cards, with numbers.",
+          "why_now": "Fortune on the AI school, 14 Nov 2026; RAND's survey of parents and teens, 12 Nov 2026; NPR on the Department of Education, 24 Sep 2026.",
+          "share": "America's Department of Education still exists, and the AI school hit its own goal for 42% of pupils."
         },
         "shape": "story",
-        "dive": "Teens follow what they think their parents want: 81% use AI for homework when they feel encouraged, 38% when they feel discouraged.",
+        "dive": "What AI is actually doing to school, sorted true from scary: the Department of Education is being emptied out but still exists, the $75,000 AI school promised twice the learning and 42% hit it, the best evidence for AI is in maths tutoring, and at home 81% of encouraged teens use AI for homework against 38% of discouraged ones.",
         "aim": "utility",
-        "funny": "The most powerful AI policy in your teen's life is the face you pull when they mention ChatGPT.",
+        "funny": "The $75,000 report card arrived printed on the back of the invoice, and the free one is the face you pull when they mention ChatGPT.",
         "lookalike": {
           "pattern": "work-reality-check",
           "beats": "https://www.instagram.com/therundownai/p/DfiNa2JkRhx/",
@@ -1210,23 +1210,35 @@
         },
         "cards": [
           {
-            "words": "Whether your teen uses AI for homework depends a lot on you.",
-            "picture": "A teen at a laptop with a parent's shadow over it"
+            "words": "$75,000 for an AI school day. What is AI really doing to school?",
+            "picture": "A school report card printed as a till receipt, lying on a kitchen table beside two mugs"
           },
           {
-            "words": "57% of teens in families earning $150,000 or more use it, against 43% under $50,000",
-            "picture": "Two stacks of books, one taller"
+            "words": "The rumour: America shut its Department of Education. The truth: it still exists. Over 100 of its programmes are moving to other departments, and only Congress can close it.",
+            "picture": "A government building with its filing cabinets being wheeled out of the door"
           },
           {
-            "words": "Their parents: 84% against 63%",
-            "picture": "Two parents with phones, one lit up"
+            "words": "One AI school charges up to $75,000 a child each year, for two hours of lessons a day. It promised pupils would learn twice as fast. 42% of them did, in both maths and reading.",
+            "picture": "A clock with two hours shaded beside a bar of 42 filled squares out of 100"
           },
           {
-            "words": "Teens who feel encouraged: 81% use it. Discouraged: 38%",
+            "words": "What the evidence says: AI tutoring helps most in maths. Most other research on AI in class is short and small.",
+            "picture": "A maths exercise book with a tick, beside a thin stack of papers"
+          },
+          {
+            "words": "At home, your view counts: 81% of teens who think their parents back AI use it for homework, against 38% who think their parents don't.",
             "picture": "A thumbs up and a thumbs down over two laptops"
           },
           {
-            "words": "The one talk to have: what it is for (checking and ideas) and what it is not (doing it for you)",
+            "words": "Our call: school stays. AI takes the practice drills, and teachers spend more time marking thinking, checking work and helping each child.",
+            "picture": "A teacher at a table with three pupils, a laptop doing sums at the side"
+          },
+          {
+            "words": "Before you pay for any AI that promises results: what is the measure, who checks it, when, and what if it misses?",
+            "picture": "Four boxes on a checklist"
+          },
+          {
+            "words": "The one talk to have: what AI is for (checking and ideas) and what it is not (doing it for you).",
             "picture": "A kitchen table with two mugs"
           }
         ],
@@ -1263,14 +1275,59 @@
         ],
         "read_back": {
           "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
-            "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+            "Fresh reader A (Sonnet, a 12-year-old reading once, 19 Nov)",
+            "Fresh reader B (Haiku, a 12-year-old reading once, 19 Nov)"
           ],
           "says": [
-            "Whether teens use AI for homework depends on their parents, with a tip on the one talk to have.",
-            "A parent watches over a teen using AI for homework, then the findings and one talk to have with them."
+            "The post asks what AI is really doing to school, and says to keep school, use AI for drills, and ask hard questions before paying for AI that promises results.",
+            "The post asks what AI is really doing to school, using a $75,000-a-year AI school as its example, and says what the evidence shows and what parents can do."
           ],
-          "against": 49
+          "fixed_after": "Cards 3, 5 and 6 rewritten after both readers stumbled on them (what 42% hit, what 'it' was, 'judgment, checking and people'); sources sit on each card in the drawn carousel."
+        },
+        "supports": "mon",
+        "ties_to": "Mon: follow.the.money; combined with Tuesday's $75,000 AI school carousel",
+        "sources": [
+          {
+            "label": "RAND, 12 Nov 2026",
+            "url": "https://www.rand.org/news/press/2026/11/higher-income-parents-more-likely-to-use-ai-encourage.html",
+            "date": "2026-11-12",
+            "what": "Survey of about 1,000 parents and 1,800 teens: 57% of teens in families earning $150,000 or more use AI for homework against 43% under $50,000; parents 84% against 63%; 81% of teens who feel encouraged use it against 38% who feel discouraged."
+          },
+          {
+            "label": "Fortune, 14 Nov 2026",
+            "url": "https://fortune.com/2026/11/14/alpha-school-ai-students-tuition-learning-goals",
+            "date": "2026-11-14",
+            "what": "Alpha School charges up to $75,000 a year for two hours of AI-led lessons a day, promises twice the learning, and 42% hit that goal in both maths and reading."
+          },
+          {
+            "label": "NPR, 24 Sep 2026",
+            "url": "https://www.npr.org/2026/09/24/nx-s1-5968605/education-department-dismantling-how-its-going",
+            "date": "2026-09-24",
+            "what": "The Education Department has not been dismantled; programmes are being handed to other agencies and staff detailed out, and closing it needs Congress. FACT GATE: confirm wording against the article before the card is drawn."
+          },
+          {
+            "label": "Education Week, Mar 2026",
+            "url": "https://www.edweek.org/policy-politics/where-are-ed-dept-programs-moving-answers-to-frequently-asked-questions/2026/03",
+            "date": "2026-03",
+            "what": "More than 100 K-12 and higher education programmes relocating to five agencies (Interior, Labor, State, Treasury, HHS). FACT GATE: confirm the count and that no later act of Congress closed the department."
+          },
+          {
+            "label": "Education Endowment Foundation evaluation (adaptive maths tool, 63 primary schools)",
+            "url": "https://educationendowmentfoundation.org.uk/",
+            "date": null,
+            "what": "About one extra month of progress in maths. Supports card 4's 'helps most in maths'; FACT GATE: find the exact report, or soften card 4 to what a primary review says."
+          }
+        ],
+        "revised": {
+          "side": "idea",
+          "words": "This is a really good idea. That's a good headline and I really want to draw into making it simple to understand what AI is actually doing to education. There was a lot of uproar when the Department of Education was dissolved in America and there are rumbling theories that educational institutions are screwed. What's actually true and where will education end up?",
+          "said_where": "Claude Code cloud session in krishanraja/content-engine, 19 Nov 2026, about the approved $75K AI school day carousel (alphacard), which teenhomework now combines",
+          "earlier": [
+            {
+              "words": "This needs to go in to Tuesday 24 but combine it with the carousel that is already on there",
+              "said_where": "board Improve, 19 Nov 2026"
+            }
+          ]
         }
       },
       {

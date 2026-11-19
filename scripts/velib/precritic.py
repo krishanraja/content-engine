@@ -19,7 +19,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import gates, ideaguard
+from . import gates, ideaguard, showgate
 from .common import ROOT, load_json, sha256_file, write_json
 
 VERDICT = 'verdict.pre.json'
@@ -81,6 +81,9 @@ def inputs(spec: dict, spec_path: Path, mechanical: list[str]) -> Path:
         'storyboard': storyboard_table(spec),
         'cards': [{'path': _rel(c), 'sha256': sha256_file(c), 'brief': c.read_text(encoding='utf-8')} for c in cards],
         'mechanical_already_run': mechanical,
+        # Everything Krish has had to say more than once about a cut (config/ve/pre-show-checklist.json): the reviewer reads it
+        # now, and the show gate asks for every row again on the exact file (scripts/velib/showgate.py).
+        'pre_show_checklist': [{k: i[k] for k in ('id', 'text', 'krish')} for i in showgate.checklist()['items']],
     }
     return write_json(directory / INPUTS, value)
 

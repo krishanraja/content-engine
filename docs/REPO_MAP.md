@@ -2902,6 +2902,15 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `async function replacePick(db: SupabaseClient, week: string, req: ReplaceRequest, deps: SeriesDeps): Promise<MoveResult>`
 - `export type { MoveDay }`
 
+### `apps/control-plane/api/board/_showGate.ts`
+
+- `const RECEIPT_SCHEMA`
+- `const RECEIPT_ROLE`
+- `class ShowGateError`
+- `function receiptCovers(text: string, sha: string): boolean`
+- `function gateApplies(body: Body, week: string, cfg = showGate.board): boolean`
+- `async function checkProofShown(db: SupabaseClient, body: Body, week: string): Promise<void>`
+
 ### `apps/control-plane/api/board/_signOffs.ts`
 
 - `const SIGN_OFF_OP`
@@ -3048,10 +3057,15 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `type Action`
 - `type PromptAction`
 - `interface SavedNote`
+- `type NoteFor = 'claude' | 'perplexity' | 'both'`
+- `const noteFor = (v: unknown): NoteFor =>`
+- `const SAVED_NOTES_SHOWN`
+- `const noteItemKey = (k: unknown): string | null =>`
 - `const VISUAL_POINT_LINE`
 - `const EARLIER_NOTES`
 - `const SAVED_NOTES_MAX`
-- `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }): SavedNote[]`
+- `function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }, tool: 'claude' | '…`
+- `async function crossWeekNotes(db: SupabaseClient, week: string, pieceIds: string[], itemKeys: string[]): Promise<ViewIn…`
 - `function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): WeekModel`
 - `interface DayView`
 - `interface ViewPost`

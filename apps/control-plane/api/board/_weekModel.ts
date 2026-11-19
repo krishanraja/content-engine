@@ -121,6 +121,10 @@ export interface ModelAsset { name: string; kind: string; url: string; folder: s
 export interface ModelItem {
   /** `piece:<id>` for a piece, the option's document id (off-<day>-<id>) for a post. */
   key: string
+  /** Contract 1.33.0: his notes box on the card at every stage: the press that saves a note (use claude_notes, `for` the
+   *  prompt it feeds) and every note he saved on it, newest first (Krish, 2026-11-19: "Should be able to save notes in
+   *  this step too"; "it never disappears ever again"). Set by _view.ts withSavedNotes. */
+  notes?: { save: PressAction; saved: Array<{ at: string; text: string; for?: string; frame?: string }> }
   type: 'piece' | 'post'
   day: PostedDay
   date: string

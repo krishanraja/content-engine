@@ -230,3 +230,90 @@ describe('research he pastes on the board is research (17 Nov)', () => {
     expect(inLibrary({ kind: pastedKind(undefined), role: null, storage: 'text', archived_at: null, bytes: 10 })).toBe(true)
   })
 })
+
+// Krish, 2026-11-19, on Fri 20's piece at Production planned: "I should also be able to add notes at this point that either
+// load into the Perplexity prompt or the Claude production prompt. ... I should be able to save that note to this board,
+// and it never disappears ever again."
+describe('notes for the Perplexity or the Claude prompt, never lost (contract 1.33.0)', () => {
+  const FRI = 'c00cd4e0-e1bb-4c60-b36f-cea92897e38c'
+  const note = (text: string, at: string, forWhat?: string, extra: Body = {}) => ({ doc_id: `desk-fri-board-${at}`, updated_by: 'Krish', updated_at: at,
+    body: { use: 'claude_notes', text, at, piece_id: FRI, anchor: 'desk:fri:board', thread_id: 't', ...(forWhat ? { for: forWhat } : {}), ...extra } })
+  const rows = [
+    note('Find who audits the auditors', '2026-11-19T09:00:00Z', 'perplexity'),
+    note('Open on the hospital bill harder', '2026-11-19T10:00:00Z', 'claude'),
+    note('Push it to the skeletons line', '2026-11-19T11:00:00Z', 'both'),
+    note('An older note before 1.33.0', '2026-11-18T08:00:00Z'),
+  ] as never
+  it('a note chosen for Perplexity feeds only Perplexity, for Claude only Claude, both both, and an old one both', () => {
+    const p = savedNotesFor(rows, { piece_id: FRI }, 'perplexity').map(n => n.text)
+    const c = savedNotesFor(rows, { piece_id: FRI }, 'claude').map(n => n.text)
+    expect(p).toEqual(['Push it to the skeletons line', 'Find who audits the auditors', 'An older note before 1.33.0'])
+    expect(c).toEqual(['Push it to the skeletons line', 'Open on the hospital bill harder', 'An older note before 1.33.0'])
+    expect(savedNotesFor(rows, { piece_id: FRI }).length).toBe(4)
+    expect(savedNotesFor(rows, { piece_id: FRI }, 'claude')[0].for).toBe('both')
+  })
+  it('the Claude prompt carries its notes and every earlier one stays listed after a newer one is saved', () => {
+    const save = { kind: 'press', label: 'Your notes for Claude', body: { use: 'claude_notes', piece_id: FRI } }
+    const claude: Body = { kind: 'prompt', label: 'Claude production prompt', tool: 'claude', prompt: 'P', notes: { ask: 'a', heading: 'h', save } }
+    const perplexity: Body = { kind: 'prompt', label: 'Perplexity research prompt', tool: 'perplexity', prompt: 'R', notes: { ask: 'a', heading: 'h', save } }
+    const model = { days: [{ items: [{ next: null, others: [claude, perplexity] }] }] } as never
+    withSavedNotes(model, rows)
+    expect(claude.prompt).toMatch(/Open on the hospital bill harder/)
+    expect(claude.prompt).not.toMatch(/Find who audits the auditors/)
+    expect(perplexity.notes.saved.map((n: Body) => n.text)).toContain('Find who audits the auditors')
+    // A twelfth note: the prompt carries the newest ten, but the list beside the box keeps every one.
+    const many = [...Array.from({ length: 12 }, (_, k) => note(`Note ${k}`, `2026-11-19T12:${String(k).padStart(2, '0')}:00Z`, 'claude')), ...(rows as Body[])] as never
+    const c2: Body = { ...claude, prompt: 'P', notes: { ask: 'a', heading: 'h', save } }
+    withSavedNotes({ days: [{ items: [{ next: c2, others: [] }] }] } as never, many)
+    expect(c2.notes.saved.length).toBe(15)
+    expect(c2.notes.saved.map((n: Body) => n.text)).toContain('An older note before 1.33.0')
+  })
+  it('a note saved in an earlier week follows its piece into the week it moved to', async () => {
+    const { crossWeekNotes } = await import('../../apps/control-plane/api/board/_view')
+    const calls: Body[] = []
+    const stored = [{ doc_id: 'desk-tue-story-1', week: '2026-11-16', updated_by: 'Krish', updated_at: '2026-11-17T09:00:00Z', body: { use: 'claude_notes', text: 'Saved on Tue 17', piece_id: FRI } }]
+    const q: any = (filters: Body) => ({
+      select: () => q(filters), eq: (c: string, v: unknown) => q({ ...filters, [c]: v }), neq: (c: string, v: unknown) => q({ ...filters, [`!${c}`]: v }),
+      in: (c: string, v: unknown[]) => q({ ...filters, [c]: v }), limit: () => q(filters),
+      then: (ok: (r: unknown) => unknown) => { calls.push(filters); return Promise.resolve({ data: stored.filter(r => r.week !== filters['!week'] && (filters['body->>piece_id'] as string[] | undefined ?? []).includes(r.body.piece_id)), error: null }).then(ok) },
+    })
+    const db = { from: () => q({}) } as never
+    const got = await crossWeekNotes(db, '2026-11-23', [FRI.toUpperCase()], [])
+    expect(got.map(r => (r as Body).body.text)).toEqual(['Saved on Tue 17'])
+    expect(calls[0]).toMatchObject({ collection: 'comments', 'body->>use': 'claude_notes', '!week': '2026-11-23' })
+    // Read in the week the piece moved to, the note is its own again.
+    expect(savedNotesFor(got, { piece_id: FRI }, 'claude').map(n => n.text)).toEqual(['Saved on Tue 17'])
+  })
+})
+
+describe('every card keeps a notes box at every stage, and every save is a new note (contract 1.33.0)', () => {
+  // Krish, 2026-11-19, on "$75,000 for an AI school day. Here is the receipt." at Made: "Should be able to save notes in
+  // this step too"; then "Should be able to save multiple notes in all instances as I always have random iterative ideas".
+  const KEY = 'off-thu-schoolday'
+  const post = (stage: string, next: Body | null = null): Body => ({ key: KEY, type: 'post', day: 'thu', title: '$75,000 for an AI school day. Here is the receipt.', piece_id: null, stage: { key: stage, label: stage }, next, others: [] })
+  const saved = (text: string, at: string, item = KEY, forWhat = 'both') => ({ doc_id: `desk-thu-notes-${at}`, updated_by: 'Krish', updated_at: at,
+    body: { use: 'claude_notes', text, at, item, anchor: 'desk:thu:notes', thread_id: 't', for: forWhat } })
+  it('a post at Made and at Scheduled carries the notes press, and a saved note stays listed', () => {
+    for (const stage of ['made', 'scheduled', 'live']) {
+      const it0 = post(stage)
+      withSavedNotes({ days: [{ items: [it0] }] } as never, [saved('Say the receipt number first', '2026-11-19T10:00:00Z')] as never)
+      expect(it0.notes.save.body).toMatchObject({ use: 'claude_notes', item: KEY })
+      expect(it0.notes.save.id).toMatch(/\{t\}$/)
+      expect(it0.notes.saved.map((n: Body) => n.text)).toEqual(['Say the receipt number first'])
+    }
+  })
+  it('three saves are three notes, newest first, and all three reach the prompt they were meant for', () => {
+    const rows = [saved('One', '2026-11-19T10:00:00Z', KEY, 'claude'), saved('Two', '2026-11-19T11:00:00Z', KEY, 'claude'), saved('Three', '2026-11-19T12:00:00Z', KEY, 'both')] as never
+    const save = { kind: 'press', label: 'Your notes for Claude', body: { use: 'claude_notes', item: KEY } }
+    const claude: Body = { kind: 'prompt', label: 'Publish', tool: 'claude', prompt: 'P', notes: { ask: 'a', heading: 'h', save } }
+    const it0 = post('made', claude)
+    withSavedNotes({ days: [{ items: [it0] }] } as never, rows)
+    expect(it0.notes.saved.map((n: Body) => n.text)).toEqual(['Three', 'Two', 'One'])
+    for (const w of ['One', 'Two', 'Three']) expect(claude.prompt).toContain(w)
+  })
+  it('a post moved to another day keeps the notes saved on its old day', () => {
+    const it0 = post('approved')
+    withSavedNotes({ days: [{ items: [it0] }] } as never, [saved('Saved while it was on Tuesday', '2026-11-18T09:00:00Z', 'off-tue-schoolday')] as never)
+    expect(it0.notes.saved.map((n: Body) => n.text)).toEqual(['Saved while it was on Tuesday'])
+  })
+})

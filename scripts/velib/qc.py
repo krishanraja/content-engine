@@ -300,6 +300,8 @@ def inputs_from_props(props: dict) -> dict:
     from . import qc_faces
     pages = []
     style = props.get('captionStyle') or 'house'
+    from . import qc_captions as qc_captions_art, plainframes as _pf
+    art_theme = props.get('captionTheme') == _pf.config()['caption_over_content']['art_directed']['theme'] and style != 'word'
     for original in caption_pages_shown(props):
         page = dict(_moved(original, props, 'fromFrame', 'toFrame'),
                     words=[_moved(w, props, 'atFrame') for w in original.get('words') or []])
@@ -314,6 +316,11 @@ def inputs_from_props(props: dict) -> dict:
         width, height = (1080, 1920) if aspect == '9:16' else (1920, 1080)
         left, top = max(0, x - 12), max(0, y - 12)
         page['region'] = (left, top, min(width, x + w + 12) - left, min(height, y + h + 12) - top)
+        if art_theme and not page.get('split'):
+            # The art-directed stack hangs above the house box by the cut's tallest page: read it where it is drawn, once
+            # settled, judged in order (qc_captions.art_view, in_order; 19 Nov 2026, the habits short).
+            view = qc_captions_art.art_view(props['captions'], props['captions'].index(original), aspect, props.get('fps', 30))
+            page['region'], page['art'] = view['region'], {'extras': view['extras'], 'settle': view['settle']}
         pages.append(page)
     # The plate's frame under file frame F of a beat is F - the beat's shift + the segment's trim.
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
