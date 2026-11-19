@@ -42,7 +42,7 @@ Those people are the cost because the tool never sits still. Someone has to fix 
 
 Back to Anthropic, which could build almost anything. Workday announced on 13 October 2026 that Anthropic runs its finance and people on Workday, the same software Klarna left for Deel. Anthropic's own job adverts say Salesforce runs its customer and deal operations.
 
-For its help desk, Anthropic chose Fin, a ready-made help desk bot from Intercom. Its support leaders say they picked it over building their own and had it live in under a week.
+For its help desk, Anthropic chose Fin, a ready-made help desk bot from the company once called Intercom, which Salesforce finished buying in September 2026. Its support leaders say they picked it over building their own and had it live in under a week.
 
 [Figure: figures/anthropic-buys.png]
 
@@ -52,7 +52,7 @@ Now for our favourite detail. Fin runs on Claude. So the company that makes the 
 
 He's right about the small stuff. Building does win, mostly at the edges. Retool, which sells building tools, found in its own survey that 35% of the teams it asked had replaced at least one rented tool with something they built, and what they replaced was mostly small: dashboards, admin pages and internal workflows that one person owns and nobody outside the company touches. Klarna's own story has a build in it too. The part it built was the one place all its customer data lives, because getting its data into one place was the point of the whole exercise.
 
-That changes your job as a manager. Keep your builder keen. The real question is what your team signs up to own for years. Every tool you build is a small product with one customer, and someone on your payroll is now its support desk. The useful thing to decide is which of those you want.
+That changes your job as a manager. The real question is what your team signs up to own for years. Every tool you build is a small product with one customer, and someone on your payroll is now its support desk. The useful thing to decide is which of those you want.
 
 So the rule we'd use is simple. Build the part that makes you different. Buy the boring plumbing, like pay, customer records and help desks, where a vendor already takes the two in the morning call for thousands of companies at once.
 
