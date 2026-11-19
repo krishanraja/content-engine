@@ -2259,7 +2259,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "The maker of Claude chose to buy, not build: Fin says so itself",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2310,7 +2310,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Anthropic pays Salesforce, Fin and Workday for its tools, though it could build them",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2456,7 +2456,8 @@
      "events": [],
      "transition_out": "cut",
      "face": "full",
-     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")",
+     "backdrop": "asset:hl-ars"
     },
     {
      "id": "vmware",
@@ -2467,7 +2468,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "One company said its VMware bill went up ten times",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2534,7 +2535,8 @@
      "events": [],
      "transition_out": "cut",
      "face": "full",
-     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")",
+     "backdrop": "asset:linkedin-saas-dead"
     },
     {
      "id": "typed",
@@ -2545,7 +2547,7 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "You type what you want and the AI writes it",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2673,7 +2675,8 @@
      "events": [],
      "transition_out": "cut",
      "face": "full",
-     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")",
+     "backdrop": "asset:hl-itpro"
     },
     {
      "id": "headlines",
@@ -2684,7 +2687,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "The headlines said Klarna replaced Salesforce and Workday with AI",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2750,7 +2753,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Klarna's own boss said they did not replace that software with AI",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2794,7 +2797,7 @@
      },
      "viewer_task": "understand_mechanism",
      "point": "They swapped rented software for different rented software",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2882,7 +2885,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Built in two months, but keeping it running is not so easy",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -2956,7 +2959,8 @@
      "events": [],
      "transition_out": "cut",
      "face": "full",
-     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")",
+     "backdrop": "asset:curative-600k"
     },
     {
      "id": "puppy",
@@ -2996,7 +3000,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Our sums: building a help desk costs about six times buying one",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -3135,7 +3139,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "Anthropic runs its finance and people on Workday and its customers on Salesforce",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -3194,7 +3198,7 @@
      },
      "viewer_task": "verify_evidence",
      "point": "For its help desk Anthropic bought Fin, live in under a week",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -3239,7 +3243,7 @@
      },
      "viewer_task": "land_payoff",
      "point": "Fin runs on Claude: the AI maker pays for a bot on its own AI",
-     "layout": "WINDOW",
+     "layout": "F1",
      "plate": {
       "source": "take"
      },
@@ -3277,7 +3281,8 @@
      "events": [],
      "transition_out": "cut",
      "face": "full",
-     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")",
+     "backdrop": "asset:fin-underweek"
     },
     {
      "id": "small",
@@ -3332,7 +3337,8 @@
      "events": [],
      "transition_out": "cut",
      "face": "full",
-     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")"
+     "override_reason": "his line to camera, his whole head in frame (Krish, 18 Nov 2026: \"The captions and my head, etc., would be better.\")",
+     "backdrop": "asset:sf-preferred-crm"
     }
    ]
   }
@@ -3390,8 +3396,8 @@
   },
   "energy": "high",
   "layout": {
-   "mode": "fill",
-   "reason": "every proof, headline and chip sits centred in the safe region the captions leave, clear of every app bar; his whole head full frame on his lines and every picture full frame (Krish, 18 Nov 2026: \"Can't cut my head off and also ruin the visual above\"); the stage staging shrank him into a window"
+   "mode": "pillar",
+   "reason": "his long take is vertical: it sits whole as the full-height panel on the right of the 16:9 cut and the graphics take the panel on the left (Ruling, Krish, 2026-11-19: \"Pillar: whole take on the right\"); the tall cut draws as fill, his whole head full frame and every picture full frame (Krish, 18 Nov 2026: \"Can't cut my head off and also ruin the visual above\")"
   },
   "look": "kinetic-movement",
   "idea": {

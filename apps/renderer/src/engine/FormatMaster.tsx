@@ -361,7 +361,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const panelBackdrop = stagingGround && activeBeat?.backdrop ? (
     <AbsoluteFill key="staging-backdrop" data-backdrop-panel>
       <div style={{ ...boxStyle(stagedNow!.panel), borderRadius: stagedNow!.panel.radius, overflow: 'hidden' }}>
-        <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={stagedNow!.panel.width} height={stagedNow!.panel.height} /></div>
+        {/* The pillar's panel carries his captions beside his take, so its picture is always thrown out of focus and graded
+            down: a sharp white page behind a caption cannot be read (Wed 18 on the pillar, 19 Nov 2026). */}
+        <Backdrop src={activeBeat.backdrop.src} tokens={props.tokens} focus={props.layout?.mode === 'pillar' ? 1 : backdropFocus(props.beats, activeBeat, frame)} frame={frame} width={stagedNow!.panel.width} height={stagedNow!.panel.height} /></div>
     </AbsoluteFill>) : undefined
   const picture = stagingGround ? [stagingGround, ...(panelBackdrop ? [panelBackdrop] : []), ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)
   // A graphics-only STAGE beat with no staging draws its backdrop across the whole frame, under its graphics, so a proof sits
