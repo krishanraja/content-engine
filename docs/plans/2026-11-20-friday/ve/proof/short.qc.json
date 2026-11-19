@@ -1,16 +1,16 @@
 {
   "file": "docs/plans/2026-11-20-friday/ve/proof/short.mp4",
-  "sha256": "1eb20e7c6cde6f2609449fc6886c4df1b3c845b26abb8ef15cd852c874ea7fe5",
+  "sha256": "8de3ef3dc058798ef6b30df28157189bc65a9a97d1d3f8d575a68424b6dd1fa1",
   "duration_s": 8.0,
   "format": "face-with-proof",
   "checks": {
     "loudness.integrated": {
-      "value": -13.5,
+      "value": -13.0,
       "target": "-14 ±1",
       "pass": true
     },
     "loudness.true_peak": {
-      "value": -1.5,
+      "value": -1.7,
       "target": "<= -1",
       "pass": true
     },
@@ -41,19 +41,19 @@
           "segment": 0,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.94989
+          "correlation": 0.920971
         },
         {
           "segment": 1,
-          "lag_ms": 0,
+          "lag_ms": -10,
           "pass": true,
-          "correlation": 0.978393
+          "correlation": 0.979359
         },
         {
           "segment": 2,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.982542
+          "correlation": 0.958443
         }
       ],
       "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
@@ -72,43 +72,74 @@
       "value": [
         {
           "page": 0,
-          "frame": 20,
-          "text": "TEAMS TO SORT\nPRICING",
-          "agreement": 0.8,
-          "variant": "cream_half",
-          "pass": false
+          "frame": 4,
+          "text": "AND IT'S\nANALYSING",
+          "agreement": 1.0,
+          "variant": "raw_2x",
+          "pass": true
         },
         {
           "page": 1,
-          "frame": 60,
-          "text": "AND A\nCHATBOT\nBEAT THEM",
+          "frame": 51,
+          "text": "BUT IN THIS\nINSTANCE",
           "agreement": 1.0,
-          "variant": "cream_half",
+          "variant": "raw",
           "pass": true
+        },
+        {
+          "page": 2,
+          "frame": 98,
+          "text": "WHOSE|\nMISTAKE\nDID CLAUDE FIND?",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 3,
+          "frame": 148,
+          "text": "I WAS ACTUALLY THE \\\nHOSPITAL'S®",
+          "agreement": 0.8333,
+          "variant": "raw",
+          "pass": false
+        },
+        {
+          "page": 4,
+          "frame": 229,
+          "text": "AND I\" oy ae\nRECKON’ ©\nCLAUDE -",
+          "agreement": 0.6667,
+          "variant": "raw_2x",
+          "pass": false
+        },
+        {
+          "page": 5,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
         }
       ],
       "target": "token agreement >= 0.98 on every page",
       "pass": false,
-      "status": "measured"
+      "status": "incomplete"
     },
     "brand.no_mark": {
       "value": [
         {
-          "beat": "face",
-          "frame": 34,
-          "score": 0.06103754055245711,
+          "beat": "hindsight",
+          "frame": 6,
+          "score": 0.14324913136506537,
           "pass": true
         },
         {
-          "beat": "question",
+          "beat": "whose",
           "frame": 119,
-          "score": 0.32675767718833854,
+          "score": 0.1146146791016418,
           "pass": true
         },
         {
-          "beat": "skeletons",
-          "frame": 205,
-          "score": 0.17892874384223081,
+          "beat": "closet",
+          "frame": 232,
+          "score": 0.20833430700326877,
           "pass": true
         }
       ],
@@ -119,79 +150,79 @@
     "motion.cue_sync": {
       "value": [
         {
-          "event": "face-0",
+          "event": "hindsight-0",
           "atFrame": 0,
           "peak_frame": 1,
           "lag_frames": 1,
-          "peak_difference": 12.432482719421387,
-          "event_difference": 12.432482719421387,
+          "peak_difference": 8.205131530761719,
+          "event_difference": 8.205131530761719,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
         },
         {
-          "event": "face-1",
+          "event": "hindsight-1",
           "atFrame": 0,
           "peak_frame": 1,
           "lag_frames": 1,
-          "peak_difference": 12.432482719421387,
-          "event_difference": 12.432482719421387,
+          "peak_difference": 8.205131530761719,
+          "event_difference": 8.205131530761719,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
         },
         {
-          "event": "face-2",
+          "event": "hindsight-2",
           "atFrame": 0,
-          "peak_frame": 3,
-          "lag_frames": 3,
-          "peak_difference": 18.414878845214844,
-          "event_difference": 17.885393142700195,
+          "peak_frame": 2,
+          "lag_frames": 2,
+          "peak_difference": 21.09774398803711,
+          "event_difference": 21.09774398803711,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
         },
         {
-          "event": "face-3",
-          "atFrame": 33,
-          "peak_frame": 36,
-          "lag_frames": 3,
-          "peak_difference": 34.80338668823242,
-          "event_difference": 30.23394775390625,
-          "threshold": 14.061225414276123,
-          "gradual": false,
-          "pass": true
-        },
-        {
-          "event": "face-4",
-          "atFrame": 36,
-          "peak_frame": 33,
-          "lag_frames": -3,
-          "peak_difference": 17.217056274414062,
-          "event_difference": 11.909677505493164,
-          "threshold": 12.162913799285889,
+          "event": "whose-0",
+          "atFrame": 68,
+          "peak_frame": 68,
+          "lag_frames": 0,
+          "peak_difference": 4.664181709289551,
+          "event_difference": 4.664181709289551,
+          "threshold": 5.172212362289429,
           "gradual": false,
           "pass": false
         },
         {
-          "event": "question-0",
-          "atFrame": 69,
-          "peak_frame": 69,
+          "event": "whose-1",
+          "atFrame": 141,
+          "peak_frame": 141,
           "lag_frames": 0,
-          "peak_difference": 72.86762237548828,
-          "event_difference": 72.86762237548828,
-          "threshold": 8.344014644622803,
+          "peak_difference": 9.603793144226074,
+          "event_difference": 9.603793144226074,
+          "threshold": 12.085859298706055,
+          "gradual": false,
+          "pass": false
+        },
+        {
+          "event": "whose-2",
+          "atFrame": 144,
+          "peak_frame": 144,
+          "lag_frames": 0,
+          "peak_difference": 27.247455596923828,
+          "event_difference": 27.247455596923828,
+          "threshold": 5.8382062911987305,
           "gradual": false,
           "pass": true
         },
         {
-          "event": "skeletons-0",
-          "atFrame": 171,
-          "peak_frame": 172,
-          "lag_frames": 1,
-          "peak_difference": 24.107830047607422,
-          "event_difference": 24.107830047607422,
-          "threshold": 6.461265563964844,
+          "event": "closet-0",
+          "atFrame": 225,
+          "peak_frame": 225,
+          "lag_frames": 0,
+          "peak_difference": 79.87364196777344,
+          "event_difference": 79.87364196777344,
+          "threshold": 10.516634702682495,
           "gradual": false,
           "pass": true
         }
@@ -312,7 +343,7 @@
           58,
           974,
           824,
-          358
+          266
         ],
         "window_frames": 3,
         "min_score": 0.98,
@@ -321,43 +352,148 @@
           {
             "page": 0,
             "fromFrame": 0,
-            "text": "teams to sort pricing out",
+            "text": "and it's analysing.",
             "change_frame": 1,
-            "frame": 23,
-            "read": "TEAMS TO SORT, =\nPRICING?”\nOUT”",
+            "frame": 4,
+            "read": "AND ITS\nANALYSING",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 1,
-            "fromFrame": 29,
-            "text": "and a chatbot beat them.",
-            "change_frame": 28,
-            "frame": 60,
-            "read": "AND A\nCHATBOT\nBEAT THEM",
+            "fromFrame": 14,
+            "text": "But in this instance,",
+            "change_frame": 13,
+            "frame": 51,
+            "read": "BUT IN THIS\nINSTANCE",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 2,
+            "fromFrame": 128,
+            "text": "It was actually the hospital's.",
+            "change_frame": 127,
+            "frame": 150,
+            "read": "IT WAS ACTUALLY THE \\\nHOSPITAL'S-",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 59,
+            "text": "whose mistake did Claude find?",
+            "change_frame": 57,
+            "frame": 98,
+            "read": "WHOSE|\nMISTAKE\nDID CLAUDE FIND?",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 1,
+            "fromFrame": 169,
+            "text": "And I reckon Claude",
+            "change_frame": 168,
+            "frame": 231,
+            "read": "AND  i  ae\nRECKON\nCLAUDE «",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 1 reads \"AND  i  ae\nRECKON\nCLAUDE «\" near frame 231, not \"And I reckon Claude\" (score 0.8, needs an exact match and 0.98)"
+          },
+          {
+            "page": 2,
+            "fromFrame": 236,
+            "text": "in this instance didn't care",
+            "change_frame": 235,
+            "frame": 239,
+            "read": "IN THIS —\nINSTANCE\nDIDN'T CARE. ~~  .",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           }
         ],
-        "failed": [],
-        "changes_found": 8,
-        "status": "pass"
+        "failed": [
+          {
+            "page": 1,
+            "fromFrame": 169,
+            "text": "And I reckon Claude",
+            "change_frame": 168,
+            "frame": 231,
+            "read": "AND  i  ae\nRECKON\nCLAUDE «",
+            "score": 0.8,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 1 reads \"AND  i  ae\nRECKON\nCLAUDE «\" near frame 231, not \"And I reckon Claude\" (score 0.8, needs an exact match and 0.98)"
+          }
+        ],
+        "changes_found": 14,
+        "status": "fail",
+        "pass": false,
+        "regions": [
+          [
+            58,
+            974,
+            824,
+            266
+          ],
+          [
+            58,
+            974,
+            824,
+            358
+          ]
+        ]
       },
       "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
-      "pass": true,
+      "pass": false,
       "status": "measured",
       "agreement": null,
-      "summary": "every caption page reads as the props say"
+      "summary": "None: caption page 1 reads \"AND  i  ae\nRECKON\nCLAUDE «\" near frame 231, not \"And I reckon Claude\" (score 0.8, needs an exact match and 0.98)"
     },
     "captions.off_face": {
       "value": {
-        "pages": 2,
+        "pages": 6,
         "on_face": [
           {
-            "at_s": 0.77,
-            "text": "teams to sort pricing out",
+            "at_s": 0.23,
+            "text": "and it's analysing.",
+            "caption": [
+              58,
+              974,
+              824,
+              266
+            ],
+            "face": [
+              525,
+              614,
+              367,
+              367
+            ]
+          },
+          {
+            "at_s": 1.77,
+            "text": "But in this instance,",
+            "caption": [
+              58,
+              974,
+              824,
+              266
+            ],
+            "face": [
+              614,
+              621,
+              342,
+              342
+            ]
+          },
+          {
+            "at_s": 3.7,
+            "text": "whose mistake did Claude find?",
             "caption": [
               58,
               974,
@@ -365,14 +501,30 @@
               358
             ],
             "face": [
-              488,
-              626,
-              366,
-              366
+              522,
+              616,
+              354,
+              354
+            ]
+          },
+          {
+            "at_s": 5.23,
+            "text": "It was actually the hospital's.",
+            "caption": [
+              58,
+              974,
+              824,
+              266
+            ],
+            "face": [
+              561,
+              617,
+              337,
+              337
             ]
           }
         ],
-        "count": 1
+        "count": 4
       },
       "target": "no caption page overlaps the face box (+10%)",
       "pass": false
@@ -394,16 +546,16 @@
     "ground.not_bare": {
       "value": [
         {
-          "edge_frame": 69,
-          "barest_frame": 69,
-          "stage_std": 51.51,
+          "edge_frame": 14,
+          "barest_frame": 17,
+          "stage_std": 53.53,
           "floor": 3.0,
           "pass": true
         },
         {
-          "edge_frame": 171,
-          "barest_frame": 168,
-          "stage_std": 64.76,
+          "edge_frame": 225,
+          "barest_frame": 227,
+          "stage_std": 51.92,
           "floor": 3.0,
           "pass": true
         }
@@ -424,7 +576,7 @@
         ],
         "onsets_per_s": 4.29,
         "handovers": 2,
-        "handovers_on_a_beat": 0
+        "handovers_on_a_beat": 1
       },
       "target": "measured only: nothing snaps to the beat; his words are the clock",
       "pass": null,
@@ -433,15 +585,18 @@
     },
     "picture.as_shot": {
       "value": {
-        "face": {
-          "L": 7.98,
-          "a": 0.42,
-          "b": 0.55
+        "hindsight": {
+          "L": 0.62,
+          "a": 0.38,
+          "b": 0.91
+        },
+        "whose": {
+          "L": 0.55,
+          "a": 0.56,
+          "b": 0.67
         }
       },
-      "moved": [
-        "face"
-      ],
+      "moved": [],
       "target": "his take as shot: the lower quarter within L 5.0, a 4.0, b 4.0 of the rows of the conformed take it shows (median L*a*b*)",
       "pass": null,
       "status": "advisory"
@@ -454,8 +609,8 @@
     },
     "composition": {
       "value": {
-        "face": {
-          "pass": false,
+        "hindsight": {
+          "pass": true,
           "checks": {
             "fill_pct": {
               "pass": true,
@@ -470,71 +625,23 @@
               "value": []
             },
             "platform_zone": {
-              "pass": false,
-              "value": [
-                {
-                  "text": "WHOLE",
-                  "conf": 96.639374,
-                  "x": 901,
-                  "y": 200,
-                  "w": 106,
-                  "h": 37
-                },
-                {
-                  "text": "WHOLE",
-                  "conf": 96.680138,
-                  "x": 964,
-                  "y": 467,
-                  "w": 104,
-                  "h": 37
-                },
-                {
-                  "text": "Man",
-                  "conf": 94.599953,
-                  "x": 946,
-                  "y": 1458,
-                  "w": 54,
-                  "h": 33
-                }
-              ]
+              "pass": true,
+              "value": []
             },
             "edges": {
-              "pass": false,
-              "value": [
-                {
-                  "text": "HOSPITAL",
-                  "conf": 76.917038,
-                  "x": 30,
-                  "y": 301,
-                  "w": 169,
-                  "h": 38
-                },
-                {
-                  "text": "WHOLE",
-                  "conf": 96.680138,
-                  "x": 964,
-                  "y": 467,
-                  "w": 104,
-                  "h": 37
-                }
-              ]
+              "pass": true,
+              "value": []
             }
           },
-          "findings": [
-            "platform_zone 'WHOLE' ends at (1007, 237), the limits are (960, 1640) outside the marquee.",
-            "platform_zone 'WHOLE' ends at (1068, 504), the limits are (960, 1640) outside the marquee.",
-            "platform_zone 'Man' ends at (1000, 1491), the limits are (960, 1640) outside the marquee.",
-            "edges 'HOSPITAL' starts at (30, 301), the limits are 24 px from each edge and x at least 60 px.",
-            "edges 'WHOLE' starts at (964, 467), the limits are 24 px from each edge and x at least 60 px."
-          ],
-          "frame": 20
+          "findings": [],
+          "frame": 0
         },
-        "question": {
-          "pass": false,
+        "whose": {
+          "pass": true,
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 99.7
+              "value": 99.99
             },
             "small_text": {
               "pass": true,
@@ -545,29 +652,18 @@
               "value": []
             },
             "platform_zone": {
-              "pass": false,
-              "value": [
-                {
-                  "text": "AUDITOR",
-                  "conf": 94.922836,
-                  "x": 648,
-                  "y": 541,
-                  "w": 329,
-                  "h": 111
-                }
-              ]
+              "pass": true,
+              "value": []
             },
             "edges": {
               "pass": true,
               "value": []
             }
           },
-          "findings": [
-            "platform_zone 'AUDITOR' ends at (977, 652), the limits are (960, 1640) outside the marquee."
-          ],
-          "frame": 151
+          "findings": [],
+          "frame": 183
         },
-        "skeletons": {
+        "closet": {
           "pass": true,
           "checks": {
             "fill_pct": {
@@ -596,7 +692,7 @@
         }
       },
       "target": "design lock composition thresholds",
-      "pass": false,
+      "pass": true,
       "status": "measured"
     },
     "annotation.target": {
@@ -687,14 +783,9 @@
       "pass": true
     },
     "title.lockup_frame": {
-      "value": [
-        {
-          "frame": 229,
-          "why": "the wordmark is not read inside the title lockup, centred under the title (it is read elsewhere on the frame)"
-        }
-      ],
+      "value": [],
       "target": "the title is one centred full-frame lockup, big type, the wordmark inside it and timed with it",
-      "pass": false
+      "pass": true
     },
     "transition.no_ghost_frames": {
       "value": [],
@@ -720,10 +811,10 @@
   },
   "composition": {
     "applies": true,
-    "pass": false,
+    "pass": true,
     "beats": {
-      "face": {
-        "pass": false,
+      "hindsight": {
+        "pass": true,
         "checks": {
           "fill_pct": {
             "pass": true,
@@ -738,71 +829,23 @@
             "value": []
           },
           "platform_zone": {
-            "pass": false,
-            "value": [
-              {
-                "text": "WHOLE",
-                "conf": 96.639374,
-                "x": 901,
-                "y": 200,
-                "w": 106,
-                "h": 37
-              },
-              {
-                "text": "WHOLE",
-                "conf": 96.680138,
-                "x": 964,
-                "y": 467,
-                "w": 104,
-                "h": 37
-              },
-              {
-                "text": "Man",
-                "conf": 94.599953,
-                "x": 946,
-                "y": 1458,
-                "w": 54,
-                "h": 33
-              }
-            ]
+            "pass": true,
+            "value": []
           },
           "edges": {
-            "pass": false,
-            "value": [
-              {
-                "text": "HOSPITAL",
-                "conf": 76.917038,
-                "x": 30,
-                "y": 301,
-                "w": 169,
-                "h": 38
-              },
-              {
-                "text": "WHOLE",
-                "conf": 96.680138,
-                "x": 964,
-                "y": 467,
-                "w": 104,
-                "h": 37
-              }
-            ]
+            "pass": true,
+            "value": []
           }
         },
-        "findings": [
-          "platform_zone 'WHOLE' ends at (1007, 237), the limits are (960, 1640) outside the marquee.",
-          "platform_zone 'WHOLE' ends at (1068, 504), the limits are (960, 1640) outside the marquee.",
-          "platform_zone 'Man' ends at (1000, 1491), the limits are (960, 1640) outside the marquee.",
-          "edges 'HOSPITAL' starts at (30, 301), the limits are 24 px from each edge and x at least 60 px.",
-          "edges 'WHOLE' starts at (964, 467), the limits are 24 px from each edge and x at least 60 px."
-        ],
-        "frame": 20
+        "findings": [],
+        "frame": 0
       },
-      "question": {
-        "pass": false,
+      "whose": {
+        "pass": true,
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 99.7
+            "value": 99.99
           },
           "small_text": {
             "pass": true,
@@ -813,29 +856,18 @@
             "value": []
           },
           "platform_zone": {
-            "pass": false,
-            "value": [
-              {
-                "text": "AUDITOR",
-                "conf": 94.922836,
-                "x": 648,
-                "y": 541,
-                "w": 329,
-                "h": 111
-              }
-            ]
+            "pass": true,
+            "value": []
           },
           "edges": {
             "pass": true,
             "value": []
           }
         },
-        "findings": [
-          "platform_zone 'AUDITOR' ends at (977, 652), the limits are (960, 1640) outside the marquee."
-        ],
-        "frame": 151
+        "findings": [],
+        "frame": 183
       },
-      "skeletons": {
+      "closet": {
         "pass": true,
         "checks": {
           "fill_pct": {

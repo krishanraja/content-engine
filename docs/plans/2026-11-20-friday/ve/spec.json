@@ -52,6 +52,7 @@
     "to_beat": "hook"
    },
    "params": {
+    "panel": true,
     "place": {
      "left": 135,
      "top": 230,

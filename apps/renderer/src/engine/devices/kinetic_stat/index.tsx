@@ -27,7 +27,11 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const ghostTexts = object.params.ghost === true ? object.dataset!.rows.map(row =>
     state.denominator === null ? String(row.value) : `${row.value}/${state.denominator}`) : []
   const l = kineticLayout(box, target, state.unit, state.producerLabel, aspect, ghostTexts)
+  const pad = 28 * l.scale, top = l.number.top - pad, bottom = l.producer.top + l.producer.height + pad
   return <div style={{ color: tokens.cream, textAlign: 'center' }}>
+    {object.params.panel === true && <div data-kinetic-panel="" style={{ position: 'absolute', left: l.number.left - pad * 1.5,
+      top, width: l.number.width + pad * 3, height: bottom - top, borderRadius: 18 * l.scale,
+      background: `color-mix(in srgb, ${tokens.ink} 82%, transparent)` }} />}
     {state.ghostText !== null && <div data-kinetic-ghost="" style={{ position: 'absolute', ...l.number,
       top: l.number.top - 8 * l.scale, opacity: 0.25, textDecoration: 'line-through',
       fontFamily: HOUSE_FONTS.data, fontSize: l.sizes[0]! * l.scale,

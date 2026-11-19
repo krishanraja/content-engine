@@ -4,7 +4,7 @@
   "format": "face-with-proof",
   "aspect": "9:16",
   "fps": 30,
-  "durationFrames": 247,
+  "durationFrames": 240,
   "tokens": {
     "ink": "#0C1512",
     "inkDeep": "#070D0B",
@@ -40,149 +40,161 @@
   "segments": [
     {
       "src": "/home/user/content-engine/.cache/fri20/assets/short.master.mov",
-      "trimBeforeFrames": 262,
+      "trimBeforeFrames": 1886,
       "fromFrame": 0,
-      "durationFrames": 247
+      "durationFrames": 240
     }
   ],
   "audio": {
     "stem": {
       "src": "/home/user/content-engine/.cache/fri20/assets/audio.short.wav",
-      "trimBeforeFrames": 262
+      "trimBeforeFrames": 1886
     },
     "sfx": []
   },
   "captions": [
     {
       "fromFrame": 0,
-      "toFrame": 51,
-      "words": [
-        {
-          "text": "So",
-          "atFrame": 0
-        },
-        {
-          "text": "imagine",
-          "atFrame": 4
-        },
-        {
-          "text": "what",
-          "atFrame": 37
-        },
-        {
-          "text": "it's",
-          "atFrame": 45
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 51,
-      "toFrame": 78,
-      "words": [
-        {
-          "text": "finding",
-          "atFrame": 51
-        },
-        {
-          "text": "in",
-          "atFrame": 63
-        },
-        {
-          "text": "everyone's",
-          "atFrame": 66
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 78,
-      "toFrame": 111,
-      "words": [
-        {
-          "text": "archives",
-          "atFrame": 78
-        },
-        {
-          "text": "right",
-          "atFrame": 91
-        },
-        {
-          "text": "now.",
-          "atFrame": 98
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 111,
-      "toFrame": 145,
-      "words": [
-        {
-          "text": "Hospitals",
-          "atFrame": 111
-        },
-        {
-          "text": "pay",
-          "atFrame": 130
-        },
-        {
-          "text": "whole",
-          "atFrame": 139
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 145,
-      "toFrame": 207,
-      "words": [
-        {
-          "text": "teams",
-          "atFrame": 145
-        },
-        {
-          "text": "to",
-          "atFrame": 161
-        },
-        {
-          "text": "sort",
-          "atFrame": 174
-        },
-        {
-          "text": "pricing",
-          "atFrame": 181
-        },
-        {
-          "text": "out",
-          "atFrame": 194
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 207,
-      "toFrame": 247,
+      "toFrame": 14,
       "words": [
         {
           "text": "and",
-          "atFrame": 207
+          "atFrame": 0
         },
         {
-          "text": "a",
-          "atFrame": 211
+          "text": "it's",
+          "atFrame": 0
         },
         {
-          "text": "chatbot",
-          "atFrame": 214
+          "text": "analysing.",
+          "atFrame": 0
+        }
+      ],
+      "swipeIndex": 2
+    },
+    {
+      "fromFrame": 14,
+      "toFrame": 59,
+      "words": [
+        {
+          "text": "But",
+          "atFrame": 14
         },
         {
-          "text": "beat",
-          "atFrame": 228
+          "text": "in",
+          "atFrame": 38
         },
         {
-          "text": "them.",
-          "atFrame": 234
+          "text": "this",
+          "atFrame": 40
+        },
+        {
+          "text": "instance,",
+          "atFrame": 47
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 59,
+      "toFrame": 128,
+      "words": [
+        {
+          "text": "whose",
+          "atFrame": 59
+        },
+        {
+          "text": "mistake",
+          "atFrame": 68
+        },
+        {
+          "text": "did",
+          "atFrame": 80
+        },
+        {
+          "text": "Claude",
+          "atFrame": 85
+        },
+        {
+          "text": "find?",
+          "atFrame": 94
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 128,
+      "toFrame": 169,
+      "words": [
+        {
+          "text": "It",
+          "atFrame": 128
+        },
+        {
+          "text": "was",
+          "atFrame": 130
+        },
+        {
+          "text": "actually",
+          "atFrame": 133
+        },
+        {
+          "text": "the",
+          "atFrame": 141
+        },
+        {
+          "text": "hospital's.",
+          "atFrame": 144
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 169,
+      "toFrame": 236,
+      "words": [
+        {
+          "text": "And",
+          "atFrame": 169
+        },
+        {
+          "text": "I",
+          "atFrame": 180
+        },
+        {
+          "text": "reckon",
+          "atFrame": 182
+        },
+        {
+          "text": "Claude",
+          "atFrame": 225
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 236,
+      "toFrame": 240,
+      "words": [
+        {
+          "text": "in",
+          "atFrame": 236
+        },
+        {
+          "text": "this",
+          "atFrame": 238
+        },
+        {
+          "text": "instance",
+          "atFrame": 240
+        },
+        {
+          "text": "didn't",
+          "atFrame": 240
+        },
+        {
+          "text": "care",
+          "atFrame": 240
         }
       ],
       "swipeIndex": null
@@ -194,15 +206,14 @@
   "title": "Your AI auditor: missing money or skeletons?",
   "beats": [
     {
-      "id": "face",
-      "role": "bridge",
+      "id": "hindsight",
+      "role": "anchor",
       "layout": "F1",
       "fromFrame": 0,
-      "toFrame": 247,
+      "toFrame": 14,
       "uses": [
-        "s_face_slam0",
-        "s_face_slam1",
-        "s_face_slam2"
+        "s_hindsight_slam0",
+        "s_hindsight_slam1"
       ],
       "face": "full",
       "transitionOut": "cut",
@@ -210,20 +221,76 @@
       "plate": {
         "source": "take"
       },
-      "keyFrame": 198
+      "keyFrame": 0
+    },
+    {
+      "id": "whose",
+      "role": "bridge",
+      "layout": "F1",
+      "fromFrame": 14,
+      "toFrame": 225,
+      "uses": [
+        "s_whose_slam0",
+        "s_whose_slam1"
+      ],
+      "face": "full",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "keyFrame": 183
+    },
+    {
+      "id": "closet",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 225,
+      "toFrame": 240,
+      "uses": [
+        "closet2"
+      ],
+      "face": "off",
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 239
     }
   ],
   "objects": [
     {
-      "obj": "s_face_slam0",
-      "device": "slam_word",
-      "meaning": "his own word slammed as he says it: archives (everyone's, right now)",
-      "fromFrame": 0,
-      "toFrame": 247,
+      "obj": "closet2",
+      "device": "scene_plate",
+      "meaning": "the callback: the same cupboard, now yours, opening on 'whose closet it was opening'",
+      "fromFrame": 225,
+      "toFrame": 240,
       "variants": {},
       "params": {
-        "word": "ARCHIVES",
-        "tapeText": "EVERYONE'S, RIGHT NOW",
+        "shots": [
+          {
+            "src": "/home/user/content-engine/.cache/fri20/assets/plates/b4-closet-skeleton-916-from2s1.mp4",
+            "kind": "video",
+            "width": 1080,
+            "height": 1920
+          }
+        ],
+        "camera": "push",
+        "full": true,
+        "grade": "none"
+      }
+    },
+    {
+      "obj": "s_hindsight_slam0",
+      "device": "slam_word",
+      "meaning": "his own word slammed as he says it: guessing (next year: it's guessing)",
+      "fromFrame": 0,
+      "toFrame": 14,
+      "variants": {},
+      "params": {
+        "word": "GUESSING",
+        "tapeText": "NEXT YEAR: IT'S GUESSING",
         "place": {
           "left": 135,
           "top": 230,
@@ -234,15 +301,15 @@
       }
     },
     {
-      "obj": "s_face_slam1",
+      "obj": "s_hindsight_slam1",
       "device": "slam_word",
-      "meaning": "his own word slammed as he says it: teams (hospitals pay whole teams)",
+      "meaning": "his own word slammed as he says it: analysing (last year: it's analysing)",
       "fromFrame": 0,
-      "toFrame": 247,
+      "toFrame": 14,
       "variants": {},
       "params": {
-        "word": "TEAMS",
-        "tapeText": "HOSPITALS PAY WHOLE TEAMS",
+        "word": "ANALYSING",
+        "tapeText": "LAST YEAR: IT'S ANALYSING",
         "place": {
           "left": 135,
           "top": 230,
@@ -253,15 +320,34 @@
       }
     },
     {
-      "obj": "s_face_slam2",
+      "obj": "s_whose_slam0",
       "device": "slam_word",
-      "meaning": "his own word slammed as he says it: chatbot (a chatbot beat them)",
-      "fromFrame": 0,
-      "toFrame": 247,
+      "meaning": "his own word slammed as he says it: mistake (whose mistake?)",
+      "fromFrame": 14,
+      "toFrame": 225,
       "variants": {},
       "params": {
-        "word": "CHATBOT",
-        "tapeText": "A CHATBOT BEAT THEM",
+        "word": "MISTAKE",
+        "tapeText": "WHOSE MISTAKE?",
+        "place": {
+          "left": 135,
+          "top": 230,
+          "width": 1080,
+          "height": 480,
+          "scale": 0.75
+        }
+      }
+    },
+    {
+      "obj": "s_whose_slam1",
+      "device": "slam_word",
+      "meaning": "his own word slammed as he says it: hospital's (it was the hospital's)",
+      "fromFrame": 14,
+      "toFrame": 225,
+      "variants": {},
+      "params": {
+        "word": "HOSPITAL'S",
+        "tapeText": "IT WAS THE HOSPITAL'S",
         "place": {
           "left": 135,
           "top": 230,
@@ -274,39 +360,53 @@
   ],
   "events": [
     {
-      "id": "face-0",
-      "obj": "s_face_slam0",
+      "id": "hindsight-0",
+      "obj": "s_hindsight_slam0",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 78
+      "atFrame": 0
     },
     {
-      "id": "face-1",
-      "obj": "s_face_slam0",
+      "id": "hindsight-1",
+      "obj": "s_hindsight_slam0",
       "verb": "exit",
       "toState": "visible",
-      "atFrame": 139
+      "atFrame": 0
     },
     {
-      "id": "face-2",
-      "obj": "s_face_slam1",
+      "id": "hindsight-2",
+      "obj": "s_hindsight_slam1",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 145
+      "atFrame": 0
     },
     {
-      "id": "face-3",
-      "obj": "s_face_slam1",
+      "id": "whose-0",
+      "obj": "s_whose_slam0",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 68
+    },
+    {
+      "id": "whose-1",
+      "obj": "s_whose_slam0",
       "verb": "exit",
       "toState": "visible",
-      "atFrame": 211
+      "atFrame": 141
     },
     {
-      "id": "face-4",
-      "obj": "s_face_slam2",
+      "id": "whose-2",
+      "obj": "s_whose_slam1",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 214
+      "atFrame": 144
+    },
+    {
+      "id": "closet-0",
+      "obj": "closet2",
+      "verb": "enter",
+      "toState": "0",
+      "atFrame": 225
     }
   ],
   "motion": {
