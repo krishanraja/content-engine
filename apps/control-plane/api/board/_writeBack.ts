@@ -62,7 +62,9 @@ export function stepKey(raw: string | null | undefined): string {
 /** The instruction itself. Plain words, one target, no key. */
 export function writeBack(t: WriteBackTarget): string {
   const step = stepKey(t.step)
-  const where = t.pieceId ? `piece_id ${t.pieceId}` : `week ${t.week} and day ${t.day}`
+  // A piece is named with its week and day too: a piece with no schedule date of its own (an off-day meme or carousel placed
+  // by the board, not by scheduled_for) is refused as piece_not_scheduled unless the report carries the day it sits on (Krish, 2026-11-19).
+  const where = t.pieceId ? `piece_id ${t.pieceId}, week ${t.week} and day ${t.day}` : `week ${t.week} and day ${t.day}`
   const cli = t.pieceId ? t.pieceId : `day:${t.week}/${t.day}`
   return `${WRITE_BACK_HEAD} (${where}, step ${step}). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n`
     + (t.decisions ? `${decisionsText(t.decisions)}\n` : '')
