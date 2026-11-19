@@ -452,7 +452,7 @@
      "src": "screens/b11-ibm.mp4",
      "pixelWidth": 1080,
      "pixelHeight": 1920,
-     "trimBeforeFrames": 45
+     "trimBeforeFrames": 63
     },
     "push": 0.0
    }
@@ -875,7 +875,7 @@
    "kind": "recording",
    "origin": "capture",
    "path": "screens/b3-posts.mp4",
-   "sha256": "93c98ee3804340a42bb604ca58ca551ce0a5ac3cf27b9e7a11a323bff6bd0866",
+   "sha256": "45996c0f9e1eae869220168c934369fa9bb787e98466825c43293e243677bb7f",
    "licence": "the publisher's own published page or post, recorded from its own page, credited",
    "credit": "Bluesky posts, links in the spec",
    "source_url": "https://bsky.app"
@@ -885,7 +885,7 @@
    "kind": "recording",
    "origin": "capture",
    "path": "screens/b11-ibm.mp4",
-   "sha256": "95eb6fe6d6d85f91d6ade45596c0b0d926d99ccc6a3be33caa05ee70506f8895",
+   "sha256": "e2455855ca4c11cd8c3624ca031185d62fc453f3e18142b81f3fd7a1164a34ba",
    "licence": "the publisher's own published page or post, recorded from its own page, credited",
    "credit": "IBM Newsroom, 21 Sep 2026",
    "source_url": "https://newsroom.ibm.com/2026-09-21-new-ibm-chro-study-ai-puts-critical-thinking-at-the-center-of-workforce-priorities"
@@ -895,7 +895,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b13a-accountable.mp4",
-   "sha256": "fec80baededd27010eaa3de7430b63faf8a4e5dc63127dea4afd8ee8b4c25d90",
+   "sha256": "86a79a2df8bc308c9c260d5b9c96bd648bf39de651eebf030b2e7f0404a12035",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
@@ -906,7 +906,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b13-overrule.mp4",
-   "sha256": "e7b731adab44614ade22a3f4f76c3faf0bc3aa99ab772c5d84068db385679998",
+   "sha256": "990608961392d31de56ecb35cfbe1cbdd8c07d2fefa1ed6177b3a9a85884b9c6",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
@@ -917,7 +917,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b19-forward.mp4",
-   "sha256": "c1e952e4e8e8570fbe8124e3ea73a01fae16c69c3403eb29db61e28dd39775d2",
+   "sha256": "84dfb44df3ac90cf464231f83364d913059332155326c360df55163248473371",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
@@ -928,7 +928,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "screens/b20-resign.mp4",
-   "sha256": "10662b8500a6ee3152bf77d6a4dbb49e9b4bd3ea5810fe6b972071695388a13a",
+   "sha256": "5108b29ee86d83c57a9fc7cedfe2eefae6da193e012b7de10de61ff457c727c3",
    "licence": "built by Codex in code and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1eff5-5641-7fb2-9eb3-e32f7c62794f",
@@ -939,7 +939,7 @@
    "kind": "broll",
    "origin": "generated",
    "path": "capture/b22-screen.mp4",
-   "sha256": "b0ccd27842aa2fdc592bcff4e7553d1bfc6c62d17087f1b70883b1b22b27bf9a",
+   "sha256": "f918482a72f03538588de750a85e7a83b50cff6eb335df6cd2b22a04a76b6b0d",
    "licence": "built by Codex from a code-made email draft and recorded with Playwright; no third-party rights",
    "tool": "codex.playwright_capture",
    "job_id": "01a1efa5-ff4d-7cf2-bc11-eca9de2b3be3",
