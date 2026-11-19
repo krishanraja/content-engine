@@ -58,7 +58,7 @@
     "hero": true,
     "place": {
      "left": 135,
-     "top": 380,
+     "top": 270,
      "width": 1080,
      "height": 480,
      "scale": 0.75
@@ -79,15 +79,15 @@
     "shape": "underline",
     "from": [
      230,
-     63
+     135
     ],
     "to": [
      850,
-     58
+     130
     ],
     "place": {
      "left": 135,
-     "top": 380,
+     "top": 270,
      "width": 1080,
      "height": 480,
      "scale": 0.75

@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-11-20-friday/ve/proof/short.mp4",
-  "sha256": "2243a97890266919f3a74e79d3248d8bad0d00548c8133acfcbcda68152546ce",
+  "sha256": "c05c6e09f0359204cf29a37643a59c3d9ee0952950a308de9b62ad36a401b8c9",
   "duration_s": 8.0,
   "format": "face-with-proof",
   "checks": {
@@ -73,7 +73,7 @@
         {
           "page": 0,
           "frame": 20,
-          "text": "TEAMS TO SORT s\nPRICING -—\nOUT /",
+          "text": "TEAMS TO SORT :\nPRICING ~—\nOUT /",
           "agreement": 1.0,
           "variant": "highlight",
           "pass": true
@@ -81,9 +81,9 @@
         {
           "page": 1,
           "frame": 60,
-          "text": "AND A\nCHATBOT\nBEAT THEM",
+          "text": "AND A y _\nCHATBOT\nBEAT THEM",
           "agreement": 1.0,
-          "variant": "cream_half",
+          "variant": "highlight",
           "pass": true
         }
       ],
@@ -96,7 +96,7 @@
         {
           "beat": "face",
           "frame": 34,
-          "score": 0.15400702291105356,
+          "score": 0.15550738942794273,
           "pass": true
         },
         {
@@ -108,7 +108,7 @@
         {
           "beat": "skeletons",
           "frame": 205,
-          "score": 0.17923668755326008,
+          "score": 0.1791238950326916,
           "pass": true
         }
       ],
@@ -123,8 +123,8 @@
           "atFrame": 0,
           "peak_frame": 1,
           "lag_frames": 1,
-          "peak_difference": 12.3241605758667,
-          "event_difference": 12.3241605758667,
+          "peak_difference": 12.337018013000488,
+          "event_difference": 12.337018013000488,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -134,8 +134,8 @@
           "atFrame": 0,
           "peak_frame": 1,
           "lag_frames": 1,
-          "peak_difference": 12.3241605758667,
-          "event_difference": 12.3241605758667,
+          "peak_difference": 12.337018013000488,
+          "event_difference": 12.337018013000488,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -156,9 +156,9 @@
           "atFrame": 33,
           "peak_frame": 36,
           "lag_frames": 3,
-          "peak_difference": 31.778087615966797,
-          "event_difference": 30.853687286376953,
-          "threshold": 13.211719036102295,
+          "peak_difference": 31.760513305664062,
+          "event_difference": 30.849512100219727,
+          "threshold": 13.214531421661377,
           "gradual": false,
           "pass": true
         },
@@ -167,9 +167,9 @@
           "atFrame": 36,
           "peak_frame": 33,
           "lag_frames": -3,
-          "peak_difference": 15.679495811462402,
-          "event_difference": 11.070816993713379,
-          "threshold": 14.4172682762146,
+          "peak_difference": 15.670050621032715,
+          "event_difference": 11.074969291687012,
+          "threshold": 14.413427352905273,
           "gradual": false,
           "pass": false
         },
@@ -178,9 +178,9 @@
           "atFrame": 69,
           "peak_frame": 69,
           "lag_frames": 0,
-          "peak_difference": 71.51508331298828,
-          "event_difference": 71.51508331298828,
-          "threshold": 8.754238843917847,
+          "peak_difference": 71.51006317138672,
+          "event_difference": 71.51006317138672,
+          "threshold": 8.751277685165405,
           "gradual": false,
           "pass": true
         },
@@ -189,9 +189,9 @@
           "atFrame": 171,
           "peak_frame": 172,
           "lag_frames": 1,
-          "peak_difference": 24.109039306640625,
-          "event_difference": 24.109039306640625,
-          "threshold": 6.461265563964844,
+          "peak_difference": 26.019716262817383,
+          "event_difference": 26.019716262817383,
+          "threshold": 6.292910814285278,
           "gradual": false,
           "pass": true
         }
@@ -323,8 +323,8 @@
             "fromFrame": 0,
             "text": "teams to sort pricing out",
             "change_frame": 1,
-            "frame": 23,
-            "read": "TEAMS TO SORT .\nPRICING -—\nOUT /",
+            "frame": 20,
+            "read": "TEAMS TO SORT :\nPRICING ~—\nOUT /",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -334,7 +334,7 @@
             "fromFrame": 29,
             "text": "and a chatbot beat them.",
             "change_frame": 28,
-            "frame": 60,
+            "frame": 61,
             "read": "AND A\nCHATBOT\nBEAT THEM",
             "score": 1.0,
             "exact": true,
@@ -354,11 +354,28 @@
     "captions.off_face": {
       "value": {
         "pages": 2,
-        "on_face": [],
-        "count": 0
+        "on_face": [
+          {
+            "at_s": 0.77,
+            "text": "teams to sort pricing out",
+            "caption": [
+              58,
+              974,
+              824,
+              358
+            ],
+            "face": [
+              479,
+              550,
+              390,
+              390
+            ]
+          }
+        ],
+        "count": 1
       },
       "target": "no caption page overlaps the face box (+10%)",
-      "pass": true
+      "pass": false
     },
     "plate.head_in_band": {
       "value": null,
@@ -386,7 +403,7 @@
         {
           "edge_frame": 171,
           "barest_frame": 168,
-          "stage_std": 64.76,
+          "stage_std": 61.92,
           "floor": 3.0,
           "pass": true
         }
@@ -465,11 +482,11 @@
           "frame": 20
         },
         "question": {
-          "pass": false,
+          "pass": true,
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 99.7
+              "value": 99.39
             },
             "small_text": {
               "pass": true,
@@ -480,26 +497,15 @@
               "value": []
             },
             "platform_zone": {
-              "pass": false,
-              "value": [
-                {
-                  "text": "AUDITOR",
-                  "conf": 94.922836,
-                  "x": 648,
-                  "y": 541,
-                  "w": 329,
-                  "h": 111
-                }
-              ]
+              "pass": true,
+              "value": []
             },
             "edges": {
               "pass": true,
               "value": []
             }
           },
-          "findings": [
-            "platform_zone 'AUDITOR' ends at (977, 652), the limits are (960, 1640) outside the marquee."
-          ],
+          "findings": [],
           "frame": 151
         },
         "skeletons": {
@@ -531,7 +537,7 @@
         }
       },
       "target": "design lock composition thresholds",
-      "pass": false,
+      "pass": true,
       "status": "measured"
     },
     "annotation.target": {
@@ -622,14 +628,9 @@
       "pass": true
     },
     "title.lockup_frame": {
-      "value": [
-        {
-          "frame": 229,
-          "why": "the wordmark is not read inside the title lockup, centred under the title (it is read elsewhere on the frame)"
-        }
-      ],
+      "value": [],
       "target": "the title is one centred full-frame lockup, big type, the wordmark inside it and timed with it",
-      "pass": false
+      "pass": true
     },
     "transition.no_ghost_frames": {
       "value": [],
@@ -655,7 +656,7 @@
   },
   "composition": {
     "applies": true,
-    "pass": false,
+    "pass": true,
     "beats": {
       "face": {
         "pass": true,
@@ -685,11 +686,11 @@
         "frame": 20
       },
       "question": {
-        "pass": false,
+        "pass": true,
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 99.7
+            "value": 99.39
           },
           "small_text": {
             "pass": true,
@@ -700,26 +701,15 @@
             "value": []
           },
           "platform_zone": {
-            "pass": false,
-            "value": [
-              {
-                "text": "AUDITOR",
-                "conf": 94.922836,
-                "x": 648,
-                "y": 541,
-                "w": 329,
-                "h": 111
-              }
-            ]
+            "pass": true,
+            "value": []
           },
           "edges": {
             "pass": true,
             "value": []
           }
         },
-        "findings": [
-          "platform_zone 'AUDITOR' ends at (977, 652), the limits are (960, 1640) outside the marquee."
-        ],
+        "findings": [],
         "frame": 151
       },
       "skeletons": {

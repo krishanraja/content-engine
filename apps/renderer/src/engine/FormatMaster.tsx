@@ -400,11 +400,11 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   )
 }
 
-/** His full-frame take on a tall cut is framed FACE_LIFT from its bottom edge, so his face sits about 130 px higher and
+/** His full-frame take on a tall cut is framed FACE_LIFT from its bottom edge, so his face sits about 150 px higher and
  *  clears the caption band under his chin (Ruling, Krish, 2026-11-19: "Halo + frame me higher"; Fri 20 Nov: the take
  *  framed his chin 12 px above the art-directed captions, which cannot go lower than Instagram's caption zone). The lift
  *  eases out as the take shrinks into its window, so a face beat and a window beat meet without a jump. */
-export const FACE_LIFT = 1.16
+export const FACE_LIFT = 1.18
 export function faceLift(aspect: string, windowed: number): number {
   if (aspect !== '9:16') return 1
   const w = Math.min(1, Math.max(0, windowed))
