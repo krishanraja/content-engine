@@ -1259,7 +1259,11 @@ export function hookNorm(v: unknown): string | null {
  *  already chose), dated from 14 days before it to the end of its own week; never itself (an item carried into this week
  *  is matched by its key). Retelling is the same primary source, the same hook (never for the weekly good news, whose
  *  hook is the same every week by design), or two or more named sources in common. The line says which. */
-export function repeatOf(own: { keys: string[]; week: string; date: string; url: string | null; hook: string | null; recurring?: boolean; cites?: { urls: string[]; parts: string[] } }, recent: RecentOut[]): ModelRepeatOf | null {
+/** `idea`: the thing asking is an idea on the ideas board, never an item drawn on its day. An idea that IS something already
+ *  approved or in work on another day or week (its piece, its post's item) is never offered again, whenever that is
+ *  dated (Ruling, Krish, 2026-11-19: "no suggestions approved duplicated. right now I seem to get pieces I am already
+ *  working on show up as suggestions for following weeks"); what went out counts within the 14 days, as before. */
+export function repeatOf(own: { keys: string[]; week: string; date: string; url: string | null; hook: string | null; recurring?: boolean; cites?: { urls: string[]; parts: string[] }; idea?: boolean }, recent: RecentOut[]): ModelRepeatOf | null {
   const why = (r: RecentOut): string | null => {
     if (own.url && (r.url === own.url || (r.cites?.urls || []).includes(own.url))) return 'Same source as'
     if (r.url && (own.cites?.urls || []).includes(r.url)) return 'Same source as'
@@ -1269,8 +1273,13 @@ export function repeatOf(own: { keys: string[]; week: string; date: string; url:
     return shared >= 2 ? `Shares ${shared} sources with` : null
   }
   const end = shiftDays(own.week, 6)
-  const hits = recent.filter(r => !r.keys.some(k => own.keys.includes(k)) && r.week < own.week && daysBetween(own.date, r.date) <= 14 && r.date <= end)
-    .map(r => ({ r, how: why(r) })).filter((x): x is { r: RecentOut; how: string } => Boolean(x.how))
+  const same = (r: RecentOut) => r.keys.some(k => own.keys.includes(k))
+  const inWork = (r: RecentOut) => r.stage !== 'live'
+  const hits = recent.filter(r => {
+    if (same(r)) return Boolean(own.idea) && inWork(r) && (r.week < own.week || r.date < own.week || r.date > end)
+    if (own.idea && inWork(r)) return r.week < own.week || r.date > end
+    return r.week < own.week && daysBetween(own.date, r.date) <= 14 && r.date <= end
+  }).map(r => ({ r, how: same(r) ? 'Already in work:' : why(r) })).filter((x): x is { r: RecentOut; how: string } => Boolean(x.how))
     .sort((a, b) => ['live', 'scheduled', 'approved'].indexOf(a.r.stage) - ['live', 'scheduled', 'approved'].indexOf(b.r.stage) || b.r.date.localeCompare(a.r.date))
   const hit = hits[0]
   if (!hit) return null
@@ -1289,7 +1298,10 @@ export function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'p
   const out: RecentOut[] = []
   for (const it of items || []) {
     const board = it.origin_week || it.week || ''
-    if (it.state !== 'approved' || !it.date || it.date < from || it.date > to || !board || board >= m.week) continue
+    // In work on any later day counts too (Ruling, Krish, 2026-11-19): an approved item dated after this week, or one
+    // this week's board offered that now sits on another week.
+    const later = Boolean(it.date) && it.date! > to
+    if (it.state !== 'approved' || !it.date || it.date < from || !board || (board >= m.week && !later)) continue
     const stage: RecentOut['stage'] = it.posts.some(p => p.state === 'live') ? 'live' : it.posts.some(p => p.state === 'scheduled') ? 'scheduled' : 'approved'
     const raw = isObj(it.option) && Object.keys(it.option).length ? it.option : rawOption(m as ModelInputs, it.day || '', it.option_id)
     out.push({ keys: [it.item, ...(it.doc ? [`${board}:${it.doc}`] : [])], kind: 'post', title: cut(raw?.hook ?? raw?.title ?? raw?.copy ?? it.option_id, 200),
@@ -1298,7 +1310,8 @@ export function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'p
   }
   for (const r of pastPieces) {
     const date = str(r.scheduled_for)?.slice(0, 10)
-    if (!date || date < from || date >= m.week || r.buried_at) continue
+    // Pieces before the week, and pieces in work for a later week (never this week's own: they are drawn on their day).
+    if (!date || date < from || (date >= m.week && date <= to) || r.buried_at) continue
     const at = new Date(`${date}T00:00:00Z`)
     const day = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][at.getUTCDay()]
     out.push({ keys: [`piece:${String(r.id).toLowerCase()}`], kind: 'piece', title: cut(r.idea ?? r.thesis, 200),
@@ -1333,7 +1346,7 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
         const idea = ideaOf(m, d, o, why)
         const raw = rawOption(m, d.day, o.id)
         const rep = repeatOf({ keys: [`${m.week}:${o.doc_id}`, ...(o.item?.key ? [o.item.key] : []), ...(idea.piece_id ? [`piece:${idea.piece_id}`] : [])], week: m.week, date: d.date,
-          url: primaryUrl(raw, o.source), hook: hookNorm(raw?.hook ?? o.title), recurring: idea.kind === 'good_news', cites: citesOf(raw) }, m.recentOut || [])
+          url: primaryUrl(raw, o.source), hook: hookNorm(raw?.hook ?? o.title), recurring: idea.kind === 'good_news', cites: citesOf(raw), idea: true }, m.recentOut || [])
         if (rep) ideaRepeats.set(o.doc_id, rep)
         ideas.push(idea)
       }

@@ -2313,6 +2313,12 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function dayDocuments(ticks: Body[], docs: Body[], from: Day, to: Day, fromWeek: string): Doc[]`
 - `async function carryDay(db: SupabaseClient, toWeek: string, raw: unknown): Promise<{ status: number; body: Body }>`
 
+### `apps/control-plane/api/board/_carryTemplates.ts`
+
+Every week's ideas board carries the meme templates (Ruling, Krish, 2026-11-19: "every week's ideas board should include
+
+- `function carryTemplates(ideas: Body | null, lastWeek: string, lastIdeas: Body | null, lastQueue: Array<{ doc_id: string…`
+
 ### `apps/control-plane/api/board/_contracts.ts`
 
 - `const collections`
@@ -2494,6 +2500,14 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `const HELD_CHANGED`
 - `function gatePieces(week: string, pieces: Body[], approvals: Approval[] | null, ideas: Body | null)`
 - `function cutSoWhat(v: unknown): string`
+
+### `apps/control-plane/api/board/_goodNews.ts`
+
+Saturday is good-news carousels only (Krish, 2026-11-19, of Sat 28's ideas board: "These are still all just one idea,
+
+- `const GOOD_NEWS_FROM: string`
+- `function isGoodNews(o: Body): boolean`
+- `function saturdayHold(week: string, day: string, o: Body, approved: boolean): string | null`
 
 ### `apps/control-plane/api/board/_growthPlacement.ts`
 

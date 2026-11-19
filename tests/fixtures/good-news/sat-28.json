@@ -1,0 +1,472 @@
+{
+ "week_start": "2026-11-23",
+ "offdays": {
+  "sat": [
+   {
+    "id": "goodnews",
+    "weekly": "good_news",
+    "format": "Uplifting AI news carousel, 7 cards, 4:5",
+    "stories_due": "2026-11-16",
+    "topic": "AI in the hospital this week",
+    "source": {
+     "label": "Your saved post asking for a positive ray of sunshine, and each story's own source",
+     "url": "https://nyulangone.org/news/ai-predicts-ptsd-risk-based-stories-about-what-brought-patients-emergency-room"
+    },
+    "hook": "AI in the hospital this week: five good things.",
+    "copy": "Five real stories from one week of AI in hospitals: catching PTSD risk early, giving a woman with ALS her voice back, reading 7,800 heart records, sparing lung cancer patients a rushed test, and giving nurses time back. Found again and checked on 16 Nov; each is checked against its source once more before it is made, because it posts about two weeks later. NYU Langone's only photo for story 1 is a Getty stock image, so its card shows NYU's own announcement page instead.",
+    "pitch": {
+     "see": "A title card, then one card per story: its real headline, its own photo, one line on why it matters, and its source and date; a last card asks which one you would want in your hospital.",
+     "lands": "Good news people save, because every story is real and shown.",
+     "why_now": "Five stories from 9 to 13 Nov 2026, checked again on 16 Nov.",
+     "share": "Five good things AI did in hospitals this week."
+    },
+    "direction": {
+     "look": "The positive post you saved, with each story's real photo, and a hilarious generated cover",
+     "format": "Uplifting AI news carousel, 7 cards, 4:5",
+     "frames": [
+      {
+       "words": "AI IN THE HOSPITAL THIS WEEK",
+       "picture": "A generated cover: the house robot in scrubs proudly holding a clipboard upside down"
+      },
+      {
+       "words": "STORY 1: ITS REAL HEADLINE",
+       "picture": "Its own photo, source and date small"
+      },
+      {
+       "words": "STORY 2: ITS REAL HEADLINE",
+       "picture": "Its own photo"
+      },
+      {
+       "words": "STORY 3: ITS REAL HEADLINE",
+       "picture": "Its own photo"
+      },
+      {
+       "words": "STORY 4: ITS REAL HEADLINE",
+       "picture": "Its own photo"
+      },
+      {
+       "words": "STORY 5: ITS REAL HEADLINE",
+       "picture": "Its own photo"
+      },
+      {
+       "words": "WHICH ONE WOULD YOU WANT IN YOUR HOSPITAL?",
+       "picture": "Five thumbnails"
+      }
+     ],
+     "tone": "Warm and true",
+     "kit": "Brand kit, sun yellow"
+    },
+    "learned_from": [
+     "Your Improve on the 14 Nov good news (3 Nov): \"Real-world stories only, but with a hilarious generated cover page\"",
+     "Your Improve (2 Nov): \"I want actual news items and the content we are going to use here - embedded real world images or videos\""
+    ],
+    "returns": {
+     "press": "2026-11-02/queue/off-sat-goodnews",
+     "said": "I want actual news items and the content we are going to use here - embedded real world images or videos",
+     "answers": [],
+     "sources": [
+      {
+       "url": "https://nyulangone.org/news/ai-predicts-ptsd-risk-based-stories-about-what-brought-patients-emergency-room",
+       "date": "2026-11-09"
+      }
+     ]
+    },
+    "stories": [
+     {
+      "headline": "AI spots who may get PTSD from what they say in A&E",
+      "what": "Doctors at NYU Langone let an AI read the stories patients told about why they came to the emergency room, and it flagged every one of 30 people who later developed PTSD.",
+      "why": "Only about 28 percent of US emergency rooms routinely screen for PTSD, so catching it early could get people help sooner.",
+      "kind": "health",
+      "date": "2026-11-09",
+      "source": {
+       "label": "NYU Langone Health news, 9 Nov 2026",
+       "url": "https://nyulangone.org/news/ai-predicts-ptsd-risk-based-stories-about-what-brought-patients-emergency-room"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://nyulangone.org/news/sites/default/files/styles/hero/public/2026-08/NH_GettyImages-2197450644.jpg?h=06ac0d8c&itok=JdJ-iivU"
+      }
+     },
+     {
+      "headline": "A woman with ALS speaks again in her own voice",
+      "what": "Anne-Marie Poirier, who has ALS, types a few words into the Vocality app and it speaks a full sentence in a voice built from her own recordings.",
+      "why": "People losing their speech can keep talking to their families in a voice that sounds like them.",
+      "kind": "people",
+      "date": "2026-11-11",
+      "source": {
+       "label": "Global News (The Canadian Press), 11 Nov 2026",
+       "url": "https://globalnews.ca/news/12147285/quebec-woman-als-ai-voice-app"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://globalnews.ca/wp-content/uploads/2026/11/c75cdc637fd60095cac21aba396acbb56fe7325dd73fc5cc25f58f485e8ef89a.jpg?quality=65&strip=all"
+      }
+     },
+     {
+      "headline": "AI read 7,800 heart patients' records in a fraction of the time",
+      "what": "Cleveland Clinic used an AI to review the records of more than 7,800 heart valve patients and predict whose new valve may wear out.",
+      "why": "Chart review that would have taken doctors years by hand now helps plan each patient's care.",
+      "kind": "health",
+      "date": "2026-11-13",
+      "source": {
+       "label": "NVIDIA blog, 13 Nov 2026",
+       "url": "https://blogs.nvidia.com/blog/how-ai-is-helping-care-teams/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://blogs.nvidia.com/wp-content/uploads/2026/11/Screenshot-2026-11-12-at-9.25.28-AM-1280x592.png"
+      }
+     },
+     {
+      "headline": "AI could spare one in three lung cancer patients a rushed test",
+      "what": "Doctors at Memorial Sloan Kettering and Mount Sinai showed an AI reading tissue slides could have let 26 of 80 lung cancer patients skip a rushed gene test without missing anyone who needed it.",
+      "why": "Fewer rushed tests means faster, cheaper answers and more tissue saved for the full test.",
+      "kind": "lab",
+      "date": "2026-11-13",
+      "source": {
+       "label": "Clinical Lab Products, AMP 2026 report, 13 Nov 2026",
+       "url": "https://clpmag.com/diagnostic-technologies/digital-pathology/ai-tools-cancer-classification-reporting-amp-2026/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://images.ctfassets.net/iujm5coq335o/nh8PTB9sk2mkJJRR4P889/e407c12bd35839440dfa8ecc7bc8f5a5/EGFR_AI_02.jpg"
+      }
+     },
+     {
+      "headline": "Sensors that give nurses time back raise $5.5 million",
+      "what": "Akara, a Trinity College Dublin spinout, raised $5.5 million for sensors and AI that track how hospital rooms are used without filming anyone.",
+      "why": "As much as 40% of nursing time goes on admin, so taking some of it away leaves more time for patients.",
+      "kind": "work",
+      "date": "2026-11-11",
+      "source": {
+       "label": "Trinity College Dublin news, 11 Nov 2026",
+       "url": "https://www.tcd.ie/news_events/top-stories/featured/akara-funding-round/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://pxl01-tcdie.terminalfour.net/prod01/channel_3/media/tcd/news-images/Akara-Founders-RS-800X582.jpg"
+      }
+     }
+    ],
+    "recommended": true,
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
+      "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+     ],
+     "says": [
+      "Cards about five good things AI did in hospitals this week, each with a real story and source.",
+      "Five good things AI did in hospitals this week, one card each with headline, photo, source and date."
+     ],
+     "against": 49,
+     "note": "Both readers named only the weekly format as a repeat of earlier good-news posts; a weekly series recurs by design, and its stories are new."
+    },
+    "shape": "theme",
+    "aim": "interest",
+    "funny": "Cover: the house robot in scrubs proudly holding its clipboard upside down, while five real stories do the work."
+   },
+   {
+    "id": "builditself",
+    "supports": "fri",
+    "format": "Carousel, 6 cards, 4:5",
+    "source_tag": "his_press",
+    "source": {
+     "label": "AI Futures Project, 10 Nov 2026",
+     "url": "https://blog.aifutures.org/p/q35-timelines-update-looks-like-the"
+    },
+    "hook": "Is AI building itself? Four facts and one myth.",
+    "copy": "Six cards for Friday's big question: four checked facts (a quarter of one lab's research tasks led by its AI, research about twice as fast, the forecasters' 2027 date) and the one myth (that a model already builds the next one alone).",
+    "pitch": {
+     "see": "Six cards: a robot holding a smaller robot it built; then a FACT stamp on four cards, each with its number and source; a MYTH stamp on the fifth; a last card asks what you think.",
+     "lands": "It sorts the scariest AI claim into real and not yet, simply.",
+     "why_now": "AI Futures Project update, 10 Nov 2026.",
+     "share": "AI writes most of its own code now. It does not build itself yet."
+    },
+    "cards": [
+     {
+      "words": "Is AI building itself?",
+      "picture": "The house robot holding up a smaller robot it has just screwed together"
+     },
+     {
+      "words": "FACT: METR estimates AI roughly doubles the speed of Anthropic's research",
+      "picture": "A code page with most lines highlighted"
+     },
+     {
+      "words": "FACT: Claude led about 26% of research tasks by August",
+      "picture": "A quarter of a pie"
+     },
+     {
+      "words": "FACT: the AI Futures authors all now forecast 2027",
+      "picture": "A calendar on 2027"
+     },
+     {
+      "words": "MYTH: an AI already builds the next AI alone",
+      "picture": "The robot with a person still holding the screwdriver"
+     },
+     {
+      "words": "Real, myth, or too early to tell?",
+      "picture": "Three buttons"
+     }
+    ],
+    "direction": {
+     "look": "Fact and myth stamps in the brand kit",
+     "format": "Carousel, 6 cards, 4:5",
+     "frames": [
+      {
+       "words": "IS AI BUILDING ITSELF?",
+       "picture": "Robot building a robot"
+      },
+      {
+       "words": "FACT: RESEARCH ABOUT TWICE AS FAST",
+       "picture": "A stopwatch running at double speed"
+      },
+      {
+       "words": "FACT: 26% OF RESEARCH TASKS",
+       "picture": "Pie"
+      },
+      {
+       "words": "FACT: THE FORECASTERS SAY 2027",
+       "picture": "Calendar"
+      },
+      {
+       "words": "MYTH: IT BUILDS ITSELF ALONE",
+       "picture": "A person still holding the screwdriver"
+      },
+      {
+       "words": "WHAT DO YOU THINK?",
+       "picture": "Three buttons"
+      }
+     ],
+     "tone": "Calm, clear",
+     "kit": "Brand kit, mind.the.gap pill"
+    },
+    "learned_from": [
+     "Your Save as a trend (9 Nov): \"needs to be really substantiated properly as to what's actually real and what's myth\""
+    ],
+    "ties_to": "Fri: mind.the.gap, if you pick the AI building itself piece",
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
+      "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+     ],
+     "says": [
+      "Six cards sorting four facts and one myth about whether AI is building itself.",
+      "Is AI building itself? Four facts and one myth, each stamped and sourced."
+     ],
+     "against": 49
+    },
+    "shape": "story",
+    "dive": "The labs now publish how much research their AI leads, so the myth and the facts can be told apart.",
+    "aim": "utility",
+    "funny": "Four facts, one myth, and a robot nervously checking its own homework.",
+    "lookalike": {
+     "pattern": "agents-did-it-alone",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfiMWH2ACgp/",
+     "our_take": "Where the post marvels at agents building an operating system, we sort the measured facts from the myth."
+    }
+   },
+   {
+    "id": "salesagent",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source_tag": "engine_research",
+    "source": {
+     "label": "The Tech Outlook, OpenAI introduces business profiles in ChatGPT (11 Nov 2026)",
+     "url": "https://www.thetechoutlook.com/news/apps/openai-introduces-business-profiles-in-chatgpt-with-business-agents-limited-to-eligible-us-businesses/"
+    },
+    "hook": "Shops can now put their own AI helper inside ChatGPT.",
+    "copy": "An explainer on Businesses in ChatGPT: from 10 Nov, eligible businesses can claim a profile inside ChatGPT, and eligible US online shops can run their own AI helper to answer customers, in chats that are labelled and kept apart. Five cards on what it is and what a small business does next.",
+    "pitch": {
+     "see": "Five cards: a little shop drawn inside a chat bubble; then a card saying that from 10 Nov eligible businesses can claim a page in ChatGPT, one showing an eligible US shop's own AI helper answering a shopper's question, one showing that these chats are labelled and kept apart from ChatGPT's own answers, and a last card asking whether your customers would find you there.",
+     "lands": "It explains a new place customers will find you before your competitors notice it.",
+     "why_now": "OpenAI launched it in beta on 10 Nov 2026.",
+     "share": "The shop window moved into the chat."
+    },
+    "cards": [
+     {
+      "words": "Your next customer might be a chatbot.",
+      "picture": "A shop window drawn inside a chat bubble"
+     },
+     {
+      "words": "From 10 Nov, eligible businesses can claim a profile in ChatGPT",
+      "picture": "A profile card with a tick"
+     },
+     {
+      "words": "Eligible US online shops: their own AI agent answers customers",
+      "picture": "Two chat bubbles talking"
+     },
+     {
+      "words": "These chats are labelled and kept apart from yours",
+      "picture": "A labelled chat tab beside the main chat"
+     },
+     {
+      "words": "Would your customers find you there?",
+      "picture": "The shop window, lights on"
+     }
+    ],
+    "direction": {
+     "look": "The infographic style you saved: one idea per card",
+     "format": "Explainer carousel, 5 cards, 4:5",
+     "frames": [
+      {
+       "words": "THE SHOP WINDOW MOVED INTO THE CHAT",
+       "picture": "Shop window in a chat bubble"
+      },
+      {
+       "words": "CLAIM YOUR PROFILE",
+       "picture": "Profile card"
+      },
+      {
+       "words": "YOUR AGENT ANSWERS",
+       "picture": "Two bubbles"
+      },
+      {
+       "words": "LABELLED, KEPT APART",
+       "picture": "A labelled chat tab"
+      },
+      {
+       "words": "WOULD THEY FIND YOU?",
+       "picture": "Lit window"
+      }
+     ],
+     "tone": "Practical",
+     "kit": "Brand kit, mint"
+    },
+    "learned_from": [
+     "Your note on the translator meme (2 Nov): \"POV: your AI agent trying to communicate with your customer's AI agent\""
+    ],
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
+      "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+     ],
+     "says": [
+      "Cards explaining that shops can now put their own AI helper inside ChatGPT from 10 November.",
+      "Shops can put their own AI helper inside ChatGPT from 10 November, shown in a chat bubble with labels."
+     ],
+     "against": 49
+    },
+    "shape": "story",
+    "dive": "Businesses can claim a profile inside ChatGPT, and US online shops can run their own agent there, in chats labelled and kept apart.",
+    "aim": "utility",
+    "funny": "Your next customer might be a chatbot, and it would like to speak to your chatbot.",
+    "lookalike": {
+     "pattern": "big-tech-chess",
+     "beats": "https://www.instagram.com/therundownai/p/DfiNxE3Rp8Q/",
+     "our_take": "Where the post covers a deal between giants, we say what a small business does with ChatGPT's new shop window."
+    }
+   },
+   {
+    "id": "presszero",
+    "format": "Meme, 2 panels, 4:5",
+    "source_tag": "trade_press",
+    "source": {
+     "label": "Twilio press release, The AI expectations gap (9 Nov 2026)",
+     "url": "https://www.twilio.com/en-us/press/releases/the-ai-expectations-gap--twilio-s-report-finds-businesses-are-me"
+    },
+    "hook": "Companies: 86% of customers love our AI. Customers: HUMAN. HUMAN. HUMAN.",
+    "copy": "A meme on Twilio's survey: 86% of companies believe customers are happy with their AI customer service, 51% of customers agree, and 78% have tried to get past the AI to a person. It stands on its own.",
+    "pitch": {
+     "see": "Panel one: a smiling executive in front of a chart reading '86% happy'. Panel two: a customer on the phone shouting 'HUMAN' while mashing the zero key.",
+     "lands": "Everyone has shouted 'agent' at a phone line; the numbers say they are not alone.",
+     "why_now": "Twilio's report, 9 Nov 2026.",
+     "share": "86% of firms think you love their AI. 78% of you have tried to escape it."
+    },
+    "shape": "story",
+    "dive": "Firms measure their AI on speed while customers judge it on whether they can reach a person, so the two numbers drift apart.",
+    "aim": "humour",
+    "funny": "The boardroom chart says delighted; the customer is pressing zero for the ninth time.",
+    "lookalike": {
+     "pattern": "work-reality-check",
+     "beats": "https://www.instagram.com/therundownai/p/DfiNa2JkRhx/",
+     "our_take": "Where the post weighs AI against jobs, ours shows the gap between what firms believe and what customers do, and the fix: an easy way to a person."
+    },
+    "direction": {
+     "look": "Clean two-panel meme in the brand kit, drawn fresh",
+     "format": "Single image, 4:5",
+     "frames": [
+      {
+       "words": "COMPANIES: 86% OF CUSTOMERS LOVE OUR AI",
+       "picture": "A smiling executive in front of a rising chart"
+      },
+      {
+       "words": "CUSTOMERS:",
+       "picture": "Someone on the phone shouting 'HUMAN' and pressing zero"
+      }
+     ],
+     "tone": "Deadpan",
+     "kit": "Brand kit, mint"
+    },
+    "learned_from": [
+     "Your Improve on the Home Depot meme (3 Nov): \"play on the hilarity of this topic\""
+    ],
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
+      "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+     ],
+     "says": [
+      "A joke picture: a company boasts 86% of customers love its AI while a customer shouts HUMAN and presses zero.",
+      "A bosses' 86 percent happy chart meets a customer shouting HUMAN while mashing zero."
+     ],
+     "against": 49
+    }
+   },
+   {
+    "id": "parentsban",
+    "format": "Meme, 2 panels, 4:5",
+    "source_tag": "trade_press",
+    "source": {
+     "label": "National Review, on the Institute for Family Studies poll of 2,000 parents (12 Nov 2026)",
+     "url": "https://www.nationalreview.com/news/politically-divided-parents-find-common-ground-in-concerns-about-ai-in-schools"
+    },
+    "hook": "56% of parents want AI blocked at school. Meanwhile, at home:",
+    "copy": "A meme on the Institute for Family Studies poll: 56% of parents of school-age children want schools to fully block students' use of AI. The joke is the parent who just asked AI to write the email to the school. It stands on its own.",
+    "pitch": {
+     "see": "Panel one: a parent at a school meeting, arms folded, under '56% of parents: block AI in schools'. Panel two: the same parent at home, typing 'write a polite email to my son's teacher' into a chatbot.",
+     "lands": "Every parent who has used AI for a tricky email will recognise themselves.",
+     "why_now": "The poll was reported on 12 Nov 2026.",
+     "share": "Ban it at school. Use it for the email to the school."
+    },
+    "shape": "story",
+    "dive": "Most parents want AI kept out of the classroom while using it themselves for the everyday jobs it is good at.",
+    "aim": "humour",
+    "funny": "The permission slip banning AI was, of course, drafted by AI.",
+    "lookalike": {
+     "pattern": "work-reality-check",
+     "beats": "https://www.instagram.com/therundownai/p/DfiNa2JkRhx/",
+     "our_take": "Where the post weighs AI at work, ours finds the same double standard at the school gate."
+    },
+    "direction": {
+     "look": "Clean two-panel meme in the brand kit, drawn fresh",
+     "format": "Single image, 4:5",
+     "frames": [
+      {
+       "words": "56% OF PARENTS: BLOCK AI IN SCHOOLS",
+       "picture": "A parent at a school meeting, arms folded"
+      },
+      {
+       "words": "ALSO PARENTS:",
+       "picture": "The same parent at home asking a chatbot to write a polite email to the teacher"
+      }
+     ],
+     "tone": "Deadpan",
+     "kit": "Brand kit, mint"
+    },
+    "learned_from": [
+     "Your Improve on the Home Depot meme (3 Nov): \"play on the hilarity of this topic\""
+    ],
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
+      "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+     ],
+     "says": [
+      "A meme: 56% of parents want AI blocked at school, but the same parent uses a chatbot at home to write to the teacher.",
+      "Most parents want AI blocked at school, but the same parent uses a chatbot at home to write an email."
+     ],
+     "against": 49
+    }
+   }
+  ]
+ }
+}
